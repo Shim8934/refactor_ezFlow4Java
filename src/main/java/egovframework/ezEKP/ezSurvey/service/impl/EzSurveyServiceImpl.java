@@ -59,6 +59,7 @@ import egovframework.ezEKP.ezSurvey.vo.SurveyVO;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
+import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 @Service("EzSurveyService")
@@ -2056,5 +2057,49 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		map.put("tenantId",  tenantId);
 
 		ezSurveyDAO.pauseSurvey(map);
+	}
+
+	@Override
+	public List<RespondentVO> getSurveyParticipantList(String surveyId, LoginSimpleVO userInfo, int currentPage, int listCntSize) throws Exception {
+		logger.debug("getSurveyParticipantList started");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("surveyId", surveyId);
+		map.put("companyId", userInfo.getCompanyID());
+		map.put("tenantId", userInfo.getTenantId());
+		map.put("offset", commonUtil.getMinuteUTC(userInfo.getOffset()));
+		
+		int startPoint  = (currentPage - 1) * listCntSize;
+		map.put("startPoint", startPoint);
+		map.put("listCount", listCntSize);
+
+		logger.debug("getSurveyParticipantList ended");
+		return ezSurveyDAO.getSurveyParticipantList(map);
+	}
+
+	@Override
+	public int getSurveyParticipantCnt(String surveyId, String companyId, int tenantId) throws Exception {
+		logger.debug("getSurveyParticipantCnt started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("surveyId", surveyId);
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+
+		logger.debug("getSurveyParticipantCnt ended");
+		return ezSurveyDAO.getSurveyParticipantCnt(map);
+	}
+
+	@Override
+	public SurveyVO getOneSurveyInfo(String surveyId, String companyId, int tenantId) throws Exception {
+		logger.debug("getOneSurveyInfo started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("surveyId", surveyId);
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+
+		logger.debug("getOneSurveyInfo ended");
+		return ezSurveyDAO.getSurveyInfo(map);
 	}
 }

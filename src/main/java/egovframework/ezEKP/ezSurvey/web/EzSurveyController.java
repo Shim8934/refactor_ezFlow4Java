@@ -24,6 +24,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import egovframework.ezEKP.ezSurvey.service.EzSurveyService;
 import egovframework.ezEKP.ezSurvey.vo.SurveyItemSearchVO;
+import egovframework.ezEKP.ezSurvey.vo.RespondentVO;
+import egovframework.ezEKP.ezSurvey.vo.SurveyVO;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.hssf.util.HSSFColor;
@@ -160,7 +162,7 @@ public class EzSurveyController extends EgovFileMngUtil {
 	@RequestMapping(value="/ezSurvey/surveyList.do", method = RequestMethod.GET)
 	public String jspGetSurveyList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, Locale locale) throws Exception {
 		logger.debug("jspGetSurveyList started");
-		LoginSimpleVO user   = commonUtil.userInfoSimple(loginCookie);
+		LoginVO user   = commonUtil.userInfo(loginCookie);
 		String mode          = request.getParameter("mode") != null ? request.getParameter("mode") : "1";
 		String pageName      = "";
 		JSONObject configObj = surveyRestService.getUserPreviewConfig(request, user.getId());
@@ -188,6 +190,7 @@ public class EzSurveyController extends EgovFileMngUtil {
 		model.addAttribute("pageName", pageName);
 		model.addAttribute("mode"    , mode);
 		model.addAttribute("user"    , user.getId());
+		model.addAttribute("adminFG" , commonUtil.isAdmin(user.getId(), user.getTenantId(), user.getRollInfo(), "c;l;k"));
 		
 		logger.debug("jspGetSurveyList ended");
 		return "ezSurvey/listmenu/surveyList";
@@ -1624,5 +1627,227 @@ public class EzSurveyController extends EgovFileMngUtil {
 		}
 
 		logger.debug("pauseSurvey ended");
+	}
+	
+	@RequestMapping(value = "/ezSurvey/showParticipantsList.do", method = RequestMethod.GET)
+	public String showParticipantsList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("showParticipantsList started");
+
+		LoginSimpleVO user = loginCookie != null ? commonUtil.userInfoSimple(loginCookie) : new LoginSimpleVO();
+		String surveyId = request.getParameter("surveyId") != null ? request.getParameter("surveyId") : "";
+		
+		int totalCnt = ezSurveyService.getSurveyParticipantCnt(surveyId, user.getCompanyID(), user.getTenantId());
+		if (totalCnt == 0) {
+			model.addAttribute("reasonMessage", "ezSurvey.yjh04");
+			return "ezSurvey/surveyAccessDenied";
+		}
+		
+		SurveyVO survey = ezSurveyService.getOneSurveyInfo(surveyId, user.getCompanyID(), user.getTenantId());
+		if (survey.getAnonymousFlag() == 1) {
+			model.addAttribute("reasonMessage", "ezSurvey.yjh05");
+			return "ezSurvey/surveyAccessDenied";
+		}
+
+		model.addAttribute("surveyId", surveyId);
+		model.addAttribute("surveyTitle", survey.getTitle());
+		model.addAttribute("totalUserCnt", totalCnt);
+		
+		return "ezSurvey/listmenu/participants";
+	}
+
+	@RequestMapping(value="/ezSurvey/getSurveyParticipantList.do", method = RequestMethod.GET)
+	@ResponseBody
+	public JSONArray getSurveyParticipantList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("getSurveyParticipantList started");
+
+		LoginSimpleVO user = loginCookie != null ? commonUtil.userInfoSimple(loginCookie) : new LoginSimpleVO();
+		String locale = user.getLocale().toString();
+		String surveyId = request.getParameter("surveyId") != null ? request.getParameter("surveyId") : "";
+		int currentPage = request.getParameter("currentPage") != null ? Integer.parseInt(request.getParameter("currentPage")) : 1;
+		int listCntSize = request.getParameter("listCntSize") != null ? Integer.parseInt(request.getParameter("listCntSize")) : 10;
+		
+		List<RespondentVO> surveyParticipantList = ezSurveyService.getSurveyParticipantList(surveyId, user, currentPage, listCntSize);
+
+		JSONArray userList = new JSONArray();
+		for (RespondentVO responseVO : surveyParticipantList) {
+			JSONObject json = new JSONObject();
+			json.put("userId", responseVO.getUserId());
+			json.put("userName", locale.equals("ko") ? responseVO.getUserName1() : responseVO.getUserName2());
+			json.put("responseDate", responseVO.getResponseDate());
+			json.put("deptName", locale.equals("ko") ? responseVO.getDeptName1() : responseVO.getDeptName2());
+			userList.add(json);
+		}
+
+		logger.debug("getSurveyParticipantList ended");
+		return userList;
+	}
+
+	@RequestMapping(value="/ezSurvey/exportUserListExcel.do", method = RequestMethod.POST)
+	@ResponseBody
+	public void exportUserListExcel(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Locale locale) throws Exception {
+		logger.debug("exportUserListExcel started");
+
+		LoginSimpleVO user = loginCookie != null ? commonUtil.userInfoSimple(loginCookie) : new LoginSimpleVO();
+		String surveyId = request.getParameter("surveyId") != null ? request.getParameter("surveyId") : "";
+		String surveyTitle = request.getParameter("surveyTitle") != null ? request.getParameter("surveyTitle") : "";
+		int totalUserCnt = request.getParameter("totalUserCnt") != null ? Integer.parseInt(request.getParameter("totalUserCnt")) : 0;
+		List<RespondentVO> surveyParticipantList = ezSurveyService.getSurveyParticipantList(surveyId, user, 1, totalUserCnt);
+
+		// Excel 객체 생성
+		try (XSSFWorkbook workbook = new XSSFWorkbook()) {
+			String fontFamily = egovMessageSource.getMessage("main.t0620", locale).split(";")[0];
+
+			// 타이틀 font (bold, 맑은고딕, 크기 12pt)
+			XSSFFont titleFont = workbook.createFont();
+			titleFont.setBoldweight(XSSFFont.BOLDWEIGHT_BOLD);
+			titleFont.setFontHeight((short) 240);
+			titleFont.setFontName(fontFamily);
+
+			// header font (bold, 맑은고딕)
+			XSSFFont headerFont = workbook.createFont();
+			headerFont.setBoldweight(XSSFFont.BOLDWEIGHT_BOLD);
+			headerFont.setFontName(fontFamily);
+
+			// 기본 font(맑은고딕)
+			XSSFFont basicFont = workbook.createFont();
+			basicFont.setFontName(fontFamily);
+
+			// 1행 타이틀 스타일
+			XSSFCellStyle titleStyle = workbook.createCellStyle();
+			titleStyle.setAlignment(HSSFCellStyle.ALIGN_LEFT);
+			titleStyle.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
+			titleStyle.setFont(titleFont);
+
+			// 응답자 정보 헤더 스타일
+			XSSFCellStyle responserHeaderStyle = workbook.createCellStyle();
+			responserHeaderStyle.setFillForegroundColor(HSSFColor.GREY_25_PERCENT.index);
+			responserHeaderStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+			responserHeaderStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
+			responserHeaderStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
+			responserHeaderStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
+			responserHeaderStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+			responserHeaderStyle.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+			responserHeaderStyle.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
+			responserHeaderStyle.setFont(headerFont);
+
+			// 응답자 정보 스타일
+			XSSFCellStyle responserStyle = workbook.createCellStyle();
+			responserStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
+			responserStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
+			responserStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
+			responserStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+			responserStyle.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+			responserStyle.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
+			responserStyle.setFont(basicFont);
+
+			String fileName = surveyTitle + "_" + egovMessageSource.getMessage("ezSurvey.yjh01", locale);
+			String[] invalidName = {"\\\\", "/", ":", "[*]", "[?]", "\"", "<", ">", "[|]"}; // 윈도우 파일명으로 사용할 수 없는 문자
+
+			for (int i = 0; i < invalidName.length; i++) {
+				fileName = fileName.replaceAll(invalidName[i], "_"); //언더바로 치환
+			}
+
+			String browser = "";
+			String header = request.getHeader("User-Agent");
+
+			if (header.indexOf("MSIE") > -1) {
+				browser = "MSIE";
+			} else if (header.indexOf("Chrome") > -1) {
+				browser = "Chrome";
+			} else if (header.indexOf("Opera") > -1) {
+				browser = "Opera";
+			} else if (header.indexOf("Trident/7.0") > -1) {
+				//IE 11 이상 
+				//IE 버전 별 체크 >> Trident/6.0(IE 10) , Trident/5.0(IE 9) , Trident/4.0(IE 8)
+				browser = "MSIE";
+			} else if (header.indexOf("Trident/6.0") > -1) {
+				//IE 11 이상 
+				//IE 버전 별 체크 >> Trident/6.0(IE 10) , Trident/5.0(IE 9) , Trident/4.0(IE 8)
+				browser = "MSIE";
+			} else {
+				browser = "Firefox";
+			}
+
+			String encodedFileName = "";
+
+			if (browser.equals("MSIE")) {
+				encodedFileName = URLEncoder.encode(fileName, "UTF-8").replaceAll("\\+", "%20");
+			} else if (browser.equals("Firefox")) {
+				encodedFileName = new String(fileName.getBytes("UTF-8"), "8859_1");
+			} else if (browser.equals("Opera")) {
+				encodedFileName = new String(fileName.getBytes("UTF-8"), "8859_1");
+			} else if (browser.equals("Chrome")) {
+				StringBuffer sb = new StringBuffer();
+
+				for (int i = 0; i < fileName.length(); i++) {
+					char c = fileName.charAt(i);
+
+					if (c > '~') {
+						sb.append(URLEncoder.encode("" + c, "UTF-8"));
+
+					} else {
+						sb.append(c);
+					}
+				}
+
+				encodedFileName = sb.toString();
+			} else {
+				encodedFileName = fileName;
+			}
+
+			// Sheet 객체 생성
+			XSSFSheet sheet = workbook.createSheet("report");
+			// Row 객체 생성
+			Row row = sheet.createRow(0);
+
+			// 1행
+			sheet.addMergedRegionUnsafe(new CellRangeAddress(0, 0, 0, 3));
+			row.createCell(0);
+			row.getCell(0).setCellStyle(titleStyle);
+			row.setHeight((short) 512);
+			row.getCell(0).setCellValue(fileName);
+
+			// 응답자 리스트 헤더
+			row = sheet.createRow(1);
+
+			for (int l = 0; l <= 3; l++) {
+				row.createCell(l);
+				row.getCell(l).setCellStyle(responserHeaderStyle);
+			}
+
+			row.getCell(0).setCellValue(egovMessageSource.getMessage("ezOrgan.t218", locale)); // 아이디
+			row.getCell(1).setCellValue(egovMessageSource.getMessage("ezSurvey.t57", locale)); // 이름
+			row.getCell(2).setCellValue(egovMessageSource.getMessage("ezSurvey.t59", locale)); // 부서명
+			row.getCell(3).setCellValue(egovMessageSource.getMessage("ezSchedule.t165", locale)); // 응답시간
+
+			// 응답자 리스트
+			int rowCount = 2;
+			for (RespondentVO rVO : surveyParticipantList) {
+				row = sheet.createRow(rowCount);
+
+				for (int j = 0; j <= 3; j++) {
+					row.createCell(j);
+					row.getCell(j).setCellStyle(responserStyle);
+				}
+
+				row.getCell(0).setCellValue(rVO.getUserId());
+				row.getCell(1).setCellValue("ko".equals(locale.getLanguage()) ? rVO.getUserName1() : rVO.getUserName2());
+				row.getCell(2).setCellValue("ko".equals(locale.getLanguage()) ? rVO.getDeptName1() : rVO.getDeptName2());
+				row.getCell(3).setCellValue(rVO.getResponseDate().substring(0, 19));
+
+				rowCount++;
+			}
+			
+			for (int c = 0; c <= 3; c++) {
+				sheet.autoSizeColumn(c);
+			}
+
+			response.setContentType("application/vnd.ms-excel");
+			response.setHeader("Content-Disposition", "attachment; fileName=\"" + encodedFileName + ".xlsx\"");
+			workbook.write(response.getOutputStream());
+			workbook.close();
+
+			logger.debug("exportUserListExcel ended");
+		}
 	}
 }

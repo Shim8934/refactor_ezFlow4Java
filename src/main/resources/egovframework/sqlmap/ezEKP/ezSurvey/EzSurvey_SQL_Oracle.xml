@@ -1886,4 +1886,49 @@
 		  AND
 			TENANT_ID = #tenantId#
 	</update>
+
+	<select id="EzSurveyDAO.getSurveyParticipantList" parameterClass="map" resultClass="RespondentVO">
+		SELECT * FROM (
+			SELECT
+				A.*,
+				ROWNUM as RNUM
+			FROM
+				(
+				SELECT
+					USER_ID as USERID,
+					USER_NAME1 as USERNAME1,
+					USER_NAME2 as USERNAME2,
+					DEPT_NAME1 as DEPTNAME1,
+					DEPT_NAME2 as DEPTNAME2,
+					TO_CHAR(TO_DATE(RESPONSE_DATE, 'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60),'YYYY-MM-DD HH24:MI:SS') as RESPONSEDATE,
+					ROW_NUMBER() OVER (PARTITION BY SURVEY_ID, USER_ID ORDER BY RESPONSE_DATE ASC) as RN
+				FROM
+					TBL_SURVEY_RESPONDENT
+				WHERE
+					SURVEY_ID = #surveyId#
+				AND
+					COMPANY_ID = #companyId#
+				AND
+					TENANT_ID = #tenantId#
+				) A
+			WHERE
+				A.RN = 1
+			ORDER BY A.RESPONSEDATE ASC
+		)
+		WHERE
+			RNUM BETWEEN (#startPoint# + 1) AND (#startPoint# + #listCount#)
+	</select>
+
+	<select id="EzSurveyDAO.getSurveyParticipantCnt" parameterClass="map" resultClass="Integer">
+		SELECT
+			COUNT(DISTINCT USER_ID)
+		FROM
+			TBL_SURVEY_RESPONDENT
+		WHERE
+			SURVEY_ID = #surveyId#
+		  AND
+			COMPANY_ID = #companyId#
+		  AND
+			TENANT_ID = #tenantId#
+	</select>
 </sqlMap>

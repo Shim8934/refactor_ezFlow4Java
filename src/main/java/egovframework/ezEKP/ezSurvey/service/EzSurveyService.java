@@ -16,6 +16,8 @@ import egovframework.ezEKP.ezSurvey.vo.SurveyParticipantVO;
 import egovframework.ezEKP.ezSurvey.vo.SurveyVO;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.let.user.login.vo.LoginVO;
+import egovframework.ezEKP.ezSurvey.vo.RespondentVO;
+import egovframework.let.user.login.vo.LoginSimpleVO;
 
 public interface EzSurveyService {
 	//Company Tree process functions
@@ -86,4 +88,10 @@ public interface EzSurveyService {
 	public String checkfinishSurvey(String endDate, String offset) throws Exception;
 
 	public void pauseSurvey(String surveyID, String type, int tenantId) throws Exception;
+
+    public List<RespondentVO> getSurveyParticipantList(String surveyId, LoginSimpleVO userInfo, int currentPage, int listCntSize) throws Exception;
+
+    public int getSurveyParticipantCnt(String surveyId, String companyID, int tenantId) throws Exception;
+
+	public SurveyVO getOneSurveyInfo(String surveyId, String companyID, int tenantId) throws Exception;
 }

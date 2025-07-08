@@ -44,6 +44,9 @@
 						<li id="modifyBttn"><a><span><spring:message code='ezSurvey.t78'/></span></a></li>
 						<c:if test="${reuseFlag == 1}"><li id="reuseBttn" ><a><span><spring:message code='ezSurvey.t22'/></span></a></li></c:if>
 						<li id="analysisBttn" class="analysisBttn2" ><a><span><spring:message code='ezSurvey.t110'/></span></a></li>
+						<c:if test="${adminFG eq true}">
+							<li id="usersBttn" class="usersBttn2" ><a><span><spring:message code='ezSurvey.yjh03'/></span></a></li>
+						</c:if>
 						<li id="searchBttn" class="searchBttn2"><a><span class="icon16 icon16_search switchIcon"></span><span class="iconTexts"><spring:message code='ezSurvey.t20'/></span></a></li>
 						<li id="deleteBttn" class="deleteBttn2"><a><span class="icon16 icon16_delete switchIcon"></span><span class="iconTexts"><spring:message code='ezSurvey.t21'/></span></a></li>
 						<div class="sub_frameIcon" style="float: right;">

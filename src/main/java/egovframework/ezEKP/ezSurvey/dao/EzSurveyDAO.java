@@ -330,4 +330,13 @@ public class EzSurveyDAO extends EgovAbstractDAO {
 	public void pauseSurvey(Map<String, Object> map) throws Exception {
 		update ("EzSurveyDAO.pauseSurvey", map);
 	}
+
+	// 2025-07-08 양지혜 - 설문 > 참여자보기
+	public List<RespondentVO> getSurveyParticipantList(Map<String, Object> map) throws Exception {
+		return (List<RespondentVO>) list("EzSurveyDAO.getSurveyParticipantList", map);
+	}
+
+	public int getSurveyParticipantCnt(Map<String, Object> map) throws Exception {
+		return (int) select("EzSurveyDAO.getSurveyParticipantCnt", map);
+	}
 }
