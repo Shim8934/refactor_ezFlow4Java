@@ -203,7 +203,7 @@
 		        });		        
 		    }
 			
-			function Permissions_View(obj) {
+			/*function Permissions_View(obj) {
 				var className = window.event.target.getAttribute('class');
 				if(className === 'checks') {
 					return;
@@ -239,7 +239,46 @@
 				}
 
 				checkItems();
-			} 
+			}*/
+			
+			function Permissions_View(obj) {
+                var className = window.event.target.getAttribute('class');
+                if (className === 'checks') {
+                    return;
+                }
+            
+                var tr = document.getElementById(obj);
+                var checkbox = tr.querySelector("input[type='checkbox'].checks");
+            
+                // 체크박스 ID 유효성 확인
+                if (!checkbox || checkbox.id === "0") {
+                    return;
+                }
+            
+                if (checkFlag) {
+                    if (checkbox.checked === true) {
+                        $("#" + obj + " td").css("background-color", "rgb(255, 255, 255)");
+                        checkbox.checked = false;
+                    } else {
+                        $("#" + obj + " td").css("background-color", "rgb(241, 248, 255)");
+                        checkbox.checked = true;
+                    }
+                } else {
+                    $("#contentlist tr td").css("background-color", "rgb(255, 255, 255)");
+                    $(".checks").prop("checked", false);
+            
+                    if (checkbox.checked === true) {
+                        $("#" + obj + " td").css("background-color", "rgb(255, 255, 255)");
+                        checkbox.checked = false;
+                    } else {
+                        $("#" + obj + " td").css("background-color", "rgb(241, 248, 255)");
+                        checkbox.checked = true;
+                    }
+                }
+            
+                checkItems();
+            }
+ 
 			
 			var cnt;
 			function checkbox_header() {
@@ -247,7 +286,7 @@
 				var th = doc.getElementById("lvPermissionList_TH_0");
 				var acList = doc.getElementById("lvPermissionList");
 				
-				th.innerHTML = "<input type= 'checkbox' id = 'checkAll' onchange= 'checkboxHeaderClick()'></input>";
+				th.innerHTML = "<div class='custom_checkbox'><input type= 'checkbox' id = 'checkAll' onchange= 'checkboxHeaderClick()'></input></div>";
 				
 				cnt = acList.children[1].childElementCount;
 				
@@ -263,11 +302,11 @@
 					
 					// 2023-07-20 전인하 - 관리자 > 조직도 > 권한관리 > 겸직/사용자별로 권한 설정 기능
 					// 리스트에서  CN이 PK로 쓰이지 않음에 따라(한 사용자에 대해 겸직별로 다양한 권한 부여 가능) 고유아이디 생성, 부여
-					acList.children[1].children[i].children[0].innerHTML = "<input type='checkbox' name='checks' class='checks' id='" 
+					acList.children[1].children[i].children[0].innerHTML = "<div class='custom_checkbox'><input type='checkbox' name='checks' class='checks' id='" 
 					+ seq + "_" + i
 					+ "' value='" 
 					+ seq 
-					+ "' onchange='inputFunc(event," + seq + "_" + i + ")'></input>";
+					+ "' onchange='inputFunc(event," + seq + "_" + i + ")'></input></div>";
 				} 
 			}
 			
@@ -291,7 +330,7 @@
 			}
 			
 			var rowList = new Array();
-			function checkItems() {
+			/*function checkItems() {
 				rowList = [];
 				$("input:checkbox[name='checks']").each(function(){
 				    // 2023-07-31 전인하 - 관리자 > 조직도 > 권한관리 - 리스트 체크박스 동작 개선
@@ -301,7 +340,18 @@
 						rowList.push(tempObj.getAttribute("data1") + ";" + tempObj.getAttribute("data6") + ";" + tempObj.getAttribute("data7")); // this: userId, data6: deptId, data7 : jobId
 					}
 				});
-			}
+			}*/
+			
+			function checkItems() {
+                rowList = [];
+                document.querySelectorAll("input[type='checkbox'][name='checks']").forEach(function (checkbox) {
+                    // 체크된 input의 가장 가까운 tr을 찾는다
+                    var tr = checkbox.closest("tr");
+                    if (checkbox.checked && tr) {
+                        rowList.push(tr.getAttribute("data1") + ";" + tr.getAttribute("data6") + ";" + tr.getAttribute("data7"));
+                    }
+                });
+            }
 			
 			function inputFunc(event) {
 				checkItems();
@@ -312,12 +362,22 @@
                 var permissionListObj = document.getElementById("lvPermissionList").childNodes[1].childNodes;
                 for (var i = 0; i < permissionListObj.length; i++) {
                     var tempPermissionObj = permissionListObj[i].getAttribute("data1") + ";" + permissionListObj[i].getAttribute("data6") + ";" + permissionListObj[i].getAttribute("data7");
-                    if (rowList.includes(tempPermissionObj)) {
+                    /*if (rowList.includes(tempPermissionObj)) {
                         $("#" + permissionListObj[i].id + " td").css("background-color", "rgb(241, 248, 255)");
                         $("#" + permissionListObj[i].childNodes[1].childNodes[1]).prop("checked", true);
                     } else {
                         $("#" + permissionListObj[i].id + " td").css("background-color", "rgb(255, 255, 255)");
                         $("#" + permissionListObj[i].childNodes[1].childNodes[1]).prop("checked", false);
+                    }*/
+
+                    var checkbox = permissionListObj[i].querySelector("td .custom_checkbox > input.checks");
+                    
+                    if (rowList.includes(tempPermissionObj)) {
+                        $("#" + permissionListObj[i].id + " td").css("background-color", "rgb(241, 248, 255)");
+                        if (checkbox) checkbox.checked = true;
+                    } else {
+                        $("#" + permissionListObj[i].id + " td").css("background-color", "rgb(255, 255, 255)");
+                        if (checkbox) checkbox.checked = false;
                     }
                 }             
 			}
@@ -547,7 +607,7 @@
 		    }
 
 			function Permissions_Del(mode) {			
-				var dataList = new Array();
+				/*var dataList = new Array();
 				var dataList2 = new Array();
 				var dataList3 = new Array();
 				var dataList4 = new Array();
@@ -567,22 +627,29 @@
 					} else {
 					    dataList7.push(this.parentElement.parentElement.getAttribute("DATA7"));
 					}
-				}); 
+				});*/
 				
-				
-				/* // 선택된 사원이 없을 경우
-				if (dataList.length == 0) {
-					alert(strLang13);
-					return;
-				} */
-
-				/* // 권한 전체삭제
-				var cData = "";
-				if (mode == "ALL") {
-					cData = "["+dataList3+"]" + strLang19 + " " + "<spring:message code='ezAddress.t362' />" + strLang20;
-				} else {
-					cData = "["+dataList3+"]" + strLang19 + document.getElementById(clickTabID).innerText + " " + strLang20;
-				} */
+				var dataList = [];
+                var dataList2 = [];
+                var dataList3 = [];
+                var dataList4 = [];
+                var dataList5 = []; // 변경하는 권한 추출용
+                var dataList6 = []; // deptId
+                var dataList7 = []; // jobId
+            
+                $("input[name='checks']:checked").each(function(){
+                    const tr = this.closest('tr');
+                    dataList.push(tr.getAttribute("data1"));
+                    dataList2.push(tr.getAttribute("data2"));
+                    dataList3.push(tr.getAttribute("data3"));
+                    dataList4.push(tr.getAttribute("data5"));
+                    dataList6.push(tr.getAttribute("data6"));
+                    if (tr.getAttribute("data7") === '') {
+                        dataList7.push('empty');
+                    } else {
+                        dataList7.push(tr.getAttribute("data7"));
+                    }
+                });
 
 				//if (confirm(cData)) {
 					for (var i =0; i< dataList.length; i++) {
@@ -630,22 +697,20 @@
 			}
 
 		    var email_onclick = function() {
-
-		        /* var listview = new ListView();
-		        listview.LoadFromID("lvPermissionList"); */
 		        
 		        var dataList3 = new Array();
 				var dataList4 = new Array();
 				
-				$("input[name='checks']:checked").each(function(){
+				$("input[name='checks']:checked").each(function() {
+                    const tr = this.closest('tr');
+                    dataList3.push(tr.getAttribute("data3"));
+                    dataList4.push(tr.getAttribute("data4"));
+                });
+				
+				/*$("input[name='checks']:checked").each(function(){
 					dataList3.push(this.parentElement.parentElement.getAttribute("DATA3"));
 					dataList4.push(this.parentElement.parentElement.getAttribute("DATA4"));
-				});
-
-		        /* if (listview.GetSelectedRows().length == 0) {
-		            alert(strLang13);
-		            return;
-		        } */
+				});*/
 		        
 		     // 선택된 사원이 없을 경우
 				if (dataList3.length == 0) {
@@ -658,26 +723,13 @@
 		        var pwidth = window.screen.availWidth;
 		        var pTop = (pheight - conHeight) / 2;
 		        var pLeft = (pwidth - 890) / 2;
-		        var MsgTo = new Array();
+		        var MsgTo = [];
 
 		        for (var i =0; i<dataList3.length; i++) {
 			        MsgTo[i] = "\"" + dataList3[i]+ "\" <" +dataList4[i]+ ">";
 		        }
 		        console.log(MsgTo);
-		        /* 2017-01-02 이효민사원
-		        if (CrossYN() || pNoneActiveX == "YES") {
-		            window.open("/myoffice/ezEmail/mail_write_Cross.aspx?cmd=NEW&msgTo=" + encodeURIComponent(MsgTo), "",
-		                           "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
-		        }
-		        else {
-		            if (pUse_Editor == "")
-		                window.open("/myoffice/ezEmail/mail_write.aspx?cmd=NEW&msgTo=" + encodeURIComponent(MsgTo), "",
-		                                "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
-		            else {
-		                window.open("/myoffice/ezEmail/mail_write_IE.aspx?cmd=NEW&msgTo=" + encodeURIComponent(MsgTo), "",
-		                            "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
-		            }
-		        } */
+
 		        window.open("/ezEmail/mailWrite.do?cmd=NEW&msgto=" + encodeURIComponent(MsgTo), "",
                         "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1"); 
 		    }
@@ -702,7 +754,7 @@
 		    
 		    var delete_confirm_cross_dialogArguments;
 		    var Choose_Del = function() {
-		    	var dataList = new Array();
+		    	/*var dataList = new Array();
 				var dataList2 = new Array();
 				var dataList3 = new Array();
 				var dataList4 = new Array();
@@ -713,7 +765,21 @@
 					dataList2.push(this.parentElement.parentElement.getAttribute("DATA2"));
 					dataList3.push(this.parentElement.parentElement.getAttribute("DATA3"));
 					dataList4.push(this.parentElement.parentElement.getAttribute("DATA5"));
-				});
+				});*/
+
+                var dataList = [];
+                var dataList2 = [];
+                var dataList3 = [];
+                var dataList4 = [];
+                var types = document.getElementById(clickTabID).innerText;
+
+                $("input[name='checks']:checked").each(function(){
+                    var tr = this.closest("tr");
+                    dataList.push(tr.getAttribute("data1"));
+                    dataList2.push(tr.getAttribute("data2"));
+                    dataList3.push(tr.getAttribute("data3"));
+                    dataList4.push(tr.getAttribute("data5"));
+                });
 				
 				testObj.dataList = dataList;
 				testObj.dataList2 = dataList2;
@@ -740,12 +806,22 @@
 				var len = rowList.length;
 				for (var i = 0; i < len; i++) {
 					var tempItemSeq = rowList.pop();
-					if (document.getElementById(tempItemSeq) != null) {
+					var tr = document.getElementById(tempItemSeq);
+
+                    if (tr != null) {
+                        var checkbox = tr.querySelector("input[type='checkbox'].checks");
+                        if (checkbox) {
+                            checkbox.checked = true;
+                            $(tr).find("td").css("background-color", "rgb(241, 248, 255)");
+                        }
+                    }
+
+					/*if (document.getElementById(tempItemSeq) != null) {
 						$("#" + tempItemSeq).prop("checked", true);
 						var tempID = $("#" + tempItemSeq)[0].parentNode.parentNode.id;
 						$("#" + tempID + " td").css("background-color",
 								"rgb(241, 248, 255)");
-					}
+					}*/
 				}
 
 				if (checkFlag) {

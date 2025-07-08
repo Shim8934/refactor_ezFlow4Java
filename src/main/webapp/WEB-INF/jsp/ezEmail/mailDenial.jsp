@@ -11,7 +11,7 @@
 	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/ie_methods.js')}"></script>
 		<style>
-			.popuplist #TDID input[type="checkbox"]{height: 12px !important;}
+			//.popuplist #TDID input[type="checkbox"]{height: 12px !important;}
 		</style>
 	    <script type="text/javascript">
 	        var arrKeyword = "";
@@ -39,18 +39,30 @@
 	                        var objTr = document.createElement("TR");
 	                        objTr.setAttribute("valign", "top");
 	                        var objTdcheck = document.createElement("TD");
-	                        objTdcheck.setAttribute('id', "TDID");
-	                        objTdcheck.style.padding = "5px";
+	                        //objTdcheck.setAttribute('id', "TDID");
+	                        //objTdcheck.style.padding = "5px";
+
+                            const divWrapper = document.createElement("div");
+                            divWrapper.className = "custom_checkbox";
+
 	                        var objIn = document.createElement("INPUT");
 	                        objIn.setAttribute('type', "checkbox");
-	                        objIn.setAttribute('id', "addr");
+	                        //objIn.setAttribute('id', "addr");
 	                        objIn.setAttribute('name', "addr");
 	                        objIn.setAttribute('addr', emailValue);
 	                        objIn.setAttribute("email", emailValue);
-	                        objTdcheck.appendChild(objIn);
+	                        //objTdcheck.appendChild(objIn);
 	                        objIn.setAttribute('checked', true);
-	                        var text = "\"" + emailValue + "\"" + '<spring:message code="ezEmail.t343" />';
-	                        objIn.insertAdjacentText("afterEnd", text);
+	                        divWrapper.appendChild(objIn);
+
+	                        //var text = "\"" + emailValue + "\"" + '<spring:message code="ezEmail.t343" />';
+	                        //objIn.insertAdjacentText("afterEnd", text);
+                           const label = document.createElement("label");
+                           label.textContent = "\"" + emailValue + "\"" + '<spring:message code="ezEmail.t343" />';
+                           divWrapper.appendChild(objIn);
+                           divWrapper.appendChild(label);
+
+                            objTdcheck.appendChild(divWrapper);
 	                        objTr.appendChild(objTdcheck);
 	                        msg.appendChild(objTr);
 	                    }
@@ -58,16 +70,31 @@
 	                for (var i = 0 ; i < arrKeyword.length ; i++) {
 	                    var keyWord = arrKeyword[i];
 	                    if (keyWord != "") {
+                            const divWrapper = document.createElement("div");
+                            divWrapper.className = "custom_checkbox";
+
 	                        var objIn = document.createElement("INPUT");
 	                        objIn.setAttribute('type', "checkbox");
-	                        objIn.setAttribute('id', "content");
+	                        //objIn.setAttribute('id', "content");
 	                        objIn.setAttribute('name', "content");
 	                        objIn.setAttribute('addr', keyWord);
-	                        msg.appendChild(objIn);
+	                        
+	                        const label = document.createElement("label");
+                            label.setAttribute("for", uniqueId);
+                            label.innerHTML = `"&nbsp;<spring:message code='ezEmail.t344' /> ${keyWord} <spring:message code='ezEmail.t345' />"`;
+
+                            divWrapper.appendChild(objIn);
+                            divWrapper.appendChild(label);
+                            const objBr = document.createElement("br");
+
+                            msg.appendChild(divWrapper);
+                            msg.appendChild(objBr);
+
+	                        /*msg.appendChild(objIn);
 	                        objIn.setAttribute('checked', true);
 	                        objIn.insertAdjacentText('afterEnd', "\"" + '<spring:message code="ezEmail.t344" /> ' + keyWord + '<spring:message code="ezEmail.t345" />');
 	                        var objBr = document.createElement("BR");
-	                        msg.appendChild(objBr);
+	                        msg.appendChild(objBr);*/
 	                    }
 	                }
 	            }
