@@ -811,7 +811,7 @@
 						</c:forEach>
 					</c:if>
 					<c:if test="${empty gatherList}">
-					    <li><spring:message code='ezSchedule.kyjGs001'/></<li>
+					    <li style="cursor: default;"><spring:message code='ezSchedule.kyjGs001'/></<li>
 					</c:if>
 				</ul>
 				<h2 class="off">
