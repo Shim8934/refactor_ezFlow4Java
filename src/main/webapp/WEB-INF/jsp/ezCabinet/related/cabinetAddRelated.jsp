@@ -601,7 +601,7 @@
 					var listAttach      = attachDivElmt.children;
 					if (listAttach && listAttach.length > 0) {
 						for (var i = 0, len = listAttach.length; i < len; i++) {
-							var inputElmt = listAttach[i].firstElementChild;
+							var inputElmt = listAttach[i].firstElementChild.firstElementChild;
 							var filePath  = javaURLDecode(inputElmt.getAttribute("filepath")).replace(/\+/g, " ");
 							var fileName  = javaURLDecode(inputElmt.getAttribute("filename")).replace(/\+/g, " ");
 							
