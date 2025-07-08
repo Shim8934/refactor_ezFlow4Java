@@ -1003,7 +1003,6 @@ function btnAprLineSearchDept_onClick_Complete2(rgParams) {
 function event_getAprLineDeptFullTree() {
     if (g_xmlHTTP != null && g_xmlHTTP.readyState == 4) {
         if (g_xmlHTTP.status == 200) {
-            debugger;
         	document.getElementById('TreeView').innerHTML = "";
         	var treeView = new TreeView();
         	treeView.SetID("FromTreeView");
