@@ -2946,46 +2946,46 @@
               <isNotEmpty property="v_ORDEROPTION">
                   ORDER BY
                   <isEqual property="v_ORDEROPTION" compareValue="APRMEMBERSN">
-                      TBL_APRLINEINFO.APRMEMBERSN
+                      TBL_ENDAPRLINEINFO.APRMEMBERSN
                   </isEqual>
                   <isEqual property="v_ORDEROPTION" compareValue="APRMEMBERSN desc">
-                      TBL_APRLINEINFO.APRMEMBERSN desc
+                      TBL_ENDAPRLINEINFO.APRMEMBERSN desc
                   </isEqual>
                   <isEqual property="v_ORDEROPTION" compareValue="APRMEMBERNAME">
-                      TBL_APRLINEINFO.APRMEMBERNAME
+                      TBL_ENDAPRLINEINFO.APRMEMBERNAME
                   </isEqual>
                   <isEqual property="v_ORDEROPTION" compareValue="APRMEMBERNAME desc">
-                      TBL_APRLINEINFO.APRMEMBERNAME desc
+                      TBL_ENDAPRLINEINFO.APRMEMBERNAME desc
                   </isEqual>
                   <isEqual property="v_ORDEROPTION" compareValue="APRMEMBERJOBTITLE">
                       TBL_APRLINEINFO.APRMEMBERJOBTITLE
                   </isEqual>
                   <isEqual property="v_ORDEROPTION" compareValue="APRMEMBERJOBTITLE desc">
-                      TBL_APRLINEINFO.APRMEMBERJOBTITLE desc
+                      TBL_ENDAPRLINEINFO.APRMEMBERJOBTITLE desc
                   </isEqual>
                   <isEqual property="v_ORDEROPTION" compareValue="APRMEMBERDEPTNAME">
-                      TBL_APRLINEINFO.APRMEMBERDEPTNAME
+                      TBL_ENDAPRLINEINFO.APRMEMBERDEPTNAME
                   </isEqual>
                   <isEqual property="v_ORDEROPTION" compareValue="APRMEMBERDEPTNAME desc">
-                      TBL_APRLINEINFO.APRMEMBERDEPTNAME desc
+                      TBL_ENDAPRLINEINFO.APRMEMBERDEPTNAME desc
                   </isEqual>
                   <isEqual property="v_ORDEROPTION" compareValue="APRTYPE">
-                      TBL_APRLINEINFO.APRTYPE, TBL_ENDAPRLINEINFO.APRMEMBERSN DESC
+                      TBL_ENDAPRLINEINFO.APRTYPE, TBL_ENDAPRLINEINFO.APRMEMBERSN DESC
                   </isEqual>
                   <isEqual property="v_ORDEROPTION" compareValue="APRTYPE desc">
-                      TBL_APRLINEINFO.APRTYPE desc, TBL_ENDAPRLINEINFO.APRMEMBERSN DESC
+                      TBL_ENDAPRLINEINFO.APRTYPE desc, TBL_ENDAPRLINEINFO.APRMEMBERSN DESC
                   </isEqual>
                   <isEqual property="v_ORDEROPTION" compareValue="APRSTATE">
-                      TBL_APRLINEINFO.APRSTATE, TBL_ENDAPRLINEINFO.APRMEMBERSN DESC
+                      TBL_ENDAPRLINEINFO.APRSTATE, TBL_ENDAPRLINEINFO.APRMEMBERSN DESC
                   </isEqual>
                   <isEqual property="v_ORDEROPTION" compareValue="APRSTATE desc">
-                      TBL_APRLINEINFO.APRSTATE desc, TBL_ENDAPRLINEINFO.APRMEMBERSN DESC
+                      TBL_ENDAPRLINEINFO.APRSTATE desc, TBL_ENDAPRLINEINFO.APRMEMBERSN DESC
                   </isEqual>
                   <isEqual property="v_ORDEROPTION" compareValue="PROCESSDATE">
-                      TBL_APRLINEINFO.PROCESSDATE
+                      TBL_ENDAPRLINEINFO.PROCESSDATE
                   </isEqual>
                   <isEqual property="v_ORDEROPTION" compareValue="PROCESSDATE desc">
-                      TBL_APRLINEINFO.PROCESSDATE desc
+                      TBL_ENDAPRLINEINFO.PROCESSDATE desc
                   </isEqual>
               </isNotEmpty>
               <isEmpty property="v_ORDEROPTION">
