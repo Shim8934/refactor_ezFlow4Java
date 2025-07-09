@@ -3601,7 +3601,7 @@
 	    </c:if>
 	    
 	    <c:if test="${approvalFlag eq 'S' }">
-	        <div id="Cabinetinfo" style="width: 1110px; height: 597px; display: none;">
+	        <div id="Cabinetinfo" style="width: 1110px; height: 595px; display: none;">
 	            <table>
 	                <tr>
 	                    <td style="border: 0px solid red; height: 580px; width: 971px; vertical-align: top">
@@ -3843,7 +3843,7 @@
 	    </c:if>
 	    
 	    <c:if test="${approvalFlag eq 'S' }">
-	    	<div id="Docinfo" style="width: 1163px; height: 594px; display: none; padding-top:3px; padding-bottom: 30px;">
+	    	<div id="Docinfo" style="width: 1163px; height: 562px; display: none; padding-top:3px; padding-bottom: 30px;">
         		<td style="border: 0px solid red; height: 580px; width: 390px; margin-left: 5px; vertical-align: top">
 		            <h2 class="h2_dot"><spring:message code='ezApproval.t334'/></h2>
 		            <table class="content" style="margin-top:4px">
@@ -3938,7 +3938,7 @@
 	    </c:if>
 	    <c:if test="${approvalFlag eq 'S' }">
 <!-- 	    회람 -->
-	    	<div id="Circulation" style="width: 1110px; height: 597px; margin-bottom: 5px; display: none;">
+	    	<div id="Circulation" style="width: 1110px; height: 590px; margin-bottom: 5px; display: none;">
         		<table>
 			        <tr>
 			            <td style="vertical-align: top">
