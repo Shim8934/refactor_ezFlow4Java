@@ -159,12 +159,12 @@
 	function makeMainTypeList() {
 		var str = '';
 		for (key in mainType) {
-			str += '<li><div class="input_check"><input id="filter_';
+			str += '<li><div class="input_check"><div class="custom_checkbox"><input id="filter_';
 			str += key + '" type="checkbox" name="notitypefilter" maintype="y" value=';
 			str += '"' + key + '" checked="checked" onchange="totalfilterCheck()"><label for="filter_';
 			str += key + '">'; 
 			str += mainType[key];
-			str += '</label></div></li>';
+			str += '</label></div></div></li>';
 		}
 		var notiTypeElem = document.getElementById("notiType");
 		notiTypeElem.insertAdjacentHTML('beforeend', str);
