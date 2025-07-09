@@ -189,7 +189,7 @@
 		        var fileList = "";
 
 		        for (var i = 1; i < filecnt; i++) {
-		            if (document.getElementById("filelist").childNodes[i].childNodes[0].childNodes[0].checked == true) {
+		            if (document.getElementById("filelist").childNodes[i].childNodes[0].childNodes[0].childNodes[0].checked == true) {
 		                var pAttachDelSN;
 		                var pAttachDelFileName;
 		                var is_newfile;
