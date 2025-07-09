@@ -2989,7 +2989,7 @@
  		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; display: none; z-index: 5000;" id="ResizeBarPanel"></div>
 	    <div style="width: 8px; height:738px; background-color: #808080; position: absolute; z-index: 10000; display: none;" id="ResizeBarH"></div>
 	    <%-- 좌측 리스트 영역 --%>
-	    <span id="MailListRayer" style="border: 0px solid blue; vertical-align: top; overflow: hidden; display: inline-block;">
+	    <span id="MailListRayer" style="width:100%; border: 0px solid blue; vertical-align: top; overflow: hidden; display: inline-block;">
 	    <div id="divList" class="div_scroll" style="width: 100%; height: 480px; overflow: AUTO; margin-bottom:10px;">
 	        <div id="lvtDoclist"></div>
 	    </div>
