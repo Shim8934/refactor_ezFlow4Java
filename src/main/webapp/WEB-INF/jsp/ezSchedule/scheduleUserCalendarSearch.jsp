@@ -534,51 +534,87 @@
                         var chk_eachVal1 = $(this).val();
                         var chk_type=$(this).data("schedule-type")
 
-                        $('.td_list td[ownerid = "'+chk_eachVal1+'"][scheduletype = "'+chk_type+'"]').each(function(index, value){
-                            $(value).addClass('chk_noneDisplay');
-                        });
+                        if (chk_type == "10") {
+                            $('.td_list td[scheduletype = "'+chk_type+'"]').each(function(index, value){
+                                $(value).addClass('chk_noneDisplay');
+                            });
+                        } else {
+                            $('.td_list td[ownerid = "'+chk_eachVal1+'"][scheduletype = "'+chk_type+'"]').each(function(index, value){
+                                $(value).addClass('chk_noneDisplay');
+                            });
+                        }
                     });
                     $("input[name=chk_schedule]:checked").each(function(index) {
                         var test = $(this).val();
                         var chk_type = $(this).data("schedule-type");
 
-                        $('.td_list td[ownerid = "'+test+'"][scheduletype = "'+chk_type+'"]').each(function(index, value){
-                            $(value).removeClass('chk_noneDisplay');
-                        });
+                        if (chk_type == "10") {
+                            $('.td_list td[scheduletype = "' + chk_type + '"]').each(function (index, value) {
+                                $(value).removeClass('chk_noneDisplay');
+                            });
+                        } else {
+                            $('.td_list td[ownerid = "' + test + '"][scheduletype = "' + chk_type + '"]').each(function (index, value) {
+                                $(value).removeClass('chk_noneDisplay');
+                            });
+                        }
                     });
                 } else if (typeCal == 1) {
                     $("input[name=chk_schedule]").each(function(index){
                         var chk_eachVal1 = $(this).val();
                         var chk_type = $(this).data("schedule-type");
 
-                        $('div[ownerid = "'+chk_eachVal1+'"][scheduletype = "'+chk_type+'"]').each(function(index, value){
-                            $(value).addClass('chk_noneDisplay');
-                        });
+                        if (chk_type == "10") {
+                            $('div[scheduletype = "' + chk_type + '"]').each(function (index, value) {
+                                $(value).addClass('chk_noneDisplay');
+                            });
+                        } else {
+                            $('div[ownerid = "' + chk_eachVal1 + '"][scheduletype = "' + chk_type + '"]').each(function (index, value) {
+                                $(value).addClass('chk_noneDisplay');
+                            });
+                        }
                     });
                     $("input[name=chk_schedule]:checked").each(function(index) {
                         var test = $(this).val();
                         var chk_type = $(this).data("schedule-type");
 
-                        $('div[ownerid = "'+test+'"][scheduletype = "'+chk_type+'"]').each(function(index, value){
-                            $(value).removeClass('chk_noneDisplay');
-                        });
+                        if (chk_type == "10") {
+                            $('div[scheduletype = "' + chk_type + '"]').each(function (index, value) {
+                                $(value).removeClass('chk_noneDisplay');
+                            });
+                        } else {
+                            $('div[ownerid = "' + test + '"][scheduletype = "' + chk_type + '"]').each(function (index, value) {
+                                $(value).removeClass('chk_noneDisplay');
+                            });
+                        }
                     });
                 } else {
                     $("input[name=chk_schedule]").each(function(index){
                         var chk_eachVal1 = $(this).val();
                         var chk_type = $(this).data("schedule-type");
 
-                        $('div[ownerid = "'+chk_eachVal1+'"][scheduletype = "'+chk_type+'"]').each(function(index, value){
-                            $(value).addClass('chk_noneDisplay');
-                        });
+                        if (chk_type == "10") {
+                            $('div[scheduletype = "' + chk_type + '"]').each(function (index, value) {
+                                $(value).addClass('chk_noneDisplay');
+                            });
+                        } else {
+                            $('div[ownerid = "' + chk_eachVal1 + '"][scheduletype = "' + chk_type + '"]').each(function (index, value) {
+                                $(value).addClass('chk_noneDisplay');
+                            });
+                        }
                     });
                     $("input[name=chk_schedule]:checked").each(function(index) {
                         var test = $(this).val();
                         var chk_type = $(this).data("schedule-type");
 
-                        $('div[ownerid = "'+test+'"][scheduletype = "'+chk_type+'"]').each(function(index, value){
-                            $(value).removeClass('chk_noneDisplay');
-                        });
+                        if (chk_type == "10") {
+                            $('div[scheduletype = "' + chk_type + '"]').each(function (index, value) {
+                                $(value).removeClass('chk_noneDisplay');
+                            });
+                        } else {
+                            $('div[ownerid = "' + test + '"][scheduletype = "' + chk_type + '"]').each(function (index, value) {
+                                $(value).removeClass('chk_noneDisplay');
+                            });
+                        }
                     });
                 }
 

@@ -21,6 +21,7 @@
 			<c:if test="${scheduleInfo.scheduleType == 7}"><spring:message code='ezSchedule.t324' /></c:if>
 			<c:if test="${scheduleInfo.scheduleType == 8}"><spring:message code='ezSchedule.t322' /></c:if>
 			<c:if test="${scheduleInfo.scheduleType == 9}">(</c:if>
+			<c:if test="${scheduleInfo.scheduleType == 10}"><spring:message code='ezSchedule.lyj14'/>(</c:if>
 			<c:if test="${primary == '1' && scheduleInfo.ownerName != 'undefined'}"><c:out value="${scheduleInfo.ownerName}" /></c:if>
 	        <c:if test="${primary != '1' && scheduleInfo.ownerName2 != 'undefined'}"><c:out value="${scheduleInfo.ownerName2}" /></c:if> )
 		</title>

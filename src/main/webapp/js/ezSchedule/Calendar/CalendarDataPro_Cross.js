@@ -819,7 +819,7 @@ function CalMonthDataBind(oAppointment) {
 			if (oAppointment.ScheduleType == 1) {
 				var tagConf = (personalScheConfigList && Array.isArray(personalScheConfigList))
 				  				? personalScheConfigList.find(function(elem) {
-					return elem.scheduleType == 1
+					return (elem.scheduleType == 1) && (oAppointment.OwnerID == elem.relatedId)
 				}) : null;
 				
 				if (tagConf && tagConf.tagColor) {
@@ -1062,7 +1062,7 @@ function CalWeekDataBind(oAppointment, order) {
 			if (oAppointment.ScheduleType == 1) {
 				var tagConf = (personalScheConfigList && Array.isArray(personalScheConfigList))
 				  				? personalScheConfigList.find(function(elem) {
-					return elem.scheduleType == 1
+					return (elem.scheduleType == 1) && (oAppointment.OwnerID == elem.relatedId)
 				}) : null;
 				
 				if (tagConf && tagConf.tagColor) {
@@ -1558,7 +1558,7 @@ function CalDayDataBind(oAppointment, order) {
 			if (oAppointment.ScheduleType == 1) {
 				var tagConf = (personalScheConfigList && Array.isArray(personalScheConfigList))
 				  				? personalScheConfigList.find(function(elem) {
-					return elem.scheduleType == 1
+					return (elem.scheduleType == 1) && (oAppointment.OwnerID == elem.relatedId)
 				}) : null;
 				
 				if (tagConf && tagConf.tagColor) {

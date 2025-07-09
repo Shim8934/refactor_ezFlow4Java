@@ -62,7 +62,7 @@
 		    	
 		    	var selector = "div[data-schedule-type='" + scheduleType + "']";
 		    	
-		    	if (scheduleType !== 1 && scheduleType !== 4) {
+		    	if (scheduleType !== 4) {
 		    		selector += "[data-related-id='" + relatedID + "']";
 		    	}
 		    	

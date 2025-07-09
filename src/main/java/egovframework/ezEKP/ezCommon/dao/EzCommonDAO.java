@@ -3575,4 +3575,14 @@ public class EzCommonDAO extends EgovAbstractDAO {
 	         update("EzCommonDAO.addBoardNotUsedFlag");
 	     }
 	 }
+
+	// 2025-07-07 이유정 - 일정관리 > 임원일정 조회 가능 범위 설정 컨피그 추가
+	public void insertExecutiveScheduleConfig(Map<String, Object> map) {
+		String executiveScheduleConfig = (String) select("EzCommonDAO.checkExecutiveScheduleConfig", map);
+
+		if (executiveScheduleConfig == null) {
+			logger.debug("useExecSchedulePublic tenant config doesn't exist. insert data...");
+			insert("EzCommonDAO.insertExecutiveScheduleConfig", map);
+		}
+	}
 }
