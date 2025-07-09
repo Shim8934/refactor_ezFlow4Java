@@ -1535,8 +1535,7 @@
                     		success : function(text){
                     		}
                     	});
-		
-		                IsSkipDrafter = "FALSE";
+						
 		                btnSendDraftEnable = "true";
 		                if (approvalFlag == "S") {
                             if (ret[32] == "Y") {
@@ -1547,6 +1546,10 @@
                         } else {
                             GetDraftAprLineInfo(ret);
                         }
+						
+						// DraftAprLineInfo 내부를 돌면서 IsSkipDrafter 값이 바뀌므로, 결재선 정보를 전부 가져온 후 IsSkipDrafter 라인을 변경
+						// apprGDraftUI에서는 2017년에 수정된 사항
+						IsSkipDrafter = "FALSE";
 		            }
 		            
 		            if (pSuSinFlag == "Y" && typeof (ret[2]) == "string") {
