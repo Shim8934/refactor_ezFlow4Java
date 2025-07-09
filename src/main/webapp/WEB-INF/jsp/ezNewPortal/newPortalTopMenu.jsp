@@ -1895,6 +1895,7 @@
 		
 		function dimLayerControl(mode) {
 			var mainFrame = window.parent.document.getElementById("mainFrame");
+            var topFrame =  window.parent.document.getElementById("topFrame");
 			if(mode == "open") {
 				document.querySelector('body').style.background = "rgba(0,0,0,0.3)";
 	            document.querySelector('body').classList.add("dimLayerOpen");
@@ -1909,6 +1910,7 @@
 						window.parent.fixLayout();
 					}
                 }
+                topFrame.style.position = "absolute";
 			} else if (mode == "close") {
 				document.querySelector('body').style.background = "rgba(0,0,0,0)";
                 document.querySelector('body').classList.remove("dimLayerOpen");
@@ -1918,6 +1920,7 @@
                 } else {
                 	mainFrame.style.position = "relative";
                 }
+                topFrame.style.position = "";
 			}
 			
 			var userAgent = navigator.userAgent.toLowerCase();
