@@ -1010,6 +1010,9 @@ public class EzPersonalController extends EgovFileMngUtil {
 		String useBoard = ezCommonService.getTenantConfig("useBoard", tenantId);
 		String useToDo = ezCommonService.getTenantConfig("useToDo", tenantId);
 		
+		//전자설문 리뉴얼 추가
+		String useSurvey = ezCommonService.getTenantConfig("useSurvey", tenantId);
+		
 		if (useAttitude == null || useAttitude.equals("")) {
 			useAttitude = "NO";
 		}
@@ -1068,6 +1071,10 @@ public class EzPersonalController extends EgovFileMngUtil {
 		
 		if (useToDo == null || useToDo.equals("")) {
 			useToDo = "YES";
+		}
+
+		if (useSurvey == null || useSurvey.equals("")) {
+			useSurvey = "NO";
 		}
 		
 		if (useQuestion.equals("NO")) {
@@ -1129,6 +1136,10 @@ public class EzPersonalController extends EgovFileMngUtil {
 		if (useToDo.equals("NO")) {
 			menuList.removeIf(vo -> (vo.getMenuId() == 17));
 		}
+
+		if (useSurvey.equals("NO")) {
+			menuList.removeIf(vo -> (vo.getMenuId() == 19));
+		}
 		/*
 		 * moduleList에 추가해준 모듈의 이름으로 확인 
 		 */
@@ -1159,6 +1170,8 @@ public class EzPersonalController extends EgovFileMngUtil {
 				model.addAttribute("isPMSUsed", "Y");
 			} else if (menuId == 17) {
 				model.addAttribute("isTaskUsed", "Y");
+			} else if (menuId == 19) {
+				model.addAttribute("isuseSurveyUsed", "Y");
 			}
 		}
 		
