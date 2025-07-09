@@ -2484,6 +2484,8 @@ function resizableMenu(url) {
                 moreButtonWidth = remainingWidth * 0.8;
             } else if (url.indexOf("ezBoard") !== -1) {
                 moreButtonWidth = remainingWidth * 0.5;
+            } else if (url.indexOf("ezResource") !== -1) {
+                moreButtonWidth = remainingWidth * 0.7; 
             }
         } else {
             moreButtonWidth = remainingWidth * 0.6;
