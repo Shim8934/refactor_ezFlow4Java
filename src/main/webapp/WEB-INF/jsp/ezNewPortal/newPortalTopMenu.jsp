@@ -414,7 +414,7 @@
 				if ('${useTotalSearch}' === 'YES') {
 					str += '<li class="contentlayout_right"><div class="employee_search"><input type="text" placeholder="<spring:message code="main.t00029" />" id="topsearch_btn"><span class="totalSearchBtn1" onclick="toggleTopSearch()"></span><span class="totalSearchBtn2" onclick="totalSearch()"></span></div></li>' 
 				}
-				str += '	<li class="contentlayout_none" onclick="subMenuClickEvent(\'off\')">';
+				str += '	<li class="contentlayout_none topMenuBtnsOn" onclick="subMenuClickEvent(\'off\')">';
 				str += setMainMenu();
 				str += '	</li>';
 				str += '</ul>';		
@@ -2042,6 +2042,14 @@
 		
 		function toggleTopSearch() {
 			 $(".employee_search").toggleClass("active");
+			 if ($(".contentlayout_none.topMenuBtnsOn").length > 0) {
+				 $(".contentlayout_none.topMenuBtnsOn").addClass("topMenuBtnsOff");
+				 $(".contentlayout_none.topMenuBtnsOn").removeClass("topMenuBtnsOn");
+			 } else {
+				 $(".contentlayout_none.topMenuBtnsOff").addClass("topMenuBtnsOn");
+				 $(".contentlayout_none.topMenuBtnsOff").removeClass("topMenuBtnsOff");
+				 
+			 }
 		}
 
 		function offMenuAll() {

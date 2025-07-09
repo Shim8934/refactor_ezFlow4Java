@@ -2488,3 +2488,6 @@ div.orbit img{border-radius:5px;}
 .mealTable td.totalCal{border-right:none; text-align:center; padding:0 5px; color:#388CE5; font-size:14px; font-weight:500;}
 .mealTable td.aCourse{background:#F2FAEB;}
 .mealTable td.bCourse{background:#FAF3EB;}
+
+.contentlayout_none.topMenuBtnsOn {opacity: 1; transition: opacity 0.3s ease-in-out;}
+.contentlayout_none.topMenuBtnsOff {opacity: 0; transition: opacity 0.3s ease-in-out;}
