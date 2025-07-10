@@ -614,7 +614,8 @@
                             alert("<spring:message code='ezBoard.t79'/>");
                             if ("<c:out value='${adminType}'/>" == "y") {
                                 if (!!parent.parent.board_menu && !!parent.parent.board_menu.refreshLeft) {
-	            				//parent.parent.board_menu.refreshLeft();window.parent.frames.location.href = "/admin/ezBoard/boardConfig.do?boardID=" + encodeURIComponent(BoardID);
+	            					//parent.parent.board_menu.refreshLeft();
+									window.parent.frames.location.href = "/admin/ezBoard/boardConfig.do?boardID=" + encodeURIComponent(BoardID);
                                 }
                             } else {
                                 if (!!parent.board_menu && !!parent.board_menu.refreshLeft) {
