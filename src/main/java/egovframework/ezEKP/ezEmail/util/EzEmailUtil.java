@@ -1273,6 +1273,15 @@ public class EzEmailUtil {
             
             String strSize = getSizeWithUnit(size);
 		    
+            // part.getFileName 메소드가 반환하는 파일명은 인코딩된 형태인 경우도 있고
+            // 디코딩이 수행된 형태인 경우도 있다.
+            // 인코딩된 상태로 반환되는 경우 예: =?UTF-8?B?Mu2VmeuFhC56aXA=?=
+		    // 디코딩된 상태로 변환되는 경우 예: 료비_20160824 (002)_검토_dhlee.xlsx
+		    // 디코딩된 경우 디코딩 이전 인코딩 예: filename*=euc-kr''%B7%E1%BA%F1%5F20160824%20%28002%29%5F%B0%CB%C5%E4%5Fdhlee.xlsx
+			String filename = Objects.isNull(part.getFileName()) ? "" : part.getFileName();
+
+			logger.debug("filename=" + filename + ",index=" + bodyPartIndex + ",order=" + order + ",depth=" + depth);
+
             String NonAsciiFilename = null;
             String originalFilename = null;
 		    String[] headers = part.getHeader("Content-Disposition");
@@ -1280,30 +1289,31 @@ public class EzEmailUtil {
 		    if (headers != null && headers.length > 0) {
 		        String contentDisposition = headers[0];
 		        
-		        logger.debug("contentDisposition=" + contentDisposition);
+		        logger.debug("Content-Disposition=" + contentDisposition);
+				ContentDisposition cd = new ContentDisposition(contentDisposition);
+				String cdFilename = cd.getParameter("filename");
+
+				/**
+				 * 첨부파일 이름이 Content-Disposition이 아닌, Content-Type에 붙은 경우가 있음.
+				 * Disposition에서 발견되지 않으면 위에서 구한 filename을 가지도록 수정함.
+				 *
+				 * (보통) Content-Disposition: attachment;	filename="=?UTF-8?B?7ZWc6riALnR4dA==?="
+				 * (예외) Content-Type: text/plain; 		name="=?UTF-8?B?7ZWc6riALnR4dA==?="
+				 */
+				logger.debug("Content-Disposition filename=" + cdFilename);
+				cdFilename = StringUtils.defaultIfBlank(cdFilename, filename);
 		        
 		        // 표준에 의하면 filename은 US-ASCII 로만 어루어져야 하지만 그렇지 않은 비표준 메일들이 있다.
 		        // 예) contentDisposition=attachment;   filename="2016³â 2Â÷ ÀÚ»ì¿¹¹æ±³À° ÁöµµÀÚ ¾ç¼º ¾È³».hwp"
-		        if (!isPureAscii(contentDisposition)) {
-    		        ContentDisposition cd = new ContentDisposition(contentDisposition);
-    		        NonAsciiFilename = cd.getParameter("filename");
+		        if (!isPureAscii(cdFilename)) {
+    		        NonAsciiFilename = cdFilename;
 		        } else {
-                    ContentDisposition cd = new ContentDisposition(contentDisposition);
-                    originalFilename = cd.getParameter("filename");		            
+                    originalFilename = cdFilename;
 		        }
 		    }
 		    
 		    logger.debug("NonAsciiFilename=" + NonAsciiFilename);
 		    logger.debug("originalFilename=" + originalFilename);
-		    
-            // part.getFileName 메소드가 반환하는 파일명은 인코딩된 형태인 경우도 있고
-            // 디코딩이 수행된 형태인 경우도 있다.
-            // 인코딩된 상태로 반환되는 경우 예: =?UTF-8?B?Mu2VmeuFhC56aXA=?=
-		    // 디코딩된 상태로 변환되는 경우 예: 료비_20160824 (002)_검토_dhlee.xlsx
-		    // 디코딩된 경우 디코딩 이전 인코딩 예: filename*=euc-kr''%B7%E1%BA%F1%5F20160824%20%28002%29%5F%B0%CB%C5%E4%5Fdhlee.xlsx
-			String filename = Objects.isNull(part.getFileName()) ? "" : part.getFileName();
-			
-			logger.debug("filename=" + filename + ",index=" + bodyPartIndex + ",order=" + order + ",depth=" + depth);
 			
 			if (filename != null) {
 				// long filename이 줄바꿈없이 인코딩 경우가 있어 추가함.
