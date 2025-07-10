@@ -1417,6 +1417,7 @@ function check_presence2() {
         // try { ContOpen.focus() } catch (e) { }
         var feature = "status=no,toolbar=no,scroll=no,menubar=no,location=no,width=340px,height=460px,resizable=no";
         ezCommon_cross_dialogArguments[0] = "";
+        feature = feature + GetOpenPosition(340, 460);
         showPopup(url, 340, 460, "selUserCont", feature, RegUserCont_Complete);
     }
     

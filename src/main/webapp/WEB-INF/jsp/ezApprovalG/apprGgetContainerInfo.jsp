@@ -564,6 +564,7 @@
 		        // var result = GetOpenWindow(url, "selectContainer", 950, 440, "NO");
 				var feature = "status=no,toolbar=no,scroll=no,menubar=no,location=no,width=950px,height=440px,resizable=no";
 				ezCommon_cross_dialogArguments[0] = para;
+				feature = feature + GetOpenPosition(950, 440);
 				showPopup(url, 950, 440, "selectContainer", feature, SelCont_Complete);
 		    }
 		    
@@ -1698,7 +1699,7 @@
 		    function TotalSave_onclick_complete(pDocID, orgCompanyID) {
 		        var url = "/ezApprovalG/totalSaveFileInfo.do?docID=" + pDocID + "&type=END&orgCompanyID="+orgCompanyID;
 		        var feature = "status=no,help=no,scroll=no,edge=sunken,width=580px,height=480px";
-		        // feature = feature + GetOpenPosition(580, 480);
+		        feature = feature + GetOpenPosition(580, 480);
 		        // window.open(url, "", feature);
 				showPopup(url, 580, 480, "", feature, DivPopUpHidden);
 		    }
