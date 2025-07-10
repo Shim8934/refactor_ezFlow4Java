@@ -230,6 +230,20 @@
 						$("#keyWord").prop("disabled", true);
 						$("#chkWriterFlag").prop("disabled", true);
 	                }
+					/* 2023-11-03 민지수 - 카테고리 게시판 유형 추가 */
+					else if ($("#chkCategoryBoard").is(":checked")) {
+						document.getElementById("trAttribute").style.display = "none";
+						$("#chkNoticeBoard").prop("disabled", true);
+						$("#chkbackgroundimage").prop("disabled", true);
+						$("#chkform").prop("disabled", true);
+						$("#chkBoardLike").prop("disabled", true);
+						$("#chkApprBoard").prop("disabled", true);
+						$("#chkNotify").prop("disabled", true);
+						$("#chkMailFG_Post").prop("disabled", true);
+						$("#chkMailFG_Mod").prop("disabled", true);
+						$("#chkMailFG_Comment").prop("disabled", true);
+						$("#chkNotify").prop("disabled", true);
+					}
 					else if ($("#chkQnABoard").is(":checked")) {
 						$("#chkWriterFlag").prop("disabled", true);
 					}
@@ -653,14 +667,16 @@
 				let chkboxArr = document.getElementById("boardTypeList").querySelectorAll("input");
 				let cnt = 0;
 
-				while ((nodeBuf = chkboxArr[cnt]) != null) {
-					if (nodeBuf.id === clickedTargetID) {
-						nodeBuf.checked = true;
-					} else {
-						nodeBuf.checked = false;
+				if (typeof clickedTargetID != "undefined") {
+					while ((nodeBuf = chkboxArr[cnt]) != null) {
+						if (nodeBuf.id === clickedTargetID) {
+							nodeBuf.checked = true;
+						} else {
+							nodeBuf.checked = false;
+						}
+	
+						cnt++;
 					}
-
-					cnt++;
 				}
 	            
 	            // URL게시판 또는 홈페이지게시판 또는 카테고리 게시판이 체크된 경우, 옵션과 댓글의 사용여부를 전부 disabled 처리한다. (댓글은 '사용안함' 고정)
@@ -726,6 +742,22 @@
                     document.getElementById("chkOneLineNone").checked = true; // 댓글옵션  '사용안함' 체크
 				 	document.getElementById("chkWriterFlag").checked = false;
 	            }
+				 else if (chkCategoryBoard.checked == true) {
+					 document.getElementById("trAttribute").style.display = "none";
+					 $("#chkNoticeBoard").prop("disabled", true);
+					 $("#chkbackgroundimage").prop("disabled", true);
+					 $("#chkform").prop("disabled", true);
+					 $("#chkBoardLike").prop("disabled", true);
+					 $("#chkApprBoard").prop("disabled", true);
+					 $("#chkNotify").prop("disabled", true);
+					 $("#chkMailFG_Post").prop("disabled", true);
+					 $("#chkMailFG_Mod").prop("disabled", true);
+					 $("#chkMailFG_Comment").prop("disabled", true);
+					 $("#chkNotify").prop("disabled", true);
+					 /*chkMailFG_Post chkMailFG_Mod chkMailFG_Comment chkNotify*/
+					 $("#chkbackgroundimage").prop("checked", false);
+					 $("#chkform").prop("checked", false);
+				 }
 	             else { // URL 게시판이 아닌 경우
 					document.getElementById("txtURL").style.display = "none";
                     document.getElementById("expireTr").style.display = "";
@@ -733,6 +765,10 @@
                     document.getElementById("attachLimitTr").style.display = "";
                     document.getElementById("trAttachment").style.display = "";
                     document.getElementById("trAttribute").style.display = "";
+                    
+	            	if (chkCategoryBoard.checked == true) {
+		                $("#chkNoticeBoard").prop("disabled", true);
+	                }
                     
                     $("#chkNotify").prop("disabled", false);
                     $("#chkMailFG_Post").prop("disabled", false);
@@ -778,6 +814,8 @@
                             $("#chkBoardReplyReact").prop("disabled", false);
                         }
 					}
+					
+					$("#chkStarRating").prop("disabled", false);
 					/* 2020-05-27 홍승비 - URL 게시판이 아닌 경우, 댓글 disabled 해제 */
 					$("#chkOneLineBottom").prop("disabled", false);
 					$("#chkOneLineLayer").prop("disabled", false);
@@ -832,6 +870,17 @@
 	            	$("#chkbackgroundimage").prop("disabled", false);
 	            	$("#chkform").prop("disabled", false);
 	            }
+	            
+				/* 2025-01-31 임정은 - 일반, 포토, 썸네일, 동영상게시판인 경우에만 게시자명 선택 기능 사용 */
+				if (chkGeneralBoard.checked || chkPhotoBoard.checked || chkThumbBoard.checked || chkMovieBoard.checked) {
+					$("#chkWriterFlag").prop("disabled", false);
+					if (writerFlag == 'Y') {
+						$("#chkWriterFlag").prop("checked", true);
+					}
+				} else {
+					$("#chkWriterFlag").prop("disabled", true);
+					$("#chkWriterFlag").prop("checked", false);
+				}
 	            
 	            // 2024-10-04 전인하 - 모든 게시판구분 설정을 제거한다면 일반게시판을 체크하도록 함
 	            if (chkGeneralBoard.checked == false && chkAnonyBoard.checked == false && chkPhotoBoard.checked == false && chkThumbBoard.checked == false && 
@@ -1157,6 +1206,12 @@
 
 					case "9" : {
 						id = "fileViewerBoardChkBox";
+
+						break;
+					}
+
+					case "10" : {
+						id = "chkCategoryBoard";
 
 						break;
 					}
