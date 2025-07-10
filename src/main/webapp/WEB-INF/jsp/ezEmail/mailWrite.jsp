@@ -394,9 +394,11 @@
 			    window.setInterval("Mail_AutoSave()", pSaveInterval);
 			
 			var ua = navigator.userAgent;
+			/* 맥사파리에서 메일쓰기창이 제대로 뜨지 않는 문제가 발생해 제거함
 			if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {
 			    document.getElementById("file1").multiple = false;
 			}
+			*/
 			
 // 			if (document.getElementById("eSubject").value == "") {
 // 			    document.getElementById("MsgTo").focus();
