@@ -1070,7 +1070,8 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		 
 		int boardItemCount = ezBoardService.getBrdTotalItemCount(myFavoriteVO);
 		
-		if (boardItemCount > 0 && !beforeBoardProperty.getGuBun().equals(boardPropertyVO.getGuBun())) {
+		// url 게시판과 
+		if (boardItemCount > 0 && (!beforeBoardProperty.getGuBun().equals(boardPropertyVO.getGuBun()) || !beforeBoardProperty.getUrl().equals(boardPropertyVO.getUrl()))) {
 			return "nonEmptyBoard";
 		}
 		
