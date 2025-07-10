@@ -1284,7 +1284,7 @@ public class EzEmailServiceImpl extends EgovAbstractServiceImpl implements EzEma
 		
 		String inputParams = "";
 		for (int i=0; i<addressList.size(); i++) {
-			if (innerDomain.contains(addressList.get(i).split("@")[1])) {
+			if (addressList.get(i).contains("@") && innerDomain.contains(addressList.get(i).split("@")[1])) {
 				if (i == 0) {
 					inputParams += "address=" + URLEncoder.encode(addressList.get(i), "UTF-8");
 				} else {
