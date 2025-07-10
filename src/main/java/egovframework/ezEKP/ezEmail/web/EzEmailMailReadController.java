@@ -392,7 +392,15 @@ public class EzEmailMailReadController extends EzFileMngUtil {
 							String item = strArr[i].trim();
 							String[] tokens = item.split(" <");
 							String name = tokens[0]; 		
-							name = commonUtil.trimDoubleQuotes(name);								
+							name = commonUtil.trimDoubleQuotes(name);
+
+							// @가 포함되어 있지 않고 =?UTF-8?B? 와 같이 인코딩된 형태이면 디코딩을 시도한다.
+							if (!name.contains("@") && name.startsWith("=?")) {
+								logger.debug("decoding name={}", name);
+
+								name = MimeUtility.decodeText(name);
+							}
+							
 							String address = ""; 
 									
 							if (tokens.length > 1) {
@@ -401,6 +409,13 @@ public class EzEmailMailReadController extends EzFileMngUtil {
 							
 							if (address.endsWith(">")) {
 								address = address.substring(0, address.length() - 1);
+							}
+
+							// @가 포함되어 있지 않고 =?UTF-8?B? 와 같이 인코딩된 형태이면 디코딩을 시도한다.
+							if (!address.contains("@") && address.startsWith("=?")) {
+								logger.debug("decoding address={}", name);
+
+								address = MimeUtility.decodeText(address);
 							}
 							
 							logger.debug("TO=" + name + " " + address);
@@ -428,7 +443,15 @@ public class EzEmailMailReadController extends EzFileMngUtil {
 							String item = strArr[i].trim();
 							String[] tokens = item.split(" <");
 							String name = tokens[0]; 		
-							name = commonUtil.trimDoubleQuotes(name);								
+							name = commonUtil.trimDoubleQuotes(name);
+
+							// @가 포함되어 있지 않고 =?UTF-8?B? 와 같이 인코딩된 형태이면 디코딩을 시도한다.
+							if (!name.contains("@") && name.startsWith("=?")) {
+								logger.debug("decoding name={}", name);
+
+								name = MimeUtility.decodeText(name);
+							}
+							
 							String address = ""; 
 							
 							if (tokens.length > 1) {
@@ -437,6 +460,13 @@ public class EzEmailMailReadController extends EzFileMngUtil {
 							
 							if (address.endsWith(">")) {
 								address = address.substring(0, address.length() - 1);
+							}
+
+							// @가 포함되어 있지 않고 =?UTF-8?B? 와 같이 인코딩된 형태이면 디코딩을 시도한다.
+							if (!address.contains("@") && address.startsWith("=?")) {
+								logger.debug("decoding address={}", name);
+
+								address = MimeUtility.decodeText(address);
 							}
 							
 							logger.debug("CC=" + name + " " + address);
@@ -464,7 +494,15 @@ public class EzEmailMailReadController extends EzFileMngUtil {
 							String item = strArr[i].trim();
 							String[] tokens = item.split(" <");
 							String name = tokens[0]; 		
-							name = commonUtil.trimDoubleQuotes(name);								
+							name = commonUtil.trimDoubleQuotes(name);
+
+							// @가 포함되어 있지 않고 =?UTF-8?B? 와 같이 인코딩된 형태이면 디코딩을 시도한다.
+							if (!name.contains("@") && name.startsWith("=?")) {
+								logger.debug("decoding name={}", name);
+
+								name = MimeUtility.decodeText(name);
+							}
+							
 							String address = ""; 
 							
 							if (tokens.length > 1) {
@@ -473,6 +511,13 @@ public class EzEmailMailReadController extends EzFileMngUtil {
 							
 							if (address.endsWith(">")) {
 								address = address.substring(0, address.length() - 1);
+							}
+
+							// @가 포함되어 있지 않고 =?UTF-8?B? 와 같이 인코딩된 형태이면 디코딩을 시도한다.
+							if (!address.contains("@") && address.startsWith("=?")) {
+								logger.debug("decoding address={}", name);
+
+								address = MimeUtility.decodeText(address);
 							}
 							
 							logger.debug("BCC=" + name + " " + address);
@@ -3287,6 +3332,13 @@ public class EzEmailMailReadController extends EzFileMngUtil {
 						// Undisclosed recipients:; <Undisclosed recipients:;>|||| 와 같은 경우가 있어
 						// :; 를 제거하도록 함.
 						toStr = recipientsArr[0].replace(":;", "").replace("; ", ";");
+
+						// @가 포함되어 있지 않고 =?UTF-8?B? 와 같이 인코딩된 형태이면 디코딩을 시도한다.
+						if (!toStr.contains("@") && toStr.startsWith("=?")) {
+							logger.debug("decoding toStr={}", toStr);
+
+							toStr = MimeUtility.decodeText(toStr);
+						}
 					}
 					
 					if (recipientsArr.length > 1 && !recipientsArr[1].isEmpty()) {

@@ -1278,6 +1278,11 @@ function event_xmlhttp_mailPreview_Complete() {
                     var pReceiver_Name = TrimText(pReceiver_.substring(0, Pos1));
                     var pReceiver_Address = TrimText(pReceiver_.substring(Pos1 + 1, Pos2));
                     
+                    if (pReceiver_Address.indexOf("@") == -1) {
+                        // @가 없으면 정상적인 이메일 주소가 아니므로 이름하고 동일한 값을 표시한다.
+                        pReceiver_Address = pReceiver_Name;
+                    }
+                    
                     if (Cnt == 0) {
                         pReceiverHtml = "<span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='#666'  style='cursor:pointer' title='" + ConvertStringForHTML(pReceiver_Address) + "' onclick='show_personinfo(\"" + pReceiver_Address + "\")'>\"" + pReceiver_Name  + " &lt;" + pReceiver_Address + "&gt;" + "\"</span>";
                         

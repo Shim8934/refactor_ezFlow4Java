@@ -528,6 +528,13 @@ public class EzEmailMailListController {
 									String[] tokens = toStr.split(" <");
 									String toName = tokens[0];
 
+									// @가 포함되어 있지 않고 =?UTF-8?B? 와 같이 인코딩된 형태이면 디코딩을 시도한다.
+									if (!toName.contains("@") && toName.startsWith("=?")) {
+										logger.debug("decoding toName={}", toName);
+
+										toName = MimeUtility.decodeText(toName);
+									}
+									
 									msgtoBuilder.append(toStr);
 									msgtoBuilder.append(",");
 
@@ -1269,7 +1276,14 @@ public class EzEmailMailListController {
 								for (String toStr : toStrArr) {
 									toStr = toStr.trim();
 									String[] tokens = toStr.split(" <");
-									String toName = tokens[0]; 
+									String toName = tokens[0];
+
+									// @가 포함되어 있지 않고 =?UTF-8?B? 와 같이 인코딩된 형태이면 디코딩을 시도한다.
+									if (!toName.contains("@") && toName.startsWith("=?")) {
+										logger.debug("decoding toName={}", toName);
+
+										toName = MimeUtility.decodeText(toName);
+									}
 									
 									msgtoBuilder.append(toStr);
 									msgtoBuilder.append(",");
