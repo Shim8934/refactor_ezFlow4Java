@@ -2691,8 +2691,8 @@ function hideAlert(callback) {
  */
 function showAlertUI(msg, callback) {
     // 기존 alert 레이어팝업의 크기보다 부모 레이어팝업이 작은 경우 -20 처리
-    var width = 330;
-    var height = 205;
+    var width = 340;
+    var height = 200;
     if (width > document.documentElement.clientWidth) {
         width = document.documentElement.clientWidth - 20;
     }
