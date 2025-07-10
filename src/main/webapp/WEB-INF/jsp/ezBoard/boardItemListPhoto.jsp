@@ -362,7 +362,8 @@
 							 searchQuery : SQLPARADATA,
 							 type 		 : boardViewType,
 							 likeFlag 	 : likeFlag,
-							 disLikeFlag : disLikeFlag
+							 disLikeFlag : disLikeFlag,
+							 listShowType : usrListShowType
 							},
 					success: function(xml){
 						getBoardList_after(loadXMLString(xml));
@@ -1357,6 +1358,22 @@
                }
     	    }
 	    	
+	    	var usrListShowType = "";
+            function listShow(type) {
+                var general	= document.getElementById("listShowGeneral");
+                var expand = document.getElementById("listShowExpand");
+                
+                if (type == "G") {
+                    general.className = "icon16 icon16_onlist";
+                    expand.className = "icon16 icon16_clip";
+                } else {
+                    general.className = "icon16 icon16_list";
+                    expand.className = "icon16 icon16_onclip";
+                }
+                
+                usrListShowType = type;
+                getBoardList();
+            }
 		</script>
 	</head>
 	<c:choose>
@@ -1443,7 +1460,19 @@
 					<img src="/images/kr/cm/btn_leftframe.gif" width="22" height="20" class="btnimg" id="PreViewleft" onclick="PreviewRayerChange('H')">
 					<img src="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="maillistoptiondiv" onclick="MailOptionView(this);" />
 				</li> -->
-		        <div id="right" class="sub_frameIcon" style="float:right">	
+		        <div id="right" class="sub_frameIcon" style="float:right">
+                    <div class="sub_frameIconUL00">
+                        <p class="frameIconLI">
+                            <span <c:if test="${admlistShowType == 'G'}">class="icon16 icon16_onlist"</c:if>
+                                  <c:if test="${admlistShowType == 'E'}">class="icon16 icon16_list"</c:if>
+                                  id="listShowGeneral" onclick="listShow('G')"></span>
+                        </p>
+                        <p class="frameIconLI">
+                            <span <c:if test="${admlistShowType == 'G'}">class="icon16 icon16_clip"</c:if>
+                                  <c:if test="${admlistShowType == 'E'}">class="icon16 icon16_onclip"</c:if>
+                                  id="listShowExpand" onclick="listShow('E')"></span>
+                        </p>
+                    </div>	
 					<div class="sub_frameIconUL" style="width:57px !important">
 					   	<p class="frameIconLI"><span class="icon16 btn_noframe" id="PreViewNone" onclick="PreviewRayerChange('NONE')"></span></p>
 					    <p class="frameIconLI"><span class="icon16 btn_leftframe" id="PreViewleft" onclick="PreviewRayerChange('H')"></span></p>

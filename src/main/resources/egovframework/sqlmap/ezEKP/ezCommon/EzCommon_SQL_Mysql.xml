@@ -8043,4 +8043,38 @@
 			ADD
 				URLCOPYFLAG CHAR(1) DEFAULT 'N' NOT NULL
 	</statement>
+
+	<select id="EzCommonDAO.checkAddBoardUsrListShowType" resultClass="String">
+		<![CDATA[
+		SELECT
+			USRLISTSHOWTYPE
+		FROM
+			TBL_BOARD_CONFIGURATION
+				LIMIT 1
+		]]>
+	</select>
+
+	<statement id="EzCommonDAO.addBoardUsrListShowType">
+		ALTER TABLE
+			TBL_BOARD_CONFIGURATION
+		ADD
+			USRLISTSHOWTYPE VARCHAR(2) NOT NULL DEFAULT 'G'
+	</statement>
+
+	<select id="EzCommonDAO.checkAddBoardListShowType" resultClass="String">
+		<![CDATA[
+		SELECT
+			LISTSHOWTYPE
+		FROM
+			TBL_BOARD_BOARDINFO
+				LIMIT 1
+		]]>
+	</select>
+
+	<statement id="EzCommonDAO.addBoardListShowType">
+		ALTER TABLE
+			TBL_BOARD_BOARDINFO
+		ADD
+			LISTSHOWTYPE VARCHAR(2) NOT NULL DEFAULT 'U'
+	</statement>
 </sqlMap>

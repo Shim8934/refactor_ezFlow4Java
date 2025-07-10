@@ -5211,7 +5211,8 @@
 			 	PREVIEWHLIST ,
               	PREVIEWHCONTENT,
 				ALLNEWBOARDLISTDATE,
-				CONTENTSIZE
+				CONTENTSIZE,
+				USRLISTSHOWTYPE
         	FROM 
         	    TBL_BOARD_CONFIGURATION 
        		WHERE  
@@ -6211,7 +6212,8 @@
             	PREVIEWHLIST = #previewHList#,
             	PREVIEWHCONTENT = #previewHContent#,
 				ALLNEWBOARDLISTDATE = #allNewBoardListDate#,
-				CONTENTSIZE = #contentSize#
+				CONTENTSIZE = #contentSize#,
+				USRLISTSHOWTYPE = #usrListShowType#
             WHERE  
             	TENANT_ID = #tenantID#
             AND
@@ -6221,10 +6223,10 @@
 	<insert id="EzBoardDAO.setBoardList_Config_I" parameterClass="BoardConfigVO">
 		<![CDATA[
 			INSERT INTO TBL_Board_Configuration ( 
-				USERID,   LISTCOUNT,   PREVIEW,   PREVIEWWLIST,   PREVIEWWCONTENT,   PREVIEWHLIST,   PREVIEWHCONTENT, ALLNEWBOARDLISTDATE, CONTENTSIZE, TENANT_ID
+				USERID,   LISTCOUNT,   PREVIEW,   PREVIEWWLIST,   PREVIEWWCONTENT,   PREVIEWHLIST,   PREVIEWHCONTENT, ALLNEWBOARDLISTDATE, CONTENTSIZE, USRLISTSHOWTYPE, TENANT_ID
 			)
           	VALUES ( 
-          		#userId#, #listCount#, #preview#, #previewWList#, #previewWContent#, #previewHList#, #previewHContent#, #allNewBoardListDate#, #contentSize#, #tenantID# 
+          		#userId#, #listCount#, #preview#, #previewWList#, #previewWContent#, #previewHList#, #previewHContent#, #allNewBoardListDate#, #contentSize#, #usrListShowType#, #tenantID# 
           	)
 		]]>
 	</insert>

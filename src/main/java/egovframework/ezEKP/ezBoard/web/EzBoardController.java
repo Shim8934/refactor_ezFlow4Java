@@ -1070,6 +1070,14 @@ public class EzBoardController extends EgovFileMngUtil{
 		if (isMyBoardExist > 0) {
 			isMyBoard = "YES";
 		}
+
+		BoardConfigVO boardConfig = ezBoardService.getBoardList_Config(userInfo.getId(), userInfo.getTenantId()); // 게시글 보기방식 (M:화면전환/P:팝업)
+		String boardItemView = "";
+//		if (boardConfig != null) {
+//			boardItemView = boardConfig.getBoardItemView();
+//		} else {
+//			boardItemView = "P";
+//		}
 		
 		//확장컬럼 데이터
 		List<BoardAttributeVO> boardAttr = new ArrayList<BoardAttributeVO>();
@@ -1096,6 +1104,14 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		String endDateOption = checkEndDateConfig(boardInfo, userInfo);
 
+		// 관리자가 설정한 리스트보기방식 ('U:사용자설정'일 경우 사용자설정값 넣어줌)
+		String listShowType = "";
+		if ("U".equals(boardInfo.getListShowType())) {
+			listShowType = boardConfig != null ? boardConfig.getUsrListShowType() : "G";
+		} else {
+			listShowType = boardInfo.getListShowType();
+		}
+
 		model.addAttribute("boardInfo", boardInfo);
 		model.addAttribute("boardName", commonUtil.cleanValue(pBoardName).replace("\\", "&#92;"));
 		model.addAttribute("boardID", commonUtil.stripScriptTags(pBoardID));
@@ -1109,6 +1125,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("endDateOption", endDateOption);
 		model.addAttribute("useKeyword", boardProperty.getUseKeyword());
 		model.addAttribute("MyBoardScrapFlag", ezCommonService.getTenantConfig("MyBoardScrapFlag", userInfo.getTenantId()));
+		model.addAttribute("admlistShowType", listShowType);
 
 		logger.debug("boardItemList ended");
 		//logger.debug("requestURL : " + requestURL);
@@ -1340,6 +1357,7 @@ public class EzBoardController extends EgovFileMngUtil{
 			boardInfo.setWriterFlag(strProp.getWriterFlag());
 			boardInfo.setStarRatingFlag(strProp.getStarRatingFlag()); // 별점 사용여부 플래그 추가
 			boardInfo.setVersionManage(strProp.getVersionManage()); // 버전관리 사용여부 플래그 추가
+			boardInfo.setListShowType(strProp.getListShowType()); // 리스트보기 형식 추가
             boardInfo.setUrlCopyFlag(strProp.getUrlCopyFlag()); // 주소복사 사용여부 플래그 추가
 
 			/* 2018-10-17 홍승비 - 게시판의 그룹게시판이 구분값 99인지 확인하여 게시판 boardInfo에 isAllGroupBoard값 셋팅 */
@@ -1423,6 +1441,7 @@ public class EzBoardController extends EgovFileMngUtil{
     	String mode = boardVO.getMode();
     	String type = "1";
     	String resultXML = "";
+		String usrlistShowType = boardVO.getListShowType() != null ? boardVO.getListShowType() : ""; // 사용자가 선택한 리스트보기방식
     	
     	if (boardVO.getType() != null && !boardVO.getType().equals("")) {
     		type = boardVO.getType();
@@ -1443,6 +1462,17 @@ public class EzBoardController extends EgovFileMngUtil{
     	String tempOrderCell = boardVO.getOrderCell() != null ? boardVO.getOrderCell() : "";
     	boardVO.setOrderOption(tempOrderOption);
     	boardVO.setOrderCell(tempOrderCell);
+
+		// 리스트보기방식 (G:기본/E:확장/U:사용자설정-'U:사용자설정'일 경우 사용자설정값 넣어줌)
+		if ("".equals(usrlistShowType) && boardInfo.getListShowType() != null) {
+			if ("U".equals(boardInfo.getListShowType())) {
+				BoardConfigVO boardConfig = ezBoardService.getBoardList_Config(userInfo.getId(), userInfo.getTenantId());
+				String listShowType = boardConfig != null ? boardConfig.getUsrListShowType() : "G";
+				boardVO.setListShowType(listShowType);
+			} else {
+				boardVO.setListShowType(boardInfo.getListShowType());
+			}
+		}
     	
     	if (boardType.equals("4") || boardType.equals("7")) { // 썸네일, 동영상
     		resultXML = getThumbList(boardVO, userInfo, type);
@@ -2414,8 +2444,33 @@ public class EzBoardController extends EgovFileMngUtil{
 					resultXML.append("<WRITEDATE>" + boardListItem.get(j).get("WRITEDATE") + "</WRITEDATE>");
 					resultXML.append("<ATTACHMENTS>" + boardListItem.get(j).get("ATTACHMENTS") + "</ATTACHMENTS>");
                     resultXML.append("<PUBLICFLAG>").append(boardListItem.get(j).get("PUBLICFLAG")).append("</PUBLICFLAG>");
-					resultXML.append("<EXT>" + commonUtil.cleanValue((String) boardListItem.get(j).get("EXT")) + "</EXT>");
-					resultXML.append("<FILEPATH>" + commonUtil.cleanValue((String) boardListItem.get(j).get("FILEPATH")) + "</FILEPATH>");
+					if ("E".equals(boardVO.getListShowType())) { // 리스트보기방식이 확장형(E)일 경우
+						List<BoardAttachVO> boardAttachVOList = ezBoardService.brdGetItemAttachmentInfo((String) boardListItem.get(j).get("ITEMID"), userInfo.getTenantId());
+
+						if (!boardAttachVOList.isEmpty()) {
+							String fileNameVal = "";
+							String filePathVal = "";
+							String fileSizeVal = "";
+							for (int k = 0; k < boardAttachVOList.size(); k++) {
+								fileNameVal += commonUtil.cleanValue(boardAttachVOList.get(k).getFileName());
+								filePathVal += commonUtil.cleanValue(boardAttachVOList.get(k).getFilePath());
+								fileSizeVal += commonUtil.getSizeWithUnit(Double.parseDouble(boardAttachVOList.get(k).getFileSize()));
+
+								if (k != boardAttachVOList.size() - 1) {
+									fileNameVal += "|";
+									filePathVal += "|";
+									fileSizeVal += "|";
+								}
+							}
+							resultXML.append("<EXT>" + fileNameVal + "</EXT>");
+							resultXML.append("<FILEPATH>" + filePathVal + "</FILEPATH>");
+							resultXML.append("<FILESIZE>" + fileSizeVal + "</FILESIZE>");
+						}
+					} else {
+						resultXML.append("<EXT>" + commonUtil.cleanValue((String) boardListItem.get(j).get("EXT")) + "</EXT>");
+						resultXML.append("<FILEPATH>" + commonUtil.cleanValue((String) boardListItem.get(j).get("FILEPATH")) + "</FILEPATH>");
+					}
+					resultXML.append("<LISTSHOWTYPE>" + boardVO.getListShowType() + "</LISTSHOWTYPE>");
 				}
 				
 				resultXML.append("</CELL>");
@@ -2630,6 +2685,8 @@ public class EzBoardController extends EgovFileMngUtil{
 		userInfo = commonUtil.userInfo(loginCookie);
 		
 		String mode = boardVO.getMode();
+		String usrlistShowType = boardVO.getListShowType() != null ? boardVO.getListShowType() : "";
+		
 		BoardPropertyVO boardInfo = getBoardInfo(boardVO.getBoardId(), userInfo);
 		
 		boardVO.setSubFlag("N");
@@ -2714,6 +2771,21 @@ public class EzBoardController extends EgovFileMngUtil{
 		}
 		
 		String boardXML = "";
+
+		// 리스트보기방식 (G:기본/E:확장/U:사용자설정-'U:사용자설정'일 경우 사용자설정값 넣어줌)
+		if ("".equals(usrlistShowType)) {
+			if (boardInfo.getListShowType() == null) {
+				boardVO.setListShowType("G");
+			} else {
+				if ("U".equals(boardInfo.getListShowType())) {
+					BoardConfigVO boardConfig = ezBoardService.getBoardList_Config(userInfo.getId(), userInfo.getTenantId());
+					String listShowType = boardConfig != null ? boardConfig.getUsrListShowType() : "G";
+					boardVO.setListShowType(listShowType);
+				} else {
+					boardVO.setListShowType(boardInfo.getListShowType());
+				}
+			}
+		}
 		
 		if (boardVO.getBoardType().equals("4") || boardVO.getBoardType().equals("7")) { // 썸네일 게시판, 동영상 게시판
 			boardXML = getSearchThumbListXML(userInfo, boardVO, searchMap);
@@ -3285,11 +3357,37 @@ public class EzBoardController extends EgovFileMngUtil{
 					} else {
 						resultXML.append("<DATA12>" + commonUtil.cleanValue((String)boardSearchList.get(j).get("MAINCONTENT")) + "</DATA12>");
 					}
-						
-					resultXML.append("<EXT>" + commonUtil.cleanValue(String.valueOf(boardSearchList.get(j).get("EXT"))) + "</EXT>");
-					resultXML.append("<FILEPATH>" + commonUtil.cleanValue(String.valueOf(boardSearchList.get(j).get("FILEPATH"))) + "</FILEPATH>");
+
+
+					if ("E".equals(boardVO.getListShowType())) { // 리스트보기방식이 확장형(E)일 경우
+						List<BoardAttachVO> boardAttachVOList = ezBoardService.brdGetItemAttachmentInfo((String) boardSearchList.get(j).get("ITEMID"), userInfo.getTenantId());
+
+						if (!boardAttachVOList.isEmpty()) {
+							String fileNameVal = "";
+							String filePathVal = "";
+							String fileSizeVal = "";
+							for (int k = 0; k < boardAttachVOList.size(); k++) {
+								fileNameVal += commonUtil.cleanValue(boardAttachVOList.get(k).getFileName());
+								filePathVal += commonUtil.cleanValue(boardAttachVOList.get(k).getFilePath());
+								fileSizeVal += commonUtil.getSizeWithUnit(Double.parseDouble(boardAttachVOList.get(k).getFileSize()));
+
+								if (k != boardAttachVOList.size() - 1) {
+									fileNameVal += "|";
+									filePathVal += "|";
+									fileSizeVal += "|";
+								}
+							}
+							resultXML.append("<EXT>" + fileNameVal + "</EXT>");
+							resultXML.append("<FILEPATH>" + filePathVal + "</FILEPATH>");
+							resultXML.append("<FILESIZE>" + fileSizeVal + "</FILESIZE>");
+						}
+					} else {
+						resultXML.append("<EXT>" + commonUtil.cleanValue(String.valueOf(boardSearchList.get(j).get("EXT"))) + "</EXT>");
+						resultXML.append("<FILEPATH>" + commonUtil.cleanValue(String.valueOf(boardSearchList.get(j).get("FILEPATH"))) + "</FILEPATH>");
+					}
 					
 					resultXML.append("<PUBLICFLAG>" + boardSearchList.get(j).get("PUBLICFLAG") + "</PUBLICFLAG>");
+					resultXML.append("<LISTSHOWTYPE>" + boardVO.getListShowType() + "</LISTSHOWTYPE>");
 				}
 				resultXML.append("</CELL>");
 			}
@@ -3643,6 +3741,7 @@ public class EzBoardController extends EgovFileMngUtil{
 						resultXML.append("<ATTACHMENTS>" + noticeList.get(k).get("ATTACHMENTS") + "</ATTACHMENTS>");
 						resultXML.append("<GUBUN>" + noticeList.get(k).get("GUBUN") + "</GUBUN>");
                         resultXML.append("<PUBLICFLAG>").append(noticeList.get(k).get("PUBLICFLAG")).append("</PUBLICFLAG>");
+						
 						resultXML.append("<EXT>" +  commonUtil.cleanValue((String)noticeList.get(k).get("EXT"))  + "</EXT>");
 						resultXML.append("<FILEPATH>" +  commonUtil.cleanValue((String)noticeList.get(k).get("FILEPATH"))  + "</FILEPATH>");
 						resultXML.append("<ITEMREAD_FG>" + (accessCheck((String)noticeList.get(k).get("BOARDID"), (String)noticeList.get(k).get("ITEMID"),
@@ -3770,14 +3869,39 @@ public class EzBoardController extends EgovFileMngUtil{
 					resultXML.append("<WRITERDEPTNAME2>" + commonUtil.cleanValue((String)boardListItem.get(j).get("WRITERDEPTNAME2")) + "</WRITERDEPTNAME2>");
 					resultXML.append("<WRITEDATE>" + commonUtil.getDateStringInUTC((String)boardListItem.get(j).get("WRITEDATE"), userInfo.getOffset(), false) + "</WRITEDATE>");
 					resultXML.append("<ATTACHMENTS>" + boardListItem.get(j).get("ATTACHMENTS") + "</ATTACHMENTS>");
-					resultXML.append("<EXT>" + commonUtil.cleanValue((String) boardListItem.get(j).get("EXT")) + "</EXT>");
-					resultXML.append("<FILEPATH>" + commonUtil.cleanValue((String) boardListItem.get(j).get("FILEPATH")) + "</FILEPATH>");
+					if ("E".equals(boardVO.getListShowType())) { // 리스트보기방식이 확장형(E)일 경우
+						List<BoardAttachVO> boardAttachVOList = ezBoardService.brdGetItemAttachmentInfo((String) boardListItem.get(j).get("ITEMID"), userInfo.getTenantId());
+
+						if (!boardAttachVOList.isEmpty()) {
+							String fileNameVal = "";
+							String filePathVal = "";
+							String fileSizeVal = "";
+							for (int k = 0; k < boardAttachVOList.size(); k++) {
+								fileNameVal += commonUtil.cleanValue(boardAttachVOList.get(k).getFileName());
+								filePathVal += commonUtil.cleanValue(boardAttachVOList.get(k).getFilePath());
+								fileSizeVal += commonUtil.getSizeWithUnit(Double.parseDouble(boardAttachVOList.get(k).getFileSize()));
+
+								if (k != boardAttachVOList.size() - 1) {
+									fileNameVal += "|";
+									filePathVal += "|";
+									fileSizeVal += "|";
+								}
+							}
+							resultXML.append("<EXT>" + fileNameVal + "</EXT>");
+							resultXML.append("<FILEPATH>" + filePathVal + "</FILEPATH>");
+							resultXML.append("<FILESIZE>" + fileSizeVal + "</FILESIZE>");
+						}
+					} else {
+						resultXML.append("<EXT>" + commonUtil.cleanValue((String) boardListItem.get(j).get("EXT")) + "</EXT>");
+						resultXML.append("<FILEPATH>" + commonUtil.cleanValue((String) boardListItem.get(j).get("FILEPATH")) + "</FILEPATH>");
+					}
 					resultXML.append("<GUBUN>" + boardListItem.get(j).get("GUBUN") + "</GUBUN>");
 					resultXML.append("<PUBLICFLAG>").append(boardListItem.get(j).get("PUBLICFLAG")).append("</PUBLICFLAG>");
 					resultXML.append("<ITEMREAD_FG>" + (accessCheck((String)boardListItem.get(j).get("BOARDID"), (String)boardListItem.get(j).get("ITEMID"),
 							"GENERAL", userInfo, "") ? "Y" : "N") + "</ITEMREAD_FG>");
 					resultXML.append("<WRITERDEPTID>" + boardListItem.get(j).get("WRITERDEPTID") + "</WRITERDEPTID>");
 					resultXML.append("<WRITERNAMETYPE>" + boardListItem.get(j).get("WRITERNAMETYPE") + "</WRITERNAMETYPE>");
+					resultXML.append("<LISTSHOWTYPE>" + boardVO.getListShowType() + "</LISTSHOWTYPE>");
 				}
 				resultXML.append("</CELL>");
 			}

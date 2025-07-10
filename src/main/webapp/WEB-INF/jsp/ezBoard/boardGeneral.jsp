@@ -99,6 +99,7 @@
      			var PreviewHContent = document.getElementById("HPreUser").value;
      			var allNewBoardListDate = document.getElementById("allNewBoardListDate").value;
      			var contentSize = document.getElementById("contentSize").value;
+     			var usrListShowType = document.getElementById("usrListShowType").value;
      		
      			$.ajax({
      				url : '/ezBoard/board_generallist_save.do',
@@ -112,7 +113,8 @@
      					previewHList : PreviewHList,
      					previewHContent : PreviewHContent,
 						allNewBoardListDate : allNewBoardListDate,
-						contentSize : contentSize
+						contentSize : contentSize,
+						usrListShowType : usrListShowType
      				} ,
 	     			success : function(data, textStatus, jqXHR) {
 	     				alert('<spring:message code="ezEmail.t42" />');
@@ -285,6 +287,15 @@
 						<spring:message code="ezBoard.t158"/>
 					</td>
 				</tr>
+				<tr>
+                    <th><spring:message code="ezBoard.t102"/></th>
+                    <td>
+                        <select id="usrListShowType" name="usrListShowType" style="WIDTH: 100px">
+                            <option value='G' <c:if test="${boardListConfig.usrListShowType eq 'G'}">selected</c:if>><spring:message code = "ezBoard.lhr006" /></option>
+                            <option value='E' <c:if test="${boardListConfig.usrListShowType eq 'E'}">selected</c:if>><spring:message code = "ezBoard.lhr007" /></option>
+                        </select>
+                    </td>
+                </tr>
 				<tr>
                     <th><spring:message code="ezBoard.lhr05" /></th>
                     <td>
