@@ -68,7 +68,7 @@
 				} else {
 					if (_RowObject != null) {
 						$("input[name=myCheckbox]").prop("checked", false);
-						$("input[name=myCheckbox]").parent().parent().css("backgroundColor", "#FFFFFF");
+						$("input[name=myCheckbox]").parent().parent().parent().css("backgroundColor", "#FFFFFF");
 					}
 	
 					_RowObject = obj;
@@ -92,10 +92,10 @@
 				var num = $(obj).attr("value");
 				if ($(obj).prop("checked") != true) {
 					$(obj).prop("checked", false);
-					$(obj).parent().parent("tr[id = '" + num + "']").css("backgroundColor", "#FFFFFF");
+					$(obj).parent().parent().parent("tr[id = '" + num + "']").css("backgroundColor", "#FFFFFF");
 				} else {
 					$(obj).prop("checked", true);
-					$(obj).parent().parent("tr[id = '" + num + "']").css("backgroundColor", "#f1f8ff");
+					$(obj).parent().parent().parent("tr[id = '" + num + "']").css("backgroundColor", "#f1f8ff");
 				}
 	
 				event.stopPropagation();

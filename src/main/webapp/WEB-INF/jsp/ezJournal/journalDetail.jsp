@@ -214,7 +214,9 @@
 										<c:set var="imagePath" value="/images/file.gif" />
 										<%-- <input type="checkbox" name="fileSelect" value="${file.fileName }"> --%>
 										<!-- 		            			<img src="/images/image.png">  -->
-										<input type="checkbox" filename="${file.fileEncodeName}" filepath="${file.filePath}">
+										<div class="custom_checkbox">
+											<input type="checkbox" filename="${file.fileEncodeName}" filepath="${file.filePath}">
+										</div>
 										<c:if test="${file.fileType == 'jpg' || file.fileType == 'jpeg' || file.fileType == 'bmp' || file.fileType == 'gif' || file.fileType == 'png' || file.fileType == 'tif' || file.fileType == 'tiff'}">
 											<c:set var="imagePath" value="/images/image.png" />
 										</c:if>
