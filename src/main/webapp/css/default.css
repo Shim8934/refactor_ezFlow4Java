@@ -4356,7 +4356,7 @@ body.drag *{user-select:none !important;}
 }
 .layerpopup_slider.active{
 	min-width: 947px;
-	width:70% !important;
+	width:80% !important;
 	height:100% !important;
 	left: auto !important;
 	right:0 !important;
