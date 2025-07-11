@@ -2721,6 +2721,9 @@ function showConfirm(msg, callback) {
         if (isIframeExists()) showConfirmUI(msg, callback);
         document.body.style.overflow = "hidden";
     } else {
+        if (msg) {
+            msg = msg.replaceAll("<br>","\n");
+        }
         if (confirm(msg)) {
             callback(true);
         } else {
