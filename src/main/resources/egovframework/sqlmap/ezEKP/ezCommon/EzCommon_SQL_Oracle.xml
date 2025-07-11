@@ -8380,10 +8380,10 @@
 		)
 	</statement>
 
-	<select id="EzCommonDAO.checkCommBrdManageData1" resultClass="String">
+	<select id="EzCommonDAO.checkCommBrdManageData1" resultClass="integer">
 		<![CDATA[
 			SELECT
-				*
+				count(*)
 			from
 				tbl_comm_boardmanage
 			where
@@ -8402,10 +8402,10 @@
 			and tenant_id = 0
 	</delete>
 
-	<select id="EzCommonDAO.checkCommBrdManageData2" resultClass="String">
+	<select id="EzCommonDAO.checkCommBrdManageData2" resultClass="integer">
 		<![CDATA[
 			SELECT
-				*
+				count(*)
 			from
 				tbl_comm_boardmanage
 			where
@@ -8433,10 +8433,10 @@
 		  and tenant_id = 0
 	</update>
 
-	<select id="EzCommonDAO.checkClubUserGrade" resultClass="String">
+	<select id="EzCommonDAO.checkClubUserGrade" resultClass="integer">
 		<![CDATA[
 			SELECT
-				*
+				count(*)
 			from
 				tbl_c_clubuser
 			where
@@ -8458,7 +8458,7 @@
 		  and TENANT_ID = 0
 	</update>
 
-	<select id="EzCommonDAO.selectClubsNotInGradeList" resultClass="HashMap">
+	<select id="EzCommonDAO.selectClubsNotInGradeList" resultClass="egovframework.ezEKP.ezCommunity.vo.CommunityClubVO">
 		select
 			c.c_clubno,
 			c.companyid,

@@ -720,7 +720,8 @@ public class EzCommunityController extends EgovFileMngUtil{
         model.addAttribute("searchStart", searchStart);
         model.addAttribute("searchEnd", searchEnd);
         model.addAttribute("pPage", pPage);
-        
+        model.addAttribute("code", code);
+
 		return "ezCommunity/communitySearchBoardItem";
 	}
 	
@@ -1198,8 +1199,10 @@ public class EzCommunityController extends EgovFileMngUtil{
 		if (request.getParameter("pReservedItem") != null) {
 			pReservedItem = request.getParameter("pReservedItem");
 		}
-		
-		if (!ezCommunityService.communityConnCHK(userInfo.getId(), "", pBoardID, userInfo.getRollInfo(), 1, response, userInfo, type)) {
+
+		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, pBoardID, code);
+
+		if (!ezCommunityService.communityConnCHK(userInfo.getId(), "", pBoardID, userInfo.getRollInfo(), 1, response, userInfo, type) && boardInfo.getRead_FG().equals("false")) {
 			if (type.equals("pop")) {
 				response.setContentType("application/json; charset=UTF-8");
 				response.getWriter().write("{\"result\": false}");
@@ -1208,8 +1211,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 			}
 			return "cmm/error/egovError";
 		}
-		
-		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, pBoardID, code);
+
 		CommunityBoardItemVO item = ezCommunityService.getItemXML(pBoardID, pItemID, userInfo);
 		
 		ezCommunityService.setAsRead(userInfo, pBoardID, pItemID);		
@@ -4673,7 +4675,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("gWidth", gWidth);
 		model.addAttribute("gHeight", gHeight);
 		model.addAttribute("useCabinet", use_cabinet);
-		
+		model.addAttribute("code", code);
+
 		return "ezCommunity/communityBoardItemViewPhoto";
 	}
 	

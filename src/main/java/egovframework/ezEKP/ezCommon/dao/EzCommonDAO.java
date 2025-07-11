@@ -31,6 +31,7 @@ import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.user.login.vo.TenantServerNameVO;
 import egovframework.let.user.login.vo.TenantVO;
 import org.egovframe.rte.psl.dataaccess.EgovAbstractDAO;
+import egovframework.ezEKP.ezCommunity.vo.CommunityClubVO;
 
 @Repository("EzCommonDAO")
 public class EzCommonDAO extends EgovAbstractDAO {
@@ -3618,35 +3619,41 @@ public class EzCommonDAO extends EgovAbstractDAO {
 
 	public void delCommBrdManageData() throws Exception {
 		try {
-			select("EzCommonDAO.checkCommBrdManageData1");
-		} catch (Exception e) {
-			logger.debug("Deleting data from TBL_COMM_BOARDMANAGE...");
+			if ((int) select("EzCommonDAO.checkCommBrdManageData1") > 0) {
+				logger.debug("Deleting data from TBL_COMM_BOARDMANAGE...");
 
-			delete("EzCommonDAO.delCommBrdManageData");
+				delete("EzCommonDAO.delCommBrdManageData");
+			}
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
 		}
 	}
 
 	public void updateCommBrdManageData() throws Exception {
 		try {
-			select("EzCommonDAO.checkCommBrdManageData2");
-		} catch (Exception e) {
-			logger.debug("Updating data from TBL_COMM_BOARDMANAGE...");
+			if ((int) select("EzCommonDAO.checkCommBrdManageData2") > 0) {
+				logger.debug("Updating data from TBL_COMM_BOARDMANAGE...");
 
-			update("EzCommonDAO.updateCommBrdManageData");
+				update("EzCommonDAO.updateCommBrdManageData");
+			}
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
 		}
 	}
 
 	public void updateClubUserGrade() throws Exception {
 		try {
-			select("EzCommonDAO.checkClubUserGrade");
-		} catch (Exception e) {
-			logger.debug("Updating data from TBL_C_CLUBUSER...");
+			if ((int) select("EzCommonDAO.checkClubUserGrade") > 0) {
+				logger.debug("Updating data from TBL_C_CLUBUSER...");
 
-			update("EzCommonDAO.updateClubUserGrade");
+				update("EzCommonDAO.updateClubUserGrade");
+			}
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
 		}
 	}
 
-	public List<Map<String, Object>> selectClubsNotInGradeList() throws Exception {
-		return (List<Map<String, Object>>) list("EzCommonDAO.selectClubsNotInGradeList");
+	public List<CommunityClubVO> selectClubsNotInGradeList() throws Exception {
+		return (List<CommunityClubVO>) list("EzCommonDAO.selectClubsNotInGradeList");
 	}
 }

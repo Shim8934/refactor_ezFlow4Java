@@ -230,7 +230,7 @@
     		}
     		
     		function NewItem_onclick() {
-    			if (UserLevel == "0" || UserLevel == "9" || Write_FG != "true") {
+    			if (Write_FG != "true") {
 				    alert("<spring:message code='ezCommunity.t431' />");
 				    return;
 				}
@@ -245,7 +245,7 @@
 			}
     		 
     		function ItemRead_onclick(pItemBoardID, pItemBoardName, pItemID, pUserID, evt) {
-   				if (UserLevel == "0" || UserLevel == "9" || Read_FG != "true") {
+   				if (Read_FG != "true") {
     				alert("<spring:message code='ezCommunity.t431' />");
     				return;
     			}
@@ -293,7 +293,7 @@
     		var checkpassword_dialogArguments = new Array();
     		
     		function DeleteItem_onclick() {
-    			if (UserLevel == "0" || UserLevel == "9" || Delete_FG != "true") {
+    			if (Delete_FG != "true" && CheckOwnerShip() == false && gubun != "2") {
     				alert("<spring:message code='ezCommunity.t431' />");
     				return;
     			}
@@ -596,7 +596,7 @@
     		}
 
     		function CopyItem_onclick() {
-    			if (UserLevel == "0" || UserLevel == "9" || (BoardAdmin_FG != "true" && BoardGroupAdmin_FG != "OK" && CheckOwnerShip() == false)) {
+    			if (BoardAdmin_FG != "true" && BoardGroupAdmin_FG != "OK" && CheckOwnerShip() == false) {
     				alert("<spring:message code='ezCommunity.t431' />");
     				return;
     			}
@@ -632,7 +632,7 @@
     		}
     		
     		function SetRead_onclick() {
-    			if (UserLevel == "0" || UserLevel == "9" || Read_FG != "true") {
+    			if (Read_FG != "true") {
     				alert("<spring:message code='ezCommunity.t431' />");
     				return;
     			}
@@ -692,7 +692,7 @@
 			}
 
     		function ReservationItem_onclick() {
-    			if (UserLevel == "0" || UserLevel == "9") {
+    			if (Read_FG != "true") {
     				alert("<spring:message code='ezCommunity.t431' />");
     				return;
     			}
@@ -701,7 +701,7 @@
     		}
 
     		function search_onclick() {
-    			if (UserLevel == "0" || UserLevel == "9") {
+    			if (Read_FG != "true") {
     				alert("<spring:message code='ezCommunity.t431' />");
     				return;
     			}

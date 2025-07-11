@@ -151,6 +151,7 @@ public class CommunityClubVO {
 	String userId;
 	/** 회원목록 보기 권한 등급*/
 	String memlist_readGrade;
+	int tenant_id;
 	
 	public String getC_ClubNo() {
 		return c_ClubNo;
@@ -603,5 +604,13 @@ public class CommunityClubVO {
 
 	public void setMemlist_readGrade(String memlist_readGrade) {
 		this.memlist_readGrade = memlist_readGrade;
+	}
+
+	public int getTenant_id() {
+		return tenant_id;
+	}
+
+	public void setTenant_id(int tenant_id) {
+		this.tenant_id = tenant_id;
 	}
 }

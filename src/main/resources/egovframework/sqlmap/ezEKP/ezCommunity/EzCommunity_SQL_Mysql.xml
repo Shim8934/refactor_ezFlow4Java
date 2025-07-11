@@ -8296,8 +8296,21 @@
 						A.TENANT_ID = B.TENANT_ID
 						AND A.BOARDID = B.BOARDID
 					WHERE
-							a.ACCESSID IN (#v_PUSERID#, #v_pDeptID#, #v_pCompanyID#, 'everyone')
-							AND a.LISTVIEW_FG = 'true'
+							a.ACCESSID = 'everyone'
+							AND a.READ_FG >= (
+												SELECT
+													COALESCE((
+														SELECT
+															CAST(cu.grade AS SIGNED)
+														FROM
+															tbl_c_clubuser cu
+														WHERE
+															cu.c_id = #v_PUSERID#
+														  AND
+															cu.c_clubno = #code#
+														LIMIT 1
+													), 10) AS grade_value
+												)
 							AND B.C_CLUBNO = #code#
 			) M ON
 					M.BOARDID = A.BOARDID
@@ -8458,8 +8471,21 @@
 							A.TENANT_ID = B.TENANT_ID
 							AND A.BOARDID = B.BOARDID
 						WHERE
-								a.ACCESSID IN (#v_PUSERID#, #v_pDeptID#, #v_pCompanyID#, 'everyone')
-								AND a.LISTVIEW_FG = 'true'
+								a.ACCESSID = 'everyone'
+								AND a.READ_FG >= (
+													SELECT
+														COALESCE((
+															SELECT
+																CAST(cu.grade AS SIGNED)
+															FROM
+																tbl_c_clubuser cu
+															WHERE
+																cu.c_id = #v_PUSERID#
+															  AND
+																cu.c_clubno = #code#
+															LIMIT 1
+														), 10) AS grade_value
+												  )
 								AND B.C_CLUBNO = #code#
 				) M ON
 						M.BOARDID = A.BOARDID

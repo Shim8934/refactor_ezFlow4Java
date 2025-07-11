@@ -1027,7 +1027,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
             	cAdmin = "admin";
             }
             
-            boardInfo.setBoardGroupAdmin_FG(checkIfBoardGroupAdmin(pBoardID, userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID(), userInfo.getTenantId()));
+            // boardInfo.setBoardGroupAdmin_FG(checkIfBoardGroupAdmin(pBoardID, userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID(), userInfo.getTenantId()));
             
             if (boardInfo.getBoardGroupAdmin_FG().equals("OK")) {
             	gcAdmin = "OK";

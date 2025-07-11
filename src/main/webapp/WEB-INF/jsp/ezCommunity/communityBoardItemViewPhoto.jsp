@@ -27,7 +27,8 @@
 		    var BoardGroupAdmin_FG = "<c:out value = '${boardInfo.boardGroupAdmin_FG}' />";
 		    var OneLineReplyFlag = "<c:out value = '${ oneLineReplyFlag }' />";
 		    var gubun = "<c:out value = '${boardInfo.gubun }' />";
-		    
+            var code = "<c:out value = '${code}' />";
+
 		    window.onload = function () {
 		    	var html = "";
 		    	

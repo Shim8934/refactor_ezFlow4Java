@@ -162,7 +162,7 @@
 
 	        var checkpassword_dialogArguments = new Array();
 	        function btn_Delete_Onclick() {
-	        	if (Delete_FG != "true") {
+	        	if (Delete_FG != "true" && strWriterID != SSUserID && gubun != "2") {
 	                alert("<spring:message code='ezCommunity.t901'/>");
 				    return;
 				}
@@ -331,7 +331,7 @@
 	        }
 
 	        function btn_Modify_Onclick() {
-	            if (Write_FG != "true" && gubun != "2") {
+	            if (Write_FG != "true" && gubun != "2" && strWriterID != SSUserID) {
 	                alert("<spring:message code='ezCommunity.t939'/>");
 				    return;
 				}

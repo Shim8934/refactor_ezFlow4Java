@@ -24,6 +24,7 @@ import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezSystem.service.EzSystemAdminService;
 import egovframework.ezEKP.ezSystem.vo.CountryVO;
+import egovframework.ezEKP.ezCommunity.vo.CommunityClubVO;
 import egovframework.ezMobile.ezOption.dao.MOptionDAO;
 import egovframework.ezMobile.ezOption.vo.MOptionVO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -8708,13 +8709,13 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
         ezCommonDAO.updateCommBrdManageData(); // boardadmin_fg ~ inherit_fg 컬럼 데이터 true/false -> 등급으로 변경
         ezCommonDAO.updateClubUserGrade(); // 기존 마스터인 사용자의 등급을 1로 update
 
-        List<Map<String, Object>> commuList = ezCommonDAO.selectClubsNotInGradeList();
+        List<CommunityClubVO> commuList = ezCommonDAO.selectClubsNotInGradeList();
 
-        for (Map<String, Object> comm : commuList) {
+        for (CommunityClubVO comm : commuList) {
             Map<String, Object> map = new HashMap<String, Object>();
-            map.put("v_CODE", comm.get("c_clubno"));
-            map.put("companyID", comm.get("companyid"));
-            map.put("tenantID", comm.get("tenant_id"));
+            map.put("v_CODE", comm.getC_ClubNo());
+            map.put("companyID", comm.getCompanyID());
+            map.put("tenantID", comm.getTenant_id());
 
             ezCommunityDAO.insertClubGrade(map); // 기존 커뮤니티에 기본 등급 insert
         }

@@ -8457,8 +8457,23 @@
 							A.TENANT_ID = B.TENANT_ID
 						AND A.BOARDID = B.BOARDID
 					WHERE
-							a.ACCESSID IN (#v_PUSERID#, #v_pDeptID#, #v_pCompanyID#, 'everyone')
-							AND a.LISTVIEW_FG = 'true'
+							a.ACCESSID = 'everyone'
+							AND a.READ_FG >= (
+													SELECT
+														NVL((
+															SELECT
+																TO_NUMBER(cu.grade)
+															FROM
+																tbl_c_clubuser cu
+															WHERE
+																cu.c_id = #v_PUSERID#
+															  AND
+																cu.c_clubno = #code#
+															  and
+															    rownum <= 1
+														), 10) AS grade_value
+													from dual
+											  	  )
 							AND B.C_CLUBNO = #code#
 			) M ON
 						M.BOARDID = A.BOARDID
@@ -8614,8 +8629,23 @@
 							A.TENANT_ID = B.TENANT_ID
 						AND A.BOARDID = B.BOARDID
 					WHERE
-							a.ACCESSID IN (#v_PUSERID#, #v_pDeptID#, #v_pCompanyID#, 'everyone')
-							AND a.LISTVIEW_FG = 'true'
+							a.ACCESSID = 'everyone'
+							AND a.READ_FG >= (
+													SELECT
+														NVL((
+															SELECT
+																TO_NUMBER(cu.grade)
+															FROM
+																tbl_c_clubuser cu
+															WHERE
+																cu.c_id = #v_PUSERID#
+															  AND
+																cu.c_clubno = #code#
+															  and
+															    rownum <= 1
+														), 10) AS grade_value
+													from dual
+											  	  )
 							AND B.C_CLUBNO = #code#
 			) M ON
 						M.BOARDID = A.BOARDID
@@ -8865,14 +8895,13 @@
 
     <insert id="EzCommunityDAO.insertClubGrade" parameterClass="Map">
 		<![CDATA[
-        INSERT INTO TBL_C_GRADE
-            (c_clubno,gradecode,gradename,companyid,tenant_id)
-        VALUES
-            (#v_CODE#, '1', '마스터', #companyID#, #tenantID#),
-            (#v_CODE#, '2', '운영자', #companyID#, #tenantID#),
-            (#v_CODE#, '3', '정회원', #companyID#, #tenantID#),
-            (#v_CODE#, '4', '준회원', #companyID#, #tenantID#),
-            (#v_CODE#, '10', '손님', #companyID#, #tenantID#)
+		INSERT ALL
+    		INTO TBL_C_GRADE (c_clubno, gradecode, gradename, companyid, tenant_id) VALUES (#v_CODE#, '1', '마스터', #companyID#, #tenantID#)
+			INTO TBL_C_GRADE (c_clubno, gradecode, gradename, companyid, tenant_id) VALUES (#v_CODE#, '2', '운영자', #companyID#, #tenantID#)
+			INTO TBL_C_GRADE (c_clubno, gradecode, gradename, companyid, tenant_id) VALUES (#v_CODE#, '3', '정회원', #companyID#, #tenantID#)
+			INTO TBL_C_GRADE (c_clubno, gradecode, gradename, companyid, tenant_id) VALUES (#v_CODE#, '4', '준회원', #companyID#, #tenantID#)
+			INTO TBL_C_GRADE (c_clubno, gradecode, gradename, companyid, tenant_id) VALUES (#v_CODE#, '10', '손님', #companyID#, #tenantID#)
+		SELECT * FROM DUAL
         ]]>
 	</insert>
 </sqlMap>

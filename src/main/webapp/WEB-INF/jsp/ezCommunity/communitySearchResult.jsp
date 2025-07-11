@@ -285,11 +285,10 @@
             }
             
     		function ItemRead_onclick(pItemBoardID, pItemBoardName, pItemID, Read_FG, evt) {
-    			
-   				if (UserLevel == "0" || UserLevel == "9" || Read_FG != "true") {
-    				alert("<spring:message code='ezCommunity.t431' />");
-    				return;
-    			}
+   				<%--if (Read_FG != "true") {--%>
+    			<%--	alert("<spring:message code='ezCommunity.t431' />");--%>
+    			<%--	return;--%>
+    			<%--}--%>
    				
    				var bTarget = evt.currentTarget.parentNode;
    		         if (bTarget.childNodes[1].classList.contains("boldClass")) {
@@ -341,20 +340,20 @@
             
             function downloadBoardFile(Read_FG, downURL) {
             	
-                if (Read_FG != "true") {
-                	alert("<spring:message code='ezCommunity.t431' />");
-                    return;
-                }
+                <%--if (Read_FG != "true") {--%>
+                <%--	alert("<spring:message code='ezCommunity.t431' />");--%>
+                <%--    return;--%>
+                <%--}--%>
                 
             	window.location = downURL;
             }
             
             function selectToDownloadFiles(Read_FG, boardID, itemID) {
             	
-            	if (Read_FG != "true") {
-            		alert("<spring:message code='ezCommunity.t431' />");
-            		return;
-            	}
+            	<%--if (Read_FG != "true") {--%>
+            	<%--	alert("<spring:message code='ezCommunity.t431' />");--%>
+            	<%--	return;--%>
+            	<%--}--%>
                 
             	var url = "/ezCommunity/selectToDownloadFiles.do?itemID=" + javaURLEncode(itemID) + "&boardID=" + javaURLEncode(boardID);
                 window.open(url, "", "status=no,help=no,width=580px,height=480px" + GetOpenPosition(580, 480));
