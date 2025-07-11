@@ -4539,7 +4539,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 									for (int i = 0; i < count; i++) {
 										p = mp.getBodyPart(i);
 
-										if (p.getDisposition() == null) {
+										// message/rfc822 파트는 Content-Disposition 헤더가 없어도 첨부파일로 취급함 
+										if (p.getDisposition() == null && !p.isMimeType("message/rfc822")) {
 											nonAttachCount++;
 										} else {
 											break;
@@ -4553,7 +4554,9 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 										boolean isRemoved = false;
 
 										// 파일의 index가 nonAttachCount 만큼 뒤로 밀렸으므로 i - nonAttachCount과 비교하여 파일을 삭제한다.
-										if (p.getDisposition() != null && p.getDisposition().equalsIgnoreCase(Part.ATTACHMENT)) {
+										// message/rfc822 파트는 Content-Disposition 헤더가 없어도 첨부파일로 취급함
+										if (Part.ATTACHMENT.equalsIgnoreCase(p.getDisposition())
+											|| p.isMimeType("message/rfc822")) {
 											for (int j = 0; j < length; j++) {
 //										String mailFileName = MimeUtility.decodeText(p.getFileName());
 //										logger.debug("mailFileName : " + mailFileName + ", index i : " + (i-1));
