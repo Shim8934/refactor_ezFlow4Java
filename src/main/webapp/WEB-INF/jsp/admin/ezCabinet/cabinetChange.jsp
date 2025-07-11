@@ -9,8 +9,8 @@
 		<tr>
 			<th><spring:message code='ezCabinet.t21'/></th>
 			<th class="white">
-				<input type="radio" name="capType" id="limit" role="limit"   checked><label for="limit" style="cursor:pointer;"><spring:message code='ezCabinet.t113'/></label>
-				<input type="radio" name="capType" id="unlimit" role="unlimit"      ><label for="unlimit" style="cursor:pointer;"><spring:message code='ezCabinet.t114'/></label>
+				<div class="custom_radio"><input type="radio" name="capType" id="limit" role="limit"   checked></div><label for="limit" style="cursor:pointer;"><spring:message code='ezCabinet.t113'/></label>
+				<div class="custom_radio"><input type="radio" name="capType" id="unlimit" role="unlimit"      ></div><label for="unlimit" style="cursor:pointer;"><spring:message code='ezCabinet.t114'/></label>
 			</th>
 		</tr>
 		<tr>
