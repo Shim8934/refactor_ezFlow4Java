@@ -876,6 +876,12 @@
 					$("#chkWriterFlag").prop("disabled", true);
 					$("#chkWriterFlag").prop("checked", false);
 				}
+				
+				if (chkGeneralBoard.checked == true || chkQnABoard.checked == true || chkAnonyBoard.checked == true) {
+					document.getElementById("trPublicFlag").style.display = "";
+				} else {
+					document.getElementById("trPublicFlag").style.display = "none";
+				}
 	            
 	            // 2024-10-04 전인하 - 모든 게시판구분 설정을 제거한다면 일반게시판을 체크하도록 함
 	            if (chkGeneralBoard.checked == false && chkAnonyBoard.checked == false && chkPhotoBoard.checked == false && chkThumbBoard.checked == false && 
@@ -1641,7 +1647,7 @@
 	        </tr>
 		</table>
 		<br>
-		<div style="${style}">
+		<div id="trPublicFlag" style="${style}">
 			<table class="content">
 				<tr>
 					<th style="min-width: 88px;"><spring:message code="ezBoard.private.pgb01"/></th>
