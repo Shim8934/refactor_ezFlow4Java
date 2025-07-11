@@ -168,10 +168,10 @@ public class EzEmailWriteServiceImpl extends EgovAbstractServiceImpl implements 
         // url
         String urlOwn = Arrays.stream(new String[]{"URL", "url", "iptURL"})
                     .map(request::getParameter).filter(StringUtils::isNotBlank).findFirst().orElse("");
-        String sepLetter = (0 < urlOwn.contains("<sep>"))? "<sep>" : "&lt;sep&gt;";
+        String sepLetter = (0 < urlOwn.indexOf("<sep>"))? "<sep>" : "&lt;sep&gt;";
         writevo.setUrlOwn(urlOwn); // folderPath/uid (ex. "INBOX/4", "INBOX/4<sep>SENT/4<sep>INBOX/5")
 
-        if (urlOwn.contains(sepLetter)) {
+        if (0 < urlOwn.indexOf(sepLetter)) {
             writevo.setCmdForForwardAsAttach();
             urlOwn = urlOwn.split(sepLetter)[0];
         }
