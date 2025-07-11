@@ -171,6 +171,10 @@ public enum WriteType {
 	public boolean useUnread() {
 		return this == RESEND_IN_SENT;
 	}
+	// bodyType 본문타입 유지
+	public boolean useOrgBodyType() {
+		return this != FORWARD_AS_ATTACH;
+	}
 	// orgMessage.reply 할 때, Flags.Flag.ANSWERED를 true 할 것인지
 	public boolean useReplyAnswered() {
 		return this == REPLYALL;

@@ -344,8 +344,10 @@ public class EzEmailWriteServiceImpl extends EgovAbstractServiceImpl implements 
                         messagevo.setUnread(unread);
                     }
 
-                    String bodyType = ezEmailUtil.isHtmlMessage(orgMessage) ? "0" : "1";
-                    messagevo.setBodyType(bodyType);
+                    if (writetype.useOrgBodyType()) { // !FORWARD_AS_ATTACH
+                        String bodyType = ezEmailUtil.isHtmlMessage(orgMessage) ? "0" : "1";
+                        messagevo.setBodyType(bodyType);
+                    }
                 }
 
                 orgFolder.close(true);
