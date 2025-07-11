@@ -394,7 +394,8 @@
 				toggleDimOnAttach(true);
 
 				// 서버에 요청할 url
-				const requestUrls = parent.gg_url.split("&lt;sep&gt;") // <sep>
+				const sepLetter = (0 < parent.gg_url.indexOf("<sep>"))? "<sep>" : "&lt;sep&gt;";
+				const requestUrls = parent.gg_url.split(sepLetter)
 							.map(url => "/ezEmail/mailExport.do?url=" + url); // 이미 encodeURIComponent 되어 있음.
 
 				// DataTransfer를 사용하여 <input type="file">에 파일 설정

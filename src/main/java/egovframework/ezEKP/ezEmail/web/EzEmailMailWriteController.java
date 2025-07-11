@@ -3820,7 +3820,8 @@ public class EzEmailMailWriteController extends EzFileMngUtil {
 			            
 			            // set the ANSWERED flag of the original message to indicate it has been replied.
 			            if (orgMailCmd.equals("REPLY") || orgMailCmd.equals("REPLYALL") || orgMailCmd.equals("FORWARD")) {
-							String[] orgUrls = orgUrl.split("&lt;sep&gt;"); // <sep>
+							const sepLetter = (0 < parent.gg_url.indexOf("<sep>"))? "<sep>" : "&lt;sep&gt;";
+							String[] orgUrls = orgUrl.split(sepLetter);
 
 							for (String originUrl : orgUrls) {
 								int index = originUrl.lastIndexOf("/");
