@@ -3614,7 +3614,7 @@ function PrepareMailTag(iWhich, type, name, email, href) {
     if (g_useAdditionalInfo) {
     	$.ajax({
     		type	: "GET",
-    		data	: {email: email},
+    		data	: {name: name, email: email},
     		contentType : "application/json;charset=utf-8",
     		url		: "/ezEmail/mailGetUserAdditionalInfo.do",
     		async	: true,

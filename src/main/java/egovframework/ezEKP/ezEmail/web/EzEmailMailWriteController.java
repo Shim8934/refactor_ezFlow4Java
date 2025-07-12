@@ -5429,8 +5429,11 @@ public class EzEmailMailWriteController extends EzFileMngUtil {
 		LoginVO loginVO = commonUtil.userInfo(loginCookie);
 		int tenantId = loginVO.getTenantId();
 
-		String email = request.getParameter("email");
 		String userId = "";
+		String name = request.getParameter("name");
+		String email = request.getParameter("email");
+		String additionalParameters = ezCommonService.getTenantConfig("mailWriteRecipientAdditionalParameters", tenantId);
+
 		if (loginVO.getEmail()!=null){
 			userId = loginVO.getEmail().equals(email)
 					? loginVO.getId()
@@ -5439,11 +5442,16 @@ public class EzEmailMailWriteController extends EzFileMngUtil {
 		OrganUserVO userInfo = ezOrganAdminService.getUserInfo(userId, loginVO.getPrimary(), loginVO.getTenantId());
 
 		if (userInfo == null) {
-			return "";
+			// 파라메터가 mail만 있는 경우, 조직도 사용자가 없어도 넘겨받은 email을 세팅하도록 함.
+			if (!name.equalsIgnoreCase(email) && "mail".equalsIgnoreCase(additionalParameters)) {
+				userInfo = new OrganUserVO();
+				userInfo.setMail(email);
+			} else {
+				return "";
+			}
 		}
 
 		String additionalFormat = ezCommonService.getTenantConfig("mailWriteRecipientAdditionalFormat", tenantId);
-		String additionalParameters = ezCommonService.getTenantConfig("mailWriteRecipientAdditionalParameters", tenantId);
 		String[] fieldNameArray = additionalParameters.split(";");
 		int size = fieldNameArray.length;
 		Object[] args = new String[size];
