@@ -37,30 +37,32 @@
  */
 
 var IsInsert = [ false, false, false ]; // 0:MsgToGot, 1:MsgCCGot, 2:MsgBCCGot
+var isCallLastSent = false; // 최근사용주소는 클릭 시에만 실행하도록 수정.
 var mode = null;
 var emailToDelete = null; // 최근 사용 주소 삭제 시 : 삭제 click 이벤트 외에 발생하는 select 이벤트를 실행하지 않기 위함.
-var checkKeyEvent = { // 한글 조합문자 특성으로 인해 keydown event 두 번 발생할 때 search 이벤트를 실행하지 않기 위함. (가독성을 위해 객체화)
-    isDuble: false,
-    prev: false,
-    setIsDuble: function(currentE) {
-        // console.debug(currentE.type, ": ", currentE.key, ", keyCode: ", currentE.keyCode, ", isComposing: ", currentE.originalEvent.isComposing);
-		/*
-         * keydown :  Process , keyCode: 229 , isComposing:  true
-		 * keydown :  Enter , keyCode: 13 , isComposing:  false
-		 * 이벤트 두 번 실행될 때 하나는 search 차단.
-         */
-
-        // search 실행 차단할 조건
-        checkKeyEvent.isDuble = checkKeyEvent.prev && (currentE.keyCode == 13);
-        // previous isComposing 저장
-        checkKeyEvent.prev = currentE.originalEvent.isComposing;
-        /*
-         * JavaScript의 this는 함수 호출 방식에 따라 동적으로 결정.
-         * 이벤트 핸들러로 사용될 경우, this는 이벤트를 트리거한 DOM 요소를 참조함. 여기서 this는 $("#MsgTo")이 된다.
-         * checkKeyEvent 객체를 명시적으로 지정함.
-         */
-    }
-}
+// 최근사용주소는 클릭 시에만 실행하도록 수정하면 될 것 같아서 해당 문제 제외해 봄.
+// var checkKeyEvent = { // 한글 조합문자 특성으로 인해 keydown event 두 번 발생할 때 search 이벤트를 실행하지 않기 위함. (가독성을 위해 객체화)
+//     isDuble: false,
+//     prev: false,
+//     setIsDuble: function(currentE) {
+//         // console.debug(currentE.type, ": ", currentE.key, ", keyCode: ", currentE.keyCode, ", isComposing: ", currentE.originalEvent.isComposing);
+// 		/*
+//          * keydown :  Process , keyCode: 229 , isComposing:  true
+// 		 * keydown :  Enter , keyCode: 13 , isComposing:  false
+// 		 * 이벤트 두 번 실행될 때 하나는 search 차단.
+//          */
+//
+//         // search 실행 차단할 조건
+//         checkKeyEvent.isDuble = checkKeyEvent.prev && (currentE.keyCode == 13);
+//         // previous isComposing 저장
+//         checkKeyEvent.prev = currentE.originalEvent.isComposing;
+//         /*
+//          * JavaScript의 this는 함수 호출 방식에 따라 동적으로 결정.
+//          * 이벤트 핸들러로 사용될 경우, this는 이벤트를 트리거한 DOM 요소를 참조함. 여기서 this는 $("#MsgTo")이 된다.
+//          * checkKeyEvent 객체를 명시적으로 지정함.
+//          */
+//     }
+// }
 
 // document ready
 $(function() {
@@ -157,7 +159,7 @@ function setupAutocomplete(selector, iType, element) {
         originalSelect.call(this, event);
     };
 
-    $(selector).on("keydown", checkKeyEvent.setIsDuble);
+//    $(selector).on("keydown", checkKeyEvent.setIsDuble);
 
     // 클릭 시 Autocomplete 목록을 열거나 닫기
     $(selector + ', ' + btn_AutoCompleteResults).on("click", function() {
@@ -166,6 +168,7 @@ function setupAutocomplete(selector, iType, element) {
             $(selector).autocomplete("close");
         // 그 외 클릭 시 최근 사용 주소
         } else {
+            isCallLastSent = true; // 클릭 시에만 최근사용주소 목록 가져오도록 함.
             $(selector).autocomplete("search", "");
         }
     });
@@ -209,17 +212,17 @@ $.ui.menu.prototype.focus = function(event, item) {
 };
 
 // 재정의 4. search
-var originalSearch = $.ui.autocomplete.prototype.search;  // 기존 search 메서드를 저장
-$.ui.autocomplete.prototype.search = function(value) {
-    if (checkKeyEvent.isDuble) { // minLength : 0 때문에 search 발생
-        checkKeyEvent.isDuble = false;
-        // console.debug("한글 조합문자 특성으로 인해 keydown event 두 번 발생할 때 search 실행 차단");
-        return;
-    }
-
-    // 기존 search 호출
-    originalSearch.call(this, value);
-};
+// var originalSearch = $.ui.autocomplete.prototype.search;  // 기존 search 메서드를 저장
+// $.ui.autocomplete.prototype.search = function(value) {
+//     if (checkKeyEvent.isDuble) { // minLength : 0 때문에 search 발생
+//         checkKeyEvent.isDuble = false;
+//         // console.debug("한글 조합문자 특성으로 인해 keydown event 두 번 발생할 때 search 실행 차단");
+//         return;
+//     }
+//
+//     // 기존 search 호출
+//     originalSearch.call(this, value);
+// };
 
 /**
  * JS Class는 ES6(ECMAScript 2015) 이상에서 사용 가능. (오.. email.rowselector.js에서도 Class 사용중!)
@@ -277,6 +280,10 @@ var lastSentStash = null;
 class LastSent extends Mode {
     // 절감 목적 : lastSent list는 데이터가 일정한데 비해, 빈번하게 발생할 것으로 예상된다. (term.length: 0-1)
     async getList(request) {
+        // minLength : 0 이나, 클릭이 아닐 때는 수행하지 않도록 빈 목록을 반환하도록 했다.
+        if (!isCallLastSent) return [];
+        isCallLastSent = false;
+
         // length = 0 인것도 결과임. if null, DB에서 데이터 가져올 것.(fetchServerList)
         return lastSentStash? lastSentStash : super.fetchServerList(request);
     };
