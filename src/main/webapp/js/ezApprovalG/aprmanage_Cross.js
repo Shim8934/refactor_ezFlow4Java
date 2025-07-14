@@ -1771,22 +1771,28 @@ function OpenAlertUI(pAlertContent, CompleteFunction, type) {
 
     if (CrossYN()) {
         ezapralert_cross_dialogArguments[0] = parameter;
+        ezCommon_cross_dialogArguments[0] = parameter;
         if (type == undefined && CompleteFunction != undefined) {
             ezapralert_cross_dialogArguments[1] = CompleteFunction;
+            ezCommon_cross_dialogArguments[1] = CompleteFunction;
             DivPopUpShow(330, 205, url);
         }
         else if (type == undefined && CompleteFunction == undefined) {
             ezapralert_cross_dialogArguments[1] = OpenAlertUI_Complete;
+            ezCommon_cross_dialogArguments[1] = OpenAlertUI_Complete;
             DivPopUpShow(330, 205, url);
         }
         else if (type != undefined && CompleteFunction != "") {
             ezapralert_cross_dialogArguments[1] = CompleteFunction;
             ezapralert_cross_dialogArguments[2] = true;
+            ezCommon_cross_dialogArguments[1] = CompleteFunction;
+            ezCommon_cross_dialogArguments[2] = true;
             var OpenWin = window.open(url, "ezAPRALERT_Cross", GetOpenWindowfeature(330, 205));
             try { OpenWin.focus(); } catch (e) { }
         }
         else if (type != undefined && CompleteFunction == "") {
         	ezapralert_cross_dialogArguments[2] = true;
+        	ezCommon_cross_dialogArguments[2] = true;
             var OpenWin = window.open(url, "ezAPRALERT_Cross", GetOpenWindowfeature(330, 205));
             try { OpenWin.focus(); } catch (e) { }
         }
