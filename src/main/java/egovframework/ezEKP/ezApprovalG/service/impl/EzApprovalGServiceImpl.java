@@ -1,7 +1,8 @@
 package egovframework.ezEKP.ezApprovalG.service.impl;
 
 import java.io.BufferedReader; 
-import java.io.ByteArrayInputStream; 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File; 
 import java.io.FileInputStream; 
 import java.io.FileNotFoundException; 
@@ -6559,21 +6560,24 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	
 	private byte[] loadFile(String filePath) throws IOException {
 		File file = new File(filePath);
-		byte[] buffer = new byte[(int) file.length()];
-		InputStream ios = null;
-		try {
-			ios = new FileInputStream(file);
-			ios.read(buffer);
-		} finally {
-			try {
-				if (ios != null) {
-					ios.close();
-				}
-			} catch (Exception e) {
-				logger.error(e.getMessage(), e);
-			}
-		}
-		return buffer;
+        long orgFileSize = file.length();
+        
+        byte[] content = null;
+        try(FileInputStream fis = new FileInputStream(file);
+            ByteArrayOutputStream baos = new ByteArrayOutputStream()){
+            byte[] buffer = new byte[8192];
+            int bytesRead;
+            while((bytesRead = fis.read(buffer)) != -1){
+                baos.write(buffer, 0, bytesRead);
+            }
+            content = baos.toByteArray();
+
+            if (orgFileSize != content.length) {
+                logger.debug("File size mismatch: expected {} bytes, but read {} bytes.", orgFileSize, content.length);
+            }
+        }
+
+		return content;
 	}
 	
 	private int addBinDataInDocInfo(HWPFile hwpFile, int streamIndex, BinDataCompress compressMethod, String imageFileExt) {
