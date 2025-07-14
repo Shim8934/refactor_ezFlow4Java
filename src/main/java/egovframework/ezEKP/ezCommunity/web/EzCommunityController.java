@@ -5513,11 +5513,10 @@ public class EzCommunityController extends EgovFileMngUtil{
 		logger.debug("selectToDownloadFiles started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		String readFlag = "false";
+
+		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, boardID, code);
 		
-		readFlag = ezCommunityService.getReadFlag(boardID, userInfo);
-		
-		if (!readFlag.equalsIgnoreCase("true")) {
+		if (!boardInfo.getRead_FG().equalsIgnoreCase("true")) {
 			return "main/warning";
 		}
 		

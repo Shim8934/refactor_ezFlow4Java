@@ -355,7 +355,7 @@
             	<%--	return;--%>
             	<%--}--%>
                 
-            	var url = "/ezCommunity/selectToDownloadFiles.do?itemID=" + javaURLEncode(itemID) + "&boardID=" + javaURLEncode(boardID);
+            	var url = "/ezCommunity/selectToDownloadFiles.do?itemID=" + javaURLEncode(itemID) + "&boardID=" + javaURLEncode(boardID) + "&code=" + encodeURIComponent(code);
                 window.open(url, "", "status=no,help=no,width=580px,height=480px" + GetOpenPosition(580, 480));
             }
     	</script>    
