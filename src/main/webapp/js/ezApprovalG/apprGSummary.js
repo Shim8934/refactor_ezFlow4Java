@@ -10,10 +10,12 @@ function btnSummaryEdit() {
 function btnSummaryEdit_Complete(rtn) {
     switch (rtn.status) {
         case "success":
-            showAlert(strLangJIH_Summary01);
+            showAlertUI(strLangJIH_Summary01);
             pSummery = rtn.summary;
             pSummaryPath = rtn.summaryPath;
-            DivPopUpHidden();
+            if (!isTeamsDesktop()) {
+                DivPopUpHidden();
+            }
             break;
         case "cancel":
             DivPopUpHidden();
