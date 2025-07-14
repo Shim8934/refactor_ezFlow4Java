@@ -1467,7 +1467,7 @@ function check_presence2() {
                 InformationString = strLangS386;
             else
                 InformationString = strLangS1124;
-            showAlert(InformationString);
+            showAlertUI(InformationString);
         }
     }
     
