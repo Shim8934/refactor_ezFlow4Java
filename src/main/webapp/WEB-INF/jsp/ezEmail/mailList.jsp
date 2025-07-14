@@ -2491,6 +2491,11 @@
 				                    	<span class="icon_graydown" onclick="CCDetail_view(this);" id="PreH_CCDetail" style="display:none;"></span>
 				                    	<p class="hidden_area" id="PreH_MailCC_Rayer" style="display:none;"><span id="PreH_MailCCDetail"></span></p>
 				                    </li>
+				                    <li class="preT_list" id="PreH_BCCMain" style="display:none;"><span class="cblack"><spring:message code="ezEmail.yja004" /></span> <span id="PreH_MailBCC" style="display:inline-block"></span>
+                                        <span id="PreH_MailBCC_sub"></span>
+                                        <span class="icon_graydown" onclick="BCCDetail_view(this);" id="PreH_BCCDetail" style="display:none;"></span>
+                                        <p class="hidden_area" id="PreH_MailBCC_Rayer" style="display:none;"><span id="PreH_MailBCCDetail"></span></p>
+                                    </li>
 									<c:if test="${useMailTag}">
 										<li class="preT_list tagli"><span class="cblack"><spring:message code="ezEmail.tag" /></span>
 											<span class="input_select">
@@ -2568,6 +2573,11 @@
 				                    	<span class="icon_graydown" onclick="CCDetail_view(this);" id="PreW_CCDetail" style="display:none;"></span>
 				                    	<p class="hidden_area" id="PreW_MailCCDetail_Rayer" style="display:none;"><span id="PreW_MailCCDetail"></span></p>
 				                    </li>
+				                    <li class="preT_list" id="PreW_BCCMain" style="display:none;"><span class="cblack"><spring:message code="ezEmail.yja004" /></span> <span id="PreW_MailBCC" style="display:inline-block"></span>
+                                        <span id="PreW_MailBCC_sub"></span>
+                                        <span class="icon_graydown" onclick="BCCDetail_view(this);" id="PreW_BCCDetail" style="display:none;"></span>
+                                        <p class="hidden_area" id="PreW_MailBCCDetail_Rayer" style="display:none;"><span id="PreW_MailBCCDetail"></span></p>
+                                    </li>
 									<c:if test="${useMailTag}">
 										<li class="preT_list tagli"><span class="cblack"><spring:message code="ezEmail.tag" /></span>
 											<span class="input_select">

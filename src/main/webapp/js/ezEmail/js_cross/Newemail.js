@@ -1382,6 +1382,66 @@ function event_xmlhttp_mailPreview_Complete() {
                 $("#ifrmPreViewH").height($("#ifrmPreViewH").height()-20);
                 $("#ifrmPreViewW").height($("#ifrmPreViewW").height()-20);
             }
+
+            document.getElementById("PreH_BCCMain").style.display = "none";
+            document.getElementById("PreW_BCCMain").style.display = "none";
+            document.getElementById("PreH_BCCDetail").style.display = "none";
+            document.getElementById("PreW_BCCDetail").style.display = "none";
+            var pBccHtml = "";
+            var pBccSubHtml = "";
+            var pBccDetailHtml = "";
+            // document.getElementById("ifrmPreViewH").style.height = (CurrentHeight - 88) + "px";
+            // document.getElementById("ifrmPreViewW").style.height = (pMailPreHeightW - 110) + "px";
+            if (pBcc != "") {
+                var pMailBcc = pBcc;
+                var pBccArray = pMailBcc.split(";");
+                var pBccDetailDisplay = false;
+                var pBccCnt = 0;
+                for (var Cnt = 0; Cnt < pBccArray.length; Cnt++) {
+                    var pBcc_ = pBccArray[Cnt].replace(/"/g, "");
+                    if (pBcc_.length > 10) {
+                        var Pos1 = pBcc_.indexOf("<");
+                        var Pos2 = pBcc_.indexOf(">");
+                        var pBcc_Name = TrimText(pBcc_.substring(0, Pos1));
+                        var pBcc_Address = TrimText(pBcc_.substring(Pos1 + 1, Pos2));
+
+                        if (Cnt == 0) {
+                            pBccHtml = "<span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='#666'  style='cursor:pointer' title='" + ConvertStringForHTML(pBcc_Address) + "' onclick='show_personinfo(\"" + pBcc_Address + "\")'>\"" + pBcc_Name + "\"</span>";
+                        }
+
+                        if (pBccDetailHtml != "")
+                            pBccDetailHtml += "&nbsp;,&nbsp;";
+                        pBccDetailHtml += "<span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='#666'  style='cursor:pointer' title='" + ConvertStringForHTML(pBcc_Address) + "' onclick='show_personinfo(\"" + pBcc_Address + "\")'>\"" + pBcc_Name + "\"</span>";
+
+                        pBccCnt++;
+                    }
+                }
+                if (pBccCnt >= 2) {
+                    document.getElementById("PreH_BCCDetail").style.display = "";
+                    document.getElementById("PreH_BCCDetail").className = "icon_graydown";
+                    document.getElementById("PreW_BCCDetail").style.display = "";
+                    document.getElementById("PreW_BCCDetail").className = "icon_graydown";
+                    pBccSubHtml = "(" + strLang156 + pBccCnt + strLang300 + ")";
+                    pBccDetailDisplay = true;
+                } else {
+                    document.getElementById("PreH_BCCDetail").style.display = "none";
+                    document.getElementById("PreW_BCCDetail").style.display = "none";
+
+                    pBccSubHtml = "";
+                    pBccDetailDisplay = false;
+                    if (pCcHtml == "") {
+                        pCcHtml = pCcDetailHtml;
+                    }
+
+                }
+                if (pPreviewShow_HOW == "H") {
+                    document.getElementById("PreH_BCCMain").style.display = "";
+                } else {
+                    document.getElementById("PreW_BCCMain").style.display = "";
+                }
+                $("#ifrmPreViewH").height($("#ifrmPreViewH").height()-20);
+                $("#ifrmPreViewW").height($("#ifrmPreViewW").height()-20);
+            }
             
             var pOCS = "";
             if (USE_OCS == "YES") {
@@ -1427,6 +1487,8 @@ function event_xmlhttp_mailPreview_Complete() {
                 document.getElementById("PreH_subject").setAttribute("itemid", pItemid);
                 document.getElementById("PreH_subject").setAttribute("_contentclass", pContentClass);
                 document.getElementById("PreH_MailReceiverDetail_Rayer").style.display = "none";
+                document.getElementById("PreH_MailCC_Rayer").style.display = "none";
+                document.getElementById("PreH_MailBCC_Rayer").style.display = "none";
                 document.getElementById("Preview_HeaderH").style.display = "";
                 document.getElementById("PreH_sub_subject").innerHTML = pSubject;
                 var preTitle = document.getElementById('PreH_sub_subject').innerText;
@@ -1444,6 +1506,9 @@ function event_xmlhttp_mailPreview_Complete() {
                 document.getElementById("PreH_MailCC").innerHTML = pCcHtml;
                 document.getElementById("PreH_MailCC_sub").innerHTML = pCcSubHtml;
                 document.getElementById("PreH_MailCCDetail").innerHTML = pCcDetailHtml;
+                document.getElementById("PreH_MailBCC").innerHTML = pBccHtml;
+                document.getElementById("PreH_MailBCC_sub").innerHTML = pBccSubHtml;
+                document.getElementById("PreH_MailBCCDetail").innerHTML = pBccDetailHtml;
                 document.getElementById("PreH_sub_MailSender").innerHTML = pMailSenderHtml;
                 
                 var picNone = "/images/kr/main/bestEmployee_pic_none.png";
@@ -1461,6 +1526,8 @@ function event_xmlhttp_mailPreview_Complete() {
                 document.getElementById("PreW_subject").setAttribute("itemid", pItemid);
                 document.getElementById("PreW_subject").setAttribute("_contentclass", pContentClass);
                 document.getElementById("PreW_MailReceiverDetail_Rayer").style.display = "none";
+                document.getElementById("PreW_MailCCDetail_Rayer").style.display = "none";
+                document.getElementById("PreW_MailBCCDetail_Rayer").style.display = "none";
                 document.getElementById("Preview_HeaderW").style.display = "";
                 document.getElementById("PreW_sub_subject").innerHTML = pSubject;
                 pSubject = pSubject.trim();
@@ -1475,6 +1542,9 @@ function event_xmlhttp_mailPreview_Complete() {
                 document.getElementById("PreW_MailCC").innerHTML = pCcHtml;
                 document.getElementById("PreW_MailCC_sub").innerHTML = pCcSubHtml;
                 document.getElementById("PreW_MailCCDetail").innerHTML = pCcDetailHtml;
+                document.getElementById("PreW_MailBCC").innerHTML = pBccHtml;
+                document.getElementById("PreW_MailBCC_sub").innerHTML = pBccSubHtml;
+                document.getElementById("PreW_MailBCCDetail").innerHTML = pBccDetailHtml;
                 document.getElementById("PreW_sub_MailSender").innerHTML = pMailSenderHtml;
                 
                 var picNone = "/images/kr/main/bestEmployee_pic_none.png";
@@ -1581,6 +1651,24 @@ function CCDetail_view(obj) {
             document.getElementById("PreH_MailCC_Rayer").style.display = "none";
     }
     
+    mailPrevIframeSize();
+}
+function BCCDetail_view(obj) {
+    if (obj.className == "icon_graydown") {
+        obj.className = "icon_grayup"
+        if (pPreviewShow_HOW == "W")
+            document.getElementById("PreW_MailBCCDetail_Rayer").style.display = "";
+        else
+            document.getElementById("PreH_MailBCC_Rayer").style.display = "";
+    }
+    else {
+        obj.className = "icon_graydown"
+        if (pPreviewShow_HOW == "W")
+            document.getElementById("PreW_MailBCCDetail_Rayer").style.display = "none";
+        else
+            document.getElementById("PreH_MailBCC_Rayer").style.display = "none";
+    }
+
     mailPrevIframeSize();
 }
 function show_personinfo(email) {

@@ -126,7 +126,7 @@
 		        {
 		        	document.getElementById("HolderSent").style.display = "";
 		            document.getElementById("HolderElse").style.display = "none";
-		            SentBcc.style.display = "";
+		            /* SentBcc.style.display = ""; */
 		        } else {
 		        	document.getElementById("HolderSent").style.display = "none";
 		            document.getElementById("HolderElse").style.display = "";
@@ -858,14 +858,14 @@
 		                </td>
 		                </tr>
 					</c:if>
-		
-		                <tr id="SentBcc" style="display:none">
+		            <c:if test="${bccStr ne ''}">
+		                <tr id="SentBcc">
 		                <th><spring:message code="ezEmail.t562" /></th>
 		                <td colspan="4"><div id="MsgBCCGot" style="padding-left:5px;"> 
 		                <span id="LabelBCC">${bccStr}</span>
 		                </div></td>
 		                </tr>
-		       
+		            </c:if>
 		        
 		                <tr>
 		                <th><spring:message code="ezEmail.t556" /></th>
