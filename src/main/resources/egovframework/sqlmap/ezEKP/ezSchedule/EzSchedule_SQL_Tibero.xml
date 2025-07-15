@@ -3093,4 +3093,13 @@
 		AND
 			RELATEDID = #relatedId#
 	</select>
+	
+	<select id="EzScheduleDAO.checkReminderScheduleExists" parameterClass="map" resultClass="Integer">
+		SELECT
+		    COUNT(*)
+		FROM
+		    TBL_SCHEDULE_REMINDER_SCHEDULER
+		WHERE
+		    SCHEDULEID = #v_SCHEDULEID#
+	</select>
 </sqlMap>

@@ -1886,7 +1886,7 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 			/* 2021-11-29 홍승비 - 참석자 초대 수락 시, 부모 일정의 일정완료 레코드도 동일하게 삽입 */
 			ezScheduleDAO.insertAttendantScheduleComplete(map);
 			
-			ScheduleInfoVO scheduleInfo = getScheduleInfo(ezScheduleDAO.getCurScheduleId(map) + "", commonUtil.getMinuteUTC(offSet), tenantId, "");
+			ScheduleInfoVO scheduleInfo = getScheduleInfo(scheduleId, commonUtil.getMinuteUTC(offSet), tenantId, "");
 			/* 2023-09-04 한태훈 - 개인 일정의 경우 미리알림 스케줄러에 데이터 추가 */
 			if (scheduleInfo.getScheduleType().equals("1")) {
 				map.put("scheInfo", scheduleInfo);
@@ -1897,7 +1897,11 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 				map.put("v_STARTDATE", commonUtil.getDateStringInUTC(scheduleInfo.getStartDate(), offSet, true));
 				map.put("v_ENDDATE", commonUtil.getDateStringInUTC(scheduleInfo.getEndDate(), offSet, true));
 				
-				ezScheduleDAO.insertAttendantReminderSchedule(map);
+				if (ezScheduleDAO.checkReminderScheduleExists(map) > 0) {
+					ezScheduleDAO.updateReminderSchedule(map);
+				} else {
+					ezScheduleDAO.insertAttendantReminderSchedule(map);
+				}
 			}
 		}
 	}

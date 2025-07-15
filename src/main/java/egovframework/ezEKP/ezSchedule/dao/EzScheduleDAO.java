@@ -563,4 +563,8 @@ public class EzScheduleDAO extends EgovAbstractDAO {
 	public List<ScheDeptVO> getAddJobSchedule(Map<String, Object> param) {
 		return (List<ScheDeptVO>) list("EzScheduleDAO.getAddJobSchedule", param);
 	}
+	
+	public int checkReminderScheduleExists(Map<String, Object> map) {
+		return (int) select("EzScheduleDAO.checkReminderScheduleExists", map);		
+	}
 }
