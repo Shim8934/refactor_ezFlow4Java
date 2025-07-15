@@ -1453,7 +1453,6 @@
 	</insert>
 	<!-- checked -->
 	<update id="EzScheduleDAO.updateSchedule" parameterClass="map">
-		<![CDATA[
 			update 
 				tbl_schedule
 			set
@@ -1465,17 +1464,24 @@
 				hasattach = #v_HASATTACH#,
 				ispublic = #v_ISPUBLIC#,
 				datetype = #v_DATETYPE#,
+			<isNotEmpty property="v_STARTDATE">
 				startdate = #v_STARTDATE#,				
+			</isNotEmpty>
+			<isNotEmpty property="v_ENDDATE">
 				enddate = #v_ENDDATE#,
-				repetition = ifnull(#v_REPETITION#, ''),
+			</isNotEmpty>
+			<isNotEmpty property="v_REPETITION">
+				repetition = #v_REPETITION#,
+			</isNotEmpty>
+			<isNotEmpty property="v_LOCATION">
+				location = #v_LOCATION#,
+			</isNotEmpty>
 				title = #v_TITLE#,
-				location = ifnull(#v_LOCATION#, ''),
 				showtop = #v_SHOWTOP#
 	   		where  
 	   			(scheduleid = #v_SCHEDULEID# or parentid = #v_SCHEDULEID#)	   		
 	   		and
 	   			tenant_id = #v_TENANTID#
-		]]>	
 	</update>
 	<!-- checked -->
 	<update id="EzScheduleDAO.updateScheduleMember" parameterClass="map">

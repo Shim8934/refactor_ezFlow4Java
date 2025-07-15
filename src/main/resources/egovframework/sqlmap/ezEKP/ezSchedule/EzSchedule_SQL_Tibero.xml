@@ -1448,17 +1448,25 @@
 				HASATTACH = #v_HASATTACH#,
 				ISPUBLIC = #v_ISPUBLIC#,
 				DATETYPE = #v_DATETYPE#,
+			]]>  
+			<isNotEmpty property="v_STARTDATE">
 				STARTDATE = TO_DATE(#v_STARTDATE#,'yyyy-mm-dd hh24:mi'),				
+			</isNotEmpty>
+			<isNotEmpty property="v_ENDDATE">
 				ENDDATE = TO_DATE(#v_ENDDATE#,'yyyy-mm-dd hh24:mi'),
-                REPETITION = NVL(#v_REPETITION#, ' '),
+			</isNotEmpty>
+			<isNotEmpty property="v_REPETITION">
+				REPETITION = #v_REPETITION#,
+			</isNotEmpty>
+			<isNotEmpty property="v_LOCATION">
+				LOCATION = #v_LOCATION#,
+			</isNotEmpty>
 				TITLE = #v_TITLE#,
-				LOCATION = NVL(#v_LOCATION#, ' '),
-				showtop = #v_SHOWTOP#
+				SHOWTOP = #v_SHOWTOP#
 	   		WHERE  
 	   			(SCHEDULEID = #v_SCHEDULEID# OR PARENTID = #v_SCHEDULEID#)	   		
 	   		AND
-	   			TENANT_ID = #v_TENANTID#
-        ]]>        
+	   			TENANT_ID = #v_TENANTID#  
 	</update>
 	<update id="EzScheduleDAO.updateScheduleMember" parameterClass="map">
 		<![CDATA[

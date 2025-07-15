@@ -366,14 +366,19 @@ public class MScheduleServiceImpl extends EgovAbstractServiceImpl implements MSc
 		map.put("v_HASATTACH", jsonParam.get("hasAttach").toString());
 		map.put("v_ISPUBLIC", jsonParam.get("isPublic").toString());
 		map.put("v_DATETYPE", jsonParam.get("dateType").toString());
-		map.put("v_STARTDATE", utcStartDate);
-		map.put("v_ENDDATE", utcEndDate);
-		map.put("v_REPETITION", repetition);
 		map.put("v_SCHEDULETYPE", jsonParam.get("scheduleType").toString());
 		map.put("v_TITLE", jsonParam.get("title").toString());
 		map.put("v_LOCATION", jsonParam.get("location").toString());
 		map.put("v_TENANTID", tenantId);
 		map.put("v_SHOWTOP", jsonParam.get("showtop") == null ? "N" : jsonParam.get("showtop").toString());
+		
+		// 2025-17-15 전인하 - 모바일 > 일정관리 > 모바일 일정수정은 아직 반복일정을 대응하지 않음
+		// 따라서 반복일정의 경우 repetition 컬럼 갱신하지 않도록 수정함
+		if (!jsonParam.get("dateType").toString().equals("3")) {
+			map.put("v_REPETITION", repetition);
+			map.put("v_STARTDATE", utcStartDate);
+			map.put("v_ENDDATE", utcEndDate);
+		}
 
 		ezScheduleDAO.updateSchedule(map);
 		
