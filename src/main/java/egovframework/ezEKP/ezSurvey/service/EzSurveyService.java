@@ -100,4 +100,6 @@ public interface EzSurveyService {
 	public String assignRandomNumbers(String surveyId, String companyID, int tenantId) throws Exception;
 
 	public String checkHasLotteryResult(String surveyId, String companyID, int tenantId) throws Exception;
+
+	public void checkResponseFlag(Object surveyId, String companyID, int tenantId) throws Exception;
 }

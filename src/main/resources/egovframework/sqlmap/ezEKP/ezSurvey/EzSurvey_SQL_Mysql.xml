@@ -797,6 +797,9 @@
 			draft_flag         = #draftFlag#,
 			response_flag      = #responseFlag#
 		</isEqual>
+		<isEqual property="updateMode" compareValue="3">
+			response_flag      = #responseFlag#
+		</isEqual>
 		where
 			survey_id = #surveyId# and tenant_id = #tenantId# and company_id = #companyId#
 	</update>

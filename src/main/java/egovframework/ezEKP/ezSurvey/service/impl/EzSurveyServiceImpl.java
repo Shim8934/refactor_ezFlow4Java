@@ -2194,4 +2194,30 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		
 		return res >= 1 ? "true" : "false";
 	}
+
+	@Override
+	public void checkResponseFlag(Object surveyId, String companyId, int tenantId) throws Exception {
+		logger.debug("checkResponseFlag started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("surveyId", surveyId);
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+
+		int responseCnt = ezSurveyDAO.getTotalRespondents(map);
+		
+		// 참여자가 0명일 때 response_Flag 값을 0으로 update
+		if (responseCnt == 0) {
+			SurveyVO survey = new SurveyVO();
+			survey.setSurveyId(((Integer)surveyId).longValue());
+			survey.setCompanyId(companyId);
+			survey.setTenantId(tenantId);
+			survey.setResultPublicFlag(0);
+			survey.setUpdateMode(3);
+			
+			ezSurveyDAO.updateSurveyItem(survey);
+		}
+
+		logger.debug("checkResponseFlag ended");
+	}
 }

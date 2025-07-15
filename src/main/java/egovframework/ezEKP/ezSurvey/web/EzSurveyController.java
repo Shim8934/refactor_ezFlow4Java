@@ -1587,6 +1587,10 @@ public class EzSurveyController extends EgovFileMngUtil {
 
 		JSONObject resultObj = surveyRestService.deleteResponse(request, responseItem);
 
+		if ("ok".equals(resultObj.get("status"))) { // 참여인원 확인 후 response_flag 값 update
+			ezSurveyService.checkResponseFlag(responseItem.get("surveyId"), user.getCompanyID(), user.getTenantId());
+		}
+		
 		logger.debug("jsonDeleteResponse ended");
 		return resultObj;
 	}
