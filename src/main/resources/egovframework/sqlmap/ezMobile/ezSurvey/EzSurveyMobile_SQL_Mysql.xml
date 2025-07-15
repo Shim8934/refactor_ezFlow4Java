@@ -691,7 +691,7 @@
 			insert into tbl_survey_respondent (
 			)
 			values (
-				#responseId#, #surveyId#, #userId#, #userName1#, #userName2#, #email#, #image#, #deptId#, #deptName1#, #deptName2#, #responseDate#, #companyId#, #tenantId#
+				#responseId#, #surveyId#, #userId#, #userName1#, #userName2#, #email#, #image#, #deptId#, #deptName1#, #deptName2#, #responseDate#, #companyId#, #tenantId#, null
 			)
 		]]>
 	</insert>

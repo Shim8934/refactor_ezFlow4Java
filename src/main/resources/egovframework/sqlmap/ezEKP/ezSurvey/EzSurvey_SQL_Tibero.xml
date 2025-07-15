@@ -1889,36 +1889,59 @@
 			TENANT_ID = #tenantId#
 	</update>
 
-	<select id="EzSurveyDAO.getSurveyParticipantList" parameterClass="map" resultClass="RespondentVO">
+	<select id="EzSurveyDAO.getSurveyParticipantList" parameterClass="map" resultClass="RespondentVO" remapResults="true">
 		SELECT * FROM (
 			SELECT
-				A.*,
+				B.*,
 				ROWNUM as RNUM
-			FROM
-				(
+			FROM (
+				SELECT
+					A.*
+				FROM (
 					SELECT
 						USER_ID as USERID,
-						USER_NAME1 as USERNAME1,
-						USER_NAME2 as USERNAME2,
-						DEPT_NAME1 as DEPTNAME1,
-						DEPT_NAME2 as DEPTNAME2,
-						TO_CHAR(TO_DATE(RESPONSE_DATE, 'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60),'YYYY-MM-DD HH24:MI:SS') as RESPONSEDATE,
+						<isEmpty property="lotteryFG">
+							USER_NAME1 as USERNAME1,
+							USER_NAME2 as USERNAME2,
+							DEPT_NAME1 as DEPTNAME1,
+							DEPT_NAME2 as DEPTNAME2,
+							TO_CHAR(TO_DATE(RESPONSE_DATE, 'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60),'YYYY-MM-DD HH24:MI:SS') as RESPONSEDATE,
+							NVL(LOTTERY_RESULT, 0) as LOTTERYRESULT,
+						</isEmpty>
 						ROW_NUMBER() OVER (PARTITION BY SURVEY_ID, USER_ID ORDER BY RESPONSE_DATE ASC) as RN
 					FROM
 						TBL_SURVEY_RESPONDENT
 					WHERE
 						SURVEY_ID = #surveyId#
-					  AND
+					AND
 						COMPANY_ID = #companyId#
-					  AND
+					AND
 						TENANT_ID = #tenantId#
-				) A
-			WHERE
-				A.RN = 1
-			ORDER BY A.RESPONSEDATE ASC
+					) A
+				WHERE
+					A.RN = 1
+				<isEmpty property="lotteryFG">
+					ORDER BY
+					<isNotEmpty property="orderCol">
+						<isEqual property="orderCol" compareValue="USERID">A.USERID</isEqual>
+						<isEqual property="orderCol" compareValue="USERNAME1">A.USERNAME1</isEqual>
+						<isEqual property="orderCol" compareValue="USERNAME2">A.USERNAME2</isEqual>
+						<isEqual property="orderCol" compareValue="DEPTNAME1">A.DEPTNAME1</isEqual>
+						<isEqual property="orderCol" compareValue="DEPTNAME2">A.DEPTNAME2</isEqual>
+						<isEqual property="orderCol" compareValue="RESPONSEDATE">A.RESPONSEDATE</isEqual>
+						<isEqual property="orderCol" compareValue="LOTTERYRESULT">A.LOTTERYRESULT</isEqual>
+					</isNotEmpty>
+					<isNotEmpty property="orderType">
+						<isEqual property="orderType" compareValue="ASC"> ASC</isEqual>
+						<isEqual property="orderType" compareValue="DESC"> DESC</isEqual>
+					</isNotEmpty>
+				</isEmpty>
+			) B
 		)
-		WHERE 
-		    RNUM BETWEEN (#startPoint# + 1) AND (#startPoint# + #listCount#)
+		<isEmpty property="lotteryFG">
+		WHERE
+			RNUM BETWEEN (#startPoint# + 1) AND (#startPoint# + #listCount#)
+		</isEmpty>
 	</select>
 
 	<select id="EzSurveyDAO.getSurveyParticipantCnt" parameterClass="map" resultClass="Integer">
@@ -1932,5 +1955,54 @@
 			COMPANY_ID = #companyId#
 		  AND
 			TENANT_ID = #tenantId#
+	</select>
+
+	<update id="EzSurveyDAO.updateSurveydrawWinners" parameterClass="map">
+		UPDATE
+			TBL_SURVEY_RESPONDENT
+		SET
+			LOTTERY_RESULT =
+				CASE
+					WHEN USER_ID IN
+						<iterate property="targetIds" open="(" close=")" conjunction=",">#targetIds[]#</iterate>
+					THEN -1
+					ELSE NULL
+				END
+		WHERE
+			SURVEY_ID = #surveyId#
+		AND
+			COMPANY_ID = #companyId#
+		AND
+			TENANT_ID = #tenantId#
+	</update>
+
+	<update id="EzSurveyDAO.surveyAssignRandomNumbers" parameterClass="map">
+		UPDATE
+			TBL_SURVEY_RESPONDENT
+		SET
+			LOTTERY_RESULT = #number#
+		WHERE
+			USER_ID = #userId#
+		  AND
+			SURVEY_ID = #surveyId#
+		  AND
+			COMPANY_ID = #companyId#
+		  AND
+			TENANT_ID = #tenantId#
+	</update>
+
+	<select id="EzSurveyDAO.checkHasLotteryResult" parameterClass="map" resultClass="Integer">
+		SELECT
+			COUNT(LOTTERY_RESULT)
+		FROM
+			TBL_SURVEY_RESPONDENT
+		WHERE
+			SURVEY_ID = #surveyId#
+		  AND
+			COMPANY_ID = #companyId#
+		  AND
+			TENANT_ID = #tenantId#
+		  AND
+			LOTTERY_RESULT IS NOT NULL
 	</select>
 </sqlMap>

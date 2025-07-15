@@ -9,6 +9,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -2026,6 +2027,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		ezSurveyDAO.endSurveyItem(map);
 	}
 
+	/* EndStr 에는 UTC 시간이 아닌, offset이 적용된 시간을 넣어야 함 */
 	@Override
 	public String checkfinishSurvey(String EndStr, String offsetRaw) throws Exception {
 		logger.debug("checkfinishSurvey started");
@@ -2060,7 +2062,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 	}
 
 	@Override
-	public List<RespondentVO> getSurveyParticipantList(String surveyId, LoginSimpleVO userInfo, int currentPage, int listCntSize) throws Exception {
+	public List<RespondentVO> getSurveyParticipantList(String surveyId, LoginSimpleVO userInfo, int currentPage, int listCntSize, String orderCol, String orderType, String locale) throws Exception {
 		logger.debug("getSurveyParticipantList started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -2072,6 +2074,13 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		int startPoint  = (currentPage - 1) * listCntSize;
 		map.put("startPoint", startPoint);
 		map.put("listCount", listCntSize);
+		
+		orderCol = "".equals(orderCol) ? "RESPONSEDATE" : orderCol;
+		if (orderCol.contains("NAME")) {
+			orderCol += "ko".equals(locale) ? "1" : "2";
+		}
+		map.put("orderCol", orderCol);
+		map.put("orderType", "".equals(orderType) ? "ASC" : orderType);
 
 		logger.debug("getSurveyParticipantList ended");
 		return ezSurveyDAO.getSurveyParticipantList(map);
@@ -2091,15 +2100,96 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 	}
 
 	@Override
-	public SurveyVO getOneSurveyInfo(String surveyId, String companyId, int tenantId) throws Exception {
+	public SurveyVO getOneSurveyInfo(String surveyId, String companyId, int tenantId, String offset) throws Exception {
 		logger.debug("getOneSurveyInfo started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("surveyId", surveyId);
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
+		map.put("offset", commonUtil.getMinuteUTC(offset));
 
 		logger.debug("getOneSurveyInfo ended");
 		return ezSurveyDAO.getSurveyInfo(map);
+	}
+
+	@Override
+	public String drawWinnersByCount(String surveyId, int lotteryCnt, String companyId, int tenantId) throws Exception {
+		logger.debug("drawWinnersByCount started");
+		
+		try {
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("surveyId", surveyId);
+			map.put("companyId", companyId);
+			map.put("tenantId", tenantId);
+			map.put("lotteryFG", "Y");
+			List<RespondentVO> participantList = ezSurveyDAO.getSurveyParticipantList(map);
+
+			Collections.shuffle(participantList);
+			List<RespondentVO> winners = participantList.subList(0, lotteryCnt);
+
+			List<String> targetIds = new ArrayList<>();
+			for (RespondentVO rVO : winners) {
+				targetIds.add(rVO.getUserId());
+			}
+			map.put("targetIds", targetIds);
+			ezSurveyDAO.updateSurveydrawWinners(map);
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			return "FAIL";
+		}
+		
+		logger.debug("drawWinnersByCount ended");
+		return "OK";
+	}
+
+	@Override
+	public String assignRandomNumbers(String surveyId, String companyId, int tenantId) throws Exception {
+		logger.debug("assignRandomNumbers started");
+
+		try {
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("surveyId", surveyId);
+			map.put("companyId", companyId);
+			map.put("tenantId", tenantId);
+			map.put("lotteryFG", "Y");
+
+			List<RespondentVO> participantList = ezSurveyDAO.getSurveyParticipantList(map);
+
+			Collections.shuffle(participantList);
+
+			int number = 1;
+			for (RespondentVO rVO : participantList) {
+				map.put("userId", rVO.getUserId());
+				map.put("number", number);
+				ezSurveyDAO.surveyAssignRandomNumbers(map);
+				number++;
+			}
+
+			if ((number - 1) != participantList.size()) {
+				logger.debug("assignRandomNumbers error : the number does not match the size of the participant list.");
+				return "FAIL";
+			}
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			return "FAIL";
+		}
+		
+		logger.debug("assignRandomNumbers ended");
+		return "OK";
+	}
+
+	@Override
+	public String checkHasLotteryResult(String surveyId, String companyId, int tenantId) throws Exception {
+		logger.debug("assignRandomNumbers started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("surveyId", surveyId);
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+
+		int res = ezSurveyDAO.checkHasLotteryResult(map);
+		
+		return res >= 1 ? "true" : "false";
 	}
 }

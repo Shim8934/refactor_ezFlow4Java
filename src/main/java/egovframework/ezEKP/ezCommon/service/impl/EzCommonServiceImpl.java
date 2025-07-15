@@ -2068,6 +2068,15 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
             put("description","메일쓰기창 첨부파일 업로드시 zip 암호 설정 여부를 옵션화한다. YES: zip 암호 설정 사용, NO: 암호 설정하지 않고 업로드 (default : NO)");
             put("config_type","메일");
         }});
+
+        test.add(new HashMap<String, Object>(){{
+            put("confName","useParticipantLottery");
+            put("property_value","NO");
+            put("config_name","전자설문 참여자보기 추첨기능 사용 여부");
+            put("regdate","2025-07-14 00:00:00");
+            put("description","전자설문 참여자보기에서 추첨기능 사용 여부. YES: 사용, NO: 미사용 (default : NO)");
+            put("config_type","전자설문");
+        }});
         
 		List<TenantVO> tenantIdList = ezCommonDAO.getTenantList();
 		
@@ -2903,6 +2912,14 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
             put("COLUMN", "RES_OPEN_FLAG");
             put("TYPE_MYSQL", "TINYINT(4)"); put("TYPE_ORACLE", "NUMBER(4,0)");
             put("AFTER", "DEFAULT 0");
+        }});
+        // 2025-07-14 양지혜 - 전자설문 > 참여자 대상 추첨결과 컬럼 추가
+        test.add(new HashMap<String, Object>(){{
+            put("TABLE","TBL_SURVEY_RESPONDENT");
+            put("COLUMN", "LOTTERY_RESULT");
+            put("TYPE_MYSQL", "INT(11)"); put("TYPE_ORACLE", "NUMBER(10,0)");
+            put("AFTER_MYSQL", "DEFAULT NULL COMMENT '추첨결과'");
+            put("AFTER_ORACLE", "DEFAULT NULL");
         }});
 		for (Map<String, Object> map : test) {
 			ezCommonDAO.alterTableAddColumns(map);

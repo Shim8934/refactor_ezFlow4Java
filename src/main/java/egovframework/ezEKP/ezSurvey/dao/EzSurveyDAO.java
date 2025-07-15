@@ -339,4 +339,19 @@ public class EzSurveyDAO extends EgovAbstractDAO {
 	public int getSurveyParticipantCnt(Map<String, Object> map) throws Exception {
 		return (int) select("EzSurveyDAO.getSurveyParticipantCnt", map);
 	}
+
+	// 2025-07-14 양지혜 - 설문 > 추첨하기 > 일반추첨
+	public void updateSurveydrawWinners(Map<String, Object> map) throws Exception {
+		update ("EzSurveyDAO.updateSurveydrawWinners", map);
+	}
+
+	// 2025-07-14 양지혜 - 설문 > 추첨하기 > 추첨번호부여
+	public void surveyAssignRandomNumbers(Map<String, Object> map) throws Exception {
+		update ("EzSurveyDAO.surveyAssignRandomNumbers", map);
+	}
+
+	// 2025-07-14 양지혜 - 설문 > 추첨하기 > 추첨여부 확인
+	public int checkHasLotteryResult(Map<String, Object> map) throws Exception {
+		return (int) select("EzSurveyDAO.checkHasLotteryResult", map);
+	}
 }

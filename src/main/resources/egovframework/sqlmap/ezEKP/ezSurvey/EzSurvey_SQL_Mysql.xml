@@ -1523,7 +1523,7 @@
 			insert into tbl_survey_respondent (
 			)
 			values (
-				#responseId#, #surveyId#, #userId#, #userName1#, #userName2#, #email#, #image#, #deptId#, #deptName1#, #deptName2#, #responseDate#, #companyId#, #tenantId#
+				#responseId#, #surveyId#, #userId#, #userName1#, #userName2#, #email#, #image#, #deptId#, #deptName1#, #deptName2#, #responseDate#, #companyId#, #tenantId#, null
 			)
 		]]>
 	</insert>
@@ -1874,18 +1874,21 @@
 			TENANT_ID = #tenantId#
 	</update>
 	
-	<select id="EzSurveyDAO.getSurveyParticipantList" parameterClass="map" resultClass="RespondentVO">
+	<select id="EzSurveyDAO.getSurveyParticipantList" parameterClass="map" resultClass="RespondentVO" remapResults="true">
 		SELECT
 			*
 		FROM
 			(
 				SELECT
 					USER_ID as USERID,
+				<isEmpty property="lotteryFG">
 					USER_NAME1 as USERNAME1,
 					USER_NAME2 as USERNAME2,
 					DEPT_NAME1 as DEPTNAME1,
 					DEPT_NAME2 as DEPTNAME2,
 					DATE_ADD(RESPONSE_DATE, interval #offset# minute) as RESPONSEDATE,
+					IFNULL(LOTTERY_RESULT, 0) as LOTTERYRESULT,
+				</isEmpty>
 					ROW_NUMBER() OVER (PARTITION BY SURVEY_ID, USER_ID ORDER BY RESPONSE_DATE ASC) as RN
 				FROM
 					TBL_SURVEY_RESPONDENT
@@ -1898,8 +1901,23 @@
 			) A
 		WHERE
 		    A.RN = 1
-		ORDER BY A.RESPONSEDATE ASC
-		LIMIT #startPoint#, #listCount#
+		<isEmpty property="lotteryFG">
+			ORDER BY 
+			    <isNotEmpty property="orderCol">
+					<isEqual property="orderCol" compareValue="USERID">A.USERID</isEqual>
+					<isEqual property="orderCol" compareValue="USERNAME1">A.USERNAME1</isEqual>
+					<isEqual property="orderCol" compareValue="USERNAME2">A.USERNAME2</isEqual>
+					<isEqual property="orderCol" compareValue="DEPTNAME1">A.DEPTNAME1</isEqual>
+					<isEqual property="orderCol" compareValue="DEPTNAME2">A.DEPTNAME2</isEqual>
+					<isEqual property="orderCol" compareValue="RESPONSEDATE">A.RESPONSEDATE</isEqual>
+					<isEqual property="orderCol" compareValue="LOTTERYRESULT">A.LOTTERYRESULT</isEqual>
+				</isNotEmpty>
+				<isNotEmpty property="orderType">
+					<isEqual property="orderType" compareValue="ASC"> ASC</isEqual>
+					<isEqual property="orderType" compareValue="DESC"> DESC</isEqual>
+				</isNotEmpty>
+			LIMIT #startPoint#, #listCount#
+		</isEmpty>
 	</select>
 	
 	<select id="EzSurveyDAO.getSurveyParticipantCnt" parameterClass="map" resultClass="Integer">
@@ -1913,5 +1931,54 @@
 			COMPANY_ID = #companyId#
 		  AND
 			TENANT_ID = #tenantId#
+	</select>
+	
+	<update id="EzSurveyDAO.updateSurveydrawWinners" parameterClass="map">
+		UPDATE
+			TBL_SURVEY_RESPONDENT
+		SET
+		    LOTTERY_RESULT =
+		        CASE
+		            WHEN USER_ID IN
+		                 <iterate property="targetIds" open="(" close=")" conjunction=",">#targetIds[]#</iterate>
+		            THEN -1
+					ELSE NULL
+				END
+		WHERE
+			SURVEY_ID = #surveyId#
+		AND
+			COMPANY_ID = #companyId#
+		AND
+			TENANT_ID = #tenantId#
+	</update>
+	
+	<update id="EzSurveyDAO.surveyAssignRandomNumbers" parameterClass="map">
+		UPDATE
+			TBL_SURVEY_RESPONDENT
+		SET
+			LOTTERY_RESULT = #number#
+		WHERE
+		    USER_ID = #userId#
+		AND
+			SURVEY_ID = #surveyId#
+		AND
+			COMPANY_ID = #companyId#
+		AND
+			TENANT_ID = #tenantId#
+	</update>
+	
+	<select id="EzSurveyDAO.checkHasLotteryResult" parameterClass="map" resultClass="Integer">
+		SELECT
+			COUNT(LOTTERY_RESULT)
+		FROM
+			TBL_SURVEY_RESPONDENT
+		WHERE
+			SURVEY_ID = #surveyId#
+	  	AND
+			COMPANY_ID = #companyId#
+		AND
+			TENANT_ID = #tenantId#
+		AND
+		    LOTTERY_RESULT IS NOT NULL
 	</select>
 </sqlMap>

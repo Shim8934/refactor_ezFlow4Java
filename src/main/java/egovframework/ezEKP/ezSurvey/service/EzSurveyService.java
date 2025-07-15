@@ -89,9 +89,15 @@ public interface EzSurveyService {
 
 	public void pauseSurvey(String surveyID, String type, int tenantId) throws Exception;
 
-    public List<RespondentVO> getSurveyParticipantList(String surveyId, LoginSimpleVO userInfo, int currentPage, int listCntSize) throws Exception;
+    public List<RespondentVO> getSurveyParticipantList(String surveyId, LoginSimpleVO userInfo, int currentPage, int listCntSize, String orderCol, String orderType, String locale) throws Exception;
 
     public int getSurveyParticipantCnt(String surveyId, String companyID, int tenantId) throws Exception;
 
-	public SurveyVO getOneSurveyInfo(String surveyId, String companyID, int tenantId) throws Exception;
+	public SurveyVO getOneSurveyInfo(String surveyId, String companyID, int tenantId, String offset) throws Exception;
+
+    public String drawWinnersByCount(String surveyId, int lotteryCnt, String companyID, int tenantId) throws Exception;
+
+	public String assignRandomNumbers(String surveyId, String companyID, int tenantId) throws Exception;
+
+	public String checkHasLotteryResult(String surveyId, String companyID, int tenantId) throws Exception;
 }
