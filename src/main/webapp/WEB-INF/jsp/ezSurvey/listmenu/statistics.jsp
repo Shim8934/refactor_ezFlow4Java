@@ -256,15 +256,32 @@
 				for (var i = 0; i < respCnt; i++) {
 					var liResp          = document.createElement("li");
 					var txtCont         = document.createElement("span");
+					txtCont.textContent = responses[i]["texts"];
 					
 					if (surveyStatistic["annoynymous"] == 0) {
+						/* 프로필사진 */
 						var userAva     = document.createElement("img");
 						userAva.src     = responses[i]["image"] ? "/admin/ezOrgan/getPersonalInfo.do?fileName=" + responses[i]["image"] : "/images/default_pic.jpg";
 						userAva.onclick = (function(userId) {return function() {showUserInfoFromId(userId);};})(responses[i]["responsorId"]);
 						liResp.appendChild(userAva);
+						/* 이름 */
+						var spanElm1 = document.createElement("span");
+						spanElm1.className = "userInfoSpan";
+						spanElm1.textContent = responses[i]["userName"];
+						spanElm1.title = responses[i]["userName"];
+						spanElm1.style.flex = "1";
+						liResp.appendChild(spanElm1);
+						/* 부서명 */
+						var spanElm2 = document.createElement("span");
+						spanElm2.className = "userInfoSpan";
+						spanElm2.textContent = responses[i]["deptName"];
+						spanElm2.title = responses[i]["deptName"];
+						spanElm2.style.flex = "2";
+						liResp.appendChild(spanElm2);
+
+						txtCont.style.flex = "7";
 					}
 					
-					txtCont.textContent = responses[i]["texts"];
 					liResp.className    = "txt-response";
 					liResp.style.whiteSpace = "pre-wrap";
 					liResp.appendChild(txtCont);
