@@ -577,7 +577,7 @@
 			                    	if (apprReuseConfig != '1') {
 			                    		getDocInfo();
 										setAttachInfo(pDocID, "APR", lstAttachLink);
-                                        copySummaryForReuse(beforeDocID, pDocID);
+                                        copySummary(beforeDocID, "END", pDocID);
 			                    	}
 								}
 			                }

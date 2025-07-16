@@ -20,6 +20,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/ezDraftAll_WHWP.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/ApprGContent.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/Office.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/apprGSummary.js')}"></script>
 		
 		<%-- 2023-12-05 홍승비 - 결재 서명 데이터를 DB(TBL_SIGNINFO)에서 가져와, 문서 상에 다시 그려주는(재맵핑) 함수 적용 --%>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/aprSignRedraw.js')}"></script>
@@ -1175,6 +1176,7 @@
                                 }
                             });
                         }
+						copySummary(parent.pDocIDAry[1], "APR", pDocID);
                     }
                 } catch (e) {
                     console.log(e);

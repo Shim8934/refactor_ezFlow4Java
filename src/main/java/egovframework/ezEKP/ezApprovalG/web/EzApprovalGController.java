@@ -14087,17 +14087,18 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		return summary.getSummaryPath();
 	}
 	
-	@RequestMapping(value = "/ezApprovalG/apprGCopyForReuse.do", method = RequestMethod.POST)
+	@RequestMapping(value = "/ezApprovalG/copySummary.do", method = RequestMethod.POST)
 	@ResponseBody
-	public String apprGCopyForReuse(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+	public String apprGCopyForReuse(@CookieValue("loginCookie") String loginCookie, @RequestParam String orgDocID, @RequestParam String orgDocStatus, @RequestParam String docID) throws Exception {
 		logger.debug("apprGSummaryEdit started");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		String orgDocID = request.getParameter("orgDocID");
-		String docID = request.getParameter("docID");
+		String result = "";
 		
-		ApprGSummaryVO summary = ezApprovalGService.getSummaryDB(orgDocID , userInfo.getCompanyID(), userInfo.getTenantId(), "END");
-		String result = ezApprovalGService.copySummary(summary, docID, "APR");
+		ApprGSummaryVO summary = ezApprovalGService.getSummaryDB(orgDocID , userInfo.getCompanyID(), userInfo.getTenantId(), orgDocStatus);
+		if (summary != null && Strings.isNotBlank(summary.getSummary())) {
+			result = ezApprovalGService.copySummary(summary, docID, "APR");
+		}
 		
 		logger.debug("apprGSummaryEdit ended");
 		return result;

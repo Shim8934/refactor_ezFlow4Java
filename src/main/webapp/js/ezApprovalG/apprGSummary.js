@@ -61,15 +61,16 @@ function btnSummaryPrint_onclick() {
     showPopup(url, 800, 500, "", feature, "");
 }
 
-function copySummaryForReuse(orgDocID, docID) {
+function copySummary(orgDocID, orgDocStatus, docID) {
      var result = "";
     $.ajax({
         type : "POST",
         dataType : "text",
         async : false,
-        url : "/ezApprovalG/apprGCopyForReuse.do",
+        url : "/ezApprovalG/copySummary.do",
         data : {
             orgDocID : orgDocID,
+            orgDocStatus : orgDocStatus,
             docID : docID
         },
         success: function(text){
