@@ -545,7 +545,9 @@
                     				var pageSrc = parent.frames["right"].document.location.toString();
             	                    
                     				if (pageSrc.indexOf("mailList.do") > -1) {
-                                    	parent.frames["right"].MailListRefresh();
+                    				    if (parent.frames["right"].searchMode != true){
+                    				        parent.frames["right"].MailListRefresh();
+                    				    }
             	                    }
                    				} catch (e) {console.log(e);}
 	                    		
