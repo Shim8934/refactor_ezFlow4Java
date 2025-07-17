@@ -102,6 +102,7 @@
 		                    <td class="pos1" style="vertical-align:middle;">
 		                        <div id="MsgToPut" title="${fromEmail}" style="padding-left: 5px; vertical-align: middle;">	
 		                            <span id="LabelFromName">${fromStr}</span>
+		                            <span id="LabelFromEmail">&lt;${fromEmail}&gt;</span>
 		                            <span id="LabelSenderInfo"></span>	
 		                        </div>
 		                    </td>
