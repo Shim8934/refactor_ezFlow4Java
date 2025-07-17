@@ -263,7 +263,7 @@
 		    	<tr>
 		      		<th><spring:message code='ezSchedule.t139' /></th>
 		      		<td>
-		      			<label style="margin-right: 10px;"><div class="custom_checkbox"><input type="checkbox" id="defaultViewCheckBox" name="defaultViewCheckBox"><spring:message code="ezSchedule.t402" /></input></div></label>
+		      			<div class="custom_checkbox"><input type="checkbox" id="defaultViewCheckBox" name="defaultViewCheckBox"/><label for="defaultViewCheckBox"><spring:message code="ezSchedule.t402" /></label></div>
 		      			<select name="DefaultViewSelect" id="DefaultViewSelect" style="width:65px; display: none;">
 		          			<option value="0"><spring:message code='ezSchedule.t140' /></option>
 		          			<option value="1"><spring:message code='ezSchedule.t141' /></option>

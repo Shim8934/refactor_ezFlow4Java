@@ -775,8 +775,8 @@
 	                                        	<span id="periodblock">
 		                                        	<div class="custom_checkbox">
 		                                            	<input name="checkbox" type="checkbox" id="alldaycheck" onclick="allday_change()" value="1">
+														<label for="alldaycheck"><spring:message code='ezSchedule.t369'/></label>
 		                                            </div>
-	                                            	<spring:message code='ezSchedule.t369'/>
 	                                           		<input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly">
 	                                           		<input id="Stimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;" onkeypress="return KeEventControl(this);" onkeydown="return KeEventControl(this);" onkeyup="return KeEventControl(this);" onmousedown="return false"/>
 	                                            	~
@@ -793,8 +793,8 @@
 	                                        	<span id="completeFG_oneSpan" <c:if test="${dateType != '1' && dateType != '2'}">style="display:none;"</c:if>>
 													<div class="custom_checkbox">	
 	                                            		<input name="checkbox" type="checkbox" id="completeFG_one" <c:if test="${completeFG == 'Y' && dateType != '3'}">checked</c:if>>
+														<label for="completeFG_one"><spring:message code='ezSchedule.HSBCp02'/></label>
 	                                        		</div>
-	                                            	<spring:message code='ezSchedule.HSBCp02'/>
 	                                            </span>
 	                                            <%-- 반복일정 수정 시 (2021-11-25 기준으로 수정 시 pattern값은 0으로만 전달됨. 반복일정 수정 시 단일/전체 선택 기능이 없기 때문) --%>
                                             	<span id="completeFG_repOneSpan" <c:if test="${dateType != '3' || pattern != '0'}">style="display:none;"</c:if>>

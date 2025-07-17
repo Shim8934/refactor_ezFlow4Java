@@ -1,4 +1,4 @@
-﻿﻿var PressCtrlKey = false;
+﻿var PressCtrlKey = false;
 var PressShiftKey = false;
 var m_strColorSelect =  "#f1f8ff";
 var m_strColorDefault =  "#FFFFFF";
@@ -1002,10 +1002,14 @@ function ListView() {
 			    
 		        var oDiv = document.createElement("DIV");
 		        oDiv.className = "custom_checkbox";
+                var oLavel = document.createElement("label");
+			    oLavel.setAttribute("for", "cb_" + curID);
+			    oLavel.innerText = ezSchedule_csj1;
 			    
 		        oDiv.appendChild(cb);
+		        oDiv.appendChild(oLavel);
 			    extTd.appendChild(oDiv);
-			    extTd.innerHTML += ezSchedule_csj1;
+			    // extTd.innerHTML += ezSchedule_csj1;
 			    objTr.appendChild(extTd);
             }
             

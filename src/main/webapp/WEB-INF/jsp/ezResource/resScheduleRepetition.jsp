@@ -289,8 +289,8 @@
      					<label for="btnT1"></label>
      					<div class="custom_checkbox">
 	     					<input type="checkbox" value="1" id="alldaycheck" NAME="alldaycheck" onclick="allDayTime()" />
+     						<label for="alldaycheck"><spring:message code="ezResource.t277"/></label>
      					</div>
-     					<spring:message code="ezResource.t277"/>
         			</td>
     			</tr>
     			<tr>
@@ -309,20 +309,14 @@
     			<td>
     				<div class="custom_radio">
 	    				<input id="mpDaily" type="radio" name="optMainPattern" value="radiobutton" onClick='showMainPattern(0);'>
-    				</div>
       					<label for="mpDaily"><spring:message code="ezResource.t280"/></label>
-    				<div class="custom_radio">
     	  				<input id="mpWeekly" type="radio" name="optMainPattern" value="radiobutton" checked onClick='showMainPattern(1);'>
-    				</div>
       					<label for="mpWeekly"><spring:message code="ezResource.t281"/></label>
-    				<div class="custom_radio">
       					<input id="mpMontly" type="radio" name="optMainPattern" value="radiobutton" onClick='showMainPattern(2);'>
-    				</div>
       					<label for="mpMontly"><spring:message code="ezResource.t282"/></label>
-    				<div class="custom_radio">
       					<input id="mpYearly" type="radio" name="optMainPattern" value="radiobutton" onClick='showMainPattern(3);'>
-    				</div>
       					<label for="mpYearly"><spring:message code="ezResource.t283"/></label>
+					</div>
     			</td>
   			</tr>
   			<tr id='divRecurPatterns' name="divRecurPatterns" style="display:none">
@@ -338,8 +332,8 @@
           			<br>
     				<div class="custom_radio">
 						<input id="id0D2" type="radio" name="optDaily">
+						<label for="id0D2"><spring:message code="ezResource.t287"/></label>
     				</div>
-					<label for="id0D2"><spring:message code="ezResource.t287"/></label>
 				</td>
   			</tr>
   			<tr id='divRecurPatterns' name="divRecurPatterns">
@@ -352,32 +346,21 @@
       				<div id="daytable">
       					<div class="custom_checkbox">
 	      					<input type="checkbox" name="day" id="day0" value="0">
-      					</div>
-      					 <spring:message code="ezResource.t290"/>
-      					<div class="custom_checkbox">
+							<label for="day0"><spring:message code="ezResource.t290"/></label>
 							<input type="checkbox" name="day" id="day1" value="1"> 
-      					</div>
-						<spring:message code="ezResource.t291"/>
-      					<div class="custom_checkbox">
+							<label for="day1"><spring:message code="ezResource.t291"/></label>
 							<input type="checkbox" name="day" id="day2" value="2">
-      					</div>
-						 <spring:message code="ezResource.t292"/>
-      					<div class="custom_checkbox">
+							<label for="day2"><spring:message code="ezResource.t292"/></label>
 							<input type="checkbox" name="day" id="day3" value="3">
-      					</div>
-						 <spring:message code="ezResource.t293"/><br>
-      					<div class="custom_checkbox">
+							<label for="day3"><spring:message code="ezResource.t293"/></label>
+						 	<br>
             				<input type="checkbox" name="day" id="day4" value="4">
-      					</div>
-           				 <spring:message code="ezResource.t294"/>
-      					<div class="custom_checkbox">
+							<label for="day4"><spring:message code="ezResource.t294"/></label>
 							<input type="checkbox" name="day" id="day5" value="5">
-      					</div>
-						 <spring:message code="ezResource.t295"/>
-      					<div class="custom_checkbox">
+							<label for="day5"><spring:message code="ezResource.t295"/></label>
 							<input type="checkbox" name="day" id="day6" value="6"> 
+							<label for="day6"><spring:message code="ezResource.t296"/></label>
       					</div>
-						<spring:message code="ezResource.t296"/>
 					</div>
 				</td>
   			</tr>
@@ -385,8 +368,8 @@
     			<td style="padding:10px;height:85px">
 	    			<div class="custom_radio">
 	    				<input type="radio" name='optMonthly' id="idOM1" checked>
+						<label for="idOM1"><spring:message code="ezResource.t297"/>&nbsp;</label>
 	    			</div>
-            		<label for="idOM1"><spring:message code="ezResource.t297"/>&nbsp;</label>
             		<input name="Input" id="list_MonthInterval" style="Width:40px;text-align:center;" onFocus='window.document.all["optMonthly"][0].checked=true;' value="1" maxlength="3">&nbsp;
 					<spring:message code="ezResource.t298"/>
             		<input name="Input" id="list_MonthlyDays" style="Width:40px;text-align:center;" onFocus='window.document.all["optMonthly"][0].checked=true;' value="" maxlength="2">&nbsp;
@@ -394,8 +377,8 @@
 					<br>
 	    			<div class="custom_radio">
 						<input id="id0M2" type="radio" name='optMonthly'>
+						<label for="id0M2"><spring:message code="ezResource.t300"/>&nbsp;</label>
 	    			</div>
-					<label for="id0M2"><spring:message code="ezResource.t300"/>&nbsp;</label>
             		<input name="Input" id="list_MonthInterval2" style="Width:40px;text-align:center;" onFocus='window.document.all["optMonthly"][1].checked=true;' value="1" maxlength="3">&nbsp;
 					<spring:message code="ezResource.t298"/>
             		<select name="select" id="list_MonthlyEach" onFocus='window.document.all["optMonthly"][1].checked=true;'>
@@ -420,8 +403,8 @@
 				</td>
   			</tr>
   			<tr id='divRecurPatterns' name="divRecurPatterns" style="display:none">
-    			<td  style="padding:10px;height:85px"><div class="custom_radio"><input id="optY1" type="radio" name="optYearly" value="radiobutton" checked></div>
-            		<label for="optY1"><spring:message code="ezResource.t297"/>&nbsp;</label>
+    			<td  style="padding:10px;height:85px"><div class="custom_radio"><input id="optY1" type="radio" name="optYearly" value="radiobutton" checked>
+            		<label for="optY1"><spring:message code="ezResource.t297"/>&nbsp;</label></div>
             		<select name="select" id="list_Month" onFocus='window.document.all["optYearly"][0].checked=true;'>
               			<option value="1"><spring:message code='ezSchedule.t382' /></option>
 						<option value="2"><spring:message code='ezSchedule.t383' /></option>
@@ -442,8 +425,8 @@
 					<br>
 					<div class="custom_radio">
 						<input id="optY2" type="radio" name="optYearly" value="radiobutton">
+						<label for="optY2" accesskey="E"><spring:message code="ezResource.t300"/>&nbsp;</label>
 					</div>
-					<label for="optY2" accesskey="E"><spring:message code="ezResource.t300"/>&nbsp;</label>
 					
             		<select name="select" id="list_Month2" onFocus='window.document.all["optYearly"][1].checked=true;'>
               			<option value="1"><spring:message code='ezSchedule.t382' /></option>
@@ -497,7 +480,7 @@
 		  	<tr>
 		    	<td>
 		    		<div class="custom_radio">
-			    		<input type="radio" id="Instances" name="optRangeEnd"  value="radiobutton" value="1"/><spring:message code='ezResource.t315' />
+			    		<input type="radio" id="Instances" name="optRangeEnd"  value="radiobutton" value="1"/><label for="Instances"><spring:message code='ezResource.t315' /></label>
 		    		</div>
 		      		<input id="list_ReCount" maxlength="3" onFocus="Instances.checked = true" style="text-align:center;" size="4" value='10' /><spring:message code='ezResource.t316' />		      		
 		      	</td>
@@ -505,7 +488,7 @@
 		  	<tr>
 		    	<td>
 		    		<div class="custom_radio">
-			    		<input id="EndTimeSet" type="radio" name="optRangeEnd" value="radiobutton" value="0" checked/><spring:message code='ezResource.t317' />
+			    		<input id="EndTimeSet" type="radio" name="optRangeEnd" value="radiobutton" value="0" checked/><label for="EndTimeSet"><spring:message code='ezResource.t317' /></label>
 		    		</div>
 		      		<input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly" onchange="timeChecker('eDate')"/>
 		    	</td>
