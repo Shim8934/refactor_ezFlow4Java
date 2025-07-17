@@ -75,8 +75,10 @@
 	
 	<ul id="upage-ul" class="upage-ul off" style="display: none;">
 		<li><span class="srvyInfo srvyInfo01"></span><span><spring:message code="ezSurvey.t32" /> : </span>
-			
 			<span><spring:message code="${survey.anonymousFlag == 1 ? 'ezSurvey.t48' : 'ezSurvey.t47'}"/></span>
+			<c:if test="${survey.anonymousFlag == 0}"><%--기명인 경우에만 참여자 공개여부 표출--%>
+				<span>(<spring:message code="ezSurvey.t105"/>&nbsp;<spring:message code="${survey.userExposedFlag == 1 ? 'ezSurvey.t42' : 'ezSurvey.t43'}"/>)</span>
+			</c:if>
 		</li>
 		<li><span class="srvyInfo srvyInfo02"></span><span><spring:message code="ezSurvey.t52" /> : </span>
 			<span><spring:message code="${survey.paritipateFlag == 1 ? 'ezSurvey.t54' : 'ezSurvey.t53'}"/></span>

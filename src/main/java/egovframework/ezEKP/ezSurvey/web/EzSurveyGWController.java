@@ -472,6 +472,7 @@ public class EzSurveyGWController {
 			String endDate          = infor.get("endDate")    != null ? infor.get("endDate").toString()            : "";
 			int publicFlag          = infor.get("public")     != null ? ((Long)infor.get("public")).intValue()     : -1;
 			int anonymousFlag       = infor.get("anonymous")  != null ? ((Long)infor.get("anonymous")).intValue()  : -1;
+			int userExposedFlag     = infor.get("userExposed")!= null ? ((Long)infor.get("userExposed")).intValue(): 1;
 			int multipleFlag        = infor.get("multiple")   != null ? ((Long)infor.get("multiple")).intValue()   : -1;
 			int publicDays          = infor.get("publicDays") != null ? ((Long)infor.get("publicDays")).intValue() : -1;
 			int mailFlag            = infor.get("mail")       != null ? ((Long)infor.get("mail")).intValue()       : 0;
@@ -493,7 +494,7 @@ public class EzSurveyGWController {
 			}
 			
 			String realPath  = request.getServletContext().getRealPath("");
-			result           = surveyService.saveSurveyItem(request, realPath, questions, title, purpose, startDate, endDate, publicFlag, anonymousFlag, multipleFlag, userFlag, publicDays, attchList, users, useStatus, surveyId, draftMode, userInfo, mailFlag, popupFlag, closingText);
+			result           = surveyService.saveSurveyItem(request, realPath, questions, title, purpose, startDate, endDate, publicFlag, anonymousFlag, multipleFlag, userFlag, publicDays, attchList, users, useStatus, surveyId, draftMode, userInfo, mailFlag, popupFlag, closingText, userExposedFlag);
 		
 			if (publicFlag == 2 && resultViewTarget != null) {
 				Long NewSurveyId = (Long) result.get("survey_id");

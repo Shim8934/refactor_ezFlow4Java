@@ -258,7 +258,7 @@
 					var txtCont         = document.createElement("span");
 					txtCont.textContent = responses[i]["texts"];
 					
-					if (surveyStatistic["annoynymous"] == 0) {
+					if (surveyStatistic["annoynymous"] == 0 && (surveyStatistic["userExposed"] == 1 || adminYN == 'Y')) {
 						/* 프로필사진 */
 						var userAva     = document.createElement("img");
 						userAva.src     = responses[i]["image"] ? "/admin/ezOrgan/getPersonalInfo.do?fileName=" + responses[i]["image"] : "/images/default_pic.jpg";
@@ -384,7 +384,7 @@
 				divRespCnt.textContent = responsesCnt <= 999 ? responsesCnt : 999 + "+";
 				spanElmt.className     = "response-usercnt";
 				
-				if (surveyStatistic["annoynymous"] == 0 && totalCnt > 0) {
+				if (surveyStatistic["annoynymous"] == 0 && totalCnt > 0 && (surveyStatistic["userExposed"] == 1 || adminYN == 'Y')) {
 					spanElmt.onclick = (function(qstId) {return function() {showRespondentList(qstId);};})(question["questionId"]);
 				}
 				
@@ -839,7 +839,7 @@
 						onClick : function (evt, item) {
 							var itemIdx = item[0]["_index"];
 							var data    = myPieChart.data["question"];
-							if (data) {
+							if (data && surveyStatistic["annoynymous"] == 0 && (surveyStatistic["userExposed"] == 1 || adminYN == 'Y')) {
 								showSelectedUsersForPie(data, itemIdx);
 							}
 						},
@@ -892,7 +892,7 @@
 					liElmt.appendChild(divElmt1);
 					liElmt.appendChild(divElmt2);
 					
-					if (data["question"]) {
+					if (data["question"] && surveyStatistic["annoynymous"] == 0 && (surveyStatistic["userExposed"] == 1 || adminYN == 'Y')) {
 						liElmt.onclick = (function(questionId, optId) {return function() {showSelectedUsersForPie(questionId, optId);};})(data["question"], i);
 					}
 					
@@ -1005,7 +1005,7 @@
 				chart.on('selectSeries', function(info) {
 					var question = questionStatistic.filter(function(qst) {return qst["questionId"] == questionId})[0];
 					
-					if (question) {
+					if (question && surveyStatistic["annoynymous"] == 0 && (surveyStatistic["userExposed"] == 1 || adminYN == 'Y')) {
 						var type     = parseInt(question["type"]);
 						if (type == 7) {
 							var indexVal  = info["index"];
@@ -1046,7 +1046,7 @@
 				chart.on('selectLegend', function(info) {
 					var question = questionStatistic.filter(function(qst) {return qst["questionId"] == questionId})[0];
 					
-					if (question) {
+					if (question && surveyStatistic["annoynymous"] == 0 && (surveyStatistic["userExposed"] == 1 || adminYN == 'Y')) {
 						var type = parseInt(question["type"]);
 						if (type == 3 || type == 4) {
 							var columnIdx = parseInt(info["index"]);

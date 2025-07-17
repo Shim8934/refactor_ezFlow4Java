@@ -378,7 +378,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public synchronized JSONObject saveSurveyItem(HttpServletRequest request, String realPath, JSONArray questions, String title, String purpose, String startDate, String endDate, int publicFlag, int anonymousFlag, int multipleFlag, int userFlag, int publicDays, JSONArray attchList, JSONArray users, int useStatus, long surveyId, int draftMode, LoginVO userInfo, int mailFlag, int popupFlag, String closingText) throws Exception {
+	public synchronized JSONObject saveSurveyItem(HttpServletRequest request, String realPath, JSONArray questions, String title, String purpose, String startDate, String endDate, int publicFlag, int anonymousFlag, int multipleFlag, int userFlag, int publicDays, JSONArray attchList, JSONArray users, int useStatus, long surveyId, int draftMode, LoginVO userInfo, int mailFlag, int popupFlag, String closingText, int userExposedFlag) throws Exception {
 		JSONObject result                    = new JSONObject();
 		int tenantId                         = userInfo.getTenantId();
 		String companyId                     = userInfo.getCompanyID();
@@ -441,6 +441,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		survey.setParitipateFlag(userFlag);
 		survey.setResultPublicFlag(publicFlag);
 		survey.setAnonymousFlag(anonymousFlag);
+		survey.setUserExposedFlag(userExposedFlag);
 		survey.setTitle(commonUtil.stripScriptTags(title));
 		survey.setPurpose(commonUtil.stripScriptTags(purpose));
 		survey.setCreateDate(timeUTC);
@@ -1654,6 +1655,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		result           = getSurveyQuestions(surveyId, "answer", realPath, userInfo);
 		
 		data.put("annoynymous"  , survey.getAnonymousFlag());
+		data.put("userExposed"  , survey.getUserExposedFlag());
 		data.put("usersCnt"     , survey.getTotalUser());
 		data.put("respondentCnt", totalRespondents);
 		data.put("title"        , survey.getTitle());

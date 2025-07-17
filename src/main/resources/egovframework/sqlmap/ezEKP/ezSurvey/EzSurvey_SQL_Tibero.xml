@@ -86,6 +86,7 @@
 		<result property="participants"     column="participants"        columnIndex="29"/>
 		<result property="participation"    column="participation"       columnIndex="30"/>
 		<result property="closingText"      column="closing_text"        columnIndex="31"/>
+		<result property="userExposedFlag"  column="user_exposed_flag"   columnIndex="32"/>
 	</resultMap>
 	
 	<!-- AttachVO resultMap -->
@@ -208,7 +209,8 @@
 			popup_flag,
 			NVL(PARTICIPANTS, 0) AS PARTICIPANTS,
 			NVL(PARTICIPATION, 0) AS PARTICIPATION,
-			CLOSING_TEXT
+			CLOSING_TEXT,
+			USER_EXPOSED_FLAG
 		from tbl_survey
 				 LEFT JOIN (SELECT SURVEY_ID                                           SI,
 								   COUNT(DISTINCT USER_ID)                           PARTICIPANTS,
@@ -733,17 +735,20 @@
 				survey_id,     title,         purpose,            user_id,        create_date,       start_date,        end_date,    user_name1,  user_name2,
 				use_status,    open_days,     result_public_flag, anonymous_flag, multi_answer_flag, participate_flag,  attach_flag,  modify_flag, draft_flag,
 				response_flag, delete_user,   update_user,        update_date,    total_user,        company_id,        tenant_id,	mail_flag,     popup_flag,
-				closing_text
+				closing_text,  user_exposed_flag
 			)
 			values (
 				#surveyId#,     #title#,      #purpose#,          #creatorId#,     #createDate#,      #startDate#,      #endDate#,      #creatorName1#, #creatorName2#,
 				#useStatus#,    #openDays#,   #resultPublicFlag#, #anonymousFlag#, #multiAnswerFlag#, #paritipateFlag#, #attachFlag#,   #modifyFlag#,   #draftFlag#,
 				#responseFlag#, #deleteUser#, #updateUser#,       #updateDate#,    #totalUser#,       #companyId#,      #tenantId#,	#mailFlag#,     #popupFlag#,
-				#closingText#
+				#closingText#,  #userExposedFlag#
 			)
 		]]>
 	</insert>
-	
+
+	<!--updateMode 별 업데이트 유형 
+	(0) 기본 수정 저장 (1) 수정/수정취소 시 관련 상태값 업데이트 
+	(2) 사용자 응답 저장 시 관련 상태갑 업데이트 (3) 응답삭제 시 responseFlag 업데이트 -->
 	<update id="EzSurveyDAO.updateSurveyItem">
 		update tbl_survey set
 		<isEqual property="updateMode" compareValue="0">
@@ -771,7 +776,8 @@
 			update_date        = #updateDate#,
 			mail_flag		   = #mailFlag#,
 			popup_flag		   = #popupFlag#,
-			closing_text       = #closingText#
+			closing_text       = #closingText#,
+			user_exposed_flag  = #userExposedFlag#
 		</isEqual>
 		<isEqual property="updateMode" compareValue="1">
 			use_status         = #useStatus#,

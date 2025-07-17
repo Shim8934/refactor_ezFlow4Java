@@ -155,6 +155,11 @@ var SurveyCreate     = function() {
 			publicSpanList[i].onchange = function(e) {toggleDaysInput(this)};
 		}
 		
+		var anonymousList = document.getElementsByName("anonymousSpan");
+		for (var elmt of anonymousList) {
+			elmt.addEventListener('change', handleAnonymousChange);
+		}
+		
 		var firstTab  = document.getElementsByClassName("gotoFirstTab");
 		var secondTab = document.getElementsByClassName("gotoSecondTab");
 		var thirdTab  = document.getElementsByClassName("gotoThirdTab");
@@ -295,6 +300,7 @@ var SurveyCreate     = function() {
 		var endDate        = document.getElementById("endDate").value;
 		var publicFlag     = parseInt(document.querySelector('input[name="publicSpan"]:checked').value);
 		var anonymousFlag  = parseInt(document.querySelector('input[name="anonymousSpan"]:checked').value);
+		var userExposedFlag = parseInt(document.querySelector('input[name="userExposedSpan"]:checked').value);
 		var multipleFlag   = parseInt(document.querySelector('input[name="multipleSpan"]:checked').value);
 		var userFlag       = parseInt(document.querySelector('input[name="targetSpan"]:checked').value);
 		var mailFlag       = parseInt(document.querySelector('input[name="mailSpan"]:checked').value);
@@ -312,6 +318,7 @@ var SurveyCreate     = function() {
 		surveyObj["infor"]["purpose"]   = surveyPurpose;
 		surveyObj["infor"]["public"]    = publicFlag;
 		surveyObj["infor"]["anonymous"] = anonymousFlag;
+		surveyObj["infor"]["userExposed"] = userExposedFlag;
 		surveyObj["infor"]["multiple"]  = multipleFlag;
 		surveyObj["infor"]["startDate"] = startDate;
 		surveyObj["infor"]["endDate"]   = endDate;
@@ -4593,6 +4600,7 @@ var SurveyCreate     = function() {
 		document.getElementById("cf-startDate").textContent  = qstInf["startDate"];
 		document.getElementById("cf-endDate").textContent    = qstInf["endDate"];
 		document.getElementById("cf-anoynymous").textContent = qstInf["anonymous"] == 0 ? SurveyMessages.strAnoynym1  : SurveyMessages.strAnoynym2;
+		document.getElementById("cf-userExposed").textContent = qstInf["userExposed"] == 0 ? SurveyMessages.strPublic2 : SurveyMessages.strPublic1;
 		document.getElementById("cf-multiple").textContent   = qstInf["multiple"]  == 0 ? SurveyMessages.strMultiple1 : SurveyMessages.strMultiple2;
 		document.getElementById("cf-mail").textContent   = qstInf["mail"]  == 0 ? SurveyMessages.strNotSend : SurveyMessages.strSend;
 		document.getElementById("cf-popup").textContent   = qstInf["popup"]  == 0 ? SurveyMessages.strNotSend : SurveyMessages.strSend;
@@ -5007,4 +5015,30 @@ function getStringFormatForDate(dateObj) {
 	if (month < 10) {month = "0" + month;}
 
 	return year + "-" + month + "-" + day;
+}
+
+/* 2025-07-18 양지혜 - 설문작성 > 기명여부 선택에 따른 참여자 공개여부 제어 */
+function handleAnonymousChange() {
+	var anonymousList = document.getElementsByName("anonymousSpan");
+	var userExposedList = document.getElementsByName("userExposedSpan");
+
+	var selectedVal = null;
+	for (var elmt of anonymousList) {
+		if (elmt.checked) {
+			selectedVal = elmt.value;
+			break;
+		}
+	}
+
+	if (selectedVal === '1') { /* 익명 */
+		for (var ue of userExposedList) {
+			ue.disabled = true;
+			if (ue.value === '0') { ue.checked = true; } 
+			else { ue.checked = false; }
+		}
+	} else {
+		for (var ue of userExposedList) {
+			ue.disabled = false;
+		}
+	}
 }

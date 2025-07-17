@@ -2921,6 +2921,15 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
             put("AFTER_MYSQL", "DEFAULT NULL COMMENT '추첨결과'");
             put("AFTER_ORACLE", "DEFAULT NULL");
         }});
+        // 2025-07-18 양지혜 - 전자설문 > 참여자 노출여부 
+        test.add(new HashMap<String, Object>(){{
+            put("TABLE","TBL_SURVEY");
+            put("COLUMN", "USER_EXPOSED_FLAG");
+            put("TYPE_MYSQL", "TINYINT(4)"); put("TYPE_ORACLE", "NUMBER(4,0)");
+            put("AFTER_MYSQL", "DEFAULT 1 COMMENT '참여자 노출여부'");
+            put("AFTER_ORACLE", "DEFAULT 1");
+        }});
+        
 		for (Map<String, Object> map : test) {
 			ezCommonDAO.alterTableAddColumns(map);
         }
