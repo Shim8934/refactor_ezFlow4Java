@@ -672,6 +672,7 @@
 	            objNode = createNodeInsert(xmlpara, objNode, "DATA");
 	            var xmlhttp = createXMLHttpRequest();
 	            createNodeAndInsertText(xmlpara, objNode, "USERID", g_loginID);
+				createNodeAndInsertText(xmlpara, objNode, "INMAILBOX", "YES");
 	            createNodeAndInsertText(xmlpara, objNode, "LISTCOUNT", document.getElementById("MailList").getAttribute("listpageCount"));
 	            createNodeAndInsertText(xmlpara, objNode, "REFRESHINTERVAL", "${mailGeneral.refreshInterval}");
 	            createNodeAndInsertText(xmlpara, objNode, "KEEPDELETELENGTH", "${mailGeneral.keepDeleteLength}");

@@ -119,7 +119,7 @@
 				var url = "/ezEmail/mailGeneralSave.do?MODE=ALL" ;
 			    var previewSubTreeSlb = $("#previewSubTreeSlb option:selected").val();
 			    var textOptionVal = $("#textOptionSlb option:selected").val();
-				var sendStr = "<DATA><LISTCOUNT>" + listcount.value + "</LISTCOUNT><REFRESHINTERVAL>" + refreshinterval.value + "</REFRESHINTERVAL>"+
+				var sendStr = "<DATA><INMAILBOX>NO</INMAILBOX><LISTCOUNT>" + listcount.value + "</LISTCOUNT><REFRESHINTERVAL>" + refreshinterval.value + "</REFRESHINTERVAL>"+
 				                "<KEEPDELETELENGTH>" + document.getElementById("AutoSaveTime").value + "</KEEPDELETELENGTH>"+
 				                "<PREVIEWMODE>" + document.getElementById("PreviewMode").value + "</PREVIEWMODE>"+
 				                "<PREVIEWWLIST>" + document.getElementById("WListUser").value + "</PREVIEWWLIST>" +
