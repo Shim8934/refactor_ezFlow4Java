@@ -774,7 +774,7 @@ form{display:inline;margin:0}
 .file{height:50px;width:100%}
 .file input {border-width:none;}
 .file .pos1 td{word-break:break-all; height:50px;table-layout:fixed;overflow:auto}
-.file div {OVERFLOW:auto;padding:0px 0;height:50px}
+/*.file div {OVERFLOW:auto;padding:0px 0;height:50px}*/
 
 .file2{height:100%;width:100%;}
 .file2 input {border-width:none;}
