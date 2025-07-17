@@ -872,7 +872,7 @@
 	        			<tr id="tr_STime" ${strDspMod1}>
 	          				<th> <spring:message code="ezResource.t197"/></th>
 	          				<td width="100%" colspan="3" id="Td_StartDate" style="overflow:hidden;">
-	          					<div class="custom_checkbox"><input type="checkbox" id="AllDay" <c:if test="${allDay eq '1' && dayView ne 0}">checked</c:if> onClick="display_time_Unshow()" /></div><spring:message code="ezResource.t211"/>
+	          					<div class="custom_checkbox"><input type="checkbox" id="AllDay" <c:if test="${allDay eq '1' && dayView ne 0}">checked</c:if> onClick="display_time_Unshow()" /><label for="AllDay"><spring:message code="ezResource.t211"/></label></div>
 	          					<input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly">
 	          					<input id="Stimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center" onkeypress="return KeEventControl(this);" onkeydown="return KeEventControl(this);" onkeyup="return KeEventControl(this);" onmousedown="return false"/>
 	           						~

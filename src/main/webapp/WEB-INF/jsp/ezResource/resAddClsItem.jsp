@@ -562,28 +562,37 @@
         					</tr>
 							<tr>
 								<th> <spring:message code="ezResource.lyj01"/></th>
-								<td colspan="3" style="width:100%"><div class="custom_radio"><input type="radio" style="margin-top: 0px;" name="repeat" id="repeat1" value="0" checked></div>
-									<spring:message code="ezResource.lyj02"/>
-									<div class="custom_radio"><input type="radio" name="repeat" style="margin-top: 0px;" id="repeat2" value="1"></div>
-									<spring:message code="ezResource.lyj03"/>
+								<td colspan="3" style="width:100%">
+									<div class="custom_radio">
+										<input type="radio" style="margin-top: 0px;" name="repeat" id="repeat1" value="0" checked>
+										<label for="repeat1"><spring:message code="ezResource.lyj02"/></label>
+										<input type="radio" name="repeat" style="margin-top: 0px;" id="repeat2" value="1">
+										<label for="repeat2"><spring:message code="ezResource.lyj03"/></label>
+									</div>
 								</td>
 							</tr>
         					<tr>
           						<th> <spring:message code="ezResource.t149"/></th>
-          						<td colspan="3" style="width:100%"><div class="custom_radio"><input type="radio" style="margin-top: 0px;" name="approve" id="approve1" value="1" checked></div>
-            						<spring:message code="ezResource.t156"/>
-            						<div class="custom_radio"><input type="radio" name="approve" style="margin-top: 0px;" id="approve0" value="0"></div>
-            						<spring:message code="ezResource.t157"/>
-            						<div class="custom_radio"><input type="radio" name="approve" id="approve2" style="margin-top: 0px;" value="2"></div>
-            						<spring:message code="ezResource.kje01"/>
+          						<td colspan="3" style="width:100%">
+									<div class="custom_radio">
+										<input type="radio" style="margin-top: 0px;" name="approve" id="approve1" value="1" checked>
+										<label for="approve1"><spring:message code="ezResource.t156"/></label>
+										<input type="radio" name="approve" style="margin-top: 0px;" id="approve0" value="0">
+										<label for="approve0"><spring:message code="ezResource.t157"/></label>
+										<input type="radio" name="approve" id="approve2" style="margin-top: 0px;" value="2">
+										<label for="approve2"><spring:message code="ezResource.kje01"/></label>
+									</div>
             					</td>
         					</tr>
         					<tr>
           						<th><spring:message code="ezResource.kmsr11"/></th>
-          						<td colspan="3" style="width:100%"><div class="custom_radio"><input type="radio" style="margin-top: 0px;" name="return" id="return1" value="0" checked></div>
-            						<spring:message code="ezResource.kmsr12"/>&nbsp;
-            						<div class="custom_radio"><input type="radio" name="return" style="margin-top: 0px;" id="return2" value="1"></div>
-            						<spring:message code="ezResource.kmsr13"/>
+          						<td colspan="3" style="width:100%">
+									<div class="custom_radio">
+										<input type="radio" style="margin-top: 0px;" name="return" id="return1" value="0" checked>
+										<label for="return1"><spring:message code="ezResource.kmsr12"/>&nbsp;</label>
+										<input type="radio" name="return" style="margin-top: 0px;" id="return2" value="1">
+										<label for="return2"><spring:message code="ezResource.kmsr13"/></label>
+									</div>
             					</td>
         					</tr>
         					<tr>
