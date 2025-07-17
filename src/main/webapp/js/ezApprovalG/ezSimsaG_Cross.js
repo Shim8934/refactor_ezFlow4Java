@@ -637,7 +637,7 @@ function SizeConvert(size) {
 }
 
 function covBody(pbody) {
-	pbody = removeTags(pbody, '<caption><img><i><b><u><sub><sup><br><p><span><ul><ol><li><table><tbody><tr><td>');
+	pbody = removeTags(pbody, '<caption><img><i><b><u><sub><sup><br><p><span><ul><ol><li><table><thead><tbody><tr><th><td>');
 	
     var compSTR, subcompSTR, compChar, startIdx, findIdx, nextIdx, endIdx;
     var i, strgt, startflag;

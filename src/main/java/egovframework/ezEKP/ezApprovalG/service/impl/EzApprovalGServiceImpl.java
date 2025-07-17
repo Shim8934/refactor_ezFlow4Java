@@ -29040,7 +29040,97 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			}
 			
 			logger.debug("table tag parsing ended");
-			
+
+			logger.debug("th tag parsing started");
+            
+			for (int k = 0; k < doc.getElementsByTag("th").size(); k++) {
+				Element thElement = doc.getElementsByTag("th").get(k);
+				String thStyle = thElement.attr("style");
+				if (thElement.hasAttr("align")) {
+					switch (thElement.attr("align").toLowerCase()) {
+					case "left":
+                    case "center":
+                    case "right":
+                    case "adjust":
+                        break;
+					default:
+						thElement.attr("align", "adjust");
+						break;
+					}
+				}
+				
+				if (thElement.hasAttr("text-align")) {
+					switch (thElement.attr("text-align").toLowerCase()) {
+					case "left":
+                    case "center":
+                    case "right":
+                    case "justify":
+                    case "char":
+                    	thElement.attr("align", thElement.attr("text-align"));
+                    	break;
+					default:
+						thElement.attr("align", "justify");
+						break;
+					}
+				}
+				
+				if (thElement.hasAttr("valign")) {
+					switch (thElement.attr("valign").toLowerCase()) {
+					case "top":
+                    case "middle":
+                    case "bottom":
+                    case "baseline":
+                        break;
+					default:
+						thElement.attr("valign", "baseline");
+						break;
+					}
+				}
+				
+				thStyle = " " + thStyle;
+				
+				if (!thElement.hasAttr("width")) {
+					if (thStyle.indexOf(" width") > 0) {
+						thElement.attr("width_kaoni", SizeConvertToMM(thStyle.substring(thStyle.indexOf(" width"), thStyle.indexOf(";", thStyle.indexOf(" width")))));
+						thStyle.replace(thStyle.substring(thStyle.indexOf(" width"), thStyle.indexOf(";", thStyle.indexOf(" width"))), "");
+						thElement.attr("style", thStyle);
+					} 
+				} else {
+					if (thStyle.indexOf(" width") > 0) {
+						thElement.attr("width_kaoni", SizeConvertToMM(thStyle.substring(thStyle.indexOf(" width"), thStyle.indexOf(";", thStyle.indexOf(" width")))));
+						thStyle.replace(thStyle.substring(thStyle.indexOf(" width"), thStyle.indexOf(";", thStyle.indexOf(" width"))), "");
+						thElement.attr("style", thStyle);
+					} else {
+						thElement.attr("width_kaoni", SizeConvertToMM(thElement.attr("width").trim()));
+					}
+					thElement.removeAttr("width");
+				}
+				
+				if (!thElement.hasAttr("height")) {
+					if (thStyle.indexOf("height") > 0) {
+						thElement.attr("height_kaoni", SizeConvertToMM(thStyle.substring(thStyle.indexOf("height"), thStyle.indexOf(";", thStyle.indexOf("height")))));
+						thStyle.replace(thStyle.substring(thStyle.indexOf("height"), thStyle.indexOf(";", thStyle.indexOf("height"))), "");
+						thElement.attr("style", thStyle);
+					} 
+				} else {
+					if (thStyle.indexOf("height") > 0) {
+						thElement.attr("height_kaoni", SizeConvertToMM(thStyle.substring(thStyle.indexOf("height"), thStyle.indexOf(";", thStyle.indexOf("height")))));
+						thStyle.replace(thStyle.substring(thStyle.indexOf("height"), thStyle.indexOf(";", thStyle.indexOf("height"))), "");
+						thElement.attr("style", thStyle);
+					} else {
+						thElement.attr("height_kaoni", SizeConvertToMM(thElement.attr("height").trim()));
+					}
+					thElement.removeAttr("height");
+				}
+				
+				if (thElement.hasAttr("style")) {
+					thElement.removeAttr("style");
+				}
+				
+			}
+
+			logger.debug("th tag parsing ended");
+            
 			logger.debug("td tag parsing started");
 			
 			for (int k = 0; k < doc.getElementsByTag("td").size(); k++) {
