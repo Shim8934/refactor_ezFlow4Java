@@ -47,6 +47,9 @@
 					if (window.parent.hiddenMoreMenu) {
 						parent.hiddenMoreMenu(e);
 					}
+					if(window.parent.hideLayer) {
+						parent.HiddenContextMenu;
+					}
 				})
 				
 		    }
