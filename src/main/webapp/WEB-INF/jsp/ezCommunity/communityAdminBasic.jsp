@@ -110,30 +110,31 @@
 				<tr>
 					<th><spring:message code ='ezCommunity.t65' /></th>
 					<td style="padding:5px">
-						<c:choose>
-							<c:when test="${club.c_ClubConfirmType == '2'}">
-								<div class="custom_radio"><input type="radio" name="c_ClubConfirmType" value="2" checked ></div>
-							</c:when>
+						<div class="custom_radio">
+							<c:choose>
+								<c:when test="${club.c_ClubConfirmType == '2'}">
+									<input id="c_ClubConfirmType1" type="radio" name="c_ClubConfirmType" value="2" checked >
+								</c:when>
+								
+								<c:otherwise>
+									<input id="c_ClubConfirmType1" type="radio" name="c_ClubConfirmType" value="2" >
+								</c:otherwise>
+							</c:choose>
 							
-							<c:otherwise>
-								<div class="custom_radio"><input type="radio" name="c_ClubConfirmType" value="2" ></div>
-							</c:otherwise>
-						</c:choose>
-						
-						<span class="radioTypeText"><spring:message code ='ezCommunity.t451' /></span>
-						
-						<c:choose>
-							<c:when test="${club.c_ClubConfirmType == '3'}">
-								<div class="custom_radio"><input type="radio" name="c_ClubConfirmType" value="3" checked ></div>
-							</c:when>
+							<label for="c_ClubConfirmType1"><spring:message code ='ezCommunity.t451' /></label>
+										
+							<c:choose>
+								<c:when test="${club.c_ClubConfirmType == '3'}">
+									<input id="c_ClubConfirmType2" type="radio" name="c_ClubConfirmType" value="3" checked >
+								</c:when>
+								
+								<c:otherwise>
+									<input id="c_ClubConfirmType2" type="radio" name="c_ClubConfirmType" value="3" >
+								</c:otherwise>
+							</c:choose>
 							
-							<c:otherwise>
-								<div class="custom_radio"><input type="radio" name="c_ClubConfirmType" value="3" ></div>
-							</c:otherwise>
-						</c:choose>
-						
-						<span class="radioTypeText"><spring:message code ='ezCommunity.t14' /></span>
-						
+							<label for="c_ClubConfirmType2"><spring:message code ='ezCommunity.t14' /></label>
+						</div>
 						<div style="margin-top:5px">
 							<spring:message code ='ezCommunity.t452' /><br>
 							<spring:message code ='ezCommunity.t453' />
@@ -143,30 +144,31 @@
 				<tr>
 					<th><spring:message code ='ezCommunity.t15' /></th>
 					<td style="padding:5px">
-						<c:choose>
-							<c:when test="${club.c_ClubGubun == '2' }">
-								<div class="custom_radio"><input type="radio" name="c_ClubGubun" value="2" checked ></div>
-							</c:when>
+						<div class="custom_radio">
+							<c:choose>
+								<c:when test="${club.c_ClubGubun == '2' }">
+									<input id="c_ClubGubun1" type="radio" name="c_ClubGubun" value="2" checked >
+								</c:when>
+								
+								<c:otherwise>
+									<input id="c_ClubGubun1" type="radio" name="c_ClubGubun" value="2" >
+								</c:otherwise>
+							</c:choose>
 							
-							<c:otherwise>
-								<div class="custom_radio"><input type="radio" name="c_ClubGubun" value="2" ></div>
-							</c:otherwise>
-						</c:choose>
-						
-						<span class="radioTypeText"><spring:message code ='ezCommunity.t454' /></span>
-						
-						<c:choose>
-							<c:when test="${club.c_ClubGubun == '3' }">
-								<div class="custom_radio"><input type="radio" name="c_ClubGubun" value="3" checked ></div>
-							</c:when>
+							<label for="c_ClubGubun1"><spring:message code ='ezCommunity.t454' /></label>
 							
-							<c:otherwise>
-								<div class="custom_radio"><input type="radio" name="c_ClubGubun" value="3" ></div>
-							</c:otherwise>
-						</c:choose>
-						
-						<span class="radioTypeText"><spring:message code ='ezCommunity.t17' /></span>
-						
+							<c:choose>
+								<c:when test="${club.c_ClubGubun == '3' }">
+									<input id="c_ClubGubun2" type="radio" name="c_ClubGubun" value="3" checked >
+								</c:when>
+								
+								<c:otherwise>
+									<input id="c_ClubGubun2" type="radio" name="c_ClubGubun" value="3" >
+								</c:otherwise>
+							</c:choose>
+							
+							<label for="c_ClubGubun2"><spring:message code ='ezCommunity.t17' /></label>
+						</div>
 						<div style="margin-top:5px">
 							<spring:message code ='ezCommunity.t1017' /><br>
 							<spring:message code ='ezCommunity.t1018' />
@@ -176,29 +178,32 @@
 				<tr style="display:none">
 					<th><spring:message code ='ezCommunity.t68' /></th>
 					<td>
-						<c:choose>
-							<c:when test="${club.isIn == '1' }">
-								<div class="custom_radio"><input type="radio" name="isIn" value="1" checked ></div>
-							</c:when>
+						<div class="custom_radio">
+							<c:choose>
+								<c:when test="${club.isIn == '1' }">
+									<input id="isIn1" type="radio" name="isIn" value="1" checked >
+								</c:when>
+								
+								<c:otherwise>
+									<input id="isIn1" type="radio" name="isIn" value="1" >
+								</c:otherwise>
+							</c:choose>
 							
-							<c:otherwise>
-								<div class="custom_radio"><input type="radio" name="isIn" value="1" ></div>
-							</c:otherwise>
-						</c:choose>
-						
-						<span class="radioTypeText"><spring:message code ='ezCommunity.t457' /></span>
-						
-						<c:choose>
-							<c:when test="${club.isIn == '2' }">
-								<div class="custom_radio"><input type="radio" name="isIn" value="2" checked ></div>
-							</c:when>
+							<label for="isIn1"><spring:message code ='ezCommunity.t457' /></label>
 							
-							<c:otherwise>
-								<div class="custom_radio"><input type="radio" name="isIn" value="2" ></div>
-							</c:otherwise>
-						</c:choose>
+							<c:choose>
+								<c:when test="${club.isIn == '2' }">
+									<input id="isIn2" type="radio" name="isIn" value="2" checked >
+								</c:when>
+								
+								<c:otherwise>
+									<input id="isIn2" type="radio" name="isIn" value="2" >
+								</c:otherwise>
+							</c:choose>
 						
-						<spring:message code ='ezCommunity.t458' /><br>
+							<label for="isIn2"><spring:message code ='ezCommunity.t458' /></label>
+						</div>
+						<br>
 						<spring:message code ='ezCommunity.t459' /><br>
 						<spring:message code ='ezCommunity.t460' />
 					</td>

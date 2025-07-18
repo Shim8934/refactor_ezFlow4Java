@@ -76,12 +76,14 @@
 			<tr>
 				<th><spring:message code = 'ezCommunity.t31' /></th>
 				<td>
-					<div class="custom_radio"><input type="radio" id="searchID" value="id" name="flag" style="margin:0px 0px -2px 3px">
-						<label class="radioTypeText"><spring:message code = 'ezCommunity.t508' /></label></div>
-	        		<div class="custom_radio"><input type="radio" id="searchName" value="name" name="flag" checked style="margin:0px 0px -2px 3px">
-						<label class="radioTypeText"><spring:message code = 'ezCommunity.t509' /></label></div>
-	        		<input style="height:22px" id ="ser" type="text" onkeypress="search()">
-	        		<a class="imgbtn imgbck" style="vertical-align: middle;margin-top:2px"><span onClick="sendit()"><spring:message code = 'ezCommunity.t31' /></span></a>
+					<div class="custom_radio">
+						<input type="radio" id="searchID" value="id" name="flag" style="margin:0px 0px -2px 3px">
+						<label for="searchID" class="radioTypeText"><spring:message code = 'ezCommunity.t508' /></label>
+	        			<input type="radio" id="searchName" value="name" name="flag" checked style="margin:0px 0px -2px 3px">
+						<label for="searchName" class="radioTypeText"><spring:message code = 'ezCommunity.t509' /></label>
+	        			<input style="height:22px" id ="ser" type="text" onkeypress="search()">
+	        			<a class="imgbtn imgbck" style="vertical-align: middle;margin-top:2px"><span onClick="sendit()"><spring:message code = 'ezCommunity.t31' /></span></a>
+					</div>
 	        	</td>
 	    	</tr>
 	  	</table>

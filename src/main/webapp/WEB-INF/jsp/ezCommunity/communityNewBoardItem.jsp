@@ -1122,18 +1122,18 @@
 							<td>
 								<!-- 2018-07-16 김보미 - 가운데 정렬을 위한 div -->
 								<div style="height: 24px;vertical-align: middle;display: inline-block;">
-									<c:choose>
-										<c:when test="${pReservedItem == 'true' }">
-											<div class="custom_checkbox"><input type="checkbox" id="chk_reservation"
-											onclick="Reservation_onclick()" checked></div>
-											<spring:message code='ezCommunity.t913' />
-										</c:when>
-										<c:otherwise>
-											<div class="custom_checkbox"><input type="checkbox" id="chk_reservation"
-											onclick="Reservation_onclick()"></div>
-											<spring:message code='ezCommunity.t913' />
-										</c:otherwise>
-									</c:choose> 
+									<div class="custom_checkbox">
+										<c:choose>
+											<c:when test="${pReservedItem == 'true' }">
+												<input type="checkbox" id="chk_reservation" onclick="Reservation_onclick()" checked>
+												<label for="chk_reservation"><spring:message code='ezCommunity.t913' /></label>
+											</c:when>
+											<c:otherwise>
+												<input type="checkbox" id="chk_reservation" onclick="Reservation_onclick()">
+												<label for="chk_reservation"><spring:message code='ezCommunity.t913' /></label>
+											</c:otherwise>
+										</c:choose> 
+									</div>
 									<span id="reservation_date">
 										<input type="text" id="Sdatepicker" oninput="this.value=this.value.replace(/[^0-9.\-]/g, '').replace(/(\..*)\./g, '$1');" style="width: 80px; text-align: center" />
 										<input id="Stimepicker" type="text" class="time" oninput="this.value=this.value.replace(/[^0-9.\:]/g, '').replace(/(\..*)\./g, '$1');" style="width: 43px; margin-left: 10px; text-align: center;" /> 
@@ -1146,36 +1146,47 @@
 						</tr>
 						<tr id="tdEndDate">
 							<th><spring:message code='ezCommunity.t384' /></th>
-							<td><c:choose>
-									<c:when
-										test="${(pMode != 'modify' && boardInfo.expireDays =='-1') || (pMode == 'modify' && fn:substring(item.endDate, 0, 4) == '9999') || pUrl != '' }">
-										<span id="Chkbox"><div class="custom_checkbox"><input type="checkbox"
-											id="ChkPermanence" name="ChkPermanence"
-											  onclick="return ChkPermanent()" checked></div>
-										<spring:message code='ezCommunity.t930' /></span>
-										<span id="Makedate"><input type="text" id="Edatepicker" readonly="readonly"
-											style="width: 80px; text-align: center"></span>
+							<td>
+								<c:choose>
+									<c:when test="${(pMode != 'modify' && boardInfo.expireDays =='-1') || (pMode == 'modify' && fn:substring(item.endDate, 0, 4) == '9999') || pUrl != '' }">
+										<span id="Chkbox">
+											<div class="custom_checkbox">
+												<input type="checkbox" id="ChkPermanence" name="ChkPermanence" onclick="return ChkPermanent()" checked>
+												<label for="ChkPermanence"><spring:message code='ezCommunity.t930' /></label>
+											</div>
+										</span>
+										<span id="Makedate"><input type="text" id="Edatepicker" readonly="readonly" style="width: 80px; text-align: center"></span>
 									</c:when>
 									<c:otherwise>
-										<span id="Chkbox"><div class="custom_checkbox"><input type="checkbox"
-											id="ChkPermanence" name="ChkPermanence"
-										 	 onclick="return ChkPermanent()"></div>
-										<spring:message code='ezCommunity.t930' /></span>
-										<span id="Makedate"><input type="text" id="Edatepicker" readonly="readonly"
-											style="width: 80px; text-align: center"></span>
+										<span id="Chkbox">
+											<div class="custom_checkbox">
+												<input type="checkbox" id="ChkPermanence" name="ChkPermanence" onclick="return ChkPermanent()">
+												<label for="ChkPermanence"><spring:message code='ezCommunity.t930' /></label>
+											</div>
+										</span>
+										<span id="Makedate"><input type="text" id="Edatepicker" readonly="readonly" style="width: 80px; text-align: center"></span>
 									</c:otherwise>
-								</c:choose></td>
+								</c:choose>
+							</td>
 						</tr>
 						<tr>
 							<th><spring:message code='ezCommunity.t1171' /></th>
 							<c:choose>
 								<c:when test="${item.importance == '1' }">
-									<td><div class="custom_checkbox"><input type="checkbox" id="chkEmergent" checked></div>
-									<spring:message code='ezCommunity.t1172' /></td>
+									<td>
+										<div class="custom_checkbox">
+											<input type="checkbox" id="chkEmergent" checked>
+											<label for="chkEmergent"><spring:message code='ezCommunity.t1172' /></label>
+										</div>
+									</td>
 								</c:when>
 								<c:otherwise>
-									<td><div class="custom_checkbox"><input type="checkbox" id="chkEmergent"></div>
-									<spring:message code='ezCommunity.t1172' /></td>
+									<td>
+										<div class="custom_checkbox">
+											<input type="checkbox" id="chkEmergent">
+											<label for="chkEmergent"><spring:message code='ezCommunity.t1172' /></label>
+										</div>
+									</td>
 								</c:otherwise>
 							</c:choose>
 						</tr>

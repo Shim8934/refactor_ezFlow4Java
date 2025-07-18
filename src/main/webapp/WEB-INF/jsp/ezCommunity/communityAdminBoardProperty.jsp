@@ -532,19 +532,21 @@
 		        <td>
 			        <c:choose>
 			        	<c:when test="${boardProp.itemExpires == '-1' }">
-							<div class="custom_checkbox"><input type="checkbox" id="chkPermanent" onClick="chkPermanent_onclick()" checked></div>
-		      				<spring:message code = 'ezCommunity.t385' />
-							<div class="custom_checkbox"><input type="checkbox" id="chkExpires" onClick="chkExpires_onclick()"></div>
-							<input type="text" id="txtExpires" value="365" style="width:35px" maxlength="3">
-		      				<spring:message code = 'ezCommunity.t386' />
+							<div class="custom_checkbox">
+								<input type="checkbox" id="chkPermanent" onClick="chkPermanent_onclick()" checked>
+								<label for="chkPermanent"><spring:message code = 'ezCommunity.t385' /></label>
+								<input type="checkbox" id="chkExpires" onClick="chkExpires_onclick()">
+								<label for="chkExpires"><input type="text" id="txtExpires" value="365" style="width:35px" maxlength="3"><spring:message code = 'ezCommunity.t386' /></label>
+							</div>
 			        	</c:when>
 							
 			        	<c:otherwise>
-			        		<div class="custom_checkbox"><input type="checkbox" id="chkPermanent" onClick="chkPermanent_onclick()"></div>
-							<spring:message code = 'ezCommunity.t385' />
-							<div class="custom_checkbox"><input type="checkbox" id="chkExpires" onClick="chkExpires_onclick()" checked></div>
-							<input type="text" id="txtExpires" style="width:35px" value="${boardProp.itemExpires}" maxlength="3">
-							<spring:message code = 'ezCommunity.t386' />
+			        		<div class="custom_checkbox">
+								<input type="checkbox" id="chkPermanent" onClick="chkPermanent_onclick()">
+								<label for="chkPermanent"><spring:message code = 'ezCommunity.t385' /></label>
+								<input type="checkbox" id="chkExpires" onClick="chkExpires_onclick()" checked>
+								<label for="chkExpires"><input type="text" id="txtExpires" style="width:35px" value="${boardProp.itemExpires}" maxlength="3"><spring:message code = 'ezCommunity.t386' /></label>
+							</div>
 			        	</c:otherwise>
 			        </c:choose>
 		        </td>
@@ -557,8 +559,8 @@
 							<spring:message code = 'ezCommunity.t388' />
 							<input type="text" id="deleteafter" style="width:50px" maxlength="3">
 							<spring:message code = 'ezCommunity.t389' /><br>
-							<div class="custom_checkbox"><input type="checkbox" id="usedeleteafter"></div>
-							<spring:message code = 'ezCommunity.t390' />
+							<div class="custom_checkbox"><input type="checkbox" id="usedeleteafter">
+							<label for="usedeleteafter"> <spring:message code = 'ezCommunity.t390' /></label></div>
 						</td>
       				</c:when>
       				
@@ -568,8 +570,8 @@
 								<spring:message code = 'ezCommunity.t388' />
 								<input type="text" id="deleteafter" style="width:50px" value="${boardProp.deleteAfter}" maxlength="3">
 								<spring:message code = 'ezCommunity.t389' /><br>
-								<div class="custom_checkbox"><input type="checkbox" id="usedeleteafter" checked></div>
-								<spring:message code = 'ezCommunity.t390' />
+								<div class="custom_checkbox"><input type="checkbox" id="usedeleteafter" checked>
+								<label for="usedeleteafter"><spring:message code = 'ezCommunity.t390' /></label></div>
 							</td>
       				</c:otherwise>
       			</c:choose>
@@ -577,74 +579,78 @@
       		<tr style="${_style}">
 				<th><spring:message code = 'ezCommunity.t392' /></th>
         		<td>
-        			<c:choose>
-        				<c:when test="${boardProp.gubun == '1' }">
-							<div class="custom_checkbox"><input type="checkbox" id="chkGroupBoard" onClick="checkboardtype(event)" checked></div>
-      						<spring:message code = 'ezCommunity.t393' />
-        				</c:when>
-        				
-        				<c:otherwise>
-							<div class="custom_checkbox"><input type="checkbox" id="chkGroupBoard" onClick="checkboardtype(event)"></div>
-      						<spring:message code = 'ezCommunity.t393' />
-        				</c:otherwise>
-        			</c:choose>
-        			
-        			<c:choose>
-        				<c:when test="${boardProp.gubun == '2' }">
-							<div class="custom_checkbox"><input type="checkbox" id="chkAnonyBoard" onClick="checkboardtype(event)" checked></div>
-      						<spring:message code = 'ezCommunity.t394' />
-        				</c:when>
-        				
-        				<c:otherwise>
-							<div class="custom_checkbox"><input type="checkbox" id="chkAnonyBoard" onClick="checkboardtype(event)"></div>
-      						<spring:message code = 'ezCommunity.t394' />
-        				</c:otherwise>
-        			</c:choose>
-        			
-        			<c:choose>
-        				<c:when test="${boardProp.gubun == '3' }">
-							<div class="custom_checkbox"><input type="checkbox" id="chkPhotoBoard" onClick="checkboardtype(event)" checked></div>
-							<spring:message code = 'ezCommunity.t395' />
-        				</c:when>
-        				
-        				<c:otherwise>
-							<div class="custom_checkbox"><input type="checkbox" id="chkPhotoBoard" onClick="checkboardtype(event)"></div>
-      						<spring:message code = 'ezCommunity.t395' />
-        				</c:otherwise>
-        			</c:choose>
+					<div class="custom_checkbox">
+						<c:choose>
+							<c:when test="${boardProp.gubun == '1' }">
+								<input type="checkbox" id="chkGroupBoard" onClick="checkboardtype(event)" checked>
+								<label for="chkGroupBoard"><spring:message code = 'ezCommunity.t393' /></label>
+							</c:when>
+							
+							<c:otherwise>
+								<input type="checkbox" id="chkGroupBoard" onClick="checkboardtype(event)">
+								<label for="chkGroupBoard"><spring:message code = 'ezCommunity.t393' /></label>
+							</c:otherwise>
+						</c:choose>
+						
+						<c:choose>
+							<c:when test="${boardProp.gubun == '2' }">
+								<input type="checkbox" id="chkAnonyBoard" onClick="checkboardtype(event)" checked>
+								<label for="chkAnonyBoard"><spring:message code = 'ezCommunity.t394' /></label>
+							</c:when>
+							
+							<c:otherwise>
+								<input type="checkbox" id="chkAnonyBoard" onClick="checkboardtype(event)">
+								<label for="chkAnonyBoard"><spring:message code = 'ezCommunity.t394' /></label>
+							</c:otherwise>
+						</c:choose>
+						
+						<c:choose>
+							<c:when test="${boardProp.gubun == '3' }">
+								<input type="checkbox" id="chkPhotoBoard" onClick="checkboardtype(event)" checked>
+								<label for="chkPhotoBoard"><spring:message code = 'ezCommunity.t395' /></label>
+							</c:when>
+							
+							<c:otherwise>
+								<input type="checkbox" id="chkPhotoBoard" onClick="checkboardtype(event)">
+								<label for="chkPhotoBoard"><spring:message code = 'ezCommunity.t395' /></label>
+							</c:otherwise>
+						</c:choose>
+					</div>
       			</td> 
         	</tr>
 			<tr style="display:none">
 				<th><spring:message code = 'ezCommunity.t397' /></th>
 				<td>
-					<c:choose>
-						<c:when test="${boardProp.versionUse == '0' || boardProp.versionUse == '' }">
-							<div class="custom_radio"><input type="radio" name="recoard" value="0" onClick="return cherecoardtype(0)" checked></div>
-							<spring:message code = 'ezCommunity.t398' />
-							<div class="custom_radio"><input type="radio" name="recoard" value="1" onClick="return cherecoardtype(1)"></div>
-							<spring:message code = 'ezCommunity.t399' />
-							<div class="custom_radio"><input type="radio" name="recoard" value="2" onClick="return cherecoardtype(2)"></div>
-							<spring:message code = 'ezCommunity.t400' />
-						</c:when>
-						
-						<c:when test="${boardProp.versionUse == '1' }">
-							<div class="custom_radio"><input type="radio" name="recoard" value="0" onClick="return cherecoardtype(0)"></div>
-							<spring:message code = 'ezCommunity.t398' />
-							<div class="custom_radio"><input type="radio" name="recoard" value="1" onClick="return cherecoardtype(1)" checked></div>
-							<spring:message code = 'ezCommunity.t401' />
-							<div class="custom_radio"><input type="radio" name="recoard" value="2" onClick="return cherecoardtype(2)"></div>
-							<spring:message code = 'ezCommunity.t400' />
-						</c:when>
-						
-						<c:otherwise>
-							<div class="custom_radio"><input type="radio" name="recoard" value="0" onClick="return cherecoardtype(0)"></div>
-							<spring:message code = 'ezCommunity.t398' />
-							<div class="custom_radio"><input type="radio" name="recoard" value="1" onClick="return cherecoardtype(1)"></div>
-							<spring:message code = 'ezCommunity.t401' />
-							<div class="custom_radio"><input type="radio" name="recoard" value="2" onClick="return cherecoardtype(2)" checked></div>
-							<spring:message code = 'ezCommunity.t400' />
-						</c:otherwise>
-					</c:choose>
+					<div class="custom_radio">
+						<c:choose>
+							<c:when test="${boardProp.versionUse == '0' || boardProp.versionUse == '' }">
+								<input id="recoard1" type="radio" name="recoard" value="0" onClick="return cherecoardtype(0)" checked>
+								<label for="recoard1"><spring:message code = 'ezCommunity.t398' /></label>
+								<input id="recoard2" type="radio" name="recoard" value="1" onClick="return cherecoardtype(1)">
+								<label for="recoard2"><spring:message code = 'ezCommunity.t399' /></label>
+								<input id="recoard3" type="radio" name="recoard" value="2" onClick="return cherecoardtype(2)">
+								<label for="recoard3"><spring:message code = 'ezCommunity.t400' /></label>
+							</c:when>
+							
+							<c:when test="${boardProp.versionUse == '1' }">
+								<input id="recoard1" type="radio" name="recoard" value="0" onClick="return cherecoardtype(0)">
+								<label for="recoard1"><spring:message code = 'ezCommunity.t398' /></label>
+								<input id="recoard2" type="radio" name="recoard" value="1" onClick="return cherecoardtype(1)" checked>
+								<label for="recoard2"><spring:message code = 'ezCommunity.t401' /></label>
+								<input id="recoard3" type="radio" name="recoard" value="2" onClick="return cherecoardtype(2)">
+								<label for="recoard3"><spring:message code = 'ezCommunity.t400' /></label>
+							</c:when>
+							
+							<c:otherwise>
+								<input id="recoard1" type="radio" name="recoard" value="0" onClick="return cherecoardtype(0)">
+								<label for="recoard1"><spring:message code = 'ezCommunity.t398' /></label>
+								<input id="recoard2" type="radio" name="recoard" value="1" onClick="return cherecoardtype(1)">
+								<label for="recoard2"><spring:message code = 'ezCommunity.t401' /></label>
+								<input id="recoard3" type="radio" name="recoard" value="2" onClick="return cherecoardtype(2)" checked>
+								<label for="recoard3"><spring:message code = 'ezCommunity.t400' /></label>
+							</c:otherwise>
+						</c:choose>
+					</div>
 				</td>
 			</tr>
       		<tr style="display:none">
@@ -687,46 +693,48 @@
 			<%-- 2021-11-12 홍승비 - 메일알림 옵션 분리, 게시/수정/댓글알림 추가 --%>
 				<th><spring:message code = 'ezNotification.hth38' /></th>
 				<td>
-					<c:choose>
-						<c:when test="${boardProp.mailFG_Post == 'Y' }">
-							<div class="custom_checkbox"><input type=checkbox id="chkMailFGPost" checked></div>
-							<spring:message code = 'ezBoard.HSBMail01' />
-						</c:when>
-						<c:otherwise>
-							<div class="custom_checkbox"><input type=checkbox id="chkMailFGPost"></div>
-      						<spring:message code = 'ezBoard.HSBMail01' />
-						</c:otherwise>
-					</c:choose>
-					<c:choose>
-						<c:when test="${boardProp.mailFG_Mod == 'Y' }">
-							<div class="custom_checkbox"><input type=checkbox id="chkMailFGMod" checked></div>
-							<spring:message code = 'ezBoard.HSBMail02' />
-						</c:when>
-						<c:otherwise>
-							<div class="custom_checkbox"><input type=checkbox id="chkMailFGMod"></div>
-      						<spring:message code = 'ezBoard.HSBMail02' />
-						</c:otherwise>
-					</c:choose>
-					<c:choose>
-						<c:when test="${boardProp.mailFG_Comment == 'Y' }">
-							<div class="custom_checkbox"><input type=checkbox id="chkMailFGComment" checked></div>
-							<spring:message code = 'ezBoard.HSBMail03' />
-						</c:when>
-						<c:otherwise>
-							<div class="custom_checkbox"><input type=checkbox id="chkMailFGComment"></div>
-      						<spring:message code = 'ezBoard.HSBMail03' />
-						</c:otherwise>
-					</c:choose>
-					<c:choose>
-						<c:when test="${boardProp.replyNotify == '1' }">
-							<div class="custom_checkbox"><input type=checkbox id="chkNotify" checked></div>
-							<spring:message code = 'ezBoard.HSBMail04' />
-						</c:when>
-						<c:otherwise>
-							<div class="custom_checkbox"><input type=checkbox id="chkNotify"></div>
-      						<spring:message code = 'ezBoard.HSBMail04' />
-						</c:otherwise>
-					</c:choose>
+					<div class="custom_checkbox">
+						<c:choose>
+							<c:when test="${boardProp.mailFG_Post == 'Y' }">
+								<input type=checkbox id="chkMailFGPost" checked>
+								<label for="chkMailFGPost"><spring:message code = 'ezBoard.HSBMail01' /></label>
+							</c:when>
+							<c:otherwise>
+								<input type=checkbox id="chkMailFGPost">
+								<label for="chkMailFGPost"><spring:message code = 'ezBoard.HSBMail01' /></label>
+							</c:otherwise>
+						</c:choose>
+						<c:choose>
+							<c:when test="${boardProp.mailFG_Mod == 'Y' }">
+								<input type=checkbox id="chkMailFGMod" checked>
+								<label for="chkMailFGMod"><spring:message code = 'ezBoard.HSBMail02' /></label>
+							</c:when>
+							<c:otherwise>
+								<input type=checkbox id="chkMailFGMod">
+								<label for="chkMailFGMod"><spring:message code = 'ezBoard.HSBMail02' /></label>
+							</c:otherwise>
+						</c:choose>
+						<c:choose>
+							<c:when test="${boardProp.mailFG_Comment == 'Y' }">
+								<input type=checkbox id="chkMailFGComment" checked>
+								<label for="chkMailFGComment"><spring:message code = 'ezBoard.HSBMail03' /></label>
+							</c:when>
+							<c:otherwise>
+								<input type=checkbox id="chkMailFGComment">
+								<label for="chkMailFGComment"><spring:message code = 'ezBoard.HSBMail03' /></label>
+							</c:otherwise>
+						</c:choose>
+						<c:choose>
+							<c:when test="${boardProp.replyNotify == '1' }">
+								<input type=checkbox id="chkNotify" checked>
+								<label for="chkNotify"><spring:message code = 'ezBoard.HSBMail04' /></label>
+							</c:when>
+							<c:otherwise>
+								<input type=checkbox id="chkNotify">
+								<label for="chkNotify"><spring:message code = 'ezBoard.HSBMail04' /></label>
+							</c:otherwise>
+						</c:choose>
+					</div>
 				</td>
 			</tr>
 			<tr style="${_style}">

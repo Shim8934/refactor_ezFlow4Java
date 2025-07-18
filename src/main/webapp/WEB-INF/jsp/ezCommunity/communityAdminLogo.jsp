@@ -326,10 +326,10 @@
 		        </tr>
 		        <tr style="height:20px;text-align:center;">
 		            <td>
-						<div class="custom_radio"><input type="radio" style="vertical-align: top; margin-top: 0px" name="radType" value="type5" onclick="radioClick(this, 'rad')" style="cursor:pointer;" checked="checked"/></div><span class="radioTypeText">Type1</span>
+						<div class="custom_radio"><input id="radType1" type="radio" style="vertical-align: top; margin-top: 0px; cursor:pointer;" name="radType" value="type5" onclick="radioClick(this, 'rad')" checked="checked"/><label for="radType1"><span class="radioTypeText">Type1</span></label></div>
 		            </td>
 		            <td>
-						<div class="custom_radio"><input type="radio" style="vertical-align: top; margin-top: 0px" name="radType" value="type2" onclick="radioClick(this, 'rad')" style="cursor:pointer;"/></div><span class="radioTypeText">Type2</span>
+						<div class="custom_radio"><input id="radType2" type="radio" style="vertical-align: top; margin-top: 0px; cursor:pointer;" name="radType" value="type2" onclick="radioClick(this, 'rad')"/><label for="radType2"><span class="radioTypeText">Type2</span></label></div>
 		            </td>
 		        </tr>
 		        <tr style="height:190px;">
@@ -342,10 +342,10 @@
 		        </tr>
 		        <tr style="height:20px;text-align:center;">
 		            <td>
-						<div class="custom_radio"><input type="radio" style="vertical-align: top; margin-top: 0px" name="radType" value="type3" onclick="radioClick(this, 'rad')" style="cursor:pointer;"/></div><span class="radioTypeText">Type3</span>
+						<div class="custom_radio"><input id="radType3" type="radio" style="vertical-align: top; margin-top: 0px; cursor:pointer;" name="radType" value="type3" onclick="radioClick(this, 'rad')"/><label for="radType3"><span class="radioTypeText">Type3</span></label></div>
 		            </td>
 		            <td>
-						<div class="custom_radio"><input type="radio" style="vertical-align: top; margin-top: 0px" name="radType" value="type4" onclick="radioClick(this, 'rad')" style="cursor:pointer;"/></div><span class="radioTypeText">Type4</span>
+						<div class="custom_radio"><input id="radType4" type="radio" style="vertical-align: top; margin-top: 0px; cursor:pointer;" name="radType" value="type4" onclick="radioClick(this, 'rad')"/><label for="radType4"><span class="radioTypeText">Type4</span></label></div>
 		            </td>
 		        </tr>
 	    	</table>
