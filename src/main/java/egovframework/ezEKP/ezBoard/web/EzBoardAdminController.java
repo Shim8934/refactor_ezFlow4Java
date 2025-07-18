@@ -1039,7 +1039,6 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		model.addAttribute("lang_quaternary", lang_quaternary);
 		model.addAttribute("useJapanese", useJapanese);
 		model.addAttribute("useChinese", useChinese);
-		model.addAttribute("hasBoardItemFlag", ezBoardService.hasBoardItemFlag(boardID, userInfo.getTenantId()));
 		model.addAttribute("boardItemCnt", boardItemCnt);
 		
 		logger.debug("boardProperty ended");

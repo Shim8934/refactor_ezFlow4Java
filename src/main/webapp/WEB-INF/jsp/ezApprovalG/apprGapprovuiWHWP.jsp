@@ -179,6 +179,7 @@
 			var draftJunGyulFlag = "<c:out value ='${draftJunGyulFlag}'/>"; // 일반버전 서명 remapping 시 전결문자 표출 확인용 (0 : 미표출 / 1 : 표출, default)
 			var useReceiveInfoName = "<c:out value ='${useReceiveInfoName}'/>"; // 수신처 뒤에 "장"을 붙이는지 여부 (0 : 안붙임 / 1 : 붙임)
 			var addLastKyulJeYN = "<c:out value ='${addLastKyulJeYN}'/>";
+			var totalMemSN = "0";
 			var signImageType = "<c:out value ='${signImageType}'/>";
 			var pADMIN = "N";
 			var AprLineArea = 0;

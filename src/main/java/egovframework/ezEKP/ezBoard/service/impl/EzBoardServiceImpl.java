@@ -5700,15 +5700,6 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 
 		logger.info("makeCallURL ended");
 	}
-
-	public String hasBoardItemFlag(String boardID, int tenantID) throws Exception {
-		return ezBoardDAO.hasBoardItemFlag(
-			new HashMap() {{
-				put("boardID", boardID);
-				put("tenantID", tenantID);
-			}}
-		);
-	}
 	
 	@Override
 	public List<HashMap<String, Object>> getNoticePostItemList(String boardID, String userID, int startRow, int endRow, int boardCount, String orderOption1, String orderOption2, String type, int tenantID) throws Exception {

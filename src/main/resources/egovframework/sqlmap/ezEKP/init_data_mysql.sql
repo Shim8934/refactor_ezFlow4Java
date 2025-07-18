@@ -337,6 +337,9 @@ INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_V
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (@tenant_id_value, 'workspaceAppPath', '협업의 웹응용프로그램 경로', '', 'workspaceHostUrl 테넌트 컨피그 뒤에 붙는 추가 경로 값으로, ""(공백), /ezWork, /ezWorkspace 등으로 설정 가능 (default: ""(공백))', '2025-03-13 00:00:00', '협업');
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (@tenant_id_value, 'workspaceHostUrlForMobile', '협업의 호스트이름 까지의 주소 (모바일 그룹웨어에서 사용)', 'http://space.kaoni.com', '기본적으로 workspaceHostUrl 테넌트 컨피그와 동일한 값이나, 모바일에서 Url 접근 구분이 필요한 경우 변경해서 사용 가능', '2025-03-13 00:00:00', '협업');
 
+INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (@tenant_id_value, 'useAI', 'ezAI 사용여부', 'NO', 'ezAI 사용여부. YES: 사용, NO: 미사용 (default: NO)', '2025-05-09 00:00:00.00', 'AI');
+INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (@tenant_id_value, 'aiAttachMBSize', 'ezAI 첨부파일 최대용량', '10', 'ezAI에서 허용하는 첨부파일 최대용량 (default:10, 단위: MB)', '2025-05-09 00:00:00.00', 'AI');
+
 INSERT INTO TBL_COMPANY_CONFIG (TENANT_ID, COMPANY_ID, PROPERTY_NAME, PROPERTY_VALUE) VALUES (@tenant_id_value, 'Top', 'useCopyright', 'NO');
 INSERT INTO TBL_COMPANY_CONFIG (TENANT_ID, COMPANY_ID, PROPERTY_NAME, PROPERTY_VALUE) VALUES (@tenant_id_value, 'Top', 'ExpirePassPeriod', '0');
 INSERT INTO TBL_COMPANY_CONFIG (TENANT_ID, COMPANY_ID, PROPERTY_NAME, PROPERTY_VALUE) VALUES (@tenant_id_value, 'Top', 'MaxAllowedCountOfLoginFail', '0');

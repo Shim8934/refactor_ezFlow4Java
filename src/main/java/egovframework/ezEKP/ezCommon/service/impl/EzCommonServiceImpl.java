@@ -2016,6 +2016,22 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 			put("description","웹한글기안기 버전에 따라 다른 동작을 하는 부분을 옵션화한다. 1: 웹한글기안기 v1.0 사용, 2: 웹한글기안기 v2.0 사용 (default : 1)");
 			put("config_type","전자결재G");
 		}});
+        test.add(new HashMap<String, Object>(){{
+			put("confName","useAI");
+			put("property_value","NO");
+			put("config_name","ezAI 사용여부");
+			put("regdate","2025-05-09 00:00:00.000");
+			put("description","ezAI 사용여부. YES: 사용, NO: 미사용 (default: NO)");
+			put("config_type","AI");
+		}});
+        test.add(new HashMap<String, Object>(){{
+			put("confName","aiAttachMBSize");
+			put("property_value","10");
+			put("config_name","ezAI 첨부파일 최대용량");
+			put("regdate","2025-05-09 00:00:00.000");
+			put("description","ezAI에서 허용하는 첨부파일 최대용량 (default:10, 단위: MB)");
+			put("config_type","AI");
+		}});
 
         test.add(new HashMap<String, Object>(){{
             put("confName","useStatMenu");

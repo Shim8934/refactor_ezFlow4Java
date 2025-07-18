@@ -587,8 +587,6 @@ public interface EzBoardService {
 
 	public BoardItemVO getFileViewerBoardInfo(HttpServletRequest request, LoginVO userInfo, String versionYN) throws Exception;
 
-	public String hasBoardItemFlag(String boardID, int tenantID) throws Exception;
-
 	public boolean isPostDuplicated(String versionYN, String boardID, String parentItemID, int tenantId) throws Exception;
 
 	public List<BoardHistoryVO> getModifiedHistoryOfItem(String boardID, String OffSetMin, String itemID, String companyID, int tenantID) throws Exception;

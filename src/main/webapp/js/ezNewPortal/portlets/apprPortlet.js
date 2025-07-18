@@ -293,7 +293,7 @@ function openViewDocInfo(pDocID, pHref, pAprMemberID, pAprMemberName, pAprMember
         openLocation += "&listType=" + encodeURIComponent(pArgument[7]);
         openLocation += "&orgCompanyID=" + encodeURIComponent(pArgument[8]);
     }
-
+    openLocation += "&mode=APR";
     openwindow(openLocation, "", 880, 570);
 }
 
@@ -387,7 +387,6 @@ function openApprDraftUI(pDraftFlag, pDocID, pHref, pAprMemberID, pAprMemberName
             }
     	}
     }
-
     openwindow(openLocation, "", 890, 560);
 }
 
@@ -475,6 +474,7 @@ function openApprovUI(pDocID, pHref, pAprMemberID, pAprMemberName, pAprMemberDep
         openLocation += "&orgCompanyID=" + encodeURIComponent(orgCompanyID);
         openLocation += "&functionType=" + encodeURIComponent(pFunctionType);
     }
+    openLocation += "&mode=APR";
     openwindow(openLocation, "", 880, 550);
 }
 

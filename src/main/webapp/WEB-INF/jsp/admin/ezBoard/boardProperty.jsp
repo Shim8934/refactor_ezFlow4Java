@@ -46,7 +46,6 @@
 			var writerFlag = $.trim("<c:out value='${model.writerFlag}'/>"); 
 			var starRatingFlag = "<c:out value='${model.starRatingFlag}'/>";
 			var boardType = "${ model.guBun }";
-			var hasBoardItemFlag = "${ hasBoardItemFlag }";
 			var versionManageFlag = false;
 			
 	        document.onselectstart = function (){
@@ -298,11 +297,6 @@
 
 			/* 2019-02-18 홍승비 - 일반설정 저장 시 각 필드 문자, 숫자 입력 제한 적용 */
 			function Save() {
-				if (hasBoardItemFlag == "Y" && $("#fileViewerBoardChkBox").is(":checked")) {
-					alert("<spring:message code = 'ezBoard.fileViewerBoard.msg3' />");
-					return;
-				}
-				
 				var name1 = $.trim($("#txtBoardName").val());
 				var name2 = $.trim($("#txtBoardName2").val());
 				var name3 = $.trim($("#txtBoardName3").val());

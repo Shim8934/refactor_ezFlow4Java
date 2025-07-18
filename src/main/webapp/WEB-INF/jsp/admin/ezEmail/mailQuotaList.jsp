@@ -339,8 +339,10 @@
 		   								var res1 = Number(i[3]);
 		   								var res2 = Number(i[4]);
 		   								var result;
-				    					
-		   								if (res1 >= res2) {
+
+										if (res1 == 0 && res2 == 0) {
+											result = 0;
+										} else if (res1 >= res2) {
 		   									result = 100;
 		   								} else {
 		   									var progress = res1 / res2 * 100;
