@@ -524,10 +524,23 @@ function ListView() {
                 if (strColName == "CHECKBOX") {
                     _useCheckBoxCol = true;
                     
+                    var divElmt = document.createElement("div");
+                    divElmt.className = "custom_checkbox";
+                    
                     var inputElmt = document.createElement("input");
+                    var inputId = "check_all_" + _thisID;
                     inputElmt.setAttribute("type", "checkbox");
+                    inputElmt.setAttribute("id", inputId);
                     inputElmt.onclick = function(e) { selectAllCheckBox(_thisID, this.checked); }
-                    objTd.appendChild(inputElmt);
+                    //objTd.appendChild(inputElmt);
+                    
+                    var labelElmt = document.createElement("label");
+                    labelElmt.setAttribute("for", inputId);
+                
+                    divElmt.appendChild(inputElmt);
+                    divElmt.appendChild(labelElmt);
+                
+                    objTd.appendChild(divElmt);
                 }
                 
                 var oText = document.createTextNode(strName);
@@ -608,6 +621,7 @@ function ListView() {
                 objTr.className = "";
                 objTr.style.backgroundColor = m_strColorDefault;
             }
+            var jobid = "";
 
             //DATA1, DATA2, DATA3... 등의 값 세팅
             var oDatas = GetDataElements(oCells[0]);
@@ -616,6 +630,10 @@ function ListView() {
                 var strValue = "";
                 if (oDatas[j].firstChild != null && oDatas[j].firstChild.nodeValue != null)
                     strValue = oDatas[j].firstChild.nodeValue;
+                    
+                    if (j == 0) {
+                        jobid = strValue
+                    }
 
                 objTr.setAttribute(strData, strValue);
             }
@@ -625,10 +643,22 @@ function ListView() {
             //체크박스 바디 세팅
             if(_useCheckBoxCol) {
                 var newTdElmt = document.createElement("TD");
+
+                var divElmt = document.createElement("div");
+                divElmt.className = "custom_checkbox";
+
                 var inputElmt = document.createElement("input");
                 inputElmt.setAttribute("type", "checkbox");
+                inputElmt.setAttribute("id", jobid);
                 inputElmt.onclick = function(e) { selectCheckBox(); }
-                newTdElmt.appendChild(inputElmt);
+
+                var labelElmt = document.createElement("label");
+                labelElmt.setAttribute("for", jobid);
+
+                divElmt.appendChild(inputElmt);
+                divElmt.appendChild(labelElmt);
+                newTdElmt.appendChild(divElmt);
+
                 objTr.appendChild(newTdElmt);
             }
             
@@ -1159,7 +1189,7 @@ function ListView() {
         if (stridx.indexOf(",") > -1)
             return;
 
-        var tBody = document.getElementById(_thisID).childNodes[1];
+        var tBody = document.getElementById(_thisID).childNodes.childNodes[1];
         if (stridx == tBody.childNodes.length - 1)
             return;
 
@@ -1220,18 +1250,23 @@ function tr_select(pRowID, pTableID, callbackFunc) {
 
     if (strAttribute == "true") {
         oSourceTr.setAttribute("selected", "false");
-        if (oSourceTr.firstElementChild.firstElementChild) {
-            oSourceTr.firstElementChild.firstElementChild.checked = false;
-        }
-        //oSourceTr.className = "";
+        //if (oSourceTr.firstElementChild.firstElementChild) {
+        //    oSourceTr.firstElementChild.firstElementChild.firstElementChild.checked = false;
+        //}
+        
+        let checkbox = oSourceTr.querySelector('input[type="checkbox"]');
+        if (checkbox) checkbox.checked = false;
+
         oSourceTr.style.backgroundColor = m_strColorDefault;
     }
     else {
         oSourceTr.setAttribute("selected", "true");
-        if (oSourceTr.firstElementChild.firstElementChild) {
-        	oSourceTr.firstElementChild.firstElementChild.checked = true;
-        }
-        //oSourceTr.className = "kt_li_tr";
+        //if (oSourceTr.firstElementChild.firstElementChild) {
+        //	oSourceTr.firstElementChild.firstElementChild.firstElementChild.checked = true;
+        //}
+        let checkbox = oSourceTr.querySelector('input[type="checkbox"]');
+        if (checkbox) checkbox.checked = true;
+
         oSourceTr.style.backgroundColor =  m_strColorSelect;
     }
 
@@ -1255,13 +1290,6 @@ function tr_unselectedAll(pTableID) {
         return;
 
     for (var i = 0; i < oList.rows.length; i++) {
-        //헤더를 제거하기 위해 ID를 검사한다.
-        /*if (oList.rows[i].id.indexOf("TR") >= 0)
-        {
-        oList.rows[i].setAttribute("selected", false);
-        oList.rows[i].className = "";
-        }*/
-        //var strID = pTableID + "_TR_" + i;
         var strID ;
        if(oList.rows[i].id.indexOf(pTableID)>-1)
         strID = oList.rows[i].id;
@@ -1270,9 +1298,11 @@ function tr_unselectedAll(pTableID) {
         if (objTr) {
             objTr.setAttribute("selected", false);
             
-            if (objTr.firstElementChild.firstElementChild) {
-                objTr.firstElementChild.firstElementChild.checked = false;
-            }
+            //if (objTr.firstElementChild.firstElementChild) {
+            //    objTr.firstElementChild.firstElementChild.firstElementChild.checked = false;
+            //}
+            let checkbox = objTr.querySelector('input[type="checkbox"]');
+            if (checkbox) checkbox.checked = false;
             
             objTr.className = "";
             objTr.style.backgroundColor =  m_strColorDefault;
@@ -1290,13 +1320,17 @@ function selectAllCheckBox(pTableID, checkFlag) {
 	for (var i = 0; i < oList.rows.length; i++) {
 		if (checkFlag) {
 			oList.rows[i].setAttribute("selected", true);
-			oList.rows[i].firstElementChild.firstElementChild.checked = true;
+			//oList.rows[i].firstElementChild.firstElementChild.firstElementChild.checked = true;
+			let checkbox = oList.rows[i].querySelector('input[type="checkbox"]');
+            if (checkbox) checkbox.checked = true;
 			oList.rows[i].style.backgroundColor = m_strColorSelect;
 		}
 		else {
 			oList.rows[i].setAttribute("selected", false);
 			oList.rows[i].style.backgroundColor = m_strColorDefault;
-			oList.rows[i].firstElementChild.firstElementChild.checked = false;
+			//oList.rows[i].firstElementChild.firstElementChild.firstElementChild.checked = false;
+			let checkbox = oList.rows[i].querySelector('input[type="checkbox"]');
+            if (checkbox) checkbox.checked = false;
 		}
 	}
 }
@@ -1305,7 +1339,8 @@ function selectCheckBox() {
 	event.stopPropagation();
 	
 	var checkboxElmt = event.currentTarget;
-	var currentRow   = checkboxElmt.parentElement.parentElement;
+	//var currentRow   = checkboxElmt.parentElement.parentElement;
+	var currentRow = checkboxElmt.closest('tr');
 	
 	if (checkboxElmt.checked) {
 		currentRow.setAttribute("selected", true);
@@ -1352,6 +1387,8 @@ function tr_selectBlock(pRowID, pTableID) {
         if (objTr) {
             objTr.setAttribute("selected", true);
             objTr.firstElementChild.firstElementChild.checked = true;
+            let checkbox = objTr.querySelector('input[type="checkbox"]');
+            if (checkbox) checkbox.checked = true;
             objTr.style.backgroundColor = m_strColorSelect;
         }
 

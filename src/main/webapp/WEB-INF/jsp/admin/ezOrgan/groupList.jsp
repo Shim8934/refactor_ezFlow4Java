@@ -267,10 +267,10 @@
 			for (var i = 0; i < document.getElementsByName("chk").length; i++) {
 				if (document.getElementsByName('checkbox').item(0).checked == true) {
 					document.getElementsByName("chk").item(i).checked = true;
-					document.getElementsByName("chk").item(i).parentElement.parentElement.className = "selectedTR";
+					document.getElementsByName("chk").item(i).closest('tr').className = "selectedTR";
 				} else {
 					document.getElementsByName("chk").item(i).checked = false;
-					document.getElementsByName("chk").item(i).parentElement.parentElement.className = "unselectedTR";
+					document.getElementsByName("chk").item(i).closest('tr').className = "unselectedTR";
 				}
 			}
 		}
@@ -311,6 +311,11 @@
 							html += "<tr>";
 							html += "    <td colspan='6' style='text-align:center' bgcolor='#FFFFFF'><spring:message code='ezOrgan.0hun07'/></td>";
 							html += "</tr>";
+							
+							// 전체삭제 후 header checkbox 해제하기 위해 추가
+						    if (document.getElementsByName('checkbox').item(0).checked == true) {
+                                document.getElementsByName('checkbox').item(0).checked = false;
+                            }
 						} else {
 							data.list
 									.forEach(function(i, v) {
@@ -319,8 +324,8 @@
 												+ "', '"
 												+ i.groupName + "')\">";
 										html += "    <td style='width:30px;'>";
-										html += "        <input type='checkbox' onclick='selectCheckBox()' id='chk' name='chk' value='"
-												+ i.groupID + "' class='" + i.groupName + "'/>";
+										html += "        <div class='custom_checkbox'><input type='checkbox' onclick='selectCheckBox()' id='chk' name='chk' value='"
+												+ i.groupID + "' class='" + i.groupName + "'/></div>";
 										html += "    </td>";
 										html += "<td style='cursor:pointer; width: 20%;'>"
 												+ i.groupName + "</td>";
@@ -474,18 +479,18 @@
 
 		for (var i = 0; i < length; i++) {
 			tableList.rows[i].className = "unselectedTR";
-			tableList.rows[i].firstElementChild.firstElementChild.checked = false;
+			tableList.rows[i].querySelector('input[type="checkbox"]').checked = false;
 		}
 
 		currentRow.className = "selectedTR";
-		currentRow.firstElementChild.firstElementChild.checked = true;
+		currentRow.querySelector('input[type="checkbox"]').checked = true;
 	}
 
 	function selectCheckBox() {
 		event.stopPropagation();
 
 		var checkboxElmt = event.currentTarget;
-		var currentRow = checkboxElmt.parentElement.parentElement;
+		var currentRow = checkboxElmt.closest('tr');
 
 		if (checkboxElmt.checked) {
 			currentRow.className = "selectedTR";
@@ -587,8 +592,11 @@
 					<table id="mainListHeader" class="mainlist" style="width: 100%">
 						<thead>
 							<tr id="mainListHeaderTr">
-								<th style="width: 30px;"><input type='checkbox'
-									name="checkbox" id="checkAll" onclick="funCheckBox('set','a')" /></th>
+								<th style="width: 30px;">
+								    <div class="custom_checkbox">
+								        <input type='checkbox' name="checkbox" id="checkAll" onclick="funCheckBox('set','a')" />
+                                    </div>
+                                </th>
 								<th style="width: 20%;"><spring:message code="ezEmail.t710" /></th>
 								<th style="width: 20%;"><spring:message code="ezOrgan.zNo007" /></th>
 								<th style="width: 20%;"><spring:message code="ezOrgan.zNo009" /></th>

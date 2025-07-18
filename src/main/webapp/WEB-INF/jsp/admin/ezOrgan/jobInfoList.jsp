@@ -550,6 +550,8 @@
 				var labelElmt = document.createElement("label");
 				var inputElmt = document.createElement("input");
 				var spanElmt  = document.createElement("span");
+				var wrapperDiv = document.createElement("div");
+				wrapperDiv.className = "custom_checkbox";
 				
 				labelElmt.className = "switch";
 				spanElmt.className = "slider round";
@@ -567,7 +569,8 @@
 				labelElmt.appendChild(inputElmt);
 				labelElmt.appendChild(spanElmt);
 				
-				useTd.appendChild(labelElmt);
+				wrapperDiv.appendChild(labelElmt);
+				useTd.appendChild(wrapperDiv);
 			}
 		}
 		

@@ -363,7 +363,8 @@
 		        var listview = new ListView();
 		        listview.LoadFromID("lvAddJobList");		        
 		        
-		        var cnVal = listview.GetSelectedRows()[0].firstChild.firstChild.defaultValue;
+		        //var cnVal = listview.GetSelectedRows()[0].firstChild.firstChild.defaultValue;
+		        var cnVal = listview.GetSelectedRows()[0].querySelector("input").value;
 		        
 		        $.ajax({
 		        	type : "POST",
@@ -542,26 +543,24 @@
 					return;
 				}
 				flags = true;
-				// 2023-08-08 이사라 - 체크박스 id에 '.' 이 들어가는 경우 link로 인식하여 체크되지 않는 오류 수정
-				/*   : $("#" + itemseq)와 같이 id로 셀렉트하는 것이 더 명시적으로 보이나 
-					   id 값에 상관없이 정상 선택이 되고 backend에 정상적으로 값을 전달하는 방법으로 수정 */
-				itemNode = document.getElementById(obj).firstChild.firstChild;
+				// 20253-07-17 이사라 - querySelector 방식으로 변경, td에 background 컬러 제거, tr에 컬러 적용
+				itemNode = document.getElementById(obj).querySelector("input");
 				if(checkFlag) {
 					if(itemNode.checked == true) {
-						$("#" + obj + " td").css("background-color", "rgb(255, 255, 255)");
+						$("#" + obj).css("background-color", "rgb(255, 255, 255)");
 						itemNode.checked = false;
 					} else {
-						$("#" + obj + " td").css("background-color", "rgb(241, 248, 255)");
+						$("#" + obj).css("background-color", "rgb(241, 248, 255)");
 						itemNode.checked = true;
 					}
 				} else {
-					$("#lvAddJobList tr td").css("background-color", "rgb(255, 255, 255)");
+					$("#lvAddJobList tr").css("background-color", "rgb(255, 255, 255)");
 					$(".checks").prop("checked",false);
 					if(itemNode.checked == true) {
-						$("#" + obj + " td").css("background-color", "rgb(255, 255, 255)");
+						$("#" + obj).css("background-color", "rgb(255, 255, 255)");
 						itemNode.checked = false;
 					} else {
-						$("#" + obj + " td").css("background-color", "rgb(241, 248, 255)");
+						$("#" + obj).css("background-color", "rgb(241, 248, 255)");
 						itemNode.checked = true;
 					}
 				}
@@ -849,21 +848,13 @@
 		    }
 		    
 		    function email_onclick() {
-
-		        /* var listview = new ListView();
-		        listview.LoadFromID("lvAddJobList"); */
-
-		        /* if (listview.GetSelectedRows().length == 0) {
-		            alert(strLang13);
-		            return;
-		        } */
-		        
 		        var dataList3 = new Array();
 				var dataList4 = new Array();
 				
 				$("input[name='checks']:checked").each(function(){
-					dataList3.push(this.parentElement.parentElement.getAttribute("DATA3"));
-					dataList4.push(this.parentElement.parentElement.getAttribute("DATA4"));
+					const $tr = $(this).closest("tr");
+                    dataList3.push($tr.attr("data3"));
+                    dataList4.push($tr.attr("data4"));
 				});
 				
 				// 선택된 사원이 없을 경우
@@ -884,21 +875,6 @@
 			        MsgTo[i] = "\"" + dataList3[i]+ "\" <" +dataList4[i]+ ">";
 		        }
 
-		        /* 2017-01-02 이효민사원
-		        if (CrossYN() || pNoneActiveX == "YES") {
-		            window.open("/myoffice/ezEmail/mail_write_Cross.aspx?cmd=NEW&msgTo=" + escape(MsgTo), "",
-		                        "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
-		        }
-		        else {
-		            if (pUse_Editor == "") {
-		                window.open("/myoffice/ezEmail/mail_write.aspx?cmd=NEW&msgTo=" + escape(MsgTo), "",
-		                        "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
-		            }
-		            else {
-		                window.open("/myoffice/ezEmail/mail_write_IE.aspx?cmd=NEW&msgTo=" + escape(MsgTo), "",
-		                        "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
-		            }
-		        } */
 		        window.open("/ezEmail/mailWrite.do?cmd=NEW&msgto=" + encodeURIComponent(MsgTo), "",
                         "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
 		    }
@@ -966,7 +942,7 @@
 
 			// xml data -> input checkbox method
 			var cnt;
-			var checkbox_header = function() {
+			/*var checkbox_header = function() {
 				var doc = window.document;
 				var th = doc.getElementById("lvAddJobList_TH_0");
 				var acList = doc.getElementById("lvAddJobList");
@@ -983,11 +959,54 @@
 								+ seq + ")'></input>";
 					}
 				}
-			}
+			}*/
+			
+			var checkbox_header = function () {
+                const doc = window.document;
+                const th = doc.getElementById("lvAddJobList_TH_0");
+                const acList = doc.getElementById("lvAddJobList");
+                const rows = acList?.querySelectorAll("tbody > tr") ?? [];
+            
+                // 헤더 영역에 '전체 선택' 체크박스 삽입
+                th.innerHTML = `
+                    <div class='custom_checkbox'>
+                        <input type='checkbox' id='checkAll' onchange='checkboxHeaderClick()'>
+                    </div>
+                `;
+            
+                // 데이터 없는 경우 빠르게 종료
+                if (rows.length === 0 || rows[0].id === "lvAddJobList_TR_noItems") {
+                    return;
+                }
+            
+                // 각 행에 체크박스 삽입 및 이벤트 바인딩
+                rows.forEach((row, i) => {
+                    if (row.id === "lvAddJobList_TR_noItems") return;
+            
+                    const seq = row.getAttribute("data1")?.trim();
+                    if (!seq) {
+                        return;
+                    }
+
+                    // 선택 컬럼(0번째 cell)에 체크박스 삽입
+                    row.cells[0].innerHTML = 
+                         '<div class="custom_checkbox">' +
+                             '<input type="checkbox" name="checks" class="checks" id="' + seq + '" value="' + seq + '">' +
+                         '</div>';
+            
+                    // 체크박스에 이벤트 바인딩
+                    const checkbox = row.cells[0].querySelector("input");
+                    if (checkbox) {
+                        checkbox.addEventListener("change", function (event) {
+                            inputFunc(event, seq);
+                        });
+                    }
+                });
+            };
 
 			// 체크박스 헤더 클릭 method
 			var checkFlag = false;
-			function checkboxHeaderClick() {
+			/*function checkboxHeaderClick() {
 				var doc = window.document;
 				var acList = doc.getElementById("lvAddJobList");
 				// 데이터가 있을 경우에만
@@ -1003,7 +1022,23 @@
 					}
 					checkItems();
 				}
-			}
+			}*/
+
+			function checkboxHeaderClick() {
+            	const acList = document.getElementById("lvAddJobList");
+            	const tbody = acList.querySelector("tbody");
+            	const rows = tbody ? Array.from(tbody.rows) : [];
+            
+            	if (rows.length === 0 || rows[0].id === 'lvAddJobList_TR_noItems') return;
+            
+            	checkFlag = !checkFlag;
+            
+            	$(".checks").prop("checked", checkFlag);
+            	const color = checkFlag ? "rgb(241, 248, 255)" : "rgb(255, 255, 255)";
+            	$("#lvAddJobList tr").css("background-color", color);
+            
+            	checkItems();
+            }
 			
 			var rowList = new Array();
 			function checkItems() {
@@ -1018,12 +1053,19 @@
 			function inputFunc(event, itemseq) {
 				checkItems();
 				
-				$("#lvAddJobList tr td").css("background-color", "rgb(255, 255, 255)");
+				$("#lvAddJobList tr").css("background-color", "rgb(255, 255, 255)");
 
 				for (var i = 0; i < rowList.length; i++) {
-					var objID = $("#" + rowList[i])[0].parentNode.parentNode.id;
+					/*var objID = $("#" + rowList[i])[0].parentNode.parentNode.id;
 					$("#" + objID + " td").css("background-color", "rgb(241, 248, 255)");
-					$("#" + rowList[i]).prop("checked", true);
+					$("#" + rowList[i]).prop("checked", true);*/
+					
+					var checkbox = document.getElementById(rowList[i]);
+                    var tr = checkbox.closest("tr");
+                    if (tr) {
+                        $(tr).css("background-color", "rgb(241, 248, 255)");
+                        $(checkbox).prop("checked", true);
+                    }
 				}
 			}
 			
@@ -1042,7 +1084,7 @@
 			}
 
 			// 등록, 수정 , 삭제 후 rowSelect 선택 method
-			function rowListSelect() {
+			/*function rowListSelect() {
 				var len = rowList.length;
 				for (var i = 0; i < len; i++) {
 					var tempItemSeq = rowList.pop();
@@ -1059,7 +1101,22 @@
 				} else {
 					$("#checkAll").prop("checked", false);
 				}
-			}
+			}*/
+			function rowListSelect() {
+            	for (var i = 0; i < rowList.length; i++) {
+            		const checkbox = document.getElementById(rowList[i]);
+            		if (checkbox) {
+            			$(checkbox).prop("checked", true);
+            			const tr = checkbox.closest("tr");
+            			if (tr) {
+            				$(tr).css("background-color", "rgb(241, 248, 255)");
+            			}
+            		}
+            	}
+            
+            	$("#checkAll").prop("checked", checkFlag);
+            }
+
 			function searchList() {
 				CurPage = 1;
 				document.getElementById("searchValue").value = document.getElementById("searchValue").value.toLowerCase();
