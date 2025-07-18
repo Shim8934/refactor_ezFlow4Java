@@ -377,7 +377,7 @@
 				<c:forEach var="keyword" items="${beforeKeyword}">
 					<input type="hidden" name="beforeKeyword" value="<c:out value='${keyword }'/>">
 				</c:forEach>
-				<label for="refineInResult"><div class='custom_checkbox'><input type="checkbox" <c:out value='${refineInResult}'/> name="refineInResult" id="refineInResult"></div><spring:message code='ezCommunity.searchInResult' /></label>
+				<div class='custom_checkbox'><input type="checkbox" <c:out value='${refineInResult}'/> name="refineInResult" id="refineInResult"><label for="refineInResult"><spring:message code='ezCommunity.searchInResult' /></label></div>
 				<select name="searchType">
 					<option value="title"<c:if test="${searchType eq 'title'}">selected</c:if>><spring:message code='ezCommunity.t124' /></option>
 					<option value="writer"<c:if test="${searchType eq 'writer'}">selected</c:if>><spring:message code='ezCommunity.t445' /></option>
