@@ -29090,13 +29090,13 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				thStyle = " " + thStyle;
 				
 				if (!thElement.hasAttr("width")) {
-					if (thStyle.indexOf(" width") > 0) {
+					if (thStyle.indexOf(" width") > -1) {
 						thElement.attr("width_kaoni", SizeConvertToMM(thStyle.substring(thStyle.indexOf(" width"), thStyle.indexOf(";", thStyle.indexOf(" width")))));
 						thStyle.replace(thStyle.substring(thStyle.indexOf(" width"), thStyle.indexOf(";", thStyle.indexOf(" width"))), "");
 						thElement.attr("style", thStyle);
 					} 
 				} else {
-					if (thStyle.indexOf(" width") > 0) {
+					if (thStyle.indexOf(" width") > -1) {
 						thElement.attr("width_kaoni", SizeConvertToMM(thStyle.substring(thStyle.indexOf(" width"), thStyle.indexOf(";", thStyle.indexOf(" width")))));
 						thStyle.replace(thStyle.substring(thStyle.indexOf(" width"), thStyle.indexOf(";", thStyle.indexOf(" width"))), "");
 						thElement.attr("style", thStyle);
@@ -29180,13 +29180,13 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				tdStyle = " " + tdStyle;
 				
 				if (!tdElement.hasAttr("width")) {
-					if (tdStyle.indexOf(" width") > 0) {
+					if (tdStyle.indexOf(" width") > -1) {
 						tdElement.attr("width_kaoni", SizeConvertToMM(tdStyle.substring(tdStyle.indexOf(" width"), tdStyle.indexOf(";", tdStyle.indexOf(" width")))));
 						tdStyle.replace(tdStyle.substring(tdStyle.indexOf(" width"), tdStyle.indexOf(";", tdStyle.indexOf(" width"))), "");
 						tdElement.attr("style", tdStyle);
 					} 
 				} else {
-					if (tdStyle.indexOf(" width") > 0) {
+					if (tdStyle.indexOf(" width") > -1) {
 						tdElement.attr("width_kaoni", SizeConvertToMM(tdStyle.substring(tdStyle.indexOf(" width"), tdStyle.indexOf(";", tdStyle.indexOf(" width")))));
 						tdStyle.replace(tdStyle.substring(tdStyle.indexOf(" width"), tdStyle.indexOf(";", tdStyle.indexOf(" width"))), "");
 						tdElement.attr("style", tdStyle);
