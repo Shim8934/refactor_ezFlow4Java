@@ -1078,7 +1078,7 @@
 		        return true;
 		    }
 		    function refresh_onclick() {
-		        window.location.href = "/ezBoard/boardItemList.do?page=" + CurPage.toString() + "&boardID=" + encodeURIComponent(pBoardID) + "&sortBy=&boardType=" + pBoardType + "&adminType=" + pAdminType;
+		        window.location.href = "/ezBoard/boardItemList.do?page=" + CurPage.toString() + "&boardID=" + encodeURIComponent(pBoardID) + "&sortBy=&boardType=" + pBoardType + "&adminType=" + pAdminType + "&gubun=" + gubun;
 		    }
 		    function AddToMyBoards() {
 		        var xmlhttp = createXMLHttpRequest();

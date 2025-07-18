@@ -62,6 +62,8 @@ import egovframework.ezEKP.ezOrgan.vo.OrganAuth.AdminAuth;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
+import org.apache.logging.log4j.util.Strings;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -1142,6 +1144,12 @@ public class EzBoardController extends EzFileMngUtil{
 			listShowType = boardConfig != null ? boardConfig.getUsrListShowType() : "G";
 		} else {
 			listShowType = boardInfo.getListShowType();
+		}
+		
+		String pBoardGubun = request.getParameter("gubun");
+		
+		if (Strings.isNotBlank(pBoardGubun)) {
+			boardInfo.setGuBun(pBoardGubun);
 		}
 
 		model.addAttribute("boardInfo", boardInfo);
@@ -10677,6 +10685,12 @@ public class EzBoardController extends EzFileMngUtil{
 		int isMyBoardExist = ezBoardService.getIsMyBoardExist(boardID, userInfo.getId(), userInfo.getTenantId(), userInfo.getCompanyID());
 		if (isMyBoardExist > 0) {
 			isMyBoard = "YES";
+		}
+		
+		String pBoardGubun = request.getParameter("gubun");
+		
+		if (Strings.isNotBlank(pBoardGubun)) {
+			boardInfo.setGuBun(pBoardGubun);
 		}
 
 		String endDateOption = checkEndDateConfig(boardInfo, userInfo);

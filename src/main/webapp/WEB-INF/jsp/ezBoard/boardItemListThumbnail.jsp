@@ -1020,7 +1020,7 @@
 		    }
 		
 		    function refresh_onclick() {
-		        window.location.href = "/ezBoard/boardItemListThumbnail.do?page=" + CurPage.toString() + "&boardID=" + encodeURIComponent(pBoardID) + "&sortBy=&boardType=" + pBoardType + "&adminType=" + pAdminType + "&boardViewForm=" + boardViewForm;
+		        window.location.href = "/ezBoard/boardItemListThumbnail.do?page=" + CurPage.toString() + "&boardID=" + encodeURIComponent(pBoardID) + "&sortBy=&boardType=" + pBoardType + "&adminType=" + pAdminType + "&boardViewForm=" + boardViewForm  + "&gubun=" + gubun;
 		    }
 		
 		    function AddToMyBoards() {
