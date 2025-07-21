@@ -864,8 +864,14 @@
 	                                 <!-- 2018-07-23 김보미 - 테이블 중앙정렬을 위한 너비값 제거 -->
 <!-- 	                                	<span  style="cursor: pointer;width:280px;" onclick="show_personinfo('0')" id="LabelCreator"> -->
 	                                	<span  style="cursor: pointer;" onclick="show_personinfo('0')" id="LabelCreator">
-		                                    <c:if test="${primary == '1'}"><c:out value="${scheduleInfo.creatorName}" /></c:if>
-		                                    <c:if test="${primary != '1'}"><c:out value="${scheduleInfo.creatorName2}" /></c:if>	                                    
+											<c:choose>
+												<c:when test="${scheduleInfo.scheduleType == '10' && scheduleInfo.creatorId != scheduleInfo.ownerId}">
+													<c:out value="${primary == '1' ? scheduleInfo.creatorName : scheduleInfo.creatorName2}" /> (<c:out value="${primary == '1' ? scheduleInfo.ownerName : scheduleInfo.ownerName2}" />)
+												</c:when>
+												<c:otherwise>
+													<c:out value="${primary == '1' ? scheduleInfo.creatorName : scheduleInfo.creatorName2}" />
+												</c:otherwise>
+											</c:choose>
 	                                	</span>	                                    
 	                                </div>
 	                            </td>
