@@ -2348,7 +2348,7 @@ function APRLINEATTENDERDELFunction()
 				  {
 					  var TmpAprLineState = pSelectedRow[0].cells[5].innerText;
 					  TmpAprLineState = ConvertAprLineState(TmpAprLineState , "Code");
-					  if(( TmpAprLineState == "002" || TmpAprLineState == "005" ) && GetAttribute(pSelectedRow[0], "DATA4").toLowerCase() == pUserID.toLowerCase() || pSelectedRow[0].cells[0].innerText.replace("" + strLang75 + "", "").replace("" + strLang76 + "", "") == "1")
+					  if(( TmpAprLineState == "002" || TmpAprLineState == "005" ) || pSelectedRow[0].cells[0].innerText.replace("" + strLang75 + "", "").replace("" + strLang76 + "", "") == "1")
 					  {
 						  var pAlertContent = "" + strLang317 + "";
 						  OpenAlertUI(pAlertContent);
