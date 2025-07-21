@@ -5408,18 +5408,18 @@
 			</isNotEmpty>
 			<isNotEmpty property="q_Map.qOptionWriterName" prepend="AND">
 				<isEqual property="q_Map.userLang" compareValue="2">
-					WRITERNAME2 LIKE CONCAT(CONCAT('%', #q_Map.qOptionWriterName#), '%')
+					TBL_ENDAPRDOCINFO.WRITERNAME2 LIKE CONCAT(CONCAT('%', #q_Map.qOptionWriterName#), '%')
 				</isEqual>
 				<isNotEqual property="q_Map.userLang" compareValue="2">
-					WRITERNAME LIKE CONCAT(CONCAT('%', #q_Map.qOptionWriterName#), '%')
+					TBL_ENDAPRDOCINFO.WRITERNAME LIKE CONCAT(CONCAT('%', #q_Map.qOptionWriterName#), '%')
 				</isNotEqual>
 			</isNotEmpty>
 			<isNotEmpty property="q_Map.qOptionWriterDeptName" prepend="AND">
 				<isEqual property="q_Map.userLang" compareValue="2">
-					WRITERDEPTNAME2 LIKE CONCAT(CONCAT('%', #q_Map.qOptionWriterDeptName#), '%')
+					TBL_ENDAPRDOCINFO.WRITERDEPTNAME2 LIKE CONCAT(CONCAT('%', #q_Map.qOptionWriterDeptName#), '%')
 				</isEqual>
 				<isNotEqual property="q_Map.userLang" compareValue="2">
-					WRITERDEPTNAME LIKE CONCAT(CONCAT('%', #q_Map.qOptionWriterDeptName#), '%')
+					TBL_ENDAPRDOCINFO.WRITERDEPTNAME LIKE CONCAT(CONCAT('%', #q_Map.qOptionWriterDeptName#), '%')
 				</isNotEqual>
 			</isNotEmpty>
 			<isNotEmpty property="q_Map.qOptionReceivedDate1" prepend="AND">
