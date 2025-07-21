@@ -8435,7 +8435,7 @@
 			tbl_c_clubuser
 		where
 			grade = '4'
-		  and permit = '4'
+		  and (permit = '4' or permit = '0')
 		  and TENANT_ID = 0
 		  and ROWNUM <= 1
 		]]>
@@ -8445,10 +8445,12 @@
 		update
 			tbl_c_clubuser
 		set
-			grade = '1'
+			grade = CASE WHEN permit = '4' THEN '1'
+						WHEN permit = '0' THEN '10'
+						ELSE grade END
 		where
 			grade = '4'
-		  and permit = '4'
+		  and permit IN ('0', '4')
 		  and TENANT_ID = 0
 	</update>
 

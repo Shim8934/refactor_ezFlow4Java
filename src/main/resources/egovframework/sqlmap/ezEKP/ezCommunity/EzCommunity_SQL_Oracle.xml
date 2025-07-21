@@ -8769,6 +8769,8 @@
             TBL_C_GRADE a
                 inner join TBL_C_CLUB b on
                 a.C_CLUBNO = b.C_CLUBNO
+					and a.TENANT_ID = b.TENANT_ID
+					and a.COMPANYID = b.COMPANYID
         WHERE
             a.TENANT_ID = #tenantID#
           AND
@@ -8999,6 +9001,8 @@
 				a.COMPANYID = #companyID#
 			  AND
 				a.C_CLUBNO = #code#
+			  AND
+			    a.permit <> 0
 		]]>
 		<isNotEmpty property="keyword">
 			<isEqual property="type" compareValue="name">
@@ -9030,6 +9034,8 @@
 				a.COMPANYID = #companyID#
 			  AND
 				a.C_CLUBNO = #code#
+			  AND
+			    a.permit <> 0
 		]]>
 		<isNotEmpty property="keyword">
 			<isEqual property="type" compareValue="name">
