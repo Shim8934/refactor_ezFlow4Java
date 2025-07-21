@@ -3544,6 +3544,7 @@ public class EzNewPortalGWController {
 
 			BoardPropertyVO boardPropertyVO = ezBoardService.getBoardProperty(boardId, info.getTenantId());
 			String guBun = boardPropertyVO.getGuBun();
+			String useVersion = boardPropertyVO.getVersionManage();
 			// Q&A 의 일반 유저일 경우 일반 게시판과 다른 리스트
 			boolean isQnANormal = "5".equals(guBun);
 			if (isQnANormal) {
@@ -3576,13 +3577,13 @@ public class EzNewPortalGWController {
 				data.put("currentPage", currentPage);
 
 			} else if (isQnANormal) { // Q&A 게시판
-				totalCnt = ezNewPortalService.getBoardPortletTotalCnt(info.getUserId(), info.getTenantId(), boardId, info.getCompanyId(), info.getOffSet(), isQnANormal);
+				totalCnt = ezNewPortalService.getBoardPortletTotalCnt(info.getUserId(), info.getTenantId(), boardId, info.getCompanyId(), info.getOffSet(), isQnANormal, useVersion);
 				totalPages  = (totalCnt + listCnt - 1) / listCnt;
 				currentPage = currentPage > totalPages ? totalPages : currentPage;
 				currentPage = currentPage == 0         ? 1          : currentPage;
 				startRow  = (currentPage - 1) * listCnt;
 				
-				List<BoardListVO> boardList = ezNewPortalService.getBoardPortletInfo(info.getUserId(), info.getTenantId(),	boardId, listCnt, info.getCompanyId(), info.getOffSet(), isQnANormal, startRow);
+				List<BoardListVO> boardList = ezNewPortalService.getBoardPortletInfo(info.getUserId(), info.getTenantId(),	boardId, listCnt, info.getCompanyId(), info.getOffSet(), isQnANormal, startRow, useVersion);
 				data.put("favList", boardList);
 				data.put("totalCnt", totalCnt);
 				data.put("currentPage", currentPage);
@@ -5215,6 +5216,7 @@ public class EzNewPortalGWController {
 			} else {
 				BoardPropertyVO boardPropertyVO = ezBoardService.getBoardProperty(boardId, info.getTenantId());
 				String guBun = boardPropertyVO.getGuBun();
+				String useVersion = boardPropertyVO.getVersionManage();
 				// Q&A 의 일반 유저일 경우 일반 게시판과 다른 리스트
 				boolean isQnANormal = "5".equals(guBun);
 				if (isQnANormal) {
@@ -5223,14 +5225,14 @@ public class EzNewPortalGWController {
 				}
 
 				// 권한이 true이면 boardList불러오기
-				int boardListTotalCnt = ezNewPortalService.getBoardPortletTotalCnt(userId, tenantId, boardId, companyId, info.getOffset(), isQnANormal);
+				int boardListTotalCnt = ezNewPortalService.getBoardPortletTotalCnt(userId, tenantId, boardId, companyId, info.getOffset(), isQnANormal, useVersion);
 				
 				int totalPages  = (boardListTotalCnt + itemCount - 1) / itemCount;
 				currentPage = currentPage > totalPages ? totalPages : currentPage;
 				currentPage = currentPage == 0         ? 1          : currentPage;
 				int startRow  = (currentPage - 1) * itemCount;
 				
-				List<BoardListVO> boardList = ezNewPortalService.getBoardPortletInfo(userId, tenantId, boardId, itemCount, companyId, info.getOffset(), isQnANormal, startRow);
+				List<BoardListVO> boardList = ezNewPortalService.getBoardPortletInfo(userId, tenantId, boardId, itemCount, companyId, info.getOffset(), isQnANormal, startRow, useVersion);
 				
 				// 리스트 개수로 utc time 적용시키기
 				int boardListCount = boardList.size();
@@ -6115,6 +6117,7 @@ public class EzNewPortalGWController {
 			if (accessCheckSub) {
 				BoardPropertyVO boardPropertyVO = ezBoardService.getBoardProperty(boardId, info.getTenantId());
 				String guBun = boardPropertyVO.getGuBun();
+				String useVersion = boardPropertyVO.getVersionManage();
 				// Q&A 의 일반 유저일 경우 일반 게시판과 다른 리스트
 				boolean isQnANormal = "5".equals(guBun);
 				if (isQnANormal) {
@@ -6122,13 +6125,14 @@ public class EzNewPortalGWController {
 					isQnANormal = !ezBoardService.isBoardAdmin(boardId, userId, deptId, companyId, tenantId, rollInfo);
 				}
 				
-				int totalCnt = ezNewPortalService.getBoardPortletTotalCnt(info.getUserId(), info.getTenantId(), boardId, info.getCompanyId(), info.getOffSet(), isQnANormal);
+				int totalCnt = ezNewPortalService.getBoardPortletTotalCnt(info.getUserId(), info.getTenantId(), boardId, info.getCompanyId(), info.getOffSet(), isQnANormal, useVersion);
+
 				int totalPages  = (totalCnt + listCnt - 1) / listCnt;
 				currentPage = currentPage > totalPages ? totalPages : currentPage;
 				currentPage = currentPage == 0         ? 1          : currentPage;
 				int startRow  = (currentPage - 1) * listCnt;
 				
-				List<BoardListVO> boardList = ezNewPortalService.getBoardPortletInfo(info.getUserId(), info.getTenantId(),	boardId, listCnt, info.getCompanyId(), info.getOffSet(), isQnANormal, startRow);
+				List<BoardListVO> boardList = ezNewPortalService.getBoardPortletInfo(info.getUserId(), info.getTenantId(),	boardId, listCnt, info.getCompanyId(), info.getOffSet(), isQnANormal, startRow, useVersion);
 
 				int boardListCount = boardList.size();
 
@@ -6192,6 +6196,7 @@ public class EzNewPortalGWController {
 			} else {
 				BoardPropertyVO boardPropertyVO = ezBoardService.getBoardProperty(boardID, info.getTenantId());
 				String guBun = boardPropertyVO.getGuBun();
+				String useVersion = boardPropertyVO.getVersionManage();
 				// Q&A 의 일반 유저일 경우 일반 게시판과 다른 리스트
 				
 				boolean isQnANormal = "5".equals(guBun);
@@ -6201,7 +6206,7 @@ public class EzNewPortalGWController {
 					isQnANormal = !ezBoardService.isBoardAdmin(boardID, userId, deptId, companyId, tenantId, rollInfo);
 				}
 				// 권한이 true이면 게시물 가져옴 (최대 3개)
-				List<BoardListVO> boardList = ezNewPortalService.getBoardPortletInfo(userId, tenantId, boardID, 3, companyId, info.getOffset(), isQnANormal);
+				List<BoardListVO> boardList = ezNewPortalService.getBoardPortletInfo(userId, tenantId, boardID, 3, companyId, info.getOffset(), isQnANormal, useVersion);
 				
 				// 리스트 개수로 utc time 적용
 				int boardListCount = boardList.size();

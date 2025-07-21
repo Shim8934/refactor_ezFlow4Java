@@ -1730,6 +1730,7 @@ public class MPortalGWController extends EgovFileMngUtil {
 					MBoardInfoVO boardInfo = mBoardService.getBoardProperty(boardId, commonUtil.getPrimaryData(info.getLang(), info.getTenantId()), info.getTenantId(), userId);
 					boardInfo = mBoardService.getBoardInfo(boardInfo, info.getRollInfo(), deptPath, mOptionService.commonInfo(serverName, userId));
 					String guBun = boardInfo.getGuBun();
+					String useVersion = boardInfo.getVersionManage();
 					// Q&A 의 일반 유저일 경우 일반 게시판과 다른 리스트
 					boolean isQnANormal = "5".equals(guBun);
 					if (isQnANormal) {
@@ -1738,14 +1739,14 @@ public class MPortalGWController extends EgovFileMngUtil {
 					}
 	
 					// 권한이 true이면 boardList불러오기
-					int boardListTotalCnt = ezNewPortalService.getBoardPortletTotalCnt(userId, tenantId, boardId, companyId, info.getOffset(), isQnANormal);
+					int boardListTotalCnt = ezNewPortalService.getBoardPortletTotalCnt(userId, tenantId, boardId, companyId, info.getOffset(), isQnANormal, useVersion);
 	
 					int totalPages  = (boardListTotalCnt + itemCount - 1) / itemCount;
 					currentPage = currentPage > totalPages ? totalPages : currentPage;
 					currentPage = currentPage == 0         ? 1          : currentPage;
 					int startRow  = (currentPage - 1) * itemCount;
 	
-					List<BoardListVO> boardList = ezNewPortalService.getBoardPortletInfo(userId, tenantId, boardId, itemCount, companyId, info.getOffset(), isQnANormal, startRow);
+					List<BoardListVO> boardList = ezNewPortalService.getBoardPortletInfo(userId, tenantId, boardId, itemCount, companyId, info.getOffset(), isQnANormal, startRow, useVersion);
 	
 					// 리스트 개수로 utc time 적용시키기
 					int boardListCount = boardList.size();

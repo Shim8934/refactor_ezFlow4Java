@@ -1709,45 +1709,24 @@ INSERT INTO TBL_PORTAL_THEME_USER (
 			A.BOARDID = C.BOARDID
 		AND
 			A.TENANT_ID = C.TENANT_ID
-		WHERE
-			A.TENANT_ID = #tenantId#
-		AND
-			A.BOARDID = #boardId#
-		AND
-			(A.WRITERCOMPANYID = C.COMPANYID OR TRIM(A.WRITERCOMPANYID) = '' OR TRIM(C.COMPANYID) = '' OR C.COMPANYID IS NULL)
-		AND
-			(A.APPRFLAG = 'Y' 
-			OR A.APPRFLAG IS NULL)
-		  ]]>
-		<isEqual property="isQnANormal" compareValue="Y" prepend="AND">
-			(TOPWRITERID = #userId#
-			OR
-			WRITERID = #userId#)
-		</isEqual>
-		<![CDATA[
-		AND
-		  	A.STARTDATE <= #nowDate#
-		AND
-		  	A.ENDDATE > #nowDate#
-		ORDER BY
-			A.DOCNO DESC
-		LIMIT
-			#startRow#, #itemCount#
-	]]>
-</select>
-
-<select id="ezNewPortal.getBoardPortletTotalCnt" parameterClass="Map" resultClass="int">
-<![CDATA[
-	SELECT
-			COUNT(*)
-		FROM
-			TBL_BOARD_ITEM A
-		JOIN
-			TBL_BOARD_BOARDINFO C
+		LEFT OUTER JOIN
+			(
+				SELECT
+					ROW_NUMBER() OVER(
+						PARTITION BY
+							PARENTITEMID
+						ORDER BY
+							VERSION DESC
+					) RN,
+					ITEMID,
+					TENANT_ID
+				FROM
+					TBL_BOARD_MODIFYHISTORY
+			) M1
 		ON
-			A.BOARDID = C.BOARDID
+			A.ITEMID = M1.ITEMID
 		AND
-			A.TENANT_ID = C.TENANT_ID
+			A.TENANT_ID = M1.TENANT_ID
 		WHERE
 			A.TENANT_ID = #tenantId#
 		AND
@@ -1769,6 +1748,75 @@ INSERT INTO TBL_PORTAL_THEME_USER (
 		AND
 		  	A.ENDDATE > #nowDate#
 		]]>
+		<isEqual property = "useVersion" compareValue = "Y" prepend="AND">
+			M1.RN = 1
+		</isEqual>
+		<isNotEqual property = "useVersion" compareValue = "Y" prepend="AND">
+			(M1.ITEMID IS NULL OR M1.RN = 1)
+		</isNotEqual>
+		ORDER BY
+			A.DOCNO DESC
+		LIMIT
+			#startRow#, #itemCount#
+</select>
+
+<select id="ezNewPortal.getBoardPortletTotalCnt" parameterClass="Map" resultClass="int">
+<![CDATA[
+	SELECT
+			COUNT(*)
+		FROM
+			TBL_BOARD_ITEM A
+		JOIN
+			TBL_BOARD_BOARDINFO C
+		ON
+			A.BOARDID = C.BOARDID
+		AND
+			A.TENANT_ID = C.TENANT_ID
+		LEFT OUTER JOIN
+			(
+				SELECT
+					ROW_NUMBER() OVER(
+						PARTITION BY
+							PARENTITEMID
+						ORDER BY
+							VERSION DESC
+					) RN,
+					ITEMID,
+					TENANT_ID
+				FROM
+					TBL_BOARD_MODIFYHISTORY
+			) M1
+		ON
+			A.ITEMID = M1.ITEMID
+		AND
+			A.TENANT_ID = M1.TENANT_ID
+		WHERE
+			A.TENANT_ID = #tenantId#
+		AND
+			A.BOARDID = #boardId#
+		AND
+			(A.WRITERCOMPANYID = C.COMPANYID OR TRIM(A.WRITERCOMPANYID) = '' OR TRIM(C.COMPANYID) = '' OR C.COMPANYID IS NULL)
+		AND
+			(A.APPRFLAG = 'Y' 
+			OR A.APPRFLAG IS NULL)
+		  ]]>
+		<isEqual property="isQnANormal" compareValue="Y" prepend="AND">
+			(TOPWRITERID = #userId#
+			OR
+			WRITERID = #userId#)
+		</isEqual>
+		<![CDATA[
+		AND
+		  	A.STARTDATE <= #nowDate#
+		AND
+		  	A.ENDDATE > #nowDate#
+		]]>
+		<isEqual property = "useVersion" compareValue = "Y" prepend="AND">
+			M1.RN = 1
+		</isEqual>
+		<isNotEqual property = "useVersion" compareValue = "Y" prepend="AND">
+			(M1.ITEMID IS NULL OR M1.RN = 1)
+		</isNotEqual>
 </select>
 
 	<!-- 2024-07-09 홍승비 - SQL Injection 수정 > $ 기호 제거 -->

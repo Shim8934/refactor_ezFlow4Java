@@ -1219,6 +1219,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
     		}
 			BoardPropertyVO boardPropertyVO = ezBoardService.getBoardProperty(boardId, userInfo.getTenantId());
 			String guBun = boardPropertyVO.getGuBun();
+			String useVersion = boardPropertyVO.getVersionManage();
 			// Q&A 의 일반 유저일 경우 일반 게시판과 다른 리스트
 			boolean isQnANormal = "5".equals(guBun);
 			if (isQnANormal) {
@@ -1233,7 +1234,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 				String boardUserType = isAdmin ? "admin" : "user";
 				boardList = ezNewPortalService.getNewBoardPortletInfo(userInfo, boardUserType, startRow, itemCount);
 			} else {
-				boardList = ezNewPortalService.getBoardPortletInfo(userInfo.getId(), userInfo.getTenantId(), boardId, itemCount, userInfo.getCompanyID(), userInfo.getOffset(), isQnANormal);
+				boardList = ezNewPortalService.getBoardPortletInfo(userInfo.getId(), userInfo.getTenantId(), boardId, itemCount, userInfo.getCompanyID(), userInfo.getOffset(), isQnANormal, useVersion);
 			}
 			
 			json.put("status", "ok");
