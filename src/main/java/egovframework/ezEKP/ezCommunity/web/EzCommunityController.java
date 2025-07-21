@@ -511,7 +511,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		List<CommunityCClubUserVO> operatorList = ezCommunityService.getClubOperatorList(userInfo.getCompanyID(), userInfo.getTenantId(), code, userInfo.getId());
 
 		if (operatorList != null && !operatorList.isEmpty()) {
-			if (operatorList.get(0).getAdmin_Auth() != null && !operatorList.get(0).getAdmin_Auth().contains("B")) {
+			if (operatorList.get(0).getAdmin_Auth() != null && !operatorList.get(0).getAdmin_Auth().equals("B")) {
 				chkOperator = true;
 			}
 		}
