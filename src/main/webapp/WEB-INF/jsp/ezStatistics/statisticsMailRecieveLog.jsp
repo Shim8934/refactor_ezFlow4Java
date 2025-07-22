@@ -382,13 +382,16 @@
 	  				      	html += ">";
                             html += "   <td style='width: 22px; text-align: center; cursor: default;'>";
 							
+							html += "   <div class='custom_checkbox'>";
                             html += "  <input type='checkbox' messageId='" + i.messageId + "'style='margin: 0px; padding: 0px; width: 13px; height: 13px;";
+
 							if(!i.messageId || !i.isNullInSearchId) {
 								html += " cursor: unset;' disabled='true'; >";
 							} else {
 								html += " cursor: pointer;' onclick='checkTheSameEml(this)'; >";
 							}
 							
+							html += "   </div>";
 							html += "   </td>";
                             
 	   						html += "	<td>" + i.LogTime 									    + "</td>";
@@ -797,8 +800,9 @@
 			<thead>
 				<tr>
 					<th width='2%' style="text-align: center; cursor: default;">
-						<input type='checkbox' id='HeaderAllCheckBox' style='margin: 0px; padding: 0px; width: 13px; height: 13px; cursor: pointer;' 
-						onchange="adminMailCheckBox(this.checked);">
+					    <div class="custom_checkbox">
+						    <input type='checkbox' id='HeaderAllCheckBox' style='margin: 0px; padding: 0px; width: 13px; height: 13px; cursor: pointer;' onchange="adminMailCheckBox(this.checked);">
+                        </div>
 					</th>				
 					<th width='12%'><spring:message code='ezStatistics.kyj10'/></th>
 					<th width='8%'><spring:message code='ezStatistics.t83'/></th>
