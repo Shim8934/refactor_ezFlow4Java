@@ -2895,15 +2895,6 @@ INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_ord
 INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (18, '/ezMemo/memoMainPage.do', 'G', 'icon_topmenu icon_nav_memo', 18, 'memo');
 INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (19, '/ezSurvey/surveyMain.do', 'G', 'icon_topmenu icon_nav_survey', 19, 'survey');
 INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (20, '/ezCar/resCar.do', 'G', 'icon_topmenu icon_nav_workdiary', 20, 'car');
-INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (21, '/mobile/ezEmail/mailList.do?folderId=INBOX', 'MG', 'iconCommon icon_mail', 21, 'mMail');
-INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (22, '/mobile/ezOrgan/personList.do', 'MG', 'iconCommon icon_employee', 22, 'mAddress');
-INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (23, '/mobile/ezApprovalG/mApproveList.do?pType=DO', 'MG', 'iconCommon icon_approval', 23, 'mApproval');
-INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (24, '/mobile/ezResource/searchTodayList.do', 'MG', 'iconCommon icon_resource', 24, 'mResource');
-INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (25, '/mobile/ezBoard/boardItemList.do?boardID={FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}', 'MG', 'iconCommon icon_notice', 25, 'mBoard');
-INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (26, '/mobile/ezAddress/addressList.do?pSearchTarget=personal', 'MG', 'iconCommon icon_address', 26, 'mAddress');
-INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (27, '/mobile/ezSchedule/mScheduleList.do', 'MG', 'iconCommon icon_schedule', 27, 'mSchedule');
-INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (28, '/mobile/ezSurvey/surveyList.do?mode=processing', 'MG', 'iconCommon icon_survey', 28, 'mSurvey');
-INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (29, '/mobile/ezWebfolder/main.do', 'MG', 'iconCommon icon_webfolder', 29, 'mWebfolder');
 
 -- 모바일 메뉴 
 INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (21, '/mobile/ezEmail/mailList.do?folderId=INBOX', 'MG', 'iconCommon icon_mail', 1, 'mMail');
