@@ -2369,8 +2369,7 @@
 	                    </ul>
 	                    <ul style="float:right;margin-right:50px">
 	                    	<%-- <li class="sel securemail" style="background:none; border:none; padding:0px; padding-top:4px; display:none;">
-	                        	<input type="checkbox" id="chkSecureMail" />
-	                        	<label for="chkSecureMail" style="color:#333;margin-right:3px"><spring:message code='ezEmail.lhm63' /></label>	                        	
+	                        	<input type="checkbox" id="chkSecureMail" /><label for="chkSecureMail" style="color:#333;margin-right:3px"><spring:message code='ezEmail.lhm63' /></label>	                        	
 	                        </li>
 	                        <li class="bar securemail" style="background:none; border:0;padding-left:5px;padding-right:0;cursor:default; display:none;">
 	                            <img src="/images/pbar.gif">
@@ -2469,8 +2468,10 @@
 	                        <th rowspan="2" style="width:1%">
 	                            <a class="imgbtn"><span onclick="SelectReceiver_onClick('To')" style="width: 50px; text-align: center;">
 	                                <spring:message code='ezEmail.t66' /></span></a>
-	                            <div style="font-weight:normal; "><INPUT id="toMe" onclick="MailToMe_Onclick();" value="" type="checkbox" name="toMe" style="vertical-align: middle"/>
-	                            <label for="toMe" style="margin-left:-3px;margin-top:1px; cursor:pointer" ><spring:message code='ezEmail.t99000010' /></label></div>
+	                            <br>
+	                            <div class="custom_checkbox">
+	                                <input id="toMe" onclick="MailToMe_Onclick();" value="" type="checkbox" name="toMe" style="vertical-align: middle"/><label for="toMe" style="margin-left:-3px;margin-top:1px; cursor:pointer" ><spring:message code='ezEmail.t99000010' /></label>
+                                </div>
 	                        </th>
 	                        <td style="width: 76%">
 								<input type="text" name="MsgTo" id="MsgTo" class="width100percent" onkeypress="return on_keydown(event)" onblur="onblurOnRecipientInputField(this.value)" tabindex="1" style="width: calc(100% - 27px); ime-mode: active;"><span class="btn_AutoCompleteResults"></span>
