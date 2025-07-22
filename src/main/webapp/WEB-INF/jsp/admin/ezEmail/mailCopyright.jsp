@@ -54,18 +54,22 @@
 				<tr>
 					<th rowspan="2" style="width: 60px;"><spring:message code='ezOrgan.kyj01'/></th>
 					<td>&nbsp;
-						<label id="radioFalse">
-							<input name="copyrightRadio" type="radio" id="copyRadio0" value="NO">
-							<span style="vertical-align:middle;">&nbsp;<spring:message code='ezOrgan.kyj02'/></span>
-						</label>
+					    <div class="custom_radio">
+                            <label id="radioFalse">
+                                <input name="copyrightRadio" type="radio" id="copyRadio0" value="NO">
+                                <span style="vertical-align:middle;">&nbsp;<spring:message code='ezOrgan.kyj02'/></span>
+                            </label>
+						</div>
 					</td>
 			    </tr>
 			    <tr>
 					<td>&nbsp;
-						<label id="radioTrue">
-							<input name="copyrightRadio" type="radio" id="copyRadio1"  value="YES">
-							<span style="vertical-align:middle;">&nbsp;<spring:message code='ezOrgan.t161'/></span>
-						</label>
+					    <div class="custom_radio">
+                            <label id="radioTrue">
+                                <input name="copyrightRadio" type="radio" id="copyRadio1"  value="YES">
+                                <span style="vertical-align:middle;">&nbsp;<spring:message code='ezOrgan.t161'/></span>
+                            </label>
+                        </div>
 					</td>
 				</tr>
 			</table>

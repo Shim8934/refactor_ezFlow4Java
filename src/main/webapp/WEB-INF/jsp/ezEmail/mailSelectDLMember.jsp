@@ -107,7 +107,11 @@
 			    		<c:forEach var="item" items="${list}">
 					    <tr>
 						  <c:if test="${newMailFlag eq null}">
-						  <td style="text-align:center;"><input type='checkbox' name="goruplistinput" _email="${item.mail}" _name="${item.displayName}" checked ></td>
+						  <td style="text-align:center;">
+						      <div class="custom_checkbox">
+						          <input type='checkbox' name="goruplistinput" _email="${item.mail}" _name="${item.displayName}" checked >
+						      </div>  
+                          </td>
 						  </c:if>
 					      <td style="text-align:center;">${item.displayName}</td>
 					      <td style="text-align:center;">&nbsp;${item.company} </td>
