@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %> 
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html>
 	<head>
@@ -44,14 +45,6 @@
 		    
 		    window.onload =function () {		        
 			    makePageSelPage();
-				getGradeList();
-
-				setTimeout(function() {
-					var selectElement = document.getElementById("selGradeList");
-					if (selectGrade) {
-						selectElement.value = selectGrade;
-					}
-				}, 100);
 			}
 			
 		    /* 2018-06-29 홍승비 - 커뮤니티 회원을 해당 회사에 겸직하고 있는 정보로 표출하기 */
@@ -268,50 +261,6 @@
 					location.href = url;
 			}
 
-			function getGradeList() {
-				$.ajax({
-					type : "GET",
-					url : "/ezCommunity/getAdminMemberGrade.do",
-					dataType : "json",
-					data : {
-						code : code
-					},
-					success : function(result) {
-						getGradeList_after(result);
-					},
-					error : function(xhr, status, error) {
-						console.error("Error: " + error);
-					}
-				});
-			}
-
-			function getGradeList_after(gradeList) {
-				var selectGrade = document.getElementById("gradeList");
-				var selectGrade2 = document.getElementById("selGradeList");
-
-				if (selectGrade) {
-					selectGrade.innerHTML = "";
-
-					for (var i = 2; i < gradeList.length-1; i++) {
-						var option = document.createElement("option");
-
-						option.value = gradeList[i].gradeCode;
-						option.textContent = gradeList[i].gradeName;
-
-						selectGrade.appendChild(option);
-					}
-				}
-
-				for (var i = 0; i < gradeList.length-1; i++) {
-					var option2 = document.createElement("option");
-
-					option2.value = gradeList[i].gradeCode;
-					option2.textContent = gradeList[i].gradeName;
-
-					selectGrade2.appendChild(option2);
-				}
-			}
-
 			var userIds = new Array();
 			function selectMember(userId, checkId) {
 				var checkbox = document.getElementById("checkbox" + checkId);
@@ -351,50 +300,24 @@
 				});
 			}
 
+			var change_grade_dialogArguments = new Array();
 			function changeGrade() {
-				var select = document.getElementById("gradeList");
-				var selectedOption = select.options[select.selectedIndex].value;
-
-				userIds = userIds.filter((value, index, self) => {
-					return self.indexOf(value) === index;
-				});
-
 				if (userIds.length == 0) {
 					alert("<spring:message code = 'ezCommunity.lyj19' />");
-				} else {
-					if (confirm("<spring:message code = 'ezCommunity.lyj20' />")) {
-						$.ajax({
-							type : "POST",
-							url : "/ezCommunity/adminMemberGradeUpdate.do",
-							dataType : "json",
-							contentType: "application/json;charset=UTF-8",
-							async : false,
-							data : JSON.stringify({
-								code : code,
-								grade : selectedOption,
-								userIds : userIds
-							}),
-							success : function(result) {
-								if (result == true) {
-									alert("<spring:message code = 'ezCommunity.t282' />");
-									location.reload();
-								} else {
-									alert("<spring:message code = 'ezCommunity.t283' />");
-								}
-							},
-							error : function() {
-								alert("<spring:message code = 'ezCommunity.t283' />");
-							}
-						});
-					}
+					return;
 				}
+
+				change_grade_dialogArguments[0] = userIds;
+				change_grade_dialogArguments[1] = changeGrade_complete;
+				GetOpenWindow("/ezCommunity/changeGradePopup.do?code=" + encodeURIComponent(code), "", 320, 200, "no");
 			}
 
-			var select = "";
-			function viewGradeList() {
-				select = document.getElementById("selGradeList").value;
+			function changeGrade_complete() {
+				alert("<spring:message code = 'ezCommunity.t282' />");
 
-				window.location.href = "/ezCommunity/commViewMember.do?code=" + code + "&selectGrade=" + select;
+				setTimeout(function () {
+					location.reload();
+				}, 1000);
 			}
 		</script>
 	</head>
@@ -414,19 +337,11 @@
 							<a class="imgbtn" style="vertical-align: middle;height:22px;margin:0px"><span onClick="searchList()" style="height:22px;line-height:22px"><spring:message code = 'ezCommunity.t724' /></span></a>
 						</c:if>
 					</td>
-					<td style="border:0px;width:150px;text-align: right;display:none">
-						<span style="font-size: 13px;vertical-align: middle;"><spring:message code = 'ezCommunity.lyj29' /></span>
-						<select id="selGradeList" style="font-size: 13px;vertical-align: middle;cursor: pointer;MIN-WIDTH: 60px;height: 20px;" onchange="viewGradeList()">
-							<option value="0"><spring:message code = 'ezCommunity.lyj30' /></option>
-						</select>
-						<c:if test="${gradeCode == '1' || gradeCode == '2'}">
-							<span style="margin-left:5px;margin-right:5px;">|</span>
-							<span style="font-size: 13px;vertical-align: middle;"><spring:message code = 'ezCommunity.lyj18' /></span>
-							<select id="gradeList" style="font-size: 13px;vertical-align: middle;cursor: pointer;MIN-WIDTH: 60px;height: 20px;" onchange="">
-								<option value="3" selected><spring:message code = 'ezCommunity.lyj07' /></option>
-								<option value="4"><spring:message code = 'ezCommunity.lyj08' /></option>
-							</select>
-							<a href="javascript:changeGrade()" style="width: 50px;padding-left: 7px;padding-right: 6px;text-align:center;" class="imgbtn imgbck" title="<spring:message code = 'ezCommunity.lyj17' />"><spring:message code = 'ezCommunity.lyj17' /></a>
+					<td style="border:0px;width:150px;text-align: right;">
+						<c:if test="${chkSysop == '1' || fn:contains(adminAuth, 'A')}">
+							<a class="imgbtn imgbck" style="vertical-align: middle;height:23px;margin:0px">
+								<span onClick="javascript:changeGrade();" style="height:22px;line-height:23px"><spring:message code = 'ezCommunity.lyj17' /></span>
+							</a>
 						</c:if>
 					</td>
 				</tr>			
@@ -434,9 +349,15 @@
 		</form>
 		<div  style = "height:370px;">
 		<table id="tblList" class="cmhomelist" style="width:100%;margin-top:10px">
-			<tr> 
-				<%--<th style="width:40px"><input type="checkbox" id="HeaderAllCheckBox" class="selectMember" onclick="allCheck(this)"></th>--%>
-				<th style="width:40px"><spring:message code = 'ezCommunity.t32' /></th>
+			<tr>
+				<c:choose>
+					<c:when test="${chkSysop == '1' || fn:contains(adminAuth, 'A')}">
+						<th style="width:40px"><input type="checkbox" id="HeaderAllCheckBox" class="selectMember" onclick="allCheck(this)"></th>
+					</c:when>
+					<c:otherwise>
+						<th style="width:40px"><spring:message code = 'ezCommunity.t32' /></th>
+					</c:otherwise>
+				</c:choose>
 				<th style="width:110px"><spring:message code = 'ezCommunity.t10' /></th>
 				<th style="width:100px"><spring:message code = 'ezCommunity.lyj16' /></th>
 				<th style="width:100px"><spring:message code = 'ezCommunity.t241' /></th>

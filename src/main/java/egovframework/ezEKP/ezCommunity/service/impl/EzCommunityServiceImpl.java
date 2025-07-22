@@ -1825,13 +1825,23 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 					CommunityMemberInfoVO memberInfo = commViewMemberGet3(user.getC_ID().trim(), user.getCompanyID(), primary, userInfo.getTenantId());
 					String memGradeName = getMemberGradeName(code, user.getGrade(), user.getCompanyID(), userInfo.getTenantId());
 
+					List<CommunityCClubUserVO> operatorList = getClubOperatorList(userInfo.getCompanyID(), userInfo.getTenantId(), code, userInfo.getId());
+
+					String adminAuth = "";
+					if (operatorList != null && !operatorList.isEmpty() && operatorList.get(0).getAdmin_Auth() != null) {
+						adminAuth = operatorList.get(0).getAdmin_Auth();
+					}
+
 					sb.append("<tr>");
-					sb.append("<td style=\"width:55; height:23; align:center;\">" + (userList.indexOf(user) + 1) + "</td>");
-					/*if (!user.getPermit().equals("4")) {
-						sb.append("<td style=\"width:55; height:23; align:center;\"><input type=\"CHECKBOX\" id=\"checkbox" + iOutputCount + "\" class=\"selectMember\" onclick=\"selectMember('" + user.getC_ID() + "', " + iOutputCount + ");\"></td>");
+					if (strSysopID.trim().equals(userInfo.getId()) || adminAuth.contains("A")) {
+						if (!"4".equals(user.getPermit()) && !user.getGrade().equals("2")) { // 마스터 및 운영자 제외한 나머지 회원들만 체크박스 표출
+							sb.append("<td style=\"width:55; height:23; align:center;\"><input type=\"CHECKBOX\" id=\"checkbox" + iOutputCount + "\" class=\"selectMember\" onclick=\"selectMember('" + user.getC_ID() + "', " + iOutputCount + ");\"></td>");
+						} else {
+							sb.append("<td style=\"width:55; height:23; align:center;\"></td>");
+						}
 					} else {
-						sb.append("<td style=\"width:55; height:23; align:center;\"></td>");
-					}*/
+						sb.append("<td style=\"width:55; height:23; align:center;\">" + (userList.indexOf(user) + 1) + "</td>");
+					}
 					sb.append("<td>");
 					
 					if (user.getC_ID().trim().equals(strSysopID)) {

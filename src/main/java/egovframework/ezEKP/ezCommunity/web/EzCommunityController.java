@@ -2536,11 +2536,22 @@ public class EzCommunityController extends EgovFileMngUtil{
         }
         
 		String strSysopID = ezCommunityService.adminMemberListGet2(code, userInfo.getTenantId()).trim();
+
+		if (strSysopID.equals(userInfo.getId())) {
+			model.addAttribute("chkSysop", "1");
+		}
+
 		// 여기에서 해당 회원의 deptID, deptname을 xml 내부에 받아온다.
 		String strXML = ezCommunityService.commViewMember(userInfo, code, strSysopID, keyword, sRadio, comNoPerPage, curPage, selectGrade);
 
-		String gradeCode = ezCommunityService.getUserGrade(code, userInfo.getId(), userInfo.getCompanyID(), userInfo.getTenantId()) != null ? ezCommunityService.getUserGrade(code, userInfo.getId(), userInfo.getCompanyID(), userInfo.getTenantId()) : "10";
-		
+		// 운영자 권한정보
+		List<CommunityCClubUserVO> operatorList = ezCommunityService.getClubOperatorList(userInfo.getCompanyID(), userInfo.getTenantId(), code, userInfo.getId());
+
+		if (operatorList != null && !operatorList.isEmpty()) {
+			String adminAuth = operatorList.get(0).getAdmin_Auth();
+			model.addAttribute("adminAuth", adminAuth);
+		}
+
 		model.addAttribute("curPage", curPage);
 		model.addAttribute("totalPage", totalPage);
 		model.addAttribute("code", code);
@@ -2550,7 +2561,6 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("keywordCount", keywordCount);
 		model.addAttribute("strSysopID", strSysopID);
 		model.addAttribute("strXML", strXML);
-		model.addAttribute("gradeCode", gradeCode);
 		model.addAttribute("selectGrade", selectGrade);
 
 		//logger.debug("strXML = " + strXML);
@@ -5874,6 +5884,22 @@ public class EzCommunityController extends EgovFileMngUtil{
 
 		logger.debug("getBoardReadFG ended, result = " + result);
 		return result;
+	}
+
+	/**
+	 * 운영진 관리 > 운영자 추가 팝업
+	 */
+	@RequestMapping(value = "/ezCommunity/changeGradePopup.do", method = RequestMethod.GET)
+	public String changeGradePopup(@CookieValue("loginCookie")String loginCookie, Model model, HttpServletRequest request) throws Exception {
+		logger.debug("changeGradePopup started");
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+
+		String code = request.getParameter("code");
+
+		model.addAttribute("code", code);
+
+		logger.debug("changeGradePopup ended");
+		return "ezCommunity/communityChangeGradePopup";
 	}
 }
 
