@@ -233,3 +233,9 @@ var strLangMJS01 = "Bạn có thể kéo và thả để thêm tệp và thay đ
 /* 2025-02-07 기민혁 - 반복자원 체크 메세지 추가 */
 var strLangKMH1 = "Tài nguyên này không cho phép đặt chỗ lặp lại.";
 var strLangKMH2 = "Đã xảy ra lỗi";
+
+// 2024-08-26 유길상 - 자원등록 > 최대 예약 가능 기간, 정원
+var strLangMaxYGS01 = "Vượt quá thời gian đặt trước tối đa.";
+var strLangMaxYGS02 = "Số lượng giới hạn";
+var strLangMaxYGS03 = "người";
+var strLangMaxYGS04 = "Vui lòng nhập số lượng giới hạn.";

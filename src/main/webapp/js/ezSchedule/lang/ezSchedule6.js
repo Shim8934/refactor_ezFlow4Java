@@ -237,3 +237,9 @@ var strLangMJS01 = "You can drag and drop to add files and change the order of a
 /* 2025-02-07 기민혁 - 반복자원 체크 메세지 추가 */
 var strLangKMH1 = "Sumber daya ini tidak mengizinkan pemesanan berulang.";
 var strLangKMH2 = "Terjadi kesalahan";
+
+// 2024-08-26 유길상 - 자원등록 > 최대 예약 가능 기간, 정원
+var strLangMaxYGS01 = "Melebihi batas maksimum waktu reservasi.";
+var strLangMaxYGS02 = "Kapasitas";
+var strLangMaxYGS03 = "orang";
+var strLangMaxYGS04 = "Silakan masukkan kapasitas.";
