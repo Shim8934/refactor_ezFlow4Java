@@ -1185,7 +1185,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 				returnStr.append("<owner_nm><![CDATA[" + scheRSDom.getElementsByTagName("owner_nm").item(i).getTextContent() + "]]></owner_nm>");
 				returnStr.append("<dept_name><![CDATA[" + scheRSDom.getElementsByTagName("dept_name").item(i).getTextContent() + "]]></dept_name>");
 				returnStr.append("<writeDay>"+ writeDay +"</writeDay>");
-				returnStr.append("<title>"+ title +"</title>");
+				returnStr.append("<title><![CDATA["+ title +"]]></title>");
 					
 				/*if (pType == null || pType.equals("")) {
 					returnStr.append("<owner_nm2><![CDATA[" + scheRSDom.getElementsByTagName("owner_nm2").item(i).getTextContent() + "]]></owner_nm2>");
