@@ -4964,7 +4964,7 @@ public class EzBoardController extends EgovFileMngUtil{
 			model.addAttribute("newestVersion", newestVersion);
 			
 			if (!itemID.isEmpty() && !mode.equals("reply")) {
-				model.addAttribute("parentItemID", ezBoardService.getParentItemID(itemID, companyID, tenantID));
+				model.addAttribute("parentItemID", ezBoardService.getParentItemID(itemID, tenantID));
 			}
 		}
 		

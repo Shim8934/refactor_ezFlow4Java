@@ -595,7 +595,7 @@ public interface EzBoardService {
 
 	public String getItemVersion(String itemID, String companyID, int tenantID) throws Exception;
 
-	public String getParentItemID(String itemID, String companyID, int tenantID) throws Exception;
+	public String getParentItemID(String itemID, int tenantID) throws Exception;
 
 	public String checkIsNewestVersion(String boardID, String itemID, int tenantID, String version) throws Exception;
 

@@ -561,7 +561,7 @@
 		    
 		    var checkpassword_dialogArguments = new Array();
 		    function btn_Delete_Onclick(param) {
-		        if (CheckIfHasReplies()) {
+		        if ('only' !== param && CheckIfHasReplies()) { /* 버전관리 > 이전버전 삭제 시에는 답글 체크 X */
 		            alert("<spring:message code='ezBoard.t196' />");
 		            return;
 		        }
@@ -615,6 +615,10 @@
 		                        window.opener.refresh_onclick();
 		                    } catch (e) {
 		                    }
+							
+							if ('only' == param) { /* 버전관리 > 이전버전 삭제 후 새로고침 */
+								window.opener.location.reload();
+							}
 
 							if(parent.opener.search != undefined){
 								parent.opener.search('skip');
@@ -706,6 +710,10 @@
 							}
 	                 	} catch (e) {console.log(e);}
 
+						if ('only' == param) { /* 버전관리 > 이전버전 삭제 후 새로고침 */
+							window.opener.location.reload();
+						}
+						
                         if (window.opener) {
                             window.close();
                         } else {

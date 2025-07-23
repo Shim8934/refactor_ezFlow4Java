@@ -765,14 +765,17 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("boardID", boardID);
 		map.put("tenantID", tenantID);
 
-		String useVersion = getUseVersionFlag(boardID, tenantID);
-
-		if (useVersion.equals("Y") && (!mode.isEmpty() && !mode.equals("only"))) {
+		String hasVersionHistory = getParentItemID(itemID, tenantID) != null ? "Y" : "N";
+		// 버전관리 사용중인 경우 글 삭제 시, 관련 버전 글 모두 삭제
+		if (hasVersionHistory.equals("Y") && (!mode.isEmpty() && !mode.equals("only"))) {
 			List<String> versionedItemHrefList = ezBoardDAO.getVersionedItemHrefList(map);
 
 			ezBoardDAO.deleteVersionedItem(map);
 			ezBoardDAO.deleteVersionedItemReply(map);
 			ezBoardDAO.deleteVersionedItemRead(map);
+			
+			map.put("allDelete", "Y");
+			ezBoardDAO.deleteVersionHistory(map);
 
 			deleteVersionedItemFile(realPath, versionedItemHrefList);
 		} else {
@@ -786,6 +789,11 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 				boardListVO.setTenantID(tenantID);
 
 				ezBoardDAO.deleteImageItem(boardListVO);
+			}
+			
+			// 버전관리 중간글 하나만 삭제
+			if (hasVersionHistory.equals("Y") && mode.equals("only")) {
+				ezBoardDAO.deleteVersionHistory(map);
 			}
 		}
 		
@@ -2015,6 +2023,9 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		
 		map.put("v_pItemID", itemID);
 		map.put("v_TENANTID", tenantID);
+
+		String parentItemId = getParentItemID(itemID, tenantID);
+		map.put("parentItemId", parentItemId);
 		
 		String check = "";
 		int checkCnt = ezBoardDAO.brdCheckIfHasReply(map);
@@ -3867,7 +3878,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 				if (mode != null && mode.equals("temp")) {
 					deleteTempItem(tempItem, boardID, realPath, tenantId);
 				} else {
-					if("TRUE".equals(brdCheckIfHasReply(tempItem, userInfo.getTenantId()))){
+					if(!mode.equals("only") && "TRUE".equals(brdCheckIfHasReply(tempItem, userInfo.getTenantId()))){
 						// 프론트에서도 답변 게시물 있는지 확인 후 있으면 넘어감.
 						continue;
 					}
@@ -7554,8 +7565,8 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	}
 
 	@Override
-	public String getParentItemID(String itemID, String companyID, int tenantID) throws Exception {
-		return ezBoardDAO.getParentItemID(itemID, companyID, tenantID);
+	public String getParentItemID(String itemID, int tenantID) throws Exception {
+		return ezBoardDAO.getParentItemID(itemID, tenantID);
 	}
 
 	private void deleteVersionedItemFile(String realPath, List<String> versionedItemHrefList) throws Exception {

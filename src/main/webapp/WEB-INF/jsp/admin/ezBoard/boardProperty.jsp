@@ -1290,26 +1290,22 @@
 			/* 2025-06-12 양지혜 - 게시글 버전관리 미사용 > 사용 시 히스토리 데이터 생성 후 진행 */
 			function createModifyHistory() {
 				var pass = false;
-
-				if (window.parent.itemCnt > 0) {
-					if (confirm(strLangVersion01)) {
-						$.ajax({
-							type : "POST",
-							dataType : "text",
-							async : false,
-							url : "/admin/ezBoard/createModifyHistory.do",
-							data : { boardID : BoardID },
-							success: function(result){
-								if (result == "PASS") {
-									pass = true;
-								} else {
-									alert(strLangVersion02);
-								}
+				
+				if (confirm(strLangVersion01)) {
+					$.ajax({
+						type : "POST",
+						dataType : "text",
+						async : false,
+						url : "/admin/ezBoard/createModifyHistory.do",
+						data : { boardID : BoardID },
+						success: function(result){
+							if (result == "PASS") {
+								pass = true;
+							} else {
+								alert(strLangVersion02);
 							}
-						});
-					}
-				} else {
-					pass = true;
+						}
+					});
 				}
 				return pass;
 			}

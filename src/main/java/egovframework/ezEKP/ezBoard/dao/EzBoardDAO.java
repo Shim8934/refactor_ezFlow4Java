@@ -1284,11 +1284,10 @@ public class EzBoardDAO extends EgovAbstractDAO{
 		insert("EzBoardDAO.addModifyHistory", b);
 	}
 
-	public String getParentItemID(String itemID, String companyID, int tenantID) throws Exception {
+	public String getParentItemID(String itemID, int tenantID) throws Exception {
 		return (String)select("EzBoardDAO.getParentItemID",
 				new HashMap() {{
 					put("itemID", itemID);
-					put("companyID", companyID);
 					put("tenantID", tenantID);
 				}}
 		);
@@ -1351,5 +1350,9 @@ public class EzBoardDAO extends EgovAbstractDAO{
 					put("v_TENANTID", tenantId);
 				}}
 		);
+	}
+
+	public void deleteVersionHistory(Map<String, Object> map) throws Exception {
+		delete("EzBoardDAO.deleteVersionHistory", map);
 	}
 }
