@@ -409,6 +409,8 @@
 					if (res === "OK") {
 						alert("<spring:message code = 'ezBoard.t54' />");
 						location.href = "/ezBoard/fileViewerBoard.do?boardID=" + encodeURIComponent(pBoardID);
+					} else if (res === "NO") {
+						alert("<spring:message code='ezBoard.t265'/>");
 					} else {
 						alert("<spring:message code = 'ezCabinet.err2' />");
 					}
