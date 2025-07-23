@@ -419,7 +419,11 @@
 		}
 
 		function editItem() {
-			location.href = "/ezBoard/fileViewerBoard.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(itemID) + "&mode=modify";
+			if (false === ${boardInfo.boardAdmin_FG} && false === ${boardInfo.delete_FG} && "${boardItemInfo.writerID}" !== "${userInfo.id}") {
+				alert("<spring:message code='ezBoard.t304' />");
+			} else {
+				location.href = "/ezBoard/fileViewerBoard.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(itemID) + "&mode=modify";
+			}
 		}
 
 		function viewContent() {
