@@ -672,6 +672,7 @@
 	            objNode = createNodeInsert(xmlpara, objNode, "DATA");
 	            var xmlhttp = createXMLHttpRequest();
 	            createNodeAndInsertText(xmlpara, objNode, "USERID", g_loginID);
+				createNodeAndInsertText(xmlpara, objNode, "INMAILBOX", "YES");
 	            createNodeAndInsertText(xmlpara, objNode, "LISTCOUNT", document.getElementById("MailList").getAttribute("listpageCount"));
 	            createNodeAndInsertText(xmlpara, objNode, "REFRESHINTERVAL", "${mailGeneral.refreshInterval}");
 	            createNodeAndInsertText(xmlpara, objNode, "KEEPDELETELENGTH", "${mailGeneral.keepDeleteLength}");
@@ -2124,27 +2125,25 @@
 			                    		</span>
 			                    	</li>
 			                        <li class="preT_list">
-			                        	<span class="t_left">
-			                        		<span class="cblack"><spring:message code="ezEmail.t693" /></span>
-			                        		<span id="PreH_MailSender">
-			                        			<span id="PreH_sub_MailSender"></span>
-			                        		</span>
-			                        	</span>
-			                        	<span class="t_right" style="margin-right:3px;">
-			                        		 <c:if test="${folderType == 'sent' or folderType == 'draft'}">
-				                        		<span class="cblack"><spring:message code="ezEmail.t704" /> : </span>
-                  							</c:if>
-			                        		 <c:if test="${folderType != 'sent' and folderType != 'draft'}">
-				                        		<span class="cblack"><spring:message code="ezEmail.t657" /> : </span>
-                  							</c:if>
-			                        		<span id="PreH_date"><span id="PreH_sub_date" style="display:none;"></span></span>
-			                        	</span>
+                                        <span class="cblack"><spring:message code="ezEmail.t693" /></span>
+                                        <span id="PreH_MailSender">
+                                            <span id="PreH_sub_MailSender"></span>
+                                        </span>
 			                        </li>
 			                        <li class="preT_list"><span class="cblack"><spring:message code="ezEmail.t527" /></span> <span id="PreH_MailReceiver" style="display:inline-block"></span>
 				                    	<span id="PreH_MailReceiver_sub"></span>
 				                    	<span class="icon_graydown" onclick="ReceiverDetail_view(this);" id="PreH_ReceiverDetail"></span>
 				                    	<p class="hidden_area" id="PreH_MailReceiverDetail_Rayer" style="display:none;"><span id="PreH_MailReceiverDetail"></span></p>
 				                    </li>
+                                    <li class="preT_list">
+                                        <c:if test="${folderType == 'sent' or folderType == 'draft'}">
+                                            <span class="cblack"><spring:message code="ezEmail.t704" /> : </span>
+                                        </c:if>
+                                         <c:if test="${folderType != 'sent' and folderType != 'draft'}">
+                                            <span class="cblack"><spring:message code="ezEmail.t657" /> : </span>
+                                        </c:if>
+                                        <span id="PreH_date"><span id="PreH_sub_date" style="display:none;"></span></span>
+                                    </li>
 			                        <li class="preT_list" id="PreH_CCMain" style="display:none;"><span class="cblack"><spring:message code="ezEmail.t526" /></span> <span id="PreH_MailCC" style="display:inline-block"></span>
 				                    	<span id="PreH_MailCC_sub"></span>
 				                    	<span class="icon_graydown" onclick="CCDetail_view(this);" id="PreH_CCDetail" style="display:none;"></span>

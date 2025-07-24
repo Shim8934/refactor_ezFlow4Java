@@ -425,6 +425,8 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		// 2025.02.11 한슬기 : 나를 항상 참조에 포함 선택. none : 사용안함(default) / cc : 나를 항상 참조에 포함 / bcc : 나를 항상 숨은참조에 포함
 		String selfCcOption = doc.getElementsByTagName("SELFCCOPTION").item(0).getTextContent();
 
+		String inMailBox = doc.getElementsByTagName("INMAILBOX").item(0).getTextContent();
+		
 		logger.debug("userId=" + userInfo.getId() + ",listCount=" + listCount + ",refreshInterval=" + refreshInterval 
 				+ ",keepDeleteLength=" + keepDeleteLength + ",previewMode=" + previewMode 
 				+ ",previewWList=" + previewWList + ",previewWContent=" + previewWContent
@@ -465,7 +467,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 			mailGeneral.setEditorFontSize(editorFontSize);
 			mailGeneral.setSelfCcOption(selfCcOption);
 
-			ezEmailService.setMailGeneral(userInfo.getTenantId(), userInfo.getId(), mailGeneral, mode);
+			ezEmailService.setMailGeneral(userInfo.getTenantId(), userInfo.getId(), mailGeneral, mode, inMailBox);
 		} catch (RuntimeException e) {
 			rtnValue = "ERROR:" + e.getMessage();
 		} catch (Exception e) {
