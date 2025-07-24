@@ -8271,7 +8271,7 @@
 	<update id="EzCommonDAO.updateAttitudeCustomCheckbox2">
 		<![CDATA[
 			UPDATE  TBL_ATTITUDE_FORM
-			SET FORM_HTML = #form_html2#
+			SET FORM_HTML2 = #form_html2#
 			WHERE FORM_ID=8
 		]]>
 	</update>
