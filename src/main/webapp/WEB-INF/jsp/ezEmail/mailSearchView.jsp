@@ -366,7 +366,7 @@
 			    
 				var Rows = resultTD.childNodes.item(0).childNodes.item(0).childNodes;
 				for (var i = 0; i < Rows.length; i++) {
-				    if (Rows.item(i).childNodes.item(0).childNodes.item(0).checked) {
+				    if (Rows.item(i).querySelector('input[type="checkbox"]').checked) {
 				        count++;
 				        selcheck = Rows.item(i);
 				    }
@@ -412,7 +412,7 @@
 			    
 			    var Rows = resultTD.childNodes.item(0).childNodes.item(0).childNodes;
 			    for (var i = 0; i < Rows.length; i++) {
-			        if (Rows.item(i).childNodes.item(0).childNodes.item(0).checked) {
+			        if (Rows.item(i).querySelector('input[type="checkbox"]').checked) {
 			            count++;
 			            selcheck = Rows.item(i);
 			        }
@@ -459,7 +459,7 @@
 			    
 			    var Rows = resultTD.childNodes.item(0).childNodes.item(0).childNodes;
 			    for (var i = 0; i < Rows.length; i++) {
-			        if (Rows.item(i).childNodes.item(0).childNodes.item(0).checked) {
+			        if (Rows.item(i).querySelector('input[type="checkbox"]').checked) {
 			            count++;
 			            selcheck = Rows.item(i);
 			        }
@@ -507,7 +507,7 @@
 			    if (resultTD.childNodes.item(0).childNodes.length > 0) {
 			        var Rows = resultTD.childNodes.item(0).childNodes.item(0).childNodes;
 			        for (var i = 0; i < Rows.length; i++) {
-			            if (Rows.item(i).childNodes.item(0).childNodes.item(0).checked) {
+			            if (Rows.item(i).querySelector('input[type="checkbox"]').checked) {
 			                selcheck[count] = Rows.item(i);
 			                count++;
 			            }
@@ -543,9 +543,9 @@
 			                copyItemList(moveUrl["cmd"], moveUrl["url"], selcheck);
 			                var Rows = resultTD.childNodes.item(0).childNodes.item(0).childNodes;
 			                for (var i = 0; i < Rows.length; i++) {
-			                    if (Rows.item(i).childNodes.item(0).childNodes.item(0).checked) {
-			                        Rows.item(i).childNodes.item(0).childNodes.item(0).checked = false;
-			                        Rows.item(i).childNodes.item(0).childNodes.item(0).disabled = true;
+			                    if (Rows.item(i).querySelector('input[type="checkbox"]').checked) {
+			                        Rows.item(i).querySelector('input[type="checkbox"]').checked = false;
+			                        Rows.item(i).querySelector('input[type="checkbox"]').disabled = true;
 			                        Rows.item(i).onclick = function () { return false; };
 			                        Rows.item(i).onmouseover = function () { return false; }
 			                        Rows.item(i).onmouseout = function () { return false; }
@@ -573,9 +573,9 @@
 		            copyItemList(moveUrl["cmd"], moveUrl["url"], selcheck);
 		            var Rows = resultTD.childNodes.item(0).childNodes.item(0).childNodes;
 		            for (var i = 0; i < Rows.length; i++) {
-		                if (Rows.item(i).childNodes.item(0).childNodes.item(0).checked) {
-		                    Rows.item(i).childNodes.item(0).childNodes.item(0).checked = false;
-		                    Rows.item(i).childNodes.item(0).childNodes.item(0).disabled = true;
+		                if (Rows.item(i).querySelector('input[type="checkbox"]').checked) {
+		                    Rows.item(i).querySelector('input[type="checkbox"]').checked = false;
+		                    Rows.item(i).querySelector('input[type="checkbox"]').disabled = true;
 		                    Rows.item(i).onclick = function () { return false; };
 		                    Rows.item(i).onmouseover = function () { return false; }
 		                    Rows.item(i).onmouseout = function () { return false; }
@@ -679,7 +679,7 @@
 				    
 				var Rows = resultTD.childNodes.item(0).childNodes.item(0).childNodes;
 				for (var i = 0; i < Rows.length; i++) {
-				    if (Rows.item(i).childNodes.item(0).childNodes.item(0).checked) {
+				    if (Rows.item(i).querySelector('input[type="checkbox"]').checked) {
 				        selcheck[count] = Rows.item(i);
 				        count++;
 				    }
@@ -754,7 +754,7 @@
 			    
 			    var Rows = resultTD.childNodes.item(0).childNodes.item(0).childNodes;
 			    for (var i = 0; i < Rows.length; i++) {
-			        if (Rows.item(i).childNodes.item(0).childNodes.item(0).checked) {
+			        if (Rows.item(i).querySelector('input[type="checkbox"]').checked) {
 			            selcheck[count] = Rows.item(i);
 			            count++;
 			        }
@@ -841,7 +841,7 @@
                     var Rows = resultTD.childNodes.item(0).childNodes.item(0).childNodes;
 
                     for (var i = 0; i < Rows.length; i++) {
-                        if (Rows.item(i).childNodes.item(0).childNodes.item(0).checked) {
+                        if (Rows.item(i).querySelector('input[type="checkbox"]').checked) {
                             selcheck[count] = Rows.item(i);
                             count++;
                             checkMailCnt = count;
@@ -1261,9 +1261,9 @@
 			<tr style="height:100%;display:none;" id="moreSearch" > 
 				<th nowrap><spring:message code="ezEmail.t642" /></th>
 				<td style="width:100%, padding:8px;" >
-					<div class="" style="margin-left: 1px;padding: 0px 3px 3px;margin-top: 3px;">
-						<label for="and"><input class="optRdo" style="margin-top: 0px;" type="radio" name="andor" id="and" value="and" checked><span class="optSpan">AND</span></label>
-						<label for="or"><input class="optRdo" style="margin-top: 0px;" type="radio" name="andor" id="or" value="or"><span class="optSpan">OR</span></label>
+					<div class="custom_radio" style="margin-left: 1px;padding: 0px 3px 3px;margin-top: 3px;">
+						<input class="optRdo" style="margin-top: 0px;" type="radio" name="andor" id="and" value="and" checked><label for="and"><span class="optSpan">AND</span></label>
+						<input class="optRdo" style="margin-top: 0px;" type="radio" name="andor" id="or" value="or"><label for="or"><span class="optSpan">OR</span></label>
 					</div>
 			    	<div style="margin-bottom: 2px;margin-left: 5px; padding: 0px 3px 3px 3px;">
 						<div style="display: inline-block; margin-right: 5px; margin-top:2px;">
@@ -1303,13 +1303,10 @@
 			<tr id="moreSearch2" style="display:none;">
 		     	<th><spring:message code="ezEmail.pyy13" /></th>	
 			    <td style="height: 40px;">
-			    	<div class="" style="/* margin-bottom: 2px; */margin-left: 1px;padding: 0px 3px 3px;margin-top: 3px;">
-						<label for="all"><input class="optRdo" style="margin-top: 0px;" type="radio" id="all" name="attachment" value="all" checked>
-							<span class="optSpan"><spring:message code="ezEmail.pyy14" /></span></label>
-						<label for="contain"><input class="optRdo" style="margin-top: 0px;" type="radio" id="contain" name="attachment" value="contain">
-							<span class="optSpan"><spring:message code="ezEmail.pyy15" /></span></label>
-						<label for="Ncontain"><input class="optRdo" style="margin-top: 0px;" type="radio" id="Ncontain" name="attachment" value="Ncontain">
-							<span class="optSpan"><spring:message code="ezEmail.pyy16" /></span></label>
+			    	<div class="custom_radio" style="/* margin-bottom: 2px; */margin-left: 1px;padding: 0px 3px 3px;margin-top: 3px;">
+						<input type="radio" id="all" name="attachment" value="all" checked><label for="all"><span class="optSpan"><spring:message code="ezEmail.pyy14" /></span></label>
+						<input type="radio" id="contain" name="attachment" value="contain"><label for="contain"><span class="optSpan"><spring:message code="ezEmail.pyy15" /></span></label>
+						<input type="radio" id="Ncontain" name="attachment" value="Ncontain"><label for="Ncontain"><span class="optSpan"><spring:message code="ezEmail.pyy16" /></span></label>
 					</div>
 			    </td>
 			</tr>
@@ -1348,7 +1345,11 @@
 		<div id="printblock"> 
 			<table id="mailHeader" class="mainlist" style="width:100%;table-layout:fixed;" >
 				<tr> 
-			        <th style="width: 26px; padding: 0px; color: black;padding-left:3px;" align="center" nowrap title><input type="checkbox" onClick="check_change(this)" id="Checkbox1"></th>
+			        <th style="width: 26px; padding: 0px; color: black;padding-left:3px;" align="center" nowrap title>
+			            <div class="custom_checkbox">
+			                <input type="checkbox" onClick="check_change(this)" id="Checkbox1">
+                        </div>
+                    </th>
 			        <th style="width: 24px; padding: 0px; color: black;padding-left:3px;cursor:pointer" align="center" nowrap title onclick="event_HeaderClick(this)" porp="importance" orderoption="ASC" ><img src="/images/ImgIcon/view-importance.gif" border="0"></th>
 			        <th style="width: 26px; padding: 0px; color: black;cursor:pointer" align="center" nowrap title onclick="event_HeaderClick(this)" porp="view" orderoption="ASC"><img src="/images/ImgIcon/view-document.gif" border="0"></th>
 			        <th style="width: 26px; padding: 0px; color: black;padding-left:1px;cursor:pointer" align="center" nowrap title onclick="event_HeaderClick(this)" porp="flag" orderoption="ASC"><img src="/images/ImgIcon/icon-flag.gif" border="0"></th>

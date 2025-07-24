@@ -292,14 +292,10 @@
 		<span>▒ <spring:message code='ezEmail.t284' /></span><br/>
 		<span>▒ <spring:message code='ezEmail.t99000062' /> : &nbsp;</span>
         <div class="custom_radio">
-            <input type="radio" name="SigState" value="0" id="SigState0" onclick="pSigState = 0" <c:if test="${signState == '0'}">checked</c:if>>
-            <label for="SigState0"><spring:message code='ezEmail.t99000063' /></label>
-            <input type="radio" name="SigState" value="1" id="SigState1" onclick="pSigState = 1" <c:if test="${signState == '1'}">checked</c:if>>
-            <label for="SigState1"><spring:message code='ezEmail.t826' /></label>
-            <input type="radio" name="SigState" value="2" id="SigState2" onclick="pSigState = 2" <c:if test="${signState == '2'}">checked</c:if>>
-            <label for="SigState2"><spring:message code='ezEmail.t827' /></label>
-            <input type="radio" name="SigState" value="3" id="SigState3" onclick="pSigState = 3" <c:if test="${signState == '3'}">checked</c:if>>
-            <label for="SigState3"><spring:message code='ezEmail.t828' /></label>
+            <input type="radio" name="SigState" value="0" id="SigState0" onclick="pSigState = 0" <c:if test="${signState == '0'}">checked</c:if>/><label for="SigState0"><spring:message code='ezEmail.t99000063' /></label>
+            <input type="radio" name="SigState" value="1" id="SigState1" onclick="pSigState = 1" <c:if test="${signState == '1'}">checked</c:if>/><label for="SigState1"><spring:message code='ezEmail.t826' /></label>
+            <input type="radio" name="SigState" value="2" id="SigState2" onclick="pSigState = 2" <c:if test="${signState == '2'}">checked</c:if>/><label for="SigState2"><spring:message code='ezEmail.t827' /></label>
+            <input type="radio" name="SigState" value="3" id="SigState3" onclick="pSigState = 3" <c:if test="${signState == '3'}">checked</c:if>/><label for="SigState3"><spring:message code='ezEmail.t828' /></label>
         </div>
 	    <div class="portlet_tabpart01" style="width:781px;margin-top:15px">
 		    <div class="portlet_tabpart01_top" id="tab1" style="border-bottom:0px; float:left">
