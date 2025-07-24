@@ -8167,8 +8167,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
                 Document docXML = commonUtil.convertStringToDocument(ret);
                 cabinetSN = docXML.getElementsByTagName("RESULT").item(0).getTextContent();
                 if (!ret.equals("") && doc.getElementById("receiptnumber") != null) {
-                    docNO = docNO + createDocNO(cabinetSN , docNumZeroCnt);
-                    doc.getElementById("receiptnumber").text(docNO);
+                    String receiveDocNo = doc.getElementById("receiptnumber").text() + createDocNO(cabinetSN , docNumZeroCnt);
+                    doc.getElementById("receiptnumber").text(receiveDocNo);
                     
                     /*if (doc.getElementById("receiptdate") != null) {
                         doc.getElementById("receiptdate").text(commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("yyyy-MM-dd"), userInfo.getOffset(), false).replace("-", "."));
