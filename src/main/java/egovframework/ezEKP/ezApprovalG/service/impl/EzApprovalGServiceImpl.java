@@ -3013,6 +3013,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			rtnXML.append("<div style='padding-top:5px'>");
 		}
 		
+        if (approvalFlag.equals("S")) {
+            rtnXML.append("<div class='custom_radio'>");
+        }
+        
 		for (int k = 0; k < dlength; k++) {
 			String[] colOption = docXML.getElementsByTagName("NAME").item(k).getTextContent().split(";");
 			
@@ -3023,12 +3027,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					rtnXML.append("<OPTION value=" + colOption[2] + ">" + colOption[1] + "</OPTION>");
 				}
 			} else {
-				rtnXML.append("<div class='custom_radio'><input type='radio' id='RSecurity' name='RSecurity' style='height: 13px; width: 13px; padding: 0px; margin: 0px; vertical-align: top;' value='" + colOption[2] + "' value2='" + colOption[1] + "' ></div>&nbsp;<span>" + colOption[1] + "</span>&nbsp;&nbsp;");
+				rtnXML.append("<input type='radio' id='RSecurity" + k + "' name='RSecurity' style='height: 13px; width: 13px; padding: 0px; margin: 0px;' value='" + colOption[2] + "' value2='" + colOption[1] + "' ><label for='RSecurity" + k + "'><span style='padding-right:10px;'>" + colOption[1] + "</span></label>");
 			}
 		}
 		
 		if (approvalFlag.equals("S")) {
-			rtnXML.append("</div>");
+			rtnXML.append("</div></div>");
 		}
 
 		logger.debug("getSecurityType ended");
@@ -26965,13 +26969,13 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		int dlength = docXML.getElementsByTagName("ROW").getLength();
 		
 		rtnXML.append("<div style='padding-top:5px'>");
-		
+		rtnXML.append("<div class='custom_radio'>");
 		for (int k = 0; k < dlength; k++) {
 			String[] colOption = docXML.getElementsByTagName("NAME").item(k).getTextContent().split(";");
-			rtnXML.append("<div class='custom_radio'><input type='radio' id='RKeeptype' name='RKeeptype' style='height: 13px; width: 13px; padding: 0px; margin: 0px; vertical-align: top;' value='" + colOption[2] + "' value2='" + colOption[1] + "' ></div>&nbsp;<span style='margin-top: 5px;'>" + colOption[1] + "</span>&nbsp;&nbsp;");
+			rtnXML.append("<input type='radio' id='RKeeptype" + k + "' name='RKeeptype' style='height: 13px; width: 13px; padding: 0px; margin: 0px;' value='" + colOption[2] + "' value2='" + colOption[1] + "' ><label for='RKeeptype"+ k +"'><span style='padding-right: 10px;'>" + colOption[1] + "</span></label>");
 		}
 		
-		rtnXML.append("</div>");
+		rtnXML.append("</div></div>");
 		
 		return rtnXML.toString();
 	}
