@@ -1233,8 +1233,7 @@
 				<table class="content" style="width:100%;margin-top:10px;">
 					<tr>
 						<td style="width:70%;border-right-width:0px;">
-							<input type="radio" name="importFormat" id="importOutlookCSV" checked="checked" value="outlookCSV" />
-							<label for="importOutlookCSV" style="vertical-align:middle;cursor:pointer;">MS Outlook 2013/2016 CSV</label>
+							<input type="radio" name="importFormat" id="importOutlookCSV" checked="checked" value="outlookCSV" /><label for="importOutlookCSV" style="vertical-align:middle;cursor:pointer;">MS Outlook 2013/2016 CSV</label>
 						</td>
 						<td style="width:30%;text-align:right;border-left-width:0px;">
 							<a class="imgbtn imgbck" href="/ezAddress/addressFormatDownload.do?format=outlookCSV"><span><spring:message code='ezAddress.lhm2' /></span></a>
@@ -1243,8 +1242,7 @@
 					<!-- 
 					<tr>
 						<td style="width:70%;border-right-width:0px;">
-							<input type="radio" name="importFormat" id="importThunderbirdCSV" checked="checked" value="thunderbirdCSV" />
-							<label for="importThunderbirdCSV" style="vertical-align:middle;cursor:pointer;">Mozilla Thunderbird CSV</label>
+							<input type="radio" name="importFormat" id="importThunderbirdCSV" checked="checked" value="thunderbirdCSV" /><label for="importThunderbirdCSV" style="vertical-align:middle;cursor:pointer;">Mozilla Thunderbird CSV</label>
 						</td>
 						<td style="width:30%;text-align:center;border-left-width:0px;">
 							<a class="imgbtn" href="/ezAddress/addressFormatDownload.do?format=thunderbirdCSV"><span><spring:message code='ezAddress.lhm2' /></span></a>
@@ -1252,8 +1250,7 @@
 					</tr>
 					<tr>
 						<td style="width:70%;border-right-width:0px;">
-							<input type="radio" name="importFormat" id="importGoogleCSV" checked="checked" value="googleCSV" />
-							<label for="importGoogleCSV" style="vertical-align:middle;cursor:pointer;">Google CSV</label>
+							<input type="radio" name="importFormat" id="importGoogleCSV" checked="checked" value="googleCSV" /><label for="importGoogleCSV" style="vertical-align:middle;cursor:pointer;">Google CSV</label>
 						</td>
 						<td style="width:30%;text-align:center;border-left-width:0px;">
 							<a class="imgbtn" href="/ezAddress/addressFormatDownload.do?format=googleCSV"><span><spring:message code='ezAddress.lhm2' /></span></a>
@@ -1285,21 +1282,18 @@
 				<table class="content" style="width:100%;margin-top:10px;">
 					<tr>
 						<td>
-							<input type="radio" name="exportFormat" id="exportOutlookCSV" checked="checked" value="outlookCSV" />
-							<label for="exportOutlookCSV" style="vertical-align:middle;cursor:pointer;">MS Outlook 2013/2016 CSV</label>
+							<input type="radio" name="exportFormat" id="exportOutlookCSV" checked="checked" value="outlookCSV" /><label for="exportOutlookCSV" style="vertical-align:middle;cursor:pointer;">MS Outlook 2013/2016 CSV</label>
 						</td>
 					</tr>
 					<!-- 
 					<tr>
 						<td>
-							<input type="radio" name="exportFormat" id="exportThunderbirdCSV" checked="checked" value="thunderbirdCSV" />
-							<label for="exportThunderbirdCSV" style="vertical-align:middle;cursor:pointer;">Mozilla Thunderbird CSV</label>
+							<input type="radio" name="exportFormat" id="exportThunderbirdCSV" checked="checked" value="thunderbirdCSV" /><label for="exportThunderbirdCSV" style="vertical-align:middle;cursor:pointer;">Mozilla Thunderbird CSV</label>
 						</td>
 					</tr>
 					<tr>
 						<td>
-							<input type="radio" name="exportFormat" id="exportGoogleCSV" checked="checked" value="googleCSV" />
-							<label for="exportGoogleCSV" style="vertical-align:middle;cursor:pointer;">Google CSV</label>
+							<input type="radio" name="exportFormat" id="exportGoogleCSV" checked="checked" value="googleCSV" /><label for="exportGoogleCSV" style="vertical-align:middle;cursor:pointer;">Google CSV</label>
 						</td>
 					</tr>
 					 -->

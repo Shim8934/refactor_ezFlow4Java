@@ -413,22 +413,13 @@
 	            <th><spring:message code='ezAddress.t314' /></th>
 	            <td>
                     <div class="custom_checkbox">
-                        <input type="checkbox" name="chkType" id="CheckUser" checked />
-                        <label for="CheckUser">
-                            <spring:message code='ezAddress.t145' />&nbsp;&nbsp;
-                        </label>
+                        <input type="checkbox" name="chkType" id="CheckUser" checked /><label for="CheckUser"><spring:message code='ezAddress.t145' />&nbsp;&nbsp;</label>
                     </div>
                     <div class="custom_checkbox">
-                        <input type="checkbox" name="chkType" id="CheckDept" checked />
-                        <label for="CheckDept">
-                            <spring:message code='ezAddress.t146' />&nbsp;&nbsp;
-                        </label>
+                        <input type="checkbox" name="chkType" id="CheckDept" checked /><label for="CheckDept"><spring:message code='ezAddress.t146' />&nbsp;&nbsp;</label>
                     </div>
                     <div class="custom_checkbox">
-                        <input type="checkbox" name="chkType" id="CheckCompany" checked />
-                        <label for="CheckCompany">
-                            <spring:message code='ezAddress.t147' />&nbsp;&nbsp;
-                        </label>
+                        <input type="checkbox" name="chkType" id="CheckCompany" checked /><label for="CheckCompany"><spring:message code='ezAddress.t147' />&nbsp;&nbsp;</label>
                     </div>
 	                <select name="search_case" id="search_case" style="height:22px; vertical-align:middle;">
 	                    <option value="S_NAME"><spring:message code='ezAddress.t124' /></option>
