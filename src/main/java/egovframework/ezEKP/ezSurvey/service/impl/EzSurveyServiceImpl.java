@@ -387,8 +387,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		String primary                       = userInfo.getPrimary();
 		String userCompanyId                 = "";
 		SurveyVO survey                      = new SurveyVO();
-		SimpleDateFormat formatter           = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		String timeUTC                       = commonUtil.getDateStringInUTC(formatter.format(new Date()), offset, true);
+		String timeUTC                       = commonUtil.getTodayUTCTime("");
 		String startDateUTC                  = commonUtil.getDateStringInUTC(startDate + " 00:00:00", offset, true);
 		String endDateUTC                    = commonUtil.getDateStringInUTC(endDate   + " 23:59:59", offset, true);
 		Set<SimpleUserVO> setUsers           = new HashSet<>();
@@ -701,9 +700,9 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 			}
 			
 			//Send notice mail
-			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-			Boolean notiMailFlag = mailFlag == 1 && dateFormat.format(new Date()).equals(startDate) && draftMode == 0;
-			Boolean totalNotiFlag = dateFormat.format(new Date()).equals(startDate) && draftMode == 0;
+			String nowDateStr = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("yyyy-MM-dd"), offset, false);
+			Boolean notiMailFlag = mailFlag == 1 && nowDateStr.equals(startDate) && draftMode == 0;
+			Boolean totalNotiFlag = nowDateStr.equals(startDate) && draftMode == 0;
 			if (notiMailFlag) {
 				int mailSentFlag = ezSurveyDAO.getMailSentFlag(survey);
 				
@@ -831,8 +830,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		if (pageMode.equals("processing") || pageMode.equals("finish") || pageMode.equals("all")) {
 			List<Long> listReceivedSurvey = getUserReceivedSurveyList(userInfo, 0);
 			List<Long> listReceivedResultSurvey = getUserReceivedSurveyResultList(userInfo, 0);
-			SimpleDateFormat formatter    = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-			String timeUTC                = commonUtil.getDateStringInUTC(formatter.format(new Date()), offset, true);
+			String timeUTC                = commonUtil.getTodayUTCTime("");
 			searchVO.setSurveyIds(listReceivedSurvey);
 			searchVO.setSurveyResultIds(listReceivedResultSurvey);
 			searchVO.setToday(timeUTC);
@@ -879,8 +877,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		if (mode != null && mode.equals("popup")) {
 			List<Long> listReceivedSurvey = getUserReceivedSurveyList(userInfo, 0);
 			List<Long> listReceivedResultSurvey = getUserReceivedSurveyResultList(userInfo, 0);
-			SimpleDateFormat formatter    = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-			String timeUTC                = commonUtil.getDateStringInUTC(formatter.format(new Date()), offset, true);
+			String timeUTC                = commonUtil.getTodayUTCTime("");
 			map.put("surveyIds", listReceivedSurvey);
 			map.put("surveyResultIds", listReceivedResultSurvey);
 			map.put("today", timeUTC);
@@ -899,9 +896,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 	
 	@Override
 	public void deleteItems(List<Long> itemIdList, LoginVO userInfo) throws Exception {
-		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		Date date                  = new Date();
-		String timeUTC             = commonUtil.getDateStringInUTC(formatter.format(date), userInfo.getOffset(), true);
+		String timeUTC             = commonUtil.getTodayUTCTime("");
 		Map<String,Object> map     = new HashMap<String, Object>();
 		map.put("tenantId",   userInfo.getTenantId());
 		map.put("companyId",  userInfo.getCompanyID());
@@ -1024,9 +1019,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		else if (mode.equals("modify")) {
 			//Change modify status only if it's not draft survey
 			if (survey.getDraftFlag() == 0) {
-				SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-				Date date                  = new Date();
-				String timeUTC             = commonUtil.getDateStringInUTC(formatter.format(date), userInfo.getOffset(), true);
+				String timeUTC             = commonUtil.getTodayUTCTime("");
 				survey.setModifyFlag(1);
 				survey.setUpdateDate(timeUTC);
 				survey.setUpdateUser(userInfo.getId());
@@ -1392,9 +1385,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		SurveyVO survey = ezSurveyDAO.getSurveyInfo(map);
 		
 		if (survey.getModifyFlag() == 1) {
-			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-			Date date                  = new Date();
-			String timeUTC             = commonUtil.getDateStringInUTC(formatter.format(date), userInfo.getOffset(), true);
+			String timeUTC             = commonUtil.getTodayUTCTime("");
 			survey.setModifyFlag(0);
 			survey.setUpdateDate(timeUTC);
 			survey.setUpdateUser(userInfo.getId());
@@ -1416,9 +1407,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		List<RespondentVO> totalUsers   = new ArrayList<>();
 		long responseId                 = ezSurveyDAO.getMaxResponseId(map);
 		SimpleDateFormat formatter      = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		SimpleDateFormat formatter2     = new SimpleDateFormat("yyyy-MM-dd");
-		Date date                       = new Date();
-		String timeUTC                  = commonUtil.getDateStringInUTC(formatter.format(date), userInfo.getOffset(), true);
+		String timeUTC                  = commonUtil.getTodayUTCTime("");
 		map.put("tenantId",  userInfo.getTenantId());
 		map.put("companyId", userInfo.getCompanyID());
 		map.put("primary",   userInfo.getPrimary());
@@ -1437,12 +1426,9 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		}
 		
 		//Check date
-		String todayStr     = formatter2.format(new Date());
-		String endDateStr   = survey.getEndDate().substring(0, 10);
-		String startDateStr = survey.getStartDate().substring(0, 10);
-		Date dToday         = formatter2.parse(todayStr);
-		Date dEndDate       = formatter2.parse(endDateStr);
-		Date dStartDate     = formatter2.parse(startDateStr);
+		Date dToday         = formatter.parse(timeUTC);
+		Date dEndDate       = formatter.parse(survey.getEndDate());
+		Date dStartDate     = formatter.parse(survey.getStartDate());
 		
 		if (dStartDate.compareTo(dToday) > 0 || dToday.compareTo(dEndDate) > 0) {
 			result.put("status", "error");
@@ -1633,7 +1619,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 				}
 				
 				SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-				String todayStr            = formatter.format(new Date());
+				String todayStr            = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("yyyy-MM-dd"), userInfo.getOffset(), true);
 				String endDateStr          = survey.getEndDate().substring(0, 10);
 				int openDays               = survey.getOpenDays();
 				Date today                 = formatter.parse(todayStr);
@@ -1826,7 +1812,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 	}
 
 	@Override
-	public int getSurveyIngCnt(MCommonVO userInfo) {
+	public int getSurveyIngCnt(MCommonVO userInfo) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("tenantId", userInfo.getTenantId());
 		map.put("deptId", userInfo.getDeptId());
@@ -1850,8 +1836,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		map.put("allDeptList", userAllDeptList);
 		
 		String offset = userInfo.getOffSet();
-		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		String timeUTC = commonUtil.getDateStringInUTC(formatter.format(new Date()), offset, true);
+		String timeUTC = commonUtil.getTodayUTCTime("");
 		map.put("today", timeUTC);
 		
 		int result = ezSurveyDAO.getNoAnsweredIngSurveyList(map);
@@ -2029,18 +2014,14 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		ezSurveyDAO.endSurveyItem(map);
 	}
 
-	/* EndStr 에는 UTC 시간이 아닌, offset이 적용된 시간을 넣어야 함 */
 	@Override
 	public String checkfinishSurvey(String EndStr, String offsetRaw) throws Exception {
+		/* EndStr 에는 UTC 시간이 아닌, offset이 적용된 시간이 들어옴, offset 적용한 현재 시간과 endDate를 비교 */
 		logger.debug("checkfinishSurvey started");
 		String finishYN = "N";
 		
 		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
-		String[] parts = offsetRaw.split("\\|");
-		String offset = parts[1];
-		date.setTimeZone(TimeZone.getTimeZone("GMT" + offset));
-		String nowStr = date.format(new Date());
+		String nowStr = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("yyyy-MM-dd HH:mm:ss"), offsetRaw, false);
 		
 		Date nowDate = date.parse(nowStr);
 		Date endDate = date.parse(EndStr);
