@@ -4976,7 +4976,6 @@ public class EzBoardController extends EgovFileMngUtil{
 		}
 		
 		if (multiFile.get(0).getOriginalFilename() != null && StringUtils.isNotBlank(multiFile.get(0).getOriginalFilename())){
-			boolean isEmpty = false;
 			String _pFileName = "";
 
 			// 파일명과 확장자를 구한다.
@@ -4998,14 +4997,6 @@ public class EzBoardController extends EgovFileMngUtil{
 					sFileTitle[i] = pFileName[i];
 					sExt[i] = "";
 				}
-				
-				if (multiFile.get(i).getSize() == 0) {
-					isEmpty = true;
-				}
-			}
-			
-			if (isEmpty) {
-				return "OVERFLOW";
 			}
 		}
 		
