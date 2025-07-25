@@ -88,6 +88,7 @@ padding:0px 0px 0px 0px; height:36px; line-height:37px;}/* 20130416 수정 */
 .preview_mail_wrap .preview_mail_text{height:auto; max-height:130px; overflow-y:auto;}
 .preview_mail_wrap .preview_mail_text p{margin:0; color:#000; font-size:13px; line-height:19px;}
 .preview_mail_wrap .preview_mail_attach{overflow-y:auto; max-height:72px;}
+.preview_mail_wrap .preview_mail_cont{height: 308px;}
 
 .preview_mail_wrap .previewmail_addfile{margin:20px 0 0; border:1px solid #DDDDDD; box-sizing:border-box;}
 .preview_mail_wrap .previewmail_addfile .title{height:35px; line-height:35px; background:#E5EFFF; margin:0;}
