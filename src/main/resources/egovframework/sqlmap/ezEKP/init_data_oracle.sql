@@ -322,6 +322,10 @@ INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_V
 
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'MyBoardScrapFlag', '게시판 스크랩기능 사용여부', 'TYPE1', 'NONE: 사용안함 / TYPE1: 마이게시판 하위 스크랩함 / TYPE2: 게시판 트리 하위 개인화 스크랩함 (default: TYPE1)', TO_DATE('2023-06-14 00:00:00', 'yyyy-mm-dd hh24:mi:ss'), '게시판');
 
+-- 메일 POP3 / IMAP 설정 컨피그 추가
+INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'usePOP3Default', 'POP3 사용 여부', 'NO', 'YES: 사용함, NO:사용안함(default: NO)', TO_DATE('2025-06-23 00:00:00', 'yyyy-mm-dd hh24:mi:ss'), '메일');
+INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'useIMAPDefault', 'IMAP 사용 여부', 'NO', 'YES: 사용함, NO:사용안함(default: NO)', TO_DATE('2025-06-23 00:00:00', 'yyyy-mm-dd hh24:mi:ss'), '메일');
+
 -- 협업 > 웹응용프로그램 경로 분리 컨피그 추가, 소스코드 상으로만 존재했던 모바일용 컨피그 추가
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'workspaceAppPath', '협업의 웹응용프로그램 경로', '', 'workspaceHostUrl 테넌트 컨피그 뒤에 붙는 추가 경로 값으로, ""(공백), /ezWork, /ezWorkspace 등으로 설정 가능 (default: ""(공백))', TO_DATE('2025-03-13 00:00:00','yyyy-mm-dd hh24:mi:ss'), '협업');
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'workspaceHostUrlForMobile', '협업의 호스트이름 까지의 주소 (모바일 그룹웨어에서 사용)', 'http://space.kaoni.com', '기본적으로 workspaceHostUrl 테넌트 컨피그와 동일한 값이나, 모바일에서 Url 접근 구분이 필요한 경우 변경해서 사용 가능', TO_DATE('2025-03-13 00:00:00','yyyy-mm-dd hh24:mi:ss'), '협업');

@@ -14142,6 +14142,27 @@ CREATE TABLE `jmocha_appr_comp_history` (
   PRIMARY KEY (`TENANT_ID`,`MAIL_UID`,`USER_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+-- 
+-- Table structure for table `jmocha_mail_pop3imap`
+--
+DROP TABLE IF EXISTS `jmocha_mail_pop3imap`;
+CREATE TABLE `jmocha_mail_pop3imap` (
+    `user_name` varchar(100),
+    `pop_enabled` int(1) default 0,
+    `pop_since` datetime,
+    `pop_as_read` int(1) default 0,
+    `pop_keep_copy` int(1) default 0,
+    `pop_exclude_imported` int(1) default 0,
+    `imap_enabled` int(1) default 0,
+    CONSTRAINT `jmocha_mail_pop3imap_pk` PRIMARY KEY (`user_name`),
+    CONSTRAINT `jmocha_mail_pop3imap_fk` FOREIGN KEY (`user_name`) REFERENCES `james_user` (`user_name`) ON DELETE CASCADE,
+    CONSTRAINT `jmocha_mail_pop3imap_check` CHECK (`pop_enabled` IN ('0', '1')),
+    CONSTRAINT `jmocha_mail_pop3imap_check2` CHECK (`pop_as_read` IN ('0', '1')),
+    CONSTRAINT `jmocha_mail_pop3imap_check3` CHECK (`pop_keep_copy` IN ('0', '1')),
+    CONSTRAINT `jmocha_mail_pop3imap_check4` CHECK (`pop_exclude_imported` IN ('0', '1')),
+    CONSTRAINT `JMOCHA_MAIL_POP3IMAP_CHECK5` CHECK (`imap_enabled` IN ('0', '1'))
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 --
 -- Temporary view structure for view `vaprdoingdoclist`
 --

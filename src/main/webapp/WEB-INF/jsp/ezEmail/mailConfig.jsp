@@ -32,6 +32,8 @@
 		    var dec = "decrypt";
 		    var webSocket =  null;
 		    var importExportMode = false;
+			var useDisablePopImap = "${useDisablePopImap}";
+			
 			function defineHost(protocol){
 	    		var host = "";
 
@@ -149,6 +151,12 @@
 	                    var requestUrl = shareId != "" ? "/ezEmail/mailTagConfig.do?shareId=" + encodeURIComponent(shareId) : "/ezEmail/mailTagConfig.do";
                         document.getElementById("MailEnv_ifrm").src = requestUrl;
 	                    break;
+					case "MailEnv_div13" :
+						document.getElementById("MailEnv_ifrm").src = shareId != "" ? "/ezEmail/userMailPop3Setting.do?shareId=" + encodeURIComponent(shareId) : "/ezEmail/userMailPop3Setting.do";
+						break;
+					case "MailEnv_div14" :
+						document.getElementById("MailEnv_ifrm").src = shareId != "" ? "/ezEmail/userMailImapSetting.do?shareId=" + encodeURIComponent(shareId) : "/ezEmail/userMailImapSetting.do";
+						break;
 	            }
 	        }
 	        var Tab1_SelectID = "";
@@ -773,6 +781,13 @@
 					<%--24.06.12 이사라 - 공유사서함 태그 지원--%>
 					<c:if test="${useMailTag and flag ne 'address'}">
 						<p><span divname="tag" id="1tab12"><spring:message code='ezEmail.tag.config' /></span></p>
+					</c:if>
+					<%-- [국립암센터] 25.06.24 김승연 - POP3/IMAP 사용 설정--%>
+					<c:if test="${useDisablePopImap == 'YES' and (usePOP3Default == 'YES' or usePOP3 == '1')}">
+						<p id = "MailEnv_sub13"><span divname="MailEnv_div13" id="1tab13"><spring:message code='ezEmail.POP3' /></span></p>
+					</c:if>
+					<c:if test="${useDisablePopImap == 'YES' and (useIMAPDefault == 'YES' or useIMAP == '1')}">
+						<p id = "MailEnv_sub14"><span divname="MailEnv_div14" id="1tab14"><spring:message code='ezEmail.IMAP' /></span></p>
 					</c:if>
 	            </div>
 	        </div>

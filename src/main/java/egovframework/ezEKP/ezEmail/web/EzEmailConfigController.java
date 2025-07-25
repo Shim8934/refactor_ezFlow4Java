@@ -138,6 +138,9 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", userInfo.getTenantId());
 		String useUserDefinedDL = ezCommonService.getTenantConfig("useUserDefinedDL", userInfo.getTenantId());
+
+		String tenantDomain = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
+		String address = userInfo.getId() + "@" + tenantDomain;
 		
 		if (useSharedMailbox.equals("YES")) {
 			String shareId = request.getParameter("shareId");
@@ -152,6 +155,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 					
 					return "ezCommon/error";
 				} else {
+					address = shareId + "@" + tenantDomain;
 					MailSharedMailboxVO shareInfo = ezEmailService.getSharedMailboxInfo(shareId, userInfo.getTenantId());
 					
 					model.addAttribute("shareId", shareId);
@@ -174,6 +178,21 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		if (useEncryptZipForEmail.equals("")) {
 			useEncryptZipForEmail = "NO";
 		}
+
+		String usePOP3Default = ezCommonService.getTenantConfig("usePOP3Default", userInfo.getTenantId());
+		String useIMAPDefault = ezCommonService.getTenantConfig("useIMAPDefault", userInfo.getTenantId());
+		String UseDisablePopImap = ezCommonService.getTenantConfig("UseDisablePopImap", userInfo.getTenantId());
+		String requestURL = "/jMochaEzEmail/getPOP3IMAPConfig";
+		String inputParams = "user_name=" + address;
+		String getResult = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + requestURL, inputParams);
+
+		JSONParser parser = new JSONParser();
+		JSONObject responseObj = (JSONObject)parser.parse(getResult);
+
+		JSONObject result = (JSONObject) responseObj.get("result");
+
+		String popEnabled = (String) result.get("pop_enabled");
+		String imapEnabled = (String) result.get("imap_enabled");
 		
 		model.addAttribute("userId", userInfo.getId());
 		model.addAttribute("useEncryptZipForEmail", useEncryptZipForEmail);
@@ -185,7 +204,11 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		model.addAttribute("userEditor", userEditor);
 		model.addAttribute("useUserDefinedDL", useUserDefinedDL);
 		model.addAttribute("useMailTag", "YES".equalsIgnoreCase(ezCommonService.getTenantConfig("useMailTag", userInfo.getTenantId())));
-
+		model.addAttribute("usePOP3Default", usePOP3Default);
+		model.addAttribute("useIMAPDefault", useIMAPDefault);
+		model.addAttribute("usePOP3", popEnabled);
+		model.addAttribute("useIMAP", imapEnabled);
+		model.addAttribute("useDisablePopImap", UseDisablePopImap);
 		logger.debug("mailConfig ended.");
 		return "ezEmail/mailConfig";
 	}
@@ -3362,5 +3385,178 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		
 		logger.debug("checkBlockExternalAddress ended.");
 		return result;
+	}
+	@RequestMapping(value="/ezEmail/userMailPop3Setting.do", method = RequestMethod.GET)
+	public String userMailPop3Setting(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception {
+		logger.debug("userMailPop3Setting started.");
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", userInfo.getTenantId());
+
+		String tenantDomain = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
+		String address = userInfo.getId() + "@" + tenantDomain;
+		String requestURL = "/jMochaEzEmail/getPOP3IMAPConfig";
+
+		if ("YES".equals(useSharedMailbox)) {
+			String shareId = request.getParameter("shareId");
+			logger.debug("shareId=" + shareId);
+
+			if (shareId != null) {
+				if (!ezEmailService.checkUserShareId(userInfo.getId(), shareId, 4, userInfo.getTenantId())) {
+					model.addAttribute("mainContent", egovMessageSource.getMessage("ezEmail.lhm81", locale));
+
+					logger.debug("the user cannot access the shareId.");
+					logger.debug("mailConfig ended.");
+
+					return "ezCommon/error";
+				} else {
+					address = shareId + "@" + tenantDomain;
+					MailSharedMailboxVO shareInfo = ezEmailService.getSharedMailboxInfo(shareId, userInfo.getTenantId());
+
+					model.addAttribute("shareId", shareId);
+					model.addAttribute("shareName", shareInfo.getShareName());
+				}
+			}
+		}
+
+		String inputParams = "user_name=" + address;
+		String getResult = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + requestURL, inputParams);
+
+		JSONParser parser = new JSONParser();
+		JSONObject responseObj = (JSONObject)parser.parse(getResult);
+
+		JSONObject result = (JSONObject) responseObj.get("result");
+		String resultCode = (String) responseObj.get("resultCode");
+
+		String popEnabled = (String) result.get("pop_enabled");
+		String popSince = (String) result.get("pop_since");
+		String popAsRead = (String) result.get("pop_as_read");
+		String popKeepCopy = (String) result.get("pop_keep_copy");
+		String imapEnabled = (String) result.get("imap_enabled");
+
+		String usePOP3Default = ezCommonService.getTenantConfig("usePOP3Default", userInfo.getTenantId());
+		String useIMAPDefault = ezCommonService.getTenantConfig("useIMAPDefault", userInfo.getTenantId());
+
+		model.addAttribute("popEnabled", popEnabled);
+		if ("NO DATA".equals(resultCode)) {
+			model.addAttribute("popSince", "");
+		} else {
+			model.addAttribute("popSince", popSince == null ? "0" : popSince);
+			if (popSince != null) 
+				model.addAttribute("popSinceDateFormat", popSince.replaceAll("\\.\\d+$", ""));
+		}
+		model.addAttribute("popAsRead", popAsRead);
+		model.addAttribute("popKeepCopy", popKeepCopy);
+		model.addAttribute("imapEnabled", imapEnabled);
+		model.addAttribute("usePOP3Default", usePOP3Default);
+		model.addAttribute("useIMAPDefault", useIMAPDefault);
+
+		logger.debug("userMailPop3Setting ended.");
+
+		return "ezEmail/mailPop3Setting";
+	}
+
+	@RequestMapping(value="/ezEmail/userMailImapSetting.do", method = RequestMethod.GET)
+	public String userMailImapSetting(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception {
+		logger.debug("userMailImapSetting started.");
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", userInfo.getTenantId());
+
+		String tenantDomain = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
+		String address = userInfo.getId() + "@" + tenantDomain;
+		String requestURL = "/jMochaEzEmail/getPOP3IMAPConfig";
+
+		if ("YES".equals(useSharedMailbox)) {
+			String shareId = request.getParameter("shareId");
+			logger.debug("shareId=" + shareId);
+
+			if (shareId != null) {
+				if (!ezEmailService.checkUserShareId(userInfo.getId(), shareId, 4, userInfo.getTenantId())) {
+					model.addAttribute("mainContent", egovMessageSource.getMessage("ezEmail.lhm81", locale));
+
+					logger.debug("the user cannot access the shareId.");
+					logger.debug("mailConfig ended.");
+
+					return "ezCommon/error";
+				} else {
+					address = shareId + "@" + tenantDomain;
+					MailSharedMailboxVO shareInfo = ezEmailService.getSharedMailboxInfo(shareId, userInfo.getTenantId());
+
+					model.addAttribute("shareId", shareId);
+					model.addAttribute("shareName", shareInfo.getShareName());
+				}
+			}
+		}
+
+		String inputParams = "user_name=" + address;
+		String getResult = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + requestURL, inputParams);
+
+		JSONParser parser = new JSONParser();
+		JSONObject responseObj = (JSONObject)parser.parse(getResult);
+
+		JSONObject result = (JSONObject) responseObj.get("result");
+
+		String popEnabled = (String) result.get("pop_enabled");
+		String popSince = (String) result.get("pop_since");
+		String popAsRead = (String) result.get("pop_as_read");
+		String popKeepCopy = (String) result.get("pop_keep_copy");
+		String imapEnabled = (String) result.get("imap_enabled");
+
+		String usePOP3Default = ezCommonService.getTenantConfig("usePOP3Default", userInfo.getTenantId());
+		String useIMAPDefault = ezCommonService.getTenantConfig("useIMAPDefault", userInfo.getTenantId());
+
+		model.addAttribute("popEnabled", popEnabled);
+		model.addAttribute("popSince", popSince);
+		model.addAttribute("popAsRead", popAsRead);
+		model.addAttribute("popKeepCopy", popKeepCopy);
+		model.addAttribute("imapEnabled", imapEnabled);
+		model.addAttribute("usePOP3Default", usePOP3Default);
+		model.addAttribute("useIMAPDefault", useIMAPDefault);
+
+		logger.debug("userMailImapSetting ended.");
+
+		return "ezEmail/mailImapSetting";
+	}
+
+	@RequestMapping(value = "/ezEmail/setConfigPOP3IMAP.do", method = RequestMethod.POST)
+	@ResponseBody
+	public Result setConfigPOP3IMAP (@CookieValue("loginCookie")String loginCookie, Model model, HttpServletRequest request) throws Exception {
+		logger.debug("setConfigPOP3IMAP started.");
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+
+		String tenantDomain = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
+
+		String address = userInfo.getId() + "@" + tenantDomain;
+
+		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", userInfo.getTenantId());
+
+		if ("YES".equals(useSharedMailbox)) {
+			String shareId = request.getParameter("shareId");
+			logger.debug("shareId=" + shareId);
+
+			if (!shareId.isEmpty() && shareId != null) {
+				if (!ezEmailService.checkUserShareId(userInfo.getId(), shareId, 4, userInfo.getTenantId())) {
+					return Result.failure();
+				} else {
+					address = shareId + "@" + tenantDomain;
+				}
+			}
+		}
+		
+		JgwResult jgwResult = rest.jgw().url("/jMochaEzEmail/updatePOP3IMAP")
+				.formParam("user_name", address)
+				.formParam("usePOP3", request.getParameter("popEnabled"))
+				.formParam("popSince", request.getParameter("popSince"))
+				.formParam("popAsRead", request.getParameter("popAsRead"))
+				.formParam("popKeepCopy", request.getParameter("popKeepCopy"))
+				.formParam("useIMAP", request.getParameter("imapEnabled"))
+				.exchangeJgwResult();
+
+		logger.debug("setConfigPOP3IMAP ended.");
+
+		return jgwResult.succeeded() ? Result.successWithCode(jgwResult.getReasonCode()) : Result.failure();
+
 	}
 }
