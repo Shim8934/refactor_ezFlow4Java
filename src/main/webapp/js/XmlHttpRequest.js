@@ -1131,6 +1131,7 @@ function toggleHideLeftFrameButton() {
 var isHideLeftFrameButtonPressed = false;
 
 function hideLeftFrame(obj) {
+    if (window.location.href.includes('admin')) return;
     if (parent.document.getElementById("frameset") != null) {
         isHideLeftFrameButtonPressed = !isHideLeftFrameButtonPressed;
         var colsValue = parent.document.getElementById("frameset").cols;
@@ -1146,6 +1147,7 @@ function hideLeftFrame(obj) {
 }
 
 function hideLeftFrameOnResize() {
+    if (window.location.href.includes('admin')) return;
     if (parent.document.getElementById("frameset") != null) {
         // hideLeftFrame 함수에 의해 left frame이 숨겨질 때에도
         // resize 콜백이 실행되어 수동으로 사용자가 버튼을 누른 경우에 대한
@@ -1185,7 +1187,7 @@ window.addEventListener("load", function () {
         leftBtn.addEventListener("click", function() {
             hideLeftFrame(this);
         });
-
+        if (!window.location.href.includes('admin')) rightFrameDoc.body.insertBefore(leftBtn, rightFirstChild);
         rightFrameDoc.body.insertBefore(leftBtn, rightFirstChild);
     }
 
