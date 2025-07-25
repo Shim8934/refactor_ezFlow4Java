@@ -2640,6 +2640,11 @@ function MailOptionHiddenOutside(e) {
     if (!clickedElementClass.includes('input_select_arrow')) {
         hiddenMoreMenu();
     }
+
+    let usingMailPreview = document.getElementById("iFramePanel_mail_preview").className.includes('on');
+    if (usingMailPreview) {
+        hiddenPreviewMail();
+    }
 }
 function mailOpenPopup(btn, event) {
 	event.stopPropagation();
@@ -2721,4 +2726,10 @@ function hiddenMoreMenu() {
             document.getElementById("input_wrap"+pageType).classList.remove("on");
         }
     }
+}
+
+function hiddenPreviewMail() {
+    document.getElementById("iFramePanel_mail_preview").style.display = "none";
+    document.getElementById("iFramePanel_mail_preview").classList.remove("on");
+    document.getElementById("mail_preview_Layer").src = "/blank.htm";
 }

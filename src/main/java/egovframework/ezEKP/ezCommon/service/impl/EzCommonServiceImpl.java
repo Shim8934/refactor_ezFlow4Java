@@ -8727,6 +8727,19 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
         ezCommonDAO.alterTblClubUserAdminAuthColumn();
     }
 
+    //2025-02-13 김대현 - 메일 > 메일 미리보기 기능 추가
+    @Override
+    public void addMailPreviewConfig() throws Exception {
+        List<TenantVO> tenantIdList = ezCommonDAO.getTenantList();
+
+        for (TenantVO tenantVo : tenantIdList) {
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put("v_TENANTID", tenantVo.getTenantId());
+            ezCommonDAO.addMailPreviewConfig(map);
+        }
+
+    }
+
     // 2025-07-23 이유정 - 커뮤니티 > 회원탈퇴일자 컬럼 추가
     public void alterTblClubUserWithdrawDateColumn() throws Exception {
         ezCommonDAO.alterTblClubUserWithdrawDateColumn();

@@ -3678,4 +3678,15 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.alterTblClubUserWithdrawDateColumn");
 		}
 	}
+
+	//2025-02-13 김대현 - 메일 > 메일 미리보기 기능 추가
+	public void addMailPreviewConfig(Map<String, Object> map) {
+		String propertyValue = (String) select("EzCommonDAO.checkMailPreviewConfig" ,map);
+		
+		if (propertyValue == null) {
+			logger.debug("tbl_tenant_config useMailPreviewConfig doesn't exist. creating the column...");
+
+			update("EzCommonDAO.addMailPreviewConfig",map);
+		}
+	}
 }

@@ -404,6 +404,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
             ezCommonService.settingCommunityGradeData(); // 2025-07-10 이유정 - 커뮤니티 > 기존 데이터 회원등급에 맞춰 세팅
             ezCommonService.alterTblClubUserAdminAuthColumn(); // 2025-07-15 이유정 - 커뮤니티 > 운영자권한 컬럼 추가
             ezCommonService.alterTblClubUserWithdrawDateColumn(); // 2025-07-23 이유정 - 커뮤니티 > 회원탈퇴일자 컬럼 추가
+            ezCommonService.addMailPreviewConfig();//2025-07-24 김대현 - 메일 > 메일 미리보기 기능 추가
         } catch (Exception e) {
     		logger.error(e.getMessage(), e);
     	}

@@ -3689,4 +3689,45 @@ public class CommonUtil {
         LocalDateTime today = LocalDateTime.parse(getTodayUTCTime("yyyy-MM-dd HH:mm:ss"), formatter);
         return today.isAfter(s) && today.isBefore(e);
     }
+
+
+	public String removeHtmlTag(String content) {
+		try {
+			Pattern p = Pattern.compile("<(head|title|style).*?</(head|title|style)>", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
+			Matcher m = p.matcher(content);
+			content = m.replaceAll(" ");
+
+			p = Pattern.compile("\\s*<.*?>\\s*", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
+			m = p.matcher(content);
+			content = m.replaceAll(" ").trim();
+
+			p = Pattern.compile("\\s+");
+			m = p.matcher(content);
+			content = m.replaceAll(" ");
+
+			p = Pattern.compile("&nbsp;");
+			m = p.matcher(content);
+			content = m.replaceAll(" ");
+
+			p = Pattern.compile(" +");
+			m = p.matcher(content);
+			content = m.replaceAll(" ");
+
+			p = Pattern.compile("&lt;");
+			m = p.matcher(content);
+			content = m.replaceAll("<");
+
+			p = Pattern.compile("&gt;");
+			m = p.matcher(content);
+			content = m.replaceAll(">");
+
+			p = Pattern.compile("&amp;");
+			m = p.matcher(content);
+			content = m.replaceAll("&");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return content;
+	}
 }

@@ -382,16 +382,19 @@ function MakeListInfoHTML(ConentObject) {
                             p_Title = p_Title.replace(/<[^>]*>/g, '');
                             _TDColum.title = p_Title.replaceAll('&amp;', '&').replaceAll('&#40;', '(').replaceAll('&#41;', ')').replaceAll('&lt;', '<').replaceAll('&gt;', '>').replaceAll('&quot;', '"').replaceAll('&#39;', "'");
 
-                            if (useMailNewWindow == "YES") {
-                            	if (g_bdraft == true) {
-	                            	p_Subject = "<span style='color: #999;'>" + p_mailBoxName + "</span>" + p_Subject
-	                            } else {
-	                            	p_Subject = "<div id = \"subject\"style=\" cursor:pointer; max-width:85%; display:inline-block;overflow:hidden; text-overflow: ellipsis;\">" + "<span style='color: #999;'>" + p_mailBoxName + "</span>" + p_Subject + "</div>&nbsp;&nbsp;<img class='mailpopupicon' src=\"/images/email/popup_icon.gif\" width=\"12px\"  onclick = \"mailOpenPopup(this, event)\" />";
-	                            }
+                            if (g_bdraft == true) {
+                                p_Subject = p_Subject;
                             } else {
-                                p_Subject = "<span style='color: #999;'>" + p_mailBoxName + "</span>" + p_Subject
+                                p_Subject = "<div id = \"subject\"style=\" cursor:pointer; max-width:85%; display:inline-block;overflow:hidden; text-overflow: ellipsis;\">" + p_Subject + "</div>&nbsp;&nbsp;"
+                                if (usePreviewMail) {
+                                    p_Subject += "<img class='mailpopupicon' id='previewMailIcon' src='/images/bsearch_new2.svg' width='14px' style='padding-right: 8px' onclick = 'previewMail(this, event)' onmouseover = 'this.src = \"/images/bsearch_new2_hover.svg\"'  onmouseout = 'this.src = \"/images/bsearch_new2.svg\"'/>";
+                                }
+
+                                if (useMailNewWindow == "YES") {
+                                    p_Subject += "<img class='mailpopupicon' src=\"/images/email/popup_icon.gif\" width=\"12px\"  onclick = \"mailOpenPopup(this, event)\" />";
+                                }
                             }
-                            
+
                             _TDColum.innerHTML = p_Subject;
                             _TDColum.title = p_Title.replaceAll('&amp;', '&').replaceAll('&#40;', '(').replaceAll('&#41;', ')').replaceAll('&lt;', '<').replaceAll('&gt;', '>').replaceAll('&quot;', '"').replaceAll('&#39;', "'");
                             _TDColum.style.fontWeight = p_Read == "0" ? "bold" : "";

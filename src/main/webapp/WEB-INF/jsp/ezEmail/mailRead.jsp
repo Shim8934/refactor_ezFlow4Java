@@ -701,6 +701,12 @@
 						document.getElementById("input_wrap").classList.remove("on");
 					}
 				}
+
+
+				let usingMailPreview = document.getElementById("iFramePanel_mail_preview").className.includes('on');
+				if (usingMailPreview) {
+					hiddenPreviewMail();
+				}
 			}
 			
 	    </script>

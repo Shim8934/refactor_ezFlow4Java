@@ -1143,6 +1143,7 @@ public class EzEmailUtil {
 		String shareId = null;
 		String useImageConvertServer = null;	// 20200312 조진호 - 메일 읽기 > 첨부파일 미리 보기 기능 옵션 처리 추가
 		boolean useWebfolder = false;			// 20230418 김은실 - 메일 읽기 > 첨부파일 웹폴더에 저장 기능 추가
+		boolean forPreviewMail = false;			// 20250213 김대현 - 메일 리스트 > 메일 미리보기 기능 추가
 		
 		// 료비에서 수신한 메일 중에 text/plain 파트만 있으면서
 		// ContentID 없이 Content-Dispostion이 inline으로 첨부된
@@ -1167,6 +1168,7 @@ public class EzEmailUtil {
 			if (extraMap.get("shareId") != null) shareId = (String)extraMap.get("shareId");
 			if (extraMap.get("useImageConvertServer") != null) useImageConvertServer = (String)extraMap.get("useImageConvertServer");
 			if (extraMap.get("useWebfolder") != null) useWebfolder = (boolean)extraMap.get("useWebfolder");
+            if (extraMap.get("forPreviewMail") != null) forPreviewMail = (boolean)extraMap.get("forPreviewMail");
 		}
 		
 		// 첨부 파일이면서 Content-ID가 있는 경우 실제 HTML 본문에서 참조되고 있는 파트인지 확인하기 위해 추가함(Gmail에서 보낸 메일).
@@ -1499,6 +1501,25 @@ public class EzEmailUtil {
 				pAttachListHtml += " <p class=\"ui-bar\" style=\"border-bottom:1px solid #e2e2e2\"><i class='fa fa-download' aria-hidden='true' \"javascript:mailFileDown('" + aitem + "');\" style='cursor:pointer'></i>";
 				pAttachListHtml += " <span onclick=\"javascript:mailFileDown('" + aitem + "');\"><span title='" + filename_spclStr + " (" + strSize + ")" + "' class='attachFileName' onmouseover=this.style.color='#164aad' onmouseout=this.style.color='black' style='cursor:pointer' >" + filename_spclStr + " (" + strSize + ")</span></span>";
 				pAttachListHtml += " </p>";
+			} else if (forPreviewMail) {
+				// 메일 미리보기
+				String filename_egovSpclStr = EgovStringUtil.getSpclStrCnvr2(filename);
+
+				aitem = "/ezEmail/downloadAttach.do?mode=Attach&folderPath="+folderPath_URLEnc+"&uid="+uid+"&filename="+URLEncoder.encode(filename,"UTF-8")+"&index="+bodyPartIndex + "&order=" + order + "&depth=" + depth;
+
+				if (shareId != null) {
+					aitem += "&shareId=" + URLEncoder.encode(shareId, "UTF-8");
+				}
+
+				pAttachListHtml += "<li>";
+
+				pAttachListHtml += " <span onclick=\"DownloadAttach('" + aitem + "');\"><span title=\"" + filename_spclStr + " (" + strSize + ")" + "\" class='attachFileName' onmouseover=this.style.color='#164aad' onmouseout=this.style.color='black' style='cursor:pointer' >" + filename_spclStr + " (" + strSize + ")</span></span>";
+
+				// 다운로드 아이콘
+				pAttachListHtml += " <span onclick=\"DownloadAttach('" + aitem + "');\" _filehref='" + aitem + "' _filesize='" + size + "' _filename=\"" + filename_egovSpclStr + "\" id='MailAttachDownloadItems' name='MailAttachDownloadItems' ><img src='/images/icon_adddownload.gif' width='16' height='16' style='vertical-align: top;'></span>";
+
+				pAttachListHtml += "</li>";
+
 			} else {
 
 				aitem = "/ezEmail/downloadAttach.do?mode=Attach&folderPath="+folderPath_URLEnc+"&uid="+uid+"&filename="+URLEncoder.encode(filename,"UTF-8")+"&index="+bodyPartIndex + "&order=" + order + "&depth=" + depth;

@@ -185,6 +185,7 @@ public class EzEmailMailListController {
 		String useMailConfirm = ezCommonService.getTenantConfig("useMailConfirm", tenantId);
 		String useHackingMailReport = ezCommonService.getTenantConfig("useHackingMailReport", tenantId);
 		String useSecureMail = StringUtils.defaultIfEmpty(ezCommonService.getTenantConfig("USE_SECUREMAIL", tenantId), "NO");
+		boolean usePreviewMail = "YES".equalsIgnoreCase(ezCommonService.getTenantConfig("usePreviewMail", tenantId));
 		String userTimeSet = userInfo.getOffset();
 		String offsetMin = commonUtil.getMinuteUTC(userTimeSet);
 		String serverName = userInfo.getServerName();
@@ -314,6 +315,7 @@ public class EzEmailMailListController {
 		model.addAttribute("offsetMin", offsetMin);
 		model.addAttribute("serverName", serverName);
 		model.addAttribute("useSecureMail", useSecureMail);
+		model.addAttribute("usePreviewMail", usePreviewMail);
 
 		// AI 첨부파일 이름 최대 길이 - 기존 메일과 동일한 값 사용
 		String attachFileNameMaxLength = ezCommonService.getTenantConfig("attachFileNameMaxLength", userInfo.getTenantId());
@@ -332,9 +334,9 @@ public class EzEmailMailListController {
 					, folderName, url, folderType, isSentItems, userInfo.getLang()
 					, userInfo.getId(), domainName, useEditor, useOcs, importanceColor);
 		logger.debug("UseEncryptZipForEmail={}, useMailBoxBackUp={}, useCountryIP={}, useMailConfirm={}, useHackingMailReport={},"
-					+ " offsetMin={}, mailGeneral={}, useSecureMail={}"
+					+ " offsetMin={}, mailGeneral={}, useSecureMail={}, usePreviewMail={}"
 					, useEncryptZipForEmail, useMailBoxBackUp, useCountryIP, useMailConfirm, useHackingMailReport
-					, offsetMin, mailGeneral, useSecureMail);
+					, offsetMin, mailGeneral, useSecureMail, usePreviewMail);
 		
 		logger.debug("showMailList ended.");
 		
@@ -4060,4 +4062,130 @@ public class EzEmailMailListController {
 
 		return Result.success(userKey);
 	}
+
+	/**
+	 * 메일 미리보기 기능
+	 */
+	@RequestMapping(value="/ezEmail/previewMail.do", method=RequestMethod.GET)
+	public String previewMail(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, Locale locale) throws Exception {
+		logger.debug("previewMail started");
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+
+		model.addAttribute("userInfo", userInfo);
+
+		logger.debug("previewMail ended");
+
+		return "ezEmail/previewMail";
+	}
+
+	/**
+	 * 메일 미리보기 정보 가져오는 부분
+	 */
+	@RequestMapping(value="/ezEmail/getPreviewMail.do", method=RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> getPreviewMail(@CookieValue("loginCookie") String loginCookie, @RequestBody JSONObject requestObject, Model model, Locale locale) throws Exception {
+		logger.debug("getPreviewMail started");
+
+		Map<String, Object> result = new HashMap<String, Object>();
+		String _href = (String) requestObject.get("_href");
+		String mailBody = "";
+		logger.debug("_href=" + _href);
+
+		_href = (_href != null) ? _href : "";
+		String folderPath = _href.split("/")[0];
+		String uidStr = _href.split("/")[1];
+		long uid = Long.parseLong(uidStr);
+
+		List<String> userInfo = commonUtil.getUserIdAndPassword(loginCookie);
+		String password  = userInfo.get(1);
+
+		LoginVO loginInfo = commonUtil.userInfo(loginCookie);
+		String domainName = ezCommonService.getTenantConfig("DomainName", loginInfo.getTenantId());
+		String userAccount = loginInfo.getId() + "@" + domainName;
+		Map<String, Object> extraMap = new HashMap<String, Object>();
+		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", loginInfo.getTenantId());
+
+		if (useSharedMailbox.equals("YES")) {
+			String shareId = (String) requestObject.get("shareId");
+			logger.debug("shareId=" + shareId);
+
+			if (shareId != null) {
+				if (!ezEmailService.checkUserShareId(loginInfo.getId(), shareId, loginInfo.getTenantId())) {
+					logger.debug("the user cannot access the shareId.");
+					logger.debug("previewMail ended.");
+
+					result.put("code","ERROR");
+					result.put("msg", "오류");
+					return result;
+				}
+
+				userAccount = shareId + "@" + domainName;
+			}
+		}
+
+		logger.debug("userId=" + loginInfo.getId() + ",userAccount=" + userAccount);
+
+		IMAPAccess ia = null;
+		String pAttachListHtmlSub = "";
+		String pAttachListHtml = "";
+		try {
+			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+					userAccount, password, egovMessageSource, locale, ezEmailUtil);
+
+			if (ia != null){
+				Folder f = ia.getFolder(folderPath != null ? folderPath : "");
+
+				if (f != null && f.exists()) {
+					f.open(Folder.READ_ONLY);
+					Message message = ((IMAPFolder)f).getMessageByUID(uid);
+					// 읽음 처리 상태 확인
+					boolean isSeen = message.isSet(Flags.Flag.SEEN);
+
+					if (message != null) {
+						extraMap.put("forPreviewMail",true);
+						List<Map<String, String>> attachedFileList = new ArrayList<Map<String, String>>();
+						List<String> bodyInfoList = ezEmailUtil.getBodyInfo(message, folderPath, uid, -1, attachedFileList, locale, extraMap);
+
+						mailBody = bodyInfoList.get(0);
+						mailBody = commonUtil.removeHtmlTag(mailBody);
+						logger.debug(mailBody);
+
+						double size = Double.parseDouble(bodyInfoList.get(2));
+						String strSize = ezEmailUtil.getSizeWithUnit(size);
+						pAttachListHtmlSub = " - <b>" + bodyInfoList.get(3) + egovMessageSource.getMessage("ezEmail.t180", locale) + "</b>(" + strSize + ")";
+						pAttachListHtml = bodyInfoList.get(1);
+
+						Map<String, Object> map = new HashMap<String, Object>();
+						map.put("mailbody", mailBody);
+						map.put("pAttachListHtmlSub", pAttachListHtmlSub);
+						map.put("pAttachListHtml", pAttachListHtml);
+						map.put("isAttach", bodyInfoList.get(4));
+
+						result.put("code", "OK");
+						result.put("result", map);
+
+						if (!isSeen) {
+							//ezEmailUtil.getBodyInfo에서 안읽었던 메일이 읽음처리되어 다시 안읽은메일로 변하게 처리
+							message.setFlag(Flags.Flag.SEEN, false);
+						}
+
+					}
+					f.close(false);
+				}
+			}
+
+		} catch (MessagingException e) {
+			logger.error(e.getMessage(), e);
+		} finally {
+			if (ia != null) {
+				ia.close();
+			}
+		}
+
+		logger.debug("previewMail ended");
+		return result;
+	}
+	
+	
 }

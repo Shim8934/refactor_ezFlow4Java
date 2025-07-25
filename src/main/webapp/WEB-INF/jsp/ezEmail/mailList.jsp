@@ -140,6 +140,7 @@
 			var searchRequiredCategory = [];
 			var searchRequirement = [];
 			let drawTagConsumeCallback;
+			var usePreviewMail = ${usePreviewMail};
 		    
 		    function defineHost(protocol){
 	    		var host = "";
@@ -1661,19 +1662,25 @@
 			// 20200407 조진호 - 한국고용정보원에서 개발된 해킹의심메일 신고 기능 표준 적용
 			var xmlhttp_HackinMail;
 			var hacking_mail_report_message_cross_dialogArguments = new Array();
-			function moveHackingMail() {
-
-				if (listContentArry.length < 1) {
-					alert(strLang42);
-					return;
-				}
-
+			function moveHackingMail(fromPreviewMail) {
 				var szItemID = "";
-				var message = new Array;
-				for (var i = 0; i < listContentArry.length; i++) {
-					szItemID += document.getElementById(listContentArry[i]).getAttribute("_href") + ",";
-				}
 
+				if (fromPreviewMail) {
+					// 메일 미리보기에서 스팸신고 시 "_href" 값을 fromPreviewMail에 넣어줌
+					szItemID = fromPreviewMail;
+
+				} else {
+					if (listContentArry.length < 1) {
+						alert("<spring:message code='ezEmail.zno001' />");
+						return;
+					}
+
+					for (var i = 0; i < listContentArry.length; i++) {
+						szItemID += document.getElementById(listContentArry[i]).getAttribute("_href") + ",";
+					}
+				}
+				var message = new Array;
+				
 				message['message'] = "";
 				message['szItemID'] = szItemID;
 
@@ -2042,6 +2049,47 @@
 						document.body.click();
 					}
 				});
+			}
+
+
+			var previewMail_cross_dialogArguments = new Array();
+			function previewMail(element, event) {
+				const grandparent = element.closest('td').parentElement;
+				const _href = grandparent.getAttribute("_href");
+				const isSecureMail = grandparent.getAttribute("securemail");
+
+				const parameter = new Map();
+				parameter.set('_href', _href);
+				parameter.set('isSecureMail', isSecureMail);
+
+				previewMail_cross_dialogArguments[0] = parameter;
+				
+				try {
+					const rightHeight = window.innerHeight;
+					const clickY = event.clientY;
+
+					let top = clickY + 12;
+					if (top + 350 > rightHeight) {
+						top = rightHeight - 350 - 12;
+					}
+
+					const iFramePanel_mail_preview = document.getElementById("iFramePanel_mail_preview");
+
+					document.getElementById("mail_preview_Layer").src = "/ezEmail/previewMail.do";
+					iFramePanel_mail_preview.style.top = top + "px";
+					iFramePanel_mail_preview.style.left = event.clientX + 12 + "px";
+					iFramePanel_mail_preview.style.height = "350px";
+					iFramePanel_mail_preview.style.display = "";
+					iFramePanel_mail_preview.style.border = "1px solid #E5E5E5";
+					iFramePanel_mail_preview.style.boxShadow = "0 3px 6px rgba(0,0,0,0.16)";
+					iFramePanel_mail_preview.classList.toggle('on');
+
+					document.getElementById("mail_preview_Layer").style.width = "633px";
+					document.getElementById("mail_preview_Layer").style.height = "350px";
+
+
+				} catch (e) { }
+				event.stopPropagation();
 			}
 		</script>
 		<style>
@@ -2588,6 +2636,9 @@
 		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel_sub">&nbsp;</div>
 		<div class="layerpopup"  style="z-index:2000; position:absolute; display:none; overflow:hidden;" id="iFramePanel_sub">
 			<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer_sub"></iframe>
+		</div>
+		<div class="layerpopup"  style="z-index:3000; position:absolute; display:none; overflow:hidden; border:1px solid;" id="iFramePanel_mail_preview">
+			<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="mail_preview_Layer"></iframe>
 		</div>
 	    <div style="width:200px;height:50px;border:0px solid red;text-align:center;vertical-align:middle;display:none;z-index:9000;position:absolute;" id="MailProgress">
 		    <img src="/images/email/progress_img.gif" style="vertical-align:middle;"/>
