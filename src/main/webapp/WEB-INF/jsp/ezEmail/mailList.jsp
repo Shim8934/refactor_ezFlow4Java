@@ -2236,11 +2236,11 @@
 	          <li id="deleteall" style="display:none"><span onClick="delAllFile()"><spring:message code="ezEmail.t514" /></span></li>
 	          <li id="receivecheck" style="display:none" ><span onClick="receiveCheck_onClick()"><spring:message code="ezEmail.t516" />/<spring:message code="ezEmail.t549" /></span></li>
 	          <li id="toggle_flag_btn" onClick="toggle_flag();" ><span class="icon16 icon16_star"></span></li>
-	          <li id="trashBtn"><span class="icon16 icon16_delete" onClick="deleteWork(false)"></span></li>
-              <li id="trashUnreadBtn" title="<spring:message code="ezEmail.unread.delete" />"><span class="icon16 icon16_unreadMail_del" onClick="deleteUnreadWork()"></span></li>
+	          <li id="trashBtn" onClick="deleteWork(false)"><span class="icon16 icon16_delete"></span></li>
+              <li id="trashUnreadBtn" title="<spring:message code="ezEmail.unread.delete" />" onClick="deleteUnreadWork()"><span class="icon16 icon16_unreadMail_del"></span></li>
 	          <li onClick="MailListRefresh()"><span class="icon16 icon16_refresh"></span></li>
 	          <c:if test="${useHackingMailReport == 'YES'}">
-			  <li id="hackingMail" title="<spring:message code="ezEmail.zno002" />"><span class="icon16 icon16_spam" onClick="moveHackingMail()"></span></li>		
+			  <li id="hackingMail" title="<spring:message code="ezEmail.zno002" />" onClick="moveHackingMail()"><span class="icon16 icon16_spam"></span></li>		
 			  </c:if>
 				<c:if test="${useMailTag}">
 				<li class="view_more" data-before-show="showLabelLayer" style="position: relative;">
