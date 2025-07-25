@@ -157,6 +157,10 @@ public enum WriteType {
 	public boolean useOperatorMailAddress() {
 		return this == NEW;
 	}
+	// 메일 옵션 유지
+	public boolean useOrgMailOption() {
+		return isEdit() || isResend();
+	}
 	// unread
 	public boolean useUnread() {
 		return this == RESEND_IN_SENT;

@@ -316,8 +316,8 @@ public class EzEmailWriteServiceImpl extends EgovAbstractServiceImpl implements 
                     }
 
                     // mail option
-                    if (writetype.isEdit()) {
-                        setMailOption(orgMessage, messagevo, isReserve);
+                    if (writetype.useOrgMailOption()) { // isEdit, isResend
+                        setMailOption(writetype, orgMessage, messagevo);
                     }
 
                     if (writetype.useUnread()) { // RESEND_IN_SENT
@@ -796,8 +796,8 @@ public class EzEmailWriteServiceImpl extends EgovAbstractServiceImpl implements 
         return attach;
     }
 
-    private void setMailOption(Message orgMessage, MailWriteMessageVO messagevo, boolean isReserve) throws MessagingException {
-        logger.debug("EDIT MODE : set mail option start");
+    private void setMailOption(WriteType writetype, Message orgMessage, MailWriteMessageVO messagevo) throws MessagingException {
+        logger.debug("set mail option start");
 
         //set importance
         if (orgMessage.getHeader("X-Priority") != null) {
@@ -819,12 +819,27 @@ public class EzEmailWriteServiceImpl extends EgovAbstractServiceImpl implements 
             String isEach = orgMessage.getHeader("X-JMocha-Each-Mail")[0];
             messagevo.setIsEach(isEach);
         }
+
+        // 추적(배달되면 알림): 현재 옵션제외됨.
+        if (orgMessage.getHeader("Return-Receipt-To") != null) {
+            messagevo.setReplySendTime("1");
+        }
+
+        if (orgMessage.getHeader("X-JMocha-Disp-Noti-To") == null) {
+            messagevo.setReplyReadTime("0");
+        }
+
+        if (!writetype.isEdit()) {
+            logger.debug("set mail option end");
+            return;
+        }
+
         //set isSecureMail
         if (orgMessage.getHeader("X-JMocha-Secure-Mail") != null) {
             String isSecureMail = orgMessage.getHeader("X-JMocha-Secure-Mail")[0];
             messagevo.setIsSecureMail(isSecureMail);
             
-            if (isReserve) {
+            if (writetype.isReserve()) {
                 String securePassword = orgMessage.getHeader("X-JMocha-Secure-Mail-Password")[0];
     			String secureReadCount = orgMessage.getHeader("X-JMocha-Secure-Mail-ReadCount")[0];
     			String secureReadDate = orgMessage.getHeader("X-JMocha-Secure-Mail-ReadDate")[0];
@@ -840,14 +855,6 @@ public class EzEmailWriteServiceImpl extends EgovAbstractServiceImpl implements 
                 messagevo.setSecureMaxReadCount(secureReadCount);
                 messagevo.setSecureMaxReadDate(secureReadDate);
     		}
-        }
-
-        if (orgMessage.getHeader("Return-Receipt-To") != null) {
-            messagevo.setReplySendTime("1");
-        }
-
-        if (orgMessage.getHeader("X-JMocha-Disp-Noti-To") == null) {
-            messagevo.setReplyReadTime("0");
         }
 
         if (orgMessage.getHeader("Delivery-Date") != null) {
