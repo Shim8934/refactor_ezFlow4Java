@@ -389,6 +389,8 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			ezCommonService.createTblBoardModifyHistory(); // 2024-12-05 한태훈 - 게시판 > 게시판 버전관리 테이블 추가
 			ezCommonService.addBoardContentSize(); // 2025-06-16 이혜림 - 게시판 > 본문 크기 컬럼 추가
             ezCommonService.updateMobilePortletMenuId(); // 2024-09-20 황인경 - 모바일 메뉴 권한 별도
+			ezCommonService.alterTblRsBrdResMaxDate(); // 2024-08-27 유길상 - 자원관리 > 자원등록 > 최대 예약 가능 기간 컬럼 추
+			ezCommonService.alterTblRsBrdResMaxUserCnt(); // 2024-08-27 유길상 - 자원관리 > 자원등록 > 정원 컬럼 추가
 		} catch (Exception e) {
     		logger.error(e.getMessage(), e);
     	}

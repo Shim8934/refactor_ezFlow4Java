@@ -753,8 +753,16 @@
 						<td colspan="2"><span id="ownerCall"></span></td>
 					</tr>
 					<tr>
+						<th style="height:30px;background-color: #fafafa"><spring:message code="ezResource.max.ygs02"/></th>
+						<td colspan="2"><span id="resMaxUserCnt">${resMaxUserCnt}<spring:message code="ezResource.max.ygs03"/></span></td>
+					</tr>
+					<tr>
 						<th style="height:30px;background-color: #fafafa"><spring:message code='ezResource.t148'/></th>
 						<td colspan="2" style="word-break:break-all;" id="resLocation"><%-- ${resLocation} --%></td>
+					</tr>
+					<tr>
+						<th style="height:30px;background-color: #fafafa"><spring:message code="ezResource.max.ygs01"/></th>
+						<td colspan="2"><span id="resMaxDate">${resMaxDate}<c:if test="${not empty resMaxDate}"><spring:message code="ezResource.max.ygs04"/></c:if></span></td>
 					</tr>
 					<tr>
 						<th style="height:30px;background-color: #fafafa"><spring:message code="ezResource.lyj01"/></th>

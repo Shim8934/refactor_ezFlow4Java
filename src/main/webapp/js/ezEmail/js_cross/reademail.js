@@ -204,6 +204,8 @@ function move_onclick_Complete(moveUrl) {
     }
     else if (moveUrl["cmd"] == "COPY") {
     	CopyOrMoveMail(moveUrl["cmd"], g_paramURL, moveUrl["url"]);
+    } else if (moveUrl["cmd"] === "KEEP_MOVE") {
+        keepMove(g_paramURL, moveUrl["url"]);
     }
     
     usedMoveDel = "1";
@@ -419,6 +421,57 @@ function event_CopyOrMoveMail() {
             g_copyItemHttp = null;
         }
     }
+}
+
+var mailKeepMoveDialogArguments = {};
+function keepMove(itemIDs, copyFolderID) {
+    if (copyFolderID === "Sent") {
+        alert(strLangKeepMoveCantUseSentBox);
+        return;
+    }
+
+    mailKeepMoveDialogArguments.okHandler = keepMoveOkHandler;
+    mailKeepMoveDialogArguments.cancelHandler = function () {
+        DivPopUpHiddenReadMail();
+        document.getElementById("iFrameLayer").src = "about:blank";
+    };
+    mailKeepMoveDialogArguments.mailUids = itemIDs;
+    mailKeepMoveDialogArguments.targetFolderId = copyFolderID;
+    let url = '/ezEmail/mailKeepMove.do?folderId=' + encodeURIComponent(copyFolderID);
+
+    if (shareId) {
+        url += '&shareId=' + encodeURIComponent(shareId);
+    }
+
+    DivPopUpHiddenReadMail();
+    document.getElementById("iFrameLayer").src = "about:blank";
+    setTimeout(function() {
+        DivPopUpShow(450, 220, url);
+    }, 0);
+}
+
+function keepMoveOkHandler(/** @type boolean*/cleanup) {
+    $.ajax({
+        method: 'post',
+        url: '/ezEmail/mailKeepMove.do',
+        data: {
+            mailUids: mailKeepMoveDialogArguments.mailUids.split(','),
+            targetFolderPath: mailKeepMoveDialogArguments.targetFolderId,
+            cleanup,
+            shareId
+        },
+        success: function (result) {
+            if (result.status === 'ok') {
+                opener.startKeepMoveTimer(result.data);
+                window.close();
+            } else {
+                alert(strLang321 + '\n' + Date.now());
+            }
+        },
+        error: function() {
+            alert(strLang321 + '\n' + Date.now());
+        }
+    });
 }
 
 function download_mail() {

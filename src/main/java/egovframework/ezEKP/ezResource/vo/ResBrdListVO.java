@@ -51,6 +51,28 @@ public class ResBrdListVO {
 	private String resLocation;
 	/** 승인여부*/
 	private String approveFlag;
+	/** 최대 예약 가능 기간 **/
+	private String resMaxDate;
+	/** 정원 **/
+	private String resMaxUserCnt;
+	
+	public String getResMaxUserCnt() {
+		if (resMaxUserCnt == null || resMaxUserCnt.isEmpty()) {
+			return "0";
+		}
+		return resMaxUserCnt;
+	}
+	
+	public void setResMaxUserCnt(String resMaxUserCnt) {
+		this.resMaxUserCnt = resMaxUserCnt;
+	}
+	
+	public String getResMaxDate() {
+		if (resMaxDate == null || resMaxDate.equals("0") || resMaxDate.isEmpty()) {
+			return "";
+		}
+		return resMaxDate;
+	}
 	
 	public int getAttachSize() {
 		return attachSize;

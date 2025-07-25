@@ -292,3 +292,8 @@ var strLangFvYGS18 = "Cannot add sub-items to a resource.";
 var strLangFvYGS19 = "Deleting a category will delete all its sub-resources and sub-categories.\nAre you sure you want to delete?";
 
 
+// 2024-08-26 유길상 - 자원등록 > 최대 예약 가능 기간, 정원
+var strLangMaxYGS01 = "최대 예약 가능 기간을 초과하였습니다.";
+var strLangMaxYGS02 = "정원";
+var strLangMaxYGS03 = "명";
+var strLangMaxYGS04 = "정원을 입력하세요.";

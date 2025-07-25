@@ -109,8 +109,16 @@
           					<td colspan="2" name="Brd_NM" idval="${strBrdID}"> ${strBrdNm} </td>
         				</tr>
         				<tr>
+          					<th><spring:message code="ezResource.max.ygs02"/></th>
+          					<td colspan="2" name="resMaxUserCnt"> ${resMaxUserCnt}<spring:message code="ezResource.max.ygs03"/> </td>
+        				</tr>
+        				<tr>
           					<th> <spring:message code="ezResource.t148"/></th>
           					<td colspan="2" name="ResLocation"> ${resLocation} </td>
+        				</tr>
+        				<tr>
+          					<th><spring:message code="ezResource.max.ygs01"/></th>
+          					<td colspan="2" name="resMaxDate"> ${resMaxDate}<c:if test="${not empty resMaxDate}"><spring:message code="ezResource.max.ygs04" /> </c:if></td>
         				</tr>
 						<tr>
 							<th> <spring:message code="ezResource.lyj01"/></th>

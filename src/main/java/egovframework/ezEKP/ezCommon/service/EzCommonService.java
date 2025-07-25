@@ -616,4 +616,10 @@ public interface EzCommonService {
 
 	// 2024-09-12 황인경 - 모바일 메뉴 권한 별도 생성으로 인한 포틀릿 데이터 변경
 	public void updateMobilePortletMenuId() throws Exception;
+	
+	// 2024-08-27 유길상 - 자원관리 > 자원등록 > 최대 예약 가능 기간 컬럼 추가
+	public void alterTblRsBrdResMaxDate() throws Exception;
+	
+	// 2024-08-27 유길상 - 자원관리 > 자원등록 > 정원 컬럼 추가
+	public void alterTblRsBrdResMaxUserCnt() throws Exception;
 }

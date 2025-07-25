@@ -404,6 +404,9 @@ const strLangTagadd = "Add tags to mail :";
 const strLangChangeButton = "Switch";
 const strLangChangeLimit = "Cannot switch because the attachment size exceeds the limit.";
 
+const strLangKeepMoveCantUseSentBox = 'Emails cannot be continuously moved to the Sent folder.';
+const strLangKeepMoveNoFromHeader = 'Emails without a sender cannot be continuously moved.';
+
 function GetLocalTime(Offset , pDateTime)
 {
     if (pDateTime == "")

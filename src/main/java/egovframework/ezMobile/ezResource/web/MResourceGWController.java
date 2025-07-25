@@ -1291,4 +1291,20 @@ public class MResourceGWController extends EgovFileMngUtil {
 		return result;
 	}
 	
+	// 2024-09-02 유길상 - 자원관리 > 최대 예약 가능기간 조회 
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value="/mobile/ezresource/resource/{resourceId:.+}/{userId:.+}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	public JSONObject getResourceInfo(@PathVariable String resourceId, @PathVariable String userId, HttpServletRequest request) throws Exception {
+		logger.debug("getResourceInfo start, resourceId=" + resourceId + ",userId=" + userId);
+		
+		String serverName = request.getHeader("x-user-host");
+		MCommonVO info = mOptionService.commonInfo(serverName, userId);
+		String brdResMaxDate = ezResourceService.getBrdResMaxDate(resourceId, info.getCompanyId(), info.getTenantId());
+		JSONObject jsonObject = new JSONObject();
+		jsonObject.put("maxDate", brdResMaxDate);
+		
+		logger.debug("getResourceInfo end, brdResMaxUserCnt=" + brdResMaxDate);
+		return jsonObject;
+	}
+	
 }

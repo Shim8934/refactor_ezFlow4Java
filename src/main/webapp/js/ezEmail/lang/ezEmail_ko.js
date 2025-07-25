@@ -404,6 +404,9 @@ const strLangTagadd = "메일에 태그 추가 :";
 const strLangChangeButton = "전환";
 const strLangChangeLimit = "첨부 용량이 초과되어 전환할 수 없습니다.";
 
+const strLangKeepMoveCantUseSentBox = '보낸편지함으로는 계속이동 할 수 없습니다.';
+const strLangKeepMoveNoFromHeader = '보낸이가 비어있는 메일은 계속이동 할 수 없습니다.';
+
 function GetLocalTime(Offset , pDateTime)
 {
     if (pDateTime == "")

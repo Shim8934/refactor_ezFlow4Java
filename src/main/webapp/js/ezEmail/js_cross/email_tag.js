@@ -21,7 +21,7 @@ function removeTag(span) {
 
         deleteTag(folderPath, mailUid, tagName, function(success) {
             if (success && window.leftMenu) {
-                leftMenu.reloadTags();
+                leftMenu.reloadTags({reloadList: true});
             }
            
         });
@@ -102,7 +102,7 @@ function onEnterTagInput(tagInputId, idPrefix ,successCallback) {
                 return;
             }
             if (window.leftMenu) {
-                leftMenu.reloadTags();
+                leftMenu.reloadTags({reloadList: true});
             }
             successCallback(tagName);
             tagInput.value = "";

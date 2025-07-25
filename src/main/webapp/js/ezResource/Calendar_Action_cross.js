@@ -1,4 +1,4 @@
-﻿//오늘의 날짜 (년도, 월, 일, 오늘의 요일)
+﻿﻿//오늘의 날짜 (년도, 월, 일, 오늘의 요일)
 var weektodate = new Date();
 
 //전역변수 (년도, 월, 일, 요일)
@@ -614,11 +614,13 @@ function tableListControl_Week()
             if(k == 0) {
             	_mtd.style.borderTop = "0px";
             }
-            if(title_name[k].split("/")[2].substring(0,1) == "1")
+            
+            if (title_name[k].split("/")[2].substring(0,1) == "1") {
                 //_mtd.innerHTML = "<img onclick='showRes(" + title_name[k].split("/")[0] + ")' src='/images/calendar/icon_resource_ok.png'  style='vertical-align:bottom;margin-right:5px'>" + title_name[k].split("/")[1];
-            	_mtd.innerHTML = "<span class='sub_iconLNB tree_resource_ok' style='margin-top:0px' onclick='showRes(" + title_name[k].split("/")[0] + ")'></span>&nbsp;" + title_name[k].split("/")[1];
-            else
-                _mtd.innerHTML = "<span class='sub_iconLNB tree_resource_standard' style='margin-top:0px' onclick='showRes(" + title_name[k].split("/")[0] + ")'></span>&nbsp;" + title_name[k].split("/")[1];
+            	_mtd.innerHTML = "<span class='sub_iconLNB tree_resource_ok' style='margin-top:0px' onclick='showRes(" + title_name[k].split("/")[0] + ")'></span>&nbsp;" + title_name[k].split("/")[1] + " [" + strLangMaxYGS02 + " : " + title_name[k].split("/")[title_name[k].split("/").length - 1] + strLangMaxYGS03 +"]";
+            } else {
+                _mtd.innerHTML = "<span class='sub_iconLNB tree_resource_standard' style='margin-top:0px' onclick='showRes(" + title_name[k].split("/")[0] + ")'></span>&nbsp;" + title_name[k].split("/")[1] + " [" + strLangMaxYGS02 + " : " + title_name[k].split("/")[title_name[k].split("/").length - 1] + strLangMaxYGS03 + "]";
+            }
             _mtr2.appendChild(_mtd);
             
             if (DefaultView == 0) { //일요일시작

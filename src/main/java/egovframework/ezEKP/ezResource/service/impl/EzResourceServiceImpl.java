@@ -286,7 +286,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 	}
 	
 	public void modifyResData(String brdID, String deptID, String deptNm, String ownerID, String ownerNm, String ownerPos, String ownerCall, String brdNm, String resLocation,
-	String brdExplain,String companyID, String approve, String brdNm2, String deptNm2, String ownerNm2, String ownerPos2, int tenantID, String realPath, String strAttachList1, String strAttachList2, String strReturn, String repeat) throws Exception {
+	String brdExplain,String companyID, String approve, String brdNm2, String deptNm2, String ownerNm2, String ownerPos2, int tenantID, String realPath, String strAttachList1, String strAttachList2, String strReturn, String repeat, String strResMaxDate, String strResMaxUserCnt) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("v_P_Brd_ID", brdID);
 		map.put("v_P_ODeptID", deptID);
@@ -307,6 +307,11 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		map.put("v_P_OwnerNm2", ownerNm2);
 		map.put("v_P_OwnerPos2", ownerPos2);
 		map.put("tenantID", tenantID);
+		
+		// 2024-09-02 유길상 - 최대 예약 가능 기간, 정원
+		map.put("v_P_ResMaxDate", strResMaxDate);
+		map.put("v_P_ResMaxUserCnt", strResMaxUserCnt);
+		
 		ezResourceDAO.modifyResData(map);
 		
 		// 첨부파일 등록 실행
@@ -413,7 +418,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 	}
 	
 	public void addResData(String classGB, String deptID, String deptNm, String ownerID, String ownerNm, String ownerPos, String ownerCall, String brdNm, String resLocation,
-	String brdExplain, String companyID, String approve, String brdNm2, String deptNm2, String ownerNm2, String ownerPos2,String strBreAccess, int tenantID, String realPath, String strAttachList1, String strAttachList2, String strReturn, String repeat) throws Exception {
+	String brdExplain, String companyID, String approve, String brdNm2, String deptNm2, String ownerNm2, String ownerPos2,String strBreAccess, int tenantID, String realPath, String strAttachList1, String strAttachList2, String strReturn, String repeat, String strResMaxDate, String strResMaxUserCnt) throws Exception {
 		logger.debug("addResData Start");
 		
 		Map<String,Object> map = new HashMap<String, Object>();
@@ -442,6 +447,10 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		map.put("v_Brd_Access", strBreAccess);
 		map.put("v_P_Return", strReturn);
 		map.put("v_P_Repeat", repeat);
+		
+		// 2024-09-02 유길상 - 최대 예약 가능 기간, 정원
+		map.put("v_P_ResMaxDate", strResMaxDate);
+		map.put("v_P_ResMaxUserCnt", strResMaxUserCnt);
 		
 		Map<String,Object> map2 = new HashMap<String, Object>();
 		logger.debug("classGB="+classGB);
@@ -2250,7 +2259,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		List<ResGetItemListVO> list = getBrdMainList(brdID, userInfo.getCompanyID(), userInfo.getPrimary(), userInfo.getTenantId());
 		
 		for(int i=0; i<list.size(); i++) {
-			childBrdBld.append(list.get(i).getBrd_ID() + "/" + commonUtil.cleanValue(list.get(i).getBrd_Nm()) + "/" + list.get(i).getApproveFlag() + ",");
+			childBrdBld.append(list.get(i).getBrd_ID() + "/" + commonUtil.cleanValue(list.get(i).getBrd_Nm()) + "/" + list.get(i).getApproveFlag()  +  ",");
 		}
 		
 		return childBrdBld.toString();
@@ -2516,6 +2525,10 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 	    String strAttachList2 = "";
 	    String strReturn = "";
 		String strRepeat = "";
+		
+		// 2024-09-02 유길상 - 최대 예약 가능 기간, 정원
+		String strResMaxDate = "";
+		String strResMaxUserCnt = "";
 	    
 		Document xmlRes = commonUtil.convertStringToDocument(xmlStr);
 		strBrdID = xmlRes.getElementsByTagName("DATA").item(0).getTextContent().trim();
@@ -2541,7 +2554,11 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		strReturn = xmlRes.getElementsByTagName("DATA").item(15).getTextContent().trim();
 		strRepeat = xmlRes.getElementsByTagName("DATA").item(16).getTextContent().trim();
 		
-		modifyResData(strBrdID, strODeptID, strODeptNm, strOwnerID, strOwnerNm, strOwnerPos, strOwnerCall, strBrdNm, strResLocation, strBrdExplain, strCompanyID, strApprove, strBrdNm2, strODeptNm2, strOwnerNm2, strOwnerPos2, tenantID, realPath, strAttachList1, strAttachList2, strReturn, strRepeat);
+		// 2024-09-02 유길상 - 최대 예약 가능 기간, 정원
+		strResMaxDate = xmlRes.getElementsByTagName("RESMAXDATE").item(0).getTextContent().trim();
+		strResMaxUserCnt = xmlRes.getElementsByTagName("RESMAXUSERCNT").item(0).getTextContent().trim();
+		
+		modifyResData(strBrdID, strODeptID, strODeptNm, strOwnerID, strOwnerNm, strOwnerPos, strOwnerCall, strBrdNm, strResLocation, strBrdExplain, strCompanyID, strApprove, strBrdNm2, strODeptNm2, strOwnerNm2, strOwnerPos2, tenantID, realPath, strAttachList1, strAttachList2, strReturn, strRepeat, strResMaxDate, strResMaxUserCnt);
 
 		return true;
 	}
@@ -2570,6 +2587,10 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 	    String strAttachList2 = "";
 	    String strReturn = "";
 		String strRepeat = "";
+		
+		// 2024-09-02 유길상 - 최대 예약 가능 기간, 정원
+		String strResMaxDate = "";
+		String strResMaxUserCnt = "";
 	    
 	   	Document xmlRes = commonUtil.convertStringToDocument(xmlStr);
 		strClassGB = xmlRes.getElementsByTagName("DATA").item(0).getTextContent().trim();
@@ -2595,8 +2616,12 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		strReturn = xmlRes.getElementsByTagName("DATA").item(15).getTextContent().trim();
 		strRepeat = xmlRes.getElementsByTagName("DATA").item(16).getTextContent().trim();
 		strBreAccess = egovMessageSource.getMessage("ezResource.t58", locale);
-			
-		addResData(strClassGB, strODeptID, strODeptNm, strOwnerID, strOwnerNm, strOwnerPos, strOwnerCall, strBrdNm, strResLocation, strBrdExplain, strCompanyID, strApprove, strBrdNm2, strODeptNm2, strOwnerNm2, strOwnerPos2, strBreAccess, tenantID, realPath, strAttachList1, strAttachList2, strReturn, strRepeat);
+		
+		// 2024-09-02 유길상 - 최대 예약 가능 기간, 정원
+		strResMaxDate = xmlRes.getElementsByTagName("RESMAXDATE").item(0).getTextContent().trim();
+		strResMaxUserCnt = xmlRes.getElementsByTagName("RESMAXUSERCNT").item(0).getTextContent().trim();
+		
+		addResData(strClassGB, strODeptID, strODeptNm, strOwnerID, strOwnerNm, strOwnerPos, strOwnerCall, strBrdNm, strResLocation, strBrdExplain, strCompanyID, strApprove, strBrdNm2, strODeptNm2, strOwnerNm2, strOwnerPos2, strBreAccess, tenantID, realPath, strAttachList1, strAttachList2, strReturn, strRepeat, strResMaxDate, strResMaxUserCnt);
 
 		return true;
 	}
@@ -4959,5 +4984,18 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		}
 		
 		logger.debug("delBrdFavoriteCategory end");
+	}
+	
+	@Override
+	public String getBrdResMaxDate(String resourceId, String companyID, int tenantID) throws Exception {
+		logger.debug("getBrdResMaxUserDate start");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("resourceID", resourceId);
+		map.put("companyID", companyID);
+		map.put("tenantID", tenantID);
+		
+		logger.debug("getBrdResMaxUserDate end");
+		return ezResourceDAO.selectResMaxDate(map);
 	}
 }

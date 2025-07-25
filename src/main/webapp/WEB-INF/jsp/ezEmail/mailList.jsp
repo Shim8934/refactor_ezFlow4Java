@@ -139,6 +139,7 @@
 			var searchRequiredKeyword = [];
 			var searchRequiredCategory = [];
 			var searchRequirement = [];
+			let drawTagConsumeCallback;
 		    
 		    function defineHost(protocol){
 	    		var host = "";
@@ -531,7 +532,11 @@
 				var viewMore = null;
 
 				function hideLayer(event) {
-					if (!event || !event.target) {
+					document.querySelectorAll('.view_more.on').forEach(el => {
+						el.classList.remove('on');
+						el.querySelector('.layer_select').style.display = 'none';
+					});
+					/*if (!event || !event.target) {
 						layerSelect.style.display = 'none';
 						viewMore.classList.remove('on');
 						return;
@@ -540,30 +545,35 @@
 					if (layerSelect && !event.target.closest('.layer_select')) {
 						layerSelect.style.display = 'none'; 
 						viewMore.classList.remove('on');
-					}
+					}*/
 				}
 
-				function showLayer(layer, targetElement) {
-					if (viewMore.classList.contains('on')) {
+				function showLayer(layer, button) {
+					if (button.classList.contains('on')) {
 						hideLayer();
-						viewMore.classList.remove('on');
+						button.classList.remove('on');
 						return;
 					}
 
-					var rect = targetElement.getBoundingClientRect();
+					hideLayer();
+					if (button.dataset.beforeShow) {
+						window[button.dataset.beforeShow]();
+					}
+
+					var rect = button.getBoundingClientRect();
 					
 					layer.style.position = 'fixed';
 					layer.style.display = 'block';
 					layer.style.top = rect.bottom + "px";
 					layer.style.left = rect.left + "px";
-					viewMore.classList.add('on'); 
+					button.classList.add('on');
 
 				}
 
 				function setUpLayerToggle() {
-					viewMore = document.querySelector('.view_more');
+					/*viewMore = document.querySelector('.view_more');
 					layerSelect = document.querySelector('.layer_select');
-					if (!viewMore || !layerSelect) return;
+					if (!viewMore || !layerSelect) return;*/
 
 					window.parent.parent.parent.frames['topFrame'].contentWindow.document.addEventListener('click', hideLayer);
 					
@@ -579,13 +589,51 @@
 						}
 					});
 
-					viewMore.addEventListener('click', (event) => {
-						event.stopPropagation(); 
-						showLayer(layerSelect, viewMore); 
+					document.querySelectorAll(".view_more").forEach(viewMore => {
+						const layerSelect = viewMore.querySelector('.layer_select');
+
+						if (!layerSelect) {
+							return;
+						}
+
+						// keep_alive 클래스가 있으면 클릭해도 사라지지 않도록 함
+						if (layerSelect.classList.contains('keep_alive')) {
+							layerSelect.addEventListener('click', (event) => {
+								event.stopPropagation();
+							});
+						}
+
+						viewMore.addEventListener('click', (event) => {
+							event.stopPropagation();
+							showLayer(event.currentTarget.querySelector('.layer_select'), event.currentTarget);
+						});
 					});
 				}
 
 				setUpLayerToggle();
+
+				if (useMailTag) {
+					const labelInput = document.getElementById('label-input');
+					// 입력 시 특수문자 입력 못하도록 함
+					inputUtil.makeNotAllowTyping(labelInput, /[!@#$%^&()\\\/:*?"<>|'`]/g);
+					// 띄어쓰기 입력 시 언더바로 치환
+					inputUtil.makeReplaceTyping(labelInput, /\s/g, '_');
+					inputUtil.addOnEnterEvent(labelInput, addLabel);
+					reloadTagsForLabelLayer();
+					window.addEventListener('message', event => {
+						if (event.data.ajaxUrl === 'getUserTagList') {
+							drawTagsToLabelLayer(event.data.tags);
+
+							if (event.data.reloadPrev) {
+								prevShow();
+							}
+
+							if (event.data.reloadList) {
+								MailListRefresh();
+							}
+						}
+					});
+				}
 			}
 		    
 		    $(document).ready(function() {
@@ -1795,8 +1843,207 @@
 	    			data : {"userKey" : userKey}
 		    	});
 		    }
-			
-		</script>	
+
+			/** @param {Function} successCallback */
+			function reloadTagsForLabelLayer() {
+				$.ajax({
+					cache: false,
+					method: 'get',
+					data: { shareId: shareId },
+					url: '/ezEmail/getUserTagList.do',
+					success: function(result) {
+						if (result.status === 'error') {
+							alert(strLang321);
+							return;
+						}
+
+						drawTagsToLabelLayer(result.data);
+					},
+					error: function() { alert(strLang321); }
+				});
+			}
+
+			function drawTagsToLabelLayer(tags) {
+				/** @type HTMLTableElement */
+				const labelTable = document.getElementById('label-table');
+				labelTable.innerHTML = '';
+
+				const checkedTagIdxArray = Array.from(labelTable.querySelectorAll(":checked")).map(input => input.value);
+				const indeterminateTagIdxArray = Array.from(labelTable.querySelectorAll(":indeterminate")).map(input => input.value);
+
+				tags.forEach(function(tag) {
+					const row = document.createElement('li');
+					const checkbox = document.createElement('input');
+					checkbox.type = 'checkbox';
+					checkbox.id = 'label-check-' + tag.idx;
+					checkbox.value = tag.idx;
+					checkbox.dataset.name = tag.name;
+
+					if (checkedTagIdxArray.includes(tag.idx)) {
+						checkbox.checked = true;
+					} else if (indeterminateTagIdxArray.includes(tag.idx)) {
+						checkbox.checked = false;
+						checkbox.indeterminate = true;
+					}
+
+					row.appendChild(checkbox);
+					row.appendChild(document.createTextNode(' '));
+					/** @type HTMLLabelElement */
+					const title = document.createElement('label');
+					title.textContent = tag.name;
+					title.title = tag.name;
+					title.htmlFor = 'label-check-' + tag.idx;
+					row.appendChild(title);
+					labelTable.appendChild(row);
+				});
+
+				if (drawTagConsumeCallback) {
+					drawTagConsumeCallback();
+					drawTagConsumeCallback = null;
+				}
+			}
+
+			function showLabelLayer() {
+				if (listContentArry.length === 0 && listSubContentArry.length === 0 && currentFixingId == null) {
+					document.querySelectorAll("#label-table input[type='checkbox']").forEach(/** @type HTMLInputElement */checkbox => {
+						checkbox.checked = false;
+						checkbox.indeterminate = false;
+					});
+					return;
+				}
+
+				const rows = [];
+				if (listContentArry.length > 0) {
+					for (var i = 0; i < listContentArry.length; i++) {
+						rows.push(document.getElementById(listContentArry[i]));
+					}
+				} else if (listSubContentArry.length > 0) {
+					for (var i = 0; i < listSubContentArry.length; i++) {
+						rows.push(document.getElementById(listSubContentArry[i]));
+					}
+				} else {
+					rows.push(currentFixingId);
+				}
+
+				const tagCount = {};
+
+				for (const row of rows) {
+					if (row.dataset.tags) {
+						row.dataset.tags.split('|').forEach(tag => {
+							if (tagCount[tag]) {
+								tagCount[tag]++;
+							} else {
+								tagCount[tag] = 1;
+							}
+						});
+					}
+				}
+
+				document.querySelectorAll("#label-table input[type='checkbox']").forEach(/** @type HTMLInputElement */checkbox => {
+					const count = tagCount[checkbox.dataset.name];
+
+					if (count === rows.length) {
+						checkbox.checked = true;
+						checkbox.indeterminate = false;
+					} else if (count === undefined) {
+						checkbox.checked = false;
+						checkbox.indeterminate = false;
+					} else {
+						checkbox.checked = false;
+						checkbox.indeterminate = true;
+					}
+				});
+			}
+
+			function addLabel() {
+				const labelInput = document.getElementById('label-input');
+
+				if (!labelInput.value.trim()) {
+					return;
+				}
+
+				$.ajax({
+					cache: false,
+					method: 'post',
+					url: '/ezEmail/createTag.do',
+					data: { tagName: labelInput.value.trim(), shareId },
+					success: function(result) {
+						if (result.status === 'error') {
+							showError();
+							return;
+						}
+
+						if (window.leftMenu) {
+							leftMenu.reloadTags();
+						}
+
+						drawTagConsumeCallback = () => {
+							labelInput.value = "";
+
+							const addedTag = document.querySelector(`#label-table [value='\${result.data}']`).parentElement;
+							addedTag.addEventListener('blur', e => {
+								e.currentTarget.removeAttribute('tabindex');
+							});
+							addedTag.tabIndex = 0;
+							addedTag.contentEditable = true;
+							addedTag.focus();
+							addedTag.contentEditable = false;
+						};
+					},
+					error: function() {
+						showError();
+					}
+				});
+			}
+
+			function saveChangesTags() {
+				if (listContentArry.length === 0 && listSubContentArry.length === 0 && currentFixingId == null) {
+					alert(strLang42);
+					document.body.click();
+					return;
+				}
+
+				const mailPathList = [];
+				const enableTagList = Array.from(document.querySelectorAll("#label-table input:checked:not(:indeterminate)")).map(input => input.value);
+				const disableTagList = Array.from(document.querySelectorAll("#label-table input:not(:checked):not(:indeterminate)")).map(input => input.value);
+
+				if (listContentArry.length > 0) {
+					for (var i = 0; i < listContentArry.length; i++) {
+						mailPathList.push(document.getElementById(listContentArry[i]).getAttribute("_href"));
+					}
+				} else if (listSubContentArry.length > 0) {
+					for (var i = 0; i < listSubContentArry.length; i++) {
+						mailPathList.push(document.getElementById(listSubContentArry[i]).getAttribute("_href"));
+					}
+				} else {
+					mailPathList.push(currentFixingId.getAttribute("_href"));
+				}
+
+				$.ajax({
+					cache: false,
+					method: 'post',
+					url: "/ezEmail/saveChangesTags.do",
+					data: JSON.stringify({ shareId, mailPathList, enableTagList, disableTagList }),
+					dataType: 'json',
+					contentType: 'application/json',
+					success: function(result) {
+						if (result.status === "error") {
+							showError();
+							return;
+						}
+
+						prevShow();
+						MailListRefresh();
+					},
+					error: function() {
+						showError();
+					},
+					complete: function() {
+						document.body.click();
+					}
+				});
+			}
+		</script>
 		<style>
 			<c:if test="${useMailTag}">
 			.tagli > span:first-child { width: 55px; display: inline-block; }
@@ -1995,6 +2242,22 @@
 	          <c:if test="${useHackingMailReport == 'YES'}">
 			  <li id="hackingMail" title="<spring:message code="ezEmail.zno002" />"><span class="icon16 icon16_spam" onClick="moveHackingMail()"></span></li>		
 			  </c:if>
+				<c:if test="${useMailTag}">
+				<li class="view_more" data-before-show="showLabelLayer" style="position: relative;">
+					<span><spring:message code="ezEmail.tag" /></span>
+					<div id="label-layer" class="layer_select keep_alive tagArea" style="display: none; position: fixed; top: 85px;">
+						<p class="tagAdd">
+							<input id="label-input" type="text" maxlength="100" placeholder="<spring:message code="ezEmail.tag.user.input.placeholder" />" />
+							<a class="imgbtn imgbck" onclick="addLabel()"><span><spring:message code="ezEmail.tag.user.addbtn" /></span></a>
+						</p>
+						<ul id="label-table" class="tagUL">
+						</ul>
+						<p class="tag_btnSave">
+							<a class="imgbtn imgbck" onclick="saveChangesTags()"><span><spring:message code="main.sp09" /></span></a>
+						</p>
+					</div>
+				</li>
+				</c:if>
 			  <li class="view_more">
 				  <span class="view_icon"><img src="/images/ImgIcon/view_more.png"></span>
 				  <ul class="layer_select">

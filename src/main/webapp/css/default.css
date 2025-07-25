@@ -4325,3 +4325,18 @@ cursor:pointer; background-size:55%; text-indent:-9999px; overflow:hidden;}
 
 body.drag{user-select:none !important;}
 body.drag *{user-select:none !important;}
+
+/* 2025-06-17 문희수 - 메일태그 리스트 CSS 추가 */
+.tagArea{width: 215px !important;}
+.tagUL{height: auto !important; max-height: 250px; overflow-y: auto !important; margin-top: 10px !important;}
+.tagUL label{cursor: pointer; vertical-align: top; display: inline-block; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; width: 165px; padding-top: 3px;}
+.tagUL li{height: 33px !important; line-height: 27px !important;}
+#mainmenu li.view_more .layer_select{padding: 7px 0;}
+#mainmenu li.view_more.on{color: #0470E4;}
+.tagUL input{height: auto !important; cursor: pointer; vertical-align: middle; margin-top: 5px;}
+.tagAdd{margin: 0 10px;}
+.tagArea{padding-top: 13px !important;}
+.tagArea .imgbtn{padding-left: 0;}
+.tagArea .imgbtn span{line-height: 23px !important;}
+.tagAdd input[type="text"]{width: 143px}
+.tag_btnSave{text-align: center; margin: 0 0 3px 0; border-top: 1px solid #f1f1f1; padding-top: 10px;}
