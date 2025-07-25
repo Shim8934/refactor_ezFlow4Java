@@ -321,7 +321,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
     		ezCommonService.addViewTaskOldFlag(); // 2021-08-31 홍승비 - 전자결재 분류코드체계 뷰에 삭제여부(OLDFLAG) 칼럼 추가 (VTASKCLASS, SVTASKCLASS)
     		ezCommonService.insertReceiptHistoryListoption();	// 2022-02-16 정주환 - 수신이력 확인 listoption 추가
 			ezCommonService.insertOpinionGB(); // 2023-06-26 민지수 - 전자결재 > 완료문서 의견타입 추가의견 추가
-			ezCommonService.updateWebFolderAndApprovalCheckPermissionCode(); // 2023-10-05 전인하 - 권한 코드 변경으로 인하여 기존 데이터를 새 코드로 변경
+//			ezCommonService.updateWebFolderAndApprovalCheckPermissionCode(); // 2023-10-05 전인하 - 권한 코드 변경으로 인하여 기존 데이터를 새 코드로 변경
 			ezCommonService.insertPortalMenuChinese(); // 2023-11-22 조소정 - 포탈 > 기본 탑메뉴 중국어 버전 추가
 			ezCommonService.insertPortletNameChinese(); // 2023-11-22 조소정 - 포탈 > 기본 포틀릿명 중국어 버전 추가
 			ezCommonService.insertLoadTimeForApprAllConfig(); // 2024-01-11 김우철 - 다안기안 문서 표출 시 글꼴, 스크롤 오류를 해결하기 위한 setTimeout 시간
