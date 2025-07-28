@@ -484,25 +484,27 @@
 	          				</td>
 	       					<th style="width:40px;"><spring:message code="ezCircular.t118"/></th>
 	       					<td style="width:200px;">
-								<c:choose>
-		                			<c:when test="${result.option eq '1'}">
-		                				<div class="custom_checkbox"><input type="checkbox" id="option1" name="chkList" checked></div><label for="option1"><spring:message code='ezCircular.t119'/></label>
-		                				<div class="custom_checkbox"><input type="checkbox" id="option2" name="chkList"></div><label for="option2"><spring:message code="ezCircular.t120"/></label>
-		                			</c:when>
-		                			<c:when test="${result.option eq '2'}">
-		                				<div class="custom_checkbox"><input type="checkbox" id="option1" name="chkList"/></div><label for="option1"><spring:message code="ezCircular.t119"/></label>
-		                				<div class="custom_checkbox"><input type="checkbox" id="option2" name="chkList" checked/></div><label for="option2"><spring:message code="ezCircular.t120"/></label>
-		                			</c:when>
-		                			<c:when test="${result.option eq '3'}">
-		                				<div class="custom_checkbox"><input type="checkbox" id="option1" name="chkList" checked/></div><label for="option1"><spring:message code="ezCircular.t119"/></label>
-										<div class="custom_checkbox"><input type="checkbox" id="option2" name="chkList" checked/></div><label for="option2"><spring:message code="ezCircular.t120"/></label>
-		                			</c:when>
-		                			<c:otherwise>
-		                				<div class="custom_checkbox"><input type="checkbox" id="option1" name="chkList"/></div><label for="option1"><spring:message code="ezCircular.t119"/></label>
-										<div class="custom_checkbox"><input type="checkbox" id="option2" name="chkList"/></div><label for="option2"><spring:message code="ezCircular.t120"/></label>
-		                			</c:otherwise>
-		                		</c:choose>					
-	         				</td>
+								<div class="custom_checkbox">
+									<c:choose>
+										<c:when test="${result.option eq '1'}">
+											<input type="checkbox" id="option1" name="chkList" checked><label for="option1"><spring:message code='ezCircular.t119'/></label>
+											<input type="checkbox" id="option2" name="chkList"><label for="option2"><spring:message code="ezCircular.t120"/></label>
+										</c:when>
+										<c:when test="${result.option eq '2'}">
+											<input type="checkbox" id="option1" name="chkList"/><label for="option1"><spring:message code="ezCircular.t119"/></label>
+											<input type="checkbox" id="option2" name="chkList" checked/><label for="option2"><spring:message code="ezCircular.t120"/></label>
+										</c:when>
+										<c:when test="${result.option eq '3'}">
+											<input type="checkbox" id="option1" name="chkList" checked/><label for="option1"><spring:message code="ezCircular.t119"/></label>
+											<input type="checkbox" id="option2" name="chkList" checked/><label for="option2"><spring:message code="ezCircular.t120"/></label>
+										</c:when>
+										<c:otherwise>
+											<input type="checkbox" id="option1" name="chkList"/><label for="option1"><spring:message code="ezCircular.t119"/></label>
+											<input type="checkbox" id="option2" name="chkList"/><label for="option2"><spring:message code="ezCircular.t120"/></label>
+										</c:otherwise>
+									</c:choose>					
+								</div>
+							</td>
 	        			</tr>
 						<tr>
 	           				<th rowspan="2" style="border-bottom:0px"><spring:message code="ezCircular.t34"/></th>

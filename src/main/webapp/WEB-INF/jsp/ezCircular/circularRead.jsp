@@ -817,36 +817,38 @@
                                 <div id="attachedfileDIV" style="margin-top: 0px; overflow: auto; padding-top: 0px;height: 70px; border-top-width: 0px;" align="left">
                                     <c:forEach var="item" items="${attachList}" varStatus="status">
                                     	<div style="margin-top:3px;height:auto;">
-                                    		<c:set var="imagePath" value="/images/file.gif" />
-                                    		<div class="custom_checkbox">
-	                                    		<input type="checkbox" filename="${item.fileEncodeName}" filepath="${item.filePath}">
+											<div class="custom_checkbox">
+												<c:set var="imagePath" value="/images/file.gif" />
+													<input id="fileSelect${status.index}" type="checkbox" filename="${item.fileEncodeName}" filepath="${item.filePath}">
+												<label for="fileSelect${status.index}">
+													<c:if test="${item.fileType == 'jpg' || item.fileType == 'jpeg' || item.fileType == 'bmp' || item.fileType == 'gif' || item.fileType == 'png' || item.fileType == 'tif' || item.fileType == 'tiff'}">
+														<c:set var="imagePath" value="/images/image.png" />
+													</c:if>
+													<c:if test="${item.fileType == 'doc' || item.fileType == 'docx'}">
+														<c:set var="imagePath" value="/images/doc.png" />
+													</c:if>
+													<c:if test="${item.fileType == 'xls' || item.fileType == 'xlsx'}">
+														<c:set var="imagePath" value="/images/xls.png" />
+													</c:if>
+													<c:if test="${item.fileType == 'ppt' || item.fileType == 'pptx' || item.fileType == 'pps' || item.fileType == 'ppsx'}">
+														<c:set var="imagePath" value="/images/ppt.png" />
+													</c:if>
+													<c:if test="${item.fileType == 'txt'}">
+														<c:set var="imagePath" value="/images/txt.png" />
+													</c:if>
+													<c:if test="${item.fileType == 'zip'}">
+														<c:set var="imagePath" value="/images/zip.png" />
+													</c:if>
+													<c:if test="${item.fileType == 'pdf'}">
+														<c:set var="imagePath" value="/images/pdf.png" />
+													</c:if>
+													<c:if test="${item.fileType == 'ecm'}">
+														<c:set var="imagePath" value="/images/ecm.png" />
+													</c:if>	                    
+													<img src="${imagePath}" style="vertical-align: middle" />&nbsp;<a href="/ezCircular/downloadAttach.do?circularFileID=${item.circularFileID}" id="regData_${status.count}" style="vertical-align:text-bottom;"><c:out value='${item.fileName}'/> (<c:out value='${item.fileTranSize}'/>)</a>
+												</label>
                                     		</div>
-                                    		<c:if test="${item.fileType == 'jpg' || item.fileType == 'jpeg' || item.fileType == 'bmp' || item.fileType == 'gif' || item.fileType == 'png' || item.fileType == 'tif' || item.fileType == 'tiff'}">
-                                    			<c:set var="imagePath" value="/images/image.png" />
-                                    		</c:if>
-                                    		<c:if test="${item.fileType == 'doc' || item.fileType == 'docx'}">
-                                    			<c:set var="imagePath" value="/images/doc.png" />
-                                    		</c:if>
-                                    		<c:if test="${item.fileType == 'xls' || item.fileType == 'xlsx'}">
-                                    			<c:set var="imagePath" value="/images/xls.png" />
-                                    		</c:if>
-                                    		<c:if test="${item.fileType == 'ppt' || item.fileType == 'pptx' || item.fileType == 'pps' || item.fileType == 'ppsx'}">
-                                    			<c:set var="imagePath" value="/images/ppt.png" />
-                                    		</c:if>
-                                    		<c:if test="${item.fileType == 'txt'}">
-                                    			<c:set var="imagePath" value="/images/txt.png" />
-                                    		</c:if>
-                                    		<c:if test="${item.fileType == 'zip'}">
-                                    			<c:set var="imagePath" value="/images/zip.png" />
-                                    		</c:if>
-                                    		<c:if test="${item.fileType == 'pdf'}">
-                                    			<c:set var="imagePath" value="/images/pdf.png" />
-                                    		</c:if>
-                                    		<c:if test="${item.fileType == 'ecm'}">
-                                    			<c:set var="imagePath" value="/images/ecm.png" />
-                                    		</c:if>	                                    		
-                                    		<img src="${imagePath}" />&nbsp;<a href="/ezCircular/downloadAttach.do?circularFileID=${item.circularFileID}" id="regData_${status.count}" style="vertical-align:text-bottom;"><c:out value='${item.fileName}'/> (<c:out value='${item.fileTranSize}'/>)</a>
-                                    	</div>
+										</div>
                                     </c:forEach>
                                 </div>
                             </td>
