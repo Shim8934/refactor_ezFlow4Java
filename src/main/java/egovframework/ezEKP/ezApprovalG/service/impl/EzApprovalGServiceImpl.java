@@ -28986,20 +28986,22 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 //					System.out.println(tableStyle.substring(tableStyle.indexOf("border-collapse"), tableStyle.indexOf(";", tableStyle.indexOf("border-collapse")) + 1));
 //					tableStyle = tableStyle.replace(tableStyle.substring(tableStyle.indexOf("border-collapse"), tableStyle.indexOf(";", tableStyle.indexOf("border-collapse")) + 1), "");
 //				}
-				
+                
+				tableStyle = " " + tableStyle;
+                
 				if (!tableElement.hasAttr("width")) {
-					if (tableStyle.contains("width")) {
-						tableElement.attr("width_kaoni", tableStyle.substring(tableStyle.indexOf("width"), tableStyle.indexOf(";", tableStyle.indexOf("width"))).split(":")[1] );
-						tableStyle = tableStyle.replace(tableStyle.substring(tableStyle.indexOf("width"), tableStyle.indexOf(";", tableStyle.indexOf("width"))), "");
+					if (tableStyle.contains(" width")) {
+						tableElement.attr("width_kaoni", tableStyle.substring(tableStyle.indexOf(" width"), tableStyle.indexOf(";", tableStyle.indexOf(" width"))).split(":")[1] );
+						tableStyle = tableStyle.replace(tableStyle.substring(tableStyle.indexOf(" width"), tableStyle.indexOf(";", tableStyle.indexOf(" width"))), "");
 						tableElement.attr("style", tableStyle);
 					} 
 				} else {
-					if (tableStyle.indexOf("width") > -1) {
-						tableElement.attr("width_kaoni", tableStyle.substring(tableStyle.indexOf("width"), tableStyle.indexOf(";", tableStyle.indexOf("width"))).split(":")[1] );
-						tableStyle = tableStyle.replace(tableStyle.substring(tableStyle.indexOf("width"), tableStyle.indexOf(";", tableStyle.indexOf("width"))), "");
+					if (tableStyle.indexOf(" width") > -1) {
+						tableElement.attr("width_kaoni", tableStyle.substring(tableStyle.indexOf(" width"), tableStyle.indexOf(";", tableStyle.indexOf(" width"))).split(":")[1] );
+						tableStyle = tableStyle.replace(tableStyle.substring(tableStyle.indexOf(" width"), tableStyle.indexOf(";", tableStyle.indexOf(" width"))), "");
 						tableElement.attr("style", tableStyle);
 					} else {
-						tableElement.attr("width_kaoni", tableStyle.substring(tableStyle.indexOf("width"), tableStyle.indexOf(";", tableStyle.indexOf("width"))).split(":")[1]);
+						tableElement.attr("width_kaoni", tableStyle.substring(tableStyle.indexOf(" width"), tableStyle.indexOf(";", tableStyle.indexOf(" width"))).split(":")[1]);
 					}
 					tableElement.removeAttr("width");
 				}
