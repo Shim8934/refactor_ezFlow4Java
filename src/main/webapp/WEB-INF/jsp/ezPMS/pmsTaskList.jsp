@@ -9,7 +9,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title><spring:message code='ezPMS.t155' /></title>
-<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+<%--<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />--%>
 		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 <link rel="stylesheet" href="${util.addVer('/css/ezPMS/default/style.css')}" type="text/css" />
 <link rel="stylesheet" href="${util.addVer('/css/previewmail.css')}" type="text/css" />

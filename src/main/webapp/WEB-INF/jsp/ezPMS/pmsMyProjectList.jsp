@@ -8,7 +8,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><script type="text/javascript" src="/js/mouseeffect.js"></script>
-<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+<%--<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />--%>
 		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 <link rel="stylesheet" href="${util.addVer('/css/previewmail.css')}" type="text/css" />
 <link rel="stylesheet" href="${util.addVer('/css/jquery.lineProgressbar.css')}" type="text/css" />
