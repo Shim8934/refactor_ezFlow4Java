@@ -1267,7 +1267,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		
 		String boardID = request.getParameter("boardID");
 		String parentBoardID = request.getParameter("parentBoardID");
-		String adminType = request.getParameter("adminType");
+//		String adminType = request.getParameter("adminType");
 		String pBoardName = request.getParameter("boardName");
 		String pType = request.getParameter("boardType");
 		String pParentNeed = request.getParameter("parentNeed");
@@ -1375,7 +1375,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		model.addAttribute("pBoardName", pBoardName);
 		model.addAttribute("pType", pType);
 		model.addAttribute("pParentNeed", pParentNeed);
-		model.addAttribute("adminType", adminType);
+//		model.addAttribute("adminType", adminType);
 		model.addAttribute("pAccessLevel", pAccessLevel);
 		model.addAttribute("boardName", boardName);
 		model.addAttribute("strList", result);
@@ -1736,6 +1736,8 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		model.addAttribute("tabID", tabID);		
 		model.addAttribute("use_Editor", ezCommonService.getTenantConfig("MODULEEDITOR", userInfo.getTenantId()));
 		model.addAttribute("useFormFlag", useFormFlag);
+		model.addAttribute("userPageYN", request.getParameter("userPageYN") != null ? request.getParameter("userPageYN") : "N");
+		model.addAttribute("parentNeed", request.getParameter("parentNeed") != null ? request.getParameter("parentNeed") : "Y");				
 
 		logger.debug("boardConfig ended");
 		return "admin/ezBoard/boardConfig";

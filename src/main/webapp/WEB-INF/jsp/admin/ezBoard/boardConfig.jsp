@@ -19,6 +19,8 @@
 	        var TabId = "<c:out value='${tabID}'/>";
 			let useFormFlag = "${ useFormFlag }";
 			var itemCnt = -1;
+			var userPageYN = "<c:out value='${userPageYN}'/>"; /* 사용자 페이지 > 게시판 관리 접근 */
+			var pParentNeed = "<c:out value='${parentNeed}'/>";
 
 	        document.onselectstart = function () { return false; };
 	        window.onresize = window_resize;
@@ -32,7 +34,7 @@
 	                document.body.style.UserSelect = 'none';
 	            }
 	            
-				if (pBoardGuBun == 10){ // 카테고리 게시판인 경우 게시물 리스트 숨김처리 및 일반설정탭으로 로드되도록 조건 설정
+				if (pBoardGuBun == 10 || userPageYN == "Y") { // 카테고리 게시판인 경우 게시물 리스트 숨김처리 및 일반설정탭으로 로드되도록 조건 설정
 					document.getElementById("BoardEnv_sub1").style.display = "none";
 					TabId = "1tab2";
 				} else {
@@ -89,6 +91,9 @@
 	                        }
 	                    }*/
 	                    break;
+					case "BoardEnv_div6":
+						goBoardList();
+						break;
 	            }
 	        }
 	        var Tab1_SelectID = "";
@@ -131,8 +136,38 @@
 
 			function setMenuBtnDisplay() {
 				let configFormBtn = document.getElementById("1tab5");	// 양식 설정 탭
-
 				configFormBtn.style.display = useFormFlag === "Y" ? "" : "none";
+
+				/* 즐겨찾기에서 게시판 관리 접근 */
+				if (userPageYN == "Y" && pParentNeed == "N") {
+					var titleH1 = document.querySelector('.mainbody h1');
+					if (titleH1) {
+						titleH1.style.display = 'none';
+						document.querySelector('.portlet_tabnew01').style.margin = '0';
+					}
+				}
+			}
+
+			function goBoardList() {
+				var uri = "/ezBoard/boardItemList.do";
+
+				if (pBoardGuBun == "3") {
+					uri = "/ezBoard/boardItemListPhoto.do";
+				} else if (pBoardGuBun == "4") {
+					uri = "/ezBoard/boardItemListThumbnail.do";
+				} else if (pBoardGuBun == "7") {
+					uri = "/ezBoard/boardItemListMovie.do";
+				} else if (pBoardGuBun == "9") {
+					uri = "/ezBoard/fileViewerBoard.do";
+				}
+				
+				uri += "?boardID=" + encodeURIComponent(pBoardID) + "&boardName=" + encodeURIComponent(pBoardName) + "&boardType=" + pBoardGuBun;
+				
+				if (pParentNeed == "N") {
+					uri += "&adminType=y";
+				}
+				
+				location.href = uri;
 			}
 	    </script>
 	</head>
@@ -146,6 +181,9 @@
 		            <p id="BoardEnv_sub3"><span divname="BoardEnv_div3" id="1tab3"><spring:message code="ezBoard.t63" /></span></p>
 		            <p id="BoardEnv_sub4" style="display:none;"><span divname="BoardEnv_div4" id="1tab4"><spring:message code="ezBoard.t0003" /></span></p>
 		            <p id="BoardEnv_sub5"><span divname="BoardEnv_div5" id="1tab5"><spring:message code="ezBoard.t999026" /></span></p>
+					<c:if test="${userPageYN == 'Y'}">
+						<p id="BoardEnv_sub6"><span divname="BoardEnv_div6" id="1tab6"><spring:message code="ezBoard.boardManage02" /></span></p>
+					</c:if>
 		        </div>
 		    </div>
 		</div> 
