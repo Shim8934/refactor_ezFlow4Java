@@ -209,14 +209,13 @@
 						<th><spring:message code='ezJournal.t105' /></th>
 						<td>
 							<div id="lstAttachLink" style="OVERFLOW: auto; HEIGHT: 50px; background-color: white; text-align: left">
-								<c:forEach items="${journal.fileList }" var="file">
+								<c:forEach items="${journal.fileList }" var="file" varStatus="status">
 									<div style="margin-top: 3px; height: auto !important;">
+										<div class="custom_checkbox">
 										<c:set var="imagePath" value="/images/file.gif" />
 										<%-- <input type="checkbox" name="fileSelect" value="${file.fileName }"> --%>
 										<!-- 		            			<img src="/images/image.png">  -->
-										<div class="custom_checkbox">
-											<input type="checkbox" filename="${file.fileEncodeName}" filepath="${file.filePath}">
-										</div>
+											<input id="fileSelect${status.index}" type="checkbox" filename="${file.fileEncodeName}" filepath="${file.filePath}">
 										<c:if test="${file.fileType == 'jpg' || file.fileType == 'jpeg' || file.fileType == 'bmp' || file.fileType == 'gif' || file.fileType == 'png' || file.fileType == 'tif' || file.fileType == 'tiff'}">
 											<c:set var="imagePath" value="/images/image.png" />
 										</c:if>
@@ -241,7 +240,7 @@
 										<c:if test="${file.fileType == 'ecm'}">
 											<c:set var="imagePath" value="/images/ecm.png" />
 										</c:if>
-										<img src="${imagePath}" />&nbsp; <a href="/ezJournal/journalAttachDown.do?filePath=${file.filePath }&fileName=${file.fileEncodeName}&journalId=${journal.journalId}"><c:out value='${file.fileName }'/>&nbsp;(${file.fileTransSize })</a><br>
+										<label for="fileSelect${status.index}"><img src="${imagePath}" style="vertical-align: middle"/>&nbsp; <a href="/ezJournal/journalAttachDown.do?filePath=${file.filePath }&fileName=${file.fileEncodeName}&journalId=${journal.journalId}"><c:out value='${file.fileName }'/>&nbsp;(${file.fileTransSize })</a></label></div><br>
 									</div>
 								</c:forEach>
 							</div>
