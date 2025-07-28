@@ -1294,55 +1294,63 @@
 				<tr>    <!------------Question setting---------------->
 					<td class="qstSettingTd">
 						<div class="qstSetting">
-							<span class="qstSettingSpan"><spring:message code="ezPoll.hdp10"/></span>
-							<div class='custom_checkbox'><input id="multipleCheck" type="checkbox"></div> <span><spring:message code="ezPoll.t154"/></span>
-							<div id="numberOfMultiSelect" style="display: none; margin-left: 5px;">
-								<%-- <span style="margin-right: 3px;"><spring:message code="ezPoll.t155"/></span> --%>
-								<select id="myList">
-									<option value="1"><spring:message code = 'ezEmail.lhm67'/></option>
-									<option value="2">2</option>
-									<option value="3">3</option>
-									<option value="4">4</option>
-									<option value="5">5</option>
-								</select>
+							<div class='custom_checkbox'>
+								<span class="qstSettingSpan"><spring:message code="ezPoll.hdp10"/></span>
+								<input id="multipleCheck" type="checkbox"><label for="multipleCheck"><span><spring:message code="ezPoll.t154"/></span></label>
+								<div id="numberOfMultiSelect" style="display: none; margin-left: 5px;">
+									<%-- <span style="margin-right: 3px;"><spring:message code="ezPoll.t155"/></span> --%>
+									<select id="myList">
+										<option value="1"><spring:message code = 'ezEmail.lhm67'/></option>
+										<option value="2">2</option>
+										<option value="3">3</option>
+										<option value="4">4</option>
+										<option value="5">5</option>
+									</select>
+								</div>
 							</div>
 						</div>
 	
 						<div class="qstSetting seeResult">
-							<span class="qstSettingSpan"><spring:message code="ezPoll.hdp11"/></span>
-							<div class='custom_radio'><input id="seeResultFirst" name="seeResult" type="radio" value="1"></div>
-							<span><spring:message code="ezPoll.hdp13"/></span>
-							<div class='custom_radio'><input id="seeResultLast" name="seeResult" type="radio" value="0"></div>
-							<span><spring:message code="ezPoll.hdp14"/></span>
-							<div class='custom_radio'><input id="seeResultCreator" name="seeResult" type="radio" value="2"></div>
-							<span><spring:message code="ezPoll.hdp15"/></span>
+							<div class='custom_radio'>
+								<span class="qstSettingSpan"><spring:message code="ezPoll.hdp11"/></span>
+								<input id="seeResultFirst" name="seeResult" type="radio" value="1">
+								<label for="seeResultFirst"><span><spring:message code="ezPoll.hdp13"/></span></label>
+								<input id="seeResultLast" name="seeResult" type="radio" value="0">
+								<label for="seeResultLast"><span><spring:message code="ezPoll.hdp14"/></span></label>
+								<input id="seeResultCreator" name="seeResult" type="radio" value="2">
+								<label for="seeResultCreator"><span><spring:message code="ezPoll.hdp15"/></span></label>
+							</div>
 						</div>
 						
 						<div class="qstSetting">
-							<span class="qstSettingSpan"><spring:message code="ezPoll.hdp12"/></span>
-							<div class='custom_checkbox'><input id="anonymousVote" type="checkbox"></div>
-							<span><spring:message code="ezPoll.t253"/></span>
-							
-							<div class='custom_checkbox'><input id="isSorting" type="checkbox"></div>
-							<span><spring:message code = 'ezPoll.t259'/></span>
-							
-							<div class='custom_checkbox'><input id="isSelOnlyOnce" type="checkbox"></div>
-							<span><spring:message code = 'ezPoll.t260'/></span>
-							
-							<div class='custom_checkbox'><input id="endDate" type="checkbox"></div>
-							<span><spring:message code="ezPoll.t159"/></span>
-							
-							<div id="_dateTimePicker" style="display: none;">										
-								<input type="text" id="Sdatepicker" style="width:80px;text-align:center;vertical-align:top;" readonly >
-								<select id="sTimePicker" style="height:24px;"></select>
-								<span>~</span>
-								<input type="text" id="Edatepicker" style="width:80px;text-align:center;vertical-align:top;" readonly >
-								<select id="eTimePicker" style="height:24px;"></select>						
+							<div class='custom_checkbox'>
+								<span class="qstSettingSpan"><spring:message code="ezPoll.hdp12"/></span>
+								<input id="anonymousVote" type="checkbox">
+								<label for="anonymousVote"><span><spring:message code="ezPoll.t253"/></span></label>
+								
+								<input id="isSorting" type="checkbox">
+								<label for="isSorting"><span><spring:message code = 'ezPoll.t259'/></span></label>
+								
+								<input id="isSelOnlyOnce" type="checkbox">
+								<label for="isSelOnlyOnce"><span><spring:message code = 'ezPoll.t260'/></span></label>
+								
+								<input id="endDate" type="checkbox">
+								<label for="endDate"><span><spring:message code="ezPoll.t159"/></span></label>
+								
+								<div id="_dateTimePicker" style="display: none;">										
+									<input type="text" id="Sdatepicker" style="width:80px;text-align:center;vertical-align:top;" readonly >
+									<select id="sTimePicker" style="height:24px;"></select>
+									<span>~</span>
+									<input type="text" id="Edatepicker" style="width:80px;text-align:center;vertical-align:top;" readonly >
+									<select id="eTimePicker" style="height:24px;"></select>						
+								</div>
 							</div>
 							
 							<div id="openToAllDiv" class="qstSettingInnerDivRight">
-								<div class='custom_checkbox'><input id="openToAll" type="checkbox" ></div>
-								<span><spring:message code="ezPoll.hdp09"/></span>
+								<div class='custom_checkbox'>
+									<input id="openToAll" type="checkbox" >
+									<label for="openToAll"><span><spring:message code="ezPoll.hdp09"/></span></label>
+								</div>
 							</div>
 							
 						</div>
@@ -1374,8 +1382,10 @@
 							<a class="pollImgbtn1" id="receiverBttn" style="display: none;background-color: #e8e8e8;height:21px"><span onclick="menu_SelectRange();"><spring:message code="ezPoll.t163"/></span></a>
 							<div style="display:none;" id="newTargetDiv"></div>																		
 							<div id="sendPostNotiMailDiv" class="qstSettingInnerDivRight">
-								<div class='custom_checkbox'><input id="sendPostMail" type="checkbox" style="margin-bottom: -2px;"></div>
-								<span style="vertical-align: middle;"><spring:message code="ezCommunity.t553"/></span>
+								<div class='custom_checkbox'>
+									<input id="sendPostMail" type="checkbox" style="margin-bottom: -2px;">
+									<label for="sendPostMail"><span style="vertical-align: middle;"><spring:message code="ezCommunity.t553"/></span></label>
+								</div>
 							</div>
 						</div>
 						<div style="display:none">
