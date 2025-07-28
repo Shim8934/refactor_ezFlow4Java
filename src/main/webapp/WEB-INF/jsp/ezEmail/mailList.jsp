@@ -2086,7 +2086,7 @@
 				</select>
 			  
 				<input name="keyword" id="keywordSearch" class="searchinputBox" style="ime-mode: active;height: 27px;border: 1px solid #cbcbcb; height: 27px !important;" onKeyPress="onkeydown_start_search(event);"
-					   onmousedown="keyword_Clear();" placeholder="";/>
+					   placeholder="";/>
 				<a class="searchBtn"><img src="/images/bsearch_new2.png" border="0" onclick="start_search2()"></a>
 				<a class="searchFilterBtn"><img src="/images/bsearch_new2_filter.png" border="0" onclick="addSearch()"></a>
 				<div class="layerPopup_new" id="moreSearch" style="display:none;z-index:6000;" >
