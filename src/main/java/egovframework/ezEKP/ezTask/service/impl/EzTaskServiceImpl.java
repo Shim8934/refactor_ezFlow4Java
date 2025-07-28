@@ -395,6 +395,7 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 		
 		StringBuilder sb = new StringBuilder();
 		for (TaskAttachVO vo : list) {
+			int i = 0;
 			String fileName = vo.getFileName();
 			String filePath = vo.getFilePath();
 			String fileSize = commonUtil.byteCalculation(vo.getFileSize());
@@ -423,10 +424,12 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 				fileImage = "/images/email/mail_006.gif";
 			}
 
-			sb.append("<div class='custom_checkbox'><input type='checkbox' name='fileSelect' value='" + fileName + "' filePath='" + folderPath + filePath + "' fileName='" + commonUtil.cleanValue(fileName) + "'></div>");
-			sb.append("<img src='" + fileImage + "' >");
+			sb.append("<div class='custom_checkbox'><input id='fileSelect" + i + "' type='checkbox' name='fileSelect' value='" + fileName + "' filePath='" + folderPath + filePath + "' fileName='" + commonUtil.cleanValue(fileName) + "'>");
+			sb.append("<label for='fileSelect" + i + "'>");
+			sb.append("<img src='" + fileImage + "' style='vertical-align: middle;' >");
 			sb.append("<a href='/ezTask/downloadAttach.do?filePath=" + URLEncoder.encode(folderPath + filePath, "UTF-8") + "&fileName=" + URLEncoder.encode(fileName, "UTF-8") + "' />");
-			sb.append(commonUtil.cleanValue(fileName) + "&nbsp;(" + fileSize + ")</a><br>");
+			sb.append(commonUtil.cleanValue(fileName) + "&nbsp;(" + fileSize + ")</a><label></div><br>");
+			i = i++;
 		}
 		
 		logger.debug("getAttachListStr ended. listSize = " + list.size());

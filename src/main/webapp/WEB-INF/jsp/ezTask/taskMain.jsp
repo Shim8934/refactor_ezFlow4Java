@@ -1080,20 +1080,26 @@
 
 				<!-- 완료 -->
 				<li id="right" class="sort_radio" style="float:right;font-weight:normal;color:black;padding-right: 7px;">
-					<div class="custom_radio"><input name="check" id="checkRadio1" type="radio" value="finish" onClick="selectTab(1)" style="width:13px;height:13px;vertical-align:middle "></div>
-					<label for="checkRadio1" style="vertical-align:middle"><spring:message code='ezTask.t9001' /></label>
+					<div class="custom_radio">
+						<input name="check" id="checkRadio1" type="radio" value="finish" onClick="selectTab(1)" style="width:13px;height:13px;vertical-align:middle ">
+						<label for="checkRadio1" style="vertical-align:middle"><spring:message code='ezTask.t9001' /></label>
+					</div>
 				</li>
 
 				<!-- 진행중 -->
 				<li id="right" class="sort_radio" style="float:right;font-weight:normal;color:black;margin-right:5px">
-					<div class="custom_radio"><input name="check" id="checkRadio2" type="radio" value="ongoing" checked onClick="selectTab(2)" style="width:13px;height:13px;vertical-align:middle "></div>
-					<label for="checkRadio2" style="vertical-align:middle"><spring:message code='ezTask.t98' /></label>
+					<div class="custom_radio">
+						<input name="check" id="checkRadio2" type="radio" value="ongoing" checked onClick="selectTab(2)" style="width:13px;height:13px;vertical-align:middle ">
+						<label for="checkRadio2" style="vertical-align:middle"><spring:message code='ezTask.t98' /></label>
+					</div>
 				</li>
 
 				<!-- 전체보기 -->
 				<li id="right" class="sort_radio" style="float:right;font-weight:normal;color:black;margin-right:5px">
-					<div class="custom_radio"><input name="check" id="checkRadio3" type="radio" value="all" onClick="selectTab(3)" style="width:13px;height:13px;vertical-align:middle "></div>
-					<label for="checkRadio3" style="vertical-align:middle"><spring:message code='ezTask.jsh07' /></label>
+					<div class="custom_radio">
+						<input name="check" id="checkRadio3" type="radio" value="all" onClick="selectTab(3)" style="width:13px;height:13px;vertical-align:middle ">
+						<label for="checkRadio3" style="vertical-align:middle"><spring:message code='ezTask.jsh07' /></label>
+					</div>
 				</li>
 
 			</ul>

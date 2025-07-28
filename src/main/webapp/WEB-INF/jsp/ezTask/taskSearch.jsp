@@ -576,7 +576,7 @@
 			<tr>
 				<th style="height:auto"><spring:message code='ezTask.t184' /></th>
 				<td>
-					<div class="custom_checkbox"><input type="checkbox" id="usedate" value="1" onclick="DateSearch_Click();"></div><label for="usedate"><spring:message code='ezTask.t185' /></label>
+					<div class="custom_checkbox"><input type="checkbox" id="usedate" value="1" onclick="DateSearch_Click();"><label for="usedate"><spring:message code='ezTask.t185' /></label></div>
 					<input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly"> ~
 					<input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly">
 	          		<span>&nbsp;<spring:message code='ezTask.t188'/></span> 
