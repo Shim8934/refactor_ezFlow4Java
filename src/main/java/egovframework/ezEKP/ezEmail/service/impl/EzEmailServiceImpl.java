@@ -232,7 +232,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 			mailGeneral.setMailSearchPeriod("sixMonth");
 			mailGeneral.setDefaultCursorPosition("recipient");
 			mailGeneral.setDefaultSeparateSend("N");
-			mailGeneral.setMailSearchPeriod("failure");
+			mailGeneral.setMailSendResult("failure");
 			mailGeneral.setEditorFontFamily(null);
 			mailGeneral.setEditorFontSize(null);
 			mailGeneral.setSelfCcOption("none");
