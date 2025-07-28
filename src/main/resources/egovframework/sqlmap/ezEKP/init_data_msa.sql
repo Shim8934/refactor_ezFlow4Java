@@ -3460,3 +3460,964 @@ Insert into EZCOMMON.TBL_RS_BRD (BRD_ID,BRD_COMPANY,BRD_NM,BRD_NM2,BRD_GROUP,BRD
 Insert into EZPORTAL.TBL_CAR (CAR_ID, CAR_NAME, CAR_NAME2, CAR_NM, CAR_GB, CAR_LEVEL, CAR_STEP, CAR_ACCESS, CAR_UPPER, OWNDEPTID, OWNDEPTNM, OWNDEPTNM2,OWNERID, OWNERNM, OWNERNM2, OWNERPOSITION, OWNERPOSITION2, OWNERCALL, CAR_REGISTER_DATE, DELFLAG, COMPANYID, TENANT_ID, CAR_URL, CAR_EXPLAIN)  values (1,'Top','조직도','OrganizationChart',1,0,1,null,0,null,null,null,null,null,null,null,null,null,null,0,'Top',@tenant_id_value,null,null);
 
 -- portal insert
+
+-- tenant_id 없는 쿼리 하단으로 추가
+--- ezPMS fixed holiday
+INSERT INTO EZPORTAL.TBL_PMS_FIXEDHOLIDAY(HOLIDAY_NAME, HOLIDAY_NAME2, HOLIDAY, SOLARLUNAR, COUNTRY) VALUES ('신정', 'New Year''s Day', '01-01', 1, 'kor');
+INSERT INTO EZPORTAL.TBL_PMS_FIXEDHOLIDAY(HOLIDAY_NAME, HOLIDAY_NAME2, HOLIDAY, SOLARLUNAR, COUNTRY) VALUES ('3·1절', 'Samiljeol', '03-01', 1, 'kor');
+INSERT INTO EZPORTAL.TBL_PMS_FIXEDHOLIDAY(HOLIDAY_NAME, HOLIDAY_NAME2, HOLIDAY, SOLARLUNAR, COUNTRY) VALUES ('어린이날', 'Children''s Day', '05-05', 1, 'kor');
+INSERT INTO EZPORTAL.TBL_PMS_FIXEDHOLIDAY(HOLIDAY_NAME, HOLIDAY_NAME2, HOLIDAY, SOLARLUNAR, COUNTRY) VALUES ('현충일', 'Memorial Day', '06-06', 1, 'kor');
+INSERT INTO EZPORTAL.TBL_PMS_FIXEDHOLIDAY(HOLIDAY_NAME, HOLIDAY_NAME2, HOLIDAY, SOLARLUNAR, COUNTRY) VALUES ('광복절', 'National Liberation Day', '08-15', 1, 'kor');
+INSERT INTO EZPORTAL.TBL_PMS_FIXEDHOLIDAY(HOLIDAY_NAME, HOLIDAY_NAME2, HOLIDAY, SOLARLUNAR, COUNTRY) VALUES ('개천절', 'Foundation Day', '10-03', 1, 'kor');
+INSERT INTO EZPORTAL.TBL_PMS_FIXEDHOLIDAY(HOLIDAY_NAME, HOLIDAY_NAME2, HOLIDAY, SOLARLUNAR, COUNTRY) VALUES ('한글날', 'Hangul Proclamation Day', '10-09', 1, 'kor');
+INSERT INTO EZPORTAL.TBL_PMS_FIXEDHOLIDAY(HOLIDAY_NAME, HOLIDAY_NAME2, HOLIDAY, SOLARLUNAR, COUNTRY) VALUES ('성탄절', 'Christmas', '12-25', 1, 'kor');
+INSERT INTO EZPORTAL.TBL_PMS_FIXEDHOLIDAY(HOLIDAY_NAME, HOLIDAY_NAME2, HOLIDAY, SOLARLUNAR, COUNTRY) VALUES ('설날', 'Lunar New Year', '01-01', 2, 'kor');
+INSERT INTO EZPORTAL.TBL_PMS_FIXEDHOLIDAY(HOLIDAY_NAME, HOLIDAY_NAME2, HOLIDAY, SOLARLUNAR, COUNTRY) VALUES ('설날', 'Lunar New Year', '01-02', 2, 'kor');
+INSERT INTO EZPORTAL.TBL_PMS_FIXEDHOLIDAY(HOLIDAY_NAME, HOLIDAY_NAME2, HOLIDAY, SOLARLUNAR, COUNTRY) VALUES ('석가탄신일', 'Buddha''s Birthday', '04-08', 2, 'kor');
+INSERT INTO EZPORTAL.TBL_PMS_FIXEDHOLIDAY(HOLIDAY_NAME, HOLIDAY_NAME2, HOLIDAY, SOLARLUNAR, COUNTRY) VALUES ('추석', 'Thanksgiving Day', '08-14', 2, 'kor');
+INSERT INTO EZPORTAL.TBL_PMS_FIXEDHOLIDAY(HOLIDAY_NAME, HOLIDAY_NAME2, HOLIDAY, SOLARLUNAR, COUNTRY) VALUES ('추석', 'Thanksgiving Day', '08-15', 2, 'kor');
+INSERT INTO EZPORTAL.TBL_PMS_FIXEDHOLIDAY(HOLIDAY_NAME, HOLIDAY_NAME2, HOLIDAY, SOLARLUNAR, COUNTRY) VALUES ('추석', 'Thanksgiving Day', '08-16', 2, 'kor');
+
+INSERT INTO EZPORTAL.TBL_PMS_FIXEDHOLIDAY(HOLIDAY_NAME, HOLIDAY_NAME2, HOLIDAY, SOLARLUNAR, COUNTRY) VALUES ('元旦', '元旦', '01-01', 1, 'jap');
+INSERT INTO EZPORTAL.TBL_PMS_FIXEDHOLIDAY(HOLIDAY_NAME, HOLIDAY_NAME2, HOLIDAY, SOLARLUNAR, COUNTRY) VALUES ('元旦', '元旦', '01-01', 2, 'jap');
+INSERT INTO EZPORTAL.TBL_PMS_FIXEDHOLIDAY(HOLIDAY_NAME, HOLIDAY_NAME2, HOLIDAY, SOLARLUNAR, COUNTRY) VALUES ('建国記念の日', '建国記念の日', '02-11', 1, 'jap');
+INSERT INTO EZPORTAL.TBL_PMS_FIXEDHOLIDAY(HOLIDAY_NAME, HOLIDAY_NAME2, HOLIDAY, SOLARLUNAR, COUNTRY) VALUES ('春分の日', '春分の日', '03-20', 1, 'jap');
+INSERT INTO EZPORTAL.TBL_PMS_FIXEDHOLIDAY(HOLIDAY_NAME, HOLIDAY_NAME2, HOLIDAY, SOLARLUNAR, COUNTRY) VALUES ('昭和の日', '昭和の日', '04-29', 1, 'jap');
+INSERT INTO EZPORTAL.TBL_PMS_FIXEDHOLIDAY(HOLIDAY_NAME, HOLIDAY_NAME2, HOLIDAY, SOLARLUNAR, COUNTRY) VALUES ('憲法記念日', '憲法記念日', '05-03', 1, 'jap');
+INSERT INTO EZPORTAL.TBL_PMS_FIXEDHOLIDAY(HOLIDAY_NAME, HOLIDAY_NAME2, HOLIDAY, SOLARLUNAR, COUNTRY) VALUES ('みどりの日', 'みどりの日', '05-04', 1, 'jap');
+INSERT INTO EZPORTAL.TBL_PMS_FIXEDHOLIDAY(HOLIDAY_NAME, HOLIDAY_NAME2, HOLIDAY, SOLARLUNAR, COUNTRY) VALUES ('こどもの日', 'こどもの日', '05-05', 1, 'jap');
+INSERT INTO EZPORTAL.TBL_PMS_FIXEDHOLIDAY(HOLIDAY_NAME, HOLIDAY_NAME2, HOLIDAY, SOLARLUNAR, COUNTRY) VALUES ('山の日', '山の日', '08-11', 1, 'jap');
+INSERT INTO EZPORTAL.TBL_PMS_FIXEDHOLIDAY(HOLIDAY_NAME, HOLIDAY_NAME2, HOLIDAY, SOLARLUNAR, COUNTRY) VALUES ('秋分の日', '秋分の日', '09-23', 1, 'jap');
+INSERT INTO EZPORTAL.TBL_PMS_FIXEDHOLIDAY(HOLIDAY_NAME, HOLIDAY_NAME2, HOLIDAY, SOLARLUNAR, COUNTRY) VALUES ('文化の日', '文化の日', '11-03', 1, 'jap');
+INSERT INTO EZPORTAL.TBL_PMS_FIXEDHOLIDAY(HOLIDAY_NAME, HOLIDAY_NAME2, HOLIDAY, SOLARLUNAR, COUNTRY) VALUES ('勤労感謝の日', '勤労感謝の日', '11-23', 1, 'jap');
+INSERT INTO EZPORTAL.TBL_PMS_FIXEDHOLIDAY(HOLIDAY_NAME, HOLIDAY_NAME2, HOLIDAY, SOLARLUNAR, COUNTRY) VALUES ('天皇誕生日', '天皇誕生日', '12-23', 1, 'jap');
+
+
+
+-- 날씨 도시 데이터
+INSERT INTO EZPORTAL.`tbl_weather` (`SN`,`CITYCODE`,`CITYNAME`,`DISPLAYCITYNAME`,`PRIMARYLANG`,`CURRENTWEATHER`,`TODAYWEATHER`) VALUES ('10','1832157','Reisui','여수','1',NULL,NULL);
+INSERT INTO EZPORTAL.`tbl_weather` (`SN`,`CITYCODE`,`CITYNAME`,`DISPLAYCITYNAME`,`PRIMARYLANG`,`CURRENTWEATHER`,`TODAYWEATHER`) VALUES ('7','1833747','Ulsan','울산','1',NULL,NULL);
+INSERT INTO EZPORTAL.`tbl_weather` (`SN`,`CITYCODE`,`CITYNAME`,`DISPLAYCITYNAME`,`PRIMARYLANG`,`CURRENTWEATHER`,`TODAYWEATHER`) VALUES ('2','1835235','Daejeon','대전','1',NULL,NULL);
+INSERT INTO EZPORTAL.`tbl_weather` (`SN`,`CITYCODE`,`CITYNAME`,`DISPLAYCITYNAME`,`PRIMARYLANG`,`CURRENTWEATHER`,`TODAYWEATHER`) VALUES ('3','1835329','Daegu','대구','1',NULL,NULL);
+INSERT INTO EZPORTAL.`tbl_weather` (`SN`,`CITYCODE`,`CITYNAME`,`DISPLAYCITYNAME`,`PRIMARYLANG`,`CURRENTWEATHER`,`TODAYWEATHER`) VALUES ('1','1835848','Seoul','서울','1',NULL,NULL);
+INSERT INTO EZPORTAL.`tbl_weather` (`SN`,`CITYCODE`,`CITYNAME`,`DISPLAYCITYNAME`,`PRIMARYLANG`,`CURRENTWEATHER`,`TODAYWEATHER`) VALUES ('4','1838524','Busan','부산','1',NULL,NULL);
+INSERT INTO EZPORTAL.`tbl_weather` (`SN`,`CITYCODE`,`CITYNAME`,`DISPLAYCITYNAME`,`PRIMARYLANG`,`CURRENTWEATHER`,`TODAYWEATHER`) VALUES ('9','1841811','Gwangju','광주','1',NULL,NULL);
+INSERT INTO EZPORTAL.`tbl_weather` (`SN`,`CITYCODE`,`CITYNAME`,`DISPLAYCITYNAME`,`PRIMARYLANG`,`CURRENTWEATHER`,`TODAYWEATHER`) VALUES ('5','1843137','Kang-neung','강릉','1',NULL,NULL);
+INSERT INTO EZPORTAL.`tbl_weather` (`SN`,`CITYCODE`,`CITYNAME`,`DISPLAYCITYNAME`,`PRIMARYLANG`,`CURRENTWEATHER`,`TODAYWEATHER`) VALUES ('6','1845136','Chuncheon','춘천','1',NULL,NULL);
+INSERT INTO EZPORTAL.`tbl_weather` (`SN`,`CITYCODE`,`CITYNAME`,`DISPLAYCITYNAME`,`PRIMARYLANG`,`CURRENTWEATHER`,`TODAYWEATHER`) VALUES ('8','1845457','Jeonju','전주','1',NULL,NULL);
+INSERT INTO EZPORTAL.`tbl_weather` (`SN`,`CITYCODE`,`CITYNAME`,`DISPLAYCITYNAME`,`PRIMARYLANG`,`CURRENTWEATHER`,`TODAYWEATHER`) VALUES ('11','1846266','Jeju','제주도','1',NULL,NULL);
+
+-- 미국
+INSERT INTO EZPORTAL.TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES('1', '5128638', 'New York','뉴욕', 	'2');
+INSERT INTO EZPORTAL.TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES('2', '5186266', 'Dallas', '댈러스', '2');
+INSERT INTO EZPORTAL.TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES('3', '5186794', 'Denver', '댄버', '2');
+INSERT INTO EZPORTAL.TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES('4', '5368361', 'Los Angeles', '로스앤젤레스', '2');
+INSERT INTO EZPORTAL.TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES('5', '5664535', 'Manhattan', '맨해튼', '2');
+INSERT INTO EZPORTAL.TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES('6', '4930956', 'Boston', '보스턴', '2');
+INSERT INTO EZPORTAL.TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES('7', '5110253', 'Bronx', '브롱크스', '2');
+INSERT INTO EZPORTAL.TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES('8', '5110302', 'Brooklyn', '브루클린', '2');
+INSERT INTO EZPORTAL.TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES('9', '5392171', 'San Jose', '산호세', '2');
+INSERT INTO EZPORTAL.TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES('10', '4726311', 'San Diego', '샌디에이고', '2');
+INSERT INTO EZPORTAL.TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES('11', '4171771', 'San Antonio', '샌안토니오', '2');
+INSERT INTO EZPORTAL.TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES('12', '4887398', 'Chicago', '시카고', '2');
+INSERT INTO EZPORTAL.TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES('13', '4883772', 'Atlanta', '애틀랜타', '2');
+INSERT INTO EZPORTAL.TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES('14', '5016884', 'Austin', '오스틴', '2');
+INSERT INTO EZPORTAL.TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES('15', '4140963', 'Washington D.C.', '워싱턴 D.C.', '2');
+INSERT INTO EZPORTAL.TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES('16', '4188985', 'Columbus', '콜롬버스', '2');
+INSERT INTO EZPORTAL.TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES('17', '5133268', 'Queens', '퀸스', '2');
+INSERT INTO EZPORTAL.TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES('18', '4905873', 'Phoenix', '피닉스', '2');
+INSERT INTO EZPORTAL.TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES('19', '5131095', 'Philadelphia', '필라델피아', '2');
+INSERT INTO EZPORTAL.TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES('20', '5194369', 'Houston', '휴스턴', '2');
+
+-- 일본
+INSERT INTO EZPORTAL.`tbl_weather` (`SN`,`CITYCODE`,`CITYNAME`,`DISPLAYCITYNAME`,`PRIMARYLANG`,`CURRENTWEATHER`,`TODAYWEATHER`) VALUES ('1','1850147','Tokyo','東京','3',NULL,NULL);
+INSERT INTO EZPORTAL.`tbl_weather` (`SN`,`CITYCODE`,`CITYNAME`,`DISPLAYCITYNAME`,`PRIMARYLANG`,`CURRENTWEATHER`,`TODAYWEATHER`) VALUES ('3','1853909','Osaka-shi','大阪市','3',NULL,NULL);
+INSERT INTO EZPORTAL.`tbl_weather` (`SN`,`CITYCODE`,`CITYNAME`,`DISPLAYCITYNAME`,`PRIMARYLANG`,`CURRENTWEATHER`,`TODAYWEATHER`) VALUES ('4','1854383','Okayama-shi','岡山市','3',NULL,NULL);
+INSERT INTO EZPORTAL.`tbl_weather` (`SN`,`CITYCODE`,`CITYNAME`,`DISPLAYCITYNAME`,`PRIMARYLANG`,`CURRENTWEATHER`,`TODAYWEATHER`) VALUES ('13','1855431','Niigata-shi','新潟市','3',NULL,NULL);
+INSERT INTO EZPORTAL.`tbl_weather` (`SN`,`CITYCODE`,`CITYNAME`,`DISPLAYCITYNAME`,`PRIMARYLANG`,`CURRENTWEATHER`,`TODAYWEATHER`) VALUES ('10','1856057','Nagoya-shi','名古屋市','3',NULL,NULL);
+INSERT INTO EZPORTAL.`tbl_weather` (`SN`,`CITYCODE`,`CITYNAME`,`DISPLAYCITYNAME`,`PRIMARYLANG`,`CURRENTWEATHER`,`TODAYWEATHER`) VALUES ('11','1856215','Nagano-shi','長野市','3',NULL,NULL);
+INSERT INTO EZPORTAL.`tbl_weather` (`SN`,`CITYCODE`,`CITYNAME`,`DISPLAYCITYNAME`,`PRIMARYLANG`,`CURRENTWEATHER`,`TODAYWEATHER`) VALUES ('5','1857910','Kyoto','京都市','3',NULL,NULL);
+INSERT INTO EZPORTAL.`tbl_weather` (`SN`,`CITYCODE`,`CITYNAME`,`DISPLAYCITYNAME`,`PRIMARYLANG`,`CURRENTWEATHER`,`TODAYWEATHER`) VALUES ('6','1860827','Kagoshima-shi','鹿児島市','3',NULL,NULL);
+INSERT INTO EZPORTAL.`tbl_weather` (`SN`,`CITYCODE`,`CITYNAME`,`DISPLAYCITYNAME`,`PRIMARYLANG`,`CURRENTWEATHER`,`TODAYWEATHER`) VALUES ('8','1862415','Hiroshima-shi','広島市','3',NULL,NULL);
+INSERT INTO EZPORTAL.`tbl_weather` (`SN`,`CITYCODE`,`CITYNAME`,`DISPLAYCITYNAME`,`PRIMARYLANG`,`CURRENTWEATHER`,`TODAYWEATHER`) VALUES ('7','1863967','Fukuoka-shi','福岡市','3',NULL,NULL);
+INSERT INTO EZPORTAL.`tbl_weather` (`SN`,`CITYCODE`,`CITYNAME`,`DISPLAYCITYNAME`,`PRIMARYLANG`,`CURRENTWEATHER`,`TODAYWEATHER`) VALUES ('9','1926099','Matsuyama-shi','松山市','3',NULL,NULL);
+INSERT INTO EZPORTAL.`tbl_weather` (`SN`,`CITYCODE`,`CITYNAME`,`DISPLAYCITYNAME`,`PRIMARYLANG`,`CURRENTWEATHER`,`TODAYWEATHER`) VALUES ('12','2112923','Fukushima-shi','福島市','3',NULL,NULL);
+INSERT INTO EZPORTAL.`tbl_weather` (`SN`,`CITYCODE`,`CITYNAME`,`DISPLAYCITYNAME`,`PRIMARYLANG`,`CURRENTWEATHER`,`TODAYWEATHER`) VALUES ('15','2128295','Sapporo-shi','札幌市','3',NULL,NULL);
+INSERT INTO EZPORTAL.`tbl_weather` (`SN`,`CITYCODE`,`CITYNAME`,`DISPLAYCITYNAME`,`PRIMARYLANG`,`CURRENTWEATHER`,`TODAYWEATHER`) VALUES ('14','2130658','Aomori-shi','青森市','3',NULL,NULL);
+INSERT INTO EZPORTAL.`tbl_weather` (`SN`,`CITYCODE`,`CITYNAME`,`DISPLAYCITYNAME`,`PRIMARYLANG`,`CURRENTWEATHER`,`TODAYWEATHER`) VALUES ('2','6697514','Asahi','旭市','3',NULL,NULL);
+
+-- 중국
+INSERT INTO EZPORTAL.TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES('1', '1809858', 'Guangzhou', '광저우', '4');
+INSERT INTO EZPORTAL.TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES('2', '1809461', 'Guiyang', '구이양', '4');
+INSERT INTO EZPORTAL.TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES('3', '1799869', 'Nanning', '난닝', '4');
+INSERT INTO EZPORTAL.TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES('4', '1799962', 'Nanjing', '난징', '4');
+INSERT INTO EZPORTAL.TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES('5', '1800163', 'Nanchang', '난창', '4');
+INSERT INTO EZPORTAL.TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES('6', '1804430', 'Lanzhou', '란저우', '4');
+INSERT INTO EZPORTAL.TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES('7', '1816670', 'Beijing', '베이징', '4');
+INSERT INTO EZPORTAL.TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES('8', '1796236', 'Shanghai', '상하이', '4');
+INSERT INTO EZPORTAL.TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES('9', '2034937', 'shenyang', '선양', '4');
+INSERT INTO EZPORTAL.TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES('10', '1795268', 'Shijiazhuang', '스자좡', '4');
+INSERT INTO EZPORTAL.TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES('11', '1805753', 'jinan', '지난', '4');
+INSERT INTO EZPORTAL.TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES('12', '1815549', 'changsha', '창사', '4');
+INSERT INTO EZPORTAL.TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES('13', '1815771', 'changchun', '창춘', '4');
+INSERT INTO EZPORTAL.TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES('14', '1815286', 'Chengdu', '청두', '4');
+INSERT INTO EZPORTAL.TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES('15', '1814906', 'chongqing', '충칭', '4');
+INSERT INTO EZPORTAL.TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES('16', '1804651', 'kunming', '쿤밍', '4');
+INSERT INTO EZPORTAL.TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES('17', '1810821', 'Fuzhou', '푸저우', '4');
+INSERT INTO EZPORTAL.TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES('18', '2037013', 'harbin', '하얼빈', '4');
+INSERT INTO EZPORTAL.TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES('19', '1808926', 'Hangzhou', '항저우', '4');
+INSERT INTO EZPORTAL.TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES('20', '1808722', 'Hefei', '허페이', '4');
+
+-- 베트남
+INSERT INTO EZPORTAL.TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES ('1', '1586203', 'Can Tho', '깐토', '5');
+INSERT INTO EZPORTAL.TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES ('2', '1568574', 'Kui bitch', '꾸이년', '5');
+INSERT INTO EZPORTAL.TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES ('3', '1572151', 'Nha Trang', '냐짱', '5');
+INSERT INTO EZPORTAL.TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES ('4', '1905468', 'Da Nang', '다낭', '5');
+INSERT INTO EZPORTAL.TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES ('5', '8201616', 'barbie', '바비', '5');
+INSERT INTO EZPORTAL.TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES ('6', '1587923', 'Bien Hoa', '비엔호아', '5');
+INSERT INTO EZPORTAL.TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES ('7', '1581130', 'Hanoi', '하노이', '5');
+INSERT INTO EZPORTAL.TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES ('8', '1581298', 'Haiphong', '하이퐁', '5');
+INSERT INTO EZPORTAL.TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES ('9', '1566083', 'ho chi minh', '호찌민', '5');
+INSERT INTO EZPORTAL.TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES ('10', '1580240', 'Hue', '후에', '5');
+
+-- 인도네시아
+INSERT INTO EZPORTAL.TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES ('1', '1645528', 'denpasar', '덴파사르', 6);
+INSERT INTO EZPORTAL.TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES ('2', '8144495', 'Depok', '드폭', 6);
+INSERT INTO EZPORTAL.TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES ('3', '1622786', 'Makassar', '마카사르', 6);
+INSERT INTO EZPORTAL.TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES ('4', '1214520', 'medan', '메단', 6);
+INSERT INTO EZPORTAL.TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES ('5', '8144723', 'Batam', '바탐', 6);
+INSERT INTO EZPORTAL.TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES ('6', '1624917', 'Bandar Lampung', '반다르람풍', 6);
+INSERT INTO EZPORTAL.TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES ('7', '1650357', 'Bandung', '반둥', 6);
+INSERT INTO EZPORTAL.TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES ('8', '1650213', 'Banjarmasin', '반자르마신', 6);
+INSERT INTO EZPORTAL.TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES ('9', '7780016', 'Bogor', '보고르', 6);
+INSERT INTO EZPORTAL.TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES ('10', '8018250', 'Surabaya', '수라바야', 6);
+INSERT INTO EZPORTAL.TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES ('11', '1627896', 'semarang', '스마랑', 6);
+INSERT INTO EZPORTAL.TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES ('12', '1651531', 'Ambon', '암본', 6);
+INSERT INTO EZPORTAL.TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES ('13', '1642911', 'Jakarta', '자카르타', 6);
+INSERT INTO EZPORTAL.TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES ('14', '1642858', 'Jambi', '잠비', 6);
+INSERT INTO EZPORTAL.TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES ('15', '1625084', 'Tangerang', '탕에랑', 6);
+INSERT INTO EZPORTAL.TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES ('16', '1633070', 'Palembang', '팔렘방', 6);
+
+-- 포탈 개인화
+INSERT INTO EZPORTAL.TBL_PORTAL_THEME (theme_id, theme_name, theme_name2, theme_name3, theme_content, theme_content2, theme_content3, theme_content4, theme_content5, theme_content6) VALUES (1, '기본형', 'Default Type', 'きほんがた', '소식 및 상단영역이 있는 디자인의 테마입니다.', 'A theme with a design that includes news and a top area.', 'ニュースやトップエリアのあるデザインのテーマです。', '这是一个包含新闻和顶部区域的设计主题。', 'A theme with a design that includes news and a top area.', 'A theme with a design that includes news and a top area.');
+INSERT INTO EZPORTAL.TBL_PORTAL_THEME (theme_id, theme_name, theme_name2, theme_name3, theme_content, theme_content2, theme_content3, theme_content4, theme_content5, theme_content6) VALUES (2, '바로가기형', 'Shortcut Type', 'ショートカットがた', '위쪽에 정보 및 바로가기가 있는 디자인의 테마입니다.', 'A theme with information and shortcuts at the top.', '上部に情報やショートカットがあるデザインのテーマです。', '该主题的设计在顶部包含信息和快捷方式。', 'A theme with information area and shortcuts at the top.', 'A theme with information area and shortcuts at the top.');
+INSERT INTO EZPORTAL.TBL_PORTAL_THEME (theme_id, theme_name, theme_name2, theme_name3, theme_content, theme_content2, theme_content3, theme_content4, theme_content5, theme_content6) VALUES (3, '정보분리형', 'Information Separation Type', 'じょうほうぶんりがた', '정보 관련 고정영역이 없이 포틀릿에 집중할 수 있는 테마입니다.', 'A theme that allows to focus on portlets without any fixed areas related to information.', '情報関連の固定領域がなくてもポートレットに集中できるテーマです。', '该主题允许您专注于 portlet，而无需任何与信息相关的固定区域。', 'A theme that allows to focus on portlets without any fixed areas related to information.', 'A theme that allows to focus on portlets without any fixed areas related to information.');
+-- 모바일 테마
+INSERT INTO EZPORTAL.TBL_PORTAL_THEME (theme_id, theme_name, theme_name2, theme_name3, theme_content, theme_content2, theme_content3, theme_content4, theme_content5, theme_content6) VALUES (4, '테마4', 'Theme4', 'Theme4', '모바일용 포틀릿 테마 입니다.', 'Theme For Mobile', 'モバイルのテーマ', '手机主题', 'Theme For Mobile', 'Theme For Mobile');
+
+INSERT INTO EZPORTAL.TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (0, '/ezNewPortal/newPortalPortalPage.do', 'G', '', 0, 'portal');
+UPDATE EZPORTAL.TBL_PORTAL_MENU SET menu_id = 0 WHERE menu_url = '/ezNewPortal/newPortalPortalPage.do';
+INSERT INTO EZPORTAL.TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (1, '/ezEmail/mailMain.do', 'G', 'icon_topmenu icon_nav_mail', 1, 'mail');
+INSERT INTO EZPORTAL.TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (2, '/ezSchedule/scheduleIndex.do?funCode=2', 'G', 'icon_topmenu icon_nav_calendar', 2, 'schedule');
+INSERT INTO EZPORTAL.TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (3, '/ezApprovalG/apprGMain.do', 'G', 'icon_topmenu icon_nav_approval', 3, 'approval');
+INSERT INTO EZPORTAL.TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (4, '/ezBoard/boardMain.do', 'G', 'icon_topmenu icon_nav_board', 4, 'board');
+INSERT INTO EZPORTAL.TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (5, '/ezCommunity/communityMain.do', 'G', 'icon_topmenu icon_nav_community', 5, 'community');
+INSERT INTO EZPORTAL.TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (6, '/ezResource/resMain.do', 'G', 'icon_topmenu icon_nav_resource', 6, 'resource');
+INSERT INTO EZPORTAL.TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (7, '/ezCircular/circularIndex.do', 'G', 'icon_topmenu icon_nav_circular_edition', 7, 'circular');
+INSERT INTO EZPORTAL.TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (8, '/ezJournal/journalMain.do', 'G', 'icon_topmenu icon_nav_workdiary', 8, 'journal');
+INSERT INTO EZPORTAL.TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (9, '/ezAttitude/attitudeMain.do', 'G', 'icon_topmenu icon_nav_absenteeism', 9, 'attitude');
+INSERT INTO EZPORTAL.TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (10, '/ezWebFolder/webfolderMain.do', 'G', 'icon_topmenu icon_nav_webfolder', 10, 'webfolder');
+INSERT INTO EZPORTAL.TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (11, '/ezCabinet/cabinetMain.do', 'G', 'icon_topmenu icon_nav_cabinet', 11, 'cabinet');
+INSERT INTO EZPORTAL.TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (12, '/ezPMS/pmsMain.do', 'G', 'icon_topmenu icon_nav_project', 12, 'pms');
+INSERT INTO EZPORTAL.TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (13, '/ezEmail/mailMain.do?funCode=2', 'G', 'icon_topmenu icon_nav_addressbook', 13, 'address');
+INSERT INTO EZPORTAL.TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (14, '/ezQuestion/qstMain.do', 'G', 'icon_topmenu icon_nav_survey', 14, 'question');
+INSERT INTO EZPORTAL.TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (15, '/ezPoll/pollMain.do', 'G', 'icon_topmenu icon_nav_voting', 15, 'vote');
+INSERT INTO EZPORTAL.TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (16, '/ezLadder/ladderMainPage.do', 'G', 'icon_topmenu icon_nav_laddergame', 16, 'ladder');
+INSERT INTO EZPORTAL.TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (17, '/ezTask/taskIndex.do', 'G', 'icon_topmenu icon_nav_work', 17, 'task');
+INSERT INTO EZPORTAL.TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (18, '/ezMemo/memoMainPage.do', 'G', 'icon_topmenu icon_nav_memo', 18, 'memo');
+INSERT INTO EZPORTAL.TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (19, '/ezSurvey/surveyMain.do', 'G', 'icon_topmenu icon_nav_survey', 19, 'survey');
+INSERT INTO EZPORTAL.TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (20, '/ezCar/resCar.do', 'G', 'icon_topmenu icon_nav_workdiary', 20, 'car');
+
+-- 모바일 메뉴
+INSERT INTO EZPORTAL.TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (21, '/mobile/ezEmail/mailList.do?folderId=INBOX', 'MG', 'iconCommon icon_mail', 1, 'mMail');
+INSERT INTO EZPORTAL.TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (22, '/mobile/ezOrgan/personList.do', 'MG', 'iconCommon icon_employee', 2, 'mAddress');
+INSERT INTO EZPORTAL.TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (23, '/mobile/ezApprovalG/mApproveList.do?pType=DO', 'MG', 'iconCommon icon_approval', 3, 'mApproval');
+INSERT INTO EZPORTAL.TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (24, '/mobile/ezResource/searchTodayList.do', 'MG', 'iconCommon icon_resource', 4, 'mResource');
+INSERT INTO EZPORTAL.TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (25, '/mobile/ezBoard/boardItemList.do?boardID={FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}', 'MG', 'iconCommon icon_notice', 5, 'mBoard');
+INSERT INTO EZPORTAL.TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (26, '/mobile/ezAddress/addressList.do?pSearchTarget=personal&pFolderName=개인주소록', 'MG', 'iconCommon icon_address', 6, 'mAddress');
+INSERT INTO EZPORTAL.TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (27, '/mobile/ezSchedule/mScheduleList.do', 'MG', 'iconCommon icon_schedule', 7, 'mSchedule');
+INSERT INTO EZPORTAL.TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (28, '/mobile/ezSurvey/surveyList.do?mode=processing', 'MG', 'iconCommon icon_survey', 8, 'mSurvey');
+INSERT INTO EZPORTAL.TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (29, '/mobile/ezWebfolder/main.do', 'MG', 'iconCommon icon_webfolder', 9, 'mWebfolder');
+
+UPDATE EZPORTAL.TBL_PORTAL_MENU SET menu_id = 0 WHERE default_order = 0;
+
+INSERT INTO EZPORTAL.TBL_PORTAL_FRAME (frame_id, frame_name, theme_id) VALUES (1, 'Frame1', 1);
+INSERT INTO EZPORTAL.TBL_PORTAL_FRAME (frame_id, frame_name, theme_id) VALUES (2, 'Frame2', 1);
+INSERT INTO EZPORTAL.TBL_PORTAL_FRAME (frame_id, frame_name, theme_id) VALUES (3, 'Frame3', 1);
+INSERT INTO EZPORTAL.TBL_PORTAL_FRAME (frame_id, frame_name, theme_id) VALUES (4, 'Frame4', 1);
+INSERT INTO EZPORTAL.TBL_PORTAL_FRAME (frame_id, frame_name, theme_id) VALUES (5, 'Frame1', 2);
+INSERT INTO EZPORTAL.TBL_PORTAL_FRAME (frame_id, frame_name, theme_id) VALUES (6, 'Frame1', 3);
+INSERT INTO EZPORTAL.TBL_PORTAL_FRAME (frame_id, frame_name, theme_id) VALUES (7, 'Frame2', 2);
+INSERT INTO EZPORTAL.TBL_PORTAL_FRAME (frame_id, frame_name, theme_id) VALUES (8, 'Frame2', 3);
+-- 모바일 프레임
+INSERT INTO EZPORTAL.TBL_PORTAL_FRAME (frame_id, frame_name, theme_id) VALUES (9, 'Frame1', 4);
+
+INSERT INTO EZPORTAL.TBL_PORTAL_PORTLET (portlet_id, menu_id, portlet_url, portlet_type, default_order, portletcode) VALUES (15, 4, '/ezNewPortal/getCustomBoardInfo.do', 'G', -2, 'fixLeft');
+INSERT INTO EZPORTAL.TBL_PORTAL_PORTLET (portlet_id, menu_id, portlet_url, portlet_type, default_order, portletcode) VALUES (16, 4, '/ezNewPortal/getCustomBoardInfo.do', 'G', -1, 'fixRight');
+INSERT INTO EZPORTAL.TBL_PORTAL_PORTLET (portlet_id, menu_id, portlet_url, portlet_type, default_order, portletcode) VALUES (1, 1, '/ezNewPortal/receivedMailPortlet.do', 'G', 2, 'receivedmail');
+INSERT INTO EZPORTAL.TBL_PORTAL_PORTLET (portlet_id, menu_id, portlet_url, portlet_type, default_order, portletcode) VALUES (2, 4, '/ezNewPortal/noticePortlet.do', 'G', 1, 'notice');
+INSERT INTO EZPORTAL.TBL_PORTAL_PORTLET (portlet_id, menu_id, portlet_url, portlet_type, default_order, portletcode) VALUES (4, 15, '/ezNewPortal/votePortlet.do', 'G', 3, 'vote');
+INSERT INTO EZPORTAL.TBL_PORTAL_PORTLET (portlet_id, menu_id, portlet_url, portlet_type, default_order, portletcode) VALUES (5, 0, '/ezNewPortal/pollPortlet.do', 'G', 4, 'poll');
+INSERT INTO EZPORTAL.TBL_PORTAL_PORTLET (portlet_id, menu_id, portlet_url, portlet_type, default_order, portletcode) VALUES (6, 2, '/ezNewPortal/schedulePortlet.do', 'G', 5, 'schedule');
+INSERT INTO EZPORTAL.TBL_PORTAL_PORTLET (portlet_id, menu_id, portlet_url, portlet_type, default_order, portletcode) VALUES (7, 3, '/ezNewPortal/approvalListPortlet.do', 'G', 6, 'approvallist');
+INSERT INTO EZPORTAL.TBL_PORTAL_PORTLET (portlet_id, menu_id, portlet_url, portlet_type, default_order, portletcode) VALUES (8, 3, '/ezNewPortal/favoriteFormsPortlet.do', 'G', 7, 'favoriteforms');
+INSERT INTO EZPORTAL.TBL_PORTAL_PORTLET (portlet_id, menu_id, portlet_url, portlet_type, default_order, portletcode) VALUES (9, 4, '/ezNewPortal/photoBoardPortlet.do', 'G', 8, 'photoboard');
+INSERT INTO EZPORTAL.TBL_PORTAL_PORTLET (portlet_id, menu_id, portlet_url, portlet_type, default_order, portletcode) VALUES (10, 4, '/ezNewPortal/favoriteBoardPortlet.do', 'G', 9, 'favoriteboard');
+INSERT INTO EZPORTAL.TBL_PORTAL_PORTLET (portlet_id, menu_id, portlet_url, portlet_type, default_order, portletcode) VALUES (11, 5, '/ezNewPortal/communityPortlet.do', 'G', 10, 'community');
+INSERT INTO EZPORTAL.TBL_PORTAL_PORTLET (portlet_id, menu_id, portlet_url, portlet_type, default_order, portletcode) VALUES (12, 0, '/ezNewPortal/helpPortlet.do', 'G', 11, 'help');
+INSERT INTO EZPORTAL.TBL_PORTAL_PORTLET (portlet_id, menu_id, portlet_url, portlet_type, default_order, portletcode) VALUES (14, 0, '/ezNewPortal/weatherPortlet.do', 'G', 13, 'weather');
+INSERT INTO EZPORTAL.TBL_PORTAL_PORTLET (portlet_id, menu_id, portlet_url, portlet_type, default_order, portletcode) VALUES (26, 0, '/ezNewPortal/birthdayPortlet.do', 'G', 14, 'birthday');
+INSERT INTO EZPORTAL.TBL_PORTAL_PORTLET (portlet_id, menu_id, portlet_url, portlet_type, default_order, portletcode) VALUES (34, 0, '/ezNewPortal/slideImagePortlet.do', 'G', 15, 'slideimage');
+INSERT INTO EZPORTAL.TBL_PORTAL_PORTLET (portlet_id, menu_id, portlet_url, portlet_type, default_order, portletcode) VALUES (36, 0, '/ezNewPortal/userInfoPortlet.do', 'G', 16, 'userinfo');
+INSERT INTO EZPORTAL.TBL_PORTAL_PORTLET (portlet_id, menu_id, portlet_url, portlet_type, default_order, portletcode) VALUES (47, 4, '/ezNewPortal/movieBoardPortlet.do', 'G', 17, 'movieboard');
+INSERT INTO EZPORTAL.TBL_PORTAL_PORTLET (portlet_id, menu_id, portlet_url, portlet_type, default_order, portletcode) VALUES (49, 0, '/ezNewPortal/countPortlet.do', 'G', 19, 'count');
+INSERT INTO EZPORTAL.TBL_PORTAL_PORTLET (portlet_id, menu_id, portlet_url, portlet_type, default_order, portletcode) VALUES (51, 6, '/ezNewPortal/resourcePortlet.do', 'G', 21, 'resource');
+INSERT INTO EZPORTAL.TBL_PORTAL_PORTLET (portlet_id, menu_id, portlet_url, portlet_type, default_order, portletcode) VALUES (70, 10, '/ezNewPortal/webFolderPortlet.do', 'G', 22, 'webfolder');
+INSERT INTO EZPORTAL.TBL_PORTAL_PORTLET (portlet_id, menu_id, portlet_url, portlet_type, default_order, portletcode) VALUES (73, 19, '/ezNewPortal/surveyPortlet.do', 'G', 20, 'survey');
+-- 모바일 포틀릿 추가
+INSERT INTO EZPORTAL.TBL_PORTAL_PORTLET (portlet_id, menu_id, portlet_url, portlet_type, default_order, portletcode) VALUES (76, 25, '/mobile/getCustomBoardInfo.do', 'MG', 1, 'mFixTop');
+INSERT INTO EZPORTAL.TBL_PORTAL_PORTLET (portlet_id, menu_id, portlet_url, portlet_type, default_order, portletcode) VALUES (77, 25, '/mobile/getCustomBoardInfo.do', 'MG', 2, 'mFixBottom');
+INSERT INTO EZPORTAL.TBL_PORTAL_PORTLET (portlet_id, menu_id, portlet_url, portlet_type, default_order, portletcode) VALUES (78, 27, '/mobile/schedulePortlet.do', 'MG', 3, 'mSchedule');
+INSERT INTO EZPORTAL.TBL_PORTAL_PORTLET (portlet_id, menu_id, portlet_url, portlet_type, default_order, portletcode) VALUES (79, 24, '/mobile/resourcePortlet.do', 'MG', 4, 'mResource');
+INSERT INTO EZPORTAL.TBL_PORTAL_PORTLET (portlet_id, menu_id, portlet_url, portlet_type, default_order, portletcode) VALUES (80, 23, '/mobile/approvallistPortlet.do', 'MG', 5, 'mApprovallist');
+INSERT INTO EZPORTAL.TBL_PORTAL_PORTLET (portlet_id, menu_id, portlet_url, portlet_type, default_order, portletcode) VALUES (81, 21, '/mobile/receivedmailPortlet.do', 'MG', 6, 'mReceivedmail');
+INSERT INTO EZPORTAL.TBL_PORTAL_PORTLET (portlet_id, menu_id, portlet_url, portlet_type, default_order, portletcode) VALUES (82, 25, '/mobile/noticePortlet.do', 'MG', 7, 'mNotice');
+INSERT INTO EZPORTAL.TBL_PORTAL_PORTLET (portlet_id, menu_id, portlet_url, portlet_type, default_order, portletcode) VALUES (83, 25, '/mobile/photoboardPortlet.do', 'MG', 8, 'mPhotoboard');
+
+
+INSERT INTO TBL_PORTAL_PORTLET (PORTLET_ID, MENU_ID, PORTLET_URL, PORTLET_TYPE, DEFAULT_ORDER, PORTLETCODE) VALUES (74,3,'/ezNewPortal/chartPortlet.do','G',24,'chart');
+INSERT INTO TBL_PORTAL_PORTLET (PORTLET_ID, MENU_ID, PORTLET_URL, PORTLET_TYPE, DEFAULT_ORDER, PORTLETCODE) VALUES (75,4,'/ezNewPortal/tabBoardPortlet.do','G',23,'tabBoard');
+
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1832157, '여수', 1);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1832157, 'Reisui', 2);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1832157, 'ヨス', 3);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1832157, '呂秀', 4);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1832157, 'Reisui', 5);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1832157, 'Reisui', 6);
+
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1833747, '울산', 1);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1833747, 'Ulsan', 2);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1833747, 'ウルサン', 3);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1833747, '蔚山', 4);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1833747, 'Ulsan', 5);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1833747, 'Ulsan', 6);
+
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1835235, '대전', 1);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1835235, 'Daejeon', 2);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1835235, 'テジョン', 3);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1835235, '大田', 4);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1835235, 'Daejeon', 5);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1835235, 'Daejeon', 6);
+
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1835329, '대구', 1);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1835329, 'Daegu', 2);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1835329, 'テグ', 3);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1835329, '大邱', 4);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1835329, 'Daegu', 5);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1835329, 'Daegu', 6);
+
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1835848, '서울', 1);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1835848, 'Seoul', 2);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1835848, 'ソウル', 3);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1835848, '首爾', 4);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1835848, 'Seoul', 5);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1835848, 'Seoul', 6);
+
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1838524, '부산', 1);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1838524, 'Busan', 2);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1838524, 'プサン', 3);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1838524, '屍速列車', 4);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1838524, 'Busan', 5);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1838524, 'Busan', 6);
+
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1841811, '광주', 1);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1841811, 'Gwangju', 2);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1841811, 'クァンジュ', 3);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1841811, '光州', 4);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1841811, 'Gwangju', 5);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1841811, 'Gwangju', 6);
+
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1843137, '강릉', 1);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1843137, 'Kang-neung', 2);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1843137, 'カンヌン', 3);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1843137, '江陵', 4);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1843137, 'Kang-neung', 5);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1843137, 'Kang-neung', 6);
+
+
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1845136, '춘천', 1);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1845136, 'Chuncheon', 2);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1845136, 'ツンチョン', 3);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1845136, '春千', 4);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1845136, 'Chuncheon', 5);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1845136, 'Chuncheon', 6);
+
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1845457, '전주', 1);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1845457, 'Jeonju', 2);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1845457, 'ジョンジュ', 3);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1845457, '全州', 4);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1845457, 'Jeonju', 5);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1845457, 'Jeonju', 6);
+
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1846266, '제주도', 1);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1846266, 'Jeju', 2);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1846266, 'チェジュド', 3);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1846266, '濟州島', 4);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1846266, 'Jeju', 5);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1846266, 'Jeju', 6);
+
+/* [ USA ] */
+-- 뉴욕
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (5128638, '뉴욕', 1);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (5128638, 'New York', 2);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (5128638, 'ニュヨク', 3);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (5128638, '紐約', 4);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (5128638, 'New York', 5);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (5128638, 'New York', 6);
+
+
+-- 댈러스
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (5186266, '댈러스', 1);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (5186266, 'Dallas', 2);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (5186266, 'デルロス', 3);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (5186266, '達拉斯', 4);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (5186266, 'Dallas', 5);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (5186266, 'Dallas', 6);
+
+-- 덴버
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (5186794, '덴버', 1);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (5186794, 'Denver', 2);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (5186794, 'デンボ', 3);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (5186794, '丹佛', 4);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (5186794, 'Denver', 5);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (5186794, 'Denver', 6);
+
+-- 로스앤젤레스
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (5368361, '로스앤젤레스', 1);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (5368361, 'Los Angeles', 2);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (5368361, 'ロスエンゼルレス', 3);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (5368361, '洛杉磯', 4);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (5368361, 'Los Angeles', 5);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (5368361, 'Los Angeles', 6);
+
+-- 맨해튼
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (5664535, '맨해튼', 1);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (5664535, 'Manhattan', 2);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (5664535, 'メンヘトゥン', 3);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (5664535, '曼哈頓', 4);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (5664535, 'Manhattan', 5);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (5664535, 'Manhattan', 6);
+
+
+-- 보스턴
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (4930956, '보스턴', 1);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (4930956, 'Boston', 2);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (4930956, 'ボストン', 3);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (4930956, '波士頓', 4);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (4930956, 'Boston', 5);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (4930956, 'Boston', 6);
+
+-- 브롱크스
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (5110253, '브롱크스', 1);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (5110253, 'Bronx', 2);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (5110253, 'ブロンクス', 3);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (5110253, '布朗克斯', 4);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (5110253, 'Bronx', 5);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (5110253, 'Bronx', 6);
+
+-- 브루클린
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (5110302, '브루클린', 1);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (5110302, 'Brooklyn', 2);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (5110302, 'ブルクルリン', 3);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (5110302, '布魯克林', 4);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (5110302, 'Brooklyn', 5);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (5110302, 'Brooklyn', 6);
+
+-- 산호세
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (5392171, '산호세', 1);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (5392171, 'San Jose', 2);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (5392171, 'サンホセ', 3);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (5392171, '聖荷西', 4);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (5392171, 'San Jose', 5);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (5392171, 'San Jose', 6);
+
+
+-- 샌디에이고
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (4726311, '샌디에이고', 1);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (4726311, 'San Diego', 2);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (4726311, 'センディエイゴ', 3);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (4726311, '聖地牙哥', 4);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (4726311, 'San Diego', 5);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (4726311, 'San Diego', 6);
+
+-- 샌안토니오
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (4171771, '샌안토니오', 1);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (4171771, 'San Antonio', 2);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (4171771, 'センアントニオ', 3);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (4171771, '聖安東尼奧', 4);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (4171771, 'San Antonio', 5);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (4171771, 'San Antonio', 6);
+
+-- 시카고
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (4887398, '시카고', 1);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (4887398, 'Chicago', 2);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (4887398, 'シカゴ', 3);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (4887398, '芝加哥', 4);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (4887398, 'Chicago', 5);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (4887398, 'Chicago', 6);
+
+-- 애틀랜타
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (4883772, '애틀랜타', 1);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (4883772, 'Atlanta', 2);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (4883772, 'エトゥルレンタ', 3);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (4883772, '亞特蘭大', 4);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (4883772, 'Atlanta', 5);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (4883772, 'Atlanta', 6);
+
+-- 오스틴
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (5016884, '오스틴', 1);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (5016884, 'Austin', 2);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (5016884, 'オスティン', 3);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (5016884, '奧斯汀', 4);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (5016884, 'Austin', 5);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (5016884, 'Austin', 6);
+
+-- 워싱턴 D.C.
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (4140963, '워싱턴 D.C.', 1);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (4140963, 'Washington D.C.', 2);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (4140963, 'ウォシントン　d。c。', 3);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (4140963, '워싱턴 D.C.', 4);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (4140963, 'Washington D.C.', 5);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (4140963, 'Washington D.C.', 6);
+
+-- 콜롬버스
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (4188985, '콜롬버스', 1);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (4188985, 'Columbus', 2);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (4188985, 'コルロムボス', 3);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (4188985, '哥倫布', 4);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (4188985, 'Columbus', 5);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (4188985, 'Columbus', 6);
+
+-- 퀸스
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (5133268, '퀸스', 1);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (5133268, 'Queens', 2);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (5133268, 'クィンス', 3);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (5133268, '皇后區', 4);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (5133268, 'Queens', 5);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (5133268, 'Queens', 6);
+
+-- 피닉스
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (4905873, '피닉스', 1);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (4905873, 'Phoenix', 2);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (4905873, 'ピニクス', 3);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (4905873, '鳳凰', 4);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (4905873, 'Phoenix', 5);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (4905873, 'Phoenix', 6);
+
+-- 필라델피아
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (5131095, '필라델피아', 1);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (5131095, 'Philadelphia', 2);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (5131095, 'ピルラデルピア', 3);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (5131095, '費城', 4);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (5131095, 'Philadelphia', 5);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (5131095, 'Philadelphia', 6);
+
+-- 휴스턴
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (5194369, '휴스턴', 1);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (5194369, 'Houston', 2);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (5194369, 'ヒュストン', 3);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (5194369, '休士頓', 4);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (5194369, 'Houston', 5);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (5194369, 'Houston', 6);
+
+/* [ Japan ] */
+-- 도쿄
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1850147, '도쿄', 1);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1850147, 'Tokyo', 2);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1850147, '東京', 3);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1850147, '東京', 4);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1850147, 'Tokyo', 5);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1850147, 'Tokyo', 6);
+
+-- 오사카
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1853909, '오사카', 1);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1853909, 'Osaka-shi', 2);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1853909, '大阪市', 3);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1853909, '大阪市', 4);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1853909, 'Osaka-shi', 5);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1853909, 'Osaka-shi', 6);
+
+-- 오카야마
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1854383, '오카야마', 1);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1854383, 'Okayama-shi', 2);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1854383, '岡山市', 3);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1854383, '岡山市', 4);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1854383, 'Okayama-shi', 5);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1854383, 'Okayama-shi', 6);
+
+-- 니가타
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1855431, '니가타', 1);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1855431, 'Niigata-shi', 2);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1855431, '新潟市', 3);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1855431, '新潟市', 4);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1855431, 'Niigata-shi', 5);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1855431, 'Niigata-shi', 6);
+
+-- 나고야
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1856057, '나고야', 1);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1856057, 'Nagoya-shi', 2);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1856057, '名古屋市', 3);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1856057, '名古屋市', 4);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1856057, 'Nagoya-shi', 5);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1856057, 'Nagoya-shi', 6);
+
+-- 교토
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1857910, '교토', 1);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1857910, 'Kyoto', 2);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1857910, '京都市', 3);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1857910, '京都市', 4);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1857910, 'Kyoto', 5);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1857910, 'Kyoto', 6);
+
+-- 가고시마
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1860827, '가고시마', 1);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1860827, 'Kagoshima-shi', 2);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1860827, '鹿児島市', 3);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1860827, '鹿兒島市', 4);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1860827, 'Kagoshima-shi', 5);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1860827, 'Kagoshima-shi', 6);
+
+-- 히로시마
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1862415, '히로시마', 1);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1862415, 'Hiroshima-shi', 2);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1862415, '広島市', 3);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1862415, '廣島市', 4);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1862415, 'Hiroshima-shi', 5);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1862415, 'Hiroshima-shi', 6);
+
+-- 후쿠오카
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1863967, '후쿠오카', 1);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1863967, 'Fukuoka-shi', 2);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1863967, '福岡市', 3);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1863967, '福岡市', 4);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1863967, 'Fukuoka-shi', 5);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1863967, 'Fukuoka-shi', 6);
+
+-- 마츠야마
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1926099, '마츠야마', 1);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1926099, 'Matsuyama-shi', 2);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1926099, '松山市', 3);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1926099, '松山市', 4);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1926099, 'Matsuyama-shi', 5);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1926099, 'Matsuyama-shi', 6);
+
+-- 후쿠시마
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (2112923, '후쿠시마', 1);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (2112923, 'Fukushima-shi', 2);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (2112923, '福島市', 3);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (2112923, '福島市', 4);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (2112923, 'Fukushima-shi', 5);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (2112923, 'Fukushima-shi', 6);
+
+-- 삿포로
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (2128295, '삿포로', 1);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (2128295, 'Sapporo-shi', 2);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (2128295, '札幌市', 3);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (2128295, '札幌市', 4);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (2128295, 'Sapporo-shi', 5);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (2128295, 'Sapporo-shi', 6);
+
+-- 아오모리
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (2130658, '아모리', 1);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (2130658, 'Aomori-shi', 2);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (2130658, '青森市', 3);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (2130658, '青森市', 4);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (2130658, 'Aomori-shi', 5);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (2130658, 'Aomori-shi', 6);
+
+-- 아사이
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (6697514, '아사이', 1);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (6697514, 'Asahi', 2);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (6697514, '旭市', 3);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (6697514, '朝日', 4);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (6697514, 'Asahi', 5);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (6697514, 'Asahi', 6);
+
+
+
+/* [ China ] */
+-- 광저우
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1809858, '광저우', 1);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1809858, 'Guangzhou', 2);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1809858, 'グァンゾウ', 3);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1809858, '廣州', 4);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1809858, 'Guangzhou', 5);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1809858, 'Guangzhou', 6);
+
+-- 구이양
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1809461, '구이양', 1);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1809461, 'Guiyang', 2);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1809461, 'グイヤン', 3);
+    INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1809461, '貴陽', 4);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1809461, 'Guiyang', 5);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1809461, 'Guiyang', 6);
+
+-- 난닝
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1799869, '난닝', 1);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1799869, 'Nanning', 2);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1799869, 'ナンニン', 3);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1799869, '南寧', 4);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1799869, 'Nanning', 5);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1799869, 'Nanning', 6);
+
+-- 난징
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1799962, '난징', 1);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1799962, 'Nanjing', 2);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1799962, 'ナンジン', 3);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1799962, '南京', 4);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1799962, 'Nanjing', 5);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1799962, 'Nanjing', 6);
+
+-- 난창
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1800163, '난창', 1);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1800163, 'Nanchang', 2);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1800163, 'ナン차ン', 3);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1800163, '南昌', 4);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1800163, 'Nanchang', 5);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1800163, 'Nanchang', 6);
+
+-- 란저우
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1804430, '란저우', 1);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1804430, 'Lanzhou', 2);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1804430, 'ランゾウ', 3);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1804430, '蘭州', 4);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1804430, 'Lanzhou', 5);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1804430, 'Lanzhou', 6);
+
+-- 베이징
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1816670, '베이징', 1);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1816670, 'Beijing', 2);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1816670, 'ベイジン', 3);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1816670, '北京', 4);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1816670, 'Beijing', 5);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1816670, 'Beijing', 6);
+
+-- 상하이
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1796236, '상하이', 1);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1796236, 'Shanghai', 2);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1796236, 'サンハイ', 3);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1796236, '上海', 4);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1796236, 'Shanghai', 5);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1796236, 'Shanghai', 6);
+
+-- 선양
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (2034937, '선양', 1);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (2034937, 'shenyang', 2);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (2034937, 'ソンヤン', 3);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (2034937, '瀋陽', 4);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (2034937, 'shenyang', 5);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (2034937, 'shenyang', 6);
+
+-- 스자좡
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1795268, '스자좡', 1);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1795268, 'Shijiazhuang', 2);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1795268, 'スザズァン', 3);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1795268, '石家莊', 4);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1795268, 'Shijiazhuang', 5);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1795268, 'Shijiazhuang', 6);
+
+-- 지난
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1805753, '지난', 1);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1805753, 'jinan', 2);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1805753, 'ジナン', 3);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1805753, '濟南', 4);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1805753, 'jinan', 5);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1805753, 'jinan', 6);
+
+-- 창사
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1815549, '창사', 1);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1815549, 'changsha', 2);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1815549, '차ンサ', 3);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1815549, '長沙', 4);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1815549, 'changsha', 5);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1815549, 'changsha', 6);
+
+-- 창춘
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1815771, '창춘', 1);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1815771, 'changchun', 2);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1815771, '차ンツン', 3);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1815771, '長春', 4);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1815771, 'changchun', 5);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1815771, 'changchun', 6);
+
+-- 청두
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1815286, '청두', 1);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1815286, 'Chengdu', 2);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1815286, 'チョンドゥ', 3);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1815286, '成都', 4);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1815286, 'Chengdu', 5);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1815286, 'Chengdu', 6);
+
+-- 충칭
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1814906, '충칭', 1);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1814906, 'chongqing', 2);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1814906, 'ツンチン', 3);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1814906, '重慶', 4);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1814906, 'chongqing', 5);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1814906, 'chongqing', 6);
+
+-- 쿤밍
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1804651, '쿤밍', 1);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1804651, 'kunming', 2);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1804651, 'クンミン', 3);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1804651, '昆明', 4);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1804651, 'kunming', 5);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1804651, 'kunming', 6);
+
+-- 푸저우
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1810821, '푸저우', 1);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1810821, 'Fuzhou', 2);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1810821, 'プゾウ', 3);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1810821, '福州', 4);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1810821, 'Fuzhou', 5);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1810821, 'Fuzhou', 6);
+
+-- 하얼빈
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (2037013, '하얼빈', 1);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (2037013, 'harbin', 2);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (2037013, 'ハオルビン', 3);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (2037013, '哈爾濱', 4);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (2037013, 'harbin', 5);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (2037013, 'harbin', 6);
+
+-- 항저우
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1808926, '항저우', 1);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1808926, 'Hangzhou', 2);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1808926, 'ハンゾウ', 3);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1808926, '杭州', 4);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1808926, 'Hangzhou', 5);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1808926, 'Hangzhou', 6);
+
+-- 허페이
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1808722, '허페이', 1);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1808722, 'Hefei', 2);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1808722, 'ホペイ', 3);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1808722, '合肥', 4);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1808722, 'Hefei', 5);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1808722, 'Hefei', 6);
+
+
+
+/* [ Vietnam ] */
+-- 깐토
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1586203, '깐토', 1);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1586203, 'Can Tho', 2);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1586203, 'カント', 3);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1586203, '芹苴', 4);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1586203, 'Can Tho', 5);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1586203, 'Can Tho', 6);
+
+-- 꾸이년
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1568574, '꾸이년', 1);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1568574, 'Kui bitch', 2);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1568574, 'クイニョン', 3);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1568574, '奎母狗', 4);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1568574, 'Kui bitch', 5);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1568574, 'Kui bitch', 6);
+
+-- 냐짱
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1572151, '냐짱', 1);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1572151, 'Nha Trang', 2);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1572151, 'ニャ차ン', 3);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1572151, '芽莊', 4);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1572151, 'Nha Trang', 5);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1572151, 'Nha Trang', 6);
+
+-- 다낭
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1905468, '다낭', 1);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1905468, 'Da Nang', 2);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1905468, 'ダナン', 3);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1905468, '峴港', 4);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1905468, 'Da Nang', 5);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1905468, 'Da Nang', 6);
+
+-- 바비
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (8201616, '바비', 1);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (8201616, 'barbie', 2);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (8201616, 'バビ', 3);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (8201616, '芭比', 4);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (8201616, 'barbie', 5);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (8201616, 'barbie', 6);
+
+-- 비엔호아
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1587923, '비엔호아', 1);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1587923, 'Bien Hoa', 2);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1587923, 'ビエンホア', 3);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1587923, '邊和', 4);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1587923, 'Bien Hoa', 5);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1587923, 'Bien Hoa', 6);
+
+-- 하노이
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1581130, '하노이', 1);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1581130, 'Hanoi', 2);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1581130, 'ハノイ', 3);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1581130, '河內', 4);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1581130, 'Hanoi', 5);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1581130, 'Hanoi', 6);
+
+-- 하이퐁
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1581298, '하이퐁', 1);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1581298, 'Haiphong', 2);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1581298, 'ハイポン', 3);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1581298, '海防市', 4);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1581298, 'Haiphong', 5);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1581298, 'Haiphong', 6);
+
+-- 호찌민
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1566083, '호찌민', 1);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1566083, 'ho chi minh', 2);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1566083, 'ホチミン', 3);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1566083, '胡志明', 4);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1566083, 'ho chi minh', 5);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1566083, 'ho chi minh', 6);
+
+-- 후에
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1580240, '후에', 1);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1580240, 'Hue', 2);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1580240, 'フエ', 3);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1580240, '色調', 4);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1580240, 'Hue', 5);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1580240, 'Hue', 6);
+
+
+
+/* [ Indonesia ] */
+-- 덴파사르
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1645528, '덴파사르', 1);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1645528, 'denpasar', 2);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1645528, 'デンパサル', 3);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1645528, '登巴薩', 4);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1645528, 'denpasar', 5);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1645528, 'denpasar', 6);
+
+-- 드폭
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (8144495, '드폭', 1);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (8144495, 'Depok', 2);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (8144495, 'ドゥポク', 3);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (8144495, '德波克', 4);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (8144495, 'Depok', 5);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (8144495, 'Depok', 6);
+
+-- 마카사르
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1622786, '마카사르', 1);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1622786, 'Makassar', 2);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1622786, 'マカサル', 3);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1622786, '望加錫', 4);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1622786, 'Makassar', 5);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1622786, 'Makassar', 6);
+
+-- 메단
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1214520, '메단', 1);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1214520, 'medan', 2);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1214520, 'メダン', 3);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1214520, '棉蘭', 4);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1214520, 'medan', 5);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1214520, 'medan', 6);
+
+-- 바탐
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (8144723, '바탐', 1);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (8144723, 'Batam', 2);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (8144723, 'バタム', 3);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (8144723, '巴淡島', 4);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (8144723, 'Batam', 5);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (8144723, 'Batam', 6);
+
+-- 반다르람풍
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1624917, '반다르람풍', 1);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1624917, 'Bandar Lampung', 2);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1624917, 'バンダルラムプン', 3);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1624917, '班達楠榜', 4);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1624917, 'Bandar Lampung', 5);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1624917, 'Bandar Lampung', 6);
+
+-- 반둥
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1650357, '반둥', 1);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1650357, 'Bandung', 2);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1650357, 'バンドゥン', 3);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1650357, '萬隆', 4);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1650357, 'Bandung', 5);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1650357, 'Bandung', 6);
+
+-- 반자르마신
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1650213, '반자르마신', 1);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1650213, 'Banjarmasin', 2);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1650213, 'バンザルマシン', 3);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1650213, '馬辰', 4);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1650213, 'Banjarmasin', 5);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1650213, 'Banjarmasin', 6);
+
+-- 보고르
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (7780016, '보고르', 1);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (7780016, 'Bogor', 2);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (7780016, 'ボゴル', 3);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (7780016, '茂物', 4);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (7780016, 'Bogor', 5);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (7780016, 'Bogor', 6);
+
+-- 수라바야
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (8018250, '수라바야', 1);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (8018250, 'Surabaya', 2);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (8018250, 'スラバヤ', 3);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (8018250, '泗水', 4);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (8018250, 'Surabaya', 5);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (8018250, 'Surabaya', 6);
+
+-- 스마랑
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1627896, '스마랑', 1);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1627896, 'semarang', 2);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1627896, 'スマラン', 3);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1627896, '三寶壟', 4);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1627896, 'semarang', 5);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1627896, 'semarang', 6);
+
+-- 암본
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1651531, '암본', 1);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1651531, 'Ambon', 2);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1651531, 'アムボン', 3);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1651531, '安汶', 4);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1651531, 'Ambon', 5);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1651531, 'Ambon', 6);
+
+-- 자카르타
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1642911, '자카르타', 1);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1642911, 'Jakarta', 2);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1642911, 'ザカルタ', 3);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1642911, '雅加達', 4);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1642911, 'Jakarta', 5);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1642911, 'Jakarta', 6);
+
+-- 잠비
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1642858, '잠비', 1);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1642858, 'Jambi', 2);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1642858, 'ザムビ', 3);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1642858, '佔碑', 4);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1642858, 'Jambi', 5);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1642858, 'Jambi', 6);
+
+-- 탕에랑
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1625084, '탕에랑', 1);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1625084, 'Tangerang', 2);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1625084, 'タンエラン', 3);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1625084, '坦格朗', 4);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1625084, 'Tangerang', 5);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1625084, 'Tangerang', 6);
+
+-- 팔렘방
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1633070, '팔렘방', 1);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1633070, 'Palembang', 2);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1633070, 'パルレムバン', 3);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1633070, '大麥克', 4);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1633070, 'Palembang', 5);
+INSERT INTO EZPORTAL.TBL_WEATHER_CITY VALUES (1633070, 'Palembang', 6);
+
+-- tenant_id 없는 쿼리 하단으로 추가 끝
