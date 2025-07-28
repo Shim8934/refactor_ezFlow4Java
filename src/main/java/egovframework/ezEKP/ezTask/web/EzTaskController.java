@@ -1227,6 +1227,8 @@ public class EzTaskController extends EgovFileMngUtil {
 			}
 		}
 		
+		String nowDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false);
+		
 		model.addAttribute("mode", mode);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("useEditor", useEditor);
@@ -1239,6 +1241,7 @@ public class EzTaskController extends EgovFileMngUtil {
 		model.addAttribute("startDate", startDate);
 		model.addAttribute("endDate", endDate);
 		model.addAttribute("flag", flag);
+		model.addAttribute("nowDate", nowDate); // utc 타임존 적용을 위해 현재시간을 백에서 받아옴
 		
 		logger.debug("taskWrite ended.");
 		

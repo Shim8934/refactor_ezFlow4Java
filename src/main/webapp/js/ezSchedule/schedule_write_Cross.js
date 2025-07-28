@@ -814,7 +814,7 @@ function allday_change()
         	var eMonth = EDate.substring(5,7);
         	var eDay = EDate.substring(8,10);
         	
-        	var EDate2 = new Date();
+        	var EDate2 = new Date(nowDate);
 	        EDate2.setFullYear(eYear, parseInt(eMonth)-1, parseInt(eDay));
 	        $("#Edatepicker").datepicker('setDate', EDate2);
         }
@@ -828,7 +828,7 @@ function allday_change()
         if ((!timeSelect && datetype == "1") || datetype == "" || datetype == "2") { //하루종일 일정일 때 시간
         	//2018-08-28 김보미 - 현재시간으로 설정
         	if($("#Stimepicker").val() == "00:00" && $("#Etimepicker").val() == "23:59") {
-	        	var now = new Date();
+	        	var now = new Date(nowDate);
 	        	
 	        	//시작시간
 	        	var startTime;
@@ -922,7 +922,7 @@ function config_repeat_Complete(rtn) {
         document.getElementById("repeatinfo").innerHTML = "&nbsp;";
         document.getElementById("alldaycheck").checked = false;
         if($("#Stimepicker").val() == "00:00" && $("#Etimepicker").val() == "23:59") {
-        	var now = new Date();
+        	var now = new Date(nowDate);
         	
         	//시작시간
         	var startTime;

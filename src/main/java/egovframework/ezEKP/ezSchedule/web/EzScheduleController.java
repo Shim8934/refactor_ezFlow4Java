@@ -2406,6 +2406,8 @@ public class EzScheduleController extends EgovFileMngUtil {
 			model.addAttribute("AdminDeptList", AdminDeptList);
 		}
 
+		String nowDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), loginVO.getOffset(), false);
+		
         model.addAttribute("userId", userId);
         model.addAttribute("userName", userName);
         model.addAttribute("userName2", userName2);
@@ -2450,7 +2452,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 		model.addAttribute("permissionBasisDeptYN", permissionBasisDeptYN); // 겸직/사용자 기준 권한 설정 옵션 여부
 		model.addAttribute("chkSchedulePublic", chkSchedulePublic); // 개인일정 작성시 공개/비공개값 설정가능 여부
 		model.addAttribute("showtop", showtop); // 겸직/사용자 기준 권한 설정 옵션 여부
-
+		model.addAttribute("nowDate", nowDate); // utc 타임존 적용을 위해 현재시간을 백에서 받아옴
    		return "/ezSchedule/scheduleWrite";
 	}	
 		

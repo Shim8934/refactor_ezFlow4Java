@@ -70,6 +70,7 @@
 			var flag = "<c:out value='${flag}'/>";
 			var printTitle = "<spring:message code='ezApprovalG.pjj03'/>";
 			var cssLang = "<spring:message code='main.default.css'/>";
+			var nowDate = "<c:out value='${nowDate}'/>";
 			
 			$(function () {
 				 $("#Sdatepicker").datepicker({

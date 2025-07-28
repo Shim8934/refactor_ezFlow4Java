@@ -79,6 +79,7 @@
 			var chkPublic = "<c:out value='${chkSchedulePublic}'/>"; // 개인일정 작성시 공개/비공개값 설정가능 여부
 		    var showtop = "<c:out value='${showtop}'/>";
 		    var lang = "<c:out value='${lang}'/>";
+			var nowDate = "<c:out value='${nowDate}'/>";
 
 		    /* 20203-09-22 한태훈 - 초대 일정 수정시 참석자에게 메일 보내는 용도 */
 			var modAttendIdList = [];
@@ -110,7 +111,7 @@
 		        // 상단표시로 바로 작성할 때
                 if (showtop == 'Y') {
                     document.getElementById("topcheck").checked = true;
-                    var now = new Date();
+                    var now = new Date(nowDate);
 
                     //시작시간
                     var startTime;
