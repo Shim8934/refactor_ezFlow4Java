@@ -444,7 +444,7 @@
 .cabphotooff, .cabUploadHelp.off {display: none;}
 .scrollPrint {padding: 7px 0px;}
 .popup_noti_btnarea.cabdelpp {border-radius: 0px 0px 4px 4px !important;}
-.cabcolor th {background-color: #eff6ff !important; color:#333;}
+.cabcolor th { color:#333;}
 .blankBody {height: 100%; min-width: 450px; min-height: 450px;}
 .blankDiv {border-radius: 30px; display: flex; flex-flow: column; justify-content: center; align-items: center;}
 .blankDiv img {width:205px; height:205px;}

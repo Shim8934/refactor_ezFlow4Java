@@ -11,6 +11,7 @@
 		<link rel="stylesheet" type="text/css" href="${util.addVer('/css/jquery-ui.css')                       }">
 		<link rel="stylesheet" type="text/css" href="${util.addVer('/js/jquery/dateControls/jquery.ui.all.css')}">
 		<link rel="stylesheet" type="text/css" href="${util.addVer('/js/jquery/dateControls/demos.css')        }">
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<style>
 			.cabPrevItemJP dd {
 				padding: 0px 0px 2px 68px;
@@ -36,23 +37,23 @@
 			<ul>
 				<c:choose>
 					<c:when test="${cabinet.permission == '2'}">
-						<li id="addBttn" class="important"><a><span><spring:message code='ezCabinet.t45'/></span></a></li>
-						<li id="movBttn"><a><span><spring:message code='ezCabinet.t47'/></span></a></li>
-						<li id="shaBttn"><a><span><spring:message code='ezCabinet.t50'/></span></a></li>
-						<li id="schBttn"><a><span class="icon16 icon16_search"></span></a></li>
-						<li id="delBttn"><a><span class="icon16 icon16_delete"></span></a></li>
-						<li id="refBttn"><a><span class="icon16 icon16_refresh"></span></a></li>
+						<li id="addBttn" class="important"><span><spring:message code='ezCabinet.t45'/></span></li>
+						<li id="movBttn"><span><spring:message code='ezCabinet.t47'/></span></li>
+						<li id="shaBttn"><span><spring:message code='ezCabinet.t50'/></span></li>
+						<li id="schBttn"><span class="icon16 icon16_search"></span></li>
+						<li id="delBttn"><span class="icon16 icon16_delete"></span></li>
+						<li id="refBttn"><span class="icon16 icon16_refresh"></span></li>
 					</c:when>
 					<c:when test="${cabinet.permission == '1'}">
-						<li id="addBttn" class="important"><a><span style="color: #0470e4;"><spring:message code='ezCabinet.t45'/></span></a></li>
-						<li id="movBttn"><a><span><spring:message code='ezCabinet.t47'/></span></a></li>
-						<li id="schBttn"><a><span class="icon16 icon16_search"></span></a></li>
-						<li id="delBttn"><a><span class="icon16 icon16_delete"></span></a></li>
-						<li id="refBttn"><a><span class="icon16 icon16_refresh"></span></a></li>
+						<li id="addBttn" class="important"><span style="color: #0470e4;"><spring:message code='ezCabinet.t45'/></span></li>
+						<li id="movBttn"><span><spring:message code='ezCabinet.t47'/></span></li>
+						<li id="schBttn"><span class="icon16 icon16_search"></span></li>
+						<li id="delBttn"><span class="icon16 icon16_delete"></span></li>
+						<li id="refBttn"><span class="icon16 icon16_refresh"></span></li>
 					</c:when>
 					<c:otherwise>
-						<li id="schBttn"><a><span class="icon16 icon16_search"></span></a></li>
-						<li id="refBttn"><a><span class="icon16 icon16_refresh"></span></a></li>
+						<li id="schBttn"><span class="icon16 icon16_search"></span></li>
+						<li id="refBttn"><span class="icon16 icon16_refresh"></span></li>
 					</c:otherwise>
 				</c:choose>
 				

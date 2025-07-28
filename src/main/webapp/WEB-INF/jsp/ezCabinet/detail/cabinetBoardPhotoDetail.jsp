@@ -11,26 +11,33 @@
 		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
 		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<link rel="stylesheet" type="text/css" href="${util.addVer('/css/ezCabinet/cabinet.css')}">
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 	</head>
 	<body class="popup cabDetail">
 		<%-- <h1 id="fileFileH1"><spring:message code='ezCabinet.t108'/></h1> --%>
-		<div class="cabBttnDiv2" id="fileDivBttn">
-			<c:if test="${permission != 0}">
-				<a class="cabBttn2"><span><spring:message code='ezCabinet.t78'/></span></a>
-				<a class="cabBttn2"><span><spring:message code='ezCabinet.t46'/></span></a>
-			</c:if>
-			<a class="cabBttn2"><span><spring:message code='ezCabinet.t144'/></span></a>
-			<%-- <a class="cabBttnP"><span><spring:message code='ezCabinet.t66'/></span></a> --%>
-		</div>
-		
-		<jsp:include page="/WEB-INF/jsp/ezCabinet/detail/cabinetPhotoDownload.jsp"></jsp:include>
-		
-		<c:if test="${permission != 0}">
-			<div class="cabBttnDiv2" id="fileModifyDivBttn" style="display: none;">
-				<a class="cabBttn2"><span><spring:message code='ezCabinet.t14'/></span></a>
-				<a class="cabBttn2"><span><spring:message code='ezCabinet.t15'/></span></a>
+		<div id="menu">
+			<div class="cabBttnDiv2" id="fileDivBttn">
+				<ul>
+					<c:if test="${permission != 0}">
+						<li class="cabBttn2"><span><spring:message code='ezCabinet.t78'/></span></li>
+						<li class="cabBttn2"><span><spring:message code='ezCabinet.t46'/></span></li>
+					</c:if>
+					<li class="cabBttn2"><span><spring:message code='ezCabinet.t144'/></span></li>
+					<%-- <a class="cabBttnP"><span><spring:message code='ezCabinet.t66'/></span></a> --%>
+				</ul>
 			</div>
-		</c:if>
+			
+			<jsp:include page="/WEB-INF/jsp/ezCabinet/detail/cabinetPhotoDownload.jsp"></jsp:include>
+			
+			<c:if test="${permission != 0}">
+				<div class="cabBttnDiv2" id="fileModifyDivBttn" style="display: none;">
+					<ul>
+						<li class="cabBttn2"><span><spring:message code='ezCabinet.t14'/></span></li>
+						<li class="cabBttn2"><span><spring:message code='ezCabinet.t15'/></span></li>
+					</ul>
+				</div>
+			</c:if>
+		</div>
 		<div id="cabRlClose" class="cabClose"><ul><li><span></span></li></ul></div>
 		<div class="divInfo">
 			<table class="tblBoardInf cabcolor">

@@ -22,11 +22,11 @@
 		<jsp:include page="/WEB-INF/jsp/ezCabinet/management/cabinetDelete.jsp"></jsp:include>
 		
 		<div class="cabdivBttn2" id="cabMgDivBttn">
-			<a class="cabBttn"><span><spring:message code="ezCabinet.t75"/></span></a>
-			<a class="cabBttn"><span><spring:message code="ezCabinet.t78"/></span></a>
-			<a class="cabBttn"><span><spring:message code="ezCabinet.t76"/></span></a>
-			<a class="cabBttn"><span><spring:message code="ezCabinet.t77"/></span></a>
-			<a class="cabBttn"><span><spring:message code="ezCabinet.t46"/></span></a>
+			<a class="imgbtn"><span><spring:message code="ezCabinet.t75"/></span></a>
+			<a class="imgbtn"><span><spring:message code="ezCabinet.t78"/></span></a>
+			<a class="imgbtn"><span><spring:message code="ezCabinet.t76"/></span></a>
+			<a class="imgbtn"><span><spring:message code="ezCabinet.t77"/></span></a>
+			<a class="imgbtn"><span><spring:message code="ezCabinet.t46"/></span></a>
 		</div>
 		
 		<script type="text/javascript" src="${util.addVer('ezCabinet.lang', 'msg')          }"></script>
