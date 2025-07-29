@@ -204,9 +204,12 @@ function setAttachInfo(tempDocID, INGFlag, attachTag) {
                 strAttach = strAttach + MakeXMLString(getNodeText(GetChildNodes(xmlRtn[i])[1])) + "</a>";
                 
                 // 2023-05-25 조수빈 - 첨부파일 미리보기 아이콘 추가
-                if (typeof useAprFilePrvw !== 'undefined' && useAprFilePrvw == "1") {
-                	strAttach += "<span class='icon_rbtn2' style='margin-left : 10px;' title=\"" + strLangJSBAP01 + "\" onclick=\"attachFile_Preview('" + filepath + "', '" + encodeURIComponent(filename) + "');\"><img src='/images/icon_preview.png' width='16' height='16' style='vertical-align:middle; cursor:pointer;'></span>";
-				}
+               if (typeof useAprFilePrvw !== 'undefined' && useAprFilePrvw == "1") {
+                    strAttach += "<span class='icon_rbtn2 file-preview' data-filepath=\"" + encodeURIComponent(filepath) + "\" data-filename=\"" + encodeURIComponent(filename) + "\" " +
+                                 "style='margin-left:10px;' title=\"" + strLangJSBAP01 + "\">" +
+                                 "<img src='/images/icon_preview.png' width='16' height='16' style='vertical-align:middle; cursor:pointer;'></span>";
+                }
+               
                 
                 if (SelectSingleNodeValue(GetChildNodes(xmlRtn[i])[0], "ISBIGATTACH") == "Y") { // 대용량첨부파일 표시
                 	strAttach = strAttach + " <font style='color:blue'>[" + strLangHSBAt02 + "]</font> &nbsp;</span>";
@@ -285,6 +288,16 @@ function setAttachInfo(tempDocID, INGFlag, attachTag) {
         try {
             pHasAttachYN = "Y";
         } catch (e) { }
+       
+        // SAT 뷰어 미리보기 함수 바인딩
+        document.addEventListener('click', function (e) {
+            const el = e.target.closest('.file-preview');
+            if (!el) return;
+        
+            const filepath = decodeURIComponent(el.dataset.filepath);
+            const filename = decodeURIComponent(el.dataset.filename);
+            attachFile_Preview(filepath, filename);
+        });
     }
     else {
         try {

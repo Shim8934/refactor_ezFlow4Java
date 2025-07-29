@@ -13087,12 +13087,12 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		// try-catch-with-resources로 자동 close 사용
 		try (OutputStream output = response.getOutputStream()) {
 			// 기존 첨부파일 객체 생성
-			pFilePath = URLDecoder.decode(pFilePath, "UTF-8");
-			fileName = URLDecoder.decode(fileName, "UTF-8");
+			pFilePath = commonUtil.htmlUnescape(URLDecoder.decode(pFilePath, "UTF-8"));
+			fileName = commonUtil.htmlUnescape(URLDecoder.decode(fileName, "UTF-8"));
 
 			logger.debug("filePath(decode) : {}", pFilePath);
 			
-			String realPath = commonUtil.getRealPath(request);
+			String realPath = commonUtil.htmlUnescape(commonUtil.getRealPath(request));
 			File srcFile = new File(commonUtil.detectPathTraversal(realPath + pFilePath));
 			
 			if (!srcFile.exists() || !srcFile.isFile()) {
