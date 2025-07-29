@@ -4356,3 +4356,4 @@ body.drag *{user-select:none !important;}
 /* mainlist checkbox,radio align */
 .mainlist .custom_checkbox input[type="checkbox"],
 .mainlist .custom_radio input[type="radio"]{vertical-align:inherit;}
+.custom_radio input[type="radio"] + label + input[type="radio"]{margin-left: 20px !important;}
