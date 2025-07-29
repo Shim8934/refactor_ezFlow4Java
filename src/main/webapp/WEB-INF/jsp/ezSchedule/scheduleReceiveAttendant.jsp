@@ -444,7 +444,7 @@
 	                    </td> 
 	                    <td style="text-align:center;"><c:out value="${item.location }" /></td> 
 	                    <td title="<spring:message code='ezSchedule.t342' />" style="word-break:break-all; cursor:pointer; text-overflow:ellipsis; overflow:hidden; text-align:center;" onClick="open_schedule_in_receiveAttendant('${item.scheduleId}', 'Y')"><c:out value="${item.title}" /></td> 
-	                    <td class="showDateType" style="white-space:nowrap; text-align:center;" startDate="${item.startDate}" endDate="${item.endDate}" dateType="${item.dateType}" repetition="${item.repetition}" showtop="${item.showtop}"></td>
+	                    <td class="showDateType" style="text-align:center;" startDate="${item.startDate}" endDate="${item.endDate}" dateType="${item.dateType}" repetition="${item.repetition}" showtop="${item.showtop}"></td>
 	                </tr>	              		
 	              	</c:forEach>	                 
 	            </table>
