@@ -518,7 +518,8 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 						Folder fd = subMailFolder.get(i);
 
 						String folderId = fd.getName();
-						String displayName = ezEmailUtil.getDisplayNameFromFolderId(folderId, locale);
+						//String displayName = ezEmailUtil.getDisplayNameFromFolderId(folderId, locale);
+						String displayName = folderId;
 
 						subFolderXML.append("<node imgidx='1'");
 
