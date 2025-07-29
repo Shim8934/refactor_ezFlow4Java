@@ -469,9 +469,9 @@
 						$('#tblList').find('tbody').remove();
 						$('#tblList').append('<tbody>' + ReplaceHTML(result) + '</tbody>');
 
-						var index = ReplaceHTML(result).lastIndexOf("</tr>");
+						var index = ReplaceHTML(result).indexOf("<ROOT>");
 
-						var result2 = result.substring(index + 5);
+						var result2 = ReplaceHTML(result).substring(index);
 
 						var parser = new DOMParser();
 						var xmlDoc = parser.parseFromString(result2, "text/xml");
@@ -632,8 +632,10 @@
 						<input class="inputText" type="text" id="Sdatepicker" readonly  style="vertical-align: middle;font-size:13px; text-align:center;border:1px solid #ddd;">
 						<span style="vertical-align: middle;margin-left:5px;margin-right:5px;">~</span>
 						<input class="inputText" type="text" id="Edatepicker" readonly style="vertical-align: middle;font-size:13px; text-align:center;border:1px solid #ddd;">&nbsp;&nbsp;&nbsp;
-						<span style="vertical-align:middle;margin-right: 137px;"><spring:message code = 'ezCommunity.lyj50' /></span>
-						<a class="imgbtn imgbck" style="vertical-align: middle;height:22px;margin:0px"><span onClick="javascript:search();" style="height:22px;line-height:22px;font-size: 13px;"><spring:message code = 'ezCommunity.lyj51' /></span></a>
+						<span style="vertical-align:middle;"><spring:message code = 'ezCommunity.lyj50' /></span>
+						<div style="float:right;display:inline-block;margin: 3px 10px 0px 0px;">
+							<a class="imgbtn imgbck" style="vertical-align: middle;height:22px;margin:0px"><span onClick="javascript:search();" style="height:22px;line-height:22px;font-size: 13px;"><spring:message code = 'ezCommunity.lyj51' /></span></a>
+						</div>
 					</td>
 				</tr>
 			</table>
