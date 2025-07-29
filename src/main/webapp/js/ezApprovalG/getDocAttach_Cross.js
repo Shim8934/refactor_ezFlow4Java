@@ -200,7 +200,7 @@ function setAttachInfo(tempDocID, INGFlag, attachTag) {
                 strAttach = strAttach + "<a href= /ezApprovalG/downloadAttach.do?fileName=" + filename + "&docID=" + tempDocID + "&docStatus=" + INGFlag + "&docAttachSN=" + SelectSingleNodeValue(GetChildNodes(xmlRtn[i])[0], "DATA2") + "&filePath=" + filepath + " onclick='AttachProcess(event)'>";
                 //strAttach = strAttach + "<a href='/myoffice/Common/downloadattach.aspx?filename=" + filename + "&filepath=" + filepath + "' " + strTarget + "' onclick='AttachProcess()'>";
 
-                strAttach = strAttach + "<IMG SRC='" + fileImage + "' border='0' style='vertical-align:middle;'>";
+                strAttach = strAttach + "<IMG SRC='" + fileImage + "' border='0' style='vertical-align:middle; padding-right: 3px;'>";
                 strAttach = strAttach + MakeXMLString(getNodeText(GetChildNodes(xmlRtn[i])[1])) + "</a></label></div>";
                 
                 // 2023-05-25 조수빈 - 첨부파일 미리보기 아이콘 추가

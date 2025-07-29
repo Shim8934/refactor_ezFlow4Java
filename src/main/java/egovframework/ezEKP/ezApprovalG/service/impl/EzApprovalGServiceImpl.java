@@ -3010,7 +3010,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		int dlength = docXML.getElementsByTagName("ROW").getLength();
 		
 		if (approvalFlag.equals("S")) {
-			rtnXML.append("<div style='padding-top:5px'>");
+			rtnXML.append("<div>");
 		}
 		
         if (approvalFlag.equals("S")) {
@@ -26968,7 +26968,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		int dlength = docXML.getElementsByTagName("ROW").getLength();
 		
-		rtnXML.append("<div style='padding-top:5px'>");
+		rtnXML.append("<div>");
 		rtnXML.append("<div class='custom_radio'>");
 		for (int k = 0; k < dlength; k++) {
 			String[] colOption = docXML.getElementsByTagName("NAME").item(k).getTextContent().split(";");

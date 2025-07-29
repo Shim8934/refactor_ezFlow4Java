@@ -3180,12 +3180,12 @@
 	                                    <div>
 	                                        <table class="content" style="margin-top: 6px; width: 100%;">
 	                                            <tr>
-	                                                <td colspan="2" style="margin-top: 3px; text-align: center; background-color: #f8f8fa">
+	                                                <td colspan="2" style="text-align: center; background-color: #f8f8fa">
 														<div class="custom_checkbox">
-															<input type="checkbox" name="Reporter" id="Reporter" value="checkbox" onclick="return Reporter_onclick()" style="height: 13px; width: 13px; padding: 0px; margin: 0px; vertical-align: top; margin: 3px 2px 0 0;">
-															<label for="Reporter"><span style="display: inline-block; margin-top: 4px;"><spring:message code='ezApprovalG.t409'/></span></label>
-															<input type="checkbox" id="Suggester" name="Suggester" value="checkbox" onclick="return Suggester_onclick()" style="height: 13px; width: 13px; padding: 0px; margin: 0px; vertical-align: top; margin: 3px 2px 0 0;">
-															<label for="Suggester"><span style="display: inline-block; margin-top: 4px;"><spring:message code='ezApprovalG.t410'/></span></label>
+															<input type="checkbox" name="Reporter" id="Reporter" value="checkbox" onclick="return Reporter_onclick()" style="height: 13px; width: 13px; padding: 0px; margin: 0px; vertical-align: top; margin: 4px 2px 0 0;">
+															<label for="Reporter"><span style="display: inline-block;"><spring:message code='ezApprovalG.t409'/></span></label>
+															<input type="checkbox" id="Suggester" name="Suggester" value="checkbox" onclick="return Suggester_onclick()" style="height: 13px; width: 13px; padding: 0px; margin: 0px; vertical-align: top; margin: 4px 2px 0 10px;">
+															<label for="Suggester"><span style="display: inline-block;"><spring:message code='ezApprovalG.t410'/></span></label>
 														</div>
 	                                                </td>
 	                                            </tr>
@@ -3661,7 +3661,7 @@
 		            <tr>
 		                <th><spring:message code='ezApprovalG.t875'/></th>
 		                <td>
-		                    <div style="padding-left: 3px;">
+		                    <div>
 								<div class="custom_checkbox">
 									<input type="checkbox" name="special1" id="special1" value="checkbox" style="height: 13px; width: 13px; padding: 0px; margin: 0px;"><label for="special1"><span style="padding-right: 10px;"><spring:message code='ezApprovalG.t1205'/></span></label>
 									<input type="checkbox" name="special2" id="special2" value="checkbox" style="height: 13px; width: 13px; padding: 0px; margin: 0px;"><label for="special2"><span style="padding-right: 10px;"><spring:message code='ezApprovalG.t984'/></span></label>
@@ -3759,7 +3759,7 @@
 		            <tr>
 		                <th><spring:message code='ezApprovalG.t989'/></th>
 		                <td>
-		                    <div style="padding-top: 5px; padding-left: 3px;">
+		                    <div style="padding-left: 3px;">
 								<div class="custom_checkbox">
 									<input type="checkbox" name="selSecLevel1" id="selSecLevel1" value="checkbox" style="height: 13px; width: 13px; padding: 0px; margin: 0px;"><label for="selSecLevel1"><span style="padding-right: 10px;">1호</span></label>
 									<input type="checkbox" name="selSecLevel2" id="selSecLevel2" value="checkbox" style="height: 13px; width: 13px; padding: 0px; margin: 0px;"><label for="selSecLevel2"><span style="padding-right: 10px;">2호</span></label>

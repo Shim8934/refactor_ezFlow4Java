@@ -1393,7 +1393,7 @@ var SurveyCreate     = function() {
 		var fileAttToolTip = $("<div class='fileAttTooltip'><div class='fileAttTooltipContent'><div class='fileAttTooltipLine' mode='questionImg'>" + SurveyMessages.strQuestionImage +"</div><div class='fileAttTooltipDivider'></div><div class='fileAttTooltipLine' mode='fileAttach'>" + SurveyMessages.strQuestionFileAttach +"</div></div></div>")
 		var liAttImg     = $("<li class='off atchLiImg'><span class='survey_icon atchImg'></span></li>");
 		var liAttUrl     = $("<li class='off atchLiUrl'><span class=''>" + SurveyMessages.strAttUrl + "</span></li>");
-		var divRequired  = $("<div class='required'><div class='custom_checkbox'><input type='checkbox'><label>" + SurveyMessages.strRequired + "</label></div></div>");
+		var divRequired  = $("<div><div class='custom_checkbox'><input type='checkbox'><label>" + SurveyMessages.strRequired + "</label></div></div>");
 		var selectBox    = $("<div class='selectBox'></div>");
 		var qstnFileInfo = $("<div class='qstnFileInfo'></div>");
 		var fileList     = $("<div class='fileList'></div>");

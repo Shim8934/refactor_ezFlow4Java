@@ -1090,8 +1090,8 @@
 		    		closePElem.id = "closeBtn" + popup_number;
 		    		
 		    		checkInputDiv.appendChild(checkInput);
+		    		checkInputDiv.appendChild(labelElem);
 		    		btnPElem.appendChild(checkInputDiv);
-		    		btnPElem.appendChild(labelElem);
 		    		btnDiv.appendChild(btnPElem);
 		    		
 		    		layoutDiv.appendChild(titleDl);

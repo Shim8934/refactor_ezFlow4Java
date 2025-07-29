@@ -518,7 +518,7 @@
 	    		htmlStr += '<tr id="attList_' + (i+1) + '" class="white" onclick="event_listclick(this, event)" ondblclick="mod_detail(this)" draggable="true" style="cursor:pointer;">';
 	    		if (excel == true) {
 	    		} else {
-	    			htmlStr += '<td style="padding:0"> <div class="custom_checkbox"><input type="checkbox" class="checkAtt"' 
+	    			htmlStr += '<td style="width: 22px; text-align: center; cursor:default;"> <div class="custom_checkbox"><input type="checkbox" class="checkAtt"' 
 	    	    	htmlStr += 'id="attCheck_' + attList[i].attitudeId + '_' + attList[i].applCnt +'"';
 	    	    	htmlStr += 'value="' + attList[i].attitudeId + '_' + attList[i].applCnt +'"';
 	    	    	htmlStr += 'status="' + attList[i].apprStatus + '"';
@@ -1160,7 +1160,7 @@
 		<div id="contentlist" name="contentlist" style="border:0px solid blue;height:680px;width:100%;overflow-y:auto;" onblur>
 		<table class="mainlist" style="width:100%;" id="AttList" listpageCount="${mailGeneral.listCount}" curPage="1">
 			<tr>
-				<th width="20px" align="center"> <%-- <spring:message code="ezPoll.t105"/> --%>
+				<th width="20px" align="center" style="width: 22px; text-align: center; cursor:default;"> <%-- <spring:message code="ezPoll.t105"/> --%>
 					<div class="custom_checkbox"><input type="checkbox" id="HeaderAllCheckBox" style="margin: 0px; padding: 0px; width: 13px; height: 13px;" onchange="javascript:event_HeaderCheckBoxClick(this)"/></div>
 				</th>
 				<th width="60px" colname="NO">NO.</th>

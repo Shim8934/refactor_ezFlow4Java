@@ -781,7 +781,7 @@
 		<div style = "height:370px;">
 			<table  id="tblList" class="cmhomelist" style="width:100%">
 				<tr>
-					<th style="width:20px;padding-top:2px;"><div class="custom_checkbox"><input type='checkbox' name="checkbox" onclick='checkBox_checkAll()'></div></th>
+					<th style="width:20px;padding-top:2px; text-align: center;"><div class="custom_checkbox"><input type='checkbox' name="checkbox" onclick='checkBox_checkAll()'></div></th>
 					<c:if test="${pBoardID == '{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}' }">
 						<c:choose>
 							<c:when test="${pSortBy == 'BoardName'}">

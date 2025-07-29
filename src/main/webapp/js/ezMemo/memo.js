@@ -23,6 +23,8 @@ function createMemo(memo, flag) {
 		
         var inputDiv = document.createElement("div");
         inputDiv.className = "custom_checkbox";
+        inputDiv.style.float = "left";
+        inputDiv.style.margin = "10px 5px 0 0";
         
 		var input = document.createElement("input");
 		input.setAttribute("id", memo.memo_id);
