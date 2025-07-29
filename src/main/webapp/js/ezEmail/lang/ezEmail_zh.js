@@ -315,6 +315,7 @@ var strLangLS03 = "The search results will be downloaded as a single zip file. \
 var strLangLS04 = ".";
 var strLangLS05 = "';' cannot be contained."
 var strLangAllmailSaveAlert = "선택된 메일이 없습니다. \n메일을 선택하거나 메일 검색 후 저장해 주세요."
+var strLangEachIcon = "개인별";
 
 /* 2018-07-03 홍승비 - 승인게시물, 커뮤니티 답변메일 companyID 관련 처리*/
 var strLangHSB01 = "此公告 在 ";

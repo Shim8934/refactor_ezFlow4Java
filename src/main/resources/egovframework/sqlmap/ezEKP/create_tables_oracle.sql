@@ -475,7 +475,8 @@ AND    ( tbl_aprdocinfo.startdate IS NOT NULL ));
 	"MAIL_UID" NUMBER, 
 	"IMPORTANCE" NUMBER DEFAULT 1, 
 	"MESSAGE_ID" VARCHAR2(500 BYTE),
-	"SECURE_FLAG" NUMBER DEFAULT 0
+	"SECURE_FLAG" NUMBER DEFAULT 0,
+	"EACH_FLAG" NUMBER DEFAULT 0
    ) ;
 --------------------------------------------------------
 --  DDL for Table JAMES_MAIL_USERFLAG

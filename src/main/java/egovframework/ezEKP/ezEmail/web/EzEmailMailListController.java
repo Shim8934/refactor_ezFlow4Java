@@ -659,6 +659,9 @@ public class EzEmailMailListController {
 					// secureMail
 					sb.append(String.format("<securemail>%s</securemail>", mailInfo.get("MAIL_IS_SECURED")));
 
+					// isEach
+					sb.append(String.format("<isEach>%s</isEach>", mailInfo.get("MAIL_SENT_IN_EACH")));
+
 					if (viewSelectIndex.equals("1")) {
 						String htmlBody = mailInfo.get("CONTENT");
 
@@ -1342,6 +1345,9 @@ public class EzEmailMailListController {
 					
 					// secureMail
 					sb.append(String.format("<securemail>%s</securemail>", mailInfo.get("MAIL_IS_SECURED")));
+
+					// isEach
+					sb.append(String.format("<isEach>%s</isEach>", mailInfo.get("MAIL_SENT_IN_EACH")));
 					
 					if (viewSelectIndex.equals("1")) {
 						String htmlBody = mailInfo.get("CONTENT");
@@ -2879,6 +2885,10 @@ public class EzEmailMailListController {
 				
 				if (ezEmailUtil.hasSecureMailFlag(message)) {
 					subject = "<img src=\"/images/email/secureMail/security_icon.gif\" width=\"12\" />" + subject;
+				}
+
+				if (ezEmailUtil.isEachMail(message)) {
+					subject = "<span class='eachMail_icon'>" + egovMessageSource.getMessage("ezEmail.eachIcon", locale) + "</span>" + subject;
 				}
 				
 				int readFlag = message.isSet(Flags.Flag.SEEN) ? 1 : 0;

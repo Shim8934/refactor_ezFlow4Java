@@ -2300,6 +2300,12 @@ public class EzCommonServiceImpl extends EzFileMngUtil implements EzCommonServic
 			put("TYPE_MYSQL", "int(1)"); put("TYPE_ORACLE", "NUMBER");
 			put("AFTER", "DEFAULT 0");
 		}});
+		test.add(new HashMap<String, Object>(){{ // 2025-07-24 김은실 - [국립암센터] 목록에 개별발신 메일 표기
+			put("TABLE","JAMES_MAIL_SEARCH");
+			put("COLUMN", "EACH_FLAG");
+			put("TYPE_MYSQL", "int(1)"); put("TYPE_ORACLE", "NUMBER");
+			put("AFTER", "DEFAULT 0");
+		}});
 
 		// JMOCHA_DISTRIBUTION
 		test.add(new HashMap<String, Object>(){{ // 2018-09-30 commit edbc67f

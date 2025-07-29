@@ -96,6 +96,9 @@ function getMailList(currPage) {
 					sender = mailList[i].sender;
 					listHTML2 += "<li class="+readClass+" onclick='open_mail(&#39;" + href + "&#39;)'>";
 					listHTML2 += "<span class='txt'>";
+					if (mailList[i].isEach === "true") {
+						listHTML2 += "<span class='eachMail_icon'>" + strLangEachIcon + "</span>";
+					}
 					if (mailList[i].securedMail === "true") {
 						listHTML2 += "<span class='security_icon'></span>";
 					}

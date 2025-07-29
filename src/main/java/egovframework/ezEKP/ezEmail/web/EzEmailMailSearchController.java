@@ -405,6 +405,9 @@ public class EzEmailMailSearchController {
 					// secureMail
 					sb.append(String.format("<SECUREMAIL>%s</SECUREMAIL>", mailInfo.get("MAIL_IS_SECURED")));
 					
+					// isEach
+					sb.append(String.format("<isEach>%s</isEach>", mailInfo.get("MAIL_SENT_IN_EACH")));
+
 					sb.append(String.format("<IMPORTANCE><![CDATA[%s]]></IMPORTANCE>", mailInfo.get("IMPORTANCE")));
 					
 					// attachment

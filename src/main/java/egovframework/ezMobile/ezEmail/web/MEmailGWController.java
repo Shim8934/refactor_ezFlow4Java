@@ -860,7 +860,10 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 
 					// secureMail
 					messageJson.put("securedMail", "1".equals(mailInfo.get("MAIL_IS_SECURED")));
-					
+
+					// isEach
+					messageJson.put("isEach", "1".equals(mailInfo.get("MAIL_SENT_IN_EACH")));
+
 					if (!endDate.equals(receivedDateStr)) {
 						messageJsonArray.add(messageJson);
 					}

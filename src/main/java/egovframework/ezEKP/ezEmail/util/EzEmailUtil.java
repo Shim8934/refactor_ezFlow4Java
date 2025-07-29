@@ -4229,6 +4229,19 @@ public class EzEmailUtil {
 		return isSecureMail;
 	}
 	
+	public boolean isEachMail(Message message) throws MessagingException {
+		boolean isEach = false;
+
+		if (message.getHeader("X-JMocha-Each-Mail") != null) {
+            String value = message.getHeader("X-JMocha-Each-Mail")[0];
+			if ("true".equalsIgnoreCase(value)) {
+				isEach = true;
+			}
+		}
+
+		return isEach;
+	}
+
 	public void setSecureMailFlag(Message message, boolean isSet) throws MessagingException {
 		Flags secureMailFlag = new Flags("$SecureMail");
 		

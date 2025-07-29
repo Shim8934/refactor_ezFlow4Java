@@ -4078,9 +4078,9 @@ a.commentFileSpan:hover {cursor: pointer; text-decoration: underline;}
 /* 게시판 공개 비공개 */
 
 .security_icon{display:inline-block; width:16px; height:16px; background:url(/images/email/secureMail/security_icon.svg) no-repeat center / 16px 16px;}
-
 .portlet_list li .txt .security_icon{vertical-align:top; margin:2px 5px 0 0;}
 
+.eachMail_icon{background: #E8F0FE; color: #408EE3; padding: 2px 6px; border-radius: 4px; margin-right: 5px} /*개별발신한 메일인 경우 "개인별" 아이콘*/
 
 #TreeCtrl_MyFavTree_ul > .lnbUL {
 	padding-top: 0px;
