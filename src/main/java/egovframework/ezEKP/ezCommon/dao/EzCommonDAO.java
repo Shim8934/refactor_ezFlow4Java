@@ -3664,7 +3664,18 @@ public class EzCommonDAO extends EgovAbstractDAO {
         } catch (Exception e) {
             logger.debug("In TBL_C_CLUBUSER doesn't exist ADMIN_AUTH column. creating the column...");
 
-            update("EzCommonDAO.alterTblClubUserAdminAuthColumn");
-        }
-    }
+			update("EzCommonDAO.alterTblClubUserAdminAuthColumn");
+		}
+	}
+
+	// 2025-07-23 이유정 - 커뮤니티 > 회원탈퇴일자 컬럼 추가
+	public void alterTblClubUserWithdrawDateColumn() {
+		try {
+			select("EzCommonDAO.checkTblClubUserWithdrawDateColumn");
+		} catch (Exception e) {
+			logger.debug("In TBL_C_CLUBUSER doesn't exist C_WITHDRAWDATE column. creating the column...");
+
+			update("EzCommonDAO.alterTblClubUserWithdrawDateColumn");
+		}
+	}
 }

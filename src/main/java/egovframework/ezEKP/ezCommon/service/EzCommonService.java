@@ -643,4 +643,7 @@ public interface EzCommonService {
 
 	// 2025-07-15 이유정 - 커뮤니티 > 운영자권한 컬럼 추가
 	public void alterTblClubUserAdminAuthColumn() throws Exception;
+
+	// 2025-07-23 이유정 - 커뮤니티 > 회원탈퇴일자 컬럼 추가
+	public void alterTblClubUserWithdrawDateColumn() throws Exception;
 }

@@ -36,6 +36,12 @@ import javax.servlet.http.HttpServletResponse;
 
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGKlibService;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.hssf.usermodel.HSSFCellStyle;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.hssf.util.HSSFColor;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -87,6 +93,7 @@ import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 import egovframework.ezEKP.ezConn.util.EzConnUtil;
+import org.w3c.dom.Node;
 
 /** 
  * @Description [Controller] 커뮤니티
@@ -2501,7 +2508,48 @@ public class EzCommunityController extends EgovFileMngUtil{
 	@RequestMapping(value = "/ezCommunity/commViewMember.do", method = RequestMethod.GET)
 	public String commViewMember(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		String keyword = "", sRadio = "", block = "", selectGrade = "";
+		
+		String code = request.getParameter("code");
+
+		if (!ezCommunityService.communityConnCHK(userInfo.getId(), code, "", userInfo.getRollInfo(), 1, response, userInfo, "")) {
+			return "cmm/error/egovError";
+		}
+
+		String strSysopID = ezCommunityService.adminMemberListGet2(code, userInfo.getTenantId()).trim();
+
+		if (strSysopID.equals(userInfo.getId())) {
+			model.addAttribute("chkSysop", "1");
+		}
+
+		// 운영자 권한정보
+		List<CommunityCClubUserVO> operatorList = ezCommunityService.getClubOperatorList(userInfo.getCompanyID(), userInfo.getTenantId(), code, userInfo.getId());
+
+		if (operatorList != null && !operatorList.isEmpty()) {
+			String adminAuth = operatorList.get(0).getAdmin_Auth();
+			model.addAttribute("adminAuth", adminAuth);
+		}
+
+		CommunityClubVO clubCntInfo = ezCommunityService.getClubUserCountInfo(code, userInfo.getCompanyID(), userInfo.getTenantId(), userInfo.getOffset());
+		int totalUserCnt = clubCntInfo.getTotalUserCnt(); // 총 회원수
+		int todayJoinCnt = clubCntInfo.getTodayJoinCnt(); // 오늘 가입수
+		int todayLeaveCnt = clubCntInfo.getTodayLeaveCnt(); // 오늘 탈퇴수
+		int waitApprCount = ezCommunityService.adminMemPermitGet1(code, userInfo.getTenantId()); // 가입승인대기 회원수
+
+		model.addAttribute("code", code);
+		model.addAttribute("strSysopID", strSysopID);
+		model.addAttribute("totalUserCnt", totalUserCnt);
+		model.addAttribute("todayJoinCnt", todayJoinCnt);
+		model.addAttribute("todayLeaveCnt", todayLeaveCnt);
+		model.addAttribute("waitApprCount", waitApprCount);
+		
+		return "ezCommunity/communityCommViewMember";
+	}
+
+	@RequestMapping(value = "/ezCommunity/commViewMemberList.do", method = RequestMethod.POST, produces = "text/xml; charset=utf-8")
+	@ResponseBody
+	public String commViewMemberList(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String keyword = "", sRadio = "", block = "", selectGrade = "", orderCell = "",  orderOption = "", selectMonth = "", startdate = "", enddate = "";
 		int curPage = 1;
 		
 		String code = request.getParameter("code");
@@ -2512,7 +2560,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		if (request.getParameter("sRadio") != null) {
 			sRadio = request.getParameter("sRadio");
 		}
-		if (request.getParameter("goToPage") != null) {
+		if (request.getParameter("goToPage") != null && request.getParameter("goToPage") != "") {
 			curPage = Integer.parseInt(request.getParameter("goToPage"));
 		}
 		if (request.getParameter("block") != null) {
@@ -2521,51 +2569,36 @@ public class EzCommunityController extends EgovFileMngUtil{
 		if (request.getParameter("selectGrade") != null && !request.getParameter("selectGrade").equals("0")) {
 			selectGrade = request.getParameter("selectGrade");
 		}
-
-		if (!ezCommunityService.communityConnCHK(userInfo.getId(), code, "", userInfo.getRollInfo(), 1, response, userInfo, "")) {
-			return "cmm/error/egovError";
+		if (request.getParameter("selectMonth") != null && !request.getParameter("selectMonth").equals("0")) {
+			selectMonth = request.getParameter("selectMonth");
 		}
-		
- 		int keywordCount = ezCommunityService.commViewMemberGet2(code, userInfo.getPrimary(), keyword, sRadio, userInfo.getCompanyID(), userInfo.getTenantId(), selectGrade);
-		
+		if (request.getParameter("orderCell") != null) {
+			orderCell = request.getParameter("orderCell");
+		}
+		if (request.getParameter("orderOption") != null) {
+			orderOption = request.getParameter("orderOption");
+		}
+		if (request.getParameter("startdate") != null) {
+			startdate = request.getParameter("startdate");
+		}
+		if (request.getParameter("enddate") != null) {
+			enddate = request.getParameter("enddate");
+		}
+
+		int keywordCount = ezCommunityService.commViewMemberGet2(code, userInfo.getPrimary(), keyword, sRadio, userInfo.getCompanyID(), userInfo.getTenantId(), selectGrade, selectMonth, userInfo.getOffset());
+
 		int comNoPerPage = 10;
-        int totalPage = keywordCount / comNoPerPage;
+		int totalPage = keywordCount / comNoPerPage;
 
-        if ((totalPage * comNoPerPage) != keywordCount && (keywordCount % comNoPerPage) != 0){
-        	totalPage = totalPage + 1;
-        }
-        
+		if ((totalPage * comNoPerPage) != keywordCount && (keywordCount % comNoPerPage) != 0) {
+			totalPage = totalPage + 1;
+		}
+
 		String strSysopID = ezCommunityService.adminMemberListGet2(code, userInfo.getTenantId()).trim();
-
-		if (strSysopID.equals(userInfo.getId())) {
-			model.addAttribute("chkSysop", "1");
-		}
-
 		// 여기에서 해당 회원의 deptID, deptname을 xml 내부에 받아온다.
-		String strXML = ezCommunityService.commViewMember(userInfo, code, strSysopID, keyword, sRadio, comNoPerPage, curPage, selectGrade);
+		String strXML = ezCommunityService.commViewMember(userInfo, code, strSysopID, keyword, sRadio, comNoPerPage, curPage, keywordCount, totalPage, block, selectGrade, orderCell, orderOption, selectMonth, startdate, enddate);
 
-		// 운영자 권한정보
-		List<CommunityCClubUserVO> operatorList = ezCommunityService.getClubOperatorList(userInfo.getCompanyID(), userInfo.getTenantId(), code, userInfo.getId());
-
-		if (operatorList != null && !operatorList.isEmpty()) {
-			String adminAuth = operatorList.get(0).getAdmin_Auth();
-			model.addAttribute("adminAuth", adminAuth);
-		}
-
-		model.addAttribute("curPage", curPage);
-		model.addAttribute("totalPage", totalPage);
-		model.addAttribute("code", code);
-		model.addAttribute("sRadio", sRadio);
-		model.addAttribute("keyword", keyword);
-		model.addAttribute("nowBlock", block);
-		model.addAttribute("keywordCount", keywordCount);
-		model.addAttribute("strSysopID", strSysopID);
-		model.addAttribute("strXML", strXML);
-		model.addAttribute("selectGrade", selectGrade);
-
-		//logger.debug("strXML = " + strXML);
-		
-		return "ezCommunity/communityCommViewMember";
+		return strXML;
 	}
 	
 	/**
@@ -2578,7 +2611,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		String code = request.getParameter("code");
 		CommunityClubVO club = ezCommunityService.aspCommInfoGet1(code, userInfo.getTenantId());
 		// 2018-06-29 김보미 - 커뮤니티 회원수 수정
-		club.setC_MemberCnt(ezCommunityService.commViewMemberGet2(club.getC_ClubNo().trim(), userInfo.getPrimary(), "", "", userInfo.getCompanyID(), userInfo.getTenantId(), ""));
+		club.setC_MemberCnt(ezCommunityService.commViewMemberGet2(club.getC_ClubNo().trim(), userInfo.getPrimary(), "", "", userInfo.getCompanyID(), userInfo.getTenantId(), "", "", userInfo.getOffset()));
 		CommunityMemberInfoVO member = ezCommunityService.commOutGet(club.getC_SysopID().trim(), club.getCompanyID(), userInfo.getPrimary(), userInfo.getTenantId());
 		
 		String sysopName = member.getUserName();
@@ -3551,7 +3584,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 			return "cmm/error/egovError";
 		}
 		
-		ezCommunityService.adminOuterOkNoSet(flag.toUpperCase(), userID, code, userInfo.getTenantId());
+		ezCommunityService.adminOuterOkNoSet(flag.toUpperCase(), userID, code, userInfo.getTenantId(), userInfo.getCompanyID());
 		
 		model.addAttribute("code", code);
 		
@@ -3740,7 +3773,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		CommunityClubVO club = ezCommunityService.aspCommInfoGet1(code, userInfo.getTenantId());
 		
 		// 2018-07-03 김보미 - 커뮤니티 회원수 수정
-		club.setC_MemberCnt(ezCommunityService.commViewMemberGet2(club.getC_ClubNo().trim(), userInfo.getPrimary(), "", "", userInfo.getCompanyID(), userInfo.getTenantId(),""));
+		club.setC_MemberCnt(ezCommunityService.commViewMemberGet2(club.getC_ClubNo().trim(), userInfo.getPrimary(), "", "", userInfo.getCompanyID(), userInfo.getTenantId(),"", "", userInfo.getOffset()));
 		
 		/* 겸직사원의 커뮤니티 선택 시 companyID로 조건 추가 */
 		CommunityMemberInfoVO member = ezCommunityService.aspCommInfoGet2(userInfo.getPrimary(), club.getC_SysopID().trim(), userInfo.getCompanyID(), userInfo.getTenantId());
@@ -4230,7 +4263,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		CommunityClubVO club = ezCommunityService.todayCopGet2(num, userInfo.getCompanyID(), userInfo.getTenantId());
 		
 		if (club != null) {
-			club.setC_MemberCnt(ezCommunityService.commViewMemberGet2(club.getC_ClubNo(), userInfo.getPrimary(), "", "", userInfo.getCompanyID(), userInfo.getTenantId(), ""));
+			club.setC_MemberCnt(ezCommunityService.commViewMemberGet2(club.getC_ClubNo(), userInfo.getPrimary(), "", "", userInfo.getCompanyID(), userInfo.getTenantId(), "", "", userInfo.getOffset()));
 			
 			if (!club.getC_Cate_A().equals("0")){
 				cCatecAName = ezCommunityService.todayCopGet3(club.getC_Cate_A(), "A", userInfo.getTenantId());
@@ -4320,7 +4353,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		// 18-05-08 김민성 - 커뮤니티 회원수 수정
 		for (CommunityClubVO club : clubList) {
-			club.setC_MemberCnt(ezCommunityService.commViewMemberGet2(club.getC_ClubNo(), userInfo.getPrimary(), "", "", userInfo.getCompanyID(), userInfo.getTenantId(),""));
+			club.setC_MemberCnt(ezCommunityService.commViewMemberGet2(club.getC_ClubNo(), userInfo.getPrimary(), "", "", userInfo.getCompanyID(), userInfo.getTenantId(),"", "", userInfo.getOffset()));
 			club.setItemCnt(ezCommunityService.categoryListItemCntGet(club.getC_ClubNo(), userInfo.getTenantId()));
 		}
 		
@@ -4369,7 +4402,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 			}
 			
 			// 18-05-08 김민성 - 커뮤니티 회원수 수정
-			club.setC_MemberCnt(ezCommunityService.commViewMemberGet2(club.getC_ClubNo(), userInfo.getPrimary(), "", "", userInfo.getCompanyID(), userInfo.getTenantId(),""));
+			club.setC_MemberCnt(ezCommunityService.commViewMemberGet2(club.getC_ClubNo(), userInfo.getPrimary(), "", "", userInfo.getCompanyID(), userInfo.getTenantId(),"", "", userInfo.getOffset()));
 			club.setItemCnt(ezCommunityService.categoryListItemCntGet(club.getC_ClubNo(), userInfo.getTenantId()));
 		}
 		
@@ -5887,7 +5920,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	}
 
 	/**
-	 * 운영진 관리 > 운영자 추가 팝업
+	 * 회원목록 > 등급변경 팝업
 	 */
 	@RequestMapping(value = "/ezCommunity/changeGradePopup.do", method = RequestMethod.GET)
 	public String changeGradePopup(@CookieValue("loginCookie")String loginCookie, Model model, HttpServletRequest request) throws Exception {
@@ -5900,6 +5933,118 @@ public class EzCommunityController extends EgovFileMngUtil{
 
 		logger.debug("changeGradePopup ended");
 		return "ezCommunity/communityChangeGradePopup";
+	}
+
+	/**
+	 * 커뮤니티 > 회원목록 > 엑셀 다운로드
+	 */
+	@RequestMapping(value = "/ezCommunity/excelExportOut.do", method = RequestMethod.GET)
+	@ResponseBody
+	public void excelExportOut(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		logger.debug("excelExportOut started.");
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+
+		StringBuilder resultExcel = new StringBuilder();
+		String excelValue = "";
+		String selectGrade = "";
+		String selectMonth = "";
+		String code = request.getParameter("code");
+		String sRadio = request.getParameter("sRadio") != null ? request.getParameter("sRadio") : "";
+		String keyword = request.getParameter("keyword");
+		if (request.getParameter("selectGrade") != null && !request.getParameter("selectGrade").equals("0")) {
+			selectGrade = request.getParameter("selectGrade");
+		}
+		if (request.getParameter("selectMonth") != null && !request.getParameter("selectMonth").equals("0")) {
+			selectMonth = request.getParameter("selectMonth");
+		}
+		String startdate = request.getParameter("startdate");
+		String enddate = request.getParameter("enddate");
+		String orderCell = request.getParameter("orderCell");
+		String orderOption = request.getParameter("orderOption");
+
+		String strSysopID = ezCommunityService.adminMemberListGet2(code, userInfo.getTenantId()).trim();
+		excelValue = ezCommunityService.commViewMember(userInfo, code, strSysopID, keyword, sRadio, 0, 0, 0, 0, "0", selectGrade, orderCell, orderOption, selectMonth, startdate, enddate);
+
+		resultExcel.append("\uFEFF");
+		resultExcel.append("<table><tbody>");
+		resultExcel.append("<tr><th style='width:40px'>" + egovMessageSource.getMessage("ezCommunity.t32", userInfo.getLocale()) + "</th>");
+		resultExcel.append("<th style='width:110px'>" + egovMessageSource.getMessage("ezCommunity.t10", userInfo.getLocale()) + "</th>");
+		resultExcel.append("<th style='width:100px'>" + egovMessageSource.getMessage("ezCommunity.lyj16", userInfo.getLocale()) + "</th>");
+		resultExcel.append("<th style='width:60px'>" + egovMessageSource.getMessage("ezCommunity.t241", userInfo.getLocale()) + "</th>");
+		resultExcel.append("<th style='width:60px'>" + egovMessageSource.getMessage("ezCommunity.t512", userInfo.getLocale()) + "</th>");
+		resultExcel.append("<th style='width:60px'>" + egovMessageSource.getMessage("ezCommunity.lyj66", userInfo.getLocale()) + "</th>");
+		resultExcel.append("<th style='width:80px'>" + egovMessageSource.getMessage("ezCommunity.lyj67", userInfo.getLocale()) + "</th>");
+		resultExcel.append("<th style='width:80px'>" + egovMessageSource.getMessage("ezCommunity.t727", userInfo.getLocale()) + "</th>");
+		resultExcel.append("<th style='width:80px'>" + egovMessageSource.getMessage("ezCommunity.t725", userInfo.getLocale()) + "</th>");
+		resultExcel.append("<th style='width:80px'>" + egovMessageSource.getMessage("ezCommunity.t726", userInfo.getLocale()) + "</th></tr>");
+		resultExcel.append(excelValue);
+		resultExcel.append("</tbody></table>");
+
+		try (HSSFWorkbook workbook = new HSSFWorkbook()) {
+			HSSFSheet sheet;
+
+			HSSFCellStyle headerStyle = workbook.createCellStyle();
+			headerStyle.setFillForegroundColor(HSSFColor.GREY_25_PERCENT.index);
+			headerStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+			headerStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
+			headerStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
+			headerStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
+			headerStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+			headerStyle.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+
+			HSSFCellStyle bodyStyle = workbook.createCellStyle();
+			bodyStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
+			bodyStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
+			bodyStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
+			bodyStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+
+			Row row;
+			Cell cell;
+
+			String pFileName = "";
+			pFileName = EgovDateUtil.getTodayTime().substring(0, 10) + "_comm_memList";
+			sheet = workbook.createSheet("memList");
+
+			String StrAnalysisDate = resultExcel.toString().trim().replaceAll("&nbsp;", "").replaceAll("\r\n", "").replaceAll("\n", "").replaceAll("\t", "");
+
+			Document analysisData = commonUtil.convertStringToDocument(StrAnalysisDate);
+
+			Node tableNode = analysisData.getElementsByTagName("table").item(0);
+			Node tableHeadNode;
+			Node tableBodyNode;
+
+			tableHeadNode = tableNode.getChildNodes().item(0).getChildNodes().item(0);
+			tableBodyNode = tableNode.getChildNodes().item(0);
+
+			row = sheet.createRow(0);
+
+			for (int i=0; i<tableHeadNode.getChildNodes().getLength(); i++) {
+				cell = row.createCell(i);
+				cell.setCellValue(tableHeadNode.getChildNodes().item(i).getTextContent());
+				cell.setCellStyle(headerStyle);
+
+				sheet.autoSizeColumn(i);
+				sheet.setColumnWidth(i, (sheet.getColumnWidth(i))+1024); //너비 더 넓게
+			}
+
+			for (int i=0; i<tableBodyNode.getChildNodes().getLength()-1; i++) {
+				row = sheet.createRow(i+1);
+				Node tr = tableBodyNode.getChildNodes().item(i+1);
+
+				for (int j=0; j<tr.getChildNodes().getLength(); j++) {
+					cell = row.createCell(j);
+					cell.setCellValue(tr.getChildNodes().item(j).getTextContent());
+					cell.setCellStyle(bodyStyle);
+
+					sheet.autoSizeColumn(j);
+					sheet.setColumnWidth(j, (sheet.getColumnWidth(j))+1024); //너비 더 넓게
+				}
+			}
+			response.setHeader("Content-Disposition", "attachment; fileName=\"" + pFileName + ".xls\"");
+			workbook.write(response.getOutputStream());
+
+		}
 	}
 }
 

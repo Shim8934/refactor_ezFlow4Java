@@ -1330,4 +1330,28 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 	public void updateOperatorGrade(Map<String, Object> map) throws Exception {
 		update("EzCommunityDAO.updateOperatorGrade", map);
 	}
+
+	public int getBoardItemWriteCount(Map<String, Object> map) throws Exception {
+		return (int) select("EzCommunityDAO.getBoardItemWriteCount", map);
+	}
+
+	public int getBoardReplyCount(Map<String, Object> map) throws Exception {
+		return (int) select("EzCommunityDAO.getBoardReplyCount", map);
+	}
+
+	public CommunityClubVO getClubUserCountInfo(Map<String, Object> map) throws Exception {
+		return (CommunityClubVO) select("EzCommunityDAO.getClubUserCountInfo", map);
+	}
+
+	public void commMemberOut(Map<String, Object> map) throws Exception {
+		update("EzCommunityDAO.commMemberOut", map);
+	}
+
+	public int checkWithDrawUser(Map<String, Object> map) throws Exception {
+		return (int) select("EzCommunityDAO.checkWithDrawUser", map);
+	}
+
+	public void updateWithDrawUsertoRegist(Map<String, Object> map) throws Exception {
+		update("EzCommunityDAO.updateWithDrawUsertoRegist", map);
+	}
 }

@@ -1705,8 +1705,43 @@
 					AND
 						A.GRADE = #selectGrade#
 				</isNotEmpty>
+				<isNotEmpty property="selectMonth">
+					<![CDATA[
+					AND A.C_ID
+						NOT IN (
+								SELECT
+									DISTINCT WRITERID
+								FROM
+									TBL_COMM_ITEM A
+										INNER JOIN TBL_COMM_BOARDINFO B
+											ON A.BOARDID = B.BOARDID
+											AND A.TENANT_ID = B.TENANT_ID
+								WHERE
+									A.WRITERCOMPANYID = #companyID#
+									AND A.TENANT_ID = #tenantID#
+									AND B.C_CLUBNO = #v_code#
+									AND TO_DATE(A.writedate, 'YYYY-MM-DD HH24:MI:SS')+(#offset#/(60*24)) >= TO_DATE(#v_pNow#, 'YYYY-MM-DD HH24:MI:SS') -#selectMonth#
+								)
+					]]>
+				</isNotEmpty>
 				ORDER BY
-					A.grade asc
+				    <isEmpty property="orderCell">
+						A.GRADE asc
+					</isEmpty>
+					<isNotEmpty property="orderCell">
+						<isEqual property="orderCell" compareValue="NAME">
+							T.USERNAME <isNotEmpty property="orderOption">desc</isNotEmpty>
+						</isEqual>
+						<isEqual property="orderCell" compareValue="GRADE">
+							A.GRADE <isNotEmpty property="orderOption">desc</isNotEmpty>
+						</isEqual>
+						<isEqual property="orderCell" compareValue="INDATE">
+							A.C_INDATE <isNotEmpty property="orderOption">desc</isNotEmpty>
+						</isEqual>
+						<isEqual property="orderCell" compareValue="LASTDATE">
+							A.C_LASTDATE <isNotEmpty property="orderOption">desc</isNotEmpty>
+						</isEqual>
+					</isNotEmpty>
 		</isEqual>
 		
 		<isNotEqual property="v_s_radio" compareValue="ID">
@@ -1795,8 +1830,43 @@
 						AND
 							A.GRADE = #selectGrade#
 					</isNotEmpty>
+					<isNotEmpty property="selectMonth">
+						<![CDATA[
+						AND A.C_ID
+							NOT IN (
+									SELECT
+										DISTINCT WRITERID
+									FROM
+										TBL_COMM_ITEM A
+											INNER JOIN TBL_COMM_BOARDINFO B
+												ON A.BOARDID = B.BOARDID
+												AND A.TENANT_ID = B.TENANT_ID
+									WHERE
+										A.WRITERCOMPANYID = #companyID#
+										AND A.TENANT_ID = #tenantID#
+										AND B.C_CLUBNO = #v_code#
+										AND TO_DATE(A.writedate, 'YYYY-MM-DD HH24:MI:SS')+(#offset#/(60*24)) >= TO_DATE(#v_pNow#, 'YYYY-MM-DD HH24:MI:SS') -#selectMonth#
+									)
+						]]>
+					</isNotEmpty>
 					ORDER BY
-						A.grade asc
+						<isEmpty property="orderCell">
+							A.GRADE asc
+						</isEmpty>
+						<isNotEmpty property="orderCell">
+							<isEqual property="orderCell" compareValue="NAME">
+								T.USERNAME <isNotEmpty property="orderOption">desc</isNotEmpty>
+							</isEqual>
+							<isEqual property="orderCell" compareValue="GRADE">
+								A.GRADE <isNotEmpty property="orderOption">desc</isNotEmpty>
+							</isEqual>
+							<isEqual property="orderCell" compareValue="INDATE">
+								A.C_INDATE <isNotEmpty property="orderOption">desc</isNotEmpty>
+							</isEqual>
+							<isEqual property="orderCell" compareValue="LASTDATE">
+								A.C_LASTDATE <isNotEmpty property="orderOption">desc</isNotEmpty>
+							</isEqual>
+						</isNotEmpty>
 			</isEqual>
 			
 			<isNotEqual property="v_s_radio" compareValue="NAME">
@@ -1878,8 +1948,43 @@
 						AND
 							A.GRADE = #selectGrade#
 					</isNotEmpty>
+					<isNotEmpty property="selectMonth">
+						<![CDATA[
+						AND A.C_ID
+							NOT IN (
+									SELECT
+										DISTINCT WRITERID
+									FROM
+										TBL_COMM_ITEM A
+											INNER JOIN TBL_COMM_BOARDINFO B
+												ON A.BOARDID = B.BOARDID
+												AND A.TENANT_ID = B.TENANT_ID
+									WHERE
+										A.WRITERCOMPANYID = #companyID#
+										AND A.TENANT_ID = #tenantID#
+										AND B.C_CLUBNO = #v_code#
+										AND TO_DATE(A.writedate, 'YYYY-MM-DD HH24:MI:SS')+(#offset#/(60*24)) >= TO_DATE(#v_pNow#, 'YYYY-MM-DD HH24:MI:SS') -#selectMonth#
+									)
+						]]>
+					</isNotEmpty>
 					ORDER BY
-						A.grade asc
+						<isEmpty property="orderCell">
+							A.GRADE asc
+						</isEmpty>
+						<isNotEmpty property="orderCell">
+							<isEqual property="orderCell" compareValue="NAME">
+								T.USERNAME <isNotEmpty property="orderOption">desc</isNotEmpty>
+							</isEqual>
+							<isEqual property="orderCell" compareValue="GRADE">
+								A.GRADE <isNotEmpty property="orderOption">desc</isNotEmpty>
+							</isEqual>
+							<isEqual property="orderCell" compareValue="INDATE">
+								A.C_INDATE <isNotEmpty property="orderOption">desc</isNotEmpty>
+							</isEqual>
+							<isEqual property="orderCell" compareValue="LASTDATE">
+								A.C_LASTDATE <isNotEmpty property="orderOption">desc</isNotEmpty>
+							</isEqual>
+						</isNotEmpty>
 			</isNotEqual>
 		</isNotEqual>
 	</select>
@@ -4380,6 +4485,25 @@
 				AND
 				    GRADE = #selectGrade#
 			</isNotEmpty>
+			<isNotEmpty property="selectMonth">
+				<![CDATA[
+				AND C_ID
+					NOT IN (
+							SELECT
+								DISTINCT WRITERID
+							FROM
+								TBL_COMM_ITEM A
+									INNER JOIN TBL_COMM_BOARDINFO B
+										ON A.BOARDID = B.BOARDID
+										AND A.TENANT_ID = B.TENANT_ID
+							WHERE
+								A.WRITERCOMPANYID = #companyID#
+								AND A.TENANT_ID = #tenantID#
+								AND B.C_CLUBNO = #v_CODE#
+								AND TO_DATE(A.writedate, 'YYYY-MM-DD HH24:MI:SS')+(#offset#/(60*24)) >= TO_DATE(#v_pNow#, 'YYYY-MM-DD HH24:MI:SS') -#selectMonth#
+							)
+				  ]]>
+			</isNotEmpty>
 		</isEqual>
 		<isNotEqual property="v_S_RADIO" compareValue="ID">
 			<isEqual property="v_S_RADIO" compareValue="NAME">
@@ -4409,6 +4533,25 @@
 					AND
 					    GRADE = #selectGrade#
 				</isNotEmpty>
+				<isNotEmpty property="selectMonth">
+					<![CDATA[
+					AND C_ID
+						NOT IN (
+								SELECT
+									DISTINCT WRITERID
+								FROM
+									TBL_COMM_ITEM A
+										INNER JOIN TBL_COMM_BOARDINFO B
+											ON A.BOARDID = B.BOARDID
+											AND A.TENANT_ID = B.TENANT_ID
+								WHERE
+									A.WRITERCOMPANYID = #companyID#
+									AND A.TENANT_ID = #tenantID#
+									AND B.C_CLUBNO = #v_CODE#
+									AND TO_DATE(A.writedate, 'YYYY-MM-DD HH24:MI:SS')+(#offset#/(60*24)) >= TO_DATE(#v_pNow#, 'YYYY-MM-DD HH24:MI:SS') -#selectMonth#
+								)
+					 ]]>
+				</isNotEmpty>
 			</isEqual>
 			<isNotEqual property="v_S_RADIO" compareValue="NAME">
 				<![CDATA[
@@ -4432,6 +4575,25 @@
 				<isNotEmpty property="selectGrade">
 					AND
 					    GRADE = #selectGrade#
+				</isNotEmpty>
+				<isNotEmpty property="selectMonth">
+					<![CDATA[
+					AND C_ID
+						NOT IN (
+								SELECT
+									DISTINCT WRITERID
+								FROM
+									TBL_COMM_ITEM A
+										INNER JOIN TBL_COMM_BOARDINFO B
+											ON A.BOARDID = B.BOARDID
+											AND A.TENANT_ID = B.TENANT_ID
+								WHERE
+									A.WRITERCOMPANYID = #companyID#
+									AND A.TENANT_ID = #tenantID#
+									AND B.C_CLUBNO = #v_CODE#
+									AND TO_DATE(A.writedate, 'YYYY-MM-DD HH24:MI:SS')+(#offset#/(60*24)) >= TO_DATE(#v_pNow#, 'YYYY-MM-DD HH24:MI:SS') -#selectMonth#
+								)
+					  ]]>
 				</isNotEmpty>
 			</isNotEqual>
 		</isNotEqual>
@@ -6930,7 +7092,7 @@
 			UPDATE
 				TBL_C_CLUB
 			SET
-				c_sysopid = #v_C_ID#
+				c_sysopid = #v_USERID#
 			WHERE
 				RTRIM(c_clubno) = #v_CODE#
 			AND
@@ -7009,7 +7171,7 @@
 			WHERE
 				RTRIM(c_clubno) = #v_CODE#
 			AND
-				RTRIM(userid) = #v_C_ID#
+				RTRIM(userid) = #v_USERID#
 			AND
 				tenant_id = #tenantID#
 		]]>
@@ -9063,6 +9225,128 @@
 			  AND
 				COMPANYID = #companyID#
 			  AND
+				tenant_id = #tenantID#
+		]]>
+	</update>
+
+	<select id="EzCommunityDAO.getBoardItemWriteCount" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				COUNT(*)
+			FROM
+				TBL_COMM_ITEM A
+					INNER JOIN TBL_COMM_BOARDINFO B
+							   ON A.BOARDID = B.BOARDID
+								   AND A.TENANT_ID = B.TENANT_ID
+			WHERE
+				A.WRITERCOMPANYID = #companyID#
+			  AND A.TENANT_ID = #tenantID#
+			  AND A.WRITERID = #userID#
+			  AND B.C_CLUBNO = #cID#
+		]]>
+		<isNotEmpty property="startdate">
+			<![CDATA[
+			  AND TRUNC(TO_DATE(A.writedate, 'YYYY-MM-DD HH24:MI:SS')+(#offset#/(60*24))) >= #startdate#
+			  AND TRUNC(TO_DATE(A.writedate, 'YYYY-MM-DD HH24:MI:SS')+(#offset#/(60*24))) <= #enddate#
+			]]>
+		</isNotEmpty>
+	</select>
+
+	<select id="EzCommunityDAO.getBoardReplyCount" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				COUNT(*)
+			FROM
+				TBL_COMM_ONELINEREPLY A
+					INNER JOIN TBL_COMM_BOARDINFO B
+							   ON A.BOARDID = B.BOARDID
+								   AND A.TENANT_ID = B.TENANT_ID
+			WHERE
+				A.COMPANYID = #companyID#
+			  AND A.TENANT_ID = #tenantID#
+			  AND A.USERID = #userID#
+			  AND B.C_CLUBNO = #cID#
+		]]>
+		<isNotEmpty property="startdate">
+			<![CDATA[
+			  AND TRUNC(A.writedate+(#offset#/(60*24))) >= #startdate#
+			  AND TRUNC(A.writedate+(#offset#/(60*24))) <= #enddate#
+			]]>
+		</isNotEmpty>
+	</select>
+
+	<select id="EzCommunityDAO.getClubUserCountInfo" parameterClass="Map" resultClass="CommunityClubVO">
+		<![CDATA[
+			select
+				count(case when permit <> 0
+							and C_CLUBNO = #cID#
+				    	   then 1 end) as totalUserCnt,
+				count(case when permit <> 0
+							and C_CLUBNO = #cID#
+				            and TRUNC(TO_DATE(c_indate, 'YYYY-MM-DD HH24:MI:SS')+(#offset#/(60*24))) = #sysdate#
+						   then 1 end) as todayJoinCnt,
+				count(case when C_CLUBNO = #cID# || '_exit'
+				    		and TRUNC(TO_DATE(C_WITHDRAWDATE, 'YYYY-MM-DD HH24:MI:SS')+(#offset#/(60*24))) = #sysdate#
+						   then 1 end) as todayLeaveCnt
+			from
+				TBL_C_CLUBUSER
+			where
+				(C_CLUBNO = #cID# or C_CLUBNO = #cID# || '_exit')
+			  and COMPANYID = #companyID#
+			  and TENANT_ID = #tenantID#
+		]]>
+	</select>
+
+	<update id="EzCommunityDAO.commMemberOut" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_C_CLUBUSER
+			SET
+				C_CLUBNO = #v_CODE# || '_exit',
+				C_WITHDRAWDATE = #withDrawDate#
+			WHERE
+				RTRIM(C_CLUBNO) = #v_CODE#
+			  AND
+				RTRIM(C_ID) = #v_USERID#
+			  AND
+				TENANT_ID = #tenantID#
+			  and
+				COMPANYID = #companyID#
+		]]>
+	</update>
+
+	<select id="EzCommunityDAO.checkWithDrawUser" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			select
+				count(*)
+			from
+				TBL_C_CLUBUSER
+			where C_CLUBNO = #v_CODE# || '_exit'
+			  and COMPANYID = #v_USERINFO_COMPANYID#
+			  and TENANT_ID = #tenantID#
+			  and C_ID = #v_USERINFO_USERID#
+		]]>
+	</select>
+
+	<update id="EzCommunityDAO.updateWithDrawUsertoRegist"	parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_C_CLUBUSER
+			SET
+				C_VISITED = '1',
+				C_CLUBNO = #v_CODE#,
+				GRADE = #joinGrade#,
+				ADMIN_AUTH = '',
+				C_WITHDRAWDATE = '',
+				C_INDATE = #v_pNow#,
+				C_LASTDATE = #v_pNow#
+			WHERE
+				C_CLUBNO = #v_CODE# || '_exit'
+			AND
+				C_ID = #v_USERINFO_USERID#
+			AND
+				COMPANYID = #v_USERINFO_COMPANYID#
+			AND
 				tenant_id = #tenantID#
 		]]>
 	</update>

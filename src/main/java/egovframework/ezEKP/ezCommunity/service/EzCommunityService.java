@@ -145,7 +145,7 @@ public interface EzCommunityService {
 	
 	public String pollAddOk(int sel, String selType, String selRes, int selectedNo, int answerCount, Model model, LoginVO userInfo) throws Exception;
 	
-	public String commViewMember(LoginVO userInfo, String code, String strSysopID, String keyword, String sRadio, int comNoPerPage, int curPage, String selectGrade) throws Exception;
+	public String commViewMember(LoginVO userInfo, String code, String strSysopID, String keyword, String sRadio, int comNoPerPage, int curPage, int keywordCount, int totalPage, String block, String selectGrade, String orderCell, String orderOption, String selectMonth, String startdate, String enddate) throws Exception;
 	
 	public String adminHomeBoard1(LoginVO userInfo, String code) throws Exception;
 	
@@ -266,7 +266,7 @@ public interface EzCommunityService {
 	public int pollETCViewGet(String questionID, int tenantID) throws Exception;
 	
 	/* 2018-11-26 홍승비 - 커뮤니티 회원목록 카운트에 companyID 조건 추가 */
-	public int commViewMemberGet2(String code, String primary, String keyword, String sRadio, String companyID, int tenantID, String selectGrade) throws Exception;
+	public int commViewMemberGet2(String code, String primary, String keyword, String sRadio, String companyID, int tenantID, String selectGrade, String selectMonth, String offset) throws Exception;
 	
 	public int adminMemPermitGet1(String code, int tenantID) throws Exception;
 	
@@ -346,7 +346,7 @@ public interface EzCommunityService {
 
 	public void createBoardInsert(String code, String boardID, String boardName, String boardName2, String parentBoardID, String boardGroupID, String comatt, LoginVO userInfo, String readGrade, String writeGrade) throws Exception;
 
-	public void adminOuterOkNoSet(String flag, String userID, String code, int tenantID) throws Exception;
+	public void adminOuterOkNoSet(String flag, String userID, String code, int tenantID, String companyID) throws Exception;
 
 	public void adminMemberListOkGoSe(String mode, String code, String cID, String cNm, LoginVO userInfo) throws Exception;
 	
@@ -459,4 +459,10 @@ public interface EzCommunityService {
 	public int getNoOperatorListCount(String companyID, int tenantID, String code, String keyword, String type) throws Exception;
 
 	public void updateOperatorGrade(String code, String id, String companyID, int tenantID) throws Exception;
+
+	public int getBoardItemWriteCount(String code, String id, String companyID, int tenantID, String offset, String startdate, String enddate) throws Exception;
+
+	public int getBoardReplyCount(String code, String id, String companyID, int tenantID, String offset, String startdate, String enddate) throws Exception;
+
+	public CommunityClubVO getClubUserCountInfo(String code, String companyID, int tenantID, String offset) throws Exception;
 }

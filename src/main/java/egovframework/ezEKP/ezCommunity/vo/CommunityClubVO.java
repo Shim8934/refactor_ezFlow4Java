@@ -152,7 +152,13 @@ public class CommunityClubVO {
 	/** 회원목록 보기 권한 등급*/
 	String memlist_readGrade;
 	int tenant_id;
-	
+	/** 총 회원수 */
+	int totalUserCnt;
+	/** 오늘 가입수 */
+	int todayJoinCnt;
+	/** 오늘 탈퇴수 */
+	int todayLeaveCnt;
+
 	public String getC_ClubNo() {
 		return c_ClubNo;
 	}
@@ -612,5 +618,29 @@ public class CommunityClubVO {
 
 	public void setTenant_id(int tenant_id) {
 		this.tenant_id = tenant_id;
+	}
+
+	public int getTotalUserCnt() {
+		return totalUserCnt;
+	}
+
+	public void setTotalUserCnt(int totalUserCnt) {
+		this.totalUserCnt = totalUserCnt;
+	}
+
+	public int getTodayJoinCnt() {
+		return todayJoinCnt;
+	}
+
+	public void setTodayJoinCnt(int todayJoinCnt) {
+		this.todayJoinCnt = todayJoinCnt;
+	}
+
+	public int getTodayLeaveCnt() {
+		return todayLeaveCnt;
+	}
+
+	public void setTodayLeaveCnt(int todayLeaveCnt) {
+		this.todayLeaveCnt = todayLeaveCnt;
 	}
 }

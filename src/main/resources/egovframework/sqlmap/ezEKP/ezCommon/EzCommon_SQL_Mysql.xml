@@ -7826,7 +7826,7 @@
         ALTER TABLE
             TBL_C_CLUB
             ADD
-                JOIN_GRADE bigint(10) DEFAULT 4 NOT NULL COMMENT '회원가입시 최초 등급',
+                JOIN_GRADE varchar(10) DEFAULT '4' NOT NULL COMMENT '회원가입시 최초 등급',
 			ADD
 				MEMLIST_READGRADE varchar(10) DEFAULT '4' NOT NULL COMMENT '회원목록 조회 등급'
 	</statement>
@@ -7957,5 +7957,20 @@
 			TBL_C_CLUBUSER
 		ADD
 			ADMIN_AUTH varchar(20) DEFAULT NULL COMMENT '커뮤니티 운영자 권한정보'
+	</statement>
+
+	<select id="EzCommonDAO.checkTblClubUserWithdrawDateColumn" resultClass="String">
+		SELECT
+			C_WITHDRAWDATE
+		FROM
+			TBL_C_CLUBUSER
+				LIMIT 1
+	</select>
+
+	<statement id="EzCommonDAO.alterTblClubUserWithdrawDateColumn">
+		ALTER TABLE
+			TBL_C_CLUBUSER
+			ADD
+				C_WITHDRAWDATE varchar(60) DEFAULT NULL COMMENT '회원 탈퇴일자'
 	</statement>
 </sqlMap>

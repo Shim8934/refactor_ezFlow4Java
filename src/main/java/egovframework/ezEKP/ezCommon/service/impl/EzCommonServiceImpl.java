@@ -8726,4 +8726,9 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
     public void alterTblClubUserAdminAuthColumn() throws Exception {
         ezCommonDAO.alterTblClubUserAdminAuthColumn();
     }
+
+    // 2025-07-23 이유정 - 커뮤니티 > 회원탈퇴일자 컬럼 추가
+    public void alterTblClubUserWithdrawDateColumn() throws Exception {
+        ezCommonDAO.alterTblClubUserWithdrawDateColumn();
+    }
 }

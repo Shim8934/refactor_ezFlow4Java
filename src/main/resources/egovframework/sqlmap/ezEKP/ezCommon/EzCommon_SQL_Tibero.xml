@@ -8485,10 +8485,28 @@
         ]]>
 	</select>
 
-    <statement id="EzCommonDAO.alterTblClubUserAdminAuthColumn">
-        ALTER TABLE
-            TBL_C_CLUBUSER
-            ADD
-                ADMIN_AUTH NVARCHAR2(20) DEFAULT NULL
-    </statement>
+	<statement id="EzCommonDAO.alterTblClubUserAdminAuthColumn">
+		ALTER TABLE
+			TBL_C_CLUBUSER
+			ADD
+				ADMIN_AUTH NVARCHAR2(20) DEFAULT NULL
+	</statement>
+
+	<select id="EzCommonDAO.checkTblClubUserWithdrawDateColumn" resultClass="String">
+		<![CDATA[
+			SELECT
+				C_WITHDRAWDATE
+			FROM
+				TBL_C_CLUBUSER
+			WHERE
+				ROWNUM <= 1
+		]]>
+	</select>
+
+	<statement id="EzCommonDAO.alterTblClubUserWithdrawDateColumn">
+		ALTER TABLE
+			TBL_C_CLUBUSER
+			ADD
+				C_WITHDRAWDATE NCHAR(30) DEFAULT NULL
+	</statement>
 </sqlMap>

@@ -597,7 +597,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		CommunityClubVO clubVO = aspCommInfoGet1(code, userInfo.getTenantId());
 		
 		// 18-05-08 김민성 - 커뮤니티 회원수 수정
-		clubVO.setC_MemberCnt(commViewMemberGet2(clubVO.getC_ClubNo().trim(), userInfo.getPrimary(), "", "", userInfo.getCompanyID(), userInfo.getTenantId(), ""));
+		clubVO.setC_MemberCnt(commViewMemberGet2(clubVO.getC_ClubNo().trim(), userInfo.getPrimary(), "", "", userInfo.getCompanyID(), userInfo.getTenantId(), "", "", userInfo.getOffset()));
 		
 		StringBuilder sb = new StringBuilder();
 		sb.append("<DATA>");
@@ -1788,7 +1788,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	}
 
 	@Override
-	public String commViewMember(LoginVO userInfo, String code, String strSysopID, String keyword, String sRadio, int comNoPerPage, int curPage, String selectGrade) throws Exception {
+	public String commViewMember(LoginVO userInfo, String code, String strSysopID, String keyword, String sRadio, int comNoPerPage, int curPage, int keywordCount, int totalPage, String block, String selectGrade, String orderCell, String orderOption, String selectMonth, String startdate, String enddate) throws Exception {
 		//logger.debug("code : " + code + ", strSysopID : " + strSysopID + ", keyword : " + keyword + ", sRadio : " + sRadio);
 		
 		StringBuilder sb = new StringBuilder();
@@ -1796,75 +1796,82 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		String primary = userInfo.getPrimary();
 		
 		// 여기서 회원리스트를 받아온다. CommunityCClubUserVO에 deptID, deptName 필드를 추가했다.
-		List<CommunityCClubUserVO> userList = commViewMemberGet1(code, primary, keyword, sRadio, userInfo.getCompanyID(), userInfo.getTenantId(), selectGrade);
+		List<CommunityCClubUserVO> userList = commViewMemberGet1(code, primary, keyword, sRadio, userInfo.getCompanyID(), userInfo.getTenantId(), selectGrade, orderCell, orderOption, selectMonth, userInfo.getOffset());
 		
 		int iOutputCount = 0;
 		
 		/* 2021-08-17 홍승비 - 데이터가 없는 경우 tr 추가 */
 		if (userList ==  null || userList.size() == 0) {
 			sb.append("<tr>");
-			sb.append("<td colspan=\"7\" style=\"width:100%; height:30px; text-align:center;\">" + egovMessageSource.getMessage("ezOrgan.hdp25", userInfo.getLocale()) + "</td>");
+			sb.append("<td colspan=\"10\" style=\"width:100%; height:30px; text-align:center;\">" + egovMessageSource.getMessage("ezOrgan.hdp25", userInfo.getLocale()) + "</td>");
 			sb.append("</tr>");
 		}
 		else {
 			for (CommunityCClubUserVO user : userList) {
-			/*	if (userList.indexOf(user) + 1 <= (curPage - 1) * comNoPerPage) {
-					continue;
-				}
-				
-				if (iOutputCount > comNoPerPage) {
-					break;
-				}*/
 				iOutputCount++;
-				
-				if (iOutputCount > comNoPerPage * curPage) {
-	        		break;
-	        	}
-	
-	        	if (iOutputCount > comNoPerPage * curPage - 10) {
-					CommunityMemberInfoVO memberInfo = commViewMemberGet3(user.getC_ID().trim(), user.getCompanyID(), primary, userInfo.getTenantId());
-					String memGradeName = getMemberGradeName(code, user.getGrade(), user.getCompanyID(), userInfo.getTenantId());
 
-					List<CommunityCClubUserVO> operatorList = getClubOperatorList(userInfo.getCompanyID(), userInfo.getTenantId(), code, userInfo.getId());
-
-					String adminAuth = "";
-					if (operatorList != null && !operatorList.isEmpty() && operatorList.get(0).getAdmin_Auth() != null) {
-						adminAuth = operatorList.get(0).getAdmin_Auth();
+				if (comNoPerPage > 0) {
+					if (iOutputCount > comNoPerPage * curPage) {
+						break;
 					}
 
-					sb.append("<tr>");
-					if (strSysopID.trim().equals(userInfo.getId()) || adminAuth.contains("A")) {
-						if (!"4".equals(user.getPermit()) && !user.getGrade().equals("2")) { // 마스터 및 운영자 제외한 나머지 회원들만 체크박스 표출
-							sb.append("<td style=\"width:55; height:23; align:center;\"><input type=\"CHECKBOX\" id=\"checkbox" + iOutputCount + "\" class=\"selectMember\" onclick=\"selectMember('" + user.getC_ID() + "', " + iOutputCount + ");\"></td>");
-						} else {
-							sb.append("<td style=\"width:55; height:23; align:center;\"></td>");
-						}
+					if (iOutputCount <= comNoPerPage * curPage - comNoPerPage) {
+						continue;
+					}
+				}
+
+				CommunityMemberInfoVO memberInfo = commViewMemberGet3(user.getC_ID().trim(), user.getCompanyID(), primary, userInfo.getTenantId());
+				String memGradeName = getMemberGradeName(code, user.getGrade(), user.getCompanyID(), userInfo.getTenantId());
+				int itemWriteCnt = getBoardItemWriteCount(code, user.getC_ID().trim(), user.getCompanyID(), userInfo.getTenantId(), userInfo.getOffset(), startdate, enddate);
+				int replyCnt = getBoardReplyCount(code, user.getC_ID().trim(), user.getCompanyID(), userInfo.getTenantId(), userInfo.getOffset(), startdate, enddate);
+
+				List<CommunityCClubUserVO> operatorList = getClubOperatorList(userInfo.getCompanyID(), userInfo.getTenantId(), code, userInfo.getId());
+
+				String adminAuth = "";
+				if (operatorList != null && !operatorList.isEmpty() && operatorList.get(0).getAdmin_Auth() != null) {
+					adminAuth = operatorList.get(0).getAdmin_Auth();
+				}
+
+				sb.append("<tr>");
+				if ((strSysopID.trim().equals(userInfo.getId()) || adminAuth.contains("A")) && comNoPerPage > 0) {
+					if (!"4".equals(user.getPermit()) && !user.getGrade().equals("2")) { // 마스터 및 운영자 제외한 나머지 회원들만 체크박스 표출
+						sb.append("<td style=\"width:55; height:23; align:center;\"><input type=\"CHECKBOX\" id=\"checkbox" + iOutputCount + "\" class=\"selectMember\" onclick=\"selectMember('" + user.getC_ID() + "', " + iOutputCount + ");\"></input></td>");
 					} else {
-						sb.append("<td style=\"width:55; height:23; align:center;\">" + (userList.indexOf(user) + 1) + "</td>");
+						sb.append("<td style=\"width:55; height:23; align:center;\"></td>");
 					}
-					sb.append("<td>");
-					
-					if (user.getC_ID().trim().equals(strSysopID)) {
-						sb.append("<img style='margin-right:3px' src=\"/images/i_master.gif\" border=\"0\" alt=\"" + egovMessageSource.getMessage("ezCommunity.t513", userInfo.getLocale()) + "\" align=\"absmiddle\" WIDTH=\"15\" HEIGHT=\"9\">");
-					}
-					
-					// CommunityMemberInfoVO를 수정해서 부서ID를 가져오도록 하자.
-					sb.append("<a href=\"javascript:openinfo1('" + code + "','" + user.getC_ID().trim() + "','" + user.getCompanyID() + "','" + user.getDeptID() + "');\" valign=\"bottom\">" + commonUtil.cleanValue(memberInfo.getUserName()) + "</a></td>");
-					// 가입한 당시 겸직한 부서이름(deptName)/또는 겸직하지 않은 상태의 부서이름을 나타낸다. 쿼리 내부에서 다국어 처리한 것(case~primary)임.
-					sb.append("<td>" + commonUtil.cleanValue(memGradeName) + "</td>");
-					sb.append("<td>" + commonUtil.cleanValue(user.getDeptName()) + "</td>");
-					sb.append("<td>" + commonUtil.cleanValue(user.getC_ID().trim()) + "</td>");
-					sb.append("<td>" + user.getC_inDate().substring(0, 10) + "</td>");
-					sb.append("<td>");
-					
-					if (user.getC_lastDate() != null) {
-						sb.append(user.getC_lastDate().substring(0, 10));
-					}
-					
-					sb.append("</td>");
-					sb.append("<td style=\"align:center\">" + user.getC_visited() + egovMessageSource.getMessage("ezCommunity.t728", userInfo.getLocale()) + "</td></tr>");
-	        	}
+				} else {
+					sb.append("<td style=\"width:55; height:23; align:center;\">" + (userList.indexOf(user) + 1) + "</td>");
+				}
+				sb.append("<td>");
+
+				if (user.getC_ID().trim().equals(strSysopID)) {
+					sb.append("<img style='margin-right:3px' src=\"/images/i_master.gif\" border=\"0\" alt=\"" + egovMessageSource.getMessage("ezCommunity.t513", userInfo.getLocale()) + "\" align=\"absmiddle\" WIDTH=\"15\" HEIGHT=\"9\"></img>");
+				}
+
+				// CommunityMemberInfoVO를 수정해서 부서ID를 가져오도록 하자.
+				sb.append("<a href=\"javascript:openinfo1('" + code + "','" + user.getC_ID().trim() + "','" + user.getCompanyID() + "','" + user.getDeptID() + "');\" valign=\"bottom\">" + commonUtil.cleanValue(memberInfo.getUserName()) + "</a></td>");
+				// 가입한 당시 겸직한 부서이름(deptName)/또는 겸직하지 않은 상태의 부서이름을 나타낸다. 쿼리 내부에서 다국어 처리한 것(case~primary)임.
+				sb.append("<td>" + commonUtil.cleanValue(memGradeName) + "</td>");
+				sb.append("<td>" + commonUtil.cleanValue(user.getDeptName()) + "</td>");
+				sb.append("<td>" + commonUtil.cleanValue(user.getC_ID().trim()) + "</td>");
+				sb.append("<td style=\"align:center\">" + itemWriteCnt + egovMessageSource.getMessage("ezCommunity.t728", userInfo.getLocale()) + "</td>");
+				sb.append("<td style=\"align:center\">" + replyCnt + egovMessageSource.getMessage("ezCommunity.t728", userInfo.getLocale()) + "</td>");
+				sb.append("<td style=\"align:center\">" + user.getC_visited() + egovMessageSource.getMessage("ezCommunity.t728", userInfo.getLocale()) + "</td>");
+				sb.append("<td>" + user.getC_inDate().substring(0, 10) + "</td>");
+				sb.append("<td>");
+
+				if (user.getC_lastDate() != null) {
+					sb.append(user.getC_lastDate().substring(0, 10));
+				}
+				sb.append("</td></tr>");
 			}
+		}
+
+		if (comNoPerPage > 0) {
+			sb.append("<ROOT><KEYWORDCOUNT>" + keywordCount + "</KEYWORDCOUNT>");
+			sb.append("<TOTALPAGE>" + totalPage + "</TOTALPAGE>");
+			sb.append("<CURPAGE>" + curPage + "</CURPAGE>");
+			sb.append("<NOWBLOCK>" + block + "</NOWBLOCK></ROOT>");
 		}
 		
 		return sb.toString();
@@ -2271,7 +2278,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			
 			// 이미 companyID로 걸러진 커뮤니티를 가져와 후작업한다.
 			for (CommunityMyCommunityVO vo : list) {
-				int cnt = commViewMemberGet2(vo.getC_ClubNo().trim(), userInfo.getPrimary(), "", "", userInfo.getCompanyID(), userInfo.getTenantId(), "");
+				int cnt = commViewMemberGet2(vo.getC_ClubNo().trim(), userInfo.getPrimary(), "", "", userInfo.getCompanyID(), userInfo.getTenantId(), "", "", userInfo.getOffset());
 				vo.setC_memberCnt(String.valueOf(cnt));
 				rtnVal.append(commonUtil.getQueryResult(vo));
 			}
@@ -2288,7 +2295,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			
 			// 이미 companyID로 걸러진 커뮤니티를 가져와 후작업한다.
 			for (CommunityMyCommunityVO vo : list) {
-				int cnt = commViewMemberGet2(vo.getC_ClubNo().trim(), userInfo.getPrimary(), "", "", userInfo.getCompanyID(), userInfo.getTenantId(), "");
+				int cnt = commViewMemberGet2(vo.getC_ClubNo().trim(), userInfo.getPrimary(), "", "", userInfo.getCompanyID(), userInfo.getTenantId(), "", "", userInfo.getOffset());
 				vo.setC_memberCnt(String.valueOf(cnt));
 				rtnVal.append(commonUtil.getQueryResult(vo));
 			}
@@ -4609,7 +4616,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	}
 
 	@Override
-	public int commViewMemberGet2(String code, String primary, String keyword, String sRadio, String companyID, int tenantID, String selectGrade) throws Exception {
+	public int commViewMemberGet2(String code, String primary, String keyword, String sRadio, String companyID, int tenantID, String selectGrade, String selectMonth, String offset) throws Exception {
 		logger.debug("commViewMemberGet2 started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -4620,6 +4627,9 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		map.put("tenantID", tenantID);
 		map.put("companyID", companyID);
 		map.put("selectGrade", selectGrade);
+		map.put("selectMonth", selectMonth);
+		map.put("offset", commonUtil.getMinuteUTC(offset));
+		map.put("v_pNow", commonUtil.getTodayUTCTime(""));
 
 		int result = ezCommunityDAO.commViewMemberGet2(map);
 		
@@ -5263,16 +5273,19 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	}
 
 	@Override
-	public void adminOuterOkNoSet(String flag, String userID, String code, int tenantID) throws Exception {
+	public void adminOuterOkNoSet(String flag, String userID, String code, int tenantID, String companyID) throws Exception {
 		logger.debug("adminOuterOkNoSet started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_USERID", userID);
 		map.put("v_CODE", code);
 		map.put("tenantID", tenantID);
-		
+		map.put("companyID", companyID);
+		map.put("withDrawDate", commonUtil.getTodayUTCTime("yyyy-MM-dd"));
+
 		if (flag.equals("OK")) {
-			ezCommunityDAO.adminOuterOkNoSetDelete1(map);
+			// ezCommunityDAO.adminOuterOkNoSetDelete1(map);
+			ezCommunityDAO.commMemberOut(map); // 탈퇴자 count를 위해 delete하지 않고 update 처리
 			ezCommunityDAO.adminOuterOkNoSetUpdate(map);
 		}
 		
@@ -5353,16 +5366,19 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		//logger.debug("code=" + code + ", id=" + cID + ", Nm=" + cNm);
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_CODE", code);
-		map.put("v_C_ID", cID);
+		map.put("v_USERID", cID);
 		map.put("v_C_NM", cNm);
 		map.put("tenantID", userInfo.getTenantId());
-		
+		map.put("companyID", userInfo.getCompanyID());
+		map.put("withDrawDate", commonUtil.getTodayUTCTime(""));
+
 		if (mode.equals("MASTER")) {
 			ezCommunityDAO.adminMemberListGoSEUpdate1(map);
 			updateMemberGrade(code, "1", Collections.singletonList(cID), userInfo.getCompanyID(), userInfo.getTenantId());
 			updateMemberGrade(code, "3", Collections.singletonList(userInfo.getId()), userInfo.getCompanyID(), userInfo.getTenantId());
 		} else {
-			ezCommunityDAO.adminMemberListGoSEDelete1(map);
+			// ezCommunityDAO.adminMemberListGoSEDelete1(map);
+			ezCommunityDAO.commMemberOut(map); // 탈퇴자 count를 위해 delete하지 않고 update 처리
 			ezCommunityDAO.adminMemberListGoSEUpdate3(map);
 			ezCommunityDAO.adminMemberListGoSEDelete2(map);			
 		}
@@ -5569,8 +5585,14 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		map.put("v_USERINFO_COMPANYID", companyID);
 		map.put("joinGrade", joinGrade);
 
-		ezCommunityDAO.joinOkSet1Insert(map);
-		
+		int count = ezCommunityDAO.checkWithDrawUser(map);
+
+		if (count > 0) {
+			ezCommunityDAO.updateWithDrawUsertoRegist(map);
+		} else {
+			ezCommunityDAO.joinOkSet1Insert(map);
+		}
+
 		logger.debug("joinOkSet1 ended.");
 	}
 
@@ -6344,7 +6366,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	}
 	
 	/* 2018-07-02 홍승비 - 커뮤니티 회원목록 회원정보 표출 시 companyID 조건 추가 */
-	public List<CommunityCClubUserVO> commViewMemberGet1(String code, String primary, String keyword, String sRadio, String companyID, int tenantID, String selectGrade) throws Exception {
+	public List<CommunityCClubUserVO> commViewMemberGet1(String code, String primary, String keyword, String sRadio, String companyID, int tenantID, String selectGrade, String orderCell, String orderOption, String selectMonth, String offset) throws Exception {
 		logger.debug("commViewMemberGet1 started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -6355,6 +6377,11 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		map.put("companyID", companyID);
 		map.put("tenantID", tenantID);
 		map.put("selectGrade", selectGrade);
+		map.put("orderCell", orderCell);
+		map.put("orderOption", orderOption);
+		map.put("selectMonth", selectMonth);
+		map.put("offset", commonUtil.getMinuteUTC(offset));
+		map.put("v_pNow", commonUtil.getTodayUTCTime(""));
 
 		List<CommunityCClubUserVO> list = ezCommunityDAO.commViewMemberGet1(map);
 		
@@ -9148,5 +9175,54 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		ezCommunityDAO.updateOperatorGrade(map);
 
 		logger.debug("updateOperatorGrade ended.");
+	}
+
+	@Override
+	public int getBoardItemWriteCount(String code, String id, String companyID, int tenantID, String offset, String startdate, String enddate) throws Exception {
+		logger.debug("getBoardItemWriteCount started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("cID", code);
+		map.put("userID", id);
+		map.put("tenantID", tenantID);
+		map.put("companyID", companyID);
+		map.put("offset", commonUtil.getMinuteUTC(offset));
+		map.put("startdate", startdate);
+		map.put("enddate", enddate);
+
+		logger.debug("getBoardItemWriteCount ended");
+		return ezCommunityDAO.getBoardItemWriteCount(map);
+	}
+
+	@Override
+	public int getBoardReplyCount(String code, String id, String companyID, int tenantID, String offset, String startdate, String enddate) throws Exception {
+		logger.debug("getBoardReplyCount started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("cID", code);
+		map.put("userID", id);
+		map.put("tenantID", tenantID);
+		map.put("companyID", companyID);
+		map.put("offset", commonUtil.getMinuteUTC(offset));
+		map.put("startdate", startdate);
+		map.put("enddate", enddate);
+
+		logger.debug("getBoardReplyCount ended");
+		return ezCommunityDAO.getBoardReplyCount(map);
+	}
+
+	@Override
+	public CommunityClubVO getClubUserCountInfo(String code,  String companyID, int tenantID, String offset) throws Exception {
+		logger.debug("getClubUserCountInfo started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("cID", code);
+		map.put("tenantID", tenantID);
+		map.put("companyID", companyID);
+		map.put("offset", commonUtil.getMinuteUTC(offset));
+		map.put("sysdate", commonUtil.getTodayUTCTime("yyyy-MM-dd"));
+
+		logger.debug("getClubUserCountInfo ended");
+		return ezCommunityDAO.getClubUserCountInfo(map);
 	}
 }

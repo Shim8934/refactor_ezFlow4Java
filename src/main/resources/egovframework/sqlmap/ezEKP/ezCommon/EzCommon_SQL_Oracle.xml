@@ -8353,8 +8353,8 @@
 		ALTER TABLE
 			TBL_C_CLUB
 			ADD (
-				JOIN_GRADE number(10) DEFAULT 4 NOT NULL,
-				MEMLIST_READGRADE varchar2(10) DEFAULT '4' NOT NULL
+				JOIN_GRADE NVARCHAR2(10) DEFAULT '4' NOT NULL,
+				MEMLIST_READGRADE NVARCHAR2(10) DEFAULT '4' NOT NULL
 		    )
 	</statement>
 
@@ -8496,5 +8496,23 @@
 			TBL_C_CLUBUSER
 		ADD
 			ADMIN_AUTH NVARCHAR2(20) DEFAULT NULL
+	</statement>
+
+	<select id="EzCommonDAO.checkTblClubUserWithdrawDateColumn" resultClass="String">
+		<![CDATA[
+			SELECT
+				C_WITHDRAWDATE
+			FROM
+				TBL_C_CLUBUSER
+			WHERE
+				ROWNUM <= 1
+		]]>
+	</select>
+
+	<statement id="EzCommonDAO.alterTblClubUserWithdrawDateColumn">
+		ALTER TABLE
+			TBL_C_CLUBUSER
+			ADD
+				C_WITHDRAWDATE NCHAR(30) DEFAULT NULL
 	</statement>
 </sqlMap>

@@ -4449,7 +4449,7 @@ CREATE TABLE `tbl_c_club` (
   `SENDMAILCNT` varchar(4) DEFAULT '0',
   `ASSIGNDISKSIZE` varchar(20) NOT NULL DEFAULT '52428800',
   `C_TYPE` varchar(20) DEFAULT NULL,
-  `JOIN_GRADE` bigint(10) NOT NULL DEFAULT 4 COMMENT '회원가입시 최초 등급',
+  `JOIN_GRADE` varchar(10) NOT NULL DEFAULT '4' COMMENT '회원가입시 최초 등급',
   `MEMLIST_READGRADE` varchar(10) NOT NULL DEFAULT '4' COMMENT '회원목록 조회 등급',
   `TENANT_ID` decimal(22,0) NOT NULL DEFAULT 0,
   PRIMARY KEY (`TENANT_ID`,`C_CLUBNO`)
@@ -4536,6 +4536,7 @@ CREATE TABLE `tbl_c_clubuser` (
   `PERMIT` varchar(4) DEFAULT '0',
   `GRADE` varchar(10) NOT NULL DEFAULT '4' COMMENT '커뮤니티 회원의 등급정보',
   `ADMIN_AUTH` varchar(20) DEFAULT NULL COMMENT '커뮤니티 운영자 권한정보',
+  `C_WITHDRAWDATE` varchar(60) DEFAULT NULL COMMENT '커뮤니티 회원탈퇴일자',
   `COMPANYID` varchar(100) DEFAULT NULL,
   `TENANT_ID` decimal(22,0) NOT NULL DEFAULT 0,
   PRIMARY KEY (`TENANT_ID`,`C_CLUBNO`,`C_ID`)

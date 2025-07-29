@@ -400,6 +400,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			ezCommonService.insertExecutiveScheduleConfig(); // 2025-07-07 이유정 - 일정관리 > 임원일정 조회 가능 범위 설정 컨피그 추가
             ezCommonService.settingCommunityGradeData(); // 2025-07-10 이유정 - 커뮤니티 > 기존 데이터 회원등급에 맞춰 세팅
             ezCommonService.alterTblClubUserAdminAuthColumn(); // 2025-07-15 이유정 - 커뮤니티 > 운영자권한 컬럼 추가
+            ezCommonService.alterTblClubUserWithdrawDateColumn(); // 2025-07-23 이유정 - 커뮤니티 > 회원탈퇴일자 컬럼 추가
         } catch (Exception e) {
     		logger.error(e.getMessage(), e);
     	}
