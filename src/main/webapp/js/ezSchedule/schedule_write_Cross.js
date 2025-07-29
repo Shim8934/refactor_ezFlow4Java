@@ -438,14 +438,16 @@ function save_schedule(pageFrom)
 	
 	var startDateReal = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
 	var endDateReal =  $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
-	var resourseID = g_resource[0][0];
 	
-	if (!!resourseID) {
-		var resMaxDate = getResourceMaxDate(resourseID);
-		if (!checkResMaxDate(startDateReal, endDateReal, resMaxDate)) {
-			alert(strLangMaxYGS01);
-			saveCheck = false;
-			return;
+	if (!!g_resource && g_resource.length > 0) {
+		var resourseID = g_resource[0][0];
+		if (!!resourseID) {
+			var resMaxDate = getResourceMaxDate(resourseID);
+			if (!checkResMaxDate(startDateReal, endDateReal, resMaxDate)) {
+				alert(strLangMaxYGS01);
+				saveCheck = false;
+				return;
+			}
 		}
 	}
 	
