@@ -42,7 +42,7 @@
 	url(fonts/NotoSansKr/otf/NotoSansKR-Black.otf) format('opentype');
 }
 
-html{font-family: 'Noto Sans KR', sans-serif, 'malgun gothic', 'arial', 'verdana' !important;}
+html{font-family: 'Noto Sans KR', sans-serif, 'malgun gothic', 'arial', 'verdana';}
 .inputText {
 	border:1px solid #999
 }
