@@ -9283,10 +9283,10 @@
 				    	   then 1 end) as totalUserCnt,
 				count(case when permit <> 0
 							and C_CLUBNO = #cID#
-				            and TRUNC(TO_DATE(c_indate, 'YYYY-MM-DD HH24:MI:SS')+(#offset#/(60*24))) = #sysdate#
+				            and TRUNC(TO_DATE(RTRIM(c_indate), 'YYYY-MM-DD HH24:MI:SS')+(#offset#/(60*24))) = #sysdate#
 						   then 1 end) as todayJoinCnt,
 				count(case when C_CLUBNO = #cID# || '_exit'
-				    		and TRUNC(TO_DATE(C_WITHDRAWDATE, 'YYYY-MM-DD HH24:MI:SS')+(#offset#/(60*24))) = #sysdate#
+				    		and TRUNC(TO_DATE(RTRIM(C_WITHDRAWDATE), 'YYYY-MM-DD HH24:MI:SS')+(#offset#/(60*24))) = #sysdate#
 						   then 1 end) as todayLeaveCnt
 			from
 				TBL_C_CLUBUSER
