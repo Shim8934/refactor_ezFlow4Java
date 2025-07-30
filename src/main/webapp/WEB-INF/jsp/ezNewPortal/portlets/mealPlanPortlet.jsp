@@ -47,8 +47,8 @@
 					</colgroup>
 					<tbody>
 						<tr>
-							<th>코스</th>
-							<th>메뉴</th>
+							<th><spring:message code='ezMealPlan.jsb012' /></th>
+							<th><spring:message code='ezMealPlan.jsb013' /></th>
 							<th><spring:message code='ezMealPlan.jsb006' /></th>
 						</tr>
 						<tr id="aCourseRow">
