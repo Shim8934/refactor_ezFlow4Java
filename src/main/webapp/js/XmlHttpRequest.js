@@ -2522,7 +2522,7 @@ function resizableMenu(url) {
             moreButton.style.display = "none";
         }
         
-        if (url.includes("ezSurvey")) {
+        if (url.includes("ezSurvey") && !url.includes("showParticipantsList.do")) {
             SurveyItem.btnResize();
         } 
         if (url.includes("/ezResource/scheduleApprovList.do")) {

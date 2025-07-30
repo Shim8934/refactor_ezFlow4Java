@@ -472,6 +472,7 @@ public class EzSurveyGWController {
 			String endDate          = infor.get("endDate")    != null ? infor.get("endDate").toString()            : "";
 			int publicFlag          = infor.get("public")     != null ? ((Long)infor.get("public")).intValue()     : -1;
 			int anonymousFlag       = infor.get("anonymous")  != null ? ((Long)infor.get("anonymous")).intValue()  : -1;
+			int userExposedFlag     = infor.get("userExposed")!= null ? ((Long)infor.get("userExposed")).intValue(): 1;
 			int multipleFlag        = infor.get("multiple")   != null ? ((Long)infor.get("multiple")).intValue()   : -1;
 			int publicDays          = infor.get("publicDays") != null ? ((Long)infor.get("publicDays")).intValue() : -1;
 			int mailFlag            = infor.get("mail")       != null ? ((Long)infor.get("mail")).intValue()       : 0;
@@ -493,7 +494,7 @@ public class EzSurveyGWController {
 			}
 			
 			String realPath  = request.getServletContext().getRealPath("");
-			result           = surveyService.saveSurveyItem(request, realPath, questions, title, purpose, startDate, endDate, publicFlag, anonymousFlag, multipleFlag, userFlag, publicDays, attchList, users, useStatus, surveyId, draftMode, userInfo, mailFlag, popupFlag, closingText);
+			result           = surveyService.saveSurveyItem(request, realPath, questions, title, purpose, startDate, endDate, publicFlag, anonymousFlag, multipleFlag, userFlag, publicDays, attchList, users, useStatus, surveyId, draftMode, userInfo, mailFlag, popupFlag, closingText, userExposedFlag);
 		
 			if (publicFlag == 2 && resultViewTarget != null) {
 				Long NewSurveyId = (Long) result.get("survey_id");
@@ -840,18 +841,22 @@ public class EzSurveyGWController {
 
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
 
-			/* 응답 시 현재 설문의 상태(수정/삭제)를 확인 */
-			int editingState = surveyService.checkEditingState(surveyId, userInfo.getCompanyID(), userInfo.getTenantId());
-			if (1 == editingState) {
+			/* 응답 시 현재 설문의 상태(수정/삭제/일시정지)를 확인 */
+			int surveyState = surveyService.checkEditingState(surveyId, userInfo.getCompanyID(), userInfo.getTenantId());
+			if (1 == surveyState) {
 				logger.debug("Survey in edit mode. surveyId={}", surveyId);
 				result.put("status", "editing");
 				result.put("code", 8);
 				return result;
-			} else if (-1 == editingState) {
+			} else if (-1 == surveyState) {
 				logger.debug("Survey has been deleted. surveyId={}", surveyId);
 				result.put("status", "deleted");
 				result.put("code", 8);
 				return result;
+			} else if (2 == surveyState) {
+				logger.debug("Survey is in paused state. surveyId={}", surveyId);
+				result.put("status", "paused");
+				result.put("code", 8);
 			} else {
 				result = surveyService.saveResponseItem(responses, surveyId, userInfo);
 			}
