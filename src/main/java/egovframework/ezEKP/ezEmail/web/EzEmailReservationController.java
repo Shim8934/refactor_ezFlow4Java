@@ -1,12 +1,24 @@
 package egovframework.ezEKP.ezEmail.web;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
 import javax.annotation.Resource;
+import javax.mail.Flags;
+import javax.mail.Folder;
+import javax.mail.Message;
+import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 
+import com.sun.mail.imap.AppendUID;
+import com.sun.mail.imap.IMAPFolder;
+import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
+import egovframework.ezEKP.ezEmail.logic.SMTPAccess;
+import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
+import egovframework.ezEKP.ezEmail.vo.MailWriteProcessVO;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -58,7 +70,15 @@ public class EzEmailReservationController extends EzFileMngUtil {
 	
 	@Resource(name = "EzCommonService")
     private EzCommonService ezCommonService;
-	
+    @Autowired
+    private EzEmailUtil ezEmailUtil;
+
+	@Resource(name = "jspw")
+	private String jspw;
+
+	@Autowired
+	private Properties config;
+
 	/**
 	 * 메일 예약발송 화면 호출 함수
 	 */
@@ -102,15 +122,46 @@ public class EzEmailReservationController extends EzFileMngUtil {
 		String messageId = request.getParameter("messageid") == null ? "" : request.getParameter("messageid");
 		messageId = commonUtil.detectPathTraversal(messageId);
 		
-		ezEmailService.deleteMailReserved(messageId);
-		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		
+		String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
+		String userEmail = userInfo.getId() + "@" + domainName;
+
 		String realPath = commonUtil.getRealPath(request);
 		String pDirPath = commonUtil.getUploadPath("upload_mail.RESERVED_MAIL_PATH", userInfo.getTenantId());
 		pDirPath = realPath + pDirPath;
 		File f = new File(pDirPath + commonUtil.separator + messageId + ".eml");
 
+		String password = jspw;
+		Message savedMessage = null;
+		FileInputStream fis = null;
+
+		IMAPAccess ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+				userEmail, password, egovMessageSource, locale, ezEmailUtil);
+		SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"),
+				userEmail, password);
+
+		try {
+			fis = new FileInputStream(f);
+			savedMessage = sa.readMimeMessage(fis); // MimeMessage
+			savedMessage.setFlag(Flags.Flag.SEEN, true);
+
+			Folder draftsFolder = ia.getFolder(ezEmailUtil.getDraftsFolderId(locale));
+
+			draftsFolder.open(Folder.READ_WRITE);
+
+			draftsFolder.appendMessages(new Message[]{savedMessage});
+
+			draftsFolder.close(true);
+		} catch (MessagingException | IOException e) {
+			logger.error("IOException has occurred");
+			logger.error(e.getMessage(), e);
+		} finally {
+			if (fis != null) fis.close();
+			if (ia != null) ia.close();
+		}
+
+		ezEmailService.deleteMailReserved(messageId);
+		
 		if (f.exists()) {
 			f.delete();
 			logger.debug(pDirPath + commonUtil.separator + messageId + ".eml deleted.");
