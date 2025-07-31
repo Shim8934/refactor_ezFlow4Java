@@ -1857,18 +1857,6 @@
 			TENANT_ID = #tenantID#
 	</update>
 
-	<select id="EzSurveyDAO.checkEditingState" parameterClass="map" resultClass="HashMap">
-		SELECT
-			MODIFY_FLAG,
-			USE_STATUS
-		FROM
-			TBL_SURVEY
-		WHERE
-			SURVEY_ID = #surveyId#
-		  AND COMPANY_ID = #companyId#
-		  AND TENANT_ID = #tenantId#
-	</select>
-
 	<update id="EzSurveyDAO.pauseSurvey" parameterClass="map">
 		UPDATE
 			TBL_SURVEY
