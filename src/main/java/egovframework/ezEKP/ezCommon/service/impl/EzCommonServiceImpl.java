@@ -1822,6 +1822,16 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 			put("description","DB 세션 사용 시 tbl_session 테이블에 세션 보관 기간 day기준(default:1)");
 			put("config_type","로그인");
 		}});
+
+        test.add(new HashMap<String, Object>(){{
+            put("confName","useAdvancedEachMail");
+            put("property_value","YES");
+            put("config_name","개별발신 성능 향상 방식 적용");
+            put("regdate","2019-12-08 00:00:00");
+            put("description","개별발신 성능 향상 방식 적용 YES:사용, NO:사용안함 (default: YES)");
+            put("config_type","메일");
+        }});
+
 		test.add(new HashMap<String, Object>(){{
 			put("confName","useMailConfirm");
 			put("property_value","NO");
