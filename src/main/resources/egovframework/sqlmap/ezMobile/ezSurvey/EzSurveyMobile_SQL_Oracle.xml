@@ -196,7 +196,7 @@
 	</sql>
 	
 	<sql id="MsurveyItemList">
-		where use_status = 1 and tenant_id = #tenantId# and modify_flag = 0
+		where use_status in (1, 2) and tenant_id = #tenantId# and modify_flag = 0
 		<isNotEmpty property="title"       prepend=" and ">title like concat('%', concat(#title#, '%'))</isNotEmpty>
 		<isNotEmpty property="endDate" prepend=" and ">
 			<![CDATA[(create_date <= #endDate#)]]>

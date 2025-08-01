@@ -466,6 +466,15 @@ public class EzEditorController extends EgovFileMngUtil {
 		String type = request.getParameter("type");
 
 		String fileType = multiFile.getContentType().replace("\\", "/").split("/")[1];
+
+		List<String> allowFileTypeList = Arrays.asList("png","jpg","jpeg","gif","bmp");
+
+		if(!allowFileTypeList.contains(fileType)) {
+			logger.debug("This file type is not allowed. allowFileTypeList : {}, fileType:{}", allowFileTypeList, fileType);
+			
+			return "";
+		}
+		
 		String realPath = commonUtil.getRealPath(request);
 		String today = EgovDateUtil.getToday("");
 		String fileName = UUID.randomUUID() + "." + fileType;
@@ -544,6 +553,15 @@ public class EzEditorController extends EgovFileMngUtil {
 
 		String fileData = request.getParameter("clip_contents");
 		String fileType = commonUtil.detectPathTraversal(request.getParameter("file_extension"));
+
+		List<String> allowFileTypeList = Arrays.asList("png","jpg","jpeg","gif","bmp");
+
+		if(!allowFileTypeList.contains(fileType)) {
+			logger.debug("This file type is not allowed. allowFileTypeList : {}, fileType:{}", allowFileTypeList, fileType);
+
+			return "";
+		}
+		
 		String rootId = request.getParameter("xfe_root_id");
 		String resultCode = "0";
 

@@ -245,7 +245,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 	}
 	
 	@Override
-	public void setMailGeneral(int tenantId, String userId, MailGeneralVO mailGeneral, String mode) throws Exception {
+	public void setMailGeneral(int tenantId, String userId, MailGeneralVO mailGeneral, String mode, String inMailBox) throws Exception {
 		logger.debug("setMailGeneral started.");
 		logger.debug("tenantId=" + tenantId + ",userId=" + userId + ",mode=" + mode);
 		
@@ -274,7 +274,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 		String editorFontFamilyParam = "editorFontFamily=" + URLEncoder.encode(mailGeneral.getEditorFontFamily(), "UTF-8");
 		String editorFontSizeParam = "editorFontSize=" + URLEncoder.encode(mailGeneral.getEditorFontSize(), "UTF-8");
 		String selfCcOption = "selfCcOption=" + URLEncoder.encode(mailGeneral.getSelfCcOption(), "UTF-8");
-		
+		String inMailBoxOption = "inMailBox=" + URLEncoder.encode(inMailBox, "UTF-8");
 		String modeParam = "mode=";
 		if (mode != null && mode.equals("ALL")) {
 			modeParam = "mode=all";
@@ -284,7 +284,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 				+ "&" + previewWListParam + "&" + previewWContentParam + "&" + previewHListParam + "&" + previewHContentParam + "&" + mailSenderNameParam
 				+ "&" + modeParam +"&" + previewSubTreeParam + "&" + usePreviewSubTreeParam + "&" + previewMailImageParam + "&" + previewMailParam + "&" + textOptionParam
 				+ "&" + mailSearchPeriodParam + "&" + defaultCursorPositionParam + "&" + defaultSeparateSendParam + "&" + mailSendResultParam + "&" + editorFontFamilyParam + "&" + editorFontSizeParam
-				+ "&" + selfCcOption;
+				+ "&" + selfCcOption + "&" + inMailBoxOption;
 
 		logger.debug("inputParams=" + inputParams);
 		

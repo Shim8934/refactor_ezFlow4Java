@@ -22,6 +22,7 @@ import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -372,17 +373,21 @@ public class CommonUtil {
 		logger.debug("readBytesFromFile path=" + pathStr);
 
 		File file = new File(pathStr);
-		byte[] content = new byte[(int)file.length()];
-		FileInputStream fin = null;		
-
-		try {
-			fin = new FileInputStream(file);
-			fin.read(content);
-		} catch (IOException e) {		
-			throw e;
-		} finally {
-			if (fin != null) {
-				fin.close();
+		long orgFileSize = file.length();
+		
+		/* 2025-07-11 (수정) 기존 FileInputStream 단일 읽기 방식 → ByteArrayOutputStream 기반으로 변경 */
+		byte[] content = null;
+		try(FileInputStream fis = new FileInputStream(file);
+			ByteArrayOutputStream baos = new ByteArrayOutputStream()){
+			byte[] buffer = new byte[8192];
+			int bytesRead;
+			while((bytesRead = fis.read(buffer)) != -1){
+				baos.write(buffer, 0, bytesRead);
+			}
+			content = baos.toByteArray();
+			
+			if (orgFileSize != content.length) { // 만일 실제 파일과 생성된 파일의 사이즈가 다른 경우 로그를 남기도록 함.
+				logger.debug("File size mismatch: expected {} bytes, but read {} bytes.", orgFileSize, content.length);
 			}
 		}
 

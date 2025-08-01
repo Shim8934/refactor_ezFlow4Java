@@ -1039,7 +1039,6 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		model.addAttribute("lang_quaternary", lang_quaternary);
 		model.addAttribute("useJapanese", useJapanese);
 		model.addAttribute("useChinese", useChinese);
-		model.addAttribute("hasBoardItemFlag", ezBoardService.hasBoardItemFlag(boardID, userInfo.getTenantId()));
 		model.addAttribute("boardItemCnt", boardItemCnt);
 		
 		logger.debug("boardProperty ended");
@@ -1062,6 +1061,9 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		boardPropertyVO.setTenantID(userInfo.getTenantId());
 		
 		BoardPropertyVO beforeBoardProperty = ezBoardService.getBoardProperty(boardPropertyVO.getBoardID(), userInfo.getTenantId()); // 게시판 이름 변경 전 정보
+		if (beforeBoardProperty.getUrl() == null) {
+			beforeBoardProperty.setUrl("");
+		}
 		
 		 BoardMyFavoriteVO myFavoriteVO = new BoardMyFavoriteVO();
 		 myFavoriteVO.setUserId(userInfo.getId());
@@ -1071,7 +1073,8 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		 
 		int boardItemCount = ezBoardService.getBrdTotalItemCount(myFavoriteVO);
 		
-		if (boardItemCount > 0 && !beforeBoardProperty.getGuBun().equals(boardPropertyVO.getGuBun())) {
+		// url 게시판과 일반 게시판이 같은 gubun값을 쓰므로, url 체크 조건을 추가함
+		if (boardItemCount > 0 && (!beforeBoardProperty.getGuBun().equals(boardPropertyVO.getGuBun()) || !beforeBoardProperty.getUrl().equals(boardPropertyVO.getUrl()))) {
 			return "nonEmptyBoard";
 		}
 		

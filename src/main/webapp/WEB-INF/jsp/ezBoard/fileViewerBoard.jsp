@@ -409,6 +409,8 @@
 					if (res === "OK") {
 						alert("<spring:message code = 'ezBoard.t54' />");
 						location.href = "/ezBoard/fileViewerBoard.do?boardID=" + encodeURIComponent(pBoardID);
+					} else if (res === "NO") {
+						alert("<spring:message code='ezBoard.t265'/>");
 					} else {
 						alert("<spring:message code = 'ezCabinet.err2' />");
 					}
@@ -417,7 +419,11 @@
 		}
 
 		function editItem() {
-			location.href = "/ezBoard/fileViewerBoard.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(itemID) + "&mode=modify";
+			if (false === ${boardInfo.boardAdmin_FG} && false === ${boardInfo.delete_FG} && "${boardItemInfo.writerID}" !== "${userInfo.id}") {
+				alert("<spring:message code='ezBoard.t304' />");
+			} else {
+				location.href = "/ezBoard/fileViewerBoard.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(itemID) + "&mode=modify";
+			}
 		}
 
 		function viewContent() {

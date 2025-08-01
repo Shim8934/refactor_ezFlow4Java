@@ -2016,6 +2016,22 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 			put("description","웹한글기안기 버전에 따라 다른 동작을 하는 부분을 옵션화한다. 1: 웹한글기안기 v1.0 사용, 2: 웹한글기안기 v2.0 사용 (default : 1)");
 			put("config_type","전자결재G");
 		}});
+        test.add(new HashMap<String, Object>(){{
+			put("confName","useAI");
+			put("property_value","NO");
+			put("config_name","ezAI 사용여부");
+			put("regdate","2025-05-09 00:00:00.000");
+			put("description","ezAI 사용여부. YES: 사용, NO: 미사용 (default: NO)");
+			put("config_type","AI");
+		}});
+        test.add(new HashMap<String, Object>(){{
+			put("confName","aiAttachMBSize");
+			put("property_value","10");
+			put("config_name","ezAI 첨부파일 최대용량");
+			put("regdate","2025-05-09 00:00:00.000");
+			put("description","ezAI에서 허용하는 첨부파일 최대용량 (default:10, 단위: MB)");
+			put("config_type","AI");
+		}});
 
         test.add(new HashMap<String, Object>(){{
             put("confName","useStatMenu");
@@ -2024,6 +2040,15 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
             put("regdate","2025-03-21 00:00:00");
             put("description","메뉴 관련 통계 집계, 및 사용 여부 (default:YES)");
             put("config_type","포탈");
+        }});
+        
+        test.add(new HashMap<String, Object>(){{
+            put("confName","useUserCont");
+            put("property_value","YES");
+            put("config_name","전자결재 개인문서함 사용 여부");
+            put("regdate","2025-01-20 00:00:00");
+            put("description","전자결재 개인문서함 사용 여부. YES: 개인문서함 사용, NO: 개인문서함 사용하지 않음 (default : YES)");
+            put("config_type","전자결재");
         }});
 
         test.add(new HashMap<String, Object>(){{
@@ -2042,6 +2067,15 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
             put("regdate","2025-05-09 00:00:00");
             put("description","메일쓰기창 첨부파일 업로드시 zip 암호 설정 여부를 옵션화한다. YES: zip 암호 설정 사용, NO: 암호 설정하지 않고 업로드 (default : NO)");
             put("config_type","메일");
+        }});
+
+        test.add(new HashMap<String, Object>(){{
+            put("confName","useParticipantLottery");
+            put("property_value","NO");
+            put("config_name","전자설문 참여자보기 추첨기능 사용 여부");
+            put("regdate","2025-07-14 00:00:00");
+            put("description","전자설문 참여자보기에서 추첨기능 사용 여부. YES: 사용, NO: 미사용 (default : NO)");
+            put("config_type","전자설문");
         }});
         
 		List<TenantVO> tenantIdList = ezCommonDAO.getTenantList();
@@ -2879,6 +2913,23 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
             put("TYPE_MYSQL", "TINYINT(4)"); put("TYPE_ORACLE", "NUMBER(4,0)");
             put("AFTER", "DEFAULT 0");
         }});
+        // 2025-07-14 양지혜 - 전자설문 > 참여자 대상 추첨결과 컬럼 추가
+        test.add(new HashMap<String, Object>(){{
+            put("TABLE","TBL_SURVEY_RESPONDENT");
+            put("COLUMN", "LOTTERY_RESULT");
+            put("TYPE_MYSQL", "INT(11)"); put("TYPE_ORACLE", "NUMBER(10,0)");
+            put("AFTER_MYSQL", "DEFAULT NULL COMMENT '추첨결과'");
+            put("AFTER_ORACLE", "DEFAULT NULL");
+        }});
+        // 2025-07-18 양지혜 - 전자설문 > 참여자 노출여부 
+        test.add(new HashMap<String, Object>(){{
+            put("TABLE","TBL_SURVEY");
+            put("COLUMN", "USER_EXPOSED_FLAG");
+            put("TYPE_MYSQL", "TINYINT(4)"); put("TYPE_ORACLE", "NUMBER(4,0)");
+            put("AFTER_MYSQL", "DEFAULT 1 COMMENT '참여자 노출여부'");
+            put("AFTER_ORACLE", "DEFAULT 1");
+        }});
+        
 		for (Map<String, Object> map : test) {
 			ezCommonDAO.alterTableAddColumns(map);
         }
@@ -4538,6 +4589,12 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	@Override
 	public void alterUseColor() throws Exception {
 		ezCommonDAO.alterUseColor();
+	}
+	
+	/* 2023-10-30 조소정 - 게시판 사용안함 여부 컬럼 추가 */
+	@Override
+	public void addBoardNotUsedFlag() throws Exception {
+		ezCommonDAO.addBoardNotUsedFlag();
 	}
 
 	@Override
@@ -8614,5 +8671,17 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
             map.put("form_html2", "<tr><th>Name</th><td id=\"writerName\" style=\"\"></td></tr><tr><th>Date </th><td colspan=\"2\" id=\"attiTime\"><span id=\"periodblock\" datetype=\"5\"><div class=\"custom_checkbox\" style=\"vertical-align: middle; margin-right: 5px;\"><input name=\"checkbox\" type=\"checkbox\" id=\"alldaycheck\" style=\"height:22px;\" onclick=\"allday_change()\" value=\"1\"><label for=\"alldaycheck\">All day </label></div><input type=\"text\" id=\"Sdatepicker\" style=\"width:80px;text-align:center\" readonly=\"readonly\"><input id=\"Stimepicker\" type=\"text\" class=\"time\" style=\"width:43px;margin-left:10px;text-align:center;\" /> ~ <input type=\"text\" id=\"Edatepicker\" style=\"width:80px;text-align:center\" readonly=\"readonly\"><input id=\"Etimepicker\" type=\"text\" class=\"time\" style=\"width:43px;margin-left:10px;text-align:center;\" /></span></td></tr><tr> <th>Workplace</th> <td id=\"region\" style=\"\"><input name=\"region\" type=\"text\" style=\"width:98%\" value=\"\"  maxlength=\"200\"></td> </tr><tr> <th>Contact information</th> <td id=\"mobile\" style=\"\"><input name=\"mobile\" type=\"text\" style=\"width:98%\" value=\"\"  maxlength=\"50\"></td> </tr><tr> <th>Substitute</th> <td id=\"bizsub\" style=\"\"><input name=\"bizsub\" type=\"text\" style=\"width:98%\" value=\"\"  maxlength=\"120\"></td></tr>");
             ezCommonDAO.updateAttitudeCustomCheckbox(map);
         }
+    }
+    
+    // 2024-08-27 유길상 - 자원관리 > 자원등록 > 최대 예약 가능 기간 컬럼 추가
+    @Override
+    public void alterTblRsBrdResMaxDate() throws Exception {
+    	ezCommonDAO.alterTblRsBrdResMaxDate();
+    }
+    
+    // 2024-08-27 유길상 - 자원관리 > 자원등록 > 정원 컬럼 추가
+    @Override
+    public void alterTblRsBrdResMaxUserCnt() throws Exception {
+    	ezCommonDAO.alterTblRsBrdResMaxUserCnt();
     }
 }

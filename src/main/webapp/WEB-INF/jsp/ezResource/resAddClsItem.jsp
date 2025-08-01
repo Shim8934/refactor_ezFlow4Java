@@ -76,6 +76,15 @@
 					return;
 				}
 				
+				// 2024-09-13 유길상 - 정원 미입력 확인
+				var checkSpace2 = document.getElementById("ResMaxUserCnt").value.trim();
+				
+				if (checkSpace2.length == 0) {
+					alert(strLangMaxYGS04);
+					document.getElementById("ResMaxUserCnt").focus();
+					return;
+				}
+				
 				var ownerList = res_owner["ownerId"][0];
 				for(var i=1; i<res_owner.ownerId.length; i++) {
 					ownerList += "," + res_owner["ownerId"][i];
@@ -179,6 +188,16 @@
 				}
 				
 				//createNodeAndInsertText(xmlpara, objNode, "DATA", document.getElementById("subOwner1").value);
+				
+				// 2024-08-26 유길상 - 정원, 최대 예약 가능 기간 요청 xml 추가
+				createNodeAndInsertText(xmlpara, objNode, "RESMAXUSERCNT", document.getElementById("ResMaxUserCnt").value);
+				
+				var paramResMaxDate = document.getElementById("ResMaxDate").value;
+				if (!document.getElementById("ResMaxDate").value || isNaN(paramResMaxDate)) {
+					paramResMaxDate = "0";
+				}
+				createNodeAndInsertText(xmlpara, objNode, "RESMAXDATE", paramResMaxDate);
+				
 				xmlHttp.open("Post", "/ezResource/callAddClsItem.do", false);
 				xmlHttp.send(xmlpara);
 
@@ -486,6 +505,19 @@
 				}
 			}
 			
+			// 2024-08-26 유길상 - 최대 예약 가능 기간 , 정원 숫자  value 검증
+			function numberCheck(el) {
+				var curValue = el.value;
+				
+				if (isNaN(curValue.charAt(curValue.length - 1))) {
+					curValue = curValue.slice(0, -1);
+				}
+				if (curValue.length > 3) {
+					curValue = curValue.slice(0, -1);
+				}
+				el.value = curValue;
+			}
+			
 		</script>
 	</head>
 	<body class="popup" style="height:100%; overflow:hidden;">
@@ -560,6 +592,10 @@
           					<th> <spring:message code="ezResource.t148"/></th>
           					<td colspan="3"><input type="text" name="ResLocation" id="ResLocation" value="" style="width: 100%" maxlength="100"></td>
         					</tr>
+        					<tr>
+        						<th><spring:message code="ezResource.max.ygs02"/></th>
+        						<td colspan="3"><input type="text" name="ResMaxUserCnt" onInput="numberCheck(this);" id="ResMaxUserCnt" style="width: 100%" maxlength="100"></td>
+        					</tr>
 							<tr>
 								<th> <spring:message code="ezResource.lyj01"/></th>
 								<td colspan="3" style="width:100%">
@@ -571,6 +607,10 @@
 									</div>
 								</td>
 							</tr>
+        					<tr>
+        						<th><spring:message code="ezResource.max.ygs01"/></th>
+        						<td colspan="3"><input type="text" name="ResMaxDate" onInput="numberCheck(this);" id="ResMaxDate" style="width: 100%" maxlength="100"></td>
+        					</tr>
         					<tr>
           						<th> <spring:message code="ezResource.t149"/></th>
           						<td colspan="3" style="width:100%">

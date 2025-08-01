@@ -7757,4 +7757,52 @@
 			WHERE FORM_ID=8
 		]]>
 	</update>
+	
+	<select id="EzCommonDAO.checkTblRsBrdResMaxDate">
+		SELECT
+			RES_MAX_DATE
+		FROM
+			TBL_RS_BRD
+		LIMIT 1
+	</select>
+	
+	<statement id="EzCommonDAO.alterTblRsBrdResMaxDate">
+		ALTER TABLE
+			TBL_RS_BRD
+		ADD
+			RES_MAX_DATE varchar(100)
+	</statement>
+	
+	<select id="EzCommonDAO.checkTblRsBrdResMaxUserCnt">
+		SELECT
+			RES_MAX_USER_CNT
+		FROM
+			TBL_RS_BRD
+		LIMIT 1
+	</select>
+	
+	<statement id="EzCommonDAO.alterTblRsBrdResMaxUserCnt">
+		ALTER TABLE
+			TBL_RS_BRD
+		ADD
+			RES_MAX_USER_CNT varchar(100) DEFAULT '0' NOT NULL
+	</statement>
+	
+    <!-- 2024-10-28 조소정 - 게시판 > 일반설정 > 사용안함 여부 플래그 추가 -->
+    <select id="EzCommonDAO.checkBoardNotUsedFlag" resultClass="String">
+        <![CDATA[
+        	SELECT
+        		NOTUSEDFLAG
+            FROM
+                TBL_BOARD_BOARDINFO
+            LIMIT 1
+        ]]>
+    </select>
+    
+    <statement id="EzCommonDAO.addBoardNotUsedFlag">
+        ALTER TABLE
+            TBL_BOARD_BOARDINFO
+        ADD
+            NOTUSEDFLAG VARCHAR(2) NOT NULL DEFAULT 'N'
+    </statement>
 </sqlMap>

@@ -333,9 +333,16 @@ INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_V
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (@tenant_id_value, 'ReturnByDesignationUsed', '지정반송 사용여부', 'NO', '지정반송 사용여부 (default:NO)', '2024-06-18 00:00:00', '전자결재');
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (@tenant_id_value, 'MyBoardScrapFlag', '게시판 스크랩기능 사용여부', 'TYPE1', 'NONE: 사용안함 / TYPE1: 마이게시판 하위 스크랩함 / TYPE2: 게시판 트리 하위 개인화 스크랩함 (default:TYPE1)', '2023-06-14 00:00:00', '게시판');
 
+-- 메일 POP3 / IMAP 설정 컨피그 추가
+INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (@tenant_id_value, 'usePOP3Default', 'POP3 사용 여부', 'NO', 'YES: 사용함, NO:사용안함(default: NO)', '2025-06-23 00:00:00', '메일');
+INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (@tenant_id_value, 'useIMAPDefault', 'IMAP 사용 여부', 'NO', 'YES: 사용함, NO:사용안함(default: NO)', '2025-06-23 00:00:00', '메일');
+
 -- 협업 > 웹응용프로그램 경로 분리 컨피그 추가, 소스코드 상으로만 존재했던 모바일용 컨피그 추가
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (@tenant_id_value, 'workspaceAppPath', '협업의 웹응용프로그램 경로', '', 'workspaceHostUrl 테넌트 컨피그 뒤에 붙는 추가 경로 값으로, ""(공백), /ezWork, /ezWorkspace 등으로 설정 가능 (default: ""(공백))', '2025-03-13 00:00:00', '협업');
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (@tenant_id_value, 'workspaceHostUrlForMobile', '협업의 호스트이름 까지의 주소 (모바일 그룹웨어에서 사용)', 'http://space.kaoni.com', '기본적으로 workspaceHostUrl 테넌트 컨피그와 동일한 값이나, 모바일에서 Url 접근 구분이 필요한 경우 변경해서 사용 가능', '2025-03-13 00:00:00', '협업');
+
+INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (@tenant_id_value, 'useAI', 'ezAI 사용여부', 'NO', 'ezAI 사용여부. YES: 사용, NO: 미사용 (default: NO)', '2025-05-09 00:00:00.00', 'AI');
+INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (@tenant_id_value, 'aiAttachMBSize', 'ezAI 첨부파일 최대용량', '10', 'ezAI에서 허용하는 첨부파일 최대용량 (default:10, 단위: MB)', '2025-05-09 00:00:00.00', 'AI');
 
 INSERT INTO TBL_COMPANY_CONFIG (TENANT_ID, COMPANY_ID, PROPERTY_NAME, PROPERTY_VALUE) VALUES (@tenant_id_value, 'Top', 'useCopyright', 'NO');
 INSERT INTO TBL_COMPANY_CONFIG (TENANT_ID, COMPANY_ID, PROPERTY_NAME, PROPERTY_VALUE) VALUES (@tenant_id_value, 'Top', 'ExpirePassPeriod', '0');
@@ -1837,50 +1844,6 @@ INSERT INTO TBL_CABINETCODELIST (CODETYPE,CODE,NAME,ISUSED,CODEDESCRIPTION,TYPED
 INSERT INTO TBL_CABINETCODELIST (CODETYPE,CODE,NAME,ISUSED,CODEDESCRIPTION,TYPEDESCRIPTION,NAME2,COMPANYID, TENANT_ID) values ('009','CV','슬라이드사진(비영상)',1,'슬라이드사진(비영상)',null,'Slide photos (Non-imaging)','Top',@tenant_id_value);
 INSERT INTO TBL_CABINETCODELIST (CODETYPE,CODE,NAME,ISUSED,CODEDESCRIPTION,TYPEDESCRIPTION,NAME2,COMPANYID, TENANT_ID) values ('009','CY','그림',1,'그림',null,'Picture','Top',@tenant_id_value);
 
-INSERT INTO TBL_FORMCONNINFO (CONNNODE, CONNINFO, DESCRIPTION, UPPERNODE) VALUES ('PROCESSIDXS',		'',							'',									'ROOT');
-INSERT INTO TBL_FORMCONNINFO (CONNNODE, CONNINFO, DESCRIPTION, UPPERNODE) VALUES ('PROCESSIDX',			'INIT',						'문서 로딩시(기안, 접수기)',				'PROCESSIDXS');
-INSERT INTO TBL_FORMCONNINFO (CONNNODE, CONNINFO, DESCRIPTION, UPPERNODE) VALUES ('PROCESSIDX',			'MIDDLE_SIGN_INIT',			'문서 로딩시(결재기)',						'PROCESSIDXS');
-INSERT INTO TBL_FORMCONNINFO (CONNNODE, CONNINFO, DESCRIPTION, UPPERNODE) VALUES ('PROCESSIDX',			'DOCNUM_BEFORE',			'문서번호 채번직전(모든화면최종결재시)',			'PROCESSIDXS');
-INSERT INTO TBL_FORMCONNINFO (CONNNODE, CONNINFO, DESCRIPTION, UPPERNODE) VALUES ('PROCESSIDX',			'DOCNUM_AFTER',				'문서번호 채번직후(모든화면최종결재시)',			'PROCESSIDXS');
-INSERT INTO TBL_FORMCONNINFO (CONNNODE, CONNINFO, DESCRIPTION, UPPERNODE) VALUES ('PROCESSIDX',			'DRAFTSAVE_BEFORE',			'기안상신직전(기안기)',					'PROCESSIDXS');
-INSERT INTO TBL_FORMCONNINFO (CONNNODE, CONNINFO, DESCRIPTION, UPPERNODE) VALUES ('PROCESSIDX',			'DRAFTSAVE_AFTER',			'기안상신직후(기안기)',					'PROCESSIDXS');
-INSERT INTO TBL_FORMCONNINFO (CONNNODE, CONNINFO, DESCRIPTION, UPPERNODE) VALUES ('PROCESSIDX',			'DOCNUM_END',				'최종결재직후(기안기)',					'PROCESSIDXS');
-INSERT INTO TBL_FORMCONNINFO (CONNNODE, CONNINFO, DESCRIPTION, UPPERNODE) VALUES ('PROCESSIDX',			'MIDDLE_SIGN_BEFORE',		'중간결재자 사인직전(결재기)',				'PROCESSIDXS');
-INSERT INTO TBL_FORMCONNINFO (CONNNODE, CONNINFO, DESCRIPTION, UPPERNODE) VALUES ('PROCESSIDX',			'MIDDLE_SIGN_AFTER',		'중간결재자 사인직후(결재기)',				'PROCESSIDXS');
-INSERT INTO TBL_FORMCONNINFO (CONNNODE, CONNINFO, DESCRIPTION, UPPERNODE) VALUES ('PROCESSIDX',			'MIDDLE_END_AFTER',			'중간결재자 결재성공시(결재기)',				'PROCESSIDXS');
-INSERT INTO TBL_FORMCONNINFO (CONNNODE, CONNINFO, DESCRIPTION, UPPERNODE) VALUES ('PROCESSIDX',			'MIDDLE_END_FAIL',			'중간결재자 결재실패시(결재기)',				'PROCESSIDXS');
-INSERT INTO TBL_FORMCONNINFO (CONNNODE, CONNINFO, DESCRIPTION, UPPERNODE) VALUES ('PROCESSIDX',			'LAST_SIGN_BEFORE',			'최종결재자 사인직전(결재기)',				'PROCESSIDXS');
-INSERT INTO TBL_FORMCONNINFO (CONNNODE, CONNINFO, DESCRIPTION, UPPERNODE) VALUES ('PROCESSIDX',			'LAST_SIGN_AFTER',			'최종결재자 사인직후(결재기)',				'PROCESSIDXS');
-INSERT INTO TBL_FORMCONNINFO (CONNNODE, CONNINFO, DESCRIPTION, UPPERNODE) VALUES ('PROCESSIDX',			'END_FAIL',					'결재완료 실패시(모든화면 최종결재시)',			'PROCESSIDXS');
-INSERT INTO TBL_FORMCONNINFO (CONNNODE, CONNINFO, DESCRIPTION, UPPERNODE) VALUES ('PROCESSIDX',			'SUSIN_DRAFTSAVE_BEFORE',	'접수문서 접수직전(접수기)',					'PROCESSIDXS');
-INSERT INTO TBL_FORMCONNINFO (CONNNODE, CONNINFO, DESCRIPTION, UPPERNODE) VALUES ('PROCESSIDX',			'SUSIN_DRAFTSAVE_AFTER',	'접수문서 접수직후(접수기)',					'PROCESSIDXS');
-INSERT INTO TBL_FORMCONNINFO (CONNNODE, CONNINFO, DESCRIPTION, UPPERNODE) VALUES ('PROCESSIDX',			'SUSIN_DOCNUM_END',			'접수문서 접수후(접수기)',					'PROCESSIDXS');
-INSERT INTO TBL_FORMCONNINFO (CONNNODE, CONNINFO, DESCRIPTION, UPPERNODE) VALUES ('PROCESSIDX',			'LAST_SEND_BEFORE',			'최종결재직전(기안기)',					'PROCESSIDXS');
-INSERT INTO TBL_FORMCONNINFO (CONNNODE, CONNINFO, DESCRIPTION, UPPERNODE) VALUES ('PROCESSIDX',			'LAST_END_AFTER',			'최종결재직후(수신문서접수기)',				'PROCESSIDXS');
-INSERT INTO TBL_FORMCONNINFO (CONNNODE, CONNINFO, DESCRIPTION, UPPERNODE) VALUES ('PROCESSIDX',			'BANSONG_BEFORE',			'반송직전(결재기)',						'PROCESSIDXS');
-INSERT INTO TBL_FORMCONNINFO (CONNNODE, CONNINFO, DESCRIPTION, UPPERNODE) VALUES ('PROCESSIDX',			'BANSONG_AFTER',			'반송성공시(결재기)',						'PROCESSIDXS');
-INSERT INTO TBL_FORMCONNINFO (CONNNODE, CONNINFO, DESCRIPTION, UPPERNODE) VALUES ('PROCESSIDX',			'BANSONG_FAIL',				'반송실패시(결재기)',						'PROCESSIDXS');
-INSERT INTO TBL_FORMCONNINFO (CONNNODE, CONNINFO, DESCRIPTION, UPPERNODE) VALUES ('PROCESSIDX',			'HESONG_BEFORE',			'회송직전',						'PROCESSIDXS');
-INSERT INTO TBL_FORMCONNINFO (CONNNODE, CONNINFO, DESCRIPTION, UPPERNODE) VALUES ('PROCESSTIMES',		'',							'',									'ROOT');
-INSERT INTO TBL_FORMCONNINFO (CONNNODE, CONNINFO, DESCRIPTION, UPPERNODE) VALUES ('PROCESSTIME',		'DRAFT',					'기안결재시 호출(기안문)',					'PROCESSTIMES');
-INSERT INTO TBL_FORMCONNINFO (CONNNODE, CONNINFO, DESCRIPTION, UPPERNODE) VALUES ('PROCESSTIME',		'REDRAFT',					'재기안시 호출(재기안시기안기에서)',			'PROCESSTIMES');
-INSERT INTO TBL_FORMCONNINFO (CONNNODE, CONNINFO, DESCRIPTION, UPPERNODE) VALUES ('PROCESSTIME',		'SUSIN',					'수신문서상태 호출(수신문)',					'PROCESSTIMES');
-INSERT INTO TBL_FORMCONNINFO (CONNNODE, CONNINFO, DESCRIPTION, UPPERNODE) VALUES ('PROCESSTIME',		'HAPYUI',					'합의문서상태 호출(합의문)',					'PROCESSTIMES');
-INSERT INTO TBL_FORMCONNINFO (CONNNODE, CONNINFO, DESCRIPTION, UPPERNODE) VALUES ('PROCESSTIME',		'CHAMJO',					'참조문서상태 호출(미구현)',					'PROCESSTIMES');
-INSERT INTO TBL_FORMCONNINFO (CONNNODE, CONNINFO, DESCRIPTION, UPPERNODE) VALUES ('PROCESSTIME',		'GONGRAM',					'공람문서상태 호출(미구현)',					'PROCESSTIMES');
-INSERT INTO TBL_FORMCONNINFO (CONNNODE, CONNINFO, DESCRIPTION, UPPERNODE) VALUES ('PROCESSTIME',		'GAMSA',					'사후감사문서상태 호출(미구현)',				'PROCESSTIMES');
-INSERT INTO TBL_FORMCONNINFO (CONNNODE, CONNINFO, DESCRIPTION, UPPERNODE) VALUES ('PROCESSTIME',		'B_GAMSA',					'사전감사문서상태 호출(미구현)',				'PROCESSTIMES');
-INSERT INTO TBL_FORMCONNINFO (CONNNODE, CONNINFO, DESCRIPTION, UPPERNODE) VALUES ('CONNSTRINGFLAGS',	'',							'',									'ROOT');
-INSERT INTO TBL_FORMCONNINFO (CONNNODE, CONNINFO, DESCRIPTION, UPPERNODE) VALUES ('CONNSTRINGFLAG',		'CS',						'커넥션 정보(없으면 자동)',					'CONNSTRINGFLAGS');
-INSERT INTO TBL_FORMCONNINFO (CONNNODE, CONNINFO, DESCRIPTION, UPPERNODE) VALUES ('CONNSTRINGFLAG',		'UI',						'화면 다이얼로그 정보',						'CONNSTRINGFLAGS');
-INSERT INTO TBL_FORMCONNINFO (CONNNODE, CONNINFO, DESCRIPTION, UPPERNODE) VALUES ('QUERYTYPES',			'',							'',									'ROOT');
-INSERT INTO TBL_FORMCONNINFO (CONNNODE, CONNINFO, DESCRIPTION, UPPERNODE) VALUES ('QUERYTYPE',			'Q',						'쿼리 실행',							'QUERYTYPES');
-INSERT INTO TBL_FORMCONNINFO (CONNNODE, CONNINFO, DESCRIPTION, UPPERNODE) VALUES ('QUERYTYPE',			'NA',						'UI가 없는 aspx',						'QUERYTYPES');
-INSERT INTO TBL_FORMCONNINFO (CONNNODE, CONNINFO, DESCRIPTION, UPPERNODE) VALUES ('QUERYTYPE',			'UA',						'UI가 있는 aspx(xml String을 전달)',		'QUERYTYPES');
-INSERT INTO TBL_FORMCONNINFO (CONNNODE, CONNINFO, DESCRIPTION, UPPERNODE) VALUES ('QUERYTYPE',			'UA_EX',					'UI가 있는 aspx(xml Document를 전달)',	'QUERYTYPES');
-INSERT INTO TBL_FORMCONNINFO (CONNNODE, CONNINFO, DESCRIPTION, UPPERNODE) VALUES ('KEYKINDS',			'',							'',									'ROOT');
-INSERT INTO TBL_FORMCONNINFO (CONNNODE, CONNINFO, DESCRIPTION, UPPERNODE) VALUES ('KEYKIND',			'single',					'필드개체',							'KEYKINDS');
-INSERT INTO TBL_FORMCONNINFO (CONNNODE, CONNINFO, DESCRIPTION, UPPERNODE) VALUES ('KEYKIND',			'table',					'테이블지원(미구현)',						'KEYKINDS');
 
 -- circular insert
 
@@ -2688,239 +2651,10 @@ INSERT INTO TBL_ATTITUDE_FORM (FORM_ID, TENANT_ID, FORM_NAME, FORM_NAME2, FORM_H
 
 -- attitude conf
 INSERT INTO TBL_ATTITUDE_CONF (COMPANY_ID, TENANT_ID, WORK_STARTTIME, WORK_ENDTIME, CLOSED_DAY, ATTITUDE_MOD_APPL, CLOSED_DATE_ATTITUDE, CONF_SET_DATE) VALUES ('Top',@tenant_id_value, '00:00', '09:00', '1,0,0,0,0,0,1', '1', '1', now());
-		    		
--- ezPMS fixed holiday
-INSERT INTO TBL_PMS_FIXEDHOLIDAY(HOLIDAY_NAME, HOLIDAY_NAME2, HOLIDAY, SOLARLUNAR, COUNTRY) VALUES ('신정', 'New Year''s Day', '01-01', 1, 'kor');
-INSERT INTO TBL_PMS_FIXEDHOLIDAY(HOLIDAY_NAME, HOLIDAY_NAME2, HOLIDAY, SOLARLUNAR, COUNTRY) VALUES ('3·1절', 'Samiljeol', '03-01', 1, 'kor');
-INSERT INTO TBL_PMS_FIXEDHOLIDAY(HOLIDAY_NAME, HOLIDAY_NAME2, HOLIDAY, SOLARLUNAR, COUNTRY) VALUES ('어린이날', 'Children''s Day', '05-05', 1, 'kor');
-INSERT INTO TBL_PMS_FIXEDHOLIDAY(HOLIDAY_NAME, HOLIDAY_NAME2, HOLIDAY, SOLARLUNAR, COUNTRY) VALUES ('현충일', 'Memorial Day', '06-06', 1, 'kor');
-INSERT INTO TBL_PMS_FIXEDHOLIDAY(HOLIDAY_NAME, HOLIDAY_NAME2, HOLIDAY, SOLARLUNAR, COUNTRY) VALUES ('광복절', 'National Liberation Day', '08-15', 1, 'kor');
-INSERT INTO TBL_PMS_FIXEDHOLIDAY(HOLIDAY_NAME, HOLIDAY_NAME2, HOLIDAY, SOLARLUNAR, COUNTRY) VALUES ('개천절', 'Foundation Day', '10-03', 1, 'kor');
-INSERT INTO TBL_PMS_FIXEDHOLIDAY(HOLIDAY_NAME, HOLIDAY_NAME2, HOLIDAY, SOLARLUNAR, COUNTRY) VALUES ('한글날', 'Hangul Proclamation Day', '10-09', 1, 'kor');
-INSERT INTO TBL_PMS_FIXEDHOLIDAY(HOLIDAY_NAME, HOLIDAY_NAME2, HOLIDAY, SOLARLUNAR, COUNTRY) VALUES ('성탄절', 'Christmas', '12-25', 1, 'kor');
-INSERT INTO TBL_PMS_FIXEDHOLIDAY(HOLIDAY_NAME, HOLIDAY_NAME2, HOLIDAY, SOLARLUNAR, COUNTRY) VALUES ('설날', 'Lunar New Year', '01-01', 2, 'kor');
-INSERT INTO TBL_PMS_FIXEDHOLIDAY(HOLIDAY_NAME, HOLIDAY_NAME2, HOLIDAY, SOLARLUNAR, COUNTRY) VALUES ('설날', 'Lunar New Year', '01-02', 2, 'kor');
-INSERT INTO TBL_PMS_FIXEDHOLIDAY(HOLIDAY_NAME, HOLIDAY_NAME2, HOLIDAY, SOLARLUNAR, COUNTRY) VALUES ('석가탄신일', 'Buddha''s Birthday', '04-08', 2, 'kor');
-INSERT INTO TBL_PMS_FIXEDHOLIDAY(HOLIDAY_NAME, HOLIDAY_NAME2, HOLIDAY, SOLARLUNAR, COUNTRY) VALUES ('추석', 'Thanksgiving Day', '08-14', 2, 'kor');
-INSERT INTO TBL_PMS_FIXEDHOLIDAY(HOLIDAY_NAME, HOLIDAY_NAME2, HOLIDAY, SOLARLUNAR, COUNTRY) VALUES ('추석', 'Thanksgiving Day', '08-15', 2, 'kor');
-INSERT INTO TBL_PMS_FIXEDHOLIDAY(HOLIDAY_NAME, HOLIDAY_NAME2, HOLIDAY, SOLARLUNAR, COUNTRY) VALUES ('추석', 'Thanksgiving Day', '08-16', 2, 'kor');
-
-INSERT INTO TBL_PMS_FIXEDHOLIDAY(HOLIDAY_NAME, HOLIDAY_NAME2, HOLIDAY, SOLARLUNAR, COUNTRY) VALUES ('元旦', '元旦', '01-01', 1, 'jap');
-INSERT INTO TBL_PMS_FIXEDHOLIDAY(HOLIDAY_NAME, HOLIDAY_NAME2, HOLIDAY, SOLARLUNAR, COUNTRY) VALUES ('元旦', '元旦', '01-01', 2, 'jap');
-INSERT INTO TBL_PMS_FIXEDHOLIDAY(HOLIDAY_NAME, HOLIDAY_NAME2, HOLIDAY, SOLARLUNAR, COUNTRY) VALUES ('建国記念の日', '建国記念の日', '02-11', 1, 'jap');
-INSERT INTO TBL_PMS_FIXEDHOLIDAY(HOLIDAY_NAME, HOLIDAY_NAME2, HOLIDAY, SOLARLUNAR, COUNTRY) VALUES ('春分の日', '春分の日', '03-20', 1, 'jap');
-INSERT INTO TBL_PMS_FIXEDHOLIDAY(HOLIDAY_NAME, HOLIDAY_NAME2, HOLIDAY, SOLARLUNAR, COUNTRY) VALUES ('昭和の日', '昭和の日', '04-29', 1, 'jap');
-INSERT INTO TBL_PMS_FIXEDHOLIDAY(HOLIDAY_NAME, HOLIDAY_NAME2, HOLIDAY, SOLARLUNAR, COUNTRY) VALUES ('憲法記念日', '憲法記念日', '05-03', 1, 'jap');
-INSERT INTO TBL_PMS_FIXEDHOLIDAY(HOLIDAY_NAME, HOLIDAY_NAME2, HOLIDAY, SOLARLUNAR, COUNTRY) VALUES ('みどりの日', 'みどりの日', '05-04', 1, 'jap');
-INSERT INTO TBL_PMS_FIXEDHOLIDAY(HOLIDAY_NAME, HOLIDAY_NAME2, HOLIDAY, SOLARLUNAR, COUNTRY) VALUES ('こどもの日', 'こどもの日', '05-05', 1, 'jap');
-INSERT INTO TBL_PMS_FIXEDHOLIDAY(HOLIDAY_NAME, HOLIDAY_NAME2, HOLIDAY, SOLARLUNAR, COUNTRY) VALUES ('山の日', '山の日', '08-11', 1, 'jap');
-INSERT INTO TBL_PMS_FIXEDHOLIDAY(HOLIDAY_NAME, HOLIDAY_NAME2, HOLIDAY, SOLARLUNAR, COUNTRY) VALUES ('秋分の日', '秋分の日', '09-23', 1, 'jap');
-INSERT INTO TBL_PMS_FIXEDHOLIDAY(HOLIDAY_NAME, HOLIDAY_NAME2, HOLIDAY, SOLARLUNAR, COUNTRY) VALUES ('文化の日', '文化の日', '11-03', 1, 'jap');
-INSERT INTO TBL_PMS_FIXEDHOLIDAY(HOLIDAY_NAME, HOLIDAY_NAME2, HOLIDAY, SOLARLUNAR, COUNTRY) VALUES ('勤労感謝の日', '勤労感謝の日', '11-23', 1, 'jap');
-INSERT INTO TBL_PMS_FIXEDHOLIDAY(HOLIDAY_NAME, HOLIDAY_NAME2, HOLIDAY, SOLARLUNAR, COUNTRY) VALUES ('天皇誕生日', '天皇誕生日', '12-23', 1, 'jap');
 
 -- nonElecRec initData
 Insert into TBL_FORMINFO (FORMCONTID,FORMID,FORMNAME,FORMNAME2,FORMDOCTYPE,FORMDESCRIPTION,FORMFILELOCATION,FORMCONNFLAG,FORMORDER,TENANT_ID,COMPANYID,FORMDRAFTALLFLAG) values ('2018000000','2018000000','비전자문서양식','비전자문서양식','003','비전자문서양식','/fileroot/0/files/upload_approvalG/Top/form/2018000000.hwp','N',null,@tenant_id_value,'Top','1');
 Insert into TBL_FORMINFO (FORMCONTID,FORMID,FORMNAME,FORMNAME2,FORMDOCTYPE,FORMDESCRIPTION,FORMFILELOCATION,FORMCONNFLAG,FORMORDER,TENANT_ID,COMPANYID,FORMDRAFTALLFLAG) values ('2021000000','2021000000','비전자문서양식','비전자문서양식','003','비전자문서양식','/fileroot/0/files/upload_approvalG/Top/form/2021000000.mht','N',null,@tenant_id_value,'Top','1');
-
--- 날씨 도시 데이터
-INSERT INTO `tbl_weather` (`SN`,`CITYCODE`,`CITYNAME`,`DISPLAYCITYNAME`,`PRIMARYLANG`,`CURRENTWEATHER`,`TODAYWEATHER`) VALUES ('10','1832157','Reisui','여수','1',NULL,NULL);
-INSERT INTO `tbl_weather` (`SN`,`CITYCODE`,`CITYNAME`,`DISPLAYCITYNAME`,`PRIMARYLANG`,`CURRENTWEATHER`,`TODAYWEATHER`) VALUES ('7','1833747','Ulsan','울산','1',NULL,NULL);
-INSERT INTO `tbl_weather` (`SN`,`CITYCODE`,`CITYNAME`,`DISPLAYCITYNAME`,`PRIMARYLANG`,`CURRENTWEATHER`,`TODAYWEATHER`) VALUES ('2','1835235','Daejeon','대전','1',NULL,NULL);
-INSERT INTO `tbl_weather` (`SN`,`CITYCODE`,`CITYNAME`,`DISPLAYCITYNAME`,`PRIMARYLANG`,`CURRENTWEATHER`,`TODAYWEATHER`) VALUES ('3','1835329','Daegu','대구','1',NULL,NULL);
-INSERT INTO `tbl_weather` (`SN`,`CITYCODE`,`CITYNAME`,`DISPLAYCITYNAME`,`PRIMARYLANG`,`CURRENTWEATHER`,`TODAYWEATHER`) VALUES ('1','1835848','Seoul','서울','1',NULL,NULL);
-INSERT INTO `tbl_weather` (`SN`,`CITYCODE`,`CITYNAME`,`DISPLAYCITYNAME`,`PRIMARYLANG`,`CURRENTWEATHER`,`TODAYWEATHER`) VALUES ('4','1838524','Busan','부산','1',NULL,NULL);
-INSERT INTO `tbl_weather` (`SN`,`CITYCODE`,`CITYNAME`,`DISPLAYCITYNAME`,`PRIMARYLANG`,`CURRENTWEATHER`,`TODAYWEATHER`) VALUES ('9','1841811','Gwangju','광주','1',NULL,NULL);
-INSERT INTO `tbl_weather` (`SN`,`CITYCODE`,`CITYNAME`,`DISPLAYCITYNAME`,`PRIMARYLANG`,`CURRENTWEATHER`,`TODAYWEATHER`) VALUES ('5','1843137','Kang-neung','강릉','1',NULL,NULL);
-INSERT INTO `tbl_weather` (`SN`,`CITYCODE`,`CITYNAME`,`DISPLAYCITYNAME`,`PRIMARYLANG`,`CURRENTWEATHER`,`TODAYWEATHER`) VALUES ('6','1845136','Chuncheon','춘천','1',NULL,NULL);
-INSERT INTO `tbl_weather` (`SN`,`CITYCODE`,`CITYNAME`,`DISPLAYCITYNAME`,`PRIMARYLANG`,`CURRENTWEATHER`,`TODAYWEATHER`) VALUES ('8','1845457','Jeonju','전주','1',NULL,NULL);
-INSERT INTO `tbl_weather` (`SN`,`CITYCODE`,`CITYNAME`,`DISPLAYCITYNAME`,`PRIMARYLANG`,`CURRENTWEATHER`,`TODAYWEATHER`) VALUES ('11','1846266','Jeju','제주도','1',NULL,NULL);
-
--- 미국
-INSERT INTO TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES('1', '5128638', 'New York','뉴욕', 	'2');
-INSERT INTO TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES('2', '5186266', 'Dallas', '댈러스', '2');
-INSERT INTO TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES('3', '5186794', 'Denver', '댄버', '2');
-INSERT INTO TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES('4', '5368361', 'Los Angeles', '로스앤젤레스', '2');
-INSERT INTO TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES('5', '5664535', 'Manhattan', '맨해튼', '2');
-INSERT INTO TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES('6', '4930956', 'Boston', '보스턴', '2');
-INSERT INTO TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES('7', '5110253', 'Bronx', '브롱크스', '2');
-INSERT INTO TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES('8', '5110302', 'Brooklyn', '브루클린', '2');
-INSERT INTO TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES('9', '5392171', 'San Jose', '산호세', '2');
-INSERT INTO TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES('10', '4726311', 'San Diego', '샌디에이고', '2');
-INSERT INTO TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES('11', '4171771', 'San Antonio', '샌안토니오', '2');
-INSERT INTO TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES('12', '4887398', 'Chicago', '시카고', '2');
-INSERT INTO TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES('13', '4883772', 'Atlanta', '애틀랜타', '2');
-INSERT INTO TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES('14', '5016884', 'Austin', '오스틴', '2');
-INSERT INTO TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES('15', '4140963', 'Washington D.C.', '워싱턴 D.C.', '2');
-INSERT INTO TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES('16', '4188985', 'Columbus', '콜롬버스', '2');
-INSERT INTO TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES('17', '5133268', 'Queens', '퀸스', '2');
-INSERT INTO TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES('18', '4905873', 'Phoenix', '피닉스', '2');
-INSERT INTO TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES('19', '5131095', 'Philadelphia', '필라델피아', '2');
-INSERT INTO TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES('20', '5194369', 'Houston', '휴스턴', '2');
-
--- 일본
-INSERT INTO `tbl_weather` (`SN`,`CITYCODE`,`CITYNAME`,`DISPLAYCITYNAME`,`PRIMARYLANG`,`CURRENTWEATHER`,`TODAYWEATHER`) VALUES ('1','1850147','Tokyo','東京','3',NULL,NULL);
-INSERT INTO `tbl_weather` (`SN`,`CITYCODE`,`CITYNAME`,`DISPLAYCITYNAME`,`PRIMARYLANG`,`CURRENTWEATHER`,`TODAYWEATHER`) VALUES ('3','1853909','Osaka-shi','大阪市','3',NULL,NULL);
-INSERT INTO `tbl_weather` (`SN`,`CITYCODE`,`CITYNAME`,`DISPLAYCITYNAME`,`PRIMARYLANG`,`CURRENTWEATHER`,`TODAYWEATHER`) VALUES ('4','1854383','Okayama-shi','岡山市','3',NULL,NULL);
-INSERT INTO `tbl_weather` (`SN`,`CITYCODE`,`CITYNAME`,`DISPLAYCITYNAME`,`PRIMARYLANG`,`CURRENTWEATHER`,`TODAYWEATHER`) VALUES ('13','1855431','Niigata-shi','新潟市','3',NULL,NULL);
-INSERT INTO `tbl_weather` (`SN`,`CITYCODE`,`CITYNAME`,`DISPLAYCITYNAME`,`PRIMARYLANG`,`CURRENTWEATHER`,`TODAYWEATHER`) VALUES ('10','1856057','Nagoya-shi','名古屋市','3',NULL,NULL);
-INSERT INTO `tbl_weather` (`SN`,`CITYCODE`,`CITYNAME`,`DISPLAYCITYNAME`,`PRIMARYLANG`,`CURRENTWEATHER`,`TODAYWEATHER`) VALUES ('11','1856215','Nagano-shi','長野市','3',NULL,NULL);
-INSERT INTO `tbl_weather` (`SN`,`CITYCODE`,`CITYNAME`,`DISPLAYCITYNAME`,`PRIMARYLANG`,`CURRENTWEATHER`,`TODAYWEATHER`) VALUES ('5','1857910','Kyoto','京都市','3',NULL,NULL);
-INSERT INTO `tbl_weather` (`SN`,`CITYCODE`,`CITYNAME`,`DISPLAYCITYNAME`,`PRIMARYLANG`,`CURRENTWEATHER`,`TODAYWEATHER`) VALUES ('6','1860827','Kagoshima-shi','鹿児島市','3',NULL,NULL);
-INSERT INTO `tbl_weather` (`SN`,`CITYCODE`,`CITYNAME`,`DISPLAYCITYNAME`,`PRIMARYLANG`,`CURRENTWEATHER`,`TODAYWEATHER`) VALUES ('8','1862415','Hiroshima-shi','広島市','3',NULL,NULL);
-INSERT INTO `tbl_weather` (`SN`,`CITYCODE`,`CITYNAME`,`DISPLAYCITYNAME`,`PRIMARYLANG`,`CURRENTWEATHER`,`TODAYWEATHER`) VALUES ('7','1863967','Fukuoka-shi','福岡市','3',NULL,NULL);
-INSERT INTO `tbl_weather` (`SN`,`CITYCODE`,`CITYNAME`,`DISPLAYCITYNAME`,`PRIMARYLANG`,`CURRENTWEATHER`,`TODAYWEATHER`) VALUES ('9','1926099','Matsuyama-shi','松山市','3',NULL,NULL);
-INSERT INTO `tbl_weather` (`SN`,`CITYCODE`,`CITYNAME`,`DISPLAYCITYNAME`,`PRIMARYLANG`,`CURRENTWEATHER`,`TODAYWEATHER`) VALUES ('12','2112923','Fukushima-shi','福島市','3',NULL,NULL);
-INSERT INTO `tbl_weather` (`SN`,`CITYCODE`,`CITYNAME`,`DISPLAYCITYNAME`,`PRIMARYLANG`,`CURRENTWEATHER`,`TODAYWEATHER`) VALUES ('15','2128295','Sapporo-shi','札幌市','3',NULL,NULL);
-INSERT INTO `tbl_weather` (`SN`,`CITYCODE`,`CITYNAME`,`DISPLAYCITYNAME`,`PRIMARYLANG`,`CURRENTWEATHER`,`TODAYWEATHER`) VALUES ('14','2130658','Aomori-shi','青森市','3',NULL,NULL);
-INSERT INTO `tbl_weather` (`SN`,`CITYCODE`,`CITYNAME`,`DISPLAYCITYNAME`,`PRIMARYLANG`,`CURRENTWEATHER`,`TODAYWEATHER`) VALUES ('2','6697514','Asahi','旭市','3',NULL,NULL);
-
--- 중국
-INSERT INTO TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES('1', '1809858', 'Guangzhou', '광저우', '4');
-INSERT INTO TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES('2', '1809461', 'Guiyang', '구이양', '4');
-INSERT INTO TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES('3', '1799869', 'Nanning', '난닝', '4');
-INSERT INTO TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES('4', '1799962', 'Nanjing', '난징', '4');
-INSERT INTO TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES('5', '1800163', 'Nanchang', '난창', '4');
-INSERT INTO TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES('6', '1804430', 'Lanzhou', '란저우', '4');
-INSERT INTO TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES('7', '1816670', 'Beijing', '베이징', '4');
-INSERT INTO TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES('8', '1796236', 'Shanghai', '상하이', '4');
-INSERT INTO TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES('9', '2034937', 'shenyang', '선양', '4');
-INSERT INTO TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES('10', '1795268', 'Shijiazhuang', '스자좡', '4');
-INSERT INTO TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES('11', '1805753', 'jinan', '지난', '4');
-INSERT INTO TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES('12', '1815549', 'changsha', '창사', '4');
-INSERT INTO TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES('13', '1815771', 'changchun', '창춘', '4');
-INSERT INTO TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES('14', '1815286', 'Chengdu', '청두', '4');
-INSERT INTO TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES('15', '1814906', 'chongqing', '충칭', '4');
-INSERT INTO TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES('16', '1804651', 'kunming', '쿤밍', '4');
-INSERT INTO TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES('17', '1810821', 'Fuzhou', '푸저우', '4');
-INSERT INTO TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES('18', '2037013', 'harbin', '하얼빈', '4');
-INSERT INTO TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES('19', '1808926', 'Hangzhou', '항저우', '4');
-INSERT INTO TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES('20', '1808722', 'Hefei', '허페이', '4');
-
--- 베트남
-INSERT INTO TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES ('1', '1586203', 'Can Tho', '깐토', '5');
-INSERT INTO TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES ('2', '1568574', 'Kui bitch', '꾸이년', '5');
-INSERT INTO TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES ('3', '1572151', 'Nha Trang', '냐짱', '5');
-INSERT INTO TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES ('4', '1905468', 'Da Nang', '다낭', '5');
-INSERT INTO TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES ('5', '8201616', 'barbie', '바비', '5');
-INSERT INTO TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES ('6', '1587923', 'Bien Hoa', '비엔호아', '5');
-INSERT INTO TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES ('7', '1581130', 'Hanoi', '하노이', '5');
-INSERT INTO TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES ('8', '1581298', 'Haiphong', '하이퐁', '5');
-INSERT INTO TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES ('9', '1566083', 'ho chi minh', '호찌민', '5');
-INSERT INTO TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES ('10', '1580240', 'Hue', '후에', '5');
-
--- 인도네시아
-INSERT INTO TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES ('1', '1645528', 'denpasar', '덴파사르', 6);
-INSERT INTO TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES ('2', '8144495', 'Depok', '드폭', 6);
-INSERT INTO TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES ('3', '1622786', 'Makassar', '마카사르', 6);
-INSERT INTO TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES ('4', '1214520', 'medan', '메단', 6);
-INSERT INTO TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES ('5', '8144723', 'Batam', '바탐', 6);
-INSERT INTO TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES ('6', '1624917', 'Bandar Lampung', '반다르람풍', 6);
-INSERT INTO TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES ('7', '1650357', 'Bandung', '반둥', 6);
-INSERT INTO TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES ('8', '1650213', 'Banjarmasin', '반자르마신', 6);
-INSERT INTO TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES ('9', '7780016', 'Bogor', '보고르', 6);
-INSERT INTO TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES ('10', '8018250', 'Surabaya', '수라바야', 6);
-INSERT INTO TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES ('11', '1627896', 'semarang', '스마랑', 6);
-INSERT INTO TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES ('12', '1651531', 'Ambon', '암본', 6);
-INSERT INTO TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES ('13', '1642911', 'Jakarta', '자카르타', 6);
-INSERT INTO TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES ('14', '1642858', 'Jambi', '잠비', 6);
-INSERT INTO TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES ('15', '1625084', 'Tangerang', '탕에랑', 6);
-INSERT INTO TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES ('16', '1633070', 'Palembang', '팔렘방', 6);
-
--- 포탈 개인화
-INSERT INTO TBL_PORTAL_THEME (theme_id, theme_name, theme_name2, theme_name3, theme_content, theme_content2, theme_content3, theme_content4, theme_content5, theme_content6) VALUES (1, '기본형', 'Default Type', 'きほんがた', '소식 및 상단영역이 있는 디자인의 테마입니다.', 'A theme with a design that includes news and a top area.', 'ニュースやトップエリアのあるデザインのテーマです。', '这是一个包含新闻和顶部区域的设计主题。', 'A theme with a design that includes news and a top area.', 'A theme with a design that includes news and a top area.');
-INSERT INTO TBL_PORTAL_THEME (theme_id, theme_name, theme_name2, theme_name3, theme_content, theme_content2, theme_content3, theme_content4, theme_content5, theme_content6) VALUES (2, '바로가기형', 'Shortcut Type', 'ショートカットがた', '위쪽에 정보 및 바로가기가 있는 디자인의 테마입니다.', 'A theme with information and shortcuts at the top.', '上部に情報やショートカットがあるデザインのテーマです。', '该主题的设计在顶部包含信息和快捷方式。', 'A theme with information area and shortcuts at the top.', 'A theme with information area and shortcuts at the top.');
-INSERT INTO TBL_PORTAL_THEME (theme_id, theme_name, theme_name2, theme_name3, theme_content, theme_content2, theme_content3, theme_content4, theme_content5, theme_content6) VALUES (3, '정보분리형', 'Information Separation Type', 'じょうほうぶんりがた', '정보 관련 고정영역이 없이 포틀릿에 집중할 수 있는 테마입니다.', 'A theme that allows to focus on portlets without any fixed areas related to information.', '情報関連の固定領域がなくてもポートレットに集中できるテーマです。', '该主题允许您专注于 portlet，而无需任何与信息相关的固定区域。', 'A theme that allows to focus on portlets without any fixed areas related to information.', 'A theme that allows to focus on portlets without any fixed areas related to information.');
--- 모바일 테마
-INSERT INTO TBL_PORTAL_THEME (theme_id, theme_name, theme_name2, theme_name3, theme_content, theme_content2, theme_content3, theme_content4, theme_content5, theme_content6) VALUES (4, '테마4', 'Theme4', 'Theme4', '모바일용 포틀릿 테마 입니다.', 'Theme For Mobile', 'モバイルのテーマ', '手机主题', 'Theme For Mobile', 'Theme For Mobile');
-
-INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (0, '/ezNewPortal/newPortalPortalPage.do', 'G', '', 0, 'portal');
-UPDATE TBL_PORTAL_MENU SET menu_id = 0 WHERE menu_url = '/ezNewPortal/newPortalPortalPage.do';
-INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (1, '/ezEmail/mailMain.do', 'G', 'icon_topmenu icon_nav_mail', 1, 'mail');
-INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (2, '/ezSchedule/scheduleIndex.do?funCode=2', 'G', 'icon_topmenu icon_nav_calendar', 2, 'schedule');
-INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (3, '/ezApprovalG/apprGMain.do', 'G', 'icon_topmenu icon_nav_approval', 3, 'approval');
-INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (4, '/ezBoard/boardMain.do', 'G', 'icon_topmenu icon_nav_board', 4, 'board');
-INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (5, '/ezCommunity/communityMain.do', 'G', 'icon_topmenu icon_nav_community', 5, 'community');
-INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (6, '/ezResource/resMain.do', 'G', 'icon_topmenu icon_nav_resource', 6, 'resource');
-INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (7, '/ezCircular/circularIndex.do', 'G', 'icon_topmenu icon_nav_circular_edition', 7, 'circular');
-INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (8, '/ezJournal/journalMain.do', 'G', 'icon_topmenu icon_nav_workdiary', 8, 'journal');
-INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (9, '/ezAttitude/attitudeMain.do', 'G', 'icon_topmenu icon_nav_absenteeism', 9, 'attitude');
-INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (10, '/ezWebFolder/webfolderMain.do', 'G', 'icon_topmenu icon_nav_webfolder', 10, 'webfolder');
-INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (11, '/ezCabinet/cabinetMain.do', 'G', 'icon_topmenu icon_nav_cabinet', 11, 'cabinet');
-INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (12, '/ezPMS/pmsMain.do', 'G', 'icon_topmenu icon_nav_project', 12, 'pms');
-INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (13, '/ezEmail/mailMain.do?funCode=2', 'G', 'icon_topmenu icon_nav_addressbook', 13, 'address');
-INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (14, '/ezQuestion/qstMain.do', 'G', 'icon_topmenu icon_nav_survey', 14, 'question');
-INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (15, '/ezPoll/pollMain.do', 'G', 'icon_topmenu icon_nav_voting', 15, 'vote');
-INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (16, '/ezLadder/ladderMainPage.do', 'G', 'icon_topmenu icon_nav_laddergame', 16, 'ladder');
-INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (17, '/ezTask/taskIndex.do', 'G', 'icon_topmenu icon_nav_work', 17, 'task');
-INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (18, '/ezMemo/memoMainPage.do', 'G', 'icon_topmenu icon_nav_memo', 18, 'memo');
-INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (19, '/ezSurvey/surveyMain.do', 'G', 'icon_topmenu icon_nav_survey', 19, 'survey');
-INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (20, '/ezCar/resCar.do', 'G', 'icon_topmenu icon_nav_workdiary', 20, 'car');
-INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (21, '/mobile/ezEmail/mailList.do?folderId=INBOX', 'MG', 'iconCommon icon_mail', 21, 'mMail');
-INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (22, '/mobile/ezOrgan/personList.do', 'MG', 'iconCommon icon_employee', 22, 'mAddress');
-INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (23, '/mobile/ezApprovalG/mApproveList.do?pType=DO', 'MG', 'iconCommon icon_approval', 23, 'mApproval');
-INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (24, '/mobile/ezResource/searchTodayList.do', 'MG', 'iconCommon icon_resource', 24, 'mResource');
-INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (25, '/mobile/ezBoard/boardItemList.do?boardID={FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}', 'MG', 'iconCommon icon_notice', 25, 'mBoard');
-INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (26, '/mobile/ezAddress/addressList.do?pSearchTarget=personal', 'MG', 'iconCommon icon_address', 26, 'mAddress');
-INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (27, '/mobile/ezSchedule/mScheduleList.do', 'MG', 'iconCommon icon_schedule', 27, 'mSchedule');
-INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (28, '/mobile/ezSurvey/surveyList.do?mode=processing', 'MG', 'iconCommon icon_survey', 28, 'mSurvey');
-INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (29, '/mobile/ezWebfolder/main.do', 'MG', 'iconCommon icon_webfolder', 29, 'mWebfolder');
-
--- 모바일 메뉴 
-INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (21, '/mobile/ezEmail/mailList.do?folderId=INBOX', 'MG', 'iconCommon icon_mail', 1, 'mMail');
-INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (22, '/mobile/ezOrgan/personList.do', 'MG', 'iconCommon icon_employee', 2, 'mAddress');
-INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (23, '/mobile/ezApprovalG/mApproveList.do?pType=DO', 'MG', 'iconCommon icon_approval', 3, 'mApproval');
-INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (24, '/mobile/ezResource/searchTodayList.do', 'MG', 'iconCommon icon_resource', 4, 'mResource');
-INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (25, '/mobile/ezBoard/boardItemList.do?boardID={FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}', 'MG', 'iconCommon icon_notice', 5, 'mBoard');
-INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (26, '/mobile/ezAddress/addressList.do?pSearchTarget=personal&pFolderName=개인주소록', 'MG', 'iconCommon icon_address', 6, 'mAddress');
-INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (27, '/mobile/ezSchedule/mScheduleList.do', 'MG', 'iconCommon icon_schedule', 7, 'mSchedule');
-INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (28, '/mobile/ezSurvey/surveyList.do?mode=processing', 'MG', 'iconCommon icon_survey', 8, 'mSurvey');
-INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (29, '/mobile/ezWebfolder/main.do', 'MG', 'iconCommon icon_webfolder', 9, 'mWebfolder');
-
-UPDATE TBL_PORTAL_MENU SET menu_id = 0 WHERE default_order = 0;
-
-INSERT INTO TBL_PORTAL_FRAME (frame_id, frame_name, theme_id) VALUES (1, 'Frame1', 1);
-INSERT INTO TBL_PORTAL_FRAME (frame_id, frame_name, theme_id) VALUES (2, 'Frame2', 1);
-INSERT INTO TBL_PORTAL_FRAME (frame_id, frame_name, theme_id) VALUES (3, 'Frame3', 1);
-INSERT INTO TBL_PORTAL_FRAME (frame_id, frame_name, theme_id) VALUES (4, 'Frame4', 1);
-INSERT INTO TBL_PORTAL_FRAME (frame_id, frame_name, theme_id) VALUES (5, 'Frame1', 2);
-INSERT INTO TBL_PORTAL_FRAME (frame_id, frame_name, theme_id) VALUES (6, 'Frame1', 3);
-INSERT INTO TBL_PORTAL_FRAME (frame_id, frame_name, theme_id) VALUES (7, 'Frame2', 2);
-INSERT INTO TBL_PORTAL_FRAME (frame_id, frame_name, theme_id) VALUES (8, 'Frame2', 3);
--- 모바일 프레임
-INSERT INTO TBL_PORTAL_FRAME (frame_id, frame_name, theme_id) VALUES (9, 'Frame1', 4);
-
-INSERT INTO TBL_PORTAL_PORTLET (portlet_id, menu_id, portlet_url, portlet_type, default_order, portletcode) VALUES (15, 4, '/ezNewPortal/getCustomBoardInfo.do', 'G', -2, 'fixLeft');
-INSERT INTO TBL_PORTAL_PORTLET (portlet_id, menu_id, portlet_url, portlet_type, default_order, portletcode) VALUES (16, 4, '/ezNewPortal/getCustomBoardInfo.do', 'G', -1, 'fixRight');
-INSERT INTO TBL_PORTAL_PORTLET (portlet_id, menu_id, portlet_url, portlet_type, default_order, portletcode) VALUES (1, 1, '/ezNewPortal/receivedMailPortlet.do', 'G', 2, 'receivedmail');
-INSERT INTO TBL_PORTAL_PORTLET (portlet_id, menu_id, portlet_url, portlet_type, default_order, portletcode) VALUES (2, 4, '/ezNewPortal/noticePortlet.do', 'G', 1, 'notice');
-INSERT INTO TBL_PORTAL_PORTLET (portlet_id, menu_id, portlet_url, portlet_type, default_order, portletcode) VALUES (4, 15, '/ezNewPortal/votePortlet.do', 'G', 3, 'vote');
-INSERT INTO TBL_PORTAL_PORTLET (portlet_id, menu_id, portlet_url, portlet_type, default_order, portletcode) VALUES (5, 0, '/ezNewPortal/pollPortlet.do', 'G', 4, 'poll');
-INSERT INTO TBL_PORTAL_PORTLET (portlet_id, menu_id, portlet_url, portlet_type, default_order, portletcode) VALUES (6, 2, '/ezNewPortal/schedulePortlet.do', 'G', 5, 'schedule');
-INSERT INTO TBL_PORTAL_PORTLET (portlet_id, menu_id, portlet_url, portlet_type, default_order, portletcode) VALUES (7, 3, '/ezNewPortal/approvalListPortlet.do', 'G', 6, 'approvallist');
-INSERT INTO TBL_PORTAL_PORTLET (portlet_id, menu_id, portlet_url, portlet_type, default_order, portletcode) VALUES (8, 3, '/ezNewPortal/favoriteFormsPortlet.do', 'G', 7, 'favoriteforms');
-INSERT INTO TBL_PORTAL_PORTLET (portlet_id, menu_id, portlet_url, portlet_type, default_order, portletcode) VALUES (9, 4, '/ezNewPortal/photoBoardPortlet.do', 'G', 8, 'photoboard');
-INSERT INTO TBL_PORTAL_PORTLET (portlet_id, menu_id, portlet_url, portlet_type, default_order, portletcode) VALUES (10, 4, '/ezNewPortal/favoriteBoardPortlet.do', 'G', 9, 'favoriteboard');
-INSERT INTO TBL_PORTAL_PORTLET (portlet_id, menu_id, portlet_url, portlet_type, default_order, portletcode) VALUES (11, 5, '/ezNewPortal/communityPortlet.do', 'G', 10, 'community');
-INSERT INTO TBL_PORTAL_PORTLET (portlet_id, menu_id, portlet_url, portlet_type, default_order, portletcode) VALUES (12, 0, '/ezNewPortal/helpPortlet.do', 'G', 11, 'help');
-INSERT INTO TBL_PORTAL_PORTLET (portlet_id, menu_id, portlet_url, portlet_type, default_order, portletcode) VALUES (14, 0, '/ezNewPortal/weatherPortlet.do', 'G', 13, 'weather');
-INSERT INTO TBL_PORTAL_PORTLET (portlet_id, menu_id, portlet_url, portlet_type, default_order, portletcode) VALUES (26, 0, '/ezNewPortal/birthdayPortlet.do', 'G', 14, 'birthday');
-INSERT INTO TBL_PORTAL_PORTLET (portlet_id, menu_id, portlet_url, portlet_type, default_order, portletcode) VALUES (34, 0, '/ezNewPortal/slideImagePortlet.do', 'G', 15, 'slideimage');
-INSERT INTO TBL_PORTAL_PORTLET (portlet_id, menu_id, portlet_url, portlet_type, default_order, portletcode) VALUES (36, 0, '/ezNewPortal/userInfoPortlet.do', 'G', 16, 'userinfo');
-INSERT INTO TBL_PORTAL_PORTLET (portlet_id, menu_id, portlet_url, portlet_type, default_order, portletcode) VALUES (47, 4, '/ezNewPortal/movieBoardPortlet.do', 'G', 17, 'movieboard');
-INSERT INTO TBL_PORTAL_PORTLET (portlet_id, menu_id, portlet_url, portlet_type, default_order, portletcode) VALUES (49, 0, '/ezNewPortal/countPortlet.do', 'G', 19, 'count');
-INSERT INTO TBL_PORTAL_PORTLET (portlet_id, menu_id, portlet_url, portlet_type, default_order, portletcode) VALUES (51, 6, '/ezNewPortal/resourcePortlet.do', 'G', 21, 'resource');
-INSERT INTO TBL_PORTAL_PORTLET (portlet_id, menu_id, portlet_url, portlet_type, default_order, portletcode) VALUES (70, 10, '/ezNewPortal/webFolderPortlet.do', 'G', 22, 'webfolder');
-INSERT INTO TBL_PORTAL_PORTLET (portlet_id, menu_id, portlet_url, portlet_type, default_order, portletcode) VALUES (73, 19, '/ezNewPortal/surveyPortlet.do', 'G', 20, 'survey');
--- 모바일 포틀릿 추가
-INSERT INTO TBL_PORTAL_PORTLET (portlet_id, menu_id, portlet_url, portlet_type, default_order, portletcode) VALUES (76, 25, '/mobile/getCustomBoardInfo.do', 'MG', 1, 'mFixTop');
-INSERT INTO TBL_PORTAL_PORTLET (portlet_id, menu_id, portlet_url, portlet_type, default_order, portletcode) VALUES (77, 25, '/mobile/getCustomBoardInfo.do', 'MG', 2, 'mFixBottom');
-INSERT INTO TBL_PORTAL_PORTLET (portlet_id, menu_id, portlet_url, portlet_type, default_order, portletcode) VALUES (78, 27, '/mobile/schedulePortlet.do', 'MG', 3, 'mSchedule');
-INSERT INTO TBL_PORTAL_PORTLET (portlet_id, menu_id, portlet_url, portlet_type, default_order, portletcode) VALUES (79, 24, '/mobile/resourcePortlet.do', 'MG', 4, 'mResource');
-INSERT INTO TBL_PORTAL_PORTLET (portlet_id, menu_id, portlet_url, portlet_type, default_order, portletcode) VALUES (80, 23, '/mobile/approvallistPortlet.do', 'MG', 5, 'mApprovallist');
-INSERT INTO TBL_PORTAL_PORTLET (portlet_id, menu_id, portlet_url, portlet_type, default_order, portletcode) VALUES (81, 21, '/mobile/receivedmailPortlet.do', 'MG', 6, 'mReceivedmail');
-INSERT INTO TBL_PORTAL_PORTLET (portlet_id, menu_id, portlet_url, portlet_type, default_order, portletcode) VALUES (82, 25, '/mobile/noticePortlet.do', 'MG', 7, 'mNotice');
-INSERT INTO TBL_PORTAL_PORTLET (portlet_id, menu_id, portlet_url, portlet_type, default_order, portletcode) VALUES (83, 25, '/mobile/photoboardPortlet.do', 'MG', 8, 'mPhotoboard');
 
 -- Top이 회사인 이닛데이터
 INSERT INTO TBL_PORTAL_THEME_COMP (COMPANY_ID, TENANT_ID, THEME_ID, THEME_USED, THEME_DEFAULT) VALUES ('Top',@tenant_id_value, 1, 1, 1);
@@ -2991,15 +2725,6 @@ INSERT INTO TBL_PORTAL_MENU_AUTH (MENU_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCES
 INSERT INTO TBL_PORTAL_MENU_AUTH (MENU_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, sn) VALUES (18, 'Top',@tenant_id_value, 'Top', 1, 0, 1);
 INSERT INTO TBL_PORTAL_MENU_AUTH (MENU_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, sn) VALUES (19, 'Top',@tenant_id_value, 'Top', 1, 0, 1);
 INSERT INTO TBL_PORTAL_MENU_AUTH (MENU_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, sn) VALUES (20, 'Top',@tenant_id_value, 'Top', 1, 0, 1);
-INSERT INTO TBL_PORTAL_MENU_AUTH (MENU_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, sn) VALUES (21, 'Top',@tenant_id_value, 'Top', 1, 0, 1);
-INSERT INTO TBL_PORTAL_MENU_AUTH (MENU_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, sn) VALUES (22, 'Top',@tenant_id_value, 'Top', 1, 0, 1);
-INSERT INTO TBL_PORTAL_MENU_AUTH (MENU_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, sn) VALUES (23, 'Top',@tenant_id_value, 'Top', 1, 0, 1);
-INSERT INTO TBL_PORTAL_MENU_AUTH (MENU_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, sn) VALUES (24, 'Top',@tenant_id_value, 'Top', 1, 0, 1);
-INSERT INTO TBL_PORTAL_MENU_AUTH (MENU_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, sn) VALUES (25, 'Top',@tenant_id_value, 'Top', 1, 0, 1);
-INSERT INTO TBL_PORTAL_MENU_AUTH (MENU_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, sn) VALUES (26, 'Top',@tenant_id_value, 'Top', 1, 0, 1);
-INSERT INTO TBL_PORTAL_MENU_AUTH (MENU_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, sn) VALUES (27, 'Top',@tenant_id_value, 'Top', 1, 0, 1);
-INSERT INTO TBL_PORTAL_MENU_AUTH (MENU_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, sn) VALUES (28, 'Top',@tenant_id_value, 'Top', 1, 0, 1);
-INSERT INTO TBL_PORTAL_MENU_AUTH (MENU_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, sn) VALUES (29, 'Top',@tenant_id_value, 'Top', 1, 0, 1);
 
 -- 모바일 메뉴
 INSERT INTO TBL_PORTAL_MENU_AUTH (MENU_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, sn) VALUES (21, 'Top',@tenant_id_value, 'Top', 1, 0, 1);
@@ -3132,9 +2857,11 @@ INSERT INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MEN
 INSERT INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) VALUES (20, 4, 'Top',@tenant_id_value, '自動車');
 INSERT INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) VALUES (20, 5, 'Top',@tenant_id_value, 'Car');
 INSERT INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) VALUES (20, 6, 'Top',@tenant_id_value, 'Car');
-INSERT INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) VALUES (21, 1, 'Top',@tenant_id_value, '메일');
-INSERT INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) VALUES (21, 2, 'Top',@tenant_id_value, 'Mail');
-INSERT INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) VALUES (21, 3, 'Top',@tenant_id_value, 'メール');
+
+-- 모바일 메뉴 
+INSERT INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) VALUES (21, 1, 'Top',@tenant_id_value, '받은메일');
+INSERT INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) VALUES (21, 2, 'Top',@tenant_id_value, 'Received Mail');
+INSERT INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) VALUES (21, 3, 'Top',@tenant_id_value, '受信メール');
 INSERT INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) VALUES (21, 4, 'Top',@tenant_id_value, '收件箱');
 INSERT INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) VALUES (21, 5, 'Top',@tenant_id_value, 'Hộp Thư Đến');
 INSERT INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) VALUES (21, 6, 'Top',@tenant_id_value, 'Surat Masuk');
@@ -3186,62 +2913,6 @@ INSERT INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MEN
 INSERT INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) VALUES (29, 4, 'Top',@tenant_id_value, '网络文件夹');
 INSERT INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) VALUES (29, 5, 'Top',@tenant_id_value, 'WebFolder');
 INSERT INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) VALUES (29, 6, 'Top',@tenant_id_value, 'WebFolder');
-
--- 모바일 메뉴 
-INSERT INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) VALUES (20, 1, 'Top',@tenant_id_value, '받은메일');
-INSERT INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) VALUES (20, 2, 'Top',@tenant_id_value, 'Received Mail');
-INSERT INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) VALUES (20, 3, 'Top',@tenant_id_value, '受信メール');
-INSERT INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) VALUES (20, 4, 'Top',@tenant_id_value, '收件箱');
-INSERT INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) VALUES (20, 5, 'Top',@tenant_id_value, 'Hộp Thư Đến');
-INSERT INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) VALUES (20, 6, 'Top',@tenant_id_value, 'Surat Masuk');
-INSERT INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) VALUES (21, 1, 'Top',@tenant_id_value, '직원목록');
-INSERT INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) VALUES (21, 2, 'Top',@tenant_id_value, 'Employee List');
-INSERT INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) VALUES (21, 3, 'Top',@tenant_id_value, '従業員リスト');
-INSERT INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) VALUES (21, 4, 'Top',@tenant_id_value, '员工名单');
-INSERT INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) VALUES (21, 5, 'Top',@tenant_id_value, 'Danh Sách Nhân Viên');
-INSERT INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) VALUES (21, 6, 'Top',@tenant_id_value, 'Daftar Karyawan');
-INSERT INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) VALUES (22, 1, 'Top',@tenant_id_value, '전자결재');
-INSERT INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) VALUES (22, 2, 'Top',@tenant_id_value, 'Approval');
-INSERT INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) VALUES (22, 3, 'Top',@tenant_id_value, '承認');
-INSERT INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) VALUES (22, 4, 'Top',@tenant_id_value, '审批');
-INSERT INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) VALUES (22, 5, 'Top',@tenant_id_value, 'Phê Duyệt');
-INSERT INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) VALUES (22, 6, 'Top',@tenant_id_value, 'Persetujuan');
-INSERT INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) VALUES (23, 1, 'Top',@tenant_id_value, '자원관리');
-INSERT INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) VALUES (23, 2, 'Top',@tenant_id_value, 'Resource Management');
-INSERT INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) VALUES (23, 3, 'Top',@tenant_id_value, '資源管理');
-INSERT INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) VALUES (23, 4, 'Top',@tenant_id_value, '资源管理');
-INSERT INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) VALUES (23, 5, 'Top',@tenant_id_value, 'Quản Lý Tài Nguyên');
-INSERT INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) VALUES (23, 6, 'Top',@tenant_id_value, 'Manajemen Sumber Daya');
-INSERT INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) VALUES (24, 1, 'Top',@tenant_id_value, '게시판');
-INSERT INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) VALUES (24, 2, 'Top',@tenant_id_value, 'Board');
-INSERT INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) VALUES (24, 3, 'Top',@tenant_id_value, '掲示板');
-INSERT INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) VALUES (24, 4, 'Top',@tenant_id_value, '公告板');
-INSERT INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) VALUES (24, 5, 'Top',@tenant_id_value, 'Bảng Tin');
-INSERT INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) VALUES (24, 6, 'Top',@tenant_id_value, 'Papan Pengumuman');
-INSERT INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) VALUES (25, 1, 'Top',@tenant_id_value, '개인주소록');
-INSERT INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) VALUES (25, 2, 'Top',@tenant_id_value, 'Personal Address Book');
-INSERT INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) VALUES (25, 3, 'Top',@tenant_id_value, '個人住所録');
-INSERT INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) VALUES (25, 4, 'Top',@tenant_id_value, '个人通讯录');
-INSERT INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) VALUES (25, 5, 'Top',@tenant_id_value, 'Danh Bạ Cá Nhân');
-INSERT INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) VALUES (25, 6, 'Top',@tenant_id_value, 'Buku Alamat Pribadi');
-INSERT INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) VALUES (26, 1, 'Top',@tenant_id_value, '오늘일정');
-INSERT INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) VALUES (26, 2, 'Top',@tenant_id_value, 'Today Schedule');
-INSERT INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) VALUES (26, 3, 'Top',@tenant_id_value, '今日のスケジュール');
-INSERT INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) VALUES (26, 4, 'Top',@tenant_id_value, '今天的日程');
-INSERT INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) VALUES (26, 5, 'Top',@tenant_id_value, 'Lịch Trình Hôm Nay');
-INSERT INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) VALUES (26, 6, 'Top',@tenant_id_value, 'Jadwal Hari Ini');
-INSERT INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) VALUES (27, 1, 'Top',@tenant_id_value, '전자설문');
-INSERT INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) VALUES (27, 2, 'Top',@tenant_id_value, 'Survey');
-INSERT INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) VALUES (27, 3, 'Top',@tenant_id_value, '電子アンケート');
-INSERT INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) VALUES (27, 4, 'Top',@tenant_id_value, '电子问卷');
-INSERT INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) VALUES (27, 5, 'Top',@tenant_id_value, 'Khảo sát điện tử');
-INSERT INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) VALUES (27, 6, 'Top',@tenant_id_value, 'Survei');
-INSERT INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) VALUES (28, 1, 'Top',@tenant_id_value, '웹폴더');
-INSERT INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) VALUES (28, 2, 'Top',@tenant_id_value, 'WebFolder');
-INSERT INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) VALUES (28, 3, 'Top',@tenant_id_value, 'Webフォルダ');
-INSERT INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) VALUES (28, 4, 'Top',@tenant_id_value, '网络文件夹');
-INSERT INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) VALUES (28, 5, 'Top',@tenant_id_value, 'WebFolder');
-INSERT INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) VALUES (28, 6, 'Top',@tenant_id_value, 'WebFolder');
 
 INSERT INTO TBL_PORTAL_PORTLET_COMP (COMPANY_ID, TENANT_ID, PORTLET_ID, MENU_ID, CONNECTION_URL, PORTLET_USED, PORTLET_ORDER, BOARD_ID) VALUES ('Top',@tenant_id_value, 15, 4, '/ezNewPortal/getCustomBoardInfo.do', 1, -2, null);
 INSERT INTO TBL_PORTAL_PORTLET_COMP (COMPANY_ID, TENANT_ID, PORTLET_ID, MENU_ID, CONNECTION_URL, PORTLET_USED, PORTLET_ORDER, BOARD_ID) VALUES ('Top',@tenant_id_value, 16, 4, '/ezNewPortal/getCustomBoardInfo.do', 1, -1, null);
@@ -3609,9 +3280,6 @@ INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIP
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE) VALUES(@tenant_id_value,'useHolidayCheckYN','0','0: 휴일 출/퇴근 체크 미사용, 1: 휴일 출/퇴근 체크 사용 (default: 0)','휴일 출/퇴근 체크 사용여부','2020-05-21 00:00:00','근태관리');
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE) VALUES(@tenant_id_value,'useHwpDownSecurity','Y','Y: 사용 N: 사용안함 (default: Y)','통합pc저장, 메일 발송, 게시판 게시 시 hwp 결재파일 배포용 문서로 저장','2023-05-31 00:00:00','전자결재');
 
-INSERT INTO TBL_PORTAL_PORTLET (PORTLET_ID, MENU_ID, PORTLET_URL, PORTLET_TYPE, DEFAULT_ORDER, PORTLETCODE) VALUES (74,3,'/ezNewPortal/chartPortlet.do','G',24,'chart');
-INSERT INTO TBL_PORTAL_PORTLET (PORTLET_ID, MENU_ID, PORTLET_URL, PORTLET_TYPE, DEFAULT_ORDER, PORTLETCODE) VALUES (75,4,'/ezNewPortal/tabBoardPortlet.do','G',23,'tabBoard');
-
 INSERT INTO TBL_ATTITUDE_TYPE (TYPE_ID, COMPANY_ID, TENANT_ID, TYPE_NAME, TYPE_NAME2, ISUSE, IMG_PATH, PARENT_ID, FORM_ID, ISADD, ISDEL) VALUES ('A24','Top',@tenant_id_value,'대체휴무','alternate holiday','1','refresh','A05',9,'0','0');
 INSERT INTO TBL_ATTITUDE_TYPE (TYPE_ID, COMPANY_ID, TENANT_ID, TYPE_NAME, TYPE_NAME2, ISUSE, IMG_PATH, PARENT_ID, FORM_ID, ISADD, ISDEL) VALUES ('A25','Top',@tenant_id_value,'퇴근','outCom','1','inOut',NULL,3,'0','0');
 
@@ -3728,6 +3396,232 @@ INSERT INTO TBL_BOARD_ITEM_LISTOPTION (LISTTYPE, SN, NAME1, NAME2, NAME3, NAME4,
 ('E', 7, '조회수', 'View', 'ヒット数', '查询数', 'READCOUNT', 50, 'Y', @tenant_id_value);
 
 INSERT INTO TBL_BOARD_BOARDINFO	(BOARDID, BOARDNAME, BOARDNAME2, BOARDNAME3, BOARDNAME4, TREEVIEWORDER, BOARDLEVEL, PARENTBOARDID, BOARDDESCRIPTION, ITEMEXPIRES, ATTACHSIZELIMIT, REPLYNOTIFY, BOARDGROUPID, ALERTPOSTITEM, GUBUN, URL, DELETEAFTER, BOARDCOLOR, BOARDNO, PORTLET, TENANT_ID, COMPANYID) VALUES ('{ZZZZZZZZ-ZZZZ-ZZZZ-ZZZZ-ZZZZZZZZZZZZ}', '전체게시물', 'ALL BoardItem', '全ての投稿 ', '所有帖子',  -3, 0, 'None', NULL, 0, NULL, 0, NULL, 0, 0, NULL, 0, NULL, 0, 'N', @tenant_id_value, 'Top');
+
+INSERT INTO TBL_BOARD_BOARDINFO (BOARDID, BOARDNAME, BOARDNAME2, BOARDNAME3, BOARDNAME4, TREEVIEWORDER, BOARDLEVEL, PARENTBOARDID, BOARDDESCRIPTION, ITEMEXPIRES, ATTACHSIZELIMIT, REPLYNOTIFY, BOARDGROUPID, ALERTPOSTITEM, GUBUN, URL, DELETEAFTER, BOARDCOLOR, BOARDNO, PORTLET, TENANT_ID, COMPANYID) VALUES ('{MMMMMMMM-MMMM-MMMM-MMMM-MMMMMMMMMMMM}', '식단', 'MealPlan', '献立表', '菜单',  -2, 0, 'None', NULL, 0, NULL, 0, NULL, 0, 0, NULL, 0, NULL, 0, 'N', @tenant_id_value, 'Top');
+
+-- tenant_id 없는 쿼리 하단으로 추가
+-- ezPMS fixed holiday
+INSERT INTO TBL_PMS_FIXEDHOLIDAY(HOLIDAY_NAME, HOLIDAY_NAME2, HOLIDAY, SOLARLUNAR, COUNTRY) VALUES ('신정', 'New Year''s Day', '01-01', 1, 'kor');
+INSERT INTO TBL_PMS_FIXEDHOLIDAY(HOLIDAY_NAME, HOLIDAY_NAME2, HOLIDAY, SOLARLUNAR, COUNTRY) VALUES ('3·1절', 'Samiljeol', '03-01', 1, 'kor');
+INSERT INTO TBL_PMS_FIXEDHOLIDAY(HOLIDAY_NAME, HOLIDAY_NAME2, HOLIDAY, SOLARLUNAR, COUNTRY) VALUES ('어린이날', 'Children''s Day', '05-05', 1, 'kor');
+INSERT INTO TBL_PMS_FIXEDHOLIDAY(HOLIDAY_NAME, HOLIDAY_NAME2, HOLIDAY, SOLARLUNAR, COUNTRY) VALUES ('현충일', 'Memorial Day', '06-06', 1, 'kor');
+INSERT INTO TBL_PMS_FIXEDHOLIDAY(HOLIDAY_NAME, HOLIDAY_NAME2, HOLIDAY, SOLARLUNAR, COUNTRY) VALUES ('광복절', 'National Liberation Day', '08-15', 1, 'kor');
+INSERT INTO TBL_PMS_FIXEDHOLIDAY(HOLIDAY_NAME, HOLIDAY_NAME2, HOLIDAY, SOLARLUNAR, COUNTRY) VALUES ('개천절', 'Foundation Day', '10-03', 1, 'kor');
+INSERT INTO TBL_PMS_FIXEDHOLIDAY(HOLIDAY_NAME, HOLIDAY_NAME2, HOLIDAY, SOLARLUNAR, COUNTRY) VALUES ('한글날', 'Hangul Proclamation Day', '10-09', 1, 'kor');
+INSERT INTO TBL_PMS_FIXEDHOLIDAY(HOLIDAY_NAME, HOLIDAY_NAME2, HOLIDAY, SOLARLUNAR, COUNTRY) VALUES ('성탄절', 'Christmas', '12-25', 1, 'kor');
+INSERT INTO TBL_PMS_FIXEDHOLIDAY(HOLIDAY_NAME, HOLIDAY_NAME2, HOLIDAY, SOLARLUNAR, COUNTRY) VALUES ('설날', 'Lunar New Year', '01-01', 2, 'kor');
+INSERT INTO TBL_PMS_FIXEDHOLIDAY(HOLIDAY_NAME, HOLIDAY_NAME2, HOLIDAY, SOLARLUNAR, COUNTRY) VALUES ('설날', 'Lunar New Year', '01-02', 2, 'kor');
+INSERT INTO TBL_PMS_FIXEDHOLIDAY(HOLIDAY_NAME, HOLIDAY_NAME2, HOLIDAY, SOLARLUNAR, COUNTRY) VALUES ('석가탄신일', 'Buddha''s Birthday', '04-08', 2, 'kor');
+INSERT INTO TBL_PMS_FIXEDHOLIDAY(HOLIDAY_NAME, HOLIDAY_NAME2, HOLIDAY, SOLARLUNAR, COUNTRY) VALUES ('추석', 'Thanksgiving Day', '08-14', 2, 'kor');
+INSERT INTO TBL_PMS_FIXEDHOLIDAY(HOLIDAY_NAME, HOLIDAY_NAME2, HOLIDAY, SOLARLUNAR, COUNTRY) VALUES ('추석', 'Thanksgiving Day', '08-15', 2, 'kor');
+INSERT INTO TBL_PMS_FIXEDHOLIDAY(HOLIDAY_NAME, HOLIDAY_NAME2, HOLIDAY, SOLARLUNAR, COUNTRY) VALUES ('추석', 'Thanksgiving Day', '08-16', 2, 'kor');
+
+INSERT INTO TBL_PMS_FIXEDHOLIDAY(HOLIDAY_NAME, HOLIDAY_NAME2, HOLIDAY, SOLARLUNAR, COUNTRY) VALUES ('元旦', '元旦', '01-01', 1, 'jap');
+INSERT INTO TBL_PMS_FIXEDHOLIDAY(HOLIDAY_NAME, HOLIDAY_NAME2, HOLIDAY, SOLARLUNAR, COUNTRY) VALUES ('元旦', '元旦', '01-01', 2, 'jap');
+INSERT INTO TBL_PMS_FIXEDHOLIDAY(HOLIDAY_NAME, HOLIDAY_NAME2, HOLIDAY, SOLARLUNAR, COUNTRY) VALUES ('建国記念の日', '建国記念の日', '02-11', 1, 'jap');
+INSERT INTO TBL_PMS_FIXEDHOLIDAY(HOLIDAY_NAME, HOLIDAY_NAME2, HOLIDAY, SOLARLUNAR, COUNTRY) VALUES ('春分の日', '春分の日', '03-20', 1, 'jap');
+INSERT INTO TBL_PMS_FIXEDHOLIDAY(HOLIDAY_NAME, HOLIDAY_NAME2, HOLIDAY, SOLARLUNAR, COUNTRY) VALUES ('昭和の日', '昭和の日', '04-29', 1, 'jap');
+INSERT INTO TBL_PMS_FIXEDHOLIDAY(HOLIDAY_NAME, HOLIDAY_NAME2, HOLIDAY, SOLARLUNAR, COUNTRY) VALUES ('憲法記念日', '憲法記念日', '05-03', 1, 'jap');
+INSERT INTO TBL_PMS_FIXEDHOLIDAY(HOLIDAY_NAME, HOLIDAY_NAME2, HOLIDAY, SOLARLUNAR, COUNTRY) VALUES ('みどりの日', 'みどりの日', '05-04', 1, 'jap');
+INSERT INTO TBL_PMS_FIXEDHOLIDAY(HOLIDAY_NAME, HOLIDAY_NAME2, HOLIDAY, SOLARLUNAR, COUNTRY) VALUES ('こどもの日', 'こどもの日', '05-05', 1, 'jap');
+INSERT INTO TBL_PMS_FIXEDHOLIDAY(HOLIDAY_NAME, HOLIDAY_NAME2, HOLIDAY, SOLARLUNAR, COUNTRY) VALUES ('山の日', '山の日', '08-11', 1, 'jap');
+INSERT INTO TBL_PMS_FIXEDHOLIDAY(HOLIDAY_NAME, HOLIDAY_NAME2, HOLIDAY, SOLARLUNAR, COUNTRY) VALUES ('秋分の日', '秋分の日', '09-23', 1, 'jap');
+INSERT INTO TBL_PMS_FIXEDHOLIDAY(HOLIDAY_NAME, HOLIDAY_NAME2, HOLIDAY, SOLARLUNAR, COUNTRY) VALUES ('文化の日', '文化の日', '11-03', 1, 'jap');
+INSERT INTO TBL_PMS_FIXEDHOLIDAY(HOLIDAY_NAME, HOLIDAY_NAME2, HOLIDAY, SOLARLUNAR, COUNTRY) VALUES ('勤労感謝の日', '勤労感謝の日', '11-23', 1, 'jap');
+INSERT INTO TBL_PMS_FIXEDHOLIDAY(HOLIDAY_NAME, HOLIDAY_NAME2, HOLIDAY, SOLARLUNAR, COUNTRY) VALUES ('天皇誕生日', '天皇誕生日', '12-23', 1, 'jap');
+
+-- 날씨 도시 데이터
+INSERT INTO `tbl_weather` (`SN`,`CITYCODE`,`CITYNAME`,`DISPLAYCITYNAME`,`PRIMARYLANG`,`CURRENTWEATHER`,`TODAYWEATHER`) VALUES ('10','1832157','Reisui','여수','1',NULL,NULL);
+INSERT INTO `tbl_weather` (`SN`,`CITYCODE`,`CITYNAME`,`DISPLAYCITYNAME`,`PRIMARYLANG`,`CURRENTWEATHER`,`TODAYWEATHER`) VALUES ('7','1833747','Ulsan','울산','1',NULL,NULL);
+INSERT INTO `tbl_weather` (`SN`,`CITYCODE`,`CITYNAME`,`DISPLAYCITYNAME`,`PRIMARYLANG`,`CURRENTWEATHER`,`TODAYWEATHER`) VALUES ('2','1835235','Daejeon','대전','1',NULL,NULL);
+INSERT INTO `tbl_weather` (`SN`,`CITYCODE`,`CITYNAME`,`DISPLAYCITYNAME`,`PRIMARYLANG`,`CURRENTWEATHER`,`TODAYWEATHER`) VALUES ('3','1835329','Daegu','대구','1',NULL,NULL);
+INSERT INTO `tbl_weather` (`SN`,`CITYCODE`,`CITYNAME`,`DISPLAYCITYNAME`,`PRIMARYLANG`,`CURRENTWEATHER`,`TODAYWEATHER`) VALUES ('1','1835848','Seoul','서울','1',NULL,NULL);
+INSERT INTO `tbl_weather` (`SN`,`CITYCODE`,`CITYNAME`,`DISPLAYCITYNAME`,`PRIMARYLANG`,`CURRENTWEATHER`,`TODAYWEATHER`) VALUES ('4','1838524','Busan','부산','1',NULL,NULL);
+INSERT INTO `tbl_weather` (`SN`,`CITYCODE`,`CITYNAME`,`DISPLAYCITYNAME`,`PRIMARYLANG`,`CURRENTWEATHER`,`TODAYWEATHER`) VALUES ('9','1841811','Gwangju','광주','1',NULL,NULL);
+INSERT INTO `tbl_weather` (`SN`,`CITYCODE`,`CITYNAME`,`DISPLAYCITYNAME`,`PRIMARYLANG`,`CURRENTWEATHER`,`TODAYWEATHER`) VALUES ('5','1843137','Kang-neung','강릉','1',NULL,NULL);
+INSERT INTO `tbl_weather` (`SN`,`CITYCODE`,`CITYNAME`,`DISPLAYCITYNAME`,`PRIMARYLANG`,`CURRENTWEATHER`,`TODAYWEATHER`) VALUES ('6','1845136','Chuncheon','춘천','1',NULL,NULL);
+INSERT INTO `tbl_weather` (`SN`,`CITYCODE`,`CITYNAME`,`DISPLAYCITYNAME`,`PRIMARYLANG`,`CURRENTWEATHER`,`TODAYWEATHER`) VALUES ('8','1845457','Jeonju','전주','1',NULL,NULL);
+INSERT INTO `tbl_weather` (`SN`,`CITYCODE`,`CITYNAME`,`DISPLAYCITYNAME`,`PRIMARYLANG`,`CURRENTWEATHER`,`TODAYWEATHER`) VALUES ('11','1846266','Jeju','제주도','1',NULL,NULL);
+
+-- 미국
+INSERT INTO TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES('1', '5128638', 'New York','뉴욕', 	'2');
+INSERT INTO TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES('2', '5186266', 'Dallas', '댈러스', '2');
+INSERT INTO TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES('3', '5186794', 'Denver', '댄버', '2');
+INSERT INTO TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES('4', '5368361', 'Los Angeles', '로스앤젤레스', '2');
+INSERT INTO TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES('5', '5664535', 'Manhattan', '맨해튼', '2');
+INSERT INTO TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES('6', '4930956', 'Boston', '보스턴', '2');
+INSERT INTO TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES('7', '5110253', 'Bronx', '브롱크스', '2');
+INSERT INTO TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES('8', '5110302', 'Brooklyn', '브루클린', '2');
+INSERT INTO TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES('9', '5392171', 'San Jose', '산호세', '2');
+INSERT INTO TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES('10', '4726311', 'San Diego', '샌디에이고', '2');
+INSERT INTO TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES('11', '4171771', 'San Antonio', '샌안토니오', '2');
+INSERT INTO TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES('12', '4887398', 'Chicago', '시카고', '2');
+INSERT INTO TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES('13', '4883772', 'Atlanta', '애틀랜타', '2');
+INSERT INTO TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES('14', '5016884', 'Austin', '오스틴', '2');
+INSERT INTO TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES('15', '4140963', 'Washington D.C.', '워싱턴 D.C.', '2');
+INSERT INTO TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES('16', '4188985', 'Columbus', '콜롬버스', '2');
+INSERT INTO TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES('17', '5133268', 'Queens', '퀸스', '2');
+INSERT INTO TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES('18', '4905873', 'Phoenix', '피닉스', '2');
+INSERT INTO TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES('19', '5131095', 'Philadelphia', '필라델피아', '2');
+INSERT INTO TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES('20', '5194369', 'Houston', '휴스턴', '2');
+
+-- 일본
+INSERT INTO `tbl_weather` (`SN`,`CITYCODE`,`CITYNAME`,`DISPLAYCITYNAME`,`PRIMARYLANG`,`CURRENTWEATHER`,`TODAYWEATHER`) VALUES ('1','1850147','Tokyo','東京','3',NULL,NULL);
+INSERT INTO `tbl_weather` (`SN`,`CITYCODE`,`CITYNAME`,`DISPLAYCITYNAME`,`PRIMARYLANG`,`CURRENTWEATHER`,`TODAYWEATHER`) VALUES ('3','1853909','Osaka-shi','大阪市','3',NULL,NULL);
+INSERT INTO `tbl_weather` (`SN`,`CITYCODE`,`CITYNAME`,`DISPLAYCITYNAME`,`PRIMARYLANG`,`CURRENTWEATHER`,`TODAYWEATHER`) VALUES ('4','1854383','Okayama-shi','岡山市','3',NULL,NULL);
+INSERT INTO `tbl_weather` (`SN`,`CITYCODE`,`CITYNAME`,`DISPLAYCITYNAME`,`PRIMARYLANG`,`CURRENTWEATHER`,`TODAYWEATHER`) VALUES ('13','1855431','Niigata-shi','新潟市','3',NULL,NULL);
+INSERT INTO `tbl_weather` (`SN`,`CITYCODE`,`CITYNAME`,`DISPLAYCITYNAME`,`PRIMARYLANG`,`CURRENTWEATHER`,`TODAYWEATHER`) VALUES ('10','1856057','Nagoya-shi','名古屋市','3',NULL,NULL);
+INSERT INTO `tbl_weather` (`SN`,`CITYCODE`,`CITYNAME`,`DISPLAYCITYNAME`,`PRIMARYLANG`,`CURRENTWEATHER`,`TODAYWEATHER`) VALUES ('11','1856215','Nagano-shi','長野市','3',NULL,NULL);
+INSERT INTO `tbl_weather` (`SN`,`CITYCODE`,`CITYNAME`,`DISPLAYCITYNAME`,`PRIMARYLANG`,`CURRENTWEATHER`,`TODAYWEATHER`) VALUES ('5','1857910','Kyoto','京都市','3',NULL,NULL);
+INSERT INTO `tbl_weather` (`SN`,`CITYCODE`,`CITYNAME`,`DISPLAYCITYNAME`,`PRIMARYLANG`,`CURRENTWEATHER`,`TODAYWEATHER`) VALUES ('6','1860827','Kagoshima-shi','鹿児島市','3',NULL,NULL);
+INSERT INTO `tbl_weather` (`SN`,`CITYCODE`,`CITYNAME`,`DISPLAYCITYNAME`,`PRIMARYLANG`,`CURRENTWEATHER`,`TODAYWEATHER`) VALUES ('8','1862415','Hiroshima-shi','広島市','3',NULL,NULL);
+INSERT INTO `tbl_weather` (`SN`,`CITYCODE`,`CITYNAME`,`DISPLAYCITYNAME`,`PRIMARYLANG`,`CURRENTWEATHER`,`TODAYWEATHER`) VALUES ('7','1863967','Fukuoka-shi','福岡市','3',NULL,NULL);
+INSERT INTO `tbl_weather` (`SN`,`CITYCODE`,`CITYNAME`,`DISPLAYCITYNAME`,`PRIMARYLANG`,`CURRENTWEATHER`,`TODAYWEATHER`) VALUES ('9','1926099','Matsuyama-shi','松山市','3',NULL,NULL);
+INSERT INTO `tbl_weather` (`SN`,`CITYCODE`,`CITYNAME`,`DISPLAYCITYNAME`,`PRIMARYLANG`,`CURRENTWEATHER`,`TODAYWEATHER`) VALUES ('12','2112923','Fukushima-shi','福島市','3',NULL,NULL);
+INSERT INTO `tbl_weather` (`SN`,`CITYCODE`,`CITYNAME`,`DISPLAYCITYNAME`,`PRIMARYLANG`,`CURRENTWEATHER`,`TODAYWEATHER`) VALUES ('15','2128295','Sapporo-shi','札幌市','3',NULL,NULL);
+INSERT INTO `tbl_weather` (`SN`,`CITYCODE`,`CITYNAME`,`DISPLAYCITYNAME`,`PRIMARYLANG`,`CURRENTWEATHER`,`TODAYWEATHER`) VALUES ('14','2130658','Aomori-shi','青森市','3',NULL,NULL);
+INSERT INTO `tbl_weather` (`SN`,`CITYCODE`,`CITYNAME`,`DISPLAYCITYNAME`,`PRIMARYLANG`,`CURRENTWEATHER`,`TODAYWEATHER`) VALUES ('2','6697514','Asahi','旭市','3',NULL,NULL);
+
+-- 중국
+INSERT INTO TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES('1', '1809858', 'Guangzhou', '광저우', '4');
+INSERT INTO TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES('2', '1809461', 'Guiyang', '구이양', '4');
+INSERT INTO TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES('3', '1799869', 'Nanning', '난닝', '4');
+INSERT INTO TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES('4', '1799962', 'Nanjing', '난징', '4');
+INSERT INTO TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES('5', '1800163', 'Nanchang', '난창', '4');
+INSERT INTO TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES('6', '1804430', 'Lanzhou', '란저우', '4');
+INSERT INTO TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES('7', '1816670', 'Beijing', '베이징', '4');
+INSERT INTO TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES('8', '1796236', 'Shanghai', '상하이', '4');
+INSERT INTO TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES('9', '2034937', 'shenyang', '선양', '4');
+INSERT INTO TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES('10', '1795268', 'Shijiazhuang', '스자좡', '4');
+INSERT INTO TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES('11', '1805753', 'jinan', '지난', '4');
+INSERT INTO TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES('12', '1815549', 'changsha', '창사', '4');
+INSERT INTO TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES('13', '1815771', 'changchun', '창춘', '4');
+INSERT INTO TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES('14', '1815286', 'Chengdu', '청두', '4');
+INSERT INTO TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES('15', '1814906', 'chongqing', '충칭', '4');
+INSERT INTO TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES('16', '1804651', 'kunming', '쿤밍', '4');
+INSERT INTO TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES('17', '1810821', 'Fuzhou', '푸저우', '4');
+INSERT INTO TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES('18', '2037013', 'harbin', '하얼빈', '4');
+INSERT INTO TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES('19', '1808926', 'Hangzhou', '항저우', '4');
+INSERT INTO TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES('20', '1808722', 'Hefei', '허페이', '4');
+
+-- 베트남
+INSERT INTO TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES ('1', '1586203', 'Can Tho', '깐토', '5');
+INSERT INTO TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES ('2', '1568574', 'Kui bitch', '꾸이년', '5');
+INSERT INTO TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES ('3', '1572151', 'Nha Trang', '냐짱', '5');
+INSERT INTO TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES ('4', '1905468', 'Da Nang', '다낭', '5');
+INSERT INTO TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES ('5', '8201616', 'barbie', '바비', '5');
+INSERT INTO TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES ('6', '1587923', 'Bien Hoa', '비엔호아', '5');
+INSERT INTO TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES ('7', '1581130', 'Hanoi', '하노이', '5');
+INSERT INTO TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES ('8', '1581298', 'Haiphong', '하이퐁', '5');
+INSERT INTO TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES ('9', '1566083', 'ho chi minh', '호찌민', '5');
+INSERT INTO TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES ('10', '1580240', 'Hue', '후에', '5');
+
+-- 인도네시아
+INSERT INTO TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES ('1', '1645528', 'denpasar', '덴파사르', 6);
+INSERT INTO TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES ('2', '8144495', 'Depok', '드폭', 6);
+INSERT INTO TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES ('3', '1622786', 'Makassar', '마카사르', 6);
+INSERT INTO TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES ('4', '1214520', 'medan', '메단', 6);
+INSERT INTO TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES ('5', '8144723', 'Batam', '바탐', 6);
+INSERT INTO TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES ('6', '1624917', 'Bandar Lampung', '반다르람풍', 6);
+INSERT INTO TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES ('7', '1650357', 'Bandung', '반둥', 6);
+INSERT INTO TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES ('8', '1650213', 'Banjarmasin', '반자르마신', 6);
+INSERT INTO TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES ('9', '7780016', 'Bogor', '보고르', 6);
+INSERT INTO TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES ('10', '8018250', 'Surabaya', '수라바야', 6);
+INSERT INTO TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES ('11', '1627896', 'semarang', '스마랑', 6);
+INSERT INTO TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES ('12', '1651531', 'Ambon', '암본', 6);
+INSERT INTO TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES ('13', '1642911', 'Jakarta', '자카르타', 6);
+INSERT INTO TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES ('14', '1642858', 'Jambi', '잠비', 6);
+INSERT INTO TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES ('15', '1625084', 'Tangerang', '탕에랑', 6);
+INSERT INTO TBL_WEATHER(SN, CITYCODE, CITYNAME, DISPLAYCITYNAME, PRIMARYLANG) VALUES ('16', '1633070', 'Palembang', '팔렘방', 6);
+
+-- 포탈 개인화
+INSERT INTO TBL_PORTAL_THEME (theme_id, theme_name, theme_name2, theme_name3, theme_content, theme_content2, theme_content3, theme_content4, theme_content5, theme_content6) VALUES (1, '기본형', 'Default Type', 'きほんがた', '소식 및 상단영역이 있는 디자인의 테마입니다.', 'A theme with a design that includes news and a top area.', 'ニュースやトップエリアのあるデザインのテーマです。', '这是一个包含新闻和顶部区域的设计主题。', 'A theme with a design that includes news and a top area.', 'A theme with a design that includes news and a top area.');
+INSERT INTO TBL_PORTAL_THEME (theme_id, theme_name, theme_name2, theme_name3, theme_content, theme_content2, theme_content3, theme_content4, theme_content5, theme_content6) VALUES (2, '바로가기형', 'Shortcut Type', 'ショートカットがた', '위쪽에 정보 및 바로가기가 있는 디자인의 테마입니다.', 'A theme with information and shortcuts at the top.', '上部に情報やショートカットがあるデザインのテーマです。', '该主题的设计在顶部包含信息和快捷方式。', 'A theme with information area and shortcuts at the top.', 'A theme with information area and shortcuts at the top.');
+INSERT INTO TBL_PORTAL_THEME (theme_id, theme_name, theme_name2, theme_name3, theme_content, theme_content2, theme_content3, theme_content4, theme_content5, theme_content6) VALUES (3, '정보분리형', 'Information Separation Type', 'じょうほうぶんりがた', '정보 관련 고정영역이 없이 포틀릿에 집중할 수 있는 테마입니다.', 'A theme that allows to focus on portlets without any fixed areas related to information.', '情報関連の固定領域がなくてもポートレットに集中できるテーマです。', '该主题允许您专注于 portlet，而无需任何与信息相关的固定区域。', 'A theme that allows to focus on portlets without any fixed areas related to information.', 'A theme that allows to focus on portlets without any fixed areas related to information.');
+-- 모바일 테마
+INSERT INTO TBL_PORTAL_THEME (theme_id, theme_name, theme_name2, theme_name3, theme_content, theme_content2, theme_content3, theme_content4, theme_content5, theme_content6) VALUES (4, '테마4', 'Theme4', 'Theme4', '모바일용 포틀릿 테마 입니다.', 'Theme For Mobile', 'モバイルのテーマ', '手机主题', 'Theme For Mobile', 'Theme For Mobile');
+
+INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (0, '/ezNewPortal/newPortalPortalPage.do', 'G', '', 0, 'portal');
+UPDATE TBL_PORTAL_MENU SET menu_id = 0 WHERE menu_url = '/ezNewPortal/newPortalPortalPage.do';
+INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (1, '/ezEmail/mailMain.do', 'G', 'icon_topmenu icon_nav_mail', 1, 'mail');
+INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (2, '/ezSchedule/scheduleIndex.do?funCode=2', 'G', 'icon_topmenu icon_nav_calendar', 2, 'schedule');
+INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (3, '/ezApprovalG/apprGMain.do', 'G', 'icon_topmenu icon_nav_approval', 3, 'approval');
+INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (4, '/ezBoard/boardMain.do', 'G', 'icon_topmenu icon_nav_board', 4, 'board');
+INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (5, '/ezCommunity/communityMain.do', 'G', 'icon_topmenu icon_nav_community', 5, 'community');
+INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (6, '/ezResource/resMain.do', 'G', 'icon_topmenu icon_nav_resource', 6, 'resource');
+INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (7, '/ezCircular/circularIndex.do', 'G', 'icon_topmenu icon_nav_circular_edition', 7, 'circular');
+INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (8, '/ezJournal/journalMain.do', 'G', 'icon_topmenu icon_nav_workdiary', 8, 'journal');
+INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (9, '/ezAttitude/attitudeMain.do', 'G', 'icon_topmenu icon_nav_absenteeism', 9, 'attitude');
+INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (10, '/ezWebFolder/webfolderMain.do', 'G', 'icon_topmenu icon_nav_webfolder', 10, 'webfolder');
+INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (11, '/ezCabinet/cabinetMain.do', 'G', 'icon_topmenu icon_nav_cabinet', 11, 'cabinet');
+INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (12, '/ezPMS/pmsMain.do', 'G', 'icon_topmenu icon_nav_project', 12, 'pms');
+INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (13, '/ezEmail/mailMain.do?funCode=2', 'G', 'icon_topmenu icon_nav_addressbook', 13, 'address');
+INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (14, '/ezQuestion/qstMain.do', 'G', 'icon_topmenu icon_nav_survey', 14, 'question');
+INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (15, '/ezPoll/pollMain.do', 'G', 'icon_topmenu icon_nav_voting', 15, 'vote');
+INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (16, '/ezLadder/ladderMainPage.do', 'G', 'icon_topmenu icon_nav_laddergame', 16, 'ladder');
+INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (17, '/ezTask/taskIndex.do', 'G', 'icon_topmenu icon_nav_work', 17, 'task');
+INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (18, '/ezMemo/memoMainPage.do', 'G', 'icon_topmenu icon_nav_memo', 18, 'memo');
+INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (19, '/ezSurvey/surveyMain.do', 'G', 'icon_topmenu icon_nav_survey', 19, 'survey');
+INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (20, '/ezCar/resCar.do', 'G', 'icon_topmenu icon_nav_workdiary', 20, 'car');
+
+-- 모바일 메뉴
+INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (21, '/mobile/ezEmail/mailList.do?folderId=INBOX', 'MG', 'iconCommon icon_mail', 1, 'mMail');
+INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (22, '/mobile/ezOrgan/personList.do', 'MG', 'iconCommon icon_employee', 2, 'mAddress');
+INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (23, '/mobile/ezApprovalG/mApproveList.do?pType=DO', 'MG', 'iconCommon icon_approval', 3, 'mApproval');
+INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (24, '/mobile/ezResource/searchTodayList.do', 'MG', 'iconCommon icon_resource', 4, 'mResource');
+INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (25, '/mobile/ezBoard/boardItemList.do?boardID={FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}', 'MG', 'iconCommon icon_notice', 5, 'mBoard');
+INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (26, '/mobile/ezAddress/addressList.do?pSearchTarget=personal&pFolderName=개인주소록', 'MG', 'iconCommon icon_address', 6, 'mAddress');
+INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (27, '/mobile/ezSchedule/mScheduleList.do', 'MG', 'iconCommon icon_schedule', 7, 'mSchedule');
+INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (28, '/mobile/ezSurvey/surveyList.do?mode=processing', 'MG', 'iconCommon icon_survey', 8, 'mSurvey');
+INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (29, '/mobile/ezWebfolder/main.do', 'MG', 'iconCommon icon_webfolder', 9, 'mWebfolder');
+
+UPDATE TBL_PORTAL_MENU SET menu_id = 0 WHERE default_order = 0;
+
+INSERT INTO TBL_PORTAL_FRAME (frame_id, frame_name, theme_id) VALUES (1, 'Frame1', 1);
+INSERT INTO TBL_PORTAL_FRAME (frame_id, frame_name, theme_id) VALUES (2, 'Frame2', 1);
+INSERT INTO TBL_PORTAL_FRAME (frame_id, frame_name, theme_id) VALUES (3, 'Frame3', 1);
+INSERT INTO TBL_PORTAL_FRAME (frame_id, frame_name, theme_id) VALUES (4, 'Frame4', 1);
+INSERT INTO TBL_PORTAL_FRAME (frame_id, frame_name, theme_id) VALUES (5, 'Frame1', 2);
+INSERT INTO TBL_PORTAL_FRAME (frame_id, frame_name, theme_id) VALUES (6, 'Frame1', 3);
+INSERT INTO TBL_PORTAL_FRAME (frame_id, frame_name, theme_id) VALUES (7, 'Frame2', 2);
+INSERT INTO TBL_PORTAL_FRAME (frame_id, frame_name, theme_id) VALUES (8, 'Frame2', 3);
+-- 모바일 프레임
+INSERT INTO TBL_PORTAL_FRAME (frame_id, frame_name, theme_id) VALUES (9, 'Frame1', 4);
+
+INSERT INTO TBL_PORTAL_PORTLET (portlet_id, menu_id, portlet_url, portlet_type, default_order, portletcode) VALUES (15, 4, '/ezNewPortal/getCustomBoardInfo.do', 'G', -2, 'fixLeft');
+INSERT INTO TBL_PORTAL_PORTLET (portlet_id, menu_id, portlet_url, portlet_type, default_order, portletcode) VALUES (16, 4, '/ezNewPortal/getCustomBoardInfo.do', 'G', -1, 'fixRight');
+INSERT INTO TBL_PORTAL_PORTLET (portlet_id, menu_id, portlet_url, portlet_type, default_order, portletcode) VALUES (1, 1, '/ezNewPortal/receivedMailPortlet.do', 'G', 2, 'receivedmail');
+INSERT INTO TBL_PORTAL_PORTLET (portlet_id, menu_id, portlet_url, portlet_type, default_order, portletcode) VALUES (2, 4, '/ezNewPortal/noticePortlet.do', 'G', 1, 'notice');
+INSERT INTO TBL_PORTAL_PORTLET (portlet_id, menu_id, portlet_url, portlet_type, default_order, portletcode) VALUES (4, 15, '/ezNewPortal/votePortlet.do', 'G', 3, 'vote');
+INSERT INTO TBL_PORTAL_PORTLET (portlet_id, menu_id, portlet_url, portlet_type, default_order, portletcode) VALUES (5, 0, '/ezNewPortal/pollPortlet.do', 'G', 4, 'poll');
+INSERT INTO TBL_PORTAL_PORTLET (portlet_id, menu_id, portlet_url, portlet_type, default_order, portletcode) VALUES (6, 2, '/ezNewPortal/schedulePortlet.do', 'G', 5, 'schedule');
+INSERT INTO TBL_PORTAL_PORTLET (portlet_id, menu_id, portlet_url, portlet_type, default_order, portletcode) VALUES (7, 3, '/ezNewPortal/approvalListPortlet.do', 'G', 6, 'approvallist');
+INSERT INTO TBL_PORTAL_PORTLET (portlet_id, menu_id, portlet_url, portlet_type, default_order, portletcode) VALUES (8, 3, '/ezNewPortal/favoriteFormsPortlet.do', 'G', 7, 'favoriteforms');
+INSERT INTO TBL_PORTAL_PORTLET (portlet_id, menu_id, portlet_url, portlet_type, default_order, portletcode) VALUES (9, 4, '/ezNewPortal/photoBoardPortlet.do', 'G', 8, 'photoboard');
+INSERT INTO TBL_PORTAL_PORTLET (portlet_id, menu_id, portlet_url, portlet_type, default_order, portletcode) VALUES (10, 4, '/ezNewPortal/favoriteBoardPortlet.do', 'G', 9, 'favoriteboard');
+INSERT INTO TBL_PORTAL_PORTLET (portlet_id, menu_id, portlet_url, portlet_type, default_order, portletcode) VALUES (11, 5, '/ezNewPortal/communityPortlet.do', 'G', 10, 'community');
+INSERT INTO TBL_PORTAL_PORTLET (portlet_id, menu_id, portlet_url, portlet_type, default_order, portletcode) VALUES (12, 0, '/ezNewPortal/helpPortlet.do', 'G', 11, 'help');
+INSERT INTO TBL_PORTAL_PORTLET (portlet_id, menu_id, portlet_url, portlet_type, default_order, portletcode) VALUES (14, 0, '/ezNewPortal/weatherPortlet.do', 'G', 13, 'weather');
+INSERT INTO TBL_PORTAL_PORTLET (portlet_id, menu_id, portlet_url, portlet_type, default_order, portletcode) VALUES (26, 0, '/ezNewPortal/birthdayPortlet.do', 'G', 14, 'birthday');
+INSERT INTO TBL_PORTAL_PORTLET (portlet_id, menu_id, portlet_url, portlet_type, default_order, portletcode) VALUES (34, 0, '/ezNewPortal/slideImagePortlet.do', 'G', 15, 'slideimage');
+INSERT INTO TBL_PORTAL_PORTLET (portlet_id, menu_id, portlet_url, portlet_type, default_order, portletcode) VALUES (36, 0, '/ezNewPortal/userInfoPortlet.do', 'G', 16, 'userinfo');
+INSERT INTO TBL_PORTAL_PORTLET (portlet_id, menu_id, portlet_url, portlet_type, default_order, portletcode) VALUES (47, 4, '/ezNewPortal/movieBoardPortlet.do', 'G', 17, 'movieboard');
+INSERT INTO TBL_PORTAL_PORTLET (portlet_id, menu_id, portlet_url, portlet_type, default_order, portletcode) VALUES (49, 0, '/ezNewPortal/countPortlet.do', 'G', 19, 'count');
+INSERT INTO TBL_PORTAL_PORTLET (portlet_id, menu_id, portlet_url, portlet_type, default_order, portletcode) VALUES (51, 6, '/ezNewPortal/resourcePortlet.do', 'G', 21, 'resource');
+INSERT INTO TBL_PORTAL_PORTLET (portlet_id, menu_id, portlet_url, portlet_type, default_order, portletcode) VALUES (70, 10, '/ezNewPortal/webFolderPortlet.do', 'G', 22, 'webfolder');
+INSERT INTO TBL_PORTAL_PORTLET (portlet_id, menu_id, portlet_url, portlet_type, default_order, portletcode) VALUES (73, 19, '/ezNewPortal/surveyPortlet.do', 'G', 20, 'survey');
+-- 모바일 포틀릿 추가
+INSERT INTO TBL_PORTAL_PORTLET (portlet_id, menu_id, portlet_url, portlet_type, default_order, portletcode) VALUES (76, 25, '/mobile/getCustomBoardInfo.do', 'MG', 1, 'mFixTop');
+INSERT INTO TBL_PORTAL_PORTLET (portlet_id, menu_id, portlet_url, portlet_type, default_order, portletcode) VALUES (77, 25, '/mobile/getCustomBoardInfo.do', 'MG', 2, 'mFixBottom');
+INSERT INTO TBL_PORTAL_PORTLET (portlet_id, menu_id, portlet_url, portlet_type, default_order, portletcode) VALUES (78, 27, '/mobile/schedulePortlet.do', 'MG', 3, 'mSchedule');
+INSERT INTO TBL_PORTAL_PORTLET (portlet_id, menu_id, portlet_url, portlet_type, default_order, portletcode) VALUES (79, 24, '/mobile/resourcePortlet.do', 'MG', 4, 'mResource');
+INSERT INTO TBL_PORTAL_PORTLET (portlet_id, menu_id, portlet_url, portlet_type, default_order, portletcode) VALUES (80, 23, '/mobile/approvallistPortlet.do', 'MG', 5, 'mApprovallist');
+INSERT INTO TBL_PORTAL_PORTLET (portlet_id, menu_id, portlet_url, portlet_type, default_order, portletcode) VALUES (81, 21, '/mobile/receivedmailPortlet.do', 'MG', 6, 'mReceivedmail');
+INSERT INTO TBL_PORTAL_PORTLET (portlet_id, menu_id, portlet_url, portlet_type, default_order, portletcode) VALUES (82, 25, '/mobile/noticePortlet.do', 'MG', 7, 'mNotice');
+INSERT INTO TBL_PORTAL_PORTLET (portlet_id, menu_id, portlet_url, portlet_type, default_order, portletcode) VALUES (83, 25, '/mobile/photoboardPortlet.do', 'MG', 8, 'mPhotoboard');
+
+INSERT INTO TBL_PORTAL_PORTLET (PORTLET_ID, MENU_ID, PORTLET_URL, PORTLET_TYPE, DEFAULT_ORDER, PORTLETCODE) VALUES (74,3,'/ezNewPortal/chartPortlet.do','G',24,'chart');
+INSERT INTO TBL_PORTAL_PORTLET (PORTLET_ID, MENU_ID, PORTLET_URL, PORTLET_TYPE, DEFAULT_ORDER, PORTLETCODE) VALUES (75,4,'/ezNewPortal/tabBoardPortlet.do','G',23,'tabBoard');
 
 INSERT INTO TBL_WEATHER_CITY VALUES (1832157, '여수', 1);
 INSERT INTO TBL_WEATHER_CITY VALUES (1832157, 'Reisui', 2);
@@ -4458,4 +4352,50 @@ INSERT INTO TBL_WEATHER_CITY VALUES (1633070, 'パルレムバン', 3);
 INSERT INTO TBL_WEATHER_CITY VALUES (1633070, '大麥克', 4);
 INSERT INTO TBL_WEATHER_CITY VALUES (1633070, 'Palembang', 5);
 INSERT INTO TBL_WEATHER_CITY VALUES (1633070, 'Palembang', 6);
-INSERT INTO TBL_BOARD_BOARDINFO (BOARDID, BOARDNAME, BOARDNAME2, BOARDNAME3, BOARDNAME4, TREEVIEWORDER, BOARDLEVEL, PARENTBOARDID, BOARDDESCRIPTION, ITEMEXPIRES, ATTACHSIZELIMIT, REPLYNOTIFY, BOARDGROUPID, ALERTPOSTITEM, GUBUN, URL, DELETEAFTER, BOARDCOLOR, BOARDNO, PORTLET, TENANT_ID, COMPANYID) VALUES ('{MMMMMMMM-MMMM-MMMM-MMMM-MMMMMMMMMMMM}', '식단', 'MealPlan', '献立表', '菜单',  -2, 0, 'None', NULL, 0, NULL, 0, NULL, 0, 0, NULL, 0, NULL, 0, 'N', @tenant_id_value, 'Top');
+
+INSERT INTO TBL_FORMCONNINFO (CONNNODE, CONNINFO, DESCRIPTION, UPPERNODE) VALUES ('PROCESSIDXS',		'',							'',									'ROOT');
+INSERT INTO TBL_FORMCONNINFO (CONNNODE, CONNINFO, DESCRIPTION, UPPERNODE) VALUES ('PROCESSIDX',			'INIT',						'문서 로딩시(기안, 접수기)',				'PROCESSIDXS');
+INSERT INTO TBL_FORMCONNINFO (CONNNODE, CONNINFO, DESCRIPTION, UPPERNODE) VALUES ('PROCESSIDX',			'MIDDLE_SIGN_INIT',			'문서 로딩시(결재기)',						'PROCESSIDXS');
+INSERT INTO TBL_FORMCONNINFO (CONNNODE, CONNINFO, DESCRIPTION, UPPERNODE) VALUES ('PROCESSIDX',			'DOCNUM_BEFORE',			'문서번호 채번직전(모든화면최종결재시)',			'PROCESSIDXS');
+INSERT INTO TBL_FORMCONNINFO (CONNNODE, CONNINFO, DESCRIPTION, UPPERNODE) VALUES ('PROCESSIDX',			'DOCNUM_AFTER',				'문서번호 채번직후(모든화면최종결재시)',			'PROCESSIDXS');
+INSERT INTO TBL_FORMCONNINFO (CONNNODE, CONNINFO, DESCRIPTION, UPPERNODE) VALUES ('PROCESSIDX',			'DRAFTSAVE_BEFORE',			'기안상신직전(기안기)',					'PROCESSIDXS');
+INSERT INTO TBL_FORMCONNINFO (CONNNODE, CONNINFO, DESCRIPTION, UPPERNODE) VALUES ('PROCESSIDX',			'DRAFTSAVE_AFTER',			'기안상신직후(기안기)',					'PROCESSIDXS');
+INSERT INTO TBL_FORMCONNINFO (CONNNODE, CONNINFO, DESCRIPTION, UPPERNODE) VALUES ('PROCESSIDX',			'DOCNUM_END',				'최종결재직후(기안기)',					'PROCESSIDXS');
+INSERT INTO TBL_FORMCONNINFO (CONNNODE, CONNINFO, DESCRIPTION, UPPERNODE) VALUES ('PROCESSIDX',			'MIDDLE_SIGN_BEFORE',		'중간결재자 사인직전(결재기)',				'PROCESSIDXS');
+INSERT INTO TBL_FORMCONNINFO (CONNNODE, CONNINFO, DESCRIPTION, UPPERNODE) VALUES ('PROCESSIDX',			'MIDDLE_SIGN_AFTER',		'중간결재자 사인직후(결재기)',				'PROCESSIDXS');
+INSERT INTO TBL_FORMCONNINFO (CONNNODE, CONNINFO, DESCRIPTION, UPPERNODE) VALUES ('PROCESSIDX',			'MIDDLE_END_AFTER',			'중간결재자 결재성공시(결재기)',				'PROCESSIDXS');
+INSERT INTO TBL_FORMCONNINFO (CONNNODE, CONNINFO, DESCRIPTION, UPPERNODE) VALUES ('PROCESSIDX',			'MIDDLE_END_FAIL',			'중간결재자 결재실패시(결재기)',				'PROCESSIDXS');
+INSERT INTO TBL_FORMCONNINFO (CONNNODE, CONNINFO, DESCRIPTION, UPPERNODE) VALUES ('PROCESSIDX',			'LAST_SIGN_BEFORE',			'최종결재자 사인직전(결재기)',				'PROCESSIDXS');
+INSERT INTO TBL_FORMCONNINFO (CONNNODE, CONNINFO, DESCRIPTION, UPPERNODE) VALUES ('PROCESSIDX',			'LAST_SIGN_AFTER',			'최종결재자 사인직후(결재기)',				'PROCESSIDXS');
+INSERT INTO TBL_FORMCONNINFO (CONNNODE, CONNINFO, DESCRIPTION, UPPERNODE) VALUES ('PROCESSIDX',			'END_FAIL',					'결재완료 실패시(모든화면 최종결재시)',			'PROCESSIDXS');
+INSERT INTO TBL_FORMCONNINFO (CONNNODE, CONNINFO, DESCRIPTION, UPPERNODE) VALUES ('PROCESSIDX',			'SUSIN_DRAFTSAVE_BEFORE',	'접수문서 접수직전(접수기)',					'PROCESSIDXS');
+INSERT INTO TBL_FORMCONNINFO (CONNNODE, CONNINFO, DESCRIPTION, UPPERNODE) VALUES ('PROCESSIDX',			'SUSIN_DRAFTSAVE_AFTER',	'접수문서 접수직후(접수기)',					'PROCESSIDXS');
+INSERT INTO TBL_FORMCONNINFO (CONNNODE, CONNINFO, DESCRIPTION, UPPERNODE) VALUES ('PROCESSIDX',			'SUSIN_DOCNUM_END',			'접수문서 접수후(접수기)',					'PROCESSIDXS');
+INSERT INTO TBL_FORMCONNINFO (CONNNODE, CONNINFO, DESCRIPTION, UPPERNODE) VALUES ('PROCESSIDX',			'LAST_SEND_BEFORE',			'최종결재직전(기안기)',					'PROCESSIDXS');
+INSERT INTO TBL_FORMCONNINFO (CONNNODE, CONNINFO, DESCRIPTION, UPPERNODE) VALUES ('PROCESSIDX',			'LAST_END_AFTER',			'최종결재직후(수신문서접수기)',				'PROCESSIDXS');
+INSERT INTO TBL_FORMCONNINFO (CONNNODE, CONNINFO, DESCRIPTION, UPPERNODE) VALUES ('PROCESSIDX',			'BANSONG_BEFORE',			'반송직전(결재기)',						'PROCESSIDXS');
+INSERT INTO TBL_FORMCONNINFO (CONNNODE, CONNINFO, DESCRIPTION, UPPERNODE) VALUES ('PROCESSIDX',			'BANSONG_AFTER',			'반송성공시(결재기)',						'PROCESSIDXS');
+INSERT INTO TBL_FORMCONNINFO (CONNNODE, CONNINFO, DESCRIPTION, UPPERNODE) VALUES ('PROCESSIDX',			'BANSONG_FAIL',				'반송실패시(결재기)',						'PROCESSIDXS');
+INSERT INTO TBL_FORMCONNINFO (CONNNODE, CONNINFO, DESCRIPTION, UPPERNODE) VALUES ('PROCESSIDX',			'HESONG_BEFORE',			'회송직전',						'PROCESSIDXS');
+INSERT INTO TBL_FORMCONNINFO (CONNNODE, CONNINFO, DESCRIPTION, UPPERNODE) VALUES ('PROCESSTIMES',		'',							'',									'ROOT');
+INSERT INTO TBL_FORMCONNINFO (CONNNODE, CONNINFO, DESCRIPTION, UPPERNODE) VALUES ('PROCESSTIME',		'DRAFT',					'기안결재시 호출(기안문)',					'PROCESSTIMES');
+INSERT INTO TBL_FORMCONNINFO (CONNNODE, CONNINFO, DESCRIPTION, UPPERNODE) VALUES ('PROCESSTIME',		'REDRAFT',					'재기안시 호출(재기안시기안기에서)',			'PROCESSTIMES');
+INSERT INTO TBL_FORMCONNINFO (CONNNODE, CONNINFO, DESCRIPTION, UPPERNODE) VALUES ('PROCESSTIME',		'SUSIN',					'수신문서상태 호출(수신문)',					'PROCESSTIMES');
+INSERT INTO TBL_FORMCONNINFO (CONNNODE, CONNINFO, DESCRIPTION, UPPERNODE) VALUES ('PROCESSTIME',		'HAPYUI',					'합의문서상태 호출(합의문)',					'PROCESSTIMES');
+INSERT INTO TBL_FORMCONNINFO (CONNNODE, CONNINFO, DESCRIPTION, UPPERNODE) VALUES ('PROCESSTIME',		'CHAMJO',					'참조문서상태 호출(미구현)',					'PROCESSTIMES');
+INSERT INTO TBL_FORMCONNINFO (CONNNODE, CONNINFO, DESCRIPTION, UPPERNODE) VALUES ('PROCESSTIME',		'GONGRAM',					'공람문서상태 호출(미구현)',					'PROCESSTIMES');
+INSERT INTO TBL_FORMCONNINFO (CONNNODE, CONNINFO, DESCRIPTION, UPPERNODE) VALUES ('PROCESSTIME',		'GAMSA',					'사후감사문서상태 호출(미구현)',				'PROCESSTIMES');
+INSERT INTO TBL_FORMCONNINFO (CONNNODE, CONNINFO, DESCRIPTION, UPPERNODE) VALUES ('PROCESSTIME',		'B_GAMSA',					'사전감사문서상태 호출(미구현)',				'PROCESSTIMES');
+INSERT INTO TBL_FORMCONNINFO (CONNNODE, CONNINFO, DESCRIPTION, UPPERNODE) VALUES ('CONNSTRINGFLAGS',	'',							'',									'ROOT');
+INSERT INTO TBL_FORMCONNINFO (CONNNODE, CONNINFO, DESCRIPTION, UPPERNODE) VALUES ('CONNSTRINGFLAG',		'CS',						'커넥션 정보(없으면 자동)',					'CONNSTRINGFLAGS');
+INSERT INTO TBL_FORMCONNINFO (CONNNODE, CONNINFO, DESCRIPTION, UPPERNODE) VALUES ('CONNSTRINGFLAG',		'UI',						'화면 다이얼로그 정보',						'CONNSTRINGFLAGS');
+INSERT INTO TBL_FORMCONNINFO (CONNNODE, CONNINFO, DESCRIPTION, UPPERNODE) VALUES ('QUERYTYPES',			'',							'',									'ROOT');
+INSERT INTO TBL_FORMCONNINFO (CONNNODE, CONNINFO, DESCRIPTION, UPPERNODE) VALUES ('QUERYTYPE',			'Q',						'쿼리 실행',							'QUERYTYPES');
+INSERT INTO TBL_FORMCONNINFO (CONNNODE, CONNINFO, DESCRIPTION, UPPERNODE) VALUES ('QUERYTYPE',			'NA',						'UI가 없는 aspx',						'QUERYTYPES');
+INSERT INTO TBL_FORMCONNINFO (CONNNODE, CONNINFO, DESCRIPTION, UPPERNODE) VALUES ('QUERYTYPE',			'UA',						'UI가 있는 aspx(xml String을 전달)',		'QUERYTYPES');
+INSERT INTO TBL_FORMCONNINFO (CONNNODE, CONNINFO, DESCRIPTION, UPPERNODE) VALUES ('QUERYTYPE',			'UA_EX',					'UI가 있는 aspx(xml Document를 전달)',	'QUERYTYPES');
+INSERT INTO TBL_FORMCONNINFO (CONNNODE, CONNINFO, DESCRIPTION, UPPERNODE) VALUES ('KEYKINDS',			'',							'',									'ROOT');
+INSERT INTO TBL_FORMCONNINFO (CONNNODE, CONNINFO, DESCRIPTION, UPPERNODE) VALUES ('KEYKIND',			'single',					'필드개체',							'KEYKINDS');
+INSERT INTO TBL_FORMCONNINFO (CONNNODE, CONNINFO, DESCRIPTION, UPPERNODE) VALUES ('KEYKIND',			'table',					'테이블지원(미구현)',						'KEYKINDS');
+
+-- tenant_id 없는 쿼리 하단으로 추가 끝

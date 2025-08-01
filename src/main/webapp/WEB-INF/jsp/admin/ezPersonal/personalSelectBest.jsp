@@ -41,28 +41,28 @@
 		            }
 		        }
 		        else {
-		            var rtnValue = window.showModalDialog("/ezPersonal/selectPerson.do?type=EMP", "", "dialogHeight:535px;dialogwidth:760px;dialogleft:100px;dialogtop:100px;status:no;toolbar:no;location:no;scroll:no;edge:sunken");
+		            var rtnJson = window.showModalDialog("/ezPersonal/selectPerson.do?type=EMP", "", "dialogHeight:535px;dialogwidth:760px;dialogleft:100px;dialogtop:100px;status:no;toolbar:no;location:no;scroll:no;edge:sunken");
 	
-		            if (typeof (rtnValue) != "undefined") {
-		                pid = rtnValue.split(":")[0];
-		                pDeptID = rtnValue.split(":")[4];
-		                document.getElementById("td_deptName").innerText = rtnValue.split(":")[2];
-		                document.getElementById("td_Name").innerText = rtnValue.split(":")[1] + " " + rtnValue.split(":")[3];
+		            if (typeof (rtnJson) != "undefined") {
+		                pid = rtnJson.userId;
+		                pDeptID = rtnJson.deptId;
+		                document.getElementById("td_deptName").innerText = rtnJson.deptName;
+		                document.getElementById("td_Name").innerText = rtnJson.userName + " " + rtnJson.jobName;
 		            }
 		        }
 		    }
 	
-		    function btnAdd_click_Complete(rtv) {
-		        if (typeof (rtv) != "undefined") {
-		            pid = rtv.split(":")[0];
-		            pDeptID = rtv.split(":")[4];
+		    function btnAdd_click_Complete(rtnJson) {
+		        if (typeof (rtnJson) != "undefined") {
+		            pid = rtnJson.userId;
+		            pDeptID = rtnJson.deptId;
 		            if (CrossYN()) {
-		                document.getElementById("td_deptName").textContent = rtv.split(":")[2];
-		                document.getElementById("td_Name").textContent = rtv.split(":")[1] + " " + rtv.split(":")[3];
+		                document.getElementById("td_deptName").textContent = rtnJson.deptName;
+		                document.getElementById("td_Name").textContent = rtnJson.userName + " " + rtnJson.jobName;
 		            }
 		            else {
-		                document.getElementById("td_deptName").innerText = rtv.split(":")[2];
-		                document.getElementById("td_Name").innerText = rtv.split(":")[1] + " " + rtv.split(":")[3];
+		                document.getElementById("td_deptName").innerText = rtnJson.deptName;
+		                document.getElementById("td_Name").innerText = rtnJson.userName + " " + rtnJson.jobName;
 		            }
 		        }
 		    }

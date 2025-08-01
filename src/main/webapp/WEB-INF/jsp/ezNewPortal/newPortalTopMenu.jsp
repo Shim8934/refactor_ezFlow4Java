@@ -414,7 +414,7 @@
 				if ('${useTotalSearch}' === 'YES') {
 					str += '<li class="contentlayout_right"><div class="employee_search"><input type="text" placeholder="<spring:message code="main.t00029" />" id="topsearch_btn"><span class="totalSearchBtn1" onclick="toggleTopSearch()"></span><span class="totalSearchBtn2" onclick="totalSearch()"></span></div></li>' 
 				}
-				str += '	<li class="contentlayout_none" onclick="subMenuClickEvent(\'off\')">';
+				str += '	<li class="contentlayout_none topMenuBtnsOn" onclick="subMenuClickEvent(\'off\')">';
 				str += setMainMenu();
 				str += '	</li>';
 				str += '</ul>';		
@@ -1903,6 +1903,7 @@
 		
 		function dimLayerControl(mode) {
 			var mainFrame = window.parent.document.getElementById("mainFrame");
+            var topFrame =  window.parent.document.getElementById("topFrame");
 			if(mode == "open") {
 				document.querySelector('body').style.background = "rgba(0,0,0,0.3)";
 	            document.querySelector('body').classList.add("dimLayerOpen");
@@ -1917,6 +1918,7 @@
 						window.parent.fixLayout();
 					}
                 }
+                topFrame.style.position = "absolute";
 			} else if (mode == "close") {
 				document.querySelector('body').style.background = "rgba(0,0,0,0)";
                 document.querySelector('body').classList.remove("dimLayerOpen");
@@ -1926,6 +1928,7 @@
                 } else {
                 	mainFrame.style.position = "relative";
                 }
+                topFrame.style.position = "";
 			}
 			
 			var userAgent = navigator.userAgent.toLowerCase();
@@ -2047,6 +2050,14 @@
 		
 		function toggleTopSearch() {
 			 $(".employee_search").toggleClass("active");
+			 if ($(".contentlayout_none.topMenuBtnsOn").length > 0) {
+				 $(".contentlayout_none.topMenuBtnsOn").addClass("topMenuBtnsOff");
+				 $(".contentlayout_none.topMenuBtnsOn").removeClass("topMenuBtnsOn");
+			 } else {
+				 $(".contentlayout_none.topMenuBtnsOff").addClass("topMenuBtnsOn");
+				 $(".contentlayout_none.topMenuBtnsOff").removeClass("topMenuBtnsOff");
+				 
+			 }
 		}
 
 		function offMenuAll() {

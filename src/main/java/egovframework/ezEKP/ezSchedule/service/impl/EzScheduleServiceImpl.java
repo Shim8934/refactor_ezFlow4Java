@@ -2487,9 +2487,9 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 		bodyContent.append(mailContent.toString());
 		
 		if (Integer.parseInt(repeatCount) > 0) {
-			bodyContent.append("<br><br> &nbsp;&nbsp; <span id='scheduleInfo' style=\"color:blue;cursor:pointer;text-decoration:underline;\" scheduleId='" + scheduleid + "' startDate='" + startdate + "' endDate='" + enddate + "' date='" + repStartdate + "' repeatcount='" + repeatCount + "' onclick='openScheduleInfo()'>" + egovMessageSource.getMessage("ezSchedule.mail.hth03") + "</span>");
+			bodyContent.append("<br><br> &nbsp;&nbsp; <span id='scheduleInfo' style=\"color:blue;cursor:pointer;text-decoration:underline;\" scheduleId='" + scheduleid + "' startDate='" + startdate + "' endDate='" + enddate + "' date='" + repStartdate + "' repeatcount='" + repeatCount + "' onclick='openScheduleInfo()'>" + egovMessageSource.getMessage("ezSchedule.mail.hth03", loginVO.getLocale()) + "</span>");
 		} else {
-			bodyContent.append("<br><br> &nbsp;&nbsp; <span id='scheduleInfo' style=\"color:blue;cursor:pointer;text-decoration:underline;\" scheduleId='" + scheduleid + "' startDate='" + startdate + "' endDate='" + enddate + "' date='" + startdate + "' onclick='openScheduleInfo()'>" + egovMessageSource.getMessage("ezSchedule.mail.hth03") + "</span>");
+			bodyContent.append("<br><br> &nbsp;&nbsp; <span id='scheduleInfo' style=\"color:blue;cursor:pointer;text-decoration:underline;\" scheduleId='" + scheduleid + "' startDate='" + startdate + "' endDate='" + enddate + "' date='" + startdate + "' onclick='openScheduleInfo()'>" + egovMessageSource.getMessage("ezSchedule.mail.hth03", loginVO.getLocale()) + "</span>");
 		}
 		
 		String content_ = commonUtil.createNotiMailContent(bodyContent.toString(), loginVO.getTenantId(), loginVO.getLocale());
@@ -2923,7 +2923,7 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 			bodyContent.append(" " + userName + egovMessageSource.getMessage("ezSchedule.kmss06", locale) + "</br><br>" + " ");
 			bodyContent.append(" &nbsp;&nbsp;- " + egovMessageSource.getMessage("ezCircular.t32", locale) + " : " + "<span id='schedule_read' >" + commonUtil.cleanValue(title) + "</span></br>");
 			bodyContent.append(periodContent);
-			bodyContent.append("<br><br> &nbsp;&nbsp; <span id='scheduleInfo' style=\"color:blue;cursor:pointer;text-decoration:underline;\" scheduleId='" + scheduleId + "' startDate='" + startDate + "' endDate='" + endDate + "' date='" + startDate + "' onclick='openScheduleInfo()'>" + egovMessageSource.getMessage("ezSchedule.mail.hth03") + "</span>");
+			bodyContent.append("<br><br> &nbsp;&nbsp; <span id='scheduleInfo' style=\"color:blue;cursor:pointer;text-decoration:underline;\" scheduleId='" + scheduleId + "' startDate='" + startDate + "' endDate='" + endDate + "' date='" + startDate + "' onclick='openScheduleInfo()'>" + egovMessageSource.getMessage("ezSchedule.mail.hth03", locale) + "</span>");
 			notiSubType = "ACCEPT";
 			break;
 		case "rej" :		// 참석 거절
@@ -2932,7 +2932,7 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 			bodyContent.append(" " + userName + egovMessageSource.getMessage("ezSchedule.kmss08", locale) + "</br><br>" + " ");
 			bodyContent.append(" &nbsp;&nbsp;- " + egovMessageSource.getMessage("ezCircular.t32", locale) + " : " + "<span id='schedule_read' >" + commonUtil.cleanValue(title) + "</span></br>");
 			bodyContent.append(periodContent);
-			bodyContent.append("<br><br> &nbsp;&nbsp; <span id='scheduleInfo' style=\"color:blue;cursor:pointer;text-decoration:underline;\" scheduleId='" + scheduleId + "' startDate='" + startDate + "' endDate='" + endDate + "' date='" + startDate + "' onclick='openScheduleInfo()'>" + egovMessageSource.getMessage("ezSchedule.mail.hth03") + "</span>");
+			bodyContent.append("<br><br> &nbsp;&nbsp; <span id='scheduleInfo' style=\"color:blue;cursor:pointer;text-decoration:underline;\" scheduleId='" + scheduleId + "' startDate='" + startDate + "' endDate='" + endDate + "' date='" + startDate + "' onclick='openScheduleInfo()'>" + egovMessageSource.getMessage("ezSchedule.mail.hth03", locale) + "</span>");
 			notiSubType = "REJECT";
 			break;
 		}
@@ -3038,7 +3038,7 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 		bodyContent.append(beforeScheTime + ")" + "<br><br>");
 		bodyContent.append(mailContent.toString());
 		
-		bodyContent.append("<br><br> &nbsp;&nbsp; <span id='scheduleInfo' style=\"color:blue;cursor:pointer;text-decoration:underline;\" scheduleId='" + scheduleId + "' startDate='" + startdate + "' endDate='" + enddate + "' date='" + startdate + "' onclick='openScheduleInfo()'>" + egovMessageSource.getMessage("ezSchedule.mail.hth03") + "</span>");
+		bodyContent.append("<br><br> &nbsp;&nbsp; <span id='scheduleInfo' style=\"color:blue;cursor:pointer;text-decoration:underline;\" scheduleId='" + scheduleId + "' startDate='" + startdate + "' endDate='" + enddate + "' date='" + startdate + "' onclick='openScheduleInfo()'>" + egovMessageSource.getMessage("ezSchedule.mail.hth03", locale) + "</span>");
 		
 		ezEmailService.sendMail(userEmail, password, locale, from, toList.toArray(new InternetAddress[toList.size()]), null, null, subject, commonUtil.createNotiMailContent(bodyContent.toString(), tenantId, locale), false, EmailImportance.NORMAL);
 		

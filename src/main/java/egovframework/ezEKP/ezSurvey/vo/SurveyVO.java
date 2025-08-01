@@ -43,6 +43,7 @@ public class SurveyVO {
 	private String participants; // 참여자수
 	private String participation; // 참여여부 (1, 0)
 	private String closingText; // 맺음말
+	private int userExposedFlag; // 참여자 공개여부 (1, 0)
 	
 	public int getUpdateMode() {
 		return updateMode;
@@ -339,5 +340,13 @@ public class SurveyVO {
 
 	public void setClosingText(String closingText) {
 		this.closingText = closingText;
+	}
+
+	public int getUserExposedFlag() {
+		return userExposedFlag;
+	}
+
+	public void setUserExposedFlag(int userExposedFlag) {
+		this.userExposedFlag = userExposedFlag;
 	}
 }

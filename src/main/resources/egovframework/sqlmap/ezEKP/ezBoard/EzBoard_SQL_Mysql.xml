@@ -4255,22 +4255,12 @@
 					COUNT(A.ITEMID)  TOTALCOUNT
               	FROM 
               		TBL_Board_Item A
-				LEFT JOIN
-	  			  	TBL_BOARD_CATEGORYINFO CI
-	  			ON 
-	  			  	A.BOARDID = CI.BOARDID
-	  			AND
-	  			  	A.TENANT_ID = CI.TENANT_ID
-	  			AND
-	  			  	A.CATEGORYID = CI.CATEGORYID
              	WHERE  
              		A.TENANT_ID = #tenantID#
              	AND
              		A.BOARDID = #boardId#
                 AND 
                 	APPRFLAG = 'Y'
-                AND
-					(CI.USEYN = '1' OR CI.USEYN IS NULL)
 			]]>
 		</isEqual>
 	</select>
@@ -4429,20 +4419,10 @@
 					COUNT(A.ITEMID)  TOTALCOUNT
               	FROM 
               		TBL_Board_Item A
-				LEFT JOIN
-	  			  	TBL_BOARD_CATEGORYINFO CI
-	  			ON 
-	  			  	A.BOARDID = CI.BOARDID
-	  			AND
-	  			  	A.TENANT_ID = CI.TENANT_ID
-	  			AND
-	  			  	A.CATEGORYID = CI.CATEGORYID
              	WHERE  
              		A.TENANT_ID = #tenantID#
              	AND
              		A.BOARDID = #boardId#
-                AND
-					(CI.USEYN = '1' OR CI.USEYN IS NULL)
 			]]>
 		</isEqual>
 	</select>
@@ -10770,22 +10750,6 @@
 			A.TENANT_ID = #tenantID#
 	  	AND
 			C.GUID = 0
-	</select>
-
-	<select id = "EzBoardDAO.hasBoardItemFlag" parameterClass = "map" resultClass = "String">
-		SELECT
-			CASE
-				WHEN COUNT(1) >= 1 THEN
-					'Y'
-				ELSE
-					'N'
-				END
-		FROM
-			TBL_BOARD_ITEM
-		WHERE
-			BOARDID = #boardID#
-	  	AND
-			TENANT_ID = #tenantID#
 	</select>
 	
 	<select id="EzBoardDAO.isPostDuplicated1" parameterClass="map" resultClass="Integer">

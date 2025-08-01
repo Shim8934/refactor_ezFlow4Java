@@ -366,18 +366,21 @@
 		            }
 		        } */
 		        
+		        var rtnJson = new Object();
+		        rtnJson.userId = selRow.getAttribute("DATA2");
+		        rtnJson.deptId =  selRow.getAttribute("DATA3");
+		        rtnJson.deptName = selRow.cells[1].textContent;
+		        rtnJson.userName = selRow.cells[2].textContent;
+		        rtnJson.jobName =  selRow.cells[3].textContent;
+		        rtnJson.tagName = tagName;
+		        
+		        debugger;
 		        if (ReturnFunction != null) {
-		            if (type == "EMP")
-		                ReturnFunction(selRow.getAttribute("DATA2") + ":" + selRow.cells[2].textContent + ":" + selRow.cells[1].textContent + ":" + selRow.cells[3].textContent + ":" + selRow.getAttribute("DATA3"));
-		            else
-		                ReturnFunction(selRow.getAttribute("DATA2") + ":" + selRow.cells[2].textContent + ":" + selRow.getAttribute("DATA3"));
+                    ReturnFunction(rtnJson);
+		        } else {
+                    window.returnValue = rtnJson;
 		        }
-		        else {
-		            if (type == "EMP")
-		                window.returnValue = selRow.getAttribute("DATA2") + ":" + selRow.cells[2].textContent + ":" + selRow.cells[1].textContent + ":" + selRow.cells[3].textContent + ":" + selRow.getAttribute("DATA3");
-		            else
-		                window.returnValue = selRow.getAttribute("DATA2") + ":" + selRow.cells[2].textContent + ":" + selRow.getAttribute("DATA3");
-		        }
+		        
 		        window.close();
 		    }
 		    

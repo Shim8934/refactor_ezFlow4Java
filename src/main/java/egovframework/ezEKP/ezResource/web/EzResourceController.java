@@ -655,7 +655,7 @@ public class EzResourceController extends EgovFileMngUtil {
 		logger.debug("brdCount=" + brdCount);
 		
 		for (int i = 0; i < brdCount; i++) {
-			childBrdBld.append(list.get(i).getBrd_ID() + "/" + list.get(i).getBrd_Nm() + "/" + list.get(i).getApproveFlag() + "|");
+			childBrdBld.append(list.get(i).getBrd_ID() + "/" + list.get(i).getBrd_Nm() + "/" + list.get(i).getApproveFlag() + "/" + list.get(i).getRes_max_user_cnt() + "|");
 		}
 		
 		ScheduleConfigVO scheduleConfigVO = ezScheduleService.getScheduleConfig(userInfo.getId(), userInfo.getTenantId());
@@ -864,6 +864,10 @@ public class EzResourceController extends EgovFileMngUtil {
 		model.addAttribute("returnFlag", strReturnFlag);
 		model.addAttribute("repeatFlag", strRepeatFlag);
 		
+		// 2024-08-26 유길상 - 최대 예약 가능 기간, 정원
+		model.addAttribute("resMaxDate", resBrd.getResMaxDate());
+		model.addAttribute("resMaxUserCnt", resBrd.getResMaxUserCnt());
+		
 		return "/ezResource/resViewClsItem";
 	}
 	
@@ -920,6 +924,11 @@ public class EzResourceController extends EgovFileMngUtil {
 		String strReturnFlag = "";
 		// 반복예약허용 flag
 		String strRepeatFlag = "";
+		
+		// 2024-08-26 유길상 - 최대 예약 가능 기간 , 정원
+		String strResMaxDate = "";
+		String strResMaxUserCnt = "";
+		
 		List<OrganUserVO> ownerListVO;
 		
 		if (req.getParameter("brdID") != null) {
@@ -983,6 +992,10 @@ public class EzResourceController extends EgovFileMngUtil {
 			strReturnFlag = resBrd.getReturnFlag();
 			strRepeatFlag = resBrd.getRepeatFlag();
 			
+			// 2024-09-02 유길상 - 최대 예약 가능 기간, 정원
+			strResMaxDate = resBrd.getResMaxDate();
+			strResMaxUserCnt = resBrd.getResMaxUserCnt();
+			
 			List<String> attachList = ezResourceService.getAttachList(brdID, userInfo.getCompanyID(), userInfo.getTenantId());
 
 			for(int i=0; i<attachList.size(); i++) {
@@ -1014,6 +1027,10 @@ public class EzResourceController extends EgovFileMngUtil {
 		model.addAttribute("attachFileNameMaxLength", attachFileNameMaxLength);
 		model.addAttribute("returnFlag", strReturnFlag);
 		model.addAttribute("repeatFlag", strRepeatFlag);
+		
+		// 2024-09-02 유길상 - 최대 예약 가능 기간, 정원
+		model.addAttribute("resMaxDate", strResMaxDate);
+		model.addAttribute("resMaxUserCnt", strResMaxUserCnt);
 		
 		return "/ezResource/resModClsItem";
 	}
@@ -1358,6 +1375,10 @@ public class EzResourceController extends EgovFileMngUtil {
 		model.addAttribute("timeZoneStr", timeZoneStr);
 		model.addAttribute("startDay", startDay);
 		model.addAttribute("adminCKFlag", adminCKFlag);
+		
+		// 2024-08-26 유길상 - 최대 예약 가능 기간
+		model.addAttribute("resMaxDate", resBrd.getResMaxDate());
+		model.addAttribute("resMaxUserCnt", resBrd.getResMaxUserCnt());
 		
 		return "/ezResource/resScheduleMain";
 	}
@@ -1877,6 +1898,10 @@ public class EzResourceController extends EgovFileMngUtil {
 		model.addAttribute("endDateTimeRepeat", endDateTimeRepeat);
 		model.addAttribute("useSchedule", useSchedule);
 		
+		// 2024-09-02 유길상 - 최대 예약 가능 기간, 정원
+		model.addAttribute("resMaxDate", resBrdVO.getResMaxDate());
+		model.addAttribute("resMaxUserCnt", resBrdVO.getResMaxUserCnt());
+		
 		if (reFlag.equals("1")) {
 			model.addAttribute("strTmpReFlagVal", "2");
 			model.addAttribute("strDspMod1", "style='display:none'");
@@ -1934,10 +1959,12 @@ public class EzResourceController extends EgovFileMngUtil {
 	 * 자원관리 자원 반복 등록 화면 호출 함수
 	 */
 	@RequestMapping(value = "/ezResource/scheduleRepetition.do", method = RequestMethod.GET)
-	public String scheduleRepetition(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
+	public String scheduleRepetition(@CookieValue("loginCookie") String loginCookie, Model model, @RequestParam String resMaxDate) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		model.addAttribute("userInfo", userInfo);
+		// 2024-09-02 유길상 - 최대 예약 가능 기간 정보 추가
+		model.addAttribute("resMaxDate", resMaxDate);
 		return "/ezResource/resScheduleRepetition";
 	}
 	
@@ -3068,7 +3095,7 @@ public class EzResourceController extends EgovFileMngUtil {
         return "json";
     }
 	
-	@RequestMapping(value = "/ezResource/checkApprovalFlag.do", method = RequestMethod.GET, produces="text/xml; charset=utf-8")
+	@RequestMapping(value = "/ezResource/checkApprovalFlag.do", method = RequestMethod.GET, produces="application/json; charset=utf-8")
 	@ResponseBody
 	public String checkApprovalFlag(HttpServletRequest request, LoginVO userInfo, @CookieValue("loginCookie") String loginCookie) throws Exception {
 		logger.debug("checkApprovalFlag Start");
@@ -3477,4 +3504,16 @@ public class EzResourceController extends EgovFileMngUtil {
         logger.debug("repeatFlagCheck end");
         return result;
     }
+	
+	// 2024-08-09 유길상 - 자원관리 > 자원등록 > 최대 예약 가능 기간 조회
+	@RequestMapping(value = "/ezResource/checkResoruceMaxDate.do", method = RequestMethod.POST, produces="text/json; charset=utf-8")
+	@ResponseBody
+	public String checkResoruceMaxDate(HttpServletRequest request, LoginVO userInfo, @CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> requestBody) throws Exception {
+		logger.debug("checkResoruceMaxDate Start");
+		String brdId = requestBody.get("brdId") != null ? (String) requestBody.get("brdId") : null;
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		logger.debug("checkResoruceMaxDate end");
+		return ezResourceService.getBrdResMaxDate(brdId, userInfo.getCompanyID(), userInfo.getTenantId());
+	}
 }

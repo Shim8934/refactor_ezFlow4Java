@@ -33,6 +33,8 @@ import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import egovframework.let.utl.rest.JgwResult;
+import egovframework.let.utl.rest.Result;
 import egovframework.ezEKP.ezOrgan.service.impl.EzOrganAdminServiceImpl;
 import org.apache.commons.lang3.BooleanUtils;
 import egovframework.ezEKP.ezOrgan.vo.OrganAuth;
@@ -322,7 +324,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
     		ezCommonService.addViewTaskOldFlag(); // 2021-08-31 홍승비 - 전자결재 분류코드체계 뷰에 삭제여부(OLDFLAG) 칼럼 추가 (VTASKCLASS, SVTASKCLASS)
     		ezCommonService.insertReceiptHistoryListoption();	// 2022-02-16 정주환 - 수신이력 확인 listoption 추가
 			ezCommonService.insertOpinionGB(); // 2023-06-26 민지수 - 전자결재 > 완료문서 의견타입 추가의견 추가
-			ezCommonService.updateWebFolderAndApprovalCheckPermissionCode(); // 2023-10-05 전인하 - 권한 코드 변경으로 인하여 기존 데이터를 새 코드로 변경
+//			ezCommonService.updateWebFolderAndApprovalCheckPermissionCode(); // 2023-10-05 전인하 - 권한 코드 변경으로 인하여 기존 데이터를 새 코드로 변경
 			ezCommonService.insertPortalMenuChinese(); // 2023-11-22 조소정 - 포탈 > 기본 탑메뉴 중국어 버전 추가
 			ezCommonService.insertPortletNameChinese(); // 2023-11-22 조소정 - 포탈 > 기본 포틀릿명 중국어 버전 추가
 			ezCommonService.insertLoadTimeForApprAllConfig(); // 2024-01-11 김우철 - 다안기안 문서 표출 시 글꼴, 스크롤 오류를 해결하기 위한 setTimeout 시간
@@ -390,7 +392,10 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			ezCommonService.createTblBoardModifyHistory(); // 2024-12-05 한태훈 - 게시판 > 게시판 버전관리 테이블 추가
 			ezCommonService.addBoardContentSize(); // 2025-06-16 이혜림 - 게시판 > 본문 크기 컬럼 추가
             ezCommonService.updateMobilePortletMenuId(); // 2024-09-20 황인경 - 모바일 메뉴 권한 별도
-		} catch (Exception e) {
+			ezCommonService.alterTblRsBrdResMaxDate(); // 2024-08-27 유길상 - 자원관리 > 자원등록 > 최대 예약 가능 기간 컬럼 추
+			ezCommonService.alterTblRsBrdResMaxUserCnt(); // 2024-08-27 유길상 - 자원관리 > 자원등록 > 정원 컬럼 추가
+			ezCommonService.addBoardNotUsedFlag(); // 2023-10-30 조소정 - 게시판 사용안함 여부 컬럼 추가
+    	} catch (Exception e) {
     		logger.error(e.getMessage(), e);
     	}
     	logger.debug("init ended.");
@@ -2157,6 +2162,16 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 
 				// 이메일 시스템에 계정을 생성한다.
 				int rc = ezEmailUserAdminService.addUser(mailAddr, vo.getPassword());
+
+				// [국립암센터] POP3/IMAP 사용 설정
+				String usePOP3Default = ezCommonService.getTenantConfig("usePOP3Default", tenantID);
+				String useIMAPDefault = ezCommonService.getTenantConfig("useIMAPDefault", tenantID);
+
+				JgwResult jgwResult = rest.jgw().url("/jMochaEzEmail/setPOP3IMAPConfig")
+						.formParam("user_name", mailAddr)
+						.formParam("usePOP3Default", usePOP3Default)
+						.formParam("useIMAPDefault", useIMAPDefault)
+						.exchangeJgwResult();
 				
 				logger.debug("addUser rc=" + rc);
 				
@@ -3571,6 +3586,16 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			int rc = ezEmailUserAdminService.restoreUser(mailAddr);
 			
 			logger.debug("restoreUser rc=" + rc);
+
+			// [국립암센터] POP3/IMAP 사용 설정
+			String usePOP3Default = ezCommonService.getTenantConfig("usePOP3Default", tenantID);
+			String useIMAPDefault = ezCommonService.getTenantConfig("useIMAPDefault", tenantID);
+
+			JgwResult jgwResult = rest.jgw().url("/jMochaEzEmail/setPOP3IMAPConfig")
+					.formParam("user_name", mailAddr)
+					.formParam("usePOP3Default", usePOP3Default)
+					.formParam("useIMAPDefault", useIMAPDefault)
+					.exchangeJgwResult();
 			
 			if (rc == 0) { // restoreUser 성공				
 				// 지정된 부서의 Group Email 주소에 해당 User를 추가한다.
@@ -4073,32 +4098,31 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	public String configPop3Imap(@CookieValue("loginCookie") String loginCookie,
 			HttpServletRequest req, Model model) throws Exception {
 		logger.debug("configPop3Imap started.");
-		
-		String returnValue = "ERROR";
-		
+
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
 		if (userInfo == null) {
 			return "cmm/error/adminDenied";
 		}
-		
-		int tenantIdNum = userInfo.getTenantId();
 		String userId = req.getParameter("userId");
-		String propertyName = "disablePopImap";
-		
-		String propertyValue = ezCommonService.getUserConfigInfo(tenantIdNum, userId, propertyName);
-		
-		if (!propertyValue.equals("")) {
-			returnValue = "SUCCESS";
-			model.addAttribute("propertyValue" , propertyValue);
-		} else {
-			returnValue = "NODATA";
+		String tenantDomain = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
+		String address = userId + "@" + tenantDomain;
+		String requestURL = "/jMochaEzEmail/getPOP3IMAPConfig";
+		String inputParams = "user_name=" + address;
+		String getResult = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + requestURL, inputParams);
+
+		JSONParser parser = new JSONParser();
+		JSONObject responseObj = (JSONObject)parser.parse(getResult);
+
+		if (("OK").equals(responseObj.get("resultCode"))) {
+			JSONObject result = (JSONObject) responseObj.get("result");
+
+			String popEnabled = (String) result.get("pop_enabled");
+			String imapEnabled = (String) result.get("imap_enabled");
+
+			model.addAttribute("popEnabled", popEnabled);
+			model.addAttribute("imapEnabled", imapEnabled);
 		}
-				
-		String defaultForDisablePopImap = ezCommonService.getTenantConfig("defaultForDisablePopImap", userInfo.getTenantId());
-		
-		model.addAttribute("result", returnValue);
-		model.addAttribute("defaultForDisablePopImap", defaultForDisablePopImap);
-		
+
 		logger.debug("configPop3Imap ended.");
 		
 		return "admin/ezOrgan/configPopImap";
@@ -4107,41 +4131,37 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	/**
 	 * POP3/IMAP 설정된 값을 추가 및 수정 한다.
 	 */
-	@RequestMapping(value = "/admin/ezOrgan/setUseDisablePop3Imap.do", method = RequestMethod.POST)
+	@RequestMapping(value = "/admin/ezOrgan/updatePOP3IMAPConfig.do", method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseEntity<String> setUseDisablePop3Imap(@CookieValue("loginCookie") String loginCookie
+	public Result updatePOP3IMAPConfig(@CookieValue("loginCookie") String loginCookie
 			, HttpServletRequest req) throws Exception	 {
-		
-		logger.debug("setUseDisablePop3Imap started.");
-		
-		String returnValue = "ERROR"; 
-		
+
+		logger.debug("updatePOP3IMAPConfig started.");
+
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
 
 		if (userInfo == null) {
-			logger.debug("setUseDisablePop3Imap accessDenied.");
+			logger.debug("updatePOP3IMAPConfig accessDenied.");
 
-			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+			return Result.failure();
 		}
-		
-		int tenantIdNum = userInfo.getTenantId();
+
 		String userId = req.getParameter("userId");
-		String propertyValue = req.getParameter("propertyValue");
-		String propertyName = req.getParameter("propertyName");
-		
-		String getPropertyValue = ezCommonService.getUserConfigInfo(tenantIdNum, userId, propertyName);
-		
-		if (!getPropertyValue.equals("")) {
-			ezCommonService.updateUserConfigInfo(tenantIdNum, userId, propertyName, propertyValue);
-			returnValue = "SUCCESS";
-		} else {
-			ezCommonService.insertUserConfigInfo(tenantIdNum, userId, propertyName, propertyValue);
-			returnValue = "SUCCESS";
-		}
-		
-		logger.debug("setUseDisablePop3Imap ended.");
-		
-		return ResponseEntity.ok().body(returnValue);
+		String tenantDomain = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
+		String address = userId + "@" + tenantDomain;
+
+		String usePop3 = req.getParameter("usePop3");
+		String useImap = req.getParameter("useImap");
+
+		JgwResult jgwResult = rest.jgw().url("/jMochaEzEmail/updatePOP3IMAPConfig")
+				.formParam("user_name", address)
+				.formParam("usePOP3", usePop3)
+				.formParam("useIMAP", useImap)
+				.exchangeJgwResult();
+
+		logger.debug("updatePOP3IMAPConfig ended.");
+
+		return jgwResult.succeeded() ? Result.successWithCode(jgwResult.getReasonCode()) : Result.failure();
 	}
 	
 	/**

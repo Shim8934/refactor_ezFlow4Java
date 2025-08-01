@@ -41,6 +41,11 @@
 							<div class='custom_radio'>
 								<span class="inf-spanTxt"><input id="anonymousSpan1" type="radio" name="anonymousSpan" value="0" checked><label for="anonymousSpan1"><spring:message code="ezSurvey.t47"/></label></span>
 								<span class="inf-spanTxt"><input id="anonymousSpan2" type="radio" name="anonymousSpan" value="1"><label for="anonymousSpan2"><spring:message code="ezSurvey.t48"/></label></span>
+                                <span class="inf-spanTxt" title="<spring:message code='ezSurvey.yjh18'/>">(&nbsp;<spring:message code="ezSurvey.yjh17"/>&nbsp;:&nbsp;
+                                    <input id="userExposedSpan1" type="radio" name="userExposedSpan" value="1" checked><label for="userExposedSpan1"><spring:message code="ezSurvey.t42"/></label>
+                                    <input id="userExposedSpan2" type="radio" name="userExposedSpan" value="0"><label for="userExposedSpan2"><spring:message code="ezSurvey.t43"/></label>
+								&nbsp;)
+							</span>
 							</div>
 						</div>
 					</td>

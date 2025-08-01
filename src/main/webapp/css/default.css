@@ -2956,8 +2956,8 @@ h2, #menu span {font-size: 12px;}
 .surveyTbl .statusTh {width: 80px; text-align: center;}
 .surveyTbl .noTh   {width: 20px; text-align: center;}
 .surveyTbl .ttlTh  {width: 60%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;}
-.surveyTbl .createTh {width: 15%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-align: center;}
-.surveyTbl .endDateTh {width: 15%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-align: center;}
+.surveyTbl .createTh {width: 16%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-align: center;}
+.surveyTbl .endDateTh {width: 16%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-align: center;}
 .surveyTbl .anoynmTh, .surveyTbl .publicTh, .surveyTbl .targetTh {width: 80px; text-align: center;}
 .surveyTbl .statisTh {width: 40px;}
 .spanName, .selectedNode {height: 22px; line-height: 22px; color: #000; padding-top: 1px; font-size: 12px; vertical-align: top; cursor: pointer; background-image: none; background-attachment: scroll; background-repeat: repeat; background-position-x: 0%; background-position-y: 0%; background-color: transparent; margin-left: 2px; white-space: pre;}
@@ -3071,6 +3071,7 @@ h2, #menu span {font-size: 12px;}
 .txt-response {display: flex; align-items: center; min-height: 30px;}
 .txt-response >img {width: 40px; height: 40px; min-width: 40px; cursor: pointer; margin-right: 10px;}
 .txt-response >span {flex: 1; word-break: break-word; line-height: 1.4;}
+.txt-response .userInfoSpan {overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; padding-right: 8px;} /* 2025-07-15 전자설문 > 결과분석 > 주관식 결과보기 개선으로 추가 */
 .txt-respul {padding: 0px; list-style: none;}
 .txt-respul >li + li {padding-top: 10px; border-top: 1px dashed #ddd;}
 .txt-viewmore {padding: 4px 3px; margin-left: 8px; border: 1px solid #ddd; cursor: pointer;}
@@ -4359,3 +4360,18 @@ body.drag *{user-select:none !important;}
 .custom_radio input[type="radio"] + label + input[type="radio"]{margin-left: 20px !important;}
 .custom_checkbox input[type="checkbox"] + label{vertical-align: middle;} 
 .menuIcon div.custom_radio{border: none} 
+
+/* 2025-06-17 문희수 - 메일태그 리스트 CSS 추가 */
+.tagArea{width: 215px !important;}
+.tagUL{height: auto !important; max-height: 250px; overflow-y: auto !important; margin-top: 10px !important;}
+.tagUL label{cursor: pointer; vertical-align: top; display: inline-block; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; width: 165px; padding-top: 3px;}
+.tagUL li{height: 33px !important; line-height: 27px !important;}
+#mainmenu li.view_more .layer_select{padding: 7px 0;}
+#mainmenu li.view_more.on{color: #0470E4;}
+.tagUL input{height: auto !important; cursor: pointer; vertical-align: middle; margin-top: 5px;}
+.tagAdd{margin: 0 10px;}
+.tagArea{padding-top: 13px !important;}
+.tagArea .imgbtn{padding-left: 0;}
+.tagArea .imgbtn span{line-height: 23px !important;}
+.tagAdd input[type="text"]{width: 143px}
+.tag_btnSave{text-align: center; margin: 0 0 3px 0; border-top: 1px solid #f1f1f1; padding-top: 10px;}

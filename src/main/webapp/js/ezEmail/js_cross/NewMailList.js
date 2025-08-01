@@ -256,6 +256,7 @@ function MakeListInfoHTML(ConentObject) {
                 var p_mailIP = SelectSingleNodeValue(XmlRows[Cnt], "mailIP");
                 var p_countryName = SelectSingleNodeValue(XmlRows[Cnt], "countryName");
                 var p_mailConfirm = SelectSingleNodeValue(XmlRows[Cnt], "mailConfirm");
+                const tags = SelectSingleNodeValue(XmlRows[Cnt], "tags");
                 var recipients = [];
             	var recipientsLen = 1;
                 
@@ -271,6 +272,7 @@ function MakeListInfoHTML(ConentObject) {
                 _TR.setAttribute("_contentclass", p_ContentClass);
                 _TR.setAttribute("_isdraft", p_IsDraft);
                 _TR.setAttribute("securemail", p_SecureMail);
+                _TR.dataset.tags = tags;
                 
                 if (shareId != "" && deletePermission != "Y") {
                 	_TR.setAttribute("draggable", false);

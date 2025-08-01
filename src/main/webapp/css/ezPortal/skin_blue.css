@@ -340,3 +340,5 @@ nav .navUL li.on{color:#003497;}
 /* radio */
 .custom_radio input[type="radio"]::after {background-color: #003497;}
 .custom_radio input[type="radio"]:checked {border-color:#003497 !important;}
+
+#mainmenu li.view_more.on{color: #003497;}

@@ -171,6 +171,8 @@ public class BoardPropertyVO {
 	private String starRatingFlag;
 
 	private String versionManage;
+	/** 2023-11-02 조소정 - 게시판 사용안함 여부 플래그 추가 */
+	private String notUsedFlag;
 	
 	public int getSs_board_maxRows() {
 		return ss_board_maxRows;
@@ -678,5 +680,11 @@ public class BoardPropertyVO {
 
 	public void setVersionManage(String versionManage) {
 		this.versionManage = versionManage;
+	}
+	public String getNotUsedFlag() {
+		return notUsedFlag;
+	}
+	public void setNotUsedFlag(String notUsedFlag) {
+		this.notUsedFlag = notUsedFlag;
 	}
 }

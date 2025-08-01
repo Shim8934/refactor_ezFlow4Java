@@ -3560,4 +3560,37 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			logger.error(e.getMessage(), e);
 		}
 	}
+	
+	// 2024-08-27 유길상 - 자원관리 > 자원등록 > 최대 예약 가능 기간 컬럼 추가
+	public void alterTblRsBrdResMaxDate() {
+		try {
+			select("EzCommonDAO.checkTblRsBrdResMaxDate");
+		} catch (Exception e) {
+			logger.debug("TBL_RS_BRD RES_MAX_DATE column doesn't exist. creating the column...");
+			
+			update("EzCommonDAO.alterTblRsBrdResMaxDate");
+		}
+	}
+	
+	// 2024-08-27 유길상 - 자원관리 > 자원등록 > 최대 예약 가능 기간 컬럼 추가
+	public void alterTblRsBrdResMaxUserCnt() {
+		try {
+			select("EzCommonDAO.checkTblRsBrdResMaxUserCnt");
+		} catch (Exception e) {
+			logger.debug("TBL_RS_BRD RES_MAX_USER_CNT column doesn't exist. creating the column...");
+			
+			update("EzCommonDAO.alterTblRsBrdResMaxUserCnt");
+		}
+	}
+	
+	 /* 2023-10-30 조소정 - 게시판 사용안함 여부 컬럼 추가 */
+	 public void addBoardNotUsedFlag() throws Exception {
+		 try {
+			 select("EzCommonDAO.checkBoardNotUsedFlag");
+		 } catch (Exception e) {
+			 logger.debug("tbl_board_info notusedflag doesn't exist. creating the column...");
+	
+	         update("EzCommonDAO.addBoardNotUsedFlag");
+	     }
+	 }
 }

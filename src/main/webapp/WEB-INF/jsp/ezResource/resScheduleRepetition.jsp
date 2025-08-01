@@ -27,6 +27,9 @@
 			var sTimeTemp = "";
 		    var eTimeTemp = "";
 			
+	    	// 2024-09-12 유길상 -  최대 예약 가능 기간 
+	    	var resMaxDate = "${resMaxDate}";
+	    	
 		    function windows_close() {
 		        window.close();
 		    }
@@ -37,6 +40,11 @@
 	        	datepicker();        
 	        	allDayTime();
 	        	clearAllDay();
+	        	// 2024-09-12 유길상 - 최대 예약 가능 기간 유무에 따른 범위 > 다음 회수 반복 후 종료 기능 disabled
+	        	if (resMaxDate && resMaxDate != "0" && resMaxDate != "-") {
+	        		document.querySelector("#Instances").disabled = true;
+	        		document.querySelector("#list_ReCount").disabled = true;
+	        	}
 	    	}
 	    	
 	    	function KeEventControl(obj) {
@@ -60,14 +68,32 @@
 	        	};
 	    	}
 	    	
+	    	// 2024-09-12 유길상 - 최대 예약 가능 기간에 따른 끝날짜 datePicker maxDate 추가
+	    	function setEdatepickerLimits(startDate, resMaxDate, flag) {
+	    	    if (resMaxDate && resMaxDate != "0" && resMaxDate != "-") {
+	    	        var maxDate = startDate;
+	    	        maxDate.setDate(maxDate.getDate() + parseInt(resMaxDate - 1));
+	    	        
+	    	        if (flag == 0) {
+		    	        $("#Edatepicker").datepicker('setDate', new Date(startDate));
+	    	        }
+	    	        $("#Edatepicker").datepicker("option", "maxDate", maxDate);
+	    	    }
+	    	}
+	    	
 	    	function datepicker() {
+	    		// 2024-09-12 유길상 - 시작일 선택 이벤트를 통한 끝날짜 datePicker maxDate 추가
 		        $("#Sdatepicker").datepicker({
 	            	changeMonth: true,
 	            	changeYear: true,
 	            	autoSize: true,
 	            	showOn: "both",
 	            	buttonImage: "/images/ImgIcon/calendar-month.png",
-	            	buttonImageOnly: true
+	            	buttonImageOnly: true,
+	            	onSelect: function(selectedDate) {
+	            		var startDate = $("#Sdatepicker").datepicker('getDate');
+	    	        	setEdatepickerLimits(startDate, resMaxDate, 1);
+	            	}
 	        	});
 	        	$("#Edatepicker").datepicker({
 		            changeMonth: true,
@@ -75,9 +101,20 @@
 	    	        autoSize: true,
 	            	showOn: "both",
 	            	buttonImage: "/images/ImgIcon/calendar-month.png",
-	            	buttonImageOnly: true
+	            	buttonImageOnly: true,
+	            	onSelect : function(selectDate) {
+	            		console.log(selectDate)
+	            		var curDate = new Date(selectDate);
+	            		var startDate = $("#Sdatepicker").datepicker('getDate');
+	            		if (curDate < startDate) {
+	            			$("#Sdatepicker").datepicker('setDate', curDate);
+	            		}
+	            	}
 	        	});
-
+				
+	        	var startDate = new Date(m_dlgArgs["startTime"]);
+                setEdatepickerLimits(startDate, resMaxDate, 0);
+	        	
 	        	var SDate, EDate;
 	        	if (m_dlgArgs["alldaycheck"] == "1") {
 	        		try {

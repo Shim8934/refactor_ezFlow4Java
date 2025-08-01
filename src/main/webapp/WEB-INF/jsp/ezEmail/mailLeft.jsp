@@ -545,7 +545,9 @@
                     				var pageSrc = parent.frames["right"].document.location.toString();
             	                    
                     				if (pageSrc.indexOf("mailList.do") > -1) {
-                                    	parent.frames["right"].MailListRefresh();
+                    				    if (parent.frames["right"].searchMode != true){
+                    				        parent.frames["right"].MailListRefresh();
+                    				    }
             	                    }
                    				} catch (e) {console.log(e);}
 	                    		
@@ -1403,7 +1405,7 @@
 				});
 			}
 
-			function reloadTags() {
+			function reloadTags(additionalArgs) {
 				$.ajax({
 					cache: false,
 					method: "get",
@@ -1414,6 +1416,8 @@
 							alert(strLang321);
 							return;
 						}
+
+						parent.frames["right"].postMessage({ajaxUrl: 'getUserTagList', tags: result.data, ...additionalArgs});
 
 						var tags = result.data;
 						var tagtitleId = "tagtitle";

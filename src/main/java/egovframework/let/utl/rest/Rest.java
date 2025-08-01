@@ -120,6 +120,21 @@ public class Rest {
 			public String toString() {
 				StringBuilder sb = new StringBuilder();
 				for (Entry<String, Object> entry : entrySet()) {
+					if (entry.getValue() instanceof Iterable) {
+						//noinspection rawtypes
+						for (Object eachValue : (Iterable) entry.getValue()) {
+							if (sb.length() > 0) {
+								sb.append('&');
+							}
+							try {
+								sb.append(entry.getKey()).append('=').append(URLEncoder.encode(eachValue.toString(), "UTF-8"));
+							} catch (UnsupportedEncodingException e) {
+								logger.error(e.getMessage(), e);
+							}
+						}
+
+						continue;
+					}
 					if (sb.length() > 0) {
 						sb.append('&');
 					}

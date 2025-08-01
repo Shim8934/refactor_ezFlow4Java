@@ -759,6 +759,21 @@ public class MBoardGWController {
 			
 			/* 2018-07-03 홍승비 - 좌측메뉴 리스트 표시 시 companyID 조건 추가 */
 			List<MBoardTreeVO> list = mBoardService.getBoardTree(rootBoardID, mode, Integer.parseInt(subFlag), Integer.parseInt(selectBy), excludeBoardID, info);
+			
+			// 2024-10-25 조소정 - 각 게시판 관리자 권한 여부 추가
+			MOptionVO mobileInfo = mOptionService.optionInfo(userId, info.getTenantId());
+			String primary = commonUtil.getPrimaryData(mobileInfo.getLang(), info.getTenantId());
+			String deptPathCode = info.getUserId() + "," + mBoardService.getDeptPathCode(info.getDeptId(), info.getTenantId());
+			
+			List<MBoardTreeVO> listWithAuth = new ArrayList<>();
+
+			for (MBoardTreeVO mBoardTreeVO : list) {
+			    String boardId = mBoardTreeVO.getBoardId();
+			    
+			    MBoardInfoVO boardInfo = mBoardService.getBoardProperty(boardId, primary, info.getTenantId(), info.getUserId());
+			    listWithAuth = mBoardService.getBoardInfoByList(boardInfo, info.getRollInfo(), deptPathCode, info, list);
+			}
+			
 			/* 2018-07-03 홍승비 - 좌측메뉴 리스트 새게시물 카운트 표시 시 companyID 조건 추가 */
 			int listCount = mBoardService.getNewBoardListCount(userId, "", info.getCompanyId(), info.getTenantId(), "");
 			int listCount2 = mBoardService.getAllNewBoardListCount(userId, "", info.getCompanyId(), info.getTenantId(), "");
@@ -773,7 +788,7 @@ public class MBoardGWController {
 			
 			String myBoardScrapFlag = ezCommonService.getTenantConfig("MyBoardScrapFlag", info.getTenantId());
 
-			data.put("list", list);
+			data.put("list", listWithAuth);
 			data.put("listCount", listCount);
 			data.put("listCount2", listCount2);
 

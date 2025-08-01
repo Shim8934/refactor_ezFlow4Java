@@ -777,11 +777,11 @@
 		                                            	<input name="checkbox" type="checkbox" id="alldaycheck" onclick="allday_change()" value="1">
 														<label for="alldaycheck"><spring:message code='ezSchedule.t369'/></label>
 		                                            </div>
-	                                           		<input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly">
-	                                           		<input id="Stimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;" onkeypress="return KeEventControl(this);" onkeydown="return KeEventControl(this);" onkeyup="return KeEventControl(this);" onmousedown="return false"/>
+	                                           		<input type="text" id="Sdatepicker" style="width:90px;text-align:center" readonly="readonly">
+	                                           		<input id="Stimepicker" type="text" class="time" style="width:53px;margin-left:10px;text-align:center;" onkeypress="return KeEventControl(this);" onkeydown="return KeEventControl(this);" onkeyup="return KeEventControl(this);" onmousedown="return false"/>
 	                                            	~
-	                                            	<input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly">
-	                                            	<input id="Etimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;" onkeypress="return KeEventControl(this);" onkeydown="return KeEventControl(this);" onkeyup="return KeEventControl(this);" onmousedown="return false"/>
+	                                            	<input type="text" id="Edatepicker" style="width:90px;text-align:center" readonly="readonly">
+	                                            	<input id="Etimepicker" type="text" class="time" style="width:53px;margin-left:10px;text-align:center;" onkeypress="return KeEventControl(this);" onkeydown="return KeEventControl(this);" onkeyup="return KeEventControl(this);" onmousedown="return false"/>
 	                                            </span>
 	                                            <span id="repeatblock" style="DISPLAY: none"><spring:message code='ezSchedule.t343'/></span>
 	                                        </td>

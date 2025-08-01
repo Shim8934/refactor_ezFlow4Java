@@ -1808,13 +1808,13 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	}
 	
 	@Override
-	public List<BoardListVO> getBoardPortletInfo (String userId, int tenantId, String boardId, int itemCount, String companyId, String offset, boolean isQnANormal) throws Exception {
-		return getBoardPortletInfo(userId, tenantId, boardId, itemCount, companyId, offset, isQnANormal, 0);
+	public List<BoardListVO> getBoardPortletInfo (String userId, int tenantId, String boardId, int itemCount, String companyId, String offset, boolean isQnANormal, String useVersion) throws Exception {
+		return getBoardPortletInfo(userId, tenantId, boardId, itemCount, companyId, offset, isQnANormal, 0, useVersion);
 		
 	}
 	
 	@Override
-	public List<BoardListVO> getBoardPortletInfo(String userId, int tenantId, String boardId, int itemCount, String companyId, String offset, boolean isQnANormal, int startRow) throws Exception {
+	public List<BoardListVO> getBoardPortletInfo(String userId, int tenantId, String boardId, int itemCount, String companyId, String offset, boolean isQnANormal, int startRow, String useVersion) throws Exception {
 		logger.debug("getBoardPortletInfo started.");
 		Map<String, Object> map = new HashMap<String, Object>();
 		String nowDate = commonUtil.getTodayUTCTime("");
@@ -1826,13 +1826,14 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		map.put("userId", userId);
 		map.put("isQnANormal", isQnANormal ? "Y" : "N");
 		map.put("startRow", startRow);
+		map.put("useVersion", useVersion != null ? useVersion : "N");
 
 		logger.debug("getBoardPortletInfo ended.");
 		return ezNewPortalDAO.getBoardPortletInfo(map);
 	}
 	
 	@Override
-	public int getBoardPortletTotalCnt(String userId, int tenantId, String boardId, String companyId, String offset, boolean isQnANormal) throws Exception {
+	public int getBoardPortletTotalCnt(String userId, int tenantId, String boardId, String companyId, String offset, boolean isQnANormal, String useVersion) throws Exception {
 		logger.debug("getBoardPortletInfo started.");
 		Map<String, Object> map = new HashMap<String, Object>();
 		String nowDate = commonUtil.getTodayUTCTime("");
@@ -1841,6 +1842,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		map.put("nowDate", nowDate);
 		map.put("userId", userId);
 		map.put("isQnANormal", isQnANormal ? "Y" : "N");
+		map.put("useVersion", useVersion != null ? useVersion : "N");
 
 		logger.debug("getBoardPortletInfo ended.");
 		return ezNewPortalDAO.getBoardPortletTotalCnt(map);

@@ -2521,3 +2521,7 @@ div.orbit img{border-radius:5px;}
 .mainlist .custom_radio input[type="radio"]{vertical-align:inherit;}
 .custom_radio input[type="radio"] + label + input[type="radio"]{margin-left: 20px !important;}
 .custom_checkbox input[type="checkbox"] + label{vertical-align: middle;} 
+
+
+.contentlayout_none.topMenuBtnsOn {opacity: 1; transition: opacity 0.3s ease-in-out;}
+.contentlayout_none.topMenuBtnsOff {opacity: 0; transition: opacity 0.3s ease-in-out;}

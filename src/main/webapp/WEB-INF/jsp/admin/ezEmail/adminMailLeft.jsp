@@ -133,6 +133,9 @@
 					case 38:
 						url = "/admin/ezEmail/appr/main.do";
 						break;
+					case 39:
+						url = "/admin/ezEmail/adminConfigPOP3IMAP.do";
+						break;
 				}
 				window.open(url,"right");
 				
@@ -199,7 +202,12 @@
 				</h2>
 				<h2>
 					<span class="h2Title" onClick="goPage(3)" style="display:inline-block;width:100%;"><spring:message code='main.t58' /></span>
-				</h2>  
+				</h2>
+				</c:if>
+				<c:if test="${UseDisablePopImap == 'YES'}">
+					<h2>
+						<span onClick="goPage(39)" style="display:inline-block;width:100%;"><spring:message code='ezEmail.configPOP3IMAP' /></span>
+					</h2>
 				</c:if>
 				<h2>
 					<span class="h2Title" onClick="goPage(2)" style="display:inline-block;width:100%;"><spring:message code='main.t57' /></span>

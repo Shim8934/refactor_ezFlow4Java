@@ -1482,7 +1482,9 @@ function openergetDocInfo() {
         selRowChangeFlag = true;
         // page 유지를 위한 Flag 설정
         pChackYN = "TRUE";
-        if (contFlag == "END" && approvalFlag == 'G') {
+        if (LoadSquery == "usercontlist") {
+            GetUserContList();
+        } else if (contFlag == "END" && approvalFlag == 'G') {
             GetDocList("END");
         } else if (contFlag == "END" && approvalFlag == 'S') {
             GetDocSearch();

@@ -2128,4 +2128,240 @@ public class MBoardServiceImpl implements MBoardService {
 		return mBoardDAO.getAllNewBoardList(map);
 	}
 	
+	@Override
+	public List<MBoardTreeVO> getBoardInfoByList(MBoardInfoVO mBoardInfoVO, String rollInfo, String deptPathCode, MCommonVO info, List<MBoardTreeVO> list) throws Exception {
+		logger.debug("getBoardInfoByList started");
+
+		// 사용자 조직도 path 정보 만들기
+		String deptPath = deptPathCode;
+		StringBuilder deptPathOrgan = new StringBuilder();
+		List<String> addJobDeptList = new ArrayList<String>();
+		
+		/* 2019-09-24 홍승비 - 개인ID 이후, 부서ID 이전 위치에 직위+직책ID (사내겸직 직위 포함) 추가 */
+		String userJJID = ezBoardService.getUserJJID(info.getUserId(), info.getCompanyId(), info.getTenantId());
+		
+		for (int ch = 0; ch < deptPath.split(",").length; ch++) {
+			if (ch == 0) { // 0 : userID
+				deptPathOrgan.append(deptPath.split(",")[ch].trim());
+				deptPathOrgan.append(",").append(userJJID);
+			} else {
+				deptPathOrgan.append(",").append(deptPath.split(",")[deptPath.split("," ).length - (ch)].trim());
+			}
+		}
+		
+		// 권한 AccessID 체크 시 'everyone' 제거 (사용하지 않는 ID임)
+		String userDeptPath = deptPathOrgan.toString();
+		addJobDeptList.add(userDeptPath);
+
+		/* 2019-05-29 홍승비 - 현재 소속 회사의 사내겸직이 존재하면 사내겸직부서ID와 그 상위부서ID까지 권한체크에 포함하도록 수정 */
+		List<String> addJobList = getPDOAddJobDeptID(info.getUserId(), info.getCompanyId(), info.getTenantId());
+		StringJoiner addJobStr = new StringJoiner(",");
+		addJobStr.add(info.getDeptId());
+		if (addJobList != null && addJobList.size() > 0) {
+			for (int i = 0; i < addJobList.size(); i++) {
+				addJobStr.add(addJobList.get(i));
+				// 각 사내겸직부서ID에 대해 상위부서 ~ 회사ID를 전부 가져오는 루프 (Top까지 전부 가져오도록 한다.)
+				String upperDept = getUpperDeptID(addJobList.get(i), info.getTenantId());
+				
+				if (upperDept != null && !upperDept.equals("")) {
+					
+					boolean loopContinue = true;
+					StringJoiner upperDeptStr = new StringJoiner(",");
+					upperDeptStr.add(upperDept);
+					
+					while (loopContinue) {
+						String upperDeptLoop = getUpperDeptID(upperDept, info.getTenantId());
+						// 각 사내겸직의 최상위에 도달하면 루프 종료
+						if (upperDeptLoop != null && !upperDeptLoop.equals("")) {
+							upperDeptStr.add(upperDeptLoop);
+							upperDept = upperDeptLoop;
+						} else {
+							loopContinue = false;
+						}
+					}
+					addJobDeptList.add(addJobList.get(i) + "," + upperDeptStr.toString());
+				}
+			}
+		}
+		
+		// 접근 가능한 각 게시판에 대해 관리자 권한 체크
+		/* 2019-06-12 홍승비 - 게시판그룹의 관리자권한 체크를 위한 쿼리 파라미터 추가(게시판그룹의 관리자권한과 하위게시판의 관리자권한 혼용 방지) */
+		boolean isBoardGroup = false;
+		MBoardInfoVO orgBoardProp = getBoardProperty(mBoardInfoVO.getBoardID(), info.getPrimary(), info.getTenantId(), info.getUserId());
+		if (orgBoardProp != null) {
+			if (orgBoardProp.getBoardGroupID() != null && !orgBoardProp.getBoardGroupID().equals("")) { // 하위게시판
+				isBoardGroup = false;
+			} else { // 게시판그룹
+				isBoardGroup = true;
+			}
+		}
+		
+		List<MBoardInfoVO> boardACLListDept = new ArrayList<MBoardInfoVO>();
+		List<MBoardInfoVO> boardACLListJJ = new ArrayList<MBoardInfoVO>();
+		Set<String> userJJIDSet = new HashSet<String>(Arrays.asList(userJJID.split(",")));
+		
+		boolean isUserHasACL = false;
+		String tempDeptList = addJobStr.toString();
+		int addJobDeptListSize = addJobDeptList.size();
+		for (int jl = 0; jl < addJobDeptListSize; jl++) {
+			// 개인 권한이 존재하지 않는 경우에만 부서 경로에 대해 권한체크 루프
+			if (isUserHasACL == false) {
+				int addJobDeptListPathSize = addJobDeptList.get(jl).split(",").length;
+				for (int i = 0; i < addJobDeptListPathSize; i++) {
+					int isEqualDept = 0;
+					for (int j = 0; j < tempDeptList.split(",").length; j++) {
+						if(addJobDeptList.get(jl).split(",")[i].trim().equalsIgnoreCase(tempDeptList.split(",")[j])) {
+							isEqualDept = 1;
+							break; 
+						} else {
+							isEqualDept = 0;
+						}
+					}
+					
+					int isDept = isDeptChk(addJobDeptList.get(jl).split(",")[i].trim(), info.getTenantId());
+					
+					/* 2019-09-25 홍승비 - 동일한 ACCESSID에 대해 리스트로 리턴된 권한을 '허용'권한 기준으로 취합 */
+					// 개인 - 직위/직책 - 부서/회사 순으로 우선순위가 적용되고, 각 루프에서 가장 우선순위가 높은 권한을 찾으면 다음 루프로 빠져나감
+					MBoardInfoVO boardInfoTempNew = new MBoardInfoVO();
+					List<MBoardInfoVO> boardInfoTempList = getACLListNew(mBoardInfoVO.getBoardID(), addJobDeptList.get(jl).split(",")[i].trim(), info.getTenantId(), isDept, isEqualDept);
+					if (boardInfoTempList != null && boardInfoTempList.size() > 0) {
+						boardInfoTempNew = sumBoardACL(boardInfoTempList, boardInfoTempNew);
+					}
+					
+					/* 2019-09-25 홍승비 - 권한그룹을 포함하여 게시판그룹 관리자권한 체크 */
+					// 권한그룹 적용 시 개인권한이 다수 존재 가능하므로, 권한을 리스트로 가져온 뒤 '허용(OK)'기준으로 취합한다.
+					String boardGroupAdmin_FG_New = "";
+					List<String> boardGroupAdmin_FG_List = ezBoardService.checkIfBoardGroupAdminNew(mBoardInfoVO.getBoardID(), addJobDeptList.get(jl).split(",")[i].trim(), info.getTenantId(), isDept, isEqualDept, isBoardGroup);
+					if (boardGroupAdmin_FG_List != null && boardGroupAdmin_FG_List.size() > 0) { // 권한이 없으면 공백값을 유지 > 다음 루프 진행
+						if (boardGroupAdmin_FG_List.contains("OK")) { // 동일한 우선순위의 권한에 대해서, OK가 하나라도 존재한다면 OK로 판정
+							boardGroupAdmin_FG_New = "OK";
+						} else {
+							boardGroupAdmin_FG_New = "NO";
+						}
+					}
+					
+					// 사원 개인에 대해 권한이 존재한다면 바로 빠져나오고 해당 권한 그대로 사용함 (최우선순위 권한)
+					if (boardInfoTempList != null && boardInfoTempList.size() > 0) {
+						boardInfoTempNew.setBoardGroupAdmin_FG(boardGroupAdmin_FG_New);
+						
+						if (addJobDeptList.get(jl).split(",")[i].trim().equals(info.getUserId())) {
+							mBoardInfoVO.setAccessID(boardInfoTempNew.getAccessID());
+							mBoardInfoVO.setAccessLevel(boardInfoTempNew.getAccessLevel());
+							mBoardInfoVO.setAccess_(boardInfoTempNew.getAccess_());
+							mBoardInfoVO.setBoardGroupAdmin_FG(boardInfoTempNew.getBoardGroupAdmin_FG());
+							mBoardInfoVO.setBoardAdmin_FG(boardInfoTempNew.getBoardAdmin_FG());
+							mBoardInfoVO.setBoardGroupACL(boardInfoTempNew.getBoardGroupACL());
+							isUserHasACL = true;
+							break;
+						}
+						else if (userJJIDSet.contains(addJobDeptList.get(jl).split(",")[i].trim())) { // 직위, 직책 권한
+							boardACLListJJ.add(boardInfoTempNew);
+							isUserHasACL = false;
+							// 직위, 직책은 게시판그룹의 관리자권한 레코드를 전부 찾을때까지 break 하지 않는다.
+						}
+						else { // 부서, 회사의 권한
+							boardACLListDept.add(boardInfoTempNew);
+							isUserHasACL = false;
+							break;
+						}
+					}
+					else if (!boardGroupAdmin_FG_New.equals("")) { // 하위게시판에는 권한이 없고, 게시판그룹에 관리자권한이 존재하는 경우
+						MBoardInfoVO boardGroupAdminFG = new MBoardInfoVO();
+						if (boardGroupAdmin_FG_New.equals("OK")) {
+							boardGroupAdminFG.setBoardGroupAdmin_FG("OK");
+							boardGroupAdminFG.setAccess_("1");
+							
+							// 게시판그룹의 관리자 권한이 '허용'인 경우에만 추가하도록 한다.
+							if (addJobDeptList.get(jl).split(",")[i].trim().equals(info.getUserId())) { // 개인의 게시판그룹 관리자 권한
+								// 개인에 대하여 게시판그룹의 관리자 권한이 존재하므로, 루프를 벗어난다.
+								mBoardInfoVO.setBoardGroupAdmin_FG(boardGroupAdmin_FG_New);
+								isUserHasACL = true;
+								break; // 게시판그룹의 관리자 권한이 '허용'인 경우에만 루프를 break시킨다.
+							}
+							else if (userJJIDSet.contains(addJobDeptList.get(jl).split(",")[i].trim())) { // 직위, 직책의 게시판그룹 관리자  권한
+								boardGroupAdminFG.setAccessID(addJobDeptList.get(jl).split(",")[i]);
+								boardACLListJJ.add(boardGroupAdminFG);
+							}
+							else { // 부서, 회사의 게시판그룹 관리자  권한
+								boardGroupAdminFG.setAccessID(addJobDeptList.get(jl).split(",")[i]);
+								boardACLListDept.add(boardGroupAdminFG);
+								break;
+							}
+						} else {
+							boardGroupAdminFG.setBoardGroupAdmin_FG("NO");
+						}
+					}
+				}
+			}
+		}
+		
+		if (isUserHasACL == false) { // 개인 권한이 존재하지 않는 경우에만 권한 취합
+			if (boardACLListJJ.size() > 0) { // 직위, 직책권한 부여
+				mBoardInfoVO = sumBoardACL(boardACLListJJ, mBoardInfoVO);
+			} else { // 직위, 직책권한이 없다면 부서권한 부여
+				mBoardInfoVO = sumBoardACL(boardACLListDept, mBoardInfoVO);
+			}
+		}
+		
+		String boardGroupID = mBoardInfoVO.getBoardGroupID();
+		String guBun = mBoardInfoVO.getGuBun();
+		/* 2018-10-26 홍승비 - 게시판의 그룹게시판이 구분값 99인지 확인하여 게시판 boardInfo에 isAllGroupBoard값 셋팅 */
+		mBoardInfoVO.setIsAllGroupBoard("");
+		if (boardGroupID != null) {
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("boardID", boardGroupID);
+			map.put("primary", info.getPrimary());
+			map.put("tenantID", info.getTenantId());
+			
+			MBoardInfoVO strGroupProp = mBoardDAO.getBoardProperty(map);
+			if (strGroupProp.getGuBun() != null && strGroupProp.getGuBun().equals("99")) {
+				mBoardInfoVO.setIsAllGroupBoard("Y");
+			} else {
+				mBoardInfoVO.setIsAllGroupBoard("N");
+			}
+		} else if (guBun != null && guBun.equals("99")) { // 현재 접근한 게시판이 게시판 그룹인 경우
+			mBoardInfoVO.setIsAllGroupBoard("Y");
+		} else {
+			mBoardInfoVO.setIsAllGroupBoard("N");
+		}
+		
+	    if (mBoardInfoVO.getBoardID().equals("{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}")) {
+	    	mBoardInfoVO.setAccess_("1");
+	    	mBoardInfoVO.setAccess_FG("1");
+	    	mBoardInfoVO.setBoardAdmin_FG("false");
+		}
+	    /* 회사관리자, 게시관리자들은 '그룹사게시판이 아닌 경우에만' 고정된 관리자 권한을 갖는다. 전체관리자는 전부 관리자로 허용된다.*/
+	    else if (commonUtil.isAdmin(info.getUserId(), info.getTenantId(), rollInfo, "c") ||
+				(!mBoardInfoVO.getIsAllGroupBoard().equals("Y") && commonUtil.isAdmin(info.getUserId(), info.getTenantId(), rollInfo, "n;k"))) {
+	    	mBoardInfoVO.setAccess_("1");
+	    	mBoardInfoVO.setAccess_FG("1");
+			mBoardInfoVO.setBoardAdmin_FG("true");
+		} else if (mBoardInfoVO.getBoardGroupAdmin_FG() != null && mBoardInfoVO.getBoardGroupAdmin_FG().equals("OK")) {
+			mBoardInfoVO.setAccess_("1");
+			mBoardInfoVO.setAccess_FG("1");
+			mBoardInfoVO.setBoardAdmin_FG("true");
+		} else if (mBoardInfoVO.getBoardAdmin_FG() == null || mBoardInfoVO.getBoardAdmin_FG().equals("")) {
+			mBoardInfoVO.setAccess_("1");
+			mBoardInfoVO.setAccess_FG("1");
+			mBoardInfoVO.setBoardAdmin_FG("false");
+		}
+	    
+	    list = insertAdminAuth(list, mBoardInfoVO.getBoardID(), mBoardInfoVO.getBoardAdmin_FG());
+
+		logger.debug("getBoardInfoByList ended");
+		return list;
+	}
+
+	private List<MBoardTreeVO> insertAdminAuth(List<MBoardTreeVO> list, String boardID, String boardAdmin_FG) {
+		logger.debug("insertAdminAuth started");
+
+		for (MBoardTreeVO boardTreeVO : list) {
+	        if (boardTreeVO.getBoardId().equals(boardID)) {
+	            boardTreeVO.setBoardAdmin_FG(boardAdmin_FG);
+	        }
+	    }
+
+		logger.debug("insertAdminAuth ended");
+	    return list;
+	}
 }

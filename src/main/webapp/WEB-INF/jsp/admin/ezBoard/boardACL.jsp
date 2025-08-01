@@ -949,7 +949,7 @@
 		      </HEADER>
 		      <HEADER>
 		        <TYPE>NONE</TYPE>
-		        <NAME><spring:message code='ezBoard.t00052'/></NAME>
+		        <NAME><spring:message code='ezNotification.hth36'/></NAME>
 		        <WIDTH>20</WIDTH>
 		        <STYLE>text-align:center;border-top:0px;</STYLE>
 		        <SORTABLE>TRUE</SORTABLE>

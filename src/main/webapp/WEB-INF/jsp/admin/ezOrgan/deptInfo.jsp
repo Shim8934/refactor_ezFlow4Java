@@ -289,7 +289,7 @@
 	
 	        function selectDeptMasterComplete(rtnValue) {
 	        	if (typeof (rtnValue) != "undefined") {
-	            	document.getElementById("Manager").value = rtnValue;
+	            	document.getElementById("Manager").value = rtnValue.userId;
 	        	}
 	        }
 		    

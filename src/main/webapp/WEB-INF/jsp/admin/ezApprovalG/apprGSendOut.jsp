@@ -1680,6 +1680,9 @@
 		            var top = (parseInt(heigth) - 460) / 2;
 		            window.open("/ezApprovalG/ezLineInfo.do?docID=" + tr.getAttribute("DATA1") + "&deptID=&docState=015", "", "height=460px,width=1155px, left=" + left + "px, top=" + top + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
 		        }
+		        else {
+                    OpenAlertUI("<spring:message code='ezApprovalG.t632'/>");
+                }
 		    }
 		    function GetBujaeFlag() {
 		        var BString = arr_userinfo[7];

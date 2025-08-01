@@ -3735,6 +3735,7 @@ CREATE TABLE `tbl_board_boardinfo` (
   `ALLNEWBOARDFLAG` char(1) DEFAULT 'Y',
   `WRITERFLAG` varchar(2) DEFAULT 'N',
   `STARRATINGFLAG` varchar(1) DEFAULT NULL,
+  `NOTUSEDFLAG` varchar(2) NOT NULL DEFAULT 'N',
   PRIMARY KEY (`BOARDID`,`TENANT_ID`),
   KEY `idx_companyid` (`COMPANYID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -10939,6 +10940,8 @@ CREATE TABLE `tbl_rs_brd` (
   `RETURNFLAG` varchar(2) DEFAULT '0',
   `REPEATFLAG` varchar(2) DEFAULT '1',
   `TENANT_ID` mediumint(5) NOT NULL DEFAULT 0,
+  `RES_MAX_DATE` varchar(100) DEFAULT NULL,
+  `RES_MAX_USER_CNT` varchar(100) NOT NULL DEFAULT '0',
   PRIMARY KEY (`TENANT_ID`,`BRD_ID`,`BRD_COMPANY`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -14140,6 +14143,27 @@ CREATE TABLE `jmocha_appr_comp_history` (
   PRIMARY KEY (`TENANT_ID`,`MAIL_UID`,`USER_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+-- 
+-- Table structure for table `jmocha_mail_pop3imap`
+--
+DROP TABLE IF EXISTS `jmocha_mail_pop3imap`;
+CREATE TABLE `jmocha_mail_pop3imap` (
+    `user_name` varchar(100),
+    `pop_enabled` int(1) default 0,
+    `pop_since` datetime,
+    `pop_as_read` int(1) default 0,
+    `pop_keep_copy` int(1) default 0,
+    `pop_exclude_imported` int(1) default 0,
+    `imap_enabled` int(1) default 0,
+    CONSTRAINT `jmocha_mail_pop3imap_pk` PRIMARY KEY (`user_name`),
+    CONSTRAINT `jmocha_mail_pop3imap_fk` FOREIGN KEY (`user_name`) REFERENCES `james_user` (`user_name`) ON DELETE CASCADE,
+    CONSTRAINT `jmocha_mail_pop3imap_check` CHECK (`pop_enabled` IN ('0', '1')),
+    CONSTRAINT `jmocha_mail_pop3imap_check2` CHECK (`pop_as_read` IN ('0', '1')),
+    CONSTRAINT `jmocha_mail_pop3imap_check3` CHECK (`pop_keep_copy` IN ('0', '1')),
+    CONSTRAINT `jmocha_mail_pop3imap_check4` CHECK (`pop_exclude_imported` IN ('0', '1')),
+    CONSTRAINT `JMOCHA_MAIL_POP3IMAP_CHECK5` CHECK (`imap_enabled` IN ('0', '1'))
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 --
 -- Temporary view structure for view `vaprdoingdoclist`
 --
@@ -15801,20 +15825,20 @@ create table tbl_portal_portlet_company_size
     DEFAULT_FLAG tinyint(1)   default 0  not null comment '기본 사이즈 설정 여부',
     primary key (TENANT_ID, COMPANY_ID, PORTLET_ID, THEME_ID, SIZE_ID),
     constraint FK_tbl_portal_portlet_company_size_SIZE_ID
-        foreign key (SIZE_ID) references jmocha.tbl_portal_portlet_size (SIZE_ID)
+        foreign key (SIZE_ID) references tbl_portal_portlet_size (SIZE_ID)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 comment '회사별 포틀릿 사이즈 설정 테이블';
 
 create index IDX_TBL_PORTAL_PORTLET_COMPANY_SIZE_ID
-    on jmocha.tbl_portal_portlet_company_size (SIZE_ID);
+    on tbl_portal_portlet_company_size (SIZE_ID);
 
 create index tbl_portal_portlet_company_size_COMPANY_ID_index
-    on jmocha.tbl_portal_portlet_company_size (COMPANY_ID);
+    on tbl_portal_portlet_company_size (COMPANY_ID);
 
 create index tbl_portal_portlet_company_size_TENANT_ID_index
-    on jmocha.tbl_portal_portlet_company_size (TENANT_ID);
+    on tbl_portal_portlet_company_size (TENANT_ID);
 
 create index tbl_portal_portlet_company_size_THEME_ID_index
-    on jmocha.tbl_portal_portlet_company_size (THEME_ID);
+    on tbl_portal_portlet_company_size (THEME_ID);
 
 
 
@@ -15828,20 +15852,20 @@ create table tbl_portal_portlet_user_size
     SIZE_ID    int                     not null,
     primary key (USER_ID, TENANT_ID, COMPANY_ID, PORTLET_ID, THEME_ID),
     constraint FK_tbl_portal_portlet_user_size_tbl_portal_portlet_size_SIZE_ID
-        foreign key (SIZE_ID) references jmocha.tbl_portal_portlet_size (SIZE_ID)
+        foreign key (SIZE_ID) references tbl_portal_portlet_size (SIZE_ID)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 comment '사용자 별 포틀릿 사이즈 설정 테이블';
 
 create index IDX_TBL_PORTAL_PORTLET_USER_COMPANY
-    on jmocha.tbl_portal_portlet_user_size (COMPANY_ID);
+    on tbl_portal_portlet_user_size (COMPANY_ID);
 
 create index IDX_TBL_PORTAL_PORTLET_USER_ID
-    on jmocha.tbl_portal_portlet_user_size (USER_ID);
+    on tbl_portal_portlet_user_size (USER_ID);
 
 create index IDX_TBL_PORTAL_PORTLET_USER_PORTLET
-    on jmocha.tbl_portal_portlet_user_size (PORTLET_ID);
+    on tbl_portal_portlet_user_size (PORTLET_ID);
 
 create index IDX_TBL_PORTAL_PORTLET_USER_TENANT
-    on jmocha.tbl_portal_portlet_user_size (TENANT_ID);
+    on tbl_portal_portlet_user_size (TENANT_ID);
 
 --
 -- Table structure for table `TBL_PORTAL_TOP_USER`

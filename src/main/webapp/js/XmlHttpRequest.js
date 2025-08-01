@@ -1131,6 +1131,7 @@ function toggleHideLeftFrameButton() {
 var isHideLeftFrameButtonPressed = false;
 
 function hideLeftFrame(obj) {
+    if (window.location.href.includes('admin')) return;
     if (parent.document.getElementById("frameset") != null) {
         isHideLeftFrameButtonPressed = !isHideLeftFrameButtonPressed;
         var colsValue = parent.document.getElementById("frameset").cols;
@@ -1146,6 +1147,7 @@ function hideLeftFrame(obj) {
 }
 
 function hideLeftFrameOnResize() {
+    if (window.location.href.includes('admin')) return;
     if (parent.document.getElementById("frameset") != null) {
         // hideLeftFrame 함수에 의해 left frame이 숨겨질 때에도
         // resize 콜백이 실행되어 수동으로 사용자가 버튼을 누른 경우에 대한
@@ -1185,7 +1187,7 @@ window.addEventListener("load", function () {
         leftBtn.addEventListener("click", function() {
             hideLeftFrame(this);
         });
-
+        if (!window.location.href.includes('admin')) rightFrameDoc.body.insertBefore(leftBtn, rightFirstChild);
         rightFrameDoc.body.insertBefore(leftBtn, rightFirstChild);
     }
 
@@ -2482,6 +2484,8 @@ function resizableMenu(url) {
                 moreButtonWidth = remainingWidth * 0.8;
             } else if (url.indexOf("ezBoard") !== -1) {
                 moreButtonWidth = remainingWidth * 0.5;
+            } else if (url.indexOf("ezResource") !== -1) {
+                moreButtonWidth = remainingWidth * 0.7; 
             }
         } else {
             moreButtonWidth = remainingWidth * 0.6;
@@ -2518,7 +2522,7 @@ function resizableMenu(url) {
             moreButton.style.display = "none";
         }
         
-        if (url.includes("ezSurvey")) {
+        if (url.includes("ezSurvey") && !url.includes("showParticipantsList.do")) {
             SurveyItem.btnResize();
         } 
         if (url.includes("/ezResource/scheduleApprovList.do")) {

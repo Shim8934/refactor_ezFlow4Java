@@ -7,7 +7,15 @@ public class ResGetItemListVO {
 	private String brd_Nm;
 	/** 사용허가유무*/
 	private String approveFlag;
+	/** 정원 **/
+	private String res_max_user_cnt;
 	
+	public String getRes_max_user_cnt() {
+		return res_max_user_cnt;
+	}
+	public void setRes_max_user_cnt(String res_max_user_cnt) {
+		this.res_max_user_cnt = res_max_user_cnt;
+	}
 	public int getBrd_ID() {
 		return brd_ID;
 	}

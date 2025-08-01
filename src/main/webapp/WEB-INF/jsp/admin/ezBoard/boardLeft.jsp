@@ -297,6 +297,7 @@
 	        
 	        /* 2018-10-16 홍승비 - 관리자단에서 좌측게시판리스트 하위에 접근하는지 판단하는 플래그 추가  */
 	        function GetSubBoard(pRootBoardID, pSubFlag) {
+	            isAdminLeft = "Y";  // 2023-11-02 조소정 - 관리자단에서 접근했는지 판단하는 플래그 추가
 		    	var xmlhttp3 = createXMLHttpRequest();
 				var urlUtil = URLParamsUtils("/ezBoard/getSubBoards.do?");
 				var url = urlUtil.put("rootBoardID", pRootBoardID).put("subFlag", pSubFlag)

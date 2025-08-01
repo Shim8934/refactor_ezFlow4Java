@@ -224,6 +224,10 @@
 
 		function user_info_btn(){
 			var element = document.querySelector('.selected');
+			if (!element) {
+				alert("<spring:message code='ezResource.t169' />");
+				return;
+			}
 			user_info(element);
 		}
 

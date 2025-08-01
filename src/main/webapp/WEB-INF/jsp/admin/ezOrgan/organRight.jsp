@@ -1638,39 +1638,37 @@
 		    	try { OpenWin.focus(); } catch (e) { }
 				
 		    }
-		    
-		    
-		    function mod_pop3Imap_Complete(rtnValue) {
-		    	var propertyName = "disablePopImap";
-		    	
-		    	if (typeof (rtnValue) != "undefined") {
-		    		
-		    		var listview = new ListView();
-		    		listview.LoadFromID("lvUserList");
-		    		
-		    		var data = listview.GetSelectedRows()[0].getAttribute("DATA2");
-		    		
-		    		$.ajax({
-		    			url: "/admin/ezOrgan/setUseDisablePop3Imap.do",
-		    			type: "POST",
-		    			dataType: "text",
-		    			data: {userId : data, propertyValue : rtnValue,
-		    					propertyName : propertyName},
-		    			success: function(res) {
-		    				
-		    				if (res == "SUCCESS") {
-			    				alert("<spring:message code='ezOrgan.kyj03' />");
-		    				} else {
-		    					alert("<spring:message code='ezOrgan.kyj04' />");
-		    				}
-		    			},
-		    			error: function(){
-		    				alert("<spring:message code='ezOrgan.kyj04' />");
-		    			}
-		 
-		    		});
-		    	}
-		    }
+
+
+			function mod_pop3Imap_Complete(usePop3, useImap) {				
+				if (typeof (usePop3) != "undefined" && typeof (useImap) != "undefined") {
+					
+					var listview = new ListView();
+					listview.LoadFromID("lvUserList");
+
+					var data = listview.GetSelectedRows()[0].getAttribute("DATA2");
+
+					$.ajax({
+						url: "/admin/ezOrgan/updatePOP3IMAPConfig.do",
+						type: "POST",
+						data: {
+							userId : data,
+							usePop3 : usePop3,
+							useImap : useImap
+						},
+						success: function(result) {
+							if (result.status == "ok") {
+								alert("<spring:message code='ezOrgan.kyj03' />");
+							} else {
+								alert("<spring:message code='ezOrgan.kyj04' />");
+							}
+						},
+						error: function(){
+							alert("<spring:message code='ezOrgan.kyj04' />");
+						}
+					});
+				}
+			}
 
 			function moveDisplay(mode) {
 				if (mode) {

@@ -135,6 +135,8 @@
 		<result property="replyMailFg"			column="REPLY_MAIL_FG"		    columnIndex="23"		nullValue="0"/>
 		<result property="resLocation"			column="RESLOCATION"			columnIndex="24"		nullValue=""/>
 		<result property="approveFlag"			column="APPROVEFLAG"			columnIndex="25"/>
+		<result property="resMaxDate"			column="RES_MAX_DATE"			columnIndex="26"/>
+		<result property="resMaxUserCnt"		column="RES_MAX_USER_CNT"		columnIndex="27"/>
 	</resultMap>
 	
 	<resultMap class="ResBrdVO" 				   id="resBrdVO">
@@ -157,6 +159,8 @@
 		<result property="returnFlag"			column="RETURNFLAG"			columnIndex="17"/>
 		<result property="repeatFlag"			column="REPEATFLAG"			    columnIndex="18"/>
 		<result property="brdAccess"			column="BRD_ACCESS"			    columnIndex="19"/>
+		<result property="resMaxDate"			column="RES_MAX_DATE"			columnIndex="20"/>
+		<result property="resMaxUserCnt"		column="RES_MAX_USER_CNT"		columnIndex="21"/>
 	</resultMap>
 	
 	<resultMap class="ResGetScheduleVO" 		    id="resGetScheduleVO">
@@ -619,6 +623,7 @@
 			       WHEN'1' THEN BRD_NM
 			       ELSE BRD_NM2
 			    END BRD_NM,
+			    RES_MAX_USER_CNT,
 				APPROVEFLAG 
 			FROM
 				TBL_RS_BRD 
@@ -972,7 +977,7 @@
                 OWNERID,
                 CASE #v_lang# WHEN '2' THEN OWNERNM2 ELSE OWNERNM END AS OWNERNM,
                 CASE #v_lang# WHEN '2' THEN OWNERPOSITION2 ELSE OWNERPOSITION END AS OWNERPOSITION,
-                REPLY_MAIL_FG, RESLOCATION, APPROVEFLAG
+                REPLY_MAIL_FG, RESLOCATION, APPROVEFLAG, RES_MAX_DATE, RES_MAX_USER_CNT
 			FROM
 				TBL_RS_BRD  
 			WHERE
@@ -1028,7 +1033,9 @@
              	IFNULL(APPROVEFLAG, '0') APPROVEFLAG ,
              	IFNULL(RETURNFLAG, '0') RETURNFLAG ,
 				IFNULL(REPEATFLAG, '1') REPEATFLAG ,
-             	BRD_ACCESS 
+             	BRD_ACCESS ,
+             	RES_MAX_DATE ,
+             	RES_MAX_USER_CNT
         	FROM
         		TBL_RS_BRD 
 			WHERE
@@ -1141,7 +1148,9 @@
           		BRD_NM2 = #v_P_Brd_NM2#,
           		OWNDEPTNM2 = #v_P_ODeptNm2#,
           		OWNERNM2 = #v_P_OwnerNm2#,
-          		OWNERPOSITION2 = #v_P_OwnerPos2#
+          		OWNERPOSITION2 = #v_P_OwnerPos2#,
+          		RES_MAX_DATE = #v_P_ResMaxDate#,
+          		RES_MAX_USER_CNT = #v_P_ResMaxUserCnt#
     		WHERE
     			BRD_ID = #v_P_Brd_ID#
     		AND
@@ -1195,12 +1204,12 @@
 			INSERT INTO TBL_RS_BRD ( 
 				BRD_UPPER, OWNDEPTID, OWNDEPTNM, OWNERID, OWNERNM, OWNERPOSITION, OWNERCALL, BRD_NM, RESLOCATION, BRD_EXPLAIN, BRD_COMPANY, 
 				BRD_ID, BRD_GB, BRD_LEVEL, BRD_STEP, MAKEDATE, ATTACH_SIZE, BRD_GROUP, BRD_URL, BRD_ACCESS, BRD_POSTTERM, BRD_COUNT, BRD_REF, APPROVEFLAG, 
-				BRD_NM2, OWNDEPTNM2, OWNERNM2, OWNERPOSITION2, RETURNFLAG, REPEATFLAG, TENANT_ID
+				BRD_NM2, OWNDEPTNM2, OWNERNM2, OWNERPOSITION2, RETURNFLAG, REPEATFLAG, TENANT_ID, RES_MAX_DATE, RES_MAX_USER_CNT
 			)
         	VALUES ( 
         		#v_P_ClassGB#, #v_P_ODeptID#, #v_P_ODeptNm#, #v_P_OwnerID#, #v_P_OwnerNm#, #v_P_OwnerPos#, #v_P_OwnerCall#, #v_P_Brd_NM#, #v_P_ResLocation#, #v_P_Brd_Explain#, #v_P_CompanyID#, 
         		#v_Brd_ID#, #v_Brd_GB#, #v_Brd_Level#, #v_Brd_Step#, DATE_FORMAT(UTC_TIMESTAMP(),'%Y%m%d'), 20, 'A00', '', #v_Brd_Access#, 365, 0, 0, #v_P_Approve#,
-      			#v_P_Brd_NM2#, #v_P_ODeptNm2#, #v_P_OwnerNm2#, #v_P_OwnerPos2#, #v_P_Return#, #v_P_Repeat#, #tenantID#
+      			#v_P_Brd_NM2#, #v_P_ODeptNm2#, #v_P_OwnerNm2#, #v_P_OwnerPos2#, #v_P_Return#, #v_P_Repeat#, #tenantID#, #v_P_ResMaxDate#, #v_P_ResMaxUserCnt#
 			)
 		]]>		
 	</insert>
@@ -2729,9 +2738,7 @@
 			IFNULL(APPROVEFLAG, '0') APPROVEFLAG,
 			IFNULL(RETURNFLAG, '0') RETURNFLAG,
 			IFNULL(REPEATFLAG, '1') REPEATFLAG,
-			BRD_ACCESS,
-			RES_MAX_DATE,
-			RES_MAX_USER_CNT
+			BRD_ACCESS
 		FROM
 			TBL_RS_BRD
 		JOIN
@@ -2938,4 +2945,22 @@
 		AND 
 			TENANT_ID = #tenantID#
 	</delete>
+	
+	<select id="EzResourceDAO.selectResMaxDate" parameterClass="Map" resultClass="String">
+		SELECT
+			A.RES_MAX_DATE 
+		FROM
+			TBL_RS_BRD A
+		JOIN 
+			TBL_RS_SCHEDULE B
+		ON	
+			A.BRD_ID = B.OWNERID
+		WHERE
+    		B.OWNERID = #resourceID#
+    	AND
+    		B.TENANT_ID = #tenantID#
+    	AND
+    		B.COMPANYID = #companyID#
+    	LIMIT 1
+	</select>
 </sqlMap>

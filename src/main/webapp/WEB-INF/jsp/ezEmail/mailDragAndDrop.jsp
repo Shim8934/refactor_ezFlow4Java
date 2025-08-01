@@ -35,7 +35,8 @@
 		    var lstAttachLink = document.getElementById("lstAttachLink");
 		    var attachFileNameMaxLength = Number("${attachFileNameMaxLength}");
 		    var status = 0; // 일반-대용량 첨부파일 구분 상태값  
-            
+            const fileExtensions = '${useFileExtension}'.split(',');
+
             $(document).ready(function () {
                 if ($("#lstAttachLink").length > 0) {
                     $("#lstAttachLink").on("change", "input[type='checkbox'][name='fileSelect']", function () {
@@ -125,7 +126,29 @@
                         isbigyn = "Y";
                         status = 0;
                     }
-                    
+
+                    const fileListTemp = [];
+                    const blockedExtList = [];
+
+                    for (let f of filelist) {
+                        const ext = f.name.substring(f.name.lastIndexOf('.') + 1).toLowerCase();
+                        if (fileExtensions[0] !== '*' && fileExtensions.indexOf(ext) === -1) {
+                            blockedExtList.push(f.name);
+                        } else {
+                            fileListTemp.push(f);
+                        }
+                    }
+
+                    if (blockedExtList.length > 0 && status !== 1) {
+                        alert(strLang323 + '\n' + blockedExtList.join('\n'));
+                    }
+
+                    if (fileListTemp.length <= 0) {
+                        return;
+                    }
+
+                    filelist = fileListTemp;
+
                     for (var i = 0; i < filelist.length; i++) {
                         
                         // 2024.05.02 한슬기 : 파일명 글지수 체크 위치 변경

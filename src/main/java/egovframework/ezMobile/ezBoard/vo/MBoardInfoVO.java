@@ -144,6 +144,8 @@ public class MBoardInfoVO {
 	/** 게시판 > 평가하기 기능 사용여부 플래그 (Y/N) */
 	private String starRatingFlag;
 	
+	private String versionManage;
+	
 	@Override
 	public String toString() {
 		return "MBoardInfoVO [loginVO=" + loginVO + ", boardID=" + boardID
@@ -606,5 +608,12 @@ public class MBoardInfoVO {
 	}
 	public void setStarRatingFlag(String starRatingFlag) {
 		this.starRatingFlag = starRatingFlag;
+	}
+	
+	public String getVersionManage() {
+		return versionManage;
+	}
+	public void setVersionManage(String versionManage) {
+		this.versionManage = versionManage;
 	}
 }

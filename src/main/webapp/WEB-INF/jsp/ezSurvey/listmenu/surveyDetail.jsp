@@ -33,13 +33,19 @@
 	<script type="text/javascript" src="${util.addVer('/js/ezSurvey/jquery.ddslick.min.js')}"></script>
 	<script type="text/javascript" src="${util.addVer('ezSurvey.lang', 'msg'              )}"></script>
 	<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+	<script>
+		if ('2' == "<c:out value='${survey.useStatus}'/>" && 'N' == "<c:out value='${adminYN}'/>" && "<c:out value='${user}'/>" != "<c:out value='${creator.id}'/>") {
+			alert(SurveyMessages.strPauseMsg03);
+			window.close();
+		}		
+	</script>
 </head>
 	
 <body class="surveyBody">
 	<div class="header-wrapper">
 		<div class="surveydetail-header">
 			<ul class="on">	
-				<c:if test="${(finishYN eq 'N') && ((survey.draftFlag ne 1) && (participation eq 'yes') && (resStatus ne true) || (survey.multiAnswerFlag ne 0))}">
+				<c:if test="${(finishYN eq 'N') && (survey.draftFlag ne 1) && (participation eq 'yes') && ((resStatus ne true) || (survey.multiAnswerFlag ne 0)) && survey.useStatus != '2'}">
 					<li class="off"><span id="saveResult"><spring:message code="ezSurvey.t17"/></span></li>
 				</c:if>
 				<c:if test="${user == creator.id}">
@@ -47,8 +53,16 @@
 				</c:if>
 				<c:if test="${(finishYN eq 'N') && (user == creator.id || adminYN eq 'Y')}">
 					<li class="off"><span id="suvyEnd"><spring:message code="ezSurvey.endSurv01"/></span></li>
+					<c:choose>
+						<c:when test="${survey.useStatus == '1'}">
+							<li class="off"><span id="suvyPause"><spring:message code="ezSurvey.survPause"/></span></li>
+						</c:when>
+						<c:when test="${survey.useStatus == '2'}">
+							<li class="off"><span id="suvyResume"><spring:message code="ezSurvey.survResume"/></span></li>
+						</c:when>
+					</c:choose>
 				</c:if>
-				<c:if test="${(finishYN eq 'N') && (survey.draftFlag ne 1) && (participation eq 'yes') && (survey.multiAnswerFlag eq 0) && (resStatus eq true)}">
+				<c:if test="${(finishYN eq 'N') && (survey.draftFlag ne 1) && (participation eq 'yes') && (survey.multiAnswerFlag eq 0) && (resStatus eq true) && survey.useStatus != '2'}">
 					<li class="off"><span id="suvyUdt"><spring:message code="ezSurvey.t118"/></span></li>
 					<li class="off"><span id="suvyDel"><spring:message code="ezSurvey.t117"/></span></li>
 				</c:if>
@@ -61,8 +75,10 @@
 	
 	<ul id="upage-ul" class="upage-ul off" style="display: none;">
 		<li><span class="srvyInfo srvyInfo01"></span><span><spring:message code="ezSurvey.t32" /> : </span>
-			
 			<span><spring:message code="${survey.anonymousFlag == 1 ? 'ezSurvey.t48' : 'ezSurvey.t47'}"/></span>
+			<c:if test="${survey.anonymousFlag == 0}"><%--기명인 경우에만 참여자 공개여부 표출--%>
+				<span>(<spring:message code="ezSurvey.t105"/>&nbsp;<spring:message code="${survey.userExposedFlag == 1 ? 'ezSurvey.t42' : 'ezSurvey.t43'}"/>)</span>
+			</c:if>
 		</li>
 		<li><span class="srvyInfo srvyInfo02"></span><span><spring:message code="ezSurvey.t52" /> : </span>
 			<span><spring:message code="${survey.paritipateFlag == 1 ? 'ezSurvey.t54' : 'ezSurvey.t53'}"/></span>
@@ -640,6 +656,11 @@
 			/* 2025-06-13 양지혜 - 설문종료 버튼 */
 			var closeBttn = document.getElementById("suvyEnd");
 			if (closeBttn) {closeBttn.onclick = function(e) {endSurvey();};}
+			/* 설문 일시정지 */
+			var pauseBttn = document.getElementById("suvyPause");
+			var resumeBttn = document.getElementById("suvyResume");
+			if (pauseBttn) {pauseBttn.onclick = function(e) {pauseSurvey("P");};}
+			if (resumeBttn) {resumeBttn.onclick = function(e) {pauseSurvey("R");};}
 			
 			// 20.05.06 강승구 : 설문응답여부에 따른 처리 코드추가
 			checkQuestionAnswer();
@@ -878,8 +899,8 @@
 				case 5 : alert(SurveyMessages.strMultiple3) ; resposeObj.responses = []; break;
 				case 6 : alert(SurveyMessages.strNotResp)   ; resposeObj.responses = []; break;
 				case 7 : alert(SurveyMessages.strNotPeriod2); resposeObj.responses = []; break;
-				case 8 : 
-					alert(data.status == 'editing' ? SurveyMessages.strEditingErr01 : SurveyMessages.strDeletedErr); 
+				case 8 :
+					alert(data.status === 'editing' ? SurveyMessages.strEditingErr01 : (data.status === 'deleted' ? SurveyMessages.strDeletedErr : SurveyMessages.strPauseMsg04));
 					resposeObj.responses = []; 
 					refreshOpenerAndClose("Y"); 
 					break;
@@ -1539,6 +1560,28 @@
 		
 		if (resStatus && 'Y' == '${finishYN}') {
 			$('#prevQsAreaDIV input, #prevQsAreaDIV textarea, #prevQsAreaDIV select').prop('disabled', true).css('cursor', 'default');
+		}
+
+		/* 2025-07-01 양지혜 - 진행중설문 > 일시정지/일시정지해제 */
+		function pauseSurvey(type) {
+			var confirmTxt = type === "P" ? SurveyMessages.strPauseMsg01 : SurveyMessages.strResumeMsg01;
+			if (confirm(confirmTxt)) {
+				$.ajax({
+					type: "POST",
+					url: "/ezSurvey/pauseSurvey.do",
+					data: {surveyID : surveyId, type : type},
+					dataType: "text",
+					async: false,
+					success : function() {
+						alert(type === "P" ? SurveyMessages.strPauseMsg02 : SurveyMessages.strResumeMsg02);
+						window.opener.location.reload();
+						window.close();
+					},
+					error : function() {
+						alert(SurveyMessages.strError);
+					}
+				});
+			}
 		}
 	});
 	

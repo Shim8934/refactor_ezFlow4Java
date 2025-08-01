@@ -7053,8 +7053,13 @@
  				displayName,
  				department,
  				description,
-				to_number(mailboxquota) as mailboxquota,
-				to_number(mailboxusage) as mailboxusage,
+				NVL(to_number(mailboxquota), 0) AS mailboxquota,
+				NVL(to_number(mailboxusage), 0) AS mailboxusage,
+				to_number(mailboxusage)/1024 AS mailboxusage_kb,
+				CASE
+					WHEN to_number(mailboxquota) IS NULL OR to_number(mailboxquota) = 0 THEN 0
+					ELSE (to_number(mailboxusage)/to_number(mailboxquota))*100
+				END AS mailboxusage_rate,
 				displayName2,
 				description2,
 				0 as isRetire,
@@ -7093,8 +7098,13 @@
 					displayName,
 					department,
 					description,
-					CAST(mailboxquota AS UNSIGNED) as mailboxquota,
-					CAST(mailboxusage AS UNSIGNED) as mailboxusage,
+					NVL(to_number(mailboxquota), 0) AS mailboxquota,
+					NVL(to_number(mailboxusage), 0) AS mailboxusage,
+					to_number(mailboxusage)/1024 AS mailboxusage_kb,
+					CASE
+						WHEN to_number(mailboxquota) IS NULL OR to_number(mailboxquota) = 0 THEN 0
+						ELSE (to_number(mailboxusage)/to_number(mailboxquota))*100
+					END AS mailboxusage_rate,
 					displayName2,
 					description2,
 					1 as isRetire,
@@ -7116,7 +7126,8 @@
 				<include refid="EzOrganAdminDAO.searchQuery"/>
 				<include refid="EzOrganAdminDAO.searchForQuery"/>
 			</isEqual>
-			ORDER BY
+			)
+				ORDER BY
  			<isNotEmpty property="sortColumn">
 		    	<!--$orderbyData$,-->
 				<isEqual property="orderbyData" compareValue="displayName ASC">
@@ -7132,26 +7143,25 @@
 					department DESC,
 				</isEqual>
 				<isEqual property="orderbyData" compareValue="mailboxusage/1024 ASC">
-					mailboxusage/1024 ASC,
+					mailboxusage_kb ASC NULLS LAST,
 				</isEqual>
 				<isEqual property="orderbyData" compareValue="mailboxusage/1024 DESC">
-					mailboxusage/1024 DESC,
+					mailboxusage_kb DESC NULLS LAST,
 				</isEqual>
 				<isEqual property="orderbyData" compareValue="mailboxquota ASC">
-					mailboxquota ASC,
+					mailboxquota ASC NULLS LAST,
 				</isEqual>
 				<isEqual property="orderbyData" compareValue="mailboxquota DESC">
-					mailboxquota DESC,
+					mailboxquota DESC NULLS LAST,
 				</isEqual>
 				<isEqual property="orderbyData" compareValue="(MAILBOXUSAGE/MAILBOXQUOTA)*100 ASC">
-					(MAILBOXUSAGE/MAILBOXQUOTA)*100 ASC,
+					mailboxusage_rate ASC NULLS LAST,
 				</isEqual>
 				<isEqual property="orderbyData" compareValue="(MAILBOXUSAGE/MAILBOXQUOTA)*100 DESC">
-					(MAILBOXUSAGE/MAILBOXQUOTA)*100 DESC,
+					mailboxusage_rate DESC NULLS LAST,
 				</isEqual>
 		    </isNotEmpty>
  				displayName, cn
- 			)
 		<!-- 2024-09-13 김승연 mysql과 조회 결과를 동일하게 하기 위해 페이지네이션 처리 방식 변경 -->
  		<isNotEqual property="v_start" compareValue="-1">
 			OFFSET #v_start# ROWS FETCH NEXT #pageCount# ROWS ONLY

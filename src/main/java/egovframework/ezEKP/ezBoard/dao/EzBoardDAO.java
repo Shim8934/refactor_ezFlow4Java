@@ -1239,10 +1239,6 @@ public class EzBoardDAO extends EgovAbstractDAO{
 		return (BoardItemVO) select("EzBoardDAO.getFileViewerBoardItemID", map);
 	}
 
-	public String hasBoardItemFlag(HashMap<String, String> map) throws Exception {
-		return (String)select("EzBoardDAO.hasBoardItemFlag", map);
-	}
-
 	public boolean isPostDuplicated1(Map<String, Object> map) throws Exception {
 		int cnt = (int) select("EzBoardDAO.isPostDuplicated1", map);
 		return cnt > 0;

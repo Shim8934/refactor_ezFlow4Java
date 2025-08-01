@@ -37,7 +37,7 @@ import egovframework.let.user.login.vo.LoginVO;
 public interface EzEmailService {
 
 	public List<MailGeneralVO> getMailGeneral(int tenantId, String userId) throws Exception;
-	public void setMailGeneral(int tenantId, String userId, MailGeneralVO mailGeneral, String mode) throws Exception;
+	public void setMailGeneral(int tenantId, String userId, MailGeneralVO mailGeneral, String mode, String inMailBox) throws Exception;
 	public MailSignatureVO getMailSignature(int tenantId, String pUserID) throws Exception;
 	public void setMailSignature(int tenantId, String pUserID, String pUseFlag, String pContent1, String pContent2, String pContent3) throws Exception;
 	public MailColorVO getMailColor(int tenantId) throws Exception;

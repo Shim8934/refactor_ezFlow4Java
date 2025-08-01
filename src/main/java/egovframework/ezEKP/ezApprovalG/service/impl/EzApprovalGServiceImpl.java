@@ -1,7 +1,8 @@
 package egovframework.ezEKP.ezApprovalG.service.impl;
 
 import java.io.BufferedReader; 
-import java.io.ByteArrayInputStream; 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File; 
 import java.io.FileInputStream; 
 import java.io.FileNotFoundException; 
@@ -6563,21 +6564,24 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	
 	private byte[] loadFile(String filePath) throws IOException {
 		File file = new File(filePath);
-		byte[] buffer = new byte[(int) file.length()];
-		InputStream ios = null;
-		try {
-			ios = new FileInputStream(file);
-			ios.read(buffer);
-		} finally {
-			try {
-				if (ios != null) {
-					ios.close();
-				}
-			} catch (Exception e) {
-				logger.error(e.getMessage(), e);
-			}
-		}
-		return buffer;
+        long orgFileSize = file.length();
+        
+        byte[] content = null;
+        try(FileInputStream fis = new FileInputStream(file);
+            ByteArrayOutputStream baos = new ByteArrayOutputStream()){
+            byte[] buffer = new byte[8192];
+            int bytesRead;
+            while((bytesRead = fis.read(buffer)) != -1){
+                baos.write(buffer, 0, bytesRead);
+            }
+            content = baos.toByteArray();
+
+            if (orgFileSize != content.length) {
+                logger.debug("File size mismatch: expected {} bytes, but read {} bytes.", orgFileSize, content.length);
+            }
+        }
+
+		return content;
 	}
 	
 	private int addBinDataInDocInfo(HWPFile hwpFile, int streamIndex, BinDataCompress compressMethod, String imageFileExt) {
@@ -15892,7 +15896,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 			if (getChamJoLineList.size() > 0) {
 				for (int m = 0; m < getChamJoLineList.size(); m++) {
-					map.put("v_APRSTATE", staASmikyul);
+					map.put("v_APRSTATE", staASDaeGi);
 					
 					ezApprovalGDAO.updateChamJoLineState(map);
 					
@@ -28990,20 +28994,24 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 //					System.out.println(tableStyle.substring(tableStyle.indexOf("border-collapse"), tableStyle.indexOf(";", tableStyle.indexOf("border-collapse")) + 1));
 //					tableStyle = tableStyle.replace(tableStyle.substring(tableStyle.indexOf("border-collapse"), tableStyle.indexOf(";", tableStyle.indexOf("border-collapse")) + 1), "");
 //				}
-				
+                
+				tableStyle = " " + tableStyle;
+                tableStyle = tableStyle.replaceAll("WIDTH", "width");
+                tableStyle = tableStyle.replaceAll("HEIGHT", "height");
+                
 				if (!tableElement.hasAttr("width")) {
-					if (tableStyle.contains("width")) {
-						tableElement.attr("width_kaoni", tableStyle.substring(tableStyle.indexOf("width"), tableStyle.indexOf(";", tableStyle.indexOf("width"))).split(":")[1] );
-						tableStyle = tableStyle.replace(tableStyle.substring(tableStyle.indexOf("width"), tableStyle.indexOf(";", tableStyle.indexOf("width"))), "");
+					if (tableStyle.contains(" width")) {
+						tableElement.attr("width_kaoni", tableStyle.substring(tableStyle.indexOf(" width"), tableStyle.indexOf(";", tableStyle.indexOf(" width"))).split(":")[1] );
+						tableStyle = tableStyle.replace(tableStyle.substring(tableStyle.indexOf(" width"), tableStyle.indexOf(";", tableStyle.indexOf(" width"))), "");
 						tableElement.attr("style", tableStyle);
 					} 
 				} else {
-					if (tableStyle.indexOf("width") > -1) {
-						tableElement.attr("width_kaoni", tableStyle.substring(tableStyle.indexOf("width"), tableStyle.indexOf(";", tableStyle.indexOf("width"))).split(":")[1] );
-						tableStyle = tableStyle.replace(tableStyle.substring(tableStyle.indexOf("width"), tableStyle.indexOf(";", tableStyle.indexOf("width"))), "");
+					if (tableStyle.indexOf(" width") > -1) {
+						tableElement.attr("width_kaoni", tableStyle.substring(tableStyle.indexOf(" width"), tableStyle.indexOf(";", tableStyle.indexOf(" width"))).split(":")[1] );
+						tableStyle = tableStyle.replace(tableStyle.substring(tableStyle.indexOf(" width"), tableStyle.indexOf(";", tableStyle.indexOf(" width"))), "");
 						tableElement.attr("style", tableStyle);
 					} else {
-						tableElement.attr("width_kaoni", tableStyle.substring(tableStyle.indexOf("width"), tableStyle.indexOf(";", tableStyle.indexOf("width"))).split(":")[1]);
+						tableElement.attr("width_kaoni", tableStyle.substring(tableStyle.indexOf(" width"), tableStyle.indexOf(";", tableStyle.indexOf(" width"))).split(":")[1]);
 					}
 					tableElement.removeAttr("width");
 				}
@@ -29044,7 +29052,99 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			}
 			
 			logger.debug("table tag parsing ended");
-			
+
+			logger.debug("th tag parsing started");
+            
+			for (int k = 0; k < doc.getElementsByTag("th").size(); k++) {
+				Element thElement = doc.getElementsByTag("th").get(k);
+				String thStyle = thElement.attr("style");
+				if (thElement.hasAttr("align")) {
+					switch (thElement.attr("align").toLowerCase()) {
+					case "left":
+                    case "center":
+                    case "right":
+                    case "adjust":
+                        break;
+					default:
+						thElement.attr("align", "adjust");
+						break;
+					}
+				}
+				
+				if (thElement.hasAttr("text-align")) {
+					switch (thElement.attr("text-align").toLowerCase()) {
+					case "left":
+                    case "center":
+                    case "right":
+                    case "justify":
+                    case "char":
+                    	thElement.attr("align", thElement.attr("text-align"));
+                    	break;
+					default:
+						thElement.attr("align", "justify");
+						break;
+					}
+				}
+				
+				if (thElement.hasAttr("valign")) {
+					switch (thElement.attr("valign").toLowerCase()) {
+					case "top":
+                    case "middle":
+                    case "bottom":
+                    case "baseline":
+                        break;
+					default:
+						thElement.attr("valign", "baseline");
+						break;
+					}
+				}
+				
+				thStyle = " " + thStyle;
+                thStyle = thStyle.replaceAll("WIDTH", "width");
+                thStyle = thStyle.replaceAll("HEIGHT", "height");
+ 
+				if (!thElement.hasAttr("width")) {
+					if (thStyle.indexOf(" width") > -1) {
+						thElement.attr("width_kaoni", SizeConvertToMM(thStyle.substring(thStyle.indexOf(" width"), thStyle.indexOf(";", thStyle.indexOf(" width")))));
+						thStyle.replace(thStyle.substring(thStyle.indexOf(" width"), thStyle.indexOf(";", thStyle.indexOf(" width"))), "");
+						thElement.attr("style", thStyle);
+					} 
+				} else {
+					if (thStyle.indexOf(" width") > -1) {
+						thElement.attr("width_kaoni", SizeConvertToMM(thStyle.substring(thStyle.indexOf(" width"), thStyle.indexOf(";", thStyle.indexOf(" width")))));
+						thStyle.replace(thStyle.substring(thStyle.indexOf(" width"), thStyle.indexOf(";", thStyle.indexOf(" width"))), "");
+						thElement.attr("style", thStyle);
+					} else {
+						thElement.attr("width_kaoni", SizeConvertToMM(thElement.attr("width").trim()));
+					}
+					thElement.removeAttr("width");
+				}
+				
+				if (!thElement.hasAttr("height")) {
+					if (thStyle.indexOf("height") > 0) {
+						thElement.attr("height_kaoni", SizeConvertToMM(thStyle.substring(thStyle.indexOf("height"), thStyle.indexOf(";", thStyle.indexOf("height")))));
+						thStyle.replace(thStyle.substring(thStyle.indexOf("height"), thStyle.indexOf(";", thStyle.indexOf("height"))), "");
+						thElement.attr("style", thStyle);
+					} 
+				} else {
+					if (thStyle.indexOf("height") > 0) {
+						thElement.attr("height_kaoni", SizeConvertToMM(thStyle.substring(thStyle.indexOf("height"), thStyle.indexOf(";", thStyle.indexOf("height")))));
+						thStyle.replace(thStyle.substring(thStyle.indexOf("height"), thStyle.indexOf(";", thStyle.indexOf("height"))), "");
+						thElement.attr("style", thStyle);
+					} else {
+						thElement.attr("height_kaoni", SizeConvertToMM(thElement.attr("height").trim()));
+					}
+					thElement.removeAttr("height");
+				}
+				
+				if (thElement.hasAttr("style")) {
+					thElement.removeAttr("style");
+				}
+				
+			}
+
+			logger.debug("th tag parsing ended");
+            
 			logger.debug("td tag parsing started");
 			
 			for (int k = 0; k < doc.getElementsByTag("td").size(); k++) {
@@ -29092,15 +29192,17 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				}
 				
 				tdStyle = " " + tdStyle;
-				
+				tdStyle = tdStyle.replaceAll("WIDTH", "width");
+                tdStyle = tdStyle.replaceAll("HEIGHT", "height");
+
 				if (!tdElement.hasAttr("width")) {
-					if (tdStyle.indexOf(" width") > 0) {
+					if (tdStyle.indexOf(" width") > -1) {
 						tdElement.attr("width_kaoni", SizeConvertToMM(tdStyle.substring(tdStyle.indexOf(" width"), tdStyle.indexOf(";", tdStyle.indexOf(" width")))));
 						tdStyle.replace(tdStyle.substring(tdStyle.indexOf(" width"), tdStyle.indexOf(";", tdStyle.indexOf(" width"))), "");
 						tdElement.attr("style", tdStyle);
 					} 
 				} else {
-					if (tdStyle.indexOf(" width") > 0) {
+					if (tdStyle.indexOf(" width") > -1) {
 						tdElement.attr("width_kaoni", SizeConvertToMM(tdStyle.substring(tdStyle.indexOf(" width"), tdStyle.indexOf(";", tdStyle.indexOf(" width")))));
 						tdStyle.replace(tdStyle.substring(tdStyle.indexOf(" width"), tdStyle.indexOf(";", tdStyle.indexOf(" width"))), "");
 						tdElement.attr("style", tdStyle);
@@ -39245,23 +39347,26 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
         
         Map<String, String> upDeptInfo = ezApprovalGDAO.getUpperDeptInfo(map);
         
-        if (upDeptInfo.get("USEUPPERDEPTBOX") != null && upDeptInfo.get("USEUPPERDEPTBOX").equals("Y")) {
-            String upDeptUseUpperCheck = "Y";
-            String upperDeptCode = upDeptInfo.get("EXTENSIONATTRIBUTE1");
+        if (upDeptInfo == null) {
+            return new HashMap<String, String>();
+        } else {
+            if (upDeptInfo.get("USEUPPERDEPTBOX") != null && upDeptInfo.get("USEUPPERDEPTBOX").equals("Y")) {
+                String upDeptUseUpperCheck = "Y";
+                String upperDeptCode = upDeptInfo.get("EXTENSIONATTRIBUTE1");
             
-            while (upDeptUseUpperCheck.equals("Y")) {
-                map.put("pDeptID", upperDeptCode);
-                Map<String, String> tmpInfo = ezApprovalGDAO.getUpperDeptInfo(map);
-                upDeptInfo.put("upperDeptName", tmpInfo.get("DISPLAYNAME"));
-                if (tmpInfo.get("USEUPPERDEPTBOX").equals("Y")) {
-                    upperDeptCode = tmpInfo.get("EXTENSIONATTRIBUTE1");
-                } else {
-                    upDeptUseUpperCheck = "N";
-                    upDeptInfo.put("upperDeptCode", upperDeptCode);
+                while (upDeptUseUpperCheck.equals("Y")) {
+                    map.put("pDeptID", upperDeptCode);
+                    Map<String, String> tmpInfo = ezApprovalGDAO.getUpperDeptInfo(map);
+                    upDeptInfo.put("upperDeptName", tmpInfo.get("DISPLAYNAME"));
+                    if (tmpInfo.get("USEUPPERDEPTBOX").equals("Y")) {
+                        upperDeptCode = tmpInfo.get("EXTENSIONATTRIBUTE1");
+                    } else {
+                        upDeptUseUpperCheck = "N";
+                        upDeptInfo.put("upperDeptCode", upperDeptCode);
+                    }
                 }
             }
         }
-        
         logger.debug("getUpperDeptInfo ended");
         return upDeptInfo;
     }

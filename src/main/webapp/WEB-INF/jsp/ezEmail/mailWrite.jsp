@@ -394,9 +394,11 @@
 			    window.setInterval("Mail_AutoSave()", pSaveInterval);
 			
 			var ua = navigator.userAgent;
+			/* 맥사파리에서 메일쓰기창이 제대로 뜨지 않는 문제가 발생해 제거함
 			if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {
 			    document.getElementById("file1").multiple = false;
 			}
+			*/
 			
 // 			if (document.getElementById("eSubject").value == "") {
 // 			    document.getElementById("MsgTo").focus();
@@ -571,7 +573,7 @@
 //	        if (retVal != "0" && g_url != "" && ("${folderPath}" != "Draft" && g_cmd != "EDIT")) {
             // 회신, 전달시 저장을 한 경우 g_cmd가 EDIT로 변경되어 g_cmd가 EDIT일 때는 삭제가 수행되지 않도록 g_cmd != "EDIT" 조건을 추가함
             // 단, 예약메일 수정의 경우에는 무조건 삭제되어야 하므로 writeType.isReserve 조건을 추가함
-	        if (g_url && writetype.useSaveDrafts && !isDelted && (g_cmd != "EDIT" || writetype.isReserve)) { // 지우면 안됨: EDIT, EDIT_IN_DRAFTS
+	        if (g_url && !isDelted && (g_cmd != "EDIT" || writetype.isReserve)) { // 지우면 안됨: EDIT, EDIT_IN_DRAFTS
 				delDrafts();
 	        } else {
 	        	delAttachListFile(filedate);

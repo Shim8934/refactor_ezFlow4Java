@@ -198,6 +198,9 @@
 					case "noti":
 						window.parent.frames.right.document.location.href="/ezPersonal/notificationSetting.do";
 						break;
+					case "useSurvey":
+						window.parent.frames.right.document.location.href="/ezSurvey/surveyConfig.do";
+						break;
 					default: 
 						break;
 				}
@@ -372,7 +375,10 @@
 	                    </c:if>                                                         
 	                    <c:if test="${isPMSUsed == 'Y'}">                               
                            	<li><span class="list_text" id="ezPMSEnv" name="ezPMS" onClick="Open_Func(this)"><spring:message code='ezPMS.t171' /></span></li>
-	                    </c:if>                                                         
+	                    </c:if>
+						<c:if test="${isuseSurveyUsed == 'Y'}">
+							<li><span class="list_text" id="useSurvey" name="useSurvey" onClick="Open_Func(this)"><spring:message code='ezSurvey.t08' /></span></li>
+						</c:if>
 					</c:if>
 		        </ul>
 		        <h2><span class="sub_iconLNB tree_plus" ></span><span id="LOGINHIST" onClick="Open_Func(this)"><spring:message code='ezSystem.x0021' /></span></h2>

@@ -151,7 +151,7 @@ public class EzMainAdminController {
 		}
 
 		OrganAuth organAuth = commonUtil.makeOrganAuth(userInfo.getId(), userInfo.getTenantId(), userInfo.getDeptID(), userInfo.getJobId());
-		if (organAuth.isAuth(OrganAuth.AdminAuth.ADMIN_MASTER) || organAuth.isAuth(OrganAuth.AdminAuth.COMPANY_MANAGER) || organAuth.isAuth(OrganAuth.AdminAuth.WEB_FOLDER_MANAGER)) {
+		if (organAuth.isAuth(OrganAuth.AdminAuth.ADMIN_MASTER) || organAuth.isAuth(OrganAuth.AdminAuth.COMPANY_MANAGER)) {
 			model.addAttribute("admin", "admin");
 		} 
 		

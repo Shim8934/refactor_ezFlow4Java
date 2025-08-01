@@ -31,6 +31,7 @@
 		<result property="guBun" 					column="GUBUN" 						columnIndex="8"/>
 		<result property="url" 					    column="URL" 						columnIndex="9"/>
 		<result property="boardGroupAcl" 			column="BOARDGROUPACL" 				columnIndex="10"/>
+		<result property="notUsedFlag" 				column="NOTUSEDFLAG" 				columnIndex="11"/>
 	</resultMap>
 	
 	<resultMap id="getMyBoardTree_get3" class="MyFavoriteVO">
@@ -427,7 +428,8 @@
 		                    A.BoardColor BoardColor,
 		                    A.Gubun ,
 		                    A.url ,
-		                    '' BoardGroupACL
+		                    '' BoardGroupACL,
+		                    A.NotUsedFlag
 		           		FROM 
 		           			TBL_Board_BoardInfo A
 		          		WHERE
@@ -467,7 +469,8 @@
 		                    A.BoardColor BoardColor  ,
 		                    A.Gubun ,
 		                    A.url ,
-		                    B.BOARDGROUPACL BOARDGROUPACL
+		                    B.BOARDGROUPACL BOARDGROUPACL,
+		                    A.NotUsedFlag
 		                FROM 
 		                	TBL_Board_BoardInfo A
 		                JOIN 
@@ -541,7 +544,8 @@
 		                    A.BoardColor BoardColor  ,
 		                    A.Gubun ,
 		                    A.url ,
-		                    B.BOARDGROUPACL BOARDGROUPACL
+		                    B.BOARDGROUPACL BOARDGROUPACL,
+		                    A.NotUsedFlag
 		                FROM 
 		                	TBL_Board_BoardInfo A
 		                JOIN 
@@ -641,7 +645,8 @@
 	                    A.BoardColor BoardColor,
 	                    A.Gubun ,
 	                    A.url ,
-	                    '' BoardGroupACL
+	                    '' BoardGroupACL,
+	                    A.NotUsedFlag
 	           		FROM 
 	           			TBL_Board_BoardInfo A
 	          		WHERE
@@ -680,7 +685,8 @@
 	                    A.BoardColor BoardColor,
 	                    A.Gubun ,
 	                    A.url ,
-	                    '' BoardGroupACL
+	                    '' BoardGroupACL,
+	                    A.NotUsedFlag
 	           		FROM 
 	           			TBL_Board_BoardInfo A
 	          		WHERE
@@ -719,7 +725,8 @@
 	                    A.BoardColor BoardColor,
 	                    A.Gubun ,
 	                    A.url ,
-	                    '' BoardGroupACL
+	                    '' BoardGroupACL,
+	                    A.NotUsedFlag
 	           		FROM 
 	           			TBL_Board_BoardInfo A
 				]]>
@@ -814,7 +821,8 @@
 		                    AG.BoardColor BoardColor,
 		                    AG.Gubun ,
 		                    AG.url ,
-		                    '' BoardGroupACL
+		                    '' BoardGroupACL,
+		                    AG.NotUsedFlag
 		           		FROM 
 		           			TBL_Board_BoardInfo AG
 					]]>
@@ -2472,7 +2480,8 @@
 	      			ALLNEWBOARDFLAG = #v_ALLNEWBOARDFLAG#,
 	      			WRITERFLAG = #v_WRITERFLAG#,
 	      			STARRATINGFLAG = #v_STARRATINGFLAG#,
-	      			VERSIONMANAGE = #versionManage#
+	      			VERSIONMANAGE = #versionManage#,
+	      			NOTUSEDFLAG = #v_NOTUSEDFLAG#
 	    		WHERE
 	    			TENANT_ID = #v_TENANTID#
 	    		AND  

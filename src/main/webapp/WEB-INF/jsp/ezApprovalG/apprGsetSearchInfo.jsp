@@ -306,7 +306,7 @@
 			            }
 			        }
 			        
-			     if (approvalFlag == 'G') {
+			     if (approvalFlag == 'G' && Type != "usercontlist") {
 			        draftfrom = draftfrom.split("-");
 			        draftto = draftto.split("-");
 			        apprfrom = apprfrom.split("-");

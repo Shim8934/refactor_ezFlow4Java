@@ -5,7 +5,6 @@ import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -7793,6 +7792,24 @@ public class EzEmailUtil {
 		
 		return tags;
 	}
-	
+
+	public int createTag(String userAccount, String tagName) {
+		try {
+			JgwResult result = rest.jgw().url("/jMochaEzEmail/getTagIdx")
+					.formParam("userAccount", userAccount)
+					.formParam("tagName", tagName)
+					.formParam("isAutoGenerate", true)
+					.exchangeJgwResult();
+			logger.debug("jgw getTagIdx result: {}", result);
+
+			if (result.succeeded()) {
+				return result.getResult(Integer.class);
+			}
+
+			throw new IllegalStateException("getTagIdx failed");
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
 }
 

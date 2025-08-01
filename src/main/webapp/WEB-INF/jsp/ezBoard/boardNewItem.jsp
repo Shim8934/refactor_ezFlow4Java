@@ -1281,6 +1281,7 @@
 		            try {
 						window.opener.leftCountRf(pBoardID);
 					} catch (e) {
+					    console.log(e);
 					}
 					
 					// 전자결재문서(시행문, 문서발송)를 게시한 경우의 자동발송 처리 (SuccessBoard 함수)
@@ -1380,7 +1381,21 @@
 					} catch (e) {console.log(e); }
 					
 
-		            window.close();
+                    if (pMode == "modify") {
+                        if (useVersion == "Y") {
+                            document.location.href = "/ezBoard/boardItemView.do?showAdjacent=&itemID=" + encodeURIComponent("{" + NewGuid +"}") + "&boardID=" + encodeURIComponent(pBoardID) + "&location=GENERAL&__wwidth=1920";
+                        } else {
+                            document.location.href = "/ezBoard/boardItemView.do?showAdjacent=&itemID=" + encodeURIComponent(strItemID) + "&boardID=" + encodeURIComponent(pBoardID) + "&location=GENERAL&__wwidth=1920";
+                        } 
+                        if (window.opener) {
+                            window.opener.location.reload();
+                        }
+                    } else {
+                        if (window.opener) {
+                            window.opener.location.reload();
+                        }
+                        window.close();
+                    }
 		        } else {
 		            if (getNodeText(GetChildNodes(loadXMLString(xmlhttp.responseText))[0]) == "XSS") {
 						alert("<spring:message code='ezBoard.t00001' />");
