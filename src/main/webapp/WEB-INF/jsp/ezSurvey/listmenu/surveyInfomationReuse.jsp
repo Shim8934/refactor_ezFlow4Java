@@ -33,16 +33,20 @@
 					<th class="left-Th"><spring:message code="ezSurvey.t41"/></th> <%-- public setting --%>
 					<td class="right-Td">
 						<div>
-                            <span class="inf-spanTxt"><div class='custom_radio'><input type="radio" name="publicSpan" value="1" ${survey.resultPublicFlag == 1 ? 'checked' : ''}/></div><spring:message code="ezSurvey.t42"/></span>
-                            <span class="inf-spanTxt"><div class='custom_radio'><input type="radio" name="publicSpan" value="0" ${survey.resultPublicFlag == 0 ? 'checked' : ''}/></div><spring:message code="ezSurvey.t43"/></span>
-                            <span class="inf-spanTxt"><div class='custom_radio'><input type="radio" name="publicSpan" value="2" ${survey.resultPublicFlag == 2 ? 'checked' : ''}/></div><spring:message code="ezSurvey.jih01"/></span>
+							<div class='custom_radio'>
+								<span class="inf-spanTxt"><input id="publicSpan1" type="radio" name="publicSpan" value="1" ${survey.resultPublicFlag == 1 ? 'checked' : ''}/><label for="publicSpan1"><spring:message code="ezSurvey.t42"/></label></span>
+								<span class="inf-spanTxt"><input id="publicSpan2" type="radio" name="publicSpan" value="0" ${survey.resultPublicFlag == 0 ? 'checked' : ''}/><label for="publicSpan2"><spring:message code="ezSurvey.t43"/></label></span>
+								<span class="inf-spanTxt"><input id="publicSpan3" type="radio" name="publicSpan" value="2" ${survey.resultPublicFlag == 2 ? 'checked' : ''}/><label for="publicSpan3"><spring:message code="ezSurvey.jih01"/></label></span>
+							</div>
                         </div>
 					</td>
 					<th class="left-Th"><spring:message code="ezSurvey.t46"/></th> <%-- anonymous setting --%>
 					<td class="right-Td">
 						<div>
-							<span class="inf-spanTxt"><div class='custom_radio'><input type="radio" name="anonymousSpan" value="0" ${survey.anonymousFlag == 0 ? 'checked' : ''}></div><spring:message code="ezSurvey.t47"/></span>
-							<span class="inf-spanTxt"><div class='custom_radio'><input type="radio" name="anonymousSpan" value="1" ${survey.anonymousFlag == 1 ? 'checked' : ''}></div><spring:message code="ezSurvey.t48"/></span>
+							<div class='custom_radio'>
+								<span class="inf-spanTxt"><input id="anonymousSpan1" type="radio" name="anonymousSpan" value="0" ${survey.anonymousFlag == 0 ? 'checked' : ''}><label for="anonymousSpan1"><spring:message code="ezSurvey.t47"/></label></span>
+								<span class="inf-spanTxt"><input id="anonymousSpan2" type="radio" name="anonymousSpan" value="1" ${survey.anonymousFlag == 1 ? 'checked' : ''}><label for="anonymousSpan2"><spring:message code="ezSurvey.t48"/></label></span>
+							</div>
 						</div>
 					</td>
 				</tr>
@@ -59,32 +63,39 @@
 					<th class="left-Th"><spring:message code="ezSurvey.t112"/></th> <%-- mail setting --%>
 					<td class="right-Td">
 						<div>
-							<span class="inf-spanTxt"><div class='custom_radio'><input type="radio" name="mailSpan" value="1" ${survey.mailFlag == 1 ? 'checked' : ''}></div><spring:message code="ezSurvey.t114"/></span>
-							<span class="inf-spanTxt"><div class='custom_radio'><input type="radio" name="mailSpan" value="0" ${survey.mailFlag == 0 ? 'checked' : ''}></div><spring:message code="ezSurvey.t115"/></span>
+							<div class='custom_radio'>
+								<span class="inf-spanTxt"><input id="mailSpan1" type="radio" name="mailSpan" value="1" ${survey.mailFlag == 1 ? 'checked' : ''}><label for="mailSpan1"><spring:message code="ezSurvey.t114"/></label></span>
+								<span class="inf-spanTxt"><input id="mailSpan2" type="radio" name="mailSpan" value="0" ${survey.mailFlag == 0 ? 'checked' : ''}><label for="mailSpan2"><spring:message code="ezSurvey.t115"/></label></span>
+							</div>
 						</div>
 					</td>
 					<th class="left-Th"><spring:message code="ezSurvey.t113"/></th> <%-- popup setting --%>
 					<td class="right-Td">
 						<div>
-							<span class="inf-spanTxt"><div class='custom_radio'><input type="radio" name="popupSpan" value="1" ${survey.popupFlag == 1 ? 'checked' : ''}></div><spring:message code="ezSurvey.t114"/></span>
-							<span class="inf-spanTxt"><div class='custom_radio'><input type="radio" name="popupSpan" value="0" ${survey.popupFlag == 0 ? 'checked' : ''}></div><spring:message code="ezSurvey.t115"/></span>
+							<div class='custom_radio'>
+								<span class="inf-spanTxt"><input id="popupSpan1" type="radio" name="popupSpan" value="1" ${survey.popupFlag == 1 ? 'checked' : ''}><label for="popupSpan1"><spring:message code="ezSurvey.t114"/></label></span>
+								<span class="inf-spanTxt"><input id="popupSpan2" type="radio" name="popupSpan" value="0" ${survey.popupFlag == 0 ? 'checked' : ''}><label for="popupSpan2"><spring:message code="ezSurvey.t115"/></label></span>
+							</div>
 						</div>
 					</td>
 				</tr>
 				<tr>
 					<th class="left-Th"><spring:message code="ezSurvey.t30"/></th> <%-- respondent setting --%>
 					<td class="right-Td">
-						<div class="survey-flexdiv">
-							<span class="inf-spanTxt"><div class='custom_radio'><input type="radio" name="targetSpan" value="0" ${survey.paritipateFlag == 0 ? 'checked' : ''}></div><spring:message code="ezSurvey.t53"/></span>
-							<span class="inf-spanTxt"><div class='custom_radio'><input type="radio" name="targetSpan" value="1" ${survey.paritipateFlag == 1 ? 'checked' : ''}></div><spring:message code="ezSurvey.t54"/></span>
-							
+						<div class='custom_radio'>
+							<div class="survey-flexdiv">
+								<span class="inf-spanTxt"><input id="targetSpan1" type="radio" name="targetSpan" value="0" ${survey.paritipateFlag == 0 ? 'checked' : ''}><label for="targetSpan1"><spring:message code="ezSurvey.t53"/></label></span>
+								<span class="inf-spanTxt"><input id="targetSpan2" type="radio" name="targetSpan" value="1" ${survey.paritipateFlag == 1 ? 'checked' : ''}><label for="targetSpan2"><spring:message code="ezSurvey.t54"/></label></span>
+							</div>
 						</div>
 					</td>
 					<th class="left-Th"><spring:message code="ezSurvey.t49"/></th> <%-- multiple select setting --%>
 					<td class="right-Td">
 						<div>
-							<span class="inf-spanTxt"><div class='custom_radio'><input type="radio" name="multipleSpan" value="1" ${survey.multiAnswerFlag == 1 ? 'checked' : ''}></div><spring:message code="ezSurvey.t51"/></span>
-							<span class="inf-spanTxt"><div class='custom_radio'><input type="radio" name="multipleSpan" value="0" ${survey.multiAnswerFlag == 0 ? 'checked' : ''}></div><spring:message code="ezSurvey.t50"/></span>
+							<div class='custom_radio'>
+								<span class="inf-spanTxt"><input id="multipleSpan1" type="radio" name="multipleSpan" value="1" ${survey.multiAnswerFlag == 1 ? 'checked' : ''}><label for="multipleSpan1"><spring:message code="ezSurvey.t51"/></label></span>
+								<span class="inf-spanTxt"><input id="multipleSpan2" type="radio" name="multipleSpan" value="0" ${survey.multiAnswerFlag == 0 ? 'checked' : ''}><label for="multipleSpan2"><spring:message code="ezSurvey.t50"/></label></span>
+							</div>
 						</div>
 					</td>
 				</tr>
