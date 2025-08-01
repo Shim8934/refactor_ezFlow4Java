@@ -175,8 +175,10 @@
 									<tr>
 										<th><spring:message code='ezBoard.t999025' /></th>
 										<td>
-											<div class='custom_checkbox'><input type="checkbox" id="admin_OK" name="admin_OK" disabled onclick="checkbox_onclick(event)"></div>&nbsp;<spring:message code='ezSurvey.t51' />
-											<div class='custom_checkbox'><input type="checkbox" id="admin_NO" name="admin_NO" disabled onclick="checkbox_onclick(event)"></div>&nbsp;<spring:message code='ezSurvey.t50' />
+											<div class='custom_checkbox'>
+												<input type="checkbox" id="admin_OK" name="admin_OK" disabled onclick="checkbox_onclick(event)"><label for="admin_OK"><spring:message code='ezSurvey.t51' /></label>
+												<input type="checkbox" id="admin_NO" name="admin_NO" disabled onclick="checkbox_onclick(event)"><label for="admin_NO"><spring:message code='ezSurvey.t50' /></label>
+											</div>
 										</td>
 									</tr>
 									</tbody>

@@ -996,7 +996,7 @@
 			<table class="mainlist" style="width:100%;">
 				<thead>
 					<tr id = "doclist">
-						<th style="width:3%;"><div class='custom_checkbox'><input id="checkboxAll" type="checkbox" onclick="selectAll()" style="width:13px; height:13px;padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 4px; vertical-align:middle"/></div></th>
+						<th style="width:3%; text-align: center;"><div class='custom_checkbox'><input id="checkboxAll" type="checkbox" onclick="selectAll()" style="width:13px; height:13px;padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 4px; vertical-align:middle"/></div></th>
 						<th style="width:15%;"><spring:message code="ezApproval.t434"></spring:message></th>
 						<th style="width:3%;"><img src="/images/newAttach.gif"></th>
 						<th style="width:*;"><spring:message code="ezApprovalG.t106"></spring:message></th>

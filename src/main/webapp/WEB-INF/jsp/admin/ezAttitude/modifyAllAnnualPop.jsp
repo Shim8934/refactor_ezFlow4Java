@@ -101,8 +101,8 @@
 	            	<span style="width:100px;padding-right: 30px;"></span>
 	            	<div class="custom_checkbox">
 		            	<input type="checkbox" id="bancha" name="bancha" onchange="setBancha();">
-	            	</div>
-	            	<label for="bancha"><spring:message code='ezAttitude.t247' /></label>
+	            		<label for="bancha"><spring:message code='ezAttitude.t247' /></label>
+					</div>
 	            </td>
 	        </tr>
 	        <tr>

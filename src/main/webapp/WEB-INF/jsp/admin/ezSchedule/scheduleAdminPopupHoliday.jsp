@@ -328,10 +328,10 @@
 		            <th style="width:200px; text-align:center"><spring:message code='ezSchedule.t4000' />/<spring:message code='ezSchedule.t101' /></th>
 		            <td>
 		            	<span>
-							<div class='custom_radio'><input id="date" type="radio" name="date" value="0" checked style="margin:0px 0px 0px 4px" onClick="onlySolar(0)" /></div>
+							<div class='custom_radio'><input id="date" type="radio" name="date" value="0" checked style="margin:0px 0px 1px 4px" onClick="onlySolar(0)" />
 			                <label for="date"><spring:message code='ezSchedule.t4000' /></label>
-							<div class='custom_radio'><input id="date2" type="radio" name="date" value="1" style="margin:0px 0px 0px 4px" onClick="onlySolar(1)" /></div>
-			                <label for="date2"><spring:message code='ezSchedule.t101' /></label>
+							<input id="date2" type="radio" name="date" value="1" style="margin:0px 0px 1px 4px" onClick="onlySolar(1)" />
+			                <label for="date2"><spring:message code='ezSchedule.t101' /></label></div>
 		            	</span>
 		            </td>
 		        </tr>
@@ -340,12 +340,13 @@
 		           		<spring:message code='ezSchedule.t4008' />
 		            </th>
 		            <td>
-						<div class='custom_radio'><input id="pickDate" type="radio" name="pickDate" value="D" checked style="margin:0px 0px 0px 4px" onClick='showMainPattern(0);' /></div>
+						<div class='custom_radio'><input id="pickDate" type="radio" name="pickDate" value="D" checked style="margin:0px 0px 1px 4px" onClick='showMainPattern(0);' />
 		                <label for="pickDate"><spring:message code='ezSchedule.gha01' /></label>
-		                <span id="lunarRadio">
-							<div class='custom_radio'><input id="pickDate2" type="radio" name="pickDate" value="Y" style="margin:0px 0px 0px 4px" onClick='showMainPattern(1);'/></div>
+		                <span id="lunarRadio" style="margin-left: 4px;">
+							<input id="pickDate2" type="radio" name="pickDate" value="Y" style="margin:0px 0px 1px 4px" onClick='showMainPattern(1);'/>
 			                <label for="pickDate2"><spring:message code='ezSchedule.gha02' /></label>
-		                </span>
+						</span>
+						</div>
 		            </td>
 		        </tr>
 		        <tr>

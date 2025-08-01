@@ -39,7 +39,7 @@
 				padding: 8px 5px;
 			}
 			.mainlist tr th {border-top:0px}
-			#usedate { height: 12px !important;}
+			#usedate {height: 16px !important; margin-bottom: 2px;}
 		</style>
 		<SCRIPT type="text/javascript" ID="clientEventHandlersJS" >
 		    var Check = false, PeriodDocList;
@@ -450,7 +450,7 @@
 						success : function(res) {
 							if (res.pSelectTab == "completedoclist") {
 								$("#doclist").empty().append(
-										  '<th style="width:3%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><div class="custom_checkbox"><input id="checkboxAll" type="checkbox" onclick="selectAll()" style="width:13px; height:13px;padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 4px; vertical-align:middle"/></div></th>'
+										  '<th style="width:3%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis; text-align: center"><div class="custom_checkbox"><input id="checkboxAll" type="checkbox" onclick="selectAll()" style="width:13px; height:13px;padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; vertical-align:middle"/></div></th>'
 										+ '<th style="width:15%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><spring:message code="ezApproval.t434"></spring:message></th>'
 										+ '<th style="width:2%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><img src="/images/newAttach.gif"></th>'
 										+ '<th style="width:25%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><spring:message code="ezApprovalG.t106"></spring:message></th>'
@@ -464,7 +464,7 @@
 										)
 								} else {
 									$("#doclist").empty().append(
-										  '<th style="width:3%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><div class="custom_checkbox"><input id="checkboxAll" type="checkbox" onclick="selectAll()" style="width:13px; height:13px;padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 4px; vertical-align:middle"/></div></th>'
+										  '<th style="width:3%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis; text-align: center"><div class="custom_checkbox"><input id="checkboxAll" type="checkbox" onclick="selectAll()" style="width:13px; height:13px;padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; vertical-align:middle"/></div></th>'
 										+ '<th style="width:15%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><spring:message code="ezApproval.t434"></spring:message></th>'
 										+ '<th style="width:2%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><img src="/images/newAttach.gif"></th>'
 										+ '<th style="width:25%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><spring:message code="ezApprovalG.t106"></spring:message></th>'
@@ -492,7 +492,7 @@
 										html += "<tr class='row_body' onclick='select_row(this)' ondblclick='openDoc(this)' docid='docID_" + i.docID + "' id='" + i.docID + "' writerName='" + i.writerName + "' " 
 											 + "DocTitle='" + i.docTitle + "' DocNo='" + i.docNo + "' DeptName='" + i.writerDeptName + "' style='cursor: pointer; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;'"
 											 + "formid='"+i.formID+"' dochref='"+i.href+"' orgdocid='"+i.orgDocID+"' >";
-										html += "   <td style='white-space: nowrap;overflow: hidden;text-overflow: ellipsis;'><div class='custom_checkbox'><input type ='checkbox' name='myCheckbox' id='" + i.docID + "' onclick='chk_onselect(this)' writerName='" 
+										html += "   <td style='white-space: nowrap;overflow: hidden;text-overflow: ellipsis;text-align: center'><div class='custom_checkbox'><input type ='checkbox' name='myCheckbox' id='" + i.docID + "' onclick='chk_onselect(this)' writerName='" 
 											 + i.writerName + "' DocTitle='" + i.docTitle + "' DocNo='" + i.docNo + "' DeptName='" + i.writerDeptName + "'></div></td>";
 										html += "	<td title=\'" + i.docNo + "' style='white-space: nowrap;overflow: hidden;text-overflow: ellipsis;'>"	+ i.docNo	+ "</td>";
 										if (i.hasAttachYn != "N") {
@@ -1037,7 +1037,7 @@
 			<table class="mainlist" style="width:100%;">
 				<thead>
 					<tr id ="doclist">
-						<th style="width:1%;"><div class="custom_checkbox"><input id="checkboxAll" type="checkbox" onclick="selectAll()" style="width:13px; height:13px;padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 4px; vertical-align:middle"/></div></th>
+						<th style="width:1%; text-align: center;"><div class="custom_checkbox"><input id="checkboxAll" type="checkbox" onclick="selectAll()" style="width:13px; height:13px;padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; vertical-align:middle"/></div></th>
 						<th style="width:15%;"><spring:message code="ezApproval.t434"></spring:message></th>
 						<th style="width:3%;"><spring:message code="ezApprovalG.t56"></spring:message></th>
 						<th style="width:*;"><spring:message code="ezApprovalG.t106"></spring:message></th>

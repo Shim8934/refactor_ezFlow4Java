@@ -4282,7 +4282,7 @@ a.commentFileSpan:hover {cursor: pointer; text-decoration: underline;}
 .schedule_list_date .date_arr.date_prev{background-image:url(../images/date_prev.png); margin-right:65px;}
 .schedule_list_date .date_arr.date_next{background-image:url(../images/date_next.png); margin-left:65px;}
 
-.boardTxtURL {width: 73%;margin-left: 1.5px;margin-bottom: 1px;}
+.boardTxtURL {width: 70%;margin-left: 1.5px;margin-bottom: 1px;}
 
 /* 전자결재 사인 그리기 */
 .btnpositionDraw{
@@ -4358,3 +4358,4 @@ body.drag *{user-select:none !important;}
 .mainlist .custom_radio input[type="radio"]{vertical-align:inherit;}
 .custom_radio input[type="radio"] + label + input[type="radio"]{margin-left: 20px !important;}
 .custom_checkbox input[type="checkbox"] + label{vertical-align: middle;} 
+.menuIcon div.custom_radio{border: none} 

@@ -1374,8 +1374,8 @@
     		closePElem.id = "surv_closeBtn";
     		
     		checkInputDiv.appendChild(checkInput);
+    		checkInputDiv.appendChild(labelElem);
     		btnPElem.appendChild(checkInputDiv);
-    		btnPElem.appendChild(labelElem);
     		btnDiv.appendChild(btnPElem);
     		
     		layoutDiv.appendChild(titleDl);

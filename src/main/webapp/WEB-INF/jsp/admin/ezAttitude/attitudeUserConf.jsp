@@ -383,9 +383,11 @@
 					<td style="width: 3%;"><spring:message code='ezAttitude.t13' /></td>
 					<td style="width: 20%;">
 						<span style="width: 90%;">
-							<div class="custom_radio"><input type="radio" name="searchGubun" value="" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle;" checked="checked"/></div>&nbsp;<spring:message code='ezAttitude.t124' />
-							<div class="custom_radio"><input type="radio" name="searchGubun" value="0" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle;"/></div>&nbsp;<spring:message code='ezAttitude.t118' />
-							<div class="custom_radio"><input type="radio" name="searchGubun" value="1" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle;"/></div>&nbsp;<spring:message code='ezAttitude.t119' />
+							<div class="custom_radio">
+								<input id="searchGubun1" type="radio" name="searchGubun" value="" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle;" checked="checked"/><label for="searchGubun1"><spring:message code='ezAttitude.t124' /></label>
+								<input id="searchGubun2" type="radio" name="searchGubun" value="0" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle;"/><label for="searchGubun2"><spring:message code='ezAttitude.t118' /></label>
+								<input id="searchGubun3" type="radio" name="searchGubun" value="1" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle;"/><label for="searchGubun3"><spring:message code='ezAttitude.t119' /></label>
+							</div>
 						</span>
 					</td>
 				</tr>

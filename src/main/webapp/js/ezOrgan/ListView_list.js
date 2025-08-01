@@ -540,6 +540,7 @@ function ListView() {
         if (_CheckBoxFlag) {
             var objTd = document.createElement("TH");
             objTd.width = "21px";
+            objTd.style.textAlign = "center";
             var checkEleDiv = document.createElement("div");
             checkEleDiv.className = "custom_checkbox";
             var checkEle = document.createElement("INPUT");

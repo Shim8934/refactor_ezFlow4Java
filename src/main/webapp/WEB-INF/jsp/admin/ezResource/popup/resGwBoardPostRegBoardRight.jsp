@@ -1534,7 +1534,7 @@
         		</tr>
     		</table>
 		<label style="display: inline-flex; align-items: center;">
-    		<div class="custom_checkbox"><input type="checkbox" value="x" id="Check_Everyone" name="Check_Everyone" ></div><span class="txt" style="margin-bottom: 3px;"><spring:message code="ezResource.t372" /></span>    		
+    		<div class="custom_checkbox"><input type="checkbox" value="x" id="Check_Everyone" name="Check_Everyone" ><label for="Check_Everyone"><span class="txt" style="margin-bottom: 3px;"><spring:message code="ezResource.t372" /></span></label></div>		
 		</label>
     		<div class="btnpositionNew">
         		<a class="imgbtn" onclick="close_onclick()"><span><spring:message code="ezResource.t15" /></span></a>

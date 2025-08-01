@@ -339,8 +339,8 @@
             		<div style="height:25px">
             			<div class="custom_checkbox">
 	            			<input type="checkbox" id="withChild" name="withChild" style="vertical-align: middle" />
-            			</div>
-            			<label for="withChild"><spring:message code='ezJournal.t226' /></label>
+            				<label for="withChild"><spring:message code='ezJournal.t226' /></label>
+						</div>
             		</div>
             	</td>
             </tr>

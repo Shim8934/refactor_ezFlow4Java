@@ -27,8 +27,10 @@
 					<tr>
 						<th><spring:message code='ezCabinet.t21'/></th>
 						<th class="white">
-							<div class='custom_radio'><input type="radio" name="capType" id="limit" role="limit"  ><label for="limit" style="cursor:pointer;"><spring:message code='ezCabinet.t113'/></label></div>
-							<div class='custom_radio'><input type="radio" name="capType" id="unlimit" role="unlimit"><label for="unlimit" style="cursor:pointer;"><spring:message code='ezCabinet.t114'/></label></div>
+							<div class='custom_radio'>
+								<input type="radio" name="capType" id="limit" role="limit"  ><label for="limit" style="cursor:pointer;"><spring:message code='ezCabinet.t113'/></label>
+								<input type="radio" name="capType" id="unlimit" role="unlimit"><label for="unlimit" style="cursor:pointer;"><spring:message code='ezCabinet.t114'/></label>
+							</div>
 						</th>
 					</tr>
 					<tr>

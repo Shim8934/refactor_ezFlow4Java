@@ -569,7 +569,7 @@
 	    		htmlStr += '<tr id="attList_' + (i+1) + '" class="white" onclick="event_listclick(this, event)" ondblclick="mod_detail(this)" draggable="true" style="cursor:pointer;">';
 	    		if (excel == true) {
 	    		} else {
-	    			htmlStr += '<td style="padding:0"><div class="custom_checkbox"><input type="checkbox" class="checkAtt"' 
+	    			htmlStr += '<td style="padding:0; text-align: center;"><div class="custom_checkbox"><input type="checkbox" class="checkAtt"' 
 	    	    	htmlStr += 'id="attCheck_' + attList[i].attitudeId + '_' + attList[i].applCnt +'"';
 	    	    	htmlStr += 'value="' + attList[i].attitudeId + '_' + attList[i].applCnt +'"';
 	    	    	htmlStr += 'status="' + attList[i].apprStatus + '"';
@@ -1168,10 +1168,12 @@
 					<td style="width: 11%;"><input type="text" id="writerDept_search" style="width: 90%;" onkeyup="search_keypress(event);"></td>
 					<td style="width: 3%;"><spring:message code='ezAttitude.kje01'/></td>
 					<td style="width: 11%;">
-						<div class="custom_radio"><input name="searchCheck" id="Radio1" type="radio" value="all" checked style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onchange="type_set()"/></div><label for="Radio1">&nbsp;<spring:message code='ezAttitude.t124'/></label>
-						<div class="custom_radio"><input name="searchCheck" id="Radio2" type="radio" value="0" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onchange="type_set()"/></div><label for="Radio2">&nbsp;<spring:message code='ezAttitude.t209'/></label>
-						<div class="custom_radio"><input name="searchCheck" id="Radio3" type="radio" value="1" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onchange="type_set()"/></div><label for="Radio3">&nbsp;<spring:message code='ezAttitude.t210'/></label>
-						<div class="custom_radio"><input name="searchCheck" id="Radio4" type="radio" value="2" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onchange="type_set()"/></div><label for="Radio4">&nbsp;<spring:message code='ezAttitude.t211'/></label>
+						<div class="custom_radio">
+							<input name="searchCheck" id="Radio1" type="radio" value="all" checked style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onchange="type_set()"/><label for="Radio1">&nbsp;<spring:message code='ezAttitude.t124'/></label>
+							<input name="searchCheck" id="Radio2" type="radio" value="0" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onchange="type_set()"/><label for="Radio2">&nbsp;<spring:message code='ezAttitude.t209'/></label>
+							<input name="searchCheck" id="Radio3" type="radio" value="1" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onchange="type_set()"/><label for="Radio3">&nbsp;<spring:message code='ezAttitude.t210'/></label>
+							<input name="searchCheck" id="Radio4" type="radio" value="2" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onchange="type_set()"/><label for="Radio4">&nbsp;<spring:message code='ezAttitude.t211'/></label>
+						</div>
 					</td>
 				</tr>
 				<tr>
@@ -1194,7 +1196,7 @@
 		<div id="contentlist" name="contentlist" style="border:0px solid blue;height:600px;width:100%;overflow-y:auto;margin-top:5px" onblur>
 			<table class="mainlist" style="width:100%;" id="AttList" listpageCount="${mailGeneral.listCount}" curPage="1">
 				<tr id="headerList">
-					<th width="20px" align="center"> <%-- <spring:message code="ezPoll.t105"/> --%>
+					<th width="20px" align="center" style="text-align: center;"> <%-- <spring:message code="ezPoll.t105"/> --%>
 						<div class="custom_checkbox">
 							<input type="checkbox" id="HeaderAllCheckBox" style="margin: 0px; padding: 0px; width: 13px; height: 13px;" onchange="javascript:event_HeaderCheckBoxClick(this)"/>
 						</div>

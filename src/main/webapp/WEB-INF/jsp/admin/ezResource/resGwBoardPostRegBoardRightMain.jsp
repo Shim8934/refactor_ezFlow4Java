@@ -188,8 +188,10 @@
    						<table class="popuplist" style="width:100%">
         				<tr>
           					<td style="border:0px;">
-          						<div class="custom_radio"><input type="radio" id="brd_mng1" name="brd_mng" value="1" style="vertical-align: middle; margin-bottom:5px;" onClick="optAclLvl_Click(this);" ${optAdmLvl}></div> <spring:message code="ezResource.t112" />
-            					<div class="custom_radio"><input type="radio" id="brd_mng2" name="brd_mng" value="2" style="vertical-align: middle; margin-bottom:5px;" onClick="optAclLvl_Click(this);" ${optUserLvl}></div> <spring:message code="ezResource.t107" />
+          						<div class="custom_radio">
+									<input type="radio" id="brd_mng1" name="brd_mng" value="1" style="vertical-align: middle; margin-bottom:3px;" onClick="optAclLvl_Click(this);" ${optAdmLvl}><label for="brd_mng1"><spring:message code="ezResource.t112" /></label>
+									<input type="radio" id="brd_mng2" name="brd_mng" value="2" style="vertical-align: middle; margin-bottom:3px;" onClick="optAclLvl_Click(this);" ${optUserLvl}><label for="brd_mng2"><spring:message code="ezResource.t107" /></label>
+								</div>
             				</td>
         				</tr>
       					</table>
@@ -199,8 +201,10 @@
    						<table class="popuplist" style="width:100%">
         				<tr>
           					<td style="border:0px;">
-          						<div class="custom_radio"><input type="radio" id="dept_copy1" name="dept_copy" value="1" style="vertical-align: middle; margin-bottom:5px;" onClick="optDeptCopy_Click(this);" disabled checked></div> <spring:message code='ezBoard.t95' />
-            					<div class="custom_radio"><input type="radio" id="dept_copy2" name="dept_copy" value="2" style="vertical-align: middle; margin-bottom:5px;" onClick="optDeptCopy_Click(this);" disabled></div> <spring:message code='ezBoard.t96' />
+          						<div class="custom_radio">
+									<input type="radio" id="dept_copy1" name="dept_copy" value="1" style="vertical-align: middle; margin-bottom:3px;" onClick="optDeptCopy_Click(this);" disabled checked><label for="dept_copy1"><spring:message code='ezBoard.t95' /></label>
+									<input type="radio" id="dept_copy2" name="dept_copy" value="2" style="vertical-align: middle; margin-bottom:3px;" onClick="optDeptCopy_Click(this);" disabled><label for="dept_copy2"><spring:message code='ezBoard.t96' /></label>
+								</div>
             				</td>
         				</tr>
       					</table>

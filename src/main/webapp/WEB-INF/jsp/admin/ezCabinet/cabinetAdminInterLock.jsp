@@ -29,7 +29,7 @@
 					<th><spring:message code="ezCabinet.t151"/></th>
 				</tr>
 				
-				<c:forEach items="${modules}" var="module">
+				<c:forEach items="${modules}" var="module" varStatus="status">
 					<tr>
 						<td class="cabName">
 							<c:choose>
@@ -47,8 +47,10 @@
 							</c:choose>
 						</td>
 						<td>
-							<label style="cursor:pointer;"><div class='custom_radio'><input type="radio" role="on"  name="${module.moduleType}" ${module.activeStatus == 1 ? 'checked' : ''}></div><spring:message code="ezCabinet.t147"/></label>
-							<label style="cursor:pointer;"><div class='custom_radio'><input type="radio" role="off" name="${module.moduleType}" ${module.activeStatus != 1 ? 'checked' : ''}></div><spring:message code="ezCabinet.t148"/></label>
+							<div class="custom_radio">
+								<input id="on${status.index}" type="radio" role="on"  name="${module.moduleType}" ${module.activeStatus == 1 ? 'checked' : ''}><label for="on${status.index}"><spring:message code="ezCabinet.t147"/></label>
+								<input id="off${status.index}" type="radio" role="off" name="${module.moduleType}" ${module.activeStatus != 1 ? 'checked' : ''}><label for="off${status.index}"><spring:message code="ezCabinet.t148"/></label>
+							</div>
 						</td>
 					</tr>
 				</c:forEach>
