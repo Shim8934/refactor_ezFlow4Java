@@ -511,18 +511,19 @@
             		<th><spring:message code='ezPersonal.t2003'/></th>
             		<td colspan="3" class="manualFlagNotYClickOff">
                 		<input type="text" id="txtBirth" class="manualFlagNotYDisabled" style="width:80px;text-align:center;" value="${txtBirth}" oninput="this.value=this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" onkeydown="return checkKey()" readonly="readonly">
-                			<img id="TempCalImage" src="/images/ImgIcon/calendar-month.png" style="margin-bottom:-5px"/>
-                			&nbsp;&nbsp;
-             			   <c:choose>
-                				<c:when test="${birthType eq 'Y'}">
-                					<span class="onlyUseKo"><div class="custom_radio"><input type="radio" id="RadBirthType1" class="manualFlagNotYDisabled" name="radioGroup"  checked></div><spring:message code='ezPersonal.t2001'/></span>
-                					<span class="onlyUseKo"><div class="custom_radio"><input type="radio" id="RadBirthType2" class="manualFlagNotYDisabled" name="radioGroup" ></div><spring:message code='ezPersonal.t2002'/></span>
-                				</c:when>                   
-                				<c:otherwise>               
-                					<span class="onlyUseKo"><div class="custom_radio"><input type="radio" id="RadBirthType1" class="manualFlagNotYDisabled" name="radioGroup" ></div><spring:message code='ezPersonal.t2001'/></span>
-                					<span class="onlyUseKo"><div class="custom_radio"><input type="radio" id="RadBirthType2" class="manualFlagNotYDisabled" name="radioGroup"  checked></div><spring:message code='ezPersonal.t2002'/></span>
-                				</c:otherwise>
-                			</c:choose>
+						<img id="TempCalImage" src="/images/ImgIcon/calendar-month.png" style="margin-bottom:-5px"/>
+					&nbsp;&nbsp;  <div class="custom_radio">
+							<c:choose>
+								<c:when test="${birthType eq 'Y'}">
+								<span class="onlyUseKo"><input type="radio" id="RadBirthType1" class="manualFlagNotYDisabled" name="radioGroup"  checked><label for="RadBirthType1"><spring:message code='ezPersonal.t2001'/></label></span>
+								<span class="onlyUseKo"><input type="radio" id="RadBirthType2" class="manualFlagNotYDisabled" name="radioGroup" ><label for="RadBirthType2"><spring:message code='ezPersonal.t2002'/></label></span>
+								</c:when>                   
+								<c:otherwise>               
+								<span class="onlyUseKo"><input type="radio" id="RadBirthType1" class="manualFlagNotYDisabled" name="radioGroup" ><label for="RadBirthType1"><spring:message code='ezPersonal.t2001'/></span>
+								<span class="onlyUseKo"><input type="radio" id="RadBirthType2" class="manualFlagNotYDisabled" name="radioGroup"  checked><label for="RadBirthType2"><spring:message code='ezPersonal.t2002'/></label></span>
+								</c:otherwise>
+							</c:choose>
+						</div>
 		            </td>
 		        </tr>
         		<tr> 
