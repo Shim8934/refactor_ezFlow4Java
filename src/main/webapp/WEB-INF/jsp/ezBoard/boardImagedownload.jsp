@@ -113,9 +113,9 @@
 	                	<c:forEach begin="1" end="${resultCount}" step="1" varStatus="vs">
 		                    <div style="display:inline-block">
 		                    	<div class="custom_checkbox">
-			                        <input type="checkbox" value="${fileName[vs.count-1]}" id="check${vs.count-1}" name="checkboxImg"  filehref='${encodeFileHref[vs.count-1]}' onclick="chk_onClick(this)" style="vertical-align: top; position: relative; z-index: 1; left:8px"/>
-		                    	</div>
-		                        <img src='${result[vs.count-1]}' width='100px' height ='100px' title='${fn:replace(content[vs.count-1],">","")}' id="image${vs.count-1}" name='zb_target_resize' style='cursor:pointer; position: relative; right: 13px' onclick="img_onClick(this)">
+			                        <input type="checkbox" value="${fileName[vs.count-1]}" id="check${vs.count-1}" name="checkboxImg"  filehref='${encodeFileHref[vs.count-1]}' onclick="chk_onClick(this)" style="vertical-align: top; position: relative; z-index: 1; left:12px; top: 8px;"/>
+		                        	<img src='${result[vs.count-1]}' width='100px' height ='100px' title='${fn:replace(content[vs.count-1],">","")}' id="image${vs.count-1}" name='zb_target_resize' style='cursor:pointer; position: relative; right: 13px;' onclick="img_onClick(this)">
+								</div>
 		                    </div>
 	                	</c:forEach>
 	                </div>

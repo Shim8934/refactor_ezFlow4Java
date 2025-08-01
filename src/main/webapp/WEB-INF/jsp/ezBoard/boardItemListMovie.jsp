@@ -74,10 +74,10 @@
 				color:#ffffff;
 			}
 			.topInfoP input[type="checkbox"] {
-				margin: 5px 5px 0px 0px;
+				margin-right:5px;
 				/* width: 13px;
 				height: 13px; */
-				vertical-align: top;
+				vertical-align: sub;
 			}
 
 			.albumTitle{
@@ -591,7 +591,7 @@
 						listXML += GetElementsByTagName(GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[getColNameIndex(xmlDoc, "WRITEDATE")], "VALUE")[0].textContent;
 						listXML += "</span>";
 						listXML += "</div>";
-						listXML += "<div class='custom_checkbox'><p class='topInfoP'><input type='checkbox' id='" + itemID + "," + writerID + ";' onclick='selectAlbumCheckBox(this, event)'>";
+						listXML += "<div class='custom_checkbox'><p class='topInfoP' style='width: 250px;'><input type='checkbox' id='" + itemID + "," + writerID + ";' onclick='selectAlbumCheckBox(this, event)'>";
 						listXML += "<span style='font-size:13px;'>";
 
 						if (readFlag == "0") {
