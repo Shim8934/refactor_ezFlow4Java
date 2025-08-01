@@ -284,7 +284,7 @@
 		    		async : false,
 		    		url : "/admin/ezApprovalG/checkSubstitute.do",
 		    		data : {
-		    				buJaeId  : rtnValue.userId;
+		    				buJaeId  : rtnValue.userId
 		    				},
 		    		success: function(result){
 		    			$("select#deptList option").remove();
