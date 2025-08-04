@@ -727,7 +727,7 @@
 	        function Open_ReservationManage(shareId) {
 				var requestUrl = "/ezEmail/mailReservation.do";
 				requestUrl += shareId? "?shareId=" + encodeURIComponent(shareId) : "";
-	            var OpenWin = window.open(requestUrl, "mail_reservation_cross", GetOpenWindowfeature(501, 350));
+				var OpenWin = window.open(requestUrl, "mail_reservation_cross", GetOpenWindowfeature(560, 380));
 	            try { OpenWin.focus(); } catch (e) {console.log(e);}
 	        }
 	        function Open_Restore() {

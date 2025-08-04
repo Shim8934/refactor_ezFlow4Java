@@ -141,9 +141,9 @@ public class EzEmailWriteServiceImpl extends EgovAbstractServiceImpl implements 
         Date reservedSaveTime = transFormat.parse(delaySendDate);
 
         //예약발송 시간 30분 전에는 수정 불가
-        if (reservedSaveTime.before(timePlus30)) {
-            return "ezEmail.lhm07";
-        }
+//        if (reservedSaveTime.before(timePlus30)) {
+//            return "ezEmail.lhm07";
+//        }
 
         //eml파일 읽기
         String realPath = commonUtil.getRealPath(request);
