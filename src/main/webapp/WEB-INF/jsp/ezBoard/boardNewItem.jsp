@@ -2375,6 +2375,10 @@
 		    	document.getElementById("backgroundtd").innerHTML = "";
 	            var backxml = loadXMLString(resultXml);
 	            var i;
+				var oDiv = document.createElement("div");
+				oDiv.className = "custom_radio";
+				oDiv.id = "custom_radio";
+				document.getElementById("backgroundtd").appendChild(oDiv);
 	            for (i = 0; i < SelectNodes(backxml, "DATA/ROW").length; i++) {
 	                if (i == 5) {
 	                    var br = document.createElement("BR");
@@ -2393,8 +2397,7 @@
 	                input.type = "radio";
 	                input.onchange = function () { backgroundimagechange(); };
 	                
-	    	        var oDiv = document.createElement("div");
-	    	        oDiv.className = "custom_radio";
+	    	        var oLabel = document.createElement("label");
 	
 	                var img = document.createElement("IMG");
 	                var filepath = getNodeText(SelectNodes(SelectNodes(backxml, "DATA/ROW")[0], "SAVEFILENAME")[i]);
@@ -2409,11 +2412,11 @@
 	        	    img.onclick = function () { GetChildNodes(this.parentElement)[0].click(); };
 	                img.style.cursor = "pointer";
 	
-	                oDiv.appendChild(input);
-	                span.appendChild(oDiv);
-	                span.appendChild(img);
+	                span.appendChild(input);
+	                oLabel.appendChild(img);
+					span.appendChild(oLabel);
 	
-	                document.getElementById("backgroundtd").appendChild(span);
+	                oDiv.appendChild(span);
 	            }
 	            if (i == 5) {
 	                var br = document.createElement("BR");
@@ -2425,9 +2428,6 @@
 	            input.type = "radio";
 	            input.onchange = function () { backgroundimagechange(); };
 	            
-		        var oDiv = document.createElement("div");
-		        oDiv.className = "custom_radio";
-	
 	            var label = document.createElement("LABEL");
 	            label.style.display = "inline-block";
 	            label.style.marginRight = "5px";
@@ -2436,11 +2436,9 @@
 	            label.onclick = function () { GetChildNodes(this.parentElement)[0].click(); };
 	            label.style.cursor = "pointer";
 	
-	            oDiv.appendChild(input);
-	            oDiv.appendChild(label);
-	            span.appendChild(oDiv);
-	
-	            document.getElementById("backgroundtd").appendChild(span);
+	            span.appendChild(input);
+	            span.appendChild(label);
+	            oDiv.appendChild(span);
 	
 	            var a = document.createElement("A");
 	            a.className = "imgbtn imgbck";
