@@ -6154,7 +6154,10 @@ public class EzCommunityController extends EgovFileMngUtil{
 			InternetAddress to1 = new InternetAddress();
 			to1.setPersonal(uvo.getDisplayName(), "UTF-8");
 			to1.setAddress(uvo.getMail());
-			to.add(to1);
+
+			if (!ezPersonalService.hasNotiDiableItem(userIds.get(i), NotiType.fromString("COMMUNITY_INVITE"), NotiPlatform.MAIL, userInfo.getTenantId())) {
+				to.add(to1);
+			}
 
 			List<Map<String, Object>> notiRecipientList = new ArrayList<Map<String, Object>>();
 
@@ -6177,11 +6180,11 @@ public class EzCommunityController extends EgovFileMngUtil{
 		String subject = "";
 		String strURL = "";
 
-		strURL = "<a id='community_a' style='color:blue;text-decoration:underline;cursor:pointer;' href=\"" + linkUrl + "\" target=\"_blank\">";
+		strURL = "<a id='community_a' style='color:blue;text-decoration:underline;cursor:pointer;' onclick=\"" + "invite_Community('" + code + "'); return false;" + "\" href=\"_blank\" target=\"_blank\">";
 
-		bodyContent.append("<br>" + egovMessageSource.getMessage("ezNotification.lyj85", userInfo.getLocale()) + "<br><br>");
-		bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("main.t1006", userInfo.getLocale()) + " : " + strURL + commonUtil.cleanValue(clubName));
-		bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezCommunity.lyj86", userInfo.getLocale()) + " : " + userInfo.getDisplayName() + "</a>");
+		bodyContent.append("<br>" + egovMessageSource.getMessage("ezCommunity.lyj85", userInfo.getLocale()) + "<br><br>");
+		bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("main.t1006", userInfo.getLocale()) + " : " + strURL + commonUtil.cleanValue(clubName) + "</a>");
+		bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezCommunity.lyj86", userInfo.getLocale()) + " : " + userInfo.getDisplayName());
 
 		content = commonUtil.createNotiMailContent(bodyContent.toString(), userInfo.getTenantId(), userInfo.getLocale());
 		subject = "[" + egovMessageSource.getMessage("ezNotification.lyj97", userInfo.getLocale()) + "] " + clubName;

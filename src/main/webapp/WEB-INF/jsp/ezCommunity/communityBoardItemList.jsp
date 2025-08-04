@@ -440,7 +440,7 @@
 					if (newPage == 0) newPage = 1;
 					
 					if (newPage > 0) {
-		    			window.location.href = "/ezCommunity/boardItemList.do?page=" + newPage + "&boardID=" + encodeURIComponent(pBoardID) + "&sortBy=" + pSortBy + "&code=" + code;						
+		    			window.location.href = "/ezCommunity/boardItemList.do?page=" + newPage + "&boardID=" + encodeURIComponent(pBoardID) + "&sortBy=" + pSortBy + "&code=" + code + "&inviteFlag=" + inviteFlag;
 					}
 				} else if ($('#tblList tbody').children().length == strListInfo.split(";").length) {
 	    			newPage = CurPage - 1;    			
@@ -448,7 +448,7 @@
 	    			if (newPage == 0) newPage = 1;
 					
 	    			if (newPage > 0) {
-		    			window.location.href = "/ezCommunity/boardItemList.do?page=" + newPage + "&boardID=" + encodeURIComponent(pBoardID) + "&sortBy=" + pSortBy + "&code=" + code;						
+		    			window.location.href = "/ezCommunity/boardItemList.do?page=" + newPage + "&boardID=" + encodeURIComponent(pBoardID) + "&sortBy=" + pSortBy + "&code=" + code + "&inviteFlag=" + inviteFlag;
 					}
     			} else {
     				window.location.reload(false);
