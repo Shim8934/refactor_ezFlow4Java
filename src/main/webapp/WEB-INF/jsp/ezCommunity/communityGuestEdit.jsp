@@ -46,6 +46,7 @@
 		        			name : $("#name").val(),
 		        			code : $("#code").val(),
 		        			mode : $("#mode").val(),
+							inviteFlag : $("#inviteFlag").val(),
  		        			memo : encodeURIComponent(memo)
 //		        			memo : JSON.stringify(memo)
 		        			},
@@ -60,7 +61,7 @@
 				
 				switch(idx) {
 					case 1:
-						url = "/ezCommunity/guestOne.do?code=" + '<c:out value="${code}"/>';
+						url = "/ezCommunity/guestOne.do?code=" + '<c:out value="${code}"/>' + "&inviteFlag=" + '<c:out value="${inviteFlag}"/>';
 						break;					
 				}
 				
@@ -103,7 +104,8 @@
 	        <input type=hidden id="name" value="<c:out value = '${item.id}' />">
 	        <input type=hidden id="code" value="<c:out value = '${code}' />">
 	        <input type=hidden id="mode" value="<c:out value = '${mode}' />">
-	        
+	        <input type=hidden id="inviteFlag" value="<c:out value = '${inviteFlag}' />">
+
 			<table class="content" style="margin-top:12px">
 	        	<tr>
 					<th><spring:message code='ezCommunity.t138' /></th>

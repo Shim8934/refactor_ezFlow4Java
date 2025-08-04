@@ -364,6 +364,13 @@ tr[data-target='.poll'], tr.poll { display: none; }
 	        <td><%=makeCheckbox(disableItemFinder, 8, 7, 3)%></td>
 	        <td><%=makeCheckbox(disableItemFinder, 8, 7, 4)%></td>
 		</tr>
+		<tr class="collapse community">
+			<td><spring:message code='ezNotification.lyj97'/></td>
+			<td><%=makeCheckbox(disableItemFinder, 8, 8, 1)%></td>
+			<td></td>
+			<td></td>
+			<td><%=makeCheckbox(disableItemFinder, 8, 8, 4)%></td>
+		</tr>
 		
 		<%-- 2024-04-30 한태훈 - 웹폴더 알림 설정 --%>
 		<tr class="collapsible" data-target=".webfolder">

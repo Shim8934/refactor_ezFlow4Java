@@ -65,7 +65,8 @@ var subType = {
 		modify : "修改通知",
 		comment : "发表评论",
 		reply : "回复通知",
-		notice : "完整通知"
+		notice : "完整通知",
+		invite : "邀请通知"
 	},
 	webfolder : {
 		open_apply : "申请开业",

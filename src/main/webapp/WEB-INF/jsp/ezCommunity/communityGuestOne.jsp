@@ -58,6 +58,7 @@
 			
 		    var xmlDoc = loadXMLString('${strXML}');
 			var chkId = '<c:out value="${chkId}" />';
+			var inviteFlag = '<c:out value="${inviteFlag}" />';
 
 		    window.onload = function () {
 		        makePageSelPage();
@@ -200,7 +201,7 @@
 				}
 				
 				strSearch = strSearch + "&key=" + document.getElementById("keyword").value;
-				window.location.href = "/ezCommunity/guestOne.do?code=" + code + "&" + encodeURI(strSearch);
+				window.location.href = "/ezCommunity/guestOne.do?code=" + code + "&" + encodeURI(strSearch) + "&inviteFlag=" + inviteFlag;
 			}
 
 			function comm_searchCheck() {
@@ -256,7 +257,7 @@
 				} else if( count >= 2 ) {
 					alert("<spring:message code='ezCommunity.t584' />");
 				} else {
-					document.location.href = "/ezCommunity/guestEdit.do?code=" + code + "&mode=edit&no="+ingNo;
+					document.location.href = "/ezCommunity/guestEdit.do?code=" + code + "&mode=edit&no="+ingNo + "&inviteFlag=" + inviteFlag;
 				}
 			}
 			
@@ -419,8 +420,9 @@
 	    		var href = "/ezCommunity/guestOne.do?bName=" + encodeURIComponent('<c:out value="${mode}"/>')
 				            + "&sRadio=" + encodeURIComponent("${sRadio}")
 				            + "&code=" + encodeURIComponent(code)
-							+ "&keyword=" + encodeURIComponent("${fn:escapeXml(keyword)}");
-				            + "&block=" + encodeURIComponent("${nowBlock}");
+							+ "&keyword=" + encodeURIComponent("${fn:escapeXml(keyword)}")
+				            + "&block=" + encodeURIComponent("${nowBlock}")
+							+ "&inviteFlag=" + encodeURIComponent(inviteFlag);
 				            
 	            if (parseInt(newPage) > 0 && parseInt(newPage) <= parseInt(totalPage)) {
 	                document.location.href = href + "&gotoPage=" + encodeURIComponent(parseInt(newPage));
@@ -432,8 +434,9 @@
 		        var href = "/ezCommunity/guestOne.do?bName=" + encodeURIComponent("${mode}")
 					+ "&sRadio=" + encodeURIComponent('<c:out value="${sRadio}"/>')
 					+ "&code=" + encodeURIComponent('<c:out value="${code}"/>')
-					+ "&keyword=" + encodeURIComponent("${fn:escapeXml(keyword)}");
-					+ "&block=" + encodeURIComponent("${nowBlock}");
+					+ "&keyword=" + encodeURIComponent("${fn:escapeXml(keyword)}")
+					+ "&block=" + encodeURIComponent("${nowBlock}")
+					+ "&inviteFlag=" + encodeURIComponent(inviteFlag);
 
 		        if (page == "front") {
 		            if (parseInt(CurPage) - 1 < 1)
@@ -463,10 +466,10 @@
 		        
 		        switch (idx) {
 		            case 1:
-		                url = "/ezCommunity/guestEdit.do?mode=write&code=" + code;
+		                url = "/ezCommunity/guestEdit.do?mode=write&code=" + code + "&inviteFlag=" + inviteFlag;
 		                break;
 		            case 2:
-		                url = "/ezCommunity/guestOne.do?mode=list&code=" + code;
+		                url = "/ezCommunity/guestOne.do?mode=list&code=" + code + "&inviteFlag=" + inviteFlag;
 		                break;
 		        }
 		        
@@ -729,6 +732,7 @@
 		<form name="del" id= "formDel" action = "/ezCommunity/guestEditOk.do" method = "post">
 			<input type=hidden name=code value="<c:out value='${code}' />">
 			<input type=hidden name=memo value="<c:out value='${memo}' />">
+			<input type=hidden name=inviteFlag value="<c:out value='${inviteFlag}' />">
 			<input type=hidden name=mode value=delete>
 		</form>
 		<div id="tblPageRayer"></div>

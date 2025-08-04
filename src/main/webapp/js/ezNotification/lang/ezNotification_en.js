@@ -64,7 +64,8 @@ var subType = {
 		modify : "Modification notice",
 		comment : "Post a comment",
 		reply : "Reply notification",
-		notice : "Full notice"
+		notice : "Full notice",
+		invite : "Invitation notification"
 	},
 	webfolder : {
 		open_apply : "Application for opening",

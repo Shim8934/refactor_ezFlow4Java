@@ -71,7 +71,9 @@ public enum NotiType {
 	COMMUNITY_REPLY(8, 6),
 	// 커뮤니티 댓글등록
 	COMMUNITY_COMMENT(8, 7),
-	
+	// 커뮤니티 초대알림
+	COMMUNITY_INVITE(8, 8),
+
 	// 웹폴더 개설승인
 	WEBFOLDER_OPEN_ADMIT(9, 1),
 	// 웹폴더 개설거절

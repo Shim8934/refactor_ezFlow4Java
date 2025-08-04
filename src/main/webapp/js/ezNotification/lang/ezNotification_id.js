@@ -64,7 +64,8 @@ var subType = {
 		modify : "Pemberitahuan modifikasi",
 		comment : "Tulis komentar",
 		reply : "Balasan pemberitahuan",
-		notice : "Pemberitahuan penuh"
+		notice : "Pemberitahuan penuh",
+		invite : "Pemberitahuan undangan"
 	},
 	webfolder : {
 		open_apply : "Aplikasi untuk pembukaan",

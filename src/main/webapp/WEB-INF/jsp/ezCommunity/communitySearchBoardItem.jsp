@@ -57,7 +57,8 @@
 		    var xmlhttp = createXMLHttpRequest();
 		    var gubun = "<c:out value='${boardInfo.gubun}' />";
 		    var ListInfo = "";
-		    
+		    var inviteFlag = "<c:out value='${inviteFlag}' />";
+
 		    if ("${userInfo.lang}" == '1') {
 		    	pBoardName = "<c:out value='${boardInfo.boardName}' />";
 		    } else {
@@ -256,6 +257,7 @@
 			    url += "&searchStart=" + searchStart;
 			    url += "&searchEnd=" + searchEnd;
 			    url += "&code=" + code;
+			    url += "&inviteFlag=" + inviteFlag;
 
 			    window.location.href = url;
 			}
@@ -607,6 +609,7 @@
 				url += "&searchEnd=" + searchEnd;
 				url += "&page=" + newPage.toString();
 				url += "&code=" + code;
+				url += "&inviteFlag=" + inviteFlag;
 
 				if(parseInt(newPage) > 0 && parseInt(newPage) <= parseInt(totalPage))  {
 					window.location.href = url;
@@ -630,6 +633,7 @@
 				url += "&searchEnd=" + searchEnd;
 				url += "&page=" + newPage.toString();
 				url += "&code=" + code;
+				url += "&inviteFlag=" + inviteFlag;
 
 				if(newPage > 0) {
 					window.location.href = url;
@@ -653,6 +657,7 @@
 				url += "&searchEnd=" + searchEnd;
 				url += "&page=" + newPage.toString();
 				url += "&code=" + code;
+				url += "&inviteFlag=" + inviteFlag;
 
 				if(newPage <= parseInt(totalPage)) {
 					window.location.href = url;
@@ -677,6 +682,7 @@
 					url += "&searchEnd=" + searchEnd;
 					url += "&page=" + newPage.toString();
 					url += "&code=" + code;
+					url += "&inviteFlag=" + inviteFlag;
 
 					if(parseInt(newPage) > 0 && parseInt(newPage) <= parseInt(totalPage)) {
 						window.location.href = url;
