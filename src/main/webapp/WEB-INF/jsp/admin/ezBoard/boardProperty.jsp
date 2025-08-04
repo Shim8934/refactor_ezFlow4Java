@@ -1508,7 +1508,7 @@
 						<input type="checkbox" id="chkbackgroundimage" onclick="checkboardtype()" /><label for="chkbackgroundimage"><spring:message code="ezBoard.t5011_1" /></label>
 						<input type="checkbox" id="chkform" onclick="checkboardtype()" /><label for="chkform"><spring:message code="ezBoard.t999027" /></label>
 						<input type="checkbox" id="keyWord" onclick="checkboardtype()" /><label for="keyWord"><spring:message code="ezApprovalG.t1200" /></label>
-						<input type="checkbox" id="chkStarRating" onclick="checkboardtype()" /><label for="chkStarRating"><spring:message code="ezBoard.lhr001" /></label>
+						<input type="checkbox" id="chkStarRating" onclick="checkboardtype()" /><label for="chkStarRating"><spring:message code="ezBoard.lhr001" /></label><br>
                         <input type="checkbox" id="chkBoardNotUsed" onclick="checkboardtype()" /><label for="chkBoardNotUsed"><spring:message code="ezBoard.CSJ01" /></label>
 					</div>
 	        	</td>
