@@ -6183,8 +6183,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 		strURL = "<a id='community_a' style='color:blue;text-decoration:underline;cursor:pointer;' onclick=\"" + "invite_Community('" + code + "'); return false;" + "\" href=\"_blank\" target=\"_blank\">";
 
 		bodyContent.append("<br>" + egovMessageSource.getMessage("ezCommunity.lyj85", userInfo.getLocale()) + "<br><br>");
-		bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("main.t1006", userInfo.getLocale()) + " : " + strURL + commonUtil.cleanValue(clubName) + "</a>");
-		bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezCommunity.lyj86", userInfo.getLocale()) + " : " + userInfo.getDisplayName());
+		bodyContent.append("<br>- " + egovMessageSource.getMessage("main.t1006", userInfo.getLocale()) + " : " + strURL + commonUtil.cleanValue(clubName) + "</a>");
+		bodyContent.append("<br><br>- " + egovMessageSource.getMessage("ezCommunity.lyj86", userInfo.getLocale()) + " : " + userInfo.getDisplayName());
 
 		content = commonUtil.createNotiMailContent(bodyContent.toString(), userInfo.getTenantId(), userInfo.getLocale());
 		subject = "[" + egovMessageSource.getMessage("ezNotification.lyj97", userInfo.getLocale()) + "] " + clubName;
