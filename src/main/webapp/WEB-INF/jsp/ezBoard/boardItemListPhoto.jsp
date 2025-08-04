@@ -1575,7 +1575,7 @@
 							</th>
 							<td>${boardName} 
 								<div class="custom_checkbox">
-				      				<input type="checkbox" id="chkSearchSub" ><spring:message code='ezBoard.t498' />
+									<input type="checkbox" id="chkSearchSub" ><label for="chkSearchSub"><spring:message code='ezBoard.t498' /></label>
 								</div>
 			    			</td>
 						</tr>

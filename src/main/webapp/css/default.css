@@ -4375,3 +4375,4 @@ body.drag *{user-select:none !important;}
 .tagArea .imgbtn span{line-height: 23px !important;}
 .tagAdd input[type="text"]{width: 143px}
 .tag_btnSave{text-align: center; margin: 0 0 3px 0; border-top: 1px solid #f1f1f1; padding-top: 10px;}
+#chkSearchSub{margin-left: 10px;}
