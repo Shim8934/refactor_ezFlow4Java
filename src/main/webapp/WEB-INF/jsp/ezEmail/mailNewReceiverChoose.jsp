@@ -101,6 +101,7 @@
 	        var useShowAllCompanies = "${useShowAllCompanies}";
 	        var useOrgListCheckBox = JSON.parse("${useOrgListCheckBox}");
 	        var receiverListId = "";
+	        var maxTotalLength = 45;
 	        
 	        document.onselectstart = function () {
 	            if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
@@ -434,7 +435,15 @@
 		                }
 		                pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + MakeXMLString(strName) + "</DATA1>";
 		                pparsingXML = pparsingXML + "<DATA2>" + strEmail + "</DATA2>";
-		                pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(strName) + " &lt;" + strEmail + "&gt;" + "</VALUE></CELL></ROW>";
+
+                        var strNameXml = MakeXMLString(strName);
+                        var maxNameLength = maxTotalLength - strEmail.length;
+
+                        if (maxNameLength > 0) {
+                            strNameXml = strNameXml.substring(0, maxNameLength);
+                        }
+
+		                pparsingXML = pparsingXML + "<VALUE>" + strNameXml + " &lt;" + strEmail + "&gt;" + "</VALUE></CELL></ROW>";
 		            }
 		            pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
 		            var Resultxml = loadXMLString(pparsingXML2);
@@ -485,19 +494,27 @@
 		                strEmail = receiverData["email"][count];
 		                strhref = receiverData["href"][count];
 		                strType = receiverData["type"][count];
+
+		                var strNameXml = MakeXMLString(strName);
+                        var maxNameLength = maxTotalLength - strEmail.length;
+
+                        if (maxNameLength > 0) {
+                            strNameXml = strNameXml.substring(0, maxNameLength);
+                        }
+
 		                if (strType == "mailgroup") {
 		                    pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + MakeXMLString(strName) + "</DATA1>";
 		                    pparsingXML = pparsingXML + "<DATA2>" + strType + "</DATA2>";
 		                    pparsingXML = pparsingXML + "<DATA3>" + strEmail + "</DATA3>";
 		                    pparsingXML = pparsingXML + "<DATA4>" + strhref + "</DATA4>";
-		                    pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(strName) + " &lt;" + strEmail + "&gt;" + "</VALUE></CELL></ROW>";
+		                    pparsingXML = pparsingXML + "<VALUE>" + strNameXml + " &lt;" + strEmail + "&gt;" + "</VALUE></CELL></ROW>";
 		                }
 		                else {
 		                    pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + MakeXMLString(strName) + "</DATA1>";
 		                    pparsingXML = pparsingXML + "<DATA2>" + strEmail + "</DATA2>";
 		                    pparsingXML = pparsingXML + "<DATA3>" + strType + "</DATA3>";
 		                    pparsingXML = pparsingXML + "<DATA4>" + strhref + "</DATA4>";
-		                    pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(strName) + " &lt;" + strEmail + "&gt;" + "</VALUE></CELL></ROW>";
+		                    pparsingXML = pparsingXML + "<VALUE>" + strNameXml + " &lt;" + strEmail + "&gt;" + "</VALUE></CELL></ROW>";
 		                }
 		
 		            }
@@ -888,7 +905,7 @@
 	            for (var i = 0; i < arrRows.length; i++) {
 	                var strName = arrRows[i].getAttribute("DATA1");
 	                var strEmail = arrRows[i].getAttribute("DATA2");
-	                returnData += "<ROW><NAME><![CDATA[" + strName + "]]></NAME><EMAIL><![CDATA[" + strEmail + "]]></EMAIL></ROW>";
+	                returnData += "<ROW><NAME><![CDATA[111111" + strName + "]]></NAME><EMAIL><![CDATA[" + strEmail + "]]></EMAIL></ROW>";
 	            }
 	            returnData += "</DATA>";
 	            return returnData;
@@ -901,7 +918,7 @@
 	            var saveLength = 0;
 	            
 	            var strXML = "<DATA>";
-	            strXML += "<OWNERID><![CDATA[" + userid + "]]></OWNERID>";
+	            strXML += "<OWNERID><![CDATA[" + MakeXMLString(userid) + "]]></OWNERID>";
 	            strXML += "<ADDRLIST>";
 	            
 	            for (var z = 1; z < aa; z++) {
@@ -1026,6 +1043,12 @@
 						        		return;
 						        	}
 	                        	}
+                                var strNameXml = MakeXMLString(strName);
+                                var maxNameLength = maxTotalLength - strEmail.length;
+
+                                if (maxNameLength > 0) {
+                                    strNameXml = strNameXml.substring(0, maxNameLength);
+                                }
 	                        	
 	                            pparsingXML2 = "";
 	                            pparsingXML = "";
@@ -1038,7 +1061,7 @@
 	                            pparsingXML = pparsingXML + "<DATA3><![CDATA[" + MakeXMLString(strEmail) + "]]></DATA3>";
 	                            pparsingXML = pparsingXML + "<DATA4><![CDATA[" + MakeXMLString(pAddressID) + "]]></DATA4>";
 	                            pparsingXML = pparsingXML + "<DATA-TYPE>add</DATA-TYPE>";
-	                            pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(strName) + " &lt;" + strEmail + "&gt;" + "</VALUE></CELL></ROW>";
+	                            pparsingXML = pparsingXML + "<VALUE>" + strNameXml + " &lt;" + strEmail + "&gt;" + "</VALUE></CELL></ROW>";
 	                            pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
 	                            Resultxml = loadXMLString(pparsingXML2);
 	
@@ -1122,6 +1145,13 @@
 						        		return;
 						        	}
 	                        	}
+
+                                var strNameXml = MakeXMLString(strName);
+                                var maxNameLength = maxTotalLength - strEmail.length;
+        
+                                if (maxNameLength > 0) {
+                                    strNameXml = strNameXml.substring(0, maxNameLength);
+                                }
 	                        	
 	                            pparsingXML2 = "";
 	                            pparsingXML = "";
@@ -1130,7 +1160,7 @@
 	                            pparsingXML = pparsingXML + "<DATA2>" + strEmail + "</DATA2>";
 	                            pparsingXML = pparsingXML + "<DATA3><![CDATA[" + MakeXMLString(strDeptNM) + "]]></DATA3>";
 	                            pparsingXML = pparsingXML + "<DATA-TYPE>dist</DATA-TYPE>";
-	                            pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(strName) + " &lt;" + strEmail + "&gt;" + "</VALUE></CELL></ROW>";
+	                            pparsingXML = pparsingXML + "<VALUE>" + strNameXml + " &lt;" + strEmail + "&gt;" + "</VALUE></CELL></ROW>";
 	                            pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
 	                            Resultxml = loadXMLString(pparsingXML2);
 	
@@ -1212,6 +1242,13 @@
 						        		return;
 						        	}
 	                        	}
+
+                                var strNameXml = MakeXMLString(strName);
+                                var maxNameLength = maxTotalLength - strEmail.length;
+        
+                                if (maxNameLength > 0) {
+                                    strNameXml = strNameXml.substring(0, maxNameLength);
+                                }
 	                        	
 	                            pparsingXML2 = "";
 	                            pparsingXML = "";
@@ -1220,7 +1257,7 @@
 	                            pparsingXML = pparsingXML + "<DATA2>" + strEmail + "</DATA2>";
 	                            pparsingXML = pparsingXML + "<DATA3><![CDATA[" + MakeXMLString(strDeptNM) + "]]></DATA3>";
 	                            pparsingXML = pparsingXML + "<DATA-TYPE>shared</DATA-TYPE>";
-	                            pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(strName) + " &lt;" + strEmail + "&gt;" + "</VALUE></CELL></ROW>";
+	                            pparsingXML = pparsingXML + "<VALUE>" + strNameXml + " &lt;" + strEmail + "&gt;" + "</VALUE></CELL></ROW>";
 	                            pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
 	                            Resultxml = loadXMLString(pparsingXML2);
 	
@@ -1397,6 +1434,13 @@
 							        	}
 	                            	}
 	                            	
+	                            	var strNameXml = MakeXMLString(strName);
+                                    var maxNameLength = maxTotalLength - strEmail.length;
+            
+                                    if (maxNameLength > 0) {
+                                        strNameXml = strNameXml.substring(0, maxNameLength);
+                                    }
+	                            	
 	                                pparsingXML2 = "";
 	                                pparsingXML = "";
 	                                pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
@@ -1405,7 +1449,7 @@
 	                                pparsingXML = pparsingXML + "<DATA3><![CDATA[" + MakeXMLString(strDeptNM) + "]]></DATA3>";
 	                                pparsingXML = pparsingXML + "<DATA4>" + strSIP + "</DATA4>";
 	                                pparsingXML = pparsingXML + "<DATA-TYPE>org</DATA-TYPE>";
-	                                pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(strName) + " &lt;" + strEmail + "&gt;" + "</VALUE></CELL></ROW>";
+	                                pparsingXML = pparsingXML + "<VALUE>" + strNameXml + " &lt;" + strEmail + "&gt;" + "</VALUE></CELL></ROW>";
 	                                pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
 	                                Resultxml = loadXMLString(pparsingXML2);
 	
@@ -1460,6 +1504,13 @@
 						        	}
 	                        	}
 	                        	
+	                        	var strNameXml = MakeXMLString(strName);
+                                var maxNameLength = maxTotalLength - strEmail.length;
+        
+                                if (maxNameLength > 0) {
+                                    strNameXml = strNameXml.substring(0, maxNameLength);
+                                }
+	                        	
 	                            pparsingXML2 = "";
 	                            pparsingXML = "";
 	                            pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
@@ -1468,7 +1519,7 @@
 	                            pparsingXML = pparsingXML + "<DATA3><![CDATA[" + MakeXMLString(strDeptNM) + "]]></DATA3>";
 	                            pparsingXML = pparsingXML + "<DATA4>" + strSIP + "</DATA4>";
 	                            pparsingXML = pparsingXML + "<DATA-TYPE>org</DATA-TYPE>";
-	                            pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(strName) + " &lt;" + strEmail + "&gt;" + "</VALUE></CELL></ROW>";
+	                            pparsingXML = pparsingXML + "<VALUE>" + strNameXml + " &lt;" + strEmail + "&gt;" + "</VALUE></CELL></ROW>";
 	                            pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
 	                            Resultxml = loadXMLString(pparsingXML2);
 	
@@ -3598,7 +3649,7 @@
                 }
                 
                 if (strName.indexOf("&") > -1 || strName.indexOf("<") > -1 || strName.indexOf(">") > -1 
-		        		 || strName.indexOf("\"") > -1 || strName.indexOf("'") > -1 || strName.indexOf(";") > -1) {
+		        		 || strName.indexOf('\"') > -1 || strName.indexOf("'") > -1 || strName.indexOf(";") > -1) {
 	           		alert("<spring:message code='ezEmail.psb17' /> [ & < > \" ' ; ]");
                		document.getElementById("emailname").focus();
 		            return;
@@ -3611,6 +3662,13 @@
                     return;
                 }
 
+                var strNameXml = MakeXMLString(strName);
+                var maxNameLength = maxTotalLength - strEmail.length;
+
+                if (maxNameLength > 0) {
+                    strNameXml = strNameXml.substring(0, maxNameLength);
+                }
+
                 var pparsingXML = "";
                 var pparsingXML2 = "";
                 var listid = "MsgToList";
@@ -3618,7 +3676,7 @@
                 pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + MakeXMLString(strName) + "</DATA1>";
                 pparsingXML = pparsingXML + "<DATA2>" + strEmail + "</DATA2>";
                 pparsingXML = pparsingXML + "<DATA3></DATA3>";
-                pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(strName) + " &lt;" + strEmail + "&gt;" + "</VALUE></CELL></ROW>";
+                pparsingXML = pparsingXML + "<VALUE>" + strNameXml + " &lt;" + strEmail + "&gt;" + "</VALUE></CELL></ROW>";
                 pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
                 Resultxml = loadXMLString(pparsingXML2);
                 var listview = new ListView();
