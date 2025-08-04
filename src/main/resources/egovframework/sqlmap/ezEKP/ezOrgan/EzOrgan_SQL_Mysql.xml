@@ -891,7 +891,8 @@
                        			'user' TYPE,
                                 extensionattribute7 JOBID,
                                 'ROLEID' ROLEID,
-                                '' ISADDJOB
+                                '' ISADDJOB,
+								PHYSICALDELIVERYOFFICENAME as EXTENSIONATTRIBUTE2
                        		FROM
                        			TBL_USERMASTER 
                        		WHERE
@@ -918,7 +919,8 @@
                        			'user' TYPE,
 						        b.jobid JOBID,
 						        b.roleid ROLEID,
-                                'Y' ISADDJOB
+                                'Y' ISADDJOB,
+								PHYSICALDELIVERYOFFICENAME as EXTENSIONATTRIBUTE2
                   			FROM
                   				TBL_ADDJOBMASTER B
                   			JOIN
@@ -953,7 +955,8 @@
                        			'user' TYPE,
                                 extensionattribute7 JOBID,
                                 'ROLEID' ROLEID,
-                                '' ISADDJOB
+                                '' ISADDJOB,
+								PHYSICALDELIVERYOFFICENAME as EXTENSIONATTRIBUTE2
                        		FROM
                        			TBL_USERMASTER 
                        		WHERE
@@ -990,7 +993,8 @@
                        			'user' TYPE,
 						        b.jobid JOBID,
 						        b.roleid ROLEID,
-                                'Y' ISADDJOB
+                                'Y' ISADDJOB,
+								A.PHYSICALDELIVERYOFFICENAME as EXTENSIONATTRIBUTE2
                   			FROM
                   				TBL_ADDJOBMASTER B
                   			JOIN
@@ -1033,7 +1037,8 @@
                      	'dept' TYPE,
 				        '' JOBID,
 				        '' ROLEID,
-                        '' ISADDJOB  
+                        '' ISADDJOB,
+						EXTENSIONATTRIBUTE2
                    FROM
                    	TBL_DEPTMASTER 
                   	WHERE
@@ -1066,7 +1071,8 @@
                            			'user' TYPE,
 						        	EXTENSIONATTRIBUTE7 JOBID,
 						        	'ROLEID' ROLEID,
-                                	'' ISADDJOB
+                                	'' ISADDJOB,
+                                	PHYSICALDELIVERYOFFICENAME as EXTENSIONATTRIBUTE2
                           		FROM
                           			TBL_USERMASTER 
                           		WHERE
@@ -1095,7 +1101,8 @@
                           			'user' TYPE,
 						        	B.JOBID JOBID,
 						        	B.ROLEID ROLEID,
-                                	'Y' ISADDJOB  
+                                	'Y' ISADDJOB,
+									PHYSICALDELIVERYOFFICENAME as EXTENSIONATTRIBUTE2 
                           		FROM
                           			TBL_ADDJOBMASTER B
                           		JOIN
@@ -1122,7 +1129,8 @@
                            			'dept' TYPE,
 						        	'' JOBID,
 						        	'' ROLEID,
-                                	'' ISADDJOB 
+                                	'' ISADDJOB,
+                                	EXTENSIONATTRIBUTE2
                           		FROM
                           			TBL_DEPTMASTER 
                           		WHERE
@@ -1243,7 +1251,8 @@
                         CONCAT(SUBSTR('0000000000', 1, 10 - CHARACTER_LENGTH(IFNULL(EXTENSIONATTRIBUTE15, '0'))), IFNULL(EXTENSIONATTRIBUTE15, '0')) EXTENSIONATTRIBUTE15  ,
                         'DEPT' TYPE,
 						'' jobid,
-						'' isaddjob
+						'' isaddjob,
+						EXTENSIONATTRIBUTE2
             	FROM
             		TBL_DEPTMASTER 
                 WHERE
@@ -1276,7 +1285,8 @@
                                      'USER' TYPE,
 									EXTENSIONATTRIBUTE7 jobid,
 									'ROLEID' roleid,
-									'' isaddjob
+									'' isaddjob,
+									PHYSICALDELIVERYOFFICENAME as EXTENSIONATTRIBUTE2
                             FROM
                             		TBL_USERMASTER 
                             WHERE
@@ -1304,7 +1314,8 @@
                                      'USER' TYPE,
 									b.jobid jobid,
 									b.roleid roleid,
-									'Y' isaddjob
+									'Y' isaddjob,
+									PHYSICALDELIVERYOFFICENAME as EXTENSIONATTRIBUTE2
                               FROM
                               	TBL_ADDJOBMASTER B
                               JOIN
@@ -1329,7 +1340,8 @@
                                  CONCAT(SUBSTR('0000000000', 1, 10 - CHARACTER_LENGTH(IFNULL(EXTENSIONATTRIBUTE15, '0'))), IFNULL(EXTENSIONATTRIBUTE15, '0')) EXTENSIONATTRIBUTE15  ,
                                  'DEPT' TYPE,
 								 '' jobid,
-								 '' isaddjob
+								 '' isaddjob,
+								 PHYSICALDELIVERYOFFICENAME as EXTENSIONATTRIBUTE2
                              FROM
                              	TBL_DEPTMASTER 
                              WHERE
