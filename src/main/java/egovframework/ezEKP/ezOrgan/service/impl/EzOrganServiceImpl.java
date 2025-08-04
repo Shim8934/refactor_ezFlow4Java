@@ -360,6 +360,7 @@ public class EzOrganServiceImpl implements EzOrganService {
 		nodeInfo.append("<VALUE1>" + commonUtil.cleanValue(vo.getDisplayName1()) + "</VALUE1>");
 		nodeInfo.append("<VALUE2>" + commonUtil.cleanValue(vo.getDisplayName2()) + "</VALUE2>");
 		nodeInfo.append("<CN>" + vo.getDepartment() + "</CN>");
+		nodeInfo.append("<COMPANYID>" + vo.getExtensionAttribute2() + "</COMPANYID>");
 	
 		if (!pPropList.equals("")) {					
 			pPropList = convertAddandConvert("group", pPropList);

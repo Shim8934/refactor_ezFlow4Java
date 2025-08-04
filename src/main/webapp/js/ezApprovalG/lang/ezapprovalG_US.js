@@ -1226,3 +1226,6 @@ var strLangKMH03 = "Would you like to proceed with batch submission and final ap
 var strLangKYJ_IsPublic01 = "View All";
 var strLangKYJ_IsPublic02 = "View Department";
 var strLangKYJ_IsPublic03 = "View Approval Line";
+
+var strLangJIHShareDox01 = "The sharer and the recipient must belong to the same company.";
+var strLangJIHShareDox02 = "Please select the sharer first.";

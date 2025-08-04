@@ -1226,3 +1226,6 @@ var strLangKMH03 = "Apakah Anda ingin melanjutkan penerimaan secara berkelompok 
 var strLangKYJ_IsPublic01 = "Lihat Semua";
 var strLangKYJ_IsPublic02 = "Lihat Departemen";
 var strLangKYJ_IsPublic03 = "Lihat Jalur Persetujuan";
+
+var strLangJIHShareDox01 = "Pemberi dan penerima berbagi harus berasal dari perusahaan yang sama.";
+var strLangJIHShareDox02 = "Silakan pilih pemberi berbagi terlebih dahulu.";

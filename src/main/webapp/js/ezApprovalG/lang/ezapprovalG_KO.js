@@ -1226,3 +1226,6 @@ var strLangKMH03 = "일괄접수자전결을 진행하시겠습니까?<br>상태
 var strLangKYJ_IsPublic01 = "전체 열람";
 var strLangKYJ_IsPublic02 = "부서 열람";
 var strLangKYJ_IsPublic03 = "결재선 열람";
+
+var strLangJIHShareDox01 = "공유자와 공유대상자는 같은 회사에 소속되어 있어야 합니다."
+var strLangJIHShareDox02 = "공유자를 먼저 선택바랍니다."

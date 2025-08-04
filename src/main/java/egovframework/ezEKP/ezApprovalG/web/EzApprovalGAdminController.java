@@ -4647,6 +4647,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String ownerId = request.getParameter("ownerId");
 		String ownerName = request.getParameter("ownerName");
 		String ownerType = request.getParameter("ownerType");
+		String ownerCompanyId = request.getParameter("ownerCompanyId");
 
 		OrganAuth organAuth = commonUtil.makeOrganAuth(userInfo.getId(), userInfo.getTenantId(), userInfo.getDeptID(), userInfo.getJobId());
 
@@ -4658,6 +4659,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		model.addAttribute("ownerId", ownerId);
 		model.addAttribute("ownerName", ownerName);
 		model.addAttribute("ownerType", ownerType);
+		model.addAttribute("ownerCompanyId", ownerCompanyId);
 		model.addAttribute("companyId", userInfo.getCompanyID());
 		model.addAttribute("deptId", userInfo.getDeptID());
 		model.addAttribute("primaryLang", primaryLang);

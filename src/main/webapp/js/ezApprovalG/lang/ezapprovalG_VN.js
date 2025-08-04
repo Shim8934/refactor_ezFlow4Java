@@ -1225,3 +1225,6 @@ var strLangKMH03 = "Bạn có muốn tiếp tục nộp đơn hàng loạt và p
 var strLangKYJ_IsPublic01 = "Xem tất cả";
 var strLangKYJ_IsPublic02 = "Xem phòng ban";
 var strLangKYJ_IsPublic03 = "Xem tuyến phê duyệt";
+
+var strLangJIHShareDox01 = "Người chia sẻ và người được chia sẻ phải thuộc cùng một công ty.";
+var strLangJIHShareDox02 = "Vui lòng chọn người chia sẻ trước.";

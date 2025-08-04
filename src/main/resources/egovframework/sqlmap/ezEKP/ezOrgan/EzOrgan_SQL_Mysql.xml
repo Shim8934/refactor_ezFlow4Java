@@ -18,7 +18,8 @@
 	<resultMap id="deptTreeInfoAddjob" class="OrganDeptVO" extends="deptTreeInfo">
 		<result property="isAddjob" 							column="isAddjob" 					nullValue=""/>
 		<result property="jobId" 								column="jobId" 						nullValue=""/>		
-		<result property="roleId" 								column="roleId" 					nullValue=""/>		
+		<result property="roleId" 								column="roleId" 					nullValue=""/>	
+		<result property="extensionAttribute2" 					column="extensionAttribute2" 		nullValue=""/>		
 	</resultMap>
 	
 	<resultMap id="deptMemberInfo" class="OrganDeptVO">
@@ -30,6 +31,7 @@
 		<result property="isAddjob" 							column="isAddjob" 						columnIndex="6"	 nullValue=""/>
 		<result property="jobId" 								column="jobId" 						    columnIndex="7"  nullValue=""/>	
 		<result property="roleId" 								column="roleId" 						columnIndex="8"  nullValue=""/>	
+		<result property="extensionAttribute2" 					column="extensionAttribute2" 			columnIndex="9"  nullValue=""/>	
 	</resultMap>
 	
 	<resultMap id="teamsDeptMemberInfo" class="OrganTeamsTreeVO">
@@ -1145,7 +1147,8 @@
                                	TYPE,
 								jobid,
 								roleid,
-								isaddjob
+								isaddjob,
+								EXTENSIONATTRIBUTE2
                         	FROM (			SELECT
                         					CN ,
                                       		CASE #v_LANGDATA#
@@ -1161,7 +1164,8 @@
                                       		'USER' TYPE,
 											EXTENSIONATTRIBUTE7 jobid,
 											'ROLEID' roleid,
-											'' isaddjob
+											'' isaddjob,
+											PHYSICALDELIVERYOFFICENAME as EXTENSIONATTRIBUTE2
                                			FROM
                                				TBL_USERMASTER 
                                 		WHERE
@@ -1197,7 +1201,8 @@
                                       		'USER' TYPE,
 											b.jobid jobid,
 											b.roleid roleid,
-											'Y' isaddjob
+											'Y' isaddjob,
+											PHYSICALDELIVERYOFFICENAME as EXTENSIONATTRIBUTE2
                                			FROM
                                				TBL_ADDJOBMASTER B
                                			JOIN

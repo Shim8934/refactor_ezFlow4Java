@@ -4667,7 +4667,8 @@
 				WHEN A.OWNER_TYPE = 'D'
 				THEN C.DISPLAYNAME2
 			END AS ownerName2,
-			A.OWNER_TYPE as ownerType
+			A.OWNER_TYPE as ownerType,
+			PHYSICALDELIVERYOFFICENAME as ownerCompanyId
 		FROM
 			TBL_SHARE_DOC_DIR A
 		LEFT JOIN
@@ -4697,7 +4698,8 @@
 				WHEN A.SHARE_TYPE = 'D'
 				THEN C.DISPLAYNAME2
 			END AS shareName2,
-			A.SHARE_TYPE as shareType
+			A.SHARE_TYPE as shareType,
+			B.PHYSICALDELIVERYOFFICENAME as ownerCompanyId
 		FROM
 			TBL_SHARE_DOC_DIR A
 		LEFT JOIN

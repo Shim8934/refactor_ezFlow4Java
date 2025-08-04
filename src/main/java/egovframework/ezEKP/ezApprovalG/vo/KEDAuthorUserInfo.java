@@ -5,6 +5,7 @@ public class KEDAuthorUserInfo {
 	private String ownerType;
 	private String ownerName;
 	private String ownerName2;
+	private String ownerCompanyId;
 
 	public String getOwnerName2() {	return ownerName2; }
 	public void setOwnerName2(String ownerName2) { this.ownerName2 = ownerName2; }
@@ -23,5 +24,11 @@ public class KEDAuthorUserInfo {
 	}
 	public void setOwnerType(String ownerType) {
 		this.ownerType = ownerType;
+	}
+	public String getOwnerCompanyId() { 
+		return ownerCompanyId; 
+	}
+	public void setOwnerCompanyId(String ownerCompany) { 
+		this.ownerCompanyId = ownerCompany; 
 	}
 }
