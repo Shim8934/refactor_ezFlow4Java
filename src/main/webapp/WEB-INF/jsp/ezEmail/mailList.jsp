@@ -2058,6 +2058,12 @@
 				const _href = grandparent.getAttribute("_href");
 				const isSecureMail = grandparent.getAttribute("securemail");
 
+				if (checkBlockedMail(_href) == '1') {
+					alert(strLangLDH07);
+					event.stopPropagation()
+					return;
+				}
+
 				const parameter = new Map();
 				parameter.set('_href', _href);
 				parameter.set('isSecureMail', isSecureMail);
@@ -2073,18 +2079,25 @@
 						top = rightHeight - 350 - 12;
 					}
 
+					const rightWidth = window.innerWidth;
+					const clickX = event.clientX;
+					let right = clickX + 12;
+					if (right + 500 > rightWidth) {
+						right = rightWidth - 510;
+					}
+
 					const iFramePanel_mail_preview = document.getElementById("iFramePanel_mail_preview");
 
 					document.getElementById("mail_preview_Layer").src = "/ezEmail/previewMail.do";
 					iFramePanel_mail_preview.style.top = top + "px";
-					iFramePanel_mail_preview.style.left = event.clientX + 12 + "px";
+					iFramePanel_mail_preview.style.left = right + "px";
 					iFramePanel_mail_preview.style.height = "350px";
 					iFramePanel_mail_preview.style.display = "";
 					iFramePanel_mail_preview.style.border = "1px solid #E5E5E5";
 					iFramePanel_mail_preview.style.boxShadow = "0 3px 6px rgba(0,0,0,0.16)";
 					iFramePanel_mail_preview.classList.toggle('on');
-
-					document.getElementById("mail_preview_Layer").style.width = "633px";
+					
+					document.getElementById("mail_preview_Layer").style.width = "500px";
 					document.getElementById("mail_preview_Layer").style.height = "350px";
 
 

@@ -3669,6 +3669,7 @@ input[type=range]::-ms-tooltip {display: none;}
 .icon_mail_Confirm{ background:url(../images/ImgIcon/view-document-confirm.gif) no-repeat; background-size:16px 15px; width:16px; height:16px; display:inline-block; margin: 7px 4px 0px 4px; cursor:pointer;}
 .icon_mail_Cancle{ background:url(../images/ImgIcon/view-document-cancel.gif) no-repeat; background-size:16px 15px; width:16px; height:16px; display:inline-block; margin: 7px 4px 0px 4px; cursor:pointer;}
 tr.mail_confirm > td:nth-child(7) { text-decoration: line-through; }
+tr.mail_confirm > td:nth-child(7) div{ text-decoration: line-through; }
 /*tr.mail_confirm > td{position:relative; }
 tr.mail_confirm > td:not(:nth-child(-n+5)):before{content:" "; position:absolute; top:51%; left:0; border-bottom:1px solid #48494B; width:100%;}
 */

@@ -262,7 +262,7 @@
         </div>
         <div class="btnposition btnpositionNew" id="btn_area">
             <a class="imgbtn" onclick="return delete_mail()"><span><spring:message code="ezPoll.t202" /></span></a>
-            <a class="imgbtn" onclick="return moveHackingMail_previewMail()"><span><spring:message code="ezEmail.previewMail.kdh01" /></span></a>
+            <a class="imgbtn" onclick="return moveHackingMail_previewMail()"><span><spring:message code="ezEmail.zno002" /></span></a>
             <a class="imgbtn" onclick="windows_close()"><span><spring:message code="main.t3" /></span></a>
         </div>
     </div>

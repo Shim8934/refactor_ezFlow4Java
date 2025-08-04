@@ -1516,7 +1516,7 @@ public class EzEmailUtil {
 				pAttachListHtml += " <span onclick=\"DownloadAttach('" + aitem + "');\"><span title=\"" + filename_spclStr + " (" + strSize + ")" + "\" class='attachFileName' onmouseover=this.style.color='#164aad' onmouseout=this.style.color='black' style='cursor:pointer' >" + filename_spclStr + " (" + strSize + ")</span></span>";
 
 				// 다운로드 아이콘
-				pAttachListHtml += " <span onclick=\"DownloadAttach('" + aitem + "');\" _filehref='" + aitem + "' _filesize='" + size + "' _filename=\"" + filename_egovSpclStr + "\" id='MailAttachDownloadItems' name='MailAttachDownloadItems' ><img src='/images/icon_adddownload.gif' width='16' height='16' style='vertical-align: top;'></span>";
+				pAttachListHtml += " <span onclick=\"DownloadAttach('" + aitem + "');\" _filehref='" + aitem + "' _filesize='" + size + "' _filename=\"" + filename_egovSpclStr + "\" id='MailAttachDownloadItems' name='MailAttachDownloadItems' ><img src='/images/icon_adddownload.gif' width='16' height='16' style='vertical-align: top; cursor:pointer'></span>";
 
 				pAttachListHtml += "</li>";
 
