@@ -274,7 +274,7 @@
 		            }
 		            else {
 // 		                window.open("/ezCommon/showPersonInfo.do?id=" + tr[0].getAttribute("DATA4"), "", "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + GetOpenPosition(420, 450));
-		                showPopup("/ezCommon/showPersonInfo.do?id=" + tr[0].getAttribute("DATA4"), 420, 450, "", "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + GetOpenPosition(420, 450), hidePopup);
+		                showPopup("/ezCommon/showPersonInfo.do?id=" + tr[0].getAttribute("DATA4"), 420, 450, "", "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + GetOpenWindowfeature(420, 450), hidePopup);
 		            }
 		        }
 		    }
