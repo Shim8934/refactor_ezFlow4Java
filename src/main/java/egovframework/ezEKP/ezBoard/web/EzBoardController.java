@@ -99,7 +99,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import egovframework.com.cmm.EgovMessageSource;
-import egovframework.com.cmm.service.EgovFileMngUtil;
+import egovframework.com.cmm.service.EzFileMngUtil;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGKlibService;
 import egovframework.ezEKP.ezBoard.service.EzBoardAdminService;
 import egovframework.ezEKP.ezBoard.service.EzBoardService;
@@ -157,7 +157,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @see
  */
 @Controller("EzBoardController")
-public class EzBoardController extends EgovFileMngUtil{
+public class EzBoardController extends EzFileMngUtil{
 	
 	@Autowired
 	private CommonUtil commonUtil;

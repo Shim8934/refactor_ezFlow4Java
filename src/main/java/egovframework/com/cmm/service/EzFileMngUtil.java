@@ -47,7 +47,7 @@ import org.egovframe.rte.fdl.idgnr.EgovIdGnrService;
 import org.egovframe.rte.fdl.property.EgovPropertyService;
 
 /**
- * @Class Name  : EgovFileMngUtil.java
+ * @Class Name  : EzFileMngUtil.java
  * @Description : 메시지 처리 관련 유틸리티
  * @Modification Information
  *
@@ -62,8 +62,8 @@ import org.egovframe.rte.fdl.property.EgovPropertyService;
  * @see
  *
  */
-@Component("EgovFileMngUtil")
-public class EgovFileMngUtil extends EgovAbstractServiceImpl{
+@Component("EzFileMngUtil")
+public class EzFileMngUtil extends EgovAbstractServiceImpl{
 
     public static final int BUFF_SIZE = 2048;
 
@@ -73,7 +73,7 @@ public class EgovFileMngUtil extends EgovAbstractServiceImpl{
     @Resource(name = "egovFileIdGnrService")
     private EgovIdGnrService idgenService;
 
-    private static final Logger logger = LoggerFactory.getLogger(EgovFileMngUtil.class);
+    private static final Logger logger = LoggerFactory.getLogger(EzFileMngUtil.class);
     
     @Autowired
 	private CommonUtil commonUtil;

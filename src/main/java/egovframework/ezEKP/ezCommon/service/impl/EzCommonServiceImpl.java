@@ -9,7 +9,7 @@ import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import egovframework.com.cmm.EgovMessageSource;
-import egovframework.com.cmm.service.EgovFileMngUtil;
+import egovframework.com.cmm.service.EzFileMngUtil;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGKlibService;
 import egovframework.ezEKP.ezBoard.service.EzBoardService;
 import egovframework.ezEKP.ezCommon.dao.EzCommonDAO;
@@ -94,7 +94,7 @@ import java.util.stream.Collectors;
 import static egovframework.ezEKP.ezNewPortal.vo.PortletInfoVO.FixBoardCode;
 
 @Service("EzCommonService")
-public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonService {
+public class EzCommonServiceImpl extends EzFileMngUtil implements EzCommonService {
 
 	@Autowired
 	private CommonUtil commonUtil;

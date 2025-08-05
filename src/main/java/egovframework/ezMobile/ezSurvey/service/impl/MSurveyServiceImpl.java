@@ -26,7 +26,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import egovframework.com.cmm.EgovMessageSource;
-import egovframework.com.cmm.service.EgovFileMngUtil;
+import egovframework.com.cmm.service.EzFileMngUtil;
 import egovframework.ezMobile.ezOption.service.MOptionService;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.ezMobile.ezSurvey.dao.MSurveyDAO;
@@ -46,7 +46,7 @@ import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 @Service("MSurveyService")
-public class MSurveyServiceImpl extends EgovFileMngUtil implements MSurveyService {
+public class MSurveyServiceImpl extends EzFileMngUtil implements MSurveyService {
 	private static final Logger logger = LoggerFactory.getLogger(MSurveyServiceImpl.class);
 	
 	final public int mobileListSize = 20;

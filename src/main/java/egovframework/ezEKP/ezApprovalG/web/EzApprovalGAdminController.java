@@ -28,7 +28,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import egovframework.com.cmm.EgovMessageSource;
-import egovframework.com.cmm.service.EgovFileMngUtil;
+import egovframework.com.cmm.service.EzFileMngUtil;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGAdminService;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGContInfoVO;
@@ -113,7 +113,7 @@ import java.util.stream.Collectors;
  */
 
 @Controller
-public class EzApprovalGAdminController extends EgovFileMngUtil {
+public class EzApprovalGAdminController extends EzFileMngUtil {
 	
 	@Autowired	
 	private CommonUtil commonUtil;

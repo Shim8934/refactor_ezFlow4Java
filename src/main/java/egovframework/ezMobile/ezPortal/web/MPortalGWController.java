@@ -62,7 +62,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import egovframework.com.cmm.EgovMessageSource;
-import egovframework.com.cmm.service.EgovFileMngUtil;
+import egovframework.com.cmm.service.EzFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezEmail.vo.MailColorVO;
@@ -104,7 +104,7 @@ import egovframework.let.utl.fcc.service.CommonUtil;
  */
 
 @RestController
-public class MPortalGWController extends EgovFileMngUtil {
+public class MPortalGWController extends EzFileMngUtil {
 	
 	private static final Logger logger = LoggerFactory.getLogger(MPortalGWController.class);
 	

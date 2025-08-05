@@ -2,7 +2,7 @@ package egovframework.ezEKP.ezPersonal.web;
 
 import com.sun.org.apache.xml.internal.security.utils.Base64;
 import egovframework.com.cmm.EgovMessageSource;
-import egovframework.com.cmm.service.EgovFileMngUtil;
+import egovframework.com.cmm.service.EzFileMngUtil;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGOutOfOfficeInfoVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
@@ -72,7 +72,7 @@ import java.util.stream.Collectors;
  */
 
 @Controller
-public class EzPersonalController extends EgovFileMngUtil {
+public class EzPersonalController extends EzFileMngUtil {
 	
 	private static final Logger logger = LoggerFactory.getLogger(EzPersonalController.class);
 	

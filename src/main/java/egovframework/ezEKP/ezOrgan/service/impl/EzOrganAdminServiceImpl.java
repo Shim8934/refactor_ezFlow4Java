@@ -2888,7 +2888,7 @@ public class EzOrganAdminServiceImpl extends EgovAbstractServiceImpl implements 
 			in              = new BufferedInputStream(new FileInputStream(file));
 			String mimetype = "application/octet-stream";
 			
-			response.setBufferSize(2048);		// BUFF_SIZE: 2048 (extends EgovFileMngUtil) 
+			response.setBufferSize(2048);		// BUFF_SIZE: 2048 (extends EzFileMngUtil) 
 			response.setContentType(mimetype);
 			response.setHeader("Content-Disposition", "attachment; filename=\"" + _fileName + "\"");
 			response.setContentLength((int)file.length());

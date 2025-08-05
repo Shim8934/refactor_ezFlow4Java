@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.google.gson.Gson;
 
-import egovframework.com.cmm.service.EgovFileMngUtil;
+import egovframework.com.cmm.service.EzFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezMobile.ezOption.service.MOptionService;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
@@ -35,7 +35,7 @@ import egovframework.let.user.login.service.LoginService;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 
 @RestController
-public class MOptionGWController extends EgovFileMngUtil {
+public class MOptionGWController extends EzFileMngUtil {
 
 	private static final Logger logger = LoggerFactory.getLogger(MOptionGWController.class);
 

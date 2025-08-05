@@ -47,7 +47,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
 
 import egovframework.com.cmm.EgovMessageSource;
-import egovframework.com.cmm.service.EgovFileMngUtil;
+import egovframework.com.cmm.service.EzFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
@@ -80,7 +80,7 @@ import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.KlibUtil;
 
 @Service("EzWebFolderService")
-public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFolderService {
+public class EzWebFolderServiceImpl extends EzFileMngUtil implements EzWebFolderService {
 	private static final String HISTORY_FOLDER = "history/";
 
 	@Resource(name = "EzWebFolderDAO")

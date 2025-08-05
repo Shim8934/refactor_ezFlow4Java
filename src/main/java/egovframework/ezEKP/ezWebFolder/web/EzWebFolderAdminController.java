@@ -45,7 +45,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import egovframework.com.cmm.EgovMessageSource;
-import egovframework.com.cmm.service.EgovFileMngUtil;
+import egovframework.com.cmm.service.EzFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezNotification.service.EzNotificationService;
@@ -64,7 +64,7 @@ import egovframework.let.utl.rest.Rest.Module;
 import egovframework.let.utl.rest.Result;
 
 @Controller
-public class EzWebFolderAdminController extends EgovFileMngUtil {
+public class EzWebFolderAdminController extends EzFileMngUtil {
 
 	private static final Logger logger = LoggerFactory.getLogger(EzWebFolderAdminController.class);
 

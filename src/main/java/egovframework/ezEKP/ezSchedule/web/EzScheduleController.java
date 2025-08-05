@@ -65,7 +65,7 @@ import com.ibm.icu.util.Calendar;
 import com.sun.mail.imap.IMAPFolder;
 
 import egovframework.com.cmm.EgovMessageSource;
-import egovframework.com.cmm.service.EgovFileMngUtil;
+import egovframework.com.cmm.service.EzFileMngUtil;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGKlibService;
 import egovframework.ezEKP.ezCabinet.service.EzCabinetAdminService;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
@@ -147,7 +147,7 @@ import static egovframework.ezEKP.ezOrgan.vo.OrganAuth.AdminAuth;
  */
 
 @Controller
-public class EzScheduleController extends EgovFileMngUtil {
+public class EzScheduleController extends EzFileMngUtil {
 	private static final Logger logger = LoggerFactory.getLogger(EzScheduleController.class);
 
 	@Autowired

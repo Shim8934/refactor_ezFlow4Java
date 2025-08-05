@@ -121,7 +121,7 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException; 
 import org.xml.sax.SAXParseException;
 import egovframework.com.cmm.EgovMessageSource; 
-import egovframework.com.cmm.service.EgovFileMngUtil; 
+import egovframework.com.cmm.service.EzFileMngUtil; 
 import egovframework.ezEKP.ezApprovalG.dao.EzApprovalGAdminDAO; 
 import egovframework.ezEKP.ezApprovalG.dao.EzApprovalGDAO; 
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGAdminService; 
@@ -153,7 +153,7 @@ import javax.servlet.ServletContext;
 import java.util.Iterator;
 
 @Service("EzApprovalGService")
-public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprovalGService {
+public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalGService {
 
 	@Autowired
 	private CommonUtil commonUtil;
@@ -32560,7 +32560,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		logger.debug("convertDocumentToImg started");
 
 		String originalFilename = docId + "_office";
-//		EgovFileMngUtil.writeFile(file, originalFilename, tempUploadPath);
+//		EzFileMngUtil.writeFile(file, originalFilename, tempUploadPath);
 
         // 다른 서버에 설치되어있는 변환솔루션의 경우, 솔루션서버에 마운트된 위치를 filePath로 알려줘야함
 //		String filePath = URLEncoder.encode(tempUploadPath + commonUtil.separator + originalFilename, "UTF-8");
@@ -32569,7 +32569,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
                 commonUtil.separator +  getDocDir(docId);
         if(file != null){
             originalFilename = file.getOriginalFilename();
-            EgovFileMngUtil.writeFile(file, docId + "_office", servletContext.getRealPath("") + filePath2);
+            EzFileMngUtil.writeFile(file, docId + "_office", servletContext.getRealPath("") + filePath2);
             ext = originalFilename.substring(originalFilename.lastIndexOf('.') + 1);
         }
         String filePath = filePath2 + commonUtil.separator + docId + "_office";
