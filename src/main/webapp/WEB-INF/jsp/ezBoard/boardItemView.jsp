@@ -813,7 +813,7 @@
 		        
 		        if (gubun != "2") {
 	                window.location.href = "/ezBoard/boardNewItem.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(pItemID) + "&mode=modify" + "&reservedItem=" + pReservedItem + "&portletId=" + portletId + "&historyModify=" + historyModify + "&version=" + version;
-		            window.resizeTo(785, 780);
+		            window.resizeTo(820, 780);
 		        }
 		    }
 		    
