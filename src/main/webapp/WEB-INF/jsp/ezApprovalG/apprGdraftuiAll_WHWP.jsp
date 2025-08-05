@@ -557,7 +557,6 @@
 				}	
 				
 				// 일괄기안에 대응하도록 루프 진행
-				ShowMailProgress(); // 로딩 이미지 표출
 				var ret = "";
 				docMaxTabNumForDraft = pDocIDAry.length -1; // 0번 인덱스 제거, 1안부터 기안 진행하도록 전역변수 셋팅
 				docDraftInfoChkCnt = 0; // 각 안 별 결재정보 체크 카운트 전역변수 초기화
@@ -1893,8 +1892,7 @@
 	    			HiddenMailProgress();
 	    			return;
 	    		}
-	    		
-	    		ShowMailProgress();
+				
 	    		// 사실상 필요없는 분기인듯? pDraftFlag는 DRAFT나 REDRAFT 둘중 하나임
 	    		/*
                 if (pDraftFlag == "HABYUI" || pDraftFlag == "GAMSABU" || pDraftFlag == "WHOKYUL") {

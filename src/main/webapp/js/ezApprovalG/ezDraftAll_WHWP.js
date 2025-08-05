@@ -1902,8 +1902,32 @@ function setDocNumFormat(pPrefix) {
 	}
 
 	var fieldValue = GetFieldText(pPrefix + "docnumber"); // 문서번호 필드의 문서번호 포맷
-	
-	numHeader = getDocNumByFormat(fieldValue);
+    
+    // orgdocnum 처리 추가
+    if ("hwp" === docHref.substring(docHref.lastIndexOf(".") + 1)) {
+        var tmpdocNum = GetDocumentElementForDraftAll(pPrefix + "orgdocnum", true);
+
+        if (!tmpdocNum) {
+            if (fieldValue) {
+                SetDocumentElementForDraftAll("orgdocnum", fieldValue);
+            }
+        } else {
+            fieldValue = tmpdocNum;
+        }
+    } else {
+        var tmpdocNum = DocumentBodyGetAttribute(pPrefix + "orgdocnum");
+
+        if (!tmpdocNum) {
+            if (fieldValue) {
+                DocumentBodySetAttribute("orgdocnum", fieldValue);
+            }
+        } else {
+            fieldValue = tmpdocNum;
+        }
+    }
+
+    
+    numHeader = getDocNumByFormat(fieldValue);
 	
 	PutFieldText(pPrefix + "docnumber", numHeader);
 	
