@@ -687,7 +687,7 @@
 	        </div>
         	<div class="scheduleListBox" style="overflow:hidden; padding-right: 0;">
 		        <%-- 2023-06-23 황인경 - 디자인 개선 > 일정관리 > 좌측메뉴 > 최상위 '일정관리' 메뉴 표시 추가 --%>
-	        	<h2 class="on">
+	        	<h2 class="on" onclick="Function_Flag(2)">
 	        		<span class="sub_iconLNB tree_arrow_down"></span><span class="h2Title" id="schedule_main" onclick="Function_Flag(2)"><spring:message code='ezSchedule.t1010'/></span>
 		        </h2>
 		        <ul class="lnbUL">
