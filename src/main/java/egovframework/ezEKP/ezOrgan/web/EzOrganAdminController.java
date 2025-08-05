@@ -408,7 +408,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			ezCommonService.alterTblUsermasterForTeams(); // 2025-07-29 김혜림 - 팀즈 연동을 위한 TEAMSID 컬럼 추가
 			ezCommonService.createAuthTokenTable(); // 2025-07-31 김혜림 - Graph API 인증토큰 저장 테이블 생성
 			ezCommonService.createUserPresenceTable(); // 2025-08-04 김혜림 - Graph API Presence 정보 저장 테이블 생성
-
+            ezCommonService.alterTblBoardInfoUrlCopyFlag(); // 2025-08-05 이유정 - 게시판 > 게시글 주소복사 컬럼 추가
 		} catch (Exception e) {
     		logger.error(e.getMessage(), e);
     	}

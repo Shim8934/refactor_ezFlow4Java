@@ -1340,6 +1340,7 @@ public class EzBoardController extends EgovFileMngUtil{
 			boardInfo.setWriterFlag(strProp.getWriterFlag());
 			boardInfo.setStarRatingFlag(strProp.getStarRatingFlag()); // 별점 사용여부 플래그 추가
 			boardInfo.setVersionManage(strProp.getVersionManage()); // 버전관리 사용여부 플래그 추가
+            boardInfo.setUrlCopyFlag(strProp.getUrlCopyFlag()); // 주소복사 사용여부 플래그 추가
 
 			/* 2018-10-17 홍승비 - 게시판의 그룹게시판이 구분값 99인지 확인하여 게시판 boardInfo에 isAllGroupBoard값 셋팅 */
 			String boardGroupID = strProp.getBoardGroupID();

@@ -1975,6 +1975,28 @@
                     }
                 }
             }
+
+			function copyURL() {
+				var url = window.frames.location.href;
+
+				var urlArea = document.createElement("textarea");
+				urlArea.value = url;
+				document.body.appendChild(urlArea);
+				urlArea.select();
+
+				try {
+					var success = document.execCommand("copy");
+					if (success) {
+						alert("<spring:message code='ezBoard.t355' />");
+					} else {
+						console.log("copyURL error : " + e);
+					}
+				} catch (e) {
+					console.log("copyURL error : " + e);
+				}
+
+				document.body.removeChild(urlArea);
+			}
 		</script>
 	</head>
 	<body  id="bodyPopup" class="popup" style="overflow:hidden; height:100%;">
@@ -2019,6 +2041,9 @@
 		                    <li ID='btn_down' ><span  onclick="btn_ImgDownload()"><spring:message code='ezBoard.t1007'/></span></li>
 		        		</c:otherwise>
 		        	</c:choose>
+					<c:if test="${boardInfo.urlCopyFlag != 'N'}">
+						<li id ="urlCopyBtn"><span onclick="copyURL()"><spring:message code = "ezBoard.lyj02" /></span></li>
+					</c:if>
 		        	<%-- 2024-02-02- 홍승비 - 게시물 승인 > 승인되지 않은 게시물 팝업창에서 캐비넷등록 버튼이 표출되는 오류 수정 (apprFlag값이 'W'인 경우는 승인게시판인데도 승인자가 없는 경우임) --%>
 					<c:if test="${useCabinet == 'YES' && apprFlag != 'N' && apprFlag != 'C' && apprFlag != 'W'}">
 						<li><span onclick="addRelatedCabinet()"><spring:message code='ezCabinet.t125'/></span></li>

@@ -48,7 +48,8 @@
 			var boardType = "${ model.guBun }";
 			var versionManageFlag = false;
 			var useBoardNotUsed = $.trim("<c:out value='${model.notUsedFlag}'/>");
-			
+			var urlCopyFlag = "<c:out value='${model.urlCopyFlag}'/>"; <%-- url복사 사용여부 (Y/N) --%>
+
 	        document.onselectstart = function (){
 	            if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA") {
 	                return false;
@@ -144,6 +145,10 @@
 
 				if (writerFlag == "Y") {
 					$("#chkWriterFlag").prop("checked", true);
+				}
+
+				if (urlCopyFlag == "Y") {
+					$("#chkUrlCopy").prop("checked", true);
 				}
 
 				checkGubun();
@@ -594,6 +599,8 @@
 	            	useBoardNotUsed = "N";
 				}
 
+				urlCopyFlag = $("#chkUrlCopy").is(":checked") ? "Y" : "N" ; <%-- 주소복사 --%>
+
 	            /* 2018-10-18 홍승비 - 게시판'그룹' 이름변경 시 하위게시판처럼 데이터가 업데이트되는 부분 수정 */
 	            $.ajax({
 	            	type : "POST",
@@ -614,7 +621,7 @@
 						reactFlag:useBoardReplyReact, useKeyword:useKeyword, publicFlag:publicFlag,
 						tabBoardCheck1:tabBoardCheck1, tabBoardCheck2:tabBoardCheck2, tabBoardCheck3:tabBoardCheck3, 
 						attachmentFlag:attachmentFlag, allNewBoardFlag:useAllNewBoard, writerFlag : writerFlag,
-						starRatingFlag:starRatingFlag, versionManage : vmf, notUsedFlag:useBoardNotUsed
+						starRatingFlag:starRatingFlag, versionManage : vmf, notUsedFlag:useBoardNotUsed, urlCopyFlag:urlCopyFlag
 	            	},
 	            	success : function(result) {
 	            	    if (result == "success") {
@@ -1493,6 +1500,7 @@
 	        	    <span style="display:inline-block;"><input type="checkbox" id="keyWord" onclick="checkboardtype()" /><spring:message code="ezApprovalG.t1200" />&nbsp;</span>
 	        	    <span style="display:inline-block;"><input type="checkbox" id="chkStarRating" onclick="checkboardtype()" /><spring:message code="ezBoard.lhr001" />&nbsp;</span>
 	        		<span style="display:inline-block;"><input type="checkbox" id="chkBoardNotUsed" onclick="checkboardtype()" /><spring:message code="ezBoard.CSJ01" />&nbsp;</span>
+	        	    <span style="display:inline-block;"><input type="checkbox" id="chkUrlCopy" onclick="checkboardtype()" /><spring:message code = "ezBoard.lyj02" />&nbsp;</span>
 	        	</td>
 	        </tr>
 	        

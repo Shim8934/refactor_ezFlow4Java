@@ -8570,5 +8570,22 @@
 			PRIMARY KEY (ID)
 		)
 	</statement>
-	
+
+	<select id="EzCommonDAO.checkTblBoardInfoUrlCopyFlag" resultClass="String">
+		<![CDATA[
+			SELECT
+				URLCOPYFLAG
+			FROM
+				TBL_BOARD_BOARDINFO
+			WHERE
+				ROWNUM <= 1
+		]]>
+	</select>
+
+	<statement id="EzCommonDAO.alterTblBoardInfoUrlCopyFlag">
+		ALTER TABLE
+			TBL_BOARD_BOARDINFO
+			ADD
+				URLCOPYFLAG CHAR(1) DEFAULT 'N' NOT NULL
+	</statement>
 </sqlMap>

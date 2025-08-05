@@ -173,6 +173,8 @@ public class BoardPropertyVO {
 	private String versionManage;
 	/** 2023-11-02 조소정 - 게시판 사용안함 여부 플래그 추가 */
 	private String notUsedFlag;
+    /** URL 복사 사용여부 */
+    private String urlCopyFlag;
 	
 	public int getSs_board_maxRows() {
 		return ss_board_maxRows;
@@ -686,5 +688,12 @@ public class BoardPropertyVO {
 	}
 	public void setNotUsedFlag(String notUsedFlag) {
 		this.notUsedFlag = notUsedFlag;
+	}
+
+	public String getUrlCopyFlag() {
+		return urlCopyFlag;
+	}
+	public void setUrlCopyFlag(String urlCopyFlag) {
+		this.urlCopyFlag = urlCopyFlag;
 	}
 }

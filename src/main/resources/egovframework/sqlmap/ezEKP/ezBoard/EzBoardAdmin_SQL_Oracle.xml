@@ -2481,7 +2481,8 @@
 	      			WRITERFLAG = #v_WRITERFLAG#,
 	      			STARRATINGFLAG = #v_STARRATINGFLAG#,
 	      			VERSIONMANAGE = #versionManage#,
-	      			NOTUSEDFLAG = #v_NOTUSEDFLAG#
+	      			NOTUSEDFLAG = #v_NOTUSEDFLAG#,
+	      			URLCOPYFLAG = #v_URLCOPYFLAG#
 	    		WHERE
 	    			TENANT_ID = #v_TENANTID#
 	    		AND  

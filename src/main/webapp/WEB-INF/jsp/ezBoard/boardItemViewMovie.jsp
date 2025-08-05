@@ -1185,6 +1185,28 @@
                     }
                 }
             }
+
+			function copyURL() {
+				var url = window.frames.location.href;
+
+				var urlArea = document.createElement("textarea");
+				urlArea.value = url;
+				document.body.appendChild(urlArea);
+				urlArea.select();
+
+				try {
+					var success = document.execCommand("copy");
+					if (success) {
+						alert("<spring:message code='ezBoard.t355' />");
+					} else {
+						console.log("copyURL error : " + e);
+					}
+				} catch (e) {
+					console.log("copyURL error : " + e);
+				}
+
+				document.body.removeChild(urlArea);
+			}
 		</script>
 	</head>
 	<body id="bodyPopup" class="popup">
@@ -1229,6 +1251,9 @@
 		                    <li ID='btn_down' ><a id="movieDownload"><span><spring:message code='ezQuestion.t180'/><spring:message code='ezQuestion.t567'/></span></a></li>
 		        		</c:otherwise>
 		        	</c:choose>
+					<c:if test="${boardInfo.urlCopyFlag != 'N'}">
+						<li id ="urlCopyBtn"><span onclick="copyURL()"><spring:message code = "ezBoard.lyj02" /></span></li>
+					</c:if>
                     <c:if test="${MyBoardScrapFlag != 'NONE' && apprFlag != 'N'}">
 		        		<c:choose>
                             <c:when test="${MyBoardScrapFlag eq 'TYPE1' && isScrap ne 'true'}">
