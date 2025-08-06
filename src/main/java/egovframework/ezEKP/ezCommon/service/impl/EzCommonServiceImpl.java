@@ -2077,6 +2077,24 @@ public class EzCommonServiceImpl extends EzFileMngUtil implements EzCommonServic
             put("description","전자설문 참여자보기에서 추첨기능 사용 여부. YES: 사용, NO: 미사용 (default : NO)");
             put("config_type","전자설문");
         }});
+
+        test.add(new HashMap<String, Object>(){{
+            put("confName","usePOP3Default");
+            put("property_value","NO");
+            put("config_name","POP3 사용 여부");
+            put("regdate","2025-06-23 00:00:00");
+            put("description","YES: 사용함, NO:사용안함(default: NO)");
+            put("config_type","메일");
+        }});
+
+        test.add(new HashMap<String, Object>(){{
+            put("confName","useIMAPDefault");
+            put("property_value","NO");
+            put("config_name","IMAP 사용 여부");
+            put("regdate","2025-06-23 00:00:00");
+            put("description","YES: 사용함, NO:사용안함(default: NO)");
+            put("config_type","메일");
+        }});
         
 		List<TenantVO> tenantIdList = ezCommonDAO.getTenantList();
 		
