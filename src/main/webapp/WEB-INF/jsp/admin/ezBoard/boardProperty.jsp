@@ -261,6 +261,13 @@
 	                if (!$("#chkURLBoard").is(":checked")) {
 	                	document.getElementById("txtURL").style.display = "none";
 	                }
+
+                    if ($("#chkURLBoard").is(":checked") || $("#chkHomePageBoard").is(":checked") || $("#chkCategoryBoard").is(":checked") || $("#fileViewerBoardChkBox").is(":checked")) {
+                        $("#chkUrlCopy").prop("disabled", true);
+                        $("#chkUrlCopy").prop("checked", false);
+                    } else {
+                        $("#chkUrlCopy").prop("disabled", false);
+                    }
 	            }
 
 				$(".boardTypeEventHandler").on("click", (e) => {
