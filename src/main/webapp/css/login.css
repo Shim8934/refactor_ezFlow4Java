@@ -303,7 +303,7 @@ a{
 .password_change p span:nth-child(2){margin-top: 5px;}
 #exDiv3 dl{margin-top: 20px;}
 .warning_wrap .layerTitle{margin-bottom: 20px;}
-.modal{max-width: 600px !important;}
+.modal:not(#exDiv10){max-width: 600px !important;}
 
 
 /* 비밀번호 초기화 */
