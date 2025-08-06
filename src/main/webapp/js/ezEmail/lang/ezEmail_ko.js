@@ -415,6 +415,9 @@ const strLangRcptEditError = "입력된 값이 메일 주소 형식이 아닙니
 
 const strPreviousTime = '현재 시간보다 이전으로 설정되었습니다. 예약발송 시간을 다시 설정해주시기 바랍니다.';
 
+const strUnLimit = "무제한";
+const strDownloadsCount = "회"
+
 function GetLocalTime(Offset , pDateTime)
 {
     if (pDateTime == "")

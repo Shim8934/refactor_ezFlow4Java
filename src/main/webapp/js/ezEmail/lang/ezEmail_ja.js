@@ -415,6 +415,9 @@ const strLangRcptEditError = "입력된 값이 메일 주소 형식이 아닙니
 
 const strPreviousTime = '時間の指定が正しくありません。 確認してください。';
 
+const strUnLimit = "無制限";
+const strDownloadsCount = "회";
+
 function GetLocalTime(Offset , pDateTime)
 {
     if (pDateTime == "")

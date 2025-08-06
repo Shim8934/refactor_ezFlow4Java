@@ -1636,6 +1636,20 @@
 	            	mailBoxMenu.attr("class", "list_text node_selected");
 	            }--%>
 			}
+
+			function Open_BigAttachManage() {
+				try {
+					let url = "/ezEmail/bigAttachManageView.do";
+
+					if (shareId != "") {
+						url += "?shareId=" + encodeURIComponent(shareId);
+					}
+
+					window.open(url, "right");
+				} catch (e) {console.log(e);}
+				liSelcted();
+			}
+			
 	    </script>
 		<style type="text/css">
 			.myBar_red {
@@ -1711,6 +1725,7 @@
 		            </c:if>	
 		            <li onclick="mail_exportall()" style="display: none;"><span class="list_text"><spring:message code="ezEmail.t99000014" /></span></li>
 		            <li onclick="Open_ReservationManage()"><span class="list_text"><spring:message code="ezEmail.t605" /></span></li>
+					<li onclick="Open_BigAttachManage()"><span class="list_text">대용량 첨부파일 관리</span></li>
 		            <c:if test="${useBizmekaSpambox == 'YES'}">
 		            	<li onclick="openSpamBox()"><span class="list_text"><spring:message code="ezEmail.ldh01" /></span></li>
 		            </c:if>

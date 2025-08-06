@@ -409,6 +409,9 @@ const strLangRcptEditError = "입력된 값이 메일 주소 형식이 아닙니
 
 const strPreviousTime = 'Tanggal cadangan tidak boleh lebih tua dari sekarang.';
 
+const strUnLimit = "tak terbatas";
+const strDownloadsCount = "회";
+
 function GetLocalTime(Offset , pDateTime)
 {
     if (pDateTime == "")

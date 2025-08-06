@@ -415,6 +415,9 @@ const strLangRcptEditError = "The entered value is not in a valid email format.\
 
 const strPreviousTime = 'Reserve date should not be older than now.';
 
+const strUnLimit = "unlimited";
+const strDownloadsCount = "downloads";
+
 function GetLocalTime(Offset , pDateTime)
 {
     if (pDateTime == "")

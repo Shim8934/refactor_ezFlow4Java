@@ -2804,6 +2804,7 @@ function ConvertEmbedPath(xmlDoc, rootNode) {
                     strFileExt == ".xlsx" || strFileExt == ".rtf" || strFileExt == ".mp3" || strFileExt == ".zip") {
                         strTarget = "target=''";
                     }*/
+                    var defaultFileSize = fileSize;
                     
                     if (fileSize / 1024 / 1024 / 1024 > 1) {
                         fileSize = (Math.floor(parseFloat(fileSize / 1024 / 1024 / 1024 * 10)) / 10).toFixed(1) + "GB";
@@ -2824,8 +2825,21 @@ function ConvertEmbedPath(xmlDoc, rootNode) {
                                 "<a href='" + EmailHref + "' " + strTarget + " style='color:#333333; text-decoration: none;'><img src='" + document.location.protocol + "//" + g_servername + "/images/icon_adddownload.gif' width='16' height='16'  style='margin-right:8px; cursor:pointer;vertical-align:middle' border='0'/></a>" +
                                 "<a id='BigSizeFileLink' href='" + EmailHref + "' " + strTarget + " style='color:#333333; text-decoration: none;font-size:12px;'>" + FileName + " (" + fileSize + ")</a></td>" +
                                 "</tr>";
-                    
-                    bigAttachFileArr.push(getNodeText(GetChildNodes(nodes[i])[0]).substr(0, 36));
+
+                    var fileInfoMap = new Map();
+                    var fileId = getNodeText(GetChildNodes(nodes[i])[0]).substr(0, 36);
+                    var uploadDate = _pBigAttachDownloadPeriod.split(" ~ ")[0].trim();
+                    var endDate = _pBigAttachDownloadPeriod.split(" ~ ")[1].trim();
+
+                    fileInfoMap.set("fileId",fileId)
+                    fileInfoMap.set("fileName",FileName)
+                    fileInfoMap.set("fileSize",defaultFileSize)
+                    fileInfoMap.set("uploadDate",uploadDate)
+                    fileInfoMap.set("endDate",endDate)
+
+
+                    var fileInfoObj = Object.fromEntries(fileInfoMap);
+                    bigAttachFileArr.push(fileInfoObj);
                 }
             }
         }
@@ -4496,13 +4510,16 @@ function callMoveAttachFileOrder() {
 }
 
 function setBigAttachCountInfo (bigAttachArr) {
+
+    const data = {
+        bigAttach : bigAttachArr,
+        bigSizeAttachDownloadLimitCount : BigSizeAttachDownloadLimitCount
+    }
+    
 	$.ajax({
 		type	: "POST",
-		data	: {
-			bigAttach : bigAttachArr,
-			BigSizeAttachDownloadLimitCount : BigSizeAttachDownloadLimitCount
-		},
-		dataType: "text",
+        data	: JSON.stringify(data),
+        contentType: 'application/json; charset=utf-8',
 		url		: "/ezEmail/setBigAttachCountInfo.do",
 		async	: true,
 		success	: function(res) {

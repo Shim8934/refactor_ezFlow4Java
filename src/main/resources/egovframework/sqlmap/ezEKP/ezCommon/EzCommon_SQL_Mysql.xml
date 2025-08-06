@@ -8117,4 +8117,27 @@
 			CREATE_DT DATETIME
 		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
 	</statement>
+
+    <select id="EzCommonDAO.checkBigAttachInfo" resultClass="String">
+	   <![CDATA[
+        SELECT
+            FILE_NAME
+        FROM
+            JMOCHA_BIGATTACH_DOWN_LIMIT
+        WHERE
+            ROWNUM <= 1
+        ]]>
+   </select>
+
+    <statement id="EzCommonDAO.addBigAttachInfo">
+		<![CDATA[
+        ALTER TABLE
+            JMOCHA_BIGATTACH_DOWN_LIMIT
+            ADD
+            (FILE_NAME VARCHAR(100),
+			FILE_SIZE BIGINT(20),
+			USER_ID VARCHAR(80),
+			UPLOAD_DATE VARCHAR(100))
+        ]]>
+	</statement>
 </sqlMap>

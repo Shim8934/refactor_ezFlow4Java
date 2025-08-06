@@ -668,4 +668,6 @@ public interface EzCommonService {
 	
 	// 2025-07-24 김승연 - SAML 인증용 request id 확인을 위한 테이블 추가
 	public void createTblSamlRequestId() throws Exception;
+
+    public void alterJmochaBigAttachDownLimit() throws Exception;
 }
