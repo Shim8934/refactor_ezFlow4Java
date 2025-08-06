@@ -734,6 +734,7 @@
 					/* 2024-08-13 전인하 - URL 및 홈페이지 게시판인 경우, 키워드 기능 disabled 처리 */
                     $("#keyWord").prop("disabled", true);
 					$("#chkWriterFlag").prop("disabled", true);
+					$("#chkUrlCopy").prop("disabled", true);
 
                     document.getElementById("chkApprBoard").checked = false;
                     checkApprBoard();                   
@@ -755,7 +756,8 @@
                     document.getElementById("chkOneLineLayer").checked = false;
                     document.getElementById("keyWord").checked = false;
                     document.getElementById("chkOneLineNone").checked = true; // 댓글옵션  '사용안함' 체크
-				 	document.getElementById("chkWriterFlag").checked = false;
+                    document.getElementById("chkWriterFlag").checked = false;
+                    document.getElementById("chkUrlCopy").checked = false;
 	            }
 				 else if (chkCategoryBoard.checked == true) {
 					 document.getElementById("trAttribute").style.display = "none";
@@ -842,6 +844,13 @@
 					/* 2024-08-13 전인하 - URL 및 홈페이지 게시판인 경우, 키워드 기능 disabled 해제 */
                     $("#keyWord").prop("disabled", false);
                     $("#chkNoticeBoard").prop("disabled", false);
+
+					if (fileViewerBoardChkBox.checked == true) {
+						document.getElementById("chkUrlCopy").checked = false;
+						$("#chkUrlCopy").prop("disabled", true);
+					} else {
+						$("#chkUrlCopy").prop("disabled", false);
+					}
 	            }
 
 	            /* 2019-04-29 홍승비 - 포토, 썸네일, 익명, 동영상게시판 선택 시 답변메일발송 disabled 처리 */
