@@ -305,9 +305,9 @@
 
 	<insert id="EzEmailDAO.setBigAttachCountInfo" parameterClass="Map">
 		INSERT INTO JMOCHA_BIGATTACH_DOWN_LIMIT
-		(file_id, download_count, limit_count, tenant_id, file_name, file_size, user_id, upload_date, end_date)
+		(file_id, download_count, limit_count, tenant_id, file_name, file_size, user_id, upload_date)
 		VALUES
-			(#fileId#, 0, #limitCount#, #tenantId#, #fileName#, #fileSize#, #userId#, #uploadDate#, #endDate#)
+			(#fileId#, 0, #limitCount#, #tenantId#, #fileName#, #fileSize#, #userId#, #uploadDate#)
 	</insert>
 	
 	<select id="EzEmailDAO.checkBigAttachDownloadCount" parameterClass="Map" resultClass="String">
