@@ -200,7 +200,9 @@
 		    window.onbeforeunload = function () {
 		        try {
 		            window.opener.openergetDocInfo();
-		        } catch (e) { }
+		        } catch (e) { 
+		            window.parent.openergetDocInfo();
+		        }
 		    };
 		    function btnClose_onclick() {
 		        window.close();

@@ -23,7 +23,11 @@
 	        
 	        /* 2020-07-01 홍승비 - 문서기안 및 보기 시 div_Content 하위 테이블에 word-break속성이 공통적으로 존재하므로, 인쇄 시에도 해당 스타일을 적용함 */
 	        window.onload = function () {
-	            document.getElementById("printDocument").innerHTML = opener.PrtBodyContent;
+				if (isTeamsDesktop()) {
+					document.getElementById("printDocument").innerHTML = parent.PrtBodyContent;
+				} else {
+	            	document.getElementById("printDocument").innerHTML = opener.PrtBodyContent;
+				}
 	            $('#printDocument #body').css('overflow', 'visible');
 	            $('#BodyContent table').css('word-break', 'break-word');
 	            
@@ -54,12 +58,48 @@
 	            WebBrowser1.outerHTML = "";
 	            return false;
 	        }
+			
+			function close_Click() {
+				if (window.parent.location.href.indexOf("docViewerCompare.do") != -1) {
+					parent.printPopUpHidden();
+				} else {
+					parent.DivPopUpHidden();
+				}
+			}
+			
+			window.addEventListener("load", function() {
+				if (isTeamsDesktop()) {
+					document.getElementById("close").style.display = "";
+				}
+			})
 	    </script>
+		<style>
+			#close ul {
+				list-style: none; margin: 0; padding: 0;
+			}
+			#close ul li {
+				text-align: right;
+				margin-left: auto;
+				margin-right: 0;
+			}
+			#close ul li span {
+				display:inline-block;
+				width:25px;
+				height:28px;
+				background-image: url('/images/close_xBtn.png');
+				background-repeat: no-repeat;
+				background-position: 4px 6px;
+				text-align: right;
+			}
+		</style>
 	</head>
-	<body scroll="auto">
+	<body scroll="auto" style="background: #fff">
 	    <table align="center">
 	        <tr>
 	            <td>
+					<div id="close" style="display: none">
+						<ul><li><span onclick="return close_Click()"></span></li></ul>
+					</div>
 	                <div id="printDocument"></div>
 	            </td>
 	        </tr>

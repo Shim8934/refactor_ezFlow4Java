@@ -14,7 +14,7 @@
 				process();
 				document.getElementById("adminTopTitle").addEventListener("click", function() {
 					process();
-					//parent.frames["bottom"].location.href = "/admin/ezNewPortal/portalMain.do";
+					//parent.document.querySelector("iframe[name=bottom]").src = "/admin/ezNewPortal/portalMain.do";
 				});
 			}
 			
@@ -22,17 +22,11 @@
 				var admin = "${admin}"; // 전체관리자, 회사관리자
 				if (admin == "admin"){
 				    <c:if test="${packageType != 'standard' || firstScreen_Mail == 'YES'}">
-				    	window.open("/admin/ezOrgan/organMain.do", "bottom");
+                    	parent.document.querySelector("iframe[name=bottom]").src = "bottom";
 				    </c:if>
 				    <c:if test="${packageType == 'standard' && firstScreen_Mail == 'NO'}">
-					//일단 게시판으로 이동하게 만듬 2016-02-16 장진혁
-					//메인화면 포탈로 설정 2016-10-04 지정석
-//						window.open("/admin/ezPortal/portalMain.do", "bottom");
-	 					window.open("/admin/ezNewPortal/portalMain.do", "bottom");
+	 					parent.document.querySelector("iframe[name=bottom]").src = "/admin/ezNewPortal/portalMain.do";
 					</c:if>
-					/* <c:if test="${use_portal != 'YES'}">
-						window.open("/admin/ezPersonal/personalMain.do", "bottom");
-					</c:if> */
 					
 					<c:if test="${useActiveX == 'YES'}">
 						var userAgent = window.navigator.userAgent;
@@ -43,7 +37,7 @@
 			    	</c:if>
 				} else {
 					if ("${isWFAdmin}" == "YES") {
-						window.open("/admin/ezWebFolder/webFolderMain.do", "bottom");
+						parent.document.querySelector("iframe[name=bottom]").src = "/admin/ezWebFolder/webFolderMain.do";
 					}				
 				}
 			}
@@ -53,91 +47,91 @@
 
 			    switch (menuname){
 					case "menu01":		
-					    parent.frames["bottom"].location.href = "/admin/ezPersonal/personalMain.do";
+					    parent.document.querySelector("iframe[name=bottom]").src = "/admin/ezPersonal/personalMain.do";
 						break;
 					case "menu02":						
-					    parent.frames["bottom"].location.href = "/admin/ezOrgan/organMain.do";				
+					    parent.document.querySelector("iframe[name=bottom]").src = "/admin/ezOrgan/organMain.do";				
 						break;				
 			        case "menu03":		
-			            parent.frames["bottom"].location.href = "/admin/ezApproval/apprMain.do";
+			            parent.document.querySelector("iframe[name=bottom]").src = "/admin/ezApproval/apprMain.do";
 						break;
 					case "menu04":		
-					    parent.frames["bottom"].location.href = "/admin/ezApprovalG/apprGMain.do";
+					    parent.document.querySelector("iframe[name=bottom]").src = "/admin/ezApprovalG/apprGMain.do";
 						break;
 					case "menu06":	//게시판관리
-					    parent.frames["bottom"].location.href = "/admin/ezBoard/boardMain.do";
+					    parent.document.querySelector("iframe[name=bottom]").src = "/admin/ezBoard/boardMain.do";
 						break;
 					case "menu07":		
-					    parent.frames["bottom"].location.href = "/admin/ezCommunity/communityMain.do";
+					    parent.document.querySelector("iframe[name=bottom]").src = "/admin/ezCommunity/communityMain.do";
 						break;
 					case "menu08":		
-					    parent.frames["bottom"].location.href = "/admin/ezSchedule/scheduleMain.do";
+					    parent.document.querySelector("iframe[name=bottom]").src = "/admin/ezSchedule/scheduleMain.do";
 						break;
 					case "menu09":						
-					    parent.frames["bottom"].location.href = "/ezStatistics/statisticsMain.do";				
+					    parent.document.querySelector("iframe[name=bottom]").src = "/ezStatistics/statisticsMain.do";				
 						break;
 					case "menu10":		
-// 					    parent.frames["bottom"].location.href = "/admin/ezPortal/portalMain.do";
- 					    parent.frames["bottom"].location.href = "/admin/ezNewPortal/portalMain.do";
+// 					    parent.document.querySelector("iframe[name=bottom]").src = "/admin/ezPortal/portalMain.do";
+ 					    parent.document.querySelector("iframe[name=bottom]").src = "/admin/ezNewPortal/portalMain.do";
 						break;								
 					case "menu12":		
-					    parent.frames["bottom"].location.href = "/admin/ezResource/resourceMain.do";
+					    parent.document.querySelector("iframe[name=bottom]").src = "/admin/ezResource/resourceMain.do";
 						break;				
 				    case "menu13":		
-				        parent.frames["bottom"].location.href = "/Myoffice/ezDocManagement/Admin/DocAdmin_index.html";
+				        parent.document.querySelector("iframe[name=bottom]").src = "/Myoffice/ezDocManagement/Admin/DocAdmin_index.html";
 						break;				
 					case "menu14":		
-					    parent.frames["bottom"].location.href = "/myoffice/ezKMS/admin/index_admin.aspx";
+					    parent.document.querySelector("iframe[name=bottom]").src = "/myoffice/ezKMS/admin/index_admin.aspx";
 						break;
                     //김왕용 : ezDMS 관리자페이지 추가
 					case "menu15":		
-					    parent.frames["bottom"].location.href = "/Myoffice/ezDMS/admin/index_admin.aspx";
+					    parent.document.querySelector("iframe[name=bottom]").src = "/Myoffice/ezDMS/admin/index_admin.aspx";
 						break;              
 					case "menu16":
-				    	parent.frames["bottom"].location.href = "index_approval_Proc.htm";
+				    	parent.document.querySelector("iframe[name=bottom]").src = "index_approval_Proc.htm";
 						break;
                 	//20120725 모바일 기기 관리자 메뉴 추가	start						
 					case "menu17":
-					    parent.frames["bottom"].location.href = "index_mobileMgmt.htm";
+					    parent.document.querySelector("iframe[name=bottom]").src = "index_mobileMgmt.htm";
 						break;
 	                case "menu18":
-	                    parent.frames["bottom"].location.href = "/admin/ezSystem/systemMain.do";
+	                    parent.document.querySelector("iframe[name=bottom]").src = "/admin/ezSystem/systemMain.do";
 	                    break;
 // 	                   업무일지
 	                case "menu19":
-	                    parent.frames["bottom"].location.href = "/admin/ezJournal/journalMain.do";
+	                    parent.document.querySelector("iframe[name=bottom]").src = "/admin/ezJournal/journalMain.do";
 	                    break;
 				    case "menu20":
-				        parent.frames["bottom"].location.href = "/myoffice/ezStatistics/ezLog/index_Log.aspx";
+				        parent.document.querySelector("iframe[name=bottom]").src = "/myoffice/ezStatistics/ezLog/index_Log.aspx";
 				        break;
 					//20120725 모바일 기기 관리자 메뉴 추가	end	
 					
 					// ezPMS 관리자페이지 추가
 				    case "menu21":
-				    	parent.frames["bottom"].location.href = "/admin/ezPMS/pmsMain.do";
+				    	parent.document.querySelector("iframe[name=bottom]").src = "/admin/ezPMS/pmsMain.do";
 						break;
 				    //근태관리 관리자 메뉴 추가
 				    case "menu30":
-				    	parent.frames["bottom"].location.href = "/admin/ezAttitude/attitudeMain.do";
+				    	parent.document.querySelector("iframe[name=bottom]").src = "/admin/ezAttitude/attitudeMain.do";
 				    	break;
 				    // 캐비넷 관리자 메뉴 추가
 				    case "menu40":
-				    	parent.frames["bottom"].location.href = "/admin/ezCabinet/cabinetAdminMain.do";
+				    	parent.document.querySelector("iframe[name=bottom]").src = "/admin/ezCabinet/cabinetAdminMain.do";
 				    	break;
 					// 메일관리
 					case "menu31":
-						parent.frames["bottom"].location.href = "/admin/ezEmail/adminMailMain.do";
+						parent.document.querySelector("iframe[name=bottom]").src = "/admin/ezEmail/adminMailMain.do";
 						break;
 						
 					case "menu32":
-						parent.frames["bottom"].location.href = "/admin/ezWebFolder/webFolderMain.do";
+						parent.document.querySelector("iframe[name=bottom]").src = "/admin/ezWebFolder/webFolderMain.do";
 						break;
 						
 					case "menu33":
-						parent.frames["bottom"].location.href = "/admin/ezCar/carMain.do";
+						parent.document.querySelector("iframe[name=bottom]").src = "/admin/ezCar/carMain.do";
 						break;
 					case "menu34":
-						parent.frames["bottom"].location.href = "/admin/ezNotification/notificationMain.do";
+						parent.document.querySelector("iframe[name=bottom]").src = "/admin/ezNotification/notificationMain.do";
 						break;
 				}
 			}

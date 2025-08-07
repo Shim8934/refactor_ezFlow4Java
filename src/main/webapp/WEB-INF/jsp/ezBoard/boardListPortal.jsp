@@ -24,7 +24,7 @@
 			function MiniGotoList() {
 				//try {
 					//window.parent.top.frames("main").location.href = "/ezBoard/boardMainRedirect.do?boardID=" + BoardID;
-				window.parent.top.frames[0].location.href = "/ezBoard/boardMainRedirect.do?boardID=" + encodeURIComponent(BoardID);
+				window.parent.document.querySelector("iframe[name=top]").contentDocument.querySelector("iframe").src = "/ezBoard/boardMainRedirect.do?boardID=" + encodeURIComponent(BoardID);
 				//} catch (e) {}
 			}
 			

@@ -86,7 +86,7 @@
 	            getMail();
 	        }
 	        function Mailmore_btnClick() {
-	            window.open("/ezEmail/mailMain.do", "main");
+                parent.document.querySelector("iframe[name=main]").src = "/ezEmail/mailMain.do";
 	        }
 		</script>
 	</head>

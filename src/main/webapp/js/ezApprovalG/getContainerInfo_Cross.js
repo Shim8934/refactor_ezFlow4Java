@@ -446,20 +446,21 @@ function btnRemoveDoc_onclick() {
         var InformationString = strLangS385;
         //2018-09-19 김보미 - 알럿창으로 변경
 //        OpenAlertUI(InformationString);
-        alert(InformationString);
+        showAlert(InformationString);
         return;
     } else {
 	    var OpinionContent = strLangS387;
-	    var rtn = OpenInformationUI(OpinionContent, RemoveDoc_Complete, "OPEN");
-	    
-	    if (rtn) {
-	        RemoveDoc_Complete(rtn);
-	    }
+//	    var rtn = OpenInformationUI(OpinionContent, RemoveDoc_Complete, "OPEN");
+	     showConfirm(OpinionContent, RemoveDoc_Complete);
+//	    if (rtn) {
+//	        RemoveDoc_Complete(rtn);
+//	    }
     }
 }
 
 function RemoveDoc_Complete(RtnVal)
 {
+	hideConfirm();
     if (!RtnVal)
         return;
 
@@ -486,17 +487,19 @@ function RemoveDoc_Complete(RtnVal)
             xmlhttp.open("POST", "/ezApprovalG/delDeptContDoc.do", false);
         xmlhttp.send(xmlpara);
     }
-    
-     		 var InformationString = strLang388;
-     	    OpenAlertUI(InformationString);
-
-     	    if (DocListType == "UserContDocList") {
-     	    	GetUserContList();
-     	    } else if (DocListType == "DeptContDocList"){
-     	        GetDeptContList();
-     	    } else {
-     		  alert(strLang803);
-     	 }
+     	
+    var InformationString = strLang802;
+    showAlertUI(InformationString, RemoveDoc_Complete_afterAlert);
+}
+function RemoveDoc_Complete_afterAlert(){
+	DivPopUpHidden();
+    if (DocListType == "UserContDocList") {
+    	GetUserContList();
+    } else if (DocListType == "DeptContDocList"){
+        GetDeptContList();
+    } else {
+    	showAlert(strLang803); 
+    }	
 }
 
 function getsearchDocList_after() {
@@ -1394,31 +1397,36 @@ function check_presence2() {
         SQLPARADATA = "<ROOT><TYPE>" + TYPE + "</TYPE><DATA>" + DATA + "</DATA></ROOT>";
     }
 
-    var SelUserCont_dialogArgument = new Array();
+    // var SelUserCont_dialogArgument = new Array();
     function btnRegUserCont_onclick() {
     	//2018-09-19 김보미 - 선택된 문서 없을 경우
         var DocList = new ListView();
         DocList.LoadFromID("DocList");
         var selRow = DocList.GetSelectedRows();
-        
-        var orgCompanyID = "";
-
         if (selRow.length <= 0) {
             var InformationString = strLangS385;
             //OpenAlertUI(InformationString);
-            alert(InformationString);
+            showAlert(InformationString);
             return;
         }
     	
-        SelUserCont_dialogArgument[0] = "";
-        SelUserCont_dialogArgument[1] = RegUserCont_Complete;
+        // SelUserCont_dialogArgument[0] = "";
+        // SelUserCont_dialogArgument[1] = RegUserCont_Complete;
         var url = "/ezApprovalG/selUserCont.do";
-        ContOpen = GetOpenWindow(url, "selUserCont", 340, 460, "NO");
-        try { ContOpen.focus() } catch (e) { }
+        // ContOpen = GetOpenWindow(url, "selUserCont", 340, 460, "NO");
+        // try { ContOpen.focus() } catch (e) { }
+        var feature = "status=no,toolbar=no,scroll=no,menubar=no,location=no,width=340px,height=460px,resizable=no";
+        ezCommon_cross_dialogArguments[0] = "";
+        feature = feature + GetOpenPosition(340, 460);
+        showPopup(url, 340, 460, "selUserCont", feature, RegUserCont_Complete);
     }
     
     function RegUserCont_Complete(RtnVal) {
-        ContOpen.close();
+        if (typeof ContOpen != "undefined") {
+            ContOpen.close();
+        } else {
+            hidePopup();
+        }
         var DocList = new ListView();
         DocList.LoadFromID("DocList");
         var selRow = DocList.GetSelectedRows();
@@ -1459,7 +1467,7 @@ function check_presence2() {
                 InformationString = strLangS386;
             else
                 InformationString = strLangS1124;
-            alert(InformationString);
+            showAlertUI(InformationString);
         }
     }
     
@@ -1492,6 +1500,6 @@ function openergetDocInfo() {
             return;
         }
     } catch (e) {
-        alert("openergetDocInfo :: " + e.description);
+    	showAlert("openergetDocInfo :: " + e.description);
     }
 }

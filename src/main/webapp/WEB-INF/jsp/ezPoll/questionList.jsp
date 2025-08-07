@@ -228,7 +228,7 @@
 		    }
  		    
  		    function menu_Insert() {
- 		    	window.parent.frames["right"].location.href = "/ezPoll/pollCreate.do?brdID=6";
+ 		    	window.parent.document.querySelector("iframe[name=right]").src = "/ezPoll/pollCreate.do?brdID=6";
  		    }
 		    
 		    function menu_Delete() {

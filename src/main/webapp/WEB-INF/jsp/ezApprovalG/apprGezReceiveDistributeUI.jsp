@@ -88,8 +88,13 @@
 	        window.onload = function () {
 	            try {
 	                try {
-	                    RetValue = parent.ezreceivedistributeui_cross_dialogArguments[0];
-	                    ReturnFunction = parent.ezreceivedistributeui_cross_dialogArguments[1];
+	                    if (isParentCommonArgsUsed()) {
+							RetValue = opener == null ? parent.ezCommon_cross_dialogArguments[0] : opener.ezCommon_cross_dialogArguments[0];
+							ReturnFunction = opener == null ? parent.ezCommon_cross_dialogArguments[1] : opener.ezCommon_cross_dialogArguments[1];
+						} else {
+							RetValue = parent.ezreceivedistributeui_cross_dialogArguments[0];
+							ReturnFunction = parent.ezreceivedistributeui_cross_dialogArguments[1];
+						}
 	                } catch (e) {
 	                    try {
 	                        RetValue = opener.ezreceivedistributeui_cross_dialogArguments[0];
@@ -203,13 +208,14 @@
 	    				}
 	    			});
 	    			if (result == "FALSE") {
-	    				if (ReturnFunction != null) {
-	    					ReturnFunction("DUPL");
-	    				}
-	    				else {
-	    					window.returnValue = "DUPL";
-	    					window.close();
-	    				}
+	    				// if (ReturnFunction != null) {
+						// 	ReturnFunction("DUPL");
+						// }
+						// else {
+						// 	window.returnValue = "DUPL";
+						// 	window.close();
+						// }
+						btnClose_onclick("DUPL");
 	    				return;
 	    			}
 	    		}
@@ -247,16 +253,16 @@
 	    	}
 	    }
 	    
-        function btnCancel_onclick() {
-            if (ReturnFunction != null) {
-                ReturnFunction("cancel");
-                window.close();
-            }
-            else {
-                window.returnValue = "cancel";
-                window.close();
-            }
-	    }
+        // function btnCancel_onclick() {
+        //     if (ReturnFunction != null) {
+        //         ReturnFunction("cancel");
+        //         window.close();
+        //     }
+        //     else {
+        //         window.returnValue = "cancel";
+        //         window.close();
+        //     }
+	    // }
 	        
 	    function setReceiveDistribute(pCurSelRow) {
 	        try {
@@ -1569,14 +1575,14 @@
 							pAlertContent = "<spring:message code='ezApprovalG.bebuAll02'/>";
 						}
 						
-						if (window.opener && window.opener.pListTypeValue) {
-							if (window.opener.pListTypeValue == "97") {
-								window.opener.parent.frames[0].convMain('97', '');
-							} else {
-								window.opener.parent.frames[0].convMain('4', '');
-							}
-						}
-						OpenAlertUIDiv(pAlertContent, window.close);
+						// if (window.opener && window.opener.pListTypeValue) {
+						// 	if (window.opener.pListTypeValue == "97") {
+						// 		window.opener.parent.frames[0].convMain('97', '');
+						// 	} else {
+						// 		window.opener.parent.frames[0].convMain('4', '');
+						// 	}
+						// }
+						showAlertUI(pAlertContent, () => btnClose_onclick('true'));
 					}, 0);
 	    		} else {
 	    			var pAlertContent = "<spring:message code='ezApprovalG.t429'/>";
@@ -1620,7 +1626,7 @@
 	    <h1><spring:message code='ezApprovalG.t427'/></h1>
 	    <div id="close">
             <ul>
-                <li><span onclick="return btnCancel_onclick()"></span></li>
+                <li><span onclick="return btnClose_onclick()"></span></li>
             </ul>
         </div>
 	    <%-- 2019-01-10 천성준 - [배부부서]라는 최상단의 탭인데 하나밖에 없는데 쓸모가 있을까 하여 주석처리함

@@ -374,27 +374,27 @@
 
 		        switch (v_data) {
 		            case 2:		// Schedule		            
-		                window.open("/ezSchedule/scheduleMain.do", "right");
+		                parent.document.querySelector("iframe[name=right]").src = "/ezSchedule/scheduleMain.do";
 		                openFolder();
 		                break;
 
 		            case 3:		// Task
-		                window.open("/ezTask/taskMain.do", "right");
+                        parent.document.querySelector("iframe[name=right]").src = "/ezTask/taskMain.do";
 		                break;
 
 		            case 6:		// schedule search
 // 		            	isCalendarView = false;
-		                window.open("/ezSchedule/scheduleSearch.do", "right")
+		                parent.document.querySelector("iframe[name=right]").src = "/ezSchedule/scheduleSearch.do";
 		                openFolder();
 		                break;
 
 		            case 7:		// Search Task
-		                window.open("/ezTask/taskSearch.do", "right");
+                        parent.document.querySelector("iframe[name=right]").src = "/ezTask/taskSearch.do";
 		                break;
 
 		            case 10:	// Search public search
 // 		            	isCalendarView = false;
-		                window.open("/ezSchedule/schedulePublicSearch.do", "right");
+		                parent.document.querySelector("iframe[name=right]").src = "/ezSchedule/schedulePublicSearch.do";
 		                openFolder();
 		                break;
 		                
@@ -402,7 +402,7 @@
 		            case 11:	// 일정관리 환경설정
 					case 13:	// 일정 모아보기, Gathering Schedule
 // 		            	isCalendarView = false;
-		                window.open("/ezSchedule/scheduleConfigMain.do?flag=schedule", "right");
+		                parent.document.querySelector("iframe[name=right]").src = "/ezSchedule/scheduleConfigMain.do?flag=schedule";
 		                
 						$("h2.on").attr("class", "off");
 						$(".lnbUL").attr("class", "lnbUL off");
@@ -411,7 +411,7 @@
 		                
 					case 12:		// Search User Calendar
 // 						isCalendarView = false;
-						window.open("/ezSchedule/scheduleUserCalendarSearch.do", "right");
+						parent.document.querySelector("iframe[name=right]").src = "/ezSchedule/scheduleUserCalendarSearch.do";
 		                openFolder();
 						break;
 		        }
@@ -535,6 +535,8 @@
 				schedule_add_user_cross_dialogArguments[0] = g_param;
 				schedule_add_user_cross_dialogArguments[1] = Add_UserInfo_onclick_Complete;
 
+				parent.document.querySelector("iframe[name=right]").src = "/ezSchedule/scheduleShowGatherList.do";
+                /*
 				if (CrossYN()) {
 					window.open("/ezSchedule/scheduleShowGatherList.do", "right");
 				} else {
@@ -548,7 +550,7 @@
 							DisplayEntryList();
 						}
 					}
-				}
+				}*/
 			}
 			function Add_UserInfo_onclick_Complete(reParam) {
 				idDatepicker.vtLocalDate = reParam["startTime"];

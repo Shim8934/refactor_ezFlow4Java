@@ -133,7 +133,7 @@
 					    break;
 				}
 				
-				window.open(url,"right");
+                parent.document.querySelector("iframe[name=right]").src = url;
 				
 				$("#left .adminListBox h2 span").click(function(){
 					$("#left .adminListBox h2").removeClass("on");

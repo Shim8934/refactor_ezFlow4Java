@@ -257,7 +257,7 @@
 			var curDocID = "";
 			var draftAllFlag = "<c:out value ='${draftAllFlag}'/>";
 			var pDocIDAry = new Array();
-			var receiptFlag = opener.receiptFlag;
+			var receiptFlag = opener != null ? opener.receiptFlag : parent.receiptFlag;
 
 			var doctitle;
 
@@ -269,8 +269,8 @@
 			var upperDeptName = "<c:out value ='${upperDeptName}'/>";
 
 	        $(function () {
-	        	if (navigator.maxTouchPoints > 4) {
-	        		document.getElementById("tblwrap").style.height = (document.documentElement.clientHeight - 130) + 'px';
+	        	if (navigator.maxTouchPoints > 4 || isTeamsDesktop()) {
+	        		document.getElementById("tblwrap").style.height = (document.documentElement.clientHeight - 143) + 'px';
 	        		document.getElementById("tblwrap").style.overflowY = 'auto';
 	        	}
 	        	
@@ -334,7 +334,9 @@
 	            AprTypeXML = loadXMLString(tempAprTypeXML);
 	            ChangeTab(document.getElementById("1tab1"));
 	            
-	            document.getElementById('textUser').focus();            
+				if (!navigator.maxTouchPoints > 4 && isTeamsDesktop()) {
+					document.getElementById('textUser').focus();
+				}
 	            
 	            if (SelectNodes(AprTypeXML, "APRTYPES/DEPTTYPES/APRTYPE")[0] == null) {
 	                document.getElementById("deptaddbtn").style.display = "none";
@@ -612,7 +614,7 @@
     		        		}
     		        	},
     		        	error : function(error){
-    		        	    alert("<spring:message code='ezOrgan.t2' />" + error);
+    		        	    showAlert("<spring:message code='ezOrgan.t2' />" + error);
     		        	}
     		        });
     				$(this).prop("checked", true);
@@ -659,7 +661,7 @@
 			        		}
 			        	},
 			        	error : function(error){
-			        	    alert("<spring:message code='ezOrgan.t2' />" + error);
+			        	    showAlert("<spring:message code='ezOrgan.t2' />" + error);
 			        	}
 			    	});
 		    	});
@@ -723,8 +725,13 @@
 	        var ReturnFunction;
 	        function GetDocInfo() {
 	            try {
-	                RetValue = parent.ezapprovalinfo_dialogArguments[0];
-	                ReturnFunction = parent.ezapprovalinfo_dialogArguments[1];
+	                if (isParentCommonArgsUsed()) {
+						RetValue = opener == null ? parent.ezCommon_cross_dialogArguments[0] : opener.ezCommon_cross_dialogArguments[0];
+						ReturnFunction = opener == null ? parent.ezCommon_cross_dialogArguments[1] : opener.ezCommon_cross_dialogArguments[1];
+					} else {
+						RetValue = parent.ezapprovalinfo_dialogArguments[0];
+						ReturnFunction = parent.ezapprovalinfo_dialogArguments[1];
+					}
 	            } catch (e) {
 	                try {
 	                    RetValue = opener.ezapprovalinfo_dialogArguments[0];
@@ -830,7 +837,7 @@
 	                    document.getElementById("inputSummaryOuterReceiverList").value = SummaryOuterReceiverList;
 	                    document.getElementById("trSummaryOuterReceiverList").style.display = "";
 	                }
-	            } catch (e) { alert(e.description); }
+	            } catch (e) { showAlert(e.description); }
 
 	            if(useOpenGov == "YES") {
                     getAttachList();
@@ -1207,7 +1214,7 @@
 			            }
 			        }
 		        } catch (e) {
-		            alert("Suggester_onclick :: " + e.description);
+		            showAlert("Suggester_onclick :: " + e.description);
 		        }
 		    }
 		
@@ -1267,7 +1274,7 @@
 		                }
 		            }
 		        } catch (e) {
-		            alert("Reporter :: " + e.description);
+		            showAlert("Reporter :: " + e.description);
 		        }
 		    }
 		
@@ -1299,7 +1306,7 @@
 		            return xmlhttp.responseText;
 		        }
 		        catch (e) {
-		            alert("getGyulJeDateDB()" + e.description);
+		            showAlert("getGyulJeDateDB()" + e.description);
 		        }
 		    }
 		    
@@ -1346,9 +1353,9 @@
 					});
 	
 					if (chkReceivedDoc != 0) {
-						alert("<spring:message code='ezApprovalG.pjg04'/>");
-						opener.close();
-						window.close();
+						showAlert("<spring:message code='ezApprovalG.pjg04'/>", "");
+						// opener.close();
+						// window.close();
 						return;
 					}
 				}
@@ -1490,7 +1497,7 @@
 		                	}
 		                	
 		                	if (checkAprCheckFN != null && checkAprCheckFN && (pReDraftAprLineFlag || pReDraftFlag == "REDRAFT") && opener.ListType != "21") {
-		                		alert("<spring:message code='ezApprovalG.bhs23'/>");
+		                		showAlert("<spring:message code='ezApprovalG.bhs23'/>");
 		                		
 		                		ret[0] = "DUPL";
 		                		if (ReturnFunction != null) {
@@ -1698,7 +1705,12 @@
 			            /* 2020-07-30 홍승비 - 실제 양식 상에 가변결재선이 없다면, 분기를 타지 않도록 수정 */
 			            /* 2020-10-19 한글버전은 opener 호출시 오류발생, G버전은 가변 결재선을 사용하지 않음 */
 						// 2021-02-19 박희찬 - G버전에도 가변결재선 동작위해 조건문 수정
-						var autoAprLineField = $(opener.document).find("#message").contents().find("td[id^='autoLine']");
+// 						var autoAprLineField = $(opener.document).find("#message").contents().find("td[id^='autoLine']");
+			            try {
+							var autoAprLineField = $(opener.document).find("#message").contents().find("td[id^='autoLine']");
+						} catch (e) {
+							var autoAprLineField = $(parent.document).find("#message").contents().find("td[id^='autoLine']");
+						}
 
 						if (useDynamicAprLine == "1" && autoAprLineField.length > 0) {
 							ret[27] = SAPRLINETEMPLETXMLParsing();
@@ -1895,7 +1907,7 @@
 		        }
 		
 		        if (alertMsg != "") {
-		            alert(alertMsg);                 
+		            showAlert(alertMsg);            
 		        }
 		    }
 		
@@ -2004,7 +2016,7 @@
 		                }
 		            }
 		        } else {
-		            alert("<spring:message code='ezApprovalG.t784'/>");
+		            showAlert("<spring:message code='ezApprovalG.t784'/>");
 		        }
 		    }
 		
@@ -2023,13 +2035,13 @@
 		        if (selnodes.length > 0) {
 		            var selnode = selnodes[0];
 		            if (trim(GetAttribute(selnode, "DATA1")) == "" || trim(GetAttribute(selnode, "DATA3")) == "") {
-		                alert("<spring:message code='ezApprovalG.t10028'/>");
+		                showAlert("<spring:message code='ezApprovalG.t10028'/>");
 		                return;
 		            }
 		            var rtn = NewVolume(trim(GetAttribute(selnode, "DATA1")), trim(GetAttribute(selnode, "DATA3")));
 		        }
 		        else {
-		            alert("<spring:message code='ezApprovalG.t478'/>");
+		            showAlert("<spring:message code='ezApprovalG.t478'/>");
 		        }
 		    }
 		    function Docinfo_ini() {
@@ -2227,12 +2239,12 @@
 		        var parameter = "status:no;dialogWidth:340px;dialogHeight:195px;scroll:no;edge:sunken;help:no";
 		
 		        if (CurSelRow[0] == undefined) {
-		            alert("<spring:message code='ezApprovalG.t10501'/>");
+		            showAlert("<spring:message code='ezApprovalG.t10501'/>");
 		            return;
 		        }
 		
 		        // if (CurSelRow[0].getAttribute("DATA6") != "" && useReceiveInfoName != '1') {
-		        //    alert("<spring:message code='ezApprovalG.t10500'/>");
+		        //    showAlert("<spring:message code='ezApprovalG.t10500'/>");
 		        //    return;
 		        // }
 		
@@ -2319,7 +2331,7 @@
 
 	            } catch (e) {
 	                pGongRamDocID = "";
-	                alert("getGongRamDocInfo :: " + e.description);
+	                showAlert("getGongRamDocInfo :: " + e.description);
 	            }
 	        }
 	        
@@ -2340,7 +2352,7 @@
 		                GetReceptTempletListCC();
 		            }
 		        } catch (e) {
-		            alert("AprGongRamLine_Cross_ChangeReceptTab::" + e.description);
+		            showAlert("AprGongRamLine_Cross_ChangeReceptTab::" + e.description);
 		        }
 		    }
 
@@ -2356,25 +2368,25 @@
 		    function CheckInputField() {
 		        var pRegType = selRegisterType.value;
 				if (txtTitle.value.trim() == "") {
-		            alert("기록물 제목을 입력해 주세요.");
+		            showAlert("기록물 제목을 입력해 주세요.");
 					viewDocInfoAndFocusNode(txtTitle);
 
 		            return false;
 		        }
 		        
 		        if (regDate.value.trim() == "" || regTime.value.trim() == "") {
-		            alert("<spring:message code='ezApprovalG.t1045'/>");
+		            showAlert("<spring:message code='ezApprovalG.t1045'/>");
 		            return false;
 		        }
 		             
 				if (txtDrafter.value.trim() == "") {
-		            alert("<spring:message code='ezApprovalG.jje01'/>");
+		            showAlert("<spring:message code='ezApprovalG.jje01'/>");
 					viewDocInfoAndFocusNode(txtDrafter);
 
 		            return false;
 		        }
 				if (txtReceiptMember.value.trim() == "") {
-	                alert("발신기관명을 입력해 주세요.");
+	                showAlert("발신기관명을 입력해 주세요.");
 					viewDocInfoAndFocusNode(txtReceiptMember);
 
 	                return false;
@@ -2382,7 +2394,7 @@
 				
 				if (pRegType == "1" || pRegType == "3") {
 					if (txtAprMemberTitle.value.trim() == "") {
-		                alert("<spring:message code='ezApprovalG.t1054'/>");
+		                showAlert("<spring:message code='ezApprovalG.t1054'/>");
 						viewDocInfoAndFocusNode(txtAprMemberTitle);
 
 		                return false;
@@ -2390,20 +2402,20 @@
 				}
 				if (pRegType == "5" || pRegType == "6") {
 					if (txtSummary.value.trim() == "") {
-		                alert("<spring:message code='ezApprovalG.t1058'/>");
+		                showAlert("<spring:message code='ezApprovalG.t1058'/>");
 						viewDocInfoAndFocusNode(txtSummary);
 
 		                return false;
 		            }
 		            if (GetAVTypeCode() == "") {
-		                alert("<spring:message code='ezApprovalG.t1059'/>");
+		                showAlert("<spring:message code='ezApprovalG.t1059'/>");
 
 		                return false;
 		            }
 				}
 				if (pRegType == "2" || pRegType == "4" || pRegType == "7" || pRegType == "8") {
 					if (txtOriginSN.value.trim() == "") {
-		                alert("문서번호를 입력해 주세요.");
+		                showAlert("문서번호를 입력해 주세요.");
 						viewDocInfoAndFocusNode(txtOriginSN);
 
 		                return false;
@@ -2444,7 +2456,7 @@
 		            OpenAlertUI(Cabinet4);
                     document.getElementById("1tab3").onclick();
                     return;
-		            //alert("기록물철을 먼저 선택하여주십시오.");
+		            //showAlert("기록물철을 먼저 선택하여주십시오.");
 		            //btnChangeCabinet_onclick();
 		        }
 		    }
@@ -2818,7 +2830,7 @@
 				}
 
 				if(filelist.length > 1) {
-					alert("<spring:message code='ezOrgan.x0001'/>");
+					showAlert("<spring:message code='ezOrgan.x0001'/>");
 					return;
 				}
 
@@ -2829,14 +2841,14 @@
 					if (tmpFileName.indexOf(">") > -1 || tmpFileName.indexOf("<") > -1 || tmpFileName.indexOf("\"") > -1 ||
 							tmpFileName.indexOf("/") > -1 || tmpFileName.indexOf("\\") > -1 || tmpFileName.indexOf(":") > -1 ||
 							tmpFileName.indexOf("*") > -1 || tmpFileName.indexOf("|") > -1 || tmpFileName.indexOf("?") > -1) {
-						alert("<spring:message code='ezApproval.t936'/>");
+						showAlert("<spring:message code='ezApproval.t936'/>");
 						return;
 					}
 
 					var FileFilter = /\.(doc|docx|ppt|pptx|xls|xlsx|pdf|jpg|jpeg|png|gif|bmp|txt|text|html|htm|hwp)$/i;
 
 					if (!tmpFileName.match(FileFilter)) {
-						alert("<spring:message code='ezApproval.t937'/>");
+						showAlert("<spring:message code='ezApproval.t937'/>");
 						return;
 					}
 				}
@@ -2870,7 +2882,7 @@
 						convertedImgInfo = result;
 					},
 					error : function() {
-						alert("<spring:message code='ezApprovalG.nonElecAt01'/>");
+						showAlert("<spring:message code='ezApprovalG.nonElecAt01'/>");
 					},
 					complete : function() {
 						$("#loading").css("display", "none");
@@ -2959,6 +2971,26 @@
 			function btn_Close2() {
 				window.close();
 			}
+			
+			innerIfrmaeOffset();
+			window.addEventListener("resize", function() {
+				if (navigator.maxTouchPoints > 4 || isTeamsDesktop()) {
+					document.getElementById("tblwrap").style.height = (document.documentElement.clientHeight - 143) + 'px';
+					document.getElementById("tblwrap").style.overflowY = 'auto';
+	        	}
+			})
+			
+			window.addEventListener("message", function (event) {
+				if (navigator.maxTouchPoints > 4 || isTeamsDesktop()) {
+					if (event.data && event.data.type == "height") {
+						var innerIframe = window.parent.document.querySelector("iframe#iFrameLayer");
+						var innerIframe2 = window.parent.document.querySelector(".layerpopup_top");
+						var innerFrameHeight = event.data.value * 0.95;
+						innerIframe.style.height = innerFrameHeight + "px";
+						innerIframe2.style.height = innerFrameHeight + "px";
+					}
+				}
+			});
 	    </script>
 	    <style>
 	    	/* .mainlist_free tr th {text-align:center} */
@@ -2990,7 +3022,7 @@
 		</div>
 	    <div id="close">
             <ul>
-                <li><span onclick="window.close()"></span></li>
+                <li><span onclick="btn_Close()"></span></li>
             </ul>
         </div>
 	    <div class="portlet_tabpart02" style="margin: 5px 0px 15px">
@@ -3569,7 +3601,7 @@
 	    </c:if>
 	    
 	    <c:if test="${approvalFlag eq 'S' }">
-	        <div id="Cabinetinfo" style="width: 1110px; height: 597px; display: none;">
+	        <div id="Cabinetinfo" style="width: 1110px; height: 595px; display: none;">
 	            <table>
 	                <tr>
 	                    <td style="border: 0px solid red; height: 580px; width: 971px; vertical-align: top">
@@ -3811,7 +3843,7 @@
 	    </c:if>
 	    
 	    <c:if test="${approvalFlag eq 'S' }">
-	    	<div id="Docinfo" style="width: 1163px; height: 594px; display: none; padding-top:3px; padding-bottom: 30px;">
+	    	<div id="Docinfo" style="width: 1163px; height: 562px; display: none; padding-top:3px; padding-bottom: 30px;">
         		<td style="border: 0px solid red; height: 580px; width: 390px; margin-left: 5px; vertical-align: top">
 		            <h2 class="h2_dot"><spring:message code='ezApproval.t334'/></h2>
 		            <table class="content" style="margin-top:4px">
@@ -3906,7 +3938,7 @@
 	    </c:if>
 	    <c:if test="${approvalFlag eq 'S' }">
 <!-- 	    회람 -->
-	    	<div id="Circulation" style="width: 1110px; height: 597px; margin-bottom: 5px; display: none;">
+	    	<div id="Circulation" style="width: 1110px; height: 590px; margin-bottom: 5px; display: none;">
         		<table>
 			        <tr>
 			            <td style="vertical-align: top">

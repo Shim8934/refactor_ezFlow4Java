@@ -503,7 +503,7 @@
 			var keyword = $("#topsearch_btn").val();
 			//$("#input_totalSearch").val("");
 // 			OpenWindow(event, "/ezPortal/totalSearch.do?keyword=" + encodeURIComponent(keyword) , "main", "");
-			window.open("/ezPortal/totalSearch.do?keyword=" + encodeURIComponent(keyword) , "main", "");
+            parent.document.querySelector("iframe[name=main]").src = "/ezPortal/totalSearch.do?keyword=" + encodeURIComponent(keyword);
 		}
 		
 		var deleteTotalSearchValue = function () {
@@ -621,7 +621,7 @@
 				} else if (openType == 2) {
 					window.open(menuUrl, '_blank', 'width=1000,height=900');
 				} else if (openType == 3) {
-					window.open(menuUrl, 'main', '');
+                    parent.document.querySelector("iframe[name=main]").src = menuUrl;
 				}
 
 				// 취소버튼과 같은 역할

@@ -14,7 +14,13 @@
 	<script type="text/javascript" src="${util.addVer('/js/Kaoni_ActiveX.js')}"></script>
     <script type="text/javascript">
         var pDocHref = "<c:out value ='${docHref}'/>";
+        var ReturnFunction;
+        
         window.onload = function () {
+            if (isParentCommonArgsUsed()) {
+                ReturnFunction = opener == null ? parent.ezCommon_cross_dialogArguments[1] : opener.ezCommon_cross_dialogArguments[1];
+            }
+            
         	try {
         			HwpCtrl.ezSetRegisterModule("HwpCtrlPathCheckModule");
                 	showProgress("<spring:message code='ezApprovalG.t368'/>");
@@ -40,9 +46,9 @@
 	        HwpCtrl.PrintDocument("", true);
 	    }
 	    
-	    function btnClose_onclick() {
-	        window.close();
-	    }
+	    // function btnClose_onclick() {
+	    //     window.close();
+	    // }
 	    
 	    function btnSave_onclick() {
 	        try {

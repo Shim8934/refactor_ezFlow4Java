@@ -38,10 +38,10 @@
 	    
 	    switch(this_menu) {	
 		    case "NOTISETTING":
-				parent.frames[1].location.href = "/admin/ezNotification/notiSetting.do";
+				parent.document.querySelectorAll("iframe")[1].src = "/admin/ezNotification/notiSetting.do";
 				break;
 			case "EMERGENCYNOTI":
-				parent.frames[1].location.href = "/admin/ezNotification/emergencyNotiSetting.do";
+				parent.document.querySelectorAll("iframe")[1].src = "/admin/ezNotification/emergencyNotiSetting.do";
 				break;
 	    }
 	    

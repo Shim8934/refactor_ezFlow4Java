@@ -868,4 +868,12 @@ public class EzCommonController extends EgovFileMngUtil{
 
 		return "true";
 	}
+
+	/**
+	 * 공통 confirm 호출 Method
+	 */
+	@RequestMapping(value = "/ezCommon/ezConfirm.do", method = RequestMethod.GET)
+	public String ezAprOpinion(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) {
+		return "ezCommon/ezConfirm";
+	}
 }

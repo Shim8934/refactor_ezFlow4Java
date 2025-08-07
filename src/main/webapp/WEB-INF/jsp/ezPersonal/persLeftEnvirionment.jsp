@@ -54,137 +54,137 @@
 			function Open_Func(pthis) {
 				switch (pthis.id) {
 				    case "BoardEnv":
-				        window.parent.frames.right.document.location.href = "/ezBoard/boardConfig.do";
+				        parent.document.querySelector("iframe[name=right]").src = "/ezBoard/boardConfig.do";
 				        break;
 					case "Portal":
-					    //window.parent.frames.right.document.location.href="/ezPortal/myPortalPageList.do";//다중포탈페이지 사용으로 인해 변경
-					    window.parent.frames.right.document.location.href="/ezNewPortal/userThemeSetting.do";//ezNewPortal
+					    //parent.document.querySelector("iframe[name=right]").src="/ezPortal/myPortalPageList.do";//다중포탈페이지 사용으로 인해 변경
+					    parent.document.querySelector("iframe[name=right]").src="/ezNewPortal/userThemeSetting.do";//ezNewPortal
 						break;
 					case "Portal_sub1":
-					    //window.parent.frames.right.document.location.href="/ezPortal/myPortalPageList.do";//다중포탈페이지 사용으로 인해 변경
-					    window.parent.frames.right.document.location.href="/ezNewPortal/userThemeSetting.do";//ezNewPortal
+					    //parent.document.querySelector("iframe[name=right]").src="/ezPortal/myPortalPageList.do";//다중포탈페이지 사용으로 인해 변경
+					    parent.document.querySelector("iframe[name=right]").src="/ezNewPortal/userThemeSetting.do";//ezNewPortal
 						break;
 					case "Portal_sub2":
-						window.parent.frames.right.document.location.href="/myoffice/ezPortal/environ/UserSkin.aspx?";
+						parent.document.querySelector("iframe[name=right]").src="/myoffice/ezPortal/environ/UserSkin.aspx?";
 						break;
 					case "Portal_sub3":
-						window.parent.frames.right.document.location.href="/myoffice/ezPortal/environ/UserImage.aspx";				
+						parent.document.querySelector("iframe[name=right]").src="/myoffice/ezPortal/environ/UserImage.aspx";				
 						break;
 					case "Portal_sub4": // 환경설정시 로그인 첫 화면을 특정 페이지로 선택 할수 있다. 2007-09-19
-					    //window.parent.frames.right.document.location.href = "/ezPortal/startPageUser.do";
-					    window.parent.frames.right.document.location.href = "/ezNewPortal/userStartPageSetting.do";
+					    //parent.document.querySelector("iframe[name=right]").src = "/ezPortal/startPageUser.do";
+					    parent.document.querySelector("iframe[name=right]").src = "/ezNewPortal/userStartPageSetting.do";
 						break;
 					case "Personal":
-						window.parent.frames.right.document.location.href="/ezPersonal/userManageWebPart.do";
+						parent.document.querySelector("iframe[name=right]").src="/ezPersonal/userManageWebPart.do";
 						break;
 					case "UserInfo":
-					    window.parent.frames.right.document.location.href="/ezPersonal/changePersonInfo.do";
+					    parent.document.querySelector("iframe[name=right]").src="/ezPersonal/changePersonInfo.do";
 						break;
 					case "MailEnv":
-						window.parent.frames.right.document.location.href="/myoffice/ezEmail/environ/mail_general_cross.aspx";
+						parent.document.querySelector("iframe[name=right]").src="/myoffice/ezEmail/environ/mail_general_cross.aspx";
 						break;
 						
 					case "MailEnv_sub1":
-						window.parent.frames.right.document.location.href="/myoffice/ezEmail/environ/mail_general_cross.aspx";
+						parent.document.querySelector("iframe[name=right]").src="/myoffice/ezEmail/environ/mail_general_cross.aspx";
 						break;
 						
 					case "MailEnv_sub2":
-						window.parent.frames.right.document.location.href="/myoffice/ezEmail/environ/mail_usage_cross.aspx";
+						parent.document.querySelector("iframe[name=right]").src="/myoffice/ezEmail/environ/mail_usage_cross.aspx";
 						break;
 						
 					case "MailEnv_sub3":
-						window.parent.frames.right.document.location.href="/myoffice/ezEmail/environ/mail_pop3_cross.aspx";
+						parent.document.querySelector("iframe[name=right]").src="/myoffice/ezEmail/environ/mail_pop3_cross.aspx";
 						break;
 				
 					case "MailEnv_sub4":
-						window.parent.frames.right.document.location.href="/myoffice/ezEmail/environ/mail_autoforward_cross.aspx";
+						parent.document.querySelector("iframe[name=right]").src="/myoffice/ezEmail/environ/mail_autoforward_cross.aspx";
 						break;
 						
 					case "MailEnv_sub5":
-						window.parent.frames.right.document.location.href="/myoffice/ezEmail/environ/mail_filter.aspx";
+						parent.document.querySelector("iframe[name=right]").src="/myoffice/ezEmail/environ/mail_filter.aspx";
 						break;
 						
 					case "MailEnv_sub6":
-						window.parent.frames.right.document.location.href="/myoffice/ezEmail/environ/mail_reject.aspx" ;
+						parent.document.querySelector("iframe[name=right]").src="/myoffice/ezEmail/environ/mail_reject.aspx" ;
 						break;
 						
 					case "MailEnv_sub7":
-						window.parent.frames.right.document.location.href="/myoffice/ezEmail/environ/mail_autodelete_cross.aspx"; 
+						parent.document.querySelector("iframe[name=right]").src="/myoffice/ezEmail/environ/mail_autodelete_cross.aspx"; 
 						break;
 						
 					case "MailEnv_sub8":
-						window.parent.frames.right.document.location.href="/myoffice/ezEmail/environ/mail_setbox.aspx";
+						parent.document.querySelector("iframe[name=right]").src="/myoffice/ezEmail/environ/mail_setbox.aspx";
 						break;
 						
 					case "MailEnv_sub9":
 						if(navigator.userAgent.indexOf("MSIE") != -1)
 					    {
-					        window.parent.frames.right.document.location.href="/myoffice/ezEmail/environ/mail_signature.aspx";
+					        parent.document.querySelector("iframe[name=right]").src="/myoffice/ezEmail/environ/mail_signature.aspx";
 					    }	
 					    else if(navigator.userAgent.indexOf("MSIE") == -1)
 					    {
-						    window.parent.frames.right.document.location.href="/myoffice/ezEmail/environ/mail_signature_CK.aspx"; 
+						    parent.document.querySelector("iframe[name=right]").src="/myoffice/ezEmail/environ/mail_signature_CK.aspx"; 
 		                }	
 						break;
 
 					case "MailEnv_sub10":                
 		                if(navigator.userAgent.indexOf("MSIE") != -1)
 		                {
-						    window.parent.frames.right.document.location.href="/myoffice/ezEmail/environ/mail_outofoffice.aspx";
+						    parent.document.querySelector("iframe[name=right]").src="/myoffice/ezEmail/environ/mail_outofoffice.aspx";
 						}
 						else if(navigator.userAgent.indexOf("MSIE") == -1)
 						{
-						    window.parent.frames.right.document.location.href="/myoffice/ezEmail/environ/mail_outofoffice_CK.aspx";
+						    parent.document.querySelector("iframe[name=right]").src="/myoffice/ezEmail/environ/mail_outofoffice_CK.aspx";
 						}               
 						break;
 					case "MailEnv_sub11":
-						window.parent.frames.right.document.location.href="/myoffice/ezEmail/environ/mail_smartReject.aspx";
+						parent.document.querySelector("iframe[name=right]").src="/myoffice/ezEmail/environ/mail_smartReject.aspx";
 						break;
 					case "ScheduleEnv":
-						window.parent.frames.right.document.location.href="/MyOffice/ezSchedule/schedule_config_Cross.aspx";
+						parent.document.querySelector("iframe[name=right]").src="/MyOffice/ezSchedule/schedule_config_Cross.aspx";
 						break;
 					case "ScheduleEnv_sub1":
-					    window.parent.frames.right.document.location.href = "/MyOffice/ezSchedule/schedule_config_Cross.aspx";
+					    parent.document.querySelector("iframe[name=right]").src = "/MyOffice/ezSchedule/schedule_config_Cross.aspx";
 						break;
 					case "ScheduleEnv_sub2":
-						window.parent.frames.right.document.location.href="/MyOffice/ezTask/task_config_Cross.aspx";
+						parent.document.querySelector("iframe[name=right]").src="/MyOffice/ezTask/task_config_Cross.aspx";
 						break;
 					case "ScheduleEnv_sub3":
-						window.parent.frames.right.document.location.href="/MyOffice/ezAddress/address_config_Cross.aspx";
+						parent.document.querySelector("iframe[name=right]").src="/MyOffice/ezAddress/address_config_Cross.aspx";
 						break;
 					case "ApprovalPass":
 					case "ApprovalEnv":
-					    window.parent.frames.right.document.location.href = "/ezPersonal/ezApprovalConfig.do";
+					    parent.document.querySelector("iframe[name=right]").src = "/ezPersonal/ezApprovalConfig.do";
 						break;
 		            case "ApprovNoti":
-		                window.parent.frames.right.document.location.href="/MyOffice/ezPersonal/PersonInfo/SetApprovNoticeMail_cross.aspx";
+		                parent.document.querySelector("iframe[name=right]").src="/MyOffice/ezPersonal/PersonInfo/SetApprovNoticeMail_cross.aspx";
 						break;
 					case "TaskEnv":
-					    window.parent.frames.right.document.location.href = "/MyOffice/ezTask/task_config_Cross.aspx";
+					    parent.document.querySelector("iframe[name=right]").src = "/MyOffice/ezTask/task_config_Cross.aspx";
 						break;
 					case "AbsenceEnv":
-						window.parent.frames.right.document.location.href="/myoffice/ezPersonal/BujaeConf/ManageBujae_cross.aspx";
+						parent.document.querySelector("iframe[name=right]").src="/myoffice/ezPersonal/BujaeConf/ManageBujae_cross.aspx";
 						break;
 					case "AbsenceEnvG":
-						window.parent.frames.right.document.location.href="/myoffice/ezPersonal/BujaeConf/ManageBujaeG_cross.aspx";
+						parent.document.querySelector("iframe[name=right]").src="/myoffice/ezPersonal/BujaeConf/ManageBujaeG_cross.aspx";
 						break;
 					case "TimeZone":
-						window.parent.frames.right.document.location.href="/ezPersonal/timeZone.do";
+						parent.document.querySelector("iframe[name=right]").src="/ezPersonal/timeZone.do";
 						break;
 					case "MailEnv_sub100":
-						window.parent.frames.right.document.location.href="/myoffice/ezEmail/environ/mail_InboxRule_Cross.aspx";
+						parent.document.querySelector("iframe[name=right]").src="/myoffice/ezEmail/environ/mail_InboxRule_Cross.aspx";
 						break;
 					case "CircularEnv":
-				        window.parent.frames.right.document.location.href = "/ezCircular/circularConfig.do";
+				        parent.document.querySelector("iframe[name=right]").src = "/ezCircular/circularConfig.do";
 				        break;
 					case "journalEnv":
-				        window.parent.frames.right.document.location.href = "/ezJournal/journalConfig.do";
+				        parent.document.querySelector("iframe[name=right]").src = "/ezJournal/journalConfig.do";
 				        break;
 					case "webfolder":
-						window.parent.frames.right.document.location.href = "/ezWebFolder/webfolderConfig.do";
+						parent.document.querySelector("iframe[name=right]").src = "/ezWebFolder/webfolderConfig.do";
 						break;
 					case "LOGINHIST":
-						window.parent.frames.right.document.location.href = "/ezSystem/systemLoginHist.do";
+						parent.document.querySelector("iframe[name=right]").src = "/ezSystem/systemLoginHist.do";
 						// 2023-06-28 황인경 - 디자인 개선 > 사용자환경설정 > 좌측메뉴 > 트리구조 LNB 이미지 수정, 클래스 제어
 						$("h2.on").attr("class", "off");
 						$(".lnbUL.on").removeClass("on").addClass("off");
@@ -193,10 +193,10 @@
 						$("#LOGINHIST").parent().attr("class", "on");
 						break;
 					case "ezPMSEnv":
-						window.parent.frames.right.document.location.href = "/ezPMS/pmsSetting.do";
+						parent.document.querySelector("iframe[name=right]").src = "/ezPMS/pmsSetting.do";
 						break;
 					case "noti":
-						window.parent.frames.right.document.location.href="/ezPersonal/notificationSetting.do";
+						parent.document.querySelector("iframe[name=right]").src="/ezPersonal/notificationSetting.do";
 						break;
 					case "useSurvey":
 						window.parent.frames.right.document.location.href="/ezSurvey/surveyConfig.do";
@@ -211,23 +211,23 @@
 				}
 			}
 		    function mail_Config() {
-		        parent.frames["right"].location.href = "/ezEmail/mailConfig.do?flag=email";
+		        parent.document.querySelector("iframe[name=right]").src = "/ezEmail/mailConfig.do?flag=email";
 		        liSelected();
 		    }
 		    function address_Config() {
-		        parent.frames["right"].location.href = "/ezEmail/mailConfig.do?flag=address";
+		        parent.document.querySelector("iframe[name=right]").src = "/ezEmail/mailConfig.do?flag=address";
 		        liSelected();
 		    }
 		    function Pims_Config() {
-		        parent.frames["right"].location.href = "/ezSchedule/scheduleConfigMain.do?flag=schedule";
+		        parent.document.querySelector("iframe[name=right]").src = "/ezSchedule/scheduleConfigMain.do?flag=schedule";
 		        liSelected();
 		    }
 		    function Approval_Config() {
-		        parent.frames["right"].location.href = "/ezPersonal/ezApprovalConfig.do";
+		        parent.document.querySelector("iframe[name=right]").src = "/ezPersonal/ezApprovalConfig.do";
 		        liSelected();
 		    }
 		    function Task_Config() {
-		        parent.frames["right"].location.href = "/ezSchedule/scheduleConfigMain.do?flag=task";
+		        parent.document.querySelector("iframe[name=right]").src = "/ezSchedule/scheduleConfigMain.do?flag=task";
 		        liSelected();
 		    }
 		    function leftResize(){

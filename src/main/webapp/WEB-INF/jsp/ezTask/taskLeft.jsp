@@ -75,30 +75,30 @@
 
 		        switch (v_data) {
 		            case 3:		// Task
-		            	window.open("/ezTask/taskMain.do?taskFlag=normal", "right");
+		            	parent.document.querySelector("iframe[name=right]").src = "/ezTask/taskMain.do?taskFlag=normal";
 		            
 		            	taskFlag = false;
 		                break;
 
 		            case 7:		// Search Task
-		                window.open("/ezTask/taskSearch.do", "right");
+		                parent.document.querySelector("iframe[name=right]").src = "/ezTask/taskSearch.do";
 		                getTaskList();
 		            	taskFlag = true;
 		                break;
 		            
 		            case 11:		// Search public calendar
-		                window.open("/ezSchedule/scheduleConfigMain.do?flag=task", "right");
+		                parent.document.querySelector("iframe[name=right]").src = "/ezSchedule/scheduleConfigMain.do?flag=task";
 		                getTaskList();
 		                taskFlag = true;
 		                break;
 		                
 		            case 12:		// repeat task
-		           		window.open("/ezTask/taskMain.do?taskFlag=repeat", "right");
+		           		parent.document.querySelector("iframe[name=right]").src = "/ezTask/taskMain.do?taskFlag=repeat";
 		            	taskFlag = false;
 		            	break;
 		            	
 		            case 13:		// send task
-		            	window.open("/ezTask/taskMain.do?taskFlag=send", "right");
+		            	parent.document.querySelector("iframe[name=right]").src = "/ezTask/taskMain.do?taskFlag=send";
 		            	taskFlag = false;
 		            	break;
 		            	

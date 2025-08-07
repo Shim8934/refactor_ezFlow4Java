@@ -307,7 +307,7 @@
 			{
 			    if (document.form.file1.value != "") {
 					if (document.form.file1.files[0].name.length > attachFileNameMaxLength) {
-						alert("<spring:message code='main.jjh08' />" + attachFileNameMaxLength + "<spring:message code='main.lhm03' />");
+						showAlert_sub("<spring:message code='main.jjh08' />" + attachFileNameMaxLength + "<spring:message code='main.lhm03' />");
 						document.form.file1.value = "";
 						return;
 					} else {
@@ -321,7 +321,7 @@
 					}
 			    } else {
 			    	return;
-// 			        alert("<spring:message code='ezApprovalG.pjj01'/>");
+// 			        showAlert_sub("<spring:message code='ezApprovalG.pjj01'/>");
 			    }
 			}
 			
@@ -731,7 +731,7 @@
 			    }
 			    catch(ErrMsg)
 			    {
-			        alert("btn_AttachEdit_onclick : " + ErrMsg.description);  
+			        showAlert_sub("btn_AttachEdit_onclick : " + ErrMsg.description);  
 			    }
 			}
 			
@@ -752,7 +752,7 @@
 				    ezUtil.UseUTF8 = true;
 					if (ezUtil.GetFileSize(g_fileList[i]) == 0)
 					{
-						alert("<spring:message code='ezApprovalG.t270'/>");
+						showAlert_sub("<spring:message code='ezApprovalG.t270'/>");
 						return;
 					}
 					ezUtil.UseUTF8 = true;
@@ -762,7 +762,7 @@
 				ezUtil = null;
 				if (fileSize > pBoardFileSize * 1024 * 1024)
 				{
-					alert("<spring:message code='ezApprovalG.t271'/>" + pBoardFileSize + "MB" + "<spring:message code='ezApprovalG.t272'/>");
+					showAlert_sub("<spring:message code='ezApprovalG.t271'/>" + pBoardFileSize + "MB" + "<spring:message code='ezApprovalG.t272'/>");
 					return;
 				}
 			
@@ -798,7 +798,7 @@
 								g_progresswin.close();
 							} catch(e) {}
 			
-							alert(g_fileList[i] + " <spring:message code='ezApprovalG.t274'/>");
+							showAlert_sub(g_fileList[i] + " <spring:message code='ezApprovalG.t274'/>");
 							return;
 						}
 						else
@@ -816,9 +816,9 @@
 						} catch(e) {}
 			
 						if (e.number == -2147352567)
-							alert("<spring:message code='ezApprovalG.t275'/>");
+							showAlert_sub("<spring:message code='ezApprovalG.t275'/>");
 						else 
-							alert(g_fileList[i] + " <spring:message code='ezApprovalG.t276'/>" + "\n\n" + e.number + " - " + e.description);
+							showAlert_sub(g_fileList[i] + " <spring:message code='ezApprovalG.t276'/>" + "\n\n" + e.number + " - " + e.description);
 						return;
 					}	
 				}
@@ -834,21 +834,21 @@
 			    {
 			        if (filesize == 0)
 				    {
-					    alert("<spring:message code='ezApprovalG.t270'/>");
+					    showAlert_sub("<spring:message code='ezApprovalG.t270'/>");
 					    return;
 			        }
 			        AttachFileInfo(filename, filesize, filelocation, addToBigAttach);
 			    }
 			    else if(result == "overflow")
 			    {
-			        alert("<spring:message code='ezApprovalG.t271'/>" + pBoardFileSize + "MB"+ "<spring:message code='ezApprovalG.t272'/>");
+			        showAlert_sub("<spring:message code='ezApprovalG.t271'/>" + pBoardFileSize + "MB"+ "<spring:message code='ezApprovalG.t272'/>");
 			    }
 			    else if (result == "denied") {
-			        alert(strLang1026);
+			        showAlert_sub(strLang1026);
 			    }
 			    else
 			    {
-			        alert(filename + "<spring:message code='ezApprovalG.pjj07'/>" + "\n\n" + result);
+			        showAlert_sub(filename + "<spring:message code='ezApprovalG.pjj07'/>" + "\n\n" + result);
 			    }
 			}
 			function onDragEnter(evt) {
@@ -874,7 +874,7 @@
 		        }
 		        if (isfileup) {
 		            hideLoadingProgress();
-		            alert(strLangjjh03);
+		            showAlert_sub(strLangjjh03);
 		            return;
 		        }
 		        var filelist;
@@ -898,7 +898,7 @@
 		        
 		        for (var i = 0; i < filelist.length; i++) {
 		            /* if (filelist[i].size / 1024 / 1024 > 5) {
-		                alert(strLang25);
+		                showAlert_sub(strLang25);
 		                return;
 		            }
 		            else { */
@@ -954,10 +954,18 @@
 		        	} else {
 		        		if(bigSizeApprAttachLimit == "0"){
 		        			hideLoadingProgress();
-		        			alert(strLangAtachHIK_01 + apprAttachLimit + strLangAtachHIK_02);
+		        			showAlert_sub(strLangAtachHIK_01 + apprAttachLimit + strLangAtachHIK_02);
 		        			return false;
 						} else {
-							bigFileCheck = confirm(strLangHSBAt13 + apprAttachLimit + "MB" + strLangHSBAt14);
+							// bigFileCheck = confirm(strLangHSBAt13 + apprAttachLimit + "MB" + strLangHSBAt14);
+							ezCommon_cross_dialogParams[0] = fd;
+							ezCommon_cross_dialogParams[1] = calTotalSize;
+							ezCommon_cross_dialogParams[2] = calNormalAttachSize;
+							ezCommon_cross_dialogParams[3] = calBigAttachSize;
+							ezCommon_cross_dialogParams[4] = calBigAttachCnt;
+							ezCommon_cross_dialogParams[5] = addToBigAttach;
+							showConfirm_sub(strLangHSBAt13 + apprAttachLimit + "MB" + strLangHSBAt14, fileupload_afterConfirm);
+							return;
 						}
 						//bigFileCheck = confirm(apprAttachLimit + "MB" + strLangHSBAt00 + bigSizeApprAttachDelDay + strLang1030 + " " +strLangHSBAt01);
 		        	}
@@ -984,7 +992,7 @@
 		        // 대용량첨부파일 최대크기 초과 체크
 				if (bigAttachSize + calBigAttachSize > parseInt(bigSizeApprAttachLimit) * 1024 * 1024) {
 					hideLoadingProgress();
-					alert(strLangHSBAt03 + bigSizeApprAttachLimit  + strLangHSBAt04);
+					showAlert_sub(strLangHSBAt03 + bigSizeApprAttachLimit  + strLangHSBAt04);
 		        	isfileup = false;
 		        	document.form.file1.value = "";
 		        	return;
@@ -997,7 +1005,7 @@
 			        	
 			        	if (parseInt(totalSize + calTotalSize) > totMaxSize) {
 			        		hideLoadingProgress();
-			        		alert(strLangjjh01 + apprTotalAttachLimit + strLangjjh02);
+			        		showAlert_sub(strLangjjh01 + apprTotalAttachLimit + strLangjjh02);
 				        	isfileup = false;
 				        	// 용량 초과 파일 같은 파일 업로드 시 알러트 다시 뜨게 수정 2018-04-19 강민수92
 				        	document.form.file1.value = "";
@@ -1016,7 +1024,7 @@
 		        	
 		        	if (fnl > attachFileNameMaxLength) {
 		        		hideLoadingProgress();
-		        		alert("<spring:message code='main.jjh08' />" + attachFileNameMaxLength + "<spring:message code='main.lhm03' />");
+		        		showAlert_sub("<spring:message code='main.jjh08' />" + attachFileNameMaxLength + "<spring:message code='main.lhm03' />");
 		        		isfileup = false;
 		        		document.form.file1.value = "";
 		        		return;
@@ -1138,12 +1146,12 @@
                 	},
                 	success : function(resultCnt) {
                 		if (resultCnt != -1 && sumAttachFileCnt > resultCnt) { // -1이라면 무제한
-                			alert("<spring:message code='ezApprovalG.hsbAL12' arguments='" + resultCnt + "'/>");
+                			showAlert_sub("<spring:message code='ezApprovalG.hsbAL12' arguments='" + resultCnt + "'/>");
                 			resultTxt = "NO";
                 		}
                 	},
                 	error : function() {
-                		alert("<spring:message code='ezApprovalG.hsbAL13' />");
+                		showAlert_sub("<spring:message code='ezApprovalG.hsbAL13' />");
                 		resultTxt = "NO";
                 	}
                 });
@@ -1163,7 +1171,7 @@
 			    var sumBigAttachFileCnt = orgBigAttachFileCnt + pNewBigAttachFileCnt;
 			    
 				if (bigSizeAttachLimitCount > 0 && sumBigAttachFileCnt > bigSizeAttachLimitCount) { // 0이라면 무제한
-					alert("<spring:message code='ezSystem.HSBAppr05' arguments='" + bigSizeAttachLimitCount + "'/>");
+					showAlert_sub("<spring:message code='ezSystem.HSBAppr05' arguments='" + bigSizeAttachLimitCount + "'/>");
 					resultTxt = "NO";
 				}
 				
@@ -1190,7 +1198,7 @@
 		    	var webFolderFileListCnt = webFolderFileList.length;
 		    	
 		    	if (isfileup) {
-		            alert(strLangjjh03);
+		            showAlert_sub(strLangjjh03);
 		            return;
 		        }
 		        // 새로 추가할 웹폴더 첨부파일과 기존 파일의 개수제한 체크
@@ -1254,7 +1262,7 @@
 		        
 		        // 대용량첨부파일 최대크기 초과 체크
 				if (bigAttachSize + calBigAttachSize > parseInt(bigSizeApprAttachLimit) * 1024 * 1024) {
-		        	alert(strLangHSBAt03 + bigSizeApprAttachLimit  + strLangHSBAt04);
+		        	showAlert_sub(strLangHSBAt03 + bigSizeApprAttachLimit  + strLangHSBAt04);
 		        	isfileup = false;
 		        	document.form.file1.value = "";
 		        	return;
@@ -1266,7 +1274,7 @@
 			        	var totMaxSize = parseInt(apprTotalAttachLimit) * 1024 * 1024;
 			        	
 			        	if (parseInt(totalSize + calTotalSize) > totMaxSize) {
-				        	alert(strLangjjh01 + apprTotalAttachLimit + strLangjjh02);
+				        	showAlert_sub(strLangjjh01 + apprTotalAttachLimit + strLangjjh02);
 				        	isfileup = false;
 				        	document.form.file1.value = "";
 				        	return;
@@ -1284,7 +1292,7 @@
 					}
 		        	
 		        	if (fnl > attachFileNameMaxLength) {
-		        		alert("<spring:message code='main.jjh08' />" + attachFileNameMaxLength + "<spring:message code='main.lhm03' />");
+		        		showAlert_sub("<spring:message code='main.jjh08' />" + attachFileNameMaxLength + "<spring:message code='main.lhm03' />");
 		        		isfileup = false;
 		        		return;
 		        	} else { // 파일명, 사이즈, 경로를 하드하게 '|' 문자열로 붙여서 서버로 전달
@@ -1360,6 +1368,110 @@
 		    	}
 			}
 		    
+			function fileupload_afterConfirm(rtn) {
+				var fd = ezCommon_cross_dialogParams[0];
+				var calTotalSize = ezCommon_cross_dialogParams[1]; // 전체 첨부파일 크기
+				var calNormalAttachSize = ezCommon_cross_dialogParams[2]; // 일반첨부파일 크기
+				var calBigAttachSize = ezCommon_cross_dialogParams[3]; // 대용량 첨부파일 크기
+				var calBigAttachCnt = ezCommon_cross_dialogParams[4]; // 대용량 첨부파일 개수
+				var addToBigAttach = ezCommon_cross_dialogParams[5]; // 대용량 첨부파일로 추가하는지 여부
+				hideConfirm_sub();
+				
+				if (rtn != true) {
+					addToBigAttach = "N";
+					hideLoadingProgress();
+					return;
+				} else {
+					calBigAttachSize += calNormalAttachSize; // 같이 추가되는 일반 첨부파일도 전부 대용량으로 추가되므로.
+					calNormalAttachSize = 0; // 대용량으로 변환되므로 일반 첨부파일로는 추가되지 않음
+				}
+
+				// 대용량첨부파일 최대개수 초과 체크
+				var checkBigAttachResult = checkBigAttachFileCntLimit(calBigAttachCnt);
+				if (checkBigAttachResult == "NO") {
+					isfileup = false;
+					document.form.file1.value = "";
+					hideLoadingProgress();
+					return;
+				}
+
+				// 대용량첨부파일 최대크기 초과 체크
+				if (bigAttachSize + calBigAttachSize > parseInt(bigSizeApprAttachLimit) * 1024 * 1024) {
+					hideLoadingProgress();
+					showAlert_sub(strLangHSBAt03 + bigSizeApprAttachLimit  + strLangHSBAt04);
+					isfileup = false;
+					document.form.file1.value = "";
+					return;
+				}
+
+				// 첨부파일 총용량제한 (일반 + 대용량의 합)
+				if (apprTotalAttachLimit != "") {
+					if (apprTotalAttachLimit > 0) {
+						var totMaxSize = parseInt(apprTotalAttachLimit) * 1024 * 1024;
+
+						if (parseInt(totalSize + calTotalSize) > totMaxSize) {
+							hideLoadingProgress();
+							showAlert_sub(strLangjjh01 + apprTotalAttachLimit + strLangjjh02);
+							isfileup = false;
+							// 용량 초과 파일 같은 파일 업로드 시 알러트 다시 뜨게 수정 2018-04-19 강민수92
+							document.form.file1.value = "";
+							return;
+						} else {
+							totalSize += calTotalSize;
+						}
+					}
+				}
+
+				for (var i = 0; i < file.length; i++) {
+					var fnl = file[i].name.length;
+					if (file[i].name.lastIndexOf('.') != -1) { // 2024-02-13 확장자 제외 파일명 길이를 체크
+						fnl = file[i].name.lastIndexOf('.');
+					}
+
+					if (fnl > attachFileNameMaxLength) {
+						hideLoadingProgress();
+						showAlert_sub("<spring:message code='main.jjh08' />" + attachFileNameMaxLength + "<spring:message code='main.lhm03' />");
+						isfileup = false;
+						document.form.file1.value = "";
+						return;
+					} else {
+						fd.append("file1", file[i]);
+					}
+				}
+
+				isfileup = true;
+				fd.append("boardid", window.parent.pBoardID);
+				fd.append("maxsize", pBoardFileSize * 1024 * 1024);
+				fd.append("compid", orgCompanyID);
+				fd.append("docid", document.getElementById("docid").value);
+				fd.append("attachsn", pAttachSN);
+
+				$.ajax({
+					type : "POST",
+					dataType : "json",
+					async : false,
+					url : "/ezApprovalG/multiUpload.do",
+					data : fd,
+					processData: false,
+					contentType: false,
+					success: function(text){
+						var uFileCnt = text.resultUpload.length
+
+						for (var i = 0; i < uFileCnt; i++) {
+							returnvalue(text.resultUpload[i], text.fileName[i], text.fileLocation[i], text.fileSize[i], addToBigAttach);
+						}
+
+						isfileup = false;
+
+						// 일반첨부, 대용량첨부 용량 갱신
+						normalAttachSize += calNormalAttachSize;
+						bigAttachSize += calBigAttachSize;
+					}
+				});
+				// 같은 파일 업로드 할 수 있게 수정 2018-04-19 강민수92
+				document.form.file1.value = "";
+				hideLoadingProgress();
+			}
 		</script>
 		<style>
 			.mainlist tr th {border-top:0px}
@@ -1422,7 +1534,7 @@
 		<div class="layerpopup"  style="z-index:2000; position:absolute; display:none; overflow:hidden;" id="iFramePanel_sub">
 			<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer_sub"></iframe>
 		</div>
-		<div style="width: 200px; height: 50px; border: 0px solid red; text-align: center; vertical-align: middle; display: none; z-index: 9000; position: absolute;" id="loadingLayer">
+		<div style="width: 200px; height: 50px; border: 0px solid red; text-align: center; vertical-align: middle; display: none; z-index: 1500; position: absolute;" id="loadingLayer">
 	        <img src="/images/email/progress_img.gif" style="vertical-align: middle;" />
 	    </div>
 	</body>

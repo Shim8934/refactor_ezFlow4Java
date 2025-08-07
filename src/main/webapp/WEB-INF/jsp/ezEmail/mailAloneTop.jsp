@@ -491,7 +491,7 @@
 			txtSearch.value = TrimText(ReplaceText(txtSearch.value, "'", ""));
 			var pSearchString = txtSearch.value;
 			
-			parent.frames["main"].location.href = "/myoffice/ezsearch/index_search.aspx?Keyword=" + escape(pSearchString);
+			parent.document.querySelector("iframe[name=main]").src = "/myoffice/ezsearch/index_search.aspx?Keyword=" + escape(pSearchString);
 		}
         
         function keyword_Clear(obj) {
@@ -579,7 +579,11 @@
  		            }
  		        }
 			} */
-			window.open(url, location, option);
+			if (location === "main") {
+                parent.document.querySelector("iframe[name=main]").src = url;
+            } else {
+				window.open(url, location, option);
+			}
 		}
 		
 		function OpenWindow2(targetid, url, location, option) {
@@ -611,7 +615,11 @@
         			clickmenuName = menuName;
     			}
 			} */
-			window.open(url, location, option);
+            if (location === "main") {
+                parent.document.querySelector("iframe[name=main]").src = url;
+            } else {
+                window.open(url, location, option);
+            }
 		}
         
         function showProgress() {

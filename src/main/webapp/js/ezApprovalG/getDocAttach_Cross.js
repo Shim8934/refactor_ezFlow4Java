@@ -244,7 +244,7 @@ function setAttachInfo(tempDocID, INGFlag, attachTag) {
                 		strAttach = strAttach + getNodeText(GetChildNodes(xmlRtn[i])[1]) + "</a> &nbsp; ";
                     } else {
                     	var pAlertContent = "한글양식은 IE에서만 볼 수 있습니다.";
-                    	alert(pAlertContent);
+                    	showAlert(pAlertContent);
                         
                         return;
                     }*/ 
@@ -253,7 +253,7 @@ function setAttachInfo(tempDocID, INGFlag, attachTag) {
 		                	openLocation = "/ezApprovalG/ezViewEnd_HWP.do?docID=" + escapenew(FileDocID) + "&docHref=" + escapenew(FilePath) + "&formID=&orgDocid=";
 	                	} else {
 	                    	var pAlertContent = "한글양식은 IE에서만 볼 수 있습니다.";
-	                    	alert(pAlertContent);
+	                    	showAlert(pAlertContent);
 	                        
 	                        return;
 	                    }
@@ -312,11 +312,11 @@ function attachFile_Preview(filePath, fileOrgName) {
 			if (result != "") {
 				window.open(result, '_blank', GetOpenWindowfeature(1100, 950));
 			} else {
-				alert(strLang223);
+				showAlert(strLang223);
 			}
 		},
 		error : function(error){
-			alert(strLang223);
+			showAlert(strLang223);
 			console.log(error);
 		}
 	})
@@ -368,17 +368,21 @@ function openAttachView(wfileLocation, wName, wWeigth, wHeigth) {
 	        		window.open(wfileLocation, wName, "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=" + heigth + ",width=" + width + ",top=" + top + ",left = " + left);
 	        	} else {
 	        		var pAlertContent = "한글양식은 IE에서만 볼 수 있습니다.";
-	            	alert(pAlertContent);
+	            	showAlert(pAlertContent);
 	                return;
 	        	}
         	} else {
         		window.open(wfileLocation, wName, "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=" + heigth + ",width=" + width + ",top=" + top + ",left = " + left);
         	}
         } else {
-        	window.open(wfileLocation, wName, "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=" + heigth + ",width=" + width + ",top=" + top + ",left = " + left);
+        	if (!isTeamsDesktop()) {
+                window.open(wfileLocation, wName, "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=" + heigth + ",width=" + width + ",top=" + top + ",left = " + left);
+            } else {
+                parent.showPopupSlide(wfileLocation, width, heigth, wName, "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=" + heigth + ",width=" + width + ",top=" + top + ",left = " + left, () => parent.hidePopupSlide(2), 2);
+            }
         }
     } catch (e) {
-        alert("openAttachView :: " + e.description);
+        showAlert("openAttachView :: " + e.description);
     }
 }
 
@@ -443,7 +447,7 @@ function attach_Download() {
     	$frm.submit();
 	}
 	else { // 체크된 파일 없음
-		alert(strLangHSBAt12);
+		showAlert(strLangHSBAt12);
 		return;
 	}
 }

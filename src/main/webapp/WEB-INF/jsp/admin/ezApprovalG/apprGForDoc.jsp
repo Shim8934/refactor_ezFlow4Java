@@ -558,7 +558,7 @@
 			
 			function ViewDoc_onclick() {
 			    if (DocID == "") {
-			        alert("<spring:message code = 'ezApprovalG.t633' />");
+			        showAlert("<spring:message code = 'ezApprovalG.t633' />");
 			    } else {
 			        var para = new Array();
 			        para[0] = DocID;
@@ -575,7 +575,7 @@
 					            openLocation = "/ezApprovalG/ezViewEnd_HWP.do";
 			                } else {
 			                	var pAlertContent = "한글양식은 IE에서만 볼 수 있습니다.";
-			                	alert(pAlertContent);
+			                	showAlert(pAlertContent);
 			                    
 			                    return;
 			                }
@@ -624,9 +624,10 @@
 		                    heigth = parseInt(heigth) - 40;
 		                width = parseInt(width) - 10;
 		            }
-			        window.open(wfileLocation, wName, "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=" + heigth + ",width=" + width + ",top=" + top + ",left = " + left);
+			        // window.open(wfileLocation, wName, "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=" + heigth + ",width=" + width + ",top=" + top + ",left = " + left);
+					showPopupSlide(wfileLocation, width, heigth, wName, "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=" + heigth + ",width=" + width + ",top=" + top + ",left = " + left, hidePopupSlide);
 			    } catch (e) {
-			        alert("openwindow :: " + e.description);
+			        showAlert("openwindow :: " + e.description);
 			    }
 			}
 			
@@ -751,7 +752,7 @@
 				}
 			}
 			
-			var ezStatisticsSearch_Cross_dialogArguments = new Array();
+			// var ezStatisticsSearch_Cross_dialogArguments = new Array();
 			var ezStatisticsSearch_QueryMap = new Map();
 			function SearchCondi_onclick() {
 				var para;
@@ -760,17 +761,20 @@
 				$('#sel_year').val("ALL");
 				
 				if (CrossYN()) {
-				    ezStatisticsSearch_Cross_dialogArguments[0] = para;
-				    ezStatisticsSearch_Cross_dialogArguments[1] = SearchCondi_onclick_Complete;
-				    var ezStatisticsSearch_Cross;
+				    // ezStatisticsSearch_Cross_dialogArguments[0] = para;
+				    // ezStatisticsSearch_Cross_dialogArguments[1] = SearchCondi_onclick_Complete;
+				    // var ezStatisticsSearch_Cross;
+					ezCommon_cross_dialogArguments[0] = para;
 				    if (approvalFlag == "S") {
-					    ezStatisticsSearch_Cross = window.open("/admin/ezApprovalG/search.do?ingFlag=END", "ezStatisticsSearch", GetOpenWindowfeature(560, 314));
+					    // ezStatisticsSearch_Cross = window.open("/admin/ezApprovalG/search.do?ingFlag=END", "ezStatisticsSearch", GetOpenWindowfeature(560, 314));
+						showPopup("/admin/ezApprovalG/search.do?ingFlag=END", 560, 314, "ezStatisticsSearch", GetOpenWindowfeature(560, 314), SearchCondi_onclick_Complete);
 				    } else {
-					    ezStatisticsSearch_Cross = window.open("/admin/ezApprovalG/search.do?ingFlag=END", "ezStatisticsSearch", GetOpenWindowfeature(560, 404));
+					    // ezStatisticsSearch_Cross = window.open("/admin/ezApprovalG/search.do?ingFlag=END", "ezStatisticsSearch", GetOpenWindowfeature(560, 404));
+						showPopup("/admin/ezApprovalG/search.do?ingFlag=END", 560, 404, "ezStatisticsSearch", GetOpenWindowfeature(560, 404), SearchCondi_onclick_Complete);
 				    }	// 팝업 사이즈 수정(510 > 560) : 다국어 버튼 아래로 떨어짐
 
-				    try { ezStatisticsSearch_Cross.focus(); } catch (e) {
-				    }
+				    // try { ezStatisticsSearch_Cross.focus(); } catch (e) {
+				    // }
 				} else {
 				    var url = "ezStatisticsSearch_Cross.aspx?INGFLAG=END";
 				    var feature = "";
@@ -797,6 +801,7 @@
 			}
 			
 			function SearchCondi_onclick_Complete(condition) {
+				hidePopup();
 				if (condition) {
 				    pChackYN = "SEARCH";
 				    
@@ -1340,6 +1345,11 @@
 	
 		<div style="WIDTH:100%;HEIGHT:204px; font-size:92%; OVERFLOW-Y:AUTO;" id="div_AprLine">
 	  		<div id="lvAprLine" ></div>
+		</div>
+
+		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>
+		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
+			<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
 		</div>
 
 	    <script type="text/javascript">

@@ -601,7 +601,7 @@
 	            var pUrl = "/ezEmail/mailConfirmDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezEmail.t666' />") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezEmail.t667' />") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezEmail.t671' />");
 	            DivPopUpShow(330, 205, pUrl);	            
 	        } else {
-	            window.close();
+				btnClose_onclick();
 	        }
 	    }
 	    function window_close_Complete(retVal) {
@@ -615,7 +615,7 @@
 	            if (tempSaveVal === "noSubject"){
 	            	retVal = "2";
 	            } else {
-		            window.close();
+					btnClose_onclick();
 	            }
 	        }
 	        
@@ -627,7 +627,7 @@
 //	        }
 	        
 	        if (retVal != "2")
-	            window.close();
+				btnClose_onclick();
 	    }
 	    var isDelted = false; // deleted의 오타 추정.
 	    function delDrafts(del_uid) {
@@ -2325,6 +2325,16 @@
 					document.getElementById("EdtorSize").style.height = 436 + "PX";
 				}
 			}
+		}
+		
+		function btnClose_onclick() {
+			if (opener == null 
+				&& typeof parent.ezCommon_cross_dialogArguments != "undefined"
+				&& parent.ezCommon_cross_dialogArguments.length > 1
+			) {
+				parent.ezCommon_cross_dialogArguments[1]();
+			}
+			window.close();
 		}
 	    </script>
         <c:if test="${options.isCrossBrowser != true}">

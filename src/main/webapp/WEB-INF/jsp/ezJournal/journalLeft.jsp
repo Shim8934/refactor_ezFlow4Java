@@ -41,7 +41,7 @@
 				if(typeId&&typeId!=undefined){
 					url=url+"&typeId="+typeId;
 				}
-				window.open(url,"right");
+				parent.document.querySelector("iframe[name=right]").src = url;
 				setRecvCount();
 				
 	        	// 2023-06-15 황인경 - 디자인 개선 > 업무일지 > 좌측메뉴 > 트리구조 LNB 이미지 수정, 메뉴선택 클래스 제어
@@ -87,7 +87,7 @@
 	        }
 	        
 	        function journalConfig() {
-	        	window.parent.frames["right"].location.href = "/ezJournal/journalConfig.do";
+	        	window.parent.document.querySelector("iframe[name=right]").src = "/ezJournal/journalConfig.do";
 	        	setRecvCount();
 	        }
 	        

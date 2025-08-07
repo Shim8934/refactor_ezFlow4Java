@@ -168,7 +168,7 @@
 
 		       // } 
 			        if (parseInt(pListTypeValue) < 10) {
-			            window.open("/ezApprovalG/aprManage.do?listType=" + pListTypeValue + "&subQuery=", "right");
+                        parent.document.querySelector("iframe[name=right]").src = "/ezApprovalG/aprManage.do?listType=" + pListTypeValue + "&subQuery=";
 			
 			            if (pListTypeValue == "1" || pListTypeValue == "11") {
 			                setPresentValue("<spring:message code='ezApprovalG.t1747'/>");
@@ -208,7 +208,7 @@
 			                DocManageMain("m02");
 			            }
 			            if (pListTypeValue == "99") {
-			            	window.open("/ezApprovalG/aprManage.do?listType=" + pListTypeValue + "&subQuery=", "right");
+                            parent.document.querySelector("iframe[name=right]").src = "/ezApprovalG/aprManage.do?listType=" + pListTypeValue + "&subQuery=";
 			            	setPresentValue("<spring:message code='ezApprovalG.hyj04'/>");
 			                document.getElementById('APPROVAL99').click();
 			            }
@@ -282,12 +282,12 @@
 		            setPresentValue(treeNode.GetNodeData("VALUE"));
 		            if (PresentOpen != "CONTAINER") {
 		                PresentOpen = "CONTAINER";
-		                window.parent.frames.right.document.location.href = "/ezApprovalG/getContainerInfo.do?contID=" + escape(treeNode.GetNodeData("DATA1")) + "&sQuery=usercontlist" + "&tmpValue=" + escape(tmpValue);
+		                parent.document.querySelector("iframe[name=right]").src = "/ezApprovalG/getContainerInfo.do?contID=" + escape(treeNode.GetNodeData("DATA1")) + "&sQuery=usercontlist" + "&tmpValue=" + escape(tmpValue);
 		            }
 		            else {
 		                try {
 
-		                    window.parent.frames.right.document.location.href = "/ezApprovalG/getContainerInfo.do?contID=" + escape(treeNode.GetNodeData("DATA1")) + "&sQuery=usercontlist" + "&tmpValue=" + escape(tmpValue);
+		                    parent.document.querySelector("iframe[name=right]").src = "/ezApprovalG/getContainerInfo.do?contID=" + escape(treeNode.GetNodeData("DATA1")) + "&sQuery=usercontlist" + "&tmpValue=" + escape(tmpValue);
 		                    window.parent.frames("right").document.Script.SelCont_onclick4(treeNode.GetNodeData("DATA1"));
 		                } catch (e) { }
 		            }
@@ -399,11 +399,11 @@
 							DocManageMain(pthis.id);
 		                    break;
 		                case "approvalForDoc":
-		                	window.open("/admin/ezApprovalG/forAprDoc.do?type=user", "right");
+                            parent.document.querySelector("iframe[name=right]").src = "/admin/ezApprovalG/forAprDoc.do?type=user";
 		                	break;
 		                case "ApprovalConfig":
 		                    PresentOpen = "CONFIG";
-		                    window.open("/ezPersonal/ezApprovalConfig.do", "right");
+                            parent.document.querySelector("iframe[name=right]").src = "/ezPersonal/ezApprovalConfig.do";
 		                    break;    
 		                case "MYCONTWHO":
 		                    cmdOK_onclick('', "<spring:message code='ezApproval.t990042'/>", "TBL_ENDAPRLINEINFO.AprType = '" + strAprType40 + "' AND TBL_ENDAPRLINEINFO.AprState = '" + strAprState2 + "'");
@@ -425,7 +425,7 @@
 		            }
 		            if($(pthis).hasClass('deptShare')){
 		            	pListTypeValue = "";
-                		window.parent.frames.right.document.location.href = "/ezApprovalG/cabinetMain.do?sFlag=docShare&shareDeptId=" + pthis.id;          		 
+                		parent.document.querySelector("iframe[name=right]").src = "/ezApprovalG/cabinetMain.do?sFlag=docShare&shareDeptId=" + pthis.id;          		 
 		            }
 		            
 		            parent.frames["right"].$('#sel_year').val("ALL");
@@ -495,7 +495,7 @@
 				            if (PresentOpen != "APPROVAL" || pListTypeValue == "") {
 				                pListTypeValue = listtype;
 				                PresentOpen = "APPROVAL";
-				                window.parent.frames.right.document.location.href = "/ezApprovalG/aprManage.do?listType=" + listtype  + "&SubQuery=" + escape(SubQuery) + "&tmpValue=" + escape(tmpValue);
+				                parent.document.querySelector("iframe[name=right]").src = "/ezApprovalG/aprManage.do?listType=" + listtype  + "&SubQuery=" + escape(SubQuery) + "&tmpValue=" + escape(tmpValue);
 				            }
 				            else {
 				                if (listtype == "1") {
@@ -535,7 +535,7 @@
 				                    parent.frames["right"].checkBujaeInfo();
 				                }
 				                else if (listtype == "10") {
-				                	parent.frames.right.document.location.href = "/ezApprovalG/aprManage.do?listType=" + listtype  + "&SubQuery=" + escape(SubQuery) + "&tmpValue=" + escape(tmpValue);
+				                	parent.document.querySelector("iframe[name=right]").src = "/ezApprovalG/aprManage.do?listType=" + listtype  + "&SubQuery=" + escape(SubQuery) + "&tmpValue=" + escape(tmpValue);
 				                	parent.frames["right"].passValLeftMenu("10");
 				                	parent.frames["right"].checkBujaeInfo();
 				                }
@@ -570,10 +570,10 @@
 		        			}
 				        	if (PresentOpen != "APPROVAL") {
 				                PresentOpen = "APPROVAL";
-				                window.parent.frames.right.document.location.href = "/ezApprovalG/aprManage.do?listType=" + listtype  + "&SubQuery=" + encodeURIComponent(SubQuery) + "&tmpValue=" + encodeURIComponent(tmpValue) + "&shareUserId=" + shareUserId;
+				                parent.document.querySelector("iframe[name=right]").src = "/ezApprovalG/aprManage.do?listType=" + listtype  + "&SubQuery=" + encodeURIComponent(SubQuery) + "&tmpValue=" + encodeURIComponent(tmpValue) + "&shareUserId=" + shareUserId;
 				            }
 				            else {
-				                window.parent.frames.right.document.location.href = "/ezApprovalG/aprManage.do?listType=" + listtype  + "&SubQuery=" + encodeURIComponent(SubQuery) + "&tmpValue=" + encodeURIComponent(tmpValue) + "&shareUserId=" + shareUserId;
+				                parent.document.querySelector("iframe[name=right]").src = "/ezApprovalG/aprManage.do?listType=" + listtype  + "&SubQuery=" + encodeURIComponent(SubQuery) + "&tmpValue=" + encodeURIComponent(tmpValue) + "&shareUserId=" + shareUserId;
 				            }
 				        }
 		        }
@@ -744,10 +744,10 @@
 		        }
 		        if (PresentOpen != "CONTAINER") {
 		            PresentOpen = "CONTAINER";
-	                window.parent.frames.right.document.location.href = "/ezApprovalG/getContainerInfo.do?contID=" + encodeURI(ContainerID) + "&sQuery="+ escape(SubQuery) + "&tmpValue=" + encodeURI(ContName) + "&ENDAPRTYPE=" + strAprType40 + "&ENDAPRSTATE=" + strAprState2 + "&shareUserId=" + shareUserId;
+	                parent.document.querySelector("iframe[name=right]").src = "/ezApprovalG/getContainerInfo.do?contID=" + encodeURI(ContainerID) + "&sQuery="+ escape(SubQuery) + "&tmpValue=" + encodeURI(ContName) + "&ENDAPRTYPE=" + strAprType40 + "&ENDAPRSTATE=" + strAprState2 + "&shareUserId=" + shareUserId;
 		        } else {
 		            try {
-		            	 window.parent.frames.right.document.location.href = "/ezApprovalG/getContainerInfo.do?contID=" + encodeURI(ContainerID) + "&sQuery="+ escape(SubQuery) + "&tmpValue=" + encodeURI(ContName) + "&ENDAPRTYPE=" + strAprType40 + "&ENDAPRSTATE=" + strAprState2 + "&shareUserId=" + shareUserId;
+		            	 parent.document.querySelector("iframe[name=right]").src = "/ezApprovalG/getContainerInfo.do?contID=" + encodeURI(ContainerID) + "&sQuery="+ escape(SubQuery) + "&tmpValue=" + encodeURI(ContName) + "&ENDAPRTYPE=" + strAprType40 + "&ENDAPRSTATE=" + strAprState2 + "&shareUserId=" + shareUserId;
 // 		                parent.frames["right"].SelCont_onclick2(ContainerID, ContName);
 		            } catch (e) { }
 		        }
@@ -758,12 +758,12 @@
 	                if (PresentOpen != "CONTAINER") {
 	                    PresentOpen = "CONTAINER";
 	                    var subCondition = "TBL_EXPENDAPRDOCINFO.TASKCODE = '" + ContainerID + "'";
-	                    window.parent.frames.right.document.location.href = "/ezApprovalG/getContainerInfo.do?contID=" + encodeURIComponent(Containers) + "&sQuery=" + encodeURIComponent(subCondition) + "&tmpValue=" + encodeURIComponent(tmpValue) + "&itemID=" + ContainerID;
+	                    parent.document.querySelector("iframe[name=right]").src = "/ezApprovalG/getContainerInfo.do?contID=" + encodeURIComponent(Containers) + "&sQuery=" + encodeURIComponent(subCondition) + "&tmpValue=" + encodeURIComponent(tmpValue) + "&itemID=" + ContainerID;
 	                }
 	                else {
 	                    try {
 	                        var subCondition = "TBL_EXPENDAPRDOCINFO.TASKCODE = '" + ContainerID + "'";
-	                        window.parent.frames.right.document.location.href = "/ezApprovalG/getContainerInfo.do?contID=" + encodeURIComponent(Containers) + "&sQuery=" + encodeURIComponent(subCondition) + "&tmpValue=" + encodeURIComponent(tmpValue) + "&itemID=" + ContainerID;
+	                        parent.document.querySelector("iframe[name=right]").src = "/ezApprovalG/getContainerInfo.do?contID=" + encodeURIComponent(Containers) + "&sQuery=" + encodeURIComponent(subCondition) + "&tmpValue=" + encodeURIComponent(tmpValue) + "&itemID=" + ContainerID;
 	                        window.parent.frames("right").document.Script.SelCont_onclick3(subCondition, Containers, ContName);
 	                    } catch (e) { }
 	                }
@@ -771,12 +771,12 @@
 	                if (PresentOpen != "CONTAINER") {
 	                    PresentOpen = "CONTAINER";
 	                    var subCondition = "TBL_EXPENDAPRDOCINFO.TASKCODE = '" + ContainerID + "'";
-	                    window.parent.frames.right.document.location.href = "/ezApprovalG/getContainerInfo.do?contID=" + encodeURIComponent(Containers) + "&sQuery=" + encodeURIComponent(subCondition) + "&tmpValue=" + encodeURIComponent(tmpValue) + "&itemID=" + ContainerID;
+	                    parent.document.querySelector("iframe[name=right]").src = "/ezApprovalG/getContainerInfo.do?contID=" + encodeURIComponent(Containers) + "&sQuery=" + encodeURIComponent(subCondition) + "&tmpValue=" + encodeURIComponent(tmpValue) + "&itemID=" + ContainerID;
 	                }
 	                else {
 	                    try {
 	                        var subCondition = "TBL_EXPENDAPRDOCINFO.TASKCODE = '" + ContainerID + "'";
-	                        window.parent.frames.right.document.location.href = "/ezApprovalG/getContainerInfo.do?contID=" + encodeURIComponent(Containers) + "&sQuery=" + encodeURIComponent(subCondition) + "&tmpValue=" + encodeURIComponent(tmpValue) + "&itemID=" + ContainerID;
+	                        parent.document.querySelector("iframe[name=right]").src = "/ezApprovalG/getContainerInfo.do?contID=" + encodeURIComponent(Containers) + "&sQuery=" + encodeURIComponent(subCondition) + "&tmpValue=" + encodeURIComponent(tmpValue) + "&itemID=" + ContainerID;
 	                        window.parent.frames("right").document.Script.SelCont_onclick3(subCondition, Containers, ContName);                     
 	                    } catch (e) { }
 	                }
@@ -789,7 +789,7 @@
 		    	}
 		    	PresentOpen = "CONTAINER";
                 var subCondition = "TBL_EXPENDAPRDOCINFO.FORMNAME = '" + ContainerID + "'";
-                window.parent.frames.right.document.location.href = "/ezApprovalG/getContainerInfo.do?contID=" + encodeURIComponent(Containers) + "&sQuery=" + encodeURIComponent(subCondition) + "&tmpValue=" + encodeURIComponent(tmpValue) + "&itemID=" + encodeURIComponent(ContainerID) + "&shareDeptId=" + shareDeptId;
+                parent.document.querySelector("iframe[name=right]").src = "/ezApprovalG/getContainerInfo.do?contID=" + encodeURIComponent(Containers) + "&sQuery=" + encodeURIComponent(subCondition) + "&tmpValue=" + encodeURIComponent(tmpValue) + "&itemID=" + encodeURIComponent(ContainerID) + "&shareDeptId=" + shareDeptId;
 		    }
 		    
 		    function setBoldText(elem) {
@@ -1058,44 +1058,44 @@
 		            switch (pthis.id) {
 		                case "admin_sub01":
 		                    PresentOpen = "DOC_ADMIN";
-		                    window.parent.frames.right.document.location.href = "/ezApprovalG/taskManage.do";
+		                    parent.document.querySelector("iframe[name=right]").src = "/ezApprovalG/taskManage.do";
 		                    break;
 		                case "admin_sub02":
 		                    PresentOpen = "DOC_ADMIN";
-		                    window.parent.frames.right.document.location.href = "/ezApprovalG/cabTransfer.do";
+		                    parent.document.querySelector("iframe[name=right]").src = "/ezApprovalG/cabTransfer.do";
 		                    break;
 		                case "admin_sub03":
 		                    PresentOpen = "DOC_ADMIN";
-		                    window.parent.frames.right.document.location.href = "/ezApprovalG/adminPage.do?initFlag=4";
+		                    parent.document.querySelector("iframe[name=right]").src = "/ezApprovalG/adminPage.do?initFlag=4";
 		                    break;
 		                case "admin_sub04":
 		                    PresentOpen = "DOC_ADMIN";
-		                    window.parent.frames.right.document.location.href = "/ezApprovalG/adminPage.do?initFlag=0";
+		                    parent.document.querySelector("iframe[name=right]").src = "/ezApprovalG/adminPage.do?initFlag=0";
 		                    break;
 		                case "admin_sub05":
 		                    PresentOpen = "DOC_ADMIN";
-		                    window.parent.frames.right.document.location.href = "/myoffice/ezApprovalG/ezCabinet/Manage/AdminPage_Cross.aspx?InitFlag=1";
+		                    parent.document.querySelector("iframe[name=right]").src = "/myoffice/ezApprovalG/ezCabinet/Manage/AdminPage_Cross.aspx?InitFlag=1";
 		                    break;
 		                case "admin_sub06":
 		                    PresentOpen = "DOC_ADMIN";
-		                    window.parent.frames.right.document.location.href = "/myoffice/ezApprovalG/ezCabinet/Manage/AdminPage_Cross.aspx?InitFlag=2";
+		                    parent.document.querySelector("iframe[name=right]").src = "/myoffice/ezApprovalG/ezCabinet/Manage/AdminPage_Cross.aspx?InitFlag=2";
 		                    break;
 		                case "admin_sub07":
 		                    PresentOpen = "DOC_ADMIN";
-		                    window.parent.frames.right.document.location.href = "/myoffice/ezApprovalG/ezCabinet/Manage/AdminPage_Cross.aspx?InitFlag=3";
+		                    parent.document.querySelector("iframe[name=right]").src = "/myoffice/ezApprovalG/ezCabinet/Manage/AdminPage_Cross.aspx?InitFlag=3";
 		                    break;
 		                case "approvalForDoc_sub01":
 		                	PresentOpen = "DOC_ADMIN";
-		                	window.parent.frames.right.document.location.href = "/admin/ezApprovalG/forAprDoc.do?type=user";
+		                	parent.document.querySelector("iframe[name=right]").src = "/admin/ezApprovalG/forAprDoc.do?type=user";
 		                	break;
 		                case "approvalForDoc_sub02":
 		                	PresentOpen = "DOC_ADMIN";
-		                	window.parent.frames.right.document.location.href = "/admin/ezApprovalG/forDoc.do?type=user";
+		                	parent.document.querySelector("iframe[name=right]").src = "/admin/ezApprovalG/forDoc.do?type=user";
 		                	break;
 						case "openGov":
 							//원문공개문서함
 							PresentOpen = "DOC_ADMIN";
-							window.parent.frames.right.document.location.href = "/admin/ezApprovalG/openGovForDoc.do?type=admin";
+							parent.document.querySelector("iframe[name=right]").src = "/admin/ezApprovalG/openGovForDoc.do?type=admin";
 							openFolder(pthis.id);
 							break;	
 		            }
@@ -1106,53 +1106,53 @@
 		        try {
 		            if (PresentOpen != "DOCMANAGE" && sFlag != "readingRecord") {
 		                PresentOpen = "DOCMANAGE";
-		                window.parent.frames.right.document.location.href = "/admin/ezApprovalG/cabinetMain.do?sFlag=" + sFlag;
+		                parent.document.querySelector("iframe[name=right]").src = "/admin/ezApprovalG/cabinetMain.do?sFlag=" + sFlag;
 		            }
 		            else {
 		                window.parent.frames["right"].g_uFlag = sFlag;
 		                switch (sFlag) {
 		                    case "m01":
-		                    	window.parent.frames.right.document.location.href = "/admin/ezApprovalG/cabinetMain.do?sFlag=" + sFlag;
+		                    	parent.document.querySelector("iframe[name=right]").src = "/admin/ezApprovalG/cabinetMain.do?sFlag=" + sFlag;
 		                        break;
 		                    case "m02":
 							case "m15" :
-		                        window.parent.frames.right.document.location.href = "/admin/ezApprovalG/cabinetMain.do?sFlag=" + sFlag;
+		                        parent.document.querySelector("iframe[name=right]").src = "/admin/ezApprovalG/cabinetMain.do?sFlag=" + sFlag;
 		                        break;
 		                    case "m03":
-		                        window.parent.frames.right.document.location.href = "/ezApprovalG/cabinetMain.do?sFlag=" + sFlag;
+		                        parent.document.querySelector("iframe[name=right]").src = "/ezApprovalG/cabinetMain.do?sFlag=" + sFlag;
 		                        break;
 		                    case "m04":
-		                        window.parent.frames.right.document.location.href = "/myoffice/ezApprovalG/ezCabinet/cabinetmain_Cross.aspx?sFlag=" + sFlag;
+		                        parent.document.querySelector("iframe[name=right]").src = "/myoffice/ezApprovalG/ezCabinet/cabinetmain_Cross.aspx?sFlag=" + sFlag;
 		                        break;
 		                    case "m05":
-		                        window.parent.frames.right.document.location.href = "/ezApprovalG/cabinetMain.do?sFlag=" + sFlag;
+		                        parent.document.querySelector("iframe[name=right]").src = "/ezApprovalG/cabinetMain.do?sFlag=" + sFlag;
 		                        break;
 		                    case "m06":
-		                        window.parent.frames.right.document.location.href = "/ezApprovalG/cabinetMain.do?sFlag=" + sFlag;
+		                        parent.document.querySelector("iframe[name=right]").src = "/ezApprovalG/cabinetMain.do?sFlag=" + sFlag;
 		                        break;
 		                    case "m07":
-		                        window.parent.frames.right.document.location.href = "/ezApprovalG/cabinetMain.do?sFlag=" + sFlag;
+		                        parent.document.querySelector("iframe[name=right]").src = "/ezApprovalG/cabinetMain.do?sFlag=" + sFlag;
 		                        break;
 		                    case "m08":
-		                        window.parent.frames.right.document.location.href = "/ezApprovalG/cabinetMain.do?sFlag=" + sFlag;
+		                        parent.document.querySelector("iframe[name=right]").src = "/ezApprovalG/cabinetMain.do?sFlag=" + sFlag;
 		                        break;
 		                    case "m09":
-		                        window.parent.frames.right.document.location.href = "/ezApprovalG/cabinetMain.do?sFlag=" + sFlag;
+		                        parent.document.querySelector("iframe[name=right]").src = "/ezApprovalG/cabinetMain.do?sFlag=" + sFlag;
 								break;
 							case "UNTREATED":
-		                        window.parent.frames.right.document.location.href = "/ezApprovalG/cabinetMain.do?sFlag=" + sFlag;
+		                        parent.document.querySelector("iframe[name=right]").src = "/ezApprovalG/cabinetMain.do?sFlag=" + sFlag;
 								break;
 							case "m12":
-		                        window.parent.frames.right.document.location.href = "/ezApprovalG/cabinetMain.do?sFlag=" + sFlag;
+		                        parent.document.querySelector("iframe[name=right]").src = "/ezApprovalG/cabinetMain.do?sFlag=" + sFlag;
 								break;
 							case "m13":
-		                        window.parent.frames.right.document.location.href = "/ezApprovalG/cabinetMain.do?sFlag=" + sFlag;
+		                        parent.document.querySelector("iframe[name=right]").src = "/ezApprovalG/cabinetMain.do?sFlag=" + sFlag;
 								break;
 							case "m14":
-		                        window.parent.frames.right.document.location.href = "/ezApprovalG/cabinetMain.do?sFlag=" + sFlag;
+		                        parent.document.querySelector("iframe[name=right]").src = "/ezApprovalG/cabinetMain.do?sFlag=" + sFlag;
 								break;
 							case "readingRecord" : 
-								window.parent.frames.right.document.location.href = "/ezApprovalG/readingRecord.do";
+								parent.document.querySelector("iframe[name=right]").src = "/ezApprovalG/readingRecord.do";
 								break;
 		                }
 		            }
@@ -1180,7 +1180,7 @@
 		            if (pListTypeValue == "7" || pListTypeValue == "8" || pListTypeValue == "9")
 		                pListTypeValue = "1";
 		
-		            parent.frames["left"].location.href = "/ezApprovalG/apprGLeft.do?listType=" + pListTypeValue;
+		            parent.document.querySelector("iframe[name=left]").src = "/ezApprovalG/apprGLeft.do?listType=" + pListTypeValue;
 		        }
 		    }
 		    function ChangeCookies() {

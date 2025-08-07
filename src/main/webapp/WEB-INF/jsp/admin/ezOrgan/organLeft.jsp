@@ -79,7 +79,7 @@
 						url = "/admin/ezOrgan/groupList.do";
 						break;
 				}
-				window.open(url,"right");
+				parent.document.querySelector("iframe[name=right]").src = url;
 			}
 
 			$(document).ready(function() {

@@ -68,7 +68,7 @@ function Draftinfo_ini() {
             }
         }
         catch (ErrMsg) {
-            alert(" Draftinfo_ini : " + ErrMsg.description + ErrMsg);
+        	showAlert(" Draftinfo_ini : " + ErrMsg.description + ErrMsg);
         }
         getMyGroupItem();
     }
@@ -118,7 +118,7 @@ function event_Draftinfo_ini() {
         xmlhttp = null;
     }
     catch (ErrMsg) {
-        alert(" Draftinfo_ini : " + ErrMsg.description + ErrMsg);
+    	showAlert(" Draftinfo_ini : " + ErrMsg.description + ErrMsg);
     }
 }
 
@@ -279,7 +279,7 @@ function CodeSearch_onclick() {
     var SearchOPtion = GetAttribute(document.getElementById("selSearchOption")[document.getElementById("selSearchOption").selectedIndex], "id");
     var SearchValue = document.getElementById("txtCodeSearch").value;
     if (SearchValue.trim() == "") {
-        alert(strLangS554);
+    	showAlert(strLangS554);
         return;
     }
 
@@ -640,7 +640,7 @@ function getMyGroupItem()
        
     }
     catch (ErrMsg) {
-        alert(" Draftinfo_ini : " + ErrMsg.description + ErrMsg);
+    	showAlert(" Draftinfo_ini : " + ErrMsg.description + ErrMsg);
     }
 }
 function lvinfofrequencylist_onclick() {

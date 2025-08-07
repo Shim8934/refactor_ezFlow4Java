@@ -29,7 +29,7 @@
 			
 		    window.onload = function()
 		    {
-		        parent.frames[1].location.href = "/ezStatistics/statisticsPerSonalMain.do";        
+		        parent.document.querySelectorAll("iframe")[1].src = "/ezStatistics/statisticsPerSonalMain.do";        
 		    };
 			
 		    function menu_change(Item) 
@@ -44,22 +44,22 @@
 			    switch(this_menu)
 			    {	
 			    	case "PERSONAL":
-		           		parent.frames[1].location.href = "/ezStatistics/statisticsPerSonalMain.do";
+		           		parent.document.querySelectorAll("iframe")[1].src = "/ezStatistics/statisticsPerSonalMain.do";
 		           	 	break;
 			        case "MAIL":
-			            parent.frames[1].location.href = "/ezStatistics/statisticsMailMain.do";
+			            parent.document.querySelectorAll("iframe")[1].src = "/ezStatistics/statisticsMailMain.do";
 			            break;
 			        case "APPROVAL":
-			            parent.frames[1].location.href = "/ezStatistics/statisticsApprMain.do";
+			            parent.document.querySelectorAll("iframe")[1].src = "/ezStatistics/statisticsApprMain.do";
 			            break;
 			        case "PAGELOG":
-			            parent.frames[1].location.href = "PageLog/PageLog_Main.aspx";
+			            parent.document.querySelectorAll("iframe")[1].src = "PageLog/PageLog_Main.aspx";
 			            break;
 			        case "WEBLOG":
-			            parent.frames[1].location.href = "WebLog_Statistics/WebLog_Main.aspx";
+			            parent.document.querySelectorAll("iframe")[1].src = "WebLog_Statistics/WebLog_Main.aspx";
 			            break;
 			        case "ATTITUDE": //개인별 근태통계
-			            parent.frames[1].location.href = "/ezStatistics/statisticsAttitudeMain.do";
+			            parent.document.querySelectorAll("iframe")[1].src = "/ezStatistics/statisticsAttitudeMain.do";
 			            break;
 			    }
 			    liSelected();

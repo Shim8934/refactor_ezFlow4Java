@@ -280,7 +280,7 @@
 	    	function btnView_Resource() {
 		        var strUrl = "/ezResource/viewResList.do?brdID=" + pBrdid + "&accessCode=" + pAccessCode;
 		        strUrl = strUrl + "&brdNm=" + encodeURIComponent(pBrdnm);
-	    	    window.open(strUrl, 'right');
+                parent.document.querySelector("iframe[name=right]").src = strUrl;
 	    	}
 
 	    	window.onresize = function () {

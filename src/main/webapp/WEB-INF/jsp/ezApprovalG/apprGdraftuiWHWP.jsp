@@ -1157,7 +1157,10 @@
 			    try {
 			        if (bAttachProcess == false)
 			            window.opener.openergetDocInfo();
-			    } catch (e) { }
+			    } catch (e) {
+					if (bAttachProcess == false)
+			            window.parent.openergetDocInfo();
+				}
 			
 			    try {
 // 			        if (bAttachProcess == false)
@@ -1169,18 +1172,18 @@
 			        bAttachProcess = true;
 			    } catch (e) { }
 			    
-		        try {
-		            window.opener.getApprGraph("appr");
-		        } catch (e) { }
+		        // try {
+		        //     window.opener.getApprGraph("appr");
+		        // } catch (e) { }
 			}
 	
 			function btn_Attach_onclick() {
 			    btnFileAttach_onclick();
 			}
 	
-			function btnMail_onclick() {
-			    window.open("/ezEmail/mailWrite.do?cmd=docsend&docID=" + pDocID + "&docHref=" + pFormHref, '', 'height=700,width=690,resizable=yes,scrollbars=no' + GetOpenPosition(690, 700));
-			}
+			// function btnMail_onclick() {
+			//     window.open("/ezEmail/mailWrite.do?cmd=docsend&docID=" + pDocID + "&docHref=" + pFormHref, '', 'height=700,width=690,resizable=yes,scrollbars=no' + GetOpenPosition(690, 700));
+			// }
 	
 			function btnDocInfo_onclick() {
 			    try {
@@ -1420,7 +1423,7 @@
 			}
 			
 			var pGubun;
-			var ezapprovalinfo_dialogArguments = new Array();
+			// var ezapprovalinfo_dialogArguments = new Array();
 			function btnApprovalInfo(pGubun) {
 				var deptCheckFlag = checkDeptAndCabinetId();
 				
@@ -1502,21 +1505,23 @@
 			        parameter[60] = passAprLine;
 			        parameter[61] = tempKeyword;
 			        
-			        ezapprovalinfo_dialogArguments[0] = parameter;
-	                ezapprovalinfo_dialogArguments[1] = btnApprovalInfo_Complete;
+			        // ezapprovalinfo_dialogArguments[0] = parameter;
+	                // ezapprovalinfo_dialogArguments[1] = btnApprovalInfo_Complete;
 			
 	                var url = "/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun +"&docType=" + pDocType + "&ext=" + "hwp" + "&formID=" + pFormID;
 			        //var feature = "status:no;dialogWidth:1140px;dialogHeight:750px;help:no;scroll:no;edge:sunken;";
 			        //var ret = window.showModalDialog(url, parameter, feature);
 			        // var ret = window.open(url, '', 'height=750,width=1210,scrollbars=no' + GetOpenPosition(1210, 750));
-			        var ret = window.open(url, "ezApprovalInfo-" + windowUuid, GetOpenWindowfeature(1210, 750));
-
+			        // var ret = window.open(url, "ezApprovalInfo-" + windowUuid, GetOpenWindowfeature(1210, 750));
+					ezCommon_cross_dialogArguments[0] = parameter;
+					showPopup(url, 1210, 750, "ezApprovalInfo-" + windowUuid, GetOpenWindowfeature(1210, 750), btnApprovalInfo_Complete);
 			    } catch (e) {
 			        alert("ezdraftui_hwp.btnApprovalInfo()::" + e);
 			    }
 			}
 			
 			function btnApprovalInfo_Complete(ret) {
+				hidePopup();
 				if (ret != undefined && ret[0] == "OK") {
 		            if (ret[1] != false) {
 		            	$.ajax({
@@ -1762,13 +1767,15 @@
 	                    window.opener.openergetDocInfo();
 	            }
 	            catch (e)
-	            { }
-	            try {
-	                if (bAttachProcess == false)
-	                    window.opener.Refresh_Window();
-	            }
-	            catch (e)
-	            { }
+	            {
+					if (bAttachProcess == false)
+	                    window.parent.openergetDocInfo();
+				}
+	            // try {
+	            //     if (bAttachProcess == false)
+	            //         window.opener.Refresh_Window();
+	            // }
+	            // catch (e) { }
 	            try {
 	                bAttachProcess = true;
 	            }

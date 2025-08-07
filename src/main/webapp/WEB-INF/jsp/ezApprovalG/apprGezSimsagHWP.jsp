@@ -98,7 +98,9 @@
         function window_onbeforeunload() {
             try {
                 window.opener.openergetDocInfo();
-            } catch (e) { }
+            } catch (e) {
+                window.parent.openergetDocInfo();
+            }
         }
 
         function btnClose_onclick() {

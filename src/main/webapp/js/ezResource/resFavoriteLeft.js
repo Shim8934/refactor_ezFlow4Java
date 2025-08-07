@@ -100,7 +100,7 @@ function checkBrd(event) {
 		event.target.classList.add("node_selected");
 	}
 	var resID = event.target.dataset.id;
-	window.open("/ezResource/scheduleMain.do?resID=" + resID + "&accessCode=" + g_AccessCode , "right");
+    parent.document.querySelector("iframe[name=right]").src = "/ezResource/scheduleMain.do?resID=" + resID + "&accessCode=" + g_AccessCode;
 }
 
 function getMainTreeUI(catList, treeMain) {

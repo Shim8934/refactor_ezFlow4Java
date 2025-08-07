@@ -18,7 +18,7 @@
 	    
 			function changeCompany() {
 				var url = "/admin/ezJournal/author.do";
-				parent.frames["right"].location.href = url + "?companyId=" + encodeURIComponent(companySelectID);
+				parent.document.querySelector("iframe[name=right]").src = url + "?companyId=" + encodeURIComponent(companySelectID);
 			}
 			
 			function insertAuth() {

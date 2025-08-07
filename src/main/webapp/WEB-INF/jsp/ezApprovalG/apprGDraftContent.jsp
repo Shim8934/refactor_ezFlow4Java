@@ -108,7 +108,7 @@
 
 	        window.onload = function () {
 	        	var officeFlag = "<c:out value='${officeFlag}'/>";
-	        	console.log(officeFlag);
+	        	// console.log(officeFlag);
 	        	$('#officeVal').val(officeFlag);
 	            try {
 	                parent.DocumentComplete(this);
@@ -472,7 +472,7 @@
 	                }
 	            }
 	            catch (e)
-	            {alert(e.message); }
+	            {showAlert(e.message); }
 	        }
 	
 	        var BODYTag;
@@ -1178,7 +1178,7 @@
                     }
                 } catch (e) {
                     console.log(e);
-                    alert("apprGdraftuiAllContent_WHWP.jsp > process_AfterOpen()  ::  " + e.description);
+                    showAlert("apprGdraftuiAllContent_WHWP.jsp > process_AfterOpen()  ::  " + e.description);
                 }
             }
 
@@ -1220,7 +1220,7 @@
                         Clear();
                     }
                 } catch (e) {
-                    alert("CopyAndPasteContent ::" + e);
+                    showAlert("CopyAndPasteContent ::" + e);
                 }
             }
 

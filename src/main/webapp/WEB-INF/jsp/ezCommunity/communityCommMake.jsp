@@ -91,7 +91,7 @@
 			
 			function back() {
 				/* 18-04-30 김민성 - 커뮤니티 만들기 취소시 메인화면으로 이동 하도록 수정 */
-				window.open("/ezCommunity/mainPage.do", "right");
+                parent.document.querySelector("iframe[name=right]").src = "/ezCommunity/mainPage.do";
 				
 				/* if("${flag}" == '1'){
 		        	   window.open("/ezCommunity/mainPage.do", "right");

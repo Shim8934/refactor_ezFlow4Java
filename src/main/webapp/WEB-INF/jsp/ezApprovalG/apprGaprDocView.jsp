@@ -89,6 +89,7 @@
 			var useHideHeaderArea = "<c:out value ='${useHideHeaderArea}'/>";
 
 			var tenantID = "<c:out value ='${userInfo.tenantId}'/>";
+			var ReturnFunction;
 	        
 		    $(function () {
 		      	if(approvalFlag == "G") {
@@ -98,6 +99,10 @@
 	        		$(".approvalG").css("display","none");
 	        		$(".approval").css("display","");
 	        	}
+
+				if (isParentCommonArgsUsed()) {
+					ReturnFunction = opener == null ? parent.ezCommon_cross_dialogArguments[1] : opener.ezCommon_cross_dialogArguments[1];
+				}
 		      	
 		      	$("#message").load(function() {
 					var selectOp = $("#selectImg option").length;
@@ -318,7 +323,7 @@
 		                }
 		            }
 		        } catch (e) {
-		            alert("putSignXML : " + e.description);
+		            showAlert("putSignXML : " + e.description);
 		            return false;
 		        }
 		        
@@ -395,9 +400,12 @@
 		        headerAction("open");
 		    	PrintClick("Cross", pDocID, "ING");
 		    }
-		    function btnClose_onclick() {
-		        window.close();
-		    }
+		    // function btnClose_onclick() {
+			// 	if (ReturnFunction != null) {
+			// 		ReturnFunction("cancel");
+			// 	}
+			// 	window.close();
+		    // }
 		
 // 		    function btnMail_onclick() {
 // 		    		  $.ajax({
@@ -447,8 +455,9 @@
 		        var pLeft = (pwidth - 890) / 2;
 			    var pURL = "/ezApprovalG/sendToMailApproval.do?cmd=docsend&docID=" + DocID + "&docHref=" + encodeURIComponent(DocHref)+"&orgCompanyID="+orgCompanyID;
 	 	        //var pURL = "/ezEmail/mailWrite.do?docHref=" +  encodeURIComponent(DocHref) + "&cmd=docsend&docID=" + DocID + "&imageCnt=&target=APPROVALG";
-		        var newwin = window.open(pURL, "mailsend", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width =890px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
-		        newwin.focus();
+		        // var newwin = window.open(pURL, "mailsend", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width =890px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
+		        // newwin.focus();
+				showPopup(pURL, 890, conHeight, "mailsend", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width =890px, status = no, toolbar=no, menubar=no,location=no, resizable=1", hidePopup);
 		    }
 		    
 		    function btnhistory_onclick() {
@@ -494,16 +503,20 @@
 				  parent.opener.clearAbsence(true);
 				}
 		    
-		        window.close();
+		        // window.close();
+				btnClose_onclick();
+
 		    }
 		    window.onbeforeunload = function () {
 		        try {
 		            window.opener.openergetDocInfo();
 		        }
-		        catch (e) { }
-		        try {
-		            window.opener.Refresh_Window();
-		        } catch (e) { }
+		        catch (e) {
+		            window.parent.openergetDocInfo();
+		        }
+		        // try {
+		        //     window.opener.Refresh_Window();
+		        // } catch (e) { }
 		    };
 		    var ezdocinfog_view_cross_dialogArguments = new Array();
 		    function btnDocInfo_onclick() {
@@ -567,7 +580,7 @@
 		     			}        			
 		            });
 		    	} catch (e) {
-		    		alert("getDocMode() :: " + e.description);
+		    		showAlert("getDocMode() :: " + e.description);
 		    	}
 		    	
 		    	return rtnVal;
@@ -593,7 +606,8 @@
 	        
 			function addRelatedCabinet() {
 				//* moon 2018.07.26
-				window.open("/ezCabinet/cabinetAddRelated.do?module=apprv", "addRelated", getOpenWindowfeature(480, 505));
+// 				window.open("/ezCabinet/cabinetAddRelated.do?module=apprv", "addRelated", getOpenWindowfeature(480, 505));
+				showPopup("/ezCabinet/cabinetAddRelated.do?module=apprv", 480, 505, "addRelated", getOpenWindowfeature(480, 505), hidePopup);
 			}
 			
 			function getOpenWindowfeature(popUpW, popUpH) {
@@ -743,8 +757,9 @@
 	        }
 	        
 	        function RemoveDoc_Complete() {
-	            try { window.opener.getDocList(); } catch (e) { }
-	            window.close();
+	            try { window.opener.getDocList(); } catch (e) { window.parent.getDocList(); }
+	            // window.close();
+				btnClose_onclick();
 	        }
 	        
 	        //2018-07-10 배현상, 강제회수 분기(btnforcecallback_onclick 생성)
@@ -869,13 +884,13 @@
 		    function btnReturn_onclick() {
 	        	var deptCheckFlag = checkDeptAndCabinetId();
 		    	if (deptCheckFlag == "3") {
-		    		alert(strLanggarm06 + " '" + arr_userinfo[5] + "'" +strLanggarm03 + " '" + arr_userinfo[5] + "'" + strLanggarm07 );
+		    		showAlert(strLanggarm06 + " '" + arr_userinfo[5] + "'" +strLanggarm03 + " '" + arr_userinfo[5] + "'" + strLanggarm07 );
 		    		return;
 		    	} else if (deptCheckFlag == "4") {
-		    		alert(strLanggarm06 + " '" + "'" + strLanggarm08);
+		    		showAlert(strLanggarm06 + " '" + "'" + strLanggarm08);
 		    		return;
 		    	} else if (deptCheckFlag == "2") {
-					alert("타부서의 철정보로 설정되어있습니다. \n'" + arr_userinfo[5] + "'부서의 철로 변경해주시기바랍니다.");
+					showAlert("타부서의 철정보로 설정되어있습니다. \n'" + arr_userinfo[5] + "'부서의 철로 변경해주시기바랍니다.");
 					return;
 				}	
 		    	
@@ -906,8 +921,8 @@
 		        DivPopUpHidden();
 
 		        if (checkAprState()) {
-		    		alert("<spring:message code='ezApprovalG.bhs23'/>");
-	    			window.close();
+		    		showAlert("<spring:message code='ezApprovalG.bhs23'/>", "");
+	    			// window.close();
 	    			return;
 		    	}
 
@@ -996,20 +1011,22 @@
 	    	}
 			
 			// 게시판 게시 - 공람할문서, 공람완료문서 메뉴에서 사용함
-		    var writeboardselect_modal_dialogArguments = new Array();
+		    // var writeboardselect_modal_dialogArguments = new Array();
 		    function NewItem_onclick() {
-		        writeboardselect_modal_dialogArguments[1] = NewItem_onclick_Complete;
-		        var OpenWin = window.open("/ezBoard/writeBoardSelectModal.do", "WriteBoardSelect_Modal", GetOpenWindowfeature(355, 600));
-		        try {
-		        	if (OpenWin) {
-		        		OpenWin.focus(); 
-		        	} 
-		        } catch (e) {
-	        		console.error('OpenWin 접근 실패:', e);
-		        }
+		        // writeboardselect_modal_dialogArguments[1] = NewItem_onclick_Complete;
+		        // var OpenWin = window.open("/ezBoard/writeBoardSelectModal.do", "WriteBoardSelect_Modal", GetOpenWindowfeature(355, 600));
+		        // try {
+		        // 	if (OpenWin) {
+		        // 		OpenWin.focus(); 
+		        // 	} 
+		        // } catch (e) {
+	        	// 	console.error('OpenWin 접근 실패:', e);
+		        // }
+				showPopup("/ezBoard/writeBoardSelectModal.do", 355, 600, "WriteBoardSelect_Modal", GetOpenWindowfeature(355, 600), NewItem_onclick_Complete);
 		    }
 		
 		    function NewItem_onclick_Complete(ret) {
+				hidePopup();
 		        if (typeof (ret) != "undefined") {
 		            pBoardID = ret[0];
 		
@@ -1023,10 +1040,11 @@
 		            var pLeft = (pwidth - 765) / 2;
 		            
 		            if (ret[2] == "2" || ret[2] == "3" || ret[2] == "4" || ret[2] == "7" || ret[2] == "8" || (ret[3] != "null" && ret[3] != null && ret[3] != "")) {
-		                alert(strLang1031);
+		                showAlert(strLang1031);
 		            }
 		            else {
-		                window.open("/ezBoard/boardNewItem.do?boardID=" + encodeURIComponent(pBoardID) + "&mode=new1&pbrdGbn=SiteNewBoard&pFromScreen=Mail&docID=" + pDocID + "&url=" + pDocHref + "&orgCompanyID=" + orgCompanyID, '', GetOpenWindowJun(765, 870));
+		                // window.open("/ezBoard/boardNewItem.do?boardID=" + encodeURIComponent(pBoardID) + "&mode=new1&pbrdGbn=SiteNewBoard&pFromScreen=Mail&docID=" + pDocID + "&url=" + pDocHref + "&orgCompanyID=" + orgCompanyID, '', GetOpenWindowJun(765, 870));
+						showPopup("/ezBoard/boardNewItem.do?boardID=" + encodeURIComponent(pBoardID) + "&mode=new1&pbrdGbn=SiteNewBoard&pFromScreen=Mail&docID=" + pDocID + "&url=" + pDocHref + "&orgCompanyID=" + orgCompanyID, 765, 870, "", GetOpenWindowJun(765, 870), hidePopup);
 		            }
 		        }
 		    }
@@ -1106,8 +1124,13 @@
 	            };
 	            
 	            var openLocation = "/ezApprovalG/draftui.do?" + new URLSearchParams(params);		        
-		        var result = GetOpenWindow(openLocation, "", 1150, 950, "YES");
-		        window.close();
+		        
+				if (!isTeamsDesktop()) {
+					var result = GetOpenWindow(openLocation, "", 1150, 950, "YES");
+					window.close();
+				} else {
+					parent.showPopupSlide(openLocation, 1150, 950, "", "", parent.hidePopupSlide);
+				}
 		    }
 		</script>
 	</head>

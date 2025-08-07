@@ -1,23 +1,22 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
-<html>
-	<head>
-		<title>main</title>
-		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	</head>
-	
-	<c:choose>
-		<c:when test="${cID == ''}">
-			<frameset cols="220,*" frameborder="NO" border="0" framespacing="0">
-				<frame src="/admin/ezCommunity/left.do" name="comm_left" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" noresize="noresize">
-				<frame src="/admin/ezCommunity/right.do" name="comm_right" marginwidth="0" marginheight="0" scrolling="auto" frameborder="0">
-		</c:when>
-		
-		<c:otherwise>
-			<frameset cols="220,*" frameborder="NO" border="0" framespacing="0">
-				<frame src="/admin/ezCommunity/left.do" name="comm_left" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" noresize="noresize">
-				<frame src="/admin/ezCommunity/right.do?cID="<c:out value = '${cID}' />" name="comm_right" marginwidth="0" marginheight="0" scrolling="auto" frameborder="0">
-		</c:otherwise>
-	</c:choose>
+<html class="frame_main">
+<head>
+	<title>main</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<link rel="stylesheet" type="text/css" href="${util.addVer('/css/mainFrame.css')}"/>
+</head>
+<body>
+<c:choose>
+	<c:when test="${cID == ''}">
+		<iframe id="left" src="/admin/ezCommunity/left.do" name="left"></iframe>
+		<iframe src="/admin/ezCommunity/right.do" id="right" name="right"></iframe>
+	</c:when>
+	<c:otherwise>
+		<iframe id="left" src="/admin/ezCommunity/left.do" name="left"></iframe>
+		<iframe src="/admin/ezCommunity/right.do?cID=<c:out value='${cID}'/>" id="right" name="right"></iframe>
+	</c:otherwise>
+</c:choose>
+</body>
 </html>

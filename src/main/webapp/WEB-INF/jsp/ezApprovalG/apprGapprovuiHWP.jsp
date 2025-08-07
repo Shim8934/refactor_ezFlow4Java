@@ -324,7 +324,9 @@
 		                try {
 		                    selectedDocID = window.opener.selectedDocIDS;
 		                }
-		                catch (e) { }
+		                catch (e) {
+							selectedDocID = window.parent.selectedDocIDS;
+						}
 		            }
 		
 		            try {
@@ -1074,15 +1076,17 @@
 			
 			        try {
 			            window.opener.openergetDocInfo();
-			        } catch (e) { }
+			        } catch (e) {
+						window.parent.openergetDocInfo();
+					}
 			
-			        try {
-			            window.opener.Refresh_Window();
-			        } catch (e) { }
+			        // try {
+			        //     window.opener.Refresh_Window();
+			        // } catch (e) { }
 			        
-			        try {
-			            window.opener.getApprGraph("appr");
-			        } catch (e) { }
+			        // try {
+			        //     window.opener.getApprGraph("appr");
+			        // } catch (e) { }
 			    }
 	
 			    function btnSave_onclick() {
@@ -1096,20 +1100,8 @@
 			
 			    function btnMail_onclick() {
 			        SaveFile();
-					var pheight = window.screen.availHeight;
-					var conHeight = pheight * 0.8;
-					var pwidth = window.screen.availWidth;
-					var conWidth = pwidth * 0.8;
-					if (conWidth > 890)
-						conWidth = 890;
-					var pTop = (pheight - conHeight) / 2;
-					var pLeft = (pwidth - 890) / 2;
-					var feature = "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = " + conWidth + "px, status = no, toolbar=no, menubar=no,location=no,resizable=1";
-					
-					var requestUrl = "/ezEmail/mailWrite.do?docHref=" + pDocHref + "&cmd=docsend&docID=" + pDocID + "&TARGET=APPROVALG";
-		
-					window.open(requestUrl, "", feature);
 			        // window.open("/ezEmail/mailWrite.do?docHref=" + pDocHref + "&cmd=docsend&docID=" + pDocID + "&TARGET=APPROVALG", "", "height = " + window.screen.availHeight * 0.8 + ", width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
+					showPopup("/ezEmail/mailWrite.do?docHref=" + pDocHref + "&cmd=docsend&docID=" + pDocID + "&TARGET=APPROVALG", 890, window.screen.availHeight * 0.8, "", "height = " + window.screen.availHeight * 0.8 + ", width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1", hidePopup);
 			    }
 	
 			    var tempSecurity = "";
@@ -1224,7 +1216,7 @@
 			        getHistory();
 			    }
 			    
-			    var ezapprovalinfo_dialogArguments = new Array();
+			    // var ezapprovalinfo_dialogArguments = new Array();
 			    function btnApprovalInfo() {
 			    			        CheckDocCellInfo();
 			    			        var onlydocinfiview = false;
@@ -1279,17 +1271,17 @@
 			    			        if (tempItemCode != "")
 			    			            tempdocnumcode = tempItemCode;
 			                        
-			                        ezapprovalinfo_dialogArguments[0] = parameter;
-			    		            ezapprovalinfo_dialogArguments[1] = btnApprovalInfo_Complete;
-
-			    		            var OpenWin = window.open("/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun + "&orgCompanyID=" + orgCompanyID + "&docType=" + pDocType + "&ext=" + "hwp", "ezApprovalInfo", GetOpenWindowfeature(1144, 750));
-			    		            try { OpenWin.focus(); } catch (e) { }
-
-			    			        
+			                        // ezapprovalinfo_dialogArguments[0] = parameter;
+			    		            // ezapprovalinfo_dialogArguments[1] = btnApprovalInfo_Complete;
+									//
+			    		            // var OpenWin = window.open("/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun + "&orgCompanyID=" + orgCompanyID + "&docType=" + pDocType + "&ext=" + "hwp", "ezApprovalInfo", GetOpenWindowfeature(1144, 750));
+			    		            // try { OpenWin.focus(); } catch (e) { }
+									ezCommon_cross_dialogArguments[0] = parameter;
+			    			        showPopup("/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun + "&orgCompanyID=" + orgCompanyID + "&docType=" + pDocType + "&ext=" + "hwp", 1144, 750, "ezApprovalInfo", GetOpenWindowfeature(1144, 750), btnApprovalInfo_Complete);
 			                    }
 
 			    function btnApprovalInfo_Complete(ret) {
-
+									hidePopup();
 			    			        if (ret != undefined && ret[0] == "OK") {
 			    			            try {
 			    			                HwpCtrl.ChangeMode(2);

@@ -975,7 +975,7 @@
 	                	url += "&shareId=" + encodeURIComponent(shareId);
 	                }
 	                
-	                window.open(url, "right");
+	                parent.document.querySelector("iframe[name=right]").src = url;
 	            } catch (e) { }
 	            
 	            var inputkeyword = document.getElementsByName('keyword').item(0);

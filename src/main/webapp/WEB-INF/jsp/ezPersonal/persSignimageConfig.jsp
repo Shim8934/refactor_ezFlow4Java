@@ -70,7 +70,7 @@
 		                DocList = null;
 	        		},
 	        		error: function(){
-	        			alert("<spring:message code='ezPersonal.t3003'/>");
+	        			showAlert("<spring:message code='ezPersonal.t3003'/>");
 	        		}
 	        	});
 	        }
@@ -97,7 +97,7 @@
 		        DocList.LoadFromID("DocList");
 		
 		        if (DocList.GetSelectedRows().length == 0) {
-		            alert("<spring:message code='ezPersonal.t3004'/>");
+		            showAlert("<spring:message code='ezPersonal.t3004'/>");
 				    return;
 		        }
 		
@@ -107,47 +107,8 @@
 		        else
 		            selName = DocList.GetSelectedRows()[0].innerText;
 		
-		        if (!confirm("'" + selName.replace( /(\s*)/g, "") + "'" + "<spring:message code='ezPersonal.t3005'/>"))
-			        return;
-		
-			    var DocList = new ListView();
-			    DocList.LoadFromID("DocList");
-			    var Rowcnt = DocList.GetDataRows();
-			    var curData = DocList.GetSelectedRows();
-		
-			    var imagelist = "";
-			    for (var i = 0; i < Rowcnt.length; i++) {
-			        if (Rowcnt[i].getAttribute("data1") != curData[0].getAttribute("data1")) {
-			            if (imagelist != "")
-			                imagelist += ";" + Rowcnt[i].getAttribute("data1");
-			            else
-			                imagelist = Rowcnt[i].getAttribute("data1");
-			        }
-			    }
-			    
-				$.ajax({
-					type : "POST",
-					dataType : "text",
-					url : "/ezApprovalG/saveSingInfo.do",
-					data : {
-							parentCn 	: "", 
-							cn 			: userid, 
-							prop 		: "", 
-							extensionAttribute3 : imagelist
-							},
-					success : function(result){
-						if(result != "OK"){
-							alert("<spring:message code='ezPersonal.t3006' />");
-						}else{
-							alert("<spring:message code='ezPersonal.t3007' />");
-							ContentDescription.innerHTML = '<div style="padding-top:80px;">' + "<spring:message code='ezPersonal.t3012'/>" + "</div>";
-							GetSignInfo();
-						}
-					},
-					error : function(){
-						alert("<spring:message code='ezPersonal.t189' />");
-					}
-				});
+		        showConfirm("'" + selName.replace( /(\s*)/g, "") + "'" + "<spring:message code='ezPersonal.t3005'/>", btnApprove_onclick_afterConfirm);
+		        return;
 		    }
 		    
 		    function btn_AttachAdd_onclick(obj) {
@@ -161,7 +122,7 @@
 				    check = compareExtension(check, extension[extension.length - 1]);
 				    
 				    if (!check || extension == null) {
-		    		    alert("<spring:message code='ezPersonal.t206'/>" + " <spring:message code='ezPersonal.t200'/>");
+		    		    showAlert("<spring:message code='ezPersonal.t206'/>" + " <spring:message code='ezPersonal.t200'/>");
 		        		document.getElementById("file1").value = "";
 		    		} else {
 		            xhr = new XMLHttpRequest();
@@ -204,10 +165,10 @@
 			/* 2021-12-08 홍승비 - 전자결재 서명 업로드 시 서버단에서도 이미지 확장자 체크 진행 */
 		    function returnvalue() {
 		    	if (xhr.responseText == "UPLOAD_ERROR") {
-					alert(document.form.file1.value + " <spring:message code='ezPersonal.t3010'/>" + "\n\n");
+					showAlert(document.form.file1.value + " <spring:message code='ezPersonal.t3010'/>" + "\n\n");
 					return;
 		    	} else if (xhr.responseText == "UPLOAD_EXT_ERROR") {
-		            alert("<spring:message code='ezAttitude.t260'/>");
+		            showAlert("<spring:message code='ezAttitude.t260'/>");
 		            return;
 		    	} else {
 					fileName = xhr.responseText;
@@ -239,14 +200,61 @@
 							},
 					success : function(result){
 						if(result != "OK"){
-							alert(filename + "<spring:message code='ezPersonal.t3010' />");
+							showAlert(filename + "<spring:message code='ezPersonal.t3010' />");
 						}else{
-							alert("<spring:message code='ezPersonal.t281' />");
+							showAlert("<spring:message code='ezPersonal.t281' />");
 							GetSignInfo();
 						}
 					}
 				});
 		    }
+			
+		    function btnApprove_onclick_afterConfirm(rtn) {
+		    	hideConfirm();
+				if(!rtn) {
+					return;
+				}
+		    	
+			    var DocList = new ListView();
+			    DocList.LoadFromID("DocList");
+			    var Rowcnt = DocList.GetDataRows();
+			    var curData = DocList.GetSelectedRows();
+		
+			    var imagelist = "";
+			    for (var i = 0; i < Rowcnt.length; i++) {
+			        if (Rowcnt[i].getAttribute("data1") != curData[0].getAttribute("data1")) {
+			            if (imagelist != "")
+			                imagelist += ";" + Rowcnt[i].getAttribute("data1");
+			            else
+			                imagelist = Rowcnt[i].getAttribute("data1");
+			        }
+			    }
+			    
+				$.ajax({
+					type : "POST",
+					dataType : "text",
+					url : "/ezApprovalG/saveSingInfo.do",
+					data : {
+							parentCn 	: "", 
+							cn 			: userid, 
+							prop 		: "", 
+							extensionAttribute3 : imagelist
+							},
+					success : function(result){
+						if(result != "OK"){
+							showAlert("<spring:message code='ezPersonal.t3006' />");
+						}else{
+							showAlert("<spring:message code='ezPersonal.t3007' />");
+							ContentDescription.innerHTML = '<div style="padding-top:80px;">' + "<spring:message code='ezPersonal.t3012'/>" + "</div>";
+							GetSignInfo();
+						}
+					},
+					error : function(){
+						showAlert("<spring:message code='ezPersonal.t189' />");
+					}
+				});
+		    }
+			
 		</script> 
 	</head>
 	<body> 
@@ -277,5 +285,9 @@
 		<form method="post" id="form" name="form" enctype="multipart/form-data" target="ifrm">
 			<input type="file" name="file1" id="file1" onchange="btn_AttachAdd_onclick()" style="width: 1px; height: 1px; display: none;" accept="image/*"/>
 		</form>
+		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>
+		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
+			<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
+		</div>
 	</body>
 </html>

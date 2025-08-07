@@ -546,10 +546,10 @@ function openwindow(wfileLocation, wName, wWeigth, wHeigth) {
             width = parseInt(width) - 10;
         }
 
-        window.open(wfileLocation, wName, "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=" + heigth + ",width=" + width + ",top=" + top + ",left = " + left);
-
+        // window.open(wfileLocation, wName, "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=" + heigth + ",width=" + width + ",top=" + top + ",left = " + left);
+        showPopupSlide(wfileLocation, width, heigth, wName, "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=" + heigth + ",width=" + width + ",top=" + top + ",left = " + left, hidePopupSlide);
     }
     catch (e) {
-        alert("openwindow :: " + e.description);
+        showAlert("openwindow :: " + e.description);
     }
 }

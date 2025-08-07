@@ -63,7 +63,7 @@
 			            url = "/admin/ezNewPortal/portalLogos.do";
 			            break;
 			    }
-				parent.frames["right"].location.href = url;
+				parent.document.querySelector("iframe[name=right]").src = url;
 			}
 			
 			$(document).ready(function() {

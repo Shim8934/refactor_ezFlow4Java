@@ -65,7 +65,7 @@
 	            if (xmlhttp.responseText.indexOf("OK") > -1) {
 	                alert("<spring:message code = 'ezCommunity.t282' />");
 			    	parent.window.frames.left.location.reload();
-			    	parent.window.frames.right.location.href = "/ezCommunity/adminBasic.do?code=${code}";
+			    	parent.document.querySelector("iframe[name=right]").src = "/ezCommunity/adminBasic.do?code=${code}";
 		        } else {
 		            alert("<spring:message code = 'ezCommunity.t283' />");
 				}

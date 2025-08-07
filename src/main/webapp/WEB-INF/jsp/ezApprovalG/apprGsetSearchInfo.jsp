@@ -52,8 +52,13 @@
 		    var openPageInfo;
 		    window.onload = function () {
 		        try {
-		            openPageInfo = parent.setsearchinfo_cross_dialogArguments[0];
-		            ReturnFunction = parent.setsearchinfo_cross_dialogArguments[1];
+		            if (isParentCommonArgsUsed()) {
+						openPageInfo = opener == null ? parent.ezCommon_cross_dialogArguments[0] : opener.ezCommon_cross_dialogArguments[0];
+						ReturnFunction = opener == null ? parent.ezCommon_cross_dialogArguments[1] : opener.ezCommon_cross_dialogArguments[1];
+					} else {
+						openPageInfo = parent.setsearchinfo_cross_dialogArguments[0];
+						ReturnFunction = parent.setsearchinfo_cross_dialogArguments[1];
+					}
 		        } catch (e) {
 		            try {
 		            	openPageInfo = opener.setsearchinfo_cross_dialogArguments[0];
@@ -466,11 +471,12 @@
 		            OpenAlertUI("<spring:message code='ezApprovalG.t1329'/>");
 		        }
 		        else {
-		            if (ReturnFunction != null)
-		                ReturnFunction(RtnVal);
-		            else
-		                window.returnValue = RtnVal;
-		            window.close();
+// 		            if (ReturnFunction != null)
+// 		                ReturnFunction(RtnVal);
+// 		            else
+// 		                window.returnValue = RtnVal;
+// 		            window.close();
+					btnClose_onclick(RtnVal);
 		        }
 		    }
 		    var ezapralert_cross_dialogArguments = new Array();
@@ -497,30 +503,33 @@
 		        DivPopUpHidden();
 		    }
 		
-		    function btncancel_onclick() {
-		    	 if (ReturnFunction != null)
-		             ReturnFunction(false);
-		         else
-		             window.returnValue = false;
-
-		         window.close();
-		    }
+// 		    function btncancel_onclick() {
+// 		    	 if (ReturnFunction != null)
+// 		             ReturnFunction(false);
+// 		         else
+// 		             window.returnValue = false;
+// 		        window.close();
+// 		    }
 		    
-		    var getformcont_cross_dialogArguments = new Array();
+		    // var getformcont_cross_dialogArguments = new Array();
 		    function btn_FormSelect_onclick() {
 		        var parameter = new Array();
 		        parameter[0] = arr_userinfo[4];
 		        parameter[1] = "999";
 		
-		        getformcont_cross_dialogArguments[0] = parameter;
-		        getformcont_cross_dialogArguments[1] = btn_FormSelect_onclick_Complete;
+		        // getformcont_cross_dialogArguments[0] = parameter;
+		        // getformcont_cross_dialogArguments[1] = btn_FormSelect_onclick_Complete;
 		
-		        var url = "/ezApprovalG/getFormCont.do";
-		        var feature = "status:no;dialogWidth:713px;dialogHeight:570px;edge:sunken;scroll:no";
-		        feature = feature + GetShowModalPosition(713, 570);
+		        // 기존 문서검색 창 url
+ 		        // var url = "/ezApprovalG/getFormCont.do";
+		        var url = "/ezApprovalG/getMiniFormCont.do";
+		        var feature = "status:no;dialogWidth:490px;dialogHeight:340px;edge:sunken;scroll:no";
+		        feature = feature + GetShowModalPosition(490, 340);
 		
-		        getformcont_Cross_OpenWin = window.open(url, "getformcont_Cross", GetOpenWindowfeature(715, 570));
-		        try { getformcont_Cross_OpenWin.focus(); } catch (e) { }
+		        // getformcont_Cross_OpenWin = window.open(url, "getformcont_Cross", GetOpenWindowfeature(715, 570));
+		        // try { getformcont_Cross_OpenWin.focus(); } catch (e) { }
+				ezCommon_cross_dialogArguments[0] = parameter;
+				showPopup(url, 490, 340, "getformcont_Cross", GetOpenWindowfeature(490, 340), btn_FormSelect_onclick_Complete);
 		        //window.resizeTo(800, 650);
 		        //var Positon = getPositionOpenWin(800, 650);
 		        //opener.OpenWin2.moveTo(Positon[0], Positon[1]);
@@ -545,6 +554,7 @@
 		    }
 		
 		    function btn_FormSelect_onclick_Complete(retVal) {
+				hidePopup();
 		        //window.resizeTo(530, 410)
 		        //var Positon = getPositionOpenWin(530, 410);
 		        //opener.OpenWin2.moveTo(Positon[0], Positon[1]);
@@ -625,11 +635,12 @@
 						}
 					}
 
-			        if (ReturnFunction != null)
-			            ReturnFunction(RtnVal);
-			        else
-			            window.returnValue = RtnVal;
-			        window.close();
+// 			        if (ReturnFunction != null)
+// 			            ReturnFunction(RtnVal);
+// 			        else
+// 			            window.returnValue = RtnVal;
+// 			        window.close();
+					btnClose_onclick(RtnVal);
 			    } else {
 		    	  RtnVal[0] = document.getElementById("DocNumber").value;
 		          RtnVal[1] = document.getElementById("DocTitle").value;
@@ -686,13 +697,14 @@
 
 // 		          RtnVal = SearchDateXML(RtnVal);
 
-		          if (ReturnFunction != null) {
-		              ReturnFunction(RtnVal);
-		          }
-		          else {
-		              window.returnValue = RtnVal;
-		          }
-		          window.close();
+// 		          if (ReturnFunction != null) {
+// 		              ReturnFunction(RtnVal);
+// 		          }
+// 		          else {
+// 		              window.returnValue = RtnVal;
+// 		          }
+// 		          window.close();
+				btnClose_onclick(RtnVal);
 		      }
 		      }
 		    
@@ -771,11 +783,12 @@
 						}
 					}
 			        
-			        if (ReturnFunction != null)
-			            ReturnFunction(RtnVal);
-			        else
-			            window.returnValue = RtnVal;
-			        window.close();
+// 			        if (ReturnFunction != null)
+// 			            ReturnFunction(RtnVal);
+// 			        else
+// 			            window.returnValue = RtnVal;
+// 			        window.close();
+					btnClose_onclick(RtnVal);
 		        } else {
 		        	 RtnVal[0] = document.getElementById("DocNumber").value;
 		             RtnVal[1] = document.getElementById("DocTitle").value;
@@ -833,13 +846,14 @@
 
 // 		             RtnVal = SearchDateXML(RtnVal);
 
-		             if (ReturnFunction != null) {
-		                 ReturnFunction(RtnVal);
-		             }
-		             else {
-		                 window.returnValue = RtnVal;
-		             }
-		             window.close();
+// 		             if (ReturnFunction != null) {
+// 		                 ReturnFunction(RtnVal);
+// 		             }
+// 		             else {
+// 		                 window.returnValue = RtnVal;
+// 		             }
+// 		             window.close();
+					btnClose_onclick(RtnVal);
 		        }
 		    }
 		    function makeString(strLen, empCh, custStr) {
@@ -928,11 +942,12 @@
 						}
 					}
 			
-			        if (ReturnFunction != null)
-			            ReturnFunction(RtnVal);
-			        else
-			            window.returnValue = RtnVal;
-			        window.close();
+// 			        if (ReturnFunction != null)
+// 			            ReturnFunction(RtnVal);
+// 			        else
+// 			            window.returnValue = RtnVal;
+// 			        window.close();
+					btnClose_onclick(RtnVal);
 		        } else {
 		        	RtnVal[0] = document.getElementById("DocNumber").value;
 		            RtnVal[1] = document.getElementById("DocTitle").value;
@@ -995,13 +1010,14 @@
 		       		 }
 // 		             RtnVal = SearchDateXML(RtnVal);
 
-		             if (ReturnFunction != null) {
-		                 ReturnFunction(RtnVal);
-		             }
-		             else {
-		                 window.returnValue = RtnVal;            
-		             }
-		             window.close();
+// 		             if (ReturnFunction != null) {
+// 		                 ReturnFunction(RtnVal);
+// 		             }
+// 		             else {
+// 		                 window.returnValue = RtnVal;            
+// 		             }
+// 		             window.close();
+					btnClose_onclick(RtnVal);
 		        }
 		        
 		    }
@@ -1082,7 +1098,7 @@
 		<h1><spring:message code='ezApprovalG.t1325'/></h1>
 		<div id="close">
             <ul>
-                <li><span id="Submit4" onclick="return btncancel_onclick()"></span></li>
+                <li><span id="Submit4" onclick="return btnClose_onclick(false)"></span></li>
             </ul>
         </div>
 		<table  class="content">

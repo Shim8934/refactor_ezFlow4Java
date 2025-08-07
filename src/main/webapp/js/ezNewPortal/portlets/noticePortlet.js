@@ -69,7 +69,7 @@ var assembleNoticeList = function(noticeList, noticePortletId, access, totalCnt,
 	
 	var noticePlus = function() {
 		//console.log('boardId', boardId);
-		window.open("/ezBoard/boardMainRedirect.do?boardID=" + encodeURIComponent(boardId), "main", "");
+		parent.document.querySelector("iframe[name=main]").src = "/ezBoard/boardMainRedirect.do?boardID=" + encodeURIComponent(boardId);
 	}
 	var dataAssembler = function(data, index) {	
 		index = (index*1 + 1); // 혹시 모르니 int형태로 변환
