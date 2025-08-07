@@ -237,3 +237,9 @@ var strLangMJS01 = "You can drag and drop to add files and change the order of a
 /* 2025-02-07 기민혁 - 반복자원 체크 메세지 추가 */
 var strLangKMH1 = "This resource does not allow repeat reservations.";
 var strLangKMH2 = "An error has occurred.";
+
+// 2024-08-26 유길상 - 자원등록 > 최대 예약 가능 기간, 정원
+var strLangMaxYGS01 = "Maximum reservation period exceeded.";
+var strLangMaxYGS02 = "Capacity";
+var strLangMaxYGS03 = "People";
+var strLangMaxYGS04 = "Please enter the capacity.";

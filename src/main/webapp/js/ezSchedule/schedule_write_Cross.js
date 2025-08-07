@@ -436,6 +436,21 @@ function save_schedule(pageFrom)
 		createNodeAndInsertText(xmlDom, objNode, "REPSTARTDATE", repStartDate);
 	}
 	
+	var startDateReal = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
+	var endDateReal =  $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
+	
+	if (!!g_resource && g_resource.length > 0) {
+		var resourseID = g_resource[0][0];
+		if (!!resourseID) {
+			var resMaxDate = getResourceMaxDate(resourseID);
+			if (!checkResMaxDate(startDateReal, endDateReal, resMaxDate)) {
+				alert(strLangMaxYGS01);
+				saveCheck = false;
+				return;
+			}
+		}
+	}
+	
 	xmlHTTP.open("POST", "/ezSchedule/scheduleSave.do?pageFrom=" + pageFrom, false);
 	xmlHTTP.send(xmlDom);
 	
@@ -488,6 +503,21 @@ function save_schedule(pageFrom)
 	    
 	    window.close();
 	}
+}
+
+// 최대 예약 가능 기간 검증
+function checkResMaxDate(startDate, endDate, maxResDate) {
+    if (maxResDate == 0) {
+        return true;
+    }
+	
+    var chStDate = new Date(startDate);
+    var chEdDate = new Date(endDate);
+    chStDate.setHours(0, 0, 0, 0);
+    chEdDate.setHours(0, 0, 0, 0);
+	
+    var betweenDay = (chEdDate - chStDate) / (1000 * 60 * 60 * 24) + 1;
+    return betweenDay <= maxResDate;
 }
 
 function CheckPreviously(timeCheck) {

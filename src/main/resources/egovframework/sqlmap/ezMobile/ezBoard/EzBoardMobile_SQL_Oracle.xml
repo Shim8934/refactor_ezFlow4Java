@@ -2246,10 +2246,14 @@
 		<isEqual property="v_PADMINTYPE" compareValue="false">
 			<![CDATA[
 				AND 
-					(TOPWRITERID = #userID#
+					(
+						TOPWRITERID = #userID#
 					OR
-					WRITERID = #userID#)
-			]]>
+						WRITERID = #userID#
+					OR
+						(EXTENSIONATTRIBUTE2 = '1' AND NTSTARTDATE <= #nowDate# AND NTENDDATE > #nowDate#)
+					)
+				]]>
 		</isEqual>
 	</select>
 	
@@ -2368,10 +2372,14 @@
 			<isEqual property="v_PADMINTYPE" compareValue="false">
 				<![CDATA[
 					AND
-						(TOPWRITERID = #userID#
+						(
+							TOPWRITERID = #userID#
 						OR
-						WRITERID = #userID#)
-				]]>
+							WRITERID = #userID#
+						OR
+							(EXTENSIONATTRIBUTE2 = '1' AND NTSTARTDATE <= #nowDate# AND NTENDDATE > #nowDate#)
+						)
+					]]>
 			</isEqual>
 			
 			<![CDATA[
@@ -2480,9 +2488,13 @@
 				<isEqual property="v_PADMINTYPE" compareValue="false">
 					<![CDATA[
 						AND
-							(TOPWRITERID = #userID#
-							OR
-							WRITERID = #userID#)
+						(
+							TOPWRITERID = #userID#
+						OR
+							WRITERID = #userID#
+						OR
+							(EXTENSIONATTRIBUTE2 = '1' AND NTSTARTDATE <= #nowDate# AND NTENDDATE > #nowDate#)
+						)
 					]]>
 				</isEqual>
 	             <![CDATA[             
