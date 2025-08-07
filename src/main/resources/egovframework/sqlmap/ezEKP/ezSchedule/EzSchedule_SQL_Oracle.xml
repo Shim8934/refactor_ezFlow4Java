@@ -332,6 +332,8 @@
 						#v_INDILIST[]#
 					</iterate>
 			<![CDATA[
+			AND
+				a.scheduletype <> '10'
             AND 
             	(            		
             		(A.STARTDATE >= TO_DATE(#v_PSTARTDATE#, 'YYYY-MM-DD HH24:MI:SS') AND A.STARTDATE <= TO_DATE(#v_PENDDATE#, 'YYYY-MM-DD HH24:MI:SS'))
@@ -439,7 +441,77 @@
 				AND
 					a.ispublic = 'Y'
 			</isEqual>
-        	) ) C
+        	)
+			OR
+				(a.scheduletype = '10'
+			AND
+				a.ownerid IN (
+				<isEqual property="useExecSchedulePublic" compareValue="ON">
+					<![CDATA[
+								SELECT
+									cn
+								FROM
+									tbl_executive
+								WHERE
+									COMPANYID = #v_COMPANYID#
+								  AND
+									TENANT_ID = #v_TENANTID#
+						]]>
+				</isEqual>
+				<isEqual property="useExecSchedulePublic" compareValue="OFF">
+					<![CDATA[
+								SELECT
+									USERID
+								FROM
+									tbl_secretary
+								WHERE
+									(SECRETARYID = #v_USERID#
+				     				or USERID = #v_USERID#)
+								  AND
+									COMPANYID = #v_COMPANYID#
+								  AND
+									TENANT_ID = #v_TENANTID#
+						]]>
+				</isEqual>
+				)
+				<![CDATA[
+				AND
+					(
+						(A.STARTDATE >= TO_DATE(#v_PSTARTDATE#, 'YYYY-MM-DD HH24:MI:SS') AND A.STARTDATE <= TO_DATE(#v_PENDDATE#, 'YYYY-MM-DD HH24:MI:SS'))
+						OR
+							(A.ENDDATE > TO_DATE(#v_PSTARTDATE#, 'YYYY-MM-DD HH24:MI:SS') AND A.ENDDATE < TO_DATE(#v_PENDDATE#, 'YYYY-MM-DD HH24:MI:SS'))
+						OR
+							(A.STARTDATE < TO_DATE(#v_PSTARTDATE#, 'YYYY-MM-DD HH24:MI:SS') AND A.ENDDATE >= TO_DATE(#v_PENDDATE#, 'YYYY-MM-DD HH24:MI:SS'))
+						OR
+							(A.DATETYPE='3')
+					)
+				AND
+					A.TENANT_ID = #v_TENANTID#
+				AND
+					A.companyid = #v_COMPANYID#
+				]]>
+			<!-- 2024-06-27 전인하 - 일정 > 일정검색 > 전체검색, 지역검색 추가 -->
+			<isNotEmpty property="v_SEARCHTITLE">
+				AND
+					a.title like concat(concat('%', #v_SEARCHTITLE#), '%') ESCAPE '\'
+			</isNotEmpty>
+			<isNotEmpty property="v_SEARCHLOCATION">
+				AND
+					location like concat(concat('%', #v_SEARCHLOCATION#), '%') ESCAPE '\'
+			</isNotEmpty>
+			<isNotEmpty property="v_SEARCHALL">
+				AND (
+					a.title like concat(concat('%', #v_SEARCHALL#), '%') ESCAPE '\'
+				OR
+					location like concat(concat('%', #v_SEARCHALL#), '%') ESCAPE '\'
+					)
+			</isNotEmpty>
+			<isEqual property="v_PFILTER" compareValue="ISPUBLIC">
+				AND
+					a.ispublic = 'Y'
+			</isEqual>
+				)
+           	) C
         	ORDER BY C.STARTDATE ASC
 	</select>
 	
@@ -2065,6 +2137,8 @@
 			</iterate>
 		<![CDATA[        	
        		AND
+				a.scheduletype <> '10'
+       		AND
 				ispublic = #v_ISPUBLIIC#
             AND
             	(
@@ -2145,7 +2219,61 @@
             	A.title like '%'|| #v_SEARCHTITLE# ||'%' ESCAPE ESCAPE '\'
             ]]>
 		</isNotEmpty>
-		) ) C
+		)
+		OR
+			(a.scheduletype = '10'
+		AND
+			a.ownerid IN (
+			<isEqual property="useExecSchedulePublic" compareValue="ON">
+				<![CDATA[
+									SELECT
+										cn
+									FROM
+										tbl_executive
+									WHERE
+										COMPANYID = #v_COMPANYID#
+									  AND
+										TENANT_ID = #v_TENANTID#
+							]]>
+			</isEqual>
+			<isEqual property="useExecSchedulePublic" compareValue="OFF">
+				<![CDATA[
+									SELECT
+										USERID
+									FROM
+										tbl_secretary
+									WHERE
+										(SECRETARYID = #v_USERID#
+				     					or USERID = #v_USERID#)
+									  AND
+										COMPANYID = #v_COMPANYID#
+									  AND
+										TENANT_ID = #v_TENANTID#
+							]]>
+			</isEqual>
+			)
+			<![CDATA[
+				AND
+					(
+						(A.STARTDATE >= TO_DATE(#v_PSTARTDATE#, 'YYYY-MM-DD HH24:MI:SS') AND A.STARTDATE <= TO_DATE(#v_PENDDATE#, 'YYYY-MM-DD HH24:MI:SS'))
+						OR
+							(A.ENDDATE > TO_DATE(#v_PSTARTDATE#, 'YYYY-MM-DD HH24:MI:SS') AND A.ENDDATE < TO_DATE(#v_PENDDATE#, 'YYYY-MM-DD HH24:MI:SS'))
+						OR
+							(A.STARTDATE < TO_DATE(#v_PSTARTDATE#, 'YYYY-MM-DD HH24:MI:SS') AND A.ENDDATE >= TO_DATE(#v_PENDDATE#, 'YYYY-MM-DD HH24:MI:SS'))
+						OR
+							(A.DATETYPE='3')
+					)
+				AND
+					A.TENANT_ID = #v_TENANTID#
+			]]>
+			<isNotEmpty property="v_SEARCHTITLE">
+				<![CDATA[
+				and
+					A.title like '%'|| #v_SEARCHTITLE# ||'%' ESCAPE ESCAPE '\'
+				]]>
+			</isNotEmpty>
+			)
+       	) C
 		ORDER BY C.STARTDATE ASC
 	</select>
 
@@ -2506,9 +2634,9 @@
 						select
 							COUNT(*)
 						from
-							tbl_secretary
+							tbl_executive
 						where
-							USERID = #v_USERID#
+							cn = #v_USERID#
 						  and COMPANYID = #v_COMPANYID#
 						  and TENANT_ID = #v_TENANTID#) as executive,
 					(

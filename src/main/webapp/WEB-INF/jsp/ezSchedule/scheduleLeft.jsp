@@ -115,7 +115,7 @@
 						var chk_eachVal1 = $(this).val();
 						var chk_type = $(this).data("schedule-type")
 
-						if (chk_type == "10" || chk_type == "1" || chk_type == "4") {
+						if (chk_type == "10" || chk_type == "4") {
 							
 							$('.td_list td[scheduletype = "' + chk_type + '"]', parent.frames["right"].document).each(function (index, value) {
 								$(value).addClass('chk_noneDisplay');
@@ -132,7 +132,7 @@
 						var test = $(this).val();
 						var chk_type = $(this).data("schedule-type");
 						
-						if (chk_type == "10" || chk_type == "1" || chk_type == "4") {
+						if (chk_type == "10" || chk_type == "4") {
 							
 							$('.td_list td[scheduletype = "'+chk_type+'"]',parent.frames["right"].document).each(function(index, value){
 								$(value).removeClass('chk_noneDisplay');
@@ -150,7 +150,7 @@
 						var chk_eachVal1 = $(this).val();
 						var chk_type = $(this).data("schedule-type");
 
-						if (chk_type == "10" || chk_type == "1" || chk_type == "4") {
+						if (chk_type == "10" || chk_type == "4") {
 							
 							$('div[scheduletype = "' + chk_type + '"]', parent.frames["right"].document).each(function (index, value) {
 								$(value).addClass('chk_noneDisplay');
@@ -167,7 +167,7 @@
 						var test = $(this).val();
 						var chk_type = $(this).data("schedule-type");
 
-						if (chk_type == "10" || chk_type == "1" || chk_type == "4") {
+						if (chk_type == "10" || chk_type == "4") {
 							
 							$('div[scheduletype = "' + chk_type + '"]', parent.frames["right"].document).each(function (index, value) {
 								$(value).removeClass('chk_noneDisplay');
@@ -185,7 +185,7 @@
 						var chk_eachVal1 = $(this).val();
 						var chk_type = $(this).data("schedule-type");
 
-						if (chk_type == "10" || chk_type == "1" || chk_type == "4") {
+						if (chk_type == "10" || chk_type == "4") {
 							
 							$('div[scheduletype = "' + chk_type + '"]', parent.frames["right"].document).each(function (index, value) {
 								$(value).addClass('chk_noneDisplay');
@@ -202,7 +202,7 @@
 						var test = $(this).val();
 						var chk_type = $(this).data("schedule-type");
 
-						if (chk_type == "10" || chk_type == "1" || chk_type == "4") {
+						if (chk_type == "10" || chk_type == "4") {
 							
 							$('div[scheduletype = "' + chk_type + '"]', parent.frames["right"].document).each(function (index, value) {
 								$(value).removeClass('chk_noneDisplay');
@@ -600,8 +600,8 @@
 							// 기본 셀렉터 구성
 							var selector = "input[type='checkbox'][data-schedule-type='" + scheduleType + "']";
 
-							// scheduleType이 1(개인), 4(협업)가 아닌 경우에는 relatedID가 필요함
-							if (scheduleType !== 1 && scheduleType !== 4) {
+							// scheduleType이 4(협업)가 아닌 경우에는 relatedID가 필요함
+							if (scheduleType !== 4) {
 								selector += "[value='" + relatedId + "']";
 							}
 
@@ -704,7 +704,18 @@
 					  		<span class="checkmark mr5" style="background:rgb(1, 138, 249); margin-top: 7px;"></span>
 					  		<span class="list_text"><spring:message code='ezSchedule.t221'/></span>
 						</label>
-					</li>	
+					</li>
+					<c:if test='${!empty scheSec}'>
+						<c:forEach var="sec" items="${scheSec}">
+							<li>
+								<label class="IDcontainer" onchange="chk_DisplayChange()">
+									<input type="checkbox" checked="checked" name="chk_schedule" data-schedule-type="1" value="${sec.secId }" class="checkSelect">
+									<span class="checkmark mr5" style="background-color:rgb(1, 138, 249); margin-top: 7px;"></span>
+									<span class="list_text" title="${sec.secName }"><spring:message code='ezSchedule.t372'/>${sec.secName }</span>
+								</label>
+							</li>
+						</c:forEach>
+					</c:if>
 					<c:if test="${isGoogleSync == 'Y'}">
 						<li>
 							<label class="IDcontainer" onchange="chk_DisplayChange()">

@@ -8673,4 +8673,16 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
     public void alterTblRsBrdResMaxUserCnt() throws Exception {
     	ezCommonDAO.alterTblRsBrdResMaxUserCnt();
     }
+
+    // 2025-07-07 이유정 - 일정관리 > 임원일정 조회 가능 범위 설정 컨피그 추가
+    @Override
+    public void insertExecutiveScheduleConfig() throws Exception {
+        List<TenantVO> tenantIdList = ezCommonDAO.getTenantList();
+
+        for (TenantVO tenantVo : tenantIdList) {
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put("v_TENANTID", tenantVo.getTenantId());
+            ezCommonDAO.insertExecutiveScheduleConfig(map);
+        }
+    }
 }

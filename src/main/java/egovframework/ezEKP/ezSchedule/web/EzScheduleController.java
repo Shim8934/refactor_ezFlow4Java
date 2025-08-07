@@ -1841,6 +1841,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 		List<ScheduleCumulerVO> pubScheCumulerVO = ezScheduleService.getPublicScheduleCumuler(userID, loginVO.getLang(), tenantID, companyID);
 		List<ScheduleSecretaryVO> sList = ezScheduleService.getSecretaryList(userID, tenantID, companyID);
 		List<OrganUserVO> oList = new ArrayList<OrganUserVO>();
+		List<ScheduleSecretaryVO> pubScheSecVO = ezScheduleService.getPublicScheduleSec(userID, loginVO.getLang(), tenantID ,companyID);
 		
 		for (int i=0; i < sList.size(); i++) {
 			ScheduleSecretaryVO vo = sList.get(i);
@@ -1871,6 +1872,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 		model.addAttribute("lang", loginVO.getPrimary());
 		model.addAttribute("scheCum", pubScheCumulerVO);
 		model.addAttribute("jsonPersonalScheConfigList", jsonPersonalScheConfigList);
+		model.addAttribute("scheSec", pubScheSecVO);
 		
 		return "/ezSchedule/scheduleConfig";
 	}
@@ -2187,6 +2189,23 @@ public class EzScheduleController extends EgovFileMngUtil {
         		soi.setOwnerName2(loginVO.getDisplayName2());
         		
         		schOwnInfoList.add(soi);
+
+				//개인비서
+				if (userType.equals("s") || userType.equals("a")) {
+					for (ScheSecretaryVO vo : sList) {
+						String usage = ezScheduleService.checkExecutiveUsage(vo.getUserID(), companyID, tenantID);
+						if (usage == null || usage.equals("Y")) { // 일정관리 > 개인환경설정에 추가된 개인비서일 경우
+							ScheduleOwnerInfoVO exceSoiB = new ScheduleOwnerInfoVO();
+
+							exceSoiB.setScheduleType("1");
+							exceSoiB.setOwnerId(vo.getUserID());
+							exceSoiB.setOwnerName(vo.getUserName());
+							exceSoiB.setOwnerName2(vo.getUserName2());
+
+							schOwnInfoList.add(exceSoiB);
+						}
+					}
+				}
 				
 				//부서일정
 				if (pDeptAdmin.equals("Y")) {
@@ -2261,8 +2280,8 @@ public class EzScheduleController extends EgovFileMngUtil {
 					
 					for (ScheSecretaryVO vo : sList) {
 						// 임원일정 사용여부 (Y - 비서가 임원일정 등록가능, N - 비서가 임원일정 등록 불가능)
-						String usage = ezScheduleService.checkExecutiveUsage(vo.getUserID(), companyID, tenantID) != null ? ezScheduleService.checkExecutiveUsage(vo.getUserID(), companyID, tenantID) : "Y";
-						if (usage.equals("Y")) {
+						String usage = ezScheduleService.checkExecutiveUsage(vo.getUserID(), companyID, tenantID);
+						if (("Y").equals(usage)) { // 관리자 > 임원일정관리에 추가된 임원비서일 경우
 							ScheduleOwnerInfoVO exceSoiB = new ScheduleOwnerInfoVO();
 							
 							exceSoiB.setScheduleType("10");
@@ -2286,8 +2305,8 @@ public class EzScheduleController extends EgovFileMngUtil {
 				} else if (userType.equals("s")) { // 비서일 경우
 					for (ScheSecretaryVO vo : sList) {
 						// 임원일정 사용여부 (Y - 비서가 임원일정 등록가능, N - 비서가 임원일정 등록 불가능)
-						String usage = ezScheduleService.checkExecutiveUsage(vo.getUserID(), companyID, tenantID) != null ? ezScheduleService.checkExecutiveUsage(vo.getUserID(), companyID, tenantID) : "Y";
-						if (usage.equals("Y")) {
+						String usage = ezScheduleService.checkExecutiveUsage(vo.getUserID(), companyID, tenantID);
+						if (("Y").equals(usage)) { // 관리자 > 임원일정관리에 추가된 임원비서일 경우
 							ScheduleOwnerInfoVO exceSoiB = new ScheduleOwnerInfoVO();
 							
 							exceSoiB.setScheduleType("10");

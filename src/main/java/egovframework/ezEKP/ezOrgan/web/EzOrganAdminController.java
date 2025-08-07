@@ -394,7 +394,8 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			ezCommonService.alterTblRsBrdResMaxDate(); // 2024-08-27 유길상 - 자원관리 > 자원등록 > 최대 예약 가능 기간 컬럼 추
 			ezCommonService.alterTblRsBrdResMaxUserCnt(); // 2024-08-27 유길상 - 자원관리 > 자원등록 > 정원 컬럼 추가
 			ezCommonService.addBoardNotUsedFlag(); // 2023-10-30 조소정 - 게시판 사용안함 여부 컬럼 추가
-    	} catch (Exception e) {
+			ezCommonService.insertExecutiveScheduleConfig(); // 2025-07-07 이유정 - 일정관리 > 임원일정 조회 가능 범위 설정 컨피그 추가
+        } catch (Exception e) {
     		logger.error(e.getMessage(), e);
     	}
     	logger.debug("init ended.");

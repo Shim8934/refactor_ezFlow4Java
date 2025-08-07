@@ -318,6 +318,8 @@
 						#v_INDILIST[]#
 					</iterate>
        		<![CDATA[
+			and
+				a.scheduletype <> '10'
             and 
             	(            		
             		(a.startdate >= #v_PSTARTDATE# and a.startdate <= #v_PENDDATE#)
@@ -403,6 +405,73 @@
             and
             	a.tenant_id = #v_TENANTID#
             ]]>
+			<!-- 2024-06-27 전인하 - 일정 > 일정검색 > 전체검색, 지역검색 추가 -->
+			<isNotEmpty property="v_SEARCHTITLE">
+				AND
+					a.title like concat(concat('%', #v_SEARCHTITLE#), '%')
+			</isNotEmpty>
+			<isNotEmpty property="v_SEARCHLOCATION">
+				AND
+					location like concat(concat('%', #v_SEARCHLOCATION#), '%')
+			</isNotEmpty>
+			<isNotEmpty property="v_SEARCHALL">
+				AND (
+						a.title like concat(concat('%', #v_SEARCHALL#), '%')
+					OR
+						location like concat(concat('%', #v_SEARCHALL#), '%')
+				)
+			</isNotEmpty>
+			<isEqual property="v_PFILTER" compareValue="ISPUBLIC">
+				AND
+					a.ispublic = 'Y'
+			</isEqual>
+			)
+        	OR
+       		    (a.scheduletype = '10'
+			AND
+       		     a.ownerid IN (
+				<isEqual property="useExecSchedulePublic" compareValue="ON">
+				<![CDATA[
+						SELECT
+							cn
+						FROM
+							tbl_executive
+						WHERE
+							COMPANYID = #v_COMPANYID#
+						  AND
+							TENANT_ID = #v_TENANTID#
+				]]>
+				</isEqual>
+				<isEqual property="useExecSchedulePublic" compareValue="OFF">
+				<![CDATA[
+						SELECT
+							USERID
+						FROM
+							tbl_secretary
+						WHERE
+							(SECRETARYID = #v_USERID#
+				     			or USERID = #v_USERID#)
+						  AND
+							COMPANYID = #v_COMPANYID#
+						  AND
+							TENANT_ID = #v_TENANTID#
+				]]>
+				</isEqual>
+				)
+			<![CDATA[
+				and
+					(
+						(a.startdate >= #v_PSTARTDATE# and a.startdate <= #v_PENDDATE#)
+						or
+						(a.enddate >= #v_PSTARTDATE# and a.enddate < #v_PENDDATE#)
+						or
+						(a.startdate < #v_PSTARTDATE# and a.enddate >= #v_PENDDATE#)
+						or
+						(a.datetype='3')
+					)
+				and
+					a.tenant_id = #v_TENANTID#
+			 ]]>
 			<!-- 2024-06-27 전인하 - 일정 > 일정검색 > 전체검색, 지역검색 추가 -->
 			<isNotEmpty property="v_SEARCHTITLE">
 				AND
@@ -2052,6 +2121,8 @@
 		<![CDATA[        	
        		and
 				ispublic = #v_ISPUBLIIC#
+       		and
+				a.scheduletype <> '10'
             and
             	(
             		(a.startdate >= #v_PSTARTDATE# and a.startdate <= #v_PENDDATE#)
@@ -2125,6 +2196,59 @@
             and
             	a.tenant_id = #v_TENANTID#
             ]]>
+		<isNotEmpty property="v_SEARCHTITLE">
+			<![CDATA[
+            and
+            	a.title like concat('%', #v_SEARCHTITLE#, '%')
+            ]]>
+		</isNotEmpty>
+		)
+		OR
+			(a.scheduletype = '10'
+		AND
+			a.ownerid IN (
+			<isEqual property="useExecSchedulePublic" compareValue="ON">
+				<![CDATA[
+							SELECT
+								cn
+							FROM
+								tbl_executive
+							WHERE
+								COMPANYID = #v_COMPANYID#
+							  AND
+								TENANT_ID = #v_TENANTID#
+				]]>
+			</isEqual>
+			<isEqual property="useExecSchedulePublic" compareValue="OFF">
+				<![CDATA[
+							SELECT
+								USERID
+							FROM
+								tbl_secretary
+							WHERE
+								(SECRETARYID = #v_USERID#
+				     				or USERID = #v_USERID#)
+							  AND
+								COMPANYID = #v_COMPANYID#
+							  AND
+								TENANT_ID = #v_TENANTID#
+				]]>
+			</isEqual>
+			)
+			<![CDATA[
+				and
+					(
+						(a.startdate >= #v_PSTARTDATE# and a.startdate <= #v_PENDDATE#)
+						or
+						(a.enddate >= #v_PSTARTDATE# and a.enddate < #v_PENDDATE#)
+						or
+						(a.startdate < #v_PSTARTDATE# and a.enddate >= #v_PENDDATE#)
+						or
+						(a.datetype='3')
+					)
+				and
+					a.tenant_id = #v_TENANTID#
+			 ]]>
 		<isNotEmpty property="v_SEARCHTITLE">
 			<![CDATA[
             and
@@ -2579,9 +2703,9 @@
 						select
 							COUNT(*)
 						from
-							tbl_secretary
+							tbl_executive
 						where
-							USERID = #v_USERID#
+							cn = #v_USERID#
 						  and COMPANYID = #v_COMPANYID#
 						  and TENANT_ID = #v_TENANTID#) as executive,
 					(

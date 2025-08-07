@@ -444,21 +444,14 @@
 				inner join tbl_usermaster b
 						   on a.cn = b.cn
 						   and a.COMPANYID = b.PHYSICALDELIVERYOFFICENAME
-				inner join tbl_usermaster c on a.CREATEUSER = c.CN
+					       and a.tenant_id = b.tenant_id
+				inner join tbl_usermaster c
+				           on a.CREATEUSER = c.CN
 				           and a.COMPANYID = c.PHYSICALDELIVERYOFFICENAME
+					       and a.tenant_id = c.tenant_id
 		where
 			a.COMPANYID = #v_COMPANYID#
 		  	and a.tenant_id = #v_TENANTID#
-		<isNotEmpty property="v_COMPANYNAME">
-			<isEqual property="v_LANG" compareValue="1">
-				and b.company = #v_COMPANYNAME#
-				and c.company = #v_COMPANYNAME#
-			</isEqual>
-			<isNotEqual property="v_LANG" compareValue="1">
-				and b.company2 = #v_COMPANYNAME#
-				and c.company2 = #v_COMPANYNAME#
-			</isNotEqual>
-		</isNotEmpty>
 		<isNotEmpty property="cn">
 		  	and a.cn = #cn#
 		</isNotEmpty>

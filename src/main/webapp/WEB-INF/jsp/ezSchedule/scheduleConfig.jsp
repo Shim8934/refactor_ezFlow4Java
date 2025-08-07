@@ -93,8 +93,8 @@
 						// 기본 셀렉터 구성 (색상 태그, 색상 텍스트)
 						var selector = "div[data-schedule-type='" + scheduleType + "']";
 
-						// scheduleType이 1(개인), 4(협업)가 아닌 경우에는 relatedID가 필요함
-				    	if (scheduleType !== 1 && scheduleType !== 4) {
+						// scheduleType이 4(협업)가 아닌 경우에는 relatedID가 필요함
+				    	if (scheduleType !== 4) {
 				    		selector += "[data-related-id='" + relatedId + "']";
 				    	}
 
@@ -395,6 +395,18 @@
 			    		<a class="imgbtn" onclick="select_personalcolor('1', '<c:out value='${loginVO.id}'/>')" style="float: left;"><span ><spring:message code='ezSchedule.csj02' /></span></a>
 			    	</td>
 			    </tr>
+				<c:if test='${!empty scheSec}'>
+					<c:forEach var="sec" items="${scheSec}">
+						<tr>
+							<th><spring:message code='ezSchedule.color01' />-${sec.secName}</th>
+							<td>
+								<div class="tagColor" style="background-color:#018AF9;" data-schedule-type="1" data-related-id="<c:out value='${sec.secId}'/>"></div>
+								<div class="tagText">#018AF9</div>
+								<a class="imgbtn" onclick="select_personalcolor('1', '${sec.secId}')" style="float: left;"><span ><spring:message code='ezSchedule.csj02' /></span></a>
+							</td>
+						</tr>
+					</c:forEach>
+				</c:if>
 			    <tr>
 			    	<th><spring:message code='ezSchedule.color02' /></th>
 			    	<td>

@@ -7780,4 +7780,22 @@
         ADD
             NOTUSEDFLAG VARCHAR(2) NOT NULL DEFAULT 'N'
     </statement>
+
+	<select id="EzCommonDAO.checkExecutiveScheduleConfig" resultClass="String">
+		SELECT
+			property_value
+		FROM
+			tbl_tenant_config
+		WHERE
+			property_name = 'useExecSchedulePublic'
+		  AND
+			tenant_id = #v_TENANTID#
+	</select>
+
+	<insert id="EzCommonDAO.insertExecutiveScheduleConfig">
+		INSERT INTO TBL_TENANT_CONFIG
+			(TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
+		VALUES
+			(#v_TENANTID#, 'useExecSchedulePublic', 'ON', '일정관리 > 임원일정의 조회 가능 범위 설정 여부 ON : 모든 사용자 조회 / OFF : 임원비서만 조회', '일정관리 > 임원일정 조회 가능 범위 설정', '2025-07-07 00:00:00', '일정관리')
+	</insert>
 </sqlMap>

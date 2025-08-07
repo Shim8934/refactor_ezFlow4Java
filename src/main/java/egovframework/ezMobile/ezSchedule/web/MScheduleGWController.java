@@ -542,6 +542,24 @@ public class MScheduleGWController extends EgovFileMngUtil {
 					String useMobileViewer = ezCommonService.getTenantConfig("useMobileViewer", info.getTenantId());
 					dataObject.put("useMobileViewer", useMobileViewer);
 				}
+
+				//비서 권한 부여
+				List<ScheduleSecretaryVO> tList = ezScheduleService.getPublicScheduleSec(userInfo.getId(), userInfo.getLang(), userInfo.getTenantId(), userInfo.getCompanyID());
+
+				String chkSecretary = "N";
+				for (ScheduleSecretaryVO ssvo : tList) {
+					if (ssvo.getSecId().equals(vo.getOwnerId())) {
+						chkSecretary = "Y";
+					}
+				}
+				dataObject.put("chkSecretary", chkSecretary);
+
+				// 임원일정 수정/삭제 가능 여부
+				String usage = "Y";
+				if (!vo.getOwnerId().equals(userInfo.getId())) {
+					usage = ezScheduleService.checkExecutiveUsage(vo.getOwnerId(), userInfo.getCompanyID(), userInfo.getTenantId()) != null ? ezScheduleService.checkExecutiveUsage(vo.getOwnerId(), userInfo.getCompanyID(), userInfo.getTenantId()) : "Y";
+				}
+				dataObject.put("usage", usage);
 			}
 	        
 
@@ -665,6 +683,23 @@ public class MScheduleGWController extends EgovFileMngUtil {
     		soi.setOwnerName2(info.getUserName2());
     		
     		schOwnInfoList.add(soi);
+
+			//개인비서
+			if (userType.equals("s") || userType.equals("a")) {
+				for (ScheSecretaryVO vo : sList) {
+					String usage = ezScheduleService.checkExecutiveUsage(vo.getUserID(), companyID, tenantID);
+					if (usage == null || usage.equals("Y")) { // 일정관리 > 개인환경설정에 추가된 개인비서일 경우
+						ScheduleOwnerInfoVO exceSoiB = new ScheduleOwnerInfoVO();
+
+						exceSoiB.setScheduleType("1");
+						exceSoiB.setOwnerId(vo.getUserID());
+						exceSoiB.setOwnerName(vo.getUserName());
+						exceSoiB.setOwnerName2(vo.getUserName2());
+
+						schOwnInfoList.add(exceSoiB);
+					}
+				}
+			}
 			
 			if (pDeptAdmin.equals("Y")) {
 				//부서일정
@@ -739,8 +774,8 @@ public class MScheduleGWController extends EgovFileMngUtil {
 				
 				for (ScheSecretaryVO vo : sList) {
 					// 임원일정 사용여부 (Y - 비서가 임원일정 등록가능, N - 비서가 임원일정 등록 불가능)
-					String usage = ezScheduleService.checkExecutiveUsage(vo.getUserID(), companyID, tenantID) != null ? ezScheduleService.checkExecutiveUsage(vo.getUserID(), companyID, tenantID) : "Y";
-					if (usage.equals("Y")) {
+					String usage = ezScheduleService.checkExecutiveUsage(vo.getUserID(), companyID, tenantID);
+					if (("Y").equals(usage)) { // 관리자 > 임원일정관리에 추가된 임원비서일 경우
 						ScheduleOwnerInfoVO exceSoiB = new ScheduleOwnerInfoVO();
 						
 						exceSoiB.setScheduleType("10");
@@ -764,8 +799,8 @@ public class MScheduleGWController extends EgovFileMngUtil {
 			} else if (userType.equals("s")) { // 비서일 경우
 				for (ScheSecretaryVO vo : sList) {
 					// 임원일정 사용여부 (Y - 비서가 임원일정 등록가능, N - 비서가 임원일정 등록 불가능)
-					String usage = ezScheduleService.checkExecutiveUsage(vo.getUserID(), companyID, tenantID) != null ? ezScheduleService.checkExecutiveUsage(vo.getUserID(), companyID, tenantID) : "Y";
-					if (usage.equals("Y")) {
+					String usage = ezScheduleService.checkExecutiveUsage(vo.getUserID(), companyID, tenantID);
+					if (("Y").equals(usage)) { // 관리자 > 임원일정관리에 추가된 임원비서일 경우
 						ScheduleOwnerInfoVO exceSoiB = new ScheduleOwnerInfoVO();
 						
 						exceSoiB.setScheduleType("10");
