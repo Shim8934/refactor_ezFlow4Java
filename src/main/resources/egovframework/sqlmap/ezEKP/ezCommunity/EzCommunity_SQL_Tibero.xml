@@ -1891,7 +1891,8 @@
 		<![CDATA[
 			SELECT
 				CASE WHEN #primary# = '1' THEN DISPLAYNAME ELSE DISPLAYNAME2 END AS username,
-				MAIL AS email
+				MAIL AS email,
+				DESCRIPTION AS deptName
 			FROM
 				TBL_USERMASTER
 			WHERE
@@ -8904,4 +8905,159 @@
 		SELECT * FROM DUAL
         ]]>
 	</insert>
+
+	<select id="EzCommunityDAO.getClubOperatorList" parameterClass="Map" resultClass="CommunityCClubUserVO">
+		<![CDATA[
+			SELECT
+				*
+			FROM
+				TBL_C_CLUBUSER
+			WHERE
+				GRADE = '2'
+			  AND
+				TENANT_ID = #tenantID#
+			  AND
+				COMPANYID = #companyID#
+			  AND
+				C_CLUBNO = #code#
+		]]>
+		<isNotEmpty property="userId">
+			AND
+				C_ID = #userId#
+		</isNotEmpty>
+	</select>
+
+	<select id="EzCommunityDAO.getClubOperatorListCount" parameterClass="Map" resultClass="Integer">
+ 		<![CDATA[
+			SELECT
+				count(*)
+			FROM
+				TBL_C_CLUBUSER
+			WHERE
+				GRADE = '2'
+			  AND
+				TENANT_ID = #tenantID#
+			  AND
+				COMPANYID = #companyID#
+			  AND
+				C_CLUBNO = #code#
+		]]>
+ 	</select>
+
+	<update id="EzCommunityDAO.deleteClubOperator" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_C_CLUBUSER
+			SET
+				ADMIN_AUTH = '',
+				GRADE = '3'
+			WHERE
+				C_CLUBNO = #code#
+			  AND
+				C_ID = #userId#
+			  AND
+				COMPANYID = #companyID#
+			  AND
+				tenant_id = #tenantID#
+		]]>
+	</update>
+
+	<update id="EzCommunityDAO.updateClubOperatorAuth" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_C_CLUBUSER
+			SET
+				ADMIN_AUTH = #adminAuth#
+			WHERE
+				C_CLUBNO = #code#
+			  AND
+				C_ID = #userId#
+			  and
+				GRADE = '2'
+			  AND
+				COMPANYID = #companyID#
+			  AND
+				tenant_id = #tenantID#
+		]]>
+	</update>
+
+	<select id="EzCommunityDAO.getNoOperatorList" parameterClass="Map" resultClass="CommunityCClubUserVO">
+		<![CDATA[
+			SELECT
+				a.*
+			FROM
+				TBL_C_CLUBUSER a
+				inner join TBL_c_memberinfo b
+				   on a.TENANT_ID = b.TENANT_ID
+					   and a.COMPANYID = b.COMPANYID
+					   and a.C_ID = b.USERID
+			WHERE
+				a.GRADE NOT IN ('1', '2')
+			  AND
+				a.TENANT_ID = #tenantID#
+			  AND
+				a.COMPANYID = #companyID#
+			  AND
+				a.C_CLUBNO = #code#
+		]]>
+		<isNotEmpty property="keyword">
+			<isEqual property="type" compareValue="name">
+				AND
+					b.USERNAME like '%' || #keyword# || '%'
+			</isEqual>
+			<isNotEqual property="type" compareValue="name">
+				AND
+					a.C_ID like '%' || #keyword# || '%'
+			</isNotEqual>
+		</isNotEmpty>
+	</select>
+
+	<select id="EzCommunityDAO.getNoOperatorListCount" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				count(*)
+			FROM
+				TBL_C_CLUBUSER a
+				inner join TBL_c_memberinfo b
+				   on a.TENANT_ID = b.TENANT_ID
+					   and a.COMPANYID = b.COMPANYID
+					   and a.C_ID = b.USERID
+			WHERE
+				a.GRADE NOT IN ('1', '2')
+			  AND
+				a.TENANT_ID = #tenantID#
+			  AND
+				a.COMPANYID = #companyID#
+			  AND
+				a.C_CLUBNO = #code#
+		]]>
+		<isNotEmpty property="keyword">
+			<isEqual property="type" compareValue="name">
+				AND
+					b.USERNAME like '%' || #keyword# || '%'
+			</isEqual>
+			<isNotEqual property="type" compareValue="name">
+				AND
+					a.C_ID like '%' || #keyword# || '%'
+			</isNotEqual>
+		</isNotEmpty>
+	</select>
+
+	<update id="EzCommunityDAO.updateOperatorGrade"	parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_C_CLUBUSER
+			SET
+				GRADE = '2',
+				ADMIN_AUTH = ''
+			WHERE
+				C_CLUBNO = #code#
+			  AND
+				C_ID = #userId#
+			  AND
+				COMPANYID = #companyID#
+			  AND
+				tenant_id = #tenantID#
+		]]>
+	</update>
 </sqlMap>

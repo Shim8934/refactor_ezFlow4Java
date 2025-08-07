@@ -3656,4 +3656,15 @@ public class EzCommonDAO extends EgovAbstractDAO {
 	public List<CommunityClubVO> selectClubsNotInGradeList() throws Exception {
 		return (List<CommunityClubVO>) list("EzCommonDAO.selectClubsNotInGradeList");
 	}
+
+    // 2025-07-15 이유정 - 커뮤니티 > 운영자권한 컬럼 추가
+    public void alterTblClubUserAdminAuthColumn() {
+        try {
+            select("EzCommonDAO.checkTblClubUserAdminAuthColumn");
+        } catch (Exception e) {
+            logger.debug("In TBL_C_CLUBUSER doesn't exist ADMIN_AUTH column. creating the column...");
+
+            update("EzCommonDAO.alterTblClubUserAdminAuthColumn");
+        }
+    }
 }

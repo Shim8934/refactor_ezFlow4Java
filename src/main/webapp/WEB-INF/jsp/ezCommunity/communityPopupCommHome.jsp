@@ -62,7 +62,9 @@
 			var pastDate = "<c:out value = '${pastDate}' />";
 			var xmlhttp;
 			var lang = "<c:out value='${lang}'/>";
-			
+			var memListFlag = "<c:out value='${memListFlag}'/>";
+			var chkOperator = "<c:out value='${chkOperator}'/>";
+
 			var strLang1 = "<spring:message code='ezCommunity.t78' />";
 		    var strLang2 = "<spring:message code='ezCommunity.t1082' />"; 
 		    var strLang3 = "<spring:message code='ezCommunity.t1103' />"; 
@@ -71,9 +73,6 @@
 		    var strLang6 =  "<spring:message code='ezCommunity.t431' />";
 		    //2018-07-24 김보미
 		    var strLang7 =  "<spring:message code='ezCommunity.kbm01' />";
-
-			var userGrade = "<c:out value='${userGrade }'/>";
-			var readGrade = "<c:out value = '${readGrade}' />";
 		    
 		    $(function () {
 		        $.ajax({
@@ -631,7 +630,7 @@
 		                    document.getElementById("makeguide").style.display = "none";
 		                    break;
 		                case "btn_MemberInfo": 
-							if (userGrade > readGrade) { <%-- 회원목록 읽기 권한 체크 --%>
+							if (memListFlag.toUpperCase() == "FALSE") { <%-- 회원목록 읽기 권한 체크 --%>
 								alert("<spring:message code='ezCommunity.t431' />");
 							} else {
 								document.getElementById("rightfrm").src = "/ezCommunity/commViewMember.do?code=" + code, "right";
@@ -792,7 +791,7 @@
 		    }
 
 		    function open_admin_home(code, num) {
-		        if (chCheckSysop.toUpperCase() == "FALSE") {
+		        if (chCheckSysop.toUpperCase() == "FALSE" && chkOperator.toUpperCase() == "FALSE") {
 		            alert(strLang4);
 		            return;
 		        }
@@ -807,15 +806,15 @@
 		    }
 		    
 		    function ItemRead_onclick(val) {
-		    	if (userLevel == "0" || userLevel == "9") {
-    				alert("<spring:message code='ezCommunity.t899' />");
-    				return;
-    			}
-		    	
 		        var pItemID = val.getAttribute("itemid");
 		        var pItemBoardID = val.getAttribute("boardid");
 		        var gubun = val.getAttribute("gubun");
 		        var copno = val.getAttribute("code");
+
+				if (chkReadFG(copno, pItemBoardID) != "true") {
+					alert("<spring:message code='ezCommunity.t980'/>");
+					return;
+				}
 
 		        var pheight = window.screen.availHeight;
 		        var pwidth = window.screen.availWidth;
@@ -980,6 +979,25 @@
 				document.getElementById("totalSearchForm").submit();
 				document.getElementById("searchWord").value = "";
 			}
+
+			function chkReadFG(code, boardID) {
+				var returnVal = "";
+
+				$.ajax({
+					type : "GET",
+					async : false,
+					url : "/ezCommunity/getBoardReadFG.do",
+					data : {
+						code : code,
+						boardID : boardID
+					},
+					success: function(result){
+						returnVal = result;
+					}
+				});
+
+				return returnVal;
+			}
 		</script>
 	</head>
 	
@@ -1008,7 +1026,7 @@
 		                    <p id="master" style="width:93px; display:inline-block; text-overflow:ellipsis; white-space: nowrap; overflow:hidden;"></p>
 		                </div>
 		                
-		                <c:if test="${checkSysop }">
+		                <c:if test="${checkSysop || chkOperator}">
 		                	<div class="admin_menu" style="height:auto;width: auto;"><span id="btn_Manager" onclick ="go_menu(this)"><spring:message code='ezCommunity.t565' /></span></div>
 		                </c:if>
 		                

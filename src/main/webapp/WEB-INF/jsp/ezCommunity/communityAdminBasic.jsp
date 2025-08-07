@@ -92,6 +92,8 @@
 				var selectGrade = document.getElementById("read_Grade");
 				selectGrade.innerHTML = "";
 
+				var isGradeFound = false;
+
 				for (var i = 0; i < gradeList.length-1; i++) {
 					var option = document.createElement("option");
 
@@ -101,9 +103,14 @@
 
 					if (gradeList[i].gradeCode == readGrade) {
 						option.selected = true;
+						isGradeFound = true;
 					}
 
 					selectGrade.appendChild(option);
+				}
+
+				if (!isGradeFound && gradeList.length > 0) {
+					selectGrade.options[selectGrade.options.length - 1].selected = true;
 				}
 			}
 		</script>

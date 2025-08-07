@@ -1302,4 +1302,32 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 	public void insertClubGrade(Map<String, Object> map) throws Exception {
 		insert("EzCommunityDAO.insertClubGrade", map);
 	}
+
+	public List<CommunityCClubUserVO> getClubOperatorList(Map<String, Object> map) throws Exception {
+		return (List<CommunityCClubUserVO>) list("EzCommunityDAO.getClubOperatorList", map);
+	}
+
+	public int adminOperatorListCount(Map<String, Object> map) throws Exception {
+		return (int) select("EzCommunityDAO.getClubOperatorListCount", map);
+	}
+
+	public void deleteClubOperator(Map<String, Object> map) throws Exception {
+		update("EzCommunityDAO.deleteClubOperator", map);
+	}
+
+	public void updateClubOperatorAuth(Map<String, Object> map) throws Exception {
+		update("EzCommunityDAO.updateClubOperatorAuth", map);
+	}
+
+	public List<CommunityCClubUserVO> getNoOperatorList(Map<String, Object> map) throws Exception {
+		return (List<CommunityCClubUserVO>) list("EzCommunityDAO.getNoOperatorList", map);
+	}
+
+	public int getNoOperatorListCount(Map<String, Object> map) throws Exception {
+		return (int) select("EzCommunityDAO.getNoOperatorListCount", map);
+	}
+
+	public void updateOperatorGrade(Map<String, Object> map) throws Exception {
+		update("EzCommunityDAO.updateOperatorGrade", map);
+	}
 }

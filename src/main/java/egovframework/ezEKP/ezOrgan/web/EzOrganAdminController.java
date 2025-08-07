@@ -399,6 +399,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			ezCommonService.addBoardNotUsedFlag(); // 2023-10-30 조소정 - 게시판 사용안함 여부 컬럼 추가
 			ezCommonService.insertExecutiveScheduleConfig(); // 2025-07-07 이유정 - 일정관리 > 임원일정 조회 가능 범위 설정 컨피그 추가
             ezCommonService.settingCommunityGradeData(); // 2025-07-10 이유정 - 커뮤니티 > 기존 데이터 회원등급에 맞춰 세팅
+            ezCommonService.alterTblClubUserAdminAuthColumn(); // 2025-07-15 이유정 - 커뮤니티 > 운영자권한 컬럼 추가
         } catch (Exception e) {
     		logger.error(e.getMessage(), e);
     	}

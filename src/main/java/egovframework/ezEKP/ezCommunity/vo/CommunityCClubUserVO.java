@@ -41,6 +41,8 @@ public class CommunityCClubUserVO {
 	private String deptName;
 	/** 사용자 회원등급*/
 	private String grade;
+	/** 운영자 권한 (A-회원관리, B-설문조사관리, D-홈화면관리, F-게시판관리) */
+	private String admin_Auth;
 
 	public String getC_clubNo() {
 		return c_clubNo;
@@ -164,5 +166,10 @@ public class CommunityCClubUserVO {
 	public void setGrade(String grade) {
 		this.grade = grade;
 	}
-
+	public String getAdmin_Auth() {
+		return admin_Auth;
+	}
+	public void setAdmin_Auth(String admin_Auth) {
+		this.admin_Auth = admin_Auth;
+	}
 }

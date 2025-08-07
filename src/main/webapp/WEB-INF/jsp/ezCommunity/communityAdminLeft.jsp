@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html>
 	<head>
@@ -355,6 +356,10 @@
 					case 11:
 						url = "/ezCommunity/adminMemberGrade.do?code=" + code;
 						break;
+
+					case 12:
+						url = "/ezCommunity/adminOperatorManage.do?code=" + code;
+						break;
 				}
 				
 				window.open(url,"right");
@@ -403,20 +408,34 @@
 	<body class="leftbody">  
 		<div id="left" style="height:526px;overflow-y:auto;">
 			<div class="left_admin" title="Community Administrator"><spring:message code = 'ezCommunity.t234' /></div>
-			<h2><span onClick="goPage(2)" id="goPage_2" style="display:inline-block;width:100%"><spring:message code = 'ezCommunity.t2012' /></span><ul></ul></h2>	
-			<h2><span onClick="goPage(1)" style="display:inline-block;width:100%"><spring:message code = 'ezCommunity.t488' /></span><ul></ul></h2>	
-	        <h2><span onClick="goPage(10)" id="goPage_10" style="display:inline-block;width:100%"><spring:message code = 'ezCommunity.t2014' /></span><ul></ul></h2>
-			<h2><span onClick="Open_Func()" id="BoardList" style="display:inline-block;width:100%"> <spring:message code = 'ezCommunity.t418' /></span></h2>
-			
-			<ul id = "treeUL"></ul>
-			
-			<h2><span onClick="goPage(4)" style="display:inline-block;width:100%"><spring:message code = 'ezCommunity.t490' /></span><ul></ul></h2>	
-			<h2><span onClick="goPage(6)" style="display:inline-block;width:100%"><spring:message code = 'ezCommunity.t492' /></span><ul></ul></h2>
-			<h2><span onClick="goPage(11)" style="display:inline-block;width:100%"><spring:message code = 'ezCommunity.lyj01' /></span><ul></ul></h2>
-			<h2><span onClick="goPage(7)" style="display:inline-block;width:100%"><spring:message code = 'ezCommunity.t493' /></span><ul></ul></h2>	
-			<h2><span onClick="goPage(8)" style="display:inline-block;width:100%"><spring:message code = 'ezCommunity.t494' /></span><ul></ul></h2>	
-			<h2><span onClick="goPage(5)" style="display:inline-block;width:100%"><spring:message code = 'ezCommunity.t491' /></span><ul></ul></h2>	
-			<h2><span onClick="goPage(9)" style="display:inline-block;width:100%"><spring:message code = 'ezCommunity.t475' /></span><ul></ul></h2>
+			<c:if test="${sysopCheck == 1}">
+				<h2><span onClick="goPage(1)" style="display:inline-block;width:100%"><spring:message code = 'ezCommunity.t488' /></span><ul></ul></h2>
+			</c:if>
+			<c:if test="${sysopCheck == 1 || fn:contains(adminAuth, 'D')}"> <%-- 마스터 및 홈화면관리 권한이 있는 운영자 --%>
+				<h2><span onClick="goPage(2)" id="goPage_2" style="display:inline-block;width:100%"><spring:message code = 'ezCommunity.t2012' /></span><ul></ul></h2>
+				<h2><span onClick="goPage(10)" id="goPage_10" style="display:inline-block;width:100%"><spring:message code = 'ezCommunity.t2014' /></span><ul></ul></h2>
+			</c:if>
+			<c:if test="${sysopCheck == 1 || fn:contains(adminAuth, 'F')}"> <%-- 마스터 및 게시판관리 권한이 있는 운영자 --%>
+				<h2><span onClick="Open_Func()" id="BoardList" style="display:inline-block;width:100%"> <spring:message code = 'ezCommunity.t418' /></span></h2>
+				<ul id = "treeUL"></ul>
+			</c:if>
+
+			<c:if test="${sysopCheck == 1 || fn:contains(adminAuth, 'A')}"> <%-- 마스터 및 회원관리 권한이 있는 운영자 --%>
+				<h2><span onClick="goPage(4)" style="display:inline-block;width:100%"><spring:message code = 'ezCommunity.t490' /></span><ul></ul></h2>
+				<h2><span onClick="goPage(6)" style="display:inline-block;width:100%"><spring:message code = 'ezCommunity.t492' /></span><ul></ul></h2>
+			</c:if>
+			<c:if test="${sysopCheck == 1}">
+				<h2><span onClick="goPage(12)" style="display:inline-block;width:100%"><spring:message code = 'ezCommunity.lyj31' /></span><ul></ul></h2>
+			</c:if>
+			<c:if test="${sysopCheck == 1 || fn:contains(adminAuth, 'A')}"> <%-- 마스터 및 회원관리 권한이 있는 운영자 --%>
+				<h2><span onClick="goPage(11)" style="display:inline-block;width:100%"><spring:message code = 'ezCommunity.lyj01' /></span><ul></ul></h2>
+				<h2><span onClick="goPage(7)" style="display:inline-block;width:100%"><spring:message code = 'ezCommunity.t493' /></span><ul></ul></h2>
+			</c:if>
+			<c:if test="${sysopCheck == 1}">
+				<h2><span onClick="goPage(8)" style="display:inline-block;width:100%"><spring:message code = 'ezCommunity.t494' /></span><ul></ul></h2>
+				<h2><span onClick="goPage(5)" style="display:inline-block;width:100%"><spring:message code = 'ezCommunity.t491' /></span><ul></ul></h2>
+				<h2><span onClick="goPage(9)" style="display:inline-block;width:100%"><spring:message code = 'ezCommunity.t475' /></span><ul></ul></h2>
+			</c:if>
 		       
 		</div>
 		

@@ -1084,7 +1084,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	}
 	
 	@Override
-	public String pollMain(LoginVO userInfo, String code) throws Exception {
+	public String pollMain(LoginVO userInfo, String code, String pollAdmin) throws Exception {
 		logger.debug("pollMain started.");
 		
 		String pollState = "", pollManager = "";
@@ -1151,7 +1151,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			sb.append("<td>" + pollState + "</td>");
 			sb.append("<td>");
 			
-			if (item.getPollRegUser().equals(userInfo.getId()) || sysopID.equals(userInfo.getId())) {
+			if (item.getPollRegUser().equals(userInfo.getId()) || sysopID.trim().equals(userInfo.getId()) || pollAdmin.equals("true")) {
 				if (pollManager.equals(egovMessageSource.getMessage("ezCommunity.t678", userInfo.getLocale()))) {
 					sb.append("<a class=\"imgbtn\" onclick=poll_edit(\"" + code + "\",\"" + item.getManagerID() + "\")><span>" + pollManager + "</span></a>");
 				} else if (pollManager.equals(egovMessageSource.getMessage("ezCommunity.t208", userInfo.getLocale()))) {
@@ -2795,7 +2795,16 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 					boardInfo.setReply_FG("false");
 				}
 				if (Integer.parseInt(userGrade) <= Integer.parseInt(boardInfoTemp.getDelete_FG())) { // 삭제권한 등급과 사용자 등급 비교
-					boardInfo.setDelete_FG("true");
+					// 운영자 권한정보
+					List<CommunityCClubUserVO> operatorList = getClubOperatorList(userInfo.getCompanyID(), userInfo.getTenantId(), code, userInfo.getId());
+
+					if (operatorList != null && !operatorList.isEmpty()) {
+						if (operatorList.get(0).getAdmin_Auth() != null && operatorList.get(0).getAdmin_Auth().contains("F")) {
+							boardInfo.setDelete_FG("true");
+						}
+					} else {
+						boardInfo.setDelete_FG("false");
+					}
 				} else {
 					boardInfo.setDelete_FG("false");
 				}
@@ -4771,12 +4780,19 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
                 strCompanyID = club.getCompanyID().trim();
 			}
 		}
-		
+
+		// 운영자 권한정보
+		List<CommunityCClubUserVO> operatorList = getClubOperatorList(companyID, tenantID, code, id);
+
 		if (!strSysopID.equals(id)){
 			if (!commonUtil.isAdmin(id, tenantID, rollInfo, "c")) {
 				if (strIsIN.equals("1") && strCompanyID.equals(companyID)) {
 					sysopCheck = 1;
-				} 
+				} else if (operatorList != null && !operatorList.isEmpty()) {
+					if (operatorList.get(0).getAdmin_Auth() != null) {
+						sysopCheck = 1;
+					}
+				}
 			} else {
 				sysopCheck = 1;
 			}
@@ -8885,5 +8901,242 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		logger.debug("getCommunityJoinGrade ended.");
 
 		return joinGrade;
+	}
+
+	public List<CommunityCClubUserVO> getClubOperatorList(String companyID, int tenantID, String code, String userId) throws Exception {
+		logger.debug("getClubOperatorList started.");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("code", code);
+		map.put("companyID", companyID);
+		map.put("tenantID", tenantID);
+		map.put("userId", userId);
+
+		List<CommunityCClubUserVO> list = ezCommunityDAO.getClubOperatorList(map);
+
+		logger.debug("getClubOperatorList ended.");
+
+		return list;
+	}
+
+	@Override
+	public int adminOperatorListCount(LoginVO userInfo, String code) throws Exception {
+		logger.debug("adminOperatorListCount started.");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("code", code);
+		map.put("companyID", userInfo.getCompanyID());
+		map.put("tenantID", userInfo.getTenantId());
+
+		int result = ezCommunityDAO.adminOperatorListCount(map);
+
+		logger.debug("adminOperatorListCount ended.");
+
+		return result;
+	}
+
+	@Override
+	public String adminOperatorList(LoginVO userInfo, String code) throws Exception {
+		logger.debug("adminOperatorList started.");
+		String primary = userInfo.getPrimary();
+
+		List<CommunityCClubUserVO> list = getClubOperatorList(userInfo.getCompanyID(), userInfo.getTenantId(), code, "");
+
+		int iCount = 1, curPage = 0;
+		StringBuilder sb = new StringBuilder();
+
+		if (list == null || list.size() == 0) {
+			sb.append("<tr>");
+			sb.append("<td colspan=\"6\" style=\"width:100%; height:30px; text-align:center;\">" + egovMessageSource.getMessage("ezOrgan.hdp25", userInfo.getLocale()) + "</td>");
+			sb.append("</tr>");
+		} else {
+			for (CommunityCClubUserVO operatorList : list) {
+				CommunityMemberInfoVO memberInfo = commViewMemberGet3(operatorList.getC_ID().trim(), operatorList.getCompanyID(), primary, userInfo.getTenantId());
+
+				sb.append("<tr>");
+				sb.append("<td style=\"width:15px; height:23px; align:center;\"><input type=\"CHECKBOX\" id=" + operatorList.getC_ID() + " class=\"selectOperator\">");
+				sb.append("<td align=\"center\">" + memberInfo.getUserName().trim() + "</td>");
+
+				List<CommunityCClubUserVO> authInfo = getClubOperatorList(userInfo.getCompanyID(), userInfo.getTenantId(), code, operatorList.getC_ID());
+
+				if (authInfo.get(0).getAdmin_Auth() != null && authInfo.get(0).getAdmin_Auth().contains("D")) {
+					sb.append("<td><input type=\"CHECKBOX\" id=\"adminAuthD" + iCount + "\" style=\"vertical-align: middle;\" userId=" + operatorList.getC_ID() + " checked><label for=\"adminAuthD" + iCount + "\" style=\"vertical-align: middle;\">홈화면관리</label></td>");
+				} else {
+					sb.append("<td><input type=\"CHECKBOX\" id=\"adminAuthD" + iCount + "\" style=\"vertical-align: middle;\" userId=" + operatorList.getC_ID() + "><label for=\"adminAuthD" + iCount + "\" style=\"vertical-align: middle;\">홈화면관리</label></td>");
+				}
+
+				if (authInfo.get(0).getAdmin_Auth() != null && authInfo.get(0).getAdmin_Auth().contains("F")) {
+					sb.append("<td><input type=\"CHECKBOX\" id=\"adminAuthF" + iCount + "\" style=\"vertical-align: middle;\" userId=" + operatorList.getC_ID() + " checked><label for=\"adminAuthF" + iCount + "\" style=\"vertical-align: middle;\">게시판관리</label></td>");
+				} else {
+					sb.append("<td><input type=\"CHECKBOX\" id=\"adminAuthF" + iCount + "\" style=\"vertical-align: middle;\" userId=" + operatorList.getC_ID() + "><label for=\"adminAuthF" + iCount + "\" style=\"vertical-align: middle;\">게시판관리</label></td>");
+				}
+
+				if (authInfo.get(0).getAdmin_Auth() != null && authInfo.get(0).getAdmin_Auth().contains("B")) {
+					sb.append("<td><input type=\"CHECKBOX\" id=\"adminAuthB" + iCount + "\" style=\"vertical-align: middle;\" userId=" + operatorList.getC_ID() + " checked><label for=\"adminAuthB" + iCount + "\" style=\"vertical-align: middle;\">설문조사관리</label></td>");
+				} else {
+					sb.append("<td><input type=\"CHECKBOX\" id=\"adminAuthB" + iCount + "\" style=\"vertical-align: middle;\" userId=" + operatorList.getC_ID() + "><label for=\"adminAuthB" + iCount + "\" style=\"vertical-align: middle;\">설문조사관리</label></td>");
+				}
+
+				if (authInfo.get(0).getAdmin_Auth() != null && authInfo.get(0).getAdmin_Auth().contains("A")) {
+					sb.append("<td><input type=\"CHECKBOX\" id=\"adminAuthA" + iCount + "\" style=\"vertical-align: middle;\" userId=" + operatorList.getC_ID() + " checked><label for=\"adminAuthA" + iCount + "\" style=\"vertical-align: middle;\">회원관리</label></td>");
+				} else {
+					sb.append("<td><input type=\"CHECKBOX\" id=\"adminAuthA" + iCount + "\" style=\"vertical-align: middle;\" userId=" + operatorList.getC_ID() + "><label for=\"adminAuthA" + iCount + "\" style=\"vertical-align: middle;\">회원관리</label></td>");
+				}
+				sb.append("</tr>");
+
+				iCount++;
+			}
+		}
+
+		logger.debug("adminOperatorList ended.");
+
+		return sb.toString();
+	}
+
+	@Override
+	public void deleteClubOperator(String code, List<String> id, String companyID, int tenantID) throws Exception {
+		logger.debug("deleteClubOperator started.");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		for (int i = 0; i < id.size(); i++) {
+			map.put("code", code);
+			map.put("userId", id.get(i));
+			map.put("companyID", companyID);
+			map.put("tenantID", tenantID);
+
+			ezCommunityDAO.deleteClubOperator(map);
+		}
+
+		logger.debug("deleteClubOperator ended.");
+	}
+
+	@Override
+	public void updateClubOperatorAuth(String code, List<String> auth, String companyID, int tenantID) throws Exception {
+		logger.debug("updateClubOperatorAuth started.");
+
+		for (int i = 0; i < auth.size(); i++) {
+			String temp = auth.get(i);
+
+			if (temp.contains(";")) {
+				String[] operateAuth = temp.split(";");
+				String adminAuth = operateAuth[0];
+				String userId = operateAuth[1];
+
+				Map<String, Object> map = new HashMap<String, Object>();
+				map.put("code", code);
+				map.put("adminAuth", adminAuth);
+				map.put("userId", userId);
+				map.put("companyID", companyID);
+				map.put("tenantID", tenantID);
+
+				ezCommunityDAO.updateClubOperatorAuth(map); // 권한 추가
+			} else {
+				String userId = temp;
+
+				Map<String, Object> map = new HashMap<String, Object>();
+				map.put("code", code);
+				map.put("adminAuth", "");
+				map.put("userId", userId);
+				map.put("companyID", companyID);
+				map.put("tenantID", tenantID);
+
+				ezCommunityDAO.updateClubOperatorAuth(map); // 권한 삭제
+			}
+		}
+
+		logger.debug("updateClubOperatorAuth ended.");
+	}
+
+	@Override
+	public List<CommunityCClubUserVO> getNoOperatorList(String companyID, int tenantID, String code, String keyword, String type) throws Exception {
+		logger.debug("getNoOperatorList started.");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("code", code);
+		map.put("companyID", companyID);
+		map.put("tenantID", tenantID);
+		map.put("keyword", keyword);
+		map.put("type", type);
+
+		List<CommunityCClubUserVO> list = ezCommunityDAO.getNoOperatorList(map);
+
+		logger.debug("getNoOperatorList ended.");
+
+		return list;
+	}
+
+	@Override
+	public int getNoOperatorListCount(String companyID, int tenantID, String code, String keyword, String type) throws Exception {
+		logger.debug("getNoOperatorListCount started.");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("code", code);
+		map.put("companyID", companyID);
+		map.put("tenantID", tenantID);
+		map.put("keyword", keyword);
+		map.put("type", type);
+
+		int cnt = ezCommunityDAO.getNoOperatorListCount(map);
+
+		logger.debug("getNoOperatorListCount ended.");
+
+		return cnt;
+	}
+
+	@Override
+	public String adminOperatorAddList(LoginVO userInfo, String code, String keyword, String type, int comNoPerPage, int curPage) throws Exception {
+		logger.debug("adminOperatorList started.");
+		String primary = userInfo.getPrimary();
+
+		List<CommunityCClubUserVO> list = getNoOperatorList(userInfo.getCompanyID(), userInfo.getTenantId(), code, keyword, type);
+
+		int iCount = 0;
+		StringBuilder sb = new StringBuilder();
+
+		if (list == null || list.size() == 0) {
+			sb.append("<tr>");
+			sb.append("<td colspan=\"5\" style=\"width:100%; height:30px; text-align:center;\">" + egovMessageSource.getMessage("ezOrgan.hdp25", userInfo.getLocale()) + "</td>");
+			sb.append("</tr>");
+		} else {
+			for (CommunityCClubUserVO userList : list) {
+				iCount++;
+
+				if (iCount > comNoPerPage * curPage) {
+					break;
+				}
+
+				if (iCount > comNoPerPage * curPage - 7) {
+					CommunityMemberInfoVO memberInfo = commViewMemberGet3(userList.getC_ID().trim(), userList.getCompanyID(), primary, userInfo.getTenantId());
+					String memGradeName = getMemberGradeName(code, userList.getGrade(), userList.getCompanyID(), userInfo.getTenantId());
+					sb.append("<tr>");
+					sb.append("<td style=\"width:15; height:23; align:center;\"><a href=\"javascript:add('" + userList.getC_ID().trim() + "')\" style=\"width: 17px;padding-left: 8px;padding-right: 16px;text-align:center;\" class=\"imgbtn imgbck\">" + egovMessageSource.getMessage("ezCommunity.lyj44", userInfo.getLocale()) + "</a></td>");
+					sb.append("<td align=\"center\">" + memberInfo.getUserName().trim() + "</td>");
+					sb.append("<td align=\"center\">" + userList.getC_ID() + "</td>");
+					sb.append("<td align=\"center\">" + memberInfo.getDeptName() + "</td>");
+					sb.append("<td align=\"center\">" + memGradeName.trim() + "</td>");
+					sb.append("</tr>");
+				}
+			}
+		}
+
+		logger.debug("adminOperatorList ended.");
+
+		return sb.toString();
+	}
+
+	@Override
+	public void updateOperatorGrade(String code, String id, String companyID, int tenantID) throws Exception {
+		logger.debug("updateOperatorGrade started.");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("code", code);
+		map.put("userId", id);
+		map.put("companyID", companyID);
+		map.put("tenantID", tenantID);
+
+		ezCommunityDAO.updateOperatorGrade(map);
+
+		logger.debug("updateOperatorGrade ended.");
 	}
 }

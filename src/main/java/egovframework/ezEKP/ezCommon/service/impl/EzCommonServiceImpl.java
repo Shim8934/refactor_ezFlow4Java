@@ -8720,4 +8720,10 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
             ezCommunityDAO.insertClubGrade(map); // 기존 커뮤니티에 기본 등급 insert
         }
     }
+
+    // 2025-07-15 이유정 - 커뮤니티 > 운영자권한 컬럼 추가
+    @Override
+    public void alterTblClubUserAdminAuthColumn() throws Exception {
+        ezCommonDAO.alterTblClubUserAdminAuthColumn();
+    }
 }

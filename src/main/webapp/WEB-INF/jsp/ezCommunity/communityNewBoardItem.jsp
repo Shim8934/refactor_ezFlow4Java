@@ -430,6 +430,11 @@
 		            txtTitle.focus();
 		            return;				
 		        }
+
+				if (gubun == "2" && document.getElementById('txtNickName').value == "") {
+					alert("<spring:message code='ezCommunity.lyj46'/>");
+					return;
+				}
 							
 		        if (gubun == "2" && document.getElementById('txtPassWord').value == "") {
 		            alert("<spring:message code='ezCommunity.t1144'/>");

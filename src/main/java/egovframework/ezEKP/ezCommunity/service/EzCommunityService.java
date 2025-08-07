@@ -141,7 +141,7 @@ public interface EzCommunityService {
 	
 	public String guestOne(LoginVO userInfo, String sRadio, String keyword, String code, int comNoPerPage, int curPage) throws Exception;
 	
-	public String pollMain(LoginVO userInfo, String code) throws Exception;
+	public String pollMain(LoginVO userInfo, String code, String pollMain) throws Exception;
 	
 	public String pollAddOk(int sel, String selType, String selRes, int selectedNo, int answerCount, Model model, LoginVO userInfo) throws Exception;
 	
@@ -441,4 +441,22 @@ public interface EzCommunityService {
 	public void updateBoardManageGrade(String boardID, String readGrade, String writeGrade, int tenantID) throws Exception;
 
 	public String getCommunityJoinGrade(String code, String companyID, int tenantID) throws Exception;
+
+	public List<CommunityCClubUserVO> getClubOperatorList(String companyID, int tenantID, String code, String userId) throws Exception;
+
+	public String adminOperatorList(LoginVO userInfo, String code) throws Exception;
+
+	public int adminOperatorListCount(LoginVO userInfo, String code) throws Exception;
+
+	public void deleteClubOperator(String code, List<String> id, String companyID, int tenantID) throws Exception;
+
+	public void updateClubOperatorAuth(String code, List<String> auth, String companyID, int tenantID) throws Exception;
+
+	public String adminOperatorAddList(LoginVO userInfo, String code, String keyword, String type, int comNoPerPage, int curPage) throws Exception;
+
+	public List<CommunityCClubUserVO> getNoOperatorList(String companyID, int tenantID, String code, String keyword, String type) throws Exception;
+
+	public int getNoOperatorListCount(String companyID, int tenantID, String code, String keyword, String type) throws Exception;
+
+	public void updateOperatorGrade(String code, String id, String companyID, int tenantID) throws Exception;
 }

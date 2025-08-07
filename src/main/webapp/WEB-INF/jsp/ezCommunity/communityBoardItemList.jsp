@@ -317,7 +317,7 @@
                     return;
                 }
     			
-    		    if (BoardAdmin_FG != "true" && BoardGroupAdmin_FG != "OK" && CheckOwnerShip() == false) {
+    		    if (BoardAdmin_FG != "true" && BoardGroupAdmin_FG != "OK" && CheckOwnerShip() == false && Delete_FG != "true") {
     		        if (gubun == "2") {
     		            var pItemInfo = strListInfo.split(";")[0];
     		            var pItemID = pItemInfo.split(",")[0];

@@ -172,7 +172,7 @@
 		            return;
 		        }
 
-	            if (BoardAdmin_FG != "true" && BoardGroupAdmin_FG != "OK" && strWriterID != SSUserID) {
+	            if (BoardAdmin_FG != "true" && BoardGroupAdmin_FG != "OK" && strWriterID != SSUserID && Delete_FG != "true") {
 	                if (gubun == "2") {
 	                	if(CrossYN()) {
 	                		checkpassword_dialogArguments[1] = btn_Delete_Onclick_Complete;
@@ -999,7 +999,9 @@
 								<c:otherwise>
 									<c:choose>
 										<c:when test="${boardInfo.gubun == '2' }">
-											<li id='btn_Reply'><span onclick='btn_Reply_Onclick()'><spring:message code='ezCommunity.t207'/></span></li>
+											<c:if test="${boardInfo.write_FG == 'true'}">
+												<li id='btn_Reply'><span onclick='btn_Reply_Onclick()'><spring:message code='ezCommunity.t207'/></span></li>
+											</c:if>
 					                        <li id='btn_Modify'><span onclick='btn_Modify_Onclick()'><spring:message code='ezCommunity.t6'/></span></li>
 					                        <li id='btn_Delete'><span class="icon16 popup_icon16_delete" onclick='btn_Delete_Onclick()'></span></li>
 					                        <li id='btn_Print'><span class="icon16 popup_icon16_print" onclick='btn_Print_Onclick()'></span></li>
@@ -1024,7 +1026,9 @@
 										</c:when>
 										
 										<c:otherwise>
-				                        	<li id='btn_Reply'><span onclick='btn_Reply_Onclick()'><spring:message code='ezCommunity.t207'/></span></li>
+											<c:if test="${boardInfo.write_FG == 'true'}">
+				                        		<li id='btn_Reply'><span onclick='btn_Reply_Onclick()'><spring:message code='ezCommunity.t207'/></span></li>
+											</c:if>
 				                        	
 				                        	<c:if test="${cAdmin == 'admin' || gcAdmin == 'OK' || boardInfo.boardAdmin_FG == 'true' }">
 				                        		<li id='btn_Modify'><span onclick='btn_Modify_Onclick()'><spring:message code='ezCommunity.t6'/></span></li>
@@ -1032,7 +1036,7 @@
 					                        
 				                        	<li id='btn_ReaderList'><span onclick='ReaderList()'><spring:message code='ezCommunity.t952'/></span></li>
 				                        	
-				                        	<c:if test="${cAdmin == 'admin' || gcAdmin == 'OK' || boardInfo.boardAdmin_FG == 'true' }">
+				                        	<c:if test="${cAdmin == 'admin' || gcAdmin == 'OK' || boardInfo.boardAdmin_FG == 'true' || boardInfo.delete_FG == 'true'}">
 				                        		<li id='btn_Delete'><span class="icon16 popup_icon16_delete" onclick='btn_Delete_Onclick()'></span></li>
 				                        	</c:if>
 				                        	

@@ -8477,4 +8477,22 @@
 				  and g.TENANT_ID = c.TENANT_ID
 			)
 	</select>
+
+	<select id="EzCommonDAO.checkTblClubUserAdminAuthColumn" resultClass="String">
+		<![CDATA[
+		SELECT
+			ADMIN_AUTH
+		FROM
+			TBL_C_CLUBUSER
+		WHERE
+			ROWNUM <= 1
+		]]>
+	</select>
+
+	<statement id="EzCommonDAO.alterTblClubUserAdminAuthColumn">
+		ALTER TABLE
+			TBL_C_CLUBUSER
+		ADD
+			ADMIN_AUTH NVARCHAR2(20) DEFAULT NULL
+	</statement>
 </sqlMap>
