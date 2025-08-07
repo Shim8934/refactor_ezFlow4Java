@@ -141,7 +141,7 @@
 			var searchRequirement = [];
 			let drawTagConsumeCallback;
 			var usePreviewMail = ${usePreviewMail};
-		    
+		    var url = "<c:out value='${url}'/>";
 		    function defineHost(protocol){
 	    		var host = "";
 
@@ -1088,12 +1088,14 @@
 					mailboxProgressFun(false); // progress percent
 				}); // progress percent
 	            
+				var folderPath = url == 'receiveChk' ? 'Sent' : url;
+				
 		    	$.ajax({
 					type : "POST",
 					dataType : "text",
 					async : true,
 					url : requestUrl,
-					data : { folderPath : "<c:out value='${url}'/>", userkey : socketUserkey},
+					data : { folderPath : folderPath, userkey : socketUserkey},
 					error : function() {
 						alert("<spring:message code='ezEmail.ls011' />");
 					}
