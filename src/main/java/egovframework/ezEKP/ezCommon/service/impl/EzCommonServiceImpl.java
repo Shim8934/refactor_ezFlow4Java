@@ -4608,12 +4608,6 @@ public class EzCommonServiceImpl extends EzFileMngUtil implements EzCommonServic
 	public void alterUseColor() throws Exception {
 		ezCommonDAO.alterUseColor();
 	}
-	
-	/* 2023-10-30 조소정 - 게시판 사용안함 여부 컬럼 추가 */
-	@Override
-	public void addBoardNotUsedFlag() throws Exception {
-		ezCommonDAO.addBoardNotUsedFlag();
-	}
 
 	@Override
 	public void updateThemeData() throws Exception {
