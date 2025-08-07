@@ -576,6 +576,7 @@ header + .lnb ul li:hover span, .lnb ul li.on span{color:#388CE5;}
 /* 2025.06 custom style */
 /* checkbox */
 .custom_checkbox input[type="checkbox"]:checked {background: #47494B; border-color:#47494B !important;}
+.master.dashDiv {background: #47494B !important; border-color:#47494B !important;}
 /* radio */
 .custom_radio input[type="radio"]::after {background-color: #47494B;}
 .custom_radio input[type="radio"]:checked {border-color:#47494B !important;}

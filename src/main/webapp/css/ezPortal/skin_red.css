@@ -334,6 +334,7 @@ nav .navUL li.on{color:#A20000;}
 /* 2025.06 custom style */
 /* checkbox */
 .custom_checkbox input[type="checkbox"]:checked {background: #A20000; border-color:#A20000 !important;}
+.master.dashDiv {background: #A20000 !important; border-color:#A20000 !important;}
 /* radio */
 .custom_radio input[type="radio"]::after {background-color: #A20000;}
 .custom_radio input[type="radio"]:checked {border-color:#A20000 !important;}
