@@ -8124,8 +8124,7 @@
             FILE_NAME
         FROM
             JMOCHA_BIGATTACH_DOWN_LIMIT
-        WHERE
-            ROWNUM <= 1
+		LIMIT 1
         ]]>
    </select>
 
