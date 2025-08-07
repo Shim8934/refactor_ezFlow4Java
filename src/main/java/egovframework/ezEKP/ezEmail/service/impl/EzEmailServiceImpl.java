@@ -6431,6 +6431,95 @@ public class EzEmailServiceImpl implements EzEmailService {
 		
 		return resultInt;
 	}
+
+	/**
+	 * 승인메일 : 일반 & 회사 승인메일 로그 상태 체크
+	 */
+	public int checkApprHistoryAll(int tenantId, String companyId, String userId, List<Map<String, Object>> mailDataList) throws Exception {
+		logger.debug("checkApprHistoryAll started. tenantId={}, companyId={}, userId={}, mailDataList size={}",
+				tenantId, companyId, userId, mailDataList.size());
+
+		int resultInt = -100;
+
+		// JSON 배열 생성
+		JSONArray requestArray = new JSONArray();
+		for (Map<String, Object> mailData : mailDataList) {
+			JSONObject item = new JSONObject();
+			item.put("tenantId", String.valueOf(tenantId));
+			item.put("companyId", companyId);
+			item.put("mailUID", String.valueOf(mailData.get("uid")));
+			item.put("userId", (String) mailData.get("applicantId"));
+			item.put("state", (String) mailData.get("state"));
+			requestArray.add(item);
+		}
+
+		String requestData = requestArray.toJSONString();
+		logger.debug("requestData={}", requestData);
+
+		String inputParams = "requestData=" + URLEncoder.encode(requestData, "UTF-8");
+		logger.debug("inputParams={}", inputParams);
+
+		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzEmailAppr/checkApprHistoryAll";
+		String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+		logger.debug("response={}", response);
+
+		JSONParser parser = new JSONParser();
+		JSONObject object = (JSONObject)parser.parse(response);
+
+		if (object.get("resultCode").equals("OK")) {
+			resultInt = ((Long)object.get("reasonCode")).intValue(); // 0:정상(모든 항목 처리 가능), 1:처리 불가(0건 항목 존재)
+		} else {
+			throw new Exception("checkApprHistoryAll JGwServer ERROR");
+		}
+
+		logger.debug("checkApprHistoryAll ended. resultInt={}", resultInt);
+		return resultInt;
+	}
+	
+	/**
+	 * 승인메일 : 일반 or 회사 승인메일 로그 상태 체크
+	 */
+	public int checkApprHistoryMultiple(int tenantId, String companyId, String userId, List<Map<String, Object>> mailDataList) throws Exception {
+		logger.debug("checkApprHistoryMultiple started. tenantId={}, companyId={}, userId={}, mailDataList size={}",
+				tenantId, companyId, userId, mailDataList.size());
+
+		int resultInt = -100;
+
+		// JSON 배열 생성
+		JSONArray requestArray = new JSONArray();
+		for (Map<String, Object> mailData : mailDataList) {
+			JSONObject item = new JSONObject();
+			item.put("tenantId", String.valueOf(tenantId));
+			item.put("companyId", companyId);
+			item.put("mailUID", String.valueOf(mailData.get("uid")));
+			item.put("userId", (String) mailData.get("applicantId"));
+			item.put("state", (String) mailData.get("state"));
+			item.put("apprMailFlag", (String) mailData.get("apprMailFlag"));
+			requestArray.add(item);
+		}
+
+		String requestData = requestArray.toJSONString();
+		logger.debug("requestData={}", requestData);
+
+		String inputParams = "requestData=" + URLEncoder.encode(requestData, "UTF-8");
+		logger.debug("inputParams={}", inputParams);
+
+		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzEmailAppr/checkApprHistoryMultiple";
+		String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+		logger.debug("response={}", response);
+
+		JSONParser parser = new JSONParser();
+		JSONObject object = (JSONObject)parser.parse(response);
+
+		if (object.get("resultCode").equals("OK")) {
+			resultInt = ((Long)object.get("reasonCode")).intValue(); // 0:정상(모든 항목 처리 가능), 1:처리 불가(0건 항목 존재)
+		} else {
+			throw new Exception("checkApprHistoryMultiple JGwServer ERROR");
+		}
+
+		logger.debug("checkApprHistoryMultiple ended. resultInt={}", resultInt);
+		return resultInt;
+	}
 	
 	/**
 	 * 승인메일 : 일반 승인메일 로그 상태 변경
@@ -6439,7 +6528,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 	 */
 	@Override
 	public int updateApprHistory(int tenantId, String companyId, long mailUID, String userId, String state, String memo) throws Exception {
-		logger.debug("tenantId={}, companyId={}, mailUID={}, userId={}, state={}, memo={}"
+		logger.debug("updateApprHistory started. tenantId={}, companyId={}, mailUID={}, userId={}, state={}, memo={}"
                 , tenantId, companyId, mailUID, userId, state, memo);
 
 		int resultInt = -100;
@@ -6461,7 +6550,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 		if (object.get("resultCode").equals("OK")) {
 			resultInt = ((Long)object.get("reasonCode")).intValue();
 		} else {
-			throw new Exception("JGwServer ERROR");
+			throw new Exception("updateApprHistory JGwServer ERROR");
 		}
 		
 		return resultInt;
@@ -6746,13 +6835,14 @@ public class EzEmailServiceImpl implements EzEmailService {
 		}
 		*/
 		// 임시보관함에 저장이 성공하면 로그 정보를 변경하도록 수정, 여러번 취소 요청이 왔을 때 메일이 없는 경우 대비하여 처리 순서 변경
+		// 2025-08-06 - 승인요청메일이 pending일 경우에만 진행하도록 수정 
 		try {
 			Map<String, Object> apprMailMap = new HashMap<String, Object>();
 			apprMailMap.put("applicantEmail", applicantEmail);
 			apprMailMap.put("uid", uid);
 
 			// 임시보관함에 저장
-			moveToDraft = ezEmailUtil.apprMailMoveToFolder(locale, tenantId, apprMailMap, ezEmailUtil.getDraftsFolderId(locale), true);
+			//moveToDraft = ezEmailUtil.apprMailMoveToFolder(locale, tenantId, apprMailMap, ezEmailUtil.getDraftsFolderId(locale), true);
 
 			if (0 == moveToDraft) {
 				if (isAllHandsType) {
@@ -6760,6 +6850,11 @@ public class EzEmailServiceImpl implements EzEmailService {
 				} else {
 					resultInt = updateApprHistory(tenantId, companyId, uid, userId, "canceled", null);
 				}
+			}
+
+			// 임시보관함에 저장
+			if (0 == resultInt) {
+				moveToDraft = ezEmailUtil.apprMailMoveToFolder(locale, tenantId, apprMailMap, ezEmailUtil.getDraftsFolderId(locale), true);
 			}
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
@@ -6869,23 +6964,31 @@ public class EzEmailServiceImpl implements EzEmailService {
 		
 		return setApprMailApproval(userId, tenantId, map, applicantEmail, uid);
 	}
+
+	@Override
+	public int setApprMailApproval(String userId, int tenantId,Map<String, Object> paramMap) throws Exception {
+		String applicantEmail = (String) paramMap.get("uid");
+		long uid = (long) paramMap.get("uid");
+		return setApprMailApproval(userId, tenantId, paramMap, applicantEmail, uid);
+	}
+
 	/**
 	 * @param paramMap: lang, locale, companyId
 	 * @param userId: 승인하는 사람 아이디
 	 */
 	@Override
 	public int setApprMailApproval(String userId, int tenantId, Map<String, Object> paramMap, String applicantEmail, long uid) throws Exception {
+		logger.debug("setApprMailApproval started. tenantId={},applicantEmail={}, uid={}", tenantId, applicantEmail, uid);
 		int resultInt = -1;
 
 		String companyId 	= (String) paramMap.get("companyId");
 		String lang 		= (String) paramMap.get("lang");
 		Locale locale 		= (Locale) paramMap.get("locale");
-		logger.debug("tenantId={}, companyId={}, lang={}, locale={}, applicantEmail={}", tenantId, companyId, lang, locale, applicantEmail);
-		
+	
 		String applicantId = applicantEmail.split("@")[0];
 		String domainName = ezCommonService.getTenantConfig("DomainName", tenantId);
 		String userAccount = userId + "@" + domainName;
-		logger.debug("applicantId={}, domainName={}, userAccount={}", applicantEmail, domainName, userAccount);
+		logger.debug("setApprMailApproval applicantId={}, domainName={}, userAccount={} lang={}, companyId={}", applicantId, domainName, userAccount, lang, companyId);
 		
 		// 해당 메일의 로그 정보
 		String hisSubject = "";

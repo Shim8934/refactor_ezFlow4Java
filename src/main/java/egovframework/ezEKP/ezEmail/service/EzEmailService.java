@@ -245,6 +245,8 @@ public interface EzEmailService {
 	public int insertApprHistory(int tenantId, String companyId, long mailUID, String userId, String approverId, MimeMessage message) throws Exception;
 	public int deleteApprCompHistory(int tenantId, String companyId, long mailUID, String userId) throws Exception;
 	public int deleteApprHistory(int tenantId, String companyId, long mailUID, String userId) throws Exception;
+	public int checkApprHistoryAll(int tenantId, String companyId, String userId, List<Map<String, Object>> mailDataList) throws Exception;
+	public int checkApprHistoryMultiple(int tenantId, String companyId, String userId, List<Map<String, Object>> mailDataList) throws Exception;
 	public int updateApprCompHistory(int tenantId, String companyId, long mailUID, String userId, String state, String approverId, String approverName, String approverName2, String memo) throws Exception;
 	public int updateApprHistory(int tenantId, String companyId, long mailUID, String userId, String state, String memo) throws Exception;
 	public int applyApprCompMail(String loginCookie, long mailUID, MimeMessage message) throws Exception;
@@ -257,6 +259,7 @@ public interface EzEmailService {
 	public int setApprMailCancel(int tenantId, Map<String, Object> paramMap, String applicantEmail, long uid) throws Exception;
 	public int setApprCompMailApproval(String loginCookie, String applicantEmail, long uid) throws Exception;
 	public int setApprMailApproval(String loginCookie, String applicantEmail, long uid) throws Exception;
+	public int setApprMailApproval(String userId, int tenantId, Map<String, Object> paramMap) throws Exception;
 	public int setApprMailApproval(String userId, int tenantId, Map<String, Object> paramMap, String applicantEmail, long uid) throws Exception;
 	public int setApprCompMailReject(String loginCookie, String applicantEmail, long uid, String memo) throws Exception;
 	public int setApprMailReject(String loginCookie, String applicantEmail, long uid, String memo) throws Exception;

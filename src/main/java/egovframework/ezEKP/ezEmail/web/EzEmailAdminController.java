@@ -4390,32 +4390,61 @@ public class EzEmailAdminController {
 		// param
 		String[] hrefArray = request.getHrefArray();
 
-		for(String encryptedHref : hrefArray) {
-			// decrypt & mailbox/uid
-			String href = egovFileScrty.decryptAES(encryptedHref);
-			String hrefUserId = href.split("/")[0].replaceFirst("^Sent\\.", "");
-			long uid = Long.parseLong(href.split("/")[1]);
-			
-			// 신청자 정보
-			String applicantId = hrefUserId;
-			String applicantEmail = hrefUserId + "@" + domainName;
-			OrganUserVO applicantVO = ezOrganAdminService.getUserInfo(hrefUserId, "1", tenantId);
-			if (applicantVO != null) {
-				applicantId = applicantVO.getCn();
-				applicantEmail = applicantId + "@" + domainName;
+		// 데이터 수집 단계
+		List<Map<String, Object>> approvalDataList = new ArrayList<>();
+
+		try {
+			for(String encryptedHref : hrefArray) {
+				// decrypt & mailbox/uid
+				String href = egovFileScrty.decryptAES(encryptedHref);
+				String hrefUserId = href.split("/")[0].replaceFirst("^Sent\\.", "");
+				long uid = Long.parseLong(href.split("/")[1]);
+
+				// 신청자 정보
+				String applicantId = hrefUserId;
+				String applicantEmail = hrefUserId + "@" + domainName;
+				OrganUserVO applicantVO = ezOrganAdminService.getUserInfo(hrefUserId, "1", tenantId);
+				if (applicantVO != null) {
+					applicantId = applicantVO.getCn();
+					applicantEmail = applicantId + "@" + domainName;
+				}
+
+				logger.debug("apprSetApproval userId={}, href={}, hrefUserId={}, uid={}, applicantId={}, applicantEmail={}",
+						userId, href, hrefUserId, uid, applicantId, applicantEmail);
+				// 데이터 생성
+				Map<String, Object> approvalData = new HashMap<>();
+				approvalData.put("tenantId", tenantId);
+				approvalData.put("companyId", companyId);
+				approvalData.put("uid", uid);
+				approvalData.put("applicantId", applicantId);
+				approvalData.put("applicantEmail", applicantEmail);
+				approvalData.put("state", "pending");
+				approvalData.put("apprMailFlag", "comp");
+
+				approvalDataList.add(approvalData);
 			}
 
-			logger.debug("apprSetApproval userId={}, href={}, hrefUserId={}, uid={}, applicantId={}, applicantEmail={}",
-					userId, href, hrefUserId, uid, applicantId, applicantEmail);
+			// 메일이 대기 상태인지 check
+			int checkMail = ezEmailService.checkApprHistoryMultiple(tenantId, companyId, userId, approvalDataList);
+			if (checkMail > 0) { // 1: 이미 처리된 메일이 있음
+				return "DONE";
+			}
 
-	        int resultInt = ezEmailService.setApprCompMailApproval(loginCookie, applicantEmail, uid);
-	        if (resultInt != 0) {
-	        	errorInt++;
-	        }
-		}
-		
-		if (errorInt > 0) {
-			returnValue = "ERROR_" + errorInt;
+			// 처리 단계
+			for (Map<String, Object> approvalData : approvalDataList) {
+				int resultInt = ezEmailService.setApprCompMailApproval(loginCookie, (String) approvalData.get("applicantEmail"), (Long) approvalData.get("uid"));
+				if (resultInt != 0) {
+					errorInt++;
+				}
+			}
+
+			if (errorInt > 0) {
+				returnValue = "ERROR_" + errorInt;
+			}
+
+		} catch (Exception e) {
+			logger.error("apprSetApproval error", e);
+			returnValue = "Exception";
 		}
         
 		logger.debug("returnValue=" + returnValue);
@@ -4458,33 +4487,62 @@ public class EzEmailAdminController {
 		String[] hrefArray = request.getHrefArray();
 	    String memo = request.getMemo().replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("&", "&amp;");
 
-	    for(String encryptedHref : hrefArray) {
-			// decrypt & mailbox/uid
-			String href = egovFileScrty.decryptAES(encryptedHref);
-			String hrefUserId = href.split("/")[0].replaceFirst("^Sent\\.", "");
-			long uid = Long.parseLong(href.split("/")[1]);
-			
-			// 신청자 정보
-			String applicantId = hrefUserId;
-			String applicantEmail = hrefUserId + "@" + domainName;
-			OrganUserVO applicantVO = ezOrganAdminService.getUserInfo(hrefUserId, "1", tenantId);
-			if (applicantVO != null) {
-				applicantId = applicantVO.getCn();
-				applicantEmail = applicantId + "@" + domainName;
+		// 데이터 수집 단계
+		List<Map<String, Object>> approvalDataList = new ArrayList<>();
+
+		try {
+			for(String encryptedHref : hrefArray) {
+				// decrypt & mailbox/uid
+				String href = egovFileScrty.decryptAES(encryptedHref);
+				String hrefUserId = href.split("/")[0].replaceFirst("^Sent\\.", "");
+				long uid = Long.parseLong(href.split("/")[1]);
+				
+				// 신청자 정보
+				String applicantId = hrefUserId;
+				String applicantEmail = hrefUserId + "@" + domainName;
+				OrganUserVO applicantVO = ezOrganAdminService.getUserInfo(hrefUserId, "1", tenantId);
+				if (applicantVO != null) {
+					applicantId = applicantVO.getCn();
+					applicantEmail = applicantId + "@" + domainName;
+				}
+	
+				logger.debug("apprAllHandsSetReject userId={}, href={}, hrefUserId={}, uid={}, applicantId={}, applicantEmail={}",
+						userId, href, hrefUserId, uid, applicantId, applicantEmail);
+
+				// 데이터 생성
+				Map<String, Object> approvalData = new HashMap<>();
+				approvalData.put("tenantId", tenantId);
+				approvalData.put("companyId", companyId);
+				approvalData.put("uid", uid);
+				approvalData.put("applicantId", applicantId);
+				approvalData.put("applicantEmail", applicantEmail);
+				approvalData.put("state", "pending");
+				approvalData.put("apprMailFlag", "comp");
+
+				approvalDataList.add(approvalData);
 			}
 
-			logger.debug("apprAllHandsSetReject userId={}, href={}, hrefUserId={}, uid={}, applicantId={}, applicantEmail={}",
-					userId, href, hrefUserId, uid, applicantId, applicantEmail);
+			// 메일이 대기 상태인지 check
+			int checkMail = ezEmailService.checkApprHistoryMultiple(tenantId, companyId, userId, approvalDataList);
+			if (checkMail > 0) { // 1: 이미 처리된 메일이 있음
+				return "DONE";
+			}
 
-	        int resultInt = ezEmailService.setApprCompMailReject(loginCookie, applicantEmail, uid, memo);
-	        if (resultInt != 0) {
-	        	errorInt++;
-	        }
-		}
-		
-		if (errorInt > 0) {
-			returnValue = "ERROR_" + errorInt;
-		}
+			// 처리 단계
+			for (Map<String, Object> approvalData : approvalDataList) {
+				int resultInt = ezEmailService.setApprCompMailReject(loginCookie, (String) approvalData.get("applicantEmail"), (Long) approvalData.get("uid"), memo);
+				if (resultInt != 0) {
+					errorInt++;
+				}
+			}
+			
+			if (errorInt > 0) {
+				returnValue = "ERROR_" + errorInt;
+			}
+		} catch (Exception e) {
+			logger.error("apprSetApproval error", e);
+			returnValue = "Exception";
+		}	
         
 		logger.debug("returnValue=" + returnValue);
 		logger.debug("apprAllHandsSetReject ended.");

@@ -198,6 +198,8 @@
 					if ("OK" == result) {
 						console.log(result);
 						alert("<spring:message code='email.appr.pending.approve.complete' />");
+					} else if ("DONE" == result) {
+                        alert("<spring:message code='email.appr.pending.done' />");
 					} else {
 						var erroCount = result.split('_')[1];
 						alert(erroCount + " <spring:message code='ezEmail.fail.count' />");
@@ -257,12 +259,14 @@
 				url		: "/admin/ezEmail/appr/allHands/setRejectAction.do",
 				async	: true,
 				success	: function(result) {
-					if ("OK" !== result) {
-						console.log(result);
-						var erroCount = result.split('_')[1];
-						alert(erroCount + " <spring:message code='ezEmail.fail.count' />");
+					if ("OK" == result) {
+					    alert("<spring:message code='email.appr.pending.reject.complete' />");
+					} else if ("DONE" == result) {
+						alert("<spring:message code='email.appr.pending.done' />");
 					} else {
-						alert("<spring:message code='email.appr.pending.reject.complete' />");
+						console.log(result);
+                        var erroCount = result.split('_')[1];
+                        alert(erroCount + " <spring:message code='ezEmail.fail.count' />");
 					}
 	
 					reloadPage();

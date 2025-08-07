@@ -134,13 +134,14 @@
 				async	: true,
 				success	: function(result) {
 					if ("OK" === result) {
-						reloadPage();
+					} else if ("DONE" == result) {
+					    alert("<spring:message code='email.appr.request.done' />");
 					} else {
 						console.log(result);
 						alert("<spring:message code='ezEmail.ls013' />");
-
-						reloadPage();
 					}
+
+					reloadPage();
 				},
 				error	: function(error) {
 					console.log(error);
