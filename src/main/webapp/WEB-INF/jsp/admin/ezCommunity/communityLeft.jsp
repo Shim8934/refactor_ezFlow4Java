@@ -45,7 +45,7 @@
 						getApplicationListCount();
 						break;
 				}
-                parent.document.querySelector("iframe[name=comm_main]").src = url;
+				parent.document.right.document.querySelector("[name='comm_main']").src = url;
 				
 				$("#left .adminListBox h2 span").click(function(){
 					$("#left .adminListBox h2").removeClass("on");
