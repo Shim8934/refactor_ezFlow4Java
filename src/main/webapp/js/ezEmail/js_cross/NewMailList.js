@@ -385,9 +385,9 @@ function MakeListInfoHTML(ConentObject) {
                             if (g_bdraft == true) {
                                 p_Subject = p_Subject;
                             } else {
-                                p_Subject = "<div id = \"subject\"style=\" cursor:pointer; max-width:85%; display:inline-block;overflow:hidden; text-overflow: ellipsis;\">" + p_Subject + "</div>&nbsp;&nbsp;"
+                                p_Subject = "<div id = \"subject\"style=\" cursor:pointer; max-width:85%; display:inline-block;overflow:hidden; text-overflow: ellipsis;\">" + p_Subject + "</div>"
                                 if (usePreviewMail) {
-                                    p_Subject += "<img class='mailpopupicon' id='previewMailIcon' src='/images/bsearch_new2.svg' width='14px' style='padding-right: 8px' onclick = 'previewMail(this, event)' onmouseover = 'this.src = \"/images/bsearch_new2_hover.svg\"'  onmouseout = 'this.src = \"/images/bsearch_new2.svg\"'/>";
+                                    p_Subject += "<img class='mailpopupicon' id='previewMailIcon' src='/images/bsearch_new2.svg' width='14px' style='padding: 0 8px;' onclick = 'previewMail(this, event)' onmouseover = 'this.src = \"/images/bsearch_new2_hover.svg\"'  onmouseout = 'this.src = \"/images/bsearch_new2.svg\"'/>";
                                 }
 
                                 if (useMailNewWindow == "YES") {
