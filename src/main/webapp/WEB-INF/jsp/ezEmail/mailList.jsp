@@ -643,9 +643,9 @@
 		      // 2022-11-02 이사라 - [닷넷연동] 메일 가져오기 실행 시 분기처리 필요하여 추가
 		      <c:if test="${!isDotNetIntegration}">
 		    	if (navigator.userAgent.toLowerCase().indexOf("msie") != -1 || (navigator.appName == 'Netscape' && navigator.userAgent.search('Trident') != -1)) { 
-		    		clickOutside = $(window.parent.parent.parent.frames['topFrame'].document);
+		    		clickOutside = $(window.parent.parent.parent.frames['topFrame']?.document);
 		    	} else {
-		    		clickOutside = $(window.parent.parent.parent.frames['topFrame'].contentWindow.document);
+		    		clickOutside = $(window.parent.parent.parent.frames['topFrame']?.contentWindow.document);
 		    	}	    	
 		    	
 		    	clickOutside.mouseup(function (e) {
@@ -1564,7 +1564,7 @@
 				
 			  <c:if test="${!isDotNetIntegration}">
 				if (window.parent.frames["left"].useBottomFrameOnly == "NO") {
-					parent.parent.document.getElementById("topFrame").contentWindow.hideProgress();
+					parent.parent.document.getElementById("topFrame")?.contentWindow.hideProgress();
 				} 
 			  </c:if>
 			}
@@ -1586,7 +1586,7 @@
 			    
 		     <c:if test="${!isDotNetIntegration}">
 			    if (window.parent.frames["left"].useBottomFrameOnly == "NO") {
-					parent.parent.document.getElementById("topFrame").contentWindow.showProgress();
+					parent.parent.document.getElementById("topFrame")?.contentWindow.showProgress();
 				} 
 			 </c:if>
 			}
