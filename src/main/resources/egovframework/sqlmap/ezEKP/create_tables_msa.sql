@@ -1553,10 +1553,10 @@ CREATE TABLE ezemail.`openjpa_sequence_table` (
 -- Table structure for table `road_name_add_info`
 --
 
-DROP TABLE IF EXISTS `road_name_add_info`;
+DROP TABLE IF EXISTS ezportal.`road_name_add_info`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `road_name_add_info` (
+CREATE TABLE ezportal.`road_name_add_info` (
   `관리번호` varchar(25) NOT NULL,
   `행정동코드` varchar(10) DEFAULT NULL,
   `행정동명` varchar(20) DEFAULT NULL,
@@ -1574,10 +1574,10 @@ CREATE TABLE `road_name_add_info` (
 -- Table structure for table `road_name_add_info_change`
 --
 
-DROP TABLE IF EXISTS `road_name_add_info_change`;
+DROP TABLE IF EXISTS ezportal.`road_name_add_info_change`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `road_name_add_info_change` (
+CREATE TABLE ezportal.`road_name_add_info_change` (
   `관리번호` varchar(25) NOT NULL,
   `행정동코드` varchar(10) DEFAULT NULL,
   `행정동명` varchar(20) DEFAULT NULL,
@@ -1596,10 +1596,10 @@ CREATE TABLE `road_name_add_info_change` (
 -- Table structure for table `road_name_address`
 --
 
-DROP TABLE IF EXISTS `road_name_address`;
+DROP TABLE IF EXISTS ezportal.`road_name_address`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `road_name_address` (
+CREATE TABLE ezportal.`road_name_address` (
   `관리번호` varchar(25) NOT NULL,
   `우편번호` varchar(5) DEFAULT NULL,
   `도로명주소` varchar(1000) DEFAULT NULL,
@@ -1612,10 +1612,10 @@ CREATE TABLE `road_name_address` (
 -- Table structure for table `road_name_address_info`
 --
 
-DROP TABLE IF EXISTS `road_name_address_info`;
+DROP TABLE IF EXISTS ezportal.`road_name_address_info`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `road_name_address_info` (
+CREATE TABLE ezportal.`road_name_address_info` (
   `관리번호` varchar(25) NOT NULL,
   `도로명코드` varchar(12) DEFAULT NULL,
   `읍면동일련번호` varchar(2) DEFAULT NULL,
@@ -1636,10 +1636,10 @@ CREATE TABLE `road_name_address_info` (
 -- Table structure for table `road_name_address_info_change`
 --
 
-DROP TABLE IF EXISTS `road_name_address_info_change`;
+DROP TABLE IF EXISTS ezportal.`road_name_address_info_change`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `road_name_address_info_change` (
+CREATE TABLE ezportal.`road_name_address_info_change` (
   `관리번호` varchar(25) NOT NULL,
   `도로명코드` varchar(12) DEFAULT NULL,
   `읍면동일련번호` varchar(2) DEFAULT NULL,
@@ -1661,10 +1661,10 @@ CREATE TABLE `road_name_address_info_change` (
 -- Table structure for table `road_name_code`
 --
 
-DROP TABLE IF EXISTS `road_name_code`;
+DROP TABLE IF EXISTS ezportal.`road_name_code`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `road_name_code` (
+CREATE TABLE ezportal.`road_name_code` (
   `도로명코드` varchar(12) NOT NULL,
   `도로명` varchar(80) DEFAULT NULL,
   `도로명로마자` varchar(80) DEFAULT NULL,
@@ -1690,10 +1690,10 @@ CREATE TABLE `road_name_code` (
 -- Table structure for table `road_name_code_change`
 --
 
-DROP TABLE IF EXISTS `road_name_code_change`;
+DROP TABLE IF EXISTS ezportal.`road_name_code_change`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `road_name_code_change` (
+CREATE TABLE ezportal.`road_name_code_change` (
   `도로명코드` varchar(12) NOT NULL,
   `도로명` varchar(80) DEFAULT NULL,
   `도로명로마자` varchar(80) DEFAULT NULL,
@@ -1719,10 +1719,10 @@ CREATE TABLE `road_name_code_change` (
 -- Table structure for table `road_name_jibun_address`
 --
 
-DROP TABLE IF EXISTS `road_name_jibun_address`;
+DROP TABLE IF EXISTS ezportal.`road_name_jibun_address`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `road_name_jibun_address` (
+CREATE TABLE ezportal.`road_name_jibun_address` (
   `관리번호` varchar(25) NOT NULL,
   `지번주소` varchar(1000) DEFAULT NULL,
   PRIMARY KEY (`관리번호`)
@@ -1733,10 +1733,10 @@ CREATE TABLE `road_name_jibun_address` (
 -- Table structure for table `road_name_jibun_info`
 --
 
-DROP TABLE IF EXISTS `road_name_jibun_info`;
+DROP TABLE IF EXISTS ezportal.`road_name_jibun_info`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `road_name_jibun_info` (
+CREATE TABLE ezportal.`road_name_jibun_info` (
   `관리번호` varchar(25) NOT NULL,
   `일련번호` varchar(3) NOT NULL,
   `법정동코드` varchar(10) DEFAULT NULL,
@@ -1756,10 +1756,10 @@ CREATE TABLE `road_name_jibun_info` (
 -- Table structure for table `road_name_jibun_info_change`
 --
 
-DROP TABLE IF EXISTS `road_name_jibun_info_change`;
+DROP TABLE IF EXISTS ezportal.`road_name_jibun_info_change`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `road_name_jibun_info_change` (
+CREATE TABLE ezportal.`road_name_jibun_info_change` (
   `관리번호` varchar(25) NOT NULL,
   `일련번호` varchar(3) NOT NULL,
   `법정동코드` varchar(10) DEFAULT NULL,
@@ -1781,7 +1781,7 @@ CREATE TABLE `road_name_jibun_info_change` (
 --
 
 DROP TABLE IF EXISTS ezapprovalg.`svtaskclass`;
-/*!50001 DROP VIEW IF EXISTS `svtaskclass`*/;
+/*!50001 DROP VIEW IF EXISTS svtaskclass`*/;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
 /*!50001 CREATE VIEW `svtaskclass` AS SELECT 
@@ -1818,10 +1818,10 @@ SET character_set_client = @saved_cs_client;
 -- Table structure for table `talk_tbl_adm_defalutserver`
 --
 
-DROP TABLE IF EXISTS `talk_tbl_adm_defalutserver`;
+DROP TABLE IF EXISTS ezportal.`talk_tbl_adm_defalutserver`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `talk_tbl_adm_defalutserver` (
+CREATE TABLE ezportal.`talk_tbl_adm_defalutserver` (
   `ServerID` varchar(64) NOT NULL,
   PRIMARY KEY (`ServerID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -1831,10 +1831,10 @@ CREATE TABLE `talk_tbl_adm_defalutserver` (
 -- Table structure for table `talk_tbl_api_accesskey`
 --
 
-DROP TABLE IF EXISTS `talk_tbl_api_accesskey`;
+DROP TABLE IF EXISTS ezportal.`talk_tbl_api_accesskey`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `talk_tbl_api_accesskey` (
+CREATE TABLE ezportal.`talk_tbl_api_accesskey` (
   `NAME` varchar(50) NOT NULL,
   `API` varchar(200) NOT NULL,
   `KEY` varchar(100) DEFAULT NULL,
@@ -1846,10 +1846,10 @@ CREATE TABLE `talk_tbl_api_accesskey` (
 -- Table structure for table `talk_tbladdjob`
 --
 
-DROP TABLE IF EXISTS `talk_tbladdjob`;
+DROP TABLE IF EXISTS ezportal.`talk_tbladdjob`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `talk_tbladdjob` (
+CREATE TABLE ezportal.`talk_tbladdjob` (
   `UserID` varchar(20) NOT NULL,
   `DeptID` varchar(50) NOT NULL,
   `Position` varchar(80) CHARACTER SET utf8mb4 DEFAULT NULL,
@@ -1864,10 +1864,10 @@ CREATE TABLE `talk_tbladdjob` (
 -- Table structure for table `talk_tblauthlogintoken`
 --
 
-DROP TABLE IF EXISTS `talk_tblauthlogintoken`;
+DROP TABLE IF EXISTS ezportal.`talk_tblauthlogintoken`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `talk_tblauthlogintoken` (
+CREATE TABLE ezportal.`talk_tblauthlogintoken` (
   `UserID` varchar(32) NOT NULL,
   `LToken` varchar(128) NOT NULL,
   `RegData` datetime NOT NULL,
@@ -1881,10 +1881,10 @@ CREATE TABLE `talk_tblauthlogintoken` (
 -- Table structure for table `talk_tblcompany`
 --
 
-DROP TABLE IF EXISTS `talk_tblcompany`;
+DROP TABLE IF EXISTS ezportal.`talk_tblcompany`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `talk_tblcompany` (
+CREATE TABLE ezportal.`talk_tblcompany` (
   `CompID` varchar(32) NOT NULL,
   `CompName` varchar(64) CHARACTER SET utf8mb4 NOT NULL,
   `CompName2` varchar(64) CHARACTER SET utf8mb4 DEFAULT NULL,
@@ -1899,10 +1899,10 @@ CREATE TABLE `talk_tblcompany` (
 -- Table structure for table `talk_tbldatelimit`
 --
 
-DROP TABLE IF EXISTS `talk_tbldatelimit`;
+DROP TABLE IF EXISTS ezportal.`talk_tbldatelimit`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `talk_tbldatelimit` (
+CREATE TABLE ezportal.`talk_tbldatelimit` (
   `Type` varchar(50) NOT NULL,
   `Value` int(11) NOT NULL,
   `RegDate` datetime NOT NULL,
@@ -1914,10 +1914,10 @@ CREATE TABLE `talk_tbldatelimit` (
 -- Table structure for table `talk_tbldept`
 --
 
-DROP TABLE IF EXISTS `talk_tbldept`;
+DROP TABLE IF EXISTS ezportal.`talk_tbldept`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `talk_tbldept` (
+CREATE TABLE ezportal.`talk_tbldept` (
   `DeptID` varchar(32) NOT NULL,
   `DeptName` varchar(200) CHARACTER SET utf8mb4 NOT NULL,
   `DeptName2` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
@@ -1934,10 +1934,10 @@ CREATE TABLE `talk_tbldept` (
 -- Table structure for table `talk_tbldevice`
 --
 
-DROP TABLE IF EXISTS `talk_tbldevice`;
+DROP TABLE IF EXISTS ezportal.`talk_tbldevice`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `talk_tbldevice` (
+CREATE TABLE ezportal.`talk_tbldevice` (
   `UserID` varchar(32) NOT NULL,
   `DeviceID` varchar(64) NOT NULL,
   `DeviceType` varchar(7) NOT NULL,
@@ -1955,10 +1955,10 @@ CREATE TABLE `talk_tbldevice` (
 -- Table structure for table `talk_tblgroup`
 --
 
-DROP TABLE IF EXISTS `talk_tblgroup`;
+DROP TABLE IF EXISTS ezportal.`talk_tblgroup`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `talk_tblgroup` (
+CREATE TABLE ezportal.`talk_tblgroup` (
   `UserID` varchar(32) NOT NULL,
   `GroupID` varchar(32) NOT NULL,
   `Title` varchar(256) CHARACTER SET utf8mb4 NOT NULL,
@@ -1972,10 +1972,10 @@ CREATE TABLE `talk_tblgroup` (
 -- Table structure for table `talk_tblmember`
 --
 
-DROP TABLE IF EXISTS `talk_tblmember`;
+DROP TABLE IF EXISTS ezportal.`talk_tblmember`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `talk_tblmember` (
+CREATE TABLE ezportal.`talk_tblmember` (
   `OwnerID` varchar(32) NOT NULL,
   `GroupID` varchar(32) NOT NULL,
   `UserID` varchar(32) NOT NULL,
@@ -1989,10 +1989,10 @@ CREATE TABLE `talk_tblmember` (
 -- Table structure for table `talk_tblmemberrelation`
 --
 
-DROP TABLE IF EXISTS `talk_tblmemberrelation`;
+DROP TABLE IF EXISTS ezportal.`talk_tblmemberrelation`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `talk_tblmemberrelation` (
+CREATE TABLE ezportal.`talk_tblmemberrelation` (
   `OwnerID` varchar(32) NOT NULL,
   `UserID` varchar(32) NOT NULL,
   `Flag` int(11) NOT NULL,
@@ -2005,10 +2005,10 @@ CREATE TABLE `talk_tblmemberrelation` (
 -- Table structure for table `talk_tblmessage`
 --
 
-DROP TABLE IF EXISTS `talk_tblmessage`;
+DROP TABLE IF EXISTS ezportal.`talk_tblmessage`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `talk_tblmessage` (
+CREATE TABLE ezportal.`talk_tblmessage` (
   `RoomID` varchar(36) NOT NULL,
   `Mseq` int(11) NOT NULL,
   `UserID` varchar(32) NOT NULL,
@@ -2031,10 +2031,10 @@ CREATE TABLE `talk_tblmessage` (
 -- Table structure for table `talk_tblmessage_backup`
 --
 
-DROP TABLE IF EXISTS `talk_tblmessage_backup`;
+DROP TABLE IF EXISTS ezportal.`talk_tblmessage_backup`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `talk_tblmessage_backup` (
+CREATE TABLE ezportal.`talk_tblmessage_backup` (
   `RoomID` varchar(36) NOT NULL,
   `Mseq` int(11) NOT NULL,
   `UserID` varchar(32) NOT NULL,
@@ -2056,10 +2056,10 @@ CREATE TABLE `talk_tblmessage_backup` (
 -- Table structure for table `talk_tblnotification`
 --
 
-DROP TABLE IF EXISTS `talk_tblnotification`;
+DROP TABLE IF EXISTS ezportal.`talk_tblnotification`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `talk_tblnotification` (
+CREATE TABLE ezportal.`talk_tblnotification` (
   `ItemSeq` int(11) NOT NULL AUTO_INCREMENT,
   `UserID` varchar(100) DEFAULT NULL,
   `PostDate` datetime DEFAULT NULL,
@@ -2078,10 +2078,10 @@ CREATE TABLE `talk_tblnotification` (
 -- Table structure for table `talk_tblorgandeleteinfo`
 --
 
-DROP TABLE IF EXISTS `talk_tblorgandeleteinfo`;
+DROP TABLE IF EXISTS ezportal.`talk_tblorgandeleteinfo`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `talk_tblorgandeleteinfo` (
+CREATE TABLE ezportal.`talk_tblorgandeleteinfo` (
   `ID` varchar(32) NOT NULL,
   `Type` varchar(10) NOT NULL,
   `CompID` varchar(32) NOT NULL,
@@ -2093,10 +2093,10 @@ CREATE TABLE `talk_tblorgandeleteinfo` (
 -- Table structure for table `talk_tblroom`
 --
 
-DROP TABLE IF EXISTS `talk_tblroom`;
+DROP TABLE IF EXISTS ezportal.`talk_tblroom`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `talk_tblroom` (
+CREATE TABLE ezportal.`talk_tblroom` (
   `RoomID` varchar(36) NOT NULL,
   `UserID` varchar(32) NOT NULL,
   `CompID` varchar(32) NOT NULL,
@@ -2111,10 +2111,10 @@ CREATE TABLE `talk_tblroom` (
 -- Table structure for table `talk_tblroommember`
 --
 
-DROP TABLE IF EXISTS `talk_tblroommember`;
+DROP TABLE IF EXISTS ezportal.`talk_tblroommember`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `talk_tblroommember` (
+CREATE TABLE ezportal.`talk_tblroommember` (
   `RoomID` varchar(36) NOT NULL,
   `MemberID` varchar(32) NOT NULL,
   `Mseq` int(11) NOT NULL,
@@ -2130,10 +2130,10 @@ CREATE TABLE `talk_tblroommember` (
 -- Table structure for table `talk_tblroommemberconfig`
 --
 
-DROP TABLE IF EXISTS `talk_tblroommemberconfig`;
+DROP TABLE IF EXISTS ezportal.`talk_tblroommemberconfig`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `talk_tblroommemberconfig` (
+CREATE TABLE ezportal.`talk_tblroommemberconfig` (
   `RoomID` varchar(36) NOT NULL,
   `MemberID` varchar(32) NOT NULL,
   `CompID` varchar(32) NOT NULL,
@@ -2146,10 +2146,10 @@ CREATE TABLE `talk_tblroommemberconfig` (
 -- Table structure for table `talk_tblroomseq`
 --
 
-DROP TABLE IF EXISTS `talk_tblroomseq`;
+DROP TABLE IF EXISTS ezportal.`talk_tblroomseq`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `talk_tblroomseq` (
+CREATE TABLE ezportal.`talk_tblroomseq` (
   `RoomID` varchar(36) NOT NULL,
   `UserID` varchar(32) NOT NULL,
   `MaxSeq` int(11) NOT NULL,
@@ -2162,10 +2162,10 @@ CREATE TABLE `talk_tblroomseq` (
 -- Table structure for table `talk_tblserverinfo`
 --
 
-DROP TABLE IF EXISTS `talk_tblserverinfo`;
+DROP TABLE IF EXISTS ezportal.`talk_tblserverinfo`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `talk_tblserverinfo` (
+CREATE TABLE ezportal.`talk_tblserverinfo` (
   `ID` varchar(64) NOT NULL,
   `IP` varchar(128) NOT NULL,
   `Port` int(11) NOT NULL,
@@ -2183,10 +2183,10 @@ CREATE TABLE `talk_tblserverinfo` (
 -- Table structure for table `talk_tbluser`
 --
 
-DROP TABLE IF EXISTS `talk_tbluser`;
+DROP TABLE IF EXISTS ezportal.`talk_tbluser`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `talk_tbluser` (
+CREATE TABLE ezportal.`talk_tbluser` (
   `UserID` varchar(32) NOT NULL,
   `PWD` varchar(32) NOT NULL,
   `Name` varchar(64) CHARACTER SET utf8mb4 NOT NULL,
@@ -2222,10 +2222,10 @@ CREATE TABLE `talk_tbluser` (
 -- Table structure for table `talk_tbluserinfo`
 --
 
-DROP TABLE IF EXISTS `talk_tbluserinfo`;
+DROP TABLE IF EXISTS ezportal.`talk_tbluserinfo`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `talk_tbluserinfo` (
+CREATE TABLE ezportal.`talk_tbluserinfo` (
   `UserID` varchar(32) NOT NULL,
   `CompID` varchar(32) NOT NULL,
   `LoginToken` varchar(128) DEFAULT NULL,
@@ -2249,10 +2249,10 @@ CREATE TABLE `talk_tbluserinfo` (
 -- Table structure for table `talk_tblversion`
 --
 
-DROP TABLE IF EXISTS `talk_tblversion`;
+DROP TABLE IF EXISTS ezportal.`talk_tblversion`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `talk_tblversion` (
+CREATE TABLE ezportal.`talk_tblversion` (
   `Type` varchar(50) NOT NULL,
   `Value` varchar(100) NOT NULL,
   `RegDate` datetime NOT NULL,
@@ -2264,10 +2264,10 @@ CREATE TABLE `talk_tblversion` (
 -- Table structure for table `tbl_access_country`
 --
 
-DROP TABLE IF EXISTS `tbl_access_country`;
+DROP TABLE IF EXISTS ezportal.`tbl_access_country`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_access_country` (
+CREATE TABLE ezportal.`tbl_access_country` (
   `tenant_id` int(11) NOT NULL,
   `country_code` varchar(900) NOT NULL,
   PRIMARY KEY (`tenant_id`)
@@ -2278,10 +2278,10 @@ CREATE TABLE `tbl_access_country` (
 -- Table structure for table `tbl_access_id`
 --
 
-DROP TABLE IF EXISTS `tbl_access_id`;
+DROP TABLE IF EXISTS ezportal.`tbl_access_id`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_access_id` (
+CREATE TABLE ezportal.`tbl_access_id` (
   `ACCESSNO` int(11) NOT NULL AUTO_INCREMENT,
   `TENANT_ID` mediumint(5) NOT NULL DEFAULT 0,
   `CN` varchar(80) NOT NULL,
@@ -2293,10 +2293,10 @@ CREATE TABLE `tbl_access_id` (
 -- Table structure for table `tbl_access_ip`
 --
 
-DROP TABLE IF EXISTS `tbl_access_ip`;
+DROP TABLE IF EXISTS ezportal.`tbl_access_ip`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_access_ip` (
+CREATE TABLE ezportal.`tbl_access_ip` (
   `IPNO` int(11) NOT NULL AUTO_INCREMENT,
   `TENANT_ID` mediumint(5) NOT NULL DEFAULT 0,
   `IPADDRESS` varchar(100) NOT NULL,
@@ -2336,10 +2336,10 @@ CREATE TABLE ezportal.`tbl_addjobmaster` (
 -- Table structure for table `tbl_addjobmasterforhistory`
 --
 
-DROP TABLE IF EXISTS `tbl_addjobmasterforhistory`;
+DROP TABLE IF EXISTS ezportal.`tbl_addjobmasterforhistory`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_addjobmasterforhistory` (
+CREATE TABLE ezportal.`tbl_addjobmasterforhistory` (
   `CN` varchar(80) NOT NULL,
   `DEPTID` varchar(80) NOT NULL,
   `TITLE` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
@@ -2360,10 +2360,10 @@ CREATE TABLE `tbl_addjobmasterforhistory` (
 -- Table structure for table `tbl_admin_access_ip`
 --
 
-DROP TABLE IF EXISTS `tbl_admin_access_ip`;
+DROP TABLE IF EXISTS ezportal.`tbl_admin_access_ip`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_admin_access_ip` (
+CREATE TABLE ezportal.`tbl_admin_access_ip` (
   `IPNO` int(11) NOT NULL AUTO_INCREMENT,
   `TENANT_ID` mediumint(5) NOT NULL DEFAULT 0,
   `IPADDRESS` varchar(100) NOT NULL,
@@ -2377,10 +2377,10 @@ CREATE TABLE `tbl_admin_access_ip` (
 -- Table structure for table `tbl_adminreceiptgroup_main`
 --
 
-DROP TABLE IF EXISTS `tbl_adminreceiptgroup_main`;
+DROP TABLE IF EXISTS ezportal.`tbl_adminreceiptgroup_main`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_adminreceiptgroup_main` (
+CREATE TABLE ezportal.`tbl_adminreceiptgroup_main` (
   `MAINID` bigint(10) NOT NULL AUTO_INCREMENT,
   `MAINNAME` varchar(400) CHARACTER SET utf8mb4 DEFAULT NULL,
   `TENANT_ID` mediumint(5) NOT NULL DEFAULT 0,
@@ -2394,10 +2394,10 @@ CREATE TABLE `tbl_adminreceiptgroup_main` (
 -- Table structure for table `tbl_adminreceiptgroup_sub`
 --
 
-DROP TABLE IF EXISTS `tbl_adminreceiptgroup_sub`;
+DROP TABLE IF EXISTS ezportal.`tbl_adminreceiptgroup_sub`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_adminreceiptgroup_sub` (
+CREATE TABLE ezportal.`tbl_adminreceiptgroup_sub` (
   `MAINID` bigint(10) NOT NULL,
   `SUBID` bigint(10) NOT NULL AUTO_INCREMENT,
   `DEPTID` varchar(400) DEFAULT NULL,
@@ -2415,10 +2415,10 @@ CREATE TABLE `tbl_adminreceiptgroup_sub` (
 -- Table structure for table `tbl_admtool_addservice`
 --
 
-DROP TABLE IF EXISTS `tbl_admtool_addservice`;
+DROP TABLE IF EXISTS ezportal.`tbl_admtool_addservice`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_admtool_addservice` (
+CREATE TABLE ezportal.`tbl_admtool_addservice` (
   `TENANTID` mediumint(5) NOT NULL,
   `TYPE` varchar(20) NOT NULL COMMENT '부가서비스 타입',
   `NOTE` varchar(20) DEFAULT NULL COMMENT '추가 입력사항',
@@ -2432,10 +2432,10 @@ CREATE TABLE `tbl_admtool_addservice` (
 -- Table structure for table `tbl_admtool_cancel_customer`
 --
 
-DROP TABLE IF EXISTS `tbl_admtool_cancel_customer`;
+DROP TABLE IF EXISTS ezportal.`tbl_admtool_cancel_customer`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_admtool_cancel_customer` (
+CREATE TABLE ezportal.`tbl_admtool_cancel_customer` (
   `CANCELCUSTOMERID` int(11) NOT NULL AUTO_INCREMENT,
   `TENANTID` mediumint(5) NOT NULL,
   `COMPANYNAME` varchar(120) DEFAULT NULL COMMENT '회사이름',
@@ -2456,10 +2456,10 @@ CREATE TABLE `tbl_admtool_cancel_customer` (
 -- Table structure for table `tbl_admtool_changerequest`
 --
 
-DROP TABLE IF EXISTS `tbl_admtool_changerequest`;
+DROP TABLE IF EXISTS ezportal.`tbl_admtool_changerequest`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_admtool_changerequest` (
+CREATE TABLE ezportal.`tbl_admtool_changerequest` (
   `CHANGEREQID` int(11) NOT NULL AUTO_INCREMENT,
   `TENANTID` mediumint(5) NOT NULL,
   `COMPANYNAME` varchar(120) NOT NULL COMMENT '회사 이름',
@@ -2483,10 +2483,10 @@ CREATE TABLE `tbl_admtool_changerequest` (
 -- Table structure for table `tbl_admtool_changerequest_attachments`
 --
 
-DROP TABLE IF EXISTS `tbl_admtool_changerequest_attachments`;
+DROP TABLE IF EXISTS ezportal.`tbl_admtool_changerequest_attachments`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_admtool_changerequest_attachments` (
+CREATE TABLE ezportal.`tbl_admtool_changerequest_attachments` (
   `ATTACHMENTID` int(11) NOT NULL AUTO_INCREMENT,
   `CHANGEREQID` int(11) NOT NULL,
   `FILENAME` varchar(255) NOT NULL COMMENT '파일 이름',
@@ -2503,10 +2503,10 @@ CREATE TABLE `tbl_admtool_changerequest_attachments` (
 -- Table structure for table `tbl_admtool_codelist`
 --
 
-DROP TABLE IF EXISTS `tbl_admtool_codelist`;
+DROP TABLE IF EXISTS ezportal.`tbl_admtool_codelist`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_admtool_codelist` (
+CREATE TABLE ezportal.`tbl_admtool_codelist` (
   `CODE` varchar(20) NOT NULL COMMENT '코드',
   `LANGUAGE` int(11) NOT NULL COMMENT '언어',
   `NAME` varchar(200) NOT NULL COMMENT '코드 이름',
@@ -2519,10 +2519,10 @@ CREATE TABLE `tbl_admtool_codelist` (
 -- Table structure for table `tbl_admtool_customer`
 --
 
-DROP TABLE IF EXISTS `tbl_admtool_customer`;
+DROP TABLE IF EXISTS ezportal.`tbl_admtool_customer`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_admtool_customer` (
+CREATE TABLE ezportal.`tbl_admtool_customer` (
   `TENANTID` mediumint(5) NOT NULL,
   `MAILDOMAIN` varchar(100) NOT NULL COMMENT '메인 메일 도메인',
   `DOMAIN` varchar(100) DEFAULT NULL COMMENT '사이트 도메인',
@@ -2572,10 +2572,10 @@ CREATE TABLE `tbl_admtool_customer` (
 -- Table structure for table `tbl_admtool_customer_attachments`
 --
 
-DROP TABLE IF EXISTS `tbl_admtool_customer_attachments`;
+DROP TABLE IF EXISTS ezportal.`tbl_admtool_customer_attachments`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_admtool_customer_attachments` (
+CREATE TABLE ezportal.`tbl_admtool_customer_attachments` (
   `ATTACHMENTID` int(11) NOT NULL AUTO_INCREMENT,
   `TENANTID` mediumint(5) NOT NULL,
   `TYPE` int(11) NOT NULL COMMENT '첨부파일 타입 (0: 해지, 1: 청약/변경)',
@@ -2593,10 +2593,10 @@ CREATE TABLE `tbl_admtool_customer_attachments` (
 -- Table structure for table `tbl_admtool_history`
 --
 
-DROP TABLE IF EXISTS `tbl_admtool_history`;
+DROP TABLE IF EXISTS ezportal.`tbl_admtool_history`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_admtool_history` (
+CREATE TABLE ezportal.`tbl_admtool_history` (
   `HISTORYID` int(11) NOT NULL AUTO_INCREMENT,
   `TENANTID` mediumint(5) NOT NULL,
   `H_SUBJECT` varchar(20) NOT NULL COMMENT '변경 항목',
@@ -2616,10 +2616,10 @@ CREATE TABLE `tbl_admtool_history` (
 -- Table structure for table `tbl_admtool_notice`
 --
 
-DROP TABLE IF EXISTS `tbl_admtool_notice`;
+DROP TABLE IF EXISTS ezportal.`tbl_admtool_notice`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_admtool_notice` (
+CREATE TABLE ezportal.`tbl_admtool_notice` (
   `NOTICEID` int(11) NOT NULL AUTO_INCREMENT,
   `TENANTID` mediumint(5) NOT NULL COMMENT '작성자 테넌트 아이디',
   `WRITERID` varchar(80) NOT NULL COMMENT '작성자 아이디',
@@ -2643,10 +2643,10 @@ CREATE TABLE `tbl_admtool_notice` (
 -- Table structure for table `tbl_admtool_notice_attachments`
 --
 
-DROP TABLE IF EXISTS `tbl_admtool_notice_attachments`;
+DROP TABLE IF EXISTS ezportal.`tbl_admtool_notice_attachments`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_admtool_notice_attachments` (
+CREATE TABLE ezportal.`tbl_admtool_notice_attachments` (
   `ATTACHMENTID` int(11) NOT NULL AUTO_INCREMENT,
   `NOTICEID` int(11) NOT NULL,
   `FILENAME` varchar(255) NOT NULL COMMENT '파일 이름',
@@ -2663,10 +2663,10 @@ CREATE TABLE `tbl_admtool_notice_attachments` (
 -- Table structure for table `tbl_admtool_receivergroup`
 --
 
-DROP TABLE IF EXISTS `tbl_admtool_receivergroup`;
+DROP TABLE IF EXISTS ezportal.`tbl_admtool_receivergroup`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_admtool_receivergroup` (
+CREATE TABLE ezportal.`tbl_admtool_receivergroup` (
   `RECEIVERID` int(11) NOT NULL AUTO_INCREMENT,
   `RECEIVERCN` varchar(80) NOT NULL,
   `RECEIVERNAME` varchar(120) NOT NULL COMMENT '수신자 이름',
@@ -2680,10 +2680,10 @@ CREATE TABLE `tbl_admtool_receivergroup` (
 -- Table structure for table `tbl_admtool_seller`
 --
 
-DROP TABLE IF EXISTS `tbl_admtool_seller`;
+DROP TABLE IF EXISTS ezportal.`tbl_admtool_seller`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_admtool_seller` (
+CREATE TABLE ezportal.`tbl_admtool_seller` (
   `SELLERID` int(11) NOT NULL AUTO_INCREMENT,
   `SELLERCN` varchar(80) NOT NULL COMMENT '판매자 아이디',
   `NAME` varchar(120) NOT NULL COMMENT '판매자 이름',
@@ -2700,10 +2700,10 @@ CREATE TABLE `tbl_admtool_seller` (
 -- Table structure for table `tbl_apr_gamsaattachinfo`
 --
 
-DROP TABLE IF EXISTS `tbl_apr_gamsaattachinfo`;
+DROP TABLE IF EXISTS ezportal.`tbl_apr_gamsaattachinfo`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_apr_gamsaattachinfo` (
+CREATE TABLE ezportal.`tbl_apr_gamsaattachinfo` (
   `ORGDOCID` varchar(80) NOT NULL,
   `OPINIONID` varchar(80) NOT NULL,
   `ATTACHFILESN` bigint(10) NOT NULL,
@@ -2731,10 +2731,10 @@ CREATE TABLE `tbl_apr_gamsaattachinfo` (
 -- Table structure for table `tbl_apr_gamsadocattachinfo`
 --
 
-DROP TABLE IF EXISTS `tbl_apr_gamsadocattachinfo`;
+DROP TABLE IF EXISTS ezportal.`tbl_apr_gamsadocattachinfo`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_apr_gamsadocattachinfo` (
+CREATE TABLE ezportal.`tbl_apr_gamsadocattachinfo` (
   `ORGDOCID` varchar(80) NOT NULL,
   `OPINIONID` varchar(80) NOT NULL,
   `ATTACHSN` bigint(10) NOT NULL,
@@ -2759,10 +2759,10 @@ CREATE TABLE `tbl_apr_gamsadocattachinfo` (
 -- Table structure for table `tbl_apr_gamsaopinion`
 --
 
-DROP TABLE IF EXISTS `tbl_apr_gamsaopinion`;
+DROP TABLE IF EXISTS ezportal.`tbl_apr_gamsaopinion`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_apr_gamsaopinion` (
+CREATE TABLE ezportal.`tbl_apr_gamsaopinion` (
   `SN` bigint(10) NOT NULL,
   `ORGDOCID` varchar(80) NOT NULL,
   `ISGSDOCID` varchar(80) NOT NULL,
@@ -2787,10 +2787,10 @@ CREATE TABLE `tbl_apr_gamsaopinion` (
 -- Table structure for table `tbl_apr_isgsdoccategory`
 --
 
-DROP TABLE IF EXISTS `tbl_apr_isgsdoccategory`;
+DROP TABLE IF EXISTS ezportal.`tbl_apr_isgsdoccategory`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_apr_isgsdoccategory` (
+CREATE TABLE ezportal.`tbl_apr_isgsdoccategory` (
   `SN` bigint(10) NOT NULL,
   `ORGDOCID` varchar(80) NOT NULL,
   `ISGSDOCID` varchar(80) DEFAULT NULL,
@@ -2808,10 +2808,10 @@ CREATE TABLE `tbl_apr_isgsdoccategory` (
 -- Table structure for table `tbl_apr_jochidoc`
 --
 
-DROP TABLE IF EXISTS `tbl_apr_jochidoc`;
+DROP TABLE IF EXISTS ezportal.`tbl_apr_jochidoc`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_apr_jochidoc` (
+CREATE TABLE ezportal.`tbl_apr_jochidoc` (
   `SN` bigint(10) NOT NULL,
   `DOCID` varchar(80) NOT NULL,
   `ORGDOCID` varchar(80) NOT NULL,
@@ -2834,10 +2834,10 @@ CREATE TABLE `tbl_apr_jochidoc` (
 -- Table structure for table `tbl_apr_secure_list`
 --
 
-DROP TABLE IF EXISTS `tbl_apr_secure_list`;
+DROP TABLE IF EXISTS ezportal.`tbl_apr_secure_list`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_apr_secure_list` (
+CREATE TABLE ezportal.`tbl_apr_secure_list` (
   `DOCID` varchar(80) NOT NULL,
   `AUTHID` varchar(400) NOT NULL,
   `TENANT_ID` mediumint(5) NOT NULL DEFAULT 0,
@@ -3187,10 +3187,10 @@ CREATE TABLE ezcommon.`tbl_attendant` (
 -- Table structure for table `tbl_attitude`
 --
 
-DROP TABLE IF EXISTS `tbl_attitude`;
+DROP TABLE IF EXISTS ezportal.`tbl_attitude`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_attitude` (
+CREATE TABLE ezportal.`tbl_attitude` (
   `ATTITUDE_ID` bigint(20) NOT NULL AUTO_INCREMENT,
   `COMPANY_ID` varchar(80) NOT NULL,
   `TENANT_ID` mediumint(5) NOT NULL,
@@ -3219,10 +3219,10 @@ CREATE TABLE `tbl_attitude` (
 -- Table structure for table `tbl_attitude_annual`
 --
 
-DROP TABLE IF EXISTS `tbl_attitude_annual`;
+DROP TABLE IF EXISTS ezportal.`tbl_attitude_annual`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_attitude_annual` (
+CREATE TABLE ezportal.`tbl_attitude_annual` (
   `USER_ID` varchar(80) NOT NULL COMMENT '사원ID',
   `MONTHLY_HOLIDAY_CNT` decimal(4,2) NOT NULL DEFAULT 0.00 COMMENT '월차 수',
   `ANNUAL_HOLIDAY_CNT` decimal(4,2) NOT NULL DEFAULT 0.00 COMMENT '연차 수',
@@ -3238,10 +3238,10 @@ CREATE TABLE `tbl_attitude_annual` (
 -- Table structure for table `tbl_attitude_annual_canappl`
 --
 
-DROP TABLE IF EXISTS `tbl_attitude_annual_canappl`;
+DROP TABLE IF EXISTS ezportal.`tbl_attitude_annual_canappl`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_attitude_annual_canappl` (
+CREATE TABLE ezportal.`tbl_attitude_annual_canappl` (
   `ATTITUDE_ID` bigint(20) NOT NULL COMMENT '근태ID',
   `APPL_CNT` int(11) NOT NULL COMMENT '수정신청키',
   `COMPANY_ID` varchar(80) NOT NULL COMMENT '회사ID',
@@ -3270,10 +3270,10 @@ CREATE TABLE `tbl_attitude_annual_canappl` (
 -- Table structure for table `tbl_attitude_annual_conf`
 --
 
-DROP TABLE IF EXISTS `tbl_attitude_annual_conf`;
+DROP TABLE IF EXISTS ezportal.`tbl_attitude_annual_conf`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_attitude_annual_conf` (
+CREATE TABLE ezportal.`tbl_attitude_annual_conf` (
   `COMPANY_ID` varchar(80) NOT NULL,
   `TENANT_ID` mediumint(5) NOT NULL,
   `ANNUAL_CANCEL_RULE` char(1) NOT NULL DEFAULT '1',
@@ -3292,10 +3292,10 @@ CREATE TABLE `tbl_attitude_annual_conf` (
 -- Table structure for table `tbl_attitude_annual_history`
 --
 
-DROP TABLE IF EXISTS `tbl_attitude_annual_history`;
+DROP TABLE IF EXISTS ezportal.`tbl_attitude_annual_history`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_attitude_annual_history` (
+CREATE TABLE ezportal.`tbl_attitude_annual_history` (
   `ANNUAL_HISTORY_ID` int(20) NOT NULL AUTO_INCREMENT COMMENT '연차수정기록ID',
   `USER_ID` varchar(80) NOT NULL COMMENT '사원ID',
   `ORIGIN_ANNUAL_CNT` decimal(4,2) NOT NULL COMMENT '기존연차수',
@@ -3313,10 +3313,10 @@ CREATE TABLE `tbl_attitude_annual_history` (
 -- Table structure for table `tbl_attitude_apr_conn`
 --
 
-DROP TABLE IF EXISTS `tbl_attitude_apr_conn`;
+DROP TABLE IF EXISTS ezportal.`tbl_attitude_apr_conn`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_attitude_apr_conn` (
+CREATE TABLE ezportal.`tbl_attitude_apr_conn` (
   `ATTITUDE_ID` bigint(20) NOT NULL,
   `USER_ID` varchar(80) DEFAULT NULL,
   `ANNUAL_DOC_ID` varchar(80) NOT NULL,
@@ -3333,10 +3333,10 @@ CREATE TABLE `tbl_attitude_apr_conn` (
 -- Table structure for table `tbl_attitude_auth`
 --
 
-DROP TABLE IF EXISTS `tbl_attitude_auth`;
+DROP TABLE IF EXISTS ezportal.`tbl_attitude_auth`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_attitude_auth` (
+CREATE TABLE ezportal.`tbl_attitude_auth` (
   `user_id` varchar(80) NOT NULL,
   `tenant_id` mediumint(5) NOT NULL,
   `auth_dept_id` varchar(80) NOT NULL,
@@ -3350,10 +3350,10 @@ CREATE TABLE `tbl_attitude_auth` (
 -- Table structure for table `tbl_attitude_conf`
 --
 
-DROP TABLE IF EXISTS `tbl_attitude_conf`;
+DROP TABLE IF EXISTS ezportal.`tbl_attitude_conf`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_attitude_conf` (
+CREATE TABLE ezportal.`tbl_attitude_conf` (
   `COMPANY_ID` varchar(80) NOT NULL,
   `TENANT_ID` mediumint(5) NOT NULL,
   `WORK_STARTTIME` varchar(40) NOT NULL DEFAULT '09:00',
@@ -3370,10 +3370,10 @@ CREATE TABLE `tbl_attitude_conf` (
 -- Table structure for table `tbl_attitude_form`
 --
 
-DROP TABLE IF EXISTS `tbl_attitude_form`;
+DROP TABLE IF EXISTS ezportal.`tbl_attitude_form`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_attitude_form` (
+CREATE TABLE ezportal.`tbl_attitude_form` (
   `FORM_ID` int(11) NOT NULL,
   `TENANT_ID` mediumint(5) NOT NULL,
   `FORM_NAME` varchar(80) DEFAULT NULL,
@@ -3388,10 +3388,10 @@ CREATE TABLE `tbl_attitude_form` (
 -- Table structure for table `tbl_attitude_modappl`
 --
 
-DROP TABLE IF EXISTS `tbl_attitude_modappl`;
+DROP TABLE IF EXISTS ezportal.`tbl_attitude_modappl`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_attitude_modappl` (
+CREATE TABLE ezportal.`tbl_attitude_modappl` (
   `ATTITUDE_ID` bigint(20) NOT NULL,
   `APPL_CNT` int(11) NOT NULL,
   `COMPANY_ID` varchar(80) NOT NULL,
@@ -3422,10 +3422,10 @@ CREATE TABLE `tbl_attitude_modappl` (
 -- Table structure for table `tbl_attitude_modappl_history`
 --
 
-DROP TABLE IF EXISTS `tbl_attitude_modappl_history`;
+DROP TABLE IF EXISTS ezportal.`tbl_attitude_modappl_history`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_attitude_modappl_history` (
+CREATE TABLE ezportal.`tbl_attitude_modappl_history` (
   `ATTITUDE_ID` bigint(20) DEFAULT NULL,
   `MOD_CNT` int(11) NOT NULL AUTO_INCREMENT,
   `COMPANY_ID` varchar(80) NOT NULL,
@@ -3472,10 +3472,10 @@ CREATE TABLE `tbl_attitude_modappl_history` (
 -- Table structure for table `tbl_attitude_refresh`
 --
 
-DROP TABLE IF EXISTS `tbl_attitude_refresh`;
+DROP TABLE IF EXISTS ezportal.`tbl_attitude_refresh`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_attitude_refresh` (
+CREATE TABLE ezportal.`tbl_attitude_refresh` (
   `USER_ID` varchar(80) NOT NULL COMMENT '사원ID',
   `TOTAL_REFRESH_CNT` decimal(4,2) NOT NULL DEFAULT 0.00 COMMENT '총 휴가 수',
   `START_DATE` datetime DEFAULT NULL COMMENT '발생년도',
@@ -3490,10 +3490,10 @@ CREATE TABLE `tbl_attitude_refresh` (
 -- Table structure for table `tbl_attitude_refresh_history`
 --
 
-DROP TABLE IF EXISTS `tbl_attitude_refresh_history`;
+DROP TABLE IF EXISTS ezportal.`tbl_attitude_refresh_history`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_attitude_refresh_history` (
+CREATE TABLE ezportal.`tbl_attitude_refresh_history` (
   `REFRESH_HISTORY_ID` int(20) NOT NULL AUTO_INCREMENT COMMENT '리프레시휴가수정기록ID',
   `USER_ID` varchar(80) NOT NULL COMMENT '사원ID',
   `ORIGIN_ANNUAL_CNT` decimal(4,2) NOT NULL COMMENT '기존휴가수',
@@ -3511,10 +3511,10 @@ CREATE TABLE `tbl_attitude_refresh_history` (
 -- Table structure for table `tbl_attitude_special`
 --
 
-DROP TABLE IF EXISTS `tbl_attitude_special`;
+DROP TABLE IF EXISTS ezportal.`tbl_attitude_special`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_attitude_special` (
+CREATE TABLE ezportal.`tbl_attitude_special` (
   `USER_ID` varchar(80) NOT NULL COMMENT '사원ID',
   `TOTAL_SPECIAL_CNT` decimal(4,2) NOT NULL DEFAULT 0.00 COMMENT '총 휴가 수',
   `COMPANY_ID` varchar(200) NOT NULL COMMENT '회사ID',
@@ -3527,10 +3527,10 @@ CREATE TABLE `tbl_attitude_special` (
 -- Table structure for table `tbl_attitude_special_history`
 --
 
-DROP TABLE IF EXISTS `tbl_attitude_special_history`;
+DROP TABLE IF EXISTS ezportal.`tbl_attitude_special_history`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_attitude_special_history` (
+CREATE TABLE ezportal.`tbl_attitude_special_history` (
   `SPECIAL_HISTORY_ID` int(20) NOT NULL AUTO_INCREMENT COMMENT '특별휴가수정기록ID',
   `USER_ID` varchar(80) NOT NULL COMMENT '사원ID',
   `ORIGIN_ANNUAL_CNT` decimal(4,2) NOT NULL COMMENT '기존휴가수',
@@ -3548,10 +3548,10 @@ CREATE TABLE `tbl_attitude_special_history` (
 -- Table structure for table `tbl_attitude_type`
 --
 
-DROP TABLE IF EXISTS `tbl_attitude_type`;
+DROP TABLE IF EXISTS ezportal.`tbl_attitude_type`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_attitude_type` (
+CREATE TABLE ezportal.`tbl_attitude_type` (
   `ORDER` bigint(20) NOT NULL AUTO_INCREMENT,
   `TYPE_ID` varchar(30) NOT NULL,
   `COMPANY_ID` varchar(80) NOT NULL,
@@ -3573,10 +3573,10 @@ CREATE TABLE `tbl_attitude_type` (
 -- Table structure for table `tbl_attitude_user_conf`
 --
 
-DROP TABLE IF EXISTS `tbl_attitude_user_conf`;
+DROP TABLE IF EXISTS ezportal.`tbl_attitude_user_conf`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_attitude_user_conf` (
+CREATE TABLE ezportal.`tbl_attitude_user_conf` (
   `USER_ID` varchar(80) NOT NULL,
   `TENANT_ID` mediumint(5) NOT NULL,
   `WORK_STARTTIME` varchar(40) NOT NULL,
@@ -4334,10 +4334,10 @@ CREATE TABLE ezboard.`tbl_board_treecache` (
 -- Table structure for table `tbl_c_board`
 --
 
-DROP TABLE IF EXISTS `tbl_c_board`;
+DROP TABLE IF EXISTS ezportal.`tbl_c_board`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_c_board` (
+CREATE TABLE ezportal.`tbl_c_board` (
   `NO` bigint(10) NOT NULL AUTO_INCREMENT,
   `ID` varchar(40) NOT NULL,
   `COMPANYID` varchar(40) DEFAULT NULL,
@@ -4367,10 +4367,10 @@ CREATE TABLE `tbl_c_board` (
 -- Table structure for table `tbl_c_category`
 --
 
-DROP TABLE IF EXISTS `tbl_c_category`;
+DROP TABLE IF EXISTS ezportal.`tbl_c_category`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_c_category` (
+CREATE TABLE ezportal.`tbl_c_category` (
   `C_CODE` varchar(510) NOT NULL,
   `C_CAT` varchar(510) NOT NULL,
   `C_NAME` varchar(510) DEFAULT NULL,
@@ -4384,10 +4384,10 @@ CREATE TABLE `tbl_c_category` (
 -- Table structure for table `tbl_c_club`
 --
 
-DROP TABLE IF EXISTS `tbl_c_club`;
+DROP TABLE IF EXISTS ezportal.`tbl_c_club`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_c_club` (
+CREATE TABLE ezportal.`tbl_c_club` (
   `C_CLUBNO` varchar(40) NOT NULL,
   `C_REGDATE` datetime DEFAULT NULL,
   `C_CLUBNAME` varchar(400) CHARACTER SET utf8mb4 DEFAULT NULL,
@@ -4457,10 +4457,10 @@ CREATE TABLE `tbl_c_club` (
 -- Table structure for table `tbl_c_clubguest`
 --
 
-DROP TABLE IF EXISTS `tbl_c_clubguest`;
+DROP TABLE IF EXISTS ezportal.`tbl_c_clubguest`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_c_clubguest` (
+CREATE TABLE ezportal.`tbl_c_clubguest` (
   `NO` bigint(10) NOT NULL AUTO_INCREMENT,
   `ID` varchar(40) CHARACTER SET utf8 DEFAULT NULL,
   `USERNAME` varchar(100) DEFAULT NULL,
@@ -4483,10 +4483,10 @@ CREATE TABLE `tbl_c_clubguest` (
 -- Table structure for table `tbl_c_clubnotice`
 --
 
-DROP TABLE IF EXISTS `tbl_c_clubnotice`;
+DROP TABLE IF EXISTS ezportal.`tbl_c_clubnotice`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_c_clubnotice` (
+CREATE TABLE ezportal.`tbl_c_clubnotice` (
   `NO` bigint(10) NOT NULL AUTO_INCREMENT,
   `ID` varchar(40) DEFAULT NULL,
   `USERNAME` varchar(100) DEFAULT NULL,
@@ -4513,10 +4513,10 @@ CREATE TABLE `tbl_c_clubnotice` (
 -- Table structure for table `tbl_c_clubuser`
 --
 
-DROP TABLE IF EXISTS `tbl_c_clubuser`;
+DROP TABLE IF EXISTS ezportal.`tbl_c_clubuser`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_c_clubuser` (
+CREATE TABLE ezportal.`tbl_c_clubuser` (
   `C_CLUBNO` varchar(40) NOT NULL,
   `C_ID` varchar(40) NOT NULL,
   `C_INDATE` varchar(60) CHARACTER SET utf8mb4 DEFAULT NULL,
@@ -4541,10 +4541,10 @@ CREATE TABLE `tbl_c_clubuser` (
 -- Table structure for table `tbl_c_comclose`
 --
 
-DROP TABLE IF EXISTS `tbl_c_comclose`;
+DROP TABLE IF EXISTS ezportal.`tbl_c_comclose`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_c_comclose` (
+CREATE TABLE ezportal.`tbl_c_comclose` (
   `C_CLUBNO` varchar(40) NOT NULL,
   `C_CLUBNAME` varchar(400) CHARACTER SET utf8mb4 DEFAULT NULL,
   `C_CLUBNAME2` varchar(400) CHARACTER SET utf8mb4 DEFAULT NULL,
@@ -4564,10 +4564,10 @@ CREATE TABLE `tbl_c_comclose` (
 -- Table structure for table `tbl_c_memberinfo`
 --
 
-DROP TABLE IF EXISTS `tbl_c_memberinfo`;
+DROP TABLE IF EXISTS ezportal.`tbl_c_memberinfo`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_c_memberinfo` (
+CREATE TABLE ezportal.`tbl_c_memberinfo` (
   `COMPANYID` varchar(100) NOT NULL,
   `USERID` varchar(100) NOT NULL,
   `USERNAME` varchar(100) CHARACTER SET utf8mb4 DEFAULT NULL,
@@ -4597,10 +4597,10 @@ CREATE TABLE `tbl_c_memberinfo` (
 -- Table structure for table `tbl_c_notice`
 --
 
-DROP TABLE IF EXISTS `tbl_c_notice`;
+DROP TABLE IF EXISTS ezportal.`tbl_c_notice`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_c_notice` (
+CREATE TABLE ezportal.`tbl_c_notice` (
   `NO` bigint(10) NOT NULL AUTO_INCREMENT,
   `ID` varchar(40) NOT NULL,
   `USERNAME` varchar(100) CHARACTER SET utf8mb4 DEFAULT NULL,
@@ -4627,10 +4627,10 @@ CREATE TABLE `tbl_c_notice` (
 -- Table structure for table `tbl_c_outapplication`
 --
 
-DROP TABLE IF EXISTS `tbl_c_outapplication`;
+DROP TABLE IF EXISTS ezportal.`tbl_c_outapplication`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_c_outapplication` (
+CREATE TABLE ezportal.`tbl_c_outapplication` (
   `C_CLUBNO` varchar(40) NOT NULL,
   `USERID` varchar(100) NOT NULL,
   `OUTDATE` varchar(100) CHARACTER SET utf8mb4 DEFAULT NULL,
@@ -4644,10 +4644,10 @@ CREATE TABLE `tbl_c_outapplication` (
 -- Table structure for table `tbl_c_pollanswer`
 --
 
-DROP TABLE IF EXISTS `tbl_c_pollanswer`;
+DROP TABLE IF EXISTS ezportal.`tbl_c_pollanswer`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_c_pollanswer` (
+CREATE TABLE ezportal.`tbl_c_pollanswer` (
   `ANSWERID` bigint(10) NOT NULL AUTO_INCREMENT,
   `POLLQUESTIONID` bigint(10) NOT NULL,
   `ANSWERNO` bigint(10) NOT NULL DEFAULT 0,
@@ -4662,10 +4662,10 @@ CREATE TABLE `tbl_c_pollanswer` (
 -- Table structure for table `tbl_c_pollmanager`
 --
 
-DROP TABLE IF EXISTS `tbl_c_pollmanager`;
+DROP TABLE IF EXISTS ezportal.`tbl_c_pollmanager`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_c_pollmanager` (
+CREATE TABLE ezportal.`tbl_c_pollmanager` (
   `MANAGERID` bigint(10) NOT NULL AUTO_INCREMENT,
   `C_CLUBNO` varchar(40) NOT NULL,
   `POLLGROUPNO` bigint(10) NOT NULL DEFAULT 0,
@@ -4685,10 +4685,10 @@ CREATE TABLE `tbl_c_pollmanager` (
 -- Table structure for table `tbl_c_pollquestion`
 --
 
-DROP TABLE IF EXISTS `tbl_c_pollquestion`;
+DROP TABLE IF EXISTS ezportal.`tbl_c_pollquestion`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_c_pollquestion` (
+CREATE TABLE ezportal.`tbl_c_pollquestion` (
   `QUESTIONID` bigint(10) NOT NULL AUTO_INCREMENT,
   `POLLMANAGERID` bigint(10) NOT NULL,
   `QUESTIONNO` bigint(10) NOT NULL,
@@ -4706,10 +4706,10 @@ CREATE TABLE `tbl_c_pollquestion` (
 -- Table structure for table `tbl_c_pollresponse`
 --
 
-DROP TABLE IF EXISTS `tbl_c_pollresponse`;
+DROP TABLE IF EXISTS ezportal.`tbl_c_pollresponse`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_c_pollresponse` (
+CREATE TABLE ezportal.`tbl_c_pollresponse` (
   `RESPONSEID` bigint(10) NOT NULL AUTO_INCREMENT,
   `QUESTIONID` bigint(10) NOT NULL,
   `ANSWERID` bigint(10) NOT NULL,
@@ -4727,10 +4727,10 @@ CREATE TABLE `tbl_c_pollresponse` (
 -- Table structure for table `tbl_cabinet`
 --
 
-DROP TABLE IF EXISTS `tbl_cabinet`;
+DROP TABLE IF EXISTS ezportal.`tbl_cabinet`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_cabinet` (
+CREATE TABLE ezportal.`tbl_cabinet` (
   `CABINETID` varchar(112) NOT NULL,
   `CREATEDATE` datetime DEFAULT NULL,
   `CABINETCLASSNO` varchar(100) NOT NULL,
@@ -4773,10 +4773,10 @@ CREATE TABLE `tbl_cabinet` (
 -- Table structure for table `tbl_cabinet_viewauth`
 --
 
-DROP TABLE IF EXISTS `tbl_cabinet_viewauth`;
+DROP TABLE IF EXISTS ezportal.`tbl_cabinet_viewauth`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_cabinet_viewauth` (
+CREATE TABLE ezportal.`tbl_cabinet_viewauth` (
   `CABINETID` varchar(112) NOT NULL,
   `TENANT_ID` mediumint(5) NOT NULL,
   `COMPANYID` varchar(20) NOT NULL,
@@ -4922,10 +4922,10 @@ CREATE TABLE ezapprovalg.`tbl_cabroleinfo` (
 -- Table structure for table `tbl_cb_admin_module`
 --
 
-DROP TABLE IF EXISTS `tbl_cb_admin_module`;
+DROP TABLE IF EXISTS ezportal.`tbl_cb_admin_module`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_cb_admin_module` (
+CREATE TABLE ezportal.`tbl_cb_admin_module` (
   `company_id` varchar(50) NOT NULL,
   `module_type` varchar(20) NOT NULL,
   `active_status` tinyint(4) NOT NULL,
@@ -4938,10 +4938,10 @@ CREATE TABLE `tbl_cb_admin_module` (
 -- Table structure for table `tbl_cb_attach_file`
 --
 
-DROP TABLE IF EXISTS `tbl_cb_attach_file`;
+DROP TABLE IF EXISTS ezportal.`tbl_cb_attach_file`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_cb_attach_file` (
+CREATE TABLE ezportal.`tbl_cb_attach_file` (
   `attach_id` int(11) NOT NULL AUTO_INCREMENT,
   `item_id` int(11) NOT NULL,
   `file_path` varchar(250) NOT NULL,
@@ -4958,10 +4958,10 @@ CREATE TABLE `tbl_cb_attach_file` (
 -- Table structure for table `tbl_cb_cabinet`
 --
 
-DROP TABLE IF EXISTS `tbl_cb_cabinet`;
+DROP TABLE IF EXISTS ezportal.`tbl_cb_cabinet`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_cb_cabinet` (
+CREATE TABLE ezportal.`tbl_cb_cabinet` (
   `cabinet_id` int(11) NOT NULL AUTO_INCREMENT,
   `cabinet_name1` varchar(150) NOT NULL,
   `cabinet_name2` varchar(150) NOT NULL,
@@ -4991,10 +4991,10 @@ CREATE TABLE `tbl_cb_cabinet` (
 -- Table structure for table `tbl_cb_company_capacity`
 --
 
-DROP TABLE IF EXISTS `tbl_cb_company_capacity`;
+DROP TABLE IF EXISTS ezportal.`tbl_cb_company_capacity`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_cb_company_capacity` (
+CREATE TABLE ezportal.`tbl_cb_company_capacity` (
   `company_id` varchar(50) NOT NULL,
   `capacity_type` tinyint(4) NOT NULL,
   `capacity_value` int(11) DEFAULT NULL,
@@ -5007,10 +5007,10 @@ CREATE TABLE `tbl_cb_company_capacity` (
 -- Table structure for table `tbl_cb_config`
 --
 
-DROP TABLE IF EXISTS `tbl_cb_config`;
+DROP TABLE IF EXISTS ezportal.`tbl_cb_config`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_cb_config` (
+CREATE TABLE ezportal.`tbl_cb_config` (
   `user_id` varchar(50) NOT NULL,
   `company_id` varchar(50) NOT NULL,
   `list_count` int(10) NOT NULL,
@@ -5026,10 +5026,10 @@ CREATE TABLE `tbl_cb_config` (
 -- Table structure for table `tbl_cb_item`
 --
 
-DROP TABLE IF EXISTS `tbl_cb_item`;
+DROP TABLE IF EXISTS ezportal.`tbl_cb_item`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_cb_item` (
+CREATE TABLE ezportal.`tbl_cb_item` (
   `item_id` int(11) NOT NULL AUTO_INCREMENT,
   `cabinet_id` int(11) NOT NULL,
   `item_type` tinyint(4) NOT NULL,
@@ -5057,10 +5057,10 @@ CREATE TABLE `tbl_cb_item` (
 -- Table structure for table `tbl_cb_rel`
 --
 
-DROP TABLE IF EXISTS `tbl_cb_rel`;
+DROP TABLE IF EXISTS ezportal.`tbl_cb_rel`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_cb_rel` (
+CREATE TABLE ezportal.`tbl_cb_rel` (
   `rel_id` varchar(50) NOT NULL,
   `item_id` int(11) NOT NULL,
   `rel_name1` varchar(80) DEFAULT NULL,
@@ -5076,10 +5076,10 @@ CREATE TABLE `tbl_cb_rel` (
 -- Table structure for table `tbl_cb_relation`
 --
 
-DROP TABLE IF EXISTS `tbl_cb_relation`;
+DROP TABLE IF EXISTS ezportal.`tbl_cb_relation`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_cb_relation` (
+CREATE TABLE ezportal.`tbl_cb_relation` (
   `relation_id` int(11) NOT NULL,
   `item_id` int(11) NOT NULL,
   `relate_item_id` int(11) NOT NULL,
@@ -5093,10 +5093,10 @@ CREATE TABLE `tbl_cb_relation` (
 -- Table structure for table `tbl_cb_share`
 --
 
-DROP TABLE IF EXISTS `tbl_cb_share`;
+DROP TABLE IF EXISTS ezportal.`tbl_cb_share`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_cb_share` (
+CREATE TABLE ezportal.`tbl_cb_share` (
   `share_id` int(11) NOT NULL,
   `cabinet_id` int(11) NOT NULL,
   `sharer_id` varchar(50) NOT NULL,
@@ -5119,10 +5119,10 @@ CREATE TABLE `tbl_cb_share` (
 -- Table structure for table `tbl_cb_user_capacity`
 --
 
-DROP TABLE IF EXISTS `tbl_cb_user_capacity`;
+DROP TABLE IF EXISTS ezportal.`tbl_cb_user_capacity`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_cb_user_capacity` (
+CREATE TABLE ezportal.`tbl_cb_user_capacity` (
   `user_id` varchar(50) NOT NULL,
   `capacity_type` tinyint(4) NOT NULL,
   `capacity_value` int(11) DEFAULT NULL,
@@ -5136,10 +5136,10 @@ CREATE TABLE `tbl_cb_user_capacity` (
 -- Table structure for table `tbl_cb_user_module`
 --
 
-DROP TABLE IF EXISTS `tbl_cb_user_module`;
+DROP TABLE IF EXISTS ezportal.`tbl_cb_user_module`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_cb_user_module` (
+CREATE TABLE ezportal.`tbl_cb_user_module` (
   `user_id` varchar(50) NOT NULL,
   `company_id` varchar(50) NOT NULL,
   `module_type` varchar(20) NOT NULL,
@@ -5153,10 +5153,10 @@ CREATE TABLE `tbl_cb_user_module` (
 -- Table structure for table `tbl_circular`
 --
 
-DROP TABLE IF EXISTS `tbl_circular`;
+DROP TABLE IF EXISTS ezportal.`tbl_circular`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_circular` (
+CREATE TABLE ezportal.`tbl_circular` (
   `circularId` bigint(10) NOT NULL AUTO_INCREMENT,
   `title` varchar(500) CHARACTER SET utf8mb4 DEFAULT NULL,
   `importance` mediumint(5) DEFAULT NULL,
@@ -5180,10 +5180,10 @@ CREATE TABLE `tbl_circular` (
 -- Table structure for table `tbl_circular_bm`
 --
 
-DROP TABLE IF EXISTS `tbl_circular_bm`;
+DROP TABLE IF EXISTS ezportal.`tbl_circular_bm`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_circular_bm` (
+CREATE TABLE ezportal.`tbl_circular_bm` (
   `circularBMId` bigint(10) NOT NULL AUTO_INCREMENT,
   `title` varchar(500) CHARACTER SET utf8mb4 DEFAULT NULL,
   `memberId` varchar(100) DEFAULT NULL,
@@ -5199,10 +5199,10 @@ CREATE TABLE `tbl_circular_bm` (
 -- Table structure for table `tbl_circular_bmuser`
 --
 
-DROP TABLE IF EXISTS `tbl_circular_bmuser`;
+DROP TABLE IF EXISTS ezportal.`tbl_circular_bmuser`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_circular_bmuser` (
+CREATE TABLE ezportal.`tbl_circular_bmuser` (
   `circularBMUserId` bigint(10) NOT NULL AUTO_INCREMENT,
   `circularBMId` bigint(10) DEFAULT NULL,
   `memberId` varchar(100) DEFAULT NULL,
@@ -5218,10 +5218,10 @@ CREATE TABLE `tbl_circular_bmuser` (
 -- Table structure for table `tbl_circular_comment`
 --
 
-DROP TABLE IF EXISTS `tbl_circular_comment`;
+DROP TABLE IF EXISTS ezportal.`tbl_circular_comment`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_circular_comment` (
+CREATE TABLE ezportal.`tbl_circular_comment` (
   `circularId` bigint(10) NOT NULL,
   `circularCommentId` bigint(10) NOT NULL AUTO_INCREMENT,
   `circularUserId` varchar(100) DEFAULT NULL,
@@ -5241,10 +5241,10 @@ CREATE TABLE `tbl_circular_comment` (
 -- Table structure for table `tbl_circular_comment_file`
 --
 
-DROP TABLE IF EXISTS `tbl_circular_comment_file`;
+DROP TABLE IF EXISTS ezportal.`tbl_circular_comment_file`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_circular_comment_file` (
+CREATE TABLE ezportal.`tbl_circular_comment_file` (
   `commentFileId` bigint(10) NOT NULL AUTO_INCREMENT,
   `circularId` bigint(10) NOT NULL,
   `circularCommentId` bigint(10) NOT NULL,
@@ -5261,10 +5261,10 @@ CREATE TABLE `tbl_circular_comment_file` (
 -- Table structure for table `tbl_circular_commentstate`
 --
 
-DROP TABLE IF EXISTS `tbl_circular_commentstate`;
+DROP TABLE IF EXISTS ezportal.`tbl_circular_commentstate`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_circular_commentstate` (
+CREATE TABLE ezportal.`tbl_circular_commentstate` (
   `circularCommentStateId` bigint(10) NOT NULL AUTO_INCREMENT,
   `circularCommentId` bigint(10) DEFAULT NULL,
   `memberId` varchar(100) DEFAULT NULL,
@@ -5281,10 +5281,10 @@ CREATE TABLE `tbl_circular_commentstate` (
 -- Table structure for table `tbl_circular_file`
 --
 
-DROP TABLE IF EXISTS `tbl_circular_file`;
+DROP TABLE IF EXISTS ezportal.`tbl_circular_file`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_circular_file` (
+CREATE TABLE ezportal.`tbl_circular_file` (
   `circularFileId` bigint(10) NOT NULL AUTO_INCREMENT,
   `circularId` bigint(10) DEFAULT NULL,
   `fileName` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
@@ -5300,10 +5300,10 @@ CREATE TABLE `tbl_circular_file` (
 -- Table structure for table `tbl_circular_folder`
 --
 
-DROP TABLE IF EXISTS `tbl_circular_folder`;
+DROP TABLE IF EXISTS ezportal.`tbl_circular_folder`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_circular_folder` (
+CREATE TABLE ezportal.`tbl_circular_folder` (
   `circularFolderId` bigint(10) NOT NULL AUTO_INCREMENT,
   `circularFolderName` varchar(100) CHARACTER SET utf8mb4 DEFAULT NULL,
   `memberId` varchar(100) DEFAULT NULL,
@@ -5319,10 +5319,10 @@ CREATE TABLE `tbl_circular_folder` (
 -- Table structure for table `tbl_circular_link`
 --
 
-DROP TABLE IF EXISTS `tbl_circular_link`;
+DROP TABLE IF EXISTS ezportal.`tbl_circular_link`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_circular_link` (
+CREATE TABLE ezportal.`tbl_circular_link` (
   `circularLinkId` bigint(10) NOT NULL AUTO_INCREMENT,
   `circularFolderId` bigint(10) DEFAULT NULL,
   `circularId` bigint(10) DEFAULT NULL,
@@ -5339,10 +5339,10 @@ CREATE TABLE `tbl_circular_link` (
 -- Table structure for table `tbl_circular_listoption`
 --
 
-DROP TABLE IF EXISTS `tbl_circular_listoption`;
+DROP TABLE IF EXISTS ezportal.`tbl_circular_listoption`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_circular_listoption` (
+CREATE TABLE ezportal.`tbl_circular_listoption` (
   `LISTTYPE` varchar(4) NOT NULL,
   `SN` bigint(10) NOT NULL,
   `NAME1` varchar(200) DEFAULT NULL,
@@ -5360,10 +5360,10 @@ CREATE TABLE `tbl_circular_listoption` (
 -- Table structure for table `tbl_circular_option`
 --
 
-DROP TABLE IF EXISTS `tbl_circular_option`;
+DROP TABLE IF EXISTS ezportal.`tbl_circular_option`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_circular_option` (
+CREATE TABLE ezportal.`tbl_circular_option` (
   `circularOptionId` bigint(10) NOT NULL AUTO_INCREMENT,
   `memberId` varchar(100) DEFAULT NULL,
   `listCnt` mediumint(5) DEFAULT NULL,
@@ -5380,10 +5380,10 @@ CREATE TABLE `tbl_circular_option` (
 -- Table structure for table `tbl_circular_user`
 --
 
-DROP TABLE IF EXISTS `tbl_circular_user`;
+DROP TABLE IF EXISTS ezportal.`tbl_circular_user`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_circular_user` (
+CREATE TABLE ezportal.`tbl_circular_user` (
   `circularUserId` bigint(10) NOT NULL AUTO_INCREMENT,
   `circularId` bigint(10) DEFAULT NULL,
   `memberId` varchar(100) DEFAULT NULL,
@@ -5408,10 +5408,10 @@ CREATE TABLE `tbl_circular_user` (
 -- Table structure for table `tbl_cloud_customer`
 --
 
-DROP TABLE IF EXISTS `tbl_cloud_customer`;
+DROP TABLE IF EXISTS ezportal.`tbl_cloud_customer`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_cloud_customer` (
+CREATE TABLE ezportal.`tbl_cloud_customer` (
   `customerId` int(11) NOT NULL AUTO_INCREMENT COMMENT '고객사 구분 번호',
   `customerName` varchar(120) NOT NULL COMMENT '고객사 이름 (회사 이름)',
   `domain` varchar(100) NOT NULL COMMENT '고객사 메일 도메인',
@@ -5429,10 +5429,10 @@ CREATE TABLE `tbl_cloud_customer` (
 -- Table structure for table `tbl_cloud_user`
 --
 
-DROP TABLE IF EXISTS `tbl_cloud_user`;
+DROP TABLE IF EXISTS ezportal.`tbl_cloud_user`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_cloud_user` (
+CREATE TABLE ezportal.`tbl_cloud_user` (
   `userId` varchar(80) NOT NULL COMMENT '멀티서버 관리자 유저 아이디',
   `password` varchar(120) NOT NULL COMMENT '멀티서버 관리자 유저 비밀번호',
   `userName` varchar(120) NOT NULL COMMENT '멀티서버 관리자 유저 이름',
@@ -5449,10 +5449,10 @@ CREATE TABLE `tbl_cloud_user` (
 -- Table structure for table `tbl_clubid`
 --
 
-DROP TABLE IF EXISTS `tbl_clubid`;
+DROP TABLE IF EXISTS ezportal.`tbl_clubid`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_clubid` (
+CREATE TABLE ezportal.`tbl_clubid` (
   `CLUBID` varchar(40) NOT NULL,
   `TENANT_ID` decimal(22,0) NOT NULL DEFAULT 0,
   PRIMARY KEY (`TENANT_ID`,`CLUBID`)
@@ -5485,10 +5485,10 @@ CREATE TABLE ezapprovalg.`tbl_codelist` (
 -- Table structure for table `tbl_comm_boardinfo`
 --
 
-DROP TABLE IF EXISTS `tbl_comm_boardinfo`;
+DROP TABLE IF EXISTS ezportal.`tbl_comm_boardinfo`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_comm_boardinfo` (
+CREATE TABLE ezportal.`tbl_comm_boardinfo` (
   `C_CLUBNO` varchar(40) NOT NULL,
   `BOARDID` varchar(76) NOT NULL,
   `BOARDNAME` varchar(100) CHARACTER SET utf8mb4 DEFAULT NULL,
@@ -5523,10 +5523,10 @@ CREATE TABLE `tbl_comm_boardinfo` (
 -- Table structure for table `tbl_comm_boardmanage`
 --
 
-DROP TABLE IF EXISTS `tbl_comm_boardmanage`;
+DROP TABLE IF EXISTS ezportal.`tbl_comm_boardmanage`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_comm_boardmanage` (
+CREATE TABLE ezportal.`tbl_comm_boardmanage` (
   `BOARDID` varchar(76) NOT NULL,
   `ACCESSID` varchar(40) NOT NULL,
   `ACCESSNAME` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
@@ -5551,10 +5551,10 @@ CREATE TABLE `tbl_comm_boardmanage` (
 -- Table structure for table `tbl_comm_deletereservedboard`
 --
 
-DROP TABLE IF EXISTS `tbl_comm_deletereservedboard`;
+DROP TABLE IF EXISTS ezportal.`tbl_comm_deletereservedboard`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_comm_deletereservedboard` (
+CREATE TABLE ezportal.`tbl_comm_deletereservedboard` (
   `BOARDID` varchar(76) NOT NULL,
   `TENANT_ID` decimal(22,0) NOT NULL DEFAULT 0,
   PRIMARY KEY (`TENANT_ID`,`BOARDID`)
@@ -5565,10 +5565,10 @@ CREATE TABLE `tbl_comm_deletereservedboard` (
 -- Table structure for table `tbl_comm_deletereserveditem`
 --
 
-DROP TABLE IF EXISTS `tbl_comm_deletereserveditem`;
+DROP TABLE IF EXISTS ezportal.`tbl_comm_deletereserveditem`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_comm_deletereserveditem` (
+CREATE TABLE ezportal.`tbl_comm_deletereserveditem` (
   `BOARDID` varchar(76) NOT NULL,
   `ITEMID` varchar(76) NOT NULL,
   `TENANT_ID` decimal(22,0) NOT NULL DEFAULT 0,
@@ -5580,10 +5580,10 @@ CREATE TABLE `tbl_comm_deletereserveditem` (
 -- Table structure for table `tbl_comm_item`
 --
 
-DROP TABLE IF EXISTS `tbl_comm_item`;
+DROP TABLE IF EXISTS ezportal.`tbl_comm_item`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_comm_item` (
+CREATE TABLE ezportal.`tbl_comm_item` (
   `ITEMID` varchar(76) NOT NULL,
   `BOARDID` varchar(76) NOT NULL,
   `WRITERID` varchar(40) DEFAULT NULL,
@@ -5626,10 +5626,10 @@ CREATE TABLE `tbl_comm_item` (
 -- Table structure for table `tbl_comm_item_attachments`
 --
 
-DROP TABLE IF EXISTS `tbl_comm_item_attachments`;
+DROP TABLE IF EXISTS ezportal.`tbl_comm_item_attachments`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_comm_item_attachments` (
+CREATE TABLE ezportal.`tbl_comm_item_attachments` (
   `ITEMID` varchar(76) NOT NULL,
   `GUID` varchar(76) NOT NULL,
   `FILEPATH` varchar(400) CHARACTER SET utf8mb4 DEFAULT NULL,
@@ -5644,10 +5644,10 @@ CREATE TABLE `tbl_comm_item_attachments` (
 -- Table structure for table `tbl_comm_item_read`
 --
 
-DROP TABLE IF EXISTS `tbl_comm_item_read`;
+DROP TABLE IF EXISTS ezportal.`tbl_comm_item_read`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_comm_item_read` (
+CREATE TABLE ezportal.`tbl_comm_item_read` (
   `BOARDID` varchar(76) NOT NULL,
   `ITEMID` varchar(76) NOT NULL,
   `USERID` varchar(40) NOT NULL,
@@ -5670,10 +5670,10 @@ CREATE TABLE `tbl_comm_item_read` (
 -- Table structure for table `tbl_comm_myboards`
 --
 
-DROP TABLE IF EXISTS `tbl_comm_myboards`;
+DROP TABLE IF EXISTS ezportal.`tbl_comm_myboards`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_comm_myboards` (
+CREATE TABLE ezportal.`tbl_comm_myboards` (
   `USERID` varchar(40) NOT NULL,
   `BOARDID` varchar(76) NOT NULL,
   `BOARDNAME` varchar(40) CHARACTER SET utf8mb4 DEFAULT NULL,
@@ -5687,10 +5687,10 @@ CREATE TABLE `tbl_comm_myboards` (
 -- Table structure for table `tbl_comm_onelinereply`
 --
 
-DROP TABLE IF EXISTS `tbl_comm_onelinereply`;
+DROP TABLE IF EXISTS ezportal.`tbl_comm_onelinereply`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_comm_onelinereply` (
+CREATE TABLE ezportal.`tbl_comm_onelinereply` (
   `ITEMID` varchar(76) NOT NULL,
   `REPLYID` varchar(76) NOT NULL,
   `BOARDID` varchar(76) NOT NULL,
@@ -5710,10 +5710,10 @@ CREATE TABLE `tbl_comm_onelinereply` (
 -- Table structure for table `tbl_comm_secretary`
 --
 
-DROP TABLE IF EXISTS `tbl_comm_secretary`;
+DROP TABLE IF EXISTS ezportal.`tbl_comm_secretary`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_comm_secretary` (
+CREATE TABLE ezportal.`tbl_comm_secretary` (
   `USERID` varchar(100) NOT NULL,
   `USERNAME` varchar(100) CHARACTER SET utf8mb4 NOT NULL,
   `SECRETARYID` varchar(100) NOT NULL,
@@ -5727,10 +5727,10 @@ CREATE TABLE `tbl_comm_secretary` (
 -- Table structure for table `tbl_comm_treecache`
 --
 
-DROP TABLE IF EXISTS `tbl_comm_treecache`;
+DROP TABLE IF EXISTS ezportal.`tbl_comm_treecache`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_comm_treecache` (
+CREATE TABLE ezportal.`tbl_comm_treecache` (
   `QUERY` varchar(3600) NOT NULL,
   `RESULT` longtext CHARACTER SET utf8mb4 DEFAULT NULL,
   `TENANT_ID` decimal(22,0) NOT NULL DEFAULT 0,
@@ -5796,10 +5796,10 @@ CREATE TABLE ezportal.`TBL_SESSION` (
 --
 -- Table structure for table `TBL_FIDO_SESSION`
 --
-DROP TABLE IF EXISTS  `TBL_FIDO_SESSION`;
+DROP TABLE IF EXISTS ezportal.`TBL_FIDO_SESSION`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `TBL_FIDO_SESSION` (
+CREATE TABLE ezportal.`TBL_FIDO_SESSION` (
   `FIDO_SESSION_ID` varchar(50) NOT NULL,
   `USER_ID` varchar(80) NOT NULL,
   `CREATE_TIME` DATETIME NOT NULL,
@@ -5808,10 +5808,10 @@ CREATE TABLE `TBL_FIDO_SESSION` (
   PRIMARY KEY (`FIDO_SESSION_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-DROP TABLE IF EXISTS  `TBL_NOT_ACCESS_FIDO_IP`;
+DROP TABLE IF EXISTS ezportal.`TBL_NOT_ACCESS_FIDO_IP`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `TBL_NOT_ACCESS_FIDO_IP` (
+CREATE TABLE ezportal.`TBL_NOT_ACCESS_FIDO_IP` (
   `IPNO` int(11) NOT NULL AUTO_INCREMENT,
   `TENANT_ID` mediumint(5) NOT NULL DEFAULT 0,
   `COMPANYID` varchar(200) DEFAULT NULL,
@@ -5924,10 +5924,10 @@ CREATE TABLE ezportal.`tbl_permission_change_info` (
 -- Table structure for table `tbl_user_change_info`
 --
 
-DROP TABLE IF EXISTS `tbl_user_change_info`;
+DROP TABLE IF EXISTS ezportal.`tbl_user_change_info`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_user_change_info` (
+CREATE TABLE ezportal.`tbl_user_change_info` (
   `SEQ` 			int(10) 	 NOT NULL 	   AUTO_INCREMENT,
   `USERID` 				varchar(80) NOT NULL,
   `USERNM` 				varchar(120) CHARACTER SET utf8mb4 DEFAULT NULL,
@@ -5956,10 +5956,10 @@ CREATE TABLE `tbl_user_change_info` (
 -- Table structure for table `tbl_dept_change_info`
 --
 
-DROP TABLE IF EXISTS `tbl_dept_change_info`;
+DROP TABLE IF EXISTS ezportal.`tbl_dept_change_info`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_dept_change_info` (
+CREATE TABLE ezportal.`tbl_dept_change_info` (
   `SEQ` 				int(10) NOT NULL AUTO_INCREMENT,
   `DEPTID` 				varchar(80) NOT NULL,
   `DEPTNM` 				varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
@@ -6106,10 +6106,10 @@ CREATE TABLE ezapprovalg.`tbl_dailyformcountlog` (
 -- Table structure for table `tbl_dbhosp_conndata`
 --
 
-DROP TABLE IF EXISTS `tbl_dbhosp_conndata`;
+DROP TABLE IF EXISTS ezportal.`tbl_dbhosp_conndata`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_dbhosp_conndata` (
+CREATE TABLE ezportal.`tbl_dbhosp_conndata` (
   `SN` bigint(10) NOT NULL AUTO_INCREMENT,
   `PARAM1` varchar(1000) CHARACTER SET utf8mb4 DEFAULT NULL,
   `PARAM2` varchar(1000) CHARACTER SET utf8mb4 DEFAULT NULL,
@@ -6130,10 +6130,10 @@ CREATE TABLE `tbl_dbhosp_conndata` (
 -- Table structure for table `tbl_dbhosp_connhist`
 --
 
-DROP TABLE IF EXISTS `tbl_dbhosp_connhist`;
+DROP TABLE IF EXISTS ezportal.`tbl_dbhosp_connhist`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_dbhosp_connhist` (
+CREATE TABLE ezportal.`tbl_dbhosp_connhist` (
   `SN` bigint(10) NOT NULL AUTO_INCREMENT,
   `CONNKEY` varchar(1000) CHARACTER SET utf8mb4 DEFAULT NULL,
   `PARAM1` varchar(1000) CHARACTER SET utf8mb4 DEFAULT NULL,
@@ -6156,10 +6156,10 @@ CREATE TABLE `tbl_dbhosp_connhist` (
 -- Table structure for table `tbl_dbhosp_connstate`
 --
 
-DROP TABLE IF EXISTS `tbl_dbhosp_connstate`;
+DROP TABLE IF EXISTS ezportal.`tbl_dbhosp_connstate`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_dbhosp_connstate` (
+CREATE TABLE ezportal.`tbl_dbhosp_connstate` (
   `SN` bigint(10) NOT NULL AUTO_INCREMENT,
   `CONNKEY` varchar(1000) CHARACTER SET utf8mb4 DEFAULT NULL,
   `CONNSTATE` varchar(1000) CHARACTER SET utf8mb4 DEFAULT NULL,
@@ -6277,10 +6277,10 @@ CREATE TABLE ezportal.`tbl_deptmaster` (
 -- Table structure for table `tbl_deptmasterforhistory`
 --
 
-DROP TABLE IF EXISTS `tbl_deptmasterforhistory`;
+DROP TABLE IF EXISTS ezportal.`tbl_deptmasterforhistory`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_deptmasterforhistory` (
+CREATE TABLE ezportal.`tbl_deptmasterforhistory` (
   `CN` varchar(80) NOT NULL,
   `DISPLAYNAME` varchar(100) CHARACTER SET utf8mb4 NOT NULL,
   `DISPLAYNAME2` varchar(100) CHARACTER SET utf8mb4 DEFAULT NULL,
@@ -6368,10 +6368,10 @@ CREATE TABLE ezapprovalg.`tbl_depttempletdetail` (
 -- Table structure for table `tbl_dev_master`
 --
 
-DROP TABLE IF EXISTS `tbl_dev_master`;
+DROP TABLE IF EXISTS ezportal.`tbl_dev_master`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_dev_master` (
+CREATE TABLE ezportal.`tbl_dev_master` (
   `DEVSEQ` bigint(20) NOT NULL AUTO_INCREMENT,
   `DEVID` varchar(64) CHARACTER SET utf8 NOT NULL,
   `DEVTYPE` varchar(10) CHARACTER SET utf8 DEFAULT NULL,
@@ -6710,10 +6710,10 @@ CREATE TABLE ezapprovalg.`tbl_endreceiptprocessinfo` (
 -- Table structure for table `tbl_except_user`
 --
 
-DROP TABLE IF EXISTS `tbl_except_user`;
+DROP TABLE IF EXISTS ezportal.`tbl_except_user`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_except_user` (
+CREATE TABLE ezportal.`tbl_except_user` (
   `USER_ID` varchar(45) NOT NULL,
   `EXCEPTED` varchar(45) DEFAULT 'N',
   `TENANT_ID` mediumint(5) NOT NULL,
@@ -6862,10 +6862,10 @@ CREATE TABLE ezapprovalg.`tbl_expendaprline` (
 -- Table structure for table `tbl_find_pwd`
 --
 
-DROP TABLE IF EXISTS `tbl_find_pwd`;
+DROP TABLE IF EXISTS ezportal.`tbl_find_pwd`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_find_pwd` (
+CREATE TABLE ezportal.`tbl_find_pwd` (
   `sabun` varchar(100) NOT NULL,
   `req_date` datetime DEFAULT NULL,
   `CERTIFICATION_NUM` varchar(100) DEFAULT NULL,
@@ -7312,10 +7312,10 @@ CREATE TABLE ezcommon.`tbl_holidaylist` (
 -- Table structure for table `tbl_journal`
 --
 
-DROP TABLE IF EXISTS `tbl_journal`;
+DROP TABLE IF EXISTS ezportal.`tbl_journal`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_journal` (
+CREATE TABLE ezportal.`tbl_journal` (
   `journal_id` bigint(10) NOT NULL AUTO_INCREMENT COMMENT '일지 아이디',
   `tenant_id` mediumint(5) NOT NULL COMMENT '테넌트 아이디',
   `journal_title` varchar(200) DEFAULT NULL COMMENT '일지 제목',
@@ -7338,10 +7338,10 @@ CREATE TABLE `tbl_journal` (
 -- Table structure for table `tbl_journal_auth`
 --
 
-DROP TABLE IF EXISTS `tbl_journal_auth`;
+DROP TABLE IF EXISTS ezportal.`tbl_journal_auth`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_journal_auth` (
+CREATE TABLE ezportal.`tbl_journal_auth` (
   `user_id` varchar(100) NOT NULL COMMENT '사원아이디',
   `dept_id` varchar(100) NOT NULL COMMENT '부서아이디',
   `tenant_id` mediumint(5) NOT NULL COMMENT '테넌트 아이디'
@@ -7352,10 +7352,10 @@ CREATE TABLE `tbl_journal_auth` (
 -- Table structure for table `tbl_journal_env`
 --
 
-DROP TABLE IF EXISTS `tbl_journal_env`;
+DROP TABLE IF EXISTS ezportal.`tbl_journal_env`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_journal_env` (
+CREATE TABLE ezportal.`tbl_journal_env` (
   `user_id` varchar(100) NOT NULL COMMENT '사원아이디',
   `tenant_id` mediumint(5) NOT NULL COMMENT '테넌트 아이디',
   `list_cnt` int(10) DEFAULT 20 COMMENT '리스트 수',
@@ -7372,10 +7372,10 @@ CREATE TABLE `tbl_journal_env` (
 -- Table structure for table `tbl_journal_file`
 --
 
-DROP TABLE IF EXISTS `tbl_journal_file`;
+DROP TABLE IF EXISTS ezportal.`tbl_journal_file`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_journal_file` (
+CREATE TABLE ezportal.`tbl_journal_file` (
   `file_id` bigint(10) NOT NULL AUTO_INCREMENT COMMENT '파일 아이디',
   `tenant_id` mediumint(5) NOT NULL COMMENT '테넌트 아이디',
   `file_path` varchar(200) DEFAULT NULL COMMENT '파일 경로',
@@ -7392,10 +7392,10 @@ CREATE TABLE `tbl_journal_file` (
 -- Table structure for table `tbl_journal_form`
 --
 
-DROP TABLE IF EXISTS `tbl_journal_form`;
+DROP TABLE IF EXISTS ezportal.`tbl_journal_form`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_journal_form` (
+CREATE TABLE ezportal.`tbl_journal_form` (
   `form_id` bigint(10) NOT NULL AUTO_INCREMENT COMMENT '양식 아이디',
   `tenant_id` mediumint(5) NOT NULL COMMENT '테넌트 아이디',
   `form_name` varchar(200) NOT NULL COMMENT '양식 명',
@@ -7417,10 +7417,10 @@ CREATE TABLE `tbl_journal_form` (
 -- Table structure for table `tbl_journal_form_type`
 --
 
-DROP TABLE IF EXISTS `tbl_journal_form_type`;
+DROP TABLE IF EXISTS ezportal.`tbl_journal_form_type`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_journal_form_type` (
+CREATE TABLE ezportal.`tbl_journal_form_type` (
   `type_id` varchar(80) NOT NULL COMMENT '함 아이디',
   `tenant_id` mediumint(5) NOT NULL COMMENT '테넌트 아이디',
   `company_id` varchar(80) NOT NULL COMMENT '회사 아이디',
@@ -7433,10 +7433,10 @@ CREATE TABLE `tbl_journal_form_type` (
 -- Table structure for table `tbl_journal_form_use_dept`
 --
 
-DROP TABLE IF EXISTS `tbl_journal_form_use_dept`;
+DROP TABLE IF EXISTS ezportal.`tbl_journal_form_use_dept`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_journal_form_use_dept` (
+CREATE TABLE ezportal.`tbl_journal_form_use_dept` (
   `dept_id` varchar(100) NOT NULL COMMENT '부서 아이디',
   `form_id` bigint(10) NOT NULL COMMENT '양식 아이디',
   `tenant_id` mediumint(5) NOT NULL COMMENT '테넌트 아이디',
@@ -7449,10 +7449,10 @@ CREATE TABLE `tbl_journal_form_use_dept` (
 -- Table structure for table `tbl_journal_order`
 --
 
-DROP TABLE IF EXISTS `tbl_journal_order`;
+DROP TABLE IF EXISTS ezportal.`tbl_journal_order`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_journal_order` (
+CREATE TABLE ezportal.`tbl_journal_order` (
   `user_id` varchar(80) NOT NULL,
   `related_user_id` varchar(80) NOT NULL,
   `user_order` mediumint(11) NOT NULL DEFAULT 1,
@@ -7466,10 +7466,10 @@ CREATE TABLE `tbl_journal_order` (
 -- Table structure for table `tbl_journal_recv`
 --
 
-DROP TABLE IF EXISTS `tbl_journal_recv`;
+DROP TABLE IF EXISTS ezportal.`tbl_journal_recv`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_journal_recv` (
+CREATE TABLE ezportal.`tbl_journal_recv` (
   `user_id` varchar(100) NOT NULL COMMENT '사원아이디',
   `tenant_id` mediumint(5) NOT NULL COMMENT '테넌트 아이디',
   `journal_id` bigint(10) DEFAULT NULL COMMENT '일지 아이디',
@@ -7484,10 +7484,10 @@ CREATE TABLE `tbl_journal_recv` (
 -- Table structure for table `tbl_journal_recv_favorite`
 --
 
-DROP TABLE IF EXISTS `tbl_journal_recv_favorite`;
+DROP TABLE IF EXISTS ezportal.`tbl_journal_recv_favorite`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_journal_recv_favorite` (
+CREATE TABLE ezportal.`tbl_journal_recv_favorite` (
   `favorite_id` bigint(10) NOT NULL AUTO_INCREMENT COMMENT '즐찾 아이디',
   `tenant_id` mediumint(5) NOT NULL COMMENT '테넌트 아이디',
   `user_id` varchar(100) DEFAULT NULL COMMENT '사원아이디',
@@ -7501,10 +7501,10 @@ CREATE TABLE `tbl_journal_recv_favorite` (
 -- Table structure for table `tbl_journal_recv_favorite_list`
 --
 
-DROP TABLE IF EXISTS `tbl_journal_recv_favorite_list`;
+DROP TABLE IF EXISTS ezportal.`tbl_journal_recv_favorite_list`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_journal_recv_favorite_list` (
+CREATE TABLE ezportal.`tbl_journal_recv_favorite_list` (
   `favorite_id` bigint(10) NOT NULL COMMENT '즐찾 아이디',
   `user_id` varchar(100) DEFAULT NULL COMMENT '사원아이디',
   `tenant_id` mediumint(5) NOT NULL COMMENT '테넌트 아이디',
@@ -7517,10 +7517,10 @@ CREATE TABLE `tbl_journal_recv_favorite_list` (
 -- Table structure for table `tbl_journal_reply`
 --
 
-DROP TABLE IF EXISTS `tbl_journal_reply`;
+DROP TABLE IF EXISTS ezportal.`tbl_journal_reply`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_journal_reply` (
+CREATE TABLE ezportal.`tbl_journal_reply` (
   `reply_id` bigint(10) NOT NULL AUTO_INCREMENT COMMENT '댓글 아이디',
   `tenant_id` mediumint(5) NOT NULL COMMENT '테넌트 아이디',
   `reply_content` varchar(4000) DEFAULT NULL COMMENT '댓글 내용',
@@ -7537,10 +7537,10 @@ CREATE TABLE `tbl_journal_reply` (
 -- Table structure for table `tbl_journal_symbol`
 --
 
-DROP TABLE IF EXISTS `tbl_journal_symbol`;
+DROP TABLE IF EXISTS ezportal.`tbl_journal_symbol`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_journal_symbol` (
+CREATE TABLE ezportal.`tbl_journal_symbol` (
   `symbol_id` bigint(20) NOT NULL AUTO_INCREMENT,
   `symbol_level` int(11) NOT NULL DEFAULT 1,
   `symbol_str` varbinary(50) NOT NULL,
@@ -7555,10 +7555,10 @@ CREATE TABLE `tbl_journal_symbol` (
 -- Table structure for table `tbl_journal_view`
 --
 
-DROP TABLE IF EXISTS `tbl_journal_view`;
+DROP TABLE IF EXISTS ezportal.`tbl_journal_view`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_journal_view` (
+CREATE TABLE ezportal.`tbl_journal_view` (
   `user_id` varchar(100) NOT NULL COMMENT '사원아이디',
   `tenant_id` mediumint(5) NOT NULL COMMENT '테넌트 아이디',
   `journal_id` bigint(10) NOT NULL COMMENT '일지 아이디',
@@ -7573,10 +7573,10 @@ CREATE TABLE `tbl_journal_view` (
 -- Table structure for table `tbl_ladder`
 --
 
-DROP TABLE IF EXISTS `tbl_ladder`;
+DROP TABLE IF EXISTS ezportal.`tbl_ladder`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_ladder` (
+CREATE TABLE ezportal.`tbl_ladder` (
   `tenant_id` mediumint(5) NOT NULL,
   `ladderid` bigint(20) NOT NULL AUTO_INCREMENT,
   `title` varchar(500) DEFAULT NULL,
@@ -7604,10 +7604,10 @@ CREATE TABLE `tbl_ladder` (
 -- Table structure for table `tbl_ladder_bm`
 --
 
-DROP TABLE IF EXISTS `tbl_ladder_bm`;
+DROP TABLE IF EXISTS ezportal.`tbl_ladder_bm`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_ladder_bm` (
+CREATE TABLE ezportal.`tbl_ladder_bm` (
   `tenant_id` mediumint(5) NOT NULL,
   `ladderbmid` bigint(20) NOT NULL AUTO_INCREMENT,
   `bmname` varchar(100) DEFAULT NULL,
@@ -7622,10 +7622,10 @@ CREATE TABLE `tbl_ladder_bm` (
 -- Table structure for table `tbl_ladder_bmuser`
 --
 
-DROP TABLE IF EXISTS `tbl_ladder_bmuser`;
+DROP TABLE IF EXISTS ezportal.`tbl_ladder_bmuser`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_ladder_bmuser` (
+CREATE TABLE ezportal.`tbl_ladder_bmuser` (
   `tenant_id` mediumint(5) NOT NULL,
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `ladderbmid` bigint(20) NOT NULL,
@@ -7645,10 +7645,10 @@ CREATE TABLE `tbl_ladder_bmuser` (
 -- Table structure for table `tbl_ladder_codelist`
 --
 
-DROP TABLE IF EXISTS `tbl_ladder_codelist`;
+DROP TABLE IF EXISTS ezportal.`tbl_ladder_codelist`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_ladder_codelist` (
+CREATE TABLE ezportal.`tbl_ladder_codelist` (
   `tenant_id` mediumint(5) NOT NULL,
   `code` varchar(20) NOT NULL,
   `language` tinyint(4) NOT NULL,
@@ -7662,10 +7662,10 @@ CREATE TABLE `tbl_ladder_codelist` (
 -- Table structure for table `tbl_ladder_comment`
 --
 
-DROP TABLE IF EXISTS `tbl_ladder_comment`;
+DROP TABLE IF EXISTS ezportal.`tbl_ladder_comment`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_ladder_comment` (
+CREATE TABLE ezportal.`tbl_ladder_comment` (
   `tenant_id` mediumint(5) NOT NULL,
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `ladderid` bigint(20) NOT NULL,
@@ -7685,10 +7685,10 @@ CREATE TABLE `tbl_ladder_comment` (
 -- Table structure for table `tbl_ladder_line`
 --
 
-DROP TABLE IF EXISTS `tbl_ladder_line`;
+DROP TABLE IF EXISTS ezportal.`tbl_ladder_line`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_ladder_line` (
+CREATE TABLE ezportal.`tbl_ladder_line` (
   `tenant_id` mediumint(5) NOT NULL,
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `ladderid` bigint(20) NOT NULL,
@@ -7712,10 +7712,10 @@ CREATE TABLE `tbl_ladder_line` (
 -- Table structure for table `tbl_ladder_order`
 --
 
-DROP TABLE IF EXISTS `tbl_ladder_order`;
+DROP TABLE IF EXISTS ezportal.`tbl_ladder_order`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_ladder_order` (
+CREATE TABLE ezportal.`tbl_ladder_order` (
   `tenant_id` mediumint(5) NOT NULL,
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `ladderid` bigint(20) NOT NULL,
@@ -7916,10 +7916,10 @@ CREATE TABLE ezapprovalg.`tbl_listoption` (
 -- Table structure for table `tbl_logo_size`
 --
 
-DROP TABLE IF EXISTS `tbl_logo_size`;
+DROP TABLE IF EXISTS ezportal.`tbl_logo_size`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_logo_size` (
+CREATE TABLE ezportal.`tbl_logo_size` (
   `C_CLUBNO` varchar(40) NOT NULL,
   `LOGO_SIZE` double(126,0) DEFAULT NULL,
   `BANNER_SIZE` double(126,0) DEFAULT NULL,
@@ -7947,10 +7947,10 @@ CREATE TABLE ezcommon.`tbl_lunaruse` (
 -- Table structure for table `tbl_memo`
 --
 
-DROP TABLE IF EXISTS `tbl_memo`;
+DROP TABLE IF EXISTS ezportal.`tbl_memo`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_memo` (
+CREATE TABLE ezportal.`tbl_memo` (
   `memo_id` bigint(10) NOT NULL AUTO_INCREMENT,
   `contents` longtext DEFAULT NULL,
   `user_id` varchar(80) NOT NULL,
@@ -7973,10 +7973,10 @@ CREATE TABLE `tbl_memo` (
 -- Table structure for table `tbl_memo_config`
 --
 
-DROP TABLE IF EXISTS `tbl_memo_config`;
+DROP TABLE IF EXISTS ezportal.`tbl_memo_config`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_memo_config` (
+CREATE TABLE ezportal.`tbl_memo_config` (
   `user_id` varchar(80) NOT NULL,
   `font_size` tinyint(4) NOT NULL,
   `use_date` tinyint(4) DEFAULT 1,
@@ -8005,10 +8005,10 @@ CREATE TABLE `tbl_memo_config` (
 -- Table structure for table `tbl_memo_folder`
 --
 
-DROP TABLE IF EXISTS `tbl_memo_folder`;
+DROP TABLE IF EXISTS ezportal.`tbl_memo_folder`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_memo_folder` (
+CREATE TABLE ezportal.`tbl_memo_folder` (
   `folder_id` bigint(10) NOT NULL AUTO_INCREMENT,
   `folder_name` varchar(100) NOT NULL,
   `reg_date` datetime DEFAULT NULL,
@@ -8026,46 +8026,46 @@ CREATE TABLE `tbl_memo_folder` (
 -- Table structure for table `tbl_menuitem_general`
 --
 
-DROP TABLE IF EXISTS `tbl_menuitem_general`;
+DROP TABLE IF EXISTS ezportal.`tbl_menuitem_general`;
 
 --
 -- Table structure for table `tbl_menuitem_items_image`
 --
 
-DROP TABLE IF EXISTS `tbl_menuitem_items_image`;
+DROP TABLE IF EXISTS ezportal.`tbl_menuitem_items_image`;
 
 --
 -- Table structure for table `tbl_menuitem_items_logos`
 --
 
-DROP TABLE IF EXISTS `tbl_menuitem_items_logos`;
+DROP TABLE IF EXISTS ezportal.`tbl_menuitem_items_logos`;
 
 --
 -- Table structure for table `tbl_menuitem_items_menuitems`
 --
 
-DROP TABLE IF EXISTS `tbl_menuitem_items_menuitems`;
+DROP TABLE IF EXISTS ezportal.`tbl_menuitem_items_menuitems`;
 
 --
 -- Table structure for table `tbl_menuitem_items_menuitems_s`
 --
 
-DROP TABLE IF EXISTS `tbl_menuitem_items_menuitems_s`;
+DROP TABLE IF EXISTS ezportal.`tbl_menuitem_items_menuitems_s`;
 
 --
 -- Table structure for table `tbl_menuitem_parameters`
 --
 
-DROP TABLE IF EXISTS `tbl_menuitem_parameters`;
+DROP TABLE IF EXISTS ezportal.`tbl_menuitem_parameters`;
 
 --
 -- Table structure for table `tbl_mobileoption`
 --
 
-DROP TABLE IF EXISTS `tbl_mobileoption`;
+DROP TABLE IF EXISTS ezportal.`tbl_mobileoption`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_mobileoption` (
+CREATE TABLE ezportal.`tbl_mobileoption` (
   `USERID` varchar(200) NOT NULL,
   `TIMEZONE` varchar(40) NOT NULL,
   `LANG` varchar(4) NOT NULL,
@@ -8225,10 +8225,10 @@ CREATE TABLE ezapprovalg.`tbl_opengovmodifyhistory` (
 -- Table structure for table `tbl_password_policy`
 --
 
-DROP TABLE IF EXISTS `tbl_password_policy`;
+DROP TABLE IF EXISTS ezportal.`tbl_password_policy`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_password_policy` (
+CREATE TABLE ezportal.`tbl_password_policy` (
   `TENANT_ID` mediumint(5) NOT NULL,
   `COMPANY_ID` varchar(100) NOT NULL,
   `ENG_CHAR_TYPE` varchar(10) DEFAULT 'N',
@@ -8244,10 +8244,10 @@ CREATE TABLE `tbl_password_policy` (
 -- Table structure for table `tbl_password_policy_pattern`
 --
 
-DROP TABLE IF EXISTS `tbl_password_policy_pattern`;
+DROP TABLE IF EXISTS ezportal.`tbl_password_policy_pattern`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_password_policy_pattern` (
+CREATE TABLE ezportal.`tbl_password_policy_pattern` (
   `TENANT_ID` mediumint(5) NOT NULL,
   `COMPANY_ID` varchar(100) NOT NULL,
   `USE_PATTERN_COUNT` int(11) NOT NULL,
@@ -8325,10 +8325,10 @@ CREATE TABLE ezboard.`tbl_photo_imageitem` (
 -- Table structure for table `tbl_pms_board_folder`
 --
 
-DROP TABLE IF EXISTS `tbl_pms_board_folder`;
+DROP TABLE IF EXISTS ezportal.`tbl_pms_board_folder`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_pms_board_folder` (
+CREATE TABLE ezportal.`tbl_pms_board_folder` (
   `folder_id` bigint(20) NOT NULL AUTO_INCREMENT,
   `tenant_id` int(11) DEFAULT NULL,
   `folder_name` varchar(100) DEFAULT NULL,
@@ -8345,10 +8345,10 @@ CREATE TABLE `tbl_pms_board_folder` (
 -- Table structure for table `tbl_pms_comment`
 --
 
-DROP TABLE IF EXISTS `tbl_pms_comment`;
+DROP TABLE IF EXISTS ezportal.`tbl_pms_comment`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_pms_comment` (
+CREATE TABLE ezportal.`tbl_pms_comment` (
   `comment_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '의견 아이디',
   `tenant_id` mediumint(9) NOT NULL COMMENT '테넌트 아이디',
   `task_id` bigint(20) DEFAULT NULL COMMENT '업무 아이디',
@@ -8374,10 +8374,10 @@ CREATE TABLE `tbl_pms_comment` (
 -- Table structure for table `tbl_pms_favorite`
 --
 
-DROP TABLE IF EXISTS `tbl_pms_favorite`;
+DROP TABLE IF EXISTS ezportal.`tbl_pms_favorite`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_pms_favorite` (
+CREATE TABLE ezportal.`tbl_pms_favorite` (
   `favorite_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '즐겨찾기 아이디',
   `tenant_id` mediumint(9) NOT NULL COMMENT '테넌트 아이디',
   `project_id` bigint(20) NOT NULL COMMENT '프로젝트 아이디',
@@ -8392,10 +8392,10 @@ CREATE TABLE `tbl_pms_favorite` (
 -- Table structure for table `tbl_pms_fixedholiday`
 --
 
-DROP TABLE IF EXISTS `tbl_pms_fixedholiday`;
+DROP TABLE IF EXISTS ezportal.`tbl_pms_fixedholiday`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_pms_fixedholiday` (
+CREATE TABLE ezportal.`tbl_pms_fixedholiday` (
   `holiday_id` bigint(20) NOT NULL AUTO_INCREMENT,
   `holiday_name` varchar(50) DEFAULT NULL,
   `holiday_name2` varchar(50) DEFAULT NULL,
@@ -8410,10 +8410,10 @@ CREATE TABLE `tbl_pms_fixedholiday` (
 -- Table structure for table `tbl_pms_group`
 --
 
-DROP TABLE IF EXISTS `tbl_pms_group`;
+DROP TABLE IF EXISTS ezportal.`tbl_pms_group`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_pms_group` (
+CREATE TABLE ezportal.`tbl_pms_group` (
   `group_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '그룹 아이디',
   `tenant_id` mediumint(9) NOT NULL COMMENT '테넌트 아이디',
   `project_id` bigint(20) NOT NULL COMMENT '프로젝트 아이디',
@@ -8455,10 +8455,10 @@ CREATE TABLE `tbl_pms_group` (
 -- Table structure for table `tbl_pms_groupmember`
 --
 
-DROP TABLE IF EXISTS `tbl_pms_groupmember`;
+DROP TABLE IF EXISTS ezportal.`tbl_pms_groupmember`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_pms_groupmember` (
+CREATE TABLE ezportal.`tbl_pms_groupmember` (
   `group_member_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '그룹 멤버 아이디',
   `tenant_id` mediumint(9) NOT NULL COMMENT '테넌트 아이디',
   `group_id` bigint(20) NOT NULL COMMENT '그룹 아이디',
@@ -8478,10 +8478,10 @@ CREATE TABLE `tbl_pms_groupmember` (
 -- Table structure for table `tbl_pms_item_attachment`
 --
 
-DROP TABLE IF EXISTS `tbl_pms_item_attachment`;
+DROP TABLE IF EXISTS ezportal.`tbl_pms_item_attachment`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_pms_item_attachment` (
+CREATE TABLE ezportal.`tbl_pms_item_attachment` (
   `file_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '파일 아이디',
   `tenant_id` mediumint(9) NOT NULL COMMENT '테넌트 아이디',
   `item_id` int(11) NOT NULL COMMENT '게시물 아이디',
@@ -8498,10 +8498,10 @@ CREATE TABLE `tbl_pms_item_attachment` (
 -- Table structure for table `tbl_pms_item_list`
 --
 
-DROP TABLE IF EXISTS `tbl_pms_item_list`;
+DROP TABLE IF EXISTS ezportal.`tbl_pms_item_list`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_pms_item_list` (
+CREATE TABLE ezportal.`tbl_pms_item_list` (
   `item_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '게시물 아이디',
   `tenant_id` mediumint(9) NOT NULL COMMENT '테넌트 아이디',
   `writer_id` varchar(100) NOT NULL COMMENT '게시자 아이디',
@@ -8539,10 +8539,10 @@ CREATE TABLE `tbl_pms_item_list` (
 -- Table structure for table `tbl_pms_item_read`
 --
 
-DROP TABLE IF EXISTS `tbl_pms_item_read`;
+DROP TABLE IF EXISTS ezportal.`tbl_pms_item_read`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_pms_item_read` (
+CREATE TABLE ezportal.`tbl_pms_item_read` (
   `read_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '조회 아이디',
   `tenant_id` mediumint(9) NOT NULL COMMENT '테넌트 아이디',
   `project_id` bigint(20) NOT NULL COMMENT '프로젝트 아이디',
@@ -8563,10 +8563,10 @@ CREATE TABLE `tbl_pms_item_read` (
 -- Table structure for table `tbl_pms_log`
 --
 
-DROP TABLE IF EXISTS `tbl_pms_log`;
+DROP TABLE IF EXISTS ezportal.`tbl_pms_log`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_pms_log` (
+CREATE TABLE ezportal.`tbl_pms_log` (
   `log_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '이력 아이디',
   `tenant_id` mediumint(9) NOT NULL COMMENT '테넌트 아이디',
   `project_id` bigint(20) DEFAULT NULL COMMENT '프로젝트 아이디',
@@ -8594,10 +8594,10 @@ CREATE TABLE `tbl_pms_log` (
 -- Table structure for table `tbl_pms_mainlist`
 --
 
-DROP TABLE IF EXISTS `tbl_pms_mainlist`;
+DROP TABLE IF EXISTS ezportal.`tbl_pms_mainlist`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_pms_mainlist` (
+CREATE TABLE ezportal.`tbl_pms_mainlist` (
   `list_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '리스트 아이디',
   `tenant_id` mediumint(9) NOT NULL COMMENT '테넌트 아이디',
   `user_id` varchar(100) NOT NULL COMMENT '사용자 아이디',
@@ -8613,10 +8613,10 @@ CREATE TABLE `tbl_pms_mainlist` (
 -- Table structure for table `tbl_pms_member`
 --
 
-DROP TABLE IF EXISTS `tbl_pms_member`;
+DROP TABLE IF EXISTS ezportal.`tbl_pms_member`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_pms_member` (
+CREATE TABLE ezportal.`tbl_pms_member` (
   `member_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '멤버 아이디',
   `tenant_id` mediumint(9) NOT NULL COMMENT '테넌트 아이디',
   `project_id` bigint(20) NOT NULL COMMENT '프로젝트 아이디',
@@ -8639,10 +8639,10 @@ CREATE TABLE `tbl_pms_member` (
 -- Table structure for table `tbl_pms_pretaskrel`
 --
 
-DROP TABLE IF EXISTS `tbl_pms_pretaskrel`;
+DROP TABLE IF EXISTS ezportal.`tbl_pms_pretaskrel`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_pms_pretaskrel` (
+CREATE TABLE ezportal.`tbl_pms_pretaskrel` (
   `pretaskrel_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '선행작업관계 아이디',
   `pretask` bigint(20) DEFAULT NULL COMMENT '선행작업',
   `task_id` bigint(20) DEFAULT NULL COMMENT '업무 아이디',
@@ -8662,10 +8662,10 @@ CREATE TABLE `tbl_pms_pretaskrel` (
 -- Table structure for table `tbl_pms_project`
 --
 
-DROP TABLE IF EXISTS `tbl_pms_project`;
+DROP TABLE IF EXISTS ezportal.`tbl_pms_project`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_pms_project` (
+CREATE TABLE ezportal.`tbl_pms_project` (
   `project_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '프로젝트 아이디',
   `tenant_id` mediumint(9) NOT NULL COMMENT '테넌트 아이디',
   `project_name` varchar(100) NOT NULL COMMENT '프로젝트 명',
@@ -8704,10 +8704,10 @@ CREATE TABLE `tbl_pms_project` (
 -- Table structure for table `tbl_pms_setting`
 --
 
-DROP TABLE IF EXISTS `tbl_pms_setting`;
+DROP TABLE IF EXISTS ezportal.`tbl_pms_setting`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_pms_setting` (
+CREATE TABLE ezportal.`tbl_pms_setting` (
   `setting_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '환경설정 아이디',
   `tenant_id` mediumint(9) NOT NULL COMMENT '테넌트 아이디',
   `user_id` varchar(100) NOT NULL COMMENT '사용자 아이디',
@@ -8727,10 +8727,10 @@ CREATE TABLE `tbl_pms_setting` (
 -- Table structure for table `tbl_pms_task`
 --
 
-DROP TABLE IF EXISTS `tbl_pms_task`;
+DROP TABLE IF EXISTS ezportal.`tbl_pms_task`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_pms_task` (
+CREATE TABLE ezportal.`tbl_pms_task` (
   `task_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '업무 아이디',
   `tenant_id` mediumint(9) NOT NULL COMMENT '테넌트 아이디',
   `project_id` bigint(20) NOT NULL COMMENT '프로젝트 아이디',
@@ -8776,10 +8776,10 @@ CREATE TABLE `tbl_pms_task` (
 -- Table structure for table `tbl_pms_taskmember`
 --
 
-DROP TABLE IF EXISTS `tbl_pms_taskmember`;
+DROP TABLE IF EXISTS ezportal.`tbl_pms_taskmember`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_pms_taskmember` (
+CREATE TABLE ezportal.`tbl_pms_taskmember` (
   `task_member_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '업무 멤버 아이디',
   `tenant_id` mediumint(9) NOT NULL COMMENT '테넌트 아이디',
   `task_id` bigint(20) NOT NULL COMMENT '업무 아이디',
@@ -8799,10 +8799,10 @@ CREATE TABLE `tbl_pms_taskmember` (
 -- Table structure for table `tbl_poll_answer`
 --
 
-DROP TABLE IF EXISTS `tbl_poll_answer`;
+DROP TABLE IF EXISTS ezportal.`tbl_poll_answer`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_poll_answer` (
+CREATE TABLE ezportal.`tbl_poll_answer` (
   `BRD_ID` bigint(10) NOT NULL,
   `ITEM_NO` bigint(10) NOT NULL,
   `QUESTION_NO` bigint(10) NOT NULL,
@@ -8817,10 +8817,10 @@ CREATE TABLE `tbl_poll_answer` (
 -- Table structure for table `tbl_poll_attach`
 --
 
-DROP TABLE IF EXISTS `tbl_poll_attach`;
+DROP TABLE IF EXISTS ezportal.`tbl_poll_attach`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_poll_attach` (
+CREATE TABLE ezportal.`tbl_poll_attach` (
   `BRD_ID` bigint(10) NOT NULL,
   `ITEM_NO` bigint(10) NOT NULL,
   `QUESTION_NO` bigint(10) NOT NULL,
@@ -8838,10 +8838,10 @@ CREATE TABLE `tbl_poll_attach` (
 -- Table structure for table `tbl_poll_item`
 --
 
-DROP TABLE IF EXISTS `tbl_poll_item`;
+DROP TABLE IF EXISTS ezportal.`tbl_poll_item`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_poll_item` (
+CREATE TABLE ezportal.`tbl_poll_item` (
   `BRD_ID` bigint(10) NOT NULL,
   `ITEM_NO` bigint(10) NOT NULL,
   `USER_ID` varchar(40) NOT NULL,
@@ -8880,10 +8880,10 @@ CREATE TABLE `tbl_poll_item` (
 -- Table structure for table `tbl_poll_itemacl`
 --
 
-DROP TABLE IF EXISTS `tbl_poll_itemacl`;
+DROP TABLE IF EXISTS ezportal.`tbl_poll_itemacl`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_poll_itemacl` (
+CREATE TABLE ezportal.`tbl_poll_itemacl` (
   `BRD_ID` bigint(10) NOT NULL,
   `ITEM_NO` bigint(10) NOT NULL,
   `GUBUN` varchar(2) NOT NULL,
@@ -8900,10 +8900,10 @@ CREATE TABLE `tbl_poll_itemacl` (
 -- Table structure for table `tbl_poll_itemread`
 --
 
-DROP TABLE IF EXISTS `tbl_poll_itemread`;
+DROP TABLE IF EXISTS ezportal.`tbl_poll_itemread`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_poll_itemread` (
+CREATE TABLE ezportal.`tbl_poll_itemread` (
   `BRD_ID` bigint(10) NOT NULL,
   `ITEM_NO` bigint(10) NOT NULL,
   `USER_ID` varchar(40) NOT NULL,
@@ -8924,10 +8924,10 @@ CREATE TABLE `tbl_poll_itemread` (
 -- Table structure for table `tbl_poll_permission`
 --
 
-DROP TABLE IF EXISTS `tbl_poll_permission`;
+DROP TABLE IF EXISTS ezportal.`tbl_poll_permission`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_poll_permission` (
+CREATE TABLE ezportal.`tbl_poll_permission` (
   `BRD_ID` bigint(10) NOT NULL,
   `ITEM_NO` bigint(10) NOT NULL,
   `PUBLIC_FLG` varchar(2) NOT NULL,
@@ -8944,10 +8944,10 @@ CREATE TABLE `tbl_poll_permission` (
 -- Table structure for table `tbl_poll_question`
 --
 
-DROP TABLE IF EXISTS `tbl_poll_question`;
+DROP TABLE IF EXISTS ezportal.`tbl_poll_question`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_poll_question` (
+CREATE TABLE ezportal.`tbl_poll_question` (
   `BRD_ID` bigint(10) NOT NULL,
   `ITEM_NO` bigint(10) NOT NULL,
   `QUESTION_NO` bigint(10) NOT NULL,
@@ -8965,10 +8965,10 @@ CREATE TABLE `tbl_poll_question` (
 -- Table structure for table `tbl_poll_response`
 --
 
-DROP TABLE IF EXISTS `tbl_poll_response`;
+DROP TABLE IF EXISTS ezportal.`tbl_poll_response`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_poll_response` (
+CREATE TABLE ezportal.`tbl_poll_response` (
   `BRD_ID` bigint(10) NOT NULL,
   `ITEM_NO` bigint(10) NOT NULL,
   `QUESTION_NO` bigint(10) NOT NULL,
@@ -9000,10 +9000,10 @@ CREATE TABLE `tbl_poll_response` (
 -- Table structure for table `tbl_poll_responseperson`
 --
 
-DROP TABLE IF EXISTS `tbl_poll_responseperson`;
+DROP TABLE IF EXISTS ezportal.`tbl_poll_responseperson`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_poll_responseperson` (
+CREATE TABLE ezportal.`tbl_poll_responseperson` (
   `BRD_ID` bigint(10) NOT NULL,
   `ITEM_NO` bigint(10) NOT NULL,
   `USER_ID` varchar(40) NOT NULL,
@@ -9031,10 +9031,10 @@ CREATE TABLE `tbl_poll_responseperson` (
 -- Table structure for table `tbl_poll_table_answer`
 --
 
-DROP TABLE IF EXISTS `tbl_poll_table_answer`;
+DROP TABLE IF EXISTS ezportal.`tbl_poll_table_answer`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_poll_table_answer` (
+CREATE TABLE ezportal.`tbl_poll_table_answer` (
   `BRD_ID` bigint(10) NOT NULL,
   `ITEM_NO` bigint(10) NOT NULL,
   `QUESTION_NO` bigint(10) NOT NULL,
@@ -9049,10 +9049,10 @@ CREATE TABLE `tbl_poll_table_answer` (
 -- Table structure for table `tbl_popupservey`
 --
 
-DROP TABLE IF EXISTS `tbl_popupservey`;
+DROP TABLE IF EXISTS ezportal.`tbl_popupservey`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_popupservey` (
+CREATE TABLE ezportal.`tbl_popupservey` (
   `sn` int(11) NOT NULL AUTO_INCREMENT,
   `cn` varchar(80) DEFAULT NULL,
   `userName` varchar(120) CHARACTER SET utf8mb4 DEFAULT NULL,
@@ -9465,10 +9465,10 @@ CREATE TABLE ezcommon.`tbl_previoslyregi` (
 -- Table structure for table `tbl_procedure_log`
 --
 
-DROP TABLE IF EXISTS `tbl_procedure_log`;
+DROP TABLE IF EXISTS ezportal.`tbl_procedure_log`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_procedure_log` (
+CREATE TABLE ezportal.`tbl_procedure_log` (
   `log_num` int(11) NOT NULL AUTO_INCREMENT,
   `log_msg` varchar(1000) DEFAULT NULL,
   `log_date` datetime DEFAULT NULL,
@@ -9480,10 +9480,10 @@ CREATE TABLE `tbl_procedure_log` (
 -- Table structure for table `tbl_proxyinfo`
 --
 
-DROP TABLE IF EXISTS `tbl_proxyinfo`;
+DROP TABLE IF EXISTS ezportal.`tbl_proxyinfo`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_proxyinfo` (
+CREATE TABLE ezportal.`tbl_proxyinfo` (
   `USERID` varchar(80) NOT NULL,
   `PROXYUSERID` varchar(80) DEFAULT NULL,
   `PROXYUSERNAME` varchar(200) DEFAULT NULL,
@@ -9832,10 +9832,10 @@ CREATE TABLE ezportal.`tbl_ps_sliderimage` (
 -- Table structure for table `tbl_ps_userwebpart`
 --
 
-DROP TABLE IF EXISTS `tbl_ps_userwebpart`;
+DROP TABLE IF EXISTS ezportal.`tbl_ps_userwebpart`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_ps_userwebpart` (
+CREATE TABLE ezportal.`tbl_ps_userwebpart` (
   `USERID` varchar(40) NOT NULL,
   `ITEMID` varchar(144) NOT NULL,
   `ITEMSEQ` bigint(10) NOT NULL,
@@ -9849,10 +9849,10 @@ CREATE TABLE `tbl_ps_userwebpart` (
 -- Table structure for table `tbl_ps_webpartgroup`
 --
 
-DROP TABLE IF EXISTS `tbl_ps_webpartgroup`;
+DROP TABLE IF EXISTS ezportal.`tbl_ps_webpartgroup`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_ps_webpartgroup` (
+CREATE TABLE ezportal.`tbl_ps_webpartgroup` (
   `COMPANYID` varchar(510) DEFAULT NULL,
   `ID` varchar(510) NOT NULL,
   `NAME` varchar(510) CHARACTER SET utf8mb4 DEFAULT NULL,
@@ -9865,10 +9865,10 @@ CREATE TABLE `tbl_ps_webpartgroup` (
 -- Table structure for table `tbl_ps_webpartitem`
 --
 
-DROP TABLE IF EXISTS `tbl_ps_webpartitem`;
+DROP TABLE IF EXISTS ezportal.`tbl_ps_webpartitem`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_ps_webpartitem` (
+CREATE TABLE ezportal.`tbl_ps_webpartitem` (
   `COMPANYID` varchar(510) DEFAULT NULL,
   `ID` varchar(510) NOT NULL,
   `GROUPID` varchar(510) DEFAULT NULL,
@@ -9886,10 +9886,10 @@ CREATE TABLE `tbl_ps_webpartitem` (
 -- Table structure for table `tbl_ps_webpartitemacl`
 --
 
-DROP TABLE IF EXISTS `tbl_ps_webpartitemacl`;
+DROP TABLE IF EXISTS ezportal.`tbl_ps_webpartitemacl`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_ps_webpartitemacl` (
+CREATE TABLE ezportal.`tbl_ps_webpartitemacl` (
   `ITEMID` varchar(510) NOT NULL,
   `ACCESSID` varchar(510) DEFAULT NULL,
   `ACCESSNAME` varchar(510) CHARACTER SET utf8mb4 DEFAULT NULL,
@@ -9902,10 +9902,10 @@ CREATE TABLE `tbl_ps_webpartitemacl` (
 -- Table structure for table `tbl_pwdinfo`
 --
 
-DROP TABLE IF EXISTS `tbl_pwdinfo`;
+DROP TABLE IF EXISTS ezportal.`tbl_pwdinfo`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_pwdinfo` (
+CREATE TABLE ezportal.`tbl_pwdinfo` (
   `USERID` varchar(100) NOT NULL,
   `FLAG` varchar(2) NOT NULL,
   `PWD` varchar(2000) DEFAULT NULL,
@@ -9920,10 +9920,10 @@ CREATE TABLE `tbl_pwdinfo` (
 -- Table structure for table `tbl_qs_brdmng`
 --
 
-DROP TABLE IF EXISTS `tbl_qs_brdmng`;
+DROP TABLE IF EXISTS ezportal.`tbl_qs_brdmng`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_qs_brdmng` (
+CREATE TABLE ezportal.`tbl_qs_brdmng` (
   `BRD_ID` bigint(10) NOT NULL,
   `USER_ID` varchar(40) NOT NULL,
   `MNG_GB` varchar(2) NOT NULL,
@@ -9944,10 +9944,10 @@ CREATE TABLE `tbl_qs_brdmng` (
 -- Table structure for table `tbl_qs_itemseq`
 --
 
-DROP TABLE IF EXISTS `tbl_qs_itemseq`;
+DROP TABLE IF EXISTS ezportal.`tbl_qs_itemseq`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_qs_itemseq` (
+CREATE TABLE ezportal.`tbl_qs_itemseq` (
   `BRD_ID` bigint(10) NOT NULL,
   `ITEM_NO` bigint(10) DEFAULT 0,
   `TENANT_ID` mediumint(5) NOT NULL DEFAULT 0,
@@ -9959,10 +9959,10 @@ CREATE TABLE `tbl_qs_itemseq` (
 -- Table structure for table `tbl_query_history`
 --
 
-DROP TABLE IF EXISTS `tbl_query_history`;
+DROP TABLE IF EXISTS ezportal.`tbl_query_history`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_query_history` (
+CREATE TABLE ezportal.`tbl_query_history` (
   `SEQ` int(11) NOT NULL AUTO_INCREMENT,
   `QUERYSTR` varchar(1020) DEFAULT NULL,
   `QUERYDATE` datetime DEFAULT NULL,
@@ -10320,10 +10320,10 @@ CREATE TABLE ezapprovalg.`tbl_recroleinfo_temp` (
 -- Table structure for table `tbl_registercontainer`
 --
 
-DROP TABLE IF EXISTS `tbl_registercontainer`;
+DROP TABLE IF EXISTS ezportal.`tbl_registercontainer`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_registercontainer` (
+CREATE TABLE ezportal.`tbl_registercontainer` (
   `sn` bigint(255) NOT NULL AUTO_INCREMENT,
   `containerID` varchar(45) NOT NULL,
   `contname` varchar(255) CHARACTER SET utf8mb4 NOT NULL,
@@ -10386,10 +10386,10 @@ CREATE TABLE ezapprovalg.`tbl_registerdoc` (
 -- Table structure for table `tbl_registergrant`
 --
 
-DROP TABLE IF EXISTS `tbl_registergrant`;
+DROP TABLE IF EXISTS ezportal.`tbl_registergrant`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_registergrant` (
+CREATE TABLE ezportal.`tbl_registergrant` (
   `containerID` varchar(45) DEFAULT NULL,
   `dept` varchar(10) DEFAULT NULL,
   `accessYN` char(1) DEFAULT NULL,
@@ -10405,10 +10405,10 @@ CREATE TABLE `tbl_registergrant` (
 -- Table structure for table `tbl_rgstbook_announcement`
 --
 
-DROP TABLE IF EXISTS `tbl_rgstbook_announcement`;
+DROP TABLE IF EXISTS ezportal.`tbl_rgstbook_announcement`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_rgstbook_announcement` (
+CREATE TABLE ezportal.`tbl_rgstbook_announcement` (
   `item_id` int(11) NOT NULL,
   `tenant_id` int(11) NOT NULL,
   `company_id` varchar(50) NOT NULL,
@@ -10431,10 +10431,10 @@ CREATE TABLE `tbl_rgstbook_announcement` (
 -- Table structure for table `tbl_rgstbook_announcement_history`
 --
 
-DROP TABLE IF EXISTS `tbl_rgstbook_announcement_history`;
+DROP TABLE IF EXISTS ezportal.`tbl_rgstbook_announcement_history`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_rgstbook_announcement_history` (
+CREATE TABLE ezportal.`tbl_rgstbook_announcement_history` (
   `log_id` int(11) NOT NULL AUTO_INCREMENT,
   `item_id` int(11) NOT NULL,
   `tenant_id` int(11) NOT NULL,
@@ -10458,10 +10458,10 @@ CREATE TABLE `tbl_rgstbook_announcement_history` (
 -- Table structure for table `tbl_rgstbook_certificate`
 --
 
-DROP TABLE IF EXISTS `tbl_rgstbook_certificate`;
+DROP TABLE IF EXISTS ezportal.`tbl_rgstbook_certificate`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_rgstbook_certificate` (
+CREATE TABLE ezportal.`tbl_rgstbook_certificate` (
   `item_id` int(11) NOT NULL,
   `tenant_id` int(11) NOT NULL,
   `company_id` varchar(50) NOT NULL,
@@ -10485,10 +10485,10 @@ CREATE TABLE `tbl_rgstbook_certificate` (
 -- Table structure for table `tbl_rgstbook_certificate_history`
 --
 
-DROP TABLE IF EXISTS `tbl_rgstbook_certificate_history`;
+DROP TABLE IF EXISTS ezportal.`tbl_rgstbook_certificate_history`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_rgstbook_certificate_history` (
+CREATE TABLE ezportal.`tbl_rgstbook_certificate_history` (
   `log_id` int(11) NOT NULL AUTO_INCREMENT,
   `item_id` int(11) NOT NULL,
   `tenant_id` int(11) NOT NULL,
@@ -10513,10 +10513,10 @@ CREATE TABLE `tbl_rgstbook_certificate_history` (
 -- Table structure for table `tbl_rgstbook_config`
 --
 
-DROP TABLE IF EXISTS `tbl_rgstbook_config`;
+DROP TABLE IF EXISTS ezportal.`tbl_rgstbook_config`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_rgstbook_config` (
+CREATE TABLE ezportal.`tbl_rgstbook_config` (
   `user_id` varchar(50) NOT NULL,
   `tenant_id` int(11) NOT NULL,
   `company_id` varchar(50) NOT NULL,
@@ -10529,10 +10529,10 @@ CREATE TABLE `tbl_rgstbook_config` (
 -- Table structure for table `tbl_rgstbook_externaldocu`
 --
 
-DROP TABLE IF EXISTS `tbl_rgstbook_externaldocu`;
+DROP TABLE IF EXISTS ezportal.`tbl_rgstbook_externaldocu`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_rgstbook_externaldocu` (
+CREATE TABLE ezportal.`tbl_rgstbook_externaldocu` (
   `item_id` int(11) NOT NULL,
   `tenant_id` int(11) NOT NULL,
   `company_id` varchar(50) NOT NULL,
@@ -10555,10 +10555,10 @@ CREATE TABLE `tbl_rgstbook_externaldocu` (
 -- Table structure for table `tbl_rgstbook_externaldocu_history`
 --
 
-DROP TABLE IF EXISTS `tbl_rgstbook_externaldocu_history`;
+DROP TABLE IF EXISTS ezportal.`tbl_rgstbook_externaldocu_history`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_rgstbook_externaldocu_history` (
+CREATE TABLE ezportal.`tbl_rgstbook_externaldocu_history` (
   `log_id` int(11) NOT NULL AUTO_INCREMENT,
   `item_id` int(11) NOT NULL,
   `tenant_id` int(11) NOT NULL,
@@ -10582,10 +10582,10 @@ CREATE TABLE `tbl_rgstbook_externaldocu_history` (
 -- Table structure for table `tbl_rgstbook_officialseal`
 --
 
-DROP TABLE IF EXISTS `tbl_rgstbook_officialseal`;
+DROP TABLE IF EXISTS ezportal.`tbl_rgstbook_officialseal`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_rgstbook_officialseal` (
+CREATE TABLE ezportal.`tbl_rgstbook_officialseal` (
   `item_id` int(11) NOT NULL,
   `tenant_id` int(11) NOT NULL,
   `company_id` varchar(50) NOT NULL,
@@ -10609,10 +10609,10 @@ CREATE TABLE `tbl_rgstbook_officialseal` (
 -- Table structure for table `tbl_rgstbook_officialseal_history`
 --
 
-DROP TABLE IF EXISTS `tbl_rgstbook_officialseal_history`;
+DROP TABLE IF EXISTS ezportal.`tbl_rgstbook_officialseal_history`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_rgstbook_officialseal_history` (
+CREATE TABLE ezportal.`tbl_rgstbook_officialseal_history` (
   `log_id` int(11) NOT NULL AUTO_INCREMENT,
   `item_id` int(11) NOT NULL,
   `tenant_id` int(11) NOT NULL,
@@ -10637,10 +10637,10 @@ CREATE TABLE `tbl_rgstbook_officialseal_history` (
 -- Table structure for table `tbl_rgstbook_otherseal`
 --
 
-DROP TABLE IF EXISTS `tbl_rgstbook_otherseal`;
+DROP TABLE IF EXISTS ezportal.`tbl_rgstbook_otherseal`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_rgstbook_otherseal` (
+CREATE TABLE ezportal.`tbl_rgstbook_otherseal` (
   `item_id` int(11) NOT NULL,
   `tenant_id` int(11) NOT NULL,
   `company_id` varchar(50) NOT NULL,
@@ -10663,10 +10663,10 @@ CREATE TABLE `tbl_rgstbook_otherseal` (
 -- Table structure for table `tbl_rgstbook_otherseal_history`
 --
 
-DROP TABLE IF EXISTS `tbl_rgstbook_otherseal_history`;
+DROP TABLE IF EXISTS ezportal.`tbl_rgstbook_otherseal_history`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_rgstbook_otherseal_history` (
+CREATE TABLE ezportal.`tbl_rgstbook_otherseal_history` (
   `log_id` int(11) NOT NULL AUTO_INCREMENT,
   `item_id` int(11) NOT NULL,
   `tenant_id` int(11) NOT NULL,
@@ -10690,10 +10690,10 @@ CREATE TABLE `tbl_rgstbook_otherseal_history` (
 -- Table structure for table `tbl_rgstbook_publication`
 --
 
-DROP TABLE IF EXISTS `tbl_rgstbook_publication`;
+DROP TABLE IF EXISTS ezportal.`tbl_rgstbook_publication`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_rgstbook_publication` (
+CREATE TABLE ezportal.`tbl_rgstbook_publication` (
   `item_id` int(11) NOT NULL,
   `tenant_id` int(11) NOT NULL,
   `company_id` varchar(50) NOT NULL,
@@ -10716,10 +10716,10 @@ CREATE TABLE `tbl_rgstbook_publication` (
 -- Table structure for table `tbl_rgstbook_publication_history`
 --
 
-DROP TABLE IF EXISTS `tbl_rgstbook_publication_history`;
+DROP TABLE IF EXISTS ezportal.`tbl_rgstbook_publication_history`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_rgstbook_publication_history` (
+CREATE TABLE ezportal.`tbl_rgstbook_publication_history` (
   `log_id` int(11) NOT NULL AUTO_INCREMENT,
   `item_id` int(11) NOT NULL,
   `tenant_id` int(11) NOT NULL,
@@ -10743,10 +10743,10 @@ CREATE TABLE `tbl_rgstbook_publication_history` (
 -- Table structure for table `tbl_rnd_ask`
 --
 
-DROP TABLE IF EXISTS `tbl_rnd_ask`;
+DROP TABLE IF EXISTS ezportal.`tbl_rnd_ask`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_rnd_ask` (
+CREATE TABLE ezportal.`tbl_rnd_ask` (
   `ask_pk` int(11) NOT NULL AUTO_INCREMENT,
   `business_seq` bigint(20) NOT NULL COMMENT '사업 일련번호',
   `tenant_id` mediumint(9) NOT NULL DEFAULT 0 COMMENT '테넌트 아이디',
@@ -10761,10 +10761,10 @@ CREATE TABLE `tbl_rnd_ask` (
 -- Table structure for table `tbl_rnd_attach`
 --
 
-DROP TABLE IF EXISTS `tbl_rnd_attach`;
+DROP TABLE IF EXISTS ezportal.`tbl_rnd_attach`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_rnd_attach` (
+CREATE TABLE ezportal.`tbl_rnd_attach` (
   `attach_seq` int(11) NOT NULL AUTO_INCREMENT COMMENT '첨부 PK',
   `business_seq` int(11) NOT NULL,
   `name` varchar(200) DEFAULT NULL COMMENT '파일 이름',
@@ -10780,10 +10780,10 @@ CREATE TABLE `tbl_rnd_attach` (
 -- Table structure for table `tbl_rnd_business`
 --
 
-DROP TABLE IF EXISTS `tbl_rnd_business`;
+DROP TABLE IF EXISTS ezportal.`tbl_rnd_business`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_rnd_business` (
+CREATE TABLE ezportal.`tbl_rnd_business` (
   `business_seq` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '사업 일련번호',
   `business_name` varchar(200) NOT NULL COMMENT '사업 명',
   `tenant_id` mediumint(9) NOT NULL DEFAULT 0 COMMENT '테넌트 아이디',
@@ -10812,10 +10812,10 @@ CREATE TABLE `tbl_rnd_business` (
 -- Table structure for table `tbl_rnd_config`
 --
 
-DROP TABLE IF EXISTS `tbl_rnd_config`;
+DROP TABLE IF EXISTS ezportal.`tbl_rnd_config`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_rnd_config` (
+CREATE TABLE ezportal.`tbl_rnd_config` (
   `id` varchar(80) NOT NULL,
   `listcount` int(4) NOT NULL,
   `tenant_id` int(11) NOT NULL,
@@ -10827,10 +10827,10 @@ CREATE TABLE `tbl_rnd_config` (
 -- Table structure for table `tbl_rnd_docattach`
 --
 
-DROP TABLE IF EXISTS `tbl_rnd_docattach`;
+DROP TABLE IF EXISTS ezportal.`tbl_rnd_docattach`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_rnd_docattach` (
+CREATE TABLE ezportal.`tbl_rnd_docattach` (
   `attach_seq` int(11) NOT NULL AUTO_INCREMENT,
   `business_seq` int(11) NOT NULL,
   `name` varchar(1020) DEFAULT NULL COMMENT '문서 이름',
@@ -10854,10 +10854,10 @@ CREATE TABLE `tbl_rnd_docattach` (
 -- Table structure for table `tbl_rnd_member`
 --
 
-DROP TABLE IF EXISTS `tbl_rnd_member`;
+DROP TABLE IF EXISTS ezportal.`tbl_rnd_member`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_rnd_member` (
+CREATE TABLE ezportal.`tbl_rnd_member` (
   `member_pk` int(11) NOT NULL AUTO_INCREMENT,
   `business_seq` int(11) NOT NULL COMMENT '사업 일련번호',
   `tenant_id` mediumint(9) NOT NULL DEFAULT 0 COMMENT '테넌트 아이디',
@@ -11512,8 +11512,8 @@ CREATE TABLE ezcommon.`tbl_schistory_rec` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
-DROP TABLE IF EXISTS `tbl_car`;
-CREATE TABLE `tbl_car` (
+DROP TABLE IF EXISTS ezportal.`tbl_car`;
+CREATE TABLE ezportal.`tbl_car` (
   `CAR_ID` bigint(10) NOT NULL,
   `CAR_NAME` varchar(510) CHARACTER SET utf8mb4 DEFAULT NULL,
   `CAR_NAME2` varchar(510) CHARACTER SET utf8mb4 DEFAULT NULL,
@@ -11541,8 +11541,8 @@ CREATE TABLE `tbl_car` (
   PRIMARY KEY (`TENANT_ID`,`CAR_ID`,`COMPANYID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-DROP TABLE IF EXISTS `tbl_car_acl`;
-CREATE TABLE `tbl_car_acl` (
+DROP TABLE IF EXISTS ezportal.`tbl_car_acl`;
+CREATE TABLE ezportal.`tbl_car_acl` (
   `CAR_ID` varchar(40) NOT NULL,
   `MEMBER_NAM` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
   `MEMBER_ID` varchar(80) NOT NULL,
@@ -11554,8 +11554,8 @@ CREATE TABLE `tbl_car_acl` (
   PRIMARY KEY (`TENANT_ID`,`CAR_ID`,`MEMBER_ID`,`COMPANYID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-DROP TABLE IF EXISTS `tbl_car_attach`;
-CREATE TABLE `tbl_car_attach` (
+DROP TABLE IF EXISTS ezportal.`tbl_car_attach`;
+CREATE TABLE ezportal.`tbl_car_attach` (
   `ATTACHID` bigint(10) NOT NULL AUTO_INCREMENT,
   `CAR_ID` varchar(40) NOT NULL,
   `FILESIZE` bigint(10) NOT NULL,
@@ -11566,8 +11566,8 @@ CREATE TABLE `tbl_car_attach` (
   PRIMARY KEY (`ATTACHID`,`TENANT_ID`,`COMPANYID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=93 DEFAULT CHARSET=utf8mb4;
 
-DROP TABLE IF EXISTS `tbl_car_form`;
-CREATE TABLE `tbl_car_form` (
+DROP TABLE IF EXISTS ezportal.`tbl_car_form`;
+CREATE TABLE ezportal.`tbl_car_form` (
   `CAR_FORM_ID` bigint(40) NOT NULL,
   `CAR_ID` varchar(40) NOT NULL,
   `REGISTER_ID` varchar(80) NOT NULL,
@@ -11793,10 +11793,10 @@ CREATE TABLE ezapprovalg.`tbl_signinfo` (
 -- Table structure for table `tbl_skin_items`
 --
 
-DROP TABLE IF EXISTS `tbl_skin_items`;
+DROP TABLE IF EXISTS ezportal.`tbl_skin_items`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_skin_items` (
+CREATE TABLE ezportal.`tbl_skin_items` (
   `UID_` varchar(100) NOT NULL,
   `SKINNUM` bigint(10) NOT NULL,
   `SKINNAME` varchar(200) DEFAULT NULL,
@@ -11916,10 +11916,10 @@ CREATE TABLE ezapprovalg.`tbl_specialcontainerinfo` (
 -- Table structure for table `tbl_submit_queue`
 --
 
-DROP TABLE IF EXISTS `tbl_submit_queue`;
+DROP TABLE IF EXISTS ezportal.`tbl_submit_queue`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_submit_queue` (
+CREATE TABLE ezportal.`tbl_submit_queue` (
   `CMP_MSG_ID` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `CMP_MSG_GROUP_ID` varchar(20) DEFAULT NULL,
   `USR_ID` varchar(16) NOT NULL,
@@ -12850,10 +12850,10 @@ CREATE TABLE ezapprovalg.`tbl_tmpreceiptpointinfo` (
 -- Table structure for table `tbl_totalalert_filter_personal`
 --
 
-DROP TABLE IF EXISTS `tbl_totalalert_filter_personal`;
+DROP TABLE IF EXISTS ezportal.`tbl_totalalert_filter_personal`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_totalalert_filter_personal` (
+CREATE TABLE ezportal.`tbl_totalalert_filter_personal` (
   `USER_ID` varchar(20) NOT NULL,
   `IS_MOBILE` char(1) NOT NULL DEFAULT 'n',
   `READ_FILTER` char(3) DEFAULT 'all',
@@ -12870,10 +12870,10 @@ CREATE TABLE `tbl_totalalert_filter_personal` (
 -- Table structure for table `tbl_totalalert_noti`
 --
 
-DROP TABLE IF EXISTS `tbl_totalalert_noti`;
+DROP TABLE IF EXISTS ezportal.`tbl_totalalert_noti`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_totalalert_noti` (
+CREATE TABLE ezportal.`tbl_totalalert_noti` (
   `NOTI_ID` bigint(20) NOT NULL AUTO_INCREMENT,
   `USER_ID` varchar(20) NOT NULL,
   `MAIN_TYPE` varchar(20) NOT NULL,
@@ -12902,10 +12902,10 @@ CREATE TABLE `tbl_totalalert_noti` (
 -- Table structure for table `tbl_totalalert_noti_config`
 --
 
-DROP TABLE IF EXISTS `tbl_totalalert_noti_config`;
+DROP TABLE IF EXISTS ezportal.`tbl_totalalert_noti_config`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_totalalert_noti_config` (
+CREATE TABLE ezportal.`tbl_totalalert_noti_config` (
   `EXPIRE_PERIOD` varchar(30) NOT NULL,
   `COMPANY_ID` varchar(200) NOT NULL,
   `TENANT_ID` mediumint(5) NOT NULL,
@@ -12917,10 +12917,10 @@ CREATE TABLE `tbl_totalalert_noti_config` (
 -- Table structure for table `tbl_totalalert_noti_config_notuseplatform`
 --
 
-DROP TABLE IF EXISTS `tbl_totalalert_noti_config_notuseplatform`;
+DROP TABLE IF EXISTS ezportal.`tbl_totalalert_noti_config_notuseplatform`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_totalalert_noti_config_notuseplatform` (
+CREATE TABLE ezportal.`tbl_totalalert_noti_config_notuseplatform` (
   `USER_ID` varchar(20) NOT NULL,
   `MAIN_TYPE` varchar(20) NOT NULL,
   `SUB_TYPE` varchar(50) NOT NULL,
@@ -12974,10 +12974,10 @@ CREATE TABLE ezportal.`tbl_user_jobmaster` (
 -- Table structure for table `tbl_user_listoption`
 --
 
-DROP TABLE IF EXISTS `tbl_user_listoption`;
+DROP TABLE IF EXISTS ezportal.`tbl_user_listoption`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_user_listoption` (
+CREATE TABLE ezportal.`tbl_user_listoption` (
   `CN` varchar(80) NOT NULL,
   `LISTTYPE` varchar(20) NOT NULL,
   `SN` varchar(50) DEFAULT NULL,
@@ -13290,10 +13290,10 @@ CREATE TABLE ezportal.`tbl_usermaster_retire` (
 -- Table structure for table `tbl_usermasterforhistory`
 --
 
-DROP TABLE IF EXISTS `tbl_usermasterforhistory`;
+DROP TABLE IF EXISTS ezportal.`tbl_usermasterforhistory`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_usermasterforhistory` (
+CREATE TABLE ezportal.`tbl_usermasterforhistory` (
   `CN` varchar(80) NOT NULL,
   `DISPLAYNAME` varchar(120) CHARACTER SET utf8mb4 NOT NULL,
   `DISPLAYNAME2` varchar(120) CHARACTER SET utf8mb4 DEFAULT NULL,
@@ -13385,10 +13385,10 @@ CREATE TABLE ezportal.`tbl_usermobileinfo` (
 -- Table structure for table `tbl_vote_answer`
 --
 
-DROP TABLE IF EXISTS `tbl_vote_answer`;
+DROP TABLE IF EXISTS ezportal.`tbl_vote_answer`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_vote_answer` (
+CREATE TABLE ezportal.`tbl_vote_answer` (
   `ID` mediumint(9) NOT NULL,
   `QST_ID` mediumint(9) NOT NULL,
   `TENANT_ID` mediumint(9) NOT NULL,
@@ -13403,10 +13403,10 @@ CREATE TABLE `tbl_vote_answer` (
 -- Table structure for table `tbl_vote_comment`
 --
 
-DROP TABLE IF EXISTS `tbl_vote_comment`;
+DROP TABLE IF EXISTS ezportal.`tbl_vote_comment`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_vote_comment` (
+CREATE TABLE ezportal.`tbl_vote_comment` (
   `ID` int(11) NOT NULL,
   `QST_ID` int(11) NOT NULL,
   `TENANT_ID` int(11) NOT NULL,
@@ -13428,10 +13428,10 @@ CREATE TABLE `tbl_vote_comment` (
 -- Table structure for table `tbl_vote_configuration`
 --
 
-DROP TABLE IF EXISTS `tbl_vote_configuration`;
+DROP TABLE IF EXISTS ezportal.`tbl_vote_configuration`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_vote_configuration` (
+CREATE TABLE ezportal.`tbl_vote_configuration` (
   `USER_ID` varchar(100) NOT NULL,
   `START_TIME` varchar(50) NOT NULL,
   `END_TIME` varchar(50) NOT NULL,
@@ -13446,10 +13446,10 @@ CREATE TABLE `tbl_vote_configuration` (
 -- Table structure for table `tbl_vote_question`
 --
 
-DROP TABLE IF EXISTS `tbl_vote_question`;
+DROP TABLE IF EXISTS ezportal.`tbl_vote_question`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_vote_question` (
+CREATE TABLE ezportal.`tbl_vote_question` (
   `ID` mediumint(9) NOT NULL,
   `TENANT_ID` mediumint(9) NOT NULL,
   `CONTENT` longtext DEFAULT NULL,
@@ -13485,10 +13485,10 @@ CREATE TABLE `tbl_vote_question` (
 -- Table structure for table `tbl_vote_question_related`
 --
 
-DROP TABLE IF EXISTS `tbl_vote_question_related`;
+DROP TABLE IF EXISTS ezportal.`tbl_vote_question_related`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_vote_question_related` (
+CREATE TABLE ezportal.`tbl_vote_question_related` (
   `QST_ID` int(11) NOT NULL,
   `USER_ID` varchar(50) NOT NULL,
   `TENANT_ID` int(11) NOT NULL,
@@ -13506,10 +13506,10 @@ CREATE TABLE `tbl_vote_question_related` (
 -- Table structure for table `tbl_vote_user_and_answer`
 --
 
-DROP TABLE IF EXISTS `tbl_vote_user_and_answer`;
+DROP TABLE IF EXISTS ezportal.`tbl_vote_user_and_answer`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_vote_user_and_answer` (
+CREATE TABLE ezportal.`tbl_vote_user_and_answer` (
   `ANS_ID` mediumint(9) NOT NULL,
   `QST_ID` mediumint(9) NOT NULL,
   `USER_ID` varchar(80) NOT NULL,
@@ -13526,10 +13526,10 @@ CREATE TABLE `tbl_vote_user_and_answer` (
 -- Table structure for table `tbl_vote_user_and_question`
 --
 
-DROP TABLE IF EXISTS `tbl_vote_user_and_question`;
+DROP TABLE IF EXISTS ezportal.`tbl_vote_user_and_question`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_vote_user_and_question` (
+CREATE TABLE ezportal.`tbl_vote_user_and_question` (
   `QST_ID` int(11) NOT NULL,
   `USER_ID` varchar(50) NOT NULL,
   `TENANT_ID` int(11) NOT NULL,
@@ -13544,10 +13544,10 @@ CREATE TABLE `tbl_vote_user_and_question` (
 -- Table structure for table `tbl_vote_users`
 --
 
-DROP TABLE IF EXISTS `tbl_vote_users`;
+DROP TABLE IF EXISTS ezportal.`tbl_vote_users`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_vote_users` (
+CREATE TABLE ezportal.`tbl_vote_users` (
   `TENANT_ID` int(11) NOT NULL,
   `QST_ID` int(11) NOT NULL,
   `USER_ID` varchar(80) NOT NULL,
@@ -13568,7 +13568,7 @@ CREATE TABLE `tbl_vote_users` (
 DROP TABLE IF EXISTS ezportal.`tbl_weather`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_weather` (
+CREATE TABLE ezportal.`tbl_weather` (
   `SN` varchar(3) NOT NULL,
   `CITYCODE` varchar(20) CHARACTER SET utf8mb4 NOT NULL,
   `CITYNAME` varchar(50) CHARACTER SET utf8mb4 DEFAULT NULL,
@@ -13587,7 +13587,7 @@ CREATE TABLE `tbl_weather` (
 DROP TABLE IF EXISTS ezportal.`tbl_weather_user`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_weather_user` (
+CREATE TABLE ezportal.`tbl_weather_user` (
   `USERID` varchar(80) NOT NULL,
   `TENANT_ID` mediumint(5) NOT NULL,
   `CITYCODE` varchar(45) DEFAULT NULL,
@@ -13619,10 +13619,10 @@ CREATE TABLE TBL_WEATHER_CITY (
 -- Table structure for table `tbl_webfolder_apply_hist_mem`
 --
 
-DROP TABLE IF EXISTS `tbl_webfolder_apply_hist_mem`;
+DROP TABLE IF EXISTS ezportal.`tbl_webfolder_apply_hist_mem`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_webfolder_apply_hist_mem` (
+CREATE TABLE ezportal.`tbl_webfolder_apply_hist_mem` (
   `APPLY_ID` varchar(40) NOT NULL,
   `MEMBER_ID` varchar(80) NOT NULL,
   `MEMBER_NAME` varchar(200) NOT NULL,
@@ -13636,10 +13636,10 @@ CREATE TABLE `tbl_webfolder_apply_hist_mem` (
 -- Table structure for table `tbl_webfolder_apply_history`
 --
 
-DROP TABLE IF EXISTS `tbl_webfolder_apply_history`;
+DROP TABLE IF EXISTS ezportal.`tbl_webfolder_apply_history`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_webfolder_apply_history` (
+CREATE TABLE ezportal.`tbl_webfolder_apply_history` (
   `APPLY_ID` varchar(40) NOT NULL,
   `TENANT_ID` int(5) DEFAULT NULL,
   `COMPANY_ID` varchar(80) NOT NULL,
@@ -13656,10 +13656,10 @@ CREATE TABLE `tbl_webfolder_apply_history` (
 -- Table structure for table `tbl_webfolder_config`
 --
 
-DROP TABLE IF EXISTS `tbl_webfolder_config`;
+DROP TABLE IF EXISTS ezportal.`tbl_webfolder_config`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_webfolder_config` (
+CREATE TABLE ezportal.`tbl_webfolder_config` (
   `TENANT_ID` mediumint(5) NOT NULL COMMENT '테넌트 아이디',
   `COMPANY_ID` varchar(100) NOT NULL COMMENT '회사 아이디',
   `UPLOAD_LIMIT` varchar(100) DEFAULT NULL COMMENT '1회 업로드 제한량',
@@ -13674,10 +13674,10 @@ CREATE TABLE `tbl_webfolder_config` (
 -- Table structure for table `tbl_webfolder_enc_folder`
 --
 
-DROP TABLE IF EXISTS `tbl_webfolder_enc_folder`;
+DROP TABLE IF EXISTS ezportal.`tbl_webfolder_enc_folder`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_webfolder_enc_folder` (
+CREATE TABLE ezportal.`tbl_webfolder_enc_folder` (
   `FOLDER_ID` int(11) NOT NULL,
   `TENANT_ID` int(7) NOT NULL,
   PRIMARY KEY (`FOLDER_ID`,`TENANT_ID`)
@@ -13688,10 +13688,10 @@ CREATE TABLE `tbl_webfolder_enc_folder` (
 -- Table structure for table `tbl_webfolder_encrypted_file`
 --
 
-DROP TABLE IF EXISTS `tbl_webfolder_encrypted_file`;
+DROP TABLE IF EXISTS ezportal.`tbl_webfolder_encrypted_file`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_webfolder_encrypted_file` (
+CREATE TABLE ezportal.`tbl_webfolder_encrypted_file` (
   `FILE_ID` int(11) NOT NULL,
   `VERSION` mediumint(5) NOT NULL,
   `TENANT_ID` mediumint(5) NOT NULL,
@@ -13703,10 +13703,10 @@ CREATE TABLE `tbl_webfolder_encrypted_file` (
 -- Table structure for table `tbl_webfolder_env`
 --
 
-DROP TABLE IF EXISTS `tbl_webfolder_env`;
+DROP TABLE IF EXISTS ezportal.`tbl_webfolder_env`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_webfolder_env` (
+CREATE TABLE ezportal.`tbl_webfolder_env` (
   `CN` varchar(100) NOT NULL COMMENT '사용자 아이디',
   `ENV_TYPE` varchar(100) NOT NULL COMMENT '환경설정 타입: 부서: D, 페이지: P ',
   `ENV_VALUE` varchar(100) DEFAULT NULL COMMENT '부서명 ; 페이지 카운트: 10,20,30,40,50',
@@ -13715,8 +13715,8 @@ CREATE TABLE `tbl_webfolder_env` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='사용자 환경설정';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
-DROP TABLE IF EXISTS `tbl_webfolder_no_inherit`;
-CREATE TABLE `tbl_webfolder_no_inherit` (
+DROP TABLE IF EXISTS ezportal.`tbl_webfolder_no_inherit`;
+CREATE TABLE ezportal.`tbl_webfolder_no_inherit` (
   `FOLDER_ID` varchar(100) NOT NULL,
   `TENANT_ID` int(7) NOT NULL,
   PRIMARY KEY (`FOLDER_ID`,`TENANT_ID`)
@@ -13725,10 +13725,10 @@ CREATE TABLE `tbl_webfolder_no_inherit` (
 -- Table structure for table `tbl_webfolder_favor`
 --
 
-DROP TABLE IF EXISTS `tbl_webfolder_favor`;
+DROP TABLE IF EXISTS ezportal.`tbl_webfolder_favor`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_webfolder_favor` (
+CREATE TABLE ezportal.`tbl_webfolder_favor` (
   `TARGET_ID` int(11) NOT NULL COMMENT '대상 아이디(폴더 또는 파일)',
   `USER_ID` varchar(80) NOT NULL COMMENT '사용자 아이디',
   `TARGET_TYPE` varchar(50) NOT NULL COMMENT '유형 폴더:FOLDER, 파일:FILE',
@@ -13742,10 +13742,10 @@ CREATE TABLE `tbl_webfolder_favor` (
 -- Table structure for table `tbl_webfolder_file`
 --
 
-DROP TABLE IF EXISTS `tbl_webfolder_file`;
+DROP TABLE IF EXISTS ezportal.`tbl_webfolder_file`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_webfolder_file` (
+CREATE TABLE ezportal.`tbl_webfolder_file` (
   `FILE_ID` int(11) NOT NULL AUTO_INCREMENT COMMENT '파일 아이디',
   `FILE_NAME` varchar(250) NOT NULL COMMENT '파일 이름',
   `FILE_PATH` varchar(250) NOT NULL COMMENT '파일 경로',
@@ -13777,10 +13777,10 @@ CREATE TABLE `tbl_webfolder_file` (
 -- Table structure for table `tbl_webfolder_file_history`
 --
 
-DROP TABLE IF EXISTS `tbl_webfolder_file_history`;
+DROP TABLE IF EXISTS ezportal.`tbl_webfolder_file_history`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_webfolder_file_history` (
+CREATE TABLE ezportal.`tbl_webfolder_file_history` (
   `FILE_ID` int(11) NOT NULL,
   `VERSION` mediumint(5) NOT NULL DEFAULT 1,
   `FILE_PATH` varchar(250) NOT NULL,
@@ -13801,10 +13801,10 @@ CREATE TABLE `tbl_webfolder_file_history` (
 -- Table structure for table `tbl_webfolder_filetype`
 --
 
-DROP TABLE IF EXISTS `tbl_webfolder_filetype`;
+DROP TABLE IF EXISTS ezportal.`tbl_webfolder_filetype`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_webfolder_filetype` (
+CREATE TABLE ezportal.`tbl_webfolder_filetype` (
   `TYPE_ID` varchar(100) NOT NULL COMMENT '유형아이디',
   `TYPE_NAME` varchar(80) NOT NULL COMMENT '파일확장자',
   `TYPE_NAME2` varchar(80) NOT NULL,
@@ -13819,10 +13819,10 @@ CREATE TABLE `tbl_webfolder_filetype` (
 -- Table structure for table `tbl_webfolder_fileuser`
 --
 
-DROP TABLE IF EXISTS `tbl_webfolder_fileuser`;
+DROP TABLE IF EXISTS ezportal.`tbl_webfolder_fileuser`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_webfolder_fileuser` (
+CREATE TABLE ezportal.`tbl_webfolder_fileuser` (
   `SEQ_ID` int(11) NOT NULL AUTO_INCREMENT,
   `FILE_ID` int(11) NOT NULL,
   `USER_ID` varchar(100) NOT NULL,
@@ -13842,10 +13842,10 @@ CREATE TABLE `tbl_webfolder_fileuser` (
 -- Table structure for table `tbl_webfolder_folder`
 --
 
-DROP TABLE IF EXISTS `tbl_webfolder_folder`;
+DROP TABLE IF EXISTS ezportal.`tbl_webfolder_folder`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_webfolder_folder` (
+CREATE TABLE ezportal.`tbl_webfolder_folder` (
   `FOLDER_ID` int(11) NOT NULL AUTO_INCREMENT COMMENT '폴더아이디',
   `FOLDER_NAME1` varchar(200) NOT NULL COMMENT '폴더이름',
   `FOLDER_NAME2` varchar(200) DEFAULT NULL COMMENT '폴더이름2',
@@ -13874,10 +13874,10 @@ CREATE TABLE `tbl_webfolder_folder` (
 -- Table structure for table `tbl_webfolder_folderuser`
 --
 
-DROP TABLE IF EXISTS `tbl_webfolder_folderuser`;
+DROP TABLE IF EXISTS ezportal.`tbl_webfolder_folderuser`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_webfolder_folderuser` (
+CREATE TABLE ezportal.`tbl_webfolder_folderuser` (
   `SEQ_ID` int(11) NOT NULL AUTO_INCREMENT COMMENT '생성 순번',
   `USER_ID` varchar(100) NOT NULL COMMENT '사용자 아이디',
   `USER_TYPE` varchar(50) NOT NULL COMMENT '사용자 타입 부서: DEPT, 사원:USER ',
@@ -13898,10 +13898,10 @@ CREATE TABLE `tbl_webfolder_folderuser` (
 -- Table structure for table `tbl_webfolder_log`
 --
 
-DROP TABLE IF EXISTS `tbl_webfolder_log`;
+DROP TABLE IF EXISTS ezportal.`tbl_webfolder_log`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_webfolder_log` (
+CREATE TABLE ezportal.`tbl_webfolder_log` (
   `LOG_ID` varchar(200) NOT NULL COMMENT '로그 순번',
   `FILE_TYPE` varchar(200) DEFAULT NULL COMMENT '파일유형',
   `FILE_NAME` varchar(200) DEFAULT NULL COMMENT '파일이름',
@@ -13930,10 +13930,10 @@ CREATE TABLE `tbl_webfolder_log` (
 -- Table structure for table `tbl_webfolder_share`
 --
 
-DROP TABLE IF EXISTS `tbl_webfolder_share`;
+DROP TABLE IF EXISTS ezportal.`tbl_webfolder_share`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_webfolder_share` (
+CREATE TABLE ezportal.`tbl_webfolder_share` (
   `SHARE_ID` bigint(20) NOT NULL,
   `SHARER_ID` varchar(80) NOT NULL,
   `SHARER_NAME1` varchar(120) NOT NULL,
@@ -13951,10 +13951,10 @@ CREATE TABLE `tbl_webfolder_share` (
 -- Table structure for table `tbl_webfolder_share_hide`
 --
 
-DROP TABLE IF EXISTS `tbl_webfolder_share_hide`;
+DROP TABLE IF EXISTS ezportal.`tbl_webfolder_share_hide`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_webfolder_share_hide` (
+CREATE TABLE ezportal.`tbl_webfolder_share_hide` (
   `SEQ_ID` bigint(20) NOT NULL,
   `SHARE_ID` bigint(20) NOT NULL,
   `USER_ID` varchar(80) NOT NULL,
@@ -13970,10 +13970,10 @@ CREATE TABLE `tbl_webfolder_share_hide` (
 -- Table structure for table `tbl_webfolder_share_sub`
 --
 
-DROP TABLE IF EXISTS `tbl_webfolder_share_sub`;
+DROP TABLE IF EXISTS ezportal.`tbl_webfolder_share_sub`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_webfolder_share_sub` (
+CREATE TABLE ezportal.`tbl_webfolder_share_sub` (
   `SEQ_ID` bigint(20) NOT NULL,
   `SHARE_ID` bigint(20) NOT NULL,
   `USER_ID` varchar(80) NOT NULL,
@@ -13991,10 +13991,10 @@ CREATE TABLE `tbl_webfolder_share_sub` (
 -- Table structure for table `tbl_webfolder_token`
 --
 
-DROP TABLE IF EXISTS `tbl_webfolder_token`;
+DROP TABLE IF EXISTS ezportal.`tbl_webfolder_token`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_webfolder_token` (
+CREATE TABLE ezportal.`tbl_webfolder_token` (
   `USERID` varchar(32) NOT NULL,
   `LTOKEN` varchar(128) DEFAULT NULL,
   `REGDATA` datetime DEFAULT NULL,
@@ -14009,10 +14009,10 @@ CREATE TABLE `tbl_webfolder_token` (
 -- Table structure for table `tbl_webfolder_user`
 --
 
-DROP TABLE IF EXISTS `tbl_webfolder_user`;
+DROP TABLE IF EXISTS ezportal.`tbl_webfolder_user`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_webfolder_user` (
+CREATE TABLE ezportal.`tbl_webfolder_user` (
   `CN` varchar(80) NOT NULL COMMENT '사용자 아이디',
   `TOTAL_CAPACITY` varchar(250) DEFAULT NULL COMMENT '총용량',
   `COMPANY_ID` varchar(50) NOT NULL COMMENT '회사 아이디',
@@ -14025,8 +14025,8 @@ CREATE TABLE `tbl_webfolder_user` (
 -- 
 -- Table structure for table `jmocha_mail_outofoffice_tem`
 --
-DROP TABLE IF EXISTS `jmocha_mail_outofoffice_tem`;
-CREATE TABLE `jmocha_mail_outofoffice_tem` (
+DROP TABLE IF EXISTS ezportal.`jmocha_mail_outofoffice_tem`;
+CREATE TABLE ezportal.`jmocha_mail_outofoffice_tem` (
   `USER_ID` varchar(100) NOT NULL,
   `DISPLAYNAME` varchar(45) NOT NULL,
   `CONTENT` longtext CHARACTER SET utf8mb4 NOT NULL,
@@ -14036,8 +14036,8 @@ CREATE TABLE `jmocha_mail_outofoffice_tem` (
 -- 
 -- Table structure for table `jmocha_user_mail_template`
 --
-DROP TABLE IF EXISTS `jmocha_user_mail_template`;
-CREATE TABLE `jmocha_user_mail_template` (
+DROP TABLE IF EXISTS ezportal.`jmocha_user_mail_template`;
+CREATE TABLE ezportal.`jmocha_user_mail_template` (
   `USER_ID` varchar(100) NOT NULL,
   `DISPLAYNAME` varchar(45) NOT NULL,
   `TEMPLATE_ID` varchar(510) NOT NULL,
@@ -14050,8 +14050,8 @@ CREATE TABLE `jmocha_user_mail_template` (
 -- 
 -- Table structure for table `jmocha_mailbox_progress`
 --
-DROP TABLE IF EXISTS `jmocha_mailbox_progress`;
-CREATE TABLE `jmocha_mailbox_progress` (
+DROP TABLE IF EXISTS ezportal.`jmocha_mailbox_progress`;
+CREATE TABLE ezportal.`jmocha_mailbox_progress` (
   `USER_KEY` varchar(80) NOT NULL,
   `TENANT_ID` mediumint(5) NOT NULL,
   `USER_ID` varchar(80) NOT NULL,
@@ -14066,8 +14066,8 @@ CREATE TABLE `jmocha_mailbox_progress` (
 -- 
 -- Table structure for table `jmocha_appr_allowed_domain`
 --
-DROP TABLE IF EXISTS `jmocha_appr_allowed_domain`;
-CREATE TABLE `jmocha_appr_allowed_domain` (
+DROP TABLE IF EXISTS ezportal.`jmocha_appr_allowed_domain`;
+CREATE TABLE ezportal.`jmocha_appr_allowed_domain` (
   `TENANT_ID` int(11) NOT NULL,
   `COMPANY_ID` varchar(80) NOT NULL,
   `DOMAIN_NAME` varchar(100) NOT NULL,
@@ -14077,8 +14077,8 @@ CREATE TABLE `jmocha_appr_allowed_domain` (
 -- 
 -- Table structure for table `jmocha_appr_user`
 --
-DROP TABLE IF EXISTS `jmocha_appr_user`;
-CREATE TABLE `jmocha_appr_user` (
+DROP TABLE IF EXISTS ezportal.`jmocha_appr_user`;
+CREATE TABLE ezportal.`jmocha_appr_user` (
   `TENANT_ID` int(11) NOT NULL,
   `COMPANY_ID` varchar(80) NOT NULL,
   `USER_ID` varchar(100) NOT NULL,
@@ -14089,8 +14089,8 @@ CREATE TABLE `jmocha_appr_user` (
 -- 
 -- Table structure for table `jmocha_appr_history`
 --
-DROP TABLE IF EXISTS `jmocha_appr_history`;
-CREATE TABLE `jmocha_appr_history` (
+DROP TABLE IF EXISTS ezportal.`jmocha_appr_history`;
+CREATE TABLE ezportal.`jmocha_appr_history` (
   `TENANT_ID` int(11) NOT NULL,
   `COMPANY_ID` varchar(80) NOT NULL,
   `MAIL_UID` bigint(20) NOT NULL,
@@ -14116,8 +14116,8 @@ CREATE TABLE `jmocha_appr_history` (
 -- 
 -- Table structure for table `jmocha_appr_comp_history`
 --
-DROP TABLE IF EXISTS `jmocha_appr_comp_history`;
-CREATE TABLE `jmocha_appr_comp_history` (
+DROP TABLE IF EXISTS ezportal.`jmocha_appr_comp_history`;
+CREATE TABLE ezportal.`jmocha_appr_comp_history` (
   `TENANT_ID` int(11) NOT NULL,
   `COMPANY_ID` varchar(80) NOT NULL,
   `MAIL_UID` bigint(20) NOT NULL,
@@ -14443,7 +14443,7 @@ SET character_set_client = @saved_cs_client;
 -- Temporary view structure for view `view_usermaster`
 --
 
-DROP TABLE IF EXISTS `view_usermaster`;
+DROP TABLE IF EXISTS ezportal.`view_usermaster`;
 /*!50001 DROP VIEW IF EXISTS `view_usermaster`*/;
 SET @saved_cs_client     = @@character_set_client;
 SET character_set_client = utf8;
@@ -15668,7 +15668,7 @@ CREATE TABLE ezapprovalg.TBL_APRPREVIEW (
     PRIMARY KEY (USERID , TENANT_ID)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-CREATE TABLE TBL_DB_LOG
+CREATE TABLE ezportal.TBL_DB_LOG
 (
     MESSAGE     VARCHAR(1000) ,
     CATEGORY    VARCHAR(200)  ,
@@ -15883,10 +15883,10 @@ CREATE TABLE ezportal.TBL_PORTAL_TOP_COMPANY
 -- Table structure for table `tbl_realtime_notification`
 --
 
-DROP TABLE IF EXISTS `tbl_realtime_notification`;
+DROP TABLE IF EXISTS ezportal.`tbl_realtime_notification`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_realtime_notification` (
+CREATE TABLE ezportal.`tbl_realtime_notification` (
 		  `NOTISEQ` bigint(20) NOT NULL AUTO_INCREMENT,
 		  `USERID` varchar(80) NOT NULL,
 		  `MAINTYPE` varchar(20) NOT NULL,
@@ -15993,10 +15993,10 @@ CREATE TABLE ezportal.`TBL_SYSTEMCONFIG` (
   PRIMARY KEY (`CODE`,`TENANT_ID`,`COMPANY_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-DROP TABLE IF EXISTS `TBL_SYSTEMCONFIG_TYPE`;
+DROP TABLE IF EXISTS ezportal.`TBL_SYSTEMCONFIG_TYPE`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `TBL_SYSTEMCONFIG_TYPE` (
+CREATE TABLE ezportal.`TBL_SYSTEMCONFIG_TYPE` (
   `TYPECODE` varchar(50) NOT NULL,
   `TENANT_ID` mediumint(5) NOT NULL,
   `COMPANY_ID` varchar(80) NOT NULL,
@@ -16010,10 +16010,10 @@ CREATE TABLE `TBL_SYSTEMCONFIG_TYPE` (
   PRIMARY KEY (`TYPECODE`,`TENANT_ID`,`COMPANY_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-DROP TABLE IF EXISTS `TBL_NOTI_EMERGENCY_COMPANY`;
+DROP TABLE IF EXISTS ezportal.`TBL_NOTI_EMERGENCY_COMPANY`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `TBL_NOTI_EMERGENCY_COMPANY` (
+CREATE TABLE ezportal.`TBL_NOTI_EMERGENCY_COMPANY` (
   `COMPANY_ID` varchar(200) NOT NULL,
   `TENANT_ID` mediumint(9) NOT NULL,
   `EMERGENCY_CONTENT` varchar(200) DEFAULT NULL,
@@ -16022,10 +16022,10 @@ CREATE TABLE `TBL_NOTI_EMERGENCY_COMPANY` (
   PRIMARY KEY (`COMPANY_ID`,`TENANT_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-DROP TABLE IF EXISTS `TBL_NOTI_EMERGENCY_ITEM`;
+DROP TABLE IF EXISTS ezportal.`TBL_NOTI_EMERGENCY_ITEM`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `TBL_NOTI_EMERGENCY_ITEM` (
+CREATE TABLE ezportal.`TBL_NOTI_EMERGENCY_ITEM` (
   `NOTIID` bigint(20) NOT NULL AUTO_INCREMENT,
   `WRITERID` varchar(80) NOT NULL,
   `COMPANY_ID` varchar(200) NOT NULL,
@@ -16036,10 +16036,10 @@ CREATE TABLE `TBL_NOTI_EMERGENCY_ITEM` (
   PRIMARY KEY (`NOTIID`,`TENANT_ID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4;
 
-DROP TABLE IF EXISTS `TBL_NOTI_EMERGENCY_PERMISSION`;
+DROP TABLE IF EXISTS ezportal.`TBL_NOTI_EMERGENCY_PERMISSION`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `TBL_NOTI_EMERGENCY_PERMISSION` (
+CREATE TABLE ezportal.`TBL_NOTI_EMERGENCY_PERMISSION` (
   `PERMISSION_CODE` bigint(20) NOT NULL AUTO_INCREMENT,
   `CN` varchar(80) NOT NULL,
   `DEPTID` varchar(80) DEFAULT NULL,
@@ -16112,7 +16112,7 @@ CREATE TABLE ezcommon.`tbl_rs_cat_brd` (
 		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 
-CREATE TABLE `jmocha_mail_tag` (
+CREATE TABLE ezportal.`jmocha_mail_tag` (
 	 `idx` INT(11) AUTO_INCREMENT,
 	 `user_name` VARCHAR(100) NOT NULL,
 	 `name` VARCHAR(100) CHARACTER SET utf8mb4 NOT NULL,
@@ -16122,7 +16122,7 @@ CREATE TABLE `jmocha_mail_tag` (
 	) CHARSET=utf8;
 
 
-CREATE TABLE `jmocha_mail_tag_config` (
+CREATE TABLE ezportal.`jmocha_mail_tag_config` (
  `user_name` VARCHAR(100),
  `enable` CHAR(1) NOT NULL,
  `orderby` CHAR(1) NOT NULL,
@@ -16136,16 +16136,16 @@ CREATE TABLE `jmocha_mail_tag_config` (
 -- Table structure for table `jmocha_mail_blocked`
 --
 
-DROP TABLE IF EXISTS jmocha_mail_blocked;
+DROP TABLE IF EXISTS ezportal.jmocha_mail_blocked;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE JMOCHA_MAIL_BLOCKED (
+CREATE TABLE ezportal.JMOCHA_MAIL_BLOCKED (
     MESSAGE_ID varchar(500) NOT NULL,
      PRIMARY KEY (MESSAGE_ID)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-DROP TABLE IF EXISTS TBL_BOARD_COMMENT_ATTACHMENTS;
-CREATE TABLE TBL_BOARD_COMMENT_ATTACHMENTS (
+DROP TABLE IF EXISTS ezportal.TBL_BOARD_COMMENT_ATTACHMENTS;
+CREATE TABLE ezportal.TBL_BOARD_COMMENT_ATTACHMENTS (
   `ITEMID` varchar(76) NOT NULL COMMENT "게시글 아이디",
   `REPLYID` varchar(76) NOT NULL COMMENT "댓글 아이디",
   `SN` mediumint(5) NOT NULL COMMENT "첨부파일 순번",
@@ -16159,10 +16159,10 @@ CREATE TABLE TBL_BOARD_COMMENT_ATTACHMENTS (
 --
 -- Table structure for table `TBL_C_CLUBGUEST_ONELINEREPLY`
 --
-DROP TABLE IF EXISTS `TBL_C_CLUBGUEST_ONELINEREPLY`;
+DROP TABLE IF EXISTS ezportal.`TBL_C_CLUBGUEST_ONELINEREPLY`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE TBL_C_CLUBGUEST_ONELINEREPLY (
+CREATE TABLE ezportal.TBL_C_CLUBGUEST_ONELINEREPLY (
     ITEMID INT NOT NULL COMMENT "방명록 아이디",
     REPLYID VARCHAR(38) NOT NULL COMMENT "방명록 댓글 아이디",
     C_CLUBNO VARCHAR(38) NOT NULL COMMENT "커뮤니티 아이디",
