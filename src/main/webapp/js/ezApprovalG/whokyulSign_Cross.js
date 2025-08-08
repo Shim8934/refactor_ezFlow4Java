@@ -35,7 +35,7 @@ var s = "";
 	function WhoKyul_onclick_Complete(RtnVal) {
 	    if (RtnVal) {
 	        if (checkPwdFlag == "Y") {
-	        	chk_Passwd(pUserID);
+	        	chk_Passwd2(pUserID);
 	        } else {
 	        	WhoKyul_Complete("OK");
 	        }
@@ -190,7 +190,7 @@ var s = "";
 	}
 
 	var ezchkpasswd_cross_dialogArguments = new Array();
-	function chk_Passwd(pPwd) {
+	function chk_Passwd2(pPwd) {
 
 	    ezchkpasswd_cross_dialogArguments[0] = pUserID;
 	    ezchkpasswd_cross_dialogArguments[1] = WhoKyul_Complete;
