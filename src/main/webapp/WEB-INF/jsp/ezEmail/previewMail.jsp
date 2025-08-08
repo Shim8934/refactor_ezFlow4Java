@@ -21,7 +21,7 @@
         
         let arguments = parent.previewMail_cross_dialogArguments[0]
         let _href = arguments.get('_href');
-        let isSecureMail = arguments.get('isSecureMail') === 1 ? true : false;
+        let isSecureMail = arguments.get('isSecureMail') === '1' ? true : false;
         
         function windows_close() {
             parent.document.getElementById("iFramePanel_mail_preview").style.display = "none";
@@ -171,30 +171,39 @@
         
         var g_deleteHttp = null;
         function delete_mail() {
-            if (isSecureMail) {
-                if (!confirm(strLangLHM19)) {
-                    return;
-                }
-            } else {
-                if (!confirm(strLang59)) {
-                    return;
-                }
-            }
 
             if (g_deleteHttp != null)
                 return;
             try {
+                //BDELETE 영구삭제
+                //BMOVE 일반삭제
+                var mailbox = parent.g_szRootFolderName;
+                var cmdType =  mailbox.replace(' ', '') === strLang4 ? "BDELETE" : "BMOVE";
+
+                if (isSecureMail) {
+                    if (!confirm(strLangLHM19)) {
+                        return;
+                    }
+                } else if (cmdType === 'BDELETE') {
+                    if (!confirm(strLang58)) {
+                        return;
+                    }
+                } else {
+                    if (!confirm(strLang59)) {
+                        return;
+                    }
+                } 
 
                 g_deleteHttp = createXMLHttpRequest();
                 var xmlDOM = createXmlDom();
-
+                
                 var objNode;
                 createNodeInsert(xmlDOM, objNode, "DATA");
-                createNodeAndInsertText(xmlDOM, objNode, "CMD", 'BMOVE');
+                createNodeAndInsertText(xmlDOM, objNode, "CMD", cmdType);
                 createNodeAndInsertText(xmlDOM, objNode, "UNIQUEID", _href);
                 createNodeAndInsertText(xmlDOM, objNode, "FOLDERID", "");
 
-                var url = "/ezEmail/mailDelete.do?cmd=BMOVE";
+                var url = "/ezEmail/mailDelete.do?cmd="+cmdType;
 
                 if (typeof(shareId) != "undefined" && shareId != "") {
                     url += "&shareId=" + encodeURIComponent(shareId);
