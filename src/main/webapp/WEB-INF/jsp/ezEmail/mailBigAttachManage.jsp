@@ -202,6 +202,7 @@
                 }
     
                 $('#bigAttachListBody').empty().append(html);
+                document.getElementById("totalCount").innerHTML = "<span style='color:#017BEC; padding-left: 8px'>" + totalCount + "</span>";
             }
     
     
@@ -420,7 +421,7 @@
                 var strtext;
                 var PagingHTML = "";
                 document.getElementById("tblPageRayer").innerHTML = "";
-                document.getElementById("totalCount").innerHTML = "&nbsp;&nbsp;<span style='color:#017BEC;'>" + totalCount + "</span>";
+                document.getElementById("totalCount").innerHTML = "<span style='color:#017BEC; padding-left: 8px'>" + totalCount + "</span>";
                 strtext = "<div class='pagenavi'>";
                 PagingHTML += strtext;
                 var pageNum = curPage;
@@ -552,6 +553,10 @@
                 };
                 getBigFileList(1);
             }
+
+            function refreshPage() {
+                getBigFileList(1);
+            }
             
         </script>
     </head>
@@ -563,7 +568,8 @@
             <ul>
         
                 <li class="important"><span onClick="downloadBigAttach()"><spring:message code="ezWebFolder.t161" /></span></li>
-                <li><span class="icon16 icon16_delete" onClick="deleteBigAttach()"></span></li>
+                <li onClick="deleteBigAttach()"><span class="icon16 icon16_delete"></span></li>
+                <li onClick="refreshPage()"><span class="icon16 icon16_refresh"></span></li>
             </ul>
         </div>
 
