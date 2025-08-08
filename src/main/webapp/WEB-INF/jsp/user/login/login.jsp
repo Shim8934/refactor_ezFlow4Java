@@ -256,6 +256,28 @@
 					$("#imgMnt2").html("<img src='/images/warning2.png'>");
 			        $("#exDiv3").modal();
 			    }
+
+				var pwInput = document.getElementById('upw'); // 해당 ID로 비밀번호 입력 요소 가져오기
+				var capsLock = document.getElementById('capsLock'); // CapsLock 경고 표시 요소
+				var pwView = document.querySelector('.pw #pw_view'); // 로그인 > 비밀번호 보기 
+
+				pwInput.addEventListener('keydown', function (e) {
+					if (e.getModifierState && e.getModifierState('CapsLock')) {
+						capsLock.style.display = 'block';
+					} else {
+						capsLock.style.display = 'none';
+					}
+				});
+
+				pwInput.addEventListener('blur', function () {
+					capsLock.style.display = 'none';
+					if (pwInput.value.length == 0) pwView.style.display = 'none';
+				});
+
+				pwInput.addEventListener('focus', function () {
+					pwView.style.display = 'block';
+				});
+				
 			    getid(document.loginForm);
 			    document.loginForm.message.value = "";
 			    
@@ -278,27 +300,7 @@
 						passwordInput.setAttribute('type', type);
 					});
 				});
-
-				var pwInput = document.getElementById('upw'); // 해당 ID로 비밀번호 입력 요소 가져오기
-				var capsLock = document.getElementById('capsLock'); // CapsLock 경고 표시 요소
-				var pwView = document.querySelector('.pw #pw_view'); // 로그인 > 비밀번호 보기 
-
-				pwInput.addEventListener('keydown', function (e) {
-					if (e.getModifierState && e.getModifierState('CapsLock')) {
-						capsLock.style.display = 'block';
-					} else {
-						capsLock.style.display = 'none';
-					}
-				});
-
-				pwInput.addEventListener('blur', function () {
-					capsLock.style.display = 'none';
-					if (pwInput.value.length == 0) pwView.style.display = 'none';
-				});
 				
-				pwInput.addEventListener('focus', function () {
-					pwView.style.display = 'block';
-				});
 			}
 			
 			function setting_click() {
