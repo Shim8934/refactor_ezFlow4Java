@@ -1134,6 +1134,13 @@
 				
 				var contentText = textContent.innerHTML;
 				document.body.removeChild(textContent); 
+				contentText = contentText
+						.replace(/"/g,'\"')
+						.replace(/<div id=\\?"hwpEditorBoardContent\\"[^]*?<\/div>/g, '')
+						.replace(/font-family\s*:\s*([^;]+);/g, (match, fonts) => {
+					var cleaned = fonts.replace(/'([^']+)'/g, "$1");
+					return `font-family: ${cleaned};`;
+				});
 				
 	        	$.ajax({
 		    		type : "POST",
@@ -1143,7 +1150,7 @@
 		    		data : {
 		    			fontFamily : pDefaultFontFamily,
 		    			fontSize : pDefaultFontSize,
-		    			content : contentText.replace(/"/g,'\"').replace(/<div id=\\?"hwpEditorBoardContent\\"[^]*?<\/div>/g, ''),
+		    			content : contentText,
 		    			docType : "MHT"
 		    		},
 		    		success: function(xml){
