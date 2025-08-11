@@ -3040,7 +3040,8 @@
 				displayname as NAME,
                 TO_CHAR(extensionAttribute7) JOBID,
 				'' ROLEID,
-                '' ISADDJOB 			
+                '' ISADDJOB,
+                COALESCE(#companyId#, PHYSICALDELIVERYOFFICENAME) as EXTENSIONATTRIBUTE2
 			FROM 
 	    		TBL_USERMASTER A 
             $strSQL$
@@ -3090,7 +3091,8 @@
 					displayname as NAME,
 	                A.JOBID JOBID,
 					A.ROLEID ROLEID,
-	                'Y' ISADDJOB	
+	                'Y' ISADDJOB,
+		      	    COALESCE(#companyId#, PHYSICALDELIVERYOFFICENAME) as EXTENSIONATTRIBUTE2
 		      	FROM	
 					TBL_USERMASTER B INNER JOIN TBL_ADDJOBMASTER A ON A.CN = B.CN AND A.TENANT_ID = B.TENANT_ID 
 	            $strGyumjikForOracle$
@@ -3135,7 +3137,8 @@
 					displayname as NAME,
 	                '' JOBID,
 	                '' ROLEID,
-	                '' ISADDJOB
+	                '' ISADDJOB,
+				    COALESCE(#companyId#, EXTENSIONATTRIBUTE2) as EXTENSIONATTRIBUTE2
 				FROM
 					TBL_DEPTMASTER 
                 $strSQL$ 
@@ -3166,7 +3169,8 @@
 	    		'group' as type,
                 '' JOBID,
 				'' ROLEID,
-                '' ISADDJOB
+                '' ISADDJOB,
+                COALESCE(#companyId#, EXTENSIONATTRIBUTE2) as EXTENSIONATTRIBUTE2
 	    	FROM
 	    		TBL_DEPTMASTER 
             $strSQL$ 
@@ -3208,7 +3212,8 @@
 						type,
 						jobid,
 						roleid,
-						isaddjob 
+						isaddjob,
+						EXTENSIONATTRIBUTE2
 			          FROM 
 			          	(SELECT  
 			             	cn, 
@@ -3219,7 +3224,8 @@
 			                'user' as type,
 			                TO_CHAR(extensionattribute7) JOBID,
 			                '' ROLEID,
-			                '' ISADDJOB 
+			                '' ISADDJOB,
+			                COALESCE(#companyId#, PHYSICALDELIVERYOFFICENAME) as EXTENSIONATTRIBUTE2
 			             FROM  
 			             	TBL_USERMASTER A
                          $strSQL$
@@ -3267,7 +3273,8 @@
 							'user' as type,
 			                a.jobid JOBID,
 						    A.ROLEID ROLEID,
-			                'Y' ISADDJOB
+			                'Y' ISADDJOB,
+						    COALESCE(#companyId#, PHYSICALDELIVERYOFFICENAME) as EXTENSIONATTRIBUTE2
 						FROM
 							TBL_USERMASTER b
 						INNER JOIN
@@ -3316,7 +3323,8 @@
 					'user' as type,
 	                TO_CHAR(extensionAttribute7) JOBID,
 	                '' JOBID,
-	                '' ISADDJOB				
+	                '' ISADDJOB,
+	                COALESCE(#companyId#, PHYSICALDELIVERYOFFICENAME) as EXTENSIONATTRIBUTE2
 				FROM 
 					TBL_USERMASTER A
 					$strSQL$
@@ -3339,7 +3347,8 @@
 					'user' as type,
 	                b.jobid JOBID,
 				    A.roleid ROLEID,
-	                '' ISADDJOB
+	                '' ISADDJOB,
+				    COALESCE(#companyId#, PHYSICALDELIVERYOFFICENAME) as EXTENSIONATTRIBUTE2
 				FROM
 					TBL_USERMASTER B
 				INNER JOIN
@@ -3361,7 +3370,8 @@
 						'group' as type,
 		                '' JOBID,
 					    '' ROLEID,
-		                '' ISADDJOB
+		                '' ISADDJOB,
+					    COALESCE(#companyId#, EXTENSIONATTRIBUTE2) as EXTENSIONATTRIBUTE2
 					FROM
 					]]>
 						TBL_DEPTMASTER <!--$strSize$  넘겨주는 값이 없어 주석처리만 함-->
@@ -3386,7 +3396,8 @@
 		    		'group' as type,
 	                '' JOBID,
 	                '' ROLEID,
-	                '' ISADDJOB
+	                '' ISADDJOB,
+	                COALESCE(#companyId#, EXTENSIONATTRIBUTE2) as EXTENSIONATTRIBUTE2
 		    	FROM
 		    		TBL_DEPTMASTER 
 	            $strSQL$ 
