@@ -257,6 +257,7 @@ nav .navUL li.on{color:#003497;}
 .node_normal:hover{color:#003497 !important;}
 .node_selected{color:#003497 !important;}
 .node_div span.node_normal:hover{color:#003497 !important;}
+.tree span.node_normal:hover {color: #003497 !important;}
 
 .btnposition input:hover{color:#003497; border-color:#3A67BE; background:#EEF4FE;}
 .btnpositionLayer a.imgbtn:hover{color:#003497; border-color:#3A67BE; background:#EEF4FE;}

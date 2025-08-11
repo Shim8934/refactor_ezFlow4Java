@@ -263,6 +263,7 @@ nav .navUL li.on{color:#A20000;}
 .node_normal:hover{color:#A20000 !important;}
 .node_selected{color:#A20000 !important;}
 .node_div span.node_normal:hover{color:#A20000 !important;}
+.tree span.node_normal:hover {color: #A20000 !important;}
 
 .btnposition input:hover{color:#A20000; border-color:#A20000; background:#FBF6F6;}
 .btnpositionLayer a.imgbtn:hover{color:#A20000; border-color:#A20000; background:#FBF6F6;}
