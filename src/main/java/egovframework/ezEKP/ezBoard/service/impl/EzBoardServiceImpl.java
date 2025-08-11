@@ -53,6 +53,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import egovframework.ezEKP.ezBoard.vo.BoardKeywordVO;
 import egovframework.ezEKP.ezBoard.vo.BoardReplyAttachVO;
 import egovframework.ezEKP.ezBoard.vo.BoardHistoryVO;
+import egovframework.ezEKP.ezCommunity.vo.CommunityCBoardVO;
 import egovframework.let.utl.fcc.service.EgovStringUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 
@@ -70,6 +71,7 @@ import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
@@ -130,7 +132,8 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	private CommonUtil commonUtil;
 
 	@Autowired
-	private Properties globals;
+	@Qualifier("config")
+	private Properties config;
 	
 	@Resource(name = "EzBoardAdminService")
 	private EzBoardAdminService ezBoardAdminService;
@@ -2868,7 +2871,10 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		int count = 0;
 		String showAllGroupBoard = "";
 		boolean isNormalAdmin = false; // 전체관리자가 아닌 관리자 플래그 (게시관리자, 회사관리자)
-		String retValue = ezBoardAdminService.getBoardTree_Get1(pStrLang, pRootBoardID + "," + pUserID + "," + pDeptID + "," + pCompanyID + "," + pMode + "," + pSubFlag + "," + pSelectBy + "," + pExcludeBoardID + "," + isAdminLeft, tenantID);
+		String useBoardGuestPermit = ezCommonService.getTenantConfig("useBoardGuestPermit", tenantID);
+		int guestReadFG = "YES".equals(useBoardGuestPermit) ? 1 : 0;
+		
+		String retValue = ezBoardAdminService.getBoardTree_Get1(pStrLang, pRootBoardID + "," + pUserID + "," + pDeptID + "," + pCompanyID + "," + pMode + "," + pSubFlag + "," + pSelectBy + "," + pExcludeBoardID + "," + isAdminLeft + "," + guestReadFG, tenantID);
 		
 		if (retValue != null && retValue.length() > 30) {
 			return retValue;
@@ -3126,8 +3132,8 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		result.append("</NODES>");
 		
 		// 관리자단과 사용자단의 게시판 표출용 트리캐시를 다르게 생성한다. (isAdminLeft 플래그 추가)
-		ezBoardAdminService.getBoardTree_Set_D(pStrLang, pRootBoardID + "," + pUserID + "," + pDeptID + "," + pCompanyID + "," + pMode + "," + pSubFlag + "," + pSelectBy + "," + pExcludeBoardID + "," + isAdminLeft, tenantID);
-		ezBoardAdminService.getBoardTree_Set(pStrLang, pRootBoardID + "," + pUserID + "," + pDeptID + "," + pCompanyID + "," + pMode + "," + pSubFlag + "," + pSelectBy + "," + pExcludeBoardID + "," + isAdminLeft, result.toString(), tenantID);
+		ezBoardAdminService.getBoardTree_Set_D(pStrLang, pRootBoardID + "," + pUserID + "," + pDeptID + "," + pCompanyID + "," + pMode + "," + pSubFlag + "," + pSelectBy + "," + pExcludeBoardID + "," + isAdminLeft + "," + guestReadFG, tenantID);
+		ezBoardAdminService.getBoardTree_Set(pStrLang, pRootBoardID + "," + pUserID + "," + pDeptID + "," + pCompanyID + "," + pMode + "," + pSubFlag + "," + pSelectBy + "," + pExcludeBoardID + "," + isAdminLeft + "," + guestReadFG, result.toString(), tenantID);
 
 		logger.debug("getBoardTree ended");
         return result.toString();
@@ -7915,5 +7921,42 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 
 		logger.debug("insertAdminAuthTag ended");
         return strXML;
+	}
+
+	@Override
+	public boolean checkGuestPerm(String id, int tenantId, String type) throws Exception {
+		logger.debug("checkGuestPerm started");
+
+		Map<String, Object> map = new HashMap<>();
+		if (type.equals("I")) {
+			map.put("itemID", id);
+		} else {
+			map.put("boardID", id);
+		}
+		map.put("tenantID", tenantId);
+		map.put("type", type);
+		int cnt = ezBoardDAO.checkGuestPerm(map);
+
+		logger.debug("checkGuestPerm ended");
+
+		return cnt > 0;
+	}
+
+	@Override
+	public List<BoardListVO> getGuestBoardList(String boardID, int tenantID, int offset) throws Exception {
+		logger.debug("getGuestBoardList started.");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("boardID", boardID);
+		map.put("tenantID", tenantID);
+		map.put("offset", offset);
+		map.put("nowDate", commonUtil.getTodayUTCTime(""));
+		map.put("primary", ezCommonService.getTenantConfig("guestLang", tenantID));
+
+		List<BoardListVO> list = ezBoardDAO.getGuestBoardList(map);
+		
+		logger.debug("getGuestBoardList ended.");
+
+		return list;
 	}
 }

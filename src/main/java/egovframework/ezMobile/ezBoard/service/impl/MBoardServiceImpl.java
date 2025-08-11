@@ -16,6 +16,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 import java.util.StringJoiner;
 
@@ -367,8 +368,20 @@ public class MBoardServiceImpl implements MBoardService {
 		if (isUserHasACL == false) { // 개인 권한이 존재하지 않는 경우에만 권한 취합
 			if (boardACLListJJ.size() > 0) { // 직위, 직책권한 부여
 				mBoardInfoVO = sumBoardACL(boardACLListJJ, mBoardInfoVO);
-			} else { // 직위, 직책권한이 없다면 부서권한 부여
+			} else if (boardACLListDept.size() > 0) { // 직위, 직책권한이 없다면 부서권한 부여
 				mBoardInfoVO = sumBoardACL(boardACLListDept, mBoardInfoVO);
+			} else { // 개인, 직위, 직책, 부서 모두 없는 경우 비회원 권한(전체공개) 체크
+				String useBoardGuestPermit = ezCommonService.getTenantConfig("useBoardGuestPermit", info.getTenantId());
+				if ("YES".equals(useBoardGuestPermit) && ezBoardService.checkGuestPerm(boardID, info.getTenantId(), "B")) {
+					mBoardInfoVO.setAccess_("1");
+					mBoardInfoVO.setAccess_FG("1");
+					mBoardInfoVO.setBoardAdmin_FG("false");
+					mBoardInfoVO.setListView_FG("true");
+					mBoardInfoVO.setRead_FG("true");
+					mBoardInfoVO.setWrite_FG("false");
+					mBoardInfoVO.setReply_FG("false");
+					mBoardInfoVO.setDelete_FG("false");
+				}
 			}
 		}
 		
@@ -1085,6 +1098,7 @@ public class MBoardServiceImpl implements MBoardService {
 		/* 2019-06-11 홍승비 - 게시판그룹에 관리자권한 존재하는 경우, 해당 게시판그룹의 하위게시판 전부 가져오도록 수정 */
 		map.put("v_isCompanyAdmin", isCompanyAdmin);
 		map.put("v_boardGroupAdmin_FG", boardGroupAdmin_FG);
+		map.put("guestPermitYN", ezCommonService.getTenantConfig("useBoardGuestPermit", tenantID));
 		
 		logger.debug("brdBoardTree ended");
 		return mBoardDAO.brdBoardTree(map);

@@ -11,6 +11,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -29,6 +30,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import egovframework.ezEKP.ezBoard.service.EzBoardService;
+import egovframework.ezEKP.ezBoard.vo.BoardListVO;
+import egovframework.ezEKP.ezBoard.vo.BoardPropertyVO;
+import egovframework.ezEKP.ezCommunity.vo.CommunityCBoardVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import org.apache.commons.codec.binary.Base32;
 import org.apache.commons.codec.binary.Hex;
@@ -124,6 +129,9 @@ public class LoginController {
     /** CRYPTO */
     @Resource(name="crypto") 
     private EgovFileScrty egovFileScrty;
+
+	@Resource(name = "EzBoardService")
+	private EzBoardService ezBoardService;
     
     /** Logger */
     private static final Logger logger = LoggerFactory.getLogger(LoginController.class);
@@ -243,6 +251,37 @@ public class LoginController {
 		CommonUtil.addXUACompatibleHeaderToResponse(request, response);
 		response.setHeader("Cache-Control", "no-store");
 		response.setHeader("Pragma", "no-cache");
+
+		/* 비회원 읽기 게시판 start */
+		String guestPermitYN = ezCommonService.getTenantConfig("useBoardGuestPermit", tenantId);
+		String showGuestBoardYN = ezCommonService.getTenantConfig("showGuestBoardListOnLogin", tenantId);
+		if ("YES".equals(guestPermitYN) && "YES".equals(showGuestBoardYN)) {
+			String guestBoardID = ezCommonService.getTenantConfig("guestBoardId", tenantId);
+			// 비회원 권한이 있는 게시판인 경우에만 리스트를 가져옴
+			if (guestBoardID != null && !guestBoardID.isEmpty() && ezBoardService.checkGuestPerm(guestBoardID, tenantId, "B")) {
+				BoardPropertyVO boardInfo = ezBoardService.getBoardProperty(guestBoardID, tenantId);
+
+				String guestOffset = ezCommonService.getTenantConfig("guestOffset", tenantId);
+				int offset = Integer.parseInt(((commonUtil.getMinuteUTC(guestOffset)).trim()));
+
+				List<BoardListVO> boardList = ezBoardService.getGuestBoardList(guestBoardID, tenantId, offset);
+				for (BoardListVO bVO : boardList) {
+					bVO.setTitle(commonUtil.cleanValue(bVO.getTitle()));
+				}
+
+				String pastDate = commonUtil.getTodayUTCTime("");
+				pastDate = EgovDateUtil.addDay(pastDate, -1, "yyyy-MM-dd HH:mm:ss");
+				pastDate = EgovDateUtil.addYMDtoDayTime(pastDate.substring(0, 10), pastDate.substring(11, 16), 0, 0, 0, 0, offset, "yyyy-MM-dd HH:mm:");
+				pastDate = pastDate.concat(commonUtil.getTodayUTCTime("").substring(17, 19));
+
+				model.addAttribute("gBoardList", boardList);
+				model.addAttribute("boardInfo", boardInfo);
+				model.addAttribute("pastDate", pastDate);
+			}
+		}
+		model.addAttribute("guestPermitYN", guestPermitYN);
+		model.addAttribute("showGuestBoardYN", showGuestBoardYN);
+		/* 비회원 읽기 게시판 end */
 		
     	return "/user/login/login";
     

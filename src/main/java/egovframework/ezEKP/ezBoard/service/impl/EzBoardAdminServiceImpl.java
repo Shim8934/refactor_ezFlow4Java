@@ -321,6 +321,7 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 		map.put("v_isCompanyAdmin", isCompanyAdmin);
 		/* 2019-06-04 홍승비 - 게시판그룹에 관리자권한 존재하는 경우, 해당 게시판그룹의 하위게시판 전부 가져오도록 수정 */
 		map.put("v_boardGroupAdmin_FG", boardGroupAdmin_FG);
+		map.put("guestPermitYN", ezCommonService.getTenantConfig("useBoardGuestPermit", tenantID));
 		
 		//logger.debug("brdBoardTree map   ::  " + map.toString());
 		logger.debug("brdBoardTree ended");
@@ -447,7 +448,7 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 	}	
 
 	@Override
-	public List<BoardPropertyVO> getBoardAccessList(String boardID, String isAllGroupBoard, String companyID, int tenantID) throws Exception {
+	public List<BoardPropertyVO> getBoardAccessList(String boardID, String isAllGroupBoard, String companyID, int tenantID, String guestPermitYN) throws Exception {
 		logger.debug("getBoardAccessList started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -456,6 +457,7 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 		map.put("v_TENANTID", tenantID);
 		map.put("v_COMPANYID", companyID);
 		map.put("isAllGroupBoard", isAllGroupBoard);
+		map.put("guestPermitYN", guestPermitYN);
 
 		logger.debug("getBoardAccessList ended");
 		return ezBoardAdminDAO.getBoardAccessList(map);
@@ -1744,4 +1746,18 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 		logger.debug("boardNotiEndAlram started");
 	}
 
+	@Override
+	public void addGuestPermit(String boardID, String parentBoardID, String companyID, int tenantId) throws Exception {
+		logger.debug("addGuestPermit started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("boardID", boardID);
+		map.put("parentBoardID", parentBoardID);
+		map.put("companyID", companyID);
+		map.put("tenantID", tenantId);
+
+		ezBoardAdminDAO.addGuestPermit(map);
+
+		logger.debug("addGuestPermit ended");
+	}
 }

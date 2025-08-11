@@ -157,6 +157,7 @@
 				var writerNameType = "<c:out value='${boardItem.writerNameType}'/>"; // 2025-01-21 임정은 - 게시자명선택 타입 (0 : 이름, 1 : 부서명)
 				var strWriterDeptID = "${boardItem.writerDeptID}";
 				var SSDeptID = "<c:out value='${userInfo.deptID}'/>";
+				var guestReadFG = "${guestReadFG}";
 				
 		        window.onload = function () {
 		            imageViewInit();
@@ -184,7 +185,7 @@
 		            addThumbnailEvent();
 		            
 		            /* 2019-11-05 홍승비 - 본문 하단에 댓글영역 표출 */
- 		            if (OneLineReplyFlag == "2") {
+ 		            if (OneLineReplyFlag == "2" && guestReadFG !== "Y") {
  		            	document.getElementById("bodyPopup").style.overflowX = "hidden";
  		            	document.getElementById("bodyPopup").style.overflowY = "auto";
  		            	self.resizeTo(794, 914);
@@ -975,7 +976,7 @@
 		            document.getElementById("viewBox").innerHTML += "<span id='viewboxlist'>";            
 		            for(var i = 0; i < ImageCount; i++)
 		            {
-		                var imgSrc = "/ezBoard/getBoardThumbnailInfo.do?type=BOARDTHUM&boardID=" + encodeURI(pBoardID) + "&fileName=" + encodeURI(result[i].split('/')[7]);
+		                var imgSrc = "/ezBoard/getBoardThumbnailInfo.do?type=BOARDTHUM&boardID=" + encodeURI(pBoardID) + "&fileName=" + encodeURI(result[i].split('/')[7]) + "&itemID=" + encodeURI(pItemID);
 		                document.getElementById("viewboxlist").innerHTML += "<img src='" + imgSrc + "' style='border:0' title='" + MakeXMLString(imagecontet[i].replaceAll("'" , "&apos;")) + "' id='image" + i + "' name='" + imageid[i] + "' style='cursor:pointer;' onclick='ImageMain(this)' onmouseover='imagemouseover(this)' onmouseout='imagemouseout(this)'/>";
 		                if (CrossYN())
 		                    document.getElementById("image" + i).style.opacity = "0.35";
@@ -2013,12 +2014,13 @@
 			});
 		</script>
 	</head>
-	<body  id="bodyPopup" class="popup" style="overflow:hidden; height:100%;">
+	<body  id="bodyPopup" class="popup" style="overflow:hidden auto; height:100%;">
 		<table class="layout" style="border-spacing:0; border-bottom:1px solid #ddd; border:0px; width:100%; min-width:745px;">
 		  <tr>
 		    <td style="height:20px; vertical-align:top">
 		      <div id="menu">
 		        <ul>
+					<c:if test="${guestReadFG ne 'Y'}">
 		        	<c:choose>
 		        		<%-- 2018-06-20 홍승비 - 승인/반려 버튼만 활성화, 작성자는 수정/삭제 가능 --%>
 		        		<c:when test="${apprFlag == 'N'}">
@@ -2077,6 +2079,7 @@
 							    <li id ="addScrapBtn"><span onclick="addScrap()"><spring:message code='ezBoard.kmh13'/></span></li>	
 							</c:otherwise>
 						</c:choose>
+					</c:if>
 					</c:if>
 		        </ul>
 		      </div>
@@ -2329,7 +2332,7 @@
 <%-- 		  	</c:otherwise> --%>
 <%-- 		  </c:choose> --%>
 			<%-- 2019-11-05 홍승비 - 하단댓글 영역 추가 --%>
-	        <c:if test="${oneLineReplyFlag == '2'}">
+	        <c:if test="${oneLineReplyFlag == '2' && guestReadFG ne 'Y'}">
 	        	<div style='height:auto;'>
 					<table class="mainlist emoticonLayerStaticPosition" style="width:100%; min-width:745px; margin-top:8px;" >
 						<tr>

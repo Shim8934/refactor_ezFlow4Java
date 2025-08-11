@@ -495,11 +495,13 @@
 		                      	C.Access_ = 1
 		                      AND 
 		                      	C.BoardID <> #v_pExcludeBoardID#
-		                      AND 
-		                      	C.AccessID = #v_pUserID#
+					]]>
+		                      AND
+								(C.AccessID = #v_pUserID#
+									<isEqual property="guestPermitYN" compareValue="YES"> OR C.AccessID = 'guestPermit'</isEqual>
+								)
 		                      AND 
 		                      	D.ParentBoardID = #v_pRootBoardID#
-		                      ]]>
 		                      <isEqual property="v_ISDEPT" compareValue="1">
 		                      	<isEqual property="v_ISEQUALDEPT" compareValue="0">
 			                      AND
@@ -1493,6 +1495,42 @@
 	         	)
 			]]>
 		</isNotEqual>
+		<isEqual property="guestPermitYN" compareValue="YES">
+			UNION
+
+				(SELECT
+					NULL COMPNAY ,
+					NULL DESCRIPTION  ,
+					ACCESSNAME AS DISPLAYNAME ,
+					NULL TITLE  ,
+					NULL COMPANY2  ,
+					NULL DESCRIPTION2  ,
+					ACCESSNAME AS DISPLAYNAME2 ,
+					NULL TITLE2  ,
+					ACCESSID ,
+					ACCESSNAME ,
+					ACCESSNAME2 ,
+					BOARDGROUPACL ,
+					ACCESSNAME AS DISPLAYNAME3,
+					BOARDADMIN_FG ,
+					ACCESS_ ,
+					LISTVIEW_FG ,
+					READ_FG ,
+					WRITE_FG ,
+					REPLY_FG ,
+					DELETE_FG ,
+					POSTNOTICE,
+					NVL(TYPE, '') AS TYPE
+				FROM
+					TBL_Board_BoardManage
+				WHERE
+					TYPE = 'GUEST'
+				AND
+					ACCESSID = 'guestPermit'
+				AND
+					BOARDID = #v_PBOARDID#
+				)
+		</isEqual>
 	</select>
 	
 	<select id="EzBoardAdminDAO.getMyBoardTreeUpper" parameterClass="MyFavoriteVO" resultClass="String">
@@ -3067,4 +3105,17 @@
 		WHERE
 		A.NTENDDATE LIKE TO_CHAR(SYSDATE, 'YYYY-MM-DD') || '%'
 	</select>
+
+	<insert id="EzBoardAdminDAO.addGuestPermit" parameterClass="Map">
+		INSERT INTO TBL_Board_BoardManage (
+			BOARDID, ACCESSID, ACCESSNAME, ACCESSNAME2, ACCESSLEVEL, ACCESS_, PARENTBOARDID,
+			BOARDADMIN_FG, LISTVIEW_FG, READ_FG, WRITE_FG, REPLY_FG, DELETE_FG, INHERIT_FG, POSTNOTICE, BOARDGROUPACL,
+			TENANT_ID, COMPANYID , TYPE
+		)
+		VALUES (
+		   #boardID#, 'guestPermit', '비회원', '비회원', NULL, 1, #parentBoardID#,
+		   'false', 'true', 'true', 'false', 'false', 'false', 'false', 'false', 'N',
+		   #tenantID#, #companyID#, 'GUEST'
+	    )
+	</insert>
 </sqlMap>

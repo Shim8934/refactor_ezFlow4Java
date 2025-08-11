@@ -409,4 +409,7 @@ public class EzBoardAdminDAO extends EgovAbstractDAO {
 		return (List<Map<String, String>>) list("EzBoardAdminDAO.boardNotiEndAlram");
 	}
 
+    public void addGuestPermit(Map<String, Object> map) throws Exception {
+		insert("EzBoardAdminDAO.addGuestPermit", map);
+	}
 }

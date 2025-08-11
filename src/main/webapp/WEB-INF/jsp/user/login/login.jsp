@@ -554,11 +554,81 @@
 				window.location.href = "/user/login/resetPw/resetPwInfo.do";
 			}
 	
+			function openBoardItem(itemID, boardType, boardID) {
+				var pheight = window.screen.availHeight;
+				var pwidth = window.screen.availWidth;
+				var pTop = (pheight - 720) / 2;
+				var pLeft = (pwidth - 890) / 2;
+				
+				var url = "/ezBoard/boardItemView.do";
+				if (boardType === "3" || boardType === "4") {
+					url = "/ezBoard/boardItemViewPhoto.do";
+				} else if (boardType === "7" ) {
+					url = "/ezBoard/boardIte mViewMovie.do";
+				}
+				
+				url += "?&itemID=" + encodeURIComponent(itemID) + "&boardID=" + encodeURIComponent(boardID);
+				window.open(url, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=890,top=" + pTop + ",left=" + pLeft, "");
+			}
+			
+			function openBoardList(boardID, boardType) {
+				var url = "/ezBoard/boardItemList.do"
+				if (boardType === "3" || boardType === "4") {
+					url = "/ezBoard/boardItemListPhoto.do";
+				} else if (boardType === "7" ) {
+					url = "/ezBoard/boardItemListMovie.do";
+				}
+
+				url += "?boardID=" + encodeURIComponent(boardID) + "&boardType=" + boardType;
+				window.open(url, "_blank", "height=720,width=890")
+			}
     	</script>
 	</head>	
 	<body class="login_body" onload="fnInit()">
 		<div class="login_wrapper">
-			<div class="login_backImg"></div>
+			<div class="login_backImg">
+				<c:if test="${guestPermitYN eq 'YES' && showGuestBoardYN eq 'YES'}">
+					<div class="contents_guestBoardList">
+						<dl class="contents_tabGuestBoard">
+							<dt>${boardInfo.boardName}</dt>
+							<c:if test="${fn:length(gBoardList) > 0 }">
+								<dd class="btn_more" onclick="openBoardList('${boardInfo.boardID}', '${boardInfo.guBun}')"></dd>
+							</c:if>
+						</dl>
+						<ul class="contents_listGuestBoard">
+							<c:choose>
+								<c:when test="${fn:length(gBoardList) eq 0 }">
+									<dl class="nodata_sIcon">
+										<dt><img src="/images/kr/main/noData_sIcon.png"></dt>
+										<dd><spring:message code='ezCommunity.kmsc01'/></dd>
+									</dl>
+								</c:when>
+								<c:when test="${fn:length(gBoardList) ne 0 }">
+									<c:forEach items="${gBoardList}" var="list" begin="0" end="4" >
+										<li>
+											<c:if test="${list.notice eq '1'}">
+												<span class="icon">
+													<img src="/images/i_notice.gif">
+												</span>
+											</c:if>
+											<c:if test="${list.itemLevel > 1}">
+												<span class="icon">
+													<img src="/images/dum.gif" width="${(list.itemLevel - 1) * 10 }" height="1" border="0">
+													<img src="/images/i_rep.gif" alt border="0">
+												</span>
+											</c:if>
+											<c:if test="${list.writeDate >= pastDate}">
+												<span class="icon"><img src="/images/kr/community/communityPortlet_iconnew.gif"></span>
+											</c:if>
+											<span class="txt" onclick="openBoardItem('${list.itemID}', '${boardInfo.guBun}', '${boardInfo.boardID}')">${list.title}</span><span class="date">${fn:substring(list.writeDate, 0, 10) }</span>
+										</li>
+									</c:forEach>
+								</c:when>
+							</c:choose>
+						</ul>
+					</div>
+				</c:if>
+			</div>
 			<div class="right_wrap">
 				<div class="login_layout">
         			<div class="login_form">	                

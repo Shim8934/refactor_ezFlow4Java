@@ -11020,4 +11020,76 @@
 		  AND ITEMID = #itemID#
 		  AND TENANT_ID = #tenantID#
 	</select>
+
+	<select id="EzBoardDAO.checkGuestPerm" parameterClass="Map" resultClass="Integer">
+		SELECT
+			COUNT(1)
+		FROM
+			TBL_BOARD_BOARDMANAGE
+		WHERE
+			BOARDID =
+		<isEqual property="type" compareValue="B">
+			#boardID#
+		</isEqual>
+		<isNotEqual property="type" compareValue="B">
+			(SELECT BOARDID FROM TBL_BOARD_ITEM WHERE ITEMID = #itemID# AND TENANT_ID = #tenantID#) 
+		</isNotEqual>
+	  	AND
+			TYPE = 'GUEST'
+	  	AND
+			TENANT_ID = #tenantID#
+	</select>
+	
+	<select id="EzBoardDAO.getGuestBoardList" parameterClass="Map" resultClass="BoardListVO">
+	<![CDATA[
+		WITH
+		TB1 as (
+			(SELECT
+				1 as PRIORITY,
+				ROW_NUMBER() OVER (ORDER BY NOTINO ASC, PARENTWRITEDATE DESC, WRITEDATE DESC) as IN_SEQ,
+				ITEMID,
+				TITLE,
+				WRITERNAME,
+				DATE_ADD(DATE_FORMAT(WRITEDATE, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) as WRITEDATE,
+				ITEMLEVEL,
+				'1' as NOTICE
+			FROM
+				TBL_BOARD_ITEM
+			WHERE
+				BOARDID = #boardID# AND TENANT_ID = #tenantID# AND (#nowDate# BETWEEN NTSTARTDATE AND NTENDDATE)
+			ORDER BY
+				PARENTWRITEDATE DESC, UPPERITEMIDTREE, NTSTARTDATE DESC)
+			UNION ALL
+			(SELECT
+				2 as PRIORITY,
+				ROW_NUMBER() OVER (ORDER BY	PARENTWRITEDATE DESC, UPPERITEMIDTREE) as IN_SEQ,
+				ITEMID,
+				TITLE,
+				WRITERNAME,
+				DATE_ADD(DATE_FORMAT(WRITEDATE, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) AS WRITEDATE,
+				ITEMLEVEL,
+				CASE
+					WHEN #nowDate# BETWEEN NTSTARTDATE AND NTENDDATE THEN '1'
+					ELSE '0'
+				END as NOTICE
+			FROM
+				TBL_BOARD_ITEM 
+			WHERE
+				BOARDID = #boardID# and TENANT_ID = #tenantID#
+			ORDER BY
+				PARENTWRITEDATE DESC, UPPERITEMIDTREE)
+		),
+		TB2 as (
+			SELECT 
+			    TB1.*, ROW_NUMBER() OVER (PARTITION BY ITEMID ORDER BY PRIORITY) as CNT
+			FROM TB1
+		)
+		SELECT
+			ITEMID, TITLE, WRITERNAME, WRITEDATE, ITEMLEVEL, NOTICE
+		FROM TB2
+		WHERE CNT = 1
+		ORDER BY PRIORITY, IN_SEQ
+		LIMIT 5
+    ]]>
+	</select>
 </sqlMap>

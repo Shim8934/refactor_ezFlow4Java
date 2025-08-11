@@ -41,7 +41,7 @@ public interface EzBoardAdminService {
 	public List<BoardBackgroundVO> getBackGroundImage(BoardBackgroundVO boardBackgroundVO) throws Exception;	
 	
 	/* 2018-07-19 홍승비 - 게시판 권한 표출 시 companyID 조건 추가 / 2019-01-28 홍승비 - 그룹사게시판 플래그 추가 */
-	public List<BoardPropertyVO> getBoardAccessList(String boardID, String isAllGroupBoard, String companyID, int tenantID) throws Exception;
+	public List<BoardPropertyVO> getBoardAccessList(String boardID, String isAllGroupBoard, String companyID, int tenantID, String guestPermitYN) throws Exception;
 	
 	public List<BoardPropertyVO> getUnderBoardID(String boardID, String type, int tenantID) throws Exception;
 	
@@ -168,4 +168,6 @@ public interface EzBoardAdminService {
 	public String encodeURIComponent(String url) throws Exception;
 
 	public void boardNotiEndAlram() throws Exception;
+
+    public void addGuestPermit(String boardID, String parentBoardID, String companyID, int tenantId) throws Exception;
 }

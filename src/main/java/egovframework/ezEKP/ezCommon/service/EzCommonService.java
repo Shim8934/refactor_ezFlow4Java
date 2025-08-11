@@ -663,4 +663,6 @@ public interface EzCommonService {
 	public void addBoardUsrListShowType() throws Exception;
 
 	public void addBoardListShowType() throws Exception;
+	
+	public void updateGuestAccessibleUris() throws Exception;
 }

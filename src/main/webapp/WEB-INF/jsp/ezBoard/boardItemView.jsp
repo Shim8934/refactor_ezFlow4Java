@@ -160,6 +160,7 @@
 			var selectedViewFlag = "${ selectedViewFlag }";
 			var historyModify = "${ historyModify }";
 			var newestVersionFlag = "${ newestVersionFlag }";
+			var guestReadFG = "${guestReadFG}";
 
 	        function Bigger() {
                 var doc = document.getElementById("message").contentWindow.document;
@@ -328,7 +329,7 @@
 		            }
 		            
 		            /* 2019-11-05 홍승비 - 본문 하단에 댓글영역 표출 */
- 		            if (OneLineReplyFlag == "2") {
+ 		            if (OneLineReplyFlag == "2" && guestReadFG !== "Y") {
  		            	document.getElementById("bodyPopup").style.overflowX = "hidden";
  		            	document.getElementById("bodyPopup").style.overflowY = "auto";
  		            	document.getElementById("bodyPopup").style.marginRight = "1px";
@@ -1009,7 +1010,7 @@
 		            strAttach += "<img src='" + fileImage + "'> <a href='/ezBoard/boardAttachDown.do?filePath=" + javaURLEncode(filepath) + "&fileName=" + javaURLEncode(filenameOrg) + "'\">";
 		            strAttach += filenameView + "&nbsp;(" + filesize + ")</a>";
 		            // 2023-05-25 조수빈 - 게시판 첨부파일 미리보기 아이콘 추가
-		            if (typeof useBoardFilePrvw !== 'undefined' && useBoardFilePrvw == "1") {
+		            if (typeof useBoardFilePrvw !== 'undefined' && useBoardFilePrvw == "1" && guestReadFG !== "Y") {
 			            strAttach += "<span class='icon_rbtn2' style='margin-left : 10px;' title='<spring:message code = 'ezEmail.t487'/>' onclick=\"attachFile_Preview('" + javaURLEncode(filepath) + "', '" + javaURLEncode(filenameOrg) + "');\"><img src='/images/icon_preview.png' width='16' height='16' style='vertical-align:middle; cursor:pointer;'></span>";
 		            }
 		            strAttach += "<br>";
@@ -2202,7 +2203,8 @@
 		  <tr>
 		    <td style="vertical-align: top; height: 10px;">
 		      <div id="menu">
-			  <c:if test = "${ historyCheck eq 'true' }">
+			  <c:choose>
+			  <c:when test = "${ historyCheck eq 'true' }">
 				  <ul>
 					  <c:if test = "${ selectedViewFlag ne 'right' && rightAddr ne '' }">
 					  <li>
@@ -2238,8 +2240,9 @@
 					  </li>
 					  </c:if>
 				  </ul>
-			  </c:if>
-			  <c:if test = "${ historyCheck ne 'true' }">
+			  </c:when>
+			  <c:when test = "${ guestReadFG eq 'Y' }"></c:when>
+			  <c:otherwise>
 		        <ul>
 		        	<c:choose>
 		        		<c:when test="${pReservedItem == 'true'}">
@@ -2373,7 +2376,8 @@
 						</c:choose>
 					</c:if>
 		        </ul>
-			  </c:if>
+			  </c:otherwise>
+			  </c:choose>
 		      </div>    
 		      <div id="close">
 		        <ul>
@@ -2652,7 +2656,7 @@
                 </c:if>
                 				
 				<%-- 2019-11-05 홍승비 - 하단댓글 영역 추가 --%>
-		        <c:if test="${boardPropertyVO.oneLineReply == '2'}">
+		        <c:if test="${boardPropertyVO.oneLineReply == '2' && guestReadFG ne 'Y'}">
 		        	<div style='height:auto;'>
 						<table class="mainlist emoticonLayerStaticPosition" style="width:100%" >
 							<c:choose>

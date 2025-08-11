@@ -8244,7 +8244,6 @@
 					PORTLETCODE = 'mSchedule'
 			)
 	</update>
-<<<<<<< HEAD
 	
 	<select id="EzCommonDAO.checkTblRsBrdResMaxDate">
 		SELECT
@@ -8620,4 +8619,15 @@
 		ADD
 			LISTSHOWTYPE VARCHAR2(2) DEFAULT 'U' NOT NULL
 	</statement>
+
+	<update id="EzCommonDAO.updateGuestAccessibleUris" parameterClass="Map">
+		UPDATE
+			TBL_TENANT_CONFIG
+		SET
+			PROPERTY_VALUE = #value#
+		WHERE
+			UPPER(property_name) = #property#
+		  AND
+			TENANT_ID = #tenantID#
+	</update>
 </sqlMap>

@@ -545,60 +545,66 @@
 		                check_presence();
 		            }
 		            if (!firstFlag) {
-		                PreviewRayerChange(pPreviewShow_HOW);
-		                if (CrossYN()) {
-		                    if (ifrmPreViewH.document.getElementById("ifrmviewEmptyText") != null){
-		                        ifrmPreViewH.document.getElementById("ifrmviewEmptyText").textContent = "<spring:message code='ezBoard.t10022'/>";
-		                    }
-		                    if (ifrmPreViewW.document.getElementById("ifrmviewEmptyText") != null){
-		                        ifrmPreViewW.document.getElementById("ifrmviewEmptyText").textContent = "<spring:message code='ezBoard.t10022' />";
-		                    }
-		                } else {
-		                    if (ifrmPreViewH.document.getElementById("ifrmviewEmptyText") != null){
-		                        ifrmPreViewH.document.getElementById("ifrmviewEmptyText").innerText = "<spring:message code='ezBoard.t10022' />";
-		                    }
-		                    if (ifrmPreViewW.document.getElementById("ifrmviewEmptyText") != null){
-		                        ifrmPreViewW.document.getElementById("ifrmviewEmptyText").innerText = "<spring:message code='ezBoard.t10022' />";
-		                    }
-		                }
-		                firstFlag = true;
+						try {
+							PreviewRayerChange(pPreviewShow_HOW);
+							if (CrossYN()) {
+								if (ifrmPreViewH.document.getElementById("ifrmviewEmptyText") != null) {
+									ifrmPreViewH.document.getElementById("ifrmviewEmptyText").textContent = "<spring:message code='ezBoard.t10022'/>";
+								}
+								if (ifrmPreViewW.document.getElementById("ifrmviewEmptyText") != null) {
+									ifrmPreViewW.document.getElementById("ifrmviewEmptyText").textContent = "<spring:message code='ezBoard.t10022' />";
+								}
+							} else {
+								if (ifrmPreViewH.document.getElementById("ifrmviewEmptyText") != null) {
+									ifrmPreViewH.document.getElementById("ifrmviewEmptyText").innerText = "<spring:message code='ezBoard.t10022' />";
+								}
+								if (ifrmPreViewW.document.getElementById("ifrmviewEmptyText") != null) {
+									ifrmPreViewW.document.getElementById("ifrmviewEmptyText").innerText = "<spring:message code='ezBoard.t10022' />";
+								}
+							}
+							firstFlag = true;
+						} catch (e) {}
 		            }
 		            //viewtype(기본보기, 안읽은게시물, 만료된게시물)이 바뀔때마다 실행되는 조건
 		            if (viewtypeChangeFlag) {
-		            	document.getElementById("Preview_HeaderW").style.display = "none"; 
-	            		document.getElementById("ifrmPreViewW").src = "<spring:message code='main.kms4' />";
-	            		document.getElementById("ifrmPreViewW").onload = function(){
-	            			if (CrossYN()) {
-			                    if (ifrmPreViewW.document.getElementById("ifrmviewEmptyText") != null){
-			                        ifrmPreViewW.document.getElementById("ifrmviewEmptyText").textContent = "<spring:message code='ezBoard.t10022' />";
-			                    }
-			                } else {
-			                    if (ifrmPreViewW.document.getElementById("ifrmviewEmptyText") != null){
-			                        ifrmPreViewW.document.getElementById("ifrmviewEmptyText").innerText = "<spring:message code='ezBoard.t10022' />";
-			                    }
-			                }
-	            		}
-	            		document.getElementById("Preview_HeaderH").style.display = "none"; 
-	            		document.getElementById("ifrmPreViewH").src = "<spring:message code='main.kms4' />";
-	            		document.getElementById("ifrmPreViewH").onload = function(){
-	            			if (CrossYN()) {
-			                    if (ifrmPreViewH.document.getElementById("ifrmviewEmptyText") != null){
-			                        ifrmPreViewH.document.getElementById("ifrmviewEmptyText").textContent = "<spring:message code='ezBoard.t10022'/>";
-			                    }
-			                } else {
-			                    if (ifrmPreViewH.document.getElementById("ifrmviewEmptyText") != null){
-			                        ifrmPreViewH.document.getElementById("ifrmviewEmptyText").innerText = "<spring:message code='ezBoard.t10022' />";
-			                    }
-			                }
-	            		}
-	            		//preview를 컨트롤하는 변수들 초기화
-		            	viewtypeChangeFlag = false;
-		            	selobj = null;
-		            	onclickFlag = false;
+						try {
+							document.getElementById("Preview_HeaderW").style.display = "none";
+							document.getElementById("ifrmPreViewW").src = "<spring:message code='main.kms4' />";
+							document.getElementById("ifrmPreViewW").onload = function () {
+								if (CrossYN()) {
+									if (ifrmPreViewW.document.getElementById("ifrmviewEmptyText") != null) {
+										ifrmPreViewW.document.getElementById("ifrmviewEmptyText").textContent = "<spring:message code='ezBoard.t10022' />";
+									}
+								} else {
+									if (ifrmPreViewW.document.getElementById("ifrmviewEmptyText") != null) {
+										ifrmPreViewW.document.getElementById("ifrmviewEmptyText").innerText = "<spring:message code='ezBoard.t10022' />";
+									}
+								}
+							}
+							document.getElementById("Preview_HeaderH").style.display = "none";
+							document.getElementById("ifrmPreViewH").src = "<spring:message code='main.kms4' />";
+							document.getElementById("ifrmPreViewH").onload = function () {
+								if (CrossYN()) {
+									if (ifrmPreViewH.document.getElementById("ifrmviewEmptyText") != null) {
+										ifrmPreViewH.document.getElementById("ifrmviewEmptyText").textContent = "<spring:message code='ezBoard.t10022'/>";
+									}
+								} else {
+									if (ifrmPreViewH.document.getElementById("ifrmviewEmptyText") != null) {
+										ifrmPreViewH.document.getElementById("ifrmviewEmptyText").innerText = "<spring:message code='ezBoard.t10022' />";
+									}
+								}
+							}
+							//preview를 컨트롤하는 변수들 초기화
+							viewtypeChangeFlag = false;
+							selobj = null;
+							onclickFlag = false;
+						} catch (e) {}
 		            }
 		            endtime = new Date().getTime();
 		            document.getElementById("runtime").innerHTML = "RunTime : <span style='color:black;font-weight:bold'>" + (endtime - starttime) / 1000 + "</span> Sec";
-		            MailOptionHidden();
+		            if ("${guestReadFG}" !== "Y") {
+						MailOptionHidden();
+					}
 					
 					try {
 						if (url === "/ezBoard/getBoardList.do") {
@@ -1374,7 +1380,9 @@
 		            }
 		        }
 		        CurPage = "1";
-		        BoardSearchOptionHidden();
+				if ("${guestReadFG}" !== "Y") {
+					BoardSearchOptionHidden();
+				}
 		        MakeSubCondition(type);
 		        getBoardList();
 		    }
@@ -1870,7 +1878,7 @@
 			    <br />
 			</c:otherwise>
 		</c:choose>
-		<c:if test="${boardInfo.buttonHidden == 'N'}">
+		<c:if test="${boardInfo.buttonHidden == 'N' && guestReadFG ne 'Y'}">
 			<div id="mainmenu">
 			  <ul>
 		        <li class="important"><span onClick="NewItem_onclick()"><spring:message code='ezBoard.hsbJP02' /></span></li>

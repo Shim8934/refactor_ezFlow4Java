@@ -345,3 +345,18 @@ a{
 .confirmBox .btn:hover{background:#0e2e74;}
 
 .capsLock{font-size: 14px; font-weight: 500; color: #ff8384; padding-left:5px}
+
+/* 2025-08-13 비회원 권한 게시판 표출 */
+.contents_guestBoardList{float:left;width: 100%;height: 191px;/* margin:15px; */padding:0px;background: #0000005c;border: none;/* border-radius: 10px; */bottom: 0;position: absolute;/* box-shadow: 2px 1px 12px rgb(0 0 0 / 8%); */}
+.contents_tabGuestBoard{height: 44px;margin:0px;padding:0px;color: #ffffff;font-size: 14px;font-weight:bold;background-color: #00000003;}
+.contents_tabGuestBoard dt{float:left; height:44px; line-height:40px; margin:0px 0px 0px 18px; padding:0px;}
+.contents_tabGuestBoard dd{float:right; height:44px; margin:0px; padding:0px;}
+.contents_tabGuestBoard dd.btn_more{width:42px; background:url(/images/kr/community/communityPortlet_btnmore_w.png) center no-repeat; cursor:pointer;}
+.contents_listGuestBoard{overflow:hidden;list-style:none;margin:0px;padding: 0px 23px;}
+.contents_listGuestBoard li{display:flex;align-items: center;overflow:hidden;line-height: 27px;color: #333;font-size: 13px;cursor:pointer;}
+.contents_listGuestBoard li span{display:inline-block;vertical-align: middle;float: none;font-size: 13px;color: #fff;}
+.contents_listGuestBoard li span.txt{flex:1;white-space:nowrap;text-overflow:ellipsis;overflow:hidden;color: #ffffff;font-size: 13px;font-weight: 500;}
+.contents_listGuestBoard li span.icon img{vertical-align:middle; margin:-3px 0px 0px 0px; padding-right: 5px;}
+.nodata_sIcon{margin:0px; padding:0px; text-align:center; margin-top:20px;}
+.nodata_sIcon dt{margin:0px; padding:0px 0px 20px 0px;}
+.nodata_sIcon dd{margin:0px; padding:0px; font-size:13px; color:#c0c0c0; font-weight: bold;}

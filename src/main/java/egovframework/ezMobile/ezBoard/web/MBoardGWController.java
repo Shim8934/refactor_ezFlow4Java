@@ -19,6 +19,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 import java.util.StringJoiner;
 import java.util.UUID;
@@ -1173,6 +1174,12 @@ public class MBoardGWController {
 		MBoardItemVO boardItem = mBoardService.getBrdItemInfo(contentID, commonUtil.getMultiData(info.getLang(), info.getTenantId()), info.getTenantId());
 		String boardGroupID = "";
 		String isAllGroupBoard = "N";
+
+		/* 2025-08-11 비회원 읽기권한(전체공개) 게시판인 경우 pass */
+		String useBoardGuestPermit = ezCommonService.getTenantConfig("useBoardGuestPermit", info.getTenantId());
+		if ("YES".equals(useBoardGuestPermit) && ezBoardService.checkGuestPerm(contentID, info.getTenantId(), "I")) {
+			return true;
+		}
 		
 		/* 2019-06-10 홍승비 - 게시판그룹의 관리자권한 체크를 위한 쿼리 파라미터 추가(게시판그룹의 관리자권한과 하위게시판의 관리자권한 혼용 방지) */
 		boolean isBoardGroup = false;

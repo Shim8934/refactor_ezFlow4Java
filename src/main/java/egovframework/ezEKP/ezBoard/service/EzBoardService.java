@@ -605,4 +605,7 @@ public interface EzBoardService {
 
 	public String getBoardInfoByList(LoginVO userInfo, List<String> boardIdList, String strXML) throws Exception;
 
+    public boolean checkGuestPerm(String id, int tenantId, String type) throws Exception;
+	
+	public List<BoardListVO> getGuestBoardList(String boardID, int tenantID, int offset) throws Exception;
 }

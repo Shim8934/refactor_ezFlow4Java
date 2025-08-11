@@ -1245,11 +1245,13 @@
 		                      	C.Access_ = 1
 		                      AND 
 		                      	C.BoardID <> NVL(#excludeBoardID#, ' ')
+					]]>
 		                      AND 
-								C.AccessID = #userID#
+								(C.AccessID = #userID#
+								 	<isEqual property="guestPermitYN" compareValue="YES"> OR C.AccessID = 'guestPermit'</isEqual>
+		                    	)
 		                      AND 
 		                      	D.ParentBoardID = #rootBoardID#
-		                      ]]>
 		                      <isEqual property="v_ISDEPT" compareValue="1">
 		                      	<isEqual property="v_ISEQUALDEPT" compareValue="0">
 			                      AND

@@ -3748,4 +3748,13 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.addBoardListShowType");
 		}
 	}
+	
+	public void updateGuestAccessibleUris(Map<String, Object> map) throws Exception {
+		String propertyValue = (String) select("EzCommonDAO.getTenantConfig", map);
+
+		if (propertyValue != null) {
+			logger.debug("guestAccessibleUris tenant config data update...");
+			insert("EzCommonDAO.updateGuestAccessibleUris", map);
+		}
+	}
 }

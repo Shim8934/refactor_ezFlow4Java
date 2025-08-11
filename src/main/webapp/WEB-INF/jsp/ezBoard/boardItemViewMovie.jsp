@@ -142,6 +142,7 @@
 				var writerNameType = "<c:out value='${boardItem.writerNameType}'/>"; // 2025-01-21 임정은 - 게시자명선택 타입 (0 : 이름, 1 : 부서명)
 				var strWriterDeptID = "${boardItem.writerDeptID}";
 				var SSDeptID = "<c:out value='${userInfo.deptID}'/>";
+				var guestReadFG = "${guestReadFG}";
 				
 		        window.onload = function () {
 		        	imageViewInit();
@@ -162,7 +163,7 @@
 		            }
 		            
 		            /* 2019-11-05 홍승비 - 본문 하단에 댓글영역 표출 */
- 		            if (OneLineReplyFlag == "2") {
+					if (OneLineReplyFlag == "2" && guestReadFG !== "Y") {
  		            	document.getElementById("bodyPopup").style.overflowX = "hidden";
  		            	document.getElementById("bodyPopup").style.overflowY = "auto";
  		            	self.resizeTo(794, 815);
@@ -576,7 +577,9 @@
 		            document.getElementById("mainVideo").src = moviePath;
 		            document.getElementById("mainVideo").setAttribute("movieid", movieID);
 		            document.getElementById("mainVideo").title = movieName;
-		            document.getElementById("movieDownload").href = "/ezBoard/boardAttachDown.do?filePath=" + javaURLEncode(moviePath) + "&fileName=" + javaURLEncode(movieName);
+					if (guestReadFG !== "Y") {
+						document.getElementById("movieDownload").href = "/ezBoard/boardAttachDown.do?filePath=" + javaURLEncode(moviePath) + "&fileName=" + javaURLEncode(movieName);
+					}
 		        }
 		        
 		        function showHideLayers()
@@ -1230,6 +1233,7 @@
 		    <td style="height:20px; vertical-align:top">
 		      <div id="menu">
 		        <ul>
+					<c:if test="${guestReadFG ne 'Y'}">
 		        	<c:choose>
 		        		<%-- 2018-06-20 홍승비 - 승인/반려 버튼만 활성화, 작성자는 수정/삭제 가능 --%>
 		        		<c:when test="${apprFlag == 'N'}">
@@ -1284,6 +1288,7 @@
                                 <li id ="addScrapBtn"><span onclick="addScrap()"><spring:message code='ezBoard.kmh13'/></span></li>	
 							</c:otherwise>
 						</c:choose>
+					</c:if>
 					</c:if>
 		        </ul>
 		      </div>
@@ -1498,7 +1503,7 @@
 <%-- 		  	</c:otherwise> --%>
 <%-- 		  </c:choose> --%>
 		<%-- 2019-11-05 홍승비 - 하단댓글 영역 추가 --%>
-        <c:if test="${oneLineReplyFlag == '2'}">
+        <c:if test="${oneLineReplyFlag == '2' && guestReadFG ne 'Y'}">
         	<div style='height:auto;'>
 				<table class="mainlist emoticonLayerStaticPosition" style="width:100%; min-width:745px; margin-top:8px;" >
 					<tr>

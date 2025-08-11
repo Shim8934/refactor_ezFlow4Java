@@ -11,6 +11,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Properties;
 import java.util.Set;
 import java.util.StringJoiner;
 import java.util.concurrent.CountDownLatch;
@@ -1269,7 +1270,6 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		String parentBoardID = request.getParameter("parentBoardID");
 //		String adminType = request.getParameter("adminType");
 		String pBoardName = request.getParameter("boardName");
-		String pType = request.getParameter("boardType");
 		String pParentNeed = request.getParameter("parentNeed");
 		String pAccessLevel = request.getParameter("accessLevel");
 		String primary = userInfo.getPrimary(); // 사용하지 않는 userLang 변수 제거, primary로 대체
@@ -1316,8 +1316,10 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 	    	boardName = boardProperty.getBoardName();
 		}
 
+		String guestPermitYN = ezCommonService.getTenantConfig("useBoardGuestPermit", userInfo.getTenantId());
+		
 		/* 게시판 권한설정 시 companyID 조건 추가, 겸직한 사원의 경우 해당 겸직정보를 표출함 + 다국어 대응하도록 정보 가져옴 */
-		List<BoardPropertyVO> list = ezBoardAdminService.getBoardAccessList(boardID, isAllGroupBoard, userInfo.getCompanyID(), userInfo.getTenantId());
+		List<BoardPropertyVO> list = ezBoardAdminService.getBoardAccessList(boardID, isAllGroupBoard, userInfo.getCompanyID(), userInfo.getTenantId(), guestPermitYN);
 		
 		StringBuilder sb = new StringBuilder();
 		sb.append("<DATA>");
@@ -1373,7 +1375,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		model.addAttribute("parentBoardID", parentBoardID);
 		model.addAttribute("primary", primary);
 		model.addAttribute("pBoardName", pBoardName);
-		model.addAttribute("pType", pType);
+		model.addAttribute("pType", boardProperty.getGuBun());
 		model.addAttribute("pParentNeed", pParentNeed);
 //		model.addAttribute("adminType", adminType);
 		model.addAttribute("pAccessLevel", pAccessLevel);
@@ -1381,6 +1383,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		model.addAttribute("strList", result);
 		model.addAttribute("isAllGroupBoard", isAllGroupBoard);
 		model.addAttribute("isBoardAdmin", isBoardAdmin);
+		model.addAttribute("guestPermitYN", guestPermitYN);
 
 		logger.debug("boardACL ended");
 		return "admin/ezBoard/boardACL";
@@ -2205,8 +2208,10 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 				}
 			}
 
+			String guestPermitYN = ezCommonService.getTenantConfig("useBoardGuestPermit", tenantID);
+			
 			for (Map<String, Object> info : addDeptlist) {
-				List<BoardPropertyVO> accessList = ezBoardAdminService.getBoardAccessList((String) info.get("boardID"), "N", companyID, tenantID);
+				List<BoardPropertyVO> accessList = ezBoardAdminService.getBoardAccessList((String) info.get("boardID"), "N", companyID, tenantID, guestPermitYN);
 				for (BoardPropertyVO access : accessList) {
 					if ((access.getAccessID()).equals(info.get("accessID"))) {
 						
@@ -2258,5 +2263,20 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 
 		logger.debug("createModifyHistory ended");
 		return res;
+	}
+
+	@RequestMapping(value = "/admin/ezBoard/addGuestPermit.do", method = RequestMethod.POST)
+	@ResponseBody
+	public String addGuestPermit(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, BoardPropertyVO boardPropertyVO) throws Exception {
+		logger.debug("addGuestPermit started");
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String boardID = request.getParameter("boardID");
+		String parentBoardID = request.getParameter("parentBoardID");
+
+		ezBoardAdminService.addGuestPermit(boardID, parentBoardID, userInfo.getCompanyID(), userInfo.getTenantId());
+
+		logger.debug("addGuestPermit ended");
+		return "TRUE";
 	}
 }

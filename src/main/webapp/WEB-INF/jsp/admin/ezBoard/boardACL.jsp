@@ -197,10 +197,16 @@
 	            var xmldom2 = loadXMLString(selectTargetListXML);
 	            var xmlhttp = createXMLHttpRequest();
 	            for (var i = 0; i < xmldom2.getElementsByTagName("CN").length; i++) {
-	                var strXML = "";
+					var targetId = getNodeText(xmldom2.getElementsByTagName("CN")[i]);					
+					if (targetId === 'guestPermit') {
+						alert("<spring:message code='ezBoard.guestRead04'/>")
+						return;
+					}
+	                
+					var strXML = "";
 	                strXML += "<NODES>";
 	                strXML += "<NODE>";
-	                strXML += "<TARGETID>" + getNodeText(xmldom2.getElementsByTagName("CN")[i]) + "</TARGETID>";
+	                strXML += "<TARGETID>" + targetId + "</TARGETID>";
 	                strXML += "<TARGETNAME>" + MakeXMLString(getNodeText(xmldom2.getElementsByTagName("NAME")[i])) + "</TARGETNAME>";
 	                strXML += "<TARGETNAME2>" + MakeXMLString(getNodeText(xmldom2.getElementsByTagName("NAME2")[i])) + "</TARGETNAME2>";
 	                // 하위부서 허용 여부 (TARGETGROUP -> BoardGroupACL)
@@ -488,7 +494,7 @@
 	                    selectedTargetName2 = GetAttribute(selnode[0],"data2")
 	                    selectedTargetGroup = GetAttribute(selnode[0],"data3")
 	                    if (para != "false")
-	                        FillACLTable();
+							updateCheckboxSetting();
 	
 	                    selectTargetListXML += "<CN>" + selectedTargetID + "</CN>";
 	                    selectTargetListXML += "<NAME><![CDATA[" + selectedTargetName + "]]></NAME>";
@@ -814,7 +820,47 @@
 	                CheckBoxInit();
 	            }
 	        }
-	        
+
+			function guestPermit() {
+				if (confirm("<spring:message code='ezBoard.guestRead01'/>")) {
+					if (strList.includes("<ACCESSID>guestPermit</ACCESSID>")) {
+						alert("<spring:message code='ezBoard.guestRead02'/>");
+						return;
+					}
+					$.ajax({
+						type : "POST",
+						async : false,
+						data : {
+							boardID : pBoardID,
+							parentBoardID : pParentBoardID
+						},
+						url : "/admin/ezBoard/addGuestPermit.do",
+						success : function() {
+							window.location.reload();
+						},
+						error : function(){
+							alert("<spring:message code='ezBoard.t80'/>");
+						}
+					});
+				}
+			}
+
+			function updateCheckboxSetting() {
+				var disableFlag = (selectedTargetID === 'guestPermit');
+
+				if (disableFlag) {
+					FillACLTable();
+				}
+
+				document.querySelectorAll('table.content input[type="checkbox"]')
+						.forEach(function (checkbox) {
+							checkbox.disabled = disableFlag;
+						});
+
+				if (!disableFlag) {
+					FillACLTable();
+				}
+			}
 	    </script>
 		</head>
 		<c:if test="${pParentNeed == 'Y'}">
@@ -990,7 +1036,10 @@
             	<li><span onclick="DeleteACL('type')"><spring:message code='ezBoard.t603'/></span></li>
             	<li><span onclick="DeleteACL('one')"><spring:message code='ezBoard.t89'/></span></li>
             	<!-- <li style="background:none; padding-right:2px; cursor:default;" class="off"><img src="/images/i_bar.gif" alt=""></li> -->
-            </ul>
+				<c:if test="${guestPermitYN == 'YES' && pType != '6' && pType != '8' && pType != '9'}">
+					<li><span onclick="guestPermit()"><spring:message code='ezBoard.guestRead03'/></span></li>
+				</c:if>
+			</ul>
         </div>
         <script type="text/javascript">
 	        selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");

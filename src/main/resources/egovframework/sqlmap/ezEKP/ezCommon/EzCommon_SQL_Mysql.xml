@@ -8077,4 +8077,15 @@
 		ADD
 			LISTSHOWTYPE VARCHAR(2) NOT NULL DEFAULT 'U'
 	</statement>
+	
+	<update id="EzCommonDAO.updateGuestAccessibleUris" parameterClass="Map">
+		UPDATE
+			TBL_TENANT_CONFIG
+		SET
+			PROPERTY_VALUE = #value#
+		WHERE
+			PROPERTY_NAME = #property#
+		AND
+			TENANT_ID = #tenantID#
+	</update>
 </sqlMap>

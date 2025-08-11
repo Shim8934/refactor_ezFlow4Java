@@ -1335,4 +1335,12 @@ public class EzBoardDAO extends EgovAbstractDAO{
 	public void repostReplyItem(Map<String, Object> map) throws Exception {
 		update("EzBoardDAO.repostReplyItem", map);
 	}
+	
+    public int checkGuestPerm(Map<String, Object> map) throws Exception {
+		return (int) select("EzBoardDAO.checkGuestPerm", map);
+    }
+
+    public List<BoardListVO> getGuestBoardList(Map<String, Object> map) throws Exception {
+		return (List<BoardListVO>) list("EzBoardDAO.getGuestBoardList", map);
+    }
 }

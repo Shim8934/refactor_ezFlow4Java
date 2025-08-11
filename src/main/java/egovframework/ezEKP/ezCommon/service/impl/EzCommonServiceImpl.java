@@ -2092,6 +2092,78 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
             put("description","전자설문 참여자보기에서 추첨기능 사용 여부. YES: 사용, NO: 미사용 (default : NO)");
             put("config_type","전자설문");
         }});
+
+        test.add(new HashMap<String, Object>(){{
+            put("confName","useBoardGuestPermit");
+            put("property_value","NO");
+            put("config_name","게시판 비회원 읽기권한 사용 여부");
+            put("regdate","2025-08-13 00:00:00");
+            put("description","게시판 비회원 읽기권한 사용 여부. YES: 사용, NO: 미사용 (default : NO)");
+            put("config_type","게시판");
+        }});
+
+        test.add(new HashMap<String, Object>(){{
+            put("confName","guestAccessibleUris");
+            put("property_value","/ezBoard/boardItemView.do,/ezBoard/boardItemViewPhoto.do,/ezBoard/boardItemViewMovie.do,/ezCommon/mhtToHTMLContent.do,/ezBoard/getItemAttachments.do,/ezBoard/boardAttachDown.do,/ezBoard/downloadAttachAll.do,/ezBoard/imageViewList.do,/ezBoard/getBoardThumbnailInfo.do,/ezBoard/boardItemList.do,/ezBoard/getBoardList.do,/ezBoard/getSearchBoardList.do");
+            put("config_name","로그아웃 상태에서 허용할 uri");
+            put("regdate","2025-08-13 00:00:00");
+            put("description","비회원 읽기권한 > 로그아웃 상태에서 허용할 uri (,로 연결. 수정 시 서버 재시작 필요)");
+            put("config_type","게시판");
+        }});
+
+        test.add(new HashMap<String, Object>(){{
+            put("confName","guestLang");
+            put("property_value", "1");
+            put("config_name","비회원 Lang");
+            put("regdate","2025-08-13 00:00:00");
+            put("description","비회원 Lang (default : 1 수정 시 서버 재시작 필요)");
+            put("config_type","게시판");
+        }});
+
+        test.add(new HashMap<String, Object>(){{
+            put("confName","guestLocal");
+            put("property_value", "ko");
+            put("config_name","비회원 Local");
+            put("regdate","2025-08-13 00:00:00");
+            put("description","비회원 Local (default : ko 수정 시 서버 재시작 필요)");
+            put("config_type","게시판");
+        }});
+
+        test.add(new HashMap<String, Object>(){{
+            put("confName","guestOffset");
+            put("property_value", "235| 09:00");
+            put("config_name","비회원 Offset");
+            put("regdate","2025-08-13 00:00:00");
+            put("description","비회원 Offset (default : 235| 09:00 수정 시 서버 재시작 필요)");
+            put("config_type","게시판");
+        }});
+
+        test.add(new HashMap<String, Object>(){{
+            put("confName","guestCompanyId");
+            put("property_value", "Kaoni");
+            put("config_name","비회원 회사 id");
+            put("regdate","2025-08-13 00:00:00");
+            put("description","비회원 회사 id (default : Kaoni 수정 시 서버 재시작 필요)");
+            put("config_type","게시판");
+        }});
+
+        test.add(new HashMap<String, Object>(){{
+            put("confName","showGuestBoardListOnLogin");
+            put("property_value", "NO");
+            put("config_name","로그인 페이지에 비회원 게시판 표출 여부");
+            put("regdate","2025-08-13 00:00:00");
+            put("description","로그인 페이지에 비회원 게시판 표출 여부. YES: 사용, NO: 미사용 (default : NO)");
+            put("config_type","게시판");
+        }});
+
+        test.add(new HashMap<String, Object>(){{
+            put("confName","guestBoardId");
+            put("property_value", "");
+            put("config_name","로그인 표출 비회원 권한 게시판ID");
+            put("regdate","2025-08-13 00:00:00");
+            put("description","로그인 표출 비회원 권한 게시판ID");
+            put("config_type","게시판");
+        }});
         
         test.add(new HashMap<String, Object>(){{
             put("confName","teamsTenant");
@@ -8857,5 +8929,20 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
     @Override
     public void addBoardListShowType() throws Exception {
         ezCommonDAO.addBoardListShowType();
+    }
+    
+    @Override
+    public void updateGuestAccessibleUris() throws Exception {
+        List<TenantVO> tenantIdList = ezCommonDAO.getTenantList();
+        String property = "guestAccessibleUris";
+        String guestAccessibleUris = "/ezBoard/boardItemView.do,/ezBoard/boardItemViewPhoto.do,/ezBoard/boardItemViewMovie.do,/ezCommon/mhtToHTMLContent.do,/ezBoard/getItemAttachments.do,/ezBoard/boardAttachDown.do,/ezBoard/downloadAttachAll.do,/ezBoard/imageViewList.do,/ezBoard/getBoardThumbnailInfo.do,/ezBoard/boardItemList.do,/ezBoard/getBoardList.do,/ezBoard/getSearchBoardList.do,/ezBoard/selectToDownloadFiles.do";
+
+        for (TenantVO tenantVo : tenantIdList) {
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put("tenantID", tenantVo.getTenantId());
+            map.put("property", property.toUpperCase());
+            map.put("value", guestAccessibleUris);
+            ezCommonDAO.updateGuestAccessibleUris(map);
+        }
     }
 }
