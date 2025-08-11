@@ -7481,7 +7481,7 @@
 			   form_content3 CLOB DEFAULT NULL,
 			   form_content4 CLOB DEFAULT NULL,
 			   form_content5 CLOB DEFAULT NULL,
-			   form_content6 CLOB DEFAULT NULL);
+			   form_content6 CLOB DEFAULT NULL)
 	</statement>
 	
 	<select id="EzCommonDAO.countJournalListLang" resultClass="Integer">

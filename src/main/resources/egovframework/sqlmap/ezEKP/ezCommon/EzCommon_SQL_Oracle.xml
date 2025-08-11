@@ -7519,7 +7519,7 @@
 		  WHERE form_status = 'basic'
 			AND form_content2 IS NOT NULL
 		)
-		WHERE ROWNUM = 1;
+		WHERE ROWNUM = 1
 	</select>
 	<statement id="EzCommonDAO.createJournalListLang">
 		ALTER TABLE TBL_JOURNAL_FORM
