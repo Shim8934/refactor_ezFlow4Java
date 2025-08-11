@@ -770,10 +770,10 @@
 	                                            	<input name="checkbox" type="checkbox" id="alldaycheck" onclick="allday_change()" value="1">
 	                                            	<spring:message code='ezSchedule.t369'/>
 	                                           		<input type="text" id="Sdatepicker" style="width:90px;text-align:center" readonly="readonly">
-	                                           		<input id="Stimepicker" type="text" class="time" style="width:53px;margin-left:10px;text-align:center;" onkeypress="return KeEventControl(this);" onkeydown="return KeEventControl(this);" onkeyup="return KeEventControl(this);" onmousedown="return false"/>
+	                                           		<input id="Stimepicker" type="text" class="time" style="width:53px;margin-left:10px;text-align:center;" onkeypress="return KeEventControl(this);" onkeydown="return KeEventControl(this);" onkeyup="return KeEventControl(this);" onmousedown="return false" readonly/>
 	                                            	~
 	                                            	<input type="text" id="Edatepicker" style="width:90px;text-align:center" readonly="readonly">
-	                                            	<input id="Etimepicker" type="text" class="time" style="width:53px;margin-left:10px;text-align:center;" onkeypress="return KeEventControl(this);" onkeydown="return KeEventControl(this);" onkeyup="return KeEventControl(this);" onmousedown="return false"/>
+	                                            	<input id="Etimepicker" type="text" class="time" style="width:53px;margin-left:10px;text-align:center;" onkeypress="return KeEventControl(this);" onkeydown="return KeEventControl(this);" onkeyup="return KeEventControl(this);" onmousedown="return false" readonly/>
 	                                            </span>
 	                                            <span id="repeatblock" style="DISPLAY: none"><spring:message code='ezSchedule.t343'/></span>
 	                                        </td>
