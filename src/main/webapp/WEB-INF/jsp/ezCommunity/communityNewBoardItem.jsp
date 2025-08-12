@@ -1147,26 +1147,24 @@
 						<tr id="tdEndDate">
 							<th><spring:message code='ezCommunity.t384' /></th>
 							<td>
-								<c:choose>
-									<c:when test="${(pMode != 'modify' && boardInfo.expireDays =='-1') || (pMode == 'modify' && fn:substring(item.endDate, 0, 4) == '9999') || pUrl != '' }">
-										<span id="Chkbox">
-											<div class="custom_checkbox">
+								<div class="custom_checkbox">
+									<c:choose>
+										<c:when test="${(pMode != 'modify' && boardInfo.expireDays =='-1') || (pMode == 'modify' && fn:substring(item.endDate, 0, 4) == '9999') || pUrl != '' }">
+											<span id="Chkbox">
 												<input type="checkbox" id="ChkPermanence" name="ChkPermanence" onclick="return ChkPermanent()" checked>
-												<label for="ChkPermanence"><spring:message code='ezCommunity.t930' /></label>
-											</div>
-										</span>
-										<span id="Makedate"><input type="text" id="Edatepicker" readonly="readonly" style="width: 80px; text-align: center"></span>
-									</c:when>
-									<c:otherwise>
-										<span id="Chkbox">
-											<div class="custom_checkbox">
+												<label for="ChkPermanence" style="display: inline-block; padding-bottom: 3px;"><spring:message code='ezCommunity.t930' /></label>
+											</span>
+											<span id="Makedate"><input type="text" id="Edatepicker" readonly="readonly" style="width: 80px; text-align: center"></span>
+										</c:when>
+										<c:otherwise>
+											<span id="Chkbox">
 												<input type="checkbox" id="ChkPermanence" name="ChkPermanence" onclick="return ChkPermanent()">
 												<label for="ChkPermanence"><spring:message code='ezCommunity.t930' /></label>
-											</div>
-										</span>
-										<span id="Makedate"><input type="text" id="Edatepicker" readonly="readonly" style="width: 80px; text-align: center"></span>
-									</c:otherwise>
-								</c:choose>
+											</span>
+											<span id="Makedate"><input type="text" id="Edatepicker" readonly="readonly" style="width: 80px; text-align: center"></span>
+										</c:otherwise>
+									</c:choose>
+								</div>
 							</td>
 						</tr>
 						<tr>
