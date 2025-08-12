@@ -547,15 +547,15 @@
         		<!-- 표준모듈 (2007.02.21) 수정 -->
         		<tr>
             		<th><spring:message code='ezPersonal.t187'/></th> 
-            		<td> <input type="password" id="txtOldPassword" size="25" value="" onkeypress="change_press()" style="width:100%"> </td> 
+            		<td> <input type="password" id="txtOldPassword" maxlength="50" size="25" value="" onkeypress="change_press()" style="width:100%"> </td> 
         		</tr> 
         		<tr> 
             		<th><spring:message code='ezPersonal.t188'/></th> 
-            		<td> <input type="password" id="txtNewPassword" size="25" value="" onkeypress="change_press()" style="width:100%"> </td> 
+            		<td> <input type="password" id="txtNewPassword" maxlength="50" size="25" value="" onkeypress="change_press()" style="width:100%"> </td> 
         		</tr> 
         		<tr> 
             		<th><spring:message code='ezPersonal.t189'/></th> 
-            		<td> <input type="password" id="txtNewPasswordConfirm" size="25" value="" onkeypress="change_press()" style="width:100%"> </td> 
+            		<td> <input type="password" id="txtNewPasswordConfirm" maxlength="50" size="25" value="" onkeypress="change_press()" style="width:100%"> </td> 
         		</tr>
     		</table> 
     		<div class="btnpositionJsp" style="width:50%">

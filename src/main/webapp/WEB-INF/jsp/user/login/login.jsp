@@ -256,6 +256,28 @@
 					$("#imgMnt2").html("<img src='/images/warning2.png'>");
 			        $("#exDiv3").modal();
 			    }
+
+				var pwInput = document.getElementById('upw'); // 해당 ID로 비밀번호 입력 요소 가져오기
+				var capsLock = document.getElementById('capsLock'); // CapsLock 경고 표시 요소
+				var pwView = document.querySelector('.pw #pw_view'); // 로그인 > 비밀번호 보기 
+
+				pwInput.addEventListener('keydown', function (e) {
+					if (e.getModifierState && e.getModifierState('CapsLock')) {
+						capsLock.style.display = 'block';
+					} else {
+						capsLock.style.display = 'none';
+					}
+				});
+
+				pwInput.addEventListener('blur', function () {
+					capsLock.style.display = 'none';
+					if (pwInput.value.length == 0) pwView.style.display = 'none';
+				});
+
+				pwInput.addEventListener('focus', function () {
+					pwView.style.display = 'block';
+				});
+				
 			    getid(document.loginForm);
 			    document.loginForm.message.value = "";
 			    
@@ -268,6 +290,17 @@
 				
 				// 하단의 연도 문자열 표출
 				makeRightsYearString();
+				
+				const togglePasswords = document.querySelectorAll('.pw_view');
+
+				togglePasswords.forEach((toggle) => {
+					toggle.addEventListener('click', function () {
+						const passwordInput = this.parentNode.querySelector('input[type="password"], input[type="text"]');
+						const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+						passwordInput.setAttribute('type', type);
+					});
+				});
+				
 			}
 			
 			function setting_click() {
@@ -546,9 +579,11 @@
 		                        </p>
 		                        <p class="pw_txt"><spring:message code="main.login.design03"/></p>
 		                        <p class="pw">
-		                        	<input id="upw" name="password" placeholder="<spring:message code="main.login.design04"/>" class="input_text" type="password" onchange="if(this.value.length!=0){this.className='input_text focus'}" onblur="if (this.value.length==0) {this.className='input_text', document.getElementById('BC2').style.display = 'none';} else {this.className='input_text'};" onfocus="this.className='input_text focus', document.getElementById('BC2').style.display = 'block';" onKeyPress="if(event.keyCode==13) actionLogin();" autocomplete="off" />
+		                        	<input id="upw" name="password" maxlength="50" style="padding-right: 90px" placeholder="<spring:message code="main.login.design04"/>" class="input_text" type="password" onchange="if(this.value.length!=0){this.className='input_text focus'}" onblur="if (this.value.length==0) {this.className='input_text', document.getElementById('BC2').style.display = 'none';} else {this.className='input_text'};" onfocus="this.className='input_text focus', document.getElementById('BC2').style.display = 'block';" onKeyPress="if(event.keyCode==13) actionLogin();" autocomplete="off" />
 		                        	<span class="btnClear" id="BC2" onclick="clearInput(this)" style="display:none;"></span>
+									<span class="pw_view" id="pw_view" onclick="this.classList.toggle('on')" style="display:none;"></span>
 		                        </p>
+									<div class="capsLock" id="capsLock" style="display:none">Caps Lock이 켜져 있습니다.</div>
 		                        <c:choose>
 			                        <c:when test="${useOTP}">
 										<p class="otp_txt">OTP</p>
@@ -634,9 +669,9 @@
 						<span class="formText">
 							<c:if test="${resetPassword == 'Y'}"><spring:message code='login.kdh001'/></c:if>
 							<c:if test="${resetPassword != 'Y'}"><spring:message code='ezPersonal.t949'/> </c:if>
-						</span><span class="formInput"><input type="password" id="txtOldPassword" onkeypress="if(event.keyCode==13) PassWordChange();"></span></li>
-					<li><span class="formText"><spring:message code='main.jjh05'/></span><span class="formInput"><input type="password" id="txtNewPassword" onkeypress="if(event.keyCode==13) PassWordChange();"></span></li>
-					<li><span class="formText"><spring:message code='main.jjh06'/></span><span class="formInput"><input type="password" id="txtNewPasswordConfirm" onkeypress="if(event.keyCode==13) PassWordChange();"></span></li>
+						</span><span class="formInput"><input type="password" id="txtOldPassword" maxlength="50" style="padding-right: 50px" onkeypress="if(event.keyCode==13) PassWordChange();"><span class="pw_view" onclick="this.classList.toggle('on');"></span></span></li>
+					<li><span class="formText"><spring:message code='main.jjh05'/></span><span class="formInput"><input type="password" id="txtNewPassword"  maxlength="50" style="padding-right: 50px" onkeypress="if(event.keyCode==13) PassWordChange();"><span class="pw_view" onclick="this.classList.toggle('on');"></span></span></li>
+					<li><span class="formText"><spring:message code='main.jjh06'/></span><span class="formInput"><input type="password" id="txtNewPasswordConfirm" maxlength="50" style="padding-right: 50px" onkeypress="if(event.keyCode==13) PassWordChange();"><span class="pw_view" onclick="this.classList.toggle('on');"></span></span></li>
 
 					<li style="padding-bottom:10px;padding-top:3px" class="grayText"></li>
 				</ul>
