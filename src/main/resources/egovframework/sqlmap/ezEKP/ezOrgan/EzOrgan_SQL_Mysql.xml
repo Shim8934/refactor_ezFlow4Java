@@ -2910,7 +2910,12 @@
                 extensionAttribute7 JOBID,
 				'' ROLEID,
                 '' ISADDJOB,
-                COALESCE(#companyId#, PHYSICALDELIVERYOFFICENAME) as EXTENSIONATTRIBUTE2
+				<isNotEmpty property="companyId">
+					#companyId# as EXTENSIONATTRIBUTE2
+				</isNotEmpty>
+				<isEmpty property="companyId">
+					PHYSICALDELIVERYOFFICENAME as EXTENSIONATTRIBUTE2
+				</isEmpty>
 			FROM 
 	    		TBL_USERMASTER A 
             $strSQLForMySQL$
@@ -2961,7 +2966,12 @@
 	                A.JOBID JOBID,
 					A.ROLEID ROLEID,
 	                'Y' ISADDJOB,
-		      	    COALESCE(#companyId#, PHYSICALDELIVERYOFFICENAME) as EXTENSIONATTRIBUTE2
+					<isNotEmpty property="companyId">
+						#companyId# as EXTENSIONATTRIBUTE2
+					</isNotEmpty>
+					<isEmpty property="companyId">
+						PHYSICALDELIVERYOFFICENAME as EXTENSIONATTRIBUTE2
+					</isEmpty>
 		      	FROM	
 					TBL_USERMASTER B INNER JOIN TBL_ADDJOBMASTER A ON A.CN = B.CN AND A.TENANT_ID = B.TENANT_ID 
 	            $strSQLForAddJobForMySQL$
@@ -3006,7 +3016,12 @@
 	                '' JOBID,
 	                '' ROLEID,
 	                '' ISADDJOB,
-				    COALESCE(#companyId#, EXTENSIONATTRIBUTE2) as EXTENSIONATTRIBUTE2
+					<isNotEmpty property="companyId">
+						#companyId# as EXTENSIONATTRIBUTE2
+					</isNotEmpty>
+					<isEmpty property="companyId">
+						EXTENSIONATTRIBUTE2
+					</isEmpty>
 				FROM
 					TBL_DEPTMASTER 
                 $strSQLForMySQL$ 
@@ -3036,7 +3051,12 @@
                 '' JOBID,
                 '' ROLEID,
                 '' ISADDJOB,
-                 COALESCE(#companyId#, EXTENSIONATTRIBUTE2) as EXTENSIONATTRIBUTE2
+				<isNotEmpty property="companyId">
+					#companyId# as EXTENSIONATTRIBUTE2
+				</isNotEmpty>
+				<isEmpty property="companyId">
+					EXTENSIONATTRIBUTE2
+				</isEmpty>
 	    	FROM
 	    		TBL_DEPTMASTER 
             $strSQLForMySQL$ 
@@ -3070,7 +3090,6 @@
  
 	<select id="EzOrganDAO.organSearchListPage" parameterClass="Map" resultMap="deptTreeInfoAddjob">
 		<isEqual property="type" compareValue="U">
-			<![CDATA[
 				 	  SELECT  
 						cn, 
 						displayName,
@@ -3091,8 +3110,14 @@
 			                extensionattribute7 JOBID,
 			                '' ROLEID,
 			                '' ISADDJOB,
-			                COALESCE(#companyId#, PHYSICALDELIVERYOFFICENAME) as EXTENSIONATTRIBUTE2
-			             FROM  
+							<isNotEmpty property="companyId">
+								#companyId# as EXTENSIONATTRIBUTE2
+							</isNotEmpty>
+							<isEmpty property="companyId">
+								PHYSICALDELIVERYOFFICENAME as EXTENSIONATTRIBUTE2
+							</isEmpty>
+						<![CDATA[
+			          	 FROM  
 			             	TBL_USERMASTER A
                          $strSQL$
                         ]]>
@@ -3125,9 +3150,7 @@
 									A.USERTREEFLAG = 'Y'
 							]]>
 						</isEqual>
-		            		<include refid="organSearchTrashDept_user"/>
-		            	<![CDATA[
-			       
+		            		<include refid="organSearchTrashDept_user"/>  
 					UNION ALL
 			            
 					SELECT
@@ -3140,7 +3163,13 @@
 		                a.jobid JOBID,
 					    A.ROLEID ROLEID,
 		                'Y' ISADDJOB,
-					    COALESCE(#companyId#, PHYSICALDELIVERYOFFICENAME) as EXTENSIONATTRIBUTE2
+					<isNotEmpty property="companyId">
+						#companyId# as EXTENSIONATTRIBUTE2
+					</isNotEmpty>
+					<isEmpty property="companyId">
+						PHYSICALDELIVERYOFFICENAME as EXTENSIONATTRIBUTE2
+					</isEmpty>
+					<![CDATA[
 					FROM
 						TBL_USERMASTER b
 					INNER JOIN
@@ -3177,7 +3206,6 @@
 					]]>
           </isEqual>
           <isEqual property="class" compareValue="all">
-          	<![CDATA[
 			SELECT
 				*
 			FROM
@@ -3190,7 +3218,13 @@
                 extensionAttribute7 JOBID,
                 '' JOBID,
                 '' ISADDJOB,
-                COALESCE(#companyId#, PHYSICALDELIVERYOFFICENAME) as EXTENSIONATTRIBUTE2
+				<isNotEmpty property="companyId">
+					#companyId# as EXTENSIONATTRIBUTE2
+				</isNotEmpty>
+				<isEmpty property="companyId">
+					PHYSICALDELIVERYOFFICENAME as EXTENSIONATTRIBUTE2
+				</isEmpty>
+			<![CDATA[
 			FROM 
 				TBL_USERMASTER A
 				$strSQL$
@@ -3200,7 +3234,6 @@
 				DEPARTMENT NOT LIKE 'shared\_mailbox\_%' 
 			]]>
 				<include refid="organSearchTrashDept_user"/>
-			<![CDATA[
 			AND
 				A.TENANT_ID = #v_TENANT_ID#
 
@@ -3214,7 +3247,13 @@
                 b.jobid JOBID,
                 A.roleid ROLEID,
                 '' ISADDJOB,
-			    COALESCE(#companyId#, PHYSICALDELIVERYOFFICENAME) as EXTENSIONATTRIBUTE2
+				<isNotEmpty property="companyId">
+					#companyId# as EXTENSIONATTRIBUTE2
+				</isNotEmpty>
+				<isEmpty property="companyId">
+					PHYSICALDELIVERYOFFICENAME as EXTENSIONATTRIBUTE2
+				</isEmpty>
+			<![CDATA[
 			FROM
 				TBL_USERMASTER B
 			INNER JOIN
@@ -3226,7 +3265,6 @@
 				DEPARTMENT NOT LIKE 'shared\_mailbox\_%' 
 			]]>
 				<include refid="organSearchTrashDept_user"/>
-			<![CDATA[
 			AND 
 				A.TENANT_ID = #v_TENANT_ID#
 
@@ -3240,7 +3278,13 @@
 	                '' JOBID,
 	                '' ROLEID,
 	                '' ISADDJOB,
-				    COALESCE(#companyId#, EXTENSIONATTRIBUTE2) as EXTENSIONATTRIBUTE2
+					<isNotEmpty property="companyId">
+						#companyId# as EXTENSIONATTRIBUTE2
+					</isNotEmpty>
+					<isEmpty property="companyId">
+						EXTENSIONATTRIBUTE2
+					</isEmpty>
+				<![CDATA[
 				FROM
 					TBL_DEPTMASTER A	
                 $strSQL$ 
@@ -3254,7 +3298,6 @@
 			]]>
           </isEqual>
 		  <isEqual property="type" compareValue="G">
-		  	<![CDATA[
 			SELECT
 	    		cn,
 	    		'' as displayName,
@@ -3263,8 +3306,14 @@
                 '' JOBID,
                 '' ROLEID,
                 '' ISADDJOB,
-                COALESCE(#companyId#, EXTENSIONATTRIBUTE2) as EXTENSIONATTRIBUTE2
-	    	FROM
+				<isNotEmpty property="companyId">
+					#companyId# as EXTENSIONATTRIBUTE2
+				</isNotEmpty>
+				<isEmpty property="companyId">
+					EXTENSIONATTRIBUTE2
+				</isEmpty>
+			<![CDATA[
+			FROM
 	    		TBL_DEPTMASTER A
             $strSQL$ 
             AND CN NOT LIKE 'shared\_mailbox\_%' 
