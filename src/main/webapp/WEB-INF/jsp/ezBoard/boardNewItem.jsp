@@ -2392,13 +2392,12 @@
 	                
 	                var input = document.createElement("INPUT");
 	                input.style.verticalAlign = "top";
-	                input.style.marginTop = "6px";
+	                input.style.marginTop = "8px";
+	                input.style.marginRight = "6px";
 	                input.name = "backradio";
 	                input.type = "radio";
 	                input.onchange = function () { backgroundimagechange(); };
 	                
-	    	        var oLabel = document.createElement("label");
-	
 	                var img = document.createElement("IMG");
 	                var filepath = getNodeText(SelectNodes(SelectNodes(backxml, "DATA/ROW")[0], "SAVEFILENAME")[i]);
 		                img.width = 108;
@@ -2413,8 +2412,7 @@
 	                img.style.cursor = "pointer";
 	
 	                span.appendChild(input);
-	                oLabel.appendChild(img);
-					span.appendChild(oLabel);
+					span.appendChild(img);
 	
 	                oDiv.appendChild(span);
 	            }
@@ -2423,6 +2421,9 @@
 	                document.getElementById("backgroundtd").appendChild(br);
 	            }
 	            var span = document.createElement("SPAN");
+				span.style.verticalAlign = "top";
+				span.style.margin = "6px 5px 0 10px";
+				span.style.display = "inline-block";
 	            var input = document.createElement("INPUT");
 	            input.name = "backradio";
 	            input.type = "radio";
@@ -2443,8 +2444,7 @@
 	            var a = document.createElement("A");
 	            a.className = "imgbtn imgbck";
 	            a.style.verticalAlign = "top";
-	            a.style.marginTop = "5px !important";
-	            a.style.marginLeft = "10px !important";
+	            a.style.setProperty("margin", "3px", "important");
 	
 	            var span = document.createElement("SPAN");
 	            span.innerHTML = "<spring:message code='ezBoard.t5010' />";

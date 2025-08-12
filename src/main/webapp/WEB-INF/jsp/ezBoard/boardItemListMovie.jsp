@@ -67,8 +67,8 @@
 				color: #5b5a5a;
 			}
 			.selectedP {
-				border-bottom: 2px solid #0470e4;
-				margin: 0px 0px -5px 0px;
+				/*border-bottom: 2px solid #0470e4;*/
+				margin: 0px 0px 0px 0px;
 				padding: 0px 20px;
 				background-color: #3d8fea;
 				color:#ffffff;
