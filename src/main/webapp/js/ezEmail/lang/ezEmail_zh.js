@@ -411,6 +411,11 @@ const strLangChangeLimit = "Cannot switch because the attachment size exceeds th
 const strLangKeepMoveCantUseSentBox = '보낸편지함으로는 계속이동 할 수 없습니다.';
 const strLangKeepMoveNoFromHeader = '보낸이가 비어있는 메일은 계속이동 할 수 없습니다.';
 
+const strUnLimit = "无限制";
+const strDownloadsCount = "회";
+
+const strPreviousTime = '设定时间在当前时间之前 。 请重新设定预约发送时间。';
+
 function GetLocalTime(Offset , pDateTime)
 {
     if (pDateTime == "")

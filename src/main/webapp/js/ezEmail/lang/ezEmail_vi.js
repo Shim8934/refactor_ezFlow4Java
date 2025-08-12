@@ -404,6 +404,11 @@ const strLangChangeLimit = "Cannot switch because the attachment size exceeds th
 const strLangKeepMoveCantUseSentBox = '보낸편지함으로는 계속이동 할 수 없습니다.';
 const strLangKeepMoveNoFromHeader = '보낸이가 비어있는 메일은 계속이동 할 수 없습니다.';
 
+const strUnLimit = "không giới hạn";
+const strDownloadsCount = "회";
+
+const strPreviousTime = 'Ngày dự trữ không được cũ hơn bây giờ.';
+
 function GetLocalTime(Offset , pDateTime)
 {
     if (pDateTime == "")
