@@ -594,3 +594,6 @@ header + .lnb ul li:hover span, .lnb ul li.on span{color:#388CE5;}
 .custom_radio.dark input[type="radio"]:disabled {background: #a9a9a9; border-color:#a9a9a9 !important}
 .custom_radio.dark input[type="radio"]:disabled:checked {background: #a9a9a9; border-color:#a9a9a9 !important;}
 .custom_radio.dark input[type="radio"]:disabled:checked::after {display:block !important; background-color: #656565;}
+
+.filter_pop .check_list .check_ul li .input_check input[type="checkbox"]:checked + label:before { background:  url(/images/ezNewPortal/bg_checkbox.png) no-repeat 2px center;
+background-color: #47494B; border-color: #47494B;}

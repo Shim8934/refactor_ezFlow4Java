@@ -341,3 +341,6 @@ nav .navUL li.on{color:#A20000;}
 
 
 #mainmenu li.view_more.on{color: #A20000;}
+
+.filter_pop .check_list .check_ul li .input_check input[type="checkbox"]:checked + label:before { background:  url(/images/ezNewPortal/bg_checkbox.png) no-repeat 2px center;
+background-color: #A20000; border-color: #A20000;}

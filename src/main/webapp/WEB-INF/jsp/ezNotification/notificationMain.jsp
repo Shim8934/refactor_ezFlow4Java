@@ -51,8 +51,8 @@
                     <ul class="check_ul" id="notiType">
                         <li>
                             <div class="input_check">
-                                <div class='custom_checkbox'><input type="checkbox" id="filter_totalcheck" name="notitypefilter" maintype="y" value="total" checked="checked" onchange="totalfilterCheck()"></div>
-                                <label for="filter_totalcheck"><spring:message code="ezNotification.hth08"/></label>
+                                <div class='custom_checkbox'><input type="checkbox" id="filter_totalcheck" name="notitypefilter" maintype="y" value="total" checked="checked" onchange="totalfilterCheck()">
+                                <label for="filter_totalcheck"><spring:message code="ezNotification.hth08"/></label></div>
                             </div>
                         </li>
                     </ul>
