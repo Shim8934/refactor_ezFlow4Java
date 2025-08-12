@@ -586,7 +586,7 @@
 		    }
 		</script>
 	</head>
-	<body class="popup" style="overflow:hidden">
+	<body class="popup" style="overflow-y: auto; margin-bottom: 60px;">
 	    <h1><c:out value = '${title}' /></h1>
 	    <div id="close">
             <ul>
