@@ -4752,14 +4752,25 @@ public class EzBoardController extends EzFileMngUtil{
 		
 		String guBun = boardInfo.getGuBun();
 		String paramGuBun = request.getParameter("gubun");
+		
 		boolean isTempPhoto = requestURL.contains("TempPhoto");
 		boolean isTempMovie = requestURL.contains("TempMovie");
 		
 		// 포토, 썸네일, 동영상 타입의 게시판이면서 게시하기 호출 url은 일반 게시판으로 들어왔을 때,
 		// 리스트 페이지에서 넘겨받은 게시판타입과 DB에서 받은 게시판타입이 상이할 때,
 		// 관리자페이지에서 게시판 타입이 변경된 것으로 그룹웨어 새로고침을 요구함
-		if ((!Arrays.asList("3", "4", "7").contains(guBun) && (isTempPhoto || isTempMovie)) ||
-			(StringUtils.isNotEmpty(paramGuBun) && !guBun.equals(paramGuBun)) ) {
+		
+		boolean gubunAndUrlValid = false;
+		
+		if ("3".equals(guBun) || "4".equals(guBun)) {
+			gubunAndUrlValid = isTempPhoto && !isTempMovie;
+		} else if ("7".equals(guBun)) {
+			gubunAndUrlValid = !isTempPhoto && isTempMovie;
+		} else {
+			gubunAndUrlValid = !isTempPhoto && !isTempMovie;
+		}
+		
+		if (!gubunAndUrlValid || (StringUtils.isNotEmpty(paramGuBun) && !guBun.equals(paramGuBun)) ) {
 			model.addAttribute("gubunExchanged", "Y");
 			return "main/warning_board";
 		}
