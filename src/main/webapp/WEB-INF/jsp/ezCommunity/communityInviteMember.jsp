@@ -89,14 +89,14 @@
 						}
 					});
 
+					var userIds = [];
+
 					if (adCount == 0) {
 						alert("'" + names[i] + "'" + "<spring:message code='ezCommunity.lyj72' />");
 						continue;
 					} else if (adCount == 1) {
 						if (g_invite == null)
 							g_invite = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname2": new Array() };
-
-						var userIds = [];
 
 						<c:forEach items="${clubUserListVO}" var = "clubUser" >
 							userIds.push("${clubUser.c_ID}");
@@ -130,6 +130,22 @@
 						else
 							document.getElementById("receiverlist").innerHTML += ", " + g_invite["name"][length];
 					} else {
+						<c:forEach items="${clubUserListVO}" var = "clubUser" >
+							userIds.push("${clubUser.c_ID}");
+						</c:forEach>
+
+						var count = 0;
+						for (var y = 0; y < adCount; y++) {
+							if (userIds.includes(getNodeText(xmlDOM.getElementsByTagName("DATA2")[y]))) {
+								count++;
+							}
+						}
+
+						if (adCount == count) {
+							alert("<spring:message code='ezCommunity.lyj71' />");
+							return;
+						}
+
 						var rgParams = new Array();
 						rgParams["addrBook"] = xmlDOM;
 						rgParams["name"] = "";
