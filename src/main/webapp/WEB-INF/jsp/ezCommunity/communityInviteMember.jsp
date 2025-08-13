@@ -272,6 +272,11 @@
 			}
 
 			function inviteSendAlarm() {
+				if (g_invite == null || g_invite["id"].length == 0) {
+					alert("사용자를 선택해주세요.");
+					return;
+				}
+
 				$.ajax({
 					type : "POST",
 					dataType : "json",
