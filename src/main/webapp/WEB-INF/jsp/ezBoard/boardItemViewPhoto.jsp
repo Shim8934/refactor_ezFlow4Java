@@ -1997,6 +1997,16 @@
 
 				document.body.removeChild(urlArea);
 			}
+
+			// 주소복사 후 복사된 URL로 주소창에 붙여넣기하여 게시글을 조회할 경우 버튼 정상동작하지 않아 숨김처리
+			document.addEventListener("DOMContentLoaded", function () {
+				if (!window.opener) {
+					var closeBtn = document.getElementById("close");
+					if (closeBtn) {
+						closeBtn.style.display = "none";
+					}
+				}
+			});
 		</script>
 	</head>
 	<body  id="bodyPopup" class="popup" style="overflow:hidden; height:100%;">
