@@ -324,7 +324,12 @@
 								parent.opener.search('skip');
 							}
 	                 	} catch (e) {console.log(e);}
-			            window.close();
+
+						if (window.opener) {
+							window.close();
+						} else {
+							window.location.reload();
+						}
 				    }
 				}
 				

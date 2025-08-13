@@ -618,8 +618,12 @@
 							if(parent.opener.search != undefined){
 								parent.opener.search('skip');
 							}
-		                    
-		                    window.close();
+
+							if (window.opener) {
+								window.close();
+							} else {
+								window.location.reload();
+							}
 		                }
 		            }
 		            else {
@@ -700,8 +704,12 @@
 								parent.opener.search('skip');
 							}
 	                 	} catch (e) {console.log(e);}
-			            
-		                window.close();
+
+                        if (window.opener) {
+                            window.close();
+                        } else {
+                            window.location.reload();
+                        }
 		            }
 		        }
 		    }
@@ -749,7 +757,12 @@
 				if(parent.opener.search != undefined){
 					parent.opener.search('skip');
 				}
-		        window.close();
+
+				if (window.opener) {
+					window.close();
+				} else {
+					window.location.reload();
+				}
 		    }
 		 	 //강민수92
 		    function btn_One_Line_Reply_Onclick() {
