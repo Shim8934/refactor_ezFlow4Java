@@ -8682,6 +8682,8 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 				Map<String, Object> approvalData = new HashMap<>();
 				approvalData.put("tenantId", tenantId);
 				approvalData.put("companyId", companyId);
+				approvalData.put("lang", lang);
+				approvalData.put("locale", locale);
 				approvalData.put("uid", uid);
 				approvalData.put("applicantId", applicantId);
 				approvalData.put("applicantEmail", applicantEmail);
@@ -8788,6 +8790,8 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 				Map<String, Object> approvalData = new HashMap<>();
 				approvalData.put("tenantId", tenantId);
 				approvalData.put("companyId", companyId);
+				approvalData.put("lang", lang);
+				approvalData.put("locale", locale);
 				approvalData.put("uid", uid);
 				approvalData.put("applicantId", applicantId);
 				approvalData.put("applicantEmail", applicantEmail);
@@ -8886,6 +8890,8 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 			Map<String, Object> approvalData = new HashMap<>();
 			approvalData.put("tenantId", tenantId);
 			approvalData.put("companyId", companyId);
+			approvalData.put("lang", lang);
+			approvalData.put("locale", locale);
 			approvalData.put("uid", uid);
 			approvalData.put("applicantId", applicantId);
 			approvalData.put("applicantEmail", applicantEmail);
