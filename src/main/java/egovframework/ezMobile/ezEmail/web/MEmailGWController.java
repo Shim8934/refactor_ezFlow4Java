@@ -1203,7 +1203,8 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 			String useReceiptExternal = ezCommonService.getTenantConfig("useReceiptExternal", info.getTenantId());
 			String useOnlyInnerMail = ezCommonService.getTenantConfig("UseOnlyInnerMail", info.getTenantId());
 			String useAutoZipEnc = ezCommonService.getTenantConfig("useAutoZipEnc", info.getTenantId());
-
+			String useFileExtension = ezCommonService.getTenantConfig("USE_FileExtension", info.getTenantId());
+			
 			// 2025.02.17 한슬기 : 나를 항상 참조에 포함 옵션(none: 사용안함, cc: 참조에 항상 포함, bcc: 숨은참조에 항상 포함)
 			MailGeneralVO mailGeneralVO = ezEmailService.getMailGeneral(info.getTenantId(), info.getUserId()).get(0);
 			String selfCcOption = mailGeneralVO.getSelfCcOption() == null ? "none" : mailGeneralVO.getSelfCcOption();
@@ -1922,7 +1923,8 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 			data.put("selfCcOption", selfCcOption); // 나를 항상 참조에 포함 옵션(none: 사용안함, cc: 참조에 항상 포함, bcc: 숨은참조에 항상 포함)
 			data.put("userName", userName);
 			data.put("deptName", deptName);
-
+			data.put("useFileExtension", useFileExtension);
+			
 	        result.put("status", "ok");
 			result.put("code", 0);			
 			result.put("data", data);			
