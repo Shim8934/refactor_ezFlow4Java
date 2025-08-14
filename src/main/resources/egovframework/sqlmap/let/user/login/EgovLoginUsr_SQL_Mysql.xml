@@ -42,6 +42,7 @@
         <result property="extensionattribute5"	column="extensionattribute5"		columnIndex="27"/>
 		<result property="jobId"				column="jobId"						columnIndex="28"/>
 		<result property="roleId"				column="roleId"						columnIndex="29"/>
+		<result property="upnname"				column="upnname"					columnIndex="30"/>
     </resultMap>    
     
     <resultMap id="session" class="egovframework.let.user.login.vo.SessionVO">
@@ -258,7 +259,8 @@
  	                mobile,
  	                extensionattribute5,
  	                EXTENSIONATTRIBUTE7  as jobId,
- 	            	EXTENSIONATTRIBUTE8  as roleId
+ 	            	EXTENSIONATTRIBUTE8  as roleId,
+ 	            	upnname
  	            FROM
  	                TBL_USERMASTER a 
  	            WHERE  
@@ -309,7 +311,8 @@
 					u.mobile as mobile,
 					u.extensionattribute5,
 					b.jobid as jobId,
-					b.roleId as roleId
+					b.roleId as roleId,
+					u.upnname
 				FROM
 					TBL_ADDJOBMASTER b
 				JOIN
@@ -361,7 +364,8 @@
 				mobile as mobile,
 				extensionattribute5,
 				EXTENSIONATTRIBUTE7  as jobId,
-				EXTENSIONATTRIBUTE8  as roleId
+				EXTENSIONATTRIBUTE8  as roleId,
+				upnname
 			FROM
 				TBL_USERMASTER a
 			WHERE
@@ -412,7 +416,8 @@
 					u.mobile as mobile,
 					u.extensionattribute5,
 					b.jobid as jobId,
-					b.roleId  as roleId
+					b.roleId  as roleId,
+					u.upnname
 				FROM
 					TBL_ADDJOBMASTER b
 				JOIN

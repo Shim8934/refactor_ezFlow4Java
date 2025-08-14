@@ -7994,4 +7994,39 @@
 		]]>
 	</insert>
 
+
+	<select id="EzCommonDAO.checkTeamsIdColumn">
+		SELECT TeamsId FROM tbl_usermaster LIMIT 1
+	</select>
+
+	<statement id="EzCommonDAO.addTeamsIdColumn">
+		ALTER TABLE tbl_usermaster ADD COLUMN TeamsId VARCHAR(100) NULL
+	</statement>
+
+	<statement id="EzCommonDAO.checkAuthTokenTable" resultClass="string">
+		SELECT COUNT(*) FROM TBL_AUTHTOKEN LIMIT 1
+	</statement>
+	
+	<statement id="EzCommonDAO.createAuthTokenTable">
+		CREATE TABLE TBL_AUTHTOKEN (
+			APITYPE VARCHAR(20) NULL,
+			TOKENTYPE VARCHAR(20) NOT NULL DEFAULT 'publicapp',
+			AUTHTOKEN VARCHAR(4000) NULL,
+			UPDATEDATE DATETIME NULL
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+	</statement>
+
+	<statement id="EzCommonDAO.checkUserPresenceTable" resultClass="string">
+		SELECT ID FROM TBL_USERPRESENCE LIMIT 1
+	</statement>
+	
+	<statement id="EzCommonDAO.createUserPresenceTable">
+		CREATE TABLE TBL_USERPRESENCE (
+			ID VARCHAR(50) NOT NULL,
+			PRESENCE VARCHAR(50) NOT NULL,
+			UPDATETIME VARCHAR(50) NOT NULL,
+			PRIMARY KEY (ID)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8
+	</statement>
+
 </sqlMap>

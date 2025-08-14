@@ -1078,6 +1078,20 @@ public class CommonUtil {
 		return stb.toString();
 	}
 	
+	public Map<String, Object> getQueryResultAsJson(Object vo) throws Exception {
+		Map<String, Object> resultMap = new HashMap<>();
+
+		if (vo != null) {
+			for (Field field : vo.getClass().getDeclaredFields()) {
+				field.setAccessible(true);
+				Object value = field.get(vo);
+				resultMap.put(field.getName().toLowerCase(), value == null ? "" : cleanValue(value.toString()));
+			}
+		}
+
+		return resultMap;
+	}
+	
 	/*
 	 * 행이 여러 개일 때 여러 행이 포함된 XML String 생성
 	 * xmlTag: "<DATA>" 또는 다름 Tag

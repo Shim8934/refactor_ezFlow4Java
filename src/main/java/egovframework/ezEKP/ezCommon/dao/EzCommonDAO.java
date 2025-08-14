@@ -3689,4 +3689,32 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.addMailPreviewConfig",map);
 		}
 	}
+
+	public void alterTblUsermasterForTeams() throws Exception {
+		try {
+			select("EzCommonDAO.checkTeamsIdColumn");
+		} catch (Exception e) {
+			logger.debug("tbl_usermaster TeamsId doesn't exist. creating the column...");
+			update("EzCommonDAO.addTeamsIdColumn");
+		}
+	}
+
+	public void createAuthTokenTable() {
+		try {
+			select("EzCommonDAO.checkAuthTokenTable");
+		} catch (Exception e) {
+			logger.debug("Table TBL_AUTHTOKEN doesn't exist. Creating the table...");
+			update("EzCommonDAO.createAuthTokenTable");
+		}
+	}
+
+	public void createUserPresenceTable() {
+		try {
+			select("EzCommonDAO.checkUserPresenceTable");
+		} catch (Exception e) {
+			logger.debug("Table TBL_USERPRESENCE doesn't exist. Creating the table...");
+			update("EzCommonDAO.createUserPresenceTable");
+		}
+	}
+	
 }

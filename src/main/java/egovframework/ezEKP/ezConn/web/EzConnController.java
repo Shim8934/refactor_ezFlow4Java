@@ -392,6 +392,8 @@ public class EzConnController {
 					resultPage = "/ezApprovalG/apprGMain.do";
 				} else if (cmd.equals("board")) {
 					resultPage ="/ezBoard/boardMain.do";
+				} else if (cmd.equals("orgChart")) {
+					resultPage = "/ezOrgan/organMain.do";
 				}
 			}
 		} catch (Exception e) {

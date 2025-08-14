@@ -8536,4 +8536,39 @@
 		]]>
 	</insert>
 
+
+	<select id="EzCommonDAO.checkTeamsIdColumn">
+		SELECT TeamsId FROM tbl_usermaster WHERE ROWNUM = 1
+	</select>
+
+	<statement id="EzCommonDAO.addTeamsIdColumn">
+		ALTER TABLE tbl_usermaster ADD TeamsId VARCHAR2(100)
+	</statement>
+
+	<statement id="EzCommonDAO.checkAuthTokenTable" resultClass="string">
+		SELECT COUNT(*) FROM TBL_AUTHTOKEN WHERE ROWNUM = 1
+	</statement>
+
+	<statement id="EzCommonDAO.createAuthTokenTable">
+		CREATE TABLE TBL_AUTHTOKEN (
+			APITYPE VARCHAR2(20),
+			TOKENTYPE VARCHAR2(20) DEFAULT 'publicapp' NOT NULL,
+			AUTHTOKEN VARCHAR2(4000),
+			UPDATEDATE DATE
+		);
+	</statement>
+
+	<statement id="EzCommonDAO.checkUserPresenceTable" resultClass="string">
+		SELECT ID FROM TBL_USERPRESENCE WHERE ROWNUM = 1
+	</statement>
+
+	<statement id="EzCommonDAO.createUserPresenceTable">
+		CREATE TABLE TBL_USERPRESENCE (
+			ID VARCHAR2(50) NOT NULL,
+			PRESENCE VARCHAR2(50) NOT NULL,
+			UPDATETIME VARCHAR2(50) NOT NULL,
+			PRIMARY KEY (ID)
+		)
+	</statement>
+	
 </sqlMap>

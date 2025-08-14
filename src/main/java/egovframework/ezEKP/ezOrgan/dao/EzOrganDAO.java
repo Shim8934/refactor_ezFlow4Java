@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import egovframework.ezEKP.ezOrgan.vo.OrganTeamsTreeVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
@@ -470,4 +471,32 @@ public class EzOrganDAO extends EgovAbstractDAO {
 	public Map<String, Object> getUserInfoMap(Map<String, Object> map) {
 		return (Map<String, Object>) select("EzOrganDAO.getUserInfoMap", map);
 	}
+
+	public List<Map<String, Object>> getCompanyList(String userLang) {
+		Map<String, Object> param = new HashMap<>();
+		param.put("lang", userLang);
+		return (List<Map<String, Object>>) list("EzOrganDAO.getCompanyList", param);
+	}
+
+	@SuppressWarnings("unchecked")
+	private List<OrganTeamsTreeVO> getDeptMemberListForLocalForTeams(Map<String, Object> map) throws Exception {
+		List<OrganTeamsTreeVO> deptMemberList = (List<OrganTeamsTreeVO>) list("EzOrganDAO.getDeptMemberListForTeams", map);
+		return deptMemberList;
+	}
+
+	public List<OrganTeamsTreeVO> getDeptMemberListForTeams(Map<String, Object> map) throws Exception {
+		return getDeptMemberListForLocalForTeams(map);
+	}
+
+	public int getSubDeptCount(Map<String, Object> param) {
+		return (Integer) select("EzOrganDAO.getSubDeptCount", param);
+	}
+
+	public List<String> getUpnNames() {
+		return (List<String>) list("EzOrganDAO.getUpnNames");
+	}
+	public int updateTeamsIdByUpnName(Map<String, Object> param) {
+		return update("EzOrganDAO.updateTeamsIdByUpnName", param);
+	}
+	
 }

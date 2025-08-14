@@ -405,7 +405,11 @@ public class EzOrganAdminController extends EgovFileMngUtil {
             ezCommonService.alterTblClubUserAdminAuthColumn(); // 2025-07-15 이유정 - 커뮤니티 > 운영자권한 컬럼 추가
             ezCommonService.alterTblClubUserWithdrawDateColumn(); // 2025-07-23 이유정 - 커뮤니티 > 회원탈퇴일자 컬럼 추가
             ezCommonService.addMailPreviewConfig();//2025-07-24 김대현 - 메일 > 메일 미리보기 기능 추가
-        } catch (Exception e) {
+			ezCommonService.alterTblUsermasterForTeams(); // 2025-07-29 김혜림 - 팀즈 연동을 위한 TEAMSID 컬럼 추가
+			ezCommonService.createAuthTokenTable(); // 2025-07-31 김혜림 - Graph API 인증토큰 저장 테이블 생성
+			ezCommonService.createUserPresenceTable(); // 2025-08-04 김혜림 - Graph API Presence 정보 저장 테이블 생성
+
+		} catch (Exception e) {
     		logger.error(e.getMessage(), e);
     	}
     	logger.debug("init ended.");

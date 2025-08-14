@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezOrgan.service.impl;
-
+import com.microsoft.aad.msal4j.*;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezOrgan.dao.EzOrganAdminDAO;
 import egovframework.ezEKP.ezOrgan.dao.EzOrganDAO;
@@ -7,18 +8,42 @@ import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganJobVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganProxyVO;
+import egovframework.ezEKP.ezOrgan.vo.OrganTeamsTreeVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
+import egovframework.ezEKP.ezOrgan.vo.TeamsOrganVO;
+import egovframework.ezEKP.ezTeams.dao.EzTeamsDAO;
+import egovframework.ezEKP.ezTeams.service.EzTeamsService;
+import egovframework.ezEKP.ezTeams.vo.TeamsPresenceVO;
 import egovframework.let.user.login.service.LoginService;
+import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
-import net.minidev.json.JSONArray;
-import net.minidev.json.JSONObject;
+//import net.minidev.json.JSONArray;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+//import net.minidev.json.JSONObject;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
 import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
 
 import javax.annotation.Resource;
 import javax.naming.Context;
@@ -27,6 +52,11 @@ import javax.naming.directory.DirContext;
 import javax.naming.directory.InitialDirContext;
 import javax.naming.directory.SearchControls;
 import javax.naming.directory.SearchResult;
+import javax.servlet.http.HttpServletRequest;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import java.io.File;
+import java.io.StringReader;
 import java.lang.reflect.Field;
 import java.net.URLDecoder;
 import java.text.ParseException;
@@ -36,11 +66,14 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
+import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 
 @Service("EzOrganService")
 public class EzOrganServiceImpl implements EzOrganService {
@@ -75,6 +108,12 @@ public class EzOrganServiceImpl implements EzOrganService {
 	@Autowired
 	private EzOrganDAO ezOrganDao;
 
+	@Resource(name = "EzTeamsDAO")
+	private EzTeamsDAO ezTeamsDAO;
+
+	@Resource(name="EzTeamsService")
+	private EzTeamsService ezTeamsService;
+	
     // 지정된 사원 혹은 부서의 특정 필드의 값을 반환한다.
 	@Override
 	public String getPropertyValue(String userid, String propName, int tenantID) throws Exception{
@@ -979,7 +1018,26 @@ public class EzOrganServiceImpl implements EzOrganService {
 				sb.append("</DATA>");
 				
 				listInfo = getMemberInfo(sb.toString(), pCellList, pPropList, "", organVO.getType());
+//				String rowXml = getMemberInfo(sb.toString(), pCellList, pPropList, "", organVO.getType());
+//				logger.debug("organVO.getCn()={}, getType()={}", organVO.getCn(), organVO.getType());
+//				if ("dept".equalsIgnoreCase(organVO.getType())) {
+//					Map<String, Object> param = new HashMap<>();
+//					param.put("v_CN", organVO.getCn());
+//					param.put("v_ADMINFLAG", "N"); // 일단 임의로 N
+//					int subDeptCnt = ezOrganDAO.getSubDeptCount(param);
+//					logger.debug("subDeptCnt={}", subDeptCnt);
+//					organVO.setIsLeaf(subDeptCnt > 0 ? "FALSE" : "TRUE");
+//				}
+//				if ("group".equalsIgnoreCase(organVO.getType()) || "dept".equalsIgnoreCase(organVO.getType())) {
+//					String extra = "<ISLEAF>" + (organVO.getIsLeaf() == null ? "TRUE" : organVO.getIsLeaf().toUpperCase()) + "</ISLEAF>"
+//							+ "<HASDEPT>" + (organVO.getHasDept() == null ? "FALSE" : organVO.getHasDept().toUpperCase()) + "</HASDEPT>"
+//							+ "<HASDEPTUSER>" + (organVO.getHasDeptUser() == null ? "FALSE" : organVO.getHasDeptUser().toUpperCase()) + "</HASDEPTUSER>";
+//
+//					rowXml = rowXml.replaceFirst("</CELL>", extra + "</CELL>");
+//				}
+//				logger.debug("rowXml 1={}", rowXml);
 				memberlist2.append(listInfo);
+//				memberlist2.append(rowXml);
 			}			
 		}
 		memberlist2.append("</ROWS></LISTVIEWDATA>");
@@ -2185,7 +2243,7 @@ public class EzOrganServiceImpl implements EzOrganService {
 		for (int i = 0; i < list.size(); i++) {
 			JSONObject jObj = new JSONObject();
 			jObj.put("cn", list.get(i).getCn());
-			jArr.add(jObj);
+			jArr.put(jObj);
 		}		
 		
 		logger.debug("jArr.toString : " + jArr.toString());
@@ -2415,7 +2473,6 @@ public class EzOrganServiceImpl implements EzOrganService {
 				
 				sb.append(commonUtil.getQueryResult(result));
 				sb.append("</DATA>");
-				
 				listInfo = getMemberInfo(sb.toString(), pCellList, pPropList, "", organVO.getType());
 				memberlist2.append(listInfo);
 			}			
@@ -2932,4 +2989,639 @@ public class EzOrganServiceImpl implements EzOrganService {
 
 		return allUserInfo;
 	}
+
+	@Override
+	public TeamsOrganVO organMain(LoginVO userInfo, String device, String companyId, String permission, String deptId, String uselstcompany, int tenantId) throws Exception {
+		logger.debug("userInfo = " + userInfo + ", device = " + device + ", companyId = " + companyId + ", permission = " + permission + ", deptId = " + deptId + ", uselstcompany = " + uselstcompany);
+		
+		TeamsOrganVO teamsOrganVO = new TeamsOrganVO();
+
+		String userId = userInfo.getId();
+		
+		if (userId == null || userId.trim().isEmpty()) {
+			return teamsOrganVO;
+		}
+
+		String mode = "DB";
+		String tenant = "";
+		String appId = "";
+		String appSecret = "";
+		String usePresence = "";
+		int presenceInterval = 60;
+		String photoPath = "";
+		String delegatedAuthToken = "";
+		String publicAuthToken = "";
+		List<Map<String, String>> companyList = new ArrayList<>();
+
+		try {
+			if (device != null && !device.isEmpty()) {
+				device = device;
+			}
+
+			// 시스템 설정값 로드
+			tenant = ezCommonService.getTenantConfig("teamsTenant", tenantId);
+			appId = ezCommonService.getTenantConfig("teamsClientId", tenantId);
+			appSecret = ezCommonService.getTenantConfig("teamsClientSecret", tenantId);
+			usePresence = ezCommonService.getTenantConfig("useTeams", tenantId).toLowerCase(); 
+			presenceInterval = Integer.parseInt(ezCommonService.getTenantConfig("presenceInterval", tenantId));
+			delegatedAuthToken = ezTeamsService.getToken("delegated");
+//			publicAuthToken = ezTeamsService.getPublicAppToken(tenant, appId, appSecret); // TODO
+			publicAuthToken = ezTeamsService.getToken("publicapp");
+			
+			// 회사ID 처리
+			if (companyId == null || companyId.isEmpty()) {
+				companyId = userInfo.getCompanyID();
+			} else {
+				if ("TOP".equalsIgnoreCase(companyId)) {
+					companyId = userInfo.getCompanyID();
+				} else {
+					companyId = companyId.toUpperCase();
+				}
+
+				if (deptId == null || deptId.isEmpty()) {
+					if (userInfo.getCompanyID().equalsIgnoreCase(companyId)) {
+						deptId = userInfo.getDeptID();
+					}
+				}
+			}
+
+			String companyName = getPropertyValue(companyId, "DISPLAYNAME", tenantId); // TODO
+			// 회사 목록 구성
+			if ("Y".equalsIgnoreCase(uselstcompany)) {
+				Map<String, String> option = new HashMap<>();
+				option.put("companyId", companyId);
+				option.put("companyName", companyName);
+				companyList.add(option);
+
+			} else if ("Y".equalsIgnoreCase(permission)
+					&& !userInfo.getRollInfo().contains("c=1")
+					&& userInfo.getRollInfo().contains("k=1")) {
+				Map<String, String> option = new HashMap<>();
+				option.put("companyId", companyId);
+				option.put("companyName", companyName);
+				companyList.add(option);
+
+			} else {
+				companyList = dropDownAllCompanyList(userInfo.getRollInfo(), companyId, userInfo.getLang()); 
+			}
+			
+
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+		}
+
+		teamsOrganVO.setTenant(tenant);
+		teamsOrganVO.setAppId(appId);
+		teamsOrganVO.setDelegatedAuthToken(delegatedAuthToken);
+		teamsOrganVO.setPublicAuthToken(publicAuthToken);
+		teamsOrganVO.setMode(mode);
+		teamsOrganVO.setDevice(device);
+		teamsOrganVO.setUsePresence(usePresence);
+		teamsOrganVO.setPresenceInterval(presenceInterval);
+		teamsOrganVO.setPhotoPath(photoPath);
+		teamsOrganVO.setCompanyList(companyList);
+		return teamsOrganVO;
+	}
+
+	// 부서, 사용자 조직도 트리 정보 조회 (Teams용)
+	@Override
+	public String getTotalTreeNodeInfo(LoginVO userInfo, String userId, String selectedUserId, String deptId, String topId,
+									   String propList, String langCode, String type, String adminFlag) throws Exception {
+
+		logger.debug("getTotalTreeNodeInfo started");
+		int tenantID = userInfo.getTenantId();
+		JSONArray returnJArray = new JSONArray();
+
+		try {
+			// selectedUserId만 있고 부서ID가 없으면 해당 사용자의 부서ID를 가져옴
+			if (!selectedUserId.isEmpty() && deptId.isEmpty()) {
+				Map<String, Object> param = new HashMap<>();
+				param.put("CN", selectedUserId);
+				OrganDeptVO deptInfo = ezOrganDAO.getDeptInfo(param);
+				deptId = deptInfo.getCn();
+			}
+
+			if (deptId.isEmpty()) {
+				deptId = userInfo.getDeptID();
+			}
+			if (topId.isEmpty()) {
+				topId = userInfo.getCompanyID();
+			}
+			Set<String> processedDeptIds = new HashSet<>();
+
+			String deptPath = "";
+			if (deptId != null && !deptId.equals("")) {
+				Map map = new HashMap();
+				map.put("tenantID", tenantID);
+				map.put("deptId", deptId);
+
+				deptPath = ezOrganDAO.getDeptPath(map); // 예: "teamsdev,projectteam1,subdept1"
+			}
+			JSONArray nodes = getSubDeptTreeNodes(topId, deptPath, propList, langCode, 1, deptId, "", adminFlag, "Y",processedDeptIds,"all");
+
+			// 최상위 부서에 직접 소속된 사용자 추가
+			Map<String, Object> topUserParam = new HashMap<>();
+			topUserParam.put("v_CLASS", "user");
+			topUserParam.put("v_CN", topId);
+			topUserParam.put("v_TENANT_ID", tenantID);
+			topUserParam.put("v_LANGDATA", langCode);
+
+			List<OrganTeamsTreeVO> topLevelUsers = ezOrganDAO.getDeptMemberListForTeams(topUserParam); // EZSP_GETDEPTMEMBERLIST_NEW2
+			for (OrganTeamsTreeVO user : topLevelUsers) {
+				JSONObject userNode = new JSONObject();
+				userNode.put("data1", "USER");
+				userNode.put("data2", user.getData2());
+				userNode.put("nodeLevel", 1);
+				userNode.put("department", user.getDepartment());
+				userNode.put("title", user.getTitle());
+				userNode.put("description", user.getDescription());
+				userNode.put("levelName", user.getLevelName());
+				userNode.put("value", user.getDisplayName() + (!user.getTitle().isEmpty() ? " (" + user.getTitle() + ")" : ""));
+				userNode.put("displayName", user.getDisplayName());
+				userNode.put("isLeaf", "TRUE");
+				userNode.put("setTextColorByName", "GRAY");
+				userNode.put("extensionAttribute10", user.getExtensionAttribute10());
+				userNode.put("physicalDeliveryOfficeName", user.getPhysicalDeliveryOfficeName());
+				userNode.put("extensionAttribute2", user.getExtensionAttribute2());
+				userNode.put("upnName", user.getUpnName());
+				userNode.put("teamsId", user.getTeamsId());
+				
+				// propList 적용
+				if (!propList.isEmpty()) {
+					String[] props = propList.split(";");
+					for (String propName : props) {
+						String val = "";
+						try {
+							Field field = user.getClass().getDeclaredField(propName);
+							field.setAccessible(true);
+							Object propValue = field.get(user);
+							val = propValue != null ? propValue.toString().trim() : "";
+						} catch (Exception e) {
+							logger.warn(e.getMessage());
+						}
+						userNode.put(propName, val);
+					}
+				}
+
+				nodes.put(userNode);  // 사용자 노드 추가
+			}
+			
+
+			// 최상위 노드 정보 구성
+			Map<String, Object> topParam = new HashMap<>();
+			topParam.put("userID", topId);
+			topParam.put("primary", langCode);
+			topParam.put("v_TENANT_ID", tenantID);
+			OrganDeptVO top = ezOrganDAO.getDeptInfo(topParam);
+
+			if (top != null) {
+				JSONObject topNode = new JSONObject();
+				topNode.put("value", top.getDisplayName());
+				topNode.put("data1", "DEPT");
+				topNode.put("data2", top.getCn());
+				topNode.put("nodeLevel", top.getDeptLevel());
+				topNode.put("displayName", top.getDisplayName());
+				topNode.put("icon", "i_company");
+				topNode.put("isLeaf", "FALSE");
+				topNode.put("nodes", nodes);
+
+				boolean hasTopDeptUser = false;
+				boolean hasTopDept = false;
+
+				for (int i = 0; i < nodes.length(); i++) {
+					JSONObject child = nodes.getJSONObject(i);
+					String nodeType = child.optString("data1");
+					if ("USER".equalsIgnoreCase(nodeType)) hasTopDeptUser = true;
+					else if ("DEPT".equalsIgnoreCase(nodeType)) hasTopDept = true;
+				}
+
+				topNode.put("hasDeptUser", hasTopDeptUser ? "TRUE" : "FALSE");
+				topNode.put("hasDept", hasTopDept ? "TRUE" : "FALSE");
+				if (top.getCn().equals(deptId)) {
+//					topNode.put("isSelected", true);
+					
+					JSONObject state = new JSONObject();
+					state.put("selected", true);
+					state.put("expanded", true);
+					topNode.put("state", state);
+				}
+				returnJArray.put(topNode);
+			}
+		} catch (Exception e) {
+			logger.error("getTotalTreeNodeInfo error", e);
+		}
+		return returnJArray.toString();
+	}
+
+	// 재귀적으로 하위 부서 및 사용자 구성
+	private JSONArray getSubDeptTreeNodes(String deptId, String deptPath, String propList, String langCode, int nodeLevel, String userDeptId, String userDeptPath,
+										   String adminFlag, String allTreeFlag, Set<String> processedDeptIds, String vClass) {
+		
+		JSONArray returnJArray = new JSONArray();
+		try {
+			// 1단계: 파라미터 설정 및 DB 쿼리 호출
+			Map<String, Object> param = new HashMap<>();
+			param.put("v_CLASS", vClass);
+			param.put("v_CN", deptId);
+			param.put("v_TENANT_ID", 0);
+			param.put("v_LANGDATA", langCode);
+
+			List<OrganTeamsTreeVO> list = ezOrganDAO.getDeptMemberListForTeams(param);
+			
+			List<OrganTeamsTreeVO> deptList = new ArrayList<>();
+			List<OrganTeamsTreeVO> totalUserList = new ArrayList<>();
+			
+			// 2단계: 부서/사용자 분리 + 자기부서/hierarchy 체크
+			for (OrganTeamsTreeVO row : list) {
+				if ("DEPT".equalsIgnoreCase(row.getData1())) {
+					
+					String currentDeptId = row.getData2(); // 현재 부서
+					String parentDeptId = row.getDepartment();  // 상위 부서
+					
+					if (currentDeptId.equals(deptId)) { // 자기 부서
+						if (!processedDeptIds.contains(currentDeptId)) {
+							processedDeptIds.add(currentDeptId);
+							continue;
+						}
+					} else if (deptId.equals(parentDeptId)) { // 하위 부서
+						if (!processedDeptIds.contains(currentDeptId)) {
+							processedDeptIds.add(currentDeptId);
+							deptList.add(row); // 하위 부서 추가
+						}
+					}
+				} else if ("USER".equalsIgnoreCase(row.getData1())) {
+					String userDept  = row.getDepartment();
+					totalUserList.add(row);  // 전체 사용자 일괄 저장 (조건없이)
+				}
+			}
+
+			//  3단계: 부서별 트리 노드 구성 시작
+			for (OrganTeamsTreeVO dept : deptList) {
+				String cn = dept.getData2();
+				String parentCn = dept.getDepartment();
+				JSONObject node = new JSONObject();
+				
+				// 하위 부서 존재 여부 DB 조회로 판단 (EZSP_DEPTSUBDEPTCNT와 동일한 역할)
+				Map<String, Object> subParam = new HashMap<>();
+				subParam.put("v_CN", dept.getData2());
+				subParam.put("v_ADMINFLAG", adminFlag);
+				int subDeptCount = ezOrganDAO.getSubDeptCount(subParam);
+				String isLeafValue = (subDeptCount > 0) ? "FALSE" : "TRUE";
+				node.put("isLeaf", isLeafValue);
+				node.put("data1", "DEPT");
+				node.put("data2", dept.getData2());
+				node.put("nodeLevel", String.valueOf(nodeLevel));
+				node.put("value", dept.getDisplayName());
+				node.put("displayName", dept.getDisplayName());
+				node.put("icon", "i_department");
+				node.put("setTextColorByName", "GRAY");
+				node.put("extensionAttribute2", dept.getExtensionAttribute2());
+				node.put("upnName", dept.getUpnName());
+				node.put("teamsId", dept.getTeamsId());
+				
+				if (dept.getData2().equals(userDeptId)) {
+//					node.put("isSelected", true);
+					JSONObject state = new JSONObject(); 
+					state.put("selected", true);        
+					state.put("expanded", true);        
+					node.put("state", state);          
+				} else if (deptPath != null && deptPath.contains(dept.getData2())) {
+					JSONObject state = new JSONObject();
+					state.put("expanded", true);
+					node.put("state", state);
+				}
+				// 4단계: 재귀 호출로 하위 부서 구성
+				JSONArray childNodes = new JSONArray();
+				if ("Y".equalsIgnoreCase(allTreeFlag)) {
+					childNodes = getSubDeptTreeNodes(dept.getData2(), deptPath, propList, langCode, nodeLevel + 1, userDeptId, userDeptPath, adminFlag, allTreeFlag, processedDeptIds,"all");
+				}
+
+				// 5단계: 사용자 노드 붙이기
+				for (OrganTeamsTreeVO user : totalUserList) {
+					if (dept.getData2().equals(user.getDepartment())) {
+						JSONObject userNode = new JSONObject();
+						userNode.put("data1", "USER");
+						userNode.put("data2", user.getData2());
+						userNode.put("nodeLevel", String.valueOf(nodeLevel + 1));
+						userNode.put("department", user.getDepartment());
+						userNode.put("title", user.getTitle());
+						userNode.put("description", user.getDescription());
+						userNode.put("levelName", user.getLevelName());
+						userNode.put("value", user.getDisplayName() + (!user.getTitle().isEmpty() ? " (" + user.getTitle() + ")" : ""));
+						userNode.put("displayName", user.getDisplayName());
+						userNode.put("isLeaf", "TRUE");
+						userNode.put("setTextColorByName", "GRAY");
+						userNode.put("extensionAttribute10", user.getExtensionAttribute10());
+						userNode.put("physicalDeliveryOfficeName", user.getPhysicalDeliveryOfficeName());
+						userNode.put("extensionAttribute2", user.getExtensionAttribute2());
+						userNode.put("upnName", user.getUpnName());
+						userNode.put("teamsId", user.getTeamsId());
+
+						if (!propList.isEmpty()) {
+							String[] props = propList.split(";");
+							for (String propName : props) {
+								String val = "";
+								try {
+									Field field = user.getClass().getDeclaredField(propName);
+									field.setAccessible(true);
+									Object propValue = field.get(user);
+									val = propValue != null ? propValue.toString().trim() : "";
+								} catch (Exception e) {
+									logger.warn(e.getMessage());
+								}
+								userNode.put(propName, val);
+							}
+						}
+						if (user.getData2().equals(userDeptPath)) {
+							JSONObject state = new JSONObject();
+							state.put("selected", true);
+							userNode.put("state", state);
+						}
+
+						childNodes.put(userNode);
+					}
+				}
+				node.put("nodes", childNodes);
+
+				// 부서 하위에 사용자/부서 존재 여부 판단
+				boolean hasDeptUser = false;
+				boolean hasDept = false;
+				
+				for (int i = 0; i < childNodes.length(); i++) {
+					JSONObject child = childNodes.getJSONObject(i);
+					String type = child.optString("data1");
+					if ("USER".equalsIgnoreCase(type)) hasDeptUser = true;
+					else if ("DEPT".equalsIgnoreCase(type)) hasDept = true;
+				}
+				node.put("hasDeptUser", hasDeptUser ? "TRUE" : "FALSE");
+				node.put("hasDept", hasDept ? "TRUE" : "FALSE");
+
+				if (!propList.isEmpty()) {
+					String[] props = propList.split(";");
+					for (String propName : props) {
+						String val = "";
+						try {
+							Field field = dept.getClass().getDeclaredField(propName);
+							field.setAccessible(true);
+							Object propValue = field.get(dept);
+							val = propValue != null ? propValue.toString().trim() : "";
+						} catch (Exception e) {
+							logger.warn(e.getMessage());
+						}
+						node.put(propName, val);
+					}
+				}
+
+				returnJArray.put(node);
+			}
+
+		} catch (Exception e) {
+			logger.error("getSubDeptTreeNodes error", e);
+			JSONObject err = new JSONObject();
+			err.put("error", "treeNode 실패: " + e.getMessage());
+			returnJArray.put(err);
+		}
+
+		return returnJArray;
+	}
+
+	public List<Map<String, String>> dropDownAllCompanyList(String rolInfo, String companyId, String lang) {
+		List<Map<String, String>> items = new ArrayList<>();
+
+		try {
+			String infoXML = getCompanyList(lang);
+			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+			DocumentBuilder builder = factory.newDocumentBuilder();
+			Document xmldom = builder.parse(new InputSource(new StringReader(infoXML)));
+			NodeList nameList = xmldom.getElementsByTagName("DISPLAYNAME");
+			NodeList cnList = xmldom.getElementsByTagName("CN");
+
+			for (int i = 0; i < nameList.getLength(); i++) {
+				String displayName = nameList.item(i).getTextContent();
+				String cn = cnList.item(i).getTextContent();
+
+				Map<String, String> item = new HashMap<>();
+				item.put("companyName", displayName);
+				item.put("companyId", cn);
+
+				if (cn.equalsIgnoreCase(companyId)) {
+					item.put("selected", "true");
+				} else {
+					item.put("selected", "false");
+				}
+
+				items.add(item);
+			}
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+		}
+
+		return items;
+	}
+	public String getCompanyList(String userLang) {
+		String result = "<DATA></DATA>";
+
+		try {
+			List<Map<String, Object>> list = ezOrganDAO.getCompanyList(userLang);
+
+			StringBuilder sb = new StringBuilder();
+			sb.append("<DATA>");
+
+			for (Map<String, Object> row : list) {
+				String cn = String.valueOf(row.get("CN"));
+				String displayName = String.valueOf(row.get("DisplayName"));
+
+				sb.append("<Row>");
+				sb.append("<CN>").append(cn).append("</CN>");
+				sb.append("<DISPLAYNAME>").append(displayName).append("</DISPLAYNAME>");
+				sb.append("</Row>");
+			}
+
+			sb.append("</DATA>");
+			result = sb.toString();
+
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+		}
+
+		return result;
+	}
+
+	@Override
+	public List<Map<String, Object>> getSearchListForTeamsJson(String pSearchList, String pCellList, String pPropList, String pClass, int pLimit, String primary, String companyId, int tenantID, String noAddJob, String adminOrgan) throws Exception {
+		logger.debug("getSearchListForTeamsJson started");
+
+		String[] searchParam = null;
+		String[] searchList;
+		String[] searchInfo;
+		String strSize = "";
+		String strSQL = "";
+		String strSQLAddjobCom = "";
+		String type = "";
+		int i = 0;
+		String strSQLForAddJob = "";
+
+		if (pLimit != 0) {
+			strSize = " AND ROWNUM <= " + pLimit;
+		}
+
+		if (!pSearchList.equals("")) {
+			pSearchList = pSearchList.replace(";;", "##");
+			pSearchList = pSearchList.replace("::", "@@");
+			searchList = pSearchList.split("##");
+			searchParam = new String[searchList.length];
+
+			logger.debug("searchList.length=" + searchList.length);
+
+			String escapeString = " ";
+			if (globals.getProperty("Globals.DbType").equals("oracle")) {
+				escapeString = " escape '\\' ";
+			}
+
+			for (i = 0; i < searchList.length; i++) {
+				searchInfo = searchList[i].split("@@");
+				String searchVal = URLDecoder.decode(searchInfo[1], "utf-8");
+				searchParam[i] = searchVal.replace("'", "\\'");
+				String escapedSearchParam = searchParam[i].replace("%", "\\%").replace("_", "\\_");
+
+				if (i == 0) {
+					if (checkSearchField(searchInfo[0])) {
+						if (searchInfo[0].toUpperCase().equals("DISPLAYNAME") && searchParam[0].equals("/")) {
+							strSQL += " WHERE ( " + searchInfo[0].toLowerCase() + " = '" + searchParam[i] + "' OR " + searchInfo[0].toLowerCase() + "2 = '" + searchParam[i] + "')";
+							searchParam[0] = searchParam[0].substring(0, searchParam[0].length() - 1);
+						} else {
+							strSQL += " WHERE ( " + searchInfo[0].toLowerCase() + " LIKE  '%" + escapedSearchParam + "%'" + escapeString + "OR " + searchInfo[0].toLowerCase() + "2 LIKE '%" + escapedSearchParam + "%'" + escapeString + " )";
+						}
+					} else {
+						if (searchInfo[0].indexOf("EXACT_") == 0) {
+							strSQL += " WHERE " + searchInfo[0].substring(6).toLowerCase() + " ='" + searchParam[i] + "' ";
+						} else if (searchInfo[0].indexOf("LEFT_") == 0) {
+							strSQL += " WHERE " + searchInfo[0].substring(5).toLowerCase() + " LIKE '" + escapedSearchParam + "%'" + escapeString;
+						} else if (searchInfo[0].indexOf("RIGHT_") == 0) {
+							strSQL += " WHERE " + searchInfo[0].substring(6).toLowerCase() + " LIKE '%" + escapedSearchParam + "%'" + escapeString;
+						} else {
+							strSQL += " WHERE " + searchInfo[0].toLowerCase() + " LIKE '%" + escapedSearchParam + "%'" + escapeString;
+						}
+					}
+				} else {
+					if (checkSearchField(searchInfo[0])) {
+						strSQL += " AND ( " + searchInfo[0].toLowerCase() + " LIKE  '%" + escapedSearchParam + "%'" + escapeString + "OR " + searchInfo[0].toLowerCase() + "2 LIKE '%" + escapedSearchParam + "%'" + escapeString + ")";
+					} else {
+						if (searchInfo[0].indexOf("EXACT_") == 0) {
+							strSQL += " AND " + searchInfo[0].substring(6).toLowerCase() + " ='" + searchParam[i] + "' ";
+						} else if (searchInfo[0].indexOf("LEFT_") == 0) {
+							strSQL += " AND " + searchInfo[0].substring(5).toLowerCase() + " LIKE '" + escapedSearchParam + "%'" + escapeString;
+						} else if (searchInfo[0].indexOf("RIGHT_") == 0) {
+							strSQL += " AND " + searchInfo[0].substring(6).toLowerCase() + " LIKE '%" + escapedSearchParam + "%'" + escapeString;
+						} else {
+							strSQL += " AND " + searchInfo[0].toLowerCase() + " LIKE '%" + escapedSearchParam + "%'" + escapeString;
+						}
+					}
+				}
+			}
+		}
+
+		if (pClass.equals("user") || pClass.equals("all")) {
+			strSQL = strSQL.replace(" cn ", " a.cn ");
+			strSQL = strSQL.replace(" title ", " a.title ");
+			strSQL = strSQL.replace(" title2 ", " a.title2 ");
+			type = "U";
+		} else {
+			type = "G";
+		}
+
+		if (!companyId.equals("") && pSearchList.split("@@")[0].equals("description")) {
+			strSQLAddjobCom = "description";
+		}
+
+		strSQLForAddJob = strSQL;
+		if (ezCommonService.getTenantConfig("permissionBasisDeptYN", tenantID).equals("Y")) {
+			strSQLForAddJob = strSQLForAddJob.replace(" extensionattribute1 ", " A.roll_info ");
+			strSQLForAddJob = strSQLForAddJob.replace(" department ", " deptID ");
+		}
+
+		Map<String, Object> map = new HashMap<>();
+		map.put("strSQL", strSQL + strSize);
+		map.put("strSQLForMySQL", strSQL);
+		map.put("pLimit", pLimit);
+		map.put("strGyumjikForOracle", strSQLForAddJob);
+		map.put("type", type);
+		map.put("companyId", companyId);
+		map.put("class", pClass);
+		map.put("v_TENANT_ID", tenantID);
+		map.put("strSQLAddjobCom", strSQLAddjobCom);
+		map.put("noAddJob", noAddJob);
+		map.put("adminOrgan", adminOrgan);
+		map.put("strSQLForAddJobForMySQL", strSQLForAddJob);
+		List<OrganDeptVO> list = ezOrganDAO.organSearch(map);
+		List<Map<String, Object>> resultList = new ArrayList<>();
+		
+		List<String> userList = new ArrayList<>();
+		for (OrganDeptVO vo : list) {
+			if ("user".equalsIgnoreCase(vo.getType())) {
+				userList.add(vo.getCn());
+			}
+		}
+		// M365 Presence 정보 추가
+		Map<String, String> presenceMap = new HashMap<>();
+		if (!userList.isEmpty()) {
+			List<TeamsPresenceVO> presenceList = ezTeamsDAO.getPresenceList(userList);
+			for (TeamsPresenceVO presence : presenceList) {
+				presenceMap.put(presence.getCn(), presence.getPresence());
+			}
+		}
+
+		for (int j = 0; j < list.size(); j++) {
+			Map<String, Object> map1 = new HashMap<>();
+			OrganDeptVO organVO = list.get(j);
+			Object result = null;
+
+			if (!organVO.getCn().equals("") && organVO.getCn() != null) {
+				if (organVO.getType().equals("user")) {
+					map1.put("v_CN", organVO.getCn());
+					map1.put("v_DEPTCD", organVO.getDisplayName());
+					map1.put("v_LANGDATA", primary);
+					map1.put("v_TENANT_ID", tenantID);
+					map1.put("IS_ADDJOB", organVO.getIsAddjob());
+					map1.put("JOBID", organVO.getJobId());
+					map1.put("ROLEID", Optional.ofNullable(organVO.getRoleId()).filter(str -> !str.isEmpty()).orElse("0"));
+
+					result = ezOrganDAO.getTBLUserMaster(map1);
+				} else {
+					map1.put("v_CN", organVO.getCn());
+					map1.put("v_LANGDATA", primary);
+					map1.put("v_TENANT_ID", tenantID);
+
+					result = ezOrganDAO.getTBLDeptMaster(map1);
+				}
+
+				Map<String, Object> rowMap = commonUtil.getQueryResultAsJson(result);
+				
+				Map<String, Object> finalRow = new HashMap<>();
+				finalRow.put("data1", "group".equalsIgnoreCase(organVO.getType()) ? "DEPT" : organVO.getType()); // ⬅ 변경됨
+				finalRow.put("data2", rowMap.getOrDefault("cn", ""));
+
+				finalRow.put("displayName", rowMap.getOrDefault("displayname", ""));
+				finalRow.put("title", rowMap.getOrDefault("title", ""));
+				finalRow.put("mail", rowMap.getOrDefault("mail", ""));
+				finalRow.put("cn", rowMap.getOrDefault("cn", ""));
+				finalRow.put("extensionAttribute2", rowMap.getOrDefault("extensionattribute2", ""));
+				finalRow.put("telephoneNumber", rowMap.getOrDefault("telephonenumber", ""));
+				finalRow.put("mobile", rowMap.getOrDefault("mobile", ""));
+				finalRow.put("teamsId", rowMap.getOrDefault("teamsid", ""));
+				finalRow.put("upnName", rowMap.getOrDefault("upnname", ""));
+				finalRow.put("value", rowMap.getOrDefault("displayname", ""));
+				finalRow.put("description", rowMap.getOrDefault("description", ""));
+				finalRow.put("presence", "user".equalsIgnoreCase(organVO.getType()) ? presenceMap.getOrDefault(organVO.getCn(), "") : "");
+
+				finalRow.put("isLeaf", "group".equalsIgnoreCase(organVO.getType()) ? "false" : "true");
+				finalRow.put("addJob", organVO.getIsAddjob() == null ? "" : organVO.getIsAddjob());
+				resultList.add(finalRow);
+			}
+		}
+
+		logger.debug("getSearchListForTeamsJson ended");
+		return resultList;
+	}
+
 }

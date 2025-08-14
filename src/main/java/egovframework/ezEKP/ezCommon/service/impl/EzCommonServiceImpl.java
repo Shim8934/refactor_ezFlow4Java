@@ -2083,7 +2083,79 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
             put("config_type","전자설문");
         }});
         
-		List<TenantVO> tenantIdList = ezCommonDAO.getTenantList();
+        test.add(new HashMap<String, Object>(){{
+            put("confName","teamsTenant");
+            put("property_value","kaonicloud.com");
+            put("config_name","M365 테넌트 도메인 이름");
+            put("regdate","2025-08-12 00:00:00");
+            put("description","M365 테넌트 도메인 이름");
+            put("config_type","TEAMS");
+        }});
+
+        test.add(new HashMap<String, Object>(){{
+            put("confName","teamsTenantId");
+            put("property_value","6f082f98-7252-4265-b8b8-4329dc830d47");
+            put("config_name","M365 테넌트 ID");
+            put("regdate","2025-07-29 00:00:00");
+            put("description","Azure AD 테넌트 식별자(GUID)");
+            put("config_type","TEAMS");
+        }});
+
+        test.add(new HashMap<String, Object>(){{
+            put("confName","teamsClientId");
+            put("property_value","5f1e15d7-3eab-47c9-a3f4-5a5256efb114");
+            put("config_name","M365 클라이언트 ID");
+            put("regdate","2025-07-29 00:00:00");
+            put("description","Microsoft Graph API 인증용으로 Azure에 등록된 앱의 Client ID");
+            put("config_type","TEAMS");
+        }});
+
+        test.add(new HashMap<String, Object>(){{
+            put("confName","teamsClientSecret");
+            put("property_value","aA08Q~MqORluSDRVZ-Wmf7_wN3sytfbEWAPrVbIc");
+            put("config_name","M365 클라이언트 시크릿");
+            put("regdate","2025-07-29 00:00:00");
+            put("description","Microsoft Graph API 토큰 발급을 위한 Client Secret");
+            put("config_type","TEAMS");
+        }});
+
+        test.add(new HashMap<String, Object>(){{
+            put("confName","useTeams");
+            put("property_value","NO");
+            put("config_name","Teams 연동 사용 여부");
+            put("regdate","2025-07-29 00:00:00");
+            put("description","Microsoft Teams 연동 여부");
+            put("config_type","TEAMS");
+        }});
+
+        test.add(new HashMap<String, Object>(){{
+            put("confName","presenceInterval");
+            put("property_value","60000");
+            put("config_name","Teams 상태값 갱신 주기");
+            put("regdate","2025-08-12 00:00:00");
+            put("description","Teams 사용자 상태정보(Presence) 조회 주기(ms 단위)");
+            put("config_type","TEAMS");
+        }});
+        
+        test.add(new HashMap<String, Object>(){{
+            put("confName","m365AdminAccount");
+            put("property_value","e3gisa1@kaonicloud.com");
+            put("config_name","M365 관리자 계정");
+            put("regdate","2025-07-31 00:00:00");
+            put("description","Graph API 호출용 Microsoft 365 관리자 계정");
+            put("config_type","TEAMS");
+        }});
+
+        test.add(new HashMap<String, Object>(){{
+            put("confName","m365AdminAccountPw");
+            put("property_value","111");
+            put("config_name","M365 관리자 계정 비밀번호");
+            put("regdate","2025-07-31 00:00:00");
+            put("description","Graph API 호출용 Microsoft 365 관리자 계정의 비밀번호");
+            put("config_type","TEAMS");
+        }});
+
+        List<TenantVO> tenantIdList = ezCommonDAO.getTenantList();
 		
 		for (Map<String, Object> map : test) {
         	try {
@@ -8744,4 +8816,20 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
     public void alterTblClubUserWithdrawDateColumn() throws Exception {
         ezCommonDAO.alterTblClubUserWithdrawDateColumn();
     }
+
+    @Override
+    public void alterTblUsermasterForTeams()  throws Exception {
+        ezCommonDAO.alterTblUsermasterForTeams();
+    }
+
+    @Override
+    public void createAuthTokenTable() throws Exception {
+        ezCommonDAO.createAuthTokenTable();
+    }
+
+    @Override
+    public void createUserPresenceTable() throws Exception {
+        ezCommonDAO.createUserPresenceTable();
+    }
+    
 }

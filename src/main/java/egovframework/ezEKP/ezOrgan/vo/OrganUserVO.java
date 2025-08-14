@@ -161,6 +161,9 @@ public class OrganUserVO {
 	/** 조직도 사용 여부*/
 	private String userTreeFlag;
 
+	/** Teams ID */
+	private String teamsId;
+	
 	/** 퇴직자 여부 */
 	private int isRetire;
 
@@ -764,5 +767,13 @@ public class OrganUserVO {
 
 	public void setIsRetire(int isRetire) {
 		this.isRetire = isRetire;
+	}
+
+	public String getTeamsId() {
+		return teamsId;
+	}
+
+	public void setTeamsId(String teamsId) {
+		this.teamsId = teamsId;
 	}
 }
