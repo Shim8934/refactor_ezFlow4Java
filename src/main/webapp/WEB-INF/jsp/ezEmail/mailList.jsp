@@ -697,11 +697,6 @@
 		        
 		        window.open(requestUrl, "", feature);
 		    }
-
-		    // 스크롤을 맨 위로 이동시키는 함수
-            function scrollToTop() {
-                $('#contentlistDiv').scrollTop(0);
-            }
 		    
 		    function mailGeneralSave() {
 		    	// 2022-12-29 이사라 : Search 후 페이지를 벗어날 때 검색조건을 비움
@@ -820,8 +815,6 @@
 		        mailsearchDetail = "N";
 		        
 		        goToPageByNum("1");
-		        scrollToTop();
-
 				try {
 					if (document.getElementById("HeaderAllCheckBox") != null)
 						document.getElementById("HeaderAllCheckBox").checked = false;
@@ -871,7 +864,6 @@
 		        var sMailFolder = TrimText(select2.value);
 		        ShowMailProgress();
 		        goToPageByNum("1");
-		        scrollToTop();
 		    }
 		    
 		    function searchInThisBoxByName() {
@@ -933,7 +925,6 @@
 		    	
 		    	SearchKeyword = searchField + "=" + inputkeyword.value;
 		        goToPageByNum("1");
-		        scrollToTop();
 		    	
 		    }
 		    
