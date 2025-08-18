@@ -8453,21 +8453,19 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 			int start 	= Integer.parseInt(StringUtils.defaultIfBlank((String) jsonObject.get("start"), "1"));
 			int end 	= Integer.parseInt(StringUtils.defaultIfBlank((String) jsonObject.get("end"), "20"));
 			logger.debug("start={}, end={}", start, end);
-			/*int listCount = end - (start-1);
-				listCount = (listCount < 0) ? 0 : listCount;
-			logger.debug("start={}, end={}, listCount={}", start, end, listCount);*/
 
 			// jgw 서버에서 리스트 받아오기
 			JSONArray array 	= ezEmailService.getApprMailList(tenantId, companyId, type, userCn, lang, start, end, domainName);
-			JSONArray array2 	= ezEmailService.setUTCtoUserTime(array, userInfo.getOffSet(), tenantId);
+			/*JSONArray array2 	= ezEmailService.setUTCtoUserTime(array, userInfo.getOffSet(), tenantId);
 
 			JSONArray resultArry = new JSONArray();
-			resultArry 			= ezEmailService.setHref(array2);
+			resultArry 			= ezEmailService.setHref(array2);*/
+			JSONArray resultArray = ezEmailService.formatApprEmail(array, userInfo.getOffSet(), tenantId, null);
 
 			int listTotalCount = ezEmailService.getApprMailListCount(tenantId, companyId, type, userCn);
 
 			returnData.put("listTotalCount", listTotalCount);
-			returnData.put("list", resultArry);
+			returnData.put("list", resultArray);
 			
 			result.put("data", returnData);
 			result.put("status", "ok");
@@ -8528,16 +8526,17 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 
 			// jgw 서버에서 리스트 받아오기
 			JSONArray array 	= ezEmailService.getApprMailList(tenantId, companyId, type, userCn, lang, start, end, domainName);
-			JSONArray array2 	= ezEmailService.setUTCtoUserTime(array, userInfo.getOffSet(), tenantId);
+			JSONArray resultArray = ezEmailService.formatApprEmail(array, userInfo.getOffSet(), tenantId, locale);
+			/*JSONArray array2 	= ezEmailService.setUTCtoUserTime(array, userInfo.getOffSet(), tenantId);
 			JSONArray array3	= ezEmailService.setHref(array2);
 
 			JSONArray resultArry = new JSONArray();
-			resultArry = ezEmailService.setStateByLocale(array3, locale);
+			resultArry = ezEmailService.setStateByLocale(array3, locale);*/
 
 			int listTotalCount = ezEmailService.getApprMailListCount(tenantId, companyId, type, userCn);
 
 			returnData.put("listTotalCount", listTotalCount);
-			returnData.put("list", resultArry);
+			returnData.put("list", resultArray);
 			
 			result.put("data", returnData);
 			result.put("status", "ok");
@@ -8598,16 +8597,17 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 			
 			// jgw 서버에서 리스트 받아오기
 			JSONArray array = ezEmailService.getApprMailList(tenantId, companyId, type, vUserId, lang, start, end, domainName);
-			JSONArray array2 = ezEmailService.setUTCtoUserTime(array, userInfo.getOffSet(), tenantId);
+			JSONArray resultArray = ezEmailService.formatApprEmail(array, userInfo.getOffSet(), tenantId, locale);
+			/*JSONArray array2 = ezEmailService.setUTCtoUserTime(array, userInfo.getOffSet(), tenantId);
 			JSONArray array3 = ezEmailService.setApprover(array2, locale);
 
 			JSONArray resultArry = new JSONArray();
-			resultArry = ezEmailService.setHref(array3);
+			resultArry = ezEmailService.setHref(array3);*/
 
 			int listTotalCount = ezEmailService.getApprMailListCount(tenantId, companyId, type, vUserId);
 
 			returnData.put("listTotalCount", listTotalCount);
-			returnData.put("list", resultArry);
+			returnData.put("list", resultArray);
 			
 			result.put("data", returnData);
 			result.put("status", "ok");

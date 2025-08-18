@@ -5433,6 +5433,67 @@ public class EzEmailServiceImpl implements EzEmailService {
 		return resultArry;
 	}
 
+	//@Override
+	public JSONArray formatApprEmail(JSONArray array, String offset, int tenantId, Locale locale) throws Exception {
+		JSONArray resultArray = new JSONArray();
+
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+		sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+
+		for (int i = 0; i < array.size(); i++) {
+			JSONObject obj = (JSONObject) array.get(i);
+
+			// 1. 작성일
+			Date writeDate = sdf.parse(obj.get("writeDate").toString());
+			String writeDateStr = sdf.format(writeDate);
+			writeDateStr = commonUtil.getDateStringInUTC(writeDateStr, offset, false);
+			obj.put("writeDate", writeDateStr);
+
+			// 2. 신청자의 primary mail
+			String senderId = obj.get("senderEmail").toString().split("@")[0];
+			OrganUserVO senderVO = ezOrganAdminService.getUserInfo(senderId, "1", tenantId); // 신청자의 primary 메일주소만 필요하기 때문에 lang 값 1로 픽스 함
+			obj.put("senderEmail", senderVO.getMail());
+
+			// 3. 승인일시 - 승인완료된 경우에만 updatedt가 있음
+			if (obj.get("updatedt") != null) {
+				Date updateDate = sdf.parse(obj.get("updatedt").toString());
+				String updateDateStr = sdf.format(updateDate);
+				updateDateStr = commonUtil.getDateStringInUTC(updateDateStr, offset, false);
+				obj.put("updatedt", updateDateStr);
+			}
+			
+			// 4. href 암호화
+			String mailUID = obj.get("mailUID").toString();
+			String href = "Sent." + senderId + "/" + mailUID;
+			String encryptedHref = egovFileScrty.encryptAES(href);
+
+			obj.put("href", encryptedHref);
+			
+			// 5. 상태 언어 변경
+			if (locale != null) {
+				String state = obj.get("state").toString().toLowerCase();
+				String stateLang;
+
+				if ("approved".equals(state)) {
+					stateLang = egovMessageSource.getMessage("email.appr.approval.status", locale);
+				} else if ("rejected".equals(state)) {
+					stateLang = egovMessageSource.getMessage("email.appr.reject.status", locale);
+				} else if ("deleted".equals(state)) {
+					stateLang = egovMessageSource.getMessage("email.appr.delete.status", locale);
+				} else {
+					stateLang = ""; // 기본값 처리
+				}
+
+				obj.put("state", stateLang);
+			}
+
+			// 6. array에 담음
+			resultArray.add(obj);
+		}
+		
+		return resultArray;
+	}
+
 	/**
 	 * 승인메일 : 전체메일 승인자 이름 관리자로 일괄 적용
 	 */
@@ -7704,7 +7765,8 @@ public class EzEmailServiceImpl implements EzEmailService {
 		
 		if (object.get("resultCode").equals("OK") && ((Long)object.get("reasonCode")).intValue() == 0) {
         	JSONArray array = (JSONArray)object.get("result");
-			resultArray = ezEmailService.setUTCtoUserTime(array, offset, tenantId);
+			//resultArray = ezEmailService.setUTCtoUserTime(array, offset, tenantId);
+			resultArray = formatApprEmail(array, offset, tenantId, locale);
 
     		/*SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         	

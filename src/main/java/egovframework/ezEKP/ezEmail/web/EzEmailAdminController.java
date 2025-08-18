@@ -4280,9 +4280,10 @@ public class EzEmailAdminController {
 
 		try {
 			JSONArray array = ezEmailService.getAdminApprMailList(tenantId, companyId, type, userId, lang, pageStartNum, listCount);
-			JSONArray array2 = ezEmailService.setUTCtoUserTime(array, userInfo.getOffset(), tenantId);
+			/*JSONArray array2 = ezEmailService.setUTCtoUserTime(array, userInfo.getOffset(), tenantId);
 			JSONArray array3 = ezEmailService.setHref(array2);
-			resultArry = ezEmailService.setStateByLocale(array3, locale);
+			resultArry = ezEmailService.setStateByLocale(array3, locale);*/
+			resultArry = ezEmailService.formatApprEmail(array, userInfo.getOffset(), tenantId, locale);
 
 			int pageTotalCount = ezEmailService.getAdminApprMailListCount(tenantId, companyId, type2, userId);
 			pageMax = (int) Math.ceil((double) pageTotalCount / listCount);
@@ -4344,9 +4345,10 @@ public class EzEmailAdminController {
 		JSONArray logList = new JSONArray();
 		try {
 			JSONArray array = ezEmailService.getAdminCompApprMailList(tenantId, companyId, type, userId, lang, pageStartNum, listCount);
-			JSONArray array2 = ezEmailService.setUTCtoUserTime(array, offset, tenantId);
+			/*JSONArray array2 = ezEmailService.setUTCtoUserTime(array, offset, tenantId);
 			JSONArray array3 = ezEmailService.setHref(array2);
-			logList = ezEmailService.setStateByLocale(array3, locale);
+			logList = ezEmailService.setStateByLocale(array3, locale);*/
+			logList = ezEmailService.formatApprEmail(array, offset, tenantId, locale);
 
 			pageTotalCount = ezEmailService.getAdminApprMailListCount(tenantId, companyId, type2, userId);
 			pageMax = (int) Math.ceil((double) pageTotalCount / listCount);
@@ -4749,7 +4751,7 @@ public class EzEmailAdminController {
 	@ResponseBody
 	public JSONObject apprGetCompleteLogList(@CookieValue("loginCookie")String loginCookie, Model model, HttpServletRequest request) 
 			throws Exception {
-		logger.debug("apprGetCompleteLogList started.");logger.debug("apprAllHandsGetCompleteLogList started.");
+		logger.debug("apprGetCompleteLogList started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 

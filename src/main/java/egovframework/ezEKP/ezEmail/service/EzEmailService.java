@@ -217,6 +217,7 @@ public interface EzEmailService {
 	JSONArray getApprMailList(int tenantId, String companyId, String type, String id, String lang, int pageStartNum, int listCount, String domainName) throws Exception;
 	int getApprMailListCount(int tenantId, String companyId, String type, String id) throws Exception;
 	JSONArray setUTCtoUserTime(JSONArray array, String offset, int tenantId) throws Exception;
+	JSONArray formatApprEmail(JSONArray array, String offset, int tenantId, Locale locale) throws Exception;
 	JSONArray setApprover(JSONArray array, Locale locale) throws Exception;
 	JSONArray setHref(JSONArray array) throws Exception;
 	String setHref(String senderId, String mailUID) throws Exception;
