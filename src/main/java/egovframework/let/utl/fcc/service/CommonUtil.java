@@ -1768,6 +1768,39 @@ public class CommonUtil {
 		logger.debug("normalizeFileName ended");
 		return nfcFilename;
 	}
+
+	/**
+	 * zip파일 생성 시, 유효한 파일 이름 반환.
+	 * @param fileName
+	 * @return String
+	 */
+	public String getValidZipEntryFileName(String fileName) {
+		// fileName이 너무길면 entry name too long 오류 발생으로 150글자 이상이면 150글자까지만 남기고 뒤에 문자열은 삭제
+		fileName = fileName.chars()
+				.limit(150)
+				.mapToObj(c -> String.valueOf((char) c))
+				.collect(Collectors.joining());
+
+		/**
+		 * 고아 surrogate 제거 (UTF-8 인코딩 과정에서 발견될 유효하지 않은 유니코드 시퀀스)
+		 *
+		 * Surrogate란?
+		 * : 유니코드 코드포인트가 U+10000 이상일 경우 UTF-16에서 두 개의 16비트 코드 단위(surrogate pair)로 표현합니다.
+		 * 		High Surrogate: U+D800 ~ U+DBFF
+		 * 		Low Surrogate: U+DC00 ~ U+DFFF
+		 *		예: 😃 (U+1F603) → \uD83D\uDE03 (high surrogate + low surrogate) length = 2
+		 *
+		 * 150자로 자르는 과정에서, 뒷자리 유니코드만 잘리는 상황이 발생 시 \uD83D만 남아 MALFORMED 발생.
+		 * 		ZipCoder 는 내부적으로 CharsetEncoder 를 사용해 String → byte[] 변환을 합니다.
+		 * 		CharsetEncoder 가 변환할 수 없는 문자 시퀀스를 만나면 CoderResult.malformedForLength() 를 반환하고, 여기서 IllegalArgumentException("MALFORMED") 가 발생합니다.
+		 */
+		fileName = fileName.replaceAll("[\uD800-\uDFFF]", "");
+
+		// 제어문자 (\u0000 ~ \u001F, 특히 \u0000 NUL) 제거
+		fileName = fileName.replaceAll("\\p{Cntrl}", "");
+
+		return fileName;
+	}
 	
 	public String getUniqueFileName(String fileName, Map<String, Integer> fileNameMap) {
 		String fileNameLowerCase = fileName.toLowerCase();

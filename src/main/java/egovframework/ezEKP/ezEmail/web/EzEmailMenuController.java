@@ -27,7 +27,6 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.TimeZone;
 import java.util.UUID;
-import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipInputStream;
@@ -2322,13 +2321,9 @@ public class EzEmailMenuController extends EzFileMngUtil {
 				
 				for (Message message : messages) {
 					String fileName = ezEmailUtil.saveFilenameForm(userInfo, locale, message);
-					//fileName = commonUtil.getUniqueFileName(fileName, fileNameMap);
 					
-					// fileName이 너무길면 entry name too long 오류 발생으로 150글자 이상이면 150글자까지만 남기고 뒤에 문자열은 삭제
-					fileName = fileName.chars()
-							.limit(150)
-							.mapToObj(c -> String.valueOf((char) c))
-							.collect(Collectors.joining()) + ".eml";
+					// 2025-08-18 김은실 - ZipEntry> putNextEntry() 쓰는 곳이 메일,웹폴더,결재,게시판 등 쓰이는 곳이 많으므로 commonUtil으로 분리함.
+					fileName = commonUtil.getValidZipEntryFileName(fileName) + ".eml";
 
 					// 2025-07-21 - 중복 name인 경우 (2) 카운트 붙이는 로직
 					fileName = commonUtil.getUniqueFileName(fileName, fileNameMap);
