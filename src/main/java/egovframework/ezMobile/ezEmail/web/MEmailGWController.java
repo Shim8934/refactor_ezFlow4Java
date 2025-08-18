@@ -7110,7 +7110,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 	/**
      * 첨부파일을 서버에 저장한다.
      *
-     * @param file
+     * @param stordFilePath
      * @param newName
      * @param stordFilePath
      * @throws Exception
@@ -8657,6 +8657,9 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 			// param
 			List<String> hrefArray = (ArrayList<String>) jsonObject.get("href");
 
+			// 데이터 수집 단계
+			List<Map<String, Object>> approvalDataList = new ArrayList<>();
+
 			for(String encryptedHref : hrefArray) {
 				// decrypt & mailbox/uid
 				String href = egovFileScrty.decryptAES(encryptedHref);
@@ -8675,19 +8678,39 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 				logger.debug("apprSetApproval userCn={}, href={}, hrefUserId={}, uid={}, applicantId={}, applicantEmail={}",
 						userCn, href, hrefUserId, uid, applicantId, applicantEmail);
 
-				Map<String, Object> map = new HashMap<String, Object>();
-				map.put("companyId", companyId);
-				map.put("lang", lang);
-				map.put("locale", locale);
-				
-		        int resultInt = ezEmailService.setApprMailApproval(userCn, tenantId, map, applicantEmail, uid);
-		        if (resultInt != 0) {
-		        	errorInt++;
-		        }
+				// 승인 데이터 생성
+				Map<String, Object> approvalData = new HashMap<>();
+				approvalData.put("tenantId", tenantId);
+				approvalData.put("companyId", companyId);
+				approvalData.put("lang", lang);
+				approvalData.put("locale", locale);
+				approvalData.put("uid", uid);
+				approvalData.put("applicantId", applicantId);
+				approvalData.put("applicantEmail", applicantEmail);
+				approvalData.put("state", "pending");
+				approvalData.put("apprMailFlag", "normal");
+
+				approvalDataList.add(approvalData);
 			}
-			
-			if (errorInt > 0) {
-				returnValue = "ERROR_" + errorInt;
+
+			// 메일이 대기 상태인지 check
+			int checkMail = ezEmailService.checkApprHistoryMultiple(tenantId, companyId, userId, approvalDataList);
+
+			if (checkMail == 1) {
+				returnValue = "DONE"; // 1: 이미 처리된 메일이 있음
+			} else {
+				// 처리 단계
+				for (Map<String, Object> approvalData : approvalDataList) {
+					int resultInt = ezEmailService.setApprMailApproval(userCn, tenantId, approvalData, (String) approvalData.get("applicantEmail"), (Long) approvalData.get("uid"));
+	
+					if (resultInt != 0) {
+						errorInt++;
+					}
+				}
+				
+				if (errorInt > 0) {
+					returnValue = "ERROR_" + errorInt;
+				}
 			}
 			
 			result.put("data", returnValue);
@@ -8711,7 +8734,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 	/**
 	 * 승인메일 : 발송 거부
 	 * @param userId
-	 * @param href: String[] 발송 거부할 메일 href
+	 * @param jsonObject.href: String[] 발송 거부할 메일 href
 	 * @return data: OK: 성공 or ERROR_{count}: 실패한 개수
 	 */
 	@SuppressWarnings("unchecked")
@@ -8742,6 +8765,9 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 		    String memo = StringUtils.defaultIfBlank((String) jsonObject.get("memo"), "");
 		    memo = memo.replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("&", "&amp;");
 
+			// 데이터 수집 단계
+			List<Map<String, Object>> approvalDataList = new ArrayList<>();
+
 		    for(String encryptedHref : hrefArray) {
 				// decrypt & mailbox/uid
 				String href = egovFileScrty.decryptAES(encryptedHref);
@@ -8760,15 +8786,35 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 				logger.debug("apprSetRejectAction userCn={}, href={}, hrefUserId={}, uid={}, applicantId={}, applicantEmail={}",
 						userCn, href, hrefUserId, uid, applicantId, applicantEmail);
 
-				Map<String, Object> map = new HashMap<String, Object>();
-				map.put("companyId", companyId);
-				map.put("lang", lang);
-				map.put("locale", locale);
-				
-				int resultInt = ezEmailService.setApprMailReject(hrefUserId, tenantId, map, applicantEmail, uid, memo);
-		        if (resultInt != 0) {
-		        	errorInt++;
-		        }
+				// 승인 데이터 생성
+				Map<String, Object> approvalData = new HashMap<>();
+				approvalData.put("tenantId", tenantId);
+				approvalData.put("companyId", companyId);
+				approvalData.put("lang", lang);
+				approvalData.put("locale", locale);
+				approvalData.put("uid", uid);
+				approvalData.put("applicantId", applicantId);
+				approvalData.put("applicantEmail", applicantEmail);
+				approvalData.put("state", "pending");
+				approvalData.put("apprMailFlag", "normal");
+
+				approvalDataList.add(approvalData);
+			}
+
+			// 메일이 대기 상태인지 check
+			int checkMail = ezEmailService.checkApprHistoryMultiple(tenantId, companyId, userId, approvalDataList);
+
+			if (checkMail == 1) {
+				returnValue = "DONE"; // 1: 이미 처리된 메일이 있음
+			} else {
+				// 처리 단계
+				for (Map<String, Object> approvalData : approvalDataList) {
+					int resultInt = ezEmailService.setApprMailReject(userCn, tenantId, approvalData, (String) approvalData.get("applicantEmail"), (Long) approvalData.get("uid"), memo);
+
+					if (resultInt != 0) {
+						errorInt++;
+					}
+				}
 			}
 			
 			if (errorInt > 0) {
@@ -8839,11 +8885,32 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 			map.put("lang", lang);
 			map.put("locale", locale);
 
-	        int resultInt = ezEmailService.setApprMailCancel(tenantId, map, applicantEmail, uid);
-	        
-	        if (resultInt != 0) {
-	        	returnValue = "ERROR";
-	        }
+			// 데이터 수집 단계
+			List<Map<String, Object>> approvalDataList = new ArrayList<>();
+			Map<String, Object> approvalData = new HashMap<>();
+			approvalData.put("tenantId", tenantId);
+			approvalData.put("companyId", companyId);
+			approvalData.put("lang", lang);
+			approvalData.put("locale", locale);
+			approvalData.put("uid", uid);
+			approvalData.put("applicantId", applicantId);
+			approvalData.put("applicantEmail", applicantEmail);
+			approvalData.put("state", "pending");
+
+			approvalDataList.add(approvalData);
+
+			// 메일이 대기 상태인지 check
+			int checkMail = ezEmailService.checkApprHistoryAll(tenantId, companyId, userId, approvalDataList);
+
+			if (checkMail == 1) {
+				returnValue = "DONE"; // 1: 이미 처리된 메일이 있음
+			} else {
+				int resultInt = ezEmailService.setApprMailCancel(tenantId, map, applicantEmail, uid);
+
+				if (resultInt != 0) {
+					returnValue = "ERROR";
+				}
+			}
 			
 			result.put("data", returnValue);
 			result.put("status", "ok");

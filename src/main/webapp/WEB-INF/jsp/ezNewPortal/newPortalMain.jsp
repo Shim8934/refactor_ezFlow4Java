@@ -8,6 +8,7 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<meta name="viewport" id="viewport">
 		<link rel="shortcut icon" href="/images/favicon.ico">
+        <link rel="stylesheet" type="text/css" href="${util.addVer('/css/ai.css')}" />
 		<link rel="stylesheet" type="text/css" href="${util.addVer('/css/ezNewPortal/portal.css')}" />
 		<link href="${util.addVer('main.portal', 'msg')}" rel="stylesheet" type="text/css">
 		<link rel="stylesheet" href="${util.addVer('/js/jquery/jquery-ui.css')}">
@@ -17,9 +18,6 @@
 		<!-- 컨텍스트 메뉴 관련 -->
 		<link rel="stylesheet" href="${util.addVer('/css/contextMenu.css')}">
 		<link rel="stylesheet" href="${util.addVer('/css/font-awesome-5.0.10/css/fontawesome-all.css')}">
-		<!--20250512 : ai 기능 추가-->
-		<link rel="stylesheet" type="text/css" href="${util.addVer('/css/ai.css')}" />
-
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-ui.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezMemo/memo.js')}"></script>

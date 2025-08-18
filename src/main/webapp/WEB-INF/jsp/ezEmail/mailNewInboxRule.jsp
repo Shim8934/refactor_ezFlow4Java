@@ -276,7 +276,8 @@
 		            }
 		            
 		            var url = mailBoxInfo["url"];
-		            var name = folderdisnameChange(mailBoxInfo["name"]);
+		            //var name = folderdisnameChange(mailBoxInfo["name"]);
+		            var name = mailBoxInfo["name"];
 		            _curCellObj.setAttribute("RuleKind", _RuleKind);
 		            _curCellObj.setAttribute("url", url);
 		            _curCellObj.setAttribute("fordername", name);
@@ -317,7 +318,8 @@
 		            }
 		            
 		            var url = mailBoxInfo["url"];
-		            var name = folderdisnameChange(mailBoxInfo["name"]);
+		            var name = mailBoxInfo["name"];
+		            //var name = folderdisnameChange(mailBoxInfo["name"]);
 		            //mail_selectfolder_cross_dialogArguments[2].parentNode.setAttribute("RuleKind", "MOVE");
 		            _curCellObj.setAttribute("url", url);
 		            _curCellObj.setAttribute("fordername", name);

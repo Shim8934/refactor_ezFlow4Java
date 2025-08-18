@@ -219,6 +219,9 @@
 				if ("OK" == result) {
 					console.log(result);
 					alert("<spring:message code='email.appr.pending.approve.complete' />");
+                } else if ("DONE" == result) {
+                    console.log(result);
+                    alert("<spring:message code='email.appr.pending.done' />");
 				} else {
 					console.log(result);
 					var erroCount = result.split('_')[1];
@@ -282,12 +285,14 @@
 			async	: true,
 			success	: function(result) {
 				//hideLoading();
-				if ("OK" !== result) {
-					console.log(result);
-					var erroCount = result.split('_')[1];
-					alert(erroCount + " <spring:message code='ezEmail.fail.count' />");
+				if ("OK" == result) {
+				    alert("<spring:message code='email.appr.pending.reject.complete' />");
+				} else if ("DONE" == result) {
+                    alert("<spring:message code='email.appr.pending.done' />");
 				} else {
-					alert("<spring:message code='email.appr.pending.reject.complete' />");
+					console.log(result);
+                    var erroCount = result.split('_')[1];
+                    alert(erroCount + " <spring:message code='ezEmail.fail.count' />");
 				}
 
 				reloadPage();

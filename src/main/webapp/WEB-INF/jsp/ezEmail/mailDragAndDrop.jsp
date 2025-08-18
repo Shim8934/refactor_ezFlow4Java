@@ -620,6 +620,7 @@
 		    
 		    function btnfiledel(type) {
 		        var filecnt = document.getElementById("filelist").childNodes.length;
+		        var isDeleted = false;
 		        
 		    	for (var i = 1; i < filecnt; i++) {
 		    		var filelistTable = document.getElementById("filelist");
@@ -628,6 +629,8 @@
 		    		var elementTrIsBig = GetAttribute(elementTR, "_big");
 		    	
 					if ((type=="big" && elementTrIsBig=="Y") || (type!="big" && elementTRIsChecked)) {
+					    isDeleted = true;
+
 			    		var pAttachDelSN;
 		                var pAttachDelFileName;
 		                var is_newfile;
@@ -665,6 +668,10 @@
 		                i--;
 		                filecnt--;
 		            }
+		        }
+
+		        if (!isDeleted) {
+		            alert(strLang90);
 		        }
 		        
 		        showAttachInnerNotice();

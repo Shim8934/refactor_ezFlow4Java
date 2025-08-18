@@ -110,7 +110,6 @@ table, th, td{font-family:Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, s
 
 @font-face {
 	font-family: 'Meiryo UI';
-	src: local('Arial'); /* 원하는 폰트로 변경 */
 	unicode-range: U+007E; /* 틸드(~)의 유니코드 범위 */
 	font-weight: normal; /* 볼드처리 방지 */
 }

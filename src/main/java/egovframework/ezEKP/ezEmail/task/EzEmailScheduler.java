@@ -813,7 +813,7 @@ public class EzEmailScheduler extends EgovFileMngUtil {
                         }
 
                         if (invalidAddressList.size() > 0) {
-//		            		sendInvalidRecipientNotiMail(userAccount, message.getSubject(), invalidAddressList, locale, offset);
+		            		sendInvalidRecipientNotiMail(userAccount, message.getSubject(), invalidAddressList, locale, offset);
 		            		
 		            		invalidAddressList.clear();
 		            	}
@@ -915,7 +915,7 @@ public class EzEmailScheduler extends EgovFileMngUtil {
                     logger.debug("invalidAddressList=" + invalidAddressList);
 
                     if (message != null && invalidAddressList.size() > 0) {
-//						sendInvalidRecipientNotiMail(userAccount, message.getSubject(), invalidAddressList, locale, offset);
+						sendInvalidRecipientNotiMail(userAccount, message.getSubject(), invalidAddressList, locale, offset);
                     }
 
                     retryFlag = true;
@@ -952,7 +952,7 @@ public class EzEmailScheduler extends EgovFileMngUtil {
                     logger.debug("invalidAddressList=" + invalidAddressList);
 
                     if (message != null && invalidAddressList.size() > 0) {
-//						sendInvalidRecipientNotiMail(userAccount, message.getSubject(), invalidAddressList, locale, offset);
+						sendInvalidRecipientNotiMail(userAccount, message.getSubject(), invalidAddressList, locale, offset);
 					}
 					
 					retryFlag = true;
