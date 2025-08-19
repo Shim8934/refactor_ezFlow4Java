@@ -866,7 +866,7 @@
 								var userInfo_position = $(_this.template.spanFormat.formatTreeView("rank")).append((node.title || "").trim());
 							}
 							else {
-								var userInfo_position = $(_this.template.spanFormat.formatTreeView("rank")).append(node.title.trim() + "/" + node.description);
+								var userInfo_position = $(_this.template.spanFormat.formatTreeView("rank")).append(((node.title||"").trim()) + "/" + node.description);
 								userInfo.append($(_this.template.delete));
 							}
 

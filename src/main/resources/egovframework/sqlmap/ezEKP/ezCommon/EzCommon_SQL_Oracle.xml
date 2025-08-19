@@ -8555,7 +8555,7 @@
 			TOKENTYPE VARCHAR2(20) DEFAULT 'publicapp' NOT NULL,
 			AUTHTOKEN VARCHAR2(4000),
 			UPDATEDATE DATE
-		);
+		)
 	</statement>
 
 	<statement id="EzCommonDAO.checkUserPresenceTable" resultClass="string">

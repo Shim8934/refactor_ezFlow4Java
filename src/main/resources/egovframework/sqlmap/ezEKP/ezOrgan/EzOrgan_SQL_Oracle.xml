@@ -1785,7 +1785,9 @@
 	            SIPURI ,
 	            POSITIONCD ,
 	            'user' USERTYPE,
-	            PHYSICALDELIVERYOFFICENAME AS COMPANYID
+	            PHYSICALDELIVERYOFFICENAME AS COMPANYID,
+				TEAMSID AS teamsId,
+				UPNNAME AS upnName
 	        FROM
 	        	TBL_USERMASTER 
 	       WHERE
@@ -1902,7 +1904,9 @@
              SIPURI ,
              B.POSITIONCD ,
 	         'addJob' USERTYPE,
-	         C.EXTENSIONATTRIBUTE2 AS COMPANYID
+	         C.EXTENSIONATTRIBUTE2 AS COMPANYID,
+			 A.TEAMSID AS teamsId,
+			 A.UPNNAME AS upnName
         	FROM
         		TBL_ADDJOBMASTER B
             JOIN
@@ -2026,7 +2030,9 @@
 	            PHYSICALDELIVERYOFFICENAME AS PHYSICALDELIVERYOFFICENAME1 ,
 	            'user' USERTYPE,
 	            USERTREEFLAG,
-	            PHYSICALDELIVERYOFFICENAME AS COMPANYID
+	            PHYSICALDELIVERYOFFICENAME AS COMPANYID,
+	            TEAMSID AS teamsId,
+            	UPNNAME AS upnName 
 	        FROM
 	        	TBL_USERMASTER 
 	       WHERE
@@ -2153,7 +2159,9 @@
              B.POSITIONCD ,
 	         'addJob' USERTYPE,
 	         B.USERTREEFLAG,
-	         C.EXTENSIONATTRIBUTE2 AS COMPANYID
+	         C.EXTENSIONATTRIBUTE2 AS COMPANYID,
+	         A.TEAMSID AS teamsId,
+         	 A.UPNNAME AS upnName
         	FROM
         		TBL_ADDJOBMASTER B
             JOIN
@@ -4166,29 +4174,31 @@
 	<select id="EzOrganDAO.getDeptMemberListForTeams" parameterClass="Map" resultMap="teamsDeptMemberInfo" remapResults="true">
 		<isEqual property="v_CLASS" compareValue="all">
 			<![CDATA[
-				WITH DEPT_RECURSIVE AS (
+				WITH DEPT_RECURSIVE 
+				    (data1, data2, displayName, title, description, levelName, department, nodeLevel, nodeIcon, extensionAttribute2, textColor, icon, mail, presence, upnName, mobile, telephoneNumber, teamsId, extensionAttribute10, chargeBusiness, physicalDeliveryOfficeName, addJob, sortOrder) 
+				    AS (
 					SELECT
 						'DEPT' AS data1,
 						CN AS data2,
 						DISPLAYNAME AS displayName,
-						'' AS title,
-						'' AS description,
-						'' AS levelName,
+						TO_NCHAR('') AS title,
+						TO_NCHAR('') AS description,
+						TO_NCHAR('') AS levelName,
 						EXTENSIONATTRIBUTE1 AS department,
-						DEPTLEVEL AS nodeLevel,
+						TO_NUMBER(DEPTLEVEL) AS nodeLevel,
 						EXTENSIONATTRIBUTE2 AS nodeIcon,
 						EXTENSIONATTRIBUTE2 AS extensionAttribute2,
-						'' AS textColor,
+						TO_NCHAR('') AS textColor,
 						'i_company' AS icon,
-						'' AS mail,
+						TO_NCHAR('') AS mail,
 						'' AS presence,
-						'' AS upnName,
-						'' AS mobile,
-						'' AS telephoneNumber,
+						TO_NCHAR('') AS upnName,
+						TO_NCHAR('') AS mobile,
+						TO_NCHAR('') AS telephoneNumber,
 						'' AS teamsId,
-						'' AS extensionAttribute10,
+						TO_NCHAR('') AS extensionAttribute10,
 						'' AS chargeBusiness,
-						'' AS physicalDeliveryOfficeName,
+						TO_NCHAR('') AS physicalDeliveryOfficeName,
 						'N' AS addJob,
 						EXTENSIONATTRIBUTE15 AS sortOrder
 					FROM TBL_DEPTMASTER 
@@ -4202,24 +4212,24 @@
 						'DEPT' AS data1,
 						D.CN AS data2,
 						D.DISPLAYNAME AS displayName,
-						'' AS title,
-						'' AS description,
-						'' AS levelName,
+						TO_NCHAR('') AS title,
+						TO_NCHAR('') AS description,
+						TO_NCHAR('') AS levelName,
 						D.EXTENSIONATTRIBUTE1 AS department,
-						D.DEPTLEVEL AS nodeLevel,
+						TO_NUMBER(D.DEPTLEVEL) AS nodeLevel,
 						D.EXTENSIONATTRIBUTE2 AS nodeIcon,
 						D.EXTENSIONATTRIBUTE2 AS extensionAttribute2,
-						'' AS textColor,
+						TO_NCHAR('') AS textColor,
 						'i_company' AS icon,
-						'' AS mail,
+						TO_NCHAR('') AS mail,
 						'' AS presence,
-						'' AS upnName,
-						'' AS mobile,
-						'' AS telephoneNumber,
+						TO_NCHAR('') AS upnName,
+						TO_NCHAR('') AS mobile,
+						TO_NCHAR('') AS telephoneNumber,
 						'' AS teamsId,
-						'' AS extensionAttribute10,
+						TO_NCHAR('') AS extensionAttribute10,
 						'' AS chargeBusiness,
-						'' AS physicalDeliveryOfficeName,
+						TO_NCHAR('') AS physicalDeliveryOfficeName,
 						'N' AS addJob,
 						EXTENSIONATTRIBUTE15 AS sortOrder
 					FROM TBL_DEPTMASTER D
@@ -4239,13 +4249,13 @@
 						A.TITLE AS title,
 						CASE #v_LANGDATA#
 							WHEN '1' THEN A.DESCRIPTION
-							WHEN '2' THEN NVL(NULLIF(A.DESCRIPTION2, ''), A.DESCRIPTION)
-							WHEN '3' THEN NVL(NULLIF(A.DESCRIPTION3, ''), A.DESCRIPTION)
+							WHEN '2' THEN NVL(NULLIF(A.DESCRIPTION2, TO_NCHAR('')), A.DESCRIPTION)
+							WHEN '3' THEN NVL(NULLIF(A.DESCRIPTION3, TO_NCHAR('')), A.DESCRIPTION)
 							ELSE A.DESCRIPTION
 						END AS description,
 						A.POSITIONCD AS levelName,
 						A.DEPARTMENT AS department,
-						DM.DEPTLEVEL + 1 AS nodeLevel,
+						NVL(TO_NUMBER(DM.DEPTLEVEL), 0) + 1 AS nodeLevel,
 						A.EXTENSIONATTRIBUTE2 AS nodeIcon,
 						A.EXTENSIONATTRIBUTE2 AS extensionAttribute2,
 						A.EXTENSIONATTRIBUTE11 AS textColor,
@@ -4255,9 +4265,9 @@
 						A.UPNNAME AS upnName,
 						A.MOBILE AS mobile,
 						A.TELEPHONENUMBER AS telephoneNumber,
-						A.TEAMSID AS teamsid,
+						A.TEAMSID AS teamsId,
 						A.EXTENSIONATTRIBUTE10 AS extensionAttribute10,
-						'' AS chargebusiness,
+						'' AS chargeBusiness,
 						A.PHYSICALDELIVERYOFFICENAME AS physicalDeliveryOfficeName,
 						'N' AS addJob,
 						A.EXTENSIONATTRIBUTE15 AS sortOrder
@@ -4279,7 +4289,7 @@
 						A.DESCRIPTION AS description,
 						A.POSITIONCD AS levelName,
 						B.DEPTID  AS department,
-						DM.DEPTLEVEL + 1 AS nodeLevel,
+						NVL(TO_NUMBER(DM.DEPTLEVEL), 0) + 1 AS nodeLevel,
 						A.EXTENSIONATTRIBUTE2 AS nodeIcon,
 						A.EXTENSIONATTRIBUTE2 AS extensionAttribute2,
 						A.EXTENSIONATTRIBUTE11 AS textColor,
@@ -4291,7 +4301,7 @@
 						A.TELEPHONENUMBER AS telephoneNumber,
 						A.TEAMSID AS teamsId,
 						A.EXTENSIONATTRIBUTE10 AS extensionAttribute10,
-						'' AS chargebusiness,
+						'' AS chargeBusiness,
 						A.PHYSICALDELIVERYOFFICENAME AS physicalDeliveryOfficeName,
 						'Y' AS addJob,
 						B.ORDERBY AS sortOrder
@@ -4301,7 +4311,7 @@
 					LEFT JOIN TBL_USERPRESENCE UP ON A.TEAMSID = UP.ID
 					WHERE B.DEPTID IN (SELECT data2 FROM DEPT_RECURSIVE)
 					AND B.TENANT_ID = #v_TENANT_ID#
-				) AS TREE
+				) TREE
 				ORDER BY data1 DESC, nodeLevel ASC, sortOrder ASC, displayName ASC
 			]]>
 		</isEqual>

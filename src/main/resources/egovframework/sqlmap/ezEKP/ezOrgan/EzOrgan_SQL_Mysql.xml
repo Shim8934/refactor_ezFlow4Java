@@ -1632,7 +1632,9 @@
 	            SIPURI ,
 	            POSITIONCD ,
 	            'user' USERTYPE,
-	            PHYSICALDELIVERYOFFICENAME AS COMPANYID
+	            PHYSICALDELIVERYOFFICENAME AS COMPANYID,
+				TEAMSID AS teamsId,
+				UPNNAME AS upnName
 	        FROM
 	        	TBL_USERMASTER 
 	       WHERE
@@ -1722,7 +1724,9 @@
              SIPURI ,
              B.POSITIONCD ,
 	         'addJob' USERTYPE,
-	         C.EXTENSIONATTRIBUTE2 AS COMPANYID
+	         C.EXTENSIONATTRIBUTE2 AS COMPANYID,
+	         A.TEAMSID AS teamsId,
+			 A.UPNNAME AS upnName
         	FROM
         		TBL_ADDJOBMASTER B
             JOIN
