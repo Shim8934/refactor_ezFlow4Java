@@ -284,6 +284,9 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 			if(usePortal.equalsIgnoreCase("NO")) {
 				JSONArray menuList = (JSONArray) data.get("menuList");
 				JSONObject firstMenu = (JSONObject) menuList.get(0);
+				if ((String) firstMenu.get("menuUrl") != null && "/connectionMenu.do".equals((String) firstMenu.get("menuUrl"))) {
+					firstMenu = (JSONObject) menuList.get(1);
+				}
 				logoMainUrl = (String) firstMenu.get("menuUrl");
 				//logoMainUrl = "/ezApprovalG/apprGMain.do";
 			}
