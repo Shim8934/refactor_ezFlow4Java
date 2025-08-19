@@ -226,8 +226,8 @@ public class EzResourceDAO extends EgovAbstractDAO {
 		insert("EzResourceDAO.insertForm_I", map);
 	}
 	
-	public void delResSch_I(Map<String, Object> map) {
-		insert("EzResourceDAO.delResSch_I", map);
+	public void copyResSch(Map<String, Object> map) {
+		insert("EzResourceDAO.copyResSch", map);
 	}
 	
 	public void modifyResSch_I1(Map<String, Object> map) {

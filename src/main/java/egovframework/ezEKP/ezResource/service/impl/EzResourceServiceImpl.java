@@ -926,6 +926,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		logger.debug("modifyResSch End");
 	}
 
+	@Override
 	public void delResSch(String ownerID, String num, String pNum, String companyID, String writerID, String sDate, String eDate, int insType, String offset, int tenantID) throws Exception {
 		logger.debug("delResSch Start");
 		Map<String,Object> map = new HashMap<String, Object>();
@@ -958,10 +959,12 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 				sDate = commonUtil.getDateStringInUTC(sDate, offset, true);
 				eDate = commonUtil.getDateStringInUTC(eDate, offset, true);
 				
+				map.put("v_P_reFlag", 4);
 				map.put("v_P_sDate", sDate);
 				map.put("v_P_eDate", eDate);
+				map.put("nowDate", commonUtil.getTodayUTCTime(""));
 				
-				ezResourceDAO.delResSch_I(map);
+				ezResourceDAO.copyResSch(map);
 			}
 		} else {
 			logger.debug("delResSch_delete");
@@ -2083,6 +2086,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		return returnList;
 	}
 	
+	// 자원"분류"에 대한 권한을 체크하는 메소드 (자원 개별 관리자 권한 체크 X)
 	@Override
 	public String getAdminFlag(String companyID, String brdID, String userID, int tenantID, String deptID) throws Exception {
 		String accessLvl = "";
@@ -2895,6 +2899,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		return resultXml.toString();
 	}
 	
+	// 각 자원에 대햔 관리자 권한과 자원 분류의 권한을 함께 체크함.
 	@Override
 	public String getACL(String pCompanyID, String pBrdID, String pUserID, String pMode, int tenantID, String pDeptID) throws Exception {
 		String aclTblBrd = "";
@@ -2969,6 +2974,131 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
         return returnStr;
 	}
 	
+	@Override
+	public String modifyResSch(ResGetScheduleVO info, int tenantID, String offset) throws Exception {
+		modifyResSch(info.getOwnerID(), String.valueOf(info.getNum()), String.valueOf(info.getpNum()), info.getCompanyID(), info.getWriterID(), info.getTitle(), info.getLocation(), info.getTimeDisplay(), info.getStartDate(), info.getEndDate(), 
+					info.getAllDay(), info.getAlertTime(), info.getContent(), info.getImportance(), info.getReFlag(), info.getGresFlag(), info.getEntryList(), 
+					String.valueOf(info.getCharacterID()), info.getAttachFlag(), "", info.getApproveFlag(), tenantID, offset);
+		
+		String returnStr = "";
+		returnStr += "<RTN_DATA>";
+        returnStr += "<NUM>" + info.getNum() + "</NUM>";
+        returnStr += "<OWNERID>" + info.getOwnerID() + "</OWNERID>";
+        returnStr += "</RTN_DATA>";
+
+        return returnStr;
+	}
+	
+	@Override
+	public String modifyResRepSchInstance(String xmlStr, int tenantID, String offset) throws Exception {
+		Document xmlRes = commonUtil.convertStringToDocument(xmlStr);
+		NodeList nodeList = xmlRes.getElementsByTagName("PARAMETER").item(0).getChildNodes();
+		
+		String startDate = nodeList.item(3).getTextContent().trim();
+		String endDate = nodeList.item(4).getTextContent().trim();
+		String writerID = nodeList.item(8).getTextContent().trim();
+		String num = nodeList.item(13).getTextContent().trim();
+		String pNum = nodeList.item(14).getTextContent().trim();
+		String ownerID = nodeList.item(15).getTextContent().trim();
+		String companyID = nodeList.item(17).getTextContent().trim();
+		
+		delResSch(ownerID, num, pNum, companyID, writerID, startDate, endDate, 3, offset, tenantID);
+		copyResSch(xmlStr, num, tenantID, offset);
+		
+		return "";
+	}
+	
+	@Override
+	public String copyResSch(String xmlStr, String newPNum, int tenantID, String offset) throws Exception {
+		
+		Document xmlRes = commonUtil.convertStringToDocument(xmlStr);
+		String attachFlag = "";
+		String scheduleID = "";
+		
+		NodeList nodeList = xmlRes.getElementsByTagName("PARAMETER").item(0).getChildNodes();
+		
+		String title = nodeList.item(0).getTextContent().trim();
+		String location = nodeList.item(1).getTextContent().trim();
+		String startDate = nodeList.item(3).getTextContent().trim();
+		String endDate = nodeList.item(4).getTextContent().trim();
+		String allDay = nodeList.item(5).getTextContent().trim();
+		String alertTime = nodeList.item(6).getTextContent().trim();
+		String content = nodeList.item(7).getTextContent().trim();
+		String writerID = nodeList.item(8).getTextContent().trim();
+		String importance = nodeList.item(9).getTextContent().trim();
+		String entryList = nodeList.item(10).getTextContent().trim();
+		String reFlag = nodeList.item(11).getTextContent().trim();
+		String gresFlag = nodeList.item(12).getTextContent().trim();
+		String num = nodeList.item(13).getTextContent().trim();
+		String ownerID = nodeList.item(15).getTextContent().trim();
+		String attachFiles = nodeList.item(16).getTextContent().trim();
+		String companyID = nodeList.item(17).getTextContent().trim();
+		String characterID = nodeList.item(18).getTextContent().trim();
+		String deptNm = nodeList.item(20).getTextContent().trim();
+		String ownerNm = nodeList.item(21).getTextContent().trim();
+		String strApprove = xmlRes.getElementsByTagName("APPROVE").item(0).getTextContent().trim();
+		
+		if (nodeList.getLength() > 23) {
+			scheduleID = nodeList.item(23).getTextContent().trim();
+		}
+
+		Node nodeDept = xmlRes.getElementsByTagName("DEPTID").item(0);
+		String deptId = nodeDept != null ? nodeDept.getTextContent() : "";
+		
+		Map<String,Object> map1 = new HashMap<String, Object>();
+		map1.put("v_P_ownerID", ownerID);
+		map1.put("v_P_companyID", companyID);
+		map1.put("tenantID", tenantID);
+		
+		if (attachFiles != null && !attachFiles.equals("")) {
+			attachFlag = "1";
+		} else {
+			attachFlag = "0";
+		}
+		
+		String timeDisplay = "1";
+		
+		int result = addResSch(ownerID, newPNum, companyID, writerID, title, location, timeDisplay, startDate, endDate, allDay, alertTime, content, importance, reFlag, gresFlag, 
+				entryList, characterID, attachFlag, deptNm, ownerNm, strApprove, scheduleID, tenantID, offset,  deptId);
+		
+		
+		String returnStr = "";
+		returnStr += "<RTN_DATA>";
+        returnStr += "<NUM>" + result + "</NUM>";
+        returnStr += "<OWNERID>" + writerID + "</OWNERID>";
+        returnStr += "</RTN_DATA>";
+        
+        logger.debug("returnStr=" + returnStr);
+        logger.debug("addResSch End");
+        return returnStr;
+		
+	}
+
+	@Override
+	public String copyResSchDrag(String dragOwnerId, int dragNum, int tenantId, String companyId, String startTime, String endTime, String offset) throws Exception {
+		logger.debug("delResSch Start");
+		
+		Map<String,Object> map = new HashMap<String, Object>();
+		
+		map.put("v_P_ownerID", dragOwnerId);
+		map.put("tenantID", tenantId);
+		map.put("v_P_companyID", companyId);
+		
+		int maxNum = ezResourceDAO.delResSch_S2(map);
+		logger.debug("maxNum="+maxNum);
+		
+		map.put("v_MaxNum", maxNum);
+		map.put("v_P_pnum", dragNum);
+		map.put("v_P_reFlag", 0);
+		map.put("v_P_sDate", commonUtil.getDateStringInUTC(startTime, offset, true));
+		map.put("v_P_eDate", commonUtil.getDateStringInUTC(endTime, offset, true));
+		map.put("nowDate", commonUtil.getTodayUTCTime(""));
+		
+		ezResourceDAO.copyResSch(map);
+		
+		return String.valueOf(maxNum);
+	}
+
 	@Override
 	public String addResSch(String xmlStr, int tenantID, String offset) throws Exception {
 		logger.debug("addResSch Start");

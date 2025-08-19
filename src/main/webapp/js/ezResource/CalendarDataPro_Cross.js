@@ -119,6 +119,15 @@ function getCalMonthViewSource_after() {
             DataSDT = null;
             DataEDT = null;
         }
+        
+        $("#dayDiv").find("td[id^='div_']").parent("tr").draggable({
+            addClasses: false,
+            cursorAt: {top: 1, left: 1},
+            scroll: false,
+            handle: "td",
+            helper: "clone"
+        });
+        
         xmlhttp = null;
         tempData = null;
     }
@@ -226,7 +235,28 @@ function getCalWeekViewSource_after() {
             if (tempData[i].oAlldayevent == "0")
                 CalDataWidth(tempData[i], i, tempData);
         }
-
+        
+        if (objNodes != undefined && SelectSingleNodeValue(objNodes, "scheduleFlag") != "google") {
+            $("div[id$='ALL']").children().draggable({
+                addClasses: false,
+                revert: "invalid",
+                helper: function (event) {
+                    return $(event.target).clone().css({
+                        width: $(event.target).width()
+                    });
+                },
+                appendTo: "body",
+                containment: "#calTR"
+              });
+              
+            $("#dayDiv").find("div[id^='div_']").draggable({
+                addClasses: false,
+                cursorAt: {top: 1, left: 1},
+                scroll: false,
+                handle: "td",
+                helper: "clone"
+            });
+        }
         xmlhttp = null;
         tempData = null;
     }
@@ -323,6 +353,17 @@ function getCalDayViewSource_after() {
             if (tempData[i].oAlldayevent == "0")
                 CalDataWidth(tempData[i], i, tempData);
         }
+        
+        if (objNodes != undefined && SelectSingleNodeValue(objNodes, "scheduleFlag") != "google") {
+            $("#dayDiv").find("div[id^='div_']").draggable({
+                addClasses: false,
+                cursorAt: {top: 1, left: 1},
+                scroll: false,
+                handle: "td",
+                helper: "clone"
+            });
+        }
+        
         xmlhttp = null;
         tempData = null;
     }

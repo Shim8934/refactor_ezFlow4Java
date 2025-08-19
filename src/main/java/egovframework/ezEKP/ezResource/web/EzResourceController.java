@@ -2,6 +2,7 @@ package egovframework.ezEKP.ezResource.web;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -2273,7 +2274,7 @@ public class EzResourceController extends EzFileMngUtil {
 			Node objNode = dom.createElement("TYPE_VAL");
 			objNode.setTextContent(typeVal);
 			rootNode.appendChild(objNode);
-
+			
 			ret = ezResourceService.modifyResSch(commonUtil.convertDocumentToString(dom), userInfo.getTenantId(), userInfo.getOffset());
 		}
 		
@@ -3517,5 +3518,161 @@ public class EzResourceController extends EzFileMngUtil {
 		
 		logger.debug("checkResoruceMaxDate end");
 		return ezResourceService.getBrdResMaxDate(brdId, userInfo.getCompanyID(), userInfo.getTenantId());
+	}
+	
+	@RequestMapping(value = "/ezResource/scheduleDragSave.do", method = RequestMethod.POST)
+	@ResponseBody
+	public String scheduleDragSave(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginVO loginVO) throws Exception {
+		logger.debug("scheduleDragSave started.");
+		
+		String returnValue = "0";
+		
+		loginVO = commonUtil.userInfo(loginCookie);
+		String offset    = loginVO.getOffset();
+		String companyId = loginVO.getCompanyID();
+		int tenantId     = loginVO.getTenantId();
+		String lang      = loginVO.getLang();
+		
+		SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd");
+		SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+		
+		String typeCal = request.getParameter("typeCal"); // 0 : 월보기 / 1: 주보기 / 2: 일보기
+		String dragOwnerId = request.getParameter("dragOwnerId");
+		int dragNum = Integer.parseInt(request.getParameter("dragNum"));
+		String dragDay = request.getParameter("dragDay");
+		String dropDay = request.getParameter("dropDay");
+		
+		ResGetScheduleVO info  = ezResourceService.getSchedule(dragNum, dragOwnerId, companyId, tenantId, lang);
+		String infoStartTime = commonUtil.getDateStringInUTC(info.getStartDate(), offset, false).substring(10, 16);
+		String infoEndTime   = commonUtil.getDateStringInUTC(info.getEndDate(), offset, false).substring(10, 16);
+		
+		// 권한체크
+		String adminFlag = ezResourceService.getACL(companyId, info.getOwnerID(), loginVO.getId(), "", tenantId, loginVO.getDeptID());
+		if (!adminFlag.equals("Y") && !info.getWriterID().equals(loginVO.getId())) {
+			logger.debug("Not Permission");
+			returnValue = "1";
+			return returnValue;
+		}
+
+		String startDate;
+		String endDate = "";
+		
+		if (info.getReFlag().equals("0")) { // 단독일정
+			if (typeCal.equals("0")) { // 월보기
+				startDate = dropDay + infoStartTime;
+				endDate   = getDropEndDate(sdf1, dropDay.substring(0, 10), info) + infoEndTime;
+			} else { // 주보기 혹은 일보기
+				if (info.getAllDay().equals("1")) {
+					startDate = dropDay.substring(0, 10) + infoStartTime;
+					endDate   = getDropEndDate(sdf1, dropDay, info) + infoEndTime;
+				} else {
+					startDate = getDropStartEnd(sdf2, dropDay, info).get(0);
+					endDate   = getDropStartEnd(sdf2, dropDay, info).get(1);
+				}
+			}
+			// modifyReSch 내부에서 utc 처리를 하고 있음
+			info.setStartDate(startDate);
+			info.setEndDate(endDate);
+			
+			ezResourceService.modifyResSch(info, tenantId, offset);
+			
+		} else if (info.getReFlag().equals("1")) { // 반복일정
+			String defaultPath  = commonUtil.detectPathTraversal(commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_schedule.ROOT", tenantId));
+			startDate = dropDay.substring(0, 10) + infoStartTime;
+			endDate = dropDay.substring(0, 10) + infoEndTime;
+		
+			ezResourceService.delResSch(dragOwnerId, "0", String.valueOf(dragNum), companyId, info.getWriterID(), dragDay, dragDay, 3, offset, tenantId);
+			ezResourceService.copyResSchDrag(dragOwnerId, dragNum, tenantId, companyId, startDate, endDate, offset);
+		}
+		
+		returnValue = endDate.substring(0, 10);
+		logger.debug("scheduleDragSave ended.");
+		return returnValue;
+	}
+	
+	/**
+	 * startDate 와 endDate 차이 구하는 함수
+	 */
+	private Integer getDateDiff(ResGetScheduleVO info) throws Exception {
+		logger.debug("getDateDiff start");
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:SS");
+		
+		com.ibm.icu.util.Calendar startCal = com.ibm.icu.util.Calendar.getInstance();
+		startCal.setTime(sdf.parse(info.getStartDate().substring(0, 19)));
+		
+		com.ibm.icu.util.Calendar endCal = com.ibm.icu.util.Calendar.getInstance();
+		endCal.setTime(sdf.parse(info.getEndDate().substring(0, 19)));
+		
+		long diff = endCal.getTimeInMillis() - startCal.getTimeInMillis();
+		long diffMinu = diff / (60 * 1000);
+		
+		logger.debug("diffMinu: " + diffMinu);
+		logger.debug("getDateDiff ended");
+		
+		return (int) diffMinu;
+	}
+	/**
+	 * 종일일정 dropDay 에서 endDate 구하는 함수
+	 */
+	private String getDropEndDate(SimpleDateFormat sdf, String dropDay, ResGetScheduleVO info) {
+		logger.debug("getDropEndDate start");
+		
+		String endDate = "";
+		
+		try {
+			com.ibm.icu.util.Calendar dropCal = com.ibm.icu.util.Calendar.getInstance();
+			dropCal.setTime(sdf.parse(dropDay));
+			dropCal.add(com.ibm.icu.util.Calendar.MINUTE, getDateDiff(info));
+			endDate = sdf.format(dropCal.getTime());
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+		}
+		
+		logger.debug("getDropEndDate ended");
+		return endDate;
+	}
+	/**
+	 * 시간일정 dropDay 에서 startDate 와  endDate 구하는 함수
+	 */
+	private ArrayList<String> getDropStartEnd (SimpleDateFormat sdf, String dropDay, ResGetScheduleVO info) {
+		
+		ArrayList<String> date = new ArrayList<String>();
+		
+		try {
+			com.ibm.icu.util.Calendar dropCal = com.ibm.icu.util.Calendar.getInstance();
+			dropCal.setTime(sdf.parse(dropDay));
+		
+			date.add(sdf.format(dropCal.getTime())); //startDate
+			dropCal.add(com.ibm.icu.util.Calendar.MINUTE, getDateDiff(info));
+			date.add(sdf.format(dropCal.getTime())); //endDate
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+		}	
+		
+		return date;
+	}
+	/**
+	 * 드래그앤드롭시 종료일과 오늘날짜 비교하는 함수
+	 */
+	private boolean CompareDate(String endDate, String startDate) {
+		boolean returnValue = false;
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		
+		try {
+			com.ibm.icu.util.Calendar cal1 = com.ibm.icu.util.Calendar.getInstance();
+			cal1.setTime(sdf.parse(endDate));
+			com.ibm.icu.util.Calendar cal2 = com.ibm.icu.util.Calendar.getInstance();
+			cal2.setTime(sdf.parse(startDate));
+			
+			if (cal1.compareTo(cal2) == -1) { //종료일이 오늘날짜보다 큰경우 저장안함
+				returnValue = true;
+			}
+			
+		} catch (ParseException e) {
+			logger.error(e.getMessage(), e);
+		}
+		
+		return returnValue;
 	}
 }

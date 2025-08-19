@@ -296,3 +296,6 @@ var strLangMaxYGS01 = "최대 예약 가능 기간을 초과하였습니다.";
 var strLangMaxYGS02 = "정원";
 var strLangMaxYGS03 = "명";
 var strLangMaxYGS04 = "정원을 입력하세요.";
+
+var strLangModSche01 = "권한이 없습니다.";
+var strLangModSche02 = "종료일을 오늘 이전으로 등록할 수 없습니다.";

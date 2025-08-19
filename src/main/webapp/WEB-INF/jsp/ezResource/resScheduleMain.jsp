@@ -26,6 +26,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.core.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.datepicker.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/monthpicker.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-ui.js')}"></script>
 		<link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/demos.css')}"/>
 		<!-- modal -->
 		<link href="${util.addVer('/js/jquery/jquery.modal.css')}" rel="stylesheet" type="text/css" />
@@ -57,6 +58,10 @@
 			}		
 			.mainmenuTab {
 				margin : 0px 15px 11px 15px;
+			}
+			
+			.calendar_week .td_list {
+				overflow: visible !important
 			}
 		</style>
 		<script type="text/javascript">
@@ -639,6 +644,10 @@
 		        }, 500);
 			}
 		}
+        
+        function RefreshView() {
+            RefreshMessageList();
+        }
     </script>
 	
 	</head>

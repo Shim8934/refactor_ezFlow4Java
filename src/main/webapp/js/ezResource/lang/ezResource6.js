@@ -296,3 +296,6 @@ var strLangMaxYGS01 = "Melebihi periode maksimum reservasi.";
 var strLangMaxYGS02 = "Kapasitas";
 var strLangMaxYGS03 = "orang";
 var strLangMaxYGS04 = "Silakan masukkan kapasitas.";
+
+var strLangModSche01 = "권한이 없습니다.";
+var strLangModSche02 = "종료일을 오늘 이전으로 등록할 수 없습니다.";

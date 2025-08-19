@@ -1702,7 +1702,7 @@
 		]]>			
 	</select>
 	
-	<insert id="EzResourceDAO.delResSch_I" parameterClass="Map">
+	<insert id="EzResourceDAO.copyResSch" parameterClass="Map">
 		<![CDATA[
 			INSERT INTO TBL_RS_SCHEDULE ( 
 				num, pnum, ownerID, writerID, deptNM, ownerNM, title, location, timeDisplay, startDate, endDate, 
@@ -1724,7 +1724,7 @@
 				ALERTTIME ,
 				CONTENT ,
 				IMPORTANCE ,
-				'4' reFlag,
+				#v_P_reFlag# reFlag,
 				GRESFLAG ,
 				ENTRYLIST ,
 				ALLDAY ,
