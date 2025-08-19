@@ -416,6 +416,11 @@ function MakeListInfoHTML(ConentObject) {
                                 event_listDBClick(this.parentElement);
                             };
                             _TDColum.onselectstart = function () { return false; };
+
+                            if (useMailConfirm == "YES" && p_mailConfirm == "true" && useReceivingChk) {
+                                _TDColum.querySelector('#subject').style.textDecoration = 'line-through';
+                            }
+                            
                             break;
                         case "receivedt":
                             _TDColum.style.textAlign = SelectSingleNodeValue(XmlHeaderRows[HRows], "align");

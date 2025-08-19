@@ -694,7 +694,7 @@ public class EzEmailMailListController {
 							sb.append("<contentclass><![CDATA[IPM.Note]]></contentclass>");
 						}
 					}
-
+					sb.append(String.format("<mailConfirm><![CDATA[%s]]></mailConfirm>", mailInfo.get("MAIL_IS_CONFIRMED").equals("1") ? true : false));
 					sb.append(String.format("<tags><![CDATA[%s]]></tags>", mailInfo.get("TAGS")));
 
 					sb.append("</response>");
