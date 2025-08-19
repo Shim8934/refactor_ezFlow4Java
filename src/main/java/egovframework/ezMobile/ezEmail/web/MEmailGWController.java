@@ -5116,6 +5116,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 	public Object downloadInline(HttpServletRequest request,
 			@PathVariable String folderId, @PathVariable String messageId, @PathVariable String index, @PathVariable String userId) throws Exception {
 		logger.debug("MOBILE G/W MAIL downloadInline started.");
+		folderId = URLDecoder.decode(folderId, "UTF-8");
 		logger.debug("folderId=" + folderId + ",messageId=" + messageId + ",userId=" + userId + ",index=" + index);
 		
 		InputStream input = null;
