@@ -28,6 +28,13 @@
 				}
 				
 				parameterTableSetting();
+
+				const BigSizeMailAttachDelDayTag = document.getElementById("BigSizeMailAttachDelDay")
+				BigSizeMailAttachDelDayTag.addEventListener('change', e => {
+					const tagValue = BigSizeMailAttachDelDayTag.value;
+					if (tagValue <= 0) alert("<spring:message code='ezSystem.BigSizeMailAttachDelDay.minimum'>");
+				});
+				
 			}
 			
 			function parameterTableSetting() {
