@@ -12234,6 +12234,10 @@ public class EzBoardController extends EgovFileMngUtil{
 			}
 		}
 
+		if (!accessCheck(boardID, boardItemInfo.getItemID(), "", userInfo, "")) {
+			return "main/warning";
+		}
+
 		String expireDays = boardInfo.getExpireDays() != null ? boardInfo.getExpireDays() : "-1";
 		String endDateTime = "-1".equals(expireDays) ? "9999-12-31" : EgovDateUtil.addDay(today, Integer.parseInt(expireDays), "yyyy-MM-dd");
 		
