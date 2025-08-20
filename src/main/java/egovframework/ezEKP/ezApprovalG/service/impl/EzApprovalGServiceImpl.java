@@ -7599,10 +7599,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
             if(conn.getResponseCode() != 200)
                 throw new Exception("연동실패 code : " + conn.getResponseCode());
             else{
-                InputStream inputStream = conn.getInputStream();
                 StringBuilder response = new StringBuilder();
 
-                try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
+                try (InputStream inputStream = conn.getInputStream();
+                     BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
                     String line;
                     while ((line = reader.readLine()) != null) {
                         response.append(line);
