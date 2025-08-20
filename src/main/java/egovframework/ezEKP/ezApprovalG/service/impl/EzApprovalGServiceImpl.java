@@ -7595,6 +7595,24 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
                 os.write(formData.getBytes(StandardCharsets.UTF_8));
                 os.flush();
             }
+            
+            if(conn.getResponseCode() != 200)
+                throw new Exception("연동실패 code : " + conn.getResponseCode());
+            else{
+                InputStream inputStream = conn.getInputStream();
+                StringBuilder response = new StringBuilder();
+
+                try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        response.append(line);
+                    }
+                }
+                String result = response.toString();
+                if(!"<RETURNDATA RESULT=\"true\"></RETURNDATA>".equals(result))
+                    throw new Exception("연동실패 result : " + result);
+            }
+            
         }catch (Exception e){
             logger.error(e.getMessage(), e);
             throw e;
