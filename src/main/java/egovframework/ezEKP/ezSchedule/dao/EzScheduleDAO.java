@@ -26,10 +26,15 @@ import egovframework.ezEKP.ezSchedule.vo.ScheduleTokenInfoVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleTypeConfigVO;
 import egovframework.let.user.login.vo.LoginVO;
 import org.egovframe.rte.psl.dataaccess.EgovAbstractDAO;
+import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import javax.annotation.Resource;
 
 @Repository("EzScheduleDAO")
 public class EzScheduleDAO extends EgovAbstractDAO {
-	
+
+	@Resource(name="EzCommonService")
+	private EzCommonService ezCommonService;
+
 	@SuppressWarnings("unchecked")
 	public List<ScheGetHolidayVO> getTholiday(Map<String, Object> map){
 		return  (List<ScheGetHolidayVO>) list("EzScheduleDAO.getTholiday", map);
@@ -47,6 +52,10 @@ public class EzScheduleDAO extends EgovAbstractDAO {
 
 	@SuppressWarnings("unchecked")
 	public List<ScheduleInfoVO> getScheduleList(Map<String, Object> map) throws Exception  {
+		// 임원일정 조회가능범위 설정여부
+		String useExecSchedulePublic = ezCommonService.getTenantConfig("useExecSchedulePublic", (Integer) map.get("v_TENANTID"));
+		map.put("useExecSchedulePublic", useExecSchedulePublic);
+
 		return (List<ScheduleInfoVO>) list("EzScheduleDAO.getScheduleList", map);
 	}
 	

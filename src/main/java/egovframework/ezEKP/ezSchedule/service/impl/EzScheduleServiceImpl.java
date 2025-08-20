@@ -309,10 +309,6 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 		map.put("v_DEPTID", deptID);
 		map.put("useAnnualScheduleYN", useAnnualScheduleYN);
 
-		// 임원일정 조회가능범위 설정여부
-		String useExecSchedulePublic = ezCommonService.getTenantConfig("useExecSchedulePublic", tenantId);
-		map.put("useExecSchedulePublic", useExecSchedulePublic);
-
 		List<ScheduleInfoVO> sList = ezScheduleDAO.getScheduleList(map);
 
 		// 2020-02-24 김정언 - 근태 현황 일정관리 연동
