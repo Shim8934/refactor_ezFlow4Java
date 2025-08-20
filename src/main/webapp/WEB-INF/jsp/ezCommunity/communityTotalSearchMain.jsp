@@ -148,31 +148,24 @@
 					if (SelectNodes(xmldoc,"NODES/NODE2").length > 0) {
 						for (var i = 0; i < SelectNodes(xmldoc,"NODES/NODE2").length; i++) {
 							if ((result.subject != "ALL" || clubCount < maxCount)) { // 전체 탭에서는 3개씩만 표출
-								var commName = SelectSingleNodeValue(SelectNodes(xmldoc, "NODES/NODE2")[i], "CommName");
+								var commName = MakeXMLString(SelectSingleNodeValue(SelectNodes(xmldoc, "NODES/NODE2")[i], "CommName"));
 								var commCode = SelectSingleNodeValue(SelectNodes(xmldoc, "NODES/NODE2")[i], "CommCode");
 								var permit = SelectSingleNodeValue(SelectNodes(xmldoc, "NODES/NODE2")[i], "Permit");
-								var commDesc = SelectSingleNodeValue(SelectNodes(xmldoc, "NODES/NODE2")[i], "CommDesc");
-								var masterName = SelectSingleNodeValue(SelectNodes(xmldoc, "NODES/NODE2")[i], "MasterName");
+								var commDesc = MakeXMLString(SelectSingleNodeValue(SelectNodes(xmldoc, "NODES/NODE2")[i], "CommDesc"));
+								var masterName = MakeXMLString(SelectSingleNodeValue(SelectNodes(xmldoc, "NODES/NODE2")[i], "MasterName"));
 								var regDate = SelectSingleNodeValue(SelectNodes(xmldoc, "NODES/NODE2")[i], "RegDate");
 								var memberCnt = SelectSingleNodeValue(SelectNodes(xmldoc, "NODES/NODE2")[i], "MemberCnt");
 								var itemCnt = SelectSingleNodeValue(SelectNodes(xmldoc, "NODES/NODE2")[i], "ItemCnt");
 
-								if (commName.includes(result.keyword)) {
-									var commRegex = new RegExp(result.keyword, "g");
-									commName = commName.replace(commRegex, "<b>" + result.keyword + "</b>");
-								}
-
-								if (commDesc.includes(result.keyword)) {
-									var descRegex = new RegExp(result.keyword, "g");
-									commDesc = commDesc.replace(descRegex, "<b>" + result.keyword + "</b>");
-								}
+								commName = highlightKeyword(commName, result.keyword);
+								commDesc = highlightKeyword(commDesc, result.keyword);
 
 								if (i < 1) {
 									listXML += "<div class='result_list_head'>";
 									if (result.subject == "ALL") {
-										listXML += "<h4><spring:message code='ezCommunity.t1529'/><div style='float: right;font-size: 13px;font-weight: normal;'>";
-										listXML += "<a href='javascript:void(0);' onclick='viewContent(\"CLUB\")' style='cursor:pointer;color:#0033ac;text-decoration:underline;margin-right: 5px;'><spring:message code='ezCommunity.lyj108'/></a>";
-										listXML += "<img src='/images/arr_right.gif' style='vertical-align: middle;width:15px;height:15px;'></div></h4>";
+										listXML += "<h4><spring:message code='ezCommunity.t1529'/><div class='moreView'>";
+										listXML += "<a href='javascript:void(0);' onclick='viewContent(\"CLUB\")'><spring:message code='ezCommunity.lyj108'/></a>";
+										listXML += "<img src='/images/arr_right.gif'></div></h4>";
 									} else {
 										listXML += "<h4><spring:message code='ezCommunity.t1529'/></h4>";
 									}
@@ -190,16 +183,16 @@
 						}
 					} else {
 						listXML += "<div class='result_list_head' style='height:150px;'><h4><spring:message code='ezCommunity.t1529'/></h4>";
-						listXML += "<div style='text-align:center;line-height: 80px;'><span><spring:message code='ezCommunity.lyj106'/></span></div></div>";
+						listXML += "<div class='empty'><span><spring:message code='ezCommunity.lyj106'/></span></div></div>";
 					}
 				}
 
 				if (result.subject == "BOARD" || result.subject == "ALL") {
 					if (result.subject != "ALL") {
-						listXML += "<a class='itemBtn" + (result.period == "recent" ? "" : " itemActive") + "' href='javascript:void(0);' onclick='itemList(\"before\")'>";
-						listXML += "<span style='vertical-align: middle;line-height: 1px;'><spring:message code='ezCommunity.lyj109'/></span></a>";
-						listXML += "<a class='itemBtn" + (result.period == "recent" ? " itemActive" : "") + "' href='javascript:void(0);' onclick='itemList(\"recent\")' style='margin-right:4px;'>";
-						listXML += "<span style='vertical-align: middle;line-height: 1px;'><spring:message code='ezCommunity.lyj110'/></span></a>";
+						listXML += "<a class='itemBtn" + (result.period == "recent" ? "" : " itemActive") + "' period='before' href='javascript:void(0);' onclick='itemList(\"before\")'>";
+						listXML += "<span><spring:message code='ezCommunity.lyj109'/></span></a>";
+						listXML += "<a class='itemBtn" + (result.period == "recent" ? " itemActive" : "") + "' period='recent' href='javascript:void(0);' onclick='itemList(\"recent\")' style='margin-right:4px;'>";
+						listXML += "<span><spring:message code='ezCommunity.lyj110'/></span></a>";
 					}
 
 					if (SelectNodes(xmldoc,"NODES/NODE1").length > 0) {
@@ -207,26 +200,23 @@
 							if ((result.subject != "ALL" || boardCount < maxCount)) { // 전체 탭에서는 3개씩만 표출
 								var itemID = SelectSingleNodeValue(SelectNodes(xmldoc, "NODES/NODE1")[j], "ItemID");
 								var boardID = SelectSingleNodeValue(SelectNodes(xmldoc, "NODES/NODE1")[j], "BoardID");
-								var writerName = SelectSingleNodeValue(SelectNodes(xmldoc, "NODES/NODE1")[j], "WriterName");
+								var writerName = MakeXMLString(SelectSingleNodeValue(SelectNodes(xmldoc, "NODES/NODE1")[j], "WriterName"));
 								var writeDate = SelectSingleNodeValue(SelectNodes(xmldoc, "NODES/NODE1")[j], "WriteDate");
-								var title = SelectSingleNodeValue(SelectNodes(xmldoc, "NODES/NODE1")[j], "Title");
-								var content = SelectSingleNodeValue(SelectNodes(xmldoc, "NODES/NODE1")[j], "Content");
-								var photoContent = SelectSingleNodeValue(SelectNodes(xmldoc, "NODES/NODE1")[j], "PhotoContent");
+								var title = MakeXMLString(SelectSingleNodeValue(SelectNodes(xmldoc, "NODES/NODE1")[j], "Title"));
+								var content = MakeXMLString(SelectSingleNodeValue(SelectNodes(xmldoc, "NODES/NODE1")[j], "Content"));
+								var photoContent = MakeXMLString(SelectSingleNodeValue(SelectNodes(xmldoc, "NODES/NODE1")[j], "PhotoContent"));
 								var gubun = SelectSingleNodeValue(SelectNodes(xmldoc, "NODES/NODE1")[j], "Gubun");
 								var c_Code = SelectSingleNodeValue(SelectNodes(xmldoc, "NODES/NODE1")[j], "Code");
-								var clubName = SelectSingleNodeValue(SelectNodes(xmldoc, "NODES/NODE1")[j], "ClubName");
+								var clubName = MakeXMLString(SelectSingleNodeValue(SelectNodes(xmldoc, "NODES/NODE1")[j], "ClubName"));
 
-								if (title.includes(result.keyword)) {
-									var boardRegex = new RegExp(result.keyword, "g");
-									title = title.replace(boardRegex, "<b>" + result.keyword + "</b>");
-								}
+								title = highlightKeyword(title, result.keyword);
 
 								if (j < 1) {
 									listXML += "<div class='result_list_head'>";
 									if (result.subject == "ALL") {
-										listXML += "<h4><spring:message code='ezCommunity.lyj102'/><div style='float: right;font-size: 13px;font-weight: normal;'>";
-										listXML += "<a href='javascript:void(0);' onclick='viewContent(\"BOARD\")' style='cursor:pointer;color:#0033ac;text-decoration:underline;margin-right: 5px;'><spring:message code='ezCommunity.lyj108'/></a>";
-										listXML += "<img src='/images/arr_right.gif' style='vertical-align: middle;width:15px;height:15px;'></div></h4>";
+										listXML += "<h4><spring:message code='ezCommunity.lyj102'/><div class='moreView'>";
+										listXML += "<a href='javascript:void(0);' onclick='viewContent(\"BOARD\")'><spring:message code='ezCommunity.lyj108'/></a>";
+										listXML += "<img src='/images/arr_right.gif'></div></h4>";
 										listXML += "<div class='result_list_noti'><span>[<spring:message code='ezCommunity.lyj112'/>]</span></div>";
 									} else {
 										listXML += "<h4><spring:message code='ezCommunity.lyj102'/></h4>";
@@ -246,7 +236,7 @@
 						if (result.subject == "ALL") {
 							listXML += "<div class='result_list_noti'><span>[<spring:message code='ezCommunity.lyj112'/>]</span></div>";
 						}
-						listXML += "<div style='text-align:center;line-height: 80px;'><span><spring:message code='ezCommunity.lyj106'/></span></div></div>";
+						listXML += "<div class='empty'><span><spring:message code='ezCommunity.lyj106'/></span></div></div>";
 					}
 				}
 
@@ -254,25 +244,22 @@
 					if (SelectNodes(xmldoc,"NODES/NODE3").length > 0) {
 						for (var y = 0; y < SelectNodes(xmldoc,"NODES/NODE3").length; y++) {
 							if ((result.subject != "ALL" || masterCount < maxCount)) { // 전체 탭에서는 3개씩만 표출
-								var commName = SelectSingleNodeValue(SelectNodes(xmldoc, "NODES/NODE3")[y], "CommName");
+								var commName = MakeXMLString(SelectSingleNodeValue(SelectNodes(xmldoc, "NODES/NODE3")[y], "CommName"));
 								var commCode = SelectSingleNodeValue(SelectNodes(xmldoc, "NODES/NODE3")[y], "CommCode");
-								var commDesc = SelectSingleNodeValue(SelectNodes(xmldoc, "NODES/NODE3")[y], "CommDesc");
-								var masterName = SelectSingleNodeValue(SelectNodes(xmldoc, "NODES/NODE3")[y], "MasterName");
+								var commDesc = MakeXMLString(SelectSingleNodeValue(SelectNodes(xmldoc, "NODES/NODE3")[y], "CommDesc"));
+								var masterName = MakeXMLString(SelectSingleNodeValue(SelectNodes(xmldoc, "NODES/NODE3")[y], "MasterName"));
 								var regDate = SelectSingleNodeValue(SelectNodes(xmldoc, "NODES/NODE3")[y], "RegDate");
 								var permit = SelectSingleNodeValue(SelectNodes(xmldoc, "NODES/NODE3")[y], "Permit");
 
-								if (masterName.includes(result.keyword)) {
-									var masterRegex = new RegExp(result.keyword, "g");
-									masterName = masterName.replace(masterRegex, "<b>" + result.keyword + "</b>");
-								}
+								masterName = highlightKeyword(masterName, result.keyword);
 
 								if (y < 1) {
 									listXML += "<div class='result_list_head'>";
 
 									if (result.subject == "ALL") {
-										listXML += "<h4><spring:message code='ezCommunity.t9'/><div style='float: right;font-size: 13px;font-weight: normal;'>";
-										listXML += "<a href='javascript:void(0);' onclick='viewContent(\"MASTER\")' style='cursor:pointer;color:#0033ac;text-decoration:underline;margin-right: 5px;'><spring:message code='ezCommunity.lyj108'/></a>";
-										listXML += "<img src='/images/arr_right.gif' style='vertical-align: middle;width:15px;height:15px;'></div></h4>";
+										listXML += "<h4><spring:message code='ezCommunity.t9'/><div class='moreView'>";
+										listXML += "<a href='javascript:void(0);' onclick='viewContent(\"MASTER\")'><spring:message code='ezCommunity.lyj108'/></a>";
+										listXML += "<img src='/images/arr_right.gif'></div></h4>";
 									} else {
 										listXML += "<h4><spring:message code='ezCommunity.t9'/></h4>";
 									}
@@ -287,7 +274,7 @@
 						}
 					} else {
 						listXML += "<div class='result_list_head' style='height:150px;'><h4><spring:message code='ezCommunity.t9'/></h4>";
-						listXML += "<div style='text-align:center;line-height: 80px;'><span><spring:message code='ezCommunity.lyj106'/></span></div></div>";
+						listXML += "<div class='empty'><span><spring:message code='ezCommunity.lyj106'/></span></div></div>";
 					}
 				}
 
@@ -314,7 +301,7 @@
 				selectVal.value = cate;
 
 				category = cate;
-
+				CurPage = 1;
 				totalSearchResult();
 			}
 			
@@ -332,7 +319,22 @@
 			
 			function itemList(periodVal) { // 기간 검색
 				period = periodVal;
+				CurPage = 1;
 				totalSearchResult();
+			}
+
+			function highlightKeyword(text, keyword) { // 키워드 굵게 처리
+				if (!text || !keyword) {
+					return text;
+				}
+
+				if (text.toLowerCase().includes(keyword.toLowerCase())) {
+					var regex = new RegExp(keyword, "gi");
+					return text.replace(regex, function(match) {
+						return "<b>" + match + "</b>";
+					});
+				}
+				return text;
 			}
 
             var BlockSize = 10;
@@ -461,8 +463,11 @@
             function movePage(newPage) {
 				CurPage = newPage;
 				
-				period = document.getElementsByClassName("itemBtn itemActive")[0].getAttribute("period");
 				category = document.getElementsByClassName("active")[0].getAttribute("value");
+
+				if (category == "BOARD") {
+					period = document.getElementsByClassName("itemBtn itemActive")[0].getAttribute("period");
+				}
 
                 if(parseInt(newPage) > 0 && parseInt(newPage) <= parseInt(totalPage)) {
 					totalSearchResult();
@@ -482,6 +487,13 @@
 			function HiddenMailProgress() {
 				document.getElementById("mailPanel").style.display = "none";
 				document.getElementById("MailProgress").style.display = "none";
+			}
+
+			function MakeXMLString(str) {
+				str = ReplaceText(str, "&", "&amp;");
+				str = ReplaceText(str, "<", "&lt;");
+				str = ReplaceText(str, ">", "&gt;");
+				return str;
 			}
 		</script>
 	</head>

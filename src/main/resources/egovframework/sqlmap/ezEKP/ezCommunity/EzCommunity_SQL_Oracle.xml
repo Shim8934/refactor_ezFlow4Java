@@ -9365,19 +9365,19 @@
 					C.C_CLUBDESC,
 					C.C_SYSOPID,
 					C.C_MEMBERCNT,
-					CASE WHEN #primary# = '1' THEN M.USERNAME ELSE M.USERNAME2 END AS USERNAME
+					CASE WHEN #primary# = '1' THEN M.DISPLAYNAME ELSE M.DISPLAYNAME2 END AS USERNAME
 				FROM
 					TBL_C_CLUB C
-						INNER JOIN TBL_C_MEMBERINFO M
-								   ON C.COMPANYID = M.COMPANYID
+						INNER JOIN TBL_USERMASTER M
+								   ON C.COMPANYID = M.PHYSICALDELIVERYOFFICENAME
 									   AND C.TENANT_ID = M.TENANT_ID
-									   AND M.USERID = C.C_SYSOPID
+									   AND M.CN = RTRIM(C.C_SYSOPID)
 				WHERE
 					C.COMPANYID = #companyID#
 				  AND C.TENANT_ID = #tenantID#
 				  AND C.C_ADMINCONFIRM = 'Y'
-				  AND (CASE WHEN #primary# = '1' THEN C.C_CLUBNAME ELSE C.C_CLUBNAME2 END LIKE '%' || #keyword# || '%'
-					OR C.C_CLUBDESC LIKE '%' || #keyword# || '%')
+				  AND (LOWER(CASE WHEN #primary# = '1' THEN C.C_CLUBNAME ELSE C.C_CLUBNAME2 END) LIKE '%' || LOWER(#keyword#) || '%'
+					OR LOWER(C.C_CLUBDESC) LIKE '%' || LOWER(#keyword#) || '%')
 				  AND (C.C_CLUBNO IN (
 					SELECT
 						A.C_CLUBNO
@@ -9406,16 +9406,16 @@
 				COUNT(*)
 			FROM
 				TBL_C_CLUB C
-					INNER JOIN TBL_C_MEMBERINFO M
-							   ON C.COMPANYID = M.COMPANYID
+					INNER JOIN TBL_USERMASTER M
+							   ON C.COMPANYID = M.PHYSICALDELIVERYOFFICENAME
 								   AND C.TENANT_ID = M.TENANT_ID
-								   AND M.USERID = C.C_SYSOPID
+								   AND M.CN = RTRIM(C.C_SYSOPID)
 			WHERE
 				C.COMPANYID = #companyID#
 			  AND C.TENANT_ID = #tenantID#
 			  AND C.C_ADMINCONFIRM = 'Y'
-			  AND (CASE WHEN #primary# = '1' THEN C.C_CLUBNAME ELSE C.C_CLUBNAME2 END LIKE '%' || #keyword# || '%'
-				OR C.C_CLUBDESC LIKE '%' || #keyword# || '%')
+			  AND (LOWER(CASE WHEN #primary# = '1' THEN C.C_CLUBNAME ELSE C.C_CLUBNAME2 END) LIKE '%' || LOWER(#keyword#) || '%'
+				OR LOWER(C.C_CLUBDESC) LIKE '%' || LOWER(#keyword#) || '%')
 			  AND (C.C_CLUBNO IN (
 				SELECT
 					A.C_CLUBNO
@@ -9446,18 +9446,18 @@
 					C.C_CLUBDESC,
 					C.C_SYSOPID,
 					C.C_MEMBERCNT,
-					CASE WHEN #primary# = '1' THEN M.USERNAME ELSE M.USERNAME2 END AS USERNAME
+					CASE WHEN #primary# = '1' THEN M.DISPLAYNAME ELSE M.DISPLAYNAME2 END AS USERNAME
 				FROM
 					TBL_C_CLUB C
-						INNER JOIN TBL_C_MEMBERINFO M
-								   ON C.COMPANYID = M.COMPANYID
+						INNER JOIN TBL_USERMASTER M
+								   ON C.COMPANYID = M.PHYSICALDELIVERYOFFICENAME
 									   AND C.TENANT_ID = M.TENANT_ID
-									   AND M.USERID = C.C_SYSOPID
+									   AND M.CN = RTRIM(C.C_SYSOPID)
 				WHERE
 					C.COMPANYID = #companyID#
 				  AND C.TENANT_ID = #tenantID#
 				  AND C.C_ADMINCONFIRM = 'Y'
-				  AND CASE WHEN #primary# = '1' THEN M.USERNAME ELSE M.USERNAME2 END LIKE '%' || #keyword# || '%'
+				  AND LOWER(CASE WHEN #primary# = '1' THEN M.DISPLAYNAME ELSE M.DISPLAYNAME2 END) LIKE '%' || LOWER(#keyword#) || '%'
 				  AND (C.C_CLUBNO IN (
 					SELECT
 						A.C_CLUBNO
@@ -9486,15 +9486,15 @@
 				COUNT(*)
 			FROM
 				TBL_C_CLUB C
-					INNER JOIN TBL_C_MEMBERINFO M
-							   ON C.COMPANYID = M.COMPANYID
+					INNER JOIN TBL_USERMASTER M
+							   ON C.COMPANYID = M.PHYSICALDELIVERYOFFICENAME
 								   AND C.TENANT_ID = M.TENANT_ID
-								   AND M.USERID = C.C_SYSOPID
+								   AND M.CN = RTRIM(C.C_SYSOPID)
 			WHERE
 				C.COMPANYID = #companyID#
 			  AND C.TENANT_ID = #tenantID#
 			  AND C.C_ADMINCONFIRM = 'Y'
-			  AND CASE WHEN #primary# = '1' THEN M.USERNAME ELSE M.USERNAME2 END LIKE '%' || #keyword# || '%'
+			  AND LOWER(CASE WHEN #primary# = '1' THEN M.DISPLAYNAME ELSE M.DISPLAYNAME2 END) LIKE '%' || LOWER(#keyword#) || '%'
 			  AND (C.C_CLUBNO IN (
 				SELECT
 					A.C_CLUBNO
@@ -9542,7 +9542,7 @@
 						LEFT JOIN TBL_COMM_BOARDMANAGE D
 								  ON A.BOARDID = D.BOARDID
 				WHERE
-					A.TITLE LIKE '%' || #keyword# || '%'
+					LOWER(A.TITLE) LIKE '%' || LOWER(#keyword#) || '%'
 					AND (A.WRITERCOMPANYID = #companyID# OR A.WRITERCOMPANYID = '')
 					AND A.TENANT_ID = #tenantID#
 					AND C.C_ID = #userId#
@@ -9596,7 +9596,7 @@
 					LEFT JOIN TBL_COMM_BOARDMANAGE D
 							  ON A.BOARDID = D.BOARDID
 			WHERE
-				A.TITLE LIKE '%' || #keyword# || '%'
+				LOWER(A.TITLE) LIKE '%' || LOWER(#keyword#) || '%'
 				AND (A.WRITERCOMPANYID = #companyID# OR A.WRITERCOMPANYID = '')
 				AND A.TENANT_ID = #tenantID#
 				AND C.C_ID = #userId#

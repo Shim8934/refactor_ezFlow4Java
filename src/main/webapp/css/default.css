@@ -4433,8 +4433,14 @@ body.drag *{user-select:none !important;}
 .result_list_cont_R > div span{margin-left:5px;}
 .result_list_title{margin-bottom:5px;}
 .result_list_title a{cursor:pointer;color:#0033ac;text-decoration:underline;}
-.result_list_desc{margin-bottom:10px;padding-right:14px;margin-top: 5px;}
+.result_list_desc{margin-bottom:10px;padding-right:14px;margin-top: 5px;word-break: break-all;}
 .result_list_noti{text-align:left;color:royalblue;margin-bottom:10px;}
+
+.moreView{float: right;font-size: 13px;font-weight: normal;}
+.moreView > a{cursor:pointer;color:#0033ac;text-decoration:underline;margin-right: 5px;}
+.moreView > img{vertical-align: middle;width:15px;height:15px;}
+
+.empty{text-align:center;line-height: 80px;}
 
 .itemBtn{height:28px; line-height:26px; padding:0 12px !important; cursor:pointer; color:#40648f; border:1px solid #b2c2d1; border-radius:4px; box-sizing:border-box; background-color:#f1f4f7; width:auto !important; float:right;}
 .itemBtn img{display:none;}

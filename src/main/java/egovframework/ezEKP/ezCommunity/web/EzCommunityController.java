@@ -6205,8 +6205,8 @@ public class EzCommunityController extends EzFileMngUtil{
 		logger.debug("totalSearchMain started");
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 
-		String subject = "ALL"; // 항목
-		String keyword = request.getParameter("keyword"); // 검색어
+		String subject = request.getParameter("subject");
+		String keyword = request.getParameter("keyword");
 
 		model.addAttribute("subject", subject);
 		model.addAttribute("keyword", keyword);
@@ -6223,8 +6223,8 @@ public class EzCommunityController extends EzFileMngUtil{
 		logger.debug("totalSearchMainResult started");
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 
-		String subject = request.getParameter("subject"); // 탭항목
-		String keyword = request.getParameter("keyword"); // 검색어
+		String subject = request.getParameter("subject");
+		String keyword = request.getParameter("keyword");
 		String period = "recent";  // 게시글 조회 기간
 		if (request.getParameter("period") != null && !request.getParameter("period").equals("") && !subject.equals("ALL")) {
 			period = request.getParameter("period");
