@@ -1354,4 +1354,28 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 	public void updateWithDrawUsertoRegist(Map<String, Object> map) throws Exception {
 		update("EzCommunityDAO.updateWithDrawUsertoRegist", map);
 	}
+
+	public List<CommunityClubVO> getTotalSearchClubResults(Map<String, Object> map) throws Exception {
+		return (List<CommunityClubVO>) list("EzCommunityDAO.totalSearchClubResults", map);
+	}
+
+	public int getTotalSearchClubResultsCnt(Map<String, Object> map) throws Exception {
+		return (int) select("EzCommunityDAO.totalSearchClubResultsCnt", map);
+	}
+
+	public List<CommunityClubVO> getTotalSearchMasterResults(Map<String, Object> map) throws Exception {
+		return (List<CommunityClubVO>) list("EzCommunityDAO.totalSearchMasterResults", map);
+	}
+
+	public int getTotalSearchMasterResultsCnt(Map<String, Object> map) throws Exception {
+		return (int) select("EzCommunityDAO.totalSearchMasterResultsCnt", map);
+	}
+
+	public List<CommunityBoardItemVO> getTotalSearchItemResults(Map<String, Object> map) throws Exception {
+		return (List<CommunityBoardItemVO>) list("EzCommunityDAO.totalSearchItemResults", map);
+	}
+
+	public int getTotalSearchItemResultsCnt(Map<String, Object> map) throws Exception {
+		return (int) select("EzCommunityDAO.totalSearchItemResultsCnt", map);
+	}
 }

@@ -876,6 +876,8 @@ public class EzCommonServiceImpl extends EzFileMngUtil implements EzCommonServic
         	url = request.getParameter("href");
         } else if (type.equals("COMMUNITYNOTI")) {
         	url = commonUtil.getUploadPath("upload_community.MAINBOARD", tenantID) + commonUtil.separator + request.getParameter("href");
+        } else if (type.equals("COMMUNITYSEARCH")) {
+            url = (String) request.getAttribute("href");
         } else if (type.equals("SCHEDULECONTENT")) {
         	url = commonUtil.getUploadPath("upload_schedule.ROOT", tenantID) + itemID;
         } else if (type.equals("TASKCONTENT") || type.equals("TASKCONTENT2")) {

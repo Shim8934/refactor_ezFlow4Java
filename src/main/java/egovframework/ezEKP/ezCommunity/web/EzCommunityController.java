@@ -6196,5 +6196,54 @@ public class EzCommunityController extends EzFileMngUtil{
 
 		return "json";
 	}
+
+	/**
+	 * 커뮤니티 메인 > 통합검색 결과 화면
+	 */
+	@RequestMapping(value = "/ezCommunity/totalSearchMain.do", method = RequestMethod.GET)
+	public String totalSearchMain(@CookieValue("loginCookie")String loginCookie, Model model, HttpServletRequest request) throws Exception {
+		logger.debug("totalSearchMain started");
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+
+		String subject = "ALL"; // 항목
+		String keyword = request.getParameter("keyword"); // 검색어
+
+		model.addAttribute("subject", subject);
+		model.addAttribute("keyword", keyword);
+
+		logger.debug("totalSearchMain ended");
+		return "ezCommunity/communityTotalSearchMain";
+	}
+
+	/**
+	 * 커뮤니티 메인 > 통합검색 결과 리스트
+	 */
+	@RequestMapping(value = "/ezCommunity/totalSearchMainResult.do", method = RequestMethod.POST)
+	public String totalSearchMainResult(@CookieValue("loginCookie")String loginCookie, Model model, HttpServletRequest request) throws Exception {
+		logger.debug("totalSearchMainResult started");
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+
+		String subject = request.getParameter("subject"); // 탭항목
+		String keyword = request.getParameter("keyword"); // 검색어
+		String period = "recent";  // 게시글 조회 기간
+		if (request.getParameter("period") != null && !request.getParameter("period").equals("") && !subject.equals("ALL")) {
+			period = request.getParameter("period");
+		}
+		int curPage = 1;
+		if (request.getParameter("goToPage") != null && !request.getParameter("goToPage").equals("") && !subject.equals("ALL")) {
+			curPage = Integer.parseInt(request.getParameter("goToPage"));
+		}
+
+		String strXML = ezCommunityService.commTotalSearchList(request, userInfo, subject, keyword, period, curPage, model);
+
+		model.addAttribute("subject", subject);
+		model.addAttribute("keyword", keyword);
+		model.addAttribute("period", period);
+		model.addAttribute("curPage", curPage);
+		model.addAttribute("strXML", strXML);
+
+		logger.debug("totalSearchMainResult ended");
+		return "json";
+	}
 }
 
