@@ -3736,6 +3736,7 @@ CREATE TABLE `tbl_board_boardinfo` (
   `WRITERFLAG` varchar(2) DEFAULT 'N',
   `STARRATINGFLAG` varchar(1) DEFAULT NULL,
   `NOTUSEDFLAG` varchar(2) NOT NULL DEFAULT 'N',
+  `URLCOPYFLAG` char(1) DEFAULT 'N',
   PRIMARY KEY (`BOARDID`,`TENANT_ID`),
   KEY `idx_companyid` (`COMPANYID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

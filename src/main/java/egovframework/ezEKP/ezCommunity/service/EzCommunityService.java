@@ -328,7 +328,7 @@ public interface EzCommunityService {
 
 	public void joinOkInsert(String companyID, String userID, String userName, String userName2, String companyName, String companyName2, String companyZip, String companyAddress, String deptName, String deptName2, String companyTel, String companyFax, String homeTel, String handPhone, String eMail, String birthDay, String gender, int tenantID) throws Exception;
 
-	public boolean communityConnCHK(String id, String clubID, String boardID, String rollInfo, int mode, HttpServletResponse response, LoginVO userInfo, String type) throws Exception;
+	public boolean communityConnCHK(String id, String clubID, String boardID, String rollInfo, int mode, HttpServletResponse response, LoginVO userInfo, String type, String inviteFlag) throws Exception;
 
 	public void updateLastDate(String strNow, String code, String id, int tenantID) throws Exception;
 
@@ -465,4 +465,6 @@ public interface EzCommunityService {
 	public int getBoardReplyCount(String code, String id, String companyID, int tenantID, String offset, String startdate, String enddate) throws Exception;
 
 	public CommunityClubVO getClubUserCountInfo(String code, String companyID, int tenantID, String offset) throws Exception;
+
+	public List<CommunityCClubUserVO> adminMemberListGet3(String code, String flag, String primary, String ser, String companyID, int tenantID) throws Exception;
 }

@@ -64,7 +64,8 @@ var subType = {
 		modify : "Thông báo sửa đổi",
 		comment : "Đăng bình luận",
 		reply : "Trả lời thông báo",
-		notice : "Thông báo đầy đủ"
+		notice : "Thông báo đầy đủ",
+		invite : "Thông báo lời mời"
 	},
 	webfolder : {
 		open_apply : "Đơn xin khai trương",

@@ -1395,11 +1395,18 @@
                         if (window.opener) {
                             window.opener.location.reload();
                         }
-                    } else {
+                    } else if (pMode == "reply") {
                         if (window.opener) {
                             window.opener.location.reload();
-                        }
-                        btnClose_onclick();
+                        	btnClose_onclick();
+                        } else {
+							document.location.href = "/ezBoard/boardItemView.do?showAdjacent=&itemID=" + encodeURIComponent(newID) + "&boardID=" + encodeURIComponent(pBoardID) + "&location=GENERAL&__wwidth=1920";
+						}
+					} else {
+						if (window.opener) {
+							window.opener.location.reload();
+						}
+						btnClose_onclick();
                     }
 		        } else {
 		            if (getNodeText(GetChildNodes(loadXMLString(xmlhttp.responseText))[0]) == "XSS") {

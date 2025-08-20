@@ -153,7 +153,7 @@ function nameCard(node, obj) {
     $(".infobox_user_cont .department").text(node.description);
     $(".infobox_user_cont .work").text(node.chargeBusiness); 
     $(".infobox_user_cont .mail").text(node.mail);
-    $(".infobox_user_cont .title").text(node.title + (node.title.trim().length > 0 ? "/" : "" ) + node.description);
+    $(".infobox_user_cont .title").text(node.title + (((node.title||"").trim().length > 0 ? "/" : "") + node.description));
     $(".infobox_user_cont .phone").text(node.mobile);
     $(".infobox_user_cont .company_phone").text(node.telephoneNumber);
 

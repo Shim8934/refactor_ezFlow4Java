@@ -655,5 +655,7 @@ public interface EzCommonService {
 	public void createAuthTokenTable() throws Exception;
 
 	public void createUserPresenceTable() throws Exception;
-	
+
+	// 2025-08-05 이유정 - 게시판 > 게시글 주소복사 컬럼 추가
+	public void alterTblBoardInfoUrlCopyFlag() throws Exception;
 }

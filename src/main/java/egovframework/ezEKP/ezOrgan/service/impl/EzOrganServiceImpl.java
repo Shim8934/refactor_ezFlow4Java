@@ -3035,7 +3035,7 @@ public class EzOrganServiceImpl implements EzOrganService {
 				if ("TOP".equalsIgnoreCase(companyId)) {
 					companyId = userInfo.getCompanyID();
 				} else {
-					companyId = companyId.toUpperCase();
+					companyId = companyId.trim();
 				}
 
 				if (deptId == null || deptId.isEmpty()) {
@@ -3136,7 +3136,7 @@ public class EzOrganServiceImpl implements EzOrganService {
 				userNode.put("title", user.getTitle());
 				userNode.put("description", user.getDescription());
 				userNode.put("levelName", user.getLevelName());
-				userNode.put("value", user.getDisplayName() + (!user.getTitle().isEmpty() ? " (" + user.getTitle() + ")" : ""));
+				userNode.put("value", user.getDisplayName() + ((user.getTitle() != null && !user.getTitle().isEmpty()) ? " (" + user.getTitle() + ")" : ""));
 				userNode.put("displayName", user.getDisplayName());
 				userNode.put("isLeaf", "TRUE");
 				userNode.put("setTextColorByName", "GRAY");
@@ -3307,7 +3307,7 @@ public class EzOrganServiceImpl implements EzOrganService {
 						userNode.put("title", user.getTitle());
 						userNode.put("description", user.getDescription());
 						userNode.put("levelName", user.getLevelName());
-						userNode.put("value", user.getDisplayName() + (!user.getTitle().isEmpty() ? " (" + user.getTitle() + ")" : ""));
+						userNode.put("value", user.getDisplayName() + ((user.getTitle() != null && !user.getTitle().isEmpty()) ? " (" + user.getTitle() + ")" : ""));
 						userNode.put("displayName", user.getDisplayName());
 						userNode.put("isLeaf", "TRUE");
 						userNode.put("setTextColorByName", "GRAY");

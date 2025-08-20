@@ -8549,7 +8549,7 @@
 			TOKENTYPE VARCHAR2(20) DEFAULT 'publicapp' NOT NULL,
 			AUTHTOKEN VARCHAR2(4000),
 			UPDATEDATE DATE
-		);
+		)
 	</statement>
 
 	<statement id="EzCommonDAO.checkUserPresenceTable" resultClass="string">
@@ -8565,4 +8565,21 @@
 		)
 	</statement>
 
+    <select id="EzCommonDAO.checkTblBoardInfoUrlCopyFlag" resultClass="String">
+		<![CDATA[
+        SELECT
+            URLCOPYFLAG
+        FROM
+            TBL_BOARD_BOARDINFO
+        WHERE
+            ROWNUM <= 1
+        ]]>
+	</select>
+
+    <statement id="EzCommonDAO.alterTblBoardInfoUrlCopyFlag">
+        ALTER TABLE
+            TBL_BOARD_BOARDINFO
+            ADD
+                URLCOPYFLAG CHAR(1) DEFAULT 'N' NOT NULL
+    </statement>
 </sqlMap>

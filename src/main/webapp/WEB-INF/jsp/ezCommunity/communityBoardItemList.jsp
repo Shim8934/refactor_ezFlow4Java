@@ -52,7 +52,8 @@
     		var pastDate = "<c:out value='${pastDate}' />";
     		//2018-07-13 김보미
     		var treeCtrl = "<c:out value='${treeCtrl}' />";
-    		
+    		var inviteFlag = "<c:out value='${inviteFlag}' />";
+
     		function SelectSingleOnlyTitle(node, tagName) {
     		    var strValue = "";
     		    if (CrossYN()) {
@@ -263,7 +264,7 @@
     		    var pLeft = (pwidth - 765) / 2; */
     		    //2018-07-13 김보미 - 파라메터 추가
 //     		    GetOpenWindow("/ezCommunity/boardItemView.do?itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pItemBoardID) + "&code=" + encodeURIComponent(code) + "&showAdjacent=" + ShowAdjacent, "", 750, 721);
-    		    GetOpenWindow("/ezCommunity/boardItemView.do?itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pItemBoardID) + "&code=" + encodeURIComponent(code) + "&showAdjacent=" + ShowAdjacent + "&treeCtrl=" + treeCtrl, "", 750, 721);
+    		    GetOpenWindow("/ezCommunity/boardItemView.do?itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pItemBoardID) + "&code=" + encodeURIComponent(code) + "&showAdjacent=" + ShowAdjacent + "&treeCtrl=" + treeCtrl + "&inviteFlag=" + inviteFlag, "", 750, 721);
     		}
     		
     		function checkBox_checked(pItemID, pUserID, evt) {
@@ -439,7 +440,7 @@
 					if (newPage == 0) newPage = 1;
 					
 					if (newPage > 0) {
-		    			window.location.href = "/ezCommunity/boardItemList.do?page=" + newPage + "&boardID=" + encodeURIComponent(pBoardID) + "&sortBy=" + pSortBy + "&code=" + code;						
+		    			window.location.href = "/ezCommunity/boardItemList.do?page=" + newPage + "&boardID=" + encodeURIComponent(pBoardID) + "&sortBy=" + pSortBy + "&code=" + code + "&inviteFlag=" + inviteFlag;
 					}
 				} else if ($('#tblList tbody').children().length == strListInfo.split(";").length) {
 	    			newPage = CurPage - 1;    			
@@ -447,7 +448,7 @@
 	    			if (newPage == 0) newPage = 1;
 					
 	    			if (newPage > 0) {
-		    			window.location.href = "/ezCommunity/boardItemList.do?page=" + newPage + "&boardID=" + encodeURIComponent(pBoardID) + "&sortBy=" + pSortBy + "&code=" + code;						
+		    			window.location.href = "/ezCommunity/boardItemList.do?page=" + newPage + "&boardID=" + encodeURIComponent(pBoardID) + "&sortBy=" + pSortBy + "&code=" + code + "&inviteFlag=" + inviteFlag;
 					}
     			} else {
     				window.location.reload(false);
@@ -707,7 +708,7 @@
     			}
     					
     			var OrgBoardParameters = "page=" + encodeURIComponent(CurPage) + "&boardID=" + encodeURIComponent(pBoardID) + "&sortBy=" + encodeURIComponent(pSortBy) + "&code=" + encodeURIComponent(code);
-    			window.location.href = "/ezCommunity/searchBoardItem.do?boardID=" + encodeURIComponent(pBoardID) + "&orgBoardParameters=" + encodeURIComponent(OrgBoardParameters) + "&code=" + encodeURIComponent(code);
+    			window.location.href = "/ezCommunity/searchBoardItem.do?boardID=" + encodeURIComponent(pBoardID) + "&orgBoardParameters=" + encodeURIComponent(OrgBoardParameters) + "&code=" + encodeURIComponent(code) + "&inviteFlag=" + inviteFlag;
     		}
 
 	        /* 2021-05-03 홍승비 - 게시물 리스트에서 게시물을 삭제한 경우, 커뮤니티 팝업홈 좌측 전체 게시물 개수 갱신 */

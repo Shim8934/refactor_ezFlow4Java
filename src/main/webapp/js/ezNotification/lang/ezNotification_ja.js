@@ -64,7 +64,8 @@ var subType = {
 		modify : "修正通知",
 		comment : "コメント登録",
 		reply : "回答通知",
-		notice : "全通知"
+		notice : "全通知",
+		invite : "招待通知"
 	},
 	webfolder : {
 		open_apply : "開設申請",

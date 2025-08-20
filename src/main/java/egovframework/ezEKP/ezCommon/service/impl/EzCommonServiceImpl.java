@@ -8841,5 +8841,10 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
     public void createUserPresenceTable() throws Exception {
         ezCommonDAO.createUserPresenceTable();
     }
-    
+
+    // 2025-08-05 이유정 - 게시판 > 게시글 주소복사 컬럼 추가
+    @Override
+    public void alterTblBoardInfoUrlCopyFlag() throws Exception {
+        ezCommonDAO.alterTblBoardInfoUrlCopyFlag();
+    }
 }

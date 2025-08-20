@@ -3716,5 +3716,15 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.createUserPresenceTable");
 		}
 	}
-	
+
+    // 2025-08-05 이유정 - 게시판 > 게시글 주소복사 컬럼 추가
+    public void alterTblBoardInfoUrlCopyFlag() {
+        try {
+            select("EzCommonDAO.checkTblBoardInfoUrlCopyFlag");
+        } catch (Exception e) {
+            logger.debug("TBL_BOARD_BOARDINFO URLCOPYFLAG column doesn't exist. creating the column...");
+
+            update("EzCommonDAO.alterTblBoardInfoUrlCopyFlag");
+        }
+    }
 }

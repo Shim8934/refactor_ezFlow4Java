@@ -8029,4 +8029,18 @@
 		) ENGINE=InnoDB DEFAULT CHARSET=utf8
 	</statement>
 
+	<select id="EzCommonDAO.checkTblBoardInfoUrlCopyFlag">
+		SELECT
+			URLCOPYFLAG
+		FROM
+			TBL_BOARD_BOARDINFO
+				LIMIT 1
+	</select>
+
+	<statement id="EzCommonDAO.alterTblBoardInfoUrlCopyFlag">
+		ALTER TABLE
+			TBL_BOARD_BOARDINFO
+			ADD
+				URLCOPYFLAG CHAR(1) DEFAULT 'N' NOT NULL
+	</statement>
 </sqlMap>

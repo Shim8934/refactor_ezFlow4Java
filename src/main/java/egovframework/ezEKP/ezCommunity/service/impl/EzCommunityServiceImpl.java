@@ -2583,7 +2583,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	}
 
 	@Override
-	public boolean communityConnCHK(String id, String clubID, String boardID, String rollInfo, int mode, HttpServletResponse response, LoginVO userInfo, String type) throws Exception {
+	public boolean communityConnCHK(String id, String clubID, String boardID, String rollInfo, int mode, HttpServletResponse response, LoginVO userInfo, String type, String inviteFlag) throws Exception {
 		logger.debug("communityConnCHK started.");
 		//logger.debug("rollInfo = " + rollInfo);
 		String rtnValue = "";
@@ -2603,6 +2603,10 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		}
 		
 		if (mode == 1 && rtnValue.equals("1")) {
+			result = true;
+		}
+
+		if (("true").equals(inviteFlag)) { // 비공개 커뮤니티여도 초대받은 사용자일 경우 커뮤니티 접근 가능함
 			result = true;
 		}
 		
@@ -6423,7 +6427,8 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		
 		return list;
 	}
-	
+
+	@Override
 	public List<CommunityCClubUserVO> adminMemberListGet3(String code, String flag, String primary, String ser, String companyID, int tenantID) throws Exception {
 		logger.debug("adminMemberListGet3 started.");
 		

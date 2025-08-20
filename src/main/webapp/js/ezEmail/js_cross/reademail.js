@@ -1283,6 +1283,22 @@ function item_ViewPhoto_New_Community(pBoardID, pItemID, pCommunityID) {
 	}
 }
 
+/* 커뮤니티 초대알림 메일 */
+function invite_Community(pCommunityID) {
+    var pheigth = window.screen.availHeight;
+    var pwidth = window.screen.availWidth;
+    pheigth = parseInt(pheigth) / 2;
+    pwidth = parseInt(pwidth) / 2;
+    pheigth = pheigth - 284;
+    pwidth = pwidth - 359;
+
+    if (CrossYN())
+        window.open("/ezCommunity/commHome/popupCommHome.do?code=" + encodeURIComponent(pCommunityID) + "&userLevel=0&inviteFlag=true", "", "height=900,width=1300, status = no, toolbar=no, scrollbars=1, menubar=no, location=no, resizable=1, top=0, left=0", "");
+    else
+        window.open("/ezCommunity/commHome/popupCommHome.do?code=" + encodeURIComponent(pCommunityID) + "&userLevel=0&inviteFlag=true", "", "height=900,width=1300, status = no, toolbar=no, menubar=no, location=no, resizable=1, top=0, left=0", "");
+
+}
+
 // 결재 보기
 function ViewDoc(pDocID, pURL, pWhat, pOpinionFlag, pdocState, pListSusin, podoc) {
     if (typeof (pWhat) == "undefined" || podoc == "") {

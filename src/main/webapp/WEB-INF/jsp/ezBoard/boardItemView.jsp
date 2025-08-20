@@ -618,8 +618,12 @@
 							if(parent.opener.search != undefined){
 								parent.opener.search('skip');
 							}
-		                    
-		                    window.close();
+
+							if (window.opener) {
+								window.close();
+							} else {
+								window.location.reload();
+							}
 		                }
 		            }
 		            else {
@@ -700,8 +704,12 @@
 								parent.opener.search('skip');
 							}
 	                 	} catch (e) {console.log(e);}
-			            
-		                window.close();
+
+                        if (window.opener) {
+                            window.close();
+                        } else {
+                            window.location.reload();
+                        }
 		            }
 		        }
 		    }
@@ -749,7 +757,12 @@
 				if(parent.opener.search != undefined){
 					parent.opener.search('skip');
 				}
-		        window.close();
+
+				if (window.opener) {
+					window.close();
+				} else {
+					window.location.reload();
+				}
 		    }
 		 	 //강민수92
 		    function btn_One_Line_Reply_Onclick() {
@@ -2150,6 +2163,38 @@
 					alert("openwindow :: " + e.description);
 				}
 			}
+
+			function copyURL() {
+				var url = window.frames.location.href;
+
+				var urlArea = document.createElement("textarea");
+				urlArea.value = url;
+				document.body.appendChild(urlArea);
+				urlArea.select();
+
+				try {
+					var success = document.execCommand("copy");
+					if (success) {
+						alert("<spring:message code='ezBoard.t355' />");
+					} else {
+						console.log("copyURL error : " + e);
+					}
+				} catch (e) {
+					console.log("copyURL error : " + e);
+				}
+
+				document.body.removeChild(urlArea);
+			}
+
+			// 주소복사 후 복사된 URL로 주소창에 붙여넣기하여 게시글을 조회할 경우 버튼 정상동작하지 않아 숨김처리
+			document.addEventListener("DOMContentLoaded", function () {
+				if (!window.opener) {
+					var closeBtn = document.getElementById("close");
+					if (closeBtn) {
+						closeBtn.style.display = "none";
+					}
+				}
+			});
 		</script>
 	</head>
 	<body id="bodyPopup" class="popup" style="overflow:auto; height:100%;">
@@ -2239,7 +2284,10 @@
                         			</c:if>
 			        				<li ID='btn_Delete' onclick='btn_Delete_Onclick()'><span class="icon16 popup_icon16_delete switchIcon"></span><span class="iconTexts"><spring:message code='ezBoard.t113' /></span></li>
 			                        <li ID='btn_Print' onclick='btn_Print_Onclick()'><span class="icon16 popup_icon16_print switchIcon"></span><span class="iconTexts"><spring:message code='main.t73'/></span></li>
-			                        <c:if test="${useExternalMailServer eq 'NO' }">
+                                    <c:if test="${boardInfo.urlCopyFlag != 'N'}">
+                                        <li id ="urlCopyBtn"><span onclick="copyURL()"><spring:message code = "ezBoard.lyj02" /></span></li>
+                                    </c:if>
+                                    <c:if test="${useExternalMailServer eq 'NO' }">
 			                        <li ID='btn_Mail' onclick='mail_boarditem()'><span class="icon16 popup_icon16_mail_gray switchIcon"></span><span class="iconTexts"><spring:message code='ezEmail.t177'/></span></li>
 			                        </c:if>
 			        			</c:when>
@@ -2267,7 +2315,10 @@
 									</c:if>
 			                    	<li ID='btn_Delete' onclick='btn_Delete_Onclick()'><span class="icon16 popup_icon16_delete switchIcon"></span><span class="iconTexts"><spring:message code='ezBoard.t113' /></span></li>
 		                        	<li ID='btn_Print' onclick='btn_Print_Onclick()'><span class="icon16 popup_icon16_print switchIcon"></span><span class="iconTexts"><spring:message code='main.t73'/></span></li>
-		                        	<c:if test="${useExternalMailServer eq 'NO' }">
+                                    <c:if test="${boardInfo.urlCopyFlag != 'N'}">
+                                        <li id ="urlCopyBtn"><span onclick="copyURL()"><spring:message code = "ezBoard.lyj02" /></span></li>
+                                    </c:if>
+                                    <c:if test="${useExternalMailServer eq 'NO' }">
 		                        	<li ID='btn_Mail' onclick='mail_boarditem()' ><span class="icon16 popup_icon16_mail_gray switchIcon"></span><span class="iconTexts"><spring:message code='ezEmail.t177'/></span></li>
 		                        	</c:if>
 			        			</c:when>
@@ -2285,7 +2336,10 @@
 										</li>
 									</c:if>
 			                        <li ID='btn_Print' onclick='btn_Print_Onclick()'><span class="icon16 popup_icon16_print switchIcon" ></span><span class="iconTexts"><spring:message code='main.t73'/></span></li>
-			                        <li ID='btn_Mail' style="display:none;" onclick='mail_boarditem()' ><span class="icon16 popup_icon16_mail_gray switchIcon" ></span><span class="iconTexts"><spring:message code='ezEmail.t177'/></span></li>
+                                    <c:if test="${boardInfo.urlCopyFlag != 'N'}">
+                                        <li id ="urlCopyBtn"><span onclick="copyURL()"><spring:message code = "ezBoard.lyj02" /></span></li>
+                                    </c:if>
+                                    <li ID='btn_Mail' style="display:none;" onclick='mail_boarditem()' ><span class="icon16 popup_icon16_mail_gray switchIcon" ></span><span class="iconTexts"><spring:message code='ezEmail.t177'/></span></li>
 			        			</c:otherwise>
 		        			</c:choose>
 		        		</c:otherwise>

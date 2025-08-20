@@ -61,7 +61,8 @@
 	        var pUse_Editor = "<c:out value = '${useEditor}' />";
 	        var pastDate = "<c:out value = '${pastDate}' />";
 			var code = "<c:out value = '${code}' />";
-	        
+			var inviteFlag = "<c:out value = '${inviteFlag}' />";
+
 	        $(function () {
     			var xmldoc = loadXMLString('${strXML}');
     			var listXML = '';
@@ -174,7 +175,7 @@
 	            var pTop = (pheight - 683) / 2;
 	            var pLeft = (pwidth - 750) / 2;
 	            
-	          	window.open("/ezCommunity/boardItemViewPhoto.do?showAdjacent=" + ShowAdjacent + "&itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pItemBoardID) + "&code=" + code, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=721,width=750,top=" + pTop + ",left=" + pLeft, "");
+	          	window.open("/ezCommunity/boardItemViewPhoto.do?showAdjacent=" + ShowAdjacent + "&itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pItemBoardID) + "&code=" + code + "&inviteFlag=" + inviteFlag, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=721,width=750,top=" + pTop + ",left=" + pLeft, "");
 	        }
 
 	        function refresh_onclick() {
