@@ -1944,6 +1944,7 @@ function setDocNumFormat(pPrefix) {
 
 // 문서번호만 별도로 리턴하기 위한 함수 분리 파트
 function getDocNumByFormat(format) {
+    format = format.trim();
 	var Arr_Header = new Array();
 	var numHeader = "";
 	var Header, Tail;
