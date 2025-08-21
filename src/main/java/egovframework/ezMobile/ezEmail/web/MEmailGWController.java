@@ -1778,34 +1778,35 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 			String useFromAddress = StringUtils.defaultIfBlank(ezCommonService.getTenantConfig("Use_FromAddress", info.getTenantId()), "NO");
 			String useDistributionSender = StringUtils.defaultIfBlank(ezCommonService.getCompanyConfig(info.getTenantId(), info.getCompanyId(), "useDistributionSender"), "NO");
 			JSONArray jsonList = new JSONArray();
+			List<String[]> fromAddressList = new ArrayList<>();
 
 			if ("YES".equalsIgnoreCase(useFromAddress) || "YES".equalsIgnoreCase(useDistributionSender)) {
-				List<String[]> fromAddressList = ezEmailService.getAliasAddress(info.getUserId(), info.getTenantId(), useFromAddress, useDistributionSender);
+				fromAddressList = ezEmailService.getAliasAddress(info.getUserId(), info.getTenantId(), useFromAddress, useDistributionSender);
+			}
+			// useFromAddress이 NO인 경우에는 primary mail 주소를 jgw에서 가져오지 않기 때문에 추가 함
+			if ("NO".equalsIgnoreCase(useFromAddress)) {
+				fromAddressList.add(0, new String[]{info.getEmail(),"",""});
+			}
 
-				// 공용배포그룹주소 사용만 YES인 경우에는 primary mail 주소를 jgw에서 가져오지 않기 때문에 추가 함
-				if ("NO".equalsIgnoreCase(useFromAddress) && "YES".equalsIgnoreCase(useDistributionSender)) {
-					fromAddressList.add(0, new String[]{info.getEmail(),"",""});
-				}
-
-				// 모바일에서 primary로 select할 수 있도록 type 값 변경 : primary, alias
-				for (String[] address : fromAddressList) {
-					if (info.getEmail().trim().equals(address[0])) {
-						address[1] = "p"; //primary
-					} else {
-						address[1] = "a"; //alias
-					}
-				}
-
-				// jsonList에 key:value 형태로 입력
-				for (String[] address : fromAddressList) {
-					JSONObject json = new JSONObject();
-					json.put("email", address[0]);
-					json.put("type", address[1]);
-					json.put("name", address[2]);
-					jsonList.add(json);
+			// 모바일에서 primary로 select할 수 있도록 type 값 변경 : primary, alias
+			for (String[] address : fromAddressList) {
+				if (info.getEmail().trim().equals(address[0])) {
+					address[1] = "p"; //primary
+				} else {
+					address[1] = "a"; //alias
 				}
 			}
-			
+
+			// jsonList에 key:value 형태로 입력
+			for (String[] address : fromAddressList) {
+				JSONObject json = new JSONObject();
+				json.put("email", address[0]);
+				json.put("type", address[1]);
+				json.put("name", address[2]);
+				jsonList.add(json);
+			}
+			// 발신가능한 메일주소 리스트 end
+
 			/*String fromAddressHtml = "";
 			
 			if (useFromAddress != null) {
