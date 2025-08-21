@@ -101,8 +101,15 @@
 
 	                    document.addEventListener('visibilitychange', onVisibilityChange);
 	                    recordNextMailListRefreshTime();
-	                }		            
+	                }
 		        }
+
+				window.parent.frames['left'].document.addEventListener('click', HiddenFolderMenu);
+
+				const topFrame = window.parent?.parent?.parent?.frames['topFrame'];
+				if (topFrame && topFrame.contentWindow && topFrame.contentWindow.document) {
+					topFrame.contentWindow.document.addEventListener('click', HiddenFolderMenu);
+				}
 	        }
 	        
 	        function getCurrentTime() {
