@@ -627,9 +627,11 @@
 							</li>
 						</c:if>
 
-						<li class onclick = "deleteItem()">
-							<span class = "icon16 icon16_delete"></span>
-						</li>
+						<c:if test="${boardItemInfo.writerID == userInfo.id || boardInfo.boardAdmin_FG == 'true' || boardInfo.boardGroupAdmin_FG == 'OK'}">
+							<li class onclick = "deleteItem()">
+								<span class = "icon16 icon16_delete"></span>
+							</li>
+						</c:if>
 					</ul>
 				</div>
 
