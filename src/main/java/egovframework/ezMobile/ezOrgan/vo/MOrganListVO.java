@@ -35,6 +35,18 @@ public class MOrganListVO {
 	private String jobId;
 	/** 유저 회사아이디 */
 	private String userCompanyID;
+	/** 부서명1 */
+	private String deptName1;
+	/** 부서명2 */
+	private String deptName2;
+	/** 유저명1 */
+	private String userName1;
+	/** 유저명2 */
+	private String userName2;
+	/** 유저 직급1 */
+	private String title1;
+	/** 유저 직급2 */
+	private String title2;
 
 	public String getIsLast() {
 		return isLast;
@@ -167,4 +179,52 @@ public class MOrganListVO {
 	public String getUserCompanyID() { return userCompanyID; }
 
 	public void setUserCompanyID(String userCompanyID) { this.userCompanyID = userCompanyID; }
+
+	public String getDeptName1() {
+		return deptName1;
+	}
+
+	public void setDeptName1(String deptName1) {
+		this.deptName1 = deptName1;
+	}
+
+	public String getDeptName2() {
+		return deptName2;
+	}
+
+	public void setDeptName2(String deptName2) {
+		this.deptName2 = deptName2;
+	}
+
+	public String getUserName1() {
+		return userName1;
+	}
+
+	public void setUserName1(String userName1) {
+		this.userName1 = userName1;
+	}
+
+	public String getUserName2() {
+		return userName2;
+	}
+
+	public void setUserName2(String userName2) {
+		this.userName2 = userName2;
+	}
+
+	public String getTitle1() {
+		return title1;
+	}
+
+	public void setTitle1(String title1) {
+		this.title1 = title1;
+	}
+
+	public String getTitle2() {
+		return title2;
+	}
+
+	public void setTitle2(String title2) {
+		this.title2 = title2;
+	}
 }

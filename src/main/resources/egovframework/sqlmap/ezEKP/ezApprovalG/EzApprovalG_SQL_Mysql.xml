@@ -4575,6 +4575,10 @@
 						TBL_FORMINFO.TENANT_ID = #v_TENANTID#
 					AND
 						TBL_FORMINFO.COMPANYID = #companyID#
+                <isNotEmpty property="v_MOBILEDRAFTFLAG">
+                    AND
+                        TBL_FORMINFO.MOBILEDRAFTFLAG = #v_MOBILEDRAFTFLAG#
+                </isNotEmpty>
 			</isNotEmpty>
 		</isEqual>
 		<isEqual property="v_FORMCONTID" compareValue="ALL">
@@ -4662,6 +4666,10 @@
 	   										TENANT_ID = #v_TENANTID#
 	   									AND
 	   										PHYSICALDELIVERYOFFICENAME = #companyID#))
+            <isNotEmpty property="v_MOBILEDRAFTFLAG">
+              AND
+                TBL_FORMINFO.MOBILEDRAFTFLAG = #v_MOBILEDRAFTFLAG#
+            </isNotEmpty>
 		</isEqual>
 		<isNotEqual property="v_FORMCONTID" compareValue="ROOT">
 		<isNotEqual property="v_FORMCONTID" compareValue="ALL">
@@ -4719,6 +4727,10 @@
          			TBL_FORMINFO.TENANT_ID = #v_TENANTID#
          		AND
          			TBL_FORMINFO.COMPANYID = #companyID#
+            <isNotEmpty property="v_MOBILEDRAFTFLAG">
+                AND
+                    TBL_FORMINFO.MOBILEDRAFTFLAG = #v_MOBILEDRAFTFLAG#
+            </isNotEmpty>
 		</isNotEqual>
 		</isNotEqual>
 		ORDER BY FORMORDER 

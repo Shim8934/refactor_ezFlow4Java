@@ -215,5 +215,9 @@ public class MApprovalGDAO extends EgovAbstractDAO {
 	public int getIsAbsenteeInfo(Map<String, Object> map) throws Exception {
 		return (int) select("MApprovalG.getIsAbsenteeInfo", map);
 	}
+
+	public int getAttachFileMaxSn(Map<String, Object> map) throws Exception {
+		return (int) select("MApprovalG.getAttachFileMaxSn", map);
+	}
 	
 }

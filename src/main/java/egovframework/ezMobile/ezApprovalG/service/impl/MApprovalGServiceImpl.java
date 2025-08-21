@@ -4,6 +4,10 @@ import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezApprovalG.dao.EzApprovalGDAO;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGListHeaderVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGAprLineVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGFormVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGLeftVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGReceiptVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezEmail.util.EmailImportance;
@@ -17,6 +21,7 @@ import egovframework.ezMobile.ezApprovalG.vo.*;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.ezMobile.ezOption.vo.MOptionVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
+import egovframework.let.user.login.vo.LoginVO;
 import org.egovframe.rte.fdl.cmmn.EgovAbstractServiceImpl;
 
 import org.apache.commons.compress.utils.IOUtils;
@@ -35,12 +40,16 @@ import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import javax.annotation.Resource;
 import javax.mail.internet.InternetAddress;
+import javax.servlet.http.HttpServletRequest;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.net.URLDecoder;
 import java.util.*;
 
 @Service("MApprovalGService")
@@ -49,6 +58,9 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 	
 	@Autowired
 	private CommonUtil commonUtil;
+
+	@Autowired
+	private Properties config;
 
 	@Resource(name="egovMessageSource")
 	private EgovMessageSource egovMessageSource;
@@ -1599,4 +1611,1402 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
         logger.debug("gongRamCancel ended.");
         return "TRUE";
 	}
+
+    public String makeListField(String orgStr) {
+        if (orgStr == null || orgStr.equals("NULL")) {
+            return "";
+        } else {
+            return orgStr;
+        }
+    }
+
+    @Override
+    public String getForm(String formContID, String kind, String searchType, String searchName, String userID, String deptId, String companyID, String lang, int tenantID) throws Exception {
+        logger.debug("getForm started");
+
+        String listCode = "109";
+        Map<String, Object> listCodeMap = new HashMap<String, Object>();
+        listCodeMap.put("v_LISTTYPE", listCode);
+        listCodeMap.put("v_LANGTYPE", lang);
+        listCodeMap.put("companyID", companyID);
+        listCodeMap.put("v_TENANTID", tenantID);
+        logger.debug("getListHeader Param : v_LISTTYPE="+ listCode + " v_LANGTYPE = " +lang +" companyID = " + companyID + " v_TENANTID =" + tenantID);
+
+        List<ApprGListHeaderVO> apprGListHeaderVOList = ezApprovalGDAO.getListHeader(listCodeMap);
+        StringBuffer listCodeMapSb = new StringBuffer();
+        listCodeMapSb.append("<DATA>");
+
+        for (int i = 0; i < apprGListHeaderVOList.size(); i++) {
+            listCodeMapSb.append(commonUtil.getQueryResult(apprGListHeaderVOList.get(i)));
+        }
+
+        listCodeMapSb.append("</DATA>");
+        String listString = listCodeMapSb.toString();
+        org.w3c.dom.Document listXML = commonUtil.convertStringToDocument(listString);
+
+        int hlength = listXML.getElementsByTagName("NAME").getLength();
+
+        StringBuffer resultXML = new StringBuffer();
+        resultXML.append("<LISTVIEWDATA>");
+        resultXML.append("<HEADERS>");
+
+        for (int k = 0; k < hlength; k++) {
+            resultXML.append("<HEADER>");
+            resultXML.append("<NAME>" + listXML.getElementsByTagName("NAME").item(k).getTextContent() + "</NAME>");
+            resultXML.append("<WIDTH>" + listXML.getElementsByTagName("WIDTH").item(k).getTextContent() + "</WIDTH>");
+            resultXML.append("</HEADER>");
+        }
+
+        resultXML.append("</HEADERS>");
+
+        String strMultiData = commonUtil.getMultiData(lang, tenantID);
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("v_FORMCONTID", formContID);
+        map.put("v_USERID", userID);
+        map.put("v_FORMKIND", kind);
+        map.put("v_LANGTYPE", strMultiData);
+        map.put("v_SEARCHTYPE", searchType);
+        map.put("deptId", deptId);
+        map.put("v_SEARCHNAME", searchName);
+        map.put("v_TENANTID", tenantID);
+        map.put("companyID", companyID);
+        map.put("v_MOBILEDRAFTFLAG", "Y");
+
+        List<ApprGFormVO> apprGFormVOlist = new ArrayList<>();
+
+        if("RESEND".equals(formContID)){
+            apprGFormVOlist = ezApprovalGDAO.getResendFormInfo(map);
+        }else{
+            apprGFormVOlist = ezApprovalGDAO.getFormInfo(map);
+        }
+        StringBuffer sb = new StringBuffer();
+        sb.append("<DATA>");
+        for (int i = 0; i < apprGFormVOlist.size(); i++) {
+            sb.append(commonUtil.getQueryResult(apprGFormVOlist.get(i)));
+        }
+        sb.append("</DATA>");
+        String docList = sb.toString();
+
+
+        org.w3c.dom.Document docXML = commonUtil.convertStringToDocument(docList);
+        int dlength = docXML.getElementsByTagName("ROW").getLength();
+        String primaryData = commonUtil.getPrimaryData(lang, tenantID);
+
+        resultXML.append("<ROWS>");
+
+        for (int k = 0; k < dlength; k++) {
+            resultXML.append("<ROW>");
+
+            for (int p = 0; p < hlength; p++) {
+                resultXML.append("<CELL>");
+
+                if (p == 0) {
+                    if (primaryData.equals("1")) {
+                        resultXML.append("<VALUE><![CDATA[" + makeListField(docXML.getElementsByTagName("FORMNAME").item(k).getTextContent()) + "]]></VALUE>");
+                    } else {
+                        // 2018-07-13 천성준 (#13071) 이름이 없는 양식이 존재함
+                        if (makeListField(docXML.getElementsByTagName("FORMNAME2").item(k).getTextContent()).length() <= 0) {
+                            resultXML.append("<VALUE><![CDATA[" + makeListField(docXML.getElementsByTagName("FORMNAME").item(k).getTextContent()) + "]]></VALUE>");
+                        } else {
+                            resultXML.append("<VALUE><![CDATA[" + makeListField(docXML.getElementsByTagName("FORMNAME2").item(k).getTextContent()) + "]]></VALUE>");
+                        }
+                    }
+
+                    resultXML.append("<DATA1>" + makeListField(docXML.getElementsByTagName("FORMID").item(k).getTextContent()) + "</DATA1>");
+                    resultXML.append("<DATA2><![CDATA[" + makeListField(docXML.getElementsByTagName("FORMDESCRIPTION").item(k).getTextContent()) + "]]></DATA2>");
+                    resultXML.append("<DATA3>" + makeListField(docXML.getElementsByTagName("FORMDOCTYPE").item(k).getTextContent()) + "</DATA3>");
+                    resultXML.append("<DATA4><![CDATA[" + makeListField(docXML.getElementsByTagName("FORMFILELOCATION").item(k).getTextContent()) + "]]></DATA4>");
+                    resultXML.append("<DATA5>" + makeListField(docXML.getElementsByTagName("FORMCONNFLAG").item(k).getTextContent()) + "</DATA5>");
+                    resultXML.append("<DATA6><![CDATA[" + makeListField(docXML.getElementsByTagName("FORMNAME").item(k).getTextContent()) + "]]></DATA6>");
+                    resultXML.append("<DATA7><![CDATA[" + makeListField(docXML.getElementsByTagName("FORMNAME2").item(k).getTextContent()) + "]]></DATA7>");
+                    resultXML.append("<DATA8><![CDATA[" + makeListField(docXML.getElementsByTagName("FORMCONTID").item(k).getTextContent()) + "]]></DATA8>");
+                    resultXML.append("<REFORMFLAG><![CDATA[" + makeListField(docXML.getElementsByTagName("REFORMFLAG").item(k).getTextContent()) + "]]></REFORMFLAG>");
+                    resultXML.append("<DATA-COMPANYID><![CDATA[" + makeListField(docXML.getElementsByTagName("COMPANYID").item(k).getTextContent()) + "]]></DATA-COMPANYID>");
+                    resultXML.append("<DATA-OFFICEFLAG><![CDATA[" + makeListField(docXML.getElementsByTagName("OFFICEFLAG").item(k).getTextContent()) + "]]></DATA-OFFICEFLAG>");
+                    resultXML.append("<OPENGOVFLAG><![CDATA[" + makeListField(docXML.getElementsByTagName("OPENGOVFLAG").item(k).getTextContent()) + "]]></OPENGOVFLAG>");
+                    resultXML.append("<PASSAPRLINEFLAG><![CDATA[" + makeListField(docXML.getElementsByTagName("PASSAPRLINEFLAG").item(k).getTextContent()) + "]]></PASSAPRLINEFLAG>");
+                }
+
+                resultXML.append("</CELL>");
+            }
+
+            resultXML.append("</ROW>");
+        }
+
+        resultXML.append("</ROWS>");
+        resultXML.append("</LISTVIEWDATA>");
+
+        logger.debug("getForm ended.");
+        return resultXML.toString();
+    }
+
+    @Override
+    public String getSecurityType(String selected, String companyID, String lang, int tenantID, String approvalFlag) throws Exception {
+        logger.debug("mobile getSecurityType started");
+        StringBuilder rtnXML = new StringBuilder();
+
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("v_LANGTYPE", lang);
+        map.put("companyID", companyID);
+        map.put("v_TENANTID", tenantID);
+        map.put("approvalFlag", approvalFlag);
+        List<ApprGLeftVO> apprGLeftVOlist = ezApprovalGDAO.getSecurityType(map);
+
+        StringBuffer sb = new StringBuffer();
+        sb.append("<DATA>");
+
+        for (int i = 0; i < apprGLeftVOlist.size(); i++) {
+            sb.append(commonUtil.getQueryResult(apprGLeftVOlist.get(i)));
+        }
+
+        sb.append("</DATA>");
+
+        org.w3c.dom.Document docXML = commonUtil.convertStringToDocument(sb.toString());
+
+        int dlength = docXML.getElementsByTagName("ROW").getLength();
+
+        for (int k = 0; k < dlength; k++) {
+            String[] colOption = docXML.getElementsByTagName("NAME").item(k).getTextContent().split(";");
+            rtnXML.append("<option name='RSecurity' value=" + colOption[2] + ">" + colOption[1] + "</option>");
+        }
+        logger.debug("mobile getSecurityType ended");
+        return rtnXML.toString();
+    }
+
+    @Override
+    public String getKeepType(String lang, int tenantID, String companyID) throws Exception {
+        StringBuilder rtnXML = new StringBuilder();
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("v_LANGTYPE", lang);
+        map.put("v_TENANTID", tenantID);
+        map.put("companyID", companyID);
+        map.put("approvalFlag", ezCommonService.getTenantConfig("ApprovalFlag", tenantID));
+        List<ApprGLeftVO> apprGetKeepTypeList = ezApprovalGDAO.getKeepType(map);
+
+        StringBuffer sb = new StringBuffer();
+        sb.append("<DATA>");
+
+        for (int i = 0; i < apprGetKeepTypeList.size(); i++) {
+            sb.append(commonUtil.getQueryResult(apprGetKeepTypeList.get(i)));
+        }
+
+        sb.append("</DATA>");
+
+        org.w3c.dom.Document docXML = commonUtil.convertStringToDocument(sb.toString());
+
+        int dlength = docXML.getElementsByTagName("ROW").getLength();
+
+        for (int k = 0; k < dlength; k++) {
+            String[] colOption = docXML.getElementsByTagName("NAME").item(k).getTextContent().split(";");
+            rtnXML.append("<option name='RKeeptype' value=" +  colOption[2] + ">" +  colOption[1] + "</option>");
+        }
+        return rtnXML.toString();
+    }
+
+    @Override
+    public int getAttachFileMaxSn(String docID, int tenantID, String companyID) throws Exception {
+        logger.debug("getAttachFileMaxSn started");
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("v_DOCID", docID);
+        map.put("v_TENANTID", tenantID);
+        map.put("companyID", companyID);
+
+        int result = mApprovalGDAO.getAttachFileMaxSn(map);
+
+        logger.debug("getAttachFileMaxSn ended");
+        return result;
+    }
+
+    @Override
+    public String updateAttachFileInfo(String docID, JSONObject jsonObj, MCommonVO userInfo) throws Exception {
+        logger.debug("updateAttachFileInfo started");
+        String rtnVal = deleteAttachFileInfo(docID, userInfo.getCompanyId(), userInfo.getLang(), userInfo.getTenantId());
+
+        Map<String, Object> map = new HashMap<String, Object>();
+
+        if (rtnVal.equals("TRUE")) {
+            String size = "";
+            JSONParser parser = new JSONParser();
+            for (int i = 0; i < jsonObj.size(); i++) {
+                String index = i + "";
+                JSONObject json = (JSONObject) parser.parse(jsonObj.get(index).toString());
+
+                size = json.get("filesize").toString().trim();
+
+                map.put("v_DOCID", docID);
+                map.put("v_ATTACHFILESN", json.get("fileSn").toString());
+                map.put("v_VIEWORDER", jsonObj.size() - i);
+                map.put("v_ATTACHFILENAME", json.get("fileName").toString());
+                map.put("v_ATTACHFILEHREF", json.get("fileLocation").toString());
+                map.put("v_ATTACHFILESIZE", size);
+                map.put("v_ATTACHUSERID", userInfo.getUserId());
+                map.put("v_ATTACHUSERNAME", userInfo.getUserName());
+                map.put("v_ATTACHUSERNAME2", userInfo.getUserName2());
+                map.put("v_ATTACHUSERJOBTITLE", userInfo.getTitle());
+                map.put("v_ATTACHUSERJOBTITLE2", userInfo.getTitle2());
+                map.put("v_ATTACHUSERDEPTID", userInfo.getDeptId());
+                map.put("v_ATTACHUSERDEPTNAME", userInfo.getDeptName());
+                map.put("v_ATTACHUSERDEPTNAME2", userInfo.getDeptName2());
+                map.put("v_PAGENUM", "1");
+                map.put("v_DISPLAYNAME", json.get("fileName").toString());
+                map.put("v_BODYATTACH", "N");
+                map.put("FLAG", "Y");
+                map.put("companyID", userInfo.getCompanyId());
+                map.put("v_TENANTID", userInfo.getTenantId());
+
+                /* 2020-11-12 홍승비 - 대용량첨부 플래그, 첨부파일 최초 저장일 추가 */
+                map.put("v_ISBIGATTACH", json.get("isBigAttachYN").toString());
+                map.put("v_ISBIGATTACHDEL", "N");
+                map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
+
+                ezApprovalGDAO.insertAprAttachInfo(map);
+                ezApprovalGDAO.updateHistoryAttachInfo(map);
+                ezApprovalGDAO.updateAttachFileInfo(map);
+
+                if (config.getProperty("config.useOpenGov").equals("YES")) {
+                    ezApprovalGDAO.insertOpenGovAttachInfo(map);
+                }
+            }
+        }
+        logger.debug("updateAttachFileInfo started");
+        return rtnVal;
+    }
+
+    @Override
+    public String deleteAttachFileInfo(String docID, String companyID, String lang, int tenantID) throws Exception {
+        logger.debug("deleteAttachFileInfo started");
+
+        Map<String, Object> map = new HashMap<String, Object>();
+
+        map.put("v_DOCID", docID);
+        map.put("companyID", companyID);
+        map.put("v_TENANTID", tenantID);
+
+        ezApprovalGDAO.deleteAttachFileInfo(map);
+        // 원문정보공개 첨부파일 삭제
+        ezApprovalGDAO.deleteOpenGovAttachInfo(map);
+
+        int attachFile = ezApprovalGDAO.countAttachFile(map);
+
+        if (attachFile > 0) {
+            map.put("FLAG", "Y");
+            ezApprovalGDAO.updateAttachFileInfo(map);
+        } else {
+            map.put("FLAG", "N");
+            ezApprovalGDAO.updateAttachFileInfo(map);
+        }
+
+        logger.debug("deleteAttachFileInfo ended");
+
+        return "TRUE";
+    }
+
+    @Override
+    public String updateAttachDocInfo(JSONObject jsonObject, MCommonVO userInfo, String approvalFlag) throws Exception {
+        logger.debug("updateAttachDocInfo started");
+
+        JSONParser jp = new JSONParser();
+        JSONObject data = (JSONObject) jp.parse(jsonObject.toJSONString());
+        String docID = data.get("docID").toString();
+        Map<String, Object> map = new HashMap<String, Object>();
+
+        String dataArr = data.get("dataArr").toString();
+        JSONParser parser = new JSONParser();
+        Object obj = parser.parse(dataArr);
+        JSONObject jsonObj = (JSONObject) obj;
+
+        String rtnVal = deleteAttachDocInfo(docID, userInfo.getCompanyId(), userInfo.getLang(), userInfo.getTenantId());
+        int tempSN = 0;
+
+        if (rtnVal.equals("TRUE")) {
+            for (int i = 0; i < jsonObj.size(); i++) {
+                String index = i + "";
+                JSONObject json = (JSONObject) parser.parse(jsonObj.get(index).toString());
+                if (approvalFlag.equals("S")) {
+                    tempSN = (i + 1);
+                    map.put("v_DOCID", docID);
+                    map.put("v_TEMPSN", tempSN);
+                    map.put("v_AttachDocName", json.get("fileName").toString());
+                    map.put("v_AttachDocURL", json.get("fileLocation").toString());
+                    map.put("v_SubAttachYN", "N");
+                    map.put("v_AttachUserID",userInfo.getUserId());
+                    map.put("v_AttachUserName", userInfo.getUserName());
+                    map.put("v_AttachUserName2", userInfo.getUserName2());
+                    map.put("v_AttachUserJobTitle", userInfo.getTitle());
+                    map.put("v_AttachUserJobTitle2", userInfo.getTitle2());
+                    map.put("v_AttachUserDeptID", userInfo.getDeptId());
+                    map.put("v_AttachUserDeptName", userInfo.getDeptName());
+                    map.put("v_AttachUserDeptName2", userInfo.getDeptName2());
+                    map.put("FLAG", "Y");
+                    map.put("companyID", userInfo.getCompanyId());
+                    map.put("v_TENANTID", userInfo.getTenantId());
+
+                    ezApprovalGDAO.insertGianAprDocAttachInfo(map);
+                }
+            }
+            ezApprovalGDAO.updateAttachFileInfo(map);
+            rtnVal = "TRUE";
+        }
+
+        logger.debug("updateAttachDocInfo ended");
+        return rtnVal;
+    }
+
+    @Override
+    public String deleteAttachDocInfo(String docID, String companyID, String lang, int tenantID) throws Exception {
+        logger.debug("deleteAttachDocInfo started");
+
+        Map<String, Object> map = new HashMap<String, Object>();
+
+        map.put("companyID", companyID);
+        map.put("v_DOCID", docID);
+        map.put("v_TENANTID", tenantID);
+
+        ezApprovalGDAO.deleteAttachDocInfo(map);
+        int countAttachDoc = ezApprovalGDAO.countAttachDocInfo(map);
+
+        if(countAttachDoc > 0 ){
+            map.put("FLAG", "Y");
+            ezApprovalGDAO.updateAttachFileInfo(map);
+        } else {
+            map.put("FLAG", "N");
+            ezApprovalGDAO.updateAttachFileInfo(map);
+        }
+
+        logger.debug("deleteAttachDocInfo ended");
+
+        return "TRUE";
+    }
+
+    @Override
+    public String saveDraftInfo(JSONObject jsonParam, String realPath, LoginVO userInfo, String userInfoXML, HttpServletRequest request) throws Exception {
+        String result = "";
+
+        try {
+            org.w3c.dom.Document xmlDom = commonUtil.convertStringToDocument(jsonParam.get("docinfo").toString());
+            org.w3c.dom.Document userDom = commonUtil.convertStringToDocument(userInfoXML);
+
+            String docID = xmlDom.getDocumentElement().getChildNodes().item(0).getTextContent();
+            int tenantId = userInfo.getTenantId();
+            String companyId = userInfo.getCompanyID();
+            String formURLTemp = xmlDom.getElementsByTagName("FORMURL").item(0).getTextContent();
+            Locale locale = new Locale(commonUtil.getTwoLetterLangFromLangNum(userInfo.getLang()));
+            String lang = userInfo.getLang();
+            String junGyulFlag = ezCommonService.getTenantConfig("JunGyulFlag", userInfo.getTenantId()); // 전결자 이후 결재자 사인칸 표시 여부
+            String draftJunGyulFlag = ezCommonService.getTenantConfig("draftJunGyulFlag", userInfo.getTenantId()); // 사인칸 전결자 표시
+            String optIsSplit = ezApprovalGService.getOptionInfo("SA33", "001", userInfo, "CODE");
+            String signImageSize = ezCommonService.getTenantConfig("SignImageSize", userInfo.getTenantId());
+            String docNO = xmlDom.getElementsByTagName("DOCNO").item(0).getTextContent();
+            String currentDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false).substring(0, 10).replace("-", ".");
+
+            // 양식 가져와서 본문 작성 후 기안문서 생성하기
+            String convertedMHT = "";
+            String formURL = realPath + formURLTemp;
+            String loadMht = ezCommonService.loadMHTFile(formURL); // 양식 가져오기
+            String domain = request.getServerName() + ":" + request.getServerPort();
+            String scheme = "http://";
+            if (request.getHeader("HTTPS") != null && request.getHeader("HTTPS").toString().toLowerCase().equals("on")) {
+                scheme = "https://";
+            }
+            String oldYear = ezApprovalGService.getDocHrefYear(docID, userInfo.getCompanyID(), userInfo.getTenantId());
+            String extension = ".mht";
+            String filePath = commonUtil.getUploadPath("upload_approvalG.ROOT", tenantId) + commonUtil.separator + companyId + commonUtil.separator + "doc" + commonUtil.separator + oldYear +
+                    commonUtil.separator + "1000" + commonUtil.separator + ezApprovalGService.getDocDir(docID);
+            String href = filePath + commonUtil.separator + docID + extension;
+            xmlDom.getElementsByTagName("HREF").item(0).setTextContent(href);
+
+            // HTML -> MHT
+            String content = ezCommonService.startMHT2HTML(realPath + commonUtil.getUploadPath("config.LocalPath", userInfo.getTenantId()), loadMht, realPath + commonUtil.getUploadPath("config.LocalPath", userInfo.getTenantId()), realPath, userInfo.getLocale(), domain, scheme);
+            //HTML 파싱 document 클래스 겹쳐서 임포트 못함
+            org.jsoup.nodes.Document doc = Jsoup.parse(content);
+
+
+            /* 문서 본문 작성 시작 */
+            JSONObject fieldValue = new JSONObject();
+            fieldValue.put("doctitle", xmlDom.getElementsByTagName("DOCTITLE").item(0).getTextContent());
+            fieldValue.put("enforcedate", "");
+            fieldValue.put("receiptdate", "");
+            fieldValue.put("zipcode", userDom.getElementsByTagName("POSTALCODE").item(0).getTextContent());
+            fieldValue.put("address", userDom.getElementsByTagName("STREETADDRESS").item(0).getTextContent());
+            fieldValue.put("telephone", userDom.getElementsByTagName("TELEPHONENUMBER").item(0).getTextContent());
+//			fieldValue.put("depttelephone", userDom.getElementsByTagName("TELEPHONENUMBER").item(0).getTextContent());
+            fieldValue.put("fax", userDom.getElementsByTagName("FACSIMILETELEPHONENUMBER").item(0).getTextContent());
+//			fieldValue.put("deptfax", userDom.getElementsByTagName("FACSIMILETELEPHONENUMBER").item(0).getTextContent());
+            fieldValue.put("department", xmlDom.getElementsByTagName("PDEPTNAME").item(0).getTextContent());
+//			fieldValue.put("parantdept", userDom.getElementsByTagName("COMPANY").item(0).getTextContent());
+            fieldValue.put("charge", userDom.getElementsByTagName("DISPLAYNAME").item(0).getTextContent());
+            fieldValue.put("position", xmlDom.getElementsByTagName("WRITERJOBTITLE").item(0).getTextContent());
+            fieldValue.put("email", xmlDom.getElementsByTagName("WRITEREMAIL").item(0).getTextContent());
+            fieldValue.put("deptname", xmlDom.getElementsByTagName("WRITERDEPTNAME").item(0).getTextContent());
+            fieldValue.put("seal", userDom.getElementsByTagName("COMPANY").item(0).getTextContent() + egovMessageSource.getMessage("ezApprovalG.t171", locale));
+            fieldValue.put("username", xmlDom.getElementsByTagName("WRITERNAME").item(0).getTextContent());
+            fieldValue.put("draftername", xmlDom.getElementsByTagName("WRITERNAME").item(0).getTextContent());
+            fieldValue.put("draftdate", currentDate);
+            fieldValue.put("deptshortedname", xmlDom.getElementsByTagName("DEPTSHORTEDNAME").item(0).getTextContent());
+
+            // 문서정보 
+            fieldValue.put("keepperiod", xmlDom.getElementsByTagName("KEEPPERIODNAME").item(0).getTextContent());
+            fieldValue.put("securitylevel", xmlDom.getElementsByTagName("SECURITYNAME").item(0).getTextContent());
+            if ("N".equals(xmlDom.getElementsByTagName("PUBLICATION").item(0).getTextContent())) {
+                fieldValue.put("publication", egovMessageSource.getMessage("ezApproval.t49", locale));
+            } else {
+                fieldValue.put("publication", egovMessageSource.getMessage("ezApproval.t50", locale));
+
+            }
+
+            Set keys = fieldValue.keySet();
+            Iterator jKeyList = keys.iterator();
+            while(jKeyList.hasNext()) {
+                String key = (String) jKeyList.next();
+                String val = (String) (fieldValue.get(key) != null ? fieldValue.get(key) : "");
+                Element targetId = doc.getElementById(key);
+                if(targetId != null) {
+                    targetId.text(val);
+                }
+            }
+
+            Element field;
+            // 문서번호 - SetAutoPropertyValue 참고
+            Element bodyEl = doc.getElementById("body");
+            if (bodyEl != null) {
+                if (!bodyEl.hasAttr("orgdocnum")) {
+                    field = doc.getElementById("docnumber");
+                    if (field != null) {
+                        bodyEl.attr("orgdocnum", field.text().trim());
+                        field.html(docNO);
+                    }
+
+                    field = doc.getElementById("bedocnumber");
+                    if (field != null) {
+                        bodyEl.attr("orgdocnum", field.text().trim());
+                        field.html(docNO);
+                    }
+                }
+
+                if (!xmlDom.getElementsByTagName("BODYATTRDOCNUM").item(0).getTextContent().isEmpty()) {
+                    bodyEl.attr("docnum", xmlDom.getElementsByTagName("BODYATTRDOCNUM").item(0).getTextContent());
+                }
+
+                field = doc.getElementById("receiptnumber");
+                if (field != null) {
+                    field.attr("Format", field.text().trim());
+                    bodyEl.attr("receiptnumber", field.text().trim());
+                    field.html("");
+                }
+            }
+
+
+
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put("v_DOCID", docID);
+            map.put("v_MODE", "APR");
+            map.put("v_TENANTID", tenantId);
+            map.put("companyID", companyId);
+
+            // 결재선
+            map.put("isUsed", "");
+            map.put("v_FLAG", "1");
+            List<ApprGAprLineVO> paprlines = ezApprovalGDAO.getAprLineInfo(map);
+
+            int LastSignSN = 0;
+            for (int i = paprlines.size() -1; i >= 0; i--) {
+                ApprGAprLineVO paprline = paprlines.get(i);
+                if ("001".equals(paprline.getAprType()) || "004".equals(paprline.getAprType()) || "003".equals(paprline.getAprType())) {
+                    LastSignSN = i;
+                }
+            }
+
+            field = doc.getElementById("lastKyuljikwee");
+            if (field != null) {
+                ApprGAprLineVO paprline = paprlines.get(LastSignSN);
+                String pAprJobTitle = "1".equals(lang) ? paprline.getAprMemberJobTitle() : paprline.getAprMemberJobTitle2();
+                field.text(pAprJobTitle);
+            }
+
+            field = doc.getElementById("lastKyulName");
+            if (field != null) {
+                ApprGAprLineVO paprline = paprlines.get(LastSignSN);
+                String pAprName = "1".equals(lang) ? paprline.getAprMemberName() : paprline.getAprMemberName2();
+                field.text(pAprName);
+            }
+
+
+            String susinSN = "";
+            String pRefer = "";
+            int hapyuiCnt = 1;
+            int idx = 1;
+            int cnt = 20;
+            int LastSignNo = 0;
+            for (int i = paprlines.size() - 1; i >= 0; i--) {
+                ApprGAprLineVO paprline = paprlines.get(i);
+                String pAprType = paprline.getAprType();
+                String pAprJobTitle = "1".equals(lang) ? paprline.getAprMemberJobTitle() : paprline.getAprMemberJobTitle2();
+                String pAprDept = "1".equals(lang) ? paprline.getAprMemberDeptName() : paprline.getAprMemberDeptName2();
+                String pAprName = "1".equals(lang) ? paprline.getAprMemberName() : paprline.getAprMemberName2();
+
+                switch (pAprType) {
+                    case "001":
+                    case "003":
+                    case "004":
+                    case "040":
+                        if (LastSignSN == i) {
+                            for (int k = 1; k <= cnt; k++) {
+                                field = doc.getElementById("sign" + k);
+                                if (field != null) {
+                                    LastSignNo = k;
+                                }
+                            }
+                            idx = LastSignNo;
+                        }
+
+                        if ("4".equals(junGyulFlag)) {
+                            if (pAprType == "003") {
+                                continue;
+                            }
+                        }
+
+                        field = doc.getElementById(susinSN + "jikwe" + idx);
+                        if (field != null) {
+                            field.text(pAprJobTitle);
+                        }
+                        field = doc.getElementById(susinSN + "approdept" + idx);
+                        if (field != null) {
+                            field.text(pAprDept);
+                        }
+                        field = doc.getElementById(susinSN + "seumyung" + idx);
+                        if (field != null) {
+                            field.text(pAprName);
+                        }
+
+                        field = doc.getElementById(susinSN + "sign" + idx);
+                        if (field != null) {
+                            // 서명필드만 존재하는 경우, 서명+결재자명 필드가 함께 존재하는 경우, 슬래시 이미지의 표출분기 수정
+                            if ("1".equals(draftJunGyulFlag) && "004".equals(pAprType)) { // 전결 서명 부여
+                                field.html(egovMessageSource.getMessage("ezApproval.t59", locale) + "&nbsp;" +  pAprName);
+                            } else if (doc.getElementById(susinSN + "seumyung" + idx) == null) { // 서명필드만 존재
+                                field.text(pAprName);
+                            } else if (doc.getElementById(susinSN + "seumyung" + idx) != null) { // 서명필드만 존재
+                                field.html("[NOSLASH]");
+                            }
+                            idx = idx + 1; // 서명칸이 존재하는 경우, idx를 1 증가시켜서 다음 칸을 찾는다.
+                        }
+                        break;
+                    case "008": // 개인순차합의
+                    case "009": // 개인병렬합의
+                        field = doc.getElementById("habyui" + hapyuiCnt);
+                        if (field != null) {
+                            field.text(pAprDept);
+                        }
+                        // 합의자명 필드가 존재하지 않는 경우, 합의자 사인 필드에 이름 표출하도록 수정(개인순차합의, 개인병렬합의) 
+                        field = doc.getElementById("habyuisign" + hapyuiCnt);
+                        if (field != null && doc.getElementById("habyuija" + hapyuiCnt) == null) {
+                            field.text(pAprName);
+                        }
+                        field = doc.getElementById("habyuija" + hapyuiCnt);
+                        if (field != null) {
+                            field.text(pAprName);
+                        }
+//						field = doc.getElementById("habyuiaddress" + hapyuiCnt); // 2024-05-31 기준으로 확인 시 양식작성창에 habyuiaddress 필드 추가 UI가 없어 실제로 사용되지는 않고 있음
+                        field = doc.getElementById("habyuipositon" + hapyuiCnt);
+                        if (field != null) {
+                            field.text(pAprJobTitle);
+                        }
+                        field = doc.getElementById("habyuiapprodept" + hapyuiCnt);
+                        if (field != null) {
+                            field.text(pAprDept);
+                        }
+                        hapyuiCnt = hapyuiCnt + 1;
+                        break;
+                    case "011": // 부서순차합의
+                    case "012": // 부서병렬합의
+                        field = doc.getElementById("habyui" + hapyuiCnt);
+                        if (field != null) {
+                            field.text(pAprDept);
+                        }
+                        field = doc.getElementById("habyuisign" + hapyuiCnt);
+                        if (field != null) {
+                            field.text(pAprDept);
+                        }
+                        field = doc.getElementById("habyuija" + hapyuiCnt);
+                        if (field != null) {
+                            field.text(pAprName);
+                        }
+//						field = doc.getElementById("habyuiaddress" + hapyuiCnt);
+                        field = doc.getElementById("habyuipositon" + hapyuiCnt);
+                        if (field != null) {
+                            field.text(pAprJobTitle);
+                        }
+                        field = doc.getElementById("habyuiapprodept" + hapyuiCnt);
+                        if (field != null) {
+                            field.text(pAprDept);
+                        }
+                        hapyuiCnt = hapyuiCnt + 1;
+                        break;
+                    case "007":	// 참조
+                        pRefer += pAprName + ",";
+                        break;
+                }
+
+            }
+            if ("Y".equals(optIsSplit)) {
+                for (int i = 1; i < 21; i++) {
+                    field = doc.getElementById(susinSN + "sign" + i);
+                    if (field != null) {
+                        String inner = field.html().trim();
+                        if (field.text().trim().isEmpty() && (inner.equals("&nbsp;") || inner.equals("") || inner.equals("<br>"))) {
+                            String strimg = "<img src='/images/signimgs/200.gif' border=0 embedding='1' ";
+                            strimg += " spath = '" + "/images/signimgs/200.gif'";
+                            strimg += " width=" + signImageSize.split("/")[0] ;
+                            strimg += " height=" + signImageSize.split("/")[1] + " imglock >";
+                            field.html(strimg);
+                        } else if ("[NOSLASH]".equals(inner.trim())) {
+                            field.html(" ");
+                        }
+                    }
+                }
+            }
+
+            // 참조
+            field = doc.getElementById("refer");
+            if (!"".equals(pRefer) && field != null) {
+                if (pRefer.endsWith(",")) {
+                    pRefer = pRefer.substring(0, pRefer.length() - 1);
+                }
+                field.text(pRefer);
+            }
+
+            // 수신처
+            Element fieldRecipient = doc.getElementById("recipient");
+            if (fieldRecipient != null) {
+                List<ApprGReceiptVO> apprGAprLineVOList = ezApprovalGDAO.getReceiptInfo(map);
+                String precipent = "";
+                String precipents = "";
+                if (apprGAprLineVOList.size() > 1) {
+                    precipent = egovMessageSource.getMessage("ezApproval.t128", locale);
+                    precipents = apprGAprLineVOList.get(0).getReceiptPointName();
+                    for (int i=1; i<apprGAprLineVOList.size(); i++) {
+                        precipents += ", " + apprGAprLineVOList.get(i).getReceiptPointName();
+                    }
+                } else if (apprGAprLineVOList.size() == 1) {
+                    precipent = apprGAprLineVOList.get(0).getReceiptPointName();
+                    precipents = apprGAprLineVOList.get(0).getReceiptPointName();
+                }
+
+                fieldRecipient.text(precipent);
+                field = doc.getElementById("recipients");
+                if (field != null) {
+                    field.text(precipents);
+                }
+
+                field = doc.getElementById("hrecipients");
+                if (field != null) {
+                    if (precipents.isEmpty()) {
+                        field.text("");
+                    } else {
+                        field.text(egovMessageSource.getMessage("ezApproval.t129", locale));
+                    }
+                }
+            }
+
+            // 본문 내용
+            String bodyContent = jsonParam.get("content").toString();
+            bodyContent = bodyContent.replaceAll("%(?![0-9a-fA-F]{2})", "%25");
+            bodyContent = bodyContent.replaceAll("\\+", "%2B");
+            bodyContent = URLDecoder.decode(bodyContent, "utf-8");
+            if (doc.getElementById("body") != null) {
+                doc.getElementById("body").html(bodyContent);
+            }
+
+            /* 문서 본문 작성 끝 */
+
+
+            /* 결재 파일 저장 시작 */
+            File Folder = new File(realPath + filePath);
+            if(!Folder.exists()) {
+                Folder.mkdirs();
+            }
+            String tempHtml = doc.outerHtml();
+            OutputStream outputStream = null;
+            OutputStreamWriter output = null;
+            try {
+                convertedMHT = ezCommonService.startHtml2Mht(tempHtml, realPath, userInfo.getLocale());
+                outputStream = new FileOutputStream(new File(commonUtil.detectPathTraversal(realPath + href)));
+                output = new OutputStreamWriter(outputStream);
+
+                output.write(convertedMHT);
+            }  catch (FileNotFoundException fnfe) {
+                logger.debug("fnfe: {}", fnfe);
+            } catch (IOException ioe) {
+                logger.debug("ioe: {}", ioe);
+            } catch (Exception e) {
+                logger.debug("e: {}", e);
+            }  finally{
+
+                if (output != null) {
+                    try {
+                        output.close();
+                    } catch (Exception ignore) {
+                        logger.debug("IGNORED: {}", ignore.getMessage());
+                    }
+                }
+                if (outputStream != null) {
+                    try {
+                        outputStream.close();
+                    } catch (Exception ignore) {
+                        logger.debug("IGNORED: {}", ignore.getMessage());
+                        // return "";
+                    }
+                }
+            }
+            /* 결재 파일 저장 끝 */
+
+            // DB 문서정보 업데이트
+            String subSQL = updateDocInfo(xmlDom, userInfo.getId(), userInfo.getCompanyID(), lang, userInfo.getTenantId());
+            if (!subSQL.toUpperCase().equals("TRUE")) {
+                result = "ERROR";
+            } else {
+                result = "TRUE";
+            }
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+            result = "ERROR";
+        }
+        return result;
+    }
+
+    public String updateDocInfo(org.w3c.dom.Document docXML, String userID, String companyID, String lang, int tenantID) throws Exception {
+        boolean firstFlag = true;
+        logger.debug("updateDocInfo started");
+        String docID = docXML.getElementsByTagName("DOCID").item(0).getTextContent();
+        String tempValue = "";
+        String rtnVal = "TRUE";
+
+        Map<String, Object> map = new HashMap<String, Object>();
+
+        map.put("companyID", companyID);
+        map.put("v_DOCID", docID);
+        map.put("v_TENANTID", tenantID);
+
+        tempValue = docXML.getElementsByTagName("FORMID").item(0).getTextContent().trim();
+
+        if (!tempValue.equals("")) {
+            if (firstFlag) {
+                map.put("v_FORMID", tempValue);
+                map.put("v_FIRSTFLAG", firstFlag);
+                firstFlag = false;
+            } else {
+                map.put("v_FORMID", tempValue);
+                map.put("v_FIRSTFLAG", firstFlag);
+            }
+        }
+
+        tempValue = docXML.getElementsByTagName("ORGDOCID").item(0).getTextContent().trim();
+
+        if (!tempValue.equals("")) {
+            if (firstFlag) {
+                map.put("v_ORGDOCID", tempValue);
+                map.put("v_FIRSTFLAG2", firstFlag);
+                firstFlag = false;
+            } else {
+                map.put("v_ORGDOCID", tempValue);
+                map.put("v_FIRSTFLAG2", firstFlag);
+            }
+        }
+
+        tempValue = docXML.getElementsByTagName("DOCTYPE").item(0).getTextContent().trim();
+
+        if (!tempValue.equals("")) {
+            if (firstFlag) {
+                map.put("v_DOCTYPE", tempValue);
+                map.put("v_FIRSTFLAG3", firstFlag);
+                firstFlag = false;
+            } else {
+                map.put("v_DOCTYPE", tempValue);
+                map.put("v_FIRSTFLAG3", firstFlag);
+            }
+        }
+
+        tempValue = docXML.getElementsByTagName("DOCSTATE").item(0).getTextContent().trim();
+
+        if (!tempValue.equals("")) {
+            if (firstFlag) {
+                map.put("v_DOCSTATE", tempValue);
+                map.put("v_FIRSTFLAG4", firstFlag);
+                firstFlag = false;
+            } else {
+                map.put("v_DOCSTATE", tempValue);
+                map.put("v_FIRSTFLAG4", firstFlag);
+            }
+        }
+
+        tempValue = docXML.getElementsByTagName("FUNCTIONTYPE").item(0).getTextContent().trim();
+
+        if (!tempValue.equals("")) {
+            if (firstFlag) {
+                map.put("v_FUNCTIONTYPE", tempValue);
+                map.put("v_FIRSTFLAG5", firstFlag);
+                firstFlag = false;
+            } else {
+                map.put("v_FUNCTIONTYPE", tempValue);
+                map.put("v_FIRSTFLAG5", firstFlag);
+            }
+        }
+
+        tempValue = docXML.getElementsByTagName("HREF").item(0).getTextContent().trim();
+
+        if (!tempValue.equals("")) {
+            if (firstFlag) {
+                map.put("v_HREF", tempValue);
+                map.put("v_FIRSTFLAG6", firstFlag);
+                firstFlag = false;
+            } else {
+                map.put("v_HREF", tempValue);
+                map.put("v_FIRSTFLAG6", firstFlag);
+            }
+        }
+
+        tempValue = docXML.getElementsByTagName("DOCTITLE").item(0).getTextContent().trim();
+
+        if (!tempValue.equals("")) {
+            if (firstFlag) {
+                map.put("v_DOCTITLE", tempValue.replaceAll("(^\\p{Z}+|\\p{Z}+$)", ""));
+                map.put("v_FIRSTFLAG7", firstFlag);
+                firstFlag = false;
+            } else {
+                map.put("v_DOCTITLE", tempValue.replaceAll("(^\\p{Z}+|\\p{Z}+$)", ""));
+                map.put("v_FIRSTFLAG7", firstFlag);
+            }
+        }
+
+        tempValue = docXML.getElementsByTagName("DOCNO").item(0).getTextContent().trim();
+
+        if (!tempValue.equals("")) {
+            if (firstFlag) {
+                map.put("v_DOCNO", tempValue);
+                map.put("v_FIRSTFLAG8", firstFlag);
+                firstFlag = false;
+            } else {
+                map.put("v_DOCNO", tempValue);
+                map.put("v_FIRSTFLAG8", firstFlag);
+            }
+        }
+
+        tempValue = docXML.getElementsByTagName("HASATTACHYN").item(0).getTextContent().trim();
+
+        if (!tempValue.equals("")) {
+            if (firstFlag) {
+                map.put("v_HASATTACHYN", tempValue);
+                map.put("v_FIRSTFLAG9", firstFlag);
+                firstFlag = false;
+            } else {
+                map.put("v_HASATTACHYN", tempValue);
+                map.put("v_FIRSTFLAG9", firstFlag);
+            }
+        }
+
+        tempValue = docXML.getElementsByTagName("HASOPINIONYN").item(0).getTextContent().trim();
+
+        if (!tempValue.equals("")) {
+            if (firstFlag) {
+                map.put("v_HASOPINIONYN", tempValue);
+                map.put("v_FIRSTFLAG10", firstFlag);
+                firstFlag = false;
+            } else {
+                map.put("v_HASOPINIONYN", tempValue);
+                map.put("v_FIRSTFLAG10", firstFlag);
+            }
+        }
+
+        tempValue = docXML.getElementsByTagName("STARTDATE").item(0).getTextContent().trim();
+
+        if (tempValue.equals("DRAFT")) {
+            if (firstFlag) {
+                map.put("v_STARTDATE", commonUtil.getTodayUTCTime(""));
+                map.put("v_FIRSTFLAG11", firstFlag);
+                firstFlag = false;
+            } else {
+                map.put("v_STARTDATE", commonUtil.getTodayUTCTime(""));
+                map.put("v_FIRSTFLAG11", firstFlag);
+            }
+        }
+
+        tempValue = docXML.getElementsByTagName("ENDDATE").item(0).getTextContent().trim();
+
+        if (tempValue.equals("DRAFT")) {
+            if (firstFlag) {
+                map.put("v_ENDDATE", "NULL");
+                map.put("v_FIRSTFLAG12", firstFlag);
+                firstFlag = false;
+            } else {
+                map.put("v_ENDDATE", "NULL");
+                map.put("v_FIRSTFLAG12", firstFlag);
+            }
+        }
+
+        tempValue = docXML.getElementsByTagName("WRITERID").item(0).getTextContent().trim();
+
+        if (!tempValue.equals("")) {
+            if (firstFlag) {
+                map.put("v_WRITERID", tempValue);
+                map.put("v_FIRSTFLAG13", firstFlag);
+                firstFlag = false;
+            } else {
+                map.put("v_WRITERID", tempValue);
+                map.put("v_FIRSTFLAG13", firstFlag);
+            }
+        }
+
+        tempValue = docXML.getElementsByTagName("WRITERNAME").item(0).getTextContent().trim();
+
+        if (!tempValue.equals("")) {
+            if (firstFlag) {
+                map.put("v_WRITERNAME", tempValue);
+                map.put("v_FIRSTFLAG14", firstFlag);
+                firstFlag = false;
+            } else {
+                map.put("v_WRITERNAME", tempValue);
+                map.put("v_FIRSTFLAG14", firstFlag);
+            }
+        }
+
+        if (docXML.getElementsByTagName("WRITERNAME2").item(0) != null) {
+            tempValue = docXML.getElementsByTagName("WRITERNAME2").item(0).getTextContent().trim();
+
+            if (!tempValue.equals("")) {
+                if (firstFlag) {
+                    map.put("v_WRITERNAME2", tempValue);
+                    map.put("v_FIRSTFLAG15", firstFlag);
+                    firstFlag = false;
+                } else {
+                    map.put("v_WRITERNAME2", tempValue);
+                    map.put("v_FIRSTFLAG15", firstFlag);
+                }
+            }
+        }
+
+        tempValue = docXML.getElementsByTagName("WRITERJOBTITLE").item(0).getTextContent().trim();
+
+        if (!tempValue.equals("")) {
+            if (firstFlag) {
+                map.put("v_WRITERJOBTITLE", tempValue);
+                map.put("v_FIRSTFLAG16", firstFlag);
+                firstFlag = false;
+            } else {
+                map.put("v_WRITERJOBTITLE", tempValue);
+                map.put("v_FIRSTFLAG16", firstFlag);
+            }
+        }
+
+        if (docXML.getElementsByTagName("WRITERJOBTITLE2").item(0) != null) {
+            tempValue = docXML.getElementsByTagName("WRITERJOBTITLE2").item(0).getTextContent().trim();
+
+            if (!tempValue.equals("")) {
+                if (firstFlag) {
+                    map.put("v_WRITERJOBTITLE2", tempValue);
+                    map.put("v_FIRSTFLAG17", firstFlag);
+                    firstFlag = false;
+                } else {
+                    map.put("v_WRITERJOBTITLE2", tempValue);
+                    map.put("v_FIRSTFLAG17", firstFlag);
+                }
+            }
+        }
+
+        tempValue = docXML.getElementsByTagName("WRITERDEPTID").item(0).getTextContent().trim();
+
+        if (!tempValue.equals("")) {
+            if (firstFlag) {
+                map.put("v_WRITERDEPTID", tempValue);
+                map.put("v_FIRSTFLAG18", firstFlag);
+                firstFlag = false;
+            } else {
+                map.put("v_WRITERDEPTID", tempValue);
+                map.put("v_FIRSTFLAG18", firstFlag);
+            }
+        }
+
+        tempValue = docXML.getElementsByTagName("WRITERDEPTNAME").item(0).getTextContent().trim();
+
+        if (!tempValue.equals("")) {
+            if (firstFlag) {
+                map.put("v_WRITERDEPTNAME", tempValue);
+                map.put("v_FIRSTFLAG19", firstFlag);
+                firstFlag = false;
+            } else {
+                map.put("v_WRITERDEPTNAME", tempValue);
+                map.put("v_FIRSTFLAG19", firstFlag);
+            }
+        }
+
+        if (docXML.getElementsByTagName("WRITERDEPTNAME2").item(0) != null) {
+            tempValue = docXML.getElementsByTagName("WRITERDEPTNAME2").item(0).getTextContent().trim();
+
+            if (!tempValue.equals("")) {
+                if (firstFlag) {
+                    map.put("v_WRITERDEPTNAME2", tempValue);
+                    map.put("v_FIRSTFLAG20", firstFlag);
+                    firstFlag = false;
+                } else {
+                    map.put("v_WRITERDEPTNAME2", tempValue);
+                    map.put("v_FIRSTFLAG20", firstFlag);
+                }
+            }
+        }
+
+        tempValue = docXML.getElementsByTagName("PUBLICATION").item(0).getTextContent().trim();
+
+        if (!tempValue.equals("")) {
+            if (firstFlag) {
+                map.put("v_ISPUBLIC", tempValue);
+                map.put("v_FIRSTFLAG21", firstFlag);
+                firstFlag = false;
+            } else {
+                map.put("v_ISPUBLIC", tempValue);
+                map.put("v_FIRSTFLAG21", firstFlag);
+            }
+        }
+
+        map.put("v_DOCID", docID);
+        map.put("v_TENANTID", tenantID);
+
+        ezApprovalGDAO.updateAprDocInfo(map);
+
+        firstFlag = true;
+
+        tempValue = docXML.getElementsByTagName("SECURITY").item(0).getTextContent().trim();
+
+        if (!tempValue.equals("")) {
+            if (firstFlag) {
+                map.put("v_SECURITYCODE", tempValue);
+                map.put("v_FIRSTFLAG", firstFlag);
+                firstFlag = false;
+            } else {
+                map.put("v_SECURITYCODE", tempValue);
+                map.put("v_FIRSTFLAG", firstFlag);
+            }
+        }
+
+        tempValue = docXML.getElementsByTagName("KEEPPERIOD").item(0).getTextContent().trim();
+
+        if (!tempValue.equals("")) {
+            if (firstFlag) {
+                map.put("v_STORAGEPERIOD", tempValue);
+                map.put("v_FIRSTFLAG2", firstFlag);
+                firstFlag = false;
+            } else {
+                map.put("v_STORAGEPERIOD", tempValue);
+                map.put("v_FIRSTFLAG2", firstFlag);
+            }
+        }
+
+        tempValue = docXML.getElementsByTagName("ITEMCODE").item(0).getTextContent().trim();
+
+        if (!tempValue.equals("")) {
+            if (firstFlag) {
+                map.put("v_ITEMCODE", tempValue);
+                map.put("v_FIRSTFLAG3", firstFlag);
+                firstFlag = false;
+            } else {
+                map.put("v_ITEMCODE", tempValue);
+                map.put("v_FIRSTFLAG3", firstFlag);
+            }
+        }
+
+        tempValue = docXML.getElementsByTagName("ITEMNAME").item(0).getTextContent().trim();
+
+        if (!tempValue.equals("")) {
+            if (firstFlag) {
+                map.put("v_ITEMNAME", tempValue);
+                map.put("v_FIRSTFLAG4", firstFlag);
+                firstFlag = false;
+            } else {
+                map.put("v_ITEMNAME", tempValue);
+                map.put("v_FIRSTFLAG4", firstFlag);
+            }
+        }
+
+        if (docXML.getElementsByTagName("ITEMNAME2").item(0) != null) {
+            tempValue = docXML.getElementsByTagName("ITEMNAME2").item(0).getTextContent().trim();
+
+            if (!tempValue.equals("")) {
+                if (firstFlag) {
+                    map.put("v_ITEMNAME2", tempValue);
+                    map.put("v_FIRSTFLAG5", firstFlag);
+                    firstFlag = false;
+                } else {
+                    map.put("v_ITEMNAME2", tempValue);
+                    map.put("v_FIRSTFLAG5", firstFlag);
+                }
+            }
+        }
+
+        tempValue = docXML.getElementsByTagName("URGENTAPPROVAL").item(0).getTextContent().trim();
+
+        if (!tempValue.equals("")) {
+            if (firstFlag) {
+                map.put("v_URGENTAPPROVAL", tempValue);
+                map.put("v_FIRSTFLAG6", firstFlag);
+                firstFlag = false;
+            } else {
+                map.put("v_URGENTAPPROVAL", tempValue);
+                map.put("v_FIRSTFLAG6", firstFlag);
+            }
+        }
+
+        tempValue = docXML.getElementsByTagName("KEYWORD").item(0).getTextContent().trim();
+
+        if (!tempValue.equals("")) {
+            if (firstFlag) {
+                map.put("v_KEYWORD", tempValue);
+                map.put("v_FIRSTFLAG7", firstFlag);
+                firstFlag = false;
+            } else {
+                map.put("v_KEYWORD", tempValue);
+                map.put("v_FIRSTFLAG7", firstFlag);
+            }
+        }
+
+        if (docXML.getElementsByTagName("SPECIALRECORDCODE").item(0) != null) {
+            tempValue = docXML.getElementsByTagName("SPECIALRECORDCODE").item(0).getTextContent().trim();
+
+            if (!tempValue.equals("")) {
+                if (firstFlag) {
+                    map.put("v_SPECIALRECORDCODE", tempValue);
+                    map.put("v_FIRSTFLAG8", firstFlag);
+                    firstFlag = false;
+                } else {
+                    map.put("v_SPECIALRECORDCODE", tempValue);
+                    map.put("v_FIRSTFLAG8", firstFlag);
+                }
+            }
+        }
+
+        if (docXML.getElementsByTagName("PUBLICITYCODE").item(0) != null) {
+            tempValue = docXML.getElementsByTagName("PUBLICITYCODE").item(0).getTextContent().trim();
+
+            if (!tempValue.equals("")) {
+                if (firstFlag) {
+                    map.put("v_PUBLICITYCODE", tempValue);
+                    map.put("v_FIRSTFLAG9", firstFlag);
+                    firstFlag = false;
+                } else {
+                    map.put("v_PUBLICITYCODE", tempValue);
+                    map.put("v_FIRSTFLAG9", firstFlag);
+                }
+            }
+        }
+
+        if (docXML.getElementsByTagName("PUBLICITYYN").item(0) != null) {
+            tempValue = docXML.getElementsByTagName("PUBLICITYYN").item(0).getTextContent().trim();
+
+            if (!tempValue.equals("")) {
+                if (firstFlag) {
+                    map.put("v_PUBLICITYYN", tempValue);
+                    map.put("v_FIRSTFLAG19", firstFlag);
+                    firstFlag = false;
+                } else {
+                    map.put("v_PUBLICITYYN", tempValue);
+                    map.put("v_FIRSTFLAG19", firstFlag);
+                }
+            }
+        }
+
+        if (docXML.getElementsByTagName("LIMITRANGE").item(0) != null) {
+            tempValue = docXML.getElementsByTagName("LIMITRANGE").item(0).getTextContent().trim();
+
+            if (!tempValue.equals("")) {
+                if (firstFlag) {
+                    map.put("v_LIMITRANGE", tempValue);
+                    map.put("v_FIRSTFLAG10", firstFlag);
+                    firstFlag = false;
+                } else {
+                    map.put("v_LIMITRANGE", tempValue);
+                    map.put("v_FIRSTFLAG10", firstFlag);
+                }
+            }
+        }
+
+        if (docXML.getElementsByTagName("PAGENUM").item(0) != null) {
+            tempValue = docXML.getElementsByTagName("PAGENUM").item(0).getTextContent().trim();
+
+            if (!tempValue.equals("")) {
+                if (firstFlag) {
+                    map.put("v_PAGENUM", tempValue);
+                    map.put("v_FIRSTFLAG11", firstFlag);
+                    firstFlag = false;
+                } else {
+                    map.put("v_PAGENUM", tempValue);
+                    map.put("v_FIRSTFLAG11", firstFlag);
+                }
+            }
+        }
+
+        if (docXML.getElementsByTagName("CABINETID").item(0) != null) {
+            tempValue = docXML.getElementsByTagName("CABINETID").item(0).getTextContent().trim();
+
+            if (!tempValue.equals("")) {
+                if (firstFlag) {
+                    map.put("v_CABINETID", tempValue);
+                    map.put("v_FIRSTFLAG12", firstFlag);
+                    firstFlag = false;
+                } else {
+                    map.put("v_CABINETID", tempValue);
+                    map.put("v_FIRSTFLAG12", firstFlag);
+                }
+            }
+        }
+
+        if (docXML.getElementsByTagName("TASKCODE").item(0) != null) {
+            tempValue = docXML.getElementsByTagName("TASKCODE").item(0).getTextContent().trim();
+
+            if (!tempValue.equals("")) {
+                if (firstFlag) {
+                    map.put("v_TASKCODE", tempValue);
+                    map.put("v_FIRSTFLAG13", firstFlag);
+                    firstFlag = false;
+                } else {
+                    map.put("v_TASKCODE", tempValue);
+                    map.put("v_FIRSTFLAG13", firstFlag);
+                }
+            }
+        }
+
+        if (docXML.getElementsByTagName("DOCNUMCODE").item(0) != null) {
+            tempValue = docXML.getElementsByTagName("DOCNUMCODE").item(0).getTextContent().trim();
+
+            if (!tempValue.equals("")) {
+                if (firstFlag) {
+                    map.put("v_DOCNUMCODE", tempValue);
+                    map.put("v_FIRSTFLAG14", firstFlag);
+                    firstFlag = false;
+                } else {
+                    map.put("v_DOCNUMCODE", tempValue);
+                    map.put("v_FIRSTFLAG14", firstFlag);
+                }
+            }
+        }
+
+        if (docXML.getElementsByTagName("ORGDOCNUMCODE").item(0) != null) {
+            tempValue = docXML.getElementsByTagName("ORGDOCNUMCODE").item(0).getTextContent().trim();
+
+            if (!tempValue.equals("")) {
+                if (firstFlag) {
+                    map.put("v_ORGDOCNUMCODE", tempValue);
+                    map.put("v_FIRSTFLAG15", firstFlag);
+                    firstFlag = false;
+                } else {
+                    map.put("v_ORGDOCNUMCODE", tempValue);
+                    map.put("v_FIRSTFLAG15", firstFlag);
+                }
+            }
+        }
+
+        if (docXML.getElementsByTagName("SEPERATEATTACHXML").item(0) != null) {
+            tempValue = docXML.getElementsByTagName("SEPERATEATTACHXML").item(0).getTextContent().trim();
+
+            if (!tempValue.equals("")) {
+                if (firstFlag) {
+                    map.put("v_SEPERATEATTACHXML", tempValue);
+                    map.put("v_FIRSTFLAG16", firstFlag);
+                    firstFlag = false;
+                } else {
+                    map.put("v_SEPERATEATTACHXML", tempValue);
+                    map.put("v_FIRSTFLAG16", firstFlag);
+                }
+            }
+        }
+
+        if (docXML.getElementsByTagName("SUMMARY").item(0) != null && docXML.getElementsByTagName("SUMMARYPATH").item(0) != null) {
+            tempValue = docXML.getElementsByTagName("SUMMARY").item(0).getTextContent();
+            String tempValue2 = docXML.getElementsByTagName("SUMMARYPATH").item(0).getTextContent();
+            if (!tempValue.trim().equals("") && !tempValue2.trim().equals("")) {
+                if (firstFlag) {
+                    map.put("v_SUMMARY", tempValue);
+                    map.put("v_SUMMARYPATH", tempValue2);
+                    map.put("v_FIRSTFLAG17", firstFlag);
+                    firstFlag = false;
+                } else {
+                    map.put("v_SUMMARY", tempValue);
+                    map.put("v_SUMMARYPATH", tempValue2);
+                    map.put("v_FIRSTFLAG17", firstFlag);
+                }
+            }
+        }
+
+        if (docXML.getElementsByTagName("SECURITYAPPROVAL").item(0) != null) {
+            tempValue = docXML.getElementsByTagName("SECURITYAPPROVAL").item(0).getTextContent().trim();
+
+            if (!tempValue.equals("")) {
+                if (firstFlag) {
+                    map.put("v_SECURITYAPPROVAL", tempValue);
+                    map.put("v_FIRSTFLAG18", firstFlag);
+                    firstFlag = false;
+                } else {
+                    map.put("v_SECURITYAPPROVAL", tempValue);
+                    map.put("v_FIRSTFLAG18", firstFlag);
+                }
+            }
+        }
+
+        map.put("v_DOCID", docID);
+        map.put("v_TENANTID", tenantID);
+
+        ezApprovalGDAO.updateExpAprDocInfo(map);
+
+        if (docXML.getElementsByTagName("STARTDATE").item(0).getTextContent().trim().equals("DRAFT")) {
+            insLastAprLine(docID, docXML.getElementsByTagName("FORMID").item(0).getTextContent().trim(), docXML.getElementsByTagName("DOCSTATE").item(0).getTextContent().trim(), userID, companyID, lang, tenantID);
+            insLastAprReceipt(docID, docXML.getElementsByTagName("FORMID").item(0).getTextContent().trim(), docXML.getElementsByTagName("DOCSTATE").item(0).getTextContent().trim(), userID, companyID, lang, tenantID);
+        }
+
+        logger.debug("updateDocInfo ended");
+
+        return rtnVal;
+    }
+
+    public void insLastAprLine(String docID, String formID, String docState, String userID, String companyID, String lang, int tenantID) throws Exception {
+        logger.debug("insLastAprLine started");
+
+        String isUse = ezApprovalGService.getCode2Name("A44", "001", companyID, lang, tenantID);
+
+        if (isUse.equals("1")) {
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put("v_USERID", userID);
+            map.put("v_FORMID", formID);
+            map.put("v_DOCID", docID);
+            map.put("companyID", companyID);
+            map.put("v_TENANTID", tenantID);
+            map.put("docState", docState);
+
+            /* 2020-08-04 홍승비 - 신규 양식 생성하여 처음 결재선 지정하고 기안하는 경우, 오라클에서 DOCSTATE값 NULL로 들어가서 터지는 오류 수정 */
+            if ((commonUtil.getDatabaseType().equalsIgnoreCase("oracle") || commonUtil.getDatabaseType().equalsIgnoreCase("tibero")) && (docState == null || docState.trim().equals(""))) {
+                map.put("docState", " "); // 임의로 공백문자 삽입
+            }
+
+            ezApprovalGDAO.deleteLastAprLine(map);
+            ezApprovalGDAO.insertLastAprLine(map);
+        }
+
+        logger.debug("insLastAprLine ended");
+    }
+
+    public void insLastAprReceipt(String docID, String formID, String docState, String userID, String companyID, String lang, int tenantID) throws Exception {
+        logger.debug("insLastAprReceipt started");
+
+        String isUse = ezApprovalGService.getCode2Name("A44", "002", companyID, lang, tenantID);
+
+        if (isUse.equals("1")) {
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put("companyID", companyID);
+            map.put("v_USERID", userID);
+            map.put("v_FORMID", formID);
+            map.put("v_DOCID", docID);
+            map.put("v_TENANTID", tenantID);
+            map.put("docState", docState);
+
+            ezApprovalGDAO.deleteLastDeptLine(map);
+            ezApprovalGDAO.insertLastDeptLine(map);
+        }
+
+        logger.debug("insLastAprReceipt ended");
+    }
 }

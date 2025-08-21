@@ -4206,5 +4206,17 @@
 		AND
 		    SUBSTR(EXTENSIONATTRIBUTE5, 1, INSTR(EXTENSIONATTRIBUTE5, ':', 1, 1) -1) = #userID#
 	</select>
-	
+
+    <select id="MApprovalG.getAttachFileMaxSn" parameterClass="map" resultClass="Integer">
+        SELECT
+            NVL(MAX(ATTACHFILESN), 0)
+        FROM
+            TBL_APRATTACHINFO
+        WHERE
+            DOCID = #v_DOCID#
+        AND
+            TENANT_ID = #v_TENANTID#
+        AND
+            COMPANYID = #companyID#
+    </select>
 </sqlMap>

@@ -6,6 +6,10 @@ import java.util.List;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
+import egovframework.ezEKP.ezOrgan.service.EzOrganService;
+import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
+import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,6 +52,12 @@ public class MOrganGWController {
 	
 	@Resource(name="MOptionService")
 	private MOptionService mOptionService;
+
+	@Resource(name = "EzOrganAdminService")
+	private EzOrganAdminService ezOrganAdminService;
+
+	@Resource(name="EzOrganService")
+	private EzOrganService ezOrganService;
 	
 	/**
 	 * 모바일 G/W 직원조회 [GET] 직원 리스트
@@ -300,6 +310,74 @@ public class MOrganGWController {
 
 		logger.debug("MOBILE G/W APPROVAL [GET /mobile/ezorgan/depts/" + deptID + "/userList] ended.");
 		
+		return result;
+	}
+
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/mobile/ezorgan/mGetEntryInfo", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject mGetEntryInfo(HttpServletRequest request) {
+		logger.debug("MOBILE G/W APPROVAL [GET /mobile/ezorgan/mGetEntryInfo] started.");
+		JSONObject result = new JSONObject();
+
+		try {
+			String serverName = request.getHeader("x-user-host");
+			String cn = request.getParameter("cn");
+			String proplist = request.getParameter("proplist");
+			String userId = request.getParameter("userID");
+	
+			MCommonVO userInfo = mOptionService.commonInfo(serverName, userId);
+			
+			String infoXML = ezOrganAdminService.getPropertyList(cn, proplist, "1", userInfo.getTenantId());
+
+			result.put("status", "ok");
+			result.put("code", "0");
+			result.put("data", infoXML);
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			result.put("status", "error");
+			result.put("code", "1");
+		}
+
+		logger.debug("MOBILE G/W APPROVAL [GET /mobile/ezorgan/mGetEntryInfo] ended.");
+		return result;
+	}
+
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/mobile/ezorgan/mGetUpperDeptName", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject mGetUpperDeptName(HttpServletRequest request) {
+		logger.debug("MOBILE G/W APPROVAL [GET /mobile/ezorgan/mGetUpperDeptName] started.");
+		JSONObject result = new JSONObject();
+
+		try {
+			String serverName = request.getHeader("x-user-host");
+			String deptID = request.getParameter("deptID");
+			String userId = request.getParameter("userID");
+
+			MCommonVO userInfo = mOptionService.commonInfo(serverName, userId);
+
+			JSONObject json = new JSONObject();
+			if (StringUtils.isNotBlank(deptID)) {
+				String upperDeptName = "";
+				OrganDeptVO organDeptVO = ezOrganService.getDeptInfo(deptID, userInfo.getPrimary(), userInfo.getTenantId());
+				OrganDeptVO upperDept = ezOrganAdminService.getDeptDisplayNm(organDeptVO.getExtensionAttribute1(), userInfo.getTenantId());
+				if (upperDept != null) {
+					upperDeptName = userInfo.getLang().equals("2") ? upperDept.getDisplayName2() : upperDept.getDisplayName();
+					json.put("upperDeptName", upperDeptName);
+					json.put("upperDeptName1", upperDept.getDisplayName());
+					json.put("upperDeptName2", upperDept.getDisplayName2());
+				}
+			}
+			
+			result.put("status", "ok");
+			result.put("code", "0");
+			result.put("data", json);
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			result.put("status", "error");
+			result.put("code", "1");
+		}
+
+		logger.debug("MOBILE G/W APPROVAL [GET /mobile/ezorgan/mGetUpperDeptName] ended.");
 		return result;
 	}
 }
