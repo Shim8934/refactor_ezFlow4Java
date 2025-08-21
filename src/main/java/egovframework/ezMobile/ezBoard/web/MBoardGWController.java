@@ -30,6 +30,7 @@ import javax.mail.internet.InternetAddress;
 import javax.servlet.http.HttpServletRequest;
 
 import egovframework.ezEKP.ezBoard.dao.EzBoardDAO;
+import egovframework.ezEKP.ezBoard.vo.BoardItemVO;
 import egovframework.ezMobile.ezBoard.dao.MBoardDAO;
 import egovframework.ezEKP.ezBoard.vo.BoardKeywordVO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -414,6 +415,11 @@ public class MBoardGWController {
 			data.put("myBoardScrapFlag", myBoardScrapFlag);
 			data.put("isScrap", isScrap);
 			data.put("itemStarRating", itemStarRating);
+			
+			if ("9".equals(boardInfo.getGuBun())) { // fileViewer 게시판
+				BoardItemVO satBoardInfo = ezBoardService.getMsatCallUrl(request, boardInfo, info);
+				data.put("satBoardInfo", satBoardInfo);
+			}
 			
 			result.put("status", "ok");
 			result.put("code", 0);			

@@ -28,6 +28,8 @@ import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezBoard.vo.MealDataVO;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
+import egovframework.ezMobile.ezBoard.vo.MBoardInfoVO;
+import egovframework.ezMobile.ezOption.vo.MCommonVO;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -608,4 +610,6 @@ public interface EzBoardService {
     public boolean checkGuestPerm(String id, int tenantId, String type) throws Exception;
 	
 	public List<BoardListVO> getGuestBoardList(String boardID, int tenantID, int offset) throws Exception;
+
+	public BoardItemVO getMsatCallUrl(HttpServletRequest request, MBoardInfoVO boardInfo, MCommonVO info) throws Exception;
 }

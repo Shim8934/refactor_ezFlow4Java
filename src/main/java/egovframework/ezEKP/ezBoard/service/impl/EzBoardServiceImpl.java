@@ -53,6 +53,8 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import egovframework.ezEKP.ezBoard.vo.BoardKeywordVO;
 import egovframework.ezEKP.ezBoard.vo.BoardReplyAttachVO;
 import egovframework.ezEKP.ezBoard.vo.BoardHistoryVO;
+import egovframework.ezMobile.ezBoard.vo.MBoardInfoVO;
+import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.let.utl.fcc.service.EgovStringUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 
@@ -7977,5 +7979,24 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		logger.debug("getGuestBoardList ended.");
 
 		return list;
+	}
+
+	@Override
+	public BoardItemVO getMsatCallUrl(HttpServletRequest request, MBoardInfoVO boardInfo, MCommonVO info) throws Exception {
+		logger.debug("getMsatCallUrl started.");
+
+		BoardItemVO boardItemInfo = null;
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("boardID", boardInfo.getBoardID());
+		map.put("companyID", info.getCompanyId());
+		map.put("tenantID", info.getTenantId());
+		map.put("versionYN", boardInfo.getVersionManage() != null ? boardInfo.getVersionManage() : "N");
+
+		boardItemInfo = ezBoardDAO.getFileViewerBoardItemID(map);
+
+		logger.debug("getMsatCallUrl ended.");
+		
+		return boardItemInfo;
 	}
 }
