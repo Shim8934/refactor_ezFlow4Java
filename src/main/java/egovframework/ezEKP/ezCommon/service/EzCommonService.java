@@ -658,4 +658,9 @@ public interface EzCommonService {
 
 	// 2025-08-05 이유정 - 게시판 > 게시글 주소복사 컬럼 추가
 	public void alterTblBoardInfoUrlCopyFlag() throws Exception;
+
+	// 2025-07-10 이혜림 - 게시판 > 게시판 리스트 타입 컬럼 추가
+	public void addBoardUsrListShowType() throws Exception;
+
+	public void addBoardListShowType() throws Exception;
 }

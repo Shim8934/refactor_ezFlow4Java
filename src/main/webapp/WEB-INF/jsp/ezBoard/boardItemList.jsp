@@ -421,7 +421,8 @@
 							 searchQuery : SQLPARADATA,
 							 type 		 : boardViewType,
 							 likeFlag : likeFlag,
-							 disLikeFlag : disLikeFlag
+							 disLikeFlag : disLikeFlag,
+							 listShowType : usrListShowType
 							},
 					success: function(xml){
 						getBoardList_after(loadXMLString(xml));
@@ -1466,10 +1467,10 @@
 		        xmlhttp.send(pBoardID);
 		
 		        if (xmlhttp.status == 200) {
-		            if(parent.window.document.getElementsByTagName("h1").length == 0)
-		                location.href = "/admin/ezBoard/boardACL.do?adminType=y&parentNeed=Y&boardID=" + encodeURIComponent(pBoardID) + "&parentBoardID=" + encodeURIComponent(getNodeText(xmlhttp.responseText)) + "&boardType=" + pBoardType + "&boardName=" + encodeURIComponent(BrdName);
-		            else
-		                location.href = "/admin/ezBoard/boardACL.do?adminType=y&parentNeed=N&boardID=" + encodeURIComponent(pBoardID) + "&parentBoardID=" + encodeURIComponent(getNodeText(xmlhttp.responseText)) + "&boardType=" + pBoardType + "&boardName=" + encodeURIComponent(BrdName);
+					var parentNeed = (parent.window.document.getElementsByTagName("h1").length == 0) ? "Y" : "N";
+					location.href = "/admin/ezBoard/boardConfig.do?boardID=" + encodeURIComponent(pBoardID) + "&parentBoardID=" + encodeURIComponent(getNodeText(xmlhttp.responseText)) 
+							+ "&boardType=" + pBoardType + "&boardName=" + encodeURIComponent(BrdName)
+							+ "&adminType=y&parentNeed=" + parentNeed + "&userPageYN=Y";
 		        }
 		        else {
 		            alert("ERROR");
@@ -1798,6 +1799,23 @@
                 });
                 return retVal;
             }
+            
+            var usrListShowType = "";
+			function listShow(type) {
+				var general	= document.getElementById("listShowGeneral");
+				var expand = document.getElementById("listShowExpand");
+				
+				if (type == "G") {
+					general.className = "icon16 icon16_onlist";
+					expand.className = "icon16 icon16_clip";
+				} else {
+					general.className = "icon16 icon16_list";
+					expand.className = "icon16 icon16_onclip";
+				}
+				
+				usrListShowType = type;
+				getBoardList();
+			}
 		</script>
 	</head>
 	<c:choose>
@@ -1865,22 +1883,28 @@
 		        </c:if> --%>
 		        <li><span onClick="SaveMyBoard()"><spring:message code='ezBoard.t10052' /></span></li>
 			  </c:if>
-		        <!-- <li id="right">
-	            	<img src="/images/kr/cm/btn_noframe.gif" width="22" height="20" class="btnimg" id="PreViewNone" onclick="PreviewRayerChange('NONE')">
-	            	<img src="/images/kr/cm/btn_bottomframe.gif" width="22" height="20" class="btnimg" id="PreViewBottom" onclick="PreviewRayerChange('W')">
-					<img src="/images/kr/cm/btn_leftframe.gif" width="22" height="20" class="btnimg" id="PreViewleft" onclick="PreviewRayerChange('H')">
-					<img src="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="maillistoptiondiv" onclick="MailOptionView(this);" />
-				</li> -->
-				<div id="right" class="sub_frameIcon" style="float:right">	
-					<div class="sub_frameIconUL">
-					   	<p class="frameIconLI"><span class="icon16 btn_noframe" id="PreViewNone" onclick="PreviewRayerChange('NONE')"></span></p>
-					    <p class="frameIconLI"><span class="icon16 btn_bottomframe" id="PreViewBottom" onclick="PreviewRayerChange('W')"></span></p>
-					    <p class="frameIconLI"><span class="icon16 btn_leftframe" id="PreViewleft" onclick="PreviewRayerChange('H')"></span></p>
-					</div>
-					<div class="sub_frameIconUL02">
-					  	<p class="frameIconLI"><span mode="off" class="icon16 btn_arrow_down" id="maillistoptiondiv" onclick="MailOptionView(this);"></span></p>  
-					</div>
-				 </div>
+                <div id="right" class="sub_frameIcon" style="float:right">
+                    <div class="sub_frameIconUL00">
+                        <p class="frameIconLI">
+                            <span <c:if test="${admlistShowType == 'G'}">class="icon16 icon16_onlist"</c:if>
+                                  <c:if test="${admlistShowType == 'E'}">class="icon16 icon16_list"</c:if>
+                                  id="listShowGeneral" onclick="listShow('G')"></span>
+                        </p>
+                        <p class="frameIconLI">
+                            <span <c:if test="${admlistShowType == 'G'}">class="icon16 icon16_clip"</c:if>
+                                  <c:if test="${admlistShowType == 'E'}">class="icon16 icon16_onclip"</c:if>
+                                  id="listShowExpand" onclick="listShow('E')"></span>
+                        </p>
+                	</div>
+                    <div class="sub_frameIconUL">
+                        <p class="frameIconLI"><span class="icon16 btn_noframe" id="PreViewNone" onclick="PreviewRayerChange('NONE')"></span></p>
+                        <p class="frameIconLI"><span class="icon16 btn_bottomframe" id="PreViewBottom" onclick="PreviewRayerChange('W')"></span></p>
+                        <p class="frameIconLI"><span class="icon16 btn_leftframe" id="PreViewleft" onclick="PreviewRayerChange('H')"></span></p>
+                    </div>
+                    <div class="sub_frameIconUL02">
+                        <p class="frameIconLI"><span mode="off" class="icon16 btn_arrow_down" id="maillistoptiondiv" onclick="MailOptionView(this);"></span></p>  
+                    </div>
+				</div>
 				<!-- <li style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li> -->
 		        <li id="noti" style="display:none"><span onClick="ChangeNotiOrder()"><spring:message code='ezBoard.t4000' /></span></li>
 		        <c:if test="${boardInfo.boardAdmin_FG == true && boardInfo.guBun ne '2' && (boardInfo.likeFlag == 'Y' || boardInfo.disLikeFlag == 'Y')}">
@@ -1890,7 +1914,7 @@
 					  <li><span onClick="SaveScrapMyBoard()"><spring:message code='ezBoard.kmh13' /></span></li>
 			    </c:if>
 		        <c:if test="${boardInfo.boardAdmin_FG == true}">
-			        <li id="btn_acl"><span onClick="SetBoardAcl()"><spring:message code='ezBoard.t63' /></span></li> 
+			        <li id="btn_acl"><span onClick="SetBoardAcl()"><spring:message code='ezBoard.boardManage01' /></span></li> 
 		        </c:if>
 		        
 		        <%-- 2020-06-15 홍승비 - 즐겨찾기 여부에 따라 별모양 아이콘 스타일 수정 --%>

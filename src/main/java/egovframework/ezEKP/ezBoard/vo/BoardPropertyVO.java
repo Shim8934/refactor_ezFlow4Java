@@ -175,6 +175,8 @@ public class BoardPropertyVO {
 	private String notUsedFlag;
     /** URL 복사 사용여부 */
     private String urlCopyFlag;
+	/** 게시판 리스트표출방식 (G:기본/E:확장형/U:사용자설정) */
+	private String listShowType;
 	
 	public int getSs_board_maxRows() {
 		return ss_board_maxRows;
@@ -695,5 +697,11 @@ public class BoardPropertyVO {
 	}
 	public void setUrlCopyFlag(String urlCopyFlag) {
 		this.urlCopyFlag = urlCopyFlag;
+	}
+	public String getListShowType() {
+		return listShowType;
+	}
+	public void setListShowType(String listShowType) {
+		this.listShowType = listShowType;
 	}
 }

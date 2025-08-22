@@ -91,8 +91,7 @@ public class MSurveyServiceImpl extends EgovFileMngUtil implements MSurveyServic
 		userInfoNew.setDeptID(userInfo.getDeptId());
 		userInfoNew.setTenantId(userInfo.getTenantId());
 		
-		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		String endDate = commonUtil.getDateStringInUTC(formatter.format(new Date()), offset, true);		
+		String endDate = commonUtil.getTodayUTCTime("");		
 		title = title.replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_");
 		
 		MSurveyItemSearchVO searchVO = new MSurveyItemSearchVO(pageMode, start, end, tenantId, userId, primary, offsetMinute, title, endDate, userMode);
@@ -100,8 +99,7 @@ public class MSurveyServiceImpl extends EgovFileMngUtil implements MSurveyServic
 		if (pageMode.equals("processing") || pageMode.equals("finish") || pageMode.equals("all")) {
 			List<Long> listReceivedSurvey = getUserReceivedSurveyList(userInfo, 0);
 			List<Long> listReceivedResultSurvey = ezSurveyService.getUserReceivedSurveyResultList(userInfoNew, 0);
-			formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-			String timeUTC = commonUtil.getDateStringInUTC(formatter.format(new Date()), offset, true);
+			String timeUTC = commonUtil.getTodayUTCTime("");
 			searchVO.setSurveyIds(listReceivedSurvey);
 			searchVO.setSurveyResultIds(listReceivedResultSurvey);
 			searchVO.setToday(timeUTC);
@@ -301,9 +299,7 @@ public class MSurveyServiceImpl extends EgovFileMngUtil implements MSurveyServic
 		} else if (mode.equals("modify")) {
 			//Change modify status only if it's not draft survey
 			if (survey.getDraftFlag() == 0) {
-				SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-				Date date = new Date();
-				String timeUTC = commonUtil.getDateStringInUTC(formatter.format(date), userInfo.getOffSet(), true);
+				String timeUTC = commonUtil.getTodayUTCTime("");
 				survey.setModifyFlag(1);
 				survey.setUpdateDate(timeUTC);
 				survey.setUpdateUser(userInfo.getUserId());
@@ -689,9 +685,7 @@ public class MSurveyServiceImpl extends EgovFileMngUtil implements MSurveyServic
 		List<MRespondentVO> totalUsers = new ArrayList<>();
 		long responseId = mSurveyDAO.getMaxResponseId(map);
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		SimpleDateFormat formatter2 = new SimpleDateFormat("yyyy-MM-dd");
-		Date date = new Date();
-		String timeUTC = commonUtil.getDateStringInUTC(formatter.format(date), userInfo.getOffset(), true);
+		String timeUTC = commonUtil.getTodayUTCTime("");
 		map.put("tenantId", userInfo.getTenantId());
 		map.put("companyId", userInfo.getCompanyID());
 		map.put("primary", userInfo.getPrimary());
@@ -710,8 +704,7 @@ public class MSurveyServiceImpl extends EgovFileMngUtil implements MSurveyServic
 		}
 		
 		//Check date
-		String todayStr = formatter.format(new Date());
-		Date dToday = formatter.parse(todayStr);
+		Date dToday = formatter.parse(timeUTC);
 		Date dEndDate = formatter.parse(survey.getEndDate());
 		Date dStartDate = formatter.parse(survey.getStartDate());
 		
@@ -962,10 +955,10 @@ public class MSurveyServiceImpl extends EgovFileMngUtil implements MSurveyServic
 				}
 				
 				SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-				String todayStr            = formatter.format(new Date());
+				String todayStr            = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), true);
 				String endDateStr          = survey.getEndDate().substring(0, 10);
 				int openDays               = survey.getOpenDays();
-				Date today                 = formatter.parse(todayStr);
+				Date today                 = formatter.parse(todayStr.substring(0, 10));
 				Date endDate               = formatter.parse(endDateStr);
 				Calendar calendar          = Calendar.getInstance();
 				calendar.setTime(endDate); 
@@ -1008,11 +1001,7 @@ public class MSurveyServiceImpl extends EgovFileMngUtil implements MSurveyServic
 		String finishYN = "N";
 
 		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
-		String[] parts = offsetRaw.split("\\|");
-		String offset = parts[1];
-		date.setTimeZone(TimeZone.getTimeZone("GMT" + offset));
-		String nowStr = date.format(new Date());
+		String nowStr = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("yyyy-MM-dd HH:mm:ss"), offsetRaw, false);
 
 		Date nowDate = date.parse(nowStr);
 		Date endDate = date.parse(EndStr);

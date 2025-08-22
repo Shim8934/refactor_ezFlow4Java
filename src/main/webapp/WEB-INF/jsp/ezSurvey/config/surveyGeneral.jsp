@@ -67,7 +67,7 @@
 		<br>
 		
 		<div class="surveyBttn">
-			<a class="imgbtn"><span><spring:message code='ezSurvey.t17'/></span></a>
+			<a class="imgbtn"><span><spring:message code='ezSurvey.t119'/></span></a>
 			<a class="imgbtn"><span><spring:message code='ezSurvey.t18'/></span></a>
 		</div>
 		

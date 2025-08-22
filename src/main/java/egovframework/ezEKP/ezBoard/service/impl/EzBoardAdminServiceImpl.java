@@ -766,6 +766,7 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 		map.put("v_STARRATINGFLAG", boardPropertyVO.getStarRatingFlag());
 		map.put("versionManage", boardPropertyVO.getVersionManage());
 		map.put("v_NOTUSEDFLAG", boardPropertyVO.getNotUsedFlag());
+		map.put("v_LISTSHOWTYPE", boardPropertyVO.getListShowType());
         map.put("v_URLCOPYFLAG", boardPropertyVO.getUrlCopyFlag());
 		
 		/* 2018-10-18 홍승비 - 게시판'그룹' 이름변경 시 하위게시판처럼 데이터가 업데이트되는 부분 수정 */

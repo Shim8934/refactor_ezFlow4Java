@@ -8282,6 +8282,7 @@
 					PORTLETCODE = 'mSchedule'
 			)
 	</update>
+<<<<<<< HEAD
     
 	<!-- 2024-10-28 조소정 - 게시판 > 일반설정 > 사용안함 여부 플래그 추가 -->
     <select id="EzCommonDAO.checkBoardNotUsedFlag" resultClass="String">
@@ -8587,5 +8588,42 @@
 			TBL_BOARD_BOARDINFO
 			ADD
 				URLCOPYFLAG CHAR(1) DEFAULT 'N' NOT NULL
+	</statement>
+
+	<select id="EzCommonDAO.checkAddBoardUsrListShowType" resultClass="String">
+		<![CDATA[
+		SELECT
+			USRLISTSHOWTYPE
+		FROM
+			TBL_BOARD_CONFIGURATION
+		WHERE
+			ROWNUM <= 1
+		]]>
+	</select>
+
+	<statement id="EzCommonDAO.addBoardUsrListShowType">
+		ALTER TABLE
+			TBL_BOARD_CONFIGURATION
+		ADD
+			USRLISTSHOWTYPE VARCHAR2(2) DEFAULT 'G' NOT NULL
+	</statement>
+
+
+	<select id="EzCommonDAO.checkAddBoardListShowType" resultClass="String">
+		<![CDATA[
+		SELECT
+			LISTSHOWTYPE
+		FROM
+			TBL_BOARD_BOARDINFO
+		WHERE
+			ROWNUM <= 1
+		]]>
+	</select>
+
+	<statement id="EzCommonDAO.addBoardListShowType">
+		ALTER TABLE
+			TBL_BOARD_BOARDINFO
+		ADD
+			LISTSHOWTYPE VARCHAR2(2) DEFAULT 'U' NOT NULL
 	</statement>
 </sqlMap>

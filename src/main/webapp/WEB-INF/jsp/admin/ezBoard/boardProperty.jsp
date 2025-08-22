@@ -152,6 +152,7 @@
 				}
 
 				checkGubun();
+				listViewTypeSetting();
 	            /* 2019-04-26 홍승비 - 게시판 설정으로 통합된 TR들을 체크박스 disabled 설정으로 변경 */
 	            /* 2018-07-11 홍승비 - 포토, 썸네일, 익명, URL, 동영상 게시판 선택 시 답변메일발송 tr 보이지 않도록 수정 */
 	            //추가항목
@@ -598,6 +599,15 @@
 				if(!versionManageFlag && vmf === "Y") { /* 2025-06-12 양지혜 - 버전관리 미사용 > 사용 시, 기존 게시글 히스토리 데이터 생성 */
 					if (!createModifyHistory()) { return; }
 				}
+				
+				var checkListFlag = "";
+                if ($("#chkListUsr").is(":checked")) {
+                    checkListFlag = "U";
+                } else if ($("#chkListGeneral").is(":checked")) {
+                    checkListFlag = "G";
+                } else if ($("#chkListExpand").is(":checked")) {
+                    checkListFlag = "E";
+                }
 
    	            /* 2023-10-30 조소정 - 게시판 사용안함 여부 기능 추가 */
 	            if ($("#chkBoardNotUsed").is(":checked")) {
@@ -628,7 +638,7 @@
 						reactFlag:useBoardReplyReact, useKeyword:useKeyword, publicFlag:publicFlag,
 						tabBoardCheck1:tabBoardCheck1, tabBoardCheck2:tabBoardCheck2, tabBoardCheck3:tabBoardCheck3, 
 						attachmentFlag:attachmentFlag, allNewBoardFlag:useAllNewBoard, writerFlag : writerFlag,
-						starRatingFlag:starRatingFlag, versionManage : vmf, notUsedFlag:useBoardNotUsed, urlCopyFlag:urlCopyFlag
+						starRatingFlag:starRatingFlag, versionManage : vmf, notUsedFlag:useBoardNotUsed, listShowType : checkListFlag, urlCopyFlag:urlCopyFlag
 	            	},
 	            	success : function(result) {
 	            	    if (result == "success") {
@@ -933,6 +943,24 @@
                     $("#versionManageChkBox").prop("checked", false);
                     $("#tr_versionManage").hide();
                 }
+
+				listViewTypeSetting();
+			}
+
+			/* 리스트 보기방식 제어 */
+			function listViewTypeSetting() {
+				var listViewTypes = document.getElementsByName("listViewType");
+				if (chkPhotoBoard.checked == true || chkThumbBoard.checked == true || chkMovieBoard.checked == true || chkURLBoard.checked == true || chkHomePageBoard.checked == true || fileViewerBoardChkBox.checked == true || chkCategoryBoard.checked == true) {
+					for (var elmt of listViewTypes) {
+						elmt.disabled = true;
+						if (elmt.id == 'chkListGeneral') { elmt.checked = true; }
+						else { elmt.checked = false; }
+					}
+				} else {
+					for (var elmt of listViewTypes) {
+						elmt.disabled = false;
+					}
+				}
 			}
 			
 			function checkApprBoard() {
@@ -1494,6 +1522,15 @@
 	                </c:if>
 	            </td>
 	        </tr>
+	        
+	        <tr style="${ style }">
+                <th><spring:message code="ezBoard.lhr009"/></th>
+                <td>
+                    <span style="display:inline-block;"><input type="radio" name="listViewType" id="chkListUsr" <c:out value="${model.listShowType == 'U' ? 'checked' : '' }"/>/><spring:message code = "ezBoard.lhr008" /></span>
+                    <span style="display:inline-block;"><input type="radio" name="listViewType" id="chkListGeneral" <c:out value="${model.listShowType == 'G' ? 'checked' : '' }"/>/><spring:message code = "ezBoard.lhr006" /></span>
+                    <span style="display:inline-block;"><input type="radio" name="listViewType" id="chkListExpand" <c:out value="${model.listShowType == 'E' ? 'checked' : '' }"/>/><spring:message code = "ezBoard.lhr007" /></span>
+                </td>
+            </tr>
 
 			<tr id = "tr_versionManage" style = "${ style }">
 				<th><spring:message code = "ezBoard.versionManage.msg1" /></th>

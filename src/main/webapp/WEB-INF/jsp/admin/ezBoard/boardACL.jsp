@@ -969,10 +969,10 @@
 		</c:if>
 		<div id="mainmenu">
             <ul>
-				<c:if test="${adminType == 'y'}">
+				<%--<c:if test="${adminType == 'y'}">
 	                <li><span onclick="goBoardList()"><spring:message code='ezBoard.t72'/></span></li>
 	                <!-- <li style="background:none; padding-right:2px; cursor:default;" class="off"><img src="/images/i_bar.gif" alt=""></li> -->
-				</c:if>
+				</c:if>--%>
 				<%-- 2019-09-19 홍승비 - 권한그룹 추가된 새로운 권한설정팝업 UI 추가, 기존권한 추가버튼 주석처리 --%>
             	<li class="important"><span onclick="SelectTargetNew()"><spring:message code='ezBoard.t602'/></span></li>
             	<%--<li class="important"><span onclick="SelectTarget()"><spring:message code='ezBoard.t602'/></span></li>--%>

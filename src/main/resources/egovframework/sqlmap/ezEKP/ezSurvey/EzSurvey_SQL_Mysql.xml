@@ -238,13 +238,13 @@
 				CASE
 					WHEN DRAFT_FLAG = 1
 					   THEN 'TMP'
-					WHEN NOW() < DATE_ADD(START_DATE, INTERVAL #offset# MINUTE)
+					WHEN #today# < START_DATE
 					   THEN 'WAIT'
-				    WHEN USE_STATUS = 2 AND NOW() <= DATE_ADD(END_DATE, INTERVAL #offset# MINUTE)
+				    WHEN USE_STATUS = 2 AND #today# <= END_DATE
 					   THEN 'PAUSE'
-					WHEN NOW() <= DATE_ADD(END_DATE, INTERVAL #offset# MINUTE)
+					WHEN #today# <= END_DATE
 					   THEN 'ING'
-					WHEN NOW() > DATE_ADD(END_DATE, INTERVAL #offset# MINUTE)
+					WHEN #today# > END_DATE
 					   THEN 'END'
 					ELSE 'END'
 				END  = #filterStatus#

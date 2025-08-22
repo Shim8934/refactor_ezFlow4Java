@@ -2591,6 +2591,10 @@ div#txtContent table {margin:auto;}
 .btn_leftframe{background-position:-52px -78px !important; width:16px; height:16px; display:inline-block !important; margin: 0px 0px 0px 0px !important; cursor:pointer;} /* icon16 프레임분활 왼쪽 */
 .btn_arrow_down{background-position:-78px -78px !important; width:16px; height:16px; display:inline-block !important; margin: 0px 0px 0px 0px !important; cursor:pointer;} /* icon16 프레임분활 아래화살표 */
 .icon16_spam {background-position: -234px -52px !important; width: 16px; height: 16px; display: inline-block; margin: 6px 0px 0px 0px;cursor: pointer;} /*icon16 스팸아이콘 */
+.icon16_clip{background-position:0px -131px !important; width:16px; height:16px; display:inline-block; margin: 0px 0px 0px 0px; cursor:pointer;} /* icon16 클립 아이콘 */
+.icon16_list{background-position:-26px -131px !important; width:16px; height:16px; display:inline-block; margin: 0px 0px 0px 0px; cursor:pointer;} /* icon16 리스트 아이콘 */
+.icon16_download{background-position:-208px -24px !important; width:16px; height:16px; display:inline-block; margin: 0px 1px 0px 1px; cursor:pointer;} /* icon16 다운 아이콘 */
+.icon16_magnifier{background-position:-182px -52px !important; width:16px; height:16px; display:inline-block; margin: 0px 1px 0px 1px; cursor:pointer;} /* icon16 돋보기 아이콘 */
 /* icon16 popup */
 .popup_icon16_delete{background-position:8px 5px !important; width:13px; height:16px; display:inline-block; margin: 0px; cursor:pointer; background-color: white !important;} /* icon16 삭제아이콘 */
 .popup_icon16_print{background-position:-70px -46px !important; width:13px; height:16px; display:inline-block; margin: 0px; cursor:pointer; background-color: white !important;} /* icon16 인쇄아이콘 */
@@ -2605,6 +2609,8 @@ div#txtContent table {margin:auto;}
 .sub_frameIcon .btn_bottomframe:hover, .btn_onbottomframe{background-position:-26px -104px !important; width:16px; height:16px; display:inline-block !important; margin: 0px 0px 0px 0px !important; cursor:pointer;} /* icon16 프레임분활 하단 오버 */
 .sub_frameIcon .btn_leftframe:hover, .btn_onleftframe{background-position:-52px -104px !important; width:16px; height:16px; display:inline-block !important; margin: 0px 0px 0px 0px !important; cursor:pointer;} /* icon16 프레임분활 왼쪽 오버 */
 .sub_frameIcon .btn_arrow_down:hover, .btn_onarrow_down{background-position:-78px -104px !important; width:16px; height:16px; display:inline-block !important; margin: 0px 0px 0px 0px !important; cursor:pointer;} /* icon16 프레임분활 아래화살표 오버 */
+.icon16_clip:hover, .icon16_onclip{background-position:0px -159.5px !important; width:16px; height:16px; display:inline-block !important; margin: 0px 0px 0px 0px !important; cursor:pointer;} /* icon16 클립 오버 */
+.icon16_list:hover, .icon16_onlist{background-position:-26px -159.5px !important; width:16px; height:16px; display:inline-block !important; margin: 0px 0px 0px 0px !important; cursor:pointer;} /* icon16 리스트 오버 */
 
 /* sub_frameIcon */
 .sub_frameIcon{ margin:0px !important; padding:0px !important; overflow:hidden !important;}
@@ -2613,6 +2619,10 @@ div#txtContent table {margin:auto;}
 .sub_frameIcon .sub_frameIconUL .frameIconLI:first-child{ border-left:none !important;}
 .sub_frameIcon .sub_frameIconUL02{ margin:0px 0px 0px 3px !important; padding:0px !important; float:left !important; overflow:hidden !important; width:29px !important; height:29px !important; box-sizing:border-box !important; list-style:none !important;border:1px solid #c7c7c7 !important; border-radius: 3px;}
 .sub_frameIcon .sub_frameIconUL02 .frameIconLI{ margin:0px !important; padding:6px 5px 5px 6px !important; overflow:hidden !important; cursor:pointer !important; border:none !important;}
+
+.sub_frameIcon .sub_frameIconUL00{ margin:0px 3px 0px 0px !important; padding:0px !important; overflow:hidden !important; width:57px !important; height:29px !important; box-sizing:border-box !important; list-style:none !important;border:1px solid #c7c7c7 !important; float:left !important; border-radius: 3px;}
+.sub_frameIcon .sub_frameIconUL00 .frameIconLI{ margin:0px !important; padding:6px 5px 5px 6px !important; float:left !important; overflow:hidden !important; cursor:pointer !important; border-left:1px solid #e6e6e6 !important; border-top:none !important; border-bottom:none !important; border-right:none !important;}
+.sub_frameIcon .sub_frameIconUL00 .frameIconLI:first-child{ border-left:none !important;}
 
 /* previewmail */
 .previewmail_bar_h{ border:1px solid #e5e5e5 !important; border-top:0px !important;}
@@ -4376,3 +4386,17 @@ body.drag *{user-select:none !important;}
 	border-radius: 5px;
 	overflow: hidden;
 }
+
+.list_attach_ul{border-top:1px solid #ddd; margin:8px 0 0; padding:8px 0 0; list-style:none; width:calc(100% - 20px); box-sizing:border-box; width:calc(100% - 20px);}
+.list_attach_ul li{margin:0; padding:0; height:28px; line-height:28px; display:flex; align-items:center;}
+.list_attach_ul li div{display:flex; max-width:100%; align-items:center;}
+/*.list_attach_ul li div span{font-size:14px; color:#384B63; vertical-align:top;}*/
+.list_attach_ul li div span{font-size:12px; color:#657b97; vertical-align:top;}
+.list_attach_ul li div span.file_name{white-space:nowrap; text-overflow:ellipsis; overflow:hidden;}
+.list_attach_ul li div span.file_capacity{margin: 0px 4px 0px 4px; flex-shrink:0;}
+/*.list_attach_ul li div span.attach_download{display:inline-block; width:16px; height:16px; background:url(../images/ImgIcon/attach_download.svg?v=1) no-repeat center; background-size:14px auto; margin:0 0 0 3px; cursor:pointer; box-sizing:border-box; flex-shrink:0;}*/
+.list_attach_ul li div span.attach_download{display:inline-block; width:20px; height:20px; background:url(../images/attach_download.svg?v=1) no-repeat center; background-size:20px auto; margin:0 0 0 5px; cursor:pointer; box-sizing:border-box; flex-shrink:0;}
+.list_attach_ul li div span.attach_view{display:inline-block; width:20px; height:20px; background:url(../images/attach_view.svg?v=1) no-repeat center; background-size:20px auto; margin:0 0 0 5px; cursor:pointer; box-sizing:border-box; flex-shrink:0;}
+.list_attach_ul li div span.attach_download:hover{background-image:url(../images/attach_download_hover.svg?v=1);}
+.list_attach_ul li div span.attach_view:hover{background-image:url(../images/attach_view_hover.svg?v=1);}
+.list_attach_ul li div:hover span{color:#0183BF;}

@@ -362,7 +362,8 @@
 							 searchQuery : SQLPARADATA,
 							 type 		 : boardViewType,
 							 likeFlag 	 : likeFlag,
-							 disLikeFlag : disLikeFlag
+							 disLikeFlag : disLikeFlag,
+							 listShowType : usrListShowType
 							},
 					success: function(xml){
 						getBoardList_after(loadXMLString(xml));
@@ -1196,10 +1197,10 @@
 		        xmlhttp.send(pBoardID);
 		
 		        if (xmlhttp.status == 200) {
-		            if (parent.window.document.getElementsByTagName("h1").length == 0)
-		                location.href = "/admin/ezBoard/boardACL.do?adminType=y&parentNeed=Y&boardID=" + encodeURIComponent(pBoardID) + "&parentBoardID=" + encodeURIComponent(getNodeText(xmlhttp.responseText)) + "&boardType=" + pBoardType + "&boardName=" + encodeURIComponent(BrdName);
-		            else
-		                location.href = "/admin/ezBoard/boardACL.do?adminType=y&parentNeed=N&boardID=" + encodeURIComponent(pBoardID) + "&parentBoardID=" + encodeURIComponent(getNodeText(xmlhttp.responseText)) + "&boardType=" + pBoardType + "&boardName=" + encodeURIComponent(BrdName);
+					var parentNeed = (parent.window.document.getElementsByTagName("h1").length == 0) ? "Y" : "N";
+					location.href = "/admin/ezBoard/boardConfig.do?boardID=" + encodeURIComponent(pBoardID) + "&parentBoardID=" + encodeURIComponent(getNodeText(xmlhttp.responseText))
+							+ "&boardType=" + pBoardType + "&boardName=" + encodeURIComponent(BrdName)
+							+ "&adminType=y&parentNeed=" + parentNeed + "&userPageYN=Y";
 		        }
 		        else {
 		            alert("ERROR");
@@ -1357,6 +1358,22 @@
                }
     	    }
 	    	
+	    	var usrListShowType = "";
+            function listShow(type) {
+                var general	= document.getElementById("listShowGeneral");
+                var expand = document.getElementById("listShowExpand");
+                
+                if (type == "G") {
+                    general.className = "icon16 icon16_onlist";
+                    expand.className = "icon16 icon16_clip";
+                } else {
+                    general.className = "icon16 icon16_list";
+                    expand.className = "icon16 icon16_onclip";
+                }
+                
+                usrListShowType = type;
+                getBoardList();
+            }
 		</script>
 	</head>
 	<c:choose>
@@ -1422,7 +1439,7 @@
 			    <!-- <li id="tbar1" style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li> -->		        
 			    <!-- <li id="Li1" style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" align="absmiddle"></li> -->
 			    <c:if test="${boardInfo.boardAdmin_FG == 'true'}">
-			    	<li id="btn_acl"><span onClick="SetBoardAcl()"><spring:message code='ezBoard.t63'/></span></li> 
+			    	<li id="btn_acl"><span onClick="SetBoardAcl()"><spring:message code='ezBoard.boardManage01'/></span></li> 
 		        </c:if>
 		        
 				<%-- 2020-06-15 홍승비 - 즐겨찾기 여부에 따라 별모양 아이콘 스타일 수정 --%>
@@ -1443,7 +1460,19 @@
 					<img src="/images/kr/cm/btn_leftframe.gif" width="22" height="20" class="btnimg" id="PreViewleft" onclick="PreviewRayerChange('H')">
 					<img src="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="maillistoptiondiv" onclick="MailOptionView(this);" />
 				</li> -->
-		        <div id="right" class="sub_frameIcon" style="float:right">	
+		        <div id="right" class="sub_frameIcon" style="float:right">
+                    <div class="sub_frameIconUL00">
+                        <p class="frameIconLI">
+                            <span <c:if test="${admlistShowType == 'G'}">class="icon16 icon16_onlist"</c:if>
+                                  <c:if test="${admlistShowType == 'E'}">class="icon16 icon16_list"</c:if>
+                                  id="listShowGeneral" onclick="listShow('G')"></span>
+                        </p>
+                        <p class="frameIconLI">
+                            <span <c:if test="${admlistShowType == 'G'}">class="icon16 icon16_clip"</c:if>
+                                  <c:if test="${admlistShowType == 'E'}">class="icon16 icon16_onclip"</c:if>
+                                  id="listShowExpand" onclick="listShow('E')"></span>
+                        </p>
+                    </div>	
 					<div class="sub_frameIconUL" style="width:57px !important">
 					   	<p class="frameIconLI"><span class="icon16 btn_noframe" id="PreViewNone" onclick="PreviewRayerChange('NONE')"></span></p>
 					    <p class="frameIconLI"><span class="icon16 btn_leftframe" id="PreViewleft" onclick="PreviewRayerChange('H')"></span></p>

@@ -2482,6 +2482,7 @@
 	      			STARRATINGFLAG = #v_STARRATINGFLAG#,
 	      			VERSIONMANAGE = #versionManage#,
 	      			NOTUSEDFLAG = #v_NOTUSEDFLAG#,
+	      			LISTSHOWTYPE = #v_LISTSHOWTYPE#,
 	      			URLCOPYFLAG = #v_URLCOPYFLAG#
 	    		WHERE
 	    			TENANT_ID = #v_TENANTID#

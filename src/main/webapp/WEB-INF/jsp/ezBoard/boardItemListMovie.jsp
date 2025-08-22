@@ -1223,10 +1223,10 @@
 		        xmlhttp.send(pBoardID);
 		
 		        if (xmlhttp.status == 200) {
-		            if (parent.window.document.getElementsByTagName("h1").length == 0)
-		                location.href = "/admin/ezBoard/boardACL.do?adminType=y&parentNeed=Y&boardID=" + encodeURIComponent(pBoardID) + "&parentBoardID=" + encodeURIComponent(getNodeText(xmlhttp.responseText)) + "&boardType=" + pBoardType + "&boardName=" + encodeURIComponent(BrdName);
-		            else
-		                location.href = "/admin/ezBoard/boardACL.do?adminType=y&parentNeed=N&boardID=" + encodeURIComponent(pBoardID) + "&parentBoardID=" + encodeURIComponent(getNodeText(xmlhttp.responseText)) + "&boardType=" + pBoardType + "&boardName=" + encodeURIComponent(BrdName);
+					var parentNeed = (parent.window.document.getElementsByTagName("h1").length == 0) ? "Y" : "N";
+					location.href = "/admin/ezBoard/boardConfig.do?boardID=" + encodeURIComponent(pBoardID) + "&parentBoardID=" + encodeURIComponent(getNodeText(xmlhttp.responseText))
+							+ "&boardType=" + pBoardType + "&boardName=" + encodeURIComponent(BrdName)
+							+ "&adminType=y&parentNeed=" + parentNeed + "&userPageYN=Y";
 		        }
 		        else {
 		            alert("ERROR");
@@ -1497,7 +1497,7 @@
 					</div>
 				</div>
 		        <c:if test="${boardInfo.boardAdmin_FG == true}">
-			        <li id="btn_acl"><span onClick="SetBoardAcl()"><spring:message code='ezBoard.t63' /></span></li>
+			        <li id="btn_acl"><span onClick="SetBoardAcl()"><spring:message code='ezBoard.boardManage01' /></span></li>
 		        </c:if>
 		        
 				<%-- 2020-06-15 홍승비 - 즐겨찾기 여부에 따라 별모양 아이콘 스타일 수정 --%>

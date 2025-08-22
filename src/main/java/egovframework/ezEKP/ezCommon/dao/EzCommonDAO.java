@@ -3727,4 +3727,25 @@ public class EzCommonDAO extends EgovAbstractDAO {
             update("EzCommonDAO.alterTblBoardInfoUrlCopyFlag");
         }
     }
+
+	// 2025-07-10 이혜림 - 게시판 > 게시판 목록 타입 컬럼 추가
+    public void addBoardUsrListShowType() {
+        try {
+            select("EzCommonDAO.checkAddBoardUsrListShowType");
+        } catch (Exception e) {
+            logger.debug("In TBL_Board_Configuration doesn't exist UsrListShowType column. creating the column...");
+
+            update("EzCommonDAO.addBoardUsrListShowType");
+        }
+    }
+
+	public void addBoardListShowType() {
+		try {
+			select("EzCommonDAO.checkAddBoardListShowType");
+		} catch (Exception e) {
+			logger.debug("In TBL_BOARD_BOARDINFO doesn't exist ListShowType column. creating the column...");
+
+			update("EzCommonDAO.addBoardListShowType");
+		}
+	}
 }

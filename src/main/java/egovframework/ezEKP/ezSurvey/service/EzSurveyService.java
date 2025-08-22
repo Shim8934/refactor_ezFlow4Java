@@ -62,7 +62,7 @@ public interface EzSurveyService {
 	List<SurveyParticipantVO> getSurveySubDeptListForMail(long surveyId, String companyId, int tenantId);
 	void updateMailSentFlag(long surveyId, int mailSentFlag, String companyId, int tenantId) throws Exception;
 	JSONObject checkRespondent(Long surveyId, LoginVO userInfo);
-	int getSurveyIngCnt(MCommonVO userInfo);
+	int getSurveyIngCnt(MCommonVO userInfo) throws Exception;
 	String checkTenantConfig(String propertyName, int tenantID) throws Exception;
 	
 	void setPreviewFlag(String prevMode, String userId, String companyId, int tenantId) throws Exception;

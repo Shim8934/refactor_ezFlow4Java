@@ -8847,4 +8847,15 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
     public void alterTblBoardInfoUrlCopyFlag() throws Exception {
         ezCommonDAO.alterTblBoardInfoUrlCopyFlag();
     }
+
+    // 2025-07-10 이혜림 - 게시판 > 게시판 목록 타입 컬럼 추가
+    @Override
+    public void addBoardUsrListShowType() throws Exception {
+        ezCommonDAO.addBoardUsrListShowType();
+    }
+
+    @Override
+    public void addBoardListShowType() throws Exception {
+        ezCommonDAO.addBoardListShowType();
+    }
 }
