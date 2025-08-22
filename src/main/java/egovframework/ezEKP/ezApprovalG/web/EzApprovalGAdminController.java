@@ -576,6 +576,7 @@ public class EzApprovalGAdminController extends EzFileMngUtil {
 		String passAprLineFlag = request.getParameter("passAprLineFlag");
 		String receptGubunYN = ezCommonService.getTenantConfig("receptGubunYN", userInfo.getTenantId());
 		String useDraftAll = ezCommonService.getTenantConfig("useDraftAll", userInfo.getTenantId());
+		String useMobileDraft = ezCommonService.getTenantConfig("useMobileDraft", userInfo.getTenantId());
 		
 		String title = (tCheck.equals("fIns") ? egovMessageSource.getMessage("ezApprovalG.t1667", userInfo.getLocale()) : egovMessageSource.getMessage("ezApprovalG.t1668", userInfo.getLocale()));
 		
@@ -674,6 +675,9 @@ public class EzApprovalGAdminController extends EzFileMngUtil {
 		
 		/* 2022-01-07 홍승비 - 일괄기안 옵션 추가 */
 		model.addAttribute("useDraftAll", useDraftAll);
+
+		/* 2025-08-22 김유진 - 모바일기안 옵션 추가 */
+		model.addAttribute("useMobileDraft", useMobileDraft);
 		
 		logger.debug("formMainOther ended.");
 		

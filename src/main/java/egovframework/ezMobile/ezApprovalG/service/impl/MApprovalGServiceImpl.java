@@ -2253,7 +2253,7 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
                     field = doc.getElementById(susinSN + "sign" + i);
                     if (field != null) {
                         String inner = field.html().trim();
-                        if (field.text().trim().isEmpty() && (inner.equals("&nbsp;") || inner.equals("") || inner.equals("<br>"))) {
+                        if (field.text().trim().isEmpty() && (inner.equals("&nbsp;") || inner.equals("") || inner.equals("<br>") || inner.equals("<p><br></p>") )) {
                             String strimg = "<img src='/images/signimgs/200.gif' border=0 embedding='1' ";
                             strimg += " spath = '" + "/images/signimgs/200.gif'";
                             strimg += " width=" + signImageSize.split("/")[0] ;

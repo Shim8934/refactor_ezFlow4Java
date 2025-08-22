@@ -1246,9 +1246,13 @@
                     
                     $("input:checkbox[id='officeFlag']").attr("checked", false);
                     $("input:checkbox[id='officeFlag']").attr("disabled", true);
+                    
+                    $("input:checkbox[id='reform-checkbox']").attr("checked", false);
+                    $("input:checkbox[id='reform-checkbox']").attr("disabled", true);
 		    	} else {
 		    		$("input:checkbox[id='setConnFlag']").attr("disabled", false);
 		    		$("input:checkbox[id='officeFlag']").attr("disabled", false);
+		    		$("input:checkbox[id='reform-checkbox']").attr("disabled", false);
 		    	}
 		    }
 		    
@@ -1391,9 +1395,14 @@
 				if (document.getElementById("reform-checkbox").checked) {
 					document.getElementById("ApvForm_sub7").style.display = "";
 					document.getElementById("ApvForm_sub8").style.display = "";
+					
+					$("input:checkbox[id='setMobileDraftFlag']").attr("checked", false);
+                    $("input:checkbox[id='setMobileDraftFlag']").attr("disabled", true);
 				} else {
 					document.getElementById("ApvForm_sub7").style.display = "none";
 					document.getElementById("ApvForm_sub8").style.display = "none";
+					
+					$("input:checkbox[id='setMobileDraftFlag']").attr("disabled", false);
 				}
 			}
 		</script>
@@ -1505,7 +1514,7 @@
                          <span style="<c:if test="${useDraftAll != 'YES'}">display:none;</c:if>"><input type="checkbox" id="setDraftAllFlag" onclick="changeDraftAllFlag()" /> <spring:message code='ezApprovalG.groupdocK01'/></span>
 						<span style="<c:if test="${usePassAprLine != 'YES'}">display:none;</c:if>"><input type="checkbox" id="setPassAprLineFlag" onclick="changePassAprLineFlag()"/> <spring:message code='ezApprovalG.garm09'/></span>
 						<%-- 2025-07-02 김유진 - 전자결재S 모바일 기안 양식 여부용 --%>
-						<c:if test="${approvalFlag == 'S' && useEditor != 'WebHWP' && useEditor != 'HWP'}">
+						<c:if test="${useMobileDraft == 'YES' && approvalFlag == 'S' && useEditor != 'WebHWP' && useEditor != 'HWP'}">
 						    <span><input type="checkbox" id="setMobileDraftFlag" onclick="changeMobileDraftFlag()"/> <spring:message code='ezApproval.mobileDraft.kyj01'/></span>
 						</c:if>
 					</td>

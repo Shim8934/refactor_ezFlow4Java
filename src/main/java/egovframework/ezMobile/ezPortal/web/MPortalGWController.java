@@ -825,12 +825,16 @@ public class MPortalGWController extends EzFileMngUtil {
 			
 			List<ScheduleGroupListVO> gatherList = ezScheduleService.getMyGatherList(userId, tenantId, companyId); // 2023-10-06 임정은 - 모바일 일정관리 > 일정 모아보기 추가
 
+			// 2025-08-22 김유진 - 모바일 전자결재 사용 여부
+			String useMobileDraft = ezCommonService.getTenantConfig("useMobileDraft", info.getTenantId());
+
 			dataObject.put("portalAccessCount", portalAccessCount);
 			dataObject.put("footerAccessCount", footerAccessCount);
 			dataObject.put("accessMenuCode", sortedMenu);
 			dataObject.put("approvalFlag", approvalFlag);
 			dataObject.put("useMobileMail2", useMobileMail2);
 			dataObject.put("gatherList", gatherList);
+			dataObject.put("useMobileDraft", useMobileDraft);
 			
 			result.put("status", "ok");
 			result.put("code", 0);			

@@ -294,8 +294,8 @@
 						DISPLAYNAME2 as deptName2,
 						DISPLAYNAME as userName1,
 						DISPLAYNAME2 as userName2,
-						'' as title1,
-						'' as title2
+						CAST('' AS NVARCHAR2(100)) as title1,
+						CAST('' AS NVARCHAR2(100)) as title2
 					FROM
 						TBL_DEPTMASTER
 					WHERE
@@ -453,8 +453,8 @@
 						DISPLAYNAME2 as deptName2,
 						DISPLAYNAME as userName1,
 						DISPLAYNAME2 as userName2,
-						'' as title1,
-						'' as title2
+						CAST('' AS NVARCHAR2(100)) as title1,
+						CAST('' AS NVARCHAR2(100)) as title2
 					FROM
 						TBL_DEPTMASTER
 					WHERE

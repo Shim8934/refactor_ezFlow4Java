@@ -2257,6 +2257,15 @@ public class EzCommonServiceImpl extends EzFileMngUtil implements EzCommonServic
             put("config_type","TEAMS");
         }});
 
+        test.add(new HashMap<String, Object>(){{
+            put("confName","useMobileDraft");
+            put("property_value","NO");
+            put("config_name","모바일 기안하기 사용 여부");
+            put("regdate","2025-08-22 00:00:00");
+            put("description","모바일 기안하기 사용 여부. YES: 사용, NO: 미사용 (default : NO)");
+            put("config_type","전자결재");
+        }});
+
         List<TenantVO> tenantIdList = ezCommonDAO.getTenantList();
 		
 		for (Map<String, Object> map : test) {
