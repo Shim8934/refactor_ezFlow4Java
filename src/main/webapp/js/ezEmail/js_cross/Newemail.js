@@ -1116,41 +1116,9 @@ function reject_onclick() {
     params["email"] = new Array();
     params["link"] = new Array();
     for (var n = 0; n < RejectArray.length; n++) {
-        var xmlHTTP = new XMLHttpRequest();
-        var xmlpara = createXmlDom();
-        var objNode;
-        xmlhttp_mailMoveDelete = createXMLHttpRequest();
-        createNodeInsert(xmlpara, objNode, "DATA");
-        var url = "";
-        url = document.getElementById(RejectArray[n]).getAttribute("_href");
-        createNodeAndInsertText(xmlpara, objNode, "ITEMID", url);
-        
-        var requestUrl = "/ezEmail/mailGetFromEmail.do";
-        
-		if (typeof(shareId) != "undefined" && shareId != "") {
-			requestUrl += "?shareId=" + encodeURIComponent(shareId);
-		}
-        
-        try {
-            xmlHTTP.open("POST", requestUrl, false);
-            xmlHTTP.send(xmlpara);
-
-            if (xmlHTTP.status < 200 || xmlHTTP.status > 300) {
-                alert("ERROR");
-                xmlDOM = null;
-                xmlHTTP = null;
-            }
-        }
-        catch (e) {
-            alert(e.description);
-            xmlDOM = null;
-            xmlHTTP = null;
-        }
-
-        var fromEmail = xmlHTTP.responseText;
-        xmlDOM = null;
-        xmlHTTP = null;
-        params["email"][n] = fromEmail;
+        const msgto = document.getElementById(RejectArray[n]).querySelectorAll('[data-msgto]')[0].getAttribute('data-msgto');
+        const splitAddr = getEmailAddressList(msgto);
+        params["email"][n] = quoteEmailName(splitAddr.name[0], splitAddr.email[0]);
         params["link"][n] = "";
     }
     denial_cross_dialogArguments[0] = params;

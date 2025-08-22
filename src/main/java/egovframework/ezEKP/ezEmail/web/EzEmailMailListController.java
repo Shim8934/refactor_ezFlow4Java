@@ -2575,6 +2575,7 @@ public class EzEmailMailListController {
 	
 	/**
 	 * 메일에서 보낸사람 정보 추출 함수
+	 * 2025-08-06 김은실 - 더이상 쓰이지 않음.
 	 */
 	@RequestMapping(value="/ezEmail/mailGetFromEmail.do", method=RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
@@ -2740,7 +2741,12 @@ public class EzEmailMailListController {
 			
 			if (email != null) {
 				if (!addresses.contains(email)) {
-					String displayName = address + " " + egovMessageSource.getMessage("ezEmail.t270", locale);
+					String ezEmailMsg = egovMessageSource.getMessage("ezEmail.t270", locale);
+					String displayName = address + " " + ezEmailMsg;
+
+					// 2025-08-06 김은실: 규칙이름이 100자가 넘어갈 경우 메일주소만 넣기. "RULE_NAME" NVARCHAR2(100) //ORA-12899: value too large for column "JMOCHA_INBOX_RULE"."RULE_NAME" (actual: 114, maximum: 100)
+					displayName = (100 < displayName.length())? email + " " + ezEmailMsg : displayName;
+
 					sb.append("&displayName=" + URLEncoder.encode(displayName, "UTF-8"));
 					sb.append("&rejectId=" + URLEncoder.encode(email, "UTF-8"));
 					addresses.add(email);
