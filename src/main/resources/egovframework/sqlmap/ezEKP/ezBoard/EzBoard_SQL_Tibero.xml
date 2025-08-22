@@ -4458,20 +4458,28 @@
 	</select>
 	
 	<select id="EzBoardDAO.brdCheckIfHasReply" parameterClass="Map" resultClass="Integer">
+		SELECT
+			COUNT(ItemID)
+		FROM
+			TBL_Board_Item
+		WHERE
+			tenant_id = #v_TENANTID#
+		AND
+			(APPRFLAG IS NULL OR APPRFLAG = 'Y')
+		<isEmpty property="parentItemId" prepend="AND">
 		<![CDATA[
-			SELECT 
-				COUNT(ITEMID)
-        	FROM 
-        		TBL_Board_Item 
-       		WHERE  
-       			tenant_id = #v_TENANTID#
-       		AND
-       			TO_CHAR(UpperItemIDTree) LIKE '%' || #v_pItemID# || '%'
-            AND 
-            	ItemID <> #v_pItemID#
-			AND
-				(APPRFLAG IS NULL OR APPRFLAG = 'Y')
+			UpperItemIDTree LIKE CONCAT('%', #v_pItemID#, '%')
+		AND
+			ItemID <> #v_pItemID#
 		]]>
+		</isEmpty>
+		<isNotEmpty property="parentItemId" prepend="AND">
+		<![CDATA[
+			UpperItemIDTree LIKE CONCAT('%', #parentItemId#, '%')
+		AND
+		    ITEMLEVEL > (SELECT ITEMLEVEL FROM TBL_Board_Item WHERE ITEMID = #v_pItemID# AND TENANT_ID = #v_TENANTID#)
+	    ]]>
+		</isNotEmpty>
 	</select>
 	
 	<select id="EzBoardDAO.getBrdTotalItemCount" parameterClass="BoardMyFavoriteVO" resultClass="Integer">
@@ -11571,4 +11579,17 @@
 			APPRFLAG IN ('N', 'C')
 		]]>
 	</select>
+
+	<delete id="EzBoardDAO.deleteVersionHistory" parameterClass="Map">
+		DELETE FROM TBL_BOARD_MODIFYHISTORY
+		WHERE
+		<isNotEmpty property="allDelete">
+			PARENTITEMID = (SELECT PARENTITEMID FROM TBL_BOARD_MODIFYHISTORY WHERE ITEMID = #itemID# AND TENANT_ID = #tenantID#)
+		</isNotEmpty>
+		<isEmpty property="allDelete">
+			ITEMID = #itemID#
+		</isEmpty>
+		AND
+			TENANT_ID = #tenantID#
+	</delete>
 </sqlMap>
