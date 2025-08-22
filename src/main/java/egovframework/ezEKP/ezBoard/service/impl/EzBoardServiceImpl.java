@@ -53,7 +53,6 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import egovframework.ezEKP.ezBoard.vo.BoardKeywordVO;
 import egovframework.ezEKP.ezBoard.vo.BoardReplyAttachVO;
 import egovframework.ezEKP.ezBoard.vo.BoardHistoryVO;
-import egovframework.ezEKP.ezCommunity.vo.CommunityCBoardVO;
 import egovframework.let.utl.fcc.service.EgovStringUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 
@@ -71,7 +70,6 @@ import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
@@ -130,10 +128,6 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	
 	@Autowired
 	private CommonUtil commonUtil;
-
-	@Autowired
-	@Qualifier("config")
-	private Properties config;
 	
 	@Resource(name = "EzBoardAdminService")
 	private EzBoardAdminService ezBoardAdminService;
