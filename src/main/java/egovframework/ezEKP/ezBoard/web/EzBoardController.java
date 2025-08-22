@@ -912,16 +912,6 @@ public class EzBoardController extends EgovFileMngUtil{
 					   if (boardInfo != null) {
 						   if (boardInfo.getGuBun() != null && boardInfo.getGuBun().equals("4")) {
 							   intCount = ezBoardService.getThumbNailCount(myFavoriteVO);
-						   } else if (boardInfo.getGuBun() != null && boardInfo.getGuBun().equals("5")) {
-							   boardInfo = getBoardInfo(myFavoriteVO.getBoardId(), userInfo);
-							   myFavoriteVO.setBoardAdmin_FG(boardInfo.getBoardAdmin_FG());
-							
-							   List<String> managingCategoryIdList = ezBoardService.getCategoryManagerListSelectedUser(myFavoriteVO.getBoardId(), userInfo.getId(), userInfo.getDeptID(), userInfo.getTenantId());
-
-							   if (managingCategoryIdList.size() > 0) {
-								   myFavoriteVO.setManagingCategoryList(managingCategoryIdList);
-							   }
-							   intCount = ezBoardService.getQNABrdTotalItemCount(myFavoriteVO);
 						   } else {
 							   intCount = ezBoardService.getBrdTotalItemCount(myFavoriteVO);
 						   }
