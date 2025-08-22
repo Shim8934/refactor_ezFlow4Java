@@ -184,6 +184,23 @@
 						TBL_BOARD_ITEM A
 					LEFT OUTER JOIN
 						(SELECT
+							ROW_NUMBER() OVER(
+								PARTITION BY
+									PARENTITEMID
+								ORDER BY
+									VERSION DESC
+							) RN,
+							ITEMID,
+							TENANT_ID
+						FROM
+							TBL_BOARD_MODIFYHISTORY
+						) M1
+					ON
+						A.ITEMID = M1.ITEMID
+					AND
+						A.TENANT_ID = M1.TENANT_ID
+					LEFT OUTER JOIN
+						(SELECT
 							COUNT(userid) AS totalcount, 
 							itemid,
 							tenant_id 
@@ -214,6 +231,12 @@
 					A.apprflag = 'Y'
 			]]>
 		</isEqual>
+		<isEqual property = "useVersion" compareValue = "Y" prepend="AND">
+			M1.RN = 1
+		</isEqual>
+		<isNotEqual property = "useVersion" compareValue = "Y" prepend="AND">
+			(M1.ITEMID IS NULL OR M1.RN = 1)
+		</isNotEqual>
 
 		<isNotEmpty property="pSearchText">
 			<![CDATA[
@@ -344,6 +367,23 @@
                   	A.PUBLICFLAG
                     FROM
                         TBL_BOARD_ITEM A
+					LEFT OUTER JOIN
+						(SELECT
+							ROW_NUMBER() OVER(
+								PARTITION BY
+									PARENTITEMID
+								ORDER BY
+									VERSION DESC
+							) RN,
+							ITEMID,
+							TENANT_ID
+						FROM
+							TBL_BOARD_MODIFYHISTORY
+						) M1
+					ON
+						A.ITEMID = M1.ITEMID
+					AND
+						A.TENANT_ID = M1.TENANT_ID
                     LEFT OUTER JOIN
                         (SELECT
                             COUNT(userid) AS totalcount, 
@@ -376,6 +416,12 @@
                         A.apprflag = 'Y'
                 ]]>
             </isEqual>
+			<isEqual property = "useVersion" compareValue = "Y" prepend="AND">
+				M1.RN = 1
+			</isEqual>
+			<isNotEqual property = "useVersion" compareValue = "Y" prepend="AND">
+				(M1.ITEMID IS NULL OR M1.RN = 1)
+			</isNotEqual>
 
 		<isNotEmpty property="pSearchText">
 			<![CDATA[
@@ -542,11 +588,29 @@
 		<isEqual property="gubun" compareValue="1">
 			<![CDATA[
 				SELECT 
-					COUNT(itemid) totalcount
+					COUNT(A.itemid) totalcount
 				FROM 
-					TBL_BOARD_ITEM 
+					TBL_BOARD_ITEM A
+				LEFT OUTER JOIN
+					(
+						SELECT
+							ROW_NUMBER() OVER(
+								PARTITION BY
+									PARENTITEMID
+								ORDER BY
+									VERSION DESC
+							) RN,
+							ITEMID,
+							TENANT_ID
+						FROM
+							TBL_BOARD_MODIFYHISTORY
+					) M1
+				ON
+					A.ITEMID = M1.ITEMID
+				AND
+					A.TENANT_ID = M1.TENANT_ID
 				WHERE  
-					tenant_id = #tenantID#
+					A.tenant_id = #tenantID#
 				AND
 					boardid = #boardID#
 				AND
@@ -594,6 +658,12 @@
 						apprflag = 'Y'
 				]]>
 			</isEqual>
+			<isEqual property = "useVersion" compareValue = "Y" prepend="AND">
+				M1.RN = 1
+			</isEqual>
+			<isNotEqual property = "useVersion" compareValue = "Y" prepend="AND">
+				(M1.ITEMID IS NULL OR M1.RN = 1)
+			</isNotEqual>
 		</isEqual>
 		
 		<isEqual property="gubun" compareValue="2">

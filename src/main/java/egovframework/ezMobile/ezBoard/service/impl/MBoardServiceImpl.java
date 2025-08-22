@@ -126,8 +126,8 @@ public class MBoardServiceImpl implements MBoardService {
 			boardCount = getQNABoardItemListCount(boardID, mBoardInfoVO, userID, gubun, tenantID, pSearchText);
 			mBoardItemList = getQNABoardItemList(boardID, mBoardInfoVO, userID, gubun, listSize, boardCount, lastDate,tenantID, offset, pSearchText, parentWriteDate, upperitemidtree);
 		} else {
-			boardCount = getBoardItemListCount(boardID, userID, gubun, tenantID,pSearchText);
-			mBoardItemList = getBoardItemList(boardID, userID, gubun, listSize, boardCount, lastDate,tenantID, offset, pSearchText, parentWriteDate, upperitemidtree);
+			boardCount = getBoardItemListCount(boardID, userID, gubun, tenantID,pSearchText, mBoardInfoVO.getVersionManage());
+			mBoardItemList = getBoardItemList(boardID, userID, gubun, listSize, boardCount, lastDate,tenantID, offset, pSearchText, parentWriteDate, upperitemidtree, mBoardInfoVO.getVersionManage());
 		}
 		
 		//게시물 writeDate와 현재시간을 비교해서 게시한지 하루 이전의 게시물은 newItemFlag Y로 set
@@ -178,7 +178,7 @@ public class MBoardServiceImpl implements MBoardService {
 		int startRow = ((mobileListSize * (page - 1)) - noticeCount) + 1;
         int endRow = (mobileListSize * page) - noticeCount;
 		
-        int boardCount = getBoardItemListCount(boardID, userID, gubun, tenantID,pSearchText);
+        int boardCount = getBoardItemListCount(boardID, userID, gubun, tenantID,pSearchText, mBoardInfoVO.getVersionManage());
         
         List<MBoardNewListVO> mBoardItemList = getNewBoardItemList(boardID, userID, gubun, startRow, endRow, boardCount, tenantID, offset, pSearchText, parentWriteDate, upperitemidtree);
         
@@ -507,7 +507,7 @@ public class MBoardServiceImpl implements MBoardService {
 		return mBoardDAO.getACL(map);
 	}
 	
-	private List<MBoardItemVO> getBoardItemList(String boardID, String userID, String gubun, int listSize, int boardItemListCount, String lastDate, int tenantID, String offset, String pSearchText, String parentWriteDate, String upperitemidtree) throws Exception {
+	private List<MBoardItemVO> getBoardItemList(String boardID, String userID, String gubun, int listSize, int boardItemListCount, String lastDate, int tenantID, String offset, String pSearchText, String parentWriteDate, String upperitemidtree, String versionManage) throws Exception {
 		logger.debug("getBoarditemList started.");
 		logger.debug("boardID = " + boardID + " || userID = " + userID + " || gubun = " + gubun + " || boardItemListCount = " + boardItemListCount + " || tenantID = " + tenantID + " || lastDate = " + lastDate);
 		
@@ -523,6 +523,7 @@ public class MBoardServiceImpl implements MBoardService {
 		map.put("pSearchText", pSearchText.replace("%", "\\%").replace("_", "\\_"));
 		map.put("parentWriteDate", parentWriteDate);
 		map.put("upperitemidtree", upperitemidtree);
+		map.put("useVersion", versionManage);
 		
 		MBoardInfoVO boardProp = getBoardProperty(boardID, "1", tenantID, userID);
 		if (boardProp.getUseKeyword() != null && boardProp.getUseKeyword().equals("Y")) {
@@ -598,7 +599,7 @@ public class MBoardServiceImpl implements MBoardService {
 	}
 	
 	@Override
-	public int getBoardItemListCount(String boardID, String userID, String gubun, int tenantID, String pSearchText) throws Exception {
+	public int getBoardItemListCount(String boardID, String userID, String gubun, int tenantID, String pSearchText, String versionManage) throws Exception {
 		logger.debug("getBoardItemListCount started.");
 		logger.debug("boardID = " + boardID + " || userID = " + userID + " || gubun = " + gubun + " || tenantID = " + tenantID);
 		
@@ -609,6 +610,7 @@ public class MBoardServiceImpl implements MBoardService {
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
 		map.put("pSearchText", pSearchText.replace("%", "\\%").replace("_", "\\_"));
 		map.put("tenantID", tenantID);
+		map.put("useVersion", versionManage);
 
 
 		MBoardInfoVO boardProp = getBoardProperty(boardID, "1", tenantID, userID);

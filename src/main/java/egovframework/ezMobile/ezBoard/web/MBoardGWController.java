@@ -227,7 +227,7 @@ public class MBoardGWController {
 			if (boardInfo.getGuBun() != null && boardInfo.getGuBun().equals("5")) { // qna 게시판
 				listCount = mBoardService.getQNABoardItemListCount(boardId, boardInfo, userID, boardInfo.getGuBun(), info.getTenantId(), pSearchText);
 			} else {
-				listCount = mBoardService.getBoardItemListCount(boardId, userID, boardInfo.getGuBun(), info.getTenantId(), pSearchText);
+				listCount = mBoardService.getBoardItemListCount(boardId, userID, boardInfo.getGuBun(), info.getTenantId(), pSearchText, boardInfo.getVersionManage());
 			}
 			
 			for (int i=0; i<list.size(); i++) {
