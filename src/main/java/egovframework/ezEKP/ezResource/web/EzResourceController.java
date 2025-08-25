@@ -57,7 +57,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import egovframework.com.cmm.EgovMessageSource;
-import egovframework.com.cmm.service.EgovFileMngUtil;
+import egovframework.com.cmm.service.EzFileMngUtil;
 import egovframework.ezEKP.ezCabinet.service.EzCabinetAdminService;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
@@ -102,7 +102,7 @@ import egovframework.let.utl.sim.service.EgovFileScrty;
  */
 
 @Controller
-public class EzResourceController extends EgovFileMngUtil {
+public class EzResourceController extends EzFileMngUtil {
 	
 	private static final Logger logger = LoggerFactory.getLogger(EzResourceController.class);
 	

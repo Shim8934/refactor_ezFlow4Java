@@ -9,7 +9,7 @@ import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import egovframework.com.cmm.EgovMessageSource;
-import egovframework.com.cmm.service.EgovFileMngUtil;
+import egovframework.com.cmm.service.EzFileMngUtil;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGKlibService;
 import egovframework.ezEKP.ezBoard.service.EzBoardService;
 import egovframework.ezEKP.ezCommunity.dao.EzCommunityDAO;
@@ -96,7 +96,7 @@ import java.util.stream.Collectors;
 import static egovframework.ezEKP.ezNewPortal.vo.PortletInfoVO.FixBoardCode;
 
 @Service("EzCommonService")
-public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonService {
+public class EzCommonServiceImpl extends EzFileMngUtil implements EzCommonService {
 
 	@Autowired
 	private CommonUtil commonUtil;
@@ -2163,6 +2163,24 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
             put("regdate","2025-08-13 00:00:00");
             put("description","로그인 표출 비회원 권한 게시판ID");
             put("config_type","게시판");
+        }});
+
+        test.add(new HashMap<String, Object>(){{
+            put("confName","usePOP3Default");
+            put("property_value","NO");
+            put("config_name","POP3 사용 여부");
+            put("regdate","2025-06-23 00:00:00");
+            put("description","YES: 사용함, NO:사용안함(default: NO)");
+            put("config_type","메일");
+        }});
+
+        test.add(new HashMap<String, Object>(){{
+            put("confName","useIMAPDefault");
+            put("property_value","NO");
+            put("config_name","IMAP 사용 여부");
+            put("regdate","2025-06-23 00:00:00");
+            put("description","YES: 사용함, NO:사용안함(default: NO)");
+            put("config_type","메일");
         }});
         
         test.add(new HashMap<String, Object>(){{

@@ -1,7 +1,7 @@
 package egovframework.ezEKP.ezApprovalG.service.impl;
 
 import egovframework.com.cmm.EgovMessageSource;
-import egovframework.com.cmm.service.EgovFileMngUtil;
+import egovframework.com.cmm.service.EzFileMngUtil;
 import egovframework.ezEKP.ezApprovalG.dao.EzApprovalGAdminDAO;
 import egovframework.ezEKP.ezApprovalG.dao.EzApprovalGDAO;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGAdminService;
@@ -73,7 +73,7 @@ import java.util.*;
 import java.util.stream.Stream;
 
 @Service("EzApprovalGAdminService")
-public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzApprovalGAdminService{
+public class EzApprovalGAdminServiceImpl extends EzFileMngUtil implements EzApprovalGAdminService{
 	@Autowired
 	private CommonUtil commonUtil;
 	

@@ -41,6 +41,7 @@ import egovframework.let.utl.fcc.service.KlibUtil;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.codec.binary.Base64;
+import org.egovframe.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -91,7 +92,7 @@ import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 
 @Service("EzEmailService")
-public class EzEmailServiceImpl implements EzEmailService {
+public class EzEmailServiceImpl extends EgovAbstractServiceImpl implements EzEmailService {
 	
 	private static final Logger logger = LoggerFactory.getLogger(EzEmailServiceImpl.class);
 	

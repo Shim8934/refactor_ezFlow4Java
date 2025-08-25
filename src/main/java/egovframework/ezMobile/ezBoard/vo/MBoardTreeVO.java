@@ -15,8 +15,6 @@ public class MBoardTreeVO {
 	private String guBun;
 	/** 그룹acl	*/
 	private String boardGroupAcl;
-	/** 게시판관리자 권한여부 */
-	private String boardAdmin_FG;
 	/** 확장여부	*/
 	private String expanded;
 	/** 셀렉트	*/
@@ -27,8 +25,6 @@ public class MBoardTreeVO {
 	private String docNO;
 	/** */
 	private int listCount;
-	/** 사용안함 여부 */
-	private String notUsedFlag;
 	
 	public String getBoardId() {
 		return boardId;
@@ -72,12 +68,6 @@ public class MBoardTreeVO {
 	public void setBoardGroupAcl(String boardGroupAcl) {
 		this.boardGroupAcl = boardGroupAcl;
 	}
-	public String getBoardAdmin_FG() {
-		return boardAdmin_FG;
-	}
-	public void setBoardAdmin_FG(String boardAdmin_FG) {
-		this.boardAdmin_FG = boardAdmin_FG;
-	}
 	public String getExpanded() {
 		return expanded;
 	}
@@ -107,12 +97,6 @@ public class MBoardTreeVO {
 	}
 	public void setListCount(int listCount) {
 		this.listCount = listCount;
-	}
-	public String getNotUsedFlag() {
-		return notUsedFlag;
-	}
-	public void setNotUsedFlag(String notUsedFlag) {
-		this.notUsedFlag = notUsedFlag;
 	}
 	
 }

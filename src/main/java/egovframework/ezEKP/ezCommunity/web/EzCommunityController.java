@@ -59,7 +59,7 @@ import org.w3c.dom.Document;
 import com.ibm.icu.util.Calendar;
 
 import egovframework.com.cmm.EgovMessageSource;
-import egovframework.com.cmm.service.EgovFileMngUtil;
+import egovframework.com.cmm.service.EzFileMngUtil;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGKlibService;
 import egovframework.ezEKP.ezCabinet.service.EzCabinetAdminService;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
@@ -108,7 +108,7 @@ import org.w3c.dom.Node;
  */
 
 @Controller
-public class EzCommunityController extends EgovFileMngUtil{
+public class EzCommunityController extends EzFileMngUtil{
 	@Autowired
 	private CommonUtil commonUtil;
 	

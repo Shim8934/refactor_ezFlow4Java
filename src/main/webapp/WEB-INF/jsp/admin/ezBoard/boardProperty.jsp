@@ -50,7 +50,7 @@
 			var useBoardNotUsed = $.trim("<c:out value='${model.notUsedFlag}'/>");
 			var urlCopyFlag = "<c:out value='${model.urlCopyFlag}'/>"; <%-- url복사 사용여부 (Y/N) --%>
 
-	        document.onselectstart = function (){
+			document.onselectstart = function (){
 	            if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA") {
 	                return false;
 	            }
@@ -136,11 +136,6 @@
 	                } else {
 	                	$("#chkApprBoard").prop("disabled",true);
 	                }
-	            }
-	            
-	            /* 2023-10-30 조소정 - 게시판 사용안함 여부 기능 추가 */
-				if (useBoardNotUsed == "Y") {
-					$("#chkBoardNotUsed").prop("checked", true);
 	            }
 
 				if (writerFlag == "Y") {
