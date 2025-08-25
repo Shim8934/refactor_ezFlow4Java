@@ -175,7 +175,7 @@
 								listXML += "<div class='result_list_cont'><div class='result_list_cont_L'>";
 								listXML += "<div class='result_list_title'><a href='javascript:void(0);' onclick='commOpen(\"" + commCode + "\", \"" + permit + "\")' ><span>" + commName + "</span></a></div>";
 								listXML += "<div class='result_list_desc'><span>" + commDesc + "</span></div>";
-								listXML += "<div class='result_list_etc'><img src='/images/i_master.gif' align='absmiddle'>" + masterName + "<span>|</span><spring:message code='ezCommunity.lyj107'/> " + regDate + "</div></div>";
+								listXML += "<div class='result_list_etc'><img src='/images/i_master.gif' align='absmiddle'>" + masterName + "<span>|</span><spring:message code='ezCommunity.t78'/> : " + regDate + "</div></div>";
 								listXML += "<div class='result_list_cont_R'><div style='margin-bottom: 3px;'><img src='../images/kr/community/categoryBox_iconLineup.gif'><span>" + memberCnt + "</span></div>";
 								listXML += "<div><img src='../images/kr/community/categoryBox_iconPost.gif'><span>" + itemCnt + "</span></div></div></div></div></div>";
 							}
@@ -268,7 +268,7 @@
 								}
 								listXML += "<div><div class='result_list_title'><a href='javascript:void(0);' onclick='commOpen(\"" + commCode + "\", \"" + permit + "\")' ><span>" + commName + "</span></a></div>";
 								listXML += "<div class='result_list_desc'><span>" + commDesc + "</span></div>";
-								listXML += "<div class='result_list_etc'><img src='/images/i_master.gif' align='absmiddle'>" + masterName + "<span>|</span><spring:message code='ezCommunity.lyj107'/> " + regDate + "</div></div></div></div></div>";
+								listXML += "<div class='result_list_etc'><img src='/images/i_master.gif' align='absmiddle'>" + masterName + "<span>|</span><spring:message code='ezCommunity.t78'/> : " + regDate + "</div></div></div></div></div>";
 							}
 							masterCount++;
 						}
