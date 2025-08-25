@@ -2806,7 +2806,7 @@ input:checked + .slider:before {-webkit-transform: translateX(26px); -ms-transfo
 .categoryInfo dd.categoryInfo_count span.count{color:#000; font-size:13px; margin:0px 12px 0px 0px;}
 
 @media only screen and (max-width: 1753px){
-	.contents_categoryViewList{overflow-y:auto; height:351px;}
+	.contents_categoryViewList{overflow-y:auto; height:415px;}
 	.categoryBox{width:calc(25% - 42px);}
 }
 @media only screen and (max-width: 1707px){
@@ -3969,7 +3969,7 @@ input#inOffice, input#retired, input#stopped{vertical-align:middle;}
 .community_section01{height: 101px;}
 .contents_bannerCommunity{height: 103px; padding-top: 25px;}
 .contents_bannerCommunity p img{height: 49px;}
-.contents_categoryViewList{height: 351px;}
+.contents_categoryViewList{height: 415px;}
 .contents_listCommunity li{color: #333;}
 .contents_searchCategory dl dt.searchinput input{height: 34px !important;}
 

@@ -907,7 +907,7 @@
         	 	span2.setAttribute("type", "ALL");							
         	 	span2.onclick = function () { 
         	 		$("#listCategory .txt").removeClass("bold");
-                	$("#keyword").val('');
+                	/*$("#keyword").val('');*/
                 	copsearch();
                 	$(this).addClass("bold"); 
                 };
@@ -941,7 +941,7 @@
 	        	 	span2.onclick = function () { 
 	        	 		$("#listCategory .txt").removeClass("bold");
                     	$(this).addClass("bold"); 
-                    	$("#keyword").val('');
+                    	/*$("#keyword").val('');*/
                     	select_category(this); 
                     };
 	        	 	
@@ -1571,11 +1571,11 @@
                 document.getElementById("todaycop").appendChild(div);
 	        }
 
-	        function key_down(e) {
+	        /*function key_down(e) {
 	            if (e.keyCode == "13") {
 	                copsearch();
 	            }
-	        }
+	        }*/
 
 			function key_down_search(e) {
 				if (e.keyCode == "13") {
@@ -1589,9 +1589,12 @@
 	        
 	        function copsearch() {
 	        	
-	            var sel = document.getElementById("search").selectedIndex;
+	           /* var sel = document.getElementById("search").selectedIndex;
 	            searchoption = document.getElementById("search")[sel].value;
-	            searchvalue = document.getElementById("keyword").value;
+	            searchvalue = document.getElementById("keyword").value;*/
+
+				searchoption = "NAME";
+				searchvalue = "";
 
 	            /* if (searchvalue == "") {
 	                alert(strLang4);
@@ -2051,7 +2054,7 @@
 		                <ul id="listCategory" class="contents_listCategory"></ul>
 		            </div>
 		            <div class="contents_categoryView">
-		                <div class="contents_searchCategory">
+		                <%--<div class="contents_searchCategory">
 		                    <dl>
 		                        <dt class="selectbox">
 		                            <select id="search" name="select" style="padding-left: 3px;">
@@ -2062,7 +2065,7 @@
 		                        <dt class="searchinput"><input id="keyword" name="keyword" onkeydown="key_down(event)" type="text"></dt>
 		                        <dd onclick="copsearch()" class="btn_searh"><spring:message code='ezCommunity.t31'/></dd>
 		                    </dl>
-		                </div>
+		                </div>--%>
 		                <div id="categoryViewList" class="contents_categoryViewList"></div>
 		            </div>
 		        </div>
