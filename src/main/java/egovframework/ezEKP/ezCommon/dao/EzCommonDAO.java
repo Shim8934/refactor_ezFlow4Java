@@ -3757,4 +3757,8 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			insert("EzCommonDAO.updateGuestAccessibleUris", map);
 		}
 	}
+
+    public void susinScheduleUpdate(String s) {
+        insert("EzCommonDAO.susinScheduleUpdate", s);
+    }
 }

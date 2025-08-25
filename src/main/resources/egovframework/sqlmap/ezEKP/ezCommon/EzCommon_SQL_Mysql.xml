@@ -8088,4 +8088,22 @@
 		AND
 			TENANT_ID = #tenantID#
 	</update>
+
+    <insert id="EzCommonDAO.susinScheduleUpdate" parameterClass="String">
+        INSERT INTO TBL_TENANT_CONFIG
+        (TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
+        VALUES
+        (0, 'susinScheduleCnt', '1',
+        '수신스케쥴러 실행 카운트',
+        '수신스케쥴러 실행 카운트',
+        STR_TO_DATE('2025-08-22','%Y-%m-%d'),
+        '전자')
+        ON DUPLICATE KEY UPDATE
+        PROPERTY_VALUE =
+        CASE
+        WHEN #value# = '0' THEN 0
+        WHEN CAST(PROPERTY_VALUE AS SIGNED) + 1 = 11 THEN 1
+        ELSE CAST(PROPERTY_VALUE AS SIGNED) + 1
+        END
+    </insert>
 </sqlMap>

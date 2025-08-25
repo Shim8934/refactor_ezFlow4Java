@@ -8636,4 +8636,20 @@
 		  AND
 			TENANT_ID = #tenantID#
 	</update>
+    
+    <insert id="EzCommonDAO.susinScheduleUpdate" parameterClass="String">
+        MERGE INTO TBL_TENANT_CONFIG t
+        USING (
+        SELECT 'susinScheduleCnt' AS PROPERTY_NAME, '1' AS PROPERTY_VALUE
+        FROM DUAL
+        ) s
+        ON (t.PROPERTY_NAME = s.PROPERTY_NAME)
+        WHEN MATCHED THEN
+        UPDATE SET t.PROPERTY_VALUE = 
+        DECODE(#value#, '0', '0', DECODE(t.PROPERTY_VALUE + 1, 11 , 1, t.PROPERTY_VALUE + 1))    
+        WHEN NOT MATCHED THEN
+        INSERT
+        (TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
+        VALUES(0, s.PROPERTY_NAME, s.PROPERTY_VALUE, '수신스케쥴러 실행 카운트', '수신스케쥴러 실행 카운트', TO_DATE('2025-08-22','yyyy-mm-dd'), '전자결재G')
+    </insert>
 </sqlMap>

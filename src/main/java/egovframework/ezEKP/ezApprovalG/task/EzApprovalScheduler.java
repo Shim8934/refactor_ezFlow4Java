@@ -14,6 +14,7 @@ import java.util.Properties;
 
 import javax.annotation.Resource;
 
+import egovframework.ezEKP.ezCommon.dao.EzCommonDAO;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
@@ -81,6 +82,9 @@ public class EzApprovalScheduler extends EzFileMngUtil {
 
 	@Autowired
 	private EzEmailUtil ezEmailUtil;
+
+    @Resource(name = "EzCommonDAO")
+    private EzCommonDAO ezCommonDAO;
 	
 	/**
 	 * delete garbage files // 전자결재 대용량첨부 자동삭제기능 사용하지 않음
@@ -102,6 +106,14 @@ public class EzApprovalScheduler extends EzFileMngUtil {
 				return;
 			}
 	
+            // 아직 스케쥴러 동작중 && 10회미만 (스케쥴러 동작중 서버꺼짐등 실동작 아닌경우 계속 동작 안할 경우 대비) ? return : DB 등록/업데이트
+            ezCommonDAO.susinScheduleUpdate("1");
+            String susinSceduleCnt = ezCommonService.getTenantConfig("susinSceduleCnt", 0);
+            if(!"1".equals(susinSceduleCnt)){
+                logger.debug("susinScheduler is running.");
+                return;
+            }
+            try{
 			int tryCnt = 0;
 			List<HashMap<String, Object>> susinScheduleList = null;
 			susinScheduleList = ezApprovalGService.susinScheduleList();
@@ -122,6 +134,9 @@ public class EzApprovalScheduler extends EzFileMngUtil {
 					Thread.sleep(300);
 				}
 			}
+            }finally {
+                ezCommonDAO.susinScheduleUpdate("0");
+            }
 			logger.debug("susinScheduler ended.");
 		}
 	}
