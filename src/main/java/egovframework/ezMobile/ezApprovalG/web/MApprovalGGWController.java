@@ -1544,6 +1544,10 @@ public class MApprovalGGWController {
 			if (!deptID.isEmpty()) {
 				userInfo.setDeptId(deptID);
 			}
+			
+			if (!locale.isEmpty()) {
+				userInfo.setLocale(new Locale(locale));
+			}
 
 			// docid 생성
 			String docid = ezApprovalGService.createNewDoc(formID, userInfo.getCompanyId(),userInfo.getTenantId());
@@ -1815,7 +1819,7 @@ public class MApprovalGGWController {
 			if (orgCompanyID != null && !orgCompanyID.equals("") && !orgCompanyID.equals(userInfo.getCompanyId())) {
 				userInfo.setCompanyId(orgCompanyID);
 			}
-			Locale locale = userInfo.getLocale();
+			Locale locale = new Locale(commonUtil.getTwoLetterLangFromLangNum(userInfo.getLang()));
 
 			MOptionVO optionInfo = mOptionService.optionInfo(userId, userInfo.getTenantId());
 			LoginVO loginVO = new LoginVO();
