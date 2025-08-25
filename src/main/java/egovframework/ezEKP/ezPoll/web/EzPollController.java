@@ -47,7 +47,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.w3c.dom.Document;
 
-import egovframework.com.cmm.service.EgovFileMngUtil;
+import egovframework.com.cmm.service.EzFileMngUtil;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezBoard.service.EzBoardService;
 import egovframework.ezEKP.ezBoard.vo.BoardPollConfigVO;
@@ -70,7 +70,7 @@ import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 
 @Controller
-public class EzPollController extends EgovFileMngUtil {
+public class EzPollController extends EzFileMngUtil {
 	private static final Logger logger = LoggerFactory.getLogger(EzPollController.class);	
 	
 	@Resource(name="egovMessageSource")

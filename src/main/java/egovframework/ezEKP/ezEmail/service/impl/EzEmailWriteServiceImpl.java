@@ -37,6 +37,7 @@ import javax.servlet.http.HttpServletRequest;
 import egovframework.ezEKP.ezPoll.service.EzPollService;
 import org.apache.commons.lang3.StringUtils;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.egovframe.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -80,7 +81,7 @@ import egovframework.let.utl.sim.service.EgovFileScrty;
  * 더 좋은 방법이 있다면, 수정 또는 주석으로 to-do 추가 바람!
  */
 @Service("EzEmailWriteService")
-public class EzEmailWriteServiceImpl implements EzEmailWriteService {
+public class EzEmailWriteServiceImpl extends EgovAbstractServiceImpl implements EzEmailWriteService {
 
     private static final Logger logger = LoggerFactory.getLogger(EzEmailWriteServiceImpl.class);
 

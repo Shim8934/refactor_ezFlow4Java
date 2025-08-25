@@ -15,6 +15,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import javax.annotation.Resource;
 import org.apache.commons.io.FileUtils;
+import org.egovframe.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -44,7 +45,7 @@ import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 @Service
-public class EzCabinetServiceImpl_h implements EzCabinetService_h {
+public class EzCabinetServiceImpl_h extends EgovAbstractServiceImpl implements EzCabinetService_h {
 	
 	private static final Logger logger = LoggerFactory.getLogger(EzCabinetServiceImpl_h.class);
 

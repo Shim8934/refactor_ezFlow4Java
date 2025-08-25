@@ -32,7 +32,7 @@ import org.springframework.web.bind.annotation.*;
 import org.w3c.dom.Document;
 
 import egovframework.com.cmm.EgovMessageSource;
-import egovframework.com.cmm.service.EgovFileMngUtil;
+import egovframework.com.cmm.service.EzFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezEmail.vo.MailDistributionVO;
@@ -56,7 +56,7 @@ import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
  * @see
  */
 @Controller
-public class EzCommonController extends EgovFileMngUtil{
+public class EzCommonController extends EzFileMngUtil{
 	
 	@Autowired
 	private CommonUtil commonUtil;

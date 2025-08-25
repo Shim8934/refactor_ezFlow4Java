@@ -41,7 +41,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import egovframework.com.cmm.EgovMessageSource;
-import egovframework.com.cmm.service.EgovFileMngUtil;
+import egovframework.com.cmm.service.EzFileMngUtil;
 import egovframework.ezEKP.ezBoard.service.EzBoardService;
 import egovframework.ezEKP.ezCabinet.service.EzCabinetAdminService;
 import egovframework.ezEKP.ezCircular.service.EzCircularService;
@@ -75,7 +75,7 @@ import egovframework.let.utl.fcc.service.EgovDateUtil;
  */
 
 @Controller
-public class EzCircularController extends EgovFileMngUtil {
+public class EzCircularController extends EzFileMngUtil {
 
 	private static final Logger logger = LoggerFactory.getLogger(EzCircularController.class);
 	

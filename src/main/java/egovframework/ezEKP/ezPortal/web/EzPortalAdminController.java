@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import egovframework.com.cmm.service.EgovFileMngUtil;
+import egovframework.com.cmm.service.EzFileMngUtil;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
@@ -31,7 +31,7 @@ import egovframework.let.utl.fcc.service.CommonUtil;
  */
 
 @Controller
-public class EzPortalAdminController extends EgovFileMngUtil {
+public class EzPortalAdminController extends EzFileMngUtil {
 	
 	private static final Logger logger = LoggerFactory.getLogger(EzPortalAdminController.class);
 	

@@ -38,7 +38,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.HandlerMapping;
 
 import egovframework.com.cmm.EgovMessageSource;
-import egovframework.com.cmm.service.EgovFileMngUtil;
+import egovframework.com.cmm.service.EzFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -57,7 +57,7 @@ import egovframework.ezEKP.ezEmail.vo.MailGeneralVO;
  * @see
  */
 @Controller
-public class EzEditorController extends EgovFileMngUtil {
+public class EzEditorController extends EzFileMngUtil {
 
 	@Autowired
 	private CommonUtil commonUtil;

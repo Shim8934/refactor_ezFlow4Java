@@ -30,8 +30,6 @@ public class BoardTreeVO {
 	/** */
 	private String url;
 	
-	private String notUsedFlag;
-	
 	public String getUrl() {
 		return url;
 	}
@@ -116,13 +114,7 @@ public class BoardTreeVO {
 	public void setDocNO(String docNO) {
 		this.docNO = docNO;
 	}
-	public String getNotUsedFlag() {
-		return notUsedFlag;
-	}
-	public void setNotUsedFlag(String notUsedFlag) {
-		this.notUsedFlag = notUsedFlag;
-	}
-
+	
 	@Override
 	public boolean equals(Object obj) {
 		boolean rtnBool = false;
@@ -150,6 +142,6 @@ public class BoardTreeVO {
 				+ ", treeViewOrder=" + treeViewOrder + ", boardColor=" + boardColor + ", guBun="
 				+ guBun + ", boardGroupAcl=" + boardGroupAcl + ", expanded="
 				+ expanded + ", select=" + select + ", isLeaf=" + isLeaf
-				+ ", docNO=" + docNO + ", url=" + url + ", notUsedFlag=" + notUsedFlag + "]";
+				+ ", docNO=" + docNO + ", url=" + url + "]";
 	}
 }

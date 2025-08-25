@@ -33,7 +33,7 @@ import org.w3c.dom.Element;
 import com.sun.mail.imap.IMAPFolder;
 
 import egovframework.com.cmm.EgovMessageSource;
-import egovframework.com.cmm.service.EgovFileMngUtil;
+import egovframework.com.cmm.service.EzFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
@@ -55,7 +55,7 @@ import egovframework.let.utl.fcc.service.CommonUtil;
  */
 
 @Controller
-public class EzEmailFolderManageController extends EgovFileMngUtil{
+public class EzEmailFolderManageController extends EzFileMngUtil{
 
 	private static final Logger logger = LoggerFactory.getLogger(EzEmailFolderManageController.class);
 	

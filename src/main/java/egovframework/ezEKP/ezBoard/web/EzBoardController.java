@@ -101,7 +101,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import egovframework.com.cmm.EgovMessageSource;
-import egovframework.com.cmm.service.EgovFileMngUtil;
+import egovframework.com.cmm.service.EzFileMngUtil;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGKlibService;
 import egovframework.ezEKP.ezBoard.service.EzBoardAdminService;
 import egovframework.ezEKP.ezBoard.service.EzBoardService;
@@ -159,7 +159,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @see
  */
 @Controller("EzBoardController")
-public class EzBoardController extends EgovFileMngUtil{
+public class EzBoardController extends EzFileMngUtil{
 	
 	@Autowired
 	private CommonUtil commonUtil;
@@ -4014,19 +4014,10 @@ public class EzBoardController extends EgovFileMngUtil{
 				commonUtil.getLangData(userInfo.getLang()), isAdminLeft, isCompanyAdmin, boardGroupAdmin_FG, userInfo.getRollInfo(), userInfo.getTenantId());
 		
 		Document doc = commonUtil.convertStringToDocument(strXML);
+		NodeList nList = doc.getElementsByTagName("NODE");
 		
 		if (!strXML.substring(0, 5).toUpperCase().equals("ERROR")) {
-			// 2024-10-25 조소정 - 각 게시판 관리자 권한 여부 트리에 추가
-			// 접근 가능한 게시판ID 리스트 추출
-			if (!isAdminLeft.equals("Y")) {	// 사용자단에서 접근 시에만 게시판관리자 권한여부 태그 추가
-				List<String> boardIdList = ezBoardService.getBoardIdList(strXML);
-	            // 각 게시판 관리자 권한 여부(<ADMINAUTH>) 추가된 트리 반환
-				String strXML2 = ezBoardService.getBoardInfoByList(userInfo, boardIdList, strXML);
-				doc = commonUtil.convertStringToDocument(strXML2);
-			}
-			
 			if (ezCommonService.getTenantConfig("USE_BOARD_LEFTMENU_COUNT", userInfo.getTenantId()).equals("YES")) {
-				NodeList nList = doc.getElementsByTagName("NODE");
 				BoardMyFavoriteVO myFavoriteVO = new BoardMyFavoriteVO();
 				int intCount = 0;
 				

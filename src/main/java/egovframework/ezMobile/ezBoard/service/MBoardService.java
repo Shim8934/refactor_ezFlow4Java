@@ -132,6 +132,4 @@ public interface MBoardService {
 	
 	/* 2024-09-09 이유정 - 모바일 게시판 > 최근게시물 리스트 */
 	List<MBoardNewListVO> getAllNewBoardList(String userID, String lastDate, String deptID, String companyID, int tenantID, String offset, String pSearchText) throws Exception;
-
-	List<MBoardTreeVO> getBoardInfoByList(MBoardInfoVO boardInfo, String rollInfo, String deptPathCode, MCommonVO info, List<MBoardTreeVO> list) throws Exception;
 }

@@ -2606,7 +2606,9 @@
              	NVL(A.APPROVEFLAG, '0') APPROVEFLAG ,
              	NVL(A.RETURNFLAG, '0') RETURNFLAG ,
 				NVL(A.REPEATFLAG, '1') REPEATFLAG ,
-             	A.BRD_ACCESS
+             	A.BRD_ACCESS,
+				A.RES_MAX_DATE ,
+				A.RES_MAX_USER_CNT
 			FROM 
 				TBL_RS_BRD A
 			JOIN

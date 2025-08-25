@@ -61,7 +61,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import egovframework.com.cmm.EgovMessageSource;
-import egovframework.com.cmm.service.EgovFileMngUtil;
+import egovframework.com.cmm.service.EzFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezSurvey.service.EzSurveyRestService;
 import egovframework.ezEKP.ezSurvey.vo.AttachVO;
@@ -75,7 +75,7 @@ import egovframework.let.utl.fcc.service.CommonUtil;
 
 @SuppressWarnings("unchecked")
 @Controller
-public class EzSurveyController extends EgovFileMngUtil {
+public class EzSurveyController extends EzFileMngUtil {
 	private static final Logger logger = LoggerFactory.getLogger(EzSurveyController.class);
 
 	@Autowired

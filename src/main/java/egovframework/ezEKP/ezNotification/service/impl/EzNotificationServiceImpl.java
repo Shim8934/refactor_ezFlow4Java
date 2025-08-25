@@ -16,6 +16,7 @@ import java.util.Set;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import org.egovframe.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
@@ -40,7 +41,7 @@ import egovframework.ezEKP.ezOrgan.vo.OrganAuth.AdminAuth;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 @Service("EzNotificationService")
-public class EzNotificationServiceImpl implements EzNotificationService {
+public class EzNotificationServiceImpl extends EgovAbstractServiceImpl implements EzNotificationService {
 	@Resource(name = "EzNotificationDAO")
 	private EzNotificationDAO ezNotificationDAO;
 	

@@ -206,6 +206,7 @@ function TreeNode() {
         //treeDiv.innerHTML += imgNode.outerHTML;
         treeDiv.innerHTML += spanNode.outerHTML;
         
+        //
         //노드 아이콘 생성
         var subImgNode = document.createElement("IMG");
         subImgNode.id = "subImgNode_" + this.NodeID;
@@ -236,21 +237,6 @@ function TreeNode() {
         spnNode.name = "spn_" + strTreeID;
         spnNode.className = "node_normal";
         spnNode.style.display = "inline-block";
-        
-        // 2023-11-02 조소정 - 게시판 > 일반설정 > 사용안함으로 설정된 게시판 숨김 처리
-        if (typeof isAdminLeft === "undefined" || isAdminLeft != "Y") {
-        	var adminAuth = GetAttribute(treeDiv, "ADMINAUTH");
-            var notUsedFlag = GetAttribute(treeDiv, "NOTUSEDFLAG");
-            
-            if (notUsedFlag == "Y") {
-            	if (adminAuth == "true") {	// 게시판관리자 권한 있는 경우 게시판명에 취소선 그어진 상태로 표출됨
-            		spnNode.style.textDecoration = "line-through";
-            	} else {	// 게시판관리자 권한 없는 경우 트리에서 숨김 처리
-            		treeDiv.style.display = "none";
-            	}
-            }
-        }
-
         /*if(CrossYN()) {
             spnNode.style.paddingTop = "0px";
         }
@@ -749,16 +735,7 @@ function node_select(pNodeID, pNodeNM, pTreeID, callbackFunc) {
 
         //if (objSpan.getAttribute("style") != "")
         //    objSpan.removeAttribute("style");
-        
-        // 2024-09-26 조소정 - 사용자단 게시판 좌측 메뉴에서 사용안함 게시판  클릭 시 게시판명 중앙에 취소선 그어짐
-        if (typeof isAdminLeft === "undefined" || isAdminLeft != "Y") {
-        	var notUsedFlag = getNotUsedFlag(pNodeID);
-        
-	        if (notUsedFlag === "Y") {
-	            objSpan.style.setProperty('text-decoration', 'line-through', 'important');
-	        }
-        }
-        
+
         treeDiv.setAttribute("SELECTNODEID", pNodeID);
 
         if (callbackFunc != null & typeof (callbackFunc) == "function")
@@ -767,12 +744,4 @@ function node_select(pNodeID, pNodeNM, pTreeID, callbackFunc) {
     
     // 2023-06-28 황인경 - 디자인 개선 > 게시판 > 좌측메뉴 > 트리구조 메뉴선택 클래스 제어
 	$(".list_text.node_selected").removeClass("node_selected");
-}
-
-function getNotUsedFlag(nodeId) {
-    var nodeDiv = document.getElementById(nodeId);
-    if (nodeDiv) {
-        return nodeDiv.getAttribute('notusedflag');
-    }
-    return null;
 }

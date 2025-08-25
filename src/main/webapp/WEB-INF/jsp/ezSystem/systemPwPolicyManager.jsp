@@ -203,7 +203,7 @@
         document.getElementById("MaxLoginFailCount").value = maxLoginFailNum_Val; // 암호 최대 오류 횟수 n번
 
 		var loginLockedDuration = data.LoginLockedDuration; // 계정 잠금 처리 시간
-		var loginLockedDuration_Val = (loginLockedDuration <= 0) ? "" : loginLockedDuration;
+		var loginLockedDuration_Val = (loginLockedDuration == 0) ? 0 : loginLockedDuration;
 		document.getElementById("LoginLockedDuration").value = loginLockedDuration_Val; // 암호 최대 오류 횟수 n번
         
         var prohUsePrevPwd = data.useChkPrevPwd; // 2021-11-10 이사라 : 가장 최근 암호 사용 금지 여부
@@ -533,7 +533,7 @@
 		    if (maxLoginFailCntVal == "" || Number(maxLoginFailCntVal) <= 0) {
 		        alert("<spring:message code='ezSystem.ksaPwPolicy30' />");
 		        return false;
-		    } else if (loginLockedDurationVal == "" || Number(loginLockedDurationVal) <= 0) {
+		    } else if (loginLockedDurationVal == "" || Number(loginLockedDurationVal) < 0) {
 				alert("<spring:message code='ezSystem.khjPwPolicy37' />");
 				return false;
 			}
