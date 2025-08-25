@@ -22,11 +22,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import egovframework.com.cmm.service.EzFileMngUtil;
+import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 
 @Controller
-public class EzApprovalGReformController extends EzFileMngUtil {
+public class EzApprovalGReformController extends EgovFileMngUtil {
 
 	private static final Logger logger = LoggerFactory.getLogger(EzApprovalGReformController.class);
 

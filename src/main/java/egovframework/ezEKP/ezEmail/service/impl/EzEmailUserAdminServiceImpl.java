@@ -8,7 +8,6 @@ import java.util.Properties;
 
 import javax.annotation.Resource;
 
-import org.egovframe.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -24,7 +23,7 @@ import egovframework.ezEKP.ezEmail.task.EzEmailAsync;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 
 @Service("EzEmailUserAdminService")
-public class EzEmailUserAdminServiceImpl extends EgovAbstractServiceImpl implements EzEmailUserAdminService {
+public class EzEmailUserAdminServiceImpl implements EzEmailUserAdminService {
 
 	private static final Logger logger = LoggerFactory.getLogger(EzEmailUserAdminServiceImpl.class);
 	

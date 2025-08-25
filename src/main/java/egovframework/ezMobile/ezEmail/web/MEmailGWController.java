@@ -126,7 +126,7 @@ import com.sun.mail.imap.AppendUID;
 import com.sun.mail.imap.IMAPFolder;
 
 import egovframework.com.cmm.EgovMessageSource;
-import egovframework.com.cmm.service.EzFileMngUtil;
+import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.com.cmm.service.Globals;
 import egovframework.ezEKP.ezAddress.service.EzAddressService;
 import egovframework.ezEKP.ezAddress.vo.AddressFolderVO;
@@ -163,7 +163,7 @@ import org.xml.sax.InputSource;
 import org.xml.sax.InputSource;
 
 @RestController
-public class MEmailGWController extends EzFileMngUtil {
+public class MEmailGWController extends EgovFileMngUtil {
 
 private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.class);
 	

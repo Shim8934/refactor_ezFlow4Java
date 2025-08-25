@@ -9,7 +9,6 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
-import org.egovframe.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -36,7 +35,7 @@ import egovframework.let.utl.rest.Rest.Module;
 import egovframework.let.utl.rest.Result;
 
 @Component
-public class MWebfolderServiceImpl extends EgovAbstractServiceImpl implements MWebfolderService {
+public class MWebfolderServiceImpl implements MWebfolderService {
 
 	private static Gson GSON = new Gson();
 

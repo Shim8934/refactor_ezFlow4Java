@@ -1,8 +1,8 @@
 package egovframework.ezEKP.ezApprovalG.web;
 
 import egovframework.com.cmm.EgovMessageSource;
+import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezAI.util.AICommonUtil;
-import egovframework.com.cmm.service.EzFileMngUtil;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGAdminService;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGKlibService;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
@@ -160,7 +160,7 @@ import java.util.zip.ZipOutputStream;
  */
 
 @Controller
-public class EzApprovalGController extends EzFileMngUtil{
+public class EzApprovalGController extends EgovFileMngUtil{
 	private static final Logger logger = LoggerFactory.getLogger(EzApprovalGController.class);
 
 	@Autowired

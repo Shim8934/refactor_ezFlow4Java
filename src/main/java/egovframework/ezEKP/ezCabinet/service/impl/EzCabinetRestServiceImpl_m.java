@@ -4,8 +4,6 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Map.Entry;
 import javax.servlet.http.HttpServletRequest;
-
-import org.egovframe.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
@@ -22,7 +20,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import egovframework.ezEKP.ezCabinet.service.EzCabinetRestService_m;
 
 @Service
-public class EzCabinetRestServiceImpl_m extends EgovAbstractServiceImpl implements EzCabinetRestService_m {
+public class EzCabinetRestServiceImpl_m implements EzCabinetRestService_m {
 	@Autowired
 	private Properties config;
 	

@@ -30,7 +30,6 @@ import egovframework.ezEKP.ezStatistics.vo.StatChartVO.Dataset;
 import egovframework.ezEKP.ezStatistics.vo.StatisticVO;
 import egovframework.let.user.login.vo.LoginVO;
 import org.apache.commons.lang3.StringUtils;
-import org.egovframe.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -50,7 +49,7 @@ import egovframework.let.utl.fcc.service.CommonUtil;
 import static egovframework.ezEKP.ezStatistics.vo.StatisticVO.Code.ACCESS;
 
 @Service("EzStatisticsAdminService")
-public class EzStatisticsAdminServiceImpl extends EgovAbstractServiceImpl implements EzStatisticsAdminService {
+public class EzStatisticsAdminServiceImpl implements EzStatisticsAdminService {
 	
 	@Autowired
 	private CommonUtil commonUtil;

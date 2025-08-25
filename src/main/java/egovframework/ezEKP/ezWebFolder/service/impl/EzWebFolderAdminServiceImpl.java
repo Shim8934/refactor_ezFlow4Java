@@ -45,7 +45,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
 
 import egovframework.com.cmm.EgovMessageSource;
-import egovframework.com.cmm.service.EzFileMngUtil;
+import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
@@ -68,7 +68,7 @@ import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.KlibUtil;
 
 @Service("EzWebFolderAdminService")
-public class EzWebFolderAdminServiceImpl extends EzFileMngUtil implements EzWebFolderAdminService {
+public class EzWebFolderAdminServiceImpl extends EgovFileMngUtil implements EzWebFolderAdminService {
 	@Resource(name = "EzWebFolderAdminDAO")
 	private EzWebFolderAdminDAO ezWebFolderAdminDAO;
 	

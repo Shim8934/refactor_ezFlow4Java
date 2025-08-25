@@ -59,7 +59,7 @@ import org.w3c.dom.*;
 import com.sun.mail.pop3.POP3Folder;
 
 import egovframework.com.cmm.EgovMessageSource;
-import egovframework.com.cmm.service.EzFileMngUtil;
+import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import egovframework.ezEKP.ezEmail.logic.POP3Access;
@@ -97,7 +97,7 @@ import org.egovframe.rte.fdl.string.EgovStringUtil;
  */
 
 @Controller
-public class EzEmailConfigController extends EzFileMngUtil {
+public class EzEmailConfigController extends EgovFileMngUtil {
 
 	private static final Logger logger = LoggerFactory.getLogger(EzEmailConfigController.class);
 

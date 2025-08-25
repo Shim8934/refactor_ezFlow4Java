@@ -16,7 +16,6 @@ import java.util.UUID;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.io.IOUtils;
-import org.egovframe.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +33,7 @@ import egovframework.ezEKP.ezTask.vo.TaskShareVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 @Service("EzTaskService")
-public class EzTaskServiceImpl extends EgovAbstractServiceImpl implements EzTaskService {
+public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 	private static final Logger logger = LoggerFactory.getLogger(EzTaskServiceImpl.class);
 	
 	@Autowired

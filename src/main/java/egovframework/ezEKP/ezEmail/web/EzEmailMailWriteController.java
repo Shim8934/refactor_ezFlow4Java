@@ -114,7 +114,7 @@ import com.sun.mail.imap.AppendUID;
 import com.sun.mail.imap.IMAPFolder;
 
 import egovframework.com.cmm.EgovMessageSource;
-import egovframework.com.cmm.service.EzFileMngUtil;
+import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezAddress.service.EzAddressService;
 import egovframework.ezEKP.ezAddress.vo.AddressVO;
 import egovframework.ezEKP.ezAddress.vo.SimpleAddressVO;
@@ -153,7 +153,7 @@ import egovframework.ezEKP.ezEmail.service.EzEmailWriteService;
  */
 
 @Controller
-public class EzEmailMailWriteController extends EzFileMngUtil {
+public class EzEmailMailWriteController extends EgovFileMngUtil {
 
 	private static final Logger logger = LoggerFactory.getLogger(EzEmailMailWriteController.class);
 	

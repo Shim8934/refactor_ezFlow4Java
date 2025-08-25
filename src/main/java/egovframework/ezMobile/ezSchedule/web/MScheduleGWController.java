@@ -39,7 +39,7 @@ import com.google.api.services.calendar.model.Event;
 import com.ibm.icu.util.Calendar;
 
 import egovframework.com.cmm.EgovMessageSource;
-import egovframework.com.cmm.service.EzFileMngUtil;
+import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezPersonal.service.EzPersonalService;
 import egovframework.ezEKP.ezPersonal.type.NotiPlatform;
@@ -82,7 +82,7 @@ import egovframework.let.utl.fcc.service.CommonUtil;
  */
 @SuppressWarnings("unchecked")
 @RestController
-public class MScheduleGWController extends EzFileMngUtil {
+public class MScheduleGWController extends EgovFileMngUtil {
 	
 	private static final Logger logger = LoggerFactory.getLogger(MScheduleGWController.class);
 	

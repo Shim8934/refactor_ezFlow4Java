@@ -34,7 +34,6 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.egovframe.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,7 +67,7 @@ import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 
 @Service("EzOrganAdminService")
-public class EzOrganAdminServiceImpl extends EgovAbstractServiceImpl implements EzOrganAdminService {
+public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	
     private static final Logger logger = LoggerFactory.getLogger(EzOrganAdminServiceImpl.class);
     
@@ -2888,7 +2887,7 @@ public class EzOrganAdminServiceImpl extends EgovAbstractServiceImpl implements 
 			in              = new BufferedInputStream(new FileInputStream(file));
 			String mimetype = "application/octet-stream";
 			
-			response.setBufferSize(2048);		// BUFF_SIZE: 2048 (extends EzFileMngUtil) 
+			response.setBufferSize(2048);		// BUFF_SIZE: 2048 (extends EgovFileMngUtil) 
 			response.setContentType(mimetype);
 			response.setHeader("Content-Disposition", "attachment; filename=\"" + _fileName + "\"");
 			response.setContentLength((int)file.length());

@@ -11,7 +11,6 @@ import kr.dogfoot.hwplib.object.bodytext.control.ControlType;
 import kr.dogfoot.hwplib.object.bodytext.control.table.Cell;
 import kr.dogfoot.hwplib.object.bodytext.control.table.Row;
 import kr.dogfoot.hwplib.object.bodytext.paragraph.Paragraph;
-import org.egovframe.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +24,7 @@ import java.util.Map;
 import java.util.Properties;
 
 @Service
-public class EzApprovalGOpenGovServiceImpl extends EgovAbstractServiceImpl implements EzApprovalGOpenGovService {
+public class EzApprovalGOpenGovServiceImpl implements EzApprovalGOpenGovService {
 
     private static final Logger logger = LoggerFactory.getLogger(EzApprovalGOpenGovServiceImpl.class);
 

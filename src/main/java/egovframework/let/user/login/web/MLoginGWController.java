@@ -2177,7 +2177,7 @@ public class MLoginGWController {
 		int remainTime = Integer.parseInt(loginLockedDuration) - Integer.parseInt(diff);
 
 		try {
-			if (!"0".equalsIgnoreCase(loginLockedDuration) && remainTime <= 0) {
+			if (remainTime <= 0) {
 				// 잠금 잔여 시간이 지난 이후 로그인 실패 카운터 초기화 및 시간 초기화 
 				commonUtil.resetLoginFailAttempts(userId, tenantID);
 				ezCommonService.updateUserConfigInfo(tenantID, userId, "LoginLockedDate", "0");

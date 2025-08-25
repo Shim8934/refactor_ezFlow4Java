@@ -9,7 +9,6 @@ import java.util.Properties;
 
 import javax.annotation.Resource;
 
-import org.egovframe.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -31,7 +30,7 @@ import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 @Service("EzAddressService")
-public class EzAddressServiceImpl extends EgovAbstractServiceImpl implements EzAddressService {
+public class EzAddressServiceImpl implements EzAddressService {
 
 	private static final Logger logger = LoggerFactory.getLogger(EzAddressServiceImpl.class);
 

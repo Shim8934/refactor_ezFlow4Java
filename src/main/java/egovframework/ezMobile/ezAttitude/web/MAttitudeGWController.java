@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import egovframework.com.cmm.EgovMessageSource;
-import egovframework.com.cmm.service.EzFileMngUtil;
+import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezAttitude.service.EzAttitudeService;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeConfigVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeVO;
@@ -41,7 +41,7 @@ import egovframework.let.utl.fcc.service.CommonUtil;
  */
 
 @RestController
-public class MAttitudeGWController extends EzFileMngUtil {
+public class MAttitudeGWController extends EgovFileMngUtil {
 
 
 	private static final Logger logger = LoggerFactory.getLogger(MAttitudeGWController.class);

@@ -23,7 +23,6 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import javax.annotation.Resource;
 
-import org.egovframe.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
@@ -61,7 +60,7 @@ import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 @Service("EzSystemAdminService")
-public class EzSystemAdminServiceImpl extends EgovAbstractServiceImpl implements EzSystemAdminService {
+public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 	
 	private static final Logger logger = LoggerFactory.getLogger(EzSystemAdminServiceImpl.class);
 	
