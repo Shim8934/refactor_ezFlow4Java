@@ -27,7 +27,6 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.util.Strings;
-import org.egovframe.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -84,7 +83,7 @@ import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 @Service("EzScheduleService")
-public class EzScheduleServiceImpl extends EgovAbstractServiceImpl implements EzScheduleService{
+public class EzScheduleServiceImpl implements EzScheduleService{
 	
 	@Resource(name="EzScheduleDAO")
 	private EzScheduleDAO ezScheduleDAO;

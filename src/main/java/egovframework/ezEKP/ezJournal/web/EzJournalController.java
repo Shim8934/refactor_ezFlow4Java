@@ -52,7 +52,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import egovframework.com.cmm.EgovMessageSource;
-import egovframework.com.cmm.service.EzFileMngUtil;
+import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCabinet.service.EzCabinetAdminService;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
@@ -63,7 +63,7 @@ import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 @Controller
-public class EzJournalController extends EzFileMngUtil {
+public class EzJournalController extends EgovFileMngUtil {
 	public static final int BUFF_SIZE = 2048;
 	
 	private static final Logger logger = LoggerFactory.getLogger(EzJournalController.class);

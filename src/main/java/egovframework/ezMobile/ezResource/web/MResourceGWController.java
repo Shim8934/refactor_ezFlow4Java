@@ -28,7 +28,7 @@ import com.google.gson.Gson;
 import com.ibm.icu.util.Calendar;
 
 import egovframework.com.cmm.EgovMessageSource;
-import egovframework.com.cmm.service.EzFileMngUtil;
+import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezNotification.service.EzNotificationService;
 import egovframework.ezEKP.ezResource.service.EzResourceService;
@@ -56,7 +56,7 @@ import egovframework.let.utl.fcc.service.CommonUtil;
  */
 
 @RestController
-public class MResourceGWController extends EzFileMngUtil {
+public class MResourceGWController extends EgovFileMngUtil {
 	
 	private static final Logger logger = LoggerFactory.getLogger(MResourceGWController.class);
 	

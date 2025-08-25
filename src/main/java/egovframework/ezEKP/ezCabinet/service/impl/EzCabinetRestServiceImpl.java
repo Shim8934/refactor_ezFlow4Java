@@ -11,7 +11,6 @@ import java.util.Properties;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.io.IOUtils;
-import org.egovframe.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -41,7 +40,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import egovframework.ezEKP.ezCabinet.service.EzCabinetRestService;
 
 @Service
-public class EzCabinetRestServiceImpl extends EgovAbstractServiceImpl implements EzCabinetRestService {
+public class EzCabinetRestServiceImpl implements EzCabinetRestService {
 	@Autowired
 	private Properties config;
 	

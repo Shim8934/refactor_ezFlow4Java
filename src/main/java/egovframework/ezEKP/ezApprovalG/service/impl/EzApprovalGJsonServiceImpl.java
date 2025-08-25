@@ -15,7 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import egovframework.com.cmm.service.EzFileMngUtil;
+import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezApprovalG.dao.EzApprovalGAdminDAO;
 import egovframework.ezEKP.ezApprovalG.dao.EzApprovalGDAO;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGJsonService;
@@ -26,7 +26,7 @@ import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 @Service("EzApprovalGJsonService")
-public class EzApprovalGJsonServiceImpl extends EzFileMngUtil implements EzApprovalGJsonService{
+public class EzApprovalGJsonServiceImpl extends EgovFileMngUtil implements EzApprovalGJsonService{
 
 	@Autowired
 	private CommonUtil commonUtil;

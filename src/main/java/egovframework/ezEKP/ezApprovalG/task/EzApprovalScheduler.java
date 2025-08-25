@@ -23,7 +23,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import egovframework.com.cmm.EgovMessageSource;
-import egovframework.com.cmm.service.EzFileMngUtil;
+import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGAdminService;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGAttachInfoVO;
@@ -39,7 +39,7 @@ import egovframework.let.utl.fcc.service.EgovDateUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 
 @Component
-public class EzApprovalScheduler extends EzFileMngUtil {
+public class EzApprovalScheduler extends EgovFileMngUtil {
 
 	private static final Logger logger = LoggerFactory.getLogger(EzApprovalScheduler.class);
 

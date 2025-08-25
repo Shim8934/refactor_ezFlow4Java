@@ -5,8 +5,6 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Map.Entry;
 import javax.servlet.http.HttpServletRequest;
-
-import org.egovframe.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
@@ -23,7 +21,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import egovframework.ezEKP.ezCabinet.service.EzCabinetRestService_h;
 
 @Service
-public class EzCabinetRestServiceImpl_h extends EgovAbstractServiceImpl implements EzCabinetRestService_h {
+public class EzCabinetRestServiceImpl_h implements EzCabinetRestService_h {
 	private static final Logger logger = LoggerFactory.getLogger(EzCabinetRestServiceImpl_h.class);
 	
 	@Autowired

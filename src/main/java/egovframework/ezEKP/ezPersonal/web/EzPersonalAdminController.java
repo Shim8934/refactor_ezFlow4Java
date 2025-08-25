@@ -46,7 +46,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import egovframework.com.cmm.EgovMessageSource;
-import egovframework.com.cmm.service.EzFileMngUtil;
+import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezNewPortal.service.EzNewPortalService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
@@ -78,7 +78,7 @@ import egovframework.let.utl.fcc.service.EgovDateUtil;
  */
 
 @Controller("EzPersonalAdminController")
-public class EzPersonalAdminController extends EzFileMngUtil {
+public class EzPersonalAdminController extends EgovFileMngUtil {
 	private static final Logger logger = LoggerFactory.getLogger(EzPersonalAdminController.class);
 	
 	@Autowired

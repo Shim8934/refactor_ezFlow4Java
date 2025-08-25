@@ -15,7 +15,6 @@ import javax.mail.internet.InternetAddress;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
-import org.egovframe.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,7 +58,7 @@ import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.KoreanLunarCalendar;
 
 @Service("EzAttitudeService")
-public class EzAttitudeServiceImpl extends EgovAbstractServiceImpl implements EzAttitudeService{
+public class EzAttitudeServiceImpl implements EzAttitudeService{
 	private static final Logger logger = LoggerFactory.getLogger(EzAttitudeServiceImpl.class);
 	private static final int defaultAnnualHolidayCnt = 15; // 기본 연차 발생 수
 	

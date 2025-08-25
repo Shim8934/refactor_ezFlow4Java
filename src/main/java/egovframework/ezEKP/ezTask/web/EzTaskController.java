@@ -31,7 +31,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import egovframework.com.cmm.EgovMessageSource;
-import egovframework.com.cmm.service.EzFileMngUtil;
+import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezTask.service.EzTaskService;
@@ -59,7 +59,7 @@ import egovframework.let.utl.fcc.service.CommonUtil;
  */
 
 @Controller
-public class EzTaskController extends EzFileMngUtil {
+public class EzTaskController extends EgovFileMngUtil {
 	private static final Logger logger = LoggerFactory.getLogger(EzTaskController.class);
 
 	@Autowired

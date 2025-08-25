@@ -3626,7 +3626,6 @@ function setDocNumFormat(pPrefix) {
 }
 
 function getDocNumByFormat(format) {
-    format = format.trim();
     var Arr_Header = new Array();
     var numHeader = "";
     var d = new Date();

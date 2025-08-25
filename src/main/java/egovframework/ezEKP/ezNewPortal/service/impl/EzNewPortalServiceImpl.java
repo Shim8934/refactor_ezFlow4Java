@@ -48,7 +48,6 @@ import egovframework.ezEKP.ezNewPortal.vo.PortalTopVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortalTopVO.TopFrameType;
 
 import org.codehaus.jackson.map.ObjectMapper;
-import org.egovframe.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
@@ -109,7 +108,7 @@ import egovframework.ezEKP.ezWebFolder.vo.FileVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 @Service("EzNewPortalService")
-public class EzNewPortalServiceImpl extends EgovAbstractServiceImpl implements EzNewPortalService {
+public class EzNewPortalServiceImpl implements EzNewPortalService {
 	private static final Logger logger = LoggerFactory.getLogger(EzNewPortalServiceImpl.class);
 	
 	@Resource(name = "EzNewPortalDAO")

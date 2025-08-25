@@ -37,7 +37,7 @@ import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import egovframework.com.cmm.EgovMessageSource;
-import egovframework.com.cmm.service.EzFileMngUtil;
+import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezEmail.task.EzEmailAsync;
@@ -64,7 +64,7 @@ import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 @Service("EzSurveyService")
-public class EzSurveyServiceImpl extends EzFileMngUtil implements EzSurveyService {
+public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyService {
 	private static final Logger logger = LoggerFactory.getLogger(EzSurveyServiceImpl.class);
 	
 	@Autowired

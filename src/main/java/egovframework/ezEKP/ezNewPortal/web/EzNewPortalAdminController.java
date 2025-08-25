@@ -43,14 +43,14 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.multipart.MultipartRequest;
 
 import egovframework.com.cmm.EgovMessageSource;
-import egovframework.com.cmm.service.EzFileMngUtil;
+import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 @Controller
-public class EzNewPortalAdminController extends EzFileMngUtil {
+public class EzNewPortalAdminController extends EgovFileMngUtil {
 
 	private static final Logger logger = LoggerFactory.getLogger(EzNewPortalAdminController.class);
 	

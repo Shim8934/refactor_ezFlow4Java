@@ -7,7 +7,6 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
-import org.egovframe.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +22,7 @@ import egovframework.ezMobile.ezOrgan.vo.MPersonListVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 @Service("MOrganService")
-public class MOrganServiceImpl extends EgovAbstractServiceImpl implements MOrganService {
+public class MOrganServiceImpl implements MOrganService {
 	private static final Logger logger = LoggerFactory.getLogger(MOrganServiceImpl.class);
 	
 	@Autowired

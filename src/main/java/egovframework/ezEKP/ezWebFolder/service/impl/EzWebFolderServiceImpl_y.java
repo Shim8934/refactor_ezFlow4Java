@@ -22,7 +22,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import egovframework.com.cmm.service.EzFileMngUtil;
+import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezWebFolder.dao.EzWebFolderDAO;
 import egovframework.ezEKP.ezWebFolder.dao.EzWebFolderDAO_m;
@@ -41,7 +41,7 @@ import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 @Service("EzWebFolderService_y")
-public class EzWebFolderServiceImpl_y extends EzFileMngUtil implements EzWebFolderService_y{
+public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFolderService_y{
 	@Autowired
 	private EzCommonService ezCommonService;
 

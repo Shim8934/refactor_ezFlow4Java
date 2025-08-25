@@ -43,7 +43,7 @@ import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
 import com.sun.mail.imap.IMAPFolder;
 import egovframework.com.cmm.EgovMessageSource;
-import egovframework.com.cmm.service.EzFileMngUtil;
+import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezBoard.dao.EzBoardDAO;
 import egovframework.ezEKP.ezBoard.vo.BoardAttachVO;
 import egovframework.ezEKP.ezCabinet.dao.EzCabinetAdminDAO;
@@ -75,7 +75,7 @@ import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 @Service
-public class EzCabinetServiceImpl extends EzFileMngUtil implements EzCabinetService {
+public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetService {
 	private static final Logger logger = LoggerFactory.getLogger(EzCabinetServiceImpl.class);
 	
 	@Autowired

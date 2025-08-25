@@ -7,7 +7,6 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
-import org.egovframe.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.springframework.stereotype.Service;
@@ -20,7 +19,7 @@ import egovframework.ezEKP.ezCabinet.vo.UserCapacityVO;
 import egovframework.let.user.login.vo.LoginVO;
 
 @Service("EzCabinetAdminService")
-public class EzCabinetAdminServiceImpl extends EgovAbstractServiceImpl implements EzCabinetAdminService {
+public class EzCabinetAdminServiceImpl implements EzCabinetAdminService {
 	@Resource(name = "EzCabinetAdminDAO")
 	private EzCabinetAdminDAO ezCabinetAdminDAO;
 	

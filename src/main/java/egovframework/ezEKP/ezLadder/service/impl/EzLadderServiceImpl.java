@@ -11,7 +11,6 @@ import java.util.Random;
 import javax.annotation.Resource;
 import javax.mail.internet.InternetAddress;
 
-import org.egovframe.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +34,7 @@ import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
 
 @Service("EzLadderService")
-public class EzLadderServiceImpl extends EgovAbstractServiceImpl implements EzLadderService {
+public class EzLadderServiceImpl implements EzLadderService {
 	private static final Logger logger = LoggerFactory.getLogger(EzLadderServiceImpl.class);
 	
 	@Resource(name="EzLadderDAO")
