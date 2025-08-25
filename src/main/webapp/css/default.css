@@ -4433,7 +4433,7 @@ body.drag *{user-select:none !important;}
 .result_list_cont_R > div span{margin-left:5px;}
 .result_list_title{margin-bottom:5px;}
 .result_list_title a{cursor:pointer;color:#0033ac;text-decoration:underline;}
-.result_list_desc{margin-bottom:10px;padding-right:14px;margin-top: 5px;word-break: break-all;}
+.result_list_desc{margin-bottom:10px;padding-right:14px;margin-top: 5px;word-break: break-all;display: -webkit-box;-webkit-box-orient: vertical;-webkit-line-clamp: 5;overflow: hidden;text-overflow: ellipsis;white-space: normal;}
 .result_list_noti{text-align:left;color:royalblue;margin-bottom:10px;}
 
 .moreView{float: right;font-size: 13px;font-weight: normal;}
