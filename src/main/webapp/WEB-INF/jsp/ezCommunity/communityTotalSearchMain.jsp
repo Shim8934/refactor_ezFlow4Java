@@ -162,7 +162,7 @@
 
 								if (i < 1) {
 									listXML += "<div class='result_list_head'>";
-									if (result.subject == "ALL") {
+									if (result.subject == "ALL" && SelectNodes(xmldoc,"NODES/NODE2").length > 3) {
 										listXML += "<h4><spring:message code='ezCommunity.t1529'/><div class='moreView'>";
 										listXML += "<a href='javascript:void(0);' onclick='viewContent(\"CLUB\")'><spring:message code='ezCommunity.lyj108'/></a>";
 										listXML += "<img src='/images/arr_right.gif'></div></h4>";
@@ -213,7 +213,7 @@
 
 								if (j < 1) {
 									listXML += "<div class='result_list_head'>";
-									if (result.subject == "ALL") {
+									if (result.subject == "ALL" && SelectNodes(xmldoc,"NODES/NODE1").length > 3) {
 										listXML += "<h4><spring:message code='ezCommunity.lyj102'/><div class='moreView'>";
 										listXML += "<a href='javascript:void(0);' onclick='viewContent(\"BOARD\")'><spring:message code='ezCommunity.lyj108'/></a>";
 										listXML += "<img src='/images/arr_right.gif'></div></h4>";
@@ -256,7 +256,7 @@
 								if (y < 1) {
 									listXML += "<div class='result_list_head'>";
 
-									if (result.subject == "ALL") {
+									if (result.subject == "ALL" && SelectNodes(xmldoc,"NODES/NODE3").length > 3) {
 										listXML += "<h4><spring:message code='ezCommunity.t9'/><div class='moreView'>";
 										listXML += "<a href='javascript:void(0);' onclick='viewContent(\"MASTER\")'><spring:message code='ezCommunity.lyj108'/></a>";
 										listXML += "<img src='/images/arr_right.gif'></div></h4>";
