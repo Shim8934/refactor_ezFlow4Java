@@ -15,7 +15,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
-import egovframework.com.cmm.service.EgovFileMngUtil;
+import egovframework.com.cmm.service.EzFileMngUtil;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezDoc24.dao.EzDoc24DAO;
@@ -24,7 +24,7 @@ import egovframework.ezEKP.ezDoc24.vo.EzDoc24VO;
 import egovframework.let.user.login.vo.LoginVO;
 
 @Service("EzDoc24Service")
-public class EzDoc24ServiceImpl extends EgovFileMngUtil implements EzDoc24Service {
+public class EzDoc24ServiceImpl extends EzFileMngUtil implements EzDoc24Service {
 	private static final Logger logger = LoggerFactory.getLogger(EzDoc24ServiceImpl.class);
 
 	@Autowired

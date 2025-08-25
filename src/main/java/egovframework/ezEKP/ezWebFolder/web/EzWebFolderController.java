@@ -51,7 +51,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import com.google.gson.JsonArray;
 
-import egovframework.com.cmm.service.EgovFileMngUtil;
+import egovframework.com.cmm.service.EzFileMngUtil;
 import egovframework.ezEKP.ezWebFolder.vo.DuplicateInfoVO.Type;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -60,7 +60,7 @@ import egovframework.let.utl.rest.Rest.Module;
 import egovframework.let.utl.rest.Result;
 
 @Controller
-public class EzWebFolderController extends EgovFileMngUtil {
+public class EzWebFolderController extends EzFileMngUtil {
 
 	private static final Logger logger = LoggerFactory.getLogger(EzWebFolderController.class);
 

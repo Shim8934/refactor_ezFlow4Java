@@ -109,7 +109,6 @@
 
 	        window.onload = function () {
 	        	var officeFlag = "<c:out value='${officeFlag}'/>";
-	        	// console.log(officeFlag);
 	        	$('#officeVal').val(officeFlag);
 	            try {
 	                parent.DocumentComplete(this);

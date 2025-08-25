@@ -79,7 +79,6 @@ import org.springframework.util.FileCopyUtils;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.w3c.dom.Document;
-import org.w3c.dom.NodeList;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGKlibService;
@@ -276,7 +275,6 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		sb.append("<FORMFLAG>" + strProp.getFormFlag() + "</FORMFLAG>");
 		sb.append("<APPRFLAG>" + strProp.getApprFlag() + "</APPRFLAG>");
 		sb.append("<APPRMAILFLAG>" + strProp.getApprMailFlag() + "</APPRMAILFLAG>");
-		sb.append("<NOTUSEDFLAG>" + strProp.getNotUsedFlag() + "</NOTUSEDFLAG>");
 		sb.append("</NODE>");
 		sb.append("</NODES>");
 
@@ -3118,7 +3116,6 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			result.append("<DATA6>" + brdBoardTreeList.get(i).getUrl() + "</DATA6>"); //2018-08-13 강민수92 url 게시판인지 체크하기 위해 추가
 			result.append("<EXPANDED>FALSE</EXPANDED>");
 			result.append("<ISLEAF>" + checkIfLeafBoard(brdBoardTreeList.get(i).getBoardId(), tenantID) + "</ISLEAF>");
-			result.append("<NOTUSEDFLAG>" + brdBoardTreeList.get(i).getNotUsedFlag() + "</NOTUSEDFLAG>");
 			
 			// 첫번째로 표출되는 게시판그룹을 자동 확장시키기 위한 코드 (현재 쓰이는 곳은 없으며, pSubFlag가 0으로 전달되어야 함)
 			if (count == 0 && pSubFlag != 1) {
@@ -7517,7 +7514,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 
 		logger.debug("repostItem ended.");
 	}
-
+	
 	@Override
 	public boolean isPostDuplicated(String versionYN, String boardID, String parentItemID, int tenantId) throws Exception {
 		logger.debug("isPostDuplicated started.");

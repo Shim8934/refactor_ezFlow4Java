@@ -624,7 +624,6 @@
 		    	/* $(".on").attr("class", "off");
 		    	$(".myb h2").attr("class", "on");
 		    	$(".myb").next().attr("class", "on"); */
-		        
 		    	var openSpan = $(event.target);
 		    	
 		    	SetTreeConfig();

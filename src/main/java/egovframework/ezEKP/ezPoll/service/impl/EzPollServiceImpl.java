@@ -12,6 +12,7 @@ import java.util.Set;
 import javax.annotation.Resource;
 import javax.mail.internet.InternetAddress;
 
+import org.egovframe.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.jsoup.Jsoup;
@@ -44,7 +45,7 @@ import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 @Service("EzPollService")
-public class EzPollServiceImpl implements EzPollService{
+public class EzPollServiceImpl extends EgovAbstractServiceImpl implements EzPollService{
 
 	private static final Logger logger = LoggerFactory.getLogger(EzPollServiceImpl.class);
 

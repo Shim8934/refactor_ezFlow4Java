@@ -42,7 +42,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import egovframework.com.cmm.EgovMessageSource;
-import egovframework.com.cmm.service.EgovFileMngUtil;
+import egovframework.com.cmm.service.EzFileMngUtil;
 import egovframework.ezEKP.ezCabinet.service.EzCabinetAdminService;
 import egovframework.ezEKP.ezCar.service.EzCarService;
 import egovframework.ezEKP.ezCar.vo.CarBrdListVO;
@@ -64,7 +64,7 @@ import egovframework.let.utl.sim.service.EgovFileScrty;
 
 
 @Controller
-public class EzCarController extends EgovFileMngUtil {
+public class EzCarController extends EzFileMngUtil {
    
    private static final Logger logger = LoggerFactory.getLogger(EzCarController.class);
    

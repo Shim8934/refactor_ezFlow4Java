@@ -34,7 +34,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import egovframework.com.cmm.service.EgovFileMngUtil;
+import egovframework.com.cmm.service.EzFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderAdminService;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService;
@@ -58,7 +58,7 @@ import egovframework.let.utl.sim.service.EgovFileScrty;
 
 
 @RestController
-public class EzWebFolderGWController_y extends EgovFileMngUtil {
+public class EzWebFolderGWController_y extends EzFileMngUtil {
 	private static final Logger logger = LoggerFactory.getLogger(EzWebFolderGWController_y.class);
 	
 	@Autowired

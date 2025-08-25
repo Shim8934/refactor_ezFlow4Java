@@ -56,7 +56,7 @@ import com.sun.mail.imap.AppendUID;
 import com.sun.mail.imap.IMAPFolder;
 
 import egovframework.com.cmm.EgovMessageSource;
-import egovframework.com.cmm.service.EgovFileMngUtil;
+import egovframework.com.cmm.service.EzFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.dao.EzEmailDAO;
 import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
@@ -80,7 +80,7 @@ import egovframework.let.utl.fcc.service.EgovStringUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 
 @Component
-public class EzEmailScheduler extends EgovFileMngUtil {
+public class EzEmailScheduler extends EzFileMngUtil {
 
 	private static final Logger logger = LoggerFactory.getLogger(EzEmailScheduler.class);
 

@@ -8,6 +8,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.egovframe.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +24,7 @@ import egovframework.ezEKP.ezOrgan.dao.EzOrganDAO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 @Service("EzMemoService")
-public class EzMemoServiceImpl implements EzMemoService {
+public class EzMemoServiceImpl extends EgovAbstractServiceImpl implements EzMemoService {
 private static final Logger logger = LoggerFactory.getLogger(EzMemoServiceImpl.class);
 	
 	@Resource(name="EzMemoDAO")

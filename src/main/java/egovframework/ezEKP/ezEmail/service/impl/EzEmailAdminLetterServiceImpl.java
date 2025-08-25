@@ -4,6 +4,7 @@ import java.net.URLEncoder;
 import java.util.Properties;
 
 import egovframework.let.utl.fcc.service.CommonUtil;
+import org.egovframe.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -22,7 +23,7 @@ import egovframework.ezEKP.ezEmail.service.EzEmailAdminLetterService;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 
 @Service("EzEmailAdminLetterService")
-public class EzEmailAdminLetterServiceImpl implements EzEmailAdminLetterService {
+public class EzEmailAdminLetterServiceImpl extends EgovAbstractServiceImpl implements EzEmailAdminLetterService {
 	private static final Logger logger = LoggerFactory.getLogger(EzEmailServiceImpl.class);
 
 	@Autowired
