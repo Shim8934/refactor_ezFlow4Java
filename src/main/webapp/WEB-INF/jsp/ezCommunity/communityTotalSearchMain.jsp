@@ -495,6 +495,10 @@
 				str = ReplaceText(str, ">", "&gt;");
 				return str;
 			}
+
+			function returnHome() {
+				window.location.href = "/ezCommunity/mainPage.do";
+			}
 		</script>
 	</head>
 	<body class="mainbody" style="margin:20px 15px; min-width:1040px; padding:0 10px 10px;">
@@ -512,6 +516,7 @@
 						</dt>
 						<dt class="searchinput"><input id="keyword" name="keyword" onkeydown="key_down(event)" type="text" value="<c:out value='${keyword}'/>"></dt>
 						<dd onclick="totalSearch()" class="btn_search"><spring:message code='ezCommunity.t31'/></dd>
+						<dd onclick="returnHome()" class="btn_CommHome"><spring:message code='ezCommunity.t1529'/> <spring:message code='ezNewPortal.t033'/></dd>
 					</dl>
 				</div>
 			</div>

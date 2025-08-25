@@ -4408,7 +4408,8 @@ body.drag *{user-select:none !important;}
 .community_totalSearch dl dt{margin-right:6px;}
 .community_totalSearch dl dt.selectbox select{border:1px solid #B2C2D1; border-radius:4px; height:34px; padding:0 26px 0 12px; background:url(../images/next.gif) no-repeat right 10px center / 12px 12px #fffe; font-size:14px; color:#40648F;}
 .community_totalSearch dl dt.searchinput input{border:1px solid #B2C2D1; height:34px !important; border-radius:4px; width:500px; padding:0 10px;}
-.community_totalSearch dl dd{height:34px; line-height:34px; padding:0 25px; border-radius:4px; background:#40648F; color:#fff; font-size:14px; font-weight:500; cursor:pointer;}
+.community_totalSearch dl dd.btn_search{height:34px; line-height:34px; padding:0 25px; border-radius:4px; background:#40648F; color:#fff; font-size:14px; font-weight:500; cursor:pointer;}
+.community_totalSearch dl dd.btn_CommHome{height:34px; line-height:34px; padding:0 25px; border-radius:4px; background:#7296C1; color:#fff; font-size:14px; font-weight:500; cursor:pointer; margin-left:5px;}
 .community_totalSearch dl dd:hover{background:#0184BF;}
 
 .tab-menu{list-style:none; margin:0; padding:0; display:flex; margin-bottom:15px;}
