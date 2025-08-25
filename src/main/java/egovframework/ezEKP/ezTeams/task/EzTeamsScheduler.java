@@ -22,13 +22,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import egovframework.com.cmm.service.EgovFileMngUtil;
+import egovframework.com.cmm.service.EzFileMngUtil;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import org.springframework.web.client.RestTemplate;
 
 @Component
-public class EzTeamsScheduler extends EgovFileMngUtil {
+public class EzTeamsScheduler extends EzFileMngUtil {
 
 	private static final Logger logger = LoggerFactory.getLogger(EzTeamsScheduler.class);
 
