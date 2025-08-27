@@ -1873,7 +1873,7 @@ public class MApprovalGGWController {
 
 			String code = request.getParameter("code");
 			String level = request.getParameter("level");
-			Locale locale = userInfo.getLocale();
+			Locale locale = new Locale(commonUtil.getTwoLetterLangFromLangNum(userInfo.getLang()));
 			
 			MOptionVO optionInfo = mOptionService.optionInfo(userId, userInfo.getTenantId());
 			LoginVO loginVO = new LoginVO();
@@ -2559,12 +2559,14 @@ public class MApprovalGGWController {
 
 			MCommonVO userInfo = mOptionService.commonInfo(serverName, userId);
 			MOptionVO optionInfo = mOptionService.optionInfo(userId, userInfo.getTenantId());
+			Locale locale = new Locale(commonUtil.getTwoLetterLangFromLangNum(userInfo.getLang()));
+			
 			LoginVO loginVO = new LoginVO();
 			loginVO.setId(userId);
 			loginVO.setCompanyID(userInfo.getCompanyId());
 			loginVO.setTenantId(userInfo.getTenantId());
 			loginVO.setOffset(userInfo.getOffSet());
-			loginVO.setLocale(userInfo.getLocale());
+			loginVO.setLocale(locale);
 			loginVO.setLang(optionInfo.getLang());
 			loginVO.setDeptID(userInfo.getDeptId());
 			loginVO.setDeptName(userInfo.getDeptName());
@@ -2615,12 +2617,14 @@ public class MApprovalGGWController {
 
 			MCommonVO userInfo = mOptionService.commonInfo(serverName, userId);
 			MOptionVO optionInfo = mOptionService.optionInfo(userId, userInfo.getTenantId());
+			Locale locale = new Locale(commonUtil.getTwoLetterLangFromLangNum(userInfo.getLang()));
+			
 			LoginVO loginVO = new LoginVO();
 			loginVO.setId(userId);
 			loginVO.setCompanyID(userInfo.getCompanyId());
 			loginVO.setTenantId(userInfo.getTenantId());
 			loginVO.setOffset(userInfo.getOffSet());
-			loginVO.setLocale(userInfo.getLocale());
+			loginVO.setLocale(locale);
 			loginVO.setLang(optionInfo.getLang());
 			loginVO.setDeptID(userInfo.getDeptId());
 			loginVO.setDeptName(userInfo.getDeptName());
