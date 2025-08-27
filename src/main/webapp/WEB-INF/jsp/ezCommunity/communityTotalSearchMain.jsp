@@ -77,7 +77,7 @@
 
 				$.ajax({
 					type : "POST",
-					async : false,
+					async : true,
 					url : "/ezCommunity/totalSearchMainResult.do",
 					dataType : "json",
 					data : {
