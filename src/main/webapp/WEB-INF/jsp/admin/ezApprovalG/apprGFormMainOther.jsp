@@ -1514,9 +1514,9 @@
                          <span style="<c:if test="${useDraftAll != 'YES'}">display:none;</c:if>"><input type="checkbox" id="setDraftAllFlag" onclick="changeDraftAllFlag()" /> <spring:message code='ezApprovalG.groupdocK01'/></span>
 						<span style="<c:if test="${usePassAprLine != 'YES'}">display:none;</c:if>"><input type="checkbox" id="setPassAprLineFlag" onclick="changePassAprLineFlag()"/> <spring:message code='ezApprovalG.garm09'/></span>
 						<%-- 2025-07-02 김유진 - 전자결재S 모바일 기안 양식 여부용 --%>
-						<c:if test="${useMobileDraft == 'YES' && approvalFlag == 'S' && useEditor != 'WebHWP' && useEditor != 'HWP'}">
-						    <span><input type="checkbox" id="setMobileDraftFlag" onclick="changeMobileDraftFlag()"/> <spring:message code='ezApproval.mobileDraft.kyj01'/></span>
-						</c:if>
+						<span style="<c:if test="${useMobileDraft != 'YES' || approvalFlag != 'S' || useEditor == 'WebHWP' || useEditor == 'HWP'}">display:none;</c:if>">
+						    <input type="checkbox" id="setMobileDraftFlag" onclick="changeMobileDraftFlag()"/> <spring:message code='ezApproval.mobileDraft.kyj01'/>
+						</span>
 					</td>
 				</tr>
 			</table>

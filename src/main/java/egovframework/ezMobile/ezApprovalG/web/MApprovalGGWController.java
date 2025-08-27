@@ -2553,6 +2553,7 @@ public class MApprovalGGWController {
 
 		try {
 			String userId = request.getParameter("userId");
+			String type = request.getParameter("type");
 			String strXML = retMap.get("strXML");
 			String serverName = request.getHeader("x-user-host");
 
@@ -2573,9 +2574,14 @@ public class MApprovalGGWController {
 
 			// 결재선 체크
 			Document doc = commonUtil.convertStringToDocument(strXML);
-			String chkAprLineResult = ezApprovalGService.chkAprLines(doc, userInfo.getLang(), loginVO);
+			String chkAprLineResult = "";
+			if (type.equals("apr")) {
+				chkAprLineResult = ezApprovalGService.chkAprLines(doc, userInfo.getLang(), loginVO);
+			} else {
+				chkAprLineResult = ezApprovalGService.chkDeptLines(doc, userInfo.getCompanyId(), userInfo.getLang(), loginVO);
+			}
 
-			if (!"<RESULT></RESULT>".equals(chkAprLineResult)) {
+			if (!chkAprLineResult.isEmpty() && !"<RESULT></RESULT>".equals(chkAprLineResult)) {
 				result.put("status", "ok");
 				result.put("code", "2");
 				result.put("data", chkAprLineResult);
