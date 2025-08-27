@@ -6210,6 +6210,7 @@ public class EzCommunityController extends EzFileMngUtil{
 
 		model.addAttribute("subject", subject);
 		model.addAttribute("keyword", keyword);
+		model.addAttribute("userInfo", userInfo);
 
 		logger.debug("totalSearchMain ended");
 		return "ezCommunity/communityTotalSearchMain";

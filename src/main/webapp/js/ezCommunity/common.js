@@ -14,9 +14,14 @@ function OpenInformationUI(pInformationContent, FunctionName)
 	    if (MACSAFARIYN()) {
 	        popUpH = popUpH + 50;
 	    }
-	    
-	    var left = (window.screen.availWidth - popUpW) / 2;
-	    var top = (window.screen.availHeight - popUpH) / 2;
+
+		var heigth = window.screen.availHeight;
+		var width = window.screen.availWidth;
+		var pTop = (heigth - popUpH) / 2;
+		var pLeft = (width - popUpW) / 2;
+
+		var left = window.outerWidth / 2 + window.screenX - (popUpW / 2);
+		var top = window.outerHeight / 2 + window.screenY - (popUpH / 2);
 	    
 	    var feature = "height = " + popUpH + "px, width = " + popUpW + "px,left=" + left + "px ,top=" + top + "px, status = no, toolbar=no, menubar=no,location=no";
 	    var result = window.open(url, "ezAPROPINION", feature);

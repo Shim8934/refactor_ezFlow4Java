@@ -9365,7 +9365,8 @@
 						C.C_CLUBDESC,
 						C.C_SYSOPID,
 						C.C_MEMBERCNT,
-						CASE WHEN #primary# = '1' THEN M.DISPLAYNAME ELSE M.DISPLAYNAME2 END AS USERNAME
+						CASE WHEN #primary# = '1' THEN M.DISPLAYNAME ELSE M.DISPLAYNAME2 END AS USERNAME,
+						C.C_CLUBCONFIRMTYPE
 					FROM
 						TBL_C_CLUB C
 							INNER JOIN TBL_USERMASTER M
@@ -9378,19 +9379,6 @@
 					  AND C.C_ADMINCONFIRM = 'Y'
 					  AND (LOWER(CASE WHEN #primary# = '1' THEN C.C_CLUBNAME ELSE C.C_CLUBNAME2 END) LIKE '%' || LOWER(#keyword#) || '%'
 						OR LOWER(C.C_CLUBDESC) LIKE '%' || LOWER(#keyword#) || '%')
-					  AND (C.C_CLUBNO IN (
-						SELECT
-							A.C_CLUBNO
-						FROM
-							TBL_C_CLUB A
-								INNER JOIN TBL_C_CLUBUSER B
-										   ON A.C_CLUBNO = B.C_CLUBNO
-											   AND A.TENANT_ID = B.TENANT_ID
-											   AND A.COMPANYID = B.COMPANYID
-						WHERE
-							A.C_CLUBGUBUN = '3'
-						  and B.C_id = #userId#)
-						OR C.C_CLUBGUBUN <> '3')
 					ORDER BY
 						C.C_REGDATE DESC)
 			WHERE
@@ -9416,19 +9404,6 @@
 			  AND C.C_ADMINCONFIRM = 'Y'
 			  AND (LOWER(CASE WHEN #primary# = '1' THEN C.C_CLUBNAME ELSE C.C_CLUBNAME2 END) LIKE '%' || LOWER(#keyword#) || '%'
 				OR LOWER(C.C_CLUBDESC) LIKE '%' || LOWER(#keyword#) || '%')
-			  AND (C.C_CLUBNO IN (
-				SELECT
-					A.C_CLUBNO
-				FROM
-					TBL_C_CLUB A
-						INNER JOIN TBL_C_CLUBUSER B
-								   ON A.C_CLUBNO = B.C_CLUBNO
-									   AND A.TENANT_ID = B.TENANT_ID
-									   AND A.COMPANYID = B.COMPANYID
-				WHERE
-					A.C_CLUBGUBUN = '3'
-				  and B.C_id = #userId#)
-				OR C.C_CLUBGUBUN <> '3')
 		]]>
 	</select>
 
@@ -9446,7 +9421,8 @@
 						C.C_CLUBDESC,
 						C.C_SYSOPID,
 						C.C_MEMBERCNT,
-						CASE WHEN #primary# = '1' THEN M.DISPLAYNAME ELSE M.DISPLAYNAME2 END AS USERNAME
+						CASE WHEN #primary# = '1' THEN M.DISPLAYNAME ELSE M.DISPLAYNAME2 END AS USERNAME,
+						C.C_CLUBCONFIRMTYPE
 					FROM
 						TBL_C_CLUB C
 							INNER JOIN TBL_USERMASTER M
@@ -9458,19 +9434,6 @@
 					  AND C.TENANT_ID = #tenantID#
 					  AND C.C_ADMINCONFIRM = 'Y'
 					  AND LOWER(CASE WHEN #primary# = '1' THEN M.DISPLAYNAME ELSE M.DISPLAYNAME2 END) LIKE '%' || LOWER(#keyword#) || '%'
-					  AND (C.C_CLUBNO IN (
-						SELECT
-							A.C_CLUBNO
-						FROM
-							TBL_C_CLUB A
-								INNER JOIN TBL_C_CLUBUSER B
-										   ON A.C_CLUBNO = B.C_CLUBNO
-											   AND A.TENANT_ID = B.TENANT_ID
-											   AND A.COMPANYID = B.COMPANYID
-						WHERE
-							A.C_CLUBGUBUN = '3'
-						  and B.C_id = #userId#)
-						OR C.C_CLUBGUBUN <> '3')
 					ORDER BY
 						C.C_REGDATE DESC)
 			WHERE
@@ -9495,19 +9458,6 @@
 			  AND C.TENANT_ID = #tenantID#
 			  AND C.C_ADMINCONFIRM = 'Y'
 			  AND LOWER(CASE WHEN #primary# = '1' THEN M.DISPLAYNAME ELSE M.DISPLAYNAME2 END) LIKE '%' || LOWER(#keyword#) || '%'
-			  AND (C.C_CLUBNO IN (
-				SELECT
-					A.C_CLUBNO
-				FROM
-					TBL_C_CLUB A
-						INNER JOIN TBL_C_CLUBUSER B
-								   ON A.C_CLUBNO = B.C_CLUBNO
-									   AND A.TENANT_ID = B.TENANT_ID
-									   AND A.COMPANYID = B.COMPANYID
-				WHERE
-					A.C_CLUBGUBUN = '3'
-				  and B.C_id = #userId#)
-				OR C.C_CLUBGUBUN <> '3')
 		]]>
 	</select>
 
@@ -9519,62 +9469,75 @@
 				(
 				SELECT
 				    ROWNUM AS PAGING_RN,
-					A.ITEMID,
-					B.C_CLUBNO,
-					CASE
-						WHEN #primary# = '1' THEN A.WRITERNAME
-						ELSE A.WRITERNAME2
-					END AS WRITERNAME,
-					A.WRITEDATE,
-					A.BOARDID,
-					A.TITLE,
-					A.CONTENTLOCATION,
-					A.PHOTOITEMCONTENT,
-					B.GUBUN,
-					B.C_CLUBNO as code
-				FROM
-					TBL_COMM_ITEM A
-						INNER JOIN TBL_COMM_BOARDINFO B
-								   ON A.TENANT_ID = B.TENANT_ID
-									   AND A.BOARDID = B.BOARDID
-						LEFT JOIN TBL_C_CLUBUSER C
-								  ON C.C_CLUBNO = B.C_CLUBNO
-						LEFT JOIN TBL_COMM_BOARDMANAGE D
-								  ON A.BOARDID = D.BOARDID
-				WHERE
-					LOWER(A.TITLE) LIKE '%' || LOWER(#keyword#) || '%'
-					AND (A.WRITERCOMPANYID = #companyID# OR A.WRITERCOMPANYID = '')
-					AND A.TENANT_ID = #tenantID#
+				    T.*
+				FROM (
+				    SELECT
+						A.ITEMID,
+						B.C_CLUBNO,
+						CASE
+							WHEN #primary# = '1' THEN A.WRITERNAME
+							ELSE A.WRITERNAME2
+						END AS WRITERNAME,
+						A.WRITEDATE,
+						A.BOARDID,
+						A.TITLE,
+						A.CONTENTLOCATION,
+						A.PHOTOITEMCONTENT,
+						B.GUBUN,
+						B.C_CLUBNO as code,
+						ROW_NUMBER() OVER (PARTITION BY A.ITEMID ORDER BY A.WRITEDATE DESC) AS RN
+					FROM
+						TBL_COMM_ITEM A
+							INNER JOIN TBL_COMM_BOARDINFO B
+									   ON A.TENANT_ID = B.TENANT_ID
+										   AND A.BOARDID = B.BOARDID
+							LEFT JOIN TBL_C_CLUBUSER C
+									  ON C.C_CLUBNO = B.C_CLUBNO
+										   AND C.TENANT_ID = B.TENANT_ID
+							LEFT JOIN TBL_COMM_BOARDMANAGE D
+									  ON A.BOARDID = D.BOARDID
+										   AND A.TENANT_ID = D.TENANT_ID
+					WHERE
+						LOWER(A.TITLE) LIKE '%' || LOWER(#keyword#) || '%'
+						AND (A.WRITERCOMPANYID = #companyID# OR A.WRITERCOMPANYID = '')
+						AND A.TENANT_ID = #tenantID#
+						AND (B.C_CLUBNO IN (
+							SELECT
+								CB.C_CLUBNO
+							FROM
+								TBL_C_CLUB CB
+									INNER JOIN TBL_C_CLUBUSER CU
+											   ON CB.C_CLUBNO = CU.C_CLUBNO
+												   AND CB.TENANT_ID = CU.TENANT_ID
+												   AND CB.COMPANYID = CU.COMPANYID
+							WHERE
+								(CB.C_CLUBGUBUN = '3' and CU.C_ID = #userId#)
+								   OR CB.C_CLUBGUBUN <> '3'))
+						AND A.STARTDATE <= #v_pNow#
+						AND A.ENDDATE > #v_pNow#
+				]]>
+			<isNotEqual property="adminType" compareValue="true">
+				<![CDATA[
 					AND C.C_ID = #userId#
-					AND (B.C_CLUBNO IN (
-						SELECT
-							CB.C_CLUBNO
-						FROM
-							TBL_C_CLUB CB
-								INNER JOIN TBL_C_CLUBUSER CU
-										   ON CB.C_CLUBNO = CU.C_CLUBNO
-											   AND CB.TENANT_ID = CU.TENANT_ID
-											   AND CB.COMPANYID = CU.COMPANYID
-						WHERE
-							(CB.C_CLUBGUBUN = '3' and CU.C_ID = #userId#)
-							   OR CB.C_CLUBGUBUN <> '3'))
-					AND A.STARTDATE <= #v_pNow#
-					AND A.ENDDATE > #v_pNow#
 					AND NVL(TO_NUMBER(C.GRADE), 10) <= TO_NUMBER(D.READ_FG)
-			]]>
-		<isEqual property="period" compareValue="recent">
-			<![CDATA[
-					AND TO_DATE(A.WRITEDATE, 'YYYY-MM-DD HH24:MI:SS') >= ADD_MONTHS(TO_DATE(#v_pNow#,'YYYY-MM-DD HH24:MI:SS'), -3)
 				]]>
-		</isEqual>
-		<isNotEqual property="period" compareValue="recent">
+			</isNotEqual>
+			<isEqual property="period" compareValue="recent">
+				<![CDATA[
+						AND TO_DATE(A.WRITEDATE, 'YYYY-MM-DD HH24:MI:SS') >= ADD_MONTHS(TO_DATE(#v_pNow#,'YYYY-MM-DD HH24:MI:SS'), -3)
+					]]>
+			</isEqual>
+			<isNotEqual property="period" compareValue="recent">
+				<![CDATA[
+						AND TO_DATE(A.WRITEDATE, 'YYYY-MM-DD HH24:MI:SS') < ADD_MONTHS(TO_DATE(#v_pNow#,'YYYY-MM-DD HH24:MI:SS'), -3)
+					]]>
+			</isNotEqual>
 			<![CDATA[
-					AND TO_DATE(A.WRITEDATE, 'YYYY-MM-DD HH24:MI:SS') < ADD_MONTHS(TO_DATE(#v_pNow#,'YYYY-MM-DD HH24:MI:SS'), -3)
-				]]>
-		</isNotEqual>
-		<![CDATA[
+				) T
+				WHERE
+				    T.RN = 1
 				ORDER BY
-					A.WRITEDATE DESC)
+					T.WRITEDATE DESC)
 			WHERE
 				PAGING_RN > #startRow#
 			  AND
@@ -9585,7 +9548,7 @@
 	<select id="EzCommunityDAO.totalSearchItemResultsCnt" parameterClass="Map" resultClass="Integer">
 		<![CDATA[
 			SELECT
-				COUNT(*)
+				COUNT(DISTINCT A.ITEMID)
 			FROM
 				TBL_COMM_ITEM A
 					INNER JOIN TBL_COMM_BOARDINFO B
@@ -9593,13 +9556,14 @@
 								   AND A.BOARDID = B.BOARDID
 					LEFT JOIN TBL_C_CLUBUSER C
 							  ON C.C_CLUBNO = B.C_CLUBNO
+				    			   AND C.TENANT_ID = B.TENANT_ID
 					LEFT JOIN TBL_COMM_BOARDMANAGE D
 							  ON A.BOARDID = D.BOARDID
+								   AND A.TENANT_ID = D.TENANT_ID
 			WHERE
 				LOWER(A.TITLE) LIKE '%' || LOWER(#keyword#) || '%'
 				AND (A.WRITERCOMPANYID = #companyID# OR A.WRITERCOMPANYID = '')
 				AND A.TENANT_ID = #tenantID#
-				AND C.C_ID = #userId#
 				AND (B.C_CLUBNO IN (
 					SELECT
 						CB.C_CLUBNO
@@ -9614,8 +9578,13 @@
 						   OR CB.C_CLUBGUBUN <> '3'))
 				AND A.STARTDATE <= #v_pNow#
 				AND A.ENDDATE > #v_pNow#
-				AND NVL(TO_NUMBER(C.GRADE), 10) <= TO_NUMBER(D.READ_FG)
 		]]>
+		<isNotEqual property="adminType" compareValue="true">
+			<![CDATA[
+				AND C.C_ID = #userId#
+				AND NVL(TO_NUMBER(C.GRADE), 10) <= TO_NUMBER(D.READ_FG)
+			]]>
+		</isNotEqual>
 		<isEqual property="period" compareValue="recent">
 			<![CDATA[
 				AND TO_DATE(A.WRITEDATE, 'YYYY-MM-DD HH24:MI:SS') >= ADD_MONTHS(TO_DATE(#v_pNow#,'YYYY-MM-DD HH24:MI:SS'), -3)

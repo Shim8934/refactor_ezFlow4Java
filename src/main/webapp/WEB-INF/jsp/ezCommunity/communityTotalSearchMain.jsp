@@ -23,6 +23,8 @@
 			//2018-10-16 김보미 - 프로그래스바
 			var startTime = "";
 			var endTime = "";
+			var strLang5 = "<spring:message code = 'ezCommunity.t1474' />";
+			var strLang6 = "<spring:message code = 'ezCommunity.t1079' />";
 			
 			window.onload = function() {
 				var subject = document.getElementById("search").value;
@@ -156,6 +158,7 @@
 								var regDate = SelectSingleNodeValue(SelectNodes(xmldoc, "NODES/NODE2")[i], "RegDate");
 								var memberCnt = SelectSingleNodeValue(SelectNodes(xmldoc, "NODES/NODE2")[i], "MemberCnt");
 								var itemCnt = SelectSingleNodeValue(SelectNodes(xmldoc, "NODES/NODE2")[i], "ItemCnt");
+								var confirmType = SelectSingleNodeValue(SelectNodes(xmldoc, "NODES/NODE2")[i], "ConfirmType");
 
 								commName = highlightKeyword(commName, result.keyword);
 								commDesc = highlightKeyword(commDesc, result.keyword);
@@ -173,7 +176,7 @@
 									listXML += "<div class='result_list'>";
 								}
 								listXML += "<div class='result_list_cont'><div class='result_list_cont_L'>";
-								listXML += "<div class='result_list_title'><a href='javascript:void(0);' onclick='commOpen(\"" + commCode + "\", \"" + permit + "\")' ><span>" + commName + "</span></a></div>";
+								listXML += "<div class='result_list_title'><a href='javascript:void(0);' onclick='move_cop(\"" + commCode + "\", \"" + permit + "\", \"" + confirmType + "\")' ><span>" + commName + "</span></a></div>";
 								listXML += "<div class='result_list_desc'><span>" + commDesc + "</span></div>";
 								listXML += "<div class='result_list_etc'><img src='/images/i_master.gif' align='absmiddle'>" + masterName + "<span>|</span><spring:message code='ezCommunity.t78'/> : " + regDate + "</div></div>";
 								listXML += "<div class='result_list_cont_R'><div style='margin-bottom: 3px;'><img src='../images/kr/community/categoryBox_iconLineup.gif'><span>" + memberCnt + "</span></div>";
@@ -250,6 +253,7 @@
 								var masterName = MakeXMLString(SelectSingleNodeValue(SelectNodes(xmldoc, "NODES/NODE3")[y], "MasterName"));
 								var regDate = SelectSingleNodeValue(SelectNodes(xmldoc, "NODES/NODE3")[y], "RegDate");
 								var permit = SelectSingleNodeValue(SelectNodes(xmldoc, "NODES/NODE3")[y], "Permit");
+								var confirmType = SelectSingleNodeValue(SelectNodes(xmldoc, "NODES/NODE3")[y], "ConfirmType");
 
 								masterName = highlightKeyword(masterName, result.keyword);
 
@@ -266,7 +270,7 @@
 								} else {
 									listXML += "<div class='result_list'>";
 								}
-								listXML += "<div><div class='result_list_title'><a href='javascript:void(0);' onclick='commOpen(\"" + commCode + "\", \"" + permit + "\")' ><span>" + commName + "</span></a></div>";
+								listXML += "<div><div class='result_list_title'><a href='javascript:void(0);' onclick='move_cop(\"" + commCode + "\", \"" + permit + "\", \"" + confirmType + "\")' ><span>" + commName + "</span></a></div>";
 								listXML += "<div class='result_list_desc'><span>" + commDesc + "</span></div>";
 								listXML += "<div class='result_list_etc'><img src='/images/i_master.gif' align='absmiddle'>" + masterName + "<span>|</span><spring:message code='ezCommunity.t78'/> : " + regDate + "</div></div></div></div></div>";
 							}
@@ -303,10 +307,6 @@
 				category = cate;
 				CurPage = 1;
 				totalSearchResult();
-			}
-			
-			function commOpen(code, userLevel) {
-				GetOpenWindow("/ezCommunity/commHome/popupCommHome.do?code=" + encodeURIComponent(code) + "&userLevel=" + userLevel, "", 1300, 900);
 			}
 
 			function itemOpen(itemID, boardID, code, gubun) {
@@ -498,6 +498,87 @@
 
 			function returnHome() {
 				window.location.href = "/ezCommunity/mainPage.do";
+			}
+
+			var joinCode = "";
+			var joinType = "";
+			function move_cop(code, userLevel, type) {
+				if(code != undefined || code != null) {
+					var clubgubun = 0;
+					$.ajax({
+						type : "POST",
+						dataType : "text",
+						async : false,
+						url : "/ezCommunity/remote/getACL.do",
+						data : { cID	:	code,
+							uID	:	"${userInfo.id}"
+						},
+						success: function(result){
+							if (result == "ERR" || clubgubun == "1") {
+								if (CrossYN()) {
+									joinCode = code;
+									joinType = type;
+
+									var rtn = OpenInformationUI(strLang5 + "<BR>" + strLang6, move_cop_Complete);
+
+									if (rtn) {
+										$.ajax({
+											type : "GET",
+											dataType : "text",
+											async : false,
+											url : "/ezCommunity/getIsJoin.do",
+											data : { code	:	code
+											},
+											success: function(result){
+												if (result == "FALSE") {
+													if (type == "2") {
+														GetOpenWindow("/ezCommunity/join1.do?no=" + code, "", 330, 220);
+													} else if (type == "3") {
+														GetOpenWindow("/ezCommunity/join2.do?no=" + code, "", 330, 220);
+													}
+												} else {
+													alert("<c:out value = '${userInfo.displayName}' />" + strLang7);
+												}
+											}
+										});
+									}
+								} else {
+									var rtn = OpenInformationUI(strLang5 + "<BR>" + strLang6);
+
+									if (rtn) {
+										getIsJoin(code);
+									}
+								}
+							} else {
+								GetOpenWindow("/ezCommunity/commHome/popupCommHome.do?code=" + encodeURIComponent(code) + "&userLevel=" + userLevel, "", 1300, 900);
+							}
+						}
+					});
+				}
+			}
+
+			function move_cop_Complete(rtn) {
+				if (rtn) {
+					$.ajax({
+						type : "GET",
+						dataType : "text",
+						async : false,
+						url : "/ezCommunity/getIsJoin.do",
+						data : { code	:	joinCode
+						},
+						success: function(result){
+							if (result == "FALSE") {
+								if (joinType == "2") {
+									GetOpenWindow("/ezCommunity/join1.do?no=" + joinCode, "", 330, 197);
+								} else if (joinType == "3") {
+									GetOpenWindow("/ezCommunity/join2.do?no=" + joinCode, "", 330, 197);
+								}
+							} else {
+								alert("<c:out value = '${userInfo.displayName}' />" + strLang7);
+							}
+						}
+					});
+				}
 			}
 		</script>
 	</head>

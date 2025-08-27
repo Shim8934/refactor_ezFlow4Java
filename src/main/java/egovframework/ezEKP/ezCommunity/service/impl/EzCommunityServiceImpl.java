@@ -9256,6 +9256,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		map.put("period", period);
 		map.put("startRow", startRow);
 		map.put("endRow", endRow);
+		map.put("adminType", commonUtil.isAdmin(userInfo.getId(), userInfo.getTenantId(), userInfo.getRollInfo(), "c"));
 
 		StringBuilder sb = new StringBuilder();
 		sb.append("<NODES>");
@@ -9314,6 +9315,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			sb.append("<MasterName>" + commonUtil.cleanValue(clubVO.getUserName()) + "</MasterName>");
 			sb.append("<RegDate>" + commonUtil.getDateStringInUTC(clubVO.getC_RegDate(), offset, false).substring(0, 10) + "</RegDate>");
 			sb.append("<Permit>" + userLevel + "</Permit>");
+			sb.append("<ConfirmType>" + clubVO.getC_ClubConfirmType() + "</ConfirmType>");
 			sb.append("<MemberCnt>" + clubVO.getC_MemberCnt() + "</MemberCnt>");
 			sb.append("<ItemCnt>" + club.getItemCnt() + "</ItemCnt>");
 			sb.append("</NODE2>");
@@ -9335,6 +9337,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			sb.append("<MasterName>" + commonUtil.cleanValue(clubVO.getUserName()) + "</MasterName>");
 			sb.append("<RegDate>" + commonUtil.getDateStringInUTC(clubVO.getC_RegDate(), offset, false).substring(0, 10) + "</RegDate>");
 			sb.append("<Permit>" + userLevel + "</Permit>");
+			sb.append("<ConfirmType>" + clubVO.getC_ClubConfirmType() + "</ConfirmType>");
 			sb.append("</NODE3>");
 		}
 
