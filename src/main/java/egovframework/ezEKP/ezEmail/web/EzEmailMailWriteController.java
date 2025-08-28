@@ -211,7 +211,7 @@ public class EzEmailMailWriteController extends EzFileMngUtil {
 
 	// 1. VALID START
 		String cmd = StringUtils.defaultIfBlank(request.getParameter("cmd"), "NEW");
-		writevo.setCmd(cmd);
+		writevo.setCmdOwn(cmd);
 
 		// get user credentials
 		LoginVO loginInfo = commonUtil.userInfo(loginCookie);
@@ -3815,37 +3815,40 @@ public class EzEmailMailWriteController extends EzFileMngUtil {
 							}
 			            }
 			            
-			            logger.debug("mailCmd=" + mailCmd + ",orgUrl=" + orgUrl);
+			            logger.debug("mailCmd=" + mailCmd + ",orgUrl=" + orgUrl); // orgUrl: "INBOX/4", "INBOX/4<sep>SENT/4<sep>INBOX/5"
 			            
 			            // set the ANSWERED flag of the original message to indicate it has been replied.
 			            if (orgMailCmd.equals("REPLY") || orgMailCmd.equals("REPLYALL") || orgMailCmd.equals("FORWARD")) {
-			    			int index = orgUrl.lastIndexOf("/");			
-			    			
-			    			if (index != -1) {
-			    				String orgMsgFolderPath = orgUrl.substring(0, index);
-			    				long orgMsgUid = Long.parseLong(orgUrl.substring(index + 1));
-		
-			    				logger.debug("orgMsgFolderPath=" + orgMsgFolderPath + ",orgMsgUid=" + orgMsgUid);
-			    				
-			    		        Folder orgMsgFolder = ia.getFolder(orgMsgFolderPath);
-			    		        orgMsgFolder.open(Folder.READ_WRITE);
-			    				
-			    		        Message orgMessage = ((IMAPFolder)orgMsgFolder).getMessageByUID(orgMsgUid);
-		    		        	
-			    		        if (orgMessage != null) {
-			    		        	if (orgMailCmd.equals("REPLY") || orgMailCmd.equals("REPLYALL")) {
-				    		        	orgMessage.setFlag(Flags.Flag.ANSWERED, true);
-				    		        	ezEmailUtil.setForwardedFlag(orgMessage, false);
-				    		        	
-				    		        }
-				    		        else {
-				    		        	ezEmailUtil.setForwardedFlag(orgMessage, true);
-				    		        	orgMessage.setFlag(Flags.Flag.ANSWERED, false);
-				    		        }
-			    		        	ezEmailUtil.setSentDateFlag(orgMessage, true);
-			    		        }
-			    		        
-			    		        orgMsgFolder.close(true);
+							String[] orgUrls = orgUrl.split("&lt;sep&gt;"); // <sep>
+
+							for (String originUrl : orgUrls) {
+								int index = originUrl.lastIndexOf("/");
+
+								if (index != -1) {
+									String orgMsgFolderPath = originUrl.substring(0, index);
+									long orgMsgUid = Long.parseLong(originUrl.substring(index + 1));
+
+									logger.debug("orgMsgFolderPath=" + orgMsgFolderPath + ",orgMsgUid=" + orgMsgUid);
+
+									Folder orgMsgFolder = ia.getFolder(orgMsgFolderPath);
+									orgMsgFolder.open(Folder.READ_WRITE);
+
+									Message orgMessage = ((IMAPFolder)orgMsgFolder).getMessageByUID(orgMsgUid);
+
+									if (orgMessage != null) {
+										if (orgMailCmd.equals("REPLY") || orgMailCmd.equals("REPLYALL")) {
+											orgMessage.setFlag(Flags.Flag.ANSWERED, true);
+											ezEmailUtil.setForwardedFlag(orgMessage, false);
+										}
+										else {
+											ezEmailUtil.setForwardedFlag(orgMessage, true);
+											orgMessage.setFlag(Flags.Flag.ANSWERED, false);
+										}
+										ezEmailUtil.setSentDateFlag(orgMessage, true);
+									}
+
+									orgMsgFolder.close(true);
+								}
 			    			}
 			            }
 			            

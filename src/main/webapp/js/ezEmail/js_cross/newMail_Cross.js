@@ -3937,6 +3937,7 @@ function ImageUrl(pUrl, cnt) {
     return link;
 }
 
+// UNUSED: 쓰이는 곳이 없는 것으로 보임.
 function Set_sendflag() {
     try {
         var setValue;

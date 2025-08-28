@@ -10,6 +10,7 @@
 		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css">
 		<script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/search_mail.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/newMail_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/email.write.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('ezEmail.e1', 'msg')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
@@ -449,48 +450,20 @@
 		
 			function transmission_mail_onclick() 
 			{
-			    var selcheck;
-			    var count = 0;
-			    
-			    if (GetChildNodes(resultTD).length == 0) {
-			    	alert(strLang42);
-			        return;
+				// 2025.02.13 김은실 : [국립암센터] 메일 전달 방식. 전달 시 메일 다수 선택 가능.
+				var selchecks = [];
+
+			    if (GetChildNodes(resultTD).length > 0) {
+					var Rows = resultTD.childNodes.item(0).childNodes.item(0).childNodes;
+
+					for (var i = 0; i < Rows.length; i++) {
+						if (Rows.item(i).childNodes.item(0).childNodes.item(0).checked) {
+							selchecks.push(Rows.item(i).getAttribute("itemID")); // "INBOX/4"
+						}
+					}
 			    }
-			    
-			    var Rows = resultTD.childNodes.item(0).childNodes.item(0).childNodes;
-			    for (var i = 0; i < Rows.length; i++) {
-			        if (Rows.item(i).childNodes.item(0).childNodes.item(0).checked) {
-			            count++;
-			            selcheck = Rows.item(i);
-			        }
-			    }
-				if (count == 0) 
-				{
-					alert(strLang42);
-					return;
-				}	
-				else if (count > 1) 
-				{
-					alert(strLang44);
-					return;
-				}
-			    var pheight = window.screen.availHeight;
-			    var conHeight = pheight * 0.8;
-			    var pwidth = window.screen.availWidth;
-			    var conWidth = pwidth * 0.8;
-			    if (conWidth > 890)
-			        conWidth = 890;
-			    var pTop = (pheight - conHeight) / 2;
-			    var pLeft = (pwidth - 890) / 2;
-			    var feature = "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = " + conWidth + "px, status = no, toolbar=no, menubar=no,location=no,resizable=1";
-			    
-				var requestUrl = "/ezEmail/mailWrite.do?URL=" + encodeURIComponent(selcheck.getAttribute("itemID")) + "&cmd=FORWARD";
-			    
-			    if (shareId != "") {
-			    	requestUrl += "&shareId=" + encodeURIComponent(shareId);
-			    }
-			    
-			    window.open(requestUrl, "", feature);	
+
+				forward_mail_call(selchecks, shareId); // 마지막 라인이라 return 필요없어서 생략.
 			}
 		    var mail_movecopy_cross_dialogArguments = new Array();
 		    var selcheck;

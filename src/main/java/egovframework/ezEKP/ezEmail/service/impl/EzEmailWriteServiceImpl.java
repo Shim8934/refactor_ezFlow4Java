@@ -168,7 +168,12 @@ public class EzEmailWriteServiceImpl extends EgovAbstractServiceImpl implements 
         // url
         String urlOwn = Arrays.stream(new String[]{"URL", "url", "iptURL"})
                     .map(request::getParameter).filter(StringUtils::isNotBlank).findFirst().orElse("");
-        writevo.setUrlOwn(urlOwn); // folderPath/uid (ex. "INBOX/4")
+        writevo.setUrlOwn(urlOwn); // folderPath/uid (ex. "INBOX/4", "INBOX/4<sep>SENT/4<sep>INBOX/5")
+
+        if (urlOwn.contains("<sep>")) {
+            writevo.setCmd("FORWARD_AS_ATTACH");
+            urlOwn = urlOwn.split("<sep>")[0];
+        }
 
         if (StringUtils.isNotBlank(urlOwn)) {
             int index = urlOwn.lastIndexOf("/");
@@ -256,7 +261,13 @@ public class EzEmailWriteServiceImpl extends EgovAbstractServiceImpl implements 
                 if (isValid) {
                     Message savedMessage = null; // 임시보관함에 저장
 
-                    // (savedMessage)
+                    /*
+                     * (savedMessage)
+                     * 임시보관함에 저장되는 내용.
+                     * 아래 (orgMessage) address, subject, body, attach 등과 내용이 같다고 할 수 없다.
+                     * 단순 reply된 message가 임시보관함에 저장된다.
+                     * 임시보관함에 저장된 메일은 첨부파일을 위함이다.
+                     */
                     if (writetype.useSaveDrafts()) { // isResend, isReply, FORWARD, RESERVE
                         savedMessage = getMessageToSave(writetype, orgMessage, userAccount, password, emlFile);
 
@@ -270,7 +281,10 @@ public class EzEmailWriteServiceImpl extends EgovAbstractServiceImpl implements 
                         saveInDraft(ia, savedMessage, writevo);
                     }
 
-                    // (orgMessage)
+                    /*
+                     * (orgMessage)
+                     * 메일쓰기 창에 기입되는 실제 address, subject, body, attach 등 내용.
+                     */
                     // from
                     Address fromAddress = getForm(orgMessage);
                     if (fromAddress != null && (writetype.isEdit() || writetype.isResend())) {
@@ -279,7 +293,7 @@ public class EzEmailWriteServiceImpl extends EgovAbstractServiceImpl implements 
                     }
 
                     // to, cc, bcc
-                    if (writetype.useSetAddresses()) { // !FORWARD
+                    if (writetype.useSetAddresses()) { // isEdit, isResend, isReply
                         setAddresses(writetype, orgMessage, savedMessage, messagevo, writevo.getMsgto(), writevo.getReciverName(), loginInfo.getTenantId());
                     }
 
@@ -289,30 +303,34 @@ public class EzEmailWriteServiceImpl extends EgovAbstractServiceImpl implements 
                     messagevo.setEncodedSubject(EgovStringUtil.getSpclStrCnvr(subject));
 
                     // body, attach
-                    long uid = writevo.getUid(); // 예약발송은  savedMessage 이후 uid가 생성됨
-                    List<Map<String, String>> attachedFileList = new ArrayList<Map<String, String>>();
-                    List<String> bodyInfoList = ezEmailUtil.getBodyInfo(orgMessage, folderPath, uid, -1, attachedFileList, locale, extraMap);
-                    String bodyValue = bodyInfoList.get(0);
+                    if (!writetype.isForwardAsAttach()) { // !FORWARD_AS_ATTACH
+                        long uid = writevo.getUid(); // 예약발송은  savedMessage 이후 uid가 생성됨
 
-                    if (writetype.useReplyMessage()) { // REPLY, REPLYALL, FORWARD
-                        bodyValue = getBodyChanged(orgMessage, bodyValue, messagevo.getDefaultFontAndSize(), loginInfo.getOffset(), locale);
+                        // attach: 메일쓰기창에서 보여주는 용도로, 정보만 구하는 것이다. 실제 첨부는 임시저장된 메일에서 꺼내 전송한다.
+                        List<Map<String, String>> attachedFileList = new ArrayList<Map<String, String>>();
+                        List<String> bodyInfoList = ezEmailUtil.getBodyInfo(orgMessage, folderPath, uid, -1, attachedFileList, locale, extraMap);
+                        String bodyValue = bodyInfoList.get(0);
 
-                        if (!isReply && attachedFileList.size() > 0) { // FORWARD
-                            // replyMessage의 첨부 파일 구성이 orgMessage와 다르게 될 수 있기 때문에 다시 첨부파일 정보를 구하도록 한다.
-                            attachedFileList.clear();
-                            ezEmailUtil.getBodyInfo(savedMessage, folderPath, uid, -1, attachedFileList, locale, extraMap);
+                        if (writetype.useReplyMessage()) { // REPLY, REPLYALL, FORWARD
+                            bodyValue = getBodyChanged(orgMessage, bodyValue, messagevo.getDefaultFontAndSize(), loginInfo.getOffset(), locale);
+
+                            if (!isReply && attachedFileList.size() > 0) { // FORWARD
+                                // replyMessage의 첨부 파일 구성이 orgMessage와 다르게 될 수 있기 때문에 다시 첨부파일 정보를 구하도록 한다.
+                                attachedFileList.clear();
+                                ezEmailUtil.getBodyInfo(savedMessage, folderPath, uid, -1, attachedFileList, locale, extraMap);
+                            }
                         }
-                    }
 
-                    if (writetype.isEdit()) {
-                        messagevo.setTempBody(bodyValue); // (tempBody) EDIT_IN_DRAFTS
-                    } else {
-                        messagevo.setBodyValue(bodyValue); // (bodyValue) RESEND_IN_SENT, REPLY, REPLYALL, FORWARD
-                    }
+                        if (writetype.isEdit()) {
+                            messagevo.setTempBody(bodyValue); // (tempBody) EDIT_IN_DRAFTS
+                        } else {
+                            messagevo.setBodyValue(bodyValue); // (bodyValue) RESEND_IN_SENT, isReply, FORWARD
+                        }
 
-                    if (!isReply) {
-                        String attach = getAttached(attachedFileList, uid);
-                        messagevo.setAttach(attach);
+                        if (!isReply) { // isEdit, isResend, FORWARD
+                            String attach = getAttached(attachedFileList, uid);
+                            messagevo.setAttach(attach);
+                        }
                     }
 
                     // mail option
@@ -331,7 +349,7 @@ public class EzEmailWriteServiceImpl extends EgovAbstractServiceImpl implements 
 
                 orgFolder.close(true);
 
-                /* 이게 필요한가..? (예약발송수정에 있었음.)
+                /* 이게 필요한가..? (예약발송수정에 있었음. RESERVE)
                 @SuppressWarnings("unchecked")
                 Enumeration<Header> headers = message.getAllHeaders();
                 while (headers.hasMoreElements()) {
@@ -382,20 +400,18 @@ public class EzEmailWriteServiceImpl extends EgovAbstractServiceImpl implements 
 
             // RESERVE
             if (writetype.isReserve()) {
-                FileInputStream fis = null;
-
-                try {
-                    fis = new FileInputStream(emlFile);
+                /*
+                 * try-with-resources (권장)
+                 * try-with-resources를 사용하면 IOException이 발생하더라도 fis.close();가 자동으로 실행됩니다.
+                 */
+                try (FileInputStream fis = new FileInputStream(emlFile)) { // try-with-resources
                     messageToSave = sa.readMimeMessage(fis); // MimeMessage
-                } catch (IOException e) {
-                    logger.error("IOException has occurred");
-                    logger.error(e.getMessage(), e);
-                } finally {
-                    if (fis != null) {
-                        fis.close();
-                    }
                 }
             }
+        }
+
+        if (messageToSave == null) {
+            throw new Exception("Failed to create the message for the drafts folder. Message is null.");
         }
 
         return messageToSave;
@@ -413,7 +429,7 @@ public class EzEmailWriteServiceImpl extends EgovAbstractServiceImpl implements 
             logger.debug("convertInlineImageToAttachment=" + convertInlineImageToAttachment);
         }
 
-        boolean isRelated = writetype.isReply()? true : orgMessage.isMimeType("multipart/related");
+        boolean isRelated = writetype.isReply() || orgMessage.isMimeType("multipart/related");
 
         if (isRelated) {
             MimeMultipart relatedPart = new MimeMultipart("related");
@@ -658,7 +674,7 @@ public class EzEmailWriteServiceImpl extends EgovAbstractServiceImpl implements 
     private String getSubject(WriteType writetype, Message orgMessage, Locale locale) throws Exception {
         String subject = StringUtils.defaultString(ezEmailUtil.getSubject(orgMessage)); // RESEND_IN_SENT: orgMessage.getSubject(); 설마.. 분기해야함?
 
-        if (writetype.useReplyMessage()) {
+        if (writetype.usePrefixForSubject()) {
             // prefix (회신, 전달)
             String prefix = StringUtils.defaultString(writetype.getPrefixCode());
             prefix = egovMessageSource.getMessage(prefix, locale) + ": ";
@@ -850,7 +866,7 @@ public class EzEmailWriteServiceImpl extends EgovAbstractServiceImpl implements 
             	PrivateKey pk = EgovFileScrty.getPrivateKey(prm, pre);
             	securePassword = EgovFileScrty.decryptRsa(pk, securePassword);
     			
-				logger.debug("securePassword=" + securePassword + ",secureReadCount=" + secureReadCount + ",secureReadDate=" + secureReadDate);
+				logger.debug("securePassword={}, secureReadCount={}, secureReadDate={}", securePassword, secureReadCount, secureReadDate);
                 messagevo.setSecurePassword(securePassword);
                 messagevo.setSecureMaxReadCount(secureReadCount);
                 messagevo.setSecureMaxReadDate(secureReadDate);
@@ -966,6 +982,15 @@ public class EzEmailWriteServiceImpl extends EgovAbstractServiceImpl implements 
         // 2025.02.11 한슬기 : 항상 나를 참조에 포함 설정. selfCcOption = none : 사용안함(default) / cc : 나를 항상 참조에 포함 / bcc : 나를 항상 숨은참조에 포함
         String selfCcOption =StringUtils.defaultIfBlank(general.getSelfCcOption(), "none");
         general.setSelfCcOption(selfCcOption);
+
+        /*
+         * 2025.02.13 김은실 : 메일 전달 방식. inline: 본문으로 전달(default), attach: 첨부로 전달
+         * forwardAs: DB에 있는 값 그대로 사용하면 되고, MailGeneralVO 객체 생성 시 초기화가 "inline"이므로 후처리는 필요없다.
+         * 대신 cmd는 FORWARD_AS_ATTACH로 기능하도록 바꿔줘야함.
+         */
+        if ("attach".equals(general.getForwardAs())) {
+            writevo.setCmd("FORWARD_AS_ATTACH");
+        }
 
         writevo.setMailGeneralVO(general);
     }
@@ -1194,7 +1219,7 @@ public class EzEmailWriteServiceImpl extends EgovAbstractServiceImpl implements 
             // 투표
             case POLL:
                 String to = getToForPoll(request, options, loginInfo); // set options
-                writevo.setTo(to); // setTo를 하긴 하지만, POLL은 origin message를 사욯하지 않기 때문에, 바뀔 우려가 현재까진 없다.
+                writevo.setTo(to); // setTo를 하긴 하지만, POLL은 origin message를 사용하지 않기 때문에, 바뀔 우려가 현재까진 없다.
                 break;
         }
     }

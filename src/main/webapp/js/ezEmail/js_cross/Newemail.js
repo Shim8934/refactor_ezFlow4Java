@@ -444,48 +444,20 @@ function rewrite_onClick() {
 }
 
 function transmission_mail_onclick() {
-    if (listContentArry.length == 0 && listSubContentArry.length == 0 && currentFixingId == null) {
-        alert(strLang42);
+    var pSelectItems = [];
+
+    // 2025.02.13 김은실 : [국립암센터] 메일 전달 방식. 전달 시 메일 다수 선택 가능.
+    if (listContentArry.length > 0) {
+        pSelectItems = listContentArry.map(id => document.getElementById(id).getAttribute("_href")); // ["INBOX/4", "INBOX/5", "INBOX/6"]
+    } else if (listSubContentArry.length > 0) {
+        pSelectItems = listSubContentArry.map(id => document.getElementById(id).getAttribute("_href"));
+    } else if (currentFixingId) {
+        pSelectItems = [currentFixingId.getAttribute('_href')]; // ["INBOX/4"]
     }
-    
-    if (listContentArry.length > 1 || listSubContentArry.length > 1) {
-        alert(strLang44);
-        return;
-    }
-    else {
-        var pSelectItem;
-        if (listContentArry.length > 0) {
-            pSelectItem = document.getElementById(listContentArry[listContentArry.length - 1])
-        } else if (listSubContentArry.length > 0) {
-            pSelectItem = document.getElementById(listSubContentArry[listSubContentArry.length - 1])
-        } else {
-        	pSelectItem = currentFixingId;
-        }
-        var pheight = window.outerHeight;
-        var conHeight = Math.max(pheight * 0.8, 840);
-        var pwidth = window.outerWidth;
-        var conWidth = pwidth * 0.8;
-        if (conWidth > minimumWidth)
-            conWidth = minimumWidth;
-        
-        var pLeft = window.outerWidth / 2 + window.screenX - (conWidth / 2);
-        var pTop = window.outerHeight / 2 + window.screenY - (conHeight / 2);
-        
-        if (checkBlockedMail(pSelectItem.getAttribute('_href')) == '1') {
-            alert(strLangLDH07);
-            return;        
-        }
-        
-        var pURI = "/ezEmail/mailWrite.do?cmd=FORWARD&URL=" + encodeURIComponent(pSelectItem.getAttribute('_href'));
-        
-        if (typeof(shareId) != "undefined" && shareId != "") {
-        	pURI += "&shareId=" + encodeURIComponent(shareId);
-    	}
-        
-        var newwin = window.open(pURI, "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
-        newwin.focus();
-    }
+
+    forward_mail_call(pSelectItems, shareId); // 마지막 라인이라 return 필요없어서 생략.
 }
+
 function Read_StatusChange(pGubun) {
     if (listContentArry.length == 0 && listSubContentArry.length == 0 && currentFixingId == null) {
         alert(strLang42);
