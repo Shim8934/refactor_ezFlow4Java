@@ -11,6 +11,9 @@ import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -38,6 +41,7 @@ import javax.servlet.http.HttpServletResponse;
 import egovframework.ezEKP.ezOrgan.vo.OrganAuth;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.util.Strings;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -47,6 +51,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -2405,6 +2410,8 @@ public class EzScheduleController extends EzFileMngUtil {
 			pDeptAdmin = "N"; // permissionBasisDeptYN 옵션 사용 시 해당 플래그가 "Y"면 부서관리자 권한이 없는 타부서에 대해서도 권한을 부릴 수 있는 오류 일으킴
 			model.addAttribute("AdminDeptList", AdminDeptList);
 		}
+		
+		String modType = request.getParameter("modType") != null ? request.getParameter("modType") : "0";
 
 		String nowDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), loginVO.getOffset(), false);
 		
@@ -2453,6 +2460,8 @@ public class EzScheduleController extends EzFileMngUtil {
 		model.addAttribute("chkSchedulePublic", chkSchedulePublic); // 개인일정 작성시 공개/비공개값 설정가능 여부
 		model.addAttribute("showtop", showtop); // 겸직/사용자 기준 권한 설정 옵션 여부
 		model.addAttribute("nowDate", nowDate); // utc 타임존 적용을 위해 현재시간을 백에서 받아옴
+		model.addAttribute("modType", modType); // 수정타입 (1: 일부만 수정 , 2: 특정 시점 이후 수정, 3: 전체 수정)
+
    		return "/ezSchedule/scheduleWrite";
 	}	
 		
@@ -2531,6 +2540,9 @@ public class EzScheduleController extends EzFileMngUtil {
         String repeatCount	= "";
         String repStartDate	= "";
         String isAllRep		= "";
+		
+		String beforeScheDate = doc.getElementsByTagName("BEFORESCHEDATE").item(0).getTextContent();
+		String modType = doc.getElementsByTagName("MODTYPE").item(0).getTextContent();
 
         if (scheduleid.equals("")) {
 	        //Set ownername and ownername2
@@ -2651,9 +2663,33 @@ public class EzScheduleController extends EzFileMngUtil {
         	 }
 	    } else {
 	    	ScheduleInfoVO beforeSche = ezScheduleService.getScheduleInfo(scheduleid, commonUtil.getMinuteUTC(loginVO.getOffset()), loginVO.getTenantId(), loginVO.getCompanyID());
-	    	//updateSchedule
-        	result = ezScheduleService.updateSchedule(scheduleid, creatorid, creatorname, creatorname2, importance, ispublic, datetype, startdate, enddate, repetition, title, location, content, attach, defaultPath, loginVO.getTenantId(), loginVO.getCompanyID(), showtop);
-        	
+	    	defaultPath = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_schedule.ROOT", loginVO.getTenantId());
+			if ("1".equals(modType)) {
+				ezScheduleService.insertScheduleRepeDel(scheduleid, commonUtil.getDateStringInUTC(beforeScheDate, loginVO.getOffset(), true), commonUtil.getDateStringInUTC(beforeScheDate, loginVO.getOffset(), true), loginVO.getTenantId(), loginVO.getCompanyID());
+				result = ezScheduleService.insertSchedule(beforeSche.getOwnerId(), beforeSche.getOwnerName(), beforeSche.getOwnerName2(), creatorid, creatorname, creatorname2, scheduletype, importance, ispublic, datetype, startdate, enddate, repetition, title, location, content, attach, 
+        			attendantId, attendantName, attendantName2, attendantDeptName, attendantDeptName2, defaultPath, loginVO.getTenantId(), loginVO.getCompanyID(), showtop, loginVO.getOffset(), loginVO.getLang());
+			} else if ("2".equals(modType)) {
+				String[] beforeRepetionArr = beforeSche.getRepetition().split("\\|");
+				DateTimeFormatter FORMATTER = beforeScheDate.length() > 10 ? DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm") : DateTimeFormatter.ofPattern("yyyy-MM-dd");
+				String endDate = LocalDateTime.parse(beforeScheDate, FORMATTER).minusDays(1).toString().substring(0, 10);
+				String endTime = beforeSche.getEndDate().substring(11, 19);
+				beforeSche.setEndDate(endDate + ' ' + endTime);
+				if (!beforeRepetionArr[0].equals("0")) { // 종료일 없음이거나 횟수반복 일정일 시 종료일 기간지정으로 변경함
+					beforeRepetionArr[0] = "0";
+					beforeSche.setRepetition(String.join("|", beforeRepetionArr));
+					ezScheduleService.updateScheduleRepetition(beforeSche.getScheduleId(), beforeSche.getRepetition(), beforeSche.getCompanyid(), loginVO.getTenantId());
+				}
+				ezScheduleService.updateScheduleEndDate(beforeSche.getScheduleId(), commonUtil.getDateStringInUTC(beforeSche.getEndDate(), loginVO.getOffset(), true), beforeSche.getCompanyid(), loginVO.getTenantId());
+				result = ezScheduleService.insertSchedule(beforeSche.getOwnerId(), beforeSche.getOwnerName(), beforeSche.getOwnerName2(), creatorid, creatorname, creatorname2, scheduletype, importance, ispublic, datetype, startdate, enddate, repetition, title, location, content, attach, 
+        			attendantId, attendantName, attendantName2, attendantDeptName, attendantDeptName2, defaultPath, loginVO.getTenantId(), loginVO.getCompanyID(), showtop, loginVO.getOffset(), loginVO.getLang());
+			} else if ("3".equals(modType)) {
+				ezScheduleService.deleteSchedule(scheduleid, loginVO.getTenantId());
+				result =  ezScheduleService.insertSchedule(beforeSche.getOwnerId(), beforeSche.getOwnerName(), beforeSche.getOwnerName2(), creatorid, creatorname, creatorname2, scheduletype, importance, ispublic, datetype, startdate, enddate, repetition, title, location, content, attach, 
+        			attendantId, attendantName, attendantName2, attendantDeptName, attendantDeptName2, defaultPath, loginVO.getTenantId(), loginVO.getCompanyID(), showtop, loginVO.getOffset(), loginVO.getLang());
+			} else { // modType = 0, 반복일정 아님
+        		result = ezScheduleService.updateSchedule(scheduleid, creatorid, creatorname, creatorname2, importance, ispublic, datetype, startdate, enddate, repetition, title, location, content, attach, defaultPath, loginVO.getTenantId(), loginVO.getCompanyID(), showtop);
+			}
+
             if (doc.getElementsByTagName("REPSTARTDATE").item(0) != null) {
             	repStartDate = doc.getElementsByTagName("REPSTARTDATE").item(0).getTextContent();
             	repStartDate = sdf.format(sdf.parse(repStartDate));
@@ -2664,14 +2700,14 @@ public class EzScheduleController extends EzFileMngUtil {
             
             // 2023-09-22 한태훈 : 초대 일정 수정 메일 발송
 	       	 if (attendantId != null) {
-	       		ezScheduleService.sendInviteModNoti(request, scheduleid, attendantId, attendantName, location, title, importance, ispublic, startdate, enddate, datetype, repetition, beforeSche, repStartDate, repeatCount, isAllRep, completeFG, loginVO, loginCookie);
+	       		ezScheduleService.sendInviteModNoti(request, String.valueOf(result), attendantId, attendantName, location, title, importance, ispublic, startdate, enddate, datetype, repetition, beforeSche, repStartDate, repeatCount, isAllRep, completeFG, loginVO, loginCookie);
 	       	}
             
 	       	/* 2021-11-25 홍승비 - 일정 수정 시 일정완료 데이터 삽입 또는 삭제 */
             if (completeFG.equals("Y")) { // 일정완료 삽입
-            	ezScheduleService.insertScheduleComplete(scheduleid, repeatCount, isAllRep, repStartDate, loginVO.getTenantId(), loginVO.getCompanyID());
+            	ezScheduleService.insertScheduleComplete(String.valueOf(result), repeatCount, isAllRep, repStartDate, loginVO.getTenantId(), loginVO.getCompanyID());
             } else { // 일정완료 해제
-            	ezScheduleService.deleteScheduleComplete(scheduleid, repeatCount, isAllRep, repStartDate, loginVO.getTenantId(), loginVO.getCompanyID());
+            	ezScheduleService.deleteScheduleComplete(String.valueOf(result), repeatCount, isAllRep, repStartDate, loginVO.getTenantId(), loginVO.getCompanyID());
             }
         }
 	    
@@ -3000,7 +3036,7 @@ public class EzScheduleController extends EzFileMngUtil {
         	if (_date == null) {
         		_date = vo.getStartDate().substring(0,10);
         	}
-        	if (vo.getRepetition().split("\\|")[1].equals("1")) {
+        	if (Strings.isNotBlank(vo.getRepetition()) && vo.getRepetition().split("\\|")[1].equals("1")) {
         		dateString = msg.getMessage("ezSchedule.t343", locale) + " (" + _repeatcount + msg.getMessage("ezSchedule.t329", locale) + " " + _date + " (" + msg.getMessage("ezSchedule.t280", locale);
         	} else {
         		dateString = msg.getMessage("ezSchedule.t343", locale) + " (" + _repeatcount + msg.getMessage("ezSchedule.t329", locale) + " " + _date + " " 
@@ -3227,7 +3263,7 @@ public class EzScheduleController extends EzFileMngUtil {
 		}
 
 		//일정데이터 삭제
-		ezScheduleService.insertScheduleRepeDel(scheduleId, realDate, loginSimpleVO.getTenantId(), loginSimpleVO.getCompanyID());
+		ezScheduleService.insertScheduleRepeDel(scheduleId, realDate, realDate, loginSimpleVO.getTenantId(), loginSimpleVO.getCompanyID());
 		
 		/* 2021-11-26 홍승비 - 해당 반복일정의 일정완료 레코드 삭제 (전체 반복완료의 경우 해당 일정 하나만 삭제되더라도 유지해야 하므로, isAllRep 조건은 'N'으로 고정) */
 		ezScheduleService.deleteScheduleCompleteOneRep(scheduleId, repeatCount, "N", realDate, loginSimpleVO.getTenantId());
@@ -4719,28 +4755,16 @@ public class EzScheduleController extends EzFileMngUtil {
 		if (info.getDateType().equals("3")) {
 			String defaultPath  = commonUtil.detectPathTraversal(commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_schedule.ROOT", tenantId));
 			String delStartDate;
+			delStartDate = dragDay.substring(0, 10) + infoStartTime;
 			
-			if (typeCal.equals("0")) { 
-				startDate    = dropDay + infoStartTime;
-				delStartDate = dragDay.substring(4, 14) + infoStartTime;
-				
-				if (dragDay.contains("ALL")) {
-					endDate = getDropEndDate(sdf1, dropDay, info) + infoEndTime;
-				}
-				else{
-					endDate = dropDay + infoEndTime;
-				}
-			}
-			else {
-				if (dropDay.contains("ALL")) {
-					startDate = dropDay.substring(0, 10) + infoStartTime;
-					endDate   = getDropEndDate(sdf1, dropDay.substring(0, 10), info) + infoEndTime;
-				}
-				else {
-					startDate = getDropStartEnd(sdf2, dropDay, info).get(0);
-					endDate   = getDropStartEnd(sdf2, dropDay, info).get(1);
-				}
-				
+			if (!typeCal.equals("0") && !dropDay.contains("ALL")) {
+				String newStartTime = getDropStartEnd(sdf2, dropDay, info).get(0).substring(11, 16);
+				String newEndTime = getDropStartEnd(sdf2, dropDay, info).get(1).substring(11, 16);
+				startDate = dropDay.substring(0, 10) + " " + newStartTime;
+				endDate = dropDay.substring(0, 10) + " " + newEndTime;
+			} else {
+				startDate = dropDay.substring(0, 10) + infoStartTime;
+				endDate = dropDay.substring(0, 10) + infoEndTime;
 				delStartDate = dragDay.substring(0, 10) + infoStartTime;
 			}
 			
@@ -4751,16 +4775,13 @@ public class EzScheduleController extends EzFileMngUtil {
 			if (usePreday.equals("2") && CompareDate(utcEndTime.substring(0, 10), utcToday.substring(0, 10))) { //둘다true이면 저장안함
 				returnValue = "2";
 				return returnValue;
-			}
-			else {
+			} else {
 				//일정데이터 삭제 
-				ezScheduleService.insertScheduleRepeDel(dragId, utcDelTime, tenantId, companyId);
-					
+				ezScheduleService.insertScheduleRepeDel(dragId, utcDelTime, utcDelTime, tenantId, companyId);
 				//일정데이터 복사
 				ezScheduleService.copySchedule(dragId, utcStartTime, utcEndTime, defaultPath, offSetMin, tenantId, companyId, lang, offset, completeFG);
 			}
-		}
-		else {
+		} else { // 단독일정
 			if (typeCal.equals("0")) {
 				startDate = dropDay + infoStartTime;
 				endDate   = getDropEndDate(sdf1, dropDay.substring(0, 10), info) + infoEndTime;
@@ -6393,5 +6414,10 @@ public class EzScheduleController extends EzFileMngUtil {
 		
 		logger.debug("saveIsTagChecked ended");
 		return result;
+	}
+	
+	@GetMapping(value = "/ezSchedule/scheduleSelectModType.do")
+	public String scheduleSelectModType(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		return "/ezSchedule/scheduleSelectModType";
 	}
 }

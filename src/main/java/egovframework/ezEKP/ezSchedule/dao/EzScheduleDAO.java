@@ -60,8 +60,8 @@ public class EzScheduleDAO extends EgovAbstractDAO {
 	}
 	
 	@SuppressWarnings("unchecked")	
-	public List<String> getScheduleRepeDelList(Map<String, Object> map) throws Exception {
-		return (List<String>) list("EzScheduleDAO.getScheduleRepeDelList", map);
+	public List<Map<String, Object>> getScheduleRepeDelList(Map<String, Object> map) throws Exception {
+		return (List<Map<String, Object>>) list("EzScheduleDAO.getScheduleRepeDelList", map);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -566,5 +566,13 @@ public class EzScheduleDAO extends EgovAbstractDAO {
 	
 	public int checkReminderScheduleExists(Map<String, Object> map) {
 		return (int) select("EzScheduleDAO.checkReminderScheduleExists", map);		
+	}
+	
+	public void updateScheduleRepetition(Map<String, Object> map) throws Exception {
+		update("EzScheduleDAO.updateScheduleRepetition", map);
+	}
+	
+		public void updateScheduleEndDate(Map<String, Object> map) throws Exception {
+		update("EzScheduleDAO.updateScheduleEndDate", map);
 	}
 }

@@ -1151,10 +1151,11 @@
 		]]>
 	</select>
 	
-	<select id="EzScheduleDAO.getScheduleRepeDelList" parameterClass="Map" resultClass="String"> 
+	<select id="EzScheduleDAO.getScheduleRepeDelList" parameterClass="Map" resultClass="java.util.HashMap"> 
 		<![CDATA[
 			select 
-				date_format(date_add(startDate, interval +#v_OFFSETMIN# minute), '%Y-%m-%d') as startDate
+				date_format(date_add(startDate, interval +#v_OFFSETMIN# minute), '%Y-%m-%d') as startDate,
+				date_format(date_add(endDate, interval +#v_OFFSETMIN# minute), '%Y-%m-%d') as endDate
 			from 
 				tbl_schedulerepetition_del
 			where
@@ -1322,7 +1323,7 @@
 			insert into tbl_schedulerepetition_del(
 				scheduleid,			startdate, 				enddate,				tenant_id,				companyid
 			) values (
-				#v_SCHEDULEID#,		#v_STARTDATE#,			#v_STARTDATE#,			#v_TENANTID#,			#v_COMPANYID#
+				#v_SCHEDULEID#,		#v_STARTDATE#,			#v_ENDDATE#,			#v_TENANTID#,			#v_COMPANYID#
 			)
    		]]>
 	</insert>
@@ -1332,7 +1333,7 @@
 				scheduleid,			startdate, 				enddate,				tenant_id,				companyid
 			) 
 			select 
-				scheduleid ,		#v_STARTDATE#,			#v_STARTDATE#,			#v_TENANTID#,			#v_COMPANYID#
+				scheduleid ,		#v_STARTDATE#,			#v_ENDDATE#,			#v_TENANTID#,			#v_COMPANYID#
 			from 
 				tbl_schedule 
 			where 
@@ -3126,4 +3127,34 @@
 		WHERE
 		    SCHEDULEID = #v_SCHEDULEID#
 	</select>
+	
+	<update id="EzScheduleDAO.updateScheduleRepetition" parameterClass="map">
+		<![CDATA[
+			update
+				tbl_schedule
+			set
+				REPETITION = #v_REPETITION#
+	   		where  
+	   			(SCHEDULEID = #v_SCHEDULEID# or PARENTID = #v_SCHEDULEID#)
+	   		and
+	   			COMPANYID = #v_COMPANYID#
+	   		and
+	   			TENANT_ID = #v_TENANTID#
+		]]>	
+	</update>
+	
+	<update id="EzScheduleDAO.updateScheduleEndDate" parameterClass="map">
+		<![CDATA[
+			update
+				tbl_schedule
+			set
+				ENDDATE = #v_ENDDATE#
+	   		where  
+	   			(SCHEDULEID = #v_SCHEDULEID# or PARENTID = #v_SCHEDULEID#)
+	   		and
+	   			COMPANYID = #v_COMPANYID#
+	   		and
+	   			TENANT_ID = #v_TENANTID#
+		]]>	
+	</update>
 </sqlMap>

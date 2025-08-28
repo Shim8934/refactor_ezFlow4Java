@@ -1167,10 +1167,11 @@
 		]]>
 	</select>
 	
-	<select id="EzScheduleDAO.getScheduleRepeDelList" parameterClass="Map" resultClass="String"> 
+	<select id="EzScheduleDAO.getScheduleRepeDelList" parameterClass="Map" resultClass="java.util.HashMap"> 
 		<![CDATA[
 			SELECT				
-				TO_CHAR((STARTDATE + #v_OFFSETMIN#/(24*60)), 'YYYY-MM-DD') AS STARTDATE
+				TO_CHAR((STARTDATE + #v_OFFSETMIN#/(24*60)), 'YYYY-MM-DD') AS STARTDATE,
+				TO_CHAR((ENDDATE + #v_OFFSETMIN#/(24*60)), 'YYYY-MM-DD') AS ENDDATE
 			FROM 
 				TBL_SCHEDULEREPETITION_DEL
 			WHERE
@@ -1305,7 +1306,7 @@
 			INSERT INTO TBL_SCHEDULEREPETITION_DEL(
 				REPETITIONID,								SCHEDULEID,				STARTDATE, 				ENDDATE,				TENANT_ID,				COMPANYID
 			) VALUES (
-				SEQ_TBL_SCHEDULE_REPEDEL.NEXTVAL,			#v_SCHEDULEID#,			TO_DATE(#v_STARTDATE#,'yyyy-mm-dd hh24:mi'),			TO_DATE(#v_STARTDATE#,'yyyy-mm-dd hh24:mi'),			#v_TENANTID#,			#v_COMPANYID#
+				SEQ_TBL_SCHEDULE_REPEDEL.NEXTVAL,			#v_SCHEDULEID#,			TO_DATE(#v_STARTDATE#,'yyyy-mm-dd hh24:mi'),			TO_DATE(#v_ENDDATE#,'yyyy-mm-dd hh24:mi'),			#v_TENANTID#,			#v_COMPANYID#
 			)
    		]]>
 	</insert>
@@ -1316,7 +1317,7 @@
 				REPETITIONID,	 SCHEDULEID,			STARTDATE, 				ENDDATE,				TENANT_ID,				COMPANYID
 			) 
 			SELECT 
-				SEQ_TBL_SCHEDULE_REPEDEL.NEXTVAL, 	SCHEDULEID ,		TO_DATE(#v_STARTDATE#,'yyyy-mm-dd hh24:mi'),			TO_DATE(#v_STARTDATE#,'yyyy-mm-dd hh24:mi'),			#v_TENANTID#,			#v_COMPANYID#
+				SEQ_TBL_SCHEDULE_REPEDEL.NEXTVAL, 	SCHEDULEID ,		TO_DATE(#v_STARTDATE#,'yyyy-mm-dd hh24:mi'),			TO_DATE(#v_ENDDATE#,'yyyy-mm-dd hh24:mi'),			#v_TENANTID#,			#v_COMPANYID#
 			FROM 
 				TBL_SCHEDULE 
 			WHERE 
@@ -3102,4 +3103,34 @@
 		WHERE
 		    SCHEDULEID = #v_SCHEDULEID#
 	</select>
+	
+	<update id="EzScheduleDAO.updateScheduleRepetition" parameterClass="map">
+		<![CDATA[
+			update
+				tbl_schedule
+			set
+				REPETITION = #v_REPETITION#
+	   		where  
+	   			(SCHEDULEID = #v_SCHEDULEID# or PARENTID = #v_SCHEDULEID#)
+	   		and
+	   			COMPANYID = #v_COMPANYID#
+	   		and
+	   			TENANT_ID = #v_TENANTID#
+		]]>	
+	</update>
+	
+	<update id="EzScheduleDAO.updateScheduleEndDate" parameterClass="map">
+		<![CDATA[
+			update
+				tbl_schedule
+			set
+				ENDDATE = TO_DATE(#v_ENDDATE#, 'YYYY-MM-DD HH24:MI:SS')
+	   		where  
+	   			(SCHEDULEID = #v_SCHEDULEID# or PARENTID = #v_SCHEDULEID#)
+	   		and
+	   			COMPANYID = #v_COMPANYID#
+	   		and
+	   			TENANT_ID = #v_TENANTID#
+		]]>	
+	</update>
 </sqlMap>

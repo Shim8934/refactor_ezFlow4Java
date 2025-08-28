@@ -22,7 +22,12 @@
 		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.core.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.datepicker.js')}"></script>
 		<!-- time picker-->		
-		<script type="text/javascript" src="${util.addVer('/js/jquery/timeControls/jquery.timepicker.js')}"></script>		
+		<script type="text/javascript" src="${util.addVer('/js/jquery/timeControls/jquery.timepicker.js')}"></script>	
+		<style>
+			.disabled {
+				color: #a0a0a0;
+			}
+		</style>
 	    <script type="text/javascript">
    	    	$(document).ready(function() {
    		    		// 반복이 100회 초과일때 알러트  
@@ -231,6 +236,7 @@
 		    	}
 		    	allDayTime();
 		    	clearAllDay();
+				selectOptRangeEnd();
 		    }
 		    
 		    function SetWeekdayDropDown(ddDay, value)
@@ -302,7 +308,7 @@
 		    	ehour = etime.split(":")[0];
 		    	eminute = etime.split(":")[1];
 	
-		    	if (startYear > endYear || (startYear == endYear && parseInt(startMonth) > parseInt(endMonth)) || (startYear == endYear && parseInt(startMonth) == parseInt(endMonth) && parseInt(startDay) <= parseInt(endDay))) {
+		    	if (startYear > endYear || (startYear == endYear && parseInt(startMonth) > parseInt(endMonth)) || (startYear == endYear && parseInt(startMonth) == parseInt(endMonth) && parseInt(startDay) > parseInt(endDay))) {
 		    	    if (document.getElementById("alldaycheck").checked == false && (shour > ehour || (shour == ehour && sminute >= eminute))) {
 		    	        alert("<spring:message code='ezSchedule.t60' />");
 		    	        return;
@@ -1070,6 +1076,26 @@
 	            }
 	            else obj.value = obj.value.replace(/[\a-zㄱ-ㅎㅏ-ㅣ가-힣]/g, '');
 	        }
+			
+			function selectOptRangeEnd() {
+				var targetId =  $('input[name=optRangeEnd]:checked').attr('id');
+				if (targetId == "Infinite") {
+					$("#Edatepicker").datepicker('option','disabled', true); 
+					$("#Edatepicker").addClass('disabled');
+					$("#list_ReCount").prop('disabled', true); 
+					$("#list_ReCount").addClass('disabled');
+				} else if (targetId == "Instances") {
+					$("#Edatepicker").datepicker('option','disabled', true); 
+					$("#Edatepicker").addClass('disabled');
+					$("#list_ReCount").prop('disabled', false); 
+					$("#list_ReCount").removeClass('disabled')
+				} else if (targetId == "EndTimeSet") {
+					$("#Edatepicker").datepicker('option','disabled', false); 
+					$("#Edatepicker").removeClass('disabled'); 
+					$("#list_ReCount").prop('disabled', true); 
+					$("#list_ReCount").addClass('disabled')
+				}
+			}
 		</script>
 	</head>
 	<body class="popup">
@@ -1283,22 +1309,22 @@
 			    	</td>
 			  	</tr>
 			  	<tr>
-			    	<td><div class="custom_radio"><input type="radio" id="endDateIp" name="optRangeEnd" style="margin-top: -2px;" value="radiobutton" value="-1" checked><label for="endDateIp"><spring:message code='ezSchedule.t111' /></label></div></td>
+			    	<td><div class="custom_radio"><input type="radio" id="Infinite" name="optRangeEnd" style="margin-top: -2px;" value="radiobutton" value="-1" onclick="selectOptRangeEnd()" checked><label for="Infinite"><spring:message code='ezSchedule.t111' /></label></div></td>
 			  	</tr>
 			  	<tr>
 			    	<td>
 			    		<div class="custom_radio">
-			    			<input type="radio" id="Instances" name="optRangeEnd" style="margin-top: -2px;" value="radiobutton" value="1"/><label for="Instances"><spring:message code='ezSchedule.t112' /></label>
+			    			<input type="radio" id="Instances" name="optRangeEnd" style="margin-top: -2px;" value="radiobutton" value="1" onclick="selectOptRangeEnd()" /><label for="Instances"><spring:message code='ezSchedule.t112' /></label>
 			    		</div>
-			      		<input id="list_ReCount" maxlength="3" onFocus="Instances.checked = true" style="text-align:center;" size="4" value='10' /><spring:message code='ezSchedule.t113' />		      		
+			      		<input id="list_ReCount" type="number" class="disabled" max="99" onFocus="Instances.checked = true" style="text-align:center; width:70px;" value='10' disabled/><spring:message code='ezSchedule.t113'/>		      		
 			      	</td>
 			  	</tr>
 			  	<tr>
 			    	<td>
 			    		<div class="custom_radio">
-				    		<input id="EndTimeSet" type="radio" name="optRangeEnd" style="margin-top: -2px;" value="radiobutton" value="0"/><label for="EndTimeSet"><spring:message code='ezSchedule.t114' /></label>
+				    		<input id="EndTimeSet" type="radio" name="optRangeEnd" style="margin-top: -2px;" value="radiobutton" value="0" onclick="selectOptRangeEnd()" /><label for="EndTimeSet"><spring:message code='ezSchedule.t114' /></label>
 			    		</div>
-			      		<input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly"/>
+			      		<input type="text" class="disabled" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly" disabled/>
 			    	</td>
 			  	</tr>
 			</table>

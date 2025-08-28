@@ -90,6 +90,9 @@
 			var modAttendIdList = [];
 			var modAttendName1List = [];
 			var modAttendName2List = [];
+			
+			var modType = "<c:out value='${modType}'/>";
+			var beforeScheDate = "";
 		    
 		    window.onload = function () {
 		    	
@@ -140,7 +143,20 @@
                     $('#Stimepicker').timepicker('setTime', startTime);
                     $('#Etimepicker').timepicker('setTime', endTime);
                 }
+				
+				g_attendant = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname2": new Array(), "jikwe": new Array(), "phone": new Array() };
+
 		        if (scheduleid != "") {
+					//수정시 저장된 일정시간으로 설정
+					setDate();
+					
+					// 이 일정부터 모든 일정 수정일 때, 반복 횟수 조정
+					if (modType === "2" && repetition != null && repetition.split("|")[0] > 0 && repeatCount > 0) {
+						info = repetition.split("|");
+						info[0] = info[0] - (repeatCount - 1);
+						repetition = info.join("|");
+					}
+					
 		            document.getElementById("importantSelect").value = importance;
 		            document.getElementById("publicSelect").value = ispublic;	                
 	                document.getElementById("HolderWrite").style.display = "none";
@@ -176,10 +192,19 @@
 		                /* 2021-11-25 홍승비 - 일정완료 체크박스 표출에 대응하도록 기간TD의 스타일 조정 */
 		                if(document.title == 'Modify'){
 		                document.getElementById("periodblockTD").style.width = "40%";
-		                }else{
+		                } else {
 		                document.getElementById("periodblockTD").style.width = "60%";
 		                }
-		                show_repetition_info();
+						
+						if (modType == '1') {
+							document.getElementById("completeFG_repAllSpan").style.display = "none";
+							document.getElementById("periodblockTD").style.width = "80%";
+							repetition = "";
+							allday_change();
+						} else {
+							show_repetition_info();
+						}
+						
 		            } else if(datetype == "2") {
 		            	document.getElementById("alldaycheck").checked = true;
 		            	allday_change();
@@ -189,7 +214,18 @@
 		                show_repetition_info();
 		                document.getElementById("repeatinfo").textContent = recurringLabelText;
 		                document.getElementById("periodblockTR").style.display = "none";
-		            }                   
+		            }
+					
+					// 참석자 초대 정보
+					<c:forEach var="item" items="${attendantList}" varStatus="status">
+    					g_attendant["name"][${status.index}] = lang == 1 ? '<c:out value="${item.attendantName}"/>' : '<c:out value="${item.attendantName2}"/>';
+						g_attendant["id"][${status.index}] = '<c:out value="${item.attendantId}"/>';
+						g_attendant["deptname"][${status.index}] = '<c:out value="${item.attendantDeptName}"/>';
+						g_attendant["name1"][${status.index}] = '<c:out value="${item.attendantName}"/>';
+						g_attendant["name2"][${status.index}] = '<c:out value="${item.attendantName2}"/>';
+						g_attendant["deptname2"][${status.index}] = '<c:out value="${item.attendantDeptName2}"/>';
+					</c:forEach>
+					
 		        } else if (datetype != ""){ 
 		        	if (datetype == "2") {
 		                document.getElementById("alldaycheck").checked = true;
@@ -220,9 +256,7 @@
 		                document.getElementById("TextTitle").focus();
 		        }
 		        catch (e) { }
-
-		        g_attendant = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname2": new Array(), "jikwe": new Array(), "phone": new Array() };
-     
+				
 		        /* for (var i = 0; i < attendantname.split("&").length - 1; i++) {
 		            g_attendant["id"][i] = attendantemail.split("&")[i];
 		            g_attendant["name1"][i] = attendantname.split("&")[i];
@@ -231,11 +265,6 @@
 		        if (document.getElementById("iReFlag")) {
 		        	tmpReFlag = document.getElementById("iReFlag").value;
 		        }
-		        
-		        //수정시 저장된 일정시간으로 설정
-		         if (scheduleid != "") {
-		        setDate();
-		         }
 		    }
 
 		    window.onresize = function () {
@@ -345,6 +374,15 @@
 		        $('#Etimepicker').timepicker();
 		        $('#Etimepicker').timepicker('setTime', EDate);
 		        $('#Etimepicker').timepicker({ 'timeFormat': 'H:i' });
+				
+				if (modType == "1") {
+					$("#Sdatepicker").datepicker('setDate', repStartDate.slice(0, 10));
+					$("#Edatepicker").datepicker('setDate', repStartDate.slice(0, 10));
+				} else if (modType== "2") {
+					$("#Sdatepicker").datepicker('setDate', repStartDate.slice(0, 10));
+				}
+				
+				beforeScheDate = repStartDate.slice(0, 10) + ' ' + $('#Stimepicker').val();
 		    }
 		    
 		    var monthMsg = "<spring:message code='ezSchedule.t110' />";
@@ -739,6 +777,16 @@
 	                            <div id="schedule1">
 	                                <table class="content">
 	                                	<c:if test="${scheduleId != ''}">
+										<c:if test="${modType ne '0'}">
+										<tr id="HolderEdit">
+                                            <th><spring:message code='ezSchedule.ModType.jih02'/></th>
+											<c:choose>
+												<c:when test="${modType eq '1'}"><td colspan="3"><spring:message code='ezSchedule.ModType.jih03'/></td></c:when>
+												<c:when test="${modType eq '2'}"><td colspan="3"><spring:message code='ezSchedule.ModType.jih04'/></td></c:when>
+												<c:when test="${modType eq '3'}"><td colspan="3"><spring:message code='ezSchedule.ModType.jih05'/></td></c:when>
+											</c:choose>
+                                        </tr>
+										</c:if>
                                         <tr id="HolderEdit">
                                             <th><spring:message code='ezSchedule.t363'/></th>
                                             <td colspan="3" id="LabelOwner">

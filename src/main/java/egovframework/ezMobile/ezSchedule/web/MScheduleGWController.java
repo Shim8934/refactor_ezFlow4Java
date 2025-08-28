@@ -1104,7 +1104,7 @@ public class MScheduleGWController extends EzFileMngUtil {
 				String realStartDate = selectDate + "" + startDate.substring(10, 16);
 				String realDate = commonUtil.getDateStringInUTC(realStartDate, info.getOffSet(), true);
 				if ("3".equals(dateType))
-					ezScheduleService.insertScheduleRepeDel(scheduleId, realDate, info.getTenantId(), info.getCompanyId());
+					ezScheduleService.insertScheduleRepeDel(scheduleId, realDate, realDate, info.getTenantId(), info.getCompanyId());
 			}
 			
 			result.put("status", "ok");

@@ -127,7 +127,7 @@ public interface EzScheduleService {
 
 	public void updateAttendant(String scheduleId, String attendantId, String displayName, String displayName2, String status, int tenantId, String showtop, String lang, String offSet) throws Exception;
 
-	public void insertScheduleRepeDel(String scheduleId, String startDate, int tenantId ,String companyID) throws Exception;
+	public void insertScheduleRepeDel(String scheduleId, String startDate, String endDate, int tenantId ,String companyID) throws Exception;
 
 	public void deleteScheduleRepe(String scheduleId, int tenantId) throws Exception;
 
@@ -252,4 +252,8 @@ public interface EzScheduleService {
 	public String saveIsTagChecked(String userID, String scheduleType, String relatedID, String isChecked, int tenantID, String companyID);
 
 	public String getUserScheduleTypeColor(String userId, String companyId, int tenantId, String scheduleType, String relatedId);
+	
+	public void updateScheduleRepetition(String scheduleId, String repetition, String companyId, int tenantId) throws Exception;
+
+	public void updateScheduleEndDate(String scheduleId, String dateStringInUTC, String companyid, int tenantId) throws Exception;
 }
