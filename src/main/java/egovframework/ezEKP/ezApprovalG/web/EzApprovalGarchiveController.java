@@ -62,6 +62,7 @@ import egovframework.ezEKP.ezPersonal.type.NotiType;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
+import egovframework.let.utl.fcc.service.EzFAL.*;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 
 @Controller
@@ -2431,18 +2432,30 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
         String realPath = commonUtil.getRealPath(request);
 		String filePath = realPath + commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + "encodeinfo.xml";
 		
-		File file = new File (commonUtil.detectPathTraversal(filePath));
+		EzFile file = new EzFile (commonUtil.detectPathTraversal(filePath));
 		String FileText = "";
-		StringBuilder result = new StringBuilder();
+		//StringBuilder result = new StringBuilder();
 
 		// CWE-404 보안 취약점 대응
-		try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+/*		try (BufferedReader br = new BufferedReader(new FileReader(file))) {
 			while ((FileText = br.readLine()) != null) {
 				result.append(FileText);
 			}
+		}*/
+		
+		// EzFAL EzFileInputStream 사용 (자동 close 호출)
+		try (EzFileInputStream fis = new EzFileInputStream(file)) {
+			byte[] fileBytes = new byte[fis.available()];
+			fis.read(fileBytes);
+			
+			FileText = new String(fileBytes, "UTF-8");
+		} catch (Exception e) {
+			logger.error(e.getMessage());
 		}
+		
 		logger.debug("getencodeinfoxXML ended");
-		return result.toString();
+//		return result.toString();
+		return FileText;
 	}
 
 	/**
@@ -2526,18 +2539,25 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 		String savePath = commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator	+ "sendXML"	+ commonUtil.separator + docID + "pubdoc.xml";
  		boolean saveFlag = false;
 		String result = null;
+		
 		try {
 			char intxt[] = new char[saveXML.toString().length()];
 			saveXML.toString().getChars(0, saveXML.toString().length(), intxt, 0); // 입력하고자 하는 문자열을 문자 배열 intxt에 저장
 
-			File file = new File(commonUtil.detectPathTraversal(realPath + savePath));
+			EzFile file = new EzFile(commonUtil.detectPathTraversal(realPath + savePath));
 			// CWE-404 보안 취약점 대응
-			try (FileOutputStream fop = new FileOutputStream(file)) {
+/*			try (FileOutputStream fop = new FileOutputStream(file)) {
 				// get the content in bytes
 				fop.write(saveXML.toString().getBytes("euc-kr"));
 				fop.flush();
+			}*/
+			
+			// EzFAL EzFileOutputStream 사용 (자동 close 호출)
+			try (EzFileOutputStream fos = new EzFileOutputStream(file)) {
+				fos.write(saveXML.toString().getBytes("euc-kr"));
+				fos.flush();
 			}
-
+			
 			saveFlag = true;
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
@@ -2659,10 +2679,12 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 		String xmlData = ezApprovalGService.createSendMsgXML(xmlDom, mapPath, userInfo);
 		xmlData = xmlData.split("::")[1];
 		xmlData = xmlData.replace("\n", "").replace("\t", "");
-		FileOutputStream fop = null;
+		//FileOutputStream fop = null;
 		
-		try {
-			File file = new File(commonUtil.detectPathTraversal(path));
+		EzFile file = new EzFile(commonUtil.detectPathTraversal(path));
+		
+/*		try {
+			EzFile file = new EzFile(commonUtil.detectPathTraversal(path));
 			fop = new FileOutputStream(file);
 			fop.write(xmlData.getBytes("utf-8"));
 			fop.flush();
@@ -2672,6 +2694,13 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 			if (fop != null) {
 				try { fop.close(); } catch (Exception e) {logger.debug("e.message=" + e.getMessage());}
 			}
+		}*/
+		// EzFAL EzFileOutputStream 사용 (자동 close 호출)
+		try (EzFileOutputStream fos = new EzFileOutputStream(file)) {
+			fos.write(xmlData.getBytes("utf-8"));
+			fos.flush();
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
 		}
 		
 		xmlData = xmlData.replace("<?xml version=\"1.0\" encoding=\"euc-kr\"?><!DOCTYPE pack SYSTEM \"pack.dtd\">", "");

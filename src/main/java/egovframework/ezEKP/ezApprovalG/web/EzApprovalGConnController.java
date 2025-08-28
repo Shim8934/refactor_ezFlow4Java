@@ -12,6 +12,7 @@ import org.springframework.stereotype.Controller;
 
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGConnService;
 import egovframework.let.utl.fcc.service.CommonUtil;
+import egovframework.let.utl.fcc.service.EzFAL.*;
 import org.springframework.ui.Model;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -227,36 +228,38 @@ public class EzApprovalGConnController {
 
         Map<String, Object> connData = ezApprovalGConnService.getConnData(keyId, formCode);
 
-        if(connData == null) {
+        if (connData == null) {
             ezApprovalGConnService.registConnData(keyId, userId, deptId, title, formCode, bodyHtml);
         }
 
         connData = ezApprovalGConnService.getConnData(keyId, formCode);
 
         String docId = null;
-        if(connData != null)
+        if (connData != null) {
             docId = (String) connData.get("DOCID");
-
+        }
+        
         String companyId = userInfo.getCompanyID();
 
         String uiFlag = ezApprovalGConnService.getDocUiFlag(docId, userInfo.getTenantId(), companyId);
 
         logger.info("### uiFlag = " + uiFlag);
-        if("redraft".equals(uiFlag)) {
+        if ("redraft".equals(uiFlag)) {
             uiFlag = "draft";
-        }else if("draft".equals(uiFlag)) {
+        } else if ("draft".equals(uiFlag)) {
             connData.put("DOCID", null);
         }
 
         // 첨부파일 정보 및 파일 데이터 삭제
-        if ("draft".equals(uiFlag))
+        if ("draft".equals(uiFlag)) {
             ezApprovalGConnService.deleteConnAttachData(keyId, "1");
-
+        }
+        
         if ("draft".equals(uiFlag) && files != null) {
             if (!files.isEmpty() && files.get(0).getSize() > 0) {
                 String dirPath = commonUtil.getUploadPath("upload_approvalG.CONNATTACH", tenantId) + commonUtil.separator + keyId;
 
-                File fileDir = new File(commonUtil.getRealPath(request) + dirPath);
+                EzFile fileDir = new EzFile(commonUtil.getRealPath(request) + dirPath);
                 if (!fileDir.exists()) {
                     if (!fileDir.mkdirs()) {
                         throw new IOException("Failed to create directory: " + dirPath);
@@ -278,13 +281,17 @@ public class EzApprovalGConnController {
                                 long fileSize = file.getSize();
                                 int fileSn = i + 1;
 
-                                File connAttach = new File(filePath);
-                                try (FileOutputStream fos = new FileOutputStream(connAttach)) {
+                                EzFile connAttach = new EzFile(filePath);
+                                
+                                // EzFAL EzFileOutputStream 사용 (자동 close 호출)
+                                try (EzFileOutputStream fos = new EzFileOutputStream(connAttach)) {
                                     fos.write(bytes);
+                                    fos.flush();
                                 }
+                                
                                 ezApprovalGConnService.insertConnAttachData(keyId, fileSn, fileName, dirPath + commonUtil.separator + fileName, fileSize, userId);
                             } catch (IOException e) {
-                                e.printStackTrace();
+                                logger.error(e.getMessage(), e);
                             }
                         }
                     }
@@ -376,7 +383,7 @@ public class EzApprovalGConnController {
             if (!files.isEmpty() && files.get(0).getSize() > 0) {
                 String dirPath = commonUtil.getUploadPath("upload_approvalG.CONNATTACH", tenantId) + commonUtil.separator + keyId;
 
-                File fileDir = new File(commonUtil.getRealPath(request) + dirPath);
+                EzFile fileDir = new EzFile(commonUtil.getRealPath(request) + dirPath);
                 if (!fileDir.exists()) {
                     if (!fileDir.mkdirs()) {
                         throw new IOException("Failed to create directory: " + dirPath);
@@ -394,10 +401,14 @@ public class EzApprovalGConnController {
                             long fileSize = file.getSize();
                             int fileSn = i + 1;
 
-                            File connAttach = new File(filePath);
-                            try (FileOutputStream fos = new FileOutputStream(connAttach)) {
+                            EzFile connAttach = new EzFile(filePath);
+                            
+                            // EzFAL EzFileOutputStream 사용 (자동 close 호출)
+                            try (EzFileOutputStream fos = new EzFileOutputStream(connAttach)) {
                                 fos.write(bytes);
+                                fos.flush();
                             }
+                            
                             ezApprovalGConnService.insertConnAttachData(keyId, fileSn, fileName, dirPath + commonUtil.separator + fileName, fileSize, userId);
                         } catch (IOException e) {
                             e.printStackTrace();
