@@ -880,47 +880,51 @@ function ListView() {
 
                         if (listShowType == "E") {
                             if (fileExt.length > 1) {
-                                    titleImage = titleImage + "<img src='/images/disk_icon.png' onclick='selectToDownloadFiles(\"" + SelectSingleNodeValue(oCells[0], "DATA1") + "\", \"" + SelectSingleNodeValue(oCells[0], "DATA2") +"\", \"" + ITEMREAD_FG +"\")'>";
+                                    titleImage = titleImage + "<img src='/images/disk.svg?v=1' style='width:20px; height:20px; vertical-align:middle;' onclick='selectToDownloadFiles(\"" + SelectSingleNodeValue(oCells[0], "DATA1") + "\", \"" + SelectSingleNodeValue(oCells[0], "DATA2") +"\", \"" + ITEMREAD_FG +"\")'>";
                                 } else if (fileExt[0].indexOf(".jpg") != -1 || fileExt[0].indexOf(".jpeg") != -1 || fileExt[0].indexOf(".bmp") != -1 || fileExt[0].indexOf(".gif") != -1 || fileExt[0].indexOf(".png") != -1 || fileExt[0].indexOf(".tif") != -1 || fileExt[0].indexOf(".tiff") != -1) {
-                                    titleImage = titleImage + "<img src='/images/image.png' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG +"\")'>";
+                                    titleImage = titleImage + "<img src='/images/image.svg?v=1' style='width:20px; height:20px; vertical-align:middle;' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG +"\")'>";
                                 } else if (fileExt[0].indexOf(".doc") != -1 || fileExt[0].indexOf(".docx") != -1) {
-                                    titleImage = titleImage + "<img src='/images/doc.png' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG +"\")'>";
+                                    titleImage = titleImage + "<img src='/images/doc.svg?v=1' style='width:20px; height:20px; vertical-align:middle;' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG +"\")'>";
                                 } else if (fileExt[0].indexOf(".xls") != -1 || fileExt[0].indexOf(".xlsx") != -1) {
-                                    titleImage = titleImage + "<img src='/images/xls.png' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG +"\")'>";
+                                    titleImage = titleImage + "<img src='/images/xls.svg?v=1' style='width:20px; height:20px; vertical-align:middle;' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG +"\")'>";
                                 } else if (fileExt[0].indexOf(".ppt") != -1 || fileExt[0].indexOf(".pptx") != -1 || fileExt[0].indexOf(".pps") != -1 || fileExt[0].indexOf(".ppsx") != -1) {
-                                    titleImage = titleImage + "<img src='/images/ppt.png' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG +"\")'>";
+                                    titleImage = titleImage + "<img src='/images/ppt.svg?v=1' style='width:20px; height:20px; vertical-align:middle;' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG +"\")'>";
                                 } else if (fileExt[0].indexOf(".txt") != -1) {
-                                    titleImage = titleImage + "<img src='/images/txt.png' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG +"\")'>";
+                                    titleImage = titleImage + "<img src='/images/txt.svg?v=1' style='width:20px; height:20px; vertical-align:middle;' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG +"\")'>";
                                 } else if (fileExt[0].indexOf(".zip") != -1) {
-                                    titleImage = titleImage + "<img src='/images/zip.png' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG +"\")'>";
-                                }else if (fileExt[0].indexOf(".pdf") != -1) {
-                                    titleImage = titleImage + "<img src='/images/pdf.png' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG +"\")'>";
+                                    titleImage = titleImage + "<img src='/images/zip.svg?v=1' style='width:20px; height:20px; vertical-align:middle;' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG +"\")'>";
+                                } else if (fileExt[0].indexOf(".pdf") != -1) {
+                                    titleImage = titleImage + "<img src='/images/pdf.svg?v=1' style='width:20px; height:20px; vertical-align:middle;' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG +"\")'>";
+                                } else if (fileExt[0].indexOf(".hwp") != -1 || fileExt[0].indexOf(".hwpx") != -1) {
+                                    titleImage = titleImage + "<img src='/images/hwp.svg?v=1' style='width:20px; height:20px; vertical-align:middle;' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG +"\")'>";
                                 } else if (fileExt[0].indexOf(".ecm") != -1) {
-                                    titleImage = titleImage + "<img src='/images/ecm.png' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG +"\")'>";
+                                    titleImage = titleImage + "<img src='/images/ecm.svg?v=1' style='width:20px; height:20px; vertical-align:middle;' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG +"\")'>";
                                 } else {
-                                    titleImage = titleImage + "<img src='/images/email/mail_006.gif' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG +"\")'>";
-                                } 
+                                    titleImage = titleImage + "<img src='/images/etc.svg?v=1' style='width:20px; height:20px; vertical-align:middle;' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG +"\")'>";
+                                }
                         } else {
                             if (fileExt.indexOf("MANY") != -1 || (listShowType == "E" && fileExt.length > 1)) {
-                                titleImage = titleImage + "<img src='/images/disk_icon.png' onclick='selectToDownloadFiles(\"" + SelectSingleNodeValue(oCells[0], "DATA1") + "\", \"" + SelectSingleNodeValue(oCells[0], "DATA2") +"\", \"" + ITEMREAD_FG +"\")'>";
+                                titleImage = titleImage + "<img src='/images/disk.svg?v=1' style='width:20px; height:20px; vertical-align:middle;' onclick='selectToDownloadFiles(\"" + SelectSingleNodeValue(oCells[0], "DATA1") + "\", \"" + SelectSingleNodeValue(oCells[0], "DATA2") +"\", \"" + ITEMREAD_FG +"\")'>";
                             } else if (fileExt.indexOf(".jpg") != -1 || fileExt.indexOf(".jpeg") != -1 || fileExt.indexOf(".bmp") != -1 || fileExt.indexOf(".gif") != -1 || fileExt.indexOf(".png") != -1 || fileExt.indexOf(".tif") != -1 || fileExt.indexOf(".tiff") != -1) {
-                                titleImage = titleImage + "<img src='/images/image.png' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG +"\")'>";
+                                titleImage = titleImage + "<img src='/images/image.svg?v=1' style='width:20px; height:20px; vertical-align:middle;' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG +"\")'>";
                             } else if (fileExt.indexOf(".doc") != -1 || fileExt.indexOf(".docx") != -1) {
-                                titleImage = titleImage + "<img src='/images/doc.png' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG +"\")'>";
+                                titleImage = titleImage + "<img src='/images/doc.svg?v=1' style='width:20px; height:20px; vertical-align:middle;' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG +"\")'>";
                             } else if (fileExt.indexOf(".xls") != -1 || fileExt.indexOf(".xlsx") != -1) {
-                                titleImage = titleImage + "<img src='/images/xls.png' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG +"\")'>";
+                                titleImage = titleImage + "<img src='/images/xls.svg?v=1' style='width:20px; height:20px; vertical-align:middle;' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG +"\")'>";
                             } else if (fileExt.indexOf(".ppt") != -1 || fileExt.indexOf(".pptx") != -1 || fileExt.indexOf(".pps") != -1 || fileExt.indexOf(".ppsx") != -1) {
-                                titleImage = titleImage + "<img src='/images/ppt.png' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG +"\")'>";
+                                titleImage = titleImage + "<img src='/images/ppt.svg?v=1' style='width:20px; height:20px; vertical-align:middle;' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG +"\")'>";
                             } else if (fileExt.indexOf(".txt") != -1) {
-                                titleImage = titleImage + "<img src='/images/txt.png' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG +"\")'>";
+                                titleImage = titleImage + "<img src='/images/txt.svg?v=1' style='width:20px; height:20px; vertical-align:middle;' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG +"\")'>";
                             } else if (fileExt.indexOf(".zip") != -1) {
-                                titleImage = titleImage + "<img src='/images/zip.png' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG +"\")'>";
-                            }else if (fileExt.indexOf(".pdf") != -1) {
-                                titleImage = titleImage + "<img src='/images/pdf.png' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG +"\")'>";
+                                titleImage = titleImage + "<img src='/images/zip.svg?v=1' style='width:20px; height:20px; vertical-align:middle;' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG +"\")'>";
+                            } else if (fileExt.indexOf(".pdf") != -1) {
+                                titleImage = titleImage + "<img src='/images/pdf.svg?v=1' style='width:20px; height:20px; vertical-align:middle;' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG +"\")'>";
+                            } else if (fileExt.indexOf(".hwp") != -1) {
+                                titleImage = titleImage + "<img src='/images/hwp.svg?v=1' style='width:20px; height:20px; vertical-align:middle;' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG +"\")'>";
                             } else if (fileExt.indexOf(".ecm") != -1) {
-                                titleImage = titleImage + "<img src='/images/ecm.png' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG +"\")'>";
+                                titleImage = titleImage + "<img src='/images/ecm.svg?v=1' style='width:20px; height:20px; vertical-align:middle;' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG +"\")'>";
                             } else {
-                                titleImage = titleImage + "<img src='/images/email/mail_006.gif' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG +"\")'>";
+                                titleImage = titleImage + "<img src='/images/etc.svg?v=1' style='width:20px; height:20px; vertical-align:middle;' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG +"\")'>";
                             } 
                     	}
                         strValue = "";

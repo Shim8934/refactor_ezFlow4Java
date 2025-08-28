@@ -463,23 +463,25 @@ function AppendFileAttachInfo_List(ret)
 		        var strFileExt = getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[0]);
 
 		        if (strFileExt.indexOf(".jpg") != -1 || strFileExt.indexOf(".jpeg") != -1 || strFileExt.indexOf(".bmp") != -1 || strFileExt.indexOf(".gif") != -1 || strFileExt.indexOf(".png") != -1 || strFileExt.indexOf(".tif") != -1 || strFileExt.indexOf(".tiff") != -1)
-		            strAttach = strAttach + "<img src='/images/image.png'> <a href='#' target='_self'>"
+		            strAttach = strAttach + "<img src='/images/image.svg'> <a href='#' target='_self'>"
 		        else if (strFileExt.indexOf(".doc") != -1 || strFileExt.indexOf(".docx") != -1)
-		            strAttach = strAttach + "<img src='/images/doc.png'> <a href='#' target='_self'>"
+		            strAttach = strAttach + "<img src='/images/doc.svg'> <a href='#' target='_self'>"
 		        else if (strFileExt.indexOf(".xls") != -1 || strFileExt.indexOf(".xlsx") != -1)
-		            strAttach = strAttach + "<img src='/images/xls.png'> <a href='#' target='_self'>"
+		            strAttach = strAttach + "<img src='/images/xls.svg'> <a href='#' target='_self'>"
 		        else if (strFileExt.indexOf(".ppt") != -1 || strFileExt.indexOf(".pptx") != -1 || strFileExt.indexOf(".pps") != -1 || strFileExt.indexOf(".ppsx") != -1)
-		            strAttach = strAttach + "<img src='/images/ppt.png'> <a href='#' target='_self'>"
+		            strAttach = strAttach + "<img src='/images/ppt.svg'> <a href='#' target='_self'>"
 		        else if (strFileExt.indexOf(".txt") != -1)
-		            strAttach = strAttach + "<img src='/images/txt.png'> <a href='#' target='_self'>"
+		            strAttach = strAttach + "<img src='/images/txt.svg'> <a href='#' target='_self'>"
 		        else if (strFileExt.indexOf(".zip") != -1)
-		            strAttach = strAttach + "<img src='/images/zip.png'> <a href='#' target='_self'>"
+		            strAttach = strAttach + "<img src='/images/zip.svg'> <a href='#' target='_self'>"
 		        else if (strFileExt.indexOf(".pdf") != -1)
-		            strAttach = strAttach + "<img src='/images/pdf.png'> <a href='#' target='_self'>"
+		            strAttach = strAttach + "<img src='/images/pdf.svg'> <a href='#' target='_self'>"
+				else if (strFileExt.indexOf(".hwp") != -1 || strFileExt.indexOf(".hwpx") != -1)
+					strAttach = strAttach + "<img src='/images/hwp.svg'> <a href='#' target='_self'>"
 		        else if (strFileExt.indexOf(".ecm") != -1)
-		            strAttach = strAttach + "<img src='/images/ecm.png'> <a href='#' target='_self'>"
+		            strAttach = strAttach + "<img src='/images/ecm.svg'> <a href='#' target='_self'>"
 		        else
-		            strAttach = strAttach + "<img src='/images/email/mail_006.gif'> <a href='#' target='_self'>"
+		            strAttach = strAttach + "<img src='/images/etc.svg'> <a href='#' target='_self'>"
 		        
 		        strAttach = strAttach + getNodeText(GetChildNodes(GetChildNodes(objAttachNodes[i])[0])[0]) + "&nbsp;</a><br>"
 		    }

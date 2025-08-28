@@ -14,6 +14,10 @@
 	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('ezBoard.e1', 'msg')}"></script>
+		<style type="text/css">
+			/* 첨부파일 아이콘 변경 */
+			#lstAttachLink img{width: 18px;height: 18px;vertical-align: middle;margin: 0 2px 4px 0;}
+		</style>
     </head>
 	<body class="popup">
 	    <h1><spring:message code='ezBoard.t10025'/></h1>
@@ -39,31 +43,34 @@
 	        		<td>
 	                <c:choose>
 		    		<c:when test="${fn:contains(attach.fileName, '.jpg') || fn:contains(attach.fileName, '.jpeg') || fn:contains(attach.fileName, '.bmp') || fn:contains(attach.fileName, '.gif') || fn:contains(attach.fileName, '.png') || fn:contains(attach.fileName, '.tif') || fn:contains(attach.fileName, '.tiff')}">
-				        <img src='/images/image.png'>
+				        <img src='/images/image.svg'>
 		    		</c:when>
 		    		<c:when test="${fn:contains(attach.fileName, '.doc') || fn:contains(attach.fileName, '.docx')}">
-				        <img src='/images/doc.png'>
+				        <img src='/images/doc.svg'>
 		    		</c:when>
 		    		<c:when test="${fn:contains(attach.fileName, '.xls') || fn:contains(attach.fileName, '.xlsx')}">
-				        <img src='/images/xls.png'>
+				        <img src='/images/xls.svg'>
 		    		</c:when>
 		    		<c:when test="${fn:contains(attach.fileName, '.ppt') || fn:contains(attach.fileName, '.pptx')  || fn:contains(attach.fileName, '.pps') || fn:contains(attach.fileName, '.ppsx')}">
-				        <img src='/images/ppt.png'>
+				        <img src='/images/ppt.svg'>
 		    		</c:when>
 		    		<c:when test="${fn:contains(attach.fileName, '.txt')}">
-				        <img src='/images/txt.png'>
+				        <img src='/images/txt.svg'>
 		    		</c:when>
 		    		<c:when test="${fn:contains(attach.fileName, '.zip')}">
-				        <img src='/images/zip.png'>
+				        <img src='/images/zip.svg'>
 		    		</c:when>
 		    		<c:when test="${fn:contains(attach.fileName, '.pdf')}">
-				        <img src='/images/pdf.png'>
+				        <img src='/images/pdf.svg'>
 		    		</c:when>
+					<c:when test="${fn:contains(attach.fileName, '.hwp')}">
+						<img src='/images/hwp.svg'>
+					</c:when>
 		    		<c:when test="${fn:contains(attach.fileName, '.ecm')}">
-				        <img src='/images/ecm.png'>
+				        <img src='/images/ecm.svg'>
 		    		</c:when>
 		    		<c:otherwise>
-				        <img src='/images/email/mail_006.gif'>
+				        <img src='/images/etc.svg'>
 		    		</c:otherwise>
 		    	    </c:choose>
 		    	    <c:url value="/ezBoard/boardAttachDown.do" var="url">
