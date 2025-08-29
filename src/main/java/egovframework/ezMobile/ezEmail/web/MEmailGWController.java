@@ -8675,15 +8675,18 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 					applicantEmail = applicantId + "@" + domainName;
 				}
 
-				logger.debug("apprSetApproval userCn={}, href={}, hrefUserId={}, uid={}, applicantId={}, applicantEmail={}",
-						userCn, href, hrefUserId, uid, applicantId, applicantEmail);
+				String applicantLang = ezCommonService.selectUserGetLang(applicantId, tenantId);
+				Locale applicantLocale = StringUtils.isNotBlank(applicantLang) ? commonUtil.getLocalFromLang(applicantLang) : Locale.getDefault();
+
+				logger.debug("apprSetApproval userCn={}, href={}, hrefUserId={}, uid={}, applicantId={}, applicantEmail={}, applicantLang={}, applicantLocale={}",
+						userCn, href, hrefUserId, uid, applicantId, applicantEmail, applicantLang, applicantLocale);
 
 				// 승인 데이터 생성
 				Map<String, Object> approvalData = new HashMap<>();
 				approvalData.put("tenantId", tenantId);
 				approvalData.put("companyId", companyId);
-				approvalData.put("lang", lang);
-				approvalData.put("locale", locale);
+				approvalData.put("lang", applicantLang);
+				approvalData.put("locale", applicantLocale);
 				approvalData.put("uid", uid);
 				approvalData.put("applicantId", applicantId);
 				approvalData.put("applicantEmail", applicantEmail);
@@ -8782,16 +8785,19 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 					applicantId = applicantVO.getCn();
 					applicantEmail = applicantId + "@" + domainName;
 				}
+
+				String applicantLang = ezCommonService.selectUserGetLang(applicantId, tenantId);
+				Locale applicantLocale = StringUtils.isNotBlank(applicantLang) ? commonUtil.getLocalFromLang(applicantLang) : Locale.getDefault();
 				
-				logger.debug("apprSetRejectAction userCn={}, href={}, hrefUserId={}, uid={}, applicantId={}, applicantEmail={}",
-						userCn, href, hrefUserId, uid, applicantId, applicantEmail);
+				logger.debug("apprSetRejectAction userCn={}, href={}, hrefUserId={}, uid={}, applicantId={}, applicantEmail={}, applicantLang={}, applicantLocale={}",
+						userCn, href, hrefUserId, uid, applicantId, applicantEmail, applicantLang, applicantLocale);
 
 				// 승인 데이터 생성
 				Map<String, Object> approvalData = new HashMap<>();
 				approvalData.put("tenantId", tenantId);
 				approvalData.put("companyId", companyId);
-				approvalData.put("lang", lang);
-				approvalData.put("locale", locale);
+				approvalData.put("lang", applicantLang);
+				approvalData.put("locale", applicantLocale);
 				approvalData.put("uid", uid);
 				approvalData.put("applicantId", applicantId);
 				approvalData.put("applicantEmail", applicantEmail);

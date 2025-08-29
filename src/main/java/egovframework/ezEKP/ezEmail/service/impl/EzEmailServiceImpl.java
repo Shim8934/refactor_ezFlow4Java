@@ -6647,13 +6647,15 @@ public class EzEmailServiceImpl implements EzEmailService {
 		String companyId 	= (String) paramMap.get("companyId");
 		String lang 	= (String) paramMap.get("lang");
 		String primary 	= (String) paramMap.get("primary");
-		Locale locale 	= (Locale) paramMap.get("locale");
+		//Locale locale 	= (Locale) paramMap.get("locale");
 		String shareId 	= (String) paramMap.get("shareId");
 
 		String domainName = ezCommonService.getTenantConfig("DomainName", tenantId);
 
 		String vUserId = "";
 		String vUserName = "";
+		String vUserName1 = "";
+		String vUserName2 = "";
 		String vUserEmail = "";
 		if (shareId == null || "".equals(shareId)) {
 			OrganUserVO userInfo = ezOrganAdminService.getUserInfo(userId, lang, tenantId);
@@ -6661,6 +6663,8 @@ public class EzEmailServiceImpl implements EzEmailService {
 
 			vUserId = userId;
 			vUserName = userInfo.getDisplayName();
+			vUserName1 = StringUtils.isNotBlank(userInfo.getDisplayName1()) ? userInfo.getDisplayName1() : vUserName;
+			vUserName2 = StringUtils.isNotBlank(userInfo.getDisplayName2()) ? userInfo.getDisplayName2() : vUserName1;
 			vUserEmail = userInfo.getMail();
 		} else {
 			MailSharedMailboxVO sharedMailBoxInfo = getSharedMailboxInfo(shareId, tenantId, lang);
@@ -6668,6 +6672,8 @@ public class EzEmailServiceImpl implements EzEmailService {
 			
 			vUserId = shareId;
 			vUserName = sharedMailBoxInfo.getShareName();
+			vUserName1 = vUserName;
+			vUserName2 = vUserName;
 			vUserEmail = vUserId + "@" + domainName;
 		}
 		
@@ -6681,12 +6687,13 @@ public class EzEmailServiceImpl implements EzEmailService {
 			/**
 			 *  메일 제목 : [메일승인요청] TEST 님께서 전사메일 발송 승인을 요청하였습니다.
 			 *  메일 본문 : 관리자>메일>전체메일승인>승인대기목록 페이지에서 확인하시기 바랍니다.
-			 */
+			 *  2025-08-28 - 관리자 언어로 setting하기 위해 주석
+			 
 			String subject = egovMessageSource.getMessage("email.appr.noti.apply.title", locale) 
 					+ " " + String.format(egovMessageSource.getMessage("email.appr.noti.apply.allhands.subject", locale), vUserName);
 			
 			String content = commonUtil.createNotiMailContentForApprMail(egovMessageSource.getMessage("email.appr.noti.apply.allhands.content1", locale), tenantId, locale);
-			
+			/*
 			/**
 			 * 보낸 사람 : 신청자
 			 */
@@ -6708,12 +6715,38 @@ public class EzEmailServiceImpl implements EzEmailService {
 			adminList.addAll(compAdminList);
 			
 			List<InternetAddress> toList = new ArrayList<InternetAddress>();
+
+			// 언어별로 관리자를 그룹핑하기 위한 Map
+			Map<String, List<OrganUserVO>> adminsByLang = new HashMap<>();
+			Map<String, String> subjectByLang = new HashMap<>();
+			Map<String, String> contentByLang = new HashMap<>();
+			
 			for (OrganUserVO ad : adminList) {
+				// 메일주소 처리
 				InternetAddress to = new InternetAddress();
 				to.setPersonal(ad.getDisplayName(), "UTF-8");
 				to.setAddress(ad.getMail());
-				
 				toList.add(to);
+
+				// 관리자의 언어 정보 조회
+				String adminLang = ezCommonService.selectUserGetLang(ad.getCn(), tenantId);
+
+				// 언어별로 관리자 그룹핑
+				adminsByLang.computeIfAbsent(adminLang, k -> new ArrayList<>()).add(ad);
+
+				// 해당 언어의 메시지가 아직 생성되지 않았다면 생성
+				if (!subjectByLang.containsKey(adminLang)) {
+					Locale adminLocale = commonUtil.getLocalFromLang(adminLang);
+					String vfUserName = adminLang.equals("1") ? vUserName1 : vUserName2;
+
+					String subject = egovMessageSource.getMessage("email.appr.noti.apply.title", adminLocale)
+							+ " " + String.format(egovMessageSource.getMessage("email.appr.noti.apply.allhands.subject", adminLocale), vfUserName);
+					String content = commonUtil.createNotiMailContentForApprMail(
+							egovMessageSource.getMessage("email.appr.noti.apply.allhands.content1", adminLocale), tenantId, adminLocale);
+
+					subjectByLang.put(adminLang, subject);
+					contentByLang.put(adminLang, content);
+				}
 			}
 			
 			// 회사 관리자가 없는 경우
@@ -6722,7 +6755,28 @@ public class EzEmailServiceImpl implements EzEmailService {
 				throw new Exception("APPR_ERROR_ALLHANDS_NOT_EXIST");
 			}*/
 			if (toList.size() > 0) {
-				sendMail(userAccount, jspw, locale, from, toList.toArray(new InternetAddress[toList.size()]), null, null, subject, content, false, EmailImportance.NORMAL);
+				//sendMail(userAccount, jspw, locale, from, toList.toArray(new InternetAddress[toList.size()]), null, null, subject, content, false, EmailImportance.NORMAL);
+				// 언어별로 메일 발송
+				for (Map.Entry<String, List<OrganUserVO>> entry : adminsByLang.entrySet()) {
+					String adminLang = entry.getKey();
+					List<OrganUserVO> adminsForLang = entry.getValue();
+
+					// 해당 언어의 관리자들에게 보낼 메일 주소 리스트 생성
+					List<InternetAddress> langSpecificToList = new ArrayList<>();
+					for (OrganUserVO admin : adminsForLang) {
+						InternetAddress to = new InternetAddress();
+						to.setPersonal(admin.getDisplayName(), "UTF-8");
+						to.setAddress(admin.getMail());
+						langSpecificToList.add(to);
+					}
+
+					// 해당 언어의 메시지로 메일 발송
+					String subject = subjectByLang.get(adminLang);
+					String content = contentByLang.get(adminLang);
+
+					sendMail(userAccount, jspw, commonUtil.getLocalFromLang(adminLang), from, langSpecificToList.toArray(new InternetAddress[0]), 
+							null, null, subject, content, false, EmailImportance.NORMAL);
+				}
 			}
 		} catch (Exception e) {
 			deleteApprCompHistory(tenantId, companyId, mailUID, vUserId);
@@ -6762,9 +6816,11 @@ public class EzEmailServiceImpl implements EzEmailService {
 	 */
 	public int applyApprMail(String userId, int tenantId, Map<String, Object> paramMap, long mailUID, MimeMessage message, String approverId) throws Exception {
 		String companyId 	= (String) paramMap.get("companyId");
-		String lang 		= (String) paramMap.get("lang");
+		//String lang 		= (String) paramMap.get("lang");
 		String primary 		= (String) paramMap.get("primary");
-		Locale locale 		= (Locale) paramMap.get("locale");
+		//Locale locale 		= (Locale) paramMap.get("locale");
+		String lang = ezCommonService.selectUserGetLang(approverId, tenantId);
+		Locale locale = StringUtils.isNotBlank(lang) ? commonUtil.getLocalFromLang(lang) : Locale.getDefault();
 		String shareId 	= (String) paramMap.get("shareId");
 
 		String domainName = ezCommonService.getTenantConfig("DomainName", tenantId);
@@ -6936,14 +6992,19 @@ public class EzEmailServiceImpl implements EzEmailService {
 		LoginVO loginInfo = commonUtil.userInfo(loginCookie);
 		int tenantId = loginInfo.getTenantId();
 		String companyId = loginInfo.getCompanyID();
-		String lang = loginInfo.getPrimary();
-		Locale locale = loginInfo.getLocale();
-		logger.debug("tenantId={}, companyId={}, lang={}, locale={}, applicantEmail={}", tenantId, companyId, lang, locale, applicantEmail);
+		//String lang = loginInfo.getPrimary();
+		//Locale locale = loginInfo.getLocale();
+
+		String applicantId = applicantEmail.split("@")[0];
+		String lang = ezCommonService.selectUserGetLang(applicantId, tenantId);
+		Locale locale = StringUtils.isNotBlank(lang) ? commonUtil.getLocalFromLang(lang) : Locale.getDefault();
+
+		logger.debug("setApprCompMailApproval started. tenantId={}, companyId={}, lang={}, locale={}, applicantEmail={}", tenantId, companyId, lang, locale, applicantEmail);
 
 		String approverId = loginInfo.getId(); // 승인자는 현재 로그인한 사용자
 		String approverName = loginInfo.getDisplayName(); 
 		String approverName2 = loginInfo.getDisplayName2(); 
-		String applicantId = applicantEmail.split("@")[0];
+		//String applicantId = applicantEmail.split("@")[0];
 		
 		// 해당 메일의 로그 정보
 		String hisSubject = "";
@@ -6996,7 +7057,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 					
 					sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject, content, false);
 				} else {
-					logger.debug("applicant is not found.");
+					logger.debug("setApprCompMailApproval applicant is not found.");
 				}
 			} catch (Exception e) {
 				logger.error(e.getMessage(), e);
@@ -7004,7 +7065,8 @@ public class EzEmailServiceImpl implements EzEmailService {
 				updateApprCompHistory(tenantId, companyId, uid, applicantId, "pending", approverId, approverName, approverName2, null);
 			}
 		}
-		
+
+		logger.debug("setApprCompMailApproval ended. resultInt={}", resultInt);
 		return resultInt;
 	}
 	
@@ -7018,19 +7080,16 @@ public class EzEmailServiceImpl implements EzEmailService {
 		int tenantId = loginInfo.getTenantId();
 		String userId = loginInfo.getId();
 
+		String applicantId = applicantEmail.split("@")[0];
+		String lang = ezCommonService.selectUserGetLang(applicantId, tenantId);
+		Locale locale = StringUtils.isNotBlank(lang) ? commonUtil.getLocalFromLang(lang) : Locale.getDefault();
+
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyId", loginInfo.getCompanyID());
-		map.put("lang", loginInfo.getLang());
-		map.put("locale", loginInfo.getLocale());
+		map.put("lang", lang);
+		map.put("locale", locale);
 		
 		return setApprMailApproval(userId, tenantId, map, applicantEmail, uid);
-	}
-
-	@Override
-	public int setApprMailApproval(String userId, int tenantId,Map<String, Object> paramMap) throws Exception {
-		String applicantEmail = (String) paramMap.get("uid");
-		long uid = (long) paramMap.get("uid");
-		return setApprMailApproval(userId, tenantId, paramMap, applicantEmail, uid);
 	}
 
 	/**
@@ -7127,14 +7186,17 @@ public class EzEmailServiceImpl implements EzEmailService {
 		LoginVO loginInfo = commonUtil.userInfo(loginCookie);
 		int tenantId = loginInfo.getTenantId();
 		String companyId = loginInfo.getCompanyID();
-		String lang = loginInfo.getPrimary();
-		Locale locale = loginInfo.getLocale();
-		logger.debug("tenantId={}, companyId={}, lang={}, locale={}, applicantEmail={}", tenantId, companyId, lang, locale, applicantEmail);
+		//String lang = loginInfo.getPrimary();
+		//Locale locale = loginInfo.getLocale();
+		String applicantId = applicantEmail.split("@")[0];
+		String lang = ezCommonService.selectUserGetLang(applicantId, tenantId);
+		Locale locale = StringUtils.isNotBlank(lang) ? commonUtil.getLocalFromLang(lang) : Locale.getDefault();
+		logger.debug("setApprCompMailReject started. tenantId={}, companyId={}, lang={}, locale={}, applicantEmail={}", tenantId, companyId, lang, locale, applicantEmail);
 
 		String approverId = loginInfo.getId(); // 승인자는 현재 로그인한 사용자
 		String approverName = loginInfo.getDisplayName(); 
 		String approverName2 = loginInfo.getDisplayName2(); 
-		String applicantId = applicantEmail.split("@")[0];
+		//String applicantId = applicantEmail.split("@")[0];
 		
 		// 해당 메일의 로그 정보
 		String hisSubject = "";
@@ -7195,9 +7257,10 @@ public class EzEmailServiceImpl implements EzEmailService {
 				updateApprCompHistory(tenantId, companyId, uid, applicantId, "pending", null, null, null, null);
 			}
 		} else if (applicantVO != null) {
-			logger.debug("applicant is not found.");
+			logger.debug("setApprCompMailReject applicant is not found.");
 		}
 		
+		logger.debug("setApprCompMailReject ended. resultInt={}", resultInt);
 		return resultInt;
 	}
 	
@@ -7212,10 +7275,14 @@ public class EzEmailServiceImpl implements EzEmailService {
 		int tenantId = loginInfo.getTenantId();
 		String userId = loginInfo.getId();
 
+		String applicantId = applicantEmail.split("@")[0];
+		String lang = ezCommonService.selectUserGetLang(applicantId, tenantId);
+		Locale locale = StringUtils.isNotBlank(lang) ? commonUtil.getLocalFromLang(lang) : Locale.getDefault();
+
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyId", loginInfo.getCompanyID());
-		map.put("lang", loginInfo.getLang());
-		map.put("locale", loginInfo.getLocale());
+		map.put("lang", lang);
+		map.put("locale", locale);
 		
 		return setApprMailReject(userId, tenantId, map, applicantEmail, uid, memo);
 	}
@@ -7230,12 +7297,12 @@ public class EzEmailServiceImpl implements EzEmailService {
 		String companyId 	= (String) paramMap.get("companyId");
 		String lang 		= (String) paramMap.get("lang");
 		Locale locale 		= (Locale) paramMap.get("locale");
-		logger.debug("tenantId={}, companyId={}, lang={}, locale={}, applicantEmail={}", tenantId, companyId, lang, locale, applicantEmail);
+		logger.debug("setApprMailReject started. tenantId={}, companyId={}, lang={}, locale={}, applicantEmail={}", tenantId, companyId, lang, locale, applicantEmail);
 		
 		String applicantId = applicantEmail.split("@")[0];
 		String domainName = ezCommonService.getTenantConfig("DomainName", tenantId);
 		String userAccount = userId + "@" + domainName;
-		logger.debug("applicantId={}, domainName={}, userAccount={}", applicantEmail, domainName, userAccount);
+		logger.debug("setApprMailReject applicantId={}, domainName={}, userAccount={}", applicantEmail, domainName, userAccount);
 		
 		// 해당 메일의 로그 정보
 		String hisSubject = "";
@@ -7298,9 +7365,10 @@ public class EzEmailServiceImpl implements EzEmailService {
 				updateApprHistory(tenantId, companyId, uid, applicantId, "pending", null);
 			}
 		} else if (applicantVO != null) {
-			logger.debug("applicant is not found.");
+			logger.debug("setApprMailReject applicant is not found.");
 		}
-		
+
+		logger.debug("setApprMailReject ended. resultInt={}", resultInt);
 		return resultInt;
 	}
 	
@@ -7317,7 +7385,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 		String companyId = loginInfo.getCompanyID();
 		Locale locale = loginInfo.getLocale();
         String applicantId = applicantEmail.split("@")[0];
-		logger.debug("tenantId={}, companyId={}, locale={}, applicantEmail={}"
+		logger.debug("setApprCompMailDelete started. tenantId={}, companyId={}, locale={}, applicantEmail={}"
 				, tenantId, companyId, locale, applicantEmail);
 		
 		resultInt = deleteApprCompHistory(tenantId, companyId, uid, applicantId);
@@ -7336,6 +7404,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 			}
 		}
 		
+		logger.debug("setApprCompMailDelete ended. resultInt={}", resultInt);
 		return resultInt;
 	}
 	
@@ -7349,9 +7418,11 @@ public class EzEmailServiceImpl implements EzEmailService {
 		
 		String keepLogPeriod = StringUtils.defaultIfBlank(ezCommonService.getTenantConfig("apprMailKeepLogPeriod", tenantId), "3");
 		
-		Locale locale = Locale.getDefault();
+		//Locale locale = Locale.getDefault();
         String applicantId = applicantEmail.split("@")[0];
         String lang = ezCommonService.selectUserGetLang(applicantId, tenantId);
+		Locale locale = StringUtils.isNotBlank(lang) ? commonUtil.getLocalFromLang(lang) : Locale.getDefault();
+		
 		logger.debug("tenantId={}, companyId={}, lang={}, locale={}, applicantEmail={}"
 				, tenantId, companyId, lang, locale, applicantEmail);
 		
@@ -7415,9 +7486,10 @@ public class EzEmailServiceImpl implements EzEmailService {
 				}
 			}
 		} else if (applicantVO != null) {
-			logger.debug("applicant is not found.");
+			logger.debug("setApprMailAutoDelete applicant is not found.");
 		}
-		
+
+		logger.debug("setApprMailAutoDelete ended. resultInt={}", resultInt);
 		return resultInt;
 	}
 	
@@ -7455,7 +7527,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 	}
 	
 	/**
-	 * 승인메일 : 자동삭제 - (전사/일반) 자동 삭제 대상로그 조회 (대기상태)
+	 * 승인메일 : 자동삭제 - 자동 삭제 대상로그 조회 (대기상태) - 일반메일만 해당, 전사메일은 제외
 	 */
 	@Override
 	public List<Map<String, String>> getAutoDeleteApprMailHistoryList(int tenantId, String lang) throws Exception {
