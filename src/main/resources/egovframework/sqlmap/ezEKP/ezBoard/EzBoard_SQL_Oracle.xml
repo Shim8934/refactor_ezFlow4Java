@@ -26,6 +26,8 @@
 	<typeAlias  alias="BoardUserScrapContListVO" 	type="egovframework.ezEKP.ezBoard.vo.BoardUserScrapContListVO"/>
 	<typeAlias  alias="BoardThumbnailVO" 			type="egovframework.ezEKP.ezBoard.vo.BoardThumbnailVO"/>
 	<typeAlias  alias="MealDataVO" 					type="egovframework.ezEKP.ezBoard.vo.MealDataVO"/>
+	<typeAlias  alias="BoardHistoryVO" 				type="egovframework.ezEKP.ezBoard.vo.BoardHistoryVO"/>
+
 	<resultMap id="getLeft_boardSTD" class="egovframework.ezEKP.ezBoard.vo.BoardVO">
 		<result property="boardGroupId" 			column="BOARDGROUPID" 			columnIndex="1"/>
 	</resultMap>
@@ -100,6 +102,7 @@
 		<result property="updateDate" 				column="UPDATEDATE" 			columnIndex="42"/>
 		<result property="publicFlag" 		        column="PUBLICFLAG" 		    columnIndex="43"/>
 		<result property="writerNameType" 			column="WRITERNAMETYPE" 		columnIndex="44"/>
+		<result property="topWriterID" 			    column="TOPWRITERID" 			columnIndex="46"/>
 	</resultMap>
 	
 	<resultMap id="getBrdGetItemInfoTemp" class="BoardListVO">
@@ -813,7 +816,32 @@
            		A.TENANT_ID = P.TENANT_ID
            	AND
            		A.BOARDID = P.BOARDID
-			AND 
+           	LEFT OUTER JOIN
+			(
+				SELECT
+					ITEMID, TENANT_ID
+				FROM
+				(
+					SELECT
+						ROW_NUMBER() OVER(
+							PARTITION BY
+								PARENTITEMID
+							ORDER BY
+								VERSION DESC
+						) RN,
+						ITEMID,
+						TENANT_ID
+					FROM
+					TBL_BOARD_MODIFYHISTORY
+				) M1
+				WHERE
+					M1.RN = 1
+			) M2
+			ON
+				A.ITEMID = M2.ITEMID
+			AND
+				A.TENANT_ID = M2.TENANT_ID  	
+			WHERE 
 			  	A.TENANT_ID = #v_TENANTID#
 			AND
             	(A.WRITERCOMPANYID = #v_COMPANYID# OR TRIM(A.WRITERCOMPANYID) = '' OR A.WRITERCOMPANYID IS NULL
@@ -845,6 +873,10 @@
      							 	S.USERID = #v_pUserID# 
      							 AND 
      							 	S.READDATE > TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS') - 5))
+     		AND
+				(P.VERSIONMANAGE = 'Y' AND M2.ITEMID IS NOT NULL
+					OR
+			    P.VERSIONMANAGE = 'N')
 		]]>
 	</select>
 	
@@ -920,8 +952,10 @@
                     	A.ITEMID,
                     	A.WRITERID,
 						A.WRITERDEPTID,
-						A.TOPWRITERID
-                	FROM 
+						A.TOPWRITERID,
+						A.WRITEDATE,
+                    	A.ENDDATE
+                	FROM
                 		TBL_Board_Item A
                 	JOIN 
                 		TBL_Board_BoardInfo B   
@@ -1348,6 +1382,31 @@
 					A.TENANT_ID = B.TENANT_ID
 				AND
 					A.BOARDID = B.BOARDID
+				LEFT OUTER JOIN
+				(
+					SELECT
+						ITEMID, TENANT_ID
+					FROM
+					(
+						SELECT
+							ROW_NUMBER() OVER(
+								PARTITION BY
+									PARENTITEMID
+								ORDER BY
+									VERSION DESC
+							) RN,
+							ITEMID,
+							TENANT_ID
+						FROM
+						TBL_BOARD_MODIFYHISTORY
+					) M1
+					WHERE
+						M1.RN = 1
+				) M2
+				ON
+					A.ITEMID = M2.ITEMID
+				AND
+					A.TENANT_ID = M2.TENANT_ID
 				INNER JOIN
 					TBL_BOARD_BOARDINFO P
 				ON
@@ -1409,7 +1468,12 @@
 								TENANT_ID ) F ON
 							    A.ITEMID = F.ITEMID
 							AND 
-							    A.TENANT_ID = F.TENANT_ID ) T1
+							    A.TENANT_ID = F.TENANT_ID
+					 WHERE
+						(P.VERSIONMANAGE = 'Y' AND M2.ITEMID IS NOT NULL
+					 OR
+					    P.VERSIONMANAGE = 'N')
+					 ) T1
 			WHERE
 				RNUM <= #v_PENDROW#) T2
 		WHERE 
@@ -1597,10 +1661,34 @@
 					A.TENANT_ID = M.TENANT_ID
 				AND
 					A.ITEMID = M.ITEMID
+					LEFT OUTER JOIN
+						(
+							SELECT
+								ROW_NUMBER() OVER(
+									PARTITION BY
+										PARENTITEMID
+									ORDER BY
+										VERSION DESC
+								) RN,
+								ITEMID,
+								TENANT_ID
+							FROM
+								TBL_BOARD_MODIFYHISTORY
+						) M1
+   				  ON
+					A.ITEMID = M1.ITEMID
+				  AND
+					A.TENANT_ID = M1.TENANT_ID
 				WHERE
 					A.TENANT_ID = #v_TENANTID#
 				AND 
-					BOARDID = #v_PBOARDID#
+					A.BOARDID = #v_PBOARDID#
+				<isEqual property = "useVersion" compareValue = "Y" prepend="AND">
+					M1.RN = 1
+				</isEqual>
+				<isNotEqual property = "useVersion" compareValue = "Y" prepend="AND">
+					(M1.ITEMID IS NULL OR M1.RN = 1)
+				</isNotEqual>
 				<isNotEmpty property="tempString" prepend="AND">
 					A.APPRFLAG = 'Y'
 				</isNotEmpty>
@@ -2273,6 +2361,8 @@
 					A.TENANT_ID = B.TENANT_ID
 				AND
 					A.BoardID = B.BoardID
+				AND
+					B.GUBUN != 9
 				LEFT OUTER JOIN 
 					(SELECT 
 						COUNT(USERID) AS TOTALCOUNT, 
@@ -2794,6 +2884,7 @@
 				* 
 			FROM
 				(SELECT
+					distinct A.ITEMID,
 					Row_Number() OVER (
 						ORDER BY
 						<isEqual property="iv_PORDERBYCOL1" compareValue="ITEMID"> A.ITEMID </isEqual>
@@ -2810,7 +2901,6 @@
 						<isEqual property="iv_PORDERBYCOL2" compareValue="UPPERITEMIDTREE">, TO_CHAR(A.UPPERITEMIDTREE) <isEqual property="iv_PORDERBYCOL2DESC" compareValue="Y">DESC</isEqual></isEqual>
 					) AS RNUM,
 					A.BOARDID,
-					A.ITEMID,
 					A.WRITERID,
 					A.WRITERNAME,
 					A.WRITERDEPTNAME,
@@ -2830,8 +2920,13 @@
 					AND
 						ITEMID = A.ItemID) ONELINECNT,
 					A.DOCNO,
-					A.MAINCONTENT,
-					B.FILEPATH,
+					TO_CHAR(A.MAINCONTENT) AS MAINCONTENT,
+					<isNotEmpty property="v_SEARCH_TITLE_AND_CONTENT">
+   						PART.FILEPATH,
+   					</isNotEmpty>
+					<isEmpty property="v_SEARCH_TITLE_AND_CONTENT">
+						B.FILEPATH,
+   					</isEmpty>
 					CASE WHEN D.TOTALCOUNT IS NULL THEN '0' ELSE '1' END READFLAG,
 					NVL(LIKECOUNT, 0) as LIKECOUNT,
 					NVL(DISLIKECOUNT, 0) as DISLIKECOUNT
@@ -2901,6 +2996,51 @@
 					A.TENANT_ID = M.TENANT_ID
 				AND
 					A.ITEMID = M.ITEMID
+                <isNotEmpty property="v_SEARCH_TITLE_AND_CONTENT">
+                    JOIN(
+						SELECT *
+						FROM (
+							SELECT
+								A.ITEMID,
+								A.TENANT_ID,
+								A.BOARDID,
+								MAIN_FLAG,
+								B.FILEPATH,
+								CONTENT,
+								FILECONTENT,
+								MAINCONTENT,
+								ROW_NUMBER() OVER ( PARTITION BY A.ITEMID
+							ORDER BY
+							CASE
+								WHEN B.MAIN_FLAG = 'Y' THEN 1
+								WHEN GUID IS NOT NULL THEN GUID + 1
+								ELSE 100
+							END ) AS SN
+							FROM
+								TBL_BOARD_ITEM_ATTACHMENTS BIT
+							RIGHT OUTER JOIN TBL_BOARD_ITEM A ON
+								BIT.ITEMID = A.ITEMID
+								AND BIT.TENANT_ID = A.TENANT_ID
+							LEFT OUTER JOIN TBL_PHOTO_IMAGEITEM B ON
+								A.TENANT_ID = B.TENANT_ID
+								AND A.ITEMID = B.ITEMID
+							WHERE (UPPER(TITLE) like UPPER('%' || #v_SEARCH_TITLE_AND_CONTENT# || '%')
+							OR
+							UPPER(CONTENT) like UPPER('%' || #v_SEARCH_TITLE_AND_CONTENT# || '%')
+							OR
+							UPPER(FILECONTENT) like UPPER('%' || #v_SEARCH_TITLE_AND_CONTENT# || '%')
+							OR
+							UPPER(A.MAINCONTENT) like UPPER('%' || #v_SEARCH_TITLE_AND_CONTENT# || '%'))
+							)A
+							WHERE SN = 1
+						) PART
+                    ON
+                    	PART.ITEMID = A.ITEMID
+                    AND
+                    	PART.TENANT_ID = A.TENANT_ID
+                    AND
+                    	B.MAIN_FLAG = PART.MAIN_FLAG
+                </isNotEmpty>
 				WHERE  
 					A.TENANT_ID = #v_TENANTID#
 				AND
@@ -2922,13 +3062,13 @@
 				AND A.APPRFLAG = 'Y'
 			</isEqual> 
 			<isNotEmpty property="v_SEARCH_TITLE">
-				AND TITLE like ('%' || #v_SEARCH_TITLE# || '%')
+				AND UPPER(TITLE) like UPPER('%' || #v_SEARCH_TITLE# || '%')
 			</isNotEmpty>
 			<isNotEmpty property="v_SEARCH_CONTENT">
-				AND CONTENT like ('%' || #v_SEARCH_CONTENT# || '%')
+				AND UPPER(CONTENT) like UPPER('%' || #v_SEARCH_CONTENT# || '%')
 			</isNotEmpty>
 			<isNotEmpty property="v_SEARCH_WRITERNAME">
-				AND (A.WRITERNAME like ('%' || #v_SEARCH_WRITERNAME# || '%') OR A.WRITERNAME2 like ('%' || #v_SEARCH_WRITERNAME# || '%'))
+				AND (UPPER(A.WRITERNAME) like UPPER('%' || #v_SEARCH_WRITERNAME# || '%') OR UPPER(A.WRITERNAME2) like UPPER('%' || #v_SEARCH_WRITERNAME# || '%'))
 			</isNotEmpty>
 			<isNotEmpty property="v_SEARCH_STARTDATE">
 				<![CDATA[AND A.WRITEDATE > #v_SEARCH_STARTDATE#]]>
@@ -2937,10 +3077,10 @@
 				<![CDATA[AND A.WRITEDATE < #v_SEARCH_ENDDATE#]]>
 			</isNotEmpty>
 			<isNotEmpty property="v_SEARCH_ABSTRACT">
-				AND ABSTRACT like ('%' || #v_SEARCH_ABSTRACT# || '%')
+				AND UPPER(ABSTRACT) like UPPER('%' || #v_SEARCH_ABSTRACT# || '%')
 			</isNotEmpty>
 			<isNotEmpty property="v_SEARCH_TOPWRITERID">
-				AND (TOPWRITERID = #v_SEARCH_TOPWRITERID#  OR EXTENSIONATTRIBUTE2 = '1')
+				AND (UPPER(TOPWRITERID) = UPPER(#v_SEARCH_TOPWRITERID#) OR EXTENSIONATTRIBUTE2 = '1')
 			</isNotEmpty>
 			<isEqual property="v_useKeywordFlag" compareValue="Y">
 				<isNotEmpty property="v_KEYWORD">
@@ -2958,7 +3098,7 @@
 								AND
 									BK.TENANT_ID = K.TENANT_ID
 								WHERE
-									K.KEYWORDNAME like CONCAT(CONCAT('%', #v_KEYWORD#), '%')
+									UPPER(K.KEYWORDNAME) like UPPER(CONCAT(CONCAT('%', #v_KEYWORD#), '%'))
 								AND
 									BK.BOARDID = #v_PBOARDID#
 								AND
@@ -3089,6 +3229,8 @@
 					A.TITLE,
 					A.READCOUNT,
 					A.ATTACHMENTS,
+					EXT,
+					FILEPATH,
 					A.ITEMLEVEL,
 					A.ABSTRACT,
 					CASE WHEN D.TOTALCOUNT IS NULL THEN '0' ELSE '1' END READFLAG,
@@ -3185,6 +3327,58 @@
 					A.TENANT_ID = I.TENANT_ID
 				AND
 					A.BOARDID = I.BOARDID 					
+                LEFT OUTER JOIN (
+                    SELECT
+					CASE
+						WHEN COUNT(FILEPATH) = 0 THEN 'NONE'
+						WHEN COUNT(FILEPATH) = 1 THEN MAX(TO_CHAR(FILENAME))
+						ELSE 'MANY'
+					END AS EXT,
+					CASE
+						WHEN COUNT(FILEPATH) = 0 THEN 'NONE'
+						WHEN COUNT(FILEPATH) = 1 THEN MAX(TO_CHAR(FILEPATH))
+						ELSE 'MANY'
+					END AS FILEPATH,
+					TENANT_ID,
+					itemid
+					FROM TBL_BOARD_ITEM_ATTACHMENTS
+					GROUP BY
+						ITEMID,
+						TENANT_ID ) F ON
+                    A.ITEMID = F.ITEMID
+                	AND A.TENANT_ID = F.TENANT_ID
+					LEFT OUTER JOIN
+						(
+							SELECT
+								ROW_NUMBER() OVER(
+									PARTITION BY
+										PARENTITEMID
+									ORDER BY
+										VERSION DESC
+								) RN,
+								ITEMID,
+								TENANT_ID
+							FROM
+							TBL_BOARD_MODIFYHISTORY
+						) M1
+					ON
+						A.ITEMID = M1.ITEMID
+					AND
+						A.TENANT_ID = M1.TENANT_ID
+				<isEqual property="boardType" compareValue="3">
+					LEFT OUTER JOIN (
+						SELECT	DISTINCT ITEMID,
+						BOARDID,
+						TO_CHAR(FILECONTENT) AS FC,
+						TENANT_ID
+						FROM TBL_PHOTO_IMAGEITEM ) PI
+					ON
+						PI.TENANT_ID = A.TENANT_ID
+					AND
+						PI.ITEMID = A.ITEMID
+					AND
+						PI.BOARDID = A.BOARDID
+				</isEqual>
 				WHERE 
 				<isEqual property="v_PSUBFLAG" compareValue="Y">
 					(A.BOARDID = #v_PBOARDID# OR A.BOARDID IN (SELECT BOARDID FROM TBL_BOARD_BOARDINFO WHERE TENANT_ID = #v_TENANTID# AND PARENTBOARDID = #v_PBOARDID#))
@@ -3207,14 +3401,20 @@
 					A.APPRFLAG IS NULL
 				 )
 				 ]]>
+			<isEqual property = "useVersion" compareValue = "Y" prepend="AND">
+				M1.RN = 1
+			</isEqual>
+			<isNotEqual property = "useVersion" compareValue = "Y" prepend="AND">
+				(M1.ITEMID IS NULL OR M1.RN = 1)
+			</isNotEqual>
 			<isNotEmpty property="v_SEARCH_TITLE">
-				AND TITLE like ('%' || #v_SEARCH_TITLE# || '%')
+				AND UPPER(TITLE) like UPPER('%' || #v_SEARCH_TITLE# || '%')
 			</isNotEmpty>
 			<isNotEmpty property="v_SEARCH_CONTENT">
-				AND CONTENT like ('%' || #v_SEARCH_CONTENT# || '%')
+				AND UPPER(CONTENT) like UPPER('%' || #v_SEARCH_CONTENT# || '%')
 			</isNotEmpty>
 			<isNotEmpty property="v_SEARCH_WRITERNAME">
-				AND (A.WRITERNAME like ('%' || #v_SEARCH_WRITERNAME# || '%') OR A.WRITERNAME2 like ('%' || #v_SEARCH_WRITERNAME# || '%'))
+				AND (UPPER(A.WRITERNAME) like UPPER('%' || #v_SEARCH_WRITERNAME# || '%') OR UPPER(A.WRITERNAME2) like UPPER('%' || #v_SEARCH_WRITERNAME# || '%'))
 			</isNotEmpty>
 			<isNotEmpty property="v_SEARCH_STARTDATE">
 				<![CDATA[AND A.WRITEDATE > #v_SEARCH_STARTDATE#]]>
@@ -3223,10 +3423,22 @@
 				<![CDATA[AND A.WRITEDATE < #v_SEARCH_ENDDATE#]]>
 			</isNotEmpty>
 			<isNotEmpty property="v_SEARCH_ABSTRACT">
-				AND ABSTRACT like ('%' || #v_SEARCH_ABSTRACT# || '%')
+				AND UPPER(ABSTRACT) like UPPER('%' || #v_SEARCH_ABSTRACT# || '%')
 			</isNotEmpty>
 			<isNotEmpty property="v_SEARCH_TOPWRITERID">
-				AND (TOPWRITERID = #v_SEARCH_TOPWRITERID# OR EXTENSIONATTRIBUTE2 = '1')
+				AND (UPPER(TOPWRITERID) = UPPER(#v_SEARCH_TOPWRITERID#) OR EXTENSIONATTRIBUTE2 = '1')
+			</isNotEmpty>
+			<isNotEmpty property="v_SEARCH_TITLE_AND_CONTENT">
+				AND (UPPER(TITLE) like UPPER('%' || #v_SEARCH_TITLE_AND_CONTENT# || '%')
+					OR
+					UPPER(CONTENT) like UPPER('%' || #v_SEARCH_TITLE_AND_CONTENT# || '%')
+				<isEqual property="boardType" compareValue="3">
+					OR
+					UPPER(FC) like UPPER('%' || #v_SEARCH_TITLE_AND_CONTENT# || '%')
+					OR
+					UPPER(A.MAINCONTENT) like UPPER('%' || #v_SEARCH_TITLE_AND_CONTENT# || '%')
+				</isEqual>
+				)
 			</isNotEmpty>
 			<isEqual property="v_useKeywordFlag" compareValue="Y">
 				<isNotEmpty property="v_KEYWORD">
@@ -3244,7 +3456,7 @@
 									AND
 										BK.TENANT_ID = K.TENANT_ID
 									WHERE
-										K.KEYWORDNAME like CONCAT(CONCAT('%', #v_KEYWORD#), '%')
+										UPPER(K.KEYWORDNAME) like UPPER(CONCAT(CONCAT('%', #v_KEYWORD#), '%'))
 									AND
 										BK.BOARDID = #v_PBOARDID#
 									AND
@@ -3312,6 +3524,8 @@
 					A.TITLE,
 					A.READCOUNT,
 					A.ATTACHMENTS,
+					EXT,
+					FILEPATH,
 					A.ITEMLEVEL,
 					A.ABSTRACT,
 					CASE WHEN D.TOTALCOUNT IS NULL THEN '0' ELSE '1' END READFLAG,
@@ -3363,6 +3577,26 @@
 					A.TENANT_ID = I.TENANT_ID
 				AND
 					A.BOARDID = I.BOARDID 					
+				LEFT OUTER JOIN (
+                    SELECT
+                        CASE
+                            WHEN COUNT(FILEPATH) = 0 THEN 'NONE'
+                            WHEN COUNT(FILEPATH) = 1 THEN MAX(TO_CHAR(FILENAME))
+                            ELSE 'MANY'
+                        END AS EXT,
+                        CASE
+                            WHEN COUNT(FILEPATH) = 0 THEN 'NONE'
+                            WHEN COUNT(FILEPATH) = 1 THEN MAX(TO_CHAR(FILEPATH))
+                            ELSE 'MANY'
+                        END AS FILEPATH,
+                        TENANT_ID,
+                        itemid
+                        FROM TBL_BOARD_ITEM_ATTACHMENTS
+                    GROUP BY
+                        ITEMID,
+                        TENANT_ID ) F ON
+                    A.ITEMID = F.ITEMID
+                    AND A.TENANT_ID = F.TENANT_ID
 				WHERE 
 					A.TENANT_ID = #v_TENANTID#
 				AND
@@ -3383,13 +3617,13 @@
 					)
 			]]>
 			<isNotEmpty property="v_SEARCH_TITLE">
-				AND TITLE like ('%' || #v_SEARCH_TITLE# || '%')
+				AND UPPER(TITLE) like UPPER('%' || #v_SEARCH_TITLE# || '%')
 			</isNotEmpty>
 			<isNotEmpty property="v_SEARCH_CONTENT">
-				AND CONTENT like ('%' || #v_SEARCH_CONTENT# || '%')
+				AND UPPER(CONTENT) like UPPER('%' || #v_SEARCH_CONTENT# || '%')
 			</isNotEmpty>
 			<isNotEmpty property="v_SEARCH_WRITERNAME">
-				AND (A.WRITERNAME like ('%' || #v_SEARCH_WRITERNAME# || '%') OR A.WRITERNAME2 like ('%' || #v_SEARCH_WRITERNAME# || '%'))
+				AND (UPPER(A.WRITERNAME) like UPPER('%' || #v_SEARCH_WRITERNAME# || '%') OR UPPER(A.WRITERNAME2) like UPPER('%' || #v_SEARCH_WRITERNAME# || '%'))
 			</isNotEmpty>
 			<isNotEmpty property="v_SEARCH_STARTDATE">
 				<![CDATA[AND A.WRITEDATE > #v_SEARCH_STARTDATE#]]>
@@ -3398,10 +3632,15 @@
 				<![CDATA[AND A.WRITEDATE < #v_SEARCH_ENDDATE#]]>
 			</isNotEmpty>
 			<isNotEmpty property="v_SEARCH_ABSTRACT">
-				AND ABSTRACT like ('%' || #v_SEARCH_ABSTRACT# || '%')
+				AND UPPER(ABSTRACT) like UPPER('%' || #v_SEARCH_ABSTRACT# || '%')
 			</isNotEmpty>
 			<isNotEmpty property="v_SEARCH_TOPWRITERID">
-				AND (TOPWRITERID = #v_SEARCH_TOPWRITERID# OR EXTENSIONATTRIBUTE2 = '1')
+				AND (UPPER(TOPWRITERID) = UPPER(#v_SEARCH_TOPWRITERID#) OR EXTENSIONATTRIBUTE2 = '1')
+			</isNotEmpty>
+			<isNotEmpty property="v_SEARCH_TITLE_AND_CONTENT">
+				AND (UPPER(TITLE) like UPPER('%' || #v_SEARCH_TITLE_AND_CONTENT# || '%')
+					OR
+				UPPER(CONTENT) like UPPER('%' || #v_SEARCH_TITLE_AND_CONTENT# || '%'))
 			</isNotEmpty>
 			<isNotEmpty property="v_KEYWORD">
 				<![CDATA[
@@ -3421,7 +3660,7 @@
 							AND
 								BK.TENANT_ID = K.TENANT_ID
 							WHERE
-								K.KEYWORDNAME like CONCAT(CONCAT('%', #v_KEYWORD#), '%')
+								UPPER(K.KEYWORDNAME) like UPPER(CONCAT(CONCAT('%', #v_KEYWORD#), '%'))
 							AND
 								BK.TENANT_ID = #v_TENANTID#
 						)
@@ -3481,6 +3720,8 @@
 					A.TITLE,
 					A.READCOUNT,
 					A.ATTACHMENTS,
+					EXT,
+					FILEPATH,
 					A.ITEMLEVEL,
 					A.ABSTRACT,
 					CASE WHEN D.TOTALCOUNT IS NULL THEN '0' ELSE '1' END READFLAG,
@@ -3532,6 +3773,26 @@
 					A.TENANT_ID = I.TENANT_ID
 				AND 
 					A.BOARDID = I.BOARDID 
+				LEFT OUTER JOIN (
+					SELECT
+						CASE
+							WHEN COUNT(FILEPATH) = 0 THEN 'NONE'
+							WHEN COUNT(FILEPATH) = 1 THEN MAX(TO_CHAR(FILENAME))
+							ELSE 'MANY'
+						END AS EXT,
+						CASE
+							WHEN COUNT(FILEPATH) = 0 THEN 'NONE'
+							WHEN COUNT(FILEPATH) = 1 THEN MAX(TO_CHAR(FILEPATH))
+							ELSE 'MANY'
+						END AS FILEPATH,
+						TENANT_ID,
+						itemid
+						FROM TBL_BOARD_ITEM_ATTACHMENTS
+					GROUP BY
+						ITEMID,
+						TENANT_ID ) F ON
+					A.ITEMID = F.ITEMID
+					AND A.TENANT_ID = F.TENANT_ID
 				WHERE
 					A.TENANT_ID = #v_TENANTID#
 				AND
@@ -3539,13 +3800,13 @@
 		 		AND 
 					A.WRITERID = #v_PUSERID# 
 			<isNotEmpty property="v_SEARCH_TITLE">
-				AND TITLE like ('%' || #v_SEARCH_TITLE# || '%')
+				AND UPPER(TITLE) like UPPER('%' || #v_SEARCH_TITLE# || '%')
 			</isNotEmpty>
 			<isNotEmpty property="v_SEARCH_CONTENT">
-				AND CONTENT like ('%' || #v_SEARCH_CONTENT# || '%')
+				AND UPPER(CONTENT) like UPPER('%' || #v_SEARCH_CONTENT# || '%')
 			</isNotEmpty>
 			<isNotEmpty property="v_SEARCH_WRITERNAME">
-				AND (A.WRITERNAME like ('%' || #v_SEARCH_WRITERNAME# || '%') OR A.WRITERNAME2 like ('%' || #v_SEARCH_WRITERNAME# || '%'))
+				AND (UPPER(A.WRITERNAME) like UPPER('%' || #v_SEARCH_WRITERNAME# || '%') OR UPPER(A.WRITERNAME2) like UPPER('%' || #v_SEARCH_WRITERNAME# || '%'))
 			</isNotEmpty>
 			<isNotEmpty property="v_SEARCH_STARTDATE">
 				<![CDATA[AND A.WRITEDATE > #v_SEARCH_STARTDATE#]]>
@@ -3554,10 +3815,15 @@
 				<![CDATA[AND A.WRITEDATE < #v_SEARCH_ENDDATE#]]>
 			</isNotEmpty>
 			<isNotEmpty property="v_SEARCH_ABSTRACT">
-				AND ABSTRACT like ('%' || #v_SEARCH_ABSTRACT# || '%')
+				AND UPPER(ABSTRACT) like UPPER('%' || #v_SEARCH_ABSTRACT# || '%')
 			</isNotEmpty>
 			<isNotEmpty property="v_SEARCH_TOPWRITERID">
-				AND (TOPWRITERID = #v_SEARCH_TOPWRITERID# OR EXTENSIONATTRIBUTE2 = '1')
+				AND (UPPER(TOPWRITERID) = UPPER(#v_SEARCH_TOPWRITERID#) OR EXTENSIONATTRIBUTE2 = '1')
+			</isNotEmpty>
+			<isNotEmpty property="v_SEARCH_TITLE_AND_CONTENT">
+				AND (UPPER(TITLE) like UPPER('%' || #v_SEARCH_TITLE_AND_CONTENT# || '%')
+					OR
+					UPPER(CONTENT) like UPPER('%' || #v_SEARCH_TITLE_AND_CONTENT# || '%'))
 			</isNotEmpty>
 			<isNotEmpty property="v_KEYWORD">
 				<![CDATA[
@@ -3577,7 +3843,7 @@
 							AND
 								BK.TENANT_ID = K.TENANT_ID
 							WHERE
-								K.KEYWORDNAME like CONCAT(CONCAT('%', #v_KEYWORD#), '%')
+								UPPER(K.KEYWORDNAME) like UPPER(CONCAT(CONCAT('%', #v_KEYWORD#), '%'))
 							AND
 								BK.TENANT_ID = #v_TENANTID#
 						)
@@ -3636,6 +3902,8 @@
 					A.TITLE,
 					A.READCOUNT,
 					A.ATTACHMENTS,
+					EXT,
+					FILEPATH,
 					A.ITEMLEVEL,
 					A.ABSTRACT,
 					CASE WHEN D.TOTALCOUNT IS NULL THEN '0' ELSE '1' END READFLAG,
@@ -3691,6 +3959,26 @@
 					TBL_BOARD_APPRLIST APPR
 				ON 
 					A.BOARDID = APPR.BOARDID
+				LEFT OUTER JOIN (
+					SELECT
+						CASE
+							WHEN COUNT(FILEPATH) = 0 THEN 'NONE'
+							WHEN COUNT(FILEPATH) = 1 THEN MAX(TO_CHAR(FILENAME))
+							ELSE 'MANY'
+						END AS EXT,
+						CASE
+							WHEN COUNT(FILEPATH) = 0 THEN 'NONE'
+							WHEN COUNT(FILEPATH) = 1 THEN MAX(TO_CHAR(FILEPATH))
+							ELSE 'MANY'
+						END AS FILEPATH,
+						TENANT_ID,
+						itemid
+						FROM TBL_BOARD_ITEM_ATTACHMENTS
+					GROUP BY
+						ITEMID,
+						TENANT_ID ) F ON
+					A.ITEMID = F.ITEMID
+					AND A.TENANT_ID = F.TENANT_ID
 				WHERE
 					A.TENANT_ID = #v_TENANTID#
 				AND
@@ -3706,13 +3994,13 @@
 					APPR.APPRUSERID = #v_PUSERID#
 			]]>
 			<isNotEmpty property="v_SEARCH_TITLE">
-				AND TITLE like ('%' || #v_SEARCH_TITLE# || '%')
+				AND UPPER(TITLE) like UPPER('%' || #v_SEARCH_TITLE# || '%')
 			</isNotEmpty>
 			<isNotEmpty property="v_SEARCH_CONTENT">
-				AND CONTENT like ('%' || #v_SEARCH_CONTENT# || '%')
+				AND UPPER(CONTENT) like UPPER('%' || #v_SEARCH_CONTENT# || '%')
 			</isNotEmpty>
 			<isNotEmpty property="v_SEARCH_WRITERNAME">
-				AND (A.WRITERNAME like ('%' || #v_SEARCH_WRITERNAME# || '%') OR A.WRITERNAME2 like ('%' || #v_SEARCH_WRITERNAME# || '%'))
+				AND (UPPER(A.WRITERNAME) like UPPER('%' || #v_SEARCH_WRITERNAME# || '%') OR UPPER(A.WRITERNAME2) like UPPER('%' || #v_SEARCH_WRITERNAME# || '%'))
 			</isNotEmpty>
 			<isNotEmpty property="v_SEARCH_STARTDATE">
 				<![CDATA[AND A.WRITEDATE > #v_SEARCH_STARTDATE#]]>
@@ -3721,10 +4009,15 @@
 				<![CDATA[AND A.WRITEDATE < #v_SEARCH_ENDDATE#]]>
 			</isNotEmpty>
 			<isNotEmpty property="v_SEARCH_ABSTRACT">
-				AND ABSTRACT like ('%' || #v_SEARCH_ABSTRACT# || '%')
+				AND UPPER(ABSTRACT) like UPPER('%' || #v_SEARCH_ABSTRACT# || '%')
 			</isNotEmpty>
 			<isNotEmpty property="v_SEARCH_TOPWRITERID">
-				AND (TOPWRITERID = #v_SEARCH_TOPWRITERID# OR EXTENSIONATTRIBUTE2 = '1')
+				AND (UPPER(TOPWRITERID) = UPPER(#v_SEARCH_TOPWRITERID#) OR EXTENSIONATTRIBUTE2 = '1')
+			</isNotEmpty>
+			<isNotEmpty property="v_SEARCH_TITLE_AND_CONTENT">
+				AND (UPPER(TITLE) like UPPER('%' || #v_SEARCH_TITLE_AND_CONTENT# || '%')
+					OR
+					UPPER(CONTENT) like UPPER('%' || #v_SEARCH_TITLE_AND_CONTENT# || '%'))
 			</isNotEmpty>
 			<isNotEmpty property="v_KEYWORD">
 				<![CDATA[
@@ -3744,7 +4037,7 @@
 							AND
 								BK.TENANT_ID = K.TENANT_ID
 							WHERE
-								K.KEYWORDNAME like CONCAT(CONCAT('%', #v_KEYWORD#), '%')
+								UPPER(K.KEYWORDNAME) like UPPER(CONCAT(CONCAT('%', #v_KEYWORD#), '%'))
 							AND
 								BK.TENANT_ID = #v_TENANTID#
 						)
@@ -4173,18 +4466,28 @@
 	</select>
 	
 	<select id="EzBoardDAO.brdCheckIfHasReply" parameterClass="Map" resultClass="Integer">
+		SELECT
+			COUNT(ItemID)
+		FROM
+			TBL_Board_Item
+		WHERE
+			tenant_id = #v_TENANTID#
+		AND
+			(APPRFLAG IS NULL OR APPRFLAG = 'Y')
+		<isEmpty property="parentItemId" prepend="AND">
 		<![CDATA[
-			SELECT 
-				COUNT(ITEMID)
-        	FROM 
-        		TBL_Board_Item 
-       		WHERE  
-       			tenant_id = #v_TENANTID#
-       		AND
-       			TO_CHAR(UpperItemIDTree) LIKE '%' || #v_pItemID# || '%'
-            AND 
-            	ItemID <> #v_pItemID#
+			UpperItemIDTree LIKE CONCAT('%', #v_pItemID#, '%')
+		AND
+			ItemID <> #v_pItemID#
 		]]>
+		</isEmpty>
+		<isNotEmpty property="parentItemId" prepend="AND">
+		<![CDATA[
+			UpperItemIDTree LIKE CONCAT('%', #parentItemId#, '%')
+		AND
+		    ITEMLEVEL > (SELECT ITEMLEVEL FROM TBL_Board_Item WHERE ITEMID = #v_pItemID# AND TENANT_ID = #v_TENANTID#)
+	    ]]>
+		</isNotEmpty>
 	</select>
 	
 	<select id="EzBoardDAO.getBrdTotalItemCount" parameterClass="BoardMyFavoriteVO" resultClass="Integer">
@@ -4263,24 +4566,63 @@
                 	ENDDATE < #nowDate#
 			]]>
 		</isEqual>
+		<!-- 전체 카운트 (시스템 상 잔여 데이터가 있는지 확인) -->
+		<isEqual property="type" compareValue="4">
+			<![CDATA[
+				SELECT 
+					COUNT(A.ITEMID)  TOTALCOUNT
+              	FROM 
+              		TBL_Board_Item A
+             	WHERE  
+             		A.TENANT_ID = #tenantID#
+             	AND
+             		A.BOARDID = #boardId#
+                AND 
+                	APPRFLAG = 'Y'
+			]]>
+		</isEqual>
 	</select>
 	
 	<select id="EzBoardDAO.getBrdTotalItemCount2" parameterClass="BoardMyFavoriteVO" resultClass="Integer">
 		<isEqual property="type" compareValue="1">
+			SELECT
+				COUNT(A.ITEMID)  TOTALCOUNT
+			FROM
+				TBL_Board_Item A
+			LEFT OUTER JOIN
+				(
+					SELECT
+						ROW_NUMBER() OVER(
+							PARTITION BY
+								PARENTITEMID
+							ORDER BY
+								VERSION DESC
+						) RN,
+						ITEMID,
+						TENANT_ID
+					FROM
+						TBL_BOARD_MODIFYHISTORY
+				) M1
+			ON
+				A.ITEMID = M1.ITEMID
+			AND
+				A.TENANT_ID = M1.TENANT_ID
+			WHERE
+				A.TENANT_ID = #tenantID#
+			AND
+				BOARDID = #boardId#
+			AND
 			<![CDATA[
-				SELECT 
-					COUNT(ITEMID)  TOTALCOUNT
-              	FROM 
-              		TBL_Board_Item 
-             	WHERE  
-             		TENANT_ID = #tenantID#
-             	AND
-             		BOARDID = #boardId#
-                AND 
-                	STARTDATE < #nowDate#
-                AND 
-                	ENDDATE > #nowDate#
+				STARTDATE < #nowDate#
+			AND
+				ENDDATE > #nowDate#
 			]]>
+			<isEqual property = "useVersion" compareValue = "Y" prepend="AND">
+				M1.RN = 1
+			</isEqual>
+			<isNotEqual property = "useVersion" compareValue = "Y" prepend="AND">
+				(M1.ITEMID IS NULL OR M1.RN = 1)
+			</isNotEqual>
 		</isEqual>
 		<isEqual property="type" compareValue="2">
 			<![CDATA[
@@ -4308,6 +4650,26 @@
                 	A.TENANT_ID = D.TENANT_ID
                 AND
                 	A.ItemID = D.ITEMID
+                ]]>
+				LEFT OUTER JOIN
+					(
+						SELECT
+							ROW_NUMBER() OVER(
+								PARTITION BY
+									PARENTITEMID
+								ORDER BY
+									VERSION DESC
+							) RN,
+							ITEMID,
+							TENANT_ID
+						FROM
+							TBL_BOARD_MODIFYHISTORY
+					) M1
+				ON
+					A.ITEMID = M1.ITEMID
+				AND
+					A.TENANT_ID = M1.TENANT_ID
+			<![CDATA[
                 WHERE  
                 	A.TENANT_ID = #tenantID#
                 AND
@@ -4319,21 +4681,66 @@
                 AND 
                 	D.TOTALCOUNT IS NULL
 			]]>
+			<isEqual property = "useVersion" compareValue = "Y" prepend="AND">
+				M1.RN = 1
+			</isEqual>
+			<isNotEqual property = "useVersion" compareValue = "Y" prepend="AND">
+				(M1.ITEMID IS NULL OR M1.RN = 1)
+			</isNotEqual>
 		</isEqual>
 		<isEqual property="type" compareValue="3">
 			<![CDATA[
 				SELECT 
-					COUNT(ITEMID)  TOTALCOUNT
+					COUNT(A.ITEMID)  TOTALCOUNT
                 FROM 
-                	TBL_Board_Item 
+                	TBL_Board_Item A
+                ]]>
+				LEFT OUTER JOIN
+					(
+						SELECT
+							ROW_NUMBER() OVER(
+								PARTITION BY
+									PARENTITEMID
+								ORDER BY
+									VERSION DESC
+							) RN,
+							ITEMID,
+							TENANT_ID
+						FROM
+							TBL_BOARD_MODIFYHISTORY
+					) M1
+				ON
+					A.ITEMID = M1.ITEMID
+				AND
+					A.TENANT_ID = M1.TENANT_ID
+				<![CDATA[
                 WHERE
-                	TENANT_ID = #tenantID#
+                	A.TENANT_ID = #tenantID#
                 AND  
-                	BOARDID = #boardId#
+                	A.BOARDID = #boardId#
                 AND 
                 	STARTDATE < #nowDate#
                 AND 
                 	ENDDATE < #nowDate#
+			]]>
+			<isEqual property = "useVersion" compareValue = "Y" prepend="AND">
+				M1.RN = 1
+			</isEqual>
+			<isNotEqual property = "useVersion" compareValue = "Y" prepend="AND">
+				(M1.ITEMID IS NULL OR M1.RN = 1)
+			</isNotEqual>
+		</isEqual>
+		<!-- 전체 카운트 (시스템 상 잔여 데이터가 있는지 확인) -->
+		<isEqual property="type" compareValue="4">
+			<![CDATA[
+				SELECT 
+					COUNT(A.ITEMID)  TOTALCOUNT
+              	FROM 
+              		TBL_Board_Item A
+             	WHERE  
+             		A.TENANT_ID = #tenantID#
+             	AND
+             		A.BOARDID = #boardId#
 			]]>
 		</isEqual>
 	</select>
@@ -4366,6 +4773,8 @@
 				StartDate < #nowDate# 
 			AND 
 				EndDate > #nowDate#
+			AND
+			    B.GUBUN != 9
 		]]>
 	</select>
 	<select id="EzBoardDAO.getMyBoardTotalItemCountTemp" parameterClass="Map" resultClass="Integer">
@@ -4627,9 +5036,80 @@
 	
 	<select id="EzBoardDAO.getSearchBoardItemCount" parameterClass="Map" resultClass="Integer">
 		SELECT
-			COUNT(ITEMID)
+			COUNT(A.ITEMID)
 		FROM
 			TBL_BOARD_ITEM A
+		<isNotEqual property="boardType" compareValue="0">
+			<isNotEqual property="boardType" compareValue="2">
+				<isNotEqual property="boardType" compareValue="5">
+					<isNotEqual property="boardType" compareValue="8">
+						<isNotEqual property="boardType" compareValue="10">
+							<isNotEmpty property="v_SEARCH_TITLE_AND_CONTENT">
+								JOIN(
+									SELECT *
+									FROM (
+									SELECT
+											A.ITEMID,
+											A.TENANT_ID,
+											A.BOARDID,
+											MAIN_FLAG,
+											B.FILEPATH,
+											CONTENT,
+											FILECONTENT,
+											MAINCONTENT,
+											ROW_NUMBER() OVER ( PARTITION BY A.ITEMID
+										ORDER BY
+											CASE
+												WHEN B.MAIN_FLAG = 'Y' THEN 1
+												WHEN GUID IS NOT NULL THEN GUID + 1
+												ELSE 100
+											END ) AS SN
+										FROM
+											TBL_BOARD_ITEM_ATTACHMENTS BIT
+										RIGHT OUTER JOIN TBL_BOARD_ITEM A ON
+											BIT.ITEMID = A.ITEMID
+											AND BIT.TENANT_ID = A.TENANT_ID
+										LEFT OUTER JOIN TBL_PHOTO_IMAGEITEM B ON
+											A.TENANT_ID = B.TENANT_ID
+											AND A.ITEMID = B.ITEMID
+										WHERE (UPPER(TITLE) like UPPER('%' || #v_SEARCH_TITLE_AND_CONTENT# || '%')
+										OR
+											UPPER(CONTENT) like UPPER('%' || #v_SEARCH_TITLE_AND_CONTENT# || '%')
+										OR
+											UPPER(FILECONTENT) like UPPER('%' || #v_SEARCH_TITLE_AND_CONTENT# || '%')
+										OR
+											UPPER(A.MAINCONTENT) like UPPER('%' || #v_SEARCH_TITLE_AND_CONTENT# || '%'))
+									)A
+									WHERE SN = 1
+								) PART
+								ON
+									PART.ITEMID = A.ITEMID
+								AND
+									PART.TENANT_ID = A.TENANT_ID
+							</isNotEmpty>
+						</isNotEqual>
+					</isNotEqual>
+				</isNotEqual>
+			</isNotEqual>
+		</isNotEqual>
+		LEFT OUTER JOIN
+				(
+					SELECT
+						ROW_NUMBER() OVER(
+							PARTITION BY
+								PARENTITEMID
+							ORDER BY
+								VERSION DESC
+						) RN,
+						ITEMID,
+						TENANT_ID
+					FROM
+					TBL_BOARD_MODIFYHISTORY
+				) M1
+			ON
+				A.ITEMID = M1.ITEMID
+			AND
+				A.TENANT_ID = M1.TENANT_ID
 		WHERE
 		<isEqual property="v_PSUBFLAG" compareValue="Y">
 			(A.BOARDID = #v_PBOARDID# OR A.BOARDID IN (SELECT BOARDID FROM TBL_BOARD_BOARDINFO WHERE TENANT_ID = #v_TENANTID# AND PARENTBOARDID = #v_PBOARDID#))
@@ -4652,14 +5132,20 @@
    			AND
    				ENDDATE > #nowDate#
 		]]>
+		<isEqual property = "useVersion" compareValue = "Y" prepend="AND">
+			M1.RN = 1
+		</isEqual>
+		<isNotEqual property = "useVersion" compareValue = "Y" prepend="AND">
+			(M1.ITEMID IS NULL OR M1.RN = 1)
+		</isNotEqual>
 		<isNotEmpty property="v_SEARCH_TITLE">
-			AND TITLE like '%' || #v_SEARCH_TITLE# || '%'
+			AND UPPER(TITLE) like UPPER('%' || #v_SEARCH_TITLE# || '%')
 		</isNotEmpty>
 		<isNotEmpty property="v_SEARCH_CONTENT">
-			AND CONTENT like '%' || #v_SEARCH_CONTENT# || '%'
+			AND UPPER(CONTENT) like UPPER('%' || #v_SEARCH_CONTENT# || '%')
 		</isNotEmpty>
 		<isNotEmpty property="v_SEARCH_WRITERNAME">
-			AND (A.WRITERNAME like '%' || #v_SEARCH_WRITERNAME# || '%' OR A.WRITERNAME2 like '%' || #v_SEARCH_WRITERNAME# || '%')
+			AND (UPPER(A.WRITERNAME) like UPPER('%' || #v_SEARCH_WRITERNAME# || '%') OR UPPER(A.WRITERNAME2) like UPPER('%' || #v_SEARCH_WRITERNAME# || '%'))
 		</isNotEmpty>
 		<isNotEmpty property="v_SEARCH_STARTDATE">
 			<![CDATA[AND A.WRITEDATE > #v_SEARCH_STARTDATE#]]>
@@ -4668,11 +5154,22 @@
 			<![CDATA[AND A.WRITEDATE < #v_SEARCH_ENDDATE#]]>
 		</isNotEmpty>
 		<isNotEmpty property="v_SEARCH_ABSTRACT">
-			AND ABSTRACT like '%' || #v_SEARCH_ABSTRACT# || '%'
+			AND UPPER(ABSTRACT) like UPPER('%' || #v_SEARCH_ABSTRACT# || '%')
 		</isNotEmpty>
 		<isNotEmpty property="v_SEARCH_TOPWRITERID">
-			AND (TOPWRITERID = #v_SEARCH_TOPWRITERID# OR EXTENSIONATTRIBUTE2 = '1')
+			AND (UPPER(TOPWRITERID) = UPPER(#v_SEARCH_TOPWRITERID#) OR EXTENSIONATTRIBUTE2 = '1')
 		</isNotEmpty>
+        <isNotEqual property="boardType" compareValue="3">
+            <isNotEqual property="boardType" compareValue="4">
+                <isNotEqual property="boardType" compareValue="7">
+                    <isNotEmpty property="v_SEARCH_TITLE_AND_CONTENT">
+                        AND (UPPER(TITLE) like UPPER('%' || #v_SEARCH_TITLE_AND_CONTENT# || '%')
+                        OR
+                        UPPER(CONTENT) like UPPER('%' || #v_SEARCH_TITLE_AND_CONTENT# || '%'))
+                    </isNotEmpty>
+                </isNotEqual>
+            </isNotEqual>
+        </isNotEqual>
 		<isEqual property="v_useKeywordFlag" compareValue="Y">
 			<isNotEmpty property="v_KEYWORD">
 				<![CDATA[
@@ -4689,7 +5186,7 @@
 					AND
 						BK.TENANT_ID = K.TENANT_ID
 					WHERE
-						K.KEYWORDNAME like CONCAT(CONCAT('%', #v_KEYWORD#), '%')
+						UPPER(K.KEYWORDNAME) like UPPER(CONCAT(CONCAT('%', #v_KEYWORD#), '%'))
 					AND
 						BK.BOARDID = #v_pBoardID#
 					AND
@@ -4762,13 +5259,13 @@
    				ENDDATE > #nowDate# 
    		]]>
 		<isNotEmpty property="v_SEARCH_TITLE">
-			AND TITLE like '%' || #v_SEARCH_TITLE# || '%'
+			AND UPPER(TITLE) like UPPER('%' || #v_SEARCH_TITLE# || '%')
 		</isNotEmpty>
 		<isNotEmpty property="v_SEARCH_CONTENT">
-			AND CONTENT like '%' || #v_SEARCH_CONTENT# || '%'
+			AND UPPER(CONTENT) like UPPER('%' || #v_SEARCH_CONTENT# || '%')
 		</isNotEmpty>
 		<isNotEmpty property="v_SEARCH_WRITERNAME">
-			AND (A.WRITERNAME like '%' || #v_SEARCH_WRITERNAME# || '%' OR A.WRITERNAME2 like '%' || #v_SEARCH_WRITERNAME# || '%')
+			AND (UPPER(A.WRITERNAME) like UPPER('%' || #v_SEARCH_WRITERNAME# || '%') OR UPPER(A.WRITERNAME2) like UPPER('%' || #v_SEARCH_WRITERNAME# || '%'))
 		</isNotEmpty>
 		<isNotEmpty property="v_SEARCH_STARTDATE">
 			<![CDATA[AND A.WRITEDATE > #v_SEARCH_STARTDATE#]]>
@@ -4777,11 +5274,16 @@
 			<![CDATA[AND A.WRITEDATE < #v_SEARCH_ENDDATE#]]>
 		</isNotEmpty>
 		<isNotEmpty property="v_SEARCH_ABSTRACT">
-			AND ABSTRACT like '%' || #v_SEARCH_ABSTRACT# || '%'
+			AND UPPER(ABSTRACT) like UPPER('%' || #v_SEARCH_ABSTRACT# || '%')
 		</isNotEmpty>
 		<isNotEmpty property="v_SEARCH_TOPWRITERID">
-			AND (TOPWRITERID = #v_SEARCH_TOPWRITERID# OR EXTENSIONATTRIBUTE2 = '1')
+			AND (UPPER(TOPWRITERID) = UPPER(#v_SEARCH_TOPWRITERID#) OR EXTENSIONATTRIBUTE2 = '1')
 		</isNotEmpty>
+        <isNotEmpty property="v_SEARCH_TITLE_AND_CONTENT">
+            AND (UPPER(TITLE) like UPPER('%' || #v_SEARCH_TITLE_AND_CONTENT# || '%')
+            OR
+            UPPER(CONTENT) like UPPER('%' || #v_SEARCH_TITLE_AND_CONTENT# || '%'))
+        </isNotEmpty>
 		<isNotEmpty property="v_KEYWORD">
 			<![CDATA[
 			AND (
@@ -4799,7 +5301,7 @@
 					AND
 						BK.TENANT_ID = K.TENANT_ID
 					WHERE
-						K.KEYWORDNAME like CONCAT(CONCAT('%', #v_KEYWORD#), '%')
+						UPPER(K.KEYWORDNAME) like UPPER(CONCAT(CONCAT('%', #v_KEYWORD#), '%'))
 					AND
 						BK.TENANT_ID = #v_TENANTID#
 				)
@@ -4826,13 +5328,13 @@
    			AND
    				WRITERID = #v_PUSERID#
 		<isNotEmpty property="v_SEARCH_TITLE">
-			AND TITLE like '%' || #v_SEARCH_TITLE# || '%'
+			AND UPPER(TITLE) like UPPER('%' || #v_SEARCH_TITLE# || '%')
 		</isNotEmpty>
 		<isNotEmpty property="v_SEARCH_CONTENT">
-			AND CONTENT like '%' || #v_SEARCH_CONTENT# || '%'
+			AND UPPER(CONTENT) like UPPER('%' || #v_SEARCH_CONTENT# || '%')
 		</isNotEmpty>
 		<isNotEmpty property="v_SEARCH_WRITERNAME">
-			AND (A.WRITERNAME like '%' || #v_SEARCH_WRITERNAME# || '%' OR A.WRITERNAME2 like '%' || #v_SEARCH_WRITERNAME# || '%')
+			AND (UPPER(A.WRITERNAME) like UPPER('%' || #v_SEARCH_WRITERNAME# || '%') OR UPPER(A.WRITERNAME2) like UPPER('%' || #v_SEARCH_WRITERNAME# || '%'))
 		</isNotEmpty>
 		<isNotEmpty property="v_SEARCH_STARTDATE">
 			<![CDATA[AND A.WRITEDATE > #v_SEARCH_STARTDATE#]]>
@@ -4841,11 +5343,16 @@
 			<![CDATA[AND A.WRITEDATE < #v_SEARCH_ENDDATE#]]>
 		</isNotEmpty>
 		<isNotEmpty property="v_SEARCH_ABSTRACT">
-			AND ABSTRACT like '%' || #v_SEARCH_ABSTRACT# || '%'
+			AND UPPER(ABSTRACT) like UPPER('%' || #v_SEARCH_ABSTRACT# || '%')
 		</isNotEmpty>
 		<isNotEmpty property="v_SEARCH_TOPWRITERID">
-			AND (TOPWRITERID = #v_SEARCH_TOPWRITERID# OR EXTENSIONATTRIBUTE2 = '1')
+			AND (UPPER(TOPWRITERID) = UPPER(#v_SEARCH_TOPWRITERID#) OR EXTENSIONATTRIBUTE2 = '1')
 		</isNotEmpty>
+        <isNotEmpty property="v_SEARCH_TITLE_AND_CONTENT">
+            AND (UPPER(TITLE) like UPPER('%' || #v_SEARCH_TITLE_AND_CONTENT# || '%')
+            OR
+			UPPER(CONTENT) like UPPER('%' || #v_SEARCH_TITLE_AND_CONTENT# || '%'))
+        </isNotEmpty>
 		<isNotEmpty property="v_KEYWORD">
 			<![CDATA[
 			AND (
@@ -4863,7 +5370,7 @@
 					AND
 						BK.TENANT_ID = K.TENANT_ID
 					WHERE
-						K.KEYWORDNAME like CONCAT(CONCAT('%', #v_KEYWORD#), '%')
+						UPPER(K.KEYWORDNAME) like UPPER(CONCAT(CONCAT('%', #v_KEYWORD#), '%'))
 					AND
 						BK.TENANT_ID = #v_TENANTID#
 				)
@@ -5040,7 +5547,8 @@
 			 	PREVIEWWCONTENT ,
 			 	PREVIEWHLIST ,
               	PREVIEWHCONTENT,
-				ALLNEWBOARDLISTDATE
+				ALLNEWBOARDLISTDATE,
+				CONTENTSIZE
         	FROM 
         	    TBL_BOARD_CONFIGURATION 
        		WHERE  
@@ -5627,13 +6135,13 @@
    				A.enddate > #nowDate#
    		]]>
 		<isNotEmpty property="v_SEARCH_TITLE">
-			AND TITLE like '%' || #v_SEARCH_TITLE# || '%'
+			AND UPPER(TITLE) like UPPER('%' || #v_SEARCH_TITLE# || '%')
 		</isNotEmpty>
 		<isNotEmpty property="v_SEARCH_CONTENT">
-			AND CONTENT like '%' || #v_SEARCH_CONTENT# || '%'
+			AND UPPER(CONTENT) like UPPER('%' || #v_SEARCH_CONTENT# || '%')
 		</isNotEmpty>
 		<isNotEmpty property="v_SEARCH_WRITERNAME">
-			AND (A.WRITERNAME like '%' || #v_SEARCH_WRITERNAME# || '%' OR A.WRITERNAME2 like '%' || #v_SEARCH_WRITERNAME# || '%')
+			AND (UPPER(A.WRITERNAME) like UPPER('%' || #v_SEARCH_WRITERNAME# || '%') OR UPPER(A.WRITERNAME2) like UPPER('%' || #v_SEARCH_WRITERNAME# || '%'))
 		</isNotEmpty>
 		<isNotEmpty property="v_SEARCH_STARTDATE">
 			<![CDATA[AND A.WRITEDATE > #v_SEARCH_STARTDATE#]]>
@@ -5642,11 +6150,16 @@
 			<![CDATA[AND A.WRITEDATE < #v_SEARCH_ENDDATE#]]>
 		</isNotEmpty>
 		<isNotEmpty property="v_SEARCH_ABSTRACT">
-			AND ABSTRACT like '%' || #v_SEARCH_ABSTRACT# || '%'
+			AND UPPER(ABSTRACT) like UPPER('%' || #v_SEARCH_ABSTRACT# || '%')
 		</isNotEmpty>
 		<isNotEmpty property="v_SEARCH_TOPWRITERID">
-			AND (TOPWRITERID = #v_SEARCH_TOPWRITERID# OR EXTENSIONATTRIBUTE2 = '1')
+			AND (UPPER(TOPWRITERID) = UPPER(#v_SEARCH_TOPWRITERID#) OR EXTENSIONATTRIBUTE2 = '1')
 		</isNotEmpty>
+        <isNotEmpty property="v_SEARCH_TITLE_AND_CONTENT">
+            AND (UPPER(TITLE) like UPPER('%' || #v_SEARCH_TITLE_AND_CONTENT# || '%')
+            OR
+            UPPER(CONTENT) like UPPER('%' || #v_SEARCH_TITLE_AND_CONTENT# || '%'))
+        </isNotEmpty>
 		<isNotEmpty property="v_KEYWORD">
 			<![CDATA[
 					AND
@@ -5665,7 +6178,7 @@
 							AND
 								BK.TENANT_ID = K.TENANT_ID
 							WHERE
-								K.KEYWORDNAME like CONCAT(CONCAT('%', #v_KEYWORD#), '%')
+								UPPER(K.KEYWORDNAME) like UPPER(CONCAT(CONCAT('%', #v_KEYWORD#), '%'))
 							AND
 								BK.TENANT_ID = #v_TENANTID#
 						)
@@ -5865,7 +6378,28 @@
 				ItemID, BoardID, WriterID, WriterName, WriterName2, WriterDeptID, WriterDeptName, WriterDeptName2, WriterCompanyID, WriterCompanyName, WriterCompanyName2, WriteDate, ParentWriteDate, Importance, Title, ContentLocation, ReadCount, StartDate, EndDate, Abstract, Attachments, UpperItemIDTree, ItemLevel, copieditem, ExtensionAttribute1, ExtensionAttribute2, ExtensionAttribute3, ExtensionAttribute32, ExtensionAttribute4, ExtensionAttribute5, DocNo, DocPassWord, TopWriterID, extensionAttribute6, extensionAttribute7, extensionAttribute8, extensionAttribute9, extensionAttribute10, tenant_id, content, ntstartdate, ntenddate, PUBLICFLAG, writerNameType
 			)
 	        VALUES ( 
-	        	#itemID#, #boardID#, #writerID#, #writerName#, #writerName2#, #writerDeptID#, #writerDeptName#, #writerDeptName2#, #writerCompanyID#, #writerCompanyName#, #writerCompanyName2#, #writeDate#, ( SELECT CASE WHEN MAX(DOCNO) IS NULL THEN 1 ELSE MAX(DOCNO) + 1 END FROM TBL_Board_Item A WHERE TENANT_ID = #tenantID# AND BOARDID = #boardID# ), #importance#, #title#, #contentLocation#, #readCount#, #startDate#, #endDate#, #ABSTRACT#, #hasAttach#, #upperItemIDTree#, #itemLevel#, 0, #extensionAttribute1#, #extensionAttribute2#, #extensionAttribute3#, #extensionAttribute32#, #extensionAttribute4#, #extensionAttribute5#, ( SELECT CASE WHEN MAX(DOCNO) IS NULL THEN 1 ELSE MAX(DOCNO) + 1 END FROM TBL_Board_Item A WHERE TENANT_ID = #tenantID# AND BOARDID = #boardID# ), #docPassword#, #topWriterID#, #extensionAttribute6#, #extensionAttribute7#, #extensionAttribute8#, #extensionAttribute9#, #extensionAttribute10#, #tenantID#, #content#, #notiStart#, #notiEnd#, #publicFlag#, #writerNameType#
+	        	#itemID#, #boardID#, #writerID#, #writerName#, #writerName2#, #writerDeptID#, #writerDeptName#, #writerDeptName2#, #writerCompanyID#, #writerCompanyName#, #writerCompanyName2#, #writeDate#, ( SELECT CASE WHEN MAX(DOCNO) IS NULL THEN 1 ELSE MAX(DOCNO) + 1 END FROM TBL_Board_Item A WHERE TENANT_ID = #tenantID# AND BOARDID = #boardID# ), #importance#, #title#, #contentLocation#, #readCount#, #startDate#, #endDate#, #ABSTRACT#, #hasAttach#, #upperItemIDTree#, #itemLevel#, 0, #extensionAttribute1#, #extensionAttribute2#, #extensionAttribute3#, #extensionAttribute32#, #extensionAttribute4#, #extensionAttribute5#,
+				<isNotEmpty property = "versionManage">
+	                <isEqual property = "version" compareValue = "0.0">
+						( SELECT CASE WHEN MAX(DOCNO) IS NULL THEN 1 ELSE MAX(DOCNO) + 1 END FROM TBL_Board_Item A WHERE TENANT_ID = #tenantID# AND BOARDID = #boardID# ),
+					</isEqual>
+	                <isNotEqual property = "version" compareValue = "0.0">
+	                (
+						SELECT
+							DOCNO
+						FROM
+							TBL_BOARD_ITEM
+						WHERE
+							ITEMID = #itemID#
+						AND
+							TENANT_ID = #tenantID#
+					),
+					</isNotEqual>
+				</isNotEmpty>
+				<isEmpty property = "versionManage">
+				( SELECT CASE WHEN MAX(DOCNO) IS NULL THEN 1 ELSE MAX(DOCNO) + 1 END FROM TBL_Board_Item A WHERE TENANT_ID = #tenantID# AND BOARDID = #boardID# ),
+				</isEmpty>
+				#docPassword#, #topWriterID#, #extensionAttribute6#, #extensionAttribute7#, #extensionAttribute8#, #extensionAttribute9#, #extensionAttribute10#, #tenantID#, #content#, #notiStart#, #notiEnd#, #publicFlag#, #writerNameType#
 	        )
 		</isEqual>
 		<isNotEqual property="parentWriteDate" compareValue="docNO">
@@ -5873,7 +6407,28 @@
 				ItemID, BoardID, WriterID, WriterName, WriterName2, WriterDeptID, WriterDeptName, WriterDeptName2, WriterCompanyID, WriterCompanyName, WriterCompanyName2, WriteDate, ParentWriteDate, Importance, Title, ContentLocation, ReadCount, StartDate, EndDate, Abstract, Attachments, UpperItemIDTree, ItemLevel, copieditem, ExtensionAttribute1, ExtensionAttribute2, ExtensionAttribute3, ExtensionAttribute32, ExtensionAttribute4, ExtensionAttribute5, DocNo, DocPassWord, TopWriterID, extensionAttribute6, extensionAttribute7, extensionAttribute8, extensionAttribute9, extensionAttribute10, tenant_id, content, ntstartdate, ntenddate, PUBLICFLAG, writerNameType
 			)
 	        VALUES ( 
-	        	#itemID#, #boardID#, #writerID#, #writerName#, #writerName2#, #writerDeptID#, #writerDeptName#, #writerDeptName2#, #writerCompanyID#, #writerCompanyName#, #writerCompanyName2#, #writeDate#, #parentWriteDate#, #importance#, #title#, #contentLocation#, #readCount#, #startDate#, #endDate#, #ABSTRACT#, #hasAttach#, #upperItemIDTree#, #itemLevel#, 0, #extensionAttribute1#, #extensionAttribute2#, #extensionAttribute3#, #extensionAttribute32#, #extensionAttribute4#, #extensionAttribute5#, ( SELECT CASE WHEN MAX(DOCNO) IS NULL THEN 1 ELSE MAX(DOCNO) + 1 END FROM TBL_Board_Item A WHERE TENANT_ID = #tenantID# AND BOARDID = #boardID# ), #docPassword#, #topWriterID#, #extensionAttribute6#, #extensionAttribute7#, #extensionAttribute8#, #extensionAttribute9#, #extensionAttribute10#, #tenantID#, #content#, #notiStart#, #notiEnd#, #publicFlag#, #writerNameType#
+	        	#itemID#, #boardID#, #writerID#, #writerName#, #writerName2#, #writerDeptID#, #writerDeptName#, #writerDeptName2#, #writerCompanyID#, #writerCompanyName#, #writerCompanyName2#, #writeDate#, #parentWriteDate#, #importance#, #title#, #contentLocation#, #readCount#, #startDate#, #endDate#, #ABSTRACT#, #hasAttach#, #upperItemIDTree#, #itemLevel#, 0, #extensionAttribute1#, #extensionAttribute2#, #extensionAttribute3#, #extensionAttribute32#, #extensionAttribute4#, #extensionAttribute5#,
+				<isNotEmpty property = "versionManage">
+					<isEqual property = "version" compareValue = "0.0">
+						( SELECT /*asd*/ CASE WHEN MAX(DOCNO) IS NULL THEN 1 ELSE MAX(DOCNO) + 1 END FROM TBL_Board_Item A WHERE TENANT_ID = #tenantID# AND BOARDID = #boardID# ),
+					</isEqual>
+					<isNotEqual property = "version" compareValue = "0.0">
+						(
+						SELECT
+							DOCNO
+						FROM
+							TBL_BOARD_ITEM
+						WHERE
+							ITEMID = #parentItemID#
+						AND
+							TENANT_ID = #tenantID#
+						),
+					</isNotEqual>
+				</isNotEmpty>
+				<isEmpty property = "versionManage">
+					( SELECT CASE WHEN MAX(DOCNO) IS NULL THEN 1 ELSE MAX(DOCNO) + 1 END FROM TBL_Board_Item A WHERE TENANT_ID = #tenantID# AND BOARDID = #boardID# ),
+				</isEmpty>
+	            #docPassword#, #topWriterID#, #extensionAttribute6#, #extensionAttribute7#, #extensionAttribute8#, #extensionAttribute9#, #extensionAttribute10#, #tenantID#, #content#, #notiStart#, #notiEnd#, #publicFlag#, #writerNameType#
 	        )
 		</isNotEqual>
 	</insert>
@@ -6024,7 +6579,8 @@
             	PREVIEWWCONTENT = #previewWContent#,
             	PREVIEWHLIST = #previewHList#,
 				PREVIEWHCONTENT = #previewHContent#,
-				ALLNEWBOARDLISTDATE = #allNewBoardListDate#
+				ALLNEWBOARDLISTDATE = #allNewBoardListDate#,
+				CONTENTSIZE = #contentSize#
             WHERE  
             	TENANT_ID = #tenantID#
             AND
@@ -6034,10 +6590,10 @@
 	<insert id="EzBoardDAO.setBoardList_Config_I" parameterClass="BoardConfigVO">
 		<![CDATA[
 			INSERT INTO TBL_Board_Configuration ( 
-				USERID,   LISTCOUNT,   PREVIEW,   PREVIEWWLIST,   PREVIEWWCONTENT,   PREVIEWHLIST,   PREVIEWHCONTENT, ALLNEWBOARDLISTDATE, TENANT_ID
+				USERID,   LISTCOUNT,   PREVIEW,   PREVIEWWLIST,   PREVIEWWCONTENT,   PREVIEWHLIST,   PREVIEWHCONTENT, ALLNEWBOARDLISTDATE, CONTENTSIZE, TENANT_ID
 			)
           	VALUES ( 
-          		#userId#, #listCount#, #preview#, #previewWList#, #previewWContent#, #previewHList#, #previewHContent#, #allNewBoardListDate#, #tenantID# 
+          		#userId#, #listCount#, #preview#, #previewWList#, #previewWContent#, #previewHList#, #previewHContent#, #allNewBoardListDate#, #contentSize#, #tenantID# 
           	)
 		]]>
 	</insert>
@@ -6345,11 +6901,13 @@
 				ntstartdate = #notiStart#,
 				ntenddate = #notiEnd#,
 				PUBLICFLAG = #publicFlag#,
-				updaterid = #updaterID#,
+				updaterid = #updaterID#
+		<isNotEqual property="writerNameType" compareValue="" prepend=",">
 				writerId = #writerID#,
 				writerName = #writerName#,
 		        writerName2 = #writerName2#,
 				writerNameType = #writerNameType#
+		</isNotEqual>
     		WHERE  
     			TENANT_ID = #tenantID#
     		AND
@@ -7015,6 +7573,8 @@
 					A.TITLE,
 					A.READCOUNT,
 					A.ATTACHMENTS,
+					EXT,
+					F.FILEPATH,
 					A.ITEMLEVEL,
 					A.ABSTRACT,
 					CASE WHEN D.TOTALCOUNT IS NULL THEN '0' ELSE '1' END READFLAG,
@@ -7092,7 +7652,85 @@
 						ITEMID,
 						TENANT_ID ) F ON
 					A.ITEMID = F.ITEMID
-				AND A.TENANT_ID = F.TENANT_ID
+					AND A.TENANT_ID = F.TENANT_ID
+				LEFT OUTER JOIN
+				(
+					SELECT
+						ITEMID, TENANT_ID
+					FROM
+					(
+						SELECT
+							ROW_NUMBER() OVER(
+								PARTITION BY
+									PARENTITEMID
+								ORDER BY
+									VERSION DESC
+							) RN,
+							ITEMID,
+							TENANT_ID
+						FROM
+							TBL_BOARD_MODIFYHISTORY
+					) M1
+					WHERE
+						M1.RN = 1
+				) M2
+				ON
+					A.ITEMID = M2.ITEMID
+				AND
+					A.TENANT_ID = M2.TENANT_ID
+				<isNotEmpty property="v_SEARCH_CONTENT">
+					INNER JOIN
+						TBL_Photo_ImageItem B
+					ON
+						A.TENANT_ID = B.TENANT_ID
+					AND
+						A.ItemID = B.ItemID
+					JOIN(
+						SELECT *
+						FROM (
+							SELECT
+								A.ITEMID,
+								A.TENANT_ID,
+								A.BOARDID,
+								MAIN_FLAG,
+								B.FILEPATH,
+								CONTENT,
+								FILECONTENT,
+								MAINCONTENT,
+								ROW_NUMBER() OVER (
+									PARTITION BY A.ITEMID
+									ORDER BY
+									CASE
+									WHEN B.MAIN_FLAG = 'Y' THEN 1
+									WHEN GUID IS NOT NULL THEN GUID + 1
+									ELSE 100
+									END
+								) AS SN
+								FROM
+									TBL_BOARD_ITEM_ATTACHMENTS BIT
+								RIGHT JOIN
+									TBL_BOARD_ITEM A
+								ON
+									BIT.ITEMID = A.ITEMID
+								AND
+									BIT.TENANT_ID = A.TENANT_ID
+								LEFT OUTER JOIN
+									TBL_PHOTO_IMAGEITEM B
+								ON
+									A.TENANT_ID = B.TENANT_ID
+								AND
+									A.ITEMID = B.ITEMID
+							) A2
+						WHERE
+							SN = 1
+						) PART
+					ON
+						PART.ITEMID = A.ITEMID
+					AND
+						PART.TENANT_ID = A.TENANT_ID
+					AND
+						B.MAIN_FLAG = PART.MAIN_FLAG
+				</isNotEmpty>
 				WHERE 
 			<isEqual property="v_PSUBFLAG" compareValue="A">
 				(1=1)
@@ -7146,13 +7784,19 @@
 					)
 		]]>
 			<isNotEmpty property="v_SEARCH_TITLE">
-				AND TITLE like '%' || #v_SEARCH_TITLE# || '%'
+				AND UPPER(TITLE) like UPPER('%' || #v_SEARCH_TITLE# || '%')
 			</isNotEmpty>
 			<isNotEmpty property="v_SEARCH_CONTENT">
-				AND CONTENT like '%' || #v_SEARCH_CONTENT# || '%'
+				AND (
+					UPPER(A.CONTENT) like UPPER('%' || #v_SEARCH_CONTENT# || '%')
+				OR
+					UPPER(PART.FILECONTENT) like UPPER('%' || #v_SEARCH_CONTENT# || '%')
+				OR
+					UPPER(PART.MAINCONTENT) like UPPER('%' || #v_SEARCH_CONTENT# || '%')
+				)
 			</isNotEmpty>
 			<isNotEmpty property="v_SEARCH_WRITERNAME">
-				AND (A.WRITERNAME like '%' || #v_SEARCH_WRITERNAME# || '%' OR A.WRITERNAME2 like '%' || #v_SEARCH_WRITERNAME# || '%')
+				AND (UPPER(A.WRITERNAME) like UPPER('%' || #v_SEARCH_WRITERNAME# || '%') OR UPPER(A.WRITERNAME2) like UPPER('%' || #v_SEARCH_WRITERNAME# || '%'))
 			</isNotEmpty>
 			<isNotEmpty property="v_SEARCH_STARTDATE">
 				<![CDATA[AND A.WRITEDATE > #v_SEARCH_STARTDATE#]]>
@@ -7161,11 +7805,16 @@
 				<![CDATA[AND A.WRITEDATE < #v_SEARCH_ENDDATE#]]>
 			</isNotEmpty>
 			<isNotEmpty property="v_SEARCH_ABSTRACT">
-				AND ABSTRACT like '%' || #v_SEARCH_ABSTRACT# || '%'
+				AND UPPER(ABSTRACT) like UPPER('%' || #v_SEARCH_ABSTRACT# || '%')
 			</isNotEmpty>
 			<isNotEmpty property="v_SEARCH_TOPWRITERID">
-				AND (TOPWRITERID = #v_SEARCH_TOPWRITERID# OR EXTENSIONATTRIBUTE2 = '1')
+				AND (UPPER(TOPWRITERID) = UPPER(#v_SEARCH_TOPWRITERID#) OR EXTENSIONATTRIBUTE2 = '1')
 			</isNotEmpty>
+            <isNotEmpty property="v_SEARCH_TITLE_AND_CONTENT">
+                AND (UPPER(TITLE) like UPPER('%' || #v_SEARCH_TITLE_AND_CONTENT# || '%')
+                OR
+                UPPER(CONTENT) like UPPER('%' || #v_SEARCH_TITLE_AND_CONTENT# || '%'))
+            </isNotEmpty>
 			<isNotEmpty property="v_KEYWORD">
 				<![CDATA[
 					AND (
@@ -7185,16 +7834,20 @@
 							WHERE
 				]]>
 							<isNotEmpty property="v_KEYWORDCLICK">
-								K.KEYWORDNAME = #v_KEYWORDCLICK#
+								UPPER(K.KEYWORDNAME) = UPPER(#v_KEYWORDCLICK#)
 							</isNotEmpty>
 							<isEmpty property="v_KEYWORDCLICK">
-								K.KEYWORDNAME like CONCAT(CONCAT('%', #v_KEYWORD#), '%')
+								UPPER(K.KEYWORDNAME) like UPPER(CONCAT(CONCAT('%', #v_KEYWORD#), '%'))
 							</isEmpty>
 							AND
 								BK.TENANT_ID = #v_TENANTID#
 						)
 					)
 		  	</isNotEmpty>
+		  	AND
+			(I.VERSIONMANAGE = 'Y' AND M2.ITEMID IS NOT NULL
+				OR
+			I.VERSIONMANAGE = 'N')
 			<![CDATA[
 				) T1
 			WHERE
@@ -7216,6 +7869,84 @@
 			A.TENANT_ID = I.TENANT_ID
 		AND
 			A.BOARDID = I.BOARDID
+		LEFT OUTER JOIN
+		(
+			SELECT
+				ITEMID, TENANT_ID
+			FROM
+			(
+				SELECT
+					ROW_NUMBER() OVER(
+						PARTITION BY
+							PARENTITEMID
+						ORDER BY
+							VERSION DESC
+					) RN,
+					ITEMID,
+					TENANT_ID
+				FROM
+					TBL_BOARD_MODIFYHISTORY
+			) M1
+			WHERE
+				M1.RN = 1
+		) M2
+		ON
+			A.ITEMID = M2.ITEMID
+		AND
+			A.TENANT_ID = M2.TENANT_ID
+		<isNotEmpty property="v_SEARCH_CONTENT">
+			INNER JOIN
+				TBL_Photo_ImageItem B
+			ON
+				A.TENANT_ID = B.TENANT_ID
+			AND
+				A.ItemID = B.ItemID
+			JOIN(
+				SELECT *
+					FROM (
+					SELECT
+						A.ITEMID,
+						A.TENANT_ID,
+						A.BOARDID,
+						MAIN_FLAG,
+						B.FILEPATH,
+						CONTENT,
+						FILECONTENT,
+						MAINCONTENT,
+						ROW_NUMBER() OVER (
+							PARTITION BY A.ITEMID
+							ORDER BY
+							CASE
+							WHEN B.MAIN_FLAG = 'Y' THEN 1
+							WHEN GUID IS NOT NULL THEN GUID + 1
+							ELSE 100
+							END
+						) AS SN
+					FROM
+						TBL_BOARD_ITEM_ATTACHMENTS BIT
+					RIGHT JOIN
+						TBL_BOARD_ITEM A
+					ON
+						BIT.ITEMID = A.ITEMID
+					AND
+						BIT.TENANT_ID = A.TENANT_ID
+					LEFT OUTER JOIN
+						TBL_PHOTO_IMAGEITEM B
+					ON
+						A.TENANT_ID = B.TENANT_ID
+					AND
+						A.ITEMID = B.ITEMID
+					) A2
+				WHERE
+					SN = 1
+				) PART
+			ON
+				PART.ITEMID = A.ITEMID
+			AND
+				PART.TENANT_ID = A.TENANT_ID
+			AND
+				B.MAIN_FLAG = PART.MAIN_FLAG
+		</isNotEmpty>
 		WHERE
 		<isEqual property="v_PSUBFLAG" compareValue="A">
 			(1=1)
@@ -7270,13 +8001,19 @@
 		]]>
 		<!--20240215 : 김진홍 : CSAP 인증 처리 Mapper 수정 : v_PSUBQUERY 대체 쿼리 제작 -->
 		<isNotEmpty property="v_SEARCH_TITLE">
-			AND TITLE like '%' || #v_SEARCH_TITLE# || '%'
+			AND UPPER(TITLE) like UPPER('%' || #v_SEARCH_TITLE# || '%')
 		</isNotEmpty>
 		<isNotEmpty property="v_SEARCH_CONTENT">
-			AND CONTENT like '%' || #v_SEARCH_CONTENT# || '%'
+			AND (
+				UPPER(A.CONTENT) like UPPER('%' || #v_SEARCH_CONTENT# || '%')
+			OR
+				UPPER(PART.FILECONTENT) like UPPER('%' || #v_SEARCH_CONTENT# || '%')
+			OR
+				UPPER(PART.MAINCONTENT) like UPPER('%' || #v_SEARCH_CONTENT# || '%')
+			)
 		</isNotEmpty>
 		<isNotEmpty property="v_SEARCH_WRITERNAME">
-			AND (A.WRITERNAME like '%' || #v_SEARCH_WRITERNAME# || '%' OR A.WRITERNAME2 like '%' || #v_SEARCH_WRITERNAME# || '%')
+			AND (UPPER(A.WRITERNAME) like UPPER('%' || #v_SEARCH_WRITERNAME# || '%') OR UPPER(A.WRITERNAME2) like UPPER('%' || #v_SEARCH_WRITERNAME# || '%'))
 		</isNotEmpty>
 		<isNotEmpty property="v_SEARCH_STARTDATE">
 			<![CDATA[AND A.WRITEDATE > #v_SEARCH_STARTDATE#]]>
@@ -7285,10 +8022,10 @@
 			<![CDATA[AND A.WRITEDATE < #v_SEARCH_ENDDATE#]]>
 		</isNotEmpty>
 		<isNotEmpty property="v_SEARCH_ABSTRACT">
-			AND ABSTRACT like '%' || #v_SEARCH_ABSTRACT# || '%'
+			AND UPPER(ABSTRACT) like UPPER('%' || #v_SEARCH_ABSTRACT# || '%')
 		</isNotEmpty>
 		<isNotEmpty property="v_SEARCH_TOPWRITERID">
-			AND (TOPWRITERID = #v_SEARCH_TOPWRITERID# OR EXTENSIONATTRIBUTE2 = '1')
+			AND (UPPER(TOPWRITERID) = UPPER(#v_SEARCH_TOPWRITERID#) OR EXTENSIONATTRIBUTE2 = '1')
 		</isNotEmpty>
 		<isNotEmpty property="v_KEYWORD">
 			<![CDATA[
@@ -7306,19 +8043,28 @@
 							BK.KEYWORDID = K.KEYWORDID
 						AND
 							BK.TENANT_ID = K.TENANT_ID
-						WHERE
-			]]>
-						<isNotEmpty property="v_KEYWORDCLICK">
-							K.KEYWORDNAME = #v_KEYWORDCLICK#
-						</isNotEmpty>
-						<isEmpty property="v_KEYWORDCLICK">
-							K.KEYWORDNAME like CONCAT(CONCAT('%', #v_KEYWORD#), '%')
-						</isEmpty>
-						AND
-							BK.TENANT_ID = #v_TENANTID#
-					)
+					WHERE
+					]]>
+					<isNotEmpty property="v_KEYWORDCLICK">
+						UPPER(K.KEYWORDNAME) = UPPER(#v_KEYWORDCLICK#)
+					</isNotEmpty>
+					<isEmpty property="v_KEYWORDCLICK">
+						UPPER(K.KEYWORDNAME) like UPPER(CONCAT(CONCAT('%', #v_KEYWORD#), '%'))
+					</isEmpty>
+					AND
+						BK.TENANT_ID = #v_TENANTID#
 				)
+			)
 		</isNotEmpty>
+        <isNotEmpty property="v_SEARCH_TITLE_AND_CONTENT">
+            AND (UPPER(TITLE) like UPPER('%' || #v_SEARCH_TITLE_AND_CONTENT# || '%')
+            OR
+            UPPER(CONTENT) like UPPER('%' || #v_SEARCH_TITLE_AND_CONTENT# || '%'))
+        </isNotEmpty>
+        AND
+		(I.VERSIONMANAGE = 'Y' AND M2.ITEMID IS NOT NULL
+			OR
+		I.VERSIONMANAGE = 'N')
 	</select>
 	
 	<update id="EzBoardDAO.modUpdateDate" parameterClass="Map">
@@ -8541,7 +9287,32 @@
 				A.TENANT_ID = P.TENANT_ID
 			AND
 				A.BOARDID = P.BOARDID
+			LEFT OUTER JOIN
+			(
+				SELECT
+					ITEMID, TENANT_ID
+				FROM
+					(
+						SELECT
+							ROW_NUMBER() OVER(
+							PARTITION BY
+								PARENTITEMID
+							ORDER BY
+								VERSION DESC
+						) RN,
+								ITEMID,
+							TENANT_ID
+						FROM
+							TBL_BOARD_MODIFYHISTORY
+					) M1
+				WHERE
+					M1.RN = 1
+			) M2
+			ON
+				A.ITEMID = M2.ITEMID
 			AND
+				A.TENANT_ID = M2.TENANT_ID
+			WHERE
 				A.TENANT_ID = #v_TENANTID#
 			AND
 				(A.WRITERCOMPANYID = #v_COMPANYID# OR TRIM(A.WRITERCOMPANYID) = '' OR A.WRITERCOMPANYID IS NULL
@@ -8555,6 +9326,10 @@
 				A.ENDDATE > #nowDate#
 			AND
 				P.GUBUN != '5'
+			AND
+			(P.VERSIONMANAGE = 'Y' AND M2.ITEMID IS NOT NULL
+				OR
+			 P.VERSIONMANAGE = 'N')
 		]]>
 	</select>
 	
@@ -8629,6 +9404,29 @@
 										   OR TRIM(P.COMPANYID) = '' OR P.COMPANYID IS NULL)
 								   AND
 									   A.BOARDID = P.BOARDID
+								   LEFT OUTER JOIN
+									(
+										SELECT
+											ITEMID, TENANT_ID
+										FROM
+										(
+											SELECT
+												ROW_NUMBER() OVER(
+													PARTITION BY
+														PARENTITEMID
+													ORDER BY
+														VERSION DESC
+												) RN,
+												ITEMID,
+												TENANT_ID
+											FROM
+												TBL_BOARD_MODIFYHISTORY
+										) M1
+										WHERE
+											M1.RN = 1
+									) M2
+									ON
+										A.ITEMID = M2.ITEMID
 									LEFT OUTER JOIN (
 										SELECT
 											CASE
@@ -8667,6 +9465,10 @@
 									   A.STARTDATE <= #nowDate#
 								   AND
 									   A.ENDDATE > #nowDate# 
+								   AND
+									(P.VERSIONMANAGE = 'Y' AND M2.ITEMID IS NOT NULL
+								     OR
+							    	P.VERSIONMANAGE = 'N')
 									   ) T1
 			  WHERE RNUM <= #v_PENDROW# ) T2
 		WHERE
@@ -8980,15 +9782,15 @@
 				AND 1 = 0
 			</isEmpty>
 			<isNotEmpty property="v_SEARCH_TITLE">
-				AND A.TITLE like '%' || #v_SEARCH_TITLE# || '%'
+				AND UPPER(A.TITLE) like UPPER('%' || #v_SEARCH_TITLE# || '%')
 			</isNotEmpty>
 			<isNotEmpty property="v_SEARCH_WRITERNAME">
-				AND (A.WRITERNAME like '%' || #v_SEARCH_WRITERNAME# || '%' OR A.WRITERNAME2 like '%' || #v_SEARCH_WRITERNAME# || '%')
+				AND (UPPER(A.WRITERNAME) like UPPER('%' || #v_SEARCH_WRITERNAME# || '%') OR UPPER(A.WRITERNAME2) like UPPER('%' || #v_SEARCH_WRITERNAME# || '%'))
 			</isNotEmpty>
             <isNotEmpty property="v_SEARCH_TITLE_AND_CONTENT">
-                AND (TITLE like ('%' || #v_SEARCH_TITLE_AND_CONTENT# || '%')
+                AND (UPPER(TITLE) like UPPER('%' || #v_SEARCH_TITLE_AND_CONTENT# || '%')
                 OR
-                CONTENT like ('%' || #v_SEARCH_TITLE_AND_CONTENT# || '%'))
+				UPPER(CONTENT) like UPPER('%' || #v_SEARCH_TITLE_AND_CONTENT# || '%'))
             </isNotEmpty>
 	</select>
 	
@@ -9031,6 +9833,8 @@
 	   					A.TITLE,
 	   					A.READCOUNT,
 	   					A.ATTACHMENTS,
+	   					EXT,
+						FILEPATH,
 	   					A.ITEMLEVEL,
 	   					A.ABSTRACT,
 	   					CASE WHEN D.TOTALCOUNT IS NULL THEN '0' ELSE '1' END READFLAG,
@@ -9091,6 +9895,26 @@
 	   					A.TENANT_ID = I.TENANT_ID
 	   				 AND 
 	   					A.BOARDID = I.BOARDID 
+	   				 LEFT OUTER JOIN (
+						SELECT 	
+							CASE
+								WHEN COUNT(FILEPATH) = 0 THEN 'NONE'
+								WHEN COUNT(FILEPATH) = 1 THEN MAX(TO_CHAR(FILENAME))
+								ELSE 'MANY'
+							END AS EXT,
+							CASE
+								WHEN COUNT(FILEPATH) = 0 THEN 'NONE'
+								WHEN COUNT(FILEPATH) = 1 THEN MAX(TO_CHAR(FILEPATH))
+								ELSE 'MANY'
+							END AS FILEPATH,
+							TENANT_ID,
+							itemid
+							FROM TBL_BOARD_ITEM_ATTACHMENTS
+						GROUP BY
+							ITEMID,
+							TENANT_ID ) F ON
+						A.ITEMID = F.ITEMID
+						AND A.TENANT_ID = F.TENANT_ID
 	   				 WHERE
 	   					A.TENANT_ID = #v_TENANTID#
 	   				 AND
@@ -9115,15 +9939,15 @@
 						AND 1 = 0
 					</isEmpty>
 					<isNotEmpty property="v_SEARCH_TITLE">
-						AND A.TITLE like '%' || #v_SEARCH_TITLE# || '%'
+						AND UPPER(A.TITLE) like UPPER('%' || #v_SEARCH_TITLE# || '%')
 					</isNotEmpty>
 					<isNotEmpty property="v_SEARCH_WRITERNAME">
-						AND (A.WRITERNAME like '%' || #v_SEARCH_WRITERNAME# || '%' OR A.WRITERNAME2 like '%' || #v_SEARCH_WRITERNAME# || '%')
+						AND (UPPER(A.WRITERNAME) like UPPER('%' || #v_SEARCH_WRITERNAME# || '%') OR UPPER(A.WRITERNAME2) like UPPER('%' || #v_SEARCH_WRITERNAME# || '%'))
 					</isNotEmpty>
                     <isNotEmpty property="v_SEARCH_TITLE_AND_CONTENT">
-                        AND (TITLE like ('%' || #v_SEARCH_TITLE_AND_CONTENT# || '%')
+                        AND (UPPER(TITLE) like UPPER('%' || #v_SEARCH_TITLE_AND_CONTENT# || '%')
                         OR
-                        CONTENT like ('%' || #v_SEARCH_TITLE_AND_CONTENT# || '%'))
+                        UPPER(CONTENT) like UPPER('%' || #v_SEARCH_TITLE_AND_CONTENT# || '%'))
                     </isNotEmpty>
 		<![CDATA[		 
 	   				 ) T1
@@ -9590,10 +10414,10 @@
 				AND 1 = 0
 			</isEmpty>
 			<isNotEmpty property="v_SEARCH_TITLE">
-				AND A.TITLE like '%' || #v_SEARCH_TITLE# || '%'
+				AND UPPER(A.TITLE) like UPPER('%' || #v_SEARCH_TITLE# || '%')
 			</isNotEmpty>
 			<isNotEmpty property="v_SEARCH_WRITERNAME">
-				AND (A.WRITERNAME like '%' || #v_SEARCH_WRITERNAME# || '%' OR A.WRITERNAME2 like '%' || #v_SEARCH_WRITERNAME# || '%')
+				AND (UPPER(A.WRITERNAME) like UPPER('%' || #v_SEARCH_WRITERNAME# || '%') OR UPPER(A.WRITERNAME2) like UPPER('%' || #v_SEARCH_WRITERNAME# || '%'))
 			</isNotEmpty>
 	</select>
 
@@ -9696,6 +10520,26 @@
 						A.TENANT_ID = I.TENANT_ID
 					AND
 						A.BOARDID = I.BOARDID
+					LEFT OUTER JOIN (
+						SELECT 	
+							CASE
+								WHEN COUNT(FILEPATH) = 0 THEN 'NONE'
+								WHEN COUNT(FILEPATH) = 1 THEN MAX(TO_CHAR(FILENAME))
+								ELSE 'MANY'
+							END AS EXT,
+							CASE
+								WHEN COUNT(FILEPATH) = 0 THEN 'NONE'
+								WHEN COUNT(FILEPATH) = 1 THEN MAX(TO_CHAR(FILEPATH))
+								ELSE 'MANY'
+							END AS FILEPATH,
+							TENANT_ID,
+							itemid
+							FROM TBL_BOARD_ITEM_ATTACHMENTS
+						GROUP BY
+							ITEMID,
+							TENANT_ID ) F ON
+						A.ITEMID = F.ITEMID
+						AND A.TENANT_ID = F.TENANT_ID
 					WHERE
 						A.TENANT_ID = #v_TENANTID#
 					AND
@@ -9722,15 +10566,15 @@
 						AND 1 = 0
 					</isEmpty>
 					<isNotEmpty property="v_SEARCH_TITLE">
-						AND A.TITLE like '%' || #v_SEARCH_TITLE# || '%'
+						AND UPPER(A.TITLE) like UPPER('%' || #v_SEARCH_TITLE# || '%')
 					</isNotEmpty>
 					<isNotEmpty property="v_SEARCH_WRITERNAME">
-						AND (A.WRITERNAME like '%' || #v_SEARCH_WRITERNAME# || '%' OR A.WRITERNAME2 like '%' || #v_SEARCH_WRITERNAME# || '%')
+						AND (UPPER(A.WRITERNAME) like UPPER('%' || #v_SEARCH_WRITERNAME# || '%') OR UPPER(A.WRITERNAME2) like UPPER('%' || #v_SEARCH_WRITERNAME# || '%'))
 					</isNotEmpty>
                     <isNotEmpty property="v_SEARCH_TITLE_AND_CONTENT">
-                        AND (TITLE like ('%' || #v_SEARCH_TITLE_AND_CONTENT# || '%')
+                        AND (UPPER(TITLE) like UPPER('%' || #v_SEARCH_TITLE_AND_CONTENT# || '%')
                         OR
-                        CONTENT like ('%' || #v_SEARCH_TITLE_AND_CONTENT# || '%'))
+                        UPPER(CONTENT) like UPPER('%' || #v_SEARCH_TITLE_AND_CONTENT# || '%'))
                     </isNotEmpty>
 		<![CDATA[		 
 					) T1
@@ -9892,7 +10736,32 @@
 						A.TENANT_ID = P.TENANT_ID
 					AND
 						A.BOARDID = P.BOARDID
+					LEFT OUTER JOIN
+					(
+						SELECT
+							ITEMID, TENANT_ID
+						FROM
+						(
+							SELECT
+								ROW_NUMBER() OVER(
+									PARTITION BY
+										PARENTITEMID
+									ORDER BY
+										VERSION DESC
+								) RN,
+								ITEMID,
+								TENANT_ID
+							FROM
+							TBL_BOARD_MODIFYHISTORY
+						) M1
+						WHERE
+							M1.RN = 1
+					) M2
+					ON
+						A.ITEMID = M2.ITEMID
 					AND
+						A.TENANT_ID = M2.TENANT_ID
+					WHERE
 						A.TENANT_ID = #v_TENANTID#
 					AND
 						P.GUBUN != '5'
@@ -9918,6 +10787,10 @@
 						A.ENDDATE > #nowDate#
 					AND
 						P.ALLNEWBOARDFLAG = 'Y'
+					AND
+					(P.VERSIONMANAGE = 'Y' AND M2.ITEMID IS NOT NULL
+					OR
+			    	P.VERSIONMANAGE = 'N')
 		]]>
 	</select>
 
@@ -9992,6 +10865,31 @@
 										   OR TRIM(P.COMPANYID) = '' OR P.COMPANYID IS NULL)
 								   AND
 									   A.BOARDID = P.BOARDID
+								   LEFT OUTER JOIN
+									(
+										SELECT
+											ITEMID, TENANT_ID
+										FROM
+										(
+											SELECT
+												ROW_NUMBER() OVER(
+													PARTITION BY
+														PARENTITEMID
+													ORDER BY
+														VERSION DESC
+												) RN,
+												ITEMID,
+												TENANT_ID
+											FROM
+												TBL_BOARD_MODIFYHISTORY
+										) M1
+										WHERE
+											M1.RN = 1
+									) M2
+									ON
+										A.ITEMID = M2.ITEMID
+									AND
+										A.TENANT_ID = M2.TENANT_ID
                                    LEFT OUTER JOIN (
                                         SELECT
                                             CASE
@@ -10040,6 +10938,10 @@
 									   A.STARTDATE <= #nowDate#
 								   AND
 									   A.ENDDATE > #nowDate#
+								   AND
+									(P.VERSIONMANAGE = 'Y' AND M2.ITEMID IS NOT NULL
+										OR
+			    					P.VERSIONMANAGE = 'N')
 								   AND
 									   P.ALLNEWBOARDFLAG = 'Y' ) T1
 			  WHERE RNUM <= #v_PENDROW# ) T2
@@ -10236,4 +11138,515 @@
 				TENANT_ID = #tenant_id#
 		]]>
 	</select>
+
+	<update id="EzBoardDAO.repostItem" parameterClass="map">
+		UPDATE TBL_Board_Item
+		SET
+			UPDATERID = #userID#,
+			UpdateDate = #updateDate#,
+			DOCNO = (
+				SELECT
+					CASE WHEN MAX(DOCNO) IS NULL THEN 1
+						ELSE MAX(DOCNO) + 1
+					END
+				FROM
+					TBL_Board_Item
+				WHERE
+					TENANT_ID = #tenantID#
+				AND
+					BOARDID = #boardID# ),
+			PARENTWRITEDATE = (
+				SELECT
+					CASE WHEN MAX(DOCNO) IS NULL THEN 1
+						ELSE MAX(DOCNO) + 1
+					END
+				FROM
+					TBL_Board_Item
+				WHERE
+					TENANT_ID = #tenantID#
+				AND
+					BOARDID = #boardID# )
+			WHERE
+				TENANT_ID = #tenantID#
+			AND
+				ItemID = #itemID#
+			AND
+				BOARDID = #boardID#
+	</update>
+
+	<select id="EzBoardDAO.getAnswerList" parameterClass="Map" resultClass="HashMap">
+		SELECT
+			ITEMID,
+			TITLE,
+			TO_CHAR(TO_DATE(WRITEDATE, 'YYYY-MM-DD HH24:MI:SS') + INTERVAL '9' HOUR, 'YYYY/MM/DD') AS WRITEDATE,
+			TO_CHAR(TO_DATE(UPDATEDATE, 'YYYY-MM-DD HH24:MI:SS') + INTERVAL '9' HOUR, 'YYYY/MM/DD') AS UPDATEDATE
+		FROM
+			TBL_BOARD_ITEM
+		WHERE
+			UPPERITEMIDTREE LIKE (#itemID# || '%')
+		AND
+			<![CDATA[ ITEMLEVEL > 1 ]]>
+		AND
+			BOARDID = #boardID#
+		AND
+			TENANT_ID = #tenantID#
+		ORDER BY
+			WRITEDATE
+	</select>
+
+	<update id="EzBoardDAO.repostReplyItem" parameterClass="map">
+		UPDATE TBL_Board_Item
+		SET
+			PARENTWRITEDATE = (
+				SELECT
+					PARENTWRITEDATE
+				FROM
+					TBL_Board_Item
+				WHERE
+					TENANT_ID = #tenantID#
+				AND
+					BOARDID = #boardID#
+				AND
+					ITEMID = #itemID# )
+		WHERE
+			TENANT_ID = #tenantID#
+		AND
+			ItemID = #replyItemID#
+		AND
+			BOARDID = #boardID#
+	</update>
+
+	<select id = "EzBoardDAO.getFileViewerBoardItemID" parameterClass = "map" resultClass = "BoardItemVO">
+		SELECT
+			A.BOARDID,
+			B.ITEMID,
+			B.WRITERID,
+			B.CONTENTLOCATION AS FILEPATH,
+			C.FILEPATH AS ATTACHFILEPATH,
+			C.FILENAME AS ATTACHFILENAME
+		FROM
+			TBL_BOARD_BOARDINFO A
+				JOIN
+			TBL_BOARD_ITEM B
+			ON
+				A.BOARDID = B.BOARDID
+				JOIN
+			TBL_BOARD_ITEM_ATTACHMENTS C
+			ON
+				B.ITEMID = C.ITEMID
+		<isEqual property="versionYN" compareValue="Y">
+		JOIN
+		(
+			SELECT
+				ITEMID
+			FROM
+			(	
+				SELECT
+					ROW_NUMBER() OVER(
+						ORDER BY
+							VERSION DESC
+					) RN,
+					ITEMID
+				FROM
+					TBL_BOARD_MODIFYHISTORY
+				WHERE
+					ITEMID IN (
+						SELECT
+							ITEMID
+						FROM
+							TBL_BOARD_ITEM
+						WHERE
+							BOARDID = #boardID#
+						AND
+							TENANT_ID = #tenantID#
+					)
+			) M
+			WHERE
+				M.RN = 1
+		) D
+		ON
+			B.ITEMID = D.ITEMID
+		</isEqual>
+		WHERE
+			A.BOARDID = #boardID#
+		  AND
+			(A.COMPANYID = #companyID# OR A.COMPANYID IS NULL)
+		  AND
+			A.TENANT_ID = #tenantID#
+		  AND
+			C.GUID = 0
+	</select>
+
+	<select id="EzBoardDAO.isPostDuplicated1" parameterClass="map" resultClass="Integer">
+		SELECT
+			COUNT(1)
+		FROM
+			TBL_BOARD_ITEM
+		WHERE
+			BOARDID = #boardID#
+		  AND TENANT_ID = #tenantID#
+	</select>
+	<select id="EzBoardDAO.isPostDuplicated2" parameterClass="map" resultClass="String">
+		SELECT
+			DISTINCT PARENTITEMID
+		FROM
+			TBL_BOARD_MODIFYHISTORY A
+		JOIN
+			TBL_BOARD_ITEM B
+		ON
+			A.ITEMID = B.ITEMID
+		WHERE
+			B.BOARDID = #boardID#
+		  AND B.TENANT_ID = #tenantID#
+	</select>
+
+	<select id = "EzBoardDAO.getModifiedHistoryOfItem" parameterClass = "map" resultClass = "BoardHistoryVO">
+		SELECT
+		    *
+		FROM
+		    TBL_BOARD_BOARDINFO A
+		JOIN
+			TBL_BOARD_ITEM B
+		ON
+			A.BOARDID = B.BOARDID
+		JOIN
+			TBL_BOARD_MODIFYHISTORY C
+		ON
+			B.ITEMID = C.ITEMID
+		WHERE
+		    A.BOARDID = #boardID#
+		AND
+		    C.PARENTITEMID IN (
+		        SELECT
+		            PARENTITEMID
+		    	FROM
+		    	    TBL_BOARD_MODIFYHISTORY
+		    	WHERE
+		    	    ITEMID = #itemID#
+			)
+		AND
+		    A.TENANT_ID = #tenantID#
+		ORDER BY
+		    VERSION DESC
+	</select>
+
+	<select id = "EzBoardDAO.getUseVersionFlag" parameterClass = "map" resultClass = "String">
+		SELECT
+			VERSIONMANAGE
+		FROM
+		    TBL_BOARD_BOARDINFO
+		WHERE
+		    BOARDID = #boardID#
+		AND
+		    TENANT_ID = #tenantID#
+	</select>
+
+	<select id = "EzBoardDAO.getItemVersion" parameterClass = "map" resultClass = "String">
+		SELECT
+		    *
+		FROM
+		(
+			SELECT
+				VERSION
+			FROM
+				TBL_BOARD_MODIFYHISTORY
+			WHERE
+				PARENTITEMID = (
+				    SELECT
+				        PARENTITEMID
+				    FROM
+				        TBL_BOARD_MODIFYHISTORY
+					WHERE
+					    ITEMID = #itemID#
+				)
+			AND
+				TENANT_ID = #tenantID#
+			ORDER BY
+				VERSION DESC
+        )
+		WHERE
+		    ROWNUM = 1
+	</select>
+
+	<insert id = "EzBoardDAO.addModifyHistory" parameterClass = "BoardListVO">
+		INSERT INTO
+			TBL_BOARD_MODIFYHISTORY (
+				ITEMID,
+				PARENTITEMID,
+				VERSION,
+				MODIFYUSERID,
+				MODIFYUSERNAME,
+				MODIFIEDDATE,
+				TENANT_ID
+			)
+		VALUES (
+			#itemID#,
+			#parentItemID#,
+			#version#,
+			#writerID#,
+			#writerName#,
+			TO_DATE(#writeDate#, 'YYYY-MM-DD HH24:MI:SS'),
+			#tenantID#
+		)
+	</insert>
+
+	<select id = "EzBoardDAO.getParentItemID" parameterClass = "map" resultClass = "String">
+		SELECT
+		    PARENTITEMID
+		FROM
+		    TBL_BOARD_MODIFYHISTORY
+		WHERE
+		    ITEMID = #itemID#
+		AND
+		    TENANT_ID = #tenantID#
+	</select>
+
+	<delete id = "EzBoardDAO.deleteVersionedItem" parameterClass = "map">
+		DELETE FROM
+			TBL_BOARD_ITEM
+		WHERE
+		    ITEMID IN (
+		        SELECT
+		            ITEMID
+		        FROM
+		            TBL_BOARD_MODIFYHISTORY
+		        WHERE
+		            PARENTITEMID = (
+		                SELECT
+		                    PARENTITEMID
+		                FROM
+		                    TBL_BOARD_MODIFYHISTORY
+		                WHERE
+		                    ITEMID = #itemID#
+					)
+			)
+		AND
+		    TENANT_ID = #tenantID#
+	</delete>
+
+	<delete id = "EzBoardDAO.deleteVersionedItemReply" parameterClass = "map">
+		DELETE FROM
+			TBL_Board_OneLineReply
+		WHERE
+			ITEMID IN (
+				SELECT
+					ITEMID
+				FROM
+					TBL_BOARD_MODIFYHISTORY
+				WHERE
+					PARENTITEMID = (
+						SELECT
+							PARENTITEMID
+						FROM
+							TBL_BOARD_MODIFYHISTORY
+						WHERE
+							ITEMID = #itemID#
+					)
+			)
+		AND
+		    TENANT_ID = #tenantID#
+	</delete>
+
+	<delete id = "EzBoardDAO.deleteVersionedItemRead" parameterClass = "map">
+		DELETE FROM
+			TBL_Board_Item_Read
+		WHERE
+			ITEMID IN (
+				SELECT
+					ITEMID
+				FROM
+					TBL_BOARD_MODIFYHISTORY
+				WHERE
+					PARENTITEMID = (
+						SELECT
+							PARENTITEMID
+						FROM
+							TBL_BOARD_MODIFYHISTORY
+						WHERE
+							ITEMID = #itemID#
+					)
+			)
+		AND
+			TENANT_ID = #tenantID#
+	</delete>
+
+	<select id = "EzBoardDAO.versionedItemHrefList" parameterClass = "map" resultClass = "String">
+		SELECT
+			CONTENTLOCATION
+		FROM
+		    TBL_BOARD_ITEM
+		WHERE
+			ITEMID IN (
+				SELECT
+					ITEMID
+				FROM
+					TBL_BOARD_MODIFYHISTORY
+				WHERE
+					PARENTITEMID = (
+						SELECT
+							PARENTITEMID
+						FROM
+							TBL_BOARD_MODIFYHISTORY
+						WHERE
+							ITEMID = #itemID#
+					)
+			)
+		AND
+			TENANT_ID = #tenantID#
+	</select>
+
+	<select id = "EzBoardDAO.getNewestVersion" parameterClass = "map" resultClass = "String">
+		WITH TMP AS (
+			SELECT
+				PARENTITEMID
+			FROM
+				TBL_BOARD_MODIFYHISTORY
+			WHERE
+				ITEMID = #itemID#
+			  AND
+				TENANT_ID = #tenantID#
+		)
+
+		SELECT
+			A.VERSION
+		FROM
+			(
+				SELECT
+					ROW_NUMBER() OVER(
+					ORDER BY
+						VERSION DESC
+				) RN,
+					TBL_BOARD_MODIFYHISTORY.VERSION
+				FROM
+					TBL_BOARD_MODIFYHISTORY
+				WHERE
+					PARENTITEMID = (
+						SELECT
+							*
+						FROM
+							TMP
+					)
+			) A
+		WHERE
+			A.RN = 1
+	</select>
+
+	<select id="EzBoardDAO.getBoardTitle" parameterClass="map" resultClass="String">
+		SELECT
+			TITLE
+		FROM
+			TBL_BOARD_ITEM
+		WHERE
+			BOARDID = #boardID#
+		  AND ITEMID = #itemID#
+		  AND TENANT_ID = #tenantID#
+	</select>
+
+	<select id="EzBoardDAO.checkGuestPerm" parameterClass="Map" resultClass="Integer">
+		SELECT
+			COUNT(1)
+		FROM
+			TBL_BOARD_BOARDMANAGE
+		WHERE
+			BOARDID =
+		<isEqual property="type" compareValue="B">
+			#boardID#
+		</isEqual>
+		<isNotEqual property="type" compareValue="B">
+			(SELECT BOARDID FROM TBL_BOARD_ITEM WHERE ITEMID = #itemID# AND TENANT_ID = #tenantID#)
+		</isNotEqual>
+		AND
+			TYPE = 'GUEST'
+		AND
+			TENANT_ID = #tenantID#
+	</select>
+
+	<select id="EzBoardDAO.getGuestBoardList" parameterClass="Map" resultClass="BoardListVO">
+	<![CDATA[
+		WITH 
+		TB1 as (
+			SELECT
+				1 AS PRIORITY,
+				ROW_NUMBER() OVER (ORDER BY NOTINO ASC, PARENTWRITEDATE DESC, WRITEDATE DESC) as IN_SEQ,
+				ITEMID,
+				TITLE,
+				WRITERNAME,
+				(TO_DATE(WRITEDATE, 'YYYY-MM-DD HH24:MI:SS') + NUMTODSINTERVAL(#offset#, 'MINUTE')) as WRITEDATE,
+				ITEMLEVEL,
+				'1' AS NOTICE,
+				PARENTWRITEDATE,
+				UPPERITEMIDTREE
+			FROM 
+			    TBL_BOARD_ITEM
+			WHERE 
+			    BOARDID = #boardID# 
+			  AND TENANT_ID = #tenantID#
+			  AND (TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS') BETWEEN TO_DATE(NTSTARTDATE, 'YYYY-MM-DD HH24:MI:SS') AND TO_DATE(NTENDDATE, 'YYYY-MM-DD HH24:MI:SS'))
+		UNION ALL
+			SELECT
+				2 AS PRIORITY,
+				ROW_NUMBER() OVER (ORDER BY TO_NUMBER(PARENTWRITEDATE) DESC, WRITEDATE DESC, DBMS_LOB.SUBSTR(UPPERITEMIDTREE, 1000, 1)) AS IN_SEQ,
+				ITEMID,
+				TITLE,
+				WRITERNAME,
+				(TO_DATE(WRITEDATE, 'YYYY-MM-DD HH24:MI:SS') + NUMTODSINTERVAL(#offset#, 'MINUTE')) AS WRITEDATE,
+				ITEMLEVEL,
+				CASE
+					WHEN TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS') BETWEEN TO_DATE(NTSTARTDATE, 'YYYY-MM-DD HH24:MI:SS') AND TO_DATE(NTENDDATE, 'YYYY-MM-DD HH24:MI:SS') THEN '1'
+					ELSE '0'
+					END AS NOTICE,
+				PARENTWRITEDATE,
+				UPPERITEMIDTREE
+			FROM 
+			    TBL_BOARD_ITEM
+			WHERE 
+			    BOARDID = #boardID#
+			  AND TENANT_ID = #tenantID#
+		),
+		TB2 as (
+			SELECT
+				TB1.*,
+				ROW_NUMBER() OVER (PARTITION BY ITEMID ORDER BY PRIORITY) AS CNT
+			FROM TB1
+		)
+		SELECT ITEMID, TITLE, WRITERNAME, WRITEDATE, ITEMLEVEL, NOTICE
+		FROM (
+				 SELECT ITEMID, TITLE, WRITERNAME, WRITEDATE, ITEMLEVEL, NOTICE, PRIORITY, IN_SEQ
+				 FROM TB2
+				 WHERE CNT = 1
+				 ORDER BY PRIORITY, IN_SEQ
+			 )
+		WHERE ROWNUM <= 5
+	]]>
+	</select>
+
+	<select id="EzBoardDAO.getReplyBoardItem" parameterClass="Map" resultClass="BoardListVO">
+		<![CDATA[
+			SELECT
+				ITEMID
+			FROM
+				TBL_Board_Item
+			WHERE
+				tenant_id = #v_TENANTID#
+			AND
+				TO_CHAR(UpperItemIDTree) LIKE '%' || #v_pItemID# || '%'
+			AND
+				ItemID <> #v_pItemID#
+			AND
+				APPRFLAG IN ('N', 'C')
+		]]>
+	</select>
+
+	<delete id="EzBoardDAO.deleteVersionHistory" parameterClass="Map">
+		DELETE FROM TBL_BOARD_MODIFYHISTORY
+		WHERE
+		<isNotEmpty property="allDelete">
+			PARENTITEMID = (SELECT PARENTITEMID FROM TBL_BOARD_MODIFYHISTORY WHERE ITEMID = #itemID# AND TENANT_ID = #tenantID#)
+		</isNotEmpty>
+		<isEmpty property="allDelete">
+			ITEMID = #itemID#
+		</isEmpty>
+		AND
+			TENANT_ID = #tenantID#
+	</delete>
 </sqlMap>

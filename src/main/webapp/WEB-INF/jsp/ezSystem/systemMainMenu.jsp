@@ -384,6 +384,9 @@
 	            		<th><spring:message code="ezEmail.hdp02"/></th>
 	            		<td><input data-paramId="MailBigSizeAttachDownloadLimitCount" id="MailBigSizeAttachDownloadLimitCount" maxlength="5" type="text" value="<c:out value='${configMap.MailBigSizeAttachDownloadLimitCount}'/>"> (<spring:message code="ezSystem.x0014"/>)</td>
 	            	</tr>
+					<c:if test="${zipEncMenu == 'YES'}">
+						<tr data-name="mail"><th><spring:message code="ezEmail.zipEncryptedFile.008"/></th><td><select data-paramId="useAutoZipEnc" id="useAutoZipEnc"><option <c:if test="${configMap.useAutoZipEnc == 'YES'}">selected="selected"</c:if> value="YES"><spring:message code="ezQuestion.t103"/></option><option <c:if test="${configMap.useAutoZipEnc == null or configMap.useAutoZipEnc == 'NO'}">selected="selected"</c:if> value="NO"><spring:message code="ezQuestion.t104"/></option></select></td>
+					</c:if>
 		            
 		            <tr data-name="mail"><th><spring:message code="ezSystem.x0006"/></th><td><input data-paramId="INDIVIDUALMAILUSER" id="INDIVIDUALMAILUSER" maxlength="3" type="text" value="<c:out value='${configMap.INDIVIDUALMAILUSER}'/>"> (<spring:message code="ezSystem.x0015"/>)</td></tr>
 		            <%-- 2024-01-30 장혜연 메일 개별발신 디폴터 설정 추가 --%>
@@ -441,20 +444,23 @@
 	    </div>       
 	<script>
 		function personalReset(val) {
-			var wWeight ="390";
-			var wHeight = "250";
-
-			var heigth = window.screen.availHeight;
-			var width = window.screen.availWidth;
-			var left = (width - wWeight) / 2;
-			var top = (heigth - wHeight) / 2;
+	        var wWeight = 390;
+	        var wHeight = 250;
+			
+			// var heigth = window.screen.availHeight;
+			// var width = window.screen.availWidth;
+			// var left = (width - wWeight) / 2;
+			// var top = (heigth - wHeight) / 2;
+	        var left = window.outerWidth / 2 + window.screenX - (wWeight / 2);
+	        var top = window.outerHeight / 2 + window.screenY - (wHeight / 2);
+			
 			console.log(val);
 			if (val == "frame") {
-				window.open("/admin/ezSystem/resetUserSettings.do?type=frame", "", "height = " + wHeight + ", width = " + wWeight
-						+ ", status = no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=1, top=" + top + ",left = " + left);
+				window.open("/admin/ezSystem/resetUserSettings.do?type=frame", "", "height=" + wHeight + ",width=" + wWeight
+						+ ",status=no,toolbar=no,menubar=no,location=no,resizable=1,scrollbars=1,top=" + top + ",left=" + left);
 			} else if (val == "portlet") {
-				window.open("/admin/ezSystem/resetUserSettings.do?type=portlet", "", "height = " + wHeight + ", width = " + wWeight
-						+ ", status = no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=1, top=" + top + ",left = " + left);
+				window.open("/admin/ezSystem/resetUserSettings.do?type=portlet", "", "height=" + wHeight + ",width=" + wWeight
+						+ ",status=no,toolbar=no,menubar=no,location=no,resizable=1,scrollbars=1,top=" + top + ",left=" + left);
 			}
 		}
 		

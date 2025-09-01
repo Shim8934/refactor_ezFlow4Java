@@ -86,13 +86,6 @@
 					ownerList2 += "," + res_owner["ownerId"][i];
 				}
 				
-				/* 2025-05-07 이혜림 - 최대 예약 가능 기간 확인*/
-				if (document.getElementById("ResMaxDate").value.trim() == "0") {
-                    alert(strLangLHR01);
-                    document.getElementById("ResMaxDate").focus();
-                    return;
-                }
-				
 				// 2024-09-13 유길상 - 정원 미입력 확인
 				if (document.getElementById("ResMaxUserCnt").value.trim() == "") {
 					alert(strLangMaxYGS04);

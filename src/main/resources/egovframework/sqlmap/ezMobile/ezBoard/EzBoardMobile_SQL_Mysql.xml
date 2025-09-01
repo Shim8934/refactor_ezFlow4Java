@@ -80,7 +80,8 @@
 				ATTACHMENTFLAG,
 				PUBLICFLAG,
 				ALLNEWBOARDFLAG,
-			    STARRATINGFLAG
+				STARRATINGFLAG,
+				VERSIONMANAGE
             FROM 
                 TBL_BOARD_BOARDINFO 
 			WHERE  
@@ -183,6 +184,23 @@
 						TBL_BOARD_ITEM A
 					LEFT OUTER JOIN
 						(SELECT
+							ROW_NUMBER() OVER(
+								PARTITION BY
+									PARENTITEMID
+								ORDER BY
+									VERSION DESC
+							) RN,
+							ITEMID,
+							TENANT_ID
+						FROM
+							TBL_BOARD_MODIFYHISTORY
+						) M1
+					ON
+						A.ITEMID = M1.ITEMID
+					AND
+						A.TENANT_ID = M1.TENANT_ID
+					LEFT OUTER JOIN
+						(SELECT
 							COUNT(userid) AS totalcount, 
 							itemid,
 							tenant_id 
@@ -213,6 +231,12 @@
 					A.apprflag = 'Y'
 			]]>
 		</isEqual>
+		<isEqual property = "useVersion" compareValue = "Y" prepend="AND">
+			M1.RN = 1
+		</isEqual>
+		<isNotEqual property = "useVersion" compareValue = "Y" prepend="AND">
+			(M1.ITEMID IS NULL OR M1.RN = 1)
+		</isNotEqual>
 
 		<isNotEmpty property="pSearchText">
 			<![CDATA[
@@ -343,6 +367,23 @@
                   	A.PUBLICFLAG
                     FROM
                         TBL_BOARD_ITEM A
+					LEFT OUTER JOIN
+						(SELECT
+							ROW_NUMBER() OVER(
+								PARTITION BY
+									PARENTITEMID
+								ORDER BY
+									VERSION DESC
+							) RN,
+							ITEMID,
+							TENANT_ID
+						FROM
+							TBL_BOARD_MODIFYHISTORY
+						) M1
+					ON
+						A.ITEMID = M1.ITEMID
+					AND
+						A.TENANT_ID = M1.TENANT_ID
                     LEFT OUTER JOIN
                         (SELECT
                             COUNT(userid) AS totalcount, 
@@ -375,6 +416,12 @@
                         A.apprflag = 'Y'
                 ]]>
             </isEqual>
+			<isEqual property = "useVersion" compareValue = "Y" prepend="AND">
+				M1.RN = 1
+			</isEqual>
+			<isNotEqual property = "useVersion" compareValue = "Y" prepend="AND">
+				(M1.ITEMID IS NULL OR M1.RN = 1)
+			</isNotEqual>
 
 		<isNotEmpty property="pSearchText">
 			<![CDATA[
@@ -541,11 +588,29 @@
 		<isEqual property="gubun" compareValue="1">
 			<![CDATA[
 				SELECT 
-					COUNT(itemid) totalcount
+					COUNT(A.itemid) totalcount
 				FROM 
-					TBL_BOARD_ITEM 
+					TBL_BOARD_ITEM A
+				LEFT OUTER JOIN
+					(
+						SELECT
+							ROW_NUMBER() OVER(
+								PARTITION BY
+									PARENTITEMID
+								ORDER BY
+									VERSION DESC
+							) RN,
+							ITEMID,
+							TENANT_ID
+						FROM
+							TBL_BOARD_MODIFYHISTORY
+					) M1
+				ON
+					A.ITEMID = M1.ITEMID
+				AND
+					A.TENANT_ID = M1.TENANT_ID
 				WHERE  
-					tenant_id = #tenantID#
+					A.tenant_id = #tenantID#
 				AND
 					boardid = #boardID#
 				AND
@@ -593,6 +658,12 @@
 						apprflag = 'Y'
 				]]>
 			</isEqual>
+			<isEqual property = "useVersion" compareValue = "Y" prepend="AND">
+				M1.RN = 1
+			</isEqual>
+			<isNotEqual property = "useVersion" compareValue = "Y" prepend="AND">
+				(M1.ITEMID IS NULL OR M1.RN = 1)
+			</isNotEqual>
 		</isEqual>
 		
 		<isEqual property="gubun" compareValue="2">
@@ -1312,11 +1383,13 @@
 		                      	C.Access_ = 1
 		                      AND 
 		                      	C.BoardID <> #excludeBoardID#
+					]]>
 		                      AND 
-		                      	C.AccessID = #userID#
+		                      	(C.AccessID = #userID#
+								 	<isEqual property="guestPermitYN" compareValue="YES"> OR C.AccessID = 'guestPermit'</isEqual>
+		                    	)
 		                      AND 
 		                      	D.ParentBoardID = #rootBoardID#
-		                      ]]>
 		                      <isEqual property="v_ISDEPT" compareValue="1">
 		                      	<isEqual property="v_ISEQUALDEPT" compareValue="0">
 			                      AND
@@ -2354,10 +2427,14 @@
 		<isEqual property="v_PADMINTYPE" compareValue="false">
 			<![CDATA[
 				AND 
-					(TOPWRITERID = #userID#
+					(
+						TOPWRITERID = #userID#
 					OR
-					WRITERID = #userID#)
-			]]>
+						WRITERID = #userID#
+					OR
+						(EXTENSIONATTRIBUTE2 = '1' AND NTSTARTDATE <= #nowDate# AND NTENDDATE > #nowDate#)
+					)
+				]]>
 		</isEqual>
 	</select>
 	
@@ -2496,9 +2573,13 @@
 		<isEqual property="v_PADMINTYPE" compareValue="false">
 			<![CDATA[
 				AND
-					(TOPWRITERID = #userID#
+					(
+						TOPWRITERID = #userID#
 					OR
-					WRITERID = #userID#)
+						WRITERID = #userID#
+					OR
+						(EXTENSIONATTRIBUTE2 = '1' AND NTSTARTDATE <= #nowDate# AND NTENDDATE > #nowDate#)
+					)
 			]]>
 		</isEqual>
 		
@@ -2631,10 +2712,14 @@
 			<isEqual property="v_PADMINTYPE" compareValue="false">
 				<![CDATA[
 					AND
-						(TOPWRITERID = #userID#
+                        (
+                            TOPWRITERID = #userID#
 						OR
-						WRITERID = #userID#)
-				]]>
+							WRITERID = #userID#
+						OR
+							(EXTENSIONATTRIBUTE2 = '1' AND NTSTARTDATE <= #nowDate# AND NTENDDATE > #nowDate#) 
+						)
+                ]]>
 			</isEqual>
              <![CDATA[             
                 ORDER BY

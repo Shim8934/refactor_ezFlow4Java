@@ -94,6 +94,9 @@
 	    	// 메인페이지의 onload실행과 initLoad함수의 실행 속도 차이로 setTimeout함수 사용
 	    	var onloadflag = false;
 	    	
+	    	// 2024-08-27 유길상 - 정원컬럼 추가
+	    	var resMaxDate = "${resMaxDate}";
+	    	
 	    	if (new RegExp(/Chrome/).test(navigator.userAgent) || new RegExp(/Safari/).test(navigator.userAgent)) {
 		        window.onblur = function () {
 		            window.focus();
@@ -409,7 +412,17 @@
 	        	} else if (typeof (retVal) != "undefined" && retVal.length == 2) {
 	            	ItemArray[0] = retVal[0];
 	            	ItemArray[1] = retVal[1];
-
+	            	var curMaxDate = resMaxDate;
+					for (var i = 0; i < ItemArray[0].length; i++) {
+						var itemResMaxDate = getResourceMaxDate(ItemArray[0][i]);
+						console.log("itemResMaxDate", itemResMaxDate)
+						if (itemResMaxDate) {
+							if (itemResMaxDate < curMaxDate) {
+								curMaxDate = itemResMaxDate;
+							}
+						}
+					}
+					resMaxDate = curMaxDate + "";
 	            	document.getElementById('itemList').innerHTML = "";
 	            	
 	            	for (var i = 0 ; i < ItemArray[0].length ; i++) {
@@ -421,6 +434,33 @@
 		            }
 	        	}
 	        	DivPopUpHidden();
+	    	}
+	    	
+	    	// 2024-08-27 유길상 - 최대 예약 가능 기간 검증
+	    	function getResourceMaxDate(item) {
+	    		var brdIdList = schedule_add_select_cross_dialogArguments[0];
+	    		var result = null;
+	    		
+	    		var ssDate = $("#Sdatepicker").datepicker().val();
+	        	var eeDate = $("#Edatepicker").datepicker().val();
+	        	var ssTime = $("#Stimepicker").timepicker({ 'timeFormat': 'H:i' }).val();
+	        	var eeTime = $("#Etimepicker").timepicker({ 'timeFormat': 'H:i' }).val();
+	        	
+	   			 $.ajax({
+	        		    url: '/ezResource/checkResoruceMaxDate.do',
+	        		    type: 'POST',
+	        		    dataType: 'json',
+	        		    async : false,
+		    			cache : false,
+	        		    contentType: "application/json",
+	        		    data: JSON.stringify({
+	        		    	brdId: item
+	        		    }),
+	        		    success: function(data) {
+	        		    	result =  data;
+	        		    }
+	        		});
+	   			 return result;
 	    	}
 	    	
 	    	var doubleSubmitFlag = false;
@@ -435,7 +475,8 @@
 	    	
 	    	var SaveScheduleId = "";
 	    	function btn_Save() {
-			if(doubleSubmitFlag) return;
+			try {
+				if(doubleSubmitCheck()) return;
 			
 	        	var check = true;
 				// 반복예약허용 유무 체크
@@ -529,6 +570,54 @@
 		            	}
 	            	}
 	            	
+					// 2024-08-27 유길상 - 최대 예약 가능 기간 검증
+	            	var resMaxDateArray = [];
+	            	for (var i = 0; i < ItemArray[0].length; i++) {
+		               	var itemResMaxDate = getResourceMaxDate(ItemArray[0][i]);
+		               	resMaxDateArray.push(itemResMaxDate);
+		            }
+	            	
+	            	var minNumber = Number.POSITIVE_INFINITY;
+	            	
+	            	for (let i = 0; i < resMaxDateArray.length; i++) {
+	            		var current = resMaxDateArray[i];
+	            	    if (current !== null && current != 0 && current < minNumber) {
+	            	        minNumber = current;
+	            	    }
+	            	}
+	            	
+	            	var maxDateFlag;
+	            	if (minNumber != Infinity) {
+	            		resMaxDate = minNumber;
+	            		var intResMaxDate = parseInt(resMaxDate);
+	            		var checStartDate = ssDate + " " + ssTime;
+		        		var checEndDate = eeDate + " " + eeTime;
+		        		
+		        		var chStDate = new Date(checStartDate);
+		        		var chEdDate = new Date(checEndDate);
+		        		
+		        		
+		        		if (schedule_repetition_cross_dialogArguments[0]) {
+		        			chStDate = new Date(schedule_repetition_cross_dialogArguments[0].startTime);	
+		        			chEdDate = new Date(schedule_repetition_cross_dialogArguments[0].endTime);	
+		        		}
+		        		
+		        		var betweenDay  = (chEdDate - chStDate) / (1000 * 60 * 60 * 24);
+		        		
+		        		if (betweenDay > intResMaxDate) {
+		        			maxDateFlag = false;
+		        		} else {
+		        			maxDateFlag = true;
+		        		}
+	            	} else {
+	            		maxDateFlag = true;
+	            	}
+					
+	            	if (!maxDateFlag) {
+	            		alert(strLangMaxYGS01);
+	            		return;
+	            	}
+	            	
 	            	for (var i = 0 ; i < ItemArray[0].length ; i++) {
 		                SaveSchedule_onClick(cmd, ItemArray[0][i]);
 		            }
@@ -544,6 +633,45 @@
 	        		}
 	    	    }
 	        	return check;
+			} catch (e) {
+				console.log(e);
+			} finally {
+				doubleSubmitCancel();
+			}
+	    	}
+
+            function doubleSubmitCancel() {
+                setTimeout(function() {
+                    doubleSubmitFlag = false;
+                }, 500);
+            }
+            
+	    	
+	    	// 2024-08-27 유길상 - 최대 예약 가능 기간 조회
+	    	function getResourceMaxDate(item) {
+	    		var brdIdList = schedule_add_select_cross_dialogArguments[0];
+	    		var result = null;
+	    		
+	    		var ssDate = $("#Sdatepicker").datepicker().val();
+	        	var eeDate = $("#Edatepicker").datepicker().val();
+	        	var ssTime = $("#Stimepicker").timepicker({ 'timeFormat': 'H:i' }).val();
+	        	var eeTime = $("#Etimepicker").timepicker({ 'timeFormat': 'H:i' }).val();
+	        	
+	   			 $.ajax({
+	        		    url: '/ezResource/checkResoruceMaxDate.do',
+	        		    type: 'POST',
+	        		    dataType: 'json',
+	        		    async : false,
+		    			cache : false,
+	        		    contentType: "application/json",
+	        		    data: JSON.stringify({
+	        		    	brdId: item
+	        		    }),
+	        		    success: function(data) {
+        		        	result = data;
+	        		    }
+        		});
+	   			return result;
 	    	}
 	    	
 	    	function CheckPreviously() {
@@ -861,11 +989,11 @@
 	          				<th> <spring:message code="ezResource.t197"/></th>
 	          				<td width="100%" colspan="3" id="Td_StartDate" style="overflow:hidden;">
 	          					<input type="checkbox" id="AllDay" <c:if test="${allDay eq '1' && dayView ne 0}">checked</c:if> onClick="display_time_Unshow()" /><spring:message code="ezResource.t211"/>
-	          					<input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly">
-	          					<input id="Stimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center" onkeypress="return KeEventControl(this);" onkeydown="return KeEventControl(this);" onkeyup="return KeEventControl(this);" onmousedown="return false"/>
+	          					<input type="text" id="Sdatepicker" style="width:90px;text-align:center" readonly="readonly">
+	          					<input id="Stimepicker" type="text" class="time" style="width:53px;margin-left:10px;text-align:center" onkeypress="return KeEventControl(this);" onkeydown="return KeEventControl(this);" onkeyup="return KeEventControl(this);" onmousedown="return false"/>
 	           						~
-	           					<input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly">
-	           					<input id="Etimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center" onkeypress="return KeEventControl(this);" onkeydown="return KeEventControl(this);" onkeyup="return KeEventControl(this);" onmousedown="return false"/>
+	           					<input type="text" id="Edatepicker" style="width:90px;text-align:center" readonly="readonly">
+	           					<input id="Etimepicker" type="text" class="time" style="width:53px;margin-left:10px;text-align:center" onkeypress="return KeEventControl(this);" onkeydown="return KeEventControl(this);" onkeyup="return KeEventControl(this);" onmousedown="return false"/>
 	          				</td>
 	        			</tr>
 				        <tr>

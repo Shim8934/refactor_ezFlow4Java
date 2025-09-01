@@ -189,7 +189,7 @@
          }
 
          function Navigate(url) {
-             window.open(url, 'right');
+             parent.document.querySelector("iframe[name=right]").src = url;
          }
 
          function TreeView_onNodeExpanded(event) {

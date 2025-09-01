@@ -365,6 +365,8 @@ var strLangHSG03 = "Subject field is empty.";
 
 var strLangKDH01 = "Read info";
 
+var strLangYJA01 = "An error occurred while uploading via the network.";
+
 //new ui
 const strLangFolderManage = "Manage folder";
 const strLangSubscribe = "Subscribe";
@@ -401,6 +403,9 @@ const strLangTagadd = "Add tags to mail :";
 
 const strLangChangeButton = "Switch";
 const strLangChangeLimit = "Cannot switch because the attachment size exceeds the limit.";
+
+const strLangKeepMoveCantUseSentBox = 'Emails cannot be continuously moved to the Sent folder.';
+const strLangKeepMoveNoFromHeader = 'Emails without a sender cannot be continuously moved.';
 
 function GetLocalTime(Offset , pDateTime)
 {

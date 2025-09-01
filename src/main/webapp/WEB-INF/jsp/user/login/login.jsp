@@ -256,6 +256,28 @@
 					$("#imgMnt2").html("<img src='/images/warning2.png'>");
 			        $("#exDiv3").modal();
 			    }
+
+				var pwInput = document.getElementById('upw'); // 해당 ID로 비밀번호 입력 요소 가져오기
+				var capsLock = document.getElementById('capsLock'); // CapsLock 경고 표시 요소
+				var pwView = document.querySelector('.pw #pw_view'); // 로그인 > 비밀번호 보기 
+
+				pwInput.addEventListener('keydown', function (e) {
+					if (e.getModifierState && e.getModifierState('CapsLock')) {
+						capsLock.style.display = 'block';
+					} else {
+						capsLock.style.display = 'none';
+					}
+				});
+
+				pwInput.addEventListener('blur', function () {
+					capsLock.style.display = 'none';
+					if (pwInput.value.length == 0) pwView.style.display = 'none';
+				});
+
+				pwInput.addEventListener('focus', function () {
+					pwView.style.display = 'block';
+				});
+				
 			    getid(document.loginForm);
 			    document.loginForm.message.value = "";
 			    
@@ -268,6 +290,17 @@
 				
 				// 하단의 연도 문자열 표출
 				makeRightsYearString();
+				
+				const togglePasswords = document.querySelectorAll('.pw_view');
+
+				togglePasswords.forEach((toggle) => {
+					toggle.addEventListener('click', function () {
+						const passwordInput = this.parentNode.querySelector('input[type="password"], input[type="text"]');
+						const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+						passwordInput.setAttribute('type', type);
+					});
+				});
+				
 			}
 			
 			function setting_click() {
@@ -521,11 +554,81 @@
 				window.location.href = "/user/login/resetPw/resetPwInfo.do";
 			}
 	
+			function openBoardItem(itemID, boardType, boardID) {
+				var pheight = window.screen.availHeight;
+				var pwidth = window.screen.availWidth;
+				var pTop = (pheight - 720) / 2;
+				var pLeft = (pwidth - 890) / 2;
+				
+				var url = "/ezBoard/boardItemView.do";
+				if (boardType === "3" || boardType === "4") {
+					url = "/ezBoard/boardItemViewPhoto.do";
+				} else if (boardType === "7" ) {
+					url = "/ezBoard/boardIte mViewMovie.do";
+				}
+				
+				url += "?&itemID=" + encodeURIComponent(itemID) + "&boardID=" + encodeURIComponent(boardID);
+				window.open(url, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=890,top=" + pTop + ",left=" + pLeft, "");
+			}
+			
+			function openBoardList(boardID, boardType) {
+				var url = "/ezBoard/boardItemList.do"
+				if (boardType === "3" || boardType === "4") {
+					url = "/ezBoard/boardItemListPhoto.do";
+				} else if (boardType === "7" ) {
+					url = "/ezBoard/boardItemListMovie.do";
+				}
+
+				url += "?boardID=" + encodeURIComponent(boardID) + "&boardType=" + boardType;
+				window.open(url, "_blank", "height=720,width=890")
+			}
     	</script>
 	</head>	
 	<body class="login_body" onload="fnInit()">
 		<div class="login_wrapper">
-			<div class="login_backImg"></div>
+			<div class="login_backImg">
+				<c:if test="${guestPermitYN eq 'YES' && showGuestBoardYN eq 'YES'}">
+					<div class="contents_guestBoardList">
+						<dl class="contents_tabGuestBoard">
+							<dt>${boardInfo.boardName}</dt>
+							<c:if test="${fn:length(gBoardList) > 0 }">
+								<dd class="btn_more" onclick="openBoardList('${boardInfo.boardID}', '${boardInfo.guBun}')"></dd>
+							</c:if>
+						</dl>
+						<ul class="contents_listGuestBoard">
+							<c:choose>
+								<c:when test="${fn:length(gBoardList) eq 0 }">
+									<dl class="nodata_sIcon">
+										<dt><img src="/images/kr/main/noData_sIcon.png"></dt>
+										<dd><spring:message code='ezCommunity.kmsc01'/></dd>
+									</dl>
+								</c:when>
+								<c:when test="${fn:length(gBoardList) ne 0 }">
+									<c:forEach items="${gBoardList}" var="list" begin="0" end="4" >
+										<li>
+											<c:if test="${list.notice eq '1'}">
+												<span class="icon">
+													<img src="/images/i_notice.gif">
+												</span>
+											</c:if>
+											<c:if test="${list.itemLevel > 1}">
+												<span class="icon">
+													<img src="/images/dum.gif" width="${(list.itemLevel - 1) * 10 }" height="1" border="0">
+													<img src="/images/i_rep.gif" alt border="0">
+												</span>
+											</c:if>
+											<c:if test="${list.writeDate >= pastDate}">
+												<span class="icon"><img src="/images/kr/community/communityPortlet_iconnew.gif"></span>
+											</c:if>
+											<span class="txt" onclick="openBoardItem('${list.itemID}', '${boardInfo.guBun}', '${boardInfo.boardID}')">${list.title}</span><span class="date">${fn:substring(list.writeDate, 0, 10) }</span>
+										</li>
+									</c:forEach>
+								</c:when>
+							</c:choose>
+						</ul>
+					</div>
+				</c:if>
+			</div>
 			<div class="right_wrap">
 				<div class="login_layout">
         			<div class="login_form">	                
@@ -546,9 +649,11 @@
 		                        </p>
 		                        <p class="pw_txt"><spring:message code="main.login.design03"/></p>
 		                        <p class="pw">
-		                        	<input id="upw" name="password" placeholder="<spring:message code="main.login.design04"/>" class="input_text" type="password" onchange="if(this.value.length!=0){this.className='input_text focus'}" onblur="if (this.value.length==0) {this.className='input_text', document.getElementById('BC2').style.display = 'none';} else {this.className='input_text'};" onfocus="this.className='input_text focus', document.getElementById('BC2').style.display = 'block';" onKeyPress="if(event.keyCode==13) actionLogin();" autocomplete="off" />
+		                        	<input id="upw" name="password" maxlength="50" style="padding-right: 90px" placeholder="<spring:message code="main.login.design04"/>" class="input_text" type="password" onchange="if(this.value.length!=0){this.className='input_text focus'}" onblur="if (this.value.length==0) {this.className='input_text', document.getElementById('BC2').style.display = 'none';} else {this.className='input_text'};" onfocus="this.className='input_text focus', document.getElementById('BC2').style.display = 'block';" onKeyPress="if(event.keyCode==13) actionLogin();" autocomplete="off" />
 		                        	<span class="btnClear" id="BC2" onclick="clearInput(this)" style="display:none;"></span>
+									<span class="pw_view" id="pw_view" onclick="this.classList.toggle('on')" style="display:none;"></span>
 		                        </p>
+									<div class="capsLock" id="capsLock" style="display:none">Caps Lock이 켜져 있습니다.</div>
 		                        <c:choose>
 			                        <c:when test="${useOTP}">
 										<p class="otp_txt">OTP</p>
@@ -634,9 +739,9 @@
 						<span class="formText">
 							<c:if test="${resetPassword == 'Y'}"><spring:message code='login.kdh001'/></c:if>
 							<c:if test="${resetPassword != 'Y'}"><spring:message code='ezPersonal.t949'/> </c:if>
-						</span><span class="formInput"><input type="password" id="txtOldPassword" onkeypress="if(event.keyCode==13) PassWordChange();"></span></li>
-					<li><span class="formText"><spring:message code='main.jjh05'/></span><span class="formInput"><input type="password" id="txtNewPassword" onkeypress="if(event.keyCode==13) PassWordChange();"></span></li>
-					<li><span class="formText"><spring:message code='main.jjh06'/></span><span class="formInput"><input type="password" id="txtNewPasswordConfirm" onkeypress="if(event.keyCode==13) PassWordChange();"></span></li>
+						</span><span class="formInput"><input type="password" id="txtOldPassword" maxlength="50" style="padding-right: 50px" onkeypress="if(event.keyCode==13) PassWordChange();"><span class="pw_view" onclick="this.classList.toggle('on');"></span></span></li>
+					<li><span class="formText"><spring:message code='main.jjh05'/></span><span class="formInput"><input type="password" id="txtNewPassword"  maxlength="50" style="padding-right: 50px" onkeypress="if(event.keyCode==13) PassWordChange();"><span class="pw_view" onclick="this.classList.toggle('on');"></span></span></li>
+					<li><span class="formText"><spring:message code='main.jjh06'/></span><span class="formInput"><input type="password" id="txtNewPasswordConfirm" maxlength="50" style="padding-right: 50px" onkeypress="if(event.keyCode==13) PassWordChange();"><span class="pw_view" onclick="this.classList.toggle('on');"></span></span></li>
 
 					<li style="padding-bottom:10px;padding-top:3px" class="grayText"></li>
 				</ul>
@@ -858,15 +963,15 @@
 				</div>
 			</div>
 
-			<div id="exDiv10" style="display:none;max-width:690px;height:190px;padding-top:27px;margin-bottom:100px">
+			<div id="exDiv10" style="display:none;max-width:730px;height:190px;padding-top:27px;margin-bottom:100px">
 				<div id="close">
 					<ul>
 						<li><a rel="modal:close"><span></span></a></li>
 					</ul>
 				</div>
-				<div class="warning_wrap" style="margin:10px 0px 10px 27px; width:640px;">
+				<div class="warning_wrap" style="margin:10px 0px 10px 27px; width:680px;">
 					<p style="border:0px" id="imgMnt10"></p>
-					<dl sty`le="margin:-108px 0px 0px 150px;">
+					<dl style="margin:-108px 0px 0px 150px;">
 						<dt>${message1}</dt>
 						<br>
 						<dd>${message2}</dd>

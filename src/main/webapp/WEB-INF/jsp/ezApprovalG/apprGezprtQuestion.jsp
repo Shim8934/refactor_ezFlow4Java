@@ -44,7 +44,13 @@
 				} else {
 					messageFrame = parent.document.getElementById("message");
 				}
-				var pages = messageFrame.contentWindow.document.getElementById("body").getElementsByClassName("divImg").length;
+				var pages;
+				if (navigator.maxTouchPoints > 4 || isTeamsDesktop()) {
+					pages = messageFrame.contentWindow.document.getElementById("div_Content").getElementsByClassName("divImg").length;
+				} else {
+					pages = messageFrame.contentWindow.document.getElementById("body").getElementsByClassName("divImg").length;
+				}
+				
 		        if(pages <= 0){
 		        	$("#Submit4").css("display", "none");
 		        }
@@ -159,7 +165,13 @@
 		    }
 		
 		    function only_click() {
-		    	var imgDiv = messageFrame.contentWindow.document.getElementById("body").getElementsByClassName("imgDiv");
+				var imgDiv;
+				if (navigator.maxTouchPoints > 4 || isTeamsDesktop()) {
+					imgDiv = messageFrame.contentWindow.document.getElementById("div_Content").getElementsByClassName("divImg").length;
+				} else {
+					imgDiv = messageFrame.contentWindow.document.getElementById("body").getElementsByClassName("divImg").length;
+				}
+				
 		    	var imgDiv2 = $(imgDiv).nextAll();
 				var imgDiv3 = $(imgDiv).prevAll();
 				$(imgDiv2).css("display", "");
@@ -178,7 +190,13 @@
 		    }
 			
 		    function all_pages() {
-		    	var imgDiv = messageFrame.contentWindow.document.getElementById("body").getElementsByClassName("imgDiv");
+				var imgDiv;
+				if (navigator.maxTouchPoints > 4 || isTeamsDesktop()) {
+					imgDiv = messageFrame.contentWindow.document.getElementById("div_Content").getElementsByClassName("divImg").length;
+				} else {
+					imgDiv = messageFrame.contentWindow.document.getElementById("body").getElementsByClassName("divImg").length;
+				}
+				
 		    	var imgDiv2 = $(imgDiv).nextAll();
 				var imgDiv3 = $(imgDiv).prevAll();
 				$(imgDiv2).css("display", "");

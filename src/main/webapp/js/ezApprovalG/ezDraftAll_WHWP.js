@@ -1902,8 +1902,32 @@ function setDocNumFormat(pPrefix) {
 	}
 
 	var fieldValue = GetFieldText(pPrefix + "docnumber"); // 문서번호 필드의 문서번호 포맷
-	
-	numHeader = getDocNumByFormat(fieldValue);
+    
+    // orgdocnum 처리 추가
+    if ("hwp" === docHref.substring(docHref.lastIndexOf(".") + 1)) {
+        var tmpdocNum = GetDocumentElementForDraftAll(pPrefix + "orgdocnum", true);
+
+        if (!tmpdocNum) {
+            if (fieldValue) {
+                SetDocumentElementForDraftAll("orgdocnum", fieldValue);
+            }
+        } else {
+            fieldValue = tmpdocNum;
+        }
+    } else {
+        var tmpdocNum = DocumentBodyGetAttribute(pPrefix + "orgdocnum");
+
+        if (!tmpdocNum) {
+            if (fieldValue) {
+                DocumentBodySetAttribute("orgdocnum", fieldValue);
+            }
+        } else {
+            fieldValue = tmpdocNum;
+        }
+    }
+
+    
+    numHeader = getDocNumByFormat(fieldValue);
 	
 	PutFieldText(pPrefix + "docnumber", numHeader);
 	
@@ -1920,6 +1944,7 @@ function setDocNumFormat(pPrefix) {
 
 // 문서번호만 별도로 리턴하기 위한 함수 분리 파트
 function getDocNumByFormat(format) {
+    format = format.trim();
 	var Arr_Header = new Array();
 	var numHeader = "";
 	var Header, Tail;
@@ -2110,16 +2135,18 @@ function openSignUI() {
 	  	
 	  	SignNodeList = SelectNodes(loadXMLString(result), "LISTVIEWDATA/ROWS/ROW");
 	    
-	    if (SignNodeList.length != 0) { 
+	    // if (SignNodeList.length != 0) { 
 	    	var parameter = pUserID;
 
             aprsign1_cross_dialogArguments[0] = parameter;
             aprsign1_cross_dialogArguments[1] = openSignUI_Complete;
 
             DivPopUpShow(350, 310, "/ezApprovalG/aprSign.do");
+        /*
 	    } else {
 	    	openSignUI_Complete("NAME");
 	    }
+	    */
     } catch(e) {
       alert("ezDraftAll_WHWP.js > openSignUI()" + e.description);
     }

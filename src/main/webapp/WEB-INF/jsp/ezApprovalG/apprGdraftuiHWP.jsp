@@ -513,7 +513,7 @@
                                 if (apprReuseConfig != '1') {
                                     getDocInfo();
                                     setAttachInfo(pDocID, "APR", lstAttachLink);
-                                    copySummaryForReuse(beforeDocID, pDocID);
+                                    copySummary(beforeDocID, "END", pDocID);
                                 }
                             }
 			            }
@@ -1039,7 +1039,10 @@
 			    try {
 			        if (bAttachProcess == false)
 			            window.opener.openergetDocInfo();
-			    } catch (e) { }
+			    } catch (e) {
+					if (bAttachProcess == false)
+			            window.parent.openergetDocInfo();
+				}
 			
 			    try {
 // 			        if (bAttachProcess == false)
@@ -1051,18 +1054,18 @@
 			        bAttachProcess = true;
 			    } catch (e) { }
 			    
-		        try {
-		            window.opener.getApprGraph("appr");
-		        } catch (e) { }
+		        // try {
+		        //     window.opener.getApprGraph("appr");
+		        // } catch (e) { }
 			}
 	
 			function btn_Attach_onclick() {
 			    btnFileAttach_onclick();
 			}
 	
-			function btnMail_onclick() {
-			    window.open("/ezEmail/mailWrite.do?cmd=docsend&docID=" + pDocID + "&docHref=" + pFormHref, '', 'height=700,width=690,resizable=yes,scrollbars=no' + GetOpenPosition(690, 700));
-			}
+			// function btnMail_onclick() {
+			//     window.open("/ezEmail/mailWrite.do?cmd=docsend&docID=" + pDocID + "&docHref=" + pFormHref, '', 'height=700,width=690,resizable=yes,scrollbars=no' + GetOpenPosition(690, 700));
+			// }
 				
 			/*PublicType, PublicLevel 기존의 공개여부 2018-04-04 김은석 수정*/
 			function setPublicFlag() {
@@ -1223,7 +1226,7 @@
 			    getHistory();
 			}
 			
-			var ezapprovalinfo_dialogArguments = new Array();
+			// var ezapprovalinfo_dialogArguments = new Array();
 			function btnApprovalInfo(pGubun) {
 				
 				gpGubun = pGubun;
@@ -1297,8 +1300,8 @@
 			
 			        parameter[60] = passAprLine;
 					
-			        ezapprovalinfo_dialogArguments[0] = parameter;
-			        ezapprovalinfo_dialogArguments[1] = btnApprovalInfo_Complete;
+			        // ezapprovalinfo_dialogArguments[0] = parameter;
+			        // ezapprovalinfo_dialogArguments[1] = btnApprovalInfo_Complete;
 			        
 					if(DraftFlag == "REDRAFT" && SusinSN == "1" && DocState == "011" && AprState == "004") {
 						gpGubun = "11";
@@ -1312,18 +1315,18 @@
 			        if (isUsed == "reuse") {
 			        	OpenUrl +=  "&isUsed=" + isUsed + "&beforeDocID=" +beforeDocID
 			        }
-			        var OpenWin = window.open(OpenUrl , "ezApprovalInfo-" + windowUuid, GetOpenWindowfeature(1144, 750));
-			        
-			        try { OpenWin.focus(); } catch (e) { }
-			        
-			        
+			        // var OpenWin = window.open(OpenUrl , "ezApprovalInfo-" + windowUuid, GetOpenWindowfeature(1144, 750));
+			        //
+			        // try { OpenWin.focus(); } catch (e) { }
+			        ezCommon_cross_dialogArguments[0] = parameter;
+			        showPopup(OpenUrl, 1144, 750, "ezApprovalInfo-" + windowUuid, GetOpenWindowfeature(1144, 750), btnApprovalInfo_Complete);
 			    } catch (e) {
 			        alert("ezdraftui_hwp.btnApprovalInfo()::" + e.description);
 			    } 
 			}
 	
 			    function btnApprovalInfo_Complete(ret) {
-
+					hidePopup();
 			        if (ret != undefined && ret[0] == "OK") {
 			            if (ret[1] != false) {
 			                $.ajax({
@@ -1527,13 +1530,15 @@
 	                    window.opener.openergetDocInfo();
 	            }
 	            catch (e)
-	            { }
-	            try {
-	                if (bAttachProcess == false)
-	                    window.opener.Refresh_Window();
-	            }
-	            catch (e)
-	            { }
+	            {
+					if (bAttachProcess == false)
+	                    window.parent.openergetDocInfo();
+				}
+	            // try {
+	            //     if (bAttachProcess == false)
+	            //         window.opener.Refresh_Window();
+	            // }
+	            // catch (e) { }
 	            try {
 	                bAttachProcess = true;
 	            }

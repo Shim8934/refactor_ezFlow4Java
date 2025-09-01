@@ -54,8 +54,14 @@
 
 			// 의견 모달창을 띄우기 위한 companyID
 			var orgCompanyID = "<c:out value ='${companyID}'/>";
+			
+			var ReturnFunction;
 
 		    window.onload = function () {
+				if (isParentCommonArgsUsed()) {
+					ReturnFunction = opener == null ? parent.ezCommon_cross_dialogArguments[1] : opener.ezCommon_cross_dialogArguments[1];
+				}
+				
 		        try {
 		            var xmlpara = createXmlDom();
 		            xmlpara = loadXMLString(ChildDocInfo);
@@ -263,10 +269,12 @@
 		        if (tr.length != 0) {
 		            var pCheckval = tr[0].getAttribute("DATA5");
 		            if (pCheckval == "Y") {
-		                window.open("/ezApprovalG/ezLineInfo.do?docID=" + tr[0].getAttribute("DATA3") + "&deptID=" + tr[0].getAttribute("DATA4") + "&docState=012", "", "height=460px,width=1155px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + GetOpenPosition(1155, 460));
+// 		                window.open("/ezApprovalG/ezLineInfo.do?docID=" + tr[0].getAttribute("DATA3") + "&deptID=" + tr[0].getAttribute("DATA4") + "&docState=012", "", "height=460px,width=1155px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + GetOpenPosition(1155, 460));
+		                showPopup("/ezApprovalG/ezLineInfo.do?docID=" + tr[0].getAttribute("DATA3") + "&deptID=" + tr[0].getAttribute("DATA4") + "&docState=012", 1155, 460, "", "height=460px,width=1155px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + GetOpenPosition(1155, 460), hidePopup);
 		            }
 		            else {
-		                window.open("/ezCommon/showPersonInfo.do?id=" + tr[0].getAttribute("DATA4"), "", "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + GetOpenPosition(420, 450));
+// 		                window.open("/ezCommon/showPersonInfo.do?id=" + tr[0].getAttribute("DATA4"), "", "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + GetOpenPosition(420, 450));
+		                showPopup("/ezCommon/showPersonInfo.do?id=" + tr[0].getAttribute("DATA4"), 420, 450, "", "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + GetOpenWindowfeature(420, 450), hidePopup);
 		            }
 		        }
 		    }
@@ -459,7 +467,7 @@
 		</h1>
 		<div id="close">
 		  <ul>
-		    <li><span onclick="window.close()"></span></li>
+		    <li><span onclick="btnClose_onclick()"></span></li>
 		  </ul>
 		</div>
 		

@@ -1,13 +1,14 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
-<html>
+<html class="frame_main">
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1">		
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" type="text/css" href="${util.addVer('/css/mainFrame.css')}"/>
 	</head>
-	<frameset cols="220,*" frameborder="no" border="0" framespacing="0">
-		<frame src="<c:url value='/admin/ezEmail/adminMailLeft.do' />"  id="lef" name="lef" frameborder="no" scrolling="no" noresize marginwidth="0" marginheight="0">
-        <frame src="<c:url value='/admin/ezEmail/mailQuotaList.do' />" id="right" name="right" frameborder="no" scrolling="auto" marginwidth="0" marginheight="0">  
-	</frameset>    
+	<body>
+	<iframe id="left" src="/admin/ezEmail/adminMailLeft.do" name="left"></iframe>
+	<iframe src="/admin/ezEmail/mailQuotaList.do" id="right" name="right"></iframe>
+	</body>
 </html>

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -190,11 +191,31 @@ public class EzJournalAdminController {
 
 		String status = result.get("status").toString();
 		
+		String useJp = "";
+		String useZh = "";
+		String useId = "";
+		String useVi = "";
+		String useFormLang = "1";
+		
 		if (status.equals("ok")) {
 			JSONArray typeList = (JSONArray) result.get("data");
 			model.addAttribute("typeList", typeList);
+			JSONArray useLangList = (JSONArray) result.get("useLangList");
+			if (useLangList != null && !useLangList.isEmpty()) {
+				JSONObject langInfo = (JSONObject) useLangList.get(0);
+				useJp = (String) langInfo.get("useJP");
+				useZh = (String) langInfo.get("useZh");
+				useId = (String) langInfo.get("useId");
+				useVi = (String) langInfo.get("useVi");
+				useFormLang = (String) langInfo.get("formLang");
+			}
 		}
 
+		model.addAttribute("useJp", useJp);
+		model.addAttribute("useZh", useZh);
+		model.addAttribute("useId", useId);
+		model.addAttribute("useVi", useVi);
+		model.addAttribute("useFormLang", useFormLang);
 		model.addAttribute("selectedCompany" , companyId);
 		logger.debug("formMain ended");
 		return "/admin/ezJournal/formMain";
@@ -204,7 +225,7 @@ public class EzJournalAdminController {
 	 * 관리자 업무일지 일지함의 양식리스트 가져오기
 	 */
 	@RequestMapping(value = "/admin/ezJournal/getFormList.do", method = RequestMethod.POST)
-	public String getFormList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) {
+	public String getFormList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, Locale locale) {
 		logger.debug("getFormList started");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
@@ -215,6 +236,7 @@ public class EzJournalAdminController {
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("companyId", companyId);
 		param.put("userId", userInfo.getId());
+		param.put("locale", locale);
 		
 		String restUrl = "/rest/ezjournal/types/" + typeId + "/forms";
 		
@@ -702,4 +724,26 @@ public class EzJournalAdminController {
 		return status;
 	}
 	
+	// 2025-05-30 황인경 - 업무일지 기본양식 다국어 처리 > 관리자 > 업무일지 > 양식관리 > select box 언어 선택 > 적용
+	@RequestMapping(value = "/admin/ezJournal/journulListLangChanege.do", method = RequestMethod.POST)
+	@ResponseBody
+	public String journulListLangChanege(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie) throws IOException{
+		logger.debug("journulListLangChanege started");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("userId",userInfo.getId());
+
+		String companyId = request.getParameter("companyId");
+		String form_lang = request.getParameter("form_lang");
+		param.put("companyId", companyId);
+		param.put("form_lang",form_lang);
+		
+		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezjournal/journulListLangChanege", param, request, "post", null);
+		
+		String status = resultBody.get("status").toString();
+		
+		logger.debug("journulListLangChanege ended");
+		return status;
+	}
 }

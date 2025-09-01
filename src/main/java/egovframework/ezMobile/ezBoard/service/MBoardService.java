@@ -65,7 +65,7 @@ public interface MBoardService {
 	/* 2018-07-03 홍승비 - 새게시물 카운트 표시 시 companyID 조건 추가 */
 	Integer getNewBoardListCount(String userID, String startDate, String companyID, int tenantID, String pSearchText) throws Exception;
 	
-	int getBoardItemListCount(String boardID, String userID, String guBun, int tenantID, String pSearchText) throws Exception;
+	int getBoardItemListCount(String boardID, String userID, String guBun, int tenantID, String pSearchText, String versionManage) throws Exception;
 	
 	Integer photoViewDBCount(String itemID, String boardID, int tenantID) throws Exception;
 	

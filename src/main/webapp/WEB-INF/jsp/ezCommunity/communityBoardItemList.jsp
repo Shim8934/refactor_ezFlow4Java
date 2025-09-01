@@ -52,7 +52,8 @@
     		var pastDate = "<c:out value='${pastDate}' />";
     		//2018-07-13 김보미
     		var treeCtrl = "<c:out value='${treeCtrl}' />";
-    		
+    		var inviteFlag = "<c:out value='${inviteFlag}' />";
+
     		function SelectSingleOnlyTitle(node, tagName) {
     		    var strValue = "";
     		    if (CrossYN()) {
@@ -230,7 +231,7 @@
     		}
     		
     		function NewItem_onclick() {
-    			if (UserLevel == "0" || UserLevel == "9" || Write_FG != "true") {
+    			if (Write_FG != "true") {
 				    alert("<spring:message code='ezCommunity.t431' />");
 				    return;
 				}
@@ -245,7 +246,7 @@
 			}
     		 
     		function ItemRead_onclick(pItemBoardID, pItemBoardName, pItemID, pUserID, evt) {
-   				if (UserLevel == "0" || UserLevel == "9" || Read_FG != "true") {
+   				if (Read_FG != "true") {
     				alert("<spring:message code='ezCommunity.t431' />");
     				return;
     			}
@@ -263,7 +264,7 @@
     		    var pLeft = (pwidth - 765) / 2; */
     		    //2018-07-13 김보미 - 파라메터 추가
 //     		    GetOpenWindow("/ezCommunity/boardItemView.do?itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pItemBoardID) + "&code=" + encodeURIComponent(code) + "&showAdjacent=" + ShowAdjacent, "", 750, 721);
-    		    GetOpenWindow("/ezCommunity/boardItemView.do?itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pItemBoardID) + "&code=" + encodeURIComponent(code) + "&showAdjacent=" + ShowAdjacent + "&treeCtrl=" + treeCtrl, "", 750, 721);
+    		    GetOpenWindow("/ezCommunity/boardItemView.do?itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pItemBoardID) + "&code=" + encodeURIComponent(code) + "&showAdjacent=" + ShowAdjacent + "&treeCtrl=" + treeCtrl + "&inviteFlag=" + inviteFlag, "", 750, 721);
     		}
     		
     		function checkBox_checked(pItemID, pUserID, evt) {
@@ -293,7 +294,7 @@
     		var checkpassword_dialogArguments = new Array();
     		
     		function DeleteItem_onclick() {
-    			if (UserLevel == "0" || UserLevel == "9" || Delete_FG != "true") {
+    			if (Delete_FG != "true" && CheckOwnerShip() == false && gubun != "2") {
     				alert("<spring:message code='ezCommunity.t431' />");
     				return;
     			}
@@ -317,7 +318,7 @@
                     return;
                 }
     			
-    		    if (BoardAdmin_FG != "true" && BoardGroupAdmin_FG != "OK" && CheckOwnerShip() == false) {
+    		    if (BoardAdmin_FG != "true" && BoardGroupAdmin_FG != "OK" && CheckOwnerShip() == false && Delete_FG != "true") {
     		        if (gubun == "2") {
     		            var pItemInfo = strListInfo.split(";")[0];
     		            var pItemID = pItemInfo.split(",")[0];
@@ -439,7 +440,7 @@
 					if (newPage == 0) newPage = 1;
 					
 					if (newPage > 0) {
-		    			window.location.href = "/ezCommunity/boardItemList.do?page=" + newPage + "&boardID=" + encodeURIComponent(pBoardID) + "&sortBy=" + pSortBy + "&code=" + code;						
+		    			window.location.href = "/ezCommunity/boardItemList.do?page=" + newPage + "&boardID=" + encodeURIComponent(pBoardID) + "&sortBy=" + pSortBy + "&code=" + code + "&inviteFlag=" + inviteFlag;
 					}
 				} else if ($('#tblList tbody').children().length == strListInfo.split(";").length) {
 	    			newPage = CurPage - 1;    			
@@ -447,7 +448,7 @@
 	    			if (newPage == 0) newPage = 1;
 					
 	    			if (newPage > 0) {
-		    			window.location.href = "/ezCommunity/boardItemList.do?page=" + newPage + "&boardID=" + encodeURIComponent(pBoardID) + "&sortBy=" + pSortBy + "&code=" + code;						
+		    			window.location.href = "/ezCommunity/boardItemList.do?page=" + newPage + "&boardID=" + encodeURIComponent(pBoardID) + "&sortBy=" + pSortBy + "&code=" + code + "&inviteFlag=" + inviteFlag;
 					}
     			} else {
     				window.location.reload(false);
@@ -596,7 +597,7 @@
     		}
 
     		function CopyItem_onclick() {
-    			if (UserLevel == "0" || UserLevel == "9" || (BoardAdmin_FG != "true" && BoardGroupAdmin_FG != "OK" && CheckOwnerShip() == false)) {
+    			if (BoardAdmin_FG != "true" && BoardGroupAdmin_FG != "OK" && CheckOwnerShip() == false) {
     				alert("<spring:message code='ezCommunity.t431' />");
     				return;
     			}
@@ -632,7 +633,7 @@
     		}
     		
     		function SetRead_onclick() {
-    			if (UserLevel == "0" || UserLevel == "9" || Read_FG != "true") {
+    			if (Read_FG != "true") {
     				alert("<spring:message code='ezCommunity.t431' />");
     				return;
     			}
@@ -692,7 +693,7 @@
 			}
 
     		function ReservationItem_onclick() {
-    			if (UserLevel == "0" || UserLevel == "9") {
+    			if (Read_FG != "true") {
     				alert("<spring:message code='ezCommunity.t431' />");
     				return;
     			}
@@ -701,13 +702,13 @@
     		}
 
     		function search_onclick() {
-    			if (UserLevel == "0" || UserLevel == "9") {
+    			if (Read_FG != "true") {
     				alert("<spring:message code='ezCommunity.t431' />");
     				return;
     			}
     					
     			var OrgBoardParameters = "page=" + encodeURIComponent(CurPage) + "&boardID=" + encodeURIComponent(pBoardID) + "&sortBy=" + encodeURIComponent(pSortBy) + "&code=" + encodeURIComponent(code);
-    			window.location.href = "/ezCommunity/searchBoardItem.do?boardID=" + encodeURIComponent(pBoardID) + "&orgBoardParameters=" + encodeURIComponent(OrgBoardParameters) + "&code=" + encodeURIComponent(code);
+    			window.location.href = "/ezCommunity/searchBoardItem.do?boardID=" + encodeURIComponent(pBoardID) + "&orgBoardParameters=" + encodeURIComponent(OrgBoardParameters) + "&code=" + encodeURIComponent(code) + "&inviteFlag=" + inviteFlag;
     		}
 
 	        /* 2021-05-03 홍승비 - 게시물 리스트에서 게시물을 삭제한 경우, 커뮤니티 팝업홈 좌측 전체 게시물 개수 갱신 */
@@ -742,7 +743,7 @@
             		return;
             	}
                 
-            	var url = "/ezCommunity/selectToDownloadFiles.do?itemID=" + javaURLEncode(itemID) + "&boardID=" + javaURLEncode(pBoardID);
+            	var url = "/ezCommunity/selectToDownloadFiles.do?itemID=" + javaURLEncode(itemID) + "&boardID=" + javaURLEncode(pBoardID) + "&code=" + encodeURIComponent(code);
                 window.open(url, "", "status=no,help=no,width=580px,height=480px" + GetOpenPosition(580, 480));
             }
     	</script>    

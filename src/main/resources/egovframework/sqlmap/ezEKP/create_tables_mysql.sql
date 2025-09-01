@@ -749,11 +749,13 @@ CREATE TABLE `jmocha_mail_general` (
   `PREVIEW_SUBTREE` varchar(10) DEFAULT 'N',
   `PREVIEW_MAIL_IMAGE` varchar(10) DEFAULT 'Y',
   `PREVIEW_MAIL` varchar(10) DEFAULT 'N',
-  `MAIL_SEND_RESULT` varchar(10) DEFAULT 'N',
+  `MAIL_SEND_RESULT` varchar(10) DEFAULT 'failure',
   `EDITOR_FONT_FAMILY` varchar(50) DEFAULT NULL,
   `EDITOR_FONT_SIZE` varchar(10) DEFAULT NULL,
   `DEFAULT_SEPARATE_SEND` VARCHAR(10) DEFAULT NULL,
   `DEFAULT_CURSOR_POSITION` VARCHAR(50) DEFAULT NULL,
+  `MAIL_SEARCH_PERIOD` varchar(10) DEFAULT NULL,
+  `SELF_CC_OPTION` varchar(10) DEFAULT 'none',  
   PRIMARY KEY (`USER_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -3733,6 +3735,8 @@ CREATE TABLE `tbl_board_boardinfo` (
   `ALLNEWBOARDFLAG` char(1) DEFAULT 'Y',
   `WRITERFLAG` varchar(2) DEFAULT 'N',
   `STARRATINGFLAG` varchar(1) DEFAULT NULL,
+  `NOTUSEDFLAG` varchar(2) NOT NULL DEFAULT 'N',
+  `URLCOPYFLAG` char(1) DEFAULT 'N',
   PRIMARY KEY (`BOARDID`,`TENANT_ID`),
   KEY `idx_companyid` (`COMPANYID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -3806,6 +3810,7 @@ CREATE TABLE `tbl_board_configuration` (
   `PREVIEWHLIST` bigint(10) DEFAULT 0,
   `PREVIEWHCONTENT` bigint(10) DEFAULT 0,
   `ALLNEWBOARDLISTDATE` int(10) DEFAULT 5,
+  `CONTENTSIZE` int(2) DEFAULT 0,
   `TENANT_ID` mediumint(5) NOT NULL,
   PRIMARY KEY (`TENANT_ID`,`USERID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -4445,6 +4450,8 @@ CREATE TABLE `tbl_c_club` (
   `SENDMAILCNT` varchar(4) DEFAULT '0',
   `ASSIGNDISKSIZE` varchar(20) NOT NULL DEFAULT '52428800',
   `C_TYPE` varchar(20) DEFAULT NULL,
+  `JOIN_GRADE` varchar(10) NOT NULL DEFAULT '4' COMMENT '회원가입시 최초 등급',
+  `MEMLIST_READGRADE` varchar(10) NOT NULL DEFAULT '4' COMMENT '회원목록 조회 등급',
   `TENANT_ID` decimal(22,0) NOT NULL DEFAULT 0,
   PRIMARY KEY (`TENANT_ID`,`C_CLUBNO`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -4528,6 +4535,9 @@ CREATE TABLE `tbl_c_clubuser` (
   `C_VISITED` decimal(19,0) NOT NULL DEFAULT 0,
   `C_INTRO` longtext DEFAULT NULL,
   `PERMIT` varchar(4) DEFAULT '0',
+  `GRADE` varchar(10) NOT NULL DEFAULT '4' COMMENT '커뮤니티 회원의 등급정보',
+  `ADMIN_AUTH` varchar(20) DEFAULT NULL COMMENT '커뮤니티 운영자 권한정보',
+  `C_WITHDRAWDATE` varchar(60) DEFAULT NULL COMMENT '커뮤니티 회원탈퇴일자',
   `COMPANYID` varchar(100) DEFAULT NULL,
   `TENANT_ID` decimal(22,0) NOT NULL DEFAULT 0,
   PRIMARY KEY (`TENANT_ID`,`C_CLUBNO`,`C_ID`)
@@ -10936,6 +10946,8 @@ CREATE TABLE `tbl_rs_brd` (
   `RETURNFLAG` varchar(2) DEFAULT '0',
   `REPEATFLAG` varchar(2) DEFAULT '1',
   `TENANT_ID` mediumint(5) NOT NULL DEFAULT 0,
+  `RES_MAX_DATE` varchar(100) DEFAULT NULL,
+  `RES_MAX_USER_CNT` varchar(100) NOT NULL DEFAULT '0',
   PRIMARY KEY (`TENANT_ID`,`BRD_ID`,`BRD_COMPANY`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -11987,6 +11999,7 @@ CREATE TABLE `tbl_survey` (
   `mail_flag` tinyint(4) DEFAULT 0,
   `popup_flag` tinyint(4) DEFAULT 0,
   `MAIL_SENT_FLAG` tinyint(4) DEFAULT 0,
+  `CLOSING_TEXT` longtext DEFAULT NULL COMMENT '맺음말',
   PRIMARY KEY (`survey_id`,`tenant_id`,`company_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -12113,6 +12126,7 @@ CREATE TABLE `tbl_survey_question` (
   `unit` bigint(20) DEFAULT -1 COMMENT '슬라이드 질문의 단위',
   `company_id` varchar(80) NOT NULL COMMENT '컴퍼니 아이디',
   `tenant_id` mediumint(5) NOT NULL COMMENT '테넌트 아이디',
+  `res_open_flag` tinyint(4) DEFAULT 0 COMMENT '질문결과 공개여부',
   PRIMARY KEY (`question_id`,`company_id`,`tenant_id`),
   KEY `FK_SURVEY_QUESTION_idx` (`survey_id`),
   CONSTRAINT `FK_SURVEY_QUESTION` FOREIGN KEY (`survey_id`) REFERENCES `tbl_survey` (`survey_id`) ON DELETE CASCADE ON UPDATE CASCADE
@@ -14052,6 +14066,8 @@ CREATE TABLE `jmocha_mailbox_progress` (
   `USER_ID` varchar(80) NOT NULL,
   `ACT` varchar(15) NOT NULL,
   `PERCENT` mediumint(100) NOT NULL,
+  `STATE` varchar(20),
+  `STATE_DESCRIPTION` varchar(100),
   `UPDATEDT` datetime DEFAULT current_timestamp(),
   PRIMARY KEY (`USER_KEY`,`TENANT_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -14131,6 +14147,27 @@ CREATE TABLE `jmocha_appr_comp_history` (
   `MEMO` varchar(200) DEFAULT NULL,
   `DEL_FLAG` varchar(10) DEFAULT 'N',
   PRIMARY KEY (`TENANT_ID`,`MAIL_UID`,`USER_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- 
+-- Table structure for table `jmocha_mail_pop3imap`
+--
+DROP TABLE IF EXISTS `jmocha_mail_pop3imap`;
+CREATE TABLE `jmocha_mail_pop3imap` (
+    `user_name` varchar(100),
+    `pop_enabled` int(1) default 0,
+    `pop_since` datetime,
+    `pop_as_read` int(1) default 0,
+    `pop_keep_copy` int(1) default 0,
+    `pop_exclude_imported` int(1) default 0,
+    `imap_enabled` int(1) default 0,
+    CONSTRAINT `jmocha_mail_pop3imap_pk` PRIMARY KEY (`user_name`),
+    CONSTRAINT `jmocha_mail_pop3imap_fk` FOREIGN KEY (`user_name`) REFERENCES `james_user` (`user_name`) ON DELETE CASCADE,
+    CONSTRAINT `jmocha_mail_pop3imap_check` CHECK (`pop_enabled` IN ('0', '1')),
+    CONSTRAINT `jmocha_mail_pop3imap_check2` CHECK (`pop_as_read` IN ('0', '1')),
+    CONSTRAINT `jmocha_mail_pop3imap_check3` CHECK (`pop_keep_copy` IN ('0', '1')),
+    CONSTRAINT `jmocha_mail_pop3imap_check4` CHECK (`pop_exclude_imported` IN ('0', '1')),
+    CONSTRAINT `JMOCHA_MAIL_POP3IMAP_CHECK5` CHECK (`imap_enabled` IN ('0', '1'))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -15794,20 +15831,20 @@ create table tbl_portal_portlet_company_size
     DEFAULT_FLAG tinyint(1)   default 0  not null comment '기본 사이즈 설정 여부',
     primary key (TENANT_ID, COMPANY_ID, PORTLET_ID, THEME_ID, SIZE_ID),
     constraint FK_tbl_portal_portlet_company_size_SIZE_ID
-        foreign key (SIZE_ID) references jmocha.tbl_portal_portlet_size (SIZE_ID)
+        foreign key (SIZE_ID) references tbl_portal_portlet_size (SIZE_ID)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 comment '회사별 포틀릿 사이즈 설정 테이블';
 
 create index IDX_TBL_PORTAL_PORTLET_COMPANY_SIZE_ID
-    on jmocha.tbl_portal_portlet_company_size (SIZE_ID);
+    on tbl_portal_portlet_company_size (SIZE_ID);
 
 create index tbl_portal_portlet_company_size_COMPANY_ID_index
-    on jmocha.tbl_portal_portlet_company_size (COMPANY_ID);
+    on tbl_portal_portlet_company_size (COMPANY_ID);
 
 create index tbl_portal_portlet_company_size_TENANT_ID_index
-    on jmocha.tbl_portal_portlet_company_size (TENANT_ID);
+    on tbl_portal_portlet_company_size (TENANT_ID);
 
 create index tbl_portal_portlet_company_size_THEME_ID_index
-    on jmocha.tbl_portal_portlet_company_size (THEME_ID);
+    on tbl_portal_portlet_company_size (THEME_ID);
 
 
 
@@ -15821,20 +15858,20 @@ create table tbl_portal_portlet_user_size
     SIZE_ID    int                     not null,
     primary key (USER_ID, TENANT_ID, COMPANY_ID, PORTLET_ID, THEME_ID),
     constraint FK_tbl_portal_portlet_user_size_tbl_portal_portlet_size_SIZE_ID
-        foreign key (SIZE_ID) references jmocha.tbl_portal_portlet_size (SIZE_ID)
+        foreign key (SIZE_ID) references tbl_portal_portlet_size (SIZE_ID)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 comment '사용자 별 포틀릿 사이즈 설정 테이블';
 
 create index IDX_TBL_PORTAL_PORTLET_USER_COMPANY
-    on jmocha.tbl_portal_portlet_user_size (COMPANY_ID);
+    on tbl_portal_portlet_user_size (COMPANY_ID);
 
 create index IDX_TBL_PORTAL_PORTLET_USER_ID
-    on jmocha.tbl_portal_portlet_user_size (USER_ID);
+    on tbl_portal_portlet_user_size (USER_ID);
 
 create index IDX_TBL_PORTAL_PORTLET_USER_PORTLET
-    on jmocha.tbl_portal_portlet_user_size (PORTLET_ID);
+    on tbl_portal_portlet_user_size (PORTLET_ID);
 
 create index IDX_TBL_PORTAL_PORTLET_USER_TENANT
-    on jmocha.tbl_portal_portlet_user_size (TENANT_ID);
+    on tbl_portal_portlet_user_size (TENANT_ID);
 
 --
 -- Table structure for table `TBL_PORTAL_TOP_USER`
@@ -16359,3 +16396,23 @@ CREATE TABLE TBL_STAT_MENU_DEPT_MONTH
     INDEX IDX_MENU (MENU_ID)
 ) ENGINE = INNODB
   DEFAULT CHARSET = UTF8MB4 COMMENT "부서별 메뉴 통계 월별 집계 테이블";
+
+CREATE TABLE TBL_BOARD_MODIFYHISTORY (
+    ITEMID VARCHAR(40) NOT NULL,
+    PARENTITEMID VARCHAR(40) DEFAULT NULL,
+    VERSION VARCHAR(5) DEFAULT NULL,
+    MODIFYUSERID VARCHAR(80) DEFAULT NULL,
+    MODIFYUSERNAME VARCHAR(120) DEFAULT NULL,
+    MODIFIEDDATE datetime DEFAULT NULL,
+    TENANT_ID mediumint(5) NOT NULL,
+    PRIMARY KEY (ITEMID,TENANT_ID)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE `TBL_C_GRADE` (
+   `C_CLUBNO` varchar(40) NOT NULL COMMENT '커뮤니티 id',
+   `GRADECODE` varchar(50) NOT NULL COMMENT '회원등급코드',
+   `GRADENAME` varchar(100) NOT NULL COMMENT '회원등급명',
+   `COMPANYID` varchar(40) NOT NULL,
+   `TENANT_ID` mediumint(9) NOT NULL DEFAULT 0,
+   PRIMARY KEY (`C_CLUBNO`, `GRADECODE`, `COMPANYID`,`TENANT_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT "커뮤니티별 회원등급 테이블";

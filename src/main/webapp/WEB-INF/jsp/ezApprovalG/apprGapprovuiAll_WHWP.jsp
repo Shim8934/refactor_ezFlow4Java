@@ -497,7 +497,9 @@
 	                try {
 	                    selectedDocID = window.opener.selectedDocIDS;
 	                }
-	                catch (e) { }
+	                catch (e) {
+						selectedDocID = window.parent.selectedDocIDS;
+					}
 	            }
 	
 	            try {
@@ -1526,15 +1528,17 @@
 			
 			        try {
 			            window.opener.openergetDocInfo();
-			        } catch (e) { }
+			        } catch (e) {
+						window.parent.openergetDocInfo();
+					}
 			
-			        try {
-			            window.opener.Refresh_Window();
-			        } catch (e) { }
+			        // try {
+			        //     window.opener.Refresh_Window();
+			        // } catch (e) { }
 			        
-			        try {
-			            window.opener.getApprGraph("appr");
-			        } catch (e) { }
+			        // try {
+			        //     window.opener.getApprGraph("appr");
+			        // } catch (e) { }
 			    }
 	
 			    function btnSave_onclick() {
@@ -1546,7 +1550,8 @@
 			    function btnMail_onclick() {
 			    	/* 2024-12-27 홍승비 - MHT 양식의 일괄기안 기능이 추가되며 발생한 사이드 이펙트 수정 (WHWP 문서의 메일발송 오류 수정) */
 			        if (document.getElementById("ifrm" + currentTabIdx).contentWindow.isHWP == "Y") {
-    			    	window.open("/ezEmail/mailWrite.do?docHref=" + pDocHrefAry[currentTabIdx] + "&cmd=docsend&docID=" + pDocIDAry[currentTabIdx] + "&TARGET=APPROVALG", "", "height = " + window.screen.availHeight * 0.8 + ", width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
+    			    	// window.open("/ezEmail/mailWrite.do?docHref=" + pDocHrefAry[currentTabIdx] + "&cmd=docsend&docID=" + pDocIDAry[currentTabIdx] + "&TARGET=APPROVALG", "", "height = " + window.screen.availHeight * 0.8 + ", width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
+						showPopup("/ezEmail/mailWrite.do?docHref=" + pDocHrefAry[currentTabIdx] + "&cmd=docsend&docID=" + pDocIDAry[currentTabIdx] + "&TARGET=APPROVALG", 890, window.screen.availHeight * 0.8, "", "height = " + window.screen.availHeight * 0.8 + ", width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1", hidePopup);
 			        } else {
                         var imgUrl = "";
                         html2canvas(document.getElementById("ifrm" + currentTabIdx).contentWindow.document.getElementById("div_Content")).then(function(canvas) {
@@ -1570,8 +1575,9 @@
                     var pLeft = (pwidth - 890) / 2;
                     //기존
                     var pURL = "/ezApprovalG/sendToMailApproval.do?cmd=docsend&docID=" + pDocIDAry[currentTabIdx] + "&docHref=" + encodeURIComponent(pDocHrefAry[currentTabIdx])+"&orgCompanyID="+orgCompanyID;
-                    var newwin = window.open(pURL, "mailsend", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width =890px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
-                    newwin.focus();
+                    // var newwin = window.open(pURL, "mailsend", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width =890px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
+                    // newwin.focus();
+						showPopup(pURL, 890, conHeight, "mailsend", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width =890px, status = no, toolbar=no, menubar=no,location=no, resizable=1", hidePopup);
                     }
 			    }
 			    
@@ -1673,7 +1679,7 @@
 			        getHistory();
 			    }
 			    
-			    var ezapprovalinfo_dialogArguments = new Array();
+			    // var ezapprovalinfo_dialogArguments = new Array();
 			    function btnApprovalInfo() {
    			        CheckDocCellInfo();
    			        var onlydocinfiview = false;
@@ -1730,14 +1736,17 @@
    			        
    			     	parameter[61] = tempKeyword;
                        
-                    ezapprovalinfo_dialogArguments[0] = parameter;
-   		            ezapprovalinfo_dialogArguments[1] = btnApprovalInfo_Complete;
+                    // ezapprovalinfo_dialogArguments[0] = parameter;
+   		         	// ezapprovalinfo_dialogArguments[1] = btnApprovalInfo_Complete;
 
-   		            var OpenWin = window.open("/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun + "&orgCompanyID=" + orgCompanyID + "&docType=" + pDocType + "&ext=" + "hwp" + "&formID=" + pFormID, "ezApprovalInfo", GetOpenWindowfeature(1210, 750));
-   		            try { OpenWin.focus(); } catch (e) { }
+   		            // var OpenWin = window.open("/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun + "&orgCompanyID=" + orgCompanyID + "&docType=" + pDocType + "&ext=" + "hwp" + "&formID=" + pFormID, "ezApprovalInfo", GetOpenWindowfeature(1210, 750));
+   		            // try { OpenWin.focus(); } catch (e) { }
+					ezCommon_cross_dialogArguments[0] = parameter;
+					showPopup("/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun + "&orgCompanyID=" + orgCompanyID + "&docType=" + pDocType + "&ext=" + "hwp" + "&formID=" + pFormID, 1210, 750, "ezApprovalInfo", GetOpenWindowfeature(1210, 750), btnApprovalInfo_Complete);
 				}
 			    
 			    function btnApprovalInfo_Complete(ret) {
+					hidePopup();
    			        if (ret != undefined && ret[0] == "OK") {
    			            try {
    			                if (pGubun != "5" && pGubun != "7" && pGubun != "10") {

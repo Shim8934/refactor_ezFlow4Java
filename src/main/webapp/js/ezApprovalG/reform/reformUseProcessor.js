@@ -1002,49 +1002,15 @@ reformUseProc.onLoadHandler = function() {
 	// set up date picker controls
 	listSrc = document.getElementById("__reform_date_picker_list");
 	if (listSrc) {
-		var reform_date_picker_list = JSON.parse(listSrc.getAttribute("value"));
-		
-		for (var i = 0; i < reform_date_picker_list.length; i++) {
-			var controlId = reform_date_picker_list[i];
-			var controlElement = document.getElementById(controlId);
-			if (controlElement != null) {
-				// this is required in order to reinstall a date picker
-				// after this control is used for a date picker since
-				// a date picker isn't installed when the value of the class is 'hasDatepicker'.
-				controlElement.removeAttribute("class");
-				
-				if (document.getElementById('attitude_annual_conn') || parent.document.getElementById('attitude_annual_conn')) {//근태관리 휴가계 연동양식일 경우
-					$(controlElement).datepicker({
-						changeMonth: true,
-						changeYear: true,
-						autoSize: true,
-						dateFormat: "yy-mm-dd",
-						beforeShowDay: disableSomeDay
-					});									
-				} else {
-					var dateFormatAttValue = controlElement.getAttribute("data-reform_date_format");
-					$(controlElement).datepicker({
-						changeMonth: true,
-						changeYear: true,
-						autoSize: true,
-						dateFormat: dateFormatAttValue ? dateFormatAttValue : "yy-mm-dd"
-							/*
-							 * showOn: "both", buttonImage: "/images/imgicon/calendar-month.gif", buttonImageOnly: true
-							 */
-					});					
-				}
-				
-				if (stageName == "draft" && (!(isRedraft || isReuse) || $(controlElement).val() === "")) {
-					$(controlElement).datepicker('setDate', new Date());
-				}
-			}
-		}
-		
+	
 		var lang = "ko";
 		if (stageName == "draft" && typeof(userLang) != "undefined") {
 			switch (userLang) {
 		    	case "1": 
 		    		lang = "ko";
+		    		break;
+				case "2": 
+		    		lang = "en";
 		    		break;
 		    	case "3": 
 		    		lang = "ja";
@@ -1092,7 +1058,64 @@ reformUseProc.onLoadHandler = function() {
 			showAnim: 'show',
 			showMonthAfterYear: true
 		};
+		
+		$.datepicker.regional['en'] = {
+			closeText: "Close",
+			prevText: "Previous month",
+			nextText: "Next month",
+			currentText: "Today",
+			monthNames: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+			monthNamesShort: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+			dayNames: ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"],
+			dayNamesShort: ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"],
+			dayNamesMin: ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa" ],
+			weekHeader: 'Wk',
+			dateFormat: 'yy-mm-dd',
+			firstDay: 0,
+			isRTL: false,
+			duration: 200,
+			showAnim: 'show',
+			showMonthAfterYear: true
+		};
 		$.datepicker.setDefaults($.datepicker.regional[lang]);
+		
+		var reform_date_picker_list = JSON.parse(listSrc.getAttribute("value"));
+		
+		for (var i = 0; i < reform_date_picker_list.length; i++) {
+			var controlId = reform_date_picker_list[i];
+			var controlElement = document.getElementById(controlId);
+			if (controlElement != null) {
+				// this is required in order to reinstall a date picker
+				// after this control is used for a date picker since
+				// a date picker isn't installed when the value of the class is 'hasDatepicker'.
+				controlElement.removeAttribute("class");
+				
+				if (document.getElementById('attitude_annual_conn') || parent.document.getElementById('attitude_annual_conn')) {//근태관리 휴가계 연동양식일 경우
+					$(controlElement).datepicker({
+						changeMonth: true,
+						changeYear: true,
+						autoSize: true,
+						dateFormat: "yy-mm-dd",
+						beforeShowDay: disableSomeDay
+					});									
+				} else {
+					var dateFormatAttValue = controlElement.getAttribute("data-reform_date_format");
+					$(controlElement).datepicker({
+						changeMonth: true,
+						changeYear: true,
+						autoSize: true,
+						dateFormat: dateFormatAttValue ? dateFormatAttValue : "yy-mm-dd"
+							/*
+							 * showOn: "both", buttonImage: "/images/imgicon/calendar-month.gif", buttonImageOnly: true
+							 */
+					});					
+				}
+				
+				if (stageName == "draft" && (!(isRedraft || isReuse) || $(controlElement).val() === "")) {
+					$(controlElement).datepicker('setDate', new Date());
+				}
+			}
+		}
 	}
 	
 	// set up time picker controls

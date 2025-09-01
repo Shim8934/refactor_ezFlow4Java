@@ -678,14 +678,18 @@
 
 		        if (document.getElementById("txt_keyword").value != "") {
 		        	 var selectSearch = document.getElementById('selectType');
-	                if (selectSearch.item(0).selected) {
+	                if (selectSearch.value == 'rad_Subject') {
 	                    TYPE += "TITLE;";
 	                    DATA += "<TITLE><![CDATA[" + document.getElementById("txt_keyword").value + "]]></TITLE>";
 	                }
-	                else if (selectSearch.item(1).selected) {
+	                else if (selectSearch.value == 'rad_Writer') {
 	                    TYPE += "WRITERNAME;";
 	                    DATA += "<WRITERNAME><![CDATA[" + MakeXMLString(document.getElementById("txt_keyword").value) + "]]></WRITERNAME>";
 	                }
+                     else if (selectSearch.value == 'rad_Subject_Content') {
+ 		                TYPE += "TNC;";
+ 	                    DATA += "<TNC><![CDATA[" + document.getElementById("txt_keyword").value.replace("'", "''") + "]]></TNC>";
+                      }
 	            }
 		        SQLPARADATA = "<ROOT><TYPE>" + TYPE + "</TYPE><DATA>" + DATA + "</DATA></ROOT>";
 		    }
@@ -767,6 +771,7 @@
 	         	<select id="selectType" class="text" style="width:80px; height:27px; border-color: #c8c8c8;">
 					<option selected value="rad_Subject"><spring:message code='ezBoard.t208'/></option>
 		    		<option value="rad_Writer"><spring:message code='ezBoard.t223'/></option>
+		    		<option value="rad_Subject_Content"><spring:message code='ezBoard.t208'/> + <spring:message code='ezBoard.garm01'/></option>
 		    	</select>
 			  <input id="txt_keyword" class="searchinputBox" style="height: 27px;border: 1px solid #cbcbcb;" onkeypress="onkeydown_start_search(event)" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
 	          <a class="searchBtn nofilter"><img src="/images/bsearch_new2.png" border="0" onClick="search('quick')"></a>

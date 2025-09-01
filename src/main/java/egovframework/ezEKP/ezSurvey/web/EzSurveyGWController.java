@@ -472,6 +472,7 @@ public class EzSurveyGWController {
 			String endDate          = infor.get("endDate")    != null ? infor.get("endDate").toString()            : "";
 			int publicFlag          = infor.get("public")     != null ? ((Long)infor.get("public")).intValue()     : -1;
 			int anonymousFlag       = infor.get("anonymous")  != null ? ((Long)infor.get("anonymous")).intValue()  : -1;
+			int userExposedFlag     = infor.get("userExposed")!= null ? ((Long)infor.get("userExposed")).intValue(): 1;
 			int multipleFlag        = infor.get("multiple")   != null ? ((Long)infor.get("multiple")).intValue()   : -1;
 			int publicDays          = infor.get("publicDays") != null ? ((Long)infor.get("publicDays")).intValue() : -1;
 			int mailFlag            = infor.get("mail")       != null ? ((Long)infor.get("mail")).intValue()       : 0;
@@ -482,6 +483,7 @@ public class EzSurveyGWController {
 			JSONArray resultViewTarget = infor.get("resultViewTarget") != null ? (JSONArray) infor.get("resultViewTarget") : null;
 			int userFlag            = (users == null || users.size() == 0) ? 0 : 1;
 			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+			String closingText      = infor.get("closing")    != null ? infor.get("closing").toString()            : "";
 			
 			// 2025-02-10 조수빈 - 설문 목적은 필수 값에서 제외하기로 했음
 			if (title.equals("") || startDate.equals("") || endDate.equals("") || format.parse(startDate).compareTo(format.parse(endDate)) > 0 || publicFlag == -1 || anonymousFlag == -1 || multipleFlag == -1 || (publicFlag == 1 && publicDays == -1)) {
@@ -492,7 +494,7 @@ public class EzSurveyGWController {
 			}
 			
 			String realPath  = request.getServletContext().getRealPath("");
-			result           = surveyService.saveSurveyItem(request, realPath, questions, title, purpose, startDate, endDate, publicFlag, anonymousFlag, multipleFlag, userFlag, publicDays, attchList, users, useStatus, surveyId, draftMode, userInfo, mailFlag, popupFlag);
+			result           = surveyService.saveSurveyItem(request, realPath, questions, title, purpose, startDate, endDate, publicFlag, anonymousFlag, multipleFlag, userFlag, publicDays, attchList, users, useStatus, surveyId, draftMode, userInfo, mailFlag, popupFlag, closingText, userExposedFlag);
 		
 			if (publicFlag == 2 && resultViewTarget != null) {
 				Long NewSurveyId = (Long) result.get("survey_id");
@@ -836,9 +838,28 @@ public class EzSurveyGWController {
 				result.put("code", 1);
 				return result;
 			}
-			
+
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
-			result           = surveyService.saveResponseItem(responses, surveyId, userInfo);
+
+			/* 응답 시 현재 설문의 상태(수정/삭제/일시정지)를 확인 */
+			int surveyState = surveyService.checkEditingState(surveyId, userInfo.getCompanyID(), userInfo.getTenantId());
+			if (1 == surveyState) {
+				logger.debug("Survey in edit mode. surveyId={}", surveyId);
+				result.put("status", "editing");
+				result.put("code", 8);
+				return result;
+			} else if (-1 == surveyState) {
+				logger.debug("Survey has been deleted. surveyId={}", surveyId);
+				result.put("status", "deleted");
+				result.put("code", 8);
+				return result;
+			} else if (2 == surveyState) {
+				logger.debug("Survey is in paused state. surveyId={}", surveyId);
+				result.put("status", "paused");
+				result.put("code", 8);
+			} else {
+				result = surveyService.saveResponseItem(responses, surveyId, userInfo);
+			}
 		}
 		
 		catch (Exception e) {
@@ -916,6 +937,40 @@ public class EzSurveyGWController {
 			result.put("code", 2);
 		}
 		
+		return result;
+	}
+	
+	@RequestMapping(value="/rest/ezsurvey/response-item/delete", method=RequestMethod.PUT, produces="application/json;charset=utf-8")
+	public JSONObject deleteResponse(@RequestBody JSONObject responseItem, HttpServletRequest request) throws Exception {
+		JSONObject result   = new JSONObject();
+		JSONParser jp       = new JSONParser();
+
+		try {
+			JSONObject response  = (JSONObject) jp.parse(responseItem.toJSONString());
+			long surveyId        = response.get("surveyId")           != null ? (Long)response.get("surveyId")        : -1;
+			String serverName    = request.getHeader("host-name")  != null ? request.getHeader("host-name")  	  : "";
+			String userId        = responseItem.get("userId")         != null ? responseItem.get("userId").toString() : "";
+
+			logger.debug("ServerName: " + serverName + " ||  userId: " + userId + " || surveyId: " + surveyId);
+
+			if ("".equals(serverName) || "".equals(userId)) {
+				logger.debug("Parameter error!");
+				result.put("status", "error");
+				result.put("code", 1);
+				return result;
+			}
+
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
+			surveyService.deleteResponseItem(surveyId, userInfo);
+			result.put("status", "ok");
+			result.put("code", 9);
+
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			result.put("status", "error");
+			result.put("code", 2);
+		}
+
 		return result;
 	}
 }

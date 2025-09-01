@@ -94,6 +94,7 @@
 		    var useDraftAll = "<c:out value = '${useDraftAll}'/>";
             var attachedDocList;
 			var popupWindow;
+			var useUserCont = "<c:out value = '${useUserCont}'/>";
 		    
 		    $(function () {
 		      	if(approvalFlag == "G") {
@@ -143,7 +144,7 @@
 		        initUserRoleinfo();
 		        
 		        var idx = "4", navigation_info = "<spring:message code='ezApprovalG.t102'/>";
-		        //if(approvalFlag == "S") {
+		        if(useUserCont === "YES") {
 		        	Tree_setconfig();
 		            var xmlDom2 = createXmlDom();
 		            xmlDom2 = loadXMLString("${userCont}");
@@ -163,63 +164,62 @@
 					/* 2020-06-29 홍승비 - 개인문서함 tile 특문처리 */
 					for(var i=0; i<node.length; i++) {
 						node[i].setAttribute("TITLE", node[i].innerText);
-					} 
-
-		       // } 
-			        if (parseInt(pListTypeValue) < 10) {
-			            window.open("/ezApprovalG/aprManage.do?listType=" + pListTypeValue + "&subQuery=", "right");
-			
-			            if (pListTypeValue == "1" || pListTypeValue == "11") {
-			                setPresentValue("<spring:message code='ezApprovalG.t1747'/>");
-			                document.getElementById('APPROVAL1').click();
-			                //document.getElementById('APPROVAL1').parentElement.setAttribute("class", "on");
-			            }
-			            else if (pListTypeValue == "2") {
-			                setPresentValue("<spring:message code='ezApprovalG.t1748'/>");
-			                document.getElementById('APPROVAL3').click();
-			                //document.getElementById('APPROVAL3').parentElement.setAttribute("class", "on");
-			            }
-			            else if (pListTypeValue == "3") {
-			                setPresentValue("<spring:message code='ezApprovalG.t1706'/>");
-			                document.getElementById('APPROVAL2').click();
-			                //document.getElementById('APPROVAL2').parentElement.setAttribute("class", "on");
-			            }
-			            else if (pListTypeValue == "4") {
-			                setPresentValue("<spring:message code='ezApprovalG.t1749'/>");
-			                document.getElementById('APPROVAL4').click();
-			                //document.getElementById('APPROVAL4').parentElement.setAttribute("class", "on");
-			            }
-			            else if (pListTypeValue == "6") {
-			                setPresentValue("<spring:message code='ezApprovalG.t257'/>");
-			            }
-			        }
-			        else {
-			            if (pListTypeValue == "11") {
-			                setPresentValue("<spring:message code='ezApprovalG.t1554'/>");
-			                cmdOK_onclick('', "<spring:message code='ezApprovalG.t1750'/>");
-			            }
-			            if (pListTypeValue == "16") {
-			                setPresentValue("<spring:message code='ezApprovalG.t552'/>");
-			                DocManageMain("m01");
-			            }
-			            if (pListTypeValue == "17") {
-			                setPresentValue("<spring:message code='ezApprovalG.t912'/>");
-			                DocManageMain("m02");
-			            }
-			            if (pListTypeValue == "99") {
-			            	window.open("/ezApprovalG/aprManage.do?listType=" + pListTypeValue + "&subQuery=", "right");
-			            	setPresentValue("<spring:message code='ezApprovalG.hyj04'/>");
-			                document.getElementById('APPROVAL99').click();
-			            }
-			            if (pListTypeValue == '21') {
-			            	setPresentValue("<spring:message code='ezApprovalG.t3000'/>");
-			                document.getElementById('APPROVAL21').click();
-			            }
-						if (pListTypeValue == '24') {
-							window.open("/ezApprovalG/aprManage.do?listType=" + pListTypeValue + "&subQuery=", "right");
-							setPresentValue("<spring:message code='ezApprovalG.t1756'/>");
-							document.getElementById('APPROVAL24').click();
-						}
+					}
+		       	} 
+				if (parseInt(pListTypeValue) < 10) {
+					parent.document.querySelector("iframe[name=right]").src = "/ezApprovalG/aprManage.do?listType=" + pListTypeValue + "&subQuery=";
+		
+					if (pListTypeValue == "1" || pListTypeValue == "11") {
+						setPresentValue("<spring:message code='ezApprovalG.t1747'/>");
+						document.getElementById('APPROVAL1').click();
+						//document.getElementById('APPROVAL1').parentElement.setAttribute("class", "on");
+					}
+					else if (pListTypeValue == "2") {
+						setPresentValue("<spring:message code='ezApprovalG.t1748'/>");
+						document.getElementById('APPROVAL3').click();
+						//document.getElementById('APPROVAL3').parentElement.setAttribute("class", "on");
+					}
+					else if (pListTypeValue == "3") {
+						setPresentValue("<spring:message code='ezApprovalG.t1706'/>");
+						document.getElementById('APPROVAL2').click();
+						//document.getElementById('APPROVAL2').parentElement.setAttribute("class", "on");
+					}
+					else if (pListTypeValue == "4") {
+						setPresentValue("<spring:message code='ezApprovalG.t1749'/>");
+						document.getElementById('APPROVAL4').click();
+						//document.getElementById('APPROVAL4').parentElement.setAttribute("class", "on");
+					}
+					else if (pListTypeValue == "6") {
+						setPresentValue("<spring:message code='ezApprovalG.t257'/>");
+					}
+				}
+				else {
+					if (pListTypeValue == "11") {
+						setPresentValue("<spring:message code='ezApprovalG.t1554'/>");
+						cmdOK_onclick('', "<spring:message code='ezApprovalG.t1750'/>");
+					}
+					if (pListTypeValue == "16") {
+						setPresentValue("<spring:message code='ezApprovalG.t552'/>");
+						DocManageMain("m01");
+					}
+					if (pListTypeValue == "17") {
+						setPresentValue("<spring:message code='ezApprovalG.t912'/>");
+						DocManageMain("m02");
+					}
+					if (pListTypeValue == "99") {
+						parent.document.querySelector("iframe[name=right]").src = "/ezApprovalG/aprManage.do?listType=" + pListTypeValue + "&subQuery=";
+						setPresentValue("<spring:message code='ezApprovalG.hyj04'/>");
+						document.getElementById('APPROVAL99').click();
+					}
+					if (pListTypeValue == '21') {
+						setPresentValue("<spring:message code='ezApprovalG.t3000'/>");
+						document.getElementById('APPROVAL21').click();
+					}
+					if (pListTypeValue == '24') {
+						parent.document.querySelector("iframe[name=right]").src = "/ezApprovalG/aprManage.do?listType=" + pListTypeValue + "&subQuery=";
+						setPresentValue("<spring:message code='ezApprovalG.t1756'/>");
+						document.getElementById('APPROVAL24').click();
+					}
 		        }
 		        getAprCount();
 		        leftResize();
@@ -282,25 +282,27 @@
 		            setPresentValue(treeNode.GetNodeData("VALUE"));
 		            if (PresentOpen != "CONTAINER") {
 		                PresentOpen = "CONTAINER";
-		                window.parent.frames.right.document.location.href = "/ezApprovalG/getContainerInfo.do?contID=" + escape(treeNode.GetNodeData("DATA1")) + "&sQuery=usercontlist" + "&tmpValue=" + escape(tmpValue);
+		                parent.document.querySelector("iframe[name=right]").src = "/ezApprovalG/getContainerInfo.do?contID=" + escape(treeNode.GetNodeData("DATA1")) + "&sQuery=usercontlist" + "&tmpValue=" + escape(tmpValue);
 		            }
 		            else {
 		                try {
 
-		                    window.parent.frames.right.document.location.href = "/ezApprovalG/getContainerInfo.do?contID=" + escape(treeNode.GetNodeData("DATA1")) + "&sQuery=usercontlist" + "&tmpValue=" + escape(tmpValue);
+		                    parent.document.querySelector("iframe[name=right]").src = "/ezApprovalG/getContainerInfo.do?contID=" + escape(treeNode.GetNodeData("DATA1")) + "&sQuery=usercontlist" + "&tmpValue=" + escape(tmpValue);
 		                    window.parent.frames("right").document.Script.SelCont_onclick4(treeNode.GetNodeData("DATA1"));
 		                } catch (e) { }
 		            }
 		        }
 		       
-	        var mngusercont_dialogArgument = new Array();
+	        // var mngusercont_dialogArgument = new Array();
 	        function MngUserOnclick() {
 	            var url = "/ezApprovalG/mngUserCont.do";
-	            mngusercont_dialogArgument[0] = "";
-	            mngusercont_dialogArgument[1] = MngUserOnclick_Complete;
-	            var Opener = GetOpenWindow(url, "MngUserCont", 465, 395, "NO");
+	            // mngusercont_dialogArgument[0] = "";
+	            // mngusercont_dialogArgument[1] = MngUserOnclick_Complete;
+	            // var Opener = GetOpenWindow(url, "MngUserCont", 465, 395, "NO");
+				showPopup(url, 465, 395, "MngUserCont", GetOpenWindowfeature(465, 395), MngUserOnclick_Complete);
 	        }
 	        function MngUserOnclick_Complete(RtnVal) {
+				hidePopup();
 	            TreeViewRefresh();
 	        }
 
@@ -403,11 +405,11 @@
 							DocManageMain(pthis.id);
 		                    break;
 		                case "approvalForDoc":
-		                	window.open("/admin/ezApprovalG/forAprDoc.do?type=user", "right");
+                            parent.document.querySelector("iframe[name=right]").src = "/admin/ezApprovalG/forAprDoc.do?type=user";
 		                	break;
 		                case "ApprovalConfig":
 		                    PresentOpen = "CONFIG";
-		                    window.open("/ezPersonal/ezApprovalConfig.do", "right");
+                            parent.document.querySelector("iframe[name=right]").src = "/ezPersonal/ezApprovalConfig.do";
 		                    break;    
 		                case "MYCONTWHO":
 		                    cmdOK_onclick('', "<spring:message code='ezApproval.t990042'/>", "TBL_ENDAPRLINEINFO.AprType = '" + strAprType40 + "' AND TBL_ENDAPRLINEINFO.AprState = '" + strAprState2 + "'");
@@ -432,7 +434,7 @@
 		            }
 		            if($(pthis).hasClass('deptShare')){
 		            	pListTypeValue = "";
-                		window.parent.frames.right.document.location.href = "/ezApprovalG/cabinetMain.do?sFlag=docShare&shareDeptId=" + pthis.id;          		 
+                		parent.document.querySelector("iframe[name=right]").src = "/ezApprovalG/cabinetMain.do?sFlag=docShare&shareDeptId=" + pthis.id;          		 
 		            }
 		            
 		            parent.frames["right"].$('#sel_year').val("ALL");
@@ -505,7 +507,7 @@
 				            if (PresentOpen != "APPROVAL" || pListTypeValue == "") {
 				                pListTypeValue = listtype;
 				                PresentOpen = "APPROVAL";
-				                window.parent.frames.right.document.location.href = "/ezApprovalG/aprManage.do?listType=" + listtype  + "&SubQuery=" + escape(SubQuery) + "&tmpValue=" + escape(tmpValue);
+				                parent.document.querySelector("iframe[name=right]").src = "/ezApprovalG/aprManage.do?listType=" + listtype  + "&SubQuery=" + escape(SubQuery) + "&tmpValue=" + escape(tmpValue);
 				            }
 				            else {
 				                if (listtype == "1") {
@@ -545,7 +547,7 @@
 				                    parent.frames["right"].checkBujaeInfo();
 				                }
 				                else if (listtype == "10") {
-				                	parent.frames.right.document.location.href = "/ezApprovalG/aprManage.do?listType=" + listtype  + "&SubQuery=" + escape(SubQuery) + "&tmpValue=" + escape(tmpValue);
+				                	parent.document.querySelector("iframe[name=right]").src = "/ezApprovalG/aprManage.do?listType=" + listtype  + "&SubQuery=" + escape(SubQuery) + "&tmpValue=" + escape(tmpValue);
 				                	parent.frames["right"].passValLeftMenu("10");
 				                	parent.frames["right"].checkBujaeInfo();
 				                }
@@ -588,10 +590,10 @@
 		        			}
 				        	if (PresentOpen != "APPROVAL") {
 				                PresentOpen = "APPROVAL";
-				                window.parent.frames.right.document.location.href = "/ezApprovalG/aprManage.do?listType=" + listtype  + "&SubQuery=" + encodeURIComponent(SubQuery) + "&tmpValue=" + encodeURIComponent(tmpValue) + "&shareUserId=" + shareUserId;
+				                parent.document.querySelector("iframe[name=right]").src = "/ezApprovalG/aprManage.do?listType=" + listtype  + "&SubQuery=" + encodeURIComponent(SubQuery) + "&tmpValue=" + encodeURIComponent(tmpValue) + "&shareUserId=" + shareUserId;
 				            }
 				            else {
-				                window.parent.frames.right.document.location.href = "/ezApprovalG/aprManage.do?listType=" + listtype  + "&SubQuery=" + encodeURIComponent(SubQuery) + "&tmpValue=" + encodeURIComponent(tmpValue) + "&shareUserId=" + shareUserId;
+				                parent.document.querySelector("iframe[name=right]").src = "/ezApprovalG/aprManage.do?listType=" + listtype  + "&SubQuery=" + encodeURIComponent(SubQuery) + "&tmpValue=" + encodeURIComponent(tmpValue) + "&shareUserId=" + shareUserId;
 				            }
 				        }
 		        }
@@ -613,11 +615,13 @@
 		        }
 		        
 		        if (CrossYN()) {
-		            getformcont_cross_dialogArguments[0] = parameter;
-		            getformcont_cross_dialogArguments[1] = openForm_Complete;
-		            var getFormCont_Cross = window.open(url, "/ezApproval/getFormCont.do", GetOpenWindowfeature(713, 570));
-		            
-		            try { getFormCont_Cross.focus(); } catch (e) {}
+		            // getformcont_cross_dialogArguments[0] = parameter;
+		            // getformcont_cross_dialogArguments[1] = openForm_Complete;
+		            // var getFormCont_Cross = window.open(url, "/ezApproval/getFormCont.do", GetOpenWindowfeature(713, 570));
+		            //
+		            // try { getFormCont_Cross.focus(); } catch (e) {}
+					ezCommon_cross_dialogArguments[0] = parameter;
+					showPopup(url, 713, 570, "/ezApproval/getFormCont.do", GetOpenWindowfeature(713, 570), openForm_Complete);
 		        } else {
 		            var feature = "status:no;dialogWidth:713px;dialogHeight:570px;edge:sunken;scroll:no";
 		            var ret = window.showModalDialog(url, parameter, feature);
@@ -651,6 +655,7 @@
 		    function draftAll_Complete(ret) {}
 		    
 		    function openForm_Complete(ret) {
+				hidePopup();
 		        formURL = ret[0];
 		        formDocType = ret[1];
                 attachedDocList = ret[5];
@@ -685,7 +690,7 @@
 	            if (formURL.substr(formURL.length - 3, formURL.length).toLowerCase() == "hwp") {
 	            	if(useWebHWP == "NO") {
 		                if (!isIE()) {
-		                    alert("한글양식은 Cross Browser 를 지원하지 않습니다.");
+		                    showAlert("한글양식은 Cross Browser 를 지원하지 않습니다.");
 		                    return;
 		                } else {
 		                   var openLocation = "/ezApprovalG/draftuiHWP.do";
@@ -747,10 +752,11 @@
 		                width = parseInt(width) - 10;
 		            }
 
-		            window.open(wfileLocation, wName, "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=" + heigth + ",width=" + width + ",top=" + top + ",left = " + left);
+		            // window.open(wfileLocation, wName, "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=" + heigth + ",width=" + width + ",top=" + top + ",left = " + left);
+					showPopupSlide(wfileLocation, width, heigth, wName, "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=" + heigth + ",width=" + width + ",top=" + top + ",left = " + left, hidePopupSlide);
 		        }
 		        catch (e) {
-		            alert("openwindow :: " + e.description);
+		            showAlert("openwindow :: " + e.description);
 		        }
 		    }	
 		
@@ -762,10 +768,10 @@
 		        }
 		        if (PresentOpen != "CONTAINER") {
 		            PresentOpen = "CONTAINER";
-	                window.parent.frames.right.document.location.href = "/ezApprovalG/getContainerInfo.do?contID=" + encodeURI(ContainerID) + "&sQuery="+ escape(SubQuery) + "&tmpValue=" + encodeURI(ContName) + "&ENDAPRTYPE=" + strAprType40 + "&ENDAPRSTATE=" + strAprState2 + "&shareUserId=" + shareUserId;
+	                parent.document.querySelector("iframe[name=right]").src = "/ezApprovalG/getContainerInfo.do?contID=" + encodeURI(ContainerID) + "&sQuery="+ escape(SubQuery) + "&tmpValue=" + encodeURI(ContName) + "&ENDAPRTYPE=" + strAprType40 + "&ENDAPRSTATE=" + strAprState2 + "&shareUserId=" + shareUserId;
 		        } else {
 		            try {
-		            	 window.parent.frames.right.document.location.href = "/ezApprovalG/getContainerInfo.do?contID=" + encodeURI(ContainerID) + "&sQuery="+ escape(SubQuery) + "&tmpValue=" + encodeURI(ContName) + "&ENDAPRTYPE=" + strAprType40 + "&ENDAPRSTATE=" + strAprState2 + "&shareUserId=" + shareUserId;
+		            	 parent.document.querySelector("iframe[name=right]").src = "/ezApprovalG/getContainerInfo.do?contID=" + encodeURI(ContainerID) + "&sQuery="+ escape(SubQuery) + "&tmpValue=" + encodeURI(ContName) + "&ENDAPRTYPE=" + strAprType40 + "&ENDAPRSTATE=" + strAprState2 + "&shareUserId=" + shareUserId;
 // 		                parent.frames["right"].SelCont_onclick2(ContainerID, ContName);
 		            } catch (e) { }
 		        }
@@ -776,12 +782,12 @@
 	                if (PresentOpen != "CONTAINER") {
 	                    PresentOpen = "CONTAINER";
 	                    var subCondition = "TBL_EXPENDAPRDOCINFO.TASKCODE = '" + ContainerID + "'";
-	                    window.parent.frames.right.document.location.href = "/ezApprovalG/getContainerInfo.do?contID=" + encodeURIComponent(Containers) + "&sQuery=" + encodeURIComponent(subCondition) + "&tmpValue=" + encodeURIComponent(tmpValue) + "&itemID=" + ContainerID;
+	                    parent.document.querySelector("iframe[name=right]").src = "/ezApprovalG/getContainerInfo.do?contID=" + encodeURIComponent(Containers) + "&sQuery=" + encodeURIComponent(subCondition) + "&tmpValue=" + encodeURIComponent(tmpValue) + "&itemID=" + ContainerID;
 	                }
 	                else {
 	                    try {
 	                        var subCondition = "TBL_EXPENDAPRDOCINFO.TASKCODE = '" + ContainerID + "'";
-	                        window.parent.frames.right.document.location.href = "/ezApprovalG/getContainerInfo.do?contID=" + encodeURIComponent(Containers) + "&sQuery=" + encodeURIComponent(subCondition) + "&tmpValue=" + encodeURIComponent(tmpValue) + "&itemID=" + ContainerID;
+	                        parent.document.querySelector("iframe[name=right]").src = "/ezApprovalG/getContainerInfo.do?contID=" + encodeURIComponent(Containers) + "&sQuery=" + encodeURIComponent(subCondition) + "&tmpValue=" + encodeURIComponent(tmpValue) + "&itemID=" + ContainerID;
 	                        window.parent.frames("right").document.Script.SelCont_onclick3(subCondition, Containers, ContName);
 	                    } catch (e) { }
 	                }
@@ -789,12 +795,12 @@
 	                if (PresentOpen != "CONTAINER") {
 	                    PresentOpen = "CONTAINER";
 	                    var subCondition = "TBL_EXPENDAPRDOCINFO.TASKCODE = '" + ContainerID + "'";
-	                    window.parent.frames.right.document.location.href = "/ezApprovalG/getContainerInfo.do?contID=" + encodeURIComponent(Containers) + "&sQuery=" + encodeURIComponent(subCondition) + "&tmpValue=" + encodeURIComponent(tmpValue) + "&itemID=" + ContainerID;
+	                    parent.document.querySelector("iframe[name=right]").src = "/ezApprovalG/getContainerInfo.do?contID=" + encodeURIComponent(Containers) + "&sQuery=" + encodeURIComponent(subCondition) + "&tmpValue=" + encodeURIComponent(tmpValue) + "&itemID=" + ContainerID;
 	                }
 	                else {
 	                    try {
 	                        var subCondition = "TBL_EXPENDAPRDOCINFO.TASKCODE = '" + ContainerID + "'";
-	                        window.parent.frames.right.document.location.href = "/ezApprovalG/getContainerInfo.do?contID=" + encodeURIComponent(Containers) + "&sQuery=" + encodeURIComponent(subCondition) + "&tmpValue=" + encodeURIComponent(tmpValue) + "&itemID=" + ContainerID;
+	                        parent.document.querySelector("iframe[name=right]").src = "/ezApprovalG/getContainerInfo.do?contID=" + encodeURIComponent(Containers) + "&sQuery=" + encodeURIComponent(subCondition) + "&tmpValue=" + encodeURIComponent(tmpValue) + "&itemID=" + ContainerID;
 	                        window.parent.frames("right").document.Script.SelCont_onclick3(subCondition, Containers, ContName);                     
 	                    } catch (e) { }
 	                }
@@ -807,7 +813,7 @@
 		    	}
 		    	PresentOpen = "CONTAINER";
                 var subCondition = "TBL_EXPENDAPRDOCINFO.FORMNAME = '" + ContainerID + "'";
-                window.parent.frames.right.document.location.href = "/ezApprovalG/getContainerInfo.do?contID=" + encodeURIComponent(Containers) + "&sQuery=" + encodeURIComponent(subCondition) + "&tmpValue=" + encodeURIComponent(tmpValue) + "&itemID=" + encodeURIComponent(ContainerID) + "&shareDeptId=" + shareDeptId;
+                parent.document.querySelector("iframe[name=right]").src = "/ezApprovalG/getContainerInfo.do?contID=" + encodeURIComponent(Containers) + "&sQuery=" + encodeURIComponent(subCondition) + "&tmpValue=" + encodeURIComponent(tmpValue) + "&itemID=" + encodeURIComponent(ContainerID) + "&shareDeptId=" + shareDeptId;
 		    }
 		    
 		    function setBoldText(elem) {
@@ -1103,44 +1109,44 @@
 		            switch (pthis.id) {
 		                case "admin_sub01":
 		                    PresentOpen = "DOC_ADMIN";
-		                    window.parent.frames.right.document.location.href = "/ezApprovalG/taskManage.do";
+		                    parent.document.querySelector("iframe[name=right]").src = "/ezApprovalG/taskManage.do";
 		                    break;
 		                case "admin_sub02":
 		                    PresentOpen = "DOC_ADMIN";
-		                    window.parent.frames.right.document.location.href = "/ezApprovalG/cabTransfer.do";
+		                    parent.document.querySelector("iframe[name=right]").src = "/ezApprovalG/cabTransfer.do";
 		                    break;
 		                case "admin_sub03":
 		                    PresentOpen = "DOC_ADMIN";
-		                    window.parent.frames.right.document.location.href = "/ezApprovalG/adminPage.do?initFlag=4";
+		                    parent.document.querySelector("iframe[name=right]").src = "/ezApprovalG/adminPage.do?initFlag=4";
 		                    break;
 		                case "admin_sub04":
 		                    PresentOpen = "DOC_ADMIN";
-		                    window.parent.frames.right.document.location.href = "/ezApprovalG/adminPage.do?initFlag=0";
+		                    parent.document.querySelector("iframe[name=right]").src = "/ezApprovalG/adminPage.do?initFlag=0";
 		                    break;
 		                case "admin_sub05":
 		                    PresentOpen = "DOC_ADMIN";
-		                    window.parent.frames.right.document.location.href = "/myoffice/ezApprovalG/ezCabinet/Manage/AdminPage_Cross.aspx?InitFlag=1";
+		                    parent.document.querySelector("iframe[name=right]").src = "/myoffice/ezApprovalG/ezCabinet/Manage/AdminPage_Cross.aspx?InitFlag=1";
 		                    break;
 		                case "admin_sub06":
 		                    PresentOpen = "DOC_ADMIN";
-		                    window.parent.frames.right.document.location.href = "/myoffice/ezApprovalG/ezCabinet/Manage/AdminPage_Cross.aspx?InitFlag=2";
+		                    parent.document.querySelector("iframe[name=right]").src = "/myoffice/ezApprovalG/ezCabinet/Manage/AdminPage_Cross.aspx?InitFlag=2";
 		                    break;
 		                case "admin_sub07":
 		                    PresentOpen = "DOC_ADMIN";
-		                    window.parent.frames.right.document.location.href = "/myoffice/ezApprovalG/ezCabinet/Manage/AdminPage_Cross.aspx?InitFlag=3";
+		                    parent.document.querySelector("iframe[name=right]").src = "/myoffice/ezApprovalG/ezCabinet/Manage/AdminPage_Cross.aspx?InitFlag=3";
 		                    break;
 		                case "approvalForDoc_sub01":
 		                	PresentOpen = "DOC_ADMIN";
-		                	window.parent.frames.right.document.location.href = "/admin/ezApprovalG/forAprDoc.do?type=user";
+		                	parent.document.querySelector("iframe[name=right]").src = "/admin/ezApprovalG/forAprDoc.do?type=user";
 		                	break;
 		                case "approvalForDoc_sub02":
 		                	PresentOpen = "DOC_ADMIN";
-		                	window.parent.frames.right.document.location.href = "/admin/ezApprovalG/forDoc.do?type=user";
+		                	parent.document.querySelector("iframe[name=right]").src = "/admin/ezApprovalG/forDoc.do?type=user";
 		                	break;
 						case "openGov":
 							//원문공개문서함
 							PresentOpen = "DOC_ADMIN";
-							window.parent.frames.right.document.location.href = "/admin/ezApprovalG/openGovForDoc.do?type=admin";
+							parent.document.querySelector("iframe[name=right]").src = "/admin/ezApprovalG/openGovForDoc.do?type=admin";
 							openFolder(pthis.id);
 							break;	
 		            }
@@ -1149,62 +1155,64 @@
 		
 		    function DocManageMain(sFlag) {
 		        try {
+					var rightUrl = "";
 		            if (PresentOpen != "DOCMANAGE" && sFlag != "readingRecord") {
 		                PresentOpen = "DOCMANAGE";
 						if(sFlag == "m96"){
-							window.parent.frames.right.document.location.href = "/ezApprovalG/cabinetMain.do?sFlag=m01&selSendStatus=N";
+							rightUrl = "/ezApprovalG/cabinetMain.do?sFlag=m01&selSendStatus=N";
 						}else{
-							window.parent.frames.right.document.location.href = "/ezApprovalG/cabinetMain.do?sFlag=" + sFlag;
+							rightUrl = "/ezApprovalG/cabinetMain.do?sFlag=" + sFlag;
 						}
-		            }
+                        parent.document.querySelector("iframe[name=right]").src = rightUrl;
+                    }
 		            else {
 		                window.parent.frames["right"].g_uFlag = sFlag;
 		                switch (sFlag) {
 		                    case "m01":
-		                    	window.parent.frames.right.document.location.href = "/ezApprovalG/cabinetMain.do?sFlag=" + sFlag;
+		                    	parent.document.querySelector("iframe[name=right]").src = "/ezApprovalG/cabinetMain.do?sFlag=" + sFlag;
 		                        break;
 		                    case "m02":
 							case "m15" :
-		                        window.parent.frames.right.document.location.href = "/ezApprovalG/cabinetMain.do?sFlag=" + sFlag;
+		                        parent.document.querySelector("iframe[name=right]").src = "/ezApprovalG/cabinetMain.do?sFlag=" + sFlag;
 		                        break;
 		                    case "m03":
-		                        window.parent.frames.right.document.location.href = "/ezApprovalG/cabinetMain.do?sFlag=" + sFlag;
+		                        parent.document.querySelector("iframe[name=right]").src = "/ezApprovalG/cabinetMain.do?sFlag=" + sFlag;
 		                        break;
 		                    case "m04":
-		                        window.parent.frames.right.document.location.href = "/myoffice/ezApprovalG/ezCabinet/cabinetmain_Cross.aspx?sFlag=" + sFlag;
+		                        parent.document.querySelector("iframe[name=right]").src = "/myoffice/ezApprovalG/ezCabinet/cabinetmain_Cross.aspx?sFlag=" + sFlag;
 		                        break;
 		                    case "m05":
-		                        window.parent.frames.right.document.location.href = "/ezApprovalG/cabinetMain.do?sFlag=" + sFlag;
+		                        parent.document.querySelector("iframe[name=right]").src = "/ezApprovalG/cabinetMain.do?sFlag=" + sFlag;
 		                        break;
 		                    case "m06":
-		                        window.parent.frames.right.document.location.href = "/ezApprovalG/cabinetMain.do?sFlag=" + sFlag;
+		                        parent.document.querySelector("iframe[name=right]").src = "/ezApprovalG/cabinetMain.do?sFlag=" + sFlag;
 		                        break;
 		                    case "m07":
-		                        window.parent.frames.right.document.location.href = "/ezApprovalG/cabinetMain.do?sFlag=" + sFlag;
+		                        parent.document.querySelector("iframe[name=right]").src = "/ezApprovalG/cabinetMain.do?sFlag=" + sFlag;
 		                        break;
 		                    case "m08":
-		                        window.parent.frames.right.document.location.href = "/ezApprovalG/cabinetMain.do?sFlag=" + sFlag;
+		                        parent.document.querySelector("iframe[name=right]").src = "/ezApprovalG/cabinetMain.do?sFlag=" + sFlag;
 		                        break;
 		                    case "m09":
-		                        window.parent.frames.right.document.location.href = "/ezApprovalG/cabinetMain.do?sFlag=" + sFlag;
+		                        parent.document.querySelector("iframe[name=right]").src = "/ezApprovalG/cabinetMain.do?sFlag=" + sFlag;
 								break;
 							case "UNTREATED":
-		                        window.parent.frames.right.document.location.href = "/ezApprovalG/cabinetMain.do?sFlag=" + sFlag;
+		                        parent.document.querySelector("iframe[name=right]").src = "/ezApprovalG/cabinetMain.do?sFlag=" + sFlag;
 								break;
 							case "m12":
-		                        window.parent.frames.right.document.location.href = "/ezApprovalG/cabinetMain.do?sFlag=" + sFlag;
+		                        parent.document.querySelector("iframe[name=right]").src = "/ezApprovalG/cabinetMain.do?sFlag=" + sFlag;
 								break;
 							case "m13":
-		                        window.parent.frames.right.document.location.href = "/ezApprovalG/cabinetMain.do?sFlag=" + sFlag;
+		                        parent.document.querySelector("iframe[name=right]").src = "/ezApprovalG/cabinetMain.do?sFlag=" + sFlag;
 								break;
 							case "m14":
-		                        window.parent.frames.right.document.location.href = "/ezApprovalG/cabinetMain.do?sFlag=" + sFlag;
+		                        parent.document.querySelector("iframe[name=right]").src = "/ezApprovalG/cabinetMain.do?sFlag=" + sFlag;
 								break;
 							case "m96":
-								window.parent.frames.right.document.location.href = "/ezApprovalG/cabinetMain.do?sFlag=m01&selSendStatus=N";
+								parent.document.querySelector("iframe[name=right]").src = "/ezApprovalG/cabinetMain.do?sFlag=m01&selSendStatus=N";
 								break;	
 							case "readingRecord" : 
-								window.parent.frames.right.document.location.href = "/ezApprovalG/readingRecord.do";
+								parent.document.querySelector("iframe[name=right]").src = "/ezApprovalG/readingRecord.do";
 								break;
 		                }
 		            }
@@ -1236,7 +1244,7 @@
 						onUserChange();
 					}
 					
-		            parent.frames["left"].location.href = "/ezApprovalG/apprGLeft.do?listType=" + pListTypeValue;
+		            parent.document.querySelector("iframe[name=left]").src = "/ezApprovalG/apprGLeft.do?listType=" + pListTypeValue;
 		        }
 		    }
 		    function ChangeCookies() {
@@ -1351,8 +1359,8 @@
 		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel_left">&nbsp;</div>
 		<span  id="presentcell" style="display:none"></span>
 		<div id="left" class="lnb">
-	    	<!-- <div class="lnb_btn"></div> -->
-	        <!-- <div class="lnb_btn_hidden"></div> lnb 숨기기 버튼-->
+	    	<%-- <div class="lnb_btn"></div> --%>
+	        <%-- <div class="lnb_btn_hidden"></div> lnb 숨기기 버튼--%>
 	    	<div class="left_title" title="<spring:message code='ezApprovalG.t102'/>">
 	    		<spring:message code='ezApprovalG.t102'/>
 	        	<span class="sub_iconLNB tree_leftconfig" id="ApprovalConfig" onClick="Open_Func(this)" title="<spring:message code='ezApprovalG.t1800'/>"></span>
@@ -1404,7 +1412,7 @@
 						<li><span class="list_text" id="APPROVAL97" onclick="setPresentValue('<spring:message code='ezApprovalG.PHSKMH01'/>');convMain('97','')"><spring:message code='ezApprovalG.PHSKMH01'/><span id=COUNT97></span></span></li>
 					</c:if>
                    	<c:if test="${approvalFlag == 'S'}">
-                       	<li></span><span class="list_text" id="APPROVAL99" onclick="setPresentValue('<spring:message code='ezApprovalG.hyj04'/>');convMain('99','')"><spring:message code='ezApprovalG.hyj04'/><span id="COUNT99"></span></span></li>
+                       	<li><span class="list_text" id="APPROVAL99" onclick="setPresentValue('<spring:message code='ezApprovalG.hyj04'/>');convMain('99','')"><spring:message code='ezApprovalG.hyj04'/><span id="COUNT99"></span></span></li>
 					</c:if>
 					<c:if test="${approvalFlag == 'G'}">
                        	<li><span class="list_text" id="APPROVAL99" onclick="setPresentValue('<spring:message code='ezApprovalG.t10011'/>');convMain('99','')"><spring:message code='ezApprovalG.t10011'/><span id="COUNT99"></span></span></li>
@@ -1505,11 +1513,11 @@
 								<span id="spn_UserShare_${status.index}" class="node_normal" onclick="treeicon_toggle('UserShare_${status.index}', 'UserContTree', UserContRequestData, 'imgNode_UserShare_${status.index}');" style="cursor: pointer; width: 135px;" title='<c:out value="${userShare.shareName}"></c:out>'><c:out value="${userShare.shareName}"></c:out></span>
 								<div id="UserShare_${status.index}_sub" style="display:none;">
 <%-- 					    			<div class="node_div" id="DeptShare_${status.index}_0" nodename="결재진행문서" nodelevel="1" endnode="true" value="결재진행문서" isleaf="TRUE" expanded="FALSE" style="white-space: nowrap;"> --%>
-<!-- 										<img border="0" class="DOT" src="/images/OrganTree/dot_end.gif" style="width: 18px; height: 18px;"> -->
+<%-- 										<img border="0" class="DOT" src="/images/OrganTree/dot_end.gif" style="width: 18px; height: 18px;"> --%>
 <%-- 										<img id="imgNode_DeptShare_${status.index}_0}" border="0" src="/images/OrganTree_cross/dot_end.gif" style="width: 18px; height: 18px;"> --%>
 <%-- 										<img id="subImgNode_DeptShare_${status.index}_0" border="0" src="/images/OrganTree_cross/fldr.gif" style="width: 18px; height: 18px;"> --%>
 <%-- 										<span onclick="setPresentValue('결재진행문서');convMain('3','','${userShare.shareId}')" style="cursor: pointer; width: 135px;" title="결재진행문서" id="spn_DeptShare_${status.index}_0" class="node_normal">결재진행문서</span> --%>
-<!-- 									</div> -->
+<%-- 									</div> --%>
 									<%-- 2024-11-14 홍승비 - 개인공유함 > 결재완료문서 다국어 처리 --%>
 					    			<div class="node_div" id="DeptShare_${status.index}_1" nodename=<spring:message code='ezApproval.t990042'/> nodelevel="1" endnode="true" value=<spring:message code='ezApproval.t990042'/> isleaf="TRUE" expanded="FALSE" style="white-space: nowrap;">
 										<img border="0" class="DOT" src="/images/OrganTree/dot_end.gif" style="width: 18px; height: 18px;">
@@ -1560,13 +1568,6 @@
 <%-- 			          	    <li><span class="sub_iconLNB tree_appr_record1"></span><span class="list_text" id="itemList${status.count - 1}"  onclick="setPresentValue('${itemList.taskName}(${itemList.keepingPeriod})');cmdOK_onclick2('${itemList.taskCode}', '${itemList.taskName}', '${itemList.taskName}(${itemList.keepingPeriod})');">${itemList.taskName}(${itemList.keepingPeriod}) </span></li> --%>
 <%-- 			          	</c:forEach> --%>
 <%-- 		          	</ul> --%>
-			        <h2 class="off" id="personH2">
-			        	<span class="sub_iconLNB tree_manage" onclick="MngUserOnclick()"></span>
-			            <span class="sub_iconLNB tree_plus"></span><span class="h2Title" onclick="openFolder('person')"><spring:message code='ezApproval.t848'/></span>			            
-			        </h2>
-			        <ul class="lnbUL off" id="personUL">
-			        	<div class="tree onlytree" id="divUserContTree"></div>
-			        </ul>
 		        </c:if>
 		        <c:if test="${approvalFlag eq 'G'}">
 		        	<h2 class="off" id="readingRecordH2">
@@ -1621,11 +1622,11 @@
 								<span id="spn_UserShare_${status.index}" class="node_normal" onclick="treeicon_toggle('UserShare_${status.index}', 'UserContTree', UserContRequestData, 'imgNode_UserShare_${status.index}');" style="cursor: pointer; width: 135px;" title='<c:out value="${userShare.shareName}"></c:out>'><c:out value="${userShare.shareName}"></c:out></span>
 								<div id="UserShare_${status.index}_sub" style="display:none;">
 <%-- 					    			<div class="node_div" id="DeptShare_${status.index}_0" nodename="결재진행문서" nodelevel="1" endnode="true" value="결재진행문서" isleaf="TRUE" expanded="FALSE" style="white-space: nowrap;"> --%>
-<!-- 										<img border="0" class="DOT" src="/images/OrganTree/dot_end.gif" style="width: 18px; height: 18px;"> -->
+<%-- 										<img border="0" class="DOT" src="/images/OrganTree/dot_end.gif" style="width: 18px; height: 18px;"> --%>
 <%-- 										<img id="imgNode_DeptShare_${status.index}_0}" border="0" src="/images/OrganTree_cross/dot_end.gif" style="width: 18px; height: 18px;"> --%>
 <%-- 										<img id="subImgNode_DeptShare_${status.index}_0" border="0" src="/images/OrganTree_cross/fldr.gif" style="width: 18px; height: 18px;"> --%>
 <%-- 										<span onclick="setPresentValue('결재진행문서');convMain('3','','${userShare.shareId}')" style="cursor: pointer; width: 135px;" title="결재진행문서" id="spn_DeptShare_${status.index}_0" class="node_normal">결재진행문서</span> --%>
-<!-- 									</div> -->
+<%-- 									</div> --%>
 									<%-- 2024-11-14 홍승비 - 개인공유함 > 결재완료문서 다국어 처리 --%>
 					    			<div class="node_div" id="DeptShare_${status.index}_1" nodename=<spring:message code='ezApproval.t990042'/> nodelevel="1" endnode="true" value=<spring:message code='ezApproval.t990042'/> isleaf="TRUE" expanded="FALSE" style="white-space: nowrap;">
 										<img border="0" class="DOT" src="/images/OrganTree/dot_end.gif" style="width: 18px; height: 18px;">
@@ -1652,32 +1653,10 @@
 			          	</ul>
 		          	</c:if>
 		        </c:if>
-		        
-	        <%-- 전자결재 G - 이후에 css작업 해야됨 -- %>
-		        <%-- <c:if test="${approvalFlag eq 'G'}">
-					<h2><span style="width:100%;display:inline-block;" id="m01" onClick="Open_Func(this)"><spring:message code='ezApprovalG.t552'/></span><ul></ul></h2>
-					<h2><span style="width:100%;display:inline-block;" id="m03" onClick="Open_Func(this)"><spring:message code='ezApprovalG.t911'/></span><ul></ul></h2>
-					<h2><span style="width:100%;display:inline-block;" id="m02" onClick="Open_Func(this)"><spring:message code='ezApprovalG.t912'/></span><ul></ul></h2>
-					<h2><span style="width:100%;display:inline-block;" id="m05" onClick="Open_Func(this)"><spring:message code='ezApprovalG.t905'/></span><ul></ul></h2>
-					<h2><span style="width:100%;display:inline-block;" id="m06" onClick="Open_Func(this)"><spring:message code='ezApprovalG.t906'/></span><ul></ul></h2>			
-					<h2 id="tag09"><span style="width:100%;display:inline-block;" id="m07" onClick="Open_Func(this)" ><spring:message code='ezApprovalG.t999'/></span></h2>
-					<ul>
-						<li id="m07" onclick="Open_Func(this)"><span style="width:100%;display:inline-block;"><spring:message code='ezApprovalG.t524'/></span></li>
-						<li id="m08" onclick="Open_Func(this)"><span style="width:100%;display:inline-block;"><spring:message code='ezApprovalG.t908'/></span></li>
-					</ul>	
-					<h2 id="tag10"><span style="width:100%;display:inline-block;" id="m09" onClick="Open_Func(this)" ><spring:message code='ezApprovalG.t1753'/></span></h2>
-					<ul>
-						<li id="m09" onclick="Open_Func(this)"><span style="width:100%;display:inline-block;"><spring:message code='ezApprovalG.t909'/></span></li>
-						<li id="admin_sub01" onclick="Menu_Click(this)"><span style="width:100%;display:inline-block;"><spring:message code='ezApprovalG.t717'/></span></li>
-						<li id="admin_sub02" onclick="Menu_Click(this)"><span style="width:100%;display:inline-block;"><spring:message code='ezApprovalG.t1754'/></span></li>
-						<li id="admin_sub03" onclick="Menu_Click(this)"><span style="width:100%;display:inline-block;"><spring:message code='ezApprovalG.t524'/></span></li>
-						<li id="admin_sub04" onclick="Menu_Click(this)"><span style="width:100%;display:inline-block;"><spring:message code='ezApprovalG.t520'/></span></li>
-					</ul>
-				</c:if> --%>
 				<c:if test="${useUserCont eq 'YES'}">
 					<h2 class="off" id="personH2">
 						<span class="sub_iconLNB tree_manage" onclick="MngUserOnclick()"></span>
-						<span class="sub_iconLNB tree_plus" onclick="openFolder('person')"></span><span class="h2Title" onclick="openFolder('person')"><spring:message code='ezApproval.t848'/></span>
+						<span class="sub_iconLNB tree_plus"></span><span class="h2Title" onclick="openFolder('person')"><spring:message code='ezApproval.t848'/></span>
 					</h2>
 					<ul class="lnbUL off" id="personUL">
 						<div class="tree onlytree" id="divUserContTree"></div>

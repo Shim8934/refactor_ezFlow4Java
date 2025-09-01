@@ -27,7 +27,8 @@
 		    var BoardGroupAdmin_FG = "<c:out value = '${boardInfo.boardGroupAdmin_FG}' />";
 		    var OneLineReplyFlag = "<c:out value = '${ oneLineReplyFlag }' />";
 		    var gubun = "<c:out value = '${boardInfo.gubun }' />";
-		    
+            var code = "<c:out value = '${code}' />";
+
 		    window.onload = function () {
 		    	var html = "";
 		    	
@@ -208,14 +209,16 @@
 		    		<div id="menu">
 			        	<ul>
 			        		<li ID='btn_One_Line_Reply'><span id="commentCount" onclick='btn_One_Line_Reply_Onclick()'><spring:message code='ezBoard.t81'/>[${commentCount}]</span></li>
-					        	<c:if test="${item.writerID == userInfo.id || boardInfo.boardAdmin_FG == 'true' || boardInfo.boardGroupAdmin_FG == 'OK' }">
-									<li><span onclick='btn_Modify_Onclick()'><spring:message code = 'ezCommunity.t6' /></span></li>
-									<li><span onclick='btn_Delete_Onclick()'><spring:message code = 'ezCommunity.t208' /></span></li>
-					         		<li><span onclick='ReaderList()'><spring:message code = 'ezCommunity.t952' /></span></li>
-					       		</c:if>
-							<c:if test="${useCabinet == 'YES'}">
-								<li><span onclick="addRelatedCabinet()"><spring:message code='ezCabinet.t125'/></span></li>
-							</c:if>
+                            <c:if test="${item.writerID == userInfo.id || boardInfo.boardAdmin_FG == 'true' || boardInfo.boardGroupAdmin_FG == 'OK' }">
+                                <li><span onclick='btn_Modify_Onclick()'><spring:message code = 'ezCommunity.t6' /></span></li>
+                            </c:if>
+                            <c:if test="${item.writerID == userInfo.id || boardInfo.boardAdmin_FG == 'true' || boardInfo.boardGroupAdmin_FG == 'OK' || boardInfo.delete_FG == 'true'}">
+                                <li><span onclick='btn_Delete_Onclick()'><spring:message code = 'ezCommunity.t208' /></span></li>
+                            </c:if>
+                            <li><span onclick='ReaderList()'><spring:message code = 'ezCommunity.t952' /></span></li>
+                            <c:if test="${useCabinet == 'YES'}">
+                                <li><span onclick="addRelatedCabinet()"><spring:message code='ezCabinet.t125'/></span></li>
+                            </c:if>
 				 	   	</ul>
 					</div>				
 		        	<div id="close">

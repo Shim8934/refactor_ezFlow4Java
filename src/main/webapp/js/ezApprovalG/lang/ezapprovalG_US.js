@@ -1211,3 +1211,21 @@ var strLangDeptInbox = "Dept. receipt folder";
 
 var strLangAtachHIK_01 = "Approval attach can be up to "; 
 var strLangAtachHIK_02 = "MB."; 
+
+/* 전자결재 사인 그리기 기능 */
+var strLangJIHSignDraw01 = "Please sign and then approve.";
+var strLangJIHSignDraw02 = "An error occurred while saving the signature.";
+
+var strLangKm01 = "The document has been retrieved.";
+
+var strLangKMH02 = "Would you like to proceed with batch submission? <br>Documents with forwarding status, implementation statements, and agreements are excluded.";
+var strLangKMH03 = "Would you like to proceed with batch submission and final approval? <br>Documents with forwarding status, implementation statements, and agreements are excluded.";
+
+
+/* 2025-06-19 김유진 -  전자결재 > 열람권한 */
+var strLangKYJ_IsPublic01 = "View All";
+var strLangKYJ_IsPublic02 = "View Department";
+var strLangKYJ_IsPublic03 = "View Approval Line";
+
+var strLangJIHShareDox01 = "The sharer and the recipient must belong to the same company.";
+var strLangJIHShareDox02 = "Please select the sharer first.";

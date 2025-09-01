@@ -50,7 +50,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
 import egovframework.com.cmm.EgovMessageSource;
-import egovframework.com.cmm.service.EgovFileMngUtil;
+import egovframework.com.cmm.service.EzFileMngUtil;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
@@ -66,7 +66,7 @@ import egovframework.let.utl.fcc.service.EzFAL.*;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 
 @Controller
-public class EzApprovalGarchiveController extends EgovFileMngUtil {
+public class EzApprovalGarchiveController extends EzFileMngUtil {
 
     private static final Logger logger = LoggerFactory.getLogger(EzApprovalGarchiveController.class);
     

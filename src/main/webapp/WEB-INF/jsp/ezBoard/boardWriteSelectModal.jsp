@@ -45,6 +45,8 @@
 			var pUse_Editor = "${useEditor}";
 		    var ReturnFunction;
 		    var rtnVal = "";
+
+			var popupMsg;
 		    
 		    var popupMsg;
 		    
@@ -61,7 +63,7 @@
 				
 				if (CheckIfCanWrite(SelectedBoardID) == false)
 				{
-					if (SelectedBoardType !== "10") {
+					if (SelectedBoardType !== "9" && SelectedBoardType !== "10") {
 						popupMsg = "<spring:message code='ezBoard.t354' />";
 					}
 
@@ -90,15 +92,16 @@
 			    ret[3] = SelectedBoardUrl;
 			
 			    rtnVal = ret;
-			    window.close();
+			    // window.close();
+				btnClose_onclick(ret);
 			}
 			
-		    window.onunload = function () {
-		        if (ReturnFunction !=null)
-		            ReturnFunction(rtnVal);
-		        else
-		            window.returnValue = rtnVal;
-		    };
+		    // window.onunload = function () {
+		    //     if (ReturnFunction !=null)
+		    //         ReturnFunction(rtnVal);
+		    //     else
+		    //         window.returnValue = rtnVal;
+		    // };
 			
 		    // 미사용 함수 주석처리
 /* 			function CheckIfAnonyBoard(pBoardID)
@@ -114,7 +117,10 @@
 			
 			function CheckIfCanWrite(pBoardID)
 			{
-				if (SelectedBoardType === "10") {
+				if (SelectedBoardType === "9") {
+					popupMsg = "<spring:message code = 'ezBoard.fileViewerBoard.msg4' />";
+					return false;
+				} else if (SelectedBoardType === "10") {
 			        popupMsg = "<spring:message code='ezBoard.MJSCAT02' />";
 			        return false;
 			    }
@@ -142,7 +148,11 @@
 			function window_onload()
 			{
 			    try {
-			        ReturnFunction = opener.writeboardselect_modal_dialogArguments[1];
+			        if (isParentCommonArgsUsed()) {
+						ReturnFunction = opener == null ? parent.ezCommon_cross_dialogArguments[1] : opener.ezCommon_cross_dialogArguments[1];
+					} else {
+						ReturnFunction = opener.writeboardselect_modal_dialogArguments[1];
+					}
 			    } catch (e) {}
 			    
 				var xmlDom_treeview = createXMLHttpRequest();
@@ -322,7 +332,7 @@
 		<h1><spring:message code='ezBoard.t135'/></h1>
 		<div id="close">
             <ul>
-                <li><span onclick="window.close();"></span></li>
+                <li><span onclick="btnClose_onclick()"></span></li>
             </ul>
         </div>
         <div class="box" style="overflow-x:hidden;overflow-y:auto;height:485px">

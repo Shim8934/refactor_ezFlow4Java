@@ -65,4 +65,26 @@ public class EzBoardScheduler {
 		logger.debug("boardGarbageClear ended");
 	}
 
+	/** 공지등록 기간 만료 시 메신저로 알림 발송 */
+	@Scheduled(cron = "${config.cron.boardNotiEndAlram}")
+	public void boardNotiEndAlram() throws Exception {
+		logger.debug("boardNotiEndAlram started");
+
+		//choose scheduler running server
+		if (!ezEmailScheduler.preScheduler("boardNotiEndAlram")) {
+			logger.debug("boardNotiEndAlram scheduler ended.");
+			return;
+		}
+
+		try {
+			ezBoardAdminService.boardNotiEndAlram();
+		} catch (NumberFormatException ne) {
+			logger.error(ne.getMessage(), ne);
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+		}
+
+		logger.debug("boardNotiEndAlram ended");
+	}
+
 }

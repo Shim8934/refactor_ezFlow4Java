@@ -66,11 +66,11 @@
 		    	$(elem).attr("class","node_selected");
 		    	
 				var szUrl = "/ezLadder/ladderMain.do?mode=" + mode + "&currPage=1&searchSelect=none&searchInput=&sort=basic&sortFlag=desc";			
-				window.parent.frames["right"].location.href = szUrl;
+				window.parent.document.querySelector("iframe[name=right]").src = szUrl;
 		    }
 		    
 		    function ladderWrite(){
-		    	window.parent.frames["right"].location.href = '/ezLadder/selectLadderType.do';
+		    	window.parent.document.querySelector("iframe[name=right]").src = '/ezLadder/selectLadderType.do';
 		    }
 		    
 		    function resetNodeSelected(){

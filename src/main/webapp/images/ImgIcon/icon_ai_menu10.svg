@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="16" height="16" viewBox="0 0 16 16">
+  <defs>
+    <clipPath id="clip-path">
+      <path id="패스_9137" data-name="패스 9137" d="M2,0A2.031,2.031,0,0,0,0,2.059v9.882A2.031,2.031,0,0,0,2,14H8.8V10.294h-4a.407.407,0,0,1-.4-.412V4.941a.407.407,0,0,1,.4-.412H14V2.059A2.031,2.031,0,0,0,12,0Z" fill="none"/>
+    </clipPath>
+    <linearGradient id="linear-gradient" y1="1" x2="0.82" y2="0.454" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#0195fb"/>
+      <stop offset="1" stop-color="#00efac"/>
+    </linearGradient>
+    <clipPath id="clip-path-2">
+      <path id="패스_9138" data-name="패스 9138" d="M13,13v4.118h4.055a.41.41,0,0,1,.406.412v4.118h2.433a2.044,2.044,0,0,0,2.028-2.059V13Z" transform="translate(-13 -13)" fill="none"/>
+    </clipPath>
+    <linearGradient id="linear-gradient-2" x1="0.619" y1="0.838" x2="-0.256" y2="0.84" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#00efac"/>
+      <stop offset="1" stop-color="#0195fb"/>
+    </linearGradient>
+  </defs>
+  <g id="icon_ai_menu10" transform="translate(-599 -1508)">
+    <g id="그룹_7375" data-name="그룹 7375" transform="translate(600.051 1509)">
+      <g id="그룹_7372" data-name="그룹 7372">
+        <g id="그룹_7371" data-name="그룹 7371" clip-path="url(#clip-path)">
+          <rect id="사각형_29893" data-name="사각형 29893" width="14" height="14.412" transform="translate(0 -0.206)" fill="url(#linear-gradient)"/>
+        </g>
+      </g>
+      <g id="그룹_7374" data-name="그룹 7374" transform="translate(4.941 5.353)">
+        <g id="그룹_7373" data-name="그룹 7373" transform="translate(0.137)" clip-path="url(#clip-path-2)">
+          <path id="패스_9139" data-name="패스 9139" d="M0,0,12.425-.095l-.095,12.425-12.425.095Z" transform="translate(-4.258 4.324) rotate(-45)" fill="url(#linear-gradient-2)"/>
+        </g>
+      </g>
+    </g>
+    <rect id="사각형_29993" data-name="사각형 29993" width="16" height="16" transform="translate(599 1508)" fill="none"/>
+  </g>
+</svg>

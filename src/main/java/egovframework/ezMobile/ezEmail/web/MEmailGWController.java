@@ -126,7 +126,7 @@ import com.sun.mail.imap.AppendUID;
 import com.sun.mail.imap.IMAPFolder;
 
 import egovframework.com.cmm.EgovMessageSource;
-import egovframework.com.cmm.service.EgovFileMngUtil;
+import egovframework.com.cmm.service.EzFileMngUtil;
 import egovframework.com.cmm.service.Globals;
 import egovframework.ezEKP.ezAddress.service.EzAddressService;
 import egovframework.ezEKP.ezAddress.vo.AddressFolderVO;
@@ -161,7 +161,7 @@ import org.xml.sax.InputSource;
 import org.xml.sax.InputSource;
 
 @RestController
-public class MEmailGWController extends EgovFileMngUtil {
+public class MEmailGWController extends EzFileMngUtil {
 
 private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.class);
 	
@@ -1200,6 +1200,18 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 			String isDefaultReceiptExternal = ezCommonService.getTenantConfig("isDefaultReceiptExternal", info.getTenantId());
 			String useReceiptExternal = ezCommonService.getTenantConfig("useReceiptExternal", info.getTenantId());
 			String useOnlyInnerMail = ezCommonService.getTenantConfig("UseOnlyInnerMail", info.getTenantId());
+			String useAutoZipEnc = ezCommonService.getTenantConfig("useAutoZipEnc", info.getTenantId());
+			String useFileExtension = ezCommonService.getTenantConfig("USE_FileExtension", info.getTenantId());
+			
+			// 2025.02.17 한슬기 : 나를 항상 참조에 포함 옵션(none: 사용안함, cc: 참조에 항상 포함, bcc: 숨은참조에 항상 포함)
+			MailGeneralVO mailGeneralVO = ezEmailService.getMailGeneral(info.getTenantId(), info.getUserId()).get(0);
+			String selfCcOption = mailGeneralVO.getSelfCcOption() == null ? "none" : mailGeneralVO.getSelfCcOption();
+			String lang = info.getLang() == null ? "1" : info.getLang();
+			String userName = "1".equals(lang) ? info.getUserName() :
+					(info.getUserName2() == null || info.getUserName2().isEmpty() ? info.getUserName() : info.getUserName2());
+			String deptName = "1".equals(lang) ? info.getDeptName() :
+					(info.getDeptName2() == null || info.getDeptName2().isEmpty() ? info.getDeptName() : info.getDeptName2());
+
 			if (useReceiptExternal.equals("YES")) {
 				replyReadTime = "YES".equalsIgnoreCase(isDefaultReceiptExternal) ? "2" : "1";
 			} else {
@@ -1561,9 +1573,9 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 						String reStr = ""; 
 								
 						if (cmd.equals("REPLY") || cmd.equals("REPLYALL")) {		
-							reStr = egovMessageSource.getMessage("ezEmail.t511", locale);
+							reStr = egovMessageSource.getMessage("ezEmail.t5111", locale);
 						} else if (cmd.equals("FORWARD")) {
-							reStr = egovMessageSource.getMessage("ezEmail.t513", locale);
+							reStr = egovMessageSource.getMessage("ezEmail.t5131", locale);
 						}
 						
 						if (!subject.startsWith(reStr)) {
@@ -1764,34 +1776,35 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 			String useFromAddress = StringUtils.defaultIfBlank(ezCommonService.getTenantConfig("Use_FromAddress", info.getTenantId()), "NO");
 			String useDistributionSender = StringUtils.defaultIfBlank(ezCommonService.getCompanyConfig(info.getTenantId(), info.getCompanyId(), "useDistributionSender"), "NO");
 			JSONArray jsonList = new JSONArray();
+			List<String[]> fromAddressList = new ArrayList<>();
 
 			if ("YES".equalsIgnoreCase(useFromAddress) || "YES".equalsIgnoreCase(useDistributionSender)) {
-				List<String[]> fromAddressList = ezEmailService.getAliasAddress(info.getUserId(), info.getTenantId(), useFromAddress, useDistributionSender);
+				fromAddressList = ezEmailService.getAliasAddress(info.getUserId(), info.getTenantId(), useFromAddress, useDistributionSender);
+			}
+			// useFromAddress이 NO인 경우에는 primary mail 주소를 jgw에서 가져오지 않기 때문에 추가 함
+			if ("NO".equalsIgnoreCase(useFromAddress)) {
+				fromAddressList.add(0, new String[]{info.getEmail(),"",""});
+			}
 
-				// 공용배포그룹주소 사용만 YES인 경우에는 primary mail 주소를 jgw에서 가져오지 않기 때문에 추가 함
-				if ("NO".equalsIgnoreCase(useFromAddress) && "YES".equalsIgnoreCase(useDistributionSender)) {
-					fromAddressList.add(0, new String[]{info.getEmail(),"",""});
-				}
-
-				// 모바일에서 primary로 select할 수 있도록 type 값 변경 : primary, alias
-				for (String[] address : fromAddressList) {
-					if (info.getEmail().trim().equals(address[0])) {
-						address[1] = "p"; //primary
-					} else {
-						address[1] = "a"; //alias
-					}
-				}
-
-				// jsonList에 key:value 형태로 입력
-				for (String[] address : fromAddressList) {
-					JSONObject json = new JSONObject();
-					json.put("email", address[0]);
-					json.put("type", address[1]);
-					json.put("name", address[2]);
-					jsonList.add(json);
+			// 모바일에서 primary로 select할 수 있도록 type 값 변경 : primary, alias
+			for (String[] address : fromAddressList) {
+				if (info.getEmail().trim().equals(address[0])) {
+					address[1] = "p"; //primary
+				} else {
+					address[1] = "a"; //alias
 				}
 			}
-			
+
+			// jsonList에 key:value 형태로 입력
+			for (String[] address : fromAddressList) {
+				JSONObject json = new JSONObject();
+				json.put("email", address[0]);
+				json.put("type", address[1]);
+				json.put("name", address[2]);
+				jsonList.add(json);
+			}
+			// 발신가능한 메일주소 리스트 end
+
 			/*String fromAddressHtml = "";
 			
 			if (useFromAddress != null) {
@@ -1905,6 +1918,11 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 			data.put("signUseFlag", mailSignUseFlag); // 기본 서명 플래그 값
 			data.put("signValue", signValue); // 기본 서명 HTML
 			data.put("totBigSizeMailAttachLimit", totBigSizeMailAttachLimit);// 대용량 첨부파일의 최대 크기
+			data.put("useAutoZipEnc", useAutoZipEnc);// 메일쓰기창 첨부파일 업로드 zip 암호 설정 여부
+			data.put("selfCcOption", selfCcOption); // 나를 항상 참조에 포함 옵션(none: 사용안함, cc: 참조에 항상 포함, bcc: 숨은참조에 항상 포함)
+			data.put("userName", userName);
+			data.put("deptName", deptName);
+			data.put("useFileExtension", useFileExtension);
 			
 	        result.put("status", "ok");
 			result.put("code", 0);			
@@ -1948,6 +1966,10 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 		
 		try {
 			String tempFolderName = "";
+			String zipPassword = jsonObject.get("zipPassword") != null ? (String) jsonObject.get("zipPassword") : "";
+			boolean zipFileUploadCheck = false;
+			boolean checkZipFileEncrypted = false;
+			boolean needZipEncryption = zipPassword != null && !zipPassword.isEmpty();
 			JSONArray fileArray = new JSONArray();
 			int cnt = 0;
 			//int maxsize = 10*1024*1024; // 10MB
@@ -1970,6 +1992,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 		*/
 			logger.debug("####" + tempFolderName + "####");
 			logger.debug("####" + cnt + "####");
+			logger.debug("####" + zipPassword + "####");
 //			logger.debug("####" + maxsize + "####");
 			
 			String serverName = request.getHeader("x-user-host");
@@ -1991,6 +2014,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 			long totalFileSize = 0; // 첨부파일 총 용량을 체크할 변수
 
 			String useExtension = ezCommonService.getTenantConfig("USE_FileExtension", info.getTenantId());
+			String useAutoZipEnc = ezCommonService.getTenantConfig("useAutoZipEnc", info.getTenantId());
 		
 			if (useExtension == null) {
 				useExtension = "";
@@ -2017,6 +2041,10 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 					} else {
 						sFileTitle[i] = pFileName[i];
 						sExt[i] = "";
+					}
+
+					if(sExt[i].equals("zip")) {
+						zipFileUploadCheck = true;
 					}
 					
 					if (((Long)((JSONObject)fileArray.get(i)).get("fileSize")).intValue() == 0) {
@@ -2098,16 +2126,41 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 
 						fileLocation[i] = pDirTempPath + commonUtil.separator + sGUID[i];
 						resultUpload[i] = "true";
+
+						if(useAutoZipEnc.equals("YES")) {
+							File f1 = new File(fileLocation[i]);
+
+							if (zipFileUploadCheck) {
+								checkZipFileEncrypted = ezEmailUtil.checkZipEncrypted(f1);
+							}
+
+							if (needZipEncryption && !checkZipFileEncrypted) {
+								String zipPath = ezEmailUtil.createEncryptZipFile(f1, pFileName[i], zipPassword, pDirTempPath);
+
+								if (zipPath != null) {
+									fileLocation[i] = zipPath;  // 암호화된 zip 경로로 업데이트
+									pFileName[i] = new File(zipPath).getName();
+								}
+							}
+						}
 					}
 
 					String pBigFileUpload = "N";
 
-					strXML2 += "<NODE><PUPLOADSN><![CDATA[" + sGUID[i] + "]]></PUPLOADSN>";
+					boolean isAutoZipEnc = !checkZipFileEncrypted && "YES".equals(useAutoZipEnc);
+					String fileIdentifier = isAutoZipEnc ? pFileName[i] : sGUID[i];
+
+					strXML2 += "<NODE><PUPLOADSN><![CDATA[" + fileIdentifier + "]]></PUPLOADSN>";
 					strXML2 += "<RESULTUPLOADA><![CDATA[" + resultUpload[i] + "]]></RESULTUPLOADA>";
 					strXML2 += "<PFILENAME><![CDATA[" + pFileName[i] + "]]></PFILENAME>";
 					strXML2 += "<FILESIZE><![CDATA[" + fileSize[i] + "]]></FILESIZE>";
-					strXML2 += "<FILELOCATION><![CDATA[" + sGUID[i] + "]]></FILELOCATION>";
+					strXML2 += "<FILELOCATION><![CDATA[" + fileIdentifier + "]]></FILELOCATION>";
 					strXML2 += "<PBIGFILEUPLOAD><![CDATA[" + pBigFileUpload + "]]></PBIGFILEUPLOAD>";
+					
+					if (zipFileUploadCheck) {
+						strXML2 += "<CHECKZIPENCRYPTED><![CDATA[" + checkZipFileEncrypted + "]]></CHECKZIPENCRYPTED>";
+					}
+					
 					strXML2 += "</NODE>";
 
 					pDirTempPath = "";
@@ -2347,6 +2400,10 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 		String strXML2 = "";
 		String folderDate = "";
 		String tempFolderName = "";
+		String zipPassword = request.getParameter("zipPassword");
+		boolean zipFileUploadCheck = false;
+		boolean checkZipFileEncrypted = false;
+		boolean needZipEncryption = zipPassword != null && !zipPassword.isEmpty();
 		String xmlList = "";
 
 		JSONObject result = new JSONObject();
@@ -2407,6 +2464,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 			MCommonVO info = mOptionService.commonInfo(serverName, userId);
 
 			String useExtension = ezCommonService.getTenantConfig("USE_FileExtension", info.getTenantId());
+			String useAutoZipEnc = ezCommonService.getTenantConfig("useAutoZipEnc", info.getTenantId());
 
 			if (useExtension == null) {
 				useExtension = "";
@@ -2448,6 +2506,10 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 
 					if (multiFile.get(i).getSize() == 0) {
 						isEmpty = true;
+					}
+
+					if(sExt[i].equals("zip")) {
+						zipFileUploadCheck = true;
 					}
 				}
 
@@ -2554,19 +2616,47 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 						writeUploadedFile(multiFile.get(i), sGUID[i], pDirTempPath);
 						fileLocation[i] = pDirTempPath + commonUtil.separator + sGUID[i];
 						resultUpload[i] = "true";
+
+						if(useAutoZipEnc.equals("YES")) {
+							File f1 = new File(fileLocation[i]);
+
+							if (zipFileUploadCheck) {
+								checkZipFileEncrypted = ezEmailUtil.checkZipEncrypted(f1);
+							}
+
+							if (needZipEncryption && !checkZipFileEncrypted) {
+								String zipPath = ezEmailUtil.createEncryptZipFile(f1, pFileName[i], zipPassword, pDirTempPath);
+
+								if (zipPath != null) {
+									fileLocation[i] = zipPath;  // 암호화된 zip 경로로 업데이트
+									pFileName[i] = new File(zipPath).getName();
+								}
+							}
+						}
 					}
 
+					boolean isAutoZipEnc = !checkZipFileEncrypted && "YES".equals(useAutoZipEnc);
+					String fileIdentifier = isAutoZipEnc ? pFileName[i] : sGUID[i];
+					String fileLocationValue;
+
+					if ("Y".equals(pBigFileUpload)) {
+						fileLocationValue = folderDate + "|!|" + fileIdentifier;
+					} else {
+						fileLocationValue = fileIdentifier;
+					}
+					
 					// 업로드된 파일에 대한 정보를 XML 형식으로 클라이언트에게 반환한다.
-					strXML2 += "<NODE><PUPLOADSN><![CDATA[" + sGUID[i] + "]]></PUPLOADSN>";
+					strXML2 += "<NODE><PUPLOADSN><![CDATA[" + fileIdentifier + "]]></PUPLOADSN>";
 					strXML2 += "<RESULTUPLOADA><![CDATA[" + resultUpload[i] + "]]></RESULTUPLOADA>";
 					strXML2 += "<PFILENAME><![CDATA[" + pFileName[i] + "]]></PFILENAME>";
 					strXML2 += "<FILESIZE><![CDATA[" + fileSize[i] + "]]></FILESIZE>";
-					if (pBigFileUpload.equals("Y")) {
-						strXML2 += "<FILELOCATION><![CDATA[" + folderDate+"|!|"+sGUID[i] + "]]></FILELOCATION>";
-					} else {
-						strXML2 += "<FILELOCATION><![CDATA[" + sGUID[i] + "]]></FILELOCATION>";
-					}
+					strXML2 += "<FILELOCATION><![CDATA[" + fileLocationValue + "]]></FILELOCATION>";
 					strXML2 += "<PBIGFILEUPLOAD><![CDATA[" + pBigFileUpload + "]]></PBIGFILEUPLOAD>";
+
+					if (zipFileUploadCheck) {
+						strXML2 += "<CHECKZIPENCRYPTED><![CDATA[" + checkZipFileEncrypted + "]]></CHECKZIPENCRYPTED>";
+					}
+					
 					strXML2 += "</NODE>";
 				}
 				pDirTempPath = "";
@@ -3654,46 +3744,52 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 							String extractedPath = imageMatcher.group(1) != null ? imageMatcher.group(1) : imageMatcher.group(2);
 							String imagePath = realPath + extractedPath;
 							File imageFile = new File(imagePath);
-							String imageExt = FilenameUtils.getExtension(imageFile.getName());
-							String imageName = UUID.randomUUID().toString() + "." + imageExt;
+							if (imageFile.exists()){
+								String imageExt = FilenameUtils.getExtension(imageFile.getName());
+								String imageName = UUID.randomUUID().toString() + "." + imageExt;
 
-							String cid = imageName + "@12345678.87654321";
-							String cidWithBrackets = "<" + cid + ">";
+								String cid = imageName + "@12345678.87654321";
+								String cidWithBrackets = "<" + cid + ">";
 
-							String contentType;
+								String contentType = null;
 
-							// 성능 향상을 위해 Object Storage에 있는 파일을 로컬 폴더로 복사한다.
-							if (EzFAL.isObjectStorageMode()) {
-								IOUtils.copy(new EzFAL.EzFileInputStream(new EzFAL.EzFile(imageFile)), new FileOutputStream(imageFile));
-							}
+								// 성능 향상을 위해 Object Storage에 있는 파일을 로컬 폴더로 복사한다.
+								if (EzFAL.isObjectStorageMode()) {
+									IOUtils.copy(new EzFAL.EzFileInputStream(new EzFAL.EzFile(imageFile)), new FileOutputStream(imageFile));
+								}
 
-							try (FileInputStream is = new FileInputStream(imageFile)) {
-								contentType = URLConnection.guessContentTypeFromStream(is);
+								try (FileInputStream is = new FileInputStream(imageFile)) {
+									contentType = URLConnection.guessContentTypeFromStream(is);
+								} catch(FileNotFoundException e) {
+									logger.error(e.getMessage(), e);
+								} catch(Exception e) {
+									logger.error(e.getMessage(), e);
+								}
 
 								if (contentType == null) {
 									contentType = Files.probeContentType(imageFile.toPath());
 								}
-							} catch (Exception ex) {
-								throw ex;
+
+								MimeBodyPart imagePart = new MimeBodyPart();
+								FileDataSource fileSource = new FileDataSource(imageFile);
+
+								imagePart.setDataHandler(new DataHandler(fileSource));
+								imagePart.setFileName(imageName);
+								imagePart.setHeader("Content-Type", contentType);
+								imagePart.setContentID(cidWithBrackets);
+								imagePart.setDisposition(Part.INLINE);
+
+								imageParts.add(imagePart);
+
+								// dhlee : 20221027 - 사이냅 웹에디터를 사용하는 닷넷 모바일에서 이미지 업로드를 지원하기 위해 Upload_Common 폴더 관련 처리를 추가함.
+								if (imageMatcher.group(1) == null ) {
+									cid = cid + "\"";
+								}
+
+								imageMatcher.appendReplacement(sb, "src=\"cid:" + cid);
+
 							}
 
-							MimeBodyPart imagePart = new MimeBodyPart();
-							FileDataSource fileSource = new FileDataSource(imageFile);
-
-							imagePart.setDataHandler(new DataHandler(fileSource));
-							imagePart.setFileName(imageName);
-							imagePart.setHeader("Content-Type", contentType);
-							imagePart.setContentID(cidWithBrackets);
-							imagePart.setDisposition(Part.INLINE);
-
-							imageParts.add(imagePart);
-
-							// dhlee : 20221027 - 사이냅 웹에디터를 사용하는 닷넷 모바일에서 이미지 업로드를 지원하기 위해 Upload_Common 폴더 관련 처리를 추가함.
-							if (imageMatcher.group(1) == null ) {
-								cid = cid + "\"";
-							}
-
-							imageMatcher.appendReplacement(sb, "src=\"cid:" + cid);
 						}
 
 						textBody = imageMatcher.appendTail(sb).toString();
@@ -5028,6 +5124,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 	public Object downloadInline(HttpServletRequest request,
 			@PathVariable String folderId, @PathVariable String messageId, @PathVariable String index, @PathVariable String userId) throws Exception {
 		logger.debug("MOBILE G/W MAIL downloadInline started.");
+		folderId = URLDecoder.decode(folderId, "UTF-8");
 		logger.debug("folderId=" + folderId + ",messageId=" + messageId + ",userId=" + userId + ",index=" + index);
 		
 		InputStream input = null;
@@ -7022,7 +7119,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 	/**
      * 첨부파일을 서버에 저장한다.
      *
-     * @param file
+     * @param stordFilePath
      * @param newName
      * @param stordFilePath
      * @throws Exception
@@ -7960,10 +8057,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 			String from = ((InternetAddress)message.getFrom()[0]).getAddress();
 			logger.debug("from=" + from);
 
-			String useFromAddress = StringUtils.defaultIfBlank(ezCommonService.getTenantConfig("Use_FromAddress", userInfo.getTenantId()), "NO");
-			String useDistributionSender = StringUtils.defaultIfBlank(ezCommonService.getCompanyConfig(userInfo.getTenantId(), userInfo.getCompanyId(), "useDistributionSender"), "NO");
-
-			List<String[]> aliasAddressList = ezEmailService.getAliasAddress(mailId, userInfo.getTenantId(), useFromAddress, useDistributionSender);
+			List<String[]> aliasAddressList = ezEmailService.getAliasAddress(mailId, userInfo.getTenantId(), "YES", "NO");
 
 			boolean isUserFrom = false;
 			for (String[] address : aliasAddressList) {
@@ -8368,21 +8462,19 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 			int start 	= Integer.parseInt(StringUtils.defaultIfBlank((String) jsonObject.get("start"), "1"));
 			int end 	= Integer.parseInt(StringUtils.defaultIfBlank((String) jsonObject.get("end"), "20"));
 			logger.debug("start={}, end={}", start, end);
-			/*int listCount = end - (start-1);
-				listCount = (listCount < 0) ? 0 : listCount;
-			logger.debug("start={}, end={}, listCount={}", start, end, listCount);*/
 
 			// jgw 서버에서 리스트 받아오기
 			JSONArray array 	= ezEmailService.getApprMailList(tenantId, companyId, type, userCn, lang, start, end, domainName);
-			JSONArray array2 	= ezEmailService.setUTCtoUserTime(array, userInfo.getOffSet(), tenantId);
+			/*JSONArray array2 	= ezEmailService.setUTCtoUserTime(array, userInfo.getOffSet(), tenantId);
 
 			JSONArray resultArry = new JSONArray();
-			resultArry 			= ezEmailService.setHref(array2);
+			resultArry 			= ezEmailService.setHref(array2);*/
+			JSONArray resultArray = ezEmailService.formatApprEmail(array, userInfo.getOffSet(), tenantId, null);
 
 			int listTotalCount = ezEmailService.getApprMailListCount(tenantId, companyId, type, userCn);
 
 			returnData.put("listTotalCount", listTotalCount);
-			returnData.put("list", resultArry);
+			returnData.put("list", resultArray);
 			
 			result.put("data", returnData);
 			result.put("status", "ok");
@@ -8443,16 +8535,17 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 
 			// jgw 서버에서 리스트 받아오기
 			JSONArray array 	= ezEmailService.getApprMailList(tenantId, companyId, type, userCn, lang, start, end, domainName);
-			JSONArray array2 	= ezEmailService.setUTCtoUserTime(array, userInfo.getOffSet(), tenantId);
+			JSONArray resultArray = ezEmailService.formatApprEmail(array, userInfo.getOffSet(), tenantId, locale);
+			/*JSONArray array2 	= ezEmailService.setUTCtoUserTime(array, userInfo.getOffSet(), tenantId);
 			JSONArray array3	= ezEmailService.setHref(array2);
 
 			JSONArray resultArry = new JSONArray();
-			resultArry = ezEmailService.setStateByLocale(array3, locale);
+			resultArry = ezEmailService.setStateByLocale(array3, locale);*/
 
 			int listTotalCount = ezEmailService.getApprMailListCount(tenantId, companyId, type, userCn);
 
 			returnData.put("listTotalCount", listTotalCount);
-			returnData.put("list", resultArry);
+			returnData.put("list", resultArray);
 			
 			result.put("data", returnData);
 			result.put("status", "ok");
@@ -8513,16 +8606,17 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 			
 			// jgw 서버에서 리스트 받아오기
 			JSONArray array = ezEmailService.getApprMailList(tenantId, companyId, type, vUserId, lang, start, end, domainName);
-			JSONArray array2 = ezEmailService.setUTCtoUserTime(array, userInfo.getOffSet(), tenantId);
+			JSONArray resultArray = ezEmailService.formatApprEmail(array, userInfo.getOffSet(), tenantId, locale);
+			/*JSONArray array2 = ezEmailService.setUTCtoUserTime(array, userInfo.getOffSet(), tenantId);
 			JSONArray array3 = ezEmailService.setApprover(array2, locale);
 
 			JSONArray resultArry = new JSONArray();
-			resultArry = ezEmailService.setHref(array3);
+			resultArry = ezEmailService.setHref(array3);*/
 
 			int listTotalCount = ezEmailService.getApprMailListCount(tenantId, companyId, type, vUserId);
 
 			returnData.put("listTotalCount", listTotalCount);
-			returnData.put("list", resultArry);
+			returnData.put("list", resultArray);
 			
 			result.put("data", returnData);
 			result.put("status", "ok");
@@ -8572,6 +8666,9 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 			// param
 			List<String> hrefArray = (ArrayList<String>) jsonObject.get("href");
 
+			// 데이터 수집 단계
+			List<Map<String, Object>> approvalDataList = new ArrayList<>();
+
 			for(String encryptedHref : hrefArray) {
 				// decrypt & mailbox/uid
 				String href = egovFileScrty.decryptAES(encryptedHref);
@@ -8590,19 +8687,39 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 				logger.debug("apprSetApproval userCn={}, href={}, hrefUserId={}, uid={}, applicantId={}, applicantEmail={}",
 						userCn, href, hrefUserId, uid, applicantId, applicantEmail);
 
-				Map<String, Object> map = new HashMap<String, Object>();
-				map.put("companyId", companyId);
-				map.put("lang", lang);
-				map.put("locale", locale);
-				
-		        int resultInt = ezEmailService.setApprMailApproval(userCn, tenantId, map, applicantEmail, uid);
-		        if (resultInt != 0) {
-		        	errorInt++;
-		        }
+				// 승인 데이터 생성
+				Map<String, Object> approvalData = new HashMap<>();
+				approvalData.put("tenantId", tenantId);
+				approvalData.put("companyId", companyId);
+				approvalData.put("lang", lang);
+				approvalData.put("locale", locale);
+				approvalData.put("uid", uid);
+				approvalData.put("applicantId", applicantId);
+				approvalData.put("applicantEmail", applicantEmail);
+				approvalData.put("state", "pending");
+				approvalData.put("apprMailFlag", "normal");
+
+				approvalDataList.add(approvalData);
 			}
-			
-			if (errorInt > 0) {
-				returnValue = "ERROR_" + errorInt;
+
+			// 메일이 대기 상태인지 check
+			int checkMail = ezEmailService.checkApprHistoryMultiple(tenantId, companyId, userId, approvalDataList);
+
+			if (checkMail == 1) {
+				returnValue = "DONE"; // 1: 이미 처리된 메일이 있음
+			} else {
+				// 처리 단계
+				for (Map<String, Object> approvalData : approvalDataList) {
+					int resultInt = ezEmailService.setApprMailApproval(userCn, tenantId, approvalData, (String) approvalData.get("applicantEmail"), (Long) approvalData.get("uid"));
+	
+					if (resultInt != 0) {
+						errorInt++;
+					}
+				}
+				
+				if (errorInt > 0) {
+					returnValue = "ERROR_" + errorInt;
+				}
 			}
 			
 			result.put("data", returnValue);
@@ -8626,7 +8743,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 	/**
 	 * 승인메일 : 발송 거부
 	 * @param userId
-	 * @param href: String[] 발송 거부할 메일 href
+	 * @param jsonObject.href: String[] 발송 거부할 메일 href
 	 * @return data: OK: 성공 or ERROR_{count}: 실패한 개수
 	 */
 	@SuppressWarnings("unchecked")
@@ -8657,6 +8774,9 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 		    String memo = StringUtils.defaultIfBlank((String) jsonObject.get("memo"), "");
 		    memo = memo.replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("&", "&amp;");
 
+			// 데이터 수집 단계
+			List<Map<String, Object>> approvalDataList = new ArrayList<>();
+
 		    for(String encryptedHref : hrefArray) {
 				// decrypt & mailbox/uid
 				String href = egovFileScrty.decryptAES(encryptedHref);
@@ -8675,15 +8795,35 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 				logger.debug("apprSetRejectAction userCn={}, href={}, hrefUserId={}, uid={}, applicantId={}, applicantEmail={}",
 						userCn, href, hrefUserId, uid, applicantId, applicantEmail);
 
-				Map<String, Object> map = new HashMap<String, Object>();
-				map.put("companyId", companyId);
-				map.put("lang", lang);
-				map.put("locale", locale);
-				
-				int resultInt = ezEmailService.setApprMailReject(hrefUserId, tenantId, map, applicantEmail, uid, memo);
-		        if (resultInt != 0) {
-		        	errorInt++;
-		        }
+				// 승인 데이터 생성
+				Map<String, Object> approvalData = new HashMap<>();
+				approvalData.put("tenantId", tenantId);
+				approvalData.put("companyId", companyId);
+				approvalData.put("lang", lang);
+				approvalData.put("locale", locale);
+				approvalData.put("uid", uid);
+				approvalData.put("applicantId", applicantId);
+				approvalData.put("applicantEmail", applicantEmail);
+				approvalData.put("state", "pending");
+				approvalData.put("apprMailFlag", "normal");
+
+				approvalDataList.add(approvalData);
+			}
+
+			// 메일이 대기 상태인지 check
+			int checkMail = ezEmailService.checkApprHistoryMultiple(tenantId, companyId, userId, approvalDataList);
+
+			if (checkMail == 1) {
+				returnValue = "DONE"; // 1: 이미 처리된 메일이 있음
+			} else {
+				// 처리 단계
+				for (Map<String, Object> approvalData : approvalDataList) {
+					int resultInt = ezEmailService.setApprMailReject(userCn, tenantId, approvalData, (String) approvalData.get("applicantEmail"), (Long) approvalData.get("uid"), memo);
+
+					if (resultInt != 0) {
+						errorInt++;
+					}
+				}
 			}
 			
 			if (errorInt > 0) {
@@ -8754,11 +8894,32 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 			map.put("lang", lang);
 			map.put("locale", locale);
 
-	        int resultInt = ezEmailService.setApprMailCancel(tenantId, map, applicantEmail, uid);
-	        
-	        if (resultInt != 0) {
-	        	returnValue = "ERROR";
-	        }
+			// 데이터 수집 단계
+			List<Map<String, Object>> approvalDataList = new ArrayList<>();
+			Map<String, Object> approvalData = new HashMap<>();
+			approvalData.put("tenantId", tenantId);
+			approvalData.put("companyId", companyId);
+			approvalData.put("lang", lang);
+			approvalData.put("locale", locale);
+			approvalData.put("uid", uid);
+			approvalData.put("applicantId", applicantId);
+			approvalData.put("applicantEmail", applicantEmail);
+			approvalData.put("state", "pending");
+
+			approvalDataList.add(approvalData);
+
+			// 메일이 대기 상태인지 check
+			int checkMail = ezEmailService.checkApprHistoryAll(tenantId, companyId, userId, approvalDataList);
+
+			if (checkMail == 1) {
+				returnValue = "DONE"; // 1: 이미 처리된 메일이 있음
+			} else {
+				int resultInt = ezEmailService.setApprMailCancel(tenantId, map, applicantEmail, uid);
+
+				if (resultInt != 0) {
+					returnValue = "ERROR";
+				}
+			}
 			
 			result.put("data", returnValue);
 			result.put("status", "ok");

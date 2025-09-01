@@ -701,6 +701,12 @@
 						document.getElementById("input_wrap").classList.remove("on");
 					}
 				}
+
+
+				let usingMailPreview = document.getElementById("iFramePanel_mail_preview").className.includes('on');
+				if (usingMailPreview) {
+					hiddenPreviewMail();
+				}
 			}
 			
 	    </script>
@@ -774,6 +780,7 @@
 		                        <DIV id="MsgToPut" onMouseOver="this.style.color='#006BB6'" title="${fromEmail}" style="CURSOR: pointer; padding-left: 5px; vertical-align: middle;" onMouseOut="this.style.color='#393939'">	
 			                        <a onClick="show_senderprofile()">					
 			                            <span id="LabelFromName">${fromStr}</span>
+			                            <span id="LabelFromEmail">&lt;${fromEmail}&gt;</span>
 			                            <span id="LabelSenderInfo"></span>	
 			                        </a>
 				                    <c:if test="${useCountryIP == 'YES'}">

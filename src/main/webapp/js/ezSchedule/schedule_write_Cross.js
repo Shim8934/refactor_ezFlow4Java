@@ -217,17 +217,11 @@ function save_schedule(pageFrom)
 
     if (scheduleid == "")
 	{
-        ownerid = document.getElementById("ListOwnerID").options[document.getElementById("ListOwnerID").selectedIndex].value;
-		ownerid = ownerid.split(";;")[1];
+        var selectRow = document.getElementById("ListOwnerID").options[document.getElementById("ListOwnerID").selectedIndex].value;
+		ownerid = selectRow.split(";;")[1];
 
-	    ownername = getNodeText(document.getElementById("ListOwnerID").options[document.getElementById("ListOwnerID").selectedIndex]);
-
-	    if (ownername.indexOf("-") > -1)
-	        ownername = ownername.split(" - ")[1];
-	    else if (ownername.indexOf("]") > -1)
-	        ownername = ownername.split("]")[1];	    
-	    
-        ownername2 = ownername;
+	    ownername = selectRow.split(";;")[2];
+        ownername2 = selectRow.split(";;")[3];
     }
 	var xmlHTTP = createXMLHttpRequest();
 	var xmlDom = createXmlDom();    
@@ -442,6 +436,21 @@ function save_schedule(pageFrom)
 		createNodeAndInsertText(xmlDom, objNode, "REPSTARTDATE", repStartDate);
 	}
 	
+	var startDateReal = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
+	var endDateReal =  $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
+	
+	if (!!g_resource && g_resource.length > 0) {
+		var resourseID = g_resource[0][0];
+		if (!!resourseID) {
+			var resMaxDate = getResourceMaxDate(resourseID);
+			if (!checkResMaxDate(startDateReal, endDateReal, resMaxDate)) {
+				alert(strLangMaxYGS01);
+				saveCheck = false;
+				return;
+			}
+		}
+	}
+	
 	xmlHTTP.open("POST", "/ezSchedule/scheduleSave.do?pageFrom=" + pageFrom, false);
 	xmlHTTP.send(xmlDom);
 	
@@ -494,6 +503,21 @@ function save_schedule(pageFrom)
 	    
 	    window.close();
 	}
+}
+
+// 최대 예약 가능 기간 검증
+function checkResMaxDate(startDate, endDate, maxResDate) {
+    if (maxResDate == 0) {
+        return true;
+    }
+	
+    var chStDate = new Date(startDate);
+    var chEdDate = new Date(endDate);
+    chStDate.setHours(0, 0, 0, 0);
+    chEdDate.setHours(0, 0, 0, 0);
+	
+    var betweenDay = (chEdDate - chStDate) / (1000 * 60 * 60 * 24) + 1;
+    return betweenDay <= maxResDate;
 }
 
 function CheckPreviously(timeCheck) {
@@ -790,7 +814,7 @@ function allday_change()
         	var eMonth = EDate.substring(5,7);
         	var eDay = EDate.substring(8,10);
         	
-        	var EDate2 = new Date();
+        	var EDate2 = new Date(nowDate);
 	        EDate2.setFullYear(eYear, parseInt(eMonth)-1, parseInt(eDay));
 	        $("#Edatepicker").datepicker('setDate', EDate2);
         }
@@ -804,7 +828,7 @@ function allday_change()
         if ((!timeSelect && datetype == "1") || datetype == "" || datetype == "2") { //하루종일 일정일 때 시간
         	//2018-08-28 김보미 - 현재시간으로 설정
         	if($("#Stimepicker").val() == "00:00" && $("#Etimepicker").val() == "23:59") {
-	        	var now = new Date();
+	        	var now = new Date(nowDate);
 	        	
 	        	//시작시간
 	        	var startTime;
@@ -898,7 +922,7 @@ function config_repeat_Complete(rtn) {
         document.getElementById("repeatinfo").innerHTML = "&nbsp;";
         document.getElementById("alldaycheck").checked = false;
         if($("#Stimepicker").val() == "00:00" && $("#Etimepicker").val() == "23:59") {
-        	var now = new Date();
+        	var now = new Date(nowDate);
         	
         	//시작시간
         	var startTime;

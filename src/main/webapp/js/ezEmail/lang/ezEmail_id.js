@@ -359,6 +359,8 @@ var strLangHSG03 = "Kolom subjek kosong.";
 
 var strLangKDH01 = "Baca info";
 
+var strLangYJA01 = "Terjadi kesalahan saat mengunggah melalui jaringan.";
+
 //new ui
 const strLangFolderManage = "Manage folder";
 const strLangSubscribe = "Subscribe";
@@ -395,6 +397,9 @@ const strLangTagadd = "메일에 태그 추가 :";
 
 const strLangChangeButton = "Switch";
 const strLangChangeLimit = "Cannot switch because the attachment size exceeds the limit.";
+
+const strLangKeepMoveCantUseSentBox = '보낸편지함으로는 계속이동 할 수 없습니다.';
+const strLangKeepMoveNoFromHeader = '보낸이가 비어있는 메일은 계속이동 할 수 없습니다.';
 
 function GetLocalTime(Offset , pDateTime)
 {

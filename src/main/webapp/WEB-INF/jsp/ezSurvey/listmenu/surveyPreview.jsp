@@ -9,9 +9,6 @@
 </div>
 
 <div class="surveyinfo-wrap" id="surveyInfConfirm">
-	<div class="surveyinfopp-wrap">
-		<div class="survey-purpose" id="cf-purpose"></div>
-	</div>
 	<div class="survey-otherinf">
 		<table class="content surveyContent">
 			<tr>
@@ -32,7 +29,10 @@
 				<th class="left-Th"><spring:message code="ezSurvey.t41"/></th> <%-- public setting --%>
 				<td class="right-Td"><div id="public-cfdiv" class="surveyinf-divcf"></div></td>
 				<th class="left-Th"><spring:message code="ezSurvey.t46"/></th> <%-- anonymous setting --%>
-				<td class="right-Td"><div id="cf-anoynymous" class="surveyinf-divcf"></div></td>
+				<td class="right-Td"><div class="surveyinf-divcf">
+					<span id="cf-anoynymous"></span>
+					<span>&nbsp;(&nbsp;<spring:message code="ezSurvey.yjh17"/>&nbsp;:&nbsp;<span id="cf-userExposed"></span>&nbsp;)</span>
+				</div></td>
 			</tr>
 			<tr>
 				<th class="left-Th"><spring:message code="ezSurvey.t112"/></th> <%-- mail setting --%>
@@ -69,6 +69,10 @@
             </div>
 		</div>
 	</div>
+
+	<div class="surveyinfopp-wrap">
+		<div class="survey-purpose" id="cf-purpose"></div>
+	</div>
 </div>
 
 <div class="attach-zone off" id="surveyAttConfirm">
@@ -83,6 +87,11 @@
 
 
 <div class="confirmQsArea"></div>
+
+<%--맺음말--%>
+<div class="surveyinfopp-wrap" id="closingArea" style="margin-top: 10px;">
+	<div class="survey-purpose" id="cf-closing"></div>
+</div>
 
 <div class="survey-bttn-panel">
 	<div class="btnpositionSurvey">

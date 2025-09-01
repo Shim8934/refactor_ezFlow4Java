@@ -215,14 +215,14 @@
 		                "dialogHeight:535px;dialogwidth:760px;dialogleft:100px;dialogtop:100px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(760, 535));
 		
 			        if (typeof (rtnValue) != "undefined" && type == "") {
-			            userid = rtnValue.split(":")[0];
-			            document.getElementById("TextName").value = rtnValue.split(":")[1];
-			            deptid = rtnValue.split(":")[2];
+			            userid = rtnValue.userId;
+			            document.getElementById("TextName").value = rtnValue.userName;
+			            deptid = rtnValue.deptId;
 			        }
 			        if (typeof (rtnValue) != "undefined" && type == "Proxy") {
-			            proxyuserid = rtnValue.split(":")[0];
-			            document.getElementById("TextProxyName").value = rtnValue.split(":")[1];
-			            proxydeptid = rtnValue.split(":")[2];
+			            proxyuserid = rtnValue.userId;
+			            document.getElementById("TextProxyName").value = rtnValue.userName;
+			            proxydeptid = rtnValue.deptId;
 			        }
 			    }
 			}
@@ -238,42 +238,42 @@
 		                "dialogHeight:535px;dialogwidth:760px;dialogleft:100px;dialogtop:100px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(760, 535));
 		
 			        if (typeof (rtnValue) != "undefined" && type == "") {
-			        	buJaeId = rtnValue.split(":")[0];
-			            document.getElementById("TextName1").value = rtnValue.split(":")[1];
-			            buJaedeptid = rtnValue.split(":")[2];
+			        	buJaeId = rtnValue.userId;
+			            document.getElementById("TextName1").value = rtnValue.userName;
+			            buJaedeptid = rtnValue.deptId;
 			        }
 			        if (typeof (rtnValue) != "undefined" && type == "Proxy") {
-			        	proxybuJaeId = rtnValue.split(":")[0];
-			            document.getElementById("TextProxyName1").value = rtnValue.split(":")[1];
-			            proxybuJaedeptid = rtnValue.split(":")[2];
+			        	proxybuJaeId = rtnValue.userId;
+			            document.getElementById("TextProxyName1").value = rtnValue.userName;
+			            proxybuJaedeptid = rtnValue.deptId;
 			        }
 			    }
 			}
 			function select_person_Complete(rtnValue) {
 			    if (typeof (rtnValue) != "undefined" && type_Complete == "") {
-			        userid = rtnValue.split(":")[0];
-			        document.getElementById("TextName").value = rtnValue.split(":")[1];
-			        deptid = rtnValue.split(":")[2];
+			        userid = rtnValue.userId;
+			        document.getElementById("TextName").value = rtnValue.userName;
+			        deptid = rtnValue.deptId;
 			        document.getElementById("TR_Absentreason").style.display = "none";
 			    }
 			    if (typeof (rtnValue) != "undefined" && type_Complete == "Proxy") {
-			        proxyuserid = rtnValue.split(":")[0];
-			        document.getElementById("TextProxyName").value = rtnValue.split(":")[1];
-			        proxydeptid = rtnValue.split(":")[2];
+			        proxyuserid = rtnValue.userId;
+			        document.getElementById("TextProxyName").value = rtnValue.userName;
+			        proxydeptid = rtnValue.deptId;
 			    }
 			}
 			function select_person_Complete1(rtnValue) {
 			    if (typeof (rtnValue) != "undefined" && type_Complete == "") {
-			    	buJaeId = rtnValue.split(":")[0];
-			        document.getElementById("TextName1").value = rtnValue.split(":")[1];
-			        buJaedeptid = rtnValue.split(":")[2];
+			    	buJaeId = rtnValue.userId;
+			        document.getElementById("TextName1").value = rtnValue.userName;
+			        buJaedeptid = rtnValue.deptId;
 			        
 			        check_substitute(rtnValue);
 			    }
 			    /* if (typeof (rtnValue) != "undefined" && type_Complete == "Proxy") {
-			    	proxybuJaeId = rtnValue.split(":")[0];
-			        document.getElementById("TextProxyName1").value = rtnValue.split(":")[1];
-			        proxybuJaedeptid = rtnValue.split(":")[2];
+			    	proxybuJaeId = rtnValue.userId;
+			        document.getElementById("TextProxyName1").value = rtnValue.userName;
+			        proxybuJaedeptid = rtnValue.deptId;
 			    } */
 			}
 			
@@ -284,7 +284,7 @@
 		    		async : false,
 		    		url : "/admin/ezApprovalG/checkSubstitute.do",
 		    		data : {
-		    				buJaeId  : rtnValue.split(":")[0]
+		    				buJaeId  : rtnValue.userId
 		    				},
 		    		success: function(result){
 		    			$("select#deptList option").remove();

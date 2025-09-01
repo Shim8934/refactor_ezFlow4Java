@@ -3,7 +3,6 @@ package egovframework.ezEKP.ezApprovalG.web;
 import java.io.FileOutputStream;
 import java.nio.charset.StandardCharsets;
 
-import egovframework.ezEKP.ezApprovalG.service.EzApprovalGConnService;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGLeftVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganAuth;
 import egovframework.ezEKP.ezOrgan.vo.OrganAuth.AdminAuth;
@@ -28,7 +27,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import egovframework.com.cmm.EgovMessageSource;
-import egovframework.com.cmm.service.EgovFileMngUtil;
+import egovframework.com.cmm.service.EzFileMngUtil;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGAdminService;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGContInfoVO;
@@ -114,7 +113,7 @@ import java.util.stream.Collectors;
  */
 
 @Controller
-public class EzApprovalGAdminController extends EgovFileMngUtil {
+public class EzApprovalGAdminController extends EzFileMngUtil {
 	
 	@Autowired	
 	private CommonUtil commonUtil;
@@ -149,9 +148,6 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	@Autowired
 	LoginController loginController;
 
-	@Autowired
-	EzApprovalGConnService ezApprovalGConnService;
-	
 	@Value("#{globals['Globals.DbType']}")
 	private String dbType;
 	
@@ -202,6 +198,10 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String useRegisterCabinetSemiAuto = ezCommonService.getTenantConfig("useRegisterCabinetSemiAuto", userInfo.getTenantId());
 		
 		model.addAttribute("useRegisterCabinetSemiAuto", useRegisterCabinetSemiAuto);
+		
+		/* 2024-07-22 양지혜 - 대외발신현황 사용여부 */
+		String useSendOutState = ezCommonService.getTenantConfig("useSendOutState", userInfo.getTenantId());
+		model.addAttribute("useSendOutState", useSendOutState);
 		
 		logger.debug("apprGLeft ended. approvalFlag = " + approvalFlag);
 		
@@ -4677,6 +4677,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String ownerId = request.getParameter("ownerId");
 		String ownerName = request.getParameter("ownerName");
 		String ownerType = request.getParameter("ownerType");
+		String ownerCompanyId = request.getParameter("ownerCompanyId");
 
 		OrganAuth organAuth = commonUtil.makeOrganAuth(userInfo.getId(), userInfo.getTenantId(), userInfo.getDeptID(), userInfo.getJobId());
 
@@ -4688,6 +4689,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		model.addAttribute("ownerId", ownerId);
 		model.addAttribute("ownerName", ownerName);
 		model.addAttribute("ownerType", ownerType);
+		model.addAttribute("ownerCompanyId", ownerCompanyId);
 		model.addAttribute("companyId", userInfo.getCompanyID());
 		model.addAttribute("deptId", userInfo.getDeptID());
 		model.addAttribute("primaryLang", primaryLang);
@@ -4819,6 +4821,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		model.addAttribute("useAdditionalRole", ezCommonService.getTenantConfig("USE_AdditionalROle", userInfo.getTenantId()));
 		model.addAttribute("userLang", userLang);
 		model.addAttribute("primary", commonUtil.getPrimaryData(userInfo.getLang(), userInfo.getTenantId()));
+		model.addAttribute("useWebHWP", ezCommonService.getTenantConfig("useWebHWP", userInfo.getTenantId()));
 		
 		logger.debug("sendOut ended.");
 		
@@ -5821,141 +5824,5 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 
 		logger.debug("alterCookie ended");
 		return "TRUE";
-	}
-
-	@ResponseBody
-	@RequestMapping(value = "/admin/ezApprovalG/insertApprGate.do", method = RequestMethod.POST)
-	public String insertApprGate(HttpServletRequest request, @RequestParam(value = "files", required = false) List<MultipartFile> files, HttpServletResponse response, Model model) throws Exception {
-		logger.debug("insertApprGate started");
-
-		String serverName = request.getServerName();
-		int tenantId = loginService.getTenantId(serverName);
-
-		String userId = request.getParameter("userId");
-		String deptId = request.getParameter("deptId");
-		String keyId = request.getParameter("keyId");
-		String formCode = request.getParameter("formCode");
-		String bodyHtml = request.getParameter("bodyHtml");
-		String title = request.getParameter("title");
-
-		// loginVO 생성
-		LoginVO paramUserInfo = new LoginVO();
-		paramUserInfo.setId(userId);
-		paramUserInfo.setTenantId(tenantId);
-		paramUserInfo.setDn("NOPASSWORD");
-
-		LoginVO userInfo = loginService.selectUser(paramUserInfo);
-
-		Map<String, Object> connData = ezApprovalGConnService.getConnData(keyId, formCode);
-
-		if (connData == null) {
-			ezApprovalGConnService.registConnData(keyId, userId, deptId, title, formCode, bodyHtml);
-		}
-
-		connData = ezApprovalGConnService.getConnData(keyId, formCode);
-
-		String docId = null;
-		if (connData != null) {
-			docId = (String) connData.get("DOCID");
-		}
-		
-		String companyId = userInfo.getCompanyID();
-
-		String uiFlag = ezApprovalGConnService.getDocUiFlag(docId, userInfo.getTenantId(), companyId);
-
-		logger.info("### uiFlag = " + uiFlag);
-		if ("redraft".equals(uiFlag)) {
-			uiFlag = "draft";
-		} else if ("draft".equals(uiFlag)) {
-			connData.put("DOCID", null);
-		}
-
-		// 첨부파일 정보 및 파일 데이터 삭제
-		if ("draft".equals(uiFlag)) {
-			ezApprovalGConnService.deleteConnAttachData(keyId, "1");
-		}
-		
-		if ("draft".equals(uiFlag) && files != null) {
-			if (!files.isEmpty() && files.get(0).getSize() > 0) {
-				String dirPath = commonUtil.getUploadPath("upload_approvalG.CONNATTACH", tenantId) + commonUtil.separator + keyId;
-
-				EzFile fileDir = new EzFile(commonUtil.getRealPath(request) + dirPath);
-				if (!fileDir.exists()) {
-					if (!fileDir.mkdirs()) {
-						throw new IOException("Failed to create directory: " + dirPath);
-					}
-				}
-
-				// 첨부파일 체크
-				String fileCheckVal = ezApprovalGConnService.checkFileAttach(files, userInfo.getTenantId());
-
-				if ("TRUE".equals(fileCheckVal)) {
-					for (int i = 0; i < files.size(); i++) {
-						MultipartFile file = files.get(i);
-						if (!file.isEmpty()) {
-							try {
-								byte[] bytes = file.getBytes();
-
-								String fileName = file.getOriginalFilename();
-								String filePath = commonUtil.getRealPath(request) + dirPath + commonUtil.separator + fileName;
-								long fileSize = file.getSize();
-								int fileSn = i + 1;
-
-								EzFile connAttach = new EzFile(filePath);
-								
-								// EzFAL EzFileOutputStream 사용 (자동 close 호출)
-								try (EzFileOutputStream fos = new EzFileOutputStream(connAttach)) {
-									fos.write(bytes);
-									fos.flush();
-								}
-								
-								ezApprovalGConnService.insertConnAttachData(keyId, fileSn, fileName, dirPath + commonUtil.separator + fileName, fileSize, userId);
-							} catch (IOException e) {
-								e.printStackTrace();
-							}
-						}
-					}
-				}
-				logger.debug("insertApprGate keyId: " + keyId + " fileCheck: " + fileCheckVal);
-				connData.put("fileCheck", fileCheckVal);
-			}
-		}
-
-		String redirectUrl;
-		if ("draft".equals(uiFlag)) {
-			redirectUrl = ezApprovalGConnService.getDraftUrl(connData, userInfo);
-		} else if ("apr".equals(uiFlag)) {
-			redirectUrl = ezApprovalGConnService.getAprUrl(connData, userInfo);
-		} else if ("end".equals(uiFlag)) {
-			redirectUrl = ezApprovalGConnService.getEndUrl(connData, userInfo);
-		} else {
-			return "cmm/error/accessBlock";
-		}
-
-		// 로그인쿠키 생성
-		Cookie[] cookies = request.getCookies();
-		boolean useDbSession = "YES".equalsIgnoreCase(config.getProperty("config.UseDbSession"));
-
-		if (cookies != null) {
-			for (Cookie cookie : cookies) {
-				if (useDbSession || cookie.getName().equalsIgnoreCase("loginCookie")) {
-					loginService.deleteSession(cookie.getValue());
-				}
-
-				if (!"JSESSIONID".equalsIgnoreCase(cookie.getName())) { // JSESSIONID는 지우지 않음 (이중화 시 JSESSIONID 쿠키를 사용)
-					cookie.setMaxAge(0);
-					cookie.setPath("/");
-					response.addCookie(cookie);
-				}
-			}
-		}
-
-		loginController.createLoginCookie(userId, "", "", tenantId, request, response, deptId, companyId);
-
-		logger.info("### redirect url = " + redirectUrl);
-
-		logger.debug("insertApprGate ended");
-
-		return redirectUrl;
 	}
 }

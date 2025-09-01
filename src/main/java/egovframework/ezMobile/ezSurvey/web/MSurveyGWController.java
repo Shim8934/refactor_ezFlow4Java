@@ -31,6 +31,7 @@ import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezMobile.ezOption.service.MOptionService;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.ezMobile.ezSurvey.service.MSurveyService;
+import egovframework.ezEKP.ezSurvey.service.EzSurveyService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
@@ -52,6 +53,9 @@ public class MSurveyGWController {
 	
 	@Resource(name="EzCommonService")
 	private EzCommonService ezCommonService;
+
+	@Resource(name="EzSurveyService")
+	private EzSurveyService ezSurveyService;
 	
 	@Resource(name="MOptionService")
 	private MOptionService mOptionService;
@@ -274,7 +278,25 @@ public class MSurveyGWController {
 			}
 			
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
-			result = mSurveyService.saveResponseItem(responses, surveyId, userInfo);
+			/* 저장 시, 설문의 상태(수정/삭제/일시정지)를 확인 */
+			int surveyState = ezSurveyService.checkEditingState(surveyId, userInfo.getCompanyID(), userInfo.getTenantId());
+			switch (surveyState) {
+				case 1: // 수정중
+					result.put("status", "editing");
+					result.put("code", 9);
+					break;
+				case 2: // 일시정지
+					result.put("status", "paused");
+					result.put("code", 9);
+					break;
+				case -1: // 삭제
+					result.put("status", "deleted");
+					result.put("code", 9);
+					break;
+				default:
+					result = mSurveyService.saveResponseItem(responses, surveyId, userInfo);
+					break;
+			}
 		}
 		
 		catch (Exception e) {

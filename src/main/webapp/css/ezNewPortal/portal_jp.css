@@ -15,7 +15,7 @@ html,input,button,select,textarea{font-family:  Meiryo UI, ＭＳ Ｐゴシッ�
 .dataHave{margin-left:-3px;}
 .portlet .board_Atype .portlet_list li{padding:0;}
 #theme2Body .section1 .sec1Layout_middle .scalendar_mini .dataHave{margin-left:1px;}
-.quickMenuBtn{width:565px !important;}
+.quickMenuBtn{width:600px !important;}
 
 
 .mainbg .ui-datepicker,
@@ -25,7 +25,6 @@ html,input,button,select,textarea{font-family:  Meiryo UI, ＭＳ Ｐゴシッ�
 
 @font-face {
     font-family: 'Meiryo UI';
-    src: local('Arial'); /* 원하는 폰트로 변경 */
     unicode-range: U+007E; /* 틸드(~)의 유니코드 범위 */
     font-weight: normal; /* 볼드처리 방지 */
 }

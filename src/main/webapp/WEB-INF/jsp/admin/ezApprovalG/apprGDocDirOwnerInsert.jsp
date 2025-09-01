@@ -7,6 +7,7 @@
 	<head>
 		<title><spring:message code='ezApprovalG.share01' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">		
+		<script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}" ></script>
 	    <link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
 		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 	    <link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css" />	    
@@ -291,8 +292,8 @@
   					dataType : "text",
   					data : {
   						deptID : tempDeptID ,
-  						cell : "company;description;displayName;title;telephoneNumber",
-  						prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2",
+  						cell : "company;description;displayName;title;telephoneNumber;companyId",
+  						prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;companyId",
   						page : CurPage ,
   						type : "user"
   					} ,
@@ -538,6 +539,7 @@
 	                    var strDeptNM2 = document.getElementById(listContentArry[i]).getAttribute("_data13");
 	                    var jickwe = document.getElementById(listContentArry[i]).getAttribute("_data14");
 	                    var phone = document.getElementById(listContentArry[i]).getAttribute("_data8");
+						var companyId = document.getElementById(listContentArry[i]).getAttribute("_data10");
 	
 	                    var listid = "MsgToList";
 	                    var getlistview = new ListView();
@@ -561,6 +563,7 @@
 	                        pparsingXML = pparsingXML + "<DATA6><![CDATA[" + strName + "]]></DATA6>";
 	                        pparsingXML = pparsingXML + "<DATA7><![CDATA[" + jickwe + "]]></DATA7>";
 	                        pparsingXML = pparsingXML + "<DATA8>" + phone + "</DATA8>";
+							pparsingXML = pparsingXML + "<DATA9>" + companyId + "</DATA9>";
 	                        pparsingXML = pparsingXML + "<VALUE><![CDATA[" + strName + "]]></VALUE></CELL></ROW>";
 	                        pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
 	                        Resultxml = loadXMLString(pparsingXML2);
@@ -609,6 +612,7 @@
 	                    var strDeptNM2 = p_ListOrderObject.getAttribute("_data13");
 	                    var jickwe = p_ListOrderObject.getAttribute("_data14");
 	                    var phone = p_ListOrderObject.getAttribute("_data8");
+						var companyId = p_ListOrderObject.getAttribute("_data10");
 	
 	                    var listid = "MsgToList";
 	                
@@ -631,6 +635,7 @@
 	                        pparsingXML = pparsingXML + "<DATA6><![CDATA[" + strName + "]]></DATA6>";
 	                        pparsingXML = pparsingXML + "<DATA7><![CDATA[" + jickwe + "]]></DATA7>";
 	                        pparsingXML = pparsingXML + "<DATA8>" + phone + "</DATA8>";
+							pparsingXML = pparsingXML + "<DATA9>" + companyId + "</DATA9>";
 	                        pparsingXML = pparsingXML + "<VALUE><![CDATA[" + strName + "]]></VALUE></CELL></ROW>";
 	                        pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
 	                        Resultxml = loadXMLString(pparsingXML2);
@@ -1403,9 +1408,10 @@
 	    	<a class="imgbtn" onClick="insertDocDirList();" ><span><spring:message code='ezSchedule.t4' /></span></a>
 		</div>
 		<script type="text/javascript">
-			var ownerId = "${ownerId }";
-			var ownerName = "<c:out value="${ownerName}"></c:out>";
-			var ownerType = "${ownerType}";
+			var ownerId = "<c:out value='${ownerId }'/>";
+			var ownerName = "<c:out value='${ownerName}'/>";
+			var ownerType = "<c:out value='${ownerType}'/>";
+			var ownerCompanyId = "<c:out value='${ownerCompanyId}'/>";
 			var selectElem;
 			
 			// 팝업창 호출위한 변수
@@ -1448,12 +1454,17 @@
 				
 				var shareId = "";
 				var shareName = "";
-				
 				var flagName = "";
-				if(flag == 'U'){
+				var shareCompanyId = "";
+				if (flag == 'U') {
+					if (!p_ListOrderObject) {
+	                    alert("<spring:message code='ezSchedule.t1053' />");
+	                    return;
+	                } 
 					flagName = "<spring:message code='ezApprovalG.share04' />";
 					shareId = p_ListOrderObject.getAttribute("_DATA2");
 					shareName =  p_ListOrderObject.getAttribute("_DATA4");
+					shareCompanyId = p_ListOrderObject.getAttribute("_DATA10");
 				} else {
 					flagName = "<spring:message code='ezApprovalG.share05' />";
 					var treeView = new TreeView();
@@ -1461,6 +1472,12 @@
 			        var nodeIdx = treeView.GetSelectNode();
 			        shareId = nodeIdx.GetNodeData("CN");
 			        shareName = nodeIdx.GetNodeData("NODENAME");
+					shareCompanyId = nodeIdx.GetNodeData("COMPANYID");
+				}
+				
+				if (shareCompanyId != ownerCompanyId) {
+					alert(strLangJIHShareDox01);
+					return;
 				}
 
 				if(ownerId == shareId){

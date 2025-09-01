@@ -892,7 +892,7 @@
 		        }
 
 				if (g_sFlag !== "m01" && g_sFlag !== "m05" && g_sFlag !== "m06") {
-					document.getElementById("attachedDraft").style.display = "none";
+					document.getElementById("tdAttachedDraft").style.display = "none";
 				}
 		    }
 		
@@ -1660,6 +1660,9 @@
 		            var top = (parseInt(heigth) - 460) / 2;
 		            window.open("/ezApprovalG/ezLineInfo.do?docID=" + tr.getAttribute("DATA1") + "&pDeptID=&docState=015", "", "height=460px,width=1155px, left=" + left + "px, top=" + top + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
 		        }
+		        else {
+                    OpenAlertUI("<spring:message code='ezApprovalG.t632'/>");
+                }
 		    }
 		    var aprgongramline_cross_dialogArguments = new Array();
 		    function btnSendAround_onclick() {
@@ -1677,6 +1680,9 @@
 		            var OpenWin = window.open(url, "AprGongRamLine_Cross", GetOpenWindowfeature(1200, 760));
 		            try { OpenWin.focus(); } catch (e) { }
 		        }
+		        else {
+                    OpenAlertUI("<spring:message code='ezApprovalG.t632'/>");
+                }
 		    }
 		
 		    function btnSendAround_onclick_Complete(rtn) {

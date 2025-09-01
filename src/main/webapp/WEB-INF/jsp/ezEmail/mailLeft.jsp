@@ -458,6 +458,10 @@
 							window[treeviewStr].putcaption(window[treeviewStr].selectedIndex(), caption + "(" + unreadcount + ")");
 	                    }
 
+	                    // rightFrame을 새로 고침할 필요는 없으나, left tree의 전체 메일함 카운트 값을 수정하기 위해 사용
+	                    // 안읽은 모든 메일 삭제를 하는 경우 unreadcount가 0일때에 속하기 때문에 모든 상황에 적용
+	                    getUnreadCountAll('no');
+
 						var rightFrame = parent.frames["right"];
                         if (rightFrame != "undefined" && typeof rightFrame.folderUnreadCount !== 'undefined') {
                             if (rightFrame != null){
@@ -476,7 +480,8 @@
 	            applyEllipsisMailTree();
 	        }
 	        
-	        function getUnreadCountAll() {
+	        function getUnreadCountAll(refreshRight) {
+	        	var refreshRightOff = refreshRight== 'no';
 	        	var mailboxList = [];
 	        	var nodeCount = window[treeviewStr].nodecount();
 	        	
@@ -534,11 +539,15 @@
 		                    		}
 	                    		}
 	                    		
+	                    		if (refreshRightOff) { return; }
+
                    				try {
                     				var pageSrc = parent.frames["right"].document.location.toString();
             	                    
                     				if (pageSrc.indexOf("mailList.do") > -1) {
-                                    	parent.frames["right"].MailListRefresh();
+                    				    if (parent.frames["right"].searchMode != true){
+                    				        parent.frames["right"].MailListRefresh();
+                    				    }
             	                    }
                    				} catch (e) {console.log(e);}
 	                    		
@@ -581,7 +590,7 @@
 		            if (RtnVal) {
 		            	var href = window[treeviewStr].getvalue(1, "href");
 		            	
-		            	window[treeviewStr].source("<tree><nodes>" + get_childXML("", true, true, false) + "</nodes></tree>");
+		            	window[treeviewStr].source("<tree><nodes>" + get_childXML("", true, true, false, true) + "</nodes></tree>");
 		            	window[treeviewStr].update();
 		                
 		                if (window[treeviewStr].selectedIndex() == -1) {
@@ -589,13 +598,13 @@
 		                }
 		                
 						// openRightFrameDefault()가능?
-		                var url = "/ezEmail/mailList.do?dispname=" + encodeURIComponent(window[treeviewStr].getvalue(1, "foldername")) + "&url=" + encodeURIComponent(window[treeviewStr].getvalue(1, "href"));
+		                var url = "/ezEmail/mailList.do?dispname=" + encodeURIComponent(window[treeviewStr].getvalue(2, "foldername")) + "&url=" + encodeURIComponent(window[treeviewStr].getvalue(2, "href"));
 		                
 		            	if (shareId != "") {
 		            		url += "&shareId=" + encodeURIComponent(shareId);
 			            }
 		                
-		                window.open(url, "right");
+		                parent.document.querySelector("iframe[name=right]").src = url;
 		                
 		                previewSubTreeCall();
 		                applyEllipsisMailTree();
@@ -609,7 +618,7 @@
 	        */
 	        function mailbox_treeview_reload() {
 	        	setTimeout(function() {
-	        		window[treeviewStr].source("<tree><nodes>" + get_childXML("", true, true, false) + "</nodes></tree>");
+	        		window[treeviewStr].source("<tree><nodes>" + get_childXML("", true, true, false, true) + "</nodes></tree>");
 	        		window[treeviewStr].update();
 	                
 	        		getUnreadCountAll();
@@ -673,7 +682,7 @@
 	                	url += "?shareId=" + encodeURIComponent(shareId);
 	                }
 	                
-	                window.open(url, "right");
+	                parent.document.querySelector("iframe[name=right]").src = url;
 	            } catch (e) {console.log(e);}
 	            liSelcted();
 	        }
@@ -684,7 +693,7 @@
 	                
 	             	// 2024.03.26 한슬기 : 스팸메시지함 호출 url변경
 	                //url = "https://gwspam.bizmeka.com/personal/index.php?email=${credentialForBizmekaSpambox}&init=mail";
-	                //window.open(url, "right");
+	                //parent.document.querySelector("iframe[name=right]").src = url;
 	                url = "https://gwspam.ktbizoffice.com/personal/index.php?email=${credentialForBizmekaSpambox}&init=mail";
 	                window.open(url, "_blank", "width=870, height=500");
 	            } catch (e) {	              
@@ -694,7 +703,7 @@
 	        
 			function oepnSpamOutBox() {
 				try {
-					window.open(spamOutLoginURI, "right");
+                    parent.document.querySelector("iframe[name=right]").src = spamOutLoginURI;
 				} catch (e) {
 				    console.log(e);
 				}
@@ -712,7 +721,7 @@
 		    		url += "&shareId=" + $(t).data("id");
 		    	}
 		    	
-		    	window.open(url, "right");
+		    	parent.document.querySelector("iframe[name=right]").src = url;
 		    }
 		    
 	        function Open_ReservationManage(shareId) {
@@ -746,7 +755,7 @@
 	        		requestUrl += "&shareId=" + encodeURIComponent(shareId);
 	        	}
 	        	
-	            parent.frames["right"].location.href = requestUrl;
+	            parent.document.querySelector("iframe[name=right]").src = requestUrl;
 	            detailView(shareId);
 	            liSelcted();
 	        }
@@ -834,7 +843,7 @@
 			        	break;			            
 				}
 				
-				window.open(url, "right");
+				parent.document.querySelector("iframe[name=right]").src = url;
 			}
 
 			// scroll한 뒤 컨텍스트 메뉴의 위치가 잘못 나오는 현상이 있어 수정  
@@ -932,7 +941,7 @@
 		            		url += "&shareId=" + encodeURIComponent(shareId);
 			            }
 		            	
-		            	parent.frames["right"].location.href = url;
+		            	parent.document.querySelector("iframe[name=right]").src = url;
 		    		}
 	            	
             		setTimeout(function() {
@@ -956,7 +965,7 @@
 		            		url += "&shareId=" + encodeURIComponent(shareId);
 			            }
 		            	
-		            	parent.frames["right"].location.href = url;
+		            	parent.document.querySelector("iframe[name=right]").src = url;
 		    		}
 		    		
 	            	parent.frames["right"].mailbox_import();
@@ -1105,7 +1114,7 @@
 	            liSelcted();
 			}
 
-			// window.open(url, "right"); 구절이 중복되어 통일함.
+			// parent.document.querySelector("iframe[name=right]").src = url; 구절이 중복되어 통일함.
 			function openRightFrame(dispname, url, extra) {
 				// 메일 페이지로 처음 진입 시 (대 메뉴 "메일" 클릭)
 				// : parent.frames["right"]는 있지만 빈 frame의 Window_onunload()는 없는 상태이기 때문에(window.open(right) 이 후 → Window_onunload() 있음.)
@@ -1122,7 +1131,7 @@
 					g_firstOpen = false;
 
 				} else {
-					window.open("/ezEmail/mailList.do?dispname=" + dispname + "&url=" + url + extra, "right");
+                    parent.document.querySelector("iframe[name=right]").src = "/ezEmail/mailList.do?dispname=" + dispname + "&url=" + url + extra;
 				}
 
 				get_unreadcount();
@@ -1167,7 +1176,7 @@
 			        createNodeAndInsertText(xmlDOM, objNode, "URL", "");
 			        createNodeAndInsertText(xmlDOM, objNode, "BCOUNT", "-1");
 			        
-			        xmlHTTP.open("POST", "/ezEmail/getFolderList.do?shareId=" + encodeURIComponent(shareId), false);
+			        xmlHTTP.open("POST", "/ezEmail/getFolderList.do?shareId=" + encodeURIComponent(shareId) + "&am=y", false);
 			        xmlHTTP.send(xmlDOM);
 
 			        var nodeTreeXml = xmlHTTP.responseText.replace("<DATA>", "").replace("</DATA>", "");
@@ -1355,7 +1364,7 @@
 				}
 				
                 var url = spamSniperUrl + "?email=" + cryptValue + "&init=mail";
-                window.open(url, "right");
+                parent.document.querySelector("iframe[name=right]").src = url;
 			}
 			
 			function goAdress() {
@@ -1392,11 +1401,11 @@
                     tagcontentId = "tagcontent_" + shareId;
                 }
 				$("#" + tagcontentId + " a").on("click", function() {
-					window.open("/ezEmail/mailList.do?tagName=" + encodeURIComponent(this.innerText) + "&shareId=" + shareId, "right");
+                    parent.document.querySelector("iframe[name=right]").src = "/ezEmail/mailList.do?tagName=" + encodeURIComponent(this.innerText) + "&shareId=" + shareId;
 				});
 			}
 
-			function reloadTags() {
+			function reloadTags(additionalArgs) {
 				$.ajax({
 					cache: false,
 					method: "get",
@@ -1407,6 +1416,8 @@
 							alert(strLang321);
 							return;
 						}
+
+						parent.frames["right"].postMessage({ajaxUrl: 'getUserTagList', tags: result.data, ...additionalArgs});
 
 						var tags = result.data;
 						var tagtitleId = "tagtitle";
@@ -1484,11 +1495,11 @@
 						+ encodeURIComponent(AddressTreeView.getvalue(nodeIdx,
 								"folderid")) + "&type="
 						+ encodeURIComponent(AddressTreeView.getvalue(nodeIdx, "type"));
-				window.open(url, "right");
+				parent.document.querySelector("iframe[name=right]").src = url;
 			}
 
 			function address_Search() {
-				window.open("/ezAddress/addressMainSearch.do", "right");
+                parent.document.querySelector("iframe[name=right]").src = "/ezAddress/addressMainSearch.do";
 			}
 
 			var AddressTreeView = null;
@@ -1587,7 +1598,7 @@
 			// 환경설정 호출
 			function address_Config() {
 				detailView();
-		 		parent.frames["right"].location.href = "/ezEmail/mailConfig.do?flag=address";
+		 		parent.document.querySelector("iframe[name=right]").src = "/ezEmail/mailConfig.do?flag=address";
 			}
 			//address end
 			

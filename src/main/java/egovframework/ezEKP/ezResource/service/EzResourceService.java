@@ -137,4 +137,6 @@ public interface EzResourceService {
 	public String moveResource(String userID, String companyID, int tenantID, String catId, String brdId, String topId) throws Exception;
 
 	public void delBrdFavoriteCategory(String userId, int tenantId, String companyId, String delBrdId, String delTopId) throws Exception;	
+	
+	public String getBrdResMaxDate(String resourceId, String companyID, int tenantID) throws Exception;
 }

@@ -38,6 +38,11 @@
 						<div>
 							<span class="inf-spanTxt"><input type="radio" name="anonymousSpan" value="0" checked><spring:message code="ezSurvey.t47"/></span>
 							<span class="inf-spanTxt"><input type="radio" name="anonymousSpan" value="1"><spring:message code="ezSurvey.t48"/></span>
+							<span class="inf-spanTxt" title="<spring:message code='ezSurvey.yjh18'/>">(&nbsp;<spring:message code="ezSurvey.yjh17"/>&nbsp;:&nbsp;
+								<label><input type="radio" name="userExposedSpan" value="1" checked><spring:message code="ezSurvey.t42"/></label>
+								<label><input type="radio" name="userExposedSpan" value="0"><spring:message code="ezSurvey.t43"/></label>
+								&nbsp;)
+							</span>
 						</div>
 					</td>
 				</tr>
@@ -123,6 +128,12 @@
 	<c:if test="${editor eq 'HWP'}">
 		<iframe id="info-input-pp" class="surey-frameeditor" name="info-input-pp" src="/ezBoard/WHWPEditor.do?type=${mode}"></iframe>
 	</c:if>
+</div>
+
+<%--맺음말--%>
+<div class="survey-otherinf" id="closingWrap">
+	<div><span><spring:message code="ezSurvey.closing01"/></span></div>
+	<textarea id="closingText"></textarea>
 </div>
 
 <div class="survey-bttn-panel">

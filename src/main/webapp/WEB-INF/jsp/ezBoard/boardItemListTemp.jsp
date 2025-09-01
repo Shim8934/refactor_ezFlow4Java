@@ -583,12 +583,14 @@
 		
 		        function ItemRead_onclick(obj) {
 		            var feature = GetOpenWindowfeature(765, 700);
-		            if (obj.getAttribute("DATA10") == "3" || obj.getAttribute("DATA10") == "4") {
-		                window.open("/ezBoard/boardNewItemTempPhoto.do?boardID=" + encodeURIComponent(obj.getAttribute("DATA1")) + "&itemID=" + encodeURIComponent(obj.getAttribute("DATA2")) + "&mode=temp" + "&location=TEMP", "", feature, "");
-		            } else if (obj.getAttribute("DATA10") == "7" ) {
-			        	window.open("/ezBoard/boardNewItemTempMovie.do?boardID=" + encodeURIComponent(obj.getAttribute("DATA1")) + "&itemID=" + encodeURIComponent(obj.getAttribute("DATA2")) + "&mode=temp" + "&location=TEMP", "", feature, "");
-			        }  else{
-                    	window.open("/ezBoard/boardNewItem.do?boardID=" + encodeURIComponent(obj.getAttribute("DATA1")) + "&itemID=" + encodeURIComponent(obj.getAttribute("DATA2")) + "&mode=temp" + "&location=TEMP", "", feature, "");
+		            
+		            var selectedBoardType = obj.getAttribute("DATA10");
+		            if (selectedBoardType  == "3" || selectedBoardType  == "4") {
+	                	window.open("/ezBoard/boardNewItemTempPhoto.do?boardID=" + encodeURIComponent(obj.getAttribute("DATA1")) + "&gubun=" + selectedBoardType + "&itemID=" + encodeURIComponent(obj.getAttribute("DATA2")) + "&mode=temp" + "&location=TEMP", "", feature, "");
+		            } else if (selectedBoardType  == "7" ) {
+			        	window.open("/ezBoard/boardNewItemTempMovie.do?boardID=" + encodeURIComponent(obj.getAttribute("DATA1")) + "&gubun=" + selectedBoardType + "&itemID=" + encodeURIComponent(obj.getAttribute("DATA2")) + "&mode=temp" + "&location=TEMP", "", feature, "");
+			        } else{
+                    	window.open("/ezBoard/boardNewItem.do?boardID=" + encodeURIComponent(obj.getAttribute("DATA1")) + "&gubun=" + selectedBoardType + "&itemID=" + encodeURIComponent(obj.getAttribute("DATA2")) + "&mode=temp" + "&location=TEMP", "", feature, "");
 		            }
 		            
 		            /* 2018-07-09 홍승비 - 승인게시판 게시물 읽기 시 즉각적으로 폰트 변화하도록 수정 */
@@ -851,18 +853,22 @@
 		        var DATA = "";
 		        if (type == "quick") {
 		        	 var selectSearch = document.getElementById('selectType');
-	                if (selectSearch.item(0).selected) {
+	                if (selectSearch.value == 'rad_Subject') {
 	                    TYPE += "TITLE;";
 	                    DATA += "<TITLE><![CDATA[" + document.getElementById("txt_keyword").value + "]]></TITLE>";
 	                }
-	                else if (selectSearch.item(1).selected) {
+	                else if (selectSearch.value == 'rad_Writer') {
 	                    TYPE += "WRITERNAME;";
 	                    DATA += "<WRITERNAME><![CDATA[" + MakeXMLString(document.getElementById("txt_keyword").value) + "]]></WRITERNAME>";
 	                }
-                     else if (selectSearch.item(2).selected) {
+                     else if (selectSearch.value == 'rad_Keyword') {
                         TYPE += "KEYWORD;";
                         DATA += "<KEYWORD><![CDATA[" + document.getElementById("txt_keyword").value.replace("'", "''") + "]]></KEYWORD>";
                      }
+                     else if (selectSearch.value == 'rad_Subject_Content') {
+ 		                TYPE += "TNC;";
+ 	                    DATA += "<TNC><![CDATA[" + document.getElementById("txt_keyword").value.replace("'", "''") + "]]></TNC>";
+                      }
 	            }
 		        else {
 		            if (document.getElementById("txtTitle").value != "")		// DocTitle
@@ -968,13 +974,14 @@
 		    function MailReadOpen_temp() {
 		        obj = selobj;
 		        var feature = GetOpenWindowfeature(765, 820);
-		        if (obj.getAttribute("DATA10") == "3" || obj.getAttribute("DATA10") == "4") {
-		            window.open("/ezBoard/boardNewItemTempPhoto.do?boardID=" + encodeURIComponent(obj.getAttribute("DATA1")) + "&itemID=" + encodeURIComponent(obj.getAttribute("DATA2")) + "&mode=temp" + "&location=TEMP", "", feature, "");
-		        } else if (obj.getAttribute("DATA10") == "7" ) {
+		        var selectedBoardType = obj.getAttribute("DATA10");
+		        if (selectedBoardType == "3" || selectedBoardType == "4") {
+		            window.open("/ezBoard/boardNewItemTempPhoto.do?boardID=" + encodeURIComponent(obj.getAttribute("DATA1")) + "&gubun=" + selectedBoardType + "&itemID=" + encodeURIComponent(obj.getAttribute("DATA2")) + "&mode=temp" + "&location=TEMP", "", feature, "");
+		        } else if (selectedBoardType == "7" ) {
 		        	feature = GetOpenWindowfeature(765, 700);
-		        	window.open("/ezBoard/boardNewItemTempMovie.do?boardID=" + encodeURIComponent(obj.getAttribute("DATA1")) + "&itemID=" + encodeURIComponent(obj.getAttribute("DATA2")) + "&mode=temp" + "&location=TEMP", "", feature, "");
+		        	window.open("/ezBoard/boardNewItemTempMovie.do?boardID=" + encodeURIComponent(obj.getAttribute("DATA1")) + "&gubun=" + selectedBoardType + "&itemID=" + encodeURIComponent(obj.getAttribute("DATA2")) + "&mode=temp" + "&location=TEMP", "", feature, "");
 		        } else {
-	                window.open("/ezBoard/boardNewItem.do?boardID=" + encodeURIComponent(obj.getAttribute("DATA1")) + "&itemID=" + encodeURIComponent(obj.getAttribute("DATA2")) + "&mode=temp" + "&location=TEMP", "", feature, "");
+	                window.open("/ezBoard/boardNewItem.do?boardID=" + encodeURIComponent(obj.getAttribute("DATA1")) + "&gubun=" + selectedBoardType + "&itemID=" + encodeURIComponent(obj.getAttribute("DATA2")) + "&mode=temp" + "&location=TEMP", "", feature, "");
 		        }
 		    }
 		    
@@ -996,6 +1003,7 @@
 					<option selected value="rad_Subject"><spring:message code='ezBoard.t208'/></option>
 		    		<option value="rad_Writer"><spring:message code='ezBoard.t223'/></option>
 		    		<option value="rad_Keyword"><spring:message code='ezApprovalG.t1200'/></option>
+<%--		    		<option value="rad_Subject_Content"><spring:message code='ezBoard.t208'/> + <spring:message code='ezBoard.garm01'/></option>--%> <%-- 임시보관함 content 컬럼 없음 --%> 
 		    	</select>
 			  <input id="txt_keyword" class="searchinputBox" style="height: 27px;border: 1px solid #cbcbcb;" onkeypress="onkeydown_start_search(event)" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
 	          <a class="searchBtn nofilter"><img src="/images/bsearch_new2.png" border="0" onClick="search('quick')"></a>

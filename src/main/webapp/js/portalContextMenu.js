@@ -624,7 +624,7 @@ var setContextMenuEvent = function () {
 			clientY: touch.clientY
 		});
 		event.target.dispatchEvent(simulatedEvent);
-		event.preventDefault();
+		// event.preventDefault();
 	});
 
 	contextMenuBtn.on("touchmove", function (event) {
@@ -645,6 +645,11 @@ var setContextMenuEvent = function () {
 			cancelable: true
 		});
 		event.target.dispatchEvent(simulatedEvent);
+        var clickEvent = new MouseEvent("click", {
+            bubbles: true,
+            cancelable: true
+        });
+        event.target.dispatchEvent(clickEvent);
 		event.preventDefault();
 	});
 

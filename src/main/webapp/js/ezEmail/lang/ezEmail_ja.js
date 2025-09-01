@@ -365,6 +365,8 @@ var strLangHSG03 = "件名が空白です。";
 
 var strLangKDH01 = "受信確認";
 
+var strLangYJA01 = "ネットワークでアップロード中にエラーが発生しました。";
+
 //new ui
 const strLangFolderManage = "メールフォルダの管理";
 const strLangSubscribe = "購読";
@@ -401,6 +403,9 @@ const strLangTagadd = "メールにタグ追加 :";
 
 const strLangChangeButton = "Switch";
 const strLangChangeLimit = "Cannot switch because the attachment size exceeds the limit.";
+
+const strLangKeepMoveCantUseSentBox = '보낸편지함으로는 계속이동 할 수 없습니다.';
+const strLangKeepMoveNoFromHeader = '보낸이가 비어있는 메일은 계속이동 할 수 없습니다.';
 
 function GetLocalTime(Offset , pDateTime)
 {

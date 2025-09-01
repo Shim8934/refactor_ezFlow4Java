@@ -1702,7 +1702,7 @@
 			AND D.JOBID = #jobID#
 		</isNotEmpty>
 		<isEmpty property="jobID">
-			AND D.JOBID IS NULL
+			AND (D.JOBID IS NULL OR D.JOBID = '')
 		</isEmpty>
 	</select>
 
@@ -6534,7 +6534,39 @@
            "COMPANYID" VARCHAR2(20) NOT NULL ENABLE,
 			CONSTRAINT "TBL_USERSCRAPCONTLIST_PK" PRIMARY KEY ("USERSCRAPCONTID", "TENANT_ID", "COMPANYID", "ITEMID", "BOARDID", "USERID"),
 			CONSTRAINT "TBL_USERSCRAPCONTLIST_FK" FOREIGN KEY ("TENANT_ID", "COMPANYID", "USERSCRAPCONTID") REFERENCES "TBL_USERSCRAPCONT" ("TENANT_ID", "COMPANYID", "USERSCRAPCONTID") ON DELETE CASCADE
-	    )	
+	    )
+	</statement>
+	
+	<select id="EzCommonDAO.checkTblRsBrdResMaxDate">
+		SELECT
+			RES_MAX_DATE
+		FROM
+			TBL_RS_BRD
+		WHERE 
+			ROWNUM = 1
+	</select>
+	
+	<statement id="EzCommonDAO.alterTblRsBrdResMaxDate">
+		ALTER TABLE
+			TBL_RS_BRD
+		ADD
+			RES_MAX_DATE varchar2(100)
+	</statement>
+	
+	<select id="EzCommonDAO.checkTblRsBrdResMaxUserCnt">
+		SELECT
+			RES_MAX_USER_CNT
+		FROM
+			TBL_RS_BRD
+		WHERE 
+			ROWNUM = 1
+	</select>
+	
+	<statement id="EzCommonDAO.alterTblRsBrdResMaxUserCnt">
+		ALTER TABLE
+			TBL_RS_BRD
+		ADD 
+			RES_MAX_USER_CNT varchar2(100) DEFAULT '0' NOT NULL
 	</statement>
 
 	<select id="EzCommonDAO.checkJmochaCompanyQuota">
@@ -7183,6 +7215,18 @@
 				ROWNUM = 1
 		]]>
 	</select>
+	
+	<select id="EzCommonDAO.checkScheduleDefaultViewCheck" resultClass="String">
+		<![CDATA[
+			SELECT
+				DEFAULTVIEWCHECK
+			FROM
+				TBL_SCHEDULECONFIG
+			WHERE
+				ROWNUM = 1
+		]]>
+	</select>
+	
 	<statement id="EzCommonDAO.createTblBoardStarRatingItem">
 		CREATE TABLE tbl_board_item_rating (
 		ITEMID varchar2(76) NOT NULL,
@@ -7457,4 +7501,1155 @@
 		VALUES (0, 'externalFileServerUrl', '대용량 첨부파일 업로드 서버', 'http://127.0.0.1:8080/', '대용량 첨부파일 동시 업로드할 외부 서버', TO_DATE('2025-05-23 00:00:00', 'yyyy-mm-dd hh24:mi:ss'), '포탈')
 	</insert>
 
+	<select id="EzCommonDAO.getMobileLang" parameterClass="Map" resultClass="String">
+		SELECT
+	    		a.LANG
+		FROM
+			TBL_USERMOBILEINFO a RIGHT JOIN TBL_USERMASTER b ON a.USERID = b.CN AND a.TENANT_ID = b.TENANT_ID
+		WHERE
+			b.CN = #userID#
+		AND
+			b.TENANT_ID = #tenantID#
+	</select>
+	<select id="EzCommonDAO.checkJournallListLang" resultClass="String">
+		SELECT form_lang
+		FROM (
+		  SELECT form_lang
+		  FROM TBL_JOURNAL_FORM
+		  WHERE form_status = 'basic'
+			AND form_content2 IS NOT NULL
+		)
+		WHERE ROWNUM = 1
+	</select>
+	<statement id="EzCommonDAO.createJournalListLang">
+		ALTER TABLE TBL_JOURNAL_FORM
+		  ADD (form_lang NUMBER(5) DEFAULT 1,
+			   form_content2 CLOB DEFAULT NULL,
+			   form_content3 CLOB DEFAULT NULL,
+			   form_content4 CLOB DEFAULT NULL,
+			   form_content5 CLOB DEFAULT NULL,
+			   form_content6 CLOB DEFAULT NULL)
+	</statement>
+	
+	<select id="EzCommonDAO.countJournalListLang" resultClass="Integer">
+		SELECT COUNT(*)
+		FROM TBL_JOURNAL_FORM
+		WHERE form_status = 'basic'
+		AND form_content2 IS NOT NULL
+	</select>
+	
+	<update id="EzCommonDAO.insertDailyJournalListLang">
+		<![CDATA[
+		UPDATE TBL_JOURNAL_FORM 
+		SET form_content2 = #form_content2#,
+		form_content3 = #form_content3#, 
+		form_content4 = #form_content4#, 
+		form_content5 = #form_content5#, 
+		form_content6 = #form_content6# 
+		WHERE 
+			type_id = 'ezJournal.t05'
+		AND 
+			form_status ='basic' ]]>
+	</update>
+	
+	<update id="EzCommonDAO.insertWeekJournalListLang">
+		<![CDATA[
+		UPDATE TBL_JOURNAL_FORM 
+		SET form_content2 = #form_content2#, 
+			form_content3 = #form_content3#,
+			form_content4 = #form_content4#,
+			form_content5 = #form_content5#, 
+			form_content6 = #form_content6#
+		WHERE 
+			type_id = 'ezJournal.t06'
+		AND
+			form_status = 'basic' ]]>
+	</update>
+	
+	<update id="EzCommonDAO.insertMonthlyJournalListLang">
+		<![CDATA[
+		UPDATE TBL_JOURNAL_FORM 
+		SET form_content2 = #form_content2#,
+		form_content3 = #form_content3#,
+		form_content4 = #form_content4#,
+		form_content5 = #form_content5#,
+		form_content6 = #form_content6#
+		WHERE 
+			type_id = 'ezJournal.t07'
+		AND
+			form_status = 'basic' ]]>
+	</update>
+	
+	<update id="EzCommonDAO.insertQuarterJournalListLang">
+		<![CDATA[
+		UPDATE TBL_JOURNAL_FORM 
+		SET form_content2 = #form_content2#,
+		form_content3 = #form_content3#,
+		form_content4 = #form_content4#,
+		form_content5 = #form_content5#,
+		form_content6 = #form_content6#
+		WHERE 
+			type_id = 'ezJournal.t08' 
+		AND 
+			form_status = 'basic' ]]>
+	</update>
+	<update id="EzCommonDAO.insertHalfYearJournalListLang">
+		<![CDATA[
+		UPDATE TBL_JOURNAL_FORM 
+		SET form_content2 = #form_content2#,
+		form_content3 = #form_content3#,
+		form_content4 = #form_content4#,
+		form_content5 = #form_content5#,
+		form_content6 = #form_content6#
+		WHERE 
+			type_id = 'ezJournal.t09' 
+		AND 
+			form_status = 'basic' 	 ]]>
+	</update>
+	<update id="EzCommonDAO.insertAnnualJournalListLang">
+		<![CDATA[ 
+		UPDATE TBL_JOURNAL_FORM 
+		SET  form_content2 = #form_content2#,
+			form_content3 = #form_content3#,
+			form_content4 = #form_content4#,
+			form_content5 = #form_content5#,
+			form_content6 = #form_content6#
+		WHERE
+			type_id = 'ezJournal.t10' 
+		AND 
+			form_status = 'basic' ]]>
+	</update>
+	
+	<statement id="EzCommonDAO.addScheduleDefaultViewCheck">
+		ALTER TABLE
+		TBL_SCHEDULECONFIG
+		ADD
+		DEFAULTVIEWCHECK VARCHAR(2) DEFAULT 'N'
+	</statement>
+		
+	<select id="EzCommonDAO.checkUserScheduleTypeConfigTable" resultClass="String">
+		SELECT
+			USERID
+		FROM
+			TBL_USER_SCHEDULE_TYPE_CONFIG
+		WHERE
+			ROWNUM = 1
+	</select>
+
+	<statement id="EzCommonDAO.createUserScheduleTypeConfigTable">
+		CREATE TABLE TBL_USER_SCHEDULE_TYPE_CONFIG (
+		    USERID            VARCHAR2(80)       NOT NULL,
+		    SCHEDULETYPE      NUMBER(5)          NOT NULL,
+		    RELATEDID         VARCHAR2(100)      NOT NULL,
+		    TAGCOLOR          VARCHAR2(10),
+		    ISCHECKED         VARCHAR2(2)        DEFAULT '1' NOT NULL,
+		    TENANT_ID         NUMBER(5)          NOT NULL,
+		    COMPANYID         VARCHAR2(80)       NOT NULL,
+		    CONSTRAINT PK_USER_SCH_TYPE_CONFIG PRIMARY KEY (
+		        USERID, COMPANYID, TENANT_ID, SCHEDULETYPE, RELATEDID
+		    )
+		)
+    </statement>
+
+	<select id="EzCommonDAO.checkMailboxProgressStateColumns" resultClass="String">
+		SELECT STATE FROM JMOCHA_MAILBOX_PROGRESS WHERE ROWNUM = 1
+	</select>
+
+	<statement id="EzCommonDAO.addMailboxProgressStateColumns">
+		ALTER TABLE JMOCHA_MAILBOX_PROGRESS
+			ADD (STATE NVARCHAR2(20), STATE_DESCRIPTION NVARCHAR2(100))
+	</statement>
+	
+	<select id="EzCommonDAO.checkTblBoardModifyHistory">
+	<![CDATA[
+		SELECT
+			ITEMID
+		FROM
+			TBL_BOARD_MODIFYHISTORY
+		WHERE
+			ROWNUM <= 1
+	]]>
+	</select>
+	
+	<statement id="EzCommonDAO.createTblBoardModifyHistory">
+	CREATE TABLE TBL_BOARD_MODIFYHISTORY (
+	    ITEMID NVARCHAR2(40),
+	    PARENTITEMID NVARCHAR2(40),
+	    VERSION NVARCHAR2(5),
+	    MODIFYUSERID NVARCHAR2(80),
+	    MODIFYUSERNAME NVARCHAR2(120),
+	    MODIFIEDDATE DATE,
+	    TENANT_ID NUMBER(5, 0),
+	    CONSTRAINT PK_TBL_BOARD_MODIFYHISTORY PRIMARY KEY (ITEMID, TENANT_ID)
+	)
+	</statement>
+
+	<insert id="EzCommonDAO.insertUseSendOutState">
+		INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
+		VALUES (#tenantID#, 'useSendOutState', 'NO', '관리자페이지 대외발송현황 메뉴 표출여부 YES: 사용 NO: 사용안함 (default:NO)', '발송현황 메뉴 표출여부', TO_DATE('2024-07-22 00:00:00', 'yyyy-mm-dd hh24:mi:ss'), '전자결재')
+	</insert>
+
+	<select id="EzCommonDAO.checkAddBoardContentSize" resultClass="String">
+		<![CDATA[
+		SELECT
+			CONTENTSIZE
+		FROM
+			TBL_BOARD_CONFIGURATION
+		WHERE
+			ROWNUM = 1
+		]]>
+	</select>
+
+	<statement id="EzCommonDAO.addBoardContentSize">
+		ALTER TABLE
+		TBL_BOARD_CONFIGURATION
+		ADD
+		CONTENTSIZE NUMBER(2,0) DEFAULT 0
+	</statement>
+
+	<select id="EzCommonDAO.checkMobilePortletMenuId" resultClass="Integer">
+		SELECT
+			COUNT(*)
+		FROM
+			TBL_PORTAL_PORTLET
+		WHERE
+			PORTLETCODE = 'mNotice'
+		  AND
+			MENU_ID = 4
+	</select>
+
+	<!-- PORTLET -->
+	<update id="EzCommonDAO.updateMobileMenuBoardId">
+		UPDATE
+			TBL_PORTAL_PORTLET
+		SET
+			MENU_ID = (
+				SELECT
+					MENU_ID
+				FROM
+					TBL_PORTAL_MENU
+				WHERE
+					MENUCODE = 'mBoard'
+			)
+		WHERE
+			PORTLETCODE IN ('mFixTop', 'mFixBottom', 'mNotice', 'mPhotoboard')
+		   OR
+			PORTLET_URL LIKE '/mobile/ezNewPortal/boardPortlet.do%'
+	</update>
+
+	<update id="EzCommonDAO.updateMobileMenuApprovalId">
+		UPDATE
+			TBL_PORTAL_PORTLET
+		SET
+			MENU_ID = (
+				SELECT
+					MENU_ID
+				FROM
+					TBL_PORTAL_MENU
+				WHERE
+					MENUCODE = 'mApproval'
+			)
+		WHERE
+			PORTLETCODE = 'mApprovallist'
+		   OR
+			PORTLET_URL LIKE '/mobile/ezNewPortal/approvalListPortlet.do%'
+	</update>
+
+	<update id="EzCommonDAO.updateMobileMenuMailId">
+		UPDATE
+			TBL_PORTAL_PORTLET
+		SET
+			MENU_ID = (
+				SELECT
+					MENU_ID
+				FROM
+					TBL_PORTAL_MENU
+				WHERE
+					MENUCODE = 'mMail'
+			)
+		WHERE
+			PORTLETCODE = 'mReceivedmail'
+	</update>
+
+	<update id="EzCommonDAO.updateMobileMenuResourceId">
+		UPDATE
+			TBL_PORTAL_PORTLET
+		SET
+			MENU_ID = (
+				SELECT
+					MENU_ID
+				FROM
+					TBL_PORTAL_MENU
+				WHERE
+					MENUCODE = 'mResource'
+			)
+		WHERE
+			PORTLETCODE = 'mResource'
+	</update>
+
+	<update id="EzCommonDAO.updateMobileMenuScheduleId">
+		UPDATE
+			TBL_PORTAL_PORTLET
+		SET
+			MENU_ID = (
+				SELECT
+					MENU_ID
+				FROM
+					TBL_PORTAL_MENU
+				WHERE
+					MENUCODE = 'mSchedule'
+			)
+		WHERE
+			PORTLETCODE = 'mSchedule'
+	</update>
+
+	<!-- PORTLET_COMP -->
+	<update id="EzCommonDAO.updateMobileMenuBoardIdComp">
+		UPDATE
+			TBL_PORTAL_PORTLET_COMP
+		SET
+			MENU_ID = (
+				SELECT
+					MENU_ID
+				FROM
+					TBL_PORTAL_MENU
+				WHERE
+					MENUCODE = 'mBoard'
+			)
+		WHERE
+			PORTLET_ID IN (
+				SELECT
+					PORTLET_ID
+				FROM
+					TBL_PORTAL_PORTLET
+				WHERE
+					PORTLETCODE IN ('mFixTop', 'mFixBottom', 'mNotice', 'mPhotoboard')
+				   OR
+					PORTLET_URL LIKE '/mobile/ezNewPortal/boardPortlet.do%'
+			)
+	</update>
+
+	<update id="EzCommonDAO.updateMobileMenuApprovalIdComp">
+		UPDATE
+			TBL_PORTAL_PORTLET_COMP
+		SET
+			MENU_ID = (
+				SELECT
+					MENU_ID
+				FROM
+					TBL_PORTAL_MENU
+				WHERE
+					MENUCODE = 'mApproval'
+			)
+		WHERE
+			PORTLET_ID IN (
+				SELECT
+					PORTLET_ID
+				FROM
+					TBL_PORTAL_PORTLET
+				WHERE
+					PORTLETCODE = 'mApprovallist'
+				   OR
+					PORTLET_URL LIKE '/mobile/ezNewPortal/approvalListPortlet.do%'
+			)
+	</update>
+
+	<update id="EzCommonDAO.updateMobileMenuMailIdComp">
+		UPDATE
+			TBL_PORTAL_PORTLET_COMP
+		SET
+			MENU_ID = (
+				SELECT
+					MENU_ID
+				FROM
+					TBL_PORTAL_MENU
+				WHERE
+					MENUCODE = 'mMail'
+			)
+		WHERE
+			PORTLET_ID IN (
+				SELECT
+					PORTLET_ID
+				FROM
+					TBL_PORTAL_PORTLET
+				WHERE
+					PORTLETCODE = 'mReceivedmail'
+			)
+	</update>
+
+	<update id="EzCommonDAO.updateMobileMenuResourceIdComp">
+		UPDATE
+			TBL_PORTAL_PORTLET_COMP
+		SET
+			MENU_ID = (
+				SELECT
+					MENU_ID
+				FROM
+					TBL_PORTAL_MENU
+				WHERE
+					MENUCODE = 'mResource'
+			)
+		WHERE
+			PORTLET_ID IN (
+				SELECT
+					PORTLET_ID
+				FROM
+					TBL_PORTAL_PORTLET
+				WHERE
+					PORTLETCODE = 'mResource'
+			)
+	</update>
+
+	<update id="EzCommonDAO.updateMobileMenuScheduleIdComp">
+		UPDATE
+			TBL_PORTAL_PORTLET_COMP
+		SET
+			MENU_ID = (
+				SELECT
+					MENU_ID
+				FROM
+					TBL_PORTAL_MENU
+				WHERE
+					MENUCODE = 'mSchedule'
+			)
+		WHERE
+			PORTLET_ID IN (
+				SELECT
+					PORTLET_ID
+				FROM
+					TBL_PORTAL_PORTLET
+				WHERE
+					PORTLETCODE = 'mSchedule'
+			)
+	</update>
+
+	<!-- PORTLET_NAME -->
+	<update id="EzCommonDAO.updateMobileMenuBoardIdName">
+		UPDATE
+			TBL_PORTAL_PORTLET_NAME
+		SET
+			MENU_ID = (
+				SELECT
+					MENU_ID
+				FROM
+					TBL_PORTAL_MENU
+				WHERE
+					MENUCODE = 'mBoard'
+			)
+		WHERE
+			PORTLET_ID IN (
+				SELECT
+					PORTLET_ID
+				FROM
+					TBL_PORTAL_PORTLET
+				WHERE
+					PORTLETCODE IN ('mFixTop', 'mFixBottom', 'mNotice', 'mPhotoboard')
+				   OR
+					PORTLET_URL LIKE '/mobile/ezNewPortal/boardPortlet.do%'
+			)
+	</update>
+
+	<update id="EzCommonDAO.updateMobileMenuApprovalIdName">
+		UPDATE
+			TBL_PORTAL_PORTLET_NAME
+		SET
+			MENU_ID = (
+				SELECT
+					MENU_ID
+				FROM
+					TBL_PORTAL_MENU
+				WHERE
+					MENUCODE = 'mApproval'
+			)
+		WHERE
+			PORTLET_ID IN (
+				SELECT
+					PORTLET_ID
+				FROM
+					TBL_PORTAL_PORTLET
+				WHERE
+					PORTLETCODE = 'mApprovallist'
+				   OR
+					PORTLET_URL LIKE '/mobile/ezNewPortal/approvalListPortlet.do%'
+			)
+	</update>
+
+	<update id="EzCommonDAO.updateMobileMenuMailIdName">
+		UPDATE
+			TBL_PORTAL_PORTLET_NAME
+		SET
+			MENU_ID = (
+				SELECT
+					MENU_ID
+				FROM
+					TBL_PORTAL_MENU
+				WHERE
+					MENUCODE = 'mMail'
+			)
+		WHERE
+			PORTLET_ID IN (
+				SELECT
+					PORTLET_ID
+				FROM
+					TBL_PORTAL_PORTLET
+				WHERE
+					PORTLETCODE = 'mReceivedmail'
+			)
+	</update>
+
+	<update id="EzCommonDAO.updateMobileMenuResourceIdName">
+		UPDATE
+			TBL_PORTAL_PORTLET_NAME
+		SET
+			MENU_ID = (
+				SELECT
+					MENU_ID
+				FROM
+					TBL_PORTAL_MENU
+				WHERE
+					MENUCODE = 'mResource'
+			)
+		WHERE
+			PORTLET_ID IN (
+				SELECT
+					PORTLET_ID
+				FROM
+					TBL_PORTAL_PORTLET
+				WHERE
+					PORTLETCODE = 'mResource'
+			)
+	</update>
+
+	<update id="EzCommonDAO.updateMobileMenuScheduleIdName">
+		UPDATE
+			TBL_PORTAL_PORTLET_NAME
+		SET
+			MENU_ID = (
+				SELECT
+					MENU_ID
+				FROM
+					TBL_PORTAL_MENU
+				WHERE
+					MENUCODE = 'mSchedule'
+			)
+		WHERE
+			PORTLET_ID IN (
+				SELECT
+					PORTLET_ID
+				FROM
+					TBL_PORTAL_PORTLET
+				WHERE
+					PORTLETCODE = 'mSchedule'
+			)
+	</update>
+
+	<!-- PORTLET_USER -->
+	<update id="EzCommonDAO.updateMobileMenuBoardIdUser">
+		UPDATE
+			TBL_PORTAL_PORTLET_USER
+		SET
+			MENU_ID = (
+				SELECT
+					MENU_ID
+				FROM
+					TBL_PORTAL_MENU
+				WHERE
+					MENUCODE = 'mBoard'
+			)
+		WHERE
+			PORTLET_ID IN (
+				SELECT
+					PORTLET_ID
+				FROM
+					TBL_PORTAL_PORTLET
+				WHERE
+					PORTLETCODE IN ('mFixTop', 'mFixBottom', 'mNotice', 'mPhotoboard')
+				   OR
+					PORTLET_URL LIKE '/mobile/ezNewPortal/boardPortlet.do%'
+			)
+	</update>
+
+	<update id="EzCommonDAO.updateMobileMenuApprovalIdUser">
+		UPDATE
+			TBL_PORTAL_PORTLET_USER
+		SET
+			MENU_ID = (
+				SELECT
+					MENU_ID
+				FROM
+					TBL_PORTAL_MENU
+				WHERE
+					MENUCODE = 'mApproval'
+			)
+		WHERE
+			PORTLET_ID IN (
+				SELECT
+					PORTLET_ID
+				FROM
+					TBL_PORTAL_PORTLET
+				WHERE
+					PORTLETCODE = 'mApprovallist'
+				   OR
+					PORTLET_URL LIKE '/mobile/ezNewPortal/approvalListPortlet.do%'
+			)
+	</update>
+
+	<update id="EzCommonDAO.updateMobileMenuMailIdUser">
+		UPDATE
+			TBL_PORTAL_PORTLET_USER
+		SET
+			MENU_ID = (
+				SELECT
+					MENU_ID
+				FROM
+					TBL_PORTAL_MENU
+				WHERE
+					MENUCODE = 'mMail'
+			)
+		WHERE
+			PORTLET_ID IN (
+				SELECT
+					PORTLET_ID
+				FROM
+					TBL_PORTAL_PORTLET
+				WHERE
+					PORTLETCODE = 'mReceivedmail'
+			)
+	</update>
+
+	<update id="EzCommonDAO.updateMobileMenuResourceIdUser">
+		UPDATE
+			TBL_PORTAL_PORTLET_USER
+		SET
+			MENU_ID = (
+				SELECT
+					MENU_ID
+				FROM
+					TBL_PORTAL_MENU
+				WHERE
+					MENUCODE = 'mResource'
+			)
+		WHERE
+			PORTLET_ID IN (
+				SELECT
+					PORTLET_ID
+				FROM
+					TBL_PORTAL_PORTLET
+				WHERE
+					PORTLETCODE = 'mResource'
+			)
+	</update>
+
+	<update id="EzCommonDAO.updateMobileMenuScheduleIdUser">
+		UPDATE
+			TBL_PORTAL_PORTLET_USER
+		SET
+			MENU_ID = (
+				SELECT
+					MENU_ID
+				FROM
+					TBL_PORTAL_MENU
+				WHERE
+					MENUCODE = 'mSchedule'
+			)
+		WHERE
+			PORTLET_ID IN (
+				SELECT
+					PORTLET_ID
+				FROM
+					TBL_PORTAL_PORTLET
+				WHERE
+					PORTLETCODE = 'mSchedule'
+			)
+	</update>
+	
+	<!-- THEME_PORTLET -->
+	<update id="EzCommonDAO.updateMobileMenuBoardIdTheme">
+		UPDATE
+			TBL_PORTAL_THEME_PORTLET
+		SET
+			MENU_ID = (
+				SELECT
+					MENU_ID
+				FROM
+					TBL_PORTAL_MENU
+				WHERE
+					MENUCODE = 'mBoard'
+			)
+		WHERE
+			PORTLET_ID IN (
+				SELECT
+					PORTLET_ID
+				FROM
+					TBL_PORTAL_PORTLET
+				WHERE
+					PORTLETCODE IN ('mFixTop', 'mFixBottom', 'mNotice', 'mPhotoboard')
+				   OR
+					PORTLET_URL LIKE '/mobile/ezNewPortal/boardPortlet.do%'
+			)
+	</update>
+
+	<update id="EzCommonDAO.updateMobileMenuApprovalIdTheme">
+		UPDATE
+			TBL_PORTAL_THEME_PORTLET
+		SET
+			MENU_ID = (
+				SELECT
+					MENU_ID
+				FROM
+					TBL_PORTAL_MENU
+				WHERE
+					MENUCODE = 'mApproval'
+			)
+		WHERE
+			PORTLET_ID IN (
+				SELECT
+					PORTLET_ID
+				FROM
+					TBL_PORTAL_PORTLET
+				WHERE
+					PORTLETCODE = 'mApprovallist'
+				   OR
+					PORTLET_URL LIKE '/mobile/ezNewPortal/approvalListPortlet.do%'
+			)
+	</update>
+
+	<update id="EzCommonDAO.updateMobileMenuMailIdTheme">
+		UPDATE
+			TBL_PORTAL_THEME_PORTLET
+		SET
+			MENU_ID = (
+				SELECT
+					MENU_ID
+				FROM
+					TBL_PORTAL_MENU
+				WHERE
+					MENUCODE = 'mMail'
+			)
+		WHERE
+			PORTLET_ID IN (
+				SELECT
+					PORTLET_ID
+				FROM
+					TBL_PORTAL_PORTLET
+				WHERE
+					PORTLETCODE = 'mReceivedmail'
+			)
+	</update>
+
+	<update id="EzCommonDAO.updateMobileMenuResourceIdTheme">
+		UPDATE
+			TBL_PORTAL_THEME_PORTLET
+		SET
+			MENU_ID = (
+				SELECT
+					MENU_ID
+				FROM
+					TBL_PORTAL_MENU
+				WHERE
+					MENUCODE = 'mResource'
+			)
+		WHERE
+			PORTLET_ID IN (
+				SELECT
+					PORTLET_ID
+				FROM
+					TBL_PORTAL_PORTLET
+				WHERE
+					PORTLETCODE = 'mResource'
+			)
+	</update>
+
+	<update id="EzCommonDAO.updateMobileMenuScheduleIdTheme">
+		UPDATE
+			TBL_PORTAL_THEME_PORTLET
+		SET
+			MENU_ID = (
+				SELECT
+					MENU_ID
+				FROM
+					TBL_PORTAL_MENU
+				WHERE
+					MENUCODE = 'mSchedule'
+			)
+		WHERE
+			PORTLET_ID IN (
+				SELECT
+					PORTLET_ID
+				FROM
+					TBL_PORTAL_PORTLET
+				WHERE
+					PORTLETCODE = 'mSchedule'
+			)
+	</update>
+    
+	<!-- 2024-10-28 조소정 - 게시판 > 일반설정 > 사용안함 여부 플래그 추가 -->
+    <select id="EzCommonDAO.checkBoardNotUsedFlag" resultClass="String">
+        <![CDATA[
+        	SELECT
+        		NOTUSEDFLAG
+            FROM
+                TBL_BOARD_BOARDINFO
+            WHERE
+            	ROWNUM = 1
+        ]]>
+    </select>
+    
+    <statement id="EzCommonDAO.addBoardNotUsedFlag">
+        ALTER TABLE
+            TBL_BOARD_BOARDINFO
+        ADD
+            NOTUSEDFLAG CHAR(1 CHAR) DEFAULT 'N' NOT NULL
+    </statement>
+
+	<select id="EzCommonDAO.checkExecutiveScheduleConfig" resultClass="String">
+		SELECT
+			property_value
+		FROM
+			tbl_tenant_config
+		WHERE
+			property_name = 'useExecSchedulePublic'
+		  AND
+			tenant_id = #v_TENANTID#
+	</select>
+
+	<insert id="EzCommonDAO.insertExecutiveScheduleConfig">
+		INSERT INTO TBL_TENANT_CONFIG
+			(TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
+		VALUES
+			(#v_TENANTID#, 'useExecSchedulePublic', 'ON', '일정관리 > 임원일정의 조회 가능 범위 설정 여부 ON : 모든 사용자 조회 / OFF : 임원비서만 조회', '일정관리 > 임원일정 조회 가능 범위 설정', TO_DATE('2025-07-07 00:00:00', 'yyyy-mm-dd hh24:mi:ss'), '일정관리')
+	</insert>
+
+	<select id="EzCommonDAO.checkTblClubUserGradeColumn" resultClass="String">
+		<![CDATA[
+			SELECT
+				GRADE
+			FROM
+				TBL_C_CLUBUSER
+			WHERE
+				ROWNUM <= 1
+		]]>
+	</select>
+
+	<statement id="EzCommonDAO.alterTblClubUserGradeColumn">
+		ALTER TABLE
+			TBL_C_CLUBUSER
+			ADD
+				GRADE VARCHAR2(10) DEFAULT '4' NOT NULL
+	</statement>
+
+	<select id="EzCommonDAO.checkTblClubJoinGradeColumn" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				JOIN_GRADE, MEMLIST_READGRADE
+			FROM
+				TBL_C_CLUB
+			WHERE
+				ROWNUM <= 1
+		]]>
+	</select>
+
+	<statement id="EzCommonDAO.alterTblClubJoinGradeColumn">
+		ALTER TABLE
+			TBL_C_CLUB
+			ADD (
+				JOIN_GRADE NVARCHAR2(10) DEFAULT '4' NOT NULL,
+				MEMLIST_READGRADE NVARCHAR2(10) DEFAULT '4' NOT NULL
+		    )
+	</statement>
+
+	<select id="EzCommonDAO.checkTblCommunityGradeTable" resultClass="String">
+		<![CDATA[
+			SELECT
+				GRADENAME
+			FROM
+				TBL_C_GRADE
+			WHERE
+				ROWNUM <= 1
+		]]>
+	</select>
+
+	<statement id="EzCommonDAO.createTblCommunityGradeTable">
+		CREATE TABLE TBL_C_GRADE (
+			 C_CLUBNO VARCHAR2(40) NOT NULL,
+			 GRADECODE VARCHAR2(50) NOT NULL,
+			 GRADENAME VARCHAR2(100) NOT NULL,
+			 COMPANYID VARCHAR2(40) NOT NULL,
+			 TENANT_ID NUMBER(5) DEFAULT 0 NOT NULL,
+			 CONSTRAINT PK_TBL_C_GRADE PRIMARY KEY (C_CLUBNO, GRADECODE, COMPANYID, TENANT_ID)
+		)
+	</statement>
+
+	<select id="EzCommonDAO.checkCommBrdManageData1" resultClass="integer">
+		<![CDATA[
+			SELECT
+				count(*)
+			from
+				tbl_comm_boardmanage
+			where
+				accessid != 'everyone'
+				and tenant_id = 0
+				and ROWNUM <= 1
+		]]>
+	</select>
+
+	<delete id="EzCommonDAO.delCommBrdManageData">
+		delete
+		from
+			tbl_comm_boardmanage
+		where
+			accessid != 'everyone'
+			and tenant_id = 0
+	</delete>
+
+	<select id="EzCommonDAO.checkCommBrdManageData2" resultClass="integer">
+		<![CDATA[
+			SELECT
+				count(*)
+			from
+				tbl_comm_boardmanage
+			where
+				(boardadmin_fg = 'true'
+					or boardadmin_fg = 'false')
+			  and tenant_id = 0
+			  and ROWNUM <= 1
+		]]>
+	</select>
+
+	<update id="EzCommonDAO.updateCommBrdManageData">
+		update
+			tbl_comm_boardmanage
+		set
+			boardadmin_fg = '1',
+			listview_fg = '10',
+			read_fg = '4',
+			write_fg = '3',
+			reply_fg = '3',
+			delete_fg = '2',
+			inherit_fg = '1'
+		where
+			(boardadmin_fg = 'true'
+				or boardadmin_fg = 'false')
+		  and tenant_id = 0
+	</update>
+
+	<select id="EzCommonDAO.checkClubUserGrade" resultClass="integer">
+		<![CDATA[
+			SELECT
+				count(*)
+			from
+				tbl_c_clubuser
+			where
+				grade = '4'
+			  and (permit = '4' or permit = '0')
+			  and TENANT_ID = 0
+			  and ROWNUM <= 1
+		]]>
+	</select>
+
+	<update id="EzCommonDAO.updateClubUserGrade">
+		update
+			tbl_c_clubuser
+		set
+			grade = CASE WHEN permit = '4' THEN '1'
+						 WHEN permit = '0' THEN '10'
+						 ELSE grade END
+		where
+			grade = '4'
+		  and permit IN ('0', '4')
+		  and TENANT_ID = 0
+	</update>
+
+	<select id="EzCommonDAO.selectClubsNotInGradeList" resultClass="egovframework.ezEKP.ezCommunity.vo.CommunityClubVO">
+		select
+			c.c_clubno,
+			c.companyid,
+			c.tenant_id
+		from
+			tbl_c_club c
+		where
+			not exists (
+				select
+					1
+				from
+					tbl_c_grade g
+				where
+					g.c_clubno = c.c_clubno
+				  and g.companyid = c.companyid
+				  and g.TENANT_ID = c.TENANT_ID
+			)
+	</select>
+
+	<select id="EzCommonDAO.checkTblClubUserAdminAuthColumn" resultClass="String">
+		<![CDATA[
+		SELECT
+			ADMIN_AUTH
+		FROM
+			TBL_C_CLUBUSER
+		WHERE
+			ROWNUM <= 1
+		]]>
+	</select>
+
+	<statement id="EzCommonDAO.alterTblClubUserAdminAuthColumn">
+		ALTER TABLE
+			TBL_C_CLUBUSER
+		ADD
+			ADMIN_AUTH NVARCHAR2(20) DEFAULT NULL
+	</statement>
+
+	<select id="EzCommonDAO.checkTblClubUserWithdrawDateColumn" resultClass="String">
+		<![CDATA[
+			SELECT
+				C_WITHDRAWDATE
+			FROM
+				TBL_C_CLUBUSER
+			WHERE
+				ROWNUM <= 1
+		]]>
+	</select>
+
+	<statement id="EzCommonDAO.alterTblClubUserWithdrawDateColumn">
+		ALTER TABLE
+			TBL_C_CLUBUSER
+			ADD
+				C_WITHDRAWDATE NCHAR(30) DEFAULT NULL
+	</statement>
+	
+	<select id="EzCommonDAO.checkMailPreviewConfig" resultClass="String" parameterClass="Map">
+        <![CDATA[
+		SELECT
+			PROPERTY_VALUE
+		FROM
+			TBL_TENANT_CONFIG
+		WHERE
+			PROPERTY_NAME = 'usePreviewMail'
+		  AND
+			TENANT_ID = #v_TENANTID#
+		]]>
+    </select>
+
+	<insert id="EzCommonDAO.addMailPreviewConfig" parameterClass="Map">
+		<![CDATA[
+		INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE) VALUES
+			(#v_TENANTID#, 'usePreviewMail', 'YES', '메일리스트에서 메일 미리보기 사용 여부 YES: 사용 NO: 사용안함 (default)', '메일미리보기 사용여부', to_date('2025-02-11 00:00:00', 'YYYY-MM-DD HH24:MI:SS'), '메일')
+		]]>
+	</insert>
+
+
+	<select id="EzCommonDAO.checkTeamsIdColumn">
+		SELECT TeamsId FROM tbl_usermaster WHERE ROWNUM = 1
+	</select>
+
+	<statement id="EzCommonDAO.addTeamsIdColumn">
+		ALTER TABLE tbl_usermaster ADD TeamsId VARCHAR2(100)
+	</statement>
+
+	<statement id="EzCommonDAO.checkAuthTokenTable" resultClass="string">
+		SELECT COUNT(*) FROM TBL_AUTHTOKEN WHERE ROWNUM = 1
+	</statement>
+
+	<statement id="EzCommonDAO.createAuthTokenTable">
+		CREATE TABLE TBL_AUTHTOKEN (
+			APITYPE VARCHAR2(20),
+			TOKENTYPE VARCHAR2(20) DEFAULT 'publicapp' NOT NULL,
+			AUTHTOKEN VARCHAR2(4000),
+			UPDATEDATE DATE
+		)
+	</statement>
+
+	<statement id="EzCommonDAO.checkUserPresenceTable" resultClass="string">
+		SELECT ID FROM TBL_USERPRESENCE WHERE ROWNUM = 1
+	</statement>
+
+	<statement id="EzCommonDAO.createUserPresenceTable">
+		CREATE TABLE TBL_USERPRESENCE (
+			ID VARCHAR2(50) NOT NULL,
+			PRESENCE VARCHAR2(50) NOT NULL,
+			UPDATETIME VARCHAR2(50) NOT NULL,
+			PRIMARY KEY (ID)
+		)
+	</statement>
+
+	<select id="EzCommonDAO.checkTblBoardInfoUrlCopyFlag" resultClass="String">
+		<![CDATA[
+			SELECT
+				URLCOPYFLAG
+			FROM
+				TBL_BOARD_BOARDINFO
+			WHERE
+				ROWNUM <= 1
+		]]>
+	</select>
+
+	<statement id="EzCommonDAO.alterTblBoardInfoUrlCopyFlag">
+		ALTER TABLE
+			TBL_BOARD_BOARDINFO
+			ADD
+				URLCOPYFLAG CHAR(1) DEFAULT 'N' NOT NULL
+	</statement>
+
+	<select id="EzCommonDAO.checkAddBoardUsrListShowType" resultClass="String">
+		<![CDATA[
+		SELECT
+			USRLISTSHOWTYPE
+		FROM
+			TBL_BOARD_CONFIGURATION
+		WHERE
+			ROWNUM <= 1
+		]]>
+	</select>
+
+	<statement id="EzCommonDAO.addBoardUsrListShowType">
+		ALTER TABLE
+			TBL_BOARD_CONFIGURATION
+		ADD
+			USRLISTSHOWTYPE VARCHAR2(2) DEFAULT 'G' NOT NULL
+	</statement>
+
+
+	<select id="EzCommonDAO.checkAddBoardListShowType" resultClass="String">
+		<![CDATA[
+		SELECT
+			LISTSHOWTYPE
+		FROM
+			TBL_BOARD_BOARDINFO
+		WHERE
+			ROWNUM <= 1
+		]]>
+	</select>
+
+	<statement id="EzCommonDAO.addBoardListShowType">
+		ALTER TABLE
+			TBL_BOARD_BOARDINFO
+		ADD
+			LISTSHOWTYPE VARCHAR2(2) DEFAULT 'U' NOT NULL
+	</statement>
+
+	<update id="EzCommonDAO.updateGuestAccessibleUris" parameterClass="Map">
+		UPDATE
+			TBL_TENANT_CONFIG
+		SET
+			PROPERTY_VALUE = #value#
+		WHERE
+			UPPER(property_name) = #property#
+		  AND
+			TENANT_ID = #tenantID#
+	</update>
+    
+    <insert id="EzCommonDAO.susinScheduleUpdate" parameterClass="String">
+        MERGE INTO TBL_TENANT_CONFIG t
+        USING (
+        SELECT 'susinScheduleCnt' AS PROPERTY_NAME, '1' AS PROPERTY_VALUE
+        FROM DUAL
+        ) s
+        ON (t.PROPERTY_NAME = s.PROPERTY_NAME)
+        WHEN MATCHED THEN
+        UPDATE SET t.PROPERTY_VALUE = 
+        DECODE(#value#, '0', '0', DECODE(t.PROPERTY_VALUE + 1, 11 , 1, t.PROPERTY_VALUE + 1))    
+        WHEN NOT MATCHED THEN
+        INSERT
+        (TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
+        VALUES(0, s.PROPERTY_NAME, s.PROPERTY_VALUE, '수신스케쥴러 실행 카운트', '수신스케쥴러 실행 카운트', TO_DATE('2025-08-22','yyyy-mm-dd'), '전자결재G')
+    </insert>
 </sqlMap>

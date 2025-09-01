@@ -167,6 +167,10 @@ public class BoardListVO {
 	private String fileName;
 	/** 2025-01-21 임정은 - 게시자명선택 타입 (0 : 이름, 1 : 부서명) */
 	private String writerNameType;
+	private String versionManage;
+	private String parentItemID;
+	private String version;
+	
 	public int getrNum() {
 		return rNum;
 	}
@@ -673,4 +677,23 @@ public class BoardListVO {
 	}
 	public String getWriterNameType() { return writerNameType; }
 	public void setWriterNameType(String writerNameType) { this.writerNameType = writerNameType; }
+	
+	public String getVersionManage() {
+		return versionManage;
+	}
+	public void setVersionManage(String versionManage) {
+		this.versionManage = versionManage;
+	}
+	public String getParentItemID() {
+		return parentItemID;
+	}
+	public void setParentItemID(String parentItemID) {
+		this.parentItemID = parentItemID;
+	}
+	public String getVersion() {
+		return version;
+	}
+	public void setVersion(String version) {
+		this.version = version;
+	}
 }

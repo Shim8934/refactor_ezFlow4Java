@@ -79,7 +79,9 @@
 			
 			// 첨부문서 확인 여부 (첨부문서 창 닫을시 발생하는 오류 방지를 위한 Flag)
 			var isDocAttach = "<c:out value = '${isDocAttach}'/>";
+			var ReturnFunction;
 			
+            var approvalFlag = "<c:out value = '${approvalFlag}'/>";
 	        window.onresize = function () {
 	       		document.getElementById("messageWHWPEditor").style.height = document.documentElement.clientHeight - 150 + "px";
 	       		var mHeight = document.documentElement.clientHeight - 110 - document.getElementById("messageWHWPEditor").offsetTop + "px";
@@ -184,6 +186,12 @@
 	            if ("${pass}" != "<RESULT>TRUE</RESULT>") {
 	                QuitWindow();
 	            }
+
+				try {
+					if (isParentCommonArgsUsed()) {
+						ReturnFunction = opener == null ? parent.ezCommon_cross_dialogArguments[1] : opener.ezCommon_cross_dialogArguments[1];
+					}
+				} catch (e) { }
 	            
 				// 일반첨부, 대용량첨부파일 관련 가이드 메세지 추가
 				setAttachGuideText();
@@ -219,9 +227,9 @@
 				message.PrintDocument();
 			}
 			
-			function btnClose_onclick() {
-			    window.close();
-			}
+			// function btnClose_onclick() {
+			//     window.close();
+			// }
 	
 			var ezapropinion_cross_dialogArguments = new Array();
 			function OpenInformationUI(pInformationContent, CompleteFunction) {
@@ -252,8 +260,8 @@
 	
 			function btnMail_onclick() {
 // 			    window.open("/myoffice/ezEmail/mail_write.aspx?DocHref=" + docHref +"&cmd=docsend&docID=" + pDocID + "&TARGET=APPROVALG", "", "height = " + window.screen.availHeight * 0.8 + ", width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + GetOpenPosition(890, window.screen.availHeight * 0.8));
-		        window.open("/ezEmail/mailWrite.do?docHref=" + docHref + "&cmd=docsend&docID=" + pDocID + "&TARGET=APPROVALG", "", "height = " + window.screen.availHeight * 0.8 + ", width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + GetOpenPosition(890, window.screen.availHeight * 0.8));
-
+// 				window.open("/ezEmail/mailWrite.do?docHref=" + docHref + "&cmd=docsend&docID=" + pDocID + "&TARGET=APPROVALG", "", "height = " + window.screen.availHeight * 0.8 + ", width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + GetOpenPosition(890, window.screen.availHeight * 0.8));
+				showPopup("/ezEmail/mailWrite.do?docHref=" + docHref + "&cmd=docsend&docID=" + pDocID + "&TARGET=APPROVALG", 890, window.screen.availHeight * 0.8, "", "height = " + window.screen.availHeight * 0.8 + ", width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + GetOpenPosition(890, window.screen.availHeight * 0.8), hidePopup);
 			}
 	
 			function btnBoard_onclick() {
@@ -338,7 +346,11 @@
 				var url = "/ezApprovalG/ezDocInfoView.do?docID=" + pDocID + "&ingFlag=" + ingFlag;
 			    //var feature = "status:no;dialogWidth:420px;dialogHeight:495px;help:no;scroll:no;edge:sunken;";
 			    //var RtnVal = window.showModalDialog(url, "", feature);
-				DivPopUpShow(430, 530, url);
+				if (typeof approvalFlag !== "undefined" && approvalFlag == "G") {
+					DivPopUpShow(430, 400, url);
+				}else {
+					DivPopUpShow(430, 300, url);
+				}
 			}
 			
 			function btnDocInfo_onclick_Complete() {
@@ -487,14 +499,16 @@
 	    	// 통합 PC 저장 끝
 	    	
 	    	// 게시판 게시 시작
-	    	var writeboardselect_modal_dialogArguments = new Array();
+	    	// var writeboardselect_modal_dialogArguments = new Array();
 		    function NewItem_onclick() {
-		    	writeboardselect_modal_dialogArguments[1] = NewItem_onclick_Complete;
-		        var OpenWin = window.open("/ezBoard/writeBoardSelectModal.do", "WriteBoardSelect_Modal", GetOpenWindowfeature(355, 600));
-		        try { OpenWin.focus(); } catch (e) { }
+		    	// writeboardselect_modal_dialogArguments[1] = NewItem_onclick_Complete;
+		        // var OpenWin = window.open("/ezBoard/writeBoardSelectModal.do", "WriteBoardSelect_Modal", GetOpenWindowfeature(355, 600));
+		        // try { OpenWin.focus(); } catch (e) { }
+				showPopup("/ezBoard/writeBoardSelectModal.do", 355, 600, "WriteBoardSelect_Modal", GetOpenWindowfeature(355, 600), NewItem_onclick_Complete);
 		    }
 		    
 		    function NewItem_onclick_Complete(ret) {
+				hidePopup();
 		        if (typeof (ret) != "undefined") {
 		            pBoardID = ret[0];
 		
@@ -511,7 +525,8 @@
 		                alert(strLang1031);
 		            }
 		            else {
-		                window.open("/ezBoard/boardNewItem.do?boardID=" + encodeURIComponent(pBoardID) + "&mode=new1&pbrdGbn=SiteNewBoard&pFromScreen=Mail&docID=" + pDocID + "&url=" + docHref + "&orgCompanyID=" + orgCompanyID, '', GetOpenWindowJun(765, 870));
+		                // window.open("/ezBoard/boardNewItem.do?boardID=" + encodeURIComponent(pBoardID) + "&mode=new1&pbrdGbn=SiteNewBoard&pFromScreen=Mail&docID=" + pDocID + "&url=" + docHref + "&orgCompanyID=" + orgCompanyID, '', GetOpenWindowJun(765, 870));
+						showPopup("/ezBoard/boardNewItem.do?boardID=" + encodeURIComponent(pBoardID) + "&mode=new1&pbrdGbn=SiteNewBoard&pFromScreen=Mail&docID=" + pDocID + "&url=" + docHref + "&orgCompanyID=" + orgCompanyID, 765, 870, "", GetOpenWindowJun(765, 870), hidePopup);
 		            }
 		        }
 		    }
@@ -665,7 +680,13 @@
 					} else {
 						return;
 					}
-				} catch (e) { }
+				} catch (e) { 
+					if ((window.parent.g_sFlag == undefined && isDocAttach == "false") || (window.parent.g_sFlag != undefined && window.parent.g_sFlag == "m01") || (window.parent.g_sFlag != undefined && window.parent.g_sFlag == "docShare")) {
+						window.parent.openergetDocInfo();
+					} else {
+						return;
+					}
+				}
 			}
 	    </script>
 	</head>

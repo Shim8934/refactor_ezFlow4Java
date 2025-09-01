@@ -6,8 +6,10 @@ function GetFormInfo(ID, KIND, searchtype, searchname) {
     	searchtype = "";
     }
     
-    if (searchname == undefined) {
+    if (searchname == undefined || searchname == null) {
     	searchname = "";
+    } else {
+        searchname = searchname.replace(/\\/g, "\\\\").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/%/g, "\\%").replace(/'/g, "\\'").replace(/_/g, "\\_");
     }
 
     $.ajax({

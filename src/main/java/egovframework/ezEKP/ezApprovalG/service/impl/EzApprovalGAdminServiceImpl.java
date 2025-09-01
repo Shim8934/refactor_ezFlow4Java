@@ -1,7 +1,7 @@
 package egovframework.ezEKP.ezApprovalG.service.impl;
 
 import egovframework.com.cmm.EgovMessageSource;
-import egovframework.com.cmm.service.EgovFileMngUtil;
+import egovframework.com.cmm.service.EzFileMngUtil;
 import egovframework.ezEKP.ezApprovalG.dao.EzApprovalGAdminDAO;
 import egovframework.ezEKP.ezApprovalG.dao.EzApprovalGDAO;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGAdminService;
@@ -75,7 +75,7 @@ import java.util.*;
 import java.util.stream.Stream;
 
 @Service("EzApprovalGAdminService")
-public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzApprovalGAdminService{
+public class EzApprovalGAdminServiceImpl extends EzFileMngUtil implements EzApprovalGAdminService{
 	@Autowired
 	private CommonUtil commonUtil;
 	
@@ -4563,7 +4563,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 				+ "<NAME2></NAME2>"
 				+ "<NAME3></NAME3>"
 				+ "<NAME4></NAME4>"
-				+ "<WIDTH>300</WIDTH>"
+				+ "<WIDTH>250</WIDTH>"
 				+ "<COLNAME>DocTitle</COLNAME>"
 				+ "<TABLENAME></TABLENAME>"
 				+ "</ROW>"
@@ -4572,7 +4572,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 				+ "<NAME2></NAME2>"
 				+ "<NAME3></NAME3>"
 				+ "<NAME4></NAME4>"
-				+ "<WIDTH>50</WIDTH>"
+				+ "<WIDTH>65</WIDTH>"
 				+ "<COLNAME>WriterDeptName</COLNAME>"
 				+ "<TABLENAME></TABLENAME>"
 				+ "</ROW>"
@@ -4581,7 +4581,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 				+ "<NAME2></NAME2>"
 				+ "<NAME3></NAME3>"
 				+ "<NAME4></NAME4>"
-				+ "<WIDTH>50</WIDTH>"
+				+ "<WIDTH>55</WIDTH>"
 				+ "<COLNAME>WriterName</COLNAME>"
 				+ "<TABLENAME></TABLENAME>"
 				+ "</ROW><ROW>"
@@ -4594,11 +4594,11 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 				+ "<TABLENAME></TABLENAME>"
 				+ "</ROW>"
 				+ "<ROW>"
-				+ "<NAME>상태</NAME>"
+				+ "<NAME>문서상태</NAME>"
 				+ "<NAME2></NAME2>"
 				+ "<NAME3></NAME3>"
 				+ "<NAME4></NAME4>"
-				+ "<WIDTH>50</WIDTH>"
+				+ "<WIDTH>60</WIDTH>"
 				+ "<COLNAME>ProcessYN</COLNAME>"
 				+ "<TABLENAME></TABLENAME>"
 				+ "</ROW>"
@@ -4625,7 +4625,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 				+ "<NAME2></NAME2>"
 				+ "<NAME3></NAME3>"
 				+ "<NAME4></NAME4>"
-				+ "<WIDTH>50</WIDTH>"
+				+ "<WIDTH>70</WIDTH>"
 				+ "<COLNAME>FolderName</COLNAME>"
 				+ "<TABLENAME></TABLENAME>"
 				+ "<ROW>"
@@ -4721,6 +4721,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 					resultXML.append("<DATA12>" + "" + "</DATA12>");
 					resultXML.append("<DATA13>" + "" + "</DATA13>");
 					resultXML.append("<DATA14>" + makeListField(docXML.getElementsByTagName("URGENTAPPROVAL").item(k).getTextContent()) + "</DATA14>");
+					resultXML.append("<DATA16>" + makeListField(docXML.getElementsByTagName("FORMID").item(k).getTextContent()) + "</DATA16>");
 				}
 				resultXML.append("</CELL>");
 			}

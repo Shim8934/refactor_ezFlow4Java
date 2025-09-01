@@ -33,20 +33,22 @@ padding:0px 0px 0px 0px; height:36px; line-height:37px;}/* 20130416 수정 */
 .icon_grayup {margin:0px 0px 0px 3px; cursor:pointer; width:11px; height:11px; display:inline-block; background:url(/images/icon_grayup.gif) no-repeat center bottom; vertical-align:middle;}
 
 /* 메일미리보기_첨부파일 121022 */
-.previewmail_addfile { position:relative ;margin:18px 0px 10px 0px; padding:0px 0px 0px 0px; width:100%;  font-size:12px;} /* 20130417 max-width:900px 제거 */
-.previewmail_addfile .title {background:url(/images/icon_addfile.gif) no-repeat 0px 1px ; color:#333; font-weight:bold; padding:0px 0px 0px 10px; margin:0px 0px 1px 0px; height:20px;}
-.previewmail_addfile .title_btn { font-weight:normal;margin:0px 5px;}
-.previewmail_addfile .title_btn a {text-decoration:underline;}
-.previewmail_addfile  ul { margin:0px; padding:0px; list-style:none; z-index:1;border-top:1px solid #e8e8e8;border-left:1px solid #e8e8e8;border-right:1px solid #e8e8e8;}
-.previewmail_addfile  ul li { position:relative;border-bottom:1px solid #e8e8e8; padding:7px 5px 5px 10px; margin:0px;}
-.previewmail_addfile  ul li span{font-size:12px;}
-.previewmail_addfile  ul li .icon_rbtn{position:absolute; right:10px;cursor:pointer;}
-.previewmail_addfile  ul li .icon_rbtn2{position:absolute; right:30px;cursor:pointer;}
-.previewmail_addfile a{color:#666;text-decoration:none}
-.previewmail_addfile a:hover{ text-decoration:underline;}
-.previewmail_addfile .icon_btn {cursor:none; margin:0px 5px 0px 5px;}
-.previewmail_addfile .icon_btn img {vertical-align:middle;}
-.previewmail_addfile  span { font-size:12px; }
+.previewmail_addfile {position: relative ;margin: 18px 0px 10px 0px;padding: 0px 0px 0px 0px;width: 100%;font-size: 12px;}
+
+/* 20130417 max-width:900px 제거 */
+.previewmail_addfile .title {background: url(/images/icon_addfile.gif) no-repeat 0px 1px ;color: #333;font-weight: bold;padding: 0px 0px 0px 10px;margin: 0px 0px 1px 0px;height: 20px;}
+.previewmail_addfile .title_btn {font-weight: normal;margin: 0px 5px;}
+.previewmail_addfile .title_btn a {text-decoration: underline;}
+.previewmail_addfile ul {margin: 0px;padding: 0px;list-style: none;z-index: 1;border-top: 1px solid #e8e8e8;border-left: 1px solid #e8e8e8;border-right: 1px solid #e8e8e8;}
+.previewmail_addfile ul li {position: relative;border-bottom: 1px solid #e8e8e8;padding: 7px 5px 5px 10px;margin: 0px;}
+.previewmail_addfile ul li span {font-size: 12px;}
+.previewmail_addfile ul li .icon_rbtn {position: absolute;right: 10px;cursor: pointer;}
+.previewmail_addfile ul li .icon_rbtn2 {position: absolute;right: 30px;cursor: pointer;}
+.previewmail_addfile a {color: #666;text-decoration: none}
+.previewmail_addfile a:hover {text-decoration: underline;}
+.previewmail_addfile .icon_btn {cursor: none;margin: 0px 5px 0px 5px;}
+.previewmail_addfile .icon_btn img {vertical-align: middle;}
+.previewmail_addfile span {font-size: 12px;}
 /* .previewmail_addfile .attachFileName { display:inline-block; width:90%;  white-space:nowrap; overflow:hidden;text-overflow:ellipsis;} */
 
 /* 메일 미리보기_첨파이미지 20181206*/
@@ -80,3 +82,23 @@ padding:0px 0px 0px 0px; height:36px; line-height:37px;}/* 20130416 수정 */
 .attachedfile_list .icon_rbtn{position:absolute; right:10px;cursor:pointer;}
 .attachedfile_list .icon_rbtn2{position:absolute; right:35px;cursor:pointer;}
 .imgSpan{ display:inline-block;}
+
+/* 메일 미리보기 ui 수정 */
+.preview_mail_wrap{padding:30px 20px 0;}
+.preview_mail_wrap .preview_mail_text{height:auto; max-height:130px; overflow-y:auto;}
+.preview_mail_wrap .preview_mail_text p{margin:0; color:#000; font-size:13px; line-height:19px;}
+.preview_mail_wrap .preview_mail_attach{overflow-y:auto; max-height:72px;}
+.preview_mail_wrap .preview_mail_cont{height: 308px;}
+
+.preview_mail_wrap .previewmail_addfile{margin:20px 0 0; border:1px solid #DDDDDD; box-sizing:border-box;}
+.preview_mail_wrap .previewmail_addfile .title{height:35px; line-height:35px; background:#E5EFFF; margin:0;}
+.preview_mail_wrap .previewmail_addfile .title p{margin:0; font-size:13px;}
+.preview_mail_wrap .previewmail_addfile .title p span{font-size:13px;}
+.preview_mail_wrap .previewmail_addfile .title p span b{color:#0075FF;}
+
+.preview_mail_wrap .btnpositionNew{background:none; left:0; padding:15px 0; margin:0;}
+
+.preview_mail_wrap .previewmail_addfile ul{border:none;}
+.preview_mail_wrap .previewmail_addfile ul li{display:flex; justify-content:space-between; align-items:center; height:35px; padding:0 10px; border:none; border-bottom:1px solid #DEDEDE;}
+.preview_mail_wrap .previewmail_addfile ul li:last-child{border-bottom:none;}
+.preview_mail_wrap .previewmail_addfile ul li span:first-child{width:calc(100% - 21px);}

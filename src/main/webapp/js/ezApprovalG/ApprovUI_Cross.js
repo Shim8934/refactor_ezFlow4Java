@@ -2,6 +2,7 @@
 var pOrgAttach;
 var bbtnApprove = "";
 var bbtnReject = "";
+var bbtnReject2 = "";
 var bbtnStay = "";
 var bbtnJunKyul = "";
 var bbtnModAprLine = "";
@@ -19,6 +20,7 @@ var bbtnDocInfo = "";
 var bbtnModAprDept = "";
 var btbtnTotalSave = "";
 var bbtntotaldocinfo = "";
+var btnAddRelatedCabinet = "";
 
 function putBansongSign() {
     var fields = message.GetFieldsList();
@@ -1161,7 +1163,8 @@ function chkBtnConfirm(para) {
 
         if (document.getElementById("btnReject").style.display == "")
             bbtnReject = "1";
-
+        if (document.getElementById("btnReject2").style.display == "")
+            bbtnReject2 = "1";
         if (document.getElementById("btnStay").style.display == "")
             bbtnStay = "1";
 
@@ -1214,6 +1217,8 @@ function chkBtnConfirm(para) {
 
         if (document.getElementById("btntotaldocinfo").style.display == "")
             bbtntotaldocinfo = "1";       
+        if (document.getElementById("btnAddRelatedCabinet").style.display == "")
+            btnAddRelatedCabinet = "1";
     }
     else {
         if (bbtnApprove == "1")
@@ -1221,6 +1226,9 @@ function chkBtnConfirm(para) {
 
         if (bbtnReject == "1")
             setMenuBar("btnReject", true);
+        
+        if (bbtnReject2 == "1")
+            setMenuBar("btnReject2", true);
 
         if (bbtnStay == "1")
             setMenuBar("btnStay", true);
@@ -1269,6 +1277,9 @@ function chkBtnConfirm(para) {
 
         if (bbtntotaldocinfo == "1")
             setMenuBar("btntotaldocinfo", true);
+        
+        if (btnAddRelatedCabinet == "1")
+            setMenuBar("btnAddRelatedCabinet", true);
     }
 }
 function getDocInfo() {
@@ -3028,17 +3039,19 @@ function openSingUI(parameter) {
     var objNodes = SelectNodes(Resultxml, "LISTVIEWDATA/ROWS/ROW");
     var SignNodeList = objNodes.length;
     // 결재 서명 정보가 존재하는 경우
-    if (SignNodeList != 0) {
+    // if (SignNodeList != 0) {
         var parameter = pingUserID;
         aprsign1_cross_dialogArguments[0] = parameter;
         aprsign1_cross_dialogArguments[1] = openSingUI_Complete;
         // 서명하는 팝업 호출
         DivPopUpShow(350, 310, "/ezApprovalG/aprSign.do");
-    }
-    else {
-        var ret = "NAME";
-        Approv_Complete(ret);
-    }
+        /*
+        }
+        else {
+            var ret = "NAME";
+            Approv_Complete(ret);
+        }
+        */
 }
 /**
  * sentdate field가 존재하는 경우

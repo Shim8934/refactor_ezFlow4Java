@@ -1309,8 +1309,12 @@ function quickMenuOpen(menu) {
 	    	location = "main";
 	    	break;
 	}
-	
-	window.open(url, location, option);
+
+	if (location === "main") {
+		parent.document.querySelector("iframe[name=main]").src = url;
+	} else {
+		window.open(url, location, option);
+	}
 }
 
 function viewQuick() {

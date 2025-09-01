@@ -84,7 +84,7 @@
 		    }		    
 		    
 		    function viewQstList() {
-		    	window.open("/ezBoard/boardMain.do?func=3","main");		    	
+                parent.document.querySelector("iframe[name=main]").src = "/ezBoard/boardMain.do?func=3";		    	
 		    }
 		    
 		    function vote_poll() {
@@ -100,7 +100,7 @@
 						var result = JSON.parse(data).result;					
 						
 						if (result == "Normal") {
-							window.open("/ezBoard/boardMain.do?func=3&qstId=" + qstId, "main");
+                            parent.document.querySelector("iframe[name=main]").src = "/ezBoard/boardMain.do?func=3&qstId=" + qstId;
 						}
 						else {
 							alert("<spring:message code = 'ezPoll.t233'/>");

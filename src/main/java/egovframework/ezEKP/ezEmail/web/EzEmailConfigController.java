@@ -59,7 +59,7 @@ import org.w3c.dom.*;
 import com.sun.mail.pop3.POP3Folder;
 
 import egovframework.com.cmm.EgovMessageSource;
-import egovframework.com.cmm.service.EgovFileMngUtil;
+import egovframework.com.cmm.service.EzFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import egovframework.ezEKP.ezEmail.logic.POP3Access;
@@ -97,7 +97,7 @@ import org.egovframe.rte.fdl.string.EgovStringUtil;
  */
 
 @Controller
-public class EzEmailConfigController extends EgovFileMngUtil {
+public class EzEmailConfigController extends EzFileMngUtil {
 
 	private static final Logger logger = LoggerFactory.getLogger(EzEmailConfigController.class);
 
@@ -138,6 +138,9 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", userInfo.getTenantId());
 		String useUserDefinedDL = ezCommonService.getTenantConfig("useUserDefinedDL", userInfo.getTenantId());
+
+		String tenantDomain = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
+		String address = userInfo.getId() + "@" + tenantDomain;
 		
 		if (useSharedMailbox.equals("YES")) {
 			String shareId = request.getParameter("shareId");
@@ -152,6 +155,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 					
 					return "ezCommon/error";
 				} else {
+					address = shareId + "@" + tenantDomain;
 					MailSharedMailboxVO shareInfo = ezEmailService.getSharedMailboxInfo(shareId, userInfo.getTenantId());
 					
 					model.addAttribute("shareId", shareId);
@@ -174,6 +178,21 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		if (useEncryptZipForEmail.equals("")) {
 			useEncryptZipForEmail = "NO";
 		}
+
+		String usePOP3Default = ezCommonService.getTenantConfig("usePOP3Default", userInfo.getTenantId());
+		String useIMAPDefault = ezCommonService.getTenantConfig("useIMAPDefault", userInfo.getTenantId());
+		String UseDisablePopImap = ezCommonService.getTenantConfig("UseDisablePopImap", userInfo.getTenantId());
+		String requestURL = "/jMochaEzEmail/getPOP3IMAPConfig";
+		String inputParams = "user_name=" + address;
+		String getResult = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + requestURL, inputParams);
+
+		JSONParser parser = new JSONParser();
+		JSONObject responseObj = (JSONObject)parser.parse(getResult);
+
+		JSONObject result = (JSONObject) responseObj.get("result");
+
+		String popEnabled = (String) result.get("pop_enabled");
+		String imapEnabled = (String) result.get("imap_enabled");
 		
 		model.addAttribute("userId", userInfo.getId());
 		model.addAttribute("useEncryptZipForEmail", useEncryptZipForEmail);
@@ -185,7 +204,11 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		model.addAttribute("userEditor", userEditor);
 		model.addAttribute("useUserDefinedDL", useUserDefinedDL);
 		model.addAttribute("useMailTag", "YES".equalsIgnoreCase(ezCommonService.getTenantConfig("useMailTag", userInfo.getTenantId())));
-
+		model.addAttribute("usePOP3Default", usePOP3Default);
+		model.addAttribute("useIMAPDefault", useIMAPDefault);
+		model.addAttribute("usePOP3", popEnabled);
+		model.addAttribute("useIMAP", imapEnabled);
+		model.addAttribute("useDisablePopImap", UseDisablePopImap);
 		logger.debug("mailConfig ended.");
 		return "ezEmail/mailConfig";
 	}
@@ -235,6 +258,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 			defaultFontFamilyList = Arrays.asList(egovMessageSource.getMessage("main.t0620", new Locale("id", "ID")).split(";"));
 		}
 		List<String> defaultFontSizeList = Arrays.asList("8pt,9pt,10pt,11pt,12pt,13pt,14pt,16pt,18pt,20pt,24pt,30pt,36pt,54pt,72pt".split(","));
+		String selfCcOption = mailGeneralVO.getSelfCcOption() == null ? "none" : mailGeneralVO.getSelfCcOption(); // 나를 항상 참조에 포함 선택. none : 사용안함(default) / cc : 나를 항상 참조에 포함 / bcc : 나를 항상 숨은참조에 포함
 
 		String fontFamily = egovMessageSource.getMessage("main.t246", locale);
 		String fontSize = "10pt";
@@ -256,7 +280,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 			keepDeleteLength = "60";
 		}
 		
-		String pMailSenderNM = EgovStringUtil.isEmpty(mailGeneralVO.getMailSenderNm()) ? userInfo.getDisplayName() : mailGeneralVO.getMailSenderNm();
+		String pMailSenderNM = mailGeneralVO.getMailSenderNm();
 		
 		if (pMailSenderNM == null) {
 			pMailSenderNM = "";
@@ -316,7 +340,8 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		model.addAttribute("primaryLang", primaryLang);
 		model.addAttribute("defaultFontFamilyList", defaultFontFamilyList);
 		model.addAttribute("defaultFontSizeList", defaultFontSizeList);
-		
+		model.addAttribute("selfCcOption", selfCcOption);
+
 		logger.debug("mailGeneral ended.");
 		
 		return "ezEmail/mailGeneral";
@@ -420,7 +445,11 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 			MailGeneralVO mailGeneralVO = ezEmailService.getMailGeneral(userInfo.getTenantId(), userInfo.getId()).get(0);
 			defaultSeparateSend = StringUtils.defaultString(mailGeneralVO.getDefaultSeparateSend());
 		}
+		// 2025.02.11 한슬기 : 나를 항상 참조에 포함 선택. none : 사용안함(default) / cc : 나를 항상 참조에 포함 / bcc : 나를 항상 숨은참조에 포함
+		String selfCcOption = doc.getElementsByTagName("SELFCCOPTION").item(0).getTextContent();
 
+		String inMailBox = doc.getElementsByTagName("INMAILBOX").item(0).getTextContent();
+		
 		logger.debug("userId=" + userInfo.getId() + ",listCount=" + listCount + ",refreshInterval=" + refreshInterval 
 				+ ",keepDeleteLength=" + keepDeleteLength + ",previewMode=" + previewMode 
 				+ ",previewWList=" + previewWList + ",previewWContent=" + previewWContent
@@ -432,7 +461,8 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 				+ ",previewMail=" +  previewMail 
 				+ ",mailSendResult=" + mailSendResult
 				+ ",editorFontFamily=" + editorFontFamily + ",editorFontSize=" + editorFontSize
-				);
+				+ ",selfCcOption=" + selfCcOption
+		);
 
 		String rtnValue= "OK";
 
@@ -458,8 +488,9 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 			mailGeneral.setMailSendResult(mailSendResult);
 			mailGeneral.setEditorFontFamily(editorFontFamily);
 			mailGeneral.setEditorFontSize(editorFontSize);
+			mailGeneral.setSelfCcOption(selfCcOption);
 
-			ezEmailService.setMailGeneral(userInfo.getTenantId(), userInfo.getId(), mailGeneral, mode);
+			ezEmailService.setMailGeneral(userInfo.getTenantId(), userInfo.getId(), mailGeneral, mode, inMailBox);
 		} catch (RuntimeException e) {
 			rtnValue = "ERROR:" + e.getMessage();
 		} catch (Exception e) {
@@ -1065,10 +1096,12 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		String deleteUnreadStr = request.getParameter("unread") == null ? "" : request.getParameter("unread");
 		int deleteUnread = deleteUnreadStr.equals("") ? 0 : Integer.parseInt(deleteUnreadStr);
 		String folderName = request.getParameter("foldername") == null ? "" : request.getParameter("foldername");
-				
+
+		String autoDeletionOption = request.getParameter("autoDeletionOption" ) == null ? "" : request.getParameter("autoDeletionOption");
+
 		logger.debug("path=" + path + ",expireTime=" + expireTime
-				 + ",deleteUnread=" + deleteUnread + ",folderName=" + folderName);
-		
+				 + ",deleteUnread=" + deleteUnread + ",folderName=" + folderName + ",autoDeletionOption=" + autoDeletionOption);
+
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", userInfo.getTenantId());
@@ -1093,8 +1126,8 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 				}
 			} 
 		}
-		
-		ezEmailService.setMailDelete(userInfo.getTenantId(), userId, path, expireTime, deleteUnread, folderName);
+		// 2025.02.18 한슬기 : 편지함 메일 자동삭제 방식 선택옵션(지운편지함으로이동(default) : trash / 영구삭제 : permanently) 파라미터(autoDeletionOption) 추가
+		ezEmailService.setMailDelete(userInfo.getTenantId(), userId, path, expireTime, deleteUnread, folderName, autoDeletionOption);
 		
 		logger.debug("mailAutoDeleteAdd ended. redirect to /ezEmail/mailAutoDelete.do");
 		return "redirect:/ezEmail/mailAutoDelete.do";
@@ -3352,5 +3385,178 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		
 		logger.debug("checkBlockExternalAddress ended.");
 		return result;
+	}
+	@RequestMapping(value="/ezEmail/userMailPop3Setting.do", method = RequestMethod.GET)
+	public String userMailPop3Setting(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception {
+		logger.debug("userMailPop3Setting started.");
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", userInfo.getTenantId());
+
+		String tenantDomain = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
+		String address = userInfo.getId() + "@" + tenantDomain;
+		String requestURL = "/jMochaEzEmail/getPOP3IMAPConfig";
+
+		if ("YES".equals(useSharedMailbox)) {
+			String shareId = request.getParameter("shareId");
+			logger.debug("shareId=" + shareId);
+
+			if (shareId != null) {
+				if (!ezEmailService.checkUserShareId(userInfo.getId(), shareId, 4, userInfo.getTenantId())) {
+					model.addAttribute("mainContent", egovMessageSource.getMessage("ezEmail.lhm81", locale));
+
+					logger.debug("the user cannot access the shareId.");
+					logger.debug("mailConfig ended.");
+
+					return "ezCommon/error";
+				} else {
+					address = shareId + "@" + tenantDomain;
+					MailSharedMailboxVO shareInfo = ezEmailService.getSharedMailboxInfo(shareId, userInfo.getTenantId());
+
+					model.addAttribute("shareId", shareId);
+					model.addAttribute("shareName", shareInfo.getShareName());
+				}
+			}
+		}
+
+		String inputParams = "user_name=" + address;
+		String getResult = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + requestURL, inputParams);
+
+		JSONParser parser = new JSONParser();
+		JSONObject responseObj = (JSONObject)parser.parse(getResult);
+
+		JSONObject result = (JSONObject) responseObj.get("result");
+		String resultCode = (String) responseObj.get("resultCode");
+
+		String popEnabled = (String) result.get("pop_enabled");
+		String popSince = (String) result.get("pop_since");
+		String popAsRead = (String) result.get("pop_as_read");
+		String popKeepCopy = (String) result.get("pop_keep_copy");
+		String imapEnabled = (String) result.get("imap_enabled");
+
+		String usePOP3Default = ezCommonService.getTenantConfig("usePOP3Default", userInfo.getTenantId());
+		String useIMAPDefault = ezCommonService.getTenantConfig("useIMAPDefault", userInfo.getTenantId());
+
+		model.addAttribute("popEnabled", popEnabled);
+		if ("NO DATA".equals(resultCode)) {
+			model.addAttribute("popSince", "");
+		} else {
+			model.addAttribute("popSince", popSince == null ? "0" : popSince);
+			if (popSince != null) 
+				model.addAttribute("popSinceDateFormat", popSince.replaceAll("\\.\\d+$", ""));
+		}
+		model.addAttribute("popAsRead", popAsRead);
+		model.addAttribute("popKeepCopy", popKeepCopy);
+		model.addAttribute("imapEnabled", imapEnabled);
+		model.addAttribute("usePOP3Default", usePOP3Default);
+		model.addAttribute("useIMAPDefault", useIMAPDefault);
+
+		logger.debug("userMailPop3Setting ended.");
+
+		return "ezEmail/mailPop3Setting";
+	}
+
+	@RequestMapping(value="/ezEmail/userMailImapSetting.do", method = RequestMethod.GET)
+	public String userMailImapSetting(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception {
+		logger.debug("userMailImapSetting started.");
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", userInfo.getTenantId());
+
+		String tenantDomain = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
+		String address = userInfo.getId() + "@" + tenantDomain;
+		String requestURL = "/jMochaEzEmail/getPOP3IMAPConfig";
+
+		if ("YES".equals(useSharedMailbox)) {
+			String shareId = request.getParameter("shareId");
+			logger.debug("shareId=" + shareId);
+
+			if (shareId != null) {
+				if (!ezEmailService.checkUserShareId(userInfo.getId(), shareId, 4, userInfo.getTenantId())) {
+					model.addAttribute("mainContent", egovMessageSource.getMessage("ezEmail.lhm81", locale));
+
+					logger.debug("the user cannot access the shareId.");
+					logger.debug("mailConfig ended.");
+
+					return "ezCommon/error";
+				} else {
+					address = shareId + "@" + tenantDomain;
+					MailSharedMailboxVO shareInfo = ezEmailService.getSharedMailboxInfo(shareId, userInfo.getTenantId());
+
+					model.addAttribute("shareId", shareId);
+					model.addAttribute("shareName", shareInfo.getShareName());
+				}
+			}
+		}
+
+		String inputParams = "user_name=" + address;
+		String getResult = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + requestURL, inputParams);
+
+		JSONParser parser = new JSONParser();
+		JSONObject responseObj = (JSONObject)parser.parse(getResult);
+
+		JSONObject result = (JSONObject) responseObj.get("result");
+
+		String popEnabled = (String) result.get("pop_enabled");
+		String popSince = (String) result.get("pop_since");
+		String popAsRead = (String) result.get("pop_as_read");
+		String popKeepCopy = (String) result.get("pop_keep_copy");
+		String imapEnabled = (String) result.get("imap_enabled");
+
+		String usePOP3Default = ezCommonService.getTenantConfig("usePOP3Default", userInfo.getTenantId());
+		String useIMAPDefault = ezCommonService.getTenantConfig("useIMAPDefault", userInfo.getTenantId());
+
+		model.addAttribute("popEnabled", popEnabled);
+		model.addAttribute("popSince", popSince);
+		model.addAttribute("popAsRead", popAsRead);
+		model.addAttribute("popKeepCopy", popKeepCopy);
+		model.addAttribute("imapEnabled", imapEnabled);
+		model.addAttribute("usePOP3Default", usePOP3Default);
+		model.addAttribute("useIMAPDefault", useIMAPDefault);
+
+		logger.debug("userMailImapSetting ended.");
+
+		return "ezEmail/mailImapSetting";
+	}
+
+	@RequestMapping(value = "/ezEmail/setConfigPOP3IMAP.do", method = RequestMethod.POST)
+	@ResponseBody
+	public Result setConfigPOP3IMAP (@CookieValue("loginCookie")String loginCookie, Model model, HttpServletRequest request) throws Exception {
+		logger.debug("setConfigPOP3IMAP started.");
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+
+		String tenantDomain = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
+
+		String address = userInfo.getId() + "@" + tenantDomain;
+
+		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", userInfo.getTenantId());
+
+		if ("YES".equals(useSharedMailbox)) {
+			String shareId = request.getParameter("shareId");
+			logger.debug("shareId=" + shareId);
+
+			if (!shareId.isEmpty() && shareId != null) {
+				if (!ezEmailService.checkUserShareId(userInfo.getId(), shareId, 4, userInfo.getTenantId())) {
+					return Result.failure();
+				} else {
+					address = shareId + "@" + tenantDomain;
+				}
+			}
+		}
+		
+		JgwResult jgwResult = rest.jgw().url("/jMochaEzEmail/updatePOP3IMAP")
+				.formParam("user_name", address)
+				.formParam("usePOP3", request.getParameter("popEnabled"))
+				.formParam("popSince", request.getParameter("popSince"))
+				.formParam("popAsRead", request.getParameter("popAsRead"))
+				.formParam("popKeepCopy", request.getParameter("popKeepCopy"))
+				.formParam("useIMAP", request.getParameter("imapEnabled"))
+				.exchangeJgwResult();
+
+		logger.debug("setConfigPOP3IMAP ended.");
+
+		return jgwResult.succeeded() ? Result.successWithCode(jgwResult.getReasonCode()) : Result.failure();
+
 	}
 }

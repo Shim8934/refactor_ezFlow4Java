@@ -2019,9 +2019,9 @@ public class EzApprovalGRelayScheduler {
 		    for (Map<String, Object> map : sendOutInfoList) {
 				
 			      File sendfile = new File(commonUtil.detectPathTraversal(sendPath + map.get("FILENAME")));
-			      File sendtempfile = new File(commonUtil.detectPathTraversal(sendPath + map.get("FILENAME")));
-			      File senderrfile = new File(commonUtil.detectPathTraversal(sendPath + map.get("FILENAME")));
-			      File senderrtempfile = new File(commonUtil.detectPathTraversal(sendPath + map.get("FILENAME")));
+			      File sendtempfile = new File(commonUtil.detectPathTraversal(sendtempPath + map.get("FILENAME")));
+			      File senderrfile = new File(commonUtil.detectPathTraversal(senderrPath + map.get("FILENAME")));
+			      File senderrtempfile = new File(commonUtil.detectPathTraversal(senderrtempPath + map.get("FILENAME")));
 			      
 			      
 			      sendExist = sendfile.exists();

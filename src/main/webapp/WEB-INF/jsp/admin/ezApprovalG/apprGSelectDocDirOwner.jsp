@@ -7,6 +7,7 @@
 	<head>
 		<title><spring:message code='ezApprovalG.share01' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">		
+		<script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}" ></script>
 	    <link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
 		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 	    <link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css" />	    
@@ -291,8 +292,8 @@
   					dataType : "text",
   					data : {
   						deptID : tempDeptID ,
-  						cell : "company;description;displayName;title;telephoneNumber",
-  						prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2",
+  						cell : "company;description;displayName;title;telephoneNumber;extensionAttribute2;companyId",
+  						prop : "mail;displayName;description;title;company;telephoneNumber;companyId",
   						page : CurPage ,
   						type : "user"
   					} ,
@@ -1370,10 +1371,16 @@
 			function selectOwnerComplete(flag){
 				var ownerId = "";
 				var ownerName = "";
+				var ownerCompanyId = "";
 				if(flag == 'U'){
+					if (!p_ListOrderObject) {
+						alert(strLangJIHShareDox01);
+						return;
+					}
 					flagName = "<spring:message code='ezApprovalG.share04' />";
 					ownerId = p_ListOrderObject.getAttribute("_DATA2");
 					ownerName =  p_ListOrderObject.getAttribute("_DATA4");
+					ownerCompanyId=  p_ListOrderObject.getAttribute("_DATA9");
 				} else {
 					flagName = "<spring:message code='ezApprovalG.share05' />";
 					var treeView = new TreeView();
@@ -1381,6 +1388,7 @@
 			        var nodeIdx = treeView.GetSelectNode();
 			        ownerId = nodeIdx.GetNodeData("CN");
 			        ownerName = nodeIdx.GetNodeData("NODENAME");
+					ownerCompanyId = nodeIdx.GetNodeData("COMPANYID");
 				}
 				
 				if(!ownerId || ownerId == ""){
@@ -1390,6 +1398,7 @@
 		        
 		        opener.ownerId = ownerId;
 		        opener.ownerName = ownerName;
+				opener.ownerCompanyId = ownerCompanyId;
 		        opener.ownerType = flag;
 		        opener.viewShareList();
 		        window.close();

@@ -106,8 +106,13 @@
 		                KeEventControl(document.getElementById("textUser"));
 		            }
 		            try {
-		                    RetValue = opener.aprgongramline_cross_dialogArguments[0];
-		                    ReturnFunction = opener.aprgongramline_cross_dialogArguments[1];
+						if (isParentCommonArgsUsed()) {
+							RetValue = opener == null ? parent.ezCommon_cross_dialogArguments[0] : opener.ezCommon_cross_dialogArguments[0];
+							ReturnFunction = opener == null ? parent.ezCommon_cross_dialogArguments[1] : opener.ezCommon_cross_dialogArguments[1];
+						} else {
+		                    RetValue = parent.aprgongramline_cross_dialogArguments[0];
+		                    ReturnFunction = parent.aprgongramline_cross_dialogArguments[1];
+						}
 		            } catch (e) {
 		                try {
 		                    RetValue = opener.aprgongramline_cross_dialogArguments[0];
@@ -150,7 +155,7 @@
 		            InitListView();
 		        }
 		        catch (e) {
-		            alert("window_onload :: " + e.description);
+		            showAlert("window_onload :: " + e.description);
 		        }
 		    };
 		    function Tree_setconfig() {
@@ -189,7 +194,7 @@
 		            treeView.DataSource(xmlDom);
 		            treeView.DataBind("TreeView");
 		        } catch (ErrMsg) {
-		            alert(" TreeViewinitialize : " + ErrMsg.description);
+		            showAlert(" TreeViewinitialize : " + ErrMsg.description);
 		        }
 		    }
 		    function list2_onSel_DBclick() {
@@ -201,7 +206,7 @@
 		            APRLINEATTENDADDFunction(selnode[0], "PERSON");
 		        }
 		        catch (e) {
-		            alert("list2_onSel_DBclick :: " + e.description);
+		            showAlert("list2_onSel_DBclick :: " + e.description);
 		        }
 		    }
 		    function list2_onSel_Click() {
@@ -247,7 +252,7 @@
 		                }
 		        }
 		        catch (ErrMsg) {
-		            alert(ErrMsg.description);
+		            showAlert(ErrMsg.description);
 		        }
 		    }
 		    
@@ -322,11 +327,11 @@
 		        else
 		            return 2;
 		    }
-		    function CancelAprline_onclick() {
-		        if (ReturnFunction != null)
-		            ReturnFunction("cancel");
-		        window.close();
-		    }
+// 		    function CancelAprline_onclick() {
+// 		        if (ReturnFunction != null)
+// 		            ReturnFunction("cancel");
+// 		        window.close();
+// 		    }
 		    function AprlineDown_onclick() {
 		        APRLINESNDownFunction();
 		    }
@@ -355,7 +360,7 @@
 		            }
 		        }
 		        catch (e) {
-		            alert("AprlineAdd :: " + e.description);
+		            showAlert("AprlineAdd :: " + e.description);
 		        }
 		    }
 		    function AprlineDel_onclick() {
@@ -397,7 +402,7 @@
 		                GetReceptTempletList();
 		            }
 		        } catch (e) {
-		            alert("AprGongRamLine_Cross_ChangeReceptTab::" + e.description);
+		            showAlert("AprGongRamLine_Cross_ChangeReceptTab::" + e.description);
 		        }
 		    }
 		    var xmlhttp;
@@ -418,7 +423,7 @@
 		        	});
 		        	
 		        } catch (e) {
-		            alert("AprGongRamLine_Cross_GetReceptTempletList::" + e.description);
+		            showAlert("AprGongRamLine_Cross_GetReceptTempletList::" + e.description);
 		        }
 		    }
 		    function event_GetReceptTempletList(result) {
@@ -442,7 +447,7 @@
 		            xmlhttp = null;
 		        }
 		        catch (e) {
-		            alert("AprGongRamLine_Cross_event_GetReceptTempletList::" + e.description);
+		            showAlert("AprGongRamLine_Cross_event_GetReceptTempletList::" + e.description);
 		        }
 		    }
 		    function lvRecSaveList_onSel_Click() {
@@ -454,7 +459,7 @@
 		                GetReceptTempletInfo(pCurSelRow[0].getAttribute("DATA1"));
 		            }
 		        } catch (e) {
-		            alert("AprGongRamLine_Cross_lvRecSaveList_onSel_Click::" + e.description);
+		            showAlert("AprGongRamLine_Cross_lvRecSaveList_onSel_Click::" + e.description);
 		        }
 		    }
 		    var xmlHTTP;
@@ -475,7 +480,7 @@
 		        		}        			
 		        	});
 		        } catch (e) {
-		            alert("AprGongRamLine_Cross_GetReceptTempletInfo::" + e.description);
+		            showAlert("AprGongRamLine_Cross_GetReceptTempletInfo::" + e.description);
 		        }
 		    }
 		    function event_GetReceptTempletInfo(result) {
@@ -492,7 +497,7 @@
 		            xmlHTTP = null;
 		        }
 		        catch (e) {
-		            alert("AprGongRamLine_Cross_event_GetReceptTempletInfo::" + e.description);
+		            showAlert("AprGongRamLine_Cross_event_GetReceptTempletInfo::" + e.description);
 		        }
 		    }
 		    var temp_CheckAprDeptTempletSN;
@@ -524,7 +529,7 @@
 		                DelAprDeptTempletList(pUserID, pFormID, p_CheckAprDeptTempletSN);
 		            }
 		        } catch (e) {
-		            alert("AprGongRamLine_Cross_btn_AprDeptTempletDel_onclick::" + e.description);
+		            showAlert("AprGongRamLine_Cross_btn_AprDeptTempletDel_onclick::" + e.description);
 		        }
 		    }
 		
@@ -557,7 +562,7 @@
 		        		}
 		        	});
 		        } catch (e) {
-		            alert("AprGongRamLine_Cross_DelAprDeptTempletList::" + e.description);
+		            showAlert("AprGongRamLine_Cross_DelAprDeptTempletList::" + e.description);
 		        }
 		    }
 		    function btn_AprDeptTempletAdd_onclick() {
@@ -603,7 +608,7 @@
 		                pAprDeptTempletUseFlag = false;
 		            }
 		        } catch (e) {
-		            alert("AprGongRamLine_Cross_btn_AprDeptTempletAdd_onclick::" + e.description);
+		            showAlert("AprGongRamLine_Cross_btn_AprDeptTempletAdd_onclick::" + e.description);
 		        }
 		    }
 		    function AddToAprDeptFromAprDeptTemplet(p_CheckAprDeptTempletSN) {
@@ -627,7 +632,7 @@
 		        	
 		            SetGongRamList(result);
 		        } catch (e) {
-		            alert("AprGongRamLine_Cross_AddToAprDeptFromAprDeptTemplet::" + e.description);
+		            showAlert("AprGongRamLine_Cross_AddToAprDeptFromAprDeptTemplet::" + e.description);
 		        }
 		    }
 		    function SetGongRamList(pstrXML) {
@@ -872,10 +877,10 @@
 		            pAPRLINE.DataBind("APRLINE");
 
 					if (RetireList.length > 0) {
-						alert("[" + RetireList.join(",") + "] 는 퇴직자입니다.\n즐겨찾기 적용에서 제외됩니다.");
+						showAlert("[" + RetireList.join(",") + "] 는 퇴직자입니다.\n즐겨찾기 적용에서 제외됩니다.");
 					}
 		        } catch (e) {
-		            alert("AprGongRamLine_Cross_SetGongRamList::" + e.description);
+		            showAlert("AprGongRamLine_Cross_SetGongRamList::" + e.description);
 		        }
 		    }
 		    var aprlinetempletname_cross_dialogArguments = new Array();
@@ -897,9 +902,9 @@
 		
 		            if (ListViewLen.length == 0 || GetAttribute(ListViewLen[0], "id") == "pAPRLINE_TR_noItems") {
 		            	if (approvalFlag == "G") {
-			                alert("<spring:message code='ezApprovalG.pjj27'/>");
+			                showAlert("<spring:message code='ezApprovalG.pjj27'/>");
 		            	} else {
-			                alert("<spring:message code='ezApprovalG.hyj28'/>");
+			                showAlert("<spring:message code='ezApprovalG.hyj28'/>");
 		            	}
 		            	
 		                return;
@@ -957,7 +962,7 @@
 		                OpenAlertUI(pAlertContent);
 		            }
 		        } catch (e) {
-		            alert("AprGongRamLine_Cross_SetGongRamList::" + e.description);
+		            showAlert("AprGongRamLine_Cross_SetGongRamList::" + e.description);
 		        }
 		    }
 		    var pAprDeptTempletUseFlag;
@@ -973,7 +978,7 @@
 		                CreateNewAprDeptTemplet(ret);
 		            }
 		        } catch (e) {
-		            alert("AprGongRamLine_Cross_btn_AprDeptTempletSave_onclick_Complete::" + e.description);
+		            showAlert("AprGongRamLine_Cross_btn_AprDeptTempletSave_onclick_Complete::" + e.description);
 		        }
 		    }
 		    function isExistDept(ExtFlag) {
@@ -998,7 +1003,7 @@
 		            }
 		            return rtnVal;
 		        } catch (e) {
-		            alert("AprGongRamLine_Cross_isExistDept::" + e.description);
+		            showAlert("AprGongRamLine_Cross_isExistDept::" + e.description);
 		        }
 		    }
 		    function CreateNewAprDeptTemplet(p_AprDeptTempletName) {
@@ -1039,7 +1044,7 @@
 		
 		            GetReceptTempletList();
 		        } catch (e) {
-		            alert("AprGongRamLine_Cross_CreateNewAprDeptTemplet::" + e.description);
+		            showAlert("AprGongRamLine_Cross_CreateNewAprDeptTemplet::" + e.description);
 		        }
 		    }
 		    function CreateNewAprDeptTemplet_Complete() {
@@ -1069,7 +1074,7 @@
 		
 		            return xmlpara;
 		        } catch (e) {
-		            alert("AprGongRamLine_Cross_AprDeptTempletXmlParsing::" + e.description);
+		            showAlert("AprGongRamLine_Cross_AprDeptTempletXmlParsing::" + e.description);
 		        }
 		    }
 		    function APRDeptXMLParsing(APRDEPT, pDocID) {
@@ -1117,7 +1122,7 @@
 		            GetXml = GetXml + "</ROWS></LISTVIEWDATA>";
 		            return GetXml;
 		        } catch (e) {
-		            alert("AprGongRamLine_Cross_APRDeptXMLParsing::" + e.description);
+		            showAlert("AprGongRamLine_Cross_APRDeptXMLParsing::" + e.description);
 		        }
 		    }
 		    function removeAllReception() {
@@ -1131,7 +1136,7 @@
 		                if (DeleteState == "Y")
 		                    listview.DeleteRow(GetAttribute(CurSelRow[i], "id"));
 		            } catch (e) {
-		                alert(e.description);
+		                showAlert(e.description);
 		            }
 		        }
 		    }
@@ -1186,7 +1191,7 @@
 	    </h1>
 	    <div id="close">
             <ul>
-                <li><span onclick="CancelAprline_onclick()"></span></li>
+                <li><span onclick="btnClose_onclick()"></span></li>
             </ul>
         </div>
 	    <div class="portlet_tabpart02" style="margin:0px 0px 15px">

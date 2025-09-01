@@ -24,6 +24,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.egovframe.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +41,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
 @Service("EzScheduleAdminService")
-public class EzScheduleAdminServiceImpl implements EzScheduleAdminService{
+public class EzScheduleAdminServiceImpl extends EgovAbstractServiceImpl implements EzScheduleAdminService{
 	private static final Logger logger = LoggerFactory.getLogger(EzScheduleAdminServiceImpl.class);
 	
 	@Resource(name="EzScheduleAdminDAO")

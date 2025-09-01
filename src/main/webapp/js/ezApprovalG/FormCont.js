@@ -16,6 +16,10 @@ function GetFormInfo(ID, KIND, searchType, searchName) {
 		return;
 	}
 	
+	if (searchName !== null) {
+		searchName = searchName.replace(/\\/g, "\\\\").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/%/g, "\\%").replace(/'/g, "\\'").replace(/_/g, "\\_");
+	}
+	
 	$.ajax({
 		type : "POST",
 		url : "/admin/ezApprovalG/getFormList.do",

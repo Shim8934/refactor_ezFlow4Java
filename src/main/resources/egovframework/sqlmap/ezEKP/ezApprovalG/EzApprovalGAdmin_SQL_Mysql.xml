@@ -779,7 +779,7 @@
 						AND
 							companyid = #companyID#
 			<isNotEqual property="v_APPROVUSER" compareValue="" prepend="AND">
-					TBL_APRLINEINFO.aprmembername = #v_APPROVUSER#
+						TBL_APRLINEINFO.aprmembername LIKE CONCAT('%', #v_APPROVUSER#, '%')
 			</isNotEqual>
 				) aaa
 			ON
@@ -2444,7 +2444,7 @@
 				AND
 					TBL_APRLINEINFO.companyid = #companyID#
 		<isNotEqual property="v_APPROVUSER" compareValue="" prepend="AND">
-				TBL_APRLINEINFO.aprmembername = #v_APPROVUSER#
+				TBL_APRLINEINFO.aprmembername LIKE CONCAT('%', #v_APPROVUSER#, '%')
 		</isNotEqual>
 				) aaa
 			ON
@@ -4667,7 +4667,8 @@
 				WHEN A.OWNER_TYPE = 'D'
 				THEN C.DISPLAYNAME2
 			END AS ownerName2,
-			A.OWNER_TYPE as ownerType
+			A.OWNER_TYPE as ownerType,
+			PHYSICALDELIVERYOFFICENAME as ownerCompanyId
 		FROM
 			TBL_SHARE_DOC_DIR A
 		LEFT JOIN
@@ -4697,7 +4698,8 @@
 				WHEN A.SHARE_TYPE = 'D'
 				THEN C.DISPLAYNAME2
 			END AS shareName2,
-			A.SHARE_TYPE as shareType
+			A.SHARE_TYPE as shareType,
+			B.PHYSICALDELIVERYOFFICENAME as ownerCompanyId
 		FROM
 			TBL_SHARE_DOC_DIR A
 		LEFT JOIN
@@ -5589,18 +5591,18 @@
 			</isNotEmpty>
 			<isNotEmpty property="q_Map.qOptionWriterName" prepend="AND">
 				<isEqual property="q_Map.userLang" compareValue="2">
-					WRITERNAME2 LIKE CONCAT(CONCAT('%', #q_Map.qOptionWriterName#), '%')
+					TBL_ENDAPRDOCINFO.WRITERNAME2 LIKE CONCAT(CONCAT('%', #q_Map.qOptionWriterName#), '%')
 				</isEqual>
 				<isNotEqual property="q_Map.userLang" compareValue="2">
-					WRITERNAME LIKE CONCAT(CONCAT('%', #q_Map.qOptionWriterName#), '%')
+					TBL_ENDAPRDOCINFO.WRITERNAME LIKE CONCAT(CONCAT('%', #q_Map.qOptionWriterName#), '%')
 				</isNotEqual>
 			</isNotEmpty>
 			<isNotEmpty property="q_Map.qOptionWriterDeptName" prepend="AND">
 				<isEqual property="q_Map.userLang" compareValue="2">
-					WRITERDEPTNAME2 LIKE CONCAT(CONCAT('%', #q_Map.qOptionWriterDeptName#), '%')
+					TBL_ENDAPRDOCINFO.WRITERDEPTNAME2 LIKE CONCAT(CONCAT('%', #q_Map.qOptionWriterDeptName#), '%')
 				</isEqual>
 				<isNotEqual property="q_Map.userLang" compareValue="2">
-					WRITERDEPTNAME LIKE CONCAT(CONCAT('%', #q_Map.qOptionWriterDeptName#), '%')
+					TBL_ENDAPRDOCINFO.WRITERDEPTNAME LIKE CONCAT(CONCAT('%', #q_Map.qOptionWriterDeptName#), '%')
 				</isNotEqual>
 			</isNotEmpty>
 			<isNotEmpty property="q_Map.qOptionReceivedDate1" prepend="AND">

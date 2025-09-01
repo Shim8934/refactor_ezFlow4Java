@@ -3,6 +3,7 @@ package egovframework.ezEKP.ezEmail.web;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -37,7 +38,7 @@ import org.w3c.dom.Document;
 import com.sun.mail.imap.IMAPFolder;
 
 import egovframework.com.cmm.EgovMessageSource;
-import egovframework.com.cmm.service.EgovFileMngUtil;
+import egovframework.com.cmm.service.EzFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
@@ -65,7 +66,7 @@ import egovframework.let.utl.sim.service.EgovFileScrty;
  */
 
 @Controller
-public class EzEmailReceiptNotiController extends EgovFileMngUtil {
+public class EzEmailReceiptNotiController extends EzFileMngUtil {
 
 	private static final Logger logger = LoggerFactory.getLogger(EzEmailReceiptNotiController.class);
 
@@ -347,6 +348,8 @@ public class EzEmailReceiptNotiController extends EgovFileMngUtil {
 
 				String companyDomainName = ezCommonService.getCompanyConfig(loginInfo.getTenantId(), loginInfo.getCompanyID(), "DomainName");
 
+				cancelList.sort(Comparator.comparing(MailCancelVO::getReaderName));
+				
 				// cancelList
 				for (MailCancelVO vo : cancelList) {
 					if (!tempMailList.contains(vo.getReaderEmail())) {

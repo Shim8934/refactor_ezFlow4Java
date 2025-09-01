@@ -572,10 +572,12 @@
 			function window_onbeforeunload() {
 			    try {
 			        window.opener.openergetDocInfo();
-			    } catch (e) { }
-			    try {
-			        window.opener.Refresh_Window();
-			    } catch (e) { }
+			    } catch (e) {
+					window.parent.openergetDocInfo();
+				}
+			    // try {
+			    //     window.opener.Refresh_Window();
+			    // } catch (e) { }
 			}
 	
 		    function btnReturn_onclick() {
@@ -630,21 +632,21 @@
                 window.close();
 		    }
 		    
-			function btnMail_onclick() {
-			    var pheight = window.screen.availHeight;
-			    var pwidth = window.screen.availWidth;
-			    var pTop = (pheight - 656) / 2;
-			    var pLeft = (pwidth - 760) / 2;
-			
-			    if (useWebMail == "YES") {
-// 			        window.open("/myoffice/ezWmail/mail_write.aspx?DocHref=" + pFormHref + "&cmd=docsend&DocID=" + pDocID + "&TARGET=APPROVALG", "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = 660px, width = 760px, status = no, toolbar=no, menubar=no,location=no,resizable=1");
-			        window.open("/ezEmail/mailWrite.do?docHref=" + pFormHref + "&cmd=docsend&docID=" + pDocID + "&TARGET=APPROVALG", "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = 660px, width = 760px, status = no, toolbar=no, menubar=no,location=no,resizable=1");
-
-				}
-				else {
-			        window.open("/ezEmail/mailWrite.do?docHref=" + pFormHref + "&cmd=docsend&docID=" + pDocID + "&TARGET=APPROVALG", "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = 660px, width = 760px, status = no, toolbar=no, menubar=no,location=no,resizable=1");
-				}
-			}
+// 			function btnMail_onclick() {
+// 			    var pheight = window.screen.availHeight;
+// 			    var pwidth = window.screen.availWidth;
+// 			    var pTop = (pheight - 656) / 2;
+// 			    var pLeft = (pwidth - 760) / 2;
+//			
+// 			    if (useWebMail == "YES") {
+// // 			        window.open("/myoffice/ezWmail/mail_write.aspx?DocHref=" + pFormHref + "&cmd=docsend&DocID=" + pDocID + "&TARGET=APPROVALG", "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = 660px, width = 760px, status = no, toolbar=no, menubar=no,location=no,resizable=1");
+// 			        window.open("/ezEmail/mailWrite.do?docHref=" + pFormHref + "&cmd=docsend&docID=" + pDocID + "&TARGET=APPROVALG", "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = 660px, width = 760px, status = no, toolbar=no, menubar=no,location=no,resizable=1");
+//
+// 				}
+// 				else {
+// 			        window.open("/ezEmail/mailWrite.do?docHref=" + pFormHref + "&cmd=docsend&docID=" + pDocID + "&TARGET=APPROVALG", "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = 660px, width = 760px, status = no, toolbar=no, menubar=no,location=no,resizable=1");
+// 				}
+// 			}
 	
 			var tempSecurity = "";
 			var tempKeep = "";
@@ -741,7 +743,7 @@
 			    }
 			}
 	
-			var ezapprovalinfo_dialogArguments = new Array();
+			// var ezapprovalinfo_dialogArguments = new Array();
 			function btnApprovalInfo(pGubun) {
 			                gpGubun = pGubun; 
 			                var onlydocinfiview = false;
@@ -783,16 +785,18 @@
 						    if (tempItemCode != "")
 						        tempdocnumcode = tempItemCode;
 						    
-					        ezapprovalinfo_dialogArguments[0] = parameter;
-					        ezapprovalinfo_dialogArguments[1] = btnApprovalInfo_Complete;
-						    
-					       	var OpenWin = window.open("/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + gpGubun + "&orgCompanyID=" + orgCompanyID + "&docType=" + pDocType + "&ext=" + "hwp", 
-									"ezApprovalInfo-" + windowUuid, GetOpenWindowfeature(1144, 750));
-					       	try { OpenWin.focus(); } catch (e) { }
-
+					        // ezapprovalinfo_dialogArguments[0] = parameter;
+					        // ezapprovalinfo_dialogArguments[1] = btnApprovalInfo_Complete;
+						    //
+					       	// var OpenWin = window.open("/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + gpGubun + "&orgCompanyID=" + orgCompanyID + "&docType=" + pDocType + "&ext=" + "hwp", 
+							// 		"ezApprovalInfo-" + windowUuid, GetOpenWindowfeature(1144, 750));
+					       	// try { OpenWin.focus(); } catch (e) { }
+							ezCommon_cross_dialogArguments[0] = parameter;
+							showPopup("/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + gpGubun + "&orgCompanyID=" + orgCompanyID + "&docType=" + pDocType + "&ext=" + "hwp", 1144, 750, "ezApprovalInfo-" + windowUuid, GetOpenWindowfeature(1144, 750), btnApprovalInfo_Complete);
 			            }
 
 					    function btnApprovalInfo_Complete(ret) {
+							hidePopup();
 			 			    if (ret != undefined && ret[0] == "OK") {
 						        try {
 						            var savexmlhttp = createXMLHttpRequest();

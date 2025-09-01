@@ -94,6 +94,7 @@
 
 			var tenantID = "<c:out value ='${userInfo.tenantId}'/>";
 			var nonElecRec = "<c:out value ='${nonElecRec}'/>";
+			var ReturnFunction;
 
 		    $(function () {
 		    	/* 2022-07-29 홍승비 - 열람권한 체크는 초기 진입 시 한번만 진행 (관리자 > 전체 완료문서조회 > 관리자는 모든 문서 열람 가능) */
@@ -108,6 +109,12 @@
 	        		$(".approvalG").css("display","none");
 	        		$(".approval").css("display","");
 	        	}
+				  
+				try {
+					if (isParentCommonArgsUsed()) {
+						ReturnFunction = opener == null ? parent.ezCommon_cross_dialogArguments[1] : opener.ezCommon_cross_dialogArguments[1];
+					}
+				} catch (e) { }
 		      	
 		      	//감사문서도 재사용하지 못하도록 수정. 2020-03-16 홍대표.
 		      	if (docState == "012" || docState == "013" || docState == "014") {
@@ -208,7 +215,7 @@
                 if (ifrmPreViewH != null && window.self.frameElement.id == "ifrmPreViewH") {
                     ifrmPreViewH.src = "<spring:message code='main.kms4'/>";
                 } else {
-                    alert(strLang1139);
+                    showAlert(strLang1139);
                     btnClose_onclick();
 		        }
 		    }
@@ -339,10 +346,13 @@
 		        headerAction("open");
 		    	PrintClick("Cross", pDocID, "END");
 		    }
-		    function btnClose_onclick() {	    
-                window.close();
-                window.open('/blank.htm', "_self");
-		    }
+		    // function btnClose_onclick() {
+			// 	if (ReturnFunction != null) {
+			// 		ReturnFunction("cancel");
+			// 	}
+            //     window.close();
+            //     window.open('/blank.htm', "_self");
+		    // }
 		    var ezapropinion_cross_dialogArguments = new Array();
 		    function OpenInformationUI(pInformationContent, CompleteFunction) {
 		        var parameter = pInformationContent;
@@ -411,7 +421,7 @@
 		            var param = "status=0,menubar=0,scrollbars=0,resizable=1,height=" + heigth + ",width=" + width + ",top=" + top + ",left = " + left
 		            window.open(wfileLocation, "view", param);
 		        } catch (e) {
-		            alert("openwindow :: " + e.description);
+		            showAlert("openwindow :: " + e.description);
 		        }
 		    }
 		    
@@ -451,14 +461,16 @@
 		     	return; 
 		    }
 		 
-		    var writeboardselect_modal_dialogArguments = new Array();
+		    // var writeboardselect_modal_dialogArguments = new Array();
 		    function NewItem_onclick() {
-		        writeboardselect_modal_dialogArguments[1] = NewItem_onclick_Complete;
-		        var OpenWin = window.open("/ezBoard/writeBoardSelectModal.do", "WriteBoardSelect_Modal", GetOpenWindowfeature(355, 600));
-		        try { OpenWin.focus(); } catch (e) { }
+		        // writeboardselect_modal_dialogArguments[1] = NewItem_onclick_Complete;
+		        // var OpenWin = window.open("/ezBoard/writeBoardSelectModal.do", "WriteBoardSelect_Modal", GetOpenWindowfeature(355, 600));
+		        // try { OpenWin.focus(); } catch (e) { }
+				showPopup("/ezBoard/writeBoardSelectModal.do", 355, 600, "WriteBoardSelect_Modal", GetOpenWindowfeature(355, 600), NewItem_onclick_Complete);
 		    }
 		
 		    function NewItem_onclick_Complete(ret) {
+				hidePopup();
 		        if (typeof (ret) != "undefined") {
 		            pBoardID = ret[0];
 		
@@ -472,10 +484,11 @@
 		            var pLeft = (pwidth - 765) / 2;
 		            
 		            if (ret[2] == "2" || ret[2] == "3" || ret[2] == "4" || ret[2] == "7" || ret[2] == "8" || (ret[3] != "null" && ret[3] != null && ret[3] != "")) {
-		                alert(strLang1031);
+		                showAlert(strLang1031);
 		            }
 		            else {
-		                window.open("/ezBoard/boardNewItem.do?boardID=" + encodeURIComponent(pBoardID) + "&mode=new1&pbrdGbn=SiteNewBoard&pFromScreen=Mail&docID=" + pDocID + "&url=" + pDocHref + "&orgCompanyID=" + orgCompanyID, '', GetOpenWindowJun(765, 870));
+		                // window.open("/ezBoard/boardNewItem.do?boardID=" + encodeURIComponent(pBoardID) + "&mode=new1&pbrdGbn=SiteNewBoard&pFromScreen=Mail&docID=" + pDocID + "&url=" + pDocHref + "&orgCompanyID=" + orgCompanyID, '', GetOpenWindowJun(765, 870));
+						showPopup("/ezBoard/boardNewItem.do?boardID=" + encodeURIComponent(pBoardID) + "&mode=new1&pbrdGbn=SiteNewBoard&pFromScreen=Mail&docID=" + pDocID + "&url=" + pDocHref + "&orgCompanyID=" + orgCompanyID, 765, 870, "", GetOpenWindowJun(765, 870), hidePopup);
 		            }
 		        }
 		    }
@@ -504,7 +517,11 @@
                 // 문서정보를 무조건 완료문서 DB에서 가져와, 진행문서를 배부대장에서 조회하는 경우 발생하는 문서정보 조회불가 현상을 수정함
                 var initFlag = docAprEnd == "APR" ? "APR" : "END";
 		        //DivPopUpShow(420, 500, "/ezApprovalG/ezDocInfoGView.do?docID=" + pDocID + "&ingFlag=END"); 문서정보 새로 구현해서 주석
-		        DivPopUpShow(430, 530, "/ezApprovalG/ezDocInfoView.do?docID=" + pDocID + "&ingFlag=" + initFlag);
+				if (typeof approvalFlag !== "undefined" && approvalFlag == "G") {
+					DivPopUpShow(430, 400, "/ezApprovalG/ezDocInfoView.do?docID=" + pDocID + "&ingFlag=" + initFlag);
+				}else {
+					DivPopUpShow(430, 300, "/ezApprovalG/ezDocInfoView.do?docID=" + pDocID + "&ingFlag=" + initFlag);
+				}
 		    }
 		    function btnDocInfo_onclick_Complete() {
 		        DivPopUpHidden();
@@ -632,7 +649,7 @@
 		                }
 		            }
 		        } catch (e) {
-		            alert("putSignXML : " + e.description);
+		            showAlert("putSignXML : " + e.description);
 		            return false;
 		        }
 		        return retVal;
@@ -829,7 +846,7 @@
 		        
 		        if (formURL.substr(formURL.length - 3, formURL.length).toLowerCase() == "hwp") {
 		            if (CrossYN()) {
-		                alert(strLang1103);
+		                showAlert(strLang1103);
 		                return;
 		            } else {
 		                var openLocation = "/myoffice/ezApproval/ezViewHWP/ezDraftUI_HWP.aspx";
@@ -844,8 +861,13 @@
 		        
 		        openLocation += "&beforeDocID=" + pDocID;
 		        pListTypeValue = temppListTypeValue;
-		        var result = GetOpenWindow(openLocation, "", 1150, 950, "YES");
-		        window.close();
+				
+				if (!isTeamsDesktop()) {
+					var result = GetOpenWindow(openLocation, "", 1150, 950, "YES");
+					window.close();
+				} else {
+					parent.showPopupSlide(openLocation, 1150, 950, "", "", parent.hidePopupSlide);
+				}
 		    }
 		    
 		    var pReceiveSN = "";
@@ -909,7 +931,7 @@
 
 		                        signCnt = signCnt + 1;
 		                    }
-		                    catch (e) { alert(e.description); }
+		                    catch (e) { showAlert(e.description); }
 		                }
 		                else {
 		                    strimg = "<p style=\"FONT-WEIGHT:900;FONT-SIZE:10pt;FONT-FAMILY:" + strLang9 + "\">" + arr_userinfo[2] + "</p>";
@@ -943,14 +965,21 @@
 		    }
 		    
 		    function whoKyulRefresh() {
-		    	window.opener.location.reload();
-		    	window.opener.parent.frames["left"].getAprCountWHO();
-                window.close();
+		    	try {
+					window.opener.location.reload();
+					window.opener.parent.frames["left"].getAprCountWHO();
+				} catch (e) {
+					window.parent.location.reload();
+					window.parent.parent.frames["left"].getAprCountWHO();
+				}
+                // window.close();
+				btnClose_onclick();
 		    }
 			
 			function addRelatedCabinet() {
 				//* moon 2018.07.26
-				window.open("/ezCabinet/cabinetAddRelated.do?module=apprv", "addRelated", getOpenWindowfeature(480, 505));
+// 				window.open("/ezCabinet/cabinetAddRelated.do?module=apprv", "addRelated", getOpenWindowfeature(480, 505));
+				showPopup("/ezCabinet/cabinetAddRelated.do?module=apprv", 480, 505, "addRelated", getOpenWindowfeature(480, 505), hidePopup);
 			}
 			
 			function getOpenWindowfeature(popUpW, popUpH) {
@@ -1028,7 +1057,14 @@
 					} else {
 						return;
 					}
-				} catch (e) { }
+				} catch (e) {
+					if ((window.parent.g_sFlag == undefined && isDocAttach == "false") || (window.parent.g_sFlag != undefined && window.parent.g_sFlag == "m01") || (window.parent.g_sFlag != undefined && window.parent.g_sFlag == "docShare")) {
+						// 전자결재 > 완료문서, 기록물등록대장, 부서공유함에 적용 되도록 조건 추가
+						window.parent.openergetDocInfo();
+					} else {
+						return;
+					}
+				}
 			}
 			
 			function checkHeaderAction() {

@@ -1212,3 +1212,20 @@ var strLangDeptInbox = "부서수신함";
 
 var strLangAtachHIK_01 = "일반첨부파일은 총"; 
 var strLangAtachHIK_02 = "MB까지 가능합니다."; 
+
+/* 전자결재 사인 그리기 기능 */
+var strLangJIHSignDraw01 = "서명을 작성한 뒤 결재해주세요.";
+var strLangJIHSignDraw02 = "사인 저장 중 오류가 발생하였습니다.";
+
+var strLangKm01 = "문서를 회수하였습니다.";
+
+var strLangKMH02 = "일괄접수를 진행하시겠습니까?<br>상태가 회송인 문서, 시행문과 합의문 문서는<br>대상에서 제외됩니다.";
+var strLangKMH03 = "일괄접수자전결을 진행하시겠습니까?<br>상태가 회송인 문서, 시행문과 합의문 문서는<br>대상에서 제외됩니다.";
+
+/* 2025-06-19 김유진 -  전자결재 > 열람권한 */
+var strLangKYJ_IsPublic01 = "전체 열람";
+var strLangKYJ_IsPublic02 = "부서 열람";
+var strLangKYJ_IsPublic03 = "결재선 열람";
+
+var strLangJIHShareDox01 = "공유자와 공유대상자는 같은 회사에 소속되어 있어야 합니다."
+var strLangJIHShareDox02 = "공유자를 먼저 선택바랍니다."

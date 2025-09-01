@@ -68,7 +68,7 @@ function Draftinfo_ini() {
             }
         }
         catch (ErrMsg) {
-            alert(" Draftinfo_ini : " + ErrMsg.description + ErrMsg);
+        	showAlert(" Draftinfo_ini : " + ErrMsg.description + ErrMsg);
         }
         getMyGroupItem();
     }
@@ -118,7 +118,7 @@ function event_Draftinfo_ini() {
         xmlhttp = null;
     }
     catch (ErrMsg) {
-        alert(" Draftinfo_ini : " + ErrMsg.description + ErrMsg);
+    	showAlert(" Draftinfo_ini : " + ErrMsg.description + ErrMsg);
     }
 }
 
@@ -241,15 +241,11 @@ function getdocinfolist(i) {
     else
         document.getElementById("urgent").checked = false;
 
-    var temptRSecurity = document.getElementsByName("RSecurity");
+    var temptRSecurity = document.querySelector("#RSecurity");
     var temptRKeeptype = document.getElementsByName("RKeeptype");
     var temptisPublic = document.getElementsByName("isPublic");
-
-    for (Cnt = 0; Cnt < temptRSecurity.length; Cnt++) {
-        if (psecuritylevel == temptRSecurity[Cnt].value) {
-            temptRSecurity[Cnt].checked = true; break;
-        }
-    }
+    temptRSecurity.value = psecuritylevel;
+         
     for (Cnt = 0; Cnt < temptRKeeptype.length; Cnt++) {
         if (pkeeperiod == temptRKeeptype[Cnt].value) {
             temptRKeeptype[Cnt].checked = true; break;
@@ -279,7 +275,7 @@ function CodeSearch_onclick() {
     var SearchOPtion = GetAttribute(document.getElementById("selSearchOption")[document.getElementById("selSearchOption").selectedIndex], "id");
     var SearchValue = document.getElementById("txtCodeSearch").value;
     if (SearchValue.trim() == "") {
-        alert(strLangS554);
+    	showAlert(strLangS554);
         return;
     }
 
@@ -640,7 +636,7 @@ function getMyGroupItem()
        
     }
     catch (ErrMsg) {
-        alert(" Draftinfo_ini : " + ErrMsg.description + ErrMsg);
+    	showAlert(" Draftinfo_ini : " + ErrMsg.description + ErrMsg);
     }
 }
 function lvinfofrequencylist_onclick() {

@@ -1,12 +1,17 @@
 package egovframework.ezEKP.ezOrgan.service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import egovframework.ezEKP.ezNewPortal.vo.PortalUserSwitchVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganProxyVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
+import egovframework.ezEKP.ezOrgan.vo.TeamsOrganVO;
+import egovframework.let.user.login.vo.LoginVO;
+
+import javax.servlet.http.HttpServletRequest;
 
 public interface EzOrganService {
 	
@@ -145,4 +150,10 @@ public interface EzOrganService {
 	Optional<OrganUserVO> getUserInfo(int tenantId, String userId, String companyId, String deptId, String jobId, String lang) throws Exception;
 
 	List<OrganUserVO> getAllUserinfo(String userId, int tenantId) throws Exception;
+	
+	public TeamsOrganVO organMain(LoginVO userInfo, String device, String companyId, String permission, String deptId, String uselstcompany, int tenantId) throws Exception;
+
+	String getTotalTreeNodeInfo(LoginVO userInfo, String userId, String selectedUserId, String deptId, String topId, String propList, String langCode, String type, String adminFlag) throws Exception;
+
+	public List<Map<String, Object>> getSearchListForTeamsJson(String searchlist, String celllist, String proplist, String listtype, int i, String lang, String companyId, int tenantID, String noAddJob, String adminOrgan) throws Exception;
 }

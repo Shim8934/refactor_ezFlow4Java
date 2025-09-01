@@ -22,16 +22,26 @@
 	        var aprFlag = "<c:out value = '${aprFlag}' />";
 	        var approvalFlag = "<c:out value = '${approvalFlag}' />";
 	        
-	        var ReturnFucntion;
+	        var ReturnFunction;
 	        var ReturnQueryMap = new Map(); // subQuery를 대체하기 위한 맵 변수 (관리자단 전체완료문서 페이지에서만 사용)
 	        
 	        $(document).ready(function(){
 	            if (CrossYN()) {
-	                ReturnFucntion = opener.ezStatisticsSearch_Cross_dialogArguments[1];
+	                if (isParentCommonArgsUsed()) {
+						ReturnFunction = opener == null ? parent.ezCommon_cross_dialogArguments[1] : opener.ezCommon_cross_dialogArguments[1];
+					} else {
+						ReturnFunction = opener.ezStatisticsSearch_Cross_dialogArguments[1];
+					}
 	                
-	                if (typeof(opener.ezStatisticsSearch_QueryMap) != "undefined" && opener.ezStatisticsSearch_QueryMap != null) {
-	                	ReturnQueryMap = opener.ezStatisticsSearch_QueryMap;
-	                }
+	                try {
+						if (typeof(opener.ezStatisticsSearch_QueryMap) != "undefined" && opener.ezStatisticsSearch_QueryMap != null) {
+							ReturnQueryMap = opener.ezStatisticsSearch_QueryMap;
+						}
+	                } catch (e) {
+						if (typeof(parent.ezStatisticsSearch_QueryMap) != "undefined" && parent.ezStatisticsSearch_QueryMap != null) {
+							ReturnQueryMap = parent.ezStatisticsSearch_QueryMap;
+						}
+					}
 	            }
 	            
 	            var ua = navigator.userAgent;
@@ -239,31 +249,31 @@
 		        } */
 		        
 		        if (draftfrom != "" && draftto == "") {
-		        	OpenAlertUI("<spring:message code='ezApprovalG.kbm02'/>");
+		        	showAlert("<spring:message code='ezApprovalG.kbm02'/>");
 		        	return;
 		        } else if (draftfrom == "" && draftto != "" ) {
-		        	OpenAlertUI("<spring:message code='ezApprovalG.kbm01'/>");
+		        	showAlert("<spring:message code='ezApprovalG.kbm01'/>");
 		        	return;
 		        }
 		        
 		        if (apprfrom != "" && apprto == "") {
-		        	OpenAlertUI("<spring:message code='ezApprovalG.kbm04'/>");
+		        	showAlert("<spring:message code='ezApprovalG.kbm04'/>");
 		        	return;
 		        } else if (apprfrom == "" && apprto != "" ) {
-		        	OpenAlertUI("<spring:message code='ezApprovalG.kbm03'/>");
+					showAlert("<spring:message code='ezApprovalG.kbm03'/>");
 		        	return;
 		        }
 		        
 		        if (draftfrom != "" && draftto != "") {
 		            if (draftfrom > draftto) {
-		                OpenAlertUI("<spring:message code='ezApprovalG.psb03'/>");
+						showAlert("<spring:message code='ezApprovalG.psb03'/>");
 		                return;
 		            }
 		        }
 		
 		        if (apprfrom != "" && apprto != "") {
 		            if (apprfrom > apprto) {
-		                OpenAlertUI("<spring:message code='ezApprovalG.psb04'/>");
+						showAlert("<spring:message code='ezApprovalG.psb04'/>");
 		                return;
 		            }
 		        }
@@ -340,10 +350,10 @@
 		
 		        if (!chkVal) {
 		            RtnVal = "";
-		            OpenAlertUI("<spring:message code ='ezApprovalG.t1329' />");
+					showAlert("<spring:message code ='ezApprovalG.t1329' />");
 		        } else {
 		            if (CrossYN()) {
-		                ReturnFucntion(RtnVal);
+		                ReturnFunction(RtnVal);
 		            } else {
 		                window.returnValue = RtnVal;
 		            }
@@ -352,27 +362,27 @@
 		        }
 		    }
 		    
-		    var ezapralert_cross_dialogArguments = new Array();
-		    function OpenAlertUI(pAlertContent) {
-		        if (CrossYN()) {
-		            ezapralert_cross_dialogArguments[0] = pAlertContent;
-		            var ezAPRALERT_Cross = window.open("/ezApprovalG/ezAprAlert.do", "ezAPRALERT", GetOpenWindowfeature(330, 205));
-		            try { ezAPRALERT_Cross.focus(); } catch (e) {
-		            }
-		        } else {
-		            var parameter = pAlertContent;
-		            var url = "/ezApprovalG/ezAprAlert.do";
-		            var feature = "status:no;dialogWidth:330px;dialogHeight:205px;help:no;scroll:no;edge:sunken";
-		            var RtnVal = window.showModalDialog(url, parameter, feature);
-		        }
-		    }
-		    
-		    function OpenAlertUI_Complete() {
-		    }
-		    
-		    function btncancel_onclick() {
-		        window.close();
-		    }
+		    // var ezapralert_cross_dialogArguments = new Array();
+		    // function OpenAlertUI(pAlertContent) {
+		    //     if (CrossYN()) {
+		    //         ezapralert_cross_dialogArguments[0] = pAlertContent;
+		    //         var ezAPRALERT_Cross = window.open("/ezApprovalG/ezAprAlert.do", "ezAPRALERT", GetOpenWindowfeature(330, 205));
+		    //         try { ezAPRALERT_Cross.focus(); } catch (e) {
+		    //         }
+		    //     } else {
+		    //         var parameter = pAlertContent;
+		    //         var url = "/ezApprovalG/ezAprAlert.do";
+		    //         var feature = "status:no;dialogWidth:330px;dialogHeight:205px;help:no;scroll:no;edge:sunken";
+		    //         var RtnVal = window.showModalDialog(url, parameter, feature);
+		    //     }
+		    // }
+		    //
+		    // function OpenAlertUI_Complete() {
+		    // }
+		    //
+		    // function btncancel_onclick() {
+		    //     window.close();
+		    // }
 		/*
 		    function btn_FormSelect_onclick() {
 		        var parameter = new Array();
@@ -475,7 +485,7 @@
 		        }
 		        
 		        if(CrossYN()) {
-		            ReturnFucntion(RtnVal);
+					ReturnFunction(RtnVal);
 		        } else {
 		            window.returnValue = RtnVal;
 		        }
@@ -566,7 +576,7 @@
 			    }
 			    
 			    if (CrossYN()) {
-			        ReturnFucntion(RtnVal);
+					ReturnFunction(RtnVal);
 			    } else {
 			        window.returnValue = RtnVal;
 			    }
@@ -668,7 +678,7 @@
 		        }
 		        
 		        if (CrossYN()) {
-		            ReturnFucntion(RtnVal);
+					ReturnFunction(RtnVal);
 		        } else {
 		            window.returnValue = RtnVal;
 		        }
@@ -756,7 +766,7 @@
 	    <h1><spring:message code ='ezApprovalG.t1325' /></h1>
 	    <div id="close">
             <ul>
-                <li><span onclick="return btncancel_onclick()"></span></li>
+                <li><span onclick="return btnClose_onclick()"></span></li>
             </ul>
         </div>
 	    <table class="content">
@@ -833,5 +843,10 @@
 	        <a class="imgbtn"><span onclick="return btnWeekSearch_onclick()"><spring:message code ='ezApprovalG.t1337' /></span></a>
 	        <a class="imgbtn"><span onclick="return btnMonthSearch_onclick()"><spring:message code ='ezApprovalG.t1557' /></span></a>
 	    </div>
+		
+		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>
+		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
+			<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
+		</div>
 	</body>
 </html>

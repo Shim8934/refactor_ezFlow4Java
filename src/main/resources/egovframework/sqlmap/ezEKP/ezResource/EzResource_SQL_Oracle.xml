@@ -135,6 +135,8 @@
 		<result property="replyMailFg"			column="REPLY_MAIL_FG"		columnIndex="23"		nullValue="0"/>
 		<result property="resLocation"			column="RESLOCATION"			columnIndex="24"		nullValue=""/>
 		<result property="approveFlag"			column="APPROVEFLAG"			columnIndex="25"/>
+		<result property="resMaxDate"			column="RES_MAX_DATE"			columnIndex="26"/>
+		<result property="resMaxUserCnt"		column="RES_MAX_USER_CNT"		columnIndex="27"/>
 	</resultMap>
 	
 	<resultMap class="ResBrdVO" 					id="resBrdVO">
@@ -157,6 +159,8 @@
 		<result property="returnFlag"			column="RETURNFLAG"			columnIndex="17"/>
 		<result property="repeatFlag"			column="REPEATFLAG"			    columnIndex="18"/>
 		<result property="brdAccess"				column="BRD_ACCESS"			columnIndex="19"/>
+		<result property="resMaxDate"			column="RES_MAX_DATE"			columnIndex="20"/>
+		<result property="resMaxUserCnt"		column="RES_MAX_USER_CNT"		columnIndex="21"/>
 	</resultMap>
 	
 	<resultMap class="ResGetScheduleVO" 		id="resGetScheduleVO">
@@ -604,6 +608,7 @@
 					WHEN '1' THEN BRD_NM
 					ELSE BRD_NM2
 				END BRD_NM,
+				RES_MAX_USER_CNT,
 				APPROVEFLAG 
 			FROM
 				TBL_RS_BRD 
@@ -956,7 +961,7 @@
 						OWNERID,
 						CASE #v_lang# WHEN '2' THEN OWNERNM2 ELSE OWNERNM END AS OWNERNM,
 						CASE #v_lang# WHEN '2' THEN OWNERPOSITION2 ELSE OWNERPOSITION END AS OWNERPOSITION,
-						REPLY_MAIL_FG, RESLOCATION, APPROVEFLAG
+						REPLY_MAIL_FG, RESLOCATION, APPROVEFLAG, RES_MAX_DATE, RES_MAX_USER_CNT
 					FROM
 						TBL_RS_BRD  
 					WHERE
@@ -1013,7 +1018,9 @@
              	NVL(APPROVEFLAG, '0') APPROVEFLAG ,
              	NVL(RETURNFLAG, '0') RETURNFLAG ,
 				NVL(REPEATFLAG, '1') REPEATFLAG ,
-             	BRD_ACCESS 
+             	BRD_ACCESS ,
+             	RES_MAX_DATE ,
+             	RES_MAX_USER_CNT
         	FROM
         		TBL_RS_BRD 
 			WHERE
@@ -1130,7 +1137,9 @@
           		BRD_NM2 = RTRIM(#v_P_Brd_NM2#),
           		OWNDEPTNM2 = RTRIM(#v_P_ODeptNm2#),
           		OWNERNM2 = RTRIM(#v_P_OwnerNm2#),
-          		OWNERPOSITION2 = RTRIM(#v_P_OwnerPos2#)
+          		OWNERPOSITION2 = RTRIM(#v_P_OwnerPos2#),
+          		RES_MAX_DATE = #v_P_ResMaxDate#,
+          		RES_MAX_USER_CNT = #v_P_ResMaxUserCnt#
     		WHERE
     			BRD_ID = #v_P_Brd_ID#
     		AND
@@ -1184,7 +1193,7 @@
 			INSERT INTO TBL_RS_BRD ( 
 				BRD_UPPER, OWNDEPTID, OWNDEPTNM, OWNERID, OWNERNM, OWNERPOSITION, OWNERCALL, BRD_NM, RESLOCATION, BRD_EXPLAIN, BRD_COMPANY
       			, BRD_ID, BRD_GB, BRD_LEVEL, BRD_STEP, MAKEDATE, ATTACH_SIZE, BRD_GROUP, BRD_URL, BRD_ACCESS, BRD_POSTTERM, BRD_COUNT, BRD_REF, APPROVEFLAG
-      			, BRD_NM2, OWNDEPTNM2, OWNERNM2, OWNERPOSITION2, RETURNFLAG, REPEATFLAG, TENANT_ID
+      			, BRD_NM2, OWNDEPTNM2, OWNERNM2, OWNERPOSITION2, RETURNFLAG, REPEATFLAG, TENANT_ID, RES_MAX_DATE, RES_MAX_USER_CNT
       		)
         	VALUES ( 
         		#v_P_ClassGB#, RTRIM(#v_P_ODeptID#), RTRIM(#v_P_ODeptNm#), RTRIM(#v_P_OwnerID#), RTRIM(#v_P_OwnerNm#), RTRIM(#v_P_OwnerPos#)
@@ -1192,6 +1201,7 @@
         		,RTRIM(#v_Brd_GB#), RTRIM(#v_Brd_Level#), RTRIM(#v_Brd_Step#), TO_CHAR(SYS_EXTRACT_UTC(SYSTIMESTAMP),'YYYYMMDD')
         		,20, u'A00', u'', #v_Brd_Access#, 365, 0, 0, RTRIM(#v_P_Approve#)
       			,RTRIM(#v_P_Brd_NM2#), RTRIM(#v_P_ODeptNm2#), RTRIM(#v_P_OwnerNm2#), RTRIM(#v_P_OwnerPos2#), RTRIM(#v_P_Return#), RTRIM(#v_P_Repeat#), #tenantID#
+      			,#v_P_ResMaxDate#, #v_P_ResMaxUserCnt#
       		)
 		]]>		
 	</insert>
@@ -2598,7 +2608,9 @@
              	NVL(A.APPROVEFLAG, '0') APPROVEFLAG ,
              	NVL(A.RETURNFLAG, '0') RETURNFLAG ,
 				NVL(A.REPEATFLAG, '1') REPEATFLAG ,
-             	A.BRD_ACCESS
+             	A.BRD_ACCESS,
+				A.RES_MAX_DATE ,
+				A.RES_MAX_USER_CNT
 			FROM 
 				TBL_RS_BRD A
 			JOIN
@@ -2841,13 +2853,17 @@
 	    	CAT_NAME = #CAT_NAME# 
 	    WHERE 
 	    	CAT_ID = #CAT_ID#
+		AND
+			USER_ID = #USER_ID#
 	</update>
 	
-	<delete id="EzResourceDAO.delFavoriteCategory" parameterClass="String">
+	<delete id="EzResourceDAO.delFavoriteCategory" parameterClass="map">
 		DELETE FROM 
 			TBL_RS_FAV_CAT 
 		WHERE 
-			CAT_ID = #catId# 
+			CAT_ID = #CAT_ID#
+		AND
+		    USER_ID = #USER_ID#
 	</delete>
 	
 	<insert id="EzResourceDAO.insertBrdFavoriteCategory" parameterClass="map">
@@ -2898,6 +2914,8 @@
 	        TBL_RS_BRD.TENANT_ID = TBL_RS_CAT_BRD.TENANT_ID
 	    WHERE
 	        TBL_RS_CAT_BRD.CAT_ID = #catId#
+	    AND
+	        TBL_RS_CAT_BRD.USER_ID = #userID#
 	    ORDER BY
 	        TBL_RS_CAT_BRD.UPDATEDATE DESC
 	    ]]>
@@ -3090,4 +3108,23 @@
 		AND 
 			TENANT_ID = #tenantID#	
 	</delete>
+	
+	<select id="EzResourceDAO.selectResMaxDate" parameterClass="Map" resultClass="String">
+		SELECT
+			A.RES_MAX_DATE 
+		FROM
+			TBL_RS_BRD A
+		JOIN 
+			TBL_RS_SCHEDULE B
+		ON	
+			A.BRD_ID = B.OWNERID
+		WHERE
+    		B.OWNERID = #resourceID#
+    	AND
+    		B.TENANT_ID = #tenantID#
+    	AND
+    		B.COMPANYID = #companyID#
+    	AND 
+    		ROWNUM = 1
+	</select>
 </sqlMap>

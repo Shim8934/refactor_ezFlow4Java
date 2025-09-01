@@ -49,8 +49,13 @@
 		        pDeptID = "<c:out value = '${deptID}'/>";
 		
 		        try {
-		            RetValue = parent.getformcont_cross_dialogArguments[0];
-		            ReturnFunction = parent.getformcont_cross_dialogArguments[1];
+		            if (isParentCommonArgsUsed()) {
+						RetValue = opener == null ? parent.ezCommon_cross_dialogArguments[0] : opener.ezCommon_cross_dialogArguments[0];
+						ReturnFunction = opener == null ? parent.ezCommon_cross_dialogArguments[1] : opener.ezCommon_cross_dialogArguments[1];
+					} else {
+						RetValue = parent.getformcont_cross_dialogArguments[0];
+						ReturnFunction = parent.getformcont_cross_dialogArguments[1];
+					}
 		        } catch (e) {
 		            try {
 		                RetValue = opener.getformcont_cross_dialogArguments[0];
@@ -442,6 +447,8 @@
 		        if (type == "1") {
 		        	_searchType = document.getElementById('searchoption').selectedIndex;
 		        	_searchName = document.getElementById('forminfo').value;
+		        	_searchName = _searchName.replace(/\\/g, "\\\\").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/%/g, "\\%").replace(/'/g, "\\'").replace(/_/g, "\\_");
+
 		        }
 		        
 		    	$.ajax({
@@ -520,7 +527,7 @@
 		
 		        if (TreeIdx != "") {
 		            if (document.getElementById('forminfo').value == "") {
-		                alert("<spring:message code='ezApprovalG.t1160'/>");
+		            	showAlert("<spring:message code='ezApprovalG.t1160'/>");
 		                return;
 		            }
 		
@@ -533,10 +540,6 @@
 		                var KIND = document.getElementById('FromList').value;
 		                var searchtype = document.getElementById('searchoption').selectedIndex;
 		                var searchname = document.getElementById('forminfo').value;
-		                
-		                if (searchname.match('%') == '%') {
-		                	searchname = searchname.concat("\\");
-		                }
 		
 		                GetFormInfo("ALL", KIND, searchtype, searchname);
 		            }
@@ -557,6 +560,8 @@
 				if (type == "1") {
 					_searchType = document.getElementById('searchoption').selectedIndex;
 					_searchName = document.getElementById('forminfo').value;
+					_searchName = _searchName.replace(/\\/g, "\\\\").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/%/g, "\\%").replace(/'/g, "\\'").replace(/_/g, "\\_");
+
 				}
 
 				$.ajax({

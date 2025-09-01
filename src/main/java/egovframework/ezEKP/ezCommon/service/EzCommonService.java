@@ -221,7 +221,9 @@ public interface EzCommonService {
 	public void createMailTemplateSequence() throws Exception;
 
 	public void createJmochaMailboxProgress() throws Exception;
-	
+
+	void addMailboxProgressStateColumns();
+
 	public void createWebfolderFileUserTable();
 	
 	public void insertApprContainterConfig() throws Exception;
@@ -588,5 +590,79 @@ public interface EzCommonService {
 	public void insertUseSaasYN() throws Exception;
 
 	public void inserExtLargeFilesever() throws Exception;
+	
+	public void createJournalListLang() throws Exception;
+	
+	public void insertJournalListLang() throws Exception;
 
+	public String getMobileLang(String nextUserID, int tenantID) throws Exception;
+	
+	// 2025-03-21 권기혁 - 일정관리환경설정 기본 화면 사용 여부 컬럼 추가
+	public void alterScheduleDefaultViewCheck()throws Exception;
+
+	// 2025-04-21 조수빈 - 기본 일정(개인, 부서, 회사)별 사용자 설정 값 저장 테이블 추가
+	public void createUserScheduleTypeConfigTable() throws Exception;
+
+	// 2024-12-05 한태훈 - 게시판 > 게시판 버전관리 테이블 추가
+	public void createTblBoardModifyHistory() throws Exception;
+
+	/* 2024-07-22 양지혜 - 관리자 > 전자결재 > 발송현황 메뉴 표출여부 */
+	public void insertUseSendOutState() throws Exception;
+    
+	public String getMoveItemURL(String type, String gubun, String boardId, String itemId) throws Exception;
+
+	// 2025-06-16 이혜림 - 게시판 > 본문 크기 컬럼 추가
+	public void addBoardContentSize() throws Exception;
+
+	// 2024-09-12 황인경 - 모바일 메뉴 권한 별도 생성으로 인한 포틀릿 데이터 변경
+	public void updateMobilePortletMenuId() throws Exception;
+	
+	// 2024-08-27 유길상 - 자원관리 > 자원등록 > 최대 예약 가능 기간 컬럼 추가
+	public void alterTblRsBrdResMaxDate() throws Exception;
+	
+	// 2024-08-27 유길상 - 자원관리 > 자원등록 > 정원 컬럼 추가
+	public void alterTblRsBrdResMaxUserCnt() throws Exception;
+	
+	/* 2023-10-30 조소정 - 게시판 사용안함 여부 컬럼 추가 */
+    public void addBoardNotUsedFlag() throws Exception;
+
+	// 2025-07-07 이유정 - 일정관리 > 임원일정 조회 가능 범위 설정 컨피그 추가
+	public void insertExecutiveScheduleConfig() throws Exception;
+
+    // 2025-07-10 이유정 - 커뮤니티 > 회원등급 추가 (회원테이블 등급컬럼 추가)
+	public void alterTblClubUserGradeColumn() throws Exception;
+
+	// 2025-07-10 이유정 - 커뮤니티 > 회원등급 추가 (커뮤니티테이블 최초가입시 등급, 회원목록 조회등급 컬럼 추가)
+	public void alterTblClubJoinGradeColumn() throws Exception;
+
+	// 2025-07-10 이유정 - 커뮤니티 > 회원등급 테이블 추가
+	public void createTblCommunityGradeTable() throws Exception;
+
+	// 2025-07-10 이유정 - 커뮤니티 > 기존 데이터 회원등급에 맞춰 세팅
+	public void settingCommunityGradeData() throws Exception;
+
+	// 2025-07-15 이유정 - 커뮤니티 > 운영자권한 컬럼 추가
+	public void alterTblClubUserAdminAuthColumn() throws Exception;
+
+	//2025-02-13 김대현 - 메일 > 메일 미리보기 기능 추가
+	public void addMailPreviewConfig() throws Exception;
+
+	// 2025-07-23 이유정 - 커뮤니티 > 회원탈퇴일자 컬럼 추가
+	public void alterTblClubUserWithdrawDateColumn() throws Exception;
+
+	public void alterTblUsermasterForTeams() throws Exception;
+
+	public void createAuthTokenTable() throws Exception;
+
+	public void createUserPresenceTable() throws Exception;
+
+	// 2025-08-05 이유정 - 게시판 > 게시글 주소복사 컬럼 추가
+	public void alterTblBoardInfoUrlCopyFlag() throws Exception;
+
+	// 2025-07-10 이혜림 - 게시판 > 게시판 리스트 타입 컬럼 추가
+	public void addBoardUsrListShowType() throws Exception;
+
+	public void addBoardListShowType() throws Exception;
+	
+	public void updateGuestAccessibleUris() throws Exception;
 }

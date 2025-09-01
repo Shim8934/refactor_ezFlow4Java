@@ -261,7 +261,7 @@ public class EzCommunityAdminController {
 		if (clubList.size() > 0) {
 			for(CommunityClubVO club : clubList) {
 				club.setUserName(ezCommunityAdminService.getUserName(club.getC_SysopID().trim(), primary, companyId, tenantId));
-				club.setC_MemberCnt(ezCommunityService.commViewMemberGet2(club.getC_ClubNo(), primary, "", "", companyId, tenantId));
+				club.setC_MemberCnt(ezCommunityService.commViewMemberGet2(club.getC_ClubNo(), primary, "", "", companyId, tenantId, "", "", userInfo.getOffset()));
 				club.setItemCnt(ezCommunityService.categoryListItemCntGet(club.getC_ClubNo(), tenantId));
 			}
 		}

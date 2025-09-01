@@ -239,3 +239,9 @@ var strLangMJS01 = "拖曳和拖放可以更改文件的顺序。";
 /* 2025-02-07 기민혁 - 반복자원 체크 메세지 추가 */
 var strLangKMH1 = "该资源不允许重复预订。";
 var strLangKMH2 = "发生了错误";
+
+// 2024-08-26 유길상 - 자원등록 > 최대 예약 가능 기간, 정원
+var strLangMaxYGS01 = "已超出最大可预约期限。";
+var strLangMaxYGS02 = "定员";
+var strLangMaxYGS03 = "人";
+var strLangMaxYGS04 = "请输入定员人数。";

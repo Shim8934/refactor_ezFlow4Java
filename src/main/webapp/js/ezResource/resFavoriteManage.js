@@ -118,7 +118,7 @@ function getMainTreeUI(catList, treeMain) {
                 }
                 brdIcon.classList.add(classStr);
                 
-                if (lang && lang != 1) {
+                if (lang != "") {
                      brdIcon.classList.add("multiLang");
                 }
                 
@@ -127,7 +127,14 @@ function getMainTreeUI(catList, treeMain) {
 
                 var brdNode = document.createElement("span");
                 
-                brdNode.innerHTML = brdList[j]["brdNm" + lang];
+                // if (!lang) {
+                //     lang = "";
+                // } 
+                if(lang == '1'){
+                    brdNode.innerHTML = brdList[j]["brdNm"];
+                }else{
+                    brdNode.innerHTML = brdList[j]["brdNm2"];
+                }
                 brdNode.classList.add("node_normal");
                 brdNode.classList.add("brd_node");
                 brdNode.style.cursor = "pointer";

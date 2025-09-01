@@ -6,17 +6,22 @@ import java.io.IOException;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
+import java.util.Set;
 import java.util.TimeZone;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
+import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
 import javax.mail.Address;
@@ -31,12 +36,15 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeUtility;
 import javax.mail.search.FlagTerm;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import egovframework.com.cmm.service.Globals;
+import egovframework.ezEKP.ezAI.util.AICommonUtil;
 import egovframework.ezEKP.ezEmail.vo.*;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -44,6 +52,7 @@ import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
@@ -54,9 +63,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -104,6 +113,9 @@ public class EzEmailMailListController {
 
 	@Autowired
 	private Properties config;
+
+	@Autowired
+	private AICommonUtil aICommonUtil;
 
     @Resource(name="egovMessageSource")
     private EgovMessageSource egovMessageSource;    
@@ -173,6 +185,7 @@ public class EzEmailMailListController {
 		String useMailConfirm = ezCommonService.getTenantConfig("useMailConfirm", tenantId);
 		String useHackingMailReport = ezCommonService.getTenantConfig("useHackingMailReport", tenantId);
 		String useSecureMail = StringUtils.defaultIfEmpty(ezCommonService.getTenantConfig("USE_SECUREMAIL", tenantId), "NO");
+		boolean usePreviewMail = "YES".equalsIgnoreCase(ezCommonService.getTenantConfig("usePreviewMail", tenantId));
 		String userTimeSet = userInfo.getOffset();
 		String offsetMin = commonUtil.getMinuteUTC(userTimeSet);
 		String serverName = userInfo.getServerName();
@@ -302,15 +315,28 @@ public class EzEmailMailListController {
 		model.addAttribute("offsetMin", offsetMin);
 		model.addAttribute("serverName", serverName);
 		model.addAttribute("useSecureMail", useSecureMail);
+		model.addAttribute("usePreviewMail", usePreviewMail);
+
+		// AI 첨부파일 이름 최대 길이 - 기존 메일과 동일한 값 사용
+		String attachFileNameMaxLength = ezCommonService.getTenantConfig("attachFileNameMaxLength", userInfo.getTenantId());
+		// AI 사용여부 확인
+		boolean useAI = aICommonUtil.checkUseAI(userInfo.getTenantId());
+		// AI 챗봇 첨부파일 최대용량
+		String aiAttachMBSize = "10";//ezCommonService.getTenantConfig("aiAttachMBSize", -99); // 모든 테넌트 공통 값
+
+		model.addAttribute("useAI", useAI);
+		model.addAttribute("attachFileNameMaxLength", attachFileNameMaxLength);
+		model.addAttribute("aiAttachMBSize", aiAttachMBSize);
+
 
 		logger.debug("folderName={}, url={}, folderType={}, isSentItems={}, userLang={},"
 					+ " userId={}, domainName={}, useEditor={}, useOcs={}, importanceColor={},"
 					, folderName, url, folderType, isSentItems, userInfo.getLang()
 					, userInfo.getId(), domainName, useEditor, useOcs, importanceColor);
 		logger.debug("UseEncryptZipForEmail={}, useMailBoxBackUp={}, useCountryIP={}, useMailConfirm={}, useHackingMailReport={},"
-					+ " offsetMin={}, mailGeneral={}, useSecureMail={}"
+					+ " offsetMin={}, mailGeneral={}, useSecureMail={}, usePreviewMail={}"
 					, useEncryptZipForEmail, useMailBoxBackUp, useCountryIP, useMailConfirm, useHackingMailReport
-					, offsetMin, mailGeneral, useSecureMail);
+					, offsetMin, mailGeneral, useSecureMail, usePreviewMail);
 		
 		logger.debug("showMailList ended.");
 		
@@ -615,7 +641,7 @@ public class EzEmailMailListController {
 
 					sb.append(String.format("<sender><![CDATA[%s]]></sender>", name));
 					sb.append(String.format("<readdt><![CDATA[%s]]></readdt>", readDate));
-					sb.append(String.format("<msgto><![CDATA[%s]]></msgto>", msgto));
+					sb.append(String.format("<msgto><![CDATA[%s]]></msgto>", msgto.replace("]]>", "]]]]><![CDATA[>")));
 					sb.append(String.format("<recipientCount><![CDATA[%d]]></recipientCount>", addressList.size()));
 
 					// subject
@@ -641,10 +667,10 @@ public class EzEmailMailListController {
 						htmlBody = htmlBody.substring(0, minLen);
 
 						String preview = "<br/><span style='font-weight:normal;font-size:9pt;color:gray'>" + htmlBody + "</span>";
-						sb.append(String.format("<subject><![CDATA[%s]]></subject>", subject + preview));
+						sb.append(String.format("<subject><![CDATA[%s]]></subject>", (subject + preview).replace("]]>", "]]]]><![CDATA[>")));
 					}
 					else {
-						sb.append(String.format("<subject><![CDATA[%s]]></subject>", subject));
+						sb.append(String.format("<subject><![CDATA[%s]]></subject>", subject.replace("]]>", "]]]]><![CDATA[>")));
 					}
 
 					// received date
@@ -668,6 +694,8 @@ public class EzEmailMailListController {
 							sb.append("<contentclass><![CDATA[IPM.Note]]></contentclass>");
 						}
 					}
+					sb.append(String.format("<mailConfirm><![CDATA[%s]]></mailConfirm>", mailInfo.get("MAIL_IS_CONFIRMED").equals("1") ? true : false));
+					sb.append(String.format("<tags><![CDATA[%s]]></tags>", mailInfo.get("TAGS")));
 
 					sb.append("</response>");
 				}
@@ -1291,7 +1319,7 @@ public class EzEmailMailListController {
 					sb.append(String.format("<systemCountryCode><![CDATA[%s]]></systemCountryCode>", systemCountryCode.toLowerCase()));
 					sb.append(String.format("<useCountryIP><![CDATA[%s]]></useCountryIP>", useCountryIP));
 					sb.append(String.format("<sender><![CDATA[%s]]></sender>", name));
-					sb.append(String.format("<msgto><![CDATA[%s]]></msgto>", msgto));
+					sb.append(String.format("<msgto><![CDATA[%s]]></msgto>", msgto.replace("]]>", "]]]]><![CDATA[>")));
 	
 					// subject
 					String subject =  mailInfo.get("SUBJECT");								
@@ -1316,10 +1344,10 @@ public class EzEmailMailListController {
 						htmlBody = htmlBody.substring(0, minLen);
 						
 						String preview = "<br/><span style='font-weight:normal;font-size:9pt;color:gray'>" + htmlBody + "</span>";
-						sb.append(String.format("<subject><![CDATA[%s]]></subject>", subject + preview));
+						sb.append(String.format("<subject><![CDATA[%s]]></subject>", (subject + preview).replace("]]>", "]]]]><![CDATA[>")));
 					}
 					else {
-						sb.append(String.format("<subject><![CDATA[%s]]></subject>", subject));
+						sb.append(String.format("<subject><![CDATA[%s]]></subject>", subject.replace("]]>", "]]]]><![CDATA[>")));
 					}
 					
 					// received date
@@ -1351,7 +1379,8 @@ public class EzEmailMailListController {
 					}
 					
 					sb.append(String.format("<mailConfirm><![CDATA[%s]]></mailConfirm>", mailInfo.get("MAIL_IS_CONFIRMED").equals("1") ? true : false));
-					
+					sb.append(String.format("<tags><![CDATA[%s]]></tags>", mailInfo.get("TAGS")));
+
 					sb.append("</response>");
 				}
 				
@@ -3353,8 +3382,9 @@ public class EzEmailMailListController {
 			pageStartNum = pageStartNum > pageMax ? pageMax : pageStartNum;
 			
 			JSONArray array = ezEmailService.getApprMailList(tenantId, companyId, type, userId, lang, pageStartNum,	listCount, domainName);
-			JSONArray array2 = ezEmailService.setUTCtoUserTime(array, userInfo.getOffset(), tenantId);
-			resultArry = ezEmailService.setHref(array2);
+			/*JSONArray array2 = ezEmailService.setUTCtoUserTime(array, userInfo.getOffset(), tenantId);
+			resultArry = ezEmailService.setHref(array2);*/
+			resultArry = ezEmailService.formatApprEmail(array, userInfo.getOffset(), tenantId, null);
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		}
@@ -3416,9 +3446,10 @@ public class EzEmailMailListController {
 			pageStartNum = pageStartNum > pageMax ? pageMax : pageStartNum;
 			
 			JSONArray array = ezEmailService.getApprMailList(tenantId, companyId, type, userId, lang, pageStartNum,	listCount, domainName);
-			JSONArray array2 = ezEmailService.setUTCtoUserTime(array, userInfo.getOffset(), tenantId);
+			/*JSONArray array2 = ezEmailService.setUTCtoUserTime(array, userInfo.getOffset(), tenantId);
 			JSONArray array3 = ezEmailService.setHref(array2);
-			resultArry = ezEmailService.setStateByLocale(array3, locale);
+			resultArry = ezEmailService.setStateByLocale(array3, locale);*/
+			resultArry = ezEmailService.formatApprEmail(array, userInfo.getOffset(), tenantId, locale);
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		}
@@ -3485,9 +3516,10 @@ public class EzEmailMailListController {
 			pageStartNum = pageStartNum > pageMax ? pageMax : pageStartNum;
 			
 			JSONArray array = ezEmailService.getApprMailList(tenantId, companyId, type, vUserId, lang, pageStartNum, listCount, domainName);
-			JSONArray array2 = ezEmailService.setUTCtoUserTime(array, userInfo.getOffset(),tenantId);
+			/*JSONArray array2 = ezEmailService.setUTCtoUserTime(array, userInfo.getOffset(),tenantId);
 			JSONArray array3 = ezEmailService.setApprover(array2, locale);
-			resultArry = ezEmailService.setHref(array3);
+			resultArry = ezEmailService.setHref(array3);*/
+			resultArry = ezEmailService.formatApprEmail(array, userInfo.getOffset(), tenantId, null);
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		}
@@ -3537,6 +3569,26 @@ public class EzEmailMailListController {
 		logger.debug("apprSetCancel userId={}, href={}, hrefUserId={}, uid={}, applicantId={}, applicantEmail={}",
 				userId, href, hrefUserId, uid, applicantId, applicantEmail);
 
+		// 데이터 생성
+		List<Map<String, Object>> approvalDataList = new ArrayList<>();
+		Map<String, Object> approvalData = new HashMap<>();
+		approvalData.put("tenantId", tenantId);
+		approvalData.put("companyId", companyId);
+		approvalData.put("uid", uid);
+		approvalData.put("applicantId", applicantId);
+		approvalData.put("applicantEmail", applicantEmail);
+		approvalData.put("state", "pending");
+
+		approvalDataList.add(approvalData);
+
+
+		// 메일이 대기 상태인지 check
+		int checkMail = ezEmailService.checkApprHistoryAll(tenantId, companyId, userId, approvalDataList);
+	
+		if (checkMail > 0) { // 1: 이미 처리된 메일이 있음
+			return "DONE";
+		}
+
 		int resultInt = ezEmailService.setApprMailCancel(loginCookie, applicantEmail, uid);
 
 		if (resultInt != 0) {
@@ -3568,32 +3620,62 @@ public class EzEmailMailListController {
 		// param
 		String[] hrefArray = request.getHrefArray();
 
-		for(String encryptedHref : hrefArray) {
-			// decrypt & mailbox/uid
-			String href = egovFileScrty.decryptAES(encryptedHref);
-			String hrefUserId = href.split("/")[0].replaceFirst("^Sent\\.", "");
-			long uid = Long.parseLong(href.split("/")[1]);
+		// 데이터 수집 단계
+		List<Map<String, Object>> approvalDataList = new ArrayList<>();
 
-			// 신청자 정보
-			String applicantId = hrefUserId;
-			String applicantEmail = hrefUserId + "@" + domainName;
-			OrganUserVO applicantVO = ezOrganAdminService.getUserInfo(hrefUserId, "1", tenantId);
-			if (applicantVO != null) {
-				applicantId = applicantVO.getCn();
-				applicantEmail = applicantId + "@" + domainName;
+		try {
+			for (String encryptedHref : hrefArray) {
+				// decrypt & mailbox/uid
+				String href = egovFileScrty.decryptAES(encryptedHref);
+				String hrefUserId = href.split("/")[0].replaceFirst("^Sent\\.", "");
+				long uid = Long.parseLong(href.split("/")[1]);
+
+				// 신청자 정보
+				String applicantId = hrefUserId;
+				String applicantEmail = hrefUserId + "@" + domainName;
+				OrganUserVO applicantVO = ezOrganAdminService.getUserInfo(hrefUserId, "1", tenantId);
+				if (applicantVO != null) {
+					applicantId = applicantVO.getCn();
+					applicantEmail = applicantId + "@" + domainName;
+				}
+
+				logger.debug("apprSetApproval userId={}, href={}, hrefUserId={}, uid={}, applicantId={}, applicantEmail={}",
+						userId, href, hrefUserId, uid, applicantId, applicantEmail);
+
+				// 데이터 생성
+				Map<String, Object> approvalData = new HashMap<>();
+				approvalData.put("tenantId", tenantId);
+				approvalData.put("companyId", companyId);
+				approvalData.put("uid", uid);
+				approvalData.put("applicantId", applicantId);
+				approvalData.put("applicantEmail", applicantEmail);
+				approvalData.put("state", "pending");
+				approvalData.put("apprMailFlag", "normal");
+
+				approvalDataList.add(approvalData);
 			}
 
-			logger.debug("apprSetApproval userId={}, href={}, hrefUserId={}, uid={}, applicantId={}, applicantEmail={}",
-					userId, href, hrefUserId, uid, applicantId, applicantEmail);
-
-			int resultInt = ezEmailService.setApprMailApproval(loginCookie, applicantEmail, uid);
-			if (resultInt != 0) {
-				errorInt++;
+			// 메일이 대기 상태인지 check
+			int checkMail = ezEmailService.checkApprHistoryMultiple(tenantId, companyId, userId, approvalDataList);
+			if (checkMail > 0) { // 1: 이미 처리된 메일이 있음
+				return "DONE";
 			}
-		}
 
-		if (errorInt > 0) {
-			returnValue = "ERROR_" + errorInt;
+			// 처리 단계
+			for (Map<String, Object> approvalData : approvalDataList) {
+				int resultInt = ezEmailService.setApprMailApproval(loginCookie, (String) approvalData.get("applicantEmail"), (Long) approvalData.get("uid"));
+
+				if (resultInt != 0) {
+					errorInt++;
+				}
+			}
+
+			if (errorInt > 0) {
+				returnValue = "ERROR_" + errorInt;
+			}
+		} catch (Exception e) {
+			logger.error("apprSetApproval error", e);
+			returnValue = "Exception";
 		}
 
 		logger.debug("apprSetApproval ended. returnValue=" + returnValue);
@@ -3634,32 +3716,62 @@ public class EzEmailMailListController {
 		String[] hrefArray = request.getHrefArray();
 		String memo = request.getMemo().replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("&", "&amp;");
 
-		for(String encryptedHref : hrefArray) {
-			// decrypt & mailbox/uid
-			String href = egovFileScrty.decryptAES(encryptedHref);
-			String hrefUserId = href.split("/")[0].replaceFirst("^Sent\\.", "");
-			long uid = Long.parseLong(href.split("/")[1]);
+		// 데이터 수집 단계
+		List<Map<String, Object>> approvalDataList = new ArrayList<>();
 
-			// 신청자 정보
-			String applicantId = hrefUserId;
-			String applicantEmail = hrefUserId + "@" + domainName;
-			OrganUserVO applicantVO = ezOrganAdminService.getUserInfo(hrefUserId, "1", tenantId);
-			if (applicantVO != null) {
-				applicantId = applicantVO.getCn();
-				applicantEmail = applicantId + "@" + domainName;
+		try {
+			for(String encryptedHref : hrefArray) {
+				// decrypt & mailbox/uid
+				String href = egovFileScrty.decryptAES(encryptedHref);
+				String hrefUserId = href.split("/")[0].replaceFirst("^Sent\\.", "");
+				long uid = Long.parseLong(href.split("/")[1]);
+	
+				// 신청자 정보
+				String applicantId = hrefUserId;
+				String applicantEmail = hrefUserId + "@" + domainName;
+				OrganUserVO applicantVO = ezOrganAdminService.getUserInfo(hrefUserId, "1", tenantId);
+				if (applicantVO != null) {
+					applicantId = applicantVO.getCn();
+					applicantEmail = applicantId + "@" + domainName;
+				}
+	
+				logger.debug("apprSetRejectAction userId={}, href={}, hrefUserId={}, uid={}, applicantId={}, applicantEmail={}",
+						userId, href, hrefUserId, uid, applicantId, applicantEmail);
+	
+				// 데이터 생성
+				Map<String, Object> approvalData = new HashMap<>();
+				approvalData.put("tenantId", tenantId);
+				approvalData.put("companyId", companyId);
+				approvalData.put("uid", uid);
+				approvalData.put("applicantId", applicantId);
+				approvalData.put("applicantEmail", applicantEmail);
+				approvalData.put("state", "pending");
+				approvalData.put("apprMailFlag", "normal");
+	
+				approvalDataList.add(approvalData);
 			}
-
-			logger.debug("apprSetRejectAction userId={}, href={}, hrefUserId={}, uid={}, applicantId={}, applicantEmail={}",
-					userId, href, hrefUserId, uid, applicantId, applicantEmail);
-
-			int resultInt = ezEmailService.setApprMailReject(loginCookie, applicantEmail, uid, memo);
-			if (resultInt != 0) {
-				errorInt++;
+	
+			// 메일이 대기 상태인지 check
+			int checkMail = ezEmailService.checkApprHistoryMultiple(tenantId, companyId, userId, approvalDataList);
+			if (checkMail > 0) { // 1: 이미 처리된 메일이 있음
+				return "DONE";
 			}
-		}
+	
+			// 처리 단계
+			for (Map<String, Object> approvalData : approvalDataList) {
+				int resultInt = ezEmailService.setApprMailReject(loginCookie, (String) approvalData.get("applicantEmail"), (Long) approvalData.get("uid"), memo);
 
-		if (errorInt > 0) {
-			returnValue = "ERROR_" + errorInt;
+				if (resultInt != 0) {
+					errorInt++;
+				}
+			}
+	
+			if (errorInt > 0) {
+				returnValue = "ERROR_" + errorInt;
+			}
+		} catch (Exception e) {
+			logger.error("apprSetApproval error", e);
+			returnValue = "Exception";
 		}
 
 		logger.debug("apprSetRejectAction ended. returnValue=" + returnValue);
@@ -3667,4 +3779,496 @@ public class EzEmailMailListController {
 		return returnValue;
 	}
 
+	@PostMapping("/ezEmail/createTag.do")
+	@ResponseBody
+	public Result createTag(@CookieValue("loginCookie") String loginCookie, @RequestParam String tagName, @RequestParam(required = false) String shareId) throws Exception {
+		logger.debug("createTag started.");
+
+		if (StringUtils.isBlank(tagName)) {
+			logger.debug("createTag ended. tagName must not be blank.");
+			return Result.failure();
+		}
+
+		if (NOT_ALLOWED_TAG_NAME_REGEXP.matcher(tagName).find()) {
+			logger.debug("createTag ended. tagName must not be contains \"!@#$%^&()\\\\/:*?\"<>|'`\"");
+			return Result.failure();
+		}
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
+		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", userInfo.getTenantId());
+		String userAccount;
+
+		if ("YES".equalsIgnoreCase(useSharedMailbox) && StringUtils.isNotBlank(shareId)) {
+			if (!ezEmailService.checkUserShareId(userInfo.getId(), shareId, userInfo.getTenantId())) {
+				logger.debug("the user cannot access the shareId.");
+				return Result.failure("the user cannot access the shareId.");
+			}
+
+			userAccount = shareId + "@" + domainName;
+		} else {
+			userAccount = userInfo.getId() + "@" + domainName;
+		}
+
+		int tagIdx = ezEmailUtil.createTag(userAccount, tagName);
+		logger.debug("createTag ended.");
+
+		return Result.success(tagIdx);
+	}
+
+	@PostMapping("/ezEmail/saveChangesTags.do")
+	@ResponseBody
+	public Result saveChangesTags(@CookieValue("loginCookie") String loginCookie, @RequestBody SaveChangesTagRequest saveChangesTagRequest) throws Exception {
+		logger.debug("saveChagnesTags started. params: {}", saveChangesTagRequest.toString());
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
+		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", userInfo.getTenantId());
+		String userAccount;
+
+		if ("YES".equalsIgnoreCase(useSharedMailbox) && StringUtils.isNotBlank(saveChangesTagRequest.getShareId())) {
+			if (!ezEmailService.checkUserShareId(userInfo.getId(), saveChangesTagRequest.getShareId(), userInfo.getTenantId())) {
+				logger.debug("the user cannot access the shareId.");
+				return Result.failure("the user cannot access the shareId.");
+			}
+
+			userAccount = saveChangesTagRequest.getShareId() + "@" + domainName;
+		} else {
+			userAccount = userInfo.getId() + "@" + domainName;
+		}
+
+		try (IMAPAccess imapAccess = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+				userAccount, jspw, egovMessageSource, userInfo.getLocale(), ezEmailUtil)) {
+			// 메일함으로 uid를 그룹핑한다.
+			Map<String, List<Long>> mailboxUidsMap = saveChangesTagRequest.getMailPathList().stream()
+					.map(path -> path.split("/"))
+					.filter(paths -> paths.length == 2)
+					.collect(Collectors.groupingBy(paths -> paths[0],
+							Collectors.mapping(paths -> Long.parseLong(paths[1]), Collectors.toList())));
+
+			Flags addFlags = new Flags();
+			Flags removeFlags = new Flags();
+
+			saveChangesTagRequest.getEnableTagList().stream().distinct().map("$Tag-"::concat).forEach(addFlags::add);
+			saveChangesTagRequest.getDisableTagList().stream().distinct().map("$Tag-"::concat).forEach(removeFlags::add);
+
+			for (Map.Entry<String, List<Long>> entry : mailboxUidsMap.entrySet()) {
+				try (Folder folder = imapAccess.getFolder(entry.getKey())) {
+					folder.open(Folder.READ_WRITE);
+					Message[] messagesByUID = ((IMAPFolder) folder).getMessagesByUID(ArrayUtils.toPrimitive(entry.getValue().toArray(new Long[0])));
+					folder.setFlags(messagesByUID, addFlags, true);
+					folder.setFlags(messagesByUID, removeFlags, false);
+				}
+			}
+		} catch (Exception e) {
+			logger.debug("saveChagneTags error:", e);
+			return Result.failure();
+		} finally {
+			logger.debug("saveChagnesTags ended.");
+		}
+
+		return Result.success();
+	}
+
+	@GetMapping("/ezEmail/mailKeepMove.do")
+	public ModelAndView mailKeepMovePage(@CookieValue("loginCookie") String loginCookie, @RequestParam String folderId,
+										 @RequestParam(required = false) String shareId, Locale locale) throws Exception {
+		ModelAndView modelAndView = new ModelAndView();
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
+		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", userInfo.getTenantId());
+		String userEmail;
+
+		if ("YES".equalsIgnoreCase(useSharedMailbox) && shareId != null) {
+			logger.debug("shareId={}", shareId);
+
+			if (!ezEmailService.checkUserShareId(userInfo.getId(), shareId, 1, userInfo.getTenantId())) {
+				logger.debug("the user cannot access the shareId.");
+				logger.debug("mailKeepMove ended.");
+				modelAndView.setStatus(HttpStatus.FORBIDDEN);
+
+				return modelAndView;
+			}
+
+			userEmail = shareId + "@" + domainName;
+		} else {
+			userEmail = userInfo.getId() + "@" + domainName;
+		}
+
+		try (IMAPAccess imapAccess = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+				userEmail, commonUtil.getUserIdAndPassword(loginCookie).get(1), egovMessageSource, locale, ezEmailUtil);
+			 Folder folder = imapAccess.getFolder(folderId)) {
+			if (folder == null) {
+				logger.error("has not exists folder: {}, user: {}", folderId, userEmail);
+				modelAndView.setStatus(HttpStatus.NOT_FOUND);
+				return modelAndView;
+			}
+
+			folder.open(Folder.READ_ONLY);
+			String folderName = ezEmailUtil.getDisplayNameFromFolderId(folderId, locale);
+			modelAndView.addObject("folderName", folderName.replace(".", "/"));
+			modelAndView.setViewName("/ezEmail/mailKeepMove");
+		}
+
+		return modelAndView;
+	}
+
+	/**
+	 * 메일 이동/복사 실행 함수
+	 */
+	@PostMapping(value="/ezEmail/mailKeepMove.do")
+	@ResponseBody
+	public Result mailKeepMove(@CookieValue("loginCookie") String loginCookie, @RequestParam(value = "mailUids[]") List<String> mailUids, @RequestParam String targetFolderPath,
+                               @RequestParam boolean cleanup, @RequestParam(required = false) String shareId, Locale locale) throws Exception {
+		logger.debug("mailKeepMove started.");
+		logger.debug("mailUids={}, targetFolderPath: {}, cleanup: {}, shareId: {}", mailUids, targetFolderPath, cleanup, shareId);
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
+		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", userInfo.getTenantId());
+		String userEmail;
+
+		if ("YES".equalsIgnoreCase(useSharedMailbox) && StringUtils.isNotBlank(shareId)) {
+			logger.debug("shareId={}", shareId);
+
+			if (!ezEmailService.checkUserShareId(userInfo.getId(), shareId, 1, userInfo.getTenantId())) {
+				logger.debug("the user cannot access the shareId.");
+				logger.debug("mailKeepMove ended.");
+
+				return Result.failure(1);
+			}
+
+			userEmail = shareId + "@" + domainName;
+		} else {
+			userEmail = userInfo.getId() + "@" + domainName;
+		}
+
+		Map<String, long[]> folderIdUidMap = ezEmailUtil.getFolderIdUid(mailUids.stream()
+				.filter(StringUtils::isNotBlank).toArray(String[]::new));
+
+		JgwResult jgwGetInboxRuleResult = rest.jgw()
+				.post().url("/jMochaAccess/getInboxRule")
+				.formParam("userId", userEmail)
+				.exchangeJgwResult();
+
+		if (jgwGetInboxRuleResult.failed()) {
+			logger.debug("getInboxRule failed: {}", jgwGetInboxRuleResult);
+			logger.debug("mailKeepMove ended.");
+
+			return Result.failure(2);
+		}
+
+		Map<String, JsonObject> inboxRuleNameMap = new HashMap<>();
+		Set<String> alreadyCallcedJgwAccountSet = new HashSet<>();
+
+		for (JsonElement inboxRuleJson : jgwGetInboxRuleResult.getResultAsJsonElement().getAsJsonArray()) {
+			inboxRuleNameMap.put(inboxRuleJson.getAsJsonObject().get("ruleName").getAsString(), inboxRuleJson.getAsJsonObject());
+		}
+
+		String userKey = UUID.randomUUID().toString();
+
+		// -1 전처리
+		// 0 진행 중
+		// 100 성공
+		// -100 실패: From 헤더 없음
+		// -200 실패: 자동분류 추가 실패(jgw)
+		// -300 실패: 알 수 없는 오류
+		Thread thread = new Thread() {
+			@Override
+			public void run() {
+				Thread.currentThread().setName("mailKeepMove-" + userEmail);
+
+				boolean isNewUserQuotaNeeded = false;
+				boolean isThereUserLevelQuota = false;
+				Double userQuota = 0.0;
+				Double userWarn = 0.0;
+
+				try (IMAPAccess ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+						userEmail, commonUtil.getUserIdAndPassword(loginCookie).get(1), egovMessageSource, locale, ezEmailUtil);
+					 IMAPFolder targetFolder = (IMAPFolder) ia.getFolder(targetFolderPath)) {
+					ezEmailService.setMailboxProgress(userKey, userEmail, "KEEPMOVE", userInfo.getTenantId(), -1);
+
+					Map<String, Set<Long>> mailboxMoveTargetMailMap = new HashMap<>();
+					Set<String> fromSet = new HashSet<>();
+
+					for (Map.Entry<String, long[]> folderIdUid : folderIdUidMap.entrySet()) {
+						try (IMAPFolder sourceFolder = (IMAPFolder) ia.getFolder(folderIdUid.getKey())) {
+							sourceFolder.open(Folder.READ_ONLY);
+							Message[] originMessages = sourceFolder.getMessagesByUID(folderIdUid.getValue());
+
+							for (Message originMessage : originMessages) {
+								Address[] fromArray = originMessage.getFrom();
+
+								if (fromArray == null || fromArray.length == 0) {
+									logger.debug("From header is none");
+									logger.debug("mailKeepMove ended.");
+
+									ezEmailService.updateMailboxProgress(userKey, -100);
+									return;
+								}
+
+								String from = ((InternetAddress) fromArray[0]).getAddress();
+								fromSet.add(from);
+							}
+
+							Set<Long> uidSet = mailboxMoveTargetMailMap.computeIfAbsent(folderIdUid.getKey(), k -> new HashSet<>());
+
+							for (long uid : folderIdUid.getValue()) {
+								uidSet.add(uid);
+							}
+						}
+					}
+
+					for (String from : fromSet) {
+						String ruleName = "계속이동: " + from;
+
+						if (!alreadyCallcedJgwAccountSet.contains(from)) {
+							List<String> types = Arrays.asList("condition", "action");
+							List<String> kinds = Arrays.asList("sender", "move");
+							List<String> values = Arrays.asList(from, targetFolderPath);
+
+							Rest.RestBuilder jgwRestBuilder = rest.jgw().post()
+									.formParam("userId", userEmail)
+									.formParam("displayName", ruleName)
+									.formParam("type", types)
+									.formParam("kind", kinds)
+									.formParam("value", values);
+
+							if (inboxRuleNameMap.containsKey(ruleName)) {
+								jgwRestBuilder.url("/jMochaAccess/updateInboxRule")
+										.formParam("ruleId", inboxRuleNameMap.get(ruleName).get("ruleId").getAsString());
+							} else {
+								jgwRestBuilder.url("/jMochaAccess/setInboxRule");
+							}
+
+							JgwResult jgwSetInboxRuleResult = jgwRestBuilder.exchangeJgwResult();
+
+							if (jgwSetInboxRuleResult.failed()) {
+								logger.debug("setInboxRule failed: {}", jgwSetInboxRuleResult);
+								logger.debug("mailKeepMove ended.");
+
+								ezEmailService.updateMailboxProgress(userKey, -200);
+								return;
+							}
+
+							alreadyCallcedJgwAccountSet.add(from);
+						}
+
+						// 기존 메일도 이동할 때 모든 편지함에서 탐색
+						if (cleanup) {
+							List<Map<String, String>> mailList = ezEmailUtil.searchFolderUsingRDBOnly(userEmail, "INBOX////Personal folder////Drafts////Trash////Junk E-Mail", new String[]{"FROM"}, new String[]{from},
+									null, null, true, false, false, "receivedDate", false, 0, 99999, false, null, userInfo.getTenantId(), false, "");
+							for (Map<String, String> mail : mailList) {
+								String[] mailIdStrings = mail.get("MAIL_ID").split("/");
+
+								if (mailIdStrings.length != 2) {
+									logger.warn("invalid mail uid skip: {}", mail);
+									continue;
+								}
+
+								long uid = Long.parseLong(mailIdStrings[1]);
+								mailboxMoveTargetMailMap.computeIfAbsent(mailIdStrings[0], k -> new HashSet<>()).add(uid);
+							}
+						}
+					}
+
+					ezEmailService.updateMailboxProgress(userKey, 0);
+					targetFolder.open(Folder.READ_WRITE);
+
+					int totalCount = mailboxMoveTargetMailMap.values().stream().mapToInt(Set::size).sum();
+					int processedCount = 0;
+
+					for (Map.Entry<String, Set<Long>> mailboxInUids : mailboxMoveTargetMailMap.entrySet()) {
+						try (IMAPFolder sourceFolder = (IMAPFolder) ia.getFolder(mailboxInUids.getKey())) {
+							sourceFolder.open(Folder.READ_WRITE);
+							Message[] messages = sourceFolder.getMessagesByUID(ArrayUtils.toPrimitive(mailboxInUids.getValue().toArray(new Long[0])));
+							String useImapMoveCommand = ezCommonService.getTenantConfig("useImapMoveCommand", userInfo.getTenantId());
+
+							if (useImapMoveCommand.equals("YES")) {
+								for (int offset = 0; offset < messages.length; offset += 20) {
+									Message[] batch = Arrays.copyOfRange(messages, offset, Math.min(offset + 20, messages.length));
+									sourceFolder.moveUIDMessages(batch, targetFolder);
+									processedCount += batch.length;
+									ezEmailService.updateMailboxProgress(userKey, Math.min((int) Math.floor((double) processedCount / totalCount * 100), 99));
+								}
+							} else {
+								// 이동시킬 메시지의 크기가 Quota량을 초과하게 되면 Quota를 재조정한다.
+								Double[] adjustQuotaData = ezEmailUtil.adjustUserQuotaForMessageMove(messages, userEmail, domainName, ia);
+
+								if (!isNewUserQuotaNeeded && adjustQuotaData[0] != null) {
+									isNewUserQuotaNeeded = true;
+
+									userQuota = adjustQuotaData[0];
+									userWarn = adjustQuotaData[1];
+
+									if (adjustQuotaData[2] != null) {
+										isThereUserLevelQuota = true;
+									}
+								}
+
+								for (int offset = 0; offset < messages.length; offset += 20) {
+									Message[] batch = Arrays.copyOfRange(messages, offset, Math.min(offset + 20, messages.length));
+									sourceFolder.copyUIDMessages(batch, targetFolder);
+									sourceFolder.setFlags(batch, new Flags(Flags.Flag.DELETED), true);
+									processedCount += batch.length;
+									ezEmailService.updateMailboxProgress(userKey, Math.min((int) Math.floor((double) processedCount / totalCount * 100), 99));
+								}
+							}
+						}
+					}
+
+					ezEmailService.updateMailboxProgress(userKey, 100);
+				} catch (Exception e) {
+					logger.error("error:", e);
+					try {
+						ezEmailService.updateMailboxProgress(userKey, -300);
+					} catch (Exception e2) {
+						logger.error("updateMailboxProgress error:", e);
+					}
+				} finally {
+					// 사용자 Quota를 변경시켰다면 원래 값으로 복원시킨다.
+					if (isNewUserQuotaNeeded) {
+						try {
+							if (isThereUserLevelQuota) {
+								ezEmailUtil.setUserQuota(userEmail, String.valueOf(userQuota), String.valueOf(userWarn));
+								// 사용자 레벨 Quota 설정값이 없었던 경유에는 해당 설정값을 삭제한다.
+							} else {
+								ezEmailUtil.deleteUserQuota(userEmail);
+							}
+						} catch (Exception e) {
+							logger.error("rollback user quota error:", e);
+						}
+					}
+				}
+			}
+		};
+		thread.start();
+
+		return Result.success(userKey);
+	}
+
+	/**
+	 * 메일 미리보기 기능
+	 */
+	@RequestMapping(value="/ezEmail/previewMail.do", method=RequestMethod.GET)
+	public String previewMail(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, Locale locale) throws Exception {
+		logger.debug("previewMail started");
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+
+		model.addAttribute("userInfo", userInfo);
+
+		logger.debug("previewMail ended");
+
+		return "ezEmail/previewMail";
+	}
+
+	/**
+	 * 메일 미리보기 정보 가져오는 부분
+	 */
+	@RequestMapping(value="/ezEmail/getPreviewMail.do", method=RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> getPreviewMail(@CookieValue("loginCookie") String loginCookie, @RequestBody JSONObject requestObject, Model model, Locale locale) throws Exception {
+		logger.debug("getPreviewMail started");
+
+		Map<String, Object> result = new HashMap<String, Object>();
+		String _href = (String) requestObject.get("_href");
+		String mailBody = "";
+		logger.debug("_href=" + _href);
+
+		_href = (_href != null) ? _href : "";
+		String folderPath = _href.split("/")[0];
+		String uidStr = _href.split("/")[1];
+		long uid = Long.parseLong(uidStr);
+
+		List<String> userInfo = commonUtil.getUserIdAndPassword(loginCookie);
+		String password  = userInfo.get(1);
+
+		LoginVO loginInfo = commonUtil.userInfo(loginCookie);
+		String domainName = ezCommonService.getTenantConfig("DomainName", loginInfo.getTenantId());
+		String userAccount = loginInfo.getId() + "@" + domainName;
+		Map<String, Object> extraMap = new HashMap<String, Object>();
+		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", loginInfo.getTenantId());
+
+		if (useSharedMailbox.equals("YES")) {
+			String shareId = (String) requestObject.get("shareId");
+			logger.debug("shareId=" + shareId);
+
+			if (shareId != null) {
+				if (!ezEmailService.checkUserShareId(loginInfo.getId(), shareId, loginInfo.getTenantId())) {
+					logger.debug("the user cannot access the shareId.");
+					logger.debug("previewMail ended.");
+
+					result.put("code","ERROR");
+					result.put("msg", "오류");
+					return result;
+				}
+
+				userAccount = shareId + "@" + domainName;
+			}
+		}
+
+		logger.debug("userId=" + loginInfo.getId() + ",userAccount=" + userAccount);
+
+		IMAPAccess ia = null;
+		String pAttachListHtmlSub = "";
+		String pAttachListHtml = "";
+		try {
+			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+					userAccount, password, egovMessageSource, locale, ezEmailUtil);
+
+			if (ia != null){
+				Folder f = ia.getFolder(folderPath != null ? folderPath : "");
+
+				if (f != null && f.exists()) {
+					f.open(Folder.READ_ONLY);
+					Message message = ((IMAPFolder)f).getMessageByUID(uid);
+					// 읽음 처리 상태 확인
+					boolean isSeen = message.isSet(Flags.Flag.SEEN);
+
+					if (message != null) {
+						extraMap.put("forPreviewMail",true);
+						List<Map<String, String>> attachedFileList = new ArrayList<Map<String, String>>();
+						List<String> bodyInfoList = ezEmailUtil.getBodyInfo(message, folderPath, uid, -1, attachedFileList, locale, extraMap);
+
+						mailBody = bodyInfoList.get(0);
+						mailBody = commonUtil.removeHtmlTag(mailBody);
+						logger.debug(mailBody);
+
+						double size = Double.parseDouble(bodyInfoList.get(2));
+						String strSize = ezEmailUtil.getSizeWithUnit(size);
+						pAttachListHtmlSub = " - <b>" + bodyInfoList.get(3) + egovMessageSource.getMessage("ezEmail.t180", locale) + "</b>(" + strSize + ")";
+						pAttachListHtml = bodyInfoList.get(1);
+
+						Map<String, Object> map = new HashMap<String, Object>();
+						map.put("mailbody", mailBody);
+						map.put("pAttachListHtmlSub", pAttachListHtmlSub);
+						map.put("pAttachListHtml", pAttachListHtml);
+						map.put("isAttach", bodyInfoList.get(4));
+
+						result.put("code", "OK");
+						result.put("result", map);
+
+						if (!isSeen) {
+							//ezEmailUtil.getBodyInfo에서 안읽었던 메일이 읽음처리되어 다시 안읽은메일로 변하게 처리
+							message.setFlag(Flags.Flag.SEEN, false);
+						}
+
+					}
+					f.close(false);
+				}
+			}
+
+		} catch (MessagingException e) {
+			logger.error(e.getMessage(), e);
+		} finally {
+			if (ia != null) {
+				ia.close();
+			}
+		}
+
+		logger.debug("previewMail ended");
+		return result;
+	}
+	
+	
 }

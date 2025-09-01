@@ -64,7 +64,8 @@ var subType = {
 		modify : "Pemberitahuan modifikasi",
 		comment : "Tulis komentar",
 		reply : "Balasan pemberitahuan",
-		notice : "Pemberitahuan penuh"
+		notice : "Pemberitahuan penuh",
+		invite : "Pemberitahuan undangan"
 	},
 	webfolder : {
 		open_apply : "Aplikasi untuk pembukaan",
@@ -84,6 +85,7 @@ subType["approval"]["return"] = "Pemulihan dokumen";
 subType["approval"]["default"] = "Notifikasi Persetujuan";
 subType["board"]["new"] = "Postingan baru";
 subType["board"]["return"] = "Tolak persetujuan";
+subType["board"]["expired"] = "Periode pengumuman telah berakhir";
 subType["schedule"]["delete"] = "Hapus acara";
 subType["survey"]["new"] = "Pendaftaran baru";
 subType["poll"]["new"] = "Pendaftaran baru";

@@ -92,16 +92,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
+import org.springframework.http.*;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -117,7 +115,7 @@ import com.sun.mail.imap.AppendUID;
 import com.sun.mail.imap.IMAPFolder;
 
 import egovframework.com.cmm.EgovMessageSource;
-import egovframework.com.cmm.service.EgovFileMngUtil;
+import egovframework.com.cmm.service.EzFileMngUtil;
 import egovframework.ezEKP.ezAddress.service.EzAddressService;
 import egovframework.ezEKP.ezAddress.vo.AddressVO;
 import egovframework.ezEKP.ezAddress.vo.SimpleAddressVO;
@@ -156,7 +154,7 @@ import egovframework.ezEKP.ezEmail.service.EzEmailWriteService;
  */
 
 @Controller
-public class EzEmailMailWriteController extends EgovFileMngUtil {
+public class EzEmailMailWriteController extends EzFileMngUtil {
 
 	private static final Logger logger = LoggerFactory.getLogger(EzEmailMailWriteController.class);
 	
@@ -269,7 +267,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		OrganUserVO userInfo = ezOrganAdminService.getUserInfo(writevo.getMailId(), loginInfo.getPrimary(), loginInfo.getTenantId());
 
 		// 2. set options: 사용자의 설정에 따른 메일쓰기 정보를 세팅 함
-		ezEmailWriteService.setDefaultMailOptions(request, writevo, loginInfo, userInfo.getDisplayName2(), locale);
+		ezEmailWriteService.setDefaultMailOptions(request, writevo, loginInfo, userInfo.getDisplayName(), locale);
 
 		// make mail top level folders: 사용자계정 생성 직후, mail top level folders가 없을 수도 있다. 에러방지.
 		ezEmailUtil.useIMAPAccessWithCallback(IMAPAccess::makeTopLevelFolders, userAccount, password, locale);
@@ -428,11 +426,15 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			}
 		}
 		String useWebfolder = ezCommonService.getTenantConfig("useWebfolder", userInfo.getTenantId());
-		
+		String useAutoZipEnc = ezCommonService.getTenantConfig("useAutoZipEnc", userInfo.getTenantId());
+		String useFileExtension = ezCommonService.getTenantConfig("USE_FileExtension", userInfo.getTenantId());
+
 		model.addAttribute("useWebfolder", useWebfolder);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("attachFileNameMaxLength", attachFileNameMaxLength);
-		
+		model.addAttribute("useAutoZipEnc", useAutoZipEnc);
+		model.addAttribute("useFileExtension", useFileExtension);
+
 		logger.debug("dragAndDropIframe ended.");
 		return "ezEmail/mailDragAndDrop";
 	}
@@ -453,6 +455,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		String tempFolderName = "";
 		String xmlList = "";
 		String isBigYN = "N";
+		String zipPassword = request.getParameter("zipPassword");
 		List<MultipartFile> multiFile = request.getFiles("fileToUpload");
 		int cnt = 0;
 		
@@ -474,6 +477,9 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		String[] sFileTitle = new String[cnt];
 		String[] sExt = new String[cnt];
 		String pDirTempPath = "";
+		boolean zipFileUploadCheck = false;
+		boolean checkZipFileEncrypted = false;
+		boolean needZipEncryption = zipPassword != null && !zipPassword.isEmpty();
 		long bigMaxSize = 0;
 		long changeSize = 0;
 
@@ -496,6 +502,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		
 		// 업로드 허용 파일 확장자 설정을 조회
 		String useExtension = ezCommonService.getTenantConfig("USE_FileExtension", userInfo.getTenantId());
+		String useAutoZipEnc = ezCommonService.getTenantConfig("useAutoZipEnc", userInfo.getTenantId());
 		
 		if (useExtension == null) {
 			useExtension = "";
@@ -527,6 +534,10 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 				
 				if (multiFile.get(i).getSize() == 0) {
 					isEmpty = true;
+				}
+
+				if(sExt[i].equals("zip")) {
+					zipFileUploadCheck = true;
 				}
 			}
 			
@@ -627,20 +638,35 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 					//multiFile.get(i).transferTo(new File(pDirTempPath, sGUID[i]));
                     fileLocation[i] = pDirTempPath + commonUtil.separator + sGUID[i];
                     resultUpload[i] = "true";
+
+					if(useAutoZipEnc.equals("YES")) {
+						File file = new File(fileLocation[i]);
+
+						if (zipFileUploadCheck) {
+							checkZipFileEncrypted = ezEmailUtil.checkZipEncrypted(file);
+						}
+
+						if (needZipEncryption && !checkZipFileEncrypted) {
+							String zipPath = ezEmailUtil.createEncryptZipFile(file, pFileName[i], zipPassword, pDirTempPath);
+
+							if (zipPath != null) {
+								fileLocation[i] = zipPath;  // 암호화된 zip 경로로 업데이트
+								pFileName[i] = new File(zipPath).getName();
+							}
+						}
+					}
                 }
-                
-				// 업로드된 파일에 대한 정보를 XML 형식으로 클라이언트에게 반환한다.
-                strXML2 += "<NODE><PUPLOADSN><![CDATA[" + sGUID[i] + "]]></PUPLOADSN>";
-                strXML2 += "<RESULTUPLOADA><![CDATA[" + resultUpload[i] + "]]></RESULTUPLOADA>";
-                strXML2 += "<PFILENAME><![CDATA[" + pFileName[i] + "]]></PFILENAME>";
-                strXML2 += "<FILESIZE><![CDATA[" + fileSize[i] + "]]></FILESIZE>";
-                if (pBigFileUpload.equals("Y")) {
-                	strXML2 += "<FILELOCATION><![CDATA[" + folderDate+"|!|"+sGUID[i] + "]]></FILELOCATION>";
-                } else {
-                	strXML2 += "<FILELOCATION><![CDATA[" + sGUID[i] + "]]></FILELOCATION>";
-                }
-                strXML2 += "<PBIGFILEUPLOAD><![CDATA[" + pBigFileUpload + "]]></PBIGFILEUPLOAD>";
-                strXML2 += "</NODE>";
+
+				
+				boolean isAutoZipEnc = !checkZipFileEncrypted && "YES".equals(useAutoZipEnc);
+				String fileIdentifier = isAutoZipEnc ? pFileName[i] : sGUID[i];
+				String fileLocationValue;
+				
+				if ("Y".equals(pBigFileUpload)) {
+					fileLocationValue = folderDate + "|!|" + fileIdentifier;
+				} else {
+					fileLocationValue = fileIdentifier;
+				}
 
 				String useExternalLargeFileServer = ezCommonService.getTenantConfig("useExternalLargeFileServer", userInfo.getTenantId());
 				// external large file server http upload
@@ -664,9 +690,35 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 					RestTemplate restTemplate = new RestTemplate();
 					((SimpleClientHttpRequestFactory) restTemplate.getRequestFactory())
 							.setBufferRequestBody(false);
-					restTemplate.exchange(externalFileServerUrl + "/rest/ezEmail/uploadAttachCommon.do", HttpMethod.POST, entity, String.class);
+
+					try {
+						restTemplate.exchange(externalFileServerUrl + "/rest/ezEmail/uploadAttachCommon.do", HttpMethod.POST, entity, String.class);
+					} catch (Exception e) {
+						logger.error("externalFileUpload failed", e);
+						resultUpload[i] = "extFalse";
+
+						File localFile = new File(fileLocation[i]);
+						File localFileName = new File(fileLocation[i]+"__.txt");
+						localFile.delete();
+						localFileName.delete();
+					}
 
 				}
+
+				// 업로드된 파일에 대한 정보를 XML 형식으로 클라이언트에게 반환한다.
+				strXML2 += "<NODE><PUPLOADSN><![CDATA[" + fileIdentifier + "]]></PUPLOADSN>";
+				strXML2 += "<RESULTUPLOADA><![CDATA[" + resultUpload[i] + "]]></RESULTUPLOADA>";
+				strXML2 += "<PFILENAME><![CDATA[" + pFileName[i] + "]]></PFILENAME>";
+				strXML2 += "<FILESIZE><![CDATA[" + fileSize[i] + "]]></FILESIZE>";
+				strXML2 += "<FILELOCATION><![CDATA[" + fileLocationValue + "]]></FILELOCATION>";
+				strXML2 += "<PBIGFILEUPLOAD><![CDATA[" + pBigFileUpload + "]]></PBIGFILEUPLOAD>";
+
+				if (zipFileUploadCheck) {
+					strXML2 += "<CHECKZIPENCRYPTED><![CDATA[" + checkZipFileEncrypted + "]]></CHECKZIPENCRYPTED>";
+				}
+
+				strXML2 += "</NODE>";
+
             }
 
             pDirTempPath = "";
@@ -3736,17 +3788,9 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 					            	for (Address a : allRecipients) {
 					            		logger.debug("address=" + a);
 					            		
-					            		try {
-						            		message.setRecipient(RecipientType.TO, a);
+										message.setRecipient(RecipientType.TO, a);
 
-											if (!apprmail) {
-												Transport.send(message);
-											}
-					            		} catch (MessagingException e) {
-					            			logger.error(e.getMessage(), e);
-										} catch (Exception e) {
-					            			logger.error(e.getMessage(), e);
-					            		}
+										Transport.send(message);
 					            		
 		    			            	sentFolderMessageUID = 0;
 		    			            	mailSendCompleted = true;				            		
@@ -4160,8 +4204,94 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	        String realPath = commonUtil.getRealPath(request);
 	        String pDirPath = realPath + commonUtil.getUploadPath("upload_mail.ROOT", loginInfo.getTenantId()) + commonUtil.separator + "templist";
 	        pDirPath += commonUtil.separator + delId + ".txt";
+
 			EzFAL.EzFile f = new EzFAL.EzFile(pDirPath);
-	        if (f.exists()) {
+			InputStream in = new EzFAL.EzFileInputStream(f);
+
+			try {
+				// DOM Parser 준비
+				DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+				DocumentBuilder builder = factory.newDocumentBuilder();
+				Document doc = builder.parse(in);
+
+				doc.getDocumentElement().normalize();
+
+				// NODE 요소 가져오기
+				NodeList nodeList = doc.getElementsByTagName("NODE");
+
+				for (int i = 0; i < nodeList.getLength(); i++) {
+					Node node = nodeList.item(i);
+
+					if (node.getNodeType() == Node.ELEMENT_NODE) {
+						Element element = (Element) node;
+						String isBigFile = element.getElementsByTagName("PBIGFILEUPLOAD").item(0).getTextContent();
+
+						if ("Y".equals(isBigFile)) {
+							String fileLocation = element.getElementsByTagName("FILELOCATION").item(0).getTextContent();
+							logger.debug("fileLocation=" + fileLocation);
+
+							String uploadMailRootPath = realPath + commonUtil.getUploadPath("upload_mail.ROOT", loginInfo.getTenantId());
+							String largeFilePath = uploadMailRootPath;
+							String useSeparatedLargeFileFolder = ezCommonService.getTenantConfig("useSeparatedLargeFileFolder", loginInfo.getTenantId());
+							if (useSeparatedLargeFileFolder.equals("YES")) {
+								largeFilePath += commonUtil.separator + "largeFile";
+							}
+
+							String[] parts = fileLocation.split("\\|!\\|");
+							if (parts.length == 2) {
+								String folderDate = parts[0];
+								String fileName = parts[1];
+
+								String bigAttachFolderPath = largeFilePath + commonUtil.separator + folderDate;
+								String fullPath = bigAttachFolderPath + commonUtil.separator + fileName;
+
+								logger.debug("fullPath=" + fullPath);
+								File file = new File(fullPath);
+								File fileTxt = new File(fullPath+"__.txt");
+
+								if (file.exists()) {
+									boolean deleted = file.delete();
+									boolean deleted2 = fileTxt.delete();
+									if (deleted && deleted2) {
+										logger.debug("file delete success");
+									} else {
+										logger.debug("file delete failure");
+									}
+								} else {
+									logger.debug("the file doesn't exists");
+								}
+
+								String useExternalLargeFileServer = ezCommonService.getTenantConfig("useExternalLargeFileServer", loginInfo.getTenantId());
+
+								if ("Y".equalsIgnoreCase(useExternalLargeFileServer)){
+									logger.debug("useExternalLargeFileServer Y.");
+									HttpHeaders headers = new HttpHeaders();
+									headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+
+									MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
+									body.add("filePath", fullPath);
+
+									HttpEntity<MultiValueMap<String, Object>> entity = new HttpEntity<>(body, headers);
+
+									//String uploadServerURL = ezCommonService.getTenantConfig("externalLargeFileServerURL", userInfo.getTenantId());
+									String externalFileServerUrl = ezCommonService.getTenantConfig("externalFileServerUrl", loginInfo.getTenantId());
+									logger.debug("externalFileServerUrl = " + externalFileServerUrl);
+									RestTemplate restTemplate = new RestTemplate();
+									restTemplate.exchange(externalFileServerUrl + "/rest/ezEmail/deleteAttachCommon.do", HttpMethod.POST, entity, String.class);
+								}
+							} else {
+								logger.debug("fileLocation 포맷 오류");
+							}
+
+						}
+					}
+				}
+
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+			if (f.exists()) {
 	        	f.delete();
 	        }
 		}
@@ -4190,8 +4320,91 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
         pDirPath += commonUtil.separator + delId + ".txt";
 
 		EzFAL.EzFile f = new EzFAL.EzFile(pDirPath);
-        
-        if (f.exists()) {
+		InputStream in = new EzFAL.EzFileInputStream(f);
+
+		if (f.exists()) {
+			try {
+				// DOM Parser 준비
+				DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+				DocumentBuilder builder = factory.newDocumentBuilder();
+				Document doc = builder.parse(in);
+
+				doc.getDocumentElement().normalize();
+
+				// NODE 요소 가져오기
+				NodeList nodeList = doc.getElementsByTagName("NODE");
+
+				for (int i = 0; i < nodeList.getLength(); i++) {
+					Node node = nodeList.item(i);
+
+					if (node.getNodeType() == Node.ELEMENT_NODE) {
+						Element element = (Element) node;
+						String isBigFile = element.getElementsByTagName("PBIGFILEUPLOAD").item(0).getTextContent();
+
+						if ("Y".equals(isBigFile)) {
+							String fileLocation = element.getElementsByTagName("FILELOCATION").item(0).getTextContent();
+							logger.debug("fileLocation=" + fileLocation);
+
+							String uploadMailRootPath = realPath + commonUtil.getUploadPath("upload_mail.ROOT", userInfo.getTenantId());
+							String largeFilePath = uploadMailRootPath;
+							String useSeparatedLargeFileFolder = ezCommonService.getTenantConfig("useSeparatedLargeFileFolder", userInfo.getTenantId());
+							if (useSeparatedLargeFileFolder.equals("YES")) {
+								largeFilePath += commonUtil.separator + "largeFile";
+							}
+
+							String[] parts = fileLocation.split("\\|!\\|");
+							if (parts.length == 2) {
+								String folderDate = parts[0];
+								String fileName = parts[1];
+
+								String bigAttachFolderPath = largeFilePath + commonUtil.separator + folderDate;
+								String fullPath = bigAttachFolderPath + commonUtil.separator + fileName;
+
+								logger.debug("fullPath=" + fullPath);
+								File file = new File(fullPath);
+								File fileTxt = new File(fullPath+"__.txt");
+
+								if (file.exists()) {
+									boolean deleted = file.delete();
+									boolean deleted2 = fileTxt.delete();
+									if (deleted && deleted2) {
+										logger.debug("file delete success");
+									} else {
+										logger.debug("file delete failure");
+									}
+								} else {
+									logger.debug("the file doesn't exists");
+								}
+
+								String useExternalLargeFileServer = ezCommonService.getTenantConfig("useExternalLargeFileServer", userInfo.getTenantId());
+
+								if ("Y".equalsIgnoreCase(useExternalLargeFileServer)){
+									logger.debug("useExternalLargeFileServer Y.");
+									HttpHeaders headers = new HttpHeaders();
+									headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+
+									MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
+									body.add("filePath", fullPath);
+
+									HttpEntity<MultiValueMap<String, Object>> entity = new HttpEntity<>(body, headers);
+
+									//String uploadServerURL = ezCommonService.getTenantConfig("externalLargeFileServerURL", userInfo.getTenantId());
+									String externalFileServerUrl = ezCommonService.getTenantConfig("externalFileServerUrl", userInfo.getTenantId());
+									logger.debug("externalFileServerUrl = " + externalFileServerUrl);
+									RestTemplate restTemplate = new RestTemplate();
+									restTemplate.exchange(externalFileServerUrl + "/rest/ezEmail/deleteAttachCommon.do", HttpMethod.POST, entity, String.class);
+								}
+							} else {
+								logger.debug("fileLocation 포맷 오류");
+							}
+						}
+					}
+				}
+
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
         	f.delete();
         }
         
@@ -4334,7 +4547,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 									for (int i = 0; i < count; i++) {
 										p = mp.getBodyPart(i);
 
-										if (p.getDisposition() == null) {
+										// message/rfc822 파트는 Content-Disposition 헤더가 없어도 첨부파일로 취급함 
+										if (p.getDisposition() == null && !p.isMimeType("message/rfc822")) {
 											nonAttachCount++;
 										} else {
 											break;
@@ -4348,7 +4562,9 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 										boolean isRemoved = false;
 
 										// 파일의 index가 nonAttachCount 만큼 뒤로 밀렸으므로 i - nonAttachCount과 비교하여 파일을 삭제한다.
-										if (p.getDisposition() != null && p.getDisposition().equalsIgnoreCase(Part.ATTACHMENT)) {
+										// message/rfc822 파트는 Content-Disposition 헤더가 없어도 첨부파일로 취급함
+										if (Part.ATTACHMENT.equalsIgnoreCase(p.getDisposition())
+											|| p.isMimeType("message/rfc822")) {
 											for (int j = 0; j < length; j++) {
 //										String mailFileName = MimeUtility.decodeText(p.getFileName());
 //										logger.debug("mailFileName : " + mailFileName + ", index i : " + (i-1));
@@ -6967,5 +7183,13 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			logger.error("error:", e);
 			return Result.failure();
 		}
+	}
+
+	/**
+	 * 메일쓰기 - 파일업로드 > 암호 입력 화면 호출 함수
+	 */
+	@GetMapping(value="/ezEmail/inputZipFilePassword.do")
+	public String inputZipPassword() throws Exception{
+		return "ezEmail/mailZipPassword";
 	}
 }

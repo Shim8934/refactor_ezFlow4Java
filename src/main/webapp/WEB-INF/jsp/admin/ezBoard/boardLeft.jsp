@@ -319,10 +319,10 @@
 	                
 	                if (RedirectBoardID != "") {
 	                    if (RedirectBoardGroupID != "") {	                    	
-	                        window.parent.frames["board_main"].location.href = "/admin/ezBoard/boardConfig.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&boardName=" + encodeURIComponent(treeNode.GetNodeData("DATA2")) + "&boardType=" + chkPhotoBrd + "&parentBoardID=" + encodeURIComponent(SelectedBoardParentBoardID) + "&tabID=1tab2";
+	                        window.parent.document.querySelector("iframe[name=board_main]").src = "/admin/ezBoard/boardConfig.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&boardName=" + encodeURIComponent(treeNode.GetNodeData("DATA2")) + "&boardType=" + chkPhotoBrd + "&parentBoardID=" + encodeURIComponent(SelectedBoardParentBoardID) + "&tabID=1tab2";
 	                    }
 	                }else{                	
-	                    window.parent.frames["board_main"].location.href = "/admin/ezBoard/boardConfig.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&boardName=" + encodeURIComponent(treeNode.GetNodeData("DATA2")) + "&boardType=" + chkPhotoBrd + "&parentBoardID=" + encodeURIComponent(SelectedBoardParentBoardID);
+	                    window.parent.document.querySelector("iframe[name=board_main]").src = "/admin/ezBoard/boardConfig.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&boardName=" + encodeURIComponent(treeNode.GetNodeData("DATA2")) + "&boardType=" + chkPhotoBrd + "&parentBoardID=" + encodeURIComponent(SelectedBoardParentBoardID);
 	                }
 	                
 	                /* 2019-04-19 홍승비 - 하위게시판 진입 시 해당 게시판 좌측리스트의 게시물 카운트 갱신 */
@@ -349,42 +349,46 @@
 					alert("<spring:message code='ezBoard.t138' />");
 					return;
 				}
+                
+                var boardMainUrl = "";
 
 	            switch (pIndex) {
 	                case 1:
-	                    window.open("/admin/ezBoard/boardGroupCreate.do", "board_main");
+	                    boardMainUrl = "/admin/ezBoard/boardGroupCreate.do";
 	                    break;
 	                case 2:
-	                    window.open("/admin/ezBoard/boardCreate.do?parentBoardID=" + encodeURIComponent(SelectedBoardID) + "&boardGroupID=" + encodeURIComponent(SelectedBoardGroupID), "board_main");
+	                    boardMainUrl = "/admin/ezBoard/boardCreate.do?parentBoardID=" + encodeURIComponent(SelectedBoardID) + "&boardGroupID=" + encodeURIComponent(SelectedBoardGroupID);
 	                    break;
 	                case 3:	                	
-	                    window.open("/admin/ezBoard/boardOrder.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&parentBoardID=" + encodeURIComponent(SelectedBoardParentBoardID), "board_main");
+	                    boardMainUrl = "/admin/ezBoard/boardOrder.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&parentBoardID=" + encodeURIComponent(SelectedBoardParentBoardID);
 	                    break;
 	                case 4:	                    
-                        window.open("/admin/ezBoard/boardMove.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&boardGroupID=" + encodeURIComponent(SelectedBoardGroupID), "board_main");
+                        boardMainUrl = "/admin/ezBoard/boardMove.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&boardGroupID=" + encodeURIComponent(SelectedBoardGroupID);
 	                    break;
 	                case 5:	                    
-	                    window.open("/admin/ezBoard/boardDelete.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&boardGroupID=" + encodeURIComponent(SelectedBoardGroupID), "board_main");	                    
+	                    boardMainUrl = "/admin/ezBoard/boardDelete.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&boardGroupID=" + encodeURIComponent(SelectedBoardGroupID);	                    
 	                    break;
 	                case 6:
-	                    window.open("/admin/ezBoard/boardProperty.do?boardID=" + encodeURIComponent(SelectedBoardID), "board_main");
+	                    boardMainUrl = "/admin/ezBoard/boardProperty.do?boardID=" + encodeURIComponent(SelectedBoardID);
 	                    break;
 	                case 7:
-	                    window.open("/admin/ezBoard/boardACL.do?parentNeed=Y&boardID=" + encodeURIComponent(SelectedBoardID) + "&parentBoardID=" + encodeURIComponent(SelectedBoardParentBoardID) + "&accessLevel=" + AccessLevel, "board_main");
+	                    boardMainUrl = "/admin/ezBoard/boardACL.do?parentNeed=Y&boardID=" + encodeURIComponent(SelectedBoardID) + "&parentBoardID=" + encodeURIComponent(SelectedBoardParentBoardID) + "&accessLevel=" + AccessLevel;
 	                    break;
 	                case 8:
-	                    window.open("/admin/ezBoard/boardBackGround.do?parentNeed=Y&boardID=" + encodeURIComponent(SelectedBoardID) + "&companyID=" + encodeURIComponent(companySelectID) + "&parentBoardID=" + encodeURIComponent(SelectedBoardParentBoardID), "board_main");
+	                    boardMainUrl = "/admin/ezBoard/boardBackGround.do?parentNeed=Y&boardID=" + encodeURIComponent(SelectedBoardID) + "&companyID=" + encodeURIComponent(companySelectID) + "&parentBoardID=" + encodeURIComponent(SelectedBoardParentBoardID);
 	                    break;
 					/* 2022-09-27 홍승비 - 트리캐시 일괄생성기능 추가 */
 	                case 9:
-	                    window.open("/admin/ezBoard/boardMakeAllTreeCache.do", "board_main");
+	                    boardMainUrl = "/admin/ezBoard/boardMakeAllTreeCache.do";
 	                    break;
 	                default:
-						window.open("/admin/ezBoard/boardRight.do", "board_main");
+						boardMainUrl = "/admin/ezBoard/boardRight.do";
 	                    break;
 	            }
 
-        		// 2023-07-03 황인경 - 디자인 개선 > 관리자 > 게시판 > 좌측메뉴 하단 영역 > 메뉴 선택 시 on class 제어
+                parent.document.querySelector("iframe[name=board_main]").src = boardMainUrl;
+
+                    // 2023-07-03 황인경 - 디자인 개선 > 관리자 > 게시판 > 좌측메뉴 하단 영역 > 메뉴 선택 시 on class 제어
     	        $("li.on").removeClass("on");
 				if (!!event) $(event.target).parent().addClass("on");
 	        }
@@ -478,7 +482,7 @@
 		    }
 		    
 		    function manageMealPlan() {
-				window.open('/admin/ezBoard/boardACL.do?parentNeed=Y&boardID=%7BMMMMMMMM-MMMM-MMMM-MMMM-MMMMMMMMMMMM%7D&parentBoardID=None&accessLevel=1', 'board_main');
+                parent.document.querySelector("iframe[name=board_main]").src = '/admin/ezBoard/boardACL.do?parentNeed=Y&boardID=%7BMMMMMMMM-MMMM-MMMM-MMMM-MMMMMMMMMMMM%7D&parentBoardID=None&accessLevel=1';
 	            $("h2.on").attr("class","off");
 	            $("#TopBoard .lnbUL").attr("class","lnbUL off");
 	            $("#TreeCtrl_MyBoardTree_ul").attr("class","lnbUL off");

@@ -522,7 +522,7 @@ public class EzNewPortalGWController {
 
 			// 2. 메뉴에 권한이 있는지 ================ 수정하기 start
 			
-			List<MenuInfoVO> menuList = ezNewPortalService.getUserMenuList(companyId, tenantId, portletLang, userId, deptId);
+			List<MenuInfoVO> menuList = ezNewPortalService.getUserMenuList(companyId, tenantId, portletLang, userId, deptId, "");
 			
 			boolean isUseQuestionAuth = false;
 			boolean isUseSurveyAuth = false;
@@ -925,7 +925,7 @@ public class EzNewPortalGWController {
 			/**
 			 * 2) 메인메뉴 및 서브메뉴 - 권한체크 - user 순서가 없을 경우 회사 순서로 진행
 			 */
-			List<MenuInfoVO> menuList = ezNewPortalService.getUserMenuList(companyId, tenantId, langType, userId, deptId);
+			List<MenuInfoVO> menuList = ezNewPortalService.getUserMenuList(companyId, tenantId, langType, userId, deptId, "");
 			
 			//tenant config가 NO인 경우 사용자 메뉴 순서에서도 나오면 안됨
 			//컨피그 : useQuestion(전자설문), useSurvey(전자설문 리뉴얼), useMemo(메모), useLadder(사다리게임), useCabinet(캐비닛), 
@@ -1206,7 +1206,7 @@ public class EzNewPortalGWController {
 			ezNewPortalService.updateUserMenuOrder(companyId, info.getTenantId(), userId, jObj);
 			
 			// 리스트 다시 받아서 출력
-			List<MenuInfoVO> menuList = ezNewPortalService.getUserMenuList(companyId, tenantId, langType, userId, deptId);
+			List<MenuInfoVO> menuList = ezNewPortalService.getUserMenuList(companyId, tenantId, langType, userId, deptId, "");
 			// List<MenuInfoVO> compMenuList = new ArrayList<MenuInfoVO>();
 //			List<MenuInfoVO> resultMenuList = new ArrayList<MenuInfoVO>();
 //			for (MenuInfoVO mVO : userMenuList) {
@@ -1390,7 +1390,7 @@ public class EzNewPortalGWController {
 			
 			ezNewPortalService.deleteUserMenuOrder(companyId, info.getTenantId(), userId);
 			// 초기화 하면 회사에서 지정한 메뉴 순서로 출력
-			List<MenuInfoVO> compMenuList = ezNewPortalService.getUserMenuList(companyId, tenantId, langType, userId, deptId);
+			List<MenuInfoVO> compMenuList = ezNewPortalService.getUserMenuList(companyId, tenantId, langType, userId, deptId, "");
 			
 			//tenant config가 NO인 경우 사용자 메뉴 순서에서도 나오면 안됨
 			//컨피그 : useQuestion(전자설문), useMemo(메모), useLadder(사다리게임), useCabinet(캐비닛), 
@@ -2383,6 +2383,178 @@ public class EzNewPortalGWController {
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
 			String menuLang = userInfo.getLang();
 			List<MenuInfoVO> menuInfos = ezNewPortalService.getMenus(companyId, userInfo.getTenantId(), menuLang, type);
+			int tenantId = userInfo.getTenantId();
+            
+			String useQuestion = ezCommonService.getTenantConfig("useQuestion", tenantId);
+			String useSurvey = ezCommonService.getTenantConfig("useSurvey", tenantId);
+			String useMemo = ezCommonService.getTenantConfig("useMemo", tenantId);
+			String useLadder = ezCommonService.getTenantConfig("useLadder", tenantId);
+			String useCabinet = ezCommonService.getTenantConfig("useCabinet", tenantId);
+			String useVote = ezCommonService.getTenantConfig("useBallotSystem", tenantId);
+			String useJournal = ezCommonService.getTenantConfig("USE_JOURNAL", tenantId);
+			String useCircular = ezCommonService.getTenantConfig("USE_CIRCULAR", tenantId);
+			String useAttitude = ezCommonService.getTenantConfig("USE_ATTITUDE", tenantId);
+			String useWebfolder = ezCommonService.getTenantConfig("useWebfolder", tenantId);
+			String useEzPMS = ezCommonService.getTenantConfig("USE_ezPMS", tenantId);
+			String useCommunity = ezCommonService.getTenantConfig("USE_COMMUNITY", tenantId);
+			String useExternalMailServer = ezCommonService.getTenantConfig("useExternalMailServer", tenantId);
+
+			String useSchedule = ezCommonService.getTenantConfig("useSchedule", tenantId);
+			String useResource = ezCommonService.getTenantConfig("useResource", tenantId);
+			String useBoard = ezCommonService.getTenantConfig("useBoard", tenantId);
+			String useToDo = ezCommonService.getTenantConfig("useToDo", tenantId);
+			String useCar = ezCommonService.getTenantConfig("useCar", tenantId);
+			
+			if (useAttitude == null || useAttitude.equals("")) {
+				useAttitude = "NO";
+			}
+			
+			if (useMemo == null || useMemo.equals("")) {
+				useMemo = "YES";
+			}
+			
+			if (useLadder == null || useLadder.equals("")) {
+				useLadder = "NO";
+			}
+			
+			if (useCabinet == null || useCabinet.equals("")) {
+				useCabinet = "NO";
+			}
+			
+			if (useVote == null || useVote.equals("")) {
+				useVote = "YES";
+			}
+			
+			if (useJournal == null || useJournal.equals("")) {
+				useJournal = "NO";
+			}
+			
+			if (useCircular == null || useCircular.equals("")) {
+				useCircular = "YES";
+			}
+			
+			if (useQuestion == null || useQuestion.equals("")) {
+				useQuestion = "NO";
+			}
+			
+			if (useSurvey == null || useSurvey.equals("")) {
+				useSurvey = "YES";
+			}
+			
+			if (useWebfolder == null || useWebfolder.equals("")) {
+				useWebfolder = "NO";
+			}
+			
+			if (useCommunity == null || useCommunity.equals("")) {
+				useCommunity = "YES";
+			}
+			
+			if (useEzPMS == null || useEzPMS.equals("")) {
+				useEzPMS = "NO";
+			}
+			
+			if (useExternalMailServer == null || useExternalMailServer.equals("")) {
+				useExternalMailServer = "NO";
+			}
+			
+			if (useSchedule == null || useSchedule.equals("")) {
+				useSchedule = "YES";
+			}
+			
+			if (useResource == null || useResource.equals("")) {
+				useResource = "YES";
+			}
+			
+			if (useBoard == null || useBoard.equals("")) {
+				useBoard = "YES";
+			}
+			
+			if (useToDo == null || useToDo.equals("")) {
+				useToDo = "YES";
+			}
+			if (useCar == null || useCar.equals("")) {
+				useCar = "NO";
+			}
+			
+			if (useQuestion.equals("NO")) {
+				menuInfos.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("question")));
+			}
+			
+			if (useSurvey.equals("NO")) {
+				menuInfos.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("survey")));
+				menuInfos.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("mSurvey")));
+			}
+			
+			if (useMemo.equals("NO")) {
+				menuInfos.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("memo")));
+			}
+			
+			if (useLadder.equals("NO")) {
+				menuInfos.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("ladder")));
+			}
+			
+			if (useCabinet.equals("NO")) {
+				menuInfos.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("cabinet")));
+			}
+			
+			if (useVote.equals("NO")) {
+				menuInfos.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("vote")));
+			}
+			
+			if (useJournal.equals("NO")) {
+				menuInfos.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("journal")));
+			}
+			
+			if (useCircular.equals("NO")) {
+				menuInfos.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("circular")));
+			}
+			
+			if (useAttitude.equals("NO")) {
+				menuInfos.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("attitude")));
+			}
+			
+			if (useWebfolder.equals("NO")) {
+				menuInfos.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("webfolder")));
+				menuInfos.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("mWebfolder")));
+			}
+			
+			if (useEzPMS.equals("NO")) {
+				menuInfos.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("pms")));
+			}
+			
+			if (useCommunity.equals("NO")) {
+				menuInfos.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("community")));
+			}
+			
+			if (useExternalMailServer.equalsIgnoreCase("YES")) {
+				menuInfos.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("mail")));
+				menuInfos.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("mMail")));
+				menuInfos.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("address")));
+				menuInfos.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("mAddress")));
+			}
+			
+			if (useSchedule.equals("NO")) {
+				menuInfos.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("schedule")));
+				menuInfos.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("mSchedule")));
+			}
+			
+			if (useResource.equals("NO")) {
+				menuInfos.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("resource")));
+				menuInfos.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("mResource")));
+			}
+			
+			if (useBoard.equals("NO")) {
+				menuInfos.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("board")));
+				menuInfos.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("mBoard")));
+			}
+			
+			if (useToDo.equals("NO")) {
+				menuInfos.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("task")));
+			}
+			
+			if (useCar.equals("NO")) {
+				menuInfos.removeIf(vo -> (vo.getMenuCode() != null && vo.getMenuCode().equals("car")));
+			}
 			
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -2869,6 +3041,14 @@ public class EzNewPortalGWController {
 				} 
 				else {
 					pvo.setPortletNameList(portletNameList);
+				}
+
+				if (webType != null && webType.equals("mobile") && pvo.getPortletCode() != null) {
+					if (pvo.getPortletCode().equals("mNotice")) {
+						data.put("mobileBrdMenuId", pvo.getMenuId());
+					} else if (pvo.getPortletCode().equals("mApprovallist")){
+						data.put("mobileAprMenuId", pvo.getMenuId());
+					}
 				}
 			}
 						
@@ -3364,6 +3544,7 @@ public class EzNewPortalGWController {
 
 			BoardPropertyVO boardPropertyVO = ezBoardService.getBoardProperty(boardId, info.getTenantId());
 			String guBun = boardPropertyVO.getGuBun();
+			String useVersion = boardPropertyVO.getVersionManage();
 			// Q&A 의 일반 유저일 경우 일반 게시판과 다른 리스트
 			boolean isQnANormal = "5".equals(guBun);
 			if (isQnANormal) {
@@ -3396,13 +3577,13 @@ public class EzNewPortalGWController {
 				data.put("currentPage", currentPage);
 
 			} else if (isQnANormal) { // Q&A 게시판
-				totalCnt = ezNewPortalService.getBoardPortletTotalCnt(info.getUserId(), info.getTenantId(), boardId, info.getCompanyId(), info.getOffSet(), isQnANormal);
+				totalCnt = ezNewPortalService.getBoardPortletTotalCnt(info.getUserId(), info.getTenantId(), boardId, info.getCompanyId(), info.getOffSet(), isQnANormal, useVersion);
 				totalPages  = (totalCnt + listCnt - 1) / listCnt;
 				currentPage = currentPage > totalPages ? totalPages : currentPage;
 				currentPage = currentPage == 0         ? 1          : currentPage;
 				startRow  = (currentPage - 1) * listCnt;
 				
-				List<BoardListVO> boardList = ezNewPortalService.getBoardPortletInfo(info.getUserId(), info.getTenantId(),	boardId, listCnt, info.getCompanyId(), info.getOffSet(), isQnANormal, startRow);
+				List<BoardListVO> boardList = ezNewPortalService.getBoardPortletInfo(info.getUserId(), info.getTenantId(),	boardId, listCnt, info.getCompanyId(), info.getOffSet(), isQnANormal, startRow, useVersion);
 				data.put("favList", boardList);
 				data.put("totalCnt", totalCnt);
 				data.put("currentPage", currentPage);
@@ -4617,7 +4798,7 @@ public class EzNewPortalGWController {
 			}
 			
 			if (useAttitude2.equals("YES")) {
-				List<MenuInfoVO> menuList = ezNewPortalService.getUserMenuList(info.getCompanyId(), info.getTenantId(), info.getLang(), userId, info.getDeptId());
+				List<MenuInfoVO> menuList = ezNewPortalService.getUserMenuList(info.getCompanyId(), info.getTenantId(), info.getLang(), userId, info.getDeptId(), "");
 				
 				for (MenuInfoVO mVO : menuList) {
 					if (mVO.getMenuCode() != null && mVO.getMenuCode().equals("attitude") && useAttitude2.equals("YES")) {
@@ -4715,7 +4896,7 @@ public class EzNewPortalGWController {
 				useCircular = "YES";
 			}
 			
-			List<MenuInfoVO> menuList = ezNewPortalService.getUserMenuList(companyId, tenantId, portletLang, userId, deptId);
+			List<MenuInfoVO> menuList = ezNewPortalService.getUserMenuList(companyId, tenantId, portletLang, userId, deptId, "");
 			
 //			boolean isUseQuestionAuth = false;
 			boolean isUseSurveyAuth = false;
@@ -5035,6 +5216,7 @@ public class EzNewPortalGWController {
 			} else {
 				BoardPropertyVO boardPropertyVO = ezBoardService.getBoardProperty(boardId, info.getTenantId());
 				String guBun = boardPropertyVO.getGuBun();
+				String useVersion = boardPropertyVO.getVersionManage();
 				// Q&A 의 일반 유저일 경우 일반 게시판과 다른 리스트
 				boolean isQnANormal = "5".equals(guBun);
 				if (isQnANormal) {
@@ -5043,14 +5225,14 @@ public class EzNewPortalGWController {
 				}
 
 				// 권한이 true이면 boardList불러오기
-				int boardListTotalCnt = ezNewPortalService.getBoardPortletTotalCnt(userId, tenantId, boardId, companyId, info.getOffset(), isQnANormal);
+				int boardListTotalCnt = ezNewPortalService.getBoardPortletTotalCnt(userId, tenantId, boardId, companyId, info.getOffset(), isQnANormal, useVersion);
 				
 				int totalPages  = (boardListTotalCnt + itemCount - 1) / itemCount;
 				currentPage = currentPage > totalPages ? totalPages : currentPage;
 				currentPage = currentPage == 0         ? 1          : currentPage;
 				int startRow  = (currentPage - 1) * itemCount;
 				
-				List<BoardListVO> boardList = ezNewPortalService.getBoardPortletInfo(userId, tenantId, boardId, itemCount, companyId, info.getOffset(), isQnANormal, startRow);
+				List<BoardListVO> boardList = ezNewPortalService.getBoardPortletInfo(userId, tenantId, boardId, itemCount, companyId, info.getOffset(), isQnANormal, startRow, useVersion);
 				
 				// 리스트 개수로 utc time 적용시키기
 				int boardListCount = boardList.size();
@@ -5814,7 +5996,7 @@ public class EzNewPortalGWController {
 			String companyId = userInfo.getCompanyID();
 			String lang = userInfo.getLang();
 			
-			Map<String, Boolean> menuAccess = commonUtil.checkMenuAccess(menuCodeList, companyId, tenantId, lang, userId, deptId);
+			Map<String, Boolean> menuAccess = commonUtil.checkMenuAccess(menuCodeList, companyId, tenantId, lang, userId, deptId, "");
 			
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -5935,6 +6117,7 @@ public class EzNewPortalGWController {
 			if (accessCheckSub) {
 				BoardPropertyVO boardPropertyVO = ezBoardService.getBoardProperty(boardId, info.getTenantId());
 				String guBun = boardPropertyVO.getGuBun();
+				String useVersion = boardPropertyVO.getVersionManage();
 				// Q&A 의 일반 유저일 경우 일반 게시판과 다른 리스트
 				boolean isQnANormal = "5".equals(guBun);
 				if (isQnANormal) {
@@ -5942,13 +6125,14 @@ public class EzNewPortalGWController {
 					isQnANormal = !ezBoardService.isBoardAdmin(boardId, userId, deptId, companyId, tenantId, rollInfo);
 				}
 				
-				int totalCnt = ezNewPortalService.getBoardPortletTotalCnt(info.getUserId(), info.getTenantId(), boardId, info.getCompanyId(), info.getOffSet(), isQnANormal);
+				int totalCnt = ezNewPortalService.getBoardPortletTotalCnt(info.getUserId(), info.getTenantId(), boardId, info.getCompanyId(), info.getOffSet(), isQnANormal, useVersion);
+
 				int totalPages  = (totalCnt + listCnt - 1) / listCnt;
 				currentPage = currentPage > totalPages ? totalPages : currentPage;
 				currentPage = currentPage == 0         ? 1          : currentPage;
 				int startRow  = (currentPage - 1) * listCnt;
 				
-				List<BoardListVO> boardList = ezNewPortalService.getBoardPortletInfo(info.getUserId(), info.getTenantId(),	boardId, listCnt, info.getCompanyId(), info.getOffSet(), isQnANormal, startRow);
+				List<BoardListVO> boardList = ezNewPortalService.getBoardPortletInfo(info.getUserId(), info.getTenantId(),	boardId, listCnt, info.getCompanyId(), info.getOffSet(), isQnANormal, startRow, useVersion);
 
 				int boardListCount = boardList.size();
 
@@ -6012,6 +6196,7 @@ public class EzNewPortalGWController {
 			} else {
 				BoardPropertyVO boardPropertyVO = ezBoardService.getBoardProperty(boardID, info.getTenantId());
 				String guBun = boardPropertyVO.getGuBun();
+				String useVersion = boardPropertyVO.getVersionManage();
 				// Q&A 의 일반 유저일 경우 일반 게시판과 다른 리스트
 				
 				boolean isQnANormal = "5".equals(guBun);
@@ -6021,7 +6206,7 @@ public class EzNewPortalGWController {
 					isQnANormal = !ezBoardService.isBoardAdmin(boardID, userId, deptId, companyId, tenantId, rollInfo);
 				}
 				// 권한이 true이면 게시물 가져옴 (최대 3개)
-				List<BoardListVO> boardList = ezNewPortalService.getBoardPortletInfo(userId, tenantId, boardID, 3, companyId, info.getOffset(), isQnANormal);
+				List<BoardListVO> boardList = ezNewPortalService.getBoardPortletInfo(userId, tenantId, boardID, 3, companyId, info.getOffset(), isQnANormal, useVersion);
 				
 				// 리스트 개수로 utc time 적용
 				int boardListCount = boardList.size();
@@ -6482,8 +6667,10 @@ public class EzNewPortalGWController {
 			String itemIDEncode = "";
 			String boardIDEncode = "";
 			
-			List<HashMap<String, Object>> boardTopItemList = ezBoardService.getNoticePostItemList(bId, userId, 1, 10, 0, "", "", "1", 0);			
-			List<HashMap<String, Object>> boardItemList = ezBoardService.getBoardListItem(bId, userId, 1, 10, 0, "", "", new HashMap<String, String>(), "1", 0);
+			Map<String, String> orderByMap = new HashMap<String, String>();
+			String useVersion = ezBoardService.getUseVersionFlag(bId, info.getTenantId());
+			List<HashMap<String, Object>> boardTopItemList = ezBoardService.getNoticePostItemList(bId, userId, 1, 10, 0, "", "", "1", 0);
+			List<HashMap<String, Object>> boardItemList = ezBoardService.getBoardListItem(bId, userId, 1, 10, 0, "", "", orderByMap, "1", 0, useVersion);
 
 			JSONArray ja = new JSONArray();			
 			int added = 0;

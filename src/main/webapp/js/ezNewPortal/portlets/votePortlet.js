@@ -2,7 +2,7 @@
  * 
  */
 function viewQstList() {
-	window.open("/ezPoll/pollMain.do","main");		    	
+	parent.document.querySelector("iframe[name=main]").src = "/ezPoll/pollMain.do";		    	
 }
 
 function votePoll() {
@@ -21,7 +21,7 @@ function votePoll() {
 			var result = JSON.parse(data).result;					
 
 			if (result == "Normal") {
-				window.open("/ezPoll/pollMain.do?qstId=" + qstId, "main");
+				parent.document.querySelector("iframe[name=main]").src = "/ezPoll/pollMain.do?qstId=" + qstId;
 			}
 			else {
 				alert(messages.strLang13);

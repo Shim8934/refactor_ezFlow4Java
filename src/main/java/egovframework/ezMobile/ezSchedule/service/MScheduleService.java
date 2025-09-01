@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.json.simple.JSONObject;
 
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
+import egovframework.ezMobile.ezResource.vo.ResScheGetHolidayVO;
 import egovframework.ezMobile.ezSchedule.vo.MScheduleInfoVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleInfoVO;
 
@@ -35,4 +36,5 @@ public interface MScheduleService {
 
 	public List<ScheduleInfoVO> scheduleUserSearchList(MCommonVO info, String startDate, String endDate, String searchTitle) throws Exception;
 
+	public List<ResScheGetHolidayVO> getTholiday(int targetYear, String companyId, String userCompany, int tenantId) throws Exception ;
 }

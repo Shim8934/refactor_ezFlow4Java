@@ -21,6 +21,7 @@ public class MQuestionVO {
 	private MAttachVO attach;
 	private MAttachVO imgTitle;
 	private List<MResponseVO> responses;
+	private int resOpenFlag;
 	
 	public List<MResponseVO> getResponses() {
 		return responses;
@@ -166,4 +167,11 @@ public class MQuestionVO {
 		this.imgTitle = imgTitle;
 	}
 	
+	public int getResOpenFlag() {
+		return resOpenFlag;
+	}
+
+	public void setResOpenFlag(int resOpenFlag) {
+		this.resOpenFlag = resOpenFlag;
+	}
 }

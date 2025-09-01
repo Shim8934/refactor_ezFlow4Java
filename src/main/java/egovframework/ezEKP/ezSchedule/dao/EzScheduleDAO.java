@@ -9,7 +9,9 @@ import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezResource.vo.ResGetScheduleVO;
 import egovframework.ezEKP.ezSchedule.vo.AttachListVO;
 import egovframework.ezEKP.ezSchedule.vo.AttendantListVO;
+import egovframework.ezEKP.ezSchedule.vo.ScheDeptVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheGetHolidayVO;
+import egovframework.ezEKP.ezSchedule.vo.ScheSecretaryVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleConfigVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleCumulerVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleDeptVO;
@@ -21,12 +23,18 @@ import egovframework.ezEKP.ezSchedule.vo.ScheduleReceiveListVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleReminderVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleSecretaryVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleTokenInfoVO;
+import egovframework.ezEKP.ezSchedule.vo.ScheduleTypeConfigVO;
 import egovframework.let.user.login.vo.LoginVO;
 import org.egovframe.rte.psl.dataaccess.EgovAbstractDAO;
+import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import javax.annotation.Resource;
 
 @Repository("EzScheduleDAO")
 public class EzScheduleDAO extends EgovAbstractDAO {
-	
+
+	@Resource(name="EzCommonService")
+	private EzCommonService ezCommonService;
+
 	@SuppressWarnings("unchecked")
 	public List<ScheGetHolidayVO> getTholiday(Map<String, Object> map){
 		return  (List<ScheGetHolidayVO>) list("EzScheduleDAO.getTholiday", map);
@@ -44,6 +52,10 @@ public class EzScheduleDAO extends EgovAbstractDAO {
 
 	@SuppressWarnings("unchecked")
 	public List<ScheduleInfoVO> getScheduleList(Map<String, Object> map) throws Exception  {
+		// 임원일정 조회가능범위 설정여부
+		String useExecSchedulePublic = ezCommonService.getTenantConfig("useExecSchedulePublic", (Integer) map.get("v_TENANTID"));
+		map.put("useExecSchedulePublic", useExecSchedulePublic);
+
 		return (List<ScheduleInfoVO>) list("EzScheduleDAO.getScheduleList", map);
 	}
 	
@@ -515,5 +527,44 @@ public class EzScheduleDAO extends EgovAbstractDAO {
 	public void updateScheduleGroupMember(Map<String, Object> map) throws Exception {
 		update("EzScheduleDAO.updateScheduleGroupMember", map);
 	}
-}
 
+	
+	@SuppressWarnings("unchecked")
+	public List<ScheSecretaryVO> getPublicExceSchedule(Map<String, Object> param) {
+		return (List<ScheSecretaryVO>) list("EzScheduleDAO.getPublicExceSchedule", param);
+	}
+	
+	public void setScheduleViewStatus(Map<String, Object> map) {
+		insert("EzScheduleDAO.setScheduleViewStatus", map);		
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<ScheduleTypeConfigVO> getUserScheduleTypeConfig(Map<String, Object> param) throws Exception {
+		return (List<ScheduleTypeConfigVO>) list("EzScheduleDAO.getUserscheduleTypeConfig", param);
+	}
+
+	public void saveIsTagChecked(Map<String, Object> param) {
+		update("EzScheduleDAO.saveIsTagChecked", param);
+	}
+	public void upsertUserScheTagColor(ScheduleTypeConfigVO vo) {
+		update("EzScheduleDAO.upsertUserScheTagColor", vo);
+	}
+
+	public String getUserScheduleTypeColor(Map<String, Object> param) {
+		return (String) select("EzScheduleDAO.getUserScheduleTypeColor", param);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<ScheDeptVO> getShareScheduleDept(Map<String, Object> param) {
+		return (List<ScheDeptVO>) list("EzScheduleDAO.getShareScheduleDept", param);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<ScheDeptVO> getAddJobSchedule(Map<String, Object> param) {
+		return (List<ScheDeptVO>) list("EzScheduleDAO.getAddJobSchedule", param);
+	}
+	
+	public int checkReminderScheduleExists(Map<String, Object> map) {
+		return (int) select("EzScheduleDAO.checkReminderScheduleExists", map);		
+	}
+}

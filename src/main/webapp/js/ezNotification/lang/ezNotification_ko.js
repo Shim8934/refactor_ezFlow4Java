@@ -64,7 +64,8 @@ var subType = {
 		modify : "수정알림",
 		comment : "댓글등록",
 		reply : "답변알림",
-		notice : "전체공지"
+		notice : "전체공지",
+		invite : "초대알림"
 	},
 	webfolder : {
 		open_apply : "개설신청",
@@ -84,6 +85,7 @@ subType["approval"]["return"] = "문서회수";
 subType["approval"]["default"] = "결재노티";
 subType["board"]["new"] = "신규게시";
 subType["board"]["return"] = "승인반려";
+subType["board"]["expired"] = "공지만료";
 subType["schedule"]["delete"] = "일정삭제";
 subType["survey"]["new"] = "신규등록";
 subType["poll"]["new"] = "신규등록";

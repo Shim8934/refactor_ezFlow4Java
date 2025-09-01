@@ -59,6 +59,8 @@
 			var orgCompanyID = "<c:out value='${orgCompanyID}' />";
 			
 			var useExternalMailServer = "<c:out value='${useExternalMailServer}'/>";
+
+			var approvalFlag = "<c:out value='${approvalFlag}'/>";
 			
 	        window.onresize = function () {
 	            HwpCtrl.style.height = null;
@@ -202,8 +204,8 @@
 	
 			function btnMail_onclick() {
 // 			    window.open("/myoffice/ezEmail/mail_write.aspx?DocHref=" + docHref +"&cmd=docsend&docID=" + pDocID + "&TARGET=APPROVALG", "", "height = " + window.screen.availHeight * 0.8 + ", width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + GetOpenPosition(890, window.screen.availHeight * 0.8));
-		        window.open("/ezEmail/mailWrite.do?docHref=" + docHref + "&cmd=docsend&docID=" + pDocID + "&TARGET=APPROVALG", "", "height = " + window.screen.availHeight * 0.8 + ", width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + GetOpenPosition(890, window.screen.availHeight * 0.8));
-
+// 		        window.open("/ezEmail/mailWrite.do?docHref=" + docHref + "&cmd=docsend&docID=" + pDocID + "&TARGET=APPROVALG", "", "height = " + window.screen.availHeight * 0.8 + ", width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + GetOpenPosition(890, window.screen.availHeight * 0.8));
+                showPopup("/ezEmail/mailWrite.do?docHref=" + docHref + "&cmd=docsend&docID=" + pDocID + "&TARGET=APPROVALG", 890, window.screen.availHeight * 0.8, "", "height = " + window.screen.availHeight * 0.8 + ", width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + GetOpenPosition(890, window.screen.availHeight * 0.8), hidePopup);
 			}
 	
 			function btnBoard_onclick() {
@@ -271,7 +273,12 @@
 	
 			function btnDocInfo_onclick() {
 				var url = "/ezApprovalG/ezDocInfoView.do?docID=" + pDocID + "&ingFlag=END";
-			    var feature = "status:no;dialogWidth:420px;dialogHeight:515px;help:no;scroll:no;edge:sunken;";
+			    var feature = "";
+				if (typeof approvalFlag !== "undefined" && approvalFlag == "G") {
+					feature = "status:no;dialogWidth:420px;dialogHeight:400px;help:no;scroll:no;edge:sunken;";
+				}else {
+					feature = "status:no;dialogWidth:420px;dialogHeight:300px;help:no;scroll:no;edge:sunken;";
+				}
 			    var RtnVal = window.showModalDialog(url, "", feature);
 			}
 	

@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.json.simple.JSONObject;
+import egovframework.ezEKP.ezBoard.vo.BoardHistoryVO;
 import org.w3c.dom.Document;
 
 import egovframework.ezEKP.ezBoard.vo.BoardAccessVO;
@@ -27,6 +28,8 @@ import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezBoard.vo.MealDataVO;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
+import egovframework.ezMobile.ezBoard.vo.MBoardInfoVO;
+import egovframework.ezMobile.ezOption.vo.MCommonVO;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -77,7 +80,7 @@ public interface EzBoardService {
 
 	public List<HashMap<String, Object>> getNoticePostItem(BoardVO ezBoardVO, int personalCount) throws Exception;
 
-	public List<HashMap<String, Object>> getBoardListItem(String boardId, String userID, int startRow, int endRow, int boardCount, String orderOption1, String orderOption2, Map<String, String> orderByMap, String type, int tenantID) throws Exception;
+	public List<HashMap<String, Object>> getBoardListItem(String boardId, String userID, int startRow, int endRow, int boardCount, String orderOption1, String orderOption2, Map<String, String> orderByMap, String type, int tenantID, String useVersion) throws Exception;
 	
 	public List<HashMap<String, Object>> getQnABoardListItem(String boardId, String userID, int startRow, int endRow, int boardCount, String orderOption1, String orderOption2, Map<String, String> orderByMap, String type, String adminType, int tenantID) throws Exception;
 	
@@ -581,4 +584,32 @@ public interface EzBoardService {
 	public JSONObject getMenuSchedule(Map<String, Object> map, JSONObject returnJson) throws Exception;
 	
 	public String getBoardNameLocalizing(String userLang, BoardPropertyVO boardProperty) throws Exception;
+
+	public void repostItem(String boardId, String itemID, String userID, int tenantID, String hasReply) throws Exception;
+
+	public BoardItemVO getFileViewerBoardInfo(HttpServletRequest request, LoginVO userInfo, String versionYN) throws Exception;
+
+	public boolean isPostDuplicated(String versionYN, String boardID, String parentItemID, int tenantId) throws Exception;
+
+	public List<BoardHistoryVO> getModifiedHistoryOfItem(String boardID, String OffSetMin, String itemID, String companyID, int tenantID) throws Exception;
+
+	public String getUseVersionFlag(String boardID, int tenantID) throws Exception;
+
+	public String getItemVersion(String itemID, String companyID, int tenantID) throws Exception;
+
+	public String getParentItemID(String itemID, int tenantID) throws Exception;
+
+	public String checkIsNewestVersion(String boardID, String itemID, int tenantID, String version) throws Exception;
+
+	public String getBoardTitle(String contentLocation, int tenantId) throws Exception;
+
+	public List<String> getBoardIdList(String strXML) throws Exception;
+
+	public String getBoardInfoByList(LoginVO userInfo, List<String> boardIdList, String strXML) throws Exception;
+
+    public boolean checkGuestPerm(String id, int tenantId, String type) throws Exception;
+	
+	public List<BoardListVO> getGuestBoardList(String boardID, int tenantID, int offset) throws Exception;
+
+	public BoardItemVO getMsatCallUrl(HttpServletRequest request, MBoardInfoVO boardInfo, MCommonVO info) throws Exception;
 }

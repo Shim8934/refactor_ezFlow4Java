@@ -122,7 +122,9 @@
         function window_onbeforeunload() {
             try {
                 window.opener.openergetDocInfo();
-            } catch (e) { }
+            } catch (e) {
+                 window.parent.openergetDocInfo();
+            }
         }
 
         function btnClose_onclick() {
@@ -1536,7 +1538,8 @@
         }
 
         function sendMail(){
-            window.open(document.location.protocol + "//" + document.location.hostname + ":" + location.port + "/ezEmail/mailWrite.do?docHref=" + pDocHref + "&cmd=docsend&docID=" + pOrgDocID + "&TARGET=APPROVALG", "", "height = " + window.screen.availHeight * 0.8 + ", width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + GetOpenPosition(890, window.screen.availHeight * 0.8));
+            // window.open(document.location.protocol + "//" + document.location.hostname + ":" + location.port + "/ezEmail/mailWrite.do?docHref=" + pDocHref + "&cmd=docsend&docID=" + pOrgDocID + "&TARGET=APPROVALG", "", "height = " + window.screen.availHeight * 0.8 + ", width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + GetOpenPosition(890, window.screen.availHeight * 0.8));
+            showPopup(document.location.protocol + "//" + document.location.hostname + ":" + location.port + "/ezEmail/mailWrite.do?docHref=" + pDocHref + "&cmd=docsend&docID=" + pOrgDocID + "&TARGET=APPROVALG", 890, window.screen.availHeight * 0.8, "", "height = " + window.screen.availHeight * 0.8 + ", width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + GetOpenPosition(890, window.screen.availHeight * 0.8), hidePopup);
         }
     </script>
 </head>

@@ -169,6 +169,14 @@ public class BoardPropertyVO {
 	private String writerFlag;
 	/** 2024-09-30 이혜림 - 게시판 별점 기능 플래그 추가**/
 	private String starRatingFlag;
+
+	private String versionManage;
+	/** 2023-11-02 조소정 - 게시판 사용안함 여부 플래그 추가 */
+	private String notUsedFlag;
+    /** URL 복사 사용여부 */
+    private String urlCopyFlag;
+	/** 게시판 리스트표출방식 (G:기본/E:확장형/U:사용자설정) */
+	private String listShowType;
 	
 	public int getSs_board_maxRows() {
 		return ss_board_maxRows;
@@ -668,5 +676,32 @@ public class BoardPropertyVO {
 
 	public void setStarRatingFlag(String starRatingFlag) {
 		this.starRatingFlag = starRatingFlag;
+	}
+
+	public String getVersionManage() {
+		return versionManage;
+	}
+
+	public void setVersionManage(String versionManage) {
+		this.versionManage = versionManage;
+	}
+	public String getNotUsedFlag() {
+		return notUsedFlag;
+	}
+	public void setNotUsedFlag(String notUsedFlag) {
+		this.notUsedFlag = notUsedFlag;
+	}
+
+	public String getUrlCopyFlag() {
+		return urlCopyFlag;
+	}
+	public void setUrlCopyFlag(String urlCopyFlag) {
+		this.urlCopyFlag = urlCopyFlag;
+	}
+	public String getListShowType() {
+		return listShowType;
+	}
+	public void setListShowType(String listShowType) {
+		this.listShowType = listShowType;
 	}
 }

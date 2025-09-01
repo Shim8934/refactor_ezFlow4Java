@@ -219,7 +219,7 @@ var strLang600 = "n.month";
 var strLang601 = "close";
 var strLang602 = "en";
 var strLang603 = "Up to five resource lists can be registered.";
-var strLangLHM01 = "default_us";
+var strLangLHM01 = "default";
 var strLangLHM02 = "Print Preview";
 var strLangLHM03 = "Print";
 var strLangLHM04 = "Cancel";
@@ -292,12 +292,8 @@ var strLangFvYGS18 = "Cannot add sub-items to a resource.";
 var strLangFvYGS19 = "Deleting a category will delete all its sub-resources and sub-categories.\nAre you sure you want to delete?";
 
 
-
 // 2024-08-26 유길상 - 자원등록 > 최대 예약 가능 기간, 정원
-var strLangMaxYGS01 = "Maximum reservation period exceeded.";
-var strLangMaxYGS02 = "Capacity";
-var strLangMaxYGS03 = "People";
-var strLangMaxYGS04 = "Please enter the capacity.";
-
-// 2025-05-07 이혜림 - 자원등록 > 최대 예약 가능 기간 제한
-var strLangLHR01 = "You can only enter numbers greater than or equal to 1 (days)";
+var strLangMaxYGS01 = "최대 예약 가능 기간을 초과하였습니다.";
+var strLangMaxYGS02 = "정원";
+var strLangMaxYGS03 = "명";
+var strLangMaxYGS04 = "정원을 입력하세요.";

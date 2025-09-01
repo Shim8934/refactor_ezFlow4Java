@@ -112,6 +112,11 @@
 			var userLang = "${userInfo.lang}";
 		    var shareUser = "<c:out value = '${shareUser}'/>";
 		    var primary = "<c:out value = '${primary}'/>"; // 재기안 시 부서명 다국어 분기처리를 위한 primary (1:기본어, 2:다국어)
+			var useWebHWP = "<c:out value ='${useWebHWP}'/>";
+			var adminSendOutFlag = "Y";
+			var assignChk = "N";
+			var adminPage = "Y";
+			var formID = "";
 		    
 		    var selectcabinet_cross_dialogArguments = new Array();
 		    
@@ -355,13 +360,13 @@
 		    }
 		
 		    $(function () {
-		      	if(approvalFlag == "G") {
+		      	/* if(approvalFlag == "G") {
 	        		$(".approvalG").css("display","");
 	        		$(".approval").css("display","none");
 	        	} else{
 	        		$(".approvalG").css("display","none");
 	        		$(".approval").css("display","");
-	        	}
+	        	} */
 		      	
 		      	/* 2018-06-19 김민성 - 전자결재 selectbox 기본으로 변경 */
 		        /* $("#sel_year").selectmenu({
@@ -439,7 +444,7 @@
 					}
 				} else { // 그 외의 경우, 다시 기안자 검색조건을 어팬드
 					if (selectWriter.length <= 0) {
-						$("#selectType").append('<option value="rad_Writer"><spring:message code="ezApprovalG.t445"/></option>');
+						$("#selectType").append('<option value="rad_Writer"><spring:message code="ezApprovalG.yjh09"/></option>');
 					}
 				}
 				
@@ -474,7 +479,7 @@
 		        	AddOption(sel_status, '<spring:message code="ezApproval.t497"/>', "015");
 		        } else if (pListTypeValue == "9") {
 		        	AddOption(sel_status, '<spring:message code="ezApprovalG.t1308"/>', "I");
-		        	AddOption(sel_status, '<spring:message code="ezApprovalG.t239"/>', "Y");
+		        	AddOption(sel_status, '<spring:message code="ezApprovalG.t239"/>', "T");
 		        	AddOption(sel_status, '<spring:message code="ezApprovalG.F0031"/>', "R");
 		        	AddOption(sel_status, '<spring:message code="ezApproval.t155"/>', "S");
 		        	AddOption(sel_status, strLangAprState21, "V");
@@ -529,7 +534,7 @@
 		        }
 		        else if (pListTypeValue == "9") {
 		            SendOutFlag = "SS";
-		            getSendOutDocList();
+					getAdminSendOutDocList();
 		        }
 		        else if (pListTypeValue == "10") {
 		            getDocList();
@@ -552,7 +557,7 @@
 		        } else if (pListTypeValue == "4") {
 		        	getReceivedDocList();
 		        } else if (pListTypeValue == "9") {
-		        	getSendOutDocList();
+					getAdminSendOutDocList();
 		        }
 		    }
 		
@@ -1439,7 +1444,7 @@
 					}
 				} else { // 그 외의 경우, 다시 기안자 검색조건을 어팬드
 					if (selectWriter.length <= 0) {
-						$("#selectType").append('<option value="rad_Writer"><spring:message code="ezApprovalG.t445"/></option>');
+						$("#selectType").append('<option value="rad_Writer"><spring:message code="ezApprovalG.yjh09"/></option>');
 					}
 				}
 				
@@ -1676,6 +1681,9 @@
 		            var top = (parseInt(heigth) - 460) / 2;
 		            window.open("/ezApprovalG/ezLineInfo.do?docID=" + tr.getAttribute("DATA1") + "&deptID=&docState=015", "", "height=460px,width=1155px, left=" + left + "px, top=" + top + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
 		        }
+		        else {
+                    OpenAlertUI("<spring:message code='ezApprovalG.t632'/>");
+                }
 		    }
 		    function GetBujaeFlag() {
 		        var BString = arr_userinfo[7];
@@ -2135,7 +2143,7 @@
 		        }
 		        else if (pListTypeValue == "9") {
 		            SendOutFlag = "SS";
-		            getSendOutDocList();
+					getAdminSendOutDocList();
 		        }
 		        else if (pListTypeValue == "10") {
 		            getDocList();
@@ -2348,18 +2356,18 @@
 	</head>
 	<body class="mainbody" style="margin-top:0px;">	
 		<h1 class="title_h1">
-			<span id="presentcell">발송현황</span><span id="TitleInfo" style="color:#666;font-weight:normal;"></span>
+			<span id="presentcell"><spring:message code='ezApprovalG.yjh08'/></span><span id="TitleInfo" style="color:#666;font-weight:normal;"></span>
 		    <span class="searchForm">
 		    	<select id="selectType" class="text"; style="width:80px; height:27px; border-color: #c8c8c8;">
 		    		<option selected value="rad_Subject"><spring:message code='ezApprovalG.t106'/></option>
-		    		<option value="rad_Writer"><spring:message code='ezApprovalG.t445'/></option>
+		    		<option value="rad_Writer"><spring:message code='ezApprovalG.yjh09'/></option>
 		    	</select>
 			    <input id="txt_keyword" class="searchinputBox searchinputBox" style="height: 27px;border: 1px solid #cbcbcb;" onkeypress="onkeydown_start_search();" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
 		        <a class="searchBtn nofilter"><img src="/images/bsearch_new2.png" border="0" onClick="search()"></a>
 		    </span>
 		</h1>
 		<div id="mainmenu">
-			<ul>  
+			<ul>  <%-- 2024-07-22 양지혜 - 관리자 > 전자결재 > 발송현황 > 상단 버튼 사용하지 않아 전체 display none --%>
 		  		<li id="tbtnRegUserCont" style="DISPLAY:none"><span id=btnRegUserCont onClick ="return btnRegUserCont_onclick()" ><spring:message code='ezApproval.t589'/></span></li>
 				<li class="important" id="tbtnDraft" style="DISPLAY:none"><span id="btnDraft" onclick="return btnDraft_onclick()" ><spring:message code='ezApprovalG.t30'/></span></li>
 				<li class="important" id="tbtnLinkDraft" style="display:none"><span id="btnLinkDraft" onclick="return btnLinkDraft_onclick()"><spring:message code='ezApprovalG.t1737'/></span></li>
@@ -2373,21 +2381,26 @@
 				<li id="tbtnReceipt"  style="DISPLAY:none"><span id="btnReceipt" onclick="return btnReceipt_onclick()" ><spring:message code='ezApprovalG.t1308'/></span></li>
 				<li id="tbtnReturn" style="DISPLAY:none"><span id="btnReturn" onclick="return btnReturn_onclick()" ><spring:message code='ezApprovalG.t1434'/></span></li>
 				<li id="tbtnSimsa" style="DISPLAY:none"><span id="btnSimsa" onclick="return btnSimsa_onclick()" ><spring:message code='ezApprovalG.t214'/></span></li>
-				<li id="tbtnRegList" class="approvalG"><span id="btnAddCabinet" onclick="return btnAddCabinet_onclick()" ><spring:message code='ezApprovalG.t933'/></span></li>
+				<li id="tbtnReceiptAll" style="DISPLAY:none"><span id="btnReceiptAll" onclick="return btnReceiptAll_onclick()" ><spring:message code='ezApprovalG.lgeAR01'/></span></li>
+				<li id="tbtnRJunkyulAll" style="DISPLAY:none"><span id="btnRJunkyulAll" onclick="return btnRJunkyulAll_onclick()" ><spring:message code='ezApprovalG.lgeAR02'/></span></li>
+				<li id="tbtnRegList" class="approvalG" style="DISPLAY:none"><span id="btnAddCabinet" onclick="return btnAddCabinet_onclick()" ><spring:message code='ezApprovalG.t933'/></span></li>
 				<li id="tbtnUserInfo" style="DISPLAY:none"><span id="btnUserInfo" onclick="return btnUserInfo_onclick()" ><spring:message code='ezApprovalG.t1741'/></span></li>
-				<li id="tDocInfo"  class="approvalG"><span id="DocInfo" onclick="return GongRamDocInfo()" ><spring:message code='ezApprovalG.t946'/></span></li>		
+				<li id="tDocInfo"  class="approvalG" style="DISPLAY:none"><span id="DocInfo" onclick="return GongRamDocInfo()" ><spring:message code='ezApprovalG.t946'/></span></li>		
 				<li id="tbtncallback" style="DISPLAY:none"><span id="btncallback" onclick="return btncallback_onclick('CALLBACK')" ><spring:message code='ezApprovalG.t66'/></span></li>
 		        <li id="tbtnforcecallback" style="display:none"><span id="btnforcecallback" onclick="return btnforcecallback_onclick()"><spring:message code='ezApprovalG.t2005'/></span></li>
 				<c:if test="${approvalFlag == 'G'}">
-					<li id="tbtnGongRam"><span id="btnGongRam" onclick="return btnViewDoc_onclick()" ><spring:message code='ezApprovalG.t1442'/></span></li>
+					<li id="tbtnGongRam" style="DISPLAY:none"><span id="btnGongRam" onclick="return btnViewDoc_onclick()" ><spring:message code='ezApprovalG.t1442'/></span></li>
 					<%-- 2024-06-04 홍승비 - 버튼 표출 제어 함수 오류를 방지하기 위해 관리자단의 발송현황 내부 페이지에 '일괄공람/일괄회람' 버튼 추가, 실제 동작은 필요하지 않으므로 onclick 속성 제거 --%>
 					<li id="tbtnGongRamALL" style="display:none"><span id="btnGongRamALL"><spring:message code='ezApprovalG.CSJBDA01'/></span></li>
 				</c:if>
 				<c:if test="${approvalFlag != 'G'}">
 					<li id="tbtnGongRam" style="DISPLAY:none"><span id="btnGongRam" onclick="return btnViewDoc_onclick()" ><spring:message code='ezApprovalG.hyj21'/></span></li>
-					<li id="tbtnGongRamALL" style="display:none"><span id="btnGongRamALL"><spring:message code='ezApprovalG.CSJBDA03'/></span></li>
+					<li id="tbtnGongRamALL" style="display:none"><span id="btnGongRamALL" onclick="return btnGongRamALL_onclick()" ><spring:message code='ezApprovalG.CSJBDA01'/></span></li>
 				</c:if>
 				<li id="tbtnViewDoc" style="DISPLAY:none"><span id="btnViewDoc" onclick="return btnViewDoc_onclick()" ><spring:message code='ezApprovalG.t367'/></span></li>
+				<li id="tbtnAssignList" style="display:none"><span id="btnAssignList" onclick="return btnAssignList_onclick()"><spring:message code='ezApprovalG.yjh06'/></span></li>
+				<li id="tbtnAssign" style="display:none"><span id="btnAssign" onClick="return btnAssign_onclick2()"><spring:message code='ezApprovalG.t1430'/></span></li>
+				<li id="tbtnDeptRecevList" style="display:none"><span id="btnDeptRecevList" onclick="return btnDeptRecevList_onclick()"><spring:message code='ezApprovalG.t1749'/></span></li>
 		        <li id="tbtnTotalSave" style="DISPLAY:none"><span id="btnTotalSave" onclick="return TotalSave_onclick()"><spring:message code='ezApprovalG.t00008'/></span></li>
 		        <li id="tSearchCondi" style="DISPLAY:none"><span class="icon16 icon16_search" id="SearchCondi" onclick="return SearchCondi_onclick()"></span></li>
 		        <%-- <li id="tSecondApproval" class="approvalG"><span id="btnSecondApproval" onclick="return btnSecondApproval()"><spring:message code='ezApprovalG.t26'/><spring:message code='ezApprovalG.t54'/></span></li> --%>

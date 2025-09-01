@@ -6,6 +6,7 @@
 	<typeAlias alias="OrganDeptVO"							    type="egovframework.ezEKP.ezOrgan.vo.OrganDeptVO"/>
 	<typeAlias alias="OrganUserVO"								type="egovframework.ezEKP.ezOrgan.vo.OrganUserVO"/>	
 	<typeAlias alias="OrganProxyVO"								type="egovframework.ezEKP.ezOrgan.vo.OrganProxyVO"/>
+	<typeAlias alias="OrganTeamsTreeVO"							type="egovframework.ezEKP.ezOrgan.vo.OrganTeamsTreeVO"/>
 	
 	<resultMap id="deptTreeInfo" class="OrganDeptVO">
 		<result property="cn" 									column="cn" 							columnIndex="1"/>
@@ -18,6 +19,7 @@
 		<result property="isAddjob" 							column="isAddjob" 					nullValue=""/>
 		<result property="jobId" 								column="jobId" 						nullValue=""/>
 		<result property="roleId" 								column="roleId" 					nullValue=""/>
+		<result property="extensionAttribute2" 					column="extensionAttribute2" 		nullValue=""/>
 	</resultMap>
 	
 	<resultMap id="deptMemberInfo" class="OrganDeptVO">
@@ -29,6 +31,33 @@
 		<result property="isAddjob" 							column="isAddjob" 						columnIndex="6"	 nullValue=""/>
 		<result property="jobId" 								column="jobId" 						    columnIndex="7"  nullValue=""/>
 		<result property="roleId" 								column="roleId" 						columnIndex="8"  nullValue=""/>
+		<result property="extensionAttribute2"					column="extensionAttribute2" 			columnIndex="9"  nullValue=""/>
+	</resultMap>
+
+	<resultMap id="teamsDeptMemberInfo" class="OrganTeamsTreeVO">
+		<result property="data1" column="data1"/>
+		<result property="data2" column="data2"/>
+		<result property="displayName" column="displayName"/>
+		<result property="title" column="title"/>
+		<result property="description" column="description"/>
+		<result property="levelName" column="levelName"/>
+		<result property="department" column="department"/>
+		<result property="nodeLevel" column="nodeLevel"/>
+		<result property="nodeIcon" column="nodeIcon"/>
+		<result property="textColor" column="textColor"/>
+		<result property="icon" column="icon"/>
+		<result property="mail" column="mail"/>
+		<result property="presence" column="presence"/>
+		<result property="upnName" column="upnName"/>
+		<result property="mobile" column="mobile"/>
+		<result property="telephoneNumber" column="telephoneNumber"/>
+		<result property="teamsId" column="teamsId"/>
+		<result property="extensionAttribute10" column="extensionAttribute10"/>
+		<result property="chargeBusiness" column="chargeBusiness"/>
+		<result property="physicalDeliveryOfficeName" column="physicalDeliveryOfficeName"/>
+		<result property="addJob" column="addJob"/>
+		<result property="extensionAttribute2" column="extensionAttribute2"/>
+		<result property="sortOrder" column="sortOrder"/>
 	</resultMap>
 	
 	<resultMap id="deptSubTreeInfo" class="OrganDeptVO">
@@ -87,6 +116,8 @@
 		<result property="physicalDeliveryOfficeName1" 			column="physicalDeliveryOfficeName1" 	columnIndex="44"/>
 		<result property="userTreeFlag" 						column="usertreeflag" 					columnIndex="48"/>
 		<result property="companyId" 			                column="companyId" 	                    columnIndex="49"/>
+		<result property="teamsId" 			                	column="teamsId" 	                    columnIndex="50"/>
+		<result property="upnName" 			                	column="upnName" 	                    columnIndex="51"/>
 	</resultMap>
 	
 	<resultMap id="userAddJobInfo" class="OrganUserVO">
@@ -862,7 +893,8 @@
                        			'user' TYPE,
                                 TO_CHAR(extensionattribute7) JOBID,
                                 'ROLEID' ROLEID,
-                                '' ISADDJOB
+                                '' ISADDJOB,
+								PHYSICALDELIVERYOFFICENAME as EXTENSIONATTRIBUTE2
                        		FROM
                        			TBL_USERMASTER 
                        		WHERE
@@ -897,7 +929,8 @@
                        			'user' TYPE,
 						        b.jobid JOBID,
 						        b.roleid ROLEID,
-                                'Y' ISADDJOB  
+                                'Y' ISADDJOB,
+								PHYSICALDELIVERYOFFICENAME as EXTENSIONATTRIBUTE2  
                   			FROM
                   				TBL_ADDJOBMASTER B
                   			JOIN
@@ -941,7 +974,8 @@
                        			'user' TYPE,
                                 TO_CHAR(extensionattribute7) JOBID,
                                 'ROLEID' ROLEID,
-                                '' ISADDJOB  
+                                '' ISADDJOB,
+								PHYSICALDELIVERYOFFICENAME as EXTENSIONATTRIBUTE2  
                        		FROM
                        			TBL_USERMASTER 
                        		WHERE
@@ -970,7 +1004,8 @@
                        			'user' TYPE,
 						        b.jobid JOBID,
 						        b.roleid ROLEID,
-                                'Y' ISADDJOB  
+                                'Y' ISADDJOB,
+								PHYSICALDELIVERYOFFICENAME as EXTENSIONATTRIBUTE2  
                   			FROM
                   				TBL_ADDJOBMASTER B
                   			JOIN
@@ -1003,7 +1038,8 @@
                      	'dept' TYPE,
 				        '' JOBID,
 				        '' ROLEID,
-                        '' ISADDJOB  
+                        '' ISADDJOB,
+                        EXTENSIONATTRIBUTE2
                    FROM
                    	TBL_DEPTMASTER 
                   	WHERE
@@ -1036,7 +1072,8 @@
                            			'user' TYPE,
 						        	TO_CHAR(EXTENSIONATTRIBUTE7) JOBID,
 						        	'ROLEID' ROLEID,
-                                	'' ISADDJOB  
+                                	'' ISADDJOB,
+									PHYSICALDELIVERYOFFICENAME as EXTENSIONATTRIBUTE2  
                           		FROM
                           			TBL_USERMASTER 
                           		WHERE
@@ -1065,7 +1102,8 @@
                           			'user' TYPE,
 						        	B.JOBID JOBID,
 						        	B.ROLEID ROLEID,
-                                	'Y' ISADDJOB  
+                                	'Y' ISADDJOB,
+									PHYSICALDELIVERYOFFICENAME as EXTENSIONATTRIBUTE2  
                           		FROM
                           			TBL_ADDJOBMASTER B
                           		JOIN
@@ -1091,7 +1129,8 @@
                           			SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, '0'))) || NVL(EXTENSIONATTRIBUTE15, '0') EXTENSIONATTRIBUTE15  ,
                            			'dept' TYPE,
 						        	'' JOBID,
-                                	'' ISADDJOB
+                                	'' ISADDJOB,
+                                	EXTENSIONATTRIBUTE2
                           		FROM
                           			TBL_DEPTMASTER 
                           		WHERE
@@ -1119,7 +1158,8 @@
                                	TYPE,
 								jobid,
 								roleid,
-								isaddjob 
+								isaddjob,
+								EXTENSIONATTRIBUTE2
                         	FROM (			SELECT
                         					CN ,
                                       		CASE #v_LANGDATA#
@@ -1135,7 +1175,8 @@
                                       		'USER' TYPE,
 											TO_CHAR(EXTENSIONATTRIBUTE7) jobid,
 											'ROLEID' roleid,
-											'' isaddjob  
+											'' isaddjob,
+											PHYSICALDELIVERYOFFICENAME as EXTENSIONATTRIBUTE2
                                			FROM
                                				TBL_USERMASTER 
                                 		WHERE
@@ -1171,7 +1212,8 @@
                                       		'USER' TYPE,
 											b.jobid jobid,
 											b.roleid roleid,
-											'Y' isaddjob  
+											'Y' isaddjob,
+											PHYSICALDELIVERYOFFICENAME as EXTENSIONATTRIBUTE2 
                                			FROM
                                				TBL_ADDJOBMASTER B
                                			JOIN
@@ -1220,7 +1262,8 @@
 	                        SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, '0'))) || NVL(EXTENSIONATTRIBUTE15, '0') EXTENSIONATTRIBUTE15  ,
 	                        'DEPT' TYPE,
 							'' jobid,
-							'' isaddjob  
+							'' isaddjob,
+							EXTENSIONATTRIBUTE2  
 	            	FROM
 	            		TBL_DEPTMASTER 
 	                WHERE
@@ -1248,7 +1291,8 @@
 	                    EXTENSIONATTRIBUTE15,
 	                    TYPE,
 	                    JOBID,
-	                    ISADDJOB
+	                    ISADDJOB,
+	                    EXTENSIONATTRIBUTE2
 	 				FROM ( 	SELECT
 	 								CN ,
 	                                 CASE
@@ -1265,7 +1309,8 @@
 	                                     'USER' TYPE,
 										TO_CHAR(EXTENSIONATTRIBUTE7) jobid,
 										'ROLEID' roleid,
-										'' isaddjob  
+										'' isaddjob,
+										PHYSICALDELIVERYOFFICENAME as EXTENSIONATTRIBUTE2  
 	                       FROM
 	                            		TBL_USERMASTER 
 	                       WHERE
@@ -1293,7 +1338,8 @@
 	                                     'USER' TYPE,
 										b.jobid jobid,
 										b.roleid roleid,
-										'Y' isaddjob  
+										'Y' isaddjob,
+										PHYSICALDELIVERYOFFICENAME as EXTENSIONATTRIBUTE2  
 	                       FROM
 	                              	TBL_ADDJOBMASTER B
 	                       JOIN
@@ -1318,7 +1364,8 @@
 	                                 SUBSTR('0000000000', 1, 10 - LENGTH(NVL(EXTENSIONATTRIBUTE15, '0'))) || NVL(EXTENSIONATTRIBUTE15, '0') EXTENSIONATTRIBUTE15  ,
 	                                 'DEPT' TYPE,
 									 '' jobid,
-									 '' isaddjob  
+									 '' isaddjob,
+									 EXTENSIONATTRIBUTE2  
 	                       FROM
 	                             	TBL_DEPTMASTER 
 	                       WHERE
@@ -1756,7 +1803,9 @@
 	            SIPURI ,
 	            POSITIONCD ,
 	            'user' USERTYPE,
-	            PHYSICALDELIVERYOFFICENAME AS COMPANYID
+	            PHYSICALDELIVERYOFFICENAME AS COMPANYID,
+				TEAMSID AS teamsId,
+				UPNNAME AS upnName
 	        FROM
 	        	TBL_USERMASTER 
 	       WHERE
@@ -1873,7 +1922,9 @@
              SIPURI ,
              B.POSITIONCD ,
 	         'addJob' USERTYPE,
-	         C.EXTENSIONATTRIBUTE2 AS COMPANYID
+	         C.EXTENSIONATTRIBUTE2 AS COMPANYID,
+			 A.TEAMSID AS teamsId,
+			 A.UPNNAME AS upnName
         	FROM
         		TBL_ADDJOBMASTER B
             JOIN
@@ -1997,7 +2048,9 @@
 	            PHYSICALDELIVERYOFFICENAME AS PHYSICALDELIVERYOFFICENAME1 ,
 	            'user' USERTYPE,
 	            USERTREEFLAG,
-	            PHYSICALDELIVERYOFFICENAME AS COMPANYID
+	            PHYSICALDELIVERYOFFICENAME AS COMPANYID,
+	            TEAMSID AS teamsId,
+            	UPNNAME AS upnName 
 	        FROM
 	        	TBL_USERMASTER 
 	       WHERE
@@ -2124,7 +2177,9 @@
              B.POSITIONCD ,
 	         'addJob' USERTYPE,
 	         B.USERTREEFLAG,
-	         C.EXTENSIONATTRIBUTE2 AS COMPANYID
+	         C.EXTENSIONATTRIBUTE2 AS COMPANYID,
+	         A.TEAMSID AS teamsId,
+         	 A.UPNNAME AS upnName
         	FROM
         		TBL_ADDJOBMASTER B
             JOIN
@@ -2985,8 +3040,14 @@
 				displayname as NAME,
                 TO_CHAR(extensionAttribute7) JOBID,
 				'' ROLEID,
-                '' ISADDJOB 			
-			FROM 
+                '' ISADDJOB,
+				<isNotEmpty property="companyId">
+                	#companyId# as EXTENSIONATTRIBUTE2
+				</isNotEmpty>
+                <isEmpty property="companyId">
+                	PHYSICALDELIVERYOFFICENAME as EXTENSIONATTRIBUTE2
+				</isEmpty>
+			FROM
 	    		TBL_USERMASTER A 
             $strSQL$
             AND 
@@ -3035,7 +3096,13 @@
 					displayname as NAME,
 	                A.JOBID JOBID,
 					A.ROLEID ROLEID,
-	                'Y' ISADDJOB	
+	                'Y' ISADDJOB,
+					<isNotEmpty property="companyId">
+						#companyId# as EXTENSIONATTRIBUTE2
+					</isNotEmpty>
+					<isEmpty property="companyId">
+						PHYSICALDELIVERYOFFICENAME as EXTENSIONATTRIBUTE2
+					</isEmpty>
 		      	FROM	
 					TBL_USERMASTER B INNER JOIN TBL_ADDJOBMASTER A ON A.CN = B.CN AND A.TENANT_ID = B.TENANT_ID 
 	            $strGyumjikForOracle$
@@ -3080,7 +3147,13 @@
 					displayname as NAME,
 	                '' JOBID,
 	                '' ROLEID,
-	                '' ISADDJOB
+	                '' ISADDJOB,
+					<isNotEmpty property="companyId">
+						#companyId# as EXTENSIONATTRIBUTE2
+					</isNotEmpty>
+					<isEmpty property="companyId">
+						EXTENSIONATTRIBUTE2
+					</isEmpty>
 				FROM
 					TBL_DEPTMASTER 
                 $strSQL$ 
@@ -3101,7 +3174,7 @@
 				]]>
 			</isNotEqual>
 			<!-- 2023-08-30 전인하 - 리스트에 겸직, 원직 함께 나타날 때 원직을 상위에, 겸직을 하위에 나타나게 함 -->
-			) ORDER BY type DESC, ISADDJOB DESC, NAME ASC
+			) ORDER BY type DESC, ISADDJOB ASC, NAME ASC
 	    </isEqual>
 	    <isEqual property="type" compareValue="G">
 	    	SELECT
@@ -3111,7 +3184,13 @@
 	    		'group' as type,
                 '' JOBID,
 				'' ROLEID,
-                '' ISADDJOB
+                '' ISADDJOB,
+				<isNotEmpty property="companyId">
+                	#companyId# as EXTENSIONATTRIBUTE2
+				</isNotEmpty>
+                <isEmpty property="companyId">
+                	EXTENSIONATTRIBUTE2
+				</isEmpty>
 	    	FROM
 	    		TBL_DEPTMASTER 
             $strSQL$ 
@@ -3141,7 +3220,6 @@
 
 	<select id="EzOrganDAO.organSearchListPage" parameterClass="Map" resultMap="deptTreeInfoAddjob">
 		<isEqual property="type" compareValue="U">
-			<![CDATA[
 				 SELECT 
 				 	* 
 				 FROM
@@ -3153,7 +3231,8 @@
 						type,
 						jobid,
 						roleid,
-						isaddjob 
+						isaddjob,
+						EXTENSIONATTRIBUTE2
 			          FROM 
 			          	(SELECT  
 			             	cn, 
@@ -3164,7 +3243,14 @@
 			                'user' as type,
 			                TO_CHAR(extensionattribute7) JOBID,
 			                '' ROLEID,
-			                '' ISADDJOB 
+			                '' ISADDJOB,
+							<isNotEmpty property="companyId">
+								#companyId# as EXTENSIONATTRIBUTE2
+							</isNotEmpty>
+							<isEmpty property="companyId">
+								PHYSICALDELIVERYOFFICENAME as EXTENSIONATTRIBUTE2
+							</isEmpty>
+						<![CDATA[
 			             FROM  
 			             	TBL_USERMASTER A
                          $strSQL$
@@ -3198,9 +3284,7 @@
 							A.USERTREEFLAG = 'Y'
 				]]>
 			</isEqual>
-							<include refid="organSearchTrashDept_user"/>
-						<![CDATA[
-		            		 
+							<include refid="organSearchTrashDept_user"/>		            		 
 						UNION ALL
 				            
 						SELECT
@@ -3212,7 +3296,14 @@
 							'user' as type,
 			                a.jobid JOBID,
 						    A.ROLEID ROLEID,
-			                'Y' ISADDJOB
+			                'Y' ISADDJOB,
+							<isNotEmpty property="companyId">
+								#companyId# as EXTENSIONATTRIBUTE2
+							</isNotEmpty>
+							<isEmpty property="companyId">
+								PHYSICALDELIVERYOFFICENAME as EXTENSIONATTRIBUTE2
+							</isEmpty>
+						<![CDATA[
 						FROM
 							TBL_USERMASTER b
 						INNER JOIN
@@ -3251,7 +3342,6 @@
                ]]>
           </isEqual>
           <isEqual property="class" compareValue="all">
-          	<![CDATA[
           	select * from 
 			(
 				SELECT 
@@ -3261,7 +3351,14 @@
 					'user' as type,
 	                TO_CHAR(extensionAttribute7) JOBID,
 	                '' JOBID,
-	                '' ISADDJOB				
+	                '' ISADDJOB,
+					<isNotEmpty property="companyId">
+						#companyId# as EXTENSIONATTRIBUTE2
+					</isNotEmpty>
+					<isEmpty property="companyId">
+						PHYSICALDELIVERYOFFICENAME as EXTENSIONATTRIBUTE2
+					</isEmpty>
+				<![CDATA[
 				FROM 
 					TBL_USERMASTER A
 					$strSQL$
@@ -3271,7 +3368,6 @@
 					DEPARTMENT NOT LIKE 'shared\_mailbox\_%' ESCAPE '\'
 				]]>
 					<include refid="organSearchTrashDept_user"/>
-				<![CDATA[
 				AND
 					A.TENANT_ID = #v_TENANT_ID#
 	
@@ -3284,7 +3380,14 @@
 					'user' as type,
 	                b.jobid JOBID,
 				    A.roleid ROLEID,
-	                '' ISADDJOB
+	                '' ISADDJOB,
+					<isNotEmpty property="companyId">
+						#companyId# as EXTENSIONATTRIBUTE2
+					</isNotEmpty>
+					<isEmpty property="companyId">
+						PHYSICALDELIVERYOFFICENAME as EXTENSIONATTRIBUTE2
+					</isEmpty>
+					<![CDATA[
 				FROM
 					TBL_USERMASTER B
 				INNER JOIN
@@ -3294,7 +3397,6 @@
 					AND DEPARTMENT NOT LIKE 'shared\_mailbox\_%' ESCAPE '\'
 					]]>
 						<include refid="organSearchTrashDept_user"/>
-					<![CDATA[
 					AND A.TENANT_ID = B.TENANT_ID
 	
 				UNION ALL
@@ -3306,9 +3408,14 @@
 						'group' as type,
 		                '' JOBID,
 					    '' ROLEID,
-		                '' ISADDJOB
+		                '' ISADDJOB,
+						<isNotEmpty property="companyId">
+							#companyId# as EXTENSIONATTRIBUTE2
+						</isNotEmpty>
+						<isEmpty property="companyId">
+							EXTENSIONATTRIBUTE2
+						</isEmpty>
 					FROM
-					]]>
 						TBL_DEPTMASTER <!--$strSize$  넘겨주는 값이 없어 주석처리만 함-->
 			  		<![CDATA[
 					AND CN NOT LIKE 'shared\_mailbox\_%' ESCAPE '\'
@@ -3321,7 +3428,6 @@
 			]]>
           </isEqual>
 		  <isEqual property="type" compareValue="G">
-		  	<![CDATA[
 			select * from 
 			(
 				SELECT
@@ -3331,8 +3437,15 @@
 		    		'group' as type,
 	                '' JOBID,
 	                '' ROLEID,
-	                '' ISADDJOB
-		    	FROM
+	                '' ISADDJOB,
+					<isNotEmpty property="companyId">
+						#companyId# as EXTENSIONATTRIBUTE2
+					</isNotEmpty>
+					<isEmpty property="companyId">
+						EXTENSIONATTRIBUTE2
+					</isEmpty>
+				<![CDATA[
+				FROM
 		    		TBL_DEPTMASTER 
 	            $strSQL$ 
 	            AND CN NOT LIKE 'shared\_mailbox\_%' ESCAPE '\'
@@ -4112,4 +4225,327 @@
 		AND
 			U.TENANT_ID = #v_TENANT_ID#
 	</select>
+
+	<select id="EzOrganDAO.getCompanyList" parameterClass="Map" resultClass="HashMap">
+		SELECT
+			CN,
+			CASE
+				WHEN #lang# = '1' THEN DisplayName
+				WHEN #lang# = '2' THEN DisplayName2
+				ELSE DisplayName
+				END AS DisplayName,
+			CASE
+				WHEN #lang# = '2' THEN DisplayName
+				ELSE DisplayName2
+				END AS DisplayName2
+		FROM
+			TBL_DEPTMASTER
+		WHERE
+			DeptLevel = '1'
+		  AND CN != 'Top'
+		ORDER BY
+			LPAD(extensionAttribute15, 20, '0')
+	</select>
+
+	<select id="EzOrganDAO.getDeptMemberListForTeams" parameterClass="Map" resultMap="teamsDeptMemberInfo" remapResults="true">
+		<isEqual property="v_CLASS" compareValue="all">
+			<![CDATA[
+				WITH DEPT_RECURSIVE 
+				    (data1, data2, displayName, title, description, levelName, department, nodeLevel, nodeIcon, extensionAttribute2, textColor, icon, mail, presence, upnName, mobile, telephoneNumber, teamsId, extensionAttribute10, chargeBusiness, physicalDeliveryOfficeName, addJob, sortOrder) 
+				    AS (
+					SELECT
+						'DEPT' AS data1,
+						CN AS data2,
+						DISPLAYNAME AS displayName,
+						TO_NCHAR('') AS title,
+						TO_NCHAR('') AS description,
+						TO_NCHAR('') AS levelName,
+						EXTENSIONATTRIBUTE1 AS department,
+						TO_NUMBER(DEPTLEVEL) AS nodeLevel,
+						EXTENSIONATTRIBUTE2 AS nodeIcon,
+						EXTENSIONATTRIBUTE2 AS extensionAttribute2,
+						TO_NCHAR('') AS textColor,
+						'i_company' AS icon,
+						TO_NCHAR('') AS mail,
+						'' AS presence,
+						TO_NCHAR('') AS upnName,
+						TO_NCHAR('') AS mobile,
+						TO_NCHAR('') AS telephoneNumber,
+						'' AS teamsId,
+						TO_NCHAR('') AS extensionAttribute10,
+						'' AS chargeBusiness,
+						TO_NCHAR('') AS physicalDeliveryOfficeName,
+						'N' AS addJob,
+						EXTENSIONATTRIBUTE15 AS sortOrder
+					FROM TBL_DEPTMASTER 
+					WHERE CN = #v_CN#
+					AND TENANT_ID = #v_TENANT_ID#
+					AND DEPT_CD_PATH NOT LIKE '%trash\_dept%'
+					
+					UNION ALL
+	
+					SELECT
+						'DEPT' AS data1,
+						D.CN AS data2,
+						D.DISPLAYNAME AS displayName,
+						TO_NCHAR('') AS title,
+						TO_NCHAR('') AS description,
+						TO_NCHAR('') AS levelName,
+						D.EXTENSIONATTRIBUTE1 AS department,
+						TO_NUMBER(D.DEPTLEVEL) AS nodeLevel,
+						D.EXTENSIONATTRIBUTE2 AS nodeIcon,
+						D.EXTENSIONATTRIBUTE2 AS extensionAttribute2,
+						TO_NCHAR('') AS textColor,
+						'i_company' AS icon,
+						TO_NCHAR('') AS mail,
+						'' AS presence,
+						TO_NCHAR('') AS upnName,
+						TO_NCHAR('') AS mobile,
+						TO_NCHAR('') AS telephoneNumber,
+						'' AS teamsId,
+						TO_NCHAR('') AS extensionAttribute10,
+						'' AS chargeBusiness,
+						TO_NCHAR('') AS physicalDeliveryOfficeName,
+						'N' AS addJob,
+						EXTENSIONATTRIBUTE15 AS sortOrder
+					FROM TBL_DEPTMASTER D
+					INNER JOIN DEPT_RECURSIVE DR ON D.EXTENSIONATTRIBUTE1 = DR.data2
+					WHERE D.TENANT_ID = #v_TENANT_ID#
+					AND DEPT_CD_PATH NOT LIKE '%trash_dept%'
+				)
+				SELECT * FROM (
+					SELECT * FROM DEPT_RECURSIVE
+					
+					UNION ALL
+	
+					SELECT 
+						'USER' AS data1,
+						A.CN AS data2,
+						A.DISPLAYNAME AS displayName,
+						A.TITLE AS title,
+						CASE #v_LANGDATA#
+							WHEN '1' THEN A.DESCRIPTION
+							WHEN '2' THEN NVL(NULLIF(A.DESCRIPTION2, TO_NCHAR('')), A.DESCRIPTION)
+							WHEN '3' THEN NVL(NULLIF(A.DESCRIPTION3, TO_NCHAR('')), A.DESCRIPTION)
+							ELSE A.DESCRIPTION
+						END AS description,
+						A.POSITIONCD AS levelName,
+						A.DEPARTMENT AS department,
+						NVL(TO_NUMBER(DM.DEPTLEVEL), 0) + 1 AS nodeLevel,
+						A.EXTENSIONATTRIBUTE2 AS nodeIcon,
+						A.EXTENSIONATTRIBUTE2 AS extensionAttribute2,
+						A.EXTENSIONATTRIBUTE11 AS textColor,
+						'' AS icon,
+						A.MAIL AS mail,
+						UP.PRESENCE AS presence,
+						A.UPNNAME AS upnName,
+						A.MOBILE AS mobile,
+						A.TELEPHONENUMBER AS telephoneNumber,
+						A.TEAMSID AS teamsId,
+						A.EXTENSIONATTRIBUTE10 AS extensionAttribute10,
+						'' AS chargeBusiness,
+						A.PHYSICALDELIVERYOFFICENAME AS physicalDeliveryOfficeName,
+						'N' AS addJob,
+						A.EXTENSIONATTRIBUTE15 AS sortOrder
+					FROM TBL_USERMASTER A
+					LEFT JOIN TBL_DEPTMASTER DM ON A.DEPARTMENT = DM.CN AND A.TENANT_ID = DM.TENANT_ID
+					LEFT JOIN TBL_USERPRESENCE UP ON A.TEAMSID = UP.ID
+					WHERE A.DEPARTMENT IN (SELECT data2 FROM DEPT_RECURSIVE)
+					AND A.CN <> 'masteradmin'
+					AND A.CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #v_TENANT_ID#)
+					AND A.TENANT_ID = #v_TENANT_ID#
+	
+					UNION ALL
+	
+					SELECT 
+						'USER' AS data1,
+						A.CN AS data2,
+						A.DISPLAYNAME AS displayName,
+						A.TITLE AS title,
+						A.DESCRIPTION AS description,
+						A.POSITIONCD AS levelName,
+						B.DEPTID  AS department,
+						NVL(TO_NUMBER(DM.DEPTLEVEL), 0) + 1 AS nodeLevel,
+						A.EXTENSIONATTRIBUTE2 AS nodeIcon,
+						A.EXTENSIONATTRIBUTE2 AS extensionAttribute2,
+						A.EXTENSIONATTRIBUTE11 AS textColor,
+						'' AS icon,
+						A.MAIL AS mail,
+						UP.PRESENCE AS presence,
+						A.UPNNAME AS upnName,
+						A.MOBILE AS mobile,
+						A.TELEPHONENUMBER AS telephoneNumber,
+						A.TEAMSID AS teamsId,
+						A.EXTENSIONATTRIBUTE10 AS extensionAttribute10,
+						'' AS chargeBusiness,
+						A.PHYSICALDELIVERYOFFICENAME AS physicalDeliveryOfficeName,
+						'Y' AS addJob,
+						B.ORDERBY AS sortOrder
+					FROM TBL_ADDJOBMASTER B
+					JOIN TBL_USERMASTER A ON A.CN = B.CN AND A.TENANT_ID = B.TENANT_ID
+					LEFT JOIN TBL_DEPTMASTER DM ON B.DEPTID = DM.CN AND A.TENANT_ID = DM.TENANT_ID
+					LEFT JOIN TBL_USERPRESENCE UP ON A.TEAMSID = UP.ID
+					WHERE B.DEPTID IN (SELECT data2 FROM DEPT_RECURSIVE)
+					AND B.TENANT_ID = #v_TENANT_ID#
+				) TREE
+				ORDER BY data1 DESC, nodeLevel ASC, sortOrder ASC, displayName ASC
+			]]>
+		</isEqual>
+
+		<isEqual property="v_CLASS" compareValue="group">
+			<![CDATA[
+				SELECT
+					'DEPT' AS data1,
+					CN AS data2,
+					DISPLAYNAME AS displayName,
+					'' AS title,
+					'' AS description,
+					'' AS levelName,
+					EXTENSIONATTRIBUTE1 AS department,
+					DEPTLEVEL AS nodeLevel,
+					EXTENSIONATTRIBUTE2 AS nodeIcon,
+					EXTENSIONATTRIBUTE2 AS extensionAttribute2,
+					'' AS textColor,
+					'i_company' AS icon,
+					'' AS mail,
+					'' AS presence,
+					'' AS upnName,
+					'' AS mobile,
+					'' AS telephoneNumber,
+					'' AS teamsId,
+					'' AS extensionAttribute10,
+					'' AS chargeBusiness,
+					'' AS physicalDeliveryOfficeName,
+					'N' AS addJob,
+					EXTENSIONATTRIBUTE15 AS sortOrder
+				FROM TBL_DEPTMASTER 
+				WHERE EXTENSIONATTRIBUTE1 = #v_CN#
+				AND TENANT_ID = #v_TENANT_ID#
+				AND DEPT_CD_PATH NOT LIKE '%trash\_dept%'
+			]]>
+		</isEqual>
+
+		<isEqual property="v_CLASS" compareValue="user">
+			<![CDATA[
+				SELECT 
+					'USER' AS data1,
+					A.CN AS data2,
+					A.DISPLAYNAME AS displayName,
+					A.TITLE AS title,
+					A.DESCRIPTION AS description,
+					A.POSITIONCD AS levelName,
+					A.DEPARTMENT AS department,
+					DM.DEPTLEVEL + 1 AS nodeLevel,
+					A.EXTENSIONATTRIBUTE2 AS extensionAttribute2,
+					A.EXTENSIONATTRIBUTE2 AS nodeIcon,
+					A.EXTENSIONATTRIBUTE11 AS textColor,
+					'' AS icon,
+					A.MAIL AS mail,
+					UP.PRESENCE AS presence,
+					A.UPNNAME AS upnName,
+					A.MOBILE AS mobile,
+					A.TELEPHONENUMBER AS telephoneNumber,
+					A.TEAMSID AS teamsId,
+					A.EXTENSIONATTRIBUTE10 AS extensionAttribute10,
+					'' AS chargeBusiness,
+					A.PHYSICALDELIVERYOFFICENAME AS physicalDeliveryOfficeName,
+					'N' AS addJob,
+					A.EXTENSIONATTRIBUTE15 AS sortOrder
+				FROM TBL_USERMASTER A
+				LEFT JOIN TBL_DEPTMASTER DM ON A.DEPARTMENT = DM.CN AND A.TENANT_ID = DM.TENANT_ID
+				LEFT JOIN TBL_USERPRESENCE UP ON A.TEAMSID = UP.ID
+				WHERE A.DEPARTMENT = #v_CN#
+				AND A.CN <> 'masteradmin'
+				AND A.CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #v_TENANT_ID#)
+				AND A.TENANT_ID = #v_TENANT_ID#
+	
+				UNION ALL
+	
+				SELECT 
+					'USER' AS data1,
+					A.CN AS data2,
+					A.DISPLAYNAME AS displayName,
+					A.TITLE AS title,
+					A.DESCRIPTION AS description,
+					A.POSITIONCD AS levelName,
+					B.DEPTID  AS department,
+					DM.DEPTLEVEL + 1 AS nodeLevel,
+					A.EXTENSIONATTRIBUTE2 AS extensionAttribute2,
+					A.EXTENSIONATTRIBUTE2 AS nodeIcon,
+					A.EXTENSIONATTRIBUTE11 AS textColor,
+					'' AS icon,
+					A.MAIL AS mail,
+					UP.PRESENCE AS presence,
+					A.UPNNAME AS upnName,
+					A.MOBILE AS mobile,
+					A.TELEPHONENUMBER AS telephoneNumber,
+					A.TEAMSID AS teamsId,
+					A.EXTENSIONATTRIBUTE10 AS extensionAttribute10,
+					'' AS chargeBusiness,
+					A.PHYSICALDELIVERYOFFICENAME AS physicalDeliveryOfficeName,
+					'Y' AS addJob,
+					B.ORDERBY AS sortOrder
+				FROM TBL_ADDJOBMASTER B
+				JOIN TBL_USERMASTER A ON A.CN = B.CN AND A.TENANT_ID = B.TENANT_ID
+				LEFT JOIN TBL_DEPTMASTER DM ON B.DEPTID = DM.CN AND A.TENANT_ID = DM.TENANT_ID
+				LEFT JOIN TBL_USERPRESENCE UP ON A.TEAMSID = UP.ID
+				WHERE B.DEPTID = #v_CN#
+				AND B.TENANT_ID = #v_TENANT_ID#
+			]]>
+		</isEqual>
+
+		<isEqual property="v_CLASS" compareValue="addjob">
+			<![CDATA[
+				SELECT 
+					'USER' AS data1,
+					A.CN AS data2,
+					A.DISPLAYNAME AS displayName,
+					A.TITLE AS title,
+					A.DESCRIPTION AS description,
+					A.POSITIONCD AS levelName,
+					A.DEPARTMENT AS department,
+					DM.DEPTLEVEL + 1 AS nodeLevel,
+					A.EXTENSIONATTRIBUTE2 AS nodeIcon,
+					A.EXTENSIONATTRIBUTE2 AS extensionAttribute2,
+					A.EXTENSIONATTRIBUTE11 AS textColor,
+					'' AS icon,
+					A.MAIL AS mail,
+					UP.PRESENCE AS presence,
+					A.UPNNAME AS upnName,
+					A.MOBILE AS mobile,
+					A.TELEPHONENUMBER AS telephoneNumber,
+					A.TEAMSID AS teamsId,
+					A.EXTENSIONATTRIBUTE10 AS extensionAttribute10,
+					'' AS chargeBusiness,
+					A.PHYSICALDELIVERYOFFICENAME AS physicalDeliveryOfficeName,
+					'Y' AS addJob,
+					B.ORDERBY AS sortOrder
+				FROM TBL_ADDJOBMASTER B
+				JOIN TBL_USERMASTER A ON A.CN = B.CN AND A.TENANT_ID = B.TENANT_ID
+				LEFT JOIN TBL_DEPTMASTER DM ON A.DEPARTMENT = DM.CN AND A.TENANT_ID = DM.TENANT_ID
+				LEFT JOIN TBL_USERPRESENCE UP ON A.TEAMSID = UP.ID
+				WHERE B.DEPTID = #v_CN#
+				AND B.TENANT_ID = #v_TENANT_ID#
+			]]>
+		</isEqual>
+	</select>
+
+	<select id="EzOrganDAO.getSubDeptCount" parameterClass="Map" resultClass="int">
+		SELECT COUNT(CN)
+		FROM TBL_DEPTMASTER
+		WHERE extensionAttribute1 = #v_CN#
+		  AND (#v_ADMINFLAG# = 'Y' OR USEFLAG = 'Y')
+	</select>
+
+	<select id="EzOrganDAO.getUpnNames" resultClass="String">
+		SELECT UPNNAME
+		FROM TBL_USERMASTER
+	</select>
+
+	<update id="EzOrganDAO.updateTeamsIdByUpnName" parameterClass="Map">
+		UPDATE TBL_USERMASTER
+		SET TEAMSID = #v_TEAMSID#
+		WHERE UPNNAME = #v_UPNNAME#
+	</update>
+
 </sqlMap>

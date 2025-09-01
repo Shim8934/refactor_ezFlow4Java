@@ -1109,7 +1109,7 @@ public class EzScheduleAdminController {
 		int tenantId = loginVO.getTenantId();
 
 		ezScheduleAdminService.scheduleDelExecutive(userId, companyId, tenantId);
-		ezScheduleService.deleteSecretary(userId, tenantId, companyId);
+		// ezScheduleService.deleteSecretary(userId, tenantId, companyId);
 	}
 
 	/**

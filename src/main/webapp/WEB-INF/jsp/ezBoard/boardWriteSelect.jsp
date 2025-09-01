@@ -42,6 +42,8 @@
 			var xmlDom_treeview = createXmlDom();
 			var pUse_Editor = "${useEditor}";
 			var pNoneActiveX = "${noneActiveX}";
+
+			var popupMsg;
 			
 			/* 2018-08-06 홍승비 - 대상게시판선택 레이어팝업 추가, 게시물 이동+복사 팝업창과 같도록 UI 통일 */
 			 var board_alertArguments = new Array();
@@ -61,7 +63,11 @@
 				}
 		
 		        if (CheckIfCanWrite(SelectedBoardID) == false) {
-		        	var pUrl = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezBoard.t354' />") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezBoard.t354'/>") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
+					if (SelectedBoardType !== "9") {
+						popupMsg = "<spring:message code='ezBoard.t354' />";
+					}
+
+		        	var pUrl = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent(popupMsg) + "&MESSAGE=" + encodeURIComponent(popupMsg) + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
 		        	
 		        	/* 2022-01-05 홍승비 - 홈페이지 게시판에 작성 시 알러트 메세지 추가 (홈페이지 게시판은 관리자만 작성이 가능합니다.) */
 					if (SelectedBoardType == "8") {
@@ -78,9 +84,9 @@
         		switch (SelectedBoardType) {
             		case "0":        
                 		if (CrossYN() || pNoneActiveX == "YES") {
-                    		window.open("/ezBoard/boardNewItem.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&mode=new", "", feature, "");
+                    		window.open("/ezBoard/boardNewItem.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&gubun=" + SelectedBoardType + "&mode=new", "", feature, "");
                 		} else {
-                        	window.open("/ezBoard/boardNewItem.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&mode=new", "", feature, "");
+                        	window.open("/ezBoard/boardNewItem.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&gubun=" + SelectedBoardType + "&mode=new", "", feature, "");
 	                	}
                 		
 	                	break;
@@ -90,7 +96,7 @@
 		                var pwidth = window.screen.availWidth;
 		                var pTop = (pheight - 720) / 2;
 		                var pLeft = (pwidth - 765) / 2;
-		                window.open("/ezBoard/newBoardItemPhoto.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&mode=new", "", feature, "");
+		                window.open("/ezBoard/newBoardItemPhoto.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&gubun=" + SelectedBoardType + "&mode=new", "", feature, "");
 		                break;
 		            case "6":
 		            	var pUrl = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezBoard.garm02' />") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezBoard.garm02'/>") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
@@ -99,15 +105,15 @@
 		            	break;
 		            case "7":
 		                feature = GetOpenWindowfeature(765, 700);
-		                window.open("/ezBoard/newBoardItemMovie.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&mode=new", "", feature, "");
+		                window.open("/ezBoard/newBoardItemMovie.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&gubun=" + SelectedBoardType + "&mode=new", "", feature, "");
 		                break;
 		            default:
 		                var feature = GetOpenWindowfeature(765, 820);
 		                if (CrossYN() || pNoneActiveX == "YES") {
-		                    window.open("/ezBoard/boardNewItem.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&mode=new", "", feature, "");
+		                    window.open("/ezBoard/boardNewItem.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&gubun=" + SelectedBoardType + "&mode=new", "", feature, "");
 		                }
 		                else {
-		                	window.open("/ezBoard/boardNewItem.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&mode=new", "", feature, "");
+		                	window.open("/ezBoard/boardNewItem.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&gubun=" + SelectedBoardType + "&mode=new", "", feature, "");
 		                }
 		                
 		                break;
@@ -129,6 +135,12 @@
 			
 			function CheckIfCanWrite(pBoardID)
 			{
+				if (SelectedBoardType === "9") {
+					popupMsg = "<spring:message code = 'ezBoard.fileViewerBoard.msg4' />";
+
+					return false;
+				}
+
 				xmlhttp.open("POST", "/ezBoard/getACL.do?boardID=" + encodeURIComponent(pBoardID), false);
 				xmlhttp.send();
 				var ret = xmlhttp.responseText;

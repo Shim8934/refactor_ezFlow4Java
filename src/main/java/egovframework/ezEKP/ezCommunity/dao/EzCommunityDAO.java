@@ -28,6 +28,7 @@ import egovframework.ezEKP.ezCommunity.vo.CommunityMemberInfoVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityMyCommunityVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityOneLineReplyVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityCClubGuestReplyVO;
+import egovframework.ezEKP.ezCommunity.vo.CommunityMemberGradeVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.let.user.login.vo.LoginVO;
 import org.egovframe.rte.psl.dataaccess.EgovAbstractDAO;
@@ -1247,5 +1248,110 @@ public class EzCommunityDAO extends EgovAbstractDAO{
 
 	public String getReadFlag(Map<String, Object> map) {
 		return (String) select("EzCommunityDAO.getReadFlag", map);
+	}
+	
+    public int checkPollPeriod(Map<String, Object> map) throws Exception {
+		Integer res = (Integer) select("EzCommunityDAO.checkPollPeriod", map);
+		return res != null ? res : -1;
+    }
+
+	public void updateJoinGrade(Map<String, Object> map) throws Exception {
+		update("EzCommunityDAO.updateJoinGrade", map);
+	}
+
+	public void saveGradeList(Map<String, Object> map) throws Exception {
+		insert("EzCommunityDAO.saveGradeList", map);
+	}
+
+	public void deleteGradeList(Map<String, Object> map) throws Exception {
+		delete("EzCommunityDAO.deleteGradeList", map);
+	}
+
+	public List<CommunityMemberGradeVO> getMemberGrade(Map<String, Object> map) throws Exception {
+		return (List<CommunityMemberGradeVO>) list("EzCommunityDAO.getMemberGrade", map);
+	}
+
+	public String getMemberGradeName(Map<String, Object> map) throws Exception {
+		return (String) select("EzCommunityDAO.getMemberGradeName", map);
+	}
+
+	public void updateMemberGrade(Map<String, Object> map) throws Exception {
+		update("EzCommunityDAO.updateMemberGrade", map);
+	}
+
+	public String getUserGrade(Map<String, Object> map) throws Exception {
+		return (String) select("EzCommunityDAO.getUserGrade", map);
+	}
+
+	public String getMemListReadGrade(Map<String, Object> map) throws Exception {
+		return (String) select("EzCommunityDAO.getMemListReadGrade", map);
+	}
+
+	public int getGradeCount(Map<String, Object> map) throws Exception {
+		return (int) select("EzCommunityDAO.getGradeCount", map);
+	}
+
+	public void updateBoardManageGrade(Map<String, Object> map) throws Exception {
+		update("EzCommunityDAO.updateBoardManageGrade", map);
+	}
+
+	public String getCommunityJoinGrade(Map<String, Object> map) throws Exception {
+		return (String) select("EzCommunityDAO.getCommunityJoinGrade", map);
+	}
+
+	public void insertClubGrade(Map<String, Object> map) throws Exception {
+		insert("EzCommunityDAO.insertClubGrade", map);
+	}
+
+	public List<CommunityCClubUserVO> getClubOperatorList(Map<String, Object> map) throws Exception {
+		return (List<CommunityCClubUserVO>) list("EzCommunityDAO.getClubOperatorList", map);
+	}
+
+	public int adminOperatorListCount(Map<String, Object> map) throws Exception {
+		return (int) select("EzCommunityDAO.getClubOperatorListCount", map);
+	}
+
+	public void deleteClubOperator(Map<String, Object> map) throws Exception {
+		update("EzCommunityDAO.deleteClubOperator", map);
+	}
+
+	public void updateClubOperatorAuth(Map<String, Object> map) throws Exception {
+		update("EzCommunityDAO.updateClubOperatorAuth", map);
+	}
+
+	public List<CommunityCClubUserVO> getNoOperatorList(Map<String, Object> map) throws Exception {
+		return (List<CommunityCClubUserVO>) list("EzCommunityDAO.getNoOperatorList", map);
+	}
+
+	public int getNoOperatorListCount(Map<String, Object> map) throws Exception {
+		return (int) select("EzCommunityDAO.getNoOperatorListCount", map);
+	}
+
+	public void updateOperatorGrade(Map<String, Object> map) throws Exception {
+		update("EzCommunityDAO.updateOperatorGrade", map);
+	}
+
+	public int getBoardItemWriteCount(Map<String, Object> map) throws Exception {
+		return (int) select("EzCommunityDAO.getBoardItemWriteCount", map);
+	}
+
+	public int getBoardReplyCount(Map<String, Object> map) throws Exception {
+		return (int) select("EzCommunityDAO.getBoardReplyCount", map);
+	}
+
+	public CommunityClubVO getClubUserCountInfo(Map<String, Object> map) throws Exception {
+		return (CommunityClubVO) select("EzCommunityDAO.getClubUserCountInfo", map);
+	}
+
+	public void commMemberOut(Map<String, Object> map) throws Exception {
+		update("EzCommunityDAO.commMemberOut", map);
+	}
+
+	public int checkWithDrawUser(Map<String, Object> map) throws Exception {
+		return (int) select("EzCommunityDAO.checkWithDrawUser", map);
+	}
+
+	public void updateWithDrawUsertoRegist(Map<String, Object> map) throws Exception {
+		update("EzCommunityDAO.updateWithDrawUsertoRegist", map);
 	}
 }

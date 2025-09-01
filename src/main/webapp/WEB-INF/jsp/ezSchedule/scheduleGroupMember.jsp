@@ -544,7 +544,7 @@
 							opener.parent.lef.groupRefresh();
 						}
 						else {
-	   	   					opener.parent.left.groupRefresh();
+							opener.parent.parent.left.groupRefresh();
 						}
 					},
 					error : function(jqXHR, textStatus, errorThrown) {

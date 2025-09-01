@@ -214,6 +214,35 @@
 						document.getElementById("btn_acl").style.display = "none";
 			        }
 		        }
+
+				// VOC #163284 관리자 탭 선택 오류 
+				if (window.parent && window.parent !== window) {
+					try {
+						const parentUrl = window.parent.location.href;
+
+						if (parentUrl.includes("admin/ezBoard/boardConfig.do")) {
+							const parentDoc = window.parent.document;
+
+							const container = parentDoc.querySelector(".portlet_tabnew01_top");
+
+							if (container) {
+								const spans = container.querySelectorAll('span[divname="BoardEnv_div1"], span[divname="BoardEnv_div2"], span[divname="BoardEnv_div3"], span[divname="BoardEnv_div4"], span[divname="BoardEnv_div5"]');
+
+								spans.forEach(span => {
+									span.removeAttribute("class");
+								});
+
+								const targetSpan = container.querySelector('span[divname="BoardEnv_div1"]');
+								if (targetSpan) {
+									targetSpan.classList.add("tabon");
+									window.parent.Tab1_SelectID = "1tab1";
+								}
+							}
+						}
+					} catch (e) {
+						console.log(e);
+					}
+				}
 		    };
 		    
 	        /* 2018-08-11 장진혁 - 레이어팝업 생성된 상태에서 backspace 누를시 왼쪽프레임 부분 딤 처리 없애기 */
@@ -641,18 +670,22 @@
 		
 		        if (type == "quick") {
 		        	var selectSearch = document.getElementById('selectType');
-	                if (selectSearch.item(0).selected) {
+	                if (selectSearch.value == 'rad_Subject') {
 	                    TYPE += "TITLE;";
 	                    DATA += "<TITLE><![CDATA[" + document.getElementById("txt_keyword").value + "]]></TITLE>";
 	                }
-	                else if (selectSearch.item(1).selected) {
+	                else if (selectSearch.value == 'rad_Writer') {
 	                    TYPE += "WRITERNAME;";
 	                    DATA += "<WRITERNAME><![CDATA[" + MakeXMLString(document.getElementById("txt_keyword").value) + "]]></WRITERNAME>";
 	                }
-	                else if (selectSearch.item(2).selected) {
+	                else if (selectSearch.value == 'rad_Keyword') {
                         TYPE += "KEYWORD;";
                         DATA += "<KEYWORD><![CDATA[" + document.getElementById("txt_keyword").value.replace("'", "''") + "]]></KEYWORD>";
                     }
+                	else if (selectSearch.value == 'rad_Subject_Content') {
+		                TYPE += "TNC;";
+	                    DATA += "<TNC><![CDATA[" + document.getElementById("txt_keyword").value.replace("'", "''") + "]]></TNC>";
+                     }
 		        }
 		        else {
 		            if (document.getElementById("txtTitle").value != "")		// DocTitle
@@ -772,11 +805,12 @@
 		        var pwidth = window.screen.availWidth;
 		        var pTop = (pheight - 700) / 2;
 		        var pLeft = (pwidth - 765) / 2;
-		        window.open("/ezBoard/newBoardItemMovie.do?boardID=" + encodeURIComponent(pBoardID), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=700,width=765,top=" + pTop + ",left=" + pLeft, "");
+		        window.open("/ezBoard/newBoardItemMovie.do?boardID=" + encodeURIComponent(pBoardID) + "&gubun=7", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=700,width=765,top=" + pTop + ",left=" + pLeft, "");
 		    }
 		
 		    function ItemRead_onclick(obj) {
-		        if (Read_FG != "true") {
+		        let pWriterName = obj.getAttribute("data3");
+		        if (Read_FG != "true" && !(pWriterName == null || pWriterName == SSUserID)) {
 		            alert("<spring:message code='ezBoard.t194'/>");
 		            return;
 		        }
@@ -940,10 +974,6 @@
 		    }
 		    
 		    function SetRead_onclick() {
-		        if (Read_FG != "true") {
-		            alert("<spring:message code='ezBoard.t194'/>");
-		            return;
-		        }
 		        if (strListInfo == "" || strListInfo === "undefined") {
 		            alert("<spring:message code='ezBoard.t198'/>");
 		            return;
@@ -955,6 +985,10 @@
 		            var i = 0;
 		            arrList = strListInfo.split(";");
 		            for (i = 0; i < arrList.length - 1; i++) {
+		                if ((!!arrList[i].split(",")[1] && arrList[i].split(",")[1] != SSUserID) && Read_FG != "true") {
+		                    alert("<spring:message code='ezBoard.t194' />");
+		                    return;
+		                }
 		                strItemList += arrList[i].split(",")[0] + ";";
 		            }
 		            arrList = null;
@@ -1189,10 +1223,10 @@
 		        xmlhttp.send(pBoardID);
 		
 		        if (xmlhttp.status == 200) {
-		            if (parent.window.document.getElementsByTagName("h1").length == 0)
-		                location.href = "/admin/ezBoard/boardACL.do?adminType=y&parentNeed=Y&boardID=" + encodeURIComponent(pBoardID) + "&parentBoardID=" + encodeURIComponent(getNodeText(xmlhttp.responseText)) + "&boardType=" + pBoardType + "&boardName=" + encodeURIComponent(BrdName);
-		            else
-		                location.href = "/admin/ezBoard/boardACL.do?adminType=y&parentNeed=N&boardID=" + encodeURIComponent(pBoardID) + "&parentBoardID=" + encodeURIComponent(getNodeText(xmlhttp.responseText)) + "&boardType=" + pBoardType + "&boardName=" + encodeURIComponent(BrdName);
+					var parentNeed = (parent.window.document.getElementsByTagName("h1").length == 0) ? "Y" : "N";
+					location.href = "/admin/ezBoard/boardConfig.do?boardID=" + encodeURIComponent(pBoardID) + "&parentBoardID=" + encodeURIComponent(getNodeText(xmlhttp.responseText))
+							+ "&boardType=" + pBoardType + "&boardName=" + encodeURIComponent(BrdName)
+							+ "&adminType=y&parentNeed=" + parentNeed + "&userPageYN=Y";
 		        }
 		        else {
 		            alert("ERROR");
@@ -1339,17 +1373,18 @@
 	            var i = 0;
 	            arrList = strListInfo.split(";");
 
-				if (Read_FG != "true") {
-					alert("<spring:message code='ezBoard.t202' />");
+				if (arrList.length == "1") {
+					alert("<spring:message code='ezBoard.kmh15' />");
 					return;
 				}
 
-	            if(arrList.length == "1"){
-	            	alert("<spring:message code='ezBoard.kmh15'/>");
+	for (i = 0; i < arrList.length - 1; i++) {
+                    if ((!!arrList[i].split(",")[1] && arrList[i].split(",")[1] != SSUserID) && Read_FG != "true"){
+	            	alert("<spring:message code='ezBoard.t194'/>");
 	            	return;
 	            }
 
-	            for (i = 0; i < arrList.length - 1; i++) {
+	            
 		            strItemList += arrList[i].split(",")[0] + ";";
 		        }
 
@@ -1390,7 +1425,6 @@
                     }
                 }
     	    }
-
 		</script>
 	</head>
 	<c:choose>
@@ -1415,6 +1449,7 @@
                             <c:if test ="${useKeyword eq 'Y'}">
                                 <option value="rad_Keyword"><spring:message code='ezApprovalG.t1200'/></option>
                             </c:if>
+                            <option value="rad_Subject_Content"><spring:message code='ezBoard.t208'/> + <spring:message code='ezBoard.garm01'/></option>
 				    	</select>
 						<input id="txt_keyword" class="searchinputBox" style="height: 27px !important;border: 1px solid #cbcbcb;" onkeypress="onkeydown_start_search();" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
 				        <a class="searchBtn nofilter"><img src="/images/bsearch_new2.png" border="0" onClick="search('quick')"></a>
@@ -1433,6 +1468,7 @@
                         <c:if test ="${useKeyword eq 'Y'}">
                             <option value="rad_Keyword"><spring:message code='ezApprovalG.t1200'/></option>
                         </c:if>
+                        <option value="rad_Subject_Content"><spring:message code='ezBoard.t208'/> + <spring:message code='ezBoard.garm01'/></option>
 			    	</select>
 					<input id="txt_keyword" class="searchinputBox" style="height: 27px;border: 1px solid #cbcbcb;" onkeypress="onkeydown_start_search();" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
 					<a class="searchBtn nofilter"><img src="/images/bsearch_new2.png" border="0" onClick="search('quick')"></a>
@@ -1461,7 +1497,7 @@
 					</div>
 				</div>
 		        <c:if test="${boardInfo.boardAdmin_FG == true}">
-			        <li id="btn_acl"><span onClick="SetBoardAcl()"><spring:message code='ezBoard.t63' /></span></li>
+			        <li id="btn_acl"><span onClick="SetBoardAcl()"><spring:message code='ezBoard.boardManage01' /></span></li>
 		        </c:if>
 		        
 				<%-- 2020-06-15 홍승비 - 즐겨찾기 여부에 따라 별모양 아이콘 스타일 수정 --%>

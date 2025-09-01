@@ -280,7 +280,7 @@
 	    	function btnView_Resource() {
 		        var strUrl = "/ezResource/viewResList.do?brdID=" + pBrdid + "&accessCode=" + pAccessCode;
 		        strUrl = strUrl + "&brdNm=" + encodeURIComponent(pBrdnm);
-	    	    window.open(strUrl, 'right');
+                parent.document.querySelector("iframe[name=right]").src = strUrl;
 	    	}
 
 	    	window.onresize = function () {
@@ -592,8 +592,8 @@
     	<div class="warningbox">
 	        <p class="warningimg"><img src="/images/notify/warning_resorce.png" width="105" height="89"></p>
 	        <dl class="warningDL">
-	        	<dt>WARNING</dt>
-	        	<dd><spring:message code="ezResource.t9900001" /></dd>
+	        	<dt><spring:message code="ezResource.t9900001" /></dt>
+	        	<dd><spring:message code="ezResource.t99000022" /></dd>
 	        </dl>
 	    </div>
         	<%-- <div class="warningbox01" style="margin-top:155px;">

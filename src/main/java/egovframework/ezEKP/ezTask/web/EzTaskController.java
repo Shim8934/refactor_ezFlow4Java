@@ -32,7 +32,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import egovframework.com.cmm.EgovMessageSource;
-import egovframework.com.cmm.service.EgovFileMngUtil;
+import egovframework.com.cmm.service.EzFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezTask.service.EzTaskService;
@@ -60,7 +60,7 @@ import egovframework.let.utl.fcc.service.CommonUtil;
  */
 
 @Controller
-public class EzTaskController extends EgovFileMngUtil {
+public class EzTaskController extends EzFileMngUtil {
 	private static final Logger logger = LoggerFactory.getLogger(EzTaskController.class);
 
 	@Autowired
@@ -1228,6 +1228,8 @@ public class EzTaskController extends EgovFileMngUtil {
 			}
 		}
 		
+		String nowDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false);
+		
 		model.addAttribute("mode", mode);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("useEditor", useEditor);
@@ -1240,6 +1242,7 @@ public class EzTaskController extends EgovFileMngUtil {
 		model.addAttribute("startDate", startDate);
 		model.addAttribute("endDate", endDate);
 		model.addAttribute("flag", flag);
+		model.addAttribute("nowDate", nowDate); // utc 타임존 적용을 위해 현재시간을 백에서 받아옴
 		
 		logger.debug("taskWrite ended.");
 		

@@ -1,4 +1,4 @@
-﻿//오늘의 날짜 (년도, 월, 일, 오늘의 요일)
+﻿﻿//오늘의 날짜 (년도, 월, 일, 오늘의 요일)
 var weektodate = new Date();
 
 //전역변수 (년도, 월, 일, 요일)
@@ -367,11 +367,9 @@ function tableListControl_Week()
                 _mth.style.verticalAlign = "middle";
                 _mth.style.overflow = "hidden";
                 _mth.style.textOverflow = "ellipsis";
-                _mth.onmouseover = new Function("onmouse_over_Week(this);");
-                _mth.onmouseout = new Function("onmouse_out_Week(this);");
-                _mth.ondblclick = new Function("idCalendarViewer_OnDoubleClickAppointment2('','" + title_name[0].split("/")[0] + "','" + AddDate + "','" + AddDate + "','" + title_name[0].split("/")[1] + "');");               
-                
-                //baonk added    	
+                _mth.onmouseover = function() {onmouse_over_Week(this);};
+                _mth.onmouseout = function() {onmouse_out_Week(this);};
+                _mth.ondblclick = function() {idCalendarViewer_OnDoubleClickAppointment2('', title_name[0].split("/")[0], AddDate, AddDate, title_name[0].split("/")[1] ); };
                 var bnk_Date = D_nowdateTitle.split("/")[1];
                 var bnk_Month = D_nowdateTitle.split("/")[0]               
                 
@@ -488,9 +486,9 @@ function tableListControl_Week()
                 _mth.style.verticalAlign = "middle";
                 _mth.style.overflow = "hidden";
                 _mth.style.textOverflow = "ellipsis";
-                _mth.onmouseover = new Function("onmouse_over_Week(this);");
-                _mth.onmouseout = new Function("onmouse_out_Week(this);");
-                _mth.ondblclick = new Function("idCalendarViewer_OnDoubleClickAppointment2('','" + title_name[0].split("/")[0] + "','" + AddDate + "','" + AddDate + "','" + title_name[0].split("/")[1] + "');");
+                _mth.onmouseover = function() {onmouse_over_Week(this);};
+                _mth.onmouseout = function() {onmouse_out_Week(this);};
+                _mth.ondblclick = function() {idCalendarViewer_OnDoubleClickAppointment2('', title_name[0].split("/")[0], AddDate, AddDate, title_name[0].split("/")[1]);};
                 
                 //baonk added    	
                 var bnk_Date = D_nowdateTitle.split("/")[1];
@@ -614,11 +612,13 @@ function tableListControl_Week()
             if(k == 0) {
             	_mtd.style.borderTop = "0px";
             }
-            if(title_name[k].split("/")[2].substring(0,1) == "1")
+            
+            if (title_name[k].split("/")[2].substring(0,1) == "1") {
                 //_mtd.innerHTML = "<img onclick='showRes(" + title_name[k].split("/")[0] + ")' src='/images/calendar/icon_resource_ok.png'  style='vertical-align:bottom;margin-right:5px'>" + title_name[k].split("/")[1];
-            	_mtd.innerHTML = "<span class='sub_iconLNB tree_resource_ok' style='margin-top:0px' onclick='showRes(" + title_name[k].split("/")[0] + ")'></span>&nbsp;" + title_name[k].split("/")[1];
-            else
-                _mtd.innerHTML = "<span class='sub_iconLNB tree_resource_standard' style='margin-top:0px' onclick='showRes(" + title_name[k].split("/")[0] + ")'></span>&nbsp;" + title_name[k].split("/")[1];
+            	_mtd.innerHTML = "<span class='sub_iconLNB tree_resource_ok' style='margin-top:0px' onclick='showRes(" + title_name[k].split("/")[0] + ")'></span>&nbsp;" + title_name[k].split("/")[1] + " [" + strLangMaxYGS02 + " : " + title_name[k].split("/")[title_name[k].split("/").length - 1] + strLangMaxYGS03 +"]";
+            } else {
+                _mtd.innerHTML = "<span class='sub_iconLNB tree_resource_standard' style='margin-top:0px' onclick='showRes(" + title_name[k].split("/")[0] + ")'></span>&nbsp;" + title_name[k].split("/")[1] + " [" + strLangMaxYGS02 + " : " + title_name[k].split("/")[title_name[k].split("/").length - 1] + strLangMaxYGS03 + "]";
+            }
             _mtr2.appendChild(_mtd);
             
             if (DefaultView == 0) { //일요일시작
@@ -783,10 +783,10 @@ function tableListControl_Week()
                 
                 //_span.addEventListener("mouseover", function (event) { onmouse_over(this, event) });
                 _span.onmouseover = function (event) { onmouse_over(this, event); };
-                _span.onmouseout = new Function("onmouse_out(this);");
+                _span.onmouseout = function() {onmouse_out(this);};
                 var pResourceName = "";
                 pResourceName = getNodeText(selObj.parentNode.childNodes[0]).trim();             
-                _span.onclick = new Function("idCalendarViewer_OnDoubleClickAppointment2('" + getNodeText(xmldom.getElementsByTagName("number")[j]) + "','" + getNodeText(xmldom.getElementsByTagName("owner_id")[j]) + "','" + getNodeText(xmldom.getElementsByTagName("dtstart")[j]).split("T")[0] + "','" + getNodeText(xmldom.getElementsByTagName("dtend")[j]).split("T")[0] + "','" + escapeHtml(pResourceName) + "','" + getNodeText(xmldom.getElementsByTagName("writer_id")[j]) + "');");
+                _span.onclick = function() {idCalendarViewer_OnDoubleClickAppointment2(getNodeText(xmldom.getElementsByTagName("number")[j]), getNodeText(xmldom.getElementsByTagName("owner_id")[j]), getNodeText(xmldom.getElementsByTagName("dtstart")[j]).split("T")[0] , getNodeText(xmldom.getElementsByTagName("dtend")[j]).split("T")[0], escapeHtml(pResourceName), getNodeText(xmldom.getElementsByTagName("writer_id")[j])); };
                 setNodeText(_span, ConvertEntityReferenceToChar(getNodeText(xmldom.getElementsByTagName("subject")[j])));
                 _td.appendChild(_span2);
                 _td.appendChild(_span);
@@ -997,11 +997,11 @@ function makeTable(xmldom, pNum, dayType, checkout) {
     }
 
     _span.onmouseover = function (event) { onmouse_over(this, event); };
-    _span.onmouseout = new Function("onmouse_out(this);");
+    _span.onmouseout = function() {onmouse_out(this);};
     var pResourceName = "";
     pResourceName = getNodeText(selObj.parentNode.childNodes[0]).trim();
     // 2018-03-12 서주연 - 2일 이상 자원예약시 자원메인 주보기에서 자원이름이 깨지는 현상 수정
-    _span.onclick = new Function("idCalendarViewer_OnDoubleClickAppointment2('" + getNodeText(xmldom.getElementsByTagName("number")[pNum]) + "','" + getNodeText(xmldom.getElementsByTagName("owner_id")[pNum]) + "','" + getNodeText(xmldom.getElementsByTagName("dtstart")[pNum]).split("T")[0] + "','" + getNodeText(xmldom.getElementsByTagName("dtend")[pNum]).split("T")[0] + "','" + pResourceName + "','" + getNodeText(xmldom.getElementsByTagName("writer_id")[pNum]) + "');");
+    _span.onclick = function() { idCalendarViewer_OnDoubleClickAppointment2(getNodeText(xmldom.getElementsByTagName("number")[pNum]), getNodeText(xmldom.getElementsByTagName("owner_id")[pNum]), getNodeText(xmldom.getElementsByTagName("dtstart")[pNum]).split("T")[0], getNodeText(xmldom.getElementsByTagName("dtend")[pNum]).split("T")[0], pResourceName, getNodeText(xmldom.getElementsByTagName("writer_id")[pNum])); }
     setNodeText(_span,ConvertEntityReferenceToChar(getNodeText(xmldom.getElementsByTagName("subject")[pNum])));
     _td.appendChild(_span2);
     _td.appendChild(_span);
@@ -1301,8 +1301,8 @@ function tableListControl_today() {
                             document.getElementById(pObjectId + "_" + TCnt).style.borderLeftWidth = "0px";*/
                             document.getElementById(pObjectId + "_" + TCnt).style.cursor = "pointer";
                             document.getElementById(pObjectId + "_" + TCnt).onmouseover = function (event) { onmouse_over_today(this, event); };
-                            document.getElementById(pObjectId + "_" + TCnt).onmouseout = new Function("onmouse_out_today(this);");
-                            document.getElementById(pObjectId + "_" + pObjectSP).onclick = new Function("idCalendarViewer_OnDoubleClickAppointment2('" + getNodeText(xmldom.getElementsByTagName("number")[j]) + "', '" + getNodeText(xmldom.getElementsByTagName("owner_id")[j]) + "', '" + getNodeText(xmldom.getElementsByTagName("dtstart")[j]).split("T")[0] + "', '" + getNodeText(xmldom.getElementsByTagName("dtend")[j]).split("T")[0] + "', '" + getNodeText(document.getElementById(pObjectId + "_" + pObjectSP).parentNode.firstChild).trim() + "', '" + getNodeText(xmldom.getElementsByTagName("writer_id")[j]) + "');");
+                            document.getElementById(pObjectId + "_" + TCnt).onmouseout = function() {onmouse_out_today(this);};
+                            document.getElementById(pObjectId + "_" + pObjectSP).onclick = function() {idCalendarViewer_OnDoubleClickAppointment2(getNodeText(xmldom.getElementsByTagName("number")[j]), getNodeText(xmldom.getElementsByTagName("owner_id")[j]), getNodeText(xmldom.getElementsByTagName("dtstart")[j]).split("T")[0], getNodeText(xmldom.getElementsByTagName("dtend")[j]).split("T")[0], getNodeText(document.getElementById(pObjectId + "_" + pObjectSP).parentNode.firstChild).trim(), getNodeText(xmldom.getElementsByTagName("writer_id")[j]));};
                             document.getElementById(pObjectId + "_" + TCnt).colSpan = (pObjectEP - pObjectSP) + 1; 
                           //늘어난 colspan만큼 오른쪽으로 밀려난 td들을 display:none 처리한다.(ie11문제 수정)
                             if (!CrossYN() || agent.search( "trident" ) > -1 ) {
@@ -1343,14 +1343,15 @@ function tableListControl_today() {
                     document.getElementById(pObjectId + "_1").style.borderLeftWidth = "0px";*/
                     document.getElementById(pObjectId + "_1").style.cursor = "pointer";
                     document.getElementById(pObjectId + "_1").onmouseover = function (event) { onmouse_over_today(this, event); };
-                    document.getElementById(pObjectId + "_1").onmouseout = new Function("onmouse_out_today(this);");
-                    document.getElementById(pObjectId + "_1").onclick = new Function("idCalendarViewer_OnDoubleClickAppointment2('" + getNodeText(xmldom.getElementsByTagName("number")[j]) + "', '" + getNodeText(xmldom.getElementsByTagName("owner_id")[j]) + "', '" + getNodeText(xmldom.getElementsByTagName("dtstart")[j]).split("T")[0] + "', '" + getNodeText(xmldom.getElementsByTagName("dtend")[j]).split("T")[0] + "', '" + getNodeText(document.getElementById(pObjectId + "_1").parentNode.firstChild).trim() + "', '" + getNodeText(xmldom.getElementsByTagName("writer_id")[j]) + "');");
+                    document.getElementById(pObjectId + "_1").onmouseout = function() {onmouse_out_today(this);};
+                    document.getElementById(pObjectId + "_1").onclick = function() {idCalendarViewer_OnDoubleClickAppointment2(getNodeText(xmldom.getElementsByTagName("number")[j]), getNodeText(xmldom.getElementsByTagName("owner_id")[j]), getNodeText(xmldom.getElementsByTagName("dtstart")[j]).split("T")[0], getNodeText(xmldom.getElementsByTagName("dtend")[j]).split("T")[0], getNodeText(document.getElementById(pObjectId + "_1").parentNode.firstChild).trim(), getNodeText(xmldom.getElementsByTagName("writer_id")[j]));};
                     document.getElementById(pObjectId + "_1").colSpan = 48;
                   //하루종일 시 우측 td 전부 삭제(ie11문제 수정)
                     if (!CrossYN() || agent.search( "trident" ) > -1 ) {
                         for(var tdR = 2; tdR <= 48; tdR++){
                        	 	document.getElementById(pObjectId + "_" + (tdR)).style.display = "none";    	
                         }
+                        
         			}	
                 }     
             }
@@ -1483,8 +1484,8 @@ function tableListControl_today() {
                                     _TD.setAttribute("id", "nDay_" + title_name[k].split("/")[0] + "_" + (j + 1));
                                     _TD.style.cursor = "pointer";
                                     _TD.onmouseover = function (event) { onmouse_over_today(this, event); };
-                                    _TD.onmouseout = new Function("onmouse_out_today(this);");
-                                    _TD.onclick = new Function("idCalendarViewer_OnDoubleClickAppointment2('" + getNodeText(xmldom.getElementsByTagName("number")[j]) + "', '" + getNodeText(xmldom.getElementsByTagName("owner_id")[j]) + "', '" + getNodeText(xmldom.getElementsByTagName("dtstart")[j]).split("T")[0] + "', '" + getNodeText(xmldom.getElementsByTagName("dtend")[j]).split("T")[0] + "', '" + title_name[k].split("/")[1] + "', '" + getNodeText(xmldom.getElementsByTagName("writer_id")[j]) + "');");
+                                    _TD.onmouseout = function() {onmouse_out_today(this);};
+                                    _TD.onclick = function() {idCalendarViewer_OnDoubleClickAppointment2(getNodeText(xmldom.getElementsByTagName("number")[j]), getNodeText(xmldom.getElementsByTagName("owner_id")[j]), getNodeText(xmldom.getElementsByTagName("dtstart")[j]).split("T")[0], getNodeText(xmldom.getElementsByTagName("dtend")[j]).split("T")[0],  title_name[k].split("/")[1], getNodeText(xmldom.getElementsByTagName("writer_id")[j])); }
                                     _TD.colSpan = width_td;
 
                                     _Tr2.appendChild(_TD);
@@ -1537,8 +1538,8 @@ function tableListControl_today() {
                             _TD.setAttribute("id", "nDay_" + title_name[k].split("/")[0] + "_" + (j + 1));
                             _TD.style.cursor = "pointer";
                             _TD.onmouseover = function (event) { onmouse_over_today(this, event); };
-                            _TD.onmouseout = new Function("onmouse_out_today(this);");
-                            _TD.onclick = new Function("idCalendarViewer_OnDoubleClickAppointment2('" + getNodeText(xmldom.getElementsByTagName("number")[j]) + "', '" + getNodeText(xmldom.getElementsByTagName("owner_id")[j]) + "', '" + getNodeText(xmldom.getElementsByTagName("dtstart")[j]).split("T")[0] + "', '" + getNodeText(xmldom.getElementsByTagName("dtend")[j]).split("T")[0] + "', '" + title_name[k].split("/")[1] + "', '" + getNodeText(xmldom.getElementsByTagName("writer_id")[j]) + "');");
+                            _TD.onmouseout = function() {onmouse_out_today(this);};
+                            _TD.onclick = function() {idCalendarViewer_OnDoubleClickAppointment2(getNodeText(xmldom.getElementsByTagName("number")[j]), getNodeText(xmldom.getElementsByTagName("owner_id")[j]), getNodeText(xmldom.getElementsByTagName("dtstart")[j]).split("T")[0], getNodeText(xmldom.getElementsByTagName("dtend")[j]).split("T")[0], title_name[k].split("/")[1], getNodeText(xmldom.getElementsByTagName("writer_id")[j])); };
                             _TD.colSpan = 48;
                             
                             _Tr2.appendChild(_TD);

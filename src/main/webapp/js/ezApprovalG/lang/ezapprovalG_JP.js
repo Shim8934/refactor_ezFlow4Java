@@ -1211,3 +1211,21 @@ var strLangDeptInbox = "部署受信文書";
 
 var strLangAtachHIK_01 = "일반첨부파일은 총_JP"; 
 var strLangAtachHIK_02 = "MB까지 가능합니다._JP"; 
+
+/* 전자결재 사인 그리기 기능 */
+var strLangJIHSignDraw01 = "署名をした後、決裁してください。";
+var strLangJIHSignDraw02 = "署名の保存中にエラーが発生しました。";
+
+var strLangKm01 = "文書を回収しました。";
+
+var strLangKMH02 = "一括受付を進めますか？ <br>状態が回送の文書、施行文と合意文は対象外です。";
+var strLangKMH03 = "一括受付と最終承認を進めますか？ <br>状態が回送の文書、施行文と合意文は対象外です。";
+
+
+/* 2025-06-19 김유진 -  전자결재 > 열람권한 */
+var strLangKYJ_IsPublic01 = "全体閲覧";
+var strLangKYJ_IsPublic02 = "部署閲覧";
+var strLangKYJ_IsPublic03 = "決裁ライン閲覧";
+
+var strLangJIHShareDox01 = "共有者と共有対象者は同じ会社に所属している必要があります。";
+var strLangJIHShareDox02 = "まず共有者を選択してください。";

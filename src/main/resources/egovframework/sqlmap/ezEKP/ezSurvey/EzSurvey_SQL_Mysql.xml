@@ -82,8 +82,10 @@
 		<result property="totalUser"        column="total_user"          columnIndex="26"/>
 		<result property="mailFlag"         column="mail_flag"           columnIndex="27"/>
 		<result property="popupFlag"        column="popup_flag"          columnIndex="28"/>
-		<result property="participants"        column="participants"          columnIndex="29"/>
-		<result property="participation"        column="participation"          columnIndex="30"/>
+		<result property="participants"     column="participants"        columnIndex="29"/>
+		<result property="participation"    column="participation"       columnIndex="30"/>
+		<result property="closingText"      column="closing_text"        columnIndex="31"/>
+		<result property="userExposedFlag"  column="user_exposed_flag"   columnIndex="32"/>
 	</resultMap>
 	
 	<!-- AttachVO resultMap -->
@@ -134,6 +136,7 @@
 		<result property="unit"             column="unit"                  columnIndex="12"/>
 		<result property="companyId"        column="company_id"            columnIndex="13"/>
 		<result property="tenantId"         column="tenant_id"             columnIndex="14"/>
+		<result property="resOpenFlag"      column="res_open_flag"         columnIndex="15"/>
 	</resultMap>
 	
 	<!-- OptionVO resultMap -->
@@ -204,7 +207,9 @@
 			mail_flag,
 			popup_flag,
 			IFNULL(PARTICIPANTS, 0) AS PARTICIPANTS,
-			IFNULL(PARTICIPATION, 0) AS PARTICIPATION
+			IFNULL(PARTICIPATION, 0) AS PARTICIPATION,
+			CLOSING_TEXT,
+			USER_EXPOSED_FLAG
 		from tbl_survey
 				 LEFT JOIN (SELECT SURVEY_ID                                           SI,
 								   COUNT(DISTINCT USER_ID)                           PARTICIPANTS,
@@ -217,7 +222,7 @@
 	</sql>
 	
 	<sql id="surveyItemList">
-		where use_status = 1 and tenant_id = #tenantId# and modify_flag = 0
+		where use_status in (1, 2) and tenant_id = #tenantId# and modify_flag = 0
 		<isEqual property="searchMode" compareValue="1">
 			<isEqual property="searchOption" compareValue="title" prepend=" and ">
 				title like concat('%', concat(#title#, '%'))
@@ -233,11 +238,13 @@
 				CASE
 					WHEN DRAFT_FLAG = 1
 					   THEN 'TMP'
-					WHEN NOW() < DATE_ADD(START_DATE, INTERVAL #offset# MINUTE)
+					WHEN #today# < START_DATE
 					   THEN 'WAIT'
-					WHEN NOW() <= DATE_ADD(END_DATE, INTERVAL #offset# MINUTE)
+				    WHEN USE_STATUS = 2 AND #today# <= END_DATE
+					   THEN 'PAUSE'
+					WHEN #today# <= END_DATE
 					   THEN 'ING'
-					WHEN NOW() > DATE_ADD(END_DATE, INTERVAL #offset# MINUTE)
+					WHEN #today# > END_DATE
 					   THEN 'END'
 					ELSE 'END'
 				END  = #filterStatus#
@@ -721,17 +728,20 @@
 				survey_id,     title,         purpose,            user_id,        create_date,       start_date,        end_date,    user_name1,  user_name2,
 				use_status,    open_days,     result_public_flag, anonymous_flag, multi_answer_flag, participate_flag,  attach_flag,  modify_flag, draft_flag,
 				response_flag, delete_user,   update_user,        update_date,    total_user,        company_id,        tenant_id,
-				mail_flag,     popup_flag
+				mail_flag,     popup_flag,	  closing_text,		  user_exposed_flag
 			)
 			values (
 				#surveyId#,     #title#,      #purpose#,          #creatorId#,     #createDate#,      #startDate#,      #endDate#,      #creatorName1#, #creatorName2#,
 				#useStatus#,    #openDays#,   #resultPublicFlag#, #anonymousFlag#, #multiAnswerFlag#, #paritipateFlag#, #attachFlag#,   #modifyFlag#,   #draftFlag#,
 				#responseFlag#, #deleteUser#, #updateUser#,       #updateDate#,    #totalUser#,       #companyId#,      #tenantId#,
-				#mailFlag#,     #popupFlag#
+				#mailFlag#,     #popupFlag#,  #closingText#,      #userExposedFlag#
 			)
 		]]>
 	</insert>
 	
+	<!--updateMode 별 업데이트 유형 
+	(0) 기본 수정 저장 (1) 수정/수정취소 시 관련 상태값 업데이트 
+	(2) 사용자 응답 저장 시 관련 상태갑 업데이트 (3) 응답삭제 시 responseFlag 업데이트 -->
 	<update id="EzSurveyDAO.updateSurveyItem">
 		update tbl_survey set
 		<isEqual property="updateMode" compareValue="0">
@@ -758,7 +768,9 @@
 			update_user        = #updateUser#,
 			update_date        = #updateDate#,
 			mail_flag		   = #mailFlag#,
-			popup_flag		   = #popupFlag#
+			popup_flag		   = #popupFlag#,
+			closing_text       = #closingText#,
+			user_exposed_flag  = #userExposedFlag#
 		</isEqual>
 		<isEqual property="updateMode" compareValue="1">
 			use_status         = #useStatus#,
@@ -783,6 +795,9 @@
 			attach_flag        = #attachFlag#,
 			modify_flag        = #modifyFlag#,
 			draft_flag         = #draftFlag#,
+			response_flag      = #responseFlag#
+		</isEqual>
+		<isEqual property="updateMode" compareValue="3">
 			response_flag      = #responseFlag#
 		</isEqual>
 		where
@@ -1163,11 +1178,11 @@
 		<![CDATA[
 			insert into tbl_survey_question (
 				question_id,    survey_id,           question_type,  title,    levels, use_status, required_flag,
-				logic_flag,     slider_logic_point,  skip_flag,      skip_num, unit,   company_id, tenant_id
+				logic_flag,     slider_logic_point,  skip_flag,      skip_num, unit,   company_id, tenant_id, res_open_flag
 			)
 			values (
 				#questionId#,  #surveyId#,         #type#,       #content#,  #level#,  #useStatus#, #required#,
-				#logicFlag#,   #sliderLogicPoint#, #skipFlag#,   #skip#,     #unit#,   #companyId#,  #tenantId#
+				#logicFlag#,   #sliderLogicPoint#, #skipFlag#,   #skip#,     #unit#,   #companyId#,  #tenantId#, #resOpenFlag#
 			)
 		]]>
 	</insert>
@@ -1462,6 +1477,8 @@
 				survey_id = #surveyId# 
 			and 
 				user_id = #userId#
+			and
+			    tenant_id = #tenantId#
 		]]>
 	</delete>
 	
@@ -1515,7 +1532,7 @@
 			insert into tbl_survey_respondent (
 			)
 			values (
-				#responseId#, #surveyId#, #userId#, #userName1#, #userName2#, #email#, #image#, #deptId#, #deptName1#, #deptName2#, #responseDate#, #companyId#, #tenantId#
+				#responseId#, #surveyId#, #userId#, #userName1#, #userName2#, #email#, #image#, #deptId#, #deptName1#, #deptName2#, #responseDate#, #companyId#, #tenantId#, null
 			)
 		]]>
 	</insert>
@@ -1528,6 +1545,8 @@
 				survey_id = #surveyId# 
 			and 
 				user_id = #userId#
+			and
+			    tenant_id = #tenantId#
 		]]>
 	</delete>
 	
@@ -1814,5 +1833,149 @@
 		AND
 			a.company_id = #companyId#
 		<isNotEmpty property="surveyId" prepend=" and ">survey_id = #surveyId#</isNotEmpty>
+	</select>
+
+	<select id="EzSurveyDAO.checkEditingState" parameterClass="map" resultClass="HashMap">
+		SELECT
+			MODIFY_FLAG,
+			USE_STATUS
+		FROM
+			TBL_SURVEY
+		WHERE
+			SURVEY_ID = #surveyId#
+		  AND COMPANY_ID = #companyId#
+		  AND TENANT_ID = #tenantId#
+	</select>
+
+	<update id="EzSurveyDAO.endSurveyItem" parameterClass="map">
+		UPDATE
+			TBL_SURVEY
+		SET
+			END_DATE = #updateDate#,
+			UPDATE_DATE = #updateDate#,
+			UPDATE_USER = #userID#
+		WHERE
+			SURVEY_ID = #surveyID#
+		  AND
+			TENANT_ID = #tenantID#
+	</update>
+
+	<update id="EzSurveyDAO.pauseSurvey" parameterClass="map">
+		UPDATE
+			TBL_SURVEY
+		SET
+			USE_STATUS = #useStatus#
+		WHERE
+			SURVEY_ID = #surveyId#
+		  AND
+			TENANT_ID = #tenantId#
+	</update>
+	
+	<select id="EzSurveyDAO.getSurveyParticipantList" parameterClass="map" resultClass="RespondentVO" remapResults="true">
+		SELECT
+			*
+		FROM
+			(
+				SELECT
+					USER_ID as USERID,
+				<isEmpty property="lotteryFG">
+					USER_NAME1 as USERNAME1,
+					USER_NAME2 as USERNAME2,
+					DEPT_NAME1 as DEPTNAME1,
+					DEPT_NAME2 as DEPTNAME2,
+					DATE_ADD(RESPONSE_DATE, interval #offset# minute) as RESPONSEDATE,
+					IFNULL(LOTTERY_RESULT, 0) as LOTTERYRESULT,
+				</isEmpty>
+					ROW_NUMBER() OVER (PARTITION BY SURVEY_ID, USER_ID ORDER BY RESPONSE_DATE ASC) as RN
+				FROM
+					TBL_SURVEY_RESPONDENT
+				WHERE
+					SURVEY_ID = #surveyId#
+				AND
+				    COMPANY_ID = #companyId#
+				AND
+				    TENANT_ID = #tenantId#
+			) A
+		WHERE
+		    A.RN = 1
+		<isEmpty property="lotteryFG">
+			ORDER BY 
+			    <isNotEmpty property="orderCol">
+					<isEqual property="orderCol" compareValue="USERID">A.USERID</isEqual>
+					<isEqual property="orderCol" compareValue="USERNAME1">A.USERNAME1</isEqual>
+					<isEqual property="orderCol" compareValue="USERNAME2">A.USERNAME2</isEqual>
+					<isEqual property="orderCol" compareValue="DEPTNAME1">A.DEPTNAME1</isEqual>
+					<isEqual property="orderCol" compareValue="DEPTNAME2">A.DEPTNAME2</isEqual>
+					<isEqual property="orderCol" compareValue="RESPONSEDATE">A.RESPONSEDATE</isEqual>
+					<isEqual property="orderCol" compareValue="LOTTERYRESULT">A.LOTTERYRESULT</isEqual>
+				</isNotEmpty>
+				<isNotEmpty property="orderType">
+					<isEqual property="orderType" compareValue="ASC"> ASC</isEqual>
+					<isEqual property="orderType" compareValue="DESC"> DESC</isEqual>
+				</isNotEmpty>
+			LIMIT #startPoint#, #listCount#
+		</isEmpty>
+	</select>
+	
+	<select id="EzSurveyDAO.getSurveyParticipantCnt" parameterClass="map" resultClass="Integer">
+		SELECT
+			COUNT(DISTINCT USER_ID)
+		FROM
+			TBL_SURVEY_RESPONDENT
+		WHERE
+			SURVEY_ID = #surveyId#
+		  AND
+			COMPANY_ID = #companyId#
+		  AND
+			TENANT_ID = #tenantId#
+	</select>
+	
+	<update id="EzSurveyDAO.updateSurveydrawWinners" parameterClass="map">
+		UPDATE
+			TBL_SURVEY_RESPONDENT
+		SET
+		    LOTTERY_RESULT =
+		        CASE
+		            WHEN USER_ID IN
+		                 <iterate property="targetIds" open="(" close=")" conjunction=",">#targetIds[]#</iterate>
+		            THEN -1
+					ELSE NULL
+				END
+		WHERE
+			SURVEY_ID = #surveyId#
+		AND
+			COMPANY_ID = #companyId#
+		AND
+			TENANT_ID = #tenantId#
+	</update>
+	
+	<update id="EzSurveyDAO.surveyAssignRandomNumbers" parameterClass="map">
+		UPDATE
+			TBL_SURVEY_RESPONDENT
+		SET
+			LOTTERY_RESULT = #number#
+		WHERE
+		    USER_ID = #userId#
+		AND
+			SURVEY_ID = #surveyId#
+		AND
+			COMPANY_ID = #companyId#
+		AND
+			TENANT_ID = #tenantId#
+	</update>
+	
+	<select id="EzSurveyDAO.checkHasLotteryResult" parameterClass="map" resultClass="Integer">
+		SELECT
+			COUNT(LOTTERY_RESULT)
+		FROM
+			TBL_SURVEY_RESPONDENT
+		WHERE
+			SURVEY_ID = #surveyId#
+	  	AND
+			COMPANY_ID = #companyId#
+		AND
+			TENANT_ID = #tenantId#
+		AND
+		    LOTTERY_RESULT IS NOT NULL
 	</select>
 </sqlMap>

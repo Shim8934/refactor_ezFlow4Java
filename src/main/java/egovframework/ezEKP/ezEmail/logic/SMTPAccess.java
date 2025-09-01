@@ -45,7 +45,6 @@ public class SMTPAccess {
 		this.port = port;
 		this.userName = userName;
 		this.password = password;
-		this.primary = userName;
 		this.usingAuth = usingAuth;
 	}
 	

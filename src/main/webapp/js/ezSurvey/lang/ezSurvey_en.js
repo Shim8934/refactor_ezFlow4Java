@@ -192,5 +192,23 @@ var SurveyMessages = {
     /* 2024-11-25 박기범 - 리스트 상태값 추가 */
     strLangPGB01 : "Participation",
     strLangPGB02 : "non-participation",
-    strNumber : "Type"
+    strNumber : "Type",
+	strEditingErr01 : "The survey is currently being edited. Your response cannot be saved.",
+	strEditingErr02 : "he author has modified the survey. Reloading the survey content.",
+	strDeletedErr : "Survey no longer exists. Response could not be saved. Back to the list.",
+	strDelResponse : "Delete your response? The survey status will change to not participated.",
+	strDelEnd : "Your response has been deleted.",
+	strEndSurv01 : "Would you like to end the survey?",
+	strEndSurv02 : "The survey has been closed.",
+	strEndSurv03 : "This survey has been closed and can no longer be answered. The window will now close.",
+	strResOpen01 : "Private Result",
+	strResOpen02 : "Only the creator or admins can view the result if set to private.",
+	strResOpen03 : "This result is private. Only the creator or admins can view it.",
+	strPause : "Pause",
+	strResume : "Resume",
+	strPauseMsg01 : "Do you want to pause this survey?\nWhile paused, user responses will be restricted.",
+	strResumeMsg01 : "Do you want to resume this survey?\nAfter resuming, users will be able to respond again.",
+	strPauseMsg02 : "The survey has been paused.",
+	strResumeMsg02 : "The survey has been resumed.",
+	strPauseAlert : "This survey is currently paused.\nYou cannot view or participate in it at this time."
 }

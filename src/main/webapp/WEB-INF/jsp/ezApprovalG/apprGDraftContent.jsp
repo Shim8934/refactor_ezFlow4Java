@@ -20,6 +20,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/ezDraftAll_WHWP.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/ApprGContent.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/Office.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/apprGSummary.js')}"></script>
 		
 		<%-- 2023-12-05 홍승비 - 결재 서명 데이터를 DB(TBL_SIGNINFO)에서 가져와, 문서 상에 다시 그려주는(재맵핑) 함수 적용 --%>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/aprSignRedraw.js')}"></script>
@@ -108,7 +109,6 @@
 
 	        window.onload = function () {
 	        	var officeFlag = "<c:out value='${officeFlag}'/>";
-	        	console.log(officeFlag);
 	        	$('#officeVal').val(officeFlag);
 	            try {
 	                parent.DocumentComplete(this);
@@ -472,7 +472,7 @@
 	                }
 	            }
 	            catch (e)
-	            {alert(e.message); }
+	            {showAlert(e.message); }
 	        }
 	
 	        var BODYTag;
@@ -581,7 +581,7 @@
 	        		var resStr = "";
 	        		for (var i = 0; i < mustFields.length; i++) {
 	        			var mustField = mustFields[i];
-	        			var val = $(mustField).text().trim();
+	        			var val = $(mustField).text().replace(/[\u200B-\u200D\uFEFF]/g, '').trim();
 	        			if (val == "") {
 							if ($(mustField).attr('id') == "doctitle"){
 								returnval.push("<spring:message code='ezApprovalG.t1330'/>");
@@ -1175,10 +1175,11 @@
                                 }
                             });
                         }
+						copySummary(parent.pDocIDAry[1], "APR", pDocID);
                     }
                 } catch (e) {
                     console.log(e);
-                    alert("apprGdraftuiAllContent_WHWP.jsp > process_AfterOpen()  ::  " + e.description);
+                    showAlert("apprGdraftuiAllContent_WHWP.jsp > process_AfterOpen()  ::  " + e.description);
                 }
             }
 
@@ -1220,7 +1221,7 @@
                         Clear();
                     }
                 } catch (e) {
-                    alert("CopyAndPasteContent ::" + e);
+                    showAlert("CopyAndPasteContent ::" + e);
                 }
             }
 

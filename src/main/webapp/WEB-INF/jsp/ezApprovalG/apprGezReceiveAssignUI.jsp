@@ -60,7 +60,12 @@
 	                }
 	                try {
 						if(mode == 'ALL'){
-							RetValue = parent.ezreceivejijungall_cross_dialogArguments[0];
+							if (isParentCommonArgsUsed()) {
+								RetValue = opener == null ? parent.ezCommon_cross_dialogArguments[0] : opener.ezCommon_cross_dialogArguments[0];
+								ReturnFunction = opener == null ? parent.ezCommon_cross_dialogArguments[1] : opener.ezCommon_cross_dialogArguments[1];
+							} else {
+								RetValue = parent.ezreceivejijungall_cross_dialogArguments[0];
+							}
 						}else{
 							RetValue = parent.ezreceiveassignui_cross_dialogArguments[0];
 							ReturnFunction = parent.ezreceiveassignui_cross_dialogArguments[1];
@@ -130,7 +135,7 @@
 	                    window.returnValue = "cancel";
 	
 	            } catch (ErrMsg) {
-	            alert("window_onload : " + ErrMsg.description);
+	            showAlert("window_onload : " + ErrMsg.description);
 	        }
 	    };
 	    function Tree_setconfig() {
@@ -164,13 +169,14 @@
 			    		}
 			    	});
 	        		if (result == "FALSE") {
-	        			if (ReturnFunction != null) {
-                            ReturnFunction("DUPL");
-                        }
-                        else {
-                            window.returnValue = "DUPL";
-                            window.close();
-                        }
+	        			// if (ReturnFunction != null) {
+                        //     ReturnFunction("DUPL");
+                        // }
+                        // else {
+                        //     window.returnValue = "DUPL";
+                        //     window.close();
+                        // }
+						btnClose_onclick("DUPL");
 		    			return;
 	        		}
 	        	}
@@ -186,13 +192,14 @@
 							|| checkIdInList(trim_Cross(pCurSelRow[0].getAttribute("DATA3")))) { // 상위부서문서함 사용중인 부서인지 확인
 	                    var RtnVal = setReceiveAssign(pCurSelRow);
 	                    if (RtnVal == "TRUE") {
-	                        if (ReturnFunction != null) {
-	                            ReturnFunction("OK");
-	                        }
-	                        else {
-	                            window.returnValue = "OK";
-	                            window.close();
-	                        }
+	                        // if (ReturnFunction != null) {
+	                        //     ReturnFunction("OK");
+	                        // }
+	                        // else {
+	                        //     window.returnValue = "OK";
+	                        //     window.close();
+	                        // }
+							btnClose_onclick("OK")
 	                    } else {
 	                        var pAlertContent = "<spring:message code='ezApprovalG.t426'/>";
 	                        OpenAlertUI(pAlertContent);
@@ -205,18 +212,18 @@
 	                }
 	            }
 	        } catch (ErrMsg) {
-	            alert(ErrMsg.description);
+	            showAlert(ErrMsg.description);
 	        }
 	    }
-	    function btnCancel_onclick() {
-	        if (ReturnFunction != null) {
-	            ReturnFunction("cancel");
-	        }
-	        else {
-	            window.returnValue = "cancel";
-	            window.close();
-	        }
-	    }
+	    // function btnCancel_onclick() {
+	    //     if (ReturnFunction != null) {
+	    //         ReturnFunction("cancel");
+	    //     }
+	    //     else {
+	    //         window.returnValue = "cancel";
+	    //         window.close();
+	    //     }
+	    // }
 	    function setReceiveAssign(pCurSelRow) {
 	    	
 	        try {
@@ -259,7 +266,7 @@
 	            
 	            return getNodeText(GetChildNodes(result)[0]);
 	        } catch (ErrMsg) {
-	            alert(ErrMsg.description);
+	            showAlert(ErrMsg.description);
 	        }
 	    }
 	    function btn_searchUser_onclick() {
@@ -293,7 +300,7 @@
                 	});
 	            }
 	    } catch (ErrMsg) {
-	        alert(ErrMsg.description);
+	        showAlert(ErrMsg.description);
 	    }
 	}
 	function textUser_onkeypress() {
@@ -436,14 +443,14 @@
 												}
 												pAlertContent += "<br/>" + "<spring:message code='ezApprovalG.t1420'/>";
 	
-												if (window.opener && window.opener.pListTypeValue) {
-													if (window.opener.pListTypeValue == "97") {
-														window.opener.parent.frames[0].convMain('97', '');
-													} else {
-														window.opener.parent.frames[0].convMain('4', '');
-													}
-												}
-								OpenAlertUI(pAlertContent, window.close);
+												// if (window.opener && window.opener.pListTypeValue) {
+												// 	if (window.opener.pListTypeValue == "97") {
+												// 		window.opener.parent.frames[0].convMain('97', '');
+												// 	} else {
+												// 		window.opener.parent.frames[0].convMain('4', '');
+												// 	}
+												// }
+								OpenAlertUI(pAlertContent, () => btnClose_onclick("true"));
 							
 							}
 						});
@@ -455,7 +462,7 @@
 				}
 			}
 		} catch (ErrMsg) {
-			alert(ErrMsg.description);
+			showAlert(ErrMsg.description);
 		}
 	}
 
@@ -498,8 +505,8 @@
 	    <h1><spring:message code='ezApprovalG.t424'/></h1>
 		<div id="close">
             <ul>
-				<c:if test="${mode == 'ALL'}"> <li><span onclick="return window.close();"></span></li> </c:if> 
-				<c:if test="${mode != 'ALL'}"> <li><span onclick="return btnCancel_onclick()"></span></li> </c:if>
+				<c:if test="${mode == 'ALL'}"> <li><span onclick="return btnClose_onclick();"></span></li> </c:if> 
+				<c:if test="${mode != 'ALL'}"> <li><span onclick="return btnClose_onclick('cancel');"></span></li> </c:if>
             </ul>
         </div>
 	    <table style="margin-top: -15px;">

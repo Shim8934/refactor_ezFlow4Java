@@ -365,6 +365,8 @@ var strLangHSG03 = "主题栏为空。";
 
 var strLangKDH01 = "收信确认";
 
+var strLangYJA01 = "通过网络上传时发生错误。";
+
 //new ui
 const strLangFolderManage = "管理文件夹";
 const strLangSubscribe = "订阅";
@@ -401,6 +403,9 @@ const strLangTagadd = "메일에 태그 추가 :";
 
 const strLangChangeButton = "Switch";
 const strLangChangeLimit = "Cannot switch because the attachment size exceeds the limit.";
+
+const strLangKeepMoveCantUseSentBox = '보낸편지함으로는 계속이동 할 수 없습니다.';
+const strLangKeepMoveNoFromHeader = '보낸이가 비어있는 메일은 계속이동 할 수 없습니다.';
 
 function GetLocalTime(Offset , pDateTime)
 {

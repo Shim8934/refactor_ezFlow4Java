@@ -13,6 +13,7 @@ import javax.annotation.Resource;
 import javax.servlet.ServletContext;
 
 import org.apache.commons.io.FileUtils;
+import org.egovframe.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +35,7 @@ import egovframework.let.utl.fcc.service.EzFAL.*;
  * @see EzApprovalGKlibService
  */
 @Service("EzApprovalGKlibService")
-public final class EzApprovalGKlibServiceImpl implements EzApprovalGKlibService {
+public final class EzApprovalGKlibServiceImpl extends EgovAbstractServiceImpl implements EzApprovalGKlibService {
 
 	private static final Logger logger = LoggerFactory.getLogger(EzApprovalGKlibServiceImpl.class);
 

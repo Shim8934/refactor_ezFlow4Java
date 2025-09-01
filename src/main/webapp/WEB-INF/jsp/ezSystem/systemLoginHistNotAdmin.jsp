@@ -541,7 +541,7 @@
 	</head>
 	<body class="mainbody">
 		<h1><spring:message code="ezSystem.x0021"></spring:message><span id="listInfo"></span></h1>
-		<table style="width: 100%; background-color: #f8f8f8; border-top: 1px solid #e8e8e8; border-bottom: 1px solid #e8e8e8;">
+		<table style="width: 100%; min-width: 1085px; background-color: #f8f8f8; border-top: 1px solid #e8e8e8; border-bottom: 1px solid #e8e8e8;">
 			<tr>
 				<td width="93%" style="margin-bottom: 10px; padding: 5px 5px;">
 					<span id="topmenu" style="width: 500px"><spring:message code='ezSystem.x0032'/> : &nbsp; 
@@ -594,7 +594,7 @@
 				<td width="98%" style="color: #333;">▒ ${mailLogKeepPeriodMessage}</td>
 			</tr>
 		</table>
-		<div id="contentlist" style="width:100%; overflow: auto;">	
+		<div id="contentlist" style="width:100%;  min-width: 1085px; overflow: auto;">	
 			<table class="mainlist" style="width:100%;">
 				<thead style="">
 					<tr>

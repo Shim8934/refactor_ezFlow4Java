@@ -80,12 +80,12 @@
 								<c:forEach items="${ownerList}" var="owner">
 								    <c:choose>
 								        <c:when test="${lang eq 1}">
-								            <tr onclick="viewShareList(this)" ondblclick="insertShare('M');" ownerId="${owner.ownerId }" ownerName="${owner.ownerName }" ownerType="${owner.ownerType}">
+								            <tr onclick="viewShareList(this)" ondblclick="insertShare('M');" ownerId="${owner.ownerId }" ownerName="${owner.ownerName }" ownerType="${owner.ownerType}" ownerCompanyId="${owner.ownerCompanyId}" >
 								        </c:when>
 								        <c:otherwise>
-								            <tr onclick="viewShareList(this)" ondblclick="insertShare('M');" ownerId="${owner.ownerId }" ownerName="${owner.ownerName2 }" ownerType="${owner.ownerType}">
-								        </c:otherwise>
-								    </c:choose>
+								            <tr onclick="viewShareList(this)" ondblclick="insertShare('M');" ownerId="${owner.ownerId }" ownerName="${owner.ownerName2 }" ownerType="${owner.ownerType}" ownerCompanyId="${owner.ownerCompanyId}" >
+										</c:otherwise>
+									</c:choose>
 
 										<td>
 										    <c:choose>
@@ -143,6 +143,7 @@
 		    var ownerId = "";
 		    var ownerName = "";
 		    var ownerType = "";
+			var ownerCompanyId = "";
 		    // 팝업창 호출위한 변수
 		    var pheight = window.screen.availHeight;
 	        var pwidth = window.screen.availWidth;
@@ -156,6 +157,7 @@
 				ownerId = $(elem).attr("ownerId");
 				ownerName = $(elem).attr("ownerName");
 				ownerType = $(elem).attr("ownerType");
+				ownerCompanyId = $(elem).attr("ownerCompanyId");
 				$(".ownerList tr").removeClass("active");
 				$(elem).addClass("active");
 		    	
@@ -180,7 +182,7 @@
 
 				var url = "/admin/ezApprovalG/docDirOwnerInsert.do";
 				if(flag == 'M'){
-					url += "?ownerId=" + ownerId + "&ownerName=" + encodeURIComponent(ownerName) + "&ownerType=" + encodeURIComponent(ownerType);
+					url += "?ownerId=" + ownerId + "&ownerName=" + encodeURIComponent(ownerName) + "&ownerType=" + encodeURIComponent(ownerType) + "&ownerCompanyId=" + encodeURIComponent(ownerCompanyId);
 				}
 		    	window.open(url, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=660,width=980,top=" + pTop + ",left=" + pLeft, "");
 			}

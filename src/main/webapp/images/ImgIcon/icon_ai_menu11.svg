@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="16" height="16" viewBox="0 0 16 16">
+  <defs>
+    <clipPath id="clip-path">
+      <path id="패스_9140" data-name="패스 9140" d="M24.7,3.012A1.992,1.992,0,0,0,23,5.052v.465a1.992,1.992,0,0,0,1.7,2.041c.058,0,.116.008.17.008a1.791,1.791,0,0,0,1.219-.477A2.028,2.028,0,0,0,26.733,5.6V4.974a2.028,2.028,0,0,0-.647-1.493A1.8,1.8,0,0,0,24.871,3q-.086,0-.174.009" transform="translate(-23 -3.003)" fill="none"/>
+    </clipPath>
+    <linearGradient id="linear-gradient" y1="0.848" x2="1.074" y2="0.566" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#0abeb0"/>
+      <stop offset="1" stop-color="#0dddad"/>
+    </linearGradient>
+    <clipPath id="clip-path-2">
+      <path id="패스_9141" data-name="패스 9141" d="M19.9,16a2.907,2.907,0,0,0-2.9,2.9v.415a1.248,1.248,0,0,0,1.244,1.244h6.221a1.248,1.248,0,0,0,1.244-1.244v-.415a2.907,2.907,0,0,0-2.9-2.9Z" transform="translate(-17 -16.004)" fill="none"/>
+    </clipPath>
+    <linearGradient id="linear-gradient-2" x1="-0.076" y1="0.748" x2="1" y2="0.778" xlink:href="#linear-gradient"/>
+    <clipPath id="clip-path-3">
+      <path id="패스_9142" data-name="패스 9142" d="M3.733,16A3.738,3.738,0,0,0,0,19.737v.83a1.248,1.248,0,0,0,1.244,1.244h7.88a1.248,1.248,0,0,0,1.244-1.244v-.83A3.738,3.738,0,0,0,6.636,16Z" transform="translate(0 -16.004)" fill="none"/>
+    </clipPath>
+    <linearGradient id="linear-gradient-3" y1="1" x2="0.95" y2="0.963" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#0195fb"/>
+      <stop offset="1" stop-color="#00efac"/>
+    </linearGradient>
+    <clipPath id="clip-path-4">
+      <path id="패스_9143" data-name="패스 9143" d="M9.269.01A2.566,2.566,0,0,0,7,2.6v.614A2.566,2.566,0,0,0,9.269,5.8c.075,0,.149.008.224.008a2.456,2.456,0,0,0,1.676-.655,2.484,2.484,0,0,0,.809-1.833V2.49A2.484,2.484,0,0,0,11.168.657,2.454,2.454,0,0,0,9.494,0c-.074,0-.149,0-.225.01" transform="translate(-7)" fill="none"/>
+    </clipPath>
+    <linearGradient id="linear-gradient-4" y1="1.074" x2="1" y2="0.851" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#1f7cf9"/>
+      <stop offset="0.994" stop-color="#00b4ff"/>
+      <stop offset="1" stop-color="#00b4ff"/>
+    </linearGradient>
+  </defs>
+  <g id="icon_ai_menu11" transform="translate(-714 -1508)">
+    <g id="그룹_7385" data-name="그룹 7385" transform="translate(714 1510)">
+      <g id="그룹_7378" data-name="그룹 7378" transform="translate(9.729 1.246)">
+        <g id="그룹_7377" data-name="그룹 7377" clip-path="url(#clip-path)">
+          <rect id="사각형_29894" data-name="사각형 29894" width="4.444" height="5.333" transform="translate(-0.651 -0.356)" fill="url(#linear-gradient)"/>
+        </g>
+      </g>
+      <g id="그룹_7380" data-name="그룹 7380" transform="translate(7.29 6.638)">
+        <g id="그룹_7379" data-name="그룹 7379" clip-path="url(#clip-path-2)">
+          <rect id="사각형_29895" data-name="사각형 29895" width="8.889" height="5.333" transform="translate(0.06 -0.415)" fill="url(#linear-gradient-2)"/>
+        </g>
+      </g>
+      <g id="그룹_7382" data-name="그룹 7382" transform="translate(0 6.638)">
+        <g id="그룹_7381" data-name="그룹 7381" clip-path="url(#clip-path-3)">
+          <rect id="사각형_29896" data-name="사각형 29896" width="11.294" height="6.588" transform="translate(-0.941 -0.05)" fill="url(#linear-gradient-3)"/>
+        </g>
+      </g>
+      <g id="그룹_7384" data-name="그룹 7384" transform="translate(2.968)">
+        <g id="그룹_7383" data-name="그룹 7383" clip-path="url(#clip-path-4)">
+          <rect id="사각형_29897" data-name="사각형 29897" width="5.333" height="6.222" transform="translate(-0.237 0)" fill="url(#linear-gradient-4)"/>
+        </g>
+      </g>
+    </g>
+    <rect id="사각형_29994" data-name="사각형 29994" width="16" height="16" transform="translate(714 1508)" fill="none"/>
+  </g>
+</svg>

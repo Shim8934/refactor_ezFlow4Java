@@ -14,6 +14,7 @@ public class RespondentVO {
 	private String responseDate;
 	private String companyId;
 	private int tenantId;
+	private int lotteryResult; /*추첨결과*/
 	
 	public String getImage() {
 		return image;
@@ -117,5 +118,13 @@ public class RespondentVO {
 	
 	public void setTenantId(int tenantId) {
 		this.tenantId = tenantId;
+	}
+
+	public int getLotteryResult() {
+		return lotteryResult;
+	}
+
+	public void setLotteryResult(int lotteryResult) {
+		this.lotteryResult = lotteryResult;
 	}
 }

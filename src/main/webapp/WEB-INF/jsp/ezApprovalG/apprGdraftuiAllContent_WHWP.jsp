@@ -27,6 +27,7 @@
 		<script type="text/javascript" src="${webHWPUrl}js/hwpctrlapp/utils/util.js"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/hwpCtrlApp.js')}"></script>
     	<script type="text/javascript" src="${webHWPUrl}js/webhwpctrl.js"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/apprGSummary.js')}"></script>
     	
     	<%-- 2023-12-07 홍승비 - 결재 서명 데이터를 DB(TBL_SIGNINFO)에서 가져와, 문서 상에 다시 그려주는(재맵핑) 함수 적용 --%>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/aprSignRedraw.js')}"></script>
@@ -364,6 +365,7 @@
 	                 			});
 				            }
 			            }
+						copySummary(parent.pDocIDAry[1], "APR", pDocID);
 					}
 				} catch (e) {
 					console.log(e);
@@ -541,7 +543,20 @@
 	            ScrollPosSet.SetItem("HorzPos", HorzPos);
 	            ScrollPosSet.SetItem("VertPos", VertPos);
 	            HwpCtrl.ScrollPosInfo = ScrollPosSet;
-	        }        
+	        }       
+	        
+            function ScrollPosTop(time) {
+				setTimeout(function() {
+					var ScrollPosSet;
+		            ScrollPosSet = HwpCtrl.ScrollPosInfo;
+		            ScrollPosSet.SetItem("HorzPos", 0);
+		            ScrollPosSet.SetItem("VertPos", 0);
+		            HwpCtrl.ScrollPosInfo = ScrollPosSet;
+					setTimeout(function() {
+						ScrollPosInfo(0, 0);
+					}, 100);
+				}, time);
+			}   
 
 	        function SetToolBar(option, ToolBarID) { //툴바 설정
 	            HwpCtrl.SetToolBar(option, ToolBarID);
@@ -810,7 +825,7 @@
 	    		
 				if (parent.titleOptionFlag == true) { // 제목
 					var mainDocTitle = ifrm1.contentWindow.GetFieldText("doctitle");
-	    			PutFieldText("doctitle", mainDocTitle);
+	    			PutFieldText("doctitle", stripHTMLTags(mainDocTitle));
 				}
 
 				if (FieldExist("publication")) {
@@ -1029,9 +1044,15 @@
                     }
                 }
             }
+
+			function stripHTMLTags(htmlString) {
+				const tempDiv = document.createElement("div");
+				tempDiv.innerHTML = htmlString;
+				return tempDiv.textContent || tempDiv.innerText || "";
+			}
 	    </script>
 	</head>
 	<body>
-	    <div id="hwpContent" style="height: 100%;"><div>
+	    <div id="hwpContent" style="height: 100%;"></div>
 	</body>
 </html>

@@ -45,10 +45,10 @@ function renderData(companyId, result, mode, rootDiv) {
 	selectedFolder = compFolderId;
 	
 	if (mode == "") {
-		window.open("/admin/ezWebFolder/webfolderAdminCompanyFile.do?folderId=" + selectedFolder + "&rootFolder=" + compFolderId + "&level=0", "right");
+		parent.document.querySelector("iframe[name=right]").src = "/admin/ezWebFolder/webfolderAdminCompanyFile.do?folderId=" + selectedFolder + "&rootFolder=" + compFolderId + "&level=0";
 	}
 	else {
-		window.open("/admin/ezWebFolder/webfolderAdminCompanyFile.do?folderId=" + selectedFolder + "&rootFolder=" + compFolderId + "&companyId=" + companyId + "&level=0", "right");
+		parent.document.querySelector("iframe[name=right]").src = "/admin/ezWebFolder/webfolderAdminCompanyFile.do?folderId=" + selectedFolder + "&rootFolder=" + compFolderId + "&companyId=" + companyId + "&level=0";
 	}
 	
 	while (divTree.hasChildNodes()) {
@@ -160,10 +160,10 @@ function getSelected(compId, obj, mode) {
 	var level            = obj.getAttribute("level");
 	
 	if (mode == "comp") {
-		window.open("/admin/ezWebFolder/webfolderAdminCompanyFile.do?folderId=" + selectedFolder + "&rootFolder=" + compFolderId + "&level=" + level + "&companyId=" + compId, "right");
+		parent.document.querySelector("iframe[name=right]").src = "/admin/ezWebFolder/webfolderAdminCompanyFile.do?folderId=" + selectedFolder + "&rootFolder=" + compFolderId + "&level=" + level + "&companyId=" + compId;
 	}
 	else {
-		window.open("/admin/ezWebFolder/webfolderAdminDeptFile.do?folderId=" + selectedFolder + "&level=" + level, "right");
+		parent.document.querySelector("iframe[name=right]").src = "/admin/ezWebFolder/webfolderAdminDeptFile.do?folderId=" + selectedFolder + "&level=" + level;
 	}
 	
 	//window.parent.frames["right"].folderId = selectedFolder;
@@ -291,10 +291,10 @@ function renderData2(companyId, result, mode, rootDiv) {
 	selectedFolder = result[0]["folderId"];
 	
 	if (mode == "") {
-		window.open("/admin/ezWebFolder/webfolderAdminDeptFile.do?folderId=" + selectedFolder + "&level=0", "right");
+		parent.document.querySelector("iframe[name=right]").src = "/admin/ezWebFolder/webfolderAdminDeptFile.do?folderId=" + selectedFolder + "&level=0";
 	}
 	else {
-		window.open("/admin/ezWebFolder/webfolderAdminDeptFile.do?folderId=" + selectedFolder + "&companyId=" + companyId + "&level=0", "right");
+		parent.document.querySelector("iframe[name=right]").src = "/admin/ezWebFolder/webfolderAdminDeptFile.do?folderId=" + selectedFolder + "&companyId=" + companyId + "&level=0";
 	}
 	
 	while (divTree.hasChildNodes()) {

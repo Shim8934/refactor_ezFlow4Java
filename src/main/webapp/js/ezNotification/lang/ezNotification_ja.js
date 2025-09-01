@@ -64,7 +64,8 @@ var subType = {
 		modify : "修正通知",
 		comment : "コメント登録",
 		reply : "回答通知",
-		notice : "全通知"
+		notice : "全通知",
+		invite : "招待通知"
 	},
 	webfolder : {
 		open_apply : "開設申請",
@@ -84,6 +85,7 @@ subType["approval"]["return"] = "文書の回収";
 subType["approval"]["default"] = "決済通知";
 subType["board"]["new"] = "新規公開";
 subType["board"]["return"] = "承認の返済";
+subType["board"]["expired"] = "お知らせの掲載期間が終了";
 subType["schedule"]["delete"] = "予定を削除";
 subType["survey"]["new"] = "新規登録";
 subType["poll"]["new"] = "新規登録";

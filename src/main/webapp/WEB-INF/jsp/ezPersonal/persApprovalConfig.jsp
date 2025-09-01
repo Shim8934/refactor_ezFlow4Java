@@ -69,12 +69,12 @@
 		
 		        if (pFlag == "Y" && document.getElementById("pwdType").value == "A") {
 		            if (document.getElementById("txtNewPassword").value.length < 3) {
-		                alert("<spring:message code='ezPersonal.t945'/>");
+		                showAlert("<spring:message code='ezPersonal.t945'/>");
 		                document.getElementById("txtNewPassword").focus();
 		                return;
 		            }
 		            if (document.getElementById("txtNewPassword").value != document.getElementById("txtNewPasswordConfirm").value) {
-		                alert("<spring:message code='ezPersonal.t942'/>");
+		                showAlert("<spring:message code='ezPersonal.t942'/>");
 		                document.getElementById("txtNewPasswordConfirm").value = "";
 		                document.getElementById("txtNewPasswordConfirm").focus();
 		                return;
@@ -84,14 +84,14 @@
 		            if (AprPass != "") {
 		
 		                if (document.getElementById("txtOldPassword").value == "") {
-		                    alert("<spring:message code='ezPersonal.t947'/>");
+		                    showAlert("<spring:message code='ezPersonal.t947'/>");
 		                    document.getElementById("txtOldPassword").value = "";
 		                    document.getElementById("txtOldPassword").focus();
 		                    return;
 		                }
 		                
 		                if (document.getElementById("txtOldPassword").value == document.getElementById("txtNewPassword").value) {
-		                	alert("<spring:message code='ezPersonal.t194'/>");
+		                	showAlert("<spring:message code='ezPersonal.t194'/>");
 		                	document.getElementById("txtNewPassword").value = "";
 		                	document.getElementById("txtNewPassword").focus();
 		                	return;
@@ -109,7 +109,7 @@
 		
 		
 		            if (!CheckPwd) {
-		                alert("<spring:message code='ezPersonal.t946'/>");
+		                showAlert("<spring:message code='ezPersonal.t946'/>");
 		                document.getElementById("txtOldPassword").value = "";
 		                document.getElementById("txtOldPassword").focus();
 		                return;
@@ -143,9 +143,9 @@
 		    	});
 		        
 		        if (result == "OK")
-		            alert("<spring:message code='ezPersonal.t191'/>");
+		            showAlert("<spring:message code='ezPersonal.t191'/>");
 		        else
-		            alert("<spring:message code='ezPersonal.t192'/>");
+		            showAlert("<spring:message code='ezPersonal.t192'/>");
 		
 		        window.location.reload(true);
 		    }
@@ -302,6 +302,10 @@
 			<div class="btnpositionJsp" style="width:436px">
 			    <a class="imgbtn" onClick="Change_Click()" ><span><spring:message code='ezPersonal.t34'/></span></a>
 			    <a class="imgbtn" onClick="Cancel_Click()" ><span><spring:message code='ezPersonal.t13'/></span></a>
+			</div>
+			<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>
+			<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
+				<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
 			</div>
 			<input id="publicModulus" value="${publicModulus}" type="hidden"/>
 			<input id="publicExponent" value="${publicExponent}" type="hidden"/>

@@ -219,7 +219,7 @@ var strLang600 = "다음달";
 var strLang601 = "닫기";
 var strLang602 = "ko";
 var strLang603 = "자원목록은 최대 5개까지 등록 가능합니다.";
-var strLangLHM01 = "default_kr";
+var strLangLHM01 = "default";
 var strLangLHM02 = "인쇄 미리보기";
 var strLangLHM03 = "인쇄";
 var strLangLHM04 = "취소";
@@ -296,6 +296,3 @@ var strLangMaxYGS01 = "최대 예약 가능 기간을 초과하였습니다.";
 var strLangMaxYGS02 = "정원";
 var strLangMaxYGS03 = "명";
 var strLangMaxYGS04 = "정원을 입력하세요.";
-
-// 2025-05-07 이혜림 - 자원등록 > 최대 예약 가능 기간 제한
-var strLangLHR01 = "최대 예약 가능 기간은 1(일)부터 입력할 수 있습니다.";

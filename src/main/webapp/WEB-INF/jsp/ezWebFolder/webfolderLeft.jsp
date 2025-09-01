@@ -301,7 +301,7 @@
 						
 						if (result == "ok") {
 							folderId = a;
-					    	window.parent.frames["right"].location.href = "/ezWebFolder/main.do?folderId="+folderId+"&folderType="+folderType+"&allFileFlag="+allFileFlag+"&parentId="+parentId;
+					    	window.parent.document.querySelector("iframe[name=right]").src = "/ezWebFolder/main.do?folderId="+folderId+"&folderType="+folderType+"&allFileFlag="+allFileFlag+"&parentId="+parentId;
 					    	allFileFlag = "N";
 						} else {
 							alert("<spring:message code='ezWebFolder.t300'/>");
@@ -319,12 +319,12 @@
 		    
 		    function getSharedList() {
 		    	folderType = "S";
-				window.parent.frames["right"].location.href = "/ezWebFolder/webfolderSharedList.do";
+				window.parent.document.querySelector("iframe[name=right]").src = "/ezWebFolder/webfolderSharedList.do";
 			}
 			
 			function getSharingList() {
 				folderType = "S";
-				window.parent.frames["right"].location.href = "/ezWebFolder/webfolderSharingList.do";
+				window.parent.document.querySelector("iframe[name=right]").src = "/ezWebFolder/webfolderSharingList.do";
 			}
 			
 			function moveFavorPage() {
@@ -333,11 +333,11 @@
 			}
 			
 			function wfConfig() {
-				window.parent.frames["right"].location.href = "/ezWebFolder/webfolderConfig.do";
+				window.parent.document.querySelector("iframe[name=right]").src = "/ezWebFolder/webfolderConfig.do";
 			}
 			
 			function getTrashCanList() {
-				window.parent.frames["right"].location.href = "/ezWebFolder/trashCan.do";
+				window.parent.document.querySelector("iframe[name=right]").src = "/ezWebFolder/trashCan.do";
 				optionOnOff();
 			}
 			
@@ -359,7 +359,7 @@
 			}
 			
 			function setRightFrame(url) {
-				window.parent.frames["right"].location.href = url;
+				window.parent.document.querySelector("iframe[name=right]").src = url;
 			}
 			
 			function wfAdministrator() {
@@ -451,7 +451,7 @@
 			// 해당폴더가 없음 화면
 			function openWebFolderRightWarning() {
 				warningFlag = "Y";
-				window.parent.frames["right"].location.href = "/ezWebFolder/openWebFolderRightWarning.do";
+				window.parent.document.querySelector("iframe[name=right]").src = "/ezWebFolder/openWebFolderRightWarning.do";
 			}
 
 			function appliWebFolder() {
@@ -461,7 +461,7 @@
 			}
 			
 			function fileTransactionHistory(obj) {
-				window.parent.frames["right"].location.href = "/admin/ezWebFolder/webfolderAdminFileHistory.do?adminFlag=user";
+				window.parent.document.querySelector("iframe[name=right]").src = "/admin/ezWebFolder/webfolderAdminFileHistory.do?adminFlag=user";
 				optionOnOff();
 			}
 			

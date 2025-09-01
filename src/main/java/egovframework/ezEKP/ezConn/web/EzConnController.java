@@ -4,7 +4,9 @@ import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.TimeZone;
 
 import javax.annotation.Resource;
@@ -16,6 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.WebUtils;
 
@@ -317,8 +320,92 @@ public class EzConnController {
 		logger.debug("checkIfUserExists ended.");
 		
 		return resultVO;
-	}	
-    
+	}
+
+	@RequestMapping(value="/ezConn/loginFromTeams.do", method={RequestMethod.GET})
+	public String loginFromTeams(@RequestParam String type, ModelMap model) throws Exception {
+		model.addAttribute("type", type);
+		
+		return "/ezConn/loginFromTeams";
+	}
+
+	@RequestMapping(value="/ezConn/loginForTeams.do", method={RequestMethod.GET})
+	@ResponseBody
+	public void loginForTeams(
+			@RequestParam String id,
+			@RequestParam String cmd,
+			HttpServletRequest request,
+			HttpServletResponse response
+	) throws Exception {
+		logger.debug("loginForTeams started. id={},cmd={}", id, cmd);
+
+		String resultPage = "";
+
+		try {
+			if (Optional.ofNullable(id).orElse("").isEmpty()) {
+				return;	
+			}
+			
+			String[] params = id.split("@");
+
+			String orgId = params[0].toLowerCase();
+
+			logger.debug("orgId=" + orgId);
+
+			String serverName = request.getServerName();
+			int serverPort = request.getServerPort();
+			int tenantId = loginService.getTenantId(serverName);
+
+			logger.debug("serverName=" + serverName + ",serverPort=" + serverPort + ",tenantId=" + tenantId);
+
+			boolean isUserExists = false;
+
+			LoginVO	resultVO = getUserInfo(orgId, "", tenantId);
+
+			if (resultVO != null && resultVO.getId() != null && !resultVO.getId().equals("")) {
+				isUserExists = true;
+			}
+
+			logger.debug("isUserExists=" + isUserExists);
+
+			if (isUserExists) {
+				// 2022-10-27 이사라 - 로그인 정보 저장
+				if (commonUtil.isLoginCookieExists(request, response)) {
+					Cookie loginCookie = WebUtils.getCookie(request, "loginCookie");
+					String decryptedLoginCookie = commonUtil.getDecryptedLoginCookie(loginCookie != null ? loginCookie.getValue() : "");
+
+					if (!decryptedLoginCookie.split("///")[1].equals(orgId)) {
+						commonUtil.updateLoginInfo(request, resultVO);
+						loginController.createLoginCookie(resultVO.getId(), " ", " ", tenantId, request, response, resultVO.getDeptID(), resultVO.getCompanyID());
+					}
+
+				} else {
+					commonUtil.updateLoginInfo(request, resultVO);
+					loginController.createLoginCookie(resultVO.getId(), " ", " ", tenantId, request, response, resultVO.getDeptID(), resultVO.getCompanyID());
+				}
+
+				// IE, Safari의 경우 기존 사이트에서 iframe으로 ezEKP를 연동할 경우
+				// 보안 문제로 쿠키 정보가 유실되는 현상이 발생해 다음 헤더를 추가함
+				response.setHeader("P3P", "CP=\"Potato\"");
+				
+				if (cmd.equals("approval")) {
+					resultPage = "/ezApprovalG/apprGMain.do";
+				} else if (cmd.equals("board")) {
+					resultPage ="/ezBoard/boardMain.do";
+				} else if (cmd.equals("orgChart")) {
+					resultPage = "/ezOrgan/organMain.do";
+				}
+			}
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+		}
+
+		logger.debug("loginForTeams ended.");
+
+		// CWE-113 보안 취약점 대응
+		response.sendRedirect(resultPage.replaceAll("\r", "").replaceAll("\n", ""));
+	}
+	
 	@RequestMapping("/ezConn/approvalMain.do")
 	public String approvalMain(
 					@RequestParam String id,

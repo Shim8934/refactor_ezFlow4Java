@@ -788,7 +788,7 @@
 								AND
 									companyid = #companyID#
 		<isNotEqual property="v_APPROVUSER" compareValue="" prepend="AND">
-					TBL_APRLINEINFO.aprmembername = #v_APPROVUSER#
+									TBL_APRLINEINFO.aprmembername LIKE '%' || #v_APPROVUSER# || '%'
 		</isNotEqual>
 				) aaa
 			ON
@@ -841,10 +841,10 @@
 				formid = #v_FORMID#
 		</isNotEqual>
 		<isNotEmpty property="v_FORMNAME" prepend="AND">
-				(FORMNAME LIKE '%' || #v_FORMNAME# || '%' OR FORMNAME2 LIKE '%' || #v_FORMNAME# || '%')
+				(FORMNAME LIKE '%' || #v_FORMNAME# || '%' OR FORMNAME2 LIKE '%' || #v_FORMNAME# || '%' ESCAPE '\')
 		</isNotEmpty>
 		<isNotEmpty property="v_KEYWORD" prepend="AND">
-				KEYWORD LIKE '%' || #v_KEYWORD# || '%'
+				KEYWORD LIKE '%' || #v_KEYWORD# || '%' ESCAPE '\'
 		</isNotEmpty>
 		<isNotEqual property="v_DOCSTATE" compareValue="" prepend="AND">
 				docstate = #v_DOCSTATE#
@@ -2459,7 +2459,7 @@
 				AND
 					TBL_APRLINEINFO.companyid = #companyID#
 		<isNotEqual property="v_APPROVUSER" compareValue="" prepend="AND">
-					TBL_APRLINEINFO.aprmembername = #v_APPROVUSER#
+					TBL_APRLINEINFO.aprmembername LIKE '%' || #v_APPROVUSER# || '%'
 		</isNotEqual>
 				) aaa
 			ON
@@ -2512,10 +2512,10 @@
 				formid = #v_FORMID#
 		</isNotEqual>
 		<isNotEmpty property="v_FORMNAME" prepend="AND">
-				(FORMNAME LIKE '%' || #v_FORMNAME# || '%' OR FORMNAME2 LIKE '%' || #v_FORMNAME# || '%')
+				(FORMNAME LIKE '%' || #v_FORMNAME# || '%' OR FORMNAME2 LIKE '%' || #v_FORMNAME# || '%' ESCAPE '\')
 		</isNotEmpty>
 		<isNotEmpty property="v_KEYWORD" prepend="AND">
-				KEYWORD LIKE '%' || #v_KEYWORD# || '%'
+				KEYWORD LIKE '%' || #v_KEYWORD# || '%' ESCAPE '\'
 		</isNotEmpty>
 		<isNotEqual property="v_DOCSTATE" compareValue="" prepend="AND">
 				docstate = #v_DOCSTATE#
@@ -4717,7 +4717,8 @@
 		        WHEN A.OWNER_TYPE = 'D'
 		        THEN C.DISPLAYNAME
 		        END AS ownerName,
-			A.OWNER_TYPE as ownerType
+			A.OWNER_TYPE as ownerType,
+			B.PHYSICALDELIVERYOFFICENAME  as ownerCompanyId
 		FROM
 			TBL_SHARE_DOC_DIR A
 		LEFT JOIN
@@ -4741,7 +4742,8 @@
 		        WHEN A.SHARE_TYPE = 'D'
 		        THEN C.DISPLAYNAME
 		        END AS shareName,
-			A.SHARE_TYPE as shareType
+			A.SHARE_TYPE as shareType,
+			B.PHYSICALDELIVERYOFFICENAME  as ownerCompanyId
 		FROM
 			TBL_SHARE_DOC_DIR A
 		LEFT JOIN
@@ -5408,18 +5410,18 @@
 			</isNotEmpty>
 			<isNotEmpty property="q_Map.qOptionWriterName" prepend="AND">
 				<isEqual property="q_Map.userLang" compareValue="2">
-					WRITERNAME2 LIKE CONCAT(CONCAT('%', #q_Map.qOptionWriterName#), '%')
+					TBL_ENDAPRDOCINFO.WRITERNAME2 LIKE CONCAT(CONCAT('%', #q_Map.qOptionWriterName#), '%')
 				</isEqual>
 				<isNotEqual property="q_Map.userLang" compareValue="2">
-					WRITERNAME LIKE CONCAT(CONCAT('%', #q_Map.qOptionWriterName#), '%')
+					TBL_ENDAPRDOCINFO.WRITERNAME LIKE CONCAT(CONCAT('%', #q_Map.qOptionWriterName#), '%')
 				</isNotEqual>
 			</isNotEmpty>
 			<isNotEmpty property="q_Map.qOptionWriterDeptName" prepend="AND">
 				<isEqual property="q_Map.userLang" compareValue="2">
-					WRITERDEPTNAME2 LIKE CONCAT(CONCAT('%', #q_Map.qOptionWriterDeptName#), '%')
+					TBL_ENDAPRDOCINFO.WRITERDEPTNAME2 LIKE CONCAT(CONCAT('%', #q_Map.qOptionWriterDeptName#), '%')
 				</isEqual>
 				<isNotEqual property="q_Map.userLang" compareValue="2">
-					WRITERDEPTNAME LIKE CONCAT(CONCAT('%', #q_Map.qOptionWriterDeptName#), '%')
+					TBL_ENDAPRDOCINFO.WRITERDEPTNAME LIKE CONCAT(CONCAT('%', #q_Map.qOptionWriterDeptName#), '%')
 				</isNotEqual>
 			</isNotEmpty>
 			<isNotEmpty property="q_Map.qOptionReceivedDate1" prepend="AND">
@@ -5591,13 +5593,13 @@
 			<![CDATA[FORMID = #v_FORMID#]]>
 		</isNotEmpty>
 		<isNotEmpty property="v_FORMNAME" prepend="AND">
-			<![CDATA[(FORMNAME LIKE '%' || #v_FORMNAME# || '%' OR FORMNAME2 LIKE '%' || #v_FORMNAME# || '%')]]>
+			<![CDATA[(FORMNAME LIKE '%' || #v_FORMNAME# || '%' OR FORMNAME2 LIKE '%' || #v_FORMNAME# || '%' ESCAPE '\')]]>
 		</isNotEmpty>
 	   	<isNotEmpty property="v_APPROVUSER" prepend="AND">
 	   		<![CDATA[TBL_ENDAPRLINEINFO.APRMEMBERNAME LIKE '%' || #v_APPROVUSER# || '%']]>
 		</isNotEmpty>
 		<isNotEmpty property="v_KEYWORD" prepend="AND">
-			<![CDATA[KEYWORD LIKE '%' || #v_KEYWORD# || '%']]>
+			<![CDATA[KEYWORD LIKE '%' || #v_KEYWORD# || '%' ESCAPE '\']]>
 		</isNotEmpty>
 		<isNotEmpty property="v_ITEMCODE" prepend="AND">
 			<![CDATA[ITEMCODE = #v_ITEMCODE#]]>
@@ -5709,10 +5711,10 @@
 									<![CDATA[FORMID = #v_FORMID#]]>
 								</isNotEmpty>
 								<isNotEmpty property="v_FORMNAME" prepend="AND">
-									<![CDATA[(FORMNAME LIKE '%' || #v_FORMNAME# || '%' OR FORMNAME2 LIKE '%' || #v_FORMNAME# || '%')]]>
+									<![CDATA[(FORMNAME LIKE '%' || #v_FORMNAME# || '%' OR FORMNAME2 LIKE '%' || #v_FORMNAME# || '%' ESCAPE '\')]]>
 								</isNotEmpty>
 								<isNotEmpty property="v_KEYWORD" prepend="AND">
-									<![CDATA[KEYWORD LIKE '%' || #v_KEYWORD# || '%']]>
+									<![CDATA[KEYWORD LIKE '%' || #v_KEYWORD# || '%' ESCAPE '\']]>
 								</isNotEmpty>
 								<isNotEmpty property="v_ITEMCODE" prepend="AND">
 									<![CDATA[ITEMCODE = #v_ITEMCODE#]]>

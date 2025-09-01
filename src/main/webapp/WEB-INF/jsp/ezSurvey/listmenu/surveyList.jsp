@@ -44,10 +44,13 @@
 						<li id="modifyBttn"><a><span><spring:message code='ezSurvey.t78'/></span></a></li>
 						<c:if test="${reuseFlag == 1}"><li id="reuseBttn" ><a><span><spring:message code='ezSurvey.t22'/></span></a></li></c:if>
 						<li id="analysisBttn" class="analysisBttn2" ><a><span><spring:message code='ezSurvey.t110'/></span></a></li>
+						<c:if test="${adminFG eq true}">
+							<li id="usersBttn" class="usersBttn2" ><a><span><spring:message code='ezSurvey.yjh03'/></span></a></li>
+						</c:if>
 						<li id="searchBttn" class="searchBttn2"><a><span class="icon16 icon16_search switchIcon"></span><span class="iconTexts"><spring:message code='ezSurvey.t20'/></span></a></li>
 						<li id="deleteBttn" class="deleteBttn2"><a><span class="icon16 icon16_delete switchIcon"></span><span class="iconTexts"><spring:message code='ezSurvey.t21'/></span></a></li>
 						<div class="sub_frameIcon" style="float: right;">
-                            <select name="filterStatus" id="filterStatus" class="select_filter"></select>
+                            <select name="filterStatus" id="filterStatus" class="select_filter" style="display: none;"></select>
 							<div class="sub_frameIconUL">
 								<p class="frameIconLI"><span class="icon16 ${config.previewMode == 'off' ? 'btn_onnoframe'     : 'btn_noframe'}"     id="preViewNone"  ></span></p>
 								<p class="frameIconLI"><span class="icon16 ${config.previewMode == 'h'   ? 'btn_onbottomframe' : 'btn_bottomframe'}" id="preViewBottom"></span></p>
@@ -136,7 +139,7 @@
 							<th headers="period"  class="endDateTh"><spring:message code='ezSurvey.t26'/></th>
 <%--							<th headers="ut"  class="targetTh" ><spring:message code='ezSurvey.t30'/></th>--%>
 <%--							<th headers="pl"  class="publicTh" ><spring:message code='ezSurvey.t31'/></th>--%>
-<%--							<th headers="an"  class="anoynmTh" ><spring:message code='ezSurvey.t32'/></th>--%>
+							<th headers="an"  class="anoynmTh" ><spring:message code='ezSurvey.t32'/></th>
 							<th headers="participants"    class="statusTh" ><spring:message code='ezSurvey.listHeader.pgb01'/></th>
 							<th headers="participation"    class="statusTh" ><spring:message code='ezSurvey.listHeader.pgb02'/></th>
 							<th headers=""    class="statusTh" ><spring:message code='ezSurvey.t81'/></th>
@@ -219,28 +222,34 @@
 					}
 				}
 
-                var filterStatus = document.getElementById('filterStatus');
-                var optionAll = document.createElement('option');
-                optionAll.value = 'ALL';
-                optionAll.innerText = "<spring:message code='ezSurvey.t81'/>";
-                filterStatus.appendChild(optionAll);
-                var optionTmp = document.createElement('option');
-                optionTmp.value = 'TMP';
-                optionTmp.innerText = SurveyMessages.strDraft;
-                filterStatus.appendChild(optionTmp);
-                var optionWait = document.createElement('option');
-                optionWait.value = 'WAIT';
-                optionWait.innerText = SurveyMessages.strWaiting;
-                filterStatus.appendChild(optionWait);
-                var optionIng = document.createElement('option');
-                optionIng.value = 'ING';
-                optionIng.innerText = SurveyMessages.strProcess;
-                filterStatus.appendChild(optionIng);
-                var optionEnd = document.createElement('option');
-                optionEnd.value = 'END';
-                optionEnd.innerText = SurveyMessages.strFinish;
-                filterStatus.appendChild(optionEnd);
+				statusFilterInit();
 				SurveyItem.btnResize();
+			}
+			
+			function statusFilterInit() {
+				var nowPage = "<c:out value='${mode}'/>";
+				var statusMap = {
+					ALL: "<spring:message code='ezSurvey.t81'/>",
+					ING: SurveyMessages.strProcess,
+					PAUSE: SurveyMessages.strPause
+				};
+				if (nowPage === 'all' || nowPage === 'my') {
+					statusMap.TMP = SurveyMessages.strDraft;
+					statusMap.WAIT = SurveyMessages.strWaiting;
+					statusMap.END = SurveyMessages.strFinish;
+				}
+
+				var filterStatus = document.getElementById('filterStatus');
+				for (var key in statusMap) {
+					var option = document.createElement('option');
+					option.value = key;
+					option.innerText = statusMap[key];
+					filterStatus.appendChild(option);
+				}
+
+				if (nowPage === 'all' || nowPage === 'my' || nowPage === 'processing') {
+					document.getElementById("filterStatus").style.display = "";
+				}
 			}
 			</script>
 	</body>

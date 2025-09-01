@@ -148,8 +148,15 @@
 			
 			// 창마다 고유한 id 지정용
 			var windowUuid = getRandomId();
+			var ReturnFunction;
 
 			window.onload = function () {
+				try {
+					if (isParentCommonArgsUsed()) {
+						ReturnFunction = opener == null ? parent.ezCommon_cross_dialogArguments[1] : opener.ezCommon_cross_dialogArguments[1];
+					}
+				} catch (e) { }
+				
 				// 일반첨부, 대용량첨부파일 관련 가이드 메세지 추가
 				setAttachGuideText();
 			};
@@ -235,7 +242,7 @@
 			            }
 			        }
 			    } catch (e) {
-			        alert(e.description);
+			        showAlert(e.description);
 			    }
 			}
 			
@@ -249,7 +256,7 @@
 				//자동입력
 				SetAutoPropertyValue();
 			  }catch(e){  
-			    alert("setAutoProperty : " +e.description);    
+			    showAlert("setAutoProperty : " +e.description);    
 			  }	  
 			}
 			
@@ -476,7 +483,7 @@
 		            }
 		        }
 		        catch (e) {
-		            alert("btnSendDraft_onclick : " + e.description);
+		            showAlert("btnSendDraft_onclick : " + e.description);
 		        }
 		    }
 		
@@ -719,17 +726,19 @@
 			
 			
 			// 종료
-			function btnClose_onclick()
-			{
-				window.close();
-			}
+			// function btnClose_onclick()
+			// {
+			// 	window.close();
+			// }
 			window.onbeforeunload = function () {
 				try{
 					window.opener.openergetDocInfo();
-				}catch(e){	}	
-				try{
-					window.opener.Refresh_Window();
-				}catch(e){	}	
+				}catch(e){
+					window.parent.openergetDocInfo();
+				}
+				// try{
+				// 	window.opener.Refresh_Window();
+				// }catch(e){ }
 			};
 			
 			//유효한 문서가 아닌경우 
@@ -870,7 +879,7 @@
 			    }
 				   
 			}
-		    var ezapprovalinfo_dialogArguments = new Array();
+		    // var ezapprovalinfo_dialogArguments = new Array();
 		    function btnApprovalInfo(pGubun) {
 		        var onlydocinfiview = false;
 		        var parameter = new Array();
@@ -926,15 +935,18 @@
 		        if (tempItemCode != "")
 		            tempdocnumcode = tempItemCode;
 		
-		        ezapprovalinfo_dialogArguments[0] = parameter;
-		        ezapprovalinfo_dialogArguments[1] = btnApprovalInfo_Complete;		
-		
-		        var OpenWin = window.open("/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun + "&docType=" + pDocType, "ezApprovalInfo-" + windowUuid, GetOpenWindowfeature(1210, 750));
-
-		        try { OpenWin.focus(); } catch (e) { }
+		        // ezapprovalinfo_dialogArguments[0] = parameter;
+		        // ezapprovalinfo_dialogArguments[1] = btnApprovalInfo_Complete;		
+				//
+		        // var OpenWin = window.open("/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun + "&docType=" + pDocType, "ezApprovalInfo-" + windowUuid, GetOpenWindowfeature(1210, 750));
+				//
+		        // try { OpenWin.focus(); } catch (e) { }
+				ezCommon_cross_dialogArguments[0] = parameter;
+				showPopup("/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun + "&docType=" + pDocType, 1210, 750, "ezApprovalInfo-" + windowUuid, GetOpenWindowfeature(1210, 750), btnApprovalInfo_Complete);
 		    }
 		
 		    function btnApprovalInfo_Complete(ret) {
+				hidePopup();
 		        if (ret != undefined && ret[0] == "OK") {
 		            var savexmlhttp = createXMLHttpRequest();
 		            //결재선 저장
@@ -1031,8 +1043,8 @@
 		    var temppDocSN;
 		    function btnReturn_onclick() {
 		    	if (isReDraft == "Y" && checkAprState()) {
-		    		alert("<spring:message code='ezApprovalG.bhs23'/>");
-	    			window.close();
+		    		showAlert("<spring:message code='ezApprovalG.bhs23'/>", "");
+	    			// window.close();
 	    			return;
 		    	}
 		    	
@@ -1084,8 +1096,8 @@
 		        var hesongok = true;
 		        if (ret != "cancel") {
 					if (checkAprState()) {
-						alert("<spring:message code='ezApprovalG.bhs23'/>");
-						window.close();
+						showAlert("<spring:message code='ezApprovalG.bhs23'/>", "");
+						// window.close();
 						return;
 					}
 
@@ -1200,7 +1212,7 @@
 		            return result;
 		        } 
 		        catch (e) {
-		            alert("getDocRecevState :: " + e.description);
+		            showAlert("getDocRecevState :: " + e.description);
 		        }
 		    }
 		    

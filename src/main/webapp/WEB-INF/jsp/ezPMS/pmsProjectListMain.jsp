@@ -65,7 +65,7 @@ var searchByOverview = "";
 
 function goProjectDetails(elem) {
 	var projectId = $(elem).attr("id");
-	window.open("/ezPMS/getProjectDetails.do?projectId=" + projectId, "right");
+    parent.document.querySelector("iframe[name=right]").src = "/ezPMS/getProjectDetails.do?projectId=" + projectId;
 }
 
 function addNewProject() { 

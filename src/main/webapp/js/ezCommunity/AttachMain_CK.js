@@ -759,7 +759,7 @@ function onDrop(evt) {
 	}
 
 	uploadedFileSize += tempfilesize;
-	fileupload();
+	fileupload("drag");
 
 	//같은 파일을 업로드 할 때, onchange 이벤트가 발생하지 않아 아래부분 추가. 2018-12-19 홍대표
 	if (CrossYN()) {
@@ -777,7 +777,7 @@ function onDrop(evt) {
 	}
 }
 
-function fileupload() {
+function fileupload(evtType) {
 
 /*	document.getElementById("boardID").value = pBoardID;
 	document.getElementById("maxSize").value = parseInt(AttachLimit) * 1024 * 1024;
@@ -785,17 +785,25 @@ function fileupload() {
 	
 	var fd = new FormData();
 	var tempFileSize = 0;
+	
+	var tempFiles = evtType != undefined && evtType === "drag" ? file : $('#file1')[0].files;
+	var returnYN = false;
 
-	$.each($('#file1')[0].files, function(i, file) {
+	$.each(tempFiles, function(i, file) {
 		if (MakeXMLString(file.name).length > attachFileNameMaxLength) {
 			document.form.file1.value = "";
 			alert(strLang84 + attachFileNameMaxLength + strLangLHM01);
+			returnYN = true;
 			return;
 		}
 		else { // 새롭게 추가된 모든 첨부파일들을 루프하며 사이즈를 합산
 			tempFileSize += parseInt(file.size);
 		}
 	});
+	
+	if (returnYN == true) {
+	    return;
+	}
 
 	// 현재 첨부된 파일과 기존 첨부된 파일의 사이즈 총합을 비교
 	if ((tempFileSize + uploadedFileSize) / 1024 / 1024 > parseInt(AttachLimit)) {

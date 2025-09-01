@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
@@ -51,7 +52,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import egovframework.com.cmm.EgovMessageSource;
-import egovframework.com.cmm.service.EgovFileMngUtil;
+import egovframework.com.cmm.service.EzFileMngUtil;
 import egovframework.ezEKP.ezCabinet.service.EzCabinetAdminService;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
@@ -62,7 +63,7 @@ import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 @Controller
-public class EzJournalController extends EgovFileMngUtil {
+public class EzJournalController extends EzFileMngUtil {
 	public static final int BUFF_SIZE = 2048;
 	
 	private static final Logger logger = LoggerFactory.getLogger(EzJournalController.class);
@@ -212,7 +213,7 @@ public class EzJournalController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value="/ezJournal/getFormList.do", method = RequestMethod.POST)
 	@ResponseBody
-	public JSONArray journalListMainFormList(HttpServletRequest request, Model model,@CookieValue("loginCookie") String loginCookie) {
+	public JSONArray journalListMainFormList(HttpServletRequest request, Model model,@CookieValue("loginCookie") String loginCookie, Locale locale) {
 		logger.debug("journalListMainFormList started");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -228,6 +229,7 @@ public class EzJournalController extends EgovFileMngUtil {
 		
 		param.put("deptId",deptId);
 		param.put("userId", userInfo.getId());
+		param.put("locale", locale);
 		
 		JSONObject resultBody = commonUtil.getJsonFromRestApi("/rest/ezjournal/types/" + typeId + "/forms", param, request, "get", null);
 		String status = resultBody.get("status").toString();
@@ -250,7 +252,7 @@ public class EzJournalController extends EgovFileMngUtil {
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@RequestMapping(value="/ezJournal/journalList.do", method = RequestMethod.POST)
-	public String journalList(@RequestBody JSONObject jsonParam, HttpServletRequest request, Model model,@CookieValue("loginCookie") String loginCookie) {
+	public String journalList(@RequestBody JSONObject jsonParam, HttpServletRequest request, Model model,@CookieValue("loginCookie") String loginCookie, Locale locale) {
 		logger.debug("journalList started");
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 
@@ -325,6 +327,7 @@ public class EzJournalController extends EgovFileMngUtil {
 			param.put("orderHow", "desc");
 		}
 		
+		param.put("locale", locale);
 		resultBody = commonUtil.getJsonFromRestApi("/rest/ezjournal/journals", param, request, "get", null);
 		status = resultBody.get("status").toString();
 		
@@ -720,7 +723,7 @@ public class EzJournalController extends EgovFileMngUtil {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/ezJournal/journalGetForm.do", produces="application/json; charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
-	public JSONObject journalGetForm(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+	public JSONObject journalGetForm(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, Locale locale) throws Exception {
 		logger.debug("journalGetForm started");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -746,16 +749,19 @@ public class EzJournalController extends EgovFileMngUtil {
 		switch (mode) {
 			case "new":
 				param.put("userId", userId);
+				param.put("locale", locale);
 				restUrl = "/rest/ezjournal/types/" + typeId + "/forms/" + formId;
 				result = commonUtil.getJsonFromRestApi(restUrl, param, request, "get", null);
 				break;
 			case "sum":
 				jsonParam.put("userId", userId);
+				jsonParam.put("locale", locale);
 				restUrl = "/rest/ezjournal/journals-sum" ;
 				result = commonUtil.getJsonFromRestApi(restUrl, null, request, "post", jsonParam);
 				break;
 			default:
 				param.put("userId", userId);
+				param.put("locale", locale);
 				restUrl = "/rest/ezjournal/types/" + typeId + "/forms/" + formId;
 				result = commonUtil.getJsonFromRestApi(restUrl, param, request, "get", null);
 				break;
@@ -1321,7 +1327,7 @@ public class EzJournalController extends EgovFileMngUtil {
 	 * @throws Exception 
 	 */
 	@RequestMapping(value="/ezJournal/journalDetail.do", method = RequestMethod.GET)
-	public String getJournalDetail(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie) throws Exception {
+	public String getJournalDetail(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie, Locale locale) throws Exception {
 		logger.debug("getJournalDetail started");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -1344,6 +1350,7 @@ public class EzJournalController extends EgovFileMngUtil {
 		param.put("userId", userInfo.getId());
 		param.put("pPreviewShow_HOW", request.getParameter("pPreviewShow_HOW"));
 //		param.put("viewDate", viewDate);
+		param.put("locale", locale);
 		
 		String journalId = request.getParameter("journalId");
 		

@@ -62,7 +62,10 @@
 			var pastDate = "<c:out value = '${pastDate}' />";
 			var xmlhttp;
 			var lang = "<c:out value='${lang}'/>";
-			
+			var memListFlag = "<c:out value='${memListFlag}'/>";
+			var chkOperator = "<c:out value='${chkOperator}'/>";
+			var inviteFlag = "<c:out value='${inviteFlag}'/>";
+
 			var strLang1 = "<spring:message code='ezCommunity.t78' />";
 		    var strLang2 = "<spring:message code='ezCommunity.t1082' />"; 
 		    var strLang3 = "<spring:message code='ezCommunity.t1103' />"; 
@@ -487,7 +490,7 @@
 		            if (chkPhotoBrd != "3") {
 		            	//2018-07-13 김보미 - 파라메터 추가
 // 		                document.getElementById("rightfrm").src = "/ezCommunity/boardItemList.do?boardID=" + encodeURIComponent(treeNode.GetNodeData("DATA1")) + "&boardName=" + encodeURIComponent(treeNode.GetNodeData("DATA2")) + "&code=" + code;
-		                document.getElementById("rightfrm").src = "/ezCommunity/boardItemList.do?boardID=" + encodeURIComponent(treeNode.GetNodeData("DATA1")) + "&boardName=" + encodeURIComponent(treeNode.GetNodeData("DATA2")) + "&code=" + code + "&treeCtrl=" + SelectedNodeID;
+		                document.getElementById("rightfrm").src = "/ezCommunity/boardItemList.do?boardID=" + encodeURIComponent(treeNode.GetNodeData("DATA1")) + "&boardName=" + encodeURIComponent(treeNode.GetNodeData("DATA2")) + "&code=" + code + "&treeCtrl=" + SelectedNodeID + "&inviteFlag=" + inviteFlag;
 		            } else {
 		                document.getElementById("rightfrm").src = "/ezCommunity/boardItemListPhoto.do?boardID=" + encodeURIComponent(treeNode.GetNodeData("DATA1")) + "&boardName=" + encodeURIComponent(treeNode.GetNodeData("DATA2")) + "&code=" + code;
 		            }
@@ -513,7 +516,7 @@
 		    	/* 2019-10-24 홍승비 - 커뮤니티 팝업홈 중 좌측메뉴가 게시판이 아닌 경우, 동일 메뉴 클릭 시 하이라이트 유지 */
 		        if (userLevel == "0" || userLevel == "9") {
 		            switch (btn.id) {
-		                case "btn_QsPoll": document.getElementById("rightfrm").src = "/ezCommunity/pollMain.do?code=" + code + "&userLevel=" + userLevel, "right";
+		                case "btn_QsPoll": document.getElementById("rightfrm").src = "/ezCommunity/pollMain.do?code=" + code + "&userLevel=" + userLevel + "&inviteFlag=" + inviteFlag, "right";
 		                    tempboard.className = "off";
 		                    tempboard = "";
 		                    document.getElementById(btn.id).className = "on";
@@ -549,7 +552,7 @@
 		                    document.getElementById("mainboard").style.display = "none";
 		                    document.getElementById("makeguide").style.display = "none";
 		                    break;
-		                case "btn_guest": document.getElementById("rightfrm").src = "/ezCommunity/guestOne.do?code=" + code, "right";
+		                case "btn_guest": document.getElementById("rightfrm").src = "/ezCommunity/guestOne.do?code=" + code  + "&inviteFlag=" + inviteFlag, "right";
 		                    tempboard.className = "off";
 		                    tempboard = "";
 		                    document.getElementById(btn.id).className = "on";
@@ -611,7 +614,7 @@
 		            }
 		        } else {
 		            switch (btn.id) {
-		                case "btn_QsPoll": document.getElementById("rightfrm").src = "/ezCommunity/pollMain.do?code=" + code + "&userLevel=" + userLevel, "right";
+		                case "btn_QsPoll": document.getElementById("rightfrm").src = "/ezCommunity/pollMain.do?code=" + code + "&userLevel=" + userLevel + "&inviteFlag=" + inviteFlag, "right";
 		                    tempboard.className = "off";
 		                    tempboard = "";
 		                    document.getElementById(btn.id).className = "on";
@@ -627,21 +630,26 @@
 		                    document.getElementById("mainboard").style.display = "none";
 		                    document.getElementById("makeguide").style.display = "none";
 		                    break;
-		                case "btn_MemberInfo": document.getElementById("rightfrm").src = "/ezCommunity/commViewMember.do?code=" + code, "right";
-		                    tempboard.className = "off";
-		                    tempboard = "";
-		                    document.getElementById(btn.id).className = "on";
-		                    
-		                    if (tempmenuid != "" && tempmenuid != "btn_MemberInfo") {
-		                        document.getElementById(tempmenuid).className = "off";
-		                    }
-		                    
-		                    tempmenuid = btn.id;
-		                    document.getElementById("copmaindesc").style.display = "none";
-		                    document.getElementById("rightfrm").style.display = "";
-		                    document.getElementById("rightfrm").style.height = "659px";
-		                    document.getElementById("mainboard").style.display = "none";
-		                    document.getElementById("makeguide").style.display = "none";
+		                case "btn_MemberInfo": 
+							if (memListFlag.toUpperCase() == "FALSE") { <%-- 회원목록 읽기 권한 체크 --%>
+								alert("<spring:message code='ezCommunity.t431' />");
+							} else {
+								document.getElementById("rightfrm").src = "/ezCommunity/commViewMember.do?code=" + code, "right";
+								tempboard.className = "off";
+								tempboard = "";
+								document.getElementById(btn.id).className = "on";
+
+								if (tempmenuid != "" && tempmenuid != "btn_MemberInfo") {
+									document.getElementById(tempmenuid).className = "off";
+								}
+
+								tempmenuid = btn.id;
+								document.getElementById("copmaindesc").style.display = "none";
+								document.getElementById("rightfrm").style.display = "";
+								document.getElementById("rightfrm").style.height = "659px";
+								document.getElementById("mainboard").style.display = "none";
+								document.getElementById("makeguide").style.display = "none";
+							}
 		                    break;
 		                case "btn_MemberOut":
 		                    if (chCheckSysop.toUpperCase() == "TRUE") {
@@ -673,7 +681,7 @@
 		                    document.getElementById("mainboard").style.display = "none";
 		                    document.getElementById("makeguide").style.display = "none";
 		                    break;
-		                case "btn_guest": document.getElementById("rightfrm").src = "/ezCommunity/guestOne.do?code=" + code, "right";
+		                case "btn_guest": document.getElementById("rightfrm").src = "/ezCommunity/guestOne.do?code=" + code + "&inviteFlag=" + inviteFlag, "right";
 		                    tempboard.className = "off";
 		                    tempboard = "";
 		                    document.getElementById(btn.id).className = "on";
@@ -712,6 +720,13 @@
 		                case "btn_MemberJoinIng":
 		                    alert(strLang7);
 		                    break;
+						case "btn_Invite": document.getElementById("rightfrm").src = "/ezCommunity/communityInviteMember.do?code=" + code + "&userLevel=" + userLevel, "right";
+							document.getElementById("copmaindesc").style.display = "none";
+							document.getElementById("rightfrm").style.display = "";
+							document.getElementById("rightfrm").style.height = "659px";
+							document.getElementById("mainboard").style.display = "none";
+							document.getElementById("makeguide").style.display = "none";
+							break;
 		                default: document.getElementById("rightfrm").src = "/ezCommunity/commHome/commHome.do?code=" + code + "&userLevel=" + userLevel, "right";
 		                    tempboard.className = "off";
 		                    tempboard = "";
@@ -784,7 +799,7 @@
 		    }
 
 		    function open_admin_home(code, num) {
-		        if (chCheckSysop.toUpperCase() == "FALSE") {
+		        if (chCheckSysop.toUpperCase() == "FALSE" && chkOperator.toUpperCase() == "FALSE") {
 		            alert(strLang4);
 		            return;
 		        }
@@ -799,15 +814,15 @@
 		    }
 		    
 		    function ItemRead_onclick(val) {
-		    	if (userLevel == "0" || userLevel == "9") {
-    				alert("<spring:message code='ezCommunity.t899' />");
-    				return;
-    			}
-		    	
 		        var pItemID = val.getAttribute("itemid");
 		        var pItemBoardID = val.getAttribute("boardid");
 		        var gubun = val.getAttribute("gubun");
 		        var copno = val.getAttribute("code");
+
+				if (chkReadFG(copno, pItemBoardID) != "true") {
+					alert("<spring:message code='ezCommunity.t980'/>");
+					return;
+				}
 
 		        var pheight = window.screen.availHeight;
 		        var pwidth = window.screen.availWidth;
@@ -815,9 +830,9 @@
 		        var pLeft = (pwidth - 765) / 2;
 
 		        if (gubun == "3") {
-		        	GetOpenWindow("/ezCommunity/boardItemViewPhoto.do?itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pItemBoardID) + "&code=" + encodeURIComponent(copno) + "&showAdjacent=" + 1, "", 750, 721);
+		        	GetOpenWindow("/ezCommunity/boardItemViewPhoto.do?itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pItemBoardID) + "&code=" + encodeURIComponent(copno) + "&showAdjacent=" + 1  + "&inviteFlag=" + inviteFlag, "", 750, 721);
 		        } else {
-		        	GetOpenWindow("/ezCommunity/boardItemView.do?itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pItemBoardID) + "&code=" + encodeURIComponent(copno) + "&showAdjacent=" + 1, "", 750, 721);
+		        	GetOpenWindow("/ezCommunity/boardItemView.do?itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pItemBoardID) + "&code=" + encodeURIComponent(copno) + "&showAdjacent=" + 1  + "&inviteFlag=" + inviteFlag, "", 750, 721);
 		        }
 		    }
 
@@ -831,9 +846,9 @@
 		        document.getElementById("makeguide").style.display = "none";
 		        document.getElementById("rightfrm").style.height = "659px";
 		        if (chkPhotoBrd != "3") {
-		            document.getElementById("rightfrm").src = "/ezCommunity/boardItemList.do?boardID=" + encodeURIComponent(selectedBoardID) + "&boardName=" + encodeURIComponent(boardName) + "&code=" + code;
+		            document.getElementById("rightfrm").src = "/ezCommunity/boardItemList.do?boardID=" + encodeURIComponent(selectedBoardID) + "&boardName=" + encodeURIComponent(boardName) + "&code=" + code + "&inviteFlag=" + inviteFlag;
 		        } else {
-		            document.getElementById("rightfrm").src = "/ezCommunity/boardItemListPhoto.do?boardID=" + encodeURIComponent(selectedBoardID) + "&boardName=" + encodeURIComponent(boardName) + "&code=" + code;
+		            document.getElementById("rightfrm").src = "/ezCommunity/boardItemListPhoto.do?boardID=" + encodeURIComponent(selectedBoardID) + "&boardName=" + encodeURIComponent(boardName) + "&code=" + code + "&inviteFlag=" + inviteFlag;
 		        }
 		        
 		        if (CrossYN()) {
@@ -972,6 +987,25 @@
 				document.getElementById("totalSearchForm").submit();
 				document.getElementById("searchWord").value = "";
 			}
+
+			function chkReadFG(code, boardID) {
+				var returnVal = "";
+
+				$.ajax({
+					type : "GET",
+					async : false,
+					url : "/ezCommunity/getBoardReadFG.do",
+					data : {
+						code : code,
+						boardID : boardID
+					},
+					success: function(result){
+						returnVal = result;
+					}
+				});
+
+				return returnVal;
+			}
 		</script>
 	</head>
 	
@@ -1000,7 +1034,7 @@
 		                    <p id="master" style="width:93px; display:inline-block; text-overflow:ellipsis; white-space: nowrap; overflow:hidden;"></p>
 		                </div>
 		                
-		                <c:if test="${checkSysop }">
+		                <c:if test="${checkSysop || chkOperator}">
 		                	<div class="admin_menu" style="height:auto;width: auto;"><span id="btn_Manager" onclick ="go_menu(this)"><spring:message code='ezCommunity.t565' /></span></div>
 		                </c:if>
 		                
@@ -1021,6 +1055,9 @@
 						</c:when>
 						<c:when test="${userLevel == '0' || userLevel =='9' }">
 							<div id="btn_MemberIn" class="btn_join" onclick ="go_menu(this)"><img src="/images/kr/community/type1/icon_rcheck.gif" width="20" height="17"><spring:message code='ezCommunity.t1080' /></div>
+						</c:when>
+						<c:when test="${userLevel != '0' && userLevel !='9' }">
+							<div id="btn_Invite" class="btn_join" onclick ="go_menu(this)"><spring:message code='ezCommunity.lyj68' /></div>
 						</c:when>
 					</c:choose>
 				

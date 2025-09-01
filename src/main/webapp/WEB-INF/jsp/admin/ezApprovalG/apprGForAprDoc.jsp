@@ -616,7 +616,7 @@
 			                    openLocation = openLocation + "&opinionFlag=&docState=&listSusin=&oDoc=&isOpinion=&listType=&pageType=admin";
 		                    } else {
 		                    	var pAlertContent = "한글양식은 IE에서만 볼 수 있습니다.";
-		                    	alert(pAlertContent);
+		                    	showAlert(pAlertContent);
 		                        
 		                        return;
 		                    }
@@ -757,11 +757,6 @@
 
                             if (AttachUrl != "null") {
                                 var tempINGFlag = "";
-                                /* if (GetAttribute(tr,"data4") == "file") {
-                                    window.open(document.location.protocol + "//" + document.location.hostname + "/approvalG/downloadAttach.do?type=APPROVAL&docID=" + GetAttribute(tr, "data3") + "&docStatus=" + tempINGFlag + "&docAttachSn=" + GetAttribute(tr,"data2"));
-                                } else {
-                                    window.open("/ezApprovalG/downloadAttach.do?fileName=" + Attachfilename + "&filePath=" + AttachUrl, "_self");
-                                } */
                                 
                               	//2018-09-12 천성준 - 전자결재 결재문서리스트 하단 첨부탭에서 첨부파일이 문서첨부일경우 문서보기로 열수있게
 								try {
@@ -1129,6 +1124,11 @@
     	<div style="WIDTH:100%;HEIGHT:204px; font-size:92%; OVERFLOW-Y:AUTO;" id="div_AprLine">
         	<div id="lvAprLine"></div>
     	</div>
+
+		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>
+		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
+			<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
+		</div>
 
     	<script type="text/javascript">
         	selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");

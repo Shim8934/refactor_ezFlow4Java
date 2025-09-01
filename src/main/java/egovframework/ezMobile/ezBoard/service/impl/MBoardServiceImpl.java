@@ -14,6 +14,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 import java.util.StringJoiner;
 
@@ -21,6 +22,8 @@ import javax.annotation.Resource;
 
 import egovframework.ezEKP.ezBoard.vo.BoardPropertyVO;
 import egovframework.let.utl.fcc.service.EzFAL;
+import org.apache.commons.io.FileUtils;
+import org.egovframe.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import org.json.simple.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -53,7 +56,7 @@ import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
 
 @Service("MBoardService")
-public class MBoardServiceImpl implements MBoardService {
+public class MBoardServiceImpl extends EgovAbstractServiceImpl implements MBoardService {
 	private static final Logger logger = LoggerFactory.getLogger(MBoardServiceImpl.class);
 	
 	final public int mobileListSize = 20;
@@ -123,8 +126,8 @@ public class MBoardServiceImpl implements MBoardService {
 			boardCount = getQNABoardItemListCount(boardID, mBoardInfoVO, userID, gubun, tenantID, pSearchText);
 			mBoardItemList = getQNABoardItemList(boardID, mBoardInfoVO, userID, gubun, listSize, boardCount, lastDate,tenantID, offset, pSearchText, parentWriteDate, upperitemidtree);
 		} else {
-			boardCount = getBoardItemListCount(boardID, userID, gubun, tenantID,pSearchText);
-			mBoardItemList = getBoardItemList(boardID, userID, gubun, listSize, boardCount, lastDate,tenantID, offset, pSearchText, parentWriteDate, upperitemidtree);
+			boardCount = getBoardItemListCount(boardID, userID, gubun, tenantID,pSearchText, mBoardInfoVO.getVersionManage());
+			mBoardItemList = getBoardItemList(boardID, userID, gubun, listSize, boardCount, lastDate,tenantID, offset, pSearchText, parentWriteDate, upperitemidtree, mBoardInfoVO.getVersionManage());
 		}
 		
 		//게시물 writeDate와 현재시간을 비교해서 게시한지 하루 이전의 게시물은 newItemFlag Y로 set
@@ -175,7 +178,7 @@ public class MBoardServiceImpl implements MBoardService {
 		int startRow = ((mobileListSize * (page - 1)) - noticeCount) + 1;
         int endRow = (mobileListSize * page) - noticeCount;
 		
-        int boardCount = getBoardItemListCount(boardID, userID, gubun, tenantID,pSearchText);
+        int boardCount = getBoardItemListCount(boardID, userID, gubun, tenantID,pSearchText, mBoardInfoVO.getVersionManage());
         
         List<MBoardNewListVO> mBoardItemList = getNewBoardItemList(boardID, userID, gubun, startRow, endRow, boardCount, tenantID, offset, pSearchText, parentWriteDate, upperitemidtree);
         
@@ -365,8 +368,20 @@ public class MBoardServiceImpl implements MBoardService {
 		if (isUserHasACL == false) { // 개인 권한이 존재하지 않는 경우에만 권한 취합
 			if (boardACLListJJ.size() > 0) { // 직위, 직책권한 부여
 				mBoardInfoVO = sumBoardACL(boardACLListJJ, mBoardInfoVO);
-			} else { // 직위, 직책권한이 없다면 부서권한 부여
+			} else if (boardACLListDept.size() > 0) { // 직위, 직책권한이 없다면 부서권한 부여
 				mBoardInfoVO = sumBoardACL(boardACLListDept, mBoardInfoVO);
+			} else { // 개인, 직위, 직책, 부서 모두 없는 경우 비회원 권한(전체공개) 체크
+				String useBoardGuestPermit = ezCommonService.getTenantConfig("useBoardGuestPermit", info.getTenantId());
+				if ("YES".equals(useBoardGuestPermit) && ezBoardService.checkGuestPerm(boardID, info.getTenantId(), "B")) {
+					mBoardInfoVO.setAccess_("1");
+					mBoardInfoVO.setAccess_FG("1");
+					mBoardInfoVO.setBoardAdmin_FG("false");
+					mBoardInfoVO.setListView_FG("true");
+					mBoardInfoVO.setRead_FG("true");
+					mBoardInfoVO.setWrite_FG("false");
+					mBoardInfoVO.setReply_FG("false");
+					mBoardInfoVO.setDelete_FG("false");
+				}
 			}
 		}
 		
@@ -464,6 +479,9 @@ public class MBoardServiceImpl implements MBoardService {
 		} else if (vo.getBoardID().equals("{ZZZZZZZZ-ZZZZ-ZZZZ-ZZZZ-ZZZZZZZZZZZZ}")) {
 			vo.setType("allBoardItemList");
 			vo.setBoardName(egovMessageSource.getMessage("ezBoard.allboard.hth01", new Locale(commonUtil.getTwoLetterLangFromLangNum(mobileInfo.getLang()))));
+		} else if (vo.getBoardID().equals("{YYYYYYYY-YYYY-YYYY-YYYY-YYYYYYYYYYYY}")) {
+			vo.setType("recentBoardItemList");
+			vo.setBoardName(egovMessageSource.getMessage("ezBoard.lyj01", new Locale(commonUtil.getTwoLetterLangFromLangNum(mobileInfo.getLang()))));
 		} else {
 			vo.setType("boardItemList");
 		}
@@ -489,7 +507,7 @@ public class MBoardServiceImpl implements MBoardService {
 		return mBoardDAO.getACL(map);
 	}
 	
-	private List<MBoardItemVO> getBoardItemList(String boardID, String userID, String gubun, int listSize, int boardItemListCount, String lastDate, int tenantID, String offset, String pSearchText, String parentWriteDate, String upperitemidtree) throws Exception {
+	private List<MBoardItemVO> getBoardItemList(String boardID, String userID, String gubun, int listSize, int boardItemListCount, String lastDate, int tenantID, String offset, String pSearchText, String parentWriteDate, String upperitemidtree, String versionManage) throws Exception {
 		logger.debug("getBoarditemList started.");
 		logger.debug("boardID = " + boardID + " || userID = " + userID + " || gubun = " + gubun + " || boardItemListCount = " + boardItemListCount + " || tenantID = " + tenantID + " || lastDate = " + lastDate);
 		
@@ -505,6 +523,7 @@ public class MBoardServiceImpl implements MBoardService {
 		map.put("pSearchText", pSearchText.replace("%", "\\%").replace("_", "\\_"));
 		map.put("parentWriteDate", parentWriteDate);
 		map.put("upperitemidtree", upperitemidtree);
+		map.put("useVersion", versionManage);
 		
 		MBoardInfoVO boardProp = getBoardProperty(boardID, "1", tenantID, userID);
 		if (boardProp.getUseKeyword() != null && boardProp.getUseKeyword().equals("Y")) {
@@ -580,7 +599,7 @@ public class MBoardServiceImpl implements MBoardService {
 	}
 	
 	@Override
-	public int getBoardItemListCount(String boardID, String userID, String gubun, int tenantID, String pSearchText) throws Exception {
+	public int getBoardItemListCount(String boardID, String userID, String gubun, int tenantID, String pSearchText, String versionManage) throws Exception {
 		logger.debug("getBoardItemListCount started.");
 		logger.debug("boardID = " + boardID + " || userID = " + userID + " || gubun = " + gubun + " || tenantID = " + tenantID);
 		
@@ -591,6 +610,7 @@ public class MBoardServiceImpl implements MBoardService {
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
 		map.put("pSearchText", pSearchText.replace("%", "\\%").replace("_", "\\_"));
 		map.put("tenantID", tenantID);
+		map.put("useVersion", versionManage);
 
 
 		MBoardInfoVO boardProp = getBoardProperty(boardID, "1", tenantID, userID);
@@ -742,7 +762,7 @@ public class MBoardServiceImpl implements MBoardService {
 		
 		//첨부파일 저장
 		if (boardListVO.get("attachments") != null && !boardListVO.get("attachments").equals("")) {
-			if (!saveAttachmentsInfo(boardListVO.get("attachments").toString(), boardListVO.get("itemID").toString(), boardListVO.get("boardID").toString(), filePath, "BOARD", realPath, info.getTenantId())) {
+			if (!saveAttachmentsInfo(boardListVO.get("attachments").toString(), boardListVO.get("itemID").toString(), boardListVO.get("boardID").toString(), filePath, "BOARD", realPath, info.getTenantId(), boardListVO.get("realFileNames").toString())) {
 				//return egovMessageSource.getMessage("ezCommunity.lhj05", locale);
 			}
 			map.put("hasAttach", "1");
@@ -766,7 +786,7 @@ public class MBoardServiceImpl implements MBoardService {
 	/**
 	 * 게시판 게시물 첨부파일저장 실행 Method
 	 */
-	public boolean saveAttachmentsInfo(String strAttachments, String strItemID, String strBoardID, String strFilePath, String strType, String realPath, int tenantID) throws Exception{
+	public boolean saveAttachmentsInfo(String strAttachments, String strItemID, String strBoardID, String strFilePath, String strType, String realPath, int tenantID, String realFileNames) throws Exception{
 		logger.debug("saveAttachmentsInfo started");
 		
         long fileSize = 0;
@@ -779,6 +799,10 @@ public class MBoardServiceImpl implements MBoardService {
         	if (!strAttachments.substring(strAttachments.length() - 1).equals("|")) {
         		strAttachments += "|";
         	}
+
+			if (!realFileNames.substring(realFileNames.length() - 1).equals("|")) {
+				realFileNames += "|";
+			}
         	
         	for (int i = 0; i < strAttachments.split("\\|").length; i++) {
         		if (strType.equals("BOARD")) {
@@ -804,6 +828,7 @@ public class MBoardServiceImpl implements MBoardService {
         				filePath2 = strFilePath + commonUtil.separator + strAttachments.split("\\|")[i];
         			}
         			file = null;
+        			fileName = commonUtil.detectPathTraversal(realFileNames.split("\\|")[i]);
         		} else {
         			EzFAL.EzFile file = new EzFAL.EzFile(realPath + commonUtil.getUploadPath("upload_board.TEMPUPLOADFILE", tenantID)  + commonUtil.separator + strAttachments.split("\\|")[i].split("/")[2]);
         			fileSize = file.length();
@@ -817,9 +842,10 @@ public class MBoardServiceImpl implements MBoardService {
         				file.delete();
         			}
         			file = null;
-        		}
+					fileName = commonUtil.detectPathTraversal(realFileNames.split("\\|")[i]);
+				}
         		
-        		fileName = filePath2.replace(strFilePath + commonUtil.separator + strBoardID + commonUtil.separator + "uploadFile", "").substring(40);
+        		//fileName = filePath2.replace(strFilePath + commonUtil.separator + strBoardID + commonUtil.separator + "uploadFile", "").substring(40);
         		
         		saveAttachInfo(strItemID, i, filePath2, fileSize, fileName, tenantID);
         	}
@@ -914,7 +940,7 @@ public class MBoardServiceImpl implements MBoardService {
 		
 		//첨부파일 저장
 		if (boardListVO.get("attachments") != null && !boardListVO.get("attachments").equals("")) {
-			if (!saveAttachmentsInfo(boardListVO.get("attachments").toString(), boardListVO.get("itemID").toString(), boardListVO.get("boardID").toString(), filePath, "BOARD", realPath, info.getTenantId())) {
+			if (!saveAttachmentsInfo(boardListVO.get("attachments").toString(), boardListVO.get("itemID").toString(), boardListVO.get("boardID").toString(), filePath, "BOARD", realPath, info.getTenantId(), boardListVO.get("realFileNames").toString())) {
 				//return egovMessageSource.getMessage("ezCommunity.lhj05", locale);
 			}
 			map.put("hasAttach", "1");
@@ -1063,6 +1089,7 @@ public class MBoardServiceImpl implements MBoardService {
 		/* 2019-06-11 홍승비 - 게시판그룹에 관리자권한 존재하는 경우, 해당 게시판그룹의 하위게시판 전부 가져오도록 수정 */
 		map.put("v_isCompanyAdmin", isCompanyAdmin);
 		map.put("v_boardGroupAdmin_FG", boardGroupAdmin_FG);
+		map.put("guestPermitYN", ezCommonService.getTenantConfig("useBoardGuestPermit", tenantID));
 		
 		logger.debug("brdBoardTree ended");
 		return mBoardDAO.brdBoardTree(map);

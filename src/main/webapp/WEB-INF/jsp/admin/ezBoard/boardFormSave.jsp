@@ -16,10 +16,38 @@
 	        var pcheckForm = "<c:out value='${checkForm}'/>";
 	        var editor = "<c:out value='${use_Editor}'/>";
 	        var fullPath = "";
-	        
 	        /* 2020-02-10 홍승비 - 관리자 > 게시판 > 양식 설정 진입 시 상단 메뉴명 변경되도록 수정 */
 	        $(document).ready(function(){
 	        	parent.document.getElementsByTagName("h1")[0].innerHTML = "<spring:message code='ezBoard.t999026'/>";
+
+				// VOC #163284 관리자 탭 선택 오류 
+				if (window.parent && window.parent !== window) {
+					try {
+						const parentUrl = window.parent.location.href;
+
+						if (parentUrl.includes("admin/ezBoard/boardConfig.do")) {
+							const parentDoc = window.parent.document;
+
+							const container = parentDoc.querySelector(".portlet_tabnew01_top");
+
+							if (container) {
+								const spans = container.querySelectorAll('span[divname="BoardEnv_div1"], span[divname="BoardEnv_div2"], span[divname="BoardEnv_div3"], span[divname="BoardEnv_div4"], span[divname="BoardEnv_div5"]');
+
+								spans.forEach(span => {
+									span.removeAttribute("class");
+								});
+
+								const targetSpan = container.querySelector('span[divname="BoardEnv_div5"]');
+								if (targetSpan) {
+									targetSpan.classList.add("tabon");
+									window.parent.Tab1_SelectID = "1tab5";
+								}
+							}
+						}
+					} catch (e) {
+						console.log(e);
+					}
+				}
 			});
 	        
 	        function Editor_Complete() {

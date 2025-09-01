@@ -81,7 +81,8 @@
 			
 			optImgPrevDelete();
     	}; 
-		window.onload = function() {	
+		window.onload = function() {
+ 			document.getElementById("lstAttachLink").appendChild(getAttachInnerNoticeObject());
 			preProcessing();		
 			//setBorder();
 			
@@ -108,7 +109,6 @@
 		    	}
 				
 		    });
-			document.getElementById("lstAttachLink").appendChild(getAttachInnerNoticeObject());
 			fileUploadStart();
 			setAttachSortable();
 		}

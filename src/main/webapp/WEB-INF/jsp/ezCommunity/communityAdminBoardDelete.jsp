@@ -32,7 +32,7 @@
 				
 					if(xmlhttp.responseText.indexOf("OK") > -1) {
 					    parent.window.frames.left.location.reload();
-					    parent.window.frames.right.location.href = "/ezCommunity/adminBasic.do?code=<c:out value = '${code}' />";
+					    parent.document.querySelector("iframe[name=right]").src = "/ezCommunity/adminBasic.do?code=<c:out value = '${code}' />";
 					}else {
 						alert("<spring:message code ='ezCommunity.t330' />");
 					}

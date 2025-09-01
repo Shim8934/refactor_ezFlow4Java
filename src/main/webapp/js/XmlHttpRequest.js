@@ -1,4 +1,4 @@
-﻿﻿/* XMLHttpRequest객체를 생성합니다. */ 
+﻿/* XMLHttpRequest객체를 생성합니다. */ 
 function createXMLHttpRequest() {
     var oXmlRequest;
     try {
@@ -1042,7 +1042,7 @@ function DivPopUpPosition_Layer(popUpW, popUpH) {
     return ReturnValue
 }
 
-function DivPopUpShow(popUpW, popUpH, URL) {
+function DivPopUpShow(popUpW, popUpH, URL, flag) {
     try {
     	
     	if (navigator.maxTouchPoints > 4) {
@@ -1056,6 +1056,18 @@ function DivPopUpShow(popUpW, popUpH, URL) {
     		}
     	} 
     	
+        // 레이어팝업 전환 함수 showPopup 호출 시에만 layerpopup_top 클래스 부여
+        if (isTeamsDesktop() && typeof flag == "boolean" && flag) {
+            if (popUpW > document.documentElement.clientWidth) {
+                popUpW = document.documentElement.clientWidth * 0.95;
+            }
+            if (popUpH > document.documentElement.clientHeight) {
+                popUpH = document.documentElement.clientHeight * 0.95;
+            }
+            document.getElementById("iFramePanel").classList.remove("layerpopup");
+            document.getElementById("iFramePanel").classList.add("layerpopup_top");
+        }
+        
         var Position = DivPopUpPosition(popUpW, popUpH);
         document.getElementById("iFrameLayer").src = URL;
         document.getElementById("iFramePanel").style.top = Position[0] + "px";
@@ -1087,6 +1099,12 @@ function DivPopUpHidden() {
         document.getElementById("mailPanel").style.display = "none";
         document.getElementById("iFramePanel").style.display = "none";
         document.getElementById("iFrameLayer").src = "/blank.htm";
+        
+        if (isTeamsDesktop()) {
+            document.getElementById("iFramePanel").classList.remove("layerpopup_top");
+            document.getElementById("iFramePanel").classList.add("layerpopup");
+            document.body.style.overflow = "";
+        }
     } catch (e) {}
 }
 
@@ -1112,63 +1130,66 @@ function DivPopUpHidden_sub() {
     } catch (e) { }
 }
 
-function toggleHideLeftFrameButton() {
-    var frameset = parent.document.getElementById("frameset");
-
-    if (frameset!= null){
-        var leftBtn = document.getElementsByClassName('left_btn')[0];
-
-        if (leftBtn) {
-            if (parent.document.getElementById("frameset").cols == "0,*") {
-                leftBtn.classList.add("on");
-            } else {
-                leftBtn.classList.remove("on");
-            }
-        }
-    }
-}
-
-var isHideLeftFrameButtonPressed = false;
-
+var hidingFrame = false;
+var resizeTimer = null;
+var clickDebounceTime = 500;
 function hideLeftFrame(obj) {
-    if (parent.document.getElementById("frameset") != null) {
-        isHideLeftFrameButtonPressed = !isHideLeftFrameButtonPressed;
-        var colsValue = parent.document.getElementById("frameset").cols;
-
-        if (colsValue == "0,*") {
-            parent.document.getElementById("frameset").cols = "220,*";
+    if (window.location.href.includes('admin')) return;
+    var frame = parent.document.getElementById("left");
+    if (!!frame) {
+        hidingFrame = true;
+        
+        if (obj.classList.contains('on')) {
+            frame.style.width = '220px';
             obj.classList.remove("on");
         } else {
-            parent.document.getElementById("frameset").cols = "0,*";
+            frame.style.width = '0';
             obj.classList.add("on");
         }
+        
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(function() {
+            hidingFrame = false;
+        }, clickDebounceTime);
     }
 }
 
 function hideLeftFrameOnResize() {
-    if (parent.document.getElementById("frameset") != null) {
+    if (window.location.href.includes('admin')) return;
+    if (parent.document.querySelector("#left.fold") != null) {
         // hideLeftFrame 함수에 의해 left frame이 숨겨질 때에도
         // resize 콜백이 실행되어 수동으로 사용자가 버튼을 누른 경우에 대한
         // 플래그를 둠
-        if (!isHideLeftFrameButtonPressed) {
-            var leftBtn = document.getElementsByClassName('left_btn')[0];
-
+        if (hidingFrame) return;
+        var leftBtn = document.getElementsByClassName('left_btn')[0];
+        var leftFrame = parent.document.getElementById("left");
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(function() {
             if (top.outerWidth < 1180) {
-                parent.document.getElementById("frameset").cols = "0,*";
+                leftFrame.style.width = '0';
                 leftBtn.classList.add("on");
             } else {
-                parent.document.getElementById("frameset").cols = "220,*";
+                leftFrame.style.width = '220px';
                 leftBtn.classList.remove("on");
             }
-        } else {
-            isHideLeftFrameButtonPressed = false;
-        }
+        }, 150);
     }
 }
 
+function printPopUpHidden() {
+    try {
+        document.getElementById("mailPanel").style.display = "none";
+        document.getElementById("iFramePanel").style.display = "none";
+        document.getElementById("iFrameLayer").src = "/blank.htm";
+        document.getElementById("iFramePanel").classList.remove("layerpopup_top");
+        document.getElementById("iFramePanel").classList.add("layerpopup");
+        document.body.style.overflow = "";
+    } catch (e) {}
+}
+
 window.addEventListener("load", function () {
-    if (parent.document.getElementById("frameset") != null) {
-        var rightFrameDoc = window.parent.frames["right"].document;
+    if (parent.document.querySelector("#left.fold") != null) {
+        var rightFrameDoc = window.parent.document.getElementById("right").contentDocument;
 
         var rightFirstChild = rightFrameDoc.body.firstElementChild;
 
@@ -1185,7 +1206,7 @@ window.addEventListener("load", function () {
         leftBtn.addEventListener("click", function() {
             hideLeftFrame(this);
         });
-
+        if (!window.location.href.includes('admin')) rightFrameDoc.body.insertBefore(leftBtn, rightFirstChild);
         rightFrameDoc.body.insertBefore(leftBtn, rightFirstChild);
     }
 
@@ -1197,7 +1218,19 @@ window.addEventListener("load", function () {
 
 });
 
-window.addEventListener("load", toggleHideLeftFrameButton);
+function modalPopUp(popupId) {
+    $(popupId).modal();
+
+    $(popupId).css("visibility", "hidden");
+
+    var popupX = window.innerWidth / 2 - $(popupId)[0].clientWidth / 2 - 20
+
+    $(popupId).css("left", popupX);
+
+    $(popupId).css("visibility", "");
+}
+
+// window.addEventListener("load", toggleHideLeftFrameButton);
 
 // 2002-11-05 >> return 20021105
 function CalToDate(p_strCal) {
@@ -2338,7 +2371,7 @@ function getCookie(name) {
 
 function setColorMode() {
 	
-	if (window.location.href.indexOf('admin') > 0 && window.location.href.indexOf('adminPage.do?initFlag=4') == -1 && window.location.href.indexOf('adminPage.do?initFlag=0') == -1) {
+	if (window.location.href.indexOf('/admin/') > 0) {
 		return;
 	}
 	
@@ -2401,7 +2434,10 @@ window.open = function (url, target, features) {
     } else {
         urlObj = new URL(url);
     }
-    urlObj.searchParams.set('__wwidth', top.outerWidth);
+    
+    try {
+        urlObj.searchParams.set('__wwidth', top.outerWidth);
+    } catch (e) {console.log(e);}
     return originWindowOpen.call(window, urlObj.toString(), target, features);
 };
 
@@ -2482,6 +2518,8 @@ function resizableMenu(url) {
                 moreButtonWidth = remainingWidth * 0.8;
             } else if (url.indexOf("ezBoard") !== -1) {
                 moreButtonWidth = remainingWidth * 0.5;
+            } else if (url.indexOf("ezResource") !== -1) {
+                moreButtonWidth = remainingWidth * 0.7; 
             }
         } else {
             moreButtonWidth = remainingWidth * 0.6;
@@ -2518,7 +2556,7 @@ function resizableMenu(url) {
             moreButton.style.display = "none";
         }
         
-        if (url.includes("ezSurvey")) {
+        if (url.includes("ezSurvey") && !url.includes("showParticipantsList.do")) {
             SurveyItem.btnResize();
         } 
         if (url.includes("/ezResource/scheduleApprovList.do")) {
@@ -2552,4 +2590,554 @@ function resizableMenu(url) {
         document.addEventListener('click', hideLayer);
     }
     setUpHideLayerEvent();
+}
+
+function decodeHtml(str) {
+    // HTML 문자 엔티티 변환
+    var entities = {
+        "lt": "<",
+        "gt": ">",
+        "amp": "&",
+        "quot": "\"",
+        "apos": "'",
+        "nbsp": " ",
+        // 추가적인 HTML 엔티티가 필요하면 여기에 추가
+    };
+
+    // 문자 이름 엔티티를 변환
+    str = str.replace(/&(\w+);/g, function(match, entity) {
+        return entities[entity] || match;  // entities에서 변환이 가능하면 변환, 아니면 원본 그대로
+    })
+	.replace(/&#(\d+);/g, function(match, num) {
+        return String.fromCharCode(num);
+    })
+	.replace(/&#x([0-9A-Fa-f]+);/g, function(match, num) {
+        return String.fromCharCode(parseInt(num, 16));
+    });
+
+    return str;
+}
+
+/* 브라우저 기본 대화창 공통 변수, 함수 */
+/** 다른 jsp에서 필요한 파라미터 전달용 배열 변수 (보통 [0]은 파라미터, [1]은 callback) */
+var ezCommon_cross_dialogArguments = new Array();
+/** callback에서 필요한 파라미터 배열 변수 (ezCommon_cross_dialogArguments[2]) */
+var ezCommon_cross_dialogParams = new Array();
+/** 새 창(window.open)객체를 저장하는 변수 */
+var ezCommon_cross_openWin = null;
+
+// 사용자 실행 환경이 Teams 데스크톱 앱인지 확인
+function isTeamsDesktop(){
+    if (/Teams\/|Electron\//i.test(navigator.userAgent)) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+/**
+ * alert 보여주기
+ * @param {string} msg - 메시지
+ * @param {string|function} callback - 바깥 팝업도 함께 닫아줘야 하는 경우
+ */
+function showAlert(msg, callback) {
+    if (isTeamsDesktop()) {
+        // 결재환경설정 페이지에서 요청 시 부모(right)의 showAlert 함수 요청
+        if (window.name === "mainFrame") {
+            parent.showAlert(msg, callback);
+            return;
+        }
+
+        if (hasIframeFunction("OpenAlertUI")) { // 레이어팝업 영역에 동일한 함수 있는지 확인
+            document.getElementById("iFrameLayer").contentWindow["OpenAlertUI"](msg);
+        } else if (hasIframeFunction("showAlertUI")) { // 레이어팝업 영역에 대체 함수 있는지 확인
+            document.getElementById("iFrameLayer").contentWindow["showAlertUI"](msg, callback);
+        } else if (typeof OpenAlertUI == "function"
+            && typeof callback == "undefined"
+        ) { // 기존에 사용 중인 OpenAlertUI 함수가 있는지 확인
+            if (isIframeExists()) OpenAlertUI(msg);
+        } else { // 없는 경우 현재 js에 있는 대체 함수 요청
+            if (isIframeExists()) showAlertUI(msg, callback);
+        }
+        document.body.style.overflow = "hidden";
+    } else {
+        alert(msg);
+        if (typeof callback == "function") {
+            callback();
+        }
+    }
+}
+
+/**
+ * alert 숨기기
+ * @param {string|function} callback - 바깥 팝업도 함께 닫아줘야 하는 경우
+ */
+function hideAlert(callback) {
+    DivPopUpHidden();
+    ezCommon_cross_dialogArguments.length = 0;
+    ezCommon_cross_dialogParams.length = 0;
+    if (typeof callback == "string") {
+        // parent.hidePopup(closeParent);
+        btnClose_onclick(callback);
+    } else if (typeof callback == "function") {
+        callback();
+    }
+}
+
+/**
+ * alert 페이지 요청
+ * @param {string} msg - 메시지
+ * @param {string|function} callback - 바깥 팝업도 함께 닫아줘야 하는 경우
+ */
+function showAlertUI(msg, callback) {
+    // 기존 alert 레이어팝업의 크기보다 부모 레이어팝업이 작은 경우 -20 처리
+    var width = 340;
+    var height = 200;
+    if (width > document.documentElement.clientWidth) {
+        width = document.documentElement.clientWidth - 20;
+    }
+    if (height > document.documentElement.clientHeight) {
+        height = document.documentElement.clientHeight - 20;
+    }
+    
+    ezCommon_cross_dialogArguments[0] = msg;
+    ezCommon_cross_dialogArguments[1] = hideAlert;
+    ezCommon_cross_dialogArguments[3] = callback;
+    DivPopUpShow(width, height, "/ezApprovalG/ezAprAlert.do");
+}
+
+/**
+ * confirm 보여주기
+ * @param {string} msg - 메시지
+ * @param {() => void} callback - confirm 이후 실행할 콜백 함수
+ */
+function showConfirm(msg, callback) {
+    if (isTeamsDesktop()) {
+        // 결재환경설정 페이지에서 요청 시 부모(right)의 showConfirm 함수 요청
+        if (window.name === "mainFrame") {
+            parent.showConfirm(msg, callback);
+            return;
+        }
+        if (isIframeExists()) showConfirmUI(msg, callback);
+        document.body.style.overflow = "hidden";
+    } else {
+        if (msg) {
+            msg = msg.replaceAll("<br>","\n");
+        }
+        if (confirm(msg)) {
+            callback(true);
+        } else {
+            callback(false);
+        }
+    }
+}
+
+// confirm 숨기기
+function hideConfirm() {
+    if (isTeamsDesktop()) {
+    	if (window.name === "mainFrame") {
+            parent.hideConfirm();
+            return;
+        }
+        DivPopUpHidden();
+        document.body.style.overflow = "";
+    }
+    ezCommon_cross_dialogArguments.length = 0;
+    ezCommon_cross_dialogParams.length = 0;
+}
+
+/**
+ * confirm 페이지 요청
+ * @param {string} msg - 메시지
+ * @param {() => void} callback - confirm 이후 실행할 콜백 함수
+ */
+function showConfirmUI(msg, callback) {
+    ezCommon_cross_dialogArguments[0] = msg;
+    ezCommon_cross_dialogArguments[1] = callback;
+    ezCommon_cross_dialogArguments[2] = ezCommon_cross_dialogParams;
+    DivPopUpShow(330, 205, "/ezCommon/ezConfirm.do");
+}
+
+/**
+ * popup 보여주기
+ * @param {string} url - 팝업으로 요청할 페이지 경로
+ * @param {number} width - 팝업 창의 너비(px)
+ * @param {number} height - 팝업 창의 높이(px)
+ * @param {string} target - 팝업 창의 이름
+ * @param {string} feature - 팝업의 상세 설정
+ * @param {() => void} callback - 팝업이 사라지고 실행할 콜백 함수
+ */
+function showPopup(url, width, height, target, feature, callback) {
+    if (isTeamsDesktop()) {
+        if (window.name === "left") { // left에서 요청할 경우 right의 레이어팝업이 열리도록 함
+            parent.right.ezCommon_cross_dialogArguments = ezCommon_cross_dialogArguments.slice(); // 현재 변수를 복사하여 덮어쓰기
+            ezCommon_cross_dialogArguments.length = 0; // 현재 변수 비우기
+            
+            parent.document.getElementById("right").contentWindow.showPopup(url, width, height, target, feature, callback);
+        } else if (window.name === "mainFrame") { // 결재환경설정 페이지(mainFrame)에서 요청할 경우 right의 레이어팝업이 열리도록 함
+            parent.ezCommon_cross_dialogArguments = ezCommon_cross_dialogArguments.slice();
+            ezCommon_cross_dialogArguments.length = 0;
+
+            parent.showPopup(url, width, height, target, feature, callback);
+        } else if (window.document.location.href.indexOf("ezAprHistory") > 0 
+            && url.indexOf("showPersonInfo") < 0
+        ) { // 결재문서이력 페이지에서 요청할 경우 main의 레이어팝업이 열리도록 함
+            var mainIframe = parent.parent.parent; // Teams Desktop에서 main을 찾지 못해 박아줌
+            mainIframe.ezCommon_cross_dialogArguments = ezCommon_cross_dialogArguments.slice();
+            ezCommon_cross_dialogArguments.length = 0;
+
+            mainIframe.showPopup(url, width, height, target, feature, callback);
+        } else {
+            ezCommon_cross_dialogArguments[1] = callback;
+            
+            document.documentElement.scrollTop = 0;
+            document.body.style.overflow = "hidden";
+            DivPopUpShow(width, height, url, true); // 클래스 부여를 위해 flag true
+        }
+    } else {
+        ezCommon_cross_dialogArguments[1] = callback;
+        
+        ezCommon_cross_openWin = window.open(url, target, feature);
+        try { ezCommon_cross_openWin.focus(); } catch (e) { }
+    }
+}
+
+// popup 숨기기
+function hidePopup() {
+    if (isTeamsDesktop()) {
+        if (window.name === "left") {
+            parent.document.getElementById("right").contentWindow.hidePopup();
+            return;
+        } else if (window.name === "mainFrame") {
+            parent.hidePopup();
+            return;
+        } else if (window.document.location.href.indexOf("ezAprHistory") > 0
+            && isIframeExists()
+            && window.document.getElementById("iFrameLayer").src.indexOf("showPersonInfo") < 0
+        ) {
+            var mainIframe = parent.parent.parent;
+
+            mainIframe.hidePopup();
+            return;
+        } else {
+            DivPopUpHidden();
+        }
+        document.body.style.overflow = ""; // 스크롤 허용
+    }
+    ezCommon_cross_dialogArguments.length = 0;
+    ezCommon_cross_dialogParams.length = 0;
+    
+    if (ezCommon_cross_openWin != null) {
+        ezCommon_cross_openWin.close();
+        ezCommon_cross_openWin = null;
+    }
+}
+
+// 부모창에서 파라미터 전달용 배열 변수가 사용되었는지 확인
+function isParentCommonArgsUsed() {
+    if (typeof parent.ezCommon_cross_dialogArguments != "undefined"
+        && parent.ezCommon_cross_dialogArguments.length > 0
+    ) {
+        return true;
+    } else if (opener != null
+        && typeof opener.ezCommon_cross_dialogArguments != "undefined"
+        && opener.ezCommon_cross_dialogArguments.length > 0
+    ) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+// 자식 레이어팝업이 존재하고 동일한 함수가 존재하는지 확인
+function hasIframeFunction(funcName) {
+    var iframe = document.getElementById("iFrameLayer");
+    
+    if (iframe
+        && iframe.contentWindow
+        && iframe.contentWindow.document.getElementById("iFrameLayer")
+        && typeof iframe.contentWindow[funcName] === "function"
+    ) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+/**
+ * popup 보여주기 (우측 슬라이드 ver.)
+ * @param {string} url - 팝업으로 요청할 페이지 경로
+ * @param {number} width - 팝업 창의 너비(px)
+ * @param {number} height - 팝업 창의 높이(px)
+ * @param {string} target - 팝업 창의 이름
+ * @param {string} feature - 팝업의 상세 설정
+ * @param {() => void} callback - 팝업이 사라지고 실행할 콜백 함수
+ * @param {number|undefined} i
+ */
+function showPopupSlide(url, width, height, target, feature, callback, i) {
+    if (isTeamsDesktop()) {
+        if (window.name === "left") { // left에서 요청할 경우 right의 레이어팝업이 열리도록 함
+            parent.right.ezCommon_cross_dialogArguments = ezCommon_cross_dialogArguments.slice(); // 현재 변수를 복사하여 덮어쓰기
+            ezCommon_cross_dialogArguments.length = 0; // 현재 변수 비우기
+
+            parent.document.getElementById("right").contentWindow.showPopupSlide(url, width, height, target, feature, callback, i);
+            return;
+        } else if (window.document.location.href.indexOf("aprDocAttach") > 0) {
+            var mainIframe = parent.parent;
+            mainIframe.ezCommon_cross_dialogArguments = ezCommon_cross_dialogArguments.slice();
+            ezCommon_cross_dialogArguments.length = 0;
+            
+            mainIframe.showPopupSlide(url, width, height, target, feature, callback, 2);
+        } else {
+            ezCommon_cross_dialogArguments[1] = callback;
+            document.documentElement.scrollTop = 0;
+            document.body.style.overflow = "hidden";
+            DivPopUpShowSlide(width, height, url, i);
+        }
+    } else {
+        ezCommon_cross_dialogArguments[1] = callback;
+
+        ezCommon_cross_openWin = window.open(url, target, feature);
+        try { ezCommon_cross_openWin.focus(); } catch (e) { }
+    }
+}
+
+/**
+ * popup 숨기기 (우측 슬라이드 ver.)
+ * @param {number|undefined} i
+ */
+function hidePopupSlide(i) {
+    if (isTeamsDesktop()) {
+        if (window.name === "left") {
+            parent.document.getElementById("right").contentWindow.hidePopupSlide(i);
+            return;
+        } else if (window.document.location.href.indexOf("aprDocAttach") > 0) {
+            var mainIframe = parent.parent;
+            
+            mainIframe.DivPopUpHiddenSlide(2);
+        } else {
+            DivPopUpHiddenSlide(i);
+        }
+    }
+    ezCommon_cross_dialogArguments.length = 0;
+    ezCommon_cross_dialogParams.length = 0;
+
+    if (ezCommon_cross_openWin != null) {
+        ezCommon_cross_openWin.close();
+        ezCommon_cross_openWin = null;
+    }
+}
+
+/**
+ * DivPopUpShow 함수 (우측 슬라이드 ver.)
+ * @param {number|undefined} i
+ */
+function DivPopUpShowSlide(popUpW, popUpH, URL, i) {
+    if (typeof i != "number") {
+        try {
+            document.getElementById("iFrameLayer").src = URL;
+    
+            document.getElementById("iFramePanel").classList.remove("layerpopup");
+            document.getElementById("iFramePanel").classList.add("layerpopup_slider");
+            document.getElementById("iFramePanel").classList.add("active");
+    
+            document.getElementById("iFramePanel").style.left = "";
+            document.getElementById("iFrameLayer").style.width = "100%";
+            document.getElementById("iFrameLayer").style.height = "100%";
+            try {
+                if (typeof(window.parent.frames.left) == "object") {
+                    window.parent.frames.left.document.getElementById("mailPanel_left").style.display = "";
+                }
+            } catch(e) {}
+    
+            document.body.style.overflow = "hidden"; // 스크롤 막기
+            document.getElementById("mailPanel").style.display = "";
+            document.getElementById("iFramePanel").style.display = "";
+        } catch (e) {}
+    
+        return document.getElementById("iFrameLayer");
+    } else {
+        try {
+            document.getElementById("iFrameLayer" + i).src = URL;
+
+            document.getElementById("iFramePanel" + i).classList.remove("layerpopup");
+            document.getElementById("iFramePanel" + i).classList.add("layerpopup_slider");
+            document.getElementById("iFramePanel" + i).classList.add("active");
+
+            document.getElementById("iFramePanel" + i).style.left = "";
+            document.getElementById("iFrameLayer" + i).style.width = "100%";
+            document.getElementById("iFrameLayer" + i).style.height = "100%";
+            document.getElementById("iFramePanel" + i).style.display = "";
+        } catch (e) {}
+
+        return document.getElementById("iFrameLayer" + i);
+    }
+}
+
+/**
+ * DivPopUpHidden 함수 (우측 슬라이드 ver.)
+ * @param {number|undefined} i
+ */
+function DivPopUpHiddenSlide(i) {
+    if (typeof i != "number") {
+        try {
+            document.getElementById("iFramePanel").classList.remove("active");
+    
+            setTimeout(function() {
+                try {
+                    if (typeof(window.parent.frames.left) == "object") {
+                        window.parent.frames.left.document.getElementById("mailPanel_left").style.display = "none";
+                    }
+                } catch(e) {}
+                document.getElementById("mailPanel").style.display = "none";
+                document.getElementById("iFramePanel").style.display = "none";
+                document.body.style.overflow = ""; // 스크롤 허용
+                
+                document.getElementById("iFrameLayer").src = "/blank.htm";
+    
+                document.getElementById("iFramePanel").classList.remove("layerpopup_slider");
+                document.getElementById("iFramePanel").classList.add("layerpopup");
+            }, 500);
+        } catch (e) {}
+    } else {
+        try {
+            document.getElementById("iFramePanel" + i).classList.remove("active");
+
+            setTimeout(function() {
+                document.getElementById("iFramePanel" + i).style.display = "none";
+
+                document.getElementById("iFrameLayer" + i).src = "/blank.htm";
+
+                document.getElementById("iFramePanel" + i).classList.remove("layerpopup_slider");
+                document.getElementById("iFramePanel" + i).classList.add("layerpopup");
+            }, 500);
+        } catch (e) {}
+    }
+}
+
+// jsp에서 alert, confirm을 mailPanel_sub, iFramePanel_sub로 사용하는 경우를 위해 분리
+// alert 보여주기
+function showAlert_sub(msg) {
+    if (isTeamsDesktop()) {
+        showAlertUI_sub(msg);
+    } else {
+        alert(msg);
+    }
+}
+
+// alert 숨기기
+function hideAlert_sub() {
+    DivPopUpHidden_sub();
+    ezCommon_cross_dialogArguments.length = 0;
+    ezCommon_cross_dialogParams.length = 0;
+}
+
+// alert 페이지 요청
+function showAlertUI_sub(msg) {
+    // 기존 alert 레이어팝업의 크기보다 부모 레이어팝업이 작은 경우 -20 처리
+    var width = 330;
+    var height = 205;
+    if (width > document.documentElement.clientWidth) {
+        width = document.documentElement.clientWidth - 20;
+    }
+    if (height > document.documentElement.clientHeight) {
+        height = document.documentElement.clientHeight - 20;
+    }
+
+    ezCommon_cross_dialogArguments[0] = msg;
+    ezCommon_cross_dialogArguments[1] = hideAlert_sub;
+    DivPopUpShow_sub(width, height, "/ezApprovalG/ezAprAlert.do");
+}
+
+// confirm 보여주기
+function showConfirm_sub(msg, callback) {
+    if (isTeamsDesktop()) {
+        showConfirmUI_sub(msg, callback);
+    } else {
+        if (confirm(msg)) {
+            callback(true);
+        } else {
+            callback(false);
+        }
+    }
+}
+
+// confirm 숨기기
+function hideConfirm_sub() {
+    if (isTeamsDesktop()) {
+        DivPopUpHidden_sub();
+    }
+    ezCommon_cross_dialogArguments.length = 0;
+    ezCommon_cross_dialogParams.length = 0;
+}
+
+// confirm 페이지 요청
+function showConfirmUI_sub(msg, callback) {
+    ezCommon_cross_dialogArguments[0] = msg;
+    ezCommon_cross_dialogArguments[1] = callback;
+    ezCommon_cross_dialogArguments[2] = ezCommon_cross_dialogParams;
+    DivPopUpShow_sub(330, 205, "/ezCommon/ezConfirm.do");
+}
+
+/**
+ * X버튼 온클릭 메소드
+ * @param {string|undefined} rtn - 반환값
+ */
+function btnClose_onclick(rtn) {
+    if (typeof ReturnFunction == "function") {
+        if (typeof rtn != "undefined") {
+            ReturnFunction(rtn);
+        } else {
+            ReturnFunction("cancel");
+        }
+    }
+    if (typeof rtn == "string" && rtn != "") {
+        window.returnValue = rtn;
+    }
+    window.close();
+}
+
+/**
+ * X버튼 온클릭 메소드2 (btnClose_onclick 함수가 jsp에 이미 존재하며 대체할 수 없는 경우 사용)
+ * @param {string|undefined} rtn - 반환값
+ */
+function btnClose_onclick2(rtn) {
+    if (typeof ReturnFunction == "function") {
+        if (typeof rtn != "undefined") {
+            ReturnFunction(rtn);
+        } else {
+            ReturnFunction("cancel");
+        }
+    }
+    if (typeof rtn == "undefined") {
+        window.returnValue = rtn;
+    }
+    window.close();
+}
+
+// 레이어팝업 영역이 존재하는지 확인
+function isIframeExists() {
+    var iframe = document.getElementById("iFrameLayer");
+
+    if (iframe) {
+        return true;
+    } else {
+        console.log("There is no div #iFrameLayer in " + window.document.location.href);
+        return false;
+    }
+}
+
+function innerIfrmaeOffset() {
+    if (navigator.maxTouchPoints > 4 || isTeamsDesktop()) {
+        window.addEventListener("message", function (event) {
+            if (event.data && event.data.type == "width") {
+                if (event.data.value >= 947) {
+                    maxWidth = event.data.value;
+                    var innerIframe = window.parent.document.querySelector("iframe#iFrameLayer");
+                    var innerFrameWidth = event.data.value * 0.95; 
+                    innerIframe.style.width = innerFrameWidth + "px";
+                }
+            }
+        });
+    }
 }

@@ -735,7 +735,11 @@ form{display:inline;margin:0}
 	border: 1px solid #ddd;
 	height: 29px;
 	word-break: break-all;
+}
 
+#receivelist .popuplist td {
+	word-break: break-word;
+    max-width: 300px;
 }
 
 .content input {vertical-align:middle; border:1px solid #dedede; height:24px; border-radius: 3px;}
@@ -2587,6 +2591,10 @@ div#txtContent table {margin:auto;}
 .btn_leftframe{background-position:-52px -78px !important; width:16px; height:16px; display:inline-block !important; margin: 0px 0px 0px 0px !important; cursor:pointer;} /* icon16 프레임분활 왼쪽 */
 .btn_arrow_down{background-position:-78px -78px !important; width:16px; height:16px; display:inline-block !important; margin: 0px 0px 0px 0px !important; cursor:pointer;} /* icon16 프레임분활 아래화살표 */
 .icon16_spam {background-position: -234px -52px !important; width: 16px; height: 16px; display: inline-block; margin: 6px 0px 0px 0px;cursor: pointer;} /*icon16 스팸아이콘 */
+.icon16_clip{background-position:0px -131px !important; width:16px; height:16px; display:inline-block; margin: 0px 0px 0px 0px; cursor:pointer;} /* icon16 클립 아이콘 */
+.icon16_list{background-position:-26px -131px !important; width:16px; height:16px; display:inline-block; margin: 0px 0px 0px 0px; cursor:pointer;} /* icon16 리스트 아이콘 */
+.icon16_download{background-position:-208px -24px !important; width:16px; height:16px; display:inline-block; margin: 0px 1px 0px 1px; cursor:pointer;} /* icon16 다운 아이콘 */
+.icon16_magnifier{background-position:-182px -52px !important; width:16px; height:16px; display:inline-block; margin: 0px 1px 0px 1px; cursor:pointer;} /* icon16 돋보기 아이콘 */
 /* icon16 popup */
 .popup_icon16_delete{background-position:8px 5px !important; width:13px; height:16px; display:inline-block; margin: 0px; cursor:pointer; background-color: white !important;} /* icon16 삭제아이콘 */
 .popup_icon16_print{background-position:-70px -46px !important; width:13px; height:16px; display:inline-block; margin: 0px; cursor:pointer; background-color: white !important;} /* icon16 인쇄아이콘 */
@@ -2601,6 +2609,8 @@ div#txtContent table {margin:auto;}
 .sub_frameIcon .btn_bottomframe:hover, .btn_onbottomframe{background-position:-26px -104px !important; width:16px; height:16px; display:inline-block !important; margin: 0px 0px 0px 0px !important; cursor:pointer;} /* icon16 프레임분활 하단 오버 */
 .sub_frameIcon .btn_leftframe:hover, .btn_onleftframe{background-position:-52px -104px !important; width:16px; height:16px; display:inline-block !important; margin: 0px 0px 0px 0px !important; cursor:pointer;} /* icon16 프레임분활 왼쪽 오버 */
 .sub_frameIcon .btn_arrow_down:hover, .btn_onarrow_down{background-position:-78px -104px !important; width:16px; height:16px; display:inline-block !important; margin: 0px 0px 0px 0px !important; cursor:pointer;} /* icon16 프레임분활 아래화살표 오버 */
+.icon16_clip:hover, .icon16_onclip{background-position:0px -159.5px !important; width:16px; height:16px; display:inline-block !important; margin: 0px 0px 0px 0px !important; cursor:pointer;} /* icon16 클립 오버 */
+.icon16_list:hover, .icon16_onlist{background-position:-26px -159.5px !important; width:16px; height:16px; display:inline-block !important; margin: 0px 0px 0px 0px !important; cursor:pointer;} /* icon16 리스트 오버 */
 
 /* sub_frameIcon */
 .sub_frameIcon{ margin:0px !important; padding:0px !important; overflow:hidden !important;}
@@ -2609,6 +2619,10 @@ div#txtContent table {margin:auto;}
 .sub_frameIcon .sub_frameIconUL .frameIconLI:first-child{ border-left:none !important;}
 .sub_frameIcon .sub_frameIconUL02{ margin:0px 0px 0px 3px !important; padding:0px !important; float:left !important; overflow:hidden !important; width:29px !important; height:29px !important; box-sizing:border-box !important; list-style:none !important;border:1px solid #c7c7c7 !important; border-radius: 3px;}
 .sub_frameIcon .sub_frameIconUL02 .frameIconLI{ margin:0px !important; padding:6px 5px 5px 6px !important; overflow:hidden !important; cursor:pointer !important; border:none !important;}
+
+.sub_frameIcon .sub_frameIconUL00{ margin:0px 3px 0px 0px !important; padding:0px !important; overflow:hidden !important; width:57px !important; height:29px !important; box-sizing:border-box !important; list-style:none !important;border:1px solid #c7c7c7 !important; float:left !important; border-radius: 3px;}
+.sub_frameIcon .sub_frameIconUL00 .frameIconLI{ margin:0px !important; padding:6px 5px 5px 6px !important; float:left !important; overflow:hidden !important; cursor:pointer !important; border-left:1px solid #e6e6e6 !important; border-top:none !important; border-bottom:none !important; border-right:none !important;}
+.sub_frameIcon .sub_frameIconUL00 .frameIconLI:first-child{ border-left:none !important;}
 
 /* previewmail */
 .previewmail_bar_h{ border:1px solid #e5e5e5 !important; border-top:0px !important;}
@@ -2956,8 +2970,8 @@ h2, #menu span {font-size: 12px;}
 .surveyTbl .statusTh {width: 80px; text-align: center;}
 .surveyTbl .noTh   {width: 20px; text-align: center;}
 .surveyTbl .ttlTh  {width: 60%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;}
-.surveyTbl .createTh {width: 15%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-align: center;}
-.surveyTbl .endDateTh {width: 15%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-align: center;}
+.surveyTbl .createTh {width: 16%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-align: center;}
+.surveyTbl .endDateTh {width: 16%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-align: center;}
 .surveyTbl .anoynmTh, .surveyTbl .publicTh, .surveyTbl .targetTh {width: 80px; text-align: center;}
 .surveyTbl .statisTh {width: 40px;}
 .spanName, .selectedNode {height: 22px; line-height: 22px; color: #000; padding-top: 1px; font-size: 12px; vertical-align: top; cursor: pointer; background-image: none; background-attachment: scroll; background-repeat: repeat; background-position-x: 0%; background-position-y: 0%; background-color: transparent; margin-left: 2px; white-space: pre;}
@@ -3071,6 +3085,7 @@ h2, #menu span {font-size: 12px;}
 .txt-response {display: flex; align-items: center; min-height: 30px;}
 .txt-response >img {width: 40px; height: 40px; min-width: 40px; cursor: pointer; margin-right: 10px;}
 .txt-response >span {flex: 1; word-break: break-word; line-height: 1.4;}
+.txt-response .userInfoSpan {overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; padding-right: 8px;} /* 2025-07-15 전자설문 > 결과분석 > 주관식 결과보기 개선으로 추가 */
 .txt-respul {padding: 0px; list-style: none;}
 .txt-respul >li + li {padding-top: 10px; border-top: 1px dashed #ddd;}
 .txt-viewmore {padding: 4px 3px; margin-left: 8px; border: 1px solid #ddd; cursor: pointer;}
@@ -3216,7 +3231,7 @@ h2, #menu span {font-size: 12px;}
 .survey-infpp-wrap {width: 100%; height: 450px; margin:0px 0px 15px 0px;}
 .surey-frameeditor {padding: 0px; height: 100%; width:100%; overflow: auto; border: 0px;}
 .svPurpose {width: auto; height: auto; margin:0px 0px 10px 0px;}
-.svPurpose .ppContent {width: auto; height: auto; background-color:white; padding: 10px; border: 1px solid #d7d7d7; overflow: auto;}
+.svPurpose .ppContent {width: auto; height: auto; background-color:white; padding: 10px; border: 1px solid #d7d7d7; overflow: auto; margin-top: 10px;}
 .ppContent img {max-width: 100%;}
 .ppContent p, .ppContent div, .ppContent td, .ppContent ul, .ppContent ol, .ppContent li {margin-top: 0px; margin-bottom: 0px; margin-left: 0px;}
 .ppContent table td  {text-indent: 0px }
@@ -3226,7 +3241,7 @@ h2, #menu span {font-size: 12px;}
 /**** survey information table end****/
 
 /**** survey attach part start ****/
-.survey-otherinf {margin: -1px 0px 0px 0px;}
+.survey-otherinf {margin: 10px 0px 0px 0px;}
 .survey-dropzone {max-height: 130px; border: 1px solid #ddd; overflow-y: auto; overflow-x: hidden; min-height: 67px; box-sizing: border-box;}
 .attach-zone {padding : 15px; background: #fff; border: 1px solid #d7d7d7; margin-bottom: 15px; }
 .attach-zone >div {max-height: 130px; overflow-y: auto; overflow-x: hidden;}
@@ -3406,6 +3421,12 @@ input::-ms-clear {display: none;}
 .required input[type="checkbox"] {display:none;}.required label{cursor:pointer;}
 .required input[type="checkbox"] + label::before{content: ' '; display: inline-block;width:16px; height:14px; background:url(/images/ezSurvey/srvyBg_check.png); vertical-align:middle; margin:-2px 5px 0px 0px; cursor:pointer;}
 .required input[type="checkbox"]:checked + label::before {background:url(/images/ezSurvey/srvyBg_check.png) 16px 0px;}
+
+/* resOpenFlag checkbox label*/
+.resOpenFlag{margin:0px 10px 0px 0px; padding:0px;}
+.resOpenFlag input[type="checkbox"] {display:none;}.required label{cursor:pointer;}
+.resOpenFlag input[type="checkbox"] + label::before{content: ' '; display: inline-block;width:16px; height:14px; background:url(/images/ezSurvey/srvyBg_check.png); vertical-align:middle; margin:-2px 5px 0px 0px; cursor:pointer;}
+.resOpenFlag input[type="checkbox"]:checked + label::before {background:url(/images/ezSurvey/srvyBg_check.png) 16px 0px;}
 
 /* 수정, 취소 버튼 */
 .survey_qsbtn{overflow:hidden; margin:20px 0px 10px 0px; padding:0px; height:40px;}
@@ -3658,6 +3679,7 @@ input[type=range]::-ms-tooltip {display: none;}
 .icon_mail_Confirm{ background:url(../images/ImgIcon/view-document-confirm.gif) no-repeat; background-size:16px 15px; width:16px; height:16px; display:inline-block; margin: 7px 4px 0px 4px; cursor:pointer;}
 .icon_mail_Cancle{ background:url(../images/ImgIcon/view-document-cancel.gif) no-repeat; background-size:16px 15px; width:16px; height:16px; display:inline-block; margin: 7px 4px 0px 4px; cursor:pointer;}
 tr.mail_confirm > td:nth-child(7) { text-decoration: line-through; }
+tr.mail_confirm > td:nth-child(7) div{ text-decoration: line-through; }
 /*tr.mail_confirm > td{position:relative; }
 tr.mail_confirm > td:not(:nth-child(-n+5)):before{content:" "; position:absolute; top:51%; left:0; border-bottom:1px solid #48494B; width:100%;}
 */
@@ -4277,3 +4299,104 @@ a.commentFileSpan:hover {cursor: pointer; text-decoration: underline;}
 .schedule_list_date .date_arr.date_next{background-image:url(../images/date_next.png); margin-left:65px;}
 
 .boardTxtURL {width: 73%;margin-left: 1.5px;margin-bottom: 1px;}
+
+/* 전자결재 사인 그리기 */
+.btnpositionDraw{
+	margin: 0px 0px 0px -10px;
+	height: 28px !important;
+	background: none;
+	border: none;
+	padding:7px 0px;
+	background-color: #fcfcfc;
+	text-align:center;
+	position: fixed;
+	text-align: center;
+	bottom: 0px;
+	width:100%;
+}
+
+/* 전자설문 - 맺음말 */
+#closingWrap {margin:10px 0px 10px 0px;}
+#closingWrap div{margin-bottom: 10px;}
+#closingWrap textarea{width:99%;}
+#svClosing {margin-top: 10px;}
+
+/* 줌 버튼 */
+.zoom_btn{position:fixed; top:7%; left:calc(100% - 47px); touch-action: none;}
+.zoom_btn span{
+display:block; width:46px; height:46px; border:1px solid #d2d2d2;
+background-repeat:no-repeat; background-position:center; background-color:#f8f8fa;
+cursor:pointer; background-size:55%; text-indent:-9999px; overflow:hidden;}
+.zoom_btn span.zoom_in{border-radius:8px 0 0 0; background-image:url(../images/zoom_in.svg?v=1);}
+.zoom_btn span.zoom_out{border-radius:0 0 0 8px; margin-top:-1px; background-image:url(../images/zoom_out.svg?v=1);}
+
+.zoom_btn span:hover{border:1px solid #388CE5;}
+.zoom_btn span.zoom_in:hover{background-image:url(../images/zoom_in_hover.svg?v=1);}
+.zoom_btn span.zoom_out:hover{background-image:url(../images/zoom_out_hover.svg?v=1);}
+
+.zoom_btn.drag span{cursor:grabbing;}
+
+[id^="smaller"]{display:none;}
+[id^="bigger"]{display:none;}
+
+body.drag{user-select:none !important;}
+body.drag *{user-select:none !important;}
+
+/* 2025-06-17 문희수 - 메일태그 리스트 CSS 추가 */
+.tagArea{width: 215px !important;}
+.tagUL{height: auto !important; max-height: 250px; overflow-y: auto !important; margin-top: 10px !important;}
+.tagUL label{cursor: pointer; vertical-align: top; display: inline-block; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; width: 165px; padding-top: 3px;}
+.tagUL li{height: 33px !important; line-height: 27px !important;}
+#mainmenu li.view_more .layer_select{padding: 7px 0;}
+#mainmenu li.view_more.on{color: #0470E4;}
+.tagUL input{height: auto !important; cursor: pointer; vertical-align: middle; margin-top: 5px;}
+.tagAdd{margin: 0 10px;}
+.tagArea{padding-top: 13px !important;}
+.tagArea .imgbtn{padding-left: 0;}
+.tagArea .imgbtn span{line-height: 23px !important;}
+.tagAdd input[type="text"]{width: 143px}
+.tag_btnSave{text-align: center; margin: 0 0 3px 0; border-top: 1px solid #f1f1f1; padding-top: 10px;}
+
+/* teams 레이어팝업 전환 */
+.layerpopup_slider{
+	position: absolute;
+	top: 0px !important;
+	right: -50% !important;
+	width: 0 !important;
+	height: 100% !important;
+	z-index: -1 !important;
+	overflow: hidden;
+	transition:all 0.5s;
+	left: auto !important;
+}
+.layerpopup_slider.active{
+	min-width: 947px;
+	width:80% !important;
+	height:100% !important;
+	left: auto !important;
+	right:0 !important;
+	z-index:2000 !important;
+	box-shadow: -5px 3px 6px rgba(0,0,0,0.16);
+}
+.layerpopup_top{
+	top: 50% !important;
+	left: 50% !important;
+	transform: translate(-50%, -50%) !important;
+	z-index: 2001 !important;
+	border-radius: 5px;
+	overflow: hidden;
+}
+
+.list_attach_ul{border-top:1px solid #ddd; margin:8px 0 0; padding:8px 0 0; list-style:none; width:calc(100% - 20px); box-sizing:border-box; width:calc(100% - 20px);}
+.list_attach_ul li{margin:0; padding:0; height:28px; line-height:28px; display:flex; align-items:center;}
+.list_attach_ul li div{display:flex; max-width:100%; align-items:center;}
+/*.list_attach_ul li div span{font-size:14px; color:#384B63; vertical-align:top;}*/
+.list_attach_ul li div span{font-size:12px; color:#657b97; vertical-align:top;}
+.list_attach_ul li div span.file_name{white-space:nowrap; text-overflow:ellipsis; overflow:hidden;}
+.list_attach_ul li div span.file_capacity{margin: 0px 4px 0px 4px; flex-shrink:0;}
+/*.list_attach_ul li div span.attach_download{display:inline-block; width:16px; height:16px; background:url(../images/ImgIcon/attach_download.svg?v=1) no-repeat center; background-size:14px auto; margin:0 0 0 3px; cursor:pointer; box-sizing:border-box; flex-shrink:0;}*/
+.list_attach_ul li div span.attach_download{display:inline-block; width:20px; height:20px; background:url(../images/attach_download.svg?v=1) no-repeat center; background-size:20px auto; margin:0 0 0 5px; cursor:pointer; box-sizing:border-box; flex-shrink:0;}
+.list_attach_ul li div span.attach_view{display:inline-block; width:20px; height:20px; background:url(../images/attach_view.svg?v=1) no-repeat center; background-size:20px auto; margin:0 0 0 5px; cursor:pointer; box-sizing:border-box; flex-shrink:0;}
+.list_attach_ul li div span.attach_download:hover{background-image:url(../images/attach_download_hover.svg?v=1);}
+.list_attach_ul li div span.attach_view:hover{background-image:url(../images/attach_view_hover.svg?v=1);}
+.list_attach_ul li div:hover span{color:#0183BF;}

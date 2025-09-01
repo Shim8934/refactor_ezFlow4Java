@@ -70,6 +70,7 @@
 			var flag = "<c:out value='${flag}'/>";
 			var printTitle = "<spring:message code='ezApprovalG.pjj03'/>";
 			var cssLang = "<spring:message code='main.default.css'/>";
+			var nowDate = "<c:out value='${nowDate}'/>";
 			
 			$(function () {
 				 $("#Sdatepicker").datepicker({
@@ -859,32 +860,32 @@
 								</tr>
 								<tr id="personinputtr" style="display:none">
 									<th><a class="imgbtn"><span onClick="manage_share(1)"><spring:message code='ezTask.t2005' /></span></a></th>
-									<td colspan ="3">
-										<div id="personlist" style="OVERFLOW-Y: auto; HEIGHT: 17px"></div>
-										<div id="personList2" style="OVERFLOW-Y: auto; HEIGHT: 17px; display:none;"></div>
-										<div id="personID" style="OVERFLOW-Y: auto; HEIGHT: 17px; display:none;"></div>
-										<div id="personDept" style="OVERFLOW-Y: auto; HEIGHT: 17px; display:none;"></div>
-										<div id="personDept2" style="OVERFLOW-Y: auto; HEIGHT: 17px; display:none;"></div>
+									<td colspan ="3" style="OVERFLOW-Y: auto;">
+										<div id="personlist"></div>
+										<div id="personList2" style="display:none;"></div>
+										<div id="personID" style="display:none;"></div>
+										<div id="personDept" style="display:none;"></div>
+										<div id="personDept2" style="display:none;"></div>
 									</td>
 								</tr>
 								<tr id="shareinputtr">
 									<th><a class="imgbtn"><span onClick="manage_share(2)"><spring:message code='ezTask.t157' /></span></a></th>
-									<td colspan ="3">
-										<div id="sharelist" style="OVERFLOW-Y: auto; HEIGHT: 17px">
+									<td colspan ="3" style="OVERFLOW-Y: auto;">
+										<div id="sharelist">
 											<c:forEach var="taskShareVO" varStatus="status" items="${taskShareList}">
 												<c:out value = '${taskShareVO.sharerName }' />&nbsp;(<c:out value = '${taskShareVO.sharerDeptName }' />)
 												<c:if test="${not status.last }">,&nbsp;</c:if>
 											</c:forEach>
 										</div>
-										<div id="shareList2" style="OVERFLOW-Y: auto; HEIGHT: 17px; display:none;"></div>
-										<div id="shareID" style="OVERFLOW-Y: auto; HEIGHT: 17px; display:none;"></div>
-										<div id="shareDept" style="OVERFLOW-Y: auto; HEIGHT: 17px; display:none;"></div>
-										<div id="shareDept2" style="OVERFLOW-Y: auto; HEIGHT: 17px; display:none;"></div>
+										<div id="shareList2" style="display:none;"></div>
+										<div id="shareID" style="display:none;"></div>
+										<div id="shareDept" style="display:none;"></div>
+										<div id="shareDept2" style="display:none;"></div>
 									</td>
 								</tr>
 								<tr id="trrepeatinfo">
 									<th><a class="imgbtn"><span onClick="config_repeat()"><spring:message code='ezTask.t213' /></span></a></th>
-									<td class="pos1" colspan="3"><div id="repeatinfo" style="OVERFLOW-Y: auto; PADDING-TOP: 2px; width:100%; HEIGHT: 19px"></div></td>
+									<td class="pos1" colspan="3" style="OVERFLOW-Y: auto; "><div id="repeatinfo" style="width:100%;"></div></td>
 								</tr>
 								
 								<c:if test="${mode == '' }">
@@ -1016,32 +1017,32 @@
 									</tr>
 									<tr id="personinputtr" style="display:none">
 										<th><a class="imgbtn"><span onClick="manage_share(1)"><spring:message code='ezTask.t2005' /></span></a></th>
-										<td colspan ="3">
-											<div id="personlist" style="OVERFLOW-Y: auto; HEIGHT: 17px"></div>
-											<div id="personList2" style="OVERFLOW-Y: auto; HEIGHT: 17px; display:none;"></div>
-											<div id="personID" style="OVERFLOW-Y: auto; HEIGHT: 17px; display:none;"></div>
-											<div id="personDept" style="OVERFLOW-Y: auto; HEIGHT: 17px; display:none;"></div>
-											<div id="personDept2" style="OVERFLOW-Y: auto; HEIGHT: 17px; display:none;"></div>
+										<td colspan ="3" style="OVERFLOW-Y: auto;">
+											<div id="personlist"></div>
+											<div id="personList2" style="display:none;"></div>
+											<div id="personID" style="display:none;"></div>
+											<div id="personDept" style="display:none;"></div>
+											<div id="personDept2" style="display:none;"></div>
 										</td>
 									</tr>
 									<tr id="shareinputtr">
 										<th><a class="imgbtn"><span onClick="manage_share(2)"><spring:message code='ezTask.t157' /></span></a></th>
-										<td colspan ="3">
-											<div id="sharelist" style="OVERFLOW-Y: auto; HEIGHT: 17px">
+										<td colspan ="3" style="OVERFLOW-Y: auto;">
+											<div id="sharelist">
 												<c:forEach var="taskShareVO" varStatus="status" items="${taskShareList}">
 													<c:out value = '${taskShareVO.sharerName }' />&nbsp;(<c:out value = '${taskShareVO.sharerDeptName }' />)
 													<c:if test="${not status.last }">,&nbsp;</c:if>
 												</c:forEach>
 											</div>
-											<div id="shareList2" style="OVERFLOW-Y: auto; HEIGHT: 17px; display:none;"></div>
-											<div id="shareID" style="OVERFLOW-Y: auto; HEIGHT: 17px; display:none;"></div>
-											<div id="shareDept" style="OVERFLOW-Y: auto; HEIGHT: 17px; display:none;"></div>
-											<div id="shareDept2" style="OVERFLOW-Y: auto; HEIGHT: 17px; display:none;"></div>
+											<div id="shareList2" style="display:none;"></div>
+											<div id="shareID" style="display:none;"></div>
+											<div id="shareDept" style="display:none;"></div>
+											<div id="shareDept2" style="display:none;"></div>
 										</td>
 									</tr>
 									<tr id="trrepeatinfo">
 										<th><a class="imgbtn"><span onClick="config_repeat()"><spring:message code='ezTask.t213' /></span></a></th>
-										<td class="pos1" colspan="3"><div id="repeatinfo" style="OVERFLOW-Y: auto; PADDING-TOP: 2px; width:100%; HEIGHT: 19px"></div></td>
+										<td class="pos1" colspan="3" style="OVERFLOW-Y: auto; "><div id="repeatinfo" style="width:100%;"></div></td>
 									</tr>
 									<tr>
 				                        <th><spring:message code='ezTask.t158' /></th>

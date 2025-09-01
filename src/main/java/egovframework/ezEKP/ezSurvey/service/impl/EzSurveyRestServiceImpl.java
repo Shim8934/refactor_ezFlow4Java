@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.compress.utils.IOUtils;
+import org.egovframe.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -43,7 +44,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import egovframework.ezEKP.ezSurvey.service.EzSurveyRestService;
 
 @Service
-public class EzSurveyRestServiceImpl implements EzSurveyRestService {
+public class EzSurveyRestServiceImpl extends EgovAbstractServiceImpl implements EzSurveyRestService {
 	@Autowired
 	private Properties config;
 	
@@ -451,6 +452,15 @@ public class EzSurveyRestServiceImpl implements EzSurveyRestService {
 		param.put("userId", userId);
 		param.put("itemId", itemId);
 		JSONObject resultBody     = getJsonResult(url, param, request, "get", null);
+		return resultBody;
+	}
+
+	@Override
+	public JSONObject deleteResponse(HttpServletRequest request, JSONObject responseItem) throws Exception {
+		String url            = "/rest/ezsurvey/response-item/delete";
+		logger.debug(responseItem.toJSONString());
+
+		JSONObject resultBody = getJsonResult(url, null, request, "put", responseItem);
 		return resultBody;
 	}
 

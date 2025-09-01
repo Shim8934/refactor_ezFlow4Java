@@ -855,18 +855,20 @@
 		    }
 	
 		    function Appmore_btnClick() {
+                var rightUrl = "";
 		        if ("${userApprovalG}" == "YES") {
 		            if (pListTypeValue != "2")
-		                window.open("/ezApprovalG/apprGMain.do?listType=1", "main");
+		                rightUrl = "/ezApprovalG/apprGMain.do?listType=1";
 		            else
-		                window.open("/ezApprovalG/apprGMain.do?listType=2", "main");
+		                rightUrl = "/ezApprovalG/apprGMain.do?listType=2";
 		        } else {
 		            if (pListTypeValue != "2")
-		                window.open("/ezApprovalG/apprGMain.do?listType=1", "main");
+		                rightUrl = "/ezApprovalG/apprGMain.do?listType=1";
 		            else
-		                window.open("/ezApprovalG/apprGMain.do?listType=2", "main");
+		                rightUrl = "/ezApprovalG/apprGMain.do?listType=2";
 		        }
-		    }
+                parent.document.querySelector("iframe[name=main]").src = rightUrl;
+            }
 	
 		    var xmlhttp_getMailGraph_NewApprMail = createXMLHttpRequest();
 		    
@@ -983,7 +985,7 @@
 		    }
 	
 		    function Mailmore_btnClick() {
-		        window.open("/ezEmail/mailMain.do", "main");
+                parent.document.querySelector("iframe[name=main]").src = "/ezEmail/mailMain.do";
 		    }
 		    
 		    /*

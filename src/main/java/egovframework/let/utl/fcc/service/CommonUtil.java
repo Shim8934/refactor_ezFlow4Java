@@ -382,23 +382,32 @@ public class CommonUtil {
 		logger.debug("readBytesFromFile path=" + pathStr);
 
 		EzFAL.EzFile file = new EzFAL.EzFile(pathStr);
-	
+		long orgFileSize = file.length();
+
+		/* 2025-07-11 (수정) 기존 FileInputStream 단일 읽기 방식 → ByteArrayOutputStream 기반으로 변경 */
+		byte[] content = null;
 		try (EzFAL.EzFileInputStream fin = new EzFAL.EzFileInputStream(file);
-			 ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
-	
-			byte[] buffer = new byte[2048];
+			 ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+			byte[] buffer = new byte[8192];
 			int bytesRead;
-			while ((bytesRead = fin.read(buffer)) != -1) {
-				bos.write(buffer, 0, bytesRead);
+			while((bytesRead = fin.read(buffer)) != -1){
+				baos.write(buffer, 0, bytesRead);
 			}
-			
-			logger.debug("readBytesFromFile ended. path=" + pathStr);
-			return bos.toByteArray();
+			content = baos.toByteArray();
+
+			if (orgFileSize != content.length) { // 만일 실제 파일과 생성된 파일의 사이즈가 다른 경우 로그를 남기도록 함.
+				logger.debug("File size mismatch: expected {} bytes, but read {} bytes.", orgFileSize, content.length);
+			}
 	
 		} catch (IOException e) {
 			logger.error("Failed to read file: " + pathStr, e);
 			throw e;
 		}
+
+		logger.debug("readBytesFromFile ended. path=" + pathStr);
+
+		return content;
+
 	}
 
     public void writeBytesToFile(Path path, byte[] content) throws IOException {
@@ -886,7 +895,7 @@ public class CommonUtil {
 			return "0".equals(validLoginCookie(request, response));
 		}
 
-		return validSessionLoginCookie(request, response);
+		return "0".equals(validSessionLoginCookie(request, response));
 	}
 
 	private String validLoginCookie(HttpServletRequest request,  HttpServletResponse response) {
@@ -924,17 +933,17 @@ public class CommonUtil {
 		return result;
 	}
 
-	private boolean validSessionLoginCookie(HttpServletRequest request, HttpServletResponse response) {
+	private String validSessionLoginCookie(HttpServletRequest request, HttpServletResponse response) {
 		HttpSession session = request.getSession(false);
 		boolean useDbSession = "YES".equalsIgnoreCase(config.getProperty("config.UseDbSession"));
 
 		if (!useDbSession && session == null) {
 			clearAllCookies(request, response);
 
-			return false;
+			return "1";
 		}
 
-		return "0".equals(validLoginCookie(request, response));
+		return validLoginCookie(request, response);
 	}
 
 	private void clearAllCookies(HttpServletRequest request, HttpServletResponse response) {
@@ -1081,6 +1090,20 @@ public class CommonUtil {
 		}
 
 		return stb.toString();
+	}
+	
+	public Map<String, Object> getQueryResultAsJson(Object vo) throws Exception {
+		Map<String, Object> resultMap = new HashMap<>();
+
+		if (vo != null) {
+			for (Field field : vo.getClass().getDeclaredFields()) {
+				field.setAccessible(true);
+				Object value = field.get(vo);
+				resultMap.put(field.getName().toLowerCase(), value == null ? "" : cleanValue(value.toString()));
+			}
+		}
+
+		return resultMap;
 	}
 	
 	/*
@@ -2648,13 +2671,13 @@ public class CommonUtil {
 	}
 	
 	//2020-01-22 유은정 메뉴코드로 메뉴 권한 체크
-	public Map<String, Boolean> checkMenuAccess(List<String> menuCodeList, String companyId, int tenantId, String lang, String userId, String deptId) {
+	public Map<String, Boolean> checkMenuAccess(List<String> menuCodeList, String companyId, int tenantId, String lang, String userId, String deptId, String type) {
 		logger.debug("checkMenuAccess started.");
 		logger.debug("[checkMenuAccess param] menuCodeList : " + menuCodeList.toString() + ", companyId : " + companyId + ", tenantId : " + tenantId + ", lang : " + lang + ", userId : " + userId + ", deptId : " + deptId);
 		Map<String, Boolean> menuAccessList = new LinkedHashMap<String, Boolean>();
 		
 		try {
-			List<MenuInfoVO> menuList = ezNewPortalService.getUserMenuList(companyId, tenantId, lang, userId, deptId);
+			List<MenuInfoVO> menuList = ezNewPortalService.getUserMenuList(companyId, tenantId, lang, userId, deptId, type);
 			
 			menuCodeList.forEach(menuCode -> {
 				boolean menuAccess = false;
@@ -2668,13 +2691,13 @@ public class CommonUtil {
     				} else if(menuCode.equals("mail") || menuCode.equals("address")) {		// 메일, 주소록
 						String useExternalMailServer = ezCommonService.getTenantConfig("useExternalMailServer", tenantId);
 						menuAccess = useExternalMailServer.equals("NO");
-    				} else if (menuCode.equals("board")) { //게시판
+    				} else if (menuCode.equals("board") || menuCode.equals("mBoard")) {//게시판
 						String useBoard = ezCommonService.getTenantConfig("useBoard", tenantId);
 						menuAccess = useBoard.equals("YES");
-    				} else if (menuCode.equals("schedule")) { //일정
+    				} else if (menuCode.equals("schedule") || menuCode.equals("mSchedule")) {//일정
 						String useSchedule = ezCommonService.getTenantConfig("useSchedule", tenantId);
 						menuAccess = useSchedule.equals("YES");
-    				} else if (menuCode.equals("resource")) { //자원
+    				} else if (menuCode.equals("resource") || menuCode.equals("mResource")) {//자원
 						String useResource = ezCommonService.getTenantConfig("useResource", tenantId);
 						menuAccess = useResource.equals("YES");
     				} else if (menuCode.equals("community")) {
@@ -2686,10 +2709,10 @@ public class CommonUtil {
                     } else if (menuCode.equals("memo")) {
                         String useMemo = ezCommonService.getTenantConfig("useMemo", tenantId);
                         menuAccess = useMemo.equals("YES");
-                    } else if (menuCode.equals("survey")) {
+                    } else if (menuCode.equals("survey") || menuCode.equals("mSurvey")) {
                         String useSurvey = ezCommonService.getTenantConfig("useSurvey", tenantId);
                         menuAccess = useSurvey.equals("YES");
-                    } else if (menuCode.equals("webfolder")) {
+                    } else if (menuCode.equals("webfolder") || menuCode.equals("mWebfolder")) {
                         String useWebfolder = ezCommonService.getTenantConfig("useWebfolder", tenantId);
                         menuAccess = useWebfolder.equals("YES");
                     } else if (menuCode.equals("journal")) {
@@ -3306,7 +3329,9 @@ public class CommonUtil {
 			return validLoginCookie(request, response);
 		}
 
-		if(validSessionLoginCookie(request, response)){
+		result = validSessionLoginCookie(request, response);
+		
+		if("0".equals(result)) {
 			boolean useDbSession = "YES".equalsIgnoreCase(config.getProperty("config.UseDbSession"));
 
 			if (useDbSession) {
@@ -3350,8 +3375,6 @@ public class CommonUtil {
 				result = "0";
 			}
 
-		}else {
-			result = "1";
 		}
 
 		return result;
@@ -3685,5 +3708,54 @@ public class CommonUtil {
 	
 	private boolean isCellMerged(Map<String, CellRangeAddress> mergedCells, int row, int col) {
 		return mergedCells.containsKey(row + ":" + col);
+	}
+	
+	public boolean isTodayBetween(String start, String end, String offset) throws Exception {
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        LocalDateTime s = LocalDateTime.parse(getDateStringInUTC(start, offset, true), formatter);
+        LocalDateTime e = LocalDateTime.parse(getDateStringInUTC(end, offset, true), formatter);
+        LocalDateTime today = LocalDateTime.parse(getTodayUTCTime("yyyy-MM-dd HH:mm:ss"), formatter);
+        return today.isAfter(s) && today.isBefore(e);
+    }
+
+
+	public String removeHtmlTag(String content) {
+		try {
+			Pattern p = Pattern.compile("<(head|title|style).*?</(head|title|style)>", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
+			Matcher m = p.matcher(content);
+			content = m.replaceAll(" ");
+
+			p = Pattern.compile("\\s*<.*?>\\s*", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
+			m = p.matcher(content);
+			content = m.replaceAll(" ").trim();
+
+			p = Pattern.compile("\\s+");
+			m = p.matcher(content);
+			content = m.replaceAll(" ");
+
+			p = Pattern.compile("&nbsp;");
+			m = p.matcher(content);
+			content = m.replaceAll(" ");
+
+			p = Pattern.compile(" +");
+			m = p.matcher(content);
+			content = m.replaceAll(" ");
+
+			p = Pattern.compile("&lt;");
+			m = p.matcher(content);
+			content = m.replaceAll("<");
+
+			p = Pattern.compile("&gt;");
+			m = p.matcher(content);
+			content = m.replaceAll(">");
+
+			p = Pattern.compile("&amp;");
+			m = p.matcher(content);
+			content = m.replaceAll("&");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return content;
 	}
 }

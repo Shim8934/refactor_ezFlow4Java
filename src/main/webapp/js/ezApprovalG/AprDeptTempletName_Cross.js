@@ -52,7 +52,7 @@ function AprDeptTempletNameCheck(p_AprDeptTempletName)
 	{
 		//var pAlertContent = strLang232 + "<br> " + strLang233;
 		//OpenAlertUI(pAlertContent);
-		alert(strLang232 + "\r\n" + strLang233);
+		showAlert(strLang232 + "\r\n" + strLang233);
 	    TxtAprDeptTempletName.value = "";
 		TxtAprDeptTempletName.focus();  
 	}
@@ -68,26 +68,26 @@ function AprDeptTempletNameCheck(p_AprDeptTempletName)
 	}
 }
 
-var ezapralert_cross_dialogArguments = new Array();
-function OpenAlertUI(pAlertContent, CompleteFunction) {
-    var parameter = pAlertContent;
-    var url = "/ezApprovalG/ezAprAlert.do";
-
-    if (CrossYN()) {
-        ezapralert_cross_dialogArguments[0] = parameter;
-        if (CompleteFunction != undefined)
-            ezapralert_cross_dialogArguments[1] = CompleteFunction;
-        else
-            ezapralert_cross_dialogArguments[1] = OpenAlertUI_Complete;
-        DivPopUpShow(330, 205, url);
-    }
-    else {
-        var feature = "status:no;dialogWidth:330px;dialogHeight:205px;help:no;scroll:no;edge:sunken";
-        feature = feature + GetShowModalPosition(330, 205);
-        var RtnVal = window.showModalDialog(url, parameter, feature);
-    }
-}
-
-function OpenAlertUI_Complete() {
-    DivPopUpHidden();
-}
+// var ezapralert_cross_dialogArguments = new Array();
+// function OpenAlertUI(pAlertContent, CompleteFunction) {
+//     var parameter = pAlertContent;
+//     var url = "/ezApprovalG/ezAprAlert.do";
+//
+//     if (CrossYN()) {
+//         ezapralert_cross_dialogArguments[0] = parameter;
+//         if (CompleteFunction != undefined)
+//             ezapralert_cross_dialogArguments[1] = CompleteFunction;
+//         else
+//             ezapralert_cross_dialogArguments[1] = OpenAlertUI_Complete;
+//         DivPopUpShow(330, 205, url);
+//     }
+//     else {
+//         var feature = "status:no;dialogWidth:330px;dialogHeight:205px;help:no;scroll:no;edge:sunken";
+//         feature = feature + GetShowModalPosition(330, 205);
+//         var RtnVal = window.showModalDialog(url, parameter, feature);
+//     }
+// }
+//
+// function OpenAlertUI_Complete() {
+//     DivPopUpHidden();
+// }

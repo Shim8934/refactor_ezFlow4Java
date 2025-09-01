@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="ezTeams">
+
+    <typeAlias alias="TeamsPresenceVO" type="egovframework.ezEKP.ezTeams.vo.TeamsPresenceVO"/>
+
+    <resultMap id="teamsPresence" class="TeamsPresenceVO">
+        <result property="cn"               column="cn"/>
+        <result property="presence"         column="presence"/>
+        <result property="upnname"          column="upnname"/>
+        <result property="teamsid"          column="teamsid"/>
+    </resultMap>
+    
+    <select id="EzTeamsDAO.getPresenceList" parameterClass="list" resultMap="teamsPresence">
+        SELECT
+            B.PRESENCE as presence,
+            A.CN as cn,
+            A.UPNNAME as upnname,
+            A.TEAMSID as teamsid
+        FROM TBL_USERMASTER A
+        INNER JOIN TBL_USERPRESENCE B ON A.TEAMSID = B.ID
+        WHERE A.CN IN
+        <iterate open="(" close=")" conjunction=",">
+            #[]#
+        </iterate>
+    </select>
+
+    <select id="EzTeamsDAO.getToken" parameterClass="Map" resultClass="String">
+        SELECT AUTHTOKEN
+        FROM (
+                 SELECT AUTHTOKEN
+                 FROM TBL_AUTHTOKEN
+                 WHERE APITYPE = #APITYPE#
+                 AND TOKENTYPE = #TOKENTYPE#
+                 ORDER BY UPDATEDATE DESC
+             )
+        WHERE ROWNUM = 1
+    </select>
+
+    <select id="EzTeamsDAO.getTeamsIdList" resultClass="String">
+        SELECT TEAMSID
+        FROM TBL_USERMASTER
+        WHERE TEAMSID IS NOT NULL AND TEAMSID != ''
+    </select>
+
+    <update id="EzTeamsDAO.updatePresenceStatus" parameterClass="map">
+        UPDATE TBL_USERPRESENCE
+        SET PRESENCE = #presence#,
+            UPDATETIME = #updateTime#
+        WHERE ID = #id#
+    </update>
+
+    <insert id="EzTeamsDAO.insertPresenceStatus" parameterClass="map">
+        INSERT INTO TBL_USERPRESENCE (ID, PRESENCE, UPDATETIME)
+        VALUES (#id#, #presence#, #updateTime#)
+    </insert>
+
+    <select id="EzTeamsDAO.checkAuthToken" parameterClass="map" resultClass="int">
+        SELECT COUNT(*) FROM TBL_AUTHTOKEN WHERE APITYPE = #APITYPE# AND TOKENTYPE = #TOKENTYPE#
+    </select>
+
+    <insert id="EzTeamsDAO.insertAuthToken" parameterClass="map">
+        INSERT INTO TBL_AUTHTOKEN (APITYPE, TOKENTYPE, AUTHTOKEN, UPDATEDATE)
+        VALUES (#APITYPE#, #TOKENTYPE#, #TOKEN#, SYSDATE)
+    </insert>
+
+    <update id="EzTeamsDAO.updateAuthToken" parameterClass="map">
+        UPDATE TBL_AUTHTOKEN
+        SET AUTHTOKEN = #TOKEN#, UPDATEDATE = SYSDATE
+        WHERE APITYPE = #APITYPE#
+        AND TOKENTYPE = #TOKENTYPE#    
+    </update>
+    
+</sqlMap>

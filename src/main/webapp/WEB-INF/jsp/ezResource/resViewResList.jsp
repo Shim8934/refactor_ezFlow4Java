@@ -346,7 +346,7 @@
 		    function btnCcalendar_Click() {
 		        var strUrl = "/ezResource/viewResList2.do?brdID=" + pBrdid + "&accessCode=" + pAccessCode;
 		        strUrl = strUrl + "&brdNm=" + encodeURIComponent(pBrdnm);
-		        window.open(strUrl, 'right');
+                parent.document.querySelector("iframe[name=right]").src = strUrl;
 		    }
 		    
 		    //2018-09-03 김보미 - 페이징 하단에 나타나도록 조정
@@ -521,6 +521,8 @@
 	    			<%-- <th style="width:120px"> <spring:message code='ezResource.t366' /></th> --%>
 	    			<th style="width:100px"> <spring:message code='ezResource.t106' /></th>
 	    			<%-- <th style="width:100px"> <spring:message code='ezResource.t37' /></th> --%>
+	    			<th style="width:120px"> <spring:message code="ezResource.max.ygs01" /></th>
+	    			<th style="width:120px"> <spring:message code="ezResource.max.ygs02" /></th>
 	    			<th style="width:120px"> <spring:message code='ezResource.t367' /></th>
 	    			<th style="width:120px"> <spring:message code='ezPersonal.t1024' /></th>
 	    			<th style="width:150px;"> <spring:message code='ezResource.t148' /></th>	    			
@@ -557,6 +559,8 @@
 								</c:if>
 							</td>
 							<%-- <td id="OwnerPosition" style="word-wrap:break-word;">${list.ownerPosition}</td> --%>
+							<td id="ResMaxDate" style="word-wrap:break-word;"><c:out value="${list.resMaxDate}"/><c:if test="${not empty list.resMaxDate}"><spring:message code="ezResource.max.ygs04" /></c:if></td> <!-- 2024-09-02 최대 예약 가능 기간 추가 -->
+							<td id="ResMaxUserCnt" style="word-wrap:break-word;"><c:out value="${list.resMaxUserCnt}"/><spring:message code="ezResource.max.ygs03" /></td> <!-- 2024-09-02 정원 추가 -->	
 							<td id="OwnerCall" style="word-wrap:break-word;">${list.ownerCall} </td>			
 							<td id="makeDate" style="word-wrap:break-word;">${list.makeDate} </td>		
 							<td id="ResLocation" style="word-wrap:break-word;"><c:out value='${list.resLocation}'/></td>				<!-- 2018-07-13 김민성 - 테이블 형식에서는 정보 모두 출력하도록 변경 -->
@@ -565,7 +569,7 @@
 				</c:if>
 				<c:if test="${empty resBrdList}">
 					<tr>
-	    				<td colspan="6" style="text-align: center"><spring:message code='main.t00026' /></td>
+	    				<td colspan="8" style="text-align: center"><spring:message code='main.t00026' /></td>
 	    			</tr>
 				</c:if>
 			</table>

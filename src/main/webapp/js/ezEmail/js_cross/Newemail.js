@@ -1,4 +1,4 @@
-﻿﻿var PreviewH_Move = false;
+﻿var PreviewH_Move = false;
 var minimumWidth = 890;
 function PreviewH_onMouserDown(e) {
     curevent = (typeof event == 'undefined' ? e : event)
@@ -636,6 +636,20 @@ function move_mail_onclick_Complete(moveUrl) {
         } catch (e) {console.log(e);}
         
         MailListRefresh();
+    } else if (moveUrl['cmd'] === 'KEEP_MOVE') {
+        let itemId = "";
+        for (let i = 0; i < listContentArry.length; i++) {
+            itemId += document.getElementById(listContentArry[i]).getAttribute("_href") + ",";
+        }
+        for (let i = 0; i < listSubContentArry.length; i++) {
+            itemId += document.getElementById(listSubContentArry[i]).getAttribute("_href") + ",";
+        }
+
+        if (isOnlyFixingId) {
+            itemId = currentFixingIdTemp.getAttribute("_href") + ",";
+        }
+
+        keepMove(itemId, moveUrl["url"]);
     }
 }
 var xmlhttp_mailCopy;
@@ -730,6 +744,110 @@ function event_xmlhttp_mailMoveDelete_Complete() {
         prevShow_Clear();
     }
 }
+
+var mailKeepMoveDialogArguments = {};
+
+function keepMove(itemIDs, copyFolderID) {
+    if (copyFolderID === "Sent") {
+        alert(strLangKeepMoveCantUseSentBox);
+        return;
+    }
+
+    mailKeepMoveDialogArguments.okHandler = keepMoveOkHandler;
+    mailKeepMoveDialogArguments.mailUids = itemIDs;
+    mailKeepMoveDialogArguments.targetFolderId = copyFolderID;
+    let url = '/ezEmail/mailKeepMove.do?folderId=' + encodeURIComponent(copyFolderID);
+
+    if (shareId) {
+        url += '&shareId=' + encodeURIComponent(shareId);
+    }
+
+    const openWindow = window.open(url, 'mail_keepmove', GetOpenWindowfeature(500, 220));
+    try { openWindow.focus(); } catch (e) {console.log(e);}
+}
+
+function keepMoveOkHandler(/** @type boolean*/cleanup) {
+    $.ajax({
+        method: 'post',
+        url: '/ezEmail/mailKeepMove.do',
+        data: {
+            mailUids: mailKeepMoveDialogArguments.mailUids.split(','),
+            targetFolderPath: mailKeepMoveDialogArguments.targetFolderId,
+            cleanup,
+            shareId
+        },
+        success: function (result) {
+            if (result.status === 'ok') {
+                startKeepMoveTimer(result.data);
+            } else {
+                alert(strLang321 + '\n' + Date.now());
+            }
+        },
+        error: function() {
+            alert(strLang321 + '\n' + Date.now());
+        }
+    });
+}
+
+let keepMoveTimerId;
+
+function clearKeepMoveTimer() {
+    if (keepMoveTimerId) {
+        psSetTimeFlag = false;
+        HiddenMailProgressNew();
+        clearTimeout(keepMoveTimerId);
+        keepMoveTimerId = null;
+    }
+}
+
+function startKeepMoveTimer(userKey) {
+    psSetTimeFlag = true;
+    ShowMailProgressNew();
+    keepMoveTimerId = setTimeout(function callAjax()  {
+        $.ajax({
+            type : "POST",
+            url : "/ezEmail/getMailboxProgress.do",
+            data : { userKey },
+            dataType : "json",
+            success : function(data) {
+                // -1 전처리
+                // 0 진행 중
+                // 100 성공
+                // -100 실패: From 헤더 없음
+                // -200 실패: 자동분류 추가 실패(jgw)
+                // -300 실패: 알 수 없는 오류
+                switch (data.progress) {
+                    case 100:
+                        ShowPercent(100);
+                        setTimeout(() => {
+                            clearKeepMoveTimer();
+                            prevShow_Clear();
+                            MailListRefresh();
+                            alert(strLang359);
+                        }, 20);
+                        break;
+                    case -100:
+                        alert(strLangKeepMoveNoFromHeader);
+                        clearKeepMoveTimer();
+                        break;
+                    case -200:
+                    case -300:
+                        alert(`${strLang321}\n${Date.now()}\n${data.progress}`);
+                        clearKeepMoveTimer();
+                        break;
+                    default:
+                        if (data.progress > -1) {
+                            ShowPercent(data.progress);
+                        }
+                        keepMoveTimerId = setTimeout(callAjax, 1000);
+                }
+            }, error : function(e) {
+                alert("error. " + e.status);
+            }
+        });
+    }, 500);
+}
+
 function refreshUnreadCount() {
     try {
         if (typeof (window.parent.frames.left) != "undefined")
@@ -737,6 +855,13 @@ function refreshUnreadCount() {
     } catch (e) {console.log(e);}
 }
 function deleteWork(bDel) {
+    
+    if (['pre_h_tag_add', 'pre_w_tag_add'].some(id => {
+        var el = document.getElementById(id);
+        return el && document.activeElement === el;
+    })) return;
+
+
     if (listContentArry.length == 0 && listSubContentArry.length == 0) {
         alert(strLang42);
         return;
@@ -786,7 +911,12 @@ function deleteWork(bDel) {
     for (var i = 0; i < listSubContentArry.length; i++) {
         szItemID += document.getElementById(listSubContentArry[i]).getAttribute("_href") + ",";
     }
-    Mail_MoveDeletePostSend(cmd, "", szItemID)
+    Mail_MoveDeletePostSend(cmd, "", szItemID);
+    
+    try {
+        if (document.getElementById("HeaderAllCheckBox") != null)
+            document.getElementById("HeaderAllCheckBox").checked = false;
+    } catch (e) {console.log(e);}
 }
 
 function deleteUnreadWork() {
@@ -1181,15 +1311,15 @@ function event_xmlhttp_mailPreview_Complete() {
                     var pReceiver_Address = TrimText(pReceiver_.substring(Pos1 + 1, Pos2));
                     
                     if (Cnt == 0) {
-                        pReceiverHtml = "<span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='#666'  style='cursor:pointer' title='" + ConvertStringForHTML(pReceiver_Address) + "' onclick='show_personinfo(\"" + pReceiver_Address + "\")'>\"" + pReceiver_Name + "\"</span>";
+                        pReceiverHtml = "<span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='#666'  style='cursor:pointer' title='" + ConvertStringForHTML(pReceiver_Address) + "' onclick='show_personinfo(\"" + pReceiver_Address + "\")'>\"" + pReceiver_Name  + " &lt;" + pReceiver_Address + "&gt;" + "\"</span>";
                         
                     }
 
                     if (pReceiverDetailHtml != "")
                         pReceiverDetailHtml += "&nbsp;,&nbsp;";
-                    pReceiverDetailHtml += "<span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='#666'  style='cursor:pointer' title='" + ConvertStringForHTML(pReceiver_Address) + "' onclick='show_personinfo(\"" + pReceiver_Address + "\")'>\"" + pReceiver_Name + "\"</span>";
+                    pReceiverDetailHtml += "<span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='#666'  style='cursor:pointer' title='" + ConvertStringForHTML(pReceiver_Address) + "' onclick='show_personinfo(\"" + pReceiver_Address + "\")'>\"" + pReceiver_Name + " &lt;" + pReceiver_Address + "&gt;" + "\"</span>";
                     if (g_useremail == pReceiver_Address) {
-                        pReceiverHtml = "<span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='#666'  style='cursor:pointer' title='" + ConvertStringForHTML(pReceiver_Address) + "' onclick='show_personinfo(\"" + pReceiver_Address + "\")'>\"" + pReceiver_Name + "\"</span>";
+                        pReceiverHtml = "<span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='#666'  style='cursor:pointer' title='" + ConvertStringForHTML(pReceiver_Address) + "' onclick='show_personinfo(\"" + pReceiver_Address + "\")'>\"" + pReceiver_Name + " &lt;" + pReceiver_Address + "&gt;" + "\"</span>";
                     }
 
                     pReceiverCnt++;
@@ -1287,7 +1417,7 @@ function event_xmlhttp_mailPreview_Complete() {
             if(pFromname == ""){
             	pMailSenderHtml = pOCS + "<span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='#666'  style='cursor:pointer' title='" + ConvertStringForHTML(pFromemail) + "' onclick='show_personinfo(\"" + pFromemail + "\")'>&nbsp;</span>";
             } else {
-            	pMailSenderHtml = pOCS + "<span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='#666'  style='cursor:pointer' title='" + ConvertStringForHTML(pFromemail) + "' onclick='show_personinfo(\"" + pFromemail + "\")'>\"" + pFromname + "\"</span>";
+            	pMailSenderHtml = pOCS + "<span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='#666'  style='cursor:pointer' title='" + ConvertStringForHTML(pFromemail) + "' onclick='show_personinfo(\"" + pFromemail + "\")'>\"" + pFromname + " &lt;" + pFromemail + "&gt;" + "\"</span>";
             	
             	if (useCountryIP == "YES" ) {
             		pMailSenderHtml += "<span title=" + pCountryName + ">"
@@ -2091,7 +2221,33 @@ function searchedMailExportZip() {
  
  	ShowMailProgressNew();
 	ShowPercent(0);
-	mailboxProgressFun(true, socketUserkey);
+	mailboxProgressFun(true, socketUserkey, (progress, state, stateDescription) => {
+        if (!state) {
+            return;
+        }
+
+        if (state === "CANCEL") {
+            HiddenMailProgress();
+            mailboxProgressFun(false);
+            return;
+        }
+
+        if (state === "SUCCESS") {
+            var fullpath = "/ezEmail/downloadMailZip.do?temp=" + stateDescription + "&encryptPw=" + "";
+
+            if (typeof(shareId) != "undefined" && shareId != "") {
+                fullpath += "&shareId=" + encodeURIComponent(shareId);
+            }
+
+            AttachDownFrame.location.href = fullpath;
+            AttachDownFrame.target = "_blank";
+        } else {
+            alert(strLang104);
+        }
+
+        HiddenMailProgressNew();
+        mailboxProgressFun(false);
+    });
       
 	$.ajax({
 		cache: false,
@@ -2099,31 +2255,8 @@ function searchedMailExportZip() {
 		url: _url,
 		data: JSON.stringify(jsonData),
 		contentType : "application/json",
-		complete: function(){
-			HiddenMailProgress();
-		},
-		success: function(result){
-			if (result == "CANCEL") {
-				console.log('User Cancel');
-			} else if (result != "") {
-				var fullpath = "/ezEmail/downloadMailZip.do?temp=" + result + "&encryptPw=" + "";
-				
-				if (typeof(shareId) != "undefined" && shareId != "") {
-					fullpath += "&shareId=" + encodeURIComponent(shareId);
-		    	}
-
-				AttachDownFrame.location.href = fullpath;
-				AttachDownFrame.target = "_blank";
-			} else {
-				alert(strLang104);
-			}
-		},
 		error: function() {
 			alert(strLang321);
-		},
-		complete : function() {
-        	HiddenMailProgressNew();
-            mailboxProgressFun(false); // progress percent
 		}
 	});
 
@@ -2507,6 +2640,11 @@ function MailOptionHiddenOutside(e) {
     if (!clickedElementClass.includes('input_select_arrow')) {
         hiddenMoreMenu();
     }
+
+    let usingMailPreview = document.getElementById("iFramePanel_mail_preview").className.includes('on');
+    if (usingMailPreview) {
+        hiddenPreviewMail();
+    }
 }
 function mailOpenPopup(btn, event) {
 	event.stopPropagation();
@@ -2588,4 +2726,10 @@ function hiddenMoreMenu() {
             document.getElementById("input_wrap"+pageType).classList.remove("on");
         }
     }
+}
+
+function hiddenPreviewMail() {
+    document.getElementById("iFramePanel_mail_preview").style.display = "none";
+    document.getElementById("iFramePanel_mail_preview").classList.remove("on");
+    document.getElementById("mail_preview_Layer").src = "/blank.htm";
 }

@@ -204,6 +204,8 @@ function move_onclick_Complete(moveUrl) {
     }
     else if (moveUrl["cmd"] == "COPY") {
     	CopyOrMoveMail(moveUrl["cmd"], g_paramURL, moveUrl["url"]);
+    } else if (moveUrl["cmd"] === "KEEP_MOVE") {
+        keepMove(g_paramURL, moveUrl["url"]);
     }
     
     usedMoveDel = "1";
@@ -419,6 +421,57 @@ function event_CopyOrMoveMail() {
             g_copyItemHttp = null;
         }
     }
+}
+
+var mailKeepMoveDialogArguments = {};
+function keepMove(itemIDs, copyFolderID) {
+    if (copyFolderID === "Sent") {
+        alert(strLangKeepMoveCantUseSentBox);
+        return;
+    }
+
+    mailKeepMoveDialogArguments.okHandler = keepMoveOkHandler;
+    mailKeepMoveDialogArguments.cancelHandler = function () {
+        DivPopUpHiddenReadMail();
+        document.getElementById("iFrameLayer").src = "about:blank";
+    };
+    mailKeepMoveDialogArguments.mailUids = itemIDs;
+    mailKeepMoveDialogArguments.targetFolderId = copyFolderID;
+    let url = '/ezEmail/mailKeepMove.do?folderId=' + encodeURIComponent(copyFolderID);
+
+    if (shareId) {
+        url += '&shareId=' + encodeURIComponent(shareId);
+    }
+
+    DivPopUpHiddenReadMail();
+    document.getElementById("iFrameLayer").src = "about:blank";
+    setTimeout(function() {
+        DivPopUpShow(450, 220, url);
+    }, 0);
+}
+
+function keepMoveOkHandler(/** @type boolean*/cleanup) {
+    $.ajax({
+        method: 'post',
+        url: '/ezEmail/mailKeepMove.do',
+        data: {
+            mailUids: mailKeepMoveDialogArguments.mailUids.split(','),
+            targetFolderPath: mailKeepMoveDialogArguments.targetFolderId,
+            cleanup,
+            shareId
+        },
+        success: function (result) {
+            if (result.status === 'ok') {
+                opener.startKeepMoveTimer(result.data);
+                window.close();
+            } else {
+                alert(strLang321 + '\n' + Date.now());
+            }
+        },
+        error: function() {
+            alert(strLang321 + '\n' + Date.now());
+        }
+    });
 }
 
 function download_mail() {
@@ -1228,6 +1281,22 @@ function item_ViewPhoto_New_Community(pBoardID, pItemID, pCommunityID) {
 		else
 			window.open("/ezCommunity/boardItemViewPhoto.do?itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pBoardID) + "&code=" + encodeURIComponent(pCommunityID), "", "height=721,width=750, status = no, toolbar=no, menubar=no, location=no, resizable=1, top=0, left=0", "");
 	}
+}
+
+/* 커뮤니티 초대알림 메일 */
+function invite_Community(pCommunityID) {
+    var pheigth = window.screen.availHeight;
+    var pwidth = window.screen.availWidth;
+    pheigth = parseInt(pheigth) / 2;
+    pwidth = parseInt(pwidth) / 2;
+    pheigth = pheigth - 284;
+    pwidth = pwidth - 359;
+
+    if (CrossYN())
+        window.open("/ezCommunity/commHome/popupCommHome.do?code=" + encodeURIComponent(pCommunityID) + "&userLevel=0&inviteFlag=true", "", "height=900,width=1300, status = no, toolbar=no, scrollbars=1, menubar=no, location=no, resizable=1, top=0, left=0", "");
+    else
+        window.open("/ezCommunity/commHome/popupCommHome.do?code=" + encodeURIComponent(pCommunityID) + "&userLevel=0&inviteFlag=true", "", "height=900,width=1300, status = no, toolbar=no, menubar=no, location=no, resizable=1, top=0, left=0", "");
+
 }
 
 // 결재 보기

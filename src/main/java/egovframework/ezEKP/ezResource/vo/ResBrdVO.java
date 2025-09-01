@@ -53,7 +53,29 @@ public class ResBrdVO {
 	private String rsPortletStratAllTime;
 	/** 자원관리 시작날짜 */
 	private String rsPortletEndAllTime;
+	/** 최대 예약 가능 기간 **/
+	private String resMaxDate;
+	/** 정원 **/
+	private String resMaxUserCnt;
 	
+	public String getResMaxUserCnt() {
+		if (resMaxUserCnt == null || resMaxUserCnt.isEmpty()) {
+			return "0";
+		}
+		return resMaxUserCnt;
+	}
+	public void setResMaxUserCnt(String resMaxUserCnt) {
+		this.resMaxUserCnt = resMaxUserCnt;
+	}
+	public String getResMaxDate() {
+		if (resMaxDate == null || resMaxDate.equals("0") || resMaxDate.isEmpty()) {
+			return "-";
+		}
+		return resMaxDate;
+	}
+	public void setResMaxDate(String resMaxDate) {
+		this.resMaxDate = resMaxDate;
+	}
 	public String getRsPortletTime() {
 		return rsPortletTime;
 	}

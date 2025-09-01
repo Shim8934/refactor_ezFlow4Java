@@ -219,7 +219,7 @@ var strLang600 = "n.tháng";
 var strLang601 = "đóng";
 var strLang602 = "vi";
 var strLang603 = "Tối đa năm danh sách tài nguyên có thể được đăng ký.";
-var strLangLHM01 = "default_vi";
+var strLangLHM01 = "default";
 var strLangLHM02 = "Xem trước khi in";
 var strLangLHM03 = "In";
 var strLangLHM04 = "Hủy bỏ";
@@ -295,6 +295,3 @@ var strLangMaxYGS01 = "최대 예약 가능 기간을 초과하였습니다.";
 var strLangMaxYGS02 = "정원";
 var strLangMaxYGS03 = "명";
 var strLangMaxYGS04 = "정원을 입력하세요.";
-
-// 2025-05-07 이혜림 - 자원등록 > 최대 예약 가능 기간 제한
-var strLangLHR01 = "최대 예약 가능 기간은 1부터 입력할 수 있습니다.";

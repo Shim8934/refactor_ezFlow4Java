@@ -56,6 +56,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.google.gson.JsonElement;
 
 import egovframework.let.utl.fcc.service.EzFAL;
+import egovframework.ezEKP.ezAI.util.AICommonUtil;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.io.IOUtils;
@@ -86,7 +87,7 @@ import com.sun.mail.imap.AppendUID;
 import com.sun.mail.imap.IMAPFolder;
 
 import egovframework.com.cmm.EgovMessageSource;
-import egovframework.com.cmm.service.EgovFileMngUtil;
+import egovframework.com.cmm.service.EzFileMngUtil;
 import egovframework.com.cmm.service.Globals;
 import egovframework.ezEKP.ezCabinet.service.EzCabinetAdminService;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
@@ -122,12 +123,15 @@ import egovframework.let.utl.sim.service.EgovFileScrty;
  */
 
 @Controller
-public class EzEmailMailReadController extends EgovFileMngUtil {
+public class EzEmailMailReadController extends EzFileMngUtil {
 
 	private static final Logger logger = LoggerFactory.getLogger(EzEmailMailReadController.class);
 
 	@Autowired
 	private CommonUtil commonUtil;
+	
+	@Autowired
+	private AICommonUtil aICommonUtil;
 
 	@Autowired
 	private Properties config;
@@ -1984,6 +1988,18 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
         // 20181219 김수아 : 첨부파일 이미지 미리보기 사용자 컨피그
         MailGeneralVO mailGeneralVO = ezEmailService.getMailGeneral(userInfo.getTenantId(), userInfo.getId()).get(0);
         String previewMailImage = mailGeneralVO.getPreviewMailImage() == null ? "Y" : mailGeneralVO.getPreviewMailImage();
+		// AI 첨부파일 이름 최대 길이 - 기존 메일과 동일한 값 사용
+		String attachFileNameMaxLength = ezCommonService.getTenantConfig("attachFileNameMaxLength", userInfo.getTenantId());
+		// AI 사용여부 확인
+		boolean useAI = aICommonUtil.checkUseAI(userInfo.getTenantId());
+		// AI 챗봇 첨부파일 최대용량
+		String aiAttachMBSize = ezCommonService.getTenantConfig("aiAttachMBSize", userInfo.getTenantId());
+
+		model.addAttribute("moduleType", "mail"); // ezAI api 타입
+		model.addAttribute("moduleSubType", "read");
+		model.addAttribute("useAI", useAI);
+		model.addAttribute("attachFileNameMaxLength", attachFileNameMaxLength);
+		model.addAttribute("aiAttachMBSize", aiAttachMBSize);
         
         model.addAttribute("htmlBody", htmlBody);
 		model.addAttribute("pAttachListHtml", bodyInfoList.get(1));
@@ -2422,6 +2438,20 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		
 		return newBodyPart;
 	}
+
+	private byte[] readPartContentAsBytes(Part part) throws Exception {
+		try (InputStream is = part.getInputStream();
+			 ByteArrayOutputStream buffer = new ByteArrayOutputStream()) {
+
+			byte[] tmp = new byte[128];
+			int bytesRead;
+			if ((bytesRead = is.read(tmp)) != -1) {
+				buffer.write(tmp, 0, bytesRead);
+			}
+			
+			return buffer.toByteArray();
+		}
+	}
 	
 	/**
 	 * 메일 첨부파일 다운로드 실행 함수
@@ -2555,7 +2585,17 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 								// 자동으로 수행됨.
 								// ezEKP-docs/eml/base64로 인코딩된 eml 첨부파일.eml 참고
 								if ("base64".equalsIgnoreCase(contentTransferEncoding)) {
-									part = getBodyPartWithNewContentType(part, partContentType);
+									// Part의 Content는 실제 base64로 인코딩되어 있지 않으나 Content-Transfer-Encoding이
+									// base64인 경우가 있어 base64 디코딩이 자동으로 수행돼 첨부 eml 파일이 깨진 상태로 다운로드되는 현상이 있어
+									// 실제 base64 인코딩 여부를 체크하도록 수정함
+									byte[] temp = readPartContentAsBytes(part);
+									boolean isBase64 = Base64.isBase64(temp);
+									
+									logger.debug("isBase64={},temp={}", isBase64, new String(temp));
+									
+									if (isBase64) {
+										part = getBodyPartWithNewContentType(part, partContentType);
+									}
 								}
 							}
 						}
@@ -2666,7 +2706,15 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 			
 		try {
 			// get fileId with extension
-			fileId = fileId.substring(0, 36);
+			if (fileId.length() < 36) {
+				if (fileId.toLowerCase().endsWith(".zip.zip")) {
+					fileId = fileId.substring(0, fileId.length() - ".zip.zip".length());
+				} else {
+					fileId = fileId.substring(0, fileId.length() - ".zip".length());
+				}
+			} else {
+				fileId = fileId.substring(0, 36);
+			}
 			EzFAL.EzFile directory = new EzFAL.EzFile(realFilePath);
 			EzFAL.EzFile[] files = directory.listFiles((FileFilter) new PrefixFileFilter(fileId));
 			
@@ -3938,6 +3986,20 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
         	previewImageListHtml = bodyInfoList.get(5);
         	isIcalMail = bodyInfoList.get(6);
         }
+
+		// AI 첨부파일 이름 최대 길이 - 기존 메일과 동일한 값 사용
+		String attachFileNameMaxLength = ezCommonService.getTenantConfig("attachFileNameMaxLength", userInfo.getTenantId());
+		// AI 사용여부 확인
+		boolean useAI = aICommonUtil.checkUseAI(userInfo.getTenantId());
+		// AI 챗봇 첨부파일 최대용량
+		String aiAttachMBSize = aICommonUtil.getAIAttachSize(userInfo.getTenantId());
+
+		model.addAttribute("moduleType", "mail"); // ezAI api 타입
+		model.addAttribute("moduleSubType", "preview");
+		model.addAttribute("useAI", useAI);
+		model.addAttribute("attachFileNameMaxLength", attachFileNameMaxLength);
+		model.addAttribute("aiAttachMBSize", aiAttachMBSize);
+		model.addAttribute("aiAttachMBSize", "mail");
 
 		model.addAttribute("url", url);
 		model.addAttribute("htmlBody", htmlBody);
@@ -5790,11 +5852,11 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		
 		if (isSecureMail) {
 			returnValue = "<span title='" + (address == null? "" : EgovStringUtil.getSpclStrCnvr(address)) + "'>"
-					+ (name == null ? "" : name) + "</span>";
+					+ (name == null ? "" : name) + " &lt;" + (address == null ? "" : address) + "&gt;" + "</span>";
 		} else {
 			returnValue = "<span style='cursor:pointer' title='" + (address == null? "" : EgovStringUtil.getSpclStrCnvr(address))
 					+ "' onclick='show_personinfo(\"" + address + "\")'>"
-					+ (name == null ? "" : name) + "</span>";
+					+ (name == null ? "" : name) + " &lt;" + (address == null ? "" : address) + "&gt;" + "</span>";
 		}
 		
 		return returnValue;

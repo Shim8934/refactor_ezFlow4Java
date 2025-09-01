@@ -20,6 +20,8 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import egovframework.let.utl.rest.JgwResult;
+import egovframework.let.utl.rest.Rest;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFFont;
@@ -58,6 +60,7 @@ import org.w3c.dom.NodeList;
 
 import com.google.gson.JsonObject;
 
+import egovframework.ezEKP.ezSystem.service.EzSystemAdminService;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.Globals;
 import egovframework.ezEKP.ezAddress.service.EzAddressService;
@@ -104,6 +107,12 @@ public class EzEmailAdminController {
 	@Autowired
 	private Properties config;
 
+	@Resource(name="EzSystemAdminService")
+	private EzSystemAdminService ezSystemAdminService;
+
+	@Autowired
+	private Rest rest;
+	
 	@Resource(name = "egovMessageSource")
 	private EgovMessageSource egovMessageSource;
 
@@ -2576,6 +2585,16 @@ public class EzEmailAdminController {
 			int rc = ezEmailUserAdminService.addUser(mailAddr, oriPass);
 			logger.debug("addUser rc=" + rc);
 			
+			// [국립암센터] POP3/IMAP 사용 설정
+			String usePOP3Default = ezCommonService.getTenantConfig("usePOP3Default", auth.getTenantId());
+			String useIMAPDefault = ezCommonService.getTenantConfig("useIMAPDefault", auth.getTenantId());
+
+			JgwResult jgwResult = rest.jgw().url("/jMochaEzEmail/setPOP3IMAPConfig")
+					.formParam("user_name", mailAddr)
+					.formParam("usePOP3Default", usePOP3Default)
+					.formParam("useIMAPDefault", useIMAPDefault)
+					.exchangeJgwResult();
+
 			if (rc == 0) { // addUser 성공
 				// 해당 User가 속한 부서의 Group Email 주소에 User를 등록한다.
 				String groupAddr = deptId + "@" + domain;
@@ -3665,6 +3684,8 @@ public class EzEmailAdminController {
 		
 		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", user.getTenantId());
 		boolean useApprMail = commonUtil.checkTenantConfigBool(user.getTenantId(), "useApprMail", "false");
+
+		String UseDisablePopImap = ezCommonService.getTenantConfig("UseDisablePopImap", user.getTenantId());
 		
 		model.addAttribute("dotNetIntegration", dotNetIntegration);
 		model.addAttribute("useLetter", useLetter);
@@ -3674,6 +3695,7 @@ public class EzEmailAdminController {
 		model.addAttribute("kChk", kChk);
 		model.addAttribute("useCopyrightMenu", useCopyrightMenu);
 		model.addAttribute("useApprMail", useApprMail);
+		model.addAttribute("UseDisablePopImap", UseDisablePopImap);
 		
 		return "admin/ezEmail/adminMailLeft";
 	}
@@ -4258,9 +4280,10 @@ public class EzEmailAdminController {
 
 		try {
 			JSONArray array = ezEmailService.getAdminApprMailList(tenantId, companyId, type, userId, lang, pageStartNum, listCount);
-			JSONArray array2 = ezEmailService.setUTCtoUserTime(array, userInfo.getOffset(), tenantId);
+			/*JSONArray array2 = ezEmailService.setUTCtoUserTime(array, userInfo.getOffset(), tenantId);
 			JSONArray array3 = ezEmailService.setHref(array2);
-			resultArry = ezEmailService.setStateByLocale(array3, locale);
+			resultArry = ezEmailService.setStateByLocale(array3, locale);*/
+			resultArry = ezEmailService.formatApprEmail(array, userInfo.getOffset(), tenantId, locale);
 
 			int pageTotalCount = ezEmailService.getAdminApprMailListCount(tenantId, companyId, type2, userId);
 			pageMax = (int) Math.ceil((double) pageTotalCount / listCount);
@@ -4322,9 +4345,10 @@ public class EzEmailAdminController {
 		JSONArray logList = new JSONArray();
 		try {
 			JSONArray array = ezEmailService.getAdminCompApprMailList(tenantId, companyId, type, userId, lang, pageStartNum, listCount);
-			JSONArray array2 = ezEmailService.setUTCtoUserTime(array, offset, tenantId);
+			/*JSONArray array2 = ezEmailService.setUTCtoUserTime(array, offset, tenantId);
 			JSONArray array3 = ezEmailService.setHref(array2);
-			logList = ezEmailService.setStateByLocale(array3, locale);
+			logList = ezEmailService.setStateByLocale(array3, locale);*/
+			logList = ezEmailService.formatApprEmail(array, offset, tenantId, locale);
 
 			pageTotalCount = ezEmailService.getAdminApprMailListCount(tenantId, companyId, type2, userId);
 			pageMax = (int) Math.ceil((double) pageTotalCount / listCount);
@@ -4368,32 +4392,61 @@ public class EzEmailAdminController {
 		// param
 		String[] hrefArray = request.getHrefArray();
 
-		for(String encryptedHref : hrefArray) {
-			// decrypt & mailbox/uid
-			String href = egovFileScrty.decryptAES(encryptedHref);
-			String hrefUserId = href.split("/")[0].replaceFirst("^Sent\\.", "");
-			long uid = Long.parseLong(href.split("/")[1]);
-			
-			// 신청자 정보
-			String applicantId = hrefUserId;
-			String applicantEmail = hrefUserId + "@" + domainName;
-			OrganUserVO applicantVO = ezOrganAdminService.getUserInfo(hrefUserId, "1", tenantId);
-			if (applicantVO != null) {
-				applicantId = applicantVO.getCn();
-				applicantEmail = applicantId + "@" + domainName;
+		// 데이터 수집 단계
+		List<Map<String, Object>> approvalDataList = new ArrayList<>();
+
+		try {
+			for(String encryptedHref : hrefArray) {
+				// decrypt & mailbox/uid
+				String href = egovFileScrty.decryptAES(encryptedHref);
+				String hrefUserId = href.split("/")[0].replaceFirst("^Sent\\.", "");
+				long uid = Long.parseLong(href.split("/")[1]);
+
+				// 신청자 정보
+				String applicantId = hrefUserId;
+				String applicantEmail = hrefUserId + "@" + domainName;
+				OrganUserVO applicantVO = ezOrganAdminService.getUserInfo(hrefUserId, "1", tenantId);
+				if (applicantVO != null) {
+					applicantId = applicantVO.getCn();
+					applicantEmail = applicantId + "@" + domainName;
+				}
+
+				logger.debug("apprSetApproval userId={}, href={}, hrefUserId={}, uid={}, applicantId={}, applicantEmail={}",
+						userId, href, hrefUserId, uid, applicantId, applicantEmail);
+				// 데이터 생성
+				Map<String, Object> approvalData = new HashMap<>();
+				approvalData.put("tenantId", tenantId);
+				approvalData.put("companyId", companyId);
+				approvalData.put("uid", uid);
+				approvalData.put("applicantId", applicantId);
+				approvalData.put("applicantEmail", applicantEmail);
+				approvalData.put("state", "pending");
+				approvalData.put("apprMailFlag", "comp");
+
+				approvalDataList.add(approvalData);
 			}
 
-			logger.debug("apprSetApproval userId={}, href={}, hrefUserId={}, uid={}, applicantId={}, applicantEmail={}",
-					userId, href, hrefUserId, uid, applicantId, applicantEmail);
+			// 메일이 대기 상태인지 check
+			int checkMail = ezEmailService.checkApprHistoryMultiple(tenantId, companyId, userId, approvalDataList);
+			if (checkMail > 0) { // 1: 이미 처리된 메일이 있음
+				return "DONE";
+			}
 
-	        int resultInt = ezEmailService.setApprCompMailApproval(loginCookie, applicantEmail, uid);
-	        if (resultInt != 0) {
-	        	errorInt++;
-	        }
-		}
-		
-		if (errorInt > 0) {
-			returnValue = "ERROR_" + errorInt;
+			// 처리 단계
+			for (Map<String, Object> approvalData : approvalDataList) {
+				int resultInt = ezEmailService.setApprCompMailApproval(loginCookie, (String) approvalData.get("applicantEmail"), (Long) approvalData.get("uid"));
+				if (resultInt != 0) {
+					errorInt++;
+				}
+			}
+
+			if (errorInt > 0) {
+				returnValue = "ERROR_" + errorInt;
+			}
+
+		} catch (Exception e) {
+			logger.error("apprSetApproval error", e);
+			returnValue = "Exception";
 		}
         
 		logger.debug("returnValue=" + returnValue);
@@ -4436,33 +4489,62 @@ public class EzEmailAdminController {
 		String[] hrefArray = request.getHrefArray();
 	    String memo = request.getMemo().replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("&", "&amp;");
 
-	    for(String encryptedHref : hrefArray) {
-			// decrypt & mailbox/uid
-			String href = egovFileScrty.decryptAES(encryptedHref);
-			String hrefUserId = href.split("/")[0].replaceFirst("^Sent\\.", "");
-			long uid = Long.parseLong(href.split("/")[1]);
-			
-			// 신청자 정보
-			String applicantId = hrefUserId;
-			String applicantEmail = hrefUserId + "@" + domainName;
-			OrganUserVO applicantVO = ezOrganAdminService.getUserInfo(hrefUserId, "1", tenantId);
-			if (applicantVO != null) {
-				applicantId = applicantVO.getCn();
-				applicantEmail = applicantId + "@" + domainName;
+		// 데이터 수집 단계
+		List<Map<String, Object>> approvalDataList = new ArrayList<>();
+
+		try {
+			for(String encryptedHref : hrefArray) {
+				// decrypt & mailbox/uid
+				String href = egovFileScrty.decryptAES(encryptedHref);
+				String hrefUserId = href.split("/")[0].replaceFirst("^Sent\\.", "");
+				long uid = Long.parseLong(href.split("/")[1]);
+				
+				// 신청자 정보
+				String applicantId = hrefUserId;
+				String applicantEmail = hrefUserId + "@" + domainName;
+				OrganUserVO applicantVO = ezOrganAdminService.getUserInfo(hrefUserId, "1", tenantId);
+				if (applicantVO != null) {
+					applicantId = applicantVO.getCn();
+					applicantEmail = applicantId + "@" + domainName;
+				}
+	
+				logger.debug("apprAllHandsSetReject userId={}, href={}, hrefUserId={}, uid={}, applicantId={}, applicantEmail={}",
+						userId, href, hrefUserId, uid, applicantId, applicantEmail);
+
+				// 데이터 생성
+				Map<String, Object> approvalData = new HashMap<>();
+				approvalData.put("tenantId", tenantId);
+				approvalData.put("companyId", companyId);
+				approvalData.put("uid", uid);
+				approvalData.put("applicantId", applicantId);
+				approvalData.put("applicantEmail", applicantEmail);
+				approvalData.put("state", "pending");
+				approvalData.put("apprMailFlag", "comp");
+
+				approvalDataList.add(approvalData);
 			}
 
-			logger.debug("apprAllHandsSetReject userId={}, href={}, hrefUserId={}, uid={}, applicantId={}, applicantEmail={}",
-					userId, href, hrefUserId, uid, applicantId, applicantEmail);
+			// 메일이 대기 상태인지 check
+			int checkMail = ezEmailService.checkApprHistoryMultiple(tenantId, companyId, userId, approvalDataList);
+			if (checkMail > 0) { // 1: 이미 처리된 메일이 있음
+				return "DONE";
+			}
 
-	        int resultInt = ezEmailService.setApprCompMailReject(loginCookie, applicantEmail, uid, memo);
-	        if (resultInt != 0) {
-	        	errorInt++;
-	        }
-		}
-		
-		if (errorInt > 0) {
-			returnValue = "ERROR_" + errorInt;
-		}
+			// 처리 단계
+			for (Map<String, Object> approvalData : approvalDataList) {
+				int resultInt = ezEmailService.setApprCompMailReject(loginCookie, (String) approvalData.get("applicantEmail"), (Long) approvalData.get("uid"), memo);
+				if (resultInt != 0) {
+					errorInt++;
+				}
+			}
+			
+			if (errorInt > 0) {
+				returnValue = "ERROR_" + errorInt;
+			}
+		} catch (Exception e) {
+			logger.error("apprSetApproval error", e);
+			returnValue = "Exception";
+		}	
         
 		logger.debug("returnValue=" + returnValue);
 		logger.debug("apprAllHandsSetReject ended.");
@@ -4669,7 +4751,7 @@ public class EzEmailAdminController {
 	@ResponseBody
 	public JSONObject apprGetCompleteLogList(@CookieValue("loginCookie")String loginCookie, Model model, HttpServletRequest request) 
 			throws Exception {
-		logger.debug("apprGetCompleteLogList started.");logger.debug("apprAllHandsGetCompleteLogList started.");
+		logger.debug("apprGetCompleteLogList started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 
@@ -4785,5 +4867,72 @@ public class EzEmailAdminController {
 		}
 		
 		logger.debug("apprGetCompleteLogListDownload ended.");
+	}
+	/**
+	 * 메일 POP3/IMAP 설정 화면
+	 */
+	@RequestMapping(value = "/admin/ezEmail/adminConfigPOP3IMAP.do", method = RequestMethod.GET)
+	public String configPOP3IMAP(
+			@CookieValue("loginCookie") String loginCookie, Locale locale,
+			Model model, HttpServletRequest request) throws Exception {
+		logger.debug("configPOP3IMAP started.");
+
+		// 관리자 권한체크
+		LoginVO auth = commonUtil.checkAdmin(loginCookie);
+		if (auth == null) {
+			return "cmm/error/adminDenied";
+		}
+
+		String usePOP3 = ezCommonService.getTenantConfig("usePOP3Default", auth.getTenantId());
+		String useIMAP = ezCommonService.getTenantConfig("useIMAPDefault", auth.getTenantId());
+
+		model.addAttribute("usePOP3", usePOP3);
+		model.addAttribute("useIMAP", useIMAP);
+
+		logger.debug("configPOP3IMAP ended.");
+
+		return "admin/ezEmail/adminConfigPOP3IMAP";
+	}
+
+	/**
+	 * 메일 POP3/IMAP 설정 저장
+	 */
+	@RequestMapping(value = "/admin/ezEmail/saveConfigPOP3IMAP.do", method = RequestMethod.POST)
+	@ResponseBody
+	public JSONObject saveConfigPOP3IMAP (@CookieValue("loginCookie")String loginCookie, Model model, HttpServletRequest request, @RequestBody Map<String, Object> requestBody)
+			throws Exception {
+		logger.debug("saveConfigPOP3IMAP started.");
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+
+		List<Map<String, String>> list = (List<Map<String, String>>) requestBody.get("paramArray");
+
+		boolean pop3AllUser = Boolean.parseBoolean(requestBody.get("pop3AllUser").toString());
+		boolean imapAllUser = Boolean.parseBoolean(requestBody.get("imapAllUser").toString());
+
+		String usePOP3Default = list.get(0).get("value");
+		String useIMAPDefault = list.get(1).get("value");
+		String tenantDomain = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
+
+		JgwResult jgwResult = rest.jgw().url("/jMochaEzEmail/updateAllUserPOP3IMAP")
+				.formParam("usePOP3Default", usePOP3Default)
+				.formParam("useIMAPDefault", useIMAPDefault)
+				.formParam("pop3AllUser", pop3AllUser)
+				.formParam("imapAllUser", imapAllUser)
+				.formParam("tenantDomain", tenantDomain)
+				.exchangeJgwResult();
+
+		ezSystemAdminService.updateSysParam(userInfo.getTenantId(), list, userInfo.getLocale(), userInfo.getCompanyID());
+
+		JSONObject returnData = new JSONObject();
+
+		String result = "OK";
+		if (!jgwResult.succeeded()) {
+			result = "ERROR";
+		}
+		returnData.put("status", result);
+
+		logger.debug("saveConfigPOP3IMAP ended.");
+		return returnData;
 	}
 }

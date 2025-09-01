@@ -18,22 +18,22 @@
 	    var mode = "${mode}";
 	        $(function() {
 	        	if (mode != "mail") {
-	        		window.open("/ezPMS/pmsProjectListMain.do", "right");
+	        		parent.document.querySelector("iframe[name=right]").src = "/ezPMS/pmsProjectListMain.do";
 	        	}
 	    
 	        	$("#pmsSetting").click(function() {
-	        		window.open("/ezPMS/pmsSetting.do", "right");
+	        		parent.document.querySelector("iframe[name=right]").src = "/ezPMS/pmsSetting.do";
 	        	});
 	        	
 	        	/* 2023-06-15 황인경 - 디자인 개선 > 프로젝트 관리 > 좌측메뉴 > 트리구조 메뉴 선택 클래스 제어 */
 	        	$("#myTask").click(function() {
-	        		window.open("/ezPMS/pmsMyTask.do", "right");
+	        		parent.document.querySelector("iframe[name=right]").src = "/ezPMS/pmsMyTask.do";
 	        		$("#projectList").attr("class", "node_normal");
 	        		$("#myTask").attr("class", "node_selected");
 	        	});
 	        	
 	        	$("#projectList").click(function() {
-	        		window.open("/ezPMS/pmsProjectListMain.do", "right");
+	        		parent.document.querySelector("iframe[name=right]").src = "/ezPMS/pmsProjectListMain.do";
 	        		$("#projectList").attr("class", "node_selected");
 	        		$("#myTask").attr("class", "node_normal");
 	        	})

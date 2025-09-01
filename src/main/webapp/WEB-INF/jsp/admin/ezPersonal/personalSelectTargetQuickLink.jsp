@@ -730,12 +730,13 @@
 
 			//사원 리스트 뿌리기
 			var setUserList = function(key, value, deptName) {
-				if(key === undefined && value === undefined && deptName === undefined) {
+				if(key === undefined || value === undefined || deptName === undefined) {
 					key = "DEPARTMENT";
 					var organTree = new TreeView();
 					organTree.LoadFromID("TreeViewList");
 					var nodeIdx = organTree.GetSelectNode();
 					value = nodeIdx.GetNodeData("CN");
+					deptName = nodeIdx.GetNodeData("DISPLAYNAME");
 				}
 
 				var listType = getOrganListType();

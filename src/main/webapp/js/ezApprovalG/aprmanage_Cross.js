@@ -470,7 +470,7 @@ function getReceivedDocList_after(xml) {
         } catch (e) { }
     }
     catch (e) {
-        alert("getReceivedDocList_after" + " " + e.description);
+        showAlert("getReceivedDocList_after" + " " + e.description);
     }
 }
 
@@ -556,7 +556,11 @@ function getSendOutDocList_after(xml) {
 
         chkUrgent();
 
-        setbuttonenable();
+        if (typeof adminSendOutFlag !== 'undefined') {
+            // 관리자 > 전자결재 > 발송현황 > 리스트 상단 버튼 사용X
+        } else {
+            setbuttonenable();
+        }
 
         //검색 후 페이지네이션이 안되는 현상 수정. 2020-12-02 홍대표.
         SearchFlag = false;
@@ -590,7 +594,7 @@ function getSendOutDocList_after(xml) {
         } catch (e) { }
     }
     catch (e) {
-        alert("getSendOutDocList_after" + " " + e.description);
+        showAlert("getSendOutDocList_after" + " " + e.description);
     }
 }
 
@@ -817,7 +821,10 @@ function openUserInfo() {
                 var width = window.screen.availWidth;
                 var left = (width - 500) / 2;
                 var top = (heigth - 400) / 2;
-                window.open("/ezCommon/showPersonInfo.do?id=" + pDeptID + "&dept=" + GetAttribute(tr, "DATA6"), "", "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
+                // window.open("/ezCommon/showPersonInfo.do?id=" + pDeptID + "&dept=" + GetAttribute(tr, "DATA6"), "", "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
+                var url = "/ezCommon/showPersonInfo.do?id=" + pDeptID + "&dept=" + GetAttribute(tr, "DATA6");
+                var feature = "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left;
+                showPopup(url, 420, 450, "", feature, hidePopup);
             }
         }
         else {
@@ -915,7 +922,7 @@ function openDraftUI(pDraftFlag, pCurSelRow,officeFlag) {
     } else {
     	if (useWebHWP == "NO") {
 	    	if (!isIE()) {
-	            alert("한글양식은 IE에서만 기안 할 수 있습니다.");
+	            showAlert("한글양식은 IE에서만 기안 할 수 있습니다.");
 	            return;
 	        } else {
 	        	openLocation = "/ezApprovalG/draftuiHWP.do?formURL=" + encodeURI(pArgument[1]) + "&draftFlag=" + encodeURI(pArgument[2]) + "&formDocType=" + encodeURI(pArgument[3]);
@@ -982,7 +989,7 @@ function openApprovUI(allFlag) {
 	        		openLocation += "&deptID=" + encodeURI(pArgument[3]) + "&allFlag=" + encodeURI(allFlag) + "&docState=" + encodeURI(GetAttribute(tr[0], "DATA12")) + "&mode=" + encodeURI(mode) + "&orgCompanyID=" + orgCompanyID + "&orgDocID=" + encodeURI(GetAttribute(tr[0], "DATA2"));
 	        	} else {
 	        		var pAlertContent = "한글양식은 IE에서만 볼 수 있습니다.";
-	        		alert(pAlertContent);
+	        		showAlert(pAlertContent);
 	                
 	                return;
 	        	}
@@ -1012,7 +1019,7 @@ function openApprovUI(allFlag) {
     }
     else {
         var pAlertContent = strLang870;
-        alert(pAlertContent);
+        showAlert(pAlertContent);
     }
 }
 
@@ -1081,25 +1088,27 @@ function RemoveDoc(pDocID, orgCompanyID) {
     }
 }
 
-var getformcont_cross_dialogArguments = new Array();
-var getformcont_Cross_OpenWin = "";
+// var getformcont_cross_dialogArguments = new Array();
+// var getformcont_Cross_OpenWin = "";
 function openForm() {
     var parameter = new Array();
     parameter[0] = arr_userinfo[4];
     parameter[1] = "000";
     var url = "/ezApprovalG/getFormCont.do";
-    var feature = "status:no;dialogWidth:713px;dialogHeight:570px;edge:sunken;scroll:no";
-    feature = feature + GetShowModalPosition(713, 570);
-
-    getformcont_cross_dialogArguments[0] = parameter;
-    getformcont_cross_dialogArguments[1] = openForm_Complete;
-    getformcont_Cross_OpenWin = window.open(url, "getformcont_Cross", GetOpenWindowfeature(713, 570));
-    
-    try { getformcont_Cross_OpenWin.focus(); } catch (e) { }
+    // var feature = "status:no;dialogWidth:713px;dialogHeight:570px;edge:sunken;scroll:no";
+    // feature = feature + GetShowModalPosition(713, 570);
+    //
+    // getformcont_cross_dialogArguments[0] = parameter;
+    // getformcont_cross_dialogArguments[1] = openForm_Complete;
+    // getformcont_Cross_OpenWin = window.open(url, "getformcont_Cross", GetOpenWindowfeature(713, 570));
+    //
+    // try { getformcont_Cross_OpenWin.focus(); } catch (e) { }
+    ezCommon_cross_dialogArguments[0] = parameter;
+    showPopup(url, 713, 570, "getformcont_Cross", GetOpenWindowfeature(713, 570), openForm_Complete);
 }
 
 function openForm_Complete(ret) {
-    getformcont_Cross_OpenWin.close();
+    hidePopup();
     formURL = ret[0];
     formDocType = ret[1];
     reformflag = ret["reformflag"];
@@ -1165,7 +1174,7 @@ function openViewDocInfo(type) {
 	            	openLocation = "/ezApprovalG/ezViewEnd_HWP.do";
 	            } else {
 	            	var pAlertContent = "한글양식은 IE에서만 볼 수 있습니다.";
-	            	alert(pAlertContent);
+	            	showAlert(pAlertContent);
 	                
 	                return;
 	            }
@@ -1176,7 +1185,7 @@ function openViewDocInfo(type) {
         else {
             openLocation = "/ezApprovalG/contDocView.do";
         }
-        openLocation = openLocation + "?docID=" + encodeURI(DocID) + "&docHref=" + encodeURI(formURL) + "&formID=&orgDocID=&sendType=" + GetAttribute(tr, "DATA5");
+        openLocation = openLocation + "?docID=" + encodeURI(DocID) + "&docHref=" + encodeURI(formURL) + "&formID=" + encodeURI(formID) + "&orgDocID=&sendType=" + GetAttribute(tr, "DATA5");
     }
     else {
     	// 2018.07.06 (KLIB) - ezd 확장자 처리
@@ -1186,7 +1195,7 @@ function openViewDocInfo(type) {
 	            	openLocation = "/ezApprovalG/ezviewAprHWP.do";
 	            } else {
 	            	var pAlertContent = "한글양식은 IE에서만 볼 수 있습니다.";
-	            	alert(pAlertContent);
+	            	showAlert(pAlertContent);
 	                
 	                return;
 	            }
@@ -1255,7 +1264,7 @@ function OpenReceiveDraftUI(pCurSelRow, pDraftFlag) {
             } else {
             	if(useWebHWP == "NO") {
 	                if (/chrome/i.test(navigator.userAgent)) {
-	                     alert(strLang1103);
+	                     showAlert(strLang1103);
 	                     return;
 	            	 } else {
 	            		if (docHref == "hwp" || g_RelayG_Type.toUpperCase() == "HWP") {
@@ -1275,7 +1284,7 @@ function OpenReceiveDraftUI(pCurSelRow, pDraftFlag) {
             if (pURL.substr(pURL.length - 3, pURL.length).toLowerCase() == "hwp") {
             	if(useWebHWP == "NO") {
 	            	if (/chrome/i.test(navigator.userAgent)) {
-	            		alert(strLang1103);
+	            		showAlert(strLang1103);
 	            		return;
 	            	} else {
 	            		openLocation = "/ezApprovalG/ezDeptRecevUI_HWP.do";
@@ -1391,7 +1400,7 @@ function OpenOpinionUI(pSelectedRow, pOpinionFlag) {
         var OpenWin = window.open(url, "AprOpinion_Cross", GetOpenWindowfeature(530, 520));
         try { OpenWin.focus(); } catch (e) { }
     } catch (e) {
-        alert("OpenOpinionUI :: " + e.description);
+        showAlert("OpenOpinionUI :: " + e.description);
     }
 }
 
@@ -1439,7 +1448,7 @@ function openOpinionUI_New(pSelectedRow, pOpinionType) {
 		var OpenWin = window.open(url, "AprOpinion_Cross", GetOpenWindowfeature(530, 520));
         try { OpenWin.focus(); } catch (e) { }
 	} catch (e) {
-		alert("openOpinionUI_New ::: " + e.description);
+		showAlert("openOpinionUI_New ::: " + e.description);
 	}
 }
 function openOpinionUI_New_Complete(ret) {
@@ -1469,7 +1478,7 @@ function openOpinionUI_New_Complete(ret) {
 	        }
 	    }
 	} catch (e) {
-		alert("openOpinionUI_New_Complete ::: " + e.description);
+		showAlert("openOpinionUI_New_Complete ::: " + e.description);
 	}
 }
 
@@ -1507,7 +1516,7 @@ function setHeSongHapyuiDocInfo(pSelectedRow) {
        	 }
        } 
     } catch (e) {
-        alert("setHeSongHapyuiDocInfo :: " + e.description);
+        showAlert("setHeSongHapyuiDocInfo :: " + e.description);
     }
 }
 
@@ -1762,22 +1771,28 @@ function OpenAlertUI(pAlertContent, CompleteFunction, type) {
 
     if (CrossYN()) {
         ezapralert_cross_dialogArguments[0] = parameter;
+        ezCommon_cross_dialogArguments[0] = parameter;
         if (type == undefined && CompleteFunction != undefined) {
             ezapralert_cross_dialogArguments[1] = CompleteFunction;
+            ezCommon_cross_dialogArguments[1] = CompleteFunction;
             DivPopUpShow(330, 205, url);
         }
         else if (type == undefined && CompleteFunction == undefined) {
             ezapralert_cross_dialogArguments[1] = OpenAlertUI_Complete;
+            ezCommon_cross_dialogArguments[1] = OpenAlertUI_Complete;
             DivPopUpShow(330, 205, url);
         }
         else if (type != undefined && CompleteFunction != "") {
             ezapralert_cross_dialogArguments[1] = CompleteFunction;
             ezapralert_cross_dialogArguments[2] = true;
+            ezCommon_cross_dialogArguments[1] = CompleteFunction;
+            ezCommon_cross_dialogArguments[2] = true;
             var OpenWin = window.open(url, "ezAPRALERT_Cross", GetOpenWindowfeature(330, 205));
             try { OpenWin.focus(); } catch (e) { }
         }
         else if (type != undefined && CompleteFunction == "") {
         	ezapralert_cross_dialogArguments[2] = true;
+        	ezCommon_cross_dialogArguments[2] = true;
             var OpenWin = window.open(url, "ezAPRALERT_Cross", GetOpenWindowfeature(330, 205));
             try { OpenWin.focus(); } catch (e) { }
         }
@@ -1867,10 +1882,11 @@ function openwindow(wfileLocation, wName, wWeigth, wHeigth) {
             width = parseInt(width) - 10;
         }
 
-        window.open(wfileLocation, wName, "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=" + heigth + ",width=" + width + ",top=" + top + ",left = " + left);
+        // window.open(wfileLocation, wName, "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=" + heigth + ",width=" + width + ",top=" + top + ",left = " + left);
+        showPopupSlide(wfileLocation, width, heigth, wName, "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=" + heigth + ",width=" + width + ",top=" + top + ",left = " + left, hidePopupSlide);
     }
     catch (e) {
-        alert("openwindow :: " + e.description);
+        showAlert("openwindow :: " + e.description);
     }
 }
 
@@ -1885,7 +1901,7 @@ function openergetDocInfo() {
         else if (pListTypeValue == "4" || pListTypeValue == "5" || pListTypeValue == "97")
             getReceivedDocList();
         else if (pListTypeValue == "7" || pListTypeValue == "8" || pListTypeValue == "9")
-            getSendOutDocList();
+            typeof adminSendOutFlag !== 'undefined' ? getAdminSendOutDocList() : getSendOutDocList();
         else
             getDocList();
 
@@ -1896,7 +1912,7 @@ function openergetDocInfo() {
 			// TODO: handle exception
 		}
     } catch (e) {
-        alert("openergetDocInfo :: " + e.description);
+        showAlert("openergetDocInfo :: " + e.description);
     }
 }
 
@@ -2356,7 +2372,12 @@ function setbuttonenable() {
 		if (approvalFlag == "G") {
 			if((pListTypeValue == "4" || pListTypeValue == "97") && (useHWP == 'YES' || pNonElecRecType.toUpperCase() == "MHT")) {
 				document.getElementById("tbtnNonElecRec").style.display = "";
-			}
+			}else{
+                var ElecElement = document.getElementById("tbtnNonElecRec");
+                if (ElecElement) {
+                    ElecElement.style.display = "none";
+                }
+            }
 		}
         
         //20130311 cpno.64
@@ -2504,6 +2525,12 @@ function setbuttonenable() {
     }
     
     document.getElementById("tSearchCondi").style.display = ""; 
+    
+    if (pListTypeValue == "9" && typeof adminPage !== "undefined") {
+        document.getElementById("tbtnViewDoc").style.display = "none";
+        document.getElementById("tbtnTotalSave").style.display = "none";
+        document.getElementById("tSearchCondi").style.display = "none";
+    }
     return true;
 }
 
@@ -3010,7 +3037,7 @@ function openServerDraftUI(pDraftFlag, pCurSelRow) {
     	if(useWebHWP == "NO") {
 	    	if (!isIE()) {
 	    		//노티문구가 잘못되었음. 아무래도 한글양식은 IE에서만 지원가능합니다 라고 바꿔야할듯
-	            alert(strLang1103);
+	            showAlert(strLang1103);
 	            return;
 	        } else {
 	        	openLocation = "/ezApprovalG/draftuiHWP.do?formURL=" + encodeURI(pArgument[1]) + "&draftFlag=" + encodeURI(pArgument[2]) + "&formDocType=" + encodeURI(pArgument[3]);
@@ -3054,20 +3081,20 @@ function RemoveTmpDoc(pDocID) {
 			if (typeof(isGroupDoc) != "undefined" && isGroupDoc == "Y" && typeof(groupDocListCnt) != "undefined" && typeof(groupDocDelCnt) != "undefined") {
 				groupDocDelCnt ++; // 일괄기안 루프 내부 문서삭제완료 카운트 증가 
 				if (groupDocDelCnt == groupDocListCnt) {
-					alert(pAlertContent);
+					showAlert(pAlertContent);
 					openergetDocInfo();
 				}
 			}
 			// 기존 일반문서 삭제 분기
 			else {
-				alert(pAlertContent);
+				showAlert(pAlertContent);
 		        openergetDocInfo();
 			}
 		},
 		error : function() {
 			var pAlertContent = strLang872;
 	        //OpenAlertUI(pAlertContent);
-	        alert(pAlertContent);
+			showAlert(pAlertContent);
 		}
 	});
 }
@@ -3433,7 +3460,7 @@ function openOpinionUI_New_Add(pOpinionType, CompleteFunction) {
 
         DivPopUpShow(530, 520, "/ezApprovalG/aprOpinionNew.do?opMode=ADD");
     } catch (e) {
-        alert("openOpinionUI_New ::: " + e.description);
+        showAlert("openOpinionUI_New ::: " + e.description);
     }
 }
 
@@ -3467,7 +3494,7 @@ function openOpinionUI_New_Complete_Add(ret) {
            // makeOpinionList_Add(objXML);
         }
     } catch (e) {
-        alert("openOpinionUI_New_Complete ::: " + e.description);
+        showAlert("openOpinionUI_New_Complete ::: " + e.description);
     }
 }
 
@@ -3485,12 +3512,15 @@ function btnSendAround_onclick() {
         aprgongramline_cross_dialogArguments[0] = para;
         aprgongramline_cross_dialogArguments[1] = btnSendAround_onclick_Complete;
 
-        var OpenWin = window.open(url, "AprGongRamLine_Cross", GetOpenWindowfeature(1200, 760));
-        try { OpenWin.focus(); } catch (e) { }
+//        var OpenWin = window.open(url, "AprGongRamLine_Cross", GetOpenWindowfeature(1200, 760));
+//        try { OpenWin.focus(); } catch (e) { }
+        ezCommon_cross_dialogArguments[0] = para;
+        showPopup(url, 1200, 760, "AprGongRamLine_Cross", GetOpenWindowfeature(1200, 760), btnSendAround_onclick_Complete);
     }
 }
 
 function btnSendAround_onclick_Complete(rtn) {
+	hidePopup();
     if (rtn == "OK") {
         var pAlertContent = "<spring:message code='ezApprovalG.t1424'/>";
         OpenAlertUI(pAlertContent);
@@ -3520,7 +3550,7 @@ function RemoveGongramDoc(pDocID, pAprmemeberSn) {
     }
 }
 
-var ezreceivedistributeui_cross_dialogArguments = new Array();
+// var ezreceivedistributeui_cross_dialogArguments = new Array();
 function btnBaeBuAll_onclick() {
 	var DocList = new ListView();
 	DocList.LoadFromID("DocList");
@@ -3613,16 +3643,25 @@ function btnBaeBuAll_onclick_Complete(rtn) {
 	
 		var url = "/ezApprovalG/ezReceiveDistributeUI.do?mode=addAll&pdocid=" + DocID;
 	
-		ezreceivedistributeui_cross_dialogArguments[0] = parameter;
-		ezreceivedistributeui_cross_dialogArguments[1] = receiveDistributeAll_Complete;
-	
-		var OpenWin = window.open(url, "ezReceiveDistributeUI_Cross", GetOpenWindowfeature(800, 600));
-		try { OpenWin.focus(); } catch (e) { }
+		// ezreceivedistributeui_cross_dialogArguments[0] = parameter;
+		// ezreceivedistributeui_cross_dialogArguments[1] = receiveDistributeAll_Complete;
+
+		// var OpenWin = window.open(url, "ezReceiveDistributeUI_Cross", GetOpenWindowfeature(800, 600));
+		// try { OpenWin.focus(); } catch (e) { }
+        ezCommon_cross_dialogArguments[0] = parameter;
+        showPopup(url, 800, 600, "ezReceiveDistributeUI_Cross", GetOpenWindowfeature(800, 600), receiveDistributeAll_Complete);
 	}
 
 }
 
 function receiveDistributeAll_Complete(ret){
-	if (ret == "cancel")
-		window.close();
+	hidePopup();
+
+    if (ret == "true") {
+        if (pListTypeValue == "97") {
+            window.parent.frames[0].convMain('97', '');
+        } else {
+            window.parent.frames[0].convMain('4', '');
+        }
+    }
 }

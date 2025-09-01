@@ -35,7 +35,8 @@
 		    var lstAttachLink = document.getElementById("lstAttachLink");
 		    var attachFileNameMaxLength = Number("${attachFileNameMaxLength}");
 		    var status = 0; // 일반-대용량 첨부파일 구분 상태값  
-            
+            const fileExtensions = '${useFileExtension}'.split(',');
+
             $(document).ready(function () {
                 if ($("#lstAttachLink").length > 0) {
                     $("#lstAttachLink").on("change", "input[type='checkbox'][name='fileSelect']", function () {
@@ -71,182 +72,216 @@
 			var alertCnt = 1;
 			var currUid = 0;
 		    var shareId = '<c:out value="${shareId}"/>';
+            var zipPassword;
 		    
 		    function onDrop(evt) {
+                
+                if (checkZipFileEncryprUploadCheck()) {
+                    if (evt != undefined) {
+                        evt.stopPropagation();
+                        evt.preventDefault();
+                    
+                        if (evt.dataTransfer.items == undefined || evt.dataTransfer.items == null) {
+                            
+                            if (evt.dataTransfer.files.length == 0) {
+                                alert(strLangKMS08);
+                                return;
+                            }
+                            
+                        } else {
+                            var length = evt.dataTransfer.items.length;
+                            
+                            for (var i = 0; i < length; i++) {
+                                var entry = evt.dataTransfer.items[i].webkitGetAsEntry();
+                                
+                                if (entry.isFile) {
+                                } else if (entry.isDirectory) {
+                                    alert(strLangKMS08);
+                                    return;
+                                }
+                            }
+                        }
+                    }				
+                    
+                    if (isfileup) {
+                        alert(strLang86);
+                        return;
+                    }
+            
+                    if (evt == undefined) {
+                        filelist = document.getElementById("file").files;
+                    } else {
+                        filelist = evt.dataTransfer.files;
+                    }
+                    
+                    var tempfilesize = 0;
+                    var tempbigfilesize = 0;
+                    var filecnt = file.length;
+                    var bigFileCheck = false;
+                    var bodyTypeVal = window.parent.document.getElementById("bodyType").value; // 0:html, 1:plainText
+                    var bodyTypeIsPlain = bodyTypeVal != 1 ? false : true;
+                    var newBigAttachCount = 0;
+                    
+                    if (status == 1) {
+                        isbigyn = "Y";
+                        status = 0;
+                    }
 
-		    	if (evt != undefined) {
-		            evt.stopPropagation();
-		            evt.preventDefault();
-				
-					if (evt.dataTransfer.items == undefined || evt.dataTransfer.items == null) {
-						
-						if (evt.dataTransfer.files.length == 0) {
-							alert(strLangKMS08);
-							return;
-						}
-						
-					} else {
-						var length = evt.dataTransfer.items.length;
-						
-					    for (var i = 0; i < length; i++) {
-					    	var entry = evt.dataTransfer.items[i].webkitGetAsEntry();
-					    	
-					    	if (entry.isFile) {
-					    	} else if (entry.isDirectory) {
-					    		alert(strLangKMS08);
-					      		return;
-					    	}
-					  	}
-					}
-		        }				
-		        
-		        if (isfileup) {
-		            alert(strLang86);
-		            return;
-		        }
-		
-		        if (evt == undefined) {
-		            filelist = document.getElementById("file").files;
-		        } else {
-		            filelist = evt.dataTransfer.files;
-		        }
-				
-		        var tempfilesize = 0;
-		        var tempbigfilesize = 0;
-		        var filecnt = file.length;
-		        var bigFileCheck = false;
-		        var bodyTypeVal = window.parent.document.getElementById("bodyType").value; // 0:html, 1:plainText
-		        var bodyTypeIsPlain = bodyTypeVal != 1 ? false : true;
-		        var newBigAttachCount = 0;
-		        
-		        if (status == 1) {
-		        	isbigyn = "Y";
-		        	status = 0;
-		        }
-		        
-		        for (var i = 0; i < filelist.length; i++) {
-		            
-			    	// 2024.05.02 한슬기 : 파일명 글지수 체크 위치 변경
-			    	if (filelist[i].name.length > attachFileNameMaxLength) {
-		        		alert("<spring:message code='main.jjh08' />" + attachFileNameMaxLength + "<spring:message code='main.lhm03' />");
-		        		isfileup = false;
-		        		return;
-		        	}
-		        
-		        	if (filelist[i].size / 1024 / 1024 > window.parent.BigSizeAttachMBSize || isbigyn == "Y") {
-		        		filelist[i].isBig = "Y";
+                    const fileListTemp = [];
+                    const blockedExtList = [];
 
-						if (bodyTypeIsPlain){ 	continue; }
-						
-		                bigFileCheck = true;
-		                bigfile[filecnt + i] = filelist[i];
-		                tempbigfilesize += filelist[i].size;
-		                newBigAttachCount++;
-		            } else {
-		                file[filecnt + i] = filelist[i];
-		                tempfilesize += filelist[i].size;
-		            }
-		        }
-				
-		        if (isbigyn == "Y") {
-		            bigFileCheck = true;
-		        }
-		        
-		        if (bigFileCheck == true) {
-		        	if(!bigFileAttachCountCheck(newBigAttachCount)) {
-		        		return;
-		        	}
-		        }
-		
-		        if (bigFileCheck == true && window.parent.FtotBigSizeAttachSize == 0) {
-		        	
-		        	if ("${ userInfo.lang }" == "2") {
-		                alert(strLangKMS02 + window.parent.totSizeAttachMBSize + strLang76);
-		        	} else {
-		                alert(strLangKMS02 + window.parent.totSizeAttachMBSize + "MB" + strLang76);
-		        	}
-		        	
-		            file.splice(file.length - filelist.length, filelist.length);
-		            return;
-		        }
-		        
-		       // if (bigFileCheck && alertCnt < 2 && isbigyn == "N") {
-		        if (bigFileCheck && isbigyn == "N") {
-		    		// 2018-10-05 재은수정: 일반첨부에서 대용량첨부로 전환될 때 취소 버튼 추가
-		        	var bigFileAttachChk = confirm(strLang77 +window.parent.BigSizeAttachMBSize + "MB" + strLang78 + window.parent._pBigAttachDownloadDay + strLang79);
-		        	
-		        	if (!bigFileAttachChk) {
-		        		return;
-		        	}
-		        	
-		            //alertCnt++;
-		        } else if ((filesize + tempfilesize) / 1024 / 1024 > window.parent.totSizeAttachMBSize && isbigyn == "N") {
+                    for (let f of filelist) {
+                        const ext = f.name.substring(f.name.lastIndexOf('.') + 1).toLowerCase();
+                        if (fileExtensions[0] !== '*' && fileExtensions.indexOf(ext) === -1) {
+                            blockedExtList.push(f.name);
+                        } else {
+                            fileListTemp.push(f);
+                        }
+                    }
 
-		        	/* 일반첨부파일용량 초과인경우 맨 마지막 파일을 대용량 첨부로 전환시킨다. 기존에는 return으로 종료했었음.
-		        	if (window.parent.FtotBigSizeAttachSize == 0) {
-		            	
-		            	if ("${ userInfo.lang }" == "2") {
-			                alert(strLangKMS02 + window.parent.totSizeAttachMBSize + strLang76);
-		            	} else {
-			                alert(strLangKMS02 + window.parent.totSizeAttachMBSize + "MB" + strLang76);
-		            	}
-		            	
-		            } else if ("${ userInfo.lang }" == "2") {
-		                alert(strLang75 + window.parent.totSizeAttachMBSize + strLang76);
-		        	} else {
-		                alert(strLang75 + window.parent.totSizeAttachMBSize + "MB" + strLang76);
-		            }
-		            
-		        	file.splice(file.length - filelist.length, filelist.length);
-		            */
-                    var bigFileAttachChk = confirm(strLang75 +window.parent.BigSizeAttachMBSize + "MB" + strLang78 + window.parent._pBigAttachDownloadDay + strLang79);
+                    if (blockedExtList.length > 0 && status !== 1) {
+                        alert(strLang323 + '\n' + blockedExtList.join('\n'));
+                    }
 
-                    if (!bigFileAttachChk) {
+                    if (fileListTemp.length <= 0) {
                         return;
                     }
 
-		            status = 1;
-	            	//return status;
-		            
-		            // 2024.05.02 한슬기 : Drag&Drop으로 파일 첨부시 파일 첨부가 안되는 현상이 있어 수정
-		            if (evt != undefined){
-			            onDrop(evt);
-			            return;
-		            } else {
-		            	return status;
-		            }
-		        }
+                    filelist = fileListTemp;
 
-		        if ((bigfilesize + tempbigfilesize) / 1024 / 1024 > window.parent.totBigSizeAttachMBSize) {
-		        	
-		        	if ("${ userInfo.lang }" == "2") {
-		                alert(strLang168 + window.parent.totBigSizeAttachMBSize + strLang169);
-		        	} else {
-		                alert(strLang168 + window.parent.totBigSizeAttachMBSize + "MB" + strLang169);
-		        	}
-		        	
-		        	file.splice(file.length - filelist.length, filelist.length);
-		            return;
-		        }
-		
-		        filesize += tempfilesize;
-		        bigfilesize += tempbigfilesize;
-		        checkMailStatusAndFileUpload();
-		        
-		        if (CrossYN()) {
-		        	
-		        	if (navigator.userAgent.search('Trident') != -1) { //IE 11
-		        		document.getElementById("file").type = "text";
-		                document.getElementById("file").type = "file";
-		        	} else {
-		            	document.getElementById("file").value = "";
-		        	}
-		            
-		        } else {
-		            document.getElementById("file").type = "text";
-		            document.getElementById("file").type = "file";
-		        }
-		        isbigyn = "N"; 
+                    for (var i = 0; i < filelist.length; i++) {
+                        
+                        // 2024.05.02 한슬기 : 파일명 글지수 체크 위치 변경
+                        if (filelist[i].name.length > attachFileNameMaxLength) {
+                            alert("<spring:message code='main.jjh08' />" + attachFileNameMaxLength + "<spring:message code='main.lhm03' />");
+                            isfileup = false;
+                            return;
+                        }
+                    
+                        if (filelist[i].size / 1024 / 1024 > window.parent.BigSizeAttachMBSize || isbigyn == "Y") {
+                            filelist[i].isBig = "Y";
+    
+                            if (bodyTypeIsPlain){ 	continue; }
+                            
+                            bigFileCheck = true;
+                            bigfile[filecnt + i] = filelist[i];
+                            tempbigfilesize += filelist[i].size;
+                            newBigAttachCount++;
+                        } else {
+                            file[filecnt + i] = filelist[i];
+                            tempfilesize += filelist[i].size;
+                        }
+                    }
+                    
+                    if (isbigyn == "Y") {
+                        bigFileCheck = true;
+                    }
+                    
+                    if (bigFileCheck == true) {
+                        if(!bigFileAttachCountCheck(newBigAttachCount)) {
+                            return;
+                        }
+                    }
+            
+                    if (bigFileCheck == true && window.parent.FtotBigSizeAttachSize == 0) {
+                        
+                        if ("${ userInfo.lang }" == "2") {
+                            alert(strLangKMS02 + window.parent.totSizeAttachMBSize + strLang76);
+                        } else {
+                            alert(strLangKMS02 + window.parent.totSizeAttachMBSize + "MB" + strLang76);
+                        }
+                        
+                        file.splice(file.length - filelist.length, filelist.length);
+                        return;
+                    }
+                    
+                   // if (bigFileCheck && alertCnt < 2 && isbigyn == "N") {
+                    if (bigFileCheck && isbigyn == "N") {
+                        // 2018-10-05 재은수정: 일반첨부에서 대용량첨부로 전환될 때 취소 버튼 추가
+                        var bigFileAttachChk = confirm(strLang77 +window.parent.BigSizeAttachMBSize + "MB" + strLang78 + window.parent._pBigAttachDownloadDay + strLang79);
+                        
+                        if (!bigFileAttachChk) {
+                            return;
+                        }
+                        
+                        //alertCnt++;
+                    } else if ((filesize + tempfilesize) / 1024 / 1024 > window.parent.totSizeAttachMBSize && isbigyn == "N") {
+    
+                        /* 일반첨부파일용량 초과인경우 맨 마지막 파일을 대용량 첨부로 전환시킨다. 기존에는 return으로 종료했었음.
+                        if (window.parent.FtotBigSizeAttachSize == 0) {
+                            
+                            if ("${ userInfo.lang }" == "2") {
+                                alert(strLangKMS02 + window.parent.totSizeAttachMBSize + strLang76);
+                            } else {
+                                alert(strLangKMS02 + window.parent.totSizeAttachMBSize + "MB" + strLang76);
+                            }
+                            
+                        } else if ("${ userInfo.lang }" == "2") {
+                            alert(strLang75 + window.parent.totSizeAttachMBSize + strLang76);
+                        } else {
+                            alert(strLang75 + window.parent.totSizeAttachMBSize + "MB" + strLang76);
+                        }
+                        
+                        file.splice(file.length - filelist.length, filelist.length);
+                        */
+                        var bigFileAttachChk = confirm(strLang75 +window.parent.BigSizeAttachMBSize + "MB" + strLang78 + window.parent._pBigAttachDownloadDay + strLang79);
+    
+                        if (!bigFileAttachChk) {
+                            return;
+                        }
+    
+                        status = 1;
+                        //return status;
+                        
+                        // 2024.05.02 한슬기 : Drag&Drop으로 파일 첨부시 파일 첨부가 안되는 현상이 있어 수정
+                        if (evt != undefined){
+                            onDrop(evt);
+                            return;
+                        } else {
+                            return status;
+                        }
+                    }
+    
+                    if ((bigfilesize + tempbigfilesize) / 1024 / 1024 > window.parent.totBigSizeAttachMBSize) {
+                        
+                        if ("${ userInfo.lang }" == "2") {
+                            alert(strLang168 + window.parent.totBigSizeAttachMBSize + strLang169);
+                        } else {
+                            alert(strLang168 + window.parent.totBigSizeAttachMBSize + "MB" + strLang169);
+                        }
+                        
+                        file.splice(file.length - filelist.length, filelist.length);
+                        return;
+                    }
+            
+                    filesize += tempfilesize;
+                    bigfilesize += tempbigfilesize;
+                    checkMailStatusAndFileUpload();
+                    
+                    if (CrossYN()) {
+                        
+                        if (navigator.userAgent.search('Trident') != -1) { //IE 11
+                            document.getElementById("file").type = "text";
+                            document.getElementById("file").type = "file";
+                        } else {
+                            document.getElementById("file").value = "";
+                        }
+                        
+                    } else {
+                        document.getElementById("file").type = "text";
+                        document.getElementById("file").type = "file";
+                    }
+                    isbigyn = "N";
+                } else {
+                    // 암호화가 안 되어 있으면 드래그&드롭 이벤트 막기
+                    if (evt != undefined) {
+                        evt.preventDefault();
+                        evt.dataTransfer.dropEffect = "none";
+                    } else {
+                        event.preventDefault();
+                        event.dataTransfer.dropEffect = "none";
+                    }
+                }
 		    }
 		    
 		    function checkMailStatusAndFileUpload() {
@@ -536,16 +571,42 @@
 		        evt.stopPropagation();
 		        evt.preventDefault();
 		    }
-		
+
+            function inputZipFilePassword() {
+                if (document.querySelectorAll('#filelist tr[newfile="Y"]').length > 0) {
+                    alert("<spring:message code='ezEmail.zipEncryptedFile.007' />");
+                    document.getElementById('ConfirmZipFilePassword').focus();
+                    return;
+                } else {
+                    parent.DivPopUpShow(330, 170, "/ezEmail/inputZipFilePassword.do");
+                }
+            }
+
+            function checkZipFileEncryprUploadCheck() {
+                zipPassword = sessionStorage.getItem("zipPassword");
+                
+                if (!zipPassword && "${useAutoZipEnc}" == "YES") {
+                    alert("<spring:message code='ezEmail.zipEncryptedFile.006' />"); 
+                    inputZipFilePassword();
+                    return false;
+                }
+
+                return true;
+            }
+
 		    function btnfileup() {
-		        isbigyn = "N";
-		        document.getElementById("file").value = "";
-		        document.getElementById("file").click();
+                if (checkZipFileEncryprUploadCheck()) {
+                    isbigyn = "N";
+                    document.getElementById("file").value = "";
+                    document.getElementById("file").click();
+                }
 		    }
 		
 		    function btnfileup_big() {
-		        isbigyn = "Y";
-		        document.getElementById("file").click();
+                if (checkZipFileEncryprUploadCheck()) {
+                    isbigyn = "Y";
+                    document.getElementById("file").click();
+                }
 		    }
 		
 		    function filechange(e) {
@@ -559,6 +620,7 @@
 		    
 		    function btnfiledel(type) {
 		        var filecnt = document.getElementById("filelist").childNodes.length;
+		        var isDeleted = false;
 		        
 		    	for (var i = 1; i < filecnt; i++) {
 		    		var filelistTable = document.getElementById("filelist");
@@ -567,6 +629,8 @@
 		    		var elementTrIsBig = GetAttribute(elementTR, "_big");
 		    	
 					if ((type=="big" && elementTrIsBig=="Y") || (type!="big" && elementTRIsChecked)) {
+					    isDeleted = true;
+
 			    		var pAttachDelSN;
 		                var pAttachDelFileName;
 		                var is_newfile;
@@ -604,6 +668,10 @@
 		                i--;
 		                filecnt--;
 		            }
+		        }
+
+		        if (!isDeleted) {
+		            alert(strLang90);
 		        }
 		        
 		        showAttachInnerNotice();
@@ -667,6 +735,7 @@
 		        fd.append("changesize", window.parent.FBigSizeAttachSize);
 		        fd.append("txtName", window.parent.filedate);
 		        fd.append("endDay", window.parent.BigSizeMailAttachDelDay);
+		        fd.append("zipPassword", sessionStorage.getItem("zipPassword"));
 
 		        xhr.upload.addEventListener("progress", uploadProgress, false);
 		        xhr.addEventListener("load", uploadComplete, false);
@@ -898,10 +967,15 @@
 		    }
 		
 		    function filePicker() {
-                isbigyn = (isbigyn === 'Y') ? 'N' : isbigyn;
-                
-		    	window.parent.filePickerOpen();
+                if (checkZipFileEncryprUploadCheck()) {
+                    isbigyn = (isbigyn === 'Y') ? 'N' : isbigyn;
+                    window.parent.filePickerOpen();
+                }
 		    }
+
+            window.addEventListener("beforeunload", () => {
+                sessionStorage.removeItem("zipPassword");
+            });
 		</script>
 	</head>  
     <body ondragover ="defaultenter(event)" ondragenter ="defaultenter(event)" style="overflow:hidden">   
@@ -912,6 +986,9 @@
                 <a class="imgbtn imgbck" onclick="btnfiledel()"><span><spring:message code='ezEmail.t678' /></span></a>   
                 <c:if test="${useWebfolder == 'YES'}">
                 	<a class="imgbtn imgbck" onclick="filePicker()"><span><spring:message code='ezWebFolder.pyy02' /></span></a>
+                </c:if>
+                <c:if test="${'YES'.equalsIgnoreCase(useAutoZipEnc)}">
+                    <a class="imgbtn imgbck" onclick="inputZipFilePassword()"><span><spring:message code='ezEmail.zipEncryptedFile.002' /></span></a>
                 </c:if>
             </span>
             <div id="progdiv" class="progarea" style="display:none">

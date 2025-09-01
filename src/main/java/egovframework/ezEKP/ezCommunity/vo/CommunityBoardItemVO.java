@@ -1,6 +1,8 @@
 package egovframework.ezEKP.ezCommunity.vo;
 
 public class CommunityBoardItemVO {
+	/** 커뮤니티아이디 */
+	String code;
 	/** 게시물아이디*/
 	String itemID;
 	/** 게시판아이디*/
@@ -75,7 +77,13 @@ public class CommunityBoardItemVO {
 	int readFlag;
 	/** 댓글갯수  //2018-05-04 홍승비 댓글갯수 표출 */
 	int oneLineCnt;
-	
+
+	public String getCode() {
+		return code;
+	}
+	public void setCode(String code) {
+		this.code = code;
+	}
 	public String getItemID() {
 		return itemID;
 	}

@@ -30,7 +30,11 @@
                     ReturnFunction = opener.SelUserCont_dialogArgument[1];
                 } catch (e) {
                     try {
-                        ReturnFunction = parent.SelUserCont_dialogArgument[1];
+                        if (isParentCommonArgsUsed()) {
+                            ReturnFunction = opener == null ? parent.ezCommon_cross_dialogArguments[1] : opener.ezCommon_cross_dialogArguments[1];
+                        } else {
+                            ReturnFunction = parent.SelUserCont_dialogArgument[1];
+                        }
                     } catch (e) {
                     }
                 }
@@ -51,7 +55,7 @@
 
             }
             catch (ErrMsg) {
-                alert(ErrMsg.description);
+                showAlert(ErrMsg.description);
             }
         }
         function Tree_setconfig() {

@@ -16,7 +16,7 @@
 	    
 			function changeCompany(val) {
 				var url = "/admin/ezJournal/formType.do";
-				parent.frames["right"].location.href = url+"?companyId="+val;
+				parent.document.querySelector("iframe[name=right]").src = url+"?companyId="+val;
 			}
 
 			

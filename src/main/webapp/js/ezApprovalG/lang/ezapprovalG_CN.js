@@ -1210,3 +1210,20 @@ var strLangDeptInbox = "部门收件箱";
 
 var strLangAtachHIK_01 = "일반첨부파일은 총_CN"; 
 var strLangAtachHIK_02 = "MB까지 가능합니다._CN"; 
+
+/* 전자결재 사인 그리기 기능 */
+var strLangJIHSignDraw01 = "서명을 작성한 뒤 결재해주세요.";
+var strLangJIHSignDraw02 = "사인 저장 중 오류가 발생하였습니다.";
+
+var strLangKm01 = "문서를 회수하였습니다.";
+
+var strLangKMH02 = "您是否要继续进行批量接收？<br>状态为退回的文件、执行文本和协议文本将被排除在对象之外。";
+var strLangKMH03 = "您是否要继续进行批量接收和最终审批？<br>状态为退回的文件、执行文本和协议文本将被排除在对象之外。";
+
+/* 2025-06-19 김유진 -  전자결재 > 열람권한 */
+var strLangKYJ_IsPublic01 = "全部查看";
+var strLangKYJ_IsPublic02 = "部门查看";
+var strLangKYJ_IsPublic03 = "审批线查看";
+
+var strLangJIHShareDox01 = "共享人和共享对象必须隶属于同一公司。";
+var strLangJIHShareDox02 = "请先选择共享人。";

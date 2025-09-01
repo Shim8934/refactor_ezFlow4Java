@@ -724,8 +724,21 @@
 					
 					// 현재 시간과 비교하여 같거나 더 작은(이전) 시작일의 진행상태만 변경 가능 (startdate는 서버단에서 시간대 부분만 사용하도록 substring(10, 19) 처리되므로 그대로 유지)
 					if (new Date(pStartdate) <= new Date(curDate)) {
-						DivPopUpShow(410, 450, "/ezTask/taskStatus.do?taskID=" + taskid + "&repeatCount=" + repeatCount + "&date=" + pStartdate + "&startDate=" + startdate);
-						// 레이어팝업 높이 수정 (430 -> 45) : 430의 경우 영어에서 잘림
+					    var url = "/ezTask/taskStatus.do?taskID=" + taskid + "&repeatCount=" + repeatCount + "&date=" + pStartdate + "&startDate=" + startdate;
+					    
+					    var xhr = new XMLHttpRequest();
+					    xhr.open("GET", url, true);
+					    xhr.onreadystatechange = function() {
+                            if (xhr.readyState === 4) {
+                                if (xhr.status === 200) {
+                                    DivPopUpShow(410, 450, url);
+                                    // 레이어팝업 높이 수정 (430 -> 45) : 430의 경우 영어에서 잘림
+                                } else {
+                                    alert("<spring:message code='ezTask.t200911' />");
+                                }
+                            }
+                        };
+                        xhr.send();
 					}
 					else {
 						alert("<spring:message code='ezTask.t200911' />");

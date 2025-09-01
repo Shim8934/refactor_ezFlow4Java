@@ -13,6 +13,7 @@ import egovframework.ezEKP.ezBoard.vo.BoardPropertyVO;
 import egovframework.ezEKP.ezBoard.vo.BoardTreeVO;
 import egovframework.ezEKP.ezBoard.vo.BoardVO;
 import egovframework.ezEKP.ezBoard.vo.BoardMyFavoriteVO;
+import egovframework.ezEKP.ezBoard.vo.BoardListVO;
 import org.egovframe.rte.psl.dataaccess.EgovAbstractDAO;
 
 @Repository("EzBoardAdminDAO")
@@ -401,4 +402,14 @@ public class EzBoardAdminDAO extends EgovAbstractDAO {
 		delete("EzBoardAdminDAO.deleteScrapContBoard", boardID);
 	}
 
+	public List<BoardListVO> getCreateHistoryTarget(Map<String, Object> map) throws Exception {
+		return (List<BoardListVO>) list("EzBoardAdminDAO.getCreateHistoryTarget", map);
+	}
+	public List<Map<String, String>> boardNotiEndAlram() throws Exception {
+		return (List<Map<String, String>>) list("EzBoardAdminDAO.boardNotiEndAlram");
+	}
+
+    public void addGuestPermit(Map<String, Object> map) throws Exception {
+		insert("EzBoardAdminDAO.addGuestPermit", map);
+	}
 }

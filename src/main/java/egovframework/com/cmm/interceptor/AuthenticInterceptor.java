@@ -6,14 +6,19 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
+import java.util.stream.Collectors;
 
+import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.naming.ServiceUnavailableException;
 import javax.servlet.RequestDispatcher;
@@ -44,6 +49,7 @@ import egovframework.let.user.login.web.LoginController;
 import egovframework.let.utl.fcc.service.ClientUtil;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
+import egovframework.ezEKP.ezBoard.service.EzBoardService;
 
 /**
  * 인증여부 체크 인터셉터
@@ -80,11 +86,30 @@ public class AuthenticInterceptor extends WebContentInterceptor {
 	
 	@Autowired
 	private LoginController loginController;
+
+	@Autowired
+	private EzBoardService ezBoardService;
+
+	@Autowired
+	private Properties config;
     
     /** Logger */
     private static final Logger logger = LoggerFactory.getLogger(AuthenticInterceptor.class);
 
     private static final String authority = "https://login.microsoftonline.com";
+	
+	private Set<String> guestAccessibleUris = Collections.emptySet();
+	
+	@PostConstruct
+	public void initGuestAccessibleUris() throws Exception {
+		String tenantID = config.getProperty("config.guestDefaultTenantId");
+		String uriString = ezCommonService.getTenantConfig("guestAccessibleUris", Integer.parseInt(tenantID));
+		if (uriString != null) {
+			guestAccessibleUris = Arrays.stream(uriString.split(","))
+					.map(String::trim)
+					.collect(Collectors.toSet());
+		}
+	}
     
 	/**
 	 * 세션에 계정정보(LoginVO)가 있는지 여부로 인증 여부를 체크한다.
@@ -143,16 +168,16 @@ public class AuthenticInterceptor extends WebContentInterceptor {
 								
 				String refererDomainName = getDomainName(referer);
 				
-				//logger.debug("refererDomainName=" + refererDomainName); // 로그정리 : referer 로 확인 가능
+				logger.debug("refererDomainName=" + refererDomainName); // 로그정리 : referer 로 확인 가능
 				
 				// 도로명주소 open api 예외 처리
 				if (!"juso.go.kr".equalsIgnoreCase(refererDomainName)
 						&& !"microsoftonline.com".equalsIgnoreCase(refererDomainName)
 						&& !"google.com".equalsIgnoreCase(refererDomainName)
 						&& !refererDomainName.equalsIgnoreCase(hostDomainName)) {
-					logger.debug("hostDomainName and refererDomainName are different.");
+//					logger.debug("hostDomainName and refererDomainName are different.");
 					
-					return false;
+//					return false;
 				}				
 			}
 			
@@ -191,7 +216,41 @@ public class AuthenticInterceptor extends WebContentInterceptor {
 				
 				return false;
 			}
-    	
+
+			// 2025-08-11 비회원 권한 사용 + 비회원 허용 게시판 > 로그인 쿠키를 생성하지 않고 통과
+			try {
+				String guestPermitYN = ezCommonService.getTenantConfig("useBoardGuestPermit", tenantId);
+				if ("YES".equals(guestPermitYN)) {
+					String reqURI = request.getRequestURI();
+					
+					if (guestAccessibleUris.contains(reqURI)) { // 비회원 허용 URI 해당하는 경우에만 체크
+						// 다운로드 관련의 경우 경로에서 boardID를 추출하여 사용
+						if ("/ezBoard/boardAttachDown.do".equals(reqURI) || "/ezBoard/downloadAttachAll.do".equals(reqURI)) {
+							String[] tmp = request.getParameter("filePath").split("/");
+							String boardID = tmp[5];
+							
+							if (!"".equals(boardID) && ezBoardService.checkGuestPerm(boardID, tenantId, "B")) {
+								return true;
+							}
+						} else if (reqURI.contains("List.do") || reqURI.contains("list.do")) {
+							String boardID = request.getParameter("boardID") == null ? (request.getParameter("boardId") == null ? "" : request.getParameter("boardId")) : request.getParameter("boardID");
+
+							if (!"".equals(boardID) && ezBoardService.checkGuestPerm(boardID, tenantId, "B")) {
+								return true;
+							}
+						} else {
+							String itemID = request.getParameter("itemID") == null ? "" : request.getParameter("itemID");
+							
+							if (!"".equals(itemID) && ezBoardService.checkGuestPerm(itemID, tenantId, "I")) {
+								return true;
+							}
+						}
+					}
+				}
+			} catch (Exception e) {
+				throw new RuntimeException("Error during guest permission validation : " + e.getMessage(), e);
+			}
+			
 	        if (ezOffice365Auth.equals("YES")) {
 	        	performEzOffice365Auth(request, response, tenantId);
 	        	

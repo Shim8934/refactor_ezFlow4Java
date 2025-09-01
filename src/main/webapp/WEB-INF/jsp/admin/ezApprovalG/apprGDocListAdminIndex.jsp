@@ -1,10 +1,15 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <!DOCTYPE html>
-<html>
-    <title><spring:message code='ezApprovalG.lhr001'/></title>
-	<frameset cols="220,*" frameborder="0" border="0" frameSpacing="0">
-		<frame src="/admin/ezApprovalG/apprGDocListAdminLeft.do?listType=${listType}&selectDeptID=${selectDeptID}" name="left" marginwidth="0"	marginheight="0" scrolling="auto" frameborder="0" noresize>
-		<frame src="" name="right" marginwidth="0" marginheight="0" scrolling="auto" frameborder="0">
-	</frameset>
+<html class="frame_main">
+<title>
+	<spring:message code='ezApprovalG.lhr001'/>
+	<link rel="stylesheet" type="text/css" href="${util.addVer('/css/mainFrame.css')}"/>
+</title>
+<body>
+<iframe id="left"
+		src="/admin/ezApprovalG/apprGDocListAdminLeft.do?listType=${listType}&selectDeptID=${selectDeptID}"
+		name="left"></iframe>
+<iframe src="" id="right" name="right"></iframe>
+</body>
 </html>

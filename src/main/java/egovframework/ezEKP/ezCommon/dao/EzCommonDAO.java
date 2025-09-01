@@ -31,6 +31,7 @@ import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.user.login.vo.TenantServerNameVO;
 import egovframework.let.user.login.vo.TenantVO;
 import org.egovframe.rte.psl.dataaccess.EgovAbstractDAO;
+import egovframework.ezEKP.ezCommunity.vo.CommunityClubVO;
 
 @Repository("EzCommonDAO")
 public class EzCommonDAO extends EgovAbstractDAO {
@@ -3401,4 +3402,363 @@ public class EzCommonDAO extends EgovAbstractDAO {
 		}
 	}
 
+	public String getMobileLang(String userID, int tenantID)  throws Exception{
+		Map<String, Object> map = new HashMap<String, Object>();
+    	
+    	map.put("userID", userID);
+    	map.put("tenantID", tenantID);
+    	
+        return (String) select("EzCommonDAO.getMobileLang", map);
+	}
+	public void createJournalListLang() {
+		try {
+			select("EzCommonDAO.checkJournallListLang");
+		} catch (RuntimeException e) {
+			logger.debug("checkJourlListLang doesn't exist. insert data...");
+		
+			// 컬럼 생성
+			update("EzCommonDAO.createJournalListLang");
+		}
+	}
+	
+	public void insertJournalListLang(Map<String, Object> map1, Map<String, Object> map2, Map<String, Object> map3, Map<String, Object> map4, Map<String, Object> map5, Map<String, Object> map6) {
+		int journalListLangCnt = (int) select("EzCommonDAO.countJournalListLang");
+		
+		// 기본양식 다국어 데이터 삽입
+		if (journalListLangCnt < 1) {
+			update("EzCommonDAO.insertDailyJournalListLang", map1);
+			update("EzCommonDAO.insertWeekJournalListLang", map2);
+			update("EzCommonDAO.insertMonthlyJournalListLang", map3);
+			update("EzCommonDAO.insertQuarterJournalListLang", map4);
+			update("EzCommonDAO.insertHalfYearJournalListLang", map5);
+			update("EzCommonDAO.insertAnnualJournalListLang", map6);
+		}
+	}
+	
+	public void alterScheduleDefaultViewCheck() {
+		try {
+			select("EzCommonDAO.checkScheduleDefaultViewCheck");
+		} catch (Exception e) {
+			logger.debug("tbl_scheduleconfig defaultviewcheck doesn't exist. creating the column...");
+
+			update("EzCommonDAO.addScheduleDefaultViewCheck");
+		}
+		
+	}
+
+	public void createUserScheduleTypeConfigTable() {
+		try {
+			select("EzCommonDAO.checkUserScheduleTypeConfigTable");
+		} catch (Exception e) {
+			logger.debug("TBL_USER_SCHEDULE_TYPE_CONFIG doesn't exist. creating the table...");
+
+			update("EzCommonDAO.createUserScheduleTypeConfigTable");
+		}
+	}
+
+	public void addMailboxProgressStateColumns() {
+		try {
+			select("EzCommonDAO.checkMailboxProgressStateColumns");
+		} catch (Exception ignore) {
+			logger.debug("JMOCHA_MAILBOX_PROGRESS.STATE, STATE_DESCRIPTION column doesn't exist. creating the column...");
+			update("EzCommonDAO.addMailboxProgressStateColumns");
+		}
+	}
+
+	// 2024-12-05 한태훈 - 게시판 > 게시판 버전관리 테이블 추가
+	public void createTblBoardModifyHistory() throws Exception {
+		try {
+			select("EzCommonDAO.checkTblBoardModifyHistory");
+		} catch (Exception e) {
+			
+			logger.debug("tbl_board_modifyhistory doesn't exist. creating the table...");
+			update("EzCommonDAO.createTblBoardModifyHistory");
+		}
+	}
+
+	/* 2024-07-22 양지혜 - 관리자 > 전자결재 > 발송현황 메뉴 표출여부 */
+	public void insertUseSendOutState(Map<String, Object> map) throws Exception {
+		String propertyValue = (String) select("EzCommonDAO.getTenantConfig", map);
+
+		if (propertyValue == null) {
+			logger.debug("useSendOutState tenant config doesn't exist. insert data...");
+			insert("EzCommonDAO.insertUseSendOutState", map);
+		}
+	}
+
+
+	// 2025-06-16 이혜림 - 게시판 > 본문 크기 컬럼 추가
+	public void addBoardContentSize() {
+		try {
+			select("EzCommonDAO.checkAddBoardContentSize");
+		} catch (Exception e) {
+			logger.debug("In TBL_Board_Configuration doesn't exist ContentSize column. creating the column...");
+
+			update("EzCommonDAO.addBoardContentSize");
+		}
+	}
+	
+	public void updateMobilePortletMenuId() throws Exception {
+		try {
+			if ((int)select("EzCommonDAO.checkMobilePortletMenuId") == 1) {
+				logger.debug("checkMobilePortletMenuId mobile menuId insert wrong Data. update data...");
+				// portlet
+				update("EzCommonDAO.updateMobileMenuBoardId");
+				update("EzCommonDAO.updateMobileMenuApprovalId");
+				update("EzCommonDAO.updateMobileMenuMailId");
+				update("EzCommonDAO.updateMobileMenuResourceId");
+				update("EzCommonDAO.updateMobileMenuScheduleId");
+				// portlet_comp
+				update("EzCommonDAO.updateMobileMenuBoardIdComp");
+				update("EzCommonDAO.updateMobileMenuApprovalIdComp");
+				update("EzCommonDAO.updateMobileMenuMailIdComp");
+				update("EzCommonDAO.updateMobileMenuResourceIdComp");
+				update("EzCommonDAO.updateMobileMenuScheduleIdComp");
+				// portlet_name
+				update("EzCommonDAO.updateMobileMenuBoardIdName");
+				update("EzCommonDAO.updateMobileMenuApprovalIdName");
+				update("EzCommonDAO.updateMobileMenuMailIdName");
+				update("EzCommonDAO.updateMobileMenuResourceIdName");
+				update("EzCommonDAO.updateMobileMenuScheduleIdName");
+				// portlet_user
+				update("EzCommonDAO.updateMobileMenuBoardIdUser");
+				update("EzCommonDAO.updateMobileMenuApprovalIdUser");
+				update("EzCommonDAO.updateMobileMenuMailIdUser");
+				update("EzCommonDAO.updateMobileMenuResourceIdUser");
+				update("EzCommonDAO.updateMobileMenuScheduleIdUser");
+				// portlet_user
+				update("EzCommonDAO.updateMobileMenuBoardIdUser");
+				update("EzCommonDAO.updateMobileMenuApprovalIdUser");
+				update("EzCommonDAO.updateMobileMenuMailIdUser");
+				update("EzCommonDAO.updateMobileMenuResourceIdUser");
+				update("EzCommonDAO.updateMobileMenuScheduleIdUser");
+				// portlet_theme
+				update("EzCommonDAO.updateMobileMenuBoardIdTheme");
+				update("EzCommonDAO.updateMobileMenuApprovalIdTheme");
+				update("EzCommonDAO.updateMobileMenuMailIdTheme");
+				update("EzCommonDAO.updateMobileMenuResourceIdTheme");
+				update("EzCommonDAO.updateMobileMenuScheduleIdTheme");
+			}
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+		}
+	}
+	
+	// 2024-08-27 유길상 - 자원관리 > 자원등록 > 최대 예약 가능 기간 컬럼 추가
+	public void alterTblRsBrdResMaxDate() {
+		try {
+			select("EzCommonDAO.checkTblRsBrdResMaxDate");
+		} catch (Exception e) {
+			logger.debug("TBL_RS_BRD RES_MAX_DATE column doesn't exist. creating the column...");
+			
+			update("EzCommonDAO.alterTblRsBrdResMaxDate");
+		}
+	}
+	
+	// 2024-08-27 유길상 - 자원관리 > 자원등록 > 최대 예약 가능 기간 컬럼 추가
+	public void alterTblRsBrdResMaxUserCnt() {
+		try {
+			select("EzCommonDAO.checkTblRsBrdResMaxUserCnt");
+		} catch (Exception e) {
+			logger.debug("TBL_RS_BRD RES_MAX_USER_CNT column doesn't exist. creating the column...");
+			
+			update("EzCommonDAO.alterTblRsBrdResMaxUserCnt");
+		}
+	}
+	
+	 /* 2023-10-30 조소정 - 게시판 사용안함 여부 컬럼 추가 */
+	 public void addBoardNotUsedFlag() throws Exception {
+		 try {
+			 select("EzCommonDAO.checkBoardNotUsedFlag");
+		 } catch (Exception e) {
+			 logger.debug("tbl_board_info notusedflag doesn't exist. creating the column...");
+	
+	         update("EzCommonDAO.addBoardNotUsedFlag");
+	     }
+	 }
+
+	// 2025-07-07 이유정 - 일정관리 > 임원일정 조회 가능 범위 설정 컨피그 추가
+	public void insertExecutiveScheduleConfig(Map<String, Object> map) {
+		String executiveScheduleConfig = (String) select("EzCommonDAO.checkExecutiveScheduleConfig", map);
+
+		if (executiveScheduleConfig == null) {
+			logger.debug("useExecSchedulePublic tenant config doesn't exist. insert data...");
+			insert("EzCommonDAO.insertExecutiveScheduleConfig", map);
+		}
+	}
+
+	public void alterTblClubUserGradeColumn() {
+		try {
+			select("EzCommonDAO.checkTblClubUserGradeColumn");
+		} catch (Exception e) {
+			logger.debug("In TBL_C_CLUBUSER doesn't exist GRADE column. creating the column...");
+
+			update("EzCommonDAO.alterTblClubUserGradeColumn");
+		}
+	}
+
+	public void alterTblClubJoinGradeColumn() {
+		try {
+			select("EzCommonDAO.checkTblClubJoinGradeColumn");
+		} catch (Exception e) {
+			logger.debug("In TBL_C_CLUB doesn't exist JOIN_GRADE, MEMLIST_READGRADE column. creating the column...");
+
+			update("EzCommonDAO.alterTblClubJoinGradeColumn");
+		}
+	}
+
+	public void createTblCommunityGradeTable() throws Exception {
+		try {
+			select("EzCommonDAO.checkTblCommunityGradeTable");
+		} catch (Exception e) {
+			logger.debug("TBL_C_GRADE doesn't exist. creating the table...");
+
+			update("EzCommonDAO.createTblCommunityGradeTable");
+		}
+	}
+
+	public void delCommBrdManageData() throws Exception {
+		try {
+			if ((int) select("EzCommonDAO.checkCommBrdManageData1") > 0) {
+				logger.debug("Deleting data from TBL_COMM_BOARDMANAGE...");
+
+				delete("EzCommonDAO.delCommBrdManageData");
+			}
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+		}
+	}
+
+	public void updateCommBrdManageData() throws Exception {
+		try {
+			if ((int) select("EzCommonDAO.checkCommBrdManageData2") > 0) {
+				logger.debug("Updating data from TBL_COMM_BOARDMANAGE...");
+
+				update("EzCommonDAO.updateCommBrdManageData");
+			}
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+		}
+	}
+
+	public void updateClubUserGrade() throws Exception {
+		try {
+			if ((int) select("EzCommonDAO.checkClubUserGrade") > 0) {
+				logger.debug("Updating data from TBL_C_CLUBUSER...");
+
+				update("EzCommonDAO.updateClubUserGrade");
+			}
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+		}
+	}
+
+	public List<CommunityClubVO> selectClubsNotInGradeList() throws Exception {
+		return (List<CommunityClubVO>) list("EzCommonDAO.selectClubsNotInGradeList");
+	}
+
+    // 2025-07-15 이유정 - 커뮤니티 > 운영자권한 컬럼 추가
+    public void alterTblClubUserAdminAuthColumn() {
+        try {
+            select("EzCommonDAO.checkTblClubUserAdminAuthColumn");
+        } catch (Exception e) {
+            logger.debug("In TBL_C_CLUBUSER doesn't exist ADMIN_AUTH column. creating the column...");
+
+			update("EzCommonDAO.alterTblClubUserAdminAuthColumn");
+		}
+	}
+
+	// 2025-07-23 이유정 - 커뮤니티 > 회원탈퇴일자 컬럼 추가
+	public void alterTblClubUserWithdrawDateColumn() {
+		try {
+			select("EzCommonDAO.checkTblClubUserWithdrawDateColumn");
+		} catch (Exception e) {
+			logger.debug("In TBL_C_CLUBUSER doesn't exist C_WITHDRAWDATE column. creating the column...");
+
+			update("EzCommonDAO.alterTblClubUserWithdrawDateColumn");
+		}
+	}
+
+	//2025-02-13 김대현 - 메일 > 메일 미리보기 기능 추가
+	public void addMailPreviewConfig(Map<String, Object> map) {
+		String propertyValue = (String) select("EzCommonDAO.checkMailPreviewConfig" ,map);
+		
+		if (propertyValue == null) {
+			logger.debug("tbl_tenant_config useMailPreviewConfig doesn't exist. creating the column...");
+
+			update("EzCommonDAO.addMailPreviewConfig",map);
+		}
+	}
+
+	public void alterTblUsermasterForTeams() throws Exception {
+		try {
+			select("EzCommonDAO.checkTeamsIdColumn");
+		} catch (Exception e) {
+			logger.debug("tbl_usermaster TeamsId doesn't exist. creating the column...");
+			update("EzCommonDAO.addTeamsIdColumn");
+		}
+	}
+
+	public void createAuthTokenTable() {
+		try {
+			select("EzCommonDAO.checkAuthTokenTable");
+		} catch (Exception e) {
+			logger.debug("Table TBL_AUTHTOKEN doesn't exist. Creating the table...");
+			update("EzCommonDAO.createAuthTokenTable");
+		}
+	}
+
+	public void createUserPresenceTable() {
+		try {
+			select("EzCommonDAO.checkUserPresenceTable");
+		} catch (Exception e) {
+			logger.debug("Table TBL_USERPRESENCE doesn't exist. Creating the table...");
+			update("EzCommonDAO.createUserPresenceTable");
+		}
+	}
+
+    // 2025-08-05 이유정 - 게시판 > 게시글 주소복사 컬럼 추가
+    public void alterTblBoardInfoUrlCopyFlag() {
+        try {
+            select("EzCommonDAO.checkTblBoardInfoUrlCopyFlag");
+        } catch (Exception e) {
+            logger.debug("TBL_BOARD_BOARDINFO URLCOPYFLAG column doesn't exist. creating the column...");
+
+            update("EzCommonDAO.alterTblBoardInfoUrlCopyFlag");
+        }
+    }
+
+	// 2025-07-10 이혜림 - 게시판 > 게시판 목록 타입 컬럼 추가
+    public void addBoardUsrListShowType() {
+        try {
+            select("EzCommonDAO.checkAddBoardUsrListShowType");
+        } catch (Exception e) {
+            logger.debug("In TBL_Board_Configuration doesn't exist UsrListShowType column. creating the column...");
+
+            update("EzCommonDAO.addBoardUsrListShowType");
+        }
+    }
+
+	public void addBoardListShowType() {
+		try {
+			select("EzCommonDAO.checkAddBoardListShowType");
+		} catch (Exception e) {
+			logger.debug("In TBL_BOARD_BOARDINFO doesn't exist ListShowType column. creating the column...");
+
+			update("EzCommonDAO.addBoardListShowType");
+		}
+	}
+	
+	public void updateGuestAccessibleUris(Map<String, Object> map) throws Exception {
+		String propertyValue = (String) select("EzCommonDAO.getTenantConfig", map);
+
+		if (propertyValue != null) {
+			logger.debug("guestAccessibleUris tenant config data update...");
+			insert("EzCommonDAO.updateGuestAccessibleUris", map);
+		}
+	}
+
+    public void susinScheduleUpdate(String s) {
+        insert("EzCommonDAO.susinScheduleUpdate", s);
+    }
 }

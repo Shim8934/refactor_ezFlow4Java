@@ -44,8 +44,8 @@
 						url = "/admin/ezCommunity/applicationList.do";
 						getApplicationListCount();
 						break;
-				}				
-				window.open(url,"comm_main");
+				}
+                parent.document.querySelector("iframe[name=comm_main]").src = url;
 				
 				$("#left .adminListBox h2 span").click(function(){
 					$("#left .adminListBox h2").removeClass("on");

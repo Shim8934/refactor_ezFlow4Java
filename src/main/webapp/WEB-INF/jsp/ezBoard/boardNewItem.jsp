@@ -158,6 +158,7 @@
 		    var useHWP = "<c:out value='${useHWP}'/>";
 
 			/* 2023-09-25 민지수 - 게시판 > 공지사항 기간설정 시작, 종료시간 변수 */
+			var boardNoticePeriod = "<c:out value='${boardNoticePeriod}'/>";
 			var strNotiStart = "${boardListVO.notiStart}";
 			var strNotiEnd = "${boardListVO.notiEnd}";
 			
@@ -179,9 +180,21 @@
 
 			var writerFlag = "${boardInfo.writerFlag}"; // 2025-01-21 임정은 - 게시판 게시물 게시자명선택 사용여부 플래그
 			var writerNameType = parseInt("<c:out value='${boardListVO.writerNameType}'/>"); // 2025-01-21 임정은 - 게시자명선택 타입 (0 : 이름, 1 : 부서명)
+			var ReturnFunction;
+
+			var parentItemID = "${parentItemID}";
+
+			var useVersion = "${ useVersion }";
+			var version = "${ version }";
+			var newVersionItemID;
+			var newestVersion = "${ newestVersion }";
+			var parentItemID = "${ parentItemID }";
+			var historyModify = "${ historyModify }";
 
 		    window.onload = function () {
-		    	
+				if (isParentCommonArgsUsed()) {
+					ReturnFunction = opener == null ? parent.ezCommon_cross_dialogArguments[1] : opener.ezCommon_cross_dialogArguments[1];
+				}
 		    	// useHwpDownSecurity가 Y일 때만 Whwp api 호출. 전자결재 일반버전에서는 useHwpDownSecurity의 값에 상관없이 Whwp api 호출하지 않음.
 	        	/*
 	        	if (useHWP == "YES" && useHwpDownSecurity == "Y" && approvalFlag == "G") {
@@ -374,6 +387,28 @@
 			                document.getElementById("txtTitle").focus();
 			    }
 			    catch (e) { }
+
+				if (useVersion === "Y") {
+					let v;
+
+					if (version != "") {
+						v = version.split(".");
+
+						document.getElementById("majorVersion").disabled = true;
+						document.getElementById("minorVersion").disabled = true;
+					} else {
+						v = newestVersion.split(".");
+					}
+
+					var newItemFlag = v[0] === '';
+
+					if (newItemFlag) {
+						document.getElementById("tr_version").style.display = "none";
+					}
+
+					document.getElementById("majorVersion").value = !newItemFlag ? v[0] : "0";
+					document.getElementById("minorVersion").value = !newItemFlag ? v[1] : "0";
+				}
 		    };
 		    
 		    /* 2022-06-21 홍승비 - 에디터 영역 리사이즈 함수 분리 */
@@ -435,7 +470,9 @@
 
 				if ("<c:out value='${boardInfo.attachmentFlag}'/>" != "Y") {
 					var beforeEditorSize = document.getElementById("EdtorSize").style.height;
+					if (!beforeEditorSize.endsWith('%')){
 					document.getElementById("EdtorSize").style.height = parseInt(beforeEditorSize, 10) + 145 + "PX";
+					}
 					mobileDistinction();
 				}
 				
@@ -485,7 +522,7 @@
 		        NowDate.setMonth(NowDate.getMonth() - 1);
 				var NtNowDate = new Date(strNow.substring(0, 10));
 				var NtEndDate = new Date(strNow.substring(0, 10));
-				NtEndDate.setMonth(NtEndDate.getMonth() + 1);
+				NtEndDate.setDate(NtEndDate.getDate() + parseInt(boardNoticePeriod));
 
 		        $("#Sdatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
 		        $("#Sdatepicker").datepicker('setDate', NowDate);
@@ -684,6 +721,11 @@
 			            return;
 			        }
 		    	}
+
+				if (gubun == 9 && pMode != "temp" && (pAttachListXml == "" || pAttachListXml.getElementsByTagName("ROWS")[0].childNodes.length == 0)) {
+					alert("<spring:message code = 'ezBoard.fileViewerBoard.attachNotice' />");
+					return;
+				}
 		
 		        //추가항목
 				var must = new Array();
@@ -852,6 +894,12 @@
 					}
 				}
 
+				if (document.getElementById("majorVersion") != null && document.getElementById("minorVersion") != null) {
+					if (!checkVersionValidate()) {
+						return;
+					}
+				}
+
 		        newID = "{" +NewGuid+ "}";
 		        var xmlDom = createXmlDom();
 		        var xmlhttp = createXMLHttpRequest();
@@ -864,7 +912,9 @@
 		            if (pMode != "modify") {
 		                createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "ITEMID", newID);
 		            } else {
-		                createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "ITEMID", strItemID);
+						var ii = useVersion === "Y" ? (historyModify === "true" ? strItemID : newID) : strItemID;
+
+		                createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "ITEMID", ii);
 		            }
 		        }
 		        
@@ -878,7 +928,7 @@
 		        if (gubun != "2") {
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "WRITERID", SSUserID);
 					if ('Y' == writerFlag) {
-						var flagwriterName = $('#writerFlag').val().toString().split(":");
+						var flagwriterName = $('#writerFlag').val().toString().split("\\");
 						createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "WRITERNAME", MakeXMLString(flagwriterName[0]));
 						createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "WRITERNAME2", MakeXMLString(flagwriterName[1]));
 						createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "WRITERNAMETYPE", MakeXMLString(flagwriterName[2]));
@@ -1160,6 +1210,15 @@
 				        createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "KEYWORD", keyword);
 				    }
 				}
+				
+                createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "useVersion", useVersion);
+
+				if (useVersion === "Y") {
+					createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "version", version == null ? "" : version);
+				}
+
+				createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "parentItemID", parentItemID == "" ? newID : parentItemID);
+				createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "historyModify", historyModify);
 
 		        xmlhttp.open("POST", "/ezBoard/saveItem.do?mode=" + pMode + "&guBun=" + gubun, false);
 		        xmlhttp.send(xmlDom);
@@ -1227,6 +1286,7 @@
 		            try {
 						window.opener.leftCountRf(pBoardID);
 					} catch (e) {
+					    console.log(e);
 					}
 					
 					// 전자결재문서(시행문, 문서발송)를 게시한 경우의 자동발송 처리 (SuccessBoard 함수)
@@ -1251,7 +1311,7 @@
 		                            try {
 		                                var checkboard = window.opener.location.toString();
 		                                if (checkboard.indexOf("mailPreviewContent") > -1) {
-		                                    window.close();
+		                                    btnClose_onclick();
 		                                    return;
 		                                }
 		                                if (checkboard.indexOf("mailReadContent.do") < 0) {
@@ -1320,18 +1380,50 @@
 					try{
 						if (parent.opener != null && parent.opener.getBoardList_NewBoardSTD != undefined) {
 							parent.opener.getBoardList_NewBoardSTD();
+						} else if (gubun === "9") {
+							parent.location.href = "/ezBoard/fileViewerBoard.do?boardID="  + encodeURIComponent(pBoardID);
 						}
 					} catch (e) {console.log(e); }
 					
 
-		            window.close();
+                    if (pMode == "modify") {
+                        if (useVersion == "Y") {
+                            document.location.href = "/ezBoard/boardItemView.do?showAdjacent=&itemID=" + encodeURIComponent("{" + NewGuid +"}") + "&boardID=" + encodeURIComponent(pBoardID) + "&location=GENERAL&__wwidth=1920";
+                        } else {
+                            document.location.href = "/ezBoard/boardItemView.do?showAdjacent=&itemID=" + encodeURIComponent(strItemID) + "&boardID=" + encodeURIComponent(pBoardID) + "&location=GENERAL&__wwidth=1920";
+                        } 
+                        if (window.opener) {
+                            window.opener.location.reload();
+                        }
+                    } else if (pMode == "reply") {
+                        if (window.opener) {
+                            window.opener.location.reload();
+                        	btnClose_onclick();
+                        } else {
+							document.location.href = "/ezBoard/boardItemView.do?showAdjacent=&itemID=" + encodeURIComponent(newID) + "&boardID=" + encodeURIComponent(pBoardID) + "&location=GENERAL&__wwidth=1920";
+						}
+					} else {
+						if (window.opener) {
+							window.opener.location.reload();
+						}
+						btnClose_onclick();
+                    }
 		        } else {
-		            if (getNodeText(GetChildNodes(loadXMLString(xmlhttp.responseText))[0]) == "XSS")
-		                alert("<spring:message code='ezBoard.t00001' />");
-		            else if (getNodeText(loadXMLString(xmlhttp.responseText)) == "INACCESSIBLE")
-		                alert(strLang173);
-		            else
-		                alert("<spring:message code='ezBoard.t403' />" + getNodeText(loadXMLString(xmlhttp.responseText)));
+		            if (getNodeText(GetChildNodes(loadXMLString(xmlhttp.responseText))[0]) == "XSS") {
+						alert("<spring:message code='ezBoard.t00001' />");
+					}
+		            else if (getNodeText(loadXMLString(xmlhttp.responseText)) == "INACCESSIBLE") {
+						alert(strLang173);
+					}
+					else if (getNodeText(GetChildNodes(loadXMLString(xmlhttp.responseText))[0]) == "GUBUNCHANGED") {
+		                alert(strLangJIHgubunChange02);
+		            }
+					else if (getNodeText(GetChildNodes(loadXMLString(xmlhttp.responseText))[0]) == "DUPLICATED") {
+						alert(strLangFileViewr01);
+					}
+		            else {
+						alert("<spring:message code='ezBoard.t403' />" + getNodeText(loadXMLString(xmlhttp.responseText)));
+					}
 		        }
 		        xmlhttp = null;
 		        xmlDom = null;
@@ -1652,13 +1744,18 @@
 				if (MailxmlHTTP.status == 200) {
 					var retXml = loadXMLString(MailxmlHTTP.responseText);
 					document.getElementById('txtTitle').value = "일정게시 : " + getNodeText(retXml.getElementsByTagName("SUBJECT").item(0));
-					var Content = "<P>&nbsp;<br></P><br><DIV><br><br>-----<B>[&nbsp;일정 내용&nbsp;]</B>-----</DIV><DIV><B>날짜 : </B>" + getNodeText(retXml.getElementsByTagName("DATE").item(0)) + "</DIV>";
-					Content = Content + "<DIV><B>작성자 : </B>" + ReplaceText(ReplaceText(getNodeText(retXml.getElementsByTagName("FROMNAME").item(0)), "<", "&lt"), ">", "&gt;") + "</DIV>";
-					Content = Content + "<DIV><B>제목 : </B>" + getNodeText(retXml.getElementsByTagName("SUBJECT").item(0)) + "</DIV><P><br><br>" + getNodeText(retXml.getElementsByTagName("HTMLDESCRIPTION").item(0)) + "</P>";
+					var Content = "<p " + defaultFontAndSize + ">&nbsp;</p><p " + defaultFontAndSize + ">&nbsp;</p>";
+					Content += "<p " + defaultFontAndSize + ">-----<B>[&nbsp;일정&nbsp;내용&nbsp;]</B>-----</p>"
+					Content += "<p " + defaultFontAndSize + "><B>날짜 : </B>" + getNodeText(retXml.getElementsByTagName("DATE").item(0)) + "</p>"
+					Content += "<p " + defaultFontAndSize + "><B>작성자 : </B>" + ReplaceText(ReplaceText(getNodeText(retXml.getElementsByTagName("FROMNAME").item(0)), "<", "&lt"), ">", "&gt;") + "</p>"
+					Content += "<p " + defaultFontAndSize + "><B>제목 : </B>" + getNodeText(retXml.getElementsByTagName("SUBJECT").item(0)) + "</p>"
+					Content += "<p " + defaultFontAndSize + ">&nbsp;</p><p " + defaultFontAndSize + ">&nbsp;</p>";
+					Content += "<p " + defaultFontAndSize + ">" + getNodeText(retXml.getElementsByTagName("HTMLDESCRIPTION").item(0)) + "</p>"
 					Content = ReplaceText(Content, "id=doctitle", "");
 					Content = ReplaceText(Content, "id=\"doctitle\"", "");
 					Content = ReplaceText(Content, "id=\'doctitle\'", "");
-
+                    Content = '<div '+defaultFontAndSize+'>' + Content + '</div>';
+                    
 					message.SetEditorContent(Content);
 
 					var attCnt = retXml.getElementsByTagName("ATTACHID").length;
@@ -1684,7 +1781,7 @@
 	                OpenWin.close();
 	                if (ret == "") {
 	                    if (confirm("<spring:message code='ezBoard.t414' />")) {
-	                        window.close();
+	                        btnClose_onclick();
 	                    }
 	                    else {
 	                        OpenWin = null;
@@ -1961,11 +2058,11 @@
 			                    }
 			                } else {
 			                    if (pDocID == "" && (scheduleId == "" || scheduleId == null)) {
-			                        if (InsertMailInfo() == -1) window.close();
+			                        if (InsertMailInfo() == -1) btnClose_onclick();
 			                    } else if (scheduleId != "" && scheduleId != null) {
-									if (InsertScheduleInfo() == -1) window.close();
+									if (InsertScheduleInfo() == -1) btnClose_onclick();
 								} else {
-			                        if (InsertDocInfo() == -1) window.close();
+			                        if (InsertDocInfo() == -1) btnClose_onclick();
 			                    }
 			                }
 			            }
@@ -2114,7 +2211,9 @@
 
 				if ("<c:out value='${boardInfo.attachmentFlag}'/>" != "Y") {
 					var beforeEditorSize = document.getElementById("EdtorSize").style.height;
+					if (!beforeEditorSize.endsWith('%')){
 					document.getElementById("EdtorSize").style.height = parseInt(beforeEditorSize, 10) + 145 + "PX";
+					}
 					mobileDistinction();
 				}
 				
@@ -2821,6 +2920,7 @@
 				}
 				attachxml = strRet;
 			}
+
 			function openPopupAuth(e) {
 			    var columnName = e.target.getAttribute("columnName");
                 var OpenWin = window.open("/ezBoard/boardSelectUser.do?companyId=" + SSCompanyID + "&columnName=" + columnName, "", GetOpenWindowfeature(970, 670));
@@ -2849,11 +2949,11 @@
 		            window.onresize();
 		            if (pUrl != "") {
 	                    if (pDocID == "" && (scheduleId == "" || scheduleId == null)) {
-	                        if (InsertMailInfo() == -1) window.close();
+	                        if (InsertMailInfo() == -1) btnClose_onclick();
 	                    } else if (scheduleId != "" && scheduleId != null) {
-							if (InsertScheduleInfo() == -1) window.close();
+							if (InsertScheduleInfo() == -1) btnClose_onclick();
 						} else {
-	                        if (InsertDocInfo() == -1) window.close();
+	                        if (InsertDocInfo() == -1) btnClose_onclick();
 	                    }
 		            } else if (pMode != "modify" && pMode != "reply") {
 		            	if (pcheckForm.toUpperCase() == "TRUE") {
@@ -2969,6 +3069,28 @@
 					document.getElementById("writerFlag").selectedIndex = 0;
 				}
 			}
+
+			function checkVersionValidate() {
+				var majorV = document.getElementById("majorVersion").value;
+				var minorV = document.getElementById("minorVersion").value;
+				version = majorV + "." + minorV;
+
+				if (majorV == "" || minorV == "") {
+					alert("<spring:message code = 'ezBoard.versionManage.msg5' />");
+
+					return false;
+				} else if (isNaN(majorV) || isNaN(minorV)) {
+					alert("<spring:message code = 'ezBoard.versionManage.msg6' />");
+
+					return false;
+				} else if (version <= newestVersion && historyModify !== "true") {
+					alert("<spring:message code = 'ezBoard.versionManage.msg7' />");
+
+					return false;
+				}
+
+				return true;
+			}
 	    </script>
 	    <c:if test="${!isCrossBrowser}">
 	   		<script type="text/javascript" FOR="EzHTTPTrans" EVENT="AttachAddFile(filename)">
@@ -2992,8 +3114,8 @@
 			                        <li><span onclick="PreventSaveItem('<c:out value="${mode}"/>');"><spring:message code='ezBoard.t98' /></span></li>
 	                    		</c:otherwise>
 		                    	</c:choose>
-		                    	<c:if test="${boardInfo.guBun != '3'}">
-			                        <li><span onclick="PreviewItem();"><spring:message code='ezBoard.t431' /></span></li>
+								<c:if test="${boardInfo.guBun != '3' && boardInfo.guBun != '9'}">
+									<li><span onclick="PreviewItem();"><spring:message code='ezBoard.t431' /></span></li>
 		                    	</c:if>
 		                    	<c:if test="${boardInfo.guBun != '2' && (mode != 'modify' && mode != 'reply')}">
 			                        <li><span onclick="PreventSaveItem('temp');"><spring:message code='ezBoard.t10034' /></span></li>
@@ -3019,11 +3141,13 @@
 	                    	</c:if>
 	                    </ul>
 	                </div>
+					<c:if test = "${ boardInfo.guBun != '9' }">
 	                <div id="close">
 	                    <ul>
-	                        <li><span onclick="window.close();"></span></li>
+	                        <li><span onclick="btnClose_onclick();"></span></li>
 	                    </ul>
 	                </div>
+					</c:if>
 	                <script type="text/javascript">
 	                    selToggleList(document.getElementById("menu"), "ul", "li", "0");
 	                </script>
@@ -3036,7 +3160,9 @@
 	                <div class="portlet_tabpart03" style="margin:0px;border-top:0px;padding:0px;margin-bottom:4px">
 	                    <div class="portlet_tabpart03_top" id="tab1">
 	                        <p id="MailEnv_sub1"><span divname="MailEnv_div1" id="1tab1"><spring:message code='ezBoard.hsbJP02' /></span></p>
+							<c:if test = "${ boardInfo.guBun != '9' }">	<%-- File Viewer 게시판 특성 상 예약게시는 구조와 맞지 않다고 판단되어 display none 처리 --%>
 	                        <p id="MailEnv_sub3"><span divname="MailEnv_div3" id="1tab3"><spring:message code='ezBoard.hsbJP01' /></span></p>
+							</c:if>
 	                    </div>
 	                </div>
 	            </td>
@@ -3104,7 +3230,7 @@
 		                                &nbsp;<input type="checkbox" style="display: none" id="noticePost" />
 	                            	</c:otherwise>
 	                            </c:choose>
-								<c:if test="${mode != 'new' && mode != 'new1' && mode != 'boardContent' && mode != 'boardAttach' && mode != 'temp' && mode != 'reply' && reservedItem == '' }">
+								<c:if test="${mode != 'new' && mode != 'new1' && mode != 'boardContent' && mode != 'boardAttach' && mode != 'temp' && mode != 'reply' && reservedItem == '' && boardInfo.guBun != '9' }">
 						              &nbsp;<span style="line-height: 20px; height: 20px; display: inline-block;"><input type="checkbox" id="readCount" /></span><span style="line-height: 21px; height: 12px; display: inline-block;"><spring:message code='ezBoard.t00002' /></span>
 								</c:if>	
 		                        </td>
@@ -3134,9 +3260,9 @@
 									</span>
 									<input type="checkbox" id="chkUseDept" style="margin-left: 0px !important;" onclick="chkUseDept_onclick()">
 									<select id="writerFlag" style="display: none;">
-										<option value="<c:out value='${writerOption.N}:${writerOption.N2}:0' />"></option>
-										<option value="<c:out value='${writerOption.T}:${writerOption.T2}:1' />"></option>
-										<option value="<c:out value='${writerOption.D}:${writerOption.D2}:2' />"></option>
+										<option value="<c:out value='${writerOption.N}\\${writerOption.N2}\\0' />"></option>
+										<option value="<c:out value='${writerOption.T}\\${writerOption.T2}\\1' />"></option>
+										<option value="<c:out value='${writerOption.D}\\${writerOption.D2}\\2' />"></option>
 									</select>
 								</td>
 							</tr>
@@ -3245,6 +3371,17 @@
 		                            <input type="password" id="txtPassWord" style="WIDTH: 150px" maxlength="15" autocomplete="new-password">&nbsp;&nbsp;(<spring:message code='ezBoard.t439' /></td>
 		                    </tr>
 	                    </c:if>
+						<c:if test = "${ (mode eq 'modify' && useVersion eq 'Y' && version ne '') || (historyModify eq 'false' && useVersion eq 'Y') }">
+						<tr id = "tr_version">
+							<th>버전</th>
+							<td colspan = 3>
+								<input type = "text" id = "majorVersion" style = "width : 25px; text-align : center;" maxLength = 2 />
+								<dot style = "vertical-align : bottom">.</dot>
+								<input type = "text" id = "minorVersion" style = "width : 25px; text-align : center;" maxLength = 2 />
+								* 숫자만 입력 가능합니다.
+							</td>
+						</tr>
+						</c:if>
 	                </table>
 	                <table id="tab02" class="content" style="display: none;">
 	                	<c:choose>
@@ -3522,7 +3659,9 @@
 		
 		if ("<c:out value='${boardInfo.attachmentFlag}'/>" != "Y") {
 			var beforeEditorSize = document.getElementById("EdtorSize").style.height;
+			if (!beforeEditorSize.endsWith('%')){
 			document.getElementById("EdtorSize").style.height = parseInt(beforeEditorSize, 10) + 145 + "PX";
+			}
 		}
 		
 		mobileDistinction();

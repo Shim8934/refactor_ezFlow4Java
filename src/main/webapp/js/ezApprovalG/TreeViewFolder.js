@@ -1,4 +1,4 @@
-﻿﻿/* 2023-10-05 황인경 - 디자인 개선 > 전자결재 관련 Folder TreeView */
+﻿/* 2023-10-05 황인경 - 디자인 개선 > 전자결재 관련 Folder TreeView */
 /*트리의 설정값을 가지고 있는 변수*/
 var TreeIcons       = new Array();
 var TreeIconSizes   = new Array();
@@ -688,5 +688,8 @@ function node_select(pNodeID, pNodeNM, pTreeID, callbackFunc) {
         if (callbackFunc != null & typeof (callbackFunc) == "function")
             callbackFunc(pNodeID, pNodeNM);
     }
-    $("li.on").attr("class","");
+    var el = document.querySelector("li.on");
+    if (el) {
+        el.className = "";
+    }
 }

@@ -196,13 +196,13 @@
 					$(".surveyList").mCustomScrollbar({theme : "dark"});
 				}
 				
-				function getConfigPage()           {window.parent.frames["right"].location.href = "/ezSurvey/surveyConfig.do";}
-				function getAllSurveyList()        {window.parent.frames["right"].location.href = "/ezSurvey/surveyList.do?mode=all";}
-				function getProcessingSurveyList() {window.parent.frames["right"].location.href = "/ezSurvey/surveyList.do?mode=processing";}
-				function getFinishedSurveyPage()   {window.parent.frames["right"].location.href = "/ezSurvey/surveyList.do?mode=finish";}
-				function getMySurveyPage()         {window.parent.frames["right"].location.href = "/ezSurvey/surveyList.do?mode=my";}
-				function getDraftSurveyPage()      {window.parent.frames["right"].location.href = "/ezSurvey/surveyList.do?mode=draft";}
-				function createNewSurvey()         {window.parent.frames["right"].location.href = "/ezSurvey/createSurvey.do";}
+				function getConfigPage()           {window.parent.document.querySelector("iframe[name=right]").src = "/ezSurvey/surveyConfig.do";}
+				function getAllSurveyList()        {window.parent.document.querySelector("iframe[name=right]").src = "/ezSurvey/surveyList.do?mode=all";}
+				function getProcessingSurveyList() {window.parent.document.querySelector("iframe[name=right]").src = "/ezSurvey/surveyList.do?mode=processing";}
+				function getFinishedSurveyPage()   {window.parent.document.querySelector("iframe[name=right]").src = "/ezSurvey/surveyList.do?mode=finish";}
+				function getMySurveyPage()         {window.parent.document.querySelector("iframe[name=right]").src = "/ezSurvey/surveyList.do?mode=my";}
+				function getDraftSurveyPage()      {window.parent.document.querySelector("iframe[name=right]").src = "/ezSurvey/surveyList.do?mode=draft";}
+				function createNewSurvey()         {window.parent.document.querySelector("iframe[name=right]").src = "/ezSurvey/createSurvey.do";}
 				function changeSurveyState() {
 					$.ajax({
 						type: "GET",
@@ -311,12 +311,12 @@
 					getAllSurveyList();
 				}
 				
-				function getConfigPage()           {window.parent.frames["right"].location.href = "/ezSurvey/surveyConfig.do";}
-				function getAllSurveyList()        {window.parent.frames["right"].location.href = "/ezSurvey/surveyList.do?mode=all";}
-				function getProcessingSurveyList() {window.parent.frames["right"].location.href = "/ezSurvey/surveyList.do?mode=processing";}
-				function getFinishedSurveyPage()   {window.parent.frames["right"].location.href = "/ezSurvey/surveyList.do?mode=finish";}
-				function getMySurveyPage()         {window.parent.frames["right"].location.href = "/ezSurvey/surveyList.do?mode=my";}
-				function getDraftSurveyPage()      {window.parent.frames["right"].location.href = "/ezSurvey/surveyList.do?mode=draft";}
+				function getConfigPage()           {window.parent.document.querySelector("iframe[name=right]").src = "/ezSurvey/surveyConfig.do";}
+				function getAllSurveyList()        {window.parent.document.querySelector("iframe[name=right]").src = "/ezSurvey/surveyList.do?mode=all";}
+				function getProcessingSurveyList() {window.parent.document.querySelector("iframe[name=right]").src = "/ezSurvey/surveyList.do?mode=processing";}
+				function getFinishedSurveyPage()   {window.parent.document.querySelector("iframe[name=right]").src = "/ezSurvey/surveyList.do?mode=finish";}
+				function getMySurveyPage()         {window.parent.document.querySelector("iframe[name=right]").src = "/ezSurvey/surveyList.do?mode=my";}
+				function getDraftSurveyPage()      {window.parent.document.querySelector("iframe[name=right]").src = "/ezSurvey/surveyList.do?mode=draft";}
 				
 				return {
 					

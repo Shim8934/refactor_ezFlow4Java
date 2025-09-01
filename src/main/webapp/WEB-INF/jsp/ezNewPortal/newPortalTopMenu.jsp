@@ -30,6 +30,10 @@
 		<script>
 			var useColor = '<c:out value="${useColor}"/>';
 			var packageType = '<c:out value="${packageType}"/>';
+
+			//ezAI 사용 여부
+			var useAI = '<c:out value="${useAI}"/>';
+
 			// UI 스킨 작업용
 			function skin(skinId){
 				var skinLink = "";
@@ -408,9 +412,9 @@
 				str += setUtilMenu();
 				str += '	</li>';
 				if ('${useTotalSearch}' === 'YES') {
-					str += '<li class="contentlayout_right"><div class="employee_search"><input type="text" placeholder="<spring:message code="main.t00029" />" id="topsearch_btn"><span onclick="toggleTopSearch()"></span></div></li>' 
+					str += '<li class="contentlayout_right"><div class="employee_search"><input type="text" placeholder="<spring:message code="main.t00029" />" id="topsearch_btn"><span class="totalSearchBtn1" onclick="toggleTopSearch()"></span><span class="totalSearchBtn2" onclick="totalSearch()"></span></div></li>' 
 				}
-				str += '	<li class="contentlayout_none" onclick="subMenuClickEvent(\'off\')">';
+				str += '	<li class="contentlayout_none topMenuBtnsOn" onclick="subMenuClickEvent(\'off\')">';
 				str += setMainMenu();
 				str += '	</li>';
 				str += '</ul>';		
@@ -440,6 +444,13 @@
 				}				
 			});				
 		}
+
+		//20250513 : 김진홍 : 챗봇 호출기능 추가
+		var openChatbotUi = function(){
+			if (!parent.document.getElementById("wrapAIbox").classList.contains("active")) {
+				parent.document.getElementById("wrapAIbox").classList.add("active");
+			}
+		}
 		
 		// 유틸메뉴 설정
 		var setUtilMenu = function () {
@@ -450,6 +461,11 @@
 					str += '<li><span style="font-family: 돋움; font-size: 13px; font-weight: bold; color: #333; display: inline-block; margin-top: 17px; width: 111px;" title="' + '<spring:message code="ezSystem.x0025" />(<spring:message code="ezSystem.x0024" />)' + '">' + '${lastLogin} (' + '${loginIP})' + '</span></li>';
 				}
 								
+				//20250513 : 김진홍 : 메인화면 챗봇버튼 추가
+				if(useAI == "Y"){
+					str += '<li><span class="util_aiToolbar" id="util_aiToolbar" onclick="openChatbotUi();">AI 도구</span></li>';
+				}
+
 				if ('${useUtilTalk}' === 'YES') str += '<li><span class="icon_topmenu util_messenger" id="util_messenger" title="' + '<spring:message code="ezNewPortal.kje01" />' + '"></span></li>'; // 메신저 다운로드 추가
 				if ('${roleInfo}' === 'admin') str += '<li><span class="util_admin" id="util_admin" title="' + '<spring:message code="ezNewPortal.t004" />' + '"></span></li>';
 				str += '<li><span class="util_employee_search" id="util_employee_search" title="' + '<spring:message code="ezNewPortal.t005" />' + '"></span></li>';
@@ -487,7 +503,7 @@
 			var keyword = $("#topsearch_btn").val();
 			//$("#input_totalSearch").val("");
 // 			OpenWindow(event, "/ezPortal/totalSearch.do?keyword=" + encodeURIComponent(keyword) , "main", "");
-			window.open("/ezPortal/totalSearch.do?keyword=" + encodeURIComponent(keyword) , "main", "");
+            parent.document.querySelector("iframe[name=main]").src = "/ezPortal/totalSearch.do?keyword=" + encodeURIComponent(keyword);
 		}
 		
 		var deleteTotalSearchValue = function () {
@@ -496,7 +512,7 @@
 		
 		function totalSearch_key_event(e,obj) {
 		    var curevent = (typeof event == 'undefined' ? e : event);
-		        if (curevent.keyCode == "13") {
+		        if (curevent.keyCode == "13" || event.key == 'Enter') {
 		            totalSearch();
 		        }
 		}
@@ -605,7 +621,7 @@
 				} else if (openType == 2) {
 					window.open(menuUrl, '_blank', 'width=1000,height=900');
 				} else if (openType == 3) {
-					window.open(menuUrl, 'main', '');
+                    parent.document.querySelector("iframe[name=main]").src = menuUrl;
 				}
 
 				// 취소버튼과 같은 역할
@@ -1879,6 +1895,7 @@
 		
 		function dimLayerControl(mode) {
 			var mainFrame = window.parent.document.getElementById("mainFrame");
+            var topFrame =  window.parent.document.getElementById("topFrame");
 			if(mode == "open") {
 				document.querySelector('body').style.background = "rgba(0,0,0,0.3)";
 	            document.querySelector('body').classList.add("dimLayerOpen");
@@ -1893,6 +1910,7 @@
 						window.parent.fixLayout();
 					}
                 }
+                topFrame.style.position = "absolute";
 			} else if (mode == "close") {
 				document.querySelector('body').style.background = "rgba(0,0,0,0)";
                 document.querySelector('body').classList.remove("dimLayerOpen");
@@ -1902,6 +1920,7 @@
                 } else {
                 	mainFrame.style.position = "relative";
                 }
+                topFrame.style.position = "";
 			}
 			
 			var userAgent = navigator.userAgent.toLowerCase();
@@ -2023,6 +2042,14 @@
 		
 		function toggleTopSearch() {
 			 $(".employee_search").toggleClass("active");
+			 if ($(".contentlayout_none.topMenuBtnsOn").length > 0) {
+				 $(".contentlayout_none.topMenuBtnsOn").addClass("topMenuBtnsOff");
+				 $(".contentlayout_none.topMenuBtnsOn").removeClass("topMenuBtnsOn");
+			 } else {
+				 $(".contentlayout_none.topMenuBtnsOff").addClass("topMenuBtnsOn");
+				 $(".contentlayout_none.topMenuBtnsOff").removeClass("topMenuBtnsOff");
+				 
+			 }
 		}
 
 		function offMenuAll() {

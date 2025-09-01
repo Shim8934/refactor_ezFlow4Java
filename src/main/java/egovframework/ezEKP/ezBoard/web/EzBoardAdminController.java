@@ -22,6 +22,8 @@ import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import egovframework.ezEKP.ezBoard.vo.BoardMyFavoriteVO;
+import egovframework.ezEKP.ezOrgan.vo.OrganAuth;
 import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
@@ -39,7 +41,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
-import egovframework.com.cmm.service.EgovFileMngUtil;
+import egovframework.com.cmm.service.EzFileMngUtil;
 import egovframework.ezEKP.ezBoard.service.EzBoardAdminService;
 import egovframework.ezEKP.ezBoard.service.EzBoardService;
 import egovframework.ezEKP.ezBoard.vo.BoardAttributeVO;
@@ -71,7 +73,7 @@ import egovframework.let.utl.fcc.service.EzFAL;
  */
 
 @Controller
-public class EzBoardAdminController extends EgovFileMngUtil {
+public class EzBoardAdminController extends EzFileMngUtil {
 
 	@Autowired
 	private CommonUtil commonUtil;
@@ -1049,7 +1051,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezBoard/saveBoardProperty.do", method = RequestMethod.POST)
 	@ResponseBody
-	public void saveBoardProperty(@CookieValue("loginCookie") String loginCookie, HttpServletResponse response,	HttpServletRequest request, BoardPropertyVO boardPropertyVO) throws Exception {
+	public String saveBoardProperty(@CookieValue("loginCookie") String loginCookie, HttpServletResponse response,	HttpServletRequest request, BoardPropertyVO boardPropertyVO) throws Exception {
 		logger.debug("saveBoardProperty started");
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -1060,6 +1062,23 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		boardPropertyVO.setTenantID(userInfo.getTenantId());
 		
 		BoardPropertyVO beforeBoardProperty = ezBoardService.getBoardProperty(boardPropertyVO.getBoardID(), userInfo.getTenantId()); // 게시판 이름 변경 전 정보
+		if (beforeBoardProperty.getUrl() == null) {
+			beforeBoardProperty.setUrl("");
+		}
+		
+		 BoardMyFavoriteVO myFavoriteVO = new BoardMyFavoriteVO();
+		 myFavoriteVO.setUserId(userInfo.getId());
+	     myFavoriteVO.setBoardId(boardPropertyVO.getBoardID());
+	     myFavoriteVO.setType("4");
+	     myFavoriteVO.setTenantID(userInfo.getTenantId());
+		 
+		int boardItemCount = ezBoardService.getBrdTotalItemCount(myFavoriteVO);
+		
+		// url 게시판과 일반 게시판이 같은 gubun값을 쓰므로, url 체크 조건을 추가함
+		if (boardItemCount > 0 && (!beforeBoardProperty.getGuBun().equals(boardPropertyVO.getGuBun()) || !beforeBoardProperty.getUrl().equals(boardPropertyVO.getUrl()))) {
+			return "nonEmptyBoard";
+		}
+		
 		ezBoardAdminService.saveBoardProperty(boardPropertyVO);
 		
 		if (!noticeBoardMod.equals("")) { // 공지사항 게시판 설정이 변경되었다면 추가 동작 진행
@@ -1102,6 +1121,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		}
 		
 		logger.debug("saveBoardProperty ended");
+		return "success";
 	}
 	
 	/**
@@ -1248,9 +1268,8 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		
 		String boardID = request.getParameter("boardID");
 		String parentBoardID = request.getParameter("parentBoardID");
-		String adminType = request.getParameter("adminType");
+//		String adminType = request.getParameter("adminType");
 		String pBoardName = request.getParameter("boardName");
-		String pType = request.getParameter("boardType");
 		String pParentNeed = request.getParameter("parentNeed");
 		String pAccessLevel = request.getParameter("accessLevel");
 		String primary = userInfo.getPrimary(); // 사용하지 않는 userLang 변수 제거, primary로 대체
@@ -1297,8 +1316,10 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 	    	boardName = boardProperty.getBoardName();
 		}
 
+		String guestPermitYN = ezCommonService.getTenantConfig("useBoardGuestPermit", userInfo.getTenantId());
+		
 		/* 게시판 권한설정 시 companyID 조건 추가, 겸직한 사원의 경우 해당 겸직정보를 표출함 + 다국어 대응하도록 정보 가져옴 */
-		List<BoardPropertyVO> list = ezBoardAdminService.getBoardAccessList(boardID, isAllGroupBoard, userInfo.getCompanyID(), userInfo.getTenantId());
+		List<BoardPropertyVO> list = ezBoardAdminService.getBoardAccessList(boardID, isAllGroupBoard, userInfo.getCompanyID(), userInfo.getTenantId(), guestPermitYN);
 		
 		StringBuilder sb = new StringBuilder();
 		sb.append("<DATA>");
@@ -1354,14 +1375,15 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		model.addAttribute("parentBoardID", parentBoardID);
 		model.addAttribute("primary", primary);
 		model.addAttribute("pBoardName", pBoardName);
-		model.addAttribute("pType", pType);
+		model.addAttribute("pType", boardProperty.getGuBun());
 		model.addAttribute("pParentNeed", pParentNeed);
-		model.addAttribute("adminType", adminType);
+//		model.addAttribute("adminType", adminType);
 		model.addAttribute("pAccessLevel", pAccessLevel);
 		model.addAttribute("boardName", boardName);
 		model.addAttribute("strList", result);
 		model.addAttribute("isAllGroupBoard", isAllGroupBoard);
 		model.addAttribute("isBoardAdmin", isBoardAdmin);
+		model.addAttribute("guestPermitYN", guestPermitYN);
 
 		logger.debug("boardACL ended");
 		return "admin/ezBoard/boardACL";
@@ -1697,19 +1719,28 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		String boardID = request.getParameter("boardID");
-		String boardName = request.getParameter("boardName");		
-		String boardType = request.getParameter("boardType");
-		String parentBoardID = request.getParameter("parentBoardID");
+		BoardPropertyVO board = ezBoardService.getBoardProperty(boardID, userInfo.getTenantId());
+		
+		String boardName = board.getBoardName();
+		String gubun = board.getGuBun();
+		String parentBoardID = board.getParentBoardID();
 		String tabID = (request.getParameter("tabID") == null ? "1tab1" : request.getParameter("tabID"));
+		
+		if (gubun.equals("10") && tabID.equals("1tab1")) {
+			tabID = "1tab2";
+		}
+		
 		String useFormFlag = ezBoardAdminService.getUseFormFlag(boardID, userInfo.getTenantId());
 		
 		model.addAttribute("boardID", boardID);
 		model.addAttribute("boardName", commonUtil.cleanValue(boardName));
-		model.addAttribute("boardType", boardType);
+		model.addAttribute("guBun", gubun);
 		model.addAttribute("parentBoardID", parentBoardID);
 		model.addAttribute("tabID", tabID);		
 		model.addAttribute("use_Editor", ezCommonService.getTenantConfig("MODULEEDITOR", userInfo.getTenantId()));
 		model.addAttribute("useFormFlag", useFormFlag);
+		model.addAttribute("userPageYN", request.getParameter("userPageYN") != null ? request.getParameter("userPageYN") : "N");
+		model.addAttribute("parentNeed", request.getParameter("parentNeed") != null ? request.getParameter("parentNeed") : "Y");				
 
 		logger.debug("boardConfig ended");
 		return "admin/ezBoard/boardConfig";
@@ -2177,8 +2208,10 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 				}
 			}
 
+			String guestPermitYN = ezCommonService.getTenantConfig("useBoardGuestPermit", tenantID);
+			
 			for (Map<String, Object> info : addDeptlist) {
-				List<BoardPropertyVO> accessList = ezBoardAdminService.getBoardAccessList((String) info.get("boardID"), "N", companyID, tenantID);
+				List<BoardPropertyVO> accessList = ezBoardAdminService.getBoardAccessList((String) info.get("boardID"), "N", companyID, tenantID, guestPermitYN);
 				for (BoardPropertyVO access : accessList) {
 					if ((access.getAccessID()).equals(info.get("accessID"))) {
 						
@@ -2217,4 +2250,33 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		return result;
 	}
 	
+	@RequestMapping(value = "/admin/ezBoard/createModifyHistory.do", method = RequestMethod.POST)
+	@ResponseBody
+	public String createModifyHistory(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("createModifyHistory started");
+		String res = "FAIL";
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String boardId = request.getParameter("boardID");
+
+		res = ezBoardAdminService.createModifyHistory(boardId, userInfo.getTenantId());
+
+		logger.debug("createModifyHistory ended");
+		return res;
+	}
+
+	@RequestMapping(value = "/admin/ezBoard/addGuestPermit.do", method = RequestMethod.POST)
+	@ResponseBody
+	public String addGuestPermit(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, BoardPropertyVO boardPropertyVO) throws Exception {
+		logger.debug("addGuestPermit started");
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String boardID = request.getParameter("boardID");
+		String parentBoardID = request.getParameter("parentBoardID");
+
+		ezBoardAdminService.addGuestPermit(boardID, parentBoardID, userInfo.getCompanyID(), userInfo.getTenantId());
+
+		logger.debug("addGuestPermit ended");
+		return "TRUE";
+	}
 }

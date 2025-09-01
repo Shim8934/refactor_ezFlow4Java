@@ -32,6 +32,8 @@
 		    var dec = "decrypt";
 		    var webSocket =  null;
 		    var importExportMode = false;
+			var useDisablePopImap = "${useDisablePopImap}";
+			
 			function defineHost(protocol){
 	    		var host = "";
 
@@ -149,6 +151,12 @@
 	                    var requestUrl = shareId != "" ? "/ezEmail/mailTagConfig.do?shareId=" + encodeURIComponent(shareId) : "/ezEmail/mailTagConfig.do";
                         document.getElementById("MailEnv_ifrm").src = requestUrl;
 	                    break;
+					case "MailEnv_div13" :
+						document.getElementById("MailEnv_ifrm").src = shareId != "" ? "/ezEmail/userMailPop3Setting.do?shareId=" + encodeURIComponent(shareId) : "/ezEmail/userMailPop3Setting.do";
+						break;
+					case "MailEnv_div14" :
+						document.getElementById("MailEnv_ifrm").src = shareId != "" ? "/ezEmail/userMailImapSetting.do?shareId=" + encodeURIComponent(shareId) : "/ezEmail/userMailImapSetting.do";
+						break;
 	            }
 	        }
 	        var Tab1_SelectID = "";
@@ -253,7 +261,29 @@
 
 	            ShowMailProgressNew();
 	            ShowPercent(0);
-	            mailboxProgressFun(true, socketUserkey); // progress percent
+	            mailboxProgressFun(true, socketUserkey, (progress, state, stateDescription) => {
+					if (!state) {
+						return;
+					}
+
+					if (state === "CANCEL") {
+						console.log('User Cancel');
+					} else if (state === "SUCCESS") {
+						var fullpath = "/ezEmail/downloadMailZip.do?temp=" + stateDescription + "&encryptPw=" + "";
+
+						if (typeof(shareId) != "undefined" && shareId != "") {
+							fullpath += "&shareId=" + encodeURIComponent(shareId);
+						}
+
+						AttachDownFrame.location.href = fullpath;
+						AttachDownFrame.target = "_blank";
+					} else {
+						alert("<spring:message code='ezEmail.ls010' />");
+					}
+
+					HiddenMailProgressNew();
+					mailboxProgressFun(false); // progress percent
+				}); // progress percent
 
 				$.ajax({
 					cache: false,
@@ -261,31 +291,8 @@
 					url: _url,
 					data: JSON.stringify(jsonData),
 					contentType : "application/json",
-					complete: function(){
-						HiddenMailProgress();
-					},
-					success: function(result){
-						if (result == "CANCEL") {
-							console.log('User Cancel');
-						} else if (result != "") {
-							var fullpath = "/ezEmail/downloadMailZip.do?temp=" + result + "&encryptPw=" + "";
-
-							if (typeof(shareId) != "undefined" && shareId != "") {
-								fullpath += "&shareId=" + encodeURIComponent(shareId);
-					    	}
-
-							AttachDownFrame.location.href = fullpath;
-							AttachDownFrame.target = "_blank";
-						} else {
-							alert("<spring:message code='ezEmail.ls010' />");
-						}
-					},
 					error: function() {
 						alert("<spring:message code='ezEmail.ls011' />");
-					},
-					complete : function() {
-				       	HiddenMailProgressNew();
-				        mailboxProgressFun(false); // progress percent
 					}
 				});
 		    }
@@ -302,7 +309,36 @@
 	            
 	            ShowMailProgressNew();
 	            ShowPercent(0);
-	            mailboxProgressFun(true, socketUserkey); // progress percent
+	            mailboxProgressFun(true, socketUserkey, (progress, state, stateDescription) => {
+					if (!state) {
+						return;
+					}
+
+					if (state === "CANCEL") {
+						console.log('User Cancel');
+					} else if (state === "SUCCESS") {
+						if (useEncryptZipForEmail == 'YES' && encryptPw != ""){
+							ShowPercent(enc);
+						}
+
+						var fullpath = "/ezEmail/downloadMailboxZip.do?folderName="
+								+ encodeURIComponent("<c:out value='${folderName}'/>")
+								+ "&temp=" + stateDescription + "&encryptPw=" + encodeURIComponent(encryptPw)
+								+ "&userkey=" + encodeURIComponent(socketUserkey);
+
+						if (typeof(shareId) != "undefined" && shareId != "") {
+							fullpath += "&shareId=" + encodeURIComponent(shareId);
+						}
+
+						AttachDownFrame.location.href = fullpath;
+						AttachDownFrame.target = "_blank";
+					} else {
+						alert("<spring:message code='ezEmail.lhm33' />");
+					}
+
+					HiddenMailProgressNew();
+					mailboxProgressFun(false); // progress percent
+				}); // progress percent
 	            
 		    	$.ajax({
 					type : "POST",
@@ -310,33 +346,8 @@
 					async : true,
 					url : requestUrl,
 					data : { folderPath : selectFolderName, userkey : socketUserkey},
-					success : function(result) {
-						if (result == "") {
-							alert("<spring:message code='ezEmail.lhm33' />");
-						} else if (result == "CANCEL") {
-							console.log('User Cancel');
-						} else {
-							
-							if (useEncryptZipForEmail == 'YES' && encryptPw != ""){
-								ShowPercent(enc);
-							}
-							
-							var fullpath = "/ezEmail/downloadMailboxZip.do?folderName="
-									+ encodeURIComponent("<c:out value='${folderName}'/>")
-									+ "&temp=" + result + "&encryptPw=" + encodeURIComponent(encryptPw)
-									+ "&userkey=" + encodeURIComponent(socketUserkey);
-							
-							if (typeof(shareId) != "undefined" && shareId != "") {
-								fullpath += "&shareId=" + encodeURIComponent(shareId);
-					    	}
-							
-							AttachDownFrame.location.href = fullpath;
-							AttachDownFrame.target = "_blank";
-			          
-						}
-					}, complete : function() {
-		            	HiddenMailProgressNew();
-			            mailboxProgressFun(false); // progress percent
+					error: function() {
+						alert("<spring:message code='ezEmail.ls011' />");
 					}
 				});
 		    }
@@ -481,7 +492,7 @@
 			function cancleProgress(){
 	        	HiddenMailProgressNew();
 	        	mailboxProgressFun(false);
-	        	webSocket.close();
+	        	// webSocket.close();
 	        	$("#MailEnv_ifrm")[0].contentWindow.requestFolderList();
 			}
 			
@@ -629,17 +640,29 @@
 			var pgSetTimeout;
 		    var pgSetTime = 2000;
 		    var psSetTimeFlag = false;
-		    function mailboxProgressFun(act, userKey) { // mailboxProgress start or stop
-		    	psSetTimeFlag = act;
-		    	if (act) {
-		    		mailboxProgress(userKey);
-		    	} else {
-		    		clearTimeout(pgSetTimeout);
-		    		mailboxProgressDel(socketUserkey);
-		    	}
-		    }
-		    
-		    function mailboxProgress(userKey) { // get mailbox Export or Import progress
+
+			/** @callback ProgressStateHandler
+			 * @param {number} progress
+			 * @param {string} state
+			 * @param {string} stateDescription
+			 * 메일함 작업 진행상황 체크 시마다 호출되는 핸들러 */
+
+			/** @param {boolean} act 작동 시 true, 취소 시 false
+			 * @param {string} userKey
+			 * @param {ProgressStateHandler} stateHandler */
+			function mailboxProgressFun(act, userKey, stateHandler) { // mailboxProgress start or stop
+				psSetTimeFlag = act;
+				if (act) {
+					mailboxProgress(userKey, stateHandler);
+				} else {
+					clearTimeout(pgSetTimeout);
+					mailboxProgressDel(socketUserkey);
+				}
+			}
+
+			/** @param {string} userKey
+			 * @param {ProgressStateHandler} stateHandler */
+			function mailboxProgress(userKey, stateHandler) { // get mailbox Export or Import progress
 		    	var uk = userKey;
 		    	
 		    	pgSetTimeout = setTimeout(function getMailboxProgress() {
@@ -658,8 +681,12 @@
 		    					ShowPercent(pg);
 		    				}
 	    					if (pg < 100) { 
-	    						setTimeout(getMailboxProgress(), pgSetTime); 
+	    						setTimeout(getMailboxProgress, pgSetTime);
 	    					}
+
+							if (stateHandler) {
+								stateHandler(pg, data.state, data.stateDescription);
+							}
 		    			}, error : function(e) {
 		    				alert("error. " + e.status);
 		    			}
@@ -676,7 +703,7 @@
 		    }
 		    
 		 	// 2024.08.12 한슬기 : 메일 환경설정 > 편지함관리 > 가져오기 추가
-			function mailbox_attach_import(pwd, tempId, userkey, folderPath, frm) {
+			function mailbox_attach_import(pwd, tempId, userkey, folderPath, frm, stateHandler) {
 				var encryptPw = (typeof pwd != "undefined") ? pwd : "";
 		    	var path = (typeof tempId != "undefined") ? tempId : "";
 		    	var tempname = "";
@@ -690,7 +717,7 @@
 	            } else {
 		            ShowPercent(uploading);
 	            }
-	            mailboxProgressFun(true, socketUserkey);
+	            mailboxProgressFun(true, socketUserkey, stateHandler);
 	  
 	            var requestUrl = "/ezEmail/mailboxImportZip.do?folderPath="
 					+ encodeURIComponent(folderPath) 
@@ -754,6 +781,13 @@
 					<%--24.06.12 이사라 - 공유사서함 태그 지원--%>
 					<c:if test="${useMailTag and flag ne 'address'}">
 						<p><span divname="tag" id="1tab12"><spring:message code='ezEmail.tag.config' /></span></p>
+					</c:if>
+					<%-- [국립암센터] 25.06.24 김승연 - POP3/IMAP 사용 설정--%>
+					<c:if test="${useDisablePopImap == 'YES' and (usePOP3Default == 'YES' or usePOP3 == '1')}">
+						<p id = "MailEnv_sub13"><span divname="MailEnv_div13" id="1tab13"><spring:message code='ezEmail.POP3' /></span></p>
+					</c:if>
+					<c:if test="${useDisablePopImap == 'YES' and (useIMAPDefault == 'YES' or useIMAP == '1')}">
+						<p id = "MailEnv_sub14"><span divname="MailEnv_div14" id="1tab14"><spring:message code='ezEmail.IMAP' /></span></p>
 					</c:if>
 	            </div>
 	        </div>

@@ -1,6 +1,9 @@
 package egovframework.ezEKP.ezOrgan.web;
 
 import java.net.URLDecoder;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Stream;
 
 import javax.annotation.Resource;
@@ -9,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
+import egovframework.ezEKP.ezOrgan.vo.TeamsOrganVO;
 import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
@@ -17,9 +21,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.w3c.dom.Document;
 
@@ -744,4 +750,120 @@ public class EzOrganController {
 		logger.debug("getJobMasterMemberList ended");
 		return json;
 	}
+
+	// 조직도 메인 페이지 매핑
+	@RequestMapping(value = "/ezOrgan/organMain.do", method = RequestMethod.GET)
+	public String organMain (@CookieValue("loginCookie") String loginCookie, Model model, String device) throws Exception {
+		logger.debug("organMain Started");
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String userId = userInfo.getId();
+		String companyId = userInfo.getCompanyID().toLowerCase();
+		String deptId = userInfo.getDeptID();
+		int tenantId = userInfo.getTenantId();
+		logger.debug("userId={},companyId={},tenantId={},device={}", userId, companyId, tenantId, device);
+//		device = replaceXSS(device);
+		TeamsOrganVO teamsOrganInfo =  new TeamsOrganVO(); ;
+		if ("kaoni".equals(companyId)) {
+			teamsOrganInfo = ezOrganService.organMain(userInfo, device, "kaoni", "", "", "Y", tenantId);
+		} else {
+			teamsOrganInfo = ezOrganService.organMain(userInfo, device, companyId, "", deptId, "",  tenantId);
+		}
+
+		if (teamsOrganInfo.getCompanyList() != null) {
+			for (int i = 0; i < teamsOrganInfo.getCompanyList().size(); i++) {
+				Map<String, String> row = teamsOrganInfo.getCompanyList().get(i);
+			}
+		} else {
+			logger.debug("teamsOrganInfo.companyList is null");
+		}
+		
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("teamsOrganInfo", teamsOrganInfo);
+		logger.debug("organMain ended");
+		return "/ezOrgan/organMain_New";
+	}
+
+	// 부서, 사용자 조직도 트리 정보 조회 (Teams용)
+	@RequestMapping(value = "/ezOrgan/getTotalTreeInfo.do", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
+	@ResponseBody
+	public String getTotalTreeInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, @RequestBody Map<String, Object> paramMap, HttpServletRequest request) throws Exception {
+		logger.debug("getTotalTreeInfo started");
+		logger.debug("paramMap = {}", paramMap);
+		
+		String deptStr = "";
+		userInfo = commonUtil.userInfo(loginCookie);
+		int tenantID = userInfo.getTenantId();
+
+		try {
+			
+			String userId = userInfo != null ? userInfo.getId() : null;
+			String deptId         = (String) paramMap.getOrDefault("deptid", userInfo.getDeptID());
+			String selectedUserId = (String) paramMap.getOrDefault("userid", "");
+			String propList       = (String) paramMap.getOrDefault("prop", "");
+			String type           = (String) paramMap.getOrDefault("type", "DEPT");
+			String companyId      = (String) paramMap.getOrDefault("topid", userInfo.getCompanyID());
+			String cellList       = (String) paramMap.getOrDefault("celllist", "");
+			String listType       = (String) paramMap.getOrDefault("listtype", "");
+			String noAddJob       = (String) paramMap.getOrDefault("noaddjob", "");
+
+			if (StringUtils.isNotEmpty(selectedUserId)) {
+				userId = selectedUserId;
+			}
+			
+			deptStr = ezOrganService.getTotalTreeNodeInfo(userInfo, userId, selectedUserId, deptId, companyId, propList, userInfo.getLang(), type, "N");
+
+		} catch (Exception e) {
+			logger.error("getTotalTreeInfo error", e);
+		}
+
+		logger.debug("getTotalTreeInfo ended");
+		return deptStr;
+	}
+	
+	/**
+	 * 팀즈 조직도 부서 및 사원목록 검색 함수
+	 */
+	@RequestMapping(value = "/ezOrgan/getTeamsSearchListJson.do", method = RequestMethod.POST, produces="application/json;charset=utf-8")
+	@ResponseBody
+	public List<Map<String, Object>> getTeamsSearchListJson(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		logger.debug("getTeamsSearchListJson started.");
+
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+
+		int tenantID = userInfo.getTenantId();
+
+		logger.debug("tenantID=" + tenantID);
+
+		String searchlist = request.getParameter("search").trim();
+		String companyId  = request.getParameter("company") == null ? userInfo.getCompanyID() : request.getParameter("company");
+		String celllist = request.getParameter("cell");
+		String proplist = request.getParameter("prop");
+		String listtype = request.getParameter("type");
+		String lang = userInfo.getPrimary();
+		String page = request.getParameter("page");
+		String noAddJob = request.getParameter("noAddJob");
+		String adminOrgan = request.getParameter("adminOrgan") != null ? request.getParameter("adminOrgan") : "n";
+
+		String useOrganHideFlag = ezCommonService.getTenantConfig("useOrganHideFlag", tenantID);
+		useOrganHideFlag = (useOrganHideFlag == null || useOrganHideFlag.isEmpty()) ? "NO" : useOrganHideFlag;
+
+		// useOrganHideFlag가 NO면 숨김 없이 모두 조회
+		adminOrgan = "NO".equalsIgnoreCase(useOrganHideFlag) ? "y" : adminOrgan;
+
+		if (userInfo.getRollInfo().contains("c=1") && adminOrgan.equalsIgnoreCase("y")) {
+			companyId = "";
+		}
+
+		logger.debug("searchlist=" + URLDecoder.decode(searchlist, "utf-8") + ", celllist=" + celllist + ", proplist=" + proplist
+				+ ", listtype=" + listtype + ", lang=" + lang + ", page=" + page + ", companyId=" + companyId);
+
+		List<Map<String, Object>> rows = ezOrganService.getSearchListForTeamsJson(searchlist, celllist, proplist, listtype, 10000, lang, companyId, tenantID, noAddJob, "");
+
+
+		logger.debug("getTeamsSearchListJson ended.");
+		logger.debug("result size = " + rows.size());
+
+		return rows;
+	}
+
 }

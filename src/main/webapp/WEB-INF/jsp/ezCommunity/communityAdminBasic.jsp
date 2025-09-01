@@ -19,7 +19,13 @@
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript">
 			var pPermitCount = "<c:out value = '${pPermitCount}' />";
-	
+			var code = "<c:out value = '${code}' />";
+			var readGrade = "<c:out value = '${readGrade}' />";
+
+			window.onload = function () {
+				getGradeList();
+			}
+			
 			function check() {
 				if (document.mod.c_ClubName.value == "") {
 					alert("<spring:message code = 'ezCommunity.t2' />");
@@ -62,6 +68,49 @@
 			function resetAll() {
 				if(confirm("<spring:message code = 'ezCommunity.t449' />")) {
 					document.location.href = document.location.href;
+				}
+			}
+
+			function getGradeList() {
+				$.ajax({
+					type : "GET",
+					url : "/ezCommunity/getAdminMemberGrade.do",
+					dataType : "json",
+					data : {
+						code : code
+					},
+					success : function(result) {
+						getGradeList_after(result);
+					},
+					error : function(xhr, status, error) {
+						console.error("Error: " + error);
+					}
+				});
+			}
+
+			function getGradeList_after(gradeList) {
+				var selectGrade = document.getElementById("read_Grade");
+				selectGrade.innerHTML = "";
+
+				var isGradeFound = false;
+
+				for (var i = 0; i < gradeList.length-1; i++) {
+					var option = document.createElement("option");
+
+					option.value = gradeList[i].gradeCode;
+					option.textContent = gradeList[i].gradeName;
+					option.name = 'read_Grade';
+
+					if (gradeList[i].gradeCode == readGrade) {
+						option.selected = true;
+						isGradeFound = true;
+					}
+
+					selectGrade.appendChild(option);
+				}
+
+				if (!isGradeFound && gradeList.length > 0) {
+					selectGrade.options[selectGrade.options.length - 1].selected = true;
 				}
 			}
 		</script>
@@ -200,6 +249,15 @@
 						<spring:message code ='ezCommunity.t458' /><br>
 						<spring:message code ='ezCommunity.t459' /><br>
 						<spring:message code ='ezCommunity.t460' />
+					</td>
+				</tr>
+				<tr>
+					<th><spring:message code ='ezCommunity.lyj21' /></th>
+					<td style="padding:5px">
+						<select name="memlist_readGrade" id="read_Grade" style="font-size: 13px;vertical-align: middle;cursor: pointer;MIN-WIDTH: 80px;height: 20px;" onchange="">
+							<option value="3"><spring:message code = 'ezCommunity.lyj07' /></option>
+							<option value="4" selected><spring:message code = 'ezCommunity.lyj08' /></option>
+						</select> <span style="vertical-align: middle;"><spring:message code = 'ezCommunity.lyj22' /></span>
 					</td>
 				</tr>
 				<tr>

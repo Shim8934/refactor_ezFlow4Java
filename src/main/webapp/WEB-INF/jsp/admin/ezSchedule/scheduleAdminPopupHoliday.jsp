@@ -59,11 +59,6 @@
 		                document.getElementById("rest").checked = true;
 		        }
 	            if (holidayType == "s") {
-	                if (issolar != "" && issolar != "1") {
-                        document.getElementById("date2").checked = true;
-	                	document.getElementById("lunarRadio").style.display = "none";
-	                }
-	                
                     if (isrepeat == "1")
                         document.getElementById("repeat").checked = true;
 	            	    //$('#repeat').attr('disabled', true);

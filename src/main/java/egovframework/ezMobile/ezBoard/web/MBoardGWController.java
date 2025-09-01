@@ -16,6 +16,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 import java.util.StringJoiner;
 import java.util.UUID;
@@ -26,6 +27,7 @@ import javax.mail.internet.InternetAddress;
 import javax.servlet.http.HttpServletRequest;
 
 import egovframework.ezEKP.ezBoard.dao.EzBoardDAO;
+import egovframework.ezEKP.ezBoard.vo.BoardItemVO;
 import egovframework.ezMobile.ezBoard.dao.MBoardDAO;
 import egovframework.ezEKP.ezBoard.vo.BoardKeywordVO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -224,7 +226,7 @@ public class MBoardGWController {
 			if (boardInfo.getGuBun() != null && boardInfo.getGuBun().equals("5")) { // qna 게시판
 				listCount = mBoardService.getQNABoardItemListCount(boardId, boardInfo, userID, boardInfo.getGuBun(), info.getTenantId(), pSearchText);
 			} else {
-				listCount = mBoardService.getBoardItemListCount(boardId, userID, boardInfo.getGuBun(), info.getTenantId(), pSearchText);
+				listCount = mBoardService.getBoardItemListCount(boardId, userID, boardInfo.getGuBun(), info.getTenantId(), pSearchText, boardInfo.getVersionManage());
 			}
 			
 			for (int i=0; i<list.size(); i++) {
@@ -411,6 +413,11 @@ public class MBoardGWController {
 			data.put("myBoardScrapFlag", myBoardScrapFlag);
 			data.put("isScrap", isScrap);
 			data.put("itemStarRating", itemStarRating);
+			
+			if ("9".equals(boardInfo.getGuBun())) { // fileViewer 게시판
+				BoardItemVO satBoardInfo = ezBoardService.getMsatCallUrl(request, boardInfo, info);
+				data.put("satBoardInfo", satBoardInfo);
+			}
 			
 			result.put("status", "ok");
 			result.put("code", 0);			
@@ -1137,6 +1144,12 @@ public class MBoardGWController {
 		MBoardItemVO boardItem = mBoardService.getBrdItemInfo(contentID, commonUtil.getMultiData(info.getLang(), info.getTenantId()), info.getTenantId());
 		String boardGroupID = "";
 		String isAllGroupBoard = "N";
+
+		/* 2025-08-11 비회원 읽기권한(전체공개) 게시판인 경우 pass */
+		String useBoardGuestPermit = ezCommonService.getTenantConfig("useBoardGuestPermit", info.getTenantId());
+		if ("YES".equals(useBoardGuestPermit) && ezBoardService.checkGuestPerm(contentID, info.getTenantId(), "I")) {
+			return true;
+		}
 		
 		/* 2019-06-10 홍승비 - 게시판그룹의 관리자권한 체크를 위한 쿼리 파라미터 추가(게시판그룹의 관리자권한과 하위게시판의 관리자권한 혼용 방지) */
 		boolean isBoardGroup = false;
@@ -2010,12 +2023,13 @@ public class MBoardGWController {
 			MCommonVO info = mOptionService.commonInfo(serverName,  userID);
 			String sort = request.getParameter("sort");
 			sort = StringUtils.isBlank(sort) ? "earliest" : sort;
+			String primary = info.getPrimary();
 			
 			logger.debug("serverName = " + serverName + " | userId = " + userID);
 			
 			userName = "USERNAME" + commonUtil.getMultiData(info.getLang(), info.getTenantId());
 			
-	    	List<BoardLineReplyVO> boardLineReplyVOList = ezBoardService.readOneLineReply(boardId, contentId, userName, gubun, info.getCompanyId(), info.getTenantId(), sort);
+	    	List<BoardLineReplyVO> boardLineReplyVOList = ezBoardService.readOneLineReply(boardId, contentId, primary, gubun, info.getCompanyId(), info.getTenantId(), sort);
 	    	
 	    	// 댓글의 작성일자 UTC시간 계산하여 각 VO에 설정
 	    	for (BoardLineReplyVO reply : boardLineReplyVOList) {

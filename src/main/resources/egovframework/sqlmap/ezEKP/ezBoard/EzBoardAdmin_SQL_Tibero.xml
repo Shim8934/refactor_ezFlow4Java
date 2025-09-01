@@ -10,6 +10,7 @@
 	<typeAlias  alias="MyFavoriteVO" 				type="egovframework.ezEKP.ezBoard.vo.BoardMyFavoriteVO"/>
 	<typeAlias  alias="BoardBackgroundVO" 			type="egovframework.ezEKP.ezBoard.vo.BoardBackgroundVO"/>
 	<typeAlias  alias="BoardListHeaderVO" 			type="egovframework.ezEKP.ezBoard.vo.BoardListHeaderVO"/>
+	<typeAlias  alias="BoardListVO" 				type="egovframework.ezEKP.ezBoard.vo.BoardListVO"/>
 	
 	<resultMap id="getBoardTree_Get2" class="EzBoardVO">
 		<result property="boardId" 					column="BOARDID" 					columnIndex="1"/>
@@ -437,7 +438,7 @@
 		          			A.PARENTBOARDID = #v_pRootBoardID#
 		                AND 
 		                	A.BoardID <> #v_pExcludeBoardID#
-		           		ORDER BY 
+		           		ORDER BY
 		           			A.TreeViewOrder ASC
 					]]>
 				</isEqual>
@@ -491,11 +492,13 @@
 		                      	C.Access_ = 1
 		                      AND 
 		                      	C.BoardID <> #v_pExcludeBoardID#
-		                      AND 
-		                      	C.AccessID = #v_pUserID#
+					]]>
+		                      AND
+								(C.AccessID = #v_pUserID#
+									<isEqual property="guestPermitYN" compareValue="YES"> OR C.AccessID = 'guestPermit'</isEqual>
+								)
 		                      AND 
 		                      	D.ParentBoardID = #v_pRootBoardID#
-		                      ]]>
 		                      <isEqual property="v_ISDEPT" compareValue="1">
 		                      	<isEqual property="v_ISEQUALDEPT" compareValue="0">
 			                      AND
@@ -652,7 +655,7 @@
 	          			A.PARENTBOARDID = #v_pRootBoardID#
 	                AND 
 	                	A.BoardID <> #v_pExcludeBoardID#
-	           		ORDER BY 
+	           		ORDER BY
 	           			A.TreeViewOrder ASC
 				]]>
 			</isEqual>
@@ -692,7 +695,8 @@
 	          		AND
 	          			A.PARENTBOARDID = #v_pRootBoardID#
 	                AND 
-	                	A.BoardID <> #v_pExcludeBoardID#)
+	                	A.BoardID <> #v_pExcludeBoardID#
+	          		)
 	           	]]>
 <!-- 그룹사게시판에 대해서 개별(개인, 직위직책, 부서 단독권한들) 권한 체크하여 UNION -->
 			<isEqual property="v_showAllGroupBoard" compareValue="Y">
@@ -776,7 +780,7 @@
 		          		AND
 		          			A.PARENTBOARDID = #v_pRootBoardID#
 		                AND 
-		                	A.BoardID <> #v_pExcludeBoardID#	
+		                	A.BoardID <> #v_pExcludeBoardID#
 				]]>
 				<!-- 권한그룹이 아닌 개별 권한(PERSON, JIKWI, JIKCEHK, DEPT)만을 체크 -->
 				<isEqual property="v_boardGroupAdmin_FG" compareValue="NO">
@@ -1483,6 +1487,42 @@
 	         	)
 			]]>
 		</isNotEqual>
+		<isEqual property="guestPermitYN" compareValue="YES">
+			UNION
+
+				(SELECT
+					NULL COMPNAY ,
+					NULL DESCRIPTION  ,
+					ACCESSNAME AS DISPLAYNAME ,
+					NULL TITLE  ,
+					NULL COMPANY2  ,
+					NULL DESCRIPTION2  ,
+					ACCESSNAME AS DISPLAYNAME2 ,
+					NULL TITLE2  ,
+					ACCESSID ,
+					ACCESSNAME ,
+					ACCESSNAME2 ,
+					BOARDGROUPACL ,
+					ACCESSNAME AS DISPLAYNAME3,
+					BOARDADMIN_FG ,
+					ACCESS_ ,
+					LISTVIEW_FG ,
+					READ_FG ,
+					WRITE_FG ,
+					REPLY_FG ,
+					DELETE_FG ,
+					POSTNOTICE,
+					NVL(TYPE, '') AS TYPE
+				FROM
+					TBL_Board_BoardManage
+				WHERE
+					TYPE = 'GUEST'
+				AND
+					ACCESSID = 'guestPermit'
+				AND
+					BOARDID = #v_PBOARDID#
+				)
+		</isEqual>
 	</select>
 	
 	<select id="EzBoardAdminDAO.getMyBoardTreeUpper" parameterClass="MyFavoriteVO" resultClass="String">
@@ -2473,7 +2513,12 @@
 	      			PUBLICFLAG = #v_PUBLICFLAG#,
 		          	ALLNEWBOARDFLAG = #v_ALLNEWBOARDFLAG#,
 		          	WRITERFLAG = #v_WRITERFLAG#,
-		          	STARRATINGFLAG = #v_STARRATINGFLAG#
+		          	STARRATINGFLAG = #v_STARRATINGFLAG#,
+		          	VERSIONMANAGE = #versionManage#,
+		          	NOTUSEDFLAG = #v_NOTUSEDFLAG#,
+		          	LISTSHOWTYPE = #v_LISTSHOWTYPE#,
+		          	URLCOPYFLAG = #v_URLCOPYFLAG#,
+		          	VERSIONMANAGE = #versionManage#
 	    		WHERE
 	    			TENANT_ID = #v_TENANTID#
 	    		AND  
@@ -3008,4 +3053,62 @@
 		FROM TBL_USERSCRAPCONTLIST
 		WHERE BOARDID = #boardID#
 	</delete>
+
+	<select id="EzBoardAdminDAO.getCreateHistoryTarget" parameterClass="map" resultClass="BoardListVO">
+		SELECT
+			DISTINCT A.ITEMID ITEMID,
+					 A.ITEMID PARENTITEMID,
+					 '0.0' VERSION,
+					 WRITERID,
+					 WRITERNAME,
+					 WRITEDATE,
+					 A.TENANT_ID TENANTID
+		FROM
+			TBL_BOARD_ITEM A
+				LEFT OUTER JOIN
+			TBL_BOARD_MODIFYHISTORY B
+			ON
+				A.ITEMID = B.ITEMID
+			AND
+				A.TENANT_ID = B.TENANT_ID
+		WHERE
+			BOARDID = #boardId#
+		  AND A.TENANT_ID = #tenantId#
+		  AND B.ITEMID IS NULL
+	</select>
+
+	<select id="EzBoardAdminDAO.boardNotiEndAlram" resultClass="HashMap">
+		SELECT
+		A.BOARDID,
+		A.ITEMID,
+		B.BOARDNAME,
+		B.BOARDNAME2,
+		B.BOARDNAME3,
+		B.BOARDNAME4,
+		TO_CHAR(B.GUBUN) AS GUBUN,
+		A.WRITERID,
+		A.TITLE,
+		TO_CHAR(A.TENANT_ID) AS TENANT_ID
+		FROM
+		TBL_BOARD_ITEM A
+		JOIN
+		TBL_BOARD_BOARDINFO B
+		ON A.BOARDID = B.BOARDID
+		AND A.TENANT_ID = B.TENANT_ID
+		WHERE
+		A.NTENDDATE LIKE TO_CHAR(SYSDATE, 'YYYY-MM-DD') || '%'
+	</select>
+
+	<insert id="EzBoardAdminDAO.addGuestPermit" parameterClass="Map">
+		INSERT INTO TBL_Board_BoardManage (
+			BOARDID, ACCESSID, ACCESSNAME, ACCESSNAME2, ACCESSLEVEL, ACCESS_, PARENTBOARDID,
+			BOARDADMIN_FG, LISTVIEW_FG, READ_FG, WRITE_FG, REPLY_FG, DELETE_FG, INHERIT_FG, POSTNOTICE, BOARDGROUPACL,
+			TENANT_ID, COMPANYID , TYPE
+		)
+		VALUES (
+		   #boardID#, 'guestPermit', '비회원', '비회원', NULL, 1, #parentBoardID#,
+		   'false', 'true', 'true', 'false', 'false', 'false', 'false', 'false', 'N',
+		   #tenantID#, #companyID#, 'GUEST'
+	    )
+	</insert>
 </sqlMap>

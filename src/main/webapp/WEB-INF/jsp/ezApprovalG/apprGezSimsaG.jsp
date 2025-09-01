@@ -200,7 +200,9 @@
 		    window.onbeforeunload = function () {
 		        try {
 		            window.opener.openergetDocInfo();
-		        } catch (e) { }
+		        } catch (e) { 
+		            window.parent.openergetDocInfo();
+		        }
 		    };
 		    function btnClose_onclick() {
 		        window.close();
@@ -1102,6 +1104,44 @@
 		    }
 		
 	        function Document_Encode(text, pDefaultFontFamily, pDefaultFontSize) {
+				var textContent = document.createElement('div');
+				textContent.style.position = 'absolute';
+				textContent.style.visibility = 'hidden';
+				textContent.innerHTML = text;
+				document.body.appendChild(textContent);
+				
+				var autoElements = textContent.querySelectorAll('td[style*="auto"], th[style*="auto"]');
+				
+				for (var i = 0; i < autoElements.length; i++) {
+					var autoElement = autoElements[i];
+					var styleAttr = autoElement.getAttribute('style');
+					if (!styleAttr) continue;
+				
+					var autoDel = styleAttr;
+				
+					if (/width\s*:\s*auto/i.test(styleAttr)) {
+						var width = autoElement.offsetWidth;
+						autoDel = autoDel.replace(/width\s*:\s*auto/i, 'width:' + width + 'px');
+					}
+				
+					if (/height\s*:\s*auto/i.test(styleAttr)) {
+						var height = autoElement.offsetHeight;
+						autoDel = autoDel.replace(/height\s*:\s*auto/i, 'height:' + height + 'px');
+					}
+				
+					autoElement.setAttribute('style', autoDel);
+				}
+				
+				var contentText = textContent.innerHTML;
+				document.body.removeChild(textContent); 
+				contentText = contentText
+						.replace(/"/g,'\"')
+						.replace(/<div id=\\?"hwpEditorBoardContent\\"[^]*?<\/div>/g, '')
+						.replace(/font-family\s*:\s*([^;]+);/g, (match, fonts) => {
+					var cleaned = fonts.replace(/'([^']+)'/g, "$1");
+					return `font-family: ${cleaned};`;
+				});
+				
 	        	$.ajax({
 		    		type : "POST",
 		    		dataType : "text",
@@ -1110,7 +1150,7 @@
 		    		data : {
 		    			fontFamily : pDefaultFontFamily,
 		    			fontSize : pDefaultFontSize,
-		    			content : text.replace(/"/g,'\"').replace(/<div id=\\?"hwpEditorBoardContent\\"[^]*?<\/div>/g, ''),
+		    			content : contentText,
 		    			docType : "MHT"
 		    		},
 		    		success: function(xml){

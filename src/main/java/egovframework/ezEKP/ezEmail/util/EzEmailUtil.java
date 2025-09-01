@@ -5,7 +5,6 @@ import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -21,6 +20,7 @@ import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
 import java.nio.charset.MalformedInputException;
+import java.nio.file.StandardCopyOption;
 import java.security.KeyFactory;
 import java.security.PrivateKey;
 import java.security.interfaces.RSAPublicKey;
@@ -51,6 +51,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 import java.util.stream.StreamSupport;
+import java.nio.file.Files;
 
 import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
@@ -92,6 +93,12 @@ import javax.xml.bind.DatatypeConverter;
 import com.google.gson.JsonElement;
 import egovframework.let.utl.fcc.service.KlibUtil;
 import net.fortuna.ical4j.util.CompatibilityHints;
+import net.lingala.zip4j.ZipFile;
+import net.lingala.zip4j.exception.ZipException;
+import net.lingala.zip4j.model.ZipParameters;
+import net.lingala.zip4j.model.enums.CompressionLevel;
+import net.lingala.zip4j.model.enums.CompressionMethod;
+import net.lingala.zip4j.model.enums.EncryptionMethod;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipArchiveInputStream;
@@ -1136,6 +1143,7 @@ public class EzEmailUtil {
 		String shareId = null;
 		String useImageConvertServer = null;	// 20200312 조진호 - 메일 읽기 > 첨부파일 미리 보기 기능 옵션 처리 추가
 		boolean useWebfolder = false;			// 20230418 김은실 - 메일 읽기 > 첨부파일 웹폴더에 저장 기능 추가
+		boolean forPreviewMail = false;			// 20250213 김대현 - 메일 리스트 > 메일 미리보기 기능 추가
 		
 		// 료비에서 수신한 메일 중에 text/plain 파트만 있으면서
 		// ContentID 없이 Content-Dispostion이 inline으로 첨부된
@@ -1160,6 +1168,7 @@ public class EzEmailUtil {
 			if (extraMap.get("shareId") != null) shareId = (String)extraMap.get("shareId");
 			if (extraMap.get("useImageConvertServer") != null) useImageConvertServer = (String)extraMap.get("useImageConvertServer");
 			if (extraMap.get("useWebfolder") != null) useWebfolder = (boolean)extraMap.get("useWebfolder");
+            if (extraMap.get("forPreviewMail") != null) forPreviewMail = (boolean)extraMap.get("forPreviewMail");
 		}
 		
 		// 첨부 파일이면서 Content-ID가 있는 경우 실제 HTML 본문에서 참조되고 있는 파트인지 확인하기 위해 추가함(Gmail에서 보낸 메일).
@@ -1492,6 +1501,25 @@ public class EzEmailUtil {
 				pAttachListHtml += " <p class=\"ui-bar\" style=\"border-bottom:1px solid #e2e2e2\"><i class='fa fa-download' aria-hidden='true' \"javascript:mailFileDown('" + aitem + "');\" style='cursor:pointer'></i>";
 				pAttachListHtml += " <span onclick=\"javascript:mailFileDown('" + aitem + "');\"><span title='" + filename_spclStr + " (" + strSize + ")" + "' class='attachFileName' onmouseover=this.style.color='#164aad' onmouseout=this.style.color='black' style='cursor:pointer' >" + filename_spclStr + " (" + strSize + ")</span></span>";
 				pAttachListHtml += " </p>";
+			} else if (forPreviewMail) {
+				// 메일 미리보기
+				String filename_egovSpclStr = EgovStringUtil.getSpclStrCnvr2(filename);
+
+				aitem = "/ezEmail/downloadAttach.do?mode=Attach&folderPath="+folderPath_URLEnc+"&uid="+uid+"&filename="+URLEncoder.encode(filename,"UTF-8")+"&index="+bodyPartIndex + "&order=" + order + "&depth=" + depth;
+
+				if (shareId != null) {
+					aitem += "&shareId=" + URLEncoder.encode(shareId, "UTF-8");
+				}
+
+				pAttachListHtml += "<li>";
+
+				pAttachListHtml += " <span onclick=\"DownloadAttach('" + aitem + "');\"><span title=\"" + filename_spclStr + " (" + strSize + ")" + "\" class='attachFileName' onmouseover=this.style.color='#164aad' onmouseout=this.style.color='black' style='cursor:pointer' >" + filename_spclStr + " (" + strSize + ")</span></span>";
+
+				// 다운로드 아이콘
+				pAttachListHtml += " <span onclick=\"DownloadAttach('" + aitem + "');\" _filehref='" + aitem + "' _filesize='" + size + "' _filename=\"" + filename_egovSpclStr + "\" id='MailAttachDownloadItems' name='MailAttachDownloadItems' ><img src='/images/icon_adddownload.gif' width='16' height='16' style='vertical-align: top; cursor:pointer'></span>";
+
+				pAttachListHtml += "</li>";
+
 			} else {
 
 				aitem = "/ezEmail/downloadAttach.do?mode=Attach&folderPath="+folderPath_URLEnc+"&uid="+uid+"&filename="+URLEncoder.encode(filename,"UTF-8")+"&index="+bodyPartIndex + "&order=" + order + "&depth=" + depth;
@@ -5582,6 +5610,63 @@ public class EzEmailUtil {
 		
 		return zipFileName;
 	}
+	public static boolean checkZipEncrypted(File file) {
+		try {
+			ZipFile zipFile = new ZipFile(file);
+			return zipFile.isEncrypted();  // 암호 있으면 true, 없으면 false
+		} catch (ZipException e) {
+			throw new RuntimeException("Not a ZIP file or the file is corrupted.", e);
+		}
+	}
+
+	public boolean compressAndEncryptFile(File file, String fileName, String zipPath, String password) {
+		try {
+
+			if (!file.exists()) {
+				System.out.println("File does not exist : " + file.getAbsolutePath());
+				return false;
+			}
+
+			// 임시 복사 파일 만들기
+			File tempFile = new File(file.getParent(), fileName);
+			Files.copy(file.toPath(), tempFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+
+			// 압축
+			ZipFile zipFile = new ZipFile(zipPath, password.toCharArray());
+
+			ZipParameters parameters = new ZipParameters();
+			parameters.setCompressionMethod(CompressionMethod.DEFLATE); // 기본 압축
+			parameters.setCompressionLevel(CompressionLevel.NORMAL);
+			parameters.setEncryptFiles(true);
+			parameters.setEncryptionMethod(EncryptionMethod.ZIP_STANDARD); // 윈도우 호환 방식
+
+			zipFile.addFile(tempFile, parameters);  // 파라미터로 추가
+
+			// 압축 후 임시 파일 및 원본 파일 삭제
+			tempFile.delete();
+			file.delete();
+			
+			return true;
+		} catch (ZipException e) {
+			logger.error(e.getMessage(), e);
+			return false;
+		} catch (IOException e) {
+			logger.error(e.getMessage(), e);
+			return false;
+		}
+	}
+
+	public String createEncryptZipFile(File file, String fileName, String zipPassword, String pDirTempPath) {
+		String zipPath = pDirTempPath + commonUtil.separator + fileName + ".zip";  // 결과 zip 경로 설정
+
+		boolean encrypted = compressAndEncryptFile(file, fileName, zipPath, zipPassword);
+		if (encrypted) {
+			return zipPath;  // 암호화된 zip 파일 경로 반환
+		}
+
+		return null;  // 실패한 경우 null 반환
+	}
+	
 	//메일, 메일함 저장시 파일 이름 : 보낸사람이름_[보낸사람 메일주소]_[보낸 날짜]_메일제목.eml 이 되도록 만들어주는 메서드
 	public String saveFilenameForm(LoginVO loginInfo , Locale locale , Message message) throws Exception {
 		EzEmailUtil ezEmailUtil = new EzEmailUtil();
@@ -7728,6 +7813,24 @@ public class EzEmailUtil {
 		
 		return tags;
 	}
-	
+
+	public int createTag(String userAccount, String tagName) {
+		try {
+			JgwResult result = rest.jgw().url("/jMochaEzEmail/getTagIdx")
+					.formParam("userAccount", userAccount)
+					.formParam("tagName", tagName)
+					.formParam("isAutoGenerate", true)
+					.exchangeJgwResult();
+			logger.debug("jgw getTagIdx result: {}", result);
+
+			if (result.succeeded()) {
+				return result.getResult(Integer.class);
+			}
+
+			throw new IllegalStateException("getTagIdx failed");
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
 }
 

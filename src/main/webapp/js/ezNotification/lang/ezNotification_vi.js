@@ -64,7 +64,8 @@ var subType = {
 		modify : "Thông báo sửa đổi",
 		comment : "Đăng bình luận",
 		reply : "Trả lời thông báo",
-		notice : "Thông báo đầy đủ"
+		notice : "Thông báo đầy đủ",
+		invite : "Thông báo lời mời"
 	},
 	webfolder : {
 		open_apply : "Đơn xin khai trương",
@@ -84,6 +85,7 @@ subType["approval"]["return"] = "Thu hồi chứng từ thanh toán";
 subType["approval"]["default"] = "Thông báo thanh toán";
 subType["board"]["new"] = "bài đăng mới";
 subType["board"]["return"] = "Từ chối phê duyệt";
+subType["board"]["expired"] = "Thời hạn thông báo đã kết thúc";
 subType["schedule"]["delete"] = "Xóa sự kiện";
 subType["survey"]["new"] = "Đăng kí mới";
 subType["poll"]["new"] = "Đăng kí mới";

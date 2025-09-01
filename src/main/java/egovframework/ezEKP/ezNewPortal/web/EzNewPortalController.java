@@ -42,6 +42,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import egovframework.com.cmm.EgovMessageSource;
+import egovframework.ezEKP.ezAI.util.AICommonUtil;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
 import egovframework.ezEKP.ezBoard.service.EzBoardService;
 import egovframework.ezEKP.ezBoard.vo.BoardListVO;
@@ -83,6 +84,11 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 
 	@Autowired
 	private EzEmailUtil ezEmailUtil;
+
+	//ai util 추가
+	@Autowired
+	private AICommonUtil aICommonUtil;
+
 	@Resource(name="EzPortalService")
 	private EzPortalService ezPortalService;
 	
@@ -192,6 +198,11 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 		String useMobileMailOnly = ezCommonService.getTenantConfig("useMobileMailOnly", userInfo.getTenantId());
 		model.addAttribute("useMobileMailOnly", useMobileMailOnly);
 
+		//ezAi 사용 여부 추가
+		model.addAttribute("useAI", aICommonUtil.checkUseAI(userInfo.getTenantId())?"Y":"N");
+		model.addAttribute("ezAIUrl", config.getProperty("config.ezAIUrl"));
+		model.addAttribute("aiChatbotUrl", config.getProperty("config.ezAIUrl") + "/ChatUi?userId=" + userId + "&tenantId=" + userInfo.getTenantId());
+
 		logger.debug("returnUrl : " + returnUrl);
 		logger.debug("portalMain End");
 		return "/ezNewPortal/newPortalMain";
@@ -273,6 +284,9 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 			if(usePortal.equalsIgnoreCase("NO")) {
 				JSONArray menuList = (JSONArray) data.get("menuList");
 				JSONObject firstMenu = (JSONObject) menuList.get(0);
+				if ((String) firstMenu.get("menuUrl") != null && "/connectionMenu.do".equals((String) firstMenu.get("menuUrl"))) {
+					firstMenu = (JSONObject) menuList.get(1);
+				}
 				logoMainUrl = (String) firstMenu.get("menuUrl");
 				//logoMainUrl = "/ezApprovalG/apprGMain.do";
 			}
@@ -319,6 +333,9 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 		model.addAttribute("pollingInterval", ezCommonService.getTenantConfig("notiPollingInterval", userInfo.getTenantId()));
 		model.addAttribute("lastNotiPollTime", commonUtil.getTodayUTCTime("yyyy-MM-dd HH:mm:ss"));
 		
+		//ezAi 사용 여부 추가
+		model.addAttribute("useAI", aICommonUtil.checkUseAI(userInfo.getTenantId())?"Y":"N");
+
 		logger.debug("portalTopMenu End");
 		return "/ezNewPortal/newPortalTopMenu";
 	}
@@ -1205,6 +1222,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
     		}
 			BoardPropertyVO boardPropertyVO = ezBoardService.getBoardProperty(boardId, userInfo.getTenantId());
 			String guBun = boardPropertyVO.getGuBun();
+			String useVersion = boardPropertyVO.getVersionManage();
 			// Q&A 의 일반 유저일 경우 일반 게시판과 다른 리스트
 			boolean isQnANormal = "5".equals(guBun);
 			if (isQnANormal) {
@@ -1219,7 +1237,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 				String boardUserType = isAdmin ? "admin" : "user";
 				boardList = ezNewPortalService.getNewBoardPortletInfo(userInfo, boardUserType, startRow, itemCount);
 			} else {
-				boardList = ezNewPortalService.getBoardPortletInfo(userInfo.getId(), userInfo.getTenantId(), boardId, itemCount, userInfo.getCompanyID(), userInfo.getOffset(), isQnANormal);
+				boardList = ezNewPortalService.getBoardPortletInfo(userInfo.getId(), userInfo.getTenantId(), boardId, itemCount, userInfo.getCompanyID(), userInfo.getOffset(), isQnANormal, useVersion);
 			}
 			
 			json.put("status", "ok");
@@ -1254,7 +1272,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 			userInfo = commonUtil.userInfo(loginCookie);
 			
 			// 메뉴 권한
-			List<MenuInfoVO> menuList = ezNewPortalService.getUserMenuList(companyID, tenantID, lang, userID, deptID);
+			List<MenuInfoVO> menuList = ezNewPortalService.getUserMenuList(companyID, tenantID, lang, userID, deptID, "");
 			String useBoard = ezCommonService.getTenantConfig("useBoard", tenantID);
 			String useExternalMailServer = ezCommonService.getTenantConfig("useExternalMailServer", tenantID);
 			String useApproval = "";

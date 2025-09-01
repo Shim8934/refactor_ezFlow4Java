@@ -44,7 +44,8 @@
 		}
 		
 		function btnClose_onclick() {
-			window.close();
+			btnClose_onclick2();
+			// window.close();
 	    }
 		
 		//게시판게시
@@ -326,6 +327,29 @@
 			});
 			
 			return result;
+		}
+		
+		var ReturnFunction;
+		
+		function isParentCommonArgsUsed() {
+			if (typeof parent.ezCommon_cross_dialogArguments != "undefined"
+				&& parent.ezCommon_cross_dialogArguments.length > 0
+			) {
+				return true;
+			} else if (opener != null
+				&& typeof opener.ezCommon_cross_dialogArguments != "undefined"
+				&& opener.ezCommon_cross_dialogArguments.length > 0
+			) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+		
+		window.onload = function () {
+			if (isParentCommonArgsUsed()) {
+				ReturnFunction = opener == null ? parent.ezCommon_cross_dialogArguments[1] : opener.ezCommon_cross_dialogArguments[1];
+			}
 		}
 		</script>
 	</head>

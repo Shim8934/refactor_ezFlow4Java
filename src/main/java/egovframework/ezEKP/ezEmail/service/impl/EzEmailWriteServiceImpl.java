@@ -38,6 +38,7 @@ import egovframework.ezEKP.ezPoll.service.EzPollService;
 import egovframework.let.utl.fcc.service.*;
 import org.apache.commons.lang3.StringUtils;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.egovframe.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,7 +78,7 @@ import egovframework.let.utl.sim.service.EgovFileScrty;
  * 더 좋은 방법이 있다면, 수정 또는 주석으로 to-do 추가 바람!
  */
 @Service("EzEmailWriteService")
-public class EzEmailWriteServiceImpl implements EzEmailWriteService {
+public class EzEmailWriteServiceImpl extends EgovAbstractServiceImpl implements EzEmailWriteService {
 
     private static final Logger logger = LoggerFactory.getLogger(EzEmailWriteServiceImpl.class);
 
@@ -856,7 +857,7 @@ public class EzEmailWriteServiceImpl implements EzEmailWriteService {
 
 // OPTIONS
     @Override
-    public void setDefaultMailOptions(HttpServletRequest request, MailWriteProcessVO writevo, LoginVO loginInfo, String userName2, Locale locale) throws Exception {
+    public void setDefaultMailOptions(HttpServletRequest request, MailWriteProcessVO writevo, LoginVO loginInfo, String userName, Locale locale) throws Exception {
         // loginInfo
         int tenantId = loginInfo.getTenantId();
 		String serverName = loginInfo.getServerName();
@@ -869,7 +870,7 @@ public class EzEmailWriteServiceImpl implements EzEmailWriteService {
         loginInfo.setServerName(serverName);
 
         // 메일 기본환경설정
-        setMailGeneralVO(writevo, loginInfo.getId(), userName2, tenantId, locale);
+        setMailGeneralVO(writevo, loginInfo.getId(), userName, tenantId, locale);
 
         // 메일 서명
         MailSignatureVO sign = ezEmailService.getMailSignature(tenantId, writevo.getMailId());
@@ -924,7 +925,7 @@ public class EzEmailWriteServiceImpl implements EzEmailWriteService {
         general.setKeepDeleteLength(pAutoSaveTime);
 
         // mailSenderNm → mailSendObject: 보내는사람이름
-		String pMailSenderNM = StringUtils.defaultIfBlank(general.getMailSenderNm(), userName2);
+		String pMailSenderNM = general.getMailSenderNm();
 		String mailSendObject = "<option value='NONE'>" + egovMessageSource.getMessage("ezEmail.t99000032", locale) + "</option>";
 
 		if (pMailSenderNM != null && !pMailSenderNM.trim().equals("")) {
@@ -951,6 +952,10 @@ public class EzEmailWriteServiceImpl implements EzEmailWriteService {
         // mailSendResult: 메일 발송 결과 표시
 		String mailSendResult = StringUtils.defaultIfBlank(general.getMailSendResult(), "failure");
         general.setMailSendResult(mailSendResult);
+
+        // 2025.02.11 한슬기 : 항상 나를 참조에 포함 설정. selfCcOption = none : 사용안함(default) / cc : 나를 항상 참조에 포함 / bcc : 나를 항상 숨은참조에 포함
+        String selfCcOption =StringUtils.defaultIfBlank(general.getSelfCcOption(), "none");
+        general.setSelfCcOption(selfCcOption);
 
         writevo.setMailGeneralVO(general);
     }

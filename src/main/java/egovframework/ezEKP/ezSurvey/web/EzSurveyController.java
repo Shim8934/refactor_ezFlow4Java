@@ -5,6 +5,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.PrintWriter;
 import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -24,6 +26,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import egovframework.ezEKP.ezSurvey.service.EzSurveyService;
 import egovframework.ezEKP.ezSurvey.vo.SurveyItemSearchVO;
+import egovframework.ezEKP.ezSurvey.vo.RespondentVO;
+import egovframework.ezEKP.ezSurvey.vo.SurveyVO;
 import egovframework.let.utl.fcc.service.EzFAL;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.ss.util.CellRangeAddress;
@@ -39,9 +43,11 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
@@ -56,7 +62,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import egovframework.com.cmm.EgovMessageSource;
-import egovframework.com.cmm.service.EgovFileMngUtil;
+import egovframework.com.cmm.service.EzFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezSurvey.service.EzSurveyRestService;
 import egovframework.ezEKP.ezSurvey.vo.AttachVO;
@@ -70,7 +76,7 @@ import egovframework.let.utl.fcc.service.CommonUtil;
 
 @SuppressWarnings("unchecked")
 @Controller
-public class EzSurveyController extends EgovFileMngUtil {
+public class EzSurveyController extends EzFileMngUtil {
 	private static final Logger logger = LoggerFactory.getLogger(EzSurveyController.class);
 
 	@Autowired
@@ -82,6 +88,9 @@ public class EzSurveyController extends EgovFileMngUtil {
 	@Autowired
 	private EzSurveyService ezSurveyService;
 
+	@Autowired
+	private SimpMessagingTemplate template;
+	
 	@Resource(name="EzCommonService")
 	private EzCommonService ezCommonService;
 	
@@ -156,7 +165,7 @@ public class EzSurveyController extends EgovFileMngUtil {
 	@RequestMapping(value="/ezSurvey/surveyList.do", method = RequestMethod.GET)
 	public String jspGetSurveyList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, Locale locale) throws Exception {
 		logger.debug("jspGetSurveyList started");
-		LoginSimpleVO user   = commonUtil.userInfoSimple(loginCookie);
+		LoginVO user   = commonUtil.userInfo(loginCookie);
 		String mode          = request.getParameter("mode") != null ? request.getParameter("mode") : "1";
 		String pageName      = "";
 		JSONObject configObj = surveyRestService.getUserPreviewConfig(request, user.getId());
@@ -184,6 +193,7 @@ public class EzSurveyController extends EgovFileMngUtil {
 		model.addAttribute("pageName", pageName);
 		model.addAttribute("mode"    , mode);
 		model.addAttribute("user"    , user.getId());
+		model.addAttribute("adminFG" , commonUtil.isAdmin(user.getId(), user.getTenantId(), user.getRollInfo(), "c;l;k"));
 		
 		logger.debug("jspGetSurveyList ended");
 		return "ezSurvey/listmenu/surveyList";
@@ -305,7 +315,7 @@ public class EzSurveyController extends EgovFileMngUtil {
 	@RequestMapping(value="/ezSurvey/surveyDetail.do", method = RequestMethod.GET)
 	public String jspGetSurveyDetail(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("jspGetSurveyDetail started");
-		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
+		LoginVO user = commonUtil.userInfo(loginCookie);
 		String itemId      = request.getParameter("itemId") != null ? request.getParameter("itemId") : "";
 		String mode        = request.getParameter("mode")   != null ? request.getParameter("mode")   : "";
 		
@@ -322,11 +332,13 @@ public class EzSurveyController extends EgovFileMngUtil {
 			String     participation = (String)surveyInf.get("participation");
 			// 20.05.06 강승구 : 설문응답여부 반환
 			String     resStatus 	 = (String)surveyInf.get("resStatus");
+			String	   finishYN      = ezSurveyService.checkfinishSurvey((String)survey.get("endDate"), user.getOffset()); // 설문 종료여부 체크
 			
 			model.addAttribute("survey" , survey);
 			model.addAttribute("creator", creator);
 			model.addAttribute("participation", participation);
 			model.addAttribute("resStatus", resStatus);
+			model.addAttribute("finishYN", finishYN);
 		}
 		else {
 			int reasonCode = ((Long)surveyInf.get("code")).intValue();
@@ -346,11 +358,14 @@ public class EzSurveyController extends EgovFileMngUtil {
 		
 		String defaultFontFamily = egovMessageSource.getMessage("main.t246", user.getLocale());
 		String defaultFontSize = "13px";
+		String adminYN = commonUtil.isAdmin(user.getId(), user.getTenantId(), user.getRollInfo(), "c;l;k") ? "Y" : "N";
 		
 		model.addAttribute("user", user.getId());
+		model.addAttribute("tenantId", user.getTenantId());
 		model.addAttribute("mode", mode);
 		model.addAttribute("defaultFontFamily", defaultFontFamily);
 		model.addAttribute("defaultFontSize", defaultFontSize);
+		model.addAttribute("adminYN", adminYN);
 		
 		logger.debug("jspGetSurveyDetail ended");
 		
@@ -525,6 +540,14 @@ public class EzSurveyController extends EgovFileMngUtil {
 		
 		JSONObject resultObj = surveyRestService.saveSurveyItem(request, surveyItem);
 		
+		/* 수정 시 변경 상태(MODIFY)와 기존 surveyId 포함한 WebSocket 메시지 전송 로직 추가 */
+		if (!"-1".equals(surveyItem.get("surveyId").toString()) && surveyItem.get("draft") == null) {
+			String orgSurveyId = surveyItem.get("surveyId").toString();
+			String result = "{\"status\":\"MODIFY\", \"surveyId\":\"" + orgSurveyId + "\"}";
+			JSONParser parser = new JSONParser();
+			JSONObject json = (JSONObject) parser.parse(result);
+			this.template.convertAndSend("/reply/getSeenUpdateForSurvey" + orgSurveyId + "+" + user.getTenantId(), json);
+		}
 		logger.debug("jsonSaveSurveyItem ended");
 		return resultObj;
 	}
@@ -1553,5 +1576,344 @@ public class EzSurveyController extends EgovFileMngUtil {
 			logger.debug(e.getMessage());
 			return "NO";
 		}
+	}
+
+	@RequestMapping(value="/ezSurvey/deleteResponse.do", method = RequestMethod.POST)
+	@ResponseBody
+	public JSONObject jsonDeleteResponse(@RequestBody JSONObject responseItem, @CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("jsonDeleteResponse started");
+
+		LoginSimpleVO user = loginCookie != null ? commonUtil.userInfoSimple(loginCookie) : new LoginSimpleVO();
+		responseItem.put("userId", user.getId());
+
+		JSONObject resultObj = surveyRestService.deleteResponse(request, responseItem);
+
+		if ("ok".equals(resultObj.get("status"))) { // 참여인원 확인 후 response_flag 값 update
+			ezSurveyService.checkResponseFlag(responseItem.get("surveyId"), user.getCompanyID(), user.getTenantId());
+		}
+		
+		logger.debug("jsonDeleteResponse ended");
+		return resultObj;
+	}
+
+	@ResponseBody
+	@RequestMapping(value="/ezSurvey/endSurveyItem.do", method = RequestMethod.POST)
+	public void closeSurveyItem(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("endSurveyItem started");
+		
+		LoginVO user   = commonUtil.userInfo(loginCookie);
+		String surveyID = request.getParameter("surveyID");
+
+		ezSurveyService.endSurveyItem(surveyID, user.getId(), user.getTenantId());
+
+		/* 설문종료 시 변경 상태(END)와 기존 surveyId 포함한 WebSocket 메시지 전송 로직 추가 */
+		try {
+			String result = "{\"status\":\"END\", \"surveyId\":\"" + surveyID + "\"}";
+			JSONParser parser = new JSONParser();
+			JSONObject json = (JSONObject) parser.parse(result);
+			this.template.convertAndSend("/reply/getSeenUpdateForSurvey" + surveyID + "+" + user.getTenantId(), json);
+		} catch (Exception e) {
+			logger.error("endSurveyItem - getSeenUpdateForSurvey err : " + e.getMessage());
+		}
+
+		logger.debug("endSurveyItem ended");
+	}
+
+	@ResponseBody
+	@RequestMapping(value="/ezSurvey/pauseSurvey.do", method = RequestMethod.POST)
+	public void pauseSurvey(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("pauseSurvey started");
+		try {
+			LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
+			String surveyID = request.getParameter("surveyID");
+			String type = request.getParameter("type");
+
+			ezSurveyService.pauseSurvey(surveyID, type, user.getTenantId());
+		} catch (Exception e) {
+			logger.debug("pauseSurvey error. : " + e.getMessage());
+		}
+
+		logger.debug("pauseSurvey ended");
+	}
+	
+	@RequestMapping(value = "/ezSurvey/showParticipantsList.do", method = RequestMethod.GET)
+	public String showParticipantsList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("showParticipantsList started");
+
+		LoginSimpleVO user = loginCookie != null ? commonUtil.userInfoSimple(loginCookie) : new LoginSimpleVO();
+		String surveyId = request.getParameter("surveyId") != null ? request.getParameter("surveyId") : "";
+		
+		int totalCnt = ezSurveyService.getSurveyParticipantCnt(surveyId, user.getCompanyID(), user.getTenantId());
+		if (totalCnt == 0) {
+			model.addAttribute("reasonMessage", "ezSurvey.yjh04");
+			return "ezSurvey/surveyAccessDenied";
+		}
+		
+		SurveyVO survey = ezSurveyService.getOneSurveyInfo(surveyId, user.getCompanyID(), user.getTenantId(), user.getOffset());
+		if (survey.getAnonymousFlag() == 1) {
+			model.addAttribute("reasonMessage", "ezSurvey.yjh05");
+			return "ezSurvey/surveyAccessDenied";
+		}
+
+		model.addAttribute("surveyId", surveyId);
+		model.addAttribute("surveyTitle", survey.getTitle());
+		model.addAttribute("totalUserCnt", totalCnt);
+
+		// 추첨기능 사용여부 체크
+		String useLottery = ezCommonService.getTenantConfig("useParticipantLottery", user.getTenantId());
+		model.addAttribute("useLottery", useLottery != null ? useLottery : "NO");
+		if ("YES".equals(useLottery)) {
+			String finishYN = ezSurveyService.checkfinishSurvey(survey.getEndDate(), user.getOffset()); // 설문 종료여부 체크
+			String hasLotteryRes = ezSurveyService.checkHasLotteryResult(surveyId, user.getCompanyID(), user.getTenantId());
+			model.addAttribute("finishYN", finishYN);
+			model.addAttribute("hasLotteryRes", hasLotteryRes);
+		}
+		
+		return "ezSurvey/listmenu/participants";
+	}
+
+	@RequestMapping(value="/ezSurvey/getSurveyParticipantList.do", method = RequestMethod.GET)
+	@ResponseBody
+	public JSONArray getSurveyParticipantList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("getSurveyParticipantList started");
+
+		LoginSimpleVO user = loginCookie != null ? commonUtil.userInfoSimple(loginCookie) : new LoginSimpleVO();
+		String locale = user.getLocale().toString();
+		String surveyId = request.getParameter("surveyId") != null ? request.getParameter("surveyId") : "";
+		int currentPage = request.getParameter("currentPage") != null ? Integer.parseInt(request.getParameter("currentPage")) : 1;
+		int listCntSize = request.getParameter("listCntSize") != null ? Integer.parseInt(request.getParameter("listCntSize")) : 10;
+		String orderCol = request.getParameter("orderCol") != null ? request.getParameter("orderCol") : "";
+		String orderType = request.getParameter("orderType") != null ? request.getParameter("orderType") : "";
+		
+		List<RespondentVO> surveyParticipantList = ezSurveyService.getSurveyParticipantList(surveyId, user, currentPage, listCntSize, orderCol, orderType, locale);
+
+		JSONArray userList = new JSONArray();
+		for (RespondentVO responseVO : surveyParticipantList) {
+			JSONObject json = new JSONObject();
+			json.put("userId", responseVO.getUserId());
+			json.put("userName", locale.equals("ko") ? responseVO.getUserName1() : responseVO.getUserName2());
+			json.put("responseDate", responseVO.getResponseDate());
+			json.put("deptName", locale.equals("ko") ? responseVO.getDeptName1() : responseVO.getDeptName2());
+			json.put("lotteryRes", responseVO.getLotteryResult());
+			userList.add(json);
+		}
+
+		logger.debug("getSurveyParticipantList ended");
+		return userList;
+	}
+
+	@RequestMapping(value="/ezSurvey/exportUserListExcel.do", method = RequestMethod.POST)
+	@ResponseBody
+	public void exportUserListExcel(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Locale locale) throws Exception {
+		logger.debug("exportUserListExcel started");
+
+		LoginSimpleVO user = loginCookie != null ? commonUtil.userInfoSimple(loginCookie) : new LoginSimpleVO();
+		String surveyId = request.getParameter("surveyId") != null ? request.getParameter("surveyId") : "";
+		String surveyTitle = request.getParameter("surveyTitle") != null ? request.getParameter("surveyTitle") : "";
+		int totalUserCnt = request.getParameter("totalUserCnt") != null ? Integer.parseInt(request.getParameter("totalUserCnt")) : 0;
+		List<RespondentVO> surveyParticipantList = ezSurveyService.getSurveyParticipantList(surveyId, user, 1, totalUserCnt, "", "", "");
+
+		// Excel 객체 생성
+		try (XSSFWorkbook workbook = new XSSFWorkbook()) {
+			String fontFamily = egovMessageSource.getMessage("main.t0620", locale).split(";")[0];
+
+			// 타이틀 font (bold, 맑은고딕, 크기 12pt)
+			XSSFFont titleFont = workbook.createFont();
+			titleFont.setBoldweight(XSSFFont.BOLDWEIGHT_BOLD);
+			titleFont.setFontHeight((short) 240);
+			titleFont.setFontName(fontFamily);
+
+			// header font (bold, 맑은고딕)
+			XSSFFont headerFont = workbook.createFont();
+			headerFont.setBoldweight(XSSFFont.BOLDWEIGHT_BOLD);
+			headerFont.setFontName(fontFamily);
+
+			// 기본 font(맑은고딕)
+			XSSFFont basicFont = workbook.createFont();
+			basicFont.setFontName(fontFamily);
+
+			// 1행 타이틀 스타일
+			XSSFCellStyle titleStyle = workbook.createCellStyle();
+			titleStyle.setAlignment(HSSFCellStyle.ALIGN_LEFT);
+			titleStyle.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
+			titleStyle.setFont(titleFont);
+
+			// 응답자 정보 헤더 스타일
+			XSSFCellStyle responserHeaderStyle = workbook.createCellStyle();
+			responserHeaderStyle.setFillForegroundColor(HSSFColor.GREY_25_PERCENT.index);
+			responserHeaderStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+			responserHeaderStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
+			responserHeaderStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
+			responserHeaderStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
+			responserHeaderStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+			responserHeaderStyle.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+			responserHeaderStyle.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
+			responserHeaderStyle.setFont(headerFont);
+
+			// 응답자 정보 스타일
+			XSSFCellStyle responserStyle = workbook.createCellStyle();
+			responserStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
+			responserStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
+			responserStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
+			responserStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+			responserStyle.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+			responserStyle.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);
+			responserStyle.setFont(basicFont);
+
+			String fileName = surveyTitle + "_" + egovMessageSource.getMessage("ezSurvey.yjh01", locale);
+			String[] invalidName = {"\\\\", "/", ":", "[*]", "[?]", "\"", "<", ">", "[|]"}; // 윈도우 파일명으로 사용할 수 없는 문자
+
+			for (int i = 0; i < invalidName.length; i++) {
+				fileName = fileName.replaceAll(invalidName[i], "_"); //언더바로 치환
+			}
+
+			String browser = "";
+			String header = request.getHeader("User-Agent");
+
+			if (header.indexOf("MSIE") > -1) {
+				browser = "MSIE";
+			} else if (header.indexOf("Chrome") > -1) {
+				browser = "Chrome";
+			} else if (header.indexOf("Opera") > -1) {
+				browser = "Opera";
+			} else if (header.indexOf("Trident/7.0") > -1) {
+				//IE 11 이상 
+				//IE 버전 별 체크 >> Trident/6.0(IE 10) , Trident/5.0(IE 9) , Trident/4.0(IE 8)
+				browser = "MSIE";
+			} else if (header.indexOf("Trident/6.0") > -1) {
+				//IE 11 이상 
+				//IE 버전 별 체크 >> Trident/6.0(IE 10) , Trident/5.0(IE 9) , Trident/4.0(IE 8)
+				browser = "MSIE";
+			} else {
+				browser = "Firefox";
+			}
+
+			String encodedFileName = "";
+
+			if (browser.equals("MSIE")) {
+				encodedFileName = URLEncoder.encode(fileName, "UTF-8").replaceAll("\\+", "%20");
+			} else if (browser.equals("Firefox")) {
+				encodedFileName = new String(fileName.getBytes("UTF-8"), "8859_1");
+			} else if (browser.equals("Opera")) {
+				encodedFileName = new String(fileName.getBytes("UTF-8"), "8859_1");
+			} else if (browser.equals("Chrome")) {
+				StringBuffer sb = new StringBuffer();
+
+				for (int i = 0; i < fileName.length(); i++) {
+					char c = fileName.charAt(i);
+
+					if (c > '~') {
+						sb.append(URLEncoder.encode("" + c, "UTF-8"));
+
+					} else {
+						sb.append(c);
+					}
+				}
+
+				encodedFileName = sb.toString();
+			} else {
+				encodedFileName = fileName;
+			}
+
+			// Sheet 객체 생성
+			XSSFSheet sheet = workbook.createSheet("report");
+			// Row 객체 생성
+			Row row = sheet.createRow(0);
+			// useLottery 체크
+			String useLottery = ezCommonService.getTenantConfig("useParticipantLottery", user.getTenantId());
+			if (useLottery == null) { useLottery = "NO"; }
+			int colCnt = "YES".equals(useLottery) ? 4 : 3;
+
+			// 1행
+			sheet.addMergedRegionUnsafe(new CellRangeAddress(0, 0, 0, colCnt));
+			row.createCell(0);
+			row.getCell(0).setCellStyle(titleStyle);
+			row.setHeight((short) 512);
+			row.getCell(0).setCellValue(fileName);
+
+			// 응답자 리스트 헤더
+			row = sheet.createRow(1);
+			List<String> columns = new ArrayList<>(Arrays.asList(
+					egovMessageSource.getMessage("ezOrgan.t218", locale), // 아이디
+					egovMessageSource.getMessage("ezSurvey.t57", locale), // 이름
+					egovMessageSource.getMessage("ezSurvey.t59", locale), // 부서명
+					egovMessageSource.getMessage("ezSchedule.t165", locale) // 응답시간
+			));
+			if ("YES".equals(useLottery)) {
+				columns.add(egovMessageSource.getMessage("ezSurvey.yjh07", locale)); // 추첨결과
+			}
+
+			for (int l = 0; l <= colCnt; l++) {
+				row.createCell(l);
+				row.getCell(l).setCellStyle(responserHeaderStyle);
+				row.getCell(l).setCellValue(columns.get(l));
+			}
+
+			// 응답자 리스트
+			int rowCount = 2;
+			for (RespondentVO rVO : surveyParticipantList) {
+				row = sheet.createRow(rowCount);
+
+				List<String> cellDatas = new ArrayList<>(Arrays.asList(
+						rVO.getUserId(), // 아이디
+						"ko".equals(locale.getLanguage()) ? rVO.getUserName1() : rVO.getUserName2(), // 이름
+						"ko".equals(locale.getLanguage()) ? rVO.getDeptName1() : rVO.getDeptName2(), // 부서명
+						rVO.getResponseDate().substring(0, 19) // 응답시간
+				));
+				if ("YES".equals(useLottery)) {
+					cellDatas.add(rVO.getLotteryResult() == -1 ? "당첨" : (rVO.getLotteryResult() == 0 ? "" : String.valueOf(rVO.getLotteryResult()))); // 추첨결과
+				}
+
+				for (int j = 0; j <= colCnt; j++) {
+					row.createCell(j);
+					row.getCell(j).setCellStyle(responserStyle);
+					row.getCell(j).setCellValue(cellDatas.get(j));
+				}
+
+				rowCount++;
+			}
+			
+			for (int c = 0; c <= colCnt; c++) {
+				sheet.autoSizeColumn(c);
+			}
+
+			response.setContentType("application/vnd.ms-excel");
+			response.setHeader("Content-Disposition", "attachment; fileName=\"" + encodedFileName + ".xlsx\"");
+			workbook.write(response.getOutputStream());
+			workbook.close();
+
+			logger.debug("exportUserListExcel ended");
+		}
+	}
+
+	@RequestMapping(value = "/ezSurvey/surveyLotteryChoice.do", method = RequestMethod.GET)
+	public String jspSurveyLotteryChoice() throws Exception {
+		return "ezSurvey/surveyLotteryChoice";
+	}
+	
+	@RequestMapping(value = "/ezSurvey/surveyLottery.do", method = RequestMethod.POST)
+	@ResponseBody
+	public String surveyLottery(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("surveyLottery started");
+		String res = "FAIL";
+		
+		try {
+			LoginSimpleVO user = loginCookie != null ? commonUtil.userInfoSimple(loginCookie) : new LoginSimpleVO();
+			String surveyId = request.getParameter("surveyId") != null ? request.getParameter("surveyId") : "";
+			String lotteryType = request.getParameter("type") != null ? request.getParameter("type") : "";
+
+			if ("1".equals(lotteryType)) {
+				int lotteryCnt = request.getParameter("cnt") != null ? Integer.parseInt(request.getParameter("cnt")) : 0;
+				res = ezSurveyService.drawWinnersByCount(surveyId, lotteryCnt, user.getCompanyID(), user.getTenantId());
+			} else if ("2".equals(lotteryType)) {
+				res = ezSurveyService.assignRandomNumbers(surveyId, user.getCompanyID(), user.getTenantId());
+			}
+		} catch (Exception e) {
+			logger.debug("surveyLottery error");
+			res = "FAIL";
+		}
+		
+		logger.debug("surveyLottery ended");
+		return res;
 	}
 }

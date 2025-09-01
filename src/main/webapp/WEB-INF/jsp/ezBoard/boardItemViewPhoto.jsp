@@ -78,6 +78,7 @@
 				var strWriteDate = "${boardItem.writeDate}";
 				var strImportance = "${boardItem.importance}";
 				var strEndDate = "${boardItem.endDate}";
+				var strStartDate = "${boardItem.startDate}";
 				var strContentLocation = "${boardItem.contentLocation}";
 				var strAttachList = "${boardItem.attachments}";
 				var SSUserID = "${userInfo.id}";
@@ -156,6 +157,7 @@
 				var writerNameType = "<c:out value='${boardItem.writerNameType}'/>"; // 2025-01-21 임정은 - 게시자명선택 타입 (0 : 이름, 1 : 부서명)
 				var strWriterDeptID = "${boardItem.writerDeptID}";
 				var SSDeptID = "<c:out value='${userInfo.deptID}'/>";
+				var guestReadFG = "${guestReadFG}";
 				
 		        window.onload = function () {
 		            imageViewInit();
@@ -183,7 +185,7 @@
 		            addThumbnailEvent();
 		            
 		            /* 2019-11-05 홍승비 - 본문 하단에 댓글영역 표출 */
- 		            if (OneLineReplyFlag == "2") {
+ 		            if (OneLineReplyFlag == "2" && guestReadFG !== "Y") {
  		            	document.getElementById("bodyPopup").style.overflowX = "hidden";
  		            	document.getElementById("bodyPopup").style.overflowY = "auto";
  		            	self.resizeTo(794, 914);
@@ -407,8 +409,12 @@
 								parent.opener.search('skip');
 							}
 	                 	} catch (e) {console.log(e);}
-						
-			            window.close();
+
+						if (window.opener) {
+							window.close();
+						} else {
+							window.location.reload();
+						}
 				    }
 				}
 		
@@ -970,7 +976,7 @@
 		            document.getElementById("viewBox").innerHTML += "<span id='viewboxlist'>";            
 		            for(var i = 0; i < ImageCount; i++)
 		            {
-		                var imgSrc = "/ezBoard/getBoardThumbnailInfo.do?type=BOARDTHUM&boardID=" + encodeURI(pBoardID) + "&fileName=" + encodeURI(result[i].split('/')[7]);
+		                var imgSrc = "/ezBoard/getBoardThumbnailInfo.do?type=BOARDTHUM&boardID=" + encodeURI(pBoardID) + "&fileName=" + encodeURI(result[i].split('/')[7]) + "&itemID=" + encodeURI(pItemID);
 		                document.getElementById("viewboxlist").innerHTML += "<img src='" + imgSrc + "' style='border:0' title='" + MakeXMLString(imagecontet[i].replaceAll("'" , "&apos;")) + "' id='image" + i + "' name='" + imageid[i] + "' style='cursor:pointer;' onclick='ImageMain(this)' onmouseover='imagemouseover(this)' onmouseout='imagemouseout(this)'/>";
 		                if (CrossYN())
 		                    document.getElementById("image" + i).style.opacity = "0.35";
@@ -1150,6 +1156,7 @@
 							}
 	                 	} catch (e) {console.log(e);}
 			            
+			            window.opener.location.reload();
 			            page_reload();
 		            }
 		                
@@ -1942,15 +1949,78 @@
                     }
                 });
 			}
-			    
+			<%-- 재게시 기능 --%>
+            function btn_Repost_Onclick() {
+                var newStartDate = new Date(strStartDate + " UTC");
+                var newEndDate = new Date(strEndDate);
+                var currentDate = new Date();
+
+                if (newStartDate > currentDate) {
+                    alert("예약게시물은 재게시가 불가능합니다.");
+                    return;
+                }
+
+                if (newEndDate < currentDate) {
+                    alert("게시기간이 만료된 게시물은 재게시가 불가능합니다.");
+                    return;
+                }
+
+                if(confirm("재게시를 하시면 최근 게시물로 등록됩니다.\n재게시 하시겠습니까?")) {
+                    var xmlhttp = createXMLHttpRequest();
+                    xmlhttp.open("POST", "/ezBoard/repostItem.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(pItemID) + "&userID=" + userInfoID, false);
+                    xmlhttp.send();
+
+                    if (xmlhttp.responseText == "SUCCESS") {
+                        alert("재게시가 완료되었습니다.");
+                        window.location.reload();
+
+                        //if (boardItemView == "P") {
+                            window.opener.location.reload();
+                        //}
+                    }
+                }
+            }
+
+			function copyURL() {
+				var url = window.frames.location.href;
+
+				var urlArea = document.createElement("textarea");
+				urlArea.value = url;
+				document.body.appendChild(urlArea);
+				urlArea.select();
+
+				try {
+					var success = document.execCommand("copy");
+					if (success) {
+						alert("<spring:message code='ezBoard.t355' />");
+					} else {
+						console.log("copyURL error : " + e);
+					}
+				} catch (e) {
+					console.log("copyURL error : " + e);
+				}
+
+				document.body.removeChild(urlArea);
+			}
+
+			// 주소복사 후 복사된 URL로 주소창에 붙여넣기하여 게시글을 조회할 경우 버튼 정상동작하지 않아 숨김처리
+			document.addEventListener("DOMContentLoaded", function () {
+				if (!window.opener) {
+					var closeBtn = document.getElementById("close");
+					if (closeBtn) {
+						closeBtn.style.display = "none";
+					}
+				}
+			});
 		</script>
 	</head>
-	<body  id="bodyPopup" class="popup" style="overflow:hidden; height:100%;">
+	<body  id="bodyPopup" class="popup" style="overflow:hidden auto; height:100%;">
 		<table class="layout" style="border-spacing:0; border-bottom:1px solid #ddd; border:0px; width:100%; min-width:745px;">
 		  <tr>
 		    <td style="height:20px; vertical-align:top">
 		      <div id="menu">
 		        <ul>
+					<c:if test="${guestReadFG ne 'Y'}">
 		        	<c:choose>
 		        		<%-- 2018-06-20 홍승비 - 승인/반려 버튼만 활성화, 작성자는 수정/삭제 가능 --%>
 		        		<c:when test="${apprFlag == 'N'}">
@@ -1979,11 +2049,17 @@
 			                    <li ID='btn_Delete' ><span  onclick="btn_ImgOnclick('Del')"><spring:message code='ezBoard.t1003'/></span></li>
 			                    <li ID='btn_AllDelete' ><span  onclick="btn_Delete_Onclick()"><spring:message code='ezBoard.t1004'/></span></li>
 			                    <li ID='btn_AlbumModify' ><span  onclick="btn_albumEdit()"><spring:message code='ezBoard.t1005'/></span></li>
+			                    <c:if test="${boardItem.itemLevel == 1 && (boardItem.writerID == userInfo.id || boardInfo.boardAdmin_FG == 'true' || boardInfo.boardGroupAdmin_FG == 'OK')}"><%-- 답변글은 재게시 버튼 안뜨도록 함 --%>
+                                    <li ID='btn_Repost'><span onclick='btn_Repost_Onclick()'><spring:message code='ezBoard.lhr04'/></span></li>
+                                </c:if>
 		        			</c:if>
 		                    <li ID='btn_Read' ><span  onclick="ReaderList()"><spring:message code='ezBoard.t1006'/></span></li>
 		                    <li ID='btn_down' ><span  onclick="btn_ImgDownload()"><spring:message code='ezBoard.t1007'/></span></li>
 		        		</c:otherwise>
 		        	</c:choose>
+					<c:if test="${boardInfo.urlCopyFlag != 'N'}">
+						<li id ="urlCopyBtn"><span onclick="copyURL()"><spring:message code = "ezBoard.lyj02" /></span></li>
+					</c:if>
 		        	<%-- 2024-02-02- 홍승비 - 게시물 승인 > 승인되지 않은 게시물 팝업창에서 캐비넷등록 버튼이 표출되는 오류 수정 (apprFlag값이 'W'인 경우는 승인게시판인데도 승인자가 없는 경우임) --%>
 					<c:if test="${useCabinet == 'YES' && apprFlag != 'N' && apprFlag != 'C' && apprFlag != 'W'}">
 						<li><span onclick="addRelatedCabinet()"><spring:message code='ezCabinet.t125'/></span></li>
@@ -2003,6 +2079,7 @@
 							    <li id ="addScrapBtn"><span onclick="addScrap()"><spring:message code='ezBoard.kmh13'/></span></li>	
 							</c:otherwise>
 						</c:choose>
+					</c:if>
 					</c:if>
 		        </ul>
 		      </div>
@@ -2255,7 +2332,7 @@
 <%-- 		  	</c:otherwise> --%>
 <%-- 		  </c:choose> --%>
 			<%-- 2019-11-05 홍승비 - 하단댓글 영역 추가 --%>
-	        <c:if test="${oneLineReplyFlag == '2'}">
+	        <c:if test="${oneLineReplyFlag == '2' && guestReadFG ne 'Y'}">
 	        	<div style='height:auto;'>
 					<table class="mainlist emoticonLayerStaticPosition" style="width:100%; min-width:745px; margin-top:8px;" >
 						<tr>

@@ -28,7 +28,7 @@ import com.google.gson.Gson;
 import com.ibm.icu.util.Calendar;
 
 import egovframework.com.cmm.EgovMessageSource;
-import egovframework.com.cmm.service.EgovFileMngUtil;
+import egovframework.com.cmm.service.EzFileMngUtil;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezNotification.service.EzNotificationService;
 import egovframework.ezEKP.ezResource.service.EzResourceService;
@@ -56,7 +56,7 @@ import egovframework.let.utl.fcc.service.CommonUtil;
  */
 
 @RestController
-public class MResourceGWController extends EgovFileMngUtil {
+public class MResourceGWController extends EzFileMngUtil {
 	
 	private static final Logger logger = LoggerFactory.getLogger(MResourceGWController.class);
 	
@@ -1289,6 +1289,22 @@ public class MResourceGWController extends EgovFileMngUtil {
 		}
 		logger.debug("MOBILE G/W RESOURCE [GET /mobile/ezresource/auth-check/users/{userId}] ended.");
 		return result;
+	}
+	
+	// 2024-09-02 유길상 - 자원관리 > 최대 예약 가능기간 조회 
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value="/mobile/ezresource/resource/{resourceId:.+}/{userId:.+}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	public JSONObject getResourceInfo(@PathVariable String resourceId, @PathVariable String userId, HttpServletRequest request) throws Exception {
+		logger.debug("getResourceInfo start, resourceId=" + resourceId + ",userId=" + userId);
+		
+		String serverName = request.getHeader("x-user-host");
+		MCommonVO info = mOptionService.commonInfo(serverName, userId);
+		String brdResMaxDate = ezResourceService.getBrdResMaxDate(resourceId, info.getCompanyId(), info.getTenantId());
+		JSONObject jsonObject = new JSONObject();
+		jsonObject.put("maxDate", brdResMaxDate);
+		
+		logger.debug("getResourceInfo end, brdResMaxUserCnt=" + brdResMaxDate);
+		return jsonObject;
 	}
 	
 }

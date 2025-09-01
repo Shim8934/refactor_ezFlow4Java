@@ -22,6 +22,8 @@
 		var checkUse = "${boardProp.checkUse}";
 		var iMenuNum = 1;
 		var guBun = "<c:out value='${boardProp.gubun}'/>";
+		var readGrade = "<c:out value='${readGrade}'/>";
+		var writeGrade = "<c:out value='${writeGrade}'/>";
 		
 		//ShowModalDialog Chrome 적용
 		(function() {
@@ -127,6 +129,8 @@
 				document.getElementById("chkMailFGComment").disabled = false;
 				document.getElementById("chkNotify").disabled = false;
 			}
+			
+			getGradeList();
 		});
 		
 		function hasSpecialCharacters(str) {
@@ -254,7 +258,9 @@
 			if (Expires == "") {
 				Expires = "30";
 			}
-			
+
+			var readGrade = document.getElementById('read_Grade').value;
+			var writeGrade = document.getElementById('write_Grade').value;
 			
 			$.ajax({
         		type : "POST",
@@ -276,7 +282,9 @@
         				boardColor : encodeURIComponent(brd_color),
         				versionUse : versionuse,
         				checkUse : checkUse,
-        				url: url
+        				url: url,
+						readGrade : readGrade,
+						writeGrade : writeGrade
         				},
         		success : function(result) {
         			if (result["result"] == "OK") {
@@ -284,7 +292,7 @@
         				
         				if (CrossYN()) {
         				    parent.window.frames.left.location.reload();
-        				    parent.window.frames.right.location.href = "/ezCommunity/adminBasic.do?code=" + '<c:out value="${code}"/>';
+        				    parent.document.querySelector("iframe[name=right]").src = "/ezCommunity/adminBasic.do?code=" + '<c:out value="${code}"/>';
         				} else {
         				    window.parent.frames.item(0).location.reload();
         					location.href = location.href;
@@ -476,7 +484,83 @@
 		function CheckType(nu) {
 			checkUse = check[nu].value;
 		}
+
+		function getGradeList() {
+			$.ajax({
+				type : "GET",
+				url : "/ezCommunity/getAdminMemberGrade.do",
+				dataType : "json",
+				data : {
+					code : code
+				},
+				success : function(result) {
+					getGradeList_after(result);
+				},
+				error : function(xhr, status, error) {
+					console.error("Error: " + error);
+				}
+			});
+		}
 		
+		var firstWriteOption = [];
+		function getGradeList_after(gradeList) {
+			var selectReadGrade = document.getElementById("read_Grade");
+			
+			if (selectReadGrade) {
+				selectReadGrade.innerHTML = "";
+	
+				for (var i = 0; i < gradeList.length; i++) {
+					var option = document.createElement("option");
+	
+					option.value = gradeList[i].gradeCode;
+					option.textContent = gradeList[i].gradeName;
+					
+					if (gradeList[i].gradeCode == readGrade) {
+						option.selected = true;
+					}
+					
+					selectReadGrade.appendChild(option);
+				}
+	
+				var selectWriteGrade = document.getElementById("write_Grade");
+				selectWriteGrade.innerHTML = "";
+	
+				for (var i = 0; i < gradeList.length-1; i++) {
+					var writeOption = document.createElement("option");
+	
+					writeOption.value = gradeList[i].gradeCode;
+					writeOption.textContent = gradeList[i].gradeName;
+	
+					if (gradeList[i].gradeCode == writeGrade) {
+						writeOption.selected = true;
+					}
+
+					firstWriteOption.push(writeOption.cloneNode(true));
+					
+					selectWriteGrade.appendChild(writeOption);
+				}
+			}
+		}
+
+		function selectChange() {
+			var selectOption = document.getElementById('read_Grade').value;
+			selectOption = parseInt(selectOption);
+			var selectWriteGrade =  document.querySelector("#write_Grade");
+			selectWriteGrade.innerHTML = "";
+
+			firstWriteOption.forEach(function(option) {
+				selectWriteGrade.appendChild(option.cloneNode(true));
+			});
+			var options = selectWriteGrade.querySelectorAll('option');
+			for (i = options.length-1; i >= 0; i--) {
+				if (i >= selectOption) {
+					var lastOption = options[i];
+					selectWriteGrade.removeChild(lastOption);
+				}
+			}
+			var remainOptions = selectWriteGrade.querySelectorAll('option');
+			remainOptions[remainOptions.length - 1].selected = true;
+		}
 		</script>
 	</head>
 	<body class="mainbody">
@@ -523,6 +607,31 @@
 		    	<th><spring:message code = 'ezCommunity.t382' /></th>
 		        <td>${boardProp.boardNo}</td>
 		    </tr>
+			<c:if test="${parentBoardID != 'TOP'}">
+				<tr>
+					<th><spring:message code='ezCommunity.lyj24' /></th>
+					<td colspan="2" style="padding:0">
+						<select id="read_Grade" style="font-size: 13px;margin-left: 5px;vertical-align: middle;cursor: pointer;MIN-WIDTH: 80px;height: 20px;" onchange="selectChange()">
+							<option value="1"><spring:message code = 'ezCommunity.t9' /></option>
+							<option value="2"><spring:message code = 'ezCommunity.lyj08' /></option>
+							<option value="3"><spring:message code = 'ezCommunity.lyj07' /></option>
+							<option value="4"><spring:message code = 'ezCommunity.lyj08' /></option>
+							<option value="10" selected><spring:message code = 'ezCommunity.lyj05' /></option>
+						</select> <span style="vertical-align: middle;"><spring:message code = 'ezCommunity.lyj22' /></span>
+					</td>
+				</tr>
+				<tr>
+					<th><spring:message code='ezCommunity.lyj25' /></th>
+					<td colspan="2" style="padding:0">
+						<select id="write_Grade" style="font-size: 13px;margin-left: 5px;vertical-align: middle;cursor: pointer;MIN-WIDTH: 80px;height: 20px;" onchange="">
+							<option value="1"><spring:message code = 'ezCommunity.t9' /></option>
+							<option value="2"><spring:message code = 'ezCommunity.lyj08' /></option>
+							<option value="3" selected><spring:message code = 'ezCommunity.lyj07' /></option>
+							<option value="4"><spring:message code = 'ezCommunity.lyj08' /></option>
+						</select> <span style="vertical-align: middle;"><spring:message code = 'ezCommunity.lyj22' /></span>
+					</td>
+				</tr>
+			</c:if>
       		<tr style="${_style}">
 		    	<th><spring:message code = 'ezCommunity.t383' /></th>
 		        <td><input type=text id="txtBoardDescription" style="width:100%;box-sizing:border-box;-moz-box-sizing:border-box;" value="<c:out value='${boardProp.boardDescription}'/>" maxlength=99></td>

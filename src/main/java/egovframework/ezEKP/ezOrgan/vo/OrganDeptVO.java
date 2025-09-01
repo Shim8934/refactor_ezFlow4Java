@@ -1,6 +1,7 @@
 package egovframework.ezEKP.ezOrgan.vo;
 
 public class OrganDeptVO {
+//	public String getExtensionAttribute;
 	/** 부모 회사/부서*/
 	private String parentCn;
 	/** 회사/부서아이디*/
@@ -81,7 +82,16 @@ public class OrganDeptVO {
 
 	/* 상위부서문서함 사용 여부 (Y/N) */
 	private String useUpperDeptBox;
-
+	
+	/* 팀즈 조직도 - 하위부서 유무 */
+	private String hasDept;
+	
+	/* 팀즈 조직도 - 소속 사용자 유무 */
+	private String hasDeptUser;
+	
+	/* 팀즈 조직도 - 최하위 노드 여부 */
+	private String isLeaf;
+	
 	public String getCn() {
 		return cn;
 	}
@@ -313,5 +323,29 @@ public class OrganDeptVO {
 	}
 	public void setUseUpperDeptBox(String useUpperDeptBox) {
 		this.useUpperDeptBox = useUpperDeptBox;
+	}
+
+	public String getHasDept() {
+		return hasDept;
+	}
+
+	public void setHasDept(String hasDept) {
+		this.hasDept = hasDept;
+	}
+
+	public String getHasDeptUser() {
+		return hasDeptUser;
+	}
+
+	public void setHasDeptUser(String hasDeptUser) {
+		this.hasDeptUser = hasDeptUser;
+	}
+
+	public String getIsLeaf() {
+		return isLeaf;
+	}
+
+	public void setIsLeaf(String isLeaf) {
+		this.isLeaf = isLeaf;
 	}
 }

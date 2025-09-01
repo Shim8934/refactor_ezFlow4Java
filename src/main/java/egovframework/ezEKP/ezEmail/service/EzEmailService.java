@@ -11,6 +11,7 @@ import javax.mail.internet.MimeMessage;
 
 import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import egovframework.let.utl.fcc.service.EzFAL;
+import egovframework.ezEKP.ezEmail.vo.MailboxProgressVO;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -37,13 +38,13 @@ import egovframework.let.user.login.vo.LoginVO;
 public interface EzEmailService {
 
 	public List<MailGeneralVO> getMailGeneral(int tenantId, String userId) throws Exception;
-	public void setMailGeneral(int tenantId, String userId, MailGeneralVO mailGeneral, String mode) throws Exception;
+	public void setMailGeneral(int tenantId, String userId, MailGeneralVO mailGeneral, String mode, String inMailBox) throws Exception;
 	public MailSignatureVO getMailSignature(int tenantId, String pUserID) throws Exception;
 	public void setMailSignature(int tenantId, String pUserID, String pUseFlag, String pContent1, String pContent2, String pContent3) throws Exception;
 	public MailColorVO getMailColor(int tenantId) throws Exception;
 	public void setMailColor(int pTenantId, String pImportanceColor, String pInColor, String pOutColor) throws Exception;
 	public List<MailDeleteVO> getMailDelete(int tenantId, String userId) throws Exception;
-	public void setMailDelete(int tenantId, String pUserID, String pPath, int pExpireTime, int pDeleteUnread, String pFolderName) throws Exception;
+	public void setMailDelete(int tenantId, String pUserID, String pPath, int pExpireTime, int pDeleteUnread, String pFolderName, String pAutoDeletionOption) throws Exception;
 	public void deleteMailDelete(int tenantId, String pUserID, String pFolderPath) throws Exception;
 	public List<MailBlobVO> getOrphanedMailBlobList() throws Exception;
 	public List<MailDeletedIdVO> getMailDeletedIdList() throws Exception;
@@ -185,7 +186,8 @@ public interface EzEmailService {
 	
 	public void setMailboxProgress(String userKey, String userId, String action, int tenantId, int percent) throws Exception;
 	public int updateMailboxProgress(String userKey, int percent) throws Exception;
-	public int getMailboxProgress(String userKey) throws Exception;
+	int updateMailboxProgressState(String userKey, String state, String stateDescription);
+	MailboxProgressVO getMailboxProgress(String userKey) throws Exception;
 	public int delMailboxProgress(String userKey) throws Exception;
 	
 	public JSONArray getMailOutOfOfficeTemplateList(String userEmail) throws Exception;
@@ -216,6 +218,7 @@ public interface EzEmailService {
 	JSONArray getApprMailList(int tenantId, String companyId, String type, String id, String lang, int pageStartNum, int listCount, String domainName) throws Exception;
 	int getApprMailListCount(int tenantId, String companyId, String type, String id) throws Exception;
 	JSONArray setUTCtoUserTime(JSONArray array, String offset, int tenantId) throws Exception;
+	JSONArray formatApprEmail(JSONArray array, String offset, int tenantId, Locale locale) throws Exception;
 	JSONArray setApprover(JSONArray array, Locale locale) throws Exception;
 	JSONArray setHref(JSONArray array) throws Exception;
 	String setHref(String senderId, String mailUID) throws Exception;
@@ -244,6 +247,8 @@ public interface EzEmailService {
 	public int insertApprHistory(int tenantId, String companyId, long mailUID, String userId, String approverId, MimeMessage message) throws Exception;
 	public int deleteApprCompHistory(int tenantId, String companyId, long mailUID, String userId) throws Exception;
 	public int deleteApprHistory(int tenantId, String companyId, long mailUID, String userId) throws Exception;
+	public int checkApprHistoryAll(int tenantId, String companyId, String userId, List<Map<String, Object>> mailDataList) throws Exception;
+	public int checkApprHistoryMultiple(int tenantId, String companyId, String userId, List<Map<String, Object>> mailDataList) throws Exception;
 	public int updateApprCompHistory(int tenantId, String companyId, long mailUID, String userId, String state, String approverId, String approverName, String approverName2, String memo) throws Exception;
 	public int updateApprHistory(int tenantId, String companyId, long mailUID, String userId, String state, String memo) throws Exception;
 	public int applyApprCompMail(String loginCookie, long mailUID, MimeMessage message) throws Exception;
@@ -256,6 +261,7 @@ public interface EzEmailService {
 	public int setApprMailCancel(int tenantId, Map<String, Object> paramMap, String applicantEmail, long uid) throws Exception;
 	public int setApprCompMailApproval(String loginCookie, String applicantEmail, long uid) throws Exception;
 	public int setApprMailApproval(String loginCookie, String applicantEmail, long uid) throws Exception;
+	public int setApprMailApproval(String userId, int tenantId, Map<String, Object> paramMap) throws Exception;
 	public int setApprMailApproval(String userId, int tenantId, Map<String, Object> paramMap, String applicantEmail, long uid) throws Exception;
 	public int setApprCompMailReject(String loginCookie, String applicantEmail, long uid, String memo) throws Exception;
 	public int setApprMailReject(String loginCookie, String applicantEmail, long uid, String memo) throws Exception;

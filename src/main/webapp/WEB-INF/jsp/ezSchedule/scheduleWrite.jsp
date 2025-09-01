@@ -78,6 +78,8 @@
 		    var adminDeptList = adminDeptListTemp.split(";").filter(Boolean);
 			var chkPublic = "<c:out value='${chkSchedulePublic}'/>"; // 개인일정 작성시 공개/비공개값 설정가능 여부
 		    var showtop = "<c:out value='${showtop}'/>";
+		    var lang = "<c:out value='${lang}'/>";
+			var nowDate = "<c:out value='${nowDate}'/>";
 
 		    /* 20203-09-22 한태훈 - 초대 일정 수정시 참석자에게 메일 보내는 용도 */
 			var modAttendIdList = [];
@@ -90,6 +92,9 @@
 			var modAttendName2List = [];
 		    
 		    window.onload = function () {
+		    	
+		    	setListOwnerID();
+		    	
 		        if (scheduleid != "" && otherid == "" && (scheduletype != "1" && scheduletype != "6")) {
 		            document.getElementById("1tab2").innerHTML = "<spring:message code='ezSchedule.t1031' />";
 		            if (document.getElementById("MsgTo_TR"))
@@ -106,7 +111,7 @@
 		        // 상단표시로 바로 작성할 때
                 if (showtop == 'Y') {
                     document.getElementById("topcheck").checked = true;
-                    var now = new Date();
+                    var now = new Date(nowDate);
 
                     //시작시간
                     var startTime;
@@ -637,6 +642,45 @@
 					}
 				}
 			}
+			
+			function setListOwnerID() {
+				var schOwnInfoList = "<c:out value='${schOwnInfoListToJson}'/>";
+				var decodedString = new DOMParser().parseFromString(schOwnInfoList, "text/html").documentElement.textContent;
+				decodedString = JSON.parse(decodedString);
+				
+			    var selElem = document.getElementById("ListOwnerID");
+
+			    while (selElem.firstChild) {
+			    	selElem.removeChild(selElem.firstChild);
+			    }
+
+			    for (var i = 0; i < decodedString.length; i++) {
+			        var item = decodedString[i];
+			        var scheduleTag = "";
+			        
+			        if (item.scheduleType == 1) {
+			        	scheduleTag = "<spring:message code='ezSchedule.t372'/>" + " ";
+			        } else if (item.scheduleType == 2) {
+			        	scheduleTag = "<spring:message code='ezSchedule.t373'/>" + " ";
+			        } else if (item.scheduleType == 3) {
+			        	scheduleTag = "<spring:message code='ezSchedule.t374'/>" + " ";
+			        } else if (item.scheduleType == 7) {
+			        	scheduleTag = "<spring:message code='ezSchedule.t375'/>" + " ";
+			        } else if (item.scheduleType == 10) {
+			        	scheduleTag = "<spring:message code='ezSchedule.lyj14'/>" + " - ";
+			        	
+			        }
+			        
+			        var value = item.scheduleType + ";;" + item.ownerId + ";;" + item.ownerName + ";;" + item.ownerName2;
+			        var text = scheduleTag + (lang == 1 ? item.ownerName : item.ownerName2);
+			        
+			        var option = document.createElement("option");
+			        option.value = value;
+			        option.textContent = text;
+			        
+			        selElem.appendChild(option);
+			    }
+			}
 	    </script>
 	</head>
 
@@ -704,7 +748,7 @@
                                         <tr id="HolderWrite">
                                             <th><spring:message code='ezSchedule.t363'/></th>
                                             <td colspan="3">
-                                            	<select name="ListOwnerID" id="ListOwnerID" onchange="ListOwnerID_Change()" style="height:24px;">${strOwnerID}</select>
+                                            	<select name="ListOwnerID" id="ListOwnerID" onchange="ListOwnerID_Change()" style="height:24px;"></select>
                                             	<input type="checkbox" id="topcheck" value="1"> <label for="topcheck"><spring:message code='ezSchedule.kwc01'/></label>
                                             </td>
                                         </tr>
@@ -726,11 +770,11 @@
 	                                        	<span id="periodblock">
 	                                            	<input name="checkbox" type="checkbox" id="alldaycheck" onclick="allday_change()" value="1">
 	                                            	<spring:message code='ezSchedule.t369'/>
-	                                           		<input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly">
-	                                           		<input id="Stimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;" onkeypress="return KeEventControl(this);" onkeydown="return KeEventControl(this);" onkeyup="return KeEventControl(this);" onmousedown="return false"/>
+	                                           		<input type="text" id="Sdatepicker" style="width:90px;text-align:center" readonly="readonly">
+	                                           		<input id="Stimepicker" type="text" class="time" style="width:53px;margin-left:10px;text-align:center;" onkeypress="return KeEventControl(this);" onkeydown="return KeEventControl(this);" onkeyup="return KeEventControl(this);" onmousedown="return false" readonly/>
 	                                            	~
-	                                            	<input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly">
-	                                            	<input id="Etimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;" onkeypress="return KeEventControl(this);" onkeydown="return KeEventControl(this);" onkeyup="return KeEventControl(this);" onmousedown="return false"/>
+	                                            	<input type="text" id="Edatepicker" style="width:90px;text-align:center" readonly="readonly">
+	                                            	<input id="Etimepicker" type="text" class="time" style="width:53px;margin-left:10px;text-align:center;" onkeypress="return KeEventControl(this);" onkeydown="return KeEventControl(this);" onkeyup="return KeEventControl(this);" onmousedown="return false" readonly/>
 	                                            </span>
 	                                            <span id="repeatblock" style="DISPLAY: none"><spring:message code='ezSchedule.t343'/></span>
 	                                        </td>

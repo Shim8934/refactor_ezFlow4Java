@@ -252,12 +252,14 @@ var SurveyItem = function() {
 		var analysisBttn = document.getElementById("analysisBttn");
 		var srchBttn     = document.getElementById("searchBttn");
 		var modifyBttn   = document.getElementById("modifyBttn");
+		var usersBttn	 = document.getElementById("usersBttn");
 		
 		if (delBttn)      {delBttn.firstElementChild.onclick      = function(e) {deleteFileConfirm()     ;};}
 		if (reuseBttn)    {reuseBttn.firstElementChild.onclick    = function(e) {reuseSurveyConfirm()    ;};}
 		if (analysisBttn) {analysisBttn.firstElementChild.onclick = function(e) {analysisSurveyConfirm() ;};}
 		if (srchBttn)     {srchBttn.firstElementChild.onclick     = function(e) {toggleSearchPanel()     ;};}
 		if (modifyBttn)   {modifyBttn.firstElementChild.onclick   = function(e) {modifySurveyConfirm()   ;};}
+		if (usersBttn)	  {usersBttn.firstElementChild.onclick 	  = function(e) {showParticipants() 	 ;};}
 		
 		$("#Sdatepicker").datepicker(datepickerSt);
 		$("#Edatepicker").datepicker(datepickerSt);
@@ -514,6 +516,7 @@ var SurveyItem = function() {
 				// 참여여부
 				var tdParticipation   = document.createElement("td");
 //				var tdElmt11   = document.createElement("td");
+				var endDate = new Date(itemList[i]["endDate"].replace(' ', 'T').replace('.0',''));
 				var endDateStr = itemList[i]["endDate"].substring(0, 10);
 				var today      = new Date();
 				var todayStr   = getStringFormatForDate(today);
@@ -605,7 +608,7 @@ var SurveyItem = function() {
 				}
 				else {
 					if (pageMode == "processing") {
-						statusStr = SurveyMessages.strProcess;
+						statusStr = itemList[i]["useStatus"] == 2 ? SurveyMessages.strPause : SurveyMessages.strProcess;
 					}
 					else if (pageMode == "finish") {
 						statusStr = SurveyMessages.strFinish;
@@ -613,14 +616,15 @@ var SurveyItem = function() {
 					else {
 						//Check time
 						var startDateStr = itemList[i]["startDate"].substring(0, 10);
+						var startDate = new Date(itemList[i]["startDate"].replace(' ', 'T').replace('.0',''));
 						
-						if (todayStr < startDateStr) {
+						if (today < startDate) {
 							//not started yet (대기)
 							statusStr = SurveyMessages.strWaiting;
 						}
 						else {
-							if (todayStr <= endDateStr) {
-								statusStr = SurveyMessages.strProcess;
+							if (today <= endDate) {
+								statusStr = itemList[i]["useStatus"] == 2 ? SurveyMessages.strPause : SurveyMessages.strProcess;
 							}
 							else {
 								statusStr = SurveyMessages.strFinish;
@@ -656,7 +660,7 @@ var SurveyItem = function() {
 				trElmt.appendChild(tdPeriod);
 				// trElmt.appendChild(tdElmt6);
 				// trElmt.appendChild(tdElmt7);
-				// trElmt.appendChild(tdElmt8);
+				trElmt.appendChild(tdElmt8);
 				trElmt.appendChild(tdParticipants);
 				trElmt.appendChild(tdParticipation);
 				trElmt.appendChild(tdElmt10);
@@ -790,7 +794,7 @@ var SurveyItem = function() {
 	function afterCheckReusePermission(data, itemId) {
 		var code = data.code;
 		switch(code) {
-			case 0 : window.parent.frames["right"].location.href = "/ezSurvey/reuseItem.do?itemId=" + itemId; break;
+			case 0 : window.parent.document.querySelector("iframe[name=right]").src = "/ezSurvey/reuseItem.do?itemId=" + itemId; break;
 			case 1 : alert(SurveyMessages.strParamErr); break;
 			case 2 : alert(SurveyMessages.strError)   ; break;
 			case 3 : alert(SurveyMessages.strPerm)    ; break;
@@ -857,7 +861,7 @@ var SurveyItem = function() {
 	}
 	
 	function modifySurveyItem(itemId) {
-		window.parent.frames["right"].location.href = "/ezSurvey/modifyItem.do?itemId=" + itemId;
+		window.parent.document.querySelector("iframe[name=right]").src = "/ezSurvey/modifyItem.do?itemId=" + itemId;
 	}
 	
 	function getSelectedItems() {
@@ -1025,9 +1029,11 @@ var SurveyItem = function() {
        var srchBttn2        = document.querySelector(".layer_select .searchBttn2");
        var delBttn2         = document.querySelector(".layer_select .deleteBttn2");
        var analysisBttn2    = document.querySelector(".layer_select .analysisBttn2");
+	   var usersBttn2		= document.querySelector(".layer_select .usersBttn2");
        if (srchBttn2)       {srchBttn2.firstElementChild.onclick        = function(e) {toggleSearchPanel()     ;};}
        if (delBttn2)        {delBttn2.firstElementChild.onclick         = function(e) {deleteFileConfirm()     ;};}
        if (analysisBttn2)   {analysisBttn2.firstElementChild.onclick    = function(e) {analysisSurveyConfirm() ;};}
+	   if (usersBttn2) 		{usersBttn2.firstElementChild.onclick 		= function(e) {showParticipants() ;};}
     }
 	
 	return {
@@ -1036,4 +1042,14 @@ var SurveyItem = function() {
 		getContent : getIframeContent,
 		btnResize : moreBtnResize
 	};
+	
+	/* 2025-07-08 양지혜 - 전자설문 > 참여자보기 호출 */
+	function showParticipants() {
+		var itemArr = getSelectedItems();
+		if (itemArr.length == 0) {alert(SurveyMessages.strItemErr) ; return;}
+		if (itemArr.length > 1)  {alert(SurveyMessages.strItemErr1); return;}
+		
+		if(statisticWd) {statisticWd.close();}
+		statisticWd  = window.open("/ezSurvey/showParticipantsList.do?surveyId=" + encodeURIComponent(itemArr[0]), "ParticipantsList", getOpenWindowfeature(780, 750));
+	}
 }();

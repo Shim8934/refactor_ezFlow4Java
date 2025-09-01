@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Properties;
 
 import javax.annotation.Resource;
 import javax.imageio.ImageIO;
@@ -32,7 +33,7 @@ import org.springframework.web.bind.annotation.*;
 import org.w3c.dom.Document;
 
 import egovframework.com.cmm.EgovMessageSource;
-import egovframework.com.cmm.service.EgovFileMngUtil;
+import egovframework.com.cmm.service.EzFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezEmail.vo.MailDistributionVO;
@@ -56,7 +57,7 @@ import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
  * @see
  */
 @Controller
-public class EzCommonController extends EgovFileMngUtil{
+public class EzCommonController extends EzFileMngUtil{
 	
 	@Autowired
 	private CommonUtil commonUtil;
@@ -72,6 +73,9 @@ public class EzCommonController extends EgovFileMngUtil{
 	
 	@Autowired
 	private EzEmailService ezEmailService;
+	
+	@Autowired
+	private Properties config;
 	
 	@Resource(name="loginService")
 	private LoginService loginService;
@@ -178,12 +182,24 @@ public class EzCommonController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value = "/ezCommon/mhtToHTMLContent.do", method = RequestMethod.POST, produces = "text/plain; charset=utf-8")
 	@ResponseBody
-	public String mhtToHTMLContent(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Locale locale) throws Exception{
+	public String mhtToHTMLContent(@CookieValue(value="loginCookie", required = false) String loginCookie, HttpServletRequest request, Locale locale) throws Exception{
 		logger.debug("mhtToHTMLContent started");
 
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		String itemID = "";
-		String type = "";
+		LoginVO userInfo = new LoginVO();
+		String type = request.getParameter("type") == null ? "" : request.getParameter("type");
+
+		/* 2025-08-11 비회원 읽기권한 pass */
+		if (loginCookie == null || loginCookie.isEmpty()) {
+			if(type.equals("BOARDCONTENT")) {
+				userInfo.setTenantId(Integer.parseInt(config.getProperty("config.guestDefaultTenantId")));
+			} else {
+				return "redirect:/user/login/login.do";
+			}
+		} else {
+			userInfo = commonUtil.userInfo(loginCookie);
+		}
+		
+		String itemID = request.getParameter("itemID") == null ? "" : request.getParameter("itemID");
 		String realPath = commonUtil.getRealPath(request);
 		String strResult = "";
 		String scheme = "http://";
@@ -192,11 +208,6 @@ public class EzCommonController extends EgovFileMngUtil{
     		scheme = "https://";
     	}
 		
-		itemID = request.getParameter("itemID");
-		type = request.getParameter("type");
-		if (type == null) {
-			type = "";
-		}
 		strResult = ezCommonService.getMHTtoHTML(type, itemID, userInfo.getTenantId(), realPath, request, locale, scheme);
 
 		logger.debug("mhtToHTMLContent ended");
@@ -882,5 +893,13 @@ public class EzCommonController extends EgovFileMngUtil{
 		logger.debug("stack: " + stack);
 
 		return "true";
+	}
+
+	/**
+	 * 공통 confirm 호출 Method
+	 */
+	@RequestMapping(value = "/ezCommon/ezConfirm.do", method = RequestMethod.GET)
+	public String ezAprOpinion(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) {
+		return "ezCommon/ezConfirm";
 	}
 }

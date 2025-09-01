@@ -44,14 +44,14 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.multipart.MultipartRequest;
 
 import egovframework.com.cmm.EgovMessageSource;
-import egovframework.com.cmm.service.EgovFileMngUtil;
+import egovframework.com.cmm.service.EzFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 @Controller
-public class EzNewPortalAdminController extends EgovFileMngUtil {
+public class EzNewPortalAdminController extends EzFileMngUtil {
 
 	private static final Logger logger = LoggerFactory.getLogger(EzNewPortalAdminController.class);
 	
@@ -759,6 +759,13 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 		if (result.equals("ok")) {
 			JSONObject data = (JSONObject) resultBody.get("data");
 			json = (JSONArray) data.get("PortletList");
+			
+			if (req.getParameter("type") != null && req.getParameter("type").equals("mobile")) {
+				JSONObject mobileMenuId = new JSONObject();
+				mobileMenuId.put("mobileBrdMenuId", data.get("mobileBrdMenuId"));
+				mobileMenuId.put("mobileAprMenuId", data.get("mobileAprMenuId"));
+				json.add(mobileMenuId);
+			}
 		}
 		logger.debug("json : " + json);
 		logger.debug("getPortalPortlets Ended");
@@ -987,6 +994,7 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 			
 			Map<String, Object> param = new HashMap<String, Object>();
 			param.put("userId", userId);
+			param.put("type", webType);
 			
 			String url = "/rest/admin/ezPortal/menus/companies/" + companyId;
 			

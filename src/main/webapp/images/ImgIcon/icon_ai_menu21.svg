@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24" height="24" viewBox="0 0 24 24">
+  <defs>
+    <clipPath id="clip-path">
+      <rect id="사각형_30526" data-name="사각형 30526" width="19.52" height="21" fill="none"/>
+    </clipPath>
+    <linearGradient id="linear-gradient" x1="0.098" y1="0.96" x2="0.753" y2="0.1" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#f8b142"/>
+      <stop offset="1" stop-color="#feea71"/>
+    </linearGradient>
+    <linearGradient id="linear-gradient-2" x1="0.203" y1="0.964" x2="0.659" y2="0.046" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#0195fb"/>
+      <stop offset="0.506" stop-color="#00c1f3"/>
+      <stop offset="1" stop-color="#00efac"/>
+    </linearGradient>
+  </defs>
+  <g id="그룹_9244" data-name="그룹 9244" transform="translate(-714 -1508)">
+    <rect id="사각형_29994" data-name="사각형 29994" width="24" height="24" transform="translate(714 1508)" fill="none"/>
+    <g id="그룹_9246" data-name="그룹 9246" transform="translate(715.874 1509.106)">
+      <g id="그룹_9245" data-name="그룹 9245" clip-path="url(#clip-path)">
+        <path id="패스_10012" data-name="패스 10012" d="M.911,17.127H4.206v-6.52H2.633a.212.212,0,0,1-.212-.212V9.762a.212.212,0,0,1,.212-.212H4.206V8.493H2.633a.211.211,0,0,1-.212-.211V7.647a.212.212,0,0,1,.212-.211H4.206V6.378H2.633a.212.212,0,0,1-.212-.211V5.533a.212.212,0,0,1,.212-.211H4.206V4.785a1.955,1.955,0,0,1,.07-.52H2.633a.212.212,0,0,1-.212-.212V3.419a.212.212,0,0,1,.212-.212H5a1.96,1.96,0,0,1,1.178-.392h8.081V.911A.911.911,0,0,0,13.345,0H.911A.911.911,0,0,0,0,.911v15.3a.911.911,0,0,0,.911.912" fill="url(#linear-gradient)"/>
+        <path id="패스_10013" data-name="패스 10013" d="M141.068,35.725a.233.233,0,0,0-.4.165v2.144a.233.233,0,0,0,.232.233l2.15.006a.232.232,0,0,0,.165-.4Z" transform="translate(-124.097 -31.456)" fill="#00efac"/>
+        <path id="패스_10014" data-name="패스 10014" d="M56.653,40.186a.3.3,0,0,1-.3.3h-9a.3.3,0,0,1-.3-.3v-.5a.3.3,0,0,1,.3-.3h9a.3.3,0,0,1,.3.3Zm0,2.114a.3.3,0,0,1-.3.3h-9a.3.3,0,0,1-.3-.3v-.5a.3.3,0,0,1,.3-.3h9a.3.3,0,0,1,.3.3Zm0,2.114a.3.3,0,0,1-.3.3h-9a.3.3,0,0,1-.3-.3v-.5a.3.3,0,0,1,.3-.3h9a.3.3,0,0,1,.3.3Zm0,2.114a.3.3,0,0,1-.3.3h-9a.3.3,0,0,1-.3-.3v-.5a.3.3,0,0,1,.3-.3h9a.3.3,0,0,1,.3.3Zm2.275,2.557V36.742a1.293,1.293,0,0,1-.563.129l-2.154-.006a1.292,1.292,0,0,1-1.286-1.29V33.431a1.28,1.28,0,0,1,.129-.561h-9.47a.912.912,0,0,0-.912.911v15.3a.912.912,0,0,0,.912.911H58.017a.911.911,0,0,0,.911-.911" transform="translate(-39.409 -28.997)" fill="url(#linear-gradient-2)"/>
+      </g>
+    </g>
+  </g>
+</svg>

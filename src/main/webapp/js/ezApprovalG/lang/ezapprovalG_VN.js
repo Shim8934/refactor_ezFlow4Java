@@ -1211,3 +1211,20 @@ var strLangDeptInbox = "Thư mục nhận phòng";
 
 var strLangAtachHIK_01 = "일반첨부파일은 총_VN"; 
 var strLangAtachHIK_02 = "MB까지 가능합니다._VN"; 
+
+/* 전자결재 사인 그리기 기능 */
+var strLangJIHSignDraw01 = "서명을 작성한 뒤 결재해주세요.";
+var strLangJIHSignDraw02 = "사인 저장 중 오류가 발생하였습니다.";
+
+var strLangKm01 = "문서를 회수하였습니다.";
+
+var strLangKMH02 = "Bạn có muốn tiếp tục nộp đơn hàng loạt không? <br>Các tài liệu có trạng thái gửi, văn bản thực hiện và thỏa thuận sẽ bị loại trừ khỏi đối tượng.";
+var strLangKMH03 = "Bạn có muốn tiếp tục nộp đơn hàng loạt và phê duyệt cuối cùng không? <br>Các tài liệu có trạng thái gửi, văn bản thực hiện và thỏa thuận sẽ bị loại trừ khỏi đối tượng.";
+
+/* 2025-06-19 김유진 -  전자결재 > 열람권한 */
+var strLangKYJ_IsPublic01 = "Xem tất cả";
+var strLangKYJ_IsPublic02 = "Xem phòng ban";
+var strLangKYJ_IsPublic03 = "Xem tuyến phê duyệt";
+
+var strLangJIHShareDox01 = "Người chia sẻ và người được chia sẻ phải thuộc cùng một công ty.";
+var strLangJIHShareDox02 = "Vui lòng chọn người chia sẻ trước.";

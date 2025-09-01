@@ -3,26 +3,28 @@ function btnSummaryEdit() {
         DivPopUpShow(713, 570, "/ezApprovalG/apprGSummaryEdit.do?docID=" + pDocID);
     } catch (e) {
         console.log(e);
-        alert(strLang199);
+        showAlert(strLang199);
     }
 }
         
 function btnSummaryEdit_Complete(rtn) {
     switch (rtn.status) {
         case "success":
-            alert(strLangJIH_Summary01);
+            showAlertUI(strLangJIH_Summary01);
             pSummery = rtn.summary;
             pSummaryPath = rtn.summaryPath;
-            DivPopUpHidden();
+            if (!isTeamsDesktop()) {
+                DivPopUpHidden();
+            }
             break;
         case "cancel":
             DivPopUpHidden();
             break;
         case "noData":
-            alert(strLangJIH_Summary02);
+            showAlert(strLangJIH_Summary02);
             break;
         default:
-            alert(strLang199);
+            showAlert(strLang199);
     }
 }
 
@@ -55,18 +57,20 @@ function btnSummaryPrint_onclick() {
     var feature = "width=800, height=500, toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1";
     var url = "/ezApprovalG/printApprGSummary.do?docID=" + pDocID + "&mode=" + aprOrEndStr;
     feature = feature + GetOpenPosition(800, 500);
-    window.open(url, "", feature);
+//    window.open(url, "", feature);
+    showPopup(url, 800, 500, "", feature, "");
 }
 
-function copySummaryForReuse(orgDocID, docID) {
+function copySummary(orgDocID, orgDocStatus, docID) {
      var result = "";
     $.ajax({
         type : "POST",
         dataType : "text",
         async : false,
-        url : "/ezApprovalG/apprGCopyForReuse.do",
+        url : "/ezApprovalG/copySummary.do",
         data : {
             orgDocID : orgDocID,
+            orgDocStatus : orgDocStatus,
             docID : docID
         },
         success: function(text){

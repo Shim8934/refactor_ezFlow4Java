@@ -64,7 +64,8 @@ var subType = {
 		modify : "Modification notice",
 		comment : "Post a comment",
 		reply : "Reply notification",
-		notice : "Full notice"
+		notice : "Full notice",
+		invite : "Invitation notification"
 	},
 	webfolder : {
 		open_apply : "Application for opening",
@@ -84,6 +85,7 @@ subType["approval"]["return"] = "Document withdraw";
 subType["approval"]["default"] = "Approval Noti";
 subType["board"]["new"] = "New posting";
 subType["board"]["return"] = "Reject approval";
+subType["board"]["expired"] = "Notice Period Ended";
 subType["schedule"]["delete"] = "Delete Schedule";
 subType["survey"]["new"] = "New registration";
 subType["poll"]["new"] = "New registration";

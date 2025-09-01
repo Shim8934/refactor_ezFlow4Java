@@ -16,6 +16,8 @@ import egovframework.ezEKP.ezSurvey.vo.SurveyParticipantVO;
 import egovframework.ezEKP.ezSurvey.vo.SurveyVO;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.let.user.login.vo.LoginVO;
+import egovframework.ezEKP.ezSurvey.vo.RespondentVO;
+import egovframework.let.user.login.vo.LoginSimpleVO;
 
 public interface EzSurveyService {
 	//Company Tree process functions
@@ -44,7 +46,7 @@ public interface EzSurveyService {
 	void getDownloadedFile(String fileName, String filePath, String realPath, String userAgent, HttpServletRequest request, HttpServletResponse response) throws Exception;
 	
 	//Save/Delete/Get survery item
-	JSONObject saveSurveyItem(HttpServletRequest request, String realPath, JSONArray questions, String title, String purpose, String startDate, String endDate, int publicFlag, int anonymousFlag, int multipleFlag, int userFlag, int publicDays, JSONArray attchList, JSONArray users, int useStatus, long surveyId, int drafMode, LoginVO userInfo, int mailFlag, int popupFlag) throws Exception;
+	JSONObject saveSurveyItem(HttpServletRequest request, String realPath, JSONArray questions, String title, String purpose, String startDate, String endDate, int publicFlag, int anonymousFlag, int multipleFlag, int userFlag, int publicDays, JSONArray attchList, JSONArray users, int useStatus, long surveyId, int drafMode, LoginVO userInfo, int mailFlag, int popupFlag, String closingText, int userExposedFlag) throws Exception;
 	JSONObject getItemsBySearching(String pageMode, int currentPage, int listCntSize, String title, String creatorName, String startDate, String endDate, String srchMode, String srchOption, String order, String column, LoginVO userInfo, int userMode, String filterStatus) throws Exception;
 	JSONObject getPopupItems(String mode, /*String startDate, String endDate,*/ LoginVO userInfo) throws Exception;
 	void deleteItems(List<Long> itemIdList, LoginVO userInfo) throws Exception;
@@ -60,7 +62,7 @@ public interface EzSurveyService {
 	List<SurveyParticipantVO> getSurveySubDeptListForMail(long surveyId, String companyId, int tenantId);
 	void updateMailSentFlag(long surveyId, int mailSentFlag, String companyId, int tenantId) throws Exception;
 	JSONObject checkRespondent(Long surveyId, LoginVO userInfo);
-	int getSurveyIngCnt(MCommonVO userInfo);
+	int getSurveyIngCnt(MCommonVO userInfo) throws Exception;
 	String checkTenantConfig(String propertyName, int tenantID) throws Exception;
 	
 	void setPreviewFlag(String prevMode, String userId, String companyId, int tenantId) throws Exception;
@@ -74,4 +76,30 @@ public interface EzSurveyService {
 	// 2024-07-12 전인하 - 설문 > 사용자가 결과조회 가능한 설문 id 조회
 	public List<Long> getUserReceivedSurveyResultList(LoginVO userInfo, long surveyId) throws Exception;
 	public void updateTotalNotiSentFlag(long surveyId, int mailSentFlag, String companyId, int tenantId) throws Exception;
+
+	public int checkEditingState(long surveyId, String companyId, int tenantId) throws Exception;
+	// 2025-05-23 양지혜 - 설문 > 응답삭제
+    public void deleteResponseItem(long surveyId, LoginVO userInfo) throws Exception;
+
+    // 2025-06-13 양지혜 - 설문 > 진행중 설문 > 설문종료
+	public void endSurveyItem(String surveyID, String userId, int tenantId) throws Exception;
+
+	// 2025-06-13 양지혜 - 설문 > 설문 종료여부 확인
+	public String checkfinishSurvey(String endDate, String offset) throws Exception;
+
+	public void pauseSurvey(String surveyID, String type, int tenantId) throws Exception;
+
+    public List<RespondentVO> getSurveyParticipantList(String surveyId, LoginSimpleVO userInfo, int currentPage, int listCntSize, String orderCol, String orderType, String locale) throws Exception;
+
+    public int getSurveyParticipantCnt(String surveyId, String companyID, int tenantId) throws Exception;
+
+	public SurveyVO getOneSurveyInfo(String surveyId, String companyID, int tenantId, String offset) throws Exception;
+
+    public String drawWinnersByCount(String surveyId, int lotteryCnt, String companyID, int tenantId) throws Exception;
+
+	public String assignRandomNumbers(String surveyId, String companyID, int tenantId) throws Exception;
+
+	public String checkHasLotteryResult(String surveyId, String companyID, int tenantId) throws Exception;
+
+	public void checkResponseFlag(Object surveyId, String companyID, int tenantId) throws Exception;
 }

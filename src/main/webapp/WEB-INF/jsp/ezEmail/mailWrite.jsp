@@ -81,6 +81,10 @@
 	    $(document).ready(function() {
 	    	window.resizeTo(990, window.outerHeight);
         });
+
+		window.addEventListener('beforeunload', function () {
+			sessionStorage.removeItem('zipPassword');
+		});
 	    
 	    var shareId = '<c:out value="${shareId}"/>';
 	    var folderPath = "${drafts}";
@@ -118,6 +122,7 @@
 		var previewMail = "${general.previewMail}";
 	    var mailSendResult = "${general.mailSendResult}";
 		var defaultCursorPosition = "${general.defaultCursorPosition}"; // 메일쓰기창 기본 커서 위치/ recipient: 받는사람, content : 내용
+		var selfCcOption = "${general.selfCcOption}"; // 나를 항상 참조에 포함 선택. none : 사용안함(default) / cc : 나를 항상 참조에 포함 / bcc : 나를 항상 숨은참조에 포함
 		// sign
 	    var mailsel = "${sign.useFlag}";
 		// color
@@ -268,10 +273,14 @@
 	        // alias, 공용배포그룹 주소로 재전송 시 실제 sender 값 설정
 	        if (["RESEND", "EDIT"].some(cmd => g_cmd.includes(cmd)) && g_from != from) {
 	            var fromAddressElem = document.getElementById("fromAddressList").value;
-	            fromAddressChange(fromAddressElem);
 	        }
 
-	    	/* 2025-01-08 홍승비 - 전자결재 메일 발송 > 웹한글문서 메일로 전송 시, 웹한글기안기의 로딩 순서를 보장하도록 수정 */
+			// 2025.02.11 한슬기 : 나를 항상 참조에 포함 설정시
+			if (g_cmd != "EDIT" && isMailToMe != "YES"){
+				setSelfCcOrBcc();
+			}
+
+			/* 2025-01-08 홍승비 - 전자결재 메일 발송 > 웹한글문서 메일로 전송 시, 웹한글기안기의 로딩 순서를 보장하도록 수정 */
 	    	// (BuildWebHwpCtrl() 함수 호출부를 Editor_Complete() 내부로 변경)
 	    	
 	        if (!CrossYN()) {
@@ -385,9 +394,11 @@
 			    window.setInterval("Mail_AutoSave()", pSaveInterval);
 			
 			var ua = navigator.userAgent;
+			/* 맥사파리에서 메일쓰기창이 제대로 뜨지 않는 문제가 발생해 제거함
 			if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {
 			    document.getElementById("file1").multiple = false;
 			}
+			*/
 			
 // 			if (document.getElementById("eSubject").value == "") {
 // 			    document.getElementById("MsgTo").focus();
@@ -562,7 +573,7 @@
 //	        if (retVal != "0" && g_url != "" && ("${folderPath}" != "Draft" && g_cmd != "EDIT")) {
             // 회신, 전달시 저장을 한 경우 g_cmd가 EDIT로 변경되어 g_cmd가 EDIT일 때는 삭제가 수행되지 않도록 g_cmd != "EDIT" 조건을 추가함
             // 단, 예약메일 수정의 경우에는 무조건 삭제되어야 하므로 writeType.isReserve 조건을 추가함
-	        if (g_url && writetype.useSaveDrafts && !isDelted && (g_cmd != "EDIT" || writetype.isReserve)) { // 지우면 안됨: EDIT, EDIT_IN_DRAFTS
+	        if (g_url && !isDelted && (g_cmd != "EDIT" || writetype.isReserve)) { // 지우면 안됨: EDIT, EDIT_IN_DRAFTS
 				delDrafts();
 	        } else {
 	        	delAttachListFile(filedate);
@@ -590,7 +601,7 @@
 	            var pUrl = "/ezEmail/mailConfirmDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezEmail.t666' />") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezEmail.t667' />") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezEmail.t671' />");
 	            DivPopUpShow(330, 205, pUrl);	            
 	        } else {
-	            window.close();
+				btnClose_onclick();
 	        }
 	    }
 	    function window_close_Complete(retVal) {
@@ -604,7 +615,7 @@
 	            if (tempSaveVal === "noSubject"){
 	            	retVal = "2";
 	            } else {
-		            window.close();
+					btnClose_onclick();
 	            }
 	        }
 	        
@@ -616,7 +627,7 @@
 //	        }
 	        
 	        if (retVal != "2")
-	            window.close();
+				btnClose_onclick();
 	    }
 	    var isDelted = false; // deleted의 오타 추정.
 	    function delDrafts(del_uid) {
@@ -997,6 +1008,9 @@
 	            else if (getNodeText(GetChildNodes(nodes[i])[1]) == "denied") {
 	                alert(strLang323);
 	            }
+	            else if (getNodeText(GetChildNodes(nodes[i])[1]) == "extFalse") {
+                    alert(strLangYJA01);
+                }
 	            else {
 	                alert(filename + strLang85 + "\n\n" + result);
 	            }
@@ -1015,6 +1029,8 @@
 	        var objRow;
 	        var objRows;
 	        var objRowRow;
+			var alerted = false;
+			var password = sessionStorage.getItem("zipPassword");
 	        
 	        objNode = createNodeInsert(xmlDoc, objNode, "DATA");
 	        createNodeAndInsertText(xmlDoc, objNode, "CMD", "ADD");
@@ -1023,13 +1039,18 @@
 	        
 	        for (var i = 0; i < nodes.length; i++) {
 	            
-	        	if (getNodeText(GetChildNodes(nodes[i])[1]) != "denied") {
+	        	if (getNodeText(GetChildNodes(nodes[i])[1]) != "denied" && getNodeText(GetChildNodes(nodes[i])[1]) != "extFalse") {
 	                objRows = createNodeAndAppandNode(xmlDoc, objRow, objRows, "FILE");
 	                createNodeAndAppandNodeText(xmlDoc, objRows, objRowRow, "NAME", getNodeText(GetChildNodes(nodes[i])[2]));
 	                createNodeAndAppandNodeText(xmlDoc, objRows, objRowRow, "PATH", getNodeText(GetChildNodes(nodes[i])[4]));
 	                createNodeAndAppandNodeText(xmlDoc, objRows, objRowRow, "BIG", getNodeText(GetChildNodes(nodes[i])[5]));
 	                createNodeAndAppandNodeText(xmlDoc, objRows, objRowRow, "SIZE", getNodeText(GetChildNodes(nodes[i])[3]));
 	                createNodeAndAppandNodeText(xmlDoc, objRows, objRowRow, "ITEMID", "Y");
+
+					if (getNodeText(GetChildNodes(nodes[i])[6]) == "true" && !alerted) {
+						alert("<spring:message code='ezEmail.zipEncryptedFile.001' />");
+						alerted = true;
+					}
 	            }
 	        }
 	        
@@ -2250,13 +2271,33 @@
 				document.getElementById("MsgTo").focus();
 			
 			} else if (defaultCursorPosition == "content") {
-				// 에디터에 커서를 위치시킴
-				message.SetEditorFocus();
-			
+				// 2025.05.16 한슬기 : 에디터에 커서를 위치시킴. 필요시 case를 추가하여 에디터별로 설정
 				setTimeout(function() {
-					   message.SetEditorFocus();
-				   }, 50);
-			
+					switch (pUse_Editor){
+						case "TAGFREE":
+							// 태그프리
+							var editorBody = document.querySelector('#tbContentElement')
+									?.contentDocument?.querySelector('.xfeDesignFrame')
+									?.contentDocument?.body;
+
+							if (editorBody) {
+								editorBody.focus();
+							} else {
+								console.warn("에디터 영역을 찾을 수 없습니다.");
+							}
+							break;
+						case "KUKUDOCS":
+							//쿠쿠닥스
+							message.SetEditorFocus();
+							break;
+
+						default:
+							//쿠쿠닥스
+							message.SetEditorFocus();
+							break;
+					}
+				   }, 500);
+
 			} else if (defaultCursorPosition == "subject") {
 				var inputValue = document.getElementById("eSubject").value;
 			
@@ -2284,6 +2325,16 @@
 					document.getElementById("EdtorSize").style.height = 436 + "PX";
 				}
 			}
+		}
+		
+		function btnClose_onclick() {
+			if (opener == null 
+				&& typeof parent.ezCommon_cross_dialogArguments != "undefined"
+				&& parent.ezCommon_cross_dialogArguments.length > 1
+			) {
+				parent.ezCommon_cross_dialogArguments[1]();
+			}
+			window.close();
 		}
 	    </script>
         <c:if test="${options.isCrossBrowser != true}">

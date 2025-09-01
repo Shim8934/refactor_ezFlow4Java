@@ -35,7 +35,7 @@ var s = "";
 	function WhoKyul_onclick_Complete(RtnVal) {
 	    if (RtnVal) {
 	        if (checkPwdFlag == "Y") {
-	        	chk_Passwd(pUserID);
+	        	chk_Passwd2(pUserID);
 	        } else {
 	        	WhoKyul_Complete("OK");
 	        }
@@ -165,14 +165,15 @@ var s = "";
 
         SignNodeList = SelectNodes(result, "LISTVIEWDATA/ROWS/ROW");
 
-        if (SignNodeList.length != 0) {
+        //if (SignNodeList.length != 0) {
             var parameter = pUserID;
 
             aprsign1_cross_dialogArguments[0] = parameter;
             aprsign1_cross_dialogArguments[1] = openSignUI_Complete;
 
             DivPopUpShow(350, 310, "/ezApprovalG/aprSign.do");
-        }
+        /*
+		}
 	    else {
 	        if (CrossYN()) {
 	            openSignUI_Complete("NAME");
@@ -181,6 +182,7 @@ var s = "";
 	            ret = "NAME";
 	        }
 	    }
+		*/
 	
 	    if (ret == null)
 	        ret = "NAME";
@@ -188,7 +190,7 @@ var s = "";
 	}
 
 	var ezchkpasswd_cross_dialogArguments = new Array();
-	function chk_Passwd(pPwd) {
+	function chk_Passwd2(pPwd) {
 
 	    ezchkpasswd_cross_dialogArguments[0] = pUserID;
 	    ezchkpasswd_cross_dialogArguments[1] = WhoKyul_Complete;

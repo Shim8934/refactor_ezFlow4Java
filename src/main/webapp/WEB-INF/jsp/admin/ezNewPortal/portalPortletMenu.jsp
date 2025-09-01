@@ -40,18 +40,24 @@
 	</c:forEach>
 	</c:when>
 	<c:otherwise>
-		<li id="menu4" class="menuList">
-			<dl class="full_menu_toggleDL">
-				<dt><span class='icon_topmenu icon_nav_board'></span></dt>
-				<dd><span><spring:message code='ezPortal.jjs04' /></span></dd>
-			</dl>
-		</li>
-		<li id="menu3" class="menuList">
-			<dl class="full_menu_toggleDL">
-				<dt><span class='icon_topmenu icon_nav_approval'></span></dt>
-				<dd><span><spring:message code='main.t25' /></span></dd>
-			</dl>
-		</li>
+		<c:forEach items="${menuList }" var="menu">
+			<c:if test="${menu.menuCode eq 'mBoard'}">
+				<li id="menu${menu.menuId}" class="menuList mBrd">
+					<dl class="full_menu_toggleDL">
+						<dt><span class='icon_topmenu icon_nav_board'></span></dt>
+						<dd><span><spring:message code='ezPortal.jjs04' /></span></dd>
+					</dl>
+				</li>
+			</c:if>
+			<c:if test="${menu.menuCode eq 'mApproval'}">
+				<li id="menu${menu.menuId}" class="menuList mApr">
+					<dl class="full_menu_toggleDL">
+						<dt><span class='icon_topmenu icon_nav_approval'></span></dt>
+						<dd><span><spring:message code='main.t25' /></span></dd>
+					</dl>
+				</li>
+			</c:if>
+		</c:forEach>
 		<li id="menu-2" class="menuList">
 			<dl class="full_menu_toggleDL">
 				<dt><span class='icon_topmenu icon_nav_connection'></span></dt>
@@ -73,6 +79,12 @@
 <script type="text/javascript">
 var webType = "<c:out value='${webType}'/>";
 const connectMenuID = "<c:out value='${connectMenuID}'/>";
+var mobileBrdId = 4;
+var mobileAprId = 3;
+if (webType == "mobile") {
+	mobileBrdId = $(".menuList.mBrd").attr('id').slice(4);
+	mobileAprId = $(".menuList.mApr").attr('id').slice(4);
+}
 
 $(function(){
 	$(".menuList").on("click", selectLi);
@@ -106,7 +118,7 @@ var selectMenu = function() {
 		window.opener.document.getElementById("newPortletMenu").setAttribute("value", menuName);
 		window.opener.document.getElementById("newPortletMenu").setAttribute("data2", menuId);
 		
-		if (menuId == 3) {
+		if (menuId == 3 || menuId == mobileAprId) {
 			window.opener.document.getElementById("newPortlet").querySelector("#cabinetSelRow").style.display = "table-row";
 			window.opener.document.getElementById("newPortlet").querySelector(".connectionTR").style.display = "none";
 			if (webType == "mobile") {
@@ -120,7 +132,7 @@ var selectMenu = function() {
 			window.opener.document.getElementById("newPortlet").querySelector("#newPortletConnection").value = "";
 			window.opener.document.getElementById("newPortlet").querySelector("#newPortletConnection").setAttribute("data1", "");
 			window.opener.document.getElementById("newPortlet").querySelector("#newPortletConnection").setAttribute("value", "");
-		} else if (menuId == 4) {
+		} else if (menuId == 4 || menuId == mobileBrdId) {
 			window.opener.document.getElementById("newPortlet").querySelector(".notUsedTR").style.display = "table-row";
 			window.opener.document.getElementById("newPortlet").querySelector(".notUsedTR2").style.display = "none";
 			window.opener.document.getElementById("newPortlet").querySelector(".connectionTR").style.display = "none";
@@ -149,8 +161,7 @@ var selectMenu = function() {
 			window.opener.document.getElementById("newPortlet").querySelector("#newPortletBoard").setAttribute("value", "");
 
 		} else {
-			
-			if (beforeMenu == 3 || beforeMenu == 4 || beforeMenu == connectMenuID) {
+			if (beforeMenu == 3 || beforeMenu == 4 || beforeMenu == connectMenuID || beforeMenu == mobileBrdId || beforeMenu == mobileAprId) {
 				window.opener.document.getElementById("newPortlet").querySelector(".connectionUrl").value = "";
 			}
 			
@@ -172,7 +183,7 @@ var selectMenu = function() {
 		window.opener.document.getElementById("portletMenu" + portletId).setAttribute("value", menuName);
 		window.opener.document.getElementById("portlet" + portletId).setAttribute("data2", menuId);
 
-		if (beforeMenu == 4) {
+		if (beforeMenu == 4 || beforeMenu == mobileBrdId) {
 			window.opener.document.getElementById("portlet" + portletId).querySelector(".connectionUrl").value = "";
 			window.opener.document.getElementById("portlet" + portletId).querySelector(".connectionUrl").setAttribute("value", "");
 			window.opener.document.getElementById("portlet" + portletId).querySelector(".boardTR").style.display = "none";
@@ -181,7 +192,7 @@ var selectMenu = function() {
 			window.opener.document.getElementById("portletBoard" + portletId).value = "";
 		}
 		
-		if (beforeMenu == 3) {
+		if (beforeMenu == 3 || beforeMenu == mobileAprId) {
 			window.opener.document.getElementById("portlet" + portletId).querySelector("#cabinetSelRow" + portletId).style.display = "none";
 			window.opener.document.getElementById("portlet" + portletId).querySelector(".connectionUrl").value = "";
 			window.opener.document.getElementById("portlet" + portletId).querySelector(".connectionUrl").setAttribute("value", "");
@@ -196,7 +207,7 @@ var selectMenu = function() {
 			window.opener.document.getElementById("portletConnection" + portletId).setAttribute("value", "");
 		}
 		
-		if (menuId == 4) {
+		if (menuId == 4 || menuId == mobileBrdId) {
 			window.opener.document.getElementById("portlet" + portletId).querySelector(".boardTR").style.display = "table-row";
 			window.opener.document.getElementById("portlet" + portletId).querySelector(".boardTR2").style.display = "none";
 			window.opener.document.getElementById("portlet" + portletId).querySelector(".connectionTR").style.display = "none";
@@ -207,7 +218,7 @@ var selectMenu = function() {
 				window.opener.document.getElementById("portlet" + portletId).querySelector(".connectionUrl").value = "/ezNewPortal/boardPortlet.do";
 				window.opener.document.getElementById("portlet" + portletId).querySelector(".connectionUrl").setAttribute("value", "/ezNewPortal/boardPortlet.do");
 			}
-		} else if (menuId == 3) {
+		} else if (menuId == 3 || menuId == mobileAprId) {
 			window.opener.document.getElementById("portlet" + portletId).querySelector("#cabinetSelRow" + portletId).style.display = "table-row";
 			window.opener.document.getElementById("portlet" + portletId).querySelector(".connectionTR").style.display = "none";
 			if (webType == "mobile") {
@@ -249,7 +260,7 @@ var selectMenu = function() {
 	if (!!window.opener.switchBoardViewTypeRow) {
 		var id = portletId !== "null" ? portletId : "";
 		window.opener.switchBoardViewTypeRow(id, false);
-		if (menuId == 4 && beforeMenu == 4) {
+		if (menuId == 4 && beforeMenu == 4 || (menuId == mobileBrdId && beforeMenu == mobileBrdId)) {
 			window.opener.switchBoardViewTypeRow(id, true);
 		}
 	}

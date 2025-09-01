@@ -2,7 +2,7 @@ package egovframework.ezEKP.ezPersonal.web;
 
 import com.sun.org.apache.xml.internal.security.utils.Base64;
 import egovframework.com.cmm.EgovMessageSource;
-import egovframework.com.cmm.service.EgovFileMngUtil;
+import egovframework.com.cmm.service.EzFileMngUtil;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGOutOfOfficeInfoVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
@@ -74,7 +74,7 @@ import java.util.stream.Collectors;
  */
 
 @Controller
-public class EzPersonalController extends EgovFileMngUtil {
+public class EzPersonalController extends EzFileMngUtil {
 	
 	private static final Logger logger = LoggerFactory.getLogger(EzPersonalController.class);
 	
@@ -991,7 +991,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 		String userId = userInfo.getId();
 		String deptId = userInfo.getDeptID();
 		
-		List<MenuInfoVO> menuList = ezNewPortalService.getUserMenuList(companyId, tenantId, portletLang, userId, deptId);
+		List<MenuInfoVO> menuList = ezNewPortalService.getUserMenuList(companyId, tenantId, portletLang, userId, deptId, "");
 		/*HashMap<String, String> usedList = (HashMap<String, String>) ezPortalService.getMainMenuItemUIDList(accessList, moduleList, userInfo.getLang(), userInfo.getCompanyID(), userInfo.getTenantId(), topMenuID);*/
 		
 		String useQuestion = ezCommonService.getTenantConfig("useQuestion", tenantId);
@@ -1011,6 +1011,9 @@ public class EzPersonalController extends EgovFileMngUtil {
 		String useSchedule = ezCommonService.getTenantConfig("useSchedule", tenantId);
 		String useBoard = ezCommonService.getTenantConfig("useBoard", tenantId);
 		String useToDo = ezCommonService.getTenantConfig("useToDo", tenantId);
+		
+		//전자설문 리뉴얼 추가
+		String useSurvey = ezCommonService.getTenantConfig("useSurvey", tenantId);
 		
 		if (useAttitude == null || useAttitude.equals("")) {
 			useAttitude = "NO";
@@ -1070,6 +1073,10 @@ public class EzPersonalController extends EgovFileMngUtil {
 		
 		if (useToDo == null || useToDo.equals("")) {
 			useToDo = "YES";
+		}
+
+		if (useSurvey == null || useSurvey.equals("")) {
+			useSurvey = "NO";
 		}
 		
 		if (useQuestion.equals("NO")) {
@@ -1131,6 +1138,10 @@ public class EzPersonalController extends EgovFileMngUtil {
 		if (useToDo.equals("NO")) {
 			menuList.removeIf(vo -> (vo.getMenuId() == 17));
 		}
+
+		if (useSurvey.equals("NO")) {
+			menuList.removeIf(vo -> (vo.getMenuId() == 19));
+		}
 		/*
 		 * moduleList에 추가해준 모듈의 이름으로 확인 
 		 */
@@ -1161,6 +1172,8 @@ public class EzPersonalController extends EgovFileMngUtil {
 				model.addAttribute("isPMSUsed", "Y");
 			} else if (menuId == 17) {
 				model.addAttribute("isTaskUsed", "Y");
+			} else if (menuId == 19) {
+				model.addAttribute("isuseSurveyUsed", "Y");
 			}
 		}
 		
@@ -2499,7 +2512,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 	public String notificationItemTab(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
 		logger.debug("notificationItemTab started.");
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
-		Set<String> menuCodeList = ezNewPortalService.getUserMenuList(user.getCompanyID(), user.getTenantId(), user.getLang(), user.getId(), user.getDeptID())
+		Set<String> menuCodeList = ezNewPortalService.getUserMenuList(user.getCompanyID(), user.getTenantId(), user.getLang(), user.getId(), user.getDeptID(), "")
 				.stream().map(MenuInfoVO::getMenuCode).filter(Objects::nonNull).map(String::toLowerCase).collect(Collectors.toSet());
 		model.addAttribute("useMail", menuCodeList.contains("mail"));
 		model.addAttribute("useApproval", menuCodeList.contains("approval"));

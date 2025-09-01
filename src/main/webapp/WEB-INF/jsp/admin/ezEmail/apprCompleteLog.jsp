@@ -239,14 +239,14 @@
 					tmpClone_approverName.textContent = e.approverName;
 					
 					const tmpClone_updatedt = tmpClone.querySelector(".tmp-apprMailList-updatedt");
-					tmpClone_updatedt.setAttribute("title", e.updateDt);
+					tmpClone_updatedt.setAttribute("title", e.updatedt);
 					tmpClone_updatedt.style.cursor = "default";
-					tmpClone_updatedt.textContent = e.updateDt;
+					tmpClone_updatedt.textContent = e.updatedt;
 					
 					const tmpClone_state = tmpClone.querySelector(".tmp-apprMailList-state");
-					tmpClone_state.setAttribute("title", e.stateStr);
+					tmpClone_state.setAttribute("title", e.state);
 					tmpClone_state.style.cursor = "default";
-					tmpClone_state.textContent = e.stateStr;
+					tmpClone_state.textContent = e.state;
 					
 					addPlace.appendChild(tmpClone); 
 				});

@@ -15,6 +15,7 @@ import javax.annotation.Resource;
 import javax.mail.internet.InternetAddress;
 
 import org.apache.commons.io.IOUtils;
+import org.egovframe.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -42,7 +43,7 @@ import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 @Service("EzCircularService")
-public class EzCircularServiceImpl implements EzCircularService {
+public class EzCircularServiceImpl extends EgovAbstractServiceImpl implements EzCircularService {
 	
 	private static final Logger logger = LoggerFactory.getLogger(EzCircularServiceImpl.class);
 	

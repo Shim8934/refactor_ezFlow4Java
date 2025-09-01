@@ -241,6 +241,7 @@ function MakeListInfoHTML(ConentObject) {
                 var p_mailIP = SelectSingleNodeValue(XmlRows[Cnt], "mailIP");
                 var p_countryName = SelectSingleNodeValue(XmlRows[Cnt], "countryName");
                 var p_mailConfirm = SelectSingleNodeValue(XmlRows[Cnt], "mailConfirm");
+                const tags = SelectSingleNodeValue(XmlRows[Cnt], "tags");
                 var recipients = [];
             	var recipientsLen = 1;
                 
@@ -256,6 +257,7 @@ function MakeListInfoHTML(ConentObject) {
                 _TR.setAttribute("_contentclass", p_ContentClass);
                 _TR.setAttribute("_isdraft", p_IsDraft);
                 _TR.setAttribute("securemail", p_SecureMail);
+                _TR.dataset.tags = tags;
                 
                 if (shareId != "" && deletePermission != "Y") {
                 	_TR.setAttribute("draggable", false);
@@ -380,16 +382,19 @@ function MakeListInfoHTML(ConentObject) {
                             p_Title = p_Title.replace(/<[^>]*>/g, '');
                             _TDColum.title = p_Title.replaceAll('&amp;', '&').replaceAll('&#40;', '(').replaceAll('&#41;', ')').replaceAll('&lt;', '<').replaceAll('&gt;', '>').replaceAll('&quot;', '"').replaceAll('&#39;', "'");
 
-                            if (useMailNewWindow == "YES") {
-                            	if (g_bdraft == true) {
-	                            	p_Subject = "<span style='color: #999;'>" + p_mailBoxName + "</span>" + p_Subject
-	                            } else {
-	                            	p_Subject = "<div id = \"subject\"style=\" cursor:pointer; max-width:85%; display:inline-block;overflow:hidden; text-overflow: ellipsis;\">" + "<span style='color: #999;'>" + p_mailBoxName + "</span>" + p_Subject + "</div>&nbsp;&nbsp;<img class='mailpopupicon' src=\"/images/email/popup_icon.gif\" width=\"12px\"  onclick = \"mailOpenPopup(this, event)\" />";
-	                            }
+                            if (g_bdraft == true) {
+                                p_Subject = p_Subject;
                             } else {
-                                p_Subject = "<span style='color: #999;'>" + p_mailBoxName + "</span>" + p_Subject
+                                p_Subject = "<div id = \"subject\"style=\" cursor:pointer; max-width:85%; display:inline-block;overflow:hidden; text-overflow: ellipsis;\">" + p_Subject + "</div>"
+                                if (usePreviewMail) {
+                                    p_Subject += "<img class='mailpopupicon' id='previewMailIcon' src='/images/bsearch_new2.svg' width='14px' style='padding: 0 8px;' onclick = 'previewMail(this, event)' onmouseover = 'this.src = \"/images/bsearch_new2_hover.svg\"'  onmouseout = 'this.src = \"/images/bsearch_new2.svg\"'/>";
+                                }
+
+                                if (useMailNewWindow == "YES") {
+                                    p_Subject += "<img class='mailpopupicon' src=\"/images/email/popup_icon.gif\" width=\"12px\"  onclick = \"mailOpenPopup(this, event)\" />";
+                                }
                             }
-                            
+
                             _TDColum.innerHTML = p_Subject;
                             _TDColum.title = p_Title.replaceAll('&amp;', '&').replaceAll('&#40;', '(').replaceAll('&#41;', ')').replaceAll('&lt;', '<').replaceAll('&gt;', '>').replaceAll('&quot;', '"').replaceAll('&#39;', "'");
                             _TDColum.style.fontWeight = p_Read == "0" ? "bold" : "";
@@ -411,6 +416,11 @@ function MakeListInfoHTML(ConentObject) {
                                 event_listDBClick(this.parentElement);
                             };
                             _TDColum.onselectstart = function () { return false; };
+
+                            if (useMailConfirm == "YES" && p_mailConfirm == "true" && useReceivingChk) {
+                                _TDColum.querySelector('#subject').style.textDecoration = 'line-through';
+                            }
+                            
                             break;
                         case "receivedt":
                             _TDColum.style.textAlign = SelectSingleNodeValue(XmlHeaderRows[HRows], "align");
@@ -521,7 +531,7 @@ function MakeListInfoHTML(ConentObject) {
                     	
                     	// 2018-10-05 메일리스트에 보낸사람 국기표시 박예연
                     	// 현재 국가도 표시할지 여부 : useShowSystemCountry - YES : 현재 상태 한국도 나오는 상태 , NO 현재국가는 안나오는 상태
-                    	if (useCountryIP == "YES" && g_foldertype == "" && p_countryCode != "") {
+                    	if (useCountryIP == "YES" && (g_foldertype == "" || g_foldertype == "allMail") && p_countryCode != "") {
 	                    			
             				// 본인국가 표시 
             				if (useShowSystemCountry == "YES") {

@@ -16,7 +16,8 @@
 // 		var ch_CommunityAdmin = "${chCommunityAdmin}";
 		    var UserLevel = "<c:out value ='${userLevel}' />";
 		    var userID = "<c:out value ='${userInfo.id}' />";
-		    
+		    var pollAdmin = "<c:out value ='${pollAdmin}' />";
+
 		    window.onload = function () {
 				$("#tblList").html($("#tblList").html() + '${strXML}');
 			}
@@ -45,7 +46,7 @@
 				else {
 					$("input:checkbox:checked[id != 'checkBoxHeader']").each(function () {
 						/* 2018-05-10 삭제 권한 확인 .do에서 jsp로 옮김 */
-						if (UserLevel != "4" && $(this).attr("pollRegID") != userID) {
+						if (UserLevel != "4" && $(this).attr("pollRegID") != userID && pollAdmin == "false") {
 							delOK = "no";
 							alert("<spring:message code='ezCommunity.t431' />");
 					     	return false;

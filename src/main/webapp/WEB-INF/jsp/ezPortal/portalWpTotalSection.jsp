@@ -655,10 +655,10 @@
 						ifrw.topMenuToggle('Appr');
 					}
 				} else if (objThis.id == "ModInfo") {
-					window.open("/ezPortal/environmentMain.do?funCode=1", "main");
+                    parent.document.querySelector("iframe[name=main]").src = "/ezPortal/environmentMain.do?funCode=1";
 				} else if (objThis.id == "Workspace") {
 					/* 2025-03-13 홍승비 - 협업 모듈에 고정된 하드코딩 문자열 제거 (ezWorkspace) */
-					window.open("${workspaceContextRootUrl}/Account/SSO", "main");
+					parent.document.querySelector("iframe[name=main]").src = "${workspaceContextRootUrl}/Account/SSO";
 				} else {
 					ifrw.topMenuToggle(objThis.id);
 				}

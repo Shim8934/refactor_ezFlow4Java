@@ -27,6 +27,7 @@ import egovframework.ezEKP.ezCommunity.vo.CommunityCPollResponseVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityClubVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityMemberInfoVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityOneLineReplyVO;
+import egovframework.ezEKP.ezCommunity.vo.CommunityMemberGradeVO;
 import egovframework.let.user.login.vo.LoginVO;
 
 public interface EzCommunityService {
@@ -90,7 +91,7 @@ public interface EzCommunityService {
 	
 	public CommunityClubVO leftCommunityGet4(String code, String companyID, int tenantID)throws Exception;
 	
-	public CommunityBoardPropertyVO getBoardInfo(LoginVO userInfo, String pBoardID) throws Exception;
+	public CommunityBoardPropertyVO getBoardInfo(LoginVO userInfo, String pBoardID, String code) throws Exception;
 	
 	public CommunityBoardPropertyVO brdGetACL(String pBoardID, String pAccessID, int tenantID) throws Exception;
 
@@ -140,11 +141,11 @@ public interface EzCommunityService {
 	
 	public String guestOne(LoginVO userInfo, String sRadio, String keyword, String code, int comNoPerPage, int curPage) throws Exception;
 	
-	public String pollMain(LoginVO userInfo, String code) throws Exception;
+	public String pollMain(LoginVO userInfo, String code, String pollMain) throws Exception;
 	
 	public String pollAddOk(int sel, String selType, String selRes, int selectedNo, int answerCount, Model model, LoginVO userInfo) throws Exception;
 	
-	public String commViewMember(LoginVO userInfo, String code, String strSysopID, String keyword, String sRadio, int comNoPerPage, int curPage) throws Exception;
+	public String commViewMember(LoginVO userInfo, String code, String strSysopID, String keyword, String sRadio, int comNoPerPage, int curPage, int keywordCount, int totalPage, String block, String selectGrade, String orderCell, String orderOption, String selectMonth, String startdate, String enddate) throws Exception;
 	
 	public String adminHomeBoard1(LoginVO userInfo, String code) throws Exception;
 	
@@ -265,7 +266,7 @@ public interface EzCommunityService {
 	public int pollETCViewGet(String questionID, int tenantID) throws Exception;
 	
 	/* 2018-11-26 홍승비 - 커뮤니티 회원목록 카운트에 companyID 조건 추가 */
-	public int commViewMemberGet2(String code, String primary, String keyword, String sRadio, String companyID, int tenantID) throws Exception;
+	public int commViewMemberGet2(String code, String primary, String keyword, String sRadio, String companyID, int tenantID, String selectGrade, String selectMonth, String offset) throws Exception;
 	
 	public int adminMemPermitGet1(String code, int tenantID) throws Exception;
 	
@@ -327,7 +328,7 @@ public interface EzCommunityService {
 
 	public void joinOkInsert(String companyID, String userID, String userName, String userName2, String companyName, String companyName2, String companyZip, String companyAddress, String deptName, String deptName2, String companyTel, String companyFax, String homeTel, String handPhone, String eMail, String birthDay, String gender, int tenantID) throws Exception;
 
-	public boolean communityConnCHK(String id, String clubID, String boardID, String rollInfo, int mode, HttpServletResponse response, LoginVO userInfo, String type) throws Exception;
+	public boolean communityConnCHK(String id, String clubID, String boardID, String rollInfo, int mode, HttpServletResponse response, LoginVO userInfo, String type, String inviteFlag) throws Exception;
 
 	public void updateLastDate(String strNow, String code, String id, int tenantID) throws Exception;
 
@@ -343,15 +344,15 @@ public interface EzCommunityService {
 
 	public void deleteBoard(int tenantID) throws Exception;
 
-	public void createBoardInsert(String code, String boardID, String boardName, String boardName2, String parentBoardID, String boardGroupID, String comatt, LoginVO userInfo) throws Exception;
+	public void createBoardInsert(String code, String boardID, String boardName, String boardName2, String parentBoardID, String boardGroupID, String comatt, LoginVO userInfo, String readGrade, String writeGrade) throws Exception;
 
-	public void adminOuterOkNoSet(String flag, String userID, String code, int tenantID) throws Exception;
+	public void adminOuterOkNoSet(String flag, String userID, String code, int tenantID, String companyID) throws Exception;
 
-	public void adminMemberListOkGoSe(String mode, String code, String cID, String cNm, int tenantID) throws Exception;
+	public void adminMemberListOkGoSe(String mode, String code, String cID, String cNm, LoginVO userInfo) throws Exception;
 	
 	public void adminCommCloseOkInsert(String code, String commName, String commName2, String sysopID, String companyName, String companyId, String todayTime, String reason, String closeState, int tenantID) throws Exception;
 
-	public void joinOkSet1(String code, String id, String todayTime, String companyID, int tenantID) throws Exception;
+	public void joinOkSet1(String code, String id, String todayTime, String companyID, int tenantID, String joinGrade) throws Exception;
 	
 	public void joinOkUpdate1(String id, String code, String cIntro, String openEmail, String openHp, String openComp, String openBirth, String openSex, String openHouse, int tenantID) throws Exception;
 
@@ -359,7 +360,7 @@ public interface EzCommunityService {
 	
 	public void joinOkUpdate3(String companyID, String id, String birthDay, int tenantID) throws Exception;
 	
-	public void okNoSet(String flag, String code, String cID, int tenantID) throws Exception;
+	public void okNoSet(String flag, String code, String cID, int tenantID, String joinGrade) throws Exception;
 
 	public void commMakeUpload(String mode, String fileName, String fileData, String logoPath, int tenantID) throws Exception;
 
@@ -416,4 +417,54 @@ public interface EzCommunityService {
 	public String getClubNameLocalization(String userLang, CommunityClubVO clubVO) throws Exception;
 
 	public String getClubBoardNameLocalization(String userLang, CommunityBoardPropertyVO clubBoardVO) throws Exception;
+
+	public int checkPollPeriod(String code, String pollManagerID, LoginVO userInfo) throws Exception;
+
+	public void updateJoinGrade(String strNow, String code, String id, int tenantID) throws Exception;
+
+	public String saveGradeList(String code, List<String> gradelist, String companyID, int tenantID) throws Exception;
+
+	public void deleteGradeList(String code, String companyID, int tenantID) throws Exception;
+
+	public List<CommunityMemberGradeVO> getMemberGrade(String code, String companyID, int tenantID) throws Exception;
+
+	public String getMemberGradeName(String code, String gradeCode, String companyID, int tenantID) throws Exception;
+
+	public void updateMemberGrade(String code, String grade, List<String> id, String companyID, int tenantID) throws Exception;
+
+	public String getUserGrade(String code, String userId, String companyID, int tenantID) throws Exception;
+
+	public String getMemListReadGrade(String code, String companyID, int tenantID) throws Exception;
+
+	public int getGradeCount(String code, String grade, String companyID, int tenantID) throws Exception;
+
+	public void updateBoardManageGrade(String boardID, String readGrade, String writeGrade, int tenantID) throws Exception;
+
+	public String getCommunityJoinGrade(String code, String companyID, int tenantID) throws Exception;
+
+	public List<CommunityCClubUserVO> getClubOperatorList(String companyID, int tenantID, String code, String userId) throws Exception;
+
+	public String adminOperatorList(LoginVO userInfo, String code) throws Exception;
+
+	public int adminOperatorListCount(LoginVO userInfo, String code) throws Exception;
+
+	public void deleteClubOperator(String code, List<String> id, String companyID, int tenantID) throws Exception;
+
+	public void updateClubOperatorAuth(String code, List<String> auth, String companyID, int tenantID) throws Exception;
+
+	public String adminOperatorAddList(LoginVO userInfo, String code, String keyword, String type, int comNoPerPage, int curPage) throws Exception;
+
+	public List<CommunityCClubUserVO> getNoOperatorList(String companyID, int tenantID, String code, String keyword, String type) throws Exception;
+
+	public int getNoOperatorListCount(String companyID, int tenantID, String code, String keyword, String type) throws Exception;
+
+	public void updateOperatorGrade(String code, String id, String companyID, int tenantID) throws Exception;
+
+	public int getBoardItemWriteCount(String code, String id, String companyID, int tenantID, String offset, String startdate, String enddate) throws Exception;
+
+	public int getBoardReplyCount(String code, String id, String companyID, int tenantID, String offset, String startdate, String enddate) throws Exception;
+
+	public CommunityClubVO getClubUserCountInfo(String code, String companyID, int tenantID, String offset) throws Exception;
+
+	public List<CommunityCClubUserVO> adminMemberListGet3(String code, String flag, String primary, String ser, String companyID, int tenantID) throws Exception;
 }

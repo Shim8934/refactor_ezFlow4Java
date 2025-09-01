@@ -429,27 +429,28 @@
 		    	$(event.target).attr("class", "list_text node_selected");
 	    	}
 	    	
+            var rightUrl = "";
 	    	switch(funcFlag) {
 	    		case 1:
-	    			window.open("/ezAttitude/attitudeUserMain.do", "right");
+	    			rightUrl = "/ezAttitude/attitudeUserMain.do";
 	    			break;
 	    		case 2:
-	    			window.open("/ezAttitude/attitudeDeptMain.do", "right");
+	    			rightUrl = "/ezAttitude/attitudeDeptMain.do";
 	    			break;
 	    		case 3:
-	    			window.open("/ezAttitude/attitudeUserAnnual.do", "right");
+	    			rightUrl = "/ezAttitude/attitudeUserAnnual.do";
 	    			break;
 	    		case 4: // 나의수정신청
-	    			window.open("/ezAttitude/attModAppList.do", "right");
+	    			rightUrl = "/ezAttitude/attModAppList.do";
 	    			break;
 	    		case 5:	// 신청관리현황
-	    			window.open("/ezAttitude/manageAttModAppList.do", "right");
+	    			rightUrl = "/ezAttitude/manageAttModAppList.do";
 	    			break;
 	    		case 6:	// 연차취소관리
-	    			window.open("/ezAttitude/manageAnnCanAppList.do", "right");
+	    			rightUrl = "/ezAttitude/manageAnnCanAppList.do";
 	    			break;
 	    		case 7:	// 근태정보관리
-	    			window.open("/ezAttitude/attitudeManage.do", "right");
+                    parent.document.querySelector("iframe[name=right]").src = "/ezAttitude/attitudeManage.do";
 	    			// 2023-06-23 황인경 - 디자인 개선 > 근태관리 > 좌측메뉴 > LNB 이미지 수정
 	    			$(".tree_arrow_down").attr("class", "sub_iconLNB tree_plus");
 	    			$(".on").attr("class", "off");
@@ -457,6 +458,7 @@
 	    			$(".list_text.node_selected").removeClass("node_selected");
 	    			break;
 	    	}
+            if (!!funcFlag && funcFlag < 7) parent.document.querySelector("iframe[name=right]").src = rightUrl;
 	    }
 	        	
     	function parseDate() {

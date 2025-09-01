@@ -568,3 +568,7 @@ header + .lnb ul li:hover span, .lnb ul li.on span{color:#388CE5;}
 #theme2Body .section1 .sec1Layout_middle .portlet_list li .txt{color: #fff;}
 #theme2Body .section1 .sec1Layout_middle .portlet_list li{background: url(/images/ezNewPortal/skin/dark/list_bul.png) no-repeat 0 center;}
 
+.mealPlan_calendal #mealPlanDatePicker{border-color:#444444; background:#343638; color:#F3F3F3;}
+.mainbg .ui-datepicker .ui-datepicker-title select option {
+    background-color:#333; /* 드롭다운 옵션 배경색 */
+}

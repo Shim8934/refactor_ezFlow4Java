@@ -1,0 +1,79 @@
+﻿.node_normal
+{
+    height: 15px;
+    line-height:16px;
+    color: #666666;
+    /*padding-top: 3px;*/
+    font-family: 맑은 고딕,Malgun Gothic;
+    font-size: 16px;
+    vertical-align: top;
+    cursor: pointer;
+    background-image: none;
+    background-attachment: scroll;
+    background-repeat: repeat;
+    background-position-x: 0%;
+    background-position-y: 0%;
+    background-color: transparent;
+}
+.node_selected
+{
+    height: 15px;
+    line-height:16px;
+    color: #004a87;
+    /*padding-top: 3px;*/
+    font-family: 맑은 고딕,Malgun Gothic;
+    font-size: 16px;
+    font-weight: bold;
+    vertical-align: top;
+    cursor: pointer;
+    background-image: none;
+    background-attachment: scroll;
+    background-repeat: repeat;
+    background-position-x: 0%;
+    background-position-y: 0%;
+    background-color: transparent;
+    /*background-color : #FBEFD4;*/
+}
+.node_hover
+{
+    height: 15px;
+    line-height:16px;
+    color: #004a87;
+    /*padding-top: 3px;*/
+    font-family: 맑은 고딕,Malgun Gothic;
+    font-size: 12px;
+    font-weight: bold;
+    vertical-align: top;
+    cursor: pointer;
+    background-image: none;
+    background-attachment: scroll;
+    background-repeat: repeat;
+    background-position-x: 0%;
+    background-position-y: 0%;
+    background-color: transparent;
+}
+
+.treeview .list-group-item {
+    cursor: pointer;
+}
+
+.treeview span.indent {
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.treeview span.icon {
+    width: 15px;
+    height: 15px;
+    /*margin-right: 5px;*/
+}
+
+.treeview .node-disabled {
+    color: silver;
+    cursor: not-allowed;
+}
+
+.tree_checkbox {
+    margin-left: 5px;
+    margin-right: 5px;
+}

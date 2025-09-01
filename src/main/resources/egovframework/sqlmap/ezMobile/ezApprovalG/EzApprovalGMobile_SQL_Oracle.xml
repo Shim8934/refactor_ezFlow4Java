@@ -510,7 +510,7 @@
 			]]>
 		</isEqual>
 		<isEqual property="type" compareValue="SHARE">
-			SLEECT A.* FROM (
+			SELECT A.* FROM (
 			SELECT LIST.* FROM (
 				SELECT 
 					DOCID,

@@ -37,13 +37,15 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 
-import egovframework.com.cmm.service.EgovFileMngUtil;
+import egovframework.com.cmm.service.EzFileMngUtil;
 import egovframework.let.utl.fcc.service.EzFAL;
+import egovframework.ezEKP.ezEmail.vo.MailboxProgressVO;
 import egovframework.let.utl.fcc.service.KlibUtil;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.poi.util.IOUtils;
+import org.egovframe.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -94,7 +96,7 @@ import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 
 @Service("EzEmailService")
-public class EzEmailServiceImpl implements EzEmailService {
+public class EzEmailServiceImpl extends EgovAbstractServiceImpl implements EzEmailService {
 	
 	private static final Logger logger = LoggerFactory.getLogger(EzEmailServiceImpl.class);
 	
@@ -110,8 +112,8 @@ public class EzEmailServiceImpl implements EzEmailService {
 	@Resource(name = "EzCommonService")
     private EzCommonService ezCommonService;
 
-	@Resource(name = "EgovFileMngUtil")
-	private EgovFileMngUtil egovFileMngUtil;
+	@Resource(name = "EzFileMngUtil")
+	private EzFileMngUtil ezFileMngUtil;
 	
 	@Autowired
 	private EzOrganAdminDAO ezOrganAdminDao;
@@ -208,6 +210,7 @@ public class EzEmailServiceImpl implements EzEmailService {
         		mailGeneral.setMailSendResult((String)obj.get("mailSendResult"));
 				mailGeneral.setEditorFontFamily((String)obj.get("editorFontFamily"));
 				mailGeneral.setEditorFontSize((String)obj.get("editorFontSize"));
+				mailGeneral.setSelfCcOption((String)obj.get("selfCcOption"));
         		mailGeneralList.add(mailGeneral);
         	}
         }
@@ -237,9 +240,10 @@ public class EzEmailServiceImpl implements EzEmailService {
 			mailGeneral.setMailSearchPeriod("sixMonth");
 			mailGeneral.setDefaultCursorPosition("recipient");
 			mailGeneral.setDefaultSeparateSend("N");
-			mailGeneral.setMailSearchPeriod("failure");
+			mailGeneral.setMailSendResult("failure");
 			mailGeneral.setEditorFontFamily(null);
 			mailGeneral.setEditorFontSize(null);
+			mailGeneral.setSelfCcOption("none");
 			
 			mailGeneralList.add(mailGeneral);
 		}
@@ -249,7 +253,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 	}
 	
 	@Override
-	public void setMailGeneral(int tenantId, String userId, MailGeneralVO mailGeneral, String mode) throws Exception {
+	public void setMailGeneral(int tenantId, String userId, MailGeneralVO mailGeneral, String mode, String inMailBox) throws Exception {
 		logger.debug("setMailGeneral started.");
 		logger.debug("tenantId=" + tenantId + ",userId=" + userId + ",mode=" + mode);
 		
@@ -277,7 +281,8 @@ public class EzEmailServiceImpl implements EzEmailService {
 		String mailSendResultParam = "mailSendResult=" + URLEncoder.encode(mailGeneral.getMailSendResult(), "UTF-8");
 		String editorFontFamilyParam = "editorFontFamily=" + URLEncoder.encode(mailGeneral.getEditorFontFamily(), "UTF-8");
 		String editorFontSizeParam = "editorFontSize=" + URLEncoder.encode(mailGeneral.getEditorFontSize(), "UTF-8");
-		
+		String selfCcOption = "selfCcOption=" + URLEncoder.encode(mailGeneral.getSelfCcOption(), "UTF-8");
+		String inMailBoxOption = "inMailBox=" + URLEncoder.encode(inMailBox, "UTF-8");
 		String modeParam = "mode=";
 		if (mode != null && mode.equals("ALL")) {
 			modeParam = "mode=all";
@@ -286,7 +291,8 @@ public class EzEmailServiceImpl implements EzEmailService {
 		String inputParams = userIdParam + "&" + listCountParam + "&" + refreshIntervalParam + "&" + keepDeleteLengthParam + "&" + previewModeParam
 				+ "&" + previewWListParam + "&" + previewWContentParam + "&" + previewHListParam + "&" + previewHContentParam + "&" + mailSenderNameParam
 				+ "&" + modeParam +"&" + previewSubTreeParam + "&" + usePreviewSubTreeParam + "&" + previewMailImageParam + "&" + previewMailParam + "&" + textOptionParam
-				+ "&" + mailSearchPeriodParam + "&" + defaultCursorPositionParam + "&" + defaultSeparateSendParam + "&" + mailSendResultParam + "&" + editorFontFamilyParam + "&" + editorFontSizeParam;
+				+ "&" + mailSearchPeriodParam + "&" + defaultCursorPositionParam + "&" + defaultSeparateSendParam + "&" + mailSendResultParam + "&" + editorFontFamilyParam + "&" + editorFontSizeParam
+				+ "&" + selfCcOption + "&" + inMailBoxOption;
 
 		logger.debug("inputParams=" + inputParams);
 		
@@ -456,6 +462,7 @@ public class EzEmailServiceImpl implements EzEmailService {
         		mailDeleteVO.setExpireTime(((Long)obj.get("expireTime")).intValue());
         		mailDeleteVO.setDeleteUnread((String)obj.get("deleteUnread"));
         		mailDeleteVO.setFolderName((String)obj.get("folderName"));
+				mailDeleteVO.setAutoDeletionOption((String) obj.get("autoDeletionOption"));
         		
         		list.add(mailDeleteVO);
         	}
@@ -468,7 +475,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 	}
 	
 	@Override
-	public void setMailDelete(int tenantId, String pUserID, String pPath, int pExpireTime, int pDeleteUnread, String pFolderName) throws Exception {
+	public void setMailDelete(int tenantId, String pUserID, String pPath, int pExpireTime, int pDeleteUnread, String pFolderName, String pAutoDeletionOption) throws Exception {
 		logger.debug("setMailDelete started.");
 		logger.debug("tenantId=" + tenantId + ",pUserID=" + pUserID + ",pPath=" + pPath + ",pExpireTime=" + pExpireTime + ",pDeleteUnread=" + pDeleteUnread + ",pFolderName=" + pFolderName);
 		
@@ -479,8 +486,9 @@ public class EzEmailServiceImpl implements EzEmailService {
 		String expireTimeParam = "expireTime=" + pExpireTime;
 		String deleteUnreadParam = "deleteUnread=" + pDeleteUnread;
 		String folderNameParam = "folderName=" + URLEncoder.encode(pFolderName, "UTF-8");
-		
-		String inputParams = userIdParam + "&" + folderPathParam + "&" + expireTimeParam + "&" + deleteUnreadParam + "&" + folderNameParam;
+		String autoDeletionOptionParam = "autoDeletionOption=" + URLEncoder.encode(pAutoDeletionOption, "UTF-8");
+
+		String inputParams = userIdParam + "&" + folderPathParam + "&" + expireTimeParam + "&" + deleteUnreadParam + "&" + folderNameParam + "&" + autoDeletionOptionParam;
 		logger.debug("inputParams=" + inputParams);
 		
 		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/setMailDelete", inputParams);
@@ -492,7 +500,7 @@ public class EzEmailServiceImpl implements EzEmailService {
         if (!object.get("resultCode").equals("OK") || ((Long)object.get("reasonCode")).intValue() != 0) {
         	throw new Exception("JGwServer ERROR");
         }
-        
+
         logger.debug("setMailDelete ended.");
 	}
 	
@@ -552,7 +560,8 @@ public class EzEmailServiceImpl implements EzEmailService {
         		mailDeleteVO.setExpireTime(((Long)obj.get("expireTime")).intValue());
         		mailDeleteVO.setDeleteUnread((String)obj.get("deleteUnread"));
         		mailDeleteVO.setFolderName((String)obj.get("folderName"));
-        		
+				mailDeleteVO.setAutoDeletionOption((String) obj.get("autoDeletionOption"));
+
         		list.add(mailDeleteVO);
         	}
         }
@@ -4797,16 +4806,22 @@ public class EzEmailServiceImpl implements EzEmailService {
 	}
 
 	@Override
-	public int getMailboxProgress(String userKey) throws Exception {
+	public int updateMailboxProgressState(String userKey, String state, String stateDescription) {
+		return ezEmailDAO.updateMailboxProgressState(userKey, state, stateDescription);
+	}
+
+	@Override
+	public MailboxProgressVO getMailboxProgress(String userKey) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userKey", userKey);
-		
-		String progressCnt = ezEmailDAO.getMailboxProgress(map);
-		if (progressCnt == null || progressCnt.equals("")) {
-			progressCnt = "-100";
+
+		MailboxProgressVO mailboxProgressVO = Optional.ofNullable(ezEmailDAO.getMailboxProgress(map))
+				.orElse(new MailboxProgressVO());
+		if (mailboxProgressVO.getProgress() == null) {
+			mailboxProgressVO.setProgress(-100);
 		}
-		
-		return Integer.parseInt(progressCnt);
+
+		return mailboxProgressVO;
 	}
 
 	@Override
@@ -5145,7 +5160,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 
 				try {
 					EzFAL.EzFile testFile = new EzFAL.EzFile(realPath + mailTemplatePath);
-					egovFileMngUtil.deleteDirectory(testFile);
+					ezFileMngUtil.deleteDirectory(testFile);
 				} catch (RuntimeException e) {
 					logger.error(e.getMessage(), e);
 				} catch (Exception e) {
@@ -5429,6 +5444,67 @@ public class EzEmailServiceImpl implements EzEmailService {
 		}
 
 		return resultArry;
+	}
+
+	//@Override
+	public JSONArray formatApprEmail(JSONArray array, String offset, int tenantId, Locale locale) throws Exception {
+		JSONArray resultArray = new JSONArray();
+
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+		sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+
+		for (int i = 0; i < array.size(); i++) {
+			JSONObject obj = (JSONObject) array.get(i);
+
+			// 1. 작성일
+			Date writeDate = sdf.parse(obj.get("writeDate").toString());
+			String writeDateStr = sdf.format(writeDate);
+			writeDateStr = commonUtil.getDateStringInUTC(writeDateStr, offset, false);
+			obj.put("writeDate", writeDateStr);
+
+			// 2. 신청자의 primary mail
+			String senderId = obj.get("senderEmail").toString().split("@")[0];
+			OrganUserVO senderVO = ezOrganAdminService.getUserInfo(senderId, "1", tenantId); // 신청자의 primary 메일주소만 필요하기 때문에 lang 값 1로 픽스 함
+			obj.put("senderEmail", senderVO.getMail());
+
+			// 3. 승인일시 - 승인완료된 경우에만 updatedt가 있음
+			if (obj.get("updatedt") != null) {
+				Date updateDate = sdf.parse(obj.get("updatedt").toString());
+				String updateDateStr = sdf.format(updateDate);
+				updateDateStr = commonUtil.getDateStringInUTC(updateDateStr, offset, false);
+				obj.put("updatedt", updateDateStr);
+			}
+			
+			// 4. href 암호화
+			String mailUID = obj.get("mailUID").toString();
+			String href = "Sent." + senderId + "/" + mailUID;
+			String encryptedHref = egovFileScrty.encryptAES(href);
+
+			obj.put("href", encryptedHref);
+			
+			// 5. 상태 언어 변경
+			if (locale != null) {
+				String state = obj.get("state").toString().toLowerCase();
+				String stateLang;
+
+				if ("approved".equals(state)) {
+					stateLang = egovMessageSource.getMessage("email.appr.approval.status", locale);
+				} else if ("rejected".equals(state)) {
+					stateLang = egovMessageSource.getMessage("email.appr.reject.status", locale);
+				} else if ("deleted".equals(state)) {
+					stateLang = egovMessageSource.getMessage("email.appr.delete.status", locale);
+				} else {
+					stateLang = ""; // 기본값 처리
+				}
+
+				obj.put("state", stateLang);
+			}
+
+			// 6. array에 담음
+			resultArray.add(obj);
+		}
+		
+		return resultArray;
 	}
 
 	/**
@@ -6429,6 +6505,95 @@ public class EzEmailServiceImpl implements EzEmailService {
 		
 		return resultInt;
 	}
+
+	/**
+	 * 승인메일 : 일반 & 회사 승인메일 로그 상태 체크
+	 */
+	public int checkApprHistoryAll(int tenantId, String companyId, String userId, List<Map<String, Object>> mailDataList) throws Exception {
+		logger.debug("checkApprHistoryAll started. tenantId={}, companyId={}, userId={}, mailDataList size={}",
+				tenantId, companyId, userId, mailDataList.size());
+
+		int resultInt = -100;
+
+		// JSON 배열 생성
+		JSONArray requestArray = new JSONArray();
+		for (Map<String, Object> mailData : mailDataList) {
+			JSONObject item = new JSONObject();
+			item.put("tenantId", String.valueOf(tenantId));
+			item.put("companyId", companyId);
+			item.put("mailUID", String.valueOf(mailData.get("uid")));
+			item.put("userId", (String) mailData.get("applicantId"));
+			item.put("state", (String) mailData.get("state"));
+			requestArray.add(item);
+		}
+
+		String requestData = requestArray.toJSONString();
+		logger.debug("requestData={}", requestData);
+
+		String inputParams = "requestData=" + URLEncoder.encode(requestData, "UTF-8");
+		logger.debug("inputParams={}", inputParams);
+
+		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzEmailAppr/checkApprHistoryAll";
+		String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+		logger.debug("response={}", response);
+
+		JSONParser parser = new JSONParser();
+		JSONObject object = (JSONObject)parser.parse(response);
+
+		if (object.get("resultCode").equals("OK")) {
+			resultInt = ((Long)object.get("reasonCode")).intValue(); // 0:정상(모든 항목 처리 가능), 1:처리 불가(0건 항목 존재)
+		} else {
+			throw new Exception("checkApprHistoryAll JGwServer ERROR");
+		}
+
+		logger.debug("checkApprHistoryAll ended. resultInt={}", resultInt);
+		return resultInt;
+	}
+	
+	/**
+	 * 승인메일 : 일반 or 회사 승인메일 로그 상태 체크
+	 */
+	public int checkApprHistoryMultiple(int tenantId, String companyId, String userId, List<Map<String, Object>> mailDataList) throws Exception {
+		logger.debug("checkApprHistoryMultiple started. tenantId={}, companyId={}, userId={}, mailDataList size={}",
+				tenantId, companyId, userId, mailDataList.size());
+
+		int resultInt = -100;
+
+		// JSON 배열 생성
+		JSONArray requestArray = new JSONArray();
+		for (Map<String, Object> mailData : mailDataList) {
+			JSONObject item = new JSONObject();
+			item.put("tenantId", String.valueOf(tenantId));
+			item.put("companyId", companyId);
+			item.put("mailUID", String.valueOf(mailData.get("uid")));
+			item.put("userId", (String) mailData.get("applicantId"));
+			item.put("state", (String) mailData.get("state"));
+			item.put("apprMailFlag", (String) mailData.get("apprMailFlag"));
+			requestArray.add(item);
+		}
+
+		String requestData = requestArray.toJSONString();
+		logger.debug("requestData={}", requestData);
+
+		String inputParams = "requestData=" + URLEncoder.encode(requestData, "UTF-8");
+		logger.debug("inputParams={}", inputParams);
+
+		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzEmailAppr/checkApprHistoryMultiple";
+		String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+		logger.debug("response={}", response);
+
+		JSONParser parser = new JSONParser();
+		JSONObject object = (JSONObject)parser.parse(response);
+
+		if (object.get("resultCode").equals("OK")) {
+			resultInt = ((Long)object.get("reasonCode")).intValue(); // 0:정상(모든 항목 처리 가능), 1:처리 불가(0건 항목 존재)
+		} else {
+			throw new Exception("checkApprHistoryMultiple JGwServer ERROR");
+		}
+
+		logger.debug("checkApprHistoryMultiple ended. resultInt={}", resultInt);
+		return resultInt;
+	}
 	
 	/**
 	 * 승인메일 : 일반 승인메일 로그 상태 변경
@@ -6437,7 +6602,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 	 */
 	@Override
 	public int updateApprHistory(int tenantId, String companyId, long mailUID, String userId, String state, String memo) throws Exception {
-		logger.debug("tenantId={}, companyId={}, mailUID={}, userId={}, state={}, memo={}"
+		logger.debug("updateApprHistory started. tenantId={}, companyId={}, mailUID={}, userId={}, state={}, memo={}"
                 , tenantId, companyId, mailUID, userId, state, memo);
 
 		int resultInt = -100;
@@ -6459,7 +6624,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 		if (object.get("resultCode").equals("OK")) {
 			resultInt = ((Long)object.get("reasonCode")).intValue();
 		} else {
-			throw new Exception("JGwServer ERROR");
+			throw new Exception("updateApprHistory JGwServer ERROR");
 		}
 		
 		return resultInt;
@@ -6744,13 +6909,14 @@ public class EzEmailServiceImpl implements EzEmailService {
 		}
 		*/
 		// 임시보관함에 저장이 성공하면 로그 정보를 변경하도록 수정, 여러번 취소 요청이 왔을 때 메일이 없는 경우 대비하여 처리 순서 변경
+		// 2025-08-06 - 승인요청메일이 pending일 경우에만 진행하도록 수정 
 		try {
 			Map<String, Object> apprMailMap = new HashMap<String, Object>();
 			apprMailMap.put("applicantEmail", applicantEmail);
 			apprMailMap.put("uid", uid);
 
 			// 임시보관함에 저장
-			moveToDraft = ezEmailUtil.apprMailMoveToFolder(locale, tenantId, apprMailMap, ezEmailUtil.getDraftsFolderId(locale), true);
+			//moveToDraft = ezEmailUtil.apprMailMoveToFolder(locale, tenantId, apprMailMap, ezEmailUtil.getDraftsFolderId(locale), true);
 
 			if (0 == moveToDraft) {
 				if (isAllHandsType) {
@@ -6758,6 +6924,11 @@ public class EzEmailServiceImpl implements EzEmailService {
 				} else {
 					resultInt = updateApprHistory(tenantId, companyId, uid, userId, "canceled", null);
 				}
+			}
+
+			// 임시보관함에 저장
+			if (0 == resultInt) {
+				moveToDraft = ezEmailUtil.apprMailMoveToFolder(locale, tenantId, apprMailMap, ezEmailUtil.getDraftsFolderId(locale), true);
 			}
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
@@ -6867,23 +7038,31 @@ public class EzEmailServiceImpl implements EzEmailService {
 		
 		return setApprMailApproval(userId, tenantId, map, applicantEmail, uid);
 	}
+
+	@Override
+	public int setApprMailApproval(String userId, int tenantId,Map<String, Object> paramMap) throws Exception {
+		String applicantEmail = (String) paramMap.get("uid");
+		long uid = (long) paramMap.get("uid");
+		return setApprMailApproval(userId, tenantId, paramMap, applicantEmail, uid);
+	}
+
 	/**
 	 * @param paramMap: lang, locale, companyId
 	 * @param userId: 승인하는 사람 아이디
 	 */
 	@Override
 	public int setApprMailApproval(String userId, int tenantId, Map<String, Object> paramMap, String applicantEmail, long uid) throws Exception {
+		logger.debug("setApprMailApproval started. tenantId={},applicantEmail={}, uid={}", tenantId, applicantEmail, uid);
 		int resultInt = -1;
 
 		String companyId 	= (String) paramMap.get("companyId");
 		String lang 		= (String) paramMap.get("lang");
 		Locale locale 		= (Locale) paramMap.get("locale");
-		logger.debug("tenantId={}, companyId={}, lang={}, locale={}, applicantEmail={}", tenantId, companyId, lang, locale, applicantEmail);
-		
+	
 		String applicantId = applicantEmail.split("@")[0];
 		String domainName = ezCommonService.getTenantConfig("DomainName", tenantId);
 		String userAccount = userId + "@" + domainName;
-		logger.debug("applicantId={}, domainName={}, userAccount={}", applicantEmail, domainName, userAccount);
+		logger.debug("setApprMailApproval applicantId={}, domainName={}, userAccount={} lang={}, companyId={}", applicantId, domainName, userAccount, lang, companyId);
 		
 		// 해당 메일의 로그 정보
 		String hisSubject = "";
@@ -7599,7 +7778,8 @@ public class EzEmailServiceImpl implements EzEmailService {
 		
 		if (object.get("resultCode").equals("OK") && ((Long)object.get("reasonCode")).intValue() == 0) {
         	JSONArray array = (JSONArray)object.get("result");
-			resultArray = ezEmailService.setUTCtoUserTime(array, offset, tenantId);
+			//resultArray = ezEmailService.setUTCtoUserTime(array, offset, tenantId);
+			resultArray = formatApprEmail(array, offset, tenantId, locale);
 
     		/*SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         	

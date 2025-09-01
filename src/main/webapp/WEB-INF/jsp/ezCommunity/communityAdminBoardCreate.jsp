@@ -19,6 +19,10 @@
 			var BoardID = '<c:out value="${boardID}"/>';
 			var code = '<c:out value="${code}"/>';
 			var iMenuNum = 2;
+
+			window.onload = function () {
+				getGradeList();
+			}
 			
 			function hasSpecialCharacters(str) {
 				for(var i=0; i<str.length; i++) {
@@ -74,16 +78,19 @@
 			        alert("<spring:message code='ezCommunity.t321' />");
 			        return;
 			    }
+				
+				var readGrade = document.getElementById('read_Grade').value;
+				var writeGrade = document.getElementById('write_Grade').value;
 					
 			    var xmlhttp = createXMLHttpRequest();
-			    xmlhttp.open("POST", "/ezCommunity/createBoard.do?boardID=" + encodeURIComponent("{" + GetGUID().toUpperCase() + "}") + "&boardName=" + encodeURIComponent(txtNewName.value) + "&boardName2=" + encodeURIComponent(txtNewName2.value) + "&parentBoardID=" + encodeURIComponent(BoardID) + "&boardGroupID=" + encodeURIComponent(BoardGroupID) + "&code=" + encodeURIComponent(code), false);
+			    xmlhttp.open("POST", "/ezCommunity/createBoard.do?boardID=" + encodeURIComponent("{" + GetGUID().toUpperCase() + "}") + "&boardName=" + encodeURIComponent(txtNewName.value) + "&boardName2=" + encodeURIComponent(txtNewName2.value) + "&parentBoardID=" + encodeURIComponent(BoardID) + "&boardGroupID=" + encodeURIComponent(BoardGroupID) + "&code=" + encodeURIComponent(code)
+						+ "&readGrade=" + readGrade + "&writeGrade=" + writeGrade, false);
 				xmlhttp.send();
 				xmlhttp = null;
 	
 				alert("<spring:message code='ezCommunity.t322' />");
 				
 				parent.window.frames.left.location.reload();
-				parent.window.frames.right.location.reload();
 			}
 			
 			function OpenRightMenu(pIndex) {
@@ -139,6 +146,79 @@
 						break;		
 				}
 			}
+
+			function getGradeList() {
+				$.ajax({
+					type : "GET",
+					url : "/ezCommunity/getAdminMemberGrade.do",
+					dataType : "json",
+					data : {
+						code : code
+					},
+					success : function(result) {
+						getGradeList_after(result);
+					},
+					error : function(xhr, status, error) {
+						console.error("Error: " + error);
+					}
+				});
+			}
+			var firstWriteOption = [];
+			function getGradeList_after(gradeList) {
+				var selectReadGrade = document.getElementById("read_Grade");
+				selectReadGrade.innerHTML = "";
+
+				for (var i = 0; i < gradeList.length; i++) {
+					var option = document.createElement("option");
+					
+					option.value = gradeList[i].gradeCode;
+					option.textContent = gradeList[i].gradeName;
+
+					if (gradeList[i].gradeCode == 10) {
+						option.selected = true;
+					}
+					
+					selectReadGrade.appendChild(option);
+				}
+
+				var selectWriteGrade = document.getElementById("write_Grade");
+				selectWriteGrade.innerHTML = "";
+
+				for (var i = 0; i < gradeList.length-1; i++) {
+					var writeOption = document.createElement("option");
+
+					writeOption.value = gradeList[i].gradeCode;
+					writeOption.textContent = gradeList[i].gradeName;
+
+					if (gradeList[i].gradeCode == 3) {
+						writeOption.selected = true;
+					}
+
+					firstWriteOption.push(writeOption.cloneNode(true));
+					
+					selectWriteGrade.appendChild(writeOption);
+				}
+			}
+			
+			function selectChange() {
+				var selectOption = document.getElementById('read_Grade').value;
+				selectOption = parseInt(selectOption);
+				var selectWriteGrade =  document.querySelector("#write_Grade");
+				selectWriteGrade.innerHTML = "";
+				
+				firstWriteOption.forEach(function(option) {
+					selectWriteGrade.appendChild(option.cloneNode(true));
+				});
+				var options = selectWriteGrade.querySelectorAll('option');
+				for (i = options.length-1; i >= 0; i--) {
+					if (i >= selectOption) {
+						var lastOption = options[i];
+						selectWriteGrade.removeChild(lastOption);
+					}
+				}
+				var remainOptions = selectWriteGrade.querySelectorAll('option');
+				remainOptions[remainOptions.length - 1].selected = true;
+			}
 		</script>
 	</head>
 	<body class="mainbody">
@@ -180,8 +260,31 @@
 						</tr>
 		      		</table>
 				</td> 
-			</tr> 
-			<%-- <tr style="display:none"> 
+			</tr>
+			<tr>
+				<th style="text-align:center;"><spring:message code='ezCommunity.lyj24' /></th>
+				<td colspan="2" style="padding:0">
+					<select id="read_Grade" style="font-size: 13px;margin-left: 5px;vertical-align: middle;cursor: pointer;MIN-WIDTH: 80px;height: 20px;" onchange="selectChange()">
+						<option value="1"><spring:message code = 'ezCommunity.t9' /></option>
+						<option value="2"><spring:message code = 'ezCommunity.lyj06' /></option>
+						<option value="3"><spring:message code = 'ezCommunity.lyj07' /></option>
+						<option value="4"><spring:message code = 'ezCommunity.lyj08' /></option>
+						<option value="10" selected><spring:message code = 'ezCommunity.lyj05' /></option>
+					</select> <span style="vertical-align: middle;"><spring:message code = 'ezCommunity.lyj22' /></span>
+				</td>
+			</tr>
+			<tr>
+				<th style="text-align:center;"><spring:message code='ezCommunity.lyj25' /></th>
+				<td colspan="2" style="padding:0">
+					<select id="write_Grade" style="font-size: 13px;margin-left: 5px;vertical-align: middle;cursor: pointer;MIN-WIDTH: 80px;height: 20px;" onchange="">
+						<option value="1"><spring:message code = 'ezCommunity.t9' /></option>
+						<option value="2"><spring:message code = 'ezCommunity.lyj06' /></option>
+						<option value="3" selected><spring:message code = 'ezCommunity.lyj07' /></option>
+						<option value="4"><spring:message code = 'ezCommunity.lyj08' /></option>
+					</select> <span style="vertical-align: middle;"><spring:message code = 'ezCommunity.lyj22' /></span>
+				</td>
+			</tr>
+		<%-- <tr style="display:none"> 
 			    <th rowspan="2">URL</th> 
 			    <td style="width:70px;white-space:nowrap;"><input type="radio" name="radiobutton" value="radiobutton"><spring:message code='ezCommunity.t327' /></td> 
 			    <td><input type="text" name="textfield2" style="width:100%"></td> 

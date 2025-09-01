@@ -43,7 +43,7 @@
 		<result property="totalUser"        column="total_user"          columnIndex="26"/>
 		<result property="mailFlag"         column="mail_flag"           columnIndex="27"/>
 		<result property="popupFlag"        column="popup_flag"          columnIndex="28"/>
-		
+		<result property="closingText"      column="closing_text"        columnIndex="29"/>
 	</resultMap>
 	
 	<!-- MAttachVO resultMap -->
@@ -121,6 +121,7 @@
 		<result property="unit"             column="unit"                  columnIndex="12"/>
 		<result property="companyId"        column="company_id"            columnIndex="13"/>
 		<result property="tenantId"         column="tenant_id"             columnIndex="14"/>
+		<result property="resOpenFlag"      column="res_open_flag"         columnIndex="15"/>
 	</resultMap>
 	
 	<!-- OptionVO resultMap -->
@@ -189,12 +190,13 @@
 			response_flag,
 			total_user,
 			mail_flag,
-			popup_flag
+			popup_flag,
+			closing_text
 		from tbl_survey
 	</sql>
 	
 	<sql id="MsurveyItemList">
-		where use_status = 1 and tenant_id = #tenantId# and modify_flag = 0
+		where use_status in (1, 2) and tenant_id = #tenantId# and modify_flag = 0
 		<isNotEmpty property="title"       prepend=" and ">title like concat('%', concat(#title#, '%'))</isNotEmpty>
 		<isNotEmpty property="endDate" prepend=" and ">
 					<![CDATA[(create_date <= #endDate#)]]>
@@ -203,28 +205,74 @@
 			<isEqual property="userMode" compareValue="0" prepend=" and ">
 				draft_flag = 0
 			</isEqual>
-			<isEmpty property="surveyIds" prepend=" and ">(survey_id = -1 or user_id = #userId#)</isEmpty>
-			<isNotEmpty property="surveyIds" prepend=" and ">
-				(survey_id in <iterate property="surveyIds" open="(" close=")" conjunction=",">#surveyIds[]#</iterate>)
-			</isNotEmpty>
+			<isEqual property="userMode" compareValue="1" prepend=" and ">
+				(
+					survey_id not in ( select survey_id from tbl_survey where draft_flag = 1 and user_id != #userId# and tenant_id = #tenantId# )
+				)
+			</isEqual>
+			AND 
+			(
+				(
+					<isEmpty property="surveyIds"> (survey_id = -1 or user_id = #userId#) </isEmpty>
+					<isNotEmpty property="surveyIds">
+						survey_id in <iterate property="surveyIds" open="(" close=")" conjunction=",">#surveyIds[]#</iterate>
+					</isNotEmpty>
+				)
+				OR
+				(
+					RESULT_PUBLIC_FLAG = 2
+				AND
+					<isEmpty property="surveyResultIds"> (survey_id = -1 or user_id = #userId#) </isEmpty>
+					<isNotEmpty property="surveyResultIds">
+						survey_id in <iterate property="surveyResultIds" open="(" close=")" conjunction=",">#surveyResultIds[]#</iterate>
+					</isNotEmpty>
+				)
+			)
 		</isEqual>
 		<isEqual property="pageMode" compareValue="processing" prepend=" and ">
 			<![CDATA[(start_date <= #today# and end_date >= #today#)]]>
-			<isEmpty property="surveyIds" prepend=" and ">(survey_id = -1)</isEmpty>
-			<isNotEmpty property="surveyIds" prepend=" and ">
-				(survey_id in <iterate property="surveyIds" open="(" close=")" conjunction=",">#surveyIds[]#</iterate>)
-			</isNotEmpty>
+			AND
+			(
+				(
+					<isEmpty property="surveyIds"> (survey_id = -1 or user_id = #userId#) </isEmpty>
+					<isNotEmpty property="surveyIds">
+						survey_id in <iterate property="surveyIds" open="(" close=")" conjunction=",">#surveyIds[]#</iterate>
+					</isNotEmpty>
+				)
+				OR
+				(
+					RESULT_PUBLIC_FLAG = 2
+				AND
+					<isEmpty property="surveyResultIds"> (survey_id = -1 or user_id = #userId#) </isEmpty>
+					<isNotEmpty property="surveyResultIds">
+						survey_id in <iterate property="surveyResultIds" open="(" close=")" conjunction=",">#surveyResultIds[]#</iterate>
+					</isNotEmpty>
+				)
+			)
 			and draft_flag = 0
 		</isEqual>
 		<isEqual property="pageMode" compareValue="finish" prepend=" and ">
 			<![CDATA[(end_date < #today#)]]>
-			<isEmpty property="surveyIds" prepend=" and ">(survey_id = -1)</isEmpty>
-			<isNotEmpty property="surveyIds" prepend=" and ">
-				(survey_id in <iterate property="surveyIds" open="(" close=")" conjunction=",">#surveyIds[]#</iterate>)
-			</isNotEmpty>
+			AND
+			(
+				(
+					<isEmpty property="surveyIds"> (survey_id = -1 or user_id = #userId#) </isEmpty>
+					<isNotEmpty property="surveyIds">
+						survey_id in <iterate property="surveyIds" open="(" close=")" conjunction=",">#surveyIds[]#</iterate>
+					</isNotEmpty>
+				)
+				OR
+				(
+					RESULT_PUBLIC_FLAG = 2
+				AND
+					<isEmpty property="surveyResultIds"> (survey_id = -1 or user_id = #userId#) </isEmpty>
+					<isNotEmpty property="surveyResultIds">
+						survey_id in <iterate property="surveyResultIds" open="(" close=")" conjunction=",">#surveyResultIds[]#</iterate>
+					</isNotEmpty>
+				)
+			)
 			and draft_flag = 0
 		</isEqual>
-		
 		<isEqual property="pageMode" compareValue="my" prepend=" and ">
 			user_id = #userId# and draft_flag = 0
 		</isEqual>
@@ -643,7 +691,7 @@
 			insert into tbl_survey_respondent (
 			)
 			values (
-				#responseId#, #surveyId#, #userId#, #userName1#, #userName2#, #email#, #image#, #deptId#, #deptName1#, #deptName2#, #responseDate#, #companyId#, #tenantId#
+				#responseId#, #surveyId#, #userId#, #userName1#, #userName2#, #email#, #image#, #deptId#, #deptName1#, #deptName2#, #responseDate#, #companyId#, #tenantId#, null
 			)
 		]]>
 	</insert>

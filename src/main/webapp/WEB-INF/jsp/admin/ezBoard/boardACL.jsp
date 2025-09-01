@@ -49,6 +49,35 @@
 	            if (pBoardID == "{MMMMMMMM-MMMM-MMMM-MMMM-MMMMMMMMMMMM}") {
 	            	PostSpan.style.display = "none";
 	            }
+
+				// VOC #163284 관리자 탭 선택 오류 
+				if (window.parent && window.parent !== window) {
+					try {
+						const parentUrl = window.parent.location.href;
+
+						if (parentUrl.includes("admin/ezBoard/boardConfig.do")) {
+							const parentDoc = window.parent.document;
+
+							const container = parentDoc.querySelector(".portlet_tabnew01_top");
+
+							if (container) {
+								const spans = container.querySelectorAll('span[divname="BoardEnv_div1"], span[divname="BoardEnv_div2"], span[divname="BoardEnv_div3"], span[divname="BoardEnv_div4"], span[divname="BoardEnv_div5"]');
+
+								spans.forEach(span => {
+									span.removeAttribute("class");
+								});
+
+								const targetSpan = container.querySelector('span[divname="BoardEnv_div3"]');
+								if (targetSpan) {
+									targetSpan.classList.add("tabon");
+									window.parent.Tab1_SelectID = "1tab3";
+								}
+							}
+						}
+					} catch (e) {
+						console.log(e);
+					}
+				}
 	        }
 	
 	        /* 2018-07-19 홍승비 - 권한설정 정보 리스트로 표출하는 분기 스크립트 오류 수정 */
@@ -168,10 +197,16 @@
 	            var xmldom2 = loadXMLString(selectTargetListXML);
 	            var xmlhttp = createXMLHttpRequest();
 	            for (var i = 0; i < xmldom2.getElementsByTagName("CN").length; i++) {
-	                var strXML = "";
+					var targetId = getNodeText(xmldom2.getElementsByTagName("CN")[i]);					
+					if (targetId === 'guestPermit') {
+						alert("<spring:message code='ezBoard.guestRead04'/>")
+						return;
+					}
+	                
+					var strXML = "";
 	                strXML += "<NODES>";
 	                strXML += "<NODE>";
-	                strXML += "<TARGETID>" + getNodeText(xmldom2.getElementsByTagName("CN")[i]) + "</TARGETID>";
+	                strXML += "<TARGETID>" + targetId + "</TARGETID>";
 	                strXML += "<TARGETNAME>" + MakeXMLString(getNodeText(xmldom2.getElementsByTagName("NAME")[i])) + "</TARGETNAME>";
 	                strXML += "<TARGETNAME2>" + MakeXMLString(getNodeText(xmldom2.getElementsByTagName("NAME2")[i])) + "</TARGETNAME2>";
 	                // 하위부서 허용 여부 (TARGETGROUP -> BoardGroupACL)
@@ -459,7 +494,7 @@
 	                    selectedTargetName2 = GetAttribute(selnode[0],"data2")
 	                    selectedTargetGroup = GetAttribute(selnode[0],"data3")
 	                    if (para != "false")
-	                        FillACLTable();
+							updateCheckboxSetting();
 	
 	                    selectTargetListXML += "<CN>" + selectedTargetID + "</CN>";
 	                    selectTargetListXML += "<NAME><![CDATA[" + selectedTargetName + "]]></NAME>";
@@ -785,7 +820,47 @@
 	                CheckBoxInit();
 	            }
 	        }
-	        
+
+			function guestPermit() {
+				if (confirm("<spring:message code='ezBoard.guestRead01'/>")) {
+					if (strList.includes("<ACCESSID>guestPermit</ACCESSID>")) {
+						alert("<spring:message code='ezBoard.guestRead02'/>");
+						return;
+					}
+					$.ajax({
+						type : "POST",
+						async : false,
+						data : {
+							boardID : pBoardID,
+							parentBoardID : pParentBoardID
+						},
+						url : "/admin/ezBoard/addGuestPermit.do",
+						success : function() {
+							window.location.reload();
+						},
+						error : function(){
+							alert("<spring:message code='ezBoard.t80'/>");
+						}
+					});
+				}
+			}
+
+			function updateCheckboxSetting() {
+				var disableFlag = (selectedTargetID === 'guestPermit');
+
+				if (disableFlag) {
+					FillACLTable();
+				}
+
+				document.querySelectorAll('table.content input[type="checkbox"]')
+						.forEach(function (checkbox) {
+							checkbox.disabled = disableFlag;
+						});
+
+				if (!disableFlag) {
+					FillACLTable();
+				}
+			}
 	    </script>
 		</head>
 		<c:if test="${pParentNeed == 'Y'}">
@@ -920,7 +995,7 @@
 		      </HEADER>
 		      <HEADER>
 		        <TYPE>NONE</TYPE>
-		        <NAME><spring:message code='ezBoard.t00052'/></NAME>
+		        <NAME><spring:message code='ezNotification.hth36'/></NAME>
 		        <WIDTH>20</WIDTH>
 		        <STYLE>text-align:center;border-top:0px;</STYLE>
 		        <SORTABLE>TRUE</SORTABLE>
@@ -940,10 +1015,10 @@
 		</c:if>
 		<div id="mainmenu">
             <ul>
-				<c:if test="${adminType == 'y'}">
+				<%--<c:if test="${adminType == 'y'}">
 	                <li><span onclick="goBoardList()"><spring:message code='ezBoard.t72'/></span></li>
 	                <!-- <li style="background:none; padding-right:2px; cursor:default;" class="off"><img src="/images/i_bar.gif" alt=""></li> -->
-				</c:if>
+				</c:if>--%>
 				<%-- 2019-09-19 홍승비 - 권한그룹 추가된 새로운 권한설정팝업 UI 추가, 기존권한 추가버튼 주석처리 --%>
             	<li class="important"><span onclick="SelectTargetNew()"><spring:message code='ezBoard.t602'/></span></li>
             	<%--<li class="important"><span onclick="SelectTarget()"><spring:message code='ezBoard.t602'/></span></li>--%>
@@ -961,7 +1036,10 @@
             	<li><span onclick="DeleteACL('type')"><spring:message code='ezBoard.t603'/></span></li>
             	<li><span onclick="DeleteACL('one')"><spring:message code='ezBoard.t89'/></span></li>
             	<!-- <li style="background:none; padding-right:2px; cursor:default;" class="off"><img src="/images/i_bar.gif" alt=""></li> -->
-            </ul>
+				<c:if test="${guestPermitYN == 'YES' && pType != '6' && pType != '8' && pType != '9'}">
+					<li><span onclick="guestPermit()"><spring:message code='ezBoard.guestRead03'/></span></li>
+				</c:if>
+			</ul>
         </div>
         <script type="text/javascript">
 	        selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");

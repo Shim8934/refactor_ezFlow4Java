@@ -190,7 +190,7 @@
 		        if (typeof (rtn) != "undefined")
 		            getGroupList();
 		        	//2018-11-01 김보미 - 일정그룹 추가시 left바에 그룹 바로 보이도록
-		        	parent.frames["left"].groupRefresh();
+		        	parent.parent.frames["left"].groupRefresh();
 		    }
 					
 		    function del_group() {
@@ -235,7 +235,7 @@
 		    		}
 		        });
 		        
-		        parent.frames["left"].groupRefresh();
+		        parent.parent.frames["left"].groupRefresh();
 		    }
 					
 		    function show_groupinfo() {
@@ -272,7 +272,7 @@
 		</script>
 	</head>
 	<body class="mainbody">		
-	    <h1><spring:message code='ezSchedule.t252' /></h1><br /><br />
+		<br/>
 	    <div class="txt">▒ <spring:message code='ezSchedule.t00005' /></div>
 	    <div class="txt" style="margin-top:3px">▒ <spring:message code='ezSchedule.t00006' /></div>
 	    <div class="txt" style="margin-top:3px">▒ <spring:message code='ezSchedule.t00007' /></div>

@@ -1,0 +1,160 @@
+﻿a:hover, a:focus {
+    text-decoration: none;
+    outline: none;
+}
+
+.tab .nav-tabs {
+    border-bottom: 0 none;
+}
+
+    .tab .nav-tabs li {
+        margin-right: 2px;
+    }
+
+        .tab .nav-tabs li a {
+            border: none;
+            /*padding: 13px 35px;*/
+            color: #fff;
+            background: #2C2C3F;
+            border-radius: 0;
+        }
+
+            .tab .nav-tabs li a:hover {
+                background: #000;
+            }
+
+            .tab .nav-tabs li a i {
+                font-size: 14px;
+                display: block;
+                text-align: center;
+                margin-bottom: 5px;
+            }
+
+        .tab .nav-tabs li.active a,
+        .tab .nav-tabs li.active a:focus,
+        .tab .nav-tabs li.active a:hover {
+            border: none;
+            background: #737495;
+            color: #fff;
+            transition: background 0.20s linear;
+        }
+
+        .tab .nav-tabs li.active:after {
+            content: "";
+            position: absolute;
+            top: 27px;
+            left: 40%;
+            border: 12px solid transparent;
+            border-top-color: #fff;
+            transform: rotate(180deg);
+        }
+
+.tab .tab-content {
+    background: #fff;
+    line-height: 25px;
+    padding: 0px;
+    /*border: 1px solid #ddd;*/
+    border-bottom: 5px solid #737495;
+}
+
+@media only screen and (max-width: 480px) {
+    .tab .nav-tabs li {
+        width: 100%;
+    }
+
+        .tab .nav-tabs li a {
+            padding: 20px;
+            text-align: center;
+        }
+
+        .tab .nav-tabs li.active:after {
+            border: none;
+        }
+}
+
+
+#loader {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    z-index: 1;
+    width: 150px;
+    height: 150px;
+    margin: -75px 0 0 -75px;
+    border: 16px solid #f3f3f3;
+    border-radius: 50%;
+    border-top: 16px solid #3498db;
+    width: 120px;
+    height: 120px;
+    -webkit-animation: spin 2s linear infinite;
+    animation: spin 2s linear infinite;
+}
+
+
+
+.btn_white {
+    display: inline-block;
+    cursor: pointer;
+    font-size: 12px;
+    height: 30px;
+    line-height: 28px;
+    border-radius: 2px;
+    border: 1px solid #c6c6c6;
+    background: rgba(255,255,255,1 );
+    box-shadow: 0px 2px 2px 0px rgba(0,0,0,0.1);
+    padding: 0 10px;
+    font-family : '맑은 고딕';
+}
+
+.ContextMenu {
+    display: inline-block;
+    cursor: pointer;
+    font-size: 12px;
+    /*height: 30px;*/
+    line-height: 28px;
+    border-radius: 2px;
+    border: 1px solid #c6c6c6;
+    background: rgba(255,255,255,1 );
+    box-shadow: 0px 2px 2px 0px rgba(0,0,0,0.1);
+    padding: 0 10px;
+    font-family: '맑은 고딕';
+}
+
+    .btn_white:hover {
+        background: #F1F0EF;
+    }
+
+.btn_dark {
+    display: inline-block;
+    cursor: pointer;
+    font-size: 12px;
+    height: 28px;
+    line-height: 28px;
+    border-radius: 2px;
+    border: 1px solid #636262;
+    color: #fff;
+    background: rgba(255,255,255,0 );
+    padding: 0 10px;
+    font-family: '맑은 고딕';
+}
+
+    .btn_dark:hover {
+        background: #F1F0EF;
+    }
+
+
+
+.alert_layer {
+    display: inline-block;
+    /*position: relative;*/
+    min-width: 370px;
+    box-sizing: border-box;
+    color: #027af1;
+    padding: 15px 18px;
+    border: 1px solid #b1d3f2;
+    background: #e0edfb;
+    border-radius: 5px;
+    font-size: 12px;
+    font-weight: bold;
+    font-family: '맑은 고딕';
+}

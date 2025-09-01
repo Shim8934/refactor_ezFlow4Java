@@ -50,7 +50,6 @@ function OpenAlertUI(pAlertContent, CompleteFunction, type, selectType) {
                 setTimeout(function () {
                     var OpenWin = GetOpenWindow(url, "", 330, 205, "NO");
                 }, 100);
-
             }
             else
                 DivPopUpShow(330, 205, url);

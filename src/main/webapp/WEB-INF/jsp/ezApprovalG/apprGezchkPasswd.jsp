@@ -35,9 +35,9 @@
 			        var rtnVal = "cancel";
 
 			        if (trim(document.getElementById("inpPassword").value).length == 0) {
-			            alert("<spring:message code='ezApprovalG.t1746'/>");
-			            document.getElementById("inpPassword").focus();
-			            flag = true;
+			        	showAlert("<spring:message code='ezApprovalG.t1746'/>", btn_OpinionOK_onclick_afterAlert);
+// 			            document.getElementById("inpPassword").focus();
+// 			            flag = true;
 			            return;
 			        }
 			        else {
@@ -63,6 +63,11 @@
 			            return;
 					}
 			    }
+		    }
+		    
+		    function btn_OpinionOK_onclick_afterAlert() {
+	            document.getElementById("inpPassword").focus();
+	            flag = true;
 		    }
 		    
 		    var ezapralert_cross_dialogArguments = new Array();

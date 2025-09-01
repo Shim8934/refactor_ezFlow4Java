@@ -1,4 +1,4 @@
-﻿var ezapralert_cross_dialogArguments = new Array();
+﻿﻿var ezapralert_cross_dialogArguments = new Array();
 function OpenAlertUI(pAlertContent, CompleteFunction) {
     var parameter = pAlertContent;
     var url = "/ezApprovalG/ezAprAlert.do";
@@ -585,7 +585,8 @@ function SaveAprLineInfo() {
                   if (ret != "FALSE") {
                       UpdateLineHistory(ret);
                       window.returnValue = "OK";
-                      window.close();
+//                      window.close();//
+                      btnClose_onclick();
                   }
           	 } else {
           		var pAlertContent = "";
@@ -1003,7 +1004,6 @@ function btnAprLineSearchDept_onClick_Complete2(rgParams) {
 function event_getAprLineDeptFullTree() {
     if (g_xmlHTTP != null && g_xmlHTTP.readyState == 4) {
         if (g_xmlHTTP.status == 200) {
-            debugger;
         	document.getElementById('TreeView').innerHTML = "";
         	var treeView = new TreeView();
         	treeView.SetID("FromTreeView");

@@ -48,6 +48,7 @@ import egovframework.ezEKP.ezNewPortal.vo.PortalTopVO.TopFrameType;
 
 import egovframework.let.utl.fcc.service.EzFAL;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.egovframe.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
@@ -108,7 +109,7 @@ import egovframework.ezEKP.ezWebFolder.vo.FileVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 @Service("EzNewPortalService")
-public class EzNewPortalServiceImpl implements EzNewPortalService {
+public class EzNewPortalServiceImpl extends EgovAbstractServiceImpl implements EzNewPortalService {
 	private static final Logger logger = LoggerFactory.getLogger(EzNewPortalServiceImpl.class);
 	
 	@Resource(name = "EzNewPortalDAO")
@@ -230,7 +231,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		return ezNewPortalDAO.getPortalLogoInfo(map);
 	}
 	
-	public List<MenuInfoVO> getUserMenuList(String companyId, int tenantId, String langType, String userId, String deptId) throws Exception {
+	public List<MenuInfoVO> getUserMenuList(String companyId, int tenantId, String langType, String userId, String deptId, String type) throws Exception {
 		logger.debug("[Service] getUserMenuList started");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyId", companyId);
@@ -238,6 +239,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		map.put("langType", langType);
 		map.put("userId", userId);
 		map.put("deptId", "");
+		map.put("mobile", type);
 		
 		/**
 		 * 2018-11-21 신규작성
@@ -506,7 +508,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		logger.debug("[Serivce] updateUserUsedFrame Started");
 		Map<String, Object> map = new HashMap<String, Object>();
 		Map<String, Object> param = (Map<String, Object>) jObj.get("param");
-		String themeId = (String) param.get("themeId");
+		String themeId = String.valueOf(param.get("themeId"));
 		// 2024-06-11 조수빈 - 한 프레임만 사용하게 됨에 따라 테마에 맞는 해당 프레임을 지정해서 update하도록 수정.
 		Object frameId = "";
 		
@@ -1807,13 +1809,13 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	}
 	
 	@Override
-	public List<BoardListVO> getBoardPortletInfo (String userId, int tenantId, String boardId, int itemCount, String companyId, String offset, boolean isQnANormal) throws Exception {
-		return getBoardPortletInfo(userId, tenantId, boardId, itemCount, companyId, offset, isQnANormal, 0);
+	public List<BoardListVO> getBoardPortletInfo (String userId, int tenantId, String boardId, int itemCount, String companyId, String offset, boolean isQnANormal, String useVersion) throws Exception {
+		return getBoardPortletInfo(userId, tenantId, boardId, itemCount, companyId, offset, isQnANormal, 0, useVersion);
 		
 	}
 	
 	@Override
-	public List<BoardListVO> getBoardPortletInfo(String userId, int tenantId, String boardId, int itemCount, String companyId, String offset, boolean isQnANormal, int startRow) throws Exception {
+	public List<BoardListVO> getBoardPortletInfo(String userId, int tenantId, String boardId, int itemCount, String companyId, String offset, boolean isQnANormal, int startRow, String useVersion) throws Exception {
 		logger.debug("getBoardPortletInfo started.");
 		Map<String, Object> map = new HashMap<String, Object>();
 		String nowDate = commonUtil.getTodayUTCTime("");
@@ -1825,13 +1827,14 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		map.put("userId", userId);
 		map.put("isQnANormal", isQnANormal ? "Y" : "N");
 		map.put("startRow", startRow);
+		map.put("useVersion", useVersion != null ? useVersion : "N");
 
 		logger.debug("getBoardPortletInfo ended.");
 		return ezNewPortalDAO.getBoardPortletInfo(map);
 	}
 	
 	@Override
-	public int getBoardPortletTotalCnt(String userId, int tenantId, String boardId, String companyId, String offset, boolean isQnANormal) throws Exception {
+	public int getBoardPortletTotalCnt(String userId, int tenantId, String boardId, String companyId, String offset, boolean isQnANormal, String useVersion) throws Exception {
 		logger.debug("getBoardPortletInfo started.");
 		Map<String, Object> map = new HashMap<String, Object>();
 		String nowDate = commonUtil.getTodayUTCTime("");
@@ -1840,6 +1843,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		map.put("nowDate", nowDate);
 		map.put("userId", userId);
 		map.put("isQnANormal", isQnANormal ? "Y" : "N");
+		map.put("useVersion", useVersion != null ? useVersion : "N");
 
 		logger.debug("getBoardPortletInfo ended.");
 		return ezNewPortalDAO.getBoardPortletTotalCnt(map);

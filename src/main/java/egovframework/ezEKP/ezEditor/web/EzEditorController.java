@@ -39,7 +39,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.HandlerMapping;
 
 import egovframework.com.cmm.EgovMessageSource;
-import egovframework.com.cmm.service.EgovFileMngUtil;
+import egovframework.com.cmm.service.EzFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -58,7 +58,7 @@ import egovframework.ezEKP.ezEmail.vo.MailGeneralVO;
  * @see
  */
 @Controller
-public class EzEditorController extends EgovFileMngUtil {
+public class EzEditorController extends EzFileMngUtil {
 
 	@Autowired
 	private CommonUtil commonUtil;
@@ -467,6 +467,15 @@ public class EzEditorController extends EgovFileMngUtil {
 		String type = request.getParameter("type");
 
 		String fileType = multiFile.getContentType().replace("\\", "/").split("/")[1];
+
+		List<String> allowFileTypeList = Arrays.asList("png","jpg","jpeg","gif","bmp");
+
+		if(!allowFileTypeList.contains(fileType)) {
+			logger.debug("This file type is not allowed. allowFileTypeList : {}, fileType:{}", allowFileTypeList, fileType);
+			
+			return "";
+		}
+		
 		String realPath = commonUtil.getRealPath(request);
 		String today = EgovDateUtil.getToday("");
 		String fileName = UUID.randomUUID() + "." + fileType;
@@ -545,6 +554,15 @@ public class EzEditorController extends EgovFileMngUtil {
 
 		String fileData = request.getParameter("clip_contents");
 		String fileType = commonUtil.detectPathTraversal(request.getParameter("file_extension"));
+
+		List<String> allowFileTypeList = Arrays.asList("png","jpg","jpeg","gif","bmp");
+
+		if(!allowFileTypeList.contains(fileType)) {
+			logger.debug("This file type is not allowed. allowFileTypeList : {}, fileType:{}", allowFileTypeList, fileType);
+
+			return "";
+		}
+		
 		String rootId = request.getParameter("xfe_root_id");
 		String resultCode = "0";
 

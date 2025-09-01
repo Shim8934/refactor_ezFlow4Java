@@ -23,6 +23,9 @@ public class BoardConfigVO {
 	private int tenantID;
 	/** 최근게시물 표출 일수*/
 	private int allNewBoardListDate;
+	private int contentSize;
+	/** 리스트보기 방식 (기본형/확장형)*/
+	private String usrListShowType;
 	
 	public String getUserId() {
 		return userId;
@@ -91,5 +94,19 @@ public class BoardConfigVO {
 
 	public void setAllNewBoardListDate(int allNewBoardListDate) {
 		this.allNewBoardListDate = allNewBoardListDate;
+	}
+	public int getContentSize() {
+		return contentSize;
+	}
+
+	public void setContentSize(int contentSize) {
+		this.contentSize = contentSize;
+	}
+	public String getUsrListShowType() {
+		return usrListShowType;
+	}
+
+	public void setUsrListShowType(String usrListShowType) {
+		this.usrListShowType = usrListShowType;
 	}
 }

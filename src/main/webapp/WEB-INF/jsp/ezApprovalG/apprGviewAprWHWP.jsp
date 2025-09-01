@@ -87,6 +87,7 @@
 	        
 	     	// 2023-05-25 조수빈 - 전자결재 첨부파일 미리보기 사용 여부
 			var useAprFilePrvw = "<c:out value ='${useAprFilePrvw}'/>";
+			var ReturnFunction;
 	        
 			function btnOpinion_onclick() {
 			    //openOpinionViewUI();
@@ -114,6 +115,12 @@
 				    btnClose_onclick();
 				    return;
 				}
+
+				try {
+					if (isParentCommonArgsUsed()) {
+						ReturnFunction = opener == null ? parent.ezCommon_cross_dialogArguments[1] : opener.ezCommon_cross_dialogArguments[1];
+					}
+				} catch (e) { }
 			
 			    if (pDocState === "015" && pOrgDocID.length >= 20) {
 			    	if (listTypeValue === "99") {	// 공람할문서
@@ -197,7 +204,10 @@
 		        if (parent.opener != null && parent.opener.getApprovalList != undefined) {
 		        	parent.opener.clearAbsence(true);
 		        }
-			
+				
+				if (ReturnFunction != null) {
+					ReturnFunction();
+				}
 			    window.close();
 			}
 	
@@ -207,7 +217,8 @@
 			}
 			
 			function btnMail_onclick() {
-			    window.open("/ezEmail/mailWrite.do?docHref=" + docHref + "&cmd=docsend&docID=" + docID + "&target=APPROVALG", "", "height = " + window.screen.availHeight * 0.8 + ", width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + GetOpenPosition(890, window.screen.availHeight * 0.8));
+			    // window.open("/ezEmail/mailWrite.do?docHref=" + docHref + "&cmd=docsend&docID=" + docID + "&target=APPROVALG", "", "height = " + window.screen.availHeight * 0.8 + ", width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + GetOpenPosition(890, window.screen.availHeight * 0.8));
+				showPopup("/ezEmail/mailWrite.do?docHref=" + docHref + "&cmd=docsend&docID=" + docID + "&target=APPROVALG", 890, window.screen.availHeight * 0.8, "", "height = " + window.screen.availHeight * 0.8 + ", width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + GetOpenPosition(890, window.screen.availHeight * 0.8), hidePopup);
 			}	
 	
 			function btnhistory_onclick() {
@@ -260,10 +271,12 @@
 			    try {
 			        window.opener.openergetDocInfo();
 			    }
-			    catch (e) { }
-			    try {
-			        window.opener.Refresh_Window();
-			    } catch (e) { }
+			    catch (e) { 
+					window.parent.openergetDocInfo();
+				}
+			    // try {
+			    //     window.opener.Refresh_Window();
+			    // } catch (e) { }
 			}
 	
 			var ezdocinfog_view_cross_dialogArguments = new Array();
@@ -273,7 +286,11 @@
 			    var url = "/ezApprovalG/ezDocInfoView.do?docID=" + docID + "&ingFlag=APR";
 			    //var feature = "status:no;dialogWidth:420px;dialogHeight:495px;help:no;scroll:no;edge:sunken;";
 			    //var RtnVal = window.showModalDialog(url, "", feature);
-			    DivPopUpShow(420, 520, url);
+				if (typeof approvalFlag !== "undefined" && approvalFlag == "G") {
+					DivPopUpShow(420, 400, url);
+				}else {
+					DivPopUpShow(420, 300, url);
+				}
 			}
 			
 			function btnDocInfo_onclick_Complete() {
@@ -320,7 +337,7 @@
 			}
 			
 			function btnforcecallback_onclick() {
-				var pMsg = "문서를 강제회수하시겠습니까?";
+				var pMsg = "<spring:message code='ezApprovalG.km02'/>";
 				OpenInformationUI(pMsg, btnforcecallback_onclick_Complete);
 			}
 		    function btnforcecallback_onclick_Complete(ans) {
@@ -365,7 +382,7 @@
 					
 					ExcuteInfo("CALLBACK_AFTER", "DRAFT");
 
-					OpenAlertUI("문서를 회수하였습니다.", function() {
+					OpenAlertUI(strLangKm01, function() {
 						btnClose_onclick();
 					});
 		        } else {
@@ -421,7 +438,7 @@
 				});  
 			}
 		    function btncallback_onclick() {
-				var pMsg = "문서를 회수하시겠습니까?";
+				var pMsg = "<spring:message code='ezApprovalG.km01'/>";
 				OpenInformationUI(pMsg, btncallback_onclick_Complete);
 		    }
 		    function btncallback_onclick_Complete(ans) {
@@ -474,7 +491,7 @@
 
 					ExcuteInfo("CALLBACK_AFTER", "DRAFT");
 
-					OpenAlertUI("문서를 회수하였습니다.", function() {
+					OpenAlertUI(strLangKm01, function() {
 						btnClose_onclick();
 					});
 					
@@ -562,7 +579,7 @@
 				var aprUserID = SelectSingleNodeValue(cell, "DATA4");
 				var aprType = SelectSingleNodeValue(cell, "DATA11");
 
-				if (aprUserID === pUserID && aprType === "018") {
+				if (aprUserID === pUserID) {
 					return true;
 				}
 
@@ -694,20 +711,22 @@
 			}
 			
 	    	// 게시판 게시
-	    	var writeboardselect_modal_dialogArguments = new Array();
+	    	// var writeboardselect_modal_dialogArguments = new Array();
 		    function NewItem_onclick() {
-		    	writeboardselect_modal_dialogArguments[1] = NewItem_onclick_Complete;
-		        var OpenWin = window.open("/ezBoard/writeBoardSelectModal.do", "WriteBoardSelect_Modal", GetOpenWindowfeature(355, 600));
-		        try {
-		        	if (OpenWin) {
-		        		OpenWin.focus(); 
-		        	} 
-		        } catch (e) {
-		        	console.error('OpenWin 접근 실패:', e);
-		        }
+		    	// writeboardselect_modal_dialogArguments[1] = NewItem_onclick_Complete;
+		        // var OpenWin = window.open("/ezBoard/writeBoardSelectModal.do", "WriteBoardSelect_Modal", GetOpenWindowfeature(355, 600));
+		        // try {
+		        // 	if (OpenWin) {
+		        // 		OpenWin.focus(); 
+		        // 	} 
+		        // } catch (e) {
+		        // 	console.error('OpenWin 접근 실패:', e);
+		        // }
+				showPopup("/ezBoard/writeBoardSelectModal.do", 355, 600, "WriteBoardSelect_Modal", GetOpenWindowfeature(355, 600), NewItem_onclick_Complete);
 		    }
 		    
 		    function NewItem_onclick_Complete(ret) {
+				hidePopup();
 		        if (typeof (ret) != "undefined") {
 		            pBoardID = ret[0];
 		
@@ -724,7 +743,8 @@
 		                alert(strLang1031);
 		            }
 		            else {
-		                window.open("/ezBoard/boardNewItem.do?boardID=" + encodeURIComponent(pBoardID) + "&mode=new1&pbrdGbn=SiteNewBoard&pFromScreen=Mail&docID=" + pDocID + "&url=" + docHref + "&orgCompanyID=" + orgCompanyID, '', GetOpenWindowJun(765, 870));
+		                // window.open("/ezBoard/boardNewItem.do?boardID=" + encodeURIComponent(pBoardID) + "&mode=new1&pbrdGbn=SiteNewBoard&pFromScreen=Mail&docID=" + pDocID + "&url=" + docHref + "&orgCompanyID=" + orgCompanyID, '', GetOpenWindowJun(765, 870));
+						showPopup("/ezBoard/boardNewItem.do?boardID=" + encodeURIComponent(pBoardID) + "&mode=new1&pbrdGbn=SiteNewBoard&pFromScreen=Mail&docID=" + pDocID + "&url=" + docHref + "&orgCompanyID=" + orgCompanyID, 765, 870, "", GetOpenWindowJun(765, 870), hidePopup);
 		            }
 		        }
 		    }
