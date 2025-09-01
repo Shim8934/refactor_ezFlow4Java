@@ -65,6 +65,8 @@
 			    overflow: hidden;
 			    text-overflow: ellipsis;
 				color: #5b5a5a;
+				display: flex;
+				align-items: center;
 			}
 			.selectedP {
 				border-bottom: 2px solid #0470e4;
@@ -586,18 +588,18 @@
 						listXML += "</span>";
 						listXML += "</div>";
 						listXML += "<p class='topInfoP'><input type='checkbox' id='" + itemID + "," + writerID + ";' onclick='selectAlbumCheckBox(this, event)'>";
-						listXML += "<span style='font-size:13px;'>";
+						listXML += "<span style='font-size:13px;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;'>";
 
 						if (readFlag == "0") {
 							listXML += "<span class='albumTitle' style='font-size:13px; font-weight:bold;'>";
 						} else {
 							listXML += "<span class='albumTitle' style='font-size:13px;'>";
 						}
-
+						listXML += title + "</span></span>";
 						if (isNew == "Y") {
-							listXML+= "<img src='/images/i_new.gif' style='vertical-align:middle;margin:0px 5px 0px 2px'/>";
+							listXML+= "<span class='board_new'></span>";
 						}
-						listXML += title + "</span></p>";
+						listXML += "</p>";
 						listXML += "<div class='infoDiv'>";
 						listXML += "<span style='font-size:13px;'>";
 						if (getColNameIndex(xmlDoc, "WRITERNAME") != -1) {

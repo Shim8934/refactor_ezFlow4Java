@@ -4448,3 +4448,7 @@ body.drag *{user-select:none !important;}
 .itemBtn img{display:none;}
 .itemBtn span{vertical-align:baseline !important;}
 .itemBtn:hover, .itemActive{color:#3d8fea; border:1px solid #3d8fea; background-color:#fff;}
+
+/* 새글(NEW) 아이콘 변경 */
+.board_new{display:inline-block; width:16px; height:16px; background:url(../images/kr/community/community_iconnew.svg?v=1) no-repeat center / 16px 16px; margin-left:4px; flex-shrink:0;}
+.list_title_txt{display:block; text-overflow:ellipsis; overflow:hidden; white-space:nowrap; font-size:14px;}

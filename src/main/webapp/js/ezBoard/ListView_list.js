@@ -822,9 +822,9 @@ function ListView() {
 //                        objTd.style.fontWeight = "BOLD";
 //                    }
                     
-                    if (getNodeText(oDatas[6]) == "Y") {
-                    	titleImage = titleImage + "<img style='vertical-align:middle; display:inline-block;' src='/images/i_new.gif'>&nbsp;";
-                    }
+                    // if (getNodeText(oDatas[6]) == "Y") {
+                    // 	titleImage = titleImage + "<img style='vertical-align:middle; display:inline-block;' src='/images/i_new.gif'>&nbsp;";
+                    // }
                     if (getNodeText(oDatas[4]) == "0") {
                         objTd.style.fontWeight = "BOLD";
                     }
@@ -1002,14 +1002,21 @@ function ListView() {
                         var fileSize = SelectSingleNodeValue(oCells[0], "FILESIZE").split("|");
                         var listShowType = SelectSingleNodeValue(oCells[0], "LISTSHOWTYPE"); // 리스트보기방식 (기본:G/확장:E)
                         var publicFlagImg = SelectSingleNodeValue(oCells[0], "PUBLICFLAG") == "N" ? " <div class='board_private'></div>" : "";
-                        
-                    	if (getNodeText(oDatas[10]) != "0") {
-                    		objTd.innerHTML = "<div style='display:flex; align-items:center;'>" + titleImage + "<span style='display:block; text-overflow:ellipsis; overflow:hidden; white-space:nowrap;'>" 
-                                + MakeXMLString(strValue) + "</span>" + titleOneLineCnt + publicFlagImg + "</div> ";
-                        } else if (getNodeText(oDatas[6]) == "Y") {
-                        	objTd.innerHTML = "<div style='overflow: hidden; text-overflow: ellipsis; display: inline-block; vertical-align:middle; width:100%;'>" + titleImage + MakeXMLString(strValue) + publicFlagImg + "</div> ";
+
+                        if (getNodeText(oDatas[10]) != "0") { // 댓글이 있는 경우
+                            if (getNodeText(oDatas[6]) == "Y") { // NEW 아이콘 표출
+                                objTd.innerHTML = "<div style='display:flex; align-items:center;'>" + titleImage + "<span class='list_title_txt'>"
+                                    + MakeXMLString(strValue) + "</span>" + titleOneLineCnt + "<span class='board_new'></span>" + publicFlagImg + "</div> ";
+                            } else {
+                                objTd.innerHTML = "<div style='display:flex; align-items:center;'>" + titleImage + "<span class='list_title_txt'>"
+                                    + MakeXMLString(strValue) + "</span>" + titleOneLineCnt + publicFlagImg + "</div> ";
+                            }
                         } else {
-                        	objTd.innerHTML = titleImage + MakeXMLString(strValue) + publicFlagImg;
+                            if (getNodeText(oDatas[6]) == "Y") { // NEW 아이콘 표출
+                                objTd.innerHTML = "<div style='display:flex; align-items:center;'>" + titleImage + "<span class='list_title_txt'>" + MakeXMLString(strValue) + "</span><span class='board_new'></span>" + publicFlagImg + "</div> ";
+                            } else {
+                                objTd.innerHTML = titleImage + MakeXMLString(strValue) + publicFlagImg;
+                            }
                         }
                         
                         // 사용자가 리스트보기방식을 선택하지 않았을 경우 -> 관리자가 설정한 리스트보기방식을 따름
