@@ -336,6 +336,15 @@
 				        		        	parent.opener.getFavoriteForms();
 				        		        }
 				                    }
+									if (isTeamsDesktop()) {
+										if (parent.document.getElementById("aprDashBoard")){
+											parent.getFavoriteForms();
+										}
+									} else {
+										if (window.opener.parent.frames["right"].document.getElementById("aprDashBoard")) {
+											window.opener.parent.frames["right"].getFavoriteForms();
+										}
+									}
 				    			} else {
 				    				OpenAlertUI("<spring:message code='ezApprovalG.t180'/>");
 				    			}

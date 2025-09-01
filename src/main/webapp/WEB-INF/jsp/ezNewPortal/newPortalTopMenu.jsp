@@ -274,6 +274,9 @@
 		}
 		
 		function leftMainMecuClickEvent(menuUrl, openType) {
+			if (menuUrl &&  menuUrl == "/ezApprovalG/apprGMain.do") {
+				menuUrl = "/ezApprovalG/apprGMain.do?listType=25"
+			}
 			offMenuAll();
 			this.classList.add("on");
 			subMenuClickEvent('off', menuUrl, openType);

@@ -163,6 +163,8 @@ public class ApprGDocListVO {
 	
 	private String delFlag;
 
+	private String processDate;
+
 	public String getSn() {
 		return sn;
 	}
@@ -699,5 +701,7 @@ public class ApprGDocListVO {
 	public void setFormVersion(String formVersion) {
 		this.formVersion = formVersion;
 	}
+	public String getProcessDate() { return processDate;}
+	public void setProcessDate(String processDate) { this.processDate = processDate; }
 	
 }

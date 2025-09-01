@@ -2109,7 +2109,7 @@ public class EzNewPortalServiceImpl extends EgovAbstractServiceImpl implements E
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public JSONObject getApprovalList(String userId, String companyId, int tenantId, String offset, String type, String approvalFlag, String lang) throws Exception {
+	public JSONObject getApprovalList(String userId, String companyId, int tenantId, String offset, String type, String approvalFlag, String lang, String primary) throws Exception {
 		logger.debug("getApprovalList started.");
 		logger.debug("userId = " + userId + " || companyId = " + companyId + " || tenantId = " + tenantId + " || type = " + type);
 		
@@ -2170,6 +2170,7 @@ public class EzNewPortalServiceImpl extends EgovAbstractServiceImpl implements E
 			break;
 		case "draft":
 			//기안
+			map.put("lang", primary.equals("1") ? "" : "2");
 			list = ezNewPortalDAO.getApprovalDraftList(map);
 			result.put("list", list);
 			

@@ -207,3 +207,5 @@ p, strong, h3, div, a, span, table, th, td {
 
 /* 사다리게임 */
 #startButton > div > span:nth-child(2){display:block !important;}
+
+.statistics_wrap .statistics .graph_box .graph .display .num{margin-left: -5px;}

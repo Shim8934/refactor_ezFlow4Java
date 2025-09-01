@@ -63,7 +63,7 @@
 		<script ID="clientEventHandlersJS" type="text/javascript">
 			var pUserID = "<c:out value = '${userInfo.id}'/>";
 		    var pListTypeValue = '<c:out value="${listType}"/>';
-		    var PresentOpen = "APPROVAL";
+		    var PresentOpen = "";
 		    var CompanyID = '<c:out value = '${userInfo.companyID}'/>';
 		    var CompanyName = "<c:out value = '${userInfo.companyName}'/>";
 		    var gMenuFlag = 1;
@@ -219,6 +219,9 @@
 						parent.document.querySelector("iframe[name=right]").src = "/ezApprovalG/aprManage.do?listType=" + pListTypeValue + "&subQuery=";
 						setPresentValue("<spring:message code='ezApprovalG.t1756'/>");
 						document.getElementById('APPROVAL24').click();
+					}
+					if (pListTypeValue == '25') {
+							 parent.document.querySelector("iframe[name=right]").src = "/ezApprovalG/apprGDashBoardMain.do";
 					}
 		        }
 		        getAprCount();
@@ -1370,11 +1373,11 @@
 	        <div class="btn_writeBox">
 	        	<c:choose>
 	        	<c:when test="${useDraftAll == 'YES' && draftAllTypeB != 'Y'}">
-	        		<p class="btn_write01" onclick="btnDraft_onclick();" style="width:83px; display:inline-block; float:none;"><spring:message code='main.t00031'/></p>
+	        		<p id="draftBtn" class="btn_write01" onclick="btnDraft_onclick();" style="width:83px; display:inline-block; float:none;"><spring:message code='main.t00031'/></p>
 	        		<p class="btn_write01" onclick="btnDraftAll_onclick();" style="width:83px; display:inline-block; float:right;"><spring:message code='ezApprovalG.HSBDa01'/></p>
 	        	</c:when>
 	        	<c:otherwise>
-	        		<p class="btn_write01" onclick="btnDraft_onclick();"><spring:message code='main.t00031'/></p>
+	        		<p id="draftBtn" class="btn_write01" onclick="btnDraft_onclick();"><spring:message code='main.t00031'/></p>
 	        	</c:otherwise>
 	        	</c:choose>
 	        </div>

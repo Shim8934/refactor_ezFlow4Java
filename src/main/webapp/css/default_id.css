@@ -262,3 +262,19 @@ th{color:#777;}
 
 #ownerInput.us{width:74%;}
 .imgbtn.comment{width: 73px;}
+.statistics_wrap .statistics .graph_box .graph .display .num{margin-left: -5px;}
+
+.payment_template .right_box li .template_box .conts_box .document_list ul.info .cont.no-data .txt {left: 35%;}
+.payment_form_list ul .cont.no-data .txt{left: 35%;}
+.payment_template .left_box .template_box .conts_box .document_list ul .cont.no-data .txt{left: 35%;}
+.payment_form_list ul.info.nodata{margin: 0 0}
+
+.statistics_wrap .statistics .graph_box .txt {
+    min-width: 105px; 
+    margin-right: 10px;
+    padding:0px
+}
+
+.statistics_wrap .statistics .graph_box .graph ul {
+    padding: 0PX
+}

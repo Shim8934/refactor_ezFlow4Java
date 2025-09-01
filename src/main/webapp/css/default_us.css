@@ -97,3 +97,5 @@ input#inOffice, input#retired, input#stopped{vertical-align:middle;}
 /* 관리자 */
 .admin_pms_left .left_admin{height:auto; line-height:1.5; padding:12px 0 12px 15px;}
 .admin_pms_left #left .project_admin{padding-left:15px;}
+
+.statistics_wrap .statistics .graph_box .graph .display .num{margin-left: -5px;}

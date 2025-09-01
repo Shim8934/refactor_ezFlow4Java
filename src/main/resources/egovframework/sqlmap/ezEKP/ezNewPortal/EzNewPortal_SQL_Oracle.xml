@@ -2052,7 +2052,11 @@ INSERT INTO TBL_PORTAL_THEME_USER (
     			aprmemberdeptid,
     			aprmemberdeptname,
     			aprmemberid,
-    			aprmembername
+    			aprmembername,
+	            hasattachyn,
+	            hasopinionyn,
+				formname,
+				formname2
     		FROM (
     			SELECT
     				INFO.*, ROWNUM AS RNUM
@@ -2077,7 +2081,11 @@ INSERT INTO TBL_PORTAL_THEME_USER (
 				            LINEINFO.aprmemberdeptid,
 				            LINEINFO.aprmemberdeptname,
 				            LINEINFO.aprmemberid,
-				            LINEINFO.aprmembername
+				            LINEINFO.aprmembername,
+							DOCINFO.hasattachyn,
+							DOCINFO.hasopinionyn,
+							exp.formname,
+							exp.formname2
 						FROM
 							TBL_APRDOCINFO DOCINFO
 						LEFT OUTER JOIN
@@ -2096,6 +2104,14 @@ INSERT INTO TBL_PORTAL_THEME_USER (
 							DOCINFO.companyid = LINEINFO.companyid
 						AND
 							DOCINFO.docid = LINEINFO.docid
+						LEFT OUTER JOIN 
+								 TBL_EXPAPRDOCINFO exp
+						ON 
+								 DOCINFO.DOCID = exp.DOCID
+						AND
+								 DOCINFO.TENANT_ID = exp.TENANT_ID
+						AND
+								 DOCINFO.COMPANYID = exp.COMPANYID
 						WHERE
 							DOCINFO.tenant_id = #tenantId#
 						AND
@@ -2155,7 +2171,13 @@ INSERT INTO TBL_PORTAL_THEME_USER (
 		        LINEINFO.aprmemberid AS aprmemberid,
 		        LINEINFO.aprmembername AS aprmembername,
 		        LINEINFO.aprmembername2 AS aprmembername2,
-		        U.extensionattribute2 AS ext2
+		        U.extensionattribute2 AS ext2,
+	            LINEINFO.aprtype,
+	            LINEINFO.aprmemberdeptname AS aprmemberdeptname,
+	            LINEINFO.aprmemberdeptname2 AS aprmemberdeptname2,
+	            LINEINFO.aprmemberjobtitle AS aprmemberjobtitle,
+	            LINEINFO.aprmemberjobtitle2 AS aprmemberjobtitle2,
+	            LINEINFO.processdate AS processdate
 		    FROM 
 		        TBL_APRLINEINFO LINEINFO
 		    JOIN 
@@ -2278,7 +2300,13 @@ INSERT INTO TBL_PORTAL_THEME_USER (
 			    writername,
 			    writername2,
 			    href,
-			    companyid
+			    companyid,
+			    HASATTACHYN,
+			    HASOPINIONYN,
+			    formname,
+			    formname2,
+			    writerdeptname,
+			    writerjobtitle
 			FROM (
 				SELECT
 					INFO.*, ROWNUM AS RNUM
@@ -2299,7 +2327,19 @@ INSERT INTO TBL_PORTAL_THEME_USER (
 						    DOCINFO.writername,
 						    DOCINFO.writername2,
 						    DOCINFO.href,
-						    DOCINFO.companyid
+						    DOCINFO.companyid,
+							DOCINFO.HASATTACHYN,
+							DOCINFO.HASOPINIONYN,
+							exp.formname,
+							exp.formname2,
+							CASE #lang#
+								WHEN '2' THEN DOCINFO.writerdeptname2
+								ELSE DOCINFO.writerdeptname
+							END AS writerdeptname,
+							CASE #lang#
+								WHEN '2' THEN DOCINFO.writerjobtitle2
+								ELSE DOCINFO.writerjobtitle
+							END AS writerjobtitle
 						FROM
 							TBL_APRDOCINFO DOCINFO
 						JOIN
@@ -2318,6 +2358,12 @@ INSERT INTO TBL_PORTAL_THEME_USER (
 							DOCINFO.COMPANYID = GRP.COMPANYID
 						AND
 							DOCINFO.DOCID = GRP.DOCID
+						LEFT OUTER JOIN 
+								 TBL_EXPAPRDOCINFO exp
+						ON 
+								 DOCINFO.DOCID = exp.DOCID
+						AND
+								 DOCINFO.TENANT_ID = exp.TENANT_ID
 						WHERE
 							DOCINFO.tenant_id = #tenantId#
 						AND

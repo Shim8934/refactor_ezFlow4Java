@@ -4303,7 +4303,7 @@ public class EzNewPortalGWController {
 			String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", tenantId);
 			String companyId = request.getParameter("companyId");
 
-			JSONObject data = ezNewPortalService.getApprovalList(userId, companyId, tenantId, info.getOffset(), type, approvalFlag, info.getLang());
+			JSONObject data = ezNewPortalService.getApprovalList(userId, companyId, tenantId, info.getOffset(), type, approvalFlag, info.getLang(), info.getPrimary());
 
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -5092,7 +5092,7 @@ public class EzNewPortalGWController {
 				if (info.getRollInfo() != null && info.getRollInfo().indexOf("a=1") > -1 || ezOrganService.isProxyUser(info.getTenantId(), userId, nowDateTime).equals("1")) {
 					susinAdmin = "admin";
 				}
-				String approvalTotalCount = ezApprovalGSerivce.getWebPartList("1", userId, deptId, "", "LEFT", susinAdmin, companyId, portletLang, tenantId, offset);
+				String approvalTotalCount = ezApprovalGSerivce.getWebPartList("1", userId, deptId, "", "LEFT", susinAdmin, companyId, portletLang, tenantId, offset, "");
 				logger.debug("approvalTotalCount : " + approvalTotalCount);
 				
 				Document docXML = commonUtil.convertStringToDocument(approvalTotalCount);
@@ -6552,7 +6552,7 @@ public class EzNewPortalGWController {
 			if (info.getRollInfo() != null && info.getRollInfo().indexOf("a=1") > -1 || ezOrganService.isProxyUser(info.getTenantId(), userId, nowDateTime).equals("1")) {
 				susinAdmin = "admin";
 			}
-			String approvalTotalCount = ezApprovalGSerivce.getWebPartList("1", userId, deptId, "", "LEFT", susinAdmin, companyId, portletLang, tenantId, offset);
+			String approvalTotalCount = ezApprovalGSerivce.getWebPartList("1", userId, deptId, "", "LEFT", susinAdmin, companyId, portletLang, tenantId, offset, "");
 			logger.debug("approvalTotalCount : " + approvalTotalCount);
 
 			Document docXML = commonUtil.convertStringToDocument(approvalTotalCount);

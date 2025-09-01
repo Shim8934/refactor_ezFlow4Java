@@ -1916,7 +1916,7 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 	}
 
 	@Override
-	public String getWebPartList(String listType, String userID, String deptID, String listCount, String mode, String userFlag, String companyID, String lang, int tenantID, String offset) throws Exception {
+	public String getWebPartList(String listType, String userID, String deptID, String listCount, String mode, String userFlag, String companyID, String lang, int tenantID, String offset, String type) throws Exception {
 		logger.debug("getWebPartList started.");
 
 		String userIDs = "'" + userID + "'";
@@ -1938,7 +1938,7 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 			int totalCount = getWebPartListCount(listType, userID, deptID, userIDs, getDocManageDeptInfo(deptID, tenantID), userFlag.toLowerCase().trim(), companyID, tenantID, list);
 			result = "<RESULT>" + totalCount + "</RESULT>";
 		} else if (mode.equals("LEFT")) {
-			String leftCount = getLeftDocCountNew(userID, deptID, userIDs, getDocManageDeptInfo(deptID, tenantID), userFlag.toLowerCase(), offset, companyID, tenantID, list);
+			String leftCount = getLeftDocCountNew(userID, deptID, userIDs, getDocManageDeptInfo(deptID, tenantID), userFlag.toLowerCase(), offset, companyID, tenantID, list, type);
 			result = leftCount;
 		}
 		/* 2024-04-29 홍승비 - 현재 getWebPartList 메서드는 LEFT와 COUNT 분기만 호출되는 것으로 확인, 관련된 코드 주석처리 */
@@ -22532,9 +22532,16 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 					resultXML.append("<DATA10>" + docXML.getElementsByTagName("SECURITYAPPROVAL").item(k).getTextContent() + "</DATA10>");
 					resultXML.append("<DATA11>" + docXML.getElementsByTagName("EDMSYN").item(k).getTextContent() + "</DATA11>");
 					resultXML.append("<DATA12>" + docXML.getElementsByTagName("WRITERDEPTID").item(k).getTextContent() + "</DATA12>");
+					resultXML.append("<DATA99>" + docXML.getElementsByTagName("FORMNAME").item(k).getTextContent() + "</DATA99>");
 					resultXML.append("<ORGCOMPANYID><![CDATA[" + docXML.getElementsByTagName("COMPANYID").item(k).getTextContent() + "]]></ORGCOMPANYID>");
                     resultXML.append("<HASOPINIONYN><![CDATA[" + docXML.getElementsByTagName("HASOPINIONYN").item(k).getTextContent() + "]]></HASOPINIONYN>");
                     resultXML.append("<ADDOPINION>" + opinionAddGB + "</ADDOPINION>");
+                    resultXML.append("<WRITERJOBTITLE><![CDATA[" + docXML.getElementsByTagName("WRITERJOBTITLE").item(k).getTextContent() + "]]></WRITERJOBTITLE>");
+                    resultXML.append("<WRITERJOBTITLE2><![CDATA[" + docXML.getElementsByTagName("WRITERJOBTITLE2").item(k).getTextContent() + "]]></WRITERJOBTITLE2>");
+                    resultXML.append("<WRITERDEPTNAME><![CDATA[" + docXML.getElementsByTagName("WRITERDEPTNAME").item(k).getTextContent() + "]]></WRITERDEPTNAME>");
+                    resultXML.append("<WRITERDEPTNAME2><![CDATA[" + docXML.getElementsByTagName("WRITERDEPTNAME2").item(k).getTextContent() + "]]></WRITERDEPTNAME2>");
+                    resultXML.append("<WRITERNAME2><![CDATA[" + docXML.getElementsByTagName("WRITERNAME2").item(k).getTextContent() + "]]></WRITERNAME2>");
+                    resultXML.append("<ENDDATE><![CDATA[" + docXML.getElementsByTagName("ENDDATE").item(k).getTextContent() + "]]></ENDDATE>");
                 }
 				
 				if (fieldName.equals("HASATTACHYN")) {
@@ -28626,6 +28633,12 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 					resultXML.append("<ORGCOMPANYID><![CDATA[" + docXML.getElementsByTagName("COMPANYID").item(k).getTextContent() + "]]></ORGCOMPANYID>");
                     resultXML.append("<ADDOPINION>" + opinionAddGB + "</ADDOPINION>");
                     resultXML.append("<HASOPINIONYN><![CDATA[" + docXML.getElementsByTagName("HASOPINIONYN").item(k).getTextContent() + "]]></HASOPINIONYN>");
+                    resultXML.append("<WRITERJOBTITLE><![CDATA[" + docXML.getElementsByTagName("WRITERJOBTITLE").item(k).getTextContent() + "]]></WRITERJOBTITLE>");
+                    resultXML.append("<WRITERJOBTITLE2><![CDATA[" + docXML.getElementsByTagName("WRITERJOBTITLE2").item(k).getTextContent() + "]]></WRITERJOBTITLE2>");
+                    resultXML.append("<WRITERDEPTNAME><![CDATA[" + docXML.getElementsByTagName("WRITERDEPTNAME").item(k).getTextContent() + "]]></WRITERDEPTNAME>");
+                    resultXML.append("<WRITERDEPTNAME2><![CDATA[" + docXML.getElementsByTagName("WRITERDEPTNAME2").item(k).getTextContent() + "]]></WRITERDEPTNAME2>");
+                    resultXML.append("<WRITERNAME2><![CDATA[" + docXML.getElementsByTagName("WRITERNAME2").item(k).getTextContent() + "]]></WRITERNAME2>");
+                    resultXML.append("<ENDDATE><![CDATA[" + docXML.getElementsByTagName("ENDDATE").item(k).getTextContent() + "]]></ENDDATE>");
 
 					firstFlag = false;
 				}
@@ -34709,7 +34722,7 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 		return result;
 	}
     
-	public String getLeftDocCountNew(String userID, String deptID, String userIDs, String deptIDs, String userFlag, String offset, String companyID , int tenantID, List<ApprGProxyVO> list) throws Exception {
+	public String getLeftDocCountNew(String userID, String deptID, String userIDs, String deptIDs, String userFlag, String offset, String companyID , int tenantID, List<ApprGProxyVO> list, String type) throws Exception {
 		logger.debug("getLeftDocCount started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -34770,7 +34783,13 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
             map.put("upperDeptIDArr", upperDeptIDArr);
         }
 		
-		Map<String, Object> result = ezApprovalGDAO.getLeftDocCountNew(map); 
+		Map<String, Object> result = new HashMap<>();
+        
+        if (type != null && !"".equals(type) && "dash".equals(type)) {
+            result = ezApprovalGDAO.getDashBoardProGressDocCount(map);
+        } else {
+            result = ezApprovalGDAO.getLeftDocCountNew(map); 
+        }
 		
 		StringBuffer sb = new StringBuffer();
 		sb.append("<DATA>");
@@ -40325,4 +40344,491 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
         }
         return res;
     }
+    
+    @Override
+    public String getDeptBoxList(String userID, String deptID, String mode, String pageSize, String pageNum, String sortHeader, String sortOption, String companyID, String userLang,
+			Map<String, Object> searchQueryMap, int tenantID, String offset, String assignChk, String userPrimary) throws Exception {
+		logger.debug("getDeptBoxList started");
+
+		StringBuilder resultXML = new StringBuilder();
+		String listString = "";
+		
+        listString = getListHeader("004", companyID, userLang, tenantID);
+		
+		Document listXML = commonUtil.convertStringToDocument(listString);
+		
+		int hlength = listXML.getElementsByTagName("NAME").getLength();
+        
+        Map<String, String> upDeptInfo = getUpperDeptInfo(deptID, tenantID);
+        if (upDeptInfo.get("USEUPPERDEPTBOX") != null && upDeptInfo.get("USEUPPERDEPTBOX").equals("Y")) {
+            deptID = upDeptInfo.get("upperDeptCode");
+        }
+        
+        int totalCount = getReceiveDocListCount(mode, userID, deptID, getDocManageDeptInfo(deptID, tenantID), searchQueryMap, companyID, tenantID, assignChk);
+		int querySize = Integer.parseInt(pageSize) * Integer.parseInt(pageNum);
+		int querySize2 = totalCount - Integer.parseInt(pageSize) * (Integer.parseInt(pageNum) - 1);
+		
+		if (querySize2 >= Integer.parseInt(pageSize)) {
+			querySize2 = Integer.parseInt(pageSize);
+		}
+		
+		resultXML.append("<DOCLIST>");
+		resultXML.append("<LISTVIEWDATA>");
+		
+		String docList = getDashBoardDeptBox(mode, userID, deptID, getDocManageDeptInfo(deptID, tenantID), querySize, querySize2, searchQueryMap, companyID, tenantID, assignChk);
+        
+        Document docXML = commonUtil.convertStringToDocument(docList);
+		int dlength = docXML.getElementsByTagName("ROW").getLength();
+		
+		String fieldName = "";
+		String fieldValue = "";
+		String langData = commonUtil.getMultiData(userLang, tenantID);
+		resultXML.append("<ROWS>");
+		
+		for (int k = dlength - 1; k >= 0; k--) {
+			resultXML.append("<ROW>");
+			for (int p = 0; p < hlength; p++) {
+				resultXML.append("<CELL>");
+				fieldName = listXML.getElementsByTagName("COLNAME").item(p).getTextContent().toUpperCase();
+				
+				if (fieldName.equals("FORMNAME") || fieldName.equals("SENTDEPTNAME") || fieldName.equals("RECEIVEDDEPTNAME") || fieldName.equals("WRITERNAME") || fieldName.equals("PROCESSORNAME")) {
+					fieldName = fieldName + langData;
+				}
+				fieldValue = docXML.getElementsByTagName(fieldName).item(k).getTextContent();
+                resultXML.append("<VALUE>" + commonUtil.cleanValue(getListField(fieldName, fieldValue, companyID, userLang, tenantID, offset)) + "</VALUE>");
+                
+				if (p == 0) {
+					resultXML.append("<DATA1>" + docXML.getElementsByTagName("DOCID").item(k).getTextContent() + "</DATA1>");
+					resultXML.append("<DATA2>" + docXML.getElementsByTagName("RECEIVESN").item(k).getTextContent() + "</DATA2>");
+					resultXML.append("<DATA3>" + makeListField(docXML.getElementsByTagName("HREF").item(k).getTextContent()) + "</DATA3>");
+					resultXML.append("<DATA4>" + docXML.getElementsByTagName("HASATTACHYN").item(k).getTextContent() + "</DATA4>");
+					resultXML.append("<DATA5>" + docXML.getElementsByTagName("HASOPINIONYN").item(k).getTextContent() + "</DATA5>");
+					resultXML.append("<DATA6>" + makeListField(docXML.getElementsByTagName("RECEIVEDDEPTID").item(k).getTextContent()) + "</DATA6>");
+					resultXML.append("<DATA7>" + makeListField(docXML.getElementsByTagName("ORGDOCID").item(k).getTextContent()) + "</DATA7>");
+					resultXML.append("<DATA8>" + makeListField(docXML.getElementsByTagName("PROCESSORID").item(k).getTextContent()) + "</DATA8>");
+					resultXML.append("<DATA9>" + docXML.getElementsByTagName("DOCSTATE").item(k).getTextContent() + "</DATA9>");
+					resultXML.append("<DATA10>" + docXML.getElementsByTagName("APRSTATE").item(k).getTextContent() + "</DATA10>");
+					resultXML.append("<DATA11>" + "" + "</DATA11>");
+					resultXML.append("<DATA12>" + "" + "</DATA12>");
+					resultXML.append("<DATA13>" + makeListField(docXML.getElementsByTagName("WRITERDEPTID").item(k).getTextContent()) + "</DATA13>");
+					resultXML.append("<DATA14>" + makeListField(docXML.getElementsByTagName("URGENTAPPROVAL").item(k).getTextContent()) + "</DATA14>");
+					resultXML.append("<DATA15>" + makeListField(docXML.getElementsByTagName("DOCTYPE").item(k).getTextContent()) + "</DATA15>");
+					resultXML.append("<DATA16>" + makeListField(docXML.getElementsByTagName("FORMID").item(k).getTextContent()) + "</DATA16>");
+					resultXML.append("<ORGCOMPANYID>" + makeListField(docXML.getElementsByTagName("COMPANYID").item(k).getTextContent()) + "</ORGCOMPANYID>");
+					resultXML.append("<HASOPINIONYN>" + docXML.getElementsByTagName("HASOPINIONYN").item(k).getTextContent() + "</HASOPINIONYN>");
+					resultXML.append("<SEPERATEATTACHXML>" + docXML.getElementsByTagName("SEPERATEATTACHXML").item(k).getTextContent() + "</SEPERATEATTACHXML>");
+					resultXML.append("<WRITERID>" + docXML.getElementsByTagName("WRITERID").item(k).getTextContent() + "</WRITERID>");
+					resultXML.append("<PROCESSDATE>" + docXML.getElementsByTagName("PROCESSDATE").item(k).getTextContent() + "</PROCESSDATE>");
+                    
+                    if (userPrimary.equals("1")) {
+                        resultXML.append("<WRITERNAME>" + docXML.getElementsByTagName("WRITERNAME").item(k).getTextContent() + "</WRITERNAME>");
+                        resultXML.append("<SENTDEPTNAME>" + docXML.getElementsByTagName("SENTDEPTNAME").item(k).getTextContent() + "</SENTDEPTNAME>");
+                        resultXML.append("<WRITERJOBTITLE>" + docXML.getElementsByTagName("WRITERJOBTITLE").item(k).getTextContent() + "</WRITERJOBTITLE>");
+                    } else {
+                        resultXML.append("<WRITERNAME>" + docXML.getElementsByTagName("WRITERNAME2").item(k).getTextContent() + "</WRITERNAME>");
+                        resultXML.append("<SENTDEPTNAME>" + docXML.getElementsByTagName("SENTDEPTNAME2").item(k).getTextContent() + "</SENTDEPTNAME>");
+                        resultXML.append("<WRITERJOBTITLE>" + docXML.getElementsByTagName("WRITERJOBTITLE2").item(k).getTextContent() + "</WRITERJOBTITLE>");
+                    }
+				}
+				
+				if (fieldName.equals("HASATTACHYN")) {
+					resultXML.append("<HASATTACHYN>" + docXML.getElementsByTagName("HASATTACHYN").item(k).getTextContent() + "</HASATTACHYN>");
+				}
+				if (fieldName.equals("ISPUBLIC")) {
+					resultXML.append("<ISPUBLIC>" + docXML.getElementsByTagName("ISPUBLIC").item(k).getTextContent() + "</ISPUBLIC>");
+				}
+				
+				resultXML.append("</CELL>");
+			}
+			resultXML.append("</ROW>");
+		}
+		resultXML.append("</ROWS>");
+		resultXML.append("</LISTVIEWDATA>");
+		resultXML.append("</DOCLIST>");
+        
+		return resultXML.toString();
+	}
+    
+    private String getDashBoardDeptBox(String mode, String userID, String deptID, String docManageDeptInfo, int querySize, int querySize2, Map<String, Object> searchQueryMap, String companyID, int tenantID, String assignChk) throws Exception {
+		logger.debug("getDashBoardDeptBox started");
+		
+        String susinAdmin = "N";
+        String [] modeArr = mode.split(";");
+        
+        if (modeArr[0].equals("admin")) {
+            susinAdmin = "Y";
+        }
+        
+        if (modeArr.length > 1) {
+            mode = modeArr[1];
+        }
+        
+        String relayFormID = config.getProperty("Relay_FormID", "");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("companyID", companyID);
+		map.put("v_MODE", mode.toLowerCase());
+        map.put("v_SUSINADMIN", susinAdmin);
+        map.put("v_RELAYFORMID", relayFormID);
+		map.put("v_USERID", userID);
+		map.put("v_DEPTID", deptID);
+		map.put("v_DEPTIDS", docManageDeptInfo.replace("'", "").replace(" ", "").split(","));
+		map.put("v_PAGESIZE", querySize);
+		map.put("v_PAGESIZE2", querySize2);
+		map.put("assignChk", assignChk);
+		map.put("v_TENANTID", tenantID);
+		
+		String ApprovalFlag = ezCommonService.getTenantConfig("ApprovalFlag", tenantID);
+		map.put("v_aprFlag", ApprovalFlag);
+		map.putAll(searchQueryMap);
+		
+		List<ApprGReceiveDocVO> apprGDeptBoxDocVOList = ezApprovalGDAO.getDashBoardDeptBox(map);
+		
+		StringBuffer sb = new StringBuffer();
+		sb.append("<DATA>");
+		
+		for (int i = 0; i < apprGDeptBoxDocVOList.size(); i++) {
+			sb.append(commonUtil.getQueryResult(apprGDeptBoxDocVOList.get(i)));
+		}
+		sb.append("</DATA>");
+		
+		logger.debug("getDashBoardDeptBox ended");
+		
+		return sb.toString();
+	}
+    
+    @Override
+	public String aprDashBoardDocList(String listType, String userID, String deptID, String pageSize, String pageNum, String orderCell, String orderOption, String companyID, String userLang, String searchQuery, Document dueryData, int tenantID, String offSet, Map<String, Object> searchMap, String primeLang) throws Exception {
+		logger.debug("aprDashBoardDocList started.");
+
+		String orderOption1 = "";
+		String orderOption2 = "";
+		String userIDs = "'" + userID + "'";
+		String deptIDs = "";
+		String proxyOption = getIsUse("A23", "001", companyID, userLang, tenantID);
+        
+        if (primeLang == "1") {
+            primeLang = "";
+        } else {
+            primeLang = "2";
+        }
+        
+		if (proxyOption == null) {
+		    return "";
+		}
+        
+		StringBuffer resultXML = new StringBuffer();
+		List<ApprGProxyVO> proxyList = null;
+        
+		if (proxyOption.equals("1")) {
+			userIDs = getProxyUser2(userID, userLang, tenantID, offSet);
+			proxyList = getProxyUserInfo(userID, userLang, tenantID, offSet);
+		}
+		
+		String basicOrder = getCode2Name("A18", "001", companyID, userLang, tenantID);
+		String basicOrderReverse = "desc";
+		
+		if (basicOrder.toLowerCase().equals("desc")) {
+			basicOrderReverse = "";
+		} else {
+			basicOrder = "";
+		}
+		
+		String listString = "";
+		logger.debug("listType : " + listType);
+        
+		if (listType.equals("1")) {
+			//결재할 문서
+			listString = getListHeader("001", companyID, userLang, tenantID);
+		} else if (listType.equals("3")) {
+			//결재진행 문서
+			listString = getListHeader("003", companyID, userLang, tenantID);
+		} else {
+			listString = getListHeader("001", companyID, userLang, tenantID);
+		}
+
+		Document listXML = commonUtil.convertStringToDocument(listString);
+		
+		int hlength = listXML.getElementsByTagName("NAME").getLength();
+		
+		int totalCount = getAprDocListCount(listType, userID, deptID, userIDs, deptIDs, searchQuery, dueryData, companyID, tenantID, proxyList, searchMap);
+
+		int querySize = Integer.parseInt(pageSize) * Integer.parseInt(pageNum);
+        int querySize2 = totalCount - Integer.parseInt(pageSize) * (Integer.parseInt(pageNum) - 1);
+
+        if (querySize2 >= Integer.parseInt(pageSize)) {
+        	querySize2 = Integer.parseInt(pageSize);
+        }
+
+        resultXML.append("<DOCLIST>");
+		
+		String viewCompany = ezCommonService.getTenantConfig("viewCompany", tenantID);
+        
+		if (listType.equals("1")) {
+			orderOption1 = "StartDate ";
+       		orderOption2 = "StartDate desc ";
+		}
+		
+		String docList = getLateAprDocList(listType, userID, deptID, userIDs, querySize, querySize2, orderOption1, orderOption2, basicOrder, basicOrderReverse, searchQuery, dueryData, companyID, tenantID, proxyList, searchMap);
+		
+		Document docXML = commonUtil.convertStringToDocument(docList);
+		int dlength = docXML.getElementsByTagName("ROW").getLength();
+		
+		String fieldName = "";
+		String fieldValue = "";
+		String langData = commonUtil.getMultiData(userLang, tenantID);
+        String ApprovalFlag = ezCommonService.getTenantConfig("ApprovalFlag", tenantID);
+        
+		resultXML.append("<ROWS>");
+		
+		for (int k = dlength - 1; k >= 0; k--) {
+			resultXML.append("<ROW>");
+			
+			for (int p = 0; p < hlength; p++) {
+				fieldName = listXML.getElementsByTagName("COLNAME").item(p).getTextContent().toUpperCase();
+				
+				if (!fieldName.equals("COMPANYNAME") || (fieldName.equals("COMPANYNAME")&&viewCompany.equals("1"))) {
+					resultXML.append("<CELL>");
+					
+					if (fieldName.equals("FORMNAME") || fieldName.equals("WRITERNAME") || fieldName.equals("WRITERJOBTITLE") || fieldName.equals("WRITERDEPTNAME") || fieldName.equals("SENDERNAME")) {
+						fieldName = fieldName + langData;
+					}
+					
+					fieldValue = docXML.getElementsByTagName(fieldName).item(k).getTextContent();
+					
+                    resultXML.append("<VALUE>" + commonUtil.cleanValue(getListField(fieldName, fieldValue, companyID, userLang, tenantID, offSet)) + "</VALUE>");
+                    Map<String, Object> map = new HashMap<String, Object>();
+                    map.put("v_DOCID", docXML.getElementsByTagName("DOCID").item(k).getTextContent());
+                    map.put("companyID", docXML.getElementsByTagName("COMPANYID").item(k).getTextContent());
+                    map.put("v_TENANTID",tenantID);
+                    map.put("v_FLAG","ADDY");
+                    map.put("v_GongHoiRam","Y");
+                    map.put("userIDs", userIDs.replace("'", "").replace(" ", "").split(","));
+                    map.put("userId", userID);
+                    map.put("primeLang", primeLang);
+                    
+                    String opinionAddGB = ezApprovalGDAO.getOpinionAddGB(map);
+
+					if (p == 0) {
+						resultXML.append("<DATA1>" + docXML.getElementsByTagName("DOCID").item(k).getTextContent() + "</DATA1>");
+						resultXML.append("<DATA2>" + makeListField(docXML.getElementsByTagName("ORGDOCID").item(k).getTextContent()) + "</DATA2>");
+						resultXML.append("<DATA3>" + makeListField(docXML.getElementsByTagName("HREF").item(k).getTextContent()) + "</DATA3>");
+						resultXML.append("<DATA4>" + makeListField(docXML.getElementsByTagName("APRMEMBERID").item(k).getTextContent()) + "</DATA4>");
+                        if(!userLang.equals("2")) {
+                                resultXML.append("<DATA5><![CDATA[" + makeListField(docXML.getElementsByTagName("APRMEMBERNAME").item(k).getTextContent()) + "]]></DATA5>");
+                            } else {
+                                resultXML.append("<DATA5><![CDATA[" + makeListField(docXML.getElementsByTagName("APRMEMBERNAME2").item(k).getTextContent()) + "]]></DATA5>");
+                            }
+                        resultXML.append("<DATA6><![CDATA[" + makeListField(docXML.getElementsByTagName("APRMEMBERJOBTITLE").item(k).getTextContent()) + "]]></DATA6>");
+                        resultXML.append("<DATA7><![CDATA[" + makeListField(docXML.getElementsByTagName("APRMEMBERDEPTID").item(k).getTextContent()) + "]]></DATA7>");
+                        resultXML.append("<DATA8><![CDATA[" + makeListField(docXML.getElementsByTagName("APRMEMBERDEPTNAME").item(k).getTextContent()) + "]]></DATA8>");
+                        resultXML.append("<DATA17><![CDATA[" + makeListField(docXML.getElementsByTagName("APRMEMBERNAME2").item(k).getTextContent()) + "]]></DATA17>");
+                        resultXML.append("<DATA18><![CDATA[" + makeListField(docXML.getElementsByTagName("APRMEMBERJOBTITLE2").item(k).getTextContent()) + "]]></DATA18>");
+                        resultXML.append("<DATA19><![CDATA[" + makeListField(docXML.getElementsByTagName("APRMEMBERDEPTNAME2").item(k).getTextContent()) + "]]></DATA19>");
+                        
+                        if (docXML.getElementsByTagName("DOCSTATE").item(k).getTextContent().equals(staDSSuSin) && !listType.equals("3")) {
+                            resultXML.append("<DATA9>" + getAprDocListReceiveSN(docXML.getElementsByTagName("DOCID").item(k).getTextContent(), docXML.getElementsByTagName("APRMEMBERDEPTID").item(k).getTextContent(), companyID, tenantID) + "</DATA9>");
+                        } else {
+                            resultXML.append("<DATA9>" + "0" + "</DATA9>");
+                        }
+                            
+                        String formId = makeListField(docXML.getElementsByTagName("FORMID").item(k).getTextContent());
+                        
+                        resultXML.append("<DATA10>" + docXML.getElementsByTagName("FUNCTIONTYPE").item(k).getTextContent() + "</DATA10>");
+                        resultXML.append("<DATA11>" + docXML.getElementsByTagName("HASOPINIONYN").item(k).getTextContent() + "</DATA11>");
+                        resultXML.append("<DATA12>" + docXML.getElementsByTagName("DOCSTATE").item(k).getTextContent() + "</DATA12>");
+                        resultXML.append("<DATA13>" + makeListField(docXML.getElementsByTagName("WRITERDEPTID").item(k).getTextContent()) + "</DATA13>");
+                        resultXML.append("<DATA14>" + makeListField(docXML.getElementsByTagName("URGENTAPPROVAL").item(k).getTextContent()) + "</DATA14>");
+                        resultXML.append("<DATA15>" + makeListField(docXML.getElementsByTagName("DOCTYPE").item(k).getTextContent()) + "</DATA15>");
+                        resultXML.append("<DATA16>" + makeListField(docXML.getElementsByTagName("WRITERID").item(k).getTextContent()) + "</DATA16>");
+                        resultXML.append("<DATA17>" + formId + "</DATA17>");
+                        resultXML.append("<orgCompanyID><![CDATA[" + makeListField(docXML.getElementsByTagName("COMPANYID").item(k).getTextContent()) + "]]></orgCompanyID>");
+                        
+                        resultXML.append("<REFORMFLAG>" + (isReform(formId, companyID, tenantID) ? "Y" : "N") + "</REFORMFLAG>");
+                        resultXML.append("<APRMEMBERSN>" + makeListField(docXML.getElementsByTagName("APRMEMBERSN").item(k).getTextContent()) + "</APRMEMBERSN>");
+                        resultXML.append("<HASOPINIONYN>" + docXML.getElementsByTagName("HASOPINIONYN").item(k).getTextContent() + "</HASOPINIONYN>");
+                        resultXML.append("<ADDOPINION>" + opinionAddGB + "</ADDOPINION>");
+                    }
+					
+					if (fieldName.equals("HASATTACHYN")) {
+						resultXML.append("<HASATTACHYN>" + docXML.getElementsByTagName("HASATTACHYN").item(k).getTextContent() + "</HASATTACHYN>");
+					}
+					
+					if (fieldName.equals("ISPUBLIC")) {
+						resultXML.append("<ISPUBLIC>" + docXML.getElementsByTagName("ISPUBLIC").item(k).getTextContent() + "</ISPUBLIC>");
+					}
+                    
+                    if (listType.equals("3")) {
+                         String lines = "";
+                        if (ApprovalFlag.equalsIgnoreCase("G")) {
+                            map.put("code1", "A04");
+                        } else {
+                            map.put("code1", "SA04");
+                        }
+                        
+                        map.put("lang", userLang.equals("1") ? "1" : userLang);
+                        
+                        lines = aprDashBoardDoingList(map, docXML.getElementsByTagName("DOCID").item(k).getTextContent());
+                        resultXML.append(lines);
+                        resultXML.append("<IMGPATH>" + commonUtil.getUploadPath("upload_personal.PHOTO", tenantID) + "</IMGPATH>");
+                    }
+					resultXML.append("</CELL>");
+				}
+			}
+			resultXML.append("</ROW>");
+		}
+		
+		resultXML.append("</ROWS>");
+		resultXML.append("</DOCLIST>");
+        
+		logger.debug("aprDashBoardDocList ended.");
+		return resultXML.toString();
+	}
+    
+    public String getLateAprDocList(String listType, String userID, String deptID, String userIDs, int querySize, int querySize2, String orderOption1, String orderOption2, String basicOrder, String basicOrderReverse, String subQuery, Document dueryData, String companyID, int tenantID, List<ApprGProxyVO> proxyList, Map<String,Object> searchMap) throws Exception{
+		logger.debug("getLateAprDocList started.");
+		
+		String listTypeFlag = "false";
+		String isDoOrRejectFG = "false";
+		
+		String[] userIDArr = userIDs.replaceAll("'","").split(",");
+		
+		Map<Object, Object> map = new HashMap<Object, Object>();
+		map.put("v_LISTTYPE", listType);
+		map.put("v_USERID", userID);
+		map.put("deptID", deptID);
+		map.put("v_USERIDS", userIDArr);
+		map.put("v_PAGESIZE", querySize); 
+		map.put("v_PAGESIZE2", querySize2);
+		map.put("v_ORDEROPTION", orderOption1.trim());
+		map.put("v_ORDEROPTION2", orderOption2.trim());
+		map.put("v_BASICORDER", basicOrder);
+		map.put("v_BASICORDER2", basicOrderReverse);
+		map.put("v_SPSUBQUERY", subQuery.trim());
+		map.put("v_SPSUBQUERYLENGTH", subQuery.trim().length());
+		map.put("v_ORDEROPTIONLENGTH", orderOption1.length());
+		map.put("MineViewYN", ezCommonService.getTenantConfig("MineViewYN", tenantID));
+		map.put("proxyList", proxyList);
+		
+        searchMap.forEach(map::putIfAbsent);
+		
+		if (orderOption1 != null && orderOption1.length() != 0) {
+			map.put("v_ORDEROPTIONVALUE", orderOption1.substring(0,9).toLowerCase());
+		}
+        
+        map.put("v_ORDEROPTION2LENGTH", orderOption2.length());
+        
+        if (orderOption2 != null && orderOption2.length()!= 0) {
+			map.put("v_ORDEROPTION2VALUE", orderOption2.substring(0,9).toLowerCase());
+		}
+		
+		map.put("v_TENANTID", tenantID);
+		map.put("companyID", companyID);
+		
+        map.put("v_SDOCNO", "");
+        map.put("v_SDOCTITLE", "");
+        map.put("v_SWRITERNAME", "");
+        map.put("v_SWRITERDEPTNAME", "");
+        
+		if (listType.equals("1") || listType.equals("11") || listType.equals("24")) {
+			listTypeFlag = "true";
+		}
+		
+		map.put("v_LISTTYPEFLAG", listTypeFlag);
+		
+		/* 2023-03-17 양지혜 - 결재할문서와 반송된문서의 FUNCTIONTYPE(004) 조건만을 분기처리하기 위한 플래그 추가 */
+		if (listType.equals("1") || listType.equals("24")) {
+			isDoOrRejectFG = "true";
+		}
+
+		map.put("v_ISDOORREJECTFG", isDoOrRejectFG);
+
+		logger.debug("getAprDocList Param : v_LISTTYPE =" + listType + ", v_LISTTYPEFLAG=" + listTypeFlag + ", v_ISDOORREJECTFG=" + isDoOrRejectFG + ", v_USERID=" + userID + ", v_USERIDS=" + userIDs + ", v_PAGESIZE=" + querySize + ", v_PAGESIZE2=" + querySize2 +", v_ORDEROPTION=" + orderOption1 +", v_ORDEROPTION2=" + orderOption2 +", v_BASICORDER=" + basicOrder +", v_BASICORDER2=" + basicOrderReverse +", v_SPSUBQUERY=" + subQuery.trim() + ", v_TENANTID=" + tenantID);
+		List<ApprGDocListVO> apprGDocListVOList = ezApprovalGDAO.getDashBoardDocList(map);
+		
+		StringBuffer sb = new StringBuffer();
+        sb.append("<DATA>");
+        
+        for (int i = 0; i < apprGDocListVOList.size(); i++) {
+			sb.append(commonUtil.getQueryResult(apprGDocListVOList.get(i)));
+		}
+        
+		sb.append("</DATA>");
+		
+		logger.debug("getLateAprDocList ended.");
+
+		return sb.toString();
+	}
+    
+    private String aprDashBoardDoingList(Map<String, Object> param, String docId) throws Exception {
+		logger.debug("aprDashBoardDoingList started.");
+		
+		List<ApprGDocListVO> ret = new ArrayList<ApprGDocListVO>();
+		int index = 0;
+		boolean isUser = false;
+		
+		Iterator<ApprGDocListVO> it = ezApprovalGDAO.getDashBoardDoingLines(param).iterator();
+		Iterator<ApprGDocListVO> it2 = ezApprovalGDAO.getDashBoardDoingLines2(param).iterator();
+        
+		String subId = ((String[]) param.get("userIDs"))[0];
+        
+		StringBuffer resultXML = new StringBuffer();
+        resultXML.append("<LINES>");
+    
+        while (it.hasNext()) {
+            ApprGDocListVO vo = it.next();
+            ret.add(vo);
+            resultXML.append("<LINE1><DATA1><![CDATA[")
+                 .append(makeListField(vo.getAprType()))
+                 .append("]]></DATA1><DATA2><![CDATA[")
+                 .append(makeListField(vo.getAprState()))
+                 .append("]]></DATA2><DATA3><![CDATA[")
+                 .append(makeListField(vo.getAprMemberName()))
+                 .append("]]></DATA3><DATA4><![CDATA[")
+                 .append(makeListField(vo.getAprMemberJobTitle()))
+                 .append("]]></DATA4><DATA5><![CDATA[")
+                 .append(makeListField(vo.getAprMemberDeptName()))
+                 .append("]]></DATA5><DATA6><![CDATA[")
+                 .append(makeListField(vo.getProcessDate()))
+                 .append("]]></DATA6><DATA7><![CDATA[")
+                 .append(makeListField(vo.getExt1()))
+                 .append("]]></DATA7><DATA8><![CDATA[")
+                 .append(makeListField(vo.getExt2()))
+                 .append("]]></DATA8>")
+                 .append("</LINE1>");
+        }
+            
+        while (it2.hasNext()) {
+            ApprGDocListVO vo = it2.next();
+            ret.add(vo);
+            resultXML.append("<LINE2><DATA1><![CDATA[")
+                 .append(makeListField(vo.getAprType()))
+                 .append("]]></DATA1><DATA2><![CDATA[")
+                 .append(makeListField(vo.getAprState()))
+                 .append("]]></DATA2><DATA3><![CDATA[")
+                 .append(makeListField(vo.getAprMemberName()))
+                 .append("]]></DATA3><DATA4><![CDATA[")
+                 .append(makeListField(vo.getAprMemberJobTitle()))
+                 .append("]]></DATA4><DATA5><![CDATA[")
+                 .append(makeListField(vo.getAprMemberDeptName()))
+                 .append("]]></DATA5><DATA6><![CDATA[")
+                 .append(makeListField(vo.getProcessDate()))
+                 .append("]]></DATA6><DATA7><![CDATA[")
+                 .append(makeListField(vo.getExt1()))
+                 .append("]]></DATA7><DATA8><![CDATA[")
+                 .append(makeListField(vo.getExt2()))
+                 .append("]]></DATA8><DATA9><![CDATA[")
+                 .append(makeListField(vo.getAprMemberID()))
+                 .append("]]></DATA9><DATA10><![CDATA[")
+                 .append(makeListField(vo.getAprMemberDeptID()))
+                 .append("]]></DATA10>")
+                 .append("</LINE2>");
+            isUser = true;
+        }
+    
+        resultXML.append("</LINES>");
+    
+        logger.debug("aprDashBoardDoingList ended.");
+        return resultXML.toString();
+	}
 }

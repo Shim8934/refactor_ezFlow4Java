@@ -206,7 +206,7 @@
 		            
 		            var pAlertContent = "";
 		            
-		            if (userLang == "1" || userLang == "3") {
+		            if (userLang == "1" || userLang == "3" || userLang == "6") {
 			            pAlertContent = arr_userinfo[2] + "<spring:message code='ezApprovalG.t1721'/>" + "<br>" + tmpStartDate + "~" + tmpEndDate + "<br>" + "<spring:message code='ezApprovalG.t1723'/>" + "<br>" + " <spring:message code='ezApprovalG.t1724'/>";
 		            }
 		            else if (userLang == "2") {
@@ -228,7 +228,7 @@
 		        		
 		        		var pAlertContent = "";
 		        		
-			            if (userLang == "1" || userLang == "3") {
+			            if (userLang == "1" || userLang == "3" || userLang == "6") {
 				            pAlertContent = arr_userinfo[2] + "<spring:message code='ezApprovalG.t1721'/>" + "<br>" + tmpStartDate + "~" + tmpEndDate + "<br>" + "<spring:message code='ezApprovalG.t1723'/>" + "<br>" + " <spring:message code='ezApprovalG.t1724'/>";
 			            }
 			            else if (userLang == "2") {

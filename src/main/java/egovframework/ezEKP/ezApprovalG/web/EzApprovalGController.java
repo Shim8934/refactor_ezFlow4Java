@@ -219,7 +219,7 @@ public class EzApprovalGController extends EzFileMngUtil{
 	 * 전자결재G 메인화면 호출 Method
 	 */
 	@RequestMapping(value = "/ezApprovalG/apprGMain.do", method = RequestMethod.GET)
-	public String apprGMain(HttpServletRequest request, Model model, HttpServletResponse response){
+	public String apprGMain(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model, HttpServletResponse response){
 		logger.debug("apprGMain Started");
 		
 		int listType = 1;
@@ -240,6 +240,21 @@ public class EzApprovalGController extends EzFileMngUtil{
 			} catch (NumberFormatException e) {
 				width = 0;
 			}
+		}
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String dashBoard = "N";
+		try {
+			dashBoard = ezCommonService.getUserConfigInfo(userInfo.getTenantId(), userInfo.getId(), "dashBoard");
+		} catch (Exception e) {
+			dashBoard = "N";
+		}
+		
+		if (listType == 25) {
+			if (("N").equals(dashBoard)){
+				listType = 1;
+			} 
 		}
 		
 		model.addAttribute("listType", listType);
@@ -579,7 +594,7 @@ public class EzApprovalGController extends EzFileMngUtil{
 		/* 2023-08-04 민지수 - 부재자 설정값 다국어 처리 */
 		if (userInfo.getDeptID().equals(userRealDeptId) && userGetTitle.equals(userRealTitle) && !userLang.equals("2")) {
 			buJaeInfo = doc.getElementsByTagName("EXTENSIONATTRIBUTE5").item(0).getTextContent();
-		} else if (userInfo.getDeptID().equals(userRealDeptId) && userGetTitle.equals(userRealTitle2) && (userLang.equals("2") || userLang.equals("3"))) {
+		} else if (userInfo.getDeptID().equals(userRealDeptId) && userGetTitle.equals(userRealTitle2) && (userLang.equals("2") || userLang.equals("3")|| userLang.equals("6"))) {
 			buJaeInfo = doc.getElementsByTagName("EXTENSIONATTRIBUTE5").item(0).getTextContent();
 		} else {
 			//buJaeInfo = ezOrganService.getAddJobProxy(userInfo.getId(), userInfo.getDeptID(), userInfo.getTenantId());
@@ -1090,15 +1105,19 @@ public class EzApprovalGController extends EzFileMngUtil{
 		String susinAdmin = "user";
 		String result = "";
 		String nowDateTime = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), true);
+		String type = "";
+		if (request.getParameter("type") != null) {
+			type = request.getParameter("type");
+		}
 		
 		if (userInfo.getRollInfo() != null && userInfo.getRollInfo().indexOf("a=1") > -1 || ezOrganService.isProxyUser(userInfo.getTenantId(), userInfo.getId(), nowDateTime).equals("1")) {
 			susinAdmin = "admin";
 		}
 		
 		if (mode != null) {
-			result = ezApprovalGService.getWebPartList(listType, userInfo.getId(), userInfo.getDeptID(), "", "LEFT", susinAdmin, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset());
+			result = ezApprovalGService.getWebPartList(listType, userInfo.getId(), userInfo.getDeptID(), "", "LEFT", susinAdmin, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset(), type);
 		} else {
-			result = ezApprovalGService.getWebPartList(listType, userInfo.getId(), userInfo.getDeptID(), "", "COUNT", susinAdmin, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset());
+			result = ezApprovalGService.getWebPartList(listType, userInfo.getId(), userInfo.getDeptID(), "", "COUNT", susinAdmin, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset(), "");
 		}
 		
 		logger.debug("getListCount ended.");

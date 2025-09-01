@@ -2638,4 +2638,49 @@ public class EzPersonalController extends EzFileMngUtil {
 		logger.debug("addAutoSave ended");
 		return "OK";
 	}
+	
+	/**
+	 * 대시보드 설정 화면 호출 Method
+	 */
+	@RequestMapping(value = "/ezPersonal/manageDashBoardTab.do", method = RequestMethod.GET)
+	public String manageDashBoardTab(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req, Locale locale) throws Exception {
+		logger.debug("manageDashBoardTab started");
+
+		userInfo = commonUtil.userInfo(loginCookie);
+
+		String dashBoardFlag =  ezCommonService.getUserConfigInfo(userInfo.getTenantId(), userInfo.getId(), "dashBoard");
+		
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("dashBoardFlag", dashBoardFlag);
+		
+		logger.debug("manageDashBoardTab ended");
+		
+		return "/ezPersonal/persManageDashBoard";
+	}
+	
+	/**
+	 * 대시보드 설정 저장 Method
+	 */
+	@RequestMapping(value = "/ezPersonal/saveDashBoard.do", method = RequestMethod.POST, produces = "text/plain;charset=utf-8")
+	@ResponseBody
+	public String saveDashBoardTab(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception {
+		logger.debug("saveDashBoard started");
+
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String dashBoardVal = "N";
+		
+		if (request.getParameter("dashBoardVal") != null) {
+			dashBoardVal = request.getParameter("dashBoardVal");
+		};
+		
+		ezCommonService.deleteUserConfigInfo(userInfo.getTenantId(), userInfo.getId(), "dashBoard");
+		
+		if ("N".equals(dashBoardVal)) {
+			ezCommonService.insertUserConfigInfo(userInfo.getTenantId(), userInfo.getId(), "dashBoard", dashBoardVal);
+		} 
+		
+ 		logger.debug("saveDashBoard ended");
+		return "OK";
+	}
 }

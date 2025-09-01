@@ -36888,4 +36888,1360 @@
            AND COMPANYID = #companyID#
            AND DOCID = #v_DOCID#
     </delete>
+    
+    <select id="EzApprovalG.getDashBoardProGressDocCount" parameterClass="Map" resultClass="egovMap">
+		SELECT 
+			*
+		FROM (SELECT
+		          SUM(CASE WHEN
+						(A.APR = TRUE AND (A.APRSTATE = '002' OR A.APRSTATE = '005') AND A.APRTYPE != '015' AND A.functiontype != '004')
+					OR
+						(A.APR = FALSE AND A.APRTYPE = '007' AND (A.APRSTATE = '002' OR A.APRSTATE = '000' ) AND A.APRTYPE != '015' AND A.functiontype != '004')
+					THEN A.COUNT ELSE 0 END
+				) AS 'count1', 
+                SUM(CASE WHEN
+                        (A.APR = TRUE AND (A.APRSTATE = '002' OR A.APRSTATE = '005') AND A.APRTYPE != '015' AND A.functiontype = '004')
+                    OR
+                        (A.APR = FALSE AND A.APRTYPE = '007' AND (A.APRSTATE = '002' OR A.APRSTATE = '000' ) AND A.APRTYPE != '015' AND A.functiontype = '004')
+                    THEN A.COUNT ELSE 0 END
+                ) AS 'count24',
+                (
+                <![CDATA[
+                    SELECT 
+                        COUNT(DISTINCT VAPRWILLDOCLIST.DOCID, VAPRWILLDOCLIST.COMPANYID) 
+                    FROM 
+                        VAPRWILLDOCLIST
+                    LEFT OUTER JOIN
+                        TBL_APRDOCGROUPINFO GRP
+                    ON
+                        VAPRWILLDOCLIST.TENANT_ID = GRP.TENANT_ID
+                    AND
+                        VAPRWILLDOCLIST.COMPANYID = GRP.COMPANYID
+                    AND
+                        VAPRWILLDOCLIST.DOCID = GRP.DOCID
+                    WHERE 
+                        APRMEMBERID = #v_USERID# 
+                    AND 
+                        AprType != '015'
+                    AND 
+                        DocState != '017'
+                    AND
+                        FUNCTIONTYPE <> '004'
+                    ]]>    
+                  <isEqual property="MineViewYN" compareValue="YES">
+                    AND	    
+                        AprState != '001'
+                  </isEqual>
+                    AND
+                        VAPRWILLDOCLIST.TENANT_ID = #v_TENANTID#
+                        <![CDATA[
+                    AND 
+                        STARTDATE >= STR_TO_DATE(#v_STARTDATE#, '%Y-%m-%d %H:%i:%s') 
+                    AND 
+                        STARTDATE <= STR_TO_DATE(#v_ENDDATE#, '%Y-%m-%d %H:%i:%s')
+                        ]]>
+                    AND
+                        VAPRWILLDOCLIST.COMPANYID = #companyID#
+                    AND VAPRWILLDOCLIST.docid in
+                        (SELECT
+                            TA.docid
+                        FROM
+                            TBL_APRLINEINFO TA
+                        WHERE
+                            TA.aprmemberid = #v_USERID#
+                        AND
+                            TA.tenant_id = #v_TENANTID#
+                        AND
+                            companyid = #companyID#
+                        )
+                    AND
+                        IFNULL(GRP.TABSN, 1) = 1
+                    )
+                     AS 'count2', 
+                    (
+                        SELECT 
+                            COUNT(TBL_APRRECEIPTPROCESSINFO.DOCID) AS COUNT
+                        FROM 
+                            TBL_APRRECEIPTPROCESSINFO 
+                        INNER JOIN 
+                            TBL_APRDOCINFO 
+                        ON 
+                            TBL_APRRECEIPTPROCESSINFO.DOCID = TBL_APRDOCINFO.DOCID
+                        AND	
+                            TBL_APRRECEIPTPROCESSINFO.TENANT_ID = TBL_APRDOCINFO.TENANT_ID
+                        AND
+                            TBL_APRRECEIPTPROCESSINFO.COMPANYID = TBL_APRDOCINFO.COMPANYID
+                    <isEqual property="v_aprFlag" compareValue="G">
+                        LEFT JOIN 
+                            TBL_RECORD_TEMP
+                        ON 
+                            TBL_RECORD_TEMP.DOCID = TBL_APRDOCINFO.ORGDOCID
+                        AND 
+                            TBL_RECORD_TEMP.TENANT_ID = TBL_APRDOCINFO.TENANT_ID
+                        AND 
+                            TBL_RECORD_TEMP.COMPANYID = TBL_APRDOCINFO.COMPANYID
+                        AND 
+                            TBL_RECORD_TEMP.PROCESSDEPTCODE = TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID
+                    </isEqual>
+                        WHERE 
+                            TBL_APRRECEIPTPROCESSINFO.PROCESSYN != 'Y'
+                        AND 
+                        (
+                            (
+                                (TBL_APRRECEIPTPROCESSINFO.PROCESSORID = #v_USERID# 
+                                    AND 
+                                        <isEmpty property="upperDeptCode">TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID = #v_DEPTID#</isEmpty>
+                                        <isNotEmpty property="upperDeptCode">TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID = #upperDeptCode#</isNotEmpty>
+                                )
+                            AND
+                                (TBL_APRRECEIPTPROCESSINFO.APRSTATE = '012' OR TBL_APRRECEIPTPROCESSINFO.APRSTATE = '015' OR TBL_APRRECEIPTPROCESSINFO.APRSTATE = '011')
+                            )
+                            
+                    <isEqual property="v_USERFLAG" compareValue="admin">
+                        OR 
+                            (
+                                TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID 
+                                IN 
+                                <isEmpty property="upperDeptCode">
+                                    <iterate property="v_DEPTIDS" open="(" close=")" conjunction=",">
+                                        #v_DEPTIDS[]#
+                                    </iterate>
+                                </isEmpty>
+                                <isNotEmpty property="upperDeptCode">
+                                    <iterate property="upperDeptIDArr" open="(" close=")" conjunction=",">
+                                        #upperDeptIDArr[]#
+                                    </iterate>
+                                </isNotEmpty>
+                            AND 
+                                TBL_APRRECEIPTPROCESSINFO.APRSTATE IN ('011', '014', '015')
+                            AND
+                                (PROCESSORID = '' OR PROCESSORID IS NULL))
+                    </isEqual>
+                    <isEqual property="v_aprFlag" compareValue="G">
+                        OR
+                            (
+                                (TBL_APRDOCINFO.WRITERID = #v_USERID# AND TBL_APRDOCINFO.WRITERDEPTID = #v_DEPTID#) 
+                            AND
+                                <isEmpty property="upperDeptCode">
+                                    TBL_RECORD_TEMP.PROCESSDEPTCODE = #v_DEPTID#
+                                </isEmpty>
+                                <isNotEmpty property="upperDeptCode">
+                                    TBL_RECORD_TEMP.PROCESSDEPTCODE = #upperDeptCode#
+                                </isNotEmpty>
+                            AND
+                                (TBL_APRRECEIPTPROCESSINFO.PROCESSORID = #v_USERID# OR TBL_APRRECEIPTPROCESSINFO.PROCESSORID = '')
+                            AND
+                                TBL_APRRECEIPTPROCESSINFO.APRSTATE != '013'
+                            )
+                        OR
+                            (
+                                TBL_APRRECEIPTPROCESSINFO.PROCESSORID = #v_USERID#
+                            AND
+                                TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID IN
+                            <iterate property="v_DEPTIDS" open="(" close=")" conjunction=",">
+                                #v_DEPTIDS[]#
+                            </iterate>
+                            AND
+                                TBL_APRRECEIPTPROCESSINFO.APRSTATE = '012'
+                            )
+                     </isEqual>
+                         )
+                        AND (
+                            TBL_APRDOCINFO.FORMID != #v_RELAYFORMID#
+                            OR (
+                                TBL_APRDOCINFO.FORMID = #v_RELAYFORMID#
+                                AND TBL_APRRECEIPTPROCESSINFO.APRSTATE != '011'
+                            )
+                        )
+                     <![CDATA[
+                        AND 
+                            PROCESSDATE >= STR_TO_DATE(#v_STARTDATE#, '%Y-%m-%d %H:%i:%s')
+                        AND 
+                            PROCESSDATE <= STR_TO_DATE(#v_ENDDATE#, '%Y-%m-%d %H:%i:%s')
+                        AND	
+                            TBL_APRRECEIPTPROCESSINFO.TENANT_ID = #v_TENANTID#
+                    ]]>
+                        ) AS 'count4', <!---부서 수신함 -->
+		          <![CDATA[
+				SUM(CASE WHEN
+						((A.APR = TRUE AND (A.APRSTATE = '002' OR A.APRSTATE = '005') AND A.APRTYPE != '015' AND A.functiontype != '004')
+					OR
+						(A.APR = FALSE AND A.APRTYPE = '007' AND (A.APRSTATE = '002' OR A.APRSTATE = '000' ) AND A.APRTYPE != '015' AND A.functiontype != '004'))
+					AND A.STARTDATE BETWEEN DATE_ADD(UTC_TIMESTAMP(), INTERVAL -1 DAY)
+					AND UTC_TIMESTAMP()
+					THEN A.COUNT ELSE 0 END
+				) AS 'oneDay',
+				SUM(CASE WHEN
+						((A.APR = TRUE AND (A.APRSTATE = '002' OR A.APRSTATE = '005') AND A.APRTYPE != '015' AND A.functiontype != '004')
+					OR
+						(A.APR = FALSE AND A.APRTYPE = '007' AND (A.APRSTATE = '002' OR A.APRSTATE = '000' ) AND A.APRTYPE != '015' AND A.functiontype != '004'))
+					AND A.STARTDATE >= DATE_ADD(UTC_TIMESTAMP(), INTERVAL -2 DAY)
+					AND A.STARTDATE <  DATE_ADD(UTC_TIMESTAMP(), INTERVAL -1 DAY)
+					THEN A.COUNT ELSE 0 END
+				) AS 'twoDay',
+				SUM(CASE WHEN
+						((A.APR = TRUE AND (A.APRSTATE = '002' OR A.APRSTATE = '005') AND A.APRTYPE != '015' AND A.functiontype != '004')
+					OR
+						(A.APR = FALSE AND A.APRTYPE = '007' AND (A.APRSTATE = '002' OR A.APRSTATE = '000' ) AND A.APRTYPE != '015' AND A.functiontype != '004'))
+					AND A.STARTDATE >= DATE_ADD(UTC_TIMESTAMP(), INTERVAL -3 DAY)
+					AND A.STARTDATE <  DATE_ADD(UTC_TIMESTAMP(), INTERVAL -2 DAY)
+					THEN A.COUNT ELSE 0 END
+				) AS 'threeDay',
+				SUM(CASE WHEN
+						((A.APR = TRUE AND (A.APRSTATE = '002' OR A.APRSTATE = '005') AND A.APRTYPE != '015' AND A.functiontype != '004')
+					OR
+						(A.APR = FALSE AND A.APRTYPE = '007' AND (A.APRSTATE = '002' OR A.APRSTATE = '000' ) AND A.APRTYPE != '015' AND A.functiontype != '004'))
+					AND A.STARTDATE < DATE_ADD(UTC_TIMESTAMP(), INTERVAL -4 DAY)
+					THEN A.COUNT ELSE 0 END
+				) AS 'otherDay'
+				 ]]>
+		FROM (
+			SELECT
+				Z.DOCID,
+				Z.APRSTATE,
+				Z.FUNCTIONTYPE,
+				Z.APRTYPE,
+				Z.DOCSTATE,
+				Z.APRMEMBERSN,
+				Z.APRMEMBERID,
+				APR,
+				COUNT(Z.DOCID) COUNT,
+			    Z.STARTDATE
+			FROM
+			(SELECT
+			    D.`DOCID`,
+				L.`APRSTATE`,
+				D.`FUNCTIONTYPE`,
+				L.`APRTYPE`,
+				CASE WHEN L.`APRTYPE` = '007' AND  D.`DOCSTATE` = '002' THEN '017' ELSE D.DOCSTATE END AS DOCSTATE,
+				L.`APRMEMBERSN`,
+				L.`APRMEMBERID`,
+				TRUE AS APR,
+				D.STARTDATE
+			FROM
+				tbl_aprdocinfo D
+			JOIN 
+				tbl_aprlineinfo L 
+			ON
+				D.`DOCID` = L.`DOCID`
+			AND 
+				D.`TENANT_ID` = L.`TENANT_ID`
+			AND 
+				D.`COMPANYID` = L.`COMPANYID`
+			AND
+				L.APRSTATE IN ( '002', '005')	
+			LEFT OUTER JOIN
+				TBL_APRDOCGROUPINFO GRP
+			ON
+				D.TENANT_ID = GRP.TENANT_ID
+			AND
+				D.COMPANYID = GRP.COMPANYID
+			AND
+				D.DOCID = GRP.DOCID
+			WHERE
+				(
+					L.`APRMEMBERID` = #v_USERID#
+					<isNotEmpty property="proxyList">
+						OR 
+							(
+								L.`APRMEMBERID` IN 
+								<iterate property="proxyList" open="(" close=")" conjunction=",">
+									#proxyList[].id#
+								</iterate>
+							AND
+								L.aprmemberdeptid IN
+								<iterate property="proxyList" open="(" close=")" conjunction=",">
+									#proxyList[].dept#
+								</iterate>
+							AND
+								L.aprmemberjobtitle IN
+								<iterate property="proxyList" open="(" close=")" conjunction=",">
+									#proxyList[].title#
+								</iterate>
+							)
+					</isNotEmpty>
+				)
+			<![CDATA[
+				AND 
+					D.STARTDATE >= STR_TO_DATE(#v_STARTDATE#, '%Y-%m-%d %H:%i:%s') 
+				AND 
+					D.STARTDATE <= STR_TO_DATE(#v_ENDDATE#, '%Y-%m-%d %H:%i:%s')
+				AND 
+					D.STARTDATE IS NOT NULL	
+			]]>
+				
+				AND 
+					D.TENANT_ID = #v_TENANTID#
+				AND 
+					D.COMPANYID = #companyID#
+				AND
+					IFNULL(GRP.TABSN, 1) = 1
+				GROUP BY 
+				    D.DOCID,
+					L.`APRSTATE`,
+					D.`FUNCTIONTYPE`,
+					`DOCSTATE`
+		UNION ALL
+			SELECT
+				D.`DOCID`,
+				L.`APRSTATE`,
+				D.`FUNCTIONTYPE`,
+				L.`APRTYPE`,
+				CASE WHEN L.`APRTYPE` = '007' AND  D.`DOCSTATE` = '002' THEN '017' ELSE D.DOCSTATE END AS DOCSTATE,
+				L.`APRMEMBERSN`,
+				L.`APRMEMBERID`,
+				FALSE AS APR,
+				D.`STARTDATE`
+			FROM
+				tbl_endaprdocinfo D
+			JOIN 
+				tbl_endaprlineinfo L 
+			ON
+				D.`DOCID` = L.`DOCID`
+			AND 
+				D.`TENANT_ID` = L.`TENANT_ID`
+			AND 
+				D.`COMPANYID` = L.`COMPANYID`
+			JOIN 
+				tbl_expendaprdocinfo E 
+			ON
+				D.DOCID = E.DOCID
+			AND
+				D.TENANT_ID = E.TENANT_ID
+			AND
+				D.COMPANYID = E.COMPANYID
+			AND
+				L.APRSTATE = '002'
+			AND
+                L.APRTYPE IN ('007', '040')
+			LEFT OUTER JOIN
+				TBL_APRDOCGROUPINFO GRP
+			ON
+				D.TENANT_ID = GRP.TENANT_ID
+			AND
+				D.COMPANYID = GRP.COMPANYID
+			AND
+				D.DOCID = GRP.DOCID
+			WHERE
+				(
+					L.`APRMEMBERID` = #v_USERID#
+					<isNotEmpty property="proxyList">
+						OR 
+							(
+								L.`APRMEMBERID` IN 
+								<iterate property="proxyList" open="(" close=")" conjunction=",">
+									#proxyList[].id#
+								</iterate>
+							AND
+								L.aprmemberdeptid IN
+								<iterate property="proxyList" open="(" close=")" conjunction=",">
+									#proxyList[].dept#
+								</iterate>
+							AND
+							L.aprmemberjobtitle IN
+							<iterate property="proxyList" open="(" close=")" conjunction=",">
+								#proxyList[].title#
+							</iterate>
+							)
+					</isNotEmpty>
+				)
+			<![CDATA[
+				AND 
+					D.STARTDATE >= STR_TO_DATE(#v_STARTDATE#, '%Y-%m-%d %H:%i:%s') 
+				AND 
+					D.STARTDATE <= STR_TO_DATE(#v_ENDDATE#, '%Y-%m-%d %H:%i:%s')
+				AND 
+					D.STARTDATE IS NOT NULL	
+			]]>
+				AND 
+					D.TENANT_ID = #v_TENANTID#
+				AND 
+					D.COMPANYID = #companyID#
+				AND
+					IFNULL(GRP.TABSN, 1) = 1
+				GROUP BY
+					D.DOCID,
+					L.`APRSTATE`,
+					D.`FUNCTIONTYPE`,
+					`DOCSTATE`) Z 
+				GROUP BY
+					Z.DOCID
+					) A ) B
+	</select>
+    
+    <select id="EzApprovalG.getDashBoardDeptBox" parameterClass="Map" resultClass="ApprGReceiveDocVO" remapResults="true">
+		SELECT 
+		   * 
+		FROM (
+				SELECT  
+				    * 
+				 FROM ( 
+				<![CDATA[
+				SELECT 
+				   * 
+				FROM 
+					(SELECT 
+						TBL_APRDOCINFO.ORGDOCID,
+						TBL_APRDOCINFO.HREF, 
+						TBL_APRDOCINFO.HASOPINIONYN, 
+						TBL_APRDOCINFO.HASATTACHYN, 
+						TBL_APRDOCINFO.ISPUBLIC,
+						TBL_APRDOCINFO.DOCTYPE, 
+						TBL_APRDOCINFO.DOCTITLE, 
+						TBL_APRDOCINFO.WRITERDEPTID,
+						TBL_APRRECEIPTPROCESSINFO.DOCSTATE, 
+						TBL_APRRECEIPTPROCESSINFO.APRSTATE,
+						TBL_APRRECEIPTPROCESSINFO.SENTDEPTNAME, 
+						TBL_APRRECEIPTPROCESSINFO.SENTDEPTNAME2, 
+						TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID,
+						TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTNAME, 
+						TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTNAME2, 
+						TBL_APRRECEIPTPROCESSINFO.PROCESSDATE,
+						TBL_APRRECEIPTPROCESSINFO.RECEIVESN, 
+						TBL_APRRECEIPTPROCESSINFO.DOCID,
+						TBL_APRRECEIPTPROCESSINFO.PROCESSORID,
+						TBL_EXPAPRDOCINFO.FORMNAME, 
+						TBL_EXPAPRDOCINFO.FORMNAME2, 
+						TBL_EXPAPRDOCINFO.URGENTAPPROVAL,
+						CASE
+							WHEN	TBL_EXPAPRDOCINFO.SEPERATEATTACHXML	IS NULL	THEN	'N'
+							WHEN	TBL_EXPAPRDOCINFO.SEPERATEATTACHXML	= ''	THEN	'N'
+							ELSE	'Y'
+						END	AS	SEPERATEATTACHXML,
+						TBL_APRDOCINFO.COMPANYID,
+						TBL_APRDOCINFO.WRITERID,
+						TBL_APRDOCINFO.WRITERNAME,
+						TBL_APRDOCINFO.WRITERNAME2,
+						TBL_APRDOCINFO.FORMID,
+						TBL_APRDOCINFO.WRITERJOBTITLE,
+						TBL_APRDOCINFO.WRITERJOBTITLE2
+					]]>
+					 <isEqual property="assignChk" compareValue="Y">
+				    , TBL_APRRECEIPTPROCESSINFO.PROCESSORNAME as PROCESSORNAME
+				    , TBL_APRRECEIPTPROCESSINFO.PROCESSORNAME2 as PROCESSORNAME2
+                </isEqual>
+	      		FROM 
+	      			TBL_APRRECEIPTPROCESSINFO 
+	      		INNER JOIN 
+	      			TBL_APRDOCINFO 
+	      		ON 
+	      			TBL_APRRECEIPTPROCESSINFO.DOCID = TBL_APRDOCINFO.DOCID
+	      		AND
+	      			TBL_APRRECEIPTPROCESSINFO.TENANT_ID = TBL_APRDOCINFO.TENANT_ID
+	      		AND	
+	      			TBL_APRRECEIPTPROCESSINFO.COMPANYID = TBL_APRDOCINFO.COMPANYID
+	      		INNER JOIN 
+	      			TBL_EXPAPRDOCINFO 
+	      		ON 
+	      			TBL_EXPAPRDOCINFO.DOCID = TBL_APRDOCINFO.DOCID
+	      		AND
+	      			TBL_EXPAPRDOCINFO.TENANT_ID = TBL_APRDOCINFO.TENANT_ID
+	      		AND
+	      			TBL_EXPAPRDOCINFO.COMPANYID = TBL_APRDOCINFO.COMPANYID
+	      		LEFT JOIN 
+      				TBL_RECORD_TEMP
+               	ON 
+           			TBL_RECORD_TEMP.DOCID = TBL_APRDOCINFO.ORGDOCID
+               	AND 
+          			TBL_RECORD_TEMP.TENANT_ID = TBL_APRDOCINFO.TENANT_ID
+               	AND 
+           			TBL_RECORD_TEMP.COMPANYID = TBL_APRDOCINFO.COMPANYID
+               	AND 
+					TBL_RECORD_TEMP.PROCESSDEPTCODE = TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID
+	      		WHERE
+                <![CDATA[
+	      			TBL_APRRECEIPTPROCESSINFO.PROCESSYN <> 'Y'
+			    ]]>
+	      		AND ((
+	      		    <isNotEqual property="assignChk" compareValue="Y">
+                    (TBL_APRRECEIPTPROCESSINFO.PROCESSORID = #v_USERID# AND TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID = #v_DEPTID#)
+                    </isNotEqual>
+                    <isEqual property="assignChk" compareValue="Y">
+                        TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID = #v_DEPTID#
+                    </isEqual>
+	      		AND 
+	      			(TBL_APRRECEIPTPROCESSINFO.APRSTATE = '012' OR TBL_APRRECEIPTPROCESSINFO.APRSTATE = '015' OR TBL_APRRECEIPTPROCESSINFO.APRSTATE = '011'))
+	      		AND
+	      			TBL_APRRECEIPTPROCESSINFO.TENANT_ID = #v_TENANTID#
+	      		AND
+	      			TBL_APRRECEIPTPROCESSINFO.COMPANYID = #companyID#
+	      	<isEqual property="v_SUSINADMIN" compareValue="Y">
+	      		OR 
+	      			(TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID IN
+					<iterate property="v_DEPTIDS" open="(" close=")" conjunction=",">
+						<![CDATA[#v_DEPTIDS[]#]]>
+					</iterate>
+	         	AND 
+					TBL_APRRECEIPTPROCESSINFO.APRSTATE IN ('011', '014', '015')
+                
+				AND
+					(PROCESSORID = '' OR PROCESSORID IS NULL)
+                )
+            </isEqual>
+	      	<isEqual property="v_aprFlag" compareValue="G">
+		     	OR
+		     		((TBL_APRDOCINFO.WRITERID = #v_USERID# AND TBL_APRDOCINFO.WRITERDEPTID = #v_DEPTID#) 
+	     		AND
+		     		TBL_RECORD_TEMP.PROCESSDEPTCODE = #v_DEPTID#
+		     	AND
+		     		(TBL_APRRECEIPTPROCESSINFO.PROCESSORID = #v_USERID# OR TBL_APRRECEIPTPROCESSINFO.PROCESSORID = '')
+		     	AND
+		     		TBL_APRRECEIPTPROCESSINFO.APRSTATE != '013')
+                OR
+                    (TBL_APRRECEIPTPROCESSINFO.PROCESSORID = #v_USERID#
+                and
+                    TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTID IN
+                    <iterate property="v_DEPTIDS" open="(" close=")" conjunction=",">
+						#v_DEPTIDS[]#
+					</iterate>
+                and
+                    TBL_APRRECEIPTPROCESSINFO.APRSTATE = '012')
+		     </isEqual>
+	      		)
+	      	    AND (
+	      	        TBL_APRDOCINFO.FORMID != #v_RELAYFORMID#
+	      	        OR (
+	      	            TBL_APRDOCINFO.FORMID = #v_RELAYFORMID#
+	      	            AND TBL_APRRECEIPTPROCESSINFO.APRSTATE != '011'
+	      	        )
+	      	    )
+	      		<isEqual property="assignChk" compareValue="Y">
+                    AND TBL_APRRECEIPTPROCESSINFO.PROCESSORNAME != ''
+                </isEqual>
+                <isNotEmpty property="col_where_PROCESSDATE_START1" prepend="AND">
+                    <![CDATA[TBL_APRRECEIPTPROCESSINFO.PROCESSDATE >= STR_TO_DATE(#col_where_PROCESSDATE_START1#, '%Y-%m-%d %H:%i:%s')]]>
+                </isNotEmpty>
+                <isNotEmpty property="col_where_PROCESSDATE_END1" prepend="AND">
+                    <![CDATA[TBL_APRRECEIPTPROCESSINFO.PROCESSDATE <= STR_TO_DATE(#col_where_PROCESSDATE_END1#, '%Y-%m-%d %H:%i:%s')]]>
+                </isNotEmpty>
+				ORDER BY
+					PROCESSDATE DESC
+			<![CDATA[
+			LIMIT #v_PAGESIZE#
+			) C
+			 ) A 
+			]]>
+				ORDER BY
+					PROCESSDATE ASC
+			<![CDATA[
+			LIMIT  #v_PAGESIZE2#
+			) B 
+			]]>
+	</select>
+    
+    <select id="EzApprovalG.getDashBoardDocList" parameterClass="Map" resultClass="ApprGDocListVO" remapResults="true">
+        <isEqual property="v_LISTTYPEFLAG" compareValue="true">
+            <![CDATA[
+            SELECT 
+                * 
+            FROM (
+                SELECT 
+                    * 
+                FROM ( 
+                    SELECT 
+                        * 
+                    FROM  (
+                        SELECT
+                            *
+                        FROM (
+                                SELECT
+                                   *
+                                FROM 
+                                    ( SELECT 
+                                        VAPRDOINGDOCLIST.*
+                                      FROM 
+                                         VAPRDOINGDOCLIST 
+                                    ]]>
+                                    <isEqual property="v_ISDOORREJECTFG" compareValue="true">
+                                        LEFT OUTER JOIN
+                                            TBL_APRDOCGROUPINFO GRP
+                                        ON
+                                            VAPRDOINGDOCLIST.TENANT_ID = GRP.TENANT_ID
+                                        AND
+                                            VAPRDOINGDOCLIST.COMPANYID = GRP.COMPANYID
+                                        AND
+                                            VAPRDOINGDOCLIST.DOCID = GRP.DOCID
+                                    </isEqual>
+                                      WHERE 
+                                      <isEqual property="v_ISDOORREJECTFG" compareValue="true">
+                                         APRMEMBERID = #v_USERID#
+                                      </isEqual>
+                                      <![CDATA[
+                                      AND 
+                                         aprtype <> '015'
+                                      ]]>
+                                      <isEqual property="v_LISTTYPE" compareValue="1">
+                                      <![CDATA[
+                                      AND
+                                        FUNCTIONTYPE <> '004'
+                                      ]]>
+                                      </isEqual>
+                                        <![CDATA[
+                                      AND 
+                                         VAPRDOINGDOCLIST.tenant_id = #v_TENANTID#
+                                      AND
+                                        VAPRDOINGDOCLIST.COMPANYID = #companyID#
+                                        ]]>
+                                        <isEqual property="v_ISDOORREJECTFG" compareValue="true">
+                                        AND
+                                            IFNULL(GRP.TABSN, 1) = 1
+                                        GROUP BY
+                                            VAPRDOINGDOCLIST.DOCID
+                                        </isEqual>
+                                        ) AS T1
+                                        WHERE
+                                            1=1
+                                      <isGreaterThan property="v_SPSUBQUERYLENGTH"  compareValue="0" >
+                                          <isEqual property="docnoSearch" compareValue="1">
+                                              AND DOCNO LIKE CONCAT('%',#DOCNO#,'%')
+                                          </isEqual>
+                                          <isEqual property="doctitleSearch" compareValue="1">
+                                              AND DocTitle LIKE CONCAT('%',#DOCTITLE#,'%')
+                                          </isEqual>
+                                          <isEqual property="writerNameSearch" compareValue="1">
+                                              AND WRITERNAME2 LIKE CONCAT('%',#WRITERNAME#,'%')
+                                          </isEqual>
+                                          <isEqual property="writerNameSearch" compareValue="2">
+                                              AND WRITERNAME LIKE CONCAT('%',#WRITERNAME#,'%')
+                                          </isEqual>
+                                          <isEqual property="writerDeptNameSearch" compareValue="1">
+                                              AND WriterDeptName2 LIKE CONCAT('%',#WRITERDEPTNAME#,'%')
+                                          </isEqual>
+                                          <isEqual property="writerDeptNameSearch" compareValue="2">
+                                              AND WriterDeptName LIKE CONCAT('%',#WRITERDEPTNAME#,'%')
+                                          </isEqual>
+                                          <!-- 2024-04-24 홍승비 - 키워드 검색 시 리스트 타입에 따라 다른 테이블과 조건을 사용하며, 정상 동작하도록 분기 순서를 조정 (DOCID ~ IN 쿼리가 붙어있어야 함) -->
+                                          <isNotEqual property="v_LISTTYPE" compareValue="10">
+                                              <isEqual property="aprStartDateSearch" compareValue="4">
+                                                  <![CDATA[ AND STARTDATE >= STR_TO_DATE(#APRSTARTDATE#,'%Y-%m-%d %H:%i:%s') ]]>
+                                              </isEqual>
+                                              <isEqual property="aprEndDateSearch" compareValue="4">
+                                                  <![CDATA[ AND STARTDATE <= STR_TO_DATE(#APRENDDATE#,'%Y-%m-%d %H:%i:%s') ]]>
+                                              </isEqual>
+                                              <isEqual property="companyIdSeach" compareValue="2">
+                                                  AND COMPANYID = #searchCompanyID#
+                                              </isEqual>
+                                              <isEqual property="kaprSearch" compareValue="2">
+                                                  AND DOCID
+                                              </isEqual>
+                                          </isNotEqual>
+                                          <isNotEqual property="v_LISTTYPE" compareValue="21">
+                                              <isEqual property="keywordSearch" compareValue="2">
+                                                  IN (SELECT DOCID FROM TBL_EXPAPRDOCINFO WHERE KEYWORD LIKE CONCAT('%',#KEYWORD#,'%'))
+                                              </isEqual>
+                                          </isNotEqual>
+                                          <isEqual property="formIdSearch" compareValue="1">
+                                              AND FormID = #FORMID#
+                                          </isEqual>
+                                          <isEqual property="formNameSearch" compareValue="1">
+                                              AND (FORMNAME LIKE CONCAT('%',#FORMNAME#,'%') OR FORMNAME2 LIKE CONCAT('%',#FORMNAME#,'%'))
+                                          </isEqual>
+                                          <isEqual property="kendSearch" compareValue="1">
+                                              AND VAPRWILLDOCLIST.DOCID IN (SELECT DOCID FROM TBL_EXPENDAPRDOCINFO WHERE KEYWORD LIKE CONCAT('%',#KEYWORD#,'%'))
+                                          </isEqual>
+                                          <isEqual property="caprSearch" compareValue="1">
+                                              AND TBL_EXPENDAPRDOCINFO.itemcode = #itemCODE#
+                                          </isEqual>
+                                          <isEqual property="cendSearch" compareValue="1">
+                                              AND TBL_EXPAPRDOCINFO.itemcode = #itemCODE#
+                                          </isEqual>
+                                          <isEqual property="urgentSearch" compareValue="1">
+                                              AND URGENTAPPROVAL = #URGENTAPPROVAL#
+                                          </isEqual>
+                                          <isNotEmpty property="searchStatus">
+                                              <isNotEqual property="searchStatus" compareValue="ALL">
+                                                  AND FUNCTIONTYPE = #searchStatus#
+                                              </isNotEqual>
+                                          </isNotEmpty>
+                                     </isGreaterThan>
+                                     
+                                <![CDATA[
+                                UNION ALL
+                                        
+                                    SELECT
+                                        *
+                                    FROM (
+                                      SELECT 
+                                        VENDCHAMJODOCINFO.*
+                                ]]>
+                                      FROM 
+                                         VENDCHAMJODOCINFO 
+                                    <isEqual property="v_ISDOORREJECTFG" compareValue="true">
+                                        LEFT OUTER JOIN
+                                            TBL_APRDOCGROUPINFO GRP
+                                        ON
+                                            VENDCHAMJODOCINFO.TENANT_ID = GRP.TENANT_ID
+                                        AND
+                                            VENDCHAMJODOCINFO.COMPANYID = GRP.COMPANYID
+                                        AND
+                                            VENDCHAMJODOCINFO.DOCID = GRP.DOCID
+                                    </isEqual>
+                                      WHERE 
+                                      <isEqual property="v_ISDOORREJECTFG" compareValue="true">
+                                         APRMEMBERID = #v_USERID#
+                                      </isEqual>
+                                      <![CDATA[ 
+                                      AND 
+                                        aprtype <> '015'
+                                      ]]>
+                                        <isEqual property="v_LISTTYPE" compareValue="1">
+                                        <![CDATA[
+                                        AND
+                                            FUNCTIONTYPE <> '004'
+                                        ]]>
+                                        </isEqual>
+                                        <![CDATA[
+                                      AND 
+                                        VENDCHAMJODOCINFO.tenant_id = #v_TENANTID#
+                                      AND
+                                        VENDCHAMJODOCINFO.COMPANYID = #companyID#
+                                        ]]>
+                                    <isEqual property="v_ISDOORREJECTFG" compareValue="true">
+                                        AND
+                                            IFNULL(GRP.TABSN, 1) = 1
+                                        GROUP BY
+                                            VENDCHAMJODOCINFO.DOCID
+                                    </isEqual>
+                                    ) AS T2
+                                    WHERE
+                                        1=1
+                                    <isGreaterThan property="v_SPSUBQUERYLENGTH"  compareValue="0" >
+                                        <isEqual property="docnoSearch" compareValue="1">
+                                            AND DOCNO LIKE CONCAT('%',#DOCNO#,'%')
+                                        </isEqual>
+                                        <isEqual property="doctitleSearch" compareValue="1">
+                                            AND DocTitle LIKE CONCAT('%',#DOCTITLE#,'%')
+                                        </isEqual>
+                                        <isEqual property="writerNameSearch" compareValue="1">
+                                            AND WRITERNAME2 LIKE CONCAT('%',#WRITERNAME#,'%')
+                                        </isEqual>
+                                        <isEqual property="writerNameSearch" compareValue="2">
+                                            AND WRITERNAME LIKE CONCAT('%',#WRITERNAME#,'%')
+                                        </isEqual>
+                                        <isEqual property="writerDeptNameSearch" compareValue="1">
+                                            AND WriterDeptName2 LIKE CONCAT('%',#WRITERDEPTNAME#,'%')
+                                        </isEqual>
+                                        <isEqual property="writerDeptNameSearch" compareValue="2">
+                                            AND WriterDeptName LIKE CONCAT('%',#WRITERDEPTNAME#,'%')
+                                        </isEqual>
+                                        <isNotEqual property="v_LISTTYPE" compareValue="10">
+                                            <isEqual property="aprStartDateSearch" compareValue="4">
+                                                <![CDATA[ AND STARTDATE >= STR_TO_DATE(#APRSTARTDATE#,'%Y-%m-%d %H:%i:%s') ]]>
+                                            </isEqual>
+                                            <isEqual property="aprEndDateSearch" compareValue="4">
+                                                <![CDATA[ AND STARTDATE <= STR_TO_DATE(#APRENDDATE#,'%Y-%m-%d %H:%i:%s') ]]>
+                                            </isEqual>
+                                            <isEqual property="companyIdSeach" compareValue="2">
+                                                AND COMPANYID = #searchCompanyID#
+                                            </isEqual>
+                                            <isEqual property="kaprSearch" compareValue="2">
+                                                AND DOCID
+                                            </isEqual>
+                                        </isNotEqual>
+                                        <isNotEqual property="v_LISTTYPE" compareValue="21">
+                                            <isEqual property="keywordSearch" compareValue="2">
+                                                IN (SELECT DOCID FROM TBL_EXPAPRDOCINFO WHERE KEYWORD LIKE CONCAT('%',#KEYWORD#,'%'))
+                                            </isEqual>
+                                        </isNotEqual>
+                                        <isEqual property="formIdSearch" compareValue="1">
+                                            AND FormID = #FORMID#
+                                        </isEqual>
+                                        <isEqual property="formNameSearch" compareValue="1">
+                                            AND (FORMNAME LIKE CONCAT('%',#FORMNAME#,'%') OR FORMNAME2 LIKE CONCAT('%',#FORMNAME#,'%'))
+                                        </isEqual>
+                                        <isEqual property="kendSearch" compareValue="1">
+                                            AND VAPRWILLDOCLIST.DOCID IN (SELECT DOCID FROM TBL_EXPENDAPRDOCINFO WHERE KEYWORD LIKE CONCAT('%',#KEYWORD#,'%'))
+                                        </isEqual>
+                                        <isEqual property="caprSearch" compareValue="1">
+                                            AND TBL_EXPENDAPRDOCINFO.itemcode = #itemCODE#
+                                        </isEqual>
+                                        <isEqual property="cendSearch" compareValue="1">
+                                            AND TBL_EXPAPRDOCINFO.itemcode = #itemCODE#
+                                        </isEqual>
+                                        <isEqual property="urgentSearch" compareValue="1">
+                                            AND URGENTAPPROVAL = #URGENTAPPROVAL#
+                                        </isEqual>
+                                        <isNotEmpty property="searchStatus">
+                                            <isNotEqual property="searchStatus" compareValue="ALL">
+                                                AND FUNCTIONTYPE = #searchStatus#
+                                            </isNotEqual>
+                                        </isNotEmpty>
+                                    </isGreaterThan>
+                                <!-- 부재자설정한 유저의 결재할문서 리스트 -->
+                                <isEqual property="v_ISDOORREJECTFG" compareValue="true">
+                                <isNotEmpty property="proxyList">
+                                <iterate property="proxyList">
+                                UNION ALL
+                                
+                                SELECT
+                                    *
+                                FROM (
+                                    SELECT 
+                                        VAPRDOINGDOCLIST.*
+                                    FROM 
+                                        VAPRDOINGDOCLIST 
+                                    LEFT OUTER JOIN
+                                        TBL_APRDOCGROUPINFO GRP
+                                    ON
+                                        VAPRDOINGDOCLIST.TENANT_ID = GRP.TENANT_ID
+                                    AND
+                                        VAPRDOINGDOCLIST.COMPANYID = GRP.COMPANYID
+                                    AND
+                                        VAPRDOINGDOCLIST.DOCID = GRP.DOCID
+                                    WHERE 
+                                        APRMEMBERID = #proxyList[].id#
+                                    AND
+                                        APRMEMBERDEPTID = #proxyList[].dept#
+                                    AND
+                                        APRMEMBERJOBTITLE = #proxyList[].title#
+                                    <![CDATA[
+                                    AND 
+                                        APRTYPE <> '015'
+                                    ]]>
+                                    <isEqual property="v_LISTTYPE" compareValue="1">
+                                        <![CDATA[
+                                        AND
+                                            FUNCTIONTYPE <> '004'
+                                        ]]>
+                                    </isEqual>
+                                    <![CDATA[
+                                    AND
+                                        VAPRDOINGDOCLIST.TENANT_ID = #v_TENANTID#
+                                    AND
+                                        VAPRDOINGDOCLIST.COMPANYID = #companyID#
+                                    AND
+                                        IFNULL(GRP.TABSN, 1) = 1
+                                    GROUP BY
+                                        VAPRDOINGDOCLIST.DOCID
+                                ) AS T3
+                            ]]>
+                            WHERE
+                                1=1
+                            <isGreaterThan property="v_SPSUBQUERYLENGTH"  compareValue="0" >
+                                <isEqual property="docnoSearch" compareValue="1">
+                                    AND DOCNO LIKE CONCAT('%',#DOCNO#,'%')
+                                </isEqual>
+                                <isEqual property="doctitleSearch" compareValue="1">
+                                    AND DocTitle LIKE CONCAT('%',#DOCTITLE#,'%')
+                                </isEqual>
+                                <isEqual property="writerNameSearch" compareValue="1">
+                                    AND WRITERNAME2 LIKE CONCAT('%',#WRITERNAME#,'%')
+                                </isEqual>
+                                <isEqual property="writerNameSearch" compareValue="2">
+                                    AND WRITERNAME LIKE CONCAT('%',#WRITERNAME#,'%')
+                                </isEqual>
+                                <isEqual property="writerDeptNameSearch" compareValue="1">
+                                    AND WriterDeptName2 LIKE CONCAT('%',#WRITERDEPTNAME#,'%')
+                                </isEqual>
+                                <isEqual property="writerDeptNameSearch" compareValue="2">
+                                    AND WriterDeptName LIKE CONCAT('%',#WRITERDEPTNAME#,'%')
+                                </isEqual>
+                                <isEqual property="aprStartDateSearch" compareValue="4">
+                                    <![CDATA[ AND STARTDATE >= STR_TO_DATE(#APRSTARTDATE#,'%Y-%m-%d %H:%i:%s') ]]>
+                                </isEqual>
+                                <isEqual property="aprEndDateSearch" compareValue="4">
+                                    <![CDATA[ AND STARTDATE <= STR_TO_DATE(#APRENDDATE#,'%Y-%m-%d %H:%i:%s') ]]>
+                                </isEqual>
+                                <isEqual property="companyIdSeach" compareValue="2">
+                                    AND COMPANYID = #searchCompanyID#
+                                </isEqual>
+                                <isEqual property="keywordSearch" compareValue="2">
+                                    AND DOCID IN (SELECT DOCID FROM TBL_EXPAPRDOCINFO WHERE KEYWORD LIKE CONCAT('%',#KEYWORD#,'%'))
+                                </isEqual>
+                                <isEqual property="formIdSearch" compareValue="1">
+                                    AND FormID = #FORMID#
+                                </isEqual>
+                                <isEqual property="formNameSearch" compareValue="1">
+                                    AND (FORMNAME LIKE CONCAT('%',#FORMNAME#,'%') OR FORMNAME2 LIKE CONCAT('%',#FORMNAME#,'%'))
+                                </isEqual>
+                                <isEqual property="kendSearch" compareValue="1">
+                                    AND VAPRWILLDOCLIST.DOCID IN (SELECT DOCID FROM TBL_EXPENDAPRDOCINFO WHERE KEYWORD LIKE CONCAT('%',#KEYWORD#,'%'))
+                                </isEqual>
+                                <isEqual property="caprSearch" compareValue="1">
+                                    AND TBL_EXPENDAPRDOCINFO.itemcode = #itemCODE#
+                                </isEqual>
+                                <isEqual property="cendSearch" compareValue="1">
+                                    AND TBL_EXPAPRDOCINFO.itemcode = #itemCODE#
+                                </isEqual>
+                                <isEqual property="urgentSearch" compareValue="1">
+                                    AND URGENTAPPROVAL = #URGENTAPPROVAL#
+                                </isEqual>
+                                <isNotEmpty property="searchStatus">
+                                    <isNotEqual property="searchStatus" compareValue="ALL">
+                                        AND FUNCTIONTYPE = #searchStatus#
+                                    </isNotEqual>
+                                </isNotEmpty>
+                            </isGreaterThan>
+                            <![CDATA[
+                                UNION ALL
+                                
+                                SELECT
+                                    *
+                                FROM (
+                                    SELECT 
+                                        VENDCHAMJODOCINFO.*
+                                    FROM 
+                                        VENDCHAMJODOCINFO 
+                                    LEFT OUTER JOIN
+                                        TBL_APRDOCGROUPINFO GRP
+                                    ON
+                                        VENDCHAMJODOCINFO.TENANT_ID = GRP.TENANT_ID
+                                    AND
+                                        VENDCHAMJODOCINFO.COMPANYID = GRP.COMPANYID
+                                    AND
+                                        VENDCHAMJODOCINFO.DOCID = GRP.DOCID
+                                    WHERE 
+                                        APRMEMBERID = #proxyList[].id#
+                                    AND
+                                        APRMEMBERDEPTID = #proxyList[].dept#
+                                    AND
+                                        APRMEMBERJOBTITLE = #proxyList[].title#
+                                    AND 
+                                        APRTYPE <> '015'
+                            ]]>
+                                    <isEqual property="v_LISTTYPE" compareValue="1">
+                                        <![CDATA[
+                                        AND
+                                            FUNCTIONTYPE <> '004'
+                                        ]]>
+                                    </isEqual>
+                                <![CDATA[
+                                    AND
+                                        VENDCHAMJODOCINFO.TENANT_ID = #v_TENANTID#
+                                    AND
+                                        VENDCHAMJODOCINFO.COMPANYID = #companyID#
+                                    AND
+                                        IFNULL(GRP.TABSN, 1) = 1
+                                    GROUP BY
+                                        VENDCHAMJODOCINFO.DOCID
+                                ) AS T4
+                                WHERE
+                                    1 = 1
+                                ]]>
+                                    <isGreaterThan property="v_SPSUBQUERYLENGTH"  compareValue="0" >
+                                        <isEqual property="docnoSearch" compareValue="1">
+                                            AND DOCNO LIKE CONCAT('%',#DOCNO#,'%')
+                                        </isEqual>
+                                        <isEqual property="doctitleSearch" compareValue="1">
+                                            AND DocTitle LIKE CONCAT('%',#DOCTITLE#,'%')
+                                        </isEqual>
+                                        <isEqual property="writerNameSearch" compareValue="1">
+                                            AND WRITERNAME2 LIKE CONCAT('%',#WRITERNAME#,'%')
+                                        </isEqual>
+                                        <isEqual property="writerNameSearch" compareValue="2">
+                                            AND WRITERNAME LIKE CONCAT('%',#WRITERNAME#,'%')
+                                        </isEqual>
+                                        <isEqual property="writerDeptNameSearch" compareValue="1">
+                                            AND WriterDeptName2 LIKE CONCAT('%',#WRITERDEPTNAME#,'%')
+                                        </isEqual>
+                                        <isEqual property="writerDeptNameSearch" compareValue="2">
+                                            AND WriterDeptName LIKE CONCAT('%',#WRITERDEPTNAME#,'%')
+                                        </isEqual>
+                                        <isEqual property="aprStartDateSearch" compareValue="4">
+                                            <![CDATA[ AND STARTDATE >= STR_TO_DATE(#APRSTARTDATE#,'%Y-%m-%d %H:%i:%s') ]]>
+                                        </isEqual>
+                                        <isEqual property="aprEndDateSearch" compareValue="4">
+                                            <![CDATA[ AND STARTDATE <= STR_TO_DATE(#APRENDDATE#,'%Y-%m-%d %H:%i:%s') ]]>
+                                        </isEqual>
+                                        <isEqual property="companyIdSeach" compareValue="2">
+                                            AND COMPANYID = #searchCompanyID#
+                                        </isEqual>
+                                        <isEqual property="keywordSearch" compareValue="2">
+                                            AND DOCID IN (SELECT DOCID FROM TBL_EXPAPRDOCINFO WHERE KEYWORD LIKE CONCAT('%',#KEYWORD#,'%'))
+                                        </isEqual>
+                                        <isEqual property="formIdSearch" compareValue="1">
+                                            AND FormID = #FORMID#
+                                        </isEqual>
+                                        <isEqual property="formNameSearch" compareValue="1">
+                                            AND (FORMNAME LIKE CONCAT('%',#FORMNAME#,'%') OR FORMNAME2 LIKE CONCAT('%',#FORMNAME#,'%'))
+                                        </isEqual>
+                                        <isEqual property="kendSearch" compareValue="1">
+                                            AND VAPRWILLDOCLIST.DOCID IN (SELECT DOCID FROM TBL_EXPENDAPRDOCINFO WHERE KEYWORD LIKE CONCAT('%',#KEYWORD#,'%'))
+                                        </isEqual>
+                                        <isEqual property="caprSearch" compareValue="1">
+                                            AND TBL_EXPENDAPRDOCINFO.itemcode = #itemCODE#
+                                        </isEqual>
+                                        <isEqual property="cendSearch" compareValue="1">
+                                            AND TBL_EXPAPRDOCINFO.itemcode = #itemCODE#
+                                        </isEqual>
+                                        <isEqual property="urgentSearch" compareValue="1">
+                                            AND URGENTAPPROVAL = #URGENTAPPROVAL#
+                                        </isEqual>
+                                        <isNotEmpty property="searchStatus">
+                                            <isNotEqual property="searchStatus" compareValue="ALL">
+                                                AND FUNCTIONTYPE = #searchStatus#
+                                            </isNotEqual>
+                                        </isNotEmpty>
+                                    </isGreaterThan>
+                                    </iterate>
+                                    </isNotEmpty>
+                                    </isEqual>
+                                    
+                                     ) AS B
+    <!-- 				      				WHERE (DOCTYPE != '017' AND FUNCTIONTYPE != '004') -->
+                                    
+                        <isNotEmpty property="v_ORDEROPTION">
+                            <isEqual property="v_ORDEROPTION" compareValue="DocTitle desc">
+                                ORDER BY doctitle DESC, startdate DESC
+                            </isEqual>
+                            <isEqual property="v_ORDEROPTION" compareValue="DocTitle">
+                                ORDER BY doctitle, startdate DESC
+                            </isEqual>
+                            <isEqual property="v_ORDEROPTION" compareValue="WriterName desc">
+                                ORDER BY writername DESC, startdate DESC
+                            </isEqual>
+                            <isEqual property="v_ORDEROPTION" compareValue="WriterName">
+                                ORDER BY writername, startdate DESC
+                            </isEqual>
+                            <isEqual property="v_ORDEROPTION" compareValue="WriterDeptName desc">
+                                ORDER BY writerdeptname DESC, startdate DESC
+                            </isEqual>
+                            <isEqual property="v_ORDEROPTION" compareValue="WriterDeptName">
+                                ORDER BY writerdeptname, startdate DESC
+                            </isEqual>
+                            <isEqual property="v_ORDEROPTION" compareValue="StartDate desc">
+                                ORDER BY startdate DESC
+                            </isEqual>
+                            <isEqual property="v_ORDEROPTION" compareValue="StartDate">
+                                ORDER BY startdate
+                            </isEqual>
+                            <isEqual property="v_ORDEROPTION" compareValue="FunctionType desc">
+                                ORDER BY functiontype DESC, startdate DESC
+                            </isEqual>
+                            <isEqual property="v_ORDEROPTION" compareValue="FunctionType">
+                                ORDER BY functiontype, startdate DESC
+                            </isEqual>
+                            <isEqual property="v_ORDEROPTION" compareValue="FormName desc">
+                                ORDER BY formname DESC, startdate DESC
+                            </isEqual>
+                            <isEqual property="v_ORDEROPTION" compareValue="FormName">
+                                ORDER BY formname, startdate DESC
+                            </isEqual>
+                            <isEqual property="v_ORDEROPTION" compareValue="HASATTACHYN desc">
+                                ORDER BY hasattachyn DESC, startdate DESC
+                            </isEqual>
+                            <isEqual property="v_ORDEROPTION" compareValue="HASATTACHYN">
+                                ORDER BY hasattachyn, startdate DESC
+                            </isEqual>
+                            <isEqual property="v_ORDEROPTION" compareValue="ISPUBLIC desc">
+                                ORDER BY ispublic DESC, startdate DESC
+                            </isEqual>
+                            <isEqual property="v_ORDEROPTION" compareValue="ISPUBLIC">
+                                ORDER BY ispublic, startdate DESC
+                            </isEqual>
+                        </isNotEmpty>
+                        <isEmpty property="v_ORDEROPTION">
+                            <isNotEqual property="v_LISTTYPE" compareValue="10">
+                                <isEqual property="v_BASICORDER" compareValue="DESC">
+                                    ORDER BY startdate DESC
+                                </isEqual>
+                            </isNotEqual>
+                        </isEmpty>
+                        <![CDATA[
+                        LIMIT #v_PAGESIZE#
+                        )C  ) A 
+                        ]]>
+                        <isNotEmpty property="v_ORDEROPTION2">
+                            <isEqual property="v_ORDEROPTION2" compareValue="DocTitle desc">
+                                ORDER BY doctitle DESC, startdate
+                            </isEqual>
+                            <isEqual property="v_ORDEROPTION2" compareValue="DocTitle">
+                                ORDER BY doctitle, startdate
+                            </isEqual>
+                            <isEqual property="v_ORDEROPTION2" compareValue="WriterName desc">
+                                ORDER BY writername DESC, startdate
+                            </isEqual>
+                            <isEqual property="v_ORDEROPTION2" compareValue="WriterName">
+                                ORDER BY writername, startdate
+                            </isEqual>
+                            <isEqual property="v_ORDEROPTION2" compareValue="WriterDeptName desc">
+                                ORDER BY writerdeptname DESC, startdate
+                            </isEqual>
+                            <isEqual property="v_ORDEROPTION2" compareValue="WriterDeptName">
+                                ORDER BY writerdeptname, startdate
+                            </isEqual>
+                            <isEqual property="v_ORDEROPTION2" compareValue="StartDate desc">
+                                ORDER BY startdate DESC
+                            </isEqual>
+                            <isEqual property="v_ORDEROPTION2" compareValue="StartDate">
+                                ORDER BY startdate
+                            </isEqual>
+                            <isEqual property="v_ORDEROPTION2" compareValue="FunctionType desc">
+                                ORDER BY functiontype DESC, startdate
+                            </isEqual>
+                            <isEqual property="v_ORDEROPTION2" compareValue="FunctionType">
+                                ORDER BY functiontype, startdate
+                            </isEqual>
+                            <isEqual property="v_ORDEROPTION2" compareValue="FormName desc">
+                                ORDER BY formname DESC, startdate
+                            </isEqual>
+                            <isEqual property="v_ORDEROPTION2" compareValue="FormName">
+                                ORDER BY formname, startdate
+                            </isEqual>
+                            <isEqual property="v_ORDEROPTION2" compareValue="HASATTACHYN desc">
+                                ORDER BY hasattachyn DESC, startdate
+                            </isEqual>
+                            <isEqual property="v_ORDEROPTION2" compareValue="HASATTACHYN">
+                                ORDER BY hasattachyn, startdate
+                            </isEqual>
+                            <isEqual property="v_ORDEROPTION2" compareValue="ISPUBLIC desc">
+                                ORDER BY ispublic DESC, startdate
+                            </isEqual>
+                            <isEqual property="v_ORDEROPTION2" compareValue="ISPUBLIC">
+                                ORDER BY ispublic, startdate
+                            </isEqual>
+                        </isNotEmpty>
+                        <isEmpty property="v_ORDEROPTION2">
+                            <isNotEqual property="v_LISTTYPE" compareValue="10">
+                                <isNotEqual property="v_BASICORDER2" compareValue="DESC">
+                                    ORDER BY startdate
+                                </isNotEqual>
+                            </isNotEqual>
+                        </isEmpty>
+                        <![CDATA[
+                        LIMIT #v_PAGESIZE2#
+                        )D
+                        ]]>
+        </isEqual>
+        <isEqual property="v_LISTTYPE" compareValue="3">
+        <![CDATA[
+            SELECT
+                * FROM (
+                SELECT
+                    *
+                FROM ( 
+                    SELECT DISTINCT
+                        T1.DOCID, 
+                        T1.FORMID, 
+                        T1.ORGDOCID,
+                        T1.DOCTYPE,
+                        T1.DOCSTATE, 
+                        T1.FUNCTIONTYPE,
+                        T1.HREF, 
+                        T1.DOCTITLE, 
+                        T1.DOCNO, 
+                        T1.HASATTACHYN, 
+                        T1.HASOPINIONYN, 
+                        T1.STARTDATE, 
+                        T1.ENDDATE, 
+                        T1.WRITERID, 
+                        T1.WRITERNAME, 
+                        T1.WRITERNAME2,
+                        T1.WRITERJOBTITLE, 
+                        T1.WRITERJOBTITLE2, 
+                        T1.WRITERDEPTID, 
+                        T1.WRITERDEPTNAME, 
+                        T1.WRITERDEPTNAME2, 
+                        T1.ISPUBLIC, 
+                        T1.FORMNAME, 
+                        T1.FORMNAME2, 
+                        T1.URGENTAPPROVAL,
+                        T1.COMPANYID,
+                        T1.COMPANYNAME,
+                        T1.COMPANYNAME2
+                    FROM 
+                        VAPRWILLDOCLIST T1
+                    INNER JOIN
+                        TBL_APRLINEINFO T2
+                    ON
+                        T1.DOCID = T2.DOCID
+                    AND
+                        T1.TENANT_ID = T2.TENANT_ID
+                    AND
+                        T1.COMPANYID = T2.COMPANYID
+                    AND
+                        T2.APRMEMBERID = #v_USERID#
+                    LEFT OUTER JOIN
+                        TBL_APRDOCGROUPINFO T3
+                    ON
+                        T1.TENANT_ID = T3.TENANT_ID
+                    AND
+                        T1.COMPANYID = T3.COMPANYID
+                    AND
+                        T1.DOCID = T3.DOCID
+                    WHERE 
+                        T1.APRMEMBERID = #v_USERID# 
+                    AND
+                        T1.TENANT_ID = #v_TENANTID#
+                    AND
+                        T1.COMPANYID = #companyID#
+                    ]]>
+                    <isEqual property="MineViewYN" compareValue="YES">            
+                        AND	    
+                            T1.AprState != '001'
+                    </isEqual>
+                    <![CDATA[
+                        AND
+                            T1.AprType <> '015'
+                        AND
+                            T1.FUNCTIONTYPE <> '004'
+                        AND
+                            IFNULL(T3.TABSN, 1) = 1
+                        AND 
+                            STARTDATE >= STR_TO_DATE(#APRSTARTDATE#,'%Y-%m-%d %H:%i:%s')
+                        AND 
+                            STARTDATE <= STR_TO_DATE(#APRENDDATE#,'%Y-%m-%d %H:%i:%s')
+                        AND T1.DOCID NOT IN (
+                            SELECT 
+                                DOCID 
+                            FROM
+                                TBL_APRLINEINFO
+                            WHERE 
+                                TENANT_ID = #v_TENANTID#
+                            AND
+                                COMPANYID = #companyID#
+                            AND
+                                AprType IN ('011', '012')
+                        )
+                        ORDER BY 
+                            T1.STARTDATE DESC
+                        LIMIT #v_PAGESIZE#
+                    ) AS LIST3
+                    ORDER BY 
+                        STARTDATE ASC
+                    LIMIT #v_PAGESIZE2#
+                ) AS RESULT
+            ]]>
+        </isEqual>
+    </select>
+    
+    <select id="EzApprovalG.getDashBoardDoingLines" parameterClass="Map" resultClass="ApprGDocListVO" remapResults="true">
+		<![CDATA[
+			SELECT L1.*
+            FROM (
+                SELECT
+                    LINEINFO.aprmembersn AS aprmembersn,
+                            LINEINFO.aprstate AS aprstate,
+                            CASE #lang#
+                                WHEN '2' THEN CODEINFO.NAME2
+                                WHEN '3' THEN CODEINFO.NAME3
+                                WHEN '4' THEN CODEINFO.NAME4
+                                WHEN '6' THEN CODEINFO.NAME6
+                                ELSE CODEINFO.NAME
+                            END AS ext1,
+                            CODEINFO.name2 AS name2,
+                            CODEINFO.name3 AS name3,
+                            CODEINFO.name4 AS name4,
+                            CODEINFO.name6 AS name6,
+                            CASE #primeLang#
+                                WHEN '2' THEN LINEINFO.aprmembername2
+                                ELSE LINEINFO.aprmembername
+                            END AS aprmembername,
+                            CASE #primeLang#
+                                WHEN '2' THEN LINEINFO.aprmemberdeptname2
+                                ELSE LINEINFO.aprmemberdeptname
+                            END AS aprmemberdeptname,
+                            USER.extensionattribute2 AS ext2,
+                            LINEINFO.aprtype,
+                            CASE #primeLang#
+                                WHEN '2' THEN LINEINFO.aprmemberjobtitle2
+                                ELSE LINEINFO.aprmemberjobtitle
+                            END AS aprmemberjobtitle,
+                            LINEINFO.processdate AS processdate,
+                            LINEINFO.aprmemberid,
+                            LINEINFO.aprmemberdeptid
+                FROM 
+                    TBL_APRLINEINFO LINEINFO
+                JOIN 
+                    TBL_CODELIST CODEINFO
+                    ON LINEINFO.tenant_id = CODEINFO.tenant_id
+                   AND LINEINFO.companyid = CODEINFO.companyid
+                   AND LINEINFO.aprstate = CODEINFO.code2
+               JOIN
+                        TBL_USERMASTER AS USER
+                    ON
+                        LINEINFO.tenant_id = USER.tenant_id
+                    AND
+                        LINEINFO.companyid = USER.physicaldeliveryofficename
+                    AND
+                        LINEINFO.aprmemberid = USER.cn
+                WHERE 
+                    LINEINFO.docid = #v_DOCID#
+              AND LINEINFO.tenant_id = #v_TENANTID#
+              AND LINEINFO.companyid = #companyID#
+              AND CODEINFO.code1 = #code1#
+            ) L1
+            JOIN (
+                SELECT aprmembersn
+                FROM TBL_APRLINEINFO
+                WHERE docid = #v_DOCID#
+              AND tenant_id = #v_TENANTID#
+              AND companyid = #companyID#
+              AND aprstate = '003'
+            ) L2
+            ON L1.aprmembersn = L2.aprmembersn
+            ORDER BY L1.aprmembersn desc
+            limit 1
+		]]>
+	</select>
+    
+    <select id="EzApprovalG.getDashBoardDoingLines2" parameterClass="Map" resultClass="ApprGDocListVO" remapResults="true">
+		<![CDATA[
+			SELECT L1.*
+            FROM (
+                SELECT
+                    LINEINFO.aprmembersn AS aprmembersn,
+                            LINEINFO.aprstate AS aprstate,
+                            CASE #lang#
+                                WHEN '2' THEN CODEINFO.NAME2
+                                WHEN '3' THEN CODEINFO.NAME3
+                                WHEN '4' THEN CODEINFO.NAME4
+                                WHEN '6' THEN CODEINFO.NAME6
+                                ELSE CODEINFO.NAME
+                            END AS ext1,
+                            CODEINFO.name2 AS name2,
+                            CODEINFO.name3 AS name3,
+                            CODEINFO.name4 AS name4,
+                            CODEINFO.name6 AS name6,
+                            CASE #primeLang#
+                                WHEN '2' THEN LINEINFO.aprmembername2
+                                ELSE LINEINFO.aprmembername
+                            END AS aprmembername,
+                            CASE #primeLang#
+                                WHEN '2' THEN LINEINFO.aprmemberdeptname2
+                                ELSE LINEINFO.aprmemberdeptname
+                            END AS aprmemberdeptname,
+                            USER.extensionattribute2 AS ext2,
+                            LINEINFO.aprtype,
+                            CASE #primeLang#
+                                WHEN '2' THEN LINEINFO.aprmemberjobtitle2
+                                ELSE LINEINFO.aprmemberjobtitle
+                            END AS aprmemberjobtitle,
+                            LINEINFO.processdate AS processdate,
+                            LINEINFO.aprmemberid,
+                            LINEINFO.aprmemberdeptid
+                FROM 
+                    TBL_APRLINEINFO LINEINFO
+                JOIN 
+                    TBL_CODELIST CODEINFO
+                    ON LINEINFO.tenant_id = CODEINFO.tenant_id
+                   AND LINEINFO.companyid = CODEINFO.companyid
+                   AND LINEINFO.aprstate = CODEINFO.code2
+               JOIN
+                        TBL_USERMASTER AS USER
+                    ON
+                        LINEINFO.tenant_id = USER.tenant_id
+                    AND
+                        LINEINFO.companyid = USER.physicaldeliveryofficename
+                    AND
+                        LINEINFO.aprmemberid = USER.cn
+                WHERE 
+                    LINEINFO.docid = #v_DOCID#
+              AND LINEINFO.tenant_id = #v_TENANTID#
+              AND LINEINFO.companyid = #companyID#
+              AND CODEINFO.code1 = #code1#
+            ) L1
+            JOIN (
+                SELECT aprmembersn
+                FROM TBL_APRLINEINFO
+                WHERE docid = #v_DOCID#
+              AND tenant_id = #v_TENANTID#
+              AND companyid = #companyID#
+              AND aprstate = '002'
+            ) L2
+            ON L1.aprmembersn = L2.aprmembersn
+            ORDER BY L1.aprmembersn
+            limit 1
+		]]>
+	</select>
 </sqlMap>

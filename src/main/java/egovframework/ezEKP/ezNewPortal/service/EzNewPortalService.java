@@ -175,7 +175,7 @@ public interface EzNewPortalService {
 	public void udpateMenuOrder(JSONArray menus, String companyId, int tenantId) throws Exception;
 	
 	public Map<String, Object> getApprovalStatistics(String userId, String companyId, int tenantId) throws Exception;
-	public JSONObject getApprovalList(String userId, String companyId, int tenantId, String offset, String type, String approvalFlag, String lang) throws Exception;
+	public JSONObject getApprovalList(String userId, String companyId, int tenantId, String offset, String type, String approvalFlag, String lang, String primary) throws Exception;
 	/** -------------------- */
 	
 	/**

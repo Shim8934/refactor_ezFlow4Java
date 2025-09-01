@@ -86,7 +86,7 @@ public interface EzApprovalGService {
 
     public String getOpinionInfo(String docID, String mode, String sortHeader, String sortOption, String companyID, String lang, int tenantID, String offset) throws Exception;
 
-    public String getWebPartList(String listType, String userID, String deptID, String listCount, String mode, String userFlag, String companyID, String lang, int tenantID, String offset) throws Exception;
+    public String getWebPartList(String listType, String userID, String deptID, String listCount, String mode, String userFlag, String companyID, String lang, int tenantID, String offset, String type) throws Exception;
     
     public String getDocType(String selected, String companyID, String lang, int tenantID, Locale locale, String approvalFlag) throws Exception;
 
@@ -1042,4 +1042,10 @@ public interface EzApprovalGService {
     public String getDocAprLine(String docID, String aprMemberSN, String userID, String docState, String companyID, int tenantID) throws Exception;
 
     public String getDocAprState(String docID, String aprMemberSN, String userID, String companyID, int tenantID) throws Exception;
+    
+    public String getDeptBoxList(String userID, String deptID, String receiveDocMode, String pageSize, String pageNum, String orderCell, String orderOption, String companyID, String userLang,
+									Map<String, Object> searchQueryMap, int tenantID, String offset, String assignChk, String userPrimary) throws Exception;
+    
+    public String aprDashBoardDocList(String listType, String userID, String deptID, String pageSize, String pageNum, String orderCell, String orderOption, String companyID, String userLang, String searchQuery, Document dueryData, int tenantID, String offSet, Map<String, Object> searchMap, String primeLang) throws Exception;
+
 }

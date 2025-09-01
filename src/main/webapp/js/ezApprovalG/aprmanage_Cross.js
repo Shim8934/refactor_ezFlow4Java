@@ -690,7 +690,7 @@ function DisplayWaitStat() {
     }
 }
 
-function getAprLine(tr) {
+function getAprLine(tr, mainPageType) {
     var pDocID,pMode = "",pFlag = "";
     var orgCompanyID = GetAttribute(tr, "orgCompanyID");
     
@@ -750,18 +750,23 @@ function getAprLine(tr) {
 				orgCompanyID : orgCompanyID
 				},
 		success: function(xml){
-			getAprovSub_after(xml);
+			getAprovSub_after(xml, mainPageType);
 		}        			
 	});
     
 }
 
-function getAprovSub_after(xml) {
-    if (document.getElementById("lvAprLine").innerHTML != "") document.getElementById("lvAprLine").innerHTML = "";
-    if (xml == "NOTPERMISSION") {
-        document.getElementById("lvAprLine").innerHTML = "<img src='/images/warning02.gif' width='120' height='100'><h1>" + strLang929 + "</h1>";
-        document.getElementById("lvAprLine").style.textAlign = "center";
-        return;
+function getAprovSub_after(xml, type) {
+    if (!type) {
+        if (document.getElementById("lvAprLine").innerHTML != "") {
+            document.getElementById("lvAprLine").innerHTML = "";
+        }
+    
+        if (xml == "NOTPERMISSION") {
+            document.getElementById("lvAprLine").innerHTML = "<img src='/images/warning02.gif' width='120' height='100'><h1>" + strLang929 + "</h1>";
+            document.getElementById("lvAprLine").style.textAlign = "center";
+            return;
+        }
     }
 
 
@@ -784,10 +789,16 @@ function getAprovSub_after(xml) {
     AprLine.SetID("AprLine");
     AprLine.SetMulSelectable(false);
 //    AprLine.SetTitleIdx(arrySubTab[1]);
-    AprLine.SetRowOnDblClick("lvAprLine_DBSelChange");
+    if (type == "dash") {
+        AprLine.SetRowOnDblClick("lvAprLine_DBSelChange2");
+    } else {
+        AprLine.SetRowOnDblClick("lvAprLine_DBSelChange");
+    }
     AprLine.SetRowOnClick("lvAprLine_SelChange");
     AprLine.DataSource(xmlDoc);
-    AprLine.DataBind("lvAprLine");
+    if (type != "dash") {
+        AprLine.DataBind("lvAprLine");
+    }
 
     if (AprLine.GetRowCount() > 0) {
         //document.getElementById("tbtnUserInfo").style.display = "";

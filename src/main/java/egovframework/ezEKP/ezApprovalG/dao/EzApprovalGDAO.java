@@ -4112,4 +4112,23 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	public void deleteFailDocID(Map<String, Object> map) throws Exception {
 		delete("EzApprovalG.deleteFailDocID", map);
 	}
+	public Map<String, Object> getDashBoardProGressDocCount(Map<String, Object> map) throws Exception{
+		return (Map<String, Object>) select("EzApprovalG.getDashBoardProGressDocCount", map);
+	}
+	
+	public List<ApprGReceiveDocVO> getDashBoardDeptBox(Map<String, Object> map) throws Exception{
+		return (List<ApprGReceiveDocVO>) list("EzApprovalG.getDashBoardDeptBox", map);
+	}
+	
+	public List<ApprGDocListVO> getDashBoardDocList(Map<Object, Object> map) throws Exception{
+		return (List<ApprGDocListVO>) list("EzApprovalG.getDashBoardDocList", map);
+	}
+	
+	public List<ApprGDocListVO> getDashBoardDoingLines(Map<String, Object> map) throws Exception {
+		return (List<ApprGDocListVO>) list("EzApprovalG.getDashBoardDoingLines", map);
+	}
+	
+	public List<ApprGDocListVO> getDashBoardDoingLines2(Map<String, Object> map) throws Exception {
+		return (List<ApprGDocListVO>) list("EzApprovalG.getDashBoardDoingLines2", map);
+	}
 }

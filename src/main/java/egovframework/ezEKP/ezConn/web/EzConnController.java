@@ -406,7 +406,7 @@ public class EzConnController {
             response.setHeader("P3P", "CP=\"Potato\"");
 
             if (tabmenu.equals("approval")) {
-                resultPage = "/ezApprovalG/apprGMain.do";
+                resultPage = "/ezApprovalG/apprGMain.do?listType=25";
             } else if (tabmenu.equals("board")) {
                 resultPage ="/ezBoard/boardMain.do";
             } else if (tabmenu.equals("orgChart")) {
