@@ -3735,7 +3735,6 @@ CREATE TABLE `tbl_board_boardinfo` (
   `ALLNEWBOARDFLAG` char(1) DEFAULT 'Y',
   `WRITERFLAG` varchar(2) DEFAULT 'N',
   `STARRATINGFLAG` varchar(1) DEFAULT NULL,
-  `NOTUSEDFLAG` varchar(2) NOT NULL DEFAULT 'N',
   `URLCOPYFLAG` char(1) DEFAULT 'N',
   PRIMARY KEY (`BOARDID`,`TENANT_ID`),
   KEY `idx_companyid` (`COMPANYID`)
