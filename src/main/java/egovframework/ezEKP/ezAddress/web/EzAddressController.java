@@ -2226,20 +2226,20 @@ public class EzAddressController{
 		CSVWriter csvWriter = null;
 		
 		try {
-//			String charset = "euc-kr";
-//			
-//			if (userInfo.getLang().equals("3")) {
-//				charset = "shift-jis";
-//			}
-//			
-//			if (format.equals("googleCSV")) {
-//				charset = "utf-8";
-//			}
-//			
-//			logger.debug("charset=" + charset);
+			String charset = "euc-kr";
 			
-			writer = new OutputStreamWriter(response.getOutputStream(), "UTF-8");
-			writer.write('\uFEFF');
+			if (userInfo.getLang().equals("3")) {
+				charset = "shift-jis";
+			}
+			
+			if (format.equals("googleCSV")) {
+				charset = "utf-8";
+			}
+			
+			logger.debug("charset=" + charset);
+			
+			writer = new OutputStreamWriter(response.getOutputStream(), charset);
+			
 			csvWriter = new CSVWriter(writer, CSVWriter.DEFAULT_SEPARATOR, CSVWriter.DEFAULT_QUOTE_CHARACTER, CSVWriter.DEFAULT_ESCAPE_CHARACTER, "\r\n");
 			
 	        String[] headerArray = egovMessageSource.getMessage("ezAddress." + format, locale).split(";");
@@ -2384,7 +2384,7 @@ public class EzAddressController{
         try {
 	        stream = multiFile.get(0).getInputStream();
 	        
-	        String charset = (userInfo.getLang().equals("3")) ? "shift-jis" : (format.equals("googleCSV") || format.equals("outlookCSV")) ? "utf-8" : "euc-kr";
+	        String charset = (userInfo.getLang().equals("3")) ? "shift-jis" : (format.equals("googleCSV")) ? "utf-8" : "euc-kr";
 			logger.debug("charset=" + charset);
 			
 	        reader = new InputStreamReader(stream, charset);
@@ -2678,7 +2678,7 @@ public class EzAddressController{
 				charset = "shift-jis";
 			}
 			
-			if (format.equals("googleCSV") || format.equals("outlookCSV")) {
+			if (format.equals("googleCSV")) {
 				charset = "utf-8";
 			}
 			
@@ -2916,19 +2916,19 @@ public class EzAddressController{
 		CSVWriter csvWriter = null;
 		
 		try {
-//			String charset = "euc-kr";
-//			
-//			if (userInfo.getLang().equals("3")) {
-//				charset = "shift-jis";
-//			}
-//			
-//			if (format.equals("googleCSV")) {
-//				charset = "utf-8";
-//			}
-//			logger.debug("charset=" + charset);
-			writer = new OutputStreamWriter(response.getOutputStream(), "UTF-8");
-
-			writer.write('\uFEFF');
+			String charset = "euc-kr";
+			
+			if (userInfo.getLang().equals("3")) {
+				charset = "shift-jis";
+			}
+			
+			if (format.equals("googleCSV")) {
+				charset = "utf-8";
+			}
+			
+			logger.debug("charset=" + charset);
+			
+			writer = new OutputStreamWriter(response.getOutputStream(), charset);
 			
 			csvWriter = new CSVWriter(writer, CSVWriter.DEFAULT_SEPARATOR, CSVWriter.DEFAULT_QUOTE_CHARACTER, CSVWriter.DEFAULT_ESCAPE_CHARACTER, "\r\n");
 			
