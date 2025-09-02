@@ -665,7 +665,4 @@ public interface EzCommonService {
 	public void addBoardListShowType() throws Exception;
 	
 	public void updateGuestAccessibleUris() throws Exception;
-
-	// 2024-10-07 유길상 - 커뮤니티 > 게시판 > 포토게시판 앨범소개 컬럼 추가
-	public void alterCommItemPhotoItemContent() throws Exception;
 }

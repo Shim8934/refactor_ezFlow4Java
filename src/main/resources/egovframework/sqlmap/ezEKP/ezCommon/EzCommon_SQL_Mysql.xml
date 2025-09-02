@@ -8106,18 +8106,4 @@
         ELSE CAST(PROPERTY_VALUE AS SIGNED) + 1
         END
     </insert>
-
-	<select id="EzCommonDAO.checkCommItemPhotoItemContent" resultClass="String">
-		SELECT
-			PHOTOITEMCONTENT
-		FROM
-			TBL_COMM_ITEM
-				LIMIT 1
-	</select>
-
-	<statement id="EzCommonDAO.alterCommItemPhotoItemContent">
-		ALTER TABLE
-			TBL_COMM_ITEM
-			ADD PHOTOITEMCONTENT LONGTEXT DEFAULT NULL
-	</statement>
 </sqlMap>
