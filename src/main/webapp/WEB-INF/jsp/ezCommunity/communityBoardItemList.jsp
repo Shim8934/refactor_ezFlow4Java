@@ -128,36 +128,36 @@
                         listXML += "<TD class='"+ urgency + " " + bClass + "' title='" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "Abstract").trim().replace("'", "`") + "' style='cursor:pointer; text-overflow:ellipsis; overflow:hidden' onclick='ItemRead_onclick(\""
                         	+ SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "BoardID") + "\", \"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "boardName") + "\", \"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "ItemID") + "\", \""
                         	+ SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterID") + "\", event)'>";
-                        listXML += "<div style='float: left; overflow: hidden; text-overflow: ellipsis; display: block; max-width: 100%;'>";
-                        	
-                        /*  2018-05-18 홍승비 - 커뮤니티 일반/그룹/익명게시판 리스트에서 new 표시하기 */
-                       	if (pastDate <= writeDate) {
-                       		listXML += "<img src='/images/i_new.gif' style='margin-bottom:1px;'>&nbsp;";
-                       	}
+						listXML += "<div style='display:flex;align-items:center;'>";
+						listXML += "<div style='float: left; overflow: hidden; text-overflow: ellipsis; display: block; max-width: 100%;'>";
                        	listXML += strEmergent + strSpace + SelectSingleOnlyTitle(SelectNodes(xmldoc,"NODES/NODE")[i], "Title");
                        	listXML += "</div>";
                        	
                        	/* 2018-05-04 홍승비 - 댓글 표시하기, 2020-03-16 홍승비 - 댓글 영역 표출 스타일 수정 */
                        	if(SelectSingleOnlyTitle(SelectNodes(xmldoc,"NODES/NODE")[i], "OneLineCnt") > 0) {
-                       		listXML += "<SPAN class= '" + bClass + "' style='color:#c64200; position:absolute; padding-left:1px;'>[" + SelectSingleOnlyTitle(SelectNodes(xmldoc,"NODES/NODE")[i], "OneLineCnt") + "]<SPAN>";
+                       		listXML += "<SPAN class= '" + bClass + "' style='color:#c64200;padding-left:1px;'>[" + SelectSingleOnlyTitle(SelectNodes(xmldoc,"NODES/NODE")[i], "OneLineCnt") + "]<SPAN>";
                        	}
-                        listXML += "</TD><TD></TD>";
+						/*  2018-05-18 홍승비 - 커뮤니티 일반/그룹/익명게시판 리스트에서 new 표시하기 */
+						if (pastDate <= writeDate) {
+							listXML += "<span class='board_new'></span>";
+						}
+                        listXML += "</div></TD><TD></TD>";
 					}
 					else {
 						listXML += "<TD class='"+ urgency + " " + bClass + "' title='" + MakeXMLString(SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "Abstract").trim().replace("'", "`")) + "' style='cursor:pointer; text-overflow:ellipsis; overflow:hidden' onclick='ItemRead_onclick(\""
 							+ pBoardID + "\", \"" + pBoardName + "\", \"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "ItemID") + "\", \"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "Writer") + "\", event)'>";
+						listXML += "<div style='display:flex;align-items:center;'>";
 						listXML += "<div style='float: left; overflow: hidden; text-overflow: ellipsis; display: block; max-width: 100%;'>";
-						
-	                    if (pastDate <= writeDate) {
-	                   		listXML += "<img src='/images/i_new.gif' style='margin-bottom:1px;'>&nbsp;";
-	                   	}
 	                    listXML += strEmergent + strSpace + Replace2HTML(SelectSingleOnlyTitle(SelectNodes(xmldoc,"NODES/NODE")[i], "Title"));
                        	listXML += "</div>";
 	                    
 						if(SelectSingleOnlyTitle(SelectNodes(xmldoc,"NODES/NODE")[i], "OneLineCnt") > 0) {
-                       		listXML += "<SPAN class ='" + bClass + "' style='color:#c64200; position:absolute; padding-left:1px;'>[" + SelectSingleOnlyTitle(SelectNodes(xmldoc,"NODES/NODE")[i], "OneLineCnt") + "]<SPAN>";
+                       		listXML += "<SPAN class ='" + bClass + "' style='color:#c64200;padding-left:1px;'>[" + SelectSingleOnlyTitle(SelectNodes(xmldoc,"NODES/NODE")[i], "OneLineCnt") + "]</SPAN>";
                        	}
-                    	listXML += "</TD><TD></TD>";
+						if (pastDate <= writeDate) {
+							listXML += "<span class='board_new'></span>";
+						}
+                    	listXML += "</div></TD><TD></TD>";
 					}				
 					
 					if (gubun == '1') {

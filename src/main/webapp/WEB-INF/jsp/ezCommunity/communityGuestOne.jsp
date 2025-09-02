@@ -71,17 +71,16 @@
 		        	html += "<th style=\"height:25px; border:1px solid #dfdfdf; width:20px;\" nowrap><input type=\"checkbox\" name=\"c_no\" value=\"" + SelectSingleNodeValue(SelectNodes(xmlDoc, "DATA/ROW")[i], "C_NO") + "\"></th>";
 		        	/* html += "<th style=\"border-left:1px solid none;border-right:1px solid none;width:50px;\" nowrap>" + SelectSingleNodeValue(SelectNodes(xmlDoc, "DATA/ROW")[i], "C_NO") + "</th>"; */
 		        	html += "<th style=\"width:90%; text-align:left;border:1px solid #dfdfdf; border-right: 1px solid transparent; font-weight:normal\" >";
-		        	
-		        	if(SelectSingleNodeValue(SelectNodes(xmlDoc, "DATA/ROW")[i], "NEW") == 'NEW') {
-		        		html += "<img src=\"/images/i_new.gif\" border=\"0\" hspace=\"5\" align=\"absmiddle\">";
-		        	}
-		        		
 					html += SelectSingleNodeValue(SelectNodes(xmlDoc, "DATA/ROW")[i], "USERNAME"+multiData);
 					html += "<spring:message code='ezCommunity.t587' />";
 					/* 2019-10-25 홍승비 - 커뮤니티 방명록에서 초단위 삭제 (타 모듈과 통일) */
 					var writeDate = SelectSingleNodeValue(SelectNodes(xmlDoc, "DATA/ROW")[i], "WRITEDAY");
 					html += writeDate.substring(0, writeDate.length - 3);
-					html += " <spring:message code='ezCommunity.t588' /></th>";
+					html += " <spring:message code='ezCommunity.t588' />";
+					if(SelectSingleNodeValue(SelectNodes(xmlDoc, "DATA/ROW")[i], "NEW") == 'NEW') {
+						html += "<img src=\"/images/kr/community/community_iconnew.svg\" style='vertical-align: text-top;' border=\"0\" hspace=\"5\" align=\"absmiddle\">";
+					}
+					html += "</th>";
 					html += "<th style='width:20%;'><a id='replyDisplay" + SelectSingleNodeValue(SelectNodes(xmlDoc, "DATA/ROW")[i], "NO") + "' class='imgbtn replyDisplay' style='vertical-align: middle;'><span onclick='replyLayerDisplay(" + SelectSingleNodeValue(SelectNodes(xmlDoc, "DATA/ROW")[i], "NO") + ")'><spring:message code="ezCommunity.reply.hik01" /></span></a></th>";
 					html += "</tr>";
 					html += "<tr style=\"border-left:1px solid #dfdfdf;border-right:1px solid #dfdfdf;\">";
