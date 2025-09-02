@@ -118,6 +118,8 @@ import org.apache.poi.ss.usermodel.VerticalAlignment;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.tika.parser.txt.CharsetDetector;
+import org.apache.tika.parser.txt.CharsetMatch;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -142,6 +144,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.i18n.CookieLocaleResolver;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -310,6 +313,20 @@ public class CommonUtil {
     	}
     	
     	return filePath;
+    }
+
+    public static String detectCharset(MultipartFile multipartFile) throws Exception {
+        byte[] fileBytes = multipartFile.getBytes();
+
+        CharsetDetector detector = new CharsetDetector();
+        detector.setText(fileBytes);
+
+        CharsetMatch match = detector.detect(); // 가장 가능성 높은 인코딩
+        if (match != null) {
+            return match.getName();  // 예: "UTF-8", "windows-1252", "EUC-KR"
+        }
+
+        return "UTF-8"; // fallback
     }
     
 	/** 

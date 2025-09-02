@@ -2384,7 +2384,8 @@ public class EzAddressController{
         try {
 	        stream = multiFile.get(0).getInputStream();
 	        
-	        String charset = (userInfo.getLang().equals("3")) ? "shift-jis" : (format.equals("googleCSV")) ? "utf-8" : "euc-kr";
+	        // String charset = (userInfo.getLang().equals("3")) ? "shift-jis" : (format.equals("googleCSV")) ? "utf-8" : "euc-kr";
+			String charset = commonUtil.detectCharset(multiFile.get(0));
 			logger.debug("charset=" + charset);
 			
 	        reader = new InputStreamReader(stream, charset);
@@ -2672,16 +2673,17 @@ public class EzAddressController{
         try {
 	        stream = multiFile.get(0).getInputStream();
 	        
-	        String charset = "euc-kr";
-	        
-			if (userInfo.getLang().equals("3")) {
-				charset = "shift-jis";
-			}
-			
-			if (format.equals("googleCSV")) {
-				charset = "utf-8";
-			}
-			
+//			String charset = "euc-kr";
+//
+//			if (userInfo.getLang().equals("3")) {
+//				charset = "shift-jis";
+//			}
+//
+//			if (format.equals("googleCSV")) {
+//				charset = "utf-8";
+//			}
+
+			String charset = commonUtil.detectCharset(multiFile.get(0));
 			logger.debug("charset=" + charset);
 			
 	        reader = new InputStreamReader(stream, charset);
