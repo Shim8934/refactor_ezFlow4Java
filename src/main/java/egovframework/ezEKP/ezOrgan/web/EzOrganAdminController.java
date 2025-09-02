@@ -411,6 +411,7 @@ public class EzOrganAdminController extends EzFileMngUtil {
 			ezCommonService.addBoardListShowType(); // 2025-07-10 이혜림 - 게시판 > 게시판 목록 타입 컬럼 추가
             ezCommonService.alterTblBoardInfoUrlCopyFlag(); // 2025-08-05 이유정 - 게시판 > 게시글 주소복사 컬럼 추가
 			ezCommonService.updateGuestAccessibleUris(); // 2025-08-19 양지혜 - 비회원 게시판 허용 URI 데이터 업데이트
+			ezCommonService.alterCommItemPhotoItemContent(); // 2024-10-07 유길상 - 커뮤니티 > 게시판 > 포토게시판 앨범소개 컬럼 추가
 		} catch (Exception e) {
     		logger.error(e.getMessage(), e);
     	}

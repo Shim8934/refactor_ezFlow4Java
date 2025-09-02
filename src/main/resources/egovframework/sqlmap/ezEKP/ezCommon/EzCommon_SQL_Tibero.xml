@@ -8627,4 +8627,21 @@
         (TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
         VALUES(0, s.PROPERTY_NAME, s.PROPERTY_VALUE, '수신스케쥴러 실행 카운트', '수신스케쥴러 실행 카운트', TO_DATE('2025-08-22','yyyy-mm-dd'), '전자결재G')
     </insert>
+
+	<select id="EzCommonDAO.checkCommItemPhotoItemContent" resultClass="String">
+		<![CDATA[
+		SELECT
+			PHOTOITEMCONTENT
+		FROM
+			TBL_COMM_ITEM
+		WHERE
+			ROWNUM <= 1
+		]]>
+	</select>
+
+	<statement id="EzCommonDAO.alterCommItemPhotoItemContent">
+		ALTER TABLE
+			TBL_COMM_ITEM
+			ADD PHOTOITEMCONTENT CLOB DEFAULT NULL
+	</statement>
 </sqlMap>
