@@ -366,6 +366,11 @@ INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_V
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'm365AdminAccountPw', 'M365 관리자 계정 비밀번호', '111', 'Graph API 호출용 Microsoft 365 관리자 계정의 비밀번호', TO_DATE('2025-07-31 00:00:00', 'YYYY-MM-DD HH24:MI:SS'), 'TEAMS');
 -- INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'useAdminDelegatedToken', 'Graph API 관리자 위임 토큰 사용 여부', 'N', 'Graph API 호출 시 M365 관리자 계정 기반 Delegated 토큰 사용 여부', TO_DATE('2025-08-04 00:00:00', 'YYYY-MM-DD HH24:MI:SS'), 'TEAMS');
 
+INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'useExternalLargeFileServer', '메일 대용량 첨부 외부메일 동시 업로드 여부', 'N', '메일에서 대용량 첨부할때 외부메일 서버 동시 업로드 여부(default:N)', '2025-05-23 00:00:00', '메일');
+INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'externalFileServerUrl', '대용량 첨부파일 업로드 서버', 'http://127.0.0.1:8080/', '대용량 첨부파일 동시 업로드할 외부 서버', '2025-05-23 00:00:00', '메일');
+
+INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'useSaas', '톡 모바일 푸시 알림 테넌트에 따른 구분 사용 여부', 'N', '톡서버에 푸시 알림 보낼때 테넌트 아이디 붙여서 넘길지 말지 사용 여부(default:N)', '2025-05-21 00:00:00', '포탈');
+
 --Board insert
 
 INSERT INTO TBL_Board_MyBoards (UserID, BoardID, BoardName, BoardName2, TreeviewNum, companyID, tenant_ID) VALUES ('everyone', '{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}', '새게시물', 'New BoardItem', -1, 'Top', 0);
