@@ -52,13 +52,13 @@ public class EzTeamsScheduler extends EzFileMngUtil {
 
 	@Scheduled(cron = "${config.cron.getTeamsIdFromGraphApi}")
 	public void getTeamsIdFromGraphApi() throws Exception {
-		logger.debug("getTeamsIdFromGraphApi started.");
 
         String useTeams = ezCommonService.getTenantConfig("useTeams", 0);
         if (useTeams == null || !useTeams.equalsIgnoreCase("YES")) {
-            logger.debug("getTeamsIdFromGraphApi scheduler ended.");
             return;
         }
+
+        logger.debug("getTeamsIdFromGraphApi started.");
 
 		try {
 			String accessToken = ezTeamsService.getToken("publicapp");
@@ -115,13 +115,13 @@ public class EzTeamsScheduler extends EzFileMngUtil {
 	// Microsoft Graph API를 통해 사용자 presence 정보 가져와 DB에 저장
 	@Scheduled(cron = "${config.cron.getPresenceFromGraphApi}")
 	public void getPresenceFromGraphApi() throws Exception {
-		logger.debug("getPresenceFromGraphApi started.");
 
         String useTeams = ezCommonService.getTenantConfig("useTeams", 0);
         if (useTeams == null || !useTeams.equalsIgnoreCase("YES")) {
-            logger.debug("getPresenceFromGraphApi scheduler ended.");
             return;
         }
+
+        logger.debug("getPresenceFromGraphApi started.");
 
         List<String> userList = ezTeamsDAO.getTeamsIdList();
         if (userList == null || userList.isEmpty()) {
@@ -175,13 +175,13 @@ public class EzTeamsScheduler extends EzFileMngUtil {
 
 	@Scheduled(cron = "${config.cron.setAdminAuthToken}")
 	public void setAdminAuthToken() throws Exception {
-		logger.debug("setAdminAuthToken started.");
 
         String useTeams = ezCommonService.getTenantConfig("useTeams", 0);
         if (useTeams == null || !useTeams.equalsIgnoreCase("YES")) {
-            logger.debug("setAdminAuthToken scheduler ended.");
             return;
         }
+
+        logger.debug("setAdminAuthToken started.");
 
 		int tenantId = 0;
 
