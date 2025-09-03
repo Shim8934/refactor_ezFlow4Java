@@ -7414,6 +7414,12 @@ CREATE TABLE `tbl_journal_form` (
   `form_status` varchar(10) DEFAULT NULL COMMENT '양식 상태',
   `company_id` varchar(80) NOT NULL COMMENT '회사 아이디',
   `form_del_flag` varchar(10) DEFAULT NULL,
+  `form_lang` MEDIUMINT(5) DEFAULT 1 COMMENT '기본양식사용설정된 언어(defult:1 한국어, 2:영어, 3:일본어, 4:중국어, 5:베트남어, 6:인도네시아어)',
+  `form_content2` TEXT DEFAULT NULL COMMENT '기본양식(영어)',
+  `form_content3` TEXT DEFAULT NULL COMMENT '기본양식(일본어)',
+  `form_content4` TEXT DEFAULT NULL COMMENT '기본양식(중국어)',
+  `form_content5` TEXT DEFAULT NULL COMMENT '기본양식(베트남어)',
+  `form_content6` TEXT DEFAULT NULL COMMENT '기본양식(인도네시아어)',
   PRIMARY KEY (`form_id`,`tenant_id`),
   KEY `FK_tbl_journal_form_type_id_tbl_journal_form_type_type_id_idx` (`type_id`),
   KEY `FK_tbl_journal_form_company_id_tbl_journal_form_type_compan_idx` (`company_id`)
