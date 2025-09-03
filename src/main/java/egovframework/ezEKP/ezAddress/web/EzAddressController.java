@@ -704,12 +704,14 @@ public class EzAddressController{
 		if(!checkAddressAccessPermission) {
 			return "ezAddress/addressRead";
 		}
-		
+
+        /*
 		if (userInfo.getGyumJik() != null) {
 			if (userInfo.getGyumJik().indexOf(userInfo.getCompanyID()) != -1) {
 				gyumJikChk = false;
 			}
 		}
+         */
 		
 		if (gyumJikChk) {
 			if (userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1) {
@@ -1439,11 +1441,14 @@ public class EzAddressController{
 		String title = egovMessageSource.getMessage("ezAddress.t144", locale);
 		
 		boolean gyumJikChk = true;
-		if (userInfo.getGyumJik() != null) {
+
+        /*
+        if (userInfo.getGyumJik() != null) {
 			if (userInfo.getGyumJik().indexOf(userInfo.getCompanyID()) != -1) {
 				gyumJikChk = false;
 			}
 		}
+         */
 		
 		if (gyumJikChk) {
 			if (userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1) {
@@ -1725,11 +1730,13 @@ public class EzAddressController{
 		}
 		
 		boolean gyumJikChk = true;
-		if (userInfo.getGyumJik() != null) {
+		/*
+        if (userInfo.getGyumJik() != null) {
 			if (userInfo.getGyumJik().indexOf(userInfo.getCompanyID()) != -1) {
 				gyumJikChk = false;
 			}
 		}
+		 */
 		
 		if (gyumJikChk) {
 			if (userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1 || userInfo.getRollInfo().indexOf("g=1") > -1) {
