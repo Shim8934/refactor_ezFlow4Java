@@ -1091,7 +1091,11 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 
 	@Override
 	public String selectUserGetLang(String userID, int tenantID) throws Exception {
-		return ezCommonDAO.selectUserGetLang(userID, tenantID);
+        String lang = ezCommonDAO.selectUserGetLang(userID, tenantID);
+        String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", tenantID);
+
+        // 사용자의 언어가 localinfo에 세팅되어 있지 않는 경우 primaryLang으로 세팅
+        return StringUtils.defaultString(lang, primaryLang);
 	}
 
 	@Override

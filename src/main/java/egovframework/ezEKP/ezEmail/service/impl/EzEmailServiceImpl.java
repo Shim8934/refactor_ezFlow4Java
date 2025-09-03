@@ -6650,6 +6650,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 		//Locale locale 	= (Locale) paramMap.get("locale");
 		String shareId 	= (String) paramMap.get("shareId");
 
+		String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", tenantId);
 		String domainName = ezCommonService.getTenantConfig("DomainName", tenantId);
 
 		String vUserId = "";
@@ -6737,7 +6738,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 				// 해당 언어의 메시지가 아직 생성되지 않았다면 생성
 				if (!subjectByLang.containsKey(adminLang)) {
 					Locale adminLocale = commonUtil.getLocalFromLang(adminLang);
-					String vfUserName = adminLang.equals("1") ? vUserName1 : vUserName2;
+					String vfUserName = primaryLang.equals(adminLang) ? vUserName1 : vUserName2;
 
 					String subject = egovMessageSource.getMessage("email.appr.noti.apply.title", adminLocale)
 							+ " " + String.format(egovMessageSource.getMessage("email.appr.noti.apply.allhands.subject", adminLocale), vfUserName);
@@ -6821,6 +6822,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 		//Locale locale 		= (Locale) paramMap.get("locale");
 		String lang = ezCommonService.selectUserGetLang(approverId, tenantId);
 		Locale locale = StringUtils.isNotBlank(lang) ? commonUtil.getLocalFromLang(lang) : Locale.getDefault();
+		String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", tenantId);
 		String shareId 	= (String) paramMap.get("shareId");
 
 		String domainName = ezCommonService.getTenantConfig("DomainName", tenantId);
@@ -6833,7 +6835,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 			if (userInfo == null) { throw new Exception("not found user."); }
 
 			vUserId = userId;
-			vUserName = userInfo.getDisplayName();
+			vUserName = primaryLang.equals(lang) ? userInfo.getDisplayName1() : userInfo.getDisplayName2();
 			vUserEmail = userInfo.getMail();
 		} else {
 			MailSharedMailboxVO sharedMailBoxInfo = getSharedMailboxInfo(shareId, tenantId, lang);
