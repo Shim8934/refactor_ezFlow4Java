@@ -985,11 +985,13 @@ public class EzWebFolderGWController {
 			List<DuplicateInfoVO> duplicateInfoList = new ArrayList<>();
 			
 			Iterator<String> onlyNameIterator = onlyNameArray.iterator();
+			Iterator<Object> nameIterator = nameArray.iterator();
 			Iterator<FileUploadVO> multiFileIterator = multiFileLists.iterator();
 			
 			while (onlyNameIterator.hasNext()) {
 				String fileName = onlyNameIterator.next();
-				
+
+				nameIterator.next();
 				multiFileIterator.next();
 
 				// 파일 이름으로 중복 정보 가져오기
@@ -1007,7 +1009,7 @@ public class EzWebFolderGWController {
 				// 중복 정보가 존재한다면
 				if (firstInfo.isPresent()) {
 					// multifile 리스트에서 삭제 (업로드 제외됨)
-					onlyNameIterator.remove();
+					nameIterator.remove();
 					multiFileIterator.remove();
 					// 중복 정보 리스트에 추가
 					duplicateInfoList.add(firstInfo.get());
