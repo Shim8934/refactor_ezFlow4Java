@@ -51,7 +51,7 @@
 	</head>
 	<body class="body_frame_main">
 	<iframe id="topFrame" src="/admin/top.do" name="top"></iframe>
-	<iframe id="bottomFrame" onload="bottomFrameLoad()" src="/admin/ezBoard/boardLeft.do" name="bottom"></iframe>
+	<iframe id="bottomFrame" onload="bottomFrameLoad()" src="" name="bottom"></iframe>
 	</body>
 </html>
 

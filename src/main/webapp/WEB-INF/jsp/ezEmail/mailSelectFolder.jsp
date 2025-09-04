@@ -182,7 +182,7 @@
 						<span class="treeNode_toggle_icon"></span>
 						<spring:message code='ezEmail.kdh06' />
 					</div>
-	                <div style="border: 0px solid #ddd; behavior: url(/js/ezEmail/Controls/treeview.htc); height: 235px; width: 100%; overflow-x: auto; overflow-y: auto; background-color: #FFFFFF; padding-left: 4px; padding-top: 5px;" id="PostTreeView" onrequestdata="requestdata()">
+	                <div style="border: 0px solid #ddd; behavior: url(/js/ezEmail/Controls/treeview.htc); height: 220px; width: 100%; overflow-x: auto; overflow-y: auto; background-color: #FFFFFF; padding-left: 4px; padding-top: 5px;" id="PostTreeView" onrequestdata="requestdata()">
 	                </div>
 	            </td>
 	        </tr>
