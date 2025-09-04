@@ -373,6 +373,8 @@ INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_V
 
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (@tenant_id_value, 'useSaas', '톡 모바일 푸시 알림 테넌트에 따른 구분 사용 여부', 'N', '톡서버에 푸시 알림 보낼때 테넌트 아이디 붙여서 넘길지 말지 사용 여부(default:N)', '2025-05-21 00:00:00', '포탈');
 
+INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (@tenant_id_value, 'useMobileDraft', '모바일 기안하기 사용 여부', 'NO', '모바일 기안하기 사용 여부. YES: 사용, NO: 미사용 (default : NO)', '2025-08-22 00:00:00.000', '전자결재');
+
 -- 게시판 > 비회원 읽기권한 추가
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (@tenant_id_value, 'useBoardGuestPermit', '게시판 비회원 읽기권한 사용 여부', 'NO', '게시판 비회원 읽기권한 사용 여부. YES: 사용, NO: 미사용 (default : NO)', '2025-08-13 00:00:00', '게시판');
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (@tenant_id_value, 'guestAccessibleUris', '로그아웃 상태에서 허용할 uri', '/ezBoard/boardItemView.do,/ezBoard/boardItemViewPhoto.do,/ezBoard/boardItemViewMovie.do,/ezCommon/mhtToHTMLContent.do,/ezBoard/getItemAttachments.do,/ezBoard/boardAttachDown.do,/ezBoard/downloadAttachAll.do,/ezBoard/imageViewList.do,/ezBoard/getBoardThumbnailInfo.do,/ezBoard/boardItemList.do,/ezBoard/getBoardList.do,/ezBoard/getSearchBoardList.do', '비회원 읽기권한 > 로그아웃 상태에서 허용할 uri (,로 연결. 수정 시 서버 재시작 필요)', '2025-08-13 00:00:00', '게시판');

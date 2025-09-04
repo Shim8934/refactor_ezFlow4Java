@@ -7074,6 +7074,7 @@ CREATE TABLE `tbl_forminfo` (
   `FORMGUIDE` longtext DEFAULT NULL,
   `APROPTION` varchar(300) DEFAULT NULL COMMENT '양식 세부설정',
   `SIHANGTYPE` varchar(10) DEFAULT '' COMMENT '전자결재G 시행문 타입',
+  `MOBILEDRAFTFLAG` varchar(4) DEFAULT 'N' COMMENT '전자결재S 모바일 기안 여부',
   PRIMARY KEY (`FORMID`,`TENANT_ID`,`COMPANYID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
