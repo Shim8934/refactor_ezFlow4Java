@@ -328,12 +328,9 @@ public class IMAPAccess implements Closeable {
 			Folder trash = rootFolder.getFolder(ezEmailUtil.getTrashFolderId(locale));
 			Folder personal = rootFolder.getFolder(ezEmailUtil.getPersonalFolderId(locale));
 			Folder junk = rootFolder.getFolder(ezEmailUtil.getJunkFolderId(locale));
-			
+
+			// INBOX 의 경우 계정 인증 시 생성 처리함
 			// if default folders do not exist, create the folders.
-			if (!inbox.exists()) {
-				createFolder(inbox.getFullName());
-			}
-			
 			if (!sent.exists()) {
 				createFolder(sent.getFullName());
 			}
