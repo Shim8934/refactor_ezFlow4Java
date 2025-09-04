@@ -2,6 +2,7 @@ package egovframework.ezEKP.ezWebFolder.web;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -992,7 +993,14 @@ public class EzWebFolderGWController {
 				multiFileIterator.next();
 
 				// 파일 이름으로 중복 정보 가져오기
-				Optional<DuplicateInfoVO> firstInfo = ezWebFolderService.getAllDuplicateInfo(fileName, folderId, offset, userInfo.getTenantId())
+				String decodeFileName = URLDecoder.decode(fileName, "UTF-8");;
+
+				if (decodeFileName.indexOf(commonUtil.separator) > 0) {
+					decodeFileName = decodeFileName.split("/")[decodeFileName.split("/").length - 1];
+				}
+
+				decodeFileName = commonUtil.normalizeFileName(decodeFileName);
+				Optional<DuplicateInfoVO> firstInfo = ezWebFolderService.getAllDuplicateInfo(decodeFileName, folderId, offset, userInfo.getTenantId())
 						.stream()
 						.findFirst();
 
