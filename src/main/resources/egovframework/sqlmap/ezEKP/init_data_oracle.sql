@@ -371,6 +371,16 @@ INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_V
 
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'useSaas', '톡 모바일 푸시 알림 테넌트에 따른 구분 사용 여부', 'N', '톡서버에 푸시 알림 보낼때 테넌트 아이디 붙여서 넘길지 말지 사용 여부(default:N)', '2025-05-21 00:00:00', '포탈');
 
+-- 게시판 > 비회원 읽기권한 추가
+INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'useBoardGuestPermit', '게시판 비회원 읽기권한 사용 여부', 'NO', '게시판 비회원 읽기권한 사용 여부. YES: 사용, NO: 미사용 (default : NO)', TO_DATE('2025-08-13 00:00:00', 'YYYY-MM-DD HH24:MI:SS'), '게시판');
+INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'guestAccessibleUris', '로그아웃 상태에서 허용할 uri', '/ezBoard/boardItemView.do,/ezBoard/boardItemViewPhoto.do,/ezBoard/boardItemViewMovie.do,/ezCommon/mhtToHTMLContent.do,/ezBoard/getItemAttachments.do,/ezBoard/boardAttachDown.do,/ezBoard/downloadAttachAll.do,/ezBoard/imageViewList.do,/ezBoard/getBoardThumbnailInfo.do,/ezBoard/boardItemList.do,/ezBoard/getBoardList.do,/ezBoard/getSearchBoardList.do', '비회원 읽기권한 > 로그아웃 상태에서 허용할 uri (,로 연결. 수정 시 서버 재시작 필요)', TO_DATE('2025-08-13 00:00:00', 'YYYY-MM-DD HH24:MI:SS'), '게시판');
+INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'guestLang', '비회원 Lang', '1', '비회원 Lang (default : 1 수정 시 서버 재시작 필요)', TO_DATE('2025-08-13 00:00:00', 'YYYY-MM-DD HH24:MI:SS'), '게시판');
+INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'guestLocal', '비회원 Local', 'ko', '비회원 Local (default : ko 수정 시 서버 재시작 필요)', TO_DATE('2025-08-13 00:00:00', 'YYYY-MM-DD HH24:MI:SS'), '게시판');
+INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'guestOffset', '비회원 Offset', '235| 09:00', '비회원 Offset (default : 235| 09:00 수정 시 서버 재시작 필요)', TO_DATE('2025-08-13 00:00:00', 'YYYY-MM-DD HH24:MI:SS'), '게시판');
+INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'guestCompanyId', '비회원 회사 id', 'Kaoni', '비회원 회사 id (default : Kaoni 수정 시 서버 재시작 필요)', TO_DATE('2025-08-13 00:00:00', 'YYYY-MM-DD HH24:MI:SS'), '게시판');
+INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'showGuestBoardListOnLogin', '로그인 페이지에 비회원 게시판 표출 여부', 'NO', '로그인 페이지에 비회원 게시판 표출 여부. YES: 사용, NO: 미사용 (default : NO)', TO_DATE('2025-08-13 00:00:00', 'YYYY-MM-DD HH24:MI:SS'), '게시판');
+INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'guestBoardId', '로그인 표출 비회원 권한 게시판ID', '', '로그인 표출 비회원 권한 게시판ID', TO_DATE('2025-08-13 00:00:00', 'YYYY-MM-DD HH24:MI:SS'), '게시판');
+
 --Board insert
 
 INSERT INTO TBL_Board_MyBoards (UserID, BoardID, BoardName, BoardName2, TreeviewNum, companyID, tenant_ID) VALUES ('everyone', '{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}', '새게시물', 'New BoardItem', -1, 'Top', 0);
