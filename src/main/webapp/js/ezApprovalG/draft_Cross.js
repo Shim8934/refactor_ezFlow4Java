@@ -3796,7 +3796,7 @@ function setFirstDrafter(type, beforDocID) {
     }
     return;
 }
-function delOpinionInfo() {
+function delOpinionInfo(tmpID) {
 	var opinionType = "";
 	if (useRedraftOpinionKeep != "YES") {
 		opinionType = "100"
@@ -3810,7 +3810,7 @@ function delOpinionInfo() {
 		async : false,
 		url : "/ezApprovalG/deleteOpinionTypeInfo.do",
 		data : {
-			docID : pDocID,
+			docID : tmpID ? tmpID : pDocID,
 			opinionType : opinionType
 		},
 		success: function(result) {
@@ -4017,7 +4017,10 @@ function SignSave() {
 
         for (i = 0; i < SignContent.length; i++) {
             objNode = createNodeAndAppandNode(xmlpara, objRoot, objNode, "SIGNINFO");
-            subNode = createNodeAndAppandNodeText(xmlpara, objNode, subNode, "DOCID", pDocID);
+            if(typeof draftAllTypeB != "undefined" && draftAllTypeB == "Y" && an.options.length > 1)
+                subNode = createNodeAndAppandNodeText(xmlpara, objNode, subNode, "DOCID", pDocIDAry);
+            else
+                subNode = createNodeAndAppandNodeText(xmlpara, objNode, subNode, "DOCID", pDocID);
             subNode = createNodeAndAppandNodeText(xmlpara, objNode, subNode, "SIGNTYPE", SignType[i]);
             subNode = createNodeAndAppandNodeText(xmlpara, objNode, subNode, "SIGNNAME", SignName[i]);
             subNode = createNodeAndAppandNodeText(xmlpara, objNode, subNode, "CONTENT", SignContent[i]);
@@ -4271,7 +4274,7 @@ function UpdateDocHistory(pHtml) {
         OpenAlertUI(pAlertContent);
     }
 }
-function UpdateLineHistory() {
+function UpdateLineHistory(tmpDocID) {
 	var result = "";
     
     $.ajax({
@@ -4280,7 +4283,7 @@ function UpdateLineHistory() {
 		async : false,
 		url : "/ezApprovalG/updateLineHistory.do",
 		data : {
-			docID : pDocID,
+			docID : tmpDocID ? tmpDocID : pDocID,
 			userID : arr_userinfo[1],
 			userName : arr_userinfo[11],
 			userJobTitle : arr_userinfo[13],
@@ -4579,13 +4582,15 @@ function setFirstDrafterAuto() {
 
     xmlpara = loadXMLString(pxml);
 
+    var url = typeof draftAllTypeB != "undefined" && draftAllTypeB == "Y" && an.options.length > 1 ? "/ezApprovalG/aprLineSaveAll.do" : "/ezApprovalG/aprLineSave.do";
     $.ajax({
 		type : "POST",
 		dataType : "text",
 		async : false,
-		url : "/ezApprovalG/aprLineSave.do",
+		url : url,
 		data : {
-				ret    : pxml
+				ret    : pxml,
+                docIDAry : pDocIDAry
 		},
 		success : function(result){
 			

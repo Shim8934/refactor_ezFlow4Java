@@ -41,6 +41,12 @@
 				else if (type == "compareAfter") { // 편집 후 문서
 					HwpCtrl = BuildWebHwpCtrl("hwpctrl", "${webHWPUrl}", function () { Editor_Complete_Compare2(); });
 				}
+				else if (type == "lastAn") { // 일괄기안 마지막 결재자
+					HwpCtrl = BuildWebHwpCtrl("hwpctrl", "${webHWPUrl}", function () { parent.lastAnSave(); });
+				}
+				else if (type == "before") { // 일괄기안 편집
+					HwpCtrl = BuildWebHwpCtrl("hwpctrl", "${webHWPUrl}", function () { parent.beforeHwpBodyAll(); });
+				}
 				else {
 					HwpCtrl = BuildWebHwpCtrl("hwpctrl", "${webHWPUrl}", function () { Editor_Complete2(); });
 				}
@@ -122,7 +128,12 @@
 			}
 
 	        function Open(url, format, type, callback, name) {
-	            return HwpCtrl.Open(url, format, type, callback, name);
+	            var hostName = window.location.hostname;
+                if(typeof hostName != "undefined" && hostName.indexOf("localhost") > -1){
+                    return localHWPLoad(this, url, callback);
+                }else{
+                    return HwpCtrl.Open(url, format, type, callback, name);
+                }
 	        }
 
 	        function SaveFile(filename, format, callback) {

@@ -742,7 +742,7 @@
         		var isGroupDoc = checkIsGroupDoc(encodeURI(pArgument[0]), orgCompanyID);
         		var openLocation = "";
         		
-        		if (isGroupDoc == "Y") { // 일괄기안 문서를 여는 경우
+        		if (isGroupDoc == "Y" && typeof draftAllTypeB != "undefined" && draftAllTypeB != "Y") { // 일괄기안 문서를 여는 경우
         			openLocation = "/ezApprovalG/approvuiAll_WHWP.do?docID=" + encodeURI(pArgument[0]);
         		} else {
             		openLocation = "/ezApprovalG/approvuiWHWP.do?docID=" + encodeURI(pArgument[0]);
@@ -752,7 +752,7 @@
         	}
         } else {
         	var isGroupDoc = checkIsGroupDoc(encodeURI(pArgument[0]), orgCompanyID);
-            if (isGroupDoc == "Y") { // 일괄기안 문서를 여는 경우
+            if (isGroupDoc == "Y" && typeof draftAllTypeB != "undefined" && draftAllTypeB != "Y") { // 일괄기안 문서를 여는 경우
                 openLocation = "/ezApprovalG/approvuiAll_WHWP.do?docID=";
             } else {
                 openLocation = "/ezApprovalG/approvui.do?docID=";            

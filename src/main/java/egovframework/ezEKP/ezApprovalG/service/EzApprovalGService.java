@@ -19,7 +19,6 @@ import egovframework.ezEKP.ezApprovalG.vo.ApprGSecondApprVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGSummaryVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGSusinProcessInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskVO;
-import egovframework.ezEKP.ezApprovalG.vo.ApprGgetDeptStacticsVO;
 import egovframework.ezEKP.ezApprovalG.vo.KEDSharedUserInfo;
 import egovframework.ezEKP.ezApprovalG.vo.PortletAprInfoVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
@@ -91,7 +90,7 @@ public interface EzApprovalGService {
     
     public String getDocType(String selected, String companyID, String lang, int tenantID, Locale locale, String approvalFlag) throws Exception;
 
-    public String getFormInfo(String formContID, String kind, String searchType, String searchName, String userID, String deptId, String companyID, String lang, int tenantID) throws Exception;
+    public String getFormInfo(String formContID, String kind, String searchType, String searchName, String userID, String deptId, String companyID, String lang, int tenantID, String draftTypeFlag) throws Exception;
 
     public String getFormContainerInfo(String id, String deptID, String companyID, String primary, int tenantID, String approvalFlag) throws Exception;
 
@@ -1037,4 +1036,10 @@ public interface EzApprovalGService {
     
     // 2025-05-28 전인하 - 그리기 서명 이미지 저장하는 코드 / 웹한글기안기 문서 지원을 위해 서명 이미지는 외부저장해야 함
     public String saveSignImg(MultipartFile signImg, String companyID, int tenantID) throws Exception;
+    
+    public boolean getCheckNotFailDoc(String docID, String companyID, int tenantID) throws Exception;
+
+    public String getDocAprLine(String docID, String aprMemberSN, String userID, String docState, String companyID, int tenantID) throws Exception;
+
+    public String getDocAprState(String docID, String aprMemberSN, String userID, String companyID, int tenantID) throws Exception;
 }

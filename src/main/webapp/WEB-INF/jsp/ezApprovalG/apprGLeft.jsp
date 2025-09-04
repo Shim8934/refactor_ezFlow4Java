@@ -1369,7 +1369,7 @@
 	        <%-- 25022-01-11 홍승비 - 전자결재G 일괄기안 버튼 추가 (웹한글) --%>
 	        <div class="btn_writeBox">
 	        	<c:choose>
-	        	<c:when test="${useDraftAll == 'YES'}">
+	        	<c:when test="${useDraftAll == 'YES' && draftAllTypeB != 'Y'}">
 	        		<p class="btn_write01" onclick="btnDraft_onclick();" style="width:83px; display:inline-block; float:none;"><spring:message code='main.t00031'/></p>
 	        		<p class="btn_write01" onclick="btnDraftAll_onclick();" style="width:83px; display:inline-block; float:right;"><spring:message code='ezApprovalG.HSBDa01'/></p>
 	        	</c:when>

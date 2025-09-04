@@ -901,7 +901,7 @@ function openDraftUI(pDraftFlag, pCurSelRow,officeFlag) {
     if (formURL.substr(formURL.length - 3, formURL.length).toLowerCase() == "mht") {
         var isGroupDoc = checkIsGroupDoc(pArgument[7], ""); // 일괄기안문서 여부 체크 (1안 기준의 DOCID 전달)
 
-        if (isGroupDoc == "Y") { // 반송된 일괄기안 문서를 여는 경우
+        if (isGroupDoc == "Y" && (typeof draftAllTypeB == "undefined" || draftAllTypeB != "Y")) { // 반송된 일괄기안 문서를 여는 경우
             openLocation = "/ezApprovalG/draftuiAll_WHWP.do?formURL=" + encodeURI(pArgument[1]) + "&draftFlag=" + encodeURI(pArgument[2]) + "&formDocType=" + encodeURI(pArgument[3]);
         } else {
             openLocation = "/ezApprovalG/draftui.do?formURL=";
@@ -932,7 +932,7 @@ function openDraftUI(pDraftFlag, pCurSelRow,officeFlag) {
     	} else {
     		var isGroupDoc = checkIsGroupDoc(pArgument[7], ""); // 일괄기안문서 여부 체크 (1안 기준의 DOCID 전달)
     		
-    		if (isGroupDoc == "Y") { // 반송된 일괄기안 문서를 여는 경우
+    		if (isGroupDoc == "Y" && (typeof draftAllTypeB == "undefined" || draftAllTypeB != "Y")) { // 반송된 일괄기안 문서를 여는 경우
     			openLocation = "/ezApprovalG/draftuiAll_WHWP.do?formURL=" + encodeURI(pArgument[1]) + "&draftFlag=" + encodeURI(pArgument[2]) + "&formDocType=" + encodeURI(pArgument[3]);
     		} else {
     			openLocation = "/ezApprovalG/draftuiWHWP.do?formURL=" + encodeURI(pArgument[1]) + "&draftFlag=" + encodeURI(pArgument[2]) + "&formDocType=" + encodeURI(pArgument[3]);
@@ -997,7 +997,7 @@ function openApprovUI(allFlag) {
         		var isGroupDoc = checkIsGroupDoc(encodeURI(pArgument[0]), orgCompanyID);
         		var openLocation = "";
         		
-        		if (isGroupDoc == "Y") { // 일괄기안 문서를 여는 경우
+        		if (isGroupDoc == "Y" && (typeof draftAllTypeB == "undefined" || draftAllTypeB != "Y")) { // 일괄기안 문서를 여는 경우
         			openLocation = "/ezApprovalG/approvuiAll_WHWP.do?docID=" + encodeURI(pArgument[0]);
         		} else {
             		openLocation = "/ezApprovalG/approvuiWHWP.do?docID=" + encodeURI(pArgument[0]);
@@ -1007,7 +1007,7 @@ function openApprovUI(allFlag) {
         	}
         } else {
             var isGroupDoc = checkIsGroupDoc(encodeURI(pArgument[0]), orgCompanyID);
-            if (isGroupDoc == "Y") // 일괄기안 문서를 여는 경우
+            if (isGroupDoc == "Y" && (typeof draftAllTypeB == "undefined" || draftAllTypeB != "Y")) // 일괄기안 문서를 여는 경우
                 openLocation = "/ezApprovalG/approvuiAll_WHWP.do?docID=";
             else
                 openLocation = "/ezApprovalG/approvui.do?docID=";
@@ -1202,7 +1202,7 @@ function openViewDocInfo(type) {
         	} else {
         		var isGroupDoc = checkIsGroupDoc(encodeURI(DocID), orgCompanyID);
         		
-        		if (isGroupDoc == "Y") { // 일괄기안 문서를 여는 경우 (결재진행문서, 기안한문서 메뉴에서 접근 시 지원)
+        		if (isGroupDoc == "Y" && (typeof draftAllTypeB == "undefined" || draftAllTypeB != "Y")) { // 일괄기안 문서를 여는 경우 (결재진행문서, 기안한문서 메뉴에서 접근 시 지원)
         			openLocation = "/ezApprovalG/ezviewAprAll_WHWP.do";
         		} else {
         			openLocation = "/ezApprovalG/ezviewAprWHWP.do";
@@ -3047,7 +3047,7 @@ function openServerDraftUI(pDraftFlag, pCurSelRow) {
     	} else {
     		var isGroupDoc = checkIsGroupDoc(pDocSN, "");
     		
-    		if (isGroupDoc == "Y") { // 임시저장된 일괄기안 문서를 여는 경우
+    		if (isGroupDoc == "Y" && (typeof draftAllTypeB == "undefined" || draftAllTypeB != "Y")) { // 임시저장된 일괄기안 문서를 여는 경우
     			openLocation = "/ezApprovalG/draftuiAll_WHWP.do?formURL=" + encodeURI(pArgument[1]) + "&draftFlag=" + encodeURI(pArgument[2]) + "&formDocType=" + encodeURI(pArgument[3]);
     		} else {
         		openLocation = "/ezApprovalG/draftuiWHWP.do?formURL=" + encodeURI(pArgument[1]) + "&draftFlag=" + encodeURI(pArgument[2]) + "&formDocType=" + encodeURI(pArgument[3]);
@@ -3226,12 +3226,12 @@ function chk_Passwd_Complete(chkpass) {
             return false;
         }
         
-        /* 2022-02-23 홍승비 - 일괄기안된 문서는 일괄결재 제외 */
+        /* 2022-02-23 홍승비 - 일괄기안된 문서는 일괄결재 제외 
         var isGroupDoc = checkIsGroupDoc($(this).attr("DATA1"), orgCompanyID); // 일괄기안문서 여부 체크 (1안 기준의 DOCID 전달)
         if (isGroupDoc == "Y") {
         	passCnt++;
         	return true;
-        }
+        }*/
         
         //결재타입 정보
         $.ajax({

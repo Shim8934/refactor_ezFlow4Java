@@ -16,6 +16,8 @@ public class MApprovalGOpinionInfoVO {
 	private String userDeptName;
 	/** 2023-03-13 전인하 - 전자결재 > 모바일 의견 기능 개선 - 의견 순번 */
 	private int opinionSN;
+	private int groupSN;
+	private String docID;
 	
 	public String getContent() {
 		return content;
@@ -59,5 +61,21 @@ public class MApprovalGOpinionInfoVO {
 	}
 	public void setOpinionSN(int opinionSN) {
 		this.opinionSN = opinionSN;
+	}
+
+	public int getGroupSN() {
+		return groupSN;
+	}
+
+	public void setGroupSN(int groupSN) {
+		this.groupSN = groupSN;
+	}
+
+	public String getDocID() {
+		return docID;
+	}
+
+	public void setDocID(String docID) {
+		this.docID = docID;
 	}
 }

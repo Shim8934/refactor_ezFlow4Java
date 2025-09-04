@@ -689,3 +689,208 @@ function GetDocumentElementForDraftAll(pCharName, pGubun) {
         return "";
     }
 }
+
+function localHWPLoad(frame, formPath, callback) {
+    const xhr = new XMLHttpRequest();
+    xhr.open("GET", formPath.substring(formPath.indexOf("/ezApprovalG/downloadAttachForHwp")), true);
+    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
+    xhr.responseType = 'blob';
+
+    xhr.onload = (e) => {
+        if (e.target.status === 200) {
+            frame.HwpCtrl.Open(e.target.response, "", "", function (res) {
+                callback(res);
+            }, null);
+        }
+    }
+    xhr.send();
+}
+
+var lastAnSaveOK = false;
+var lastAnSaveFail = false;
+var lastAnSaveIng = false;
+function lastAnSave(){
+    lastAnSaveFail = false;
+    lastAnSaveIng = true;
+    if($(".lastAn").length == 0){
+        $("body").append("<iframe class=\"lastAn\" name=\"lastAn\" id=\"lastAn\" style=\"width:0px; height:0px; border:0px\" src=\"/ezApprovalG/WHWPEditor.do?type=lastAn\"></iframe>");
+        return;
+    }
+    message.HwpCtrl.GetTextFile("HWP", "", function(data){
+        lastAnSave2(data, 1);
+    });
+}
+
+function lastAnSave2(hwp, lidx){
+    try{
+        lastAn.SetTextFile(hwp, "HWP", "", function(){
+            try{
+                for(var i = 0; i < an.options.length; i++){
+                    if(lidx == i)
+                        continue;
+                    deleteAn_B(lastAn.HwpCtrl, i > lidx ? 1 : 0);
+                }
+                lastAn.HwpCtrl.GetTextFile("HWP", "", function(html){
+                    var data = {
+                        docID : pDocIDAry[lidx + 1],
+                        html  : html
+                    }
+                    
+                    $.ajax({
+                        type : "POST",
+                        dataType : "text",
+                        async : false,
+                        url : "/ezApprovalG/saveFileHWP.do",
+                        contentType : "application/json",
+                        data : JSON.stringify(data),
+                        success: function(text){
+                            try{
+                                if(an.options.length > ++lidx)
+                                    lastAnSave2(hwp, lidx);
+                                else{
+                                    lastAnSaveOK = true;
+                                    lastAnSaveIng = false;
+                                }
+                            }catch(e){
+                                lastAnSaveIng = false;
+                                lastAnSaveFail = true;
+                            }
+                        },
+                        error: function(e){
+                            console.log(e);
+                            lastAnSaveIng = false;
+                            lastAnSaveFail = true;
+                        }
+                    });
+                });
+            }catch(e){
+                lastAnSaveIng = false;
+                lastAnSaveFail = true;
+            }
+        });
+    }catch(e){
+        lastAnSaveIng = false;
+        lastAnSaveFail = true;
+    }
+}
+
+function deleteAn_B(HwpCtrl, anIndex){
+    HwpCtrl.MoveToField("headcampaign{{"+anIndex+"}}");
+    HwpCtrl.DeleteCtrl(HwpCtrl.ParentCtrl);
+    var now = HwpCtrl.KeyIndicator().prnpageno;
+    var next = 0;
+    if(HwpCtrl.MoveToField("headcampaign{{"+anIndex+"}}")){
+        next = HwpCtrl.KeyIndicator().prnpageno;
+    }
+    if(next){
+        HwpCtrl.Run("MoveDocBegin");
+        for(var i = 1; i < now; i++){
+            HwpCtrl.Run("MovePageDown");
+        }
+        for(var i = now; i < next; i++){
+            HwpCtrl.Run("MovePageBegin");
+            HwpCtrl.Run("Select");
+            HwpCtrl.Run("MovePageEnd");
+            HwpCtrl.Run("DeleteBack");
+            HwpCtrl.Run("DeleteBack");
+        }
+    }else{
+        HwpCtrl.Run("MovePageBegin");
+        HwpCtrl.Run("Select");
+        HwpCtrl.Run("MoveDocEnd");
+        HwpCtrl.Run("DeleteBack");
+        HwpCtrl.Run("DeleteBack");
+    }
+}
+
+/*
+function deleteAn_B(HwpCtrl, anIndex){
+    HwpCtrl.MoveToField("headcampaign{{"+anIndex+"}}");
+    HwpCtrl.DeleteCtrl(HwpCtrl.ParentCtrl);
+    HwpCtrl.Run("MovePageBegin");
+    HwpCtrl.Run("Select");
+    HwpCtrl.Run("MovePageEnd");
+    var now = HwpCtrl.KeyIndicator().prnpageno;
+    var beforePos = message.HwpCtrl.GetPos();
+    var afterPos;
+    HwpCtrl.Run("Delete");
+    do{
+        HwpCtrl.Run("DeleteBack");
+        HwpCtrl.Run("DeleteBack");
+        if(now == 1)
+            afterPos = message.HwpCtrl.GetPos();
+    }while((now == HwpCtrl.KeyIndicator().prnpageno && now != 1) || (afterPos && beforePos.list == afterPos.list && beforePos.para == afterPos.para && beforePos.pos == afterPos.pos))
+}
+*/
+var scrollPos = new Array();
+var pos;
+function scrollSetBefore(idx, start){
+    if(message.HwpCtrl.ScrollPosInfo.Item("VertPos") != 0 && !start){
+        message.ScrollPosInfo(0,0);
+        //setTimeout(() => scrollSetBefore(idx), 10);
+        hwpChange(() => scrollSetBefore(idx));
+        return;
+    }
+    message.MoveToFieldEx("headcampaign{{" + idx + "}}");
+    //setTimeout(() => scrollSet(idx), 10);
+    hwpChange(() => scrollSet(idx));
+}
+
+var before = 0;
+function scrollSet(idx){
+    var next = message.HwpCtrl.ScrollPosInfo.Item("VertPos");
+    if(before == next){
+        //setTimeout(() => scrollSet(idx), 10);
+        message.MoveToFieldEx("headcampaign{{" + idx + "}}");
+        hwpChange(() => scrollSet(idx));
+        return;
+    }
+    scrollPos[idx] = next;
+    before = next;
+    if(++idx >= an.options.length){
+        if(pos)
+            message.HwpCtrl.SetPos(pos.list, pos.para, pos.pos);
+        else
+            message.ScrollPosInfo(0,0);
+        pos = null;
+        before = 0;
+    }else{
+        //setTimeout(() => scrollSetBefore(idx), 10);
+        scrollSetBefore(idx);
+    }
+}
+
+function changeAn(para, isScroll){
+    var anIndex = para ? para - 1 : an.selectedIndex;
+    selTab(anIndex);
+    if(!isScroll){
+        message.ScrollPosInfo(0,scrollPos[anIndex]);
+        /*message.HwpCtrl.MovePos(3);
+        message.MoveToFieldEx("headcampaign{{"+anIndex+"}}");
+        message.HwpCtrl.MovePos(27);*/
+        //setTimeout(function(){message.MoveToField("body{{"+anIndex+"}}");}, 1);
+        hwpChange(() => message.MoveToField("body{{"+anIndex+"}}"));
+    }
+    an.selectedIndex = anIndex;
+}
+
+function selTab(idx) {
+    currentTabIdx = idx + 1;
+    pDocID = pDocIDAry[currentTabIdx];
+    if(!attachLoad[currentTabIdx]){
+        setAttachInfo(an.options[idx].value, "APR", lstAttachLink, draftAllTypeB);
+        attachHTMLSave(currentTabIdx);
+    } else{
+        lstAttachLink.innerHTML = attachHTML[currentTabIdx];
+        lstAttachLinkDoc.innerHTML = docAttachHTML[currentTabIdx];
+    }
+    
+    var tmp = message.document.getElementById("hwpctrl_frame");
+    if (tmp) {
+        tmp.contentDocument.getElementById("ImeWrapper_Elm").focus();
+    }
+}
+
+function hwpChange(nextFun){
+    requestAnimationFrame(() => requestAnimationFrame(() => nextFun()));
+}

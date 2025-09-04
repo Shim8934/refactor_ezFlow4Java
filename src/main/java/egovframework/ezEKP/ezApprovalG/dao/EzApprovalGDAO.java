@@ -4095,4 +4095,21 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	public void saveSummary(ApprGSummaryVO summary) throws Exception {
 		update("EzApprovalG.saveSummary", summary);
 	}
+
+	/*2025-01-20 강동주 - 전자결재 > 백단 결재 > 문서 핸들링 시 오류 발생하였을 때 insert */
+	public void saveFailDocID(Map<String, Object> map) throws Exception {
+		insert("EzApprovalG.saveFailDocID", map);
+	}
+	
+	public Map<String, Object> getFailDocID(Map<String, Object> map) throws Exception {
+		return (Map<String, Object>) select("EzApprovalG.getFailDocID", map);
+	}
+	
+	public void updateFailDocID(Map<String, Object> map) throws Exception {
+		update("EzApprovalG.updateFailDocID", map);
+	}
+	
+	public void deleteFailDocID(Map<String, Object> map) throws Exception {
+		delete("EzApprovalG.deleteFailDocID", map);
+	}
 }

@@ -3,6 +3,8 @@ package egovframework.ezMobile.ezApprovalG.service.impl;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezApprovalG.dao.EzApprovalGDAO;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGAprLineVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGDocListVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGListHeaderVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGAprLineVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGFormVO;
@@ -3051,4 +3053,200 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 
         logger.debug("insLastAprReceipt ended");
     }
+
+	@Override
+	public String checkLastKyulje(String docID, String aprMemberSN, String lang, String offSet, String companyID, int tenantID) throws Exception {
+		String result = "";
+		String orgUID = "";
+		String currentAprType = "";
+		int lastAprLineSN = 0;
+		int totalLineSN = 0;
+		String formID = "";
+		boolean isJKAprTypeAfterDK = false; // 전자결재 G > 대결자(016) 이후의 전결자(004)가 존재하는 경우, 해당 플래그를 true로 한다.
+		String addLastKyulJeYN = ezCommonService.getTenantConfig("addLastKyulJeYN", tenantID);
+
+		Map<String, Object> lineMap = getAprMemberBySn(docID, aprMemberSN, lang, companyID, tenantID);
+		if(lineMap != null && !lineMap.isEmpty()){
+			orgUID = (String) lineMap.get("APRMEMBERID");
+		}
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("companyID", companyID);
+		map.put("v_DOCID", docID);
+		map.put("v_MODE", "APR");
+		map.put("v_TENANTID", tenantID);
+
+		List<ApprGDocListVO> apprGDocListVOList = ezApprovalGDAO.getDocInfo(map);
+		if(apprGDocListVOList.size() > 0){
+			formID = apprGDocListVOList.get(0).getFormID();
+		}
+
+		// userID로 추출
+		String docState = getDocAprState(docID, aprMemberSN, orgUID, companyID, tenantID);
+		// userID로 추출한 값이 없을 경우 orgID로 추출
+		if (docState == null || docState.equals("")) {
+			docState = getDocAprState(docID, "", orgUID, companyID, tenantID);
+		}
+
+		// userID로 추출
+		String rValue = getDocAprLine(docID, aprMemberSN, orgUID, docState, companyID, tenantID);
+		// userID로 추출한 값이 없을 경우 orgUID로 추출
+		if (rValue == null || rValue.equals("<DATA></DATA>")) {
+			rValue = getDocAprLine(docID, "", orgUID, docState, companyID, tenantID);
+		}
+
+		org.w3c.dom.Document xmlDom = commonUtil.convertStringToDocument(rValue);
+
+		String signNum = xmlDom.getElementsByTagName("APRMEMBERSN").item(0).getTextContent();
+		String aprState = xmlDom.getElementsByTagName("APRSTATE").item(0).getTextContent();
+		String aprType = xmlDom.getElementsByTagName("APRTYPE").item(0).getTextContent();
+		
+		String lineResult = ezApprovalGService.getAprLineInfo(docID, orgUID, formID, companyID, lang, tenantID, offSet, "DRAFT", "", "", "", "");
+
+		org.w3c.dom.Document lineXml = commonUtil.convertStringToDocument(lineResult);
+		NodeList docListNode = lineXml.getElementsByTagName("ROW");
+
+		if (docListNode.getLength() > 0) {
+			logger.debug("docListNode.getLength = " + docListNode.getLength());
+
+			totalLineSN = docListNode.getLength();
+
+			for (int k = totalLineSN - Integer.parseInt(aprMemberSN); k < totalLineSN; k++) {
+				String pType = docListNode.item(k).getChildNodes().item(0).getChildNodes().item(11).getTextContent(); //APRTYPE
+				// 007(참조), 008(개인순차협조), 009(개인병렬협조), 011(부서순차협조), 012(부서병렬협조)
+				if (pType.equals("007") || pType.equals("008") || pType.equals("009") || pType.equals("011") || pType.equals("012")) {
+					aprMemberSN =  String.valueOf(Integer.parseInt(aprMemberSN) - 1);
+				}
+			}
+
+			for (int k = 0; k < docListNode.getLength(); k++) {
+				String pType = docListNode.item(k).getChildNodes().item(0).getChildNodes().item(11).getTextContent();
+				// 003(결재안함), 007(참조), 008(개인순차협조), 009(개인병렬협조), 011(부서순차협조), 012(부서병렬협조)
+				if (pType.equals("003") || pType.equals("007") || pType.equals("008") || pType.equals("009") || pType.equals("011") || pType.equals("012")) {
+					totalLineSN = totalLineSN - 1;
+				}
+			}
+
+			for (int k = docListNode.getLength() -1; k >= 0; k--) {
+				currentAprType = docListNode.item(k).getChildNodes().item(0).getChildNodes().item(11).getTextContent();
+
+				switch (currentAprType) {
+					case "001": // "결재";
+						lastAprLineSN = lastAprLineSN + 1;
+						break;
+
+					case "019": // "검토";
+						lastAprLineSN = lastAprLineSN + 1;
+						break;
+
+					case "004": // "전결";
+						lastAprLineSN = lastAprLineSN + 1;
+						break;
+
+					case "003": // "결재안함";
+						lastAprLineSN = lastAprLineSN + 1;
+						break;
+				}
+			}
+		}
+
+		logger.debug("totalLineSN = " + totalLineSN);
+		logger.debug("lastAprLineSN = " + lastAprLineSN);
+
+		int jeonKyul = getDocInfoJeonKyul(docID, orgUID, aprState, companyID, tenantID);
+
+		if (jeonKyul > 0) {
+			isJKAprTypeAfterDK = true;
+		}
+		
+		if ((totalLineSN == Integer.parseInt(signNum.trim()) || isJKAprTypeAfterDK)
+				&& (aprType.equals("016") || aprType.equals("001") || aprType.equals("004") || (aprType.equals("008") && addLastKyulJeYN.equals("1") || addLastKyulJeYN.equals("2")))
+				&& !aprType.equals("007")){
+			result = "TRUE";
+		}else{
+			result = "FALSE";
+		}
+			
+		return result;
+	}
+
+	public int getDocInfoJeonKyul(String docID, String orgUID, String aprState, String companyID, int tenantID) throws Exception {
+		logger.debug("getDocInfoJeonKyul started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		map.put("companyID", companyID);
+		map.put("v_PDOCID", docID);
+		map.put("v_PUSERID", orgUID);
+		map.put("v_PAPRSTATE", aprState);
+		map.put("v_TENANTID", tenantID);
+
+		logger.debug("getDocInfoJeonKyul ended");
+
+		return ezApprovalGDAO.getDocInfoJeonKyul(map);
+	}
+
+	public String getDocAprLine(String docID, String aprMemberSN, String userID, String docState, String companyID, int tenantID) throws Exception {
+		logger.debug("getDocAprLine started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		map.put("companyID", companyID);
+		map.put("v_PDOCID", docID);
+		map.put("v_PUSERID", userID);
+		map.put("v_PAPRSTATE", docState);
+		map.put("v_TENANTID", tenantID);
+		map.put("v_APRMEMBERSN", aprMemberSN);
+
+		List<ApprGAprLineVO> apprGAprLineVOList = ezApprovalGDAO.getDocAprLine(map);
+
+		StringBuffer sb = new StringBuffer();
+		sb.append("<DATA>");
+
+		for (int i = 0; i < apprGAprLineVOList.size(); i++) {
+			sb.append(commonUtil.getQueryResult(apprGAprLineVOList.get(i)));
+		}
+
+		sb.append("</DATA>");
+
+		logger.debug("getDocAprLine ended");
+
+		return sb.toString();
+	}
+	
+	public String getDocAprState(String docID, String aprMemberSN, String userID, String companyID, int tenantID) throws Exception {
+		logger.debug("getDocAprState started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		map.put("companyID", companyID);
+		map.put("v_PDOCID", docID);
+		map.put("v_PUSERID", userID);
+		map.put("v_TENANTID", tenantID);
+		map.put("v_APRMEMBERSN", aprMemberSN);
+		// 승인(003), 완료(010) 아닌 결재정보 가져오기
+		List<ApprGAprLineVO> apprGAprLineVOList = ezApprovalGDAO.getAprLineInfoAprState(map);
+
+		StringBuffer sb = new StringBuffer();
+		sb.append("<DATA>");
+
+		for (int i = 0; i < apprGAprLineVOList.size(); i++) {
+			sb.append(commonUtil.getQueryResult(apprGAprLineVOList.get(i)));
+		}
+
+		sb.append("</DATA>");
+
+		org.w3c.dom.Document xmlDom = commonUtil.convertStringToDocument(sb.toString());
+
+		String state = "";
+
+		if (apprGAprLineVOList.size() > 0) {
+			state = xmlDom.getElementsByTagName("APRSTATE").item(0).getTextContent();
+		}
+
+		logger.debug("getDocAprState ended");
+
+		return state;
+	}
+	
 }

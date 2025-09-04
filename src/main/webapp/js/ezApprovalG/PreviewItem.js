@@ -409,7 +409,7 @@ function pre_openApprovUI(allFlag) {
 	    		var isGroupDoc = checkIsGroupDoc(encodeURI(pArgument[0]), orgCompanyID);
 	    		var openLocation = "";
 	    		
-	    		if (isGroupDoc == "Y") { // 일괄기안 문서를 여는 경우
+	    		if (isGroupDoc == "Y" && (typeof draftAllTypeB == "undefined" || draftAllTypeB != "Y")) { // 일괄기안 문서를 여는 경우
         			openLocation = "/ezApprovalG/approvuiAll_WHWP.do?docID=" + encodeURI(pArgument[0]);
         		} else {
             		openLocation = "/ezApprovalG/approvuiWHWP.do?docID=" + encodeURI(pArgument[0]);
@@ -515,7 +515,7 @@ function pre_openViewDocInfo(type) {
     		} else {
     			var isGroupDoc = checkIsGroupDoc(encodeURI(DocID), orgCompanyID);
         		
-        		if (isGroupDoc == "Y") { // 일괄기안 문서를 여는 경우 (결재진행문서, 기안한문서 메뉴에서 접근 시 지원)
+        		if (isGroupDoc == "Y" && (typeof draftAllTypeB == "undefined" || draftAllTypeB != "Y")) { // 일괄기안 문서를 여는 경우 (결재진행문서, 기안한문서 메뉴에서 접근 시 지원)
         			openLocation = "/ezApprovalG/ezviewAprAll_WHWP.do";
         		} else {
         			openLocation = "/ezApprovalG/ezviewAprWHWP.do";
@@ -819,7 +819,7 @@ function pre_openServerDraftUI(pDraftFlag, pCurSelRow) {
     		/* 2022-06-30 홍승비 - 전자결재 미리보기 기능 일괄기안문서에도 대응 */
     		var isGroupDoc = checkIsGroupDoc(pDocSN, ""); // 일괄기안문서 여부 체크 (임시저장문서의 pDocSN 전달)
     		
-    		if (isGroupDoc == "Y") { // 임시저장된 일괄기안 문서를 여는 경우
+    		if (isGroupDoc == "Y" && (typeof draftAllTypeB == "undefined" || draftAllTypeB != "Y")) { // 일괄기안 문서를 여는 경우
     			openLocation = "/ezApprovalG/draftuiAll_WHWP.do?formURL=" + encodeURI(pArgument[1]) + "&draftFlag=" + encodeURI(pArgument[2]) + "&formDocType=" + encodeURI(pArgument[3]);
     		} else {
     			openLocation = "/ezApprovalG/draftuiWHWP.do?formURL=" + encodeURI(pArgument[1]) + "&draftFlag=" + encodeURI(pArgument[2]) + "&formDocType=" + encodeURI(pArgument[3]);
@@ -905,7 +905,7 @@ function pre_openDraftUI(pDraftFlag, pCurSelRow) {
     	} else {
     		var isGroupDoc = checkIsGroupDoc(pArgument[7], ""); // 일괄기안문서 여부 체크 (1안 기준의 DOCID 전달)
     		
-    		if (isGroupDoc == "Y") { // 반송된 일괄기안 문서를 여는 경우
+    		if (isGroupDoc == "Y" && (typeof draftAllTypeB == "undefined" || draftAllTypeB != "Y")) { // 일괄기안 문서를 여는 경우
     			openLocation = "/ezApprovalG/draftuiAll_WHWP.do?formURL=" + encodeURI(pArgument[1]) + "&draftFlag=" + encodeURI(pArgument[2]) + "&formDocType=" + encodeURI(pArgument[3]);
     		} else {
     			openLocation = "/ezApprovalG/draftuiWHWP.do?formURL=" + encodeURI(pArgument[1]) + "&draftFlag=" + encodeURI(pArgument[2]) + "&formDocType=" + encodeURI(pArgument[3]);

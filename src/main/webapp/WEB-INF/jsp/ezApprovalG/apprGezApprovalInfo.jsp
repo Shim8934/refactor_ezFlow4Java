@@ -258,6 +258,9 @@
 			var draftAllFlag = "<c:out value ='${draftAllFlag}'/>";
 			var pDocIDAry = new Array();
 			var receiptFlag = opener != null ? opener.receiptFlag : parent.receiptFlag;
+			
+			// 일괄기안 B타입 플래그 추가
+            var draftAllTypeB = "<c:out value='${draftAllTypeB}'/>";
 
 			var doctitle;
 
@@ -1497,18 +1500,20 @@
 		                	}
 		                	
 		                	if (checkAprCheckFN != null && checkAprCheckFN && (pReDraftAprLineFlag || pReDraftFlag == "REDRAFT") && opener.ListType != "21") {
-		                		showAlert("<spring:message code='ezApprovalG.bhs23'/>");
-		                		
-		                		ret[0] = "DUPL";
-		                		if (ReturnFunction != null) {
-				                    ReturnFunction(ret);
-				                }
-				                else {
-				                    window.returnValue = ret;
-				                }
-				                
-				                window.close();
-		                		return;
+		                		if(draftAllFlag != "Y" && draftAllTypeB != "Y"){
+                                    showAlert("<spring:message code='ezApprovalG.bhs23'/>");
+                                    
+                                    ret[0] = "DUPL";
+                                    if (ReturnFunction != null) {
+                                        ReturnFunction(ret);
+                                    }
+                                    else {
+                                        window.returnValue = ret;
+                                    }
+                                    
+                                    window.close();
+                                    return;
+		                		}
 		                	}
 		                	
 		                    var lineArea = CheckLineArea();

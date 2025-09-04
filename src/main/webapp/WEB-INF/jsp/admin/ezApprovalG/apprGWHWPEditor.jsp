@@ -38,9 +38,30 @@
                        setTimeout(Editor_Complete, 100);
          	      }
            }
-		
+           
+            function localHWPLoad(frame, formPath, callback) {
+                const xhr = new XMLHttpRequest();
+                xhr.open("GET", formPath.substring(formPath.indexOf("/ezApprovalG/downloadAttachForHwp")), true);
+                xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
+                xhr.responseType = 'blob';
+            
+                xhr.onload = (e) => {
+                    if (e.target.status === 200) {
+                        frame.HwpCtrl.Open(e.target.response, "", "", function (res) {
+                            callback(res);
+                        }, null);
+                    }
+                }
+                xhr.send();
+            }
+            
 	        function Open(url, format, type, callback, name) {
-	            return HwpCtrl.Open(url, format, type, callback, name);
+	            var hostName = window.location.hostname;
+	            if(typeof hostName != "undefined" && hostName.indexOf("localhost") > -1){
+	                return localHWPLoad(this, url, callback);
+	            }else{
+	                return HwpCtrl.Open(url, format, type, callback, name);
+	            }
 	        }
 
 	        function SaveFile(filename, format, callback) {

@@ -678,4 +678,6 @@ public interface EzCommonService {
 	public void updateInitDataForIndiLang() throws Exception;
 
     public void alterJmochaBigAttachDownLimit() throws Exception;
+	
+	public void createApproveErrorInfoTable() throws Exception;
 }

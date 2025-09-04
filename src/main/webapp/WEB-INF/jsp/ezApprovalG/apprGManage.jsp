@@ -522,6 +522,7 @@
 		    });
 		  
 		    function window_onload() {
+		        draftAllTypeB = "<c:out value='${draftAllTypeB}'/>";
 		        CurrentHeight = document.documentElement.clientHeight;
 		        CurrentWidth = document.documentElement.clientWidth;
 		        var height = parseInt(divList.style.height.replace('px', '')) + 200;

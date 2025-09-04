@@ -2276,6 +2276,15 @@ public class EzCommonServiceImpl extends EzFileMngUtil implements EzCommonServic
             put("config_type","연동");
         }});
         
+        test.add(new HashMap<String, Object>(){{
+            put("confName","draftAllTypeB");
+            put("property_value","N");
+            put("config_name","일괄기안 B타입");
+            put("regdate","2025-01-08 00:00:00");
+            put("description","A타입 : 안추가 시 양식이 하나씩 추가됨. B타입 : 하나의 양식에 페이지가 추가됨. Y: 일괄기안 B타입 사용, N: 일괄기안 A타입(기존방식) 사용 (default : N)");
+            put("config_type","전자결재G");
+        }});
+        
 		List<TenantVO> tenantIdList = ezCommonDAO.getTenantList();
 		
 		for (Map<String, Object> map : test) {
@@ -9572,5 +9581,14 @@ public class EzCommonServiceImpl extends EzFileMngUtil implements EzCommonServic
             map.put("v_TENANTID", tenantVo.getTenantId());
             ezCommonDAO.alterJmochaBigAttachDownLimit(map);
         }
+    }
+
+    @Override
+    public void createApproveErrorInfoTable() throws Exception {
+        logger.debug("createApproveErrorInfoTable started");
+        
+        ezCommonDAO.createApproveErrorInfoTable();
+        
+        logger.debug("createApproveErrorInfoTable ended");
     }
 }

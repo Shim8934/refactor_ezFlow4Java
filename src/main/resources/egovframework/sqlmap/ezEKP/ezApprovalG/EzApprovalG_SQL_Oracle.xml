@@ -4650,6 +4650,9 @@
             </isNotEmpty>
 		</isNotEqual>
 		</isNotEqual>
+        <isNotEmpty property="draftTypeFlag">
+            AND FORMDRAFTALLFLAG = #draftTypeFlag#
+        </isNotEmpty>
 		ORDER BY FORMORDER
 		<isEqual property="isPortal" compareValue="Y">
 			LIMIT 0, 5
@@ -14168,7 +14171,10 @@
 	      FROM 
 	        	TBL_APRLINEINFO 
 	      WHERE  
-	      		DOCID = #v_DOCID#
+	      		DOCID IN
+        <iterate property="v_DOCID" open="(" close=")" conjunction=",">
+            <![CDATA[#v_DOCID[]#]]>
+        </iterate>
 	      AND 
 	      		APRMEMBERID = #v_USERID#
 	      AND ( 	APRSTATE = '002'
@@ -14318,7 +14324,10 @@
     		AND
             	COMPANYID = #companyID#
             AND	
-            	DOCID = #v_DOCID#
+            	DOCID IN
+            <iterate property="v_DOCID" open="(" close=")" conjunction=",">
+                <![CDATA[#v_DOCID[]#]]>
+            </iterate>
             AND 
             	APRMEMBERID = #v_USERID#
 		</isEqual>
@@ -14332,7 +14341,10 @@
              AND
             	COMPANYID = #companyID#
              AND  
-             	DOCID = #v_DOCID#
+             	DOCID IN
+            <iterate property="v_DOCID" open="(" close=")" conjunction=",">
+                <![CDATA[#v_DOCID[]#]]>
+            </iterate>
              AND 
              	APRMEMBERID = #v_USERID# 
 		</isNotEqual>
@@ -31193,7 +31205,10 @@
 					FROM
 						TBL_APRLINEINFO
 					WHERE
-						DOCID = #v_DOCID#
+						DOCID IN
+                    <iterate property="v_DOCID" open="(" close=")" conjunction=",">
+                        <![CDATA[#v_DOCID[]#]]>
+                    </iterate>
 					AND
 						APRSTATE = '002'
 					AND
@@ -35012,7 +35027,8 @@
 			TBL_FORMINFO.FORMID,
 			TBL_FORMINFO.FORMNAME,
 			TBL_FORMINFO.FORMDOCTYPE,
-			TBL_FORMINFO.FORMFILELOCATION
+			TBL_FORMINFO.FORMFILELOCATION,
+            TBL_FORMINFO.FORMDRAFTALLFLAG
 		FROM 
 			TBL_FORMINFO
 	<isNotEmpty property="v_DEPTID">
@@ -36532,7 +36548,10 @@
             APRTYPE IN ('001', '019')
         </isNotEqual>
         AND
-            DOCID = #docID#
+            DOCID IN 
+            <iterate property="docID" open="(" close=")" conjunction=",">
+                #docID[]#
+            </iterate>
         AND
             COMPANYID = #companyID#
         AND
@@ -37471,4 +37490,37 @@
         AND
             TENANT_ID = #tenantID#
 	</update>
+
+    <insert id="EzApprovalG.saveFailDocID" parameterClass="Map">
+        INSERT INTO TBL_APPROVE_ERROR_INFO
+            (DOCID, TENANT_ID, COMPANYID, ERROR_MESSAGE, ERROR_CASE, CREATEDATE, UPDATEDATE)
+        VALUES
+            (#v_DOCID#, #v_TENANTID#, #companyID#, #v_ERROR_MESSAGE#, #v_ERROR_CASE#, #v_CREATEDATE#, #v_UPDATEDATE#)
+    </insert>
+
+    <select id="EzApprovalG.getFailDocID" parameterClass="Map" resultClass="HashMap">
+        SELECT DOCID, TENANT_ID, COMPANYID, ERROR_MESSAGE, ERROR_CASE, CREATEDATE, UPDATEDATE
+          FROM TBL_APPROVE_ERROR_INFO
+         WHERE DOCID = #v_DOCID#
+           AND COMPANYID = #companyID#
+           AND TENANT_ID = #v_TENANTID#
+    </select>
+
+    <update id="EzApprovalG.updateFailDocID" parameterClass="Map">
+        UPDATE TBL_APPROVE_ERROR_INFO
+           SET UPDATEDATE = #v_UPDATEDATE#
+        <isNotEmpty property="v_ERROR_MESSAGE">
+            ,ERROR_MESSAGE = #v_ERROR_MESSAGE#
+        </isNotEmpty>
+         WHERE TENANT_ID = #v_TENANTID#
+           AND COMPANYID = #companyID#
+           AND DOCID = #v_DOCID#
+    </update>
+
+    <delete id="EzApprovalG.deleteFailDocID" parameterClass="Map">
+        DELETE FROM tbl_approve_error_info
+         WHERE TENANT_ID = #v_TENANTID#
+           AND COMPANYID = #companyID#
+           AND DOCID = #v_DOCID#
+    </delete>
 </sqlMap>

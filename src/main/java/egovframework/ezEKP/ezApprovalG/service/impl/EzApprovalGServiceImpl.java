@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezApprovalG.service.impl;
 
+import egovframework.ezEKP.ezApprovalG.CustomException.DocHandlingException;
 import java.io.BufferedReader; 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -1992,7 +1993,7 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 	}
 
 	@Override
-	public String getFormInfo(String formContID, String kind, String searchType, String searchName, String userID, String deptId, String companyID, String lang, int tenantID) throws Exception {
+	public String getFormInfo(String formContID, String kind, String searchType, String searchName, String userID, String deptId, String companyID, String lang, int tenantID, String draftTypeFlag) throws Exception {
 		logger.debug("getFormInfo started.");
 
 		StringBuffer resultXML = new StringBuffer();
@@ -2017,7 +2018,7 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 		resultXML.append("</HEADERS>");
 		
 		String strMultiData = commonUtil.getMultiData(lang, tenantID);
-		String docList = getFormInfoDB(formContID, userID, deptId, kind, strMultiData, searchType, searchName, companyID, tenantID);
+		String docList = getFormInfoDB(formContID, userID, deptId, kind, strMultiData, searchType, searchName, companyID, tenantID, draftTypeFlag);
 		
 		Document docXML = commonUtil.convertStringToDocument(docList);
 		int dlength = docXML.getElementsByTagName("ROW").getLength();
@@ -2415,13 +2416,13 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
         	String docFilePath = dirPath + companyID + commonUtil.separator + "doc" + commonUtil.separator + commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offSet, false).substring(0,4) + commonUtil.separator + getDocDir(newDocID) + commonUtil.separator + newDocID + "." + extFileName;
         	if (extFileName.equals("hwp")) {
 		        HWPFile hwpFile = HWPReader.fromFile(docFilePath);
-		        setHwpText("docnumber", docNo, hwpFile);
+		        setHwpText(false, "docnumber", docNo, hwpFile);
 		        
 		        //접수 후 반송,회송대장등록일 경우 접수결재칸 지워주기
 				for (int i = 1; i < 10; i++) {
 					if (findHwpField("1sign" + i, hwpFile)) {
-						setHwpText("1sign" + i, " ", hwpFile);
-						setHwpText("1jikwe" + i, " ", hwpFile);
+						setHwpText(false, "1sign" + i, " ", hwpFile);
+						setHwpText(false, "1jikwe" + i, " ", hwpFile);
 					} else {
 						break;
 					}
@@ -2943,7 +2944,7 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("companyID", companyID);
-		map.put("v_DOCID", docID);
+		map.put("v_DOCID", docID.split(","));
 		map.put("v_MODE", mode);
 		map.put("v_USERID", userID);
 		map.put("v_TENANTID", tenantID);
@@ -6135,9 +6136,125 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 		String signNum = xmlDom.getElementsByTagName("APRMEMBERSN").item(0).getTextContent();
 		String aprState = xmlDom.getElementsByTagName("APRSTATE").item(0).getTextContent();
 		String aprType = xmlDom.getElementsByTagName("APRTYPE").item(0).getTextContent();
-		
-		String resultVal = createMhtFile(formID, userID, signNum, docID, aprState, aprType, result, orgUID, strLang, companyID, request, userInfo, mode);
-		
+
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("v_DOCID", docID);
+        map.put("companyID", companyID);
+        map.put("v_TENANTID", userInfo.getTenantId());
+        map.put("v_FLAG", "APR");
+        map.put("v_APRMEMBERID", userID);
+
+        String docHref = ezApprovalGDAO.getDocInfoHref(map);
+        String extFileName = getExtendedFileName(docHref);
+        String draftAllTypeB = ezCommonService.getTenantConfig("draftAllTypeB", userInfo.getTenantId());
+        String groupDocSN = getGroupDocSN(docID, userInfo.getTenantId(), companyID);
+        groupDocSN = Strings.isNotBlank(groupDocSN) ? groupDocSN : "";
+        
+        /* 일괄결재 백단 처리 */
+        List<ApprGGroupDocInfoVO> groupDocList = getGroupDocList(docID, "APR", userInfo.getTenantId(), userInfo.getCompanyID());
+
+        boolean copyFlag = !groupDocSN.equals(docID) && "hwp".equals(extFileName.toLowerCase()) && "Y".equals(draftAllTypeB) ? false : true;
+        
+        boolean docnumFlag = false;
+        JSONArray resultJsonArr = null;
+        JSONObject resultJson = null;
+        String resultVal = "";
+        String groupResVal = "" ;
+        String resultSN = "";
+        int tabsn = 0;
+
+        if(groupDocList.size() > 1 && copyFlag) { // 1번째 안만 파일복사됨.
+            copyRollbackFile(docID, "APR", companyID, userInfo.getTenantId(), true);
+        }
+        try {
+            resultJson = createMhtFile(formID, userID, signNum, docID, aprState, aprType, result, orgUID, strLang, companyID, request, userInfo, mode);
+
+            resultVal = resultJson.get("result") != null ? (String) resultJson.get("result") : "ERROR";
+            resultSN = resultJson.get("cabinetSN") != null ? (String) resultJson.get("cabinetSN") : "";
+            
+            if(Strings.isNotBlank(resultSN)){
+                docnumFlag = true;
+            }
+            
+            /*2025-01-20 강동주 - 백단 결재 시 일괄기안 문인지 체크*/
+            /* 일괄결재 백단 처리 */
+            if (resultVal != null && !resultVal.contains("ERROR")) {
+                if(groupDocList.size() > 1){
+                    if(docnumFlag){
+                        resultJsonArr = new JSONArray();
+                        resultJsonArr.add(resultJson);
+                    }
+                    
+                    String href = "";
+                    for(int i = 1; i < groupDocList.size(); i++){
+                        href = groupDocList.get(i).getDocHref() != null ? groupDocList.get(i).getDocHref() : "";
+                        tabsn = Integer.parseInt(groupDocList.get(i).getTabSN());
+
+                        if("Y".equals(draftAllTypeB) && docnumFlag){
+                            String tempRealPath = commonUtil.getRealPath(request);
+                            File beforeFile = new File(commonUtil.detectPathTraversal(tempRealPath + href));
+
+                            if(!beforeFile.exists()){
+                                throw new Exception("GROUP EXCEPTION");
+                            }
+                        }
+                        
+                        if(copyFlag){
+                            // 롤백용 
+                            copyRollbackFile(groupDocList.get(i).getDocID(), "APR", companyID, userInfo.getTenantId(), true);
+                        }
+
+                        String tempFormID = getFormIdFromApr(groupDocList.get(i).getDocID(), companyID, userInfo.getTenantId());
+                        if(href.contains("hwp")){
+//                            groupResVal = mobileSrvConn_HWP(userID, result, tempFormID, "", groupDocList.get(i).getDocID(), orgUID, strLang, companyID, request, userInfo, mode, aprMemberSN);
+                            resultJson = createHwpFile(formID, userID, signNum, groupDocList.get(i).getDocID(), aprState, aprType, result, orgUID, strLang, companyID, request, userInfo, mode);
+                        } else if (href.contains("mht")) {
+//                            groupResVal = mobileSrvConn(userID, result, tempFormID, "", groupDocList.get(i).getDocID(), orgUID, strLang, companyID, request, userInfo, mode, aprMemberSN);
+                            resultJson = createMhtFile(formID, userID, signNum, groupDocList.get(i).getDocID(), aprState, aprType, result, orgUID, strLang, companyID, request, userInfo, mode);
+                        }
+                        groupResVal = resultJson.get("result") != null ? (String) resultJson.get("result") : "ERROR";
+
+                        if(groupResVal != null && groupResVal.equals("ERROR")){
+                            throw new Exception("GROUP EXCEPTION");
+                        }
+                        
+                        if(docnumFlag){
+                            resultJsonArr.add(resultJson);
+                        }
+                        
+                    }
+                }
+            }
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            /* 일괄기안 docnum, 파일 롤백 */
+            if(groupDocList.size() > 1 && tabsn > 1){
+                if (docnumFlag) {
+                    for(int i = 0; i < resultJsonArr.size(); i++) {
+                        JSONObject json = (JSONObject) resultJsonArr.get(i);
+                        String cabinetSN = (String) json.get("cabinetSN");
+                        String resetDocID = (String) json.get("docID");
+                        String resetRes = (String) json.get("result");
+                        String strDeptID = (String) json.get("strDeptID");
+                        if(!resetRes.contains("ERROR")){
+                            rollBackDocNumber(strDeptID, companyID, cabinetSN, resetDocID, strLang, userInfo.getTenantId());
+                        }
+                    }
+                }
+
+                for(int i = 0; i < tabsn; i++) {
+                    if("Y".equals(draftAllTypeB) && !docnumFlag && i == 0){
+                        copyRollbackFile(groupDocList.get(i).getDocID(), "", companyID, userInfo.getTenantId(), false);
+                        break;
+                    }else{
+                        copyRollbackFile(groupDocList.get(i).getDocID(), "", companyID, userInfo.getTenantId(), false);
+                    }
+                    //copyRollbackFile(groupDocList.get(i).getDocID(), "APR", companyID, userInfo.getTenantId(), false);
+                }
+            }
+            return "ERROR";
+        }
+        
 		logger.debug("mobileSrvConn ended.");
 		
 		return resultVal;
@@ -6177,10 +6294,131 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 		String signNum = xmlDom.getElementsByTagName("APRMEMBERSN").item(0).getTextContent();
 		String aprState = xmlDom.getElementsByTagName("APRSTATE").item(0).getTextContent();
 		String aprType = xmlDom.getElementsByTagName("APRTYPE").item(0).getTextContent();
-		
-		String resultVal = createHwpFile(formID, userID, signNum, docID, aprState, aprType, result, orgUID, strLang, companyID, request, userInfo, mode);
-		
-		logger.debug("mobileSrvConn_HWP ended");
+
+
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("v_DOCID", docID);
+        map.put("companyID", companyID);
+        map.put("v_TENANTID", userInfo.getTenantId());
+        map.put("v_FLAG", "APR");
+        map.put("v_APRMEMBERID", userID);
+
+        String docHref = ezApprovalGDAO.getDocInfoHref(map);
+        String extFileName = getExtendedFileName(docHref);
+        String draftAllTypeB = ezCommonService.getTenantConfig("draftAllTypeB", userInfo.getTenantId());
+        String groupDocSN = getGroupDocSN(docID, userInfo.getTenantId(), companyID);
+        groupDocSN = Strings.isNotBlank(groupDocSN) ? groupDocSN : "";
+        
+        List<ApprGGroupDocInfoVO> groupDocList = getGroupDocList(docID, "APR", userInfo.getTenantId(), userInfo.getCompanyID());
+
+        boolean copyFlag = !groupDocSN.equals(docID) && "hwp".equals(extFileName.toLowerCase()) && "Y".equals(draftAllTypeB) ? false : true;
+        
+        boolean docnumFlag = false;
+        JSONArray resultJsonArr = null;
+        JSONObject resultJson = null;
+        String resultVal = "";
+        String groupResVal = "" ;
+        String resultSN = "";
+        int tabsn = 0;
+        if(groupDocList.size() > 1 && copyFlag) { // 1번째 안만 파일복사됨.
+            copyRollbackFile(docID, "APR", companyID, userInfo.getTenantId(), true);
+        }
+        //resultVal = createHwpFile(formID, userID, signNum, docID, aprState, aprType, result, orgUID, strLang, companyID, request, userInfo, mode);
+        try {
+            resultJson = createHwpFile(formID, userID, signNum, docID, aprState, aprType, result, orgUID, strLang, companyID, request, userInfo, mode);
+            
+            resultVal = resultJson.get("result") != null ? (String) resultJson.get("result") : "ERROR";
+            resultSN = resultJson.get("cabinetSN") != null ? (String) resultJson.get("cabinetSN") : "";
+            
+            if(Strings.isNotBlank(resultSN)){
+                docnumFlag = true;
+            }
+            
+            /*2025-01-20 강동주 - 백단 결재 시 일괄기안 문인지 체크*/
+            /* 일괄결재 백단 처리 */
+            if (resultVal != null && !resultVal.contains("ERROR")) {
+                if(groupDocList.size() > 1){
+                    if(docnumFlag){
+                        resultJsonArr = new JSONArray();
+                        resultJsonArr.add(resultJson);
+                    }
+                    
+                    String href = "";
+                    for(int i = 1; i < groupDocList.size(); i++){
+                        href = groupDocList.get(i).getDocHref() != null ? groupDocList.get(i).getDocHref() : "";
+                        tabsn = Integer.parseInt(groupDocList.get(i).getTabSN());
+                        
+                        if("Y".equals(draftAllTypeB) && docnumFlag){
+                            String tempRealPath = commonUtil.getRealPath(request);
+                            File beforeFile = new File(commonUtil.detectPathTraversal(tempRealPath + href));
+
+                            if(!beforeFile.exists()){
+                                throw new Exception("GROUP EXCEPTION");
+                            }
+                        }
+                        
+
+                        if(copyFlag){
+                            // 롤백용 
+                            copyRollbackFile(groupDocList.get(i).getDocID(), "APR", companyID, userInfo.getTenantId(), true);
+                        }
+
+                        String tempFormID = getFormIdFromApr(groupDocList.get(i).getDocID(), companyID, userInfo.getTenantId());
+                        if(href.contains("hwp")){
+//                            groupResVal = mobileSrvConn_HWP(userID, result, tempFormID, "", groupDocList.get(i).getDocID(), orgUID, strLang, companyID, request, userInfo, mode, aprMemberSN);
+                            resultJson = createHwpFile(formID, userID, signNum, groupDocList.get(i).getDocID(), aprState, aprType, result, orgUID, strLang, companyID, request, userInfo, mode);
+                        } else if (href.contains("mht")) {
+                            //groupResVal = mobileSrvConn(userID, result, tempFormID, "", groupDocList.get(i).getDocID(), orgUID, strLang, companyID, request, userInfo, mode, aprMemberSN);
+                            resultJson = createMhtFile(formID, userID, signNum, groupDocList.get(i).getDocID(), aprState, aprType, result, orgUID, strLang, companyID, request, userInfo, mode);
+                        }
+                        
+                        groupResVal = resultJson.get("result") != null ? (String) resultJson.get("result") : "ERROR";
+
+                        if(groupResVal != null && groupResVal.contains("ERROR")){
+                            throw new Exception("GROUP EXCEPTION");
+                        }
+                        if(docnumFlag){
+                            resultJsonArr.add(resultJson);
+                        }
+                    }
+                }
+            }else{
+                if(copyFlag){
+                    copyRollbackFile(docID, "APR", companyID, userInfo.getTenantId(), false);
+                }
+                return "ERROR";
+            }
+        } catch (Exception e) {
+            /* 일괄기안 docnum, 파일 롤백 */
+            if(groupDocList.size() > 1 && tabsn > 1){
+                if (docnumFlag) {
+                    for(int i = 0; i < resultJsonArr.size(); i++) {
+                        JSONObject json = (JSONObject) resultJsonArr.get(i);
+                        String cabinetSN = (String) json.get("cabinetSN");
+                        String resetDocID = (String) json.get("docID");
+                        String resetRes = (String) json.get("result");
+                        String strDeptID = (String) json.get("strDeptID");
+                        if(!resetRes.contains("ERROR")){
+                            rollBackDocNumber(strDeptID, companyID, cabinetSN, resetDocID, strLang, userInfo.getTenantId());
+                        }
+                    }
+                }
+                
+                for(int i = 0; i < tabsn; i++) {
+                    if("Y".equals(draftAllTypeB) && !docnumFlag && i == 0){
+                        copyRollbackFile(groupDocList.get(i).getDocID(), "", companyID, userInfo.getTenantId(), false);
+                        break;
+                    }else{
+                        String tempFormID = getFormIdFromApr(groupDocList.get(i).getDocID(), companyID, userInfo.getTenantId());
+                        logger.debug("tempFormID >> " + tempFormID);
+                        copyRollbackFile(groupDocList.get(i).getDocID(), "", companyID, userInfo.getTenantId(), false);
+                    }
+                    //copyRollbackFile(groupDocList.get(i).getDocID(), "APR", companyID, userInfo.getTenantId(), false);
+                }
+            }
+            return "ERROR";
+        }
+        logger.debug("mobileSrvConn_HWP ended");
 		
 		return resultVal;
 	}
@@ -6368,22 +6606,73 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 	
     private Cell findHwpFieldCell(ParagraphList pList, String fieldName) throws Exception {
         Cell fieldCell = null;
+        try {
+            for (Paragraph p : pList) {
+                fieldCell = findHwpFieldCell(p, fieldName);
+                
+                if (fieldCell != null) {
+                    break;
+                }
+            }
+        }
+        catch (Exception e){
+            throw new DocHandlingException(e.getMessage());
+        }
+        return fieldCell;
+    }
+    
+    private List<Cell> findHwpFieldCellB(ParagraphList pList, String fieldName) throws Exception {
+        List<Cell> result = new ArrayList<>();
         
         for (Paragraph p : pList) {
-            fieldCell = findHwpFieldCell(p, fieldName);
+            List<Cell> fieldCell = findHwpFieldCellB(p, fieldName);
             
             if (fieldCell != null) {
-                break;
+                result.addAll(fieldCell);
             }
         }
         
-        return fieldCell;
+        return result;
     }
     
     private Cell findHwpFieldCell(Paragraph p, String fieldName) throws Exception {
         if (p == null || p.getControlList() == null) {
             return null;
         }
+        try {
+            for (Control c : p.getControlList()) {
+                if (c.getType() == ControlType.Table) {
+                    ControlTable ct = (ControlTable) c;
+
+                    for (Row row : ct.getRowList()) {
+                        for (Cell cell : row.getCellList()) {
+                            Cell fieldCell = null;
+
+                            if (cell.getListHeader().getFieldName() != null && cell.getListHeader().getFieldName().equals(fieldName)) {
+                                fieldCell = cell;
+                            } else {
+                                fieldCell = findHwpFieldCell(cell.getParagraphList(), fieldName);
+                            }
+
+                            if (fieldCell != null) {
+                                return fieldCell;
+                            }
+                        }
+                    }
+                }
+            }
+        }catch (Exception e){
+            throw new DocHandlingException(e.getMessage());
+        }
+        
+        return null;
+    }
+    private List<Cell> findHwpFieldCellB(Paragraph p, String fieldName) throws Exception {
+        if (p == null || p.getControlList() == null) {
+            return null;
+        }
+        
+        List<Cell> result = new ArrayList<>();
         
         for (Control c : p.getControlList()) {
             if (c.getType() == ControlType.Table) {
@@ -6391,23 +6680,22 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
                 
                 for (Row row : ct.getRowList()) {
                     for (Cell cell : row.getCellList()) {
-                        Cell fieldCell = null;
+                        List<Cell> fieldCell = null;
                         
                         if (cell.getListHeader().getFieldName() != null && cell.getListHeader().getFieldName().equals(fieldName)) {
-                            fieldCell = cell;
+                            result.add(cell);
                         } else {
-                            fieldCell = findHwpFieldCell(cell.getParagraphList(), fieldName);
+                            fieldCell = findHwpFieldCellB(cell.getParagraphList(), fieldName);
+                            if(fieldCell != null)
+                                result.addAll(fieldCell);
                         }
                         
-                        if (fieldCell != null) {
-                            return fieldCell;
-                        }
                     }
                 }
             }
         }
         
-        return null;
+        return result;
     }
 	
 	/**
@@ -6419,15 +6707,19 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 	 */
 	private boolean findHwpField(String fieldName, HWPFile hwpFile) throws Exception {
 		logger.debug("findHwpField started");
-
-		for (Section s : hwpFile.getBodyText().getSectionList()) {
-			for (Paragraph p : s) {
-                Cell cell = findHwpFieldCell(p, fieldName);
-                if (cell != null) {
-                    return true;
+        
+        try {
+            for (Section s : hwpFile.getBodyText().getSectionList()) {
+                for (Paragraph p : s) {
+                    Cell cell = findHwpFieldCell(p, fieldName);
+                    if (cell != null) {
+                        return true;
+                    }
                 }
-			}
-		}
+            }
+        }catch (Exception e){
+            throw new DocHandlingException(e.getMessage());
+        }
 		
 		logger.debug("findHwpField ended");
 		
@@ -6441,20 +6733,36 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 	 * @throws Exception
 	 * 한글파일에 사인기입하기
 	 */
-	private void setHwpText(String fieldName, String signText, HWPFile hwpFile) throws Exception {
+	private void setHwpText(boolean draftAllB, String fieldName, String signText, HWPFile hwpFile) throws Exception {
 		logger.debug("setHwpSign started");
-
-		for (Section s : hwpFile.getBodyText().getSectionList()) {
-			for (Paragraph p : s) {
-                Cell cell = findHwpFieldCell(p, fieldName);
-                if (cell != null) {
-                    /* 2023-04-28 양지혜 - 공백 문자를 제거하고 사인을 삽입 */
-                    cell.getParagraphList().getParagraph(0).deleteText();
-                    cell.getParagraphList().getParagraph(0).createText();
-                    cell.getParagraphList().getParagraph(0).getText().addString(signText);
+        
+        try {
+            for (Section s : hwpFile.getBodyText().getSectionList()) {
+                for (Paragraph p : s) {
+                    if(draftAllB){
+                        List<Cell> cell = findHwpFieldCellB(p, fieldName);
+                        if (cell != null) {
+                            for (int i = 0; i < cell.size(); i++) {
+                                /* 2023-04-28 양지혜 - 공백 문자를 제거하고 사인을 삽입 */
+                                cell.get(i).getParagraphList().getParagraph(0).deleteText();
+                                cell.get(i).getParagraphList().getParagraph(0).createText();
+                                cell.get(i).getParagraphList().getParagraph(0).getText().addString(signText);
+                            }
+                        }
+                    } else{
+                        Cell cell = findHwpFieldCell(p, fieldName);
+                        if (cell != null) {
+                            /* 2023-04-28 양지혜 - 공백 문자를 제거하고 사인을 삽입 */
+                            cell.getParagraphList().getParagraph(0).deleteText();
+                            cell.getParagraphList().getParagraph(0).createText();
+                            cell.getParagraphList().getParagraph(0).getText().addString(signText);
+                        }
+                    }
                 }
-			}
-		}
+            }
+        }catch (Exception e){
+            throw new DocHandlingException(e.getMessage());
+        }
 		logger.debug("setHwpSign ended");
 	}
 	
@@ -6467,15 +6775,18 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 	private String getHwpText(String fieldName, HWPFile hwpFile) throws Exception {
 		logger.debug("getHwpSign started");
 		String fieldText = "";
-		
-		for (Section s : hwpFile.getBodyText().getSectionList()) {
-			for (Paragraph p : s) {
-                Cell cell = findHwpFieldCell(p, fieldName);
-                if (cell != null) {
-                    fieldText = cell.getParagraphList().getParagraph(0).getText().getNormalString(0);
+        try {
+            for (Section s : hwpFile.getBodyText().getSectionList()) {
+                for (Paragraph p : s) {
+                    Cell cell = findHwpFieldCell(p, fieldName);
+                    if (cell != null) {
+                        fieldText = cell.getParagraphList().getParagraph(0).getText().getNormalString(0);
+                    }
                 }
-			}
-		}
+            }
+        }catch (Exception e){
+            throw new DocHandlingException(e.getMessage());
+        }
 		
 		logger.debug("getHwpSign ended");
 		return fieldText;
@@ -6488,41 +6799,77 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 	 * @throws Exception
 	 * 한글파일에 사인기입하기
 	 */
-	private void setHwpText(HWPFile hwpFile, String fieldName, String... signTextArray) throws Exception {
+	private void setHwpText(boolean draftAllB, HWPFile hwpFile, String fieldName, String... signTextArray) throws Exception {
 		logger.debug("setHwpSign started");
-
-		for (Section s : hwpFile.getBodyText().getSectionList()) {
-			for (Paragraph p : s) {
-                Cell cell = findHwpFieldCell(p, fieldName);
-                if (cell != null) {
-                    ParagraphList paragraphList = cell.getParagraphList();
-                    ParaHeader ph = paragraphList.getParagraph(0).getHeader();
-                    ParaCharShape pcs = paragraphList.getParagraph(0).getCharShape();
-                    
-                    for (int k = 1; k < signTextArray.length; k++) {
-                        Paragraph newParagraph = paragraphList.addNewParagraph();
-                        
-                        newParagraph.createText();
-                        newParagraph.createCharShape();
-                        
-                        //글자모양 복사해주기
-                        for (CharPositionShapeIdPair charPositionShapeIdPair : pcs.getPositonShapeIdPairList()) {
-                            newParagraph.getCharShape().addParaCharShape(charPositionShapeIdPair.getPosition(), charPositionShapeIdPair.getShapeId());
+        try {
+            for (Section s : hwpFile.getBodyText().getSectionList()) {
+                for (Paragraph p : s) {
+                    if(draftAllB){
+                        List<Cell> cell = findHwpFieldCellB(p, fieldName);
+                        if (cell != null) {
+                            for (int i = 0; i < cell.size(); i++) {
+                                ParagraphList paragraphList = cell.get(i).getParagraphList();
+                                ParaHeader ph = paragraphList.getParagraph(0).getHeader();
+                                ParaCharShape pcs = paragraphList.getParagraph(0).getCharShape();
+    
+                                for (int k = 1; k < signTextArray.length; k++) {
+                                    Paragraph newParagraph = paragraphList.addNewParagraph();
+    
+                                    newParagraph.createText();
+                                    newParagraph.createCharShape();
+    
+                                    //글자모양 복사해주기
+                                    for (CharPositionShapeIdPair charPositionShapeIdPair : pcs.getPositonShapeIdPairList()) {
+                                        newParagraph.getCharShape().addParaCharShape(charPositionShapeIdPair.getPosition(), charPositionShapeIdPair.getShapeId());
+                                    }
+    
+                                    //헤더값 복사해서 정렬 맞추기
+                                    newParagraph.getHeader().setParaShapeId(ph.getParaShapeId());
+                                    newParagraph.getHeader().setStyleId(ph.getStyleId());
+    
+                                    newParagraph.getText().addString(signTextArray[k]);
+                                }
+                                /* 2023-04-28 양지혜 - 공백 문자를 제거하고 사인을 삽입 */
+                                paragraphList.getParagraph(0).deleteText();
+                                paragraphList.getParagraph(0).createText();
+                                paragraphList.getParagraph(0).getText().addString(signTextArray[0]);
+                            }
+                        }              
+                    }else{
+                        Cell cell = findHwpFieldCell(p, fieldName);
+                        if (cell != null) {
+                            ParagraphList paragraphList = cell.getParagraphList();
+                            ParaHeader ph = paragraphList.getParagraph(0).getHeader();
+                            ParaCharShape pcs = paragraphList.getParagraph(0).getCharShape();
+    
+                            for (int k = 1; k < signTextArray.length; k++) {
+                                Paragraph newParagraph = paragraphList.addNewParagraph();
+    
+                                newParagraph.createText();
+                                newParagraph.createCharShape();
+    
+                                //글자모양 복사해주기
+                                for (CharPositionShapeIdPair charPositionShapeIdPair : pcs.getPositonShapeIdPairList()) {
+                                    newParagraph.getCharShape().addParaCharShape(charPositionShapeIdPair.getPosition(), charPositionShapeIdPair.getShapeId());
+                                }
+    
+                                //헤더값 복사해서 정렬 맞추기
+                                newParagraph.getHeader().setParaShapeId(ph.getParaShapeId());
+                                newParagraph.getHeader().setStyleId(ph.getStyleId());
+    
+                                newParagraph.getText().addString(signTextArray[k]);
+                            }
+                            /* 2023-04-28 양지혜 - 공백 문자를 제거하고 사인을 삽입 */
+                            paragraphList.getParagraph(0).deleteText();
+                            paragraphList.getParagraph(0).createText();
+                            paragraphList.getParagraph(0).getText().addString(signTextArray[0]);
                         }
-                        
-                        //헤더값 복사해서 정렬 맞추기
-                        newParagraph.getHeader().setParaShapeId(ph.getParaShapeId());
-                        newParagraph.getHeader().setStyleId(ph.getStyleId());
-                        
-                        newParagraph.getText().addString(signTextArray[k]);
                     }
-                    /* 2023-04-28 양지혜 - 공백 문자를 제거하고 사인을 삽입 */
-                    paragraphList.getParagraph(0).deleteText();
-                    paragraphList.getParagraph(0).createText();
-                    paragraphList.getParagraph(0).getText().addString(signTextArray[0]);
                 }
-			}
-		}
+            }
+        }catch (Exception e){
+            throw new DocHandlingException(e.getMessage());
+        }
 
 		logger.debug("setHwpSign ended");
 	}
@@ -6583,10 +6930,114 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 		return hwpFile.getDocInfo().getBinDataList().size();
 	}
 
-	private String createHwpFile(String formID, String userID, String signNum, String docID, String aprState, String aprType, String result, String orgUID, String strLang,
+    /**
+     * saveFailDocID
+     * @param docID         문서의 키값
+     * @param errMessage    문서의 에러 메시지
+     * @param companyID     회사명
+     * @param tenantID      tenantID
+     * @throws Exception
+     */
+    public void saveFailDocID(String docID, String errMessage, String companyID, int tenantID) {
+        logger.debug("saveFailDocID started");
+        logger.debug("saveFailDocID param : docID = " + docID + " , companyID = " + companyID + " , tenantID = " + tenantID);
+
+        if(docID == null) return;
+        try {
+            Map<String, Object> map = new HashMap<>();
+            map.put("v_DOCID", docID);
+            map.put("v_TENANTID", tenantID);
+            map.put("companyID", companyID);
+
+            Map<String, Object> failDoc = ezApprovalGDAO.getFailDocID(map);
+
+            if (failDoc != null && !failDoc.isEmpty()) {
+                String tempDate = commonUtil.getTodayUTCTime("");
+                map.put("v_UPDATEDATE", tempDate);
+
+                if (errMessage != null && !"".equals(errMessage)) {
+                    map.put("v_ERROR_MESSAGE", errMessage);
+                }
+                ezApprovalGDAO.updateFailDocID(map);
+            } else {
+                String tempDate = commonUtil.getTodayUTCTime("");
+                map.put("v_CREATEDATE", tempDate);
+                map.put("v_UPDATEDATE", tempDate);
+                map.put("v_ERROR_MESSAGE", errMessage);
+
+                ezApprovalGDAO.saveFailDocID(map);
+            }
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+        }
+        logger.debug("saveFailDocID ended");
+    }
+    
+    /**
+     * DB 내 tbl_aprdocinfo, tbl_endaprdocinfo 내 href 데이터 형식 기준으로 서버 내 문서 롤백파일 생성
+     * @param docID         문서의 키값
+     * @param docMode       문서의 진행상태 : APR / END
+     * @param companyID     회사명
+     * @param tenantID      tenantID
+     * @param mode          mode
+     * @throws Exception
+     */
+    public void copyRollbackFile(String docID, String docMode, String companyID, int tenantID, boolean mode)  throws Exception {
+        logger.debug("copyRollbackFile started");
+        logger.debug("copyRollbackFile param : docID = " + docID + " , companyID = " + companyID + " , tenantID = " + tenantID + " / mode = " + mode);
+        
+        if(docID == null) return;
+        if(docMode == null || !"".equals(docMode)){
+            docMode = "APR";
+        }
+
+        String path = commonUtil.getUploadPath("upload_approvalG.ROOT", tenantID);
+        String oldYear = getDocHrefYear(docID, companyID, tenantID);
+        String realPath = servletContext.getRealPath("");
+        String href = getDocHref(docID, docMode, "", "", companyID, tenantID);
+        String extension = href.substring(href.lastIndexOf(".")+1); // hwp
+        String beforeHref = "";
+        String afterHref = "";
+        if (mode){
+            String afterFileName = "";
+            beforeHref = href;
+            afterFileName = href.substring(href.lastIndexOf("/")+1, href.lastIndexOf(".")) + "_groupBack";
+            afterHref = href.substring(0, href.lastIndexOf("/") + 1) + afterFileName + "." + extension;
+        }else{
+//            beforeHref = href.substring(0, href.lastIndexOf("/")+1) + href.substring(href.lastIndexOf("/")+1, href.lastIndexOf(".")) + "_groupBack" + "." + extension;
+            String tempHref = path + commonUtil.separator + companyID + commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + "1000" + commonUtil.separator + getDocDir(docID) + commonUtil.separator + docID + "_groupBack.hwp";
+            File tempFile = new File(commonUtil.detectPathTraversal(realPath + tempHref));
+            if(!tempFile.exists()){
+                tempHref = path + commonUtil.separator + companyID + commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + "1000" + commonUtil.separator + getDocDir(docID) + commonUtil.separator + docID + "_groupBack.mht";
+                tempFile = new File(commonUtil.detectPathTraversal(realPath + tempHref));
+            }
+            beforeHref = tempHref;
+            afterHref = path + commonUtil.separator + companyID + commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + "1000" + commonUtil.separator + getDocDir(docID) + commonUtil.separator + docID + "." + tempHref.substring(tempHref.lastIndexOf(".")+1);
+        }
+        
+        File beforeFile = new File(commonUtil.detectPathTraversal(realPath + beforeHref));
+        File afterFile = new File(commonUtil.detectPathTraversal(realPath + afterHref));
+        
+        if(beforeFile.exists()){
+            FileUtils.copyFile(beforeFile, afterFile);
+        }
+
+        if(!mode){
+            if(beforeFile.exists()){
+                beforeFile.delete();
+            }
+        }
+        
+        logger.debug("copyRollbackFile ended");
+    }
+
+    private JSONObject createHwpFile(String formID, String userID, String signNum, String docID, String aprState, String aprType, String result, String orgUID, String strLang,
 			String companyID, HttpServletRequest request, LoginVO userInfo, String mode) throws Exception {
 		logger.debug("createHwpFile started");
-		
+        
+        JSONObject resultJson = new JSONObject();
+        resultJson.put("docID", docID);
+        
 		String proxySign = "";
 		String receiveDept = "";
 		String drafterDept = "";
@@ -6606,7 +7057,7 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 		//String docNumZeroCnt = ezCommonService.getTenantConfig("docNumZeroCnt", userInfo.getTenantId());
 		String docNumZeroCnt = getDocNumZeroCnt(companyID, userInfo.getTenantId());
 		String useReceiveDocNo = ezCommonService.getTenantConfig("useReceiveDocNo", userInfo.getTenantId());
-		String realPath = commonUtil.getRealPath(request);
+		String realPath = commonUtil.getRealPath(servletContext);
 		
 		String currentAprType = "";
 		int lastAprLineSN = 0;
@@ -6626,11 +7077,14 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 		String drafterDeptName = "";
 		String receiveDeptName = "";
 		boolean isJKAprTypeAfterDK = false; // 전자결재 G > 대결자(016) 이후의 전결자(004)가 존재하는 경우, 해당 플래그를 true로 한다.
-		
+        boolean tempIsJKAprTypeAfterDK = false;
+        
         String signInfo = "";
         String signInfo2 = "";
         String signText2 = "";
         boolean signSaveFlag = false;
+
+        String addLastKyulJeYN = ezCommonService.getTenantConfig("addLastKyulJeYN", userInfo.getTenantId());
         
         /* 2023-10-04 홍승비 - 양식상에 저장되는 서명일자는 UTC 시간이 아닌 결재자의 타임존 시간으로 저장 (웹과 동일 스펙, MM.dd 형식) */
         // 2025-02-19 조수빈 - ParseException으로 utc 기준 일자가 저장되는 결함 수정
@@ -6647,13 +7101,13 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
                 }
 			}
 			
-			String aprStateSign = getDocInfo(docID, "APR", "DOCSTATE", userInfo, companyID, userInfo.getTenantId(), "", "");
+			String docStateSign = getDocInfo(docID, "APR", "DOCSTATE", userInfo, companyID, userInfo.getTenantId(), "", "");
 			
-			Document aprXML2 = commonUtil.convertStringToDocument(aprStateSign);
-			aprStateSign = aprXML2.getElementsByTagName("DOCSTATE").item(0).getTextContent();
+			Document aprXML2 = commonUtil.convertStringToDocument(docStateSign);
+			docStateSign = aprXML2.getElementsByTagName("DOCSTATE").item(0).getTextContent();
 			
-			// aprState : 도착(011), 지정(012)
-			if (aprStateSign.equals("011") || aprStateSign.equals("012")) {
+			// docState : 수신(011), 합의(012)
+			if (docStateSign.equals("011") || docStateSign.equals("012")) {
 				String receiveRet = getReceivedDocInfo(userInfo, docID, companyID, strLang, userInfo.getTenantId(), userInfo.getOffset());
 				Document aprXML = commonUtil.convertStringToDocument(receiveRet);
 				
@@ -6678,16 +7132,20 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 			}
 			
 			formURL = realPath + fileForder1;
-			//한글파일 리더
-			HWPFile hwpFile = HWPReader.fromFile(formURL);
-			
-			//DOCSTATE : 011(수신)
-			if (aprStateSign.equals("011")) {
-				signAdd = "1";
-			} else {
-				signAdd = "";
-			}
-			
+            
+            //DOCSTATE : 011(수신)
+            if (docStateSign.equals("011")) {
+                signAdd = "1";
+            } else {
+                signAdd = "";
+            }
+
+            // .일괄기안 타입 체크 Y면 B 타입
+            String draftAllType = ezCommonService.getTenantConfig("draftAllTypeB", userInfo.getTenantId());
+            List<ApprGGroupDocInfoVO> group = getGroupDocList(docID, "APR", userInfo.getTenantId(), companyID);
+            String groupDocSN = getGroupDocSN(docID, userInfo.getTenantId(), companyID);
+            boolean draftAllTypeB = "Y".equals(draftAllType) && signAdd.equals("") && group.size() > 1;
+            
 			String signImage = "";
 			String propList = "extensionAttribute3;title;title2;displayName;displayName2;department;description;description2;extensionAttribute14";
 			String results = ezOrganService.getPropertyList(userID, propList, strLang, userInfo.getTenantId());
@@ -6738,9 +7196,9 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 			String strSeumyungDate = "";
 			
 			String lineResult = getAprLineInfo(docID, orgUID, formID, companyID, strLang, userInfo.getTenantId(), userInfo.getOffset(), "DRAFT", "", "", "", "");
-			
-			Document lineXml = commonUtil.convertStringToDocument(lineResult);
-			NodeList docListNode = lineXml.getElementsByTagName("ROW");
+
+            Document lineXml = commonUtil.convertStringToDocument(lineResult);
+            NodeList docListNode = lineXml.getElementsByTagName("ROW");
 	
 			if (docListNode.getLength() > 0) {
 				logger.debug("docListNode.getLength = " + docListNode.getLength());
@@ -6792,13 +7250,49 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 			int LSignNum = 0;
 			int lastSignNum = 0;
 			
-			for (int k = 1; k < 10; k++) {
-				if (!findHwpField(signAdd + "sign" + k, hwpFile)) {
-					LSignNum = k - 1;
-					lastSignNum = LSignNum;
-					break;
-				}
-			}
+            /* 
+            백단에서 문서 핸들링 가능 유무 플래그(일괄기안 타입 B때문에 추가, 일괄기안B는 GROUPDOCID에만 물리파일이 존재하기 떄문)
+             */
+            // 대결자 이후 전결자가 존재하는 경우, 전결자의 서명 부여 (웹과 동일하게 "전결" 문자 하나만 사용, 서명일자 표출 없음)
+            int jeonKyul = getDocInfoJeonKyul(docID, orgUID, aprState, companyID, userInfo.getTenantId());
+            if (jeonKyul > 0 && "G".equals(approvalFlag)) {
+                tempIsJKAprTypeAfterDK = true;
+            }
+            
+            // 백단 한글 문서 핸들링 플래그. true 이면 한글 핸들링 false면 문서 건들지 않음.
+            boolean canHandlingFile = true;
+            if(!"Y".equals(draftAllType)){
+                canHandlingFile = true;
+            }else{
+                // 일괄기안 문서 이며 일괄기안 B 타입일 경우 최종결재(웹에서)일때만 가능. 모바일에선 막아둠. 
+                if(groupDocSN != null && !"".equals(groupDocSN) && !groupDocSN.equals(docID)){
+                    if ((totalLineSN == Integer.parseInt(signNum.trim()) || tempIsJKAprTypeAfterDK)
+                            && (aprType.equals("016") || aprType.equals("001") || aprType.equals("004") || (aprType.equals("008") && addLastKyulJeYN.equals("1") || addLastKyulJeYN.equals("2")))
+                            && !aprType.equals("007") && !docStateSign.equals("011")) {
+                        canHandlingFile = true;
+                    }else{
+                        canHandlingFile = false;
+                    }
+                }else{
+                    canHandlingFile = true;
+                }
+            }
+            
+            HWPFile hwpFile = null;
+            //한글파일 리더
+            if(canHandlingFile){
+                hwpFile = HWPReader.fromFile(formURL);
+            }
+            
+            if(canHandlingFile){
+                for (int k = 1; k < 10; k++) {
+                    if (!findHwpField(signAdd + "sign" + k, hwpFile)) {
+                        LSignNum = k - 1;
+                        lastSignNum = LSignNum;
+                        break;
+                    }
+                }
+            }
 			
 			logger.debug("LSignNum = " + LSignNum);
 			logger.debug("lastSignNum = " + lastSignNum);
@@ -6806,215 +7300,217 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 			if (result.equals("A")) { // "A"pprove 승인
 				docState = "003";
 				String tempDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false);
-				
-				if (approvalFlag.equals("S")) {
-					String lastCnt = tempDate.substring(5, 7) + "." + tempDate.substring(8, 10);
-					
-					if (aprType.equals("001")) {
-						if (refResult > 0) {
-							//분석해야함
-							int tmps = signCnt - refResult;
-							
-							if (totalLineSN == tmps) {
-								setHwpText(signAdd + "sign" + lastSignNum, proxySign + displayName, hwpFile);
-								
-								if (findHwpField(signAdd + "seumyungdate" + lastSignNum, hwpFile)) {
-									setHwpText(signAdd + "seumyungdate" + lastSignNum, lastCnt, hwpFile);
-								}
-							} else {
-								strSign = signAdd + "sign" + tmps;
-								strSeumyungDate = signAdd + "seumyungdate" + tmps;
-								
-								setHwpText(strSign, proxySign + displayName, hwpFile);
-								
-								if (findHwpField(strSeumyungDate, hwpFile)) {
-									setHwpText(strSeumyungDate, lastCnt, hwpFile);
-								}
-							}
-						} else {
-							int tmps = signCnt - refResult;
-							
-							if (totalLineSN == tmps) {
-								strSign = signAdd + "sign" + lastSignNum;
-								strSeumyungDate = signAdd + "seumyungdate" + lastSignNum;
-								
-								setHwpText(strSign, proxySign + displayName, hwpFile);
-								
-								if (findHwpField(strSeumyungDate, hwpFile)) {	
-									setHwpText(strSeumyungDate, lastCnt, hwpFile);
-								}
-							} else {
-								strSign = signAdd + "sign" + tmps;
-								strSeumyungDate = signAdd + "seumyungdate" + tmps;
-								
-								setHwpText(strSign, proxySign + displayName, hwpFile);
-								
-								if (findHwpField(strSeumyungDate, hwpFile)) {	
-									setHwpText(strSeumyungDate, lastCnt, hwpFile);
-								}
-							}
-						}
-						
-                        signInfo = strSign;
-						signText = proxySign + displayName;
-                        signInfo2 = strSeumyungDate;
-                        signText2 = signDateMD;
-					} else if (aprType.equals("008") || aprType.equals("009")) {
-						int tmps = signCnt - habResult;
-						String habSign = signAdd + "habyuisign" + tmps;
-						String habSem = signAdd + "habyuidate" + tmps;
-						
-                        signInfo = habSign;
-						signText = proxySign + displayName;
-                        signInfo2 = habSem;
-                        signText2 = signDateMD;
-						
-						setHwpText(habSign, signText, hwpFile);
-						setHwpText(habSem, signText, hwpFile);
-					} else if (aprType.equals("004")) { //전결은 UTC가 불가능할지도...
-						String junGyulFlag = ezCommonService.getTenantConfig("JunGyulFlag", userInfo.getTenantId());
-						
-						if (junGyulFlag.equals("1")) {
-							int tmps = signCnt - refResult;
-							String tempSign = signAdd + "sign" + lastSignNum;
-							String tempSeumyungDate = signAdd + "seumyungdate" + lastSignNum;
-							
-							for (int k = tmps; k < lastAprLineSN; k++) {
-								setHwpText(signAdd + "sign" + k, messageSource.getMessage("ezApprovalG.t25", userInfo.getLocale()), hwpFile);
-							}
-							
-							setHwpText(tempSign, proxySign + displayName, hwpFile);
-							setHwpText(tempSeumyungDate, lastCnt, hwpFile);
-							
-                            signInfo = tempSign;
-							signText = proxySign + displayName;
-                            signInfo2 = tempSeumyungDate;
+                if(canHandlingFile){
+                    if (approvalFlag.equals("S")) {
+                        String lastCnt = tempDate.substring(5, 7) + "." + tempDate.substring(8, 10);
+                        
+                        if (aprType.equals("001")) {
+                            if (refResult > 0) {
+                                //분석해야함
+                                int tmps = signCnt - refResult;
+                                
+                                if (totalLineSN == tmps) {
+                                    setHwpText(draftAllTypeB, signAdd + "sign" + lastSignNum, proxySign + displayName, hwpFile);
+                                    
+                                    if (findHwpField(signAdd + "seumyungdate" + lastSignNum, hwpFile)) {
+                                        setHwpText(draftAllTypeB, signAdd + "seumyungdate" + lastSignNum, lastCnt, hwpFile);
+                                    }
+                                } else {
+                                    strSign = signAdd + "sign" + tmps;
+                                    strSeumyungDate = signAdd + "seumyungdate" + tmps;
+                                    
+                                    setHwpText(draftAllTypeB, strSign, proxySign + displayName, hwpFile);
+                                    
+                                    if (findHwpField(strSeumyungDate, hwpFile)) {
+                                        setHwpText(draftAllTypeB, strSeumyungDate, lastCnt, hwpFile);
+                                    }
+                                }
+                            } else {
+                                int tmps = signCnt - refResult;
+                                
+                                if (totalLineSN == tmps) {
+                                    strSign = signAdd + "sign" + lastSignNum;
+                                    strSeumyungDate = signAdd + "seumyungdate" + lastSignNum;
+                                    
+                                    setHwpText(draftAllTypeB, strSign, proxySign + displayName, hwpFile);
+                                    
+                                    if (findHwpField(strSeumyungDate, hwpFile)) {	
+                                        setHwpText(draftAllTypeB, strSeumyungDate, lastCnt, hwpFile);
+                                    }
+                                } else {
+                                    strSign = signAdd + "sign" + tmps;
+                                    strSeumyungDate = signAdd + "seumyungdate" + tmps;
+                                    
+                                    setHwpText(draftAllTypeB, strSign, proxySign + displayName, hwpFile);
+                                    
+                                    if (findHwpField(strSeumyungDate, hwpFile)) {	
+                                        setHwpText(draftAllTypeB, strSeumyungDate, lastCnt, hwpFile);
+                                    }
+                                }
+                            }
+                            
+                            signInfo = strSign;
+                            signText = proxySign + displayName;
+                            signInfo2 = strSeumyungDate;
                             signText2 = signDateMD;
-						} else if (junGyulFlag.equals("4")) {
-							int tmps = signCnt - refResult;
-                            String tempSign = signAdd + "sign" + lastSignNum;
-							String tempSeumyungDate = signAdd + "seumyungdate" + tmps;
-							
-							setHwpText(signAdd + "sign" + tmps, proxySign + displayName, hwpFile);
-							setHwpText(tempSeumyungDate, lastCnt, hwpFile);
-							
-                            signInfo = tempSign;
-							signText = messageSource.getMessage("ezApprovalG.t25", userInfo.getLocale()) + commonUtil.CRLF + proxySign + displayName;
-                            signInfo2 = tempSeumyungDate;
+                        } else if (aprType.equals("008") || aprType.equals("009")) {
+                            int tmps = signCnt - habResult;
+                            String habSign = signAdd + "habyuisign" + tmps;
+                            String habSem = signAdd + "habyuidate" + tmps;
+                            
+                            signInfo = habSign;
+                            signText = proxySign + displayName;
+                            signInfo2 = habSem;
                             signText2 = signDateMD;
-						}
-					}
-				} else { // 전자결재 G
-					if (aprType.equals("016")) { // 대결
-						int tmps = signCnt - refResult;
-						String tempSign = signAdd + "sign" + tmps;
-						String[] signAry = {messageSource.getMessage("ezApprovalG.t26", userInfo.getLocale()) + tempDate.substring(5, 7) + "/" + tempDate.substring(8, 10), proxySign + displayName};
-						
-						// 대결자의 서명 부여
-						setHwpText(hwpFile, tempSign, signAry);
-						
-						// 대결자 이후 전결자가 존재하는 경우, 전결자의 서명 부여 (웹과 동일하게 "전결" 문자 하나만 사용, 서명일자 표출 없음)
-						int jeonKyul = getDocInfoJeonKyul(docID, orgUID, aprState, companyID, userInfo.getTenantId());
-						
-						if (jeonKyul > 0) {
-							isJKAprTypeAfterDK = true;
-							strSign = signAdd + "sign" + (tmps + 1); // 대결자 직후 순번의 전결자
-							String[] signAryJK = {messageSource.getMessage("ezApprovalG.t25", userInfo.getLocale())};
-							
-							setHwpText(hwpFile, strSign, signAryJK);
-						}
-						
-                        signInfo = tempSign;
-						signText = messageSource.getMessage("ezApprovalG.t26", userInfo.getLocale()) + tempDate.substring(5, 7) + "/" + tempDate.substring(8, 10) + commonUtil.CRLF + proxySign + displayName;
-					} else if (aprType.equals("001") || aprType.equals("019")) { // 결재 || 검토
-						String lastCnt = "";
-						
-						int tmps = signCnt - refResult;
-						strSign = signAdd + "sign" + tmps;
-						strSeumyungDate = signAdd + "seumyungdate" + tmps;
+                            
+                            setHwpText(draftAllTypeB, habSign, signText, hwpFile);
+                            setHwpText(draftAllTypeB, habSem, signText, hwpFile);
+                        } else if (aprType.equals("004")) { //전결은 UTC가 불가능할지도...
+                            String junGyulFlag = ezCommonService.getTenantConfig("JunGyulFlag", userInfo.getTenantId());
+                            
+                            if (junGyulFlag.equals("1")) {
+                                int tmps = signCnt - refResult;
+                                String tempSign = signAdd + "sign" + lastSignNum;
+                                String tempSeumyungDate = signAdd + "seumyungdate" + lastSignNum;
+                                
+                                for (int k = tmps; k < lastAprLineSN; k++) {
+                                    setHwpText(false, signAdd + "sign" + k, messageSource.getMessage("ezApprovalG.t25", userInfo.getLocale()), hwpFile);
+                                }
+                                
+                                setHwpText(false, tempSign, proxySign + displayName, hwpFile);
+                                setHwpText(false, tempSeumyungDate, lastCnt, hwpFile);
+                                
+                                signInfo = tempSign;
+                                signText = proxySign + displayName;
+                                signInfo2 = tempSeumyungDate;
+                                signText2 = signDateMD;
+                            } else if (junGyulFlag.equals("4")) {
+                                int tmps = signCnt - refResult;
+                                String tempSign = signAdd + "sign" + lastSignNum;
+                                String tempSeumyungDate = signAdd + "seumyungdate" + tmps;
+                                
+                                setHwpText(false, signAdd + "sign" + tmps, proxySign + displayName, hwpFile);
+                                setHwpText(false, tempSeumyungDate, lastCnt, hwpFile);
+                                
+                                signInfo = tempSign;
+                                signText = messageSource.getMessage("ezApprovalG.t25", userInfo.getLocale()) + commonUtil.CRLF + proxySign + displayName;
+                                signInfo2 = tempSeumyungDate;
+                                signText2 = signDateMD;
+                            }
+                        }
+                    } else { // 전자결재 G
+                        if (aprType.equals("016")) { // 대결
+                            int tmps = signCnt - refResult;
+                            String tempSign = signAdd + "sign" + tmps;
+                            String[] signAry = {messageSource.getMessage("ezApprovalG.t26", userInfo.getLocale()) + tempDate.substring(5, 7) + "/" + tempDate.substring(8, 10), proxySign + displayName};
+                            
+                            // 대결자의 서명 부여
+                            setHwpText(false, hwpFile, tempSign, signAry);
+                            
+                            // 대결자 이후 전결자가 존재하는 경우, 전결자의 서명 부여 (웹과 동일하게 "전결" 문자 하나만 사용, 서명일자 표출 없음)
+                            //int jeonKyul = getDocInfoJeonKyul(docID, orgUID, aprState, companyID, userInfo.getTenantId());
+                            
+                            if (jeonKyul > 0) {
+                                isJKAprTypeAfterDK = true;
+                                strSign = signAdd + "sign" + (tmps + 1); // 대결자 직후 순번의 전결자
+                                String[] signAryJK = {messageSource.getMessage("ezApprovalG.t25", userInfo.getLocale())};
+                                
+                                setHwpText(false, hwpFile, strSign, signAryJK);
+                            }
+                            
+                            signInfo = tempSign;
+                            signText = messageSource.getMessage("ezApprovalG.t26", userInfo.getLocale()) + tempDate.substring(5, 7) + "/" + tempDate.substring(8, 10) + commonUtil.CRLF + proxySign + displayName;
+                        } else if (aprType.equals("001") || aprType.equals("019")) { // 결재 || 검토
+                            String lastCnt = "";
+                            
+                            int tmps = signCnt - refResult;
+                            strSign = signAdd + "sign" + tmps;
+                            strSeumyungDate = signAdd + "seumyungdate" + tmps;
+    
+                            // 서명날짜필드 유/무 동작 추가 - 유>결재순번 상관없이 서명일자 기입[ex.(09.09)], 무>최종결재자만 서명일자 기입[ex.(09/09)]
+                            if (findHwpField(strSeumyungDate, hwpFile)) {
+                                setHwpText(draftAllTypeB, strSeumyungDate, tempDate.substring(5, 7) + "." + tempDate.substring(8, 10), hwpFile);
+                            } else {
+                                if (totalLineSN == Integer.parseInt(signNum.trim()) || aprType.equals("001")) {
+                                    lastCnt = tempDate.substring(5, 7) + "/" + tempDate.substring(8, 10);
+                                }
+                            }
+                            
+                            String[] signAry = {lastCnt, proxySign + displayName};
+                            
+                            if (refResult > 0) {
+                                tmps = signCnt - refResult;
+                                strSign = signAdd + "sign" + tmps;
+                                
+                                if (lastCnt.equals("")) {
+                                    setHwpText(draftAllTypeB, strSign, proxySign + displayName, hwpFile);
+                                } else {
+                                    setHwpText(draftAllTypeB, hwpFile, strSign, signAry);
+                                }
+                            } else {
+                                tmps = signCnt - refResult;
+                                strSign = signAdd + "sign" + tmps;
+                                
+                                if (lastCnt.equals("")) {
+                                    setHwpText(draftAllTypeB, strSign, proxySign + displayName, hwpFile);
+                                } else {
+                                    setHwpText(draftAllTypeB, hwpFile, strSign, signAry);
+                                }
+                            }
+                            
+                            signInfo = strSign;
+                            signText = lastCnt + proxySign + displayName;
+                            signInfo2 = strSeumyungDate;
+                            signText2 = signDateMD;
+                        } else if (aprType.equals("008") || aprType.equals("009")) { // 개인순차협조 || 개인병렬협조
+                            int tmps = signCnt - habResult;
+                            String habSign = signAdd + "habyuisign" + tmps;
+                            String habSem = signAdd + "habyuidate" + tmps;
+                            
+                            signInfo = habSign;
+                            signText = proxySign + displayName;
+                            signInfo2 = habSem;
+                            signText2 = signDateMD;
+                            
+                            String[] signAry = {signText};
+                            
+                            setHwpText(draftAllTypeB, hwpFile, habSign, signAry);
+                            setHwpText(draftAllTypeB, habSem, tempDate.substring(5, 7) + "." + tempDate.substring(8, 10), hwpFile);
+                        } else if (aprType.equals("004")) {
+                            int tmps = signCnt - refResult;
+                            String tempSign = signAdd + "sign" + tmps;
+                            String tempSignDate = signAdd + "seumyungdate" + tmps;
+                            String lastSignDate = "";
+    
+                            // 서명날짜필드 유/무 동작 추가 - 유>결재순번 상관없이 서명일자 기입[ex.(09.09)], 무>최종결재자만 서명일자 기입[ex.(09/09)]
+                            if (findHwpField(tempSignDate, hwpFile)) {
+                                setHwpText(false, tempSignDate, tempDate.substring(5, 7) + "." + tempDate.substring(8, 10), hwpFile);
+                            } else {
+                                lastSignDate = tempDate.substring(5, 7) + "/" + tempDate.substring(8, 10);
+                            }
+    
+                            String[] signAry = null;
+                            if (lastSignDate.equals("")) {
+                                signAry = new String[]{messageSource.getMessage("ezApprovalG.t25", userInfo.getLocale()), proxySign + displayName};
+                            } else {
+                                signAry = new String[]{messageSource.getMessage("ezApprovalG.t25", userInfo.getLocale()) + lastSignDate, proxySign + displayName};
+                            }
+                            
+                            setHwpText(false, hwpFile, tempSign, signAry);
+                            
+                            signInfo = tempSign;
+                            signText = messageSource.getMessage("ezApprovalG.t25", userInfo.getLocale()) + tempDate.substring(5, 7) + "/" + tempDate.substring(8, 10) + commonUtil.CRLF + proxySign + displayName;
+                            signInfo2 = tempSignDate;
+                            signText2 = signDateMD;
+                        } else if (aprType.equals("015")) { // 후열
+                            gongRamUpdate(docID, userID, companyID, strLang, userInfo.getTenantId());
 
-						// 서명날짜필드 유/무 동작 추가 - 유>결재순번 상관없이 서명일자 기입[ex.(09.09)], 무>최종결재자만 서명일자 기입[ex.(09/09)]
-						if (findHwpField(strSeumyungDate, hwpFile)) {
-							setHwpText(strSeumyungDate, tempDate.substring(5, 7) + "." + tempDate.substring(8, 10), hwpFile);
-						} else {
-							if (totalLineSN == Integer.parseInt(signNum.trim()) || aprType.equals("001")) {
-								lastCnt = tempDate.substring(5, 7) + "/" + tempDate.substring(8, 10);
-							}
-						}
-						
-						String[] signAry = {lastCnt, proxySign + displayName};
-						
-						if (refResult > 0) {
-							tmps = signCnt - refResult;
-							strSign = signAdd + "sign" + tmps;
-							
-							if (lastCnt.equals("")) {
-								setHwpText(strSign, proxySign + displayName, hwpFile);
-							} else {
-								setHwpText(hwpFile, strSign, signAry);
-							}
-						} else {
-							tmps = signCnt - refResult;
-							strSign = signAdd + "sign" + tmps;
-							
-							if (lastCnt.equals("")) {
-								setHwpText(strSign, proxySign + displayName, hwpFile);
-							} else {
-								setHwpText(hwpFile, strSign, signAry);
-							}
-						}
-						
-                        signInfo = strSign;
-						signText = lastCnt + proxySign + displayName;
-						signInfo2 = strSeumyungDate;
-                        signText2 = signDateMD;
-					} else if (aprType.equals("008") || aprType.equals("009")) { // 개인순차협조 || 개인병렬협조
-						int tmps = signCnt - habResult;
-						String habSign = signAdd + "habyuisign" + tmps;
-						String habSem = signAdd + "habyuidate" + tmps;
-						
-                        signInfo = habSign;
-						signText = proxySign + displayName;
-                        signInfo2 = habSem;
-                        signText2 = signDateMD;
-						
-						String[] signAry = {signText};
-						
-						setHwpText(hwpFile, habSign, signAry);
-						setHwpText(habSem, tempDate.substring(5, 7) + "." + tempDate.substring(8, 10), hwpFile);
-					} else if (aprType.equals("004")) {
-						int tmps = signCnt - refResult;
-						String tempSign = signAdd + "sign" + tmps;
-						String tempSignDate = signAdd + "seumyungdate" + tmps;
-						String lastSignDate = "";
-
-						// 서명날짜필드 유/무 동작 추가 - 유>결재순번 상관없이 서명일자 기입[ex.(09.09)], 무>최종결재자만 서명일자 기입[ex.(09/09)]
-						if (findHwpField(tempSignDate, hwpFile)) {
-							setHwpText(tempSignDate, tempDate.substring(5, 7) + "." + tempDate.substring(8, 10), hwpFile);
-						} else {
-							lastSignDate = tempDate.substring(5, 7) + "/" + tempDate.substring(8, 10);
-						}
-
-						String[] signAry = null;
-						if (lastSignDate.equals("")) {
-							signAry = new String[]{messageSource.getMessage("ezApprovalG.t25", userInfo.getLocale()), proxySign + displayName};
-						} else {
-							signAry = new String[]{messageSource.getMessage("ezApprovalG.t25", userInfo.getLocale()) + lastSignDate, proxySign + displayName};
-						}
-						
-						setHwpText(hwpFile, tempSign, signAry);
-						
-                        signInfo = tempSign;
-						signText = messageSource.getMessage("ezApprovalG.t25", userInfo.getLocale()) + tempDate.substring(5, 7) + "/" + tempDate.substring(8, 10) + commonUtil.CRLF + proxySign + displayName;
-						signInfo2 = tempSignDate;
-			            signText2 = signDateMD;
-					} else if (aprType.equals("015")) { // 후열
-						gongRamUpdate(docID, userID, companyID, strLang, userInfo.getTenantId());
-						
-						return "001";
-					}
-				}
-				
+                            resultJson.put("result", "001");
+                            return resultJson;
+//                            return "001";
+                        }
+                    }
+                }
 				String tmpYear = getDocInfoDState(docID, "STARTDATE", companyID, userInfo.getTenantId());
 				
 				SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -7023,14 +7519,14 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 				cal.setTime(format.parse(tmpYear));
 				tmpYear = String.valueOf(cal.get(Calendar.YEAR));
 
-                String addLastKyulJeYN = ezCommonService.getTenantConfig("addLastKyulJeYN", userInfo.getTenantId());
+                // String addLastKyulJeYN = ezCommonService.getTenantConfig("addLastKyulJeYN", userInfo.getTenantId());
 
                 /* 2022-10-12 홍승비 - 대결자 직후 전결자가 존재하는 경우, 자동으로 결재완료되어야 하므로 문서번호 생성 진행 */
                 // 대결자 + 전결자로 마감되지 않는 일반적인 결재선인 경우, 현재 결재자가 최종결재자인 경우에만 문서채번 진행 (기존 스펙)
                 if ((totalLineSN == Integer.parseInt(signNum.trim()) || isJKAprTypeAfterDK)
                         && (aprType.equals("016") || aprType.equals("001") || aprType.equals("004") || (aprType.equals("008") && addLastKyulJeYN.equals("1") || addLastKyulJeYN.equals("2")))
-                        && !aprType.equals("007") && !aprStateSign.equals("011")) {
-					if (aprStateSign.equals("012")) {
+                        && !aprType.equals("007") && !docStateSign.equals("011")) {
+					if (docStateSign.equals("012")) {
 						strDeptID = receiveDept;
 						strDeptName = receiveDeptName;
 					} else {
@@ -7041,13 +7537,16 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
                     /* 상위부서의 부서문서함을 가져오도록 함 */
                     String ret = "";
                     Map<String, String> upDeptInfo = getUpperDeptInfo(strDeptID, userInfo.getTenantId());
-                    if (upDeptInfo.get("USEUPPERDEPTBOX") != null && upDeptInfo.get("USEUPPERDEPTBOX").equals("Y")) {
-                        ret = getCabinetNum(upDeptInfo.get("upperDeptCode"), "", companyID, docID, userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset());
-                    }else{
-                        ret = getCabinetNum(strDeptID, "", companyID, docID, userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset());
-                    }
+                    strDeptID = upDeptInfo.get("USEUPPERDEPTBOX") != null && upDeptInfo.get("USEUPPERDEPTBOX").equals("Y") ? upDeptInfo.get("upperDeptCode") : strDeptID;
+                    ret = getCabinetNum(strDeptID, "", companyID, docID, userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset());
                     
-					logger.debug("serialNum = " + ret);
+//                    if (upDeptInfo.get("USEUPPERDEPTBOX") != null && upDeptInfo.get("USEUPPERDEPTBOX").equals("Y")) {
+//                        ret = getCabinetNum(upDeptInfo.get("upperDeptCode"), "", companyID, docID, userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset());
+//                    }else{
+//                        ret = getCabinetNum(strDeptID, "", companyID, docID, userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset());
+//                    }
+
+                    logger.debug("serialNum = " + ret);
 					
 					docNumFlag = true;
 					
@@ -7057,24 +7556,28 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 					if (!ret.equals("")) {
 						if (aprType.equals("018") || aprType.equals("019") || aprType.equals("001") || aprType.equals("004") || aprType.equals("016") || aprType.equals("002")) {
 							if (!excuteInfoHwp("DOCNUM_BEFORE", "DRAFT", hwpFile, docID, userID, formURL, companyID, userInfo.getTenantId(), request)) {
-								return "Link ERROR";
+                                resultJson.put("result", "Link ERROR");
+                                return resultJson;
+//								return "Link ERROR";
 							}
 						}
 						
 						if (findHwpField("docnumber", hwpFile)) {
                             docNO = docNO + createDocNO(cabinetSN , docNumZeroCnt);
-							setHwpText("docnumber", docNO, hwpFile);
+							setHwpText(false, "docnumber", docNO, hwpFile);
 						}
 						
 						if (findHwpField("enforcedate", hwpFile)) {
-							setHwpText("enforcedate", commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false).substring(0, 10).replace("-", "."), hwpFile);
+							setHwpText(false, "enforcedate", commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false).substring(0, 10).replace("-", "."), hwpFile);
 						}
 						
 						retNum = getNDigitNum(cabinetSN, 6);
 						
 						if (aprType.equals("018") || aprType.equals("019") || aprType.equals("001") || aprType.equals("004") || aprType.equals("016") || aprType.equals("002")) {
 							if (!excuteInfoHwp("DOCNUM_AFTER", "DRAFT", hwpFile, docID, userID, formURL, companyID, userInfo.getTenantId(), request)) {
-								return "Link ERROR";
+                                resultJson.put("result", "Link ERROR");
+                                return resultJson;
+//								return "Link ERROR";
 							}
 						}
 					}
@@ -7082,7 +7585,7 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 				
                 /* 2025-01-21 홍승비 - 전자결재 일반버전 > 수신문의 최종결재 시, 접수번호를 채번하지 않으며 원문서의 문서번호를 그대로 사용한다. (수신문의 접수번호는 G버전에서만 사용 / 일반버전에서는 접수번호 필드를 공백으로 유지) */
 				/** 수신 일괄결재시 채번 */
-				if (approvalFlag.equals("G") && useReceiveDocNo.equals("NO") && (totalLineSN == Integer.parseInt(signNum.trim()) || isJKAprTypeAfterDK == true) && (aprType.equals("016") || aprType.equals("001") || aprType.equals("004")) && !aprType.equals("007") && aprStateSign.equals("011")) {
+				if (approvalFlag.equals("G") && useReceiveDocNo.equals("NO") && (totalLineSN == Integer.parseInt(signNum.trim()) || isJKAprTypeAfterDK == true) && (aprType.equals("016") || aprType.equals("001") || aprType.equals("004")) && !aprType.equals("007") && docStateSign.equals("011")) {
 					strDeptID = receiveDept;
 					strDeptName = receiveDeptName;
 
@@ -7098,13 +7601,15 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 					if (!ret.equals("")) {
 						if (aprType.equals("018") || aprType.equals("019") || aprType.equals("001") || aprType.equals("004") || aprType.equals("016") || aprType.equals("002")) {
 							if (!excuteInfoHwp("DOCNUM_BEFORE", "SUSIN", hwpFile, docID, userID, formURL, companyID, userInfo.getTenantId(), request)) {
-								return "Link ERROR";
+                                resultJson.put("result", "Link ERROR");
+                                return resultJson;
+//								return "Link ERROR";
 							}
 						}
 						
 						if (findHwpField("receiptnumber", hwpFile)) {
                             docNO = docNO + createDocNO(cabinetSN , docNumZeroCnt);
-                            setHwpText("receiptnumber", docNO, hwpFile);
+                            setHwpText(false, "receiptnumber", docNO, hwpFile);
 						}
 						
 						/*if (findHwpField("receiptdate", hwpFile)) {
@@ -7115,16 +7620,21 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 						
 						if (aprType.equals("018") || aprType.equals("019") || aprType.equals("001") || aprType.equals("004") || aprType.equals("016") || aprType.equals("002")) {
 							if (!excuteInfoHwp("DOCNUM_AFTER", "SUSIN", hwpFile, docID, userID, formURL, companyID, userInfo.getTenantId(), request)) {
-								return "Link ERROR";
+                                resultJson.put("result", "Link ERROR");
+                                return resultJson;
+//								return "Link ERROR";
+                                
 							}
 						}
 					}
 				}
 				
-				tempHwp = new File(commonUtil.detectPathTraversal(formURL)).getParentFile() + commonUtil.separator + docID + "_backup.hwp";
-				FileUtils.copyFile(new File(commonUtil.detectPathTraversal(formURL)), new File(commonUtil.detectPathTraversal(tempHwp)));
+                if(canHandlingFile) {
+                    tempHwp = new File(commonUtil.detectPathTraversal(formURL)).getParentFile() + commonUtil.separator + docID + "_backup.hwp";
+                    FileUtils.copyFile(new File(commonUtil.detectPathTraversal(formURL)), new File(commonUtil.detectPathTraversal(tempHwp)));
+                }
 				
-				if (aprStateSign.equals("011")) {
+				if (docStateSign.equals("011")) {
 					if ((totalLineSN == Integer.parseInt(signNum.trim()) || isJKAprTypeAfterDK == true) && (aprType.equals("016") || aprType.equals("001")) && !aprType.equals("007")) {
 						if (aprType.equals("018") || aprType.equals("019") || aprType.equals("001") || aprType.equals("004") || aprType.equals("016") || aprType.equals("002")) {
 							linkCheck = excuteInfoHwp("LAST_SIGN_BEFORE", "SUSIN", hwpFile, docID, userID, formURL, companyID, userInfo.getTenantId(), request);
@@ -7138,25 +7648,27 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 							linkCheck = excuteInfoHwp("LAST_SIGN_BEFORE", "DRAFT", hwpFile, docID, userID, formURL, companyID, userInfo.getTenantId(), request);
 						}
 					} else {
-						linkCheck = excuteInfoHwp("MIDDLE_SIGN_BEFORE", "DRAFT", hwpFile, docID, userID, formURL, companyID, userInfo.getTenantId(), request);
+                        linkCheck = excuteInfoHwp("MIDDLE_SIGN_BEFORE", "DRAFT", hwpFile, docID, userID, formURL, companyID, userInfo.getTenantId(), request);
 					}
 				}
 				
 				if (!linkCheck) {
 					if (docNumFlag) {
-						rollBackDocNumber(drafterDept, companyID, cabinetSN, docID, strLang, userInfo.getTenantId());
+						rollBackDocNumber(strDeptID, companyID, cabinetSN, docID, strLang, userInfo.getTenantId());
 					}
 				}
 				
-				HWPWriter.toFile(hwpFile, formURL);
-				hwpSaveFlag = true;
+                if(canHandlingFile){
+                    HWPWriter.toFile(hwpFile, formURL);
+                    hwpSaveFlag = true;
+                }
 			} else if (result.equals("B")) {
 				docState = "004";
 				
-				if (aprStateSign.equals("011")) {
+				if (docStateSign.equals("011")) {
 					linkCheck = excuteInfoHwp("BANSONG_BEFORE", "SUSIN", hwpFile, docID, userID, formURL, companyID, userInfo.getTenantId(), request);
 				} else {
-					linkCheck = excuteInfoHwp("BANSONG_BEFORE", "DRAFT", hwpFile, docID, userID, formURL, companyID, userInfo.getTenantId(), request);
+                    linkCheck = excuteInfoHwp("BANSONG_BEFORE", "DRAFT", hwpFile, docID, userID, formURL, companyID, userInfo.getTenantId(), request);
 				}
 			} else if (result.equals("BR")) {
 				docState = "005";
@@ -7170,8 +7682,9 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 				if (docNumFlag) {
 					rollBackDocNumber(strDeptID, companyID, cabinetSN, docID, strLang, userInfo.getTenantId());
 				}
-				
-				return "ERROR";
+                resultJson.put("result", "ERROR");
+                return resultJson;
+//				return "ERROR";
 			}
 			
 			String docResult = getDocInfoSP(orgUID, docID, docNO, companyID, result, retNum, strLang, userID, orgDeptID, orgName, orgName2, userInfo.getTenantId());
@@ -7225,14 +7738,14 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
                     docNumCode = upDeptInfo.get("upperDeptCode");
                 }
                 
-				if (aprStateSign.equals("011")) {
+				if (docStateSign.equals("011")) {
 					paramXML.getElementsByTagName("DOCNUMCODE").item(0).setTextContent("");
 					paramXML.getElementsByTagName("ORGDOCNUMCODE").item(0).setTextContent("");
 				} else {
 					paramXML.getElementsByTagName("DOCNUMCODE").item(0).setTextContent(docNumCode + retNum);
 				}
 				
-				if (useReceiveDocNo.equals("NO") && aprStateSign.equals("011")) {
+				if (useReceiveDocNo.equals("NO") && docStateSign.equals("011")) {
 					paramXML.getElementsByTagName("DOCNUMCODE").item(0).setTextContent(docNumCode + retNum);
 				}
 				
@@ -7262,7 +7775,7 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
             resultXML.append("</SIGNINFOS>");
             
 			if (result.equals("A")) {
-				if (aprStateSign.equals("011")) {
+				if (docStateSign.equals("011")) {
 					if ((totalLineSN == Integer.parseInt(signNum.trim()) || isJKAprTypeAfterDK == true) && (aprType.equals("016") || aprType.equals("001")) && !aprType.equals("007")) {
 						if (aprType.equals("018") || aprType.equals("019") || aprType.equals("001") || aprType.equals("004") || aprType.equals("016") || aprType.equals("002")) {
 							linkCheck = excuteInfoHwp("LAST_SIGN_AFTER", "SUSIN", hwpFile, docID, userID, formURL, companyID, userInfo.getTenantId(), request);
@@ -7310,7 +7823,7 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
                 signSaveFlag = true;
 				
 				if (result.equals("A")) {
-					if (aprStateSign.equals("011")) {
+					if (docStateSign.equals("011")) {
 						if ((totalLineSN == Integer.parseInt(signNum.trim()) || isJKAprTypeAfterDK == true) && (aprType.equals("016") || aprType.equals("001") || aprType.equals("004")) && !aprType.equals("007")) {
 							linkCheck = excuteInfoHwp("END_FAIL", "SUSIN", hwpFile, docID, userID, formURL, companyID, userInfo.getTenantId(), request);
 						} else {
@@ -7320,14 +7833,14 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 						if ((totalLineSN == Integer.parseInt(signNum.trim()) || isJKAprTypeAfterDK == true) && (aprType.equals("016") || aprType.equals("001") || aprType.equals("004")) && !aprType.equals("007")) {
 							linkCheck = excuteInfoHwp("END_FAIL", "DRAFT", hwpFile, docID, userID, formURL, companyID, userInfo.getTenantId(), request);
 						} else {
-							linkCheck = excuteInfoHwp("MIDDLE_END_FAIL", "DRAFT", hwpFile, docID, userID, formURL, companyID, userInfo.getTenantId(), request);
+                            linkCheck = excuteInfoHwp("MIDDLE_END_FAIL", "DRAFT", hwpFile, docID, userID, formURL, companyID, userInfo.getTenantId(), request);
 						}
 					}
 				} else if (result.equals("B")) {
-					if (aprStateSign.equals("011")) {
+					if (docStateSign.equals("011")) {
 						linkCheck = excuteInfoHwp("BANSONG_FAIL", "SUSIN", hwpFile, docID, userID, formURL, companyID, userInfo.getTenantId(), request);
 					} else {
-						linkCheck = excuteInfoHwp("BANSONG_FAIL", "DRAFT", hwpFile, docID, userID, formURL, companyID, userInfo.getTenantId(), request);
+                        linkCheck = excuteInfoHwp("BANSONG_FAIL", "DRAFT", hwpFile, docID, userID, formURL, companyID, userInfo.getTenantId(), request);
 					}
 				}
 				
@@ -7343,28 +7856,32 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
                     if (signSaveFlag) {
                         rollBackSignInfo(signNum, docID, companyID, signAdd, userInfo.getTenantId());
                     }
-					
-					return "Link ERROR";
+                    
+                    resultJson.put("result", "Link ERROR");
+                    return resultJson;
+//					return "Link ERROR";
 				}
 				
 				if (docNumFlag) {
 					rollBackDocNumber(strDeptID, companyID, cabinetSN, docID, strLang, userInfo.getTenantId());
 				} 
 				
-				if (hwpSaveFlag) {
+				if (hwpSaveFlag && canHandlingFile) {
 					rollBackHwp(formURL, tempHwp);
 				}
 				
                 if (signSaveFlag) {
                     rollBackSignInfo(signNum, docID, companyID, signAdd, userInfo.getTenantId());
                 }
-				
-				return "ERROR";
+
+                resultJson.put("result", "ERROR");
+                return resultJson;
+//				return "ERROR";
 			} else {
 				linkCheck = true;
 				
 				if (result.equals("A")) {
-					if (aprStateSign.equals("011")) {
+					if (docStateSign.equals("011")) {
 						if ((totalLineSN == Integer.parseInt(signNum.trim()) || isJKAprTypeAfterDK == true) && (aprType.equals("016") || aprType.equals("001") || aprType.equals("004")) && !aprType.equals("007")) {
 							linkCheck = excuteInfoHwp("LAST_END_AFTER", "SUSIN", hwpFile, docID, userID, formURL, companyID, userInfo.getTenantId(), request);
 						} else {
@@ -7374,14 +7891,14 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 						if ((totalLineSN == Integer.parseInt(signNum.trim()) || isJKAprTypeAfterDK == true) && (aprType.equals("016") || aprType.equals("001") || aprType.equals("004")) && !aprType.equals("007")) {
 							linkCheck = excuteInfoHwp("LAST_END_AFTER", "DRAFT", hwpFile, docID, userID, formURL, companyID, userInfo.getTenantId(), request);
 						} else {
-							linkCheck = excuteInfoHwp("MIDDLE_END_AFTER", "DRAFT", hwpFile, docID, userID, formURL, companyID, userInfo.getTenantId(), request);
+                            linkCheck = excuteInfoHwp("MIDDLE_END_AFTER", "DRAFT", hwpFile, docID, userID, formURL, companyID, userInfo.getTenantId(), request);
 						}
 					}
 				} else if (result.equals("B")) {
-					if (aprStateSign.equals("011")) {
+					if (docStateSign.equals("011")) {
 						linkCheck = excuteInfoHwp("BANSONG_AFTER", "SUSIN", hwpFile, docID, userID, formURL, companyID, userInfo.getTenantId(), request);
 					} else {
-						linkCheck = excuteInfoHwp("BANSONG_AFTER", "DRAFT", hwpFile, docID, userID, formURL, companyID, userInfo.getTenantId(), request);
+                        linkCheck = excuteInfoHwp("BANSONG_AFTER", "DRAFT", hwpFile, docID, userID, formURL, companyID, userInfo.getTenantId(), request);
 					}
 				}
 				
@@ -7390,23 +7907,54 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 						rollBackDocNumber(strDeptID, companyID, cabinetSN, docID, strLang, userInfo.getTenantId());
 					} 
 					
-					if (hwpSaveFlag) {
+					if (hwpSaveFlag && canHandlingFile) {
 						rollBackHwp(formURL, tempHwp);
 					}
 					
                     if (signSaveFlag) {
                         rollBackSignInfo(signNum, docID, companyID, signAdd, userInfo.getTenantId());
                     }
-					
-					return "Link ERROR";
+                    resultJson.put("result", "Link ERROR");
+                    return resultJson;
+//					return "Link ERROR";
 				}
 				
 				logger.debug("createHwpFile ended");
-				
-				return "001";
+                
+                if(docNumFlag){
+                    resultJson.put("cabinetSN", cabinetSN);
+                    resultJson.put("strDeptID", strDeptID);
+                }
+                resultJson.put("result", "001");
+                return resultJson;
+//				return "001";
 			}
-		} catch (Exception e) {
-			logger.error(e.getMessage(), e);
+        } catch (DocHandlingException e) {
+            logger.error(e.getMessage(), e);
+            saveFailDocID(docID, e.getMessage(), companyID, userInfo.getTenantId());
+            
+            if (docNumFlag) {
+                // Cause: java.sql.SQLTransactionRollbackException: (conn=7146174) Deadlock found when trying to get lock; try restarting transaction
+                // 위와 같이 Deadlock 예외가 발생한 경우엔 MariaDB 클러스터 환경에서 다른 Node에 의해 commit이 된 경우이므로
+                // 채번한 번호에 대한 롤백 처리를 하지 않는다.
+                if (e.getCause().getMessage().indexOf("Deadlock") == -1) {
+                    rollBackDocNumber(strDeptID, companyID, cabinetSN, docID, strLang, userInfo.getTenantId());
+                }
+            }
+
+            if (hwpSaveFlag) {
+                rollBackHwp(formURL, tempHwp);
+            }
+
+            if (signSaveFlag) {
+                rollBackSignInfo(signNum, docID, companyID, signAdd, userInfo.getTenantId());
+            }
+
+            resultJson.put("result", "ERROR");
+            return resultJson;
+//            return "ERROR";
+        } 
+        catch (Exception e) {
 			
 			if (docNumFlag) {
 				// Cause: java.sql.SQLTransactionRollbackException: (conn=7146174) Deadlock found when trying to get lock; try restarting transaction
@@ -7424,8 +7972,10 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
             if (signSaveFlag) {
                 rollBackSignInfo(signNum, docID, companyID, signAdd, userInfo.getTenantId());
             }
-			
-			return "ERROR";
+
+            resultJson.put("result", "ERROR");
+            return resultJson;
+//			return "ERROR";
 		}
 	}
 
@@ -7441,6 +7991,12 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 	//2018-07-04 이효진 전자결재 HWP 일괄결재 시 연동
 	private boolean excuteInfoHwp(String pProcessIdx, String draftFlag, HWPFile hwpFile, String docID, String userID, String formURL, String companyID, int tenantID, HttpServletRequest request) throws Exception {
 		logger.debug("excuteInfoHwp started");
+
+        // 파일 없으면 리턴
+        if(hwpFile == null) {
+            logger.error("excuteInfoHwp hwpFile is null");
+            return true;
+        }
 
 		SummaryInformation summaryInformation = hwpFile.getSummaryInformation();
 		String keywords = summaryInformation.getKeywords();
@@ -7622,10 +8178,12 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
         }
     }
 
-    public String createMhtFile(String formID, String userID, String signNum, String docID, String aprState, String aprType, String result, String orgUID, String strLang, String companyID,
+    public JSONObject createMhtFile(String formID, String userID, String signNum, String docID, String aprState, String aprType, String result, String orgUID, String strLang, String companyID,
 			HttpServletRequest request,LoginVO userInfo, String mode) throws Exception{
 		logger.debug("createMhtFile started. formID = " + formID + " || userID = " + userID + " || signNum = " + signNum + " || docID = " + docID + " || aprState = " + aprState + " || aprType = " + aprType + " || result = " + result + " || orgUID = " + orgUID);
-		
+
+        JSONObject resultJson = new JSONObject();
+                
 		String realPath = commonUtil.getRealPath(request);
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
 		//String docNumZeroCnt = ezCommonService.getTenantConfig("docNumZeroCnt", userInfo.getTenantId());
@@ -7681,6 +8239,8 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 		String signInfo2 = "";
 		String signText2 = "";
 		String signAdd = "";
+        
+        String cabinetDeptID = "";
 		
 		boolean isJKAprTypeAfterDK = false; // 전자결재 G > 대결자(016) 이후의 전결자(004)가 존재하는 경우, 해당 플래그를 true로 한다.
 		
@@ -7698,12 +8258,12 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
             }
 		}
 		
-		String aprStateSign = getDocInfo(docID, "APR", "DOCSTATE", userInfo, companyID, userInfo.getTenantId(), "", "");
+		String docStateSign = getDocInfo(docID, "APR", "DOCSTATE", userInfo, companyID, userInfo.getTenantId(), "", "");
 		
-		Document aprXML2 = commonUtil.convertStringToDocument(aprStateSign);
-		aprStateSign = aprXML2.getElementsByTagName("DOCSTATE").item(0).getTextContent();
+		Document aprXML2 = commonUtil.convertStringToDocument(docStateSign);
+		docStateSign = aprXML2.getElementsByTagName("DOCSTATE").item(0).getTextContent();
 		// aprState : 도착(011), 지정(012)
-		if (aprStateSign.equals("011") || aprStateSign.equals("012")) {
+		if (docStateSign.equals("011") || docStateSign.equals("012")) {
 			String receiveRet = getReceivedDocInfo(userInfo, docID, companyID, strLang, userInfo.getTenantId(), userInfo.getOffset());
 			Document aprXML = commonUtil.convertStringToDocument(receiveRet);
 			
@@ -7734,7 +8294,7 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 		//HTML 파싱 document 클래스 겹쳐서 임포트 못함
 		org.jsoup.nodes.Document doc = Jsoup.parse(content);
 		//DOCSTATE : 011(수신)
-		if (aprStateSign.equals("011")) {
+		if (docStateSign.equals("011")) {
 			signAdd = "1";
 		} else {
 			signAdd = "";
@@ -8067,8 +8627,10 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 					signText = messageSource.getMessage("ezApprovalG.t25", userInfo.getLocale()) + tempDate.substring(5, 7) + "/" + tempDate.substring(8, 10) + "<BR/><P style=\"FONT-FAMILY: " + messageSource.getMessage("ezApprovalG.t2105", userInfo.getLocale()) + "; FONT-SIZE: 10pt; FONT-WEIGHT: 900\">" + proxySign + displayName + "</P>";
 				} else if (aprType.equals("015")) { // 후열
 					gongRamUpdate(docID, userID, companyID, strLang, userInfo.getTenantId());
-					
-					return "001";
+                    
+                    resultJson.put("result", "001");
+                    return resultJson;
+//					return "001";
 				}
 			}
 			
@@ -8092,11 +8654,11 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 			/* 2022-10-12 홍승비 - 대결자 직후 전결자가 존재하는 경우, 자동으로 결재완료되어야 하므로 문서번호 생성 진행 */
 			/* 2023-08-11 박기범 - addLastKyulJeYN(결재 후에 합의 가능: 1, 2) 값에따라 마지막이 개인순차합의인 경우 허용 */
 			//일반 채번문제 수정 2017-05-15
-//			if ((totalLineSN == Integer.parseInt(signNum.trim()) || aprType.equals("016") || aprType.equals("001")) && !aprType.equals("007") && !aprStateSign.equals("011")) {
+//			if ((totalLineSN == Integer.parseInt(signNum.trim()) || aprType.equals("016") || aprType.equals("001")) && !aprType.equals("007") && !docStateSign.equals("011")) {
 			if ((totalLineSN == Integer.parseInt(signNum.trim()) || isJKAprTypeAfterDK)
                     && (aprType.equals("016") || aprType.equals("001") || aprType.equals("004") || (aprType.equals("008") && addLastKyulJeYN.equals("1") || addLastKyulJeYN.equals("2")))
-                    && !aprType.equals("007") && !aprStateSign.equals("011") && habYuiAprStateFlag) {
-				if (aprStateSign.equals("012")) {
+                    && !aprType.equals("007") && !docStateSign.equals("011") && habYuiAprStateFlag) {
+				if (docStateSign.equals("012")) {
 					strDeptID = receiveDept;
 					strDeptName = receiveDeptName;
 				} else {
@@ -8105,17 +8667,22 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 				}
 				
 				if (!excuteInfo("DOCNUM_BEFORE", "DRAFT", doc, docID, userID, formURL, userInfo.getTenantId(), request)) {
-					return "Link ERROR";
+                    resultJson.put("result", "Link ERROR");
+                    return resultJson;
+//					return "Link ERROR";
 				}
 
                 /* 상위부서의 부서문서함을 가져오도록 함 */
                 String ret = "";
                 Map<String, String> upDeptInfo = getUpperDeptInfo(strDeptID, userInfo.getTenantId());
-                if (upDeptInfo.get("USEUPPERDEPTBOX") != null && upDeptInfo.get("USEUPPERDEPTBOX").equals("Y")) {
-                    ret = getCabinetNum(upDeptInfo.get("upperDeptCode"), "", companyID, docID, userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset());
-                }else{
-                    ret = getCabinetNum(strDeptID, "", companyID, docID, userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset());
-                }
+                strDeptID = upDeptInfo.get("USEUPPERDEPTBOX") != null && upDeptInfo.get("USEUPPERDEPTBOX").equals("Y") ? upDeptInfo.get("upperDeptCode") : strDeptID;
+                ret = getCabinetNum(strDeptID, "", companyID, docID, userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset());
+                
+//                if (upDeptInfo.get("USEUPPERDEPTBOX") != null && upDeptInfo.get("USEUPPERDEPTBOX").equals("Y")) {
+//                    ret = getCabinetNum(upDeptInfo.get("upperDeptCode"), "", companyID, docID, userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset());
+//                }else{
+//                    ret = getCabinetNum(strDeptID, "", companyID, docID, userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset());
+//                }
                 
 				logger.debug("serialNum = " + ret);
 				
@@ -8144,18 +8711,21 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 					if (docNumFlag) {
 						rollBackDocNumber(strDeptID, companyID, cabinetSN, docID, strLang, userInfo.getTenantId());
 					}
-					
-					return "Link ERROR";
+                    resultJson.put("result", "Link ERROR");
+                    return resultJson;
+//					return "Link ERROR";
 				}
 			}
 			
             /** 수신 일괄결재시 채번 */
-            if (approvalFlag.equals("G") && useReceiveDocNo.equals("NO") && (totalLineSN == Integer.parseInt(signNum.trim()) || isJKAprTypeAfterDK == true) && (aprType.equals("016") || aprType.equals("001") || aprType.equals("004")) && !aprType.equals("007") && aprStateSign.equals("011")) {
+            if (approvalFlag.equals("G") && useReceiveDocNo.equals("NO") && (totalLineSN == Integer.parseInt(signNum.trim()) || isJKAprTypeAfterDK == true) && (aprType.equals("016") || aprType.equals("001") || aprType.equals("004")) && !aprType.equals("007") && docStateSign.equals("011")) {
                 strDeptID = receiveDept;
                 strDeptName = receiveDeptName;
 
                 if (!excuteInfo("DOCNUM_BEFORE", "SUSIN", doc, docID, userID, formURL, userInfo.getTenantId(), request)) {
-                    return "Link ERROR";
+                    resultJson.put("result", "Link ERROR");
+                    return resultJson;
+//                    return "Link ERROR";
                 }
                 
                 String ret = getCabinetNum(strDeptID, "", companyID, docID, userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset());
@@ -8186,8 +8756,10 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
                     if (docNumFlag) {
                         rollBackDocNumber(strDeptID, companyID, cabinetSN, docID, strLang, userInfo.getTenantId());
                     }
-                    
-                    return "Link ERROR";
+
+                    resultJson.put("result", "Link ERROR");
+                    return resultJson;
+//                    return "Link ERROR";
                 }
             }
 		} else if (result.equals("B")) { // 반송
@@ -8220,7 +8792,7 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 		}
 		
 		if (result.equals("A")) {
-			if (aprStateSign.equals("011")) {
+			if (docStateSign.equals("011")) {
 				if ((totalLineSN == Integer.parseInt(signNum.trim()) || isJKAprTypeAfterDK == true) && (aprType.equals("016") || aprType.equals("001") || aprType.equals("004")) && !aprType.equals("007")) {
 					linkCheck = excuteInfo("LAST_SIGN_BEFORE", "SUSIN", doc, docID, userID, formURL, userInfo.getTenantId(), request);
 				} else {
@@ -8234,7 +8806,7 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 				}
 			}
 		} else if (result.equals("B")) {
-			if (aprStateSign.equals("011")) {
+			if (docStateSign.equals("011")) {
 				linkCheck = excuteInfo("BANSONG_BEFORE", "SUSIN", doc, docID, userID, formURL, userInfo.getTenantId(), request);
 			} else {
 				linkCheck = excuteInfo("BANSONG_BEFORE", "DRAFT", doc, docID, userID, formURL, userInfo.getTenantId(), request);
@@ -8249,8 +8821,10 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 			if (mhtSaveFlag) {
 				rollBackMHT(formURL, tempMht);
 			}
-			
-			return "Link ERROR";
+        
+            resultJson.put("result", "Link ERROR");
+            return resultJson;
+//			return "Link ERROR";
 		}
 		
 		String result2 = updateHistoryForLine(docID, orgUID, displayName, displayName2, pTitle, pTitle, department, description, description2, chkFlag, companyID, userInfo.getTenantId());
@@ -8261,8 +8835,10 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 			if (docNumFlag) {
 				rollBackDocNumber(strDeptID, companyID, cabinetSN, docID, strLang, userInfo.getTenantId());
 			}
-			
-			return "ERROR";
+
+            resultJson.put("result", "ERROR");
+            return resultJson;
+//			return "ERROR";
 		}
 		
 		String tempHtml = doc.outerHtml();
@@ -8298,7 +8874,9 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 					outputStream.close();
 				} catch (Exception ignore) {
 					logger.debug("IGNORED: {}", ignore.getMessage());
-					return "";
+                    resultJson.put("result", "");
+                    return resultJson;
+//					return "";
 				}
 		    }
 		}
@@ -8323,7 +8901,7 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
                 docNumCode = upDeptInfo.get("upperDeptCode");
             }
             
-			if (aprStateSign.equals("011")) {
+			if (docStateSign.equals("011")) {
 			    if (approvalFlag.equals("S")) {
 			        paramXML.getElementsByTagName("DOCNUMCODE").item(0).setTextContent("");
 			        paramXML.getElementsByTagName("ORGDOCNUMCODE").item(0).setTextContent("");
@@ -8385,14 +8963,16 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 			if (mhtSaveFlag) {
 				rollBackMHT(formURL, tempMht);
 			}
-			
-			return "ERROR";
+
+            resultJson.put("result", "ERROR");
+            return resultJson;
+//			return "ERROR";
 		} else {
 			signSaveFlag = true;
 			linkCheck = true;
 			
 			if (result.equals("A")) {
-				if (aprStateSign.equals("011")) {
+				if (docStateSign.equals("011")) {
 					if ((totalLineSN == Integer.parseInt(signNum.trim()) || isJKAprTypeAfterDK == true) && (aprType.equals("016") || aprType.equals("001") || aprType.equals("004")) && !aprType.equals("007")) {
 						linkCheck = excuteInfo("LAST_SIGN_AFTER", "SUSIN", doc, docID, userID, formURL, userInfo.getTenantId(), request);
 					} else {
@@ -8419,8 +8999,10 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 				if (signSaveFlag) {
 					rollBackSignInfo(signNum, docID, companyID, signAdd, userInfo.getTenantId());
 				}
-				
-				return "Link ERROR";
+                
+                resultJson.put("result", "Link ERROR");
+                return resultJson;
+//				return "Link ERROR";
 			}
 			
 			Document tempXmlDom = commonUtil.convertStringToDocument(docResult);
@@ -8443,7 +9025,7 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 				linkCheck = true;
 				
 				if (result.equals("A")) {
-					if (aprStateSign.equals("011")) {
+					if (docStateSign.equals("011")) {
 						if ((totalLineSN == Integer.parseInt(signNum.trim()) || isJKAprTypeAfterDK == true) && (aprType.equals("016") || aprType.equals("001") || aprType.equals("004")) && !aprType.equals("007")) {
 							linkCheck = excuteInfo("END_FAIL", "SUSIN", doc, docID, userID, formURL, userInfo.getTenantId(), request);
 						} else {
@@ -8457,7 +9039,7 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 						}
 					}
 				} else if (result.equals("B")) {
-					if (aprStateSign.equals("011")) {
+					if (docStateSign.equals("011")) {
 						linkCheck = excuteInfo("BANSONG_FAIL", "SUSIN", doc, docID, userID, formURL, userInfo.getTenantId(), request);
 					} else {
 						linkCheck = excuteInfo("BANSONG_FAIL", "DRAFT", doc, docID, userID, formURL, userInfo.getTenantId(), request);
@@ -8476,8 +9058,10 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 					if (signSaveFlag) {
 						rollBackSignInfo(signNum, docID, companyID, signAdd, userInfo.getTenantId());
 					}
-					
-					return "Link ERROR";
+
+                    resultJson.put("result", "Link ERROR");
+                    return resultJson;
+//					return "Link ERROR";
 				}
 				
 				if (signSaveFlag) {
@@ -8491,13 +9075,15 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 				if (mhtSaveFlag) {
 					rollBackMHT(formURL, tempMht);
 				}
-				
-				return "ERROR";
+
+                resultJson.put("result", "ERROR");
+                return resultJson;
+//				return "ERROR";
 			} else {
 				linkCheck = true;
 				
 				if (result.equals("A")) {
-					if (aprStateSign.equals("011")) {
+					if (docStateSign.equals("011")) {
 						if ((totalLineSN == Integer.parseInt(signNum.trim()) || isJKAprTypeAfterDK == true) && (aprType.equals("016") || aprType.equals("001") || aprType.equals("004")) && !aprType.equals("007")) {
 							linkCheck = excuteInfo("LAST_END_AFTER", "SUSIN", doc, docID, userID, formURL, userInfo.getTenantId(), request);
 							if (linkCheck) { //근태관리 연동양식 관련된 docId면 근태관리 연동양식 함수 태움.
@@ -8514,7 +9100,7 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 						}
 					}
 				} else if (result.equals("B")) {
-					if (aprStateSign.equals("011")) {
+					if (docStateSign.equals("011")) {
 						linkCheck = excuteInfo("BANSONG_AFTER", "SUSIN", doc, docID, userID, formURL, userInfo.getTenantId(), request);
 					} else {
 						linkCheck = excuteInfo("BANSONG_AFTER", "DRAFT", doc, docID, userID, formURL, userInfo.getTenantId(), request);
@@ -8533,13 +9119,20 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 					if (signSaveFlag) {
 						rollBackSignInfo(signNum, docID, companyID, signAdd, userInfo.getTenantId());
 					}
-					
-					return "Link ERROR";
+                    
+                    resultJson.put("result", "Link ERROR");
+                    return resultJson;
+//					return "Link ERROR";
 				}
 				
 				logger.debug("createMhtFile ended.");
-				
-				return "001";
+                
+                if (docNumFlag){
+                    resultJson.put("cabinetSN", cabinetSN);
+                }
+                resultJson.put("result", "001");
+                return resultJson;
+//				return "001";
 			}
 		}
 	}
@@ -8852,6 +9445,7 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 		return ezApprovalGDAO.getDocAprCnt(map);
 	}
 
+    @Override
 	public String getDocAprLine(String docID, String aprMemberSN, String userID, String docState, String companyID, int tenantID) throws Exception {
 		logger.debug("getDocAprLine started");
 
@@ -8880,6 +9474,7 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 		return sb.toString();
 	}
 
+    @Override
 	public String getDocAprState(String docID, String aprMemberSN, String userID, String companyID, int tenantID) throws Exception {
 		logger.debug("getDocAprState started");
 
@@ -11533,7 +12128,31 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 			String companyID, String lang, LoginVO userInfo) throws Exception {
 		logger.debug("doProcess started");
 
-		String subSQL = "";
+        Node approvback = strXML.getElementsByTagName("APPROVBACK").item(0);
+        String[] split = docID.split(",");
+        if(approvback != null){
+            String isBack = approvback.getTextContent();
+            if("Y".equals(isBack)){
+                String formid = strXML.getElementsByTagName("FORMID").item(0).getTextContent();
+                String[] formsp = formid.split(",");
+                
+                String result = mobileSrvConn_HWP(userInfo.getId(), "A", formsp[0], "", split[0], userID, userInfo.getLang(), strXML.getElementsByTagName("ORGCOMPANYID").item(0).getTextContent(),
+                        null, userInfo, "APR", "");
+                if(result.equals("ERROR"))
+                    throw new Exception("draftAllTypeB 최종결재시 오류발생");
+
+//                for(int i = 0; i < split.length; i++){
+//                    // orgUID 원결재자 ID
+//                    String result = mobileSrvConn_HWP(userInfo.getId(), "A", formsp[i], "", split[i], userID, userInfo.getLang(), strXML.getElementsByTagName("ORGCOMPANYID").item(0).getTextContent(),
+//                            null, userInfo, "APR", "");
+//                    if(result.equals("ERROR"))
+//                        throw new Exception("draftAllTypeB 최종결재시 오류발생");
+//                }
+                return "<RESULT>TRUE</RESULT>"; 
+            }
+        }
+
+        String subSQL = "";
 		String result = "";
 		boolean rtnVal = true;
 		
@@ -11591,9 +12210,14 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
             FautoSaveFlag = strXML.getElementsByTagName("FautoSaveFlag").item(0).getTextContent();
         }
 		
+        if(split.length > 1){
+            for(int i = 0; i < split.length; i++)
+                saveAprGroupAndDelTmp(split[i], i + 1 + "", split[0], split[0], companyID, userInfo.getTenantId());
+        }
+            
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyID", companyID);
-		map.put("v_DOCID", docID.trim());
+		map.put("v_DOCID", docID.trim().split(","));
 		map.put("v_TENANTID", userInfo.getTenantId());
 		map.put("v_USERID", userID.trim());
 		map.put("v_ISUSED", "");
@@ -11601,12 +12225,12 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 		String oldDocID = "";
 		if(strXML.getElementsByTagName("saveFlag").getLength() > 0) {
 			oldDocID = strXML.getElementsByTagName("oldDocID").item(0).getTextContent();
-			map.put("v_DOCID", oldDocID);
+			map.put("v_DOCID", oldDocID.split(","));
 		}
 		
 		if (isUsed.equals("reuse")) {
 			map.put("v_ISUSED", isUsed);
-			map.put("v_DOCID", beforeDocID.trim());
+			map.put("v_DOCID", beforeDocID.trim().split(","));
 		}
 		
 		logger.debug("doProcess param : v_DOCID =" + docID.trim() + " v_TENANTID =" + userInfo.getTenantId() + " v_USERID =" + userID.trim());
@@ -11762,7 +12386,16 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 						docSN = strXML.getElementsByTagName("DOCSN").item(0).getTextContent();
 					}
 
-					if (!FormHref.equals("") && listType.equals("21") && draftFlag.equals("REDRAFT") && !oldDocID.equals("") && !beforeDocID.equals("")) {
+                    String tmp = docID;
+                    String[] split2 = FormHref.split(",");
+                    String[] split3 = docSN.split(",");
+                    String[] split4 = oldDocID.split(",");
+                    for(int d = 0; d < split.length; d++){
+                        docID = split[d];
+                        FormHref = split2[d];
+                        docSN = split3.length == 0 ? "" : split3[d];
+                        oldDocID = "".equals(split4[0]) ? "" : split4[d];
+                    if (!FormHref.equals("") && listType.equals("21") && draftFlag.equals("REDRAFT") && !oldDocID.equals("") && !beforeDocID.equals("")) {
 						if (!compareTmpDocID(FormHref, docSN, companyID, userInfo.getTenantId())) {
 							return "<RESULT>FALSE</RESULT>";
 						} else {
@@ -11792,7 +12425,8 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 						subSQL = makeTmpDocInfo(userID, docID, autoSaveFlag, companyID, lang, userInfo.getTenantId(), oldDocID, subSQL);
 						subSQL = makeTmp2IngDocInfo(userID, subSQL, companyID, lang, userInfo.getTenantId(), docID, oldDocID, autoSaveFlag);
 					}
-					
+					}
+                    docID = tmp;
 					logger.debug("doapprov makeTmpDocInfo ended.");
 					
 					if (subSQL.toUpperCase().equals("FALSE")) {
@@ -11804,7 +12438,10 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 			}
 		}
 		
-		chkDocDelete(docID, docID, rtnVal, userID, deptID, dirPath, companyID, userInfo.getTenantId());
+        for(int d = 0; d < split.length; d++){
+            docID = split[d];
+            chkDocDelete(docID, docID, rtnVal, userID, deptID, dirPath, companyID, userInfo.getTenantId());
+        }
 		if (rtnVal) {
 			result = "<RESULT>TRUE</RESULT>";
 		} else {
@@ -11822,20 +12459,37 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		
-		map.put("v_DOCID", docID);
+        String[] sp = docID.split(",");
+        
 		map.put("companyID", companyID);
 		map.put("v_TENANTID", tenantID);
 		
-		// 외부 수신처가 존재하는지 체크 (외부시행문이어도 수신자가 회사 내부 조직도라면 추가적으로 용량을 체크하지 않음)
-		int temp = ezApprovalGDAO.getTotalAttachSizeTemp(map);
-		if ( temp > 0 ) {
-			map.put("v_temp" , "1");
-		} else {
-			map.put("v_temp" , "0");
-		}
-		
-		List<ApprGAttachInfoVO> apprGAttachInfoVOList = ezApprovalGDAO.getTotalAttachSize(map);
-		
+		int temp = 0;
+        List<ApprGAttachInfoVO> apprGAttachInfoVOList = null;
+        String biggestSize = "0";
+
+        for(int i = 0; i < sp.length; i++){
+            map.put("v_DOCID", sp[i]);
+            // 외부 수신처가 존재하는지 체크 (외부시행문이어도 수신자가 회사 내부 조직도라면 추가적으로 용량을 체크하지 않음)
+            temp = ezApprovalGDAO.getTotalAttachSizeTemp(map);
+            if ( temp > 0 ) {
+                map.put("v_temp" , "1");
+            } else {
+                map.put("v_temp" , "0");
+            }
+
+            if(temp > 0 || i == 0)
+                apprGAttachInfoVOList = ezApprovalGDAO.getTotalAttachSize(map);
+            if(Integer.parseInt(apprGAttachInfoVOList.get(0).getTotalSize()) > Integer.parseInt(biggestSize))
+                biggestSize = apprGAttachInfoVOList.get(0).getTotalSize();
+            if("Y".equals(apprGAttachInfoVOList.get(0).getFlag())){
+                if(sp.length > 1)
+                    apprGAttachInfoVOList.get(0).setPageNum(i + 1 + "");
+                break;
+            }
+        }
+        apprGAttachInfoVOList.get(0).setTotalSize(biggestSize);
+        
 		StringBuffer sb = new StringBuffer();
 		sb.append("<DATA>");
 		
@@ -11919,34 +12573,39 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 		logger.debug("updateHistoryForLine started");
 
 		boolean addFlag = true;
-		
-		if (!chkFlag.equals("MUST")) {
-			addFlag = compareLineHistory(docID, companyID, tenantID);
-		}
-		
-		if (addFlag) {
-			Map<String, Object> map = new HashMap<String, Object>();
-			map.put("v_DOCID", docID.trim());
-			map.put("v_USERID", userID.trim());
-			map.put("v_USERNAME", userName.trim());
-			map.put("v_USERNAME2", userName2.trim());
-			map.put("v_USERJOBTITLE", userJobTitle.trim());
-			map.put("v_USERJOBTITLE2", userJobTitle2.trim());
-			map.put("v_DEPTID", userDeptID.trim());
-			map.put("v_DEPTNAME", userDeptName.trim());
-			map.put("v_DEPTNAME2", userDeptName2.trim());
-			map.put("v_TENANTID", tenantID);
-			map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
-			map.put("companyID", companyID);
-			
-			String mode = getLineModeFlag(docID.trim(), userID.trim(), companyID, tenantID);
-			
-			if (mode.equals("APR")) {
-				ezApprovalGDAO.updateHistoryForLine(map);
-			} else {
-				ezApprovalGDAO.updateHistoryForLine2(map);
-			}
-		}
+
+        String[] split = docID.split(",");
+        
+        for(int i = 0; i < split.length; i++){
+            docID = split[i];
+            if (!chkFlag.equals("MUST")) {
+                addFlag = compareLineHistory(docID, companyID, tenantID);
+            }
+
+            if (addFlag) {
+                Map<String, Object> map = new HashMap<String, Object>();
+                map.put("v_DOCID", docID.trim());
+                map.put("v_USERID", userID.trim());
+                map.put("v_USERNAME", userName.trim());
+                map.put("v_USERNAME2", userName2.trim());
+                map.put("v_USERJOBTITLE", userJobTitle.trim());
+                map.put("v_USERJOBTITLE2", userJobTitle2.trim());
+                map.put("v_DEPTID", userDeptID.trim());
+                map.put("v_DEPTNAME", userDeptName.trim());
+                map.put("v_DEPTNAME2", userDeptName2.trim());
+                map.put("v_TENANTID", tenantID);
+                map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
+                map.put("companyID", companyID);
+
+                String mode = getLineModeFlag(docID.trim(), userID.trim(), companyID, tenantID);
+
+                if (mode.equals("APR")) {
+                    ezApprovalGDAO.updateHistoryForLine(map);
+                } else {
+                    ezApprovalGDAO.updateHistoryForLine2(map);
+                }
+            }
+        }
 
 		logger.debug("updateHistoryForLine ended");
 		
@@ -12264,23 +12923,27 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyID", companyID);
-		map.put("v_DOCID", docID);
 		map.put("v_TENANTID", tenantID);
-		
-		int aprSN = ezApprovalGDAO.updateSignInfoAprSN(map); // 서명 순번 추출
-		int signLength = xmlDom.getElementsByTagName("SIGNINFO").getLength();
-		int maxAprSN = 0;
-		
-		for (int k = 0; k < signLength; k++) {
-			maxAprSN = aprSN + k + 1;
-			
-			map.put("v_MAXAPRSN", maxAprSN);
-			map.put("v_SIGNTYPE", xmlDom.getElementsByTagName("SIGNTYPE").item(k).getTextContent());
-			map.put("v_SIGNNAME", xmlDom.getElementsByTagName("SIGNNAME").item(k).getTextContent());
-			map.put("v_CONTENT", xmlDom.getElementsByTagName("CONTENT").item(k).getTextContent());
-			
-			ezApprovalGDAO.insertSignInfo(map);
-		}
+
+        String[] split = docID.split(",");
+        for(int i = 0; i < split.length; i++){
+            docID = split[i];
+            map.put("v_DOCID", docID);
+            int aprSN = ezApprovalGDAO.updateSignInfoAprSN(map); // 서명 순번 추출
+            int signLength = xmlDom.getElementsByTagName("SIGNINFO").getLength();
+            int maxAprSN = 0;
+
+            for (int k = 0; k < signLength; k++) {
+                maxAprSN = aprSN + k + 1;
+
+                map.put("v_MAXAPRSN", maxAprSN);
+                map.put("v_SIGNTYPE", xmlDom.getElementsByTagName("SIGNTYPE").item(k).getTextContent());
+                map.put("v_SIGNNAME", xmlDom.getElementsByTagName("SIGNNAME").item(k).getTextContent());
+                map.put("v_CONTENT", xmlDom.getElementsByTagName("CONTENT").item(k).getTextContent());
+
+                ezApprovalGDAO.insertSignInfo(map);
+            }
+        }
 
 		logger.debug("updateSignInfo ended");
 		
@@ -14700,19 +15363,24 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_APRSTATE", aprState);
 		map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
-		map.put("v_DOCID", docID);
 		map.put("v_USERID", userID);
 		map.put("v_STAASJINHANG", staASJinHang);
 		map.put("v_TENANTID", tenantID);
 		map.put("companyID", companyID);
-		
-		ezApprovalGDAO.updateBoryuAprLineInfo(map);
-		ezApprovalGDAO.updateBoryuAprDocInfo(map);
-		
-		sendMsg(docID, "", "BOR", companyID, lang, tenantID);
-		if (sendNotiFlag == null || !sendNotiFlag.equals("N")) {
-			sendNoti(docID, userID, userName, "", "", "", "BOR", companyID, lang, tenantID);
-		}
+
+        String[] split = docID.split(",");
+        for(int d = 0; d < split.length; d++){
+            docID = split[d];
+            map.put("v_DOCID", docID);
+
+            ezApprovalGDAO.updateBoryuAprLineInfo(map);
+            ezApprovalGDAO.updateBoryuAprDocInfo(map);
+
+            sendMsg(docID, "", "BOR", companyID, lang, tenantID);
+            if (sendNotiFlag == null || !sendNotiFlag.equals("N")) {
+                sendNoti(docID, userID, userName, "", "", "", "BOR", companyID, lang, tenantID);
+            }
+        }
 
 		logger.debug("doBoryu ended");
 		
@@ -14733,36 +15401,60 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
         if (aprState.equals("")) {
         	notiType = "HESONG";
         }
-		
-        if (approvalFlag.equals("G")) {
-			map.put("companyID", companyID);
-			map.put("v_DOCID", orgDocID);
-            map.put("v_STAASJINHANG", staASJinHang);
-            map.put("v_STAASBORYU", staASBoRyu);
-			map.put("v_TENANTID", userInfo.getTenantId());
-			map.put("v_APRMEMBERID", userID);
-			// APRTYPE 리스트 가져오기
-			List<ApprGDocListVO> aprTypeList = ezApprovalGDAO.doBanSongAprType(map);
 
-            //////
-			if (aprTypeList.size() > 0 && aprTypeList.get(0).getAprType().equals(staATByungRyulHyubJo)) {
-                if (!"2".equals(agreeReturnType)) {
-                    //type1 : 다음 결재권자에게 진행
-                    //displayName : 회사/부서명, displayName2 : 회사/부서명 (다국어), department : 부서ID
-                    doApprove(orgDocID, userID, aprState, ezOrganService.getPropertyValue(userID, "displayName", userInfo.getTenantId()), ezOrganService.getPropertyValue(userID, "displayName2", userInfo.getTenantId()), dirPath, ezOrganService.getPropertyValue(userID, "department", userInfo.getTenantId()), "", companyID, lang, userInfo, curDocNum, "", "", "", sendNotiFlag);
-                    sendMsg(orgDocID, "", notiType, companyID, lang, userInfo.getTenantId());
-                    if (sendNotiFlag == null || !sendNotiFlag.equals("N")) {
-                    	sendNoti(orgDocID, userID, userInfo.getDisplayName(), "", "", "", notiType, companyID, lang, userInfo.getTenantId());
+        String[] split = docID.split(",");
+        String[] split2 = orgDocID.split(",");
+        
+        for(int d = 0; d < split2.length; d++){
+        docID = split.length > d ? split[d] : "";
+            orgDocID = split2[d];
+    
+            if (approvalFlag.equals("G")) {
+                map.put("companyID", companyID);
+                map.put("v_DOCID", orgDocID);
+                map.put("v_STAASJINHANG", staASJinHang);
+                map.put("v_STAASBORYU", staASBoRyu);
+                map.put("v_TENANTID", userInfo.getTenantId());
+                map.put("v_APRMEMBERID", userID);
+                // APRTYPE 리스트 가져오기
+                List<ApprGDocListVO> aprTypeList = ezApprovalGDAO.doBanSongAprType(map);
+    
+                //////
+                if (aprTypeList.size() > 0 && aprTypeList.get(0).getAprType().equals(staATByungRyulHyubJo)) {
+                    if (!"2".equals(agreeReturnType)) {
+                        //type1 : 다음 결재권자에게 진행
+                        //displayName : 회사/부서명, displayName2 : 회사/부서명 (다국어), department : 부서ID
+                        doApprove(orgDocID, userID, aprState, ezOrganService.getPropertyValue(userID, "displayName", userInfo.getTenantId()), ezOrganService.getPropertyValue(userID, "displayName2", userInfo.getTenantId()), dirPath, ezOrganService.getPropertyValue(userID, "department", userInfo.getTenantId()), "", companyID, lang, userInfo, curDocNum, "", "", "", sendNotiFlag);
+                        sendMsg(orgDocID, "", notiType, companyID, lang, userInfo.getTenantId());
+                        if (sendNotiFlag == null || !sendNotiFlag.equals("N")) {
+                            sendNoti(orgDocID, userID, userInfo.getDisplayName(), "", "", "", notiType, companyID, lang, userInfo.getTenantId());
+                        }
+    
+                    } else {
+                        //type2 : 원 기안자에게 반송
+                        map.put("v_APRSTATE", staASDaeGi);
+                        map.put("v_APRTYPE", staATByungRyulHyubJo);
+                        map.put("v_APRMEMBERID", userID);
+    
+                        ezApprovalGDAO.updatePersonalAgreeLineInfo(map);
+    
+                        map.put("v_AprState", aprState);
+                        map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
+                        map.put("v_AprState2", staASJinHang);
+                        map.put("v_AprState3", staASBoRyu);
+                        // 현재 결재자의 APRSTATE가 '진행' 혹은 '보류' 상태인 경우 -> APRSTATE를 '반송'으로 변경
+                        ezApprovalGDAO.updateBanSongAprLineInfo(map);
+                        ezApprovalGDAO.updateBanSongChamJoAprLineInfo(map);
+                        ezApprovalGDAO.updateBanSongAprDocInfo(map);
+                        // APRMEMBERSN='1'인 경우. 즉, 기안자인 경우 -> APRSTATE를 '진행'으로 변경
+                        ezApprovalGDAO.updateBanSongAprLineInfo2(map);
+    
+                        sendMsg(orgDocID, "", notiType, companyID, lang, userInfo.getTenantId());
+                        if (sendNotiFlag == null || !sendNotiFlag.equals("N")) {
+                            sendNoti(orgDocID, userID, userInfo.getDisplayName(), "", "", "", notiType, companyID, lang, userInfo.getTenantId());
+                        }
                     }
-
                 } else {
-                    //type2 : 원 기안자에게 반송
-                    map.put("v_APRSTATE", staASDaeGi);
-                    map.put("v_APRTYPE", staATByungRyulHyubJo);
-                    map.put("v_APRMEMBERID", userID);
-
-                    ezApprovalGDAO.updatePersonalAgreeLineInfo(map);
-
                     map.put("v_AprState", aprState);
                     map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
                     map.put("v_AprState2", staASJinHang);
@@ -14772,76 +15464,60 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
                     ezApprovalGDAO.updateBanSongChamJoAprLineInfo(map);
                     ezApprovalGDAO.updateBanSongAprDocInfo(map);
                     // APRMEMBERSN='1'인 경우. 즉, 기안자인 경우 -> APRSTATE를 '진행'으로 변경
-                    ezApprovalGDAO.updateBanSongAprLineInfo2(map);
-
+                    ezApprovalGDAO.updateBanSongAprLineInfo2(map); 
+                    
                     sendMsg(orgDocID, "", notiType, companyID, lang, userInfo.getTenantId());
                     if (sendNotiFlag == null || !sendNotiFlag.equals("N")) {
-                    	sendNoti(orgDocID, userID, userInfo.getDisplayName(), "", "", "", notiType, companyID, lang, userInfo.getTenantId());
+                        sendNoti(orgDocID, userID, userInfo.getDisplayName(), "", "", "", notiType, companyID, lang, userInfo.getTenantId());
                     }
                 }
-			} else {
-				map.put("v_AprState", aprState);
-				map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
-				map.put("v_AprState2", staASJinHang);
-				map.put("v_AprState3", staASBoRyu);
-				// 현재 결재자의 APRSTATE가 '진행' 혹은 '보류' 상태인 경우 -> APRSTATE를 '반송'으로 변경
-				ezApprovalGDAO.updateBanSongAprLineInfo(map);
-				ezApprovalGDAO.updateBanSongChamJoAprLineInfo(map);
-				ezApprovalGDAO.updateBanSongAprDocInfo(map);
-				// APRMEMBERSN='1'인 경우. 즉, 기안자인 경우 -> APRSTATE를 '진행'으로 변경
-				ezApprovalGDAO.updateBanSongAprLineInfo2(map); 
-				
-				sendMsg(orgDocID, "", notiType, companyID, lang, userInfo.getTenantId());
-				if (sendNotiFlag == null || !sendNotiFlag.equals("N")) {
-					sendNoti(orgDocID, userID, userInfo.getDisplayName(), "", "", "", notiType, companyID, lang, userInfo.getTenantId());
-				}
-			}
-		} else {
-			// 개인병렬합의/협조 관련 반송타입
-			map.put("companyID", companyID);
-			map.put("v_DOCID", orgDocID);
-			map.put("v_TENANTID", userInfo.getTenantId());
-			map.put("v_APRMEMBERID", userID);
-			map.put("v_STAASJINHANG", staASJinHang);
-			map.put("v_STAASBORYU", staASBoRyu);
-			
-			List<ApprGDocListVO> aprTypeList = ezApprovalGDAO.doBanSongAprTypeS(map);
-
-			// 개인병렬협조의 타입 값에 따른 조건문 변경.
-			if (agreeReturnType.equalsIgnoreCase("") || agreeReturnType == null || agreeReturnType.equalsIgnoreCase("1")) {
-				if (aprTypeList.get(0).getAprType().equals(staATByungRyulHyubJo)) {
-					resultStr = true;
-				}
-			} else if (agreeReturnType.equalsIgnoreCase("2")) {
-				// 개인병렬합의/협조에서 한 명이라도 반송을 한 경우
-				// 남은 병렬 합의/협조자의 상태값을 대기로 변경(리스트에 미출력 && 결재 등의 행위 금지를 위함)
-
-				if (aprTypeList.get(0).getAprType().equals(staATByungRyulHyubJo)) {
-					map.put("v_APRSTATE", staASDaeGi);
-					map.put("v_APRTYPE", staATByungRyulHyubJo);
-					ezApprovalGDAO.updatePersonalAgreeLineInfo(map);					
-				}
-			}
-			
-			if (resultStr) {
-				doApprove(orgDocID, userID, aprState, ezOrganService.getPropertyValue(userID, "displayName", userInfo.getTenantId()), ezOrganService.getPropertyValue(userID, "displayName2", userInfo.getTenantId()), dirPath, ezOrganService.getPropertyValue(userID, "department", userInfo.getTenantId()), "", companyID, lang, userInfo, curDocNum, "", "", "", sendNotiFlag);
-				sendMsg(orgDocID, "", notiType, companyID, lang, userInfo.getTenantId());
-				if (sendNotiFlag == null || !sendNotiFlag.equals("N")) {
-					sendNoti(orgDocID, userID, userInfo.getDisplayName(), "", "", "", notiType, companyID, lang, userInfo.getTenantId());
-				}
-
-			} else {
-				String pBansongType = getCode2Name("SA25", "002", companyID, lang, userInfo.getTenantId());		// 이 값이 Y면 반송함 자동 등록.
-				
-				if (pBansongType.equals("Y")) {
-					String rtn = doReturnDocComplete(orgDocID, docID, "3", dirPath, deptID, companyID, lang, userInfo.getTenantId(), userInfo.getOffset(), aprState , userID, userInfo.getDisplayName());
-					
-					if (rtn.equals("FALSE")) {
-						return "FALSE";
-					} 
-				}
-			}
-		}
+            } else {
+                // 개인병렬합의/협조 관련 반송타입
+                map.put("companyID", companyID);
+                map.put("v_DOCID", orgDocID);
+                map.put("v_TENANTID", userInfo.getTenantId());
+                map.put("v_APRMEMBERID", userID);
+                map.put("v_STAASJINHANG", staASJinHang);
+                map.put("v_STAASBORYU", staASBoRyu);
+                
+                List<ApprGDocListVO> aprTypeList = ezApprovalGDAO.doBanSongAprTypeS(map);
+    
+                // 개인병렬협조의 타입 값에 따른 조건문 변경.
+                if (agreeReturnType.equalsIgnoreCase("") || agreeReturnType == null || agreeReturnType.equalsIgnoreCase("1")) {
+                    if (aprTypeList.get(0).getAprType().equals(staATByungRyulHyubJo)) {
+                        resultStr = true;
+                    }
+                } else if (agreeReturnType.equalsIgnoreCase("2")) {
+                    // 개인병렬합의/협조에서 한 명이라도 반송을 한 경우
+                    // 남은 병렬 합의/협조자의 상태값을 대기로 변경(리스트에 미출력 && 결재 등의 행위 금지를 위함)
+    
+                    if (aprTypeList.get(0).getAprType().equals(staATByungRyulHyubJo)) {
+                        map.put("v_APRSTATE", staASDaeGi);
+                        map.put("v_APRTYPE", staATByungRyulHyubJo);
+                        ezApprovalGDAO.updatePersonalAgreeLineInfo(map);					
+                    }
+                }
+                
+                if (resultStr) {
+                    doApprove(orgDocID, userID, aprState, ezOrganService.getPropertyValue(userID, "displayName", userInfo.getTenantId()), ezOrganService.getPropertyValue(userID, "displayName2", userInfo.getTenantId()), dirPath, ezOrganService.getPropertyValue(userID, "department", userInfo.getTenantId()), "", companyID, lang, userInfo, curDocNum, "", "", "", sendNotiFlag);
+                    sendMsg(orgDocID, "", notiType, companyID, lang, userInfo.getTenantId());
+                    if (sendNotiFlag == null || !sendNotiFlag.equals("N")) {
+                        sendNoti(orgDocID, userID, userInfo.getDisplayName(), "", "", "", notiType, companyID, lang, userInfo.getTenantId());
+                    }
+    
+                } else {
+                    String pBansongType = getCode2Name("SA25", "002", companyID, lang, userInfo.getTenantId());		// 이 값이 Y면 반송함 자동 등록.
+                    
+                    if (pBansongType.equals("Y")) {
+                        String rtn = doReturnDocComplete(orgDocID, docID, "3", dirPath, deptID, companyID, lang, userInfo.getTenantId(), userInfo.getOffset(), aprState , userID, userInfo.getDisplayName());
+                        
+                        if (rtn.equals("FALSE")) {
+                            return "FALSE";
+                        } 
+                    }
+                }
+            }
+        }
 
 		logger.debug("doBansong ended");
 		
@@ -14866,6 +15542,20 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 		map.put("v_APRMEMBERID", userID);
 		
 		String href = ezApprovalGDAO.getDocInfoHref(map);
+
+        String extFileName = getExtendedFileName(href);
+        String draftAllTypeB = ezCommonService.getTenantConfig("draftAllTypeB", tenantID);
+        String groupDocSN = getGroupDocSN(orgDocID.trim(), tenantID, companyID);
+        groupDocSN = Strings.isNotBlank(groupDocSN) ? groupDocSN : "";
+        
+        /*
+         
+         2. 일괄기안문에서 해당 docid 가 groupdocsn이 아니고 draftAllTypeB가 Y면 false
+         */
+        boolean copyFlag = Strings.isNotBlank(groupDocSN) && !groupDocSN.equals(orgDocID.trim()) && "hwp".equals(extFileName.toLowerCase()) && "Y".equals(draftAllTypeB) ? false : true;
+//        if (Strings.isNotBlank(groupDocSN) && !groupDocSN.equals(orgDocID.trim()) && "hwp".equals(extFileName.toLowerCase()) && "Y".equals(draftAllTypeB)){
+//            copyFlag = false;
+//        }
 		
 		String docState = StaDSHesong;
 		@SuppressWarnings("unused")
@@ -14888,13 +15578,15 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 		
 		String NewID = getNewID(companyID, tenantID);
 		
-		String extFileName = getExtendedFileName(href);
+		// String extFileName = getExtendedFileName(href);
 		String oldYear = getDocHrefYear(orgDocID, companyID, tenantID);
         String endURL = commonUtil.getUploadPath("upload_approvalG.ROOT", tenantID) + commonUtil.separator + companyID + commonUtil.separator + "doc" + commonUtil.separator + commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offSet, false).substring(0,4) + commonUtil.separator + getDocDir(NewID) + commonUtil.separator + NewID + "." + extFileName;
 
-		rtnVal = copyFile(dirPath + companyID + commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + "1000" + commonUtil.separator + getDocDir(orgDocID) + commonUtil.separator + orgDocID + "." + extFileName,
-				dirPath + companyID + commonUtil.separator + "doc" + commonUtil.separator + commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offSet, false).substring(0,4) + commonUtil.separator + getDocDir(NewID) + commonUtil.separator + NewID + "." + extFileName,
-				dirPath + companyID + commonUtil.separator + "doc" + commonUtil.separator + commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offSet, false).substring(0,4) + commonUtil.separator + getDocDir(NewID));
+        if(copyFlag){
+            rtnVal = copyFile(dirPath + companyID + commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + "1000" + commonUtil.separator + getDocDir(orgDocID) + commonUtil.separator + orgDocID + "." + extFileName,
+                    dirPath + companyID + commonUtil.separator + "doc" + commonUtil.separator + commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offSet, false).substring(0,4) + commonUtil.separator + getDocDir(NewID) + commonUtil.separator + NewID + "." + extFileName,
+                    dirPath + companyID + commonUtil.separator + "doc" + commonUtil.separator + commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offSet, false).substring(0,4) + commonUtil.separator + getDocDir(NewID));
+        }
 		
 		if (rtnVal) {
 			map.put("v_NEWDOCID", NewID);
@@ -14993,7 +15685,6 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 		int chamJoCnt = 0;
 		
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_DOCID", docID.trim());
 		
 		if (!userInfo.getCompanyID().equals(companyID)) {
 			userInfo.setCompanyID(companyID);
@@ -15007,7 +15698,11 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 		
 		Map<String, Object> map3 = new HashMap<String, Object>();
 		map3.put("v_MODE", ingFlag);
-		
+
+        String[] split = docID.split(",");
+        for(int d = 0; d < split.length; d++){
+            docID = split[d];
+        map.put("v_DOCID", docID.trim());
 		// 결재선 정보 추출
 		List<ApprGAprLineVO> apprGAprLineVOList = null;
 		if (passAprLine != null && passAprLine.equals("Y")) {
@@ -15064,7 +15759,8 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 		if (docXML.getDocumentElement().getChildNodes().getLength() < 1) {
 			rtnVal = false;
 			
-			return "FALSE";
+//			return "FALSE";
+            continue;
 		} else {
 			rtnVal = true;
 			curAprMemberSN = makeListField(docXML.getElementsByTagName("APRMEMBERSN").item(0).getTextContent());
@@ -15102,7 +15798,8 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 			logger.debug("insertProxyUserInfo ended");
 			if (subSQL.toUpperCase().equals("FALSE")) {
 				rtnVal = false;
-				return "FALSE";
+//				return "FALSE";
+                continue;
 			} 
 		}
 		
@@ -15121,7 +15818,9 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 			
 			// 마지막 병렬합의자가 아닌 경우, 이후 동작을 진행하지 않고 리턴 (마지막 병렬합의자인 경우에만 이후 결재유형들의 진행상태 변경 로직을 진행)
 			if (subCount >= 1) {
-				return strSQL.toString();
+//				return strSQL.toString();
+                rtnVal = true;
+                continue;
 			}
 			
 			
@@ -15148,7 +15847,9 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 						map1.put("v_APRSTATE", staASBanSong);
 						ezApprovalGDAO.updateDocInfoAprstate(map1);
 						doBansong(docID, "", proxyUserID, "004", dirPath, deptID, companyID, lang, userInfo, curDocNum, sendNotiFlag);
-						return strSQL.toString();
+//						return strSQL.toString();
+                        rtnVal = true;
+                        continue;
 					}	
 				}				
 			}
@@ -15264,8 +15965,11 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 			
 			ezApprovalGDAO.setAprLineStateBanSongToStay(map);
 			logger.debug("doApprove passAprLine ended");
-            if(passCnt != userCnt || pass)
-			    return "TRUE";
+            if(passCnt != userCnt || pass){
+//                return "TRUE";
+                rtnVal = true;
+                continue;
+            }
 		}
 			while (k < dlength && whileFlag) {
 				if (!curAprType.equals("007")) {
@@ -15961,7 +16665,7 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 					} 
 				}
 		}
-		
+		}
 		if (rtnVal) {
 			logger.debug("doApprove ended");
 			return "TRUE";
@@ -16751,7 +17455,9 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 				}
 			}
 		} else if ("hwp".equals(ext)) { //부서합의 한글 기안기 처리하기 위해 수정. 접수 후 결재완료 됐을 경우 파싱 에러 때문에 수정. 2019-09-24 홍대표
-			HWPFile loadHwp = HWPReader.fromFile(formURL);
+            List<ApprGGroupDocInfoVO> group = getGroupDocList(docID, "APR", userInfo.getTenantId(), companyID);
+            boolean draftAllTypeB = "Y".equals(ezCommonService.getTenantConfig("draftAllTypeB", userInfo.getTenantId())) && group.size() > 1;
+            HWPFile loadHwp = HWPReader.fromFile(formURL);
 			
 			if(findHwpField("deptgamsaname", loadHwp)) {
 				isGamsaDoc = true;
@@ -16780,7 +17486,7 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 			
 			if (isGamsaDoc) {
 				if (findHwpField("deptgamsasign", loadHwp)) {
-					setHwpText(loadHwp, "deptgamsasign", signCont);
+					setHwpText(draftAllTypeB, loadHwp, "deptgamsasign", signCont);
 				}
 			}
 			
@@ -17061,12 +17767,14 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 			}
 		} else if("hwp".equals(ext)) { //부서합의 한글 기안기 처리하기 위해 수정. 접수 후 결재완료 됐을 경우 파싱 에러 때문에 수정. 2019-09-24 홍대표
 			HWPFile loadHwp = HWPReader.fromFile(formURL);
+            List<ApprGGroupDocInfoVO> group = getGroupDocList(docID, "APR", userInfo.getTenantId(), companyID);
+            boolean draftAllTypeB = "Y".equals(ezCommonService.getTenantConfig("draftAllTypeB", userInfo.getTenantId())) && "".equals(susinSN) && group.size() > 1;
 			
 			if (findHwpField(susinSN + "habyuipositon" + aprSN, loadHwp)) {
 				if (isHesong) {
-					setHwpText(susinSN + "habyuipositon" + aprSN, userInfo.getTitle(), loadHwp);
+					setHwpText(draftAllTypeB, susinSN + "habyuipositon" + aprSN, userInfo.getTitle(), loadHwp);
 				} else {
-					setHwpText(susinSN + "habyuipositon" + aprSN, signTitle, loadHwp);
+					setHwpText(draftAllTypeB, susinSN + "habyuipositon" + aprSN, signTitle, loadHwp);
 				}
 			}
 			
@@ -17127,18 +17835,18 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 							map.put("v_DOCID", orgDocID);
 							ezApprovalGDAO.updateDocNumber(map);
 						}
-						setHwpText(loadHwp, "docnumber", docNo + createDocNO(cabinetSN, docNumZeroCnt));
+						setHwpText(false, loadHwp, "docnumber", docNo + createDocNO(cabinetSN, docNumZeroCnt));
 					}
 				}
 			}
 			
 			if (findHwpField(susinSN + "habyuisign" + aprSN, loadHwp)) {
-				setHwpText(loadHwp, susinSN + "habyuisign" + aprSN, signCont);
+				setHwpText(draftAllTypeB, loadHwp, susinSN + "habyuisign" + aprSN, signCont);
 			}
 			
 			String strDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false).substring(5, 10).replace("-", ".");
 			if (findHwpField(susinSN + "habyuidate" + aprSN, loadHwp)) {
-				setHwpText(loadHwp, susinSN + "habyuidate" + aprSN, strDate);
+				setHwpText(draftAllTypeB, loadHwp, susinSN + "habyuidate" + aprSN, strDate);
 			}
 			
 			HWPWriter.toFile(loadHwp, formURL);
@@ -19393,15 +20101,17 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 			// HWP
 			if (docHref.indexOf(".hwp") > -1) {
 				HWPFile hwpFile = HWPReader.fromFile(realPath + docHref);
-				
-				/* 2023-11-28 홍승비 - 부재사유 지정으로 자동 결재 시, 서명일자칸에 자동결재된 날짜를 표출하도록 수정 */
+                List<ApprGGroupDocInfoVO> group = getGroupDocList(docID, "APR", tenantID, companyID);
+                boolean draftAllTypeB = "Y".equals(ezCommonService.getTenantConfig("draftAllTypeB", tenantID)) && "".equals(susinSN) && group.size() > 1;
+
+                /* 2023-11-28 홍승비 - 부재사유 지정으로 자동 결재 시, 서명일자칸에 자동결재된 날짜를 표출하도록 수정 */
 				// 서명일자 필드가 양식상에 존재하지 않으면서 최종결재인 경우 서명칸에 서명일자를 함께 표출하나, 최종결재자의 부재자 자동결재는 불가능하므로 서명칸에는 부재사유만 표출
 				if (findHwpField(signDateField, hwpFile)) {
-					setHwpText(signDateField, signDateMD, hwpFile);
+					setHwpText(draftAllTypeB, signDateField, signDateMD, hwpFile);
 				}
 				
 				if (findHwpField(signField, hwpFile)) {
-					setHwpText(signField, signContent, hwpFile);
+					setHwpText(draftAllTypeB, signField, signContent, hwpFile);
 				}
 				
 				// 서명일자, 서명칸 필드가 양식상에 존재하는 경우에만 파일 수정 및 저장 진행
@@ -19736,11 +20446,19 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 			
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("companyID", companyID);
+            map.put("v_COMPANYID", companyID);
 			map.put("v_TENANTID", tenantID);
 			map.put("v_DOCID", docID);
 			map.put("v_FLAG", "ING");
-			
-			docTitle = makeListField(ezApprovalGDAO.getDocTitle(map));
+
+            switch (mode.toUpperCase()){
+                case "ING": case "HESU": case "BAN": case "BOR":
+                    String groupDocSN = ezApprovalGDAO.getGroupDocSN(map);
+                    if(!"".equals(groupDocSN) && !docID.equals(groupDocSN))
+                        return "TRUE";
+            }
+            
+            docTitle = makeListField(ezApprovalGDAO.getDocTitle(map));
 			
 			if (docTitle.trim().equals("")) {
 				Map<String, Object> map1 = new HashMap<String, Object>();
@@ -19963,7 +20681,6 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 	}
 
 	public String updateDocInfo(Document docXML, String userID, String companyID, String lang, int tenantID) throws Exception {
-		boolean firstFlag = true;
 		logger.debug("updateDocInfo started");
 		String docID = docXML.getElementsByTagName("DOCID").item(0).getTextContent();
 		String tempValue = "";
@@ -19972,584 +20689,206 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("companyID", companyID);
-		map.put("v_DOCID", docID);
 		map.put("v_TENANTID", tenantID);
-		
-		tempValue = docXML.getElementsByTagName("FORMID").item(0).getTextContent().trim();
-		
-		if (!tempValue.equals("")) {
-			if (firstFlag) {
-				map.put("v_FORMID", tempValue);
-				map.put("v_FIRSTFLAG", firstFlag);
-				firstFlag = false;
-			} else {
-				map.put("v_FORMID", tempValue);
-				map.put("v_FIRSTFLAG", firstFlag);
-			}
-		}
-		
-		tempValue = docXML.getElementsByTagName("ORGDOCID").item(0).getTextContent().trim();
-		
-		if (!tempValue.equals("")) {
-			if (firstFlag) {
-				map.put("v_ORGDOCID", tempValue);
-				map.put("v_FIRSTFLAG2", firstFlag);
-				firstFlag = false;
-			} else {
-				map.put("v_ORGDOCID", tempValue);
-				map.put("v_FIRSTFLAG2", firstFlag);
-			}
-		}
-		
- 		tempValue = docXML.getElementsByTagName("DOCTYPE").item(0).getTextContent().trim();
-		
-		if (!tempValue.equals("")) {
-			if (firstFlag) {
-				map.put("v_DOCTYPE", tempValue);
-				map.put("v_FIRSTFLAG3", firstFlag);
-				firstFlag = false;
-			} else {
-				map.put("v_DOCTYPE", tempValue);
-				map.put("v_FIRSTFLAG3", firstFlag);
-			}
-		}
-		
-		tempValue = docXML.getElementsByTagName("DOCSTATE").item(0).getTextContent().trim();
-		
-		if (!tempValue.equals("")) {
-			if (firstFlag) {
-				map.put("v_DOCSTATE", tempValue);
-				map.put("v_FIRSTFLAG4", firstFlag);
-				firstFlag = false;
-			} else {
-				map.put("v_DOCSTATE", tempValue);
-				map.put("v_FIRSTFLAG4", firstFlag);
-			}
-		}
-		
-		tempValue = docXML.getElementsByTagName("FUNCTIONTYPE").item(0).getTextContent().trim();
-		
-		if (!tempValue.equals("")) {
-			if (firstFlag) {
-				map.put("v_FUNCTIONTYPE", tempValue);
-				map.put("v_FIRSTFLAG5", firstFlag);
-				firstFlag = false;
-			} else {
-				map.put("v_FUNCTIONTYPE", tempValue);
-				map.put("v_FIRSTFLAG5", firstFlag);
-			}
-		}
-		
-		tempValue = docXML.getElementsByTagName("HREF").item(0).getTextContent().trim();
-		
-		if (!tempValue.equals("")) {
-			if (firstFlag) {
-				map.put("v_HREF", tempValue);
-				map.put("v_FIRSTFLAG6", firstFlag);
-				firstFlag = false;
-			} else {
-				map.put("v_HREF", tempValue);
-				map.put("v_FIRSTFLAG6", firstFlag);
-			}
-		}
-		
- 		tempValue = docXML.getElementsByTagName("DOCTITLE").item(0).getTextContent().trim();
-		
-		if (!tempValue.equals("")) {
-			if (firstFlag) {
-				map.put("v_DOCTITLE", tempValue.replaceAll("(^\\p{Z}+|\\p{Z}+$)", ""));
-				map.put("v_FIRSTFLAG7", firstFlag);
-				firstFlag = false;
-			} else {
-				map.put("v_DOCTITLE", tempValue.replaceAll("(^\\p{Z}+|\\p{Z}+$)", ""));
-				map.put("v_FIRSTFLAG7", firstFlag);
-			}
-		}
-		
-		tempValue = docXML.getElementsByTagName("DOCNO").item(0).getTextContent().trim();
-		
-		if (!tempValue.equals("")) {
-			if (firstFlag) {
-				map.put("v_DOCNO", tempValue);
-				map.put("v_FIRSTFLAG8", firstFlag);
-				firstFlag = false;
-			} else {
-				map.put("v_DOCNO", tempValue);
-				map.put("v_FIRSTFLAG8", firstFlag);
-			}
-		}
-		
-		tempValue = docXML.getElementsByTagName("HASATTACHYN").item(0).getTextContent().trim();
-		
-		if (!tempValue.equals("")) {
-			if (firstFlag) {
-				map.put("v_HASATTACHYN", tempValue);
-				map.put("v_FIRSTFLAG9", firstFlag);
-				firstFlag = false;
-			} else {
-				map.put("v_HASATTACHYN", tempValue);
-				map.put("v_FIRSTFLAG9", firstFlag);
-			}
-		}
-		
-		tempValue = docXML.getElementsByTagName("HASOPINIONYN").item(0).getTextContent().trim();
-		
-		if (!tempValue.equals("")) {
-			if (firstFlag) {
-				map.put("v_HASOPINIONYN", tempValue);
-				map.put("v_FIRSTFLAG10", firstFlag);
-				firstFlag = false;
-			} else {
-				map.put("v_HASOPINIONYN", tempValue);
-				map.put("v_FIRSTFLAG10", firstFlag);
-			}
-		}
-		
-		tempValue = docXML.getElementsByTagName("STARTDATE").item(0).getTextContent().trim();
-		
-		if (tempValue.equals("DRAFT")) {
-			if (firstFlag) {
-				map.put("v_STARTDATE", commonUtil.getTodayUTCTime(""));
-				map.put("v_FIRSTFLAG11", firstFlag);
-				firstFlag = false;
-			} else {
-				map.put("v_STARTDATE", commonUtil.getTodayUTCTime(""));
-				map.put("v_FIRSTFLAG11", firstFlag);
-			}
-		}
-		
-		tempValue = docXML.getElementsByTagName("ENDDATE").item(0).getTextContent().trim();
-		
-		if (tempValue.equals("DRAFT")) {
-			if (firstFlag) {
-				map.put("v_ENDDATE", "NULL");
-				map.put("v_FIRSTFLAG12", firstFlag);
-				firstFlag = false;
-			} else {
-				map.put("v_ENDDATE", "NULL");
-				map.put("v_FIRSTFLAG12", firstFlag);
-			}
-		}
-		
-		tempValue = docXML.getElementsByTagName("WRITERID").item(0).getTextContent().trim();
-		
-		if (!tempValue.equals("")) {
-			if (firstFlag) {
-				map.put("v_WRITERID", tempValue);
-				map.put("v_FIRSTFLAG13", firstFlag);
-				firstFlag = false;
-			} else {
-				map.put("v_WRITERID", tempValue);
-				map.put("v_FIRSTFLAG13", firstFlag);
-			}
-		}
-		
-		tempValue = docXML.getElementsByTagName("WRITERNAME").item(0).getTextContent().trim();
-		
-		if (!tempValue.equals("")) {
-			if (firstFlag) {
-				map.put("v_WRITERNAME", tempValue);
-				map.put("v_FIRSTFLAG14", firstFlag);
-				firstFlag = false;
-			} else {
-				map.put("v_WRITERNAME", tempValue);
-				map.put("v_FIRSTFLAG14", firstFlag);
-			}
-		}
+        String[] split = docID.split(",");
+        for(int i = 0; i < split.length; i++) {
+            boolean firstFlag = true;
+            docID = split[i];
+            map.put("v_DOCID", docID);
 
-		if (docXML.getElementsByTagName("WRITERNAME2").item(0) != null) {
-			tempValue = docXML.getElementsByTagName("WRITERNAME2").item(0).getTextContent().trim();
-			
-			if (!tempValue.equals("")) {
-				if (firstFlag) {
-					map.put("v_WRITERNAME2", tempValue);
-					map.put("v_FIRSTFLAG15", firstFlag);
-					firstFlag = false;
-				} else {
-					map.put("v_WRITERNAME2", tempValue);
-					map.put("v_FIRSTFLAG15", firstFlag);
-				}
-			}
-		}
-		
-		tempValue = docXML.getElementsByTagName("WRITERJOBTITLE").item(0).getTextContent().trim();
-		
-		if (!tempValue.equals("")) {
-			if (firstFlag) {
-				map.put("v_WRITERJOBTITLE", tempValue);
-				map.put("v_FIRSTFLAG16", firstFlag);
-				firstFlag = false;
-			} else {
-				map.put("v_WRITERJOBTITLE", tempValue);
-				map.put("v_FIRSTFLAG16", firstFlag);
-			}
-		}
-		
-		if (docXML.getElementsByTagName("WRITERJOBTITLE2").item(0) != null) {
-			tempValue = docXML.getElementsByTagName("WRITERJOBTITLE2").item(0).getTextContent().trim();
-			
-			if (!tempValue.equals("")) {
-				if (firstFlag) {
-					map.put("v_WRITERJOBTITLE2", tempValue);
-					map.put("v_FIRSTFLAG17", firstFlag);
-					firstFlag = false;
-				} else {
-					map.put("v_WRITERJOBTITLE2", tempValue);
-					map.put("v_FIRSTFLAG17", firstFlag);
-				}
-			}
-		}
-		
-		tempValue = docXML.getElementsByTagName("WRITERDEPTID").item(0).getTextContent().trim();
-		
-		if (!tempValue.equals("")) {
-			if (firstFlag) {
-				map.put("v_WRITERDEPTID", tempValue);
-				map.put("v_FIRSTFLAG18", firstFlag);
-				firstFlag = false;
-			} else {
-				map.put("v_WRITERDEPTID", tempValue);
-				map.put("v_FIRSTFLAG18", firstFlag);
-			}
-		}
-		
-		tempValue = docXML.getElementsByTagName("WRITERDEPTNAME").item(0).getTextContent().trim();
-		
-		if (!tempValue.equals("")) {
-			if (firstFlag) {
-				map.put("v_WRITERDEPTNAME", tempValue);
-				map.put("v_FIRSTFLAG19", firstFlag);
-				firstFlag = false;
-			} else {
-				map.put("v_WRITERDEPTNAME", tempValue);
-				map.put("v_FIRSTFLAG19", firstFlag);
-			}
-		}
-		
-		if (docXML.getElementsByTagName("WRITERDEPTNAME2").item(0) != null) {
-			tempValue = docXML.getElementsByTagName("WRITERDEPTNAME2").item(0).getTextContent().trim();
-			
-			if (!tempValue.equals("")) {
-				if (firstFlag) {
-					map.put("v_WRITERDEPTNAME2", tempValue);
-					map.put("v_FIRSTFLAG20", firstFlag);
-					firstFlag = false;
-				} else {
-					map.put("v_WRITERDEPTNAME2", tempValue);
-					map.put("v_FIRSTFLAG20", firstFlag);
-				}
-			}
-		}
-		
-		tempValue = docXML.getElementsByTagName("PUBLICATION").item(0).getTextContent().trim();
-		
-		if (!tempValue.equals("")) {
-			if (firstFlag) {
-				map.put("v_ISPUBLIC", tempValue);
-				map.put("v_FIRSTFLAG21", firstFlag);
-				firstFlag = false;
-			} else {
-				map.put("v_ISPUBLIC", tempValue);
-				map.put("v_FIRSTFLAG21", firstFlag);
-			}
-		}
-		
-		map.put("v_DOCID", docID);
-		map.put("v_TENANTID", tenantID);
-		
-		ezApprovalGDAO.updateAprDocInfo(map);
-		
-		firstFlag = true;
-		
-		tempValue = docXML.getElementsByTagName("SECURITY").item(0).getTextContent().trim();
-		
-		if (!tempValue.equals("")) {
-			if (firstFlag) {
-				map.put("v_SECURITYCODE", tempValue);
-				map.put("v_FIRSTFLAG", firstFlag);
-				firstFlag = false;
-			} else {
-				map.put("v_SECURITYCODE", tempValue);
-				map.put("v_FIRSTFLAG", firstFlag);
-			}
-		}
-		
-		tempValue = docXML.getElementsByTagName("KEEPPERIOD").item(0).getTextContent().trim();
-		
-		if (!tempValue.equals("")) {
-			if (firstFlag) {
-				map.put("v_STORAGEPERIOD", tempValue);
-				map.put("v_FIRSTFLAG2", firstFlag);
-				firstFlag = false;
-			} else {
-				map.put("v_STORAGEPERIOD", tempValue);
-				map.put("v_FIRSTFLAG2", firstFlag);
-			}
-		}
-		
-		tempValue = docXML.getElementsByTagName("ITEMCODE").item(0).getTextContent().trim();
-		
-		if (!tempValue.equals("")) {
-			if (firstFlag) {
-				map.put("v_ITEMCODE", tempValue);
-				map.put("v_FIRSTFLAG3", firstFlag);
-				firstFlag = false;
-			} else {
-				map.put("v_ITEMCODE", tempValue);
-				map.put("v_FIRSTFLAG3", firstFlag);
-			}
-		}
-		
-		tempValue = docXML.getElementsByTagName("ITEMNAME").item(0).getTextContent().trim();
-		
-		if (!tempValue.equals("")) {
-			if (firstFlag) {
-				map.put("v_ITEMNAME", tempValue);
-				map.put("v_FIRSTFLAG4", firstFlag);
-				firstFlag = false;
-			} else {
-				map.put("v_ITEMNAME", tempValue);
-				map.put("v_FIRSTFLAG4", firstFlag);
-			}
-		}
-		
-		if (docXML.getElementsByTagName("ITEMNAME2").item(0) != null) {
-			tempValue = docXML.getElementsByTagName("ITEMNAME2").item(0).getTextContent().trim();
-			
-			if (!tempValue.equals("")) {
-				if (firstFlag) {
-					map.put("v_ITEMNAME2", tempValue);
-					map.put("v_FIRSTFLAG5", firstFlag);
-					firstFlag = false;
-				} else {
-					map.put("v_ITEMNAME2", tempValue);
-					map.put("v_FIRSTFLAG5", firstFlag);
-				}
-			}
-		}
-		
-		tempValue = docXML.getElementsByTagName("URGENTAPPROVAL").item(0).getTextContent().trim();
-		
-		if (!tempValue.equals("")) {
-			if (firstFlag) {
-				map.put("v_URGENTAPPROVAL", tempValue);
-				map.put("v_FIRSTFLAG6", firstFlag);
-				firstFlag = false;
-			} else {
-				map.put("v_URGENTAPPROVAL", tempValue);
-				map.put("v_FIRSTFLAG6", firstFlag);
-			}
-		}
-		
-		tempValue = docXML.getElementsByTagName("KEYWORD").item(0).getTextContent().trim();
-		
-		if (!tempValue.equals("")) {
-			if (firstFlag) {
-				map.put("v_KEYWORD", tempValue);
-				map.put("v_FIRSTFLAG7", firstFlag);
-				firstFlag = false;
-			} else {
-				map.put("v_KEYWORD", tempValue);
-				map.put("v_FIRSTFLAG7", firstFlag);
-			}
-		}
+            tempValue = docXML.getElementsByTagName("FORMID").item(0).getTextContent().trim();
+            firstFlag = insertParam(map, "v_FORMID", tempValue.split(",")[i], firstFlag, "");
 
-		if (docXML.getElementsByTagName("SPECIALRECORDCODE").item(0) != null) {
-			tempValue = docXML.getElementsByTagName("SPECIALRECORDCODE").item(0).getTextContent().trim();
-			
-			if (!tempValue.equals("")) {
-				if (firstFlag) {
-					map.put("v_SPECIALRECORDCODE", tempValue);
-					map.put("v_FIRSTFLAG8", firstFlag);
-					firstFlag = false;
-				} else {
-					map.put("v_SPECIALRECORDCODE", tempValue);
-					map.put("v_FIRSTFLAG8", firstFlag);
-				}
-			}
-		}
-		
-		if (docXML.getElementsByTagName("PUBLICITYCODE").item(0) != null) {
-			tempValue = docXML.getElementsByTagName("PUBLICITYCODE").item(0).getTextContent().trim();
-			
-			if (!tempValue.equals("")) {
-				if (firstFlag) {
-					map.put("v_PUBLICITYCODE", tempValue);
-					map.put("v_FIRSTFLAG9", firstFlag);
-					firstFlag = false;
-				} else {
-					map.put("v_PUBLICITYCODE", tempValue);
-					map.put("v_FIRSTFLAG9", firstFlag);
-				}
-			}
-		}
-		
-		if (docXML.getElementsByTagName("PUBLICITYYN").item(0) != null) {
-			tempValue = docXML.getElementsByTagName("PUBLICITYYN").item(0).getTextContent().trim();
-			
-			if (!tempValue.equals("")) {
-				if (firstFlag) {
-					map.put("v_PUBLICITYYN", tempValue);
-					map.put("v_FIRSTFLAG19", firstFlag);
-					firstFlag = false;
-				} else {
-					map.put("v_PUBLICITYYN", tempValue);
-					map.put("v_FIRSTFLAG19", firstFlag);
-				}
-			}
-		}
-		
-		if (docXML.getElementsByTagName("LIMITRANGE").item(0) != null) {
-			tempValue = docXML.getElementsByTagName("LIMITRANGE").item(0).getTextContent().trim();
-			
-			if (!tempValue.equals("")) {
-				if (firstFlag) {
-					map.put("v_LIMITRANGE", tempValue);
-					map.put("v_FIRSTFLAG10", firstFlag);
-					firstFlag = false;
-				} else {
-					map.put("v_LIMITRANGE", tempValue);
-					map.put("v_FIRSTFLAG10", firstFlag);
-				}
-			}
-		}
-		
-		if (docXML.getElementsByTagName("PAGENUM").item(0) != null) {
-			tempValue = docXML.getElementsByTagName("PAGENUM").item(0).getTextContent().trim();
-			
-			if (!tempValue.equals("")) {
-				if (firstFlag) {
-					map.put("v_PAGENUM", tempValue);
-					map.put("v_FIRSTFLAG11", firstFlag);
-					firstFlag = false;
-				} else {
-					map.put("v_PAGENUM", tempValue);
-					map.put("v_FIRSTFLAG11", firstFlag);
-				}
-			}
-		}
-		
-		if (docXML.getElementsByTagName("CABINETID").item(0) != null) {
-			tempValue = docXML.getElementsByTagName("CABINETID").item(0).getTextContent().trim();
-			
-			if (!tempValue.equals("")) {
-				if (firstFlag) {
-					map.put("v_CABINETID", tempValue);
-					map.put("v_FIRSTFLAG12", firstFlag);
-					firstFlag = false;
-				} else {
-					map.put("v_CABINETID", tempValue);
-					map.put("v_FIRSTFLAG12", firstFlag);
-				}
-			}
-		}
-		
-		if (docXML.getElementsByTagName("TASKCODE").item(0) != null) {
-			tempValue = docXML.getElementsByTagName("TASKCODE").item(0).getTextContent().trim();
-			
-			if (!tempValue.equals("")) {
-				if (firstFlag) {
-					map.put("v_TASKCODE", tempValue);
-					map.put("v_FIRSTFLAG13", firstFlag);
-					firstFlag = false;
-				} else {
-					map.put("v_TASKCODE", tempValue);
-					map.put("v_FIRSTFLAG13", firstFlag);
-				}
-			}
-		}
-		
-		if (docXML.getElementsByTagName("DOCNUMCODE").item(0) != null) {
-			tempValue = docXML.getElementsByTagName("DOCNUMCODE").item(0).getTextContent().trim();
-			
-			if (!tempValue.equals("")) {
-				if (firstFlag) {
-					map.put("v_DOCNUMCODE", tempValue);
-					map.put("v_FIRSTFLAG14", firstFlag);
-					firstFlag = false;
-				} else {
-					map.put("v_DOCNUMCODE", tempValue);
-					map.put("v_FIRSTFLAG14", firstFlag);
-				}
-			}
-		}
-		
-		if (docXML.getElementsByTagName("ORGDOCNUMCODE").item(0) != null) {
-			tempValue = docXML.getElementsByTagName("ORGDOCNUMCODE").item(0).getTextContent().trim();
-			
-			if (!tempValue.equals("")) {
-				if (firstFlag) {
-					map.put("v_ORGDOCNUMCODE", tempValue);
-					map.put("v_FIRSTFLAG15", firstFlag);
-					firstFlag = false;
-				} else {
-					map.put("v_ORGDOCNUMCODE", tempValue);
-					map.put("v_FIRSTFLAG15", firstFlag);
-				}
-			}
-		}
-		
-		if (docXML.getElementsByTagName("SEPERATEATTACHXML").item(0) != null) {
-			tempValue = docXML.getElementsByTagName("SEPERATEATTACHXML").item(0).getTextContent().trim();
-			
-			if (!tempValue.equals("")) {
-				if (firstFlag) {
-					map.put("v_SEPERATEATTACHXML", tempValue);
-					map.put("v_FIRSTFLAG16", firstFlag);
-					firstFlag = false;
-				} else {
-					map.put("v_SEPERATEATTACHXML", tempValue);
-					map.put("v_FIRSTFLAG16", firstFlag);
-				}
-			}
+            tempValue = docXML.getElementsByTagName("ORGDOCID").item(0).getTextContent().trim();
+            firstFlag = insertParam(map, "v_ORGDOCID", tempValue, firstFlag, "2");
+
+            tempValue = docXML.getElementsByTagName("DOCTYPE").item(0).getTextContent().trim();
+            firstFlag = insertParam(map, "v_DOCTYPE", tempValue, firstFlag, "3");
+
+            tempValue = docXML.getElementsByTagName("DOCSTATE").item(0).getTextContent().trim();
+            firstFlag = insertParam(map, "v_DOCSTATE", tempValue, firstFlag, "4");
+
+            tempValue = docXML.getElementsByTagName("FUNCTIONTYPE").item(0).getTextContent().trim();
+            firstFlag = insertParam(map, "v_FUNCTIONTYPE", tempValue, firstFlag, "5");
+
+            tempValue = docXML.getElementsByTagName("HREF").item(0).getTextContent().trim();
+            firstFlag = insertParam(map, "v_HREF", tempValue.split(",")[i], firstFlag, "6");
+
+            tempValue = docXML.getElementsByTagName("DOCTITLE").item(0).getTextContent().trim();
+            firstFlag = insertParam(map, "v_DOCTITLE", tempValue.replaceAll("(^\\p{Z}+|\\p{Z}+$)", "").split("㉾")[i], firstFlag, "7");
+
+            tempValue = docXML.getElementsByTagName("DOCNO").item(0).getTextContent().trim();
+            firstFlag = insertParam(map, "v_DOCNO", tempValue, firstFlag, "8");
+
+            tempValue = docXML.getElementsByTagName("HASATTACHYN").item(0).getTextContent().trim();
+            firstFlag = insertParam(map, "v_HASATTACHYN", tempValue.split(",")[i], firstFlag, "9");
+
+            tempValue = docXML.getElementsByTagName("HASOPINIONYN").item(0).getTextContent().trim();
+            firstFlag = insertParam(map, "v_HASOPINIONYN", tempValue.split(",")[i], firstFlag, "10");
+
+            tempValue = docXML.getElementsByTagName("STARTDATE").item(0).getTextContent().trim();
+
+            if (tempValue.equals("DRAFT")) {
+                firstFlag = insertParam(map, "v_STARTDATE", commonUtil.getTodayUTCTime(""), firstFlag, "11");
+            }
+
+            tempValue = docXML.getElementsByTagName("ENDDATE").item(0).getTextContent().trim();
+            if (tempValue.equals("DRAFT")) {
+                firstFlag = insertParam(map, "v_ENDDATE", "NULL", firstFlag, "12");
+            }
+
+            tempValue = docXML.getElementsByTagName("WRITERID").item(0).getTextContent().trim();
+            firstFlag = insertParam(map, "v_WRITERID", tempValue, firstFlag, "13");
+
+            tempValue = docXML.getElementsByTagName("WRITERNAME").item(0).getTextContent().trim();
+            firstFlag = insertParam(map, "v_WRITERNAME", tempValue, firstFlag, "14");
+
+            if (docXML.getElementsByTagName("WRITERNAME2").item(0) != null) {
+                tempValue = docXML.getElementsByTagName("WRITERNAME2").item(0).getTextContent().trim();
+                firstFlag = insertParam(map, "v_WRITERNAME2", tempValue, firstFlag, "15");
+            }
+
+            tempValue = docXML.getElementsByTagName("WRITERJOBTITLE").item(0).getTextContent().trim();
+            firstFlag = insertParam(map, "v_WRITERJOBTITLE", tempValue, firstFlag, "16");
+
+            if (docXML.getElementsByTagName("WRITERJOBTITLE2").item(0) != null) {
+                tempValue = docXML.getElementsByTagName("WRITERJOBTITLE2").item(0).getTextContent().trim();
+                firstFlag = insertParam(map, "v_WRITERJOBTITLE2", tempValue, firstFlag, "17");
+            }
+
+            tempValue = docXML.getElementsByTagName("WRITERDEPTID").item(0).getTextContent().trim();
+            firstFlag = insertParam(map, "v_WRITERDEPTID", tempValue, firstFlag, "18");
+
+            tempValue = docXML.getElementsByTagName("WRITERDEPTNAME").item(0).getTextContent().trim();
+            firstFlag = insertParam(map, "v_WRITERDEPTNAME", tempValue, firstFlag, "19");
+            
+            if (docXML.getElementsByTagName("WRITERDEPTNAME2").item(0) != null) {
+                tempValue = docXML.getElementsByTagName("WRITERDEPTNAME2").item(0).getTextContent().trim();
+                firstFlag = insertParam(map, "v_WRITERDEPTNAME2", tempValue, firstFlag, "20");
+            }
+
+            tempValue = docXML.getElementsByTagName("PUBLICATION").item(0).getTextContent().trim();
+            firstFlag = insertParam(map, "v_ISPUBLIC", tempValue, firstFlag, "21");
+
+            ezApprovalGDAO.updateAprDocInfo(map);
+
+            firstFlag = true;
+
+            tempValue = docXML.getElementsByTagName("SECURITY").item(0).getTextContent().trim();
+            firstFlag = insertParam(map, "v_SECURITYCODE", tempValue, firstFlag, "");
+
+            tempValue = docXML.getElementsByTagName("KEEPPERIOD").item(0).getTextContent().trim();
+            firstFlag = insertParam(map, "v_STORAGEPERIOD", tempValue, firstFlag, "2");
+
+            tempValue = docXML.getElementsByTagName("ITEMCODE").item(0).getTextContent().trim();
+            firstFlag = insertParam(map, "v_ITEMCODE", tempValue, firstFlag, "3");
+
+            tempValue = docXML.getElementsByTagName("ITEMNAME").item(0).getTextContent().trim();
+            firstFlag = insertParam(map, "v_ITEMNAME", tempValue, firstFlag, "4");
+
+            if (docXML.getElementsByTagName("ITEMNAME2").item(0) != null) {
+                tempValue = docXML.getElementsByTagName("ITEMNAME2").item(0).getTextContent().trim();
+                firstFlag = insertParam(map, "v_ITEMNAME2", tempValue, firstFlag, "5");
+            }
+
+            tempValue = docXML.getElementsByTagName("URGENTAPPROVAL").item(0).getTextContent().trim();
+            firstFlag = insertParam(map, "v_URGENTAPPROVAL", tempValue, firstFlag, "6");
+
+            tempValue = docXML.getElementsByTagName("KEYWORD").item(0).getTextContent().trim();
+            firstFlag = insertParam(map, "v_KEYWORD", tempValue, firstFlag, "7");
+
+            if (docXML.getElementsByTagName("SPECIALRECORDCODE").item(0) != null) {
+                tempValue = docXML.getElementsByTagName("SPECIALRECORDCODE").item(0).getTextContent().trim();
+                firstFlag = insertParam(map, "v_SPECIALRECORDCODE", tempValue, firstFlag, "8");
+            }
+
+            if (docXML.getElementsByTagName("PUBLICITYCODE").item(0) != null) {
+                tempValue = docXML.getElementsByTagName("PUBLICITYCODE").item(0).getTextContent().trim();
+                firstFlag = insertParam(map, "v_PUBLICITYCODE", tempValue, firstFlag, "9");
+            }
+
+            if (docXML.getElementsByTagName("PUBLICITYYN").item(0) != null) {
+                tempValue = docXML.getElementsByTagName("PUBLICITYYN").item(0).getTextContent().trim();
+                firstFlag = insertParam(map, "v_PUBLICITYYN", tempValue, firstFlag, "19");
+            }
+
+            if (docXML.getElementsByTagName("LIMITRANGE").item(0) != null) {
+                tempValue = docXML.getElementsByTagName("LIMITRANGE").item(0).getTextContent().trim();
+                firstFlag = insertParam(map, "v_LIMITRANGE", tempValue, firstFlag, "10");
+            }
+
+            if (docXML.getElementsByTagName("PAGENUM").item(0) != null) {
+                tempValue = docXML.getElementsByTagName("PAGENUM").item(0).getTextContent().trim();
+                firstFlag = insertParam(map, "v_PAGENUM", tempValue, firstFlag, "11");
+            }
+
+            if (docXML.getElementsByTagName("CABINETID").item(0) != null) {
+                tempValue = docXML.getElementsByTagName("CABINETID").item(0).getTextContent().trim();
+                firstFlag = insertParam(map, "v_CABINETID", tempValue, firstFlag, "12");
+            }
+
+            if (docXML.getElementsByTagName("TASKCODE").item(0) != null) {
+                tempValue = docXML.getElementsByTagName("TASKCODE").item(0).getTextContent().trim();
+                firstFlag = insertParam(map, "v_TASKCODE", tempValue, firstFlag, "13");
+            }
+
+            if (docXML.getElementsByTagName("DOCNUMCODE").item(0) != null) {
+                tempValue = docXML.getElementsByTagName("DOCNUMCODE").item(0).getTextContent().trim();
+                firstFlag = insertParam(map, "v_DOCNUMCODE", tempValue, firstFlag, "14");
+            }
+
+            if (docXML.getElementsByTagName("ORGDOCNUMCODE").item(0) != null) {
+                tempValue = docXML.getElementsByTagName("ORGDOCNUMCODE").item(0).getTextContent().trim();
+                firstFlag = insertParam(map, "v_ORGDOCNUMCODE", tempValue, firstFlag, "15");
+            }
+
+            if (docXML.getElementsByTagName("SEPERATEATTACHXML").item(0) != null) {
+                tempValue = docXML.getElementsByTagName("SEPERATEATTACHXML").item(0).getTextContent().trim();
+                firstFlag = insertParam(map, "v_SEPERATEATTACHXML", tempValue, firstFlag, "16");
 		}
         
 		if (docXML.getElementsByTagName("SUMMARY").item(0) != null && docXML.getElementsByTagName("SUMMARYPATH").item(0) != null) {
-			tempValue = docXML.getElementsByTagName("SUMMARY").item(0).getTextContent();
+            tempValue = docXML.getElementsByTagName("SUMMARY").item(0).getTextContent();
             String tempValue2 = docXML.getElementsByTagName("SUMMARYPATH").item(0).getTextContent();
-			if (!tempValue.trim().equals("") && !tempValue2.trim().equals("")) {
-				if (firstFlag) {
-					map.put("v_SUMMARY", tempValue);
+            if (!tempValue.trim().equals("") && !tempValue2.trim().equals("")) {
+                if (firstFlag) {
+                    map.put("v_SUMMARY", tempValue);
                     map.put("v_SUMMARYPATH", tempValue2);
-					map.put("v_FIRSTFLAG17", firstFlag);
-					firstFlag = false;
-				} else {
-					map.put("v_SUMMARY", tempValue);
+                    map.put("v_FIRSTFLAG17", firstFlag);
+                    firstFlag = false;
+                } else {
+                    map.put("v_SUMMARY", tempValue);
                     map.put("v_SUMMARYPATH", tempValue2);
-					map.put("v_FIRSTFLAG17", firstFlag);
-				}
-			}
-		}
-		
-		if (docXML.getElementsByTagName("SECURITYAPPROVAL").item(0) != null) {
-			tempValue = docXML.getElementsByTagName("SECURITYAPPROVAL").item(0).getTextContent().trim();
-			
-			if (!tempValue.equals("")) {
-				if (firstFlag) {
-					map.put("v_SECURITYAPPROVAL", tempValue);
-					map.put("v_FIRSTFLAG18", firstFlag);
-					firstFlag = false;
-				} else {
-					map.put("v_SECURITYAPPROVAL", tempValue);
-					map.put("v_FIRSTFLAG18", firstFlag);
-				}
-			}
-		}
-		
-		map.put("v_DOCID", docID);
-		map.put("v_TENANTID", tenantID);
-		
-		ezApprovalGDAO.updateExpAprDocInfo(map);
-		
-		if (docXML.getElementsByTagName("STARTDATE").item(0).getTextContent().trim().equals("DRAFT")) {
-			insLastAprLine(docID, docXML.getElementsByTagName("FORMID").item(0).getTextContent().trim(), docXML.getElementsByTagName("DOCSTATE").item(0).getTextContent().trim(), userID, companyID, lang, tenantID);
-			insLastAprReceipt(docID, docXML.getElementsByTagName("FORMID").item(0).getTextContent().trim(), docXML.getElementsByTagName("DOCSTATE").item(0).getTextContent().trim(), userID, companyID, lang, tenantID);
-		}
-		
+                    map.put("v_FIRSTFLAG17", firstFlag);
+                }
+            }
+        }
+
+            if (docXML.getElementsByTagName("SECURITYAPPROVAL").item(0) != null) {
+                tempValue = docXML.getElementsByTagName("SECURITYAPPROVAL").item(0).getTextContent().trim();
+                firstFlag = insertParam(map, "v_SECURITYAPPROVAL", tempValue, firstFlag, "18");
+            }
+
+            ezApprovalGDAO.updateExpAprDocInfo(map);
+
+            if (docXML.getElementsByTagName("STARTDATE").item(0).getTextContent().trim().equals("DRAFT")) {
+                insLastAprLine(docID, docXML.getElementsByTagName("FORMID").item(0).getTextContent().trim().split(",")[i], docXML.getElementsByTagName("DOCSTATE").item(0).getTextContent().trim(), userID, companyID, lang, tenantID);
+                insLastAprReceipt(docID, docXML.getElementsByTagName("FORMID").item(0).getTextContent().trim().split(",")[i], docXML.getElementsByTagName("DOCSTATE").item(0).getTextContent().trim(), userID, companyID, lang, tenantID);
+            }
+        }
 		logger.debug("updateDocInfo ended");
 
 		return rtnVal;
 	}
+    
+    public boolean insertParam(Map<String, Object> map, String param, Object tempValue, boolean firstFlag, String firstCnt){
+        if(!tempValue.equals("")){
+            map.put(param, tempValue);
+            map.put("v_FIRSTFLAG" + firstCnt, firstFlag);
+            firstFlag = false;
+        }
+        return firstFlag;
+    }
 
 	public void insLastAprReceipt(String docID, String formID, String docState, String userID, String companyID, String lang, int tenantID) throws Exception {
 		logger.debug("insLastAprReceipt started");
@@ -22544,7 +22883,7 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 		return ezApprovalGDAO.getCountChildFormCont(map);
 	}
 
-	public String getFormInfoDB(String formContID, String userID, String deptId, String kind, String strMultiData, String searchType, String searchName, String companyID, int tenantID) throws Exception {
+	public String getFormInfoDB(String formContID, String userID, String deptId, String kind, String strMultiData, String searchType, String searchName, String companyID, int tenantID, String draftTypeFlag) throws Exception {
 		logger.debug("getFormInfoDB started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -22557,6 +22896,7 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
         map.put("v_SEARCHNAME", searchName);
 		map.put("v_TENANTID", tenantID);
 		map.put("companyID", companyID);
+        map.put("draftTypeFlag", draftTypeFlag);
         
         List<ApprGFormVO> apprGFormVOlist = new ArrayList<>();
         
@@ -36628,7 +36968,7 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 
 		for (String docID : docIDarr) {
 		    map.put("companyID", companyID);
-			map.put("v_DOCID", docID);
+			map.put("v_DOCID", docID.split(","));
 			map.put("v_MODE", mode);
 			map.put("v_USERID", userID);
 			map.put("v_TENANTID", tenantID);
@@ -36942,8 +37282,24 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
     public String updateReturnByDesignation(LoginVO userInfo, String docID, String returnUserSN) throws Exception {
         logger.debug("updateReturnByDesignation started");
 
+        String groupDocSN = getGroupDocSN(docID, userInfo.getTenantId(), userInfo.getCompanyID());
+        groupDocSN = Strings.isNotBlank(groupDocSN) ? groupDocSN : "";
+
+        List<ApprGGroupDocInfoVO> groupDocList = getGroupDocList(docID, "APR", userInfo.getTenantId(), userInfo.getCompanyID());
+
+        List<String> docIDList = new ArrayList<>();
+
+        if(groupDocList.size() > 1){
+            for (ApprGGroupDocInfoVO vo : groupDocList){
+                docIDList.add(vo.getDocID());
+            }
+        }else{
+            docIDList.add(docID);
+        }
+
         Map<String, Object> map = new HashMap<>();
-        map.put("docID", docID);
+//        map.put("docID", docID);
+        map.put("docID", docIDList);
         map.put("companyID", userInfo.getCompanyID());
         map.put("tenantID", userInfo.getTenantId());
         map.put("returnUserSN", Integer.parseInt(returnUserSN));
@@ -36956,8 +37312,10 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
         map.put("type", "2");
         map.put("aprState", "001");
         ezApprovalGDAO.updateReturnByDesignation(map);
+        
 
         logger.debug("updateReturnByDesignation ended");
+
         return null;
     }
 
@@ -37089,10 +37447,18 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyID", companyID);
+        map.put("v_COMPANYID", companyID);
 		map.put("v_TENANTID", tenantID);
 		map.put("v_DOCID", docID);
 		map.put("v_FLAG", "ING");
 
+        switch (mode.toUpperCase()){
+            case "ING": case "HESU": case "BAN": case "BOR": case "PASS":
+                String groupDocSN = ezApprovalGDAO.getGroupDocSN(map);
+                if(!"".equals(groupDocSN) && !docID.equals(groupDocSN))
+                    return "TRUE";
+        }
+        
 		ApprGDocListVO apprDocInfo = null;
 		docTitle = makeListField(ezApprovalGDAO.getDocTitle(map));
 		if (docTitle.trim().equals("")) {
@@ -37616,7 +37982,7 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 					// 현재 결재자 이후의 결재권자들의 직위 세팅
 					for (int i = 0; i < apprGAprLineList.size(); i++) {
 						if (findHwpField("1jikwe" + (i + 1), hwpFile)) {
-							setHwpText("1jikwe" + (i + 1), apprGAprLineList.get(i).getAprMemberJobTitle(), hwpFile);
+							setHwpText(false, "1jikwe" + (i + 1), apprGAprLineList.get(i).getAprMemberJobTitle(), hwpFile);
 						}
 					}
 					
@@ -37644,16 +38010,16 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 						
 						// 서명필드가 존재할 경우 결재 순번 관계 없이 서명 일자 기입 (mm.dd)
 						if (findHwpField("1seumyungdate1", hwpFile)) {
-							setHwpText("1seumyungdate1", signMonthDate, hwpFile);
+							setHwpText(false, "1seumyungdate1", signMonthDate, hwpFile);
 						}
 						
-						setHwpText("1sign1", signStr + displayName, hwpFile);
+						setHwpText(false, "1sign1", signStr + displayName, hwpFile);
 					} else {
 						throw new IllegalArgumentException("HWPFile does not have '1sign1' field.");
 					}
 					
 					if (findHwpField("receiptdate", hwpFile)) {
-						setHwpText("receiptdate", tempDate.substring(0, 4) + "." + signMonthDate, hwpFile);
+						setHwpText(false, "receiptdate", tempDate.substring(0, 4) + "." + signMonthDate, hwpFile);
 					}
 					
 					// 사인 저장
@@ -37715,7 +38081,7 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 								}
 								
 								docNO = description + "-" + createDocNO(cabinetSN , docNumZeroCnt);
-								setHwpText("receiptnumber", docNO, hwpFile);
+						setHwpText(false, "receiptnumber", docNO, hwpFile);
 								strXML.getElementsByTagName("DOCNO").item(0).setTextContent(docNO);
 								retNum = getNDigitNum(cabinetSN, 6);
 								
@@ -37729,7 +38095,7 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 						} else {
 							// 채번하지 않는 경우 
 							docNO = description + "-";
-							setHwpText("receiptnumber", docNO, hwpFile);
+					setHwpText(false, "receiptnumber", docNO, hwpFile);
 							strXML.getElementsByTagName("DOCNO").item(0).setTextContent(docNO);
 						}
 					}
@@ -37740,7 +38106,7 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 					
 					// 접수일자는 접수하는 시점에서 해당 필드에 값이 세팅 됨
 					if (findHwpField("receiptdate", hwpFile)) {
-						setHwpText("receiptdate", commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false).substring(0, 10).replace("-", "."), hwpFile);
+					setHwpText(false, "receiptdate", commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false).substring(0, 10).replace("-", "."), hwpFile);
 					}
 					
 					tempHwp = new File(commonUtil.detectPathTraversal(formURL)).getParentFile() + commonUtil.separator + docID + "_backup.hwp";
@@ -39136,6 +39502,8 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
         String path = "";
         String docInfo = getDocInfo(docID, "APR", "ALL", userInfo, companyID, userInfo.getTenantId(), "", "");
 
+        String draftAllTypeB = ezCommonService.getTenantConfig("draftAllTypeB", userInfo.getTenantId());
+        
 		Document xmlDom = commonUtil.convertStringToDocument(docInfo);
 		String docState = xmlDom.getElementsByTagName("DOCSTATE").item(0).getTextContent();
 
@@ -39143,7 +39511,7 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
         if (docHref.endsWith(".mht")) {
             path = "/ezApprovalG/approvui.do";
         } else if (docHref.endsWith(".hwp")) {
-            if ("Y".equals(isGroupDoc)) {
+            if ("Y".equals(isGroupDoc) && !"Y".equals(draftAllTypeB)) {
                 path = "/ezApprovalG/approvuiAll_WHWP.do";
             } else {
                 path = "/ezApprovalG/approvuiWHWP.do";
@@ -39183,7 +39551,8 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
         String orgDocId = docInfo.getElementsByTagName("ORGDOCID").item(0).getTextContent().trim();
         String formId = docInfo.getElementsByTagName("FORMID").item(0).getTextContent().trim();
         String isGroupDoc = checkIsGroupDoc(nextUserID, docID, companyID, tenantID);
-
+        String draftAllTypeB = ezCommonService.getTenantConfig("draftAllTypeB", userInfo.getTenantId());
+        
         String tempDocHref = docHref;
         if (tempDocHref.endsWith(".ezd")) {
             tempDocHref = tempDocHref.replace(".ezd", "");
@@ -39193,13 +39562,13 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
         MultiValueMap queryParam = new LinkedMultiValueMap();
         if (tempDocHref.endsWith(".mht")) {
             path = "/ezApprovalG/contDocView.do";
-        } else if (tempDocHref.endsWith(".hwp")) {
+        } else if (tempDocHref.endsWith(".hwp") && !"Y".equals(draftAllTypeB)) {
             if ("Y".equals(isGroupDoc)) {
                 path = "/ezApprovalG/ezViewEndAll_WHWP.do";
             } else {
                 path = "/ezApprovalG/ezViewEnd_WHWP.do";
             }
-        } else if (tempDocHref.endsWith(".pdf")) {
+        } else if (tempDocHref.endsWith(".pdf") && !"Y".equals(draftAllTypeB)) {
             if ("Y".equals(isGroupDoc)) {
                 path = "/ezApprovalG/ezViewEndAll_WHWP.do";
             } else {
@@ -39235,7 +39604,7 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
         //String susinAdmin = getSusinAdmin(nextUserID, tenantID);
 
         String isGroupDoc = checkIsGroupDoc(nextUserID, docID, companyID, tenantID);
-
+        String draftAllTypeB = ezCommonService.getTenantConfig("draftAllTypeB", userInfo.getTenantId());
 
         String tempDocHref = docHref;
         if (tempDocHref.endsWith(".ezd")) {
@@ -39246,7 +39615,7 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
         MultiValueMap queryParam = new LinkedMultiValueMap();
         if (tempDocHref.endsWith(".mht")) {
             path = "/ezApprovalG/aprDocView.do";
-        } else if (tempDocHref.endsWith(".hwp")) {
+        } else if (tempDocHref.endsWith(".hwp") && !"Y".equals(draftAllTypeB)) {
             if ("Y".equals(isGroupDoc)) {
                 path = "/ezApprovalG/ezviewAprAll_WHWP.do";
             } else {
@@ -39815,5 +40184,27 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
         
         logger.debug("saveSignImg ended.");
         return path.getFilePath();
+    }
+
+    public boolean getCheckNotFailDoc(String docID, String companyID, int tenantID) throws Exception {
+        boolean res = false;
+
+        String[] sp = docID.split(",");
+
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("companyID", companyID);
+        map.put("v_TENANTID", tenantID);
+
+        Map<String, Object> resMap = null;
+        for (int i = 0; i < sp.length; i++){
+            map.put("v_DOCID", sp[i]);
+            resMap = ezApprovalGDAO.getFailDocID(map);
+
+            if(resMap != null && !resMap.isEmpty()){
+                res = true;
+                break;
+            }
+        }
+        return res;
     }
 }

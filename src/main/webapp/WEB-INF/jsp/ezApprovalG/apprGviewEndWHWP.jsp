@@ -558,6 +558,7 @@
                  }
 	    	}
 		 
+		var getformcont_cross_dialogArguments = new Array();
 		var editable = "";
 	 	function btnReuse_onclick(type) {
 	 		editable = type;

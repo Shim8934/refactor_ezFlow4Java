@@ -283,9 +283,10 @@ public class EzApprovalGAdminController extends EzFileMngUtil {
 		String companyID = request.getParameter("companyID");
 		String searchType = request.getParameter("searchType");
 		String searchName = request.getParameter("searchName");
+		String draftTypeFlag = request.getParameter("draftTypeFlag");
 		
 		//양식목록에 특수문자처리, 양식등록/수정 양식명1,2 둘다 넣어야 저장되는지 확인필요
-		String result = ezApprovalGService.getFormInfo(id.trim(), kind, searchType, searchName, userInfo.getId(), userInfo.getDeptID(), companyID, userInfo.getLang(), userInfo.getTenantId());
+		String result = ezApprovalGService.getFormInfo(id.trim(), kind, searchType, searchName, userInfo.getId(), userInfo.getDeptID(), companyID, userInfo.getLang(), userInfo.getTenantId(), draftTypeFlag);
 		
 		logger.debug("id : " + id + ", kind : " + kind + ", companyID : " + companyID);
 		
@@ -3122,6 +3123,7 @@ public class EzApprovalGAdminController extends EzFileMngUtil {
 		model.addAttribute("openYear", ezCommonService.getTenantConfig("Site_OpenYear", userInfo.getTenantId()));
 		model.addAttribute("useWebHWP", ezCommonService.getTenantConfig("useWebHWP", userInfo.getTenantId()));
 		model.addAttribute("useReceiveInfoName", ezCommonService.getTenantConfig("useReceiveInfoName", userInfo.getTenantId()));
+		model.addAttribute("draftAllTypeB", ezCommonService.getTenantConfig("draftAllTypeB", userInfo.getTenantId()));
 		
 		logger.debug("forAprDoc ended.");
 		

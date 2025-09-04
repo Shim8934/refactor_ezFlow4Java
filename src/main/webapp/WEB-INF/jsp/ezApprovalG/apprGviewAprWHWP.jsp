@@ -89,6 +89,48 @@
 			var useAprFilePrvw = "<c:out value ='${useAprFilePrvw}'/>";
 			var ReturnFunction;
 	        
+            // 일괄 타입 B
+            var draftAllTypeB = "<c:out value ='${draftAllTypeB}'/>";
+            var pMode;
+            var draftAllFlag = "Y";
+            var groupDocSN = "<c:out value ='${groupDocSN}'/>"; // 일괄기안된 문서가 가지는 TBL_APRDOCGROUPINFO의 GROUPDOCSN값 (1안의 DOCID)
+            var pDocHrefAry = new Array();
+            var pFormIDAry = new Array();
+            var pSuSinFlagAry = new Array();
+            var pDocIDAry = new Array();
+            var pOrgDocIDAry = new Array();
+            var pDocTypeAry = new Array();
+            var pDocTitleAry = new Array();
+            var pDocNumCodeAry = new Array(); // 문서번호 배열
+            var pDocNumSnAry = new Array(); // 문서번호 숫자부분(tempNumString) 배열
+            
+            var pHasAttachYNAry = new Array();
+            var pHasDocAttachYN = new String("N");
+            var pHasDocAttachYNAry = new Array();
+            var attachReload = new Array();
+            var pHasOpinionYN = new String("N");
+            var pHasOpinionYNAry = new Array();
+            
+            var SignInfoAry = new Array();
+            var hapyuiCountAry = new Array();
+            var SignCountAry = new Array();
+            var gamsaCountAry = new Array();
+
+            var extAry = new Array();
+ 
+            var htmlDataAry = new Array(""); // 웹한글기안기의 GetHTML 함수가 비동기로 동작하므로, 이 배열에 가져온 data를 넣어준다. 
+            var pOrgHtmlAry = new Array(""); // 결재 중 오류 발생 시 원래 문서로 돌려주기 위한 데이터 저장 배열. 기본적으로 htmlDataAry값과 동일하다.
+            
+            var pDocInfoAry = new Array();
+            var pAttachInfoAry = new Array();
+            var currentTabIdx = 0;
+            var attachHTML = new Array();
+            var docAttachHTML = new Array();
+            var attachLoad = new Array();
+            var anCnt = 1;
+            var FirstHtmlAry = new Array();
+            var SaveHtmlAry = new Array();
+            
 			function btnOpinion_onclick() {
 			    //openOpinionViewUI();
 				openOpinionUI_New("Show");
@@ -144,6 +186,22 @@
 				cancelYN();
 				returnYN();
 				setAttachGuideText();
+				
+                // 일괄기안 B
+                <c:if test="${fn:length(group) > 0}">
+                    anCnt = an.options.length;
+                    pDocIDAry.push("");
+                    pDocHrefAry.push("");
+                    pDocTypeAry.push("");
+                    extAry.push("");
+
+                    <c:forEach items="${group}" var="item">
+                        pDocIDAry.push("${item.docID}");
+                        pDocHrefAry.push("${item.docHref}"); // 문서경로
+                        pDocTypeAry.push("${item.docType}"); // 문서타입 (내부결재, 수신문...)
+                        extAry.push("${item.docHref}".substring("${item.docHref}".lastIndexOf(".") + 1)); // 확장자
+                    </c:forEach>		                
+                </c:if>
 			}
 	
 			// 웹 한글 기안기용
@@ -187,7 +245,24 @@
 					    message.ScrollPosInfo(0, 0);
 					    
 					    window.onresize();
-					    
+
+                        if(anCnt > 1){
+                            scrollPos.push(0);
+                            hwpChange(() => scrollSetBefore(1));
+                            message.HwpCtrl.AddEventListener(2, function(){
+                                for(var i = scrollPos.length - 1; i >= 0; i--){
+                                    if(message.HwpCtrl.ScrollPosInfo.Item("VertPos") >= scrollPos[i]){
+                                        if(currentTabIdx != i + 1){
+                                            changeAn(i + 1, true);
+                                        }
+                                        break;
+                                    }
+                                }
+                            });
+                            for(var i = 0; i < anCnt; i++){
+                                pSuSinFlagAry[i + 1] = message.FieldExist("recipient{{" + i + "}}")
+                            }
+                        }					    
 					    if(useExternalMailServer == "NO") {
 					    	$("#btnMail").css("display","");
 					    }
@@ -217,7 +292,11 @@
 			}
 			
 			function btnMail_onclick() {
-			    // window.open("/ezEmail/mailWrite.do?docHref=" + docHref + "&cmd=docsend&docID=" + docID + "&target=APPROVALG", "", "height = " + window.screen.availHeight * 0.8 + ", width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + GetOpenPosition(890, window.screen.availHeight * 0.8));
+			    if(anCnt > 1 && draftAllTypeB == "Y"){
+                    changeAn(1, true);
+                }
+				
+                // window.open("/ezEmail/mailWrite.do?docHref=" + docHref + "&cmd=docsend&docID=" + docID + "&target=APPROVALG", "", "height = " + window.screen.availHeight * 0.8 + ", width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + GetOpenPosition(890, window.screen.availHeight * 0.8));
 				showPopup("/ezEmail/mailWrite.do?docHref=" + docHref + "&cmd=docsend&docID=" + docID + "&target=APPROVALG", 1200, window.screen.availHeight * 0.8, "", "height = " + window.screen.availHeight * 0.8 + ", width = 1200px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + GetOpenPosition(1200, window.screen.availHeight * 0.8), hidePopup);
 			}	
 	
@@ -301,6 +380,10 @@
 		    function TotalSave_onclick() {
 		        totalsavefileinfo_dialogArguments[0] = "";
 		        totalsavefileinfo_dialogArguments[1] = TotalSave_onclick_Complete;
+				
+				if(anCnt > 1 && draftAllTypeB == "Y"){
+                    changeAn(1, true);
+                }
 				
 		        if (listTypeValue == "21") { //2019-02-08 천성준 - #14965 임시보관함문서 > 문서보기 > 통합PC저장 시, 첨부 및 문서파일을 내려받을수 없던 문제해결
 			        DivPopUpShow(580, 480, "/ezApprovalG/totalSaveFileInfo.do?docID=" + pDocID + "&type=TMP&orgCompanyID=" + orgCompanyID);
@@ -444,6 +527,10 @@
 		    function btncallback_onclick_Complete(ans) {
 				DivPopUpHidden();
 		        if (ans) {
+		            if(anCnt > 1 && draftAllTypeB == "Y"){
+		                changeAn(1, true);
+		            }
+		        
                     doCancel();
                 } else {
                     DivPopUpHidden();
@@ -457,16 +544,27 @@
 				}
 
 				var result = "";
-
+				var sendData;
+				if(anCnt > 1 && draftAllTypeB == "Y"){
+                    sendData = {
+                        docID : pDocIDAry[1], // 일괄기안문서 회수 시에는 사용하지 않으며, pDocIDAry를 대신 사용한다.
+                        userID : pUserID,
+                        draftAllFlag : "Y",
+                        docIDAry : pDocIDAry
+                    };
+				}else{
+				    sendData = {
+                        docID : pDocID,
+                        userID : pUserID
+                    };
+				}
+				
 				$.ajax({
 					type : "POST",
 					dataType : "text",
 					async : false,
 					url : "/ezApprovalG/doCancel.do",
-					data : {
-						docID : pDocID,
-						userID : pUserID
-					},
+					data : sendData,
 					success: function(xml){
 						result = xml;
 					}, error: function () {
@@ -905,6 +1003,11 @@
 	                        <c:if test="${useExternalMailServer == 'NO'}">
 	                        	<li id="btnMail" style="display:none"><span class="icon16 popup_icon16_mail_gray" onclick="return btnMail_onclick()"></span></li>
 	                        </c:if>
+                            <select class="draftAllTypeB" id="an" onchange="changeAn()" <c:if test="${fn:length(group) < 2}">style="display:none"</c:if>>
+                            <c:forEach var="item" items="${group}">
+                                <option value="<c:out value='${item.docID}'/>"><c:out value='${item.tabSN}'/><spring:message code='ezApprovalG.HSBDa04'/></option>
+                            </c:forEach>
+                            </select>
 	                    </ul>
 	                    <ul <c:if test="${isPreview != 'Y'}">style="display:none"</c:if>>
 				        	<li><img src='/images/kr/cm/btn_newpopup.gif' title=<spring:message code='ezEmail.t99000001'/> alt=<spring:message code='ezEmail.t99000001'/> onclick='return parent.btn_newpopup()'></li>

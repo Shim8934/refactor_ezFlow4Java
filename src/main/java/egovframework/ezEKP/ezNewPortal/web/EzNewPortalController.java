@@ -539,6 +539,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 		Calendar cal = Calendar.getInstance();
 		String nowMonth = String.valueOf(cal.get(Calendar.MONTH)+1);
 		String useMailServer2 =  config.getProperty("config.useMailServer2");
+		String draftAllTypeB = ezCommonService.getTenantConfig("draftAllTypeB", userInfo.getTenantId());
 
 		resp.setHeader("Pragma", "no-cache"); //HTTP 1.0 
 		resp.setHeader("Cache-Control", "no-cache"); //HTTP 1.1 
@@ -664,6 +665,8 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 		model.addAttribute("checkBrowser", checkBrowser);
 		model.addAttribute("useWebHWP", ezCommonService.getTenantConfig("useWebHWP", userInfo.getTenantId()));
 		model.addAttribute("companyID", companyId);
+		
+		model.addAttribute("draftAllTypeB", draftAllTypeB);
 		
 		logger.debug("portalMainPage End");
 		return returnUrl;
