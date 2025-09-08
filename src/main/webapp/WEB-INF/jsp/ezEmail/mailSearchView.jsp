@@ -1261,7 +1261,7 @@
 			<tr style="height:100%;display:none;" id="moreSearch" > 
 				<th nowrap><spring:message code="ezEmail.t642" /></th>
 				<td style="width:100%, padding:8px;" >
-					<div class="custom_radio" style="margin-left: 1px;padding: 0px 3px 3px;margin-top: 3px;">
+					<div class="custom_radio" style="margin-left: 1px;padding: 3px 6px 8px;margin-top: 4px;">
 						<input class="optRdo" style="margin-top: 0px;" type="radio" name="andor" id="and" value="and" checked><label for="and"><span class="optSpan">AND</span></label>
 						<input class="optRdo" style="margin-top: 0px;" type="radio" name="andor" id="or" value="or"><label for="or"><span class="optSpan">OR</span></label>
 					</div>
@@ -1303,7 +1303,7 @@
 			<tr id="moreSearch2" style="display:none;">
 		     	<th><spring:message code="ezEmail.pyy13" /></th>	
 			    <td style="height: 40px;">
-			    	<div class="custom_radio" style="/* margin-bottom: 2px; */margin-left: 1px;padding: 0px 3px 3px;margin-top: 3px;">
+			    	<div class="custom_radio" style="/* margin-bottom: 2px; */margin-left: 1px;padding: 0px 6px 3px;margin-top: 3px;">
 						<input type="radio" id="all" name="attachment" value="all" checked><label for="all"><span class="optSpan"><spring:message code="ezEmail.pyy14" /></span></label>
 						<input type="radio" id="contain" name="attachment" value="contain"><label for="contain"><span class="optSpan"><spring:message code="ezEmail.pyy15" /></span></label>
 						<input type="radio" id="Ncontain" name="attachment" value="Ncontain"><label for="Ncontain"><span class="optSpan"><spring:message code="ezEmail.pyy16" /></span></label>

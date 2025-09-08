@@ -2472,7 +2472,7 @@
 	                                <spring:message code='ezEmail.t66' /></span></a>
 	                            <br>
 	                            <div class="custom_checkbox">
-	                                <input id="toMe" onclick="MailToMe_Onclick();" value="" type="checkbox" name="toMe" style="vertical-align: middle"/><label for="toMe" style="margin-left:-3px;margin-top:1px; cursor:pointer" ><spring:message code='ezEmail.t99000010' /></label>
+	                                <input id="toMe" onclick="MailToMe_Onclick();" value="" type="checkbox" name="toMe" style="vertical-align: middle;margin-top: 2px;"/><label for="toMe" style="margin-top:1px; cursor:pointer;vertical-align: middle" ><spring:message code='ezEmail.t99000010' /></label>
                                 </div>
 	                        </th>
 	                        <td style="width: 76%">
@@ -2500,7 +2500,7 @@
 	                            <a class="imgbtn"><span onclick="SelectReceiver_onClick('CC')" style="width: 50px; text-align: center;"> 
 	                                <spring:message code='ezEmail.t594' /></span></a>
 	                            <div onclick="MailBCCView(this);" style="cursor:pointer;" status="off" id="BccViewer">
-	                            <img src="/images/ImgIcon/groupplus.gif" align="absmiddle"/><span><spring:message code='ezEmail.t562' /></span>
+	                            <img src="/images/ImgIcon/groupplus.gif" align="absmiddle"/><span style="vertical-align: middle; margin: -3px 0px 0px 3px;"><spring:message code='ezEmail.t562' /></span>
 	                            </div>
 	                        </th>
 	                        <td style="width: 76%">

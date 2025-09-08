@@ -505,10 +505,14 @@
 			    	</c:otherwise>
 			    </c:choose>
 			    <OPTION VALUE=""><spring:message code='ezEmail.t244' /></option>
-			</select>	
-		      Port : <input type="text" name="popPort1" id="popPort1" class="textarea" style="width:30px" value="110"> 
-		      SSL : <div class="custom_checkbox"><input type="checkbox" name="popSSL1" id="popSSL1"></div>
-		      <a  class="imgbtn imgbck" style="float: right; margin-top: 3px !important; height: 22px;"><span onClick="reset_setting(1)"><spring:message code='ezEmail.ldh04' /></span></a>
+			  </select>
+              <div style="display: inline-block;">
+                  <span style="vertical-align: middle; margin-left: 6px">Port : </span>
+                  <input type="text" name="popPort1" id="popPort1" class="textarea" style="width:30px" value="110"> 
+                  <span style="vertical-align: middle;margin-left: 6px">SSL : </span>
+                  <div class="custom_checkbox"><input type="checkbox" name="popSSL1" id="popSSL1"></div>
+              </div>
+              <a  class="imgbtn imgbck" style="float: right;"><span onClick="reset_setting(1)"><spring:message code='ezEmail.ldh04' /></span></a>	
 		    </td> 
 		  </tr> 
 		  <tr> 
@@ -520,9 +524,9 @@
 		  </tr> 
 		  <tr> 
 		    <th style="white-space:nowrap"><spring:message code='ezEmail.t266' /></th> 
-		    <td colspan="3"><a  class="imgbtn imgbck" style="margin-right:3px !important; margin-top: 3px !important; height: 22px !important;"><span onClick="search_mailbox(1)"><spring:message code='ezEmail.t37' /></span></a> <spring:message code='ezEmail.t267' /><span id='popBox1' url=""><spring:message code='ezEmail.t158' /></span> 
+		    <td colspan="3"><a  class="imgbtn imgbck" style="margin-right:3px !important; /*margin-top: 3px !important; */height: 22px !important;"><span onClick="search_mailbox(1)"><spring:message code='ezEmail.t37' /></span></a> <span style="vertical-align: middle;"><spring:message code='ezEmail.t267' /></span><span id='popBox1' style="vertical-align: middle;" url=""><spring:message code='ezEmail.t158' />&nbsp;</span> 
 		        <div class="custom_checkbox">
-		            <input type="checkbox" name="popDelete1" id="popDelete1" value="checkbox"><label for="popDelete1"><spring:message code='ezEmail.t268' /></label>
+		            <input type="checkbox" name="popDelete1" id="popDelete1" value="checkbox" style="margin-top: 1px;"><label for="popDelete1" style="vertical-align: middle;"><spring:message code='ezEmail.t268' /></label>
 		        </div>
 		    </td>
 		  </tr> 
@@ -555,9 +559,13 @@
 			    </c:choose>
 			    <OPTION VALUE=""><spring:message code='ezEmail.t244' /></option>
 		      </select> 
-		      Port : <input type="text" name="popPort2" id="popPort2" class="textarea" style="width:30px" value="110"> 
-		      SSL :  <div class="custom_checkbox"><input type="checkbox" name="popSSL2" id="popSSL2"></div>
-		      <a  class="imgbtn imgbck" style="float: right; margin-top: 3px !important; height: 22px;"><span onClick="reset_setting(2)"><spring:message code='ezEmail.ldh04' /></span></a>
+		      <div style="display: inline-block;">
+                  <span style="vertical-align: middle; margin-left: 6px">Port : </span>
+                  <input type="text" name="popPort2" id="popPort2" class="textarea" style="width:30px" value="110"> 
+                  <span style="vertical-align: middle;margin-left: 6px">SSL : </span>
+                  <div class="custom_checkbox"><input type="checkbox" name="popSSL2" id="popSSL2"></div>
+              </div>
+		      <a  class="imgbtn imgbck" style="float: right;"><span onClick="reset_setting(2)"><spring:message code='ezEmail.ldh04' /></span></a>
 		    </td> 
 		  </tr> 
 		  <tr> 
@@ -569,9 +577,9 @@
 		  </tr> 
 		  <tr> 
 		    <th style="white-space:nowrap"><spring:message code='ezEmail.t266' /></th> 
-            <td colspan="3"><a  class="imgbtn imgbck" style="margin-right:5px !important; margin-top: 3px !important; height: 22px !important;"><span onClick="search_mailbox(2)"><spring:message code='ezEmail.t37' /></span></a><span><spring:message code='ezEmail.t267' /></span><span id='popBox2' url=""><spring:message code='ezEmail.t158' /></span> 
+            <td colspan="3"><a  class="imgbtn imgbck" style="margin-right:3px !important; /*margin-top: 3px !important; */height: 22px !important;"><span onClick="search_mailbox(2)"><spring:message code='ezEmail.t37' /></span></a> <span style="vertical-align: middle;"><spring:message code='ezEmail.t267' /></span><span id='popBox2' style="vertical-align: middle;" url=""><spring:message code='ezEmail.t158' />&nbsp;</span>  
                 <div class="custom_checkbox">
-                    <input type="checkbox" name="popDelete2" id="popDelete2" value="checkbox"><label for="popDelete2"><spring:message code='ezEmail.t268' /></label>
+                    <input type="checkbox" name="popDelete2" id="popDelete2" value="checkbox" style="margin-top: 1px;"><label for="popDelete2" style="vertical-align: middle;"><spring:message code='ezEmail.t268' /></label>
                 </div>
             </td>
 		  </tr> 
@@ -604,8 +612,12 @@
 			    </c:choose>
 			    <OPTION VALUE=""><spring:message code='ezEmail.t244' /></option>
 		      </select> 
-		      Port : <input type="text" name="popPort3" id="popPort3" class="textarea" style="width:30px" value="110"> 
-		      SSL :  <div class="custom_checkbox"><input type="checkbox" name="popSSL3" id="popSSL3"></div>
+              <div style="display: inline-block;">
+                    <span style="vertical-align: middle; margin-left: 6px">Port : </span>
+                    <input type="text" name="popPort3" id="popPort3" class="textarea" style="width:30px" value="110"> 
+                    <span style="vertical-align: middle;margin-left: 6px">SSL : </span>
+                    <div class="custom_checkbox"><input type="checkbox" name="popSSL3" id="popSSL3"></div>
+                </div>
 		      <a  class="imgbtn imgbck" style="float: right"><span onClick="reset_setting(3)"><spring:message code='ezEmail.ldh04' /></span></a>
 		    </td> 
 		  </tr> 
@@ -618,9 +630,9 @@
 		  </tr> 
 		  <tr> 
 		    <th style="white-space:nowrap"><spring:message code='ezEmail.t266' /></th> 
-		    <td colspan="3"> <a  class="imgbtn imgbck" style="margin-right:5px"><span onClick="search_mailbox(3)"><spring:message code='ezEmail.t37' /></span></a><span><spring:message code='ezEmail.t267' /></span><span id='popBox3' url=""><spring:message code='ezEmail.t158' /></span> 
+            <td colspan="3"><a  class="imgbtn imgbck" style="margin-right:3px !important; /*margin-top: 3px !important; */height: 22px !important;"><span onClick="search_mailbox(3)"><spring:message code='ezEmail.t37' /></span></a> <span style="vertical-align: middle;"><spring:message code='ezEmail.t267' /></span><span id='popBox3' style="vertical-align: middle;" url=""><spring:message code='ezEmail.t158' />&nbsp;</span>
 		        <div class="custom_checkbox">
-		            <input type="checkbox" name="popDelete3" value="checkbox" id="popDelete3"><label for="popDelete3"><spring:message code='ezEmail.t268' /></label>
+                    <input type="checkbox" name="popDelete3" id="popDelete3" value="checkbox" style="margin-top: 1px;"><label for="popDelete3" style="vertical-align: middle;"><spring:message code='ezEmail.t268' /></label>
 		        </div>
             </td> 
 		  </tr> 

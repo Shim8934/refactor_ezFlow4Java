@@ -534,11 +534,11 @@ function ListView() {
                     inputElmt.onclick = function(e) { selectAllCheckBox(_thisID, this.checked); }
                     //objTd.appendChild(inputElmt);
                     
-                    var labelElmt = document.createElement("label");
-                    labelElmt.setAttribute("for", inputId);
+                    //var labelElmt = document.createElement("label");
+                    //labelElmt.setAttribute("for", inputId);
                 
                     divElmt.appendChild(inputElmt);
-                    divElmt.appendChild(labelElmt);
+                    //divElmt.appendChild(labelElmt);
                 
                     objTd.appendChild(divElmt);
                 }
@@ -652,11 +652,11 @@ function ListView() {
                 inputElmt.setAttribute("id", jobid);
                 inputElmt.onclick = function(e) { selectCheckBox(); }
 
-                var labelElmt = document.createElement("label");
-                labelElmt.setAttribute("for", jobid);
+                //var labelElmt = document.createElement("label");
+                //labelElmt.setAttribute("for", jobid);
 
                 divElmt.appendChild(inputElmt);
-                divElmt.appendChild(labelElmt);
+                //divElmt.appendChild(labelElmt);
                 newTdElmt.appendChild(divElmt);
 
                 objTr.appendChild(newTdElmt);
