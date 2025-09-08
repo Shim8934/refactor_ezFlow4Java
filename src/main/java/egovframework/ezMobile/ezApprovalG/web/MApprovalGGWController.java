@@ -1590,6 +1590,9 @@ public class MApprovalGGWController {
 			String docnumberFormat = "";
 			String bedocnumberFormat = "";
 			String deptshortednameFormat = "";
+			String docTitleUseYN = "Y";
+			String docBodyUseYN = "Y";
+
 			// 문서 제목 가져오기
 			if (formURL.endsWith("mht")) {
 				String loadMht = ezCommonService.loadMHTFile(realPath + formURL); // 양식 가져오기
@@ -1600,6 +1603,9 @@ public class MApprovalGGWController {
 				Element titleElement = doc.getElementById("doctitle");
 				if (titleElement != null) {
 					doctitle = titleElement.text().trim();
+					if (!doctitle.isEmpty() && !titleElement.hasAttr("free")) {
+						docTitleUseYN = "N";
+					}
 				}
 				
 				// 수신 여부
@@ -1608,7 +1614,7 @@ public class MApprovalGGWController {
 				hapyuiCount = doc.select("[id^=habyuisign]").size();
 				signCount = doc.select("[id^=sign]").size();
 				
-				// 가변 결재선일 때 최대 사인칸 10개로 고정
+				// 가변 결재선일 때 최대 사인칸 10개로 고정 - 가변결재선 기안은 미구현된 상태
 				if ("1".equals(useDynamicAprLine) && doc.getElementById("autoLine") != null) {
 					hapyuiCount = 10;
 					signCount = 10;
@@ -1624,6 +1630,17 @@ public class MApprovalGGWController {
 				docnumberFormat = docnumberEl != null ? docnumberEl.text() : "";
 				bedocnumberFormat = bedocnumberEl != null ? bedocnumberEl.text() : "";
 				deptshortednameFormat = deptshortednameEl != null ? (deptSymbol + ":") : "";
+
+				// body 필드 영역 확인
+				Element bodyElement = doc.select("#body.FIELD").first();
+				if (bodyElement != null) {
+					String bodyElStyle = bodyElement.attr("style");
+					if (!bodyElStyle.isEmpty() && bodyElStyle.replaceAll("\\s+", "").contains("display:none")) {
+						docBodyUseYN = "N";
+					}
+				} else {
+					docBodyUseYN = "N";
+				}
 				
 			}
 			
@@ -1780,6 +1797,9 @@ public class MApprovalGGWController {
 			// 문서첨부
 			totalData.put("openYear", openYear);
 			totalData.put("nowDateUTC", commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffSet(), false));
+
+			totalData.put("docTitleUseYN", docTitleUseYN);
+			totalData.put("docBodyUseYN", docBodyUseYN);
 			
 			result.put("status", "ok");
 			result.put("code", "0");

@@ -2137,6 +2137,33 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
             int idx = 1;
             int cnt = 20;
             int LastSignNo = 0;
+
+            // 2025-09-08 김유진 - 사인칸 '/' 추가를 위한 처리
+            for (int k = 1; k <= cnt; k++) {
+                field = doc.getElementById("jikwe" + k);
+                if (field != null) {
+                    field.html("&nbsp;");
+
+                    field = doc.getElementById("sign" + k);
+                    if (field != null) {
+                        field.html("&nbsp;");
+                    }
+                    field = doc.getElementById("approdept" + k);
+                    if (field != null) {
+                        field.html("&nbsp;");
+                    }
+                    field = doc.getElementById("seumyung" + k);
+                    if (field != null) {
+                        field.html("&nbsp;");
+                    }
+                }
+
+                field = doc.getElementById("hjkwe" + k);
+                if (field != null) {
+                    field.html("&nbsp;");
+                }
+            }
+            
             for (int i = paprlines.size() - 1; i >= 0; i--) {
                 ApprGAprLineVO paprline = paprlines.get(i);
                 String pAprType = paprline.getAprType();
@@ -2253,7 +2280,7 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
                     field = doc.getElementById(susinSN + "sign" + i);
                     if (field != null) {
                         String inner = field.html().trim();
-                        if (field.text().trim().isEmpty() && (inner.equals("&nbsp;") || inner.equals("") || inner.equals("<br>") || inner.equals("<p><br></p>") )) {
+                        if (field.text().trim().isEmpty() && (inner.equals("&nbsp;") || inner.equals("") || inner.equals("<br>"))) {
                             String strimg = "<img src='/images/signimgs/200.gif' border=0 embedding='1' ";
                             strimg += " spath = '" + "/images/signimgs/200.gif'";
                             strimg += " width=" + signImageSize.split("/")[0] ;
