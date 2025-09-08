@@ -2319,7 +2319,8 @@ function updateDragSchedule(typeCal, dragOwnerId, dragNum, dragDay, dropDay, com
             dragNum : dragNum,
 			dragDay: dragDay,
 			dropDay: dropDay,
-			completeFG: completeFG
+			completeFG: completeFG,
+            resApprFlag : ApproveFlag
 		},
 		success: function(text) {
 			if (text == "1") { //권한 없음
@@ -2328,7 +2329,10 @@ function updateDragSchedule(typeCal, dragOwnerId, dragNum, dragDay, dropDay, com
 			}else if (text == "2") { //이전날짜사용하는데 종료일이 현재날짜보다 큰 경우
 				setTimeout(function() { alert(strLangModSche02); }, 10)
 				rtv = false;
-			}
+			} else if (text == "3") { // 중복예약인 경우
+                setTimeout(function() { alert(strLang248); }, 10)
+				rtv = false;
+            }
 		},
 		error: function(error) {
 			console.log("error");

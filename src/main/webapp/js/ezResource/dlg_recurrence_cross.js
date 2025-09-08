@@ -189,7 +189,7 @@ function window_onload() {
                 default:
                     break;
             }
-            SetRemainder(xmlinDoc);
+            // SetRemainder(xmlinDoc);
         }
     }
     catch (e) {

@@ -71,8 +71,8 @@
 	    	var sDT				="${startDateTime}";
 	    	var eDT				="${endDateTime}";
 	    	var flag = false;
-	    	var startDateTimeRepeat = "${startDateTimeRepeat}";
-	    	var endDateTimeRepeat = "${endDateTimeRepeat}";
+	    	var startDateTimeRepeat;
+	    	var endDateTimeRepeat;
 	    	var brdName = "${brdName}";
 	    	var resID = "${resID}";
 	    	var ItemArray = new Array();
@@ -143,21 +143,45 @@
 	        	createNodeAndInsertText(xmlpara, objNode, "OWNERID", org_ownerID);
 	        	createNodeAndInsertText(xmlpara, objNode, "GROUPID", "");
 	        	createNodeAndInsertText(xmlpara, objNode, "companyID", org_companyID);
-
+				
+				// 반복일정 관련 데이터 세팅
 	        	if (document.getElementById("iReFlag").value == "1") {
 	            	if (org_num != "" && org_ownerID != "") {
 	                	xmlHttp.open("POST", "/ezResource/scheduleRepetitionProc.do?cmd=get", false);
 	                	xmlHttp.send(xmlpara);
-
-	                	resultXML = xmlHttp.responseXML;
-
-	                	if (resultXML.xml != "") {
+						
+						resultXML = xmlHttp.responseXML;
+						if (resultXML.xml != "") {
+							if (modType == 2) { // 특정 일 이후로 수정일 때 시작일 변경함
+								var scheTimeTemp = resultXML.getElementsByTagName("startDateTime")[0];
+								if (scheTimeTemp && scheTimeTemp.textContent && scheTimeTemp.textContent.length > 11) {
+									scheTimeTemp = scheTimeTemp.textContent.substring(11);
+									if (beforeScheDate) {
+										resultXML.getElementsByTagName("startDateTime")[0].textContent = beforeScheDate + ' ' + scheTimeTemp;
+									}
+								}
+							}
+							startDateTimeRepeat = resultXML.getElementsByTagName("startDateTime")[0].textContent;
+							endDateTimeRepeat = resultXML.getElementsByTagName("endDateTime")[0].textContent;
 	                    	g_data["recurrence"] = getXmlString(resultXML);
 	                	}
 	            	}
-
-	            	show_repetition_info();
-	        	}
+					
+					if (modType != 1) {
+						document.getElementById("tr_STime").style.display = "none"; // 기간 (단일)
+					}
+					
+					if (modType == 2 && resultXML.getElementsByTagName("endRecurType")[0].textContent == "1") { // 횟수반복, 중간부터 수정일 때 반복횟수 초기값 세팅
+						var repeatCountNow = resultXML.getElementsByTagName("instances")[0].textContent;
+						repeatCount = repeatCountNow - repeatCount + 1;
+						updateRecurrence("instances", repeatCount)
+					}
+	        	} else if (document.getElementById("iReFlag").value == "1" && modType == 1) { // 반복일정이지만 수정타입이 1(선택한 날짜의 일정만 수정)일 때, 단일일정 취급
+					repetition = "";
+					reFlagVal = "0";
+					document.getElementById("iReFlag").value = "0";
+					document.getElementById("tmpReFlag").value = "0";
+				}
 
 		        if (brdName != "" && resID  != "") {
 		            ItemArray[0] = Array("${resID}");
@@ -192,6 +216,12 @@
 	        			display_time_Unshow();
 	        		}
 	        	}
+				
+				// 날짜 및 시간 삽입
+				setDate();
+				if (reFlagVal == '1' && modType != "1") {
+					show_repetition_info();
+				}
 		    }
 			
 		    window.onresize = function () {
@@ -214,34 +244,70 @@
 		    }
 		    
 		    $(function () {
-	    	    $("#Sdatepicker").datepicker({
-	        	    changeMonth: true,
-	            	changeYear: true,
-	            	autoSize: true,
-	            	showOn: "both",
-	            	buttonImage: "/images/ImgIcon/calendar-month.png",
-	            	buttonImageOnly: true,
-	            	onSelect : function(dateText, inst) {
-		            	var startD = new Date(inst.lastVal);
-		            	var endD = new Date($("#Edatepicker").datepicker().val());
-		            	var dateDiff = (endD - startD)/1000/24/60/60;
-		            	
-		            	var nowSDate = dateText.split('-');
-		            	var nowSDate2 = new Date(nowSDate[0], nowSDate[1]-1, nowSDate[2]);
-		            	nowSDate2.setDate(nowSDate2.getDate() + dateDiff);
+				$("#Sdatepicker").datepicker({
+					changeMonth: true,
+					changeYear: true,
+					autoSize: true,
+					showOn: "both",
+					buttonImage: "/images/ImgIcon/calendar-month.png",
+					buttonImageOnly: true,
+					onSelect: function (dateText, inst) {
+						var startD = new Date(inst.lastVal);
+						var endD = new Date($("#Edatepicker").datepicker().val());
+						var dateDiff = (endD - startD) / 1000 / 24 / 60 / 60;
 
-		            	$("#Edatepicker").datepicker('setDate', nowSDate2);
-		            }
-	        	});
-	        	$("#Edatepicker").datepicker({
-	            	changeMonth: true,
-	            	changeYear: true,
-	            	autoSize: true,
-	            	showOn: "both",
-	            	buttonImage: "/images/ImgIcon/calendar-month.png",
-	            	buttonImageOnly: true
-	        	});
+						var nowSDate = dateText.split('-');
+						var nowSDate2 = new Date(nowSDate[0], nowSDate[1] - 1, nowSDate[2]);
+						nowSDate2.setDate(nowSDate2.getDate() + dateDiff);
 
+						$("#Edatepicker").datepicker('setDate', nowSDate2);
+					}
+				});
+				$("#Edatepicker").datepicker({
+					changeMonth: true,
+					changeYear: true,
+					autoSize: true,
+					showOn: "both",
+					buttonImage: "/images/ImgIcon/calendar-month.png",
+					buttonImageOnly: true
+				});
+
+				$(function () {
+					$.datepicker.regional["<spring:message code='main.t0619' />"] = {
+						closeText: "<spring:message code='main.t3' />",
+						prevText: "<spring:message code='main.t0604' />",
+						nextText: "<spring:message code='main.t0605' />",
+						currentText: "<spring:message code='main.t0606' />",
+						monthNames: ["<spring:message code='main.t0607' />", "<spring:message code='main.t0608' />", "<spring:message code='main.t0609' />",
+							"<spring:message code='main.t0610' />", "<spring:message code='main.t0611' />", "<spring:message code='main.t0612' />",
+							"<spring:message code='main.t0613' />", "<spring:message code='main.t0614' />", "<spring:message code='main.t0615' />",
+							"<spring:message code='main.t0616' />", "<spring:message code='main.t0617' />", "<spring:message code='main.t0618' />"],
+						monthNamesShort: ["<spring:message code='main.t0607' />", "<spring:message code='main.t0608' />", "<spring:message code='main.t0609' />",
+							"<spring:message code='main.t0610' />", "<spring:message code='main.t0611' />", "<spring:message code='main.t0612' />",
+							"<spring:message code='main.t0613' />", "<spring:message code='main.t0614' />", "<spring:message code='main.t0615' />",
+							"<spring:message code='main.t0616' />", "<spring:message code='main.t0617' />", "<spring:message code='main.t0618' />"],
+						dayNames: ["<spring:message code='main.t0621' />", "<spring:message code='main.t0622' />", "<spring:message code='main.t0623' />",
+							"<spring:message code='main.t0624' />", "<spring:message code='main.t0625' />", "<spring:message code='main.t0626' />",
+							"<spring:message code='main.t0627' />"],
+						dayNamesShort: ["<spring:message code='main.t0621' />", "<spring:message code='main.t0622' />", "<spring:message code='main.t0623' />",
+							"<spring:message code='main.t0624' />", "<spring:message code='main.t0625' />", "<spring:message code='main.t0626' />",
+							"<spring:message code='main.t0627' />"],
+						dayNamesMin: ["<spring:message code='main.t0621' />", "<spring:message code='main.t0622' />", "<spring:message code='main.t0623' />",
+							"<spring:message code='main.t0624' />", "<spring:message code='main.t0625' />", "<spring:message code='main.t0626' />",
+							"<spring:message code='main.t0627' />"],
+						weekHeader: "Wk",
+						dateFormat: "yy-mm-dd",
+						firstDay: 0,
+						isRTL: false,
+						duration: 200,
+						showAnim: "show",
+						showMonthAfterYear: true
+					};
+					$.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619' />"]);
+				});
+			});
+			
+			function setDate() {
 	        	var uploadSDate = "${startDateTime2}";
 
 	        	var sYear = uploadSDate.substring(0, 4);
@@ -256,6 +322,18 @@
 				var eDay = uploadEDate.substring(8, 10);
 				var eHour = uploadEDate.substring(11, 13);
 				var eMin = uploadEDate.substring(14, 16);
+				
+				if (modType == "1" || modType == "2") {
+					targetDate = beforeScheDate.split('-');
+					sYear = targetDate[0]
+					sMonth = targetDate[1];
+					sDay = targetDate[2];
+					if (modType == "1") {
+						eYear = sYear;
+						eMonth = sMonth;
+						eDay = sDay;
+					}
+				}
 				
 	        	var SDate = new Date("");
 	        	SDate.setFullYear(sYear, sMonth-1, sDay);
@@ -282,41 +360,7 @@
 	        	$('#Etimepicker').timepicker();
 	        	$('#Etimepicker').timepicker('setTime', EDate);
 	        	$('#Etimepicker').timepicker({ 'timeFormat': 'H:i' });
-	     	});
-		    
-		    $(function () {
-		        $.datepicker.regional["<spring:message code='main.t0619' />"] = {
-		            closeText: "<spring:message code='main.t3' />",
-		            prevText: "<spring:message code='main.t0604' />",
-		            nextText: "<spring:message code='main.t0605' />",
-		            currentText: "<spring:message code='main.t0606' />",
-		            monthNames: ["<spring:message code='main.t0607' />", "<spring:message code='main.t0608' />", "<spring:message code='main.t0609' />", 
-		                         "<spring:message code='main.t0610' />", "<spring:message code='main.t0611' />", "<spring:message code='main.t0612' />",
-		                         "<spring:message code='main.t0613' />", "<spring:message code='main.t0614' />", "<spring:message code='main.t0615' />", 
-		                         "<spring:message code='main.t0616' />", "<spring:message code='main.t0617' />", "<spring:message code='main.t0618' />"],
-		            monthNamesShort: ["<spring:message code='main.t0607' />", "<spring:message code='main.t0608' />", "<spring:message code='main.t0609' />", 
-		                              "<spring:message code='main.t0610' />", "<spring:message code='main.t0611' />", "<spring:message code='main.t0612' />",
-		                              "<spring:message code='main.t0613' />", "<spring:message code='main.t0614' />", "<spring:message code='main.t0615' />", 
-		                              "<spring:message code='main.t0616' />", "<spring:message code='main.t0617' />", "<spring:message code='main.t0618' />"],
-		            dayNames: ["<spring:message code='main.t0621' />", "<spring:message code='main.t0622' />", "<spring:message code='main.t0623' />", 
-		                       "<spring:message code='main.t0624' />", "<spring:message code='main.t0625' />", "<spring:message code='main.t0626' />", 
-		                       "<spring:message code='main.t0627' />"],
-		            dayNamesShort: ["<spring:message code='main.t0621' />", "<spring:message code='main.t0622' />", "<spring:message code='main.t0623' />", 
-				                       "<spring:message code='main.t0624' />", "<spring:message code='main.t0625' />", "<spring:message code='main.t0626' />", 
-				                       "<spring:message code='main.t0627' />"],
-		            dayNamesMin: ["<spring:message code='main.t0621' />", "<spring:message code='main.t0622' />", "<spring:message code='main.t0623' />", 
-			                       "<spring:message code='main.t0624' />", "<spring:message code='main.t0625' />", "<spring:message code='main.t0626' />", 
-			                       "<spring:message code='main.t0627' />"],
-		            weekHeader: "Wk",
-		            dateFormat: "yy-mm-dd",
-		            firstDay: 0,
-		            isRTL: false,
-		            duration: 200,
-		            showAnim: "show",
-		            showMonthAfterYear: true
-		        };
-		        $.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619' />"]);
-		    });
+	     	}
 		    
 		    function Editor_Complete() {
 		        if (cmd == "mod") {
@@ -782,13 +826,21 @@
         				</ul>
       				</div>
       				<table class="content" style="width:100%;">
+						<c:if test="${modType ne '0'}">
+							<tr id="HolderEdit">
+								<th><spring:message code='ezSchedule.ModType.jih02'/></th>
+								<c:choose>
+									<c:when test="${modType eq '1'}"><td colspan="3"><spring:message code='ezSchedule.ModType.jih03'/></td></c:when>
+									<c:when test="${modType eq '2'}"><td colspan="3"><spring:message code='ezSchedule.ModType.jih04'/></td></c:when>
+									<c:when test="${modType eq '3'}"><td colspan="3"><spring:message code='ezSchedule.ModType.jih05'/></td></c:when>
+								</c:choose>
+							</tr>
+						</c:if>
         				<tr>
           					<th> <spring:message code="ezResource.t193"/></th>
           					<td colspan="3" style="width:100%"><div id="displayNM"> </div></td>
         				</tr>
-        				
-							
-						<tr id="tr_Recur" <c:if test="${reFlag ne '1'}">style="display: none"</c:if>>
+						<tr id="tr_Recur" <c:if test="${reFlag ne '1' || modType eq '1'}">style="display: none" attr="asd"</c:if>>
     						<th> <spring:message code="ezResource.t197"/></th>
     						<td colspan="3"><span id="AllDayDisplay"></span>
       							<select id="timeDisplay" name="timeDisplay" class="select" style="width: 95px; display: none">
@@ -799,17 +851,7 @@
       							</select>
       			  			</td>
   						</tr>
-				 		<script>
-        		 	  		if (reFlagVal == "1") {
-	                			strDspMod_1 = "style='display:none'";
-                				strDspMod_2 = "";
-            				} else {
-	                			strDspMod_1 = "";
-                				strDspMod_2 = "style='display:none'";
-            				}	
-            			</script>
-					
-	        			<tr id="tr_STime" ${strDspMod1}>
+	        			<tr id="tr_STime">
 	          				<th> <spring:message code="ezResource.t197"/></th>
 	          				<td width="100%" colspan="3" id="Td_StartDate" style="overflow:hidden;">
 	          					<input type="checkbox" id="AllDay" <c:if test="${allDay eq '1' && dayView ne 0}">checked</c:if> onClick="display_time_Unshow()" /><spring:message code="ezResource.t211"/>
@@ -875,8 +917,8 @@
 	  			<td id="EdtorSize" style="vertical-align:top;height:100%;">
 					<iframe id="Iframe1" class="viewbox" name="message" src="/ezEditor/selectEditor.do?type=RESOURCE" style="padding: 0; width: 100%; overflow: auto; margin-top: -1px"></iframe>
 	      			
-	      			<input type="hidden" id="iReFlag" value="${strIReFlagVal}" />
-       				<input type="hidden" id="tmpReFlag" value="${strTmpReFlagVal}" />
+	      			<input type="hidden" id="iReFlag" value="${reFlag}" /> <%-- 반복일자: 1: 반복일자임, 0:반복일자 아님 --%>
+       				<input type="hidden" id="tmpReFlag" value="${strTmpReFlagVal}" /> <%-- 반복일자 수정타입: 1: 추가, 2:수정, 3: 삭제 --%>
        				<input type="hidden" id="gresFlag" value="${gresFlag}" />
        				<input type="hidden" id="num" value="${num}" />
        				<input type="hidden" id="pnum" value="${pNum}" />
@@ -890,7 +932,7 @@
 			        	<tr>
 							<th> <spring:message code="ezResource.t227"/></th>
 							<td class="pos1">
-								<div id="attachedFile" style="display: none; background-c	olor: white; width:350px; height: 60px; overflow: auto"> </div>
+								<div id="attachedFile" style="display: none; background-color: white; width:350px; height: 60px; overflow: auto"> </div>
                   				<div id="divBody" style="background-color: white; width:350px; height: 60px; overflow: auto;"> </div>
                   			</td>
 							

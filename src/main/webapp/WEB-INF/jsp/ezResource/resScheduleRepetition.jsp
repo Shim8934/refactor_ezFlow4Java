@@ -21,6 +21,11 @@
 		<!-- time picker-->
 		<script type="text/javascript" src="${util.addVer('/js/jquery/timeControls/jquery.timepicker.js')}"></script>
 		<link rel="stylesheet" type="text/css" href="${util.addVer('/js/jquery/timeControls/jquery.timepicker.css')}" />
+		<style>
+			.disabled {
+				color: #a0a0a0;
+			}
+		</style>
 		<script type="text/javascript">
 			var lang = "${userInfo.lang}";
 			var pRepetitionFlag = 1; //0:매일, 1:매주, 2:매월, 3:매년 (매주가 default이므로 초기설정)
@@ -45,6 +50,7 @@
 	        		document.querySelector("#Instances").disabled = true;
 	        		document.querySelector("#list_ReCount").disabled = true;
 	        	}
+				selectOptRangeEnd();
 	    	}
 	    	
 	    	function KeEventControl(obj) {
@@ -239,7 +245,7 @@
 	    			sTimeTemp = $('#Stimepicker').val();
 		    		eTimeTemp = $('#Etimepicker').val();
 		    		$('#Stimepicker').timepicker("setTime", "00:00");
-		    		$('#Etimepicker').timepicker("setTime", "00:00");
+		    		$('#Etimepicker').timepicker("setTime", "23:59");
 		    		setTimePickerReadOnly();
 		    	}else if(sTimeTemp != null){
 		    		setTimePickerModifiable();
@@ -307,6 +313,21 @@
 	            }
 	            else obj.value = obj.value.replace(/[\a-zㄱ-ㅎㅏ-ㅣ가-힣]/g, '');
 	        }
+			
+			function selectOptRangeEnd() {
+				var targetId =  $('input[name=optRangeEnd]:checked').attr('id');
+				if (targetId == "Instances") {
+					$("#Edatepicker").datepicker('option','disabled', true); 
+					$("#Edatepicker").addClass('disabled');
+					$("#list_ReCount").prop('disabled', false); 
+					$("#list_ReCount").removeClass('disabled')
+				} else if (targetId == "EndTimeSet") {
+					$("#Edatepicker").datepicker('option','disabled', false); 
+					$("#Edatepicker").removeClass('disabled'); 
+					$("#list_ReCount").prop('disabled', true); 
+					$("#list_ReCount").addClass('disabled')
+				}
+			}
 		</script>
 	</head>
 	<body class="popup">
@@ -517,17 +538,17 @@
 		  	<tr>
 		    	<td>
 		    		<div class="custom_radio">
-			    		<input type="radio" id="Instances" name="optRangeEnd"  value="radiobutton" value="1"/><label for="Instances"><spring:message code='ezResource.t315' /></label>
+			    		<input type="radio" id="Instances" name="optRangeEnd"  value="radiobutton" onclick="selectOptRangeEnd()" value="1"/><label for="Instances"><spring:message code='ezResource.t315' /></label>
 		    		</div>
-		      		<input id="list_ReCount" maxlength="3" onFocus="Instances.checked = true" style="text-align:center;" size="4" value='10' /><spring:message code='ezResource.t316' />		      		
+		      		<input id="list_ReCount" type="number" class="disabled" max="99" onFocus="Instances.checked = true" style="text-align:center;width:70px;"  value='10' disabled/><spring:message code='ezResource.t316' />		      		
 		      	</td>
 		  	</tr>
 		  	<tr>
 		    	<td>
 		    		<div class="custom_radio">
-			    		<input id="EndTimeSet" type="radio" name="optRangeEnd" value="radiobutton" value="0" checked/><label for="EndTimeSet"><spring:message code='ezResource.t317' /></label>
+			    		<input id="EndTimeSet" type="radio" name="optRangeEnd" value="radiobutton"  onclick="selectOptRangeEnd()" value="0" checked/><label for="EndTimeSet"><spring:message code='ezResource.t317' /></label>
 		    		</div>
-		      		<input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly" onchange="timeChecker('eDate')"/>
+		      		<input type="text" id="Edatepicker" class="disabled" style="width:80px;text-align:center" readonly="readonly" onchange="timeChecker('eDate')" disabled/>
 		    	</td>
 		  	</tr>
 		</table>
