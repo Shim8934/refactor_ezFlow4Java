@@ -299,10 +299,7 @@ public class MSurveyServiceImpl extends EzFileMngUtil implements MSurveyService 
 		} else if (mode.equals("modify")) {
 			//Change modify status only if it's not draft survey
 			if (survey.getDraftFlag() == 0) {
-				String timeUTC = commonUtil.getTodayUTCTime("");
 				survey.setModifyFlag(1);
-				survey.setUpdateDate(timeUTC);
-				survey.setUpdateUser(userInfo.getUserId());
 				survey.setUpdateMode(1);
 				
 				mSurveyDAO.updateSurveyItem(survey);

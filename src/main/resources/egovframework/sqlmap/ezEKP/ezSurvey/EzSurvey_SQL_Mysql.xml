@@ -817,19 +817,7 @@
 			user_exposed_flag  = #userExposedFlag#
 		</isEqual>
 		<isEqual property="updateMode" compareValue="1">
-			use_status         = #useStatus#,
-			open_days          = #openDays#,
-			result_public_flag = #resultPublicFlag#,
-			anonymous_flag     = #anonymousFlag#,
-			multi_answer_flag  = #multiAnswerFlag#,
-			participate_flag   = #paritipateFlag#,
-			attach_flag        = #attachFlag#,
-			modify_flag        = #modifyFlag#,
-			draft_flag         = #draftFlag#,
-			response_flag      = #responseFlag#,
-			delete_user        = #deleteUser#,
-			update_user        = #updateUser#,
-			update_date        = #updateDate#
+			modify_flag        = #modifyFlag#
 		</isEqual>
 		<isEqual property="updateMode" compareValue="2">
 			result_public_flag = #resultPublicFlag#,
