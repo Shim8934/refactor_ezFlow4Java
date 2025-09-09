@@ -1497,9 +1497,12 @@ public class LoginController {
 
     	Cookie cookieID = new Cookie("loginCookie", loginCookie);
     	cookieID.setPath("/");
-    	response.addCookie(cookieID);
-        response.addHeader("Set-Cookie", "loginCookie=" + loginCookie + "; Path=/; SameSite=None; Secure; Partitioned");
-    	
+        if (request.isSecure() || "https".equalsIgnoreCase(request.getHeader("X-Forwarded-Proto"))) {
+            response.addHeader("Set-Cookie", "loginCookie=" + loginCookie + "; Path=/; SameSite=None; Secure");
+        } else {
+            response.addCookie(cookieID);
+        }
+
     	// loginCookieSSO 라는 이름으로 쿠키를 추가로 생성할 것인지
 		/* 더 이상 사용되지 않는 코드로 보여 보안 취약점 조치를 위해 제거하였으나 가온누리에서 닷넷 버전 협업과의 연동에 사용중이어서 다시 복원함. */
     	String useSSOCookie = ezCommonService.getTenantConfig("useLoginCookieSSO", tenantId);
