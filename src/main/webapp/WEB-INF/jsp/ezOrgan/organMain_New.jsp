@@ -39,7 +39,7 @@
     <script type="text/javascript" src="${util.addVer('/js/teams/script/appOrg_New.js')}"></script>
     <script type="text/javascript" src="${util.addVer('/js/teams/toastr.js')}"></script>
     <!-- Language Pack -->
-    <script type="text/javascript" src="${util.addVer('/js/teams/lang/ezTeams_kr.js')}"></script>
+    <script type="text/javascript" src="${util.addVer('ezTeams.e2', 'msg')}"></script>
 
 </head>
 
