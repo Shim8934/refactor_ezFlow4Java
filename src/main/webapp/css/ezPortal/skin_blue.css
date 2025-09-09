@@ -336,10 +336,10 @@ nav .navUL li.on{color:#003497;}
 
 /* 2025.06 custom style */
 /* checkbox */
-.custom_checkbox input[type="checkbox"]:checked {background: #003497; border-color:#003497 !important;}
+.custom_checkbox input[type="checkbox"]:checked {background: #003497 !important; border-color:#003497 !important;}
 .master.dashDiv {background: #003497 !important; border-color:#003497 !important;}
 /* radio */
-.custom_radio input[type="radio"]::after {background-color: #003497;}
+.custom_radio input[type="radio"]::after {background-color: #003497 !important;}
 .custom_radio input[type="radio"]:checked {border-color:#003497 !important;}
 
 #mainmenu li.view_more.on{color: #003497;}
