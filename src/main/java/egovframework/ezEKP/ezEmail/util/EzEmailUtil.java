@@ -7084,9 +7084,6 @@ public class EzEmailUtil {
 			
 			String[] eachMailHeaders = message.getHeader("X-JMocha-Each-Mail");
 			String eachMailHeader = eachMailHeaders != null ? eachMailHeaders[0] : null;		
-			if (eachMailHeader != null) {
-				message.removeHeader("X-JMocha-Each-Mail");
-			}
 				
 			String[] secureMailHeaders = message.getHeader("X-JMocha-Secure-Mail");
 			String secureMailHeader = secureMailHeaders != null ? secureMailHeaders[0] : null;
@@ -7312,7 +7309,6 @@ public class EzEmailUtil {
     				try {
     					message.setRecipients(RecipientType.TO, allRecipients);
         				
-        				message.setHeader("X-JMocha-Each-Mail", "true");
         				Transport.send(message);
 					} catch (Exception e1) {
 						logger.error(e1.getMessage(), e1);
@@ -7339,7 +7335,6 @@ public class EzEmailUtil {
         					message.setRecipients(RecipientType.TO, newRecipients);
         					logger.debug("validAddressList=" + allRecipientList.toString());
 							logger.debug("invalidAddressList=" + invalidAddressList);
-							message.setHeader("X-JMocha-Each-Mail", "true");
 							Transport.send(message);
         				} else {
         					throw e1;	 // 예외를 발생시킴
