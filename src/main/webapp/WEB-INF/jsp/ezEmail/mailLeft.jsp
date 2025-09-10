@@ -1725,7 +1725,7 @@
 		            </c:if>	
 		            <li onclick="mail_exportall()" style="display: none;"><span class="list_text"><spring:message code="ezEmail.t99000014" /></span></li>
 		            <li onclick="Open_ReservationManage()"><span class="list_text"><spring:message code="ezEmail.t605" /></span></li>
-					<li onclick="Open_BigAttachManage()"><span class="list_text">대용량 첨부파일 관리</span></li>
+					<li onclick="Open_BigAttachManage()"><span class="list_text"><spring:message code="ezEmail.bigAttach.kdh03" /></span></li>
 		            <c:if test="${useBizmekaSpambox == 'YES'}">
 		            	<li onclick="openSpamBox()"><span class="list_text"><spring:message code="ezEmail.ldh01" /></span></li>
 		            </c:if>
