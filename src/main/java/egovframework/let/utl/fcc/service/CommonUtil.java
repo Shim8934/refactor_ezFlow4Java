@@ -290,7 +290,9 @@ public class CommonUtil {
     	logger.debug("init ended.");
     }
 	public Locale getLocalFromLang(String lang) throws Exception {
-		if (lang.equals("2")) {
+		if (lang.equals("1")) {
+			return Locale.KOREA;
+		} else if (lang.equals("2")) {
 			return Locale.ENGLISH;
 		} else if (lang.equals("3")) {
 			return Locale.JAPAN;

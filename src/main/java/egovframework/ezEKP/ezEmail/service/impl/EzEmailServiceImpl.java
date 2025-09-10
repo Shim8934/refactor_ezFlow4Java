@@ -6821,7 +6821,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 		String primary 		= (String) paramMap.get("primary");
 		//Locale locale 		= (Locale) paramMap.get("locale");
 		String lang = ezCommonService.selectUserGetLang(approverId, tenantId);
-		Locale locale = StringUtils.isNotBlank(lang) ? commonUtil.getLocalFromLang(lang) : Locale.getDefault();
+		Locale locale = commonUtil.getLocalFromLang(lang);
 		String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", tenantId);
 		String shareId 	= (String) paramMap.get("shareId");
 
@@ -6999,7 +6999,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 
 		String applicantId = applicantEmail.split("@")[0];
 		String lang = ezCommonService.selectUserGetLang(applicantId, tenantId);
-		Locale locale = StringUtils.isNotBlank(lang) ? commonUtil.getLocalFromLang(lang) : Locale.getDefault();
+		Locale locale = commonUtil.getLocalFromLang(lang);
 
 		logger.debug("setApprCompMailApproval started. tenantId={}, companyId={}, lang={}, locale={}, applicantEmail={}", tenantId, companyId, lang, locale, applicantEmail);
 
@@ -7084,7 +7084,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 
 		String applicantId = applicantEmail.split("@")[0];
 		String lang = ezCommonService.selectUserGetLang(applicantId, tenantId);
-		Locale locale = StringUtils.isNotBlank(lang) ? commonUtil.getLocalFromLang(lang) : Locale.getDefault();
+		Locale locale = commonUtil.getLocalFromLang(lang);
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyId", loginInfo.getCompanyID());
@@ -7192,7 +7192,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 		//Locale locale = loginInfo.getLocale();
 		String applicantId = applicantEmail.split("@")[0];
 		String lang = ezCommonService.selectUserGetLang(applicantId, tenantId);
-		Locale locale = StringUtils.isNotBlank(lang) ? commonUtil.getLocalFromLang(lang) : Locale.getDefault();
+		Locale locale = commonUtil.getLocalFromLang(lang);
 		logger.debug("setApprCompMailReject started. tenantId={}, companyId={}, lang={}, locale={}, applicantEmail={}", tenantId, companyId, lang, locale, applicantEmail);
 
 		String approverId = loginInfo.getId(); // 승인자는 현재 로그인한 사용자
@@ -7279,7 +7279,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 
 		String applicantId = applicantEmail.split("@")[0];
 		String lang = ezCommonService.selectUserGetLang(applicantId, tenantId);
-		Locale locale = StringUtils.isNotBlank(lang) ? commonUtil.getLocalFromLang(lang) : Locale.getDefault();
+		Locale locale = commonUtil.getLocalFromLang(lang);
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyId", loginInfo.getCompanyID());
@@ -7423,7 +7423,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 		//Locale locale = Locale.getDefault();
         String applicantId = applicantEmail.split("@")[0];
         String lang = ezCommonService.selectUserGetLang(applicantId, tenantId);
-		Locale locale = StringUtils.isNotBlank(lang) ? commonUtil.getLocalFromLang(lang) : Locale.getDefault();
+		Locale locale = commonUtil.getLocalFromLang(lang);
 		
 		logger.debug("tenantId={}, companyId={}, lang={}, locale={}, applicantEmail={}"
 				, tenantId, companyId, lang, locale, applicantEmail);
