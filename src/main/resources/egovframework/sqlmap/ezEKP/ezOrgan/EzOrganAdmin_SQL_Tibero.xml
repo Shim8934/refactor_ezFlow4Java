@@ -9003,5 +9003,28 @@
 			TENANT_ID = #v_TENANTID#
 		]]>
 	</update>
-	
+
+	<select id="EzOrganAdminDAO.getRetireUserDeptList" parameterClass="Map" resultClass="String">
+		<![CDATA[
+		SELECT
+			DEPARTMENT
+		FROM
+			TBL_USERMASTER
+		WHERE
+			CN = #v_CN#
+		  AND
+			TENANT_ID = #v_TENANT_ID#
+		UNION
+		SELECT
+			DEPTID
+		FROM
+			TBL_ADDJOBMASTER
+		WHERE
+			CN = #v_CN#
+		  AND
+			TENANT_ID = #v_TENANT_ID#
+		]]>
+	</select>
+
+
 </sqlMap>
