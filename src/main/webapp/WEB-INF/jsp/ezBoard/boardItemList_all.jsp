@@ -705,7 +705,14 @@
 		<c:if test="${boardInfo.listView_FG != true}'">
 			<div style="margin-top:100px;text-align:center"><spring:message code="ezBoard.t272" /></div>
 		</c:if>
-		<h1><spring:message code='ezBoard.allboard.hth01'/><span id="mailBoxInfo"></span></h1>
+		<c:choose>
+			<c:when test="${useGroupFlag == 'Y'}">
+				<h1>${boardName}<span id="mailBoxInfo"></span></h1>
+			</c:when>
+			<c:otherwise>
+				<h1><spring:message code='ezBoard.allboard.hth01'/><span id="mailBoxInfo"></span></h1>
+			</c:otherwise>
+		</c:choose>
 		<c:if test="${boardInfo.buttonHidden == 'N'}">
 			<div id="mainmenu">
 			  <ul>

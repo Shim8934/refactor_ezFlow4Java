@@ -48,6 +48,7 @@
 			var boardType = "${ model.guBun }";
 			var versionManageFlag = false;
 			var urlCopyFlag = "<c:out value='${model.urlCopyFlag}'/>"; <%-- url복사 사용여부 (Y/N) --%>
+			var useGroupFlag = "<c:out value='${model.useGroupFlag}'/>"; <%-- 그룹게시판 설정여부 (Y/N) --%>
 
 			document.onselectstart = function (){
 	            if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA") {
@@ -269,7 +270,7 @@
 					checkboardtype(e.target.id);
 				});
 				
-				if (boardType == '0' || boardType == '1' || boardType == '9') {
+				if ((boardType == '0' || boardType == '1' || boardType == '9') && useGroupFlag != "Y") {
 					$('#tr_versionManage').show();
 				} else {
 					$('#tr_versionManage').hide();
@@ -277,6 +278,16 @@
 				
 				versionManageFlag = ${ model.versionManage eq 'Y' };
 				$("#versionManageChkBox").prop("checked", versionManageFlag);
+
+				if (useGroupFlag == "Y") {
+					$("#useGroup").prop("checked", true);
+
+					document.querySelectorAll("tr").forEach(el => {
+						if (!el.classList.contains("contentG") && !el.classList.contains("primary")) {
+							el.style.display = "none";
+						}
+					});
+				}
 
 				// VOC #163284 관리자 탭 선택 오류 
 				if (window.parent && window.parent !== window) {
@@ -604,6 +615,27 @@
                 }
 
 				urlCopyFlag = $("#chkUrlCopy").is(":checked") ? "Y" : "N" ; <%-- 주소복사 --%>
+                
+				<%-- 그룹게시판 사용여부 --%>
+				if ($("#useGroup").is(":checked")) {
+					if (boardItemCnt > 0) { // 게시물이 존재하는 경우 그룹게시판으로 변경 불가
+						alert("<spring:message code='ezBoard.lyj10'/>");
+						return;
+					}
+
+					if (chkGroupBoardExist() == "true") { // 상위 및 하위게시판에 그룹게시판이 존재하는 경우 그룹게시판으로 변경 불가
+						alert("<spring:message code='ezBoard.lyj11'/>");
+						return;
+					}
+
+					useGroupFlag = "Y";
+					tabBoardCheck1 = "";
+					tabBoardCheck2 = "";
+					tabBoardCheck3 = "";
+					pNoticeBoardMod = "DELETE";
+				} else {
+					useGroupFlag = "N";
+				}
 
 	            /* 2018-10-18 홍승비 - 게시판'그룹' 이름변경 시 하위게시판처럼 데이터가 업데이트되는 부분 수정 */
 	            $.ajax({
@@ -625,7 +657,8 @@
 						reactFlag:useBoardReplyReact, useKeyword:useKeyword, publicFlag:publicFlag,
 						tabBoardCheck1:tabBoardCheck1, tabBoardCheck2:tabBoardCheck2, tabBoardCheck3:tabBoardCheck3, 
 						attachmentFlag:attachmentFlag, allNewBoardFlag:useAllNewBoard, writerFlag : writerFlag,
-						starRatingFlag:starRatingFlag, versionManage : vmf, listShowType : checkListFlag, urlCopyFlag:urlCopyFlag
+						starRatingFlag:starRatingFlag, versionManage : vmf, listShowType : checkListFlag, urlCopyFlag:urlCopyFlag,
+                        useGroupFlag:useGroupFlag
 	            	},
 	            	success : function(result) {
 	            	    if (result == "success") {
@@ -1296,6 +1329,42 @@
 				}
 				return pass;
 			}
+
+			function chkUseGroup_onclick(obj) {
+				if (obj.checked) {
+					document.querySelectorAll("tr").forEach(el => {
+						if (!el.classList.contains("contentG") && !el.classList.contains("primary")) {
+							el.style.display = "none";
+						}
+					});
+				} else {
+					document.querySelectorAll("tr").forEach(el => {
+						if (!el.classList.contains("contentG") && !el.classList.contains("primary")) {
+							el.style.display = "";
+						}
+					});
+				}
+			}
+
+			function chkGroupBoardExist() {
+				var result = "";
+
+				$.ajax({
+					type: "POST",
+					dataType: "text",
+					async: false,
+					url: "/ezBoard/chkGroupBoardExist.do",
+					data: {
+						boardID: BoardID,
+						type: "MODIFY"
+					},
+					success: function (res) {
+						result = res;
+					}
+				});
+
+				return result;
+			}
 	    </script>
 	    <style type="text/css">
 	    	.mainlist tr {
@@ -1312,7 +1381,7 @@
 		<xml id="listviewheader" style ="display:none"></xml>
 		<div style="max-width: 800px;">
 		<table class="content">
-	        <tr>
+	        <tr class="contentG">
 	            <th style="min-width: 88px;"><spring:message code="ezBoard.t114"/></th>
 	            <td style="padding: 0;">
 	            	<c:if test="${use_multiData == 'YES'}">
@@ -1347,7 +1416,7 @@
 	    <br/>
 	    <div style="max-width : 800px;">
 	    <table class="content">
-	        <tr>
+	        <tr class="contentG">
 	            <th style="min-width: 88px;"><spring:message code="ezBoard.t111"/></th>
 	            <td style="padding: 0;">
 	                <c:if test="${use_multiData == 'YES'}">
@@ -1387,7 +1456,7 @@
 	                </c:if>
 	            </td>
 	        </tr>
-	        <tr>
+	        <tr class="contentG">
 	            <th><spring:message code="ezBoard.t154"/></th>
 	            <td><c:out value='${model.boardNo}' /></td>
 	        </tr>
@@ -1624,7 +1693,12 @@
 	                </c:if>
 	            </td>
 	        </tr>
-	        
+			<tr class="contentG" style="${style}">
+				<th><spring:message code="ezBoard.t164" /></th>
+				<td>
+					<input id="useGroup" type="checkbox" onclick="chkUseGroup_onclick(this)"/><spring:message code="ezBoard.t162" /> <spring:message code="ezBoard.lyj09" />
+				</td>
+			</tr>
 			<%-- 2019-10-11 홍승비 - 특정 게시판을 회사별 공지게시판으로 설정하는 기능 추가 --%>
 			<tr id="trNoticeBoard" style="${style}">
 	            <th><spring:message code="ezBoard.hsbNt01" /></th>

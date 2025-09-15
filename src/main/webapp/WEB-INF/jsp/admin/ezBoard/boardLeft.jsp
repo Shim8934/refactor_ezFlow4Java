@@ -316,12 +316,23 @@
 	                SelectedBoardID = treeNode.GetNodeData("DATA1");
 	                SelectedBoardParentBoardID = treeNode.GetNodeData("DATA3");	                
 	                var chkPhotoBrd = treeNode.GetNodeData("DATA5");
-	                
+	                var useGroupFlag = treeNode.GetNodeData("useGroupFlag");
+
 	                if (RedirectBoardID != "") {
 	                    if (RedirectBoardGroupID != "") {	                    	
+							if (useGroupFlag == "Y") { // 그룹게시판일 경우 권한설정 숨김처리
+								document.getElementById("boardACL").style.display = "none";
+							} else {
+								document.getElementById("boardACL").style.display = "";
+							}
 	                        window.parent.document.querySelector("iframe[name=board_main]").src = "/admin/ezBoard/boardConfig.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&boardName=" + encodeURIComponent(treeNode.GetNodeData("DATA2")) + "&boardType=" + chkPhotoBrd + "&parentBoardID=" + encodeURIComponent(SelectedBoardParentBoardID) + "&tabID=1tab2";
 	                    }
 	                }else{                	
+						if (useGroupFlag == "Y") { // 그룹게시판일 경우 권한설정 숨김처리
+							document.getElementById("boardACL").style.display = "none";
+						} else {
+							document.getElementById("boardACL").style.display = "";
+						}
 	                    window.parent.document.querySelector("iframe[name=board_main]").src = "/admin/ezBoard/boardConfig.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&boardName=" + encodeURIComponent(treeNode.GetNodeData("DATA2")) + "&boardType=" + chkPhotoBrd + "&parentBoardID=" + encodeURIComponent(SelectedBoardParentBoardID);
 	                }
 	                
@@ -511,7 +522,7 @@
 		        	<ul class="lnbUL">
                        	<li><span class="list_text" onclick="OpenRightMenu(1)"><spring:message code="ezBoard.t122" /></span></li>
                        	<li><span class="list_text" onclick="OpenRightMenu(6)"><spring:message code="ezBoard.t60" /></span></li>
-                       	<li><span class="list_text" onclick="OpenRightMenu(7)"><spring:message code="ezBoard.t500" /></span></li>
+                       	<li id="boardACL"><span class="list_text" onclick="OpenRightMenu(7)"><spring:message code="ezBoard.t500" /></span></li>
                        	<li><span class="list_text" onclick="OpenRightMenu(2)"><spring:message code="ezBoard.t62" /></span></li>
                        	<li><span class="list_text" onclick="OpenRightMenu(3)"><spring:message code="ezBoard.t64" /></span></li>
                        	<li><span class="list_text" onclick="OpenRightMenu(4)"><spring:message code="ezBoard.t65" /></span></li>

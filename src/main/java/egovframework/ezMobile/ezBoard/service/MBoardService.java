@@ -132,4 +132,8 @@ public interface MBoardService {
 	
 	/* 2024-09-09 이유정 - 모바일 게시판 > 최근게시물 리스트 */
 	List<MBoardNewListVO> getAllNewBoardList(String userID, String lastDate, String deptID, String companyID, int tenantID, String offset, String pSearchText) throws Exception;
+
+	public int getGroupBoardItemListCount(String userId, String companyId, int tenantId, String boardId, List<String> childBoardIds) throws Exception;
+
+	List<MBoardListVO> getGroupBoardItemList(String userId, String lastDate, String deptId, String companyId, int tenantId, String offSet, String boardId, List<String> childBoardIds) throws Exception;
 }

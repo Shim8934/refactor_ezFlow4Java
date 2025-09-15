@@ -550,7 +550,8 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 		map.put("v_ACCESSNAME2", boardPropertyVO.getAccessName2());
 		map.put("v_COMPANYID", boardPropertyVO.getCompanyID());
 		map.put("v_TENANTID", boardPropertyVO.getTenantID());
-		
+		map.put("v_USEGROUPFLAG", boardPropertyVO.getUseGroupFlag());
+
 		/* 2018-10-15 홍승비 - 게시판그룹의 그룹사게시판 여부를 체크하여 하위게시판 등록하도록 수정 */
 		map.put("isAllGroupBoard", boardPropertyVO.getIsAllGroupBoard());
 		
@@ -768,14 +769,20 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 		map.put("v_STARRATINGFLAG", boardPropertyVO.getStarRatingFlag());
 		map.put("versionManage", boardPropertyVO.getVersionManage());
 		map.put("v_LISTSHOWTYPE", boardPropertyVO.getListShowType());
-        map.put("v_URLCOPYFLAG", boardPropertyVO.getUrlCopyFlag());
-		
+		map.put("v_URLCOPYFLAG", boardPropertyVO.getUrlCopyFlag());
+		map.put("v_USEGROUPFLAG", boardPropertyVO.getUseGroupFlag());
+
 		/* 2018-10-18 홍승비 - 게시판'그룹' 이름변경 시 하위게시판처럼 데이터가 업데이트되는 부분 수정 */
 		if (boardPropertyVO.getParentBoardID().equals("top")) {
 			isBoardGroup = "Y";
 		}
 		map.put("v_isBoardGroup", isBoardGroup);
-		
+
+		/* 그룹게시판으로 설정할 경우 gubun값을 0으로 수정 */
+		if (boardPropertyVO.getUseGroupFlag().equals("Y")) {
+			map.put("v_PGUBUN", "0");
+		}
+
 		/* 2018-09-18 홍승비 - 게시판 이름변경 시 마이게시판에 등록된 게시판명도 변경되도록 수정 */
 		ezBoardAdminDAO.saveBoardProperty(map);
 		ezBoardAdminDAO.saveBoardProperty2(map);

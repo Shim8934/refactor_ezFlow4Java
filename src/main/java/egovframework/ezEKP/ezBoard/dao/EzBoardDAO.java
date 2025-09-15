@@ -991,6 +991,14 @@ public class EzBoardDAO extends EgovAbstractDAO{
 		return (String) select("EzBoardDAO.getContentlocation", map);
 	}
 	
+	public int getGroupBoardItemListCount(Map<String, Object> map) throws Exception {
+		return (int) select("EzBoardDAO.getGroupBoardItemListCount", map);
+	}
+
+	public List<HashMap<String, Object>> getGroupBoardItemList(Map<String, Object> map) throws Exception {
+		return (List<HashMap<String, Object>>) list("EzBoardDAO.getGroupBoardItemList", map);
+	}
+
 	/* 2023-05-03 기민혁 - 나의 스크랩 데이터 등록 쿼리 */
 	public void setScrapItem(Map<String, Object> map) throws Exception {
 		insert("EzBoardDAO.setScrapItem", map);

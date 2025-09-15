@@ -175,7 +175,9 @@ public class BoardPropertyVO {
     private String urlCopyFlag;
 	/** 게시판 리스트표출방식 (G:기본/E:확장형/U:사용자설정) */
 	private String listShowType;
-	
+	/** 그룹게시판 사용 여부 */
+	private String useGroupFlag;
+
 	public int getSs_board_maxRows() {
 		return ss_board_maxRows;
 	}
@@ -695,5 +697,12 @@ public class BoardPropertyVO {
 	}
 	public void setListShowType(String listShowType) {
 		this.listShowType = listShowType;
+	}
+
+	public String getUseGroupFlag() {
+		return useGroupFlag;
+	}
+	public void setUseGroupFlag(String useGroupFlag) {
+		this.useGroupFlag = useGroupFlag;
 	}
 }

@@ -2636,6 +2636,74 @@ public class MBoardGWController {
 		}
 		logger.debug("MOBILE G/W BOARD [GET /mobile/ezboard/mealPlan/{startDate}] ended.");
 
+
+		return result;
+	}
+
+	/**
+	 * 모바일 G/W 게시판 [GET] 그룹게시판 리스트
+	 */
+	@RequestMapping(value="/mobile/ezboard/group-list/{userId:.+}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	public Object getGroupBoardList(@PathVariable String userId, HttpServletRequest request, Model model) {
+		logger.debug("MOBILE G/W BOARD [GET /mobile/ezboard/group-list/{userId}] started.");
+
+		JSONObject result = new JSONObject();
+
+		try {
+			String serverName = request.getHeader("x-user-host");
+			String boardId = request.getParameter("boardID");
+			String lastDate = request.getParameter("lastDate");
+			String pSearchText = request.getParameter("pSearchText");
+			MCommonVO info = mOptionService.commonInfo(serverName, userId);
+			MOptionVO mobileInfo = mOptionService.optionInfo(userId, info.getTenantId());
+			String primary = commonUtil.getPrimaryData(mobileInfo.getLang(), info.getTenantId());
+
+			logger.debug("serverName = " + serverName + " | boardId = " + boardId + " | lastDate = " + lastDate + " | pSearchText = " + pSearchText + " | primary = " + primary);
+
+			MBoardInfoVO boardInfo = new MBoardInfoVO();
+			/* 2018-07-05 홍승비 - deptPath에 자신의 ID 빠져있는 부분 추가 */
+			String deptPathCode = info.getUserId() + "," + mBoardService.getDeptPathCode(info.getDeptId(), info.getTenantId());
+
+			logger.debug("deptPathCode = " + deptPathCode);
+
+			boardInfo = mBoardService.getBoardProperty(boardId, primary, info.getTenantId(), info.getUserId());
+			boardInfo = mBoardService.getBoardInfo(boardInfo, info.getRollInfo(), deptPathCode, info);
+
+			List<MBoardTreeVO> treeList = mBoardService.getBoardTree(boardId, 0, 0, 0, "", info);
+			List<String> childBoardIds = new ArrayList<>();
+			MBoardInfoVO childBoardInfo = new MBoardInfoVO();
+
+			for (MBoardTreeVO tree : treeList) {
+				childBoardInfo = mBoardService.getBoardProperty(tree.getBoardId(), primary, info.getTenantId(), info.getUserId());
+				childBoardInfo = mBoardService.getBoardInfo(childBoardInfo, info.getRollInfo(), deptPathCode, info);
+
+				if (childBoardInfo.getListView_FG().equals("true")) {
+					childBoardIds.add(tree.getBoardId());
+				}
+			}
+
+			List<MBoardListVO> list = mBoardService.getGroupBoardItemList(userId, commonUtil.getDateStringInUTC(lastDate, info.getOffSet(), true), info.getDeptId(), info.getCompanyId(), info.getTenantId(), info.getOffSet(), boardId, childBoardIds);
+
+			int listCount = mBoardService.getGroupBoardItemListCount(userId, info.getCompanyId(), info.getTenantId(), boardId, childBoardIds);
+			logger.debug("listCount ="+listCount);
+
+			JSONObject data = new JSONObject();
+			data.put("list", list);
+			data.put("boardInfo", boardInfo);
+			data.put("listCount", listCount);
+
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", data);
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+		}
+
+		logger.debug("MOBILE G/W BOARD [GET /mobile/ezboard/group-list/{userId}] ended.");
+
 		return result;
 	}
 }

@@ -409,7 +409,7 @@ public class MBoardServiceImpl extends EgovAbstractServiceImpl implements MBoard
 			mBoardInfoVO.setUseKeyword(orgBoardProp.getUseKeyword());
 		}
 		
-	    if (mBoardInfoVO.getBoardID().equals("{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}") || mBoardInfoVO.getBoardID().equals("{YYYYYYYY-YYYY-YYYY-YYYY-YYYYYYYYYYYY}") || mBoardInfoVO.getBoardID().equals("{ZZZZZZZZ-ZZZZ-ZZZZ-ZZZZ-ZZZZZZZZZZZZ}")) {
+	    if (mBoardInfoVO.getBoardID().equals("{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}") || mBoardInfoVO.getBoardID().equals("{YYYYYYYY-YYYY-YYYY-YYYY-YYYYYYYYYYYY}") || mBoardInfoVO.getBoardID().equals("{ZZZZZZZZ-ZZZZ-ZZZZ-ZZZZ-ZZZZZZZZZZZZ}") || mBoardInfoVO.getUseGroupFlag().equals("Y")) {
 	    	mBoardInfoVO.setAccess_("1");
 	    	mBoardInfoVO.setAccess_FG("1");
 	    	mBoardInfoVO.setBoardAdmin_FG("false");
@@ -483,6 +483,8 @@ public class MBoardServiceImpl extends EgovAbstractServiceImpl implements MBoard
 		} else if (vo.getBoardID().equals("{YYYYYYYY-YYYY-YYYY-YYYY-YYYYYYYYYYYY}")) {
 			vo.setType("recentBoardItemList");
 			vo.setBoardName(egovMessageSource.getMessage("ezBoard.lyj01", new Locale(commonUtil.getTwoLetterLangFromLangNum(mobileInfo.getLang()))));
+		} else if (vo.getUseGroupFlag().equals("Y")) {
+			vo.setType("groupBoardItemList");
 		} else {
 			vo.setType("boardItemList");
 		}
@@ -2144,5 +2146,39 @@ public class MBoardServiceImpl extends EgovAbstractServiceImpl implements MBoard
 		logger.debug("getAllNewBoardList ended");
 		return mBoardDAO.getAllNewBoardList(map);
 	}
-	
+
+	@Override
+	public int getGroupBoardItemListCount(String userId, String companyId, int tenantId, String boardId, List<String> childBoardIds) throws Exception {
+		logger.debug("getGroupBoardItemListCount started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		map.put("v_pUserID", userId);
+		map.put("v_COMPANYID", companyId);
+		map.put("v_TENANTID", tenantId);
+		map.put("nowDate", commonUtil.getTodayUTCTime(""));
+		map.put("boardID", boardId);
+		map.put("childBoardIDs", childBoardIds);
+
+		logger.debug("getGroupBoardItemListCount ended");
+		return mBoardDAO.getGroupBoardItemListCount(map);
+	}
+
+	@Override
+	public List<MBoardListVO> getGroupBoardItemList(String userId, String lastDate, String deptId, String companyId, int tenantId, String offSet, String boardId, List<String> childBoardIds) throws Exception {
+		logger.debug("getGroupBoardItemList started");
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		map.put("v_PUSERID", userId);
+		map.put("v_COMPANYID", companyId);
+		map.put("v_TENANTID", tenantId);
+		map.put("listSize", 50);
+		map.put("offset", commonUtil.getMinuteUTC(offSet));
+		map.put("nowDate", commonUtil.getTodayUTCTime(""));
+		map.put("boardID", boardId);
+		map.put("childBoardIDs", childBoardIds);
+
+		logger.debug("getGroupBoardItemList ended");
+		return mBoardDAO.getGroupBoardItemList(map);
+	}
 }

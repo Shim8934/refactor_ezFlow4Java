@@ -11597,4 +11597,222 @@
 		AND
 			TENANT_ID = #tenantID#
 	</delete>
+
+	<select id="EzBoardDAO.getGroupBoardItemListCount" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				COUNT(A.ITEMID) CNT
+			FROM
+				TBL_Board_Item A
+					INNER JOIN
+				TBL_Board_BoardInfo P
+				ON
+					A.TENANT_ID = P.TENANT_ID
+						AND
+					A.BOARDID = P.BOARDID
+					LEFT OUTER JOIN
+				(
+					SELECT
+						ITEMID, TENANT_ID
+					FROM
+						(
+							SELECT
+								ROW_NUMBER() OVER(
+								PARTITION BY
+									PARENTITEMID
+								ORDER BY
+									VERSION DESC
+							) RN,
+								ITEMID,
+								TENANT_ID
+							FROM
+								TBL_BOARD_MODIFYHISTORY
+						) M1
+					WHERE
+						M1.RN = 1
+				) M2
+				ON
+					A.ITEMID = M2.ITEMID
+						AND
+					A.TENANT_ID = M2.TENANT_ID
+			WHERE
+				A.TENANT_ID = #v_TENANTID#
+			  AND
+				(A.WRITERCOMPANYID = #v_COMPANYID# OR TRIM(A.WRITERCOMPANYID) = '' OR A.WRITERCOMPANYID IS NULL
+					OR TRIM(P.COMPANYID) = '' OR P.COMPANYID IS NULL)
+			  AND
+				(A.APPRFLAG = 'Y'
+					OR A.APPRFLAG IS NULL)
+			  AND
+				A.STARTDATE <= #nowDate#
+			  AND
+				A.ENDDATE > #nowDate#
+			  AND
+				P.GUBUN != '5'
+				AND
+				(P.VERSIONMANAGE = 'Y' AND M2.ITEMID IS NOT NULL
+					OR
+				 P.VERSIONMANAGE = 'N')
+			  AND
+				P.PARENTBOARDID = #boardID#
+		]]>
+		<isNotEmpty property="childBoardIDs">
+			AND P.BOARDID IN
+			<iterate property="childBoardIDs" open="(" close=")" conjunction=",">
+				#childBoardIDs[]#
+			</iterate>
+		</isNotEmpty>
+	</select>
+
+	<select id="EzBoardDAO.getGroupBoardItemList" parameterClass="Map" resultClass="HashMap">
+		SELECT
+			*
+		FROM
+			( SELECT
+				*
+				FROM (
+						SELECT
+							Row_Number() OVER (
+								ORDER BY
+								<isEqual property="iv_PORDERBYCOL1" compareValue="BOARDNAME"> P.BOARDNAME </isEqual>
+								<isEqual property="iv_PORDERBYCOL1" compareValue="ITEMID"> A.ITEMID </isEqual>
+								<isEqual property="iv_PORDERBYCOL1" compareValue="WRITERNAME"> A.WRITERNAME </isEqual>
+								<isEqual property="iv_PORDERBYCOL1" compareValue="WRITERDEPTNAME"> A.WRITERDEPTNAME </isEqual>
+								<isEqual property="iv_PORDERBYCOL1" compareValue="WRITERCOMPANYNAME"> A.WRITERCOMPANYNAME </isEqual>
+								<isEqual property="iv_PORDERBYCOL1" compareValue="WRITEDATE"> A.WRITEDATE </isEqual>
+								<isEqual property="iv_PORDERBYCOL1" compareValue="STARTDATE"> A.STARTDATE </isEqual>
+								<isEqual property="iv_PORDERBYCOL1" compareValue="PARENTWRITEDATE"> TO_NUMBER(A.PARENTWRITEDATE) </isEqual>
+								<isEqual property="iv_PORDERBYCOL1" compareValue="TITLE"> A.TITLE </isEqual>
+								<isEqual property="iv_PORDERBYCOL1" compareValue="ATTACHMENTS"> A.ATTACHMENTS </isEqual>
+								<isEqual property="iv_PORDERBYCOL1" compareValue="READCOUNT"> A.READCOUNT </isEqual>
+								<isEqual property="iv_PORDERBYCOL1" compareValue="DOCNO"> A.DOCNO </isEqual>
+								<isEqual property="iv_PORDERBYCOL1DESC" compareValue="Y"> DESC </isEqual>
+									) AS RNUM,
+							A.BOARDID,
+							P.BOARDNAME,
+							A.ITEMID,
+							A.WRITERID,
+							A.WRITERNAME,
+							A.WRITERDEPTNAME,
+							A.WRITERCOMPANYNAME,
+							A.WRITEDATE,
+							A.STARTDATE,
+							A.PARENTWRITEDATE,
+							A.IMPORTANCE,
+							A.TITLE,
+							A.ATTACHMENTS,
+							EXT,
+							FILEPATH,
+							A.READCOUNT,
+							A.ITEMLEVEL,
+							A.ABSTRACT,
+							P.BOARDNAME2 AS BOARDNAME2,
+							A.WRITERNAME2,
+							A.WRITERDEPTNAME2,
+							A.WRITERCOMPANYNAME2,
+							(SELECT
+								COUNT(*)
+							FROM
+								TBL_Board_OneLineReply
+							WHERE
+								TENANT_ID = A.TENANT_ID
+							AND
+								ITEMID = A.ItemID) ONELINECNT,
+							A.UPPERITEMIDTREE,
+							A.DOCNO,
+							'' AS NOTICE,
+							P.GUBUN,
+							A.MAINCONTENT,
+							P.BOARDGROUPID
+						FROM
+							TBL_BOARD_ITEM A
+							INNER JOIN
+								TBL_BOARD_BOARDINFO P
+							ON
+								A.TENANT_ID = P.TENANT_ID
+							AND
+								(A.WRITERCOMPANYID = P.COMPANYID OR TRIM(A.WRITERCOMPANYID) = '' OR A.WRITERCOMPANYID IS NULL
+									OR TRIM(P.COMPANYID) = '' OR P.COMPANYID IS NULL)
+							AND
+								A.BOARDID = P.BOARDID
+							LEFT OUTER JOIN
+							(
+								SELECT
+									ITEMID, TENANT_ID
+								FROM
+									(
+										SELECT
+											ROW_NUMBER() OVER(
+												PARTITION BY
+													PARENTITEMID
+												ORDER BY
+													VERSION DESC
+											) RN,
+											ITEMID,
+											TENANT_ID
+										FROM
+											TBL_BOARD_MODIFYHISTORY
+									) M1
+									WHERE
+										M1.RN = 1
+							) M2
+							ON
+								A.ITEMID = M2.ITEMID
+							LEFT OUTER JOIN (
+								SELECT
+									CASE
+										WHEN COUNT(FILEPATH) = 0 THEN 'NONE'
+										WHEN COUNT(FILEPATH) = 1 THEN MAX(TO_CHAR(FILENAME))
+										ELSE 'MANY'
+									END AS EXT,
+									CASE
+										WHEN COUNT(FILEPATH) = 0 THEN 'NONE'
+										WHEN COUNT(FILEPATH) = 1 THEN MAX(TO_CHAR(FILEPATH))
+										ELSE 'MANY'
+									END AS FILEPATH,
+									TENANT_ID,
+									itemid
+								FROM TBL_BOARD_ITEM_ATTACHMENTS
+								GROUP BY
+									ITEMID,
+									TENANT_ID
+								) F
+							ON
+								A.ITEMID = F.ITEMID
+							AND
+								A.TENANT_ID = F.TENANT_ID
+							WHERE
+								A.TENANT_ID = #v_TENANTID#
+							AND
+								P.GUBUN != '5'
+							AND
+								(A.WRITERCOMPANYID = #v_COMPANYID# OR TRIM(A.WRITERCOMPANYID) = '' OR A.WRITERCOMPANYID IS NULL
+									OR TRIM(P.COMPANYID) = '' OR P.COMPANYID IS NULL)
+			<![CDATA[
+						   AND
+							   (A.APPRFLAG = 'Y'
+								   OR A.APPRFLAG IS NULL)
+						   AND
+							   A.STARTDATE <= #nowDate#
+						   AND
+							   A.ENDDATE > #nowDate#
+						   AND
+							   (P.VERSIONMANAGE = 'Y' AND M2.ITEMID IS NOT NULL
+								 OR P.VERSIONMANAGE = 'N')
+						   AND
+							   P.PARENTBOARDID = #boardID#
+			]]>
+						<isNotEmpty property="childBoardIDs">
+							AND P.BOARDID IN
+							<iterate property="childBoardIDs" open="(" close=")" conjunction=",">
+								#childBoardIDs[]#
+							</iterate>
+						</isNotEmpty>
+						) T1
+			<![CDATA[
+				  WHERE RNUM <= #v_PENDROW# ) T2
+			WHERE
+				RNUM >= #v_PSTARTROW#
+			]]>
+	</select>
 </sqlMap>

@@ -31,6 +31,7 @@
 		<result property="guBun" 					column="GUBUN" 						columnIndex="8"/>
 		<result property="url" 					    column="URL" 						columnIndex="9"/>
 		<result property="boardGroupAcl" 			column="BOARDGROUPACL" 				columnIndex="10"/>
+        <result property="useGroupFlag" 			column="USEGROUPFLAG"				columnIndex="11"/>
 	</resultMap>
 	
 	<resultMap id="getMyBoardTree_get3" class="MyFavoriteVO">
@@ -354,7 +355,8 @@
 	                    A.boardcolor BoardColor,
 	                    A.gubun,
 	                    A.url,
-	                    '' BoardGroupACL
+	                    '' BoardGroupACL,
+	                    A.USEGROUPFLAG
 	              	FROM 
 	              		TBL_Board_BoardInfo A
 	                JOIN 
@@ -427,7 +429,8 @@
 		                    A.BoardColor BoardColor,
 		                    A.Gubun ,
 		                    A.url ,
-		                    '' BoardGroupACL
+		                    '' BoardGroupACL,
+		                    A.USEGROUPFLAG
 		           		FROM 
 		           			TBL_Board_BoardInfo A
 		          		WHERE
@@ -467,7 +470,8 @@
 		                    A.BoardColor BoardColor  ,
 		                    A.Gubun ,
 		                    A.url ,
-		                    B.BOARDGROUPACL BOARDGROUPACL
+		                    B.BOARDGROUPACL BOARDGROUPACL,
+		                    A.USEGROUPFLAG
 		                FROM 
 		                	TBL_Board_BoardInfo A
 		                JOIN 
@@ -543,8 +547,9 @@
 		                    A.BoardColor BoardColor  ,
 		                    A.Gubun ,
 		                    A.url ,
-		                    B.BOARDGROUPACL BOARDGROUPACL
-		                FROM 
+		                    B.BOARDGROUPACL BOARDGROUPACL,
+	                    	A.USEGROUPFLAG
+		                FROM
 		                	TBL_Board_BoardInfo A
 		                JOIN 
 		                	( SELECT 
@@ -643,8 +648,9 @@
 	                    A.BoardColor BoardColor,
 	                    A.Gubun ,
 	                    A.url ,
-	                    '' BoardGroupACL
-	           		FROM 
+	                    '' BoardGroupACL,
+						A.USEGROUPFLAG
+	           		FROM
 	           			TBL_Board_BoardInfo A
 	          		WHERE
 	          			A.TENANT_ID = #v_TENANTID#
@@ -682,8 +688,9 @@
 	                    A.BoardColor BoardColor,
 	                    A.Gubun ,
 	                    A.url ,
-	                    '' BoardGroupACL
-	           		FROM 
+	                    '' BoardGroupACL,
+						A.USEGROUPFLAG
+	           		FROM
 	           			TBL_Board_BoardInfo A
 	          		WHERE
 	          			A.TENANT_ID = #v_TENANTID#
@@ -721,8 +728,9 @@
 	                    A.BoardColor BoardColor,
 	                    A.Gubun ,
 	                    A.url ,
-	                    '' BoardGroupACL
-	           		FROM 
+	                    '' BoardGroupACL,
+	                    A.USEGROUPFLAG
+	           		FROM
 	           			TBL_Board_BoardInfo A
 				]]>
 	           	<isEqual property="v_boardGroupAdmin_FG" compareValue="NO">
@@ -816,8 +824,9 @@
 		                    AG.BoardColor BoardColor,
 		                    AG.Gubun ,
 		                    AG.url ,
-		                    '' BoardGroupACL
-		           		FROM 
+		                    '' BoardGroupACL,
+	                    	AG.USEGROUPFLAG
+		           		FROM
 		           			TBL_Board_BoardInfo AG
 					]]>
 		           	<isEqual property="v_boardGroupAdmin_FG" compareValue="NO">
@@ -1610,7 +1619,8 @@
 			<![CDATA[
 				SELECT 
 					BOARDID ,
-                	PARENTBOARDID
+                	PARENTBOARDID,
+                	USEGROUPFLAG
            		FROM 
            			TBL_Board_BoardInfo A
         		WHERE  
@@ -2308,20 +2318,20 @@
 	<isEqual property="isAllGroupBoard" compareValue="Y">
 			<![CDATA[
 				INSERT INTO TBL_Board_BoardInfo ( 
-					BOARDID, BOARDNAME, BOARDNAME2, BOARDNAME3, BOARDNAME4, TREEVIEWORDER, PARENTBOARDID, BOARDGROUPID, ITEMEXPIRES, ATTACHSIZELIMIT, BOARDNO, GUBUN, BoardColor, TENANT_ID, ONELINEREPLY, REPLYNOTIFY
+					BOARDID, BOARDNAME, BOARDNAME2, BOARDNAME3, BOARDNAME4, TREEVIEWORDER, PARENTBOARDID, BOARDGROUPID, ITEMEXPIRES, ATTACHSIZELIMIT, BOARDNO, GUBUN, BoardColor, TENANT_ID, ONELINEREPLY, REPLYNOTIFY, USEGROUPFLAG
 				)
 		   		VALUES ( 
-		   			#v_BOARDID#, #v_BOARDNAME#, #v_BOARDNAME2#, #v_BOARDNAME3#, #v_BOARDNAME4#, ( SELECT CASE WHEN MAX(TREEVIEWORDER) IS NULL THEN 1 ELSE MAX(TREEVIEWORDER) + 1 END FROM TBL_Board_BoardInfo A WHERE TENANT_ID = #v_TENANTID# AND PARENTBOARDID = #v_PARENTBOARDID# ), #v_PARENTBOARDID#, #v_BOARDGROUPID#, -1, 1024, ( SELECT CASE WHEN MAX(BOARDNO) IS NULL THEN 1 ELSE MAX(BOARDNO) + 1 END FROM TBL_Board_BoardInfo A WHERE TENANT_ID = #v_TENANTID# ), 0, '##000000', #v_TENANTID#, '2', 0 
+		   			#v_BOARDID#, #v_BOARDNAME#, #v_BOARDNAME2#, #v_BOARDNAME3#, #v_BOARDNAME4#, ( SELECT CASE WHEN MAX(TREEVIEWORDER) IS NULL THEN 1 ELSE MAX(TREEVIEWORDER) + 1 END FROM TBL_Board_BoardInfo A WHERE TENANT_ID = #v_TENANTID# AND PARENTBOARDID = #v_PARENTBOARDID# ), #v_PARENTBOARDID#, #v_BOARDGROUPID#, -1, 1024, ( SELECT CASE WHEN MAX(BOARDNO) IS NULL THEN 1 ELSE MAX(BOARDNO) + 1 END FROM TBL_Board_BoardInfo A WHERE TENANT_ID = #v_TENANTID# ), 0, '##000000', #v_TENANTID#, '2', 0, #v_USEGROUPFLAG# 
 		   		)
 			]]>
 		</isEqual>
 		<isNotEqual property="isAllGroupBoard" compareValue="Y">
 		<![CDATA[
 			INSERT INTO TBL_Board_BoardInfo ( 
-				BOARDID, BOARDNAME, BOARDNAME2, BOARDNAME3, BOARDNAME4, TREEVIEWORDER, PARENTBOARDID, BOARDGROUPID, ITEMEXPIRES, ATTACHSIZELIMIT, BOARDNO, GUBUN, BoardColor, TENANT_ID, ONELINEREPLY, REPLYNOTIFY, COMPANYID
+				BOARDID, BOARDNAME, BOARDNAME2, BOARDNAME3, BOARDNAME4, TREEVIEWORDER, PARENTBOARDID, BOARDGROUPID, ITEMEXPIRES, ATTACHSIZELIMIT, BOARDNO, GUBUN, BoardColor, TENANT_ID, ONELINEREPLY, REPLYNOTIFY, COMPANYID, USEGROUPFLAG
 			)
 	   		VALUES ( 
-	   			#v_BOARDID#, #v_BOARDNAME#, #v_BOARDNAME2#, #v_BOARDNAME3#, #v_BOARDNAME4#, ( SELECT CASE WHEN MAX(TREEVIEWORDER) IS NULL THEN 1 ELSE MAX(TREEVIEWORDER) + 1 END FROM TBL_Board_BoardInfo WHERE TENANT_ID = #v_TENANTID# AND PARENTBOARDID = #v_PARENTBOARDID# ), #v_PARENTBOARDID#, #v_BOARDGROUPID#, -1, 1024, ( SELECT CASE WHEN MAX(BOARDNO) IS NULL THEN 1 ELSE MAX(BOARDNO) + 1 END FROM TBL_Board_BoardInfo WHERE TENANT_ID = #v_TENANTID# ), 0, '##000000', #v_TENANTID#, '2', 0, #v_COMPANYID#  
+	   			#v_BOARDID#, #v_BOARDNAME#, #v_BOARDNAME2#, #v_BOARDNAME3#, #v_BOARDNAME4#, ( SELECT CASE WHEN MAX(TREEVIEWORDER) IS NULL THEN 1 ELSE MAX(TREEVIEWORDER) + 1 END FROM TBL_Board_BoardInfo WHERE TENANT_ID = #v_TENANTID# AND PARENTBOARDID = #v_PARENTBOARDID# ), #v_PARENTBOARDID#, #v_BOARDGROUPID#, -1, 1024, ( SELECT CASE WHEN MAX(BOARDNO) IS NULL THEN 1 ELSE MAX(BOARDNO) + 1 END FROM TBL_Board_BoardInfo WHERE TENANT_ID = #v_TENANTID# ), 0, '##000000', #v_TENANTID#, '2', 0, #v_COMPANYID#, #v_USEGROUPFLAG#  
 	   		)
 		]]>
 		</isNotEqual>
@@ -2512,7 +2522,8 @@
 	      			STARRATINGFLAG = #v_STARRATINGFLAG#,
 	      			VERSIONMANAGE = #versionManage#,
 	      			LISTSHOWTYPE = #v_LISTSHOWTYPE#,
-	      			URLCOPYFLAG = #v_URLCOPYFLAG#
+	      			URLCOPYFLAG = #v_URLCOPYFLAG#,
+	      			USEGROUPFLAG = #v_USEGROUPFLAG#
 	    		WHERE
 	    			TENANT_ID = #v_TENANTID#
 	    		AND  

@@ -81,7 +81,8 @@
 				PUBLICFLAG,
 				ALLNEWBOARDFLAG,
 				STARRATINGFLAG,
-				VERSIONMANAGE
+				VERSIONMANAGE,
+				USEGROUPFLAG
             FROM 
                 TBL_BOARD_BOARDINFO 
 			WHERE  
@@ -1187,7 +1188,8 @@
                         A.treevieworder TreeViewOrder,
                         A.boardcolor BoardColor,
                         A.gubun,
-                        '' BoardGroupACL
+                        '' BoardGroupACL,
+                        A.USEGROUPFLAG
                     FROM 
                         TBL_Board_BoardInfo A
                     JOIN 
@@ -1254,8 +1256,9 @@
 	                        A.TreeViewOrder TreeViewOrder  ,
 	                        A.BoardColor BoardColor  ,
 	                        A.Gubun ,
-	                        B.BOARDGROUPACL BOARDGROUPACL  
-	                    FROM 
+	                        B.BOARDGROUPACL BOARDGROUPACL,
+	                        A.USEGROUPFLAG
+	                    FROM
 	                        TBL_Board_BoardInfo A
 	                   WHERE
 		          			A.TENANT_ID = #tenantID#
@@ -1288,8 +1291,9 @@
 	                        A.TreeViewOrder TreeViewOrder  ,
 	                        A.BoardColor BoardColor  ,
 	                        A.Gubun ,
-	                        B.BOARDGROUPACL BOARDGROUPACL  
-		                FROM 
+	                        B.BOARDGROUPACL BOARDGROUPACL,
+	                        A.USEGROUPFLAG
+		                FROM
 		                	TBL_Board_BoardInfo A
 		                JOIN 
 		                	( SELECT 
@@ -1359,8 +1363,9 @@
 							A.TreeViewOrder TreeViewOrder  ,
 	                        A.BoardColor BoardColor  ,
 	                        A.Gubun ,
-	                        B.BOARDGROUPACL BOARDGROUPACL
-		                FROM 
+	                        B.BOARDGROUPACL BOARDGROUPACL,
+		                    A.USEGROUPFLAG
+		                FROM
 		                	TBL_Board_BoardInfo A
 		                JOIN 
 		                	( SELECT 
@@ -1453,8 +1458,9 @@
 	                        A.TreeViewOrder ,
 	                        A.BoardColor BoardColor,
 	                        A.Gubun ,
-	                        '' BoardGroupACL
-	                    FROM 
+	                        '' BoardGroupACL,
+	                        A.USEGROUPFLAG
+	                    FROM
 	                        TBL_Board_BoardInfo A
 	                    WHERE
 	                        A.TENANT_ID = #tenantID#
@@ -1490,8 +1496,9 @@
 		                        A.TreeViewOrder,
 		                        A.BoardColor BoardColor,
 		                        A.Gubun ,
-		                        '' BoardGroupACL
-			           		FROM 
+		                        '' BoardGroupACL,
+		                        A.USEGROUPFLAG
+			           		FROM
 			           			TBL_Board_BoardInfo A
 			          		WHERE
 			          			A.TENANT_ID = #tenantID#
@@ -1522,8 +1529,9 @@
 		                        A.TreeViewOrder ,
 		                        A.BoardColor BoardColor,
 		                        A.Gubun ,
-		                        '' BoardGroupACL
-			           		FROM 
+		                        '' BoardGroupACL,
+		                        A.USEGROUPFLAG
+			           		FROM
 			           			TBL_Board_BoardInfo A
 						]]>
 			           	<isEqual property="v_boardGroupAdmin_FG" compareValue="NO">
@@ -1606,8 +1614,9 @@
 		                     AG.TreeViewOrder ,
 		                     AG.BoardColor BoardColor,
 		                     AG.Gubun ,
-		                     '' BoardGroupACL
-		           		FROM 
+		                     '' BoardGroupACL,
+							 AG.USEGROUPFLAG
+		           		FROM
 		           			TBL_Board_BoardInfo AG
 		           	<isEqual property="v_boardGroupAdmin_FG" compareValue="NO">
 		           		<![CDATA[
@@ -3066,5 +3075,123 @@
           WHERE 
             RNUM <= #listSize#
             ]]>
+	</select>
+
+	<select id="MBoardDAO.getGroupBoardItemListCount" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+		SELECT
+			COUNT(*) CNT
+		FROM
+			TBL_BOARD_BOARDINFO P
+				INNER JOIN
+			TBL_Board_Item A
+			ON
+				A.TENANT_ID = P.TENANT_ID
+					AND
+				A.BOARDID = P.BOARDID
+					AND
+				P.GUBUN != '5'
+			AND
+			  	A.TENANT_ID = #v_TENANTID#
+			AND
+		   (A.WRITERCOMPANYID = #v_COMPANYID# OR TRIM(A.WRITERCOMPANYID) = '' OR A.WRITERCOMPANYID IS NULL
+			OR TRIM(P.COMPANYID) = '' OR P.COMPANYID IS NULL)
+			AND
+		   (A.APPRFLAG = 'Y'
+			OR A.APPRFLAG IS NULL)
+			AND
+			A.STARTDATE <= #nowDate#
+			AND
+			A.ENDDATE > #nowDate#
+			AND
+			P.PARENTBOARDID = #boardID#
+		]]>
+		<isNotEmpty property="childBoardIDs">
+			AND P.BOARDID IN
+			<iterate property="childBoardIDs" open="(" close=")" conjunction=",">
+				#childBoardIDs[]#
+			</iterate>
+		</isNotEmpty>
+	</select>
+
+	<select id="MBoardDAO.getGroupBoardItemList" parameterClass="Map" resultClass="MBoardListVO">
+		SELECT
+			*
+		FROM (
+			SELECT
+				Row_Number() OVER(ORDER BY A.WRITEDATE DESC) AS RNUM,
+				A.BOARDID,
+				P.BOARDNAME AS BOARDNAME,
+				A.ITEMID,
+				A.WRITERID,
+				A.WRITERNAME,
+				A.WRITERDEPTNAME,
+				A.WRITERCOMPANYNAME,
+				TO_DATE(A.STARTDATE, 'YYYY-MM-DD HH24:MI:SS')+(#offset#/(60*24)) AS STARTDATE,
+				TO_DATE(A.WRITEDATE, 'YYYY-MM-DD HH24:MI:SS')+(#offset#/(60*24)) AS WRITEDATE,
+				A.PARENTWRITEDATE,
+				A.IMPORTANCE,
+				A.TITLE,
+				A.ATTACHMENTS,
+				A.READCOUNT,
+				A.ITEMLEVEL,
+				A.ABSTRACT,
+				P.BOARDNAME2 AS BOARDNAME2,
+				A.WRITERNAME2,
+				A.WRITERDEPTNAME2,
+				A.WRITERCOMPANYNAME2,
+				(SELECT
+					COUNT(*)
+				FROM
+					TBL_Board_OneLineReply
+				WHERE
+					TENANT_ID = A.TENANT_ID
+				AND
+					ITEMID = A.ItemID) ONELINECNT,
+				A.UPPERITEMIDTREE,
+				A.DOCNO,
+				'' AS NOTICE,
+				P.GUBUN,
+				A.MAINCONTENT,
+				P.BOARDGROUPID
+			FROM
+				TBL_BOARD_ITEM A
+				INNER JOIN
+					TBL_BOARD_BOARDINFO P
+				ON
+					A.TENANT_ID = P.TENANT_ID
+				AND
+					(A.WRITERCOMPANYID = P.COMPANYID OR TRIM(A.WRITERCOMPANYID) = '' OR A.WRITERCOMPANYID IS NULL
+						OR TRIM(P.COMPANYID) = '' OR P.COMPANYID IS NULL)
+				AND
+					A.BOARDID = P.BOARDID
+				AND
+					P.GUBUN != '5'
+				AND
+					A.TENANT_ID = #v_TENANTID#
+				AND
+					(A.WRITERCOMPANYID = #v_COMPANYID# OR TRIM(A.WRITERCOMPANYID) = '' OR A.WRITERCOMPANYID IS NULL
+						OR TRIM(P.COMPANYID) = '' OR P.COMPANYID IS NULL)
+		<![CDATA[
+			   AND
+				   (A.APPRFLAG = 'Y'
+					   OR A.APPRFLAG IS NULL)
+			   AND
+				   A.STARTDATE <= #nowDate#
+			   AND
+				   A.ENDDATE > #nowDate#
+			   AND
+				   P.PARENTBOARDID = #boardID#
+		]]>
+		<isNotEmpty property="childBoardIDs">
+			AND P.BOARDID IN
+			<iterate property="childBoardIDs" open="(" close=")" conjunction=",">
+				#childBoardIDs[]#
+			</iterate>
+		</isNotEmpty>
+		<![CDATA[
+		  ) T1
+		  WHERE RNUM <= #listSize#
+		]]>
 	</select>
 </sqlMap>

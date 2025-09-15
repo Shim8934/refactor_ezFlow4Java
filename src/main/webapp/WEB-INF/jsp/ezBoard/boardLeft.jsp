@@ -557,7 +557,8 @@
 		            var SelectedBoardID = treeNode.GetNodeData("DATA1");
 		            var SelectedBoardParentBoardID = treeNode.GetNodeData("DATA3");
 		            var chkPhotoBrd = treeNode.GetNodeData("DATA5");
-				    
+		            var useGroupFlag = treeNode.GetNodeData("USEGROUPFLAG"); /* 그룹게시판 사용여부 */
+
 		            /* 2018-08-07 홍승비 - url게시판 접근 후 window.parent.frames["right"]이 undefined인 경우, 다른 방법으로 게시판 접근 */
 				  	if (typeof window.parent.frames["right"] == "undefined") {
 						if (chkPhotoBrd == 3) {
@@ -575,7 +576,7 @@
 						} else {
 			                if (SelectedBoardID == "{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}") {
 								rightFrame.src = "/ezBoard/boardItemList_new.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&boardName=" + encodeURIComponent(treeNode.GetNodeData("DATA2")) + "&boardType=N";
-							} else if (SelectedBoardID == "{ZZZZZZZZ-ZZZZ-ZZZZ-ZZZZ-ZZZZZZZZZZZZ}") {
+							} else if (SelectedBoardID == "{ZZZZZZZZ-ZZZZ-ZZZZ-ZZZZ-ZZZZZZZZZZZZ}" || useGroupFlag == "Y") {
 								rightFrame.src = "/ezBoard/boardItemList_all.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&boardName=" + encodeURIComponent(treeNode.GetNodeData("DATA2")) + "&boardType=E";
 			                } else if (SelectedBoardID == "{YYYYYYYY-YYYY-YYYY-YYYY-YYYYYYYYYYYY}") {
 								rightFrame.src = "/ezBoard/boardItemList_allnew.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&boardName=" + encodeURIComponent(treeNode.GetNodeData("DATA2")) + "&boardType=R";
@@ -600,7 +601,7 @@
 						} else {
 			                if (SelectedBoardID == "{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}") {
 			                    window.parent.document.querySelector("iframe[name=right]").src = "/ezBoard/boardItemList_new.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&boardName=" + encodeURIComponent(treeNode.GetNodeData("DATA2")) + "&boardType=N";
-							} else if (SelectedBoardID == "{ZZZZZZZZ-ZZZZ-ZZZZ-ZZZZ-ZZZZZZZZZZZZ}") {
+							} else if (SelectedBoardID == "{ZZZZZZZZ-ZZZZ-ZZZZ-ZZZZ-ZZZZZZZZZZZZ}" || useGroupFlag == "Y") {
 								window.parent.document.querySelector("iframe[name=right]").src = "/ezBoard/boardItemList_all.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&boardName=" + encodeURIComponent(treeNode.GetNodeData("DATA2")) + "&boardType=E";
 			                } else if (SelectedBoardID == "{YYYYYYYY-YYYY-YYYY-YYYY-YYYYYYYYYYYY}") {
 								window.parent.document.querySelector("iframe[name=right]").src = "/ezBoard/boardItemList_allnew.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&boardName=" + encodeURIComponent(treeNode.GetNodeData("DATA2")) + "&boardType=R";

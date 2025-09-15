@@ -1153,6 +1153,7 @@ public class EzBoardController extends EzFileMngUtil{
 		model.addAttribute("MyBoardScrapFlag", ezCommonService.getTenantConfig("MyBoardScrapFlag", userInfo.getTenantId()));
 		model.addAttribute("admlistShowType", listShowType);
 		model.addAttribute("guestReadFG", guestReadFG);
+		model.addAttribute("useGroupFlag", boardProperty.getUseGroupFlag()); // 그룹게시판 사용여부
 
 		logger.debug("boardItemList ended");
 		//logger.debug("requestURL : " + requestURL);
@@ -1397,7 +1398,8 @@ public class EzBoardController extends EzFileMngUtil{
 			boardInfo.setStarRatingFlag(strProp.getStarRatingFlag()); // 별점 사용여부 플래그 추가
 			boardInfo.setVersionManage(strProp.getVersionManage()); // 버전관리 사용여부 플래그 추가
 			boardInfo.setListShowType(strProp.getListShowType()); // 리스트보기 형식 추가
-            boardInfo.setUrlCopyFlag(strProp.getUrlCopyFlag()); // 주소복사 사용여부 플래그 추가
+			boardInfo.setUrlCopyFlag(strProp.getUrlCopyFlag()); // 주소복사 사용여부 플래그 추가
+			boardInfo.setUseGroupFlag(strProp.getUseGroupFlag()); // 그룹게시판 사용 플래그 추가
 
 			/* 2018-10-17 홍승비 - 게시판의 그룹게시판이 구분값 99인지 확인하여 게시판 boardInfo에 isAllGroupBoard값 셋팅 */
 			String boardGroupID = strProp.getBoardGroupID();
@@ -1417,7 +1419,7 @@ public class EzBoardController extends EzFileMngUtil{
 			}
 		}
 		
-		if (pBoardID.equals("{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}") || pBoardID.equals("{YYYYYYYY-YYYY-YYYY-YYYY-YYYYYYYYYYYY}") || pBoardID.equals("{ZZZZZZZZ-ZZZZ-ZZZZ-ZZZZ-ZZZZZZZZZZZZ}")) {
+		if (pBoardID.equals("{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}") || pBoardID.equals("{YYYYYYYY-YYYY-YYYY-YYYY-YYYYYYYYYYYY}") || pBoardID.equals("{ZZZZZZZZ-ZZZZ-ZZZZ-ZZZZ-ZZZZZZZZZZZZ}") || boardInfo.getUseGroupFlag().equals("Y")) {
 			boardInfo.setAccess_("1");
 			boardInfo.setAccess_FG("1");
 			boardInfo.setBoardAdmin_FG("false");
@@ -1534,7 +1536,9 @@ public class EzBoardController extends EzFileMngUtil{
     			resultXML = getNewItemList(boardVO, userInfo);
     		} else if (boardID.equals("{ZZZZZZZZ-ZZZZ-ZZZZ-ZZZZ-ZZZZZZZZZZZZ}")) {
     			resultXML = getAllItemList(boardVO, userInfo);
-    		} else { // 일반게시판
+    		} else if (boardInfo.getUseGroupFlag().equals("Y")) { // 그룹게시판
+				resultXML = getGroupItemList(boardVO, userInfo);
+			} else { // 일반게시판
     			resultXML = getBoardListItem(boardVO, userInfo, type);
     		}
     	}
@@ -13928,5 +13932,251 @@ public class EzBoardController extends EzFileMngUtil{
 
 		logger.debug("getBoardTitle ended.");
 		return ezBoardService.getBoardTitle(contentLocation, userInfo.getTenantId());
+	}
+
+	/**
+	 * 게시판 그룹게시판 리스트 표출 Method
+	 */
+	public String getGroupItemList(BoardVO boardVO, LoginVO userInfo) throws Exception {
+		logger.debug("getGroupItemList started");
+
+		String orderOption1 = "";
+		String orderOption2 = "";
+		String strMultiData = commonUtil.getMultiData(boardVO.getLang(), userInfo.getTenantId());
+		String anonyMsg = "";
+
+		BoardListVO boardListVO = new BoardListVO();
+		boardVO.setBoardType("E");
+		boardVO.setLang(userInfo.getLang());
+		boardVO.setTenantID(userInfo.getTenantId());
+
+		List<BoardListHeaderVO> headerList = ezBoardService.getListHeader(userInfo, boardVO);
+
+		int i = 0;
+		int hlength = headerList.size();
+		Map<String, String> orderByMap = new HashMap<String, String>();
+
+		for (i = 0; i < hlength; i++) {
+			if (boardVO.getOrderCell() != null && !boardVO.getOrderCell().equals("") && boardVO.getOrderCell().equals(headerList.get(i).getName())) {
+				orderByMap.put("orderByCol", headerList.get(i).getColName().toUpperCase());
+				if (boardVO.getOrderOption().equals("")) {
+					orderByMap.put("orderByColDesc", "N");
+					if (headerList.get(i).getName().indexOf("BOARDNAME") > -1) {
+						orderOption1 = headerList.get(i).getColName().replace("BOARDNAME", "B.BOARDNAME") + " ";
+					} else {
+						orderOption1 = headerList.get(i).getColName() + " ";
+					}
+				} else {
+					orderByMap.put("orderByColDesc", "Y");
+					if (headerList.get(i).getColName().indexOf("BOARDNAME") > -1) {
+						orderOption1 = headerList.get(i).getColName().replace("BOARDNAME", "B.BOARDNAME") + " DESC ";
+					} else {
+						orderOption1 = headerList.get(i).getColName() + " DESC ";
+					}
+				}
+			}
+		}
+
+		String fieldName = "";
+		String fieldValue = "";
+
+		BoardConfigVO boardConfigVO = ezBoardService.getPersonalCount(userInfo);
+
+		OrganAuth organAuth = commonUtil.makeOrganAuth(userInfo.getId(), userInfo.getTenantId(), userInfo.getDeptID(), userInfo.getJobId());
+		boolean isCompanyAdmin = organAuth.isAuth(AdminAuth.ADMIN_MASTER,"");
+
+		/* 2019-06-03 홍승비 - 게시판그룹 관리자권한 체크 시 사내겸직 및 하위부서 허용여부 체크하도록 수정 */
+		String boardGroupAdmin_FG = checkIfBoardGroupAdmin(boardVO.getBoardId(), userInfo);
+
+		int pMode = isCompanyAdmin || organAuth.isAuth(AdminAuth.COMPANY_MANAGER, userInfo.getCompanyID())
+				|| organAuth.isAuth(AdminAuth.BOARD_MANAGER, userInfo.getCompanyID())
+				|| boardGroupAdmin_FG.equals("OK") ? 0 : 1;
+
+		/* 하위게시판 접근/리스트보기권한 체크 */
+		String strXML = ezBoardService.chkSubBoards(boardVO.getBoardId(), userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID(), pMode, 1, 0, "",
+				commonUtil.getLangData(userInfo.getLang()), "", isCompanyAdmin, boardGroupAdmin_FG, userInfo.getRollInfo(), userInfo.getTenantId());
+
+		Document doc = commonUtil.convertStringToDocument(strXML);
+		NodeList nList = doc.getElementsByTagName("NODE");
+		List<String> childBoardIDs = new ArrayList<>();
+
+		if (nList != null) {
+			for (int j = 0; j < nList.getLength(); j++) {
+				Node node = nList.item(j);
+
+				BoardPropertyVO boardInfo = getBoardInfo(node.getChildNodes().item(2).getTextContent(), userInfo);
+
+				if (boardInfo.getListView_FG().equals("true")) {
+					childBoardIDs.add(node.getChildNodes().item(2).getTextContent());
+				}
+			}
+		}
+
+		// 새게시물 카운트 시 companyID 조건 추가
+		int boardCount = ezBoardService.getGroupBoardItemListCount(userInfo, boardVO.getBoardId(), childBoardIDs);
+		int startRow = 1;
+		int endRow = 0;
+		int personalCount_ = boardConfigVO.getListCount();
+
+		boardConfigVO.setPageCnt(boardCount);
+		boardConfigVO.setTotalCnt(boardCount);
+
+		startRow = (personalCount_ * (boardVO.getPageNum() - 1)) + 1;
+		endRow = (personalCount_ * boardVO.getPageNum());
+
+		boardListVO.setUserID(userInfo.getId());
+		boardListVO.setWriterCompanyID(userInfo.getCompanyID());
+		boardListVO.setTenantID(userInfo.getTenantId());
+		boardListVO.setStartRow(startRow);
+		boardListVO.setEndRow(endRow);
+		boardListVO.setTotalCount(boardCount);
+		boardListVO.setOrderBySub(orderOption1);
+		boardListVO.setOrderByMain(orderOption2);
+		boardListVO.setBoardID(boardVO.getBoardId());
+
+		// 새게시물 표출 시 companyID 조건 추가
+		List<HashMap<String, Object>> boardList = ezBoardService.getGroupBoardItemList(boardListVO, orderByMap, childBoardIDs);
+
+		int dlength = boardList.size();
+		StringBuffer resultXML = new StringBuffer();
+
+		resultXML.append("<DOCLIST>");
+		resultXML.append("<TOTALCNT>" + boardCount + "</TOTALCNT>");
+		resultXML.append("<PAGECNT>" + boardCount + "</PAGECNT>");
+		resultXML.append("<PERSONALCNT>" + personalCount_ + "</PERSONALCNT>");
+		resultXML.append("<PREVIEWTYPE>" + boardConfigVO.getPreview() + "</PREVIEWTYPE>");
+		resultXML.append("<PREVIEWWLIST>" + boardConfigVO.getPreviewWList() + "</PREVIEWWLIST>");
+		resultXML.append("<PREVIEWWCONTENT>" + boardConfigVO.getPreviewWContent() + "</PREVIEWWCONTENT>");
+		resultXML.append("<PREVIEWHLIST>" + boardConfigVO.getPreviewHList() + "</PREVIEWHLIST>");
+		resultXML.append("<PREVIEWHCONTENT>" + boardConfigVO.getPreviewHContent() + "</PREVIEWHCONTENT>");
+		resultXML.append("<LISTVIEWDATA>");
+		resultXML.append("<HEADERS>");
+
+		for (BoardListHeaderVO vo:headerList) {
+			resultXML.append("<HEADER>");
+			resultXML.append("<NAME>" + vo.getName() + "</NAME>");
+			resultXML.append("<WIDTH>" + vo.getWidth() + "</WIDTH>");
+			resultXML.append("<COLNAME>" + vo.getColName() + "</COLNAME>");
+			resultXML.append("</HEADER>");
+		}
+
+		resultXML.append("</HEADERS>");
+		resultXML.append("<ROWS>");
+
+		/* 2018-11-28 홍승비 - 새게시물 리스트의 익명게시물 부서칼럼 '익명'으로 표출 */
+		anonyMsg = egovMessageSource.getMessage("ezBoard.t249", userInfo.getLocale()).split(";")[0];
+
+		for (int j = 0; j < dlength; j++) {
+			resultXML.append("<ROW>");
+
+			/* 2019-08-02 홍승비 - 다국어 환경에서 부서명 '익명'처리되지 않는 오류 수정 */
+			if (String.valueOf(boardList.get(j).get("GUBUN")).equals("2")) {
+				boardList.get(j).replace("WRITERDEPTNAME", anonyMsg);
+				boardList.get(j).replace("WRITERDEPTNAME2", anonyMsg);
+			}
+
+			for (i = 0; i < hlength; i++) {
+				resultXML.append("<CELL>");
+				fieldName = headerList.get(i).getColName().toUpperCase();
+
+				if (fieldName.equals("WRITERNAME") || fieldName.equals("WRITERJOBTITLE") || fieldName.equals("WRITERDEPTNAME") || fieldName.equals("BOARDNAME")) {
+					fieldName = fieldName + strMultiData;
+				}
+				if (fieldName.equals("WRITEDATE")) {
+					fieldValue = commonUtil.getDateStringInUTC((String)boardList.get(j).get(fieldName), userInfo.getOffset(), false);
+					fieldValue = fieldValue.substring(0, fieldValue.length()-3);
+				} else {
+					fieldValue = commonUtil.cleanValue(String.valueOf(boardList.get(j).get(fieldName)));
+				}
+
+				resultXML.append("<VALUE>" + fieldValue + "</VALUE>");
+
+				if (i == 0) {
+					resultXML.append("<DATA1>" + boardList.get(j).get("BOARDID") + "</DATA1>");
+					resultXML.append("<DATA2>" + boardList.get(j).get("ITEMID") + "</DATA2>");
+					resultXML.append("<DATA3>" + boardList.get(j).get("WRITERID") + "</DATA3>");
+					resultXML.append("<DATA4>" + boardList.get(j).get("IMPORTANCE") + "</DATA4>");
+					resultXML.append("<DATA5>1</DATA5>");
+					resultXML.append("<DATA6>" + commonUtil.cleanValue((String)boardList.get(j).get("ABSTRACT")) + "</DATA6>");
+					resultXML.append("<DATA7>N</DATA7>");
+					resultXML.append("<DATA8>" + boardList.get(j).get("ITEMLEVEL") + "</DATA8>");
+					resultXML.append("<DATA9>" + boardList.get(j).get("NOTICE") + "</DATA9>");
+					resultXML.append("<DATA10>" + boardList.get(j).get("GUBUN") + "</DATA10>");
+					resultXML.append("<DATA11>" + boardList.get(j).get("ONELINECNT") + "</DATA11>");
+					resultXML.append("<EXT>" + commonUtil.cleanValue((String) boardList.get(j).get("EXT")) + "</EXT>");
+					resultXML.append("<FILEPATH>" + commonUtil.cleanValue((String) boardList.get(j).get("FILEPATH")) + "</FILEPATH>");
+
+					if (globals.getProperty("Globals.DbType").equals("oracle")) {
+						resultXML.append("<DATA12>" + commonUtil.cleanValue((String)boardList.get(j).get("TO_CHAR(MAINCONTENT)")) + "</DATA12>");
+					} else if (globals.getProperty("Globals.DbType").equals("tibero")) {
+						resultXML.append("<DATA12>" + commonUtil.cleanValue((String)boardList.get(j).get("TO_CHAR(MAINCONTENT)")) + "</DATA12>");
+					} else {
+						resultXML.append("<DATA12>" + commonUtil.cleanValue((String)boardList.get(j).get("MAINCONTENT")) + "</DATA12>");
+					}
+
+					resultXML.append("<TITLE>" + commonUtil.cleanValue((String)boardList.get(j).get("TITLE")) + "</TITLE>");
+					/* 2019-07-04 홍승비 - 게시판 미독건수 읽음표시 처리용 boardGroupID 추가 */
+					resultXML.append("<BOARDGROUPID>" + boardList.get(j).get("BOARDGROUPID") + "</BOARDGROUPID>");
+					resultXML.append("<ITEMREAD_FG>" + (accessCheck((String)boardList.get(j).get("BOARDID"), (String)boardList.get(j).get("ITEMID"),
+							"GENERAL", userInfo, "") ? "Y" : "N") + "</ITEMREAD_FG>");
+				}
+				resultXML.append("</CELL>");
+			}
+			resultXML.append("</ROW>");
+		}
+		resultXML.append("</ROWS>");
+		resultXML.append("</LISTVIEWDATA>");
+		resultXML.append("</DOCLIST>");
+
+		logger.debug("getGroupItemList ended");
+		return resultXML.toString();
+	}
+
+	/**
+	 *  상위/하위게시판 그룹게시판 여부 체크
+	 */
+	@RequestMapping(value = "/ezBoard/chkGroupBoardExist.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
+	@ResponseBody
+	public String chkGroupBoardExist(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
+		logger.debug("chkGroupBoardExist started");
+
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+
+		String boardID = request.getParameter("boardID");
+		String type = request.getParameter("type");
+		String parentBoardIDs = ezBoardAdminService.getAllUpperBoardID(boardID, userInfo.getTenantId());
+		String result = "false";
+
+		/* 상위게시판 체크 */
+		List<String> parentBoardIDList = new ArrayList<>(Arrays.asList(parentBoardIDs.split(","))); // 상위게시판 리스트
+
+		if (type.equals("MODIFY")) {
+			parentBoardIDList.remove(boardID);
+		}
+
+		for (int i = 0; i < parentBoardIDList.size() - 1; i++) {
+			BoardPropertyVO boardInfo = getBoardInfo(parentBoardIDList.get(i), userInfo);
+
+			if (boardInfo.getUseGroupFlag().equals("Y")) {
+				result = "true";
+				break;
+			}
+		}
+
+		/* 하위게시판 체크 */
+		if (type.equals("MODIFY")) {
+			List<BoardPropertyVO> lowerBoardList = ezBoardAdminService.getUnderBoardID(boardID, "2", userInfo.getTenantId()); // 하위게시판 리스트
+
+			for (BoardPropertyVO vo : lowerBoardList) {
+				if (vo.getUseGroupFlag().equals("Y")) {
+					result = "true";
+					break;
+				}
+			}
+		}
+
+		logger.debug("chkGroupBoardExist ended");
+
+		return result;
 	}
 }

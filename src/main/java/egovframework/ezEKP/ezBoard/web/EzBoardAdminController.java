@@ -359,7 +359,8 @@ public class EzBoardAdminController extends EzFileMngUtil {
 		boardPropertyVO.setAccessName2(accessName2);
 		boardPropertyVO.setCompanyID(boardGroupPropertyVO.getCompanyID());
 		boardPropertyVO.setTenantID(user.getTenantId());
-		
+		boardPropertyVO.setUseGroupFlag(boardPropertyVO.getUseGroupFlag());
+
 		ezBoardAdminService.createBoard(boardPropertyVO);
 
 		logger.debug("createBoard ended");
@@ -1093,7 +1094,8 @@ public class EzBoardAdminController extends EzFileMngUtil {
 		int tabNum = 3; //탭 개수
 		
 		/* 2023-11-08 민지수 - 카테고리게시판으로 게시판 유형을 변경한 경우, 즐겨찾기와 마이게시판 목록에서 해당 게시판 제거 */
-		if (boardpro.getGuBun() != null && boardpro.getGuBun().equals("10")) {
+		/* 그룹게시판으로 게시판 유형을 변경한 경우, 즐겨찾기와 마이게시판 목록에서 해당 게시판 제거 */
+		if (boardpro.getGuBun() != null && (boardpro.getGuBun().equals("10") || boardpro.getUseGroupFlag().equals("Y"))) {
 			ezBoardAdminService.deleteMyBoardData("MyBoards", boardPropertyVO.getBoardID(), userInfo.getTenantId());
 			ezBoardAdminService.deleteMyBoardData("MyBoardTree", boardPropertyVO.getBoardID(), userInfo.getTenantId());
 		}
@@ -1740,6 +1742,7 @@ public class EzBoardAdminController extends EzFileMngUtil {
 		model.addAttribute("useFormFlag", useFormFlag);
 		model.addAttribute("userPageYN", request.getParameter("userPageYN") != null ? request.getParameter("userPageYN") : "N");
 		model.addAttribute("parentNeed", request.getParameter("parentNeed") != null ? request.getParameter("parentNeed") : "Y");				
+		model.addAttribute("useGroupFlag", board.getUseGroupFlag());
 
 		logger.debug("boardConfig ended");
 		return "admin/ezBoard/boardConfig";
