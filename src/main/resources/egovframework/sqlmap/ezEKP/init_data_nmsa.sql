@@ -3585,10 +3585,10 @@ INSERT INTO nezportal.TBL_PORTAL_THEME (theme_id, theme_name, theme_name2, theme
 
 INSERT INTO nezportal.TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (0, '/ezNewPortal/newPortalPortalPage.do', 'G', '', 0, 'portal');
 UPDATE nezportal.TBL_PORTAL_MENU SET menu_id = 0 WHERE menu_url = '/ezNewPortal/newPortalPortalPage.do';
-INSERT INTO nezportal.TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (1, '/ezemail/mailMain.do', 'G', 'icon_topmenu icon_nav_mail', 1, 'mail');
+INSERT INTO nezportal.TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (1, '/ezEmail/mailMain.do', 'G', 'icon_topmenu icon_nav_mail', 1, 'mail');
 INSERT INTO nezportal.TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (2, '/ezSchedule/scheduleIndex.do?funCode=2', 'G', 'icon_topmenu icon_nav_calendar', 2, 'schedule');
-INSERT INTO nezportal.TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (3, '/ezapprovalg/apprGMain.do', 'G', 'icon_topmenu icon_nav_approval', 3, 'approval');
-INSERT INTO nezportal.TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (4, '/ezboard/boardMain.do', 'G', 'icon_topmenu icon_nav_board', 4, 'board');
+INSERT INTO nezportal.TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (3, '/ezApprovalG/apprGMain.do', 'G', 'icon_topmenu icon_nav_approval', 3, 'approval');
+INSERT INTO nezportal.TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (4, '/ezBoard/boardMain.do', 'G', 'icon_topmenu icon_nav_board', 4, 'board');
 INSERT INTO nezportal.TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (5, '/ezCommunity/communityMain.do', 'G', 'icon_topmenu icon_nav_community', 5, 'community');
 INSERT INTO nezportal.TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (6, '/ezResource/resMain.do', 'G', 'icon_topmenu icon_nav_resource', 6, 'resource');
 INSERT INTO nezportal.TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (7, '/ezCircular/circularIndex.do', 'G', 'icon_topmenu icon_nav_circular_edition', 7, 'circular');
@@ -3597,7 +3597,7 @@ INSERT INTO nezportal.TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, d
 INSERT INTO nezportal.TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (10, '/ezWebFolder/webfolderMain.do', 'G', 'icon_topmenu icon_nav_webfolder', 10, 'webfolder');
 INSERT INTO nezportal.TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (11, '/ezCabinet/cabinetMain.do', 'G', 'icon_topmenu icon_nav_cabinet', 11, 'cabinet');
 INSERT INTO nezportal.TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (12, '/ezPMS/pmsMain.do', 'G', 'icon_topmenu icon_nav_project', 12, 'pms');
-INSERT INTO nezportal.TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (13, '/ezemail/mailMain.do?funCode=2', 'G', 'icon_topmenu icon_nav_addressbook', 13, 'address');
+INSERT INTO nezportal.TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (13, '/ezEmail/mailMain.do?funCode=2', 'G', 'icon_topmenu icon_nav_addressbook', 13, 'address');
 INSERT INTO nezportal.TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (14, '/ezQuestion/qstMain.do', 'G', 'icon_topmenu icon_nav_survey', 14, 'question');
 INSERT INTO nezportal.TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (15, '/ezPoll/pollMain.do', 'G', 'icon_topmenu icon_nav_voting', 15, 'vote');
 INSERT INTO nezportal.TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (16, '/ezLadder/ladderMainPage.do', 'G', 'icon_topmenu icon_nav_laddergame', 16, 'ladder');
@@ -3607,11 +3607,11 @@ INSERT INTO nezportal.TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, d
 INSERT INTO nezportal.TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (20, '/ezCar/resCar.do', 'G', 'icon_topmenu icon_nav_workdiary', 20, 'car');
 
 -- 모바일 메뉴
-INSERT INTO nezportal.TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (21, '/mobile/ezemail/mailList.do?folderId=INBOX', 'MG', 'iconCommon icon_mail', 1, 'mMail');
+INSERT INTO nezportal.TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (21, '/mobile/ezEmail/mailList.do?folderId=INBOX', 'MG', 'iconCommon icon_mail', 1, 'mMail');
 INSERT INTO nezportal.TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (22, '/mobile/ezOrgan/personList.do', 'MG', 'iconCommon icon_employee', 2, 'mAddress');
-INSERT INTO nezportal.TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (23, '/mobile/ezapprovalg/mApproveList.do?pType=DO', 'MG', 'iconCommon icon_approval', 3, 'mApproval');
+INSERT INTO nezportal.TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (23, '/mobile/ezApprovalG/mApproveList.do?pType=DO', 'MG', 'iconCommon icon_approval', 3, 'mApproval');
 INSERT INTO nezportal.TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (24, '/mobile/ezResource/searchTodayList.do', 'MG', 'iconCommon icon_resource', 4, 'mResource');
-INSERT INTO nezportal.TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (25, '/mobile/ezboard/boardItemList.do?boardID={FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}', 'MG', 'iconCommon icon_notice', 5, 'mBoard');
+INSERT INTO nezportal.TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (25, '/mobile/ezBoard/boardItemList.do?boardID={FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}', 'MG', 'iconCommon icon_notice', 5, 'mBoard');
 INSERT INTO nezportal.TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (26, '/mobile/ezAddress/addressList.do?pSearchTarget=personal&pFolderName=개인주소록', 'MG', 'iconCommon icon_address', 6, 'mAddress');
 INSERT INTO nezportal.TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (27, '/mobile/ezSchedule/mScheduleList.do', 'MG', 'iconCommon icon_schedule', 7, 'mSchedule');
 INSERT INTO nezportal.TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (28, '/mobile/ezSurvey/surveyList.do?mode=processing', 'MG', 'iconCommon icon_survey', 8, 'mSurvey');
