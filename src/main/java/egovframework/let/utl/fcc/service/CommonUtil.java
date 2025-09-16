@@ -762,11 +762,20 @@ public class CommonUtil {
 			    // "자동회신:"과 같이 :이 제목에 포함되어 있는 경우 메일 저장하기 시, 한글파일명 깨지는 문제가 있어
 			    // :를 %3A로 변경한 후 URI 인코딩을 수행함. 
 				filename = filename.replaceAll(":", "%3A");
+				// 2025-05-11 김은실 : 제목에 ;가 포함될 경우 아래 "; filename" 에서 제목을 ;까지만 인식하는 경우가 발생한다.
+				// ex. attachment; filename="test;.eml"; filename*=UTF-8''"test;.eml"; => filename=tes
+				filename = filename.replaceAll(";", "%3B");
+				// 2025-05-19 김은실 : 제목에 '가 포함될 경우 front(js)를 거쳐가면서 name이 '를 기준으로 짤리는 현상이 발생하는 듯 하다.
+				// ex. attachment; filename="te'st.eml"; filename*=UTF-8''"te'st.eml"; => filename=te
+				filename = filename.replaceAll("'", "%27");
+
 				URI uri = new URI(null, null, filename, null);
 				filename = uri.toASCIIString();
 				// %3A에서 %가 %25로 인코딩되므로 다시 %3A로 변경함.
 				filename = filename.replaceAll("%253A", "%3A");
-				
+				filename = filename.replaceAll("%253B", "%3B");
+				filename = filename.replaceAll("%2527", "%27");
+
                 if (userAgentValue.contains("Chrome")) {
                     filename = filename + "\"" + "; filename*=UTF-8''\"" + filename;
                 }				
