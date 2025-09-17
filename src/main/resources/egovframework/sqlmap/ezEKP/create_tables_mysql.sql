@@ -755,7 +755,7 @@ CREATE TABLE `jmocha_mail_general` (
   `DEFAULT_SEPARATE_SEND` VARCHAR(10) DEFAULT NULL,
   `DEFAULT_CURSOR_POSITION` VARCHAR(50) DEFAULT NULL,
   `MAIL_SEARCH_PERIOD` varchar(10) DEFAULT NULL,
-  `SELF_CC_OPTION` varchar(10) DEFAULT 'none',  
+  `SELF_CC_OPTION` varchar(10) DEFAULT 'none',
   PRIMARY KEY (`USER_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -13162,6 +13162,7 @@ CREATE TABLE `tbl_usermaster` (
   `PASSWORD2` varchar(100) DEFAULT NULL,
   `PHOTO_UPDATEDT` datetime DEFAULT NULL,
   `USERTREEFLAG` char(1) DEFAULT 'Y',
+  `TeamsId` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`CN`,`TENANT_ID`),
   KEY `IDX_EMP_NO` (`EXTENSIONATTRIBUTE14`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -16422,3 +16423,19 @@ CREATE TABLE `TBL_C_GRADE` (
    `TENANT_ID` mediumint(9) NOT NULL DEFAULT 0,
    PRIMARY KEY (`C_CLUBNO`, `GRADECODE`, `COMPANYID`,`TENANT_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT "커뮤니티별 회원등급 테이블";
+
+DROP TABLE IF EXISTS `TBL_AUTHTOKEN`;
+CREATE TABLE `TBL_AUTHTOKEN` (
+                                 `APITYPE` varchar(20) DEFAULT NULL,
+                                 `TOKENTYPE` varchar(20) NOT NULL DEFAULT 'publicapp',
+                                 `AUTHTOKEN` varchar(4000) DEFAULT NULL,
+                                 `UPDATEDATE` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT="Graph API 인증토큰 저장 테이블";
+
+DROP TABLE IF EXISTS `TBL_USERPRESENCE`;
+CREATE TABLE `TBL_USERPRESENCE` (
+                                    `ID` varchar(50) NOT NULL,
+                                    `PRESENCE` varchar(50) NOT NULL,
+                                    `UPDATETIME` varchar(50) NOT NULL,
+                                    PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT="Graph API Presence 정보 저장 테이블";
