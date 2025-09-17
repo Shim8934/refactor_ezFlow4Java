@@ -4555,6 +4555,13 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 						fromStr = commonUtil.trimDoubleQuotes(fromStr);
 								
 						fromEmail = ((InternetAddress)arrFroms[0]).getAddress();
+
+						// 2025-09-17 김은실: 메일읽기 시 From주소 등 웹과 모바일이 처리가 통일되지않아 누락 가능성이 높다. 나중에 한번 응집처리가 필요해보임. (웹) /ezEmail/mailRead.do (모바일) this
+						if (fromStr.equals(fromEmail)) {
+							List<String> mailAddrList = ezEmailUtil.mailAddrNameParse(fromStr, fromEmail);
+							fromStr = mailAddrList.get(0);
+							fromEmail = mailAddrList.get(1);
+						}
 					} else {
 						String[] fromHeaders = message.getHeader("From");
 						
@@ -6254,7 +6261,12 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 			Locale locale = new Locale(ld);
 
 			if (senderAddress != null) {
-				String displayName = address + " " + egovMessageSource.getMessage("ezEmail.t270", locale);
+				String ezEmailMsg = egovMessageSource.getMessage("ezEmail.t270", locale);
+				String displayName = address + " " + ezEmailMsg;
+
+				// 2025-09-17 김은실: 규칙이름이 100자가 넘어갈 경우 메일주소만 넣기. "RULE_NAME" NVARCHAR2(100) //ORA-12899: value too large for column "JMOCHA_INBOX_RULE"."RULE_NAME" (actual: 114, maximum: 100)
+				displayName = (100 < displayName.length())? senderAddress + " " + ezEmailMsg : displayName;
+
 				sb.append("&displayName=" + URLEncoder.encode(displayName, "UTF-8"));
 				sb.append("&rejectId=" + URLEncoder.encode(senderAddress, "UTF-8"));
 			}
