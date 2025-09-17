@@ -6545,6 +6545,11 @@
 				ntenddate = #notiEnd#,
 				PUBLICFLAG = #publicFlag#,
 				updaterid = #updaterID#
+        <isEqual property="guBun" compareValue="2" prepend=",">
+            writerId = #writerID#,
+            writerName = #writerName#,
+            writerName2 = #writerName2#
+        </isEqual>
 		<isNotEqual property="writerNameType" compareValue="" prepend=",">
 				writerId = #writerID#,
 				writerName = #writerName#,

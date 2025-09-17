@@ -4548,4 +4548,15 @@
 		WHERE UPNNAME = #v_UPNNAME#
 	</update>
 
+	<select id="EzOrganDAO.getCnByUpn"	parameterClass="Map" resultClass="String">
+        SELECT
+            CN
+        FROM
+            TBL_USERMASTER
+        WHERE
+            UPNNAME = #upnname#
+          AND
+            TENANT_ID = #tenantID#
+	</select>
+
 </sqlMap>

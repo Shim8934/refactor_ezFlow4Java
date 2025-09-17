@@ -1188,6 +1188,7 @@ function printPopUpHidden() {
 }
 
 window.addEventListener("load", function () {
+    try { void window.parent.document; } catch (e) { return; }
     if (parent.document.querySelector("#left.fold") != null) {
         var rightFrameDoc = window.parent.document.getElementById("right").contentDocument;
 

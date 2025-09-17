@@ -3626,4 +3626,37 @@ public class EzOrganServiceImpl extends EgovAbstractServiceImpl implements EzOrg
 		return resultList;
 	}
 
+	@Override
+	public String getCnByUpn (String upnname, int tenantID) throws Exception {
+		String result = ezOrganDAO.getCnByUpn(upnname, tenantID);
+
+		return result;
+	}
+
+    @Override
+    public String GetUpnFromAuthToken(String authToken, int tenantId) throws Exception {
+        try {
+            // 1) 테넌트 설정 로드
+            String clientId    = ezCommonService.getTenantConfig("teamsClientId", tenantId);
+            String tenantGuid  = ezCommonService.getTenantConfig("teamsTenantId", tenantId); // AAD(Entra) 테넌트 GUID
+            String issuer      = "https://login.microsoftonline.com/" + tenantGuid + "/v2.0";
+            String jwksUrl     = "https://login.microsoftonline.com/" + tenantGuid + "/discovery/v2.0/keys";
+
+            // 2) 토큰 파싱
+            com.nimbusds.jwt.SignedJWT jwt = com.nimbusds.jwt.SignedJWT.parse(authToken);
+            com.nimbusds.jwt.JWTClaimsSet claims = jwt.getJWTClaimsSet(); // 클레임에서 UPN만 추출 (.NET TokenHelper와 동일)
+            String upn = claims.getStringClaim("upn");
+
+            if (upn == null || upn.trim().isEmpty()) {
+                throw new Exception("No upn claim");
+            }
+
+            return upn;
+        } catch (Exception e) {
+            throw new Exception("Token validation failed: " + e.getMessage(), e);
+        }
+    }
+
+
+
 }

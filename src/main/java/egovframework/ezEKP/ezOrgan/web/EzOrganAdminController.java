@@ -162,259 +162,259 @@ public class EzOrganAdminController extends EzFileMngUtil {
     @PostConstruct
 	public void init() throws Exception {
     	logger.debug("init started.");
-    	try {
-			// create table
-    		ezCommonService.createTables(); // 2024-07-01 김수아 - 테이블 생성 공통함수 추가
-			ezCommonService.createTblFidoSession(); //2023-11-23 이사라 - Fido 2차인증 테이블 생성, tbl_tenant_config에 해당 옵션 추가
-	    	ezCommonService.createMailTemplateSequence();
-    		ezCommonService.createJmochaMailboxProgress();
-	    	ezCommonService.createTblSession(); // 2023-11-07 이사라 - DB 기반 세션 테이블 생성
-	    	ezCommonService.createUserMailTemplate(); // 2020-07-27 김수아 - 메일 템플릿 테이블 생성
-	    	ezCommonService.createMailOutOfOfficeTemplate(); // 2020-07-17 김수아 - 부재중 설정 템플릿 테이블 생성
-	    	ezCommonService.createTblCompanyConfig();
-	    	ezCommonService.createTblIPAccessID();
-	    	ezCommonService.createTblIPAccessIP();
-	    	ezCommonService.createJMochaDistributionSub();
-	    	ezCommonService.createJMochaMailSignatureTemplate();
-	    	ezCommonService.createJobMasterTable();
-	    	ezCommonService.createWebfolderToken();
-	    	ezCommonService.createPortalThemePortlet();
-	    	ezCommonService.createTblUserMultiLogin();
-	    	ezCommonService.createJmochaMailCopyright();
-	    	ezCommonService.createJamesMailDeletedId();
-    		ezCommonService.createRsFavoriteTable(); // 2019-03-28 이석화 - 모바일 오라클 자원관리 즐겨찾기 테이블 생성
-	    	ezCommonService.createAttitudeAnnual(); //2019-06-11 주홍선 근태관리 연차관리 기능 테이블 추가
-	    	ezCommonService.createThemeAndPortletAuth();
-	    	ezCommonService.createTblYearlyDocCount(); // 2021-02-22 박기범 - 차트 통계 테이브 없을시 자동 생성
-	    	ezCommonService.createAccessCountry(); //2019-0705 김수아 - 접속 허용 국가 테이블
-	    	ezCommonService.createOpenGovTable(); // 2019-07-18 원문공개 테이블 추가
-    		ezCommonService.createUserDistributionTable(); // 20200226 사용자 정의 공용배포그룹 테이블 생성
-	    	ezCommonService.createResourcePortlet(); // 2019-06-28 황윤호 -자원관리 포틀릿 테이블 추가
-	    	ezCommonService.createJmochaBigAttachDownloadLimit(); // 2020-03-12 홍대표 - 메일 대용량 첨부 제한 테이블 추가.
-	    	ezCommonService.createPwPolicyTable(); // 2020-04-06 김수아 - tbl_password_policy table
-	    	ezCommonService.createPwPolicyPatternTable(); // 2020-04-06 김수아 - tbl_password_policy_Pattern table
-	    	ezCommonService.createBoardLike();
-	    	ezCommonService.createPersonalPopupUser();
-	    	ezCommonService.createAprAttachLimit(); // 2020-05-15 홍승비 - 전자결재 일반 첨부파일 개수제한 테이블 추가 (회사별 데이터)
-	    	ezCommonService.createAdminAccessIpTable(); // 2020-04-28 김수아 - 관리자 IP 제한 테이블
-			ezCommonService.createTblPermissionChangeInfo(); // 2022-01-18 이사라 - 권한 변경 히스토리 테이블 추가
-	    	ezCommonService.createTblShareDocDir(); //2019-10-14 박성빈 - 문서함공유 테이블 추가
-	    	ezCommonService.createTblNoticeBoard(); //2020-06-17 홍승비 - 회사별 공지사항 게시판 기능을 위한 NOTICEBOARD 테이블 추가
-	    	ezCommonService.createTblTabBoard(); //2020-12-04 탭게시판 등록 용 테이블 추가
-	    	ezCommonService.insertApprBigAttachInfo(); //2021-02-10 홍승비 - 전자결재 대용량첨부 컨피그, 칼럼, 테이블 추가
-	    	ezCommonService.createSerialnumgenGrant();			// 2021-06-08 김민성 - 전자결재 상위부서 채번 기능 테이블 추가
-	    	ezCommonService.createTblCar(); // 2021-07-12 차량관리 테이블 추가
-	    	ezCommonService.createTblCarAcl(); // 2021-07-12 차량관리 테이블 추가
-	    	ezCommonService.createTblCarAttach(); // 2021-07-12 차량관리 테이블 추가
-	    	ezCommonService.createTblCarForm(); // 2021-07-12 차량관리 테이블 추가
-    		ezCommonService.createTblScheduleComplete(); // 2021-11-23 홍승비 - 일정 완료여부 레코드 저장 테이블 추가
-    		ezCommonService.createTblAdminAccessInfo();	// 2022-01-06 이사라 - 관리자 메뉴 접속 히스토리 테이블 추가
-    		ezCommonService.createTblDisableNotiItem(); // 2022-03-11 - 알림환경설정 테이블 추가
-			ezCommonService.createTblUserChangeInfo(); // 2023-09-05 장혜연 - 사용자 변경 히스토리 테이블 추가
-	    	ezCommonService.createWebfolderFileUserTable(); 			
-	    	ezCommonService.createTblWebfolderApplyHistroy();			
-			ezCommonService.checkWebfolderEncryptTable(); 				
-			ezCommonService.checkWebfolderVersionTable(); 				
-	    	ezCommonService.createWebfolderNoInherit(); 				// 권한비상속			
-	    	ezCommonService.createTblAprpreview(); //2020-11-18 정소미 - 전자결재 미리보기 설정 테이블 추가
-	    	ezCommonService.createTblSerialNoRollback(); // 2022-09-21 홍승비 - 전자결재G > 문서 기록물 레코드 중복삽입 시 에러 롤백방지 기록 테이블 추가
-			ezCommonService.addBoardDisLikeFlag(); // 2023-06-14 기민혁 - 게시판 > 싫어요 기능 컬럼 추가  
-			ezCommonService.createTblBoardDisLike(); // 2023-06-14 기민혁 - 게시판 > 싫어요 기능 테이블 생성
-			ezCommonService.insertScrapTenantConfig(); // 2023-06-14 기민혁 - 게시판 > 마이게시판 하위 나의스크랩 사용 Flag
-			ezCommonService.insertScrapTableHeader(); // 2024-06-17 기민혁 - 게시판 > 마이게시판 하위 나의스크랩 테이블 해더 추가
-			ezCommonService.createTblBoardScrap(); // 2023-06-15 기민혁 - 게시판 > 마이게시판 스크랩 테이블 생성
-			ezCommonService.createTblUserScrapCont(); // 2023-06-15 기민혁 - 게시판 > 나의 스크랩함 cont테이블 생성
-			ezCommonService.createTblUserScrapContList(); // 2023-06-15 기민혁 - 게시판 > 나의 스크랩함 list테이블 생성
-	    	ezCommonService.createTblBoardReplyReact();	// 2023-07-27 이가은&임정은 - 댓글 좋아요/싫어요 관련 테이블 및 칼럼 추가
-			ezCommonService.createTblDbLog(); // 2023-12-11 박기범 - DB 로그 테이블 추가
-			ezCommonService.createTblDistributeinfo(); // 2024-08-07 김유진 - 배부이력정보 테이블 추가
-			ezCommonService.createExecutiveTable(); // 2024-08-06 이유정 - 임원일정 테이블 추가
-            ezCommonService.createJmochaMailBlocked(); // 2024-11-14 김승연 - 메일 열람 차단 테이블 추가
-			ezCommonService.addTblCommunityClubguestOnelinereply(); // 2024-10-28 황인경 - 커뮤니티 방명록 댓글 테이블 추가
-			ezCommonService.createJmochaCompanyQuota(); // 2024-12-12 김혜림 - 회사별 메일박스 용량 테이블 추가
-            ezCommonService.createTblAprAutoSaveConfig(); // 2024-07-10 기민혁 - 전자결재G > 자동 임시저장 컨피그 추가
-			ezCommonService.createTblScheduleGather(); // 2023-09-27 임정은 - 일정관리 > 일정 모아보기 그룹 테이블 추가
-			ezCommonService.createTblBoardStarRating(); // 2024-10-02 이혜림 - 게시물 별점 평가하기 관련 테이블 및 컬럼 추가
-			ezCommonService.createMealPlanTable(); // 2025-01-14 조수빈 - 식단 테이블  추가
-			ezCommonService.createTblStatMenu(); // 2025-03-19 박기범 - 메뉴 통계 테이블 추가
-			ezCommonService.createUserScheduleTypeConfigTable(); // 2025-04-21 조수빈 - 기본 일정(개인, 부서, 회사)별 사용자 설정 값 저장 테이블 추가
-			ezCommonService.createTblCommunityGradeTable(); // 2025-07-10 이유정 - 커뮤니티 > 회원등급 테이블 추가
-
-			// alter table
-	    	ezCommonService.alterTableAddColumns(); // 2022-01-19 김은실 - alter 재사용 모듈 추가
-	    	ezCommonService.addWebfolderTotalLimit();
-	    	ezCommonService.addMemoExtensionColumns(); // 2019-05-14 이석화 - 큰 메모 기능 추가로 컬럼 추가
-	    	ezCommonService.addMenuAndPortletCode(); //2019-07-15 유은정 - 메뉴, 포틀릿 호출 로직 개선 위한 컬럼 추가
-	    	ezCommonService.addAddressFurigana(); // 2019-12-04 주소록 후리가나 추가 
-	    	ezCommonService.insertMobileAttitudeColumn();			// 2020-06-10 김민성 - 모바일 근태관리 기능 추가
-	    	ezCommonService.addScehdulegroup(); //2021-02-17 그룹일정의 tbl_schedulegroup 컬럼 추가
-	    	ezCommonService.addScheduleMailNotiConfig();		// 2021-02-23 김민성 - 일정메일알림 컨피그 추가
-			ezCommonService.addTblUserMultiLoginMobileFlagColumn(); // 2021-03-19 중복로그인 모바일 플래그 컬럼 추가
-    		ezCommonService.alterTblConnectionInfo();	// 2021-12-22 이사라 : 로그아웃시간, 상태 컬럼 추가
-	    	ezCommonService.addWebfolderLogHistory(); 					// 2020-01-20 웹폴더 파일 이력관리 컬럼추가 
-    		ezCommonService.alterTblDevMaster();						//20220315 조진호 - mobile Pin 사용 관련 여부 컬럼 추가 (원래는 Talk에서 관리하는 테이블이나 Talk이 없는 경우 ezEKP DB의 테이블을 사용하기 떄문에 추가)
-	    	ezCommonService.addAttitudeFormFormHtml2Column(); // 2023-08-21 조소정 - 근태관리 > 작성 양식 테이블에 영어 버전 양식 컬럼 추가
-			ezCommonService.addTblBoardItemNoti(); /* 2023-09-25 민지수 - 게시판 > 공지게시물 > 기간설정 컬럼 추가 */
-			ezCommonService.addTblBoardItemTempNoti(); /* 2023-09-25 민지수 - 게시판 > 임시저장 > 공지게시물 > 기간설정 컬럼 추가 */
-			ezCommonService.alterRepeatFlagForResourceInfo(); // 2024-05-28 이유정 - 자원관리 > 자원반복예약 허용 설정을 위한 RepeatFlag 컬럼 추가
-			ezCommonService.alterSubPermittedForMenuAuth();		/* 2024-05-28 김유진 - 포탈 > 메뉴관리 하위부서 허용여부 컬럼 추가 */
-			ezCommonService.alterSubPermittedForPortletAuth();	/* 2024-05-28 김유진 - 포탈 > 포틀릿관리 하위부서 허용여부 컬럼 추가 */
-			ezCommonService.alterSubPermittedForThemeAuth();	/* 2024-05-28 김유진 - 포탈 > 테마관리 하위부서 허용여부 컬럼 추가 */
-			ezCommonService.alterSubPermittedForQuicklinkAcl(); /* 2024-05-28 김유진 - 포탈 > 빠른링크관리 하위부서 허용여부, 유저타입 컬럼 추가 */
-			ezCommonService.alterDocAttachNameCol(); // 2024-06-24 민지수 > 전자결재 > 비전자 기록물 > 본문첨부 파일명 컬럼 추가
-			ezCommonService.alterUserThemePagination();
-			ezCommonService.alterTblScheduleForShowtop(); /* 2024-06-17 이주원 - 일정관리 > 상단표시 컬럼 추가 */
-			ezCommonService.addColumnsRetireTblCompareWithUserTbl(); // 2024-07-09 장혜연 - tbl_usermaster에만 존재하는 컬럼을 조회해 tbl_usermaster_retire에 추가
-			ezCommonService.addUserDeptHideFlag(); //2024-07-25 김대현 - 사용자 숨김, 부서 숨김 Flag 컬럼 추가
-			ezCommonService.insertInitMobileTheme(); // 2024-07-12 황인경 > 모바일 포탈 > 포틀릿, 테마, 권한 추가
-			ezCommonService.alterMenuOpenType();	// 2024-07-23 조수빈 - 관리자 > 메뉴 관리 > url 외부 / 내부 모듈 및 새 탭 열기, 새 창 열기 구분
-			ezCommonService.alterSaveFlagForCbShare(); // 2024-06-28 이유정 - 캐비넷 > 캐비넷공유 > 공유자 저장여부 컬럼 추가
-			ezCommonService.addTblFormContainerSN(); /* 2024-07-17 기민혁 - 전자결재 > 양식함 순서 컬럼 추가 */
-			ezCommonService.alterAddThumbnailForTPI(); /* 2024-10-28 김우철 - 게시판 > 동영상게시판 > 썸네일 추가 여부 컬럼 추가 */
-			ezCommonService.alterThumbnailExtForTPI(); /* 2024-10-28 김우철 - 게시판 > 동영상게시판 > 썸네일 확장자 컬럼 추가 */
-			ezCommonService.alterAttachmentsForCBoard(); /* 2024-10-18 김우철 - 커뮤니티 > 공지사항 >  첨부 여부 컬럼 추가 */
-			ezCommonService.alterUseUpperDeptBox(); /* 2024-07-05 양지혜 - 전자결재 > 상위부서문서함 사용여부 컬럼 추가 */
-			ezCommonService.addBoardWriterFlagAndWriterNameType(); // 2025-01-16 임정은 - 게시판 게시물 게시자명선택 사용여부 플래그 및 게시자명선택 타입 컬럼 추가
-			ezCommonService.alterTalkNotiTenant(); /* 2025-03-10 유지아 - 톡알림 테이블 tenantId추가 */
-			ezCommonService.alterServerNameMain(); /* 2025-05-22 유지아 - servername 테이블 mainyn 추가 */
-			ezCommonService.createJournalListLang(); // 2025-05-28 황인경 - 업무일지 양식 다국어 관련 컬럼 추가
-			ezCommonService.insertJournalListLang(); // 2025-05-28 황인경 - 업무일지 양식 다국어 관련 데이터 추가
-			ezCommonService.alterScheduleDefaultViewCheck(); // 2025-03-21 권기혁 - 일정관리환경설정 기본 화면 사용 여부 컬럼 추가
-            ezCommonService.alterTblClubUserGradeColumn();	// 2025-07-10 이유정 - 커뮤니티 > 회원등급 컬럼 추가
-            ezCommonService.alterTblClubJoinGradeColumn();	// 2025-07-10 이유정 - 커뮤니티 > 최초가입 등급, 회원목록조회 등급 컬럼 추가
-
-			// tenant config
-	    	ezCommonService.insertTblTenantConfig(); // 2020-01-28 useMailConfirm 컨피그 추가 >> 2020-04-28 tbl_tenant_config add
-	    	ezCommonService.insertSurveyTenantConfig(); // 2019-06-25 이석화 전자설문 리뉴얼 테넌트 컨피그 추가
-	    	ezCommonService.insertMailBigSizeAttachLimit(); // 2020-03-12 홍대표 - 메일 대용량 첨부 제한 컨피그 추가.
-	    	ezCommonService.insertAnnualScheduleTenantConfig(); // 2020-02-24 김정언 - useAnnualScheduleYN 컨피그 추가
-	    	ezCommonService.insertHolidayCheckTenantConfig(); // 2020-05-21 김정언 - useHolidayCheckYN 컨피그 추가
-	    	ezCommonService.createMenuTenantConfig();		// 2020-08-06 김민성 - 메뉴 숨김처리 관련 config 추가
-	    	ezCommonService.insertAutoSendOfferFlag(); //2020-11-23 김보혜 전자결재G 문서발송시 발송옵션 추가
-	    	ezCommonService.insertApprSatViewerConfig(); // 2021-06-15 심기영 - 전자결재 첨부파일 SAT 뷰어 사용 컨피그 추가
-	    	ezCommonService.insertHWPSecurityConfig(); // 2023-05-31 김우철 - 한글 배포용 문서 저장 관련 테넌트 컨피그 2건 추가
-	    	ezCommonService.insertPrvwConfig(); // 2023-10-27 조수빈 - 전자결재 / 게시판 모듈 미리보기 테넌트 컨피그 2건 추가
-	    	ezCommonService.insertApprSignRemapApplyTime(); // 2023-12-05 홍승비 - 전자결재 > 전자결재 서명 데이터 재맵핑 시점 컨피그 추가
-			ezCommonService.insertPermissionBasisDeptYN_Config(); // 2023-08-16 전인하 - PermissionBasisDeptYN 테넌트 컨피그 추가
-			ezCommonService.insertTenantConfigLangTertiary(); // 2023-11-27 조소정 - 게시판그룹 일본어 버전 생성 위해 LangTertiary 테넌트 컨피그 추가
-			ezCommonService.insertTenantConfigLangQuaternary(); // 2023-11-27 조소정 - 게시판그룹 중국어 버전 생성 위해 LangQuaternary 테넌트 컨피그 추가
-			ezCommonService.insertLoadTimeForApprAllConfig(); // 2024-01-11 김우철 - 다안기안 문서 표출 시 글꼴, 스크롤 오류를 해결하기 위한 setTimeout 시간
-			ezCommonService.insertUseHideHeaderArea(); // 2024-05-23 김우철 - 헤더 숨기기 기능 사용여부 테넌트 컨피그 추가
-			ezCommonService.insertUseReceiptDeptFileAttach(); // 2024-06-04 김우철 - 부서수신함에서 첨부, 문서첨부 기능 사용여부 테넌트 컨피그 추가
-			ezCommonService.insertNonUseDocAttachYN(); // 2024-07-02 민지수 - 전자결재 > 비전자문서등록 > 본문첨부 기능 사용여부 테넌트 컨피그 추가
-			ezCommonService.insertModuleEditor(); // 2024-09-23 김우철 - 전자결재, 메일을 제외한 에디터 테넌트 컨피그 추가
-			ezCommonService.insertServername(); // 2024-12-02 김승연 - servername에 127.0.0.1 값 추가
-			ezCommonService.insertResendFormYN(); // 2024-12-04 기민혁 - 전자결재 > 최근서식 사용여부 테넌트 컨피그 추가
-			ezCommonService.insertEditVertionYN(); // 2024-12-05 기민혁 - 전자결재 > 본문수정 시 본문버전 변경 기능 사용여부 테넌트 컨피그 추가
-			ezCommonService.insertPersonalHideSusinYN(); // 2024-11-26 기민혁 - 전자결재 > 개인수신함 사용여부 테넌트 컨피그 추가
-			ezCommonService.insertMealPlanTenantConfig(); // 2025-02-05 조수빈 - 식단 사용 여부 컨피그 추가
-			ezCommonService.insertUseSaasYN(); // 2025-05-21 유지아 - 모바일 푸시 알림 테넌트 따라 구분 컨피그 추가
-			ezCommonService.inserExtLargeFilesever(); // 2025-05-22 유지아 - 대용량 첨부파일 외부메일 서버 동시 업로드
-			ezCommonService.insertUseSendOutState(); // 2024-07-22 양지혜 - 관리자 > 전자결재 > 발송현황 메뉴 표출여부 컨피그 추가
-	    	ezCommonService.insertPortalThemePortletInitdata();
-	    	ezCommonService.updateTaskUrl();
-	    	ezCommonService.updateListOptionData(); //2019-03-06 천성준 - 전자결재 회람수신함 관련 리스트헤더 데이터 임시 업데이트문
-			ezCommonService.insertChartPortletInfo(); //2021-02-22 박기범 - 차트 포틀릿 없을시 자동 생성
-	    	ezCommonService.addThemeAndPorteltAuthInit(); //2020-02-20 테마별, 포틀릿별 권한 추가
-	    	ezCommonService.alterChamjoView(); // 2019-11-21 참조 View 수정
-	    	ezCommonService.insertPortletInfo(); // 2019-07-02 자원, 웹폴더, 전자설문 포틀릿 데이터 확인 후 없으면 추가
-	    	ezCommonService.setCompanyConfigs(); // 2020-03-30 김수아 - companyConfig 추가
-	    	ezCommonService.insertUseExternalMailServerConfig();		// 2020-04-16 김민성 - 메일 기능 사용 관련 컨피그 추가(외부/내부)
-	    	ezCommonService.insertReBebuOpinionCode();		// 2020-05-14 홍대표 - 재배부요청 의견 코드 추가
-	    	ezCommonService.insertHalfOffAttitudeType(); // 2020-03-16  김정언 - 근태관리 휴가유형 반반차 추가
-	    	ezCommonService.insertAlternateHolidayAttitudeType(); // 2020-03-16  김정언 - 근태관리 휴가유형 대체휴무 추가
-	    	ezCommonService.insertBeforeOutComeAttitudeType(); // 2020-06-03  김정언 - 근태관리 휴가유형 전일퇴근 추가
-	    	ezCommonService.insertTabBoardPortlet(); //2020-12-03 박기범 - 탭게시판포틀릿 추가
-	    	ezCommonService.insertApprContainterConfig();		// 2021-05-21 김민성 - 전자결재 양식별문서함, 분류코드문서함 컨피그 추가
-    		ezCommonService.addViewTaskOldFlag(); // 2021-08-31 홍승비 - 전자결재 분류코드체계 뷰에 삭제여부(OLDFLAG) 칼럼 추가 (VTASKCLASS, SVTASKCLASS)
-    		ezCommonService.insertReceiptHistoryListoption();	// 2022-02-16 정주환 - 수신이력 확인 listoption 추가
-			ezCommonService.insertOpinionGB(); // 2023-06-26 민지수 - 전자결재 > 완료문서 의견타입 추가의견 추가
-//			ezCommonService.updateWebFolderAndApprovalCheckPermissionCode(); // 2023-10-05 전인하 - 권한 코드 변경으로 인하여 기존 데이터를 새 코드로 변경
-			ezCommonService.insertPortalMenuChinese(); // 2023-11-22 조소정 - 포탈 > 기본 탑메뉴 중국어 버전 추가
-			ezCommonService.insertPortletNameChinese(); // 2023-11-22 조소정 - 포탈 > 기본 포틀릿명 중국어 버전 추가
-			ezCommonService.insertLoadTimeForApprAllConfig(); // 2024-01-11 김우철 - 다안기안 문서 표출 시 글꼴, 스크롤 오류를 해결하기 위한 setTimeout 시간
-			ezCommonService.createTblDeptChangeInfo(); // 2024-02-20 장혜연 - tbl_dept_change_info 테이블 추가
-			ezCommonService.insertSurveyPostingMaxPeriodConfig(); // 2024-03-26 - 전자설문 종료 후 게시기간 설정 추가
-			ezCommonService.alterFileNameForWebfolderHistory(); // 2023-10-18 남진구 - 웹폴더 > 버전관리 > 파일 복원시 파일명 복원을 위한 FILE_NAME 칼럼 추가
-			ezCommonService.createTblTotalHistory(); // 2023-06-04 - 통합 PC 다중 파일 저장시 다운로드 로그 남기는 테이블
-			ezCommonService.insertdelAttachByOthersConfing(); // 2024-05-23 민지수 - 전자결재 > 첨부 > 첨부 등록자 이외의 사용자가 첨부 삭제가능여부
-			ezCommonService.insertApprNonElecRecTypeConfing(); // 2024-05-29 김유진 - 전자결재G 비전자문서등록 양식 확장자 정보
-			ezCommonService.insertEndDateOptionConfig(); // 2024-05-29 전인하 - 게시판 > 게시물 리스트 > 만료된 게시물 리스트 표출 가능여부
-            ezCommonService.insertRecordHeaderClassTitle(); // 2024-06-11 민지수 - 전자결재 > 기록물대장 > 기록물철명 헤더 추가
-    		ezCommonService.insertDocBinderListOption(); // 2024-06-12 전인하 - 전자결재G > 기록물철인계 > 기록물철리스트 리스트헤더 컬럼 추가
-			ezCommonService.insertReturnByDesignationUsedConfig(); // 2024-06-24 양지혜 - 전자결재 > 지정반송 사용여부 컨피그 추가
-			ezCommonService.insertReadingRecordHeader(); // 2024-06-21 김우철 - 전자결재G > 열람문서함 헤더 추가
-            ezCommonService.insertPortalPortletSizeTables(); // 2023-11-20 박기범 - 포탈 포틀릿 사이즈 관련 테이블 추가
-            ezCommonService.insertTblPortalTopUser(); // 2024-04-11  TBL_PORTAL_TOP_USER 추가(포탈 top 프레임 타입 설정. 현재는 위, 왼쪽)
-            ezCommonService.insertTblPortalTopCompany(); // 2024-05-17 한태훈 - TBL_PORTAL_TOP_COMPANY 추가(포탈 top 프레임 타입 설정. 현재는 위, 왼쪽)
-            ezCommonService.alterUseColor();	// 2024-08-20 조수빈 - 포탈 설정 > 모드 설정 컬럼 추가
-            ezCommonService.createTblRealTimeNotification(); // 2024-03-28 한태훈 - 통합알림 테이블 추가
-            ezCommonService.addNotiStoragePeriodConfig(); // 2024-03-28 한태훈 - 통합알림 보관기간 tenantConfig 추가
-            ezCommonService.addNotiPollingIntervalConfig(); // 2024-03-28 한태훈 - 통합알림 데이터 새로고침 간격 tenantConfig 추가
-            ezCommonService.insertPortalTopCompanyInitdata(); // 2024-05-17 한태훈 - 포탈 탑 메뉴 위치 설정 회사 기본 데이터 세팅
-            ezCommonService.insertFixPortlet(); // 2024-05-17 박기범 - 고정포틀릿 추가
-            ezCommonService.addQuickLinkCompanyID(); // 2023-12-15 박차웅 - 퀵링크 tbl_ps_quicklink 테이블 COMPANYID 필드 추가
-            ezCommonService.alterThemeInformation(); // 2024-06-20 한태훈 - 테마 설명 내용 수정.
-            ezCommonService.alterCompanyMenuIconUrl(); // 2024-07-08 황인경 - 회사별 메뉴 아이콘 추가
-            ezCommonService.insertGongRamListOption(); // 2024-06-17 임정은 - 공람 listoption 추가
-			ezCommonService.addReminderTimeAtTblScheduleConfig(); //2023-09-04 한태훈 - 일정관리 > 설정 > 미리알림 시간 컬럼 추가
-	    	ezCommonService.createTblScheduleReminderScheduler(); // 2023-09-04 한태훈 - 일정관리 > 미리알림 스케줄러 테이블 추가
-	    	ezCommonService.insertReminderTenantConfig(); // 2023-09-11 한태훈 - 일정관리 > 미리알림 방식(닷넷 통합 알림, 자바 메일) 선택 테넌트 컨피그, 미리알림 시 하루종일 일정의 시작 시각 설정 테넌트 컨피그 추가
-			ezCommonService.alterBoardExtentionAttrByteSize(); // 2024-07-31 전인하 - 게시판 > 확장컬럼 > 저장할 수 있는 데이터 크기 변경 (mysql, oracle 일괄 500자)
-			ezCommonService.insertDotNetTotalNotificationConfig(); // 2024-08-21 유길상 닷넷 통합알림 컨피그
-//			ezCommonService.updateInProcessJpCodeName3(); // 2024-08-22 유길상 - CODELIST > a04(진행) 일본어 변경 
-			ezCommonService.createServeyResultviewPermTbl(); // 2024-07-11 전인하 - 설문 > 지정공개 대상자 리스트 테이블 추가
-            ezCommonService.createSystemConfig(); // 2024-07-22 한태훈 - tbl_systemconfig, tbl_systemconfig_type
-            ezCommonService.addIsDeleteBlockToSytemConfig();
-            ezCommonService.createConnectionMenu(); // 2024-07-22 한태훈 - 연계메뉴 및 연계 포틀릿 기본 시스템 컨피그 추가
-            ezCommonService.insertStandardSystemConfigData(); // 2024-07-22 한태훈 - 시스템 컨피그 기본 데이터 추가
-            ezCommonService.createEmergencyNotiTable();
-            ezCommonService.insertMobileToggleMenus(); // 2024-08-08 조수빈 - 모바일 우측 panel의 기본 toggle menu 데이터 추가
-            ezCommonService.updateThemeData(); // 2024-09-02 조수빈 - 테마 변경에 따른 테마 데이터 update
-			ezCommonService.createRsScheduleDeptIdColumn(); // 2024-09-03 박기범  - TBL_RS_SCHEDULE deptid 컬럼 추가
-	    	ezCommonService.alterTblBoardOneLineChildReply(); // 2023-03-31 이가은 - 게시판 > 게시물 댓글 정보 테이블에 답글 작성/수정기능 컬럼 추가
-			ezCommonService.insertBoardReplyCommentEmoticon(); // 2023-11-07 전인하 - 게시판 > 댓글로 이모티콘 삽입 가능 관련 테이블 컬럼 추가
-			ezCommonService.createBoardKeywordTable(); // 2024-08-23 전인하 - 게시판 > 키워드 기능 개발
-			ezCommonService.createResourceFavoriteTables(); // 2024-08-07 유길상 - 자원관리 즐겨찾기 테이블 추가
-			ezCommonService.addBoardAttachmentFlag(); // 2024-10-23 정지은 - 게시판 > 글 작성 시 파일첨부 가능여부 설정
-	        ezCommonService.addTblBoardInfoPublicFlag(); // 2024-10-21 박기범 - 게시판 공게여부 컬럼추가
-			ezCommonService.insertAllBoardListOption(); // 2024-10-21 한태훈 - 게시판 > 전체게시물 리스트헤더 추가
-	    	ezCommonService.insertAllBoardInfo(); // 2024-10-17 한태훈 - 게시판 > 전체게시물 게시판정보 추가
-			ezCommonService.addSurveyTotalNotiSentFlag(); // 2024-11-15 한태훈 - 전자설문 > 설문 알림 발송 시 알림 발송 유무 확인 플래그 추가
-			ezCommonService.createTblBoardCommentAttachments(); // 2024-10-23 전인하 - 게시판 > 댓글 첨부 테이블 추가
-			ezCommonService.insertBoardItemListOptionAN(); // 2024-09-11 이유정 - 게시판 > 최근게시물 리스트헤더 추가
-			ezCommonService.insertRecentBoardInfo(); // 2024-09-11 이유정 - 게시판 > 최근게시물 게시판정보 추가
-			ezCommonService.addBoardAllNewBoardFlag(); // 2024-10-22 정지은 - 게시판 > 게시물의 최근 게시물 포함 여부 설정(게시판 설정)
-			ezCommonService.addBoardAllNewBoardListDate(); // 2024-10-22 정지은 - 게시판 > 게시물의 최근 게시물 일자 설정
-			ezCommonService.alterEditVersionHistory(); // 2024-12-10 기민혁 - 전자결재 > 수정버전,수정모드 컬럼 추가
-			ezCommonService.insertEditVersionListOption(); // 2024-12-10 기민혁 - 수정버전 리스트 해더 생성
-			ezCommonService.insertPersonalSusinListOption(); // 2024-11-28 기민혁 - 개인 수신함 리스트 해더 추가
-			ezCommonService.alterBodyHTMLToConnData(); // 2025-01-24 이가은 - 전자결재 > 연동테이블 컬럼명 변경
-			ezCommonService.createGongramDeleteHistory(); // 2024-12-27 이가은 - 공람완료문서 삭제 히스토리 테이블 생성
-			ezCommonService.addMemberDeptIdScheduleGroupMember(); // 2024-12-27 한태훈 - 일정관리 > 일정 그룹 테이블에 부서컬럼 추가
-			ezCommonService.addMemberDeptIdScheduleGatherMember(); // 2024-12-27 한태훈 - 일정관리 > 일정 모아보기 그룹 테이블에 부서컬럼 추가
-			ezCommonService.addMailboxProgressStateColumns(); // 2025-05-23 메일 내보내기/가져오기 비동기 컬럼 추가
-			ezCommonService.createTblBoardModifyHistory(); // 2024-12-05 한태훈 - 게시판 > 게시판 버전관리 테이블 추가
-			ezCommonService.addBoardContentSize(); // 2025-06-16 이혜림 - 게시판 > 본문 크기 컬럼 추가
-            ezCommonService.updateMobilePortletMenuId(); // 2024-09-20 황인경 - 모바일 메뉴 권한 별도
-			ezCommonService.alterTblRsBrdResMaxDate(); // 2024-08-27 유길상 - 자원관리 > 자원등록 > 최대 예약 가능 기간 컬럼 추
-			ezCommonService.alterTblRsBrdResMaxUserCnt(); // 2024-08-27 유길상 - 자원관리 > 자원등록 > 정원 컬럼 추가
-			ezCommonService.addBoardNotUsedFlag(); // 2023-10-30 조소정 - 게시판 사용안함 여부 컬럼 추가
-			ezCommonService.insertExecutiveScheduleConfig(); // 2025-07-07 이유정 - 일정관리 > 임원일정 조회 가능 범위 설정 컨피그 추가
-            ezCommonService.settingCommunityGradeData(); // 2025-07-10 이유정 - 커뮤니티 > 기존 데이터 회원등급에 맞춰 세팅
-            ezCommonService.alterTblClubUserAdminAuthColumn(); // 2025-07-15 이유정 - 커뮤니티 > 운영자권한 컬럼 추가
-            ezCommonService.alterTblClubUserWithdrawDateColumn(); // 2025-07-23 이유정 - 커뮤니티 > 회원탈퇴일자 컬럼 추가
-            ezCommonService.addMailPreviewConfig();//2025-07-24 김대현 - 메일 > 메일 미리보기 기능 추가
-			ezCommonService.alterTblUsermasterForTeams(); // 2025-07-29 김혜림 - 팀즈 연동을 위한 TEAMSID 컬럼 추가
-			ezCommonService.createAuthTokenTable(); // 2025-07-31 김혜림 - Graph API 인증토큰 저장 테이블 생성
-			ezCommonService.createUserPresenceTable(); // 2025-08-04 김혜림 - Graph API Presence 정보 저장 테이블 생성
-			ezCommonService.addBoardUsrListShowType(); // 2025-07-10 이혜림 - 게시판 > 게시판 목록 타입 컬럼 추가
-			ezCommonService.addBoardListShowType(); // 2025-07-10 이혜림 - 게시판 > 게시판 목록 타입 컬럼 추가
-            ezCommonService.alterTblBoardInfoUrlCopyFlag(); // 2025-08-05 이유정 - 게시판 > 게시글 주소복사 컬럼 추가
-			ezCommonService.updateGuestAccessibleUris(); // 2025-08-19 양지혜 - 비회원 게시판 허용 URI 데이터 업데이트
-		} catch (Exception e) {
-    		logger.error(e.getMessage(), e);
-    	}
+//    	try {
+//			// create table
+//    		ezCommonService.createTables(); // 2024-07-01 김수아 - 테이블 생성 공통함수 추가
+//			ezCommonService.createTblFidoSession(); //2023-11-23 이사라 - Fido 2차인증 테이블 생성, tbl_tenant_config에 해당 옵션 추가
+//	    	ezCommonService.createMailTemplateSequence();
+//    		ezCommonService.createJmochaMailboxProgress();
+//	    	ezCommonService.createTblSession(); // 2023-11-07 이사라 - DB 기반 세션 테이블 생성
+//	    	ezCommonService.createUserMailTemplate(); // 2020-07-27 김수아 - 메일 템플릿 테이블 생성
+//	    	ezCommonService.createMailOutOfOfficeTemplate(); // 2020-07-17 김수아 - 부재중 설정 템플릿 테이블 생성
+//	    	ezCommonService.createTblCompanyConfig();
+//	    	ezCommonService.createTblIPAccessID();
+//	    	ezCommonService.createTblIPAccessIP();
+//	    	ezCommonService.createJMochaDistributionSub();
+//	    	ezCommonService.createJMochaMailSignatureTemplate();
+//	    	ezCommonService.createJobMasterTable();
+//	    	ezCommonService.createWebfolderToken();
+//	    	ezCommonService.createPortalThemePortlet();
+//	    	ezCommonService.createTblUserMultiLogin();
+//	    	ezCommonService.createJmochaMailCopyright();
+//	    	ezCommonService.createJamesMailDeletedId();
+//    		ezCommonService.createRsFavoriteTable(); // 2019-03-28 이석화 - 모바일 오라클 자원관리 즐겨찾기 테이블 생성
+//	    	ezCommonService.createAttitudeAnnual(); //2019-06-11 주홍선 근태관리 연차관리 기능 테이블 추가
+//	    	ezCommonService.createThemeAndPortletAuth();
+//	    	ezCommonService.createTblYearlyDocCount(); // 2021-02-22 박기범 - 차트 통계 테이브 없을시 자동 생성
+//	    	ezCommonService.createAccessCountry(); //2019-0705 김수아 - 접속 허용 국가 테이블
+//	    	ezCommonService.createOpenGovTable(); // 2019-07-18 원문공개 테이블 추가
+//    		ezCommonService.createUserDistributionTable(); // 20200226 사용자 정의 공용배포그룹 테이블 생성
+//	    	ezCommonService.createResourcePortlet(); // 2019-06-28 황윤호 -자원관리 포틀릿 테이블 추가
+//	    	ezCommonService.createJmochaBigAttachDownloadLimit(); // 2020-03-12 홍대표 - 메일 대용량 첨부 제한 테이블 추가.
+//	    	ezCommonService.createPwPolicyTable(); // 2020-04-06 김수아 - tbl_password_policy table
+//	    	ezCommonService.createPwPolicyPatternTable(); // 2020-04-06 김수아 - tbl_password_policy_Pattern table
+//	    	ezCommonService.createBoardLike();
+//	    	ezCommonService.createPersonalPopupUser();
+//	    	ezCommonService.createAprAttachLimit(); // 2020-05-15 홍승비 - 전자결재 일반 첨부파일 개수제한 테이블 추가 (회사별 데이터)
+//	    	ezCommonService.createAdminAccessIpTable(); // 2020-04-28 김수아 - 관리자 IP 제한 테이블
+//			ezCommonService.createTblPermissionChangeInfo(); // 2022-01-18 이사라 - 권한 변경 히스토리 테이블 추가
+//	    	ezCommonService.createTblShareDocDir(); //2019-10-14 박성빈 - 문서함공유 테이블 추가
+//	    	ezCommonService.createTblNoticeBoard(); //2020-06-17 홍승비 - 회사별 공지사항 게시판 기능을 위한 NOTICEBOARD 테이블 추가
+//	    	ezCommonService.createTblTabBoard(); //2020-12-04 탭게시판 등록 용 테이블 추가
+//	    	ezCommonService.insertApprBigAttachInfo(); //2021-02-10 홍승비 - 전자결재 대용량첨부 컨피그, 칼럼, 테이블 추가
+//	    	ezCommonService.createSerialnumgenGrant();			// 2021-06-08 김민성 - 전자결재 상위부서 채번 기능 테이블 추가
+//	    	ezCommonService.createTblCar(); // 2021-07-12 차량관리 테이블 추가
+//	    	ezCommonService.createTblCarAcl(); // 2021-07-12 차량관리 테이블 추가
+//	    	ezCommonService.createTblCarAttach(); // 2021-07-12 차량관리 테이블 추가
+//	    	ezCommonService.createTblCarForm(); // 2021-07-12 차량관리 테이블 추가
+//    		ezCommonService.createTblScheduleComplete(); // 2021-11-23 홍승비 - 일정 완료여부 레코드 저장 테이블 추가
+//    		ezCommonService.createTblAdminAccessInfo();	// 2022-01-06 이사라 - 관리자 메뉴 접속 히스토리 테이블 추가
+//    		ezCommonService.createTblDisableNotiItem(); // 2022-03-11 - 알림환경설정 테이블 추가
+//			ezCommonService.createTblUserChangeInfo(); // 2023-09-05 장혜연 - 사용자 변경 히스토리 테이블 추가
+//	    	ezCommonService.createWebfolderFileUserTable();
+//	    	ezCommonService.createTblWebfolderApplyHistroy();
+//			ezCommonService.checkWebfolderEncryptTable();
+//			ezCommonService.checkWebfolderVersionTable();
+//	    	ezCommonService.createWebfolderNoInherit(); 				// 권한비상속
+//	    	ezCommonService.createTblAprpreview(); //2020-11-18 정소미 - 전자결재 미리보기 설정 테이블 추가
+//	    	ezCommonService.createTblSerialNoRollback(); // 2022-09-21 홍승비 - 전자결재G > 문서 기록물 레코드 중복삽입 시 에러 롤백방지 기록 테이블 추가
+//			ezCommonService.addBoardDisLikeFlag(); // 2023-06-14 기민혁 - 게시판 > 싫어요 기능 컬럼 추가
+//			ezCommonService.createTblBoardDisLike(); // 2023-06-14 기민혁 - 게시판 > 싫어요 기능 테이블 생성
+//			ezCommonService.insertScrapTenantConfig(); // 2023-06-14 기민혁 - 게시판 > 마이게시판 하위 나의스크랩 사용 Flag
+//			ezCommonService.insertScrapTableHeader(); // 2024-06-17 기민혁 - 게시판 > 마이게시판 하위 나의스크랩 테이블 해더 추가
+//			ezCommonService.createTblBoardScrap(); // 2023-06-15 기민혁 - 게시판 > 마이게시판 스크랩 테이블 생성
+//			ezCommonService.createTblUserScrapCont(); // 2023-06-15 기민혁 - 게시판 > 나의 스크랩함 cont테이블 생성
+//			ezCommonService.createTblUserScrapContList(); // 2023-06-15 기민혁 - 게시판 > 나의 스크랩함 list테이블 생성
+//	    	ezCommonService.createTblBoardReplyReact();	// 2023-07-27 이가은&임정은 - 댓글 좋아요/싫어요 관련 테이블 및 칼럼 추가
+//			ezCommonService.createTblDbLog(); // 2023-12-11 박기범 - DB 로그 테이블 추가
+//			ezCommonService.createTblDistributeinfo(); // 2024-08-07 김유진 - 배부이력정보 테이블 추가
+//			ezCommonService.createExecutiveTable(); // 2024-08-06 이유정 - 임원일정 테이블 추가
+//            ezCommonService.createJmochaMailBlocked(); // 2024-11-14 김승연 - 메일 열람 차단 테이블 추가
+//			ezCommonService.addTblCommunityClubguestOnelinereply(); // 2024-10-28 황인경 - 커뮤니티 방명록 댓글 테이블 추가
+//			ezCommonService.createJmochaCompanyQuota(); // 2024-12-12 김혜림 - 회사별 메일박스 용량 테이블 추가
+//            ezCommonService.createTblAprAutoSaveConfig(); // 2024-07-10 기민혁 - 전자결재G > 자동 임시저장 컨피그 추가
+//			ezCommonService.createTblScheduleGather(); // 2023-09-27 임정은 - 일정관리 > 일정 모아보기 그룹 테이블 추가
+//			ezCommonService.createTblBoardStarRating(); // 2024-10-02 이혜림 - 게시물 별점 평가하기 관련 테이블 및 컬럼 추가
+//			ezCommonService.createMealPlanTable(); // 2025-01-14 조수빈 - 식단 테이블  추가
+//			ezCommonService.createTblStatMenu(); // 2025-03-19 박기범 - 메뉴 통계 테이블 추가
+//			ezCommonService.createUserScheduleTypeConfigTable(); // 2025-04-21 조수빈 - 기본 일정(개인, 부서, 회사)별 사용자 설정 값 저장 테이블 추가
+//			ezCommonService.createTblCommunityGradeTable(); // 2025-07-10 이유정 - 커뮤니티 > 회원등급 테이블 추가
+//
+//			// alter table
+//	    	ezCommonService.alterTableAddColumns(); // 2022-01-19 김은실 - alter 재사용 모듈 추가
+//	    	ezCommonService.addWebfolderTotalLimit();
+//	    	ezCommonService.addMemoExtensionColumns(); // 2019-05-14 이석화 - 큰 메모 기능 추가로 컬럼 추가
+//	    	ezCommonService.addMenuAndPortletCode(); //2019-07-15 유은정 - 메뉴, 포틀릿 호출 로직 개선 위한 컬럼 추가
+//	    	ezCommonService.addAddressFurigana(); // 2019-12-04 주소록 후리가나 추가
+//	    	ezCommonService.insertMobileAttitudeColumn();			// 2020-06-10 김민성 - 모바일 근태관리 기능 추가
+//	    	ezCommonService.addScehdulegroup(); //2021-02-17 그룹일정의 tbl_schedulegroup 컬럼 추가
+//	    	ezCommonService.addScheduleMailNotiConfig();		// 2021-02-23 김민성 - 일정메일알림 컨피그 추가
+//			ezCommonService.addTblUserMultiLoginMobileFlagColumn(); // 2021-03-19 중복로그인 모바일 플래그 컬럼 추가
+//    		ezCommonService.alterTblConnectionInfo();	// 2021-12-22 이사라 : 로그아웃시간, 상태 컬럼 추가
+//	    	ezCommonService.addWebfolderLogHistory(); 					// 2020-01-20 웹폴더 파일 이력관리 컬럼추가
+//    		ezCommonService.alterTblDevMaster();						//20220315 조진호 - mobile Pin 사용 관련 여부 컬럼 추가 (원래는 Talk에서 관리하는 테이블이나 Talk이 없는 경우 ezEKP DB의 테이블을 사용하기 떄문에 추가)
+//	    	ezCommonService.addAttitudeFormFormHtml2Column(); // 2023-08-21 조소정 - 근태관리 > 작성 양식 테이블에 영어 버전 양식 컬럼 추가
+//			ezCommonService.addTblBoardItemNoti(); /* 2023-09-25 민지수 - 게시판 > 공지게시물 > 기간설정 컬럼 추가 */
+//			ezCommonService.addTblBoardItemTempNoti(); /* 2023-09-25 민지수 - 게시판 > 임시저장 > 공지게시물 > 기간설정 컬럼 추가 */
+//			ezCommonService.alterRepeatFlagForResourceInfo(); // 2024-05-28 이유정 - 자원관리 > 자원반복예약 허용 설정을 위한 RepeatFlag 컬럼 추가
+//			ezCommonService.alterSubPermittedForMenuAuth();		/* 2024-05-28 김유진 - 포탈 > 메뉴관리 하위부서 허용여부 컬럼 추가 */
+//			ezCommonService.alterSubPermittedForPortletAuth();	/* 2024-05-28 김유진 - 포탈 > 포틀릿관리 하위부서 허용여부 컬럼 추가 */
+//			ezCommonService.alterSubPermittedForThemeAuth();	/* 2024-05-28 김유진 - 포탈 > 테마관리 하위부서 허용여부 컬럼 추가 */
+//			ezCommonService.alterSubPermittedForQuicklinkAcl(); /* 2024-05-28 김유진 - 포탈 > 빠른링크관리 하위부서 허용여부, 유저타입 컬럼 추가 */
+//			ezCommonService.alterDocAttachNameCol(); // 2024-06-24 민지수 > 전자결재 > 비전자 기록물 > 본문첨부 파일명 컬럼 추가
+//			ezCommonService.alterUserThemePagination();
+//			ezCommonService.alterTblScheduleForShowtop(); /* 2024-06-17 이주원 - 일정관리 > 상단표시 컬럼 추가 */
+//			ezCommonService.addColumnsRetireTblCompareWithUserTbl(); // 2024-07-09 장혜연 - tbl_usermaster에만 존재하는 컬럼을 조회해 tbl_usermaster_retire에 추가
+//			ezCommonService.addUserDeptHideFlag(); //2024-07-25 김대현 - 사용자 숨김, 부서 숨김 Flag 컬럼 추가
+//			ezCommonService.insertInitMobileTheme(); // 2024-07-12 황인경 > 모바일 포탈 > 포틀릿, 테마, 권한 추가
+//			ezCommonService.alterMenuOpenType();	// 2024-07-23 조수빈 - 관리자 > 메뉴 관리 > url 외부 / 내부 모듈 및 새 탭 열기, 새 창 열기 구분
+//			ezCommonService.alterSaveFlagForCbShare(); // 2024-06-28 이유정 - 캐비넷 > 캐비넷공유 > 공유자 저장여부 컬럼 추가
+//			ezCommonService.addTblFormContainerSN(); /* 2024-07-17 기민혁 - 전자결재 > 양식함 순서 컬럼 추가 */
+//			ezCommonService.alterAddThumbnailForTPI(); /* 2024-10-28 김우철 - 게시판 > 동영상게시판 > 썸네일 추가 여부 컬럼 추가 */
+//			ezCommonService.alterThumbnailExtForTPI(); /* 2024-10-28 김우철 - 게시판 > 동영상게시판 > 썸네일 확장자 컬럼 추가 */
+//			ezCommonService.alterAttachmentsForCBoard(); /* 2024-10-18 김우철 - 커뮤니티 > 공지사항 >  첨부 여부 컬럼 추가 */
+//			ezCommonService.alterUseUpperDeptBox(); /* 2024-07-05 양지혜 - 전자결재 > 상위부서문서함 사용여부 컬럼 추가 */
+//			ezCommonService.addBoardWriterFlagAndWriterNameType(); // 2025-01-16 임정은 - 게시판 게시물 게시자명선택 사용여부 플래그 및 게시자명선택 타입 컬럼 추가
+//			ezCommonService.alterTalkNotiTenant(); /* 2025-03-10 유지아 - 톡알림 테이블 tenantId추가 */
+//			ezCommonService.alterServerNameMain(); /* 2025-05-22 유지아 - servername 테이블 mainyn 추가 */
+//			ezCommonService.createJournalListLang(); // 2025-05-28 황인경 - 업무일지 양식 다국어 관련 컬럼 추가
+//			ezCommonService.insertJournalListLang(); // 2025-05-28 황인경 - 업무일지 양식 다국어 관련 데이터 추가
+//			ezCommonService.alterScheduleDefaultViewCheck(); // 2025-03-21 권기혁 - 일정관리환경설정 기본 화면 사용 여부 컬럼 추가
+//            ezCommonService.alterTblClubUserGradeColumn();	// 2025-07-10 이유정 - 커뮤니티 > 회원등급 컬럼 추가
+//            ezCommonService.alterTblClubJoinGradeColumn();	// 2025-07-10 이유정 - 커뮤니티 > 최초가입 등급, 회원목록조회 등급 컬럼 추가
+//
+//			// tenant config
+//	    	ezCommonService.insertTblTenantConfig(); // 2020-01-28 useMailConfirm 컨피그 추가 >> 2020-04-28 tbl_tenant_config add
+//	    	ezCommonService.insertSurveyTenantConfig(); // 2019-06-25 이석화 전자설문 리뉴얼 테넌트 컨피그 추가
+//	    	ezCommonService.insertMailBigSizeAttachLimit(); // 2020-03-12 홍대표 - 메일 대용량 첨부 제한 컨피그 추가.
+//	    	ezCommonService.insertAnnualScheduleTenantConfig(); // 2020-02-24 김정언 - useAnnualScheduleYN 컨피그 추가
+//	    	ezCommonService.insertHolidayCheckTenantConfig(); // 2020-05-21 김정언 - useHolidayCheckYN 컨피그 추가
+//	    	ezCommonService.createMenuTenantConfig();		// 2020-08-06 김민성 - 메뉴 숨김처리 관련 config 추가
+//	    	ezCommonService.insertAutoSendOfferFlag(); //2020-11-23 김보혜 전자결재G 문서발송시 발송옵션 추가
+//	    	ezCommonService.insertApprSatViewerConfig(); // 2021-06-15 심기영 - 전자결재 첨부파일 SAT 뷰어 사용 컨피그 추가
+//	    	ezCommonService.insertHWPSecurityConfig(); // 2023-05-31 김우철 - 한글 배포용 문서 저장 관련 테넌트 컨피그 2건 추가
+//	    	ezCommonService.insertPrvwConfig(); // 2023-10-27 조수빈 - 전자결재 / 게시판 모듈 미리보기 테넌트 컨피그 2건 추가
+//	    	ezCommonService.insertApprSignRemapApplyTime(); // 2023-12-05 홍승비 - 전자결재 > 전자결재 서명 데이터 재맵핑 시점 컨피그 추가
+//			ezCommonService.insertPermissionBasisDeptYN_Config(); // 2023-08-16 전인하 - PermissionBasisDeptYN 테넌트 컨피그 추가
+//			ezCommonService.insertTenantConfigLangTertiary(); // 2023-11-27 조소정 - 게시판그룹 일본어 버전 생성 위해 LangTertiary 테넌트 컨피그 추가
+//			ezCommonService.insertTenantConfigLangQuaternary(); // 2023-11-27 조소정 - 게시판그룹 중국어 버전 생성 위해 LangQuaternary 테넌트 컨피그 추가
+//			ezCommonService.insertLoadTimeForApprAllConfig(); // 2024-01-11 김우철 - 다안기안 문서 표출 시 글꼴, 스크롤 오류를 해결하기 위한 setTimeout 시간
+//			ezCommonService.insertUseHideHeaderArea(); // 2024-05-23 김우철 - 헤더 숨기기 기능 사용여부 테넌트 컨피그 추가
+//			ezCommonService.insertUseReceiptDeptFileAttach(); // 2024-06-04 김우철 - 부서수신함에서 첨부, 문서첨부 기능 사용여부 테넌트 컨피그 추가
+//			ezCommonService.insertNonUseDocAttachYN(); // 2024-07-02 민지수 - 전자결재 > 비전자문서등록 > 본문첨부 기능 사용여부 테넌트 컨피그 추가
+//			ezCommonService.insertModuleEditor(); // 2024-09-23 김우철 - 전자결재, 메일을 제외한 에디터 테넌트 컨피그 추가
+//			ezCommonService.insertServername(); // 2024-12-02 김승연 - servername에 127.0.0.1 값 추가
+//			ezCommonService.insertResendFormYN(); // 2024-12-04 기민혁 - 전자결재 > 최근서식 사용여부 테넌트 컨피그 추가
+//			ezCommonService.insertEditVertionYN(); // 2024-12-05 기민혁 - 전자결재 > 본문수정 시 본문버전 변경 기능 사용여부 테넌트 컨피그 추가
+//			ezCommonService.insertPersonalHideSusinYN(); // 2024-11-26 기민혁 - 전자결재 > 개인수신함 사용여부 테넌트 컨피그 추가
+//			ezCommonService.insertMealPlanTenantConfig(); // 2025-02-05 조수빈 - 식단 사용 여부 컨피그 추가
+//			ezCommonService.insertUseSaasYN(); // 2025-05-21 유지아 - 모바일 푸시 알림 테넌트 따라 구분 컨피그 추가
+//			ezCommonService.inserExtLargeFilesever(); // 2025-05-22 유지아 - 대용량 첨부파일 외부메일 서버 동시 업로드
+//			ezCommonService.insertUseSendOutState(); // 2024-07-22 양지혜 - 관리자 > 전자결재 > 발송현황 메뉴 표출여부 컨피그 추가
+//	    	ezCommonService.insertPortalThemePortletInitdata();
+//	    	ezCommonService.updateTaskUrl();
+//	    	ezCommonService.updateListOptionData(); //2019-03-06 천성준 - 전자결재 회람수신함 관련 리스트헤더 데이터 임시 업데이트문
+//			ezCommonService.insertChartPortletInfo(); //2021-02-22 박기범 - 차트 포틀릿 없을시 자동 생성
+//	    	ezCommonService.addThemeAndPorteltAuthInit(); //2020-02-20 테마별, 포틀릿별 권한 추가
+//	    	ezCommonService.alterChamjoView(); // 2019-11-21 참조 View 수정
+//	    	ezCommonService.insertPortletInfo(); // 2019-07-02 자원, 웹폴더, 전자설문 포틀릿 데이터 확인 후 없으면 추가
+//	    	ezCommonService.setCompanyConfigs(); // 2020-03-30 김수아 - companyConfig 추가
+//	    	ezCommonService.insertUseExternalMailServerConfig();		// 2020-04-16 김민성 - 메일 기능 사용 관련 컨피그 추가(외부/내부)
+//	    	ezCommonService.insertReBebuOpinionCode();		// 2020-05-14 홍대표 - 재배부요청 의견 코드 추가
+//	    	ezCommonService.insertHalfOffAttitudeType(); // 2020-03-16  김정언 - 근태관리 휴가유형 반반차 추가
+//	    	ezCommonService.insertAlternateHolidayAttitudeType(); // 2020-03-16  김정언 - 근태관리 휴가유형 대체휴무 추가
+//	    	ezCommonService.insertBeforeOutComeAttitudeType(); // 2020-06-03  김정언 - 근태관리 휴가유형 전일퇴근 추가
+//	    	ezCommonService.insertTabBoardPortlet(); //2020-12-03 박기범 - 탭게시판포틀릿 추가
+//	    	ezCommonService.insertApprContainterConfig();		// 2021-05-21 김민성 - 전자결재 양식별문서함, 분류코드문서함 컨피그 추가
+//    		ezCommonService.addViewTaskOldFlag(); // 2021-08-31 홍승비 - 전자결재 분류코드체계 뷰에 삭제여부(OLDFLAG) 칼럼 추가 (VTASKCLASS, SVTASKCLASS)
+//    		ezCommonService.insertReceiptHistoryListoption();	// 2022-02-16 정주환 - 수신이력 확인 listoption 추가
+//			ezCommonService.insertOpinionGB(); // 2023-06-26 민지수 - 전자결재 > 완료문서 의견타입 추가의견 추가
+////			ezCommonService.updateWebFolderAndApprovalCheckPermissionCode(); // 2023-10-05 전인하 - 권한 코드 변경으로 인하여 기존 데이터를 새 코드로 변경
+//			ezCommonService.insertPortalMenuChinese(); // 2023-11-22 조소정 - 포탈 > 기본 탑메뉴 중국어 버전 추가
+//			ezCommonService.insertPortletNameChinese(); // 2023-11-22 조소정 - 포탈 > 기본 포틀릿명 중국어 버전 추가
+//			ezCommonService.insertLoadTimeForApprAllConfig(); // 2024-01-11 김우철 - 다안기안 문서 표출 시 글꼴, 스크롤 오류를 해결하기 위한 setTimeout 시간
+//			ezCommonService.createTblDeptChangeInfo(); // 2024-02-20 장혜연 - tbl_dept_change_info 테이블 추가
+//			ezCommonService.insertSurveyPostingMaxPeriodConfig(); // 2024-03-26 - 전자설문 종료 후 게시기간 설정 추가
+//			ezCommonService.alterFileNameForWebfolderHistory(); // 2023-10-18 남진구 - 웹폴더 > 버전관리 > 파일 복원시 파일명 복원을 위한 FILE_NAME 칼럼 추가
+//			ezCommonService.createTblTotalHistory(); // 2023-06-04 - 통합 PC 다중 파일 저장시 다운로드 로그 남기는 테이블
+//			ezCommonService.insertdelAttachByOthersConfing(); // 2024-05-23 민지수 - 전자결재 > 첨부 > 첨부 등록자 이외의 사용자가 첨부 삭제가능여부
+//			ezCommonService.insertApprNonElecRecTypeConfing(); // 2024-05-29 김유진 - 전자결재G 비전자문서등록 양식 확장자 정보
+//			ezCommonService.insertEndDateOptionConfig(); // 2024-05-29 전인하 - 게시판 > 게시물 리스트 > 만료된 게시물 리스트 표출 가능여부
+//            ezCommonService.insertRecordHeaderClassTitle(); // 2024-06-11 민지수 - 전자결재 > 기록물대장 > 기록물철명 헤더 추가
+//    		ezCommonService.insertDocBinderListOption(); // 2024-06-12 전인하 - 전자결재G > 기록물철인계 > 기록물철리스트 리스트헤더 컬럼 추가
+//			ezCommonService.insertReturnByDesignationUsedConfig(); // 2024-06-24 양지혜 - 전자결재 > 지정반송 사용여부 컨피그 추가
+//			ezCommonService.insertReadingRecordHeader(); // 2024-06-21 김우철 - 전자결재G > 열람문서함 헤더 추가
+//            ezCommonService.insertPortalPortletSizeTables(); // 2023-11-20 박기범 - 포탈 포틀릿 사이즈 관련 테이블 추가
+//            ezCommonService.insertTblPortalTopUser(); // 2024-04-11  TBL_PORTAL_TOP_USER 추가(포탈 top 프레임 타입 설정. 현재는 위, 왼쪽)
+//            ezCommonService.insertTblPortalTopCompany(); // 2024-05-17 한태훈 - TBL_PORTAL_TOP_COMPANY 추가(포탈 top 프레임 타입 설정. 현재는 위, 왼쪽)
+//            ezCommonService.alterUseColor();	// 2024-08-20 조수빈 - 포탈 설정 > 모드 설정 컬럼 추가
+//            ezCommonService.createTblRealTimeNotification(); // 2024-03-28 한태훈 - 통합알림 테이블 추가
+//            ezCommonService.addNotiStoragePeriodConfig(); // 2024-03-28 한태훈 - 통합알림 보관기간 tenantConfig 추가
+//            ezCommonService.addNotiPollingIntervalConfig(); // 2024-03-28 한태훈 - 통합알림 데이터 새로고침 간격 tenantConfig 추가
+//            ezCommonService.insertPortalTopCompanyInitdata(); // 2024-05-17 한태훈 - 포탈 탑 메뉴 위치 설정 회사 기본 데이터 세팅
+//            ezCommonService.insertFixPortlet(); // 2024-05-17 박기범 - 고정포틀릿 추가
+//            ezCommonService.addQuickLinkCompanyID(); // 2023-12-15 박차웅 - 퀵링크 tbl_ps_quicklink 테이블 COMPANYID 필드 추가
+//            ezCommonService.alterThemeInformation(); // 2024-06-20 한태훈 - 테마 설명 내용 수정.
+//            ezCommonService.alterCompanyMenuIconUrl(); // 2024-07-08 황인경 - 회사별 메뉴 아이콘 추가
+//            ezCommonService.insertGongRamListOption(); // 2024-06-17 임정은 - 공람 listoption 추가
+//			ezCommonService.addReminderTimeAtTblScheduleConfig(); //2023-09-04 한태훈 - 일정관리 > 설정 > 미리알림 시간 컬럼 추가
+//	    	ezCommonService.createTblScheduleReminderScheduler(); // 2023-09-04 한태훈 - 일정관리 > 미리알림 스케줄러 테이블 추가
+//	    	ezCommonService.insertReminderTenantConfig(); // 2023-09-11 한태훈 - 일정관리 > 미리알림 방식(닷넷 통합 알림, 자바 메일) 선택 테넌트 컨피그, 미리알림 시 하루종일 일정의 시작 시각 설정 테넌트 컨피그 추가
+//			ezCommonService.alterBoardExtentionAttrByteSize(); // 2024-07-31 전인하 - 게시판 > 확장컬럼 > 저장할 수 있는 데이터 크기 변경 (mysql, oracle 일괄 500자)
+//			ezCommonService.insertDotNetTotalNotificationConfig(); // 2024-08-21 유길상 닷넷 통합알림 컨피그
+////			ezCommonService.updateInProcessJpCodeName3(); // 2024-08-22 유길상 - CODELIST > a04(진행) 일본어 변경
+//			ezCommonService.createServeyResultviewPermTbl(); // 2024-07-11 전인하 - 설문 > 지정공개 대상자 리스트 테이블 추가
+//            ezCommonService.createSystemConfig(); // 2024-07-22 한태훈 - tbl_systemconfig, tbl_systemconfig_type
+//            ezCommonService.addIsDeleteBlockToSytemConfig();
+//            ezCommonService.createConnectionMenu(); // 2024-07-22 한태훈 - 연계메뉴 및 연계 포틀릿 기본 시스템 컨피그 추가
+//            ezCommonService.insertStandardSystemConfigData(); // 2024-07-22 한태훈 - 시스템 컨피그 기본 데이터 추가
+//            ezCommonService.createEmergencyNotiTable();
+//            ezCommonService.insertMobileToggleMenus(); // 2024-08-08 조수빈 - 모바일 우측 panel의 기본 toggle menu 데이터 추가
+//            ezCommonService.updateThemeData(); // 2024-09-02 조수빈 - 테마 변경에 따른 테마 데이터 update
+//			ezCommonService.createRsScheduleDeptIdColumn(); // 2024-09-03 박기범  - TBL_RS_SCHEDULE deptid 컬럼 추가
+//	    	ezCommonService.alterTblBoardOneLineChildReply(); // 2023-03-31 이가은 - 게시판 > 게시물 댓글 정보 테이블에 답글 작성/수정기능 컬럼 추가
+//			ezCommonService.insertBoardReplyCommentEmoticon(); // 2023-11-07 전인하 - 게시판 > 댓글로 이모티콘 삽입 가능 관련 테이블 컬럼 추가
+//			ezCommonService.createBoardKeywordTable(); // 2024-08-23 전인하 - 게시판 > 키워드 기능 개발
+//			ezCommonService.createResourceFavoriteTables(); // 2024-08-07 유길상 - 자원관리 즐겨찾기 테이블 추가
+//			ezCommonService.addBoardAttachmentFlag(); // 2024-10-23 정지은 - 게시판 > 글 작성 시 파일첨부 가능여부 설정
+//	        ezCommonService.addTblBoardInfoPublicFlag(); // 2024-10-21 박기범 - 게시판 공게여부 컬럼추가
+//			ezCommonService.insertAllBoardListOption(); // 2024-10-21 한태훈 - 게시판 > 전체게시물 리스트헤더 추가
+//	    	ezCommonService.insertAllBoardInfo(); // 2024-10-17 한태훈 - 게시판 > 전체게시물 게시판정보 추가
+//			ezCommonService.addSurveyTotalNotiSentFlag(); // 2024-11-15 한태훈 - 전자설문 > 설문 알림 발송 시 알림 발송 유무 확인 플래그 추가
+//			ezCommonService.createTblBoardCommentAttachments(); // 2024-10-23 전인하 - 게시판 > 댓글 첨부 테이블 추가
+//			ezCommonService.insertBoardItemListOptionAN(); // 2024-09-11 이유정 - 게시판 > 최근게시물 리스트헤더 추가
+//			ezCommonService.insertRecentBoardInfo(); // 2024-09-11 이유정 - 게시판 > 최근게시물 게시판정보 추가
+//			ezCommonService.addBoardAllNewBoardFlag(); // 2024-10-22 정지은 - 게시판 > 게시물의 최근 게시물 포함 여부 설정(게시판 설정)
+//			ezCommonService.addBoardAllNewBoardListDate(); // 2024-10-22 정지은 - 게시판 > 게시물의 최근 게시물 일자 설정
+//			ezCommonService.alterEditVersionHistory(); // 2024-12-10 기민혁 - 전자결재 > 수정버전,수정모드 컬럼 추가
+//			ezCommonService.insertEditVersionListOption(); // 2024-12-10 기민혁 - 수정버전 리스트 해더 생성
+//			ezCommonService.insertPersonalSusinListOption(); // 2024-11-28 기민혁 - 개인 수신함 리스트 해더 추가
+//			ezCommonService.alterBodyHTMLToConnData(); // 2025-01-24 이가은 - 전자결재 > 연동테이블 컬럼명 변경
+//			ezCommonService.createGongramDeleteHistory(); // 2024-12-27 이가은 - 공람완료문서 삭제 히스토리 테이블 생성
+//			ezCommonService.addMemberDeptIdScheduleGroupMember(); // 2024-12-27 한태훈 - 일정관리 > 일정 그룹 테이블에 부서컬럼 추가
+//			ezCommonService.addMemberDeptIdScheduleGatherMember(); // 2024-12-27 한태훈 - 일정관리 > 일정 모아보기 그룹 테이블에 부서컬럼 추가
+//			ezCommonService.addMailboxProgressStateColumns(); // 2025-05-23 메일 내보내기/가져오기 비동기 컬럼 추가
+//			ezCommonService.createTblBoardModifyHistory(); // 2024-12-05 한태훈 - 게시판 > 게시판 버전관리 테이블 추가
+//			ezCommonService.addBoardContentSize(); // 2025-06-16 이혜림 - 게시판 > 본문 크기 컬럼 추가
+//            ezCommonService.updateMobilePortletMenuId(); // 2024-09-20 황인경 - 모바일 메뉴 권한 별도
+//			ezCommonService.alterTblRsBrdResMaxDate(); // 2024-08-27 유길상 - 자원관리 > 자원등록 > 최대 예약 가능 기간 컬럼 추
+//			ezCommonService.alterTblRsBrdResMaxUserCnt(); // 2024-08-27 유길상 - 자원관리 > 자원등록 > 정원 컬럼 추가
+//			ezCommonService.addBoardNotUsedFlag(); // 2023-10-30 조소정 - 게시판 사용안함 여부 컬럼 추가
+//			ezCommonService.insertExecutiveScheduleConfig(); // 2025-07-07 이유정 - 일정관리 > 임원일정 조회 가능 범위 설정 컨피그 추가
+//            ezCommonService.settingCommunityGradeData(); // 2025-07-10 이유정 - 커뮤니티 > 기존 데이터 회원등급에 맞춰 세팅
+//            ezCommonService.alterTblClubUserAdminAuthColumn(); // 2025-07-15 이유정 - 커뮤니티 > 운영자권한 컬럼 추가
+//            ezCommonService.alterTblClubUserWithdrawDateColumn(); // 2025-07-23 이유정 - 커뮤니티 > 회원탈퇴일자 컬럼 추가
+//            ezCommonService.addMailPreviewConfig();//2025-07-24 김대현 - 메일 > 메일 미리보기 기능 추가
+//			ezCommonService.alterTblUsermasterForTeams(); // 2025-07-29 김혜림 - 팀즈 연동을 위한 TEAMSID 컬럼 추가
+//			ezCommonService.createAuthTokenTable(); // 2025-07-31 김혜림 - Graph API 인증토큰 저장 테이블 생성
+//			ezCommonService.createUserPresenceTable(); // 2025-08-04 김혜림 - Graph API Presence 정보 저장 테이블 생성
+//			ezCommonService.addBoardUsrListShowType(); // 2025-07-10 이혜림 - 게시판 > 게시판 목록 타입 컬럼 추가
+//			ezCommonService.addBoardListShowType(); // 2025-07-10 이혜림 - 게시판 > 게시판 목록 타입 컬럼 추가
+//            ezCommonService.alterTblBoardInfoUrlCopyFlag(); // 2025-08-05 이유정 - 게시판 > 게시글 주소복사 컬럼 추가
+//			ezCommonService.updateGuestAccessibleUris(); // 2025-08-19 양지혜 - 비회원 게시판 허용 URI 데이터 업데이트
+//		} catch (Exception e) {
+//    		logger.error(e.getMessage(), e);
+//    	}
     	logger.debug("init ended.");
     }
 

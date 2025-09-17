@@ -498,5 +498,16 @@ public class EzOrganDAO extends EgovAbstractDAO {
 	public int updateTeamsIdByUpnName(Map<String, Object> param) {
 		return update("EzOrganDAO.updateTeamsIdByUpnName", param);
 	}
+
+	public String getCnByUpn(String upnname, int tenantID) throws Exception {
+		return getCnByUpnForLocal(upnname, tenantID);
+	}
+
+	private String getCnByUpnForLocal(String upnname, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("upnname", upnname);
+		map.put("tenantID", tenantID);
+		return (String) select("EzOrganDAO.getCnByUpn", map);
+	}
 	
 }

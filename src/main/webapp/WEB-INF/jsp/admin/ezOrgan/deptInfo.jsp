@@ -360,7 +360,7 @@
 		      		</table>
 		      	</td> 
 		  	</tr>
-		  	<tr class="onlyUseG"> 
+		  	<tr> 
 		    	<th><spring:message code='ezOrgan.t221' /></th> 
 		    	<td><input type="text" id=SimpleName style="width:97%" maxlength="50"></td> 
 		  	</tr>

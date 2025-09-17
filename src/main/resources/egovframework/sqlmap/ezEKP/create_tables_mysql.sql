@@ -755,7 +755,7 @@ CREATE TABLE `jmocha_mail_general` (
   `DEFAULT_SEPARATE_SEND` VARCHAR(10) DEFAULT NULL,
   `DEFAULT_CURSOR_POSITION` VARCHAR(50) DEFAULT NULL,
   `MAIL_SEARCH_PERIOD` varchar(10) DEFAULT NULL,
-  `SELF_CC_OPTION` varchar(10) DEFAULT 'none',  
+  `SELF_CC_OPTION` varchar(10) DEFAULT 'none',
   PRIMARY KEY (`USER_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -7414,6 +7414,12 @@ CREATE TABLE `tbl_journal_form` (
   `form_status` varchar(10) DEFAULT NULL COMMENT '양식 상태',
   `company_id` varchar(80) NOT NULL COMMENT '회사 아이디',
   `form_del_flag` varchar(10) DEFAULT NULL,
+  `form_lang` MEDIUMINT(5) DEFAULT 1 COMMENT '기본양식사용설정된 언어(defult:1 한국어, 2:영어, 3:일본어, 4:중국어, 5:베트남어, 6:인도네시아어)',
+  `form_content2` TEXT DEFAULT NULL COMMENT '기본양식(영어)',
+  `form_content3` TEXT DEFAULT NULL COMMENT '기본양식(일본어)',
+  `form_content4` TEXT DEFAULT NULL COMMENT '기본양식(중국어)',
+  `form_content5` TEXT DEFAULT NULL COMMENT '기본양식(베트남어)',
+  `form_content6` TEXT DEFAULT NULL COMMENT '기본양식(인도네시아어)',
   PRIMARY KEY (`form_id`,`tenant_id`),
   KEY `FK_tbl_journal_form_type_id_tbl_journal_form_type_type_id_idx` (`type_id`),
   KEY `FK_tbl_journal_form_company_id_tbl_journal_form_type_compan_idx` (`company_id`)
@@ -13158,6 +13164,7 @@ CREATE TABLE `tbl_usermaster` (
   `PASSWORD2` varchar(100) DEFAULT NULL,
   `PHOTO_UPDATEDT` datetime DEFAULT NULL,
   `USERTREEFLAG` char(1) DEFAULT 'Y',
+  `TeamsId` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`CN`,`TENANT_ID`),
   KEY `IDX_EMP_NO` (`EXTENSIONATTRIBUTE14`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -15888,6 +15895,7 @@ CREATE TABLE `TBL_PORTAL_TOP_USER`
     TENANT_ID  MEDIUMINT    DEFAULT 0  NOT NULL COMMENT '테넌트 아이디',
     COMPANY_ID VARCHAR(100) DEFAULT '' NOT NULL COMMENT '회사 아이디',
     TYPE       MEDIUMINT    DEFAULT 0  NOT NULL COMMENT '타입',
+    USECOLOR   NUMBER(1)    DEFAULT 0  NOT NULL COMMNET '사용 모드(색상)',
     PRIMARY KEY (USER_ID, TENANT_ID, COMPANY_ID)
 )   ENGINE=InnoDB DEFAULT CHARSET=utf8
     COMMENT '개인별 탑 메뉴 프레임 타입';
@@ -16418,3 +16426,19 @@ CREATE TABLE `TBL_C_GRADE` (
    `TENANT_ID` mediumint(9) NOT NULL DEFAULT 0,
    PRIMARY KEY (`C_CLUBNO`, `GRADECODE`, `COMPANYID`,`TENANT_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT "커뮤니티별 회원등급 테이블";
+
+DROP TABLE IF EXISTS `TBL_AUTHTOKEN`;
+CREATE TABLE `TBL_AUTHTOKEN` (
+                                 `APITYPE` varchar(20) DEFAULT NULL,
+                                 `TOKENTYPE` varchar(20) NOT NULL DEFAULT 'publicapp',
+                                 `AUTHTOKEN` varchar(4000) DEFAULT NULL,
+                                 `UPDATEDATE` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT="Graph API 인증토큰 저장 테이블";
+
+DROP TABLE IF EXISTS `TBL_USERPRESENCE`;
+CREATE TABLE `TBL_USERPRESENCE` (
+                                    `ID` varchar(50) NOT NULL,
+                                    `PRESENCE` varchar(50) NOT NULL,
+                                    `UPDATETIME` varchar(50) NOT NULL,
+                                    PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT="Graph API Presence 정보 저장 테이블";

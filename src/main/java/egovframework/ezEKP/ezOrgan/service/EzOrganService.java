@@ -156,4 +156,8 @@ public interface EzOrganService {
 	String getTotalTreeNodeInfo(LoginVO userInfo, String userId, String selectedUserId, String deptId, String topId, String propList, String langCode, String type, String adminFlag) throws Exception;
 
 	public List<Map<String, Object>> getSearchListForTeamsJson(String searchlist, String celllist, String proplist, String listtype, int i, String lang, String companyId, int tenantID, String noAddJob, String adminOrgan) throws Exception;
+
+	public String getCnByUpn (String upn, int tenantID) throws Exception;
+
+    public String GetUpnFromAuthToken(String authToken, int tenantId) throws Exception;
 }

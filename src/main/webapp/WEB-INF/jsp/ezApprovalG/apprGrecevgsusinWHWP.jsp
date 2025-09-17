@@ -363,8 +363,9 @@
 			        // SetBtnStateTrue();
 			
 			        getReceiveDocInfo();
-			        
-                	document.getElementById("btnAddSepAttach").style.display = "";
+			        if (approvalFlag == "G"){
+						document.getElementById("btnAddSepAttach").style.display = "";
+					}
                 	
 			        if (nonElecRec == "Y") {
 				        getNonElecInfoSusinInit();

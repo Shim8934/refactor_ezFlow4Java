@@ -369,6 +369,21 @@ INSERT INTO TBL_COMPANY_CONFIG (TENANT_ID, COMPANY_ID, PROPERTY_NAME, PROPERTY_V
 --2024.07.22 양지혜 - 관리자 > 대외발송현황 메뉴 표출여부
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE) VALUES(@tenant_id_value, 'useSendOutState', 'NO', '관리자페이지 대외발송현황 메뉴 표출여부 YES: 사용 NO: 사용안함 (default:NO)', '발송현황 메뉴 표출여부', '2024-07-22 00:00:00', '전자결재');
 
+INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (@tenant_id_value, 'useExternalLargeFileServer', '메일 대용량 첨부 외부메일 동시 업로드 여부', 'N', '메일에서 대용량 첨부할때 외부메일 서버 동시 업로드 여부(default:N)', '2025-05-23 00:00:00', '메일');
+INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (@tenant_id_value, 'externalFileServerUrl', '대용량 첨부파일 업로드 서버', 'http://127.0.0.1:8080/', '대용량 첨부파일 동시 업로드할 외부 서버', '2025-05-23 00:00:00', '메일');
+
+INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (@tenant_id_value, 'useSaas', '톡 모바일 푸시 알림 테넌트에 따른 구분 사용 여부', 'N', '톡서버에 푸시 알림 보낼때 테넌트 아이디 붙여서 넘길지 말지 사용 여부(default:N)', '2025-05-21 00:00:00', '포탈');
+
+-- 게시판 > 비회원 읽기권한 추가
+INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (@tenant_id_value, 'useBoardGuestPermit', '게시판 비회원 읽기권한 사용 여부', 'NO', '게시판 비회원 읽기권한 사용 여부. YES: 사용, NO: 미사용 (default : NO)', '2025-08-13 00:00:00', '게시판');
+INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (@tenant_id_value, 'guestAccessibleUris', '로그아웃 상태에서 허용할 uri', '/ezBoard/boardItemView.do,/ezBoard/boardItemViewPhoto.do,/ezBoard/boardItemViewMovie.do,/ezCommon/mhtToHTMLContent.do,/ezBoard/getItemAttachments.do,/ezBoard/boardAttachDown.do,/ezBoard/downloadAttachAll.do,/ezBoard/imageViewList.do,/ezBoard/getBoardThumbnailInfo.do,/ezBoard/boardItemList.do,/ezBoard/getBoardList.do,/ezBoard/getSearchBoardList.do', '비회원 읽기권한 > 로그아웃 상태에서 허용할 uri (,로 연결. 수정 시 서버 재시작 필요)', '2025-08-13 00:00:00', '게시판');
+INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (@tenant_id_value, 'guestLang', '비회원 Lang', '1', '비회원 Lang (default : 1 수정 시 서버 재시작 필요)', '2025-08-13 00:00:00', '게시판');
+INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (@tenant_id_value, 'guestLocal', '비회원 Local', 'ko', '비회원 Local (default : ko 수정 시 서버 재시작 필요)', '2025-08-13 00:00:00', '게시판');
+INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (@tenant_id_value, 'guestOffset', '비회원 Offset', '235| 09:00', '비회원 Offset (default : 235| 09:00 수정 시 서버 재시작 필요)', '2025-08-13 00:00:00', '게시판');
+INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (@tenant_id_value, 'guestCompanyId', '비회원 회사 id', 'Kaoni', '비회원 회사 id (default : Kaoni 수정 시 서버 재시작 필요)', '2025-08-13 00:00:00', '게시판');
+INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (@tenant_id_value, 'showGuestBoardListOnLogin', '로그인 페이지에 비회원 게시판 표출 여부', 'NO', '로그인 페이지에 비회원 게시판 표출 여부. YES: 사용, NO: 미사용 (default : NO)', '2025-08-13 00:00:00', '게시판');
+INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (@tenant_id_value, 'guestBoardId', '로그인 표출 비회원 권한 게시판ID', '', '로그인 표출 비회원 권한 게시판ID', '2025-08-13 00:00:00', '게시판');
+
 -- Board insert 
 Insert into TBL_BOARD_ITEM_LISTOPTION (LISTTYPE,SN,NAME1,NAME2,NAME3,NAME4,COLNAME,WIDTH,VIEW_FG,TENANT_ID) values ('0',0,'CHECK','CHECK','CHECK','CHECK','ITEMID',20,'Y',@tenant_id_value);
 Insert into TBL_BOARD_ITEM_LISTOPTION (LISTTYPE,SN,NAME1,NAME2,NAME3,NAME4,COLNAME,WIDTH,VIEW_FG,TENANT_ID) values ('0',1,'No','No','No','No','DOCNO',30,'Y',@tenant_id_value);
@@ -1886,7 +1901,7 @@ Insert into tbl_journal_form_type (type_id,company_id,tenant_id) values ('ezJour
 Insert into tbl_journal_form_type (type_id,company_id,tenant_id) values ('ezJournal.t09','Top',@tenant_id_value);
 Insert into tbl_journal_form_type (type_id,company_id,tenant_id) values ('ezJournal.t10','Top',@tenant_id_value);
 
-Insert into tbl_journal_form (tenant_id,form_name,form_content,type_id,form_date,form_info,company_id,form_status) values (@tenant_id_value,'일일업무일지(기본)',
+Insert into tbl_journal_form (tenant_id,form_name,form_content,form_content2,form_content3,form_content4,form_content5,form_content6,type_id,form_date,form_info,company_id,form_status) values (@tenant_id_value,'일일업무일지(기본)',
 '<div>
    <table width="629" align="center" style="border-collapse:collapse; width: 629px; font-family: 굴림체; font-size: 0pt; table-layout: fixed; -design-time-lock: true; ">
       <tbody>
@@ -2006,9 +2021,605 @@ Insert into tbl_journal_form (tenant_id,form_name,form_content,type_id,form_date
 <p>
    <span>&nbsp;</span>
 </p>'
-,'ezJournal.t05',UTC_TIMESTAMP(),'기본일일업무일지','Top','basic');
+,
+'<div>
+   <table width="629" align="center" style="border-collapse:collapse; width: 629px; font-family: 굴림체; font-size: 0pt; table-layout: fixed; -design-time-lock: true; ">
+      <tbody>
+         <tr>
+            <td width="629" height="60" style="border: 1px rgb(255, 255, 255); border-image: none; width: 629px; height: 60px; vertical-align: middle;" colspan="2">
+               <table width="629" style="width: 629px; font-family: 굴림체; font-size: 10pt;">
+                  <tbody>
+                     <tr>
+                        <td width="629" height="50" style="border: 1px rgb(255, 255, 255); border-image: none; width: 629px; height: 50px; vertical-align: middle;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-size: 24pt; font-weight: bold;">Daily Journal</span>
+                           </p>
+                        </td>
+                     </tr>
+                  </tbody>
+               </table>
+            </td>
+         </tr>
+         <tr>
+            <td width="12" height="71" style="border: 1px rgb(255, 255, 255); border-image: none; width: 12px; height: 71px; vertical-align: middle;">
+               <p style="font-family: 맑은 고딕; font-size: 13px; margin-top: 0pt; margin-bottom: 0pt;">
+                  <span>&nbsp;</span>
+               </p>
+            </td>
+            <td width="315" height="71" style="border: 1px rgb(255, 255, 255); border-image: none; width: 313px; height: 71px; vertical-align: middle;">
+               <div>
+                  <table width="311" align="right" style="border-collapse:collapse; width: 311px; height: 69px; font-family: 굴림체; font-size: 10pt; table-layout: fixed; -design-time-lock: true;">
+                     <tbody>
+                        <tr>
+                           <td width="115"style="width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;">
+                              <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                                 <span style="font-weight: bold;">Department</span>
+                              </p>
+                           </td>
+                           <td width="186" class="FIELD" id="journalWriterDept" style="width: 186px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;" free="">
+                              <p style="font-family: 맑은 고딕; font-size: 13px;">@journalWriterDept</p>
+                           </td>
+                        </tr>
+                        <tr>
+                           <td width="115" style="width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;">
+                              <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                                 <span style="font-weight: bold;">Writer</span>
+                              </p>
+                           </td>
+                           <td width="186" class="FIELD" id="journalWriterName" style="width: 186px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;" free="">
+                              <p style="font-family: 맑은 고딕; font-size: 13px;">@journalWriterName</p>
+                           </td>
+                        </tr>
+                        <tr>
+                           <td width="115" style="width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-style: solid; border-bottom-style: solid; border-left-style: solid;">
+                              <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                                 <span style="font-weight: bold;">Date</span>
+                              </p>
+                           </td>
+                           <td width="186" class="FIELD" id="journalWriteDate" style="border: 1px solid rgb(0, 0, 0); border-image: none; width: 186px; vertical-align: middle;" free="">
+                              <p style="font-family: 맑은 고딕; font-size: 13px;">@journalWriteDate</p>
+                           </td>
+                        </tr>
+                     </tbody>
+                  </table>
+               </div>
+            </td>
+         </tr>
+         <tr>
+            <td width="629" style="border: 1px rgb(255, 255, 255); border-image: none; width: 629px; vertical-align: top; padding-top: 5px;" colspan="2" free="">
+               <div>
+                  <span>
+                     <br>
+                  </span>
+               </div>
+               <table width="630" style="border-collapse:collapse; width: 630px; height: 100%; font-family: 굴림체; font-size: 10pt;">
+                  <tbody>
+                     <tr>
+                        <td width="104" height="38" style="width: 104px; height: 38px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid; background-color: #edf3f8;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">Type</span>
+                           </p>
+                        </td>
+                        <td width="520" height="38" style="width: 520px; height: 38px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid; background-color: #edf3f8;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">Task Details</span>
+                           </p>
+                        </td>
+                     </tr>
+                     <tr>
+                        <td width="104" height="200" style="width: 104px; height: 200px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">Today</span>
+                           </p>
+                        </td>
+                        <td width="520" id="thisJournal" style="width: 520px; vertical-align: top; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;" free="">
+                           <p style="font-family: 맑은 고딕; font-size: 13px;">&nbsp;</p>
+                        </td>
+                     </tr>
+                     <tr>
+                        <td width="104" height="200" style="border-width: 1px medium 1px 1px; border-style: solid none solid solid; border-color: rgb(0, 0, 0) currentColor rgb(0, 0, 0) rgb(0, 0, 0); border-image: none; width: 104px; height: 200px; vertical-align: middle;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">Tomorrow</span>
+                           </p>
+                        </td>
+                        <td width="520" id="nextJournal" style="border: 1px solid rgb(0, 0, 0); border-image: none; width: 520px; vertical-align: top;" free="">
+                           <p style="font-family: 맑은 고딕; font-size: 13px;">&nbsp;</p>
+                        </td>
+                     </tr>
+                  </tbody>
+               </table>
+            </td>
+         </tr>
+      </tbody>
+   </table>
+</div>
+<div>
+   <span>
+      <br>
+   </span>
+</div>
+<p>
+   <span>&nbsp;</span>
+</p>',
+'<div>
+   <table width="629" align="center" style="border-collapse:collapse; width: 629px; font-family: 굴림체; font-size: 0pt; table-layout: fixed; -design-time-lock: true; ">
+      <tbody>
+         <tr>
+            <td width="629" height="60" style="border: 1px rgb(255, 255, 255); border-image: none; width: 629px; height: 60px; vertical-align: middle;" colspan="2">
+               <table width="629" style="width: 629px; font-family: 굴림체; font-size: 10pt;">
+                  <tbody>
+                     <tr>
+                        <td width="629" height="50" style="border: 1px rgb(255, 255, 255); border-image: none; width: 629px; height: 50px; vertical-align: middle;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-size: 24pt; font-weight: bold;">日報業務報告書</span>
+                           </p>
+                        </td>
+                     </tr>
+                  </tbody>
+               </table>
+            </td>
+         </tr>
+         <tr>
+            <td width="12" height="71" style="border: 1px rgb(255, 255, 255); border-image: none; width: 12px; height: 71px; vertical-align: middle;">
+               <p style="font-family: 맑은 고딕; font-size: 13px; margin-top: 0pt; margin-bottom: 0pt;">
+                  <span>&nbsp;</span>
+               </p>
+            </td>
+            <td width="315" height="71" style="border: 1px rgb(255, 255, 255); border-image: none; width: 313px; height: 71px; vertical-align: middle;">
+               <div>
+                  <table width="311" align="right" style="border-collapse:collapse; width: 311px; height: 69px; font-family: 굴림체; font-size: 10pt; table-layout: fixed; -design-time-lock: true;">
+                     <tbody>
+                        <tr>
+                           <td width="115"style="width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;">
+                              <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                                 <span style="font-weight: bold;">部&nbsp;&nbsp;署&nbsp;&nbsp;名</span>
+                              </p>
+                           </td>
+                           <td width="186" class="FIELD" id="journalWriterDept" style="width: 186px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;" free="">
+                              <p style="font-family: 맑은 고딕; font-size: 13px;">@journalWriterDept</p>
+                           </td>
+                        </tr>
+                        <tr>
+                           <td width="115" style="width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;">
+                              <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                                 <span style="font-weight: bold;">作&nbsp;&nbsp;成&nbsp;&nbsp;者</span>
+                              </p>
+                           </td>
+                           <td width="186" class="FIELD" id="journalWriterName" style="width: 186px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;" free="">
+                              <p style="font-family: 맑은 고딕; font-size: 13px;">@journalWriterName</p>
+                           </td>
+                        </tr>
+                        <tr>
+                           <td width="115" style="width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-style: solid; border-bottom-style: solid; border-left-style: solid;">
+                              <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                                 <span style="font-weight: bold;">作&nbsp;&nbsp;成&nbsp;&nbsp;日</span>
+                              </p>
+                           </td>
+                           <td width="186" class="FIELD" id="journalWriteDate" style="border: 1px solid rgb(0, 0, 0); border-image: none; width: 186px; vertical-align: middle;" free="">
+                              <p style="font-family: 맑은 고딕; font-size: 13px;">@journalWriteDate</p>
+                           </td>
+                        </tr>
+                     </tbody>
+                  </table>
+               </div>
+            </td>
+         </tr>
+         <tr>
+            <td width="629" style="border: 1px rgb(255, 255, 255); border-image: none; width: 629px; vertical-align: top; padding-top: 5px;" colspan="2" free="">
+               <div>
+                  <span>
+                     <br>
+                  </span>
+               </div>
+               <table width="630" style="border-collapse:collapse; width: 630px; height: 100%; font-family: 굴림체; font-size: 10pt;">
+                  <tbody>
+                     <tr>
+                        <td width="104" height="38" style="width: 104px; height: 38px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid; background-color: #edf3f8;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">分&nbsp;類</span>
+                           </p>
+                        </td>
+                        <td width="520" height="38" style="width: 520px; height: 38px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid; background-color: #edf3f8;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">業務内容および進捗状況</span>
+                           </p>
+                        </td>
+                     </tr>
+                     <tr>
+                        <td width="104" height="200" style="width: 104px; height: 200px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">本&nbsp;日</span>
+                           </p>
+                        </td>
+                        <td width="520" id="thisJournal" style="width: 520px; vertical-align: top; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;" free="">
+                           <p style="font-family: 맑은 고딕; font-size: 13px;">&nbsp;</p>
+                        </td>
+                     </tr>
+                     <tr>
+                        <td width="104" height="200" style="border-width: 1px medium 1px 1px; border-style: solid none solid solid; border-color: rgb(0, 0, 0) currentColor rgb(0, 0, 0) rgb(0, 0, 0); border-image: none; width: 104px; height: 200px; vertical-align: middle;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">翌&nbsp;日</span>
+                           </p>
+                        </td>
+                        <td width="520" id="nextJournal" style="border: 1px solid rgb(0, 0, 0); border-image: none; width: 520px; vertical-align: top;" free="">
+                           <p style="font-family: 맑은 고딕; font-size: 13px;">&nbsp;</p>
+                        </td>
+                     </tr>
+                  </tbody>
+               </table>
+            </td>
+         </tr>
+      </tbody>
+   </table>
+</div>
+<div>
+   <span>
+      <br>
+   </span>
+</div>
+<p>
+   <span>&nbsp;</span>
+</p>',
+'<div>
+   <table width="629" align="center" style="border-collapse:collapse; width: 629px; font-family: 굴림체; font-size: 0pt; table-layout: fixed; -design-time-lock: true; ">
+      <tbody>
+         <tr>
+            <td width="629" height="60" style="border: 1px rgb(255, 255, 255); border-image: none; width: 629px; height: 60px; vertical-align: middle;" colspan="2">
+               <table width="629" style="width: 629px; font-family: 굴림체; font-size: 10pt;">
+                  <tbody>
+                     <tr>
+                        <td width="629" height="50" style="border: 1px rgb(255, 255, 255); border-image: none; width: 629px; height: 50px; vertical-align: middle;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-size: 24pt; font-weight: bold;">일일업무일지(중국어-사용시번역필요)</span>
+                           </p>
+                        </td>
+                     </tr>
+                  </tbody>
+               </table>
+            </td>
+         </tr>
+         <tr>
+            <td width="12" height="71" style="border: 1px rgb(255, 255, 255); border-image: none; width: 12px; height: 71px; vertical-align: middle;">
+               <p style="font-family: 맑은 고딕; font-size: 13px; margin-top: 0pt; margin-bottom: 0pt;">
+                  <span>&nbsp;</span>
+               </p>
+            </td>
+            <td width="315" height="71" style="border: 1px rgb(255, 255, 255); border-image: none; width: 313px; height: 71px; vertical-align: middle;">
+               <div>
+                  <table width="311" align="right" style="border-collapse:collapse; width: 311px; height: 69px; font-family: 굴림체; font-size: 10pt; table-layout: fixed; -design-time-lock: true;">
+                     <tbody>
+                        <tr>
+                           <td width="115"style="width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;">
+                              <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                                 <span style="font-weight: bold;">부&nbsp;&nbsp;서&nbsp;&nbsp;명</span>
+                              </p>
+                           </td>
+                           <td width="186" class="FIELD" id="journalWriterDept" style="width: 186px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;" free="">
+                              <p style="font-family: 맑은 고딕; font-size: 13px;">@journalWriterDept</p>
+                           </td>
+                        </tr>
+                        <tr>
+                           <td width="115" style="width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;">
+                              <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                                 <span style="font-weight: bold;">작&nbsp;&nbsp;성&nbsp;&nbsp;자</span>
+                              </p>
+                           </td>
+                           <td width="186" class="FIELD" id="journalWriterName" style="width: 186px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;" free="">
+                              <p style="font-family: 맑은 고딕; font-size: 13px;">@journalWriterName</p>
+                           </td>
+                        </tr>
+                        <tr>
+                           <td width="115" style="width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-style: solid; border-bottom-style: solid; border-left-style: solid;">
+                              <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                                 <span style="font-weight: bold;">작&nbsp;&nbsp;성&nbsp;&nbsp;일</span>
+                              </p>
+                           </td>
+                           <td width="186" class="FIELD" id="journalWriteDate" style="border: 1px solid rgb(0, 0, 0); border-image: none; width: 186px; vertical-align: middle;" free="">
+                              <p style="font-family: 맑은 고딕; font-size: 13px;">@journalWriteDate</p>
+                           </td>
+                        </tr>
+                     </tbody>
+                  </table>
+               </div>
+            </td>
+         </tr>
+         <tr>
+            <td width="629" style="border: 1px rgb(255, 255, 255); border-image: none; width: 629px; vertical-align: top; padding-top: 5px;" colspan="2" free="">
+               <div>
+                  <span>
+                     <br>
+                  </span>
+               </div>
+               <table width="630" style="border-collapse:collapse; width: 630px; height: 100%; font-family: 굴림체; font-size: 10pt;">
+                  <tbody>
+                     <tr>
+                        <td width="104" height="38" style="width: 104px; height: 38px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid; background-color: #edf3f8;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">구&nbsp;분</span>
+                           </p>
+                        </td>
+                        <td width="520" height="38" style="width: 520px; height: 38px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid; background-color: #edf3f8;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">업무내용 및 진행사항</span>
+                           </p>
+                        </td>
+                     </tr>
+                     <tr>
+                        <td width="104" height="200" style="width: 104px; height: 200px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">금&nbsp;일</span>
+                           </p>
+                        </td>
+                        <td width="520" id="thisJournal" style="width: 520px; vertical-align: top; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;" free="">
+                           <p style="font-family: 맑은 고딕; font-size: 13px;"></p>
+                        </td>
+                     </tr>
+                     <tr>
+                        <td width="104" height="200" style="border-width: 1px medium 1px 1px; border-style: solid none solid solid; border-color: rgb(0, 0, 0) currentColor rgb(0, 0, 0) rgb(0, 0, 0); border-image: none; width: 104px; height: 200px; vertical-align: middle;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">익&nbsp;일</span>
+                           </p>
+                        </td>
+                        <td width="520" id="nextJournal" style="border: 1px solid rgb(0, 0, 0); border-image: none; width: 520px; vertical-align: top;" free="">
+                           <p style="font-family: 맑은 고딕; font-size: 13px;"></p>
+                        </td>
+                     </tr>
+                  </tbody>
+               </table>
+            </td>
+         </tr>
+      </tbody>
+   </table>
+</div>
+<div>
+   <span>
+      <br>
+   </span>
+</div>
+<p>
+   <span>&nbsp;</span>
+</p>',
+'<div>
+   <table width="629" align="center" style="border-collapse:collapse; width: 629px; font-family: 굴림체; font-size: 0pt; table-layout: fixed; -design-time-lock: true; ">
+      <tbody>
+         <tr>
+            <td width="629" height="60" style="border: 1px rgb(255, 255, 255); border-image: none; width: 629px; height: 60px; vertical-align: middle;" colspan="2">
+               <table width="629" style="width: 629px; font-family: 굴림체; font-size: 10pt;">
+                  <tbody>
+                     <tr>
+                        <td width="629" height="50" style="border: 1px rgb(255, 255, 255); border-image: none; width: 629px; height: 50px; vertical-align: middle;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-size: 24pt; font-weight: bold;">일일업무일지(베트남어-사용시번역필요)</span>
+                           </p>
+                        </td>
+                     </tr>
+                  </tbody>
+               </table>
+            </td>
+         </tr>
+         <tr>
+            <td width="12" height="71" style="border: 1px rgb(255, 255, 255); border-image: none; width: 12px; height: 71px; vertical-align: middle;">
+               <p style="font-family: 맑은 고딕; font-size: 13px; margin-top: 0pt; margin-bottom: 0pt;">
+                  <span>&nbsp;</span>
+               </p>
+            </td>
+            <td width="315" height="71" style="border: 1px rgb(255, 255, 255); border-image: none; width: 313px; height: 71px; vertical-align: middle;">
+               <div>
+                  <table width="311" align="right" style="border-collapse:collapse; width: 311px; height: 69px; font-family: 굴림체; font-size: 10pt; table-layout: fixed; -design-time-lock: true;">
+                     <tbody>
+                        <tr>
+                           <td width="115"style="width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;">
+                              <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                                 <span style="font-weight: bold;">부&nbsp;&nbsp;서&nbsp;&nbsp;명</span>
+                              </p>
+                           </td>
+                           <td width="186" class="FIELD" id="journalWriterDept" style="width: 186px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;" free="">
+                              <p style="font-family: 맑은 고딕; font-size: 13px;">@journalWriterDept</p>
+                           </td>
+                        </tr>
+                        <tr>
+                           <td width="115" style="width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;">
+                              <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                                 <span style="font-weight: bold;">작&nbsp;&nbsp;성&nbsp;&nbsp;자</span>
+                              </p>
+                           </td>
+                           <td width="186" class="FIELD" id="journalWriterName" style="width: 186px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;" free="">
+                              <p style="font-family: 맑은 고딕; font-size: 13px;">@journalWriterName</p>
+                           </td>
+                        </tr>
+                        <tr>
+                           <td width="115" style="width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-style: solid; border-bottom-style: solid; border-left-style: solid;">
+                              <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                                 <span style="font-weight: bold;">작&nbsp;&nbsp;성&nbsp;&nbsp;일</span>
+                              </p>
+                           </td>
+                           <td width="186" class="FIELD" id="journalWriteDate" style="border: 1px solid rgb(0, 0, 0); border-image: none; width: 186px; vertical-align: middle;" free="">
+                              <p style="font-family: 맑은 고딕; font-size: 13px;">@journalWriteDate</p>
+                           </td>
+                        </tr>
+                     </tbody>
+                  </table>
+               </div>
+            </td>
+         </tr>
+         <tr>
+            <td width="629" style="border: 1px rgb(255, 255, 255); border-image: none; width: 629px; vertical-align: top; padding-top: 5px;" colspan="2" free="">
+               <div>
+                  <span>
+                     <br>
+                  </span>
+               </div>
+               <table width="630" style="border-collapse:collapse; width: 630px; height: 100%; font-family: 굴림체; font-size: 10pt;">
+                  <tbody>
+                     <tr>
+                        <td width="104" height="38" style="width: 104px; height: 38px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid; background-color: #edf3f8;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">구&nbsp;분</span>
+                           </p>
+                        </td>
+                        <td width="520" height="38" style="width: 520px; height: 38px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid; background-color: #edf3f8;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">업무내용 및 진행사항</span>
+                           </p>
+                        </td>
+                     </tr>
+                     <tr>
+                        <td width="104" height="200" style="width: 104px; height: 200px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">금&nbsp;일</span>
+                           </p>
+                        </td>
+                        <td width="520" id="thisJournal" style="width: 520px; vertical-align: top; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;" free="">
+                           <p style="font-family: 맑은 고딕; font-size: 13px;"></p>
+                        </td>
+                     </tr>
+                     <tr>
+                        <td width="104" height="200" style="border-width: 1px medium 1px 1px; border-style: solid none solid solid; border-color: rgb(0, 0, 0) currentColor rgb(0, 0, 0) rgb(0, 0, 0); border-image: none; width: 104px; height: 200px; vertical-align: middle;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">익&nbsp;일</span>
+                           </p>
+                        </td>
+                        <td width="520" id="nextJournal" style="border: 1px solid rgb(0, 0, 0); border-image: none; width: 520px; vertical-align: top;" free="">
+                           <p style="font-family: 맑은 고딕; font-size: 13px;"></p>
+                        </td>
+                     </tr>
+                  </tbody>
+               </table>
+            </td>
+         </tr>
+      </tbody>
+   </table>
+</div>
+<div>
+   <span>
+      <br>
+   </span>
+</div>
+<p>
+   <span>&nbsp;</span>
+</p>', 
+'<div>
+   <table width="629" align="center" style="border-collapse:collapse; width: 629px; font-family: 굴림체; font-size: 0pt; table-layout: fixed; -design-time-lock: true; ">
+      <tbody>
+         <tr>
+            <td width="629" height="60" style="border: 1px rgb(255, 255, 255); border-image: none; width: 629px; height: 60px; vertical-align: middle;" colspan="2">
+               <table width="629" style="width: 629px; font-family: 굴림체; font-size: 10pt;">
+                  <tbody>
+                     <tr>
+                        <td width="629" height="50" style="border: 1px rgb(255, 255, 255); border-image: none; width: 629px; height: 50px; vertical-align: middle;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-size: 24pt; font-weight: bold;">Daily Journal</span>
+                           </p>
+                        </td>
+                     </tr>
+                  </tbody>
+               </table>
+            </td>
+         </tr>
+         <tr>
+            <td width="12" height="71" style="border: 1px rgb(255, 255, 255); border-image: none; width: 12px; height: 71px; vertical-align: middle;">
+               <p style="font-family: 맑은 고딕; font-size: 13px; margin-top: 0pt; margin-bottom: 0pt;">
+                  <span>&nbsp;</span>
+               </p>
+            </td>
+            <td width="315" height="71" style="border: 1px rgb(255, 255, 255); border-image: none; width: 313px; height: 71px; vertical-align: middle;">
+               <div>
+                  <table width="311" align="right" style="border-collapse:collapse; width: 311px; height: 69px; font-family: 굴림체; font-size: 10pt; table-layout: fixed; -design-time-lock: true;">
+                     <tbody>
+                        <tr>
+                           <td width="115"style="width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;">
+                              <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                                 <span style="font-weight: bold;">Department</span>
+                              </p>
+                           </td>
+                           <td width="186" class="FIELD" id="journalWriterDept" style="width: 186px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;" free="">
+                              <p style="font-family: 맑은 고딕; font-size: 13px;">@journalWriterDept</p>
+                           </td>
+                        </tr>
+                        <tr>
+                           <td width="115" style="width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;">
+                              <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                                 <span style="font-weight: bold;">Writer</span>
+                              </p>
+                           </td>
+                           <td width="186" class="FIELD" id="journalWriterName" style="width: 186px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;" free="">
+                              <p style="font-family: 맑은 고딕; font-size: 13px;">@journalWriterName</p>
+                           </td>
+                        </tr>
+                        <tr>
+                           <td width="115" style="width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-style: solid; border-bottom-style: solid; border-left-style: solid;">
+                              <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                                 <span style="font-weight: bold;">Date</span>
+                              </p>
+                           </td>
+                           <td width="186" class="FIELD" id="journalWriteDate" style="border: 1px solid rgb(0, 0, 0); border-image: none; width: 186px; vertical-align: middle;" free="">
+                              <p style="font-family: 맑은 고딕; font-size: 13px;">@journalWriteDate</p>
+                           </td>
+                        </tr>
+                     </tbody>
+                  </table>
+               </div>
+            </td>
+         </tr>
+         <tr>
+            <td width="629" style="border: 1px rgb(255, 255, 255); border-image: none; width: 629px; vertical-align: top; padding-top: 5px;" colspan="2" free="">
+               <div>
+                  <span>
+                     <br>
+                  </span>
+               </div>
+               <table width="630" style="border-collapse:collapse; width: 630px; height: 100%; font-family: 굴림체; font-size: 10pt;">
+                  <tbody>
+                     <tr>
+                        <td width="104" height="38" style="width: 104px; height: 38px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid; background-color: #edf3f8;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">Type</span>
+                           </p>
+                        </td>
+                        <td width="520" height="38" style="width: 520px; height: 38px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid; background-color: #edf3f8;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">Task Details</span>
+                           </p>
+                        </td>
+                     </tr>
+                     <tr>
+                        <td width="104" height="200" style="width: 104px; height: 200px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">Today</span>
+                           </p>
+                        </td>
+                        <td width="520" id="thisJournal" style="width: 520px; vertical-align: top; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;" free="">
+                           <p style="font-family: 맑은 고딕; font-size: 13px;">&nbsp;</p>
+                        </td>
+                     </tr>
+                     <tr>
+                        <td width="104" height="200" style="border-width: 1px medium 1px 1px; border-style: solid none solid solid; border-color: rgb(0, 0, 0) currentColor rgb(0, 0, 0) rgb(0, 0, 0); border-image: none; width: 104px; height: 200px; vertical-align: middle;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">Tomorrow</span>
+                           </p>
+                        </td>
+                        <td width="520" id="nextJournal" style="border: 1px solid rgb(0, 0, 0); border-image: none; width: 520px; vertical-align: top;" free="">
+                           <p style="font-family: 맑은 고딕; font-size: 13px;">&nbsp;</p>
+                        </td>
+                     </tr>
+                  </tbody>
+               </table>
+            </td>
+         </tr>
+      </tbody>
+   </table>
+</div>
+<div>
+   <span>
+      <br>
+   </span>
+</div>
+<p>
+   <span>&nbsp;</span>
+</p>',
+'ezJournal.t05',UTC_TIMESTAMP(),'기본일일업무일지','Top','basic');
 
-Insert into tbl_journal_form (tenant_id,form_name,form_content,type_id,form_date,form_info,company_id,form_status) values (@tenant_id_value,'주간업무일지(기본)',
+Insert into tbl_journal_form (tenant_id,form_name,form_content,form_content2,form_content3,form_content4,form_content5,form_content6,type_id,form_date,form_info,company_id,form_status) values (@tenant_id_value,'주간업무일지(기본)',
 '<div>
    <table width="629" align="center" style="border-collapse:collapse; width: 629px; font-family: 굴림체; font-size: 0pt; table-layout: fixed; -design-time-lock: true; ">
       <tbody>
@@ -2127,10 +2738,605 @@ Insert into tbl_journal_form (tenant_id,form_name,form_content,type_id,form_date
 </div>
 <p>
    <span>&nbsp;</span>
-</p>'
-,'ezJournal.t06',UTC_TIMESTAMP(),'기본주간업무일지','Top','basic');
+</p>',
+'<div>
+   <table width="629" align="center" style="border-collapse:collapse; width: 629px; font-family: 굴림체; font-size: 0pt; table-layout: fixed; -design-time-lock: true; ">
+      <tbody>
+         <tr>
+            <td width="629" height="60" style="border: 1px rgb(255, 255, 255); border-image: none; width: 629px; height: 60px; vertical-align: middle;" colspan="2">
+               <table width="629" style="width: 629px; font-family: 굴림체; font-size: 10pt;">
+                  <tbody>
+                     <tr>
+                        <td width="629" height="50" style="border: 1px rgb(255, 255, 255); border-image: none; width: 629px; height: 50px; vertical-align: middle;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-size: 24pt; font-weight: bold;">Weekly Journal</span>
+                           </p>
+                        </td>
+                     </tr>
+                  </tbody>
+               </table>
+            </td>
+         </tr>
+         <tr>
+            <td width="12" height="71" style="border: 1px rgb(255, 255, 255); border-image: none; width: 12px; height: 71px; vertical-align: middle;">
+               <p style="font-family: 맑은 고딕; font-size: 13px; margin-top: 0pt; margin-bottom: 0pt;">
+                  <span>&nbsp;</span>
+               </p>
+            </td>
+            <td width="315" height="71" style="border: 1px rgb(255, 255, 255); border-image: none; width: 313px; height: 71px; vertical-align: middle;">
+               <div>
+                  <table width="311" align="right" style="border-collapse:collapse; width: 311px; height: 69px; font-family: 굴림체; font-size: 10pt; table-layout: fixed; -design-time-lock: true;">
+                     <tbody>
+                        <tr>
+                           <td width="115"style="width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;">
+                              <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                                 <span style="font-weight: bold;">Department</span>
+                              </p>
+                           </td>
+                           <td width="186" class="FIELD" id="journalWriterDept" style="width: 186px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;" free="">
+                              <p style="font-family: 맑은 고딕; font-size: 13px;">@journalWriterDept</p>
+                           </td>
+                        </tr>
+                        <tr>
+                           <td width="115" style="width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;">
+                              <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                                 <span style="font-weight: bold;">Writer</span>
+                              </p>
+                           </td>
+                           <td width="186" class="FIELD" id="journalWriterName" style="width: 186px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;" free="">
+                              <p style="font-family: 맑은 고딕; font-size: 13px;">@journalWriterName</p>
+                           </td>
+                        </tr>
+                        <tr>
+                           <td width="115" style="width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-style: solid; border-bottom-style: solid; border-left-style: solid;">
+                              <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                                 <span style="font-weight: bold;">Date</span>
+                              </p>
+                           </td>
+                           <td width="186" class="FIELD" id="journalWriteDate" style="border: 1px solid rgb(0, 0, 0); border-image: none; width: 186px; vertical-align: middle;" free="">
+                              <p style="font-family: 맑은 고딕; font-size: 13px;">@journalWriteDate</p>
+                           </td>
+                        </tr>
+                     </tbody>
+                  </table>
+               </div>
+            </td>
+         </tr>
+         <tr>
+            <td width="629" style="border: 1px rgb(255, 255, 255); border-image: none; width: 629px; vertical-align: top; padding-top: 5px;" colspan="2" free="">
+               <div>
+                  <span>
+                     <br>
+                  </span>
+               </div>
+               <table width="630" style="border-collapse:collapse; width: 630px; height: 100%; font-family: 굴림체; font-size: 10pt;">
+                  <tbody>
+                     <tr>
+                        <td width="104" height="38" style="width: 104px; height: 38px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid; background-color: #edf3f8;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">Type</span>
+                           </p>
+                        </td>
+                        <td width="520" height="38" style="width: 520px; height: 38px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid; background-color: #edf3f8;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">Task Details</span>
+                           </p>
+                        </td>
+                     </tr>
+                     <tr>
+                        <td width="104" height="200" style="width: 104px; height: 200px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">This Week</span>
+                           </p>
+                        </td>
+                        <td width="520" id="thisJournal" style="width: 520px; vertical-align: top; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;" free="">
+                           <p style="font-family: 맑은 고딕; font-size: 13px;">&nbsp;</p>
+                        </td>
+                     </tr>
+                     <tr>
+                        <td width="104" height="200" style="border-width: 1px medium 1px 1px; border-style: solid none solid solid; border-color: rgb(0, 0, 0) currentColor rgb(0, 0, 0) rgb(0, 0, 0); border-image: none; width: 104px; height: 200px; vertical-align: middle;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">Next Week</span>
+                           </p>
+                        </td>
+                        <td width="520" id="nextJournal" style="border: 1px solid rgb(0, 0, 0); border-image: none; width: 520px; vertical-align: top;" free="">
+                           <p style="font-family: 맑은 고딕; font-size: 13px;">&nbsp;</p>
+                        </td>
+                     </tr>
+                  </tbody>
+               </table>
+            </td>
+         </tr>
+      </tbody>
+   </table>
+</div>
+<div>
+   <span>
+      <br>
+   </span>
+</div>
+<p>
+   <span>&nbsp;</span>
+</p>',
+'<div>
+   <table width="629" align="center" style="border-collapse:collapse; width: 629px; font-family: 굴림체; font-size: 0pt; table-layout: fixed; -design-time-lock: true; ">
+      <tbody>
+         <tr>
+            <td width="629" height="60" style="border: 1px rgb(255, 255, 255); border-image: none; width: 629px; height: 60px; vertical-align: middle;" colspan="2">
+               <table width="629" style="width: 629px; font-family: 굴림체; font-size: 10pt;">
+                  <tbody>
+                     <tr>
+                        <td width="629" height="50" style="border: 1px rgb(255, 255, 255); border-image: none; width: 629px; height: 50px; vertical-align: middle;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-size: 24pt; font-weight: bold;">週間業務報告書</span>
+                           </p>
+                        </td>
+                     </tr>
+                  </tbody>
+               </table>
+            </td>
+         </tr>
+         <tr>
+            <td width="12" height="71" style="border: 1px rgb(255, 255, 255); border-image: none; width: 12px; height: 71px; vertical-align: middle;">
+               <p style="font-family: 맑은 고딕; font-size: 13px; margin-top: 0pt; margin-bottom: 0pt;">
+                  <span>&nbsp;</span>
+               </p>
+            </td>
+            <td width="315" height="71" style="border: 1px rgb(255, 255, 255); border-image: none; width: 313px; height: 71px; vertical-align: middle;">
+               <div>
+                  <table width="311" align="right" style="border-collapse:collapse; width: 311px; height: 69px; font-family: 굴림체; font-size: 10pt; table-layout: fixed; -design-time-lock: true;">
+                     <tbody>
+                        <tr>
+                           <td width="115"style="width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;">
+                              <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                                 <span style="font-weight: bold;">部&nbsp;&nbsp;署&nbsp;&nbsp;名</span>
+                              </p>
+                           </td>
+                           <td width="186" class="FIELD" id="journalWriterDept" style="width: 186px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;" free="">
+                              <p style="font-family: 맑은 고딕; font-size: 13px;">@journalWriterDept</p>
+                           </td>
+                        </tr>
+                        <tr>
+                           <td width="115" style="width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;">
+                              <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                                 <span style="font-weight: bold;">作&nbsp;&nbsp;成&nbsp;&nbsp;者</span>
+                              </p>
+                           </td>
+                           <td width="186" class="FIELD" id="journalWriterName" style="width: 186px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;" free="">
+                              <p style="font-family: 맑은 고딕; font-size: 13px;">@journalWriterName</p>
+                           </td>
+                        </tr>
+                        <tr>
+                           <td width="115" style="width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-style: solid; border-bottom-style: solid; border-left-style: solid;">
+                              <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                                 <span style="font-weight: bold;">作&nbsp;&nbsp;成&nbsp;&nbsp;日</span>
+                              </p>
+                           </td>
+                           <td width="186" class="FIELD" id="journalWriteDate" style="border: 1px solid rgb(0, 0, 0); border-image: none; width: 186px; vertical-align: middle;" free="">
+                              <p style="font-family: 맑은 고딕; font-size: 13px;">@journalWriteDate</p>
+                           </td>
+                        </tr>
+                     </tbody>
+                  </table>
+               </div>
+            </td>
+         </tr>
+         <tr>
+            <td width="629" style="border: 1px rgb(255, 255, 255); border-image: none; width: 629px; vertical-align: top; padding-top: 5px;" colspan="2" free="">
+               <div>
+                  <span>
+                     <br>
+                  </span>
+               </div>
+               <table width="630" style="border-collapse:collapse; width: 630px; height: 100%; font-family: 굴림체; font-size: 10pt;">
+                  <tbody>
+                     <tr>
+                        <td width="104" height="38" style="width: 104px; height: 38px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid; background-color: #edf3f8;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">分&nbsp;類</span>
+                           </p>
+                        </td>
+                        <td width="520" height="38" style="width: 520px; height: 38px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid; background-color: #edf3f8;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">業務内容および進捗状況</span>
+                           </p>
+                        </td>
+                     </tr>
+                     <tr>
+                        <td width="104" height="200" style="width: 104px; height: 200px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">今&nbsp;週 </span>
+                           </p>
+                        </td>
+                        <td width="520" id="thisJournal" style="width: 520px; vertical-align: top; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;" free="">
+                           <p style="font-family: 맑은 고딕; font-size: 13px;">&nbsp;</p>
+                        </td>
+                     </tr>
+                     <tr>
+                        <td width="104" height="200" style="border-width: 1px medium 1px 1px; border-style: solid none solid solid; border-color: rgb(0, 0, 0) currentColor rgb(0, 0, 0) rgb(0, 0, 0); border-image: none; width: 104px; height: 200px; vertical-align: middle;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">来&nbsp;週 </span>
+                           </p>
+                        </td>
+                        <td width="520" id="nextJournal" style="border: 1px solid rgb(0, 0, 0); border-image: none; width: 520px; vertical-align: top;" free="">
+                           <p style="font-family: 맑은 고딕; font-size: 13px;">&nbsp;</p>
+                        </td>
+                     </tr>
+                  </tbody>
+               </table>
+            </td>
+         </tr>
+      </tbody>
+   </table>
+</div>
+<div>
+   <span>
+      <br>
+   </span>
+</div>
+<p>
+   <span>&nbsp;</span>
+</p>',
+'<div>
+   <table width="629" align="center" style="border-collapse:collapse; width: 629px; font-family: 굴림체; font-size: 0pt; table-layout: fixed; -design-time-lock: true; ">
+      <tbody>
+         <tr>
+            <td width="629" height="60" style="border: 1px rgb(255, 255, 255); border-image: none; width: 629px; height: 60px; vertical-align: middle;" colspan="2">
+               <table width="629" style="width: 629px; font-family: 굴림체; font-size: 10pt;">
+                  <tbody>
+                     <tr>
+                        <td width="629" height="50" style="border: 1px rgb(255, 255, 255); border-image: none; width: 629px; height: 50px; vertical-align: middle;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-size: 24pt; font-weight: bold;">주간업무일지</span>
+                           </p>
+                        </td>
+                     </tr>
+                  </tbody>
+               </table>
+            </td>
+         </tr>
+         <tr>
+            <td width="12" height="71" style="border: 1px rgb(255, 255, 255); border-image: none; width: 12px; height: 71px; vertical-align: middle;">
+               <p style="font-family: 맑은 고딕; font-size: 13px; margin-top: 0pt; margin-bottom: 0pt;">
+                  <span>&nbsp;</span>
+               </p>
+            </td>
+            <td width="315" height="71" style="border: 1px rgb(255, 255, 255); border-image: none; width: 313px; height: 71px; vertical-align: middle;">
+               <div>
+                  <table width="311" align="right" style="border-collapse:collapse; width: 311px; height: 69px; font-family: 굴림체; font-size: 10pt; table-layout: fixed; -design-time-lock: true;">
+                     <tbody>
+                        <tr>
+                           <td width="115"style="width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;">
+                              <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                                 <span style="font-weight: bold;">부&nbsp;&nbsp;서&nbsp;&nbsp;명</span>
+                              </p>
+                           </td>
+                           <td width="186" class="FIELD" id="journalWriterDept" style="width: 186px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;" free="">
+                              <p style="font-family: 맑은 고딕; font-size: 13px;">@journalWriterDept</p>
+                           </td>
+                        </tr>
+                        <tr>
+                           <td width="115" style="width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;">
+                              <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                                 <span style="font-weight: bold;">작&nbsp;&nbsp;성&nbsp;&nbsp;자</span>
+                              </p>
+                           </td>
+                           <td width="186" class="FIELD" id="journalWriterName" style="width: 186px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;" free="">
+                              <p style="font-family: 맑은 고딕; font-size: 13px;">@journalWriterName</p>
+                           </td>
+                        </tr>
+                        <tr>
+                           <td width="115" style="width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-style: solid; border-bottom-style: solid; border-left-style: solid;">
+                              <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                                 <span style="font-weight: bold;">작&nbsp;&nbsp;성&nbsp;&nbsp;일</span>
+                              </p>
+                           </td>
+                           <td width="186" class="FIELD" id="journalWriteDate" style="border: 1px solid rgb(0, 0, 0); border-image: none; width: 186px; vertical-align: middle;" free="">
+                              <p style="font-family: 맑은 고딕; font-size: 13px;">@journalWriteDate</p>
+                           </td>
+                        </tr>
+                     </tbody>
+                  </table>
+               </div>
+            </td>
+         </tr>
+         <tr>
+            <td width="629" style="border: 1px rgb(255, 255, 255); border-image: none; width: 629px; vertical-align: top; padding-top: 5px;" colspan="2" free="">
+               <div>
+                  <span>
+                     <br>
+                  </span>
+               </div>
+               <table width="630" style="border-collapse:collapse; width: 630px; height: 100%; font-family: 굴림체; font-size: 10pt;">
+                  <tbody>
+                     <tr>
+                        <td width="104" height="38" style="width: 104px; height: 38px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid; background-color: #edf3f8;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">구&nbsp;분</span>
+                           </p>
+                        </td>
+                        <td width="520" height="38" style="width: 520px; height: 38px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid; background-color: #edf3f8;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">업무내용 및 진행사항</span>
+                           </p>
+                        </td>
+                     </tr>
+                     <tr>
+                        <td width="104" height="200" style="width: 104px; height: 200px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">금&nbsp;주</span>
+                           </p>
+                        </td>
+                        <td width="520" id="thisJournal" style="width: 520px; vertical-align: top; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;" free="">
+                           <p style="font-family: 맑은 고딕; font-size: 13px;"></p>
+                        </td>
+                     </tr>
+                     <tr>
+                        <td width="104" height="200" style="border-width: 1px medium 1px 1px; border-style: solid none solid solid; border-color: rgb(0, 0, 0) currentColor rgb(0, 0, 0) rgb(0, 0, 0); border-image: none; width: 104px; height: 200px; vertical-align: middle;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">차&nbsp;주</span>
+                           </p>
+                        </td>
+                        <td width="520" id="nextJournal" style="border: 1px solid rgb(0, 0, 0); border-image: none; width: 520px; vertical-align: top;" free="">
+                           <p style="font-family: 맑은 고딕; font-size: 13px;"></p>
+                        </td>
+                     </tr>
+                  </tbody>
+               </table>
+            </td>
+         </tr>
+      </tbody>
+   </table>
+</div>
+<div>
+   <span>
+      <br>
+   </span>
+</div>
+<p>
+   <span>&nbsp;</span>
+</p>',
+'<div>
+   <table width="629" align="center" style="border-collapse:collapse; width: 629px; font-family: 굴림체; font-size: 0pt; table-layout: fixed; -design-time-lock: true; ">
+      <tbody>
+         <tr>
+            <td width="629" height="60" style="border: 1px rgb(255, 255, 255); border-image: none; width: 629px; height: 60px; vertical-align: middle;" colspan="2">
+               <table width="629" style="width: 629px; font-family: 굴림체; font-size: 10pt;">
+                  <tbody>
+                     <tr>
+                        <td width="629" height="50" style="border: 1px rgb(255, 255, 255); border-image: none; width: 629px; height: 50px; vertical-align: middle;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-size: 24pt; font-weight: bold;">주간업무일지</span>
+                           </p>
+                        </td>
+                     </tr>
+                  </tbody>
+               </table>
+            </td>
+         </tr>
+         <tr>
+            <td width="12" height="71" style="border: 1px rgb(255, 255, 255); border-image: none; width: 12px; height: 71px; vertical-align: middle;">
+               <p style="font-family: 맑은 고딕; font-size: 13px; margin-top: 0pt; margin-bottom: 0pt;">
+                  <span>&nbsp;</span>
+               </p>
+            </td>
+            <td width="315" height="71" style="border: 1px rgb(255, 255, 255); border-image: none; width: 313px; height: 71px; vertical-align: middle;">
+               <div>
+                  <table width="311" align="right" style="border-collapse:collapse; width: 311px; height: 69px; font-family: 굴림체; font-size: 10pt; table-layout: fixed; -design-time-lock: true;">
+                     <tbody>
+                        <tr>
+                           <td width="115"style="width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;">
+                              <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                                 <span style="font-weight: bold;">부&nbsp;&nbsp;서&nbsp;&nbsp;명</span>
+                              </p>
+                           </td>
+                           <td width="186" class="FIELD" id="journalWriterDept" style="width: 186px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;" free="">
+                              <p style="font-family: 맑은 고딕; font-size: 13px;">@journalWriterDept</p>
+                           </td>
+                        </tr>
+                        <tr>
+                           <td width="115" style="width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;">
+                              <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                                 <span style="font-weight: bold;">작&nbsp;&nbsp;성&nbsp;&nbsp;자</span>
+                              </p>
+                           </td>
+                           <td width="186" class="FIELD" id="journalWriterName" style="width: 186px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;" free="">
+                              <p style="font-family: 맑은 고딕; font-size: 13px;">@journalWriterName</p>
+                           </td>
+                        </tr>
+                        <tr>
+                           <td width="115" style="width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-style: solid; border-bottom-style: solid; border-left-style: solid;">
+                              <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                                 <span style="font-weight: bold;">작&nbsp;&nbsp;성&nbsp;&nbsp;일</span>
+                              </p>
+                           </td>
+                           <td width="186" class="FIELD" id="journalWriteDate" style="border: 1px solid rgb(0, 0, 0); border-image: none; width: 186px; vertical-align: middle;" free="">
+                              <p style="font-family: 맑은 고딕; font-size: 13px;">@journalWriteDate</p>
+                           </td>
+                        </tr>
+                     </tbody>
+                  </table>
+               </div>
+            </td>
+         </tr>
+         <tr>
+            <td width="629" style="border: 1px rgb(255, 255, 255); border-image: none; width: 629px; vertical-align: top; padding-top: 5px;" colspan="2" free="">
+               <div>
+                  <span>
+                     <br>
+                  </span>
+               </div>
+               <table width="630" style="border-collapse:collapse; width: 630px; height: 100%; font-family: 굴림체; font-size: 10pt;">
+                  <tbody>
+                     <tr>
+                        <td width="104" height="38" style="width: 104px; height: 38px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid; background-color: #edf3f8;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">구&nbsp;분</span>
+                           </p>
+                        </td>
+                        <td width="520" height="38" style="width: 520px; height: 38px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid; background-color: #edf3f8;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">업무내용 및 진행사항</span>
+                           </p>
+                        </td>
+                     </tr>
+                     <tr>
+                        <td width="104" height="200" style="width: 104px; height: 200px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">금&nbsp;주</span>
+                           </p>
+                        </td>
+                        <td width="520" id="thisJournal" style="width: 520px; vertical-align: top; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;" free="">
+                           <p style="font-family: 맑은 고딕; font-size: 13px;"></p>
+                        </td>
+                     </tr>
+                     <tr>
+                        <td width="104" height="200" style="border-width: 1px medium 1px 1px; border-style: solid none solid solid; border-color: rgb(0, 0, 0) currentColor rgb(0, 0, 0) rgb(0, 0, 0); border-image: none; width: 104px; height: 200px; vertical-align: middle;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">차&nbsp;주</span>
+                           </p>
+                        </td>
+                        <td width="520" id="nextJournal" style="border: 1px solid rgb(0, 0, 0); border-image: none; width: 520px; vertical-align: top;" free="">
+                           <p style="font-family: 맑은 고딕; font-size: 13px;"></p>
+                        </td>
+                     </tr>
+                  </tbody>
+               </table>
+            </td>
+         </tr>
+      </tbody>
+   </table>
+</div>
+<div>
+   <span>
+      <br>
+   </span>
+</div>
+<p>
+   <span>&nbsp;</span>
+</p>',
+'<div>	
+   <table width="629" align="center" style="border-collapse:collapse; width: 629px; font-family: 굴림체; font-size: 0pt; table-layout: fixed; -design-time-lock: true; ">
+      <tbody>
+         <tr>
+            <td width="629" height="60" style="border: 1px rgb(255, 255, 255); border-image: none; width: 629px; height: 60px; vertical-align: middle;" colspan="2">
+               <table width="629" style="width: 629px; font-family: 굴림체; font-size: 10pt;">
+                  <tbody>
+                     <tr>
+                        <td width="629" height="50" style="border: 1px rgb(255, 255, 255); border-image: none; width: 629px; height: 50px; vertical-align: middle;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-size: 24pt; font-weight: bold;">Weekly Journal</span>
+                           </p>
+                        </td>
+                     </tr>
+                  </tbody>
+               </table>
+            </td>
+         </tr>
+         <tr>
+            <td width="12" height="71" style="border: 1px rgb(255, 255, 255); border-image: none; width: 12px; height: 71px; vertical-align: middle;">
+               <p style="font-family: 맑은 고딕; font-size: 13px; margin-top: 0pt; margin-bottom: 0pt;">
+                  <span>&nbsp;</span>
+               </p>
+            </td>
+            <td width="315" height="71" style="border: 1px rgb(255, 255, 255); border-image: none; width: 313px; height: 71px; vertical-align: middle;">
+               <div>
+                  <table width="311" align="right" style="border-collapse:collapse; width: 311px; height: 69px; font-family: 굴림체; font-size: 10pt; table-layout: fixed; -design-time-lock: true;">
+                     <tbody>
+                        <tr>
+                           <td width="115"style="width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;">
+                              <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                                 <span style="font-weight: bold;">Department</span>
+                              </p>
+                           </td>
+                           <td width="186" class="FIELD" id="journalWriterDept" style="width: 186px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;" free="">
+                              <p style="font-family: 맑은 고딕; font-size: 13px;">@journalWriterDept</p>
+                           </td>
+                        </tr>
+                        <tr>
+                           <td width="115" style="width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;">
+                              <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                                 <span style="font-weight: bold;">Writer</span>
+                              </p>
+                           </td>
+                           <td width="186" class="FIELD" id="journalWriterName" style="width: 186px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;" free="">
+                              <p style="font-family: 맑은 고딕; font-size: 13px;">@journalWriterName</p>
+                           </td>
+                        </tr>
+                        <tr>
+                           <td width="115" style="width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-style: solid; border-bottom-style: solid; border-left-style: solid;">
+                              <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                                 <span style="font-weight: bold;">Date</span>
+                              </p>
+                           </td>
+                           <td width="186" class="FIELD" id="journalWriteDate" style="border: 1px solid rgb(0, 0, 0); border-image: none; width: 186px; vertical-align: middle;" free="">
+                              <p style="font-family: 맑은 고딕; font-size: 13px;">@journalWriteDate</p>
+                           </td>
+                        </tr>
+                     </tbody>
+                  </table>
+               </div>
+            </td>
+         </tr>
+         <tr>
+            <td width="629" style="border: 1px rgb(255, 255, 255); border-image: none; width: 629px; vertical-align: top; padding-top: 5px;" colspan="2" free="">
+               <div>
+                  <span>
+                     <br>
+                  </span>
+               </div>
+               <table width="630" style="border-collapse:collapse; width: 630px; height: 100%; font-family: 굴림체; font-size: 10pt;">
+                  <tbody>
+                     <tr>
+                        <td width="104" height="38" style="width: 104px; height: 38px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid; background-color: #edf3f8;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">Type</span>
+                           </p>
+                        </td>
+                        <td width="520" height="38" style="width: 520px; height: 38px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid; background-color: #edf3f8;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">Task Details</span>
+                           </p>
+                        </td>
+                     </tr>
+                     <tr>
+                        <td width="104" height="200" style="width: 104px; height: 200px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">This Week</span>
+                           </p>
+                        </td>
+                        <td width="520" id="thisJournal" style="width: 520px; vertical-align: top; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;" free="">
+                           <p style="font-family: 맑은 고딕; font-size: 13px;">&nbsp;</p>
+                        </td>
+                     </tr>
+                     <tr>
+                        <td width="104" height="200" style="border-width: 1px medium 1px 1px; border-style: solid none solid solid; border-color: rgb(0, 0, 0) currentColor rgb(0, 0, 0) rgb(0, 0, 0); border-image: none; width: 104px; height: 200px; vertical-align: middle;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">Next Week</span>
+                           </p>
+                        </td>
+                        <td width="520" id="nextJournal" style="border: 1px solid rgb(0, 0, 0); border-image: none; width: 520px; vertical-align: top;" free="">
+                           <p style="font-family: 맑은 고딕; font-size: 13px;">&nbsp;</p>
+                        </td>
+                     </tr>
+                  </tbody>
+               </table>
+            </td>
+         </tr>
+      </tbody>
+   </table>
+</div>
+<div>
+   <span>
+      <br>
+   </span>
+</div>
+<p>
+   <span>&nbsp;</span>
+</p>',
+'ezJournal.t06',UTC_TIMESTAMP(),'기본주간업무일지','Top','basic');
 
-Insert into tbl_journal_form (tenant_id,form_name,form_content,type_id,form_date,form_info,company_id,form_status) values (@tenant_id_value,'월간업무일지(기본)',
+Insert into tbl_journal_form (tenant_id,form_name,form_content,form_content2,form_content3,form_content4,form_content5,form_content6,type_id,form_date,form_info,company_id,form_status) values (@tenant_id_value,'월간업무일지(기본)',
 '<div>
    <table width="629" align="center" style="border-collapse:collapse; width: 629px; font-family: 굴림체; font-size: 0pt; table-layout: fixed; -design-time-lock: true; ">
       <tbody>
@@ -2249,10 +3455,605 @@ Insert into tbl_journal_form (tenant_id,form_name,form_content,type_id,form_date
 </div>
 <p>
    <span>&nbsp;</span>
-</p>'
-,'ezJournal.t07',UTC_TIMESTAMP(),'기본월간업무일지','Top','basic');
+</p>',
+'<div>
+   <table width="629" align="center" style="border-collapse:collapse; width: 629px; font-family: 굴림체; font-size: 0pt; table-layout: fixed; -design-time-lock: true; ">
+      <tbody>
+         <tr>
+            <td width="629" height="60" style="border: 1px rgb(255, 255, 255); border-image: none; width: 629px; height: 60px; vertical-align: middle;" colspan="2">
+               <table width="629" style="width: 629px; font-family: 굴림체; font-size: 10pt;">
+                  <tbody>
+                     <tr>
+                        <td width="629" height="50" style="border: 1px rgb(255, 255, 255); border-image: none; width: 629px; height: 50px; vertical-align: middle;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-size: 24pt; font-weight: bold;">Monthly Journal</span>
+                           </p>
+                        </td>
+                     </tr>
+                  </tbody>
+               </table>
+            </td>
+         </tr>
+         <tr>
+            <td width="12" height="71" style="border: 1px rgb(255, 255, 255); border-image: none; width: 12px; height: 71px; vertical-align: middle;">
+               <p style="font-family: 맑은 고딕; font-size: 13px; margin-top: 0pt; margin-bottom: 0pt;">
+                  <span>&nbsp;</span>
+               </p>
+            </td>
+            <td width="315" height="71" style="border: 1px rgb(255, 255, 255); border-image: none; width: 313px; height: 71px; vertical-align: middle;">
+               <div>
+                  <table width="311" align="right" style="border-collapse:collapse; width: 311px; height: 69px; font-family: 굴림체; font-size: 10pt; table-layout: fixed; -design-time-lock: true;">
+                     <tbody>
+                        <tr>
+                           <td width="115"style="width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;">
+                              <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                                 <span style="font-weight: bold;">Department</span>
+                              </p>
+                           </td>
+                           <td width="186" class="FIELD" id="journalWriterDept" style="width: 186px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;" free="">
+                              <p style="font-family: 맑은 고딕; font-size: 13px;">@journalWriterDept</p>
+                           </td>
+                        </tr>
+                        <tr>
+                           <td width="115" style="width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;">
+                              <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                                 <span style="font-weight: bold;">Writer</span>
+                              </p>
+                           </td>
+                           <td width="186" class="FIELD" id="journalWriterName" style="width: 186px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;" free="">
+                              <p style="font-family: 맑은 고딕; font-size: 13px;">@journalWriterName</p>
+                           </td>
+                        </tr>
+                        <tr>
+                           <td width="115" style="width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-style: solid; border-bottom-style: solid; border-left-style: solid;">
+                              <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                                 <span style="font-weight: bold;">Date</span>
+                              </p>
+                           </td>
+                           <td width="186" class="FIELD" id="journalWriteDate" style="border: 1px solid rgb(0, 0, 0); border-image: none; width: 186px; vertical-align: middle;" free="">
+                              <p style="font-family: 맑은 고딕; font-size: 13px;">@journalWriteDate</p>
+                           </td>
+                        </tr>
+                     </tbody>
+                  </table>
+               </div>
+            </td>
+         </tr>
+         <tr>
+            <td width="629" style="border: 1px rgb(255, 255, 255); border-image: none; width: 629px; vertical-align: top; padding-top: 5px;" colspan="2" free="">
+               <div>
+                  <span>
+                     <br>
+                  </span>
+               </div>
+               <table width="630" style="border-collapse:collapse; width: 630px; height: 100%; font-family: 굴림체; font-size: 10pt;">
+                  <tbody>
+                     <tr>
+                        <td width="104" height="38" style="width: 104px; height: 38px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid; background-color: #edf3f8;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">Type</span>
+                           </p>
+                        </td>
+                        <td width="520" height="38" style="width: 520px; height: 38px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid; background-color: #edf3f8;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">Task Details</span>
+                           </p>
+                        </td>
+                     </tr>
+                     <tr>
+                        <td width="104" height="200" style="width: 104px; height: 200px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">This Month</span>
+                           </p>
+                        </td>
+                        <td width="520" id="thisJournal" style="width: 520px; vertical-align: top; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;" free="">
+                           <p style="font-family: 맑은 고딕; font-size: 13px;">&nbsp;</p>
+                        </td>
+                     </tr>
+                     <tr>
+                        <td width="104" height="200" style="border-width: 1px medium 1px 1px; border-style: solid none solid solid; border-color: rgb(0, 0, 0) currentColor rgb(0, 0, 0) rgb(0, 0, 0); border-image: none; width: 104px; height: 200px; vertical-align: middle;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">Next Month</span>
+                           </p>
+                        </td>
+                        <td width="520" id="nextJournal" style="border: 1px solid rgb(0, 0, 0); border-image: none; width: 520px; vertical-align: top;" free="">
+                           <p style="font-family: 맑은 고딕; font-size: 13px;">&nbsp;</p>
+                        </td>
+                     </tr>
+                  </tbody>
+               </table>
+            </td>
+         </tr>
+      </tbody>
+   </table>
+</div>
+<div>
+   <span>
+      <br>
+   </span>
+</div>
+<p>
+   <span>&nbsp;</span>
+</p>',
+'<div>
+   <table width="629" align="center" style="border-collapse:collapse; width: 629px; font-family: 굴림체; font-size: 0pt; table-layout: fixed; -design-time-lock: true; ">
+      <tbody>
+         <tr>
+            <td width="629" height="60" style="border: 1px rgb(255, 255, 255); border-image: none; width: 629px; height: 60px; vertical-align: middle;" colspan="2">
+               <table width="629" style="width: 629px; font-family: 굴림체; font-size: 10pt;">
+                  <tbody>
+                     <tr>
+                        <td width="629" height="50" style="border: 1px rgb(255, 255, 255); border-image: none; width: 629px; height: 50px; vertical-align: middle;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-size: 24pt; font-weight: bold;">Monthly Journal</span>
+                           </p>
+                        </td>
+                     </tr>
+                  </tbody>
+               </table>
+            </td>
+         </tr>
+         <tr>
+            <td width="12" height="71" style="border: 1px rgb(255, 255, 255); border-image: none; width: 12px; height: 71px; vertical-align: middle;">
+               <p style="font-family: 맑은 고딕; font-size: 13px; margin-top: 0pt; margin-bottom: 0pt;">
+                  <span>&nbsp;</span>
+               </p>
+            </td>
+            <td width="315" height="71" style="border: 1px rgb(255, 255, 255); border-image: none; width: 313px; height: 71px; vertical-align: middle;">
+               <div>
+                  <table width="311" align="right" style="border-collapse:collapse; width: 311px; height: 69px; font-family: 굴림체; font-size: 10pt; table-layout: fixed; -design-time-lock: true;">
+                     <tbody>
+                        <tr>
+                           <td width="115"style="width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;">
+                              <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                                 <span style="font-weight: bold;">Department</span>
+                              </p>
+                           </td>
+                           <td width="186" class="FIELD" id="journalWriterDept" style="width: 186px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;" free="">
+                              <p style="font-family: 맑은 고딕; font-size: 13px;">@journalWriterDept</p>
+                           </td>
+                        </tr>
+                        <tr>
+                           <td width="115" style="width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;">
+                              <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                                 <span style="font-weight: bold;">Writer</span>
+                              </p>
+                           </td>
+                           <td width="186" class="FIELD" id="journalWriterName" style="width: 186px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;" free="">
+                              <p style="font-family: 맑은 고딕; font-size: 13px;">@journalWriterName</p>
+                           </td>
+                        </tr>
+                        <tr>
+                           <td width="115" style="width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-style: solid; border-bottom-style: solid; border-left-style: solid;">
+                              <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                                 <span style="font-weight: bold;">Date</span>
+                              </p>
+                           </td>
+                           <td width="186" class="FIELD" id="journalWriteDate" style="border: 1px solid rgb(0, 0, 0); border-image: none; width: 186px; vertical-align: middle;" free="">
+                              <p style="font-family: 맑은 고딕; font-size: 13px;">@journalWriteDate</p>
+                           </td>
+                        </tr>
+                     </tbody>
+                  </table>
+               </div>
+            </td>
+         </tr>
+         <tr>
+            <td width="629" style="border: 1px rgb(255, 255, 255); border-image: none; width: 629px; vertical-align: top; padding-top: 5px;" colspan="2" free="">
+               <div>
+                  <span>
+                     <br>
+                  </span>
+               </div>
+               <table width="630" style="border-collapse:collapse; width: 630px; height: 100%; font-family: 굴림체; font-size: 10pt;">
+                  <tbody>
+                     <tr>
+                        <td width="104" height="38" style="width: 104px; height: 38px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid; background-color: #edf3f8;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">Type</span>
+                           </p>
+                        </td>
+                        <td width="520" height="38" style="width: 520px; height: 38px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid; background-color: #edf3f8;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">Task Details</span>
+                           </p>
+                        </td>
+                     </tr>
+                     <tr>
+                        <td width="104" height="200" style="width: 104px; height: 200px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">This Month</span>
+                           </p>
+                        </td>
+                        <td width="520" id="thisJournal" style="width: 520px; vertical-align: top; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;" free="">
+                           <p style="font-family: 맑은 고딕; font-size: 13px;">&nbsp;</p>
+                        </td>
+                     </tr>
+                     <tr>
+                        <td width="104" height="200" style="border-width: 1px medium 1px 1px; border-style: solid none solid solid; border-color: rgb(0, 0, 0) currentColor rgb(0, 0, 0) rgb(0, 0, 0); border-image: none; width: 104px; height: 200px; vertical-align: middle;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">Next Month</span>
+                           </p>
+                        </td>
+                        <td width="520" id="nextJournal" style="border: 1px solid rgb(0, 0, 0); border-image: none; width: 520px; vertical-align: top;" free="">
+                           <p style="font-family: 맑은 고딕; font-size: 13px;">&nbsp;</p>
+                        </td>
+                     </tr>
+                  </tbody>
+               </table>
+            </td>
+         </tr>
+      </tbody>
+   </table>
+</div>
+<div>
+   <span>
+      <br>
+   </span>
+</div>
+<p>
+   <span>&nbsp;</span>
+</p>',
+'<div>
+   <table width="629" align="center" style="border-collapse:collapse; width: 629px; font-family: 굴림체; font-size: 0pt; table-layout: fixed; -design-time-lock: true; ">
+      <tbody>
+         <tr>
+            <td width="629" height="60" style="border: 1px rgb(255, 255, 255); border-image: none; width: 629px; height: 60px; vertical-align: middle;" colspan="2">
+               <table width="629" style="width: 629px; font-family: 굴림체; font-size: 10pt;">
+                  <tbody>
+                     <tr>
+                        <td width="629" height="50" style="border: 1px rgb(255, 255, 255); border-image: none; width: 629px; height: 50px; vertical-align: middle;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-size: 24pt; font-weight: bold;">월간업무일지</span>
+                           </p>
+                        </td>
+                     </tr>
+                  </tbody>
+               </table>
+            </td>
+         </tr>
+         <tr>
+            <td width="12" height="71" style="border: 1px rgb(255, 255, 255); border-image: none; width: 12px; height: 71px; vertical-align: middle;">
+               <p style="font-family: 맑은 고딕; font-size: 13px; margin-top: 0pt; margin-bottom: 0pt;">
+                  <span>&nbsp;</span>
+               </p>
+            </td>
+            <td width="315" height="71" style="border: 1px rgb(255, 255, 255); border-image: none; width: 313px; height: 71px; vertical-align: middle;">
+               <div>
+                  <table width="311" align="right" style="border-collapse:collapse; width: 311px; height: 69px; font-family: 굴림체; font-size: 10pt; table-layout: fixed; -design-time-lock: true;">
+                     <tbody>
+                        <tr>
+                           <td width="115"style="width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;">
+                              <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                                 <span style="font-weight: bold;">부&nbsp;&nbsp;서&nbsp;&nbsp;명</span>
+                              </p>
+                           </td>
+                           <td width="186" class="FIELD" id="journalWriterDept" style="width: 186px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;" free="">
+                              <p style="font-family: 맑은 고딕; font-size: 13px;">@journalWriterDept</p>
+                           </td>
+                        </tr>
+                        <tr>
+                           <td width="115" style="width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;">
+                              <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                                 <span style="font-weight: bold;">작&nbsp;&nbsp;성&nbsp;&nbsp;자</span>
+                              </p>
+                           </td>
+                           <td width="186" class="FIELD" id="journalWriterName" style="width: 186px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;" free="">
+                              <p style="font-family: 맑은 고딕; font-size: 13px;">@journalWriterName</p>
+                           </td>
+                        </tr>
+                        <tr>
+                           <td width="115" style="width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-style: solid; border-bottom-style: solid; border-left-style: solid;">
+                              <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                                 <span style="font-weight: bold;">작&nbsp;&nbsp;성&nbsp;&nbsp;일</span>
+                              </p>
+                           </td>
+                           <td width="186" class="FIELD" id="journalWriteDate" style="border: 1px solid rgb(0, 0, 0); border-image: none; width: 186px; vertical-align: middle;" free="">
+                              <p style="font-family: 맑은 고딕; font-size: 13px;">@journalWriteDate</p>
+                           </td>
+                        </tr>
+                     </tbody>
+                  </table>
+               </div>
+            </td>
+         </tr>
+         <tr>
+            <td width="629" style="border: 1px rgb(255, 255, 255); border-image: none; width: 629px; vertical-align: top; padding-top: 5px;" colspan="2" free="">
+               <div>
+                  <span>
+                     <br>
+                  </span>
+               </div>
+               <table width="630" style="border-collapse:collapse; width: 630px; height: 100%; font-family: 굴림체; font-size: 10pt;">
+                  <tbody>
+                     <tr>
+                        <td width="104" height="38" style="width: 104px; height: 38px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid; background-color: #edf3f8;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">구&nbsp;분</span>
+                           </p>
+                        </td>
+                        <td width="520" height="38" style="width: 520px; height: 38px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid; background-color: #edf3f8;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">업무내용 및 진행사항</span>
+                           </p>
+                        </td>
+                     </tr>
+                     <tr>
+                        <td width="104" height="200" style="width: 104px; height: 200px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">금&nbsp;월</span>
+                           </p>
+                        </td>
+                        <td width="520" id="thisJournal" style="width: 520px; vertical-align: top; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;" free="">
+                           <p style="font-family: 맑은 고딕; font-size: 13px;"></p>
+                        </td>
+                     </tr>
+                     <tr>
+                        <td width="104" height="200" style="border-width: 1px medium 1px 1px; border-style: solid none solid solid; border-color: rgb(0, 0, 0) currentColor rgb(0, 0, 0) rgb(0, 0, 0); border-image: none; width: 104px; height: 200px; vertical-align: middle;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">익&nbsp;월</span>
+                           </p>
+                        </td>
+                        <td width="520" id="nextJournal" style="border: 1px solid rgb(0, 0, 0); border-image: none; width: 520px; vertical-align: top;" free="">
+                           <p style="font-family: 맑은 고딕; font-size: 13px;"></p>
+                        </td>
+                     </tr>
+                  </tbody>
+               </table>
+            </td>
+         </tr>
+      </tbody>
+   </table>
+</div>
+<div>
+   <span>
+      <br>
+   </span>
+</div>
+<p>
+   <span>&nbsp;</span>
+</p>',
+'<div>
+   <table width="629" align="center" style="border-collapse:collapse; width: 629px; font-family: 굴림체; font-size: 0pt; table-layout: fixed; -design-time-lock: true; ">
+      <tbody>
+         <tr>
+            <td width="629" height="60" style="border: 1px rgb(255, 255, 255); border-image: none; width: 629px; height: 60px; vertical-align: middle;" colspan="2">
+               <table width="629" style="width: 629px; font-family: 굴림체; font-size: 10pt;">
+                  <tbody>
+                     <tr>
+                        <td width="629" height="50" style="border: 1px rgb(255, 255, 255); border-image: none; width: 629px; height: 50px; vertical-align: middle;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-size: 24pt; font-weight: bold;">월간업무일지</span>
+                           </p>
+                        </td>
+                     </tr>
+                  </tbody>
+               </table>
+            </td>
+         </tr>
+         <tr>
+            <td width="12" height="71" style="border: 1px rgb(255, 255, 255); border-image: none; width: 12px; height: 71px; vertical-align: middle;">
+               <p style="font-family: 맑은 고딕; font-size: 13px; margin-top: 0pt; margin-bottom: 0pt;">
+                  <span>&nbsp;</span>
+               </p>
+            </td>
+            <td width="315" height="71" style="border: 1px rgb(255, 255, 255); border-image: none; width: 313px; height: 71px; vertical-align: middle;">
+               <div>
+                  <table width="311" align="right" style="border-collapse:collapse; width: 311px; height: 69px; font-family: 굴림체; font-size: 10pt; table-layout: fixed; -design-time-lock: true;">
+                     <tbody>
+                        <tr>
+                           <td width="115"style="width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;">
+                              <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                                 <span style="font-weight: bold;">부&nbsp;&nbsp;서&nbsp;&nbsp;명</span>
+                              </p>
+                           </td>
+                           <td width="186" class="FIELD" id="journalWriterDept" style="width: 186px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;" free="">
+                              <p style="font-family: 맑은 고딕; font-size: 13px;">@journalWriterDept</p>
+                           </td>
+                        </tr>
+                        <tr>
+                           <td width="115" style="width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;">
+                              <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                                 <span style="font-weight: bold;">작&nbsp;&nbsp;성&nbsp;&nbsp;자</span>
+                              </p>
+                           </td>
+                           <td width="186" class="FIELD" id="journalWriterName" style="width: 186px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;" free="">
+                              <p style="font-family: 맑은 고딕; font-size: 13px;">@journalWriterName</p>
+                           </td>
+                        </tr>
+                        <tr>
+                           <td width="115" style="width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-style: solid; border-bottom-style: solid; border-left-style: solid;">
+                              <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                                 <span style="font-weight: bold;">작&nbsp;&nbsp;성&nbsp;&nbsp;일</span>
+                              </p>
+                           </td>
+                           <td width="186" class="FIELD" id="journalWriteDate" style="border: 1px solid rgb(0, 0, 0); border-image: none; width: 186px; vertical-align: middle;" free="">
+                              <p style="font-family: 맑은 고딕; font-size: 13px;">@journalWriteDate</p>
+                           </td>
+                        </tr>
+                     </tbody>
+                  </table>
+               </div>
+            </td>
+         </tr>
+         <tr>
+            <td width="629" style="border: 1px rgb(255, 255, 255); border-image: none; width: 629px; vertical-align: top; padding-top: 5px;" colspan="2" free="">
+               <div>
+                  <span>
+                     <br>
+                  </span>
+               </div>
+               <table width="630" style="border-collapse:collapse; width: 630px; height: 100%; font-family: 굴림체; font-size: 10pt;">
+                  <tbody>
+                     <tr>
+                        <td width="104" height="38" style="width: 104px; height: 38px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid; background-color: #edf3f8;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">구&nbsp;분</span>
+                           </p>
+                        </td>
+                        <td width="520" height="38" style="width: 520px; height: 38px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid; background-color: #edf3f8;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">업무내용 및 진행사항</span>
+                           </p>
+                        </td>
+                     </tr>
+                     <tr>
+                        <td width="104" height="200" style="width: 104px; height: 200px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">금&nbsp;월</span>
+                           </p>
+                        </td>
+                        <td width="520" id="thisJournal" style="width: 520px; vertical-align: top; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;" free="">
+                           <p style="font-family: 맑은 고딕; font-size: 13px;"></p>
+                        </td>
+                     </tr>
+                     <tr>
+                        <td width="104" height="200" style="border-width: 1px medium 1px 1px; border-style: solid none solid solid; border-color: rgb(0, 0, 0) currentColor rgb(0, 0, 0) rgb(0, 0, 0); border-image: none; width: 104px; height: 200px; vertical-align: middle;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">익&nbsp;월</span>
+                           </p>
+                        </td>
+                        <td width="520" id="nextJournal" style="border: 1px solid rgb(0, 0, 0); border-image: none; width: 520px; vertical-align: top;" free="">
+                           <p style="font-family: 맑은 고딕; font-size: 13px;"></p>
+                        </td>
+                     </tr>
+                  </tbody>
+               </table>
+            </td>
+         </tr>
+      </tbody>
+   </table>
+</div>
+<div>
+   <span>
+      <br>
+   </span>
+</div>
+<p>
+   <span>&nbsp;</span>
+</p>',
+'<div>
+   <table width="629" align="center" style="border-collapse:collapse; width: 629px; font-family: 굴림체; font-size: 0pt; table-layout: fixed; -design-time-lock: true; ">
+      <tbody>
+         <tr>
+            <td width="629" height="60" style="border: 1px rgb(255, 255, 255); border-image: none; width: 629px; height: 60px; vertical-align: middle;" colspan="2">
+               <table width="629" style="width: 629px; font-family: 굴림체; font-size: 10pt;">
+                  <tbody>
+                     <tr>
+                        <td width="629" height="50" style="border: 1px rgb(255, 255, 255); border-image: none; width: 629px; height: 50px; vertical-align: middle;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-size: 24pt; font-weight: bold;">Monthly Journal</span>
+                           </p>
+                        </td>
+                     </tr>
+                  </tbody>
+               </table>
+            </td>
+         </tr>
+         <tr>
+            <td width="12" height="71" style="border: 1px rgb(255, 255, 255); border-image: none; width: 12px; height: 71px; vertical-align: middle;">
+               <p style="font-family: 맑은 고딕; font-size: 13px; margin-top: 0pt; margin-bottom: 0pt;">
+                  <span>&nbsp;</span>
+               </p>
+            </td>
+            <td width="315" height="71" style="border: 1px rgb(255, 255, 255); border-image: none; width: 313px; height: 71px; vertical-align: middle;">
+               <div>
+                  <table width="311" align="right" style="border-collapse:collapse; width: 311px; height: 69px; font-family: 굴림체; font-size: 10pt; table-layout: fixed; -design-time-lock: true;">
+                     <tbody>
+                        <tr>
+                           <td width="115"style="width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;">
+                              <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                                 <span style="font-weight: bold;">Department</span>
+                              </p>
+                           </td>
+                           <td width="186" class="FIELD" id="journalWriterDept" style="width: 186px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;" free="">
+                              <p style="font-family: 맑은 고딕; font-size: 13px;">@journalWriterDept</p>
+                           </td>
+                        </tr>
+                        <tr>
+                           <td width="115" style="width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;">
+                              <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                                 <span style="font-weight: bold;">Writer</span>
+                              </p>
+                           </td>
+                           <td width="186" class="FIELD" id="journalWriterName" style="width: 186px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;" free="">
+                              <p style="font-family: 맑은 고딕; font-size: 13px;">@journalWriterName</p>
+                           </td>
+                        </tr>
+                        <tr>
+                           <td width="115" style="width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-style: solid; border-bottom-style: solid; border-left-style: solid;">
+                              <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                                 <span style="font-weight: bold;">Date</span>
+                              </p>
+                           </td>
+                           <td width="186" class="FIELD" id="journalWriteDate" style="border: 1px solid rgb(0, 0, 0); border-image: none; width: 186px; vertical-align: middle;" free="">
+                              <p style="font-family: 맑은 고딕; font-size: 13px;">@journalWriteDate</p>
+                           </td>
+                        </tr>
+                     </tbody>
+                  </table>
+               </div>
+            </td>
+         </tr>
+         <tr>
+            <td width="629" style="border: 1px rgb(255, 255, 255); border-image: none; width: 629px; vertical-align: top; padding-top: 5px;" colspan="2" free="">
+               <div>
+                  <span>
+                     <br>
+                  </span>
+               </div>
+               <table width="630" style="border-collapse:collapse; width: 630px; height: 100%; font-family: 굴림체; font-size: 10pt;">
+                  <tbody>
+                     <tr>
+                        <td width="104" height="38" style="width: 104px; height: 38px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid; background-color: #edf3f8;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">Type</span>
+                           </p>
+                        </td>
+                        <td width="520" height="38" style="width: 520px; height: 38px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid; background-color: #edf3f8;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">Task Details</span>
+                           </p>
+                        </td>
+                     </tr>
+                     <tr>
+                        <td width="104" height="200" style="width: 104px; height: 200px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">This Month</span>
+                           </p>
+                        </td>
+                        <td width="520" id="thisJournal" style="width: 520px; vertical-align: top; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;" free="">
+                           <p style="font-family: 맑은 고딕; font-size: 13px;">&nbsp;</p>
+                        </td>
+                     </tr>
+                     <tr>
+                        <td width="104" height="200" style="border-width: 1px medium 1px 1px; border-style: solid none solid solid; border-color: rgb(0, 0, 0) currentColor rgb(0, 0, 0) rgb(0, 0, 0); border-image: none; width: 104px; height: 200px; vertical-align: middle;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">Next Month</span>
+                           </p>
+                        </td>
+                        <td width="520" id="nextJournal" style="border: 1px solid rgb(0, 0, 0); border-image: none; width: 520px; vertical-align: top;" free="">
+                           <p style="font-family: 맑은 고딕; font-size: 13px;">&nbsp;</p>
+                        </td>
+                     </tr>
+                  </tbody>
+               </table>
+            </td>
+         </tr>
+      </tbody>
+   </table>
+</div>
+<div>
+   <span>
+      <br>
+   </span>
+</div>
+<p>
+   <span>&nbsp;</span>
+</p>',
+'ezJournal.t07',UTC_TIMESTAMP(),'기본월간업무일지','Top','basic');
 
-Insert into tbl_journal_form (tenant_id,form_name,form_content,type_id,form_date,form_info,company_id,form_status) VALUES (@tenant_id_value,'분기업무일지(기본)',
+Insert into tbl_journal_form (tenant_id,form_name,form_content,form_content2,form_content3,form_content4,form_content5,form_content6,type_id,form_date,form_info,company_id,form_status) VALUES (@tenant_id_value,'분기업무일지(기본)',
 '<div>
    <table width="629" align="center" style="border-collapse:collapse; width: 629px; font-family: 굴림체; font-size: 0pt; table-layout: fixed; -design-time-lock: true; ">
       <tbody>
@@ -2371,10 +4172,605 @@ Insert into tbl_journal_form (tenant_id,form_name,form_content,type_id,form_date
 </div>
 <p>
    <span>&nbsp;</span>
-</p>'
-,'ezJournal.t08',UTC_TIMESTAMP(),'기본분기업무일지','Top','basic');
+</p>',
+'<div>
+   <table width="629" align="center" style="border-collapse:collapse; width: 629px; font-family: 굴림체; font-size: 0pt; table-layout: fixed; -design-time-lock: true; ">
+      <tbody>
+         <tr>
+            <td width="629" height="60" style="border: 1px rgb(255, 255, 255); border-image: none; width: 629px; height: 60px; vertical-align: middle;" colspan="2">
+               <table width="629" style="width: 629px; font-family: 굴림체; font-size: 10pt;">
+                  <tbody>
+                     <tr>
+                        <td width="629" height="50" style="border: 1px rgb(255, 255, 255); border-image: none; width: 629px; height: 50px; vertical-align: middle;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-size: 24pt; font-weight: bold;">Quarterly Journal</span>
+                           </p>
+                        </td>
+                     </tr>
+                  </tbody>
+               </table>
+            </td>
+         </tr>
+         <tr>
+            <td width="12" height="71" style="border: 1px rgb(255, 255, 255); border-image: none; width: 12px; height: 71px; vertical-align: middle;">
+               <p style="font-family: 맑은 고딕; font-size: 13px; margin-top: 0pt; margin-bottom: 0pt;">
+                  <span>&nbsp;</span>
+               </p>
+            </td>
+            <td width="315" height="71" style="border: 1px rgb(255, 255, 255); border-image: none; width: 313px; height: 71px; vertical-align: middle;">
+               <div>
+                  <table width="311" align="right" style="border-collapse:collapse; width: 311px; height: 69px; font-family: 굴림체; font-size: 10pt; table-layout: fixed; -design-time-lock: true;">
+                     <tbody>
+                        <tr>
+                           <td width="115"style="width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;">
+                              <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                                 <span style="font-weight: bold;">Department</span>
+                              </p>
+                           </td>
+                           <td width="186" class="FIELD" id="journalWriterDept" style="width: 186px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;" free="">
+                              <p style="font-family: 맑은 고딕; font-size: 13px;">@journalWriterDept</p>
+                           </td>
+                        </tr>
+                        <tr>
+                           <td width="115" style="width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;">
+                              <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                                 <span style="font-weight: bold;">Writer</span>
+                              </p>
+                           </td>
+                           <td width="186" class="FIELD" id="journalWriterName" style="width: 186px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;" free="">
+                              <p style="font-family: 맑은 고딕; font-size: 13px;">@journalWriterName</p>
+                           </td>
+                        </tr>
+                        <tr>
+                           <td width="115" style="width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-style: solid; border-bottom-style: solid; border-left-style: solid;">
+                              <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                                 <span style="font-weight: bold;">Date</span>
+                              </p>
+                           </td>
+                           <td width="186" class="FIELD" id="journalWriteDate" style="border: 1px solid rgb(0, 0, 0); border-image: none; width: 186px; vertical-align: middle;" free="">
+                              <p style="font-family: 맑은 고딕; font-size: 13px;">@journalWriteDate</p>
+                           </td>
+                        </tr>
+                     </tbody>
+                  </table>
+               </div>
+            </td>
+         </tr>
+         <tr>
+            <td width="629" style="border: 1px rgb(255, 255, 255); border-image: none; width: 629px; vertical-align: top; padding-top: 5px;" colspan="2" free="">
+               <div>
+                  <span>
+                     <br>
+                  </span>
+               </div>
+               <table width="630" style="border-collapse:collapse; width: 630px; height: 100%; font-family: 굴림체; font-size: 10pt;">
+                  <tbody>
+                     <tr>
+                        <td width="104" height="38" style="width: 104px; height: 38px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid; background-color: #edf3f8;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">Type</span>
+                           </p>
+                        </td>
+                        <td width="520" height="38" style="width: 520px; height: 38px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid; background-color: #edf3f8;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">Task Details</span>
+                           </p>
+                        </td>
+                     </tr>
+                     <tr>
+                        <td width="104" height="200" style="width: 104px; height: 200px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">This Quarter</span>
+                           </p>
+                        </td>
+                        <td width="520" id="thisJournal" style="width: 520px; vertical-align: top; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;" free="">
+                           <p style="font-family: 맑은 고딕; font-size: 13px;">&nbsp;</p>
+                        </td>
+                     </tr>
+                     <tr>
+                        <td width="104" height="200" style="border-width: 1px medium 1px 1px; border-style: solid none solid solid; border-color: rgb(0, 0, 0) currentColor rgb(0, 0, 0) rgb(0, 0, 0); border-image: none; width: 104px; height: 200px; vertical-align: middle;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">Next Quarter</span>
+                           </p>
+                        </td>
+                        <td width="520" id="nextJournal" style="border: 1px solid rgb(0, 0, 0); border-image: none; width: 520px; vertical-align: top;" free="">
+                           <p style="font-family: 맑은 고딕; font-size: 13px;">&nbsp;</p>
+                        </td>
+                     </tr>
+                  </tbody>
+               </table>
+            </td>
+         </tr>
+      </tbody>
+   </table>
+</div>
+<div>
+   <span>
+      <br>
+   </span>
+</div>
+<p>
+   <span>&nbsp;</span>
+</p>',
+'<div>
+   <table width="629" align="center" style="border-collapse:collapse; width: 629px; font-family: 굴림체; font-size: 0pt; table-layout: fixed; -design-time-lock: true; ">
+      <tbody>
+         <tr>
+            <td width="629" height="60" style="border: 1px rgb(255, 255, 255); border-image: none; width: 629px; height: 60px; vertical-align: middle;" colspan="2">
+               <table width="629" style="width: 629px; font-family: 굴림체; font-size: 10pt;">
+                  <tbody>
+                     <tr>
+                        <td width="629" height="50" style="border: 1px rgb(255, 255, 255); border-image: none; width: 629px; height: 50px; vertical-align: middle;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-size: 24pt; font-weight: bold;">四半期業務報告書</span>
+                           </p>
+                        </td>
+                     </tr>
+                  </tbody>
+               </table>
+            </td>
+         </tr>
+         <tr>
+            <td width="12" height="71" style="border: 1px rgb(255, 255, 255); border-image: none; width: 12px; height: 71px; vertical-align: middle;">
+               <p style="font-family: 맑은 고딕; font-size: 13px; margin-top: 0pt; margin-bottom: 0pt;">
+                  <span>&nbsp;</span>
+               </p>
+            </td>
+            <td width="315" height="71" style="border: 1px rgb(255, 255, 255); border-image: none; width: 313px; height: 71px; vertical-align: middle;">
+               <div>
+                  <table width="311" align="right" style="border-collapse:collapse; width: 311px; height: 69px; font-family: 굴림체; font-size: 10pt; table-layout: fixed; -design-time-lock: true;">
+                     <tbody>
+                        <tr>
+                           <td width="115"style="width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;">
+                              <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                                 <span style="font-weight: bold;">部&nbsp;&nbsp;署&nbsp;&nbsp;名</span>
+                              </p>
+                           </td>
+                           <td width="186" class="FIELD" id="journalWriterDept" style="width: 186px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;" free="">
+                              <p style="font-family: 맑은 고딕; font-size: 13px;">@journalWriterDept</p>
+                           </td>
+                        </tr>
+                        <tr>
+                           <td width="115" style="width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;">
+                              <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                                 <span style="font-weight: bold;">作&nbsp;&nbsp;成&nbsp;&nbsp;者</span>
+                              </p>
+                           </td>
+                           <td width="186" class="FIELD" id="journalWriterName" style="width: 186px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;" free="">
+                              <p style="font-family: 맑은 고딕; font-size: 13px;">@journalWriterName</p>
+                           </td>
+                        </tr>
+                        <tr>
+                           <td width="115" style="width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-style: solid; border-bottom-style: solid; border-left-style: solid;">
+                              <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                                 <span style="font-weight: bold;">作&nbsp;&nbsp;成&nbsp;&nbsp;日</span>
+                              </p>
+                           </td>
+                           <td width="186" class="FIELD" id="journalWriteDate" style="border: 1px solid rgb(0, 0, 0); border-image: none; width: 186px; vertical-align: middle;" free="">
+                              <p style="font-family: 맑은 고딕; font-size: 13px;">@journalWriteDate</p>
+                           </td>
+                        </tr>
+                     </tbody>
+                  </table>
+               </div>
+            </td>
+         </tr>
+         <tr>
+            <td width="629" style="border: 1px rgb(255, 255, 255); border-image: none; width: 629px; vertical-align: top; padding-top: 5px;" colspan="2" free="">
+               <div>
+                  <span>
+                     <br>
+                  </span>
+               </div>
+               <table width="630" style="border-collapse:collapse; width: 630px; height: 100%; font-family: 굴림체; font-size: 10pt;">
+                  <tbody>
+                     <tr>
+                        <td width="104" height="38" style="width: 104px; height: 38px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid; background-color: #edf3f8;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">分&nbsp;類</span>
+                           </p>
+                        </td>
+                        <td width="520" height="38" style="width: 520px; height: 38px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid; background-color: #edf3f8;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">業務内容および進捗状況</span>
+                           </p>
+                        </td>
+                     </tr>
+                     <tr>
+                        <td width="104" height="200" style="width: 104px; height: 200px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">今四半期</span>
+                           </p>
+                        </td>
+                        <td width="520" id="thisJournal" style="width: 520px; vertical-align: top; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;" free="">
+                           <p style="font-family: 맑은 고딕; font-size: 13px;">&nbsp;</p>
+                        </td>
+                     </tr>
+                     <tr>
+                        <td width="104" height="200" style="border-width: 1px medium 1px 1px; border-style: solid none solid solid; border-color: rgb(0, 0, 0) currentColor rgb(0, 0, 0) rgb(0, 0, 0); border-image: none; width: 104px; height: 200px; vertical-align: middle;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">次四半期</span>
+                           </p>
+                        </td>
+                        <td width="520" id="nextJournal" style="border: 1px solid rgb(0, 0, 0); border-image: none; width: 520px; vertical-align: top;" free="">
+                           <p style="font-family: 맑은 고딕; font-size: 13px;">&nbsp;</p>
+                        </td>
+                     </tr>
+                  </tbody>
+               </table>
+            </td>
+         </tr>
+      </tbody>
+   </table>
+</div>
+<div>
+   <span>
+      <br>
+   </span>
+</div>
+<p>
+   <span>&nbsp;</span>
+</p>',
+'<div>
+   <table width="629" align="center" style="border-collapse:collapse; width: 629px; font-family: 굴림체; font-size: 0pt; table-layout: fixed; -design-time-lock: true; ">
+      <tbody>
+         <tr>
+            <td width="629" height="60" style="border: 1px rgb(255, 255, 255); border-image: none; width: 629px; height: 60px; vertical-align: middle;" colspan="2">
+               <table width="629" style="width: 629px; font-family: 굴림체; font-size: 10pt;">
+                  <tbody>
+                     <tr>
+                        <td width="629" height="50" style="border: 1px rgb(255, 255, 255); border-image: none; width: 629px; height: 50px; vertical-align: middle;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-size: 24pt; font-weight: bold;">분기업무일지</span>
+                           </p>
+                        </td>
+                     </tr>
+                  </tbody>
+               </table>
+            </td>
+         </tr>
+         <tr>
+            <td width="12" height="71" style="border: 1px rgb(255, 255, 255); border-image: none; width: 12px; height: 71px; vertical-align: middle;">
+               <p style="font-family: 맑은 고딕; font-size: 13px; margin-top: 0pt; margin-bottom: 0pt;">
+                  <span>&nbsp;</span>
+               </p>
+            </td>
+            <td width="315" height="71" style="border: 1px rgb(255, 255, 255); border-image: none; width: 313px; height: 71px; vertical-align: middle;">
+               <div>
+                  <table width="311" align="right" style="border-collapse:collapse; width: 311px; height: 69px; font-family: 굴림체; font-size: 10pt; table-layout: fixed; -design-time-lock: true;">
+                     <tbody>
+                        <tr>
+                           <td width="115"style="width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;">
+                              <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                                 <span style="font-weight: bold;">부&nbsp;&nbsp;서&nbsp;&nbsp;명</span>
+                              </p>
+                           </td>
+                           <td width="186" class="FIELD" id="journalWriterDept" style="width: 186px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;" free="">
+                              <p style="font-family: 맑은 고딕; font-size: 13px;">@journalWriterDept</p>
+                           </td>
+                        </tr>
+                        <tr>
+                           <td width="115" style="width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;">
+                              <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                                 <span style="font-weight: bold;">작&nbsp;&nbsp;성&nbsp;&nbsp;자</span>
+                              </p>
+                           </td>
+                           <td width="186" class="FIELD" id="journalWriterName" style="width: 186px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;" free="">
+                              <p style="font-family: 맑은 고딕; font-size: 13px;">@journalWriterName</p>
+                           </td>
+                        </tr>
+                        <tr>
+                           <td width="115" style="width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-style: solid; border-bottom-style: solid; border-left-style: solid;">
+                              <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                                 <span style="font-weight: bold;">작&nbsp;&nbsp;성&nbsp;&nbsp;일</span>
+                              </p>
+                           </td>
+                           <td width="186" class="FIELD" id="journalWriteDate" style="border: 1px solid rgb(0, 0, 0); border-image: none; width: 186px; vertical-align: middle;" free="">
+                              <p style="font-family: 맑은 고딕; font-size: 13px;">@journalWriteDate</p>
+                           </td>
+                        </tr>
+                     </tbody>
+                  </table>
+               </div>
+            </td>
+         </tr>
+         <tr>
+            <td width="629" style="border: 1px rgb(255, 255, 255); border-image: none; width: 629px; vertical-align: top; padding-top: 5px;" colspan="2" free="">
+               <div>
+                  <span>
+                     <br>
+                  </span>
+               </div>
+               <table width="630" style="border-collapse:collapse; width: 630px; height: 100%; font-family: 굴림체; font-size: 10pt;">
+                  <tbody>
+                     <tr>
+                        <td width="104" height="38" style="width: 104px; height: 38px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid; background-color: #edf3f8;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">구&nbsp;분</span>
+                           </p>
+                        </td>
+                        <td width="520" height="38" style="width: 520px; height: 38px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid; background-color: #edf3f8;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">업무내용 및 진행사항</span>
+                           </p>
+                        </td>
+                     </tr>
+                     <tr>
+                        <td width="104" height="200" style="width: 104px; height: 200px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">금분기</span>
+                           </p>
+                        </td>
+                        <td width="520" id="thisJournal" style="width: 520px; vertical-align: top; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;" free="">
+                           <p style="font-family: 맑은 고딕; font-size: 13px;"></p>
+                        </td>
+                     </tr>
+                     <tr>
+                        <td width="104" height="200" style="border-width: 1px medium 1px 1px; border-style: solid none solid solid; border-color: rgb(0, 0, 0) currentColor rgb(0, 0, 0) rgb(0, 0, 0); border-image: none; width: 104px; height: 200px; vertical-align: middle;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">차분기</span>
+                           </p>
+                        </td>
+                        <td width="520" id="nextJournal" style="border: 1px solid rgb(0, 0, 0); border-image: none; width: 520px; vertical-align: top;" free="">
+                           <p style="font-family: 맑은 고딕; font-size: 13px;"></p>
+                        </td>
+                     </tr>
+                  </tbody>
+               </table>
+            </td>
+         </tr>
+      </tbody>
+   </table>
+</div>
+<div>
+   <span>
+      <br>
+   </span>
+</div>
+<p>
+   <span>&nbsp;</span>
+</p>',
+'<div>
+   <table width="629" align="center" style="border-collapse:collapse; width: 629px; font-family: 굴림체; font-size: 0pt; table-layout: fixed; -design-time-lock: true; ">
+      <tbody>
+         <tr>
+            <td width="629" height="60" style="border: 1px rgb(255, 255, 255); border-image: none; width: 629px; height: 60px; vertical-align: middle;" colspan="2">
+               <table width="629" style="width: 629px; font-family: 굴림체; font-size: 10pt;">
+                  <tbody>
+                     <tr>
+                        <td width="629" height="50" style="border: 1px rgb(255, 255, 255); border-image: none; width: 629px; height: 50px; vertical-align: middle;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-size: 24pt; font-weight: bold;">분기업무일지</span>
+                           </p>
+                        </td>
+                     </tr>
+                  </tbody>
+               </table>
+            </td>
+         </tr>
+         <tr>
+            <td width="12" height="71" style="border: 1px rgb(255, 255, 255); border-image: none; width: 12px; height: 71px; vertical-align: middle;">
+               <p style="font-family: 맑은 고딕; font-size: 13px; margin-top: 0pt; margin-bottom: 0pt;">
+                  <span>&nbsp;</span>
+               </p>
+            </td>
+            <td width="315" height="71" style="border: 1px rgb(255, 255, 255); border-image: none; width: 313px; height: 71px; vertical-align: middle;">
+               <div>
+                  <table width="311" align="right" style="border-collapse:collapse; width: 311px; height: 69px; font-family: 굴림체; font-size: 10pt; table-layout: fixed; -design-time-lock: true;">
+                     <tbody>
+                        <tr>
+                           <td width="115"style="width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;">
+                              <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                                 <span style="font-weight: bold;">부&nbsp;&nbsp;서&nbsp;&nbsp;명</span>
+                              </p>
+                           </td>
+                           <td width="186" class="FIELD" id="journalWriterDept" style="width: 186px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;" free="">
+                              <p style="font-family: 맑은 고딕; font-size: 13px;">@journalWriterDept</p>
+                           </td>
+                        </tr>
+                        <tr>
+                           <td width="115" style="width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;">
+                              <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                                 <span style="font-weight: bold;">작&nbsp;&nbsp;성&nbsp;&nbsp;자</span>
+                              </p>
+                           </td>
+                           <td width="186" class="FIELD" id="journalWriterName" style="width: 186px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;" free="">
+                              <p style="font-family: 맑은 고딕; font-size: 13px;">@journalWriterName</p>
+                           </td>
+                        </tr>
+                        <tr>
+                           <td width="115" style="width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-style: solid; border-bottom-style: solid; border-left-style: solid;">
+                              <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                                 <span style="font-weight: bold;">작&nbsp;&nbsp;성&nbsp;&nbsp;일</span>
+                              </p>
+                           </td>
+                           <td width="186" class="FIELD" id="journalWriteDate" style="border: 1px solid rgb(0, 0, 0); border-image: none; width: 186px; vertical-align: middle;" free="">
+                              <p style="font-family: 맑은 고딕; font-size: 13px;">@journalWriteDate</p>
+                           </td>
+                        </tr>
+                     </tbody>
+                  </table>
+               </div>
+            </td>
+         </tr>
+         <tr>
+            <td width="629" style="border: 1px rgb(255, 255, 255); border-image: none; width: 629px; vertical-align: top; padding-top: 5px;" colspan="2" free="">
+               <div>
+                  <span>
+                     <br>
+                  </span>
+               </div>
+               <table width="630" style="border-collapse:collapse; width: 630px; height: 100%; font-family: 굴림체; font-size: 10pt;">
+                  <tbody>
+                     <tr>
+                        <td width="104" height="38" style="width: 104px; height: 38px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid; background-color: #edf3f8;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">구&nbsp;분</span>
+                           </p>
+                        </td>
+                        <td width="520" height="38" style="width: 520px; height: 38px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid; background-color: #edf3f8;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">업무내용 및 진행사항</span>
+                           </p>
+                        </td>
+                     </tr>
+                     <tr>
+                        <td width="104" height="200" style="width: 104px; height: 200px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">금분기</span>
+                           </p>
+                        </td>
+                        <td width="520" id="thisJournal" style="width: 520px; vertical-align: top; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;" free="">
+                           <p style="font-family: 맑은 고딕; font-size: 13px;"></p>
+                        </td>
+                     </tr>
+                     <tr>
+                        <td width="104" height="200" style="border-width: 1px medium 1px 1px; border-style: solid none solid solid; border-color: rgb(0, 0, 0) currentColor rgb(0, 0, 0) rgb(0, 0, 0); border-image: none; width: 104px; height: 200px; vertical-align: middle;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">차분기</span>
+                           </p>
+                        </td>
+                        <td width="520" id="nextJournal" style="border: 1px solid rgb(0, 0, 0); border-image: none; width: 520px; vertical-align: top;" free="">
+                           <p style="font-family: 맑은 고딕; font-size: 13px;"></p>
+                        </td>
+                     </tr>
+                  </tbody>
+               </table>
+            </td>
+         </tr>
+      </tbody>
+   </table>
+</div>
+<div>
+   <span>
+      <br>
+   </span>
+</div>
+<p>
+   <span>&nbsp;</span>
+</p>',
+'<div>
+   <table width="629" align="center" style="border-collapse:collapse; width: 629px; font-family: 굴림체; font-size: 0pt; table-layout: fixed; -design-time-lock: true; ">
+      <tbody>
+         <tr>
+            <td width="629" height="60" style="border: 1px rgb(255, 255, 255); border-image: none; width: 629px; height: 60px; vertical-align: middle;" colspan="2">
+               <table width="629" style="width: 629px; font-family: 굴림체; font-size: 10pt;">
+                  <tbody>
+                     <tr>
+                        <td width="629" height="50" style="border: 1px rgb(255, 255, 255); border-image: none; width: 629px; height: 50px; vertical-align: middle;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-size: 24pt; font-weight: bold;">Quarterly Journal</span>
+                           </p>
+                        </td>
+                     </tr>
+                  </tbody>
+               </table>
+            </td>
+         </tr>
+         <tr>
+            <td width="12" height="71" style="border: 1px rgb(255, 255, 255); border-image: none; width: 12px; height: 71px; vertical-align: middle;">
+               <p style="font-family: 맑은 고딕; font-size: 13px; margin-top: 0pt; margin-bottom: 0pt;">
+                  <span>&nbsp;</span>
+               </p>
+            </td>
+            <td width="315" height="71" style="border: 1px rgb(255, 255, 255); border-image: none; width: 313px; height: 71px; vertical-align: middle;">
+               <div>
+                  <table width="311" align="right" style="border-collapse:collapse; width: 311px; height: 69px; font-family: 굴림체; font-size: 10pt; table-layout: fixed; -design-time-lock: true;">
+                     <tbody>
+                        <tr>
+                           <td width="115"style="width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;">
+                              <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                                 <span style="font-weight: bold;">Department</span>
+                              </p>
+                           </td>
+                           <td width="186" class="FIELD" id="journalWriterDept" style="width: 186px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;" free="">
+                              <p style="font-family: 맑은 고딕; font-size: 13px;">@journalWriterDept</p>
+                           </td>
+                        </tr>
+                        <tr>
+                           <td width="115" style="width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;">
+                              <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                                 <span style="font-weight: bold;">Writer</span>
+                              </p>
+                           </td>
+                           <td width="186" class="FIELD" id="journalWriterName" style="width: 186px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;" free="">
+                              <p style="font-family: 맑은 고딕; font-size: 13px;">@journalWriterName</p>
+                           </td>
+                        </tr>
+                        <tr>
+                           <td width="115" style="width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-style: solid; border-bottom-style: solid; border-left-style: solid;">
+                              <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                                 <span style="font-weight: bold;">Date</span>
+                              </p>
+                           </td>
+                           <td width="186" class="FIELD" id="journalWriteDate" style="border: 1px solid rgb(0, 0, 0); border-image: none; width: 186px; vertical-align: middle;" free="">
+                              <p style="font-family: 맑은 고딕; font-size: 13px;">@journalWriteDate</p>
+                           </td>
+                        </tr>
+                     </tbody>
+                  </table>
+               </div>
+            </td>
+         </tr>
+         <tr>
+            <td width="629" style="border: 1px rgb(255, 255, 255); border-image: none; width: 629px; vertical-align: top; padding-top: 5px;" colspan="2" free="">
+               <div>
+                  <span>
+                     <br>
+                  </span>
+               </div>
+               <table width="630" style="border-collapse:collapse; width: 630px; height: 100%; font-family: 굴림체; font-size: 10pt;">
+                  <tbody>
+                     <tr>
+                        <td width="104" height="38" style="width: 104px; height: 38px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid; background-color: #edf3f8;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">Type</span>
+                           </p>
+                        </td>
+                        <td width="520" height="38" style="width: 520px; height: 38px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid; background-color: #edf3f8;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">Task Details</span>
+                           </p>
+                        </td>
+                     </tr>
+                     <tr>
+                        <td width="104" height="200" style="width: 104px; height: 200px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">This Quarter</span>
+                           </p>
+                        </td>
+                        <td width="520" id="thisJournal" style="width: 520px; vertical-align: top; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;" free="">
+                           <p style="font-family: 맑은 고딕; font-size: 13px;">&nbsp;</p>
+                        </td>
+                     </tr>
+                     <tr>
+                        <td width="104" height="200" style="border-width: 1px medium 1px 1px; border-style: solid none solid solid; border-color: rgb(0, 0, 0) currentColor rgb(0, 0, 0) rgb(0, 0, 0); border-image: none; width: 104px; height: 200px; vertical-align: middle;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">Next Quarter</span>
+                           </p>
+                        </td>
+                        <td width="520" id="nextJournal" style="border: 1px solid rgb(0, 0, 0); border-image: none; width: 520px; vertical-align: top;" free="">
+                           <p style="font-family: 맑은 고딕; font-size: 13px;">&nbsp;</p>
+                        </td>
+                     </tr>
+                  </tbody>
+               </table>
+            </td>
+         </tr>
+      </tbody>
+   </table>
+</div>
+<div>
+   <span>
+      <br>
+   </span>
+</div>
+<p>
+   <span>&nbsp;</span>
+</p>',
+'ezJournal.t08',UTC_TIMESTAMP(),'기본분기업무일지','Top','basic');
 
-Insert into tbl_journal_form (tenant_id,form_name,form_content,type_id,form_date,form_info,company_id,form_status) VALUES (@tenant_id_value,'반기업무일지(기본)',
+Insert into tbl_journal_form (tenant_id,form_name,form_content,form_content2,form_content3,form_content4,form_content5,form_content6,type_id,form_date,form_info,company_id,form_status) VALUES (@tenant_id_value,'반기업무일지(기본)',
 '<div>
    <table width="629" align="center" style="border-collapse:collapse; width: 629px; font-family: 굴림체; font-size: 0pt; table-layout: fixed; -design-time-lock: true; ">
       <tbody>
@@ -2493,10 +4889,605 @@ Insert into tbl_journal_form (tenant_id,form_name,form_content,type_id,form_date
 </div>
 <p>
    <span>&nbsp;</span>
-</p>'
-,'ezJournal.t09',UTC_TIMESTAMP(),'기본반기업무일지','Top','basic');
+</p>',
+'<div>
+   <table width="629" align="center" style="border-collapse:collapse; width: 629px; font-family: 굴림체; font-size: 0pt; table-layout: fixed; -design-time-lock: true; ">
+      <tbody>
+         <tr>
+            <td width="629" height="60" style="border: 1px rgb(255, 255, 255); border-image: none; width: 629px; height: 60px; vertical-align: middle;" colspan="2">
+               <table width="629" style="width: 629px; font-family: 굴림체; font-size: 10pt;">
+                  <tbody>
+                     <tr>
+                        <td width="629" height="50" style="border: 1px rgb(255, 255, 255); border-image: none; width: 629px; height: 50px; vertical-align: middle;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-size: 24pt; font-weight: bold;">Semiannual Journal</span>
+                           </p>
+                        </td>
+                     </tr>
+                  </tbody>
+               </table>
+            </td>
+         </tr>
+         <tr>
+            <td width="12" height="71" style="border: 1px rgb(255, 255, 255); border-image: none; width: 12px; height: 71px; vertical-align: middle;">
+               <p style="font-family: 맑은 고딕; font-size: 13px; margin-top: 0pt; margin-bottom: 0pt;">
+                  <span>&nbsp;</span>
+               </p>
+            </td>
+            <td width="315" height="71" style="border: 1px rgb(255, 255, 255); border-image: none; width: 313px; height: 71px; vertical-align: middle;">
+               <div>
+                  <table width="311" align="right" style="border-collapse:collapse; width: 311px; height: 69px; font-family: 굴림체; font-size: 10pt; table-layout: fixed; -design-time-lock: true;">
+                     <tbody>
+                        <tr>
+                           <td width="115"style="width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;">
+                              <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                                 <span style="font-weight: bold;">Department</span>
+                              </p>
+                           </td>
+                           <td width="186" class="FIELD" id="journalWriterDept" style="width: 186px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;" free="">
+                              <p style="font-family: 맑은 고딕; font-size: 13px;">@journalWriterDept</p>
+                           </td>
+                        </tr>
+                        <tr>
+                           <td width="115" style="width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;">
+                              <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                                 <span style="font-weight: bold;">Writer</span>
+                              </p>
+                           </td>
+                           <td width="186" class="FIELD" id="journalWriterName" style="width: 186px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;" free="">
+                              <p style="font-family: 맑은 고딕; font-size: 13px;">@journalWriterName</p>
+                           </td>
+                        </tr>
+                        <tr>
+                           <td width="115" style="width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-style: solid; border-bottom-style: solid; border-left-style: solid;">
+                              <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                                 <span style="font-weight: bold;">Date</span>
+                              </p>
+                           </td>
+                           <td width="186" class="FIELD" id="journalWriteDate" style="border: 1px solid rgb(0, 0, 0); border-image: none; width: 186px; vertical-align: middle;" free="">
+                              <p style="font-family: 맑은 고딕; font-size: 13px;">@journalWriteDate</p>
+                           </td>
+                        </tr>
+                     </tbody>
+                  </table>
+               </div>
+            </td>
+         </tr>
+         <tr>
+            <td width="629" style="border: 1px rgb(255, 255, 255); border-image: none; width: 629px; vertical-align: top; padding-top: 5px;" colspan="2" free="">
+               <div>
+                  <span>
+                     <br>
+                  </span>
+               </div>
+               <table width="630" style="border-collapse:collapse; width: 630px; height: 100%; font-family: 굴림체; font-size: 10pt;">
+                  <tbody>
+                     <tr>
+                        <td width="104" height="38" style="width: 104px; height: 38px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid; background-color: #edf3f8;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">Type</span>
+                           </p>
+                        </td>
+                        <td width="520" height="38" style="width: 520px; height: 38px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid; background-color: #edf3f8;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">Task Details</span>
+                           </p>
+                        </td>
+                     </tr>
+                     <tr>
+                        <td width="104" height="200" style="width: 104px; height: 200px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">This Half-year</span>
+                           </p>
+                        </td>
+                        <td width="520" id="thisJournal" style="width: 520px; vertical-align: top; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;" free="">
+                           <p style="font-family: 맑은 고딕; font-size: 13px;">&nbsp;</p>
+                        </td>
+                     </tr>
+                     <tr>
+                        <td width="104" height="200" style="border-width: 1px medium 1px 1px; border-style: solid none solid solid; border-color: rgb(0, 0, 0) currentColor rgb(0, 0, 0) rgb(0, 0, 0); border-image: none; width: 104px; height: 200px; vertical-align: middle;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">Next Half-year</span>
+                           </p>
+                        </td>
+                        <td width="520" id="nextJournal" style="border: 1px solid rgb(0, 0, 0); border-image: none; width: 520px; vertical-align: top;" free="">
+                           <p style="font-family: 맑은 고딕; font-size: 13px;">&nbsp;</p>
+                        </td>
+                     </tr>
+                  </tbody>
+               </table>
+            </td>
+         </tr>
+      </tbody>
+   </table>
+</div>
+<div>
+   <span>
+      <br>
+   </span>
+</div>
+<p>
+   <span>&nbsp;</span>
+</p>',
+'<div>
+   <table width="629" align="center" style="border-collapse:collapse; width: 629px; font-family: 굴림체; font-size: 0pt; table-layout: fixed; -design-time-lock: true; ">
+      <tbody>
+         <tr>
+            <td width="629" height="60" style="border: 1px rgb(255, 255, 255); border-image: none; width: 629px; height: 60px; vertical-align: middle;" colspan="2">
+               <table width="629" style="width: 629px; font-family: 굴림체; font-size: 10pt;">
+                  <tbody>
+                     <tr>
+                        <td width="629" height="50" style="border: 1px rgb(255, 255, 255); border-image: none; width: 629px; height: 50px; vertical-align: middle;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-size: 24pt; font-weight: bold;">半期業務報告書</span>
+                           </p>
+                        </td>
+                     </tr>
+                  </tbody>
+               </table>
+            </td>
+         </tr>
+         <tr>
+            <td width="12" height="71" style="border: 1px rgb(255, 255, 255); border-image: none; width: 12px; height: 71px; vertical-align: middle;">
+               <p style="font-family: 맑은 고딕; font-size: 13px; margin-top: 0pt; margin-bottom: 0pt;">
+                  <span>&nbsp;</span>
+               </p>
+            </td>
+            <td width="315" height="71" style="border: 1px rgb(255, 255, 255); border-image: none; width: 313px; height: 71px; vertical-align: middle;">
+               <div>
+                  <table width="311" align="right" style="border-collapse:collapse; width: 311px; height: 69px; font-family: 굴림체; font-size: 10pt; table-layout: fixed; -design-time-lock: true;">
+                     <tbody>
+                        <tr>
+                           <td width="115"style="width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;">
+                              <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                                 <span style="font-weight: bold;">部&nbsp;&nbsp;署&nbsp;&nbsp;名</span>
+                              </p>
+                           </td>
+                           <td width="186" class="FIELD" id="journalWriterDept" style="width: 186px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;" free="">
+                              <p style="font-family: 맑은 고딕; font-size: 13px;">@journalWriterDept</p>
+                           </td>
+                        </tr>
+                        <tr>
+                           <td width="115" style="width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;">
+                              <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                                 <span style="font-weight: bold;">作&nbsp;&nbsp;成&nbsp;&nbsp;者</span>
+                              </p>
+                           </td>
+                           <td width="186" class="FIELD" id="journalWriterName" style="width: 186px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;" free="">
+                              <p style="font-family: 맑은 고딕; font-size: 13px;">@journalWriterName</p>
+                           </td>
+                        </tr>
+                        <tr>
+                           <td width="115" style="width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-style: solid; border-bottom-style: solid; border-left-style: solid;">
+                              <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                                 <span style="font-weight: bold;">作&nbsp;&nbsp;成&nbsp;&nbsp;日</span>
+                              </p>
+                           </td>
+                           <td width="186" class="FIELD" id="journalWriteDate" style="border: 1px solid rgb(0, 0, 0); border-image: none; width: 186px; vertical-align: middle;" free="">
+                              <p style="font-family: 맑은 고딕; font-size: 13px;">@journalWriteDate</p>
+                           </td>
+                        </tr>
+                     </tbody>
+                  </table>
+               </div>
+            </td>
+         </tr>
+         <tr>
+            <td width="629" style="border: 1px rgb(255, 255, 255); border-image: none; width: 629px; vertical-align: top; padding-top: 5px;" colspan="2" free="">
+               <div>
+                  <span>
+                     <br>
+                  </span>
+               </div>
+               <table width="630" style="border-collapse:collapse; width: 630px; height: 100%; font-family: 굴림체; font-size: 10pt;">
+                  <tbody>
+                     <tr>
+                        <td width="104" height="38" style="width: 104px; height: 38px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid; background-color: #edf3f8;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">分&nbsp;類</span>
+                           </p>
+                        </td>
+                        <td width="520" height="38" style="width: 520px; height: 38px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid; background-color: #edf3f8;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">業務内容および進捗状況</span>
+                           </p>
+                        </td>
+                     </tr>
+                     <tr>
+                        <td width="104" height="200" style="width: 104px; height: 200px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">上半期</span>
+                           </p>
+                        </td>
+                        <td width="520" id="thisJournal" style="width: 520px; vertical-align: top; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;" free="">
+                           <p style="font-family: 맑은 고딕; font-size: 13px;">&nbsp;</p>
+                        </td>
+                     </tr>
+                     <tr>
+                        <td width="104" height="200" style="border-width: 1px medium 1px 1px; border-style: solid none solid solid; border-color: rgb(0, 0, 0) currentColor rgb(0, 0, 0) rgb(0, 0, 0); border-image: none; width: 104px; height: 200px; vertical-align: middle;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">下半期</span>
+                           </p>
+                        </td>
+                        <td width="520" id="nextJournal" style="border: 1px solid rgb(0, 0, 0); border-image: none; width: 520px; vertical-align: top;" free="">
+                           <p style="font-family: 맑은 고딕; font-size: 13px;">&nbsp;</p>
+                        </td>
+                     </tr>
+                  </tbody>
+               </table>
+            </td>
+         </tr>
+      </tbody>
+   </table>
+</div>
+<div>
+   <span>
+      <br>
+   </span>
+</div>
+<p>
+   <span>&nbsp;</span>
+</p>',
+'<div>
+   <table width="629" align="center" style="border-collapse:collapse; width: 629px; font-family: 굴림체; font-size: 0pt; table-layout: fixed; -design-time-lock: true; ">
+      <tbody>
+         <tr>
+            <td width="629" height="60" style="border: 1px rgb(255, 255, 255); border-image: none; width: 629px; height: 60px; vertical-align: middle;" colspan="2">
+               <table width="629" style="width: 629px; font-family: 굴림체; font-size: 10pt;">
+                  <tbody>
+                     <tr>
+                        <td width="629" height="50" style="border: 1px rgb(255, 255, 255); border-image: none; width: 629px; height: 50px; vertical-align: middle;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-size: 24pt; font-weight: bold;">반기업무일지</span>
+                           </p>
+                        </td>
+                     </tr>
+                  </tbody>
+               </table>
+            </td>
+         </tr>
+         <tr>
+            <td width="12" height="71" style="border: 1px rgb(255, 255, 255); border-image: none; width: 12px; height: 71px; vertical-align: middle;">
+               <p style="font-family: 맑은 고딕; font-size: 13px; margin-top: 0pt; margin-bottom: 0pt;">
+                  <span>&nbsp;</span>
+               </p>
+            </td>
+            <td width="315" height="71" style="border: 1px rgb(255, 255, 255); border-image: none; width: 313px; height: 71px; vertical-align: middle;">
+               <div>
+                  <table width="311" align="right" style="border-collapse:collapse; width: 311px; height: 69px; font-family: 굴림체; font-size: 10pt; table-layout: fixed; -design-time-lock: true;">
+                     <tbody>
+                        <tr>
+                           <td width="115"style="width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;">
+                              <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                                 <span style="font-weight: bold;">부&nbsp;&nbsp;서&nbsp;&nbsp;명</span>
+                              </p>
+                           </td>
+                           <td width="186" class="FIELD" id="journalWriterDept" style="width: 186px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;" free="">
+                              <p style="font-family: 맑은 고딕; font-size: 13px;">@journalWriterDept</p>
+                           </td>
+                        </tr>
+                        <tr>
+                           <td width="115" style="width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;">
+                              <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                                 <span style="font-weight: bold;">작&nbsp;&nbsp;성&nbsp;&nbsp;자</span>
+                              </p>
+                           </td>
+                           <td width="186" class="FIELD" id="journalWriterName" style="width: 186px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;" free="">
+                              <p style="font-family: 맑은 고딕; font-size: 13px;">@journalWriterName</p>
+                           </td>
+                        </tr>
+                        <tr>
+                           <td width="115" style="width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-style: solid; border-bottom-style: solid; border-left-style: solid;">
+                              <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                                 <span style="font-weight: bold;">작&nbsp;&nbsp;성&nbsp;&nbsp;일</span>
+                              </p>
+                           </td>
+                           <td width="186" class="FIELD" id="journalWriteDate" style="border: 1px solid rgb(0, 0, 0); border-image: none; width: 186px; vertical-align: middle;" free="">
+                              <p style="font-family: 맑은 고딕; font-size: 13px;">@journalWriteDate</p>
+                           </td>
+                        </tr>
+                     </tbody>
+                  </table>
+               </div>
+            </td>
+         </tr>
+         <tr>
+            <td width="629" style="border: 1px rgb(255, 255, 255); border-image: none; width: 629px; vertical-align: top; padding-top: 5px;" colspan="2" free="">
+               <div>
+                  <span>
+                     <br>
+                  </span>
+               </div>
+               <table width="630" style="border-collapse:collapse; width: 630px; height: 100%; font-family: 굴림체; font-size: 10pt;">
+                  <tbody>
+                     <tr>
+                        <td width="104" height="38" style="width: 104px; height: 38px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid; background-color: #edf3f8;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">구&nbsp;분</span>
+                           </p>
+                        </td>
+                        <td width="520" height="38" style="width: 520px; height: 38px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid; background-color: #edf3f8;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">업무내용 및 진행사항</span>
+                           </p>
+                        </td>
+                     </tr>
+                     <tr>
+                        <td width="104" height="200" style="width: 104px; height: 200px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">금반기</span>
+                           </p>
+                        </td>
+                        <td width="520" id="thisJournal" style="width: 520px; vertical-align: top; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;" free="">
+                           <p style="font-family: 맑은 고딕; font-size: 13px;"></p>
+                        </td>
+                     </tr>
+                     <tr>
+                        <td width="104" height="200" style="border-width: 1px medium 1px 1px; border-style: solid none solid solid; border-color: rgb(0, 0, 0) currentColor rgb(0, 0, 0) rgb(0, 0, 0); border-image: none; width: 104px; height: 200px; vertical-align: middle;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">차반기</span>
+                           </p>
+                        </td>
+                        <td width="520" id="nextJournal" style="border: 1px solid rgb(0, 0, 0); border-image: none; width: 520px; vertical-align: top;" free="">
+                           <p style="font-family: 맑은 고딕; font-size: 13px;"></p>
+                        </td>
+                     </tr>
+                  </tbody>
+               </table>
+            </td>
+         </tr>
+      </tbody>
+   </table>
+</div>
+<div>
+   <span>
+      <br>
+   </span>
+</div>
+<p>
+   <span>&nbsp;</span>
+</p>',
+'<div>
+   <table width="629" align="center" style="border-collapse:collapse; width: 629px; font-family: 굴림체; font-size: 0pt; table-layout: fixed; -design-time-lock: true; ">
+      <tbody>
+         <tr>
+            <td width="629" height="60" style="border: 1px rgb(255, 255, 255); border-image: none; width: 629px; height: 60px; vertical-align: middle;" colspan="2">
+               <table width="629" style="width: 629px; font-family: 굴림체; font-size: 10pt;">
+                  <tbody>
+                     <tr>
+                        <td width="629" height="50" style="border: 1px rgb(255, 255, 255); border-image: none; width: 629px; height: 50px; vertical-align: middle;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-size: 24pt; font-weight: bold;">반기업무일지</span>
+                           </p>
+                        </td>
+                     </tr>
+                  </tbody>
+               </table>
+            </td>
+         </tr>
+         <tr>
+            <td width="12" height="71" style="border: 1px rgb(255, 255, 255); border-image: none; width: 12px; height: 71px; vertical-align: middle;">
+               <p style="font-family: 맑은 고딕; font-size: 13px; margin-top: 0pt; margin-bottom: 0pt;">
+                  <span>&nbsp;</span>
+               </p>
+            </td>
+            <td width="315" height="71" style="border: 1px rgb(255, 255, 255); border-image: none; width: 313px; height: 71px; vertical-align: middle;">
+               <div>
+                  <table width="311" align="right" style="border-collapse:collapse; width: 311px; height: 69px; font-family: 굴림체; font-size: 10pt; table-layout: fixed; -design-time-lock: true;">
+                     <tbody>
+                        <tr>
+                           <td width="115"style="width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;">
+                              <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                                 <span style="font-weight: bold;">부&nbsp;&nbsp;서&nbsp;&nbsp;명</span>
+                              </p>
+                           </td>
+                           <td width="186" class="FIELD" id="journalWriterDept" style="width: 186px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;" free="">
+                              <p style="font-family: 맑은 고딕; font-size: 13px;">@journalWriterDept</p>
+                           </td>
+                        </tr>
+                        <tr>
+                           <td width="115" style="width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;">
+                              <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                                 <span style="font-weight: bold;">작&nbsp;&nbsp;성&nbsp;&nbsp;자</span>
+                              </p>
+                           </td>
+                           <td width="186" class="FIELD" id="journalWriterName" style="width: 186px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;" free="">
+                              <p style="font-family: 맑은 고딕; font-size: 13px;">@journalWriterName</p>
+                           </td>
+                        </tr>
+                        <tr>
+                           <td width="115" style="width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-style: solid; border-bottom-style: solid; border-left-style: solid;">
+                              <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                                 <span style="font-weight: bold;">작&nbsp;&nbsp;성&nbsp;&nbsp;일</span>
+                              </p>
+                           </td>
+                           <td width="186" class="FIELD" id="journalWriteDate" style="border: 1px solid rgb(0, 0, 0); border-image: none; width: 186px; vertical-align: middle;" free="">
+                              <p style="font-family: 맑은 고딕; font-size: 13px;">@journalWriteDate</p>
+                           </td>
+                        </tr>
+                     </tbody>
+                  </table>
+               </div>
+            </td>
+         </tr>
+         <tr>
+            <td width="629" style="border: 1px rgb(255, 255, 255); border-image: none; width: 629px; vertical-align: top; padding-top: 5px;" colspan="2" free="">
+               <div>
+                  <span>
+                     <br>
+                  </span>
+               </div>
+               <table width="630" style="border-collapse:collapse; width: 630px; height: 100%; font-family: 굴림체; font-size: 10pt;">
+                  <tbody>
+                     <tr>
+                        <td width="104" height="38" style="width: 104px; height: 38px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid; background-color: #edf3f8;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">구&nbsp;분</span>
+                           </p>
+                        </td>
+                        <td width="520" height="38" style="width: 520px; height: 38px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid; background-color: #edf3f8;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">업무내용 및 진행사항</span>
+                           </p>
+                        </td>
+                     </tr>
+                     <tr>
+                        <td width="104" height="200" style="width: 104px; height: 200px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">금반기</span>
+                           </p>
+                        </td>
+                        <td width="520" id="thisJournal" style="width: 520px; vertical-align: top; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;" free="">
+                           <p style="font-family: 맑은 고딕; font-size: 13px;"></p>
+                        </td>
+                     </tr>
+                     <tr>
+                        <td width="104" height="200" style="border-width: 1px medium 1px 1px; border-style: solid none solid solid; border-color: rgb(0, 0, 0) currentColor rgb(0, 0, 0) rgb(0, 0, 0); border-image: none; width: 104px; height: 200px; vertical-align: middle;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">차반기</span>
+                           </p>
+                        </td>
+                        <td width="520" id="nextJournal" style="border: 1px solid rgb(0, 0, 0); border-image: none; width: 520px; vertical-align: top;" free="">
+                           <p style="font-family: 맑은 고딕; font-size: 13px;"></p>
+                        </td>
+                     </tr>
+                  </tbody>
+               </table>
+            </td>
+         </tr>
+      </tbody>
+   </table>
+</div>
+<div>
+   <span>
+      <br>
+   </span>
+</div>
+<p>
+   <span>&nbsp;</span>
+</p>',
+'<div>
+   <table width="629" align="center" style="border-collapse:collapse; width: 629px; font-family: 굴림체; font-size: 0pt; table-layout: fixed; -design-time-lock: true; ">
+      <tbody>
+         <tr>
+            <td width="629" height="60" style="border: 1px rgb(255, 255, 255); border-image: none; width: 629px; height: 60px; vertical-align: middle;" colspan="2">
+               <table width="629" style="width: 629px; font-family: 굴림체; font-size: 10pt;">
+                  <tbody>
+                     <tr>
+                        <td width="629" height="50" style="border: 1px rgb(255, 255, 255); border-image: none; width: 629px; height: 50px; vertical-align: middle;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-size: 24pt; font-weight: bold;">Semiannual Journal</span>
+                           </p>
+                        </td>
+                     </tr>
+                  </tbody>
+               </table>
+            </td>
+         </tr>
+         <tr>
+            <td width="12" height="71" style="border: 1px rgb(255, 255, 255); border-image: none; width: 12px; height: 71px; vertical-align: middle;">
+               <p style="font-family: 맑은 고딕; font-size: 13px; margin-top: 0pt; margin-bottom: 0pt;">
+                  <span>&nbsp;</span>
+               </p>
+            </td>
+            <td width="315" height="71" style="border: 1px rgb(255, 255, 255); border-image: none; width: 313px; height: 71px; vertical-align: middle;">
+               <div>
+                  <table width="311" align="right" style="border-collapse:collapse; width: 311px; height: 69px; font-family: 굴림체; font-size: 10pt; table-layout: fixed; -design-time-lock: true;">
+                     <tbody>
+                        <tr>
+                           <td width="115"style="width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;">
+                              <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                                 <span style="font-weight: bold;">Department</span>
+                              </p>
+                           </td>
+                           <td width="186" class="FIELD" id="journalWriterDept" style="width: 186px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;" free="">
+                              <p style="font-family: 맑은 고딕; font-size: 13px;">@journalWriterDept</p>
+                           </td>
+                        </tr>
+                        <tr>
+                           <td width="115" style="width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;">
+                              <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                                 <span style="font-weight: bold;">Writer</span>
+                              </p>
+                           </td>
+                           <td width="186" class="FIELD" id="journalWriterName" style="width: 186px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;" free="">
+                              <p style="font-family: 맑은 고딕; font-size: 13px;">@journalWriterName</p>
+                           </td>
+                        </tr>
+                        <tr>
+                           <td width="115" style="width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-style: solid; border-bottom-style: solid; border-left-style: solid;">
+                              <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                                 <span style="font-weight: bold;">Date</span>
+                              </p>
+                           </td>
+                           <td width="186" class="FIELD" id="journalWriteDate" style="border: 1px solid rgb(0, 0, 0); border-image: none; width: 186px; vertical-align: middle;" free="">
+                              <p style="font-family: 맑은 고딕; font-size: 13px;">@journalWriteDate</p>
+                           </td>
+                        </tr>
+                     </tbody>
+                  </table>
+               </div>
+            </td>
+         </tr>
+         <tr>
+            <td width="629" style="border: 1px rgb(255, 255, 255); border-image: none; width: 629px; vertical-align: top; padding-top: 5px;" colspan="2" free="">
+               <div>
+                  <span>
+                     <br>
+                  </span>
+               </div>
+               <table width="630" style="border-collapse:collapse; width: 630px; height: 100%; font-family: 굴림체; font-size: 10pt;">
+                  <tbody>
+                     <tr>
+                        <td width="104" height="38" style="width: 104px; height: 38px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid; background-color: #edf3f8;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">Type</span>
+                           </p>
+                        </td>
+                        <td width="520" height="38" style="width: 520px; height: 38px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid; background-color: #edf3f8;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">Task Details</span>
+                           </p>
+                        </td>
+                     </tr>
+                     <tr>
+                        <td width="104" height="200" style="width: 104px; height: 200px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">This Half-year</span>
+                           </p>
+                        </td>
+                        <td width="520" id="thisJournal" style="width: 520px; vertical-align: top; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;" free="">
+                           <p style="font-family: 맑은 고딕; font-size: 13px;">&nbsp;</p>
+                        </td>
+                     </tr>
+                     <tr>
+                        <td width="104" height="200" style="border-width: 1px medium 1px 1px; border-style: solid none solid solid; border-color: rgb(0, 0, 0) currentColor rgb(0, 0, 0) rgb(0, 0, 0); border-image: none; width: 104px; height: 200px; vertical-align: middle;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">Next Half-year</span>
+                           </p>
+                        </td>
+                        <td width="520" id="nextJournal" style="border: 1px solid rgb(0, 0, 0); border-image: none; width: 520px; vertical-align: top;" free="">
+                           <p style="font-family: 맑은 고딕; font-size: 13px;">&nbsp;</p>
+                        </td>
+                     </tr>
+                  </tbody>
+               </table>
+            </td>
+         </tr>
+      </tbody>
+   </table>
+</div>
+<div>
+   <span>
+      <br>
+   </span>
+</div>
+<p>
+   <span>&nbsp;</span>
+</p>',
+'ezJournal.t09',UTC_TIMESTAMP(),'기본반기업무일지','Top','basic');
 
-Insert into tbl_journal_form (tenant_id,form_name,form_content,type_id,form_date,form_info,company_id,form_status) VALUES (@tenant_id_value,'연간업무일지(기본)',
+Insert into tbl_journal_form (tenant_id,form_name,form_content,form_content2,form_content3,form_content4,form_content5,form_content6,type_id,form_date,form_info,company_id,form_status) VALUES (@tenant_id_value,'연간업무일지(기본)',
 '<div>
    <table width="629" align="center" style="border-collapse:collapse; width: 629px; font-family: 굴림체; font-size: 0pt; table-layout: fixed; -design-time-lock: true; ">
       <tbody>
@@ -2615,8 +5606,603 @@ Insert into tbl_journal_form (tenant_id,form_name,form_content,type_id,form_date
 </div>
 <p>
    <span>&nbsp;</span>
-</p>'
-,'ezJournal.t10',UTC_TIMESTAMP(),'기본연간업무일지','Top','basic');
+</p>',
+'<div>
+   <table width="629" align="center" style="border-collapse:collapse; width: 629px; font-family: 굴림체; font-size: 0pt; table-layout: fixed; -design-time-lock: true; ">
+      <tbody>
+         <tr>
+            <td width="629" height="60" style="border: 1px rgb(255, 255, 255); border-image: none; width: 629px; height: 60px; vertical-align: middle;" colspan="2">
+               <table width="629" style="width: 629px; font-family: 굴림체; font-size: 10pt;">
+                  <tbody>
+                     <tr>
+                        <td width="629" height="50" style="border: 1px rgb(255, 255, 255); border-image: none; width: 629px; height: 50px; vertical-align: middle;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-size: 24pt; font-weight: bold;">Annual Journal</span>
+                           </p>
+                        </td>
+                     </tr>
+                  </tbody>
+               </table>
+            </td>
+         </tr>
+         <tr>
+            <td width="12" height="71" style="border: 1px rgb(255, 255, 255); border-image: none; width: 12px; height: 71px; vertical-align: middle;">
+               <p style="font-family: 맑은 고딕; font-size: 13px; margin-top: 0pt; margin-bottom: 0pt;">
+                  <span>&nbsp;</span>
+               </p>
+            </td>
+            <td width="315" height="71" style="border: 1px rgb(255, 255, 255); border-image: none; width: 313px; height: 71px; vertical-align: middle;">
+               <div>
+                  <table width="311" align="right" style="border-collapse:collapse; width: 311px; height: 69px; font-family: 굴림체; font-size: 10pt; table-layout: fixed; -design-time-lock: true;">
+                     <tbody>
+                        <tr>
+                           <td width="115"style="width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;">
+                              <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                                 <span style="font-weight: bold;">Department</span>
+                              </p>
+                           </td>
+                           <td width="186" class="FIELD" id="journalWriterDept" style="width: 186px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;" free="">
+                              <p style="font-family: 맑은 고딕; font-size: 13px;">@journalWriterDept</p>
+                           </td>
+                        </tr>
+                        <tr>
+                           <td width="115" style="width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;">
+                              <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                                 <span style="font-weight: bold;">Writer</span>
+                              </p>
+                           </td>
+                           <td width="186" class="FIELD" id="journalWriterName" style="width: 186px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;" free="">
+                              <p style="font-family: 맑은 고딕; font-size: 13px;">@journalWriterName</p>
+                           </td>
+                        </tr>
+                        <tr>
+                           <td width="115" style="width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-style: solid; border-bottom-style: solid; border-left-style: solid;">
+                              <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                                 <span style="font-weight: bold;">Date</span>
+                              </p>
+                           </td>
+                           <td width="186" class="FIELD" id="journalWriteDate" style="border: 1px solid rgb(0, 0, 0); border-image: none; width: 186px; vertical-align: middle;" free="">
+                              <p style="font-family: 맑은 고딕; font-size: 13px;">@journalWriteDate</p>
+                           </td>
+                        </tr>
+                     </tbody>
+                  </table>
+               </div>
+            </td>
+         </tr>
+         <tr>
+            <td width="629" style="border: 1px rgb(255, 255, 255); border-image: none; width: 629px; vertical-align: top; padding-top: 5px;" colspan="2" free="">
+               <div>
+                  <span>
+                     <br>
+                  </span>
+               </div>
+               <table width="630" style="border-collapse:collapse; width: 630px; height: 100%; font-family: 굴림체; font-size: 10pt;">
+                  <tbody>
+                     <tr>
+                        <td width="104" height="38" style="width: 104px; height: 38px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid; background-color: #edf3f8;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">Type</span>
+                           </p>
+                        </td>
+                        <td width="520" height="38" style="width: 520px; height: 38px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid; background-color: #edf3f8;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">Task Details</span>
+                           </p>
+                        </td>
+                     </tr>
+                     <tr>
+                        <td width="104" height="200" style="width: 104px; height: 200px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">This Year</span>
+                           </p>
+                        </td>
+                        <td width="520" id="thisJournal" style="width: 520px; vertical-align: top; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;" free="">
+                           <p style="font-family: 맑은 고딕; font-size: 13px;">&nbsp;</p>
+                        </td>
+                     </tr>
+                     <tr>
+                        <td width="104" height="200" style="border-width: 1px medium 1px 1px; border-style: solid none solid solid; border-color: rgb(0, 0, 0) currentColor rgb(0, 0, 0) rgb(0, 0, 0); border-image: none; width: 104px; height: 200px; vertical-align: middle;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">Next Year</span>
+                           </p>
+                        </td>
+                        <td width="520" id="nextJournal" style="border: 1px solid rgb(0, 0, 0); border-image: none; width: 520px; vertical-align: top;" free="">
+                           <p style="font-family: 맑은 고딕; font-size: 13px;">&nbsp;</p>
+                        </td>
+                     </tr>
+                  </tbody>
+               </table>
+            </td>
+         </tr>
+      </tbody>
+   </table>
+</div>
+<div>
+   <span>
+      <br>
+   </span>
+</div>
+<p>
+   <span>&nbsp;</span>
+</p>',
+'<div>
+   <table width="629" align="center" style="border-collapse:collapse; width: 629px; font-family: 굴림체; font-size: 0pt; table-layout: fixed; -design-time-lock: true; ">
+      <tbody>
+         <tr>
+            <td width="629" height="60" style="border: 1px rgb(255, 255, 255); border-image: none; width: 629px; height: 60px; vertical-align: middle;" colspan="2">
+               <table width="629" style="width: 629px; font-family: 굴림체; font-size: 10pt;">
+                  <tbody>
+                     <tr>
+                        <td width="629" height="50" style="border: 1px rgb(255, 255, 255); border-image: none; width: 629px; height: 50px; vertical-align: middle;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-size: 24pt; font-weight: bold;">年間業務報告書</span>
+                           </p>
+                        </td>
+                     </tr>
+                  </tbody>
+               </table>
+            </td>
+         </tr>
+         <tr>
+            <td width="12" height="71" style="border: 1px rgb(255, 255, 255); border-image: none; width: 12px; height: 71px; vertical-align: middle;">
+               <p style="font-family: 맑은 고딕; font-size: 13px; margin-top: 0pt; margin-bottom: 0pt;">
+                  <span>&nbsp;</span>
+               </p>
+            </td>
+            <td width="315" height="71" style="border: 1px rgb(255, 255, 255); border-image: none; width: 313px; height: 71px; vertical-align: middle;">
+               <div>
+                  <table width="311" align="right" style="border-collapse:collapse; width: 311px; height: 69px; font-family: 굴림체; font-size: 10pt; table-layout: fixed; -design-time-lock: true;">
+                     <tbody>
+                        <tr>
+                           <td width="115"style="width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;">
+                              <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                                 <span style="font-weight: bold;">部&nbsp;&nbsp;署&nbsp;&nbsp;名</span>
+                              </p>
+                           </td>
+                           <td width="186" class="FIELD" id="journalWriterDept" style="width: 186px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;" free="">
+                              <p style="font-family: 맑은 고딕; font-size: 13px;">@journalWriterDept</p>
+                           </td>
+                        </tr>
+                        <tr>
+                           <td width="115" style="width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;">
+                              <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                                 <span style="font-weight: bold;">作&nbsp;&nbsp;成&nbsp;&nbsp;者</span>
+                              </p>
+                           </td>
+                           <td width="186" class="FIELD" id="journalWriterName" style="width: 186px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;" free="">
+                              <p style="font-family: 맑은 고딕; font-size: 13px;">@journalWriterName</p>
+                           </td>
+                        </tr>
+                        <tr>
+                           <td width="115" style="width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-style: solid; border-bottom-style: solid; border-left-style: solid;">
+                              <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                                 <span style="font-weight: bold;">作&nbsp;&nbsp;成&nbsp;&nbsp;日</span>
+                              </p>
+                           </td>
+                           <td width="186" class="FIELD" id="journalWriteDate" style="border: 1px solid rgb(0, 0, 0); border-image: none; width: 186px; vertical-align: middle;" free="">
+                              <p style="font-family: 맑은 고딕; font-size: 13px;">@journalWriteDate</p>
+                           </td>
+                        </tr>
+                     </tbody>
+                  </table>
+               </div>
+            </td>
+         </tr>
+         <tr>
+            <td width="629" style="border: 1px rgb(255, 255, 255); border-image: none; width: 629px; vertical-align: top; padding-top: 5px;" colspan="2" free="">
+               <div>
+                  <span>
+                     <br>
+                  </span>
+               </div>
+               <table width="630" style="border-collapse:collapse; width: 630px; height: 100%; font-family: 굴림체; font-size: 10pt;">
+                  <tbody>
+                     <tr>
+                        <td width="104" height="38" style="width: 104px; height: 38px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid; background-color: #edf3f8;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">分&nbsp;類</span>
+                           </p>
+                        </td>
+                        <td width="520" height="38" style="width: 520px; height: 38px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid; background-color: #edf3f8;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">業務内容および進捗状況</span>
+                           </p>
+                        </td>
+                     </tr>
+                     <tr>
+                        <td width="104" height="200" style="width: 104px; height: 200px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">今&nbsp;年</span>
+                           </p>
+                        </td>
+                        <td width="520" id="thisJournal" style="width: 520px; vertical-align: top; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;" free="">
+                           <p style="font-family: 맑은 고딕; font-size: 13px;">&nbsp;</p>
+                        </td>
+                     </tr>
+                     <tr>
+                        <td width="104" height="200" style="border-width: 1px medium 1px 1px; border-style: solid none solid solid; border-color: rgb(0, 0, 0) currentColor rgb(0, 0, 0) rgb(0, 0, 0); border-image: none; width: 104px; height: 200px; vertical-align: middle;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">来&nbsp;年</span>
+                           </p>
+                        </td>
+                        <td width="520" id="nextJournal" style="border: 1px solid rgb(0, 0, 0); border-image: none; width: 520px; vertical-align: top;" free="">
+                           <p style="font-family: 맑은 고딕; font-size: 13px;">&nbsp;</p>
+                        </td>
+                     </tr>
+                  </tbody>
+               </table>
+            </td>
+         </tr>
+      </tbody>
+   </table>
+</div>
+<div>
+   <span>
+      <br>
+   </span>
+</div>
+<p>
+   <span>&nbsp;</span>
+</p>',
+'<div>
+   <table width="629" align="center" style="border-collapse:collapse; width: 629px; font-family: 굴림체; font-size: 0pt; table-layout: fixed; -design-time-lock: true; ">
+      <tbody>
+         <tr>
+            <td width="629" height="60" style="border: 1px rgb(255, 255, 255); border-image: none; width: 629px; height: 60px; vertical-align: middle;" colspan="2">
+               <table width="629" style="width: 629px; font-family: 굴림체; font-size: 10pt;">
+                  <tbody>
+                     <tr>
+                        <td width="629" height="50" style="border: 1px rgb(255, 255, 255); border-image: none; width: 629px; height: 50px; vertical-align: middle;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-size: 24pt; font-weight: bold;">연간업무일지</span>
+                           </p>
+                        </td>
+                     </tr>
+                  </tbody>
+               </table>
+            </td>
+         </tr>
+         <tr>
+            <td width="12" height="71" style="border: 1px rgb(255, 255, 255); border-image: none; width: 12px; height: 71px; vertical-align: middle;">
+               <p style="font-family: 맑은 고딕; font-size: 13px; margin-top: 0pt; margin-bottom: 0pt;">
+                  <span>&nbsp;</span>
+               </p>
+            </td>
+            <td width="315" height="71" style="border: 1px rgb(255, 255, 255); border-image: none; width: 313px; height: 71px; vertical-align: middle;">
+               <div>
+                  <table width="311" align="right" style="border-collapse:collapse; width: 311px; height: 69px; font-family: 굴림체; font-size: 10pt; table-layout: fixed; -design-time-lock: true;">
+                     <tbody>
+                        <tr>
+                           <td width="115"style="width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;">
+                              <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                                 <span style="font-weight: bold;">부&nbsp;&nbsp;서&nbsp;&nbsp;명</span>
+                              </p>
+                           </td>
+                           <td width="186" class="FIELD" id="journalWriterDept" style="width: 186px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;" free="">
+                              <p style="font-family: 맑은 고딕; font-size: 13px;">@journalWriterDept</p>
+                           </td>
+                        </tr>
+                        <tr>
+                           <td width="115" style="width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;">
+                              <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                                 <span style="font-weight: bold;">작&nbsp;&nbsp;성&nbsp;&nbsp;자</span>
+                              </p>
+                           </td>
+                           <td width="186" class="FIELD" id="journalWriterName" style="width: 186px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;" free="">
+                              <p style="font-family: 맑은 고딕; font-size: 13px;">@journalWriterName</p>
+                           </td>
+                        </tr>
+                        <tr>
+                           <td width="115" style="width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-style: solid; border-bottom-style: solid; border-left-style: solid;">
+                              <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                                 <span style="font-weight: bold;">작&nbsp;&nbsp;성&nbsp;&nbsp;일</span>
+                              </p>
+                           </td>
+                           <td width="186" class="FIELD" id="journalWriteDate" style="border: 1px solid rgb(0, 0, 0); border-image: none; width: 186px; vertical-align: middle;" free="">
+                              <p style="font-family: 맑은 고딕; font-size: 13px;">@journalWriteDate</p>
+                           </td>
+                        </tr>
+                     </tbody>
+                  </table>
+               </div>
+            </td>
+         </tr>
+         <tr>
+            <td width="629" style="border: 1px rgb(255, 255, 255); border-image: none; width: 629px; vertical-align: top; padding-top: 5px;" colspan="2" free="">
+               <div>
+                  <span>
+                     <br>
+                  </span>
+               </div>
+               <table width="630" style="border-collapse:collapse; width: 630px; height: 100%; font-family: 굴림체; font-size: 10pt;">
+                  <tbody>
+                     <tr>
+                        <td width="104" height="38" style="width: 104px; height: 38px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid; background-color: #edf3f8;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">구&nbsp;분</span>
+                           </p>
+                        </td>
+                        <td width="520" height="38" style="width: 520px; height: 38px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid; background-color: #edf3f8;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">업무내용 및 진행사항</span>
+                           </p>
+                        </td>
+                     </tr>
+                     <tr>
+                        <td width="104" height="200" style="width: 104px; height: 200px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">금&nbsp;년</span>
+                           </p>
+                        </td>
+                        <td width="520" id="thisJournal" style="width: 520px; vertical-align: top; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;" free="">
+                           <p style="font-family: 맑은 고딕; font-size: 13px;"></p>
+                        </td>
+                     </tr>
+                     <tr>
+                        <td width="104" height="200" style="border-width: 1px medium 1px 1px; border-style: solid none solid solid; border-color: rgb(0, 0, 0) currentColor rgb(0, 0, 0) rgb(0, 0, 0); border-image: none; width: 104px; height: 200px; vertical-align: middle;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">익&nbsp;년</span>
+                           </p>
+                        </td>
+                        <td width="520" id="nextJournal" style="border: 1px solid rgb(0, 0, 0); border-image: none; width: 520px; vertical-align: top;" free="">
+                           <p style="font-family: 맑은 고딕; font-size: 13px;"></p>
+                        </td>
+                     </tr>
+                  </tbody>
+               </table>
+            </td>
+         </tr>
+      </tbody>
+   </table>
+</div>
+<div>
+   <span>
+      <br>
+   </span>
+</div>
+<p>
+   <span>&nbsp;</span>
+</p>',
+'<div>
+   <table width="629" align="center" style="border-collapse:collapse; width: 629px; font-family: 굴림체; font-size: 0pt; table-layout: fixed; -design-time-lock: true; ">
+      <tbody>
+         <tr>
+            <td width="629" height="60" style="border: 1px rgb(255, 255, 255); border-image: none; width: 629px; height: 60px; vertical-align: middle;" colspan="2">
+               <table width="629" style="width: 629px; font-family: 굴림체; font-size: 10pt;">
+                  <tbody>
+                     <tr>
+                        <td width="629" height="50" style="border: 1px rgb(255, 255, 255); border-image: none; width: 629px; height: 50px; vertical-align: middle;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-size: 24pt; font-weight: bold;">연간업무일지</span>
+                           </p>
+                        </td>
+                     </tr>
+                  </tbody>
+               </table>
+            </td>
+         </tr>
+         <tr>
+            <td width="12" height="71" style="border: 1px rgb(255, 255, 255); border-image: none; width: 12px; height: 71px; vertical-align: middle;">
+               <p style="font-family: 맑은 고딕; font-size: 13px; margin-top: 0pt; margin-bottom: 0pt;">
+                  <span>&nbsp;</span>
+               </p>
+            </td>
+            <td width="315" height="71" style="border: 1px rgb(255, 255, 255); border-image: none; width: 313px; height: 71px; vertical-align: middle;">
+               <div>
+                  <table width="311" align="right" style="border-collapse:collapse; width: 311px; height: 69px; font-family: 굴림체; font-size: 10pt; table-layout: fixed; -design-time-lock: true;">
+                     <tbody>
+                        <tr>
+                           <td width="115"style="width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;">
+                              <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                                 <span style="font-weight: bold;">부&nbsp;&nbsp;서&nbsp;&nbsp;명</span>
+                              </p>
+                           </td>
+                           <td width="186" class="FIELD" id="journalWriterDept" style="width: 186px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;" free="">
+                              <p style="font-family: 맑은 고딕; font-size: 13px;">@journalWriterDept</p>
+                           </td>
+                        </tr>
+                        <tr>
+                           <td width="115" style="width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;">
+                              <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                                 <span style="font-weight: bold;">작&nbsp;&nbsp;성&nbsp;&nbsp;자</span>
+                              </p>
+                           </td>
+                           <td width="186" class="FIELD" id="journalWriterName" style="width: 186px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;" free="">
+                              <p style="font-family: 맑은 고딕; font-size: 13px;">@journalWriterName</p>
+                           </td>
+                        </tr>
+                        <tr>
+                           <td width="115" style="width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-style: solid; border-bottom-style: solid; border-left-style: solid;">
+                              <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                                 <span style="font-weight: bold;">작&nbsp;&nbsp;성&nbsp;&nbsp;일</span>
+                              </p>
+                           </td>
+                           <td width="186" class="FIELD" id="journalWriteDate" style="border: 1px solid rgb(0, 0, 0); border-image: none; width: 186px; vertical-align: middle;" free="">
+                              <p style="font-family: 맑은 고딕; font-size: 13px;">@journalWriteDate</p>
+                           </td>
+                        </tr>
+                     </tbody>
+                  </table>
+               </div>
+            </td>
+         </tr>
+         <tr>
+            <td width="629" style="border: 1px rgb(255, 255, 255); border-image: none; width: 629px; vertical-align: top; padding-top: 5px;" colspan="2" free="">
+               <div>
+                  <span>
+                     <br>
+                  </span>
+               </div>
+               <table width="630" style="border-collapse:collapse; width: 630px; height: 100%; font-family: 굴림체; font-size: 10pt;">
+                  <tbody>
+                     <tr>
+                        <td width="104" height="38" style="width: 104px; height: 38px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid; background-color: #edf3f8;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">구&nbsp;분</span>
+                           </p>
+                        </td>
+                        <td width="520" height="38" style="width: 520px; height: 38px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid; background-color: #edf3f8;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">업무내용 및 진행사항</span>
+                           </p>
+                        </td>
+                     </tr>
+                     <tr>
+                        <td width="104" height="200" style="width: 104px; height: 200px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">금&nbsp;년</span>
+                           </p>
+                        </td>
+                        <td width="520" id="thisJournal" style="width: 520px; vertical-align: top; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;" free="">
+                           <p style="font-family: 맑은 고딕; font-size: 13px;"></p>
+                        </td>
+                     </tr>
+                     <tr>
+                        <td width="104" height="200" style="border-width: 1px medium 1px 1px; border-style: solid none solid solid; border-color: rgb(0, 0, 0) currentColor rgb(0, 0, 0) rgb(0, 0, 0); border-image: none; width: 104px; height: 200px; vertical-align: middle;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">익&nbsp;년</span>
+                           </p>
+                        </td>
+                        <td width="520" id="nextJournal" style="border: 1px solid rgb(0, 0, 0); border-image: none; width: 520px; vertical-align: top;" free="">
+                           <p style="font-family: 맑은 고딕; font-size: 13px;"></p>
+                        </td>
+                     </tr>
+                  </tbody>
+               </table>
+            </td>
+         </tr>
+      </tbody>
+   </table>
+</div>
+<div>
+   <span>
+      <br>
+   </span>
+</div>
+<p>
+   <span>&nbsp;</span>
+</p>',
+'<div>
+   <table width="629" align="center" style="border-collapse:collapse; width: 629px; font-family: 굴림체; font-size: 0pt; table-layout: fixed; -design-time-lock: true; ">
+      <tbody>
+         <tr>
+            <td width="629" height="60" style="border: 1px rgb(255, 255, 255); border-image: none; width: 629px; height: 60px; vertical-align: middle;" colspan="2">
+               <table width="629" style="width: 629px; font-family: 굴림체; font-size: 10pt;">
+                  <tbody>
+                     <tr>
+                        <td width="629" height="50" style="border: 1px rgb(255, 255, 255); border-image: none; width: 629px; height: 50px; vertical-align: middle;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-size: 24pt; font-weight: bold;">Annual Journal</span>
+                           </p>
+                        </td>
+                     </tr>
+                  </tbody>
+               </table>
+            </td>
+         </tr>
+         <tr>
+            <td width="12" height="71" style="border: 1px rgb(255, 255, 255); border-image: none; width: 12px; height: 71px; vertical-align: middle;">
+               <p style="font-family: 맑은 고딕; font-size: 13px; margin-top: 0pt; margin-bottom: 0pt;">
+                  <span>&nbsp;</span>
+               </p>
+            </td>
+            <td width="315" height="71" style="border: 1px rgb(255, 255, 255); border-image: none; width: 313px; height: 71px; vertical-align: middle;">
+               <div>
+                  <table width="311" align="right" style="border-collapse:collapse; width: 311px; height: 69px; font-family: 굴림체; font-size: 10pt; table-layout: fixed; -design-time-lock: true;">
+                     <tbody>
+                        <tr>
+                           <td width="115"style="width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;">
+                              <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                                 <span style="font-weight: bold;">Department</span>
+                              </p>
+                           </td>
+                           <td width="186" class="FIELD" id="journalWriterDept" style="width: 186px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;" free="">
+                              <p style="font-family: 맑은 고딕; font-size: 13px;">@journalWriterDept</p>
+                           </td>
+                        </tr>
+                        <tr>
+                           <td width="115" style="width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;">
+                              <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                                 <span style="font-weight: bold;">Writer</span>
+                              </p>
+                           </td>
+                           <td width="186" class="FIELD" id="journalWriterName" style="width: 186px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;" free="">
+                              <p style="font-family: 맑은 고딕; font-size: 13px;">@journalWriterName</p>
+                           </td>
+                        </tr>
+                        <tr>
+                           <td width="115" style="width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-style: solid; border-bottom-style: solid; border-left-style: solid;">
+                              <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                                 <span style="font-weight: bold;">Date</span>
+                              </p>
+                           </td>
+                           <td width="186" class="FIELD" id="journalWriteDate" style="border: 1px solid rgb(0, 0, 0); border-image: none; width: 186px; vertical-align: middle;" free="">
+                              <p style="font-family: 맑은 고딕; font-size: 13px;">@journalWriteDate</p>
+                           </td>
+                        </tr>
+                     </tbody>
+                  </table>
+               </div>
+            </td>
+         </tr>
+         <tr>
+            <td width="629" style="border: 1px rgb(255, 255, 255); border-image: none; width: 629px; vertical-align: top; padding-top: 5px;" colspan="2" free="">
+               <div>
+                  <span>
+                     <br>
+                  </span>
+               </div>
+               <table width="630" style="border-collapse:collapse; width: 630px; height: 100%; font-family: 굴림체; font-size: 10pt;">
+                  <tbody>
+                     <tr>
+                        <td width="104" height="38" style="width: 104px; height: 38px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid; background-color: #edf3f8;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">Type</span>
+                           </p>
+                        </td>
+                        <td width="520" height="38" style="width: 520px; height: 38px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid; background-color: #edf3f8;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">Task Details</span>
+                           </p>
+                        </td>
+                     </tr>
+                     <tr>
+                        <td width="104" height="200" style="width: 104px; height: 200px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">This Year</span>
+                           </p>
+                        </td>
+                        <td width="520" id="thisJournal" style="width: 520px; vertical-align: top; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;" free="">
+                           <p style="font-family: 맑은 고딕; font-size: 13px;">&nbsp;</p>
+                        </td>
+                     </tr>
+                     <tr>
+                        <td width="104" height="200" style="border-width: 1px medium 1px 1px; border-style: solid none solid solid; border-color: rgb(0, 0, 0) currentColor rgb(0, 0, 0) rgb(0, 0, 0); border-image: none; width: 104px; height: 200px; vertical-align: middle;">
+                           <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                              <span style="font-weight: bold;">Next Year</span>
+                           </p>
+                        </td>
+                        <td width="520" id="nextJournal" style="border: 1px solid rgb(0, 0, 0); border-image: none; width: 520px; vertical-align: top;" free="">
+                           <p style="font-family: 맑은 고딕; font-size: 13px;">&nbsp;</p>
+                        </td>
+                     </tr>
+                  </tbody>
+               </table>
+            </td>
+         </tr>
+      </tbody>
+   </table>
+</div>
+<div>
+   <span>
+      <br>
+   </span>
+</div>
+<p>
+   <span>&nbsp;</span>
+</p>',
+'ezJournal.t10',UTC_TIMESTAMP(),'기본연간업무일지','Top','basic');
 
 -- webfolder fileType 
 INSERT INTO TBL_WEBFOLDER_FILETYPE (TYPE_ID,TYPE_NAME,FILE_EXT,TYPE_ICON,TENANT_ID,TYPE_NAME2) values ('1','document','doc','/images/webfolder/msWord.png',@tenant_id_value,'문서');
