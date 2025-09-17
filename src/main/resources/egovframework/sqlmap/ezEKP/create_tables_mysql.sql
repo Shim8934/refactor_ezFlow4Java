@@ -9284,6 +9284,7 @@ CREATE TABLE `tbl_portal_portlet_comp` (
   `portlet_used` int(11) DEFAULT 0 COMMENT '포틀릿 보임(Y)/숨김(N)',
   `portlet_order` int(11) DEFAULT NULL COMMENT '포틀릿 순서',
   `board_id` varchar(200) DEFAULT NULL,
+  `connection_id` varchar(200) DEFAULT NULL,
   PRIMARY KEY (`company_id`,`tenant_id`,`portlet_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='회사별 포틀릿 설정 테이블';
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -12000,6 +12001,7 @@ CREATE TABLE `tbl_survey` (
   `popup_flag` tinyint(4) DEFAULT 0,
   `MAIL_SENT_FLAG` tinyint(4) DEFAULT 0,
   `CLOSING_TEXT` longtext DEFAULT NULL COMMENT '맺음말',
+  `TOTALNOTI_SENT_FLAG` tinyint(4) DEFAULT 0,
   PRIMARY KEY (`survey_id`,`tenant_id`,`company_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;

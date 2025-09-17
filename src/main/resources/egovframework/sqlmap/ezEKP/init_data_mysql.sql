@@ -2683,6 +2683,8 @@ INSERT INTO TBL_PORTAL_FRAME_COMP (COMPANY_ID, TENANT_ID, THEME_ID, FRAME_ID, FR
 -- 모바일 포틀릿
 INSERT INTO TBL_PORTAL_FRAME_COMP (COMPANY_ID, TENANT_ID, THEME_ID, FRAME_ID, FRAME_USED, FRAME_DEFAULT) VALUES ('Top',@tenant_id_value, 4, 9, 1, 1);
 
+INSERT INTO TBL_PORTAL_MENU_COMP (COMPANY_ID, TENANT_ID, MENU_ID, MENU_USED, COMPANY_LANG, COMPANY_ORDER) VALUES ('Top',@tenant_id_value, -2, 1, 1, -2);
+INSERT INTO TBL_PORTAL_MENU_COMP (COMPANY_ID, TENANT_ID, MENU_ID, MENU_USED, COMPANY_LANG, COMPANY_ORDER) VALUES ('Top',@tenant_id_value, -1, 1, 1, -1);
 INSERT INTO TBL_PORTAL_MENU_COMP (COMPANY_ID, TENANT_ID, MENU_ID, MENU_USED, COMPANY_LANG, COMPANY_ORDER) VALUES ('Top',@tenant_id_value, 1, 1, 1, 1);
 INSERT INTO TBL_PORTAL_MENU_COMP (COMPANY_ID, TENANT_ID, MENU_ID, MENU_USED, COMPANY_LANG, COMPANY_ORDER) VALUES ('Top',@tenant_id_value, 2, 1, 1, 2);
 INSERT INTO TBL_PORTAL_MENU_COMP (COMPANY_ID, TENANT_ID, MENU_ID, MENU_USED, COMPANY_LANG, COMPANY_ORDER) VALUES ('Top',@tenant_id_value, 3, 1, 1, 3);
@@ -2714,7 +2716,9 @@ INSERT INTO TBL_PORTAL_MENU_COMP (COMPANY_ID, TENANT_ID, MENU_ID, MENU_USED, COM
 INSERT INTO TBL_PORTAL_MENU_COMP (COMPANY_ID, TENANT_ID, MENU_ID, MENU_USED, COMPANY_LANG, COMPANY_ORDER) VALUES ('Top',@tenant_id_value, 27, 1, 1, 7);
 INSERT INTO TBL_PORTAL_MENU_COMP (COMPANY_ID, TENANT_ID, MENU_ID, MENU_USED, COMPANY_LANG, COMPANY_ORDER) VALUES ('Top',@tenant_id_value, 28, 1, 1, 8);
 INSERT INTO TBL_PORTAL_MENU_COMP (COMPANY_ID, TENANT_ID, MENU_ID, MENU_USED, COMPANY_LANG, COMPANY_ORDER) VALUES ('Top',@tenant_id_value, 29, 1, 1, 9);
-				
+
+INSERT INTO TBL_PORTAL_MENU_AUTH (MENU_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, sn) VALUES (-2, 'Top', @tenant_id_value, 'Top', 1, 0, 1);
+INSERT INTO TBL_PORTAL_MENU_AUTH (MENU_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, sn) VALUES (-1, 'Top', @tenant_id_value, 'Top', 1, 0, 1);
 INSERT INTO TBL_PORTAL_MENU_AUTH (MENU_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, sn) VALUES (0, 'Top',@tenant_id_value, 'Top', 1, 0, 1);
 INSERT INTO TBL_PORTAL_MENU_AUTH (MENU_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, sn) VALUES (1, 'Top',@tenant_id_value, 'Top', 1, 0, 1);
 INSERT INTO TBL_PORTAL_MENU_AUTH (MENU_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, sn) VALUES (2, 'Top',@tenant_id_value, 'Top', 1, 0, 1);
@@ -2748,6 +2752,18 @@ INSERT INTO TBL_PORTAL_MENU_AUTH (MENU_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCES
 INSERT INTO TBL_PORTAL_MENU_AUTH (MENU_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, sn) VALUES (28, 'Top',@tenant_id_value, 'Top', 1, 0, 1);
 INSERT INTO TBL_PORTAL_MENU_AUTH (MENU_ID, COMPANY_ID, TENANT_ID, USER_ID, ACCESS_YN, USER_TYPE, sn) VALUES (29, 'Top',@tenant_id_value, 'Top', 1, 0, 1);
 
+INSERT INTO TBL_PORTAL_MENU_NAME (menu_id, menu_lang, company_id, tenant_id, menu_name) VALUES (-2, 1, 'Top', @tenant_id_value, '연계');
+INSERT INTO TBL_PORTAL_MENU_NAME (menu_id, menu_lang, company_id, tenant_id, menu_name) VALUES (-2, 2, 'Top', @tenant_id_value, 'Connection');
+INSERT INTO TBL_PORTAL_MENU_NAME (menu_id, menu_lang, company_id, tenant_id, menu_name) VALUES (-2, 3, 'Top', @tenant_id_value, '連携');
+INSERT INTO TBL_PORTAL_MENU_NAME (menu_id, menu_lang, company_id, tenant_id, menu_name) VALUES (-2, 4, 'Top', @tenant_id_value, '关联');
+INSERT INTO TBL_PORTAL_MENU_NAME (menu_id, menu_lang, company_id, tenant_id, menu_name) VALUES (-2, 5, 'Top', @tenant_id_value, 'Connection');
+INSERT INTO TBL_PORTAL_MENU_NAME (menu_id, menu_lang, company_id, tenant_id, menu_name) VALUES (-2, 6, 'Top', @tenant_id_value, 'Connection');
+INSERT INTO TBL_PORTAL_MENU_NAME (menu_id, menu_lang, company_id, tenant_id, menu_name) VALUES (-1, 1, 'Top', @tenant_id_value, '연계');
+INSERT INTO TBL_PORTAL_MENU_NAME (menu_id, menu_lang, company_id, tenant_id, menu_name) VALUES (-1, 2, 'Top', @tenant_id_value, 'Connection');
+INSERT INTO TBL_PORTAL_MENU_NAME (menu_id, menu_lang, company_id, tenant_id, menu_name) VALUES (-1, 3, 'Top', @tenant_id_value, '連携');
+INSERT INTO TBL_PORTAL_MENU_NAME (menu_id, menu_lang, company_id, tenant_id, menu_name) VALUES (-1, 4, 'Top', @tenant_id_value, '关联');
+INSERT INTO TBL_PORTAL_MENU_NAME (menu_id, menu_lang, company_id, tenant_id, menu_name) VALUES (-1, 5, 'Top', @tenant_id_value, 'Connection');
+INSERT INTO TBL_PORTAL_MENU_NAME (menu_id, menu_lang, company_id, tenant_id, menu_name) VALUES (-1, 6, 'Top', @tenant_id_value, 'Connection');
 INSERT INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) VALUES (1, 1, 'Top',@tenant_id_value, '메일');
 INSERT INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) VALUES (1, 2, 'Top',@tenant_id_value, 'Email');
 INSERT INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME) VALUES (1, 3, 'Top',@tenant_id_value, 'メール');
@@ -3556,6 +3572,7 @@ INSERT INTO TBL_PORTAL_THEME (theme_id, theme_name, theme_name2, theme_name3, th
 -- 모바일 테마
 INSERT INTO TBL_PORTAL_THEME (theme_id, theme_name, theme_name2, theme_name3, theme_content, theme_content2, theme_content3, theme_content4, theme_content5, theme_content6) VALUES (4, '테마4', 'Theme4', 'Theme4', '모바일용 포틀릿 테마 입니다.', 'Theme For Mobile', 'モバイルのテーマ', '手机主题', 'Theme For Mobile', 'Theme For Mobile');
 
+INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (-1, '/connectionMenu.do', 'G', 'icon_topmenu icon_nav_connection', -1, 'connectPortlet');
 INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (0, '/ezNewPortal/newPortalPortalPage.do', 'G', '', 0, 'portal');
 UPDATE TBL_PORTAL_MENU SET menu_id = 0 WHERE menu_url = '/ezNewPortal/newPortalPortalPage.do';
 INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (1, '/ezEmail/mailMain.do', 'G', 'icon_topmenu icon_nav_mail', 1, 'mail');
@@ -3580,6 +3597,7 @@ INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_ord
 INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (20, '/ezCar/resCar.do', 'G', 'icon_topmenu icon_nav_workdiary', 20, 'car');
 
 -- 모바일 메뉴
+INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (-2, '/mobile/connectionMenu.do', 'MG', 'icon_topmenu icon_nav_connection', -2, 'connectPortlet');
 INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (21, '/mobile/ezEmail/mailList.do?folderId=INBOX', 'MG', 'iconCommon icon_mail', 1, 'mMail');
 INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (22, '/mobile/ezOrgan/personList.do', 'MG', 'iconCommon icon_employee', 2, 'mAddress');
 INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order, menucode) VALUES (23, '/mobile/ezApprovalG/mApproveList.do?pType=DO', 'MG', 'iconCommon icon_approval', 3, 'mApproval');
@@ -3640,6 +3658,11 @@ INSERT INTO TBL_PORTAL_PORTLET (PORTLET_ID, MENU_ID, PORTLET_URL, PORTLET_TYPE, 
 
 -- 2025-07-07 이유정 - 일정관리 > 임원일정 조회 가능 범위 설정 컨피그 추가
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE) VALUES(@tenant_id_value, 'useExecSchedulePublic', 'ON', '일정관리 > 임원일정의 조회 가능 범위 설정 여부 ON : 모든 사용자 조회 / OFF : 임원비서만 조회', '일정관리 > 임원일정 조회 가능 범위 설정', '2025-07-07 00:00:00', '일정관리');
+
+-- 2025-09-17 한태훈 - 누락된 값 추가
+INSERT INTO	TBL_PORTAL_TOP_COMPANY (COMPANY_ID, TENANT_ID, TYPE) VALUES ('Top', @tenant_id_value, 0);
+INSERT INTO TBL_SYSTEMCONFIG_TYPE (TYPECODE, TENANT_ID, COMPANY_ID, TYPENAME, TYPENAME2, DESCRIPTION, WRITERID, WRITERNAME, WRITERNAME2, WRITEDATE) VALUES ('PORTLET', @tenant_id_value, 'Top', '포틀릿', 'Portlet', '(연계)포틀릿 컨피그', 'Top', '조직도', 'OrganizationChart',  now());
+INSERT INTO TBL_SYSTEMCONFIG (CODE, CODEVALUE, DESCRIPTION, WRITERID, WRITERNAME, WRITEDATE, TENANT_ID, COMPANY_ID, TYPECODE) VALUES ('PORTLET_STANDARD','{"portletType":"standard","viewType": "list","connectType": "","paging":"","listCnt":"","width": "","height": "","linkUrl": "","mobileLinkUrl": "","restUrl": "","httpMethodType":"","headerParam" : {  	},"dataParam" : {    },"dataParamType" : "","dataResultType" : "","dataResultFormat" : {"rootPath" : "","totalCnt" : "","dataInfo" : {"title" : "","writer" : "","date" : "","linkUrl" : "","mobileLinkUrl" : "","width": "","height": ""}  },"dbType": "","dbIp": "","dbPort": "","dataBase": "","dbUser": "","dbPwd": "","dbDataQuery": "","totalCntQuery": "","driverClassName" : ""}','연계 포틀릿 기본 설정', 'Top', '조직도', now(), @tenant_id_value, 'Top', 'PORTLET');
 
 INSERT INTO TBL_WEATHER_CITY VALUES (1832157, '여수', 1);
 INSERT INTO TBL_WEATHER_CITY VALUES (1832157, 'Reisui', 2);
