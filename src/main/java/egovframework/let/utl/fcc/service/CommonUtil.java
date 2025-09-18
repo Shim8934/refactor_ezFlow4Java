@@ -2688,7 +2688,7 @@ public class CommonUtil {
 						
 						/* 2025-02-27 홍승비 - 포탈 > 협업 메뉴 사용 여부 판별 시 URL이 아닌 메뉴코드를 사용하도록 수정 (쿼리에서 판별) */
 						menuAccess = useEzWorkspace.equals("YES");
-    				} else if(menuCode.equals("mail") || menuCode.equals("address")) {		// 메일, 주소록
+    				} else if(menuCode.equals("mail") || menuCode.equals("address") || menuCode.equals("mAddress") || menuCode.equals("mMail")) {		// 메일, 주소록
 						String useExternalMailServer = ezCommonService.getTenantConfig("useExternalMailServer", tenantId);
 						menuAccess = useExternalMailServer.equals("NO");
     				} else if (menuCode.equals("board") || menuCode.equals("mBoard")) {//게시판
