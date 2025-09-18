@@ -403,29 +403,29 @@ public class EzTaskServiceImpl extends EgovAbstractServiceImpl implements EzTask
 			filePath = commonUtil.detectPathTraversal(filePath);
 			
 			if (fileName.contains(".jpg") || fileName.contains(".jpeg") || fileName.contains(".bmp") || fileName.contains(".gif") || fileName.contains(".png") || fileName.contains(".tif") || fileName.contains(".tiff") || fileName.contains(".jpeg")) {
-				fileImage = "/images/image.png";
+				fileImage = "/images/image.svg";
 			} else if (fileName.contains(".doc")) {
-				fileImage = "/images/doc.png";
+				fileImage = "/images/doc.svg";
 			} else if (fileName.contains(".xls") || fileName.contains(".xlsx")) {
-				fileImage = "/images/xls.png";
+				fileImage = "/images/xls.svg";
 			} else if (fileName.contains(".ppt") || fileName.contains(".pptx") || fileName.contains(".pps") || fileName.contains(".ppsx")) {
-				fileImage = "/images/ppt.png";
+				fileImage = "/images/ppt.svg";
 			} else if (fileName.contains(".txt")) {
-				fileImage = "/images/txt.png";
+				fileImage = "/images/txt.svg";
 			} else if (fileName.contains(".zip")) {
-				fileImage = "/images/zip.png";
+				fileImage = "/images/zip.svg";
 			} else if (fileName.contains(".pdf")) {
-				fileImage = "/images/pdf.png";
+				fileImage = "/images/pdf.svg";
 			} else if (fileName.contains(".ecm")) {
-				fileImage = "/images/ecm.png";
-			} else if (fileName.contains(".hwp")) {
-				fileImage = "/images/hwp.png";
+				fileImage = "/images/ecm.svg";
+			} else if (fileName.contains(".hwp") || fileName.contains(".hwpx")) {
+				fileImage = "/images/hwp.svg";
 			} else {
-				fileImage = "/images/email/mail_006.gif";
+				fileImage = "/images/etc.svg";
 			}
 
 			sb.append("<input type='checkbox' name='fileSelect' value='" + fileName + "' filePath='" + folderPath + filePath + "' fileName='" + commonUtil.cleanValue(fileName) + "'>");
-			sb.append("<img src='" + fileImage + "' >");
+			sb.append("<img src='" + fileImage + "' style='width:20px;height:20px;vertical-align:sub;margin-right:3px;'>");
 			sb.append("<a href='/ezTask/downloadAttach.do?filePath=" + URLEncoder.encode(folderPath + filePath, "UTF-8") + "&fileName=" + URLEncoder.encode(fileName, "UTF-8") + "' />");
 			sb.append(commonUtil.cleanValue(fileName) + "&nbsp;(" + fileSize + ")</a><br>");
 		}
