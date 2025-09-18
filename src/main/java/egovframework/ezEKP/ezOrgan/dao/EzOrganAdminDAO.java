@@ -1834,7 +1834,9 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
     	container.put(new BasicAttribute( "mail", map.get("v_CN") + "@" +  domainName ));
     	container.put(new BasicAttribute( "unicodePwd", pwdArray )); 
     	container.put(new BasicAttribute( "sAMAccountName", map.get("v_CN") ));
-    	container.put(new BasicAttribute( "userAccountControl", Integer.toString( UF_NORMAL_ACCOUNT + UF_DONT_EXPIRE_PASSWD ) ));
+    	//container.put(new BasicAttribute( "userAccountControl", Integer.toString( UF_NORMAL_ACCOUNT + UF_DONT_EXPIRE_PASSWD ) ));
+        container.put(new BasicAttribute( "userAccountControl", Integer.toString(UF_NORMAL_ACCOUNT) ));
+        container.put(new BasicAttribute( "pwdLastSet", "-1" ));
     	
     	String description = getADdata(ctx, map.get("v_PARENTCN").toString(), "group", "displayName");
     	
@@ -2146,10 +2148,12 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
     	
     	byte[] pwdArray = quotedPassword.getBytes("UTF-16LE");
     	
-    	ModificationItem[] mods = new ModificationItem[2];
+    	ModificationItem[] mods = new ModificationItem[3];
 
     	mods[0] = new ModificationItem(DirContext.REPLACE_ATTRIBUTE, new BasicAttribute("unicodePwd", pwdArray));
-    	mods[1] = new ModificationItem(DirContext.REPLACE_ATTRIBUTE, new BasicAttribute("userAccountControl", Integer.toString( UF_NORMAL_ACCOUNT + UF_DONT_EXPIRE_PASSWD ) ));
+    	//mods[1] = new ModificationItem(DirContext.REPLACE_ATTRIBUTE, new BasicAttribute("userAccountControl", Integer.toString( UF_NORMAL_ACCOUNT + UF_DONT_EXPIRE_PASSWD ) ));
+        mods[1] = new ModificationItem(DirContext.REPLACE_ATTRIBUTE, new BasicAttribute("userAccountControl", Integer.toString(UF_NORMAL_ACCOUNT)));
+        mods[2] = new ModificationItem(DirContext.REPLACE_ATTRIBUTE, new BasicAttribute("pwdLastSet", "-1"));
 
     	ctx.modifyAttributes(getDN, mods);
     	// 한 번만 실행하면 직전 패스워드로도 로그인이 되어 두 번 수행함
