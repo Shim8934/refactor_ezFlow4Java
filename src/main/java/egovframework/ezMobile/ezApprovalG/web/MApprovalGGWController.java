@@ -13,10 +13,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.ArrayList;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import egovframework.ezMobile.ezApprovalG.vo.*;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
@@ -36,6 +38,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.w3c.dom.Document;
 import org.apache.commons.io.FileUtils;
 
@@ -1592,7 +1595,7 @@ public class MApprovalGGWController {
 			String deptshortednameFormat = "";
 			String docTitleUseYN = "Y";
 			String docBodyUseYN = "Y";
-
+			List<Map<String, Object>> formFieldList = new ArrayList<>();
 			// 문서 제목 가져오기
 			if (formURL.endsWith("mht")) {
 				String loadMht = ezCommonService.loadMHTFile(realPath + formURL); // 양식 가져오기
@@ -1642,6 +1645,49 @@ public class MApprovalGGWController {
 					docBodyUseYN = "N";
 				}
 				
+				// 2025-09-10 김유진 - id가 m_Name, m_ValText, m_ValDate 로 시작하는 필드값을 받아 입력화면 생성
+				Elements mFields = doc.select("[id^=m_Name].FIELD");
+				if (!mFields.isEmpty()) {
+					Elements  fields;
+					String fieldId;
+					int fieldNo;
+					String fieldNoStr;
+					
+					for (Element field : mFields) {
+						Map<String, Object> fieldMap = new HashMap<>();
+						int fieldValCnt = 0;
+						String valueType = "single";
+						
+						fieldId = field.id();
+						fieldNoStr = fieldId.length() > 6 ? fieldId.substring(6) : "";
+
+						if (!fieldNoStr.isEmpty() && fieldNoStr.matches("\\d+")) {
+							fieldNo = Integer.parseInt(fieldNoStr);
+						} else {
+							break;
+						}
+						
+						fieldMap.put(fieldId, field.text().trim());
+
+						fields = doc.select("[id~=^m_ValText" + fieldNo + "(_.*)?$].FIELD");
+						for (Element field2 : fields) {
+							fieldMap.put(field2.id(), field2.text().trim());
+							fieldValCnt++;
+						}
+
+						fields = doc.select("[id~=^m_ValDate" + fieldNo + "(_.*)?$].FIELD");
+						for (Element field2 : fields) {
+							fieldMap.put(field2.id(), field2.text().trim());
+							fieldValCnt++;
+						}
+						
+						if (fieldValCnt > 1) {
+							valueType = "multi";
+						}
+						fieldMap.put("valueType", valueType);
+						formFieldList.add(fieldMap);
+					}
+				}
 			}
 			
 			LoginVO loginVO = new LoginVO();
@@ -1800,6 +1846,9 @@ public class MApprovalGGWController {
 
 			totalData.put("docTitleUseYN", docTitleUseYN);
 			totalData.put("docBodyUseYN", docBodyUseYN);
+			ObjectMapper objectMapper = new ObjectMapper();
+			String jsonFormFieldList = objectMapper.writeValueAsString(formFieldList);
+			totalData.put("jsonFormFieldList", jsonFormFieldList);
 			
 			result.put("status", "ok");
 			result.put("code", "0");

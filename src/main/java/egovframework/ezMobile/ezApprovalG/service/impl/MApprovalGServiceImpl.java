@@ -51,6 +51,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URLDecoder;
 import java.util.*;
+import org.w3c.dom.NodeList;
 
 @Service("MApprovalGService")
 public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MApprovalGService {
@@ -1984,6 +1985,7 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 
         try {
             org.w3c.dom.Document xmlDom = commonUtil.convertStringToDocument(jsonParam.get("docinfo").toString());
+            org.w3c.dom.Document xmlDomField = commonUtil.convertStringToDocument(jsonParam.get("formFieldInfo").toString());
             org.w3c.dom.Document userDom = commonUtil.convertStringToDocument(userInfoXML);
 
             String docID = xmlDom.getDocumentElement().getChildNodes().item(0).getTextContent();
@@ -2344,7 +2346,20 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
                 doc.getElementById("body").html(bodyContent);
             }
 
-            /* 문서 본문 작성 끝 */
+			// 2025-09-10 김유진 - id가 m_ValText, m_ValDate 로 시작하는 필드명에 값 넣기
+			NodeList xmlDomFieldList = xmlDomField.getDocumentElement().getChildNodes();
+			for (int i = 0; i < xmlDomFieldList.getLength(); i++) {
+				field = doc.getElementById(xmlDomFieldList.item(i).getNodeName());
+				if (field != null) {
+					String val = xmlDomFieldList.item(i).getTextContent();
+					val = val.replaceAll("%(?![0-9a-fA-F]{2})", "%25");
+					val = val.replaceAll("\\+", "%2B");
+					val = URLDecoder.decode(val, "utf-8");
+					field.html(val);
+				}
+			}
+
+			/* 문서 본문 작성 끝 */
 
 
             /* 결재 파일 저장 시작 */
