@@ -4089,7 +4089,8 @@ CREATE TABLE "TBL_DEPTMASTER"
      "CREATEDT" DATE,
      "TENANT_ID" NUMBER(5,0) DEFAULT 0,
      "MANUAL_FLAG" NVARCHAR2(10) DEFAULT NULL,
-     "DEPTTREEFLAG" char(1) DEFAULT 'Y'
+     "DEPTTREEFLAG" char(1) DEFAULT 'Y',
+     "USEUPPERDEPTBOX" varchar(4) DEFAULT 'N'
 ) ;
 --------------------------------------------------------
 --  DDL for Table TBL_DEPTTEMPLETDETAIL

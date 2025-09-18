@@ -6276,6 +6276,7 @@ CREATE TABLE `tbl_deptmaster` (
   `TENANT_ID` mediumint(5) NOT NULL DEFAULT 0,
   `MANUAL_FLAG` varchar(10) DEFAULT NULL,
   `DEPTTREEFLAG` char(1) DEFAULT 'Y',
+  `USEUPPERDEPTBOX` varchar(4) DEFAULT 'N',
   PRIMARY KEY (`TENANT_ID`,`CN`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
