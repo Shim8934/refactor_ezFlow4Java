@@ -85,7 +85,7 @@
 			#mainmenu li {border-color: #ddd; border-radius:0px; }
 			.mainlist th {cursor: pointer;}
 			#mainmenu li a:HOVER span{color:#0072c6;border-color:#0072c6;}
-			#cmt {color:#c64200;}
+			#cmt {color:#c64200;margin-left:2px;}
 			label {position:relative; top: -3px;}
 			.participantBtn:HOVER, label:HOVER {cursor: pointer;}
 			.mainlist tr td {padding-top:0px;padding-bottom:0px;}
@@ -150,10 +150,12 @@
 					<tr class="black" style="height=30px;" onClick="getLadderGame(<c:out value="${vo.ladderId}" />)">
 						<td width="50px"><img class="effect" title="<spring:message code='ezLadder.t10${vo.type+1}'/>" src ='/images/ezLadder/icon_game_thirty0${vo.type}.png' /></td>
 					
-						<td style="text-overflow: ellipsis; overflow: hidden; white-space: nowrap;">
-							<c:if test="${vo.newFlag == 1 }"><img src="/images/i_new.gif">&nbsp;</c:if>
-							<c:out value ="${vo.title }" />
-							<c:if test="${vo.cmt>0 }"><span id="cmt">[<c:out value="${vo.cmt}" />]</span></c:if>
+						<td>
+							<div style="display:flex;align-items:center;">
+								<div style="text-overflow: ellipsis; overflow: hidden; white-space: nowrap;"><c:out value ="${vo.title }" /></div>
+								<c:if test="${vo.cmt>0 }"><span id="cmt">[<c:out value="${vo.cmt}" />]</span></c:if>
+								<c:if test="${vo.newFlag == 1 }"><span class="board_new"></span></c:if>
+							</div>
 						</td>
 						<td style="text-align: left;" width="100px"><a style="cursor:pointer" onClick="menuQst_DetailUserInfo('<c:out value='${vo.writerId}' />', '<c:out value='${vo.deptID}' />', event)"><c:out value="${vo.writerName }" /></a></td>
 						<td style="text-align: left;" width="140px"><c:out value="${vo.writeDate.substring(0,16) }" /></td>

@@ -74,14 +74,18 @@
 					<fmt:formatDate value="${toDay}" pattern="yyyy-MM-dd" var="nowDay"/>
 					<fmt:parseDate value="${journal.journalDate}" pattern="yyyy-MM-dd"  var="jDay"/>
 					<fmt:formatDate value="${jDay}" pattern="yyyy-MM-dd" var="jDay"/>
-					<c:if test="${nowDay <= jDay }">
-						<img src="/images/i_new.gif">
-					</c:if>
-						<c:out value='${journal.journalTitle}'/>
+						<div style="display:flex; align-items:center;">
+						<div style='float:left; overflow: hidden; text-overflow: ellipsis; display: block; max-width: 95%;'>
+							<c:out value='${journal.journalTitle}'/>
+						</div>
 						<c:if test="${journal.replyCount gt 0}">
 							<!-- <a onclick=""><span onclick="quickReply('${journal.journalId }','${journal.journalTitle }');" style="color: #c64200">[${journal.replyCount }]</span></a> -->
 							<a onclick=""><span style="color: #c64200">[<c:out value='${journal.replyCount }'/>]</span></a>
 						</c:if>
+						<c:if test="${nowDay <= jDay }">
+							<span class="board_new" style="margin-top: 2px;"></span>
+						</c:if>
+						</div>
 					</td>
 					<td	onclick="selectedTR(this);" style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width:20%;">
 						<c:out value='${fn:substring(journal.journalDate, 0, 16) }'/>

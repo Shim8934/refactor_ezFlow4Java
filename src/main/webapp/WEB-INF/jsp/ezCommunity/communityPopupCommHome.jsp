@@ -202,21 +202,26 @@
 
 		                                    var span2 = document.createElement("span");
 		                                    var span3 = document.createElement("span");
-		                                    
+		                                    var div = document.createElement("div");
+
 		                                    if (itemVO.gubun != "3") {
 		                                    	span2.className = "txt";
-		                                    	/* 2018-05-18 홍승비 - 커뮤니티 팝업홈 메인화면 일반/그룹/익명게시물 new 표시 */
-		                                    	if (pastDate <= itemVO.writeDate) {
-		                                    		span2.innerHTML = "<img src='/images/i_new.gif' style='margin-bottom:1px;'>&nbsp;";
-                   		 						}
 		                                    	/* 2019-02-21 홍승비 - 커뮤니티 팝업홈 메인화면 일반/그룹/익명게시물명 특문처리 */
-		                                        span2.innerHTML += MakeXMLString(itemVO.title);
-		                                        
+		                                        div.innerHTML += "<div style='overflow:hidden;text-overflow:ellipsis;white-space:nowrap;'>" + MakeXMLString(itemVO.title) + "</div>";
+
 		                                        /* 2018-05-04 홍승비 - 댓글수 표출 */
 		                                        if (itemVO.oneLineCnt > 0) {
-		                                        	span2.innerHTML += ("<SPAN style='color:#c64200'> [" + itemVO.oneLineCnt + "]</SPAN>");
+		                                        	div.innerHTML += ("<SPAN style='color:#c64200;'> [" + itemVO.oneLineCnt + "]</SPAN>");
 		                                        }
-		                                        
+
+		                                    	/* 2018-05-18 홍승비 - 커뮤니티 팝업홈 메인화면 일반/그룹/익명게시물 new 표시 */
+		                                    	if (pastDate <= itemVO.writeDate) {
+		                                    		div.innerHTML += "<span class='board_new'></span>";
+                   		 						}
+
+												div.style.display = "flex";
+												div.style.alignItems = "center";
+												span2.appendChild(div);
 		                                        span2.setAttribute("itemid", itemVO.itemID);
 		                                        span2.setAttribute("boardid", itemVO.boardID);
 		                                        span2.setAttribute("gubun", itemVO.gubun);
@@ -247,17 +252,20 @@
 
 			                                        span2.appendChild(img);
 			                                        span3.className = "ptxt";
-			                                        /* 2018-05-18 홍승비 - new 표시 */
-			                                        if (pastDate <= itemVO.writeDate) {
-			                                    		span3.innerHTML = "<img src='/images/new_icon.gif'>&nbsp;";
-	                   		 						}
 			                                        /* 2019-02-21 홍승비 - 커뮤니티 팝업홈 메인화면 포토게시물명 특문처리 */
-			                                        span3.innerHTML += MakeXMLString(itemVO.title);
+			                                        div.innerHTML += "<div style='overflow:hidden;text-overflow:ellipsis;white-space:nowrap;'>" + MakeXMLString(itemVO.title) + "</div>";
 			                                        /* 2018-05-07 홍승비 - 댓글수 표출 */
 			                                        if (itemVO.oneLineCnt > 0) {
-			                                        	span3.innerHTML += ("<SPAN style='color:#c64200'> [" + itemVO.oneLineCnt + "]</SPAN>");
+			                                        	div.innerHTML += ("<SPAN style='color:#c64200'> [" + itemVO.oneLineCnt + "]</SPAN>");
 			                                        }
-			                                        
+			                                        /* 2018-05-18 홍승비 - new 표시 */
+			                                        if (pastDate <= itemVO.writeDate) {
+			                                    		div.innerHTML += "<span class='board_new'></span>";
+	                   		 						}
+
+													div.style.display = "flex";
+													div.style.alignItems = "center";
+													span3.appendChild(div);
 			                                        span3.setAttribute("itemid", itemVO.itemID);
 			                                        span3.setAttribute("boardid", itemVO.boardID);
 			                                        span3.setAttribute("gubun", itemVO.gubun);

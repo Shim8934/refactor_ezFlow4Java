@@ -80,15 +80,15 @@
 							<fmt:formatDate value="${toDay}" pattern="yyyy-MM-dd" var="nowDay"/>
 							<fmt:parseDate value="${journal.journalDate}" pattern="yyyy-MM-dd"  var="jDay"/>
 							<fmt:formatDate value="${jDay}" pattern="yyyy-MM-dd" var="jDay"/>
-							<c:if test="${nowDay <= jDay }">
-								<img src="/images/i_new.gif">
-							</c:if>
 							<c:out value='${journal.journalTitle}'/>
 						</div>
 						<c:if test="${journal.replyCount gt 0}">
 <!-- 							<a style="position: absolute;" onclick=""> -->
 							<span style="color: #c64200; padding-left:3px;">[<c:out value='${journal.replyCount }'/>]</span>
 <!-- 							</a> -->
+						</c:if>
+						<c:if test="${nowDay <= jDay }">
+							<span class="board_new" style="margin-top: 2px;"></span>
 						</c:if>
 						</div>
 					</td>
