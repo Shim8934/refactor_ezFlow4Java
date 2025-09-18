@@ -26,14 +26,9 @@
 	        </h2>
 	        <div class="emergency_title"><span><spring:message code='ezNotification.hth89'/></span><p><c:out value='${emergencyNotiItem.notiTitle}'/></p></div>
 	        <ul class="emergency_info">
-	        	<c:choose>
-	        		<c:when test="${not empty emergencyNotiItem.writerPhoto}">
-	            		<li class="info_img" onclick="show_personinfo('${emergencyNotiItem.writerId}')"><img src='<c:out value='${emergencyNotiItem.writerPhoto}'/>'></li>
-	            	</c:when>
-	        		<c:otherwise>
-	            		<li class="info_img" onclick="show_personinfo('${emergencyNotiItem.writerId}')"><img src='/images/ezNewPortal/info_pic_none.png'></li>
-	        		</c:otherwise>
-	        	</c:choose>
+				<c:set var="picNone" value="/images/ezNewPortal/info_pic_none.png" />
+				<c:set var="userPic" value="${not empty emergencyNotiItem.writerPhoto? emergencyNotiItem.writerPhoto : picNone}" />
+				<li class="info_img" onclick="show_personinfo('${emergencyNotiItem.writerId}')"><img src="${userPic}" onerror="this.src='${picNone}'" /></li>
 				<c:if test="${lang eq '1'}">
 					<li class="info_name" onclick="show_personinfo('${emergencyNotiItem.writerId}')"><c:out value='${emergencyNotiItem.writerName}'/><span>(<c:out value='${emergencyNotiItem.writerDeptName}'/>)</span></li>
 				</c:if>

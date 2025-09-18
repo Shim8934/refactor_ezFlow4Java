@@ -181,6 +181,9 @@
 		var userPhotoSrc = '<c:out value="${userPhoto}"/>';
 		var primaryLang = '<c:out value="${primaryLang}"/>';
 		
+		var picNone = "/images/ezNewPortal/info_pic_none.png";
+		var userPic = (userPhotoSrc != "")? '/ezCommon/downloadAttach.do?filePath=' + userPhotoSrc : picNone;
+
 		var newPortalTopMenu = {
 			menuListArr: [],           // 메뉴 리스트 배열에 저장
 			menuListObj: {},           // 메뉴 리스트 객체에 저장
@@ -482,11 +485,7 @@
                 
                 // 프로필 정보
 			    str += '<li><span class="util_profile" id="util_profile">';
-			    if (userPhotoSrc != "") {
-				    str += '<img src="' + '/ezCommon/downloadAttach.do?filePath=' + userPhotoSrc + '"></span>';
-			    } else {
-				    str += '<img src="/images/ezNewPortal/info_pic_none.png"></span>';
-			    }
+				str += '<img src="' + userPic + '" onerror="this.src=\'' + picNone + '\'"></span>';
 			    
 			    str += '<div class="profile_div util_div_menu" id="profileContainer"><div class="btn_tab"><span class="set" id="util_set"><spring:message code="ezNewPortal.t006" /></span>';
 				if(primaryLang == 1) {
@@ -1690,12 +1689,8 @@
 					var imgDiv = document.createElement('div');
 					imgDiv.classList.add('profile_img');
 					var userImg = document.createElement('img');
-					
-					if (userPhotoSrc != "") {
-						userImg.setAttribute("src","/ezCommon/downloadAttach.do?filePath=" + userPhotoSrc);
-					} else {
-						userImg.setAttribute("src", "/images/ezNewPortal/info_pic_none.png");
-					}
+					userImg.setAttribute("src", userPic);
+					userImg.setAttribute('onerror', "this.src='" + picNone + "'");
 					imgDiv.appendChild(userImg);
 					profileContainer.insertBefore(imgDiv, btnTabDiv);
 					

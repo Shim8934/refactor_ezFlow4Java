@@ -930,6 +930,7 @@ function getMonthlyBestEmployee() {
 				strHTML += "</dl>";
 			} else {
 				$("#emPic").find("img").attr("src", bestEmployee.userImg);
+				$("#emPic").find("img").attr("onerror","this.src='/images/default_pic.gif'"); // ezNewPortalService.getMonthlyBestEmployee의 default값.
 				strHTML += "<dd class='emName'>" + bestEmployee.userName + " " + bestEmployee.title + "</dd>";
 				strHTML += "<dd class='emTeam'>" + bestEmployee.userDeptName + "</dd>";
 			}
