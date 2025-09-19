@@ -16442,3 +16442,21 @@ CREATE TABLE `TBL_USERPRESENCE` (
                                     `UPDATETIME` varchar(50) NOT NULL,
                                     PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT="Graph API Presence 정보 저장 테이블";
+
+DROP TABLE IF EXISTS `TBL_TOTAL_HISTORY`;
+CREATE TABLE `TBL_TOTAL_HISTORY` (
+  `DOCID` varchar(80) NOT NULL,
+  `USERID` varchar(400) NOT NULL,
+  `REGDATE` datetime NOT NULL,
+  `GUBUN` varchar(12) DEFAULT NULL,
+  `USERJOBTITLE` varchar(40) DEFAULT NULL,
+  `USERDEPTID` varchar(400) DEFAULT NULL,
+  `USERDEPTNAME` varchar(200) DEFAULT NULL,
+  `USERNAME` varchar(200) DEFAULT NULL,
+  `USERNAME2` varchar(200) DEFAULT NULL,
+  `USERJOBTITLE2` varchar(200) DEFAULT NULL,
+  `USERDEPTNAME2` varchar(400) DEFAULT NULL,
+  `TENANT_ID` mediumint(5) NOT NULL,
+  `COMPANYID` varchar(20) NOT NULL,
+  PRIMARY KEY (`DOCID`, `USERID`, `REGDATE`, `TENANT_ID`, `COMPANYID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='2023-06-30 기준 통합 PC 저장에서만 사용하고 있음. gubun 은 "D"(Download) 로 사용하고 있음.';
