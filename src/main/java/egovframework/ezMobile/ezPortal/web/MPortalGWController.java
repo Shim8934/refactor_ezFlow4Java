@@ -761,6 +761,7 @@ public class MPortalGWController extends EzFileMngUtil {
                         case "mBoard":
                         case "mResource":
                         case "mWebfolder":
+						case "mSurvey":
                             footerAccessCount = access ? footerAccessCount + 1 : footerAccessCount;
                             portalAccessCount = access ? portalAccessCount + 1 : portalAccessCount;
 
@@ -768,8 +769,10 @@ public class MPortalGWController extends EzFileMngUtil {
                                 accessMenuCode.add(menuCode);
                             }
 
-                            dataObject.put(menuCode, access);
-                            dataObject.put(menuCode + "Access", access);
+                            if (menuAccessList.getOrDefault(menuCode, false)) {
+								dataObject.put(menuCode, access);
+								dataObject.put(menuCode + "Access", access);
+							}
 
                             if ("mail".equalsIgnoreCase(menuCode)){
                                 if ("Y".equalsIgnoreCase(useMobileMail2)){
@@ -778,12 +781,12 @@ public class MPortalGWController extends EzFileMngUtil {
                                     accessMenuCode.add("mail2");
                                 }
                             }
-
                             break;
-                        case "mSurvey":
                         case "mAddress":
-                            dataObject.put(menuCode, access);
-                            dataObject.put(menuCode + "Access", access);
+                            if (menuAccessList.getOrDefault(menuCode, false)) {
+								dataObject.put(menuCode, access);
+								dataObject.put(menuCode + "Access", access);
+							}
                             break;
                     }
 				} else if (menuCode != null) {
@@ -1921,7 +1924,36 @@ public class MPortalGWController extends EzFileMngUtil {
 			
 			Map<String, Object> dataObject = new HashMap<String, Object>();
 			List<MenuInfoVO> mobileMenuList = mOptionService.getMobileMenuList(userInfoMap);
-			dataObject.put("mobileMenuList", mobileMenuList);
+			String menuCodeStr = "mApproval,mMail,mSchedule,mBoard,mResource,workspace,mAddress,mWebfolder,mSurvey";
+			String[] menuCodeArr = menuCodeStr.split(",");
+			ArrayList<String> menuCodeList =  new ArrayList<>(Arrays.asList(menuCodeArr));
+			Map<String, Boolean> menuAccessList = commonUtil.checkMenuAccess(menuCodeList, request.getParameter("companyId"), Integer.parseInt(request.getParameter("tenantId")), request.getParameter("langType"), request.getParameter("userId"), info.getDeptId(), "mobile");
+			JSONArray menuArray = new JSONArray();
+			
+			for (MenuInfoVO menuInfo : mobileMenuList) {
+				String menuCode = menuInfo.getMenuCode();
+				if (menuCodeList.contains(menuCode)) {
+					switch (menuCode) {
+						case "mApproval":
+						case "mMail":
+						case "mSchedule":
+						case "mBoard":
+						case "mResource":
+						case "mWebfolder":
+						case "mSurvey":
+						case "mAddress":
+							
+						if (menuAccessList.getOrDefault(menuCode, false)) {
+							menuArray.add(menuInfo);
+						}
+						break;
+						default:
+							menuArray.add(menuInfo);
+						break;
+					}
+				}
+			}
+			dataObject.put("mobileMenuList", menuArray);
 	        
 			result.put("status", "ok");
 			result.put("code", 0);

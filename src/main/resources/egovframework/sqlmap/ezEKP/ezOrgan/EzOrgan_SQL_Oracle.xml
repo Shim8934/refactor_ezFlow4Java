@@ -3903,7 +3903,7 @@
 	<select id="EzOrganDAO.getCompanyId" parameterClass="Map" resultClass="String">
 		SELECT physicaldeliveryofficename
 		FROM tbl_usermaster
-		WHERE cn = #userId# AND tenantid = #tenantId#
+		WHERE cn = #userId# AND tenant_id = #tenantId#
 	</select>
 
 	<!-- 2023-07-31 전인하 - 겸직/부서 별 권한 설정 기능 - 겸직/사용자 기준 권한 설정 옵션 사용 시 유저 정보에 해당하는 겸직 권한 조회 -->
