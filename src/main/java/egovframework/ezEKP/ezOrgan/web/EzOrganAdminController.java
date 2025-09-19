@@ -162,6 +162,7 @@ public class EzOrganAdminController extends EzFileMngUtil {
     @PostConstruct
 	public void init() throws Exception {
     	logger.debug("init started.");
+
 //    	try {
 //			// create table
 //    		ezCommonService.createTables(); // 2024-07-01 김수아 - 테이블 생성 공통함수 추가
