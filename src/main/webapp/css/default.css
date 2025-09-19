@@ -4329,6 +4329,7 @@ body.drag *{user-select:none !important;}
 
 /* 2025.06 custom style */
 /* checkbox */
+.chk_lower_4 .custom_checkbox{margin-top: 4px !important}
 .custom_checkbox {display:inline-block !important;}
 .custom_checkbox input[type="checkbox"] {-webkit-appearance: none;-moz-appearance: none;appearance: none;background: #fff;border-radius: 4px;cursor: pointer;height: 16px !important;width: 16px !important; line-height:16px !important;box-sizing: border-box;border: 1px solid #CCCCCC !important;outline: 0;margin: 0px 0px 0px 0px;vertical-align: middle; border-radius:3px;}
 .custom_checkbox input[type="checkbox"]::after {border: solid #fff;border-width: 0 2px 2px 0;content: '';display: none;width: 3px;height: 7px; position: relative;left: 5px;top: 1px;transform: rotate(45deg);}

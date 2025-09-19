@@ -538,7 +538,7 @@
 	}
 </script>
 </head>
-<body class="mainbody">
+<body class="mainbody chk_lower_4">
 	<form id="Form1" method="post">
 		<h1>
 			<spring:message code='ezOrgan.zNo004' /><span id="TitleInfo"></span> <span class="title_bar"><img

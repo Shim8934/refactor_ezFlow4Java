@@ -252,7 +252,7 @@
 		}
 	</script>
 </head>
-<body class="mainbody" style="overflow:hidden; margin:0" marginwidth="0" marginheight="0">
+<body class="mainbody chk_lower_4" style="overflow:hidden; margin:0" marginwidth="0" marginheight="0">
 	<div id="contentHeader" style="width: 100%; overflow: auto;">
 		<table class="mainlist" style="width:100%;">
 			<thead>

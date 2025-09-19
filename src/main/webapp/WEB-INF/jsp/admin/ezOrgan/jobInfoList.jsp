@@ -32,6 +32,7 @@
 		#lvJobList tr td:nth-child(4) {padding-left: 12px;}
 		#lvJobList {min-width: 400px;}
 		#lvJobList tr th:nth-child(4), tr th:nth-child(5) {width: 15%;} 
+		#lvJobList_TH_0 {text-align: center;}
 		#lvJobUserList {min-width: 360px;}
 		.countColor {color:#017BEC;}
 	</style>
