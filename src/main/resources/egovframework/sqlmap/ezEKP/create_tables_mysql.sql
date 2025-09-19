@@ -9190,6 +9190,7 @@ CREATE TABLE `tbl_portal_menu_comp` (
   `company_order` int(11) DEFAULT NULL,
   `menu_ipused` int(11) DEFAULT 0 COMMENT '활성화(Y), 비활성화(N)',
   `icon_url` varchar(200) DEFAULT NULL COMMENT '회사별 기본 아이콘 변경',
+  `OPENTYPE`	int(3)	DEFAULT	3	NOT NULL	COMMENT '메뉴 열기 방식; 1:새 탭, 2:새 창, 3:iframe에서 열기'
   PRIMARY KEY (`company_id`,`tenant_id`,`menu_id`),
   KEY `FK_tbl_portal_menu_comp_menu_id_tbl_portal_menu_menu_id` (`menu_id`),
   CONSTRAINT `FK_tbl_portal_menu_comp_menu_id_tbl_portal_menu_menu_id` FOREIGN KEY (`menu_id`) REFERENCES `tbl_portal_menu` (`menu_id`)
@@ -11416,6 +11417,7 @@ CREATE TABLE `tbl_scheduleconfig` (
   `AUTODELETE` bigint(10) NOT NULL,
   `TENANT_ID` mediumint(5) NOT NULL,
   `REMINDERTIME` VARCHAR(8) NOT NULL DEFAULT '0',
+  `DEFAULTVIEWCHECK` varchar(2) NOT NULL DEFAULT 'N' COMMENT '일정관리 진입 시 Y: DEFAULTVIEW에 해당하는 화면 / N: 마지막으로 조회한 화면',
   PRIMARY KEY (`USERID`,`TENANT_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -16460,3 +16462,15 @@ CREATE TABLE `TBL_TOTAL_HISTORY` (
   `COMPANYID` varchar(20) NOT NULL,
   PRIMARY KEY (`DOCID`, `USERID`, `REGDATE`, `TENANT_ID`, `COMPANYID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='2023-06-30 기준 통합 PC 저장에서만 사용하고 있음. gubun 은 "D"(Download) 로 사용하고 있음.';
+
+DROP TABLE IF EXISTS `TBL_USER_SCHEDULE_TYPE_CONFIG`;
+CREATE TABLE TBL_USER_SCHEDULE_TYPE_CONFIG (
+    USERID         VARCHAR(80)       NOT NULL COMMENT '사용자 아이디',
+    SCHEDULETYPE   MEDIUMINT(5)      NOT NULL COMMENT '일정 유형',
+    RELATEDID      VARCHAR(100)      NOT NULL COMMENT '유형에 따라 연결되는 대상 ID; 개인: 사용자 아이디, 부서: 부서 아이디, 회사: 회사 아이디, 협업: collaboaration, 일정그룹: 일정그룹아이디',
+    TAGCOLOR       VARCHAR(10)                COMMENT '일정 태그 색상',
+    ISCHECKED      VARCHAR(2)        NOT NULL DEFAULT '1' COMMENT '일정 조회 체크 상태; 0:off / 1:on',
+    TENANT_ID      MEDIUMINT(5)      NOT NULL COMMENT '테넌트 아이디',
+    COMPANYID      VARCHAR(80)       NOT NULL COMMENT '회사 아이디',
+    PRIMARY KEY (USERID, COMPANYID, TENANT_ID, SCHEDULETYPE, RELATEDID)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT = '사용자의 일정 유형별 설정 테이블'
