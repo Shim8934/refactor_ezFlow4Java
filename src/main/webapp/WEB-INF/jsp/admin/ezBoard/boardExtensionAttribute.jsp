@@ -745,7 +745,7 @@
 		        oCell01 = oRow.insertCell(-1);
 		        oCell01.align = "left";
 		        oCell01.valign = "middle";
-		        oCell01.innerHTML = "<input tye=\"text\" id=\"cas_no" + cnt + "\" name=\"cas_no" + cnt + "\" style=\"width:90%\" maxlength=\"50\" />&nbsp;<input type=\"checkbox\" name=\"DEL_FG" + cnt + "\" id=\"DEL_FG" + cnt + "\" />"
+		        oCell01.innerHTML = "<input type=\"text\" id=\"cas_no" + cnt + "\" name=\"cas_no" + cnt + "\" style=\"width:90%\" maxlength=\"50\" />&nbsp;<div class=\"custom_checkbox\"><input type=\"checkbox\" name=\"DEL_FG" + cnt + "\" id=\"DEL_FG" + cnt + "\" /></div>"
 		        document.getElementById("cnt").value = cnt;
 		    }
 
