@@ -7016,6 +7016,67 @@ INSERT INTO TBL_BOARD_BOARDINFO (BOARDID, BOARDNAME, BOARDNAME2, BOARDNAME3, BOA
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE) VALUES
     (@tenant_id_value, 'usePreviewMail', 'YES', '메일리스트에서 메일 미리보기 사용 여부 YES: 사용 (default), NO: 사용안함', '메일미리보기 사용여부', '2025-02-11 00:00:00', '메일');
 
+-- 2025-07-07 이유정 - 일정관리 > 임원일정 조회 가능 범위 설정 컨피그 추가
+INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE) VALUES(@tenant_id_value, 'useExecSchedulePublic', 'ON', '일정관리 > 임원일정의 조회 가능 범위 설정 여부 ON : 모든 사용자 조회 / OFF : 임원비서만 조회', '일정관리 > 임원일정 조회 가능 범위 설정', '2025-07-07 00:00:00', '일정관리');
+
+-- 2025-09-17 한태훈 - 누락된 값 추가
+INSERT INTO	TBL_PORTAL_TOP_COMPANY (COMPANY_ID, TENANT_ID, TYPE) VALUES ('Top', @tenant_id_value, 0);
+INSERT INTO TBL_SYSTEMCONFIG_TYPE (TYPECODE, TENANT_ID, COMPANY_ID, TYPENAME, TYPENAME2, DESCRIPTION, WRITERID, WRITERNAME, WRITERNAME2, WRITEDATE) VALUES ('PORTLET', @tenant_id_value, 'Top', '포틀릿', 'Portlet', '(연계)포틀릿 컨피그', 'Top', '조직도', 'OrganizationChart',  now());
+INSERT INTO TBL_SYSTEMCONFIG (CODE, CODEVALUE, DESCRIPTION, WRITERID, WRITERNAME, WRITEDATE, TENANT_ID, COMPANY_ID, TYPECODE) VALUES ('PORTLET_STANDARD','{"portletType":"standard","viewType": "list","connectType": "","paging":"","listCnt":"","width": "","height": "","linkUrl": "","mobileLinkUrl": "","restUrl": "","httpMethodType":"","headerParam" : {  	},"dataParam" : {    },"dataParamType" : "","dataResultType" : "","dataResultFormat" : {"rootPath" : "","totalCnt" : "","dataInfo" : {"title" : "","writer" : "","date" : "","linkUrl" : "","mobileLinkUrl" : "","width": "","height": ""}  },"dbType": "","dbIp": "","dbPort": "","dataBase": "","dbUser": "","dbPwd": "","dbDataQuery": "","totalCntQuery": "","driverClassName" : ""}','연계 포틀릿 기본 설정', 'Top', '조직도', now(), @tenant_id_value, 'Top', 'PORTLET');
+
+INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE) VALUES
+    (@tenant_id_value, 'AprAutoSaveFlag', 'YES', 'YES: 사용 NO: 사용안함 (default: YES)', '전자결재 G 자동 임시저장 사용 여부', '2024-07-10 00:00:00', '전자결재G');
+
+INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
+        VALUES (@tenant_id_value, 'loadTimeForApprAll', '200', '다안기안 문서 표출 시 글꼴,스크롤 오류를 해결하기 위한 setTimeout 시간. 네트워크 환경에 따라 적절한 시간 조절을 위해 사용(default:200)', '다안기안 문서 로딩시간', '2024-01-11 00:00:00', '전자결재G');
+
+INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
+        VALUES (@tenant_id_value, 'useHideHeaderArea', 'NO', '전자결재 mht양식 headerArea 필드 숨기기 기능 사용여부. 양식에 headerArea 필드가 있어야 사용 가능. YES: 사용 NO: 사용안함 (default: NO)', '헤더 숨기기 기능 사용여부', '2024-05-23 00:00:00', '전자결재');
+
+INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
+        VALUES (@tenant_id_value, 'useReceiptDeptFileAttach', 'NO', '부서수신함에서 첨부, 문서첨부 기능 사용 여부. YES: 사용 NO: 사용안함 (default: NO)', '부서수신함에서 첨부, 문서첨부 기능 사용여부', '2024-06-04 00:00:00', '전자결재');
+
+INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
+		VALUES (@tenant_id_value 'NonUseDocAttachYN', 'Y', '비전자문서 본문첨부 기능 사용여부 / Y:사용, N:사용안함 (default:Y)', '본문첨부 기능 사용여부', '2024-07-02 00:00:00', '전자결재');
+
+INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
+        VALUES (@tenant_id_value, 'MODULEEDITOR', 'KUKUDOCS', 'CK, NAMO, TAGFREE, FORM, POLARIS, DEXT, KUKUDOCS, HWP 중 사용할 에디터를 설정한다. (default: KUKUDOCS)', '전자결재, 메일을 제외한 에디터 타입', '2024-09-23 00:00:00', '일반');
+
+INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
+        VALUES (@tenant_id_value, 'ResendFormYN', 'Y', '최근서식 기능 사용여부 / Y:사용, N:사용안함 (default:Y)', '최근서식 기능 사용여부', '2024-12-04 00:00:00', '전자결재');
+
+INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
+		VALUES (@tenant_id_value, 'EditVertionYN', 'Y', '본문수정 시 본문버전 변경 기능 사용여부 / Y:사용, N:사용안함 (default:Y)', '본문수정 시 본문버전 변경 기능 사용여부', '2024-12-05 00:00:00', '전자결재');
+
+INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
+        VALUES (@tenant_id_value, 'PersonalHideSusin', 'Y', '개인수신함 기능 사용여부 / Y:사용, N:사용안함 (default:Y)', '개인수신함 기능 사용여부', '2024-11-26 00:00:00', '전자결재');
+
+INSERT INTO TBL_LISTOPTION
+(LISTTYPE, SN, NAME, WIDTH, TABLENAME, COLNAME, COLALIAS, DTYPE, TYPEDESC, FIELDDESC, NAME2, NAME3, NAME4, DELFLAG, TENANT_ID, COMPANYID)
+		VALUES
+			('K064', 1, '변경순번', 	60, 	'TBL_HISTORYDOCINFO', 	'ChangeSN', 			NULL, NULL, '문서이력리스트', '변경순번', 	'No.', 		'変更順番', 	'变更序号', 	@tenant_id_value, 'Top'),
+			('K064', 2, '변경일자', 	90, 	'TBL_HISTORYDOCINFO', 	'ChangeDate', 			NULL, NULL, '문서이력리스트', '변경일자', 	'Date', 	'変更日時', 	'变更日',@tenant_id_value, 'Top'),
+			('K064', 3, '변경자이름', 	90, 	'TBL_HISTORYDOCINFO', 	'ChangeUserName', 		NULL, NULL, '문서이력리스트', '변경자이름', 'Name', 	'変更者', 	'变更者名',@tenant_id_value, 'Top'),
+			('K064', 4, '변경자직위', 	90, 	'TBL_HISTORYDOCINFO', 	'ChangeUserJobTitle', 	NULL, NULL,' 문서이력리스트', '변경자직위', 'Title', 	'変更者役職', '变更者职位',@tenant_id_value, 'Top'),
+			('K064', 5, '변경자부서', 	90, 	'TBL_HISTORYDOCINFO', 	'ChangeUserDeptName', 	NULL, NULL, '문서이력리스트', '변경자부서', 'Dept.', 	'変更者部署', '变更者部门',@tenant_id_value, 'Top'),
+			('K064', 6, '버전', 		60, 	'TBL_HISTORYDOCINFO', 	'EditVersion',  		NULL, NULL, '문서이력리스트', '변경버전', 	'Version', 	'版本', 		'版本',@tenant_id_value, 'Top');
+
+INSERT INTO TBL_LISTOPTION
+		    (LISTTYPE, SN, NAME, WIDTH, TABLENAME, COLNAME, COLALIAS, DTYPE, TYPEDESC, FIELDDESC, NAME2, NAME3, NAME4, TENANT_ID, COMPANYID)
+		VALUES
+			('P004', 1, '제목', 	300, 'TBL_APRDOCINFO', 'DocTitle', NULL, NULL, '수신문서처리기', '제목', 'Title', '見出し', '标题', @tenant_id_value, 'Top'),
+			('P004', 2, '문서상태', 70, 'TBL_APRRECEIPTPROCESSINFO', 'DocState', NULL, NULL, '수신문서처리기', '문서상태', 'Doc. status', '文書区分', '文件状态', @tenant_id_value, 'Top'),
+			('P004', 3, '결재상태', 70, 'TBL_APRRECEIPTPROCESSINFO', 'AprState', NULL, NULL, '수신문서처리기', '결재상태', 'Approval status', 'ステータス', '批准状态', @tenant_id_value, 'Top'),
+			('P004', 4, '기안자', 	 70, 'TBL_APRDOCINFO', 'WriterName', NULL, NULL,' 수신문서처리기', '기안자', 'Drafter', '起案者', '起草人', @tenant_id_value, 'Top'),
+			('P004', 5, '발신부서', 90, 'TBL_APRRECEIPTPROCESSINFO', 'SentDeptName', NULL, NULL, '수신문서처리기', '발신부서', 'Dept. sent', '送信部署', '发送部门', @tenant_id_value, 'Top'),
+			('P004', 6, '수신자', 	70, 'TBL_APRRECEIPTPROCESSINFO', 'PROCESSORNAME', NULL, NULL, '수신문서처리기', '수신자', 'Receiver', '受信者', '受信者', @tenant_id_value, 'Top'),
+			('P004', 7, '수신부서', 90, 'TBL_APRRECEIPTPROCESSINFO', 'ReceivedDeptName', NULL, NULL, '수신문서처리기', '도착부서', 'Date received', '受信部署', '收信部门', @tenant_id_value, 'Top'),
+			('P004', 8, '도착일자', 100, 'TBL_APRRECEIPTPROCESSINFO', 'ProcessDate', NULL, NULL, '수신문서처리기', '도착일자', 'ProcessDate', '到着日付', '接收日', @tenant_id_value, 'Top'),
+			('P004', 9, '양식명', 	70, 'TBL_APRDOCINFO', 'FormName', NULL, NULL, '수신문서처리기', '양식명', 'Form Name', '様式名', '样式名', @tenant_id_value, 'Top'),
+			('P004', 10, '첨부', 	30, 'TBL_APRDOCINFO', 'HASATTACHYN', NULL, NULL, '수신문서처리기', '첨부', 'Attach', '添付', '附件', @tenant_id_value, 'Top'),
+			('P004', 11, '공개',	 30, 'TBL_APRDOCINFO', 'ISPUBLIC', NULL, NULL, '수신문서처리기', '공개', 'Public', '公開', '公开', @tenant_id_value, 'Top');
+
+
 -- tenant_id 없는 쿼리 하단으로 추가
 -- ezPMS fixed holiday
 INSERT INTO TBL_PMS_FIXEDHOLIDAY(HOLIDAY_NAME, HOLIDAY_NAME2, HOLIDAY, SOLARLUNAR, COUNTRY) VALUES ('신정', 'New Year''s Day', '01-01', 1, 'kor');
@@ -7241,14 +7302,6 @@ INSERT INTO TBL_PORTAL_PORTLET (portlet_id, menu_id, portlet_url, portlet_type, 
 
 INSERT INTO TBL_PORTAL_PORTLET (PORTLET_ID, MENU_ID, PORTLET_URL, PORTLET_TYPE, DEFAULT_ORDER, PORTLETCODE) VALUES (74,3,'/ezNewPortal/chartPortlet.do','G',24,'chart');
 INSERT INTO TBL_PORTAL_PORTLET (PORTLET_ID, MENU_ID, PORTLET_URL, PORTLET_TYPE, DEFAULT_ORDER, PORTLETCODE) VALUES (75,4,'/ezNewPortal/tabBoardPortlet.do','G',23,'tabBoard');
-
--- 2025-07-07 이유정 - 일정관리 > 임원일정 조회 가능 범위 설정 컨피그 추가
-INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE) VALUES(@tenant_id_value, 'useExecSchedulePublic', 'ON', '일정관리 > 임원일정의 조회 가능 범위 설정 여부 ON : 모든 사용자 조회 / OFF : 임원비서만 조회', '일정관리 > 임원일정 조회 가능 범위 설정', '2025-07-07 00:00:00', '일정관리');
-
--- 2025-09-17 한태훈 - 누락된 값 추가
-INSERT INTO	TBL_PORTAL_TOP_COMPANY (COMPANY_ID, TENANT_ID, TYPE) VALUES ('Top', @tenant_id_value, 0);
-INSERT INTO TBL_SYSTEMCONFIG_TYPE (TYPECODE, TENANT_ID, COMPANY_ID, TYPENAME, TYPENAME2, DESCRIPTION, WRITERID, WRITERNAME, WRITERNAME2, WRITEDATE) VALUES ('PORTLET', @tenant_id_value, 'Top', '포틀릿', 'Portlet', '(연계)포틀릿 컨피그', 'Top', '조직도', 'OrganizationChart',  now());
-INSERT INTO TBL_SYSTEMCONFIG (CODE, CODEVALUE, DESCRIPTION, WRITERID, WRITERNAME, WRITEDATE, TENANT_ID, COMPANY_ID, TYPECODE) VALUES ('PORTLET_STANDARD','{"portletType":"standard","viewType": "list","connectType": "","paging":"","listCnt":"","width": "","height": "","linkUrl": "","mobileLinkUrl": "","restUrl": "","httpMethodType":"","headerParam" : {  	},"dataParam" : {    },"dataParamType" : "","dataResultType" : "","dataResultFormat" : {"rootPath" : "","totalCnt" : "","dataInfo" : {"title" : "","writer" : "","date" : "","linkUrl" : "","mobileLinkUrl" : "","width": "","height": ""}  },"dbType": "","dbIp": "","dbPort": "","dataBase": "","dbUser": "","dbPwd": "","dbDataQuery": "","totalCntQuery": "","driverClassName" : ""}','연계 포틀릿 기본 설정', 'Top', '조직도', now(), @tenant_id_value, 'Top', 'PORTLET');
 
 INSERT INTO TBL_WEATHER_CITY VALUES (1832157, '여수', 1);
 INSERT INTO TBL_WEATHER_CITY VALUES (1832157, 'Reisui', 2);
