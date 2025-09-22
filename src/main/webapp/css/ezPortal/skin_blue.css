@@ -346,3 +346,32 @@ nav .navUL li.on{color:#003497;}
 
 .filter_pop .check_list .check_ul li .input_check input[type="checkbox"]:checked + label:before { background:  url(/images/ezNewPortal/bg_checkbox.png) no-repeat 2px center;
 background-color: #003497; border-color: #003497;}
+
+.layerPopup_button .button_style01 {
+    display: block;
+    min-width: 113px;
+    height: 36px;
+    line-height: 34px;
+    padding: 0px 20px;
+    background-color: #003497;
+    font-size: 14px;
+    color: #ffffff;
+    text-align: center;
+    box-sizing: border-box;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.radio_design > label {
+    display: inline-block;
+    height: 18px;
+    line-height: 16px;
+    padding-left: 24px;
+    background: url(/images/ezNewPortal/skin/blue/input_checkbox_radio_blue.png) no-repeat -0px -92px;
+    font-size: 14px;
+    vertical-align: middle;
+    cursor: pointer;
+    user-select: none;
+    -ms-user-select: none;
+    -webkit-user-select: none;
+}
