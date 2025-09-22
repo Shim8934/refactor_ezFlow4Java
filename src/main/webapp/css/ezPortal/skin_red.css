@@ -331,3 +331,50 @@ nav .navUL li.on{color:#A20000;}
 .form_set.theme li.select:before, .form_set.default li.select .form_image:before{border: 1px solid #A20000;}
 .form_set.theme li.select:before, .form_set.default li.select .form_image:before{background: url(../../images/ezNewPortal/form_select_red.png) no-repeat center rgba(0,0,0,0.2);}
 #mainmenu li.view_more.on{color: #A20000;}
+
+/* 커뮤니티 통합검색 */
+.community_searchBox{border:0; background:#fff; display:flex; justify-content:center; align-items:center; height:74px; box-sizing:border-box;}
+.community_totalSearch{margin:0; padding:0;}
+.community_totalSearch dl{margin:0; padding:0; display:flex; align-items:center;}
+.community_totalSearch dl dt{margin-right:6px;}
+.community_totalSearch dl dt.selectbox select{border:1px solid #B2C2D1; border-radius:4px; width:120px; height:34px; padding:0 26px 0 12px; background:url(../../images/next.gif) no-repeat right 10px center / 12px 12px #fffe; font-size:14px; color:#333;}
+.community_totalSearch dl dt.searchinput input{border:1px solid #B2C2D1; height:34px !important; border-radius:4px; width:500px; padding:0 10px;font-size: 14px;}
+.community_totalSearch dl dd.btn_search{height:34px; line-height:34px; padding:0 25px; border-radius:4px; background:#A20000; color:#fff; font-size:14px; font-weight:500; cursor:pointer;}
+.community_totalSearch dl dd.btn_CommHome{height:34px; line-height:34px; padding:0 25px; border-radius:4px; background:#b54d4d; color:#fff; font-size:14px; font-weight:500; cursor:pointer; margin-left:5px;}
+.community_totalSearch dl dd:hover{background:#0184BF;}
+.community_totalSearch dl dd.btn_search:hover{background: #950202;}
+.community_totalSearch dl dd.btn_CommHome:hover{background: #ac4343;}
+
+.tab-menu{list-style:none; margin:0; padding:0;width: 100%;height: 29px;border-bottom: 1px solid #ddd; margin-bottom:12px; display:inline-block;}
+.tab-menu li{display:block; float: left; height: 29px; line-height: 29px; padding: 0px 20px; border: 0; margin: 0px 1px 0px 0px; border-bottom: 0 none;font-weight: bold; color: #555; background:#fff; cursor:pointer; font-size:14px;}
+.tab-menu li:hover{color: #A20000;background: #fff; border:0; border-bottom: 2px solid #A20000;}
+.tab-menu li.active{color: #A20000;background: #fff; border:0; border-bottom: 2px solid #A20000;}
+
+.result_txt{margin-left: 10px;font-size:14px;font-weight:500;color:#333;height: 34px;display: inline-block;line-height: 32px;}
+.result_txt span{color:#A20000; font-size:14px;}
+.result_list_head{margin-bottom:13px;margin-top:0;padding:15px 20px 15px 20px;border-top:1px solid #ddd;border-bottom:1px solid #ddd;overflow:hidden;}
+.result_list_head h4{font-size:16px; margin-bottom:13px;}
+.result_list{margin-top:13px;padding:2px 20px 15px 20px;border-bottom:1px solid #ddd;overflow:hidden;}
+.result_list_cont{display:flex; align-items:stretch;}
+.result_list_cont_L{width:85%;border-right:1px solid #ddd;float:left;}
+.result_list_etc > img{margin-right:5px;}
+.result_list_etc > span{margin-left: 10px; margin-right: 10px;}
+.result_list_cont_R{float:left;width:100px;margin-left:20px;padding:0;display:flex;flex-direction:column;justify-content:center;}
+.result_list_cont_R > div{display:flex; align-items: center; margin:1px 0;}
+.result_list_cont_R > div img{vertical-align:middle; width:16px; height:16px;}
+.result_list_cont_R > div span{margin-left:5px;}
+.result_list_title{margin-bottom:5px;}
+.result_list_title a{cursor:pointer;color:#0033ac;text-decoration:underline;}
+.result_list_desc{margin-bottom:10px;padding-right:14px;margin-top: 5px;word-break: break-all;display: -webkit-box;-webkit-box-orient: vertical;-webkit-line-clamp: 5;overflow: hidden;text-overflow: ellipsis;white-space: normal;}
+.result_list_noti{text-align:left;color:royalblue;margin-bottom:10px;}
+
+.moreView{float: right;font-size: 13px;font-weight: normal;}
+.moreView > a{cursor:pointer;color:#0033ac;text-decoration:underline;margin-right: 5px;}
+.moreView > img{vertical-align: middle;width:15px;height:15px;}
+
+.empty{text-align:center;line-height: 80px;}
+
+.itemBtn{height:28px; line-height:26px; padding:0 12px !important; cursor:pointer; color:#333; border:1px solid #CECECE; border-radius:4px; box-sizing:border-box; background-color:#fff; width:auto !important; float:right;}
+.itemBtn img{display:none;}
+.itemBtn span{vertical-align:baseline !important;}
+.itemBtn:hover, .itemActive{color:#A20000; border:1px solid #A20000; background-color:#fff;}
