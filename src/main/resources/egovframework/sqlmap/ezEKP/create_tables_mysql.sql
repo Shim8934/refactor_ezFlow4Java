@@ -9461,6 +9461,7 @@ CREATE TABLE `tbl_portal_theme_user` (
   `tenant_id` mediumint(9) NOT NULL DEFAULT 0 COMMENT '테넌트 아이디',
   `used_theme` int(11) NOT NULL DEFAULT 0 COMMENT '사용자가 사용하는 테마 아이디',
   `used_frame` int(11) DEFAULT NULL COMMENT '사용자가 사용하는 프레임 아이디',
+  `USEPAGING`	TINYINT	DEFAULT	1	NOT NULL	COMMENT '페이징 사용 여부',
   `is_default` int(11) DEFAULT 0,
   PRIMARY KEY (`user_id`,`company_id`,`tenant_id`,`used_theme`),
   KEY `FK_tbl_portal_theme_user_used_theme_tbl_portal_theme_theme_id` (`used_theme`),
