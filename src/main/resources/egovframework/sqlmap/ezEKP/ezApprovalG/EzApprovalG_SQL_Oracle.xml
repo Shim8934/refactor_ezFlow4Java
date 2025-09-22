@@ -35286,7 +35286,7 @@
     
     <select id="EzApprovalG.getGroupDocList" parameterClass="Map" resultClass="ApprGGroupDocInfoVO" remapResults="true">
     	SELECT
-    		DOCID,
+    		A.DOCID,
     		TABSN,
     		GROUPDOCSN,
     		<isNotEmpty property="v_MODE">
@@ -35324,7 +35324,6 @@
 			    AND
 			    	TENANT_ID = #v_TENANTID#
 	    		) AS ORGDOCID,
-	    		TENANT_ID,
 	    		(SELECT
 	    			DOCTYPE
 	    		FROM
@@ -35396,16 +35395,23 @@
 	    		) AS DOCTYPE,
 	    		</isEqual>
     		</isNotEmpty>
-    		TENANT_ID,
-    		COMPANYID
+    		A.TENANT_ID,
+    		A.COMPANYID,
+            CASE WHEN C.EXTRECEPTYN = 'Y' AND RECEIPTPOINTID NOT LIKE 'Address%' THEN 'Y' ELSE '' END EXTYN
     	FROM
     		TBL_APRDOCGROUPINFO A
-    	WHERE
+        LEFT JOIN
+            TBL_RECEIPTPOINTINFO C
+        ON
+            A.DOCID = C.DOCID
+        AND
+            DEPTMEMBERSN = 1
+        WHERE
     		GROUPDOCSN = #v_GROUPDOCSN#
 		AND
-			TENANT_ID = #v_TENANTID#
+			A.TENANT_ID = #v_TENANTID#
 		AND
-			COMPANYID = #v_COMPANYID#
+			A.COMPANYID = #v_COMPANYID#
 		ORDER BY
 			TABSN ASC
     </select>

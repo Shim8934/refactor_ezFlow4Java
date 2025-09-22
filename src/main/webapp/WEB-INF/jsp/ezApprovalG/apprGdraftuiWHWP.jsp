@@ -940,6 +940,7 @@
 	        }
 	        
 	        // sendDraft 시작
+	        var strBytesAry = new Array();
 	        function sendDraft(strClone) {
 	        	var strBytes = parseInt(getByteLength(strClone));
 		    	
@@ -956,8 +957,16 @@
                 }
 
                 // 본문과 첨부파일의 총합이 7.4mb가 초과시 알러트 2018-07-13 강민수92
-                if (getNodeText(rtnAttachXML.getElementsByTagName("EXTFLAG").item(0)) == "Y" && strBytes + parseInt(attachTotalSize) > 7400000) {
-                	OpenAlertUI("외부발송문서 총 용량은 최대 7.4MB 입니다" + "<br>" + (tmpAn ? tmpAn + "<spring:message code='ezApprovalG.HSBDa04_1'/> " : "") + "첨부파일이나 본문용량을 줄여주시기 바랍니다.");
+                if(draftAnCnt > 1){
+                    attachTotalSize = getNodeText(rtnAttachXML.getElementsByTagName("TOTALSIZE").item(1)).split(",");
+                    for(var i = 1; i <= draftAnCnt; i++){
+                        if (strBytesAry[i] && strBytesAry[i] + parseInt(attachTotalSize[i]) > 7400000) {
+                            OpenAlertUI("외부발송문서 총 용량은 최대 7.4MB 입니다" + "<br>" + i + "<spring:message code='ezApprovalG.HSBDa04_1'/> 첨부파일이나 본문용량을 줄여주시기 바랍니다.");
+                            return;
+                        }
+                    }
+                }else if (getNodeText(rtnAttachXML.getElementsByTagName("EXTFLAG").item(0)) == "Y" && strBytes + parseInt(attachTotalSize) > 7400000) {
+                	OpenAlertUI("외부발송문서 총 용량은 최대 7.4MB 입니다" + "<br>" + "첨부파일이나 본문용량을 줄여주시기 바랍니다.");
                     return;
                 }
 
@@ -1343,12 +1352,32 @@
 	        
 	        function GetHTML(callback) {
                 ingFlag = true;
-	            message.GetTextFile("HWP", "", function (data) { ingFlag = false; callback(data); });
+                if(anCnt > 1)
+                    lastAnSave(callback);
+                else
+	                message.GetTextFile("HWP", "", function (data) { ingFlag = false; callback(data); });
 	        }
 	        
 	        function GetHTML2(callback) {
                 ingFlag = true;
-	            message.GetTextFile("HWPML2X", "", function (data) { ingFlag = false; callback(data); });
+                if(anCnt > 1){
+                    var lengthCnt = 0;
+                    for(var i = 1; i <= anCnt; i++){
+                        var lengthChk = loadXMLString(CheckDeptLinesXMLAry[i]);
+                        var extYN = lengthChk.getElementsByTagName("EXTRECEPTYN");
+                        if(extYN.length > 0 && extYN.item(0).textContent == "Y" && !lengthChk.getElementsByTagName("DEPTID").item(0).textContent.startsWith("Address")){
+                            message.HwpCtrl.MoveToField("body{{" + (i-1) + "}}", true, true, true);
+                            message.HwpCtrl.SaveAs("","PUBDOCBODY", "saveblock", function (data) {
+                                strBytesAry[i] = data.size;
+                                if(++lengthCnt == anCnt)
+                                    callback("");
+                            });
+                        }else
+                            if(++lengthCnt == anCnt)
+                                callback("");
+                    }
+                }else
+	                message.GetTextFile("HWPML2X", "", function (data) { ingFlag = false; callback(data); });
 	        }
 	        
 		    function Complete_Draft() {
@@ -2837,7 +2866,7 @@
                 var Fields = message.GetFieldList(2);
                 for(var i = 0; i < Fields.length; i++){
                     var field = Fields[i].substring(0,Fields[i].indexOf("{"));
-                    if(field == "body")
+                    if(field == "body" || field == "recipients")
                         continue;
                     var txt = message.GetFieldText(field);
                     if((txt && txt != message.GetFieldText(field + "{{" + (currAn - 1) + "}}")) || field == "receiptnumber")

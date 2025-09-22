@@ -706,34 +706,37 @@ function localHWPLoad(frame, formPath, callback) {
     xhr.send();
 }
 
-var lastAnSaveOK = false;
-var lastAnSaveFail = false;
-var lastAnSaveIng = false;
-function lastAnSave(){
-    lastAnSaveFail = false;
-    lastAnSaveIng = true;
+var saveCallback;
+function lastAnSave(callback){
     if($(".lastAn").length == 0){
         $("body").append("<iframe class=\"lastAn\" name=\"lastAn\" id=\"lastAn\" style=\"width:0px; height:0px; border:0px\" src=\"/ezApprovalG/WHWPEditor.do?type=lastAn\"></iframe>");
+        saveCallback = callback;
         return;
     }
+    if(saveCallback){
+        callback = saveCallback;
+        saveCallback = null;
+    }
+    
     message.HwpCtrl.GetTextFile("HWP", "", function(data){
-        lastAnSave2(data, 1);
+        lastAnSave2(callback, data, 1);
     });
 }
 
-function lastAnSave2(hwp, lidx){
+function lastAnSave2(callback, hwp, lidx){
     try{
         lastAn.SetTextFile(hwp, "HWP", "", function(){
             try{
-                for(var i = 0; i < an.options.length; i++){
+                for(var i = 1; i <= an.options.length; i++){
                     if(lidx == i)
                         continue;
                     deleteAn_B(lastAn.HwpCtrl, i > lidx ? 1 : 0);
                 }
                 lastAn.HwpCtrl.GetTextFile("HWP", "", function(html){
                     var data = {
-                        docID : pDocIDAry[lidx + 1],
-                        html  : html
+                        docID : pDocIDAry[lidx],
+                        html  : html,
+                        draftAllB : lidx == 1 ? "OA" : ""
                     }
                     
                     $.ajax({
@@ -744,33 +747,27 @@ function lastAnSave2(hwp, lidx){
                         contentType : "application/json",
                         data : JSON.stringify(data),
                         success: function(text){
-                            try{
-                                if(an.options.length > ++lidx)
-                                    lastAnSave2(hwp, lidx);
-                                else{
-                                    lastAnSaveOK = true;
-                                    lastAnSaveIng = false;
-                                }
-                            }catch(e){
-                                lastAnSaveIng = false;
-                                lastAnSaveFail = true;
+                            if(an.options.length >= ++lidx)
+                                lastAnSave2(callback, hwp, lidx);
+                            else{
+                                var tmp = pDocID;
+                                pDocID = pDocIDAry[1];
+                                callback(hwp);
+                                pDocID = tmp;
                             }
                         },
                         error: function(e){
                             console.log(e);
-                            lastAnSaveIng = false;
-                            lastAnSaveFail = true;
+                            OpenAlertUI("일괄기안 문서 저장중 오류가 발생했습니다.");
                         }
                     });
                 });
             }catch(e){
-                lastAnSaveIng = false;
-                lastAnSaveFail = true;
+                OpenAlertUI("일괄기안 문서 저장중 오류가 발생했습니다.");
             }
         });
     }catch(e){
-        lastAnSaveIng = false;
-        lastAnSaveFail = true;
+        OpenAlertUI("일괄기안 문서 저장중 오류가 발생했습니다.");
     }
 }
 

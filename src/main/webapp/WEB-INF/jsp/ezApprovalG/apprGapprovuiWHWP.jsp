@@ -247,6 +247,8 @@
 			var anCnt = 1;
 			var FirstHtmlAry = new Array();
 			var SaveHtmlAry = new Array();
+			var extYNAry = new Array();
+			var strBytesAry = new Array();
 			
 			var wAprMemberSN = "";
             
@@ -480,12 +482,14 @@
                             pDocHrefAry.push("");
                             pDocTypeAry.push("");
                             extAry.push("");
+                            extYNAry.push("");
         
                             <c:forEach items="${group}" var="item">
                                 pDocIDAry.push("${item.docID}");
                                 pDocHrefAry.push("${item.docHref}"); // 문서경로
                                 pDocTypeAry.push("${item.docType}"); // 문서타입 (내부결재, 수신문...)
                                 extAry.push("${item.docHref}".substring("${item.docHref}".lastIndexOf(".") + 1)); // 확장자
+                                extYNAry.push("${item.extYN}"); // extYN
                             </c:forEach>		                
                             pMode = getDocMode();
                             getApprovInfoAll(pDocIDAry); // 결재문서 기본 정보
@@ -579,9 +583,6 @@
 		            }
 		
 		            process_AfterOpen();
-		            isLastSaveDoc = ((LastKyulSN == pAprMemberSN && (pAprLineType == strAprType18 || pAprLineType == strAprType19 || pAprLineType == strAprType1 || pAprLineType == strAprType2)) || pAprLineType == strAprType4 || pAprLineType == strAprType16) && anCnt > 1;
-		            if(isLastSaveDoc)
-		                lastAnSave();
 		            hideLoadingProgress();
 		            CheckOpinionYN();
 		
@@ -914,23 +915,30 @@
 				 
 			 function GetHTML(callback) {
                 ingFlag = true;
-			    message.GetTextFile("HWP", "", function (data) { ingFlag = false; callback(data); });
+                if(anCnt > 1)
+                    lastAnSave(callback);
+                else
+			        message.GetTextFile("HWP", "", function (data) { ingFlag = false; callback(data); });
 			 }
 			 
 			 function GetHTML2(callback) {
                 ingFlag = true;
-                if(lastAnSaveFail)
-                    lastAnSave();
-                else if(lastAnSaveIng && !lastAnSaveOK){
-                    if(tryCnt++ > 60){
-                        OpenAlertUI("일괄기안 문서 저장중 오류가 발생했습니다.");
-                        ingFlag = false;
-                        return;
+                if(anCnt > 1){
+                    var lengthCnt = 0;
+                    for(var i = 1; i <= anCnt; i++){
+                        if(extYNAry[i] == "Y"){
+                            message.HwpCtrl.MoveToField("body{{" + (i-1) + "}}", true, true, true);
+                            message.HwpCtrl.SaveAs("","PUBDOCBODY", "saveblock", function (data) {
+                                strBytesAry[i] = data.size;
+                                if(++lengthCnt == anCnt)
+                                    callback("");
+                            });
+                        }else
+                            if(++lengthCnt == anCnt)
+                                callback("");
                     }
-                    setTimeout(GetHTML2(callback), 50);
-                    return;
-                }
-			    message.GetTextFile("HWPML2X", "", function (data) { ingFlag = false; callback(data); });
+                }else
+    			    message.GetTextFile("HWPML2X", "", function (data) { ingFlag = false; callback(data); });
 			 }
 			 
 			 function SetHTML(data, callback) {
@@ -953,7 +961,15 @@
                 }
 
                 // 본문과 첨부파일의 총합이 7.4mb가 초과시 알러트 결재라인 수정시에도 2018-07-19 강민수92
-                if (getNodeText(rtnAttachXML.getElementsByTagName("EXTFLAG").item(0)) == "Y" && strBytes + parseInt(attachTotalSize) > 7400000) {
+                if(anCnt > 1){
+                    attachTotalSize = getNodeText(rtnAttachXML.getElementsByTagName("TOTALSIZE").item(1)).split(",");
+                    for(var i = 1; i <= anCnt; i++){
+                        if (strBytesAry[i] && strBytesAry[i] + parseInt(attachTotalSize[i]) > 7400000) {
+                            OpenAlertUI("외부발송문서 총 용량은 최대 7.4MB 입니다" + "<br>" + i + "<spring:message code='ezApprovalG.HSBDa04_1'/> 첨부파일이나 본문용량을 줄여주시기 바랍니다.");
+                            return;
+                        }
+                    }
+                }else if (getNodeText(rtnAttachXML.getElementsByTagName("EXTFLAG").item(0)) == "Y" && strBytes + parseInt(attachTotalSize) > 7400000) {
                 	OpenAlertUI("외부발송문서 총 용량은 최대 7.4MB 입니다" + "<br>" + (tmpAn ? tmpAn + "<spring:message code='ezApprovalG.HSBDa04_1'/> " : "") + "첨부파일이나 본문용량을 줄여주시기 바랍니다.");
                     return;
                 }
@@ -969,14 +985,6 @@
 				/* 백단 결재 실패한 이력이 있는 doc은 프론트 결재 로직 */
                 if(getCheckNotFailDoc()){
                     backFailFlag = true;
-                }
-                
-                // 일괄 B타입 문서 결재 취소 시 복구할 body
-                if(isLastSaveDoc){
-                    beforeWholeHwp_B = html;
-                    if($("#before").length == 0){
-                        $("body").append("<iframe name=\"beforeFrame\" id=\"before\" style=\"width:0px; height:0px; border:0px\" src=\"/ezApprovalG/WHWPEditor.do?type=before\"></iframe>");
-                    }
                 }
                 
 			    setMenuDisable("btnApprove", true);
@@ -1074,34 +1082,6 @@
                     return;
                 }
                 
-                /* 일괄기안 B 타입의 최종결재는 백단결재 불가능 */
-                /*
-                if(draftAllTypeB == "Y"){
-                    if (LastKyulSN == pAprMemberSN || pAprLineType == strAprType4 || pAprLineType == strAprType16) {
-                        if (pAprLineType == strAprType18 || pAprLineType == strAprType19 || pAprLineType == strAprType1 || pAprLineType == strAprType4 || pAprLineType == strAprType16 || pAprLineType == strAprType2) {
-                            backFailFlag = true;
-                        }
-                    }
-                }
-                */
-                
-                if(isLastSaveDoc){
-                    message.EditMode(1);
-                    if(!saveBtypeFlag){
-                        for(var i = 1; i < an.options.length; i++){
-                            deleteAn_B(message.HwpCtrl, 1);
-                        }
-                    }
-                    message.EditMode(0);
-                    changeAn(1, true);
-                    
-                    // B타입 1안 자른 후 저장이 안되어 있으면 1안도 저장 
-                    if(!saveBtypeFlag) {
-                        GetHTML(before_SaveFile_BackEnd);
-                        return;
-                    }
-                }
-                
                 var res = "";
                 if(!backFailFlag){
 		            DivPopUpHidden();
@@ -1128,29 +1108,9 @@
                             }else if(typeof resData != "undefined" && resData.toUpperCase() == "FAIL"){
                                 // 결재 실패
                                 backFailFlag = true;
-                                
-                                // 일괄 B타입 결재 실패 시 문서 복구
-                                if(beforeWholeHwp_B){
-                                    message.SetTextFile(beforeWholeHwp_B, "HWP", "", function(){
-                                        message.GetTextFile("HWP", "", function(data){
-                                            SaveHtml = data;
-                                            SaveFile();
-                                        });
-                                    });
-                                }
                             }
                         }else{ // 호출시 데이터 문제(type) or 백단 결재 로직 오류
                             backFailFlag = true;
-                            
-                            // 일괄 B타입 결재 실패 시 문서 복구
-                            if(beforeWholeHwp_B){
-                                message.SetTextFile(beforeWholeHwp_B, "HWP", "", function(){
-                                    message.GetTextFile("HWP", "", function(data){
-                                        SaveHtml = data;
-                                        SaveFile();
-                                    });
-                                });
-                            }
                         }
                     }
                     /* 백단 결재 로직 실패 시 프론트로 결재*/
@@ -1362,23 +1322,7 @@
 					    }
 		            }
 				   
-				   //signInfo = AprrovMappingSign(ret);		// 사인 이미지 생성
-				   if(isLastSaveDoc){
-                        if(!saveBtypeFlag) {
-                            message.EditMode(1);
-                            for(var i = 1; i < an.options.length; i++){
-                                deleteAn_B(message.HwpCtrl, 1);
-                            }
-                            message.EditMode(0);
-                            
-                            changeAn(1, true);
-                            
-                            // GetHTML(before_SaveFile_BackEnd);
-                            // return;
-                        }
-				   }else{
-				        AprrovMappingSign(ret);
-				   }
+                    AprrovMappingSign(ret);
 				   
 		            var rtnVal = true;
 		            if (LastKyulSN == pAprMemberSN || pAprLineType == strAprType4 || pAprLineType == strAprType16) {
@@ -1402,10 +1346,6 @@
 					    }
 		            }
 		            
-		            if(isLastSaveDoc && saveBtypeFlag){
-		                changeAn(1, true);
-		                GetHTML(Before_SaveApproveInfo);
-		            }
 		           // GetHTML(Before_SaveApproveInfo);		// 사인 추가된 문서 데이터 저장
 			   }
 			   // Approve_complete 끝
@@ -1962,6 +1902,21 @@
                                         pDocID = pDocIDAry[index+1];
                                         var beforeDocURL = UpdateDocHistory(beforeHwp, "Y", ""); // 수정전 문서 이력저장
                                         UpdateDocHistory(data, "N", beforeDocURL); // 수정후 문서 이력저장
+                                        var tmp = {
+                                                docID : pDocID,
+                                                html  : data,
+                                                draftAllB : lidx == 1 ? "OA" : ""
+                                            }
+                                        
+                                        $.ajax({
+                                            type : "POST",
+                                            dataType : "text",
+                                            url : "/ezApprovalG/saveFileHWP.do",
+                                            contentType : "application/json",
+                                            data : JSON.stringify(tmp),
+                                            success: function(text){
+                                            }
+                                        });
                                         pDocID = tempDocID;
                                     });
                                 });
@@ -2384,7 +2339,12 @@
    		                    	});
    			                	
    			                    btnReceivLineEnable = false;
-   			                    setRecevInfo(ret[3]);
+   			                    var changeIdx = "";
+   			                    if(anCnt > 1){
+   			                        var tmpDoc = loadXMLString(ret[2]).getElementsByName("DocID")[0].textContent;
+   			                        changeIdx = pDocIDAry.indexOf(tmpDoc);
+   			                    }
+   			                    setRecevInfo(ret[3], changeIdx);
    			                }
    			
    			                if (pGubun != "5" && pGubun != "6" && pGubun != "7" && pGubun != "8" && pGubun != "9" && pGubun != "10") {

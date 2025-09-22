@@ -5167,7 +5167,7 @@ public class EzApprovalGController extends EzFileMngUtil{
 		InputStream stream = null;
 		OutputStream bos = null;
 		
-		saveFileName = realPath + path + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + "1000" + commonUtil.separator + ezApprovalGService.getDocDir(docID) + commonUtil.separator + docID + extension; 
+		saveFileName = realPath + path + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + "1000" + commonUtil.separator + ezApprovalGService.getDocDir(docID) + commonUtil.separator + docID + extension + (jsonObj.get("draftAllB") == null ? "" : jsonObj.get("draftAllB").toString()); 
 		saveDir = realPath + path + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + "1000" + commonUtil.separator + ezApprovalGService.getDocDir(docID);
 		
 		logger.debug("<<<userID : " + userInfo.getId());

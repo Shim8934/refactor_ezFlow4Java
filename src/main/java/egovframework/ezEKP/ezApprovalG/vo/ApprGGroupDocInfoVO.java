@@ -21,6 +21,8 @@ public class ApprGGroupDocInfoVO {
 
 	/* 그룹 DOCID */
 	private String groupDocSN;
+	/* 대외문서여부 */
+	private String extYN;
 	
 	public String getDocID() {
 		return docID;
@@ -76,4 +78,6 @@ public class ApprGGroupDocInfoVO {
 	public void setgroupDocSN(String groupDocSN) {
 		this.groupDocSN = groupDocSN;
 	}
+    public String getExtYN() {return extYN;}
+    public void setExtYN(String extYN) {this.extYN = extYN;}
 }

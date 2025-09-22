@@ -788,42 +788,7 @@ function makeOpinionList(OpinionXML, anIdx) {
 	    }
 	}
 
-//	GetHTML(before_SaveFile);
-
-	if(typeof anIdx != "undefined" && typeof draftAllTypeB != "undefined" && draftAllTypeB == "Y" && anIdx > 0){
-	    GetHTML(SaveFileAfterOpinions);
-    }else{
-	    GetHTML(before_SaveFile);
-    }
-}
-
-function SaveFileAfterOpinions(html) {
-    SaveHtml = html;
-
-	// 확인, 참조일 경우 파일 저장 안함
-	if (pAprLineType == strAprType2 || pAprLineType == strAprType7) return "TRUE";
-	var result = "";
-	
-	var data = {
-		docID : pDocIDAry[1],
-		formId : pFormIDAry[1],
-		html  : SaveHtml,
-		orgCompanyID : orgCompanyID
-	}
-	
-    $.ajax({
-		type : "POST",
-		dataType : "text",
-		async : false,
-		url : "/ezApprovalG/saveFileHWP.do",
-		contentType : "application/json",
-		data : JSON.stringify(data),
-		success: function(text){
-			result = text;
-		}        			
-	});
-    
-    return result;
+    GetHTML(before_SaveFile);
 }
 
 function before_SaveFile(html) {
@@ -2298,7 +2263,17 @@ function centerOpenWindow(wfileLocation, wWeight, wHeight) {
 	}
 }
 
-function setRecevInfo(ret) {
+function setRecevInfo(ret, changeIdx) {
+    var idx = "";
+    if(changeIdx){
+        idx = 0;
+        for(var i = 1; i < changeIdx; i++){
+            if(pSuSinFlagAry[i])
+                idx++;
+        }
+        idx = "{{" + idx + "}}"
+    }
+    
     var precipent = "";
     var precipents = "";
     var recipflag = true;
@@ -2309,14 +2284,14 @@ function setRecevInfo(ret) {
     if (xmldom.documentElement.length == 0) return;
 
     var rows = xmldom.documentElement.childNodes
-    if (message.FieldExist("hrecipients"))
-        message.PutFieldText("hrecipients", "");
+    if (message.FieldExist("hrecipients" + idx))
+        message.PutFieldText("hrecipients" + idx, "");
 
-    if (message.FieldExist("recipient"))
-        message.PutFieldText("recipient", "");
+    if (message.FieldExist("recipient" + idx))
+        message.PutFieldText("recipient" + idx, "");
 
-    if (message.FieldExist("recipients"))
-        message.PutFieldText("recipients", "");
+    if (message.FieldExist("recipients" + idx))
+        message.PutFieldText("recipients" + idx, "");
 
     for (var i = rows.length - 1; i >= 0; i--) {
     	var row = rows[i];
@@ -2369,23 +2344,23 @@ function setRecevInfo(ret) {
         }
     }
     
-    if (message.FieldExist("recipient")) {
+    if (message.FieldExist("recipient" + idx)) {
         if (precipent == strLang92) {
-            message.PutFieldText("recipient", precipent);
-            if (message.FieldExist("recipients")) {
-                message.PutFieldText("recipients", precipents);
-                if (message.FieldExist("hrecipients"))
-                    message.PutFieldText("hrecipients", strLang129);
+            message.PutFieldText("recipient" + idx, precipent);
+            if (message.FieldExist("recipients" + idx)) {
+                message.PutFieldText("recipients" + idx, precipents);
+                if (message.FieldExist("hrecipients" + idx))
+                    message.PutFieldText("hrecipients" + idx, strLang129);
             }
         }
         else {
-            message.PutFieldText("recipient", precipent);
+            message.PutFieldText("recipient" + idx, precipent);
             if (precipents == "") {
-                if (message.FieldExist("hrecipients"))
-                    message.PutFieldText("hrecipients", "");
+                if (message.FieldExist("hrecipients" + idx))
+                    message.PutFieldText("hrecipients" + idx, "");
 
-                if (message.FieldExist("recipients"))
-                    message.PutFieldText("recipients", "");
+                if (message.FieldExist("recipients" + idx))
+                    message.PutFieldText("recipients" + idx, "");
             }
         }
     }
