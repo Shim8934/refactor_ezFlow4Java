@@ -940,9 +940,8 @@ public class EzOrganAdminServiceImpl extends EgovAbstractServiceImpl implements 
 				ezOrganAdminDao.insertCompanyInfo_I10(map1);
 //				ezOrganAdminDao.insertCompanyInfo_I11(map1);
 				/* 2020-08-24 홍승비 - insert all 시, 오라클에서는 insert한 레코드 바로 select할수 없어 null이 삽입되는 오류 수정 */
-				if (globals.getProperty("Globals.DbType").equals("oracle")) {
-					ezOrganAdminDao.insertCompanyInfo_I12_separate(map1); // insertCompanyInfo_I12 오라클 쿼리에서 6개의 insert를 분리
-				}
+				/* ezekp365g 사이트에서 mysql 의 경우 TBL_FORMPROPERTY 테이블을 뷰로 사용하는데 oracle과 동일한 현상이 발생하여 로직 동일하게 수정*/
+				ezOrganAdminDao.insertCompanyInfo_I12_separate(map1); // insertCompanyInfo_I12 쿼리에서 6개의 insert를 분리
 				ezOrganAdminDao.insertCompanyInfo_I12(map1);
 				ezOrganAdminDao.insertCompanyInfo_I13(map1);
 				ezOrganAdminDao.insertCompanyInfo_I14(map1);

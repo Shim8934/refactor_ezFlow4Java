@@ -1484,14 +1484,26 @@
 	     	(N'aa000001', N'', N'共通', N'ZZ000001', NULL, N'COMMON',#tenantID#, #companyID#)
 	     </isNotEqual>
     </insert>
-    
+	<insert id="EzOrganAdminDAO.insertCompanyInfo_I12_separate" parameterClass="Map">
+		<![CDATA[
+        INSERT INTO
+            TBL_FORMPROPERTY
+                (SN, CODE,  ID,  NAME,  DESCRIPTION,  UPPERCODE, TENANT_ID, COMPANYID)
+        VALUES
+                (1, UUID(), 'processinfo', 'F0001', '문서정보', 'ROOT',#tenantID#, #companyID#),
+                (21,UUID(), 'draftinfo', 'F0020', '기안부서 정보', 'ROOT',#tenantID#, #companyID#),
+                (31,UUID(), 'receiptinfo', 'F0030', '수신 정보', 'ROOT',#tenantID#, #companyID#),
+                (37,UUID(), 'approvalinfo', 'F0036', '기안결재 사인정보', 'ROOT',#tenantID#, #companyID#),
+                (49,UUID(), 'recvapprovalinfo', 'F0048', '수신결재 사인정보', 'ROOT',#tenantID#, #companyID#),
+                (55,UUID(), 'userdefinedinfo', 'F0054', '사용자 지정', 'ROOT',#tenantID#, #companyID#)
+      ]]>
+	</insert>
     <insert id="EzOrganAdminDAO.insertCompanyInfo_I12" parameterClass="Map">
       <![CDATA[
         INSERT INTO
             TBL_FORMPROPERTY
                 (SN, CODE,  ID,  NAME,  DESCRIPTION,  UPPERCODE, TENANT_ID, COMPANYID)
         VALUES
-                (1, UUID(), 'processinfo', 'F0001', '문서정보', 'ROOT',#tenantID#, #companyID#),
                 (2, UUID(),'headcampaign', 'F0002', '머리표제', (SELECT CODE FROM    TBL_FORMPROPERTY T WHERE ID='processinfo' AND TENANT_ID = #tenantID# AND COMPANYID = #companyID#),#tenantID#, #companyID#),
                 (3, UUID(),'doctitle', 'F0003', '문서제목', (SELECT CODE FROM    TBL_FORMPROPERTY T WHERE ID='processinfo' AND TENANT_ID = #tenantID# AND COMPANYID = #companyID#),#tenantID#, #companyID#),
                 (4,	UUID(), 'body', 'F0004', '본문', (SELECT CODE FROM    TBL_FORMPROPERTY T WHERE ID='processinfo' AND TENANT_ID = #tenantID# AND COMPANYID = #companyID#),#tenantID#, #companyID#),
@@ -1511,7 +1523,6 @@
                 (18,UUID(), 'sealsign', 'F0018', '관인날인', (SELECT CODE FROM    TBL_FORMPROPERTY T WHERE ID='processinfo' AND TENANT_ID = #tenantID# AND COMPANYID = #companyID#),#tenantID#, #companyID#),
                 (19,UUID(), 'noseal', 'F0019', '관인생략', (SELECT CODE FROM    TBL_FORMPROPERTY T WHERE ID='processinfo' AND TENANT_ID = #tenantID# AND COMPANYID = #companyID#),#tenantID#, #companyID#),
                 (20,UUID(), 'receiptnumber', 'F0056', '접수번호', (SELECT CODE FROM    TBL_FORMPROPERTY T WHERE ID='processinfo' AND TENANT_ID = #tenantID# AND COMPANYID = #companyID#),#tenantID#, #companyID#),
-                (21,UUID(), 'draftinfo', 'F0020', '기안부서 정보', 'ROOT',#tenantID#, #companyID#),
                 (22,UUID(), 'draftername', 'F0021', '기안자 성명', (SELECT CODE FROM    TBL_FORMPROPERTY T WHERE ID='draftinfo' AND TENANT_ID = #tenantID# AND COMPANYID = #companyID#),#tenantID#, #companyID#),
                 (23,UUID(), 'department', 'F0022', '기안자 부서명', (SELECT CODE FROM    TBL_FORMPROPERTY T WHERE ID='draftinfo' AND TENANT_ID = #tenantID# AND COMPANYID = #companyID#),#tenantID#, #companyID#),
                 (24,UUID(), 'position', 'F0023', '기안자 직위', (SELECT CODE FROM    TBL_FORMPROPERTY T WHERE ID='draftinfo' AND TENANT_ID = #tenantID# AND COMPANYID = #companyID#),#tenantID#, #companyID#),
@@ -1521,13 +1532,11 @@
                 (28,UUID(), 'lastKyuljikwee', 'F0027', '최종결재자직위', (SELECT CODE FROM    TBL_FORMPROPERTY T WHERE ID='draftinfo' AND TENANT_ID = #tenantID# AND COMPANYID = #companyID#),#tenantID#, #companyID#),
                 (29,UUID(), 'chief', 'F0028', '기관장', (SELECT CODE FROM    TBL_FORMPROPERTY T WHERE ID='draftinfo' AND TENANT_ID = #tenantID# AND COMPANYID = #companyID#),#tenantID#, #companyID#),
                 (30,UUID(), 'deptshortedname', 'F0029', '부서약어', (SELECT CODE FROM    TBL_FORMPROPERTY T WHERE ID='draftinfo' AND TENANT_ID = #tenantID# AND COMPANYID = #companyID#),#tenantID#, #companyID#),
-                (31,UUID(), 'receiptinfo', 'F0030', '수신 정보', 'ROOT',#tenantID#, #companyID#),
                 (32,UUID(), 'recipient', 'F0031', '수신', (SELECT CODE FROM    TBL_FORMPROPERTY T WHERE ID='receiptinfo' AND TENANT_ID = #tenantID# AND COMPANYID = #companyID#),#tenantID#, #companyID#),
                 (33,UUID(), 'recipients', 'F0032', '수신처', (SELECT CODE FROM    TBL_FORMPROPERTY T WHERE ID='receiptinfo' AND TENANT_ID = #tenantID# AND COMPANYID = #companyID#),#tenantID#, #companyID#),
                 (34,UUID(), 'refer', 'F0033', '참조', (SELECT CODE FROM    TBL_FORMPROPERTY T WHERE ID='receiptinfo' AND TENANT_ID = #tenantID# AND COMPANYID = #companyID#),#tenantID#, #companyID#),
                 (35,UUID(), 'seal', 'F0034', '발신처명의', (SELECT CODE FROM    TBL_FORMPROPERTY T WHERE ID='receiptinfo' AND TENANT_ID = #tenantID# AND COMPANYID = #companyID#),#tenantID#, #companyID#),
                 (36,UUID(), 'receiptdate', 'F0035', '접수일자', (SELECT CODE FROM    TBL_FORMPROPERTY T WHERE ID='receiptinfo' AND TENANT_ID = #tenantID# AND COMPANYID = #companyID#),#tenantID#, #companyID#),
-                (37,UUID(), 'approvalinfo', 'F0036', '기안결재 사인정보', 'ROOT',#tenantID#, #companyID#),
                 (38,UUID(), 'sign', 'F0037', '결재사인', (SELECT CODE FROM    TBL_FORMPROPERTY T WHERE ID='approvalinfo' AND TENANT_ID = #tenantID# AND COMPANYID = #companyID#),#tenantID#, #companyID#),
                 (39,UUID(), 'approdept', 'F0038', '결재자부서명', (SELECT CODE FROM    TBL_FORMPROPERTY T WHERE ID='approvalinfo' AND TENANT_ID = #tenantID# AND COMPANYID = #companyID#),#tenantID#, #companyID#),
                 (40,UUID(), 'jikwe', 'F0039', '결재자직위', (SELECT CODE FROM    TBL_FORMPROPERTY T WHERE ID='approvalinfo' AND TENANT_ID = #tenantID# AND COMPANYID = #companyID#),#tenantID#, #companyID#),
@@ -1539,13 +1548,11 @@
                 (46,UUID(), 'habyuija', 'F0045', '합의자명', (SELECT CODE FROM    TBL_FORMPROPERTY T WHERE ID='approvalinfo' AND TENANT_ID = #tenantID# AND COMPANYID = #companyID#),#tenantID#, #companyID#),
                 (47,UUID(), 'habyuidate', 'F0046', '합의일자', (SELECT CODE FROM    TBL_FORMPROPERTY T WHERE ID='approvalinfo' AND TENANT_ID = #tenantID# AND COMPANYID = #companyID#),#tenantID#, #companyID#),
                 (48,UUID(), 'gongram', 'F0047', '공람사인', (SELECT CODE FROM    TBL_FORMPROPERTY T WHERE ID='approvalinfo' AND TENANT_ID = #tenantID# AND COMPANYID = #companyID#),#tenantID#, #companyID#),
-                (49,UUID(), 'recvapprovalinfo', 'F0048', '수신결재 사인정보', 'ROOT',#tenantID#, #companyID#),
                 (50,UUID(), '1sign', 'F0049', '결재사인1', (SELECT CODE FROM    TBL_FORMPROPERTY T WHERE ID='recvapprovalinfo' AND TENANT_ID = #tenantID# AND COMPANYID = #companyID#),#tenantID#, #companyID#),
                 (51,UUID(), '1approdept', 'F0050', '결재자부서명1', (SELECT CODE FROM    TBL_FORMPROPERTY T WHERE ID='recvapprovalinfo' AND TENANT_ID = #tenantID# AND COMPANYID = #companyID#),#tenantID#, #companyID#),
                 (52,UUID(), '1jikwe', 'F0051', '결재자직위1', (SELECT CODE FROM    TBL_FORMPROPERTY T WHERE ID='recvapprovalinfo' AND TENANT_ID = #tenantID# AND COMPANYID = #companyID#),#tenantID#, #companyID#),
                 (53,UUID(), '1seumyung', 'F0052', '결재자명1', (SELECT CODE FROM    TBL_FORMPROPERTY T WHERE ID='recvapprovalinfo' AND TENANT_ID = #tenantID# AND COMPANYID = #companyID#),#tenantID#, #companyID#),
                 (54,UUID(), '1seumyungdate', 'F0053', '결재일자1', (SELECT CODE FROM    TBL_FORMPROPERTY T WHERE ID='recvapprovalinfo' AND TENANT_ID = #tenantID# AND COMPANYID = #companyID#),#tenantID#, #companyID#),
-                (55,UUID(), 'userdefinedinfo', 'F0054', '사용자 지정', 'ROOT',#tenantID#, #companyID#),
                 (56,UUID(), '', 'F0055', '사용자정의정보', (SELECT CODE FROM    TBL_FORMPROPERTY T WHERE ID='userdefinedinfo' AND TENANT_ID = #tenantID# AND COMPANYID = #companyID#),#tenantID#, #companyID#)
       ]]>
     </insert>
