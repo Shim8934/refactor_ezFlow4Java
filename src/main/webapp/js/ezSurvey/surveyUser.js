@@ -182,6 +182,7 @@
 				if (result[i]["userImg"]) {
 					var imgElmt = document.createElement("img");
 					imgElmt.src = "/admin/ezOrgan/getPersonalInfo.do?fileName=" + result[i]["userImg"];
+					imgElmt.setAttribute('onerror', "this.style.display='none'");
 					divInner.appendChild(imgElmt);
 				}
 				

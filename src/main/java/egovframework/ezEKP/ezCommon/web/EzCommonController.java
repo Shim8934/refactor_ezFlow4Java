@@ -530,11 +530,14 @@ public class EzCommonController extends EzFileMngUtil{
 							}
 						}
 
+						String defaultPic = egovMessageSource.getMessage("main.e14", locale);
+						String userImg = defaultPic;
+
 						if (!xmldom.getElementsByTagName("EXTENSIONATTRIBUTE2").item(0).getTextContent().equals("") && xmldom.getElementsByTagName("EXTENSIONATTRIBUTE2").item(0).getTextContent().contains(".")) {
-							literalPhoto = "<IMG SRC='/admin/ezOrgan/getPersonalInfo.do?fileName=" + xmldom.getElementsByTagName("EXTENSIONATTRIBUTE2").item(0).getTextContent() + "' width=119 height=128>";
-						} else {
-							literalPhoto = "<IMG SRC='" + egovMessageSource.getMessage("main.e14", locale) + "' width=119 height=128>";
+							userImg = "/admin/ezOrgan/getPersonalInfo.do?fileName=" + xmldom.getElementsByTagName("EXTENSIONATTRIBUTE2").item(0).getTextContent();
 						}
+
+						literalPhoto = "<IMG SRC='" + userImg + "' onerror=\"this.src='" + defaultPic + "'\" width=119 height=128>";
 						
 						/* 2018-09-13 홍승비 - 사원 정보 보기 시 담당업무 자기소개 특수문자 처리 */
 		//				literalCompany = xmldom.getElementsByTagName("COMPANY").item(0).getTextContent();

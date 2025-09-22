@@ -75,10 +75,9 @@
 	                    _dt.className = "photo";
 	
 	                    var _img = document.createElement("img")
-	                    if (trim_Cross(userimagesrc) != "")
-	                        _img.src = "/admin/ezOrgan/getPersonalInfo.do?fileName=" + userimagesrc;
-	                    else
-	                        _img.src = "/images/OrganTree/porson_noimg.gif";
+						var picNone = "/images/OrganTree/porson_noimg.gif";
+						_img.src = (trim_Cross(userimagesrc) != "")? "/admin/ezOrgan/getPersonalInfo.do?fileName=" + userimagesrc : picNone;
+						_img.setAttribute('onerror', "this.src='" + picNone + "'");
 	                    _img.style.width = "83px";
 	                    _img.style.height = "85px";
 	

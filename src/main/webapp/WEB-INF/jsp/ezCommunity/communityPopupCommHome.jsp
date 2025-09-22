@@ -323,15 +323,11 @@
 	            
 	            var userImage = SelectSingleNodeValueNew(xmldom, "DATA/MEMBER/USERIMAGE").trim();
 
+				var picNone = "<spring:message code='main.e14' />";
 	            var _img = document.createElement("img");
 
-	            if (userImage != "") {
-	                _img.src = "/admin/ezOrgan/getPersonalInfo.do?type=PERSONAL&fileName=" + userImage;
-	            } else {
-// 	                _img.src = "/images/OrganTree/porson_noimg.gif";
-	                _img.src = "<spring:message code='main.e14' />";
-	            }
-	            
+				_img.src = (userImage != "")? "/admin/ezOrgan/getPersonalInfo.do?type=PERSONAL&fileName=" + userImage : picNone;
+				_img.setAttribute('onerror', "this.src='" + picNone + "'");
 	            _img.style.width = "48px";
 	            _img.style.height = "48px";
 

@@ -77,27 +77,22 @@ public class EzTeamsServiceImpl implements EzTeamsService {
 	 * Microsoft Graph API용 Application 권한 토큰 발급 (MSAL4J 사용)
 	 */
 	@Override
-	public String getPublicAppToken(String teamsTenant, String appId, String appSecret) {
+	public String getPublicAppToken(String teamsTenant, String appId, String appSecret) throws Exception {
 		logger.debug("getPublicAppToken started");
-		String token = "";
-		try {
-			String authority = "https://login.microsoftonline.com/" + teamsTenant;
-			String graphScope = "https://graph.microsoft.com/.default";
 
-			IClientCredential credential = ClientCredentialFactory.createFromSecret(appSecret);
-			ConfidentialClientApplication app = ConfidentialClientApplication.builder(appId, credential).authority(authority).build();
+        String authority = "https://login.microsoftonline.com/" + teamsTenant;
+        String graphScope = "https://graph.microsoft.com/.default";
 
-			ClientCredentialParameters parameters = ClientCredentialParameters.builder(Collections.singleton(graphScope)).build();
+        IClientCredential credential = ClientCredentialFactory.createFromSecret(appSecret);
+        ConfidentialClientApplication app = ConfidentialClientApplication.builder(appId, credential).authority(authority).build();
 
-			CompletableFuture<IAuthenticationResult> future = app.acquireToken(parameters);
-			IAuthenticationResult result = future.get();
-			token = result.accessToken();
-			
-		} catch (Exception ex) {
-			logger.error("[getPublicAppToken] Exception: {}", ex.toString());
-		}
+        ClientCredentialParameters parameters = ClientCredentialParameters.builder(Collections.singleton(graphScope)).build();
+
+        CompletableFuture<IAuthenticationResult> future = app.acquireToken(parameters);
+        IAuthenticationResult result = future.get();
+
 		logger.debug("getPublicAppToken ended");
-		return token;
+		return result.accessToken();
 	}
 
 	/**

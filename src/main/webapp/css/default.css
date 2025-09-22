@@ -1403,10 +1403,11 @@ form{display:inline;margin:0}
 
 
 /* pagenavi */
-#tblPageRayer {width:100% !important}
+#tblPageRayer {width:100% !important; height: 45px;}
+#tblPageRayer2 {height: 45px;}
 .popup_pagenavi {border-top:1px solid #c8c8c8;}
 .pagenavi {float:none; margin: 0px; padding: 10px 0; line-height: normal; text-align: center; overflow:hidden;}
-.pagenavi span{display:inline-block; min-width:27px; height:27px; line-height:25px; margin:0px 2px; padding:0px 5px; border:1px solid #c8c8c8; border-radius:3px; box-sizing:border-box; font-size: 12px; text-align: center; color: #333; cursor: pointer; background-color:#fff; vertical-align:top;}
+.pagenavi span{display:inline-block; min-width:25px; height:25px; line-height:23px; margin:0px 2px; padding:0px 5px; border:1px solid #c8c8c8; border-radius:3px; box-sizing:border-box; font-size: 12px; text-align: center; color: #333; cursor: pointer; background-color:#fff; vertical-align:top;}
 .pagenavi span:hover{background-color:#EEF4FE; border-color:#388CE5; color:#388CE5;}
 .pagenavi span.on{border-color:#388CE5; color:#388CE5;}
 .pagenavi span.btnimg{background-repeat:no-repeat; background-position:center;}
@@ -4077,9 +4078,9 @@ a.commentFileSpan:hover {cursor: pointer; text-decoration: underline;}
 /* 게시판 공개 비공개 */
 
 .security_icon{display:inline-block; width:16px; height:16px; background:url(/images/email/secureMail/security_icon.svg) no-repeat center / 16px 16px;}
-
 .portlet_list li .txt .security_icon{vertical-align:top; margin:2px 5px 0 0;}
 
+.eachMail_icon{background: #E8F0FE; color: #408EE3; padding: 2px 6px; border-radius: 4px; margin-right: 5px} /*개별발신한 메일인 경우 "개인별" 아이콘*/
 
 #TreeCtrl_MyFavTree_ul > .lnbUL {
 	padding-top: 0px;

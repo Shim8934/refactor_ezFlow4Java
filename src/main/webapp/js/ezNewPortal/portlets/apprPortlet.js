@@ -177,7 +177,7 @@ var dataAssemblerApprLine = function(object, lines, imgPath) {
         }
         
         str += '		<dl class="apprDL">';
-        str += '			<dt class="apprPic"><img src="'+ imgsrc +'"></dt>';
+        str += '			<dt class="apprPic"><img src="'+ imgsrc +'" onerror="this.src=\'/images/ezNewPortal/info_pic_none.png\'"></dt>';
         str += '			<dd class="apprName">';
         
      	// 2023-07-28 황인경 - 포탈 > 전자결재 포트릿  > 결재선 > 이름 다국어 지원 추가

@@ -7,6 +7,7 @@
 	<link rel="stylesheet" type="text/css" href="${util.addVer('/css/mainFrame.css')}"/>
 	<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
 	<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+	<script type="text/javascript" src="${util.addVer('/js/ezNewPortal/top.js')}"></script>
 </head>
 <body>
 <iframe id="left" class="fold" src="/ezApprovalG/apprGLeft.do?listType=${listType}" name="left"

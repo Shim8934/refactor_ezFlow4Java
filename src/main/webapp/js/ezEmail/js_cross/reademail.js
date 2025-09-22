@@ -689,19 +689,7 @@ function func_reject() {
     params["email"] = new Array();
     params["link"] = new Array();
     var labelFromName = document.getElementById('LabelFromName').textContent;
-    if (labelFromName != g_fromEmail) {
-        // "01099455495 <발신전용>" <01099455495@ktfmms.magicn.com>와 같이 이름안에 <> 기호가 있는 경우
-        // 이름을 감싸는 이중따옴표가 제거된 상태로 들어와서 이메일 주소 파싱에 오류가 발생함. 이에 < 기호가 있는 경우
-        // 다시 이중따옴표로 감싸도록 함.
-        if (labelFromName.indexOf('<') > -1) {
-            params["email"][0] = '"' + labelFromName + '"' + " <" + g_fromEmail + ">";
-        } else {
-            params["email"][0] = labelFromName + " <" + g_fromEmail + ">";
-        }
-    }
-    else {
-        params["email"][0] = g_fromEmail;
-    }
+    params["email"][0] = quoteEmailName(labelFromName, g_fromEmail);
     params["link"][0] = g_rejectWord;
 
     denial_cross_dialogArguments[0] = params;

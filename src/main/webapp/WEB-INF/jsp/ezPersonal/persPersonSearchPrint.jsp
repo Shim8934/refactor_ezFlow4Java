@@ -97,6 +97,7 @@
 		                if (M_TR.getAttribute("_DATA9") != "") {
 		                    var M_TR_IMG = document.createElement("IMG");
 		                    M_TR_IMG.setAttribute("SRC", "/admin/ezOrgan/getPersonalInfo.do?fileName=" + M_TR.getAttribute("_DATA9"));
+		                    M_TR_IMG.setAttribute('onerror', "this.style.display='none'");
 		                    M_TR_IMG.setAttribute("width", "90px");
 		                    M_TR_IMG.setAttribute("height", "90px");
 		                    M_TR_DIV.appendChild(M_TR_IMG);
@@ -202,10 +203,11 @@
 	
 		                    var M_TR_TD3 = document.createElement("TD");
 		                    M_TR_TD3.innerHTML = M_TR.getAttribute("_DATA6") == "" ? "" : M_TR.getAttribute("_DATA6");
-		                    M_TR_TD3.style.width = "80px";
+		                    // M_TR_TD3.style.width = "80px";
 	
 		                    var M_TR_TD4 = document.createElement("TD");
 		                    M_TR_TD4.innerHTML = M_TR.getAttribute("_DATA8") == "" ? "" : M_TR.getAttribute("_DATA8");
+		                    M_TR_TD4.style.width = "100px";
 
 							<c:if test="${useShowAllCompanies}">
 								var companyTd = document.createElement("TD");
@@ -232,11 +234,12 @@
 		                    M_TR_TD1.innerHTML = M_TR.getAttribute("_DATA4");
 	
 		                    var M_TR_TD2 = document.createElement("TD");
-		                    M_TR_TD2.style.width = "80px";
+		                    // M_TR_TD2.style.width = "80px";
 		                    M_TR_TD2.innerHTML = M_TR.getAttribute("_DATA6") == "" ? "" : M_TR.getAttribute("_DATA6");
 	
 		                    var M_TR_TD3 = document.createElement("TD");
 		                    M_TR_TD3.innerHTML = M_TR.getAttribute("_DATA8") == "" ? "" : M_TR.getAttribute("_DATA8");
+		                    M_TR_TD3.style.width = "100px";
 	
 		                    M_TR.appendChild(M_TR_TD1);
 		                    M_TR.appendChild(M_TR_TD2);
@@ -256,8 +259,8 @@
     <table style="width:100%;height:auto;border:1px solid #ddd;display:none;" id="Print_txtlist_table" class="mainlist" > 
               <tr>
                   <td style="width:150px;font-weight:bold;" class="td_gray"><spring:message code='ezPersonal.t304'/></td>
-                  <td style="width:80px;font-weight:bold;" class="td_gray"><spring:message code='ezPersonal.t69'/></td>
-                  <td class="td_gray" style="font-weight:bold;"><spring:message code='ezPersonal.t177'/></td>
+                  <td style="font-weight:bold;" class="td_gray"><spring:message code='ezPersonal.t69'/></td>
+                  <td class="td_gray" style="width: 100px;font-weight:bold;"><spring:message code='ezPersonal.t177'/></td>
               </tr>
           </table>
           <table style="width:100%;height:100%; border:1px solid #ddd;display:none;" id="Print_Search_txtlist_table" class="mainlist" > 
@@ -267,8 +270,8 @@
                   </c:if>
                   <td style="width:110px;font-weight:bold;" class="td_gray"><spring:message code='ezPersonal.t305'/></td>
                   <td style="width:90px;font-weight:bold;" class="td_gray"><spring:message code='ezPersonal.t304'/></td>
-                  <td style="width:80px;font-weight:bold;" class="td_gray"><spring:message code='ezPersonal.t69'/></td>
-                  <td class="td_gray" style="font-weight:bold;"><spring:message code='ezPersonal.t177'/></td>
+                  <td style="font-weight:bold;" class="td_gray"><spring:message code='ezPersonal.t69'/></td>
+                  <td class="td_gray" style="width: 100px;font-weight:bold;"><spring:message code='ezPersonal.t177'/></td>
               </tr>
           </table>
 		  <div style="vertical-align:top;text-align:center;height:auto;display:none;width:425px;" id="Print_DeptUserImgList">    

@@ -234,6 +234,7 @@ function MakeListInfoHTML(ConentObject) {
                 var p_ContentClass = SelectSingleNodeValue(XmlRows[Cnt], "contentclass");
                 var p_IsDraft = SelectSingleNodeValue(XmlRows[Cnt], "isdraft");
                 var p_SecureMail = SelectSingleNodeValue(XmlRows[Cnt], "securemail");
+                var p_IsEach = SelectSingleNodeValue(XmlRows[Cnt], "isEach");
                 var p_Readdt = SelectSingleNodeValue(XmlRows[Cnt], "readdt");
                 var p_Group = SelectSingleNodeValue(XmlRows[Cnt], "group");
                 var p_RecipientCount = SelectSingleNodeValue(XmlRows[Cnt], "recipientCount");
@@ -257,6 +258,7 @@ function MakeListInfoHTML(ConentObject) {
                 _TR.setAttribute("_contentclass", p_ContentClass);
                 _TR.setAttribute("_isdraft", p_IsDraft);
                 _TR.setAttribute("securemail", p_SecureMail);
+                _TR.setAttribute("isEach", p_IsEach);
                 _TR.dataset.tags = tags;
                 
                 if (shareId != "" && deletePermission != "Y") {
@@ -375,6 +377,10 @@ function MakeListInfoHTML(ConentObject) {
                             }
                             if (p_SecureMail == 1) {
                             	p_Subject = "<span class='security_icon'></span>" + p_Subject;
+                            }
+                            if (p_IsEach == 1) {
+                                p_Subject = "<span class='eachMail_icon'>" + strLangEachIcon + "</span>" + p_Subject;
+                                // *strLangEachIcon: NewMailList.js가 포함된 곳엔 ('ezEmail.e1', 'msg') = ezEmail_ko.js가 임포트되고 있다.
                             }
                             
                             var p_Title  = SelectSingleNodeValue(XmlRows[Cnt], "subject");

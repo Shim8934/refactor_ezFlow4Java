@@ -140,6 +140,7 @@ CREATE TABLE `james_mail_search` (
   `MAIL_IP` varchar(200) DEFAULT NULL,
   `COUNTRY_CODE` varchar(200) DEFAULT NULL,
   `SECURE_FLAG` int(1) DEFAULT 0,
+  `EACH_FLAG` int(1) DEFAULT 0,
   PRIMARY KEY (`MAIL_SEARCH_ID`),
   KEY `MAILBOX_ID` (`MAILBOX_ID`,`MAIL_UID`),
   KEY `MESSAGE_ID` (`MESSAGE_ID`(191)),
@@ -756,6 +757,7 @@ CREATE TABLE `jmocha_mail_general` (
   `DEFAULT_CURSOR_POSITION` VARCHAR(50) DEFAULT NULL,
   `MAIL_SEARCH_PERIOD` varchar(10) DEFAULT NULL,
   `SELF_CC_OPTION` varchar(10) DEFAULT 'none',
+  `FORWARD_AS` VARCHAR(50) DEFAULT 'inline',
   PRIMARY KEY (`USER_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -3735,7 +3737,6 @@ CREATE TABLE `tbl_board_boardinfo` (
   `ALLNEWBOARDFLAG` char(1) DEFAULT 'Y',
   `WRITERFLAG` varchar(2) DEFAULT 'N',
   `STARRATINGFLAG` varchar(1) DEFAULT NULL,
-  `NOTUSEDFLAG` varchar(2) NOT NULL DEFAULT 'N',
   `URLCOPYFLAG` char(1) DEFAULT 'N',
   `DISLIKEFLAG` VARCHAR(2) DEFAULT NULL,
   PRIMARY KEY (`BOARDID`,`TENANT_ID`),
@@ -6281,6 +6282,7 @@ CREATE TABLE `tbl_deptmaster` (
   `TENANT_ID` mediumint(5) NOT NULL DEFAULT 0,
   `MANUAL_FLAG` varchar(10) DEFAULT NULL,
   `DEPTTREEFLAG` char(1) DEFAULT 'Y',
+  `USEUPPERDEPTBOX` varchar(4) DEFAULT 'N',
   PRIMARY KEY (`TENANT_ID`,`CN`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -9200,6 +9202,7 @@ CREATE TABLE `tbl_portal_menu_comp` (
   `company_order` int(11) DEFAULT NULL,
   `menu_ipused` int(11) DEFAULT 0 COMMENT '활성화(Y), 비활성화(N)',
   `icon_url` varchar(200) DEFAULT NULL COMMENT '회사별 기본 아이콘 변경',
+  `OPENTYPE`	int(3)	DEFAULT	3	NOT NULL	COMMENT '메뉴 열기 방식; 1:새 탭, 2:새 창, 3:iframe에서 열기'
   PRIMARY KEY (`company_id`,`tenant_id`,`menu_id`),
   KEY `FK_tbl_portal_menu_comp_menu_id_tbl_portal_menu_menu_id` (`menu_id`),
   CONSTRAINT `FK_tbl_portal_menu_comp_menu_id_tbl_portal_menu_menu_id` FOREIGN KEY (`menu_id`) REFERENCES `tbl_portal_menu` (`menu_id`)
@@ -11429,7 +11432,7 @@ CREATE TABLE `tbl_scheduleconfig` (
   `AUTODELETE` bigint(10) NOT NULL,
   `TENANT_ID` mediumint(5) NOT NULL,
   `REMINDERTIME` VARCHAR(8) NOT NULL DEFAULT '0',
-  `DEFAULTVIEWCHECK` VARCHAR(2) DEFAULT 'N',
+  `DEFAULTVIEWCHECK` varchar(2) NOT NULL DEFAULT 'N' COMMENT '일정관리 진입 시 Y: DEFAULTVIEW에 해당하는 화면 / N: 마지막으로 조회한 화면',
   PRIMARY KEY (`USERID`,`TENANT_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -16457,6 +16460,7 @@ CREATE TABLE `TBL_USERPRESENCE` (
                                     PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT="Graph API Presence 정보 저장 테이블";
 
+
 DROP TABLE IF EXISTS `tbl_board_dislike`;
 CREATE TABLE `tbl_board_dislike` (
   `ITEMID` varchar(80) NOT NULL,
@@ -16513,3 +16517,33 @@ CREATE TABLE `tbl_board_reply_react` (
     `REACTDATE` varchar(40) DEFAULT NULL,
     PRIMARY KEY (`ITEMID`,`REPLYID`,`USERID`,`TENANT_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+DROP TABLE IF EXISTS `TBL_TOTAL_HISTORY`;
+CREATE TABLE `TBL_TOTAL_HISTORY` (
+  `DOCID` varchar(80) NOT NULL,
+  `USERID` varchar(400) NOT NULL,
+  `REGDATE` datetime NOT NULL,
+  `GUBUN` varchar(12) DEFAULT NULL,
+  `USERJOBTITLE` varchar(40) DEFAULT NULL,
+  `USERDEPTID` varchar(400) DEFAULT NULL,
+  `USERDEPTNAME` varchar(200) DEFAULT NULL,
+  `USERNAME` varchar(200) DEFAULT NULL,
+  `USERNAME2` varchar(200) DEFAULT NULL,
+  `USERJOBTITLE2` varchar(200) DEFAULT NULL,
+  `USERDEPTNAME2` varchar(400) DEFAULT NULL,
+  `TENANT_ID` mediumint(5) NOT NULL,
+  `COMPANYID` varchar(20) NOT NULL,
+  PRIMARY KEY (`DOCID`, `USERID`, `REGDATE`, `TENANT_ID`, `COMPANYID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='2023-06-30 기준 통합 PC 저장에서만 사용하고 있음. gubun 은 "D"(Download) 로 사용하고 있음.';
+
+DROP TABLE IF EXISTS `TBL_USER_SCHEDULE_TYPE_CONFIG`;
+CREATE TABLE TBL_USER_SCHEDULE_TYPE_CONFIG (
+    USERID         VARCHAR(80)       NOT NULL COMMENT '사용자 아이디',
+    SCHEDULETYPE   MEDIUMINT(5)      NOT NULL COMMENT '일정 유형',
+    RELATEDID      VARCHAR(100)      NOT NULL COMMENT '유형에 따라 연결되는 대상 ID; 개인: 사용자 아이디, 부서: 부서 아이디, 회사: 회사 아이디, 협업: collaboaration, 일정그룹: 일정그룹아이디',
+    TAGCOLOR       VARCHAR(10)                COMMENT '일정 태그 색상',
+    ISCHECKED      VARCHAR(2)        NOT NULL DEFAULT '1' COMMENT '일정 조회 체크 상태; 0:off / 1:on',
+    TENANT_ID      MEDIUMINT(5)      NOT NULL COMMENT '테넌트 아이디',
+    COMPANYID      VARCHAR(80)       NOT NULL COMMENT '회사 아이디',
+    PRIMARY KEY (USERID, COMPANYID, TENANT_ID, SCHEDULETYPE, RELATEDID)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT = '사용자의 일정 유형별 설정 테이블'

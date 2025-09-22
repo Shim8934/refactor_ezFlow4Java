@@ -24,6 +24,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/reademail.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/string_component.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/leftmenu-util.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/email.address.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/email_tag.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/Common.js')}"></script>
 		<script type="text/javascript">	

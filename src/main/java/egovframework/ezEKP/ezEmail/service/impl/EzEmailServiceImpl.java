@@ -204,6 +204,7 @@ public class EzEmailServiceImpl extends EgovAbstractServiceImpl implements EzEma
 				mailGeneral.setEditorFontFamily((String)obj.get("editorFontFamily"));
 				mailGeneral.setEditorFontSize((String)obj.get("editorFontSize"));
 				mailGeneral.setSelfCcOption((String)obj.get("selfCcOption"));
+				mailGeneral.setForwardAs((String)obj.get("forwardAs"));
         		mailGeneralList.add(mailGeneral);
         	}
         }
@@ -237,6 +238,7 @@ public class EzEmailServiceImpl extends EgovAbstractServiceImpl implements EzEma
 			mailGeneral.setEditorFontFamily(null);
 			mailGeneral.setEditorFontSize(null);
 			mailGeneral.setSelfCcOption("none");
+			// mailGeneral.setForwardAs("inline"); vo에서 초기화 하면 되지 않을까? 기본값 관리도 편하고.
 			
 			mailGeneralList.add(mailGeneral);
 		}
@@ -276,16 +278,19 @@ public class EzEmailServiceImpl extends EgovAbstractServiceImpl implements EzEma
 		String editorFontSizeParam = "editorFontSize=" + URLEncoder.encode(mailGeneral.getEditorFontSize(), "UTF-8");
 		String selfCcOption = "selfCcOption=" + URLEncoder.encode(mailGeneral.getSelfCcOption(), "UTF-8");
 		String inMailBoxOption = "inMailBox=" + URLEncoder.encode(inMailBox, "UTF-8");
+		String forwardAsParam = "forwardAs=" + URLEncoder.encode(mailGeneral.getForwardAs(), "UTF-8");
+
 		String modeParam = "mode=";
 		if (mode != null && mode.equals("ALL")) {
 			modeParam = "mode=all";
 		}
 		
-		String inputParams = userIdParam + "&" + listCountParam + "&" + refreshIntervalParam + "&" + keepDeleteLengthParam + "&" + previewModeParam
-				+ "&" + previewWListParam + "&" + previewWContentParam + "&" + previewHListParam + "&" + previewHContentParam + "&" + mailSenderNameParam
-				+ "&" + modeParam +"&" + previewSubTreeParam + "&" + usePreviewSubTreeParam + "&" + previewMailImageParam + "&" + previewMailParam + "&" + textOptionParam
-				+ "&" + mailSearchPeriodParam + "&" + defaultCursorPositionParam + "&" + defaultSeparateSendParam + "&" + mailSendResultParam + "&" + editorFontFamilyParam + "&" + editorFontSizeParam
-				+ "&" + selfCcOption + "&" + inMailBoxOption;
+		String inputParams = String.join("&",
+			userIdParam, listCountParam, refreshIntervalParam, keepDeleteLengthParam,
+			previewModeParam, previewWListParam, previewWContentParam, previewHListParam, previewHContentParam,
+			mailSenderNameParam, modeParam, previewSubTreeParam, usePreviewSubTreeParam, previewMailImageParam, previewMailParam,
+			textOptionParam, mailSearchPeriodParam, defaultCursorPositionParam, defaultSeparateSendParam,
+			mailSendResultParam, editorFontFamilyParam, editorFontSizeParam, selfCcOption, inMailBoxOption, forwardAsParam);
 
 		logger.debug("inputParams=" + inputParams);
 		
@@ -1284,7 +1289,7 @@ public class EzEmailServiceImpl extends EgovAbstractServiceImpl implements EzEma
 		
 		String inputParams = "";
 		for (int i=0; i<addressList.size(); i++) {
-			if (innerDomain.contains(addressList.get(i).split("@")[1])) {
+			if (addressList.get(i).contains("@") && innerDomain.contains(addressList.get(i).split("@")[1])) {
 				if (i == 0) {
 					inputParams += "address=" + URLEncoder.encode(addressList.get(i), "UTF-8");
 				} else {

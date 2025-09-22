@@ -369,7 +369,7 @@
 			
  			function openQuickMenu(id) {
 				if(id === 'organ') {
-					window.open("/ezPersonal/personSearch.do", "", GetOpenWindowfeature(750, 670));
+					window.open("/ezPersonal/personSearch.do", "", GetOpenWindowfeature(880, 670));
 				}
 					
 			}

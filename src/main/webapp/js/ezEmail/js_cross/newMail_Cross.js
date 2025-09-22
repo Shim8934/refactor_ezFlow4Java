@@ -3614,7 +3614,7 @@ function PrepareMailTag(iWhich, type, name, email, href) {
     if (g_useAdditionalInfo) {
     	$.ajax({
     		type	: "GET",
-    		data	: {email: email},
+    		data	: {name: name, email: email},
     		contentType : "application/json;charset=utf-8",
     		url		: "/ezEmail/mailGetUserAdditionalInfo.do",
     		async	: true,
@@ -3764,61 +3764,6 @@ function addReceiverFromList(iWhich, receiverlist) {
                 break;
         }
     }
-}
-
-function getEmailAddressList(ReceiverList) {
-    var count, count2, count3, length, length2;
-    var szType, szName, szEmail, szHref;
-
-    var receivers;
-    var receiver;
-
-    var retVal = {
-        "type": new Array(),
-        "name": new Array(),
-        "email": new Array(),
-        "href": new Array()
-    };
-
-
-    receivers = ReceiverList.split(">,");
-    length = receivers.length;
-    //receivers[ length - 1 ] = receivers[ length - 1 ].substr( 0, receivers[ length - 1].length - 1);
-    for (count = 0, count3 = 0; count < length; count++) {
-        receiver = receivers[count];
-        receiver = ReplaceText(receiver, "-leftSeperator-kaoni-", "<");
-        receiver = ReplaceText(receiver, "-rightSeperator-kaoni-", ">");
-        if (ReplaceText(receiver, " ", "") == "") continue;
-        receiverPart = receiver.split(" <");
-        var pName = receiverPart[0];
-        var pEmail = receiverPart[1].replace("<", "").replace(">", "");
-        
-        if (g_cmd != "EDIT") {
-            if (pEmail == g_myemail) {
-            	if (Org_cmd == "attitudeAbsented") {
-            		attitudeIncludeMe = true;
-                }
-            	
-            	continue;
-            }
-        }
-        
-        retVal["name"][count3] = pName.replace("\"", "").replace("\"", "");
-        
-        if (receiverPart[1].indexOf('@') > 0) {
-            retVal["type"][count3] = "email";
-            retVal["email"][count3] = pEmail;
-            retVal["href"][count3] = "";
-        } else {
-            retVal["type"][count3] = "mailgroup";
-            retVal["email"][count3] = strLang126;
-            retVal["href"][count3] = pEmail;
-        }
-        
-        count3++;
-    }
-
-    return retVal;
 }
 
 function findAddress(emailAddress, addrList) {
@@ -3992,6 +3937,7 @@ function ImageUrl(pUrl, cnt) {
     return link;
 }
 
+// UNUSED: 쓰이는 곳이 없는 것으로 보임.
 function Set_sendflag() {
     try {
         var setValue;

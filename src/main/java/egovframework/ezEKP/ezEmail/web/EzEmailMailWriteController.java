@@ -211,7 +211,7 @@ public class EzEmailMailWriteController extends EzFileMngUtil {
 
 	// 1. VALID START
 		String cmd = StringUtils.defaultIfBlank(request.getParameter("cmd"), "NEW");
-		writevo.setCmd(cmd);
+		writevo.setCmdOwn(cmd);
 
 		// get user credentials
 		LoginVO loginInfo = commonUtil.userInfo(loginCookie);
@@ -239,6 +239,7 @@ public class EzEmailMailWriteController extends EzFileMngUtil {
 		}
 
 		writevo.setWriteType();
+		logger.debug("WriteType=" + writevo.getWriteType());
 
 		if (!writevo.isValid() || hasScript) {
 			return egovMessageSource.getMessage("ezEmail.lhm17", locale);
@@ -3398,18 +3399,19 @@ public class EzEmailMailWriteController extends EzFileMngUtil {
 		        	
 		        	throw new Exception("OVERMESSAGESIZE:" + maxMessageSizeD + "MB:" + messageSizeD + "MB");
 		        }
-		        
+
+				// 개별발신 헤더추가
+				Boolean isEachMailB = Boolean.parseBoolean(isEachMail.trim());
+				if (isEachMailB) {
+					message.setHeader("X-JMocha-Each-Mail", "true");
+				}
+
 		        String useSecureMail = ezCommonService.getTenantConfig("USE_SECUREMAIL", userInfo.getTenantId());
 		        logger.debug("useSecureMail=" + useSecureMail);
 		        
 		        if (cmd.equalsIgnoreCase("SAVE")) {
 		        	logger.debug("Saving the message");
 		        	
-		    		Boolean isEachMailB = Boolean.parseBoolean(isEachMail.trim());
-		    		
-		    		if (isEachMailB) {
-	                	message.setHeader("X-JMocha-Each-Mail", "true");
-                    }
 		    		if (!delaySendTime.equals("")){
 		    			message.setHeader("Delivery-Date", delaySendTime);
 		    		}
@@ -3443,7 +3445,6 @@ public class EzEmailMailWriteController extends EzFileMngUtil {
 		    		}
 		        	
 //					String strCheckReadUrl = ""; //외부메일수신확인 관련 URL. GetSystemConfigValue("APPREADCHECK_URL").ToString();
-			        Boolean isEachMailB = Boolean.parseBoolean(isEachMail.trim());
 			        
 			        if (!eShowDisplayName.equals("")) {
 		            	message.setHeader("X-JMocha-EXT-SENDERNAME", MimeUtility.encodeText(eShowDisplayName, "UTF-8", null));
@@ -3457,11 +3458,6 @@ public class EzEmailMailWriteController extends EzFileMngUtil {
 	                    AppendUID[] uids = ((IMAPFolder)draftFolder).appendUIDMessages(new Message[]{message});
 	                    if (uids != null && uids[0] != null) {
 	                        draftUID = uids[0].uid;
-	                    } 
-			            
-	                    // 개별발신
-	                    if (isEachMailB) {
-		                	message.setHeader("X-JMocha-Each-Mail", "true");
 	                    }
 	                    
 			        	// 예약발송
@@ -3503,14 +3499,6 @@ public class EzEmailMailWriteController extends EzFileMngUtil {
                         }		        		
 		        	// 즉시 발송의 경우	
 			        } else {
-			        	
-			        	String[] eachMailHeaders = message.getHeader("X-JMocha-Each-Mail");
-						String eachMailHeader = eachMailHeaders != null ? eachMailHeaders[0] : null;		
-						
-						if (eachMailHeader != null) {
-							message.removeHeader("X-JMocha-Each-Mail");
-						}
-						
 						File encryptedFile = null; // 보안메일 관련 파일 변수
 
 		            	String sentMailStoredInSentBox = config.getProperty("config.SentMailStoredInSentbox", "YES");
@@ -3522,12 +3510,6 @@ public class EzEmailMailWriteController extends EzFileMngUtil {
 			            	
 			            	// 보안메일 처리
 			            	if (useSecureMail.equals("YES") && isSecureMail) {
-
-								// 개별발신 헤더추가
-								if (isEachMailB) {
-									message.setHeader("X-JMocha-Each-Mail", "true");
-								}
-								
 								// 승인메일일 경우
 								if (apprmail) {
 
@@ -3734,10 +3716,6 @@ public class EzEmailMailWriteController extends EzFileMngUtil {
 								}
 			            	} else {
 			            		if (sentMailStoredInSentBox.equalsIgnoreCase("YES")) {
-									// 개별발신 헤더추가
-									if (isEachMailB) {
-										message.setHeader("X-JMocha-Each-Mail", "true");
-									}
 
 				            		// 편지함 용량 초과 메세지 확인을 위해 임시저장
 		    	                    // 본래는 임시보관함에 미리 저장해두고 성공했을 시 임시보관함에 있는 메일을 보낸메일함으로 복사하였으나
@@ -3767,9 +3745,6 @@ public class EzEmailMailWriteController extends EzFileMngUtil {
 								
 								if (useAdvancedEachMail.equals("YES")) {				        		
 					        		message.setRecipients(RecipientType.TO, allRecipients);
-					        		
-					        		message.setHeader("X-JMocha-Each-Mail", "true");
-				            		
 					        		Transport.send(message);
 				            		
 	    			            	sentFolderMessageUID = 0;
@@ -3841,37 +3816,41 @@ public class EzEmailMailWriteController extends EzFileMngUtil {
 							}
 			            }
 			            
-			            logger.debug("mailCmd=" + mailCmd + ",orgUrl=" + orgUrl);
+			            logger.debug("mailCmd=" + mailCmd + ",orgUrl=" + orgUrl); // orgUrl: "INBOX/4", "INBOX/4<sep>SENT/4<sep>INBOX/5"
 			            
 			            // set the ANSWERED flag of the original message to indicate it has been replied.
 			            if (orgMailCmd.equals("REPLY") || orgMailCmd.equals("REPLYALL") || orgMailCmd.equals("FORWARD")) {
-			    			int index = orgUrl.lastIndexOf("/");			
-			    			
-			    			if (index != -1) {
-			    				String orgMsgFolderPath = orgUrl.substring(0, index);
-			    				long orgMsgUid = Long.parseLong(orgUrl.substring(index + 1));
-		
-			    				logger.debug("orgMsgFolderPath=" + orgMsgFolderPath + ",orgMsgUid=" + orgMsgUid);
-			    				
-			    		        Folder orgMsgFolder = ia.getFolder(orgMsgFolderPath);
-			    		        orgMsgFolder.open(Folder.READ_WRITE);
-			    				
-			    		        Message orgMessage = ((IMAPFolder)orgMsgFolder).getMessageByUID(orgMsgUid);
-		    		        	
-			    		        if (orgMessage != null) {
-			    		        	if (orgMailCmd.equals("REPLY") || orgMailCmd.equals("REPLYALL")) {
-				    		        	orgMessage.setFlag(Flags.Flag.ANSWERED, true);
-				    		        	ezEmailUtil.setForwardedFlag(orgMessage, false);
-				    		        	
-				    		        }
-				    		        else {
-				    		        	ezEmailUtil.setForwardedFlag(orgMessage, true);
-				    		        	orgMessage.setFlag(Flags.Flag.ANSWERED, false);
-				    		        }
-			    		        	ezEmailUtil.setSentDateFlag(orgMessage, true);
-			    		        }
-			    		        
-			    		        orgMsgFolder.close(true);
+							String sepLetter = (0 < orgUrl.indexOf("<sep>"))? "<sep>" : "&lt;sep&gt;";
+							String[] orgUrls = orgUrl.split(sepLetter);
+
+							for (String originUrl : orgUrls) {
+								int index = originUrl.lastIndexOf("/");
+
+								if (index != -1) {
+									String orgMsgFolderPath = originUrl.substring(0, index);
+									long orgMsgUid = Long.parseLong(originUrl.substring(index + 1));
+
+									logger.debug("orgMsgFolderPath=" + orgMsgFolderPath + ",orgMsgUid=" + orgMsgUid);
+
+									Folder orgMsgFolder = ia.getFolder(orgMsgFolderPath);
+									orgMsgFolder.open(Folder.READ_WRITE);
+
+									Message orgMessage = ((IMAPFolder)orgMsgFolder).getMessageByUID(orgMsgUid);
+
+									if (orgMessage != null) {
+										if (orgMailCmd.equals("REPLY") || orgMailCmd.equals("REPLYALL")) {
+											orgMessage.setFlag(Flags.Flag.ANSWERED, true);
+											ezEmailUtil.setForwardedFlag(orgMessage, false);
+										}
+										else {
+											ezEmailUtil.setForwardedFlag(orgMessage, true);
+											orgMessage.setFlag(Flags.Flag.ANSWERED, false);
+										}
+										ezEmailUtil.setSentDateFlag(orgMessage, true);
+									}
+
+									orgMsgFolder.close(true);
+								}
 			    			}
 			            }
 			            
@@ -5429,8 +5408,11 @@ public class EzEmailMailWriteController extends EzFileMngUtil {
 		LoginVO loginVO = commonUtil.userInfo(loginCookie);
 		int tenantId = loginVO.getTenantId();
 
-		String email = request.getParameter("email");
 		String userId = "";
+		String name = request.getParameter("name");
+		String email = request.getParameter("email");
+		String additionalParameters = ezCommonService.getTenantConfig("mailWriteRecipientAdditionalParameters", tenantId);
+
 		if (loginVO.getEmail()!=null){
 			userId = loginVO.getEmail().equals(email)
 					? loginVO.getId()
@@ -5439,11 +5421,16 @@ public class EzEmailMailWriteController extends EzFileMngUtil {
 		OrganUserVO userInfo = ezOrganAdminService.getUserInfo(userId, loginVO.getPrimary(), loginVO.getTenantId());
 
 		if (userInfo == null) {
-			return "";
+			// 파라메터가 mail만 있는 경우, 조직도 사용자가 없어도 넘겨받은 email을 세팅하도록 함.
+			if (!name.equalsIgnoreCase(email) && "mail".equalsIgnoreCase(additionalParameters)) {
+				userInfo = new OrganUserVO();
+				userInfo.setMail(email);
+			} else {
+				return "";
+			}
 		}
 
 		String additionalFormat = ezCommonService.getTenantConfig("mailWriteRecipientAdditionalFormat", tenantId);
-		String additionalParameters = ezCommonService.getTenantConfig("mailWriteRecipientAdditionalParameters", tenantId);
 		String[] fieldNameArray = additionalParameters.split(";");
 		int size = fieldNameArray.length;
 		Object[] args = new String[size];

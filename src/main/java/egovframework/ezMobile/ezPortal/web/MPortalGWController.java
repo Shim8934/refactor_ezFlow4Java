@@ -1403,6 +1403,7 @@ public class MPortalGWController extends EzFileMngUtil {
 //						}
 
 						String securedMail = String.valueOf("1".equals(mailInfo.get("MAIL_IS_SECURED")));
+						String isEach = String.valueOf("1".equals(mailInfo.get("MAIL_SENT_IN_EACH")));
 
 						int readFlag = "1".equals(mailInfo.get("MAIL_IS_SEEN")) ? 1 : 0;
 						String readClass = "";
@@ -1420,6 +1421,7 @@ public class MPortalGWController extends EzFileMngUtil {
 						mailMap.put("subject", subject);
 						mailMap.put("readClass", readClass);
 						mailMap.put("securedMail", securedMail);
+						mailMap.put("isEach", isEach);
 
 						mailList.add(mailMap);
 					}
@@ -1462,6 +1464,7 @@ public class MPortalGWController extends EzFileMngUtil {
 //						}
 
 						String securedMail = String.valueOf("1".equals(ezEmailUtil.hasSecureMailFlag(message)));
+						String isEach = String.valueOf("1".equals(ezEmailUtil.isEachMail(message)));
 
 						int readFlag = message.isSet(Flags.Flag.SEEN) ? 1 : 0;
 						String readClass = "";
@@ -1479,6 +1482,7 @@ public class MPortalGWController extends EzFileMngUtil {
 						mailMap.put("subject", subject);
 						mailMap.put("readClass", readClass);
 						mailMap.put("securedMail", securedMail);
+						mailMap.put("isEach", isEach);
 
 						mailList.add(mailMap);
 					}

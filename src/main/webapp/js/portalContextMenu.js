@@ -237,7 +237,7 @@ var handleQuickMenuOpen = function (menu) {
 			break;
 		case 'organ':
 			url = '/ezPersonal/personSearch.do';
-			option = getOpenWindowfeature(750, 670) + ', resizable=0';			
+			option = getOpenWindowfeature(880, 670) + ', resizable=0';
 			break;
 	}
 	

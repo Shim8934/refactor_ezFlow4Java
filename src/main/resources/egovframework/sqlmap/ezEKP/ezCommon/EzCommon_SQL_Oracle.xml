@@ -3443,12 +3443,12 @@
 					USERID NVARCHAR2(50) NOT NULL,
 					USERNM NVARCHAR2(100),
 					USERNM2 NVARCHAR2(100),
-					DEPTID CHAR(50 CHAR),
+					DEPTID NVARCHAR2(50),
 					DEPTNM NVARCHAR2(100),
 					DEPTNM2 NVARCHAR2(100),
 					TITLE NVARCHAR2(100),
 					TITLE2 NVARCHAR2(100),
-					COMPANYID CHAR(50 CHAR),
+					COMPANYID NVARCHAR2(50),
 					COMPANYNM NVARCHAR2(100),
 					COMPANYNM2 NVARCHAR2(100),
 					AUTHORIZEDTIME DATE,
@@ -8282,25 +8282,6 @@
 					PORTLETCODE = 'mSchedule'
 			)
 	</update>
-    
-	<!-- 2024-10-28 조소정 - 게시판 > 일반설정 > 사용안함 여부 플래그 추가 -->
-    <select id="EzCommonDAO.checkBoardNotUsedFlag" resultClass="String">
-        <![CDATA[
-        	SELECT
-        		NOTUSEDFLAG
-            FROM
-                TBL_BOARD_BOARDINFO
-            WHERE
-            	ROWNUM = 1
-        ]]>
-    </select>
-    
-    <statement id="EzCommonDAO.addBoardNotUsedFlag">
-        ALTER TABLE
-            TBL_BOARD_BOARDINFO
-        ADD
-            NOTUSEDFLAG CHAR(1 CHAR) DEFAULT 'N' NOT NULL
-    </statement>
 
 	<select id="EzCommonDAO.checkExecutiveScheduleConfig" resultClass="String">
 		SELECT
@@ -8652,4 +8633,21 @@
         (TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
         VALUES(0, s.PROPERTY_NAME, s.PROPERTY_VALUE, '수신스케쥴러 실행 카운트', '수신스케쥴러 실행 카운트', TO_DATE('2025-08-22','yyyy-mm-dd'), '전자결재G')
     </insert>
+
+	<select id="EzCommonDAO.checkCommItemPhotoItemContent" resultClass="String">
+		<![CDATA[
+		SELECT
+			PHOTOITEMCONTENT
+		FROM
+			TBL_COMM_ITEM
+		WHERE
+			ROWNUM <= 1
+		]]>
+	</select>
+
+	<statement id="EzCommonDAO.alterCommItemPhotoItemContent">
+		ALTER TABLE
+			TBL_COMM_ITEM
+			ADD PHOTOITEMCONTENT CLOB DEFAULT NULL
+	</statement>
 </sqlMap>

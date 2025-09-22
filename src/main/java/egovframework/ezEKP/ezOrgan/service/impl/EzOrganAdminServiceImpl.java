@@ -608,8 +608,8 @@ public class EzOrganAdminServiceImpl extends EgovAbstractServiceImpl implements 
 		logger.debug("mailAddr=" + mailAddr);
 
 		// 외부메일서버 비밀번호 변경
-		String useMailServer2 = config.getProperty("config.useMailServer2");
-		if ("Y".equalsIgnoreCase(useMailServer2)) {
+		String useMailServerPwSync = config.getProperty("config.useMailServerPwSync");
+		if ("Y".equalsIgnoreCase(useMailServerPwSync)) {
 			try {
 				updatePasswordForMailServer2(cn, password);
 				updateLoginCntForMailServer2(cn, password);
@@ -658,8 +658,8 @@ public class EzOrganAdminServiceImpl extends EgovAbstractServiceImpl implements 
 		logger.debug("cn=" + cn + ",domain=" + domain + ",tenantID=" + tenantId);
 
 		// 외부메일서버 비밀번호 변경
-		String useMailServer2 = config.getProperty("config.useMailServer2");
-		if ("Y".equalsIgnoreCase(useMailServer2)) {
+		String useMailServerPwSync = config.getProperty("config.useMailServerPwSync");
+		if ("Y".equalsIgnoreCase(useMailServerPwSync)) {
 			try {
 				updatePasswordForMailServer2(cn, decryptedNewPassword);
 			} catch (Exception e) {
@@ -693,7 +693,7 @@ public class EzOrganAdminServiceImpl extends EgovAbstractServiceImpl implements 
 		return result;
 	}
 
-	/*	외부 메일 비밀번호 변경 (useMailServer2가 Y인 경우)	*/
+	/*	외부 메일 비밀번호 변경 (useMailServerPwSync가 Y인 경우)	*/
 	private void updatePasswordForMailServer2(String cn, String password) throws Exception {
 		logger.debug("updatePasswordForMailServer2 started.");
 
@@ -769,6 +769,14 @@ public class EzOrganAdminServiceImpl extends EgovAbstractServiceImpl implements 
 		
 		logger.debug("retireEntry ended");
 	}	
+
+	@Override
+	public List<String> getRetireUserDeptList(String cn, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_TENANT_ID", tenantID);
+		map.put("v_CN", cn);
+		return ezOrganAdminDao.getRetireUserDeptList(map);
+	}
 
 	@Override
 	public int companyCheck(String cn, int tenantID) throws Exception {

@@ -218,7 +218,7 @@
 		    	<table class="popuplist" style="width:100%; table-layout: fixed; ">
 		          <tr style=<c:out value="${primaryLang eq '3' ? 'display:table-row' : 'display:none' }"/>>
 		            <th style="width: 71px;"><spring:message code='main.ksa01' /></th>
-		            <td colspan="3" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"><span id="TextFurigana" title="${addressInfo.sFurigana}"> <c:out value='${addressInfo.sFurigana}' /></span></td>
+		            <td colspan="3" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"><span id="TextFurigana" title="<c:out value='${addressInfo.sFurigana}' />"> <c:out value='${addressInfo.sFurigana}' /></span></td>
 		          </tr>
 		          <tr>
 		            <th width="13%"><spring:message code='ezAddress.t124' /></th>
@@ -228,19 +228,19 @@
 		          </tr>
 		          <tr>
 		            <th><spring:message code='ezAddress.t51' /></th>
-		            <td style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"><span id="TextCompany" title="${addressInfo.sCompany}"><c:out value='${addressInfo.sCompany}' /></span></td>
+		            <td style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"><span id="TextCompany" title="<c:out value='${addressInfo.sCompany}' />"><c:out value='${addressInfo.sCompany}' /></span></td>
 		            <th><spring:message code='ezAddress.t288' /></th>
 		            <td style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"><span id="TextCreateDate"><c:out value='${addressInfo.createDate}' /></span></td>
 		          </tr>
 		          <tr>
 		            <th><spring:message code='ezAddress.t54' /></th>
-		            <td style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"><span id="TextDept" title="${addressInfo.sDept}"><c:out value='${addressInfo.sDept}' /></span></td>
+		            <td style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"><span id="TextDept" title="<c:out value='${addressInfo.sDept}' />"><c:out value='${addressInfo.sDept}' /></span></td>
 		            <th><spring:message code='ezAddress.t289' /></th>
 		            <td title="<spring:message code='ezAddress.t287' />" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"> <span onClick="show_personinfo(1)" style="cursor:pointer"><span id="TextModifier"><c:out value='${addressInfo.modifierName}' /></span></span></td>
 		          </tr>
 		          <tr>
 		            <th><spring:message code='main.t77' /></th>
-		            <td style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"><span id="TextTitle" title="${addressInfo.sTitle}" ><c:out value='${addressInfo.sTitle}' /></span></td>
+		            <td style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"><span id="TextTitle" title="<c:out value='${addressInfo.sTitle}' />" ><c:out value='${addressInfo.sTitle}' /></span></td>
 		            <th><spring:message code='ezAddress.t290' /></th>
 		            <td style="white-space:nowrap;"><span id="TextModifyDate"><c:out value='${addressInfo.modifyDate}' /></span></td>
 		          </tr>

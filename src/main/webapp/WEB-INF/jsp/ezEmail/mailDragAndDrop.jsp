@@ -10,6 +10,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-ui.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery-ui/jquery.multipleSortable.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/util/attachUtil.js')}"></script>
 		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
 		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css">
 		<style>
@@ -380,13 +381,47 @@
                         }
                     }
                 })
+
+				// load attach files.
+				fetchFiles();
 		    }
-		    
+
+			// 서버에 요청해서 가져다가 첨부하는 방식
+			async function fetchFiles() {
+				if (!parent.gg_url) return;
+				if (!parent.writetype) return;
+				if (!parent.writetype.isForwardAsAttach) return; // eml을 첨부하는 경우
+				toggleDimOnAttach(true);
+
+				// 서버에 요청할 url
+				const sepLetter = (0 < parent.gg_url.indexOf("<sep>"))? "<sep>" : "&lt;sep&gt;";
+				const requestUrls = parent.gg_url.split(sepLetter)
+							.map(url => "/ezEmail/mailExport.do?url=" + url); // 이미 encodeURIComponent 되어 있음.
+
+				// DataTransfer를 사용하여 <input type="file">에 파일 설정
+				const dataTransfer = await getDataTransfer(requestUrls);
+				document.getElementById("file").files = dataTransfer.files;
+
+				// 첨부 로직 실행.
+				filechange();
+				document.getElementById('progdiv').style.display = "none"; // progress 대신 dim
+				if (!isfileup) toggleDimOnAttach(false);
+			}
+
+			// dim / undim
+			function toggleDimOnAttach(isDim) {
+				if (parent.mailPanel) parent.mailPanel.style.display = isDim? "" : "none";
+				if (parent.loadingLayer) parent.loadingLayer.style.display = isDim? "" : "none";
+				if (parent.messageInSending) parent.messageInSending.style.display = isDim? "none" : "";
+				if (parent.messageInAttaching) parent.messageInAttaching.style.display = isDim? "" : "none";
+			}
+
 		    var AttatchReturnValue;
 		    function uploadComplete(evt) {
 		        document.getElementById('prog_bar').style.width = "0%";
 		        document.getElementById('prog_num').innerHTML = "0";
 		        document.getElementById('progdiv').style.display = "none";
+		        toggleDimOnAttach(false);
 		        
 		        if (xhr.responseText == "OVERFLOW") {
 		            alert(strLang167);
@@ -436,6 +471,7 @@
 		        document.getElementById('prog_bar').style.width = "0%";
 		        document.getElementById('prog_num').innerHTML = "0";
 		        document.getElementById('progdiv').style.display = "none";
+		        toggleDimOnAttach(false);
 		
 		        if (xhr2.responseText == "OVERFLOW") {
 		            alert(strLang167);

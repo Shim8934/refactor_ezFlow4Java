@@ -42,6 +42,8 @@ public class MailGeneralVO {
 
 	private String selfCcOption; // 나를 항상 참조에 포함 선택. none : 사용안함(default) / cc : 나를 항상 참조에 포함 / bcc : 나를 항상 숨은참조에 포함
 	
+	private String forwardAs = "inline"; // 메일 전달 방식 inline: 본문으로 전달(default), attach: 첨부로 전달
+
 	public String getMailSendResult() {
 		return mailSendResult;
 	}
@@ -200,6 +202,15 @@ public class MailGeneralVO {
 		this.selfCcOption = selfCcOption;
 	}
 
+	public String getForwardAs() {
+		return forwardAs;
+	}
+	public void setForwardAs(String forwardAs) {
+		if ("inline".equals(forwardAs) || "attach".equals(forwardAs)) {
+			this.forwardAs = forwardAs;
+		}
+	}
+
 	public String toString() {
 		return "listCount=" + listCount + ",refreshInterval=" + refreshInterval + ",keepDeleteLength=" + keepDeleteLength
 				+ ",previewMode=" + previewMode + ",previewWList=" + previewWList + ",previewWContent=" + previewWContent
@@ -207,7 +218,7 @@ public class MailGeneralVO {
 				+ ",previewSubtree=" + previewSubTree + ",previewmailImage=" + previewMailImage + ",previewMail=" + previewMail + ",textOption=" + textOption
 				+ ",mailSearchPeriod=" + mailSearchPeriod + ",defaultCursorPosition=" + defaultCursorPosition + ",defaultSeparateSend=" + defaultSeparateSend
 				+ ",mailSendResult=" + mailSendResult + ",editorFontFamily=" + editorFontFamily + ",editorFontSize=" + editorFontSize
-				+ ",selfCcOption=" + selfCcOption;
+				+ ",selfCcOption=" + selfCcOption + ",forwardAs=" + forwardAs;
 	}
 
 }

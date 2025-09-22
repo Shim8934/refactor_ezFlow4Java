@@ -1453,6 +1453,7 @@
 			//address start
 			function Address_Menu_Click() {
 				LoadAddressTree(true);
+				// TODO: mailLeft.jsp의 주소록 부분과 addressLeft.jsp의 주소록 부분은 공통 처리할 수 없는지? (c:import 또는 selectnode_address)
 				if (AddressTreeView.selectedIndex() == -1)
 					AddressTreeView.select(1);
 				else
@@ -1500,6 +1501,12 @@
 
 			function address_Search() {
                 parent.document.querySelector("iframe[name=right]").src = "/ezAddress/addressMainSearch.do";
+				// liSelcted();
+				/**
+				 * TODO: $("#" + treeViewValue + " span.node_selected").attr("class", "node_normal");
+				 * 		 → $(".node_selected").attr("class", "node_normal"); 로 바꿀 수는 없는 건지?
+				 */
+				$(".node_selected").attr("class", "node_normal");
 			}
 
 			var AddressTreeView = null;
@@ -1599,6 +1606,9 @@
 			function address_Config() {
 				detailView();
 		 		parent.document.querySelector("iframe[name=right]").src = "/ezEmail/mailConfig.do?flag=address";
+				// liSelcted();
+				$(".node_selected").attr("class", "node_normal");
+
 			}
 			//address end
 			
@@ -1768,7 +1778,6 @@
 								</div>
 							</div>
 							<li onclick="address_Search()">
-								<span class="sub_iconLNB tree_search"></span>
 								<span class="list_text" title="<spring:message code="ezEmail.t99000042" />"><spring:message code="ezEmail.t99000042" /></span>
 							</li>
 							<li onclick="address_Config()">

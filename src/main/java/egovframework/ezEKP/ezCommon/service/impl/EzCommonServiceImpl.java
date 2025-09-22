@@ -2187,7 +2187,7 @@ public class EzCommonServiceImpl extends EzFileMngUtil implements EzCommonServic
         
         test.add(new HashMap<String, Object>(){{
             put("confName","teamsTenant");
-            put("property_value","kaonicloud.com");
+            put("property_value","");
             put("config_name","M365 테넌트 도메인 이름");
             put("regdate","2025-08-12 00:00:00");
             put("description","M365 테넌트 도메인 이름");
@@ -2196,7 +2196,7 @@ public class EzCommonServiceImpl extends EzFileMngUtil implements EzCommonServic
 
         test.add(new HashMap<String, Object>(){{
             put("confName","teamsTenantId");
-            put("property_value","6f082f98-7252-4265-b8b8-4329dc830d47");
+            put("property_value","");
             put("config_name","M365 테넌트 ID");
             put("regdate","2025-07-29 00:00:00");
             put("description","Azure AD 테넌트 식별자(GUID)");
@@ -2205,7 +2205,7 @@ public class EzCommonServiceImpl extends EzFileMngUtil implements EzCommonServic
 
         test.add(new HashMap<String, Object>(){{
             put("confName","teamsClientId");
-            put("property_value","5f1e15d7-3eab-47c9-a3f4-5a5256efb114");
+            put("property_value","");
             put("config_name","M365 클라이언트 ID");
             put("regdate","2025-07-29 00:00:00");
             put("description","Microsoft Graph API 인증용으로 Azure에 등록된 앱의 Client ID");
@@ -2214,7 +2214,7 @@ public class EzCommonServiceImpl extends EzFileMngUtil implements EzCommonServic
 
         test.add(new HashMap<String, Object>(){{
             put("confName","teamsClientSecret");
-            put("property_value","aA08Q~MqORluSDRVZ-Wmf7_wN3sytfbEWAPrVbIc");
+            put("property_value","");
             put("config_name","M365 클라이언트 시크릿");
             put("regdate","2025-07-29 00:00:00");
             put("description","Microsoft Graph API 토큰 발급을 위한 Client Secret");
@@ -2226,7 +2226,7 @@ public class EzCommonServiceImpl extends EzFileMngUtil implements EzCommonServic
             put("property_value","NO");
             put("config_name","Teams 연동 사용 여부");
             put("regdate","2025-07-29 00:00:00");
-            put("description","Microsoft Teams 연동 여부");
+            put("description","Microsoft Teams 연동 여부 (NO: 연동안함, YES: 연동함, Default=NO)");
             put("config_type","TEAMS");
         }});
 
@@ -2241,7 +2241,7 @@ public class EzCommonServiceImpl extends EzFileMngUtil implements EzCommonServic
         
         test.add(new HashMap<String, Object>(){{
             put("confName","m365AdminAccount");
-            put("property_value","e3gisa1@kaonicloud.com");
+            put("property_value","");
             put("config_name","M365 관리자 계정");
             put("regdate","2025-07-31 00:00:00");
             put("description","Graph API 호출용 Microsoft 365 관리자 계정");
@@ -2250,7 +2250,7 @@ public class EzCommonServiceImpl extends EzFileMngUtil implements EzCommonServic
 
         test.add(new HashMap<String, Object>(){{
             put("confName","m365AdminAccountPw");
-            put("property_value","111");
+            put("property_value","");
             put("config_name","M365 관리자 계정 비밀번호");
             put("regdate","2025-07-31 00:00:00");
             put("description","Graph API 호출용 Microsoft 365 관리자 계정의 비밀번호");
@@ -2300,6 +2300,12 @@ public class EzCommonServiceImpl extends EzFileMngUtil implements EzCommonServic
 			put("TYPE_MYSQL", "int(1)"); put("TYPE_ORACLE", "NUMBER");
 			put("AFTER", "DEFAULT 0");
 		}});
+		test.add(new HashMap<String, Object>(){{ // 2025-07-24 김은실 - [국립암센터] 목록에 개별발신 메일 표기
+			put("TABLE","JAMES_MAIL_SEARCH");
+			put("COLUMN", "EACH_FLAG");
+			put("TYPE_MYSQL", "int(1)"); put("TYPE_ORACLE", "NUMBER");
+			put("AFTER", "DEFAULT 0");
+		}});
 
 		// JMOCHA_DISTRIBUTION
 		test.add(new HashMap<String, Object>(){{ // 2018-09-30 commit edbc67f
@@ -2315,6 +2321,18 @@ public class EzCommonServiceImpl extends EzFileMngUtil implements EzCommonServic
 			put("COLUMN", "PREVIEW_MAIL_IMAGE");
 			put("TYPE_MYSQL", "VARCHAR(10)"); put("TYPE_ORACLE", "VARCHAR(10)");
 			put("AFTER", "DEFAULT 'Y'");
+		}});
+		test.add(new HashMap<String, Object>(){{ // 2025.02.11 한슬기 - [국립암센터] 나를 항상 참조에 포함
+			put("TABLE","JMOCHA_MAIL_GENERAL");
+			put("COLUMN", "SELF_CC_OPTION");
+			put("TYPE_MYSQL", "VARCHAR(10)"); put("TYPE_ORACLE", "VARCHAR2(10)");
+			put("AFTER", "DEFAULT 'none'");
+		}});
+		test.add(new HashMap<String, Object>(){{ // 2025-02-12 김은실 - [국립암센터] 메일 전달 방식 추가
+			put("TABLE","JMOCHA_MAIL_GENERAL");
+			put("COLUMN", "FORWARD_AS");
+			put("TYPE_MYSQL", "VARCHAR(50)"); put("TYPE_ORACLE", "VARCHAR2(50)");
+			put("AFTER", "DEFAULT 'inline'");
 		}});
 
 		// JMOCHA_MAIL_RESERVE
@@ -4770,12 +4788,6 @@ public class EzCommonServiceImpl extends EzFileMngUtil implements EzCommonServic
 		ezCommonDAO.alterUseColor();
 	}
 	
-	/* 2023-10-30 조소정 - 게시판 사용안함 여부 컬럼 추가 */
-	@Override
-	public void addBoardNotUsedFlag() throws Exception {
-		ezCommonDAO.addBoardNotUsedFlag();
-	}
-
 	@Override
 	public void updateThemeData() throws Exception {
 		ezCommonDAO.updateThemeData();
@@ -8964,5 +8976,11 @@ public class EzCommonServiceImpl extends EzFileMngUtil implements EzCommonServic
             map.put("value", guestAccessibleUris);
             ezCommonDAO.updateGuestAccessibleUris(map);
         }
+    }
+
+    // 2024-10-07 유길상 - 커뮤니티 > 게시판 > 포토게시판 앨범소개 컬럼 추가
+    @Override
+    public void alterCommItemPhotoItemContent() throws Exception {
+        ezCommonDAO.alterCommItemPhotoItemContent();
     }
 }

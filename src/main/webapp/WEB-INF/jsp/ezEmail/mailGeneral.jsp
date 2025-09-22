@@ -136,7 +136,8 @@
 				                "<MAILSENDRESULT>" + document.getElementById("sendResult").value + "</MAILSENDRESULT>" + 
 								"<EDITORFONTFAMILY>" + document.getElementById("editorFontFamily").value + "</EDITORFONTFAMILY>" +
 								"<EDITORFONTSIZE>" + document.getElementById("editorFontSize").value + "</EDITORFONTSIZE>"+
-								"<SELFCCOPTION>" + document.getElementById("selfCcOption").value + "</SELFCCOPTION>";
+								"<SELFCCOPTION>" + document.getElementById("selfCcOption").value + "</SELFCCOPTION>" +
+								"<FORWARDAS>" + document.getElementById("forwardAs").value + "</FORWARDAS>";
 				
                 if (usePreviewSubTree == "YES") {
                 	sendStr +=  "<PREVIEWSUBTREE>" + previewSubTreeSlb + "</PREVIEWSUBTREE>";
@@ -578,6 +579,19 @@
 				  </td>
 			  </tr>
 		  </c:if>
+
+		  <!-- 2025.02.13 김은실 : [국립암센터] 메일 전달 방식. inline: 본문으로 전달(default), attach: 첨부로 전달 -->
+          <tr>
+              <th><spring:message code="ezEmail.general.forward"/></th>
+              <td>
+                  <select id="forwardAs" style="width:100px;">
+                    <option value=inline <c:if test="${forwardAs == 'inline'}">selected</c:if>><spring:message code="ezEmail.general.forward.asInline" /></option>
+                    <option value=attach <c:if test="${forwardAs == 'attach'}">selected</c:if>><spring:message code="ezEmail.general.forward.asAttach" /></option>
+                  </select>
+                  <br /><!-- description style: 공통적인 class가 없는 것으로 보여서 inline으로 줌. ※ #999999 = rgb(153, 153, 153) -->
+                  <text style="color: #999999;"><spring:message code="ezEmail.general.forward.description" /></text>
+              </td>
+          </tr>
 		</table>
 		<div align="center" style="width:680px;">
 			<div class="btnpositionJsp">

@@ -528,6 +528,13 @@ public class EzEmailMailListController {
 									String[] tokens = toStr.split(" <");
 									String toName = tokens[0];
 
+									// @가 포함되어 있지 않고 =?UTF-8?B? 와 같이 인코딩된 형태이면 디코딩을 시도한다.
+									if (!toName.contains("@") && toName.startsWith("=?")) {
+										logger.debug("decoding toName={}", toName);
+
+										toName = MimeUtility.decodeText(toName);
+									}
+									
 									msgtoBuilder.append(toStr);
 									msgtoBuilder.append(",");
 
@@ -651,6 +658,9 @@ public class EzEmailMailListController {
 
 					// secureMail
 					sb.append(String.format("<securemail>%s</securemail>", mailInfo.get("MAIL_IS_SECURED")));
+
+					// isEach
+					sb.append(String.format("<isEach>%s</isEach>", mailInfo.get("MAIL_SENT_IN_EACH")));
 
 					if (viewSelectIndex.equals("1")) {
 						String htmlBody = mailInfo.get("CONTENT");
@@ -1269,7 +1279,14 @@ public class EzEmailMailListController {
 								for (String toStr : toStrArr) {
 									toStr = toStr.trim();
 									String[] tokens = toStr.split(" <");
-									String toName = tokens[0]; 
+									String toName = tokens[0];
+
+									// @가 포함되어 있지 않고 =?UTF-8?B? 와 같이 인코딩된 형태이면 디코딩을 시도한다.
+									if (!toName.contains("@") && toName.startsWith("=?")) {
+										logger.debug("decoding toName={}", toName);
+
+										toName = MimeUtility.decodeText(toName);
+									}
 									
 									msgtoBuilder.append(toStr);
 									msgtoBuilder.append(",");
@@ -1328,6 +1345,9 @@ public class EzEmailMailListController {
 					
 					// secureMail
 					sb.append(String.format("<securemail>%s</securemail>", mailInfo.get("MAIL_IS_SECURED")));
+
+					// isEach
+					sb.append(String.format("<isEach>%s</isEach>", mailInfo.get("MAIL_SENT_IN_EACH")));
 					
 					if (viewSelectIndex.equals("1")) {
 						String htmlBody = mailInfo.get("CONTENT");
@@ -2575,6 +2595,7 @@ public class EzEmailMailListController {
 	
 	/**
 	 * 메일에서 보낸사람 정보 추출 함수
+	 * 2025-08-06 김은실 - 더이상 쓰이지 않음.
 	 */
 	@RequestMapping(value="/ezEmail/mailGetFromEmail.do", method=RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
@@ -2740,7 +2761,12 @@ public class EzEmailMailListController {
 			
 			if (email != null) {
 				if (!addresses.contains(email)) {
-					String displayName = address + " " + egovMessageSource.getMessage("ezEmail.t270", locale);
+					String ezEmailMsg = egovMessageSource.getMessage("ezEmail.t270", locale);
+					String displayName = address + " " + ezEmailMsg;
+
+					// 2025-08-06 김은실: 규칙이름이 100자가 넘어갈 경우 메일주소만 넣기. "RULE_NAME" NVARCHAR2(100) //ORA-12899: value too large for column "JMOCHA_INBOX_RULE"."RULE_NAME" (actual: 114, maximum: 100)
+					displayName = (100 < displayName.length())? email + " " + ezEmailMsg : displayName;
+
 					sb.append("&displayName=" + URLEncoder.encode(displayName, "UTF-8"));
 					sb.append("&rejectId=" + URLEncoder.encode(email, "UTF-8"));
 					addresses.add(email);
@@ -2859,6 +2885,10 @@ public class EzEmailMailListController {
 				
 				if (ezEmailUtil.hasSecureMailFlag(message)) {
 					subject = "<img src=\"/images/email/secureMail/security_icon.gif\" width=\"12\" />" + subject;
+				}
+
+				if (ezEmailUtil.isEachMail(message)) {
+					subject = "<span class='eachMail_icon'>" + egovMessageSource.getMessage("ezEmail.eachIcon", locale) + "</span>" + subject;
 				}
 				
 				int readFlag = message.isSet(Flags.Flag.SEEN) ? 1 : 0;

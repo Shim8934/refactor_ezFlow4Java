@@ -2468,6 +2468,8 @@ div.orbit img{border-radius:5px;}
 .security_icon{display:inline-block; width:16px; height:16px; background:url(/images/email/secureMail/security_icon.svg) no-repeat center / 16px 16px; !important;}
 .portlet_list li .txt .security_icon{vertical-align:top; margin:2px 5px 0 0; !important;}
 
+.eachMail_icon{background: #E8F0FE; color: #408EE3; padding: 2px 6px; border-radius: 4px; margin-right: 5px} /*개별발신한 메일인 경우 "개인별" 아이콘*/
+
 /* 게시판 공개 비공개 */
 .board_private{background:url(/images/lock_icon.png) no-repeat center; background-size:contain; width: 16px;height: 16px; display: inline-block;vertical-align: text-bottom;}
 /* 게시판 공개 비공개 */

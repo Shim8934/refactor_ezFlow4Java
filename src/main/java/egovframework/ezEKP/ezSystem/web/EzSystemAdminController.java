@@ -2928,7 +2928,7 @@ public class EzSystemAdminController {
 			String countryCode = "";
 			logger.debug("ip : {} ", vo.getExecutorIp());	
 			
-			if(!"".equals(ip) || "null".equals(ip)) {
+			if(StringUtils.isNotBlank(ip)) {
 				
 				if (ip.equals("0:0:0:0:0:0:0:1")) {
 					ip = "127.0.0.1";
@@ -2936,22 +2936,18 @@ public class EzSystemAdminController {
 	
 				systemCountryName = commonUtil.getTwoLetterLangFromLangNum(systemLang, "ko");
 	
-				if (StringUtils.isNotBlank(ip)) {
-					if (commonUtil.checkLocalIP(ip)) {
-						countryCode = systemCountryCode;
-					} else {
-						List<CountryVO> countryVo = commonUtil.getCountryInfo(ip);
-						if (countryVo.size() == 0) {
-							countryName = "?";
-						} else {
-							countryCode = countryVo.get(0).getCountryCode();
-						}
-					}
+				if (commonUtil.checkLocalIP(ip)) {
+					countryCode = systemCountryCode;
 				} else {
-					countryName = "?";
+					List<CountryVO> countryVo = commonUtil.getCountryInfo(ip);
+					if (countryVo.isEmpty()) {
+						countryName = "?";
+					} else {
+						countryCode = countryVo.get(0).getCountryCode();
+					}
 				}
 	
-				if (countryName != "?") {
+				if (!"?".equals(countryName)) {
 					Locale localeCountry = new Locale(systemCountryName, countryCode);
 					countryName = localeCountry.getDisplayCountry(localeCountry);
 					countryName = countryName.replaceAll(" ", "");

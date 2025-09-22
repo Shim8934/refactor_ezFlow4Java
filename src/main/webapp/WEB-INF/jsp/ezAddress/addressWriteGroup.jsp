@@ -1341,6 +1341,7 @@
 	                    if (M_TR.getAttribute("_DATA9") != "") {
 	                        var M_TR_IMG = document.createElement("IMG");
 	                        M_TR_IMG.setAttribute("SRC", "/admin/ezOrgan/getPersonalInfo.do?fileName=" + M_TR.getAttribute("_DATA9"));
+	                        M_TR_IMG.setAttribute('onerror', "this.style.display='none'");
 	                        M_TR_IMG.setAttribute("width", "90px");
 	                        M_TR_IMG.setAttribute("height", "90px");
 	                        M_TR_DIV.appendChild(M_TR_IMG);
@@ -1366,12 +1367,14 @@
 	                    pDisplayName += M_TR.getAttribute("_DATA4") == "" ? "" : M_TR.getAttribute("_DATA4");
 	                    pDisplayName += M_TR.getAttribute("_DATA6") == "" ? "" : "[" + M_TR.getAttribute("_DATA6") + "]";
 	                    Sub_TD1.innerHTML = pDisplayName;
+	                    Sub_TD1.title = pDisplayName;
 	                    Sub_TR1.appendChild(Sub_TD1);
 	
 	                    var Sub_TR2 = document.createElement("TR");
 	                    var Sub_TD2 = document.createElement("TD");
 	                    Sub_TD2.style.textAlign = "left";
 	                    Sub_TD2.innerHTML = M_TR.getAttribute("_DATA5");
+	                    Sub_TD2.title = M_TR.getAttribute("_DATA5");
 	                    Sub_TR2.appendChild(Sub_TD2);
 	
 	                    var Sub_TR3 = document.createElement("TR");
@@ -1382,6 +1385,7 @@
 	                    Sub_TD3_Img.setAttribute("src", "/images/OrganTree/icon_hp.gif");
 	                    Sub_TD3.appendChild(Sub_TD3_Img);
 	                    Sub_TD3.innerHTML += M_TR.getAttribute("_DATA8") == "" ? " - " : M_TR.getAttribute("_DATA8");
+	                    Sub_TD3.title = M_TR.getAttribute("_DATA8") == "" ? " - " : M_TR.getAttribute("_DATA8");
 	                    Sub_TR3.appendChild(Sub_TD3);
 	
 	                    var Sub_TR4 = document.createElement("TR");
@@ -1392,6 +1396,7 @@
 	                    Sub_TD4_Img.setAttribute("src", "/images/OrganTree/icon_mail.gif");
 	                    Sub_TD4.appendChild(Sub_TD4_Img);
 	                    Sub_TD4.innerHTML += M_TR.getAttribute("_DATA3")
+	                    Sub_TD4.title = M_TR.getAttribute("_DATA3")
 	                    Sub_TR4.appendChild(Sub_TD4);
 	
 	                    M_TR_TDS_Table.appendChild(Sub_TR1);
@@ -1449,12 +1454,14 @@
 	                        M_TR_TD1.style.whiteSpace = "nowrap";
 	                        M_TR_TD1.style.width = "110px";
 	                        M_TR_TD1.innerHTML = M_TR.getAttribute("_DATA5");
+	                        M_TR_TD1.title = M_TR.getAttribute("_DATA5");
 	
 	                        var M_TR_TD2 = document.createElement("TD");
 	                        M_TR_TD2.style.overflow = "hidden";
 	                        M_TR_TD2.style.textOverflow = "ellipsis";
 	                        M_TR_TD2.style.whiteSpace = "nowrap";
 	                        M_TR_TD2.style.width = "90px";
+							M_TR_TD2.title = M_TR.getAttribute("_DATA4");
 	                        if ("${useOcs}" == "YES")
 	                            M_TR_TD2.innerHTML = "<span><img src='/images/Presence/unknown.gif' id= '" + GetGUID() + ",type=smtp' style='vertical-align:middle;margin-right:3px;'  onload='PresenceControl(\"" + M_TR.getAttribute("_DATA3") + "\",this);'/></span>" + M_TR.getAttribute("_DATA4");
 	                        else
@@ -1462,10 +1469,12 @@
 	
 	                        var M_TR_TD3 = document.createElement("TD");
 	                        M_TR_TD3.innerHTML = M_TR.getAttribute("_DATA6") == "" ? "" : M_TR.getAttribute("_DATA6");
+	                        M_TR_TD3.title = M_TR.getAttribute("_DATA6") == "" ? "" : M_TR.getAttribute("_DATA6");
 	                        M_TR_TD3.style.width = "80px";
 	
 	                        var M_TR_TD4 = document.createElement("TD");
 	                        M_TR_TD4.innerHTML = M_TR.getAttribute("_DATA8") == "" ? "" : M_TR.getAttribute("_DATA8");
+	                        M_TR_TD4.title = M_TR.getAttribute("_DATA8") == "" ? "" : M_TR.getAttribute("_DATA8");
 	
 	                        if (useOrgListCheckBox) {
 			                    var M_TR_TD_Chk = document.createElement("TD");
@@ -1486,6 +1495,7 @@
 	                        M_TR_TD1.style.textOverflow = "ellipsis";
 	                        M_TR_TD1.style.whiteSpace = "nowrap";
 	                        M_TR_TD1.style.width = "150px";
+							M_TR_TD1.title = M_TR.getAttribute("_DATA4");
 	                        if ("${useOcs}" == "YES")
 	                            M_TR_TD1.innerHTML = "<span><img src='/images/Presence/unknown.gif' id= '" + GetGUID() + ",type=smtp' style='vertical-align:middle;margin-right:3px;'  onload='PresenceControl(\"" + M_TR.getAttribute("_DATA3") + "\",this);'/></span>" + M_TR.getAttribute("_DATA4");
 	                        else
@@ -1494,9 +1504,11 @@
 	                        var M_TR_TD2 = document.createElement("TD");
 	                        M_TR_TD2.style.width = "80px";
 	                        M_TR_TD2.innerHTML = M_TR.getAttribute("_DATA6") == "" ? "" : M_TR.getAttribute("_DATA6");
+	                        M_TR_TD2.title = M_TR.getAttribute("_DATA6") == "" ? "" : M_TR.getAttribute("_DATA6");
 	
 	                        var M_TR_TD3 = document.createElement("TD");
 	                        M_TR_TD3.innerHTML = M_TR.getAttribute("_DATA8") == "" ? "" : M_TR.getAttribute("_DATA8");
+	                        M_TR_TD3.title = M_TR.getAttribute("_DATA8") == "" ? "" : M_TR.getAttribute("_DATA8");
 	
 	                        if (useOrgListCheckBox) {
 			                    var M_TR_TD_Chk = document.createElement("TD");
@@ -1511,6 +1523,7 @@
 			                    M_TR_DEPT_TD.style.whiteSpace = "nowrap";
 			                    M_TR_DEPT_TD.style.width = "110px";
 			                    M_TR_DEPT_TD.innerHTML = M_TR.getAttribute("_DATA5");
+			                    M_TR_DEPT_TD.title = M_TR.getAttribute("_DATA5");
 			                    
 			                    M_TR.appendChild(M_TR_DEPT_TD);
 		                    }
@@ -2478,7 +2491,7 @@
 		    }
 	    </script> 
 	</head>
-	<body class="popup" style="overflow: hidden">
+	<body class="popup" style="overflow: auto; width: fit-content; min-width: 400px;">
 	    <xml id="listviewheader" style="display: none;">
 		  <LISTVIEWDATA>
 		    <HEADERS>
@@ -2547,14 +2560,14 @@
 		    </HEADERS>
 		  </LISTVIEWDATA>
 		</xml>
-	    <form id="Form_address_writegroup" name="Form_address_writegroup" method="post">
+	    <form id="Form_address_writegroup" name="Form_address_writegroup" method="post" style="position: relative;">
 	        <div id="menu">
 	            <ul>
 	            <!-- 2018-05-30 구해안 그룹웨어 모듈 '등록','저장후닫기' => '저장'으로 통일  ezAddress.t339 => t300 -->
 	                <li><span onclick="add()"><spring:message code='ezAddress.t300' /></span></li>
 	            </ul>
 	        </div>
-	        <div id="close">
+	        <div id="close" style="top: 2px;">
 	            <ul>
 	                <li><span onclick="close_onclick()"></span></li>
 	            </ul>
@@ -2616,7 +2629,7 @@
 	                        </tr>
 	                    </table>
 	                </td> --%>
-					<td rowspan="2" style="width: 665px; height: 375px; vertical-align: top; padding-top:5px;">
+					<td rowspan="2" style="height: 375px; vertical-align: top; padding-top:5px;">
 	                    <div id="ManualView" style="DISPLAY: none; height: 488px; width: 648px; padding: 10px; border-right: 1px solid #ddd" class="box">
 	                        <table class="content">
 	                            <tr>
@@ -2685,25 +2698,25 @@
 	                                            </th>
 	                                        </tr>
 	                                    </table>
-	                                    <div style="vertical-align: top; height: 394px; overflow: auto; width: 446px;" id="txtlist_Layer">
+	                                    <div style="vertical-align: top; height: 394px; overflow: auto; min-width: 446px;" id="txtlist_Layer">
 	                                        <table style="width: 100%; border: 1px solid #ddd; display: none;" id="txtlist_table" class="mainlist">
 	                                            <tr>
 	                                                <td style="width: 110px; color:#333;background-color: #f8f8fa;" class="td_gray txtlist_DeptTD none"><spring:message code='ezAddress.t54' /></td>
 	                                                <td style="width: 110px;color:#333;background-color: #f8f8fa" class="td_gray"><spring:message code='ezAddress.t124' /></td>
-	                                                <td style="width: 90px;color:#333;background-color: #f8f8fa" class="td_gray"><spring:message code='ezAddress.t359' /></td>
-	                                                <td style="color:#333;background-color: #f8f8fa" class="td_gray"><spring:message code='ezAddress.t192' /></td>
+	                                                <td style="color:#333;background-color: #f8f8fa" class="td_gray"><spring:message code='ezAddress.t359' /></td>
+	                                                <td style="width: 100px;color:#333;background-color: #f8f8fa" class="td_gray"><spring:message code='ezAddress.t192' /></td>
 	                                            </tr>
 	                                        </table>
 	                                        <table style="width: 100%; border: 1px solid #ddd; display: none;" id="Search_txtlist_table" class="mainlist">
 	                                            <tr>
 	                                                <td style="width: 110px; color:#333;background-color: #f8f8fa" class="td_gray"><spring:message code='ezAddress.t54' /></td>
 	                                                <td style="width: 90px; color:#333;background-color: #f8f8fa" class="td_gray"><spring:message code='ezAddress.t358' /></td>
-	                                                <td style="width: 80px; color:#333;background-color: #f8f8fa" class="td_gray"><spring:message code='ezAddress.t359' /></td>
-	                                                <td class="td_gray" style="color:#333;background-color: #f8f8fa"><spring:message code='ezAddress.t192' /></td>
+	                                                <td style="color:#333;background-color: #f8f8fa" class="td_gray"><spring:message code='ezAddress.t359' /></td>
+	                                                <td class="td_gray" style="width: 100px;color:#333;background-color: #f8f8fa"><spring:message code='ezAddress.t192' /></td>
 	                                            </tr>
 	                                        </table>
 	                                    </div>
-                                        <div style="vertical-align: top; text-align: center; height: 394px; overflow: auto; display: none; width: 446px;" id="DeptUserImgList"></div>                                     
+                                        <div style="vertical-align: top; text-align: center; height: 394px; overflow: auto; display: none; min-width: 446px;" id="DeptUserImgList"></div>                                     
 	                                    <div id="tblPageRayer2" style="text-align:center;"></div>	                                    
 	                                </td>
 	                            </tr>
@@ -2719,7 +2732,7 @@
 	                                    <div style="vertical-align: middle; border: 1px solid #ddd; border-bottom: 0px; height: 20px; padding-top: 3px; padding-left: 5px;padding-bottom:2px">
 	                                    	<img align="absmiddle" hspace="2" style="cursor: pointer"/><span id="addressFolderName"></span>&nbsp;&nbsp;<span id="addressFolderCnt" class='txt_color'></span>
 	                            		</div>
-	                                    <div id="AddressListView" style="BORDER: #ddd 1px solid; OVERFLOW: auto; WIDTH: 446px; HEIGHT: 436px; BACKGROUND-COLOR: white; border-bottom:0px;border-top:0px" class="listview"></div>
+	                                    <div id="AddressListView" style="BORDER: #ddd 1px solid; OVERFLOW: auto; MIN-WIDTH: 446px; HEIGHT: 436px; BACKGROUND-COLOR: white; border-bottom:0px;border-top:0px" class="listview"></div>
 	                                    <div id="tblPageRayer"  style="border:#ddd 1px solid;border-top:0px;width:auto !important"></div>
 	                                </td>
 	                            </tr>

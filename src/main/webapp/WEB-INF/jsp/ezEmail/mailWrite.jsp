@@ -61,6 +61,7 @@
 	    <script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/string_component.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/encode_component.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/newMail_Cross.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/email.address.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/AttachMain_CK.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/AttachItem_CK.js')}"></script>
@@ -97,6 +98,7 @@
 			isEdit: <c:out value="${writetype.isEdit()}"/>, // true/false
 			isResend: <c:out value="${writetype.isResend()}"/>, // var g_ReSendFlag = "${writetype == WriteType.RESEND_IN_SENT? 'Y' : 'N'}";
 			isReserve: <c:out value="${writetype.isReserve()}"/>,
+			isForwardAsAttach: <c:out value="${writetype.isForwardAsAttach()}"/>,
 			useSaveDrafts: <c:out value="${writetype.useSaveDrafts()}"/>,
 			useReplyMessage: <c:out value="${writetype.useReplyMessage()}"/>,
 			useAppendAttach: <c:out value="${writetype.useAppendAttach()}"/>
@@ -147,7 +149,6 @@
 		// options
 		var g_ePostType = "${options.postType}";
 	    var useMultiLangMail = "${options.useMultiLangMail}";
-	    var g_charsetCheck = "${options.charsetCheck}";
 	    var BigSizeAttachLimitCount = "${options.bigSizeAttachLimitCount}";
 	    var BigSizeAttachDownloadLimitCount = "${options.bigSizeAttachDownloadLimitCount}";
 	    var BigSizeAttachMBSize = "${options.bigSizeMailAttachLimit}";
@@ -269,6 +270,7 @@
         + "<td style='max-width:45%; border:none; align:left'><spring:message code='ezEmail.t713' /></td>"
         + "</tr></thead></table></li></a>";
 
+
 	    window.onload = function () {
 	        // alias, 공용배포그룹 주소로 재전송 시 실제 sender 값 설정
 	        if (["RESEND", "EDIT"].some(cmd => g_cmd.includes(cmd)) && g_from != from) {
@@ -374,12 +376,6 @@
 	        Subject_ReApply();  
             window.onresize();
 	        g_bDirty = false;
-	        
-	        if (g_charsetCheck == "0") {
-	            if (confirm("<spring:message code='ezEmail.t665' />")) {
-	                location.href = location.href + "&attach=1";
-	            }
-	        }        
 	        
 	        if (writetype.useAppendAttach && document.getElementById("AttachXmlList").innerHTML.trim() != "") {
 	            AddAttachFileInfoXmlParsing(document.getElementById("AttachXmlList").innerHTML, true);
@@ -2695,7 +2691,13 @@
 	        <input type="hidden" name="endDay" id="endDay" />
 	    </form> -->
 	    <div style="width:100%;height:100%;position:absolute;top:0;left:0;z-index:1000;background:none rgba(0,0,0,0.5);display:none;" id="mailPanel">&nbsp;</div>
-	    <span class="loading_layer" style="z-index:6000;position:absolute;top:50%;left:50%;transform: translate(-50%, -50%);display:none;" id="loadingLayer"><span class="right"><img src="/images/loading/loading.gif" width="24" height="24" ><span id="messageInSending"><spring:message code='ezEmail.t679' /></span><spring:message code='ezEmail.t680' /></span></span>
+	    <span class="loading_layer" style="z-index:6000;position:absolute;top:50%;left:50%;transform: translate(-50%, -50%);display:none;" id="loadingLayer">
+			<span class="right"><img src="/images/loading/loading.gif" width="24" height="24" >
+				<span id="messageInSending"><spring:message code='ezEmail.t679' /></span>
+				<span id="messageInAttaching" style="display: none;"><spring:message code='ezCircular.t93' /></span> <!-- 첨부파일을 추가하는 중입니다. :ezBoard.t2000, ezCircular.t93, ezTask.jsh03, ezJournal.t186 -->
+				<spring:message code='ezEmail.t680' />
+			</span>
+		</span>
 	    <div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
 	    <iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
 	    </div>

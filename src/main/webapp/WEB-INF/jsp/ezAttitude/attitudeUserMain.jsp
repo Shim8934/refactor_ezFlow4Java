@@ -2408,7 +2408,7 @@
 		        	<dt class="timeInfoPic">
 		        		<c:choose>
 							<c:when test="${not empty userInfo.userFileUrl }">
-								<img src="/admin/ezOrgan/getPersonalInfo.do?fileName=${userInfo.userFileUrl }" width="48px" height="48px">
+								<img src="/admin/ezOrgan/getPersonalInfo.do?fileName=${userInfo.userFileUrl }" onerror="this.src='/images/kr/main/bestEmployee_pic_none.png'" width="48px" height="48px">
 							</c:when>
 							<c:otherwise>
 								<img src="/images/kr/main/bestEmployee_pic_none.png" width="48px" height="48px">
