@@ -1535,7 +1535,7 @@
                 (23,UUID(), 'department', 'F0022', '기안자 부서명', #upperCode2#,#tenantID#, #companyID#),
                 (24,UUID(), 'position', 'F0023', '기안자 직위', #upperCode2#,#tenantID#, #companyID#),
                 (25,UUID(), 'email', 'F0024', '기안자 E-Mail', #upperCode2#,#tenantID#, #companyID#),
-                (26,UUID(), 'draftdate', 'F0025', '기안일자', #upperCode2##tenantID#, #companyID#),
+                (26,UUID(), 'draftdate', 'F0025', '기안일자', #upperCode2#,#tenantID#, #companyID#),
                 (27,UUID(), 'lastKyulName', 'F0026', '최종결재자명', #upperCode2#,#tenantID#, #companyID#),
                 (28,UUID(), 'lastKyuljikwee', 'F0027', '최종결재자직위', #upperCode2#,#tenantID#, #companyID#),
                 (29,UUID(), 'chief', 'F0028', '기관장', #upperCode2#,#tenantID#, #companyID#),

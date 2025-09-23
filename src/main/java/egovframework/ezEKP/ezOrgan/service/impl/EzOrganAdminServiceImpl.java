@@ -949,7 +949,7 @@ public class EzOrganAdminServiceImpl extends EgovAbstractServiceImpl implements 
 				String approvalCode    = codes.get("approvalinfo");
 				String recvApprovalCode= codes.get("recvapprovalinfo");
 				String userDefinedCode = codes.get("userdefinedinfo");
-				logger.debug("processinfo = {}, draftinfo = {}, receiptinfo = {}, approvalinfo = {}, recvapprovalinfo = {}, userdefinedinfo = {}",processCode, receiptCode, approvalCode, recvApprovalCode, userDefinedCode);
+				logger.debug("processinfo = {}, draftinfo = {}, receiptinfo = {}, approvalinfo = {}, recvapprovalinfo = {}, userdefinedinfo = {}",processCode, draftCode, receiptCode, approvalCode, recvApprovalCode, userDefinedCode);
 				map1.put("upperCode1", processCode);
 				map1.put("upperCode2", draftCode);
 				map1.put("upperCode3", receiptCode);
