@@ -4422,7 +4422,7 @@ body.drag *{user-select:none !important;}
 
 .result_txt{margin-left: 10px; font-size:14px; font-weight:500; color:#333;height: 34px;display: inline-block;line-height: 32px;}
 .result_txt span{color:#3d8fea; font-size:14px;}
-.result_list_head{margin-bottom:13px;margin-top:0;padding:15px 20px 15px 20px;border-top:1px solid #ddd;border-bottom:1px solid #ddd;overflow:hidden;}
+.result_list_head{margin-bottom:0;margin-top:0;padding:15px 20px 15px 20px;border-top:1px solid #ddd;border-bottom:1px solid #ddd;overflow:hidden;}
 .result_list_head h4{font-size:16px; margin-bottom:13px;}
 .result_list{margin-top:13px;padding:2px 20px 15px 20px;border-bottom:1px solid #ddd;overflow:hidden;}
 .result_list_cont{display:flex; align-items:stretch;}
