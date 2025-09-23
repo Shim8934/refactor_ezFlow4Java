@@ -2377,10 +2377,10 @@ CREATE TABLE nezportal.`tbl_admin_access_ip` (
 -- Table structure for table `tbl_adminreceiptgroup_main`
 --
 
-DROP TABLE IF EXISTS nezportal.`tbl_adminreceiptgroup_main`;
+DROP TABLE IF EXISTS nezapprovalg.`tbl_adminreceiptgroup_main`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE nezportal.`tbl_adminreceiptgroup_main` (
+CREATE TABLE nezapprovalg.`tbl_adminreceiptgroup_main` (
   `MAINID` bigint(10) NOT NULL AUTO_INCREMENT,
   `MAINNAME` varchar(400) CHARACTER SET utf8mb4 DEFAULT NULL,
   `TENANT_ID` mediumint(5) NOT NULL DEFAULT 0,
@@ -4727,10 +4727,10 @@ CREATE TABLE nezportal.`tbl_c_pollresponse` (
 -- Table structure for table `tbl_cabinet`
 --
 
-DROP TABLE IF EXISTS nezportal.`tbl_cabinet`;
+DROP TABLE IF EXISTS nezapprovalg.`tbl_cabinet`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE nezportal.`tbl_cabinet` (
+CREATE TABLE nezapprovalg.`tbl_cabinet` (
   `CABINETID` varchar(112) NOT NULL,
   `CREATEDATE` datetime DEFAULT NULL,
   `CABINETCLASSNO` varchar(100) NOT NULL,
@@ -4773,10 +4773,10 @@ CREATE TABLE nezportal.`tbl_cabinet` (
 -- Table structure for table `tbl_cabinet_viewauth`
 --
 
-DROP TABLE IF EXISTS nezportal.`tbl_cabinet_viewauth`;
+DROP TABLE IF EXISTS nezapprovalg.`tbl_cabinet_viewauth`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE nezportal.`tbl_cabinet_viewauth` (
+CREATE TABLE nezapprovalg.`tbl_cabinet_viewauth` (
   `CABINETID` varchar(112) NOT NULL,
   `TENANT_ID` mediumint(5) NOT NULL,
   `COMPANYID` varchar(20) NOT NULL,
@@ -12229,10 +12229,10 @@ CREATE TABLE nezcommon.`tbl_task` (
 -- Table structure for table `tbl_task_deptinfo`
 --
 
-DROP TABLE IF EXISTS nezcommon.`tbl_task_deptinfo`;
+DROP TABLE IF EXISTS nezapprovalg.`tbl_task_deptinfo`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE nezcommon.`tbl_task_deptinfo` (
+CREATE TABLE nezapprovalg.`tbl_task_deptinfo` (
   `CREATEDATE` datetime DEFAULT NULL,
   `DESCRIPTION` varchar(600) CHARACTER SET utf8mb4 DEFAULT NULL,
   `PROCESSDEPTNAME` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
@@ -12275,10 +12275,10 @@ CREATE TABLE nezcommon.`tbl_taskattach` (
 -- Table structure for table `tbl_taskcategory`
 --
 
-DROP TABLE IF EXISTS nezcommon.`tbl_taskcategory`;
+DROP TABLE IF EXISTS nezapprovalg.`tbl_taskcategory`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE nezcommon.`tbl_taskcategory` (
+CREATE TABLE nezapprovalg.`tbl_taskcategory` (
   `CATEGORYCODE` varchar(32) NOT NULL,
   `NAME` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
   `DESCRIPTION` varchar(1020) CHARACTER SET utf8mb4 DEFAULT NULL,
@@ -12294,10 +12294,10 @@ CREATE TABLE nezcommon.`tbl_taskcategory` (
 -- Table structure for table `tbl_taskcode`
 --
 
-DROP TABLE IF EXISTS nezcommon.`tbl_taskcode`;
+DROP TABLE IF EXISTS nezapprovalg.`tbl_taskcode`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE nezcommon.`tbl_taskcode` (
+CREATE TABLE nezapprovalg.`tbl_taskcode` (
   `TASKCODE` varchar(32) NOT NULL,
   `TASKNAME` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
   `KEEPINGPERIOD` varchar(8) DEFAULT NULL,
@@ -12332,10 +12332,10 @@ CREATE TABLE nezcommon.`tbl_taskcode` (
 -- Table structure for table `tbl_taskcodehistory`
 --
 
-DROP TABLE IF EXISTS nezcommon.`tbl_taskcodehistory`;
+DROP TABLE IF EXISTS nezapprovalg.`tbl_taskcodehistory`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE nezcommon.`tbl_taskcodehistory` (
+CREATE TABLE nezapprovalg.`tbl_taskcodehistory` (
   `SN` bigint(10) NOT NULL AUTO_INCREMENT,
   `APPLYDATE` datetime DEFAULT NULL,
   `TASKCODE` varchar(32) DEFAULT NULL,
@@ -12431,10 +12431,10 @@ CREATE TABLE nezcommon.`tbl_taskinstancestatus` (
 -- Table structure for table `tbl_taskmiddlecategory`
 --
 
-DROP TABLE IF EXISTS nezcommon.`tbl_taskmiddlecategory`;
+DROP TABLE IF EXISTS nezapprovalg.`tbl_taskmiddlecategory`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE nezcommon.`tbl_taskmiddlecategory` (
+CREATE TABLE nezapprovalg.`tbl_taskmiddlecategory` (
   `MCATEGORYCODE` varchar(32) NOT NULL,
   `NAME` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
   `DESCRIPTION` varchar(1020) CHARACTER SET utf8mb4 DEFAULT NULL,
@@ -12497,10 +12497,10 @@ CREATE TABLE nezcommon.`tbl_taskshare` (
 -- Table structure for table `tbl_tasksubcategory`
 --
 
-DROP TABLE IF EXISTS nezcommon.`tbl_tasksubcategory`;
+DROP TABLE IF EXISTS nezapprovalg.`tbl_tasksubcategory`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE nezcommon.`tbl_tasksubcategory` (
+CREATE TABLE nezapprovalg.`tbl_tasksubcategory` (
   `SUBCATEGORYCODE` varchar(32) NOT NULL,
   `NAME` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
   `DESCRIPTION` varchar(1020) CHARACTER SET utf8mb4 DEFAULT NULL,

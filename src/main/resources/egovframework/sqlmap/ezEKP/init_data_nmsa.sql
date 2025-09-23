@@ -6957,11 +6957,11 @@ INSERT INTO nezboard.TBL_Board_MyBoards (UserID, BoardID, BoardName, BoardName2,
 INSERT INTO   nezapprovalg.TBL_FormContainer  (FormContID,  FormContName,  FormContOwnDepID,  FormContParents,  FormContdescription,  FormContName2, COMPANYID, TENANT_ID) VALUES (N'2004000001', N'기본양식함', N'ALL', N'ROOT', N'기본 양식함 입니다.', N'DEPT003','Top',@tenant_id_value);
 -- INSERT INTO   nezapprovalg.TBL_FormContainer  (FormContID,  FormContName,  FormContOwnDepID,  FormContParents,  FormContdescription,  FormContName2, COMPANYID, TENANT_ID) VALUES (N'2004000003', N'HWP양식함', N'ALL', N'ROOT', NULL, NULL,'Top',@tenant_id_value);
 
-INSERT INTO nezcommon.TBL_TASKCATEGORY  (CategoryCode,  Name,  Description,  OldFlag,  Name2, COMPANYID, TENANT_ID) VALUES (N'ZA000001', N'총무행정', N'총무행정', NULL, N'총무행정_Eng','Top',@tenant_id_value);
-INSERT INTO nezcommon.TBL_TASKCATEGORY  (CategoryCode,  Name,  Description,  OldFlag,  Name2, COMPANYID, TENANT_ID) VALUES (N'ZB000001', N'경제', N'경제', NULL, N'경제_Eng','Top',@tenant_id_value);
-INSERT INTO nezcommon.TBL_TASKCATEGORY  (CategoryCode,  Name,  Description,  OldFlag,  Name2, COMPANYID, TENANT_ID) VALUES (N'ZC000001', N'재무', N'재무', NULL, N'재무_Eng','Top',@tenant_id_value);
-INSERT INTO nezcommon.TBL_TASKCATEGORY  (CategoryCode,  Name,  Description,  OldFlag,  Name2, COMPANYID, TENANT_ID) VALUES (N'ZZ000001', N'감사', N'감사', NULL, N'감사_Eng','Top',@tenant_id_value);
-INSERT INTO nezcommon.TBL_TASKCATEGORY  (CategoryCode,  Name,  Description,  OldFlag,  Name2, COMPANYID, TENANT_ID) VALUES (N'ZZ000002', N'에너지', N'에너지관리공단테스트용', NULL, N'에너지_Eng','Top',@tenant_id_value);
+INSERT INTO nezapprovalg.TBL_TASKCATEGORY  (CategoryCode,  Name,  Description,  OldFlag,  Name2, COMPANYID, TENANT_ID) VALUES (N'ZA000001', N'총무행정', N'총무행정', NULL, N'총무행정_Eng','Top',@tenant_id_value);
+INSERT INTO nezapprovalg.TBL_TASKCATEGORY  (CategoryCode,  Name,  Description,  OldFlag,  Name2, COMPANYID, TENANT_ID) VALUES (N'ZB000001', N'경제', N'경제', NULL, N'경제_Eng','Top',@tenant_id_value);
+INSERT INTO nezapprovalg.TBL_TASKCATEGORY  (CategoryCode,  Name,  Description,  OldFlag,  Name2, COMPANYID, TENANT_ID) VALUES (N'ZC000001', N'재무', N'재무', NULL, N'재무_Eng','Top',@tenant_id_value);
+INSERT INTO nezapprovalg.TBL_TASKCATEGORY  (CategoryCode,  Name,  Description,  OldFlag,  Name2, COMPANYID, TENANT_ID) VALUES (N'ZZ000001', N'감사', N'감사', NULL, N'감사_Eng','Top',@tenant_id_value);
+INSERT INTO nezapprovalg.TBL_TASKCATEGORY  (CategoryCode,  Name,  Description,  OldFlag,  Name2, COMPANYID, TENANT_ID) VALUES (N'ZZ000002', N'에너지', N'에너지관리공단테스트용', NULL, N'에너지_Eng','Top',@tenant_id_value);
 
 INSERT INTO   nezapprovalg.TBL_ContainerType  (ContainerTypeID,  ContainerTypeName,  ContainerTypeName2, COMPANYID, TENANT_ID) VALUES (N'100', N'품의함', N'Draft','Top',@tenant_id_value);
 INSERT INTO   nezapprovalg.TBL_ContainerType  (ContainerTypeID,  ContainerTypeName,  ContainerTypeName2, COMPANYID, TENANT_ID) VALUES (N'200', N'협조함', N'Support','Top',@tenant_id_value);
@@ -6972,14 +6972,14 @@ INSERT INTO   nezapprovalg.TBL_ContainerType  (ContainerTypeID,  ContainerTypeNa
 INSERT INTO   nezapprovalg.TBL_ContainerType  (ContainerTypeID,  ContainerTypeName,  ContainerTypeName2, COMPANYID, TENANT_ID) VALUES (N'700', N'반송함', N'Reject','Top',@tenant_id_value);
 INSERT INTO   nezapprovalg.TBL_ContainerType  (ContainerTypeID,  ContainerTypeName,  ContainerTypeName2, COMPANYID, TENANT_ID) VALUES (N'999', N'폐기함', N'Obsolete','Top',@tenant_id_value);
 
-INSERT INTO   nezcommon.TBL_TASKMIDDLECATEGORY  (MCategoryCode,  Name,  Description,  CategoryCode,  OldFlag,  Name2, COMPANYID, TENANT_ID) VALUES (N'aa000001', N'감사결과처리', N'감사결과처리', N'ZZ000001', NULL, N'감사결과처리_Eng','Top',@tenant_id_value);
-INSERT INTO   nezcommon.TBL_TASKMIDDLECATEGORY  (MCategoryCode,  Name,  Description,  CategoryCode,  OldFlag,  Name2, COMPANYID, TENANT_ID) VALUES (N'aa000002', N'인사관리', N'인사관리', N'ZZ000001', NULL, N'인사관리_Eng','Top',@tenant_id_value);
-INSERT INTO   nezcommon.TBL_TASKMIDDLECATEGORY  (MCategoryCode,  Name,  Description,  CategoryCode,  OldFlag,  Name2, COMPANYID, TENANT_ID) VALUES (N'ab000001', N'기록관리', N'기록관리', N'ZA000001', NULL, N'기록관리_Eng','Top',@tenant_id_value);
-INSERT INTO   nezcommon.TBL_TASKMIDDLECATEGORY  (MCategoryCode,  Name,  Description,  CategoryCode,  OldFlag,  Name2, COMPANYID, TENANT_ID) VALUES (N'ac000001', N'경제협력', N'경제협력', N'ZB000001', NULL, N'경제협력_Eng','Top',@tenant_id_value);
-INSERT INTO   nezcommon.TBL_TASKMIDDLECATEGORY  (MCategoryCode,  Name,  Description,  CategoryCode,  OldFlag,  Name2, COMPANYID, TENANT_ID) VALUES (N'ad000001', N'조세', N'조세', N'ZC000001', NULL, N'조세_Eng','Top',@tenant_id_value);
-INSERT INTO   nezcommon.TBL_TASKMIDDLECATEGORY  (MCategoryCode,  Name,  Description,  CategoryCode,  OldFlag,  Name2, COMPANYID, TENANT_ID) VALUES (N'cb000001', N'기록관리', N'기록관리', N'ZA000001', NULL, N'기록관리_Eng','Top',@tenant_id_value);
-INSERT INTO   nezcommon.TBL_TASKMIDDLECATEGORY  (MCategoryCode,  Name,  Description,  CategoryCode,  OldFlag,  Name2, COMPANYID, TENANT_ID) VALUES (N'cc000001', N'인사관리', N'인사관리', N'ZA000001', NULL, N'인사관리_Eng','Top',@tenant_id_value);
-INSERT INTO   nezcommon.TBL_TASKMIDDLECATEGORY  (MCategoryCode,  Name,  Description,  CategoryCode,  OldFlag,  Name2, COMPANYID, TENANT_ID) VALUES (N'ZZ000022', N'에너지용', N'에너지용', N'ZZ000002', NULL, N'에너지용_Eng','Top',@tenant_id_value);
+INSERT INTO   nezapprovalg.TBL_TASKMIDDLECATEGORY  (MCategoryCode,  Name,  Description,  CategoryCode,  OldFlag,  Name2, COMPANYID, TENANT_ID) VALUES (N'aa000001', N'감사결과처리', N'감사결과처리', N'ZZ000001', NULL, N'감사결과처리_Eng','Top',@tenant_id_value);
+INSERT INTO   nezapprovalg.TBL_TASKMIDDLECATEGORY  (MCategoryCode,  Name,  Description,  CategoryCode,  OldFlag,  Name2, COMPANYID, TENANT_ID) VALUES (N'aa000002', N'인사관리', N'인사관리', N'ZZ000001', NULL, N'인사관리_Eng','Top',@tenant_id_value);
+INSERT INTO   nezapprovalg.TBL_TASKMIDDLECATEGORY  (MCategoryCode,  Name,  Description,  CategoryCode,  OldFlag,  Name2, COMPANYID, TENANT_ID) VALUES (N'ab000001', N'기록관리', N'기록관리', N'ZA000001', NULL, N'기록관리_Eng','Top',@tenant_id_value);
+INSERT INTO   nezapprovalg.TBL_TASKMIDDLECATEGORY  (MCategoryCode,  Name,  Description,  CategoryCode,  OldFlag,  Name2, COMPANYID, TENANT_ID) VALUES (N'ac000001', N'경제협력', N'경제협력', N'ZB000001', NULL, N'경제협력_Eng','Top',@tenant_id_value);
+INSERT INTO   nezapprovalg.TBL_TASKMIDDLECATEGORY  (MCategoryCode,  Name,  Description,  CategoryCode,  OldFlag,  Name2, COMPANYID, TENANT_ID) VALUES (N'ad000001', N'조세', N'조세', N'ZC000001', NULL, N'조세_Eng','Top',@tenant_id_value);
+INSERT INTO   nezapprovalg.TBL_TASKMIDDLECATEGORY  (MCategoryCode,  Name,  Description,  CategoryCode,  OldFlag,  Name2, COMPANYID, TENANT_ID) VALUES (N'cb000001', N'기록관리', N'기록관리', N'ZA000001', NULL, N'기록관리_Eng','Top',@tenant_id_value);
+INSERT INTO   nezapprovalg.TBL_TASKMIDDLECATEGORY  (MCategoryCode,  Name,  Description,  CategoryCode,  OldFlag,  Name2, COMPANYID, TENANT_ID) VALUES (N'cc000001', N'인사관리', N'인사관리', N'ZA000001', NULL, N'인사관리_Eng','Top',@tenant_id_value);
+INSERT INTO   nezapprovalg.TBL_TASKMIDDLECATEGORY  (MCategoryCode,  Name,  Description,  CategoryCode,  OldFlag,  Name2, COMPANYID, TENANT_ID) VALUES (N'ZZ000022', N'에너지용', N'에너지용', N'ZZ000002', NULL, N'에너지용_Eng','Top',@tenant_id_value);
 
 -- resource insert
 
