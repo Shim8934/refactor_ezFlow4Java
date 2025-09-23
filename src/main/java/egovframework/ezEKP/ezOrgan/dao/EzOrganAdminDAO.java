@@ -2,14 +2,7 @@ package egovframework.ezEKP.ezOrgan.dao;
 
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Properties;
-import java.util.TimeZone;
+import java.util.*;
 
 import javax.annotation.Resource;
 import javax.naming.NamingEnumeration;
@@ -1334,7 +1327,30 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
     public void insertCompanyInfo_I12_separate(Map<String, Object> map) throws Exception {
     	insert("EzOrganAdminDAO.insertCompanyInfo_I12_separate", map);
     }
-    
+
+	@SuppressWarnings("unchecked")
+	public Map<String, String> getCodeMap(Map<String, Object> map) {
+		Map<String, String> codeMap = new LinkedHashMap<>();
+
+		String[] ids = {
+				"processinfo",
+				"draftinfo",
+				"receiptinfo",
+				"approvalinfo",
+				"recvapprovalinfo",
+				"userdefinedinfo"
+		};
+
+		for (String id : ids) {
+			map.put("id", id);
+			String code = (String) select("EzOrganAdminDAO.selectCodeById", map);
+			codeMap.put(id, code); // key = id, value = code
+		}
+
+		return codeMap;
+	}
+
+
     public void insertCompanyInfo_I12(Map<String, Object> map) throws Exception {
     	insert("EzOrganAdminDAO.insertCompanyInfo_I12", map);
     }

@@ -942,6 +942,20 @@ public class EzOrganAdminServiceImpl extends EgovAbstractServiceImpl implements 
 				/* 2020-08-24 홍승비 - insert all 시, 오라클에서는 insert한 레코드 바로 select할수 없어 null이 삽입되는 오류 수정 */
 				/* ezekp365g 사이트에서 mysql 의 경우 TBL_FORMPROPERTY 테이블을 뷰로 사용하는데 oracle과 동일한 현상이 발생하여 로직 동일하게 수정*/
 				ezOrganAdminDao.insertCompanyInfo_I12_separate(map1); // insertCompanyInfo_I12 쿼리에서 6개의 insert를 분리
+				Map<String, String> codes  = ezOrganAdminDao.getCodeMap(map1);
+				String processCode     = codes.get("processinfo");
+				String draftCode       = codes.get("draftinfo");
+				String receiptCode     = codes.get("receiptinfo");
+				String approvalCode    = codes.get("approvalinfo");
+				String recvApprovalCode= codes.get("recvapprovalinfo");
+				String userDefinedCode = codes.get("userdefinedinfo");
+				logger.debug("processinfo = {}, draftinfo = {}, receiptinfo = {}, approvalinfo = {}, recvapprovalinfo = {}, userdefinedinfo = {}",processCode, receiptCode, approvalCode, recvApprovalCode, userDefinedCode);
+				map1.put("upperCode1", processCode);
+				map1.put("upperCode2", draftCode);
+				map1.put("upperCode3", receiptCode);
+				map1.put("upperCode4", approvalCode);
+				map1.put("upperCode5", recvApprovalCode);
+				map1.put("upperCode6", userDefinedCode);
 				ezOrganAdminDao.insertCompanyInfo_I12(map1);
 				ezOrganAdminDao.insertCompanyInfo_I13(map1);
 				ezOrganAdminDao.insertCompanyInfo_I14(map1);
