@@ -24,6 +24,7 @@
 	    <script type="text/javascript" src="${util.addVer('/js/ezWebFolder/adminFile.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/ezWebFolder/selectUsers.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/jquery-ui/jquery-ui.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript">
 			var strLang39  = "<spring:message code='ezWebFolder.t135'/>";
 			var strLang40  = "<spring:message code='ezWebFolder.t136'/>";
