@@ -519,7 +519,9 @@
 		    }
 		
 		    function NewItem_onclick_Complete(ret) {
-		        if (typeof (ret) != "undefined") {
+				if (ret == "cancel" || typeof (ret) == "undefined") {
+					return;
+				} else if (typeof (ret) != "undefined") {
 		            pBoardID = ret[0];
 		
 		            if (pBoardID == "" || typeof (pBoardID) == "undefined") {
