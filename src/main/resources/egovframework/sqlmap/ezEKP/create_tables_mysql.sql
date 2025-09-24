@@ -3741,6 +3741,7 @@ CREATE TABLE `tbl_board_boardinfo` (
   `URLCOPYFLAG` char(1) DEFAULT 'N',
   `DISLIKEFLAG` VARCHAR(2) DEFAULT NULL,
   `VERSIONMANAGE` VARCHAR(1) DEFAULT 'N',
+  `USEKEYWORD` VARCHAR(11) DEFAULT NULL,
   PRIMARY KEY (`BOARDID`,`TENANT_ID`),
   KEY `idx_companyid` (`COMPANYID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -3907,6 +3908,7 @@ CREATE TABLE `tbl_board_item` (
   `NTENDDATE` varchar(40) DEFAULT NULL,
   `PUBLICFLAG`char(1) DEFAULT 'Y',
   `WRITERNAMETYPE` varchar(2) DEFAULT NULL,
+  `UPDATERID` varchar(80) DEFAULT NULL,
   PRIMARY KEY (`TENANT_ID`,`ITEMID`),
   KEY `writedate` (`WRITEDATE`,`PARENTWRITEDATE`),
   KEY `writedate1` (`WRITEDATE`),
@@ -6772,6 +6774,7 @@ CREATE TABLE `tbl_expaprdocinfo` (
   `TENANT_ID` mediumint(5) NOT NULL,
   `PUBLICITYYN` char(2) DEFAULT NULL,
   `FORMVERSION` int(11) DEFAULT 0,
+  `SUMMARYPATH` varchar(140) DEFAULT NULL COMMENT '요약전 mht파일이 저장되는 경로정보',
   PRIMARY KEY (`TENANT_ID`,`COMPANYID`,`DOCID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -6840,6 +6843,7 @@ CREATE TABLE `tbl_expendaprdocinfo` (
   `TENANT_ID` mediumint(5) NOT NULL,
   `PUBLICITYYN` char(2) DEFAULT NULL,
   `FORMVERSION` int(11) DEFAULT 0,
+  `SUMMARYPATH` varchar(140) DEFAULT NULL COMMENT '요약전 mht파일이 저장되는 경로정보',
   PRIMARY KEY (`TENANT_ID`,`COMPANYID`,`DOCID`),
   KEY `IDX_TBL_EXPENDAPRDOCINFO_DELFLAG` (`DELFLAG`),
   KEY `IDX_TBL_EXPENDAPRDOCINFO_DOCID` (`DOCID`),
@@ -11483,6 +11487,7 @@ CREATE TABLE `tbl_schedulegroupmember` (
   `STATUS` mediumint(5) NOT NULL,
   `RESPONSEDATE` datetime NOT NULL,
   `TENANT_ID` mediumint(5) NOT NULL,
+  `WRITEPERMISSION` varchar(10) DEFAULT 'Y' NOT NULL,
   PRIMARY KEY (`GROUPID`,`MEMBERID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -12028,6 +12033,7 @@ CREATE TABLE `tbl_survey` (
   `MAIL_SENT_FLAG` tinyint(4) DEFAULT 0,
   `CLOSING_TEXT` longtext DEFAULT NULL COMMENT '맺음말',
   `TOTALNOTI_SENT_FLAG` tinyint(4) DEFAULT 0,
+  `user_exposed_flag` tinyint(4) DEFAULT 1 COMMENT '참여자 노출여부',
   PRIMARY KEY (`survey_id`,`tenant_id`,`company_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -12182,6 +12188,7 @@ CREATE TABLE `tbl_survey_respondent` (
   `response_date` datetime NOT NULL COMMENT '응답일',
   `company_id` varchar(80) NOT NULL COMMENT '컴퍼니 아이디',
   `tenant_id` mediumint(5) NOT NULL COMMENT '테넌트 아이디',
+  `lottery_result` int(11) DEFAULT NULL COMMENT '추첨결과',
   PRIMARY KEY (`company_id`,`tenant_id`,`response_id`),
   KEY `FK_SURVEY_RESPONDENT_idx` (`survey_id`),
   KEY `FK_SURVEY_RESPONDENT_RESPONSE_idx` (`response_id`),
@@ -12821,6 +12828,7 @@ CREATE TABLE `tbl_tmpexpaprdocinfo` (
   `TENANT_ID` mediumint(5) NOT NULL,
   `PUBLICITYYN` char(2) DEFAULT NULL,
   `FORMVERSION` int(11) DEFAULT 0,
+  `SUMMARYPATH` varchar(140) DEFAULT NULL COMMENT '요약전 mht파일이 저장되는 경로정보',
   PRIMARY KEY (`TENANT_ID`,`COMPANYID`,`OWNERID`,`SN`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
