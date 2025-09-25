@@ -4565,7 +4565,7 @@
 
 		</script>
 	</head>
-	<body class="popup" onkeydown="event_listOnkeyDown(event);" onkeyup="event_listOnkeyUp(event);" style="overflow: auto; width: fit-content; min-width: 1100px;">
+	<body class="popup" onkeydown="event_listOnkeyDown(event);" onkeyup="event_listOnkeyUp(event);" style="overflow:hidden">
 		<xml id="listviewheader" style="display: none;">
 		  <LISTVIEWDATA>
 		    <HEADERS>
