@@ -6827,8 +6827,9 @@ public class EzEmailServiceImpl extends EgovAbstractServiceImpl implements EzEma
 		String primary 		= (String) paramMap.get("primary");
 		//Locale locale 		= (Locale) paramMap.get("locale");
 		String lang = ezCommonService.selectUserGetLang(approverId, tenantId);
-		Locale locale = commonUtil.getLocalFromLang(lang);
 		String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", tenantId);
+		lang = Optional.ofNullable(lang).orElse(primaryLang);
+		Locale locale = commonUtil.getLocalFromLang(lang);
 		String shareId 	= (String) paramMap.get("shareId");
 
 		String domainName = ezCommonService.getTenantConfig("DomainName", tenantId);
