@@ -1,6 +1,26 @@
 ﻿// 2023-11-09 전인하 - 게시판 이모티콘 관련 전역변수
 var stickerGroup = ["girl;12;png", "officepeople;17;png"]; // 이모티콘그룹과 해당 그룹에 속하는 이모티콘 갯수
 var stickerIndex = 0; // 현재 포커싱중인 이모티콘의 인덱스
+// 이벤트 맵핑
+$(function() {
+	// 게시물 조회 > 게시물 세부정보 토글 // 기본은 펼쳐진 상태
+	$('#preview_detail_toggle').click(function () {
+		$('#preview_detail_toggle').toggleClass('active');
+		$('.detail_category').toggleClass('active');
+	});
+	
+	// 첨부파일 조회 > 첨부파일 리스트 토글 // 기본은 펼쳐진 상태
+	$('#preview_attach_toggle').click(function () {
+		$('#preview_attach_toggle').toggleClass('active');
+		$('.preview_attach_list').toggleClass('active');
+        
+        if ($('.preview_attach_list').hasClass('active')){
+            $('.preview_attach_list').css("height","auto");
+        } else {
+            $('.preview_attach_list').css("height","0");
+        }
+	});
+});
 
 function OpenInformationUI(pInformationContent)
 {
@@ -96,172 +116,144 @@ function getBoardComment() {
 // mode: view(게시물조회화면), print(인쇄)
 function makeBoardCommentHtml(result, mode) {
     var updateCount = parseInt(result.totalCommentCount);
-    var boardCommentList = "<colgroup><col width='20%' /><col width='61%' /><col width='19%' /></colgroup>";
+    var boardCommentList = "";
+    
+    boardCommentList.classList = "comment_list_text";
     list = result.boardLineReplyVOList;
-    var commentBgColor = 1;
-
-    list.forEach(function(vo, index) {
-        var replyDelFlag = 0;
-        if (!vo.userID) {
-            if (gubun == "2" && (!!vo.content || !!vo.imageContent)) {  // 빈 댓글 조회 기준 변경
-                vo.userName = strLangLGE06;
-            } else {
-                vo.userName = "";
-            }
-        }
-        if (!vo.content && !vo.imageContent) { // 빈 댓글 조회 기준 변경
-            vo.content = strLangLGE07;
-            vo.replyAttach = null;
-            replyDelFlag = 1;
-            updateCount -= 1;
-        }
-        if (!vo.content) { // 댓글 본문없이 이모티콘만 존재할 경우 빈문자열 삽입하여 빈댓글 취급
-            vo.content = "";
-        }
-        var commentBgColorText = commentBgColor == 1 ? "#ffffff" : "#fafafa";
-        var trBorderStyleText = replyDelFlag == 1 ? "border-bottom: 1px solid #e2e2e2" : "";
-
-        // 하나의 댓글은 2개의 tr로 구성, 각각의 tr은 3개의 td로 구성
-        // 첫번째 tr - 댓글 작성자 td, 댓글 내용 td, 댓글 작성일시(수정일시) td로 구성
-        boardCommentList += "<tr class='boardComment' replyLevel='" + vo.replyLevel + "' boardUserID='" + vo.userID + "' memberID='"
-            + vo.userID + "' replyID='" + vo.replyID + "' boardCommentStatus='" 
-            + 1 + "' style='height:40px;text-align:left;" + trBorderStyleText + "; background-color:" + commentBgColorText + ";'>";
-        
-        // 댓글 작성자 td
-        if (gubun == "2") {
-            if (vo.replyLevel >= 2) {
-                boardCommentList += "<td style='padding-left:47px;line-height:1.5'><img src='/images/egovframework/com/cmm/icon/reply_arrow.gif'> &nbsp;<span>" + vo.userName + "</span></td>";
-            } else {
-                boardCommentList += "<td style='padding-left:3px;line-height:1.5'>&nbsp;<span>" + vo.userName + "</span></td>";
-            }
-        } else {
-            if (vo.replyLevel >= 2) {
-                boardCommentList += "<td style='padding-left:47px;'><img src='/images/egovframework/com/cmm/icon/reply_arrow.gif'> &nbsp;<span style='cursor:pointer'"
-                    + " onclick='OpenUserInfo(\"" + vo.userID + "\", \"" + vo.deptID + "\")'>" + vo.userName + "</span></td>";
-            } else {
-                boardCommentList += "<td style='padding-left:3px;'>&nbsp;<span style='cursor:pointer'"
-                    + " onclick='OpenUserInfo(\"" + vo.userID + "\", \"" + vo.deptID + "\")'>" + vo.userName + "</span></td>";
-            }
-        }
-        // 댓글 내용 td
-        if (!!vo.parentWriterName && vo.replyLevel >= "2") {
-            boardCommentList += "<td id='contentTd" + index + "' class='comment' style='text-align:left;vertical-align:middle;padding:10px;word-break:break-all;line-height:1.5; white-space:pre-wrap;'>"
-                + "<span style='font-weight: bold; background-color: #E5EFFF'>@" + vo.parentWriterName + "</span>&ensp;<span class='contentSpan'>" + vo.content + "</span>&nbsp;&nbsp;";
-        } else {
-            if (vo.replyLevel == "1" && replyDelFlag == 1) { // 삭제된 댓글
-                boardCommentList += "<td id='contentTd" + index + "' class='comment' style='text-align:center;vertical-align:middle;padding:10px;'><span style='color:darkgray;'>"
-                + vo.content + "</span>&nbsp;&nbsp;";
-            } else {
-                /* 2019-11-22 홍승비 - 댓글 작성 시의 공백과 줄바꿈 전부 표출하도록 수정 */
-                boardCommentList += "<td id='contentTd" + index + "' class='comment' style='text-align:left;vertical-align:middle;padding:10px;word-wrap:break-word;line-height:1.5; white-space:pre-wrap;'><span class='contentSpan'>"
-                + vo.content + "</span>&nbsp;&nbsp;";
-            }
-        }        
-        if (typeof userInfoID == "undefined") {
-            userInfoID = "";    	
-        }
-        
-        // 2023-10-07 전인하 - 댓글 레이어에 이모티콘 삽입				
-        if (!!vo.imageContent) {
-            if (!!vo.content || vo.replyLevel >= "2") { // 본문이 존재하거나 답글이 존재할 경우
-                boardCommentList += "</br>";
-            }
-            boardCommentList += "<img class='emoticon' src='" +vo.imageContent+ "' style='margin-top:10px'/>";
-        }
-        
-        if (vo.userID == userInfoID && mode == "view") {
-            boardCommentList += "<img src='/images/ImgIcon/comment_del.gif'" +
-                    " style='cursor:pointer;vertical-align:middle;inline-block;padding-bottom:1.6px' onclick='deleteBoardComment(this)'/>";
-            boardCommentList += "<img src='/images/modify2.gif'" + " style='cursor:pointer;vertical-align:middle;inline-block;padding-bottom:1.6px' onclick='modifyBoardComment(this);'/>";
-        } else {
-            /* 2020-01-10 홍승비 - 익명게시판 댓글 체크 부분 오라클 호환 수정 */
-            if (!vo.userID && gubun == "2" && replyDelFlag == 0 && mode == "view") {
-                //익명일 경우
-                boardCommentList += "<img src='/images/ImgIcon/comment_del.gif'" +
-                        " style='cursor:pointer;vertical-align:middle;inline-block;padding-bottom:1.6px;' onclick='deleteBoardComment(this)'/>";
-                boardCommentList += "<img src='/images/modify2.gif'" + " style='cursor:pointer;vertical-align:middle;inline-block;padding-bottom:1.6px' onclick='modifyBoardComment(this)'/>";
-            } else {
-                ;
-            }
-        }
-
-        // 파일첨부 삽입
-        if (!!vo.replyAttach) {
-            boardCommentList += "<br/>"
-            for (let i = 0; i < vo.replyAttach.length; i++) {
-                let replyAttObjStr = insertCommentAttachDom(vo.replyAttach[i], 'view', 'json').outerHTML;
-                boardCommentList += replyAttObjStr;
-            }
-        }
-        boardCommentList += "</td>";
-        // 댓글 작성일시(수정일시) td
-        var styleText = mode == "print" ? "" : "style='text-align:right;padding-right:8px;border-bottom:hidden;'";
-        var dateText = !vo.updateDate ? vo.writeDate.substring(0, 16) : vo.updateDate.substring(0, 16);
-        if (replyDelFlag == 1) {// 삭제된 경우 두번째 tr 사용 X
-            boardCommentList += "<td></td>";
-        } else {
-            boardCommentList += "<td " + styleText + ">" + dateText + "</td>";
-        }
-        boardCommentList += "</tr>";
-        // 첫번째 tr 종료
-
-        // 두번째 tr - 답글쓰기 버튼 td, 비어있는 td, 좋아요/싫어요 버튼 td로 구성
-        /* 2023-03-07 이가은 - 댓글 좋아요/싫어요 버튼 및 우측 숫자 표출 */
-        if (replyDelFlag != 1) {
-            if (mode == "view") {
-                if (vo.replyLevel >= 2) {
-                    boardCommentList += "<tr class='commentReact" + index + "' parentreplyid=" + vo.parentReplyID + " style='text-align:left;border:1px solid #e2e2e2;background-color:" + commentBgColorText + ";'>";
-                } else {
-                    boardCommentList += "<tr class='commentReact" + index + "' style='height:20px; text-align:left; border:1px solid #e2e2e2; background-color:" + commentBgColorText + ";'>";
-                }
-               
-                // 답글쓰기 버튼 td
-                if (vo.replyLevel >= 2) {
-                    boardCommentList += "<td style='border-top:hidden;padding-left:58px;'>";
-                } else {
-                    boardCommentList += "<td style='border-top:hidden;'>";
-                }
-                boardCommentList += "<a style='color: #8c8b89; float: left; padding-left: 7px; margin-bottom: 13px;' onclick='replyOnclick(this, \"" + vo.replyID + "\", \"" + vo.userName + "\")'><span class='replyWriteSpan" + index + "' style='cursor:pointer;'>" + strLangLGE01 + "</span></a></td>";
-                // 비어있는 td
-                boardCommentList += "<td style='border-top:hidden;'></td>";
-                // 좋아요/싫어요 버튼 td
-                boardCommentList += "<td class='reactTd' style='text-align:right; border-top:hidden; padding-right:13px; float:right;' replyid=" + vo.replyID + ">";
-                if (reactFlag != null && reactFlag == "Y") {
-                    if (gubun != 2) {
-                        boardCommentList += "<div><p style='float:left; margin-top:0px;'><img src='/images/like_off.png' style='cursor:pointer;' id=Y" + vo.replyID + " replyid=" + vo.replyID + " userid=" + vo.userID + " reactflag=Y index=" + index + " onclick='react_onclick(this)' /></p>";
-                        boardCommentList += "<p style='width:16px; float:left; margin-top:0px;'><span id='myY" + index + "' style='color:#F55E51;'>" + vo.re_like + "</span></p>";
-                        boardCommentList += "<p style='float:left; margin-top:0px; margin-left:15px;'><img src='/images/hate_off.png' style='cursor:pointer;' id=N" + vo.replyID + " replyid=" + vo.replyID + " userid=" + vo.userID + " reactflag=N index=" + index + " onclick='react_onclick(this)'/></p>";
-                        boardCommentList += "<p style='width:16px; float:left; margin-top:0px;'><span id='myN" + index + "' style='color:#5381F5;'>" + vo.re_hate + "</span></p></div>";
-                        boardCommentList += "</td>";
-                        boardCommentList += "</tr>";
-                    } else {
-                        boardCommentList += "<div><p style='float:left; margin-top:0px;'><img src='/images/like_off.png' style='cursor:pointer;' id=Y" + vo.replyID + " replyid=" + vo.replyID + " userid=anonym reactflag=Y index=" + index + " onclick='react_onclick(this)' /></p>";
-                        boardCommentList += "<p style='width:16px; float:left; margin-top:0px;'><span id='myY" + index + "' style='color:#F55E51;'>" + vo.re_like + "</span></p>";
-                        boardCommentList += "<p style='float:left; margin-top:0px; margin-left:15px;'><img src='/images/hate_off.png' style='cursor:pointer;' id=N" + vo.replyID + " replyid=" + vo.replyID + " userid=anonym reactflag=N index=" + index + " onclick='react_onclick(this)'/></p>";
-                        boardCommentList += "<p style='width:16px; float:left; margin-top:0px;'><span id='myN" + index + "' style='color:#5381F5;'>" + vo.re_hate + "</span></p></div>";
-                        boardCommentList += "</td>";
-                        boardCommentList += "</tr>";
-                    }
-                } else {
-                    boardCommentList += "</td></tr>";
-                }
-            }
-        }
-        if (mode == "view") {
-            commentBgColor = commentBgColor * (-1);
-        }
-    });
-    // 두번째 tr 종료
-      
-    if (list.length == 0) {
-        boardCommentList += "<tr style='height:40px;text-align:left;border:1px solid #e2e2e2; background-color:white;'>";
-        boardCommentList += "<td colspan='3' style='padding:10px;border-top:0px;border-bottom:1px solid #e2e2e2;"
-                            + "border-right:0px;border-left:0px;text-align:center;background-color:white;'>" 
-                            + strLang181 + "</td>";
-        boardCommentList += "</tr>";
+	
+	if (list.length == 0) { // 댓글이 없을 때
+		boardCommentList += "<div style='padding: 15px; margin: 0 auto; width: 100%; text-align: center; border-bottom: 1px solid #CDD1D5; box-sizing: border-box;'>";
+        boardCommentList += "<span style='color: #8b8b8b;font-size: 14px;'>" + strLang181 + "</span></div>";
+		return boardCommentList;
     }
+
+    for (const [index, vo] of list.entries()) {
+		var replyDelFlag = 0;
+		if (!vo.userID) {
+			if (gubun == "2" && (!!vo.content || !!vo.imageContent)) {  // 빈 댓글 조회 기준 변경
+				vo.userName = strLangLGE06;
+			} else {
+				vo.userName = "";
+			}
+		}
+		if (!vo.content && !vo.imageContent) { // 빈 댓글 조회 기준 변경
+			vo.content = strLangLGE07;
+			vo.replyAttach = null;
+			replyDelFlag = 1;
+			updateCount -= 1;
+		}
+		if (!vo.content) { // 댓글 본문없이 이모티콘만 존재할 경우 빈문자열 삽입하여 빈댓글 취급
+			vo.content = "";
+		}
+
+		if (!vo.userPhoto || gubun == "2") {
+			vo.userPhoto = "/images/kr/main/bestEmployee_pic_none.png";
+		}
+
+		if (typeof userInfoID == "undefined") {
+			userInfoID = "";
+		}
+
+		var dateText = !vo.updateDate ? vo.writeDate.substring(0, 16) : vo.updateDate.substring(0, 16);
+
+		if (replyDelFlag == 1) {
+			dateText = "";
+		}
+
+		if (vo.replyLevel == "1" && replyDelFlag == 1) { // 삭제된 댓글
+			boardCommentList += "<div id='commentIndex" + index + "' class='reNewalCmt delComment commentReact" + index + "' replyLevel='" + vo.replyLevel + "' boardUserID='" + vo.userID + "' memberID='"
+				+ vo.userID + "' replyID='" + vo.replyID + "' boardCommentStatus='" + 1 + "'>";
+			boardCommentList += "<span>" + vo.content + "</span></div>";
+			continue;
+		}
+
+		var isReReply = !!vo.parentWriterName && vo.replyLevel >= "2"; // 대댓글이면 true, 일반댓글이면 false;
+		if (isReReply) {
+			boardCommentList += "<div id='commentIndex" + index + "' class='comment_list sub_comment_list reNewalCmt commentReact" + index + "' replyLevel='" + vo.replyLevel + "' boardUserID='" + vo.userID + "' memberID='"
+				+ vo.userID + "' replyID='" + vo.replyID + "' boardCommentStatus='" + 1 + "' parentreplyid='" + vo.parentReplyID + "'>";
+			boardCommentList += "<div class='icon_sub_comment'></div>";
+			boardCommentList += "<div class='sub_comment_listcont'>";
+			boardCommentList += "<div class='comment_list_text'>";
+		} else {
+			boardCommentList += "<div id='commentIndex" + index + "' class='comment_list reNewalCmt commentReact" + index + "' replyLevel='" + vo.replyLevel + "' boardUserID='" + vo.userID + "' memberID='"
+				+ vo.userID + "' replyID='" + vo.replyID + "' boardCommentStatus='" + 1 + "'>";
+			boardCommentList += "<div class='comment_list_text'><div class='user_poto'>";
+            
+            if (vo.userPhoto && vo.userPhoto != '/images/kr/main/bestEmployee_pic_none.png') {
+			    boardCommentList += "<img src='/admin/ezOrgan/getPersonalInfo.do?fileName=" + vo.userPhoto + "'></div>";
+            } else {
+                boardCommentList += "<img src='" + vo.userPhoto + "'></div>";
+            }
+		}
+		
+		boardCommentList += "<div class='comment_list_textarea'>";
+		
+		// 댓글 작성자명
+		if (gubun == "2" || mode == "print") {
+			boardCommentList += "<span class='comment_name' style='cursor: default' >";
+		} else {
+			boardCommentList += "<span class='comment_name' onclick='OpenUserInfo(\"" + vo.userID + "\", \"" + vo.deptID + "\")' style='cursor: pointer;'> ";
+		}
+		if (isReReply) {
+			boardCommentList += vo.userName + "<strong style='cursor: default;' onclick='event.stopPropagation();'>@" + vo.parentWriterName + "</strong></span>"
+		} else {
+			boardCommentList += vo.userName + "</span>";
+		}
+
+		// 댓글 작성일
+		boardCommentList += "<span class='comment_day'>" + dateText + "</span>";
+		
+		// 댓글 본문 및 이모티콘
+		boardCommentList += "<span class='comment_txt'>" + vo.content;
+		if (!!vo.imageContent) {
+			boardCommentList += "<br>";
+			boardCommentList += "<img class='emoticon' src='" + vo.imageContent + "' style='margin-top:10px'/>";
+		}
+		boardCommentList += "</span>";
+
+		// 첨부파일
+		if (!!vo.replyAttach) {
+			boardCommentList += "<span class='comment_attachFile'>"
+			for (let i = 0; i < vo.replyAttach.length; i++) {
+				var replyAttObjStr = insertCommentAttachDom(vo.replyAttach[i], mode, 'json').outerHTML;
+				boardCommentList += replyAttObjStr;
+			}
+			boardCommentList += "</span>";
+		}
+		boardCommentList += "</div></div>";
+
+		// 답글쓰기, 수정, 삭제 버튼
+		boardCommentList += "<div class='comment_list_function'><div class='comment_list_btn'>";
+		if (mode != "print") {
+			boardCommentList += "<span class='replyWriteSpan" + index + "' onclick='replyOnclick(this, \"" + vo.replyID + "\", \"" + vo.userName + "\")'>" +strLangLGE01 + "</span>";
+			if (!vo.userID && gubun == "2" && replyDelFlag == 0 || vo.userID == userInfoID ) {
+				boardCommentList += "<span onclick='modifyBoardComment(this)'>" + strLangNewBoardDesign01 + "</span>";
+				boardCommentList += "<span onclick='deleteBoardComment(this)'>" + strLangNewBoardDesign02 + "</span>";
+			}
+		}
+		boardCommentList += "</div>";
+
+		// 좋아요 / 싫어요
+		if (reactFlag != null && reactFlag == "Y") {
+            if (gubun != 2) {
+			    boardCommentList += "<div><div class='likeDivBox'><span id=Y" + vo.replyID + " replyid=" + vo.replyID + " userid=" + vo.userID + " reactflag=Y index=" + index + " onclick='react_onclick(this)' class='likeButton' title='" + strLangNewBoardDesign03 + "'>";
+            } else {
+			    boardCommentList += "<div><div class='likeDivBox'><span id=Y" + vo.replyID + " replyid=" + vo.replyID + " userid=anonym reactflag=Y index=" + index + " onclick='react_onclick(this)' class='likeButton' title='" + strLangNewBoardDesign03 + "'>";
+            }
+			boardCommentList += "<img id='likeButtonImg' src='/images/like_on.png'><span id='likeCountSpan'>" + vo.re_like + "</span></span></div>"
+			if (gubun != 2) {
+                boardCommentList += "<div id='disLikeDiv'><span id=N" + vo.replyID + " replyid=" + vo.replyID + " userid=" + vo.userID + " reactflag=N index=" + index + " onclick='react_onclick(this)' class='disLikeButton' title='" + strLangNewBoardDesign04 + "'>";
+			} else {
+			    boardCommentList += "<div id='disLikeDiv'><span id=N" + vo.replyID + " replyid=" + vo.replyID + " userid=anonym reactflag=N index=" + index + " onclick='react_onclick(this)' class='disLikeButton' title='" + strLangNewBoardDesign04 + "'>";
+			}
+			boardCommentList += "<img id='disLikeButtonImg' src='/images/disLike_off.png'><span id='disLikeCountSpan'>" + vo.re_hate + "</span></span></div></div>";
+		}
+		boardCommentList += "</div></div></div>";
+	}
+	
     return boardCommentList;
 }
+
 //강민수92
 function delete_onelinereply_Complete(ret) {
     var xmlhttp = createXMLHttpRequest();
@@ -319,7 +311,7 @@ function delete_onelinereply_Complete(ret) {
 }
 //강민수92
 function deleteBoardCommentPopup(obj) {
-	delpReplyID = $(obj).closest("tr").attr("replyID");
+	delpReplyID = $(obj).closest(".reNewalCmt").attr("replyID");
 
 	/* 2019-11-07 홍승비 - 하단댓글의 경우 레이어팝업 표출영역 수정 */
 	if (OneLineReplyFlag == "1") {
@@ -341,15 +333,15 @@ function closePopup2() {
 }
 //강민수92
 function deleteBoardComment(obj) {
-	delpReplyID = $(obj).closest("tr").attr("replyID");
-	delReplyLevel = $(obj).closest("tr").attr("replylevel");
-	parentReplyID = $(obj).closest('tr')[0].nextSibling.getAttribute('parentreplyid');
+	delpReplyID = $(obj).closest(".reNewalCmt").attr("replyID");
+	delReplyLevel = $(obj).closest(".reNewalCmt").attr("replylevel");
+	parentReplyID = $(obj).closest('.reNewalCmt').attr('parentreplyid');
 
 	var replyID = "";
 
 	if (delReplyLevel != "1" && !!parentReplyID) {
-		if ($(obj).closest('tr')[0].previousSibling.className == "boardComment") {
-			delChildReply = 1;
+		if ($(obj).closest('.reNewalCmt').prev('.delComment') > 0) {
+			delChildReply = 1; // 부모댓글이 삭제된 상태일 때
 		}
 	}
 
@@ -372,7 +364,7 @@ function deleteBoardComment(obj) {
 		success: function(result){
 			if ((delReplyLevel == "1" && result > 0) || (delReplyLevel != "1" && result == 1 && delChildReply == 0)) {
 				delParentReply = 1;
-			} else if (delReplyLevel != "1" && result == 1 && delChildReply == 1) {
+			} else if (delReplyLevel != "1" && result == 1 && delChildReply == 1) { // 부모가 삭제 되었고, 삭제할 자식 댓글이 마지막일 때
 				delParentReply = 2;
 			}
 		}
@@ -463,6 +455,7 @@ function OneLineReply_onkeydown() {
 }
 //강민수92
 function Save_OneLineReply(reply) {
+    
     if (Reply_FG != "true") {
         alert(strLang173);
 	    return;
@@ -505,8 +498,8 @@ function Save_OneLineReply(reply) {
 
 	// 답글일 경우
 	if (reply.id == 'childReplySaveBtn') {
-		var parentReplyId = reply.closest('tr').getAttribute('parentreplyid');
-		var parentWriterName = reply.closest('tr').getAttribute('parentwritername');
+		var parentReplyId = reply.closest('.reNewalCmt').getAttribute('parentreplyid');
+		var parentWriterName = reply.closest('.reNewalCmt').getAttribute('parentwritername');
 		var replyLevel = reply.getAttribute('replyLevel');
 
 		content = MakeXMLString(document.getElementById('reReply').value);
@@ -555,6 +548,11 @@ function Save_OneLineReply(reply) {
 			/* 2021-06-23 홍승비 - 댓글알림 기능 추가 (댓글알림 시에 그룹사게시판 여부 파라미터는 필요없음) */
 			sendBoardAlert("comment", pBoardID, pItemID, "");
 			closeEmoticonPreview(); // 댓글 저장 후 이모티콘 미리보기 레이어 닫기
+            var firstCommentAttach = document.getElementById("commentAttach");
+            
+            if (firstCommentAttach) {
+                firstCommentAttach.classList = "";
+            }
 		},
 		error : function(jqXHR, textStatus, errorThrown) {
 			alert("ajax error");
@@ -668,63 +666,45 @@ function showUserReplyReact(pItemID) {
 
 /* 2023-03-29 이가은 - 답글쓰기/답글접기 버튼 온클릭 메서드 */
 function replyOnclick(reply, replyID, userName){
-	var replyTr = ($(reply).parents()[1]).className;
-	var parentReplyID = $(reply).parents()[1].getAttribute('parentreplyid');
-	var replyWriteSpan = $(reply).children('span').text();
-	var replyLevel = $(reply).parents()[1].previousSibling.getAttribute('replylevel');
-	
     AllEmoticonPanelClose();
+    removeCloneModiCommet();    
+    var commentElement = $(reply).closest(".comment_list");
+    var replyTr = commentElement.attr('class').match(/commentReact\S*/)[0];
+    console.log(replyTr);
+	var parentReplyID = commentElement.attr("parentreplyid");
+	var replyWriteSpan = $(reply).text(); // 답글쓰기
+	var replyLevel = commentElement.attr('replylevel');
 
 	if (parentReplyID != null) {
 		replyID = parentReplyID;
 	}
 
-	var commentList = "<tr class='tr" + replyTr + "' style='height: 71.88px; position:relative;' parentReplyId= " + replyID +" parentWriterName= " + "'" + userName  + "'" + ">";
+	var commentList = "";
+	commentList += "<div class='tr" + replyTr + " comment_list sub_comment_list reNewalCmt' parentReplyId= '" + replyID +"' parentWriterName= '" + userName  + "'>";
+    commentList += "<div class='icon_sub_comment'></div>";
+    commentList += "<div class='sub_comment_listcont'>";
     
-    // 2023-11-07 전인하 - 이모티콘 아이콘 버튼 삽입
-	if (gubun != 2) {
-		commentList += "<td colspan='3' style='padding:3px 0px 3px 63px; border-left:1px solid #e2e2e2; border-top:1px solid #e2e2e2; border-bottom:1px solid #e2e2e2;'>";
-		commentList += "<div>"
-		commentList += "<p style='width : 14%; float: left; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden;'><span>" + userInfoName + "</span></p>";
-		commentList += "<img id='_addEmoticonRereply' class='_addEmoticon' src='/images/poll/add_emo_vote.png' onclick='addSticker(this)'>";
-		commentList += "<textarea id='reReply' class='reReplyText' rows='3' style='resize:none; float: left; overflow: hidden;' maxlength='500' oninput='editAutoGrow(this)'></textarea>";
-		commentList += "<span style='vertical-align: middle;position:absolute; right: 14px; margin-top: 7px;'>"
-		if (attachmentFlag == "Y") {
-		    commentList += "<a class='imgbtn'><span onclick='btnfileup(\"commentListFile\");'>" + strLangAttachJIH01 + "</span></a><br/>"
-		}
-		commentList += "<a class='imgbtn'><span id='childReplySaveBtn' replyLevel=" + (parseInt(replyLevel) + 1) + " onclick='Save_OneLineReply(this)'>" + strLangLGE03 + "</span></a>";
-		commentList += "</span>"
-		commentList += "</div>"
-		commentList += "</br><div id='commentListAttach'></div>"
-		commentList += "</td></tr>";
-	} else {
-		if (OneLineReplyFlag == 1) {
-			commentList += "<td colspan='3' style='padding-left:53px; padding-top:10px; border-left:1px solid #e2e2e2; border-top:1px solid #e2e2e2; position:relative;'>";
-			commentList += "<div>"
-			commentList += "<p style='float:left; width:90px; margin:0; padding-left:10px;'><span>" + strLangLGE06 + "</span></p>";
-		    commentList += "<img id='_addEmoticonRereply' class='_addEmoticon' src='/images/poll/add_emo_vote.png' onclick='addSticker(this)'>";
-			commentList += "<textarea id='reReply' rows='3' style='resize:none; width:calc(100% - 160px); float: left; overflow:hidden; margin-left:10px;' maxlength='500' oninput='editAutoGrow(this)'></textarea></td></tr>";
-		} else {
-			commentList += "<td colspan='3' style='padding-left:53px; padding-top:10px; border-left:1px solid #e2e2e2; border-top:1px solid #e2e2e2; position:relative;'>";
-			commentList += "<div>";
-			commentList += "<p style='float:left; width:90px; margin:0; padding-left:10px;'><span>" + strLangLGE06 + "</span></p>";
-		    commentList += "<img id='_addEmoticonRereply' class='_addEmoticon' src='/images/poll/add_emo_vote.png' onclick='addSticker(this)'>";
-			commentList += "<textarea id='reReply' rows='3' style='resize:none; width:calc(100% - 160px); margin-left:10px; float: left; overflow:hidden;' maxlength='500' oninput='editAutoGrow(this)'></textarea></td></tr>";
-		}
-		commentList += "<tr class='tr" + replyTr + "' style='border-bottom:solid 1px #e2e2e2;' parentReplyId= " + replyID + " parentWriterName= " + userName + ">";
-		commentList += "<td colspan='3' style='width: 90%; text-align:right; padding-top:3px; padding-bottom:4px; vertical-align: middle'>";
-		commentList += "<span style='font-weight:normal; margin-right:4px; display:inline-block; margin-top:2px'>" + strLangLGE05 + "&nbsp;</span>";
-		commentList += "<span><input type='password' id='childReplyPW' maxlength='20' size='20' style='height:25px !important'>&nbsp;</span>";
-		commentList += "<span>"
-		if (attachmentFlag == "Y") {
-		    commentList += "<a class='imgbtn' style='margin-right:3px;'><span onclick='btnfileup(\"commentListFile\");'>" + strLangAttachJIH01 + "</span></a>"
-		}
-		commentList += "<a class='imgbtn' style='margin-right: 8px'><span id='childReplySaveBtn' replyLevel=" + (parseInt(replyLevel) + 1) + " onclick='Save_OneLineReply(this)'>" + strLangLGE03 + "</span></a>";
-		commentList += "</span>"
-		commentList += "</div>"
-		commentList += "<br/><div id='commentListAttach'></div>"
-		commentList += "</td></tr>";
-	}
+    if (gubun == 2) {
+        commentList += "<div class='pw_area'><input type='password' id='childReplyPW' maxlength='20' size='20' placeholder='"+ strLangNewBoardDesign08 +"'></div>";
+    }
+    commentList += "<div class='comment_textarea'>"
+    commentList += "<textarea id='reReply' name='textarea' rows='2' placeholder='" + strLangNewBoardDesign06 + "' maxlength='500' oninput='editAutoGrow(this)'></textarea></div>";
+    
+    if (attachmentFlag == "Y") {
+        commentList += "<div id='commentListAttach'></div>";
+    }
+    
+    commentList += "<div class='comment_function'><div>";
+    commentList += "<span id='_addEmoticonRereply' class='btn_emoticon' onclick='addSticker(this)'>" + strLangNewBoardDesign05 + "</span>";
+    
+    if (attachmentFlag == "Y") {
+        commentList += "<span class='btn_attachFile' onclick='btnfileup(\"commentListFile\");'>" + strLangNewBoardDesign07 + "</span>"
+    }
+    
+    commentList += "</div><div>";
+    commentList += "<button id='childReplySaveBtn' class='btn_registration' replyLevel=" + (parseInt(replyLevel) + 1) + " onclick='Save_OneLineReply(this)'>" + strLangLGE03 + "</button>";
+    commentList += "<button class='btn_registration' onclick='removeCloneModiCommet()'>" + strLangLGE04 + "</button>";
+    commentList += "</div></div></div></div>"
 
 	if (replyModifyFlag > 0) { // 댓글수정 창이 열려있는 경우 창을 닫아줌
 		$('#' + replyModifyId).next('td').css('border-bottom', 'hidden');
@@ -756,22 +736,26 @@ function replyOnclick(reply, replyID, userName){
 /* 2023-03-29 이가은 - 수정 버튼 온클릭 메서드 > textarea로 변경 */
 function modifyBoardComment(obj) {
 	AllEmoticonPanelClose();
-    var basePanel = $(obj).parents('.boardComment');    // TR 선택
+    removeCloneModiCommet();
+    $(".modifyClickEvent").removeClass("modifyClickEvent");
+    $(obj).addClass("modifyClickEvent");
+    var basePanel = $(obj).parents(".reNewalCmt");
+    
+    originalCommentClone(basePanel);
+    
+    var parentreplyid = basePanel.attr("parentreplyid");
+    var replyLevel = basePanel.attr("replyLevel");
+    
     var uploadedEmoticonPanel = $('#uploadedFile'); // 삽입이모티콘팝업 레이어
-    var emoticonSrc = basePanel.find('.emoticon').length > 0 ? $(obj).parents('.boardComment').find('.emoticon').attr('src') : ""; // 댓글에 이미 삽입되어있던 이모티콘
+    var emoticonSrc = basePanel.find('.emoticon').length > 0 ? $(obj).parents('.reNewalCmt').find('.emoticon').attr('src') : ""; // 댓글에 이미 삽입되어있던 이모티콘
 	var replyID = basePanel.attr('replyID');
 	var replyLevel = basePanel.attr('replylevel');
-	var color = basePanel.parent().css('backgroundColor');
-    var content = basePanel.find('.contentSpan').text();
+	var memberId = basePanel.attr('memberid');
+	var boarduserId = basePanel.attr('boarduserid');
+    var content = basePanel.find('.comment_txt').text();
     var editFileList = getEditFileList(basePanel.find('.commentFileSpan'));
 
-	// 답글쓰기 창이 열려있는 경우 창을 닫아줌
-	if (replyOpenFlag > 0) {
-		$('[class^=trcommentReact]').remove();
-		$('[class^=replyWriteSpan]').text(strLangLGE01);
-		replyOpenFlag = 0;
-	}
-
+    var color = "";
 	replyModifyArray = [obj, color, content];
 
 	if (gubun == 2 && CrossYN()) { // 익명게시판, CrossYN()이 true -> 흐름을 다르게 타야 함
@@ -790,23 +774,39 @@ function modifyBoardComment(obj) {
 				return;
 			}
 		}
-        // 2023-11-07 전인하 - 답글수정 레이어에 id 값 삽입, 이모티콘 아이콘 삽입
-		var modifyTextarea = "<div id='reReplyArea' style='border:1px solid lightgray; width:100%; float:left;'>";
-		modifyTextarea += "<div><textarea class='modifyText' style='width:98%;background-color:" + color + "; resize:none; outline:none; padding:3px; border:none; overflow:hidden;' maxlength='500' oninput='editAutoGrow(this)'>" + content + "</textarea>";
-		modifyTextarea += "</div>";
-		modifyTextarea += "<div style='margin-bottom:2px; float:right; margin-right:5px;'>";
-        modifyTextarea += "<img id='_addEmoticonModify' class='_addEmoticonModify' src='/images/poll/add_emo_vote.png' onclick='addSticker(this)'>";
+        
+        var modifyTextarea = "";
+        
+        if (!!parentreplyid && replyLevel >= "2") {
+            modifyTextarea += "<div class='icon_sub_comment'></div>";
+            modifyTextarea += "<div class='sub_comment_listcont'>";
+        }
+        
+		modifyTextarea += "<div id='reReplyArea' class='comment_textarea'>";
+		modifyTextarea += "<textarea rows='3' name='textarea' class='modifyText' maxlength='500' placeholder='" + strLangNewBoardDesign06 + "'oninput='editAutoGrow(this)'>" + content + "</textarea>";
+        modifyTextarea += "</div>";
+        
         if (attachmentFlag == "Y") {
-            modifyTextarea += "<span style='margin-left:5px; margin-right:5px; color:gray;'>|</span>";
-            modifyTextarea += "<a onclick='btnfileup(\"commentListFile\");'>" + strLangAttachJIH01 + "</a>";
-		}
-        modifyTextarea += "<span style='margin-left:5px; margin-right:5px; color:gray;'>|</span>";
-		modifyTextarea += "<a onclick='getBoardComment(); replyModifyFlag -= 1;'>" + strLangLGE04 + "</a>";
-		modifyTextarea += "<span style='margin-left:5px; margin-right:5px; color:gray;'>|</span>"
-		modifyTextarea += "<a onclick='modiReplySave(this); replyModifyFlag -= 1;'>" + strLangLGE03 + "</a></div>";
-		modifyTextarea += "</div>";
-		modifyTextarea += "<div id='commentListAttach'></div>"
-
+            modifyTextarea += "<div id='commentListAttach'></div>";
+        }
+        
+        modifyTextarea += "<div class='comment_function'><div>";
+        modifyTextarea += "<span id='_addEmoticonModify' class='btn_emoticon' onclick='addSticker(this)'>" + strLangNewBoardDesign05 + "</span>";
+        
+        if (attachmentFlag == "Y") {
+            modifyTextarea += "<span onclick='btnfileup(\"commentListFile\");' class='btn_attachFile'>" + strLangNewBoardDesign07 + "</span>"
+        }
+        
+        modifyTextarea += "</div>";
+        modifyTextarea += "<div>";
+        modifyTextarea += "<button class='btn_registration' onclick='modiReplySave(this);' replyModifyFlag -= 1;'>" + strLangLGE03 + "</button>";
+        modifyTextarea += "<button class='btn_registration cancelComment' onclick='getBoardComment();' replyModifyFlag -= 1;'>" + strLangLGE04 + "</button>";
+        modifyTextarea += "</div></div></div></div></div>";
+        
+        if (!!parentreplyid && replyLevel >= "2") {
+            modifyTextarea += "</div>";
+        }
+        
 		if (replyModifyFlag == 0) {
 			replyModifyFlag += 1;
 		} else if (replyModifyFlag > 0) { // 댓글수정 창이 열려있는 경우 창을 닫아줌
@@ -814,20 +814,18 @@ function modifyBoardComment(obj) {
 			$('#' + replyModifyId).next('td').css('border-bottom', 'hidden');
 			$('#' + replyModifyId).closest('tr').next('tr').css('display', '');
 		}
-		var basePanelComment = $(obj).parents('.boardComment').find('.comment');
-        replyModifyId = basePanelComment.attr('id');
-        replyTextarea = basePanelComment.html();
-        basePanelComment.next('td').css('border-bottom', '');
-        basePanel.next('tr').css('display', 'none');
+        
+		var basePanelComment = $(obj).parents('.comment_list');
+        
         basePanelComment.html(modifyTextarea);
         $('.modifyText').focus();
         $('.modifyText').prop('selectionStart', content.length);
 		editAutoGrow($('.modifyText')[0]);
-	}
 
-    if (gubun != 2) {
+        var reReplyArea = $("#reReplyArea");
+
         if (!!emoticonSrc) {    
-            basePanel.append(uploadedEmoticonPanel); // 삽입이모티콘팝업 레이어 삽입
+            reReplyArea.append(uploadedEmoticonPanel); // 삽입이모티콘팝업 레이어 삽입
             if (previewPageCheck(location) || commentPopupPageCheck(location)) {                
                 uploadedEmoticonPanel.addClass('down');
             } else {
@@ -836,17 +834,22 @@ function modifyBoardComment(obj) {
             openEmoticonPreview(emoticonSrc);
         }
         
-        for(let i=0; i<editFileList.length; i++) {
-            var item = editFileList[i];
-            var fileDomObj = insertCommentAttachDom(item, "edit", "json");
-            basePanelComment.find("#commentListAttach").append(fileDomObj);
+        if (attachmentFlag == "Y") {
+            if (editFileList.length > 0) {
+                $("#commentListAttach").addClass("comment_attachFile");
+            }
+            for(let i=0; i<editFileList.length; i++) {
+                var item = editFileList[i];
+                var fileDomObj = insertCommentAttachDom(item, "edit", "json");
+                basePanelComment.find("#commentListAttach").append(fileDomObj);
+            }
         }
     }
 }
 
 /* 2023-03-27 이가은 - 댓글 수정 후 등록 버튼 온클릭 메서드 */
 function modiReplySave(reply) {
-    var basePanel = $(reply).parents('.boardComment');
+    var basePanel = $(reply).closest('.reNewalCmt');
 	var pReplyID = basePanel.attr('replyid');
 	var text = basePanel.find('.modifyText').val();  
     var fileinfo = $("#uploadedFile").hasClass('open') ? $("#previewImage").attr("_fileInfo") : null
@@ -887,7 +890,7 @@ function modiReplySave(reply) {
 
 /* 2023-08-09 임정은 - 익명게시판 답글 수정 > checkPassWord.do로 보내주는 메서드 */
 function modifyBoardCommentPopup(obj) {
-	delpReplyID = $(obj).closest("tr").attr("replyID");
+	delpReplyID = $(obj).closest(".reNewalCmt").attr("replyID");
 
 	if (OneLineReplyFlag == "1") {
 		DivPopUpShow2($('body').prop('scrollWidth') * 0.5, $('body').prop('scrollHeight') * 0.3, "/ezBoard/checkPassWord.do?itemID="
@@ -915,54 +918,68 @@ function modify_onelinereply_Complete(ret) {
 	} else if (ret == "cancel" || ret == undefined) {
 		return;
 	}
+    
+    AllEmoticonPanelClose();
+    removeCloneModiCommet();   
 
-	var obj = replyModifyArray[0];
+	var obj = $(".modifyClickEvent");
 	var color = replyModifyArray[1];
 	var content = replyModifyArray[2];
 	// 2023-11-07 전인하 - 댓글에 이미 삽입되어있던 이모티콘을 저장
-	var basePanel = $(obj).parents('.boardComment'); // TR 선택
-	var basePanelComment = basePanel.find('.comment');
+	var basePanel = $(obj).closest('.reNewalCmt'); // TR 선택
+	
+    originalCommentClone(basePanel);
+    
+	var replylevel = basePanel.attr("replylevel");
+	var basePanelComment = basePanel.find('.comment_textarea');
 	var uploadedEmoticonPanel = $('#uploadedFile'); // 삽입이모티콘팝업 레이어
-    var emoticonSrc = basePanel.find('.emoticon').length > 0 ? $(obj).parents('.boardComment').find('.emoticon').attr('src') : ""; // 댓글에 이미 삽입되어있던 이모티콘
+    var emoticonSrc = basePanel.find('.emoticon').length > 0 ? $(obj).parents('.reNewalCmt').find('.emoticon').attr('src') : ""; // 댓글에 이미 삽입되어있던 이모티콘
     var editFileList = getEditFileList(basePanel.find('.commentFileSpan'));
 
     // 2023-11-07 전인하 - 답글수정 레이어에 id 값 삽입, 이모티콘 아이콘 삽입
-    var modifyTextarea = "<div id='reReplyArea' style='border:1px solid lightgray; width:100%; float:left;'>";
-	modifyTextarea += "<div><textarea class='modifyText' style='width:98%;background-color:" + color + "; resize:none; outline:none; padding:3px; border:none; overflow:hidden;' maxlength='500' oninput='editAutoGrow(this)'>" + content + "</textarea>";
-	modifyTextarea += "</div>";
-	modifyTextarea += "<div style='margin-bottom:2px; float:right; margin-right:5px;'>";
-	modifyTextarea += "<img id='_addEmoticonModify' class='_addEmoticon' src='/images/poll/add_emo_vote.png' onclick='addSticker(this)'>";
-	modifyTextarea += "<span style='margin-left:5px; margin-right:5px; color:gray;'>|</span>";
-	if (attachmentFlag == "Y") {
-        modifyTextarea += "<a onclick='btnfileup(\"commentListFile\");'>" + strLangAttachJIH01 + "</a>";
-        modifyTextarea += "<span style='margin-left:5px; margin-right:5px; color:gray;'>|</span>"
-	}
-	modifyTextarea += "<a onclick='getBoardComment(); replyModifyFlag -= 1;'>" + strLangLGE04 + "</a>";
-	modifyTextarea += "<span style='margin-left:5px; margin-right:5px; color:gray;'>|</span>"
-	modifyTextarea += "<a onclick='modiReplySave(this); replyModifyFlag -= 1;'>" + strLangLGE03 + "</a></div>";
-	modifyTextarea += "</div>";
-	modifyTextarea += "<div id='commentListAttach'></div>";
+    var modifyTextarea = "";
+    
+    if (replylevel == 1){
+        modifyTextarea +=  "<div id='reReplyArea' class='comment_textarea'>";
+        modifyTextarea += "<textarea class='modifyText' rows='3' name='textarea' maxlength='500' oninput='editAutoGrow(this)' placeholder='" + strLangNewBoardDesign06 + "'>" + content + "</textarea></div>"
+        
+        if (attachmentFlag == "Y") {
+            modifyTextarea += "<div id='commentListAttach' class='commentListAttach'></div>"
+        }
+        
+        modifyTextarea += "<div class='comment_function'>";
+        modifyTextarea += "<div><span id='_addEmoticonModify' class='btn_emoticon' onclick='addSticker(this)'>" + strLangNewBoardDesign05 + "</span>";
+        modifyTextarea += "<span class='btn_attachFile' onclick='btnfileup(\"commentListFile\");'>" + strLangNewBoardDesign07 + "</span></div>";
+        modifyTextarea += "<div><button class='btn_registration' onclick='modiReplySave(this); replyModifyFlag -= 1;'>" + strLangLGE03 + "</button>";
+        modifyTextarea += "<button class='btn_registration' onclick='getBoardComment(); replyModifyFlag -= 1;'>" + strLangLGE04 + "</button></div>";
+    } else {
+        modifyTextarea += "<div class='icon_sub_comment'></div>";
+        modifyTextarea += "<div class='sub_comment_listcont'>";
+        modifyTextarea += "<div id='reReplyArea' class='comment_textarea'>";
+        modifyTextarea += "<textarea class='modifyText' rows='3' name='textarea' maxlength='500' oninput='editAutoGrow(this)' placeholder='" + strLangNewBoardDesign06 + "'>" + content + "</textarea></div>"
+        
+        if (attachmentFlag == "Y") {
+            modifyTextarea += "<div id='commentListAttach' class='commentListAttach'></div>"
+        }
+        
+        modifyTextarea += "<div class='comment_function'>";
+        modifyTextarea += "<div><span id='_addEmoticonModify' class='btn_emoticon' onclick='addSticker(this)'>" + strLangNewBoardDesign05 + "</span>";
+        modifyTextarea += "<span class='btn_attachFile' onclick='btnfileup(\"commentListFile\");'>" + strLangNewBoardDesign07 + "</span></div>";
+        modifyTextarea += "<div><button class='btn_registration' onclick='modiReplySave(this); replyModifyFlag -= 1;'>" + strLangLGE03 + "</button>";
+        modifyTextarea += "<button class='btn_registration' onclick='getBoardComment(); replyModifyFlag -= 1;'>" + strLangLGE04 + "</button></div></div>";
+    }
 
-	if (replyModifyFlag == 0) {
-		basePanelComment.next('td').css('border-bottom', '');
-		basePanel.next('tr').css('display', 'none');
-		replyModifyFlag += 1;
-	} else if (replyModifyFlag > 0) { // 댓글수정 창이 열려있는 경우 창을 닫아줌
-		$('#' + replyModifyId).html(replyTextarea);
-		$('#' + replyModifyId).next('td').css('border-bottom', 'hidden');
-		$('#' + replyModifyId).closest('tr').next('tr').css('display', '');	
-	}
 	replyModifyId = basePanelComment.attr('id');
     replyTextarea = basePanelComment.html();
-    basePanelComment.html(modifyTextarea);
+    basePanel.html(modifyTextarea);
     $('.modifyText').focus();
     $('.modifyText').prop('selectionStart', content.length);
 	editAutoGrow($('.modifyText')[0]);
 	
-	// 2023-11-07 전인하 - 댓글 수정 시 이모티콘 동작
-    basePanel.append(uploadedEmoticonPanel);
-    // 수정하고자 하는 댓글에 원래 삽입되어있던 이모티콘이 존재하였을 시 해당 이모티콘을 기억하여 이모티콘 미리보기 레이어에 표출함
     if (!!emoticonSrc) {    
+	    // 2023-11-07 전인하 - 댓글 수정 시 이모티콘 동작
+        $("#reReplyArea").append(uploadedEmoticonPanel);
+    // 수정하고자 하는 댓글에 원래 삽입되어있던 이모티콘이 존재하였을 시 해당 이모티콘을 기억하여 이모티콘 미리보기 레이어에 표출함
         if (previewPageCheck(location) || commentPopupPageCheck(location)) {
             uploadedEmoticonPanel.addClass('down');
         } else {
@@ -992,18 +1009,18 @@ function editAutoGrow(element) {
 
  // 2023-10-31 전인하 - 이모티콘 삽입 공통함수. 투표모듈에 삽입된 것을 수정해서 씀
 function addSticker(obj) {
-    var basePanel = $(obj).parents('.emoticonLayerStaticPosition'); // 이모티콘 위치 잡는 댓글 영역 area
+    var basePanel = $(obj).closest('.reNewalCmt'); // 이모티콘 판넬 위치 잡는 댓글 영역
+    var insertChkEmoticon = $(obj).closest('.reNewalCmt').find('.comment_textarea'); // 이모티콘 선택 후 확인 영역
     
     if (obj.id == "_addEmoticonModify") {
-        basePanel = $(obj).parents('.boardComment');
         basePanel.css("position", "relative");
     } else if (obj.id == "_addEmoticonRereply") {
-        var reReplyClassName = "." + $(obj).parents('tr').attr('class');
-        if (gubun == 2 && (previewPageCheck(location) || commentPopupPageCheck(location))) {
-            basePanel = $(reReplyClassName).eq(1);
-        } else {
-            basePanel = $(reReplyClassName).eq(0);
-        }
+        // var reReplyClassName = "." + $(obj).parents('div').attr('class');
+        // if (gubun == 2 && (previewPageCheck(location) || commentPopupPageCheck(location))) {
+        //     basePanel = $(reReplyClassName).eq(1);
+        // } else {
+        //     basePanel = $(reReplyClassName).eq(0);
+        // }
          basePanel.css("position", "relative");
     }
     
@@ -1019,7 +1036,7 @@ function addSticker(obj) {
     }
     
     basePanel.append(emoticonPanel);
-    basePanel.append(uploadedEmoticonPanel);
+    insertChkEmoticon.append(uploadedEmoticonPanel);
     emoticonListPanel.toggleClass('open');
 }
 
@@ -1090,6 +1107,7 @@ function checkScrollBars() {
 // 2023-11-09 전인하 - 이모티콘 미리보기 끄기
 function closeEmoticonPreview() {
     $("#uploadedFile").removeClass('open');
+    $("#uploadedFile").appendTo("#basePanel");
 }
 
 function openEmoticonPreview(src) {
@@ -1219,55 +1237,74 @@ function removeKeyword(event) {
 }
 
 // 2024-08-23 전인하 - 게시판 > 게시물 작성 > 키워드 textInput 키보드 동작
-function keyword_onkeyUp(e) {
+function keyword_onkeyUp(event) {
     var keyCode = event.key;
     var inputDom = event.target;
-    var inputText = inputDom.value;
     
     if (!characterCheckForKeyword(inputDom)) {
         return;
     }
-    
-    inputText = inputText.trim();
-    if (keyCode == "Enter" || keyCode == " ") {
-        if (inputText == "") {
-            return;
-        }
-                        
-        // 키워드 배열에 추가
-        keywordArr.push(inputText);
-        
-        // 키워드 span 추가
-        var keywordObj = makeKeywordSpanObj(inputText, "edit");
-        inputDom.before(keywordObj);
-        inputDom.value = "";		 
-        
-        // 키워드 10개 넘어가면 입력 불가 처리
-        if (keywordArr.length >= 10) {
-            inputDom.style.display = 'none';
-        }
-    } else if (keyCode == "Delete") {
-        inputDom.value = "";
+	
+	if (keyCode == "Delete") {
+		inputDom.value = "";
+		return;
+	}
+	
+    if (keyCode == "Enter" || keyCode == " " || keyCode == "Tab") {
+		handleKeywordInput(event);
     }
+}
+
+function keyword_blur(event) {
+    var inputDom = event.target;
+	
+	if (!characterCheckForKeyword(inputDom)) {
+        return;
+    } else {
+		handleKeywordInput(event);
+	}
+}
+
+function handleKeywordInput(event) {
+    var inputDom = event.target;
+    var inputText = inputDom.value.trim();
+	
+	 // 빈 값이거나 이미 최대 개수면 리턴
+    if (inputText === "" || keywordArr.length >= 10) {
+		inputDom.value = "";
+        return;
+    }
+	
+	// 키워드 배열에 추가
+	keywordArr.push(inputText);
+	
+	// 키워드 span 추가
+	var keywordObj = makeKeywordSpanObj(inputText, "edit");
+	inputDom.before(keywordObj);
+	inputDom.value = "";		 
+	
+	// 키워드 10개 넘어가면 입력 불가 처리
+	if (keywordArr.length >= 10) {
+		inputDom.style.display = 'none';
+	}
 }
 
 // 2024-08-23 전인하 - 게시판 > 게시물 작성 > 키워드 span 삽입
 // key : 키워드 이름 / mode: edit/view (edit는 삭제 버튼 존재)
 function makeKeywordSpanObj(key, mode) {
    var keyObj = document.createElement("span");
-   keyObj.innerText = "#" + key;
+   keyObj.innerText = key;
    keyObj.id = key;
-   keyObj.className = 'keywordSpanView';
+   keyObj.className = 'keyword_tag keywordSpanView';
 
    // 키워드 삭제 img 삽입
    if (mode == "edit") {
-       var deleteX = document.createElement("img");
-       deleteX.src = "/images/icon/oneline_delete.gif";
-       deleteX.className = "keywordDeleteBtn";
+       var deleteX = document.createElement("button");
+       deleteX.className = "keyword_delete keywordDeleteBtn";
        deleteX.addEventListener('click', removeKeyword);
        keyObj.appendChild(deleteX);
    } else if (mode == "view") {
-       keyObj.className = 'keywordSpan';
+       keyObj.className = 'keyword_tag keywordSpan';
        keyObj.addEventListener('click', onclickKeyword);
    } else if (mode == "print") {
        // 동작없음
@@ -1308,20 +1345,25 @@ function onclickKeyword(event) {
     GetOpenWindow(url, "_blank", 1000, 550, "yes");
 }
 
+// 게시판 > 키워드 클릭 > 키워드 영역 포커스
+function keywordInput(inputId) { 
+	document.getElementById(inputId).focus(); 
+}
+
 /* 2024-10-17 전인하 - 게시판 댓글 정렬 기준 클릭 메소드 */
 function boardCommentSort() {
-    var sortBtn = event.target;
-    var sortBtnList = document.querySelector(".commentSort").children;
+    var sortBtn = event.target.id;
     
-    for (let i=0; i<sortBtnList.length; i++) {
-        var tmpBtn = sortBtnList[i];
-        if (tmpBtn.id == sortBtn.id) {
-            tmpBtn.classList.add("checked");
-            commentSort = sortBtn.id;
-        } else {
-            tmpBtn.classList.remove("checked");
-        }
+    if (sortBtn == "earliest") {
+        document.getElementById("earliest").classList = "tabon";
+        document.getElementById("latest").classList = "";
+        commentSort = "earliest";
+    } else if (sortBtn == "latest") {
+        document.getElementById("earliest").classList = "";
+        document.getElementById("latest").classList = "tabon";
+        commentSort = "latest";
     }
+    
     getBoardComment();
 }
 
@@ -1366,6 +1408,7 @@ function fileupload(mode) {
                     var fileDomObj = insertCommentAttachDom(fileListXml[i], "edit", "xml");
                     var attachListDom = mode == "commentFile" ? document.querySelector("#commentAttach") : document.querySelector("#commentListAttach");
                     attachListDom.append(fileDomObj);
+                    attachListDom.classList = "comment_attachFile";
                 }
             }
 			// 업로드 후 file input 객체 초기화
@@ -1467,6 +1510,13 @@ function returnvalueCommentFile(strXML) {
 }
 
 function btnfileup(mode) {
+    if (mode == "commentFile") {
+        $("#commentListAttach").removeClass("comment_attachFile");
+        $("#commentListAttach").children().remove();
+    } else if (mode == "commentListFile") {
+        $("#commentAttach").removeClass("comment_attachFile");
+        $("#commentAttach").children().remove();
+    }
     document.getElementById(mode).click();
 }
 
@@ -1487,37 +1537,78 @@ function initAttachFileSize() {
 // 댓글 첨부파일 삭제 메소드
 function delCommentFile() {
   var fileCommentObj = event.target.parentElement;
+  var fileAttachArea = event.target.closest("div");
   fileCommentObj.remove();
+  
+  if (fileAttachArea && fileAttachArea.classList.contains("comment_attachFile") && fileAttachArea.childElementCount == 0) {
+    fileAttachArea.classList = "";
+  }
 }
 
 // 댓글 첨부파일 dom객체 생성 메소드
 // mode: view, edit (view는 다운가능, edit은 삭제 가능)
 // dataType : file 변수의 데이터타입 (json, xml)
 function insertCommentAttachDom(file, mode, dataType) {
-    var fileRtnObj = mode == "edit" ? document.createElement("span") : document.createElement("a");
+    var fileRtnObj = document.createElement("span");
     var tmpName = dataType == "xml" ? file.getElementsByTagName("PFILENAME")[0].textContent : file.fileName;
     var tmpSize = dataType == "xml" ? file.getElementsByTagName("FILESIZE")[0].textContent : file.fileSize;
     var uploadHref = dataType == "xml" ? file.getElementsByTagName("FILELOCATION")[0].textContent : file.filePath;
+    var fileTypeImg = document.createElement("img");
+    var fileInsertBtn = document.createElement("a");
+    
+    if (uploadHref.includes(".jpg") || uploadHref.includes(".jpeg") || uploadHref.includes(".bmp") || uploadHref.includes(".gif") || uploadHref.includes(".png") || uploadHref.includes(".tif") || uploadHref.includes(".tiff") || uploadHref.includes(".jpeg")) {
+        fileTypeImg.src = "/images/image.svg";
+    } else if (uploadHref.includes(".doc")) {
+        fileTypeImg.src = "/images/doc.svg";
+    } else if (uploadHref.includes(".xls") || uploadHref.includes(".xlsx")) {
+        fileTypeImg.src = "/images/xls.svg";
+    } else if (uploadHref.includes(".ppt") || uploadHref.includes(".pptx") || uploadHref.includes(".pps") || uploadHref.includes(".ppsx")) {
+        fileTypeImg.src = "/images/ppt.svg";
+    } else if (uploadHref.includes(".txt")) {
+        fileTypeImg.src = "/images/txt.svg";
+    } else if (uploadHref.includes(".zip")) {
+        fileTypeImg.src = "/images/zip.svg";
+    } else if (uploadHref.includes(".pdf")) {
+        fileTypeImg.src = "/images/pdf.svg";
+    } else if (uploadHref.includes(".ecm")) {
+        fileTypeImg.src = "/images/ecm.svg";
+    } else if (uploadHref.includes(".hwp") || uploadHref.includes(".hwpx")) {
+        fileTypeImg.src = "/images/hwp.svg";
+    } else {
+        fileTypeImg.src = "/images/etc.svg";
+    }
+    
     tmpName = ReplaceHTML(tmpName);
-     
-    fileRtnObj.innerText = tmpName + " (" + calculateAttachSize(tmpSize) + ")";
+    
+    fileInsertBtn.classList = "btn_attach_download";
+    fileRtnObj.textContent = "";
     fileRtnObj.className = "commentFileSpan";
     fileRtnObj.setAttribute("uploadHref", uploadHref);
     fileRtnObj.setAttribute("realFileSize", tmpSize);
     fileRtnObj.setAttribute("name", tmpName);
     if (mode == "view") {
         var href = "/ezBoard/boardAttachDown.do?filePath=" + encodeURIComponent(file.filePath) + "&fileName=" + encodeURIComponent(file.fileName);
-        fileRtnObj.setAttribute("href", href)
+        fileRtnObj.setAttribute("href", href);
+        fileRtnObj.appendChild(fileTypeImg);
+        fileRtnObj.append(tmpName + " (" + calculateAttachSize(tmpSize) + ")");
+        fileInsertBtn.setAttribute("href", href);
+        fileRtnObj.appendChild(fileInsertBtn);
+    }
+    
+    if (mode == "print") {
+        fileRtnObj.appendChild(fileTypeImg);
+        fileRtnObj.append(tmpName + " (" + calculateAttachSize(tmpSize) + ")");
     }
 
    if (mode == "edit") {
-       var deleteX = document.createElement("img");
-       deleteX.src = "/images/icon/oneline_delete.gif";
-       deleteX.className = "fileDeleteBtn";
+       var deleteX = document.createElement("button");
+       deleteX.className = "btn_attach_delete";
        deleteX.addEventListener('click', delCommentFile);
+       fileRtnObj.appendChild(fileTypeImg);
+       fileRtnObj.append(tmpName + " (" + calculateAttachSize(tmpSize) + ")");
        fileRtnObj.appendChild(deleteX);
    }
-   fileRtnObj.append(document.createElement("br"));
+   // fileRtnObj.append(document.createElement("br"));
    return fileRtnObj;
 }
 
@@ -1782,4 +1873,36 @@ function resizableMenuItem(url) {
         }
     }
     setUpHideLayerEventItem();
+}
+    // 수정 창이 열려있을 때 다른 기능 사용시 수정창 닫기
+function removeCloneModiCommet() {
+    if ($(".cloneArea").length > 0) {
+        var originalId = $(".cloneArea").attr("original");
+        var cloneChild = $(".cloneArea").children();
+        $("#" + originalId).html(cloneChild);
+        $(".cloneArea").remove();
+    }
+    console.log($('[class^=trcommentReact]').length);
+    $('[class^=trcommentReact]').remove();
+}
+
+function originalCommentClone(obj) {
+    var clonedPanel = $(obj).children().clone();// 요소 복사
+    var createImsi = $("<div>");
+    createImsi.addClass("cloneArea");
+    createImsi.attr("original", $(obj).attr("id"));
+    createImsi.append(clonedPanel);
+    $(obj).before(createImsi);
+    createImsi.hide(); 
+}
+
+function previewAttachToggle() {
+	$('#preview_attach_toggle').toggleClass('active');
+	$('.preview_attach_list').toggleClass('active');
+    
+    if ($('.preview_attach_list').hasClass('active')){
+        $('.preview_attach_list').css("height","auto");
+    } else {
+        $('.preview_attach_list').css("height","0");
+    }
 }

@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html>
 	<head>
@@ -8,6 +9,7 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"> 
 		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
 		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/Tab.css')}" type="text/css">
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
@@ -38,6 +40,10 @@
 			td.boardItemViewPrint_cssTdEn > table .boardComment:last-child{border-bottom:none;}
 			/* 첨부파일 아이콘 변경 */
 			#lstAttachLink img{width: 18px;height: 18px;vertical-align: middle;margin: 0 2px 4px 0;}
+			.preview_attach_list > ul > li:hover span{font-weight:unset; }
+			.preview_toggleBtn{cursor: default;}
+			.textBtn:hover {color:#131416;cursor: default}
+			.btn_attach_download {cursor: default}
     	</style>
 		<script>
 		    if (new RegExp(/Chrome/).test(navigator.userAgent) || new RegExp(/Safari/).test(navigator.userAgent)) {
@@ -76,6 +82,7 @@
 			var OneLineReplyFlag = "${oneLineReplyFlag}";
 		    var gubun = "${boardInfo.guBun}";
 		    var AtttributeCount = "${boardAttrCount}";
+			var Atttribute = "${boardAttr}";
 		    var reactFlag = "<c:out value='${boardInfo.reactFlag}'/>";
 		    var commentSort = "earliest"; // 댓글 정렬 기준 : earliest(등록순) / latest(최신순)
 		
@@ -108,7 +115,7 @@
 		    
 		    function beforePrint() {
 		    	if (eOneline == "Y") {
-		            document.getElementById('onelineView').style.display = "";
+		            document.querySelector(".comment_listBox").style.display = "";
 		        }
 		        
 		        if (eAttach == "Y") {
@@ -122,18 +129,37 @@
 		        
 		        myVar = setInterval(function () { DocumentComplate(); }, 2000);
 		        
-		        document.getElementById("WriteUserNM").innerText = " " + strWriterName;
-		        
-		        // 2024-07-31 전인하 - 게시판 > 확장컬럼 > peoplePicker 타입 출력값 가공
-		        var userLang = "${userInfo.lang}";        
-		        for (i = 1 ; i < 6; i++) {
-		            var extentionAttrId = "extensionAttribute" + (5 + i);
-		            var extentionAttrDiv = document.getElementById(extentionAttrId);
-		            if (extentionAttrDiv != null && typeof extentionAttrDiv != "undefined")
-		            if (extentionAttrDiv.getAttribute("type") == "people") {
-		                extentionAttrDiv.innerText = peoplePickerDisplay(extentionAttrDiv.innerText, userLang);
-		            }
-		        }
+		        // document.getElementById("WriteUserNM").innerText = " " + strWriterName;
+				
+				
+				// 2024-07-31 전인하 - 게시판 > 확장컬럼 > peoplePicker 타입, textArea 타입 출력값 가공
+				var userLang = "${userInfo.lang}"
+				var boardAttrListTemp = '<c:out value="${boardAttrJson}"/>';
+				var boardAttrListJson = JSON.parse(replaceEntityCodeToStr(boardAttrListTemp));
+				var boardItemTemp = '<c:out value="${boardItemJson}"/>';
+				var boardItemJson = JSON.parse(replaceEntityCodeToStr(boardItemTemp));
+				
+				for (let i = 0 ; i < boardAttrListJson.length ; i++ ) {
+					var boardAttr = boardAttrListJson[i];
+					if (boardAttr.colType == 'people') {
+						var peoplePickerString = peoplePickerDisplay(boardItemJson[boardAttr.tableCol], userLang);
+						document.getElementById(boardAttr.tableCol).innerText = peoplePickerString;
+					} else if (boardAttr.colType == 'textArea') {
+						document.getElementById(boardAttr.tableCol).style.display = "block";
+						var peoplePickerString = boardItemJson[boardAttr.tableCol];
+						var peoplePickerStringList = peoplePickerString.split("<br/>");
+						for (let j = 0 ; j < peoplePickerStringList.length ; j++) {
+							if (j != 0) {
+								var brDom = document.createElement("br");
+								document.getElementById(boardAttr.tableCol).appendChild(brDom);
+							}
+							var bDom = document.createElement("b");
+							bDom.style.fontWeight = 'normal';
+							bDom.innerText = unescapeForJson(peoplePickerStringList[j])
+							document.getElementById(boardAttr.tableCol).appendChild(bDom);
+						}
+					}
+				}
 		    }
 		
 		    function DocumentComplate() {
@@ -172,59 +198,67 @@
 		        var xmldomNodes = SelectNodes(xmldom, "NODES/NODE");
 		        var attachFileDiv = document.getElementById("lstAttachLink");
 		        
-		        for (var i = 0; i < xmldomNodes.length; i++) {
-					var span = document.createElement("SPAN");
-					var img = document.createElement("IMG");
-		                
-		            filepath = getNodeText(SelectSingleNode(xmldomNodes[i], "FilePath"));
-		            filename = getNodeText(SelectSingleNode(xmldomNodes[i], "FileName"));
-		            filesize = getNodeText(SelectSingleNode(xmldomNodes[i], "FileSize"));
-		            strAttach = " " + filename + " (" + filesize + ")";
-		            
-		            var strTarget = "target=''";
-		            var strFileExt = filename.substr(filename.lastIndexOf('.')).toLowerCase();
-		            if (strFileExt == ".xls" || strFileExt == ".doc" || strFileExt == ".ppt" ||
-		               strFileExt == ".eml" || strFileExt == ".pdf" || strFileExt == ".hwp" ||
-		               strFileExt == ".ppt" || strFileExt == ".docx" || strFileExt == ".pptx" ||
-		               strFileExt == ".xlsx" || strFileExt == ".rtf") {
-		                strTarget = "target=''";
-		            }
-		            
-		            if (strFileExt.indexOf(".jpg") != -1 || strFileExt.indexOf(".jpeg") != -1 || strFileExt.indexOf(".bmp") != -1 || strFileExt.indexOf(".gif") != -1 || strFileExt.indexOf(".png") != -1 || strFileExt.indexOf(".tif") != -1 || strFileExt.indexOf(".tiff") != -1) {
-		                fileImage = "/images/image.svg";
-		            } else if (strFileExt.indexOf(".doc") != -1 || strFileExt.indexOf(".docx") != -1) {
-		                fileImage = "/images/doc.svg";
-		            } else if (strFileExt.indexOf(".xls") != -1 || strFileExt.indexOf(".xlsx") != -1) {
-		                fileImage = "/images/xls.svg";
-		            } else if (strFileExt.indexOf(".ppt") != -1 || strFileExt.indexOf(".pptx") != -1 || strFileExt.indexOf(".pps") != -1 || strFileExt.indexOf(".ppsx") != -1) {
-		                fileImage = "/images/ppt.svg";
-		            } else if (strFileExt.indexOf(".txt") != -1) {
-		                fileImage = "/images/txt.svg";
-		            } else if (strFileExt.indexOf(".zip") != -1) {
-		                fileImage = "/images/zip.svg";
-		            } else if (strFileExt.indexOf(".pdf") != -1) {
-		                fileImage = "/images/pdf.svg";
-		            } else if (strFileExt.indexOf(".hwp") != -1 || strFileExt.indexOf(".hwpx") != -1) {
+				var oUl = document.createElement("ul");
+				for (var i = 0; i < xmldomNodes.length; i++) {
+					var oLi = document.createElement("li");
+					var oSpan = document.createElement("span");
+					var oA = document.createElement("a");
+					var oImage = document.createElement("img");
+					
+					filepath = getNodeText(SelectSingleNode(xmldomNodes[i], "FilePath"));
+					/* 2018-04-27 홍승비 - 화면에 표시되는 파일명 특문처리 수정 */
+					filenameOrg = getNodeText(SelectSingleNode(xmldomNodes[i], "FileName"));
+					filenameView = MakeXMLString(filenameOrg);
+					filesize = getNodeText(SelectSingleNode(xmldomNodes[i], "FileSize"));
+
+					var strTarget = "target=''";
+					var strFileExt = filepath.substr(filepath.lastIndexOf('.')).toLowerCase();
+					if (strFileExt == ".xls" || strFileExt == ".doc" || strFileExt == ".ppt" ||
+							strFileExt == ".eml" || strFileExt == ".pdf" || strFileExt == ".hwp" ||
+							strFileExt == ".ppt" || strFileExt == ".docx" || strFileExt == ".pptx" ||
+							strFileExt == ".xlsx" || strFileExt == ".rtf") {
+						strTarget = "target=''";
+					}
+
+					if (strFileExt.indexOf(".jpg") != -1 || strFileExt.indexOf(".jpeg") != -1 || strFileExt.indexOf(".bmp") != -1 || strFileExt.indexOf(".gif") != -1 || strFileExt.indexOf(".png") != -1 || strFileExt.indexOf(".tif") != -1 || strFileExt.indexOf(".tiff") != -1)
+						fileImage = "/images/image.svg";
+					else if (strFileExt.indexOf(".doc") != -1 || strFileExt.indexOf(".docx") != -1)
+						fileImage = "/images/doc.svg";
+					else if (strFileExt.indexOf(".xls") != -1 || strFileExt.indexOf(".xlsx") != -1)
+						fileImage = "/images/xls.svg";
+					else if (strFileExt.indexOf(".ppt") != -1 || strFileExt.indexOf(".pptx") != -1 || strFileExt.indexOf(".pps") != -1 || strFileExt.indexOf(".ppsx") != -1)
+						fileImage = "/images/ppt.svg";
+					else if (strFileExt.indexOf(".txt") != -1)
+						fileImage = "/images/txt.svg";
+					else if (strFileExt.indexOf(".zip") != -1)
+						fileImage = "/images/zip.svg";
+					else if (strFileExt.indexOf(".pdf") != -1)
+						fileImage = "/images/pdf.svg";
+					else if (strFileExt.indexOf(".hwp") != -1 || strFileExt.indexOf(".hwpx") != -1)
 						fileImage = "/images/hwp.svg";
-					} else if (strFileExt.indexOf(".ecm") != -1) {
-		                fileImage = "/images/ecm.svg";
-		            } else {
-		                fileImage = "/images/etc.svg";
-		            }
-		            
-	                img.src = fileImage;
-                    
-	                var attachNameSpan = document.createElement("SPAN");
-	                attachNameSpan.innerText = strAttach;
-	                
-	                var br = document.createElement("BR");
-	
-	                span.appendChild(img);
-	                span.appendChild(attachNameSpan);
-	                span.appendChild(br);
-	
-	                attachFileDiv.appendChild(span);
-		        }
+					else if (strFileExt.indexOf(".ecm") != -1)
+						fileImage = "/images/ecm.svg";
+					else
+						fileImage = "/images/etc.svg";
+
+					var protocol = window.location.protocol;
+					var serverName = window.location.hostname;
+					
+					oImage.src = fileImage;
+					oA.innerText = filenameView + " (" + filesize + ")";
+					oA.style.cursor = "default";
+					oSpan.appendChild(oImage);
+					oSpan.appendChild(oA)
+					oLi.appendChild(oSpan);
+					if (typeof useBoardFilePrvw !== 'undefined' && useBoardFilePrvw == "1" && guestReadFG !== "Y") {
+						oButton = document.createElement("button");
+						oButton.className = "textBtn i_attach_preview";
+						oButton.style.cursor ="default";
+						oLi.appendChild(oButton);
+					}
+					oUl.appendChild(oLi);
+				}
+				document.getElementById('lstAttachLink').append(oUl);
 		    }
 		    
 		    /* 2018-06-29 홍승비 - 사원정보 확인 시 겸직부서인 상태로 정보 보여주도록 수정 */
@@ -290,185 +324,126 @@
 		</script>
 	</head>
 	<!-- 2018-02-01 김보미 - 게시물 상세 테이블 컬럼 조정. -->
-	<body style="padding:10px;">
-		<table class="layout" >  
-		  <tr>
-		    <td>
-		        <table class="content" style="width:100%;">
-		        	<!-- 게시자&부서 (부서의 경우 익명게시판이 아닐때만 표출) -->
-		        	<tr>
-		        	<c:choose>
-		        		<c:when test="${boardInfo.guBun != '2'}">
-			        		<th style="width:10%;"><spring:message code='ezBoard.t223'/></th>
-							<td id="WriteUserNM" style="width:40%; white-space:nowrap"></td>
-							<th style="width:10%;"><spring:message code='ezBoard.t289'/></th>
-							<td id="User_DeptNM" style="width:40%; white-space:nowrap">${boardItem.writerDeptName}</td>
-						</c:when>
-						<c:otherwise>
-							<th style="width:10%;"><spring:message code='ezBoard.t223'/></th>
-							<td id="WriteUserNM" style="width:40%; white-space:nowrap" colspan=4></td>
-						</c:otherwise>
-					</c:choose>
-		        	</tr>
-		        	<!-- 직위&사내전화 (익명게시판이 아닌 경우에만 표출) -->
-		        	<c:if test="${boardInfo.guBun != '2'}">
-		        	<tr>
-		        		<th><spring:message code='ezBoard.t290'/></th>
-						<td id="User_JobTitle" style="width:40%; white-space:nowrap;">${boardItem.extensionAttribute3}<div></div></td>
-						<th><spring:message code='ezPersonal.t177'/></th>
-						<td id="Telephone" style="width:40%; white-space:nowrap">${boardItem.extensionAttribute4}</td>
-		        	</tr>
-		        	</c:if>
-		        	<!-- 게시일&게시종료일 -->
-		        	<tr>
-						<th><spring:message code='ezBoard.t224'/></th>
-		        		<td id="PostDate" style="width:40%; white-space:nowrap">${boardItem.writeDate.substring(0, 16)}</td>
-						<th><spring:message code='ezBoard.t288'/></th>
-						<c:set var="t287" value="<spring:message code='ezBoard.t287'/>"/>
+	<body class="popup newBoardPopup" style="padding:10px;">
+		<div class="layout" >  
+			<div class="preview_infoBox">
+				<div class="preview_tit"><c:out value="${boardItem.title}"/></div>
+				<div class="preview_info">
+					<div>
 						<c:choose>
-							<c:when test="${boardItem.endDate == t287}">
-								<td id="EndDate" style="padding-right:15px; width:40%;"><spring:message code='ezBoard.t287'/></td>
+							<c:when test="${guBun != '2'}">
+								<span id="WriteUserNM">
+									<c:out value="${boardItem.writerDeptName}"/> <c:out value="${boardItem.writerName}"/><c:if test="${not empty fn:trim(boardItem.extensionAttribute3)}">(<c:out value="${boardItem.extensionAttribute3}"/>)</c:if>
+								</span>
 							</c:when>
 							<c:otherwise>
-								<td id="EndDate" style="padding-right:15px; width:40%;">${boardItem.endDate.split(' ')[0]}</td>
+								<span id="WriteUserNM">
+									<c:out value="${boardItem.writerName}"/>
+								</span>
 							</c:otherwise>
 						</c:choose>
-		        	</tr>
-		        	<c:if test="${(boardInfo.boardAdmin_FG == 'true' || boardInfo.boardGroupAdmin_FG == 'OK') && not empty boardItem.updateDate}">
-                     <!-- 수정자, 수정일 -->
-                        <tr>
-                            <c:if test="${boardInfo.guBun != '2'}">
-                                <th><spring:message code='ezBoard.updateJIH01' /></th>
-                                <td id="updaterName" style = "white-space:nowrap; padding-right:5px; width: 40%;">
-                                    <div style="vertical-align:middle;width:100%;height:16px;">${boardItem.updaterName}</div>
-                                </td>
-                                <th><spring:message code='ezBoard.updateJIH02' /></th>
-                                <td id="updateDate" style = "white-space:nowrap; padding-right:5px; width: 40%;">
-                                    <div style="vertical-align:middle;width:100%;height:16px;">${boardItem.updateDate.substring(0, 16)}</div>
-                                </td>
-                            </c:if>
-                            <c:if test="${boardInfo.guBun == '2'}">
-                                <th><spring:message code='ezBoard.updateJIH02' /></th>
-                                <td width="100%" id="updateDate" style="WORD-WRAP: break-word;word-break:break-all; line-height:16px;" colspan=5>
-                                    <div style="WIDTH: 100%; vertical-align: middle"><c:out value="${boardItem.updateDate.substring(0, 16)}"/></div>
-                                </td>
-                            </c:if>
-                        </tr>
-                    <!-- 수정자, 수정일 end -->
-                    </c:if>	
-		        	<!-- 확장컬럼 -->
-						<c:if test="${boardAttrCount > 0}">
-							<c:forEach var="boardAttr" items="${boardAttr}">
-								<tr>
-									<c:choose>
-										<c:when test="${extenLang == '1'}">
-							                <th>${boardAttr.colName1}</th>
-										</c:when>
-										<c:otherwise>
-							                <th>${boardAttr.colName2}</th>
-										</c:otherwise>
-									</c:choose>
-					                <td colspan="5" id="${boardAttr.tableCol}" type="${boardAttr.colType}">
-					                	<c:choose>
-					                		<c:when test="${boardAttr.tableCol == 'extensionAttribute6'}">
-					                			${boardItem.extensionAttribute6}
-					                		</c:when>
-					                		<c:when test="${boardAttr.tableCol == 'extensionAttribute7'}">
-					                			${boardItem.extensionAttribute7}
-					                		</c:when>
-					                		<c:when test="${boardAttr.tableCol == 'extensionAttribute8'}">
-					                			${boardItem.extensionAttribute8}
-					                		</c:when>
-					                		<c:when test="${boardAttr.tableCol == 'extensionAttribute9'}">
-					                			${boardItem.extensionAttribute9}
-					                		</c:when>
-					                		<c:when test="${boardAttr.tableCol == 'extensionAttribute10'}">
-					                			${boardItem.extensionAttribute10}
-					                		</c:when>
-					                		<c:otherwise></c:otherwise>
-					                	</c:choose>
-					                </td>
-					            </tr>
-							</c:forEach>
-						</c:if>
-					<!-- 제목 -->
-		            <tr>
-	                  <th><spring:message code='ezBoard.t291'/></th>
-	                  <td id="cTitle" style="WORD-WRAP: break-word;" colspan="6"><c:out value="${boardItem.title}"/></td>
-		            </tr>
-		            <%-- 키워드 --%>
-                     <c:if test='${boardInfo.useKeyword eq "Y"}'>
-                         <tr>
-                             <th><spring:message code="ezApprovalG.t1200" /></th>
-                             <td width="100%" id="cKeyword" style="WORD-WRAP: break-word;word-break:break-all; line-height:16px;" colspan=5>
-                                <div style="WIDTH: 100%; vertical-align: middle">
-                                    <c:if test='${not empty keywordList}'>
-                                        <c:forEach var="keyword" items="${keywordList}">
-                                            <span class="keywordSpanView" id="${keyword.keywordName}">#${keyword.keywordName}</span>
-                                        </c:forEach>
-                                    </c:if>
-                                </div>
-                             </td>
-                         </tr>
-                     </c:if>
-		      </table>
-<!-- 		<table class="layout">  -->
-<!-- 		  <tr>  -->
-<!-- 		    <td style="height:20px"><table class="content">  -->
-<!-- 		        <tr>  -->
-<%-- 		          <th><spring:message code='ezBoard.t207'/></th>  --%>
-<!-- 		          <td id="WriteUserNM" style="white-space:nowrap; width:200px"><div id = title style="vertical-align:middle;width:100%;height:16px;overflow-y:auto;cursor:pointer"></div></td>  -->
-<%-- 		          <th><spring:message code='ezBoard.t224'/></th>  --%>
-<!-- 		          <td id="PostDate" style="padding-right:10px; white-space:nowrap; width:300px"><div id = title style="vertical-align:middle;width:100%;height:16px;overflow-y:auto;"></div></td>  -->
-<%-- 		          <th><spring:message code='ezBoard.t288'/></th>  --%>
-<!-- 		          <td id="EndDate" style="padding-right:10px; white-space:nowrap; width:200px"><div id = title style="vertical-align:middle;width:100%;height:16px;overflow-y:auto;"></div></td>  -->
-<!-- 		        </tr>  -->
-<%-- 		        <c:if test="${guBun != '2'}">  --%>
-<!-- 			        <tr>  -->
-<%-- 			          <th><spring:message code='ezBoard.t289'/></th>  --%>
-<!-- 			          <td id="User_DeptNM" style="white-space:nowrap; width:200px"></td>  -->
-<%-- 			          <th><spring:message code='ezBoard.t290'/></th>  --%>
-<!-- 			          <td id="User_JobTitle" style="white-space:nowrap; width:200px"></td>  -->
-<%-- 			          <th><spring:message code='ezBoard.t38'/></th>  --%>
-<!-- 			          <td id="Telephone" style="width:200px"></td>  -->
-<!-- 			        </tr>  -->
-<%-- 		        </c:if>  --%>
-<!-- 		        <tr>  -->
-<%-- 		          <th><spring:message code='ezBoard.t291'/></th>  --%>
-<!-- 		          <td id="cTitle" style="WORD-WRAP: break-word" colSpan="5"><div id="txtTitle" style="OVERFLOW-Y: auto; WIDTH: 100%; HEIGHT: 15px; vertical-align: middle"></div></td>  -->
-<!-- 		        </tr>  -->
-<!-- 		        추가 항목이 있을 경우  -->
-<%--        			<c:forEach var="boardAttributeVO" items="${boardAttributeListVO}" step="1" varStatus="status">  --%>
-<!--        				<tr>  -->
-<%--        					<c:choose>  --%>
-<%--        						<c:when test="${extenLang == 1}">  --%>
-<%--          						<th>${boardAttributeVO.colName1}</th>  --%>
-<%--        						</c:when>  --%>
-<%--        						<c:otherwise>  --%>
-<%--        							<th>${boardAttributeVO.colName2}</th>  --%>
-<%--        						</c:otherwise>  --%>
-<%--        					</c:choose>  --%>
-<%--        					<c:choose>  --%>
-<%--        						<c:when test="${boardAttributeVO.colType == 'radio'}">  --%>
-<%-- 				                <td colspan="5" id="${boardAttributeVO.tableCol}">  --%>
-<!-- 				                </td>  -->
-<%--       						</c:when>  --%>
-<%--       						<c:when test="${boardAttributeVO.colType == 'text'}">  --%>
-<%-- 				                <td colspan="5" id="${boardAttributeVO.tableCol}">  --%>
-<!-- 				                </td>  -->
-<%--        						</c:when>  --%>
-<%--        						<c:when test="${boardAttributeVO.colType == 'check'}">  --%>
-<%-- 				                <td colspan="5" id="${boardAttributeVO.tableCol}">  --%>
-<!-- 				                </td>  -->
-<%--        						</c:when>  --%>
-<%--        					</c:choose>  --%>
-<!--        				</tr>  -->
-<%--        			</c:forEach>  --%>
-<!-- 	          추가 항목이 있을 경우 끝  -->
-<!-- 		      </table> -->
-		    </td>
-		  </tr>
-		  </table>
+						<span id="PostDate"><c:out value="${boardItem.writeDate.substring(0, 16)}"/></span>
+					</div>
+					<div>
+						<c:choose>
+							<c:when test="${boardItem.endDate.substring(0,4) == '9999'}">
+								<span id="EndDate" style="padding-right:5px;">
+									<spring:message code='ezBoard.t287' />
+								</span>
+							</c:when>
+							<c:otherwise>
+								<span id="EndDate" style="padding-right:15px;">
+									<c:out value="${boardItem.endDate.split(' ')[0]}"/>
+								</span>
+							</c:otherwise>
+						</c:choose>
+					</div>
+				</div>
+				<c:if test="${((boardInfo.boardAdmin_FG == 'true' || boardInfo.boardGroupAdmin_FG == 'OK') && not empty boardItem.updateDate) || boardInfo.useKeyword eq 'Y' || boardAttrCount > 0}">
+					<div class="preview_detail">
+						<!-- 상세정보는 위 기본정보를 제외한 추가정보 (확장컬럼) -->
+						<span class="preview_toggleBtn active"><spring:message code='ezBoard.newDesign10' /></span>
+						<div class="detail_category active">
+							<ul>
+								<c:if test="${(boardInfo.boardAdmin_FG == 'true' || boardInfo.boardGroupAdmin_FG == 'OK') && not empty boardItem.updateDate}">
+									<!-- 수정자, 수정일 -->
+									<li>
+										<c:if test="${guBun != '2'}">
+											<span><spring:message code='ezBoard.updateJIH01' /></span>
+											<span id="updaterName">
+												<c:out value="${boardItem.updaterDept}"/> <c:out value="${boardItem.updaterName}"/><c:if test="${not empty fn:trim(boardItem.updaterTitle)}">(<c:out value="${boardItem.updaterTitle}"/>)</c:if>
+												<span><c:out value="${boardItem.updateDate.substring(0, 16)}"/></span>
+											</span>
+										</c:if>
+										<c:if test="${guBun == '2'}">
+											<span><spring:message code='ezBoard.updateJIH02' /></span>
+											<span id="updateDate">
+												<c:out value="${boardItem.updateDate.substring(0, 16)}"/>
+											</span>
+										</c:if>
+									</li>
+									<!-- 수정자, 수정일 end -->
+								</c:if>	
+								<c:if test='${boardInfo.useKeyword eq "Y"}'>
+									<li>
+										<span><spring:message code="ezApprovalG.t1200" /></span>
+										<c:if test='${not empty keywordList}'>
+											<c:forEach var="keyword" items="${keywordList}">
+												<span class="keywordSpan" id="${keyword.keywordName}" onclick="onclickKeyword(event)">#${keyword.keywordName}</span>
+											</c:forEach>
+										</c:if>
+									</li>
+								</c:if>
+								<c:if test="${boardAttrCount > 0}">
+									<c:forEach var="boardAttr" items="${boardAttr}">
+										<li>
+											<c:choose>
+												<c:when test="${extenLang == '1'}">
+													<span>${boardAttr.colName1}</span>
+												</c:when>
+												<c:otherwise>
+													<span>${boardAttr.colName2}</span>
+												</c:otherwise>
+											</c:choose>
+											<c:choose>
+												<c:when test="${boardAttr.colType == 'people' || boardAttr.colType == 'textArea'}">                                         
+													<span id="${boardAttr.tableCol}"></span>
+												</c:when>
+												<c:when test="${boardAttr.colType == 'people'}">
+													<span id="${boardAttr.tableCol}"></span>
+												</c:when>
+												<c:when test="${boardAttr.tableCol == 'extensionAttribute6'}">
+													<c:out value="${boardItem.extensionAttribute6}"/>
+												</c:when>
+												<c:when test="${boardAttr.tableCol == 'extensionAttribute7'}">
+													<c:out value="${boardItem.extensionAttribute7}"/>
+												</c:when>
+												<c:when test="${boardAttr.tableCol == 'extensionAttribute8'}">
+													<c:out value="${boardItem.extensionAttribute8}"/>
+												</c:when>
+												<c:when test="${boardAttr.tableCol == 'extensionAttribute9'}">
+													<c:out value="${boardItem.extensionAttribute9}"/>
+												</c:when>
+												<c:when test="${boardAttr.tableCol == 'extensionAttribute10'}">
+													<c:out value="${boardItem.extensionAttribute10}"/>
+												</c:when>
+												<c:otherwise></c:otherwise>
+											</c:choose>
+										</li>
+									</c:forEach>
+								</c:if>
+							</ul>
+						</div>
+					</div>
+				</c:if>
+			</div>
+			<div id="attachView" class="preview_attachBox" style="display:none;">
+				<div class="preview_attach_header">
+					<span class="preview_toggleBtn active"><spring:message code='ezBoard.t10025' /></span>
+				</div>
+				<div class="preview_attach_list boardPrint active" id="lstAttachLink" style="border: none;"></div>
+			</div>
+		  </div>
 		  <table class="layout" style="margin-top:5px;">
 		  <tr>
 		    <td class="pad1" style="display:none;">
@@ -482,36 +457,12 @@
 		  </tr>
 		    <tr>
 		    <td class="pad1" style="height:100%;">
-		        <div id ="txtContent" class ="viewbox" style="border:1px solid #d2d2d2; margin-left:0px; margin-right:0px;"></div>
+		        <div id ="txtContent" class ="viewbox"></div>
 		    </td> 
 		  </tr>
 		  </table>
-		  <table class="layout" style="margin-top:5px;">
-		      <tr id="onelineView" style="display:none;">
-		        <td style="height:30px">
-		          <table style="height:100%;">
-		            <tr>
-		              <th class="boardItemViewPrint_cssThEn" style="height:100%; "><spring:message code='ezBoard.jjh06'/></th>
-		              <td class="boardItemViewPrint_cssTdEn" style="height:100%; width:100%; ">
-		                <table id="onelinereplylist" style="OVERFLOW:visible;  background-color:white; text-align:left; width:100%;"></table>
-		              </td>
-		            </tr>
-		          </table>
-		        </td>
-		      </tr>
-		  </table>
-		  <table class="layout" style="margin-top:5px;">
-		      <tr id="attachView" style="display:none;">
-		        <td style="height:20px" class="pad1">
-		          <table class="file2" style="height:100%">
-		            <tr>
-		              <th class="boardItemViewPrint_cssThEn" style="height:100%; "><spring:message code='ezBoard.t10025'/></th>
-		              <td class="boardItemViewPrint_cssTdEn" style="width:100%; height:100%; "><div id="lstAttachLink" style="padding-top:3px;padding-bottom:3px;padding-left:3px;OVERFLOW:visible;  background-color:white; text-align:left"></div></td>
-		              <td id="ItemLevel" style="display:none"></td>
-		            </tr>
-		          </table>
-		        </td>
-		      </tr>
-		</table>
+		  <div class="comment_listBox" style="display: none;">
+			  <div id="onelinereplylist"></div>
+		  </div>
 	</body>
 </html>

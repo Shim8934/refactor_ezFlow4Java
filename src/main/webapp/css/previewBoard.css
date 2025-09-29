@@ -37,7 +37,7 @@ th {
 	OVERFLOW:auto;padding:0px 0;height:50px
 }
 .viewbox {
-	border:1px solid #ddd;
+	/*border:1px solid #ddd;*/
 	height:100%;
 	background-color:#fff;
 	border-collapse:collapse;

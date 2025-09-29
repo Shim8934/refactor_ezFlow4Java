@@ -115,3 +115,14 @@ var strLangVersion02 = "게시글 버전 관리를 위한 히스토리 생성에
 // 2025-05-07 전인하 - 관리자 > 게시판 > 게시물 구분 변경 시 제한 조건 추가
 var strLangJIHgubunChange01 = "게시판에 게시물이 존재할 경우 게시판의 구분을 변경할 수 없습니다.";
 var strLangJIHgubunChange02 = "관리자 페이지에서 게시판 타입이 변경되었습니다.\n게시물을 저장할 수 없습니다. 그룹웨어 새로고침이 필요합니다.";
+
+var strLangNewBoardDesign01 = "Sửa đổi";
+var strLangNewBoardDesign02 = "Xóa";
+var strLangNewBoardDesign03 = "Thích";
+var strLangNewBoardDesign04 = "Không thích";
+var strLangNewBoardDesign05 = "biểu tượng cảm xúc";
+var strLangNewBoardDesign06 = "Vui lòng nhập bình luận.";
+var strLangNewBoardDesign07 = "Tệp đính kèm";
+var strLangNewBoardDesign08 = "Nhập mật khẩu.";
+var strLangNewBoardDesign09 = "Đăng bài vĩnh viễn";
+var strLangNewBoardDesign10 = "Tải về";

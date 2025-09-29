@@ -1080,15 +1080,15 @@
 		                <img src="/images/prevview_hbar_dotted.gif">
 		            </p>
 		        </div>
-		        <div id="PreContent_RayerH" style="position: absolute; border: 0px; margin-left:7px;">
+		        <div id="PreContent_RayerH" style="position: absolute; border: 0px; magin-left: 7px;">
 		            <div class="previewmail">
 		                <div class="previewmail_info">
 		                	<dl class="previewmailDL" id="Preview_HeaderH" style="display:none;">
 								<dt class="prepic"><img id="userImgH" src="/images/kr/main/bestEmployee_pic_none.png" width="55px" height="55px"></dt>
 								<dd class="pretext">
 									<ul class="pretextUL">
-										<li class="preSubject"><span class="popup_open" onclick="MailReadOpen_temp();"><img src="/images/kr/cm/btn_newpopup.gif" title="<spring:message code='ezEmail.t99000001' />" alt="<spring:message code="ezEmail.t99000001" />"></span><span class="subjectText" id="PreH_subject"><span class="subjectText" id="PreH_sub_subject"></span></span></li>
-										<li class="preT_list"><span class="t_left"><span class="cblack"><spring:message code="ezBoard.t223" /></span> : <span id="PreH_MailReceiver"></span></span><span class="t_right"><span class="cblack"><spring:message code="ezBoard.t224" /> : </span><span id="PreH_date"><span id="PreH_sub_date" style="display:none;"></span></span></span></li>
+										<li class="preSubject"><span class="popup_open" onclick="MailReadOpen_temp();"><img src="/images/kr/cm/btn_newpopup.svg" title="<spring:message code='ezEmail.t99000001' />" alt="<spring:message code="ezEmail.t99000001" />"></span><span class="subjectText" id="PreH_subject"><span class="subjectText" id="PreH_sub_subject"></span></span></li>
+										<li class="preT_list"><span class="t_left"><span id="PreH_MailReceiver"></span></span><span class="t_left"><span id="PreH_date"><span id="PreH_sub_date" style="display:none;"></span></span></span><span id="PreH_endDate" class="t_right date_right"></span></li>
 										
 									</ul>
 								</dd>
@@ -1110,8 +1110,8 @@
 							<dt class="prepic"><img id="userImgW" src="/images/kr/main/bestEmployee_pic_none.png" width="55px" height="55px"></dt>
 							<dd class="pretext">
 								<ul class="pretextUL">
-									<li class="preSubject"><span class="popup_open" onclick="MailReadOpen();"><img src="/images/kr/cm/btn_newpopup.gif" title="<spring:message code='ezEmail.t99000001' />" alt="<spring:message code="ezEmail.t99000001" />"></span><span class="subjectText" id="PreW_subject"><span class="subjectText" id="PreW_sub_subject"></span></span></li>
-									<li class="preT_list"><span class="t_left"><span class="cblack"><spring:message code="ezBoard.t223" /></span> : <span id="PreW_MailReceiver"></span></span><span class="t_right"><span class="cblack"><spring:message code="ezBoard.t224" /> : </span><span id="PreW_date"><span id="PreW_sub_date" style="display:none;"></span></span></span></li>
+									<li class="preSubject"><span class="popup_open" onclick="MailReadOpen();"><img src="/images/kr/cm/btn_newpopup.svg" title="<spring:message code='ezEmail.t99000001' />" alt="<spring:message code="ezEmail.t99000001" />"></span><span class="subjectText" id="PreW_subject"><span class="subjectText" id="PreW_sub_subject"></span></span></li>
+									<li class="preT_list"><span class="t_left"><span id="PreW_MailReceiver"></span></span><span class="t_left"><span id="PreW_date"><span id="PreW_sub_date" style="display:none;"></span></span></span><span id="PreW_endDate" class="t_right date_right"></span></li>
 									
 								</ul>
 							</dd>

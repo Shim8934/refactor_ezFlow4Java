@@ -39,6 +39,7 @@ public class BoardLineReplyVO {
 	private String fileSize;
 	private String filePath;
 	private String fileSN;
+	private String userPhoto;
 	
 	public String getReplyID() {
 		return replyID;
@@ -171,4 +172,8 @@ public class BoardLineReplyVO {
 	public void setFileSize(String fileSize) {
 		this.fileSize = fileSize;
 	}
+	
+	public String getUserPhoto() { return userPhoto; }
+
+	public void setUserPhoto(String userPhoto) { this.userPhoto = userPhoto; }
 }

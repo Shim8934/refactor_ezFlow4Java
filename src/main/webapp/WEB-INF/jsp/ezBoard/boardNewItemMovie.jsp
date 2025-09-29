@@ -64,19 +64,9 @@
 	        function window_onload() {
 	            try{
 	                new FormData();
-	                thumbnailInit();
 	            }
 	            catch (e) {
 	            }
-	            window.onresize();
-	            
-	            if(parseInt(autoSaveTime) > 0)
-	            	autoSaveTempItem();
-	        }
-	        
-	        /* 2018-08-08 홍승비 - 썸네일+포토게시물 등록창 세로길이 리사이즈 추가 */
-	        window.onresize = function () {
-	        	 document.getElementById("addimagecontent").style.height = document.documentElement.clientHeight - 280 + "PX";
 	        }
 	
 		    function MakeXMLString(str)
@@ -102,21 +92,16 @@
                     return "false";
                 }
 
-                var resultHTML = "";
-				resultHTML = "<table width='100%' height='420px' class='content' style='border-top:0 none; table-layout:fixed;' id='" + "M_" + movieid + "' name='" + moviePath + "' uniqueId='" + movieUniqueID + "' >" +
-				"<tr><td style='border-top:0 none; padding:6px; text-align:center;'><video id='" + movieid + "' title='" + localFileName + "' size='" + movieSize + "' uniqueId='" + movieUniqueID + 
-				"' style='width: 640px; height: 360px;' name='movieView' controls /></td></tr></table>";
-
                 var movieContent = document.getElementById("addimagecontent");
-                movieContent.innerHTML += resultHTML;
-                
-                /* 2023-09-14 홍승비 - 게시물 작성창에서 동영상 업로드 시 동영상 재생바 클릭으로 시간 이동되지 않는 현상 수정 (기존 getBoardMovieInfo.do URL이 아닌 실제 파일경로를 사용) */
-				if (movieContent != null && movieContent != "") {
-					var movieSrc = getBoardMoviePath("BOARDMOVIETEMP", pBoardID, movieUniqueID);
-					
-                    document.getElementById(movieid).src = movieSrc;
-                    bodycount = parseInt(bodycount) + 1;
-				}
+				movieContent.replaceChildren();
+				
+				const wrapper = createEl("div", "content", { id: "M_" + movieid, name: moviePath, uniqueId: movieUniqueID});
+				const videoAttr = {id: movieid, title: localFileName, size: movieSize, uniqueId: movieUniqueID, name: "movieView", src: getBoardMoviePath("BOARDMOVIETEMP", pBoardID, movieUniqueID), controls: ""}
+				const video = createEl("video", null, videoAttr);
+				wrapper.appendChild(video);
+				movieContent.appendChild(wrapper);
+				
+                bodycount = parseInt(bodycount) + 1;
 	        }
 	        
 	        function GetSmallUrl() {
@@ -773,41 +758,24 @@
 
                 if (document.getElementById(imageid) != "" && document.getElementById(imageid) != null)
                     return "false";
-
-                var resultHTML = "<table width='100%' class='content' style='border-top:0 none; table-layout:fixed;' id='" + "M_" + imageid + "' name='" + imgpath + "' uniqueId='" + imgUniqueID + "' ><tr>" +
-	                             "<td style='width:200px; height: 100px;border-top:0 none; padding:6px; text-align:center;'><img id='" + imageid + "' title='" + localFileName + "' size='" + imgSize + "' uniqueId='" + imgUniqueID + "' style='width: 200px; height: 100px;' name='imgView'></img></td>" +
-	                             "</tr></table>";
+				
                 var imagecontent = document.getElementById("addimagecontent2");
-                imagecontent.innerHTML = "";
-                imagecontent.innerHTML += resultHTML;
+				imagecontent.replaceChildren();
+				
+				var wrapper = createEl("div", null, {id:"M_" + imageid, name:imgpath, uniqueId:imgUniqueID});
+				var imgSrc = "/ezBoard/getBoardThumbnailInfo.do?type=BOARDTHUMTEMP&boardID=" + encodeURI(pBoardID) + "&fileName=" + encodeURI(imgpath);
+				var imgAttr = {id:imageid, title:localFileName, size:imgSize, uniqueId:imgUniqueID, name:"imgView", src:imgSrc }
+				var img = createEl("img", null, imgAttr);
+				
+				wrapper.appendChild(img);
+				imagecontent.appendChild(wrapper)
+				
                 for (var i = 0 ; i < tmpContents.length ; i++) {
                     document.getElementsByName("imgContent")[i].value = tmpContents[i];
                 }
+				bodycount = parseInt(bodycount) + 1;
 
-                if (imagecontent != null && imagecontent != "") {
-                    var imgSrc = "/ezBoard/getBoardThumbnailInfo.do?type=BOARDTHUMTEMP&boardID=" + encodeURI(pBoardID) + "&fileName=" + encodeURI(imgpath);
-                    document.getElementById(imageid).src = imgSrc;
-                    bodycount = parseInt(bodycount) + 1;
-                }
-	            thumbnailChange();
-	        }
-		        
-	        function thumbnailInit() {
-	        	document.getElementById("titleTD").colSpan = 3;
-	        	document.getElementById("titleTD").style.width = "100%";
-	    		document.getElementById("thumbnailTH").style.display = "none";
-	    		document.getElementById("movieContentTD").colSpan = 3;
-	        	document.getElementById("movieContentTD").style.width = "100%";
-	        	document.getElementById("imageContentTD").style.display = "none";
-	        }
-	        
-	        function thumbnailChange() {
-	        	document.getElementById("titleTD").colSpan = 1;
-	        	document.getElementById("titleTD").style.width = "70%";
-	    		document.getElementById("thumbnailTH").style.display= "";
-	    		document.getElementById("movieContentTD").colSpan = 1;
-	        	document.getElementById("movieContentTD").style.width = "70%";
-	        	document.getElementById("imageContentTD").style.display= "";
+	            document.getElementById("thumbnailDiv").style.display = "";
 	        }
 		        
 	        function btn_thumbAttachDel()
@@ -851,7 +819,7 @@
 		        xmldom = null;
 		        xmlHTTP = null;
 		        
-		        thumbnailInit();
+		        document.getElementById("thumbnailDiv").style.display = "none";
 		        isThumbnailUp = false;
 		    }
 
@@ -866,143 +834,111 @@
 			}
 	    </script>
 	</head>
-	<c:if test="${!isCrossBrowser}">
-		<script type="text/javascript" FOR="EzHTTPTrans" EVENT="AttachAddFile(filename)">
-		    Append_AttachAdd(filename);
-		</script>
-	</c:if>
 	<body class="popup" onload="window_onload()">
-	    <table border="0" class="layout">
-	        <tr>
-	            <td style="height:20px">
-	              <div id="menu">
-	                <ul>
-	                  <li ><span onClick="SaveItem('new');"><spring:message code='ezBoard.t98'/></span></li>
-	                  <li ><span ID='btn_add' onclick='btn_MovieAttachAdd()'><spring:message code='ezQuestion.t180'/><spring:message code='ezBoard.t602'/></span></li>
-	                  <li ><span id="btn_del" onClick="return btn_MovieAttachDel()"><spring:message code='ezQuestion.t180'/><spring:message code='ezBoard.t89'/></span></li>
-	                  <li ><span ID='btn_thumbAdd' onclick='btn_thumbAttachAdd()'><spring:message code='ezBoard.thumbnail.kwc001'/><spring:message code='ezBoard.t602'/></span></li>
-	                  <li ><span id="btn_thumbDel" onClick="return btn_thumbAttachDel()"><spring:message code='ezBoard.thumbnail.kwc001'/><spring:message code='ezBoard.t89'/></span></li>
-	                  <li><span  onClick="SaveItem('temp');"><spring:message code='ezBoard.t10034'/></span></li>
-	                </ul>
-	              </div>
-	              <div id="close">
-	                <ul>
-	                    <li ><span onclick="window.close();"></span></li>
-	                </ul>
-	              </div>
-				<script type="text/javascript">
-				    selToggleList(document.getElementById("menu"), "ul", "li", "0");	    
-				</script>
-	        </td>
-	  </tr>
-	  <tr>
-	      <td>
-	      <table border="0" cellspacing="0" cellpadding="0" class="content" style="table-layout:fixed;">
-	        <tr>
-	          <th style="width:100px; text-align:center">
-	          	<c:choose>
-	          		<c:when test="${boardType != 'SELECT'}">
-		                <spring:message code='ezBoard.t142'/>
-	          		</c:when>
-	          		<c:otherwise>
-		                <a class="imgbtn" onclick="NewItem_onclick()"><span><spring:message code='ezBoard.t171'/></span></a>
-	          		</c:otherwise>
-	          	</c:choose>
-	          </th>
-	          <td style="width:45%" id="tdBoardName">
-	          	<c:choose>
-	          		<c:when test="${boardType != 'SELECT'}">
-	          			${boardName}
-	          		</c:when>
-	          		<c:otherwise>
-	          			<c:choose>
-	          				<c:when test="${boardID == ''}">
-			                    <span id="BoardSpan"><spring:message code='ezBoard.t57'/></span>
-	          				</c:when>
-	          				<c:otherwise>
-			                    <span id="BoardSpan">${boardName}</span>
-	          				</c:otherwise>
-	          			</c:choose>
-	          		</c:otherwise>
-	          	</c:choose>
-	          </td>
-	          <th style="width:100px; text-align:center"><spring:message code='ezBoard.t223'/></th>
-				<td style="width:48%;">
-					<span id="spUseDept">${userInfo.displayName}</span>
-					<c:if test="${'Y' == boardInfo.writerFlag}">
-						<div class="custom_checkbox"><input type="checkbox" id="chkUseDept" style="margin-left: 0px !important;" onclick="chkUseDept_onclick()"></div>
-						<select id="writerFlag" style="display: none;">
-							<option value="<c:out value='${writerOption.N}\\${writerOption.N2}\\0' />"></option>
-							<option value="<c:out value='${writerOption.T}\\${writerOption.T2}\\1' />"></option>
-							<option value="<c:out value='${writerOption.D}\\${writerOption.D2}\\2' />"></option>
-						</select>
-					</c:if>
-				</td>
-	        </tr>
-            <!-- 키워드 시작 -->
-            <c:if test="${not empty useKeyword && useKeyword eq 'Y'}">
-                <tr>
-                    <th><spring:message code="ezApprovalG.t1200" /></th>
-                    <td colspan="3" id="keyWordResult">
-                        <input type="text" id="txtKeyword" style="WIDTH: 20%; word-wrap: break-word; word-break: break-all;" value="" maxlength="100" onkeyup="keyword_onkeyUp(event)" >
-                    </td>
-                </tr>
-            </c:if>
-            <!-- 키워드 끝 -->
-	        <tr>
-	          <th style="text-align:center"><spring:message code='ezBoard.t208'/></th>
-	          <td id="titleTD" colspan="1" style="width:70%; vertical-align:middle; padding:0px 5px 0px 3px; margin:0;"><INPUT type="text" id="txtTitle" style="WIDTH:100%;word-wrap:break-word;word-break:break-all; border:1px solid #ddd; margin:0px; padding:2px 0px 2px 0px;" value="" maxlength="100" /></td>
-	          <th id="thumbnailTH" colspan="2" style="width:30%; text-align:center">
-	          	<spring:message code='ezBoard.thumbnail.kwc001'/>
-	          </th>
-	        </tr>
-	        <tr style="display:none;">
-	          <th><spring:message code='ezBoard.t1001'/></th>
-	          <td class="pos1" colspan="3" style="width:100%;"><input style="width:600px;" id="fileData" name="fileData" type="file" onchange="fileUploadPreview(this, 'preView')" /></td>
-	        </tr>
-	        <tr>
-	            <th><spring:message code='ezQuestion.t180'/><spring:message code='ezCommunity.t18'/></th>
-	            <td id="movieContentTD" colspan="1" style="width:70%; height:100px; margin:0; padding:3px 5px 3px 3px;"><textarea style="width:100%; height:100px; margin:0; padding:0; border:1px solid #ddd;" id="movieContent" wrap="hard"></textarea></td>
-	            <td id="imageContentTD" colspan="2" style="width:30%;">
-			        <div id="addimagecontent2" style="overflow:auto; vertical-align:top;"></div>
-			    </td>
-	        </tr>
-	      </table>
-	      </td>
-	  </tr>
-	  <tr>
-	    <td>
-	        <table style="width:100%; border:1px solid #ddd; border-top:0 none; table-layout:fixed;" border="0" cellspacing="0" cellpadding="0">
-	        <tr>
-	            <th style="text-align:center ;padding-left:2px;border:0;"><spring:message code='ezBoard.t431'/></th>
-	        </tr>
-	      </table>
-	    </td>
-	  </tr>
-	  <tr>
-	    <td colspan="4">
-	        <div id="addimagecontent" style="overflow:auto;width:100%;height:415px; vertical-align:top"></div>
-	    </td>
-	  </tr>
-	  <tr>
-	    <td>
-	        <iframe name="ifrm" src="about:blank" style="display: none"></iframe>
-	        <form method="post" id="form" name="form" enctype="multipart/form-data" action="" target="ifrm" style="display: none">
-	        <input type="file" name="file1" id="file1"  style="width: 1px; height: 1px;" onchange="MovieTemp_onclick()" accept="video/*"/>
-	        <input type="hidden" name="mode" id="mode" />
-	        </form>
-	    </td>
-	    <td>
-	        <iframe name="ifrm2" src="about:blank" style="display: none"></iframe>
-	        <form method="post" id="form2" name="form2" enctype="multipart/form-data" action="" target="ifrm2" style="display: none">
-	        <input type="file" name="file2" id="file2"  style="width: 1px; height: 1px;" onchange="imgtemp_onclick()" accept="image/*"/>
-	        <input type="hidden" name="mode2" id="mode2" />
-	        </form>
-    	</td>
-	  </tr>
-
-	    </table>
-	    <div id="progdiv" class="progarea" style="z-index:6000;position:absolute;top:370px;left:227px;display:none">
+	    <div class="layout">
+			<div id="menu">
+				<ul>
+					<li><span onClick="SaveItem('new');"><spring:message code='ezBoard.t98'/></span></li>
+					<li><span id='btn_thumbAdd' onclick='btn_thumbAttachAdd()'><spring:message code='ezBoard.thumbnail.kwc001'/><spring:message code='ezBoard.t602'/></span></li>
+					<li><span id="btn_thumbDel" onClick="return btn_thumbAttachDel()"><spring:message code='ezBoard.thumbnail.kwc001'/><spring:message code='ezBoard.t89'/></span></li>
+					<li><span  onClick="SaveItem('temp');"><spring:message code='ezBoard.t10034'/></span></li>
+				</ul>
+			</div>
+			<div id="close">
+				<ul>
+					<li><span onclick="window.close();"></span></li>
+				</ul>
+		 	</div>
+			<div class="flex_contentBox">
+				<%-- 게시판명 --%>
+				<div class="flex_content">
+					<div class="flex_content_tit"><spring:message code='ezBoard.t142'/></div>
+					<div class="flex_content_cont">
+						<input type="text" id="tdBoardName" value="<c:out value='${boardName}'/>" disabled="disabled" />
+					</div>
+				</div>
+				<%-- 게시자명 선택 기능 --%>
+				<c:if test="${'Y' == boardInfo.writerFlag && '2' != boardInfo.guBun}">
+					<div class="flex_content">
+						<div class="flex_content_tit"><spring:message code='ezBoard.t223' /></div>
+						<div class="flex_content_cont">
+							<div class="custom_checkbox">
+								<input type="checkbox" id="chkUseDept" onclick="chkUseDept_onclick()">
+								<label id="spUseDept" for="chkUseDept"><c:out value="${userInfo.displayName}"/></label>
+								<select id="writerFlag" style="display: none;">
+									<option value="<c:out value='${writerOption.N}\\${writerOption.N2}\\0' />"></option>
+									<option value="<c:out value='${writerOption.T}\\${writerOption.T2}\\1' />"></option>
+									<option value="<c:out value='${writerOption.D}\\${writerOption.D2}\\2' />"></option>
+								</select>
+							</div>
+						</div>
+					</div>
+				</c:if>
+				<%-- 키워드 --%>
+				<c:if test="${not empty useKeyword && useKeyword eq 'Y'}">
+					<div class="flex_content">
+						<div class="flex_content_tit"><spring:message code="ezApprovalG.t1200" /></div>
+						<div class="flex_content_cont">
+							<div class="flex_content_keyword" id="keyWordResult" onclick="keywordInput('txtKeyword')">
+								<label for="txtKeyword">
+									<input type="text" id="txtKeyword" maxlength="70" style="width:auto" placeholder="<spring:message code='ezBoard.newDesign07' />" onblur="keyword_blur(event)" onkeyup="keyword_onkeyUp(event)" >
+								</label>
+							</div>
+						</div>
+					</div>
+				</c:if>
+				<%-- 제목 --%>
+				<div class="flex_content">
+					<div class="flex_content_tit"><spring:message code='ezBoard.t208'/></div>
+					<div class="flex_content_cont">
+						<input type="text" id="txtTitle" placeholder="<spring:message code='ezBoard.t390'/>" value="" />
+					</div>
+				</div>
+				<!-- 썸네일 -->
+				<div class="flex_content" id="thumbnailDiv" style="display:none;">
+					<div class="flex_content_tit"><spring:message code='ezBoard.thumbnail.kwc001'/></div>
+					<div class="flex_content_cont">
+						<div class="flex_content_thumbnail" id="addimagecontent2" style="display:flex;"></div>
+					</div>
+				</div>
+				<!-- 동영상소개 -->
+				<div class="flex_content">
+					<div class="flex_content_tit"><spring:message code='ezQuestion.t180'/><spring:message code='ezCommunity.t18'/></div>
+					<div class="flex_content_cont">
+						<textarea name="textarea" id="movieContent" rows="2"></textarea>
+					</div>
+				</div>
+				<!-- 동영상 content -->
+				<div class="flex_content_album">
+					<div class="flex_content">
+						<div class="flex_content_tit"><spring:message code='ezBoard.t431'/></div>
+						<div class="flex_content_cont">
+							<button type="button" id='btn_add' class="form_btn3" onclick='btn_MovieAttachAdd()'><spring:message code='ezQuestion.t180'/><spring:message code='ezBoard.t602'/></button>
+							<button type="button" id="btn_del" class="form_btn3" onClick="return btn_MovieAttachDel()"><spring:message code='ezQuestion.t180'/><spring:message code='ezBoard.t89'/></button>
+						</div>
+					</div>
+					<!-- 동영상 미리보기 -->
+					<div id="addimagecontent" class="flex_content_movie"></div>
+				</div>
+					
+				<%-- 게시판 동영상 및 썸네일 첨부 로직에 사용되는 hidden DOM --%>
+				<div style="display:none">
+					<iframe name="ifrm" src="about:blank" style="display: none"></iframe>
+					<form method="post" id="form" name="form" enctype="multipart/form-data" action="" target="ifrm" style="display: none">
+					<input type="file" name="file1" id="file1"  style="width: 1px; height: 1px;" onchange="MovieTemp_onclick()" accept="video/*"/>
+					<input type="hidden" name="mode" id="mode" />
+					</form>
+				</div>
+				<div style="display:none">
+					<iframe name="ifrm2" src="about:blank" style="display: none"></iframe>
+					<form method="post" id="form2" name="form2" enctype="multipart/form-data" action="" target="ifrm2" style="display: none">
+					<input type="file" name="file2" id="file2"  style="width: 1px; height: 1px;" onchange="imgtemp_onclick()" accept="image/*"/>
+					<input type="hidden" name="mode2" id="mode2" />
+					</form>
+				</div>
+			</div>
+		</div>
+		<div id="progdiv" class="progarea" style="z-index:6000;position:absolute;top:370px;left:227px;display:none">
 	        <P class="prog_bar"><span id="prog_bar" style="width:0%"></span></P> <span class="prog_num"><strong id ="prog_num">0</strong>%</span>
 	    </div>
 	</body>

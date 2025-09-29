@@ -3,7 +3,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <!DOCTYPE html>
-<html style="height: 99%;" ondragover="bodydragover(event)">
+<html style="height: 100%;" ondragover="bodydragover(event)">
 	<head>
 		<c:choose>
 			<c:when test="${mode == 'new' || mode == 'new1' || mode == 'boardAttach' || mode == 'boardContent' || url != ''}">
@@ -20,16 +20,6 @@
 	    <link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
 	    <link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css">
 	    <link rel="stylesheet" href="${util.addVer('/css/Tab.css')}" type="text/css">
-	    <style>
-            .peopleSelectBtn {
-                border-radius: 3px;
-                line-height: 23px;
-                border: 1px solid #ccc;
-                cursor: pointer;
-                padding: 2px 5px;
-                margin-right: 10px;
-            }
-	    </style>
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/ezBoard/datepicker.htc.js')}"></script>
@@ -135,6 +125,7 @@
 		    var SelBoard = false;
 		    var pcheckForm = "${checkForm}";
 		    var pUseBackGround = "${useBackGround}";
+			var pBackGroundUploadPath = "<spring:eval expression='@commonUtil.getUploadPath(\"upload_board.BOARDBACKGROUND\", \"${userInfo.tenantId}\")' />";
 		    var defaultFontAndSize  = "${defaultFontAndSize}";
 		    var FirstFlag = false;
 		    var rsa = new RSAKey();
@@ -357,7 +348,7 @@
 			    if (gubun == "8") {
 			    	document.getElementById("attachIframeTR").style.display = "none";
 			    	document.getElementById("tdEndDate").style.display = "none"; // 영구 게시로 고정되어 숨김
-			    	resizeMessageFrame();
+			    	// resizeMessageFrame();
 			    }
 			    
 			    FirstFlag = true;
@@ -388,7 +379,7 @@
 			    }
 			    catch (e) { }
 
-				if (useVersion === "Y") {
+				if (useVersion === "Y" && pReservedItem != "true") {
 					let v;
 
 					if (version != "") {
@@ -404,6 +395,8 @@
 
 					if (newItemFlag) {
 						document.getElementById("tr_version").style.display = "none";
+					} else {
+						document.getElementById("tr_version").style.display = "";
 					}
 
 					document.getElementById("majorVersion").value = !newItemFlag ? v[0] : "0";
@@ -413,7 +406,7 @@
 		    
 		    /* 2022-06-21 홍승비 - 에디터 영역 리사이즈 함수 분리 */
 		    window.onresize = function () {
-				resizeMessageFrame();
+				// resizeMessageFrame();
 				if (editor == "HWP") {
 					var mHeight = document.getElementById("EdtorSize").clientHeight - 16 + "px";
 		       		message.Resize(mHeight);
@@ -421,6 +414,8 @@
 				mobileDistinction();
 		    };
 
+			/* 2025-11-27 게시판 디자인 작업
+			 신디자인에서 TAB 삭제됨, 관련코드는 추후 검토 후 삭제해도 됨 */
 		    function resizeMessageFrame () {
 		        switch (pSelectTab) {
 		            case "MailEnv_div1":
@@ -481,40 +476,35 @@
 	            document.getElementById("message").style.width = editorW;
 	            //iframe 내부 에디터의 body width 조절
 	            $("iframe").ready(function(){ $("iframe[name='message']").contents().find("body").css("width" , editorW); });
-		        
-		    };
+		    }
 		
 		    $(function () {
 		        $("#Sdatepicker").datepicker({
 		            changeMonth: true,
 		            changeYear: true,
-		            autoSize: true,
 		            showOn: "both",
-		            buttonImage: "/images/ImgIcon/calendar-month.png",
+		            buttonImage: "/images/ezNewPortal/calIcon.png",
 		            buttonImageOnly: true
 		        });
 				$("#noti_start").datepicker({ /* 게시판 > 공지사항 시작날짜 */
 					changeMonth: true,
 					changeYear: true,
-					autoSize: true,
 					showOn: "both",
-					buttonImage: "/images/ImgIcon/calendar-month.png",
+					buttonImage: "/images/ezNewPortal/calIcon.png",
 					buttonImageOnly: true
 				});
 				$("#noti_end").datepicker({ /* 게시판 > 공지사항 종료날짜 */
 					changeMonth: true,
 					changeYear: true,
-					autoSize: true,
 					showOn: "both",
-					buttonImage: "/images/ImgIcon/calendar-month.png",
+					buttonImage: "/images/ezNewPortal/calIcon.png",
 					buttonImageOnly: true
 				});
 				$(".cal").datepicker({ /* 게시판 > 확장컬럼 날짜형식 */
 					changeMonth: true,
 					changeYear: true,
-					autoSize: true,
 					showOn: "both",
-					buttonImage: "/images/ImgIcon/calendar-month.png",
+					buttonImage: "/images/ezNewPortal/calIcon.png",
 					buttonImageOnly: true
 				});
 		        var settime = "${startDateTime}";
@@ -539,9 +529,8 @@
 		        $("#Sdatepicker2").datepicker({
 		            changeMonth: true,
 		            changeYear: true,
-		            autoSize: true,
 		            showOn: "both",
-		            buttonImage: "/images/ImgIcon/calendar-month.png",
+		            buttonImage: "/images/ezNewPortal/calIcon.png",
 		            buttonImageOnly: true
 		        });
        			
@@ -755,27 +744,27 @@
 					if (must[i] == "Y") {
 		        		if (colType[i] == "radio") {
 		        			if (GetRadioVal(tableCol[i]) == "") {
-		        				Tab1_MouseClick(document.getElementById("1tab1"));
+		        				// Tab1_MouseClick(document.getElementById("1tab1"));
 	                            alert(strLang188 + colName + strLang179);
 	                            return;
 		        			}
 		        		} else if (colType[i] == "text" || colType[i] == "textArea") {
 		        			if (document.getElementById(tableCol[i]).value.trim() == "") {
 		        			    document.getElementById(tableCol[i]).value = "";
-		        				Tab1_MouseClick(document.getElementById("1tab1"));
+		        				// Tab1_MouseClick(document.getElementById("1tab1"));
 	                            alert(strLang189 + colName + strLang187);
 	                            return;
 		        			}
 		        		} else if (colType[i] == "check") {
 		        			if(GetCheckVal(tableCol[i]) == ""){
-		        				Tab1_MouseClick(document.getElementById("1tab1"));
+		        				// Tab1_MouseClick(document.getElementById("1tab1"));
 	                            alert(strLang188 + colName + strLang179);
 	                            return;
 		        			}
 		        		} else if (colType[i] == "people") {
 		        		    var tempPeopleList = document.getElementById(tableCol[i]).innerHTML;
 		        		    if (tempPeopleList.trim() == "") {
-                                Tab1_MouseClick(document.getElementById("1tab1"));
+                                // Tab1_MouseClick(document.getElementById("1tab1"));
                                 alert(strLang188 + colName + strLang179);
                                 return;
                             }
@@ -838,13 +827,13 @@
 		        }
 		        if (document.getElementById("txtTitle").value == "" || trim(document.getElementById("txtTitle").value) == "") {
 		            alert("<spring:message code='ezBoard.t390' />");
-		            Tab1_MouseClick(document.getElementById("1tab1"));
+		            // Tab1_MouseClick(document.getElementById("1tab1"));
 		            document.getElementById("txtTitle").focus();
 		            return;
 		        }
 		        if (gubun == "2" && document.getElementById('txtPassWord').value == "") {
 		            alert("<spring:message code='ezBoard.t391' />");
-		            Tab1_MouseClick(document.getElementById("1tab1"));
+		            // Tab1_MouseClick(document.getElementById("1tab1"));
 		            txtPassWord.focus();
 		            return;
 		        }
@@ -912,7 +901,7 @@
 		            if (pMode != "modify") {
 		                createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "ITEMID", newID);
 		            } else {
-						var ii = useVersion === "Y" ? (historyModify === "true" ? strItemID : newID) : strItemID;
+						var ii = (useVersion === "Y" && pReservedItem != "true") ? (historyModify === "true" ? strItemID : newID) : strItemID;
 
 		                createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "ITEMID", ii);
 		            }
@@ -952,8 +941,8 @@
 		            }
 
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "WRITERID", "");
-		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "WRITERNAME", MakeXMLString(nickname));
-		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "WRITERNAME2", MakeXMLString(nickname));
+		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "WRITERNAME", nickname);
+		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "WRITERNAME2", nickname);
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "DEPTID", "");
 		            /* 2018.02.09 김기하 새게시물에서 익명게시판 부서가 null로 나오는 것을 공백처리 */
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "DEPTNAME", MakeXMLString(" "));
@@ -1213,7 +1202,7 @@
 				
                 createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "useVersion", useVersion);
 
-				if (useVersion === "Y") {
+				if ((useVersion === "Y" && pReservedItem != "true")) {
 					createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "version", version == null ? "" : version);
 				}
 
@@ -1387,7 +1376,7 @@
 					
 
                     if (pMode == "modify") {
-                        if (useVersion == "Y") {
+                        if (useVersion === "Y" && pReservedItem != "true") {
                             document.location.href = "/ezBoard/boardItemView.do?showAdjacent=&itemID=" + encodeURIComponent("{" + NewGuid +"}") + "&boardID=" + encodeURIComponent(pBoardID) + "&location=GENERAL&__wwidth=1920";
                         } else {
                             document.location.href = "/ezBoard/boardItemView.do?showAdjacent=&itemID=" + encodeURIComponent(strItemID) + "&boardID=" + encodeURIComponent(pBoardID) + "&location=GENERAL&__wwidth=1920";
@@ -1456,7 +1445,7 @@
 		            changeYear: true,
 		            autoSize: true,
 		            showOn: "both",
-		            buttonImage: "/images/ImgIcon/calendar-month.png",
+		            buttonImage: "/images/ezNewPortal/calIcon.png",
 		            buttonImageOnly: true
 		        });
 		        var settime = "${startDateTime}";
@@ -1470,44 +1459,41 @@
 		        $('#Stimepicker').timepicker({ 'timeFormat': 'H:i' });
 		    }
 		    function ChkPermanent() {
-		        if (pBoardType != "SELECT") {
-		            if (ExpireDays != -1) {
-		                if(!FirstFlag) {
-		                    alert("<spring:message code='ezBoard.t405' />");
-		                }
-		
-		                document.getElementById("ChkPermanence").checked = false;
-		                return;
-		            }
-		            if (document.getElementById("ChkPermanence").checked) {
-		                document.getElementById("Makedate").style.visibility = "hidden";
-		            } else {
-		            	document.getElementById("Makedate").style.visibility = "visible";
-		            	
-		                if (strEndDate != "") {
-		                    if (strEndDate.substring(0, 4) == "9999") {
-		                        $("#Sdatepicker2").datepicker({
-		                            changeMonth: true,
-		                            changeYear: true,
-		                            autoSize: true,
-		                            showOn: "both",
-		                            buttonImage: "/images/ImgIcon/calendar-month.png",
-		                            buttonImageOnly: true
-		                        });
-		                        var NowDate2 = new Date();
-		                        NowDate2.setMonth(NowDate2.getMonth() + 1);
-		                        $("#Sdatepicker2").datepicker("option", "dateFormat", "yy-mm-dd");
-		                        $("#Sdatepicker2").datepicker('setDate', NowDate2);
-		                    }
-		                    else {
-		                        //var NowDate = new Date(strEndDate.substring(0, 4), strEndDate.substring(5, 7), strEndDate.substring(8, 10), strEndDate.substring(11, 13), strEndDate.substring(14, 16));
-		                        //NowDate.setMonth(NowDate.getMonth() - 1);
-		                        //2017-12-01 영구게시가 아닐때 만료일자를 지정한 날짜가 그대로 나오도록 수정
-		                        $("#Sdatepicker2").datepicker('setDate', strEndDate);
-		                    }
-		                }
-		            }
-		        }
+				if (ExpireDays != -1) {
+					if(!FirstFlag) {
+						alert("<spring:message code='ezBoard.t405' />");
+					}
+	
+					document.getElementById("ChkPermanence").checked = false;
+					return;
+				}
+				if (document.getElementById("ChkPermanence").checked) {
+					document.getElementById("Makedate").style.visibility = "hidden";
+				} else {
+					document.getElementById("Makedate").style.visibility = "visible";
+					
+					if (strEndDate != "") {
+						if (strEndDate.substring(0, 4) == "9999") {
+							$("#Sdatepicker2").datepicker({
+								changeMonth: true,
+								changeYear: true,
+								showOn: "both",
+								buttonImage: "/images/ezNewPortal/calIcon.png",
+								buttonImageOnly: true
+							});
+							var NowDate2 = new Date();
+							NowDate2.setMonth(NowDate2.getMonth() + 1);
+							$("#Sdatepicker2").datepicker("option", "dateFormat", "yy-mm-dd");
+							$("#Sdatepicker2").datepicker('setDate', NowDate2);
+						}
+						else {
+							//var NowDate = new Date(strEndDate.substring(0, 4), strEndDate.substring(5, 7), strEndDate.substring(8, 10), strEndDate.substring(11, 13), strEndDate.substring(14, 16));
+							//NowDate.setMonth(NowDate.getMonth() - 1);
+							//2017-12-01 영구게시가 아닐때 만료일자를 지정한 날짜가 그대로 나오도록 수정
+							$("#Sdatepicker2").datepicker('setDate', strEndDate);
+						}
+					}
+				}
 		    }
 		    function Reservation_onclick() {
 		        if (document.getElementById("chk_reservation").checked) {
@@ -1660,78 +1646,6 @@
 	            	}
 		        }
 		    }
-		    
-		    /* 2017-01-11 이효민사원 - 사용안함 
-		    function InsertMailInfo_Complete(ret) {
-		        OpenWin.close();
-		        if (ret == "") {
-		            if (confirm("<spring:message code='ezBoard.t414' />")) {
-		                window.close();
-		            }
-		            else {
-		                OpenWin = null;
-		                SelectBoard(InsertMailInfo_Complete);
-		                return;
-		            }
-		        }
-		        if (typeof (ret) == "undefined") return "";
-		
-		        pBoardID = ret;
-		        GetBoardInfo();
-		        InitializeSettings();
-		
-		        if (pcheckForm.toUpperCase() == "TRUE") {
-		            var tempHtml = message.GetEditorContent();
-		            var fullPath = document.location.protocol + "//" + document.location.hostname + "/myoffice/Common/ezCommon_InterFace.aspx?TYPE=BOARDFORM&DOCID=" + pBoardID;
-		            var htmlData = message.GetEditorContentURL(fullPath);
-		            message.SetEditorContent(htmlData + tempHtml);
-		        }
-		
-		        if (pUseBackGround.toUpperCase() == "TRUE") {
-		            document.getElementById("pUseBackGroundTR").style.display = "";
-		            GetBackGroundImage();
-		        }
-		        else
-		            document.getElementById("pUseBackGroundTR").style.display = "none";
-		
-		
-		        var mailXml = loadXMLString(MailxmlHTTP.responseText);
-		        if (mailXml.getElementsByTagName("ATTACHMENT").length > 0) {
-		            mgubun = "M";
-		            var attachHTTP = createXMLHttpRequest();
-		            var filefullpath = "";
-		            var strXML = "<ROOT><NODES>";
-		            for (var i = 0; i < mailXml.getElementsByTagName("ATTACHMENT").length; i++) {
-		                FileName = getNodeText(mailXml.getElementsByTagName("ATTACHMENT").item(i));
-		                FileURL = getNodeText(mailXml.getElementsByTagName("ATTACHMENTURL").item(i));
-		                ItemID = getNodeText(mailXml.getElementsByTagName("ITEMID").item(0));
-		                attachHTTP.open("POST", document.location.protocol + "//" + document.location.hostname + "/myoffice/ezEmail/remote/mail_downloadattachfile.aspx?mode=Attach&ID=" + encodeURIComponent(ItemID) + "&ATTID=" + encodeURIComponent(FileURL) + "&filepath=" + pUploadFilePath + "\\" + pBoardID + "\\uploadFile" + "&newGuid=" + NewGuid, false);
-		                attachHTTP.send();
-		                filefullpath = pUploadFilePath + "\\" + pBoardID + "\\uploadFile\\" + NewGuid + "_" + FileName;
-		                var fileHTTP = createXMLHttpRequest();
-		                fileHTTP.open("POST", "interASP/getFileSize.aspx?filepath=" + encodeURIComponent(filefullpath), false);
-		                fileHTTP.send();
-		                var size = fileHTTP.responseText;
-		                strXML += "<NODE>";
-		                strXML += "<PUPLOADSN><![CDATA[" + NewGuid + "_" + FileName + "]]></PUPLOADSN>";
-		                strXML += "<RESULTUPLOADA><![CDATA[" + "true" + "]]></RESULTUPLOADA>";
-		                strXML += "<PFILENAME><![CDATA[" + FileName + "]]></PFILENAME>";
-		                strXML += "<FILESIZE><![CDATA[" + size + "]]></FILESIZE>";
-		                strXML += "<FILELOCATION><![CDATA[" + filefullpath + "]]></FILELOCATION>";
-		                strXML += "</NODE>";
-		            }
-		            strXML += "</NODES></ROOT>";
-		            returnvalue(strXML);
-		        }
-		    } */
-		    
-		     /*
-		    function InsertDocInfo() {
-		        var ret = "";
-		        document.getElementById("docTR").style.display = "";
-		        ret = SelectBoard(InsertDocInfo_Complete);
-		    }
-		    */
 
 			/* 2024-05-21 김유진 - 일정 정보 가져오기 */
 			function InsertScheduleInfo() {
@@ -1772,8 +1686,6 @@
 						uploadScheduleFile(xmlstringUl);
 					}
 				}
-
-
 			}
 		    
 	        function InsertDocInfo() {
@@ -1905,7 +1817,7 @@
 		        xmlhttp_boardinfo = null;
 		    }
 		    function InitializeSettings() {
-		        document.getElementById('BoardSpan').innerText = pBoardName;
+		        document.getElementById('BoardSpan').value = pBoardName;
 		        if (ExpireDays == "-1") {
 		            document.getElementById('ChkPermanence').checked = true;
 		            document.getElementById('Makedate').style.visibility = "hidden";
@@ -2123,7 +2035,8 @@
 		            AttachFileInfo(strXML);
 		        }
 		    }
-		    
+			
+		    /* 신디자인에서 탭 쓰지 않음
 		    var firstnode = true;
 		    function Tab1_NewTabIni(pTabNodeID) {
 		        for (var i = 0; i < document.getElementById(pTabNodeID).childNodes.length; i++) {
@@ -2203,7 +2116,7 @@
 							mobileDistinction();
 		                }
 		        }
-				/* 2024-08-26 김유진 - 사용된 확장컬럼 높이 고려하여 에디터 높이 설정 */
+				// 2024-08-26 김유진 - 사용된 확장컬럼 높이 고려하여 에디터 높이 설정
 				if (pAttributeYN == "Y" && document.getElementById("tab01")) {
 					document.getElementById("EdtorSize").style.height = '100%'
                     mobileDistinction();
@@ -2224,6 +2137,8 @@
 	            $("iframe").ready(function(){ $("iframe[name='message']").contents().find("body").css("width" , editorW); });
       
 		    }
+			*/
+			
 		    function bodydragover(evt) {
 		        evt.dataTransfer.dropEffect = "none";
 		        evt.stopPropagation();
@@ -2268,7 +2183,7 @@
 		                        return;
 		                    }
 		                }
-		                document.getElementById("BoardSpan").innerText = ret[1];
+		                document.getElementById("BoardSpan").value = ret[1];
 		                InitializeSettings();
 		                ChkPermanent();
 						NotiPost_onclick();
@@ -2332,7 +2247,7 @@
 	                    }
 	                }
 	                pBoardID = ret[0];
-	                document.getElementById("BoardSpan").innerText = ret[1];
+	                document.getElementById("BoardSpan").value = ret[1];
 	                InitializeSettings();
 	                ChkPermanent();
 					NotiPost_onclick();
@@ -2391,92 +2306,54 @@
 		    }
 		
 		    function event_Get_listComplite(resultXml) {
-		    	document.getElementById("backgroundtd").innerHTML = "";
-	            var backxml = loadXMLString(resultXml);
-	            var i;
-				var oDiv = document.createElement("div");
-				oDiv.className = "custom_radio";
-				oDiv.id = "custom_radio";
-				document.getElementById("backgroundtd").appendChild(oDiv);
-	            for (i = 0; i < SelectNodes(backxml, "DATA/ROW").length; i++) {
-	                if (i == 5) {
-	                    var br = document.createElement("BR");
-	                    document.getElementById("backgroundtd").appendChild(br);
-	                }
-	                var span = document.createElement("SPAN");
-	                span.setAttribute("imgwidth", getNodeText(SelectNodes(SelectNodes(backxml, "DATA/ROW")[0], "WIDTH")[i]));
-	                span.setAttribute("imgheight", getNodeText(SelectNodes(SelectNodes(backxml, "DATA/ROW")[0], "HEIGHT")[i]));
-	                span.setAttribute("filemane", getNodeText(SelectNodes(SelectNodes(backxml, "DATA/ROW")[0], "SAVEFILENAME")[i]));
-	                span.style.display = "inline-block";
+				var backxml = loadXMLString(resultXml);
+				var rows = SelectNodes(backxml, "DATA/ROW");
+				var backgroundDiv = document.getElementById("backImgDiv");
+				backgroundDiv.replaceChildren();
+				
+	            for (let i = 0 ; i < SelectNodes(backxml, "DATA/ROW").length ; i++) {
+					var width = getNodeText(SelectNodes(rows[0], "WIDTH")[i]);
+    				var height = getNodeText(SelectNodes(rows[0], "HEIGHT")[i]);
+					var filename = getNodeText(SelectNodes(rows[0], "SAVEFILENAME")[i]);
+					
+					var containerSpan = document.createElement("span");
+					containerSpan.className = "background_listImg";
+					
+					var contentSpan = document.createElement("span");
+					contentSpan.className = "custom_radio";
+	                contentSpan.setAttribute("imgwidth", width);
+	                contentSpan.setAttribute("imgheight", height);
+	                contentSpan.setAttribute("filename", filename);
 	                
-	                var input = document.createElement("INPUT");
-	                input.style.verticalAlign = "top";
-	                input.style.marginTop = "8px";
-	                input.style.marginRight = "6px";
-	                input.name = "backradio";
-	                input.type = "radio";
-	                input.onchange = function () { backgroundimagechange(); };
+	                var input = document.createElement("input");
+					input.type = "radio";
+	                input.name = "backradioImg";
+	                input.id = "backImg" + i;
+	                input.addEventListener("change", backgroundImgChange);
+					
+					var label = document.createElement("label");
+					label.htmlFor = "backImg" + i;
 	
-	                var img = document.createElement("IMG");
-	                var filepath = getNodeText(SelectNodes(SelectNodes(backxml, "DATA/ROW")[0], "SAVEFILENAME")[i]);
-		                img.width = 108;
-	                
-	                if (navigator.userAgent.indexOf("Chrome") != -1) {
-		                img.width = 103;
-	                }
-	                
-	                img.height = 30;
-	               	img.src = "<spring:eval expression='@commonUtil.getUploadPath(\"upload_board.BOARDBACKGROUND\", \"${userInfo.tenantId}\")' />" + "/S_" + filepath;
-	        	    img.onclick = function () { GetChildNodes(this.parentElement)[0].click(); };
-	                img.style.cursor = "pointer";
+	                var img = document.createElement("img");
+	               	img.src = pBackGroundUploadPath + "/S_" + filename;
 	
-	                span.appendChild(input);
-					span.appendChild(img);
-	
-	                oDiv.appendChild(span);
+					label.appendChild(img);
+	                contentSpan.appendChild(input);
+	                contentSpan.appendChild(label);
+					containerSpan.appendChild(contentSpan);
+					backgroundDiv.appendChild(containerSpan);
 	            }
-	            if (i == 5) {
-	                var br = document.createElement("BR");
-	                document.getElementById("backgroundtd").appendChild(br);
-	            }
-	            var span = document.createElement("SPAN");
-				span.style.verticalAlign = "top";
-				span.style.margin = "6px 5px 0 10px";
-				span.style.display = "inline-block";
-	            var input = document.createElement("INPUT");
-	            input.name = "backradio";
-	            input.type = "radio";
-	            input.onchange = function () { backgroundimagechange(); };
-	
-	            var label = document.createElement("LABEL");
-	            label.style.display = "inline-block";
-	            label.style.marginRight = "5px";
-	
-	            label.innerHTML = "<spring:message code='ezBoard.t5009' />";
-	            label.onclick = function () { GetChildNodes(this.parentElement)[0].click(); };
-	            label.style.cursor = "pointer";
-	
-	            span.appendChild(input);
-	            span.appendChild(label);
-	            oDiv.appendChild(span);
-	
-	            var a = document.createElement("A");
-	            a.className = "imgbtn imgbck";
-	            a.style.verticalAlign = "top";
-	            a.style.setProperty("margin", "3px", "important");
-	
-	            var span = document.createElement("SPAN");
-	            span.innerHTML = "<spring:message code='ezBoard.t5010' />";
-	            span.onclick = function () { BackImageUp(); };
-	
-	            a.appendChild(span);
-	            document.getElementById("backgroundtd").appendChild(a);
 		    }
 		
-		    function backgroundimagechange() {
-		    	if (editor != "HWP") {
-		    		for (var i = 0; i < document.getElementsByName("backradio").length; i++) {
-			            if (document.getElementsByName("backradio")[i].checked) {
+		    function backgroundImgChange() {
+				var backradioImgObjList = document.getElementsByName("backradioImg");
+				for (let i = 0; i < backradioImgObjList.length; i++) {
+					if (backradioImgObjList[i].checked) {
+						var backradioImgObj = backradioImgObjList[i].parentNode;
+						var url = pBackGroundUploadPath + "/S_" + backradioImgObj.getAttribute("filename");
+						var width = backradioImgObj.getAttribute("imgwidth");
+						var height = backradioImgObj.getAttribute("imgheight");
+						if (editor != "HWP") {
 			                var Table = document.createElement("TABLE");
 			                var Tr = document.createElement("TR");
 			                var Td = document.createElement("TD");
@@ -2489,28 +2366,17 @@
 			                Td.style.verticalAlign = "top";
 			                Td.style.fontSize = "10pt";
 			                Td.style.lineHeight = "20px";
-			                Td.style.width = document.getElementsByName("backradio")[i].parentNode.getAttribute("imgwidth") + "px";
-		                    Td.style.height = document.getElementsByName("backradio")[i].parentNode.getAttribute("imgheight") + "px";
+			                Td.style.width = width + "px";
+		                    Td.style.height = height + "px";
 			                Td.style.wordBreak = "break-all";
 			                Td.style.backgroundRepeat = "no-repeat";
 			                Td.style.backgroundSize = Td.style.width + " " +Td.style.height;     
 			                Td.setAttribute("free", "");
-			
-			                if (document.getElementsByName("backradio")[i].parentNode.getAttribute("filemane") != null) {
-		                		Td.style.backgroundImage = "URL(<spring:eval expression='@commonUtil.getUploadPath(\"upload_board.BOARDBACKGROUND\", \"${userInfo.tenantId}\")'/>" + "/S_" 
-		                				+ document.getElementsByName("backradio")[i].parentNode.getAttribute("filemane") + ")";	
-		                		Table.style.width = document.getElementsByName("backradio")[i].parentNode.getAttribute("imgwidth") + "px";
-			                    Table.style.height = document.getElementsByName("backradio")[i].parentNode.getAttribute("imgheight") + "px";
-			                }
-			                else {
-			                    for (var j = 0; j < temp.length; j++) {
-			                        if (temp[j].id == "imagediv") {
-			                            message.SetEditorContent(temp[j].innerHTML);
-			                            break;
-			                        }
-			                    }
-			                    break;
-			                }
+							
+							Td.style.backgroundImage = "URL(" + url + ")";	
+							Table.style.width = width + "px";
+							Table.style.height = height + "px";
+								
 			                if (temp.length > 0) {
 			                    for (var j = 0; j < temp.length; j++) {
 			                        if (temp[j].id == "imagediv") {
@@ -2521,41 +2387,52 @@
 			                    }
 			                }
 			                message.SetEditorContent(Table.outerHTML);
-			            }
-			        }
-		    	} else {
-		    		for (var i = 0; i < document.getElementsByName("backradio").length; i++) {
-		    			if (document.getElementsByName("backradio")[i].checked) {
-		    				if (document.getElementsByName("backradio")[i].parentNode.getAttribute("filemane") != null) {
-		    					message.createField("backGround");
-		    					if (message.FieldExist("backGround")) {
-		    						message.MoveToField("backGround");
-		    						var url = "<spring:eval expression='@commonUtil.getUploadPath(\"upload_board.BOARDBACKGROUND\", \"${userInfo.tenantId}\")'/>" + "/S_" 
-												+ document.getElementsByName("backradio")[i].parentNode.getAttribute("filemane");
-				    				var width = document.getElementsByName("backradio")[i].parentNode.getAttribute("imgwidth");
-				                    var height = document.getElementsByName("backradio")[i].parentNode.getAttribute("imgheight");
-				                    message.SetFieldImage("", document.location.protocol + "//" + document.location.hostname + ":" + document.location.port + url, 1, width, height, true, 2);
-		    					}
-		    					
-		    				} else {
-		    					if (message.FieldExist("backGround")) {
-		    						message.deleteField("backGround");
-		    					}
-		    				}
+			            } else {
+							message.createField("backGround");
+							if (message.FieldExist("backGround")) {
+								message.MoveToField("backGround");
+								message.SetFieldImage("", document.location.protocol + "//" + document.location.hostname + ":" + document.location.port + url, 1, width, height, true, 2);
+							}
 		    			}
 		    		}
-		    	}
+				}
 		    }
+			
+			// 배경이미지 제거 분리
+			function backgroundImgRemove() {
+				if (editor != "HWP") {
+					var Table = document.createElement("TABLE");
+					var Tr = document.createElement("TR");
+					var Td = document.createElement("TD");
+					Tr.appendChild(Td);
+					Table.appendChild(Tr);
+					Td.innerHTML = message.GetEditorContent();
+					var temp = Td.getElementsByTagName("TD");
+					for (let j = 0; j < temp.length; j++) {
+						var temp = Td.getElementsByTagName("TD");
+						if (temp[j].id == "imagediv") {
+							message.SetEditorContent(temp[j].innerHTML);
+							break;
+						}
+					}
+				} else {
+					if (message.FieldExist("backGround")) {
+						message.deleteField("backGround");
+					}
+				}
+				selectImageToggle();
+			}
 		
-		    function BackImageUp() {
+		    function backgroundImgUpload() {
 		        var pheight = window.screen.availHeight;
 		        var pwidth = window.screen.availWidth;
 		        var pTop = (pheight - 330) / 2;
 		        var pLeft = (pwidth - 610) / 2;
 		        window.open("/ezBoard/imageUpload.do?", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=355,width=610,top=" + pTop + ",left=" + pLeft, "");
-		    }
+			 	selectImageToggle();
+			}
 		    
-		    function BackImageUp_After(rtn) {
+		    function backgroundImgUpload_After(rtn) {
 		        var xmlhttp = null;
 		        xmlhttp = createXMLHttpRequest();
 
@@ -2670,15 +2547,15 @@
 	        	
 	        	// 이미 HTML/XML에 대응하도록 저장된 확장칼럼 파라미터를 다시 c:out으로 파싱했으므로, ConvMakeXMLString()을 두 번 실행한다.
 	        	if (tableCol == "extensionAttribute6") {
-	        		retValue = ConvMakeXMLString(ConvMakeXMLString("<c:out value='${boardListVO.extensionAttribute6}'/>")); 
+	        		retValue = ConvMakeXMLString("<c:out value='${boardListVO.extensionAttribute6}'/>"); 
 				} else if (tableCol == "extensionAttribute7") {
-					retValue = ConvMakeXMLString(ConvMakeXMLString("<c:out value='${boardListVO.extensionAttribute7}'/>"));
+					retValue = ConvMakeXMLString("<c:out value='${boardListVO.extensionAttribute7}'/>");
 				} else if (tableCol == "extensionAttribute8") {
-					retValue = ConvMakeXMLString(ConvMakeXMLString("<c:out value='${boardListVO.extensionAttribute8}'/>"));
+					retValue = ConvMakeXMLString("<c:out value='${boardListVO.extensionAttribute8}'/>");
 				} else if (tableCol == "extensionAttribute9") {
-					retValue = ConvMakeXMLString(ConvMakeXMLString("<c:out value='${boardListVO.extensionAttribute9}'/>"));
+					retValue = ConvMakeXMLString("<c:out value='${boardListVO.extensionAttribute9}'/>");
 				} else if (tableCol == "extensionAttribute10") {
-					retValue = ConvMakeXMLString(ConvMakeXMLString("<c:out value='${boardListVO.extensionAttribute10}'/>"));
+					retValue = ConvMakeXMLString("<c:out value='${boardListVO.extensionAttribute10}'/>");
 				}
 	        	
 	        	return retValue;
@@ -3093,530 +2970,330 @@
 
 				return true;
 			}
+			
+			function selectImageToggle() {
+				var isChecked = $("#backradio_select:checked").length > 0;
+				$("#backImgDiv").css("display", isChecked ? "flex" : "none");
+			
+				if (!isChecked) {
+					$("input[name='backradioImg']").prop("checked", false);
+				}
+			}
 	    </script>
-	    <c:if test="${!isCrossBrowser}">
-	   		<script type="text/javascript" FOR="EzHTTPTrans" EVENT="AttachAddFile(filename)">
-			    Append_AttachAdd(filename);
-			</script>
-	    </c:if>
 	</head>
-	<body class="popup" style="height: 97%;">
-	    <table class="layout" style="width: 100%;">
-	        <tr>
-	            <td style="height: 20px">
-	                <div id="menu">
-	                    <ul>
-	                    	<c:if test="${editor ne 'HWP'}">
-	                    		<c:choose>
-	                    		<c:when test="${mode == 'temp'}">
-	                    		<!-- 2018-05-30 구해안 그룹웨어 모듈 '등록','저장후닫기' => '저장'으로 통일  ezBoard.t98 => t98 -->
-			                        <li><span onclick="SaveItem('save');"><spring:message code='ezBoard.t98' /></span></li>
-	                    		</c:when>
-	                    		<c:otherwise>
-			                        <li><span onclick="PreventSaveItem('<c:out value="${mode}"/>');"><spring:message code='ezBoard.t98' /></span></li>
-	                    		</c:otherwise>
-		                    	</c:choose>
-								<c:if test="${boardInfo.guBun != '3' && boardInfo.guBun != '9'}">
-									<li><span onclick="PreviewItem();"><spring:message code='ezBoard.t431' /></span></li>
-		                    	</c:if>
-		                    	<c:if test="${boardInfo.guBun != '2' && (mode != 'modify' && mode != 'reply')}">
-			                        <li><span onclick="PreventSaveItem('temp');"><spring:message code='ezBoard.t10034' /></span></li>
-		                    	</c:if>
-	                    	</c:if>
-	                    	
-	                    	<c:if test="${editor eq 'HWP'}">
-	                    		<c:choose>
-	                    		<c:when test="${mode == 'temp'}">
-	                    		<!-- 2018-05-30 구해안 그룹웨어 모듈 '등록','저장후닫기' => '저장'으로 통일  ezBoard.t98 => t98 -->
-			                        <li><span onclick="SaveItemHWP('save');"><spring:message code='ezBoard.t98' /></span></li>
-	                    		</c:when>
-	                    		<c:otherwise>
-			                        <li><span onclick="PreventSaveItemHWP('<c:out value="${mode}"/>');"><spring:message code='ezBoard.t98' /></span></li>
-	                    		</c:otherwise>
-		                    	</c:choose>
-		                    	<%-- <c:if test="${boardInfo.guBun != '3'}">
-			                        <li><span onclick="PreviewItemHWP();"><spring:message code='ezBoard.t431' /></span></li>
-		                    	</c:if> --%>
-		                    	<c:if test="${boardInfo.guBun != '2' && (mode != 'modify' && mode != 'reply')}">
-			                        <li><span onclick="PreventSaveItemHWP('temp');"><spring:message code='ezBoard.t10034' /></span></li>
-		                    	</c:if>
-	                    	</c:if>
-	                    </ul>
-	                </div>
-					<c:if test = "${ boardInfo.guBun != '9' }">
-	                <div id="close">
-	                    <ul>
-	                        <li><span onclick="btnClose_onclick();"></span></li>
-	                    </ul>
-	                </div>
+	<body class="popup newBoardPopup">
+	    <div class="layout">
+			<div id="menu">
+				<ul>
+					<c:if test="${editor ne 'HWP'}">
+						<c:choose>
+							<c:when test="${mode == 'temp'}">
+								<li><span onclick="SaveItem('save');"><spring:message code='ezBoard.t98' /></span></li>
+							</c:when>
+							<c:otherwise>
+								<li><span onclick="PreventSaveItem('<c:out value="${mode}"/>');"><spring:message code='ezBoard.t98' /></span></li>
+							</c:otherwise>
+						</c:choose>
+						<c:if test="${boardInfo.guBun != '3' && boardInfo.guBun != '9'}">
+							<li><span onclick="PreviewItem();"><spring:message code='ezBoard.t431' /></span></li>
+						</c:if>
+						<c:if test="${boardInfo.guBun != '2' && (mode != 'modify' && mode != 'reply')}">
+							<li><span onclick="PreventSaveItem('temp');"><spring:message code='ezBoard.t10034' /></span></li>
+						</c:if>
 					</c:if>
-	                <script type="text/javascript">
-	                    selToggleList(document.getElementById("menu"), "ul", "li", "0");
-	                </script>
-	            </td>
-	        </tr>
-        	<c:choose>
-        	<c:when test="${boardInfo.guBun != '3'}">
-	        <tr style="height: 20px">
-	            <td>
-	                <div class="portlet_tabpart03" style="margin:0px;border-top:0px;padding:0px;margin-bottom:4px">
-	                    <div class="portlet_tabpart03_top" id="tab1">
-	                        <p id="MailEnv_sub1"><span divname="MailEnv_div1" id="1tab1"><spring:message code='ezBoard.hsbJP02' /></span></p>
-							<c:if test = "${ boardInfo.guBun != '9' }">	<%-- File Viewer 게시판 특성 상 예약게시는 구조와 맞지 않다고 판단되어 display none 처리 --%>
-	                        <p id="MailEnv_sub3"><span divname="MailEnv_div3" id="1tab3"><spring:message code='ezBoard.hsbJP01' /></span></p>
-							</c:if>
-	                    </div>
-	                </div>
-	            </td>
-	        </tr>
-	        <tr>
-	            <td style="height: 20px">
-	                <table class="content" id="tab01">
-	                    <tr>
-	                        <th>
-	                        	<c:choose>
-	                        		<c:when test="${boardType != 'SELECT'}">
-			                            <spring:message code='ezBoard.t111' />
-	                        		</c:when>
-	                        		<c:otherwise>
-			                            <a class="imgbtn" onclick="NewItem_onclick()"><span><spring:message code='ezBoard.t171' /></span></a>
-	                        		</c:otherwise>
-	                        	</c:choose>
-	                        </th>
-	                        <td id="tdBoardName" style="width: 300px">
-	                        	<c:choose>
-	                        		<c:when test="${boardType != 'SELECT'}">
-			                            <span id="BoardSpan">
-			                                <c:out value='${boardName}' />
-			                            </span>
-	                        		</c:when>
-	                        		<c:otherwise>
-	                        			<c:choose>
-	                        				<c:when test="${boardID == ''}">
-					                            <span id="BoardSpan"><spring:message code='ezBoard.t57' /></span>
-	                        				</c:when>
-	                        				<c:otherwise>
-					                            <span id="BoardSpan">${boardInfo.boardName}</span>
-	                        				</c:otherwise>
-	                        			</c:choose>
-	                        		</c:otherwise>
-	                        	</c:choose>
-	                        </td>
-	                        <th style="width:80px"><spring:message code='ezBoard.t434' /></th>
-							<td style="width: 300px; vertical-align: baseline;">
-								 <div class="custom_checkbox">
-									 <span style="line-height: 25px; height: 20px; display: inline-block;">
-										<c:choose>
-											<c:when test="${boardListVO.importance == '1'}">
-												<input type="checkbox" id="chkEmergent" checked>
-												<label for="chkEmergent"><spring:message code='ezBoard.t435' /></label>
-											</c:when>
-											<c:otherwise>
-												<input type="checkbox" style="margin-top: 0px;" id="chkEmergent">
-												<label for="chkEmergent"><spring:message code='ezBoard.t435' /></label>
-											</c:otherwise>
-										</c:choose>
-										<!-- // 20090913 : 게시판 공지게시 기능 -->
-										<c:choose>
-											<c:when test="${mode != 'reply'}">
-												<c:choose>
-													<c:when test="${boardInfo.guBun != '2' && (boardInfo.boardAdmin_FG == 'true' || boardInfo.boardGroupAdmin_FG == 'true') && boardListVO.extensionAttribute2 == '1'}">
-														<input type="checkbox" id="noticePost" checked onclick="NotiPost_onclick()"/>
-														<label for="noticePost"><spring:message code='ezBoard.t483' /></label>
-													</c:when>
-													<c:when test="${boardInfo.guBun != '2' && (boardInfo.boardAdmin_FG == 'true' || boardInfo.boardGroupAdmin_FG == 'true')}">
-														<input type="checkbox" id="noticePost" onclick="NotiPost_onclick()"/>
-														<label for="noticePost"><spring:message code='ezBoard.t483' /></label>
-													</c:when>
-													<c:otherwise>
-														&nbsp;<input type="checkbox" style="display: none" id="noticePost" />
-													</c:otherwise>
-												</c:choose>
-											</c:when>
-											<c:otherwise>
-												&nbsp;<input type="checkbox" style="display: none" id="noticePost" />
-											</c:otherwise>
-										</c:choose>
-										<c:if test="${mode != 'new' && mode != 'new1' && mode != 'boardContent' && mode != 'boardAttach' && mode != 'temp' && mode != 'reply' && reservedItem == '' && boardInfo.guBun != '9' }">
-											<input type="checkbox" id="readCount" />
-											<label for="readCount"><spring:message code='ezBoard.t00002' /></label>
-										</c:if>
-								 	</span>
-								 </div>
-							</td>
-	                    </tr>
-
-						<tr id="noti_setTime" style="display: none"> <%-- 공지사항 기간설정 --%>
-							<th><spring:message code='ezBoard.Notimjs06' /></th>
-							<td colspan="3" style="width: 300px; vertical-align: baseline;">
-								<div class="custom_radio">
-									<span style="line-height: 30px; height: 20px; display: inline-block;">
-									<input type="radio" id="NotiPeriod" name="isNoti" onclick="NotiPost_onclick()">
-									<label for="NotiPeriod"><spring:message code='ezBoard.Notimjs05' /></label>&nbsp;
-									<span id = "notiTimeset" style="display: none;">
-										<input type="text" id="noti_start" readonly="readonly" style="width:80px;text-align:center; margin-bottom: 3px; ">
-										~ <input type="text" id="noti_end" readonly="readonly" style="width:80px;text-align:center; margin-bottom: 3px; ">
-									</span>
-									&nbsp;<input type="radio" id="NotiPermanece" name="isNoti" onclick="NotiPost_onclick()">
-										<label for="NotiPermanece"><spring:message code='ezBoard.Notimjs01' /></label>
-									</span>
-								</div>
-							</td>
-						</tr>
-						<c:if test="${'Y' == boardInfo.writerFlag}">
-							<tr class="td_style">
-								<th><spring:message code='ezBoard.t223' /></th>
-								<td colspan="3">
-									<span id="spUseDept">
-										<c:choose>
-											<c:when test="${mode == 'new'}">${userInfo.displayName}</c:when>
-											<c:otherwise>${boardListVO.writerName}</c:otherwise>
-										</c:choose>
-									</span>
-									<div class="custom_checkbox">
-										<input type="checkbox" id="chkUseDept" style="margin-left: 0px !important;" onclick="chkUseDept_onclick()">
-									</div>
-									<select id="writerFlag" style="display: none;">
-										<option value="<c:out value='${writerOption.N}\\${writerOption.N2}\\0' />"></option>
-										<option value="<c:out value='${writerOption.T}\\${writerOption.T2}\\1' />"></option>
-										<option value="<c:out value='${writerOption.D}\\${writerOption.D2}\\2' />"></option>
-									</select>
-								</td>
-							</tr>
+					<c:if test="${editor eq 'HWP'}">
+						<c:choose>
+							<c:when test="${mode == 'temp'}">
+								<li><span onclick="SaveItemHWP('save');"><spring:message code='ezBoard.t98' /></span></li>
+							</c:when>
+							<c:otherwise>
+								<li><span onclick="PreventSaveItemHWP('<c:out value="${mode}"/>');"><spring:message code='ezBoard.t98' /></span></li>
+							</c:otherwise>
+						</c:choose>
+						<c:if test="${boardInfo.guBun != '2' && (mode != 'modify' && mode != 'reply')}">
+							<li><span onclick="PreventSaveItemHWP('temp');"><spring:message code='ezBoard.t10034' /></span></li>
 						</c:if>
-             			<!-- 추가 항목이 있을 경우 -->
-             			<c:forEach var="boardAttributeVO" items="${boardAttributeListVO}" step="1" varStatus="status">
-             				<tr>
-								<th>
-									${boardAttributeVO.colName1}
-									<c:if test="${boardAttributeVO.must == 'Y'}">
-										<span style="color:red"> *</span>
-									</c:if>
-								</th>
-             					<c:choose>
-             						<c:when test="${boardAttributeVO.colType == 'radio'}">
-						                <td colspan="3">
-											<div class="custom_radio">
-												<c:forEach begin="0" end="${fn:length(fn:split(boardAttributeVO.value, '|')) - 1}" step="1" varStatus="status">
-													<input type="radio" name="${boardAttributeVO.tableCol}" value="${fn:split(boardAttributeVO.value, '|')[status.index]}" id="lbr${boardAttributeVO.tableCol}${status.index}"/>
-													<label for="lbr${boardAttributeVO.tableCol}${status.index}">${fn:split(boardAttributeVO.value, '|')[status.index]}</label>
-												</c:forEach>
-											</div>
-						                </td>
-             						</c:when>
-             						<c:when test="${boardAttributeVO.colType == 'text'}">
-						                <td colspan="3">
-						                    <!-- 2018.02.08 입력창 최대 길이 제한-->
-						                    <input type="text" id='${boardAttributeVO.tableCol}' name='${boardAttributeVO.tableCol}'  style="width:43%" maxlength="100"/>
-						                </td>
-             						</c:when>
-             						<c:when test="${boardAttributeVO.colType == 'check'}">
-						                <td colspan="3">
-											<div class="custom_checkbox">
-												<c:forEach begin="0" end="${fn:length(fn:split(boardAttributeVO.value, '|')) - 1}" step="1" varStatus="status">
-													<input type="checkbox" name="${boardAttributeVO.tableCol}" value="${fn:split(boardAttributeVO.value, '|')[status.index]}" id="lbc${boardAttributeVO.tableCol}${status.index}"/>
-													<label for="lbc${boardAttributeVO.tableCol}${status.index}">${fn:split(boardAttributeVO.value, '|')[status.index]}</label>
-												</c:forEach>
-											</div>
-						                </td>
-             						</c:when>
-									<c:when test="${boardAttributeVO.colType == 'cal'}">
-										<td colspan="3">
-											<input type="text" class="cal" id='${boardAttributeVO.tableCol}' name='${boardAttributeVO.tableCol}'"/>
-										</td>
-									</c:when>
-									<c:when test="${boardAttributeVO.colType == 'select'}">
-										<td colspan="3">
-											<select id='${boardAttributeVO.tableCol}' name='${boardAttributeVO.tableCol}'>
-											<c:forEach begin="0" end="${fn:length(fn:split(boardAttributeVO.value, '|')) - 1}" step="1" varStatus="status">												
-													<option value="${fn:split(boardAttributeVO.value, '|')[status.index]}">${fn:split(boardAttributeVO.value, '|')[status.index]}</option>
-											</c:forEach>
-											</select>
-										</td>
-									</c:when>
-									<c:when test="${boardAttributeVO.colType == 'people'}">
-                                        <td colspan="3">
-                                            <span id="peopleSelectBtn" class="peopleSelectBtn" columnName='${boardAttributeVO.tableCol}' style="" onclick ='openPopupAuth(event)'><spring:message code='ezWebFolder.t516' /></span>
-                                            <span id ='${boardAttributeVO.tableCol}' name='${boardAttributeVO.tableCol}' type="people" class='authList_div peoplePickerData ${boardAttributeVO.tableCol}'></span>
-                                        </td>
-                                    </c:when>
-                                    <c:when test="${boardAttributeVO.colType == 'textArea'}">
-                                        <td colspan="3">
-                                            <span id='icon_textArea'></span>
-                                            <textarea maxlength="450" id='${boardAttributeVO.tableCol}' name='${boardAttributeVO.tableCol}' type="textArea" onkeyup="characterCheckForExtAttr(this)" onkeydown="characterCheckForExtAttr(this)" style="width: 100%; height: 150px; box-sizing: border-box; "></textarea>
-                                        </td>
-                                    </c:when>
-             					</c:choose>
-             				</tr>
-             			</c:forEach>
-	         			<!-- 추가 항목이 있을 경우 끝-->
-	         			<!-- 키워드 시작 -->
-	         			<c:if test="${not empty useKeyword && useKeyword eq 'Y'}">
-                            <tr>
-                                <th><spring:message code="ezApprovalG.t1200" /></th>
-                                <td colspan="3" id="keyWordResult">
-                                    <c:if test="${not empty useKeyword && useKeyword eq 'Y' && (mode eq 'modify' || mode eq 'temp')}">
-                                        <c:forEach var="keyword" items="${keywordListForModify}">
-                                            <span id="${keyword.keywordName}" class="keywordSpanView">
-                                                #${keyword.keywordName}<img src="/images/icon/oneline_delete.gif" class="keywordDeleteBtn" onclick="removeKeyword(event)">
-                                            </span>
-                                        </c:forEach>
-                                    </c:if>
-                                    <c:if test="${fn:length(keywordListForModify) < 10}">
-                                        <input type="text" id="txtKeyword" style="WIDTH: 20%; word-wrap: break-word; word-break: break-all;" value="" maxlength="100" onkeyup="keyword_onkeyUp(event)" >
-                                    </c:if>
-                                </td>
-                            </tr>
-                        </c:if>
-                        <!-- 키워드 끝 -->
-	                    <tr>
-	                        <th><spring:message code='ezBoard.t208' /></th>
-	                        <td colspan="3">
-	                            <input type="text" id="txtTitle" style="WIDTH: 100%; word-wrap: break-word; word-break: break-all;" value="" maxlength="100" onkeydown="Title_onkeyDown(event)" ></td>
-	                    </tr>
-	                    <c:if test="${boardInfo.guBun == '2'}">
-		                    <tr>
-		                        <th><spring:message code='ezBoard.t438' /></th>
-		                        <td colspan="3">
-		                        	<input type="password" id="txtPassWord_fake" style="WIDTH: 150px; display: none;" maxlength="15" autocomplete="new-password">
-		                            <input type="password" id="txtPassWord" style="WIDTH: 150px" maxlength="15" autocomplete="new-password">&nbsp;&nbsp;(<spring:message code='ezBoard.t439' /></td>
-		                    </tr>
-	                    </c:if>
-						<c:if test = "${ (mode eq 'modify' && useVersion eq 'Y' && version ne '') || (historyModify eq 'false' && useVersion eq 'Y') }">
-						<tr id = "tr_version">
-							<th><spring:message code='ezBoard.versionManage.hth01' /></th>
-							<td colspan = 3>
-								<input type = "text" id = "majorVersion" style = "width : 25px; text-align : center;" maxLength = 2 />
-								<dot style = "vertical-align : bottom">.</dot>
-								<input type = "text" id = "minorVersion" style = "width : 25px; text-align : center;" maxLength = 2 />
-								<spring:message code='ezBoard.versionManage.msg12' />
-							</td>
-						</tr>
-						</c:if>
-	                </table>
-	                <table id="tab02" class="content" style="display: none;">
-	                	<c:choose>
-	                	<%-- 2019-12-02 홍승비 - 임시저장과 예약게시 기능을 동시에 사용 가능하도록 수정 --%>
-	                		<c:when test="${(mode== 'new' || mode== 'new1' || mode == 'temp' || reservedItem == 'true' || url != '') && boardInfo.guBun != '2'}">
-			                    <tr id="tdReservationDate">
-	                		</c:when>
-	                		<c:otherwise>
-			                    <tr id="tdReservationDate" style="display: none;">
-	                		</c:otherwise>
-	                	</c:choose>
-	                        <th><spring:message code='ezBoard.t432' /></th>
-	                        <td>
-								<div class="custom_checkbox">
-									<span style="line-height: 20px; height: 25px; display: inline-block;">
-										<c:choose>
-											<c:when test="${reservedItem == 'true'}">
-												<input type="checkbox" id="chk_reservation" onclick="Reservation_onclick()" checked>
-												<label for="chk_reservation"><spring:message code='ezBoard.t276' /></label>
-											</c:when>
-											<c:otherwise>
-												<input type="checkbox" id="chk_reservation" onclick="Reservation_onclick()">
-												<label for="chk_reservation"><spring:message code='ezBoard.t276' /></label>
-											</c:otherwise>
-										</c:choose>
-										<span id="reservation_date">
-											<input type="text" id="Sdatepicker" readonly="readonly" style="width:80px;text-align:center; margin-bottom: 2px;"><input id="Stimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center; margin-bottom: 2px;"readonly readonlyExcept />
-											&nbsp;<a class="imgbtn imgbck" style= "height:22px; margin-top:2px !important"><span onclick="btn_PostDate_Clear()" popuplocation='topright'><spring:message code='ezBoard.t220' /></span></a>
-										</span>
-									</span>
-								</div>
-							</td>
-	                    </tr>
-						<c:if test="${boardInfo.publicFlag eq 'Y'}">
-							<tr>
-								<th><spring:message code='ezBoard.private.pgb02'/></th>
-								<td>
-									<div class="custom_checkbox">
-										<span style="line-height: 29px; height: 29px; display: inline-block;">
-											<input type="checkbox" id="publicFlag" name="publicFlag" ${boardListVO.publicFlag == "Y" ? "checked" : "" } value="Y">
-											<label for="publicFlag"><spring:message code='ezBoard.private.pgb04'/></label>
-										</span>
-									</div>
-								</td>
-							</tr>
-						</c:if>
-	                    <tr id="tdEndDate">
-	                        <th><spring:message code='ezBoard.t156' /></th>
-	                        <td>
-	                        	<c:choose>
-	                        	<%-- 2019-11-22 홍승비 - 임시저장한 게시물 재작성 시에도 게시만료일 설정 여부가 제대로 반영되도록 수정 --%>
-	                        		<c:when test="${(mode != 'modify' && mode != 'temp' && boardInfo.expireDays == '-1') || ((mode == 'modify' || mode == 'temp') && fn:substring(boardListVO.endDate, 0, 4) == '9999')}">
-			                            <span id="Chkbox">
-											<div class="custom_checkbox">
-			                                	<span style="line-height: 20px; height: 20px; display: inline-block;">
-													<input type="checkbox" id="ChkPermanence" name="ChkPermanence" onclick="return ChkPermanent()" checked>
-													<label for="ChkPermanence"><spring:message code='ezBoard.t433' /></label>
-												</span>
-											</div>
-			                            </span>
-			                            <span id="Makedate">
-			                                <input type="text" id="Sdatepicker2" readonly="readonly" style="width:80px;text-align:center; margin-bottom:1.2px;">
-			                            </span>
-	                        		</c:when>
-	                        		<c:otherwise>
-			                            <span id="Chkbox" style="display: inline-block;">
-											<div class="custom_checkbox">
-												<span style="line-height: 20px; height: 20px; display: inline-block;">
-													<input type="checkbox" id="ChkPermanence" name="ChkPermanence" onclick="return ChkPermanent()">
-													<label for="ChkPermanence"><spring:message code='ezBoard.t433' /></label>
-												</span>
-											</div>
-			                            </span>
-			                            <span id="Makedate">
-			                                <input type="text" id="Sdatepicker2" readonly="readonly" style="width:80px;text-align:center; margin-bottom:1.2px;">
-			                            </span>
-	                        		</c:otherwise>
-	                        	</c:choose>
-	                        </td>
-	                    </tr>
-	                    <c:if test="${boardInfo.guBun == '2'}">
-		                    <tr>
-		                        <th><spring:message code='ezBoard.t436' /></th>
-		                        <td>
-		                            <input type="text" id="txtNickName" style="WIDTH: 150px" maxlength="15" value="<c:out value='${boardListVO.writerName}'/>">&nbsp;&nbsp;(<spring:message code='ezBoard.t437' /></td>
-		                    </tr>
-	                    </c:if>
-	                    <tr>
-	                        <th><spring:message code='ezBoard.t209' /></th>
-	                        <td>
-	                            <input type="text" id="txtAbstract" style="WIDTH: 100%; word-break: break-all" value="" maxlength="100">
-							</td>
-	                    </tr>
-	                    <tr id="pUseBackGroundTR" style="display:none;" height="50px">
-	                    	<th><spring:message code='ezBoard.t5011' /></th>
-	                    	<td colspan="3" id="backgroundtd"></td>
-	                    </tr>
-	                </table>
-	            </td>
-	            </c:when>
-	            <c:otherwise>
-	            <td>
-	                <table class="content">
-	                    <tr>
-	                        <th><spring:message code='ezBoard.t111' /></th>
-	                        <td id="tdBoardName" style="width: 100%" colspan="2">${boardName}</td>
-	                    </tr>
-	                    <tr>
-	                        <th><spring:message code='ezBoard.t208' /></th>
-	                        <td style="vertical-align: middle" colspan="2">
-	                            <input type="text" id="txtTitle" style="WIDTH: 95%; word-wrap: break-word; word-break: break-all;" value="" maxlength="100" onkeydown="Title_onkeyDown(event)"></td>
-	                    </tr>
-	                    <tr>
-	                        <th><spring:message code='ezBoard.t459' /></th>
-	                        <td class="pos1">
-	                            <input type="text" id="txtPhotoFile" style="WIDTH: 100%" readonly="true"></td>
-	                        <td class="pos2"><a class="imgbtn"><span id="btn_AttachAdd" onclick="return btn_PhotoAttachAdd_onclick()"><spring:message code='ezBoard.t440' /></span></a></td>
-	                    </tr>
-	                    <tr id="tdReservationDate" style="visibility:hidden;">
-	                        <th><spring:message code='ezBoard.t432' /></th>
-	                        <td style="width: 100%" colspan="2">
-	                            <table style="width: 100%;" border="0">
-	                                <tr>
-	                                    <td>
-											<div class="custom_checkbox">
-												<span style="line-height: 20px; height: 25px; display: inline-block;">
-													<c:choose>
-														<c:when test="${reservedItem == 'true'}">
-															<input type="checkbox" id="chk_reservation" onclick="Reservation_onclick()" checked>
-															<label for="chk_reservation"><spring:message code='ezBoard.t276' /></label>
-														</c:when>
-														<c:otherwise>
-															<input type="checkbox" id="chk_reservation" onclick="Reservation_onclick()">
-															<label for="chk_reservation"><spring:message code='ezBoard.t276' /></label>
-														</c:otherwise>
-													</c:choose>
-												</span>
-											</div>
-	                                    </td>
-	                                    <td id="reservation_date">
-	                                        <input type="text" id="Sdatepicker" readonly="readonly" style="width:80px;text-align:center" ><input id="Stimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;"readonly readonlyExcept />
-	                                        &nbsp;<img src="/images/btn_date.gif" border="0" style="CURSOR: pointer; width: 75px; height: 20px; vertical-align: middle" onclick="btn_PostDate_Clear()" popuplocation='topright'>
-	                                    </td>
-	                                </tr>
-	                            </table>
-	                        </td>
-	                    </tr>
-	                    <tr id="tdEndDate" style="visibility:hidden;">
-	                        <th><spring:message code='ezBoard.t156' /></th>
-	                        <td style="padding-top: 0; padding-bottom: 0px" colspan="2">
-	                            <table border="0">
-	                                <tr>
-	                                	<c:choose>
-	                                		<c:when test="${(mode != 'modify' && boardInfo.expireDays == '-1') || ((mode == 'modify' || mode == 'temp') && fn:substring(boardListVO.endDate, 0, 4) == '9999')}">
-			                                    <td style="width: 90px; white-space: nowrap" id="Chkbox">
-			                                        <div class="custom_checkbox">
-														<input type="checkbox" id="ChkPermanence" name="ChkPermanence" onclick="return ChkPermanent()" checked>
-														<label for="ChkPermanence"><spring:message code='ezBoard.t433' /></label>
-													</div>
-												</td>
-			                                    <td id="Makedate">
-			                                        <input type="text" id="Sdatepicker2" readonly="readonly" style="width:80px;text-align:center">&nbsp;&nbsp;
-			                                    </td>
-	                                		</c:when>
-	                                		<c:otherwise>
-			                                    <td style="width: 90px; white-space: nowrap" id="Chkbox">
-			                                        <div class="custom_checkbox">
-														<input type="checkbox" id="ChkPermanence" name="ChkPermanence" onclick="return ChkPermanent()">
-														<label for="ChkPermanence"><spring:message code='ezBoard.t433' /></label>
-													</div>
-												</td>
-			                                    <td id="Makedate">
-			                                        <input type="text" id="Sdatepicker2" readonly="readonly" style="width:80px;text-align:center">&nbsp;&nbsp; </td>
-	                                		</c:otherwise>
-	                                	</c:choose>
-	                                    <td>&nbsp;</td>
-	                                </tr>
-	                            </table>
-	                        </td>
-	                    </tr>
-	                    <tr style="display: none">
-	                        <th><spring:message code='ezBoard.t434' /></th>
-							<td style="vertical-align: middle" colspan="2">
-								<div class="custom_checkbox">
+					</c:if>
+				</ul>
+			</div>
+			<c:if test = "${ boardInfo.guBun != '9' }">
+			<div id="close">
+				<ul>
+					<li><span onclick="btnClose_onclick();"></span></li>
+				</ul>
+			</div>
+			</c:if>
+			<div class="flex_contentBox">
+				<%-- 게시판명 --%>
+				<div class="flex_content">
+					<div class="flex_content_tit"><spring:message code='ezBoard.t142' /></div>
+					<div class="flex_content_cont">
+						<input type="text" id="BoardSpan" value="<c:out value="${boardName}"/>" disabled="disabled">
+					</div>
+				</div>
+				<%-- 게시자명 선택 기능 --%>
+				<c:if test="${'Y' == boardInfo.writerFlag && '2' != boardInfo.guBun}">
+					<div class="flex_content">
+						<div class="flex_content_tit"><spring:message code='ezBoard.t223' /></div>
+						<div class="flex_content_cont">
+							<div class="custom_checkbox">
+								<input type="checkbox" id="chkUseDept" onclick="chkUseDept_onclick()">
+								<label id="spUseDept" for="chkUseDept">
 									<c:choose>
-										<c:when test="${importance == '1'}">
-											<input type="checkbox" id="chkEmergent" checked>
-											<label for="chkEmergent"><spring:message code='ezBoard.t435' /></label>
-										</c:when>
-										<c:otherwise>
-											<input type="checkbox" id="chkEmergent">
-											<label for="chkEmergent"><spring:message code='ezBoard.t435' /></label>
-										</c:otherwise>
+										<c:when test="${mode == 'new'}"><c:out value="${userInfo.displayName}"/></c:when>
+										<c:otherwise><c:out value="${boardListVO.writerName}"/></c:otherwise>
 									</c:choose>
+								</label>
+								<select id="writerFlag" style="display: none;">
+									<option value="<c:out value='${writerOption.N}\\${writerOption.N2}\\0' />"></option>
+									<option value="<c:out value='${writerOption.T}\\${writerOption.T2}\\1' />"></option>
+									<option value="<c:out value='${writerOption.D}\\${writerOption.D2}\\2' />"></option>
+								</select>
+							</div>
+						</div>
+					</div>
+				</c:if>
+				<%-- 익명게시판 이름 및 암호설정 --%>
+				<c:if test="${'2' == boardInfo.guBun}">
+					<div class="flex_content type2">
+						<div class="flex_content">
+							<div class="flex_content_tit"><spring:message code='ezBoard.t436' /></div>
+							<div class="flex_content_cont">
+								<input type="text" id="txtNickName" maxlength="15"  placeholder="<spring:message code='ezBoard.newDesign08' />" value="<c:out value='${boardListVO.writerName}'/>" />
+							</div>
+						</div>
+						 <div class="flex_content">
+							 <div class="flex_content_tit"><spring:message code='ezBoard.t438' /></div>
+							 <div class="flex_content_cont">
+								<input type="password" id="txtPassWord" maxlength="15" autocomplete="new-password" placeholder="<spring:message code='ezBoard.newDesign09' />" />
+							 </div>
+						 </div>
+					</div>
+				</c:if>
+				<%-- 게시물 종류 --%>
+				<div class="flex_content">
+					<div class="flex_content_tit"><spring:message code='ezBoard.t434' /></div>
+					<div class="flex_content_cont">
+						<div class="custom_checkbox">
+							<%-- 긴급게시 --%>
+							<input type="checkbox" id="chkEmergent" />
+							<label for="chkEmergent" ><spring:message code='ezBoard.t435' /></label>
+							<c:set var="isAdmin" value="${boardInfo.boardAdmin_FG == 'true' || boardInfo.boardGroupAdmin_FG == 'true'}" />
+							<c:set var="canShowNotice" value="${boardInfo.guBun != '2' && isAdmin && mode != 'reply'}" />
+							<%-- 공지사항 --%>
+							<c:choose>
+								<c:when test="${!canShowNotice}">
+									<input type="checkbox" style="display: none" id="noticePost" />
+								</c:when>
+								<c:otherwise>
+									<input type="checkbox" id="noticePost" onclick="NotiPost_onclick()" ${boardListVO.extensionAttribute2 == "1" ? "checked" : ""} />
+									<label for="noticePost"><spring:message code='ezBoard.t483' /></label>
+								</c:otherwise>
+							</c:choose>
+							<%-- 조회수 초기화 --%>
+							<c:if test="${mode != 'new' && mode != 'new1' && mode != 'boardContent' && mode != 'boardAttach' && mode != 'temp' && mode != 'reply' && reservedItem == '' && boardInfo.guBun != '9' }">
+								<input type="checkbox" id="readCount" />
+								<label for="readCount"><spring:message code='ezBoard.t00002' /></label>
+							</c:if>	
+							<%-- 게시물 공개 --%>
+							<c:if test="${boardInfo.publicFlag eq 'Y'}">
+								<input type="checkbox" id="publicFlag" name="publicFlag" ${boardListVO.publicFlag == "Y" ? "checked" : "" } value="Y">
+								<label for="publicFlag"><spring:message code='ezBoard.private.pgb02'/></label>
+							</c:if>
+						</div>
+						<%-- 공지사항 등록기간--%>
+						<div class="flex_contentBox" id="noti_setTime" style="display:none;">
+							<div class="flex_content">
+								<div class="flex_content_tit"><spring:message code='ezBoard.Notimjs06' /></div>
+								<div class="flex_content_cont">
+									<div class="custom_radio">
+										<input type="radio" id="NotiPeriod" name="isNoti" onclick="NotiPost_onclick()" checked="checked" >
+										<label for="NotiPeriod"><spring:message code='ezBoard.Notimjs05' /></label>
+									</div>
+									<div id="notiTimeset" class="krds-sub-contents">
+										<div class="resources_calendal"><input type="text" id="noti_start" class="DatePicker_class" readonly size="13" /></div>
+										~
+										<div class="resources_calendal"><input type="text" id="noti_end" class="DatePicker_class" readonly size="13" /></div>
+									</div>
 								</div>
-							</td>
-	                    </tr>
-	                    <c:if test="${boardInfo.guBun == '2'}">
-		                    <tr style="display: none">
-		                        <th><spring:message code='ezBoard.t436' /></th>
-		                        <td style="vertical-align: middle" colspan="2">
-		                            <input type="text" id="txtNickName" style="WIDTH: 100px" maxlength="15" value="<c:out value='${boardListVO.writerName}'/>">
-		                            &nbsp;&nbsp;(<spring:message code='ezBoard.t437' /></td>
-		                    </tr>
-		                    <tr style="display: none">
-		                        <th><spring:message code='ezBoard.t438' /></th>
-		                        <td style="vertical-align: middle" colspan="2">
-		                            <input type="password" id="txtPassWord_fake" style="WIDTH: 100px; display: none;" maxlength="15" autocomplete="new-password">
-		                            <input type="password" id="txtPassWord" style="WIDTH: 100px" maxlength="15" autocomplete="new-password">
-		                            &nbsp;&nbsp;(<spring:message code='ezBoard.t439' /></td>
-		                    </tr>
-	                    </c:if>
-	                    <tr style="display: none">
-	                        <th><spring:message code='ezBoard.t209' /></th>
-	                        <td style="vertical-align: middle" colspan="2">
-	                            <input type="text" id="txtAbstract" style="WIDTH: 100%; word-break: break-all" value="" maxlength="100"></td>
-	                    </tr>
-	                </table>
-	            </td>
-	            </c:otherwise>
-        	</c:choose>
-	        </tr>
-	        <tr>
-	            <td style="vertical-align: top; height: 100%" id="EdtorSize">
+							</div>
+							<div class="flex_content">
+								<div class="flex_content_tit"></div>
+								<div class="flex_content_cont">
+									<div class="custom_radio">
+										<input type="radio" id="NotiPermanece" name="isNoti" onclick="NotiPost_onclick()"  />
+										<label for="NotiPermanece"><spring:message code='ezBoard.Notimjs01' /></label>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<%-- 게시만료--%>
+				<div id="tdEndDate" class="flex_content">
+					<div class="flex_content_tit"><spring:message code='ezBoard.t156' /></div>
+					<div class="flex_content_cont">
+						<div class="custom_checkbox">
+							<c:set var="isChkPermanence" value="${(mode != 'modify' && mode != 'temp' && boardInfo.expireDays == '-1') || ((mode == 'modify' || mode == 'temp') && fn:substring(boardListVO.endDate, 0, 4) == '9999')}" />
+							<input type="checkbox" id="ChkPermanence" name="ChkPermanence" onclick="return ChkPermanent()" ${isChkPermanence == true ? "checked" : ""} />
+							<label for="ChkPermanence"><spring:message code='ezBoard.t433' /></label>
+						</div>
+						<div id="Makedate" class="krds-sub-contents" style=${isChkPermanence == true ? "visibility:hidden;" : ""} >
+							<div class="resources_calendal">
+								<input type="text" id="Sdatepicker2" class="DatePicker_class" size="37" readonly />
+							</div>
+						</div>
+					</div>
+				</div>
+				<%-- 예약게시 --%>
+				<c:set var="isShowEndDate" value="${(mode== 'new' || mode== 'new1' || mode == 'temp' || reservedItem == 'true' || url != '') && boardInfo.guBun != '2'}"/>
+				<div id="tdEndDate" class="flex_content" ${isShowEndDate == false ? "style='display:none;'" : ""} >
+					<div class="flex_content_tit"><spring:message code='ezBoard.t432' /></div>
+					<div class="flex_content_cont">
+						<div class="custom_checkbox">
+							<input type="checkbox" id="chk_reservation" onclick="Reservation_onclick()" ${reservedItem == 'true' ? "checked" : ""} />
+							<label for="chk_reservation"><spring:message code='ezBoard.t276' /></label>
+						 </div>
+						<div id="reservation_date" class="krds-sub-contents" style=${reservedItem == 'true' ? "" : "visibility:hidden;"} >
+							<div class="resources_calendal">
+								<input type="text" id="Sdatepicker" class="DatePicker_class" size="13"  readonly />
+							</div>
+							<input id="Stimepicker" type="text" class="DatePicker_class time" style="width:60px;text-align:center;" />
+							<button type="button" onclick="btn_PostDate_Clear()" popuplocation='topright' class="form_btn3"><spring:message code='ezBoard.t999035' /></button>
+						</div>
+					</div>
+				</div>
+				<%-- 배경표시 --%>
+				<div class="flex_content" id="pUseBackGroundTR" style="display:none">
+					<div class="flex_content_tit"><spring:message code='ezBoard.t5011' /></div>
+					<div class="flex_content_cont">
+						<div class="custom_radio">
+							<input type="radio" name="backradio" id="backradio_noImg" onchange="backgroundImgRemove()" checked="checked">
+                        	<label for="backradio_noImg"><spring:message code='ezBoard.t5009' /></label>
+							<input type="radio" name="backradio" id="backradio_select" onchange="selectImageToggle()">
+							<label for="backradio_select"><spring:message code='ezBoard.newDesign05' /></label>
+                        	<input type="radio" name="backradio" id="backradio_insert" onchange="backgroundImgUpload()">
+							<label for="backradio_insert"><spring:message code='ezBoard.newDesign06' /></label>
+						</div>
+						<div id="backImgDiv" class="flex_content_background" style="display:none;"></div>
+                    </div>
+				</div>
+				<%-- 확장컬럼 --%>
+				<c:forEach var="boardAttributeVO" items="${boardAttributeListVO}" step="1" varStatus="status">
+					<div class="flex_content">
+                		<div class="flex_content_tit ${boardAttributeVO.must == 'Y' ? "point_tit" : ""}">
+							<c:out value="${extenLang == 1 ? boardAttributeVO.colName1 : boardAttributeVO.colName2}"/>
+						</div>
+						<div class="${boardAttributeVO.colType == 'people' ? 'flex_content_cont type2' : 'flex_content_cont'}">
+						<c:choose>
+							<c:when test="${boardAttributeVO.colType == 'radio'}">
+								<div class="custom_radio">
+									<c:set var="options" value="${fn:split(boardAttributeVO.value, '|')}" />
+									<c:forEach var="option" items="${options}" varStatus="status">
+										<input type="radio" id="radio${status.index}" name="${boardAttributeVO.tableCol}" value="${option}" ${status.index == 0 ? "checked" : ""} />
+										<label for="radio${status.index}"><c:out value="${option}"/></label>
+									</c:forEach>
+								</div>
+							</c:when>
+							<c:when test="${boardAttributeVO.colType == 'text'}">
+								<input type="text" id='${boardAttributeVO.tableCol}' name='${boardAttributeVO.tableCol}' placeholder="<spring:message code='ezBoard.newDesign04' />" maxlength="100"/>
+							</c:when>
+							<c:when test="${boardAttributeVO.colType == 'check'}">
+								<div class="custom_checkbox">
+									<c:set var="options" value="${fn:split(boardAttributeVO.value, '|')}" />
+									<c:forEach var="option" items="${options}" varStatus="status">
+										<input type="checkbox" id="checkbox${status.index}" name="${boardAttributeVO.tableCol}" value="${option}" />
+										<label for="checkbox${status.index}"><c:out value="${option}"/></label>
+									</c:forEach>
+								</div>
+							</c:when>
+							<c:when test="${boardAttributeVO.colType == 'cal'}">
+								<div class="krds-sub-contents column">
+                        			<div class="resources_calendal" style="width:118px;">
+										<input type="text" class="DatePicker_class cal" id="${boardAttributeVO.tableCol}" name="${boardAttributeVO.tableCol}" readonly="readonly"/>
+								 	</div>
+								</div>
+							</c:when>
+							<c:when test="${boardAttributeVO.colType == 'select'}">
+								<c:set var="options" value="${fn:split(boardAttributeVO.value, '|')}" />
+								<select id="${boardAttributeVO.tableCol}" name="${boardAttributeVO.tableCol}">
+									<c:forEach var="option" items="${options}">
+										<option value="${option}"><c:out value="${option}"/></option>
+									</c:forEach>
+								</select>
+							</c:when>
+							<c:when test="${boardAttributeVO.colType == 'people'}">
+								<div class="flex_content_user">
+									<span type="people" id='${boardAttributeVO.tableCol}' name='${boardAttributeVO.tableCol}' class='authList_div peoplePickerData ${boardAttributeVO.tableCol}'></span>
+								</div>
+								<button id="peopleSelectBtn" class="form_btn3" columnName='${boardAttributeVO.tableCol}' onclick ='openPopupAuth(event)'><spring:message code='ezBoard.extensionAttr.JIH05'/></button>
+							</c:when>
+							<c:when test="${boardAttributeVO.colType == 'textArea'}">
+								<textarea type="textArea" id='${boardAttributeVO.tableCol}' name='${boardAttributeVO.tableCol}' maxlength="450" onkeyup="characterCheckForExtAttr(this)" onkeydown="characterCheckForExtAttr(this)"></textarea>
+							</c:when>
+						</c:choose>
+						</div>
+					</div>
+				</c:forEach>
+				<%-- 버전관리 --%>
+				<c:if test = "${ useVersion eq 'Y' && reservedItem ne 'true' && mode ne 'boardContent' && mode ne 'boardAttach' && ((mode eq 'modify' && version ne '') || historyModify eq 'false')}">
+				<div class="flex_content" id = "tr_version" style="display:none">
+					<div class="flex_content_tit"><spring:message code='ezBoard.boardVersion01' /></div>
+					<div class="flex_content_cont">
+						<input type="text" class="boardVersion" id="majorVersion" maxLength=2 />
+						<dot style="vertical-align:bottom">.</dot>
+						<input type="text" class="boardVersion" id="minorVersion" maxLength=2 />
+					</div>
+				</div>
+				</c:if>
+				<%-- 키워드 --%>
+				<c:if test="${not empty useKeyword && useKeyword eq 'Y'}">
+					<div class="flex_content">
+						<div class="flex_content_tit"><spring:message code="ezApprovalG.t1200" /></div>
+						<div class="flex_content_cont">
+							<div class="flex_content_keyword" id="keyWordResult" onclick="keywordInput('txtKeyword')">
+								<c:if test="${not empty useKeyword && useKeyword eq 'Y' && (mode eq 'modify' || mode eq 'temp')}">
+									<c:forEach var="keyword" items="${keywordListForModify}">
+										<span id="${keyword.keywordName}" class="keyword_tag keywordSpanView">
+											<c:out value="${keyword.keywordName}"/><button type="button" class="keywordDeleteBtn keyword_delete" onclick="removeKeyword(event)"></button>
+										</span>
+									</c:forEach>
+								</c:if>
+								<c:if test="${fn:length(keywordListForModify) < 10}">
+									<label for="txtKeyword">
+										<input type="text" id="txtKeyword" maxlength="70" style="width:auto" placeholder="<spring:message code='ezBoard.newDesign07' />" onblur="keyword_blur(event)" onkeyup="keyword_onkeyUp(event)" >
+									</label>
+								</c:if>
+							</div>
+						</div>
+					</div>
+				</c:if>
+				<%-- 게시요약 --%>
+				<div class="flex_content">
+					<div class="flex_content_tit"><spring:message code='ezBoard.t209' /></div>
+					<div class="flex_content_cont">
+						<input type="text" id="txtAbstract" maxlength="100" placeholder="<spring:message code='ezBoard.newDesign03' />" />
+					</div>
+				</div>
+				<%-- 제목 --%>
+				<div class="flex_content">
+					<div class="flex_content_tit"><spring:message code='ezBoard.t208' /></div>
+					<div class="flex_content_cont">
+						<input type="text" id="txtTitle" maxlength="100" placeholder="<spring:message code='ezBoard.t390' />" onkeydown="Title_onkeyDown(event)" />
+					</div>
+				</div>
+				<%-- 첨부 --%>
+				<c:if test="${isCrossBrowser}">
+					<div class="flex_content" id="attachIframeTR" <c:if test="${boardInfo.attachmentFlag != 'Y'}"> style="display:none;"</c:if>>
+						<div class="flex_content_tit"><spring:message code='ezBoard.commentAttach.JIH01' /></div>
+						<div id="attachArea" class="flex_content_cont board active">
+							<iframe id="dadiframe" name="dadiframe" style="width:100%; height:100%; border:0px;" src="/ezBoard/dragAndDrop.do"></iframe>
+							<input type="hidden" name="mode" id="mode" />
+						</div>
+					</div>
+				</c:if>
+				<%-- 에디터 --%>
+				<div class="editor_content" id="EdtorSize">
 	            	<c:if test="${editor ne 'HWP'}">
 	            		<iframe id="message" class="viewbox" name="message" src="/ezEditor/selectEditor.do?type=BOARDBACKGROUND" style="padding: 0; height: 100%; width: 100%; overflow: auto; margin-top:-1px"></iframe>
 	            	</c:if>
@@ -3626,53 +3303,14 @@
 	            			<iframe id="message2" name="message2" style="display:none;"></iframe>
 	            		</c:if>
 	            	</c:if>
-	            </td>
-	        </tr>
-	        <tr id="docTR" style="display: none">
-	            <td>
-	                <div id="docContentBorder" style="border: 0; BACKGROUND-COLOR: white; margin-top: 5px;">
-	                    <iframe id="docContent" name="docContent" style="width: 99.5%; height: 100%;"></iframe>
-	                </div>
-	            </td>
-	        </tr>
-	    	<c:if test="${!isCrossBrowser}">
-				<c:choose>
-					<c:when test="${boardInfo.guBun != '3'}">
-				      <tr <c:if test="${boardInfo.attachmentFlag != 'Y'}"> style="display:none;"</c:if>>
-				        <td height="20" valign="top" style="padding-top:10px">
-				          <table class="file" style="height:100px">
-				            <form name="multicheck">
-				              <tr>
-				                <th><spring:message code='ezBoard.t292' /></th>
-				                <td class="pos1" style="height:100px">                
-				                    <SCRIPT type="text/javascript">EzHTTPTrans_ActiveX2("EzHTTPTrans", "100%", "100%");</SCRIPT>
-				                    <div id="lstAttachLink" style="display:none">&nbsp;</div>                
-				                </td>
-				                <td class="pos2"><a class="imgbtn"><span id="btn_AttachAdd" onClick="return btn_AttachAdd_onclick()"><spring:message code='ezBoard.t440' /></span></a><br><a class="imgbtn"><span id="btn_AttachDel" onClick="return btn_AttachDel_onclick()"><spring:message code='ezBoard.t441' /></span></a></td>
-				              </tr>
-				            </form>
-				          </table>
-				        </td>
-				      </tr>
-					</c:when>
-					<c:otherwise>
-						<SCRIPT type="text/javascript">EzHTTPTrans_ActiveX("EzHTTPTrans");</SCRIPT>
-					</c:otherwise>
-				</c:choose>
-	    	</c:if>
-	    	<c:if test="${isCrossBrowser}">
-				<c:choose>
-					<c:when test="${boardInfo.guBun != '3'}">
-						<tr id="attachIframeTR" <c:if test="${boardInfo.attachmentFlag != 'Y'}"> style="display:none;"</c:if>>
-				            <td style="height: 145px">
-				                <iframe id="dadiframe" name="dadiframe" style="width: 100%; height: 100%; border: 0px" src="/ezBoard/dragAndDrop.do"></iframe>
-				                <input type="hidden" name="mode" id="mode" />
-				            </td>
-				        </tr>
-					</c:when>
-				</c:choose>
-	    	</c:if>
-	    </table>
+				</div>
+			<%-- 전자문서 게시 --%>
+			<div class="flex_content" id="docTR" style="display: none">
+				<div id="docContentBorder" style="border: 0; BACKGROUND-COLOR: white; margin-top: 5px;">
+					<iframe id="docContent" name="docContent" style="width: 99.5%; height: 350px;"></iframe>
+				</div>
+			</div>
+		</div>
 	    <input id="publicModulus" value="${publicModulus}" type="hidden"/>
 	    <input id="publicExponent" value="${publicExponent}" type="hidden"/>
 	    <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
@@ -3681,9 +3319,6 @@
 		</div>
 		<div id="hwpctrl"/>
 	</body>
-	<script type="text/javascript">
-	    Tab1_NewTabIni("tab1");
-	</script>
 	<script type="text/javascript">
 	    if ("${boardInfo.guBun}" == "2") {
 	        document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 350 + "PX";

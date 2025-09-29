@@ -423,3 +423,8 @@ background-color: #003497; border-color: #003497;}
     -ms-user-select: none;
     -webkit-user-select: none;
 }
+
+/* 게시판-스킨컬러추가 */
+.custom_checkbox input[type="checkbox"]:checked { background: #003497; border-color: #003497 !important;}
+.custom_radio input[type="radio"]::after{background-color: #003497;}
+.custom_radio input[type="radio"]:checked{border-color: #003497 !important;}

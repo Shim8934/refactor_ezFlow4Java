@@ -4482,11 +4482,6 @@ public class EzBoardController extends EzFileMngUtil{
 			model.addAttribute("commentCount", commentCount);
 		}
 		
-		/* 2019-01-31 홍승비 - 게시물 보기 시 게시자 이름 특문처리 (익명게시판 오류수정) */
-		if (boardItem.getWriterName() != null && !boardItem.getWriterName().equals("")) {
-			boardItem.setWriterName(commonUtil.htmlUnescape(boardItem.getWriterName()).replace("\\", "&#92;"));
-		}
-		
 		/* 2019-04-05 홍승비 - 해당 게시물에 대해 사용자가 좋아요를 표시했는지 체크 */
 		String isLikeChecked = ezBoardService.likeCheck(userInfo.getId(), itemID, userInfo.getTenantId());
 		
@@ -4993,14 +4988,6 @@ public class EzBoardController extends EzFileMngUtil{
 			boardName = boardInfo.getBoardName4();
 		} else if (userLang.equals("6") && boardInfo.getBoardName6() != null && !boardInfo.getBoardName6().isEmpty()) {
 			boardName = boardInfo.getBoardName6();
-		}
-		
-		if (boardListVO.getTitle() != null && !boardListVO.getTitle().equals("")) {
-			boardListVO.setTitle(boardListVO.getTitle().replace("\\", "&#92;"));
-		}
-		/* 2018-04-27 홍승비 - 게시요약의 \문자 변환 */ 
-		if (boardListVO.getABSTRACT() != null && !boardListVO.getABSTRACT().equals("")) {
-			boardListVO.setABSTRACT(boardListVO.getABSTRACT().replace("\\", "&#92;"));
 		}
 		
 		/* 2018-07-09 홍승비 - 임시저장 게시물 더블클릭 시 조회한 것으로 확인되지 않는 현상 수정 */
@@ -6682,6 +6669,23 @@ public class EzBoardController extends EzFileMngUtil{
 		
 		String use_Editor = ezCommonService.getTenantConfig("MODULEEDITOR", userInfo.getTenantId());
 		
+		// 2024-08-14 전인하 - 게시판 > json data 이용 시 문제가 되는 특정 특수문자 이스케이프 추가 
+		JsonSerializer<String> stringSerializer = new JsonSerializer<String>() {
+			@Override
+			public JsonElement serialize(String src, Type typeOfSrc, JsonSerializationContext context) {
+				String escapedString = src.replace("\\", "\\\\")
+											.replace("\"", "\\\"")
+											.replace("/", "\\/");
+				return new JsonPrimitive(escapedString);
+			}
+		};
+		
+		Gson gson = new GsonBuilder().registerTypeAdapter(String.class, stringSerializer).create();
+		String boardAttrJson = gson.toJson(boardAttr);
+		String boardItemJson = gson.toJson(boardItem);
+		model.addAttribute("boardAttrJson", boardAttrJson);
+		model.addAttribute("boardItemJson", boardItemJson);
+		
 		model.addAttribute("boardItem", boardItem);
 		model.addAttribute("boardInfo", boardInfo);
 		model.addAttribute("userInfo", userInfo);
@@ -7574,7 +7578,7 @@ public class EzBoardController extends EzFileMngUtil{
 		String boardID = request.getParameter("boardID");
 		String realPath = commonUtil.getRealPath(request);
 		String g_ImageUrl = "";
-		int imageCnt = 10;
+		int imageCnt = 6;
 		int page = Integer.parseInt(request.getParameter("page")); // page = 0인 경우, photoViewDB에서 분기 체크하여 모든 이미지를 가져오도록 함
 		int pStartRow = Math.addExact(Math.multiplyExact(Math.subtractExact(page, 1), imageCnt), 1);
 		int pEndRow = Math.multiplyExact(page, imageCnt);
@@ -8491,7 +8495,6 @@ public class EzBoardController extends EzFileMngUtil{
 		model.addAttribute("boardItem", gson.toJson(boardItem));
 		model.addAttribute("boardAttr", gson.toJson(boardAttr));
 		model.addAttribute("extenLang", extenLang);
-		model.addAttribute("boardAttr", gson.toJson(boardAttr));
 		model.addAttribute("moduleType", "board");
 		model.addAttribute("moduleSubType", "preview");
 		model.addAttribute("useAI", useAI);

@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>  
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>    
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html>
 	<head>
@@ -8,6 +9,7 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"> 
 		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
 		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/Tab.css')}" type="text/css">
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
@@ -22,28 +24,6 @@
 		<script type="text/javascript" src="${util.addVer('/js/rsa/rng.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/rsa/rsa.js')}"></script>
 		<style>
-			.likeButton {
-				padding:5px;
-				cursor:pointer;
-				display:inline-block;
-				border:1px solid #c7c7c7;
-			    border-radius:2px;
-			}
-			.likeButton:hover {
-				background-color:#f1f8ff;
-				border:1px solid #6793d8;
-			}
-			.disLikeButton {
-				padding:5px;
-				cursor:pointer;
-				display:inline-block;
-				border:1px solid #c7c7c7;
-			    border-radius:2px;
-			}
-			.disLikeButton:hover {
-				background-color:#ffd9ec;
-				border:1px solid #f44336;
-			}
 			/* 첨부파일 아이콘 변경 */
 			#lstAttachLink img{width: 18px;height: 18px;vertical-align: middle;margin: 0 2px 4px 0;}
 		</style>
@@ -314,7 +294,7 @@
 		            addheight = 0;
 		            if("${boardAttrCount}" > 0){
 						addheight = AtttributeCount * 30;
-						document.getElementById("bodyPopup").style.marginRight = "1px";
+						// document.getElementById("bodyPopup").style.marginRight = "1px";
 		            }
 		            
 		            // 2024-07-31 전인하 - 게시판 > 확장컬럼 > peoplePicker 타입, textArea 타입 출력값 가공
@@ -324,9 +304,19 @@
 		                    var peoplePickerString = peoplePickerDisplay(boardItemJson[boardAttr.tableCol], userLang);
 		                    document.getElementById(boardAttr.tableCol).innerText = peoplePickerString;
 		                } else if (boardAttr.colType == 'textArea') {
+							document.getElementById(boardAttr.tableCol).style.display = "block";
 		                    var peoplePickerString = boardItemJson[boardAttr.tableCol];
-		                    peoplePickerString = peoplePickerString.replace(/<script.*?>(.*?)<\/script>/gs, '$1');
-		                    document.getElementById(boardAttr.tableCol).innerHTML = unescapeForJson(peoplePickerString);
+							var peoplePickerStringList = peoplePickerString.split("<br/>");
+							for (let j = 0 ; j < peoplePickerStringList.length ; j++) {
+								if (j != 0) {
+									var brDom = document.createElement("br");
+									document.getElementById(boardAttr.tableCol).appendChild(brDom);
+								}
+								var bDom = document.createElement("b");
+								bDom.style.fontWeight = 'normal';
+								bDom.innerText = unescapeForJson(peoplePickerStringList[j])
+								document.getElementById(boardAttr.tableCol).appendChild(bDom);
+							}
 		                }
 		            }
 		            
@@ -334,7 +324,6 @@
  		            if (OneLineReplyFlag == "2" && guestReadFG !== "Y") {
  		            	document.getElementById("bodyPopup").style.overflowX = "hidden";
  		            	document.getElementById("bodyPopup").style.overflowY = "auto";
- 		            	document.getElementById("bodyPopup").style.marginRight = "1px";
  		            	getBoardComment();
  		            }
 		            
@@ -397,7 +386,7 @@
 			                Span.setAttribute("onclick", "OpenUserInfo('" + strWriterID + "', '" + strWriterDeptID + "')");
 			                Span.innerText = strWriterName;
 			                Div.appendChild(Span);
-			                document.getElementById("WriteUserNM").innerHTML = Div.outerHTML;
+			                // document.getElementById("WriteUserNM").innerHTML = Div.outerHTML;
 			                pSIPUriList = null;
 			            }
 			            else {
@@ -407,7 +396,7 @@
 			                Span.setAttribute("onclick", "OpenUserInfo('" + strWriterID + "', '" + strWriterDeptID + "')");
 			                Span.innerText = strWriterName;
 			                Div.appendChild(Span);
-			                document.getElementById("WriteUserNM").innerHTML = Div.outerHTML;
+			                // document.getElementById("WriteUserNM").innerHTML = Div.outerHTML;
 			            }
 		            } else {
 						Span = document.createElement("SPAN");
@@ -530,7 +519,7 @@
                 }
                 
                 document.getElementById("message").style.height = contentHeight + "PX";
-                document.getElementById("pad1").style.height = (contentHeight + 20) + "PX";
+                // document.getElementById("pad1").style.height = (contentHeight + 20) + "PX";
 		    }
 		
 		    function AddLinkTarget() {
@@ -982,58 +971,86 @@
 		        var fileImage = "";
 		        var xmldomNodes = SelectNodes(xmldom, "NODES/NODE");
 		        var regData = GetbrowserLanguage();
-		        for (var i = 0; i < xmldomNodes.length; i++) {
-		            filepath = getNodeText(SelectSingleNode(xmldomNodes[i], "FilePath"));
-		            /* 2018-04-27 홍승비 - 화면에 표시되는 파일명 특문처리 수정 */
-		            filenameOrg = getNodeText(SelectSingleNode(xmldomNodes[i], "FileName"));
-		            filenameView = MakeXMLString(filenameOrg);
-		            filesize = getNodeText(SelectSingleNode(xmldomNodes[i], "FileSize"));
-		            
-		            var strTarget = "target=''";
-		            var strFileExt = filepath.substr(filepath.lastIndexOf('.')).toLowerCase();
-		            if (strFileExt == ".xls" || strFileExt == ".doc" || strFileExt == ".ppt" ||
-		               strFileExt == ".eml" || strFileExt == ".pdf" || strFileExt == ".hwp" ||
-		               strFileExt == ".ppt" || strFileExt == ".docx" || strFileExt == ".pptx" ||
-		               strFileExt == ".xlsx" || strFileExt == ".rtf") {
-		                strTarget = "target=''";
-		            }
-		            
-		            if (strFileExt.indexOf(".jpg") != -1 || strFileExt.indexOf(".jpeg") != -1 || strFileExt.indexOf(".bmp") != -1 || strFileExt.indexOf(".gif") != -1 || strFileExt.indexOf(".png") != -1 || strFileExt.indexOf(".tif") != -1 || strFileExt.indexOf(".tiff") != -1)
-		                fileImage = "/images/image.svg";
-		            else if (strFileExt.indexOf(".doc") != -1 || strFileExt.indexOf(".docx") != -1)
-		                fileImage = "/images/doc.svg";
-		            else if (strFileExt.indexOf(".xls") != -1 || strFileExt.indexOf(".xlsx") != -1)
-		                fileImage = "/images/xls.svg";
-		            else if (strFileExt.indexOf(".ppt") != -1 || strFileExt.indexOf(".pptx") != -1 || strFileExt.indexOf(".pps") != -1 || strFileExt.indexOf(".ppsx") != -1)
-		                fileImage = "/images/ppt.svg";
-		            else if (strFileExt.indexOf(".txt") != -1)
-		                fileImage = "/images/txt.svg";
-		            else if (strFileExt.indexOf(".zip") != -1)
-		                fileImage = "/images/zip.svg";
-		            else if (strFileExt.indexOf(".pdf") != -1)
-		                fileImage = "/images/pdf.svg";
-					else if (strFileExt.indexOf(".hwp") != -1 || strFileExt.indexOf(".hwpx") != -1)
-						fileImage = "/images/hwp.svg";
-		            else if (strFileExt.indexOf(".ecm") != -1)
-		                fileImage = "/images/ecm.svg";
-		            else
-		                fileImage = "/images/etc.svg";
-		
-		            var protocol = window.location.protocol;
-		            var serverName = window.location.hostname;
-		            
-		            /* 2020-01-30 홍승비 - 모두저장 기능을 위해 속성 추가 */
-		            strAttach += "<div class='custom_checkbox'><input type='checkbox' name='fileSelect' value='" + filenameView + "' filePath='" + MakeXMLString(filepath) + "' id='fileSelect" + i + "'>";
-		            strAttach += "<label for='fileSelect" + i + "'><img src='" + fileImage + "' style='vertical-align: middle;'> <a href='/ezBoard/boardAttachDown.do?filePath=" + javaURLEncode(filepath) + "&fileName=" + javaURLEncode(filenameOrg) + "'\">";
-		            strAttach += filenameView + "&nbsp;(" + filesize + ")</a>";
-		            // 2023-05-25 조수빈 - 게시판 첨부파일 미리보기 아이콘 추가
-		            if (typeof useBoardFilePrvw !== 'undefined' && useBoardFilePrvw == "1" && guestReadFG !== "Y") {
-			            strAttach += "<span class='icon_rbtn2' style='margin-left : 10px;' title='<spring:message code = 'ezEmail.t487'/>' onclick=\"attachFile_Preview('" + javaURLEncode(filepath) + "', '" + javaURLEncode(filenameOrg) + "');\"><img src='/images/icon_preview.png' width='16' height='16' style='vertical-align:middle; cursor:pointer;'></span>";
-		            }
-		            strAttach += "</label></div><br>";
-		        }
-		        document.getElementById('lstAttachLink').innerHTML = strAttach;
-		    }
+		        
+				if (!xmldomNodes || xmldomNodes.length < 1) {
+					document.querySelector("#attachTD").style.display = "none";
+					return;
+				} else {
+					document.querySelector("#attachTD").style.display = ""; // 첨부파일 표출
+					
+					var oUl = document.createElement("ul");
+					for (var i = 0; i < xmldomNodes.length; i++) {
+						var oLi = document.createElement("li");
+						var oSpan = document.createElement("span");
+						var oA = document.createElement("a");
+						var oImage = document.createElement("img");
+						var oInput = document.createElement("input");
+						oInput.type = "checkbox";
+						oInput.style.display = "none"; // ui 변경으로 선택 저장 기능 삭제 (추후 기능 재사용시 수정필요)
+						
+						filepath = getNodeText(SelectSingleNode(xmldomNodes[i], "FilePath"));
+						/* 2018-04-27 홍승비 - 화면에 표시되는 파일명 특문처리 수정 */
+						filenameOrg = getNodeText(SelectSingleNode(xmldomNodes[i], "FileName"));
+						filenameView = MakeXMLString(filenameOrg);
+						filesize = getNodeText(SelectSingleNode(xmldomNodes[i], "FileSize"));
+
+						var strTarget = "target=''";
+						var strFileExt = filepath.substr(filepath.lastIndexOf('.')).toLowerCase();
+						if (strFileExt == ".xls" || strFileExt == ".doc" || strFileExt == ".ppt" ||
+								strFileExt == ".eml" || strFileExt == ".pdf" || strFileExt == ".hwp" ||
+								strFileExt == ".ppt" || strFileExt == ".docx" || strFileExt == ".pptx" ||
+								strFileExt == ".xlsx" || strFileExt == ".rtf") {
+							strTarget = "target=''";
+						}
+
+						if (strFileExt.indexOf(".jpg") != -1 || strFileExt.indexOf(".jpeg") != -1 || strFileExt.indexOf(".bmp") != -1 || strFileExt.indexOf(".gif") != -1 || strFileExt.indexOf(".png") != -1 || strFileExt.indexOf(".tif") != -1 || strFileExt.indexOf(".tiff") != -1)
+							fileImage = "/images/image.svg";
+						else if (strFileExt.indexOf(".doc") != -1 || strFileExt.indexOf(".docx") != -1)
+							fileImage = "/images/doc.svg";
+						else if (strFileExt.indexOf(".xls") != -1 || strFileExt.indexOf(".xlsx") != -1)
+							fileImage = "/images/xls.svg";
+						else if (strFileExt.indexOf(".ppt") != -1 || strFileExt.indexOf(".pptx") != -1 || strFileExt.indexOf(".pps") != -1 || strFileExt.indexOf(".ppsx") != -1)
+							fileImage = "/images/ppt.svg";
+						else if (strFileExt.indexOf(".txt") != -1)
+							fileImage = "/images/txt.svg";
+						else if (strFileExt.indexOf(".zip") != -1)
+							fileImage = "/images/zip.svg";
+						else if (strFileExt.indexOf(".pdf") != -1)
+							fileImage = "/images/pdf.svg";
+						else if (strFileExt.indexOf(".hwp") != -1 || strFileExt.indexOf(".hwpx") != -1)
+							fileImage = "/images/hwp.svg";
+						else if (strFileExt.indexOf(".ecm") != -1)
+							fileImage = "/images/ecm.svg";
+						else
+							fileImage = "/images/etc.svg";
+
+						var protocol = window.location.protocol;
+						var serverName = window.location.hostname;
+						
+						oInput.setAttribute("name","fileSelect");
+						oInput.setAttribute("value",filenameView);
+						oInput.setAttribute("filePath",MakeXMLString(filepath));
+						oImage.src = fileImage;
+						oA.innerText = filenameOrg + " (" + filesize + ")";
+						oA.href = "/ezBoard/boardAttachDown.do?filePath=" + javaURLEncode(filepath) + "&fileName=" + javaURLEncode(filenameOrg);
+						oSpan.appendChild(oInput);
+						oSpan.appendChild(oImage);
+						oSpan.appendChild(oA)
+						oLi.appendChild(oSpan);
+						if (typeof useBoardFilePrvw !== 'undefined' && useBoardFilePrvw == "1" && guestReadFG !== "Y") {
+							oButton = document.createElement("button");
+							oButton.className = "textBtn i_attach_preview";
+							oButton.onclick = function() {
+								attachFile_Preview(javaURLEncode(filepath), javaURLEncode(filenameOrg));
+							}
+							oButton.innerText = "<spring:message code = 'ezBoard.newDesign11'/>";
+							oLi.appendChild(oButton);
+						}
+						oUl.appendChild(oLi);
+					}
+					document.getElementById('lstAttachLink').append(oUl);
+				}
+			}
 		    
 		 	// 2023-05-25 조수빈 - 게시판 첨부파일 미리보기
 		    function attachFile_Preview(filePath, fileOrgName) {
@@ -1062,6 +1079,8 @@
 		        var checks = document.getElementById('lstAttachLink').getElementsByTagName("input");
 		        for (var i = 0; i < checks.length; i++)
 		            checks.item(i).checked = true;
+				
+				attach_Download();
 		    }
 		    
 		    /* 2020-01-30 홍승비 - 체크한 파일이 1개 이상인 경우, zip 파일로 다운받도록 수정 */
@@ -1619,7 +1638,7 @@
 					success: function(result){
 						likeCountAfter = result;
 						if (parseInt(result) > 0) {
-							document.getElementById("likeCountSpan").innerText = "(" + result + ")";
+							document.getElementById("likeCountSpan").innerText = result;
 						} else {
 							document.getElementById("likeCountSpan").innerText = "";
 						}
@@ -1658,6 +1677,8 @@
 		        str = ReplaceText(str, "&#034;", "\"");
 		  		str = ReplaceText(str, "&#92;", "\\");
 		  	    str = ReplaceText(str, "&amp;", "&");
+		  	    str = ReplaceText(str, "&amp;", "&");
+		  	    str = ReplaceText(str, "&apos;", "'");
 		        return str;
 		    }
 		    
@@ -1767,7 +1788,7 @@
 					success: function(result){
 						disLikeCountAfter = result;
 						if (parseInt(result) > 0) {
-							document.getElementById("disLikeCountSpan").innerText = "(" + result + ")";
+							document.getElementById("disLikeCountSpan").innerText = result;
 						} else {
 							document.getElementById("disLikeCountSpan").innerText = "";
 						}
@@ -1787,7 +1808,7 @@
 		    	if(gubun === "disLike"){
 		    		isDisLikeChecked = checked ;
 			    	if (parseInt(result) > 0) {
-						document.getElementById("disLikeCountSpan").innerText = "(" + result + ")";
+						document.getElementById("disLikeCountSpan").innerText = result;
 					} else {
 						document.getElementById("disLikeCountSpan").innerText = "";
 					}
@@ -1799,7 +1820,7 @@
 		    	}else if(gubun === "like"){
 		    		isLikeChecked = checked;
 		    		if (parseInt(result) > 0) {
-						document.getElementById("likeCountSpan").innerText = "(" + result + ")";
+						document.getElementById("likeCountSpan").innerText = result;
 					} else {
 						document.getElementById("likeCountSpan").innerText = "";
 					}
@@ -1852,6 +1873,7 @@
 							
 							var layerSelect = document.getElementById('moreBoardIcon');
 							if (layerSelect) {
+								moreBoardIcon.classList = "view_moreboarditem";
 								var addScrapBtn2 = layerSelect.querySelector('li#addScrapBtn');
 								if (addScrapBtn2) {
 									addScrapBtn2.id = 'delScrapBtn';
@@ -1926,6 +1948,7 @@
 
 								var layerSelect = document.getElementById('moreBoardIcon');
 								if (layerSelect) {
+									moreBoardIcon.classList = "view_moreboarditem";
 									var delScrapBtn2 = layerSelect.querySelector('li#delScrapBtn');
 									if (delScrapBtn2) {
 										delScrapBtn2.id = 'addScrapBtn';
@@ -2215,557 +2238,430 @@
 			});
 		</script>
 	</head>
-	<body id="bodyPopup" class="popup" style="overflow:auto; height:100%;">
-		<table class="layout" style="height:100%">
-		  <tr>
-		    <td style="vertical-align: top; height: 10px;">
-		      <div id="menu">
-			  <c:choose>
-			  <c:when test = "${ historyCheck eq 'true' }">
-				  <ul>
-					  <c:if test = "${ selectedViewFlag ne 'right' && rightAddr ne '' }">
-					  <li>
-						  <span onclick = "viewContent('right')"><spring:message code='ezBoard.versionManage.msg8' /></span>
-					  </li>
-					  </c:if>
-
-					  <c:if test = "${ selectedViewFlag ne 'my' }">
-					  <li>
-						  <span onclick = "viewContent('my')"><spring:message code='ezBoard.versionManage.msg10' /></span>
-					  </li>
-					  </c:if>
-
-					  <c:if test = "${ selectedViewFlag ne 'left' && leftAddr ne '' }">
-					  <li>
-						  <span onclick = "viewContent('left')"><spring:message code='ezBoard.versionManage.msg9' /></span>
-					  </li>
-					  </c:if>
-
-					  <%-- 수정 : 선택한 버전의 글만 수정 가능 --%>
-					  <c:if test = "${ selectedViewFlag eq 'my' }">
-					  	  <li ID='btn_Modify'><span onclick='btn_Modify_Onclick()'><spring:message code='ezBoard.t316' /></span></li>
-					  </c:if>
-
-					  <%-- 삭제 : 최종 수정본이 아닌 중간 버전의 글만 삭제 가능 --%>
-					  <c:if test = "${ newestVersionFlag ne 'Y' }">
-					  	  <li ID='btn_Delete'><span class="icon16 popup_icon16_delete" onclick='btn_Delete_Onclick(`only`)'></span></li>
-					  </c:if>
-
-					  <c:if test = "${ selectedViewFlag ne 'my' }">
-					  <li>
-						  <span onclick = "showModifyHistory()"><spring:message code='ezBoard.versionManage.msg11' /></span>
-					  </li>
-					  </c:if>
-				  </ul>
-			  </c:when>
-			  <c:when test = "${ guestReadFG eq 'Y' }"></c:when>
-			  <c:otherwise>
-		        <ul>
-		        	<c:choose>
-		        		<c:when test="${pReservedItem == 'true'}">
-		        			<li ID='btn_Modify'><span onclick='btn_Modify_Onclick()'><spring:message code='ezBoard.t316' /></span></li>
-		        			<c:if test="${boardItem.itemLevel == 1 && (boardItem.writerID == userInfo.id || boardInfo.boardAdmin_FG == 'true' || boardInfo.boardGroupAdmin_FG == 'OK')}"><%-- 답변글은 재게시 버튼 안뜨도록 함 --%>
-                                <li ID='btn_Repost'><span onclick='btn_Repost_Onclick()'><spring:message code='ezBoard.lhr04'/></span></li>
-                            </c:if>
-		                    <li ID='btn_Delete' onclick='btn_Delete_Onclick()'><span class="icon16 popup_icon16_delete switchIcon"></span><span class="iconTexts"><spring:message code='ezBoard.t113' /></span></li>
-		        		</c:when>
-		        		<c:when test="${apprFlag == 'N'}">
-		        			<li><span onClick="Appr_onclick('Y')"><spring:message code='ezBoard.t999005' /></span></li>
-		                    <li><span onClick="Appr_onclick('C')"><spring:message code='ezBoard.t999014' /></span></li>
-		                    	<c:if test="${boardItem.writerID == userInfo.id || (boardItem.writerNameType == '1' && boardItem.writerDeptID == userInfo.deptID)}">
-			                        <li ID='btn_Modify'><span onclick='btn_Modify_Onclick()'><spring:message code='ezBoard.t316' /></span></li>
-			                        <li ID='btn_Delete' onclick='btn_Delete_Onclick()'><span class="icon16 popup_icon16_delete switchIcon"></span><span class="iconTexts"><spring:message code='ezBoard.t113' /></span></li>
-		                    	</c:if>
-		        		</c:when>
-		        		<c:when test="${apprFlag == 'C'}">
-		        			<li><span onClick="btn_Modify_Onclick()"><spring:message code='ezBoard.t999021' /></span></li>
-		        		</c:when>
-		        		<c:when test="${apprFlag == 'W'}">
-		        			<li ID='btn_Modify'><span onclick='btn_Modify_Onclick()'><spring:message code='ezBoard.t316' /></span></li>
-		        			<c:if test="${boardItem.itemLevel == 1 && (boardItem.writerID == userInfo.id || boardInfo.boardAdmin_FG == 'true' || boardInfo.boardGroupAdmin_FG == 'OK')}"><%-- 답변글은 재게시 버튼 안뜨도록 함 --%>
-                                <li ID='btn_Repost'><span onclick='btn_Repost_Onclick()'><spring:message code='ezBoard.lhr04'/></span></li>
-                            </c:if>
-		                    <li ID='btn_Delete' onclick='btn_Delete_Onclick()'><span class="icon16 popup_icon16_delete switchIcon"></span><span class="iconTexts"><spring:message code='ezBoard.t113' /></span></li>
-		        		</c:when>
-		        		<c:otherwise>
-		        			<c:choose>
-			        			<c:when test="${guBun == '2'}">
-					        		<!--		강민수92	   -->
-			        				<c:if test = "${boardPropertyVO.oneLineReply == '1'}">
-			        					<li ID='btn_One_Line_Reply'><span id="commentCount" onclick='btn_One_Line_Reply_Onclick()'><spring:message code='ezBoard.t81' />[${commentCount}]</span></li>
-			        				</c:if>
-									<!--		강민수92 end -->				        				
-		        					<li ID='btn_Reply'><span onclick='btn_Reply_Onclick()'><spring:message code='ezBoard.t88' /></span></li>
-			        				<li ID='btn_Modify'><span onclick='btn_Modify_Onclick()'><spring:message code='ezBoard.t316' /></span></li>
-			        				<%-- 2020-02-11 홍승비 - 익명게시판 게시물도 관리자인 경우 이동, 복사 가능하도록 수정(boardGroupAdmin_FG이 OK라면 boardAdmin_FG값도 true) --%>
-		                        	<c:if test="${boardInfo.boardAdmin_FG == 'true' || boardInfo.boardGroupAdmin_FG == 'OK'}"> 
-				                        <li ID='btn_Copy'><span onclick='btn_Copy_Onclick()' ><spring:message code='ezBoard.t274' /></span></li>
-							            <li ID='btn_Move'><span onClick="btn_Move_Onclick()"><spring:message code='ezBoard.t134' /></span></li>
-                        			</c:if>
-			        				<li ID='btn_Delete' onclick='btn_Delete_Onclick()'><span class="icon16 popup_icon16_delete switchIcon"></span><span class="iconTexts"><spring:message code='ezBoard.t113' /></span></li>
-			                        <li ID='btn_Print' onclick='btn_Print_Onclick()'><span class="icon16 popup_icon16_print switchIcon"></span><span class="iconTexts"><spring:message code='main.t73'/></span></li>
-                                    <c:if test="${boardInfo.urlCopyFlag != 'N'}">
-                                        <li id ="urlCopyBtn"><span onclick="copyURL()"><spring:message code = "ezBoard.lyj02" /></span></li>
-                                    </c:if>
-                                    <c:if test="${useExternalMailServer eq 'NO' }">
-			                        <li ID='btn_Mail' onclick='mail_boarditem()'><span class="icon16 popup_icon16_mail_gray switchIcon"></span><span class="iconTexts"><spring:message code='ezEmail.t177'/></span></li>
-			                        </c:if>
-			        			</c:when>
-			        			<c:when test="${boardItem.writerID == userInfo.id || boardInfo.boardAdmin_FG == 'true' || boardInfo.boardGroupAdmin_FG == 'OK' || (boardItem.writerNameType == '1' && boardItem.writerDeptID == userInfo.deptID)}">
-		        					<!--		강민수92	   -->
-			        				<c:if test = "${boardPropertyVO.oneLineReply == '1'}">
-			        					<li ID='btn_One_Line_Reply'><span id="commentCount" onclick='btn_One_Line_Reply_Onclick()'><spring:message code='ezBoard.t81' />[${commentCount}]</span></li>
-			        				</c:if>
-									<!--		강민수92 end -->			        				
-		        					<li ID='btn_Reply'><span onclick='btn_Reply_Onclick()'><spring:message code='ezBoard.t88' /></span></li>
-			        				<li ID='btn_Modify'><span onclick='btn_Modify_Onclick()'><spring:message code='ezBoard.t316' /></span></li>
-			        				<c:if test="${boardItem.itemLevel == 1}">
-                                        <li ID='btn_Repost'><span onclick='btn_Repost_Onclick()'><spring:message code='ezBoard.lhr04'/></span></li>
-                                    </c:if>
-			                        <c:if test="${guBun != '2'}">
-										<li ID='btn_Copy'><span onclick='btn_Copy_Onclick()' ><spring:message code='ezBoard.t274' /></span></li>
-										<%--게시물이동추가--%>
-										<li ID='btn_Move'><span onClick="btn_Move_Onclick()"><spring:message code='ezBoard.t134' /></span></li>
-			                        	<li ID='btn_Reader'><span onclick='ReaderList()' ><spring:message code='ezBoard.t320' /></span></li>
-			                    	</c:if>
-									<c:if test = "${ useVersion eq 'Y' }">
-										<li id = "btn_modifyHistory">
-											<span onclick = "viewModifyHistory()"><spring:message code = "ezBoard.versionManage.msg2" /></span>
-										</li>
+	<body id="bodyPopup" class="popup newBoardPopup" style="overflow:auto; height:100%;">
+		<div class="layout" style="height:100%">
+			<div id="menu">
+				<ul style="overflow: unset;">
+					<c:choose>
+						<c:when test = "${ historyCheck eq 'true' }">
+							<ul>
+								<c:if test = "${ selectedViewFlag ne 'right' && rightAddr ne '' }">
+									<li>
+										<span onclick = "viewContent('right')"><spring:message code='ezBoard.versionManage.msg8' /></span>
+									</li>
+								</c:if>
+								<c:if test = "${ selectedViewFlag ne 'my' }">
+									<li>
+										<span onclick = "viewContent('my')"><spring:message code='ezBoard.versionManage.msg10' /></span>
+									</li>
+								</c:if>
+								<c:if test = "${ selectedViewFlag ne 'left' && leftAddr ne '' }">
+									<li>
+										<span onclick = "viewContent('left')"><spring:message code='ezBoard.versionManage.msg9' /></span>
+									</li>
+								</c:if>
+								<%-- 수정 : 선택한 버전의 글만 수정 가능 --%>
+								<c:if test = "${ selectedViewFlag eq 'my' }">
+									<li ID='btn_Modify'><span onclick='btn_Modify_Onclick()'><spring:message code='ezBoard.t316' /></span></li>
+								</c:if>
+								<%-- 삭제 : 최종 수정본이 아닌 중간 버전의 글만 삭제 가능 --%>
+								<c:if test = "${ newestVersionFlag ne 'Y' }">
+									<li ID='btn_Delete'>
+										<span class="icon16 popup_icon16_delete" onclick='btn_Delete_Onclick(`only`)'></span>
+									</li>
+								</c:if>
+								<c:if test = "${ selectedViewFlag ne 'my' }">
+									<li>
+										<span onclick = "showModifyHistory()"><spring:message code='ezBoard.versionManage.msg11' /></span>
+									</li>
+								</c:if>
+							</ul>
+						</c:when>
+						<c:when test = "${ guestReadFG eq 'Y' }"></c:when>
+						<c:otherwise>
+							<ul>
+								<c:choose>
+									<c:when test="${pReservedItem == 'true'}">
+										<li ID='btn_Modify'><span onclick='btn_Modify_Onclick()'><spring:message code='ezBoard.t316' /></span></li>
+										<c:if test="${boardItem.itemLevel == 1 && (boardItem.writerID == userInfo.id || boardInfo.boardAdmin_FG == 'true' || boardInfo.boardGroupAdmin_FG == 'OK')}"><%-- 답변글은 재게시 버튼 안뜨도록 함 --%>
+											<li ID='btn_Repost'><span onclick='btn_Repost_Onclick()'><spring:message code='ezBoard.lhr04'/></span></li>
+										</c:if>
+										<li ID='btn_Delete' onclick='btn_Delete_Onclick()'><span class="icon16 popup_icon16_delete switchIcon"></span><span class="iconTexts"><spring:message code='ezBoard.t113' /></span></li>
+									</c:when>
+									<c:when test="${apprFlag == 'N'}">
+										<li><span onClick="Appr_onclick('Y')"><spring:message code='ezBoard.t999005' /></span></li>
+										<li><span onClick="Appr_onclick('C')"><spring:message code='ezBoard.t999014' /></span></li>
+											<c:if test="${boardItem.writerID == userInfo.id || (boardItem.writerNameType == '1' && boardItem.writerDeptID == userInfo.deptID)}">
+												<li ID='btn_Modify'><span onclick='btn_Modify_Onclick()'><spring:message code='ezBoard.t316' /></span></li>
+												<li ID='btn_Delete' onclick='btn_Delete_Onclick()'><span class="icon16 popup_icon16_delete switchIcon"></span><span class="iconTexts"><spring:message code='ezBoard.t113' /></span></li>
+											</c:if>
+									</c:when>
+									<c:when test="${apprFlag == 'C'}">
+										<li><span onClick="btn_Modify_Onclick()"><spring:message code='ezBoard.t999021' /></span></li>
+									</c:when>
+									<c:when test="${apprFlag == 'W'}">
+										<li ID='btn_Modify'><span onclick='btn_Modify_Onclick()'><spring:message code='ezBoard.t316' /></span></li>
+										<c:if test="${boardItem.itemLevel == 1 && (boardItem.writerID == userInfo.id || boardInfo.boardAdmin_FG == 'true' || boardInfo.boardGroupAdmin_FG == 'OK')}"><%-- 답변글은 재게시 버튼 안뜨도록 함 --%>
+											<li ID='btn_Repost'><span onclick='btn_Repost_Onclick()'><spring:message code='ezBoard.lhr04'/></span></li>
+										</c:if>
+										<li ID='btn_Delete' onclick='btn_Delete_Onclick()'><span class="icon16 popup_icon16_delete switchIcon"></span><span class="iconTexts"><spring:message code='ezBoard.t113' /></span></li>
+									</c:when>
+									<c:otherwise>
+										<c:choose>
+											<c:when test="${guBun == '2'}">
+												<!--		강민수92	   -->
+												<c:if test = "${boardPropertyVO.oneLineReply == '1'}">
+													<li ID='btn_One_Line_Reply'><span id="commentCount" onclick='btn_One_Line_Reply_Onclick()'><spring:message code='ezBoard.t81' />[${commentCount}]</span></li>
+												</c:if>
+												<!--		강민수92 end -->				        				
+												<li ID='btn_Reply'><span onclick='btn_Reply_Onclick()'><spring:message code='ezBoard.t88' /></span></li>
+												<li ID='btn_Modify'><span onclick='btn_Modify_Onclick()'><spring:message code='ezBoard.t316' /></span></li>
+												<%-- 2020-02-11 홍승비 - 익명게시판 게시물도 관리자인 경우 이동, 복사 가능하도록 수정(boardGroupAdmin_FG이 OK라면 boardAdmin_FG값도 true) --%>
+												<c:if test="${boardInfo.boardAdmin_FG == 'true' || boardInfo.boardGroupAdmin_FG == 'OK'}"> 
+													<li ID='btn_Copy'><span onclick='btn_Copy_Onclick()' ><spring:message code='ezBoard.t274' /></span></li>
+													<li ID='btn_Move'><span onClick="btn_Move_Onclick()"><spring:message code='ezBoard.t134' /></span></li>
+												</c:if>
+												<li ID='btn_Delete' onclick='btn_Delete_Onclick()'><span class="icon16 popup_icon16_delete switchIcon"></span><span class="iconTexts"><spring:message code='ezBoard.t113' /></span></li>
+												<li ID='btn_Print' onclick='btn_Print_Onclick()'><span class="icon16 popup_icon16_print switchIcon"></span><span class="iconTexts"><spring:message code='main.t73'/></span></li>
+												<c:if test="${boardInfo.urlCopyFlag != 'N'}">
+													<li id ="urlCopyBtn"><span onclick="copyURL()"><spring:message code = "ezBoard.lyj02" /></span></li>
+												</c:if>
+												<c:if test="${useExternalMailServer eq 'NO' }">
+												<li ID='btn_Mail' onclick='mail_boarditem()'><span class="icon16 popup_icon16_mail_gray switchIcon"></span><span class="iconTexts"><spring:message code='ezEmail.t177'/></span></li>
+												</c:if>
+											</c:when>
+											<c:when test="${boardItem.writerID == userInfo.id || boardInfo.boardAdmin_FG == 'true' || boardInfo.boardGroupAdmin_FG == 'OK' || (boardItem.writerNameType == '1' && boardItem.writerDeptID == userInfo.deptID)}">
+												<!--		강민수92	   -->
+												<c:if test = "${boardPropertyVO.oneLineReply == '1'}">
+													<li ID='btn_One_Line_Reply'><span id="commentCount" onclick='btn_One_Line_Reply_Onclick()'><spring:message code='ezBoard.t81' />[${commentCount}]</span></li>
+												</c:if>
+												<!--		강민수92 end -->			        				
+												<li ID='btn_Reply'><span onclick='btn_Reply_Onclick()'><spring:message code='ezBoard.t88' /></span></li>
+												<li ID='btn_Modify'><span onclick='btn_Modify_Onclick()'><spring:message code='ezBoard.t316' /></span></li>
+												<c:if test="${boardItem.itemLevel == 1}">
+													<li ID='btn_Repost'><span onclick='btn_Repost_Onclick()'><spring:message code='ezBoard.lhr04'/></span></li>
+												</c:if>
+												<c:if test="${guBun != '2'}">
+													<li ID='btn_Copy'><span onclick='btn_Copy_Onclick()' ><spring:message code='ezBoard.t274' /></span></li>
+													<%--게시물이동추가--%>
+													<li ID='btn_Move'><span onClick="btn_Move_Onclick()"><spring:message code='ezBoard.t134' /></span></li>
+													<li ID='btn_Reader'><span onclick='ReaderList()' ><spring:message code='ezBoard.t320' /></span></li>
+												</c:if>
+												<c:if test = "${ useVersion eq 'Y' }">
+													<li id = "btn_modifyHistory">
+														<span onclick = "viewModifyHistory()"><spring:message code = "ezBoard.versionManage.msg2" /></span>
+													</li>
+												</c:if>
+												<li ID='btn_Delete' onclick='btn_Delete_Onclick()'><span class="icon16 popup_icon16_delete switchIcon"></span><span class="iconTexts"><spring:message code='ezBoard.t113' /></span></li>
+												<li ID='btn_Print' onclick='btn_Print_Onclick()'><span class="icon16 popup_icon16_print switchIcon"></span><span class="iconTexts"><spring:message code='main.t73'/></span></li>
+												<c:if test="${boardInfo.urlCopyFlag != 'N'}">
+													<li id ="urlCopyBtn"><span onclick="copyURL()"><spring:message code = "ezBoard.lyj02" /></span></li>
+												</c:if>
+												<c:if test="${useExternalMailServer eq 'NO' }">
+												<li ID='btn_Mail' onclick='mail_boarditem()' ><span class="icon16 popup_icon16_mail_gray switchIcon"></span><span class="iconTexts"><spring:message code='ezEmail.t177'/></span></li>
+												</c:if>
+											</c:when>
+											<c:otherwise>
+												<!--		강민수92	   -->
+												<c:if test = "${boardPropertyVO.oneLineReply == '1'}">
+													<li ID='btn_One_Line_Reply'><span id="commentCount" onclick='btn_One_Line_Reply_Onclick()'><spring:message code='ezBoard.t81' />[${commentCount}]</span></li>
+												</c:if>
+												<!--		강민수92 end -->			        				
+												<li ID='btn_Reply'><span onclick='btn_Reply_Onclick()'><spring:message code='ezBoard.t88' /></span></li>
+												<li ID='btn_Read' ><span onclick='ReaderList()' ><spring:message code='ezBoard.t320' /></span></li>
+												<c:if test = "${ useVersion eq 'Y' }">
+													<li id = "btn_modifyHistory">
+														<span onclick = "viewModifyHistory()"><spring:message code = "ezBoard.versionManage.msg2" /></span>
+													</li>
+												</c:if>
+												<li ID='btn_Print' onclick='btn_Print_Onclick()'><span class="icon16 popup_icon16_print switchIcon" ></span><span class="iconTexts"><spring:message code='main.t73'/></span></li>
+												<c:if test="${boardInfo.urlCopyFlag != 'N'}">
+													<li id ="urlCopyBtn"><span onclick="copyURL()"><spring:message code = "ezBoard.lyj02" /></span></li>
+												</c:if>
+												<li ID='btn_Mail' style="display:none;" onclick='mail_boarditem()' ><span class="icon16 popup_icon16_mail_gray switchIcon" ></span><span class="iconTexts"><spring:message code='ezEmail.t177'/></span></li>
+											</c:otherwise>
+										</c:choose>
+									</c:otherwise>
+								</c:choose>
+								<c:if test="${useEzKMS == 'YES' && apprFlag != 'N' && apprFlag != 'C' && apprFlag != 'W'}">
+									<c:if test="${boardItem.writerID == userInfo.id || boardInfo.boardAdmin_FG == 'true' || boardInfo.boardGroupAdmin_FG == 'OK'}">
+										<li  ID='btn_KMS' style="display:none;"><span onclick='ToKMS()'>KMS <spring:message code='ezBoard.t98' /></span></li>
 									</c:if>
-			                    	<li ID='btn_Delete' onclick='btn_Delete_Onclick()'><span class="icon16 popup_icon16_delete switchIcon"></span><span class="iconTexts"><spring:message code='ezBoard.t113' /></span></li>
-		                        	<li ID='btn_Print' onclick='btn_Print_Onclick()'><span class="icon16 popup_icon16_print switchIcon"></span><span class="iconTexts"><spring:message code='main.t73'/></span></li>
-                                    <c:if test="${boardInfo.urlCopyFlag != 'N'}">
-                                        <li id ="urlCopyBtn"><span onclick="copyURL()"><spring:message code = "ezBoard.lyj02" /></span></li>
-                                    </c:if>
-                                    <c:if test="${useExternalMailServer eq 'NO' }">
-		                        	<li ID='btn_Mail' onclick='mail_boarditem()' ><span class="icon16 popup_icon16_mail_gray switchIcon"></span><span class="iconTexts"><spring:message code='ezEmail.t177'/></span></li>
-		                        	</c:if>
-			        			</c:when>
-			        			<c:otherwise>
-				        			<!--		강민수92	   -->
-			        				<c:if test = "${boardPropertyVO.oneLineReply == '1'}">
-			        					<li ID='btn_One_Line_Reply'><span id="commentCount" onclick='btn_One_Line_Reply_Onclick()'><spring:message code='ezBoard.t81' />[${commentCount}]</span></li>
-			        				</c:if>
-									<!--		강민수92 end -->			        				
-			                        <li ID='btn_Reply'><span onclick='btn_Reply_Onclick()'><spring:message code='ezBoard.t88' /></span></li>
-			                        <li ID='btn_Read' ><span onclick='ReaderList()' ><spring:message code='ezBoard.t320' /></span></li>
-									<c:if test = "${ useVersion eq 'Y' }">
-										<li id = "btn_modifyHistory">
-											<span onclick = "viewModifyHistory()"><spring:message code = "ezBoard.versionManage.msg2" /></span>
-										</li>
-									</c:if>
-			                        <li ID='btn_Print' onclick='btn_Print_Onclick()'><span class="icon16 popup_icon16_print switchIcon" ></span><span class="iconTexts"><spring:message code='main.t73'/></span></li>
-                                    <c:if test="${boardInfo.urlCopyFlag != 'N'}">
-                                        <li id ="urlCopyBtn"><span onclick="copyURL()"><spring:message code = "ezBoard.lyj02" /></span></li>
-                                    </c:if>
-                                    <li ID='btn_Mail' style="display:none;" onclick='mail_boarditem()' ><span class="icon16 popup_icon16_mail_gray switchIcon" ></span><span class="iconTexts"><spring:message code='ezEmail.t177'/></span></li>
-			        			</c:otherwise>
-		        			</c:choose>
-		        		</c:otherwise>
-		        	</c:choose>
-		        	<c:if test="${useEzKMS == 'YES' && apprFlag != 'N' && apprFlag != 'C' && apprFlag != 'W'}">
-		        		<c:if test="${boardItem.writerID == userInfo.id || boardInfo.boardAdmin_FG == 'true' || boardInfo.boardGroupAdmin_FG == 'OK'}">
-		        			<li  ID='btn_KMS' style="display:none;"><span onclick='ToKMS()'>KMS <spring:message code='ezBoard.t98' /></span></li>
-		        		</c:if>
-		        	</c:if>
-		        	<c:if test="${(boardItem.writerID == userInfo.id || boardInfo.boardAdmin_FG == 'true' || boardInfo.boardGroupAdmin_FG == 'OK') && apprFlag != 'N' && apprFlag != 'C' && apprFlag != 'W'}">
-		        		<li ID='Retrans'><span onclick='btn_Retrans_Onclick()'><spring:message code='ezBoard.t10100' /></span></li>
-		        	</c:if>
-					<%-- 2024-02-02- 홍승비 - 게시물 승인 > 승인되지 않은 게시물 팝업창에서 캐비넷등록 버튼이 표출되는 오류 수정 (apprFlag값이 'W'인 경우는 승인게시판인데도 승인자가 없는 경우임) --%>
-					<c:if test="${useCabinet == 'YES' && apprFlag != 'N' && apprFlag != 'C' && apprFlag != 'W'}">
-						<li><span onclick="addRelatedCabinet()"><spring:message code='ezCabinet.t125'/></span></li>
-					</c:if>
-					<c:if test="${MyBoardScrapFlag != 'NONE' && apprFlag != 'N'}">
-						<c:choose>
-							<c:when test="${MyBoardScrapFlag eq 'TYPE1' && isScrap ne 'true'}">
-								<li id ="delScrapBtn"><span onclick="delScrap()"><spring:message code='ezBoard.kmh14'/></span></li>
-							</c:when>
-							<c:when test="${MyBoardScrapFlag eq 'TYPE2' && not empty scrapContID}">
-								<li id ="addScrapBtn"><span onclick="addScrap()"><spring:message code='ezBoard.kmh13'/></span></li>
-								<li id ="delScrapBtn"><span onclick="delScrap()"><spring:message code='ezBoard.kmh14'/></span></li>	
-							</c:when>
-							<c:when test="${empty MyBoardScrapFlag || MyBoardScrapFlag eq 'NONE'}">
-							</c:when>
-							<c:otherwise>
-							    <li id ="addScrapBtn"><span onclick="addScrap()"><spring:message code='ezBoard.kmh13'/></span></li>	
-							</c:otherwise>
-						</c:choose>
-					</c:if>
-		        </ul>
-			  </c:otherwise>
-			  </c:choose>
-		      </div>    
-		      <div id="close">
-		        <ul>
-		          <li><span onClick="btnClose_onclick()"></span></li>
-		        </ul>
-		      </div>
+								</c:if>
+								<c:if test="${(boardItem.writerID == userInfo.id || boardInfo.boardAdmin_FG == 'true' || boardInfo.boardGroupAdmin_FG == 'OK') && apprFlag != 'N' && apprFlag != 'C' && apprFlag != 'W'}">
+									<li ID='Retrans'><span onclick='btn_Retrans_Onclick()'><spring:message code='ezBoard.t10100' /></span></li>
+								</c:if>
+								<%-- 2024-02-02- 홍승비 - 게시물 승인 > 승인되지 않은 게시물 팝업창에서 캐비넷등록 버튼이 표출되는 오류 수정 (apprFlag값이 'W'인 경우는 승인게시판인데도 승인자가 없는 경우임) --%>
+								<c:if test="${useCabinet == 'YES' && apprFlag != 'N' && apprFlag != 'C' && apprFlag != 'W'}">
+									<li><span onclick="addRelatedCabinet()"><spring:message code='ezCabinet.t125'/></span></li>
+								</c:if>
+								<c:if test="${MyBoardScrapFlag != 'NONE' && apprFlag != 'N'}">
+									<c:choose>
+										<c:when test="${MyBoardScrapFlag eq 'TYPE1' && isScrap ne 'true'}">
+											<li id ="delScrapBtn"><span onclick="delScrap()"><spring:message code='ezBoard.kmh14'/></span></li>
+										</c:when>
+										<c:when test="${MyBoardScrapFlag eq 'TYPE2' && not empty scrapContID}">
+											<li id ="addScrapBtn"><span onclick="addScrap()"><spring:message code='ezBoard.kmh13'/></span></li>
+											<li id ="delScrapBtn"><span onclick="delScrap()"><spring:message code='ezBoard.kmh14'/></span></li>	
+										</c:when>
+										<c:when test="${empty MyBoardScrapFlag || MyBoardScrapFlag eq 'NONE'}">
+										</c:when>
+										<c:otherwise>
+											<li id ="addScrapBtn"><span onclick="addScrap()"><spring:message code='ezBoard.kmh13'/></span></li>	
+										</c:otherwise>
+									</c:choose>
+								</c:if>
+							</ul>
+						</c:otherwise>
+					</c:choose>
+				</ul>
+			</div>    
+			<div id="close">
+				<ul>
+				  <li><span onClick="btnClose_onclick()"></span></li>
+				</ul>
+			</div>
 			<script type="text/javascript">
 				selToggleList(document.getElementById("menu"), "ul", "li", "0");
 			</script>
-		    </td>
-		    </tr>
-		    <tr>
-				<td style="vertical-align: top; height: 10px; padding-bottom:10px;">
-				<table class="content2" style="width:100%;">
-					<!-- 게시자  -->
-					<tr>
-						<th style="width:10%;"><spring:message code='ezBoard.t223' /></th>
+			<!-- 게시자  -->
+			<div class="preview_infoBox">
+				<div class="preview_tit"><c:out value="${boardItem.title}"/></div>
+				<div class="preview_info">
+					<div class="preview_info_part">
 						<c:choose>
 							<c:when test="${guBun != '2'}">
-								<td id="WriteUserNM" style="width:40%;">
-									<div style="vertical-align:middle;width:100%;overflow-y:auto;cursor:pointer" onclick='OpenUserInfo("${boardItem.writerID}", "${boardItem.writerDeptID} ")'>
-										<c:out value="${boardItem.writerName}"/>
-									</div>
-								</td>
+								<span id="WriteUserNM" class="WriteUserClick" onclick='OpenUserInfo("${boardItem.writerID}", "${boardItem.writerDeptID} ")'>
+									<c:out value="${boardItem.writerDeptName}"/> <c:out value="${boardItem.writerName}"/><c:if test="${not empty fn:trim(boardItem.extensionAttribute3)}">(<c:out value="${boardItem.extensionAttribute3}"/>)</c:if>
+								</span>
 							</c:when>
 							<c:otherwise>
-								<td id="WriteUserNM" style="width:40%; white-space:nowrap">
-									<div style="vertical-align:middle;width:100%;overflow-y:auto;">
-										<c:out value="${boardItem.writerName}"/>
-									</div>
-								</td>
+								<span id="WriteUserNM">
+									<c:out value="${boardItem.writerName}"/>
+								</span>
 							</c:otherwise>
 						</c:choose>
-					<!-- 게시자 end -->
-					<c:choose>
-						<c:when test="${guBun != '2'}">
-							<!-- 부서 -->
-								<th style="width:10%;"><spring:message code='ezBoard.t322' /></th>
-								<c:choose>
-									<c:when test="${guBun != '2'}">
-										<td id="User_DeptNM" style="width:40%; white-space:nowrap"><span>${boardItem.writerDeptName}</span></td>
-									</c:when>
-									<c:otherwise>
-										<td id="User_DeptNM" style="width:40%; white-space:nowrap"><span>&nbsp;</span> </td>
-									</c:otherwise>
-								</c:choose>
-						</tr>
-								<!-- 부서 end -->
-								<!-- 직위 -->
-								<tr>
-									<th><spring:message code='ezBoard.t290' /></th>
-									<c:choose>
-										<c:when test="${guBun != '2'}">
-											<td id="User_JobTitle"><span>${boardItem.extensionAttribute3}</span> </td>
-										</c:when>
-										<c:otherwise>
-											<th id="User_JobTitle"><span>&nbsp; </span> </th>
-										</c:otherwise>
-									</c:choose>
-								<!-- 직위 end -->
-								<!-- 사내전화 -->
-									<th><spring:message code='ezPersonal.t177' /></th>
-									<c:choose>
-										<c:when test="${guBun != '2'}">
-											<td id="Telephone"><span>${boardItem.extensionAttribute4} </span> </td>
-										</c:when>
-										<c:otherwise>
-											<td id="Telephone"><span>&nbsp; </span> </td>
-										</c:otherwise>
-									</c:choose>
-								</tr>
-								<!-- 전화번호 end -->
-								<!-- 게시일 -->
-								<tr>
-									<th><spring:message code='ezBoard.t224' /></th>
-									<td id="PostDate" style = "white-space:nowrap; padding-right:5px">
-										<div style="vertical-align:middle;width:100%;height:16px;">${boardItem.writeDate.substring(0, 16)}</div>
-									</td>
-									<!-- 게시일 end -->
-									<!-- 게시 종료일 -->
-								<th><spring:message code='ezBoard.t288' /></th>
-								<c:set var="code287" value="<spring:message code='ezBoard.t287' />"/>
-								<c:choose>
-									<c:when test="${boardItem.endDate.substring(0,4) == '9999'}">
-										<td id="EndDate" style="padding-right:5px;">
-											<div style="vertical-align:middle;overflow-y:auto; display:ruby-text-container;"><spring:message code='ezBoard.t287' /></div>
-										</td>
-									</c:when>
-									<c:otherwise>
-										<td id="EndDate" style="padding-right:15px;">
-											<div style="vertical-align:middle;overflow-y:auto; display:ruby-text-container;">${boardItem.endDate.split(' ')[0]}</div>
-										</td>
-									</c:otherwise>
-								</c:choose>
-							</tr>
-							<!-- 게시 종료일 end -->
+						<span id="PostDate"><c:out value="${boardItem.writeDate.substring(0, 16)}"/></span>
+					</div>
+					<div>
+						<c:choose>
+							<c:when test="${boardItem.endDate.substring(0,4) == '9999'}">
+								<span id="EndDate" style="padding-right:5px;">
+									<spring:message code='ezBoard.t287' />
+								</span>
 							</c:when>
 							<c:otherwise>
-								<th style="width:10%"><spring:message code='ezBoard.t224' /></th>
-									<td id="PostDate" style="width:120px; white-space:nowrap; padding-right:5px">
-										<div style="vertical-align:middle;width:100%;height:16px;">${boardItem.writeDate}</div>
-									</td>
-									<!-- 게시일 end -->
-							</tr>
-							<!-- 게시 종료일 -->
-							<tr>
-								<th><spring:message code='ezBoard.t288' /></th>
-								<c:set var="code287" value="<spring:message code='ezBoard.t287' />"/>
-								<c:choose>
-									<c:when test="${boardItem.endDate.substring(0,4) == '9999'}">
-										<td colspan="3" id="EndDate" style="padding-right:5px;">
-											<div style="vertical-align:middle;overflow-y:auto; display:ruby-text-container;"><spring:message code='ezBoard.t287' /></div>
-										</td>
-									</c:when>
-									<c:otherwise>
-										<td colspan="3" id="EndDate" style="padding-right:15px;">
-											<div style="vertical-align:middle;overflow-y:auto; display:ruby-text-container;">${boardItem.endDate.split(' ')[0]}</div>
-										</td>
-									</c:otherwise>
-								</c:choose>
-							</tr>
-							<!-- 게시 종료일 end -->
+								<span id="EndDate" style="padding-right:15px;">
+									<c:out value="${boardItem.endDate.split(' ')[0]}"/>
+								</span>
 							</c:otherwise>
 						</c:choose>
-						<c:if test="${(boardInfo.boardAdmin_FG == 'true' || boardInfo.boardGroupAdmin_FG == 'OK') && not empty boardItem.updateDate}">
-						 <!-- 수정자, 수정일 -->
-							<tr>
-							    <c:if test="${guBun != '2'}">
-                                    <th><spring:message code='ezBoard.updateJIH01' /></th>
-                                    <td id="updaterName" style = "white-space:nowrap; padding-right:5px">
-                                        <div style="vertical-align:middle;width:100%;height:16px;">${boardItem.updaterName}</div>
-                                    </td>
-                                    <th><spring:message code='ezBoard.updateJIH02' /></th>
-                                    <td id="updateDate" style = "white-space:nowrap; padding-right:5px">
-                                        <div style="vertical-align:middle;width:100%;height:16px;">${boardItem.updateDate.substring(0, 16)}</div>
-                                    </td>
-                                </c:if>
-                                <c:if test="${guBun == '2'}">
-                                    <th><spring:message code='ezBoard.updateJIH02' /></th>
-                                    <td width="100%" id="updateDate" style="WORD-WRAP: break-word;word-break:break-all; line-height:16px;" colspan=5>
-			             	            <div style="WIDTH: 100%; vertical-align: middle"><c:out value="${boardItem.updateDate.substring(0, 16)}"/></div>
-			                        </td>
-                                </c:if>
-							</tr>
-						<!-- 수정자, 수정일 end -->
-						</c:if>	
-						<c:if test="${boardAttrCount > 0}">
-							<c:forEach var="boardAttr" items="${boardAttr}">
-								<tr>
-									<c:choose>
-										<c:when test="${extenLang == '1'}">
-							                <th>${boardAttr.colName1}</th>
-										</c:when>
-										<c:otherwise>
-							                <th>${boardAttr.colName2}</th>
-										</c:otherwise>
-									</c:choose>
-					                <td colspan="5">
-					                	<c:choose>
-                                            <c:when test="${boardAttr.colType == 'people' || boardAttr.colType == 'textArea'}">                                         
-                                                <span id="${boardAttr.tableCol}"></span>
-                                            </c:when>
-                                            <c:when test="${boardAttr.colType == 'people'}">
-                                                <span id="${boardAttr.tableCol}"></span>
-                                            </c:when>
-					                		<c:when test="${boardAttr.tableCol == 'extensionAttribute6'}">
-					                			<c:out value="${boardItem.extensionAttribute6}"/>
-					                		</c:when>
-					                		<c:when test="${boardAttr.tableCol == 'extensionAttribute7'}">
-					                			<c:out value="${boardItem.extensionAttribute7}"/>
-					                		</c:when>
-					                		<c:when test="${boardAttr.tableCol == 'extensionAttribute8'}">
-					                			<c:out value="${boardItem.extensionAttribute8}"/>
-					                		</c:when>
-					                		<c:when test="${boardAttr.tableCol == 'extensionAttribute9'}">
-					                			<c:out value="${boardItem.extensionAttribute9}"/>
-					                		</c:when>
-					                		<c:when test="${boardAttr.tableCol == 'extensionAttribute10'}">
-					                			<c:out value="${boardItem.extensionAttribute10}"/>
-					                		</c:when>
-					                		<c:otherwise></c:otherwise>
-					                	</c:choose>
-					                </td>
-					            </tr>
-							</c:forEach>
-						</c:if>
-					<!-- 제목 -->	
-			        <tr>
-			          <th><spring:message code='ezBoard.t323' /></th>
-			             <td width="100%" id="cTitle" style="WORD-WRAP: break-word;word-break:break-all; line-height:16px;" colspan=5>
-			             	<div style="WIDTH: 100%; vertical-align: middle"><c:out value="${boardItem.title}"/></div>
-			             </td>
-			        </tr>
-			        <!-- 제목 end -->
-			        <c:if test='${boardInfo.useKeyword eq "Y"}'>
-                         <tr>
-                             <th><spring:message code="ezApprovalG.t1200" /></th>
-                             <td width="100%" id="cKeyword" style="WORD-WRAP: break-word;word-break:break-all; line-height:16px;" colspan=5>
-                                <div style="WIDTH: 100%; vertical-align: middle">
-                                    <c:if test='${not empty keywordList}'>
-                                        <c:forEach var="keyword" items="${keywordList}">
-                                            <span class="keywordSpan" id="${keyword.keywordName}" onclick="onclickKeyword(event)">#${keyword.keywordName}</span>
-                                        </c:forEach>
-                                    </c:if>
-                                </div>
-                             </td>
-                         </tr>
-                     </c:if>
-			      </table>
-			    </td>
-		  </tr>
-		  <tr>
-		    <td class="pad1" id="pad1" style="vertical-align: top; height:460px;">
-		    <c:if test="${useEditor ne 'HWP'}">
-		        <iframe id="message" class="viewbox" name="message" style="padding:0; width:calc(100% - 2px); height:495px; overflow:auto; border:1px solid #ddd"></iframe>
-		    </c:if>
-		    <c:if test="${useEditor eq 'HWP'}">
-		    	<iframe id="message" class="viewbox"  src="/ezBoard/WHWPEditor.do" name="message" frameborder="0" style="padding:0; height:495px; width:calc(100% - 2px); overflow:auto; border:1px solid #ddd"></iframe>
-		    </c:if>
-				
+					</div>
+				</div>
+				<c:if test="${((boardInfo.boardAdmin_FG == 'true' || boardInfo.boardGroupAdmin_FG == 'OK') && not empty boardItem.updateDate) || boardInfo.useKeyword eq 'Y' || boardAttrCount > 0}">
+					<div class="preview_detail">
+						<!-- 상세정보는 위 기본정보를 제외한 추가정보 (확장컬럼) -->
+						<span id="preview_detail_toggle" class="preview_toggleBtn active"><spring:message code='ezBoard.newDesign10' /></span>
+						<div class="detail_category active">
+							<ul>
+								<c:if test="${(boardInfo.boardAdmin_FG == 'true' || boardInfo.boardGroupAdmin_FG == 'OK') && not empty boardItem.updateDate}">
+									<!-- 수정자, 수정일 -->
+									<li>
+										<c:if test="${guBun != '2'}">
+											<span><spring:message code='ezBoard.updateJIH01' /></span>
+											<span id="updaterName">
+												<c:out value="${boardItem.updaterDept}"/> <c:out value="${boardItem.updaterName}"/><c:if test="${not empty fn:trim(boardItem.updaterTitle)}">(<c:out value="${boardItem.updaterTitle}"/>)</c:if> 
+												<span><c:out value="${boardItem.updateDate.substring(0, 16)}"/></span>
+											</span>
+										</c:if>
+										<c:if test="${guBun == '2'}">
+											<span><spring:message code='ezBoard.updateJIH02' /></span>
+											<span id="updateDate">
+												<c:out value="${boardItem.updateDate.substring(0, 16)}"/>
+											</span>
+										</c:if>
+									</li>
+									<!-- 수정자, 수정일 end -->
+								</c:if>	
+								<c:if test='${boardInfo.useKeyword eq "Y"}'>
+									<li>
+										<span><spring:message code="ezApprovalG.t1200" /></span>
+										<c:if test='${not empty keywordList}'>
+											<c:forEach var="keyword" items="${keywordList}">
+												<span class="keywordSpan" id="${keyword.keywordName}" onclick="onclickKeyword(event)">#${keyword.keywordName}</span>
+											</c:forEach>
+										</c:if>
+									</li>
+								</c:if>
+								<c:if test="${boardAttrCount > 0}">
+									<c:forEach var="boardAttr" items="${boardAttr}">
+										<li>
+											<c:choose>
+												<c:when test="${extenLang == '1'}">
+													<span>${boardAttr.colName1}</span>
+												</c:when>
+												<c:otherwise>
+													<span>${boardAttr.colName2}</span>
+												</c:otherwise>
+											</c:choose>
+											<c:choose>
+												<c:when test="${boardAttr.colType == 'people' || boardAttr.colType == 'textArea'}">                                         
+													<span id="${boardAttr.tableCol}"></span>
+												</c:when>
+												<c:when test="${boardAttr.colType == 'people'}">
+													<span id="${boardAttr.tableCol}"></span>
+												</c:when>
+												<c:when test="${boardAttr.tableCol == 'extensionAttribute6'}">
+													<c:out value="${boardItem.extensionAttribute6}"/>
+												</c:when>
+												<c:when test="${boardAttr.tableCol == 'extensionAttribute7'}">
+													<c:out value="${boardItem.extensionAttribute7}"/>
+												</c:when>
+												<c:when test="${boardAttr.tableCol == 'extensionAttribute8'}">
+													<c:out value="${boardItem.extensionAttribute8}"/>
+												</c:when>
+												<c:when test="${boardAttr.tableCol == 'extensionAttribute9'}">
+													<c:out value="${boardItem.extensionAttribute9}"/>
+												</c:when>
+												<c:when test="${boardAttr.tableCol == 'extensionAttribute10'}">
+													<c:out value="${boardItem.extensionAttribute10}"/>
+												</c:when>
+												<c:otherwise></c:otherwise>
+											</c:choose>
+										</li>
+									</c:forEach>
+								</c:if>
+							</ul>
+						</div>
+					</div>
+				</c:if>
+			</div>
+			<div id="attachTD" class="preview_attachBox" style="display:none;">
+				<div class="preview_attach_header">
+					<span id="preview_attach_toggle" class="preview_toggleBtn active"><spring:message code='ezBoard.t10025' /></span>
+					<button type="button" class="textBtn i_attach_download" onClick="attach_SelectAll()"><spring:message code='ezBoard.t10024' /></button>
+				</div>
+				<div class="preview_attach_list active" id="lstAttachLink" style="border: none;"></div>
+			</div>
+				<!-- 제목 end -->
+		    <div class="pad1" id="pad1" style="padding: 20px; width: auto; min-height: 300px; overflow: auto; border: 0px none; border-bottom: 1px solid #D6E0EB; ">
+				<div class="zoom_btn_p">
+					<span class="zoom_out_p" onclick="Smaller()"></span>
+					<span class="zoom_in_p" onclick="Bigger()"></span>
+				</div>
+				<c:if test="${useEditor ne 'HWP'}">
+					<iframe id="message" class="viewbox" name="message" style="padding:0; width:100%; overflow:auto;"></iframe>
+				</c:if>
+				<c:if test="${useEditor eq 'HWP'}">
+					<iframe id="message" class="viewbox"  src="/ezBoard/WHWPEditor.do" name="message" frameborder="0" style="padding:0; height:495px; width:calc(100% - 2px); overflow:auto; border:1px solid #ddd"></iframe>
+				</c:if>
+			</div>
+			
+			<div class="evaluate_cont" <c:if test="${boardInfo.likeFlag == 'N' && boardInfo.disLikeFlag == 'N'}">  style="display: block;" </c:if>>
 				<%-- 2019-04-05 홍승비 - 본문 하단, 첨부파일/한줄댓글 상단에 좋아요 버튼 추가 --%>
-				<div style="display: flex; justify-content: center;">
-					<c:if test="${boardInfo.likeFlag != null && boardInfo.likeFlag == 'Y'}">
-						<div id="likeDiv" style="text-align:center; padding:5px 0px 7px 0px; margin-right: 5px;">	
-						  	<span class="likeButton" onclick="clickLikeButton()" title="<spring:message code='ezBoard.hsb10'/>" style="height:20px">
-							  	<c:choose>
-							  		<c:when test="${isLikeChecked == 'Y'}">
-							  			<img id="likeButtonImg" src="/images/like_on.png"/>
-							  		</c:when>
-							  		<c:otherwise>
-							  			<img id="likeButtonImg" src="/images/like_off.png"/>
-							  		</c:otherwise>
-							  	</c:choose>
-							  	<span id="likeCountSpan" style="vertical-align:top;"><c:if test="${boardItem.likeCount > 0}"> (<c:out value="${boardItem.likeCount}"/>)</c:if></span>
-						  	</span>
-						</div>
-					</c:if>
-					
+				<c:if test="${(boardInfo.likeFlag != null && boardInfo.likeFlag == 'Y') || (boardInfo.disLikeFlag != null && boardInfo.disLikeFlag == 'Y')}">
+					<div class="likeDivBox" <c:if test="${not empty boardInfo.starRatingFlag && boardInfo.starRatingFlag == 'Y'}">style="margin-left: 255px;"</c:if>>
+						<c:if test="${boardInfo.likeFlag != null && boardInfo.likeFlag == 'Y'}">
+							<div id="likeDiv">	
+								<span class="likeButton" onclick="clickLikeButton()" title="<spring:message code='ezBoard.hsb10'/>">
+									<c:choose>
+										<c:when test="${isLikeChecked == 'Y'}">
+											<img id="likeButtonImg" src="/images/like_on.png"/>
+										</c:when>
+										<c:otherwise>
+											<img id="likeButtonImg" src="/images/like_off.png"/>
+										</c:otherwise>
+									</c:choose>
+									<span id="likeCountSpan"><c:if test="${boardItem.likeCount > 0}"> <c:out value="${boardItem.likeCount}"/></c:if></span>
+								</span>
+							</div>
+						</c:if>
 						
-					<%-- 2023-04-06 기민혁 - 본문 하단, 첨부파일/한줄댓글 상단에 싫어요 버튼 추가 --%>
-					<c:if test="${boardInfo.disLikeFlag != null && boardInfo.disLikeFlag == 'Y'}">
-						<div id="disLikeDiv" style="text-align:center; padding:5px 0px 7px 0px;">	
-						  	<span class="disLikeButton" onclick="clickDisLikeButton()" title="<spring:message code='ezBoard.kmh07'/>" style="height:20px">
-							  	<c:choose>
-							  		<c:when test="${isDisLikeChecked == 'Y'}">
-							  			<img id="disLikeButtonImg" src="/images/disLike_on.png"/>
-							  		</c:when>
-							  		<c:otherwise>
-							  			<img id="disLikeButtonImg" src="/images/disLike_off.png"/>
-							  		</c:otherwise>
-							  	</c:choose>
-							  	<span id="disLikeCountSpan" style="vertical-align:top;"><c:if test="${boardItem.disLikeCount > 0}"> (<c:out value="${boardItem.disLikeCount}"/>)</c:if></span>
-						  	</span>
-						</div>
-					</c:if>
-                </div>
-                
+						<%-- 2023-04-06 기민혁 - 본문 하단, 첨부파일/한줄댓글 상단에 싫어요 버튼 추가 --%>
+						<c:if test="${boardInfo.disLikeFlag != null && boardInfo.disLikeFlag == 'Y'}">
+							<div id="disLikeDiv">	
+								<span class="disLikeButton" onclick="clickDisLikeButton()" title="<spring:message code='ezBoard.kmh07'/>" style="height:20px">
+									<c:choose>
+										<c:when test="${isDisLikeChecked == 'Y'}">
+											<img id="disLikeButtonImg" src="/images/disLike_on.png"/>
+										</c:when>
+										<c:otherwise>
+											<img id="disLikeButtonImg" src="/images/disLike_off.png"/>
+										</c:otherwise>
+									</c:choose>
+									<span id="disLikeCountSpan"><c:if test="${boardItem.disLikeCount > 0}"> <c:out value="${boardItem.disLikeCount}"/></c:if></span>
+								</span>
+							</div>
+						</c:if>
+					</div>
+				</c:if>
+			
 				<%-- 2024-09-24 이혜림 - 본문 하단, 첨부파일/한줄댓글 상단에 별점 평가하기 추가 --%>
 				<c:if test="${not empty boardInfo.starRatingFlag && boardInfo.starRatingFlag == 'Y'}">
-                    <div id="ratingContainer" class="rating_div" onclick="clickRatingButton()">
-                        <div>
-                            <span id="avgScore"><b>${itemStarRating.averageScore}</b><spring:message code='ezBoard.lhr004'/></span>
-                            <span>(<span id="totalRaters">${itemStarRating.totalRaters}</span><spring:message code='ezBoard.lhr003'/>)</span>
-                        </div>
-                        <span class="ratingButton" title="<spring:message code='ezBoard.lhr001'/>">
-                        <c:forEach var="i" begin="1" end="5">
-                            <c:set var="srcIconFlag" value="${itemStarRating.rating >= i}" />
-                            <label for="rate${i}">
-                            	<div class="custom_radio">
-	                                <input type="radio" name="reviewStar" value="${i}" id="rate${i}" <c:if test="${itemStarRating.rating == i}"> checked </c:if> />
-                            	</div>
-                                <img draggable="false" src="/images/ImgIcon/${srcIconFlag ? 'icon-flag.gif' : 'view-flag.gif'}"/>
-                            </label>
-                        </c:forEach>
-                        </span>
-                        <a class="imgbtn"><span onclick="clickSaveRatingButton()"><spring:message code='ezBoard.lhr001'/></span></a>
-                    </div>
-                </c:if>
-                				
-				<%-- 2019-11-05 홍승비 - 하단댓글 영역 추가 --%>
-		        <c:if test="${boardPropertyVO.oneLineReply == '2' && guestReadFG ne 'Y'}">
-		        	<div style='height:auto;'>
-						<table class="mainlist emoticonLayerStaticPosition" style="width:100%" >
-							<c:choose>
-								<c:when test="${guBun == 2}">
-								    <tr>
-										<th colspan="2" style="text-align:center; width: 100%; border-left:1px solid #e2e2e2; border-right:1px solid #e2e2e2;
-												 border-top:1px solid #e2e2e2; border-bottom:1px solid #f8f8fa; padding-bottom:3px">
-										    <%-- 2023-11-07 전인하 - 게시판 > 이모티콘 아이콘 삽입 --%>
-                                            <div class="emoticonRelative">								    
-                                               <img id="_addEmoticon" class="_addEmoticon" src="/images/poll/add_emo_vote.png" onclick="addSticker(this)">
-                                               <textarea id="onelinereply" rows="3" style = "resize:none; width: calc(100% - 45px);" maxlength="500"></textarea>
-                                            </div>
-										</th>
-								</c:when>
-								<c:otherwise>
-								    <tr>
-										<th style="text-align:center; width: 81%; border-left:1px solid #e2e2e2; border-top:1px solid #e2e2e2; border-bottom:1px solid #e2e2e2;">
-											<%-- 2023-11-07 전인하 - 게시판 > 이모티콘 아이콘 삽입 --%>
-                                            <div class="emoticonRelative">								    
-                                                <img id="_addEmoticon" class="_addEmoticon" src="/images/poll/add_emo_vote.png" onclick="addSticker(this)">
-                                                <textarea id="onelinereply" rows="3" style = "resize:none; width:90%;" maxlength="500"></textarea>
-                                            </div>
-										</th>
-								</c:otherwise>	
-							</c:choose>
-							<c:choose>
-								<c:when test="${guBun == 2}">
-									</tr>
-								</c:when>
-								<c:otherwise>
-										<th style="text-align:center;border-top:1px solid #e2e2e2; border-bottom:1px solid #e2e2e2; border-right:1px solid #e2e2e2;width:11%;">
-										    <c:if test='${boardInfo.attachmentFlag eq "Y"}'>
-											    <a class='imgbtn comment' style="vertical-align: middle"><span onclick="btnfileup('commentFile')"><spring:message code='ezBoard.commentAttach.JIH01' /></span></a><br/>
-											</c:if>
-											<a class='imgbtn comment' style="vertical-align: middle"><span onclick="Save_OneLineReply(this)"><spring:message code='ezBoard.t98' /></span></a>
-										</th>
-									</tr>
-								</c:otherwise>
-							</c:choose>
-							</tr>
-							<c:if test="${guBun == 2}">
-								<tr>
-									<th colspan="2" style="width: 90%; border-left:1px solid #e2e2e2; border-top:1px solid #f8f8fa; border-right:1px solid #e2e2e2; text-align:right;
-											border-bottom:1px solid #e2e2e2; padding-top:0px; padding-bottom:4px; vertical-align: middle ">
-										<span style = "font-weight:normal; display:inline-block; margin-top:2px"><spring:message code='ezBoard.t438' />&nbsp;</span>
-										<span><input type="password" id="txtPassWord" maxlength="20" size="20" />&nbsp;</span>
-										<c:if test='${boardInfo.attachmentFlag eq "Y"}'>
-										    <a class='imgbtn comment' style="vertical-align: middle"><span onclick="btnfileup('commentFile')"><spring:message code='ezBoard.commentAttach.JIH01' /></span></a>
-										</c:if>
-										<a class='imgbtn comment' style="vertical-align: middle"><span onclick="Save_OneLineReply(this)"><spring:message code='ezBoard.t98' /></span></a>
-									</th>
-								</tr>
-							</c:if>
-						</table>
-						<c:if test='${boardInfo.attachmentFlag eq "Y"}'>
-                            <%-- 첨부파일 버튼 --%>
-                            <input id="commentFile" type="file" multiple="multiple" onchange="filechange(event)" style="display:none"/>
-                            <input id="commentListFile" type="file" multiple="multiple" onchange="filechange(event)" style="display:none"/>
-                            <%-- 댓글 첨부 리스트 --%>
-                            <div id="commentAttach"></div>
-						</c:if>
-						<div class="commentSort">
-						    <span id="earliest" class="checked" onclick="boardCommentSort()"><spring:message code='ezBoard.commentSort.JIH001' /></span>
-						    <span id="latest" onclick="boardCommentSort()"><spring:message code='ezBoard.commentSort.JIH002' /></span>
-                        </div>
-						<table id="commentList" style="width:100%;margin-top:2px; overflow:auto;border:1px solid rgb(225,225,225)"></table>
+					<div id="ratingContainer" class="rating_div" onclick="clickRatingButton()">
+						<div>
+							<span id="avgScore"><b>${itemStarRating.averageScore}</b><spring:message code='ezBoard.lhr004'/></span>
+							<span>(<span id="totalRaters">${itemStarRating.totalRaters}</span><spring:message code='ezBoard.lhr003'/>)</span>
+						</div>
+						<span class="ratingButton" title="<spring:message code='ezBoard.lhr001'/>">
+							<c:forEach var="i" begin="1" end="5">
+								<c:set var="srcIconFlag" value="${itemStarRating.rating >= i}" />
+								<label for="rate${i}">
+									<input type="radio" name="reviewStar" value="${i}" id="rate${i}" <c:if test="${itemStarRating.rating == i}"> checked </c:if> />
+									<img draggable="false" src="/images/ImgIcon/${srcIconFlag ? 'icon-flag.gif' : 'view-flag.gif'}"/>
+								</label>
+							</c:forEach>
+						</span>
+						<a class="imgbtn"><span onclick="clickSaveRatingButton()"><spring:message code='ezBoard.lhr001'/></span></a>
 					</div>
-		        </c:if>
-		        <%-- 본문하단 댓글영역 끝 --%>
-		    </td>
-		  </tr>
-			
-		<%-- 2020-02-13 홍승비 - 사용하지 않는 한줄댓글 코드 제거(본문하단 댓글으로 대체), 첨부파일 영역 확장 --%>
-		  <tr>
-		    <td class="pad1" id="attachTD" style="vertical-align: top;">
-		        <table class="file">
-		        <tr>
-		          <th><spring:message code='ezBoard.t10025' /></th>
-		            <td>
-		            	<div style="text-align:left; OVERFLOW: auto; HEIGHT: 76px; background-color:white" id="lstAttachLink" ></div>
-		            </td>
-		        <td class="pos2">
-		        <a class="imgbtn imgbck" style="width:60px; margin-bottom: 3px !important;"><span onClick="attach_SelectAll()"><spring:message code='ezBoard.t325' /></span></a><br/>
-		        <a class="imgbtn imgbck" style="width:60px"><span onClick="attach_Download()"><spring:message code='ezBoard.t98' /></span></a> 
-		        </td>
-		        <td id="ItemLevel" style="display:none"></td>
-		        </tr>
-		      </table>
-		    </td>
-		  </tr>
+				</c:if>
+			</div>		
+			<%-- 2019-11-05 홍승비 - 하단댓글 영역 추가 --%>
+			<c:if test="${boardPropertyVO.oneLineReply == '2' && guestReadFG ne 'Y'}">
+				<div class="comment_cont reNewalCmt">
+					<c:if test="${guBun == 2}">
+						<div class="pw_area">
+							<input type="password" id="txtPassWord" maxlength="20" size="20" placeholder="<spring:message code='ezBoard.t243'/>">
+						</div>
+					</c:if>
+					<div class="comment_textarea">
+						<textarea id="onelinereply" rows="3" maxlength="500" placeholder="<spring:message code='ezBoard.newDesign01'/>"></textarea>
+					</div>
+					<c:if test='${boardInfo.attachmentFlag eq "Y"}'>
+						<div id="commentAttach"></div>
+					</c:if>
+					<div class="comment_function">	
+						<div>
+							<span id="_addEmoticon" class="btn_emoticon" onclick="addSticker(this)"><spring:message code='ezBoard.newDesign02' /></span>
+							<c:if test='${boardInfo.attachmentFlag eq "Y"}'>
+								<span class="btn_attachFile" onclick="btnfileup('commentFile')"><spring:message code='ezBoard.commentAttach.JIH01' /></span>
+							</c:if>
+						</div>
+						<div>
+							<button class='btn_registration' onclick="Save_OneLineReply(this)"><spring:message code='ezBoard.t98' /></button>
+						</div>
+					</div>
+				</div>
+				<c:if test='${boardInfo.attachmentFlag eq "Y"}'>
+					<%-- 첨부파일 버튼 --%>
+					<input id="commentFile" type="file" multiple="multiple" onchange="filechange(event)" style="display:none"/>
+					<input id="commentListFile" type="file" multiple="multiple" onchange="filechange(event)" style="display:none"/>
+					<%-- 댓글 첨부 리스트 --%>
+				</c:if>
+				<div class="comment_listBox">
+					<div class="portlet_tabpart02_top">
+						<p>
+							<span id="earliest" class="tabon" onclick="boardCommentSort()"><spring:message code='ezBoard.commentSort.JIH001' /></span>
+						</p>
+						<p>
+							<span id="latest" onclick="boardCommentSort()"><spring:message code='ezBoard.commentSort.JIH002' /></span>
+						</p>
+					</div>
+					<div id="commentList"></div>
+				</div>
+			</c:if>
+			<%-- 본문하단 댓글영역 끝 --%>
+		</div>
 		  
 		  <c:if test="${adjacentItemsEnableFlag == '1' && showAdjacent == '1'}">
 			  <tr>
@@ -2799,7 +2695,7 @@
 			    </td>
 			  </tr>
 		  </c:if>
-		</table>
+<%--		</table>--%>
 		<input id="publicModulus" value="${publicModulus}" type="hidden"/>
 	    <input id="publicExponent" value="${publicExponent}" type="hidden"/>
 	    <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>
@@ -2833,13 +2729,9 @@
             
             <%-- 2023-11-01 전인하 - 선택된 이모티콘 조회 팝업 --%>
             <div id="uploadedFile" class="uploadedFile">
-                <img id="cancelImg" class="cancelImg" src="/images/close.png" onclick="closeEmoticonPreview();">
+                <img id="cancelImg" class="cancelImg" src="/images/ImgIcon/btn_emotion_delete.svg" onclick="closeEmoticonPreview();">
                 <img id="previewImage" class="previewImage">
             </div>            
-        </div>
-        <div class="zoom_btn">
-            <span class="zoom_in" onclick="Bigger()">확대</span>
-            <span class="zoom_out" onclick="Smaller()">축소</span>
         </div>
         <c:if test="${useAI}">
             <c:import url="/WEB-INF/jsp/ezAI/aiSlide.jsp" />

@@ -4494,7 +4494,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			}
 		}
 		
-		if (!useVersion.isEmpty() && useVersion.equals("Y")) {
+		if (!useVersion.isEmpty() && useVersion.equals("Y") && !boardListVO.getIsReserved().equals("true")) {
 			boardListVO.setVersionManage(useVersion);
 			boardListVO.setParentItemID(doc.getElementsByTagName("parentItemID").item(0).getTextContent());
 
@@ -4507,7 +4507,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
             historyModify = true;
         }
 
-		if (pMode.equals("modify") && (!useVersion.isEmpty() && !useVersion.equals("Y"))) {
+		if (pMode.equals("modify") && (!useVersion.isEmpty() && !useVersion.equals("Y")) || boardListVO.getIsReserved().equals("true")) {
 			brdUpdateItem(boardListVO, "BOARD");
 		} else if (pMode.equals("temp")) {
 			brdNewItemTemp(boardListVO);

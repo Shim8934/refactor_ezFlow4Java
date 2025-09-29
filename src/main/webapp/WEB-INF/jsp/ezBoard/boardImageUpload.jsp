@@ -113,7 +113,7 @@
 		        fileinfo[1] = document.getElementById("imagewidth").value;
 		        fileinfo[2] = document.getElementById("imageheight").value;
 		
-		        window.opener.BackImageUp_After(fileinfo);
+		        window.opener.backgroundImgUpload_After(fileinfo);
 		        window.close();
 		    }
 		

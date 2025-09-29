@@ -8,33 +8,12 @@
 	    <link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
 	    <link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css">
 	    <link href="${util.addVer('/css/previewmail.css')}" rel="stylesheet" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/Tab.css')}" type="text/css">
 	    <style type="text/css">
 	    	.list {
 	    		font-size:12px;
 				text-decoration: none;
 	    	}
-	    	.likeButton {
-				padding:5px;
-				cursor:pointer;
-				display:inline-block;
-				border:1px solid #c7c7c7;
-			    border-radius:2px;
-			}
-			.likeButton:hover {
-				background-color:#f1f8ff;
-				border:1px solid #6793d8;
-			}
-			.disLikeButton {
-				padding:5px;
-				cursor:pointer;
-				display:inline-block;
-				border:1px solid #c7c7c7;
-			    border-radius:2px;
-			}
-			.disLikeButton:hover {
-				background-color:#ffd9ec;
-				border:1px solid #f44336;
-			}
 			#txtContent h1, #txtContent h2 , #txtContent h3 , #txtContent h4 , #txtContent h5 , #txtContent h6 {
 				margin-left:0px;
 				margin-right:0px;
@@ -51,8 +30,6 @@
             .zoom_btn_p{margin: 1% 1% 0 1%; touch-action: none; display:flex;}
             .zoom_btn_p span{
             display:inline-block; width:32px; height:32px; border:1px solid #d2d2d2; background-repeat:no-repeat; background-position:center; background-color:#f8f8fa; cursor:pointer; background-size:55%; text-indent:-9999px; overflow:hidden;}
-            .zoom_btn_p span.zoom_in_p{border-radius:8px 0 0 8px; background-image:url(../images/zoom_in.svg?v=1);}
-            .zoom_btn_p span.zoom_out_p{border-radius:0 8px 8px 0; background-image:url(../images/zoom_out.svg?v=1);}
             
             .zoom_btn_p span:hover{border:1px solid #388CE5;}
             .zoom_btn_p span.zoom_in_p:hover{background-image:url(../images/zoom_in_hover.svg?v=1);}
@@ -147,7 +124,7 @@
 	            document.getElementById("txtContent").style.textAlign = "center";
 	            
 	            if (useEditor != "HWP") {
-	            	window.parent.previewItemSet();
+	            	window.parent.previewItemSet(gubun);
 	            }
 	            
 	            makeEmoticonPanel();
@@ -276,9 +253,9 @@
                     zoomOutSpan.className = "zoom_out_p";
                     zoomOutSpan.onclick = function () { Smaller(); };
                     zoomOutSpan.textContent = "축소";
-                    
-                    zoomBtnContainer.appendChild(zoomInSpan);
-                    zoomBtnContainer.appendChild(zoomOutSpan);
+
+					zoomBtnContainer.appendChild(zoomOutSpan);
+					zoomBtnContainer.appendChild(zoomInSpan);
                     
                     document.getElementById("txtContent").appendChild(zoomBtnContainer);
 	
@@ -286,7 +263,9 @@
 	                _div.id = "divContent";
 	                _div.innerHTML = responseText;
 	                document.getElementById("txtContent").appendChild(_div);
-	                
+	                _div.style.marginLeft = "5px";
+	                _div.style.marginTop = "5px";
+					
 	                // 사용자가 설정한 본문크기값으로 세팅 (원글)
 	                if (navigator.userAgent.indexOf('Firefox') != -1) {
                         document.getElementById("divContent").style.MozTransform = "scale(" + MozNowZoom + ")";
@@ -311,7 +290,7 @@
 	            /* 2019-05-02 홍승비 - 게시물 미리보기 첨부파일영역 폰트 수정 */
 	            // strAttach += "<div class='attachedfile' id='ifrmPreViewRayer' style='margin:-13px; margin-bottom:10px; margin-top:-8px;'>";
 	             /* 2019-11-07 게시물 미리보기단에 default_...css 적용 후 마진 수정 */
-	            strAttach += "<div class='attachedfile' id='ifrmPreViewRayer' style='margin:-13px; margin-bottom:10px; margin-top:0px;'>";
+	            strAttach += "<div class='preview_attachBox' id='ifrmPreViewRayer'>";
 	
 	            var totalSize = 0;
 	            for (var j = 0; j < xmldomNodes.length; j++) {
@@ -319,45 +298,73 @@
 	            }
 	
 	            var strSize = "";
-	            strAttach += "<ul class='attachedfile_title'><li class='titleText'><span class='titleT'>" + strLang1+ "<span class='cblue'> " + xmldomNodes.length + "</span> (" + File_Size(totalSize) + ")</span><span class='attach_btn_up' id='BtnAttachDetail' onclick='AttachDetail_view(this);'></span>";
-	            strAttach += "<li class='titleSave' onclick='AttachAllDownload();'><span>" + strLang3 + "</span></li></ul>"; 
-	            strAttach += "<ul class='attachedfile_list' id='PreviewAttachList'>";
+	            strAttach += "<div class='preview_attach_header'>";
+                strAttach += "<span id='preview_attach_toggle' class='preview_toggleBtn active' onclick='previewAttachToggle()'>" + strLang1;
+				strAttach += "<span class='num'>" + xmldomNodes.length + "</span>" + strLang42  + "(" + File_Size(totalSize) + ")";
+				strAttach += "</span>";
+                strAttach += "<button type='button' class='textBtn i_attach_download' onclick='AttachAllDownload();'>" + strLang3 + "</button>";
+	            strAttach += "</div>";
+	            strAttach += "<div class='preview_attach_list active'>";
+				strAttach += "<ul id='PreviewAttachList'>";
 	
 				/* 2018-07-16 홍승비 - 게시물 미리보기 시 첨부파일 특수문자 처리 */
 	            for (i = 0; i < xmldomNodes.length; i++) {
-	            	filepath = getNodeText(SelectSingleNode(xmldomNodes[i], "FilePath"));
-	            	filepathHTMLEscape = MakeXMLString(getNodeText(SelectSingleNode(xmldomNodes[i], "FilePath")));
-	            	/* 2020-01-31 홍승비 - filePath가 아닌 fileName으로 파일명을 가져오도록 수정 */
-	            	filename = MakeXMLString(getNodeText(SelectSingleNode(xmldomNodes[i], "FileName")));
-	            	filenameAttr = MakeXMLString(filepath.substr(filepath.lastIndexOf("/"), filepath.length));
-	                filesize = getNodeText(SelectSingleNode(xmldomNodes[i], "FileSize"));
-	
-	                var strTarget = "target=''";
-	                var strFileExt = filepath.substr(filepath.lastIndexOf('.')).toLowerCase();
-	                if (strFileExt == ".xls" || strFileExt == ".doc" || strFileExt == ".ppt" ||
-	                   strFileExt == ".eml" || strFileExt == ".pdf" || strFileExt == ".hwp" ||
-	                   strFileExt == ".ppt" || strFileExt == ".docx" || strFileExt == ".pptx" ||
-	                   strFileExt == ".xlsx" || strFileExt == ".rtf") {
-	                    strTarget = "target=''";
-	                }
-	                
-	                strAttach += "<li style='display:inline-block;'>";
-	                strAttach += "<span id='MailAttachDownloadItems' name='MailAttachDownloadItems' onclick=\"DownloadFile('/ezBoard/getBoardAttachInfo.do?type=BOARD&itemID=" + encodeURIComponent(getNodeText(SelectSingleNode(xmldomNodes[i], "ItemID"))) + "&attID=" + getNodeText(SelectSingleNode(xmldomNodes[i], "GUID")) + "')\"><img style='cursor:pointer;vertical-align:middle' src='/images/icon_adddownload.gif' width='16' height='16' /></span>";
-	                strAttach += "&nbsp;";
-	                strAttach += "<span onmouseover=\"this.style.color='#164aad'\" onmouseout=\"this.style.color='#666'\" style='cursor: pointer; color: rgb(102, 102, 102);'>";
-         
-	                /* 2018-10-11 홍승비 - 모두저장용 filePath 속성 추가 */
-	                strAttach += "<a name='filename' href='/ezBoard/getBoardAttachInfo.do?type=BOARD&itemID=" + encodeURIComponent(getNodeText(SelectSingleNode(xmldomNodes[i], "ItemID"))) + "&attID=" + getNodeText(SelectSingleNode(xmldomNodes[i], "GUID"))
-	                + "' filePath='" + filepathHTMLEscape + "' fileNameAttr='" + filenameAttr + "' realFileName='" + filename + "'>" + filename + " (" + filesize + ")</a>";	                
-	              	strAttach += "</span>";
-	             	// 2023-05-23 조수빈 - 게시판 첨부파일 미리보기 아이콘 추가
-		            if (typeof useBoardFilePrvw !== 'undefined' && useBoardFilePrvw == "1") {
-			        	strAttach += "<span class='icon_rbtn2' style='margin-left : 10px;' title='<spring:message code = 'ezEmail.t487'/>' onclick=\"attachFile_Preview('" + javaURLEncode(filepath) + "', '" + javaURLEncode(filename) + "');\"><img src='/images/icon_preview.png' width='16' height='16' style='vertical-align:middle; cursor:pointer;'></span>";
-		            }
-	                strAttach += "</li><br>";
-	            }
-	            strAttach += "</ul></div>";
-	            return strAttach;
+					filepath = getNodeText(SelectSingleNode(xmldomNodes[i], "FilePath"));
+					filepathHTMLEscape = MakeXMLString(getNodeText(SelectSingleNode(xmldomNodes[i], "FilePath")));
+					/* 2020-01-31 홍승비 - filePath가 아닌 fileName으로 파일명을 가져오도록 수정 */
+					filename = MakeXMLString(getNodeText(SelectSingleNode(xmldomNodes[i], "FileName")));
+					filenameAttr = MakeXMLString(filepath.substr(filepath.lastIndexOf("/"), filepath.length));
+					filesize = getNodeText(SelectSingleNode(xmldomNodes[i], "FileSize"));
+
+					var strTarget = "target=''";
+					var strFileExt = filepath.substr(filepath.lastIndexOf('.')).toLowerCase();
+					if (strFileExt == ".xls" || strFileExt == ".doc" || strFileExt == ".ppt" ||
+							strFileExt == ".eml" || strFileExt == ".pdf" || strFileExt == ".hwp" ||
+							strFileExt == ".ppt" || strFileExt == ".docx" || strFileExt == ".pptx" ||
+							strFileExt == ".xlsx" || strFileExt == ".rtf") {
+						strTarget = "target=''";
+					}
+
+					var fileTypeImg;
+					if (strFileExt.includes(".jpg") || strFileExt.includes(".jpeg") || strFileExt.includes(".bmp") || strFileExt.includes(".gif") || strFileExt.includes(".png") || strFileExt.includes(".tif") || strFileExt.includes(".tiff") || strFileExt.includes(".jpeg")) {
+						fileTypeImg = "/images/image.svg";
+					} else if (strFileExt.includes(".doc")) {
+						fileTypeImg = "/images/doc.svg";
+					} else if (strFileExt.includes(".xls") || strFileExt.includes(".xlsx")) {
+						fileTypeImg = "/images/xls.svg";
+					} else if (strFileExt.includes(".ppt") || strFileExt.includes(".pptx") || strFileExt.includes(".pps") || strFileExt.includes(".ppsx")) {
+						fileTypeImg = "/images/ppt.svg";
+					} else if (strFileExt.includes(".txt")) {
+						fileTypeImg = "/images/txt.svg";
+					} else if (strFileExt.includes(".zip")) {
+						fileTypeImg = "/images/zip.svg";
+					} else if (strFileExt.includes(".pdf")) {
+						fileTypeImg = "/images/pdf.svg";
+					} else if (strFileExt.includes(".ecm")) {
+						fileTypeImg = "/images/ecm.svg";
+					} else if (strFileExt.includes(".hwp") || strFileExt.includes(".hwpx")) {
+						fileTypeImg = "/images/hwp.svg";
+					} else {
+						fileTypeImg = "/images/etc.svg";
+					}
+
+					strAttach += "<li>";
+					strAttach += "<span id='MailAttachDownloadItems' name='MailAttachDownloadItems'><img style='cursor:pointer;vertical-align:middle' src='" + fileTypeImg + "'/>";
+					strAttach += filename + " (" + filesize + ")</span>";
+
+					/* 2018-10-11 홍승비 - 모두저장용 filePath 속성 추가 */
+					strAttach += "<a style='display: none;' name='filename' href='/ezBoard/getBoardAttachInfo.do?type=BOARD&itemID=" + encodeURIComponent(getNodeText(SelectSingleNode(xmldomNodes[i], "ItemID"))) + "&attID=" + getNodeText(SelectSingleNode(xmldomNodes[i], "GUID"))
+							+ "' filePath='" + filepathHTMLEscape + "' fileNameAttr='" + filenameAttr + "' realFileName='" + filename + "'>" + filename + " (" + filesize + ")</a>";
+					strAttach += "</span>";
+					// 2023-05-23 조수빈 - 게시판 첨부파일 미리보기 아이콘 추가
+					if (typeof useBoardFilePrvw !== 'undefined' && useBoardFilePrvw == "1") {
+						strAttach += "<button class='textBtn i_attach_preview' title='<spring:message code = 'ezEmail.t487'/>' onclick=\"attachFile_Preview('" + javaURLEncode(filepath) + "', '" + javaURLEncode(filename) + "');\"></button>";
+					}
+					strAttach += "<button type='button' onclick=\"DownloadFile('/ezBoard/getBoardAttachInfo.do?type=BOARD&itemID=" + encodeURIComponent(getNodeText(SelectSingleNode(xmldomNodes[i], "ItemID"))) + "&attID=" + getNodeText(SelectSingleNode(xmldomNodes[i], "GUID")) + "')\" class='textBtn i_attach_download'>" + strLangNewBoardDesign10 + "</button>";
+					strAttach += "</li>";
+				}
+				strAttach += "</ul></div>";
+				return strAttach;
 	        }
 
 	     	// 2023-05-25 조수빈 - 게시판 첨부파일 미리보기
@@ -525,7 +532,7 @@
 						},
 						success: function(result){
 							if (parseInt(result) > 0) {
-								document.getElementById("likeCountSpan").innerText = "(" + result + ")";
+								document.getElementById("likeCountSpan").innerText = result;
 							} else {
 								document.getElementById("likeCountSpan").innerText = "";
 							}
@@ -548,7 +555,7 @@
 						},
 						success: function(result){
 							if (parseInt(result) > 0) {
-								document.getElementById("likeCountSpan").innerText = "(" + result + ")";
+								document.getElementById("likeCountSpan").innerText =result;
 							} else {
 								document.getElementById("likeCountSpan").innerText = "";
 							}
@@ -625,7 +632,7 @@
 					success: function(result){
 						disLikeCountAfter = result;
 						if (parseInt(result) > 0) {
-							document.getElementById("disLikeCountSpan").innerText = "(" + result + ")";
+							document.getElementById("disLikeCountSpan").innerText = result;
 						} else {
 							document.getElementById("disLikeCountSpan").innerText = "";
 						}
@@ -645,7 +652,7 @@
 		    	if(gubun === "disLike"){
 		    		isDisLikeChecked = checked ;
 			    	if (parseInt(result) > 0) {
-						document.getElementById("disLikeCountSpan").innerText = "(" + result + ")";
+						document.getElementById("disLikeCountSpan").innerText = result;
 					} else {
 						document.getElementById("disLikeCountSpan").innerText = "";
 					}
@@ -657,7 +664,7 @@
 		    	}else if(gubun === "like"){
 		    		isLikeChecked = checked;
 		    		if (parseInt(result) > 0) {
-						document.getElementById("likeCountSpan").innerText = "(" + result + ")";
+						document.getElementById("likeCountSpan").innerText = result;
 					} else {
 						document.getElementById("likeCountSpan").innerText = "";
 					}
@@ -697,137 +704,116 @@
 			}
 	    </script>
 	</head>
-	<body>
-		<div id="txtContent" name="txtContent" style="height:100%;margin-left:5px;margin-right:5px;">
+	<body class="newBoardPopup">
+		<div id="txtContent" name="txtContent" style="height:100%;margin-left:0px;margin-right:0px;">
 			<span style="margin-top:50px;height:10px;display:inline-block;"></span>
 		</div>
 		
 		<%-- 2019-04-05 홍승비 - 본문 하단, 첨부파일/한줄댓글 상단에 좋아요 버튼 추가 --%>
 		<%-- 2023-04-06 기민혁 - 싫어요 버튼 추가  --%>
-		<div style="display: flex; justify-content: center;">
-			<c:if test="${boardInfo.likeFlag != null && boardInfo.likeFlag == 'Y'}">
-				<div id="likeDiv" style="text-align:center; padding:5px 0px 7px 0px; margin-right: 5px">
-			  		<span class="likeButton" onclick="clickLikeButton()" title="<spring:message code='ezBoard.hsb10'/>" style="height:20px">
-				  		<c:choose>
-				  			<c:when test="${isLikeChecked == 'Y'}">
-				  				<img id="likeButtonImg" src="/images/like_on.png" style="vertical-align:text-top;"/>
-				  			</c:when>
-				  			<c:otherwise>
-				  				<img id="likeButtonImg" src="/images/like_off.png" style="vertical-align:text-top;"/>
-				  			</c:otherwise>
-				  		</c:choose>
-				  	<span id="likeCountSpan" style="vertical-align:top;"><c:if test="${likeCount > 0}"> (<c:out value="${likeCount}"/>)</c:if></span>
-			  		</span>
-				</div>			
+		<div class="evaluate_cont" <c:if test="${boardInfo.likeFlag == 'N' && boardInfo.disLikeFlag == 'N'}">  style="display: block;" </c:if>>
+			<%-- 2019-04-05 홍승비 - 본문 하단, 첨부파일/한줄댓글 상단에 좋아요 버튼 추가 --%>
+			<c:if test="${(boardInfo.likeFlag != null && boardInfo.likeFlag == 'Y') || (boardInfo.disLikeFlag != null && boardInfo.disLikeFlag == 'Y')}">
+				<div class="likeDivBox" <c:if test="${not empty boardInfo.starRatingFlag && boardInfo.starRatingFlag == 'Y'}">style="padding-left: 255px;"</c:if>>
+					<c:if test="${boardInfo.likeFlag != null && boardInfo.likeFlag == 'Y'}">
+						<div id="likeDiv">	
+							<span class="likeButton" onclick="clickLikeButton()" title="<spring:message code='ezBoard.hsb10'/>">
+								<c:choose>
+									<c:when test="${isLikeChecked == 'Y'}">
+										<img id="likeButtonImg" src="/images/like_on.png"/>
+									</c:when>
+									<c:otherwise>
+										<img id="likeButtonImg" src="/images/like_off.png"/>
+									</c:otherwise>
+								</c:choose>
+								<span id="likeCountSpan"><c:if test="${likeCount > 0}"> <c:out value="${likeCount}"/></c:if></span>
+							</span>
+						</div>
+					</c:if>
+					
+					<%-- 2023-04-06 기민혁 - 본문 하단, 첨부파일/한줄댓글 상단에 싫어요 버튼 추가 --%>
+					<c:if test="${boardInfo.disLikeFlag != null && boardInfo.disLikeFlag == 'Y'}">
+						<div id="disLikeDiv">	
+							<span class="disLikeButton" onclick="clickDisLikeButton()" title="<spring:message code='ezBoard.kmh07'/>" style="height:20px">
+								<c:choose>
+									<c:when test="${isDisLikeChecked == 'Y'}">
+										<img id="disLikeButtonImg" src="/images/disLike_on.png"/>
+									</c:when>
+									<c:otherwise>
+										<img id="disLikeButtonImg" src="/images/disLike_off.png"/>
+									</c:otherwise>
+								</c:choose>
+								<span id="disLikeCountSpan"><c:if test="${disLikeCount > 0}"> <c:out value="${disLikeCount}"/></c:if></span>
+							</span>
+						</div>
+					</c:if>
+				</div>
 			</c:if>
 		
-		    <c:if test="${boardInfo.disLikeFlag != null && boardInfo.disLikeFlag == 'Y'}">
-				<div id="disLikeDiv" style="text-align:center; padding:5px 0px 7px 0px;">	
-					<span class="disLikeButton" onclick="clickDisLikeButton()" title="<spring:message code='ezBoard.kmh07'/>" style="height:20px">
-						<c:choose>
-							<c:when test="${isDisLikeChecked == 'Y'}">
-							  	<img id="disLikeButtonImg" src="/images/disLike_on.png" style="vertical-align:text-top;"/>
-							</c:when>
-							<c:otherwise>
-							  	<img id="disLikeButtonImg" src="/images/disLike_off.png" style="vertical-align:text-top;"/>
-							</c:otherwise>
-						</c:choose>
-					<span id="disLikeCountSpan" style="vertical-align:top;"><c:if test="${disLikeCount > 0}"> (<c:out value="${disLikeCount}"/>)</c:if></span>
+			<%-- 2024-09-24 이혜림 - 본문 하단, 첨부파일/한줄댓글 상단에 별점 평가하기 추가 --%>
+			<c:if test="${not empty boardInfo.starRatingFlag && boardInfo.starRatingFlag == 'Y'}">
+				<div id="ratingContainer" class="rating_div" onclick="clickRatingButton()">
+					<div>
+						<span id="avgScore"><b>${itemStarRating.averageScore}</b><spring:message code='ezBoard.lhr004'/></span>
+						<span>(<span id="totalRaters">${itemStarRating.totalRaters}</span><spring:message code='ezBoard.lhr003'/>)</span>
+					</div>
+					<span class="ratingButton" title="<spring:message code='ezBoard.lhr001'/>">
+						<c:forEach var="i" begin="1" end="5">
+							<c:set var="srcIconFlag" value="${itemStarRating.rating >= i}" />
+							<label for="rate${i}">
+								<input type="radio" name="reviewStar" value="${i}" id="rate${i}" <c:if test="${itemStarRating.rating == i}"> checked </c:if> />
+								<img draggable="false" src="/images/ImgIcon/${srcIconFlag ? 'icon-flag.gif' : 'view-flag.gif'}"/>
+							</label>
+						</c:forEach>
 					</span>
+					<a class="imgbtn"><span onclick="clickSaveRatingButton()"><spring:message code='ezBoard.lhr001'/></span></a>
 				</div>
-            </c:if>
-        </div>
-
-            <%-- 2024-09-24 이혜림 - 본문 하단, 첨부파일/한줄댓글 상단에 별점 평가하기 추가 --%>
-            <c:if test="${not empty boardInfo.starRatingFlag && boardInfo.starRatingFlag == 'Y'}">
-                <div id="ratingContainer" class="rating_div" onclick="clickRatingButton()">
-                    <div>
-					    <span id="avgScore"><b>${itemStarRating.averageScore}</b><spring:message code='ezBoard.lhr004'/></span>
-                        <span>(<span id="totalRaters">${itemStarRating.totalRaters}</span><spring:message code='ezBoard.lhr003'/>)</span>
-                    </div>
-                    <span class="ratingButton" title="<spring:message code='ezBoard.lhr001'/>">
-                    <c:forEach var="i" begin="1" end="5"> <c:set var="srcIconFlag" value="${itemStarRating.rating >= i}" />
-                        <label for="rate${i}">
-                            <input type="radio" name="reviewStar" value="${i}" id="rate${i}" <c:if test="${itemStarRating.rating == i}"> checked </c:if> />
-                            <img draggable="false" src="/images/ImgIcon/${srcIconFlag ? 'icon-flag.gif' : 'view-flag.gif'}"/>
-                        </label>
-                    </c:forEach>
-                    </span>
-                    <a class="imgbtn"><span onclick="clickSaveRatingButton()"><spring:message code='ezBoard.lhr001'/></span></a>
-                </div>
-            </c:if>
-			
-		<%-- 2019-11-06 홍승비 - 하단댓글 영역 추가 --%>
-        <c:if test="${OneLineReplyFlag == '2'}">
-        	<div style='height:auto; padding-bottom: 15px;'>
-				<table class="mainlist emoticonLayerStaticPosition" style="width:100%">
-					<c:choose>
-						<c:when test="${gubun == 2}">
-								<th style="text-align:center; width: 45px; border-left:1px solid #e2e2e2; border-top:1px solid #e2e2e2; border-bottom:1px solid #f8f8fa; padding-bottom:3px">
-								    <%-- 2023-11-07 전인하 - 게시판 > 이모티콘 아이콘 삽입 --%>
-								    <div class="emoticonRelative">                                       
-                                        <img id="_addEmoticon" class="_addEmoticon" src="/images/poll/add_emo_vote.png" onclick="addSticker(this)">
-									</div>
-								</th>
-                                <th style="text-align:center; width: 90%; border-right:1px solid #e2e2e2; border-top:1px solid #e2e2e2; border-bottom:1px solid #f8f8fa; padding-bottom:3px">
-                                    <textarea id="onelinereply" rows="3" style = "resize:none; width:calc(100% - 45px);" maxlength="500"></textarea>
-                                </th>
-						</c:when>
-						<c:otherwise>
-								<th style="text-align:center; width: 10%; border-left:1px solid #e2e2e2; border-top:1px solid #e2e2e2; border-bottom:1px solid #e2e2e2;">
-								    <%-- 2023-11-07 전인하 - 게시판 > 이모티콘 아이콘 삽입 --%>
-								    <div class="emoticonRelative">								    
-                                        <img id="_addEmoticon" class="_addEmoticon" src="/images/poll/add_emo_vote.png" onclick="addSticker(this)">
-								    </div>
-								</th>
-                                <th style="text-align:center; width: 90%; border-top:1px solid #e2e2e2; border-bottom:1px solid #e2e2e2; padding-bottom:3px">
-                                    <textarea id="onelinereply" rows="3" style="resize:none; width:calc(100% - 45px);" maxlength="500"></textarea>
-                                </th>
-						</c:otherwise>	
-					</c:choose>
-					<c:choose>
-						<c:when test="${gubun == 2}">
-							</tr>
-						</c:when>
-						<c:otherwise>
-								<th style="text-align:center;border-top:1px solid #e2e2e2; border-bottom:1px solid #e2e2e2; border-right:1px solid #e2e2e2; width:15%;">
-									<c:if test='${boardInfo.attachmentFlag eq "Y"}'>
-									    <a class='imgbtn comment' style="vertical-align: middle"><span onclick="btnfileup('commentFile')"><spring:message code='ezBoard.commentAttach.JIH01' /></span></a><br/>
-									</c:if>
-									<a class='imgbtn comment' style="vertical-align: middle"><span onclick="Save_OneLineReply(this)"><spring:message code='ezBoard.t98' /></span></a>
-								</th>
-							</tr>
-						</c:otherwise>
-					</c:choose>
-					</tr>
-					<c:if test="${gubun == 2}">
-						<tr>
-							<th colspan="2" style="width: 85%; border-left:1px solid #e2e2e2; border-top:1px solid #f8f8fa; border-right:1px solid #e2e2e2; text-align:right;
-									border-bottom:1px solid #e2e2e2; padding-top:0px; padding-bottom:4px; vertical-align: middle">
-								<span style = "font-weight:normal; display:inline-block; margin-top:2px"><spring:message code='ezBoard.t438' />&nbsp;</span>
-								<span><input type="password" id="txtPassWord" maxlength="20" size="20" />&nbsp;</span>
-								<c:if test='${boardInfo.attachmentFlag eq "Y"}'>
-								    <a class='imgbtn comment' style="vertical-align: middle"><span onclick="btnfileup('commentFile')"><spring:message code='ezBoard.commentAttach.JIH01' /></span></a>
-								</c:if>
-								<a class='imgbtn comment' style="vertical-align: middle"><span onclick="Save_OneLineReply(this)"><spring:message code='ezBoard.t98' /></span></a>
-							</th>
-						</tr>
-					</c:if>
-				</table>
+			</c:if>
+		</div>		
+		<%-- 2019-11-05 홍승비 - 하단댓글 영역 추가 --%>
+		<c:if test="${OneLineReplyFlag == '2'}">
+			<div class="comment_cont reNewalCmt">
+				<c:if test="${gubun == 2}">
+					<div class="pw_area">
+						<input type="password" id="txtPassWord" maxlength="20" size="20" placeholder="<spring:message code='ezBoard.t243'/>">
+					</div>
+				</c:if>
+				<div class="comment_textarea">
+					<textarea id="onelinereply" rows="3" maxlength="500" placeholder="<spring:message code='ezBoard.newDesign01'/>"></textarea>
+				</div>
 				<c:if test='${boardInfo.attachmentFlag eq "Y"}'>
-                    <%-- 첨부파일 버튼 --%>
-                    <input id="commentFile" type="file" multiple="multiple" onchange="filechange(event)" style="display:none"/>
-                    <input id="commentListFile" type="file" multiple="multiple" onchange="filechange(event)" style="display:none"/>
-                    <%-- 댓글 첨부 리스트 --%>
-                    <div id="commentAttach"></div>
-                </c:if>
-                <div class="commentSort">
-                    <span id="earliest" class="checked" onclick="boardCommentSort()"><spring:message code='ezBoard.commentSort.JIH001' /></span>
-                    <span id="latest" onclick="boardCommentSort()"><spring:message code='ezBoard.commentSort.JIH002' /></span>
-                </div>
-				<table id="commentList" style="width:100%;margin-top:2px; overflow:auto;border:1px solid rgb(225,225,225)"></table>
+					<div id="commentAttach"></div>
+				</c:if>
+				<div class="comment_function">	
+					<div>
+						<span id="_addEmoticon" class="btn_emoticon" onclick="addSticker(this)"><spring:message code='ezBoard.newDesign02' /></span>
+						<c:if test='${boardInfo.attachmentFlag eq "Y"}'>
+							<span class="btn_attachFile" onclick="btnfileup('commentFile')"><spring:message code='ezBoard.commentAttach.JIH01' /></span>
+						</c:if>
+					</div>
+					<div>
+						<button class='btn_registration' onclick="Save_OneLineReply(this)"><spring:message code='ezBoard.t98' /></button>
+					</div>
+				</div>
 			</div>
-        </c:if>
+			<c:if test='${boardInfo.attachmentFlag eq "Y"}'>
+				<%-- 첨부파일 버튼 --%>
+				<input id="commentFile" type="file" multiple="multiple" onchange="filechange(event)" style="display:none"/>
+				<input id="commentListFile" type="file" multiple="multiple" onchange="filechange(event)" style="display:none"/>
+				<%-- 댓글 첨부 리스트 --%>
+			</c:if>
+			<div class="comment_listBox">
+				<div class="portlet_tabpart02_top">
+					<p>
+						<span id="earliest" class="tabon" onclick="boardCommentSort()"><spring:message code='ezBoard.commentSort.JIH001' /></span>
+					</p>
+					<p>
+						<span id="latest" onclick="boardCommentSort()"><spring:message code='ezBoard.commentSort.JIH002' /></span>
+					</p>
+				</div>
+				<div id="commentList"></div>
+			</div>
+		</c:if>
         <%-- 본문하단 댓글영역 끝 --%>
 		<%-- 2018-10-11 - 홍승비 - 모두저장 기능 추가 --%>
 		<c:if test="${useEditor eq 'HWP'}">
@@ -864,7 +850,7 @@
             
             <%-- 2023-11-01 전인하 - 선택된 이모티콘 조회 팝업 --%>
             <div id="uploadedFile" class="uploadedFile">
-                <img id="cancelImg" class="cancelImg" src="/images/close.png" onclick="closeEmoticonPreview();">
+                <img id="cancelImg" class="cancelImg" src="/images/ImgIcon/btn_emotion_delete.svg" onclick="closeEmoticonPreview();">
                 <img id="previewImage" class="previewImage">
             </div>            
         </div>

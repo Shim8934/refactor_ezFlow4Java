@@ -51,6 +51,7 @@
     margin: 0px 1px 0px 0px;
     border-bottom: 0 none;
     font-weight: bold;
+    font-size:15px;
     color: #555;
     cursor: pointer;
 }
@@ -105,3 +106,10 @@
 /* 2023-10-18 디자인 개선 건으로 인한 css 삭제 */
 /* 20230630 자바 디자인 css수정 */
 .portlet_tabnew01_top p{position: relative}
+
+/* 2025-11-25 게시판 모듈 리뉴얼 디자인 CSS */
+.newBoardPopup .portlet_tabpart02_top {height: 40px; border-bottom: 1px solid #CDD1D5; box-sizing: border-box;}
+.newBoardPopup .portlet_tabpart02_top p span {height: 40px; line-height: 40px; padding: 0px 9px; margin: 0px 8px 0px 0px; font-size:15px; color: #464C53; box-sizing:border-box;}
+.newBoardPopup .portlet_tabpart02_top p .tabover {color: #0470e4; border-bottom: 2px solid #0470e4;}
+.newBoardPopup .portlet_tabpart02_top p .tabon {position: relative; color: #0470e4;border-bottom: 2px solid #0470e4;}
+/* 2025-11-25 게시판 모듈 리뉴얼 디자인 CSS */

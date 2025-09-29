@@ -571,8 +571,7 @@ function ListView() {
                 
                 if (strColName == "DOCNO") {    //강민수92 DocNo 
                 	objTd.style.padding = "0";
-                	objTd.style.textAlign = "left";
-                	objTd.style.paddingLeft = "8px";
+                	objTd.style.textAlign = "center";
                 }
                 
                 if (strColName == "ITEMID") {
@@ -996,7 +995,7 @@ function ListView() {
                     	} else {
                     		objTd.style.padding = "0";
                     		objTd.innerHTML = titleImage + strValue;
-                    		objTd.style.paddingLeft = "8px"; // 강민수92 docno정렬
+                    		objTd.style.textAlign = "center"; // 강민수92 docno정렬
                     	}
                     } else if (SelectSingleNodeValue(oHeaders[j], "COLNAME").indexOf('TITLE') > -1) { //2018-01-09 강민수92 공지일 때 docNo 안보이게
                     	/* 2018-12-27 홍승비 - 새게시물, 답변아이콘, 댓글 제목에 붙는 위치 변경 (IE에서의 말줄임표 오류 수정) */

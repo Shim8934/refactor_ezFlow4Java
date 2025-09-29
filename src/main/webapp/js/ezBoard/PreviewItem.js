@@ -1,4 +1,4 @@
-﻿﻿function MailOptionView(obj, flag) {
+﻿function MailOptionView(obj, flag) {
     if (obj.getAttribute("mode") == "off") {
         if (flag=='N') {
         	document.getElementById("layer_Viewpopup").style.left = document.documentElement.clientWidth - 160 + "px";
@@ -176,7 +176,8 @@ function PreviewRayerChange(pGubun) {
             /*document.getElementById("divList").style.overflow = "auto";*/
             document.getElementById("PreviewRayerH").style.width = (pMailPreWidthH - 70) + "px";
             document.getElementById("PreContent_RayerH").style.width = (pMailPreWidthH - 10) + "px";
-            document.getElementById("ifrmPreViewH").style.height = (CurrentHeight - 68) + "px";
+            document.getElementById("PreContent_RayerH").style.marginLeft = "7px";
+            document.getElementById("ifrmPreViewH").style.height = (CurrentHeight - 100) + "px";
             document.getElementById("PreH_subject").style.width = (pMailPreWidthH - 200) + "px";
             
             pPreviewShow_HOW = "H";
@@ -268,6 +269,7 @@ function PreviewRayerChange_photo(pGubun) {
             	document.getElementById("MailListRayer").style.width = (CurrenWidth - 760) + "px";
             }
             document.getElementById("PreContent_RayerH").style.width = "749px";
+            document.getElementById("PreContent_RayerH").style.marginLeft = "7px";
 
             document.getElementById("ResizeBarH").style.height = CurrentHeight + "px";
             document.getElementById("ResizeBarW").style.width = CurrenWidth + "px";
@@ -281,7 +283,7 @@ function PreviewRayerChange_photo(pGubun) {
 //			}
 			
 			if (document.getElementById("ifrmPreViewH")) {
-				document.getElementById("ifrmPreViewH").style.height = (CurrentHeight - 68) + "px";
+				document.getElementById("ifrmPreViewH").style.height = (CurrentHeight - 100) + "px";
 			}
 			/* 2019-04-11 홍승비 - 앨범형식 보기 시 사용하지 않는 div 분기처리 */
 			// if (document.getElementById("BoardList_BODY") != null) {
@@ -289,7 +291,7 @@ function PreviewRayerChange_photo(pGubun) {
 			// }
 
             /*document.getElementById("divList").style.overflow = "auto";*/
-            document.getElementById("ifrmPreViewH_photo").style.height = (CurrentHeight - 77) + "px";
+            document.getElementById("ifrmPreViewH_photo").style.height = (CurrentHeight - 120) + "px";
             pPreviewShow_HOW = "H";
             pMailListDiv_H = Math.round((pMailListWidthH / CurrenWidth) * 100);
             pMailPreVDiv_H = Math.round((pMailPreWidthH / CurrenWidth) * 100);
@@ -455,12 +457,14 @@ function event_ItemPreviewRead_photo() {
             var WriterDeptName = SelectSingleNodeValueNew(xmldom, "NODES/NODE/WriterDeptName");
             var WriterCompanyName = SelectSingleNodeValueNew(xmldom, "NODES/NODE/WriterCompanyName");
             var WriteDate = SelectSingleNodeValueNew(xmldom, "NODES/NODE/WriteDate");
+            var EndDate = SelectSingleNodeValueNew(xmldom, "NODES/NODE/EndDate");
             var Title = SelectSingleNodeValueNew(xmldom, "NODES/NODE/Title");
             var ContentLocation = SelectSingleNodeValueNew(xmldom, "NODES/NODE/ContentLocation");
             var GuBun = SelectSingleNodeValueNew(xmldom, "NODES/NODE/GUBUN");
             var UserIMG =  SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/UserIMG");
             var LikeCount = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/LikeCount");
             var DisLikeCount = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/DisLikeCount");
+            var DeptTitle = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/ExtensionAttribute3");
 
             if (pPreviewShow_HOW.trim() == "W") {
                 PreviewRayerChange_photo("W");
@@ -494,8 +498,16 @@ function event_ItemPreviewRead_photo() {
                 }
             }
             /* 2018-06-29 홍승비 - 게시물 미리보기 > 게시자 사원정보 확인 시 겸직부서인 상태로 정보 보여주도록 수정 */
-            pOCS += "<span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='#666'  style='cursor:pointer' title='" + WriterName
-            			+ "' onclick='MemberInfo_onclick(\"" + GetAttribute(selobj, "DATA3").trim() + "\", \"" + WriterDeptID + "\")'>" + WriterName + "</span>";
+            if (GuBun == "2") {
+                pOCS += "<span>" + escapeForHTML(WriterName) ;
+            } else {
+                pOCS += "<span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='#666'  style='cursor:pointer' onclick='MemberInfo_onclick(\"" + GetAttribute(selobj, "DATA3").trim() + "\", \"" + WriterDeptID + "\")'>" + WriterDeptName + " " + escapeForHTML(WriterName);
+            }
+            
+            if (DeptTitle) {
+                pOCS += "(" + DeptTitle + ")";
+            }
+            pOCS += "</span>";
 
             if (document.getElementById('ifrmPreViewH') != null) {
                 document.getElementById('ifrmPreViewH_photo').style.display = "";
@@ -512,6 +524,16 @@ function event_ItemPreviewRead_photo() {
             setNodeText(document.getElementById("PreH_sub_subject"), Title);
             document.getElementById("PreH_MailReceiver").innerHTML = pOCS;
             setNodeText(document.getElementById("PreH_date"), WriteDate.substring(0, 16));
+            
+            if (EndDate.substring(0, 4) == "9999"){
+                EndDate = strLangNewBoardDesign09
+            } else {
+                EndDate = EndDate.substring(0, 16)
+            }
+            
+            setNodeText(document.getElementById("PreW_endDate"),EndDate);
+            setNodeText(document.getElementById("PreH_endDate"),EndDate);
+            
             var fullPath = "/ezBoard/boardAttachDown.do?filepath=" + javaURLEncode(ContentLocation);
             
             /* 20118-11-07 홍승비 - 동영상게시물 미리보기 분기 추가 */
@@ -533,6 +555,8 @@ var Title;
 var pOCS;
 var WriteDate;
 var interValue;
+var DeptTitle;
+var EndDate;
 function event_ItemPreviewRead() {
     if ((xmlhttp != null && xmlhttp.readyState == 4) && (xmlhttp2 != null && xmlhttp2.readyState == 4)) {
         if ((xmlhttp.status >= 200 && xmlhttp.status < 300) && (xmlhttp2.status >= 200 && xmlhttp2.status < 300)) {
@@ -561,12 +585,15 @@ function event_ItemPreviewRead() {
             WriterDeptName = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/WriterDeptName");
             WriterCompanyName = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/WriterCompanyName");
             WriteDate = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/WriteDate");
+            EndDate = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/EndDate");
             Title = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/Title");
             ContentLocation = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/ContentLocation");
             UserIMG =  SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/UserIMG");
             BoardID = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/BoardID");
             LikeCount = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/LikeCount");
             DisLikeCount = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/DisLikeCount");
+            DeptTitle = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/ExtensionAttribute3");
+            
             /* 2019-11-06 홍승비 - 게시물 미리보기 시 댓글옵션 표출용 변수 추가 */
             OneLineReplyFlag = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/ONELINEREPLY");
             if (!!document.getElementById('ifrmPreViewH_photo') && document.getElementById('ifrmPreViewH_photo').style.display != "none") {
@@ -622,10 +649,18 @@ function event_ItemPreviewRead() {
     }
 }
 
-function previewItemSet() {
+function previewItemSet(gubun) {
 	pOCS = "";
-    pOCS += "<span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='#666'  style='cursor:pointer' title='" + WriterName
-    			+ "' onclick='MemberInfo_onclick(\"" + selobj.getAttribute("DATA3")  + "\", \"" + WriterDeptID + "\")'>" + WriterName + "</span>";
+    if (gubun == "2") {
+        pOCS += "<span>" + escapeForHTML(WriterName);
+    } else {
+        pOCS += "<span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='#666'  style='cursor:pointer' onclick='MemberInfo_onclick(\"" + selobj.getAttribute("DATA3")  + "\", \"" + WriterDeptID + "\")'>" + WriterDeptName + " " + escapeForHTML(WriterName);
+    }
+    
+    if (DeptTitle) {
+        pOCS += "(" + DeptTitle + ")";
+    }
+    pOCS += "</span>";
 
     if (document.getElementById('ifrmPreViewH_photo') != null) {
         document.getElementById('ifrmPreViewH_photo').style.display = "none";
@@ -633,6 +668,16 @@ function previewItemSet() {
         document.getElementById('ifrmPreViewH').style.display = "";
         document.getElementById('ifrmPreViewW').style.display = "";
     }
+    
+    if (EndDate.substring(0, 4) == "9999"){
+        EndDate = strLangNewBoardDesign09
+    } else {
+        EndDate = EndDate.substring(0, 16)
+    }
+    
+    setNodeText(document.getElementById("PreW_endDate"),EndDate);
+    setNodeText(document.getElementById("PreH_endDate"),EndDate);
+            
     if (CrossYN()) {
     	var boardType = "";
     	
@@ -782,7 +827,8 @@ function MailPreviewEnd(e) {
             document.getElementById("divList").style.height = (CurrentHeight - 62) + "px";
             document.getElementById("PreviewRayerH").style.width = (pMailPreWidthH - 70) + "px";
             document.getElementById("PreContent_RayerH").style.width = (pMailPreWidthH - 10) + "px";
-            document.getElementById("ifrmPreViewH").style.height = (CurrentHeight - 80) + "px";
+            document.getElementById("PreContent_RayerH").style.marginLeft = "7px";
+            document.getElementById("ifrmPreViewH").style.height = (CurrentHeight - 100) + "px";
             document.getElementById("PreH_subject").style.width = (pMailPreWidthH - 200) + "px";
             pMailListDiv_H = (pMailListWidthH / CurrenWidth) * 100;
             pMailPreVDiv_H = (pMailPreWidthH / CurrenWidth) * 100;
@@ -1038,7 +1084,8 @@ function Window_resize() {
                 /*document.getElementById("divList").style.overflow = "auto";*/
                 document.getElementById("PreviewRayerH").style.width = (pMailPreWidthH - 70) + "px";
                 document.getElementById("PreContent_RayerH").style.width = (pMailPreWidthH - 10) + "px";
-                document.getElementById("ifrmPreViewH").style.height = (CurrentHeight - 80) + "px";
+                document.getElementById("PreContent_RayerH").style.marginLeft = "7px";
+                document.getElementById("ifrmPreViewH").style.height = (CurrentHeight - 100) + "px";
                 document.getElementById("PreH_subject").style.width = (pMailPreWidthH - 200) + "px";
                 pPreviewShow_HOW = "H";
                 pMailListDiv_H = Math.round((pMailListWidthH / CurrenWidth) * 100);
@@ -1126,6 +1173,7 @@ function Window_resize_photo() {
                 	document.getElementById("MailListRayer").style.width = (CurrenWidth - 760) + "px";
                 }
                 document.getElementById("PreContent_RayerH").style.width = "749px";
+                document.getElementById("PreContent_RayerH").style.marginLeft = "7px";
                 
                 document.getElementById("ResizeBarH").style.height = CurrentHeight + "px";
                 document.getElementById("ResizeBarW").style.width = CurrenWidth + "px";
@@ -1138,7 +1186,7 @@ function Window_resize_photo() {
                 if (window.location.href.indexOf("/ezBoard/boardItemListPhoto.do") > -1) {
                 	document.getElementById("BoardList_BODY").style.height = (CurrentHeight - 103) + "px";
                 }
-                document.getElementById("ifrmPreViewH_photo").style.height = (CurrentHeight - 77) + "px";
+                document.getElementById("ifrmPreViewH_photo").style.height = (CurrentHeight - 120) + "px";
                 
                 pPreviewShow_HOW = "H";
                 pMailListDiv_H = Math.round((pMailListWidthH / CurrenWidth) * 100);

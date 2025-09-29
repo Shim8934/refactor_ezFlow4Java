@@ -170,6 +170,10 @@ public class BoardListVO {
 	private String versionManage;
 	private String parentItemID;
 	private String version;
+
+	// 2025-11-18 황인경 - 게시판 디자인 변경 관련 수정자 부서, 직급
+	private String updaterTitle;
+	private String updaterDept;
 	
 	public int getrNum() {
 		return rNum;
@@ -695,5 +699,21 @@ public class BoardListVO {
 	}
 	public void setVersion(String version) {
 		this.version = version;
+	}
+	
+	public String getUpdaterTitle() {
+		return updaterTitle;
+	}
+
+	public void setUpdaterTitle(String updaterTitle) {
+		this.updaterTitle = updaterTitle;
+	}
+
+	public String getUpdaterDept() {
+		return updaterDept;
+	}
+
+	public void setUpdaterDept(String updaterDept) {
+		this.updaterDept = updaterDept;
 	}
 }

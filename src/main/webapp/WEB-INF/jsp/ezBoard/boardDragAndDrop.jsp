@@ -6,26 +6,6 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
 		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css">
-		<style>
-			#lstAttachLink {
-			height: 115px;
-			border: 1px solid #d2d2d2;
-			}
-
-            .attachInnerNotice_p_on {
-                text-align: center;
-                margin: 10px 0 0 0;
-            }
-
-            .attachInnerNotice_p_off {
-                display: none;
-            }
-
-            .attachInnerNotice_span {
-                line-height: 55px;
-            }
-            
-		</style>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('ezBoard.e1', 'msg')}"></script>
@@ -112,25 +92,22 @@
 		        var oTable = document.createElement("TABLE");
 		        oTable.style.width = "100%";
 		        oTable.id = "filelist";
-		        oTable.className = "sublist";
+		        oTable.className = "sublist filelist_Board";
 		
 		        var objTr = document.createElement("TR");
 		        var objTh = document.createElement("TH");
-		        
-		        if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1 && ua.indexOf("Macintosh") == -1) {
-		            objTh.style.width = "24px";
-		        } else {
-		            objTh.style.width = "15px";
-		        }
-		        
+		        objTh.style.width = "36px";
+                objTh.style.textAlign = "center";
+
+		        var objSpan = document.createElement("span");
+                objSpan.className = "custom_checkbox";
 		        var input = document.createElement("input");
 		        input.type = "checkbox";
 		        input.id = "checkboxall";
 		        input.onclick = function () { checkall(); };
-		        var oDiv = document.createElement("div");
-		        oDiv.className = "custom_checkbox";
-		        oDiv.appendChild(input);
-		        objTh.appendChild(oDiv);
+                
+                objSpan.appendChild(input);
+		        objTh.appendChild(objSpan);
 		        objTr.appendChild(objTh);
 		
 		        var objTh2 = document.createElement("TH");
@@ -223,7 +200,7 @@
 		        }
 		        
 		        for (var i = 1; i < filecnt; i++) {
-		            if (document.getElementById("filelist").childNodes[i].childNodes[0].childNodes[0].childNodes[0].checked == true) {
+		            if (document.querySelectorAll("#filelist .custom_checkbox input")[i].checked == true) {
 		                var pAttachDelSN;
 		                var pAttachDelFileName;
 		                var is_newfile;
@@ -273,10 +250,10 @@
 		
 		        for (var i = 1; i < filecnt; i++) {
 		            if (document.getElementById("checkboxall").checked == true) {
-		                document.getElementById("filelist").childNodes[i].childNodes[0].childNodes[0].childNodes[0].checked = true;
+		                document.querySelectorAll("#filelist .custom_checkbox input")[i].checked = true;
 		            }
 		            else {
-		                document.getElementById("filelist").childNodes[i].childNodes[0].childNodes[0].childNodes[0].checked = false;
+		                document.querySelectorAll("#filelist .custom_checkbox input")[i].checked = false;
 		            }
 		        }
 		    }
@@ -312,7 +289,7 @@
 		        xhr.addEventListener("abort", uploadCanceled, false);
 		        xhr.open("POST", "/ezBoard/uploadItemAttach.do");
 		        xhr.send(fd);
-		        document.getElementById('progdiv').style.display = "inline-block";
+		        document.getElementById('progdiv').style.display = "flex";
 		    }
 		    
 		    function bodydragover(evt) {
@@ -418,19 +395,30 @@
                     document.getElementById("attachInnerNotice").className = "attachInnerNotice_p_on";
                 }
             }
+            
+            function attachToggle() {
+                var attachArea = window.parent.document.querySelector('#attachArea');
+                if (!!attachArea) {
+                    $(attachArea).toggleClass('active');
+                    $("#content_toggleBtn").toggleClass('active');
+                }
+            }
 		</script>
 	</head>  
 	<body ondragover ="defaultenter(event)" ondragenter ="defaultenter(event)" style ="width:100%;height:100%;overflow:hidden">
-        <div style="width:100%;white-space:nowrap;display:inline-block; height: 23px;">
-            <div style="float:left">
-                <a class="imgbtn imgbck" onclick="btnfileup()"><span><spring:message code='ezBoard.t440' /></span></a>
-                <a class="imgbtn imgbck" onclick="btnfiledel()"><span><spring:message code='ezBoard.t441' /></span></a>   
+        <div class="flex_content_attach">
+            <div>
+                <span id="content_toggleBtn" class="flex_content_toggleBtn active" onclick="attachToggle()"></span>
             </div>
-            <div id="progdiv" class="progarea" style="display:none">
-             	<P class="prog_bar"><span id="prog_bar" style="width:0%"></span></P> <span class="prog_num"><strong id ="prog_num">0</strong>%</span>
-             </div>
+            <div id="progdiv" class="progarea board" style="display:none">
+             	<P class="prog_bar"><span id="prog_bar" style="width:0%"></span></P><span class="prog_num"><strong id ="prog_num">0</strong>%</span>
+            </div>
+            <div>
+                <button type="button" onclick="btnfileup()" class="form_btn3"><spring:message code='ezBoard.t440' /></button>
+                <button type="button" onclick="btnfiledel()" class="form_btn3"><spring:message code='ezBoard.t441' /></button>
+            </div>
         </div>
-        <div id="lstAttachLink" class="ui-sortable" ondragenter="onDragEnter(event)"  ondragover="onDragOver(event)" ondrop="onDrop(event)" style="overflow:auto;">
+        <div id="lstAttachLink" class="ui-sortable board active" ondragenter="onDragEnter(event)" ondragover="onDragOver(event)" ondrop="onDrop(event)" style="overflow:auto;">
         </div>
         <input id="file" type="file" onchange="filechange(event)" multiple style="display:none"/>
         <input type="hidden" value="upload" onclick ="fileupload()" />

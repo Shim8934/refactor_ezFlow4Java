@@ -116,3 +116,14 @@ var strLangVersion02 = "Unable to save settings due to a failure in creating pos
 // 2025-05-07 전인하 - 관리자 > 게시판 > 게시물 구분 변경 시 제한 조건 추가
 var strLangJIHgubunChange01 = "If there are posts on this board, the board's division cannot be changed.";
 var strLangJIHgubunChange02 = "The board type has been changed. \nYou can't post now. Please refresh the groupware.";
+
+var strLangNewBoardDesign01 = "Modify";
+var strLangNewBoardDesign02 = "Delete";
+var strLangNewBoardDesign03 = "Like";
+var strLangNewBoardDesign04 = "Dislike";
+var strLangNewBoardDesign05 = "emoticon";
+var strLangNewBoardDesign06 = "Please enter a comment.";
+var strLangNewBoardDesign07 = "Attachments";
+var strLangNewBoardDesign08 = "Enter password.";
+var strLangNewBoardDesign09 = "Post permanently";
+var strLangNewBoardDesign10 = "Download";

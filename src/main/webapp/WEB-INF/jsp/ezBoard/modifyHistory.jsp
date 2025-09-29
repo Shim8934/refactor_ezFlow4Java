@@ -134,7 +134,7 @@
                 <table class = "contentTable">
                     <tr>
                         <th><spring:message code = "ezBoard.versionManage.hth01" /></th>
-                        <th><spring:message code = "ezBoard.updateJIH01" /></th>
+                        <th><spring:message code = "ezBoard.updateJIH03" /></th>
                         <th><spring:message code = "ezBoard.updateJIH02" /></th>
                     </tr>
 

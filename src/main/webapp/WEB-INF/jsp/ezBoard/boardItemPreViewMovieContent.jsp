@@ -8,6 +8,7 @@
 		<title><spring:message code="ezBoard.t293"/></title>
 		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
 		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('/css/Tab.css')}" type="text/css">
 		<link rel="stylesheet" href="${util.addVer('/css/font-awesome-5.0.10/css/fontawesome-all.css')}">
 		<script type="text/javascript" src="${util.addVer('ezBoard.e1', 'msg')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
@@ -19,28 +20,21 @@
 					MARGIN-TOP: 0mm;
 					MARGIN-BOTTOM: 0mm;
 			  }
-			.likeButton {
-				padding:5px;
-				cursor:pointer;
-				display:inline-block;
-				border:1px solid #c7c7c7;
-			    border-radius:2px;
+			.video_visual {
+			    display: flex;
+			    justify-content: center;  
+			    align-items: center;    
 			}
-			.likeButton:hover {
-				background-color:#f1f8ff;
-				border:1px solid #6793d8;
+			
+			.video_visual video {
+			    max-width: 100%;
+			    height: auto;
 			}
-			.disLikeButton {
-				padding:5px;
-				cursor:pointer;
-				display:inline-block;
-				border:1px solid #c7c7c7;
-			    border-radius:2px;
-			}
-			.disLikeButton:hover {
-				background-color:#ffd9ec;
-				border:1px solid #f44336;
-			}
+			.preview_video {
+			    border-bottom: 1px solid #D6E0EB;
+    			box-sizing: border-box;
+    			min-height: 380px;
+			}			  
 		</STYLE>
 		<script type="text/javascript">
 		    window.offscreenBuffering = true;
@@ -391,7 +385,7 @@
 					},
 					success: function(result){
 						if (parseInt(result) > 0) {
-							document.getElementById("likeCountSpan").innerText = "(" + result + ")";
+							document.getElementById("likeCountSpan").innerText = result;
 						} else {
 							document.getElementById("likeCountSpan").innerText = "";
 						}
@@ -467,7 +461,7 @@
 					success: function(result){
 						disLikeCountAfter = result;
 						if (parseInt(result) > 0) {
-							document.getElementById("disLikeCountSpan").innerText = "(" + result + ")";
+							document.getElementById("disLikeCountSpan").innerText = result;
 						} else {
 							document.getElementById("disLikeCountSpan").innerText = "";
 						}
@@ -487,7 +481,7 @@
 		    	if(gubun === "disLike"){
 		    		isDisLikeChecked = checked ;
 			    	if (parseInt(result) > 0) {
-						document.getElementById("disLikeCountSpan").innerText = "(" + result + ")";
+						document.getElementById("disLikeCountSpan").innerText = result;
 					} else {
 						document.getElementById("disLikeCountSpan").innerText = "";
 					}
@@ -499,7 +493,7 @@
 		    	}else if(gubun === "like"){
 		    		isLikeChecked = checked;
 		    		if (parseInt(result) > 0) {
-						document.getElementById("likeCountSpan").innerText = "(" + result + ")";
+						document.getElementById("likeCountSpan").innerText = result;
 					} else {
 						document.getElementById("likeCountSpan").innerText = "";
 					}
@@ -513,165 +507,129 @@
 		    
 			</script>
 		</head>
-		<body>
-			<table class="layout" style="border-spacing:0; border-bottom:1px solid #ddd; border:0px; width:100%; margin-top:-1px;">
-			  <tr>
-			    <td style="width:100%;  text-align:center; vertical-align:top;" >
-			        <table id="outerTable" style="width:100%; min-height:635px;">
-				        <c:if test="${boardInfo.oneLineReply == '2' && mode != 'temp'}">
-							<tr>
-				        		<td style="height:65px;"></td>
-							</tr>
-						</c:if>
-				        <tr id="trheight" style="display:table-cell;">
-				            <td style="display:inline-block;">
-				                <table id="movieTable" style="text-align:center; border:0px;">
-				                    <tr>
-				                    	<td>
-										<video id="mainVideo" style="width: 640px; height: 360px;" src="" controls /> 
-				                        </td>
-				                    </tr>
-				            	</table>
-				            </td>
-				            
-							<%-- 2019-04-05 홍승비 - 본문, 사진소개 하단에 좋아요 버튼 추가 --%>
-							<%-- 2023-04-06 기민혁 - 싫어요 버튼 추가  --%>
-							<c:if test="${boardInfo.likeFlag != null && boardInfo.likeFlag == 'Y' && boardInfo.disLikeFlag != null && boardInfo.disLikeFlag == 'Y'}">
-								<td style="text-align:center; display:block;">
-									<div style="display: flex; justify-content: center;">
-										<div id="likeDiv" style="text-align:center;display: inline-block; margin-right : 5px;" >
-										  	<span class="likeButton" style="cursor:pointer; height:20px;" onclick="clickLikeButton()" title="<spring:message code='ezBoard.hsb10'/>" >
-											  	<c:choose>
-											  		<c:when test="${isLikeChecked == 'Y'}">
-											  			<img id="likeButtonImg" src="/images/like_on.png"/>
-											  		</c:when>
-											  		<c:otherwise>
-											  			<img id="likeButtonImg" src="/images/like_off.png"/>
-											  		</c:otherwise>
-											  	</c:choose>
-										  	<span id="likeCountSpan" style="vertical-align:top;"><c:if test="${likeCount > 0}"> (<c:out value="${likeCount}"/>)</c:if></span>
-										  	</span>
-										</div>
-										<div id="disLikeDiv" style="text-align:center; display: inline-block;">
-										  	<span class="disLikeButton" onclick="clickDisLikeButton()" title="<spring:message code='ezBoard.kmh07'/>" style="height:20px">
-								  				<c:choose>
-								  					<c:when test="${isDisLikeChecked == 'Y'}">
-								  						<img id="disLikeButtonImg" src="/images/disLike_on.png"/>
-								  					</c:when>
-								  					<c:otherwise>
-								  						<img id="disLikeButtonImg" src="/images/disLike_off.png"/>
-								  					</c:otherwise>
-								  				</c:choose>
-								  			<span id="disLikeCountSpan" style="vertical-align:top;"><c:if test="${disLikeCount > 0}"> (<c:out value="${disLikeCount}"/>)</c:if></span>
-							  				</span>
-										</div>
-									</div>	
-								</td>
+		<body class="popup newBoardPopup" >
+			<div class="layout">
+				  <!-- 동영상 영역 -->
+		          <div class="preview_video" id="trheight" >
+		              <div class="preview_album media">
+		                  <div>
+		                      <div class="video_visual">
+		                          <video id="mainVideo" style="width: 640px; height: 360px;" src="" controls />            
+		                      </div>
+		                  </div>
+		         	    </div>
+		          </div>
+		          <!-- //동영상 영역 -->
+	        	<!-- 좋아요/평가하기 -->
+	        	<div class="evaluate_cont" <c:if test="${boardInfo.likeFlag == 'N' && boardInfo.disLikeFlag == 'N'}">  style="display: block;" </c:if>>
+			        <%-- 2019-04-05 홍승비 - 본문, 사진소개 하단에 좋아요 버튼 추가 --%>
+			        <%-- 2023-04-06 기민혁 - 싫어요 버튼 추가  --%>
+					<c:if test="${boardInfo.likeFlag != null && boardInfo.likeFlag == 'Y' || boardInfo.disLikeFlag != null && boardInfo.disLikeFlag == 'Y'}">
+						<div class="likeDivBox" <c:if test="${not empty boardInfo.starRatingFlag && boardInfo.starRatingFlag == 'Y'}">style="margin-left: 255px;"</c:if>>
+							<c:if test="${boardInfo.likeFlag != null && boardInfo.likeFlag == 'Y'}">
+								<div id="likeDiv">	
+					  				<span class="likeButton" onclick="clickLikeButton()" title="<spring:message code='ezBoard.hsb10'/>">
+						  				<c:choose>
+						  					<c:when test="${isLikeChecked == 'Y'}">
+						  						<img id="likeButtonImg" src="/images/like_on.png"/>
+						  					</c:when>
+						  					<c:otherwise>
+						  						<img id="likeButtonImg" src="/images/like_off.png"/>
+						  					</c:otherwise>
+						  				</c:choose>
+						  				<span id="likeCountSpan"><c:if test="${boardItem.likeCount > 0}"> <c:out value="${boardItem.likeCount}"/></c:if></span>
+					  				</span>
+								</div>
 							</c:if>
-							
-							<c:if test="${boardInfo.likeFlag != null && boardInfo.likeFlag == 'Y' && boardInfo.disLikeFlag != 'Y'}">
-								<td style="text-align:center; display:block;">
-									<div id="likeDiv" style="text-align:center; margin-top:40px;" colspan="3">
-									  	<span class="likeButton" style="cursor:pointer; margin-left:-7px;" onclick="clickLikeButton()" title="<spring:message code='ezBoard.hsb10'/>" style="height:20px">
-										  	<c:choose>
-										  		<c:when test="${isLikeChecked == 'Y'}">
-										  			<img id="likeButtonImg" src="/images/like_on.png"/>
-										  		</c:when>
-										  		<c:otherwise>
-										  			<img id="likeButtonImg" src="/images/like_off.png"/>
-										  		</c:otherwise>
-										  	</c:choose>
-									  	<span id="likeCountSpan" style="vertical-align:top;"><c:if test="${likeCount > 0}"> (<c:out value="${likeCount}"/>)</c:if></span>
-									  	</span>
-									</div>
-								</td>
+							<c:if test="${boardInfo.disLikeFlag != null && boardInfo.disLikeFlag == 'Y'}">
+								<div id="disLikeDiv">	
+					 			 	<span class="disLikeButton" onclick="clickDisLikeButton()" title="<spring:message code='ezBoard.kmh07'/>" >
+									  	<c:choose>
+						  					<c:when test="${isDisLikeChecked == 'Y'}">
+						  						<img id="disLikeButtonImg" src="/images/disLike_on.png"/>
+						  					</c:when>
+						  					<c:otherwise>
+						  						<img id="disLikeButtonImg" src="/images/disLike_off.png"/>
+						  					</c:otherwise>
+									  	</c:choose>
+									  	<span id="disLikeCountSpan"><c:if test="${boardItem.disLikeCount > 0}"> <c:out value="${boardItem.disLikeCount}"/></c:if></span>
+					  				</span>
+								</div>
+						   </c:if>
+	         			</div>
+				   </c:if>
+				   <!-- 앰범에서 별점 평가 사용안할시 제거 -->
+                   <%-- 2024-09-24 이혜림 - 본문 하단, 첨부파일/한줄댓글 상단에 별점 평가하기 추가 --%>
+                   <c:if test="${not empty boardInfo.starRatingFlag && boardInfo.starRatingFlag == 'Y'}">
+                      <div id="ratingContainer" class="rating_div" onclick="clickRatingButton()">
+                          <div>
+                              <span id="avgScore"><b>${itemStarRating.averageScore}</b><spring:message code='ezBoard.lhr004'/></span>
+                              <span>(<span id="totalRaters">${itemStarRating.totalRaters}</span><spring:message code='ezBoard.lhr003'/>)</span>
+                          </div>
+                          <span class="ratingButton" title="<spring:message code='ezBoard.lhr001'/>">
+                          <c:forEach var="i" begin="1" end="5">
+                              <c:set var="srcIconFlag" value="${itemStarRating.rating >= i}" />
+                              <label for="rate${i}">
+                                  <input type="radio" name="reviewStar" value="${i}" id="rate${i}" <c:if test="${itemStarRating.rating == i}"> checked </c:if> />
+                                  <img draggable="false" src="/images/ImgIcon/${srcIconFlag ? 'icon-flag.gif' : 'view-flag.gif'}"/>
+                              </label>
+                          </c:forEach>
+                          </span>
+                          <a class="imgbtn"><span onclick="clickSaveRatingButton()"><spring:message code='ezBoard.lhr001'/></span></a>
+                     </div>
+                   </c:if>
+                   <!-- //앰범에서 별점 평가 사용안할시 제거 -->
+            	</div>
+            	
+		<%-- 2019-11-05 홍승비 - 하단댓글 영역 추가 --%>
+	        <c:if test="${boardInfo.oneLineReply == '2' && mode != 'temp'}">
+	        	<div class="comment_cont reNewalCmt">
+    				<div class="comment_textarea">
+						<textarea id="onelinereply" rows="3" maxlength="500" placeholder="<spring:message code='ezBoard.newDesign01'/>"></textarea>
+					</div>
+	        	
+					<c:if test='${boardInfo.attachmentFlag eq "Y"}'>
+						<div id="commentAttach"></div>
+					</c:if>
+
+					<div class="comment_function">	
+						<div>
+							<span id="_addEmoticon" class="btn_emoticon" onclick="addSticker(this)"><spring:message code='ezBoard.newDesign02' /></span>
+							<c:if test='${boardInfo.attachmentFlag eq "Y"}'>
+								<span class="btn_attachFile" onclick="btnfileup('commentFile')"><spring:message code='ezBoard.commentAttach.JIH01' /></span>
 							</c:if>
-							
-							<c:if test="${boardInfo.disLikeFlag != null && boardInfo.disLikeFlag == 'Y' && boardInfo.likeFlag != 'Y' }">
-								<td style="text-align:center; display:block;">
-									<div id="disLikeDiv" style="text-align:center; margin-top:40px;" colspan="3">
-									  	<span class="disLikeButton" onclick="clickDisLikeButton()" title="<spring:message code='ezBoard.kmh07'/>" style="height:20px">
-							  	<c:choose>
-							  		<c:when test="${isDisLikeChecked == 'Y'}">
-							  			<img id="disLikeButtonImg" src="/images/disLike_on.png"/>
-							  		</c:when>
-							  		<c:otherwise>
-							  			<img id="disLikeButtonImg" src="/images/disLike_off.png"/>
-							  		</c:otherwise>
-							  	</c:choose>
-							  	<span id="disLikeCountSpan" style="vertical-align:top;"><c:if test="${disLikeCount > 0}"> (<c:out value="${disLikeCount}"/>)</c:if></span>
-						  	</span>
-									</div>
-								</td>
-							</c:if>		
-                            <%-- 2024-09-24 이혜림 - 본문 하단, 첨부파일/한줄댓글 상단에 별점 평가하기 추가 --%>
-                            <c:if test="${not empty boardInfo.starRatingFlag && boardInfo.starRatingFlag == 'Y'}">
-                            <tr>
-                                <td style="text-align:center; padding-bottom:8px;" colspan="3">
-                                    <div id="ratingContainer" class="rating_div" onclick="clickRatingButton()">
-                                        <div>
-                                            <span id="avgScore"><b>${itemStarRating.averageScore}</b><spring:message code='ezBoard.lhr004'/></span>
-                                            <span>(<span id="totalRaters">${itemStarRating.totalRaters}</span><spring:message code='ezBoard.lhr003'/>)</span>
-                                        </div>
-                                        <span class="ratingButton" title="<spring:message code='ezBoard.lhr001'/>">
-                                        <c:forEach var="i" begin="1" end="5">
-                                            <c:set var="srcIconFlag" value="${itemStarRating.rating >= i}" />
-                                            <label for="rate${i}">
-                                                <input type="radio" name="reviewStar" value="${i}" id="rate${i}" <c:if test="${itemStarRating.rating == i}"> checked </c:if> />
-                                                <img draggable="false" src="/images/ImgIcon/${srcIconFlag ? 'icon-flag.gif' : 'view-flag.gif'}"/>
-                                            </label>
-                                        </c:forEach>
-                                        </span>
-                                        <a class="imgbtn"><span onclick="clickSaveRatingButton()"><spring:message code='ezBoard.lhr001'/></span></a>
-                                    </div>
-                                </td>
-                            </tr>
-                            </c:if>
+						</div>
+						<div>
+							<button class='btn_registration' onclick="Save_OneLineReply(this)"><spring:message code='ezBoard.t98' /></button>
+						</div>
+					</div>
+				</div>
+				<c:if test='${boardInfo.attachmentFlag eq "Y"}'>
+                       <%-- 첨부파일 버튼 --%>
+                       <input id="commentFile" type="file" multiple="multiple" onchange="filechange(event)" style="display:none"/>
+                       <input id="commentListFile" type="file" multiple="multiple" onchange="filechange(event)" style="display:none"/>
+                       <%-- 댓글 첨부 리스트 --%>
+				</c:if>
+				<div class="comment_listBox">
+					<div class="portlet_tabpart02_top">
+						<p>
+							<span id="earliest" class="tabon" onclick="boardCommentSort()"><spring:message code='ezBoard.commentSort.JIH001' /></span>
+						</p>
+						<p>
+							<span id="latest" onclick="boardCommentSort()"><spring:message code='ezBoard.commentSort.JIH002' /></span>
+						</p>
+					</div>
+					<div id="commentList"></div>
+				</div>
+	        </c:if>
+	        <%-- 본문하단 댓글영역 끝 --%>
+            	
+            	
+               </div>
 				            
-				            <%-- 2019-11-05 홍승비 - 하단댓글 영역 추가 --%>
-				            <td>
-						        <c:if test="${boardInfo.oneLineReply == '2' && mode != 'temp'}">
-						        	<div id="onelineDiv" style='height:auto;'>
-										<table class="mainlist emoticonLayerStaticPosition" style="width:100%; min-width:732px; margin-top:1px;" >
-											<tr>
-												<th style="text-align:center; width: 10%; border-left:1px solid #e2e2e2; border-top:1px solid #e2e2e2; border-bottom:1px solid #e2e2e2;">
-                                                    <%-- 2023-11-07 전인하 - 게시판 > 이모티콘 아이콘 삽입 --%>
-                                                    <div class="emoticonRelative">                                       
-                                                          <img id="_addEmoticon" class="_addEmoticon" src="/images/poll/add_emo_vote.png" onclick="addSticker(this)">
-                                                    </div>
-                                                </th>
-                                                <th>
-                                                    <textarea id="onelinereply" rows="3" style = "resize:none; width: 90%" maxlength="500"></textarea>
-                                                </th>
-												<th style="text-align:center;border-top:1px solid #e2e2e2; border-bottom:1px solid #e2e2e2; border-right:1px solid #e2e2e2; width:15%;">
-													<c:if test='${boardInfo.attachmentFlag eq "Y"}'>
-													    <a class='imgbtn comment' style="vertical-align: middle"><span onclick="btnfileup('commentFile')"><spring:message code='ezBoard.commentAttach.JIH01' /></span></a><br/>
-													</c:if>
-													<a class='imgbtn comment' style="vertical-align: middle"><span onclick="Save_OneLineReply(this)"><spring:message code='ezBoard.t98' /></span></a>
-												</th>
-											</tr>
-										</table>
-										<c:if test='${boardInfo.attachmentFlag eq "Y"}'>
-                                            <%-- 첨부파일 버튼 --%>
-                                            <input id="commentFile" type="file" multiple="multiple" onchange="filechange(event)" style="display:none"/>
-                                            <input id="commentListFile" type="file" multiple="multiple" onchange="filechange(event)" style="display:none"/>
-                                            <%-- 댓글 첨부 리스트 --%>
-                                            <div id="commentAttach"></div>
-                                        </c:if>
-                                        <div class="commentSort">
-                                            <span id="earliest" class="checked" onclick="boardCommentSort()"><spring:message code='ezBoard.commentSort.JIH001' /></span>
-                                            <span id="latest" onclick="boardCommentSort()"><spring:message code='ezBoard.commentSort.JIH002' /></span>
-                                        </div>
-										<table id="commentList" style="width:100%; min-width:732px; margin-top:2px; overflow:auto;border:1px solid rgb(225,225,225)"></table>
-									</div>
-						        </c:if>
-				            </td>
-				            <%-- 본문하단 댓글영역 끝 --%>
-				        </tr>
-			        </table>
-			    </td>
-			  </tr>
-		</table>
+	
+
+
 		
 		<div id = "basePanel">
             <%-- 2023-11-01 전인하 - 이모티콘 선택 팝업--%>

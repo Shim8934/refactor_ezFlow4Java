@@ -83,6 +83,27 @@ padding:0px 0px 0px 0px; height:36px; line-height:37px;}/* 20130416 수정 */
 .attachedfile_list .icon_rbtn2{position:absolute; right:35px;cursor:pointer;}
 .imgSpan{ display:inline-block;}
 
+.button_calendar_task {
+    padding: 7px 46px;
+    margin: 0px;
+    margin-top: 11px;
+    margin-right: 6px;
+    cursor: pointer;
+    border-radius: 4px;
+    font-weight: 500;
+}
+
+.button_calendar_task.active {
+    background-color: #388ce5;
+    color: white;
+    /*box-shadow: 0 0 5px #388ce5;*/
+}
+
+.button_calendar_task:hover:not(.active) {
+    background-color: #388ce529;
+    color: black;
+}
+
 /* 메일 미리보기 ui 수정 */
 .preview_mail_wrap{padding:30px 20px 0;}
 .preview_mail_wrap .preview_mail_text{height:auto; max-height:130px; overflow-y:auto;}

@@ -184,7 +184,7 @@
                          <tr id='keywordView' style='display:none'>
                              <th><spring:message code="ezApprovalG.t1200" /></th>
                              <td colspan="3" id="keyWordResult">
-                                 <input type="text" id="txtKeyword" style="WIDTH: 20%; word-wrap: break-word; word-break: break-all;" value="" maxlength="100" onkeyup="keyword_onkeyUp(event)" >
+                                 <input type="text" id="txtKeyword" style="WIDTH: 20%; word-wrap: break-word; word-break: break-all;" value="" maxlength="100" onblur="keyword_blur(event)" onkeyup="keyword_onkeyUp(event)" >
                              </td>
                          </tr>
                          <!-- 키워드 끝 -->

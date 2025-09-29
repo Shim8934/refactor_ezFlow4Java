@@ -103,6 +103,8 @@
         <result property="publicFlag" 		        column="PUBLICFLAG" 		    columnIndex="43"/>
 		<result property="writerNameType" 			column="WRITERNAMETYPE" 		columnIndex="44"/>
 		<result property="topWriterID" 			    column="TOPWRITERID" 			columnIndex="46"/>
+		<result property="updaterTitle" 			column="UPDATERTITLE" 			columnIndex="47"/>
+		<result property="updaterDept" 			    column="UPDATERDEPT" 			columnIndex="48"/>
 	</resultMap>
 	
 	<resultMap id="getBrdGetItemInfoTemp" class="BoardListVO">
@@ -3853,6 +3855,8 @@
 	            B.ONELINEREPLY,
                 A.PUBLICFLAG,
 	            CASE WHEN #lang# = '2' THEN C.DISPLAYNAME2 ELSE C.DISPLAYNAME END AS UPDATERNAME,
+	            CASE WHEN #lang# = '2' THEN C.TITLE2 ELSE C.TITLE END AS UPDATERTITLE,
+	            CASE WHEN #lang# = '2' THEN C.DESCRIPTION2 ELSE C.DESCRIPTION END AS UPDATERDEPT,
 	            A.UPDATEDATE,
 				A.WRITERNAMETYPE,
 				A.TOPWRITERID
@@ -5443,7 +5447,14 @@
 				BC.fileName,
 				BC.fileSize,
 				BC.SN as fileSN,
-				BC.filePath
+				BC.filePath,
+				(
+					SELECT U.EXTENSIONATTRIBUTE2
+					FROM TBL_USERMASTER U
+					WHERE U.CN = A.USERID
+					AND U.TENANT_ID = A.TENANT_ID
+					LIMIT 1
+    			) AS USERPHOTO
 	        FROM
 	        	TBL_BOARD_ONELINEREPLY A
 	        LEFT OUTER JOIN

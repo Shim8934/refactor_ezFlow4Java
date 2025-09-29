@@ -83,12 +83,12 @@
 	            catch (e) {
 	            }
 	            
-	            document.getElementById("addimagecontent").style.height = document.documentElement.clientHeight - 280 + "PX";
+	           // document.getElementById("addimagecontent").style.height = document.documentElement.clientHeight - 280 + "PX";
 	        }
 	        
 	        /* 2018-08-08 홍승비 - 썸네일+포토게시물 등록창 세로길이 리사이즈 추가 */
 	        window.onresize = function () {
-	        	 document.getElementById("addimagecontent").style.height = document.documentElement.clientHeight - 280 + "PX";
+	        	// document.getElementById("addimagecontent").style.height = document.documentElement.clientHeight - 280 + "PX";
 	        }
 	
 		    function MakeXMLString(str)
@@ -105,8 +105,7 @@
 			    return ( orgStr.replace( re, replaceStr ) );
 		    }
 	
-	        function addimageline(imgpath, localFileName, imgUniqueID, imgSize)
-	        {
+	        function addimageline(imgpath, localFileName, imgUniqueID, imgSize) {
 	            var imagecount = "";
 	            var imageid = "";
 	
@@ -122,24 +121,8 @@
 	                if (document.getElementById(imageid) != "" && document.getElementById(imageid) != null)
 	                    return "false";
 	
-	                var resultHTML = "";
-	                var ua = navigator.userAgent;
-	                if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {
-	                    resultHTML = "<table width='100%' class='content' style='border-top:0 none; table-layout:fixed;' id='" + "M_" + imageid + "' name='" + imgpath + "' uniqueId='" + imgUniqueID + "' ><tr>" +
-	                                     "<td style='width:25px;background:rgb(245, 245, 245);border-top:0 none; text-align: center;'><div class='custom_checkbox'><input type='checkbox' value='" + "M_" + imageid + "' id='imagecheck" + bodycount + "'  name='checkmenuSub' /></div></td>" +
-	                                     "<td style='width:113px; height: 100px;border-top:0 none; padding:6px;'><img id='" + imageid + "' title='" + localFileName + "' size='" + imgSize + "' uniqueId='" + imgUniqueID + "' style='width: 100px; height: 100px;' name='imgView'></img></td>" +
-	                                     "<td style='border-top:0 none; padding:6px 8px 6px 6px;'><textarea type=/text' style='width:100%; height:100px; border:1px solid #ddd; margin:0; padding:0;' maxlength='50' name='imgContent'></textarea></td>" +
-	                                     "<td style='width:72px; border-top:0 none; padding:0px 6px; text-align:center;'><div class='custom_radio'><input type='radio' name=mainFG /></div></td></tr></table>";
-	                }
-	                else {
-	                    resultHTML = "<table width='100%' class='content' style='border-top:0 none; table-layout:fixed;' id='" + "M_" + imageid + "' name='" + imgpath + "' uniqueId='" + imgUniqueID + "' ><tr>" +
-	                                     "<td style='width:20px;background:rgb(245, 245, 245);border-top:0 none; text-align: center;'><div class='custom_checkbox'><input type='checkbox' value='" + "M_" + imageid + "' id='imagecheck" + bodycount + "'  name='checkmenuSub' /></div></td>" +
-	                                     "<td style='width:100px; height: 100px;border-top:0 none; padding:6px;'><img id='" + imageid + "' title='" + localFileName + "' size='" + imgSize + "' uniqueId='" + imgUniqueID + "' style='width: 100px; height: 100px;' name='imgView'></img></td>" +
-	                                     "<td style='border-top:0 none; padding:6px 8px 6px 6px;'><textarea type=/text' style='width:100%; height:100px; border:1px solid #ddd; margin:0; padding:0;' maxlength='50' name='imgContent'></textarea></td>" +
-	                                     "<td style='width:72px; border-top:0 none; padding:0px 6px; text-align:center;'><div class='custom_radio'><input type='radio' name=mainFG /></div></td></tr></table>";
-	                }
-	                var imagecontent = document.getElementById("addimagecontent");
-	                imagecontent.innerHTML += resultHTML;
+					var imagecontent = document.getElementById("addimagecontent");
+	                insertImageHtml(imagecontent, imgpath, localFileName, imgUniqueID, imageid, imgSize);
 	                for (var i = 0 ; i < tmpContents.length ; i++) {
 	                    document.getElementsByName("imgContent")[i].value = tmpContents[i];
 	                }
@@ -156,20 +139,47 @@
 	                if (document.getElementById(imageid) != "" && document.getElementById(imageid) != null)
 	                    return "false";
 	
-	                var resultHTML = "<table width='100%' class='content' style='border-top:0 none; table-layout:fixed;' id='" + "M_" + imageid + "' name='" + imgpath + "' uniqueId='" + imgUniqueID + "' ><tr>" +
-	                                     "<td style='width:25px;background:rgb(245, 245, 245);border-top:0 none; text-align: center;'><div class='custom_checkbox'><input type='checkbox' value='" + "M_" + imageid + "' id='imagecheck" + bodycount + "'  name='checkmenuSub' /></div></td>" +
-	                                     "<td style='width:113px; height: 100px;border-top:0 none; padding:6px;'><img id='" + imageid + "' title='" + localFileName + "' size='" + imgSize + "' uniqueId='" + imgUniqueID + "' style='width: 100px; height: 100px;' name='imgView'></img></td>" +
-	                                     "<td style='border-top:0 none; padding:6px 8px 6px 6px;'><textarea type=/text' style='width:100%; height:100px; border:1px solid #ddd; margin:0; padding:0;' maxlength='50' name='imgContent'></textarea></td>" +
-	                                     "<td style='width:72px; border-top:0 none; padding:0px 6px; text-align:center;'><div class='custom_radio'><input type='radio' name=mainFG /></div></td></tr></table>";
-	
-	                var imagecontent = document.getElementById("addimagecontent");
-	                imagecontent.innerHTML += resultHTML;
+					var imagecontent = document.getElementById("addimagecontent");
+	                insertImageHtml(imagecontent, imgpath, localFileName, imgUniqueID, imageid, imgSize);
 	                if (imagecontent != null && imagecontent != "") {
 	                    document.getElementById(imageid).src = localFileName;
 	                    bodycount = parseInt(bodycount) + 1;
 	                }                
 	            }
 	        }
+			
+			function insertImageHtml(imagecontentDom, imgpath, localFileName, imgUniqueID, imageid, imgSize) {
+				// 사진 개체 박스
+				const wrapperAttr = { id: "M_" + imageid, name: imgpath, uniqueId: imgUniqueID };
+				const wrapper = createEl("div", "album_list_cont", wrapperAttr);
+				
+				// 체크박스
+				const spanCheck = createEl("span", "custom_checkbox");
+				const checkboxAttr = { type: "checkbox", value: "M_" + imageid, id: "imagecheck" + bodycount, name: "checkmenuSub" }
+				const checkbox = createEl("input", null, checkboxAttr);
+				spanCheck.appendChild(checkbox);
+				
+				// 이미지
+				const spanPhoto = createEl("span", "album_list_photo");
+				const imgAttr = { id: imageid, title: localFileName, size: imgSize, uniqueId: imgUniqueID, name: "imgView" };
+				const img = createEl("img", null, imgAttr);
+				spanPhoto.appendChild(img);
+				
+				// 텍스트
+				const spanText = createEl("span", "album_list_textarea");
+				const textareaAttr = { rows: "3", maxLength: "50", name: "imgContent" }
+				const textarea = createEl("textarea", null, textareaAttr);
+				spanText.appendChild(textarea);
+				
+				// 라디오 버튼
+				const spanRadio = createEl("span", "album_list_mainChk");
+				const radioWrap = createEl("div", "custom_radio");
+				radioWrap.appendChild(createEl("input", null, { type: "radio", name: "mainFG" }));
+				
+				spanRadio.appendChild(radioWrap);
+				wrapper.append(spanCheck, spanPhoto, spanText, spanRadio);
+				imagecontentDom.appendChild(wrapper);
+			}
 	
 	        function GetSmallUrl() {
 	            var xmldom_attachlist = createXmlDom();
@@ -211,7 +221,6 @@
 	        var isSubmit = false;
 	        
 	        function checkDuplicateSubmit(pMode) {
-	        	console.log("click!");
 				if (!isSubmit) { 
 					isSubmit = true;
 					
@@ -349,7 +358,7 @@
 			    strXML += "<TITLE>" + MakeXMLString(txtTitle.value.replace(/[\t\n\r]+/g, ' ').trim()) + "</TITLE>";
 			    strXML += "<STARTDATE>" + pStartDate + "</STARTDATE>";
 			    strXML += "<ENDDATE>" + pEndDate + "</ENDDATE>";
-			    strXML += "<ABSTRACT>" + MakeXMLString(txtAbstract.value) + "</ABSTRACT>";
+			    strXML += "<ABSTRACT></ABSTRACT>"; // 게시요약, 포토 / 썸네일 사용안함
 			    strXML += "<ATTACHMENTS>" + MakeXMLString(AttachFileList_Photo()) + "</ATTACHMENTS>";
 				strXML += "<UPPERITEMIDTREE>" + newID + "</UPPERITEMIDTREE>";
 				strXML += "<PARENTWRITEDATE></PARENTWRITEDATE>";
@@ -367,7 +376,7 @@
 					strXML += "<EXTENSIONATTRIBUTE32>" + strUserRank2 + "</EXTENSIONATTRIBUTE32>";	//직급으로 사용
 				}
 
-				strXML += "<EXTENSIONATTRIBUTE4>" + MakeXMLString(txtPhotoFile.value) + "</EXTENSIONATTRIBUTE4>";//이미지명으로 사용함
+				strXML += "<EXTENSIONATTRIBUTE4></EXTENSIONATTRIBUTE4>"; // 포토 / 썸네일에서는 미사용
 			    strXML += "<EXTENSIONATTRIBUTE5>" + MakeXMLString(GetSmallUrl()) + "</EXTENSIONATTRIBUTE5>";
 			    
 			    //20121018_[을지]_포토앨범 : 앨범소개 내용전달
@@ -631,8 +640,10 @@
 		            	alert("<spring:message code='ezBoard.t601'/>");
 			    		return;	
 		            }
-		            
-		            xmlhttp.open("POST", "/ezBoard/boardImageUpload.do?mode=DEL&boardID=" + encodeURIComponent(pBoardID) +"&uniqueIDs=" + uniqueIDs, false);
+		            fd.append("boardID", pBoardID);
+					fd.append("uniqueIDs", uniqueIDs);
+					
+		            xmlhttp.open("POST", "/ezBoard/boardImageUpload.do?mode=DEL", false);
 		            xmlhttp.send(fd);
 		
 		            document.getElementById("checkmenu").checked = false;
@@ -802,7 +813,7 @@
 		                    }
 		                }
 		                pBoardID = ret[0];
-		                document.getElementById("BoardSpan").innerHTML = ret[1];
+		                document.getElementById("BoardSpan").value = ret[1];
 		
 		                SelBoard = true;
 		            }
@@ -819,7 +830,7 @@
 	                    }
 	                }
 	                pBoardID = ret[0];
-	                document.getElementById("BoardSpan").innerHTML = ret[1];
+	                document.getElementById("BoardSpan").value = ret[1];
 	
 	                SelBoard = true;
 	            }
@@ -876,153 +887,98 @@
 			}
 	    </script>
 	</head>
-	<c:if test="${!isCrossBrowser}">
-		<script type="text/javascript" FOR="EzHTTPTrans" EVENT="AttachAddFile(filename)">
-		    Append_AttachAdd(filename);
-		</script>
-	</c:if>
 	<body class="popup" onload="window_onload()">
-	    <table border="0" class="layout">
-	        <tr>
-	            <td style="height:20px">
-	              <div id="menu">
-	                <ul>
-	                  <li ><span onClick="checkDuplicateSubmit('new');"><spring:message code='ezBoard.t98'/></span></li>
-	                  <li ><span ID='btn_Reply' onclick='btn_PhotoAttachAdd()'><spring:message code='ezBoard.t1001'/></span></li>
-	                  <li ><span id="Span2" onClick="return btn_PhotoAttachDel()"><spring:message code='ezBoard.t1003'/></span></li>
-	                  <li><span  onClick="checkDuplicateSubmit('temp');"><spring:message code='ezBoard.t10034'/></span></li>
-	                </ul>
-	              </div>
-	              <div id="close">
-	                <ul>
-	                    <li ><span onclick="window.close();"></span></li>
-	                </ul>
-	              </div>
-				<script type="text/javascript">
-				    selToggleList(document.getElementById("menu"), "ul", "li", "0");	    
-				</script>
-	        </td>
-	  </tr>
-	  <tr>
-	      <td>
-	      <table border="0" cellspacing="0" cellpadding="0" class="content" style="table-layout:fixed;">
-	        <tr>
-	          <th style="width:100px; text-align:center"">
-	          	<c:choose>
-	          		<c:when test="${boardType != 'SELECT'}">
-		                <spring:message code='ezBoard.t142'/>
-	          		</c:when>
-	          		<c:otherwise>
-		                <a class="imgbtn" onclick="NewItem_onclick()"><span><spring:message code='ezBoard.t171'/></span></a>
-	          		</c:otherwise>
-	          	</c:choose>
-	          </th>
-	          <td style="width:45%" id="tdBoardName">
-	          	<c:choose>
-	          		<c:when test="${boardType != 'SELECT'}">
-	          			${boardName}
-	          		</c:when>
-	          		<c:otherwise>
-	          			<c:choose>
-	          				<c:when test="${boardID == ''}">
-			                    <span id="BoardSpan"><spring:message code='ezBoard.t57'/></span>
-	          				</c:when>
-	          				<c:otherwise>
-			                    <span id="BoardSpan">${boardName}</span>
-	          				</c:otherwise>
-	          			</c:choose>
-	          		</c:otherwise>
-	          	</c:choose>
-	          </td>
-	          <th style="width:100px; text-align:center"><spring:message code='ezBoard.t223'/></th>
-	          <td style="width:47%;">
-				  <span id="spUseDept">${userInfo.displayName}</span>
-				  <c:if test="${'Y' == boardInfo.writerFlag}">
-				  	<div class="custom_checkbox">
-					  <input type="checkbox" id="chkUseDept" style="margin-left: 0px !important;" onclick="chkUseDept_onclick()">
-				  	</div>
-					  <select id="writerFlag" style="display: none;">
-						  <option value="<c:out value='${writerOption.N}\\${writerOption.N2}\\0' />"></option>
-						  <option value="<c:out value='${writerOption.T}\\${writerOption.T2}\\1' />"></option>
-						  <option value="<c:out value='${writerOption.D}\\${writerOption.D2}\\2' />"></option>
-					  </select>
-				  </c:if>
-			  </td>
-	        </tr>
-            <!-- 키워드 시작 -->
+		<div id="menu">
+			<ul>
+				<li><span onClick="checkDuplicateSubmit('new');"><spring:message code='ezBoard.t98'/></span></li>
+		  		<li><span  onClick="checkDuplicateSubmit('temp');"><spring:message code='ezBoard.t10034'/></span></li>
+			</ul>
+	  	</div>
+		<div id="close">
+			<ul>
+				<li><span onclick="window.close();"></span></li>
+			</ul>
+	  	</div>
+		<div class="flex_contentBox">
+			<%-- 게시판명 --%>
+			<div class="flex_content">
+				<div class="flex_content_tit"><spring:message code='ezBoard.t142'/></div>
+				<div class="flex_content_cont">
+					<input type="text" id="BoardSpan" value="<c:out value='${boardName}'/>" disabled="disabled" />
+				</div>
+			</div>
+			<%-- 게시자 --%>
+			<c:if test="${'Y' == boardInfo.writerFlag}">
+				<div class="flex_content">
+					<div class="flex_content_tit"><spring:message code='ezBoard.t223'/></div>
+					<div class="flex_content_cont">
+						<input type="checkbox" id="chkUseDept" onclick="chkUseDept_onclick()">
+						<label id="spUseDept" for="chkUseDept"><c:out value="${userInfo.displayName}"/></label>
+						<select id="writerFlag" style="display: none;">
+							<option value="<c:out value='${writerOption.N}\\${writerOption.N2}\\0' />"></option>
+							<option value="<c:out value='${writerOption.T}\\${writerOption.T2}\\1' />"></option>
+							<option value="<c:out value='${writerOption.D}\\${writerOption.D2}\\2' />"></option>
+						</select>
+					</div>
+				</div>
+			</c:if>
+            <%-- 키워드 --%>
             <c:if test="${not empty useKeyword && useKeyword eq 'Y'}">
-               <tr>
-                   <th><spring:message code="ezApprovalG.t1200" /></th>
-                   <td colspan="3" id="keyWordResult">
-                       <input type="text" id="txtKeyword" style="WIDTH: 20%; word-wrap: break-word; word-break: break-all;" value="" maxlength="100" onkeyup="keyword_onkeyUp(event)" >
-                   </td>
-               </tr>
-            </c:if>
-            <!-- 키워드 끝 -->
-	        <tr>
-	          <th style="text-align:center"><spring:message code='ezBoard.t208'/></th>
-	          <td colspan="3" style="width:100%; vertical-align:middle; padding:0px 5px 0px 3px; margin:0;"><INPUT type="text" id="txtTitle" style="WIDTH:100%;word-wrap:break-word;word-break:break-all; border:1px solid #ddd; margin:0px; padding:2px 0px 2px 0px;" value="" maxlength="100" /></td>
-	        </tr>
-	        <tr style="display:none;">
-	          <th><spring:message code='ezBoard.t1001'/></th>
-	          <td class="pos1" colspan="3" style="width:100%;"><input style="width:600px;" id="fileData" name="fileData" type="file" onchange="fileUploadPreview(this, 'preView')" /></td>
-	        </tr>
-	        <tr style="display:none;">
-	          <th><spring:message code='ezBoard.t1021'/></th>
-	          <td class="pos1" colspan="3" style="width:100%"><input type="text" id="txtPhotoFile" style="width:85%" readonly ></td>
-	        </tr>
-	        <tr>
-	            <th><spring:message code='ezBoard.t1008'/></th>
-	            <td colspan="3" style="height:100px; margin:0; padding:3px 5px 3px 3px;"><textarea style="width:100%; height:100px; margin:0; padding:0; border:1px solid #ddd;" id="photocontent" wrap="hard"></textarea></td>
-	        </tr>
-	      </table>
-	      </td>
-	  </tr>
-	  <tr>
-	    <td>
-	        <table style="width:100%; border:1px solid #ddd; border-top:0 none; table-layout:fixed;" border="0" cellspacing="0" cellpadding="0">
-	        <tr>
-	            <th width="60" style="text-align:left;padding-left:7px;border:0;"><div class="custom_checkbox"><input id="checkmenu" type="checkbox" onclick="imagecheckAll(this)" name="checkmenu"/></div></th>
-	            <th style="text-align:center ;padding-left:2px;border:0;"><spring:message code='ezBoard.t1012'/></th>
-	            <th width="72" style="text-align:center;padding-left:2px;border:0;"><spring:message code='ezBoard.t1022'/></th>
-	        </tr>
-	      </table>
-	    </td>
-	  </tr>
-	  <tr>
-	    <td colspan="4">
-	        <div id="addimagecontent" style="overflow:auto;width:100%;height:415px; vertical-align:top" ondragenter="onDragEnter(event)"  ondragover="onDragOver(event)" ondrop="onDrop(event)"></div>
-	    </td>
-	  </tr>
-	  <tr>
-	    <td>
-	        <iframe name="ifrm" src="about:blank" style="display: none"></iframe>
-	        <form method="post" id="form" name="form" enctype="multipart/form-data" action="" target="ifrm" style="display: none">
-	        <input type="file" name="file1" id="file1"  style="width: 1px; height: 1px;" onchange="imgtemp_onclick()" accept="image/*" multiple />
-	        <input type="hidden" name="mode" id="mode" />
-	        </form>
-	    </td>
-	  </tr>
-	  <tr style="display:none">
-	    <th><spring:message code='ezBoard.t209'/></th>
-	    <td style="vertical-align:middle" colspan="2"><input type="text" id="txtAbstract"  style="width:100%;word-break:break-all" value="" maxlength=100></td>
-	  </tr>
-	
-	<%-- 2018-06-08 홍승비 - 사용하지 않는 크로스브라우징 코드 주석처리 --%>
-	<%--  
-	    <tr>
-	    <td style="display:none;">
-	    <c:if test="${!isCrossBrowser}">
-		    <SCRIPT type="text/javascript">EzHTTPTrans_ActiveX("EzHTTPTrans");</SCRIPT>
-	    </c:if>
-	    <div id="lstAttachLink">&nbsp;</div>
-	    </td>
-	    </tr>
-	--%>
-
-	    </table>
-	    <div id="progdiv" class="progarea" style="z-index:6000;position:absolute;top:370px;left:227px;display:none">
-	        <P class="prog_bar"><span id="prog_bar" style="width:0%"></span></P> <span class="prog_num"><strong id ="prog_num">0</strong>%</span>
-	    </div>
+				<div class="flex_content">
+					<div class="flex_content_tit"><spring:message code="ezApprovalG.t1200" /></div>
+					<div class="flex_content_cont">
+						<div class="flex_content_keyword" id="keyWordResult" onclick="keywordInput('txtKeyword')">
+							<label for="txtKeyword">
+								<input type="text" id="txtKeyword" maxlength="70" style="width:auto" placeholder="<spring:message code='ezBoard.newDesign07' />" onblur="keyword_blur(event)" onkeyup="keyword_onkeyUp(event)" >
+							</label>
+						</div>
+					</div>
+				</div>
+			</c:if>
+			<!-- 제목 -->
+			<div class="flex_content">
+                <div class="flex_content_tit"><spring:message code='ezBoard.t208'/></div>
+                <div class="flex_content_cont">
+                    <input type="text" id="txtTitle" maxlength="100" placeholder="<spring:message code='ezBoard.t390' />" value="" />
+                </div>
+            </div>
+			<!-- 앨범소개 -->
+            <div class="flex_content">
+                <div class="flex_content_tit"><spring:message code='ezBoard.t1008'/></div>
+                <div class="flex_content_cont">
+                    <textarea id="photocontent" name="textarea" rows="2"></textarea>
+                </div>
+            </div>
+			<div class="flex_content_album">
+				<div class="flex_content">
+					<div class="flex_content_tit"></div>
+					<div class="flex_content_cont">
+						<span id='btn_Reply' onclick='btn_PhotoAttachAdd()'></span>
+						<button type="button" id='btn_Reply' class="form_btn3" onclick='btn_PhotoAttachAdd()'><spring:message code='ezBoard.t1001'/></button>
+						<button type="button" id="Span2" class="form_btn3" onClick="return btn_PhotoAttachDel()"><spring:message code='ezBoard.t1003'/></button>
+					</div>
+				</div>
+				<div class="album_list">
+					<div class="album_top_cont">
+						<span class="custom_checkbox">
+							<input type="checkbox" id="checkmenu" name="checkmenu" onclick="imagecheckAll(this)">
+						</span>
+						<span class="album_top_photo"><spring:message code='ezAddress.t301'/></span>
+						<span class="album_top_textarea"><spring:message code='ezBoard.t1012'/></span>
+						<span class="album_top_main"><spring:message code='ezBoard.t1022'/></span>
+					</div>
+					<!-- 사진 표출 영역 -->
+					<div id="addimagecontent" ondragenter="onDragEnter(event)" ondragover="onDragOver(event)" ondrop="onDrop(event)"></div>
+				</div>
+			</div>
+		</div>
+		<iframe name="ifrm" src="about:blank" style="display: none"></iframe>
+		<form method="post" id="form" name="form" enctype="multipart/form-data" action="" target="ifrm" style="display: none">
+			<input type="file" name="file1" id="file1"  style="display:none;" onchange="imgtemp_onclick()" accept="image/*" multiple />
+			<input type="hidden" name="mode" id="mode" />
+		</form>
+		<div id="progdiv" class="progarea" style="z-index: 6000; position:absolute; top:370px; left:227px; display: none;">
+			<p class="prog_bar"><span id="prog_bar" style="width:0%;"></span></p> <span class="prog_num"><strong id="prog_num"></strong>%</span>
+		</div>
 	</body>
 </html>

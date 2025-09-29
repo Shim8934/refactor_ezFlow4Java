@@ -115,3 +115,14 @@ var strLangVersion02 = "Gagal membuat riwayat untuk manajemen versi postingan, s
 // 2025-05-07 전인하 - 관리자 > 게시판 > 게시물 구분 변경 시 제한 조건 추가
 var strLangJIHgubunChange01 = "Jika terdapat postingan di papan, kategori papan tidak dapat diubah.";
 var strLangJIHgubunChange02 = "Jenis papan telah diubah di halaman administrator.\nTidak dapat menyimpan postingan. Penyegaran ulang groupware diperlukan.";
+
+var strLangNewBoardDesign01 = "Ubah";
+var strLangNewBoardDesign02 = "Hapus";
+var strLangNewBoardDesign03 = "Suka";
+var strLangNewBoardDesign04 = "Tidak suka";
+var strLangNewBoardDesign05 = "emotikon";
+var strLangNewBoardDesign06 = "Silakan masukkan komentar.";
+var strLangNewBoardDesign07 = "Lampiran";
+var strLangNewBoardDesign08 = "Masukkan kata sandi.";
+var strLangNewBoardDesign09 = "Posting secara permanen";
+var strLangNewBoardDesign10 = "Unduh";

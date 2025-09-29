@@ -8,6 +8,7 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
 		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('/css/Tab.css')}" type="text/css">
 		<script type="text/javascript" src="${util.addVer('ezBoard.e1', 'msg')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
@@ -113,7 +114,7 @@
 		</script>
 		
 	</head>
-	<body class="popup">
+	<body class="popup newBoardPopup">
 		<div class="layerpopup"  style="z-index: 1000; position: absolute;display: none;" id="iFramePanel">
 			<iframe src="/blank.htm" style="border:none;" id="iFrameLayer"></iframe>
 		</div>
@@ -125,80 +126,48 @@
 		</div>
 		
 	<%-- 2018-11-07 홍승비 - 동영상게시판 구분 추가 --%>
-	<c:choose>
-		<c:when test="${gubun == 7}">
-			<div id="commentDiv" style='height:540px;overflow-y:auto;'>
-		</c:when>
-		<c:otherwise>
-			<div id="commentDiv" style='height:570px;overflow-y:auto;'>
-		</c:otherwise>
-	</c:choose>
-			<table class="mainlist emoticonLayerStaticPosition" style="width:99.5%" >
-				<c:choose>
-					<c:when test="${gubun == 2}">
-						<tr>
-							<th colspan="2" style="text-align:center; width: 85%; border-left:1px solid #e2e2e2; border-right:1px solid #e2e2e2; width:85%;
-									 border-top:1px solid #e2e2e2; border-bottom:1px solid #f8f8fa; padding-bottom:3px">
-                                <%-- 2023-11-07 전인하 - 게시판 > 이모티콘 아이콘 삽입 --%>
-                                <div class="emoticonRelative">                                       
-                                    <img id="_addEmoticon" class="_addEmoticon" src="/images/poll/add_emo_vote.png" onclick="addSticker(this)">
-                                    <textarea id="onelinereply" rows="3" style = "resize:none; width: calc(100% - 45px);" maxlength="500"></textarea>
-                                </div>
-							</th>
-					</c:when>
-					<c:otherwise>
-						<tr>
-							<th style="text-align:center; width: 85%; border-left:1px solid #e2e2e2; border-top:1px solid #e2e2e2; border-bottom:1px solid #e2e2e2; width:85%;">
-                                <%-- 2023-11-07 전인하 - 게시판 > 이모티콘 아이콘 삽입 --%>
-                                <div class="emoticonRelative">								    
-                                    <img id="_addEmoticon" class="_addEmoticon" src="/images/poll/add_emo_vote.png" onclick="addSticker(this)">
-                                    <textarea id="onelinereply" rows="3" style = "resize:none; width: 90%;" maxlength="500"></textarea>
-                                </div>
-							</th>
-					</c:otherwise>	
-				</c:choose>
-				<c:choose>
-					<c:when test="${gubun == 2}">
-						</tr>
-					</c:when>
-					<c:otherwise>
-							<th style="text-align:center;border-top:1px solid #e2e2e2; border-bottom:1px solid #e2e2e2; border-right:1px solid #e2e2e2; width:15%;">
-							    <c:if test='${boardInfo.attachmentFlag eq "Y"}'>
-                                    <a class='imgbtn comment' style="vertical-align: middle"><span onclick="btnfileup('commentFile')"><spring:message code='ezBoard.commentAttach.JIH01' /></span></a><br/>
-                                </c:if>
-								<a class='imgbtn comment' style="vertical-align: middle"><span onclick="Save_OneLineReply(this)"><spring:message code='ezBoard.t98' /></span></a>
-							</th>
-						</tr>
-					</c:otherwise>
-				</c:choose>
-				</tr>
+		<div id="commentDiv" style='height:${gubun == 7 ? 540 : 570}px; overflow-y:auto;'>
+			<div class="comment_cont reNewalCmt">
 				<c:if test="${gubun == 2}">
-					<tr>
-						<th colspan="2" style="width: 90%; border-left:1px solid #e2e2e2; border-top:1px solid #f8f8fa; border-right:1px solid #e2e2e2; text-align:right;
-								border-bottom:1px solid #e2e2e2; padding-top:0px; padding-bottom:4px; vertical-align: middle">
-							<span style = "font-weight:normal; display:inline-block; margin-top:2px"><spring:message code='ezBoard.t438' />&nbsp;</span>
-							<span><input type="password" id="txtPassWord" maxlength="20" size="20" />&nbsp;</span>
-							<c:if test='${boardInfo.attachmentFlag eq "Y"}'>
-                                <a class='imgbtn comment' style="vertical-align: middle"><span onclick="btnfileup('commentFile')"><spring:message code='ezBoard.commentAttach.JIH01' /></span></a>
-                            </c:if>
-							<a class='imgbtn comment' style="vertical-align: middle"><span id="replySaveBtn" onclick="Save_OneLineReply(this)"><spring:message code='ezBoard.t98' /></span></a>
-						</th>
-					</tr>
+					<div class="pw_area">
+						<input type="password" id="txtPassWord" maxlength="20" size="20" placeholder="<spring:message code='ezBoard.t243'/>">
+					</div>
 				</c:if>
-			</table>
-			
-            <c:if test='${boardInfo.attachmentFlag eq "Y"}'>
-                <%-- 첨부파일 버튼 --%>
-                <input id="commentFile" type="file" multiple="multiple" onchange="filechange(event)" style="display:none"/>
-                <input id="commentListFile" type="file" multiple="multiple" onchange="filechange(event)" style="display:none"/>
-                <%-- 댓글 첨부 리스트 --%>
-                <div id="commentAttach"></div>
-            </c:if>
-            <div class="commentSort">
-                <span id="earliest" class="checked" onclick="boardCommentSort()"><spring:message code='ezBoard.commentSort.JIH001' /></span>
-                <span id="latest" onclick="boardCommentSort()"><spring:message code='ezBoard.commentSort.JIH002' /></span>
-            </div>
-			<table id="commentList" style="width:99.5%;margin-top:10px; overflow:auto;border:1px solid rgb(225,225,225)"></table>
+				<div class="comment_textarea">
+					<textarea id="onelinereply" rows="3" maxlength="500" placeholder="<spring:message code='ezBoard.newDesign01'/>"></textarea>
+				</div>
+				<c:if test='${boardInfo.attachmentFlag eq "Y"}'>
+					<div id="commentAttach"></div>
+				</c:if>
+				<div class="comment_function">	
+					<div>
+						<span id="_addEmoticon" class="btn_emoticon" onclick="addSticker(this)"><spring:message code='ezBoard.newDesign02' /></span>
+						<c:if test='${boardInfo.attachmentFlag eq "Y"}'>
+							<span class="btn_attachFile" onclick="btnfileup('commentFile')"><spring:message code='ezBoard.commentAttach.JIH01' /></span>
+						</c:if>
+					</div>
+					<div>
+						<button class='btn_registration' onclick="Save_OneLineReply(this)"><spring:message code='ezBoard.t98' /></button>
+					</div>
+				</div>
+			</div>
+			<c:if test='${boardInfo.attachmentFlag eq "Y"}'>
+				<%-- 첨부파일 버튼 --%>
+				<input id="commentFile" type="file" multiple="multiple" onchange="filechange(event)" style="display:none"/>
+				<input id="commentListFile" type="file" multiple="multiple" onchange="filechange(event)" style="display:none"/>
+				<%-- 댓글 첨부 리스트 --%>
+			</c:if>
+			<div class="comment_listBox">
+				<div class="portlet_tabpart02_top">
+					<p>
+						<span id="earliest" class="tabon" onclick="boardCommentSort()"><spring:message code='ezBoard.commentSort.JIH001' /></span>
+					</p>
+					<p>
+						<span id="latest" onclick="boardCommentSort()"><spring:message code='ezBoard.commentSort.JIH002' /></span>
+					</p>
+				</div>
+				<div id="commentList"></div>
+			</div>
 		</div>
 		<input id="publicModulus" value="${publicModulus}" type="hidden"/>
 	    <input id="publicExponent" value="${publicExponent}" type="hidden"/>

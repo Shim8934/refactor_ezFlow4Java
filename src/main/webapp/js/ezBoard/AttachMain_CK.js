@@ -301,19 +301,19 @@ function AppendFileAttachInfo(ret) {
 
         var objTh = document.createElement("TH");
         var ua = navigator.userAgent;
-        if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1 && ua.indexOf("Macintosh") == -1) {
-            objTh.style.width = "24px";
-        }
-        else
-            objTh.style.width = "15px";
+		objTh.style.width = "36px";
+		objTh.style.textAlign = "center";
+		
+		var objSpan = document.createElement("span");
+		objSpan.className = "custom_checkbox";
+		
         var input = document.createElement("input");
         input.type = "checkbox";
         input.id = "checkboxall";
         input.onclick = function () { dadiframe.checkall(); };
-        var oDiv = document.createElement("div");
-        oDiv.className = "custom_checkbox";
-        oDiv.appendChild(input);
-        objTh.appendChild(oDiv);
+		
+		objSpan.appendChild(input);
+		objTh.appendChild(objSpan);
         objTr.appendChild(objTh);
 
         var objTh2 = document.createElement("TH");
@@ -360,15 +360,16 @@ function AppendFileAttachInfo(ret) {
 
                 var objTd = document.createElement("TD");
                 objTd.style.textAlign = "center";
-
+		
+				var objSpan = document.createElement("span");
+				objSpan.className = "custom_checkbox";
+		
                 var input = document.createElement("input");
                 input.type = "checkbox";
                 input.name = "fileSelect";
-    	        var oDiv = document.createElement("div");
-    	        oDiv.className = "custom_checkbox";
-    	        
-    	        oDiv.appendChild(input);
-                objTd.appendChild(oDiv);
+
+				objSpan.appendChild(input);
+                objTd.appendChild(objSpan);
                 objTr.appendChild(objTd);
 
                 var objTd2 = document.createElement("TD");

@@ -3143,3 +3143,28 @@ function innerIfrmaeOffset() {
         });
     }
 }
+
+// tag명, 클래스이름(다수일 경우 ' '로 구분), 속성을 입력하면 객체를 만들어 반환함
+function createEl(tag, className, attrs = {}) {
+    const el = document.createElement(tag);
+    if (className) {
+        const classes = className.split(' ');
+        for (var i = 0; i < classes.length; i++) {
+            if (classes[i]) el.classList.add(classes[i]);
+        }
+    }
+
+    if (attrs) {
+        for (var key in attrs) {
+            el.setAttribute(key, attrs[key]);
+        }
+    }
+    
+    return el;
+}
+
+function escapeForHTML(str) {
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+}

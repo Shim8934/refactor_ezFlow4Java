@@ -421,3 +421,13 @@ background-color: #A20000; border-color: #A20000;}
     -ms-user-select: none;
     -webkit-user-select: none;
 }
+
+/* 게시판-스킨컬러추가 */
+.custom_checkbox input[type="checkbox"]:checked { background: #A20000; border-color: #A20000 !important;}
+.custom_radio input[type="radio"]::after{background-color: #A20000;}
+.custom_radio input[type="radio"]:checked{border-color: #A20000 !important;}
+#menu li.view_moreboarditem.on .layer_select li span:hover{background:#ECF2FE; color:#A20000;}
+.comment_listBox .comment_list .comment_list_function > .comment_list_btn > span:hover {color: #A20000;}
+.background_listImg > .custom_radio input[type="radio"]:checked{border: #A20000 !important; background: #A20000 !important;}
+.background_listImg > .custom_radio input[type="radio"]::after{left: 5px; top: 3px;}
+.background_listImg:has(.custom_radio input[type="radio"]:checked) {border: 1px solid #a20000;}

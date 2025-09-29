@@ -1,12 +1,14 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html>
 	<head>
 		<title><spring:message code='ezBoard.t293'/></title>
 		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
 		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/Tab.css')}" type="text/css">
 		<link rel="stylesheet" href="${util.addVer('/css/font-awesome-5.0.10/css/fontawesome-all.css')}">
 		<script type="text/javascript" src="${util.addVer('ezBoard.e1', 'msg')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
@@ -26,41 +28,88 @@
 					MARGIN-TOP: 0mm;
 					MARGIN-BOTTOM: 0mm;
 				}
-			<%-- 2018-07-24 홍승비 - 썸네일/포토게시물 이미지 클릭 시 레이어팝업 추가 --%>
-			.imgPopup{position: relative; float: left; max-width: 400px; max-height: 400px; cursor:pointer;}
-			.imgPopupMagnify{position: relative; float: left; cursor: pointer;}
-			.imgPopupBox{width: 500px;height: 500px; position: absolute; background: rgba(0,0,0,0.4); border-radius: 30px;}
-			.imgPopupBoxMagnify{width: 700px;height: 760px; position: absolute; background: rgba(0,0,0,0.4); border-radius: 30px; z-index: 5;}
-			.imgPopupDivMagnify{width: 670px; max-width:670px; height:680px; overflow:auto; margin:0px auto;}
-			.imgPopupDiv{width:400px; height:400px; margin:0px auto;}
-			.imgPopupBoxOff, .imgPopupOff{display: none;}
-			.imgNotAttached{vertical-align: middle; margin: 0px auto; display: block; border: 1px dotted #cfcfcf; width: 33px; padding: 5px 2px 2px 5px;}
-			.iPBInnerDiv_Top{display:inline-block; float:right; width:40px; margin-top: 15px;}
-			.iPBInnerDiv_Top i{font-size:25px; color:black; cursor:pointer;}
-			.iPBInnerDiv_TopOff{display:none; float:right; width:40px;}
-			.iPBInnerDiv{height:50px; padding-right: 15px}	
-			.likeButton {
-				padding:5px;
-				cursor:pointer;
-				display:inline-block;
-				border:1px solid #c7c7c7;
-			    border-radius:2px;
-			}
-			.likeButton:hover {
-				background-color:#f1f8ff;
-				border:1px solid #6793d8;
+				
+	        .imgPopup {
+	            position: relative;
+	            float: left;
+	            max-width: 400px;
+	            max-height: 400px;
+	            cursor: pointer;
+	        }
+	
+	        .imgPopupMagnify {
+	            position: relative;
+	            float: left;
+	            cursor: pointer;
+	        }
+	
+	        .imgPopupBox {
+	            width: 500px;
+	            height: 500px;
+	            position: absolute;
+	            background: rgba(0,0,0,0.4);
+	            border-radius: 30px;
+	        }
+	
+	        .imgPopupBoxMagnify {
+	            width: 700px;
+	            height: 760px;
+	            position: absolute;
+	            background: rgba(0,0,0,0.4);
+	            border-radius: 30px;
+	            z-index: 5;
+	        }
+	
+	        .imgPopupDivMagnify {
+	            width: 670px;
+	            max-width: 670px;
+	            height: 680px;
+	            overflow: auto;
+	            margin: 0px auto;
+	        }
+	
+	        .imgPopupDiv {
+	            width: 400px;
+	            height: 400px;
+	            margin: 0px auto;
+	        }
+	
+	        .imgPopupBoxOff, .imgPopupOff {
+	            display: none;
+	        }
+	
+	        .imgNotAttached {
+	            vertical-align: middle;
+	            margin: 0px auto;
+	            display: block;
+	            border: 1px dotted #cfcfcf;
+	            width: 33px;
+	            padding: 5px 2px 2px 5px;
+	        }
+	
+	        .iPBInnerDiv_Top {
+	            display: inline-block;
+	            float: right;
+	            width: 40px;
+	            margin-top: 15px;
+	        }
+	
+            .iPBInnerDiv_Top i {
+                font-size: 25px;
+                color: black;
+                cursor: pointer;
             }
-			.disLikeButton {
-				padding:5px;
-				cursor:pointer;
-				display:inline-block;
-				border:1px solid #c7c7c7;
-			    border-radius:2px;
-			}
-			.disLikeButton:hover {
-				background-color:#ffd9ec;
-				border:1px solid #f44336;
-			}
+	
+	        .iPBInnerDiv_TopOff {
+	            display: none;
+	            float: right;
+	            width: 40px;
+	        }
+	
+	        .iPBInnerDiv {
+	            height: 50px;
+	            padding-right: 15px
+	        }
 		</style>
 		<script type="text/javascript">
 				window.offscreenBuffering = true;
@@ -866,7 +915,7 @@
 		            var NewPage = "";
 		
 		            if (Page == "Next") {
-		                var endpage = pPage * 10;
+		                var endpage = pPage * 6;
 		                if (imagetotalcount <= endpage) {
 		                    return;
 		                }
@@ -876,7 +925,7 @@
 		                }
 		            }
 		            else if (Page == "Nextimage") {
-		                var endpage = pPage * 10;
+		                var endpage = pPage * 6;
 		
 		                if (imagetotalcount <= endpage) {
 		                    imagepage = 0;
@@ -888,15 +937,15 @@
 		                }
 		            }
 		            else if (Page == "Prev") {
-		                imagepage = 9;
+		                imagepage = 5;
 		                if (pPage == 1) {
-		                    if (imagetotalcount % 10 > 0) {
-		                        pPage = Number(imagetotalcount / 10) + 2;
+		                    if (imagetotalcount % 6 > 0) {
+		                        pPage = Number(imagetotalcount / 6) + 2;
 		                    } else {
-		                        pPage = Number(imagetotalcount / 10) + 1;
+		                        pPage = Number(imagetotalcount / 6) + 1;
 		                    }
-							if (imagetotalcount != 10) {
-		                    	imagepage = imagetotalcount % 10 - 1;
+							if (imagetotalcount != 6) {
+		                    	imagepage = imagetotalcount % 6 - 1;
 							}
 		                }
 		                NewPage = parseInt(pPage) - 1;
@@ -977,7 +1026,7 @@
 		            for(var i = 0; i < ImageCount; i++)
 		            {
 		                var imgSrc = "/ezBoard/getBoardThumbnailInfo.do?type=BOARDTHUM&boardID=" + encodeURI(pBoardID) + "&fileName=" + encodeURI(result[i].split('/')[7]) + "&itemID=" + encodeURI(pItemID);
-		                document.getElementById("viewboxlist").innerHTML += "<img src='" + imgSrc + "' style='border:0' title='" + MakeXMLString(imagecontet[i].replaceAll("'" , "&apos;")) + "' id='image" + i + "' name='" + imageid[i] + "' style='cursor:pointer;' onclick='ImageMain(this)' onmouseover='imagemouseover(this)' onmouseout='imagemouseout(this)'/>";
+		                document.getElementById("viewboxlist").innerHTML += "<span class='viewboxlist_item' onclick=\"ImageMain(this.querySelector('img'))\"><img src='" + imgSrc + "' title='" + MakeXMLString(imagecontet[i].replaceAll("'" , "&apos;")) +  "' id='image" + i + "' name='" + imageid[i] + "' onclick='ImageMain(this); event.stopPropagation();' onmouseover='imagemouseover(this)' onmouseout='imagemouseout(this)'/></span>";
 		                if (CrossYN())
 		                    document.getElementById("image" + i).style.opacity = "0.35";
 		                else
@@ -1000,21 +1049,28 @@
 		            for(var i = 0; i < ImageCount; i++)
 		            {
 		                document.getElementById("image" + i).style.border = "";
-		                document.getElementById("image" + i).style.margin = "0px 4px";
 		                document.getElementById("image" + i).style.width = imgWidth;
 		                document.getElementById("image" + i).style.height = imgHeight;
-		                if (CrossYN())
+		                document.getElementById("image" + i).parentElement.style.border =""; 
+		                document.getElementById("image" + i).parentElement.style.backgroundColor = "";
+		                if (CrossYN()) {
 		                    document.getElementById("image" + i).style.opacity = "0.35";
+			                document.getElementById("image" + i).parentElement.style.opacity = "";
+		                }
 		                else
 		                    document.getElementById("image" + i).style.filter = "Alpha(Opacity=35)";
 		            }
 		
 		            document.getElementById(result).style.border = "#888 1px solid";
-					document.getElementById(result).style.margin = "0px 4px";
 		            document.getElementById(result).style.width = imgWidth;
 		            document.getElementById(result).style.height = imgHeight;
-		            if (CrossYN())
+		            document.getElementById(result).parentElement.style.border = "1px solid #256EF4";
+		            document.getElementById(result).parentElement.style.backgroundColor = "#ECF2FE";
+		            
+		            if (CrossYN()) {
 		                document.getElementById(result).style.opacity = "1";
+		                document.getElementById(result).parentElement.style.opacity = "1";
+		            }
 		            else
 		                document.getElementById(result).style.filter = "Alpha(Opacity=100)";
 		        }
@@ -1032,7 +1088,6 @@
 		            }
 		            
 		            image.style.border = "#888 0.015px solid";
-					image.style.margin = "0px 4px";
 		        }
 		        function imagemouseout(image)
 		        {
@@ -1046,7 +1101,6 @@
 		            }
 		            
 		            image.style.border = "none";
-					image.style.margin = "0px 4px";
 		        }
 		
 		        var photoalbumedit_dialogArguments = new Array();
@@ -1165,20 +1219,20 @@
 		        /* 2018-06-01 홍승비 - 페이징 코드 수정, 도달 불가능 코드 삭제 */
 		        function pageimageover()
 		        {
-		            var endpage = pPage * 10;
+		        	var endpage = pPage * 6;
 		            if(imagetotalcount > endpage && pPage == 1)
 		            {
 		                document.getElementById("SmallImageNext").style.display = "";		                
 		            }
-		            else if(pPage == 1 && imagetotalcount <= 10)
+		            else if(pPage == 1 && imagetotalcount <= 6)
 		            {
-		                document.getElementById("SmallImagePrev").style.display = "none";
-		                document.getElementById("SmallImageNext").style.display = "none";
+// 		                document.getElementById("SmallImagePrev").style.display = "none";
+// 		                document.getElementById("SmallImageNext").style.display = "none";
 		            }
 		            else if(pPage != 1 && imagetotalcount <= endpage)
 		            {
 		                document.getElementById("SmallImagePrev").style.display = "";
-		                document.getElementById("SmallImageNext").style.display = "none";
+// 		                document.getElementById("SmallImageNext").style.display = "none";
 		            }
 		            else
 		            {
@@ -1189,8 +1243,8 @@
 		
 		        function pageimageout()
 		        {
-		            document.getElementById("SmallImagePrev").style.display = "none";
-		            document.getElementById("SmallImageNext").style.display = "none";
+// 		            document.getElementById("SmallImagePrev").style.display = "none";
+// 		            document.getElementById("SmallImageNext").style.display = "none";
 		        }
 		
 		        function btn_ImgDownload()
@@ -1666,7 +1720,7 @@
 						success: function(result){
 							likeCountAfter = result;
 							if (parseInt(result) > 0) {
-								document.getElementById("likeCountSpan").innerText = "(" + result + ")";
+								document.getElementById("likeCountSpan").innerText = result;
 							} else {
 								document.getElementById("likeCountSpan").innerText = "";
 							}
@@ -1788,7 +1842,7 @@
 						success: function(result){
 							disLikeCountAfter = result;
 							if (parseInt(result) > 0) {
-								document.getElementById("disLikeCountSpan").innerText = "(" + result + ")";
+								document.getElementById("disLikeCountSpan").innerText = + result;
 							} else {
 								document.getElementById("disLikeCountSpan").innerText = "";
 							}
@@ -1808,7 +1862,7 @@
 			    	if(gubun === "disLike"){
 			    		isDisLikeChecked = checked ;
 				    	if (parseInt(result) > 0) {
-							document.getElementById("disLikeCountSpan").innerText = "(" + result + ")";
+							document.getElementById("disLikeCountSpan").innerText = result;
 						} else {
 							document.getElementById("disLikeCountSpan").innerText = "";
 						}
@@ -1820,7 +1874,7 @@
 			    	}else if(gubun === "like"){
 			    		isLikeChecked = checked;
 			    		if (parseInt(result) > 0) {
-							document.getElementById("likeCountSpan").innerText = "(" + result + ")";
+							document.getElementById("likeCountSpan").innerText = result;
 						} else {
 							document.getElementById("likeCountSpan").innerText = "";
 						}
@@ -2018,13 +2072,13 @@
 				}
 			});
 		</script>
+		<link rel="stylesheet" id="skinCss" href="undefined">
 	</head>
-	<body  id="bodyPopup" class="popup" style="overflow:hidden auto; height:100%;">
-		<table class="layout" style="border-spacing:0; border-bottom:1px solid #ddd; border:0px; width:100%; min-width:745px;">
-		  <tr>
-		    <td style="height:20px; vertical-align:top">
-		      <div id="menu">
-		        <ul>
+	<body id="bodyPopup" class="popup newBoardPopup" style="overflow: hidden auto; height: 100%;">
+		<div class="layout">
+		      <!-- menu -->	
+			  <div id="menu">
+		        <ul class="" style="overflow: unset;">
 					<c:if test="${guestReadFG ne 'Y'}">
 		        	<c:choose>
 		        		<%-- 2018-06-20 홍승비 - 승인/반려 버튼만 활성화, 작성자는 수정/삭제 가능 --%>
@@ -2059,7 +2113,7 @@
                                 </c:if>
 		        			</c:if>
 		                    <li ID='btn_Read' ><span  onclick="ReaderList()"><spring:message code='ezBoard.t1006'/></span></li>
-		                    <li ID='btn_down' ><span  onclick="btn_ImgDownload()"><spring:message code='ezBoard.t1007'/></span></li>
+		                    <li ID='btn_down' ><span  onclick="btn_ImgDownload()"><spring:message code='ezBoard.ksy01'/></span></li>
 		        		</c:otherwise>
 		        	</c:choose>
 					<c:if test="${boardInfo.urlCopyFlag != 'N'}">
@@ -2093,284 +2147,194 @@
 		            <li ><span  onclick="btnClose_onclick()"></span></li>
 		        </ul>
 		      </div>
-			<script type="text/javascript">
-				selToggleList(document.getElementById("menu"), "ul", "li", "0");
-			</script>
-		    </td>
-		  </tr>
-		  <tr>
-		     <td>
-		         <table class="content" style="border:0px; width:100%">
-		            <tr>
-		              <th style="width:10%"><spring:message code='ezBoard.t223'/></th>
-			              <td style="width:40%; text-overflow:ellipsis; white-space:nowrap;" id="WriteUserNM">
-			              	  <div style="vertical-align:middle;width:100%;height:16px;">
-								 <span onclick='OpenUserInfo("${boardItem.writerID}", "${boardItem.writerDeptID} ")' style="cursor:pointer;"><c:out value="${boardItem.writerName}"/></span>
-							  </div>
-			              </td> 
-		              <th style="width:10%"><spring:message code='ezBoard.t289'/></th>
-		              <td style="width:40%; text-overflow:ellipsis; white-space:nowrap;"id="User_DeptNM"><c:out value="${boardItem.writerDeptName}"/></td>
-		            </tr>
-		            <tr>
-		              <th style="width:10%"><spring:message code='ezBoard.t290'/></th>
-		              <td style="width:40%; text-overflow:ellipsis; white-space:nowrap;" id="User_JobTitle">${boardItem.extensionAttribute3}</td>
-		              <th style="width:10%"><spring:message code='ezBoard.t224'/></th>
-		              <td style="width:40%; text-overflow:ellipsis; white-space:nowrap;" id="User_WriteDate">${boardItem.writeDate.substring(0, 16)} </td>
-		            </tr>
-		            <%-- 키워드 --%>
-                    <c:if test='${boardInfo.useKeyword eq "Y"}'>
-                         <tr>
-                             <th><spring:message code="ezApprovalG.t1200" /></th>
-                             <td width="100%" id="cKeyword" style="WORD-WRAP: break-word;word-break:break-all; line-height:16px;" colspan=5>
-                                <div style="WIDTH: 100%; vertical-align: middle">
-                                    <c:if test='${not empty keywordList}'>
-                                        <c:forEach var="keyword" items="${keywordList}">
-                                            <span class="keywordSpan" id="${keyword.keywordName}" onclick="onclickKeyword(event)">#${keyword.keywordName}</span>
-                                        </c:forEach>
-                                    </c:if>
-                                </div>
-                             </td>
-                         </tr>
-                     </c:if>
-                    <c:if test="${(boardInfo.boardAdmin_FG == 'true' || boardInfo.boardGroupAdmin_FG == 'OK') && not empty boardItem.updateDate}">
-                    <!-- 수정자, 수정일 -->
-                        <tr>
-                            <th style="width:10%;"><spring:message code='ezBoard.updateJIH01' /></th>
-                            <td id="updaterName" style = "white-space:nowrap; padding-right:5px; width: 40%;">
-                                <div style="vertical-align:middle;width:100%;height:16px;">${boardItem.updaterName}</div>
-                            </td>
-                            <th style="width:10%;"><spring:message code='ezBoard.updateJIH02' /></th>
-                            <td id="updateDate" style = "white-space:nowrap; padding-right:5px; width: 40%;">
-                                <div style="vertical-align:middle;width:100%;height:16px;">${boardItem.updateDate.substring(0, 16)}</div>
-                            </td>
-                        </tr>
-                    <!-- 수정자, 수정일 end -->
-                    </c:if>	
-		            <tr>
-		              <th><spring:message code='ezBoard.t291'/></th>
-		              <td id="cTitle" colspan="3">
-			              <div id="title" style="OVERFLOW-Y:auto; WIDTH:100%; vertical-align:middle;"><c:out value="${boardItem.title}"/></div>
-		              </td>
-		            </tr>
-		            <tr>
-		                <th><spring:message code='ezBoard.t1008'/></th>
-		                <td id="cimagecontent" colspan="3" style="padding-right:0px">
-		                    <div id="Div2" style="OVERFLOW-Y: auto; overflow-x:hidden; height:55px;WIDTH: 100%; padding-top:5px;padding-bottom:5px; vertical-align:middle; white-space:pre-wrap; word-break:break-word;"><c:out value="${boardItem.mainContent}"/></div>
-		                </td>
-		            </tr>
-		          </table>
-		    </td>
-		  </tr>
-		  <tr>
-		    <td style="width:100%;  text-align:center; vertical-align:top;padding-top:10px;" >
-		        <table style="width:100%; border:1px solid #ddd;  ">
-				  <tr>
-		        	<td style="height:55px;" colspan="3">
-		            </td>
-		        </tr>
-		        <tr>
-		            <td style="width:100px; padding-left:50px; text-align:center">
-		                <img src="/images/previous.png" style="width:70px;height:70px;border:0;cursor:pointer;" onclick="Pagenationimage('prevPage');" />
-		            </td>
-		            <td style="display:inline-block;">
-		                <table id="imagetable" style="text-align:center; border:0px;">
-		                    <tr>  
-		                        <td style="width:400px;height:300px; min-height:300px; border:1px solid #e3e1e2; text-align:center;">
-		                            <img id="mainimages" class="thumbnail" style="background-color:#ffffff;cursor:pointer;" src=""/>            
-		                        </td>
-		                    </tr>
-		           	    </table>
-		            </td>
-		            <td style="width:100px; padding-right:50px; text-align:center">
-		                <img src="/images/next.png" style="width:70px;height:70px;border:0;cursor:pointer;" onclick="Pagenationimage('nextPage');" />
-		            </td>
-		        </tr>
-		        <tr>
-		        	<td class="MainContentTD" style="padding:10px 0px; height:83px; text-align:center" colspan="3">
-		            	<div id="MainContent" style="height:60px; padding-left:23%; padding-right:24%;white-space: pre-wrap; overflow: auto;"></div>
-		            </td>
-		        </tr>
-			<%-- 2019-04-05 홍승비 - 본문, 사진소개 하단에 좋아요 버튼 추가 --%>
-			<%-- 2023-04-06 기민혁 - 싫어요 버튼 추가 --%>
-			<c:if test="${boardInfo.likeFlag != null && boardInfo.likeFlag == 'Y' || boardInfo.disLikeFlag != null && boardInfo.disLikeFlag == 'Y'}">
-				<tr>
-					<td style="text-align:center; padding-bottom:8px;" colspan="3">
-						<div style="display: flex; justify-content: center; ">
-							<c:if test="${boardInfo.likeFlag != null && boardInfo.likeFlag == 'Y'}">
-								<div id="likeDiv" style="text-align:center; padding:5px 0px 7px 0px; margin-right: 5px;">	
-						  			<span class="likeButton" onclick="clickLikeButton()" title="<spring:message code='ezBoard.hsb10'/>" style="height:20px;">
-							  			<c:choose>
-							  				<c:when test="${isLikeChecked == 'Y'}">
-							  					<img id="likeButtonImg" src="/images/like_on.png"/>
-							  				</c:when>
-							  				<c:otherwise>
-							  					<img id="likeButtonImg" src="/images/like_off.png"/>
-							  				</c:otherwise>
-							  			</c:choose>
-							  				<span id="likeCountSpan" style="vertical-align:top;"><c:if test="${boardItem.likeCount > 0}"> (<c:out value="${boardItem.likeCount}"/>)</c:if></span>
-						  			</span>
-								</div>
-							</c:if>
-			
-							<c:if test="${boardInfo.disLikeFlag != null && boardInfo.disLikeFlag == 'Y'}">
-								<div id="disLikeDiv" style="text-align:center; padding:5px 0px 7px 0px;">	
-						  			<span class="disLikeButton" onclick="clickDisLikeButton()" title="<spring:message code='ezBoard.kmh07'/>" style="height:20px;">
-							  			<c:choose>
-							  				<c:when test="${isDisLikeChecked == 'Y'}">
-							  					<img id="disLikeButtonImg" src="/images/disLike_on.png"/>
-							  				</c:when>
-							  				<c:otherwise>
-							  					<img id="disLikeButtonImg" src="/images/disLike_off.png"/>
-							  				</c:otherwise>
-							  			</c:choose>
-							  				<span id="disLikeCountSpan" style="vertical-align:top;"><c:if test="${boardItem.disLikeCount > 0}"> (<c:out value="${boardItem.disLikeCount}"/>)</c:if></span>
-						  			</span>
-								</div>
-							</c:if>
-                		</div>
-					</td>
-				</tr>
-			</c:if>
-                <%-- 2024-09-24 이혜림 - 본문 하단, 첨부파일/한줄댓글 상단에 별점 평가하기 추가 --%>
+			  <script type="text/javascript">
+				  selToggleList(document.getElementById("menu"), "ul", "li", "0");
+			  </script>
+			  <!-- //menu -->
+			<!-- 정보 -->
+	         <div class="preview_infoBox">
+	            <div class="preview_tit" id="title"><c:out value="${boardItem.title}"/></div>
+	            <div class="preview_subtit" id="Div2" ><c:out value="${boardItem.mainContent}"/></div><!-- 앨범소개 는 제목 밑으로 -->
+	            <div class="preview_info">
+	                <div>
+	                    <span class="WriteUserClick" onclick='OpenUserInfo("${boardItem.writerID}", "${boardItem.writerDeptID} ")'><c:out value="${boardItem.writerDeptName}"/> <c:out value="${boardItem.writerName}"/><c:if test="${not empty fn:trim(boardItem.extensionAttribute3)}">(<c:out value="${boardItem.extensionAttribute3}"/>)</c:if></span>
+	                    <span><c:out value="${boardItem.writeDate.substring(0, 16)}"/></span>
+	                </div>
+	                <div>
+	                    <span style="display:none;">영구게시</span><!-- 영구게시없을시 span 제거/ div 는 필요 -->
+	                </div>
+	            </div>
+				<c:if test="${((boardInfo.boardAdmin_FG == 'true' || boardInfo.boardGroupAdmin_FG == 'OK') && not empty boardItem.updateDate) || boardInfo.useKeyword eq 'Y'}">
+					<div class="preview_detail">
+						<!-- 상세정보는 위 기본정보를 제외한 추가정보 (확장컬럼) -->
+						<span id="preview_detail_toggle" class="preview_toggleBtn active"><spring:message code='ezBoard.newDesign10' /></span>
+						<div class="detail_category active">
+							<ul>
+								<c:if test="${(boardInfo.boardAdmin_FG == 'true' || boardInfo.boardGroupAdmin_FG == 'OK') && not empty boardItem.updateDate}">
+									<!-- 수정자, 수정일 -->
+									<li>
+										<span><spring:message code='ezBoard.updateJIH01' /></span>
+										<span id="updaterName">
+											<c:out value="${boardItem.updaterDept}"/> <c:out value="${boardItem.updaterName}"/><c:if test="${not empty fn:trim(boardItem.updaterTitle)}">(<c:out value="${boardItem.updaterTitle}"/>)</c:if>
+											<span><c:out value="${boardItem.updateDate.substring(0, 16)}"/></span>
+										</span>
+								   </li>
+								   <!-- 수정자, 수정일 end -->
+								</c:if>
+								<c:if test='${boardInfo.useKeyword eq "Y"}'>
+									<li>
+										<span><spring:message code="ezApprovalG.t1200" /></span>
+										<c:if test='${not empty keywordList}'>
+											<c:forEach var="keyword" items="${keywordList}">
+												<span class="keywordSpan" id="${keyword.keywordName}" onclick="onclickKeyword(event)">#${keyword.keywordName}</span>
+											</c:forEach>
+										</c:if>
+										
+									</li>
+								</c:if>
+							</ul>
+						</div>
+					</div>
+				</c:if>
+	          </div>
+	          <!-- //정보 -->
+		  
+		   <!-- 앨범 사진영역 -->
+		    <div class="preview_body">
+		    	<div class="preview_album">
+			        <div class="preview_album_cont">
+			            <div>
+			                <img src="/images/previous.png" style="cursor:pointer;" onclick="Pagenationimage('prevPage');" />
+			            </div>
+                        <div id="imagetable" class="album_visual">
+                            <img id="mainimages" class="thumbnail" style="background-color:#ffffff;cursor:pointer;" src=""/>            
+                        </div>
+			            <div>
+			                <img src="/images/next.png" style="cursor:pointer;" onclick="Pagenationimage('nextPage');" />
+			            </div>
+			        </div>
+	            	<div class="preview_album_txt" id="MainContent" ></div>
+					<div class="preview_thumbnail_cont">
+	                    <div class="thumbnail_btn_prev" onmouseover="pageimageover()" onmouseout="pageimageout()">
+	                        <img src="/images/date_prev.png" id="SmallImagePrev" onclick="btn_SmallIamge('Prev')" />
+	                    </div>
+	                    <div class="thumbnail_list" id="viewBox" onmouseover="pageimageover()" onmouseout="pageimageout()"></div>
+	                    <div class="thumbnail_btn_next" onmouseover="pageimageover()" onmouseout="pageimageout()">
+	                        <img src="/images/date_next.png" id="SmallImageNext" onclick="btn_SmallIamge('Next')" />
+	                    </div>
+					</div>
+		        </div>
+		    </div>
+	        <!-- //앨범 사진영역 -->
+	        <!-- 좋아요/평가하기 -->
+		     <div class="evaluate_cont" <c:if test="${boardInfo.likeFlag == 'N' && boardInfo.disLikeFlag == 'N'}">  style="display: block;" </c:if>>
+			    <%-- 2019-04-05 홍승비 - 본문, 사진소개 하단에 좋아요 버튼 추가 --%>
+				<%-- 2023-04-06 기민혁 - 싫어요 버튼 추가 --%>
+				<c:if test="${boardInfo.likeFlag != null && boardInfo.likeFlag == 'Y' || boardInfo.disLikeFlag != null && boardInfo.disLikeFlag == 'Y'}">
+					<div class="likeDivBox" <c:if test="${not empty boardInfo.starRatingFlag && boardInfo.starRatingFlag == 'Y'}">style="margin-left: 255px;"</c:if>>
+						<c:if test="${boardInfo.likeFlag != null && boardInfo.likeFlag == 'Y'}">
+							<div id="likeDiv">	
+					  			<span class="likeButton" onclick="clickLikeButton()" title="<spring:message code='ezBoard.hsb10'/>">
+						  			<c:choose>
+						  				<c:when test="${isLikeChecked == 'Y'}">
+						  					<img id="likeButtonImg" src="/images/like_on.png"/>
+						  				</c:when>
+						  				<c:otherwise>
+						  					<img id="likeButtonImg" src="/images/like_off.png"/>
+						  				</c:otherwise>
+						  			</c:choose>
+						  				<span id="likeCountSpan"><c:if test="${boardItem.likeCount > 0}"> <c:out value="${boardItem.likeCount}"/></c:if></span>
+					  			</span>
+							</div>
+						</c:if>
+		
+						<c:if test="${boardInfo.disLikeFlag != null && boardInfo.disLikeFlag == 'Y'}">
+							<div id="disLikeDiv">	
+					  			<span class="disLikeButton" onclick="clickDisLikeButton()" title="<spring:message code='ezBoard.kmh07'/>" >
+						  			<c:choose>
+						  				<c:when test="${isDisLikeChecked == 'Y'}">
+						  					<img id="disLikeButtonImg" src="/images/disLike_on.png"/>
+						  				</c:when>
+						  				<c:otherwise>
+						  					<img id="disLikeButtonImg" src="/images/disLike_off.png"/>
+						  				</c:otherwise>
+						  			</c:choose>
+						  				<span id="disLikeCountSpan"><c:if test="${boardItem.disLikeCount > 0}"> <c:out value="${boardItem.disLikeCount}"/></c:if></span>
+					  			</span>
+							</div>
+						</c:if>
+	            	</div>
+				</c:if>
+				
+				<!-- 앰범에서 별점 평가 사용안할시 제거 -->
+		        <%-- 2024-09-24 이혜림 - 본문 하단, 첨부파일/한줄댓글 상단에 별점 평가하기 추가 --%>
                 <c:if test="${not empty boardInfo.starRatingFlag && boardInfo.starRatingFlag == 'Y'}">
-                    <tr>
-                        <td style="text-align:center; padding-bottom:8px;" colspan="3">
-                       <div id="ratingContainer" class="rating_div" onclick="clickRatingButton()">
-                                <div>
-                                <span id="avgScore"><b>${itemStarRating.averageScore}</b><spring:message code='ezBoard.lhr004'/></span>
-                                    <span>(<span id="totalRaters">${itemStarRating.totalRaters}</span><spring:message code='ezBoard.lhr003'/>)</span>
-                                </div>
-                                <span class="ratingButton" title="<spring:message code='ezBoard.lhr001'/>">
-                                <c:forEach var="i" begin="1" end="5">
-                                    <c:set var="srcIconFlag" value="${itemStarRating.rating >= i}" />
-                                <label for="rate${i}">
-                                    <input type="radio" name="reviewStar" value="${i}" id="rate${i}" <c:if test="${itemStarRating.rating == i}"> checked </c:if> />
-                                    <img draggable="false" src="/images/ImgIcon/${srcIconFlag ? 'icon-flag.gif' : 'view-flag.gif'}"/>
-                                </label>
-                                </c:forEach>
-                                </span>
-                                <a class="imgbtn"><span onclick="clickSaveRatingButton()"><spring:message code='ezBoard.lhr001'/></span></a>
-                            </div>
-                        </td>
-                    </tr>
+                    <div id="ratingContainer" class="rating_div" onclick="clickRatingButton()">
+                          <div>
+                              <span id="avgScore"><b>${itemStarRating.averageScore}</b><spring:message code='ezBoard.lhr004'/></span>
+                              <span>(<span id="totalRaters">${itemStarRating.totalRaters}</span><spring:message code='ezBoard.lhr003'/>)</span>
+                          </div>
+                          <span class="ratingButton" title="<spring:message code='ezBoard.lhr001'/>">
+                              <c:forEach var="i" begin="1" end="5">
+                                  <c:set var="srcIconFlag" value="${itemStarRating.rating >= i}" />
+                              <label for="rate${i}">
+                                  <input type="radio" name="reviewStar" value="${i}" id="rate${i}" <c:if test="${itemStarRating.rating == i}"> checked </c:if> />
+                                  <img draggable="false" src="/images/ImgIcon/${srcIconFlag ? 'icon-flag.gif' : 'view-flag.gif'}"/>
+                              </label>
+                              </c:forEach>
+                          </span>
+                          <a class="imgbtn"><span onclick="clickSaveRatingButton()"><spring:message code='ezBoard.lhr001'/></span></a>
+                    </div>
                 </c:if>
-		        </table>
-		    </td>
-		  </tr>
-		    <%--<tr style="display:none;">
-		        <td style="text-align:center">
-		            <span id="MainContent" ></span>
-		        </td>
-		    </tr>--%>
-		    <tr>
-		        <td  >
-					<div style="background:#f8f8fa; border:1px solid #ddd; border-top:0 none; height:70px; text-align:center; padding-top:25px;">
-		            <table border="0">
-		                <tr>
-		                    <td style="width:30px; padding-left:15px;padding-right:1px;padding-bottom:5px; vertical-align:bottom; text-align:left" onmouseover="pageimageover()" onmouseout="pageimageout()">
-		                        <img src="/images/previous.png" id="SmallImagePrev" style="width:30px;height:30px;border:0;cursor:pointer;" onclick="btn_SmallIamge('Prev')" />
-		                    </td>
-		                    <td onmouseover="pageimageover()" onmouseout="pageimageout()">
-		                        <div class="content" id="viewBox" style="width:100%; border:0;" ></div>
-		                    </td>
-		                    <td style="width:30px; padding-bottom:5px; vertical-align:bottom; text-align:right" onmouseover="pageimageover()" onmouseout="pageimageout()">
-		                        <img src="/images/next.png" id="SmallImageNext" style="width:30px;height:30px;border:0;cursor:pointer;" onclick="btn_SmallIamge('Next')" />
-		                    </td>
-		                </tr>
-		            </table>
-				</div>
-		        </td>
-		    </tr>
-		  <%--2011-04 : 한줄 답변 옵션 처리--%>
-<%-- 		  <c:choose> --%>
-<%-- 		  	<c:when test="${oneLineReplyFlag == '1'}"> --%>
-<!-- 			  <tr> -->
-<!-- 			    <td style="height:50px"> -->
-<!-- 			        <table> -->
-<!-- 			            <tr> -->
-<!-- 			                <td style="height:20px;"></td> -->
-<!-- 			            </tr> -->
-<!-- 			        </table> -->
-<!-- 			        <table class="content">    -->
-<!-- 			        <tr> -->
-<%-- 			            <th><spring:message code='ezBoard.t486'/></th> --%>
-<!-- 			            <td class="pos1"><input id="onelinereply" style="WIDTH: 100%" type="text" maxLength="100" onKeyDown="OneLineReply_onkeydown(event)"></td> -->
-<%-- 			            <td class="pos2"><a class="imgbtn"><span onClick="Save_OneLineReply(event)"><spring:message code='ezBoard.t98'/></span></a></td> --%>
-<!-- 			        </tr> -->
-<!-- 			        <tr> -->
-<!-- 			            <td style="height:100px" colspan="4"> -->
-<!-- 			                <div id="onelinereplylist" style="OVERFLOW:auto; HEIGHT: 90px; background-color:white; padding:10px; text-align:left"></div> -->
-<!-- 			            </td> -->
-<!-- 			        </tr> -->
-<!-- 			        </table> -->
-<!-- 			      </td> -->
-<!-- 			  </tr> -->
-<!-- 			  <tr> -->
-<!-- 			    <td style="DISPLAY:none; height:50px" class="pad1"> -->
-<!-- 			        <table class="file"> -->
-<!-- 			            <tr> -->
-<%-- 			              <th><spring:message code='ezBoard.t292'/></th> --%>
-			
-<!-- 			              <td class="pos1"> -->
-<!-- 			                  <div style="OVERFLOW:auto;HEIGHT:50px;BACKGROUND-COLOR:white; text-align:left" id="lstAttachLink"></div> -->
-<!-- 			              </td> -->
-<%-- 			              <td class="pos2"><a class="imgbtn"><span onClick="attach_SelectAll()"><spring:message code='ezBoard.t325'/></span></a><a class="imgbtn"><span onClick="attach_Download()"><spring:message code='ezBoard.t98'/></span></a> </td> --%>
-<!-- 			              <td id="ItemLevel"></td> -->
-<!-- 			            </tr> -->
-<!-- 			      </table> -->
-<!-- 			    </td> -->
-<!-- 			  </tr> -->
-<%-- 		  	</c:when> --%>
-<%-- 		  	<c:otherwise> --%>
-<!-- 		        <tr style="DISPLAY:none"> -->
-<!-- 				    <td class="pad1" style="height:20px"> -->
-<!-- 					    <table class="file"> -->
-<!-- 				     	   <tr> -->
-<%-- 			        		<th><spring:message code='ezBoard.t292'/></th> --%>
-<!-- 				          	<td class="pos1"><div id="lstAttachLink" style="OVERFLOW:auto;HEIGHT:50px;BACKGROUND-COLOR:white; text-align:left"></div></td> -->
-<%-- 				          	<td class="pos2"><a class="imgbtn"><span onClick="attach_SelectAll()"><spring:message code='ezBoard.t325'/></span></a><a class="imgbtn"><span onClick="attach_Download()"> <spring:message code='ezBoard.t98'/></span></a></td> --%>
-<!-- 				          	<td id="ItemLevel"></td> -->
-<!-- 				        	</tr> -->
-<!-- 				        </table> -->
-<!-- 				    </td> -->
-<!-- 		 	 	</tr> -->
-<%-- 		  	</c:otherwise> --%>
-<%-- 		  </c:choose> --%>
+                <!-- //앰범에서 별점 평가 사용안할시 제거 -->
+			</div>
+			<!-- //좋아요/평가하기 -->
+		    
+		 
 			<%-- 2019-11-05 홍승비 - 하단댓글 영역 추가 --%>
 	        <c:if test="${oneLineReplyFlag == '2' && guestReadFG ne 'Y'}">
-	        	<div style='height:auto;'>
-					<table class="mainlist emoticonLayerStaticPosition" style="width:100%; min-width:745px; margin-top:8px;" >
-						<tr>
-							<th style="text-align:center; width: 85%; border-left:1px solid #e2e2e2; border-top:1px solid #e2e2e2; border-bottom:1px solid #e2e2e2;">
-                                <%-- 2023-11-07 전인하 - 게시판 > 이모티콘 아이콘 삽입 --%>
-                                <div class="emoticonRelative">								    
-                                    <img id="_addEmoticon" class="_addEmoticon" src="/images/poll/add_emo_vote.png" onclick="addSticker(this)">
-                                    <textarea id="onelinereply" rows="3" style = "resize:none; width:90%;" maxlength="500"></textarea>
-                                </div>
-							</th>
-							<th style="text-align:center;border-top:1px solid #e2e2e2; border-bottom:1px solid #e2e2e2; border-right:1px solid #e2e2e2; width:15%">
-								<c:if test='${boardInfo.attachmentFlag eq "Y"}'>
-								    <a class='imgbtn comment' style="vertical-align: middle"><span onclick="btnfileup('commentFile')"><spring:message code='ezBoard.commentAttach.JIH01' /></span></a><br/>
-								</c:if>
-								<a class='imgbtn comment' style="vertical-align: middle"><span onclick="Save_OneLineReply(this)"><spring:message code='ezBoard.t98' /></span></a>
-							</th>
-						</tr>
-					</table>
+	        	<div class="comment_cont reNewalCmt">
+    				<div class="comment_textarea">
+						<textarea id="onelinereply" rows="3" maxlength="500" placeholder="<spring:message code='ezBoard.newDesign01'/>"></textarea>
+					</div>
+	        	
 					<c:if test='${boardInfo.attachmentFlag eq "Y"}'>
-                        <%-- 첨부파일 버튼 --%>
-                        <input id="commentFile" type="file" multiple="multiple" onchange="filechange(event)" style="display:none"/>
-                        <input id="commentListFile" type="file" multiple="multiple" onchange="filechange(event)" style="display:none"/>
-                        <%-- 댓글 첨부 리스트 --%>
-                        <div id="commentAttach"></div>
+						<div id="commentAttach"></div>
 					</c:if>
-                    <div class="commentSort">
-                        <span id="earliest" class="checked" onclick="boardCommentSort()"><spring:message code='ezBoard.commentSort.JIH001' /></span>
-                        <span id="latest" onclick="boardCommentSort()"><spring:message code='ezBoard.commentSort.JIH002' /></span>
-                    </div>
-					<table id="commentList" style="width:100%; min-width:745px; margin-top:2px; overflow:auto;border:1px solid rgb(225,225,225)"></table>
+
+					<div class="comment_function">	
+						<div>
+							<span id="_addEmoticon" class="btn_emoticon" onclick="addSticker(this)"><spring:message code='ezBoard.newDesign02' /></span>
+							<c:if test='${boardInfo.attachmentFlag eq "Y"}'>
+								<span class="btn_attachFile" onclick="btnfileup('commentFile')"><spring:message code='ezBoard.commentAttach.JIH01' /></span>
+							</c:if>
+						</div>
+						<div>
+							<button class='btn_registration' onclick="Save_OneLineReply(this)"><spring:message code='ezBoard.t98' /></button>
+						</div>
+					</div>
+				</div>
+				<c:if test='${boardInfo.attachmentFlag eq "Y"}'>
+                       <%-- 첨부파일 버튼 --%>
+                       <input id="commentFile" type="file" multiple="multiple" onchange="filechange(event)" style="display:none"/>
+                       <input id="commentListFile" type="file" multiple="multiple" onchange="filechange(event)" style="display:none"/>
+                       <%-- 댓글 첨부 리스트 --%>
+				</c:if>
+				<div class="comment_listBox">
+					<div class="portlet_tabpart02_top">
+						<p>
+							<span id="earliest" class="tabon" onclick="boardCommentSort()"><spring:message code='ezBoard.commentSort.JIH001' /></span>
+						</p>
+						<p>
+							<span id="latest" onclick="boardCommentSort()"><spring:message code='ezBoard.commentSort.JIH002' /></span>
+						</p>
+					</div>
+					<div id="commentList"></div>
 				</div>
 	        </c:if>
 	        <%-- 본문하단 댓글영역 끝 --%>
+	        
+	        
 		  <c:if test="${adjacentItemsEnableFlag == '1' && showAdjacent == '1'}">
 			  <tr>
 			    <td style="height:20px">
@@ -2409,7 +2373,7 @@
 			    </td>
 			  </tr>
 		  </c:if>
-		</table>
+		</div>
 		<input id="publicModulus" value="${publicModulus}" type="hidden"/>
 	    <input id="publicExponent" value="${publicExponent}" type="hidden"/>
 	    <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>
