@@ -833,6 +833,7 @@ public class EzBoardAdminController extends EzFileMngUtil {
 		model.addAttribute("boardGroupID", boardGroupID);
 		model.addAttribute("boardName", boardName);
 		model.addAttribute("hasSubBoard", hasSubBoard);
+		model.addAttribute("useGroupFlag", boardPropertyVO.getUseGroupFlag());
 
 		logger.debug("boardMove ended");
 		return "admin/ezBoard/boardMove";

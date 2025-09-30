@@ -14164,7 +14164,7 @@ public class EzBoardController extends EzFileMngUtil{
 		}
 
 		/* 하위게시판 체크 */
-		if (type.equals("MODIFY")) {
+		if (!type.equals("CREATE")) {
 			List<BoardPropertyVO> lowerBoardList = ezBoardAdminService.getUnderBoardID(boardID, "2", userInfo.getTenantId()); // 하위게시판 리스트
 
 			for (BoardPropertyVO vo : lowerBoardList) {

@@ -1333,13 +1333,13 @@
 			function chkUseGroup_onclick(obj) {
 				if (obj.checked) {
 					document.querySelectorAll("tr").forEach(el => {
-						if (!el.classList.contains("contentG") && !el.classList.contains("primary")) {
+						if (!el.classList.contains("contentG") && !el.classList.contains("primary") && !el.classList.contains("secondary")) {
 							el.style.display = "none";
 						}
 					});
 				} else {
 					document.querySelectorAll("tr").forEach(el => {
-						if (!el.classList.contains("contentG") && !el.classList.contains("primary")) {
+						if (!el.classList.contains("contentG") && !el.classList.contains("primary") && !el.classList.contains("secondary")) {
 							el.style.display = "";
 						}
 					});
