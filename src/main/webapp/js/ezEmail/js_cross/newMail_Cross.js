@@ -742,6 +742,10 @@ function Send_onClick_preview() {
     }
 }
 
+function previewSend() {
+    setTimeout(Send_onClick, 1000);
+}
+
 function Send_onClick() {
     /* Send_onClick_preview 에서 체크하고 오기때문에 주석
     if (eSubject.value.trim() == "") {
@@ -1185,7 +1189,7 @@ function event_SaveonClick() {
                 			try { deleteMailUser(invalidAddressArr[i],"2"); } catch (e) {console.log(e);}
                 		}
                 		
-                		setTimeout(Send_onClick(), 100);
+                		Send_onClick();
                 	}
                 }
                 // 잘못된 메일주소가 있을 경우 (ex> mailto:test@test.com)

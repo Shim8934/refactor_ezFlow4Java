@@ -230,7 +230,7 @@
 			}
 
 			function send() {
-			    window.opener.Send_onClick();
+			    window.opener.previewSend();
 			    window.close();
 			}
 
