@@ -4138,6 +4138,7 @@ to_clob('<td width="520" height="38" style="width: 520px; height: 38px; vertical
 			</p>')
 ,'ezJournal.t07',SYS_EXTRACT_UTC(SYSTIMESTAMP),'기본월간업무일지','Top','basic');
 
+-- 문자열이 너무 깁니다. (form_content2,form_content3,form_content4,form_content5)
 Insert into tbl_journal_form (form_id,tenant_id,form_name,form_content,form_content2,form_content3,form_content4,form_content5,form_content6,type_id,form_date,form_info,company_id,form_status) 
 values (seq_tbl_journal_form.nextval,0,'분기업무일지(기본)',
 to_clob('<div>
