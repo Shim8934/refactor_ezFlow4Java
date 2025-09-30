@@ -191,6 +191,12 @@ public class EzFileMngUtil extends EgovAbstractServiceImpl{
     protected void writeUploadedFile(MultipartFile file, String newName, String stordFilePath) throws Exception {
 		String stordFilePathReal = (stordFilePath==null?"":stordFilePath);
 		
+		// 로컬에 경로가 없으면 오류가 발생함
+		EzFAL.EzFile stordFile = new EzFAL.EzFile(stordFilePath);
+		if (!stordFile.exists()) {
+			stordFile.mkdirs();
+		}
+		
 		try (InputStream stream = file.getInputStream();
 			 EzFAL.EzFileOutputStream bos = new EzFAL.EzFileOutputStream(stordFilePathReal + commonUtil.separator + newName)) {
 			
