@@ -904,6 +904,7 @@ function checkMailStatusAndSave(savemode) {
     dadiframe.updateItemUid();
 }
 var alertFlag = false;
+var mailSaveFlag = false;
 function Save_onClick(savemode) {
     // 이미 저장 혹은 발송 중이면 저장 작업을(자동 저장) 수행하지 않고 그냥 반환한다.
     if (savemode == "tempsave" && MailStatus == "SEND" && !previewChk) {
@@ -950,6 +951,7 @@ function Save_onClick(savemode) {
 function Save_onClick_Complete(ReturnValue) {
     try {
         if (ReturnValue) {
+            mailSaveFlag = true;
             var Subject = eSubject.value;
             /* 2024-03-06 이사라 - 임시보관함으로 메일을 저장하는 경우도 제목을 필수로 입력하도록 수정하여 불필요한 부분 주석
             if (TrimText(Subject) == "" && !previewChk)

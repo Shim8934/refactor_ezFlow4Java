@@ -579,7 +579,9 @@
 	        if (g_url && !isDelted && (g_cmd != "EDIT" || writetype.isReserve)) { // 지우면 안됨: EDIT, EDIT_IN_DRAFTS
 				delDrafts();
 	        } else {
-	        	delAttachListFile(filedate);
+	            if(!mailSaveFlag){
+	                delAttachListFile(filedate);
+	            }
 	        } 
 	    }
 	    var mail_message_cross_dialogArguments = new Array();
