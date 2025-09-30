@@ -2389,7 +2389,8 @@ function setColorMode() {
 	var link = document.createElement('link');
 	link.rel = 'stylesheet';
 	link.id = "skinCss";
-	link.href = cssMap.get(useColor);
+	const cssMapValue = cssMap.get(useColor);
+	if (cssMapValue) link.href = cssMapValue;
 
 	document.head.appendChild(link);
 }
