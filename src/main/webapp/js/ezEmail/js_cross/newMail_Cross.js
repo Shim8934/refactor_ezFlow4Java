@@ -3179,7 +3179,7 @@ function changeTextOption(bodyType) {
 		document.getElementById("SelMailSign").classList.add("disabled"); // plainTextDisable style
 		
 		// 대용량 첨부파일 없애기
-		dadiframe.btnfiledel('big');
+		dadiframe.btnfiledel('big',false);
 		/*} else {
     		//document.getElementById("bodyType").options[0].selected = true;
     	}*/

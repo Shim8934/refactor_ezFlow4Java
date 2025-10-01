@@ -617,8 +617,13 @@
 		        }
 		        
 		    }
-		    
-		    function btnfiledel(type) {
+
+            /**
+             * 
+             * @param type
+             * @param isDelButton : 파일 삭제버튼 클릭
+             */
+		    function btnfiledel(type,isDelButton) {
 		        var filecnt = document.getElementById("filelist").childNodes.length;
 		        var isDeleted = false;
 		        
@@ -670,7 +675,7 @@
 		            }
 		        }
 
-		        if (!isDeleted) {
+		        if (!isDeleted && isDelButton) {
 		            alert(strLang90);
 		        }
 		        
@@ -983,7 +988,7 @@
             <span style="float:left;">
                 <a class="imgbtn imgbck" onclick="btnfileup()"><span><spring:message code='ezEmail.t677' /></span></a>
                 <a class="imgbtn imgbck" id="btnBigFileUpload" onclick="btnfileup_big()"><span><spring:message code='ezEmail.t663' /></span></a>
-                <a class="imgbtn imgbck" onclick="btnfiledel()"><span><spring:message code='ezEmail.t678' /></span></a>   
+                <a class="imgbtn imgbck" onclick="btnfiledel('',true)"><span><spring:message code='ezEmail.t678' /></span></a>   
                 <c:if test="${useWebfolder == 'YES'}">
                 	<a class="imgbtn imgbck" onclick="filePicker()"><span><spring:message code='ezWebFolder.pyy02' /></span></a>
                 </c:if>
