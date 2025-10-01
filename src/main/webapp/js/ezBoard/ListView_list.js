@@ -1667,17 +1667,27 @@ function tr_select(pRowID, pTableID, callbackFunc) {
 
         //현재 클릭한 Row를 Select 한다.
         //strAttribute = GetAttribute(oSourceTr, "selected");
-        if (oSourceTr.childNodes[0].childNodes[0].checked) {
-            oSourceTr.setAttribute("selected", "false");
-            oSourceTr.childNodes[0].childNodes[0].checked = false;
-            oSourceTr.style.backgroundColor = m_strColorDefault;
-            strListInfo = ReplaceText(strListInfo, oSourceTr.childNodes[0].childNodes[0].id, "");
-        }
-        else {
-            oSourceTr.setAttribute("selected", "true");
-            oSourceTr.childNodes[0].childNodes[0].checked = true;
-            oSourceTr.style.backgroundColor = m_strColorSelect;
-            strListInfo += oSourceTr.childNodes[0].childNodes[0].id;
+        if (!document.getElementById("HeaderAllCheckBox") && pBoardType == "E") { // 체크박스가 존재하지 않는 경우
+            if (oSourceTr.style.backgroundColor != "rgb(255, 255, 255)") {
+                oSourceTr.setAttribute("selected", "false");
+                oSourceTr.style.backgroundColor = m_strColorDefault;
+            } else {
+                oSourceTr.setAttribute("selected", "true");
+                oSourceTr.style.backgroundColor = m_strColorSelect;
+            }
+        } else {
+            if (oSourceTr.childNodes[0].childNodes[0].checked) {
+                oSourceTr.setAttribute("selected", "false");
+                oSourceTr.childNodes[0].childNodes[0].checked = false;
+                oSourceTr.style.backgroundColor = m_strColorDefault;
+                strListInfo = ReplaceText(strListInfo, oSourceTr.childNodes[0].childNodes[0].id, "");
+            }
+            else {
+                oSourceTr.setAttribute("selected", "true");
+                oSourceTr.childNodes[0].childNodes[0].checked = true;
+                oSourceTr.style.backgroundColor = m_strColorSelect;
+                strListInfo += oSourceTr.childNodes[0].childNodes[0].id;
+            }
         }
 
         //각 리스트마다 마지막으로 선택한 ID를 보관한다.
@@ -1719,7 +1729,17 @@ function tr_unselectedAll(pTableID) {
 	        }
 	    }
     } else {
-    	strListInfo = "";
+        if (pBoardType == "E") { // 체크박스가 존재하지 않는 경우
+            var SelList = new ListView();
+            SelList.LoadFromID("BoardListDiv");
+
+            for (var i = 0; i < SelList.GetRowCount() ; i++) {
+                SelList.GetDataRows()[i].style.backgroundColor = m_strColorDefault;
+                strListInfo = "";
+            }
+        } else {
+    	    strListInfo = "";
+        }
     }
 }
 
@@ -1789,9 +1809,14 @@ function tr_selectBlock(pRowID, pTableID) {
 function tr_mouseover(pRow) {
 
     //var strAttribute = GetAttribute(pRow, "selected");
-    if (pRow.childNodes[0].childNodes[0].checked != true) {
-        pRow.style.backgroundColor=m_strColorOver;      
-
+    if (!document.getElementById("HeaderAllCheckBox") && pBoardType == "E") { // 체크박스가 존재하지 않는 경우
+        if (pRow.style.backgroundColor == "rgb(255, 255, 255)") {
+            pRow.style.backgroundColor=m_strColorOver;
+        }
+    } else {
+        if (pRow.childNodes[0].childNodes[0].checked != true) {
+            pRow.style.backgroundColor=m_strColorOver;      
+        }
     }
 
     pRow = null;
@@ -1800,10 +1825,22 @@ function tr_mouseover(pRow) {
 //마우스 아웃
 function tr_mouseout(pRow) {
     var strAttribute = GetAttribute(pRow, "selected");
-    if (pRow.childNodes[0].childNodes[0].checked != true)
-        pRow.style.backgroundColor=m_strColorDefault;
-    else
-        pRow.style.backgroundColor=m_strColorSelect;
+
+    if (!document.getElementById("HeaderAllCheckBox") && pBoardType == "E") { // 체크박스가 존재하지 않는 경우
+        if (pRow.style.backgroundColor == "rgb(255, 255, 255)") {
+            pRow.style.backgroundColor = m_strColorSelect;
+        } else {
+            if (pRow.style.backgroundColor != "rgb(241, 248, 255)") {
+                pRow.style.backgroundColor = m_strColorDefault;
+            }
+        }
+    } else {
+        if (pRow.childNodes[0].childNodes[0].checked != true) {
+            pRow.style.backgroundColor=m_strColorDefault;
+        } else {
+            pRow.style.backgroundColor=m_strColorSelect;
+        }
+    }
 
     pRow = null;
 }
