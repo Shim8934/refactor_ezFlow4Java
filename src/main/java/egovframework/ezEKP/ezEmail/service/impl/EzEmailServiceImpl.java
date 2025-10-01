@@ -6736,7 +6736,7 @@ public class EzEmailServiceImpl extends EgovAbstractServiceImpl implements EzEma
 				toList.add(to);
 
 				// 관리자의 언어 정보 조회
-				String adminLang = ezCommonService.selectUserGetLang(ad.getCn(), tenantId);
+				String adminLang = Optional.ofNullable(ezCommonService.selectUserGetLang(ad.getCn(), tenantId)).orElse(primaryLang);
 
 				// 언어별로 관리자 그룹핑
 				adminsByLang.computeIfAbsent(adminLang, k -> new ArrayList<>()).add(ad);
@@ -6787,8 +6787,8 @@ public class EzEmailServiceImpl extends EgovAbstractServiceImpl implements EzEma
 			}
 		} catch (Exception e) {
 			deleteApprCompHistory(tenantId, companyId, mailUID, vUserId);
-			logger.debug("applyApprCompMail error!");
-			throw new Exception(e.getMessage());
+			logger.debug("applyApprCompMail error! : {}", e.getMessage());
+			throw e;
 		}
 		
 		return 0;
@@ -7005,7 +7005,8 @@ public class EzEmailServiceImpl extends EgovAbstractServiceImpl implements EzEma
 		//Locale locale = loginInfo.getLocale();
 
 		String applicantId = applicantEmail.split("@")[0];
-		String lang = ezCommonService.selectUserGetLang(applicantId, tenantId);
+		String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", tenantId);
+		String lang = Optional.ofNullable(ezCommonService.selectUserGetLang(applicantId, tenantId)).orElse(primaryLang);
 		Locale locale = commonUtil.getLocalFromLang(lang);
 
 		logger.debug("setApprCompMailApproval started. tenantId={}, companyId={}, lang={}, locale={}, applicantEmail={}", tenantId, companyId, lang, locale, applicantEmail);
@@ -7090,7 +7091,8 @@ public class EzEmailServiceImpl extends EgovAbstractServiceImpl implements EzEma
 		String userId = loginInfo.getId();
 
 		String applicantId = applicantEmail.split("@")[0];
-		String lang = ezCommonService.selectUserGetLang(applicantId, tenantId);
+		String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", tenantId);
+		String lang = Optional.ofNullable(ezCommonService.selectUserGetLang(applicantId, tenantId)).orElse(primaryLang);
 		Locale locale = commonUtil.getLocalFromLang(lang);
 
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -7198,7 +7200,8 @@ public class EzEmailServiceImpl extends EgovAbstractServiceImpl implements EzEma
 		//String lang = loginInfo.getPrimary();
 		//Locale locale = loginInfo.getLocale();
 		String applicantId = applicantEmail.split("@")[0];
-		String lang = ezCommonService.selectUserGetLang(applicantId, tenantId);
+		String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", tenantId);
+		String lang = Optional.ofNullable(ezCommonService.selectUserGetLang(applicantId, tenantId)).orElse(primaryLang);
 		Locale locale = commonUtil.getLocalFromLang(lang);
 		logger.debug("setApprCompMailReject started. tenantId={}, companyId={}, lang={}, locale={}, applicantEmail={}", tenantId, companyId, lang, locale, applicantEmail);
 
@@ -7285,7 +7288,8 @@ public class EzEmailServiceImpl extends EgovAbstractServiceImpl implements EzEma
 		String userId = loginInfo.getId();
 
 		String applicantId = applicantEmail.split("@")[0];
-		String lang = ezCommonService.selectUserGetLang(applicantId, tenantId);
+		String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", tenantId);
+		String lang = Optional.ofNullable(ezCommonService.selectUserGetLang(applicantId, tenantId)).orElse(primaryLang);
 		Locale locale = commonUtil.getLocalFromLang(lang);
 
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -7429,7 +7433,8 @@ public class EzEmailServiceImpl extends EgovAbstractServiceImpl implements EzEma
 		
 		//Locale locale = Locale.getDefault();
         String applicantId = applicantEmail.split("@")[0];
-        String lang = ezCommonService.selectUserGetLang(applicantId, tenantId);
+		String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", tenantId);
+		String lang = Optional.ofNullable(ezCommonService.selectUserGetLang(applicantId, tenantId)).orElse(primaryLang);
 		Locale locale = commonUtil.getLocalFromLang(lang);
 		
 		logger.debug("tenantId={}, companyId={}, lang={}, locale={}, applicantEmail={}"
@@ -7512,7 +7517,8 @@ public class EzEmailServiceImpl extends EgovAbstractServiceImpl implements EzEma
 		
 		Locale locale = Locale.getDefault();
         String applicantId = applicantEmail.split("@")[0];
-        String lang = ezCommonService.selectUserGetLang(applicantId, tenantId);
+		String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", tenantId);
+		String lang = Optional.ofNullable(ezCommonService.selectUserGetLang(applicantId, tenantId)).orElse(primaryLang);
 		logger.debug("tenantId={}, companyId={}, lang={}, locale={}, applicantEmail={}"
 				, tenantId, companyId, lang, locale, applicantEmail);
 		
