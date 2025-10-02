@@ -1195,10 +1195,12 @@ public class MApprovalGGWController {
 				loginVO.setPrimary(commonUtil.getPrimaryData(loginVO.getLang(), loginVO.getTenantId()));
 				loginVO.setEmail(userInfo.getEmail());
 
+				MApprovalGDocInfoVO approvalGDocInfoVO = null;
 				String rtnVal = "";
 				// 문서 생성
 				rtnVal = mApprovalGService.saveDraftInfo(jsonParam, realPath, loginVO, userInfoXML, request);
 				if (rtnVal != null && !rtnVal.isEmpty() && !rtnVal.contains("ERROR")) {
+					approvalGDocInfoVO = mApprovalGService.getAprDocInfo(pDocID, "DO", optionInfo.getLang(), userInfo.getOffSet(), userInfo.getCompanyId(), userInfo.getTenantId(), "1", "APR");
 					// 기안결재
 					rtnVal = ezApprovalGService.mobileSrvConn(userId, "A", pFormID, "", pDocID, puserID, optionInfo.getLang(), userInfo.getCompanyId(), request, loginVO, lineMode, "1");
 				}
@@ -1212,6 +1214,9 @@ public class MApprovalGGWController {
 							scheme = "https://";
 						}
 						rtnVal = mApprovalGService.insertSeumyungdateMobile(pDocID, realPath, userInfo.getOffSet(), new Locale(locale), domain, scheme, userInfo.getCompanyId(), userInfo.getTenantId());
+
+						// 메일 발송
+						mApprovalGService.sendApproveNoticeMail(userInfo, optionInfo, approvalGDocInfoVO, pDocID, "APR");
 					}
 				}
 
