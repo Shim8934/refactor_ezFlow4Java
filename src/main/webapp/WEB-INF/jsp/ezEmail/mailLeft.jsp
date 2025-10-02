@@ -85,9 +85,9 @@
 	            Function_Flag(funcCode);
 	            previewSubTreeCall();
 	            leftResize();
-		        $(".taskListBox").mCustomScrollbar({
-	        		theme : "dark"
-	        	});
+		        // $(".taskListBox").mCustomScrollbar({
+	        	// 	theme : "dark"
+	        	// });
 	            
 	            if (pRefreshinterval != "") {
 		            console.log('Setting Mail List Refresh Timer...');
@@ -110,6 +110,10 @@
 				if (topFrame && topFrame.contentWindow && topFrame.contentWindow.document) {
 					topFrame.contentWindow.document.addEventListener('click', HiddenFolderMenu);
 				}
+
+				document.getElementById("taskListBox").addEventListener("scroll", function() {
+                    HiddenFolderMenu();
+				});
 	        }
 	        
 	        function getCurrentTime() {
@@ -1159,7 +1163,7 @@
 		    }
 			
 			function leftResize(){
-	        	$(".taskListBox").height(window.innerHeight-135);
+                $(".taskListBox").css("max-height", window.innerHeight - 220);
 	        }
 	        
 	        $( window ).resize(function() {
@@ -1703,6 +1707,12 @@
 			/*#tagcontent { word-break: break-all; line-height: 215%; }
 			#tagcontent a { padding: 4px; border-radius: 4px; }
 			#tagcontent a:hover { background: #c0ccd5; color: #0470e4; }*/
+
+			#taskListBox::-webkit-scrollbar {
+				position: absolute;
+				width: 9px;
+				height: auto;
+			}
 		</style>
 	</head>
 	<body class="newLeft">
@@ -1718,7 +1728,7 @@
 	        	<p class="btn_write02" onclick="write_LetterToMe()"><spring:message code="ezEmail.t99000010" /></p> 
 	        	<p class="btn_write01" onclick="write_Letter()"><spring:message code="ezEmail.t99000013" /></p>
 	        </div>
-        	<div class="taskListBox" style="overflow:hidden; padding-right: 0;">
+        	<div id="taskListBox" class="taskListBox" style="overflow:auto; padding-right: 0; max-height: 160px">
 		        <h2 class="on" id="h2Mail" onclick="Email_Menu_Click();">
 		        	<span class="sub_iconLNB tree_arrow_down"></span>
 		        	<span class="h2Title" id="h2TitleMail" style="display:inline-block"><spring:message code="ezEmail.t99000012" /></span><span id="totalUnreadCount" class="txt_color" style="position:absolute;"></span>
@@ -1759,7 +1769,7 @@
                             <span>
                                 <div id="tagtitle" class="on" onclick='openTagFolder();'>
                                     <span class="sub_iconLNB tree_blank"></span>
-                                    <span class="tag_normal" style="width: 156px; text-align: justify;"><spring:message code="ezEmail.tag" /></span>
+                                    <span class="tag_normal" style="text-align: justify;"><spring:message code="ezEmail.tag" /></span>
                                 </div>
                                 <ul class="lnbUL" id="tagcontent">
                                     <li class="tagcontent">
