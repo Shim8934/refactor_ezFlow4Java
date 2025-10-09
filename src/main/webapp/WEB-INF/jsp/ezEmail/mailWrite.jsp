@@ -512,7 +512,14 @@
 
 			// 2024-10-16 김은실 : [표준모듈] 메일쓰기창 To, Cc, Bcc 간 Drag & Drop 구현
 			$("#MsgToGot, #MsgCCGot, #MsgBCCGot").sortable({
-				connectWith: ".viewtxt"
+				connectWith: ".viewtxt",
+				stop: function(event, ui) {
+					const destWrapper = ui.item[0].parentElement;
+					const span = ui.item[0].querySelector('[email]');
+					const iWhich = destWrapper === MsgToGot ? '0' : destWrapper === MsgCCGot ? '1' : '2';
+					span.setAttribute('itype', iWhich);
+					ui.item[0].querySelector('img[onclick^=deleteMailUser]').setAttribute('onclick', `deleteMailUser("\${span.getAttribute('email')}", "\${iWhich}")`);
+				}
 			});
 
             var selectName = document.getElementById("mailSenderName");

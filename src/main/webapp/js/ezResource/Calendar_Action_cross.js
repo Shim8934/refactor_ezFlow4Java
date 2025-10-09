@@ -338,7 +338,7 @@ function tableListControl_Week()
         var countdayname = 1;
 
         //금주의 시작일 월요일 부터 일요일까지 
-        for (var i = sz_Date; i <= sz_Date + 6; i++) {
+        for (let i = sz_Date; i <= sz_Date + 6; i++) {
             //월요일부터 시작 이니깐 1부터 6까지 돌면 마지막에 0으로 변경
             if (countdayname > 6)
                 countdayname = 0;
@@ -386,7 +386,7 @@ function tableListControl_Week()
                     var holidayName = "";
                     var holidayName2 = "";
                     
-                    for (var k = 0; k < memorial.length; k++) {
+                    for (let k = 0; k < memorial.length; k++) {
                     	// 2023-08-22 한태훈 - 다국어 처리.
                     	var memorialName = userLang == 1 ? memorial[k].name : memorial[k].name2;
                     	
@@ -405,7 +405,7 @@ function tableListControl_Week()
                         }
                     }
                     
-                    for (var k = 0; k < yearmemorial.length; k++) {
+                    for (let k = 0; k < yearmemorial.length; k++) {
                     	// 2023-08-22 한태훈 - 다국어 처리.
                     	var yearmemorialName = userLang == 1 ? yearmemorial[k].name : yearmemorial[k].name2;
                     	
@@ -507,7 +507,7 @@ function tableListControl_Week()
                     var holidayName = "";
                     var holidayName2 = "";
                     
-                    for (var k = 0; k < memorial.length; k++) {
+                    for (let k = 0; k < memorial.length; k++) {
                     	// 2023-08-22 한태훈 - 다국어 처리.
                     	var memorialName = userLang == 1 ? memorial[k].name : memorial[k].name2;
                     	
@@ -527,7 +527,7 @@ function tableListControl_Week()
                         }
                     }
                     
-                    for (var k = 0; k < yearmemorial.length; k++) {
+                    for (let k = 0; k < yearmemorial.length; k++) {
                     	// 2023-08-22 한태훈 - 다국어 처리.
                     	var yearmemorialName = userLang == 1 ? yearmemorial[k].name : yearmemorial[k].name2;
                     	
@@ -593,7 +593,7 @@ function tableListControl_Week()
         var totalreult;
 
         //하위 자원의 갯수만큼
-        for (var k = 0; k < title_name.length; k++) {
+        for (let k = 0; k < title_name.length; k++) {
             var _mtr2 = document.createElement("TR");
             _mtd = document.createElement("TD");
             _mtd.style.width = "200px";
@@ -622,7 +622,7 @@ function tableListControl_Week()
             _mtr2.appendChild(_mtd);
             
             if (DefaultView == 0) { //일요일시작
-            	for (var i = 0; i < 7; i++) {
+            	for (let i = 0; i < 7; i++) {
                     var y = i;
                     if (i == 7) y = 0;
 
@@ -643,7 +643,7 @@ function tableListControl_Week()
                     b++;
                 }
             } else { //월요일시작
-            	for (var i = 1; i < 8; i++) {
+            	for (let i = 1; i < 8; i++) {
                     var y = i;
                     if (i == 7) y = 0;
 
@@ -687,7 +687,7 @@ function tableListControl_Week()
         else {
 
             if (document.getElementById("tdDateCalendarViewer").childNodes.length > 0)
-            	for(var n = 0; n <= document.getElementById("tdDateCalendarViewer").childNodes.length; n++) {
+            	for(let n = 0; n <= document.getElementById("tdDateCalendarViewer").childNodes.length; n++) {
             		document.getElementById("tdDateCalendarViewer").removeChild(document.getElementById("tdDateCalendarViewer").childNodes.item(0));
             	}
 
@@ -695,7 +695,7 @@ function tableListControl_Week()
             document.getElementById("tdDateCalendarViewer").appendChild(_mdiv);
         }
 
-        for (var j = 0; j < xmldom.getElementsByTagName("appointment").length; j++) {
+        for (let j = 0; j < xmldom.getElementsByTagName("appointment").length; j++) {
 
             var s_weekDateSet = dataSetChange(getNodeText(xmldom.getElementsByTagName("dtstart")[j]).split("T")[0]);
             var e_weekDateSet = dataSetChange(getNodeText(xmldom.getElementsByTagName("dtend")[j]).split("T")[0]);
@@ -812,7 +812,7 @@ function tableListControl_Week()
                     var endCnt = getNodeText(xmldom.getElementsByTagName("deDaytype")[j]);
                     var endCnt2 = endCnt;
                     if (endCnt == 0) endCnt2 = 7;
-                    for (var i = startCnt; i <= endCnt2; i++) {
+                    for (let i = startCnt; i <= endCnt2; i++) {
                         if (endCnt == 0 && i == 7) {
                             if(startcheck == i){
                                 makeTable(xmldom, j, endCnt, "S");
@@ -835,7 +835,7 @@ function tableListControl_Week()
                 else if (s_weekDateSet < weekdatename[0] && e_weekDateSet <= weekdatename[6]) {
                     var endCnt = getNodeText(xmldom.getElementsByTagName("deDaytype")[j]);
                     if (DefaultView == 0) { //일요일 시작
-                    	for (var i = endCnt; 0 <= i; i--) {
+                    	for (let i = endCnt; 0 <= i; i--) {
                             if(startcheck == i){
                                 makeTable(xmldom, j, i, "S");
                             }else if(endcheck == i){
@@ -845,7 +845,7 @@ function tableListControl_Week()
                             }
                     	}
                     } else { // 월요일 시작
-	                    for (var i = endCnt; 0 < i; i--) {
+	                    for (let i = endCnt; 0 < i; i--) {
                             if(startcheck == i){
                                 makeTable(xmldom, j, i, "S");
                             }else if(endcheck == i){
@@ -859,7 +859,7 @@ function tableListControl_Week()
                 else if (weekdatename[0] <= s_weekDateSet && weekdatename[6] < e_weekDateSet) {
                     var startCnt = getNodeText(xmldom.getElementsByTagName("dsDaytype")[j]);
                     if (DefaultView == 0) { //일요일 시작
-                    	for (var i = startCnt; i < 7; i++) {
+                    	for (let i = startCnt; i < 7; i++) {
                             if(startcheck == i){
                                 makeTable(xmldom, j, i, "S");    
                             }else if(endcheck == i){
@@ -869,7 +869,7 @@ function tableListControl_Week()
                             }
                     	}
                     } else {
-	                    for (var i = startCnt; i < 8; i++) {
+	                    for (let i = startCnt; i < 8; i++) {
 	                        if (i == 7 || i == 0) {
 	                        	if (DefaultView == 1) { // 월요일 시작
                                     if(startcheck == i){
@@ -894,7 +894,7 @@ function tableListControl_Week()
                     }
                 }
                 else {
-                    for (var i = 0; i < 7; i++) {
+                    for (let i = 0; i < 7; i++) {
                         if(startcheck == i){
                             makeTable(xmldom, j, i, "S");
                         }else if(endcheck == i){
@@ -1140,7 +1140,7 @@ function tableListControl_today() {
             var yearmemorial = yearmemorialDayCheck(current_day, LunarDate);                   
 
             var isholiday = false;
-	            for (var k = 0; k < memorial.length; k++) {      
+	            for (let k = 0; k < memorial.length; k++) {      
 	            	// 윤달일 때 기념일 안나타나도록 수정
 	                if(LunarDate.leapMonth == 1 && memorial[k].solarLunar == 2) {
 	                	continue;
@@ -1149,7 +1149,7 @@ function tableListControl_today() {
 	                    isholiday = true;                    
 	                }
 	            }
-	            for (var k = 0; k < yearmemorial.length; k++) {
+	            for (let k = 0; k < yearmemorial.length; k++) {
 	            	// 윤달일 때 기념일 안나타나도록 수정
 	                if(LunarDate.leapMonth == 1 && yearmemorial[k].solarLunar == 2) {
 	                	continue;
@@ -1178,7 +1178,7 @@ function tableListControl_today() {
         setNodeText(_Th,strLang266);
         _Th.style.verticalAlign = "middle";
         _Tr.appendChild(_Th);
-        for (var i = 0; i < 24; i++) {
+        for (let i = 0; i < 24; i++) {
             var headerday = "";
             if (i < 10)
                 headerday = "0" + i;
@@ -1195,7 +1195,7 @@ function tableListControl_today() {
         }
         _Table.appendChild(_Tr);
 
-        for (var k = 0; k < title_name.length; k++) {
+        for (let k = 0; k < title_name.length; k++) {
             var _Tr2 = document.createElement("TR");
             var _TD = document.createElement("TD");
             _TD.setAttribute("style", "width:250px; vertical-align:middle; cursor:pointer; overflow:hidden; text-overflow:ellipsis; white-space: nowrap;");
@@ -1218,7 +1218,7 @@ function tableListControl_today() {
             
             _TD.style.verticalAlign = "middle";
             _Tr2.appendChild(_TD);
-            for (j = 0 ; j < 48; j++) {
+            for (let j = 0 ; j < 48; j++) {
                 _TD = document.createElement("TD");
                 _TD.align = "center";
                 _TD.style.width = "2%";
@@ -1235,7 +1235,7 @@ function tableListControl_today() {
         else {
         	
             if (document.getElementById("tdDateCalendarViewer").childNodes.length > 0) {
-            	for(var n = 0; n <= document.getElementById("tdDateCalendarViewer").childNodes.length; n++) {
+            	for(let n = 0; n <= document.getElementById("tdDateCalendarViewer").childNodes.length; n++) {
             		document.getElementById("tdDateCalendarViewer").removeChild(document.getElementById("tdDateCalendarViewer").childNodes.item(0));
             	}
             }
@@ -1245,7 +1245,7 @@ function tableListControl_today() {
 
         document.getElementById("tdDateCalendarViewer").appendChild(_Table);
 
-        for (var j = 0; j < xmldom.getElementsByTagName("appointment").length; j++) {
+        for (let j = 0; j < xmldom.getElementsByTagName("appointment").length; j++) {
             if (getNodeText(xmldom.getElementsByTagName("approveFlag")[j]) == "1") {
                 var pObjectId = "Day_" + getNodeText(xmldom.getElementsByTagName("owner_id")[j]);
                 var pObjectSP = Math.floor((parseInt(getNodeText(xmldom.getElementsByTagName("dstartTime")[j])) / 30)) + 1;
@@ -1267,7 +1267,10 @@ function tableListControl_today() {
                         }
                 	}
                 	
-                    for (var TCnt = pObjectSP; TCnt <= pObjectEP ; TCnt++) {
+                    for (let TCnt = pObjectSP; TCnt <= pObjectEP ; TCnt++) {
+                        if (!document.getElementById(pObjectId + "_" + TCnt)) {
+                            continue;
+                        }
                         if (TCnt != pObjectSP) {
                         	try {document.getElementById(pObjectId + "_" + TCnt).remove();} catch (e) {}
                         } else {
@@ -1306,7 +1309,7 @@ function tableListControl_today() {
                             document.getElementById(pObjectId + "_" + TCnt).colSpan = (pObjectEP - pObjectSP) + 1; 
                           //늘어난 colspan만큼 오른쪽으로 밀려난 td들을 display:none 처리한다.(ie11문제 수정)
                             if (!CrossYN() || agent.search( "trident" ) > -1 ) {
-                                for(var tdR = 1; tdR < (pObjectEP - pObjectSP) + 1; tdR++){
+                                for(let tdR = 1; tdR < (pObjectEP - pObjectSP) + 1; tdR++){
                                	 	document.getElementById(pObjectId + "_" + (TCnt+tdR)).style.display = "none";    	
                                 }
                 			}	
@@ -1314,6 +1317,9 @@ function tableListControl_today() {
                     }
                 } else {
                     //tooltip 추가
+                    if (!document.getElementById(pObjectId + "_1")) {
+                        continue;
+                    }
                     document.getElementById(pObjectId + "_1").setAttribute("number", getNodeText(xmldom.getElementsByTagName("number")[j]));
                     document.getElementById(pObjectId + "_1").setAttribute("pnumber", getNodeText(xmldom.getElementsByTagName("pnumber")[j]));
                     document.getElementById(pObjectId + "_1").setAttribute("owner_id", getNodeText(xmldom.getElementsByTagName("owner_id")[j]));
@@ -1348,7 +1354,7 @@ function tableListControl_today() {
                     document.getElementById(pObjectId + "_1").colSpan = 48;
                   //하루종일 시 우측 td 전부 삭제(ie11문제 수정)
                     if (!CrossYN() || agent.search( "trident" ) > -1 ) {
-                        for(var tdR = 2; tdR <= 48; tdR++){
+                        for(let tdR = 2; tdR <= 48; tdR++){
                        	 	document.getElementById(pObjectId + "_" + (tdR)).style.display = "none";    	
                         }
                         
@@ -1372,7 +1378,7 @@ function tableListControl_today() {
         setNodeText(_th,strLang266);
         _tr.appendChild(_th);
         
-        for (var i = 0; i < 24; i++) {
+        for (let i = 0; i < 24; i++) {
             var headerday = "";
 
             if (i < 10)
@@ -1389,8 +1395,8 @@ function tableListControl_today() {
         }
         _table.appendChild(_tr);
         tdcount = 0;
-        for (var k = 0; k < title_name.length; k++) {
-            for (var j = 0; j < xmldom.getElementsByTagName("appointment").length; j++) {
+        for (let k = 0; k < title_name.length; k++) {
+            for (let j = 0; j < xmldom.getElementsByTagName("appointment").length; j++) {
                 var s_weekDateSet = dataSetChange(getNodeText(xmldom.getElementsByTagName("dtstart")[j]).split("T")[0]);
                 var e_weekDateSet = dataSetChange(getNodeText(xmldom.getElementsByTagName("dtend")[j]).split("T")[0]);
                 
@@ -1441,7 +1447,7 @@ function tableListControl_today() {
                             
                             width_td = pObjectEP - pObjectSP + 1;
                             
-                            for (var i = 1; i <= 48; i++) {
+                            for (let i = 1; i <= 48; i++) {
                                 if (pObjectSP <= i && pObjectEP >= i) {
                                 	if (i != pObjectSP) {
                                 		continue;

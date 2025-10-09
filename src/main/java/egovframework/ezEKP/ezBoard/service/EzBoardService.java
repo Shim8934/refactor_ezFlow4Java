@@ -603,10 +603,6 @@ public interface EzBoardService {
 
 	public String getBoardTitle(String contentLocation, int tenantId) throws Exception;
 
-	public List<String> getBoardIdList(String strXML) throws Exception;
-
-	public String getBoardInfoByList(LoginVO userInfo, List<String> boardIdList, String strXML) throws Exception;
-
     public boolean checkGuestPerm(String id, int tenantId, String type) throws Exception;
 	
 	public List<BoardListVO> getGuestBoardList(String boardID, int tenantID, int offset) throws Exception;

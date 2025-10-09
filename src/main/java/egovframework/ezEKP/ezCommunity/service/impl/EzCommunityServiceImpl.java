@@ -46,6 +46,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.util.Strings;
+import org.jsoup.Jsoup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9229,5 +9230,151 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 
 		logger.debug("getClubUserCountInfo ended");
 		return ezCommunityDAO.getClubUserCountInfo(map);
+	}
+
+	@Override
+	public String commTotalSearchList(HttpServletRequest request, LoginVO userInfo, String subject, String keyword, String period, int curPage, Model model) throws Exception {
+		logger.debug("commTotalSearchList started.");
+
+		String id = userInfo.getId();
+		String offset = userInfo.getOffset();
+		String companyID = userInfo.getCompanyID();
+		String primary = userInfo.getPrimary();
+		int tenantID = userInfo.getTenantId();
+		int startRow = curPage != 0 ? (curPage - 1) * 10 : 0;
+		int endRow = startRow + 10;
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userId", id);
+		map.put("offset", commonUtil.getMinuteUTC(offset));
+		map.put("primary", primary);
+		map.put("companyID", companyID);
+		map.put("tenantID", tenantID);
+		map.put("v_pNow", commonUtil.getTodayUTCTime(""));
+		map.put("subject", subject);
+		map.put("keyword", keyword);
+		map.put("period", period);
+		map.put("startRow", startRow);
+		map.put("endRow", endRow);
+		map.put("adminType", commonUtil.isAdmin(userInfo.getId(), userInfo.getTenantId(), userInfo.getRollInfo(), "c"));
+
+		StringBuilder sb = new StringBuilder();
+		sb.append("<NODES>");
+
+		List<CommunityBoardItemVO> itemList = ezCommunityDAO.getTotalSearchItemResults(map);
+
+		int itemListCnt = ezCommunityDAO.getTotalSearchItemResultsCnt(map);
+
+		String realPath = commonUtil.getRealPath(request);
+		String scheme = "http://";
+
+		if (request.getHeader("HTTPS") != null && request.getHeader("HTTPS").toString().toLowerCase().equals("on")) {
+			scheme = "https://";
+		}
+
+		for (CommunityBoardItemVO itemVO : itemList) {
+			// 게시글 본문
+			request.setAttribute("href", itemVO.getContentLocation());
+			String strResult = ezCommonService.getMHTtoHTML("COMMUNITYSEARCH", itemVO.getItemID(), userInfo.getTenantId(), realPath, request, userInfo.getLocale(), scheme);
+
+			org.jsoup.nodes.Document document = Jsoup.parse(strResult);
+			String content = document.body().text();
+
+			String clubName = join1Get(itemVO.getCode(), userInfo.getPrimary(), userInfo.getTenantId());
+
+			sb.append("<NODE1>");
+			sb.append("<ItemID>" + commonUtil.cleanValue(itemVO.getItemID()) + "</ItemID>");
+			sb.append("<WriterName>" + commonUtil.cleanValue(itemVO.getWriterName()) + "</WriterName>");
+			sb.append("<WriteDate>" + commonUtil.getDateStringInUTC(itemVO.getWriteDate(), offset, false).substring(0, 10) + "</WriteDate>");
+			sb.append("<BoardID>" + commonUtil.cleanValue(itemVO.getBoardID()) + "</BoardID>");
+			sb.append("<Title>" + commonUtil.cleanValue(itemVO.getTitle()) + "</Title>");
+			sb.append("<Gubun>" + commonUtil.cleanValue(itemVO.getGubun()) + "</Gubun>");
+			sb.append("<Content>" + commonUtil.cleanValue(content) + "</Content>");
+			sb.append("<PhotoContent>" + commonUtil.cleanValue(itemVO.getPhotoItemContent()) + "</PhotoContent>");
+			sb.append("<Code>" + commonUtil.cleanValue(itemVO.getCode()) + "</Code>");
+			sb.append("<ClubName>" + commonUtil.cleanValue(clubName) + "</ClubName>");
+			sb.append("</NODE1>");
+		}
+
+		List<CommunityClubVO> clubList = ezCommunityDAO.getTotalSearchClubResults(map);
+
+		int clubListCnt = ezCommunityDAO.getTotalSearchClubResultsCnt(map);
+
+		for (CommunityClubVO clubVO : clubList) {
+			// 권한
+			CommunityCClubUserVO clubUser = adminMemberListOkGet(clubVO.getC_ClubNo(), userInfo.getId(), userInfo.getCompanyID(), userInfo.getTenantId());
+			String userLevel = clubUser != null ? clubUser.getPermit() : "0";
+
+			// 게시글 수
+			CommunityClubVO club = aspCommInfoGet1(clubVO.getC_ClubNo(), userInfo.getTenantId());
+
+			sb.append("<NODE2>");
+			sb.append("<CommName>" + commonUtil.cleanValue(clubVO.getC_ClubName()) + "</CommName>");
+			sb.append("<CommCode>" + commonUtil.cleanValue(clubVO.getC_ClubNo()) + "</CommCode>");
+			sb.append("<CommDesc>" + commonUtil.cleanValue(clubVO.getC_ClubDesc()) + "</CommDesc>");
+			sb.append("<MasterName>" + commonUtil.cleanValue(clubVO.getUserName()) + "</MasterName>");
+			sb.append("<RegDate>" + commonUtil.getDateStringInUTC(clubVO.getC_RegDate(), offset, false).substring(0, 10) + "</RegDate>");
+			sb.append("<Permit>" + userLevel + "</Permit>");
+			sb.append("<ConfirmType>" + clubVO.getC_ClubConfirmType() + "</ConfirmType>");
+			sb.append("<MemberCnt>" + clubVO.getC_MemberCnt() + "</MemberCnt>");
+			sb.append("<ItemCnt>" + club.getItemCnt() + "</ItemCnt>");
+			sb.append("</NODE2>");
+		}
+
+		List<CommunityClubVO> masterList = ezCommunityDAO.getTotalSearchMasterResults(map);
+
+		int masterListCnt = ezCommunityDAO.getTotalSearchMasterResultsCnt(map);
+
+		for (CommunityClubVO clubVO : masterList) {
+			// 권한
+			CommunityCClubUserVO clubUser = adminMemberListOkGet(clubVO.getC_ClubNo(), userInfo.getId(), userInfo.getCompanyID(), userInfo.getTenantId());
+			String userLevel = clubUser != null ? clubUser.getPermit() : "0";
+
+			sb.append("<NODE3>");
+			sb.append("<CommName>" + commonUtil.cleanValue(clubVO.getC_ClubName()) + "</CommName>");
+			sb.append("<CommDesc>" + commonUtil.cleanValue(clubVO.getC_ClubDesc()) + "</CommDesc>");
+			sb.append("<CommCode>" + commonUtil.cleanValue(clubVO.getC_ClubNo()) + "</CommCode>");
+			sb.append("<MasterName>" + commonUtil.cleanValue(clubVO.getUserName()) + "</MasterName>");
+			sb.append("<RegDate>" + commonUtil.getDateStringInUTC(clubVO.getC_RegDate(), offset, false).substring(0, 10) + "</RegDate>");
+			sb.append("<Permit>" + userLevel + "</Permit>");
+			sb.append("<ConfirmType>" + clubVO.getC_ClubConfirmType() + "</ConfirmType>");
+			sb.append("</NODE3>");
+		}
+
+		int totalCnt = itemListCnt + clubListCnt + masterListCnt;
+
+		sb.append("<NODE4>");
+		sb.append("<TotalCnt>" +  totalCnt + "</TotalCnt>");
+		sb.append("<ItemCnt>" + itemListCnt + "</ItemCnt>");
+		sb.append("<CommCnt>" + clubListCnt + "</CommCnt>");
+		sb.append("<MasterCnt>" + masterListCnt + "</MasterCnt>");
+		sb.append("</NODE4></NODES>");
+
+		int comNoPerPage = 10;
+		int listCnt = 0;
+
+        switch (subject) {
+            case "CLUB":
+                listCnt = clubListCnt;
+                break;
+            case "BOARD":
+                listCnt = itemListCnt;
+                break;
+            case "MASTER":
+                listCnt = masterListCnt;
+                break;
+        }
+
+		int totalPage = listCnt / comNoPerPage;
+
+		if ((totalPage * comNoPerPage) != listCnt && (listCnt % comNoPerPage) != 0){
+			totalPage = totalPage + 1;
+		}
+
+		model.addAttribute("totalPage", totalPage);
+
+		logger.debug("commTotalSearchList ended.");
+
+		return sb.toString();
 	}
 }

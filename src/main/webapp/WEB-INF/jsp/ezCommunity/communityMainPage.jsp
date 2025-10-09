@@ -907,7 +907,7 @@
         	 	span2.setAttribute("type", "ALL");							
         	 	span2.onclick = function () { 
         	 		$("#listCategory .txt").removeClass("bold");
-                	$("#keyword").val('');
+                	/*$("#keyword").val('');*/
                 	copsearch();
                 	$(this).addClass("bold"); 
                 };
@@ -941,7 +941,7 @@
 	        	 	span2.onclick = function () { 
 	        	 		$("#listCategory .txt").removeClass("bold");
                     	$(this).addClass("bold"); 
-                    	$("#keyword").val('');
+                    	/*$("#keyword").val('');*/
                     	select_category(this); 
                     };
 	        	 	
@@ -1571,11 +1571,17 @@
                 document.getElementById("todaycop").appendChild(div);
 	        }
 
-	        function key_down(e) {
+	        /*function key_down(e) {
 	            if (e.keyCode == "13") {
 	                copsearch();
 	            }
-	        }
+	        }*/
+
+			function key_down_search(e) {
+				if (e.keyCode == "13") {
+					totalSearch();
+				}
+			}
 	        
 	        var search = false;
 	        var searchoption;
@@ -1583,9 +1589,12 @@
 	        
 	        function copsearch() {
 	        	
-	            var sel = document.getElementById("search").selectedIndex;
+	           /* var sel = document.getElementById("search").selectedIndex;
 	            searchoption = document.getElementById("search")[sel].value;
-	            searchvalue = document.getElementById("keyword").value;
+	            searchvalue = document.getElementById("keyword").value;*/
+
+				searchoption = "NAME";
+				searchvalue = "";
 
 	            /* if (searchvalue == "") {
 	                alert(strLang4);
@@ -1930,13 +1939,49 @@
 					}
 				});
 			}
-			
+
+			function totalSearch() {
+				var keyword = document.getElementById("keyword2").value;
+				var subject = document.getElementById("search2").value;
+
+				if (keyword.trim() == "") {
+					alert("<spring:message code='ezCommunity.lyj103'/>");
+					return;
+				}
+
+				if (keyword.trim().length < 2) {
+					alert("<spring:message code='ezCommunity.lyj104'/>");
+					return;
+				}
+
+				var specialCharPattern = /[!@#$%^&*(),.?":{}|<\\]/;
+				if (specialCharPattern.test(keyword)) {
+					alert("<spring:message code='ezCommunity.lyj101'/>");
+					return;
+				}
+
+				window.open("/ezCommunity/totalSearchMain.do?subject=" + subject + "&keyword=" + keyword, "right");
+			}
 		</script>
 	</head>
 	<body class="mainbody" style="margin:20px 0 0; min-width:1040px; padding:0 30px 10px;">
 		<div class="main_community_center">
 			<!-- communitySection01 : banner -->
-		    <div class="community_section01">
+			<div class="contents_searchCategory" style="margin:0 0 20px 0;">
+				<dl>
+					<dt class="selectbox">
+						<select id="search2" name="select" style="padding-left: 3px;">
+							<option value ="ALL"><spring:message code='ezCommunity.lyj100'/></option>
+							<option value ="CLUB"><spring:message code='ezCommunity.t1529'/></option>
+							<option value ="BOARD"><spring:message code='ezCommunity.lyj102'/></option>
+							<option value ="MASTER"><spring:message code='ezCommunity.t9'/></option>
+						</select>
+					</dt>
+					<dt class="searchinput"><input id="keyword2" name="keyword" onkeydown="key_down_search(event)" type="text"></dt>
+					<dd onclick="totalSearch()" class="btn_search"><spring:message code='ezCommunity.t31'/></dd>
+				</dl>
+			</div>
+		   <%-- <div class="community_section01">
 		    	<div class="contents_bannerCommunity">
 		        	<p>
 		        		<c:choose>
@@ -1952,7 +1997,7 @@
 				         </c:choose>
 		        	</p>
 		        </div>
-		    </div>
+		    </div>--%>
 		    <!-- //communitySection01 : banner -->
 		    <!-- communitySection02 : notice + board -->
 		    <div class="community_section02">
@@ -2009,7 +2054,7 @@
 		                <ul id="listCategory" class="contents_listCategory"></ul>
 		            </div>
 		            <div class="contents_categoryView">
-		                <div class="contents_searchCategory">
+		                <%--<div class="contents_searchCategory">
 		                    <dl>
 		                        <dt class="selectbox">
 		                            <select id="search" name="select" style="padding-left: 3px;">
@@ -2020,7 +2065,7 @@
 		                        <dt class="searchinput"><input id="keyword" name="keyword" onkeydown="key_down(event)" type="text"></dt>
 		                        <dd onclick="copsearch()" class="btn_searh"><spring:message code='ezCommunity.t31'/></dd>
 		                    </dl>
-		                </div>
+		                </div>--%>
 		                <div id="categoryViewList" class="contents_categoryViewList"></div>
 		            </div>
 		        </div>

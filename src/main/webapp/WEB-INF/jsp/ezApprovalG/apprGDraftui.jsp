@@ -2189,9 +2189,6 @@
 		        
 		        var rtnVal = SaveTMPFile(AutoSave);
 		        if (rtnVal == "TRUE") {
-					if (isUsed == 'reuse') { 
-						Saveflag = false;
-					}					
 		            rtnVal = SaveTMPDocInfo(AutoSave);
                     if (useOpenGov == "YES") {
                         $.ajax({

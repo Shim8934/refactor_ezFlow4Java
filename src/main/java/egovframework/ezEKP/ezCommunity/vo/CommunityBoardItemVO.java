@@ -77,6 +77,8 @@ public class CommunityBoardItemVO {
 	int readFlag;
 	/** 댓글갯수  //2018-05-04 홍승비 댓글갯수 표출 */
 	int oneLineCnt;
+	/** 앨범소개글 */
+	String photoItemContent;
 
 	public String getCode() {
 		return code;
@@ -306,5 +308,10 @@ public class CommunityBoardItemVO {
 	public void setOneLineCnt(int oneLineCnt) {
 		this.oneLineCnt = oneLineCnt;
 	}
-	
+	public String getPhotoItemContent() {
+		return photoItemContent;
+	}
+	public void setPhotoItemContent(String photoItemContent) {
+		this.photoItemContent = photoItemContent;
+	}
 }

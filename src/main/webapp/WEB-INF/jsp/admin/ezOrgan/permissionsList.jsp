@@ -128,14 +128,14 @@
 				document.getElementById("progressPanel").style.display = "";
 				document.getElementById("loadingLayer").style.display = "";
 
-				parent.document.getElementById("lef").contentWindow.showProgress();
+				parent.document.getElementById("left").contentWindow.showProgress();
 			}
 
 			function hideProgress() {
 				document.getElementById("progressPanel").style.display = "none";
 				document.getElementById("loadingLayer").style.display = "none";
 
-				parent.document.getElementById("lef").contentWindow.hideProgress();
+				parent.document.getElementById("left").contentWindow.hideProgress();
 			}
 
 			function Permissions_List() {

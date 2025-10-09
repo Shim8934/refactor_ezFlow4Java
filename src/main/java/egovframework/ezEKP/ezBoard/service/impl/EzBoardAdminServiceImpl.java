@@ -769,7 +769,6 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 		map.put("v_WRITERFLAG", boardPropertyVO.getWriterFlag());
 		map.put("v_STARRATINGFLAG", boardPropertyVO.getStarRatingFlag());
 		map.put("versionManage", boardPropertyVO.getVersionManage());
-		map.put("v_NOTUSEDFLAG", boardPropertyVO.getNotUsedFlag());
 		map.put("v_LISTSHOWTYPE", boardPropertyVO.getListShowType());
         map.put("v_URLCOPYFLAG", boardPropertyVO.getUrlCopyFlag());
 		

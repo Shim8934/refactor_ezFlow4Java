@@ -467,4 +467,6 @@ public interface EzCommunityService {
 	public CommunityClubVO getClubUserCountInfo(String code, String companyID, int tenantID, String offset) throws Exception;
 
 	public List<CommunityCClubUserVO> adminMemberListGet3(String code, String flag, String primary, String ser, String companyID, int tenantID) throws Exception;
+
+	public String commTotalSearchList(HttpServletRequest request, LoginVO userInfo, String subject, String keyword, String period, int curPage, Model model) throws Exception;
 }

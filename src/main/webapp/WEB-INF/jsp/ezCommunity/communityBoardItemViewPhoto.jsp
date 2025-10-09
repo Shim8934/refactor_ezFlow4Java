@@ -97,8 +97,15 @@
 						}
 					} catch(e) {}
 				}
-	            window.opener.refresh_onclick();
-	            
+				if (window.opener.location.href.indexOf("/ezCommunity/totalSearchMain.do") > -1) {
+					var keyword = window.opener.document.querySelector("#keyword").value;
+					var subject = window.opener.document.querySelector("#search").value;
+
+					window.open("/ezCommunity/totalSearchMain.do?subject=" + subject + "&keyword=" + keyword, "right");
+				} else {
+					window.opener.refresh_onclick();
+				}
+
 	            /* 2021-11-10 홍승비 - 커뮤니티 팝업홈의 좌측 게시판 신규 게시물 아이콘 갱신 */
 				if (window.opener.parent.location.href.indexOf("ezCommunity/commHome/popupCommHome.do") > -1 && typeof(window.opener.parent.applyIsNewIconAll) == "function") {
 					window.opener.parent.applyIsNewIconAll();
