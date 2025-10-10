@@ -39912,11 +39912,16 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
         logger.debug("saveSignImg started.");
         String fileName = UUID.randomUUID().toString() + ".jpg";
         FilePath path = new FilePath(fileName, "drawSignImg", companyID, tenantID);
-        // 파일 저장
-        Files.createDirectories(Paths.get(path.getDirFullPath()));
-        Files.write(Paths.get(path.getFileFullPath()), signImg.getBytes(), StandardOpenOption.CREATE);
         
-        logger.debug("saveSignImg ended.");
+        EzFile signImgDir = new EzFile(Paths.get(path.getDirFullPath()).toString());
+		if (!signImgDir.exists()) {
+			signImgDir.mkdir(); 
+		}
+        
+		try (EzFileOutputStream fos = new EzFileOutputStream(path.getFileFullPath())) {
+			fos.write(signImg.getBytes());
+			fos.flush();
+		}
         return path.getFilePath();
     }
 }

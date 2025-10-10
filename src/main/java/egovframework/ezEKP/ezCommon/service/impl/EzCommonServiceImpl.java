@@ -916,6 +916,12 @@ public class EzCommonServiceImpl extends EzFileMngUtil implements EzCommonServic
 		List<String> m_ListImageLocalLocation = new ArrayList<String>();
 		String extension = ".gif"; // 기존 확장자가 .gif로 고정되어 있었으므로, 디폴트로 사용함
 		boolean isUTF8;
+        
+        // filePath 없을 시의 교정
+        EzFAL.EzFile file = new EzFAL.EzFile(m_strLPath);
+        if (!file.exists()) {
+        	file.mkdirs();
+        }
 		
 		strBoundary = getBoundaryText(m_strMHT);
 		logger.debug("strBoundary="+strBoundary);
@@ -995,7 +1001,7 @@ public class EzCommonServiceImpl extends EzFileMngUtil implements EzCommonServic
 		String strImageName = UUID.randomUUID() + extension;
         String SfilePath = m_strSPath + strImageName;
         String LfilePath = m_strLPath + strImageName;
-        File file = new File(commonUtil.detectPathTraversal(m_strLPath));
+        EzFAL.EzFile file = new EzFAL.EzFile(commonUtil.detectPathTraversal(m_strLPath));
 
         if (!file.exists()) {
         	file.mkdirs();
@@ -1003,7 +1009,7 @@ public class EzCommonServiceImpl extends EzFileMngUtil implements EzCommonServic
 
         OutputStream bos = null;
         try {
-        	bos = new FileOutputStream(new File(commonUtil.detectPathTraversal(LfilePath)));
+        	bos = new EzFAL.EzFileOutputStream(commonUtil.detectPathTraversal(LfilePath));
         	bos.write(imageBytes);
 		} catch (Exception e) {
 			logger.debug("e: {}", e);
