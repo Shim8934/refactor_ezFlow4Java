@@ -1224,7 +1224,8 @@ function GetListIevent_ongetxmlcomplete() {
             	
             	if (!(typeof getChkId === 'undefined')) {
                     listContentArry[listContentArry.length] = getChkId;
-	            	document.getElementById(getChkId).childNodes.item(0).childNodes.item(0).checked = true;
+	            	//document.getElementById(getChkId).childNodes.item(0).childNodes.item(0).checked = true;
+	            	document.getElementById(getChkId).querySelector('input[type="checkbox"]').checked = true;
 	                document.getElementById(getChkId).style.backgroundColor = m_strColorSelect;
             	}
             } // for End

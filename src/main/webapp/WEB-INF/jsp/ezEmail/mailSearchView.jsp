@@ -297,7 +297,8 @@
 		            for (var i = 0; i < nodeCount; i++) {
 		            	mailNode = mailNodes.item(i);
 		            	
-		            	mailNode.childNodes.item(0).childNodes.item(0).checked = true;
+		            	//mailNode.childNodes.item(0).childNodes.item(0).checked = true;
+		            	mailNode.querySelector('input[type="checkbox"]').checked = true;
 		            	mailNode.style.backgroundColor = m_strColorSelect;
 		                //TODO: 테스트해보기 2016-06-02
 		                // dhlee: modified so that existing elements aren't merged with new ones.
@@ -309,7 +310,8 @@
 		            for (var i = 0; i < nodeCount; i++) {
 		            	mailNode = mailNodes.item(i);
 		            	
-		            	mailNode.childNodes.item(0).childNodes.item(0).checked = false;
+		            	//mailNode.childNodes.item(0).childNodes.item(0).checked = false;
+		            	mailNode.querySelector('input[type="checkbox"]').checked = false;
 		            	mailNode.style.backgroundColor = m_strColorDefault;
 		            }
 		            

@@ -49,7 +49,7 @@
         <tr>
             <td class="pos1" style="padding: 15px; text-align: center;">
                 <spring:message code="ezEmail.keepmove.description" arguments="${folderName}" />
-                <div style="margin-top: 10px;">
+                <div class="custom_checkbox" style="margin-top: 10px;">
                     <input id="cleanup" type="checkbox" />
                     <label for="cleanup"><spring:message code="ezEmail.keepmove.checkmessage" /></label>
                 </div>
