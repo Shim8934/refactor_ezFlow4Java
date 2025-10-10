@@ -632,6 +632,7 @@
 	        if (retVal != "2")
 				btnClose_onclick();
 	    }
+
 	    var isDelted = false; // deleted의 오타 추정.
 	    function delDrafts(del_uid) {
 	    	var delDraftsURL = g_url;
@@ -653,6 +654,13 @@
 	        xmlhttp = null;
 	        isDelted = true;
 	    }
+
+        // 발송 전 미리보기 시 isDelted이 true 되는 현상 수정
+        function delDrafts_preview(del_uid) {
+            delDrafts(del_uid);
+            isDelted = false;
+        }
+
 	    function delAttachListFile(filedate) {
 	    	var xmlhttp = createXMLHttpRequest();
 	        xmlhttp.open("GET", "/ezEmail/delAttachListFile.do?&delid=" + filedate, true);
