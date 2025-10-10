@@ -4966,10 +4966,9 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 			String password = jspw;
 			String useMobileViewer = ezCommonService.getTenantConfig("useMobileViewer", info.getTenantId());
 			String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", info.getTenantId());
+			String shareId = request.getParameter("shareId");
 
-			if (useSharedMailbox.equals("YES")) {
-				String shareId = request.getParameter("shareId");
-
+			if (useSharedMailbox.equals("YES") && !Globals.APPR_MAIL_SHARED_ID.equalsIgnoreCase(shareId)) {
 				logger.debug("shareId=" + shareId + ", userId=" + userId + ", info.getUserId=" + info.getUserId());
 
 				if (shareId != null && !shareId.equals("")) {
@@ -4985,6 +4984,11 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 				}
 			}
 
+			// 승인메일
+			if (StringUtils.isNotBlank(shareId) && Globals.APPR_MAIL_SHARED_ID.equalsIgnoreCase(shareId)) {
+				userEmail = shareId + "@" + domainName;
+			}
+			
 			logger.debug("userEmail=" + userEmail);
 			
 			String ld = commonUtil.getTwoLetterLangFromLangNum(info.getLang());
@@ -9344,7 +9348,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 					
 					Map<String, Object> extraMap = new HashMap<String, Object>();
 					extraMap.put("mobile", true);
-					extraMap.put("shareId", userCn);
+					extraMap.put("shareId", shareId);
 					
 					bodyInfoList = ezEmailUtil.getBodyInfo(message, folderPath, uid, -1, attachedFileList, locale, extraMap);
 
