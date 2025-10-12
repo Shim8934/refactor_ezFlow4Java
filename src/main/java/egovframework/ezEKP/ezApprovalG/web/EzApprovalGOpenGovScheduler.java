@@ -48,7 +48,7 @@ public class EzApprovalGOpenGovScheduler {
     public void makeOpenGovCSV() throws Exception {
         logger.debug("makeOpenGovCSV started.");
 
-        if (!config.getProperty("config.useOpenGov").equals("YES") || !ezEmailScheduler.preScheduler("makeOpenGovCSV")) {
+        if (!config.getProperty("config.useOpenGov").equals("YES") || !ezEmailScheduler.preScheduler("ezapprovalg_makeOpenGovCSV")) {
             logger.debug("makeOpenGovCSV scheduler ended.");
             return;
         }

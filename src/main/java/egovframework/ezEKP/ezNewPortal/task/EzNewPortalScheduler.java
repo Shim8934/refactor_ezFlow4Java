@@ -40,7 +40,7 @@ public class EzNewPortalScheduler {
 		logger.debug("weatherUpdate started");
 		
 		try {
-			if (!ezEmailScheduler.preScheduler("weatherUpdate")) {
+			if (!ezEmailScheduler.preScheduler("ezportal_weatherUpdate")) {
 				logger.debug("weatherUpdate scheduler ended.");
 				return;
 			}
@@ -63,7 +63,7 @@ public class EzNewPortalScheduler {
 		logger.debug("deleteDbSessionByTime started");
 
 		// choose scheduler running server
-		if (!ezEmailScheduler.preScheduler("deleteDbSessionByTime")) {
+		if (!ezEmailScheduler.preScheduler("ezportal_deleteDbSessionByTime")) {
 			logger.debug("deleteDbSessionByTime scheduler ended.");
 			return;
 		}
@@ -82,7 +82,7 @@ public class EzNewPortalScheduler {
 		logger.debug("deleteFidoSessionByTime started");
 
 		// choose scheduler running server
-		if (!ezEmailScheduler.preScheduler("deleteFidoSessionByTime")) {
+		if (!ezEmailScheduler.preScheduler("ezportal_deleteFidoSessionByTime")) {
 			logger.debug("deleteFidoSessionByTime scheduler ended.");
 			return;
 		}

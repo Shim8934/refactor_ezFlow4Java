@@ -41,7 +41,7 @@ public class EzNotificationScheduler {
 		logger.debug("deleteOldNotification started");
 		
 		//choose scheduler running server
-		if (!preScheduler("deleteOldNotification")) {
+		if (!preScheduler("ezportal_deleteOldNotification")) {
 			logger.debug("deleteOldNotification scheduler ended.");
 			return;
 		}

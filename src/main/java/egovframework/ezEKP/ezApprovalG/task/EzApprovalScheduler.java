@@ -102,7 +102,7 @@ public class EzApprovalScheduler extends EzFileMngUtil {
 		if(checkTimer()) {
 			logger.debug("susinScheduler started.");
 						
-			if (!ezEmailScheduler.preScheduler("susinScheduler")) {
+			if (!ezEmailScheduler.preScheduler("ezapprovalg_susinScheduler")) {
 				logger.debug("susinScheduler ended.");
 				return;
 			}
