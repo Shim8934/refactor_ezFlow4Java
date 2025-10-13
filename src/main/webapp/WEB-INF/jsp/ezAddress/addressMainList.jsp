@@ -1182,9 +1182,11 @@
 					<tr>
 						<th style="text-align:center;height:30px"><spring:message code='ezAddress.t314' /></th>
 						<td style="text-align:left;height:30px">
-							<input type="checkbox" name="chkType" id="CheckUser" /><span onclick="check_click('CheckUser')" style="cursor: pointer;"><spring:message code='ezAddress.t145' /></span><br/>
-							<input type="checkbox" name="chkType" id="CheckDept" /><span onclick="check_click('CheckDept')" style="cursor: pointer;"><spring:message code='ezAddress.t146' /></span><br/>
-							<input type="checkbox" name="chkType" id="CheckCompany" /><span onclick="check_click('CheckCompany')" style="cursor: pointer;"><spring:message code='ezAddress.t147' /></span>
+						    <div class="custom_checkbox">
+                                <input type="checkbox" name="chkType" id="CheckUser" /><span onclick="check_click('CheckUser')" style="cursor: pointer;">&nbsp;<spring:message code='ezAddress.t145' /></span><br/>
+                                <input type="checkbox" name="chkType" id="CheckDept" /><span onclick="check_click('CheckDept')" style="cursor: pointer;">&nbsp;<spring:message code='ezAddress.t146' /></span><br/>
+                                <input type="checkbox" name="chkType" id="CheckCompany" /><span onclick="check_click('CheckCompany')" style="cursor: pointer;">&nbsp;<spring:message code='ezAddress.t147' /></span>
+							</div>
 						</td>
 					</tr>
 					<tr>
