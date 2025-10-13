@@ -56,7 +56,7 @@ public class EzFAL {
                         "/tempUploadFile", "/files/upload_personal/photo/temp", "/files/upload_approvalG/form",
                         "/files/sealImg", "\\files\\upload_common", "\\tempFileUpload", "\\files\\upload_mail\\templist",
                         "\\tempUploadFile", "\\files\\upload_personal\\photo\\temp", "\\files\\upload_approvalG\\form",
-                        "\\files\\sealImg", "/relay", "\\relay");
+                        "\\files\\sealImg", "/relay", "\\relay", "/images/signimgs", "\\images\\signimgs");
     private static String startFolderPath = "fileroot";
 
     private static AmazonS3 s3Client;
