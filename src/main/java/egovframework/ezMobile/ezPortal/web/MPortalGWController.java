@@ -262,7 +262,8 @@ public class MPortalGWController extends EzFileMngUtil {
 
 					if ("true".equals(mailAccess)) {
 						mailList = mEmailService.getMainMailList(info, locale, "isUnreadOnly", listCnt);
-						mailCnt = mEmailService.getMainMailUnreadCount(info, locale);
+						//mailCnt = mEmailService.getMainMailUnreadCount(info, locale);
+						mailCnt = (int) ezEmailService.getUnreadCountAll(null, userId, locale, info.getTenantId()).get("totalUnreadCountInAllAccounts");
 
 						// 메일 중요도 색깔 구하기
 						// jgw 요청은 비용이 높으므로 먼저 중요도 높음 메일이 있는지 체크함

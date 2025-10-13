@@ -292,6 +292,23 @@ public class CommonUtil {
     	
     	logger.debug("init ended.");
     }
+	public Locale getLocalFromLang(String lang) throws Exception {
+		if (lang.equals("1")) {
+			return Locale.KOREA;
+		} else if (lang.equals("2")) {
+			return Locale.ENGLISH;
+		} else if (lang.equals("3")) {
+			return Locale.JAPAN;
+		} else if (lang.equals("4")) {
+			return Locale.CHINA;
+		} else if (lang.equals("5")) {
+			return new Locale("vi", "VN");
+		} else if (lang.equals("6")) {
+			return new Locale("id", "ID");
+		}
+
+		return Locale.getDefault();
+	}
 
     /**
      * Path Traversal 공격을 방지하기 위해 filePath에 ../ 혹은 ..\ 패턴이 있으면

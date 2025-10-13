@@ -260,7 +260,6 @@ public interface EzEmailService {
 	public int setApprMailCancel(int tenantId, Map<String, Object> paramMap, String applicantEmail, long uid) throws Exception;
 	public int setApprCompMailApproval(String loginCookie, String applicantEmail, long uid) throws Exception;
 	public int setApprMailApproval(String loginCookie, String applicantEmail, long uid) throws Exception;
-	public int setApprMailApproval(String userId, int tenantId, Map<String, Object> paramMap) throws Exception;
 	public int setApprMailApproval(String userId, int tenantId, Map<String, Object> paramMap, String applicantEmail, long uid) throws Exception;
 	public int setApprCompMailReject(String loginCookie, String applicantEmail, long uid, String memo) throws Exception;
 	public int setApprMailReject(String loginCookie, String applicantEmail, long uid, String memo) throws Exception;
