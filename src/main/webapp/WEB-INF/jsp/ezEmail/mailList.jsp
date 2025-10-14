@@ -2245,8 +2245,10 @@
 							<input id="label-input" type="text" maxlength="100" placeholder="<spring:message code="ezEmail.tag.user.input.placeholder" />" />
 							<a class="imgbtn imgbck" onclick="addLabel()"><span><spring:message code="ezEmail.tag.user.addbtn" /></span></a>
 						</p>
-						<ul id="label-table" class="tagUL">
-						</ul>
+						<div class="custom_checkbox">
+                            <ul id="label-table" class="tagUL">
+                            </ul>
+						</div>
 						<p class="tag_btnSave">
 							<a class="imgbtn imgbck" onclick="saveChangesTags()"><span><spring:message code="main.sp09" /></span></a>
 						</p>
