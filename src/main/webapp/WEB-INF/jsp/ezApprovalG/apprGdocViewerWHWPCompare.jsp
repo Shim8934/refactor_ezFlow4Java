@@ -29,6 +29,7 @@
 	    var pDocHrefBefore = "${docHrefBefore}"; // 편집 전 문서
 	    var pDocHrefAfter = "${docHrefAfter}"; // 편집 후 문서
         var ReturnFunction;
+        var selectedAn = ""; //  선택된 안 index (일괄기안 B타입 문서비교를 위함)
         
         window.onload = function () {
             if (isParentCommonArgsUsed()) {
@@ -50,6 +51,10 @@
                     } 
                 }, null);   
 			}
+            
+            if (!!opener.parent.an) {
+                filterDocForAn_B(message.HwpCtrl);
+            }
         }
         
         // 2) 웹한글기안기의 로딩 이후, 편집 후 HWP 문서 로딩 시 잠시 타임아웃 (1초)
@@ -70,6 +75,10 @@
                     } 
                 }, null);   
 			}
+            
+            if (!!opener.parent.an) {
+                filterDocForAn_B(message2.HwpCtrl);
+            }
         }
         
         // 4) 편집 전 문서 HTML 변환 -> 편집 후 문서 HTML 변환 호출
@@ -268,6 +277,47 @@
 	    	document.getElementById("mailPanel").style.display = "none";
         	document.getElementById("loadingProgress").style.display = "none";
 	    }
+        
+        function filterDocForAn_B(HwpCtrl) {
+            selectedAn = opener.parent.an.selectedIndex;
+            maxAnIdx = opener.parent.an.options.length;
+            // 안이 삭제되면서 각 안의 인덱스가 변동하는 것을 막기 위해 뒤에서부터 안을 거꾸로 삭제함
+            for (let i = maxAnIdx - 1; i < 0; i--) {
+                if (i != selectedAn) {
+                    deleteAn_B(HwpCtrl, i)
+                }
+            }
+        }
+        
+        // 일괄기안 B타입 비교를 위해 해당하지 않는 기안을 삭제하는 로직 
+        function deleteAn_B(HwpCtrl, anIndex){
+            HwpCtrl.MoveToField("headcampaign{{"+anIndex+"}}");
+            HwpCtrl.DeleteCtrl(HwpCtrl.ParentCtrl);
+            var now = HwpCtrl.KeyIndicator().prnpageno;
+            var next = 0;
+            if(HwpCtrl.MoveToField("headcampaign{{"+anIndex+"}}")){
+                next = HwpCtrl.KeyIndicator().prnpageno;
+            }
+            if(next){
+                HwpCtrl.Run("MoveDocBegin");
+                for(var i = 1; i < now; i++){
+                    HwpCtrl.Run("MovePageDown");
+                }
+                for(var i = now; i < next; i++){
+                    HwpCtrl.Run("MovePageBegin");
+                    HwpCtrl.Run("Select");
+                    HwpCtrl.Run("MovePageEnd");
+                    HwpCtrl.Run("DeleteBack");
+                    HwpCtrl.Run("DeleteBack");
+                }
+            }else{
+                HwpCtrl.Run("MovePageBegin");
+                HwpCtrl.Run("Select");
+                HwpCtrl.Run("MoveDocEnd");
+                HwpCtrl.Run("DeleteBack");
+                HwpCtrl.Run("DeleteBack");
+            }
+        }
 	    
     </script>
 </head>
@@ -308,10 +358,10 @@
 			<div style="vertical-align: top;" id="EdtorSize">
 	            <table style="width: 100%; height: 100%;">
 	                <tr>
-	                    <td id="divTD1" style="width:50%; display:inline-block;">    
+	                    <td id="divTD1" style="width:50%; display:inline-block; vertical-align: top">    
 	                        <div id="docView"> </div>                
 	                    </td>
-	                    <td id="divTD2"  style="width:50%; display:inline-block;" >
+	                    <td id="divTD2"  style="width:50%; display:inline-block; vertical-align: top" >
 	                         <div id="docView2"> </div>
 	                    </td>
 	                </tr>

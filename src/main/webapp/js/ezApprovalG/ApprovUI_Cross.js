@@ -1163,7 +1163,7 @@ function chkBtnConfirm(para) {
 
         if (document.getElementById("btnReject").style.display == "")
             bbtnReject = "1";
-        if (document.getElementById("btnReject2").style.display == "")
+        if (!!document.getElementById("btnReject2") && document.getElementById("btnReject2").style.display == "")
             bbtnReject2 = "1";
         if (document.getElementById("btnStay").style.display == "")
             bbtnStay = "1";
@@ -1217,7 +1217,7 @@ function chkBtnConfirm(para) {
 
         if (document.getElementById("btntotaldocinfo").style.display == "")
             bbtntotaldocinfo = "1";       
-        if (document.getElementById("btnAddRelatedCabinet").style.display == "")
+        if (!!document.getElementById("btnAddRelatedCabinet") && document.getElementById("btnAddRelatedCabinet").style.display == "")
             btnAddRelatedCabinet = "1";
     }
     else {
