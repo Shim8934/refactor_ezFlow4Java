@@ -634,6 +634,8 @@
                     // 메일 작성 > 미리보기 메일 삭제
                     window.opener.parent.delDrafts_preview(g_uid);
                     window.parent.opener.parent.previewChk = false;
+				}
+			}
 			
 		    
 		    /* 2020-08-31 홍승비 - 메일 커뮤니티 게시판에 게시 기능 추가 */
