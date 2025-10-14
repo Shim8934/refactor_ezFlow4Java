@@ -4567,6 +4567,7 @@ public class EzNewPortalGWController {
 			result.put("code", 0);
 			result.put("data", sList);
 		} catch (Exception e) {
+			logger.debug(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");

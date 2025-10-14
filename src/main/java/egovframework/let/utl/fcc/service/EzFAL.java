@@ -473,8 +473,6 @@ public class EzFAL {
     }
     
     public static boolean isObjectStorageMode() {
-        LOGGER.debug("isObjectStorageMode={}", storageMode == OBJECT_STORAGE_MODE);
-
         return storageMode == OBJECT_STORAGE_MODE;
     }
 
