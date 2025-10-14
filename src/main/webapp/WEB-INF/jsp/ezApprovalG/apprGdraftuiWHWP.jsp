@@ -1369,12 +1369,15 @@
                             message.HwpCtrl.MoveToField("body{{" + (i-1) + "}}", true, true, true);
                             message.HwpCtrl.SaveAs("","PUBDOCBODY", "saveblock", function (data) {
                                 strBytesAry[i] = data.size;
-                                if(++lengthCnt == anCnt)
+                                if(++lengthCnt == anCnt){
+                                    ingFlag = false;
                                     callback("");
+                                }
                             });
-                        }else
-                            if(++lengthCnt == anCnt)
-                                callback("");
+                        }else if(++lengthCnt == anCnt){
+                            ingFlag = false;
+                            callback("");
+                        }
                     }
                 }else
 	                message.GetTextFile("HWPML2X", "", function (data) { ingFlag = false; callback(data); });

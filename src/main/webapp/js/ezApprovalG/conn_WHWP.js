@@ -752,11 +752,13 @@ function lastAnSave2(callback, hwp, lidx){
                             else{
                                 var tmp = pDocID;
                                 pDocID = pDocIDAry[1];
+                                ingFlag = false;
                                 callback(hwp);
                                 pDocID = tmp;
                             }
                         },
                         error: function(e){
+                            ingFlag = false;
                             console.log(e);
                             OpenAlertUI("일괄기안 문서 저장중 오류가 발생했습니다.");
                         }
