@@ -1175,7 +1175,9 @@ public class EzEmailMailReadController extends EzFileMngUtil {
 		// fixed param
 		String pnFlag = "N";
 		String contentClass = "IPM.Note";
-
+		
+		String type = request.getParameter("type");
+		model.addAttribute("type", type);
 		model.addAttribute("shareId", shareId);
 		model.addAttribute("pnFlag", pnFlag);
 
@@ -1770,6 +1772,7 @@ public class EzEmailMailReadController extends EzFileMngUtil {
 		model.addAttribute("fromStr", fromStr);
 		model.addAttribute("fromEmail", fromEmail);
 		model.addAttribute("url", url);
+		model.addAttribute("encryptedUrl", encryptedUrl);
 		model.addAttribute("toStr", toStr);
 		model.addAttribute("toHiddenStr", toHiddenStr);
 		model.addAttribute("ccStr", ccStr);
