@@ -112,7 +112,7 @@
 		}
 	
 		function openEmail(object) {
-			callMsgDlgAppr(object.dataset.href);
+			callMsgDlgAppr(object.dataset.href, "allHands");
 		}
 	
 		function isEmptyMailList() {

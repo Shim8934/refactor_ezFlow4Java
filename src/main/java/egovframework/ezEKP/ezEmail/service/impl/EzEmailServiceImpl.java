@@ -5458,6 +5458,9 @@ public class EzEmailServiceImpl extends EgovAbstractServiceImpl implements EzEma
 			// 2. 신청자의 primary mail
 			String senderId = obj.get("senderEmail").toString().split("@")[0];
 			OrganUserVO senderVO = ezOrganAdminService.getUserInfo(senderId, "1", tenantId); // 신청자의 primary 메일주소만 필요하기 때문에 lang 값 1로 픽스 함
+			
+			if(senderVO == null) continue;
+			
 			obj.put("senderEmail", senderVO.getMail());
 
 			// 3. 승인일시 - 승인완료된 경우에만 updatedt가 있음

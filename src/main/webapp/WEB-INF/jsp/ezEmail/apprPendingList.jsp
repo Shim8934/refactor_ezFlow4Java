@@ -117,7 +117,7 @@
     }
 
 	function openEmail(object) {
-		callMsgDlgAppr(object.dataset.href);
+		callMsgDlgAppr(object.dataset.href, "appr");
 	}
 
 	const mailListElement = document.getElementById("apprmail");

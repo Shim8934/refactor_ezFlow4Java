@@ -1955,7 +1955,7 @@ function callMsgDlg(szContentClass, Href) {
     }
 }
 
-function callMsgDlgAppr(href) {
+function callMsgDlgAppr(href, type) {
     var pheight = window.screen.availHeight;
     var conHeight = 720;
     var pwidth = window.screen.availWidth;
@@ -1967,6 +1967,9 @@ function callMsgDlgAppr(href) {
     var feature = "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = " + conWidth + "px, toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1";
 
     var pURI = "/ezEmail/mailApprRead.do?URL=" + encodeURIComponent(href);
+    if (type) {
+        pURI += "&type=" + encodeURIComponent(type);
+    }
 
     ReadMailOpenNewWin = window.open(pURI, "", feature);
 
