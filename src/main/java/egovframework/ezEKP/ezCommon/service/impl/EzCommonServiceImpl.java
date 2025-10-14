@@ -988,13 +988,13 @@ public class EzCommonServiceImpl extends EzFileMngUtil implements EzCommonServic
 	/**
 	 * html -> mht 변환 이미지디코딩 표출 Method
 	 */
-	
+	private String doImageDecoding(String strImageMht, String m_strSPath, String m_strLPath, String extension) throws Exception{
 		byte[] imageBytes = Base64.getMimeDecoder().decode(strImageMht);
 
 		/* 2018-08-16 홍승비 - mht파일 내의 이미지 이름을 .tmp -> 원래 확장자로 변경 */
 		String strImageName = UUID.randomUUID() + extension;
         String SfilePath = m_strSPath + strImageName;
-        String LfilePath = m_strLPath + strImageName;private String doImageDecoding(String strImageMht, String m_strSPath, String m_strLPath, String extension) throws Exception{
+        String LfilePath = m_strLPath + strImageName;
         File file = new File(commonUtil.detectPathTraversal(m_strLPath));
 
         if (!file.exists()) {
