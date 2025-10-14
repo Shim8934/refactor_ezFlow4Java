@@ -99,7 +99,7 @@
                 return;*/
         if (document.getElementById(g_toggleid + nodeIdx)) {
 	        if (document.getElementById(g_childid + nodeIdx).style.display == "none") {
-	            document.getElementById(g_childid + nodeIdx).style.display = "inline-block";
+	            document.getElementById(g_childid + nodeIdx).style.display = "block";
 	            if (document.getElementById(g_toggleid + nodeIdx).className.indexOf("sub_iconLNB tree_plus") >= 0)
 	                document.getElementById(g_toggleid + nodeIdx).className = "sub_iconLNB tree_minus";
 	            else
@@ -231,7 +231,7 @@
                 g_nodeArray["nodeXML"][nodeIdx].appendChild(childXML.documentElement.childNodes.item(0));
 
             if (childLength) {
-                childel.style.display = "inline-block";
+                childel.style.display = "block";
                 /*if (GetAttribute(toggleel, 'src').indexOf(g_baseImage["dot_normal"]) >= 0)
                     toggleel.setAttribute('src', g_baseImage["minus_normal"]);*/
                 if (GetAttribute(toggleel, 'class').indexOf("tree_blank") >= 0){
