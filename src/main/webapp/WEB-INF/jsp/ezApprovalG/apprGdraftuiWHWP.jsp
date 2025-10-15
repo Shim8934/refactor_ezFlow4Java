@@ -3025,7 +3025,7 @@
                 SummaryOuterReceiverList = undefined2EmptyString(SummaryOuterReceiverListAry[currentTabIdx]);
                 fileOpenFlagList = undefined2EmptyString(fileOpenFlagListArr[currentTabIdx]);
                 
-                DocSN = undefined2EmptyString(DocSNAry[currentTabIdx]);
+                // DocSN = undefined2EmptyString(DocSNAry[currentTabIdx]);
                 pDocType = undefined2EmptyString(pDocTypeAry[currentTabIdx]);
                 pDocTitle = undefined2EmptyString(pDocTitleAry[currentTabIdx]);
             }

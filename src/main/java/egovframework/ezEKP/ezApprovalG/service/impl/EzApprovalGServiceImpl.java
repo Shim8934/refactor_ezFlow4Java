@@ -12135,6 +12135,32 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 		map.put("href", href);
 		
 		ArrayList<String> docList = ezApprovalGDAO.getTmpDocList(map);
+        List<String> hrefList = new ArrayList<>();
+        boolean btype = false;
+        int tmpSN = Integer.parseInt(sn);
+        if(docList.isEmpty()){
+            btype = true;
+            String tmpDocID = ezApprovalGDAO.getTmpDocID(map);
+            if(tmpDocID != null)
+                docList.add(tmpDocID);
+        }
+        if(!docList.isEmpty()){
+            List<ApprGGroupDocInfoVO> group = getGroupDocList(docList.get(docList.size() - 1), "TMP", tenantID, companyID);
+            if(group.isEmpty()){
+                hrefList.add(href);
+            }
+
+            for (int i = 0; i < group.size(); i++) {
+                ApprGGroupDocInfoVO apr = group.get(i);
+                String id = apr.getDocID();
+                if(!docList.contains(id))
+                    docList.add(id);
+                if(btype)
+                    hrefList.add(getDocHref(userID + "@" + (tmpSN + i), "TMP", "", "", companyID, tenantID));
+                else
+                    hrefList.add(apr.getDocHref() == null ? getDocHref(id, "APR", "", "", companyID, tenantID) : apr.getDocHref());
+            }
+        }
 		for (String s : docList) {
 			map.put("v_DocID", s);
 			//기존 임시저장문서 지우기
@@ -12149,18 +12175,22 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 			ezApprovalGDAO.aprDeleteDocInfo9(map);
             deleteSummaryFile(s, companyID, tenantID);
 		}
-		
-		ezApprovalGDAO.deleteTmpDocInfo(map);
-		ezApprovalGDAO.deleteTmpDocInfo2(map);
-		ezApprovalGDAO.deleteTmpDocInfo3(map);
-		ezApprovalGDAO.deleteTmpDocInfo4(map);
-		ezApprovalGDAO.deleteTmpDocInfo5(map);
-		ezApprovalGDAO.deleteTmpDocInfo6(map);
-		ezApprovalGDAO.deleteTmpDocInfo7(map);
-		ezApprovalGDAO.deleteTmpDocInfo8(map);
-		
-		File file = new File(commonUtil.detectPathTraversal(path + href));
-		file.delete();
+
+        for(int i = 0; i < hrefList.size(); i++){
+            map.put("v_PSN", tmpSN + i);
+            href = hrefList.get(i);
+            ezApprovalGDAO.deleteTmpDocInfo(map);
+            ezApprovalGDAO.deleteTmpDocInfo2(map);
+            ezApprovalGDAO.deleteTmpDocInfo3(map);
+            ezApprovalGDAO.deleteTmpDocInfo4(map);
+            ezApprovalGDAO.deleteTmpDocInfo5(map);
+            ezApprovalGDAO.deleteTmpDocInfo6(map);
+            ezApprovalGDAO.deleteTmpDocInfo7(map);
+            ezApprovalGDAO.deleteTmpDocInfo8(map);
+
+            File file = new File(commonUtil.detectPathTraversal(path + href));
+            file.delete();
+        }
 		
 		rtnVal = "<RESULT>TRUE</RESULT>";
 
@@ -12276,7 +12306,7 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 		
 		if (isUsed.equals("reuse")) {
 			map.put("v_ISUSED", isUsed);
-			map.put("v_DOCID", beforeDocID.trim().split(","));
+			map.put("v_DOCID", beforeDocID.trim());
 		}
 		
 		logger.debug("doProcess param : v_DOCID =" + docID.trim() + " v_TENANTID =" + userInfo.getTenantId() + " v_USERID =" + userID.trim());
