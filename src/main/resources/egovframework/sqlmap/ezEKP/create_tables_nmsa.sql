@@ -9902,10 +9902,10 @@ CREATE TABLE nezportal.`tbl_ps_webpartitemacl` (
 -- Table structure for table `tbl_pwdinfo`
 --
 
-DROP TABLE IF EXISTS nezportal.`tbl_pwdinfo`;
+DROP TABLE IF EXISTS nezapprovalg.`tbl_pwdinfo`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE nezportal.`tbl_pwdinfo` (
+CREATE TABLE nezapprovalg.`tbl_pwdinfo` (
   `USERID` varchar(100) NOT NULL,
   `FLAG` varchar(2) NOT NULL,
   `PWD` varchar(2000) DEFAULT NULL,
@@ -14030,8 +14030,8 @@ CREATE TABLE nezportal.`tbl_webfolder_user` (
 -- 
 -- Table structure for table `jmocha_mail_outofoffice_tem`
 --
-DROP TABLE IF EXISTS nezportal.`jmocha_mail_outofoffice_tem`;
-CREATE TABLE nezportal.`jmocha_mail_outofoffice_tem` (
+DROP TABLE IF EXISTS nezemail.`jmocha_mail_outofoffice_tem`;
+CREATE TABLE nezemail.`jmocha_mail_outofoffice_tem` (
   `USER_ID` varchar(100) NOT NULL,
   `DISPLAYNAME` varchar(45) NOT NULL,
   `CONTENT` longtext CHARACTER SET utf8mb4 NOT NULL,
@@ -14041,8 +14041,8 @@ CREATE TABLE nezportal.`jmocha_mail_outofoffice_tem` (
 -- 
 -- Table structure for table `jmocha_user_mail_template`
 --
-DROP TABLE IF EXISTS nezportal.`jmocha_user_mail_template`;
-CREATE TABLE nezportal.`jmocha_user_mail_template` (
+DROP TABLE IF EXISTS nezemail.`jmocha_user_mail_template`;
+CREATE TABLE nezemail.`jmocha_user_mail_template` (
   `USER_ID` varchar(100) NOT NULL,
   `DISPLAYNAME` varchar(45) NOT NULL,
   `TEMPLATE_ID` varchar(510) NOT NULL,
@@ -14055,8 +14055,8 @@ CREATE TABLE nezportal.`jmocha_user_mail_template` (
 -- 
 -- Table structure for table `jmocha_mailbox_progress`
 --
-DROP TABLE IF EXISTS nezportal.`jmocha_mailbox_progress`;
-CREATE TABLE nezportal.`jmocha_mailbox_progress` (
+DROP TABLE IF EXISTS nezemail.`jmocha_mailbox_progress`;
+CREATE TABLE nezemail.`jmocha_mailbox_progress` (
   `USER_KEY` varchar(80) NOT NULL,
   `TENANT_ID` mediumint(5) NOT NULL,
   `USER_ID` varchar(80) NOT NULL,
@@ -14071,8 +14071,8 @@ CREATE TABLE nezportal.`jmocha_mailbox_progress` (
 -- 
 -- Table structure for table `jmocha_appr_allowed_domain`
 --
-DROP TABLE IF EXISTS nezportal.`jmocha_appr_allowed_domain`;
-CREATE TABLE nezportal.`jmocha_appr_allowed_domain` (
+DROP TABLE IF EXISTS nezemail.`jmocha_appr_allowed_domain`;
+CREATE TABLE nezemail.`jmocha_appr_allowed_domain` (
   `TENANT_ID` int(11) NOT NULL,
   `COMPANY_ID` varchar(80) NOT NULL,
   `DOMAIN_NAME` varchar(100) NOT NULL,
@@ -14082,8 +14082,8 @@ CREATE TABLE nezportal.`jmocha_appr_allowed_domain` (
 -- 
 -- Table structure for table `jmocha_appr_user`
 --
-DROP TABLE IF EXISTS nezportal.`jmocha_appr_user`;
-CREATE TABLE nezportal.`jmocha_appr_user` (
+DROP TABLE IF EXISTS nezemail.`jmocha_appr_user`;
+CREATE TABLE nezemail.`jmocha_appr_user` (
   `TENANT_ID` int(11) NOT NULL,
   `COMPANY_ID` varchar(80) NOT NULL,
   `USER_ID` varchar(100) NOT NULL,
@@ -14094,8 +14094,8 @@ CREATE TABLE nezportal.`jmocha_appr_user` (
 -- 
 -- Table structure for table `jmocha_appr_history`
 --
-DROP TABLE IF EXISTS nezportal.`jmocha_appr_history`;
-CREATE TABLE nezportal.`jmocha_appr_history` (
+DROP TABLE IF EXISTS nezemail.`jmocha_appr_history`;
+CREATE TABLE nezemail.`jmocha_appr_history` (
   `TENANT_ID` int(11) NOT NULL,
   `COMPANY_ID` varchar(80) NOT NULL,
   `MAIL_UID` bigint(20) NOT NULL,
@@ -14121,8 +14121,8 @@ CREATE TABLE nezportal.`jmocha_appr_history` (
 -- 
 -- Table structure for table `jmocha_appr_comp_history`
 --
-DROP TABLE IF EXISTS nezportal.`jmocha_appr_comp_history`;
-CREATE TABLE nezportal.`jmocha_appr_comp_history` (
+DROP TABLE IF EXISTS nezemail.`jmocha_appr_comp_history`;
+CREATE TABLE nezemail.`jmocha_appr_comp_history` (
   `TENANT_ID` int(11) NOT NULL,
   `COMPANY_ID` varchar(80) NOT NULL,
   `MAIL_UID` bigint(20) NOT NULL,
@@ -14557,7 +14557,7 @@ CREATE TABLE nezapprovalg.`tbl_yearlydoccount`(
 /*!50001 SET character_set_results     = utf8 */;
 /*!50001 SET collation_connection      = utf8_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50001 VIEW nezapprovalg.`svtaskclass` AS select `tbl_taskcategory`.`CATEGORYCODE` AS `CATEGORYCODE`,`tbl_taskcategory`.`NAME` AS `CNAME`,`tbl_taskcategory`.`NAME2` AS `CNAME2`,`tbl_taskmiddlecategory`.`MCATEGORYCODE` AS `MCATEGORYCODE`,`tbl_taskmiddlecategory`.`NAME` AS `MCNAME`,`tbl_taskmiddlecategory`.`NAME2` AS `MCNAME2`,`tbl_tasksubcategory`.`SUBCATEGORYCODE` AS `SUBCATEGORYCODE`,`tbl_tasksubcategory`.`NAME` AS `SCNAME`,`tbl_tasksubcategory`.`NAME2` AS `SCNAME2`,`tbl_taskcode`.`TASKCODE` AS `TASKCODE`,`tbl_taskcode`.`TASKNAME` AS `TASKNAME`,`tbl_taskcode`.`TASKNAME2` AS `TASKNAME2`,`tbl_taskcode`.`KEEPINGPERIOD` AS `KEEPINGPERIOD`,`tbl_taskcode`.`DISPLAYRECFLAG` AS `DISPLAYRECFLAG`,`tbl_taskcode`.`SPECIALCATALOGFLAG` AS `SPECIALCATALOGFLAG`,`tbl_taskcode`.`TEMPFLAG` AS `TEMPFLAG`,`tbl_taskcode`.`COMPANYID` AS `COMPANYID`,`tbl_taskcode`.`TENANT_ID` AS `TENANT_ID`,`tbl_task_deptinfo`.`PROCESSDEPTCODE` AS `PROCESSDEPTCODE`,`tbl_task_deptinfo`.`PROCESSDEPTNAME` AS `PROCESSDEPTNAME`,`tbl_task_deptinfo`.`PROCESSDEPTNAME2` AS `PROCESSDEPTNAME2`,`tbl_taskcode`.`KEEPINGMETHOD` AS `KEEPINGMETHOD`,`tbl_taskcode`.`KEEPINGPLACE` AS `KEEPINGPLACE`,`tbl_taskcode`.`DISPLAYRECTRASTIME` AS `DISPLAYRECTRASTIME`,`tbl_taskcode`.`ISPUBLIC` AS `ISPUBLIC`,`tbl_taskcode`.`ITEMSECURITY` AS `ITEMSECURITY`,`tbl_task_deptinfo`.`DELFLAG` AS `DELFLAG` from ((((nezcommon.`tbl_taskcategory` join nezcommon.`tbl_taskmiddlecategory` on(`tbl_taskcategory`.`CATEGORYCODE` = `tbl_taskmiddlecategory`.`CATEGORYCODE` and `tbl_taskcategory`.`TENANT_ID` = `tbl_taskmiddlecategory`.`TENANT_ID` and `tbl_taskcategory`.`COMPANYID` = `tbl_taskmiddlecategory`.`COMPANYID`)) join nezcommon.`tbl_tasksubcategory` on(`tbl_taskmiddlecategory`.`MCATEGORYCODE` = `tbl_tasksubcategory`.`MCATEGORYCODE` and `tbl_taskmiddlecategory`.`TENANT_ID` = `tbl_tasksubcategory`.`TENANT_ID` and `tbl_taskmiddlecategory`.`COMPANYID` = `tbl_tasksubcategory`.`COMPANYID`)) join nezcommon.`tbl_taskcode` on(`tbl_tasksubcategory`.`SUBCATEGORYCODE` = `tbl_taskcode`.`SUBCATEGORYCODE` and `tbl_tasksubcategory`.`TENANT_ID` = `tbl_taskcode`.`TENANT_ID` and `tbl_tasksubcategory`.`COMPANYID` = `tbl_taskcode`.`COMPANYID`)) left join nezcommon.`tbl_task_deptinfo` on(`tbl_taskcode`.`TASKCODE` = `tbl_task_deptinfo`.`TASKCODE` and `tbl_taskcode`.`TENANT_ID` = `tbl_task_deptinfo`.`TENANT_ID` and `tbl_taskcode`.`COMPANYID` = `tbl_task_deptinfo`.`COMPANYID`)) where `tbl_task_deptinfo`.`DELFLAG` = '0' or `tbl_task_deptinfo`.`DELFLAG` is null or `tbl_task_deptinfo`.`DELFLAG` = '2' */;
+/*!50001 VIEW nezapprovalg.`svtaskclass` AS select `tbl_taskcategory`.`CATEGORYCODE` AS `CATEGORYCODE`,`tbl_taskcategory`.`NAME` AS `CNAME`,`tbl_taskcategory`.`NAME2` AS `CNAME2`,`tbl_taskmiddlecategory`.`MCATEGORYCODE` AS `MCATEGORYCODE`,`tbl_taskmiddlecategory`.`NAME` AS `MCNAME`,`tbl_taskmiddlecategory`.`NAME2` AS `MCNAME2`,`tbl_tasksubcategory`.`SUBCATEGORYCODE` AS `SUBCATEGORYCODE`,`tbl_tasksubcategory`.`NAME` AS `SCNAME`,`tbl_tasksubcategory`.`NAME2` AS `SCNAME2`,`tbl_taskcode`.`TASKCODE` AS `TASKCODE`,`tbl_taskcode`.`TASKNAME` AS `TASKNAME`,`tbl_taskcode`.`TASKNAME2` AS `TASKNAME2`,`tbl_taskcode`.`KEEPINGPERIOD` AS `KEEPINGPERIOD`,`tbl_taskcode`.`DISPLAYRECFLAG` AS `DISPLAYRECFLAG`,`tbl_taskcode`.`SPECIALCATALOGFLAG` AS `SPECIALCATALOGFLAG`,`tbl_taskcode`.`TEMPFLAG` AS `TEMPFLAG`,`tbl_taskcode`.`COMPANYID` AS `COMPANYID`,`tbl_taskcode`.`TENANT_ID` AS `TENANT_ID`,`tbl_task_deptinfo`.`PROCESSDEPTCODE` AS `PROCESSDEPTCODE`,`tbl_task_deptinfo`.`PROCESSDEPTNAME` AS `PROCESSDEPTNAME`,`tbl_task_deptinfo`.`PROCESSDEPTNAME2` AS `PROCESSDEPTNAME2`,`tbl_taskcode`.`KEEPINGMETHOD` AS `KEEPINGMETHOD`,`tbl_taskcode`.`KEEPINGPLACE` AS `KEEPINGPLACE`,`tbl_taskcode`.`DISPLAYRECTRASTIME` AS `DISPLAYRECTRASTIME`,`tbl_taskcode`.`ISPUBLIC` AS `ISPUBLIC`,`tbl_taskcode`.`ITEMSECURITY` AS `ITEMSECURITY`,`tbl_task_deptinfo`.`DELFLAG` AS `DELFLAG` from ((((nezapprovalg.`tbl_taskcategory` join nezapprovalg.`tbl_taskmiddlecategory` on(`tbl_taskcategory`.`CATEGORYCODE` = `tbl_taskmiddlecategory`.`CATEGORYCODE` and `tbl_taskcategory`.`TENANT_ID` = `tbl_taskmiddlecategory`.`TENANT_ID` and `tbl_taskcategory`.`COMPANYID` = `tbl_taskmiddlecategory`.`COMPANYID`)) join nezapprovalg.`tbl_tasksubcategory` on(`tbl_taskmiddlecategory`.`MCATEGORYCODE` = `tbl_tasksubcategory`.`MCATEGORYCODE` and `tbl_taskmiddlecategory`.`TENANT_ID` = `tbl_tasksubcategory`.`TENANT_ID` and `tbl_taskmiddlecategory`.`COMPANYID` = `tbl_tasksubcategory`.`COMPANYID`)) join nezapprovalg.`tbl_taskcode` on(`tbl_tasksubcategory`.`SUBCATEGORYCODE` = `tbl_taskcode`.`SUBCATEGORYCODE` and `tbl_tasksubcategory`.`TENANT_ID` = `tbl_taskcode`.`TENANT_ID` and `tbl_tasksubcategory`.`COMPANYID` = `tbl_taskcode`.`COMPANYID`)) left join nezapprovalg.`tbl_task_deptinfo` on(`tbl_taskcode`.`TASKCODE` = `tbl_task_deptinfo`.`TASKCODE` and `tbl_taskcode`.`TENANT_ID` = `tbl_task_deptinfo`.`TENANT_ID` and `tbl_taskcode`.`COMPANYID` = `tbl_task_deptinfo`.`COMPANYID`)) where `tbl_task_deptinfo`.`DELFLAG` = '0' or `tbl_task_deptinfo`.`DELFLAG` is null or `tbl_task_deptinfo`.`DELFLAG` = '2' */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -14710,7 +14710,7 @@ CREATE TABLE nezapprovalg.`tbl_yearlydoccount`(
 /*!50001 SET character_set_results     = utf8 */;
 /*!50001 SET collation_connection      = utf8_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50001 VIEW nezapprovalg.`vtaskclass` AS select `tbl_taskcategory`.`CATEGORYCODE` AS `CATEGORYCODE`,`tbl_taskcategory`.`NAME` AS `CNAME`,`tbl_taskcategory`.`NAME2` AS `CNAME2`,`tbl_taskmiddlecategory`.`MCATEGORYCODE` AS `MCATEGORYCODE`,`tbl_taskmiddlecategory`.`NAME` AS `MCNAME`,`tbl_taskmiddlecategory`.`NAME2` AS `MCNAME2`,`tbl_tasksubcategory`.`SUBCATEGORYCODE` AS `SUBCATEGORYCODE`,`tbl_tasksubcategory`.`NAME` AS `SCNAME`,`tbl_tasksubcategory`.`NAME2` AS `SCNAME2`,`tbl_taskcode`.`TASKCODE` AS `TASKCODE`,`tbl_taskcode`.`TASKNAME` AS `TASKNAME`,`tbl_taskcode`.`TASKNAME2` AS `TASKNAME2`,`tbl_taskcode`.`KEEPINGPERIOD` AS `KEEPINGPERIOD`,`tbl_taskcode`.`DISPLAYRECFLAG` AS `DISPLAYRECFLAG`,`tbl_taskcode`.`SPECIALCATALOGFLAG` AS `SPECIALCATALOGFLAG`,`tbl_taskcode`.`SC1` AS `SC1`,`tbl_taskcode`.`SC2` AS `SC2`,`tbl_taskcode`.`SC3` AS `SC3`,`tbl_taskcode`.`TEMPFLAG` AS `TEMPFLAG`,`tbl_taskcode`.`COMPANYID` AS `COMPANYID`,`tbl_taskcode`.`TENANT_ID` AS `TENANT_ID`,`tbl_task_deptinfo`.`PROCESSDEPTCODE` AS `PROCESSDEPTCODE`,`tbl_task_deptinfo`.`PROCESSDEPTNAME` AS `PROCESSDEPTNAME`,`tbl_task_deptinfo`.`PROCESSDEPTNAME2` AS `PROCESSDEPTNAME2`,`tbl_taskcode`.`KEEPINGMETHOD` AS `KEEPINGMETHOD`,`tbl_taskcode`.`KEEPINGPLACE` AS `KEEPINGPLACE`,`tbl_taskcode`.`DISPLAYRECTRASTIME` AS `DISPLAYRECTRASTIME`,`tbl_task_deptinfo`.`DELFLAG` AS `DELFLAG` from ((((nezcommon.`tbl_taskcategory` join nezcommon.`tbl_taskmiddlecategory` on(`tbl_taskcategory`.`CATEGORYCODE` = `tbl_taskmiddlecategory`.`CATEGORYCODE` and `tbl_taskcategory`.`TENANT_ID` = `tbl_taskmiddlecategory`.`TENANT_ID` and `tbl_taskcategory`.`COMPANYID` = `tbl_taskmiddlecategory`.`COMPANYID`)) join nezcommon.`tbl_tasksubcategory` on(`tbl_taskmiddlecategory`.`MCATEGORYCODE` = `tbl_tasksubcategory`.`MCATEGORYCODE` and `tbl_taskmiddlecategory`.`TENANT_ID` = `tbl_tasksubcategory`.`TENANT_ID` and `tbl_taskmiddlecategory`.`COMPANYID` = `tbl_tasksubcategory`.`COMPANYID`)) join nezcommon.`tbl_taskcode` on(`tbl_tasksubcategory`.`SUBCATEGORYCODE` = `tbl_taskcode`.`SUBCATEGORYCODE` and `tbl_tasksubcategory`.`TENANT_ID` = `tbl_taskcode`.`TENANT_ID` and `tbl_tasksubcategory`.`COMPANYID` = `tbl_taskcode`.`COMPANYID` and `tbl_taskcode`.`DELFLAG` = '0')) left join nezcommon.`tbl_task_deptinfo` on(`tbl_taskcode`.`TASKCODE` = `tbl_task_deptinfo`.`TASKCODE` and `tbl_taskcode`.`TENANT_ID` = `tbl_task_deptinfo`.`TENANT_ID` and `tbl_taskcode`.`COMPANYID` = `tbl_task_deptinfo`.`COMPANYID`)) where `tbl_task_deptinfo`.`DELFLAG` = '0' or `tbl_task_deptinfo`.`DELFLAG` is null or `tbl_task_deptinfo`.`DELFLAG` = '2' */;
+/*!50001 VIEW nezapprovalg.`vtaskclass` AS select `tbl_taskcategory`.`CATEGORYCODE` AS `CATEGORYCODE`,`tbl_taskcategory`.`NAME` AS `CNAME`,`tbl_taskcategory`.`NAME2` AS `CNAME2`,`tbl_taskmiddlecategory`.`MCATEGORYCODE` AS `MCATEGORYCODE`,`tbl_taskmiddlecategory`.`NAME` AS `MCNAME`,`tbl_taskmiddlecategory`.`NAME2` AS `MCNAME2`,`tbl_tasksubcategory`.`SUBCATEGORYCODE` AS `SUBCATEGORYCODE`,`tbl_tasksubcategory`.`NAME` AS `SCNAME`,`tbl_tasksubcategory`.`NAME2` AS `SCNAME2`,`tbl_taskcode`.`TASKCODE` AS `TASKCODE`,`tbl_taskcode`.`TASKNAME` AS `TASKNAME`,`tbl_taskcode`.`TASKNAME2` AS `TASKNAME2`,`tbl_taskcode`.`KEEPINGPERIOD` AS `KEEPINGPERIOD`,`tbl_taskcode`.`DISPLAYRECFLAG` AS `DISPLAYRECFLAG`,`tbl_taskcode`.`SPECIALCATALOGFLAG` AS `SPECIALCATALOGFLAG`,`tbl_taskcode`.`SC1` AS `SC1`,`tbl_taskcode`.`SC2` AS `SC2`,`tbl_taskcode`.`SC3` AS `SC3`,`tbl_taskcode`.`TEMPFLAG` AS `TEMPFLAG`,`tbl_taskcode`.`COMPANYID` AS `COMPANYID`,`tbl_taskcode`.`TENANT_ID` AS `TENANT_ID`,`tbl_task_deptinfo`.`PROCESSDEPTCODE` AS `PROCESSDEPTCODE`,`tbl_task_deptinfo`.`PROCESSDEPTNAME` AS `PROCESSDEPTNAME`,`tbl_task_deptinfo`.`PROCESSDEPTNAME2` AS `PROCESSDEPTNAME2`,`tbl_taskcode`.`KEEPINGMETHOD` AS `KEEPINGMETHOD`,`tbl_taskcode`.`KEEPINGPLACE` AS `KEEPINGPLACE`,`tbl_taskcode`.`DISPLAYRECTRASTIME` AS `DISPLAYRECTRASTIME`,`tbl_task_deptinfo`.`DELFLAG` AS `DELFLAG` from ((((nezapprovalg.`tbl_taskcategory` join nezapprovalg.`tbl_taskmiddlecategory` on(`tbl_taskcategory`.`CATEGORYCODE` = `tbl_taskmiddlecategory`.`CATEGORYCODE` and `tbl_taskcategory`.`TENANT_ID` = `tbl_taskmiddlecategory`.`TENANT_ID` and `tbl_taskcategory`.`COMPANYID` = `tbl_taskmiddlecategory`.`COMPANYID`)) join nezapprovalg.`tbl_tasksubcategory` on(`tbl_taskmiddlecategory`.`MCATEGORYCODE` = `tbl_tasksubcategory`.`MCATEGORYCODE` and `tbl_taskmiddlecategory`.`TENANT_ID` = `tbl_tasksubcategory`.`TENANT_ID` and `tbl_taskmiddlecategory`.`COMPANYID` = `tbl_tasksubcategory`.`COMPANYID`)) join nezapprovalg.`tbl_taskcode` on(`tbl_tasksubcategory`.`SUBCATEGORYCODE` = `tbl_taskcode`.`SUBCATEGORYCODE` and `tbl_tasksubcategory`.`TENANT_ID` = `tbl_taskcode`.`TENANT_ID` and `tbl_tasksubcategory`.`COMPANYID` = `tbl_taskcode`.`COMPANYID` and `tbl_taskcode`.`DELFLAG` = '0')) left join nezapprovalg.`tbl_task_deptinfo` on(`tbl_taskcode`.`TASKCODE` = `tbl_task_deptinfo`.`TASKCODE` and `tbl_taskcode`.`TENANT_ID` = `tbl_task_deptinfo`.`TENANT_ID` and `tbl_taskcode`.`COMPANYID` = `tbl_task_deptinfo`.`COMPANYID`)) where `tbl_task_deptinfo`.`DELFLAG` = '0' or `tbl_task_deptinfo`.`DELFLAG` is null or `tbl_task_deptinfo`.`DELFLAG` = '2' */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -15450,18 +15450,18 @@ SELECT
     `tbl_taskmiddlecategory`.`OLDFLAG` AS `OLDFLAG_MID`,
     `tbl_tasksubcategory`.`OLDFLAG` AS `OLDFLAG_SUB`
 FROM
-    ((((nezcommon.`tbl_taskcategory`
-        JOIN nezcommon.`tbl_taskmiddlecategory` ON (`tbl_taskcategory`.`CATEGORYCODE` = `tbl_taskmiddlecategory`.`CATEGORYCODE`
+    ((((nezapprovalg.`tbl_taskcategory`
+        JOIN nezapprovalg.`tbl_taskmiddlecategory` ON (`tbl_taskcategory`.`CATEGORYCODE` = `tbl_taskmiddlecategory`.`CATEGORYCODE`
             AND `tbl_taskcategory`.`TENANT_ID` = `tbl_taskmiddlecategory`.`TENANT_ID`
             AND `tbl_taskcategory`.`COMPANYID` = `tbl_taskmiddlecategory`.`COMPANYID`))
-        JOIN nezcommon.`tbl_tasksubcategory` ON (`tbl_taskmiddlecategory`.`MCATEGORYCODE` = `tbl_tasksubcategory`.`MCATEGORYCODE`
+        JOIN nezapprovalg.`tbl_tasksubcategory` ON (`tbl_taskmiddlecategory`.`MCATEGORYCODE` = `tbl_tasksubcategory`.`MCATEGORYCODE`
         AND `tbl_taskmiddlecategory`.`TENANT_ID` = `tbl_tasksubcategory`.`TENANT_ID`
         AND `tbl_taskmiddlecategory`.`COMPANYID` = `tbl_tasksubcategory`.`COMPANYID`))
-        JOIN nezcommon.`tbl_taskcode` ON (`tbl_tasksubcategory`.`SUBCATEGORYCODE` = `tbl_taskcode`.`SUBCATEGORYCODE`
+        JOIN nezapprovalg.`tbl_taskcode` ON (`tbl_tasksubcategory`.`SUBCATEGORYCODE` = `tbl_taskcode`.`SUBCATEGORYCODE`
         AND `tbl_tasksubcategory`.`TENANT_ID` = `tbl_taskcode`.`TENANT_ID`
         AND `tbl_tasksubcategory`.`COMPANYID` = `tbl_taskcode`.`COMPANYID`
         AND `tbl_taskcode`.`DELFLAG` = '0'))
-        LEFT JOIN nezcommon.`tbl_task_deptinfo` ON (`tbl_taskcode`.`TASKCODE` = `tbl_task_deptinfo`.`TASKCODE`
+        LEFT JOIN nezapprovalg.`tbl_task_deptinfo` ON (`tbl_taskcode`.`TASKCODE` = `tbl_task_deptinfo`.`TASKCODE`
         AND `tbl_taskcode`.`TENANT_ID` = `tbl_task_deptinfo`.`TENANT_ID`
         AND `tbl_taskcode`.`COMPANYID` = `tbl_task_deptinfo`.`COMPANYID`))
 WHERE
@@ -15503,17 +15503,17 @@ SELECT
     `tbl_taskmiddlecategory`.`OLDFLAG` AS `OLDFLAG_MID`,
     `tbl_tasksubcategory`.`OLDFLAG` AS `OLDFLAG_SUB`
 FROM
-    ((((nezcommon.`tbl_taskcategory`
-        JOIN nezcommon.`tbl_taskmiddlecategory` ON (`tbl_taskcategory`.`CATEGORYCODE` = `tbl_taskmiddlecategory`.`CATEGORYCODE`
+    ((((nezapprovalg.`tbl_taskcategory`
+        JOIN nezapprovalg.`tbl_taskmiddlecategory` ON (`tbl_taskcategory`.`CATEGORYCODE` = `tbl_taskmiddlecategory`.`CATEGORYCODE`
             AND `tbl_taskcategory`.`TENANT_ID` = `tbl_taskmiddlecategory`.`TENANT_ID`
             AND `tbl_taskcategory`.`COMPANYID` = `tbl_taskmiddlecategory`.`COMPANYID`))
-        JOIN nezcommon.`tbl_tasksubcategory` ON (`tbl_taskmiddlecategory`.`MCATEGORYCODE` = `tbl_tasksubcategory`.`MCATEGORYCODE`
+        JOIN nezapprovalg.`tbl_tasksubcategory` ON (`tbl_taskmiddlecategory`.`MCATEGORYCODE` = `tbl_tasksubcategory`.`MCATEGORYCODE`
         AND `tbl_taskmiddlecategory`.`TENANT_ID` = `tbl_tasksubcategory`.`TENANT_ID`
         AND `tbl_taskmiddlecategory`.`COMPANYID` = `tbl_tasksubcategory`.`COMPANYID`))
-        JOIN nezcommon.`tbl_taskcode` ON (`tbl_tasksubcategory`.`SUBCATEGORYCODE` = `tbl_taskcode`.`SUBCATEGORYCODE`
+        JOIN nezapprovalg.`tbl_taskcode` ON (`tbl_tasksubcategory`.`SUBCATEGORYCODE` = `tbl_taskcode`.`SUBCATEGORYCODE`
         AND `tbl_tasksubcategory`.`TENANT_ID` = `tbl_taskcode`.`TENANT_ID`
         AND `tbl_tasksubcategory`.`COMPANYID` = `tbl_taskcode`.`COMPANYID`))
-        LEFT JOIN nezcommon.`tbl_task_deptinfo` ON (`tbl_taskcode`.`TASKCODE` = `tbl_task_deptinfo`.`TASKCODE`
+        LEFT JOIN nezapprovalg.`tbl_task_deptinfo` ON (`tbl_taskcode`.`TASKCODE` = `tbl_task_deptinfo`.`TASKCODE`
         AND `tbl_taskcode`.`TENANT_ID` = `tbl_task_deptinfo`.`TENANT_ID`
         AND `tbl_taskcode`.`COMPANYID` = `tbl_task_deptinfo`.`COMPANYID`))
 WHERE
@@ -15883,8 +15883,8 @@ CREATE TABLE nezemail.JMOCHA_MAIL_BLOCKED (
      PRIMARY KEY (MESSAGE_ID)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-DROP TABLE IF EXISTS nezportal.TBL_BOARD_COMMENT_ATTACHMENTS;
-CREATE TABLE nezportal.TBL_BOARD_COMMENT_ATTACHMENTS (
+DROP TABLE IF EXISTS nezboard.TBL_BOARD_COMMENT_ATTACHMENTS;
+CREATE TABLE nezboard.TBL_BOARD_COMMENT_ATTACHMENTS (
   `ITEMID` varchar(76) NOT NULL COMMENT "게시글 아이디",
   `REPLYID` varchar(76) NOT NULL COMMENT "댓글 아이디",
   `SN` mediumint(5) NOT NULL COMMENT "첨부파일 순번",
@@ -15945,7 +15945,8 @@ CREATE TABLE nezapprovalg.`tbl_gongramdeletehistory` (
 	KEY `tbl_gongramdeletehistory_IDX` (`DOCID`, `APRMEMBERID`, `TENANT_ID`, `COMPANYID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-CREATE TABLE nezapprovalg.`tbl_schedulegather` (
+DROP TABLE IF EXISTS nezcommon.`tbl_schedulegather`;
+CREATE TABLE nezcommon.`tbl_schedulegather` (
     `GROUPID` varchar(100) NOT NULL,
     `GROUPNAME` varchar(100) CHARACTER SET utf8mb4 NOT NULL,
     `CREATORID` varchar(100) DEFAULT NULL,
@@ -15958,7 +15959,8 @@ CREATE TABLE nezapprovalg.`tbl_schedulegather` (
     PRIMARY KEY (`GROUPID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-CREATE TABLE nezapprovalg.`tbl_schedulegathermember` (
+DROP TABLE IF EXISTS nezcommon.`tbl_schedulegathermember`;
+CREATE TABLE nezcommon.`tbl_schedulegathermember` (
     `GROUPID` varchar(100) NOT NULL,
     `MEMBERID` varchar(100) NOT NULL,
     `MEMBERNAME` varchar(100) CHARACTER SET utf8mb4 NOT NULL,
