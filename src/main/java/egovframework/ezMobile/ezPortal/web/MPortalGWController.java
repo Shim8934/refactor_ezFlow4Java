@@ -788,30 +788,21 @@ public class MPortalGWController extends EzFileMngUtil {
 								dataObject.put(menuCode + "Access", access);
 							}
                             break;
+						case "workspace":
+							footerAccessCount = access ? footerAccessCount + 1 : footerAccessCount;
+		
+							if (access) {
+								accessMenuCode.add(menuCode);
+							}
+		
+							dataObject.put(menuCode, access);
+							dataObject.put(menuCode + "Access", access);
+							break;	
                     }
 				} else if (menuCode != null) {
 					dataObject.put(menuCode, access);
 					dataObject.put(menuCode + "Access", access);
 					System.out.println(menuCode + " is NOT in the menuCodeList.");
-				}
-			}
-
-			for (Map.Entry<String, Boolean> menuAccess : menuAccessList.entrySet()) {
-				String menuCode = menuAccess.getKey();
-				boolean access = menuAccess.getValue();
-				if (menuCode != null) {
-					switch(menuCode) {
-						case "workspace":
-						footerAccessCount = access ? footerAccessCount + 1 : footerAccessCount;
-
-						if (access) {
-							accessMenuCode.add(menuCode);
-						}
-
-						dataObject.put(menuCode, access);
-						dataObject.put(menuCode + "Access", access);
-						break;
-					}
 				}
 			}
 			logger.debug("[access result] footerAccessCount : " + footerAccessCount + ", accessMenuCode : " + accessMenuCode.toString() + ", portalAccessCount : " + portalAccessCount);

@@ -78,7 +78,11 @@
 					$(document.getElementById("mobileIconArea").children[0]).find("input").prop("checked", true);
 				}
 			} else {
-				beforeClass = beforeClass.substring(beforeClass.indexOf(" ") + 1);
+				if (beforeClass) {
+					beforeClass = beforeClass.substring(beforeClass.indexOf(" ") + 1);
+				} else {
+					beforeClass = "icon_mail";
+				}
 				$("." + beforeClass).parent().siblings().prop("checked", true);
 			}
 			

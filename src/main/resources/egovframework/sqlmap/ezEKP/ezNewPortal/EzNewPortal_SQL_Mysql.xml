@@ -3450,7 +3450,15 @@ ORDER BY
 		menu.menucode = 'workspace'
 	AND
 		user_id = #userId#
-]]>    
+		]]>   
+	AND 
+	<isNotEqual property="type" compareValue="mobile">
+		menu_type = 'A'
+	</isNotEqual>
+	<isEqual property="type" compareValue="mobile">
+		menu_type = 'MA'
+	</isEqual>
+
 </select>
 
 <select id="ezNewPortal.getInitCompanyList" resultClass="OrganDeptVO">

@@ -2729,7 +2729,7 @@ public class CommonUtil {
 				
 				try {
     				if (menuCode.equals("workspace")) {//협업
-						String useEzWorkspace = ezNewPortalService.isUseEzWorkspace(companyId, tenantId, userId, deptId);
+						String useEzWorkspace = ezNewPortalService.isUseEzWorkspace(companyId, tenantId, userId, deptId, type);
 						
 						/* 2025-02-27 홍승비 - 포탈 > 협업 메뉴 사용 여부 판별 시 URL이 아닌 메뉴코드를 사용하도록 수정 (쿼리에서 판별) */
 						menuAccess = useEzWorkspace.equals("YES");
