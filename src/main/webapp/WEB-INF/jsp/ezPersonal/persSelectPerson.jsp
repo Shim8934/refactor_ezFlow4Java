@@ -436,12 +436,12 @@
 		        rtnJson.tagName = tagName;
 		        
 		        if (ReturnFunction != null) {
-                    ReturnFunction(rtnJson);
+                    //ReturnFunction(rtnJson);
 		        } else {
                     window.returnValue = rtnJson;
 		        }
 		        // window.close();
-				btnClose_onclick();
+				btnClose_onclick(rtnJson);
 		    }
 		</script>
 		<style>
