@@ -392,15 +392,13 @@
 		        rtnJson.deptName = selRow.cells[1].textContent;
 		        rtnJson.userName = selRow.cells[2].textContent;
 		        rtnJson.jobName =  selRow.cells[3].textContent;
-		        rtnJson.tagName = tagName;
+				rtnJson.buJaeId = selRow.getAttribute("DATA2");
 				
-		        if (ReturnFunction != null) {
-                    ReturnFunction(rtnJson);
-		        } else {
+		        if (!ReturnFunction) {
                     window.returnValue = rtnJson;
 		        }
-		        
-		        window.close();
+				
+				btnClose_onclick(rtnJson);
 		    }
 		    
 		</script>
