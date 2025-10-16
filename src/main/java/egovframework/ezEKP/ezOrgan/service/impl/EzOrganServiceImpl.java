@@ -3143,6 +3143,7 @@ public class EzOrganServiceImpl extends EgovAbstractServiceImpl implements EzOrg
 				userNode.put("isLeaf", "TRUE");
 				userNode.put("setTextColorByName", "GRAY");
 				userNode.put("extensionAttribute10", user.getExtensionAttribute10());
+                userNode.put("chargeBusiness", user.getChargeBusiness());
 				userNode.put("physicalDeliveryOfficeName", user.getPhysicalDeliveryOfficeName());
 				userNode.put("extensionAttribute2", user.getExtensionAttribute2());
 				userNode.put("upnName", user.getUpnName());
@@ -3314,6 +3315,7 @@ public class EzOrganServiceImpl extends EgovAbstractServiceImpl implements EzOrg
 						userNode.put("isLeaf", "TRUE");
 						userNode.put("setTextColorByName", "GRAY");
 						userNode.put("extensionAttribute10", user.getExtensionAttribute10());
+                        userNode.put("chargeBusiness", user.getChargeBusiness());
 						userNode.put("physicalDeliveryOfficeName", user.getPhysicalDeliveryOfficeName());
 						userNode.put("extensionAttribute2", user.getExtensionAttribute2());
 						userNode.put("upnName", user.getUpnName());
