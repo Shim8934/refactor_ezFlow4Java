@@ -11,7 +11,7 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 -- 2023.08.08 한슬기 tenant_id변경을 위한 변수선언 및 values의 tenant_id 변수로 교체(멀티테넌트 사용)
-set @tenant_id_value = 0;
+set @tenant_id_value = (SELECT MAX(TENANT_ID)+1 FROM NEZPORTAL.TBL_TENANT);
 
 INSERT INTO nezemail.james_recipient_rewrite (`DOMAIN_NAME`,`USER_NAME`,`TARGET_ADDRESS`) VALUES ('ndsaas1.kaoni.com','Top','');
 INSERT IGNORE INTO nezemail.james_domain (`DOMAIN_NAME`) VALUES ('ndsaas1.kaoni.com');

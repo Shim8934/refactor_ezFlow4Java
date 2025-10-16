@@ -288,7 +288,7 @@
 	        }
 	
 	        function selectDeptMasterComplete(rtnValue) {
-	        	if (typeof (rtnValue) != "undefined") {
+	        	if (typeof (rtnValue) != "undefined" && rtnValue != "cancel") {
 	            	document.getElementById("Manager").value = rtnValue.userId;
 	        	}
 	        }
