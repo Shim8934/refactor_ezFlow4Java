@@ -359,8 +359,7 @@
 				//		alert("<spring:message code='ezPersonal.t16'/>");
 				//		return;
 				//	}
-		        //}	
-		        var buJaeId = selRow.getAttribute("DATA2");
+		        //}
 		        
 		        if (type == "Proxy") {
 		            if ("<c:out value='${userInfo.deptID}'/>" != selRow.getAttribute("DATA3")) {
@@ -368,19 +367,20 @@
 		                return;
 		            }
 		        }
-		        if (ReturnFunction != null) {
-		            if (type == "EMP")
-		                ReturnFunction(selRow.getAttribute("DATA2") + ":" + selRow.cells[2].textContent + ":" + selRow.cells[1].textContent + ":" + selRow.cells[3].textContent + ":" + selRow.getAttribute("DATA3"));
-		            else
-		                ReturnFunction(selRow.getAttribute("DATA2") + ":" + selRow.cells[2].textContent + ":" + selRow.getAttribute("DATA3"));
+				
+		        var rtnJson = new Object();
+		        rtnJson.userId = selRow.getAttribute("DATA2");
+		        rtnJson.deptId =  selRow.getAttribute("DATA3");
+		        rtnJson.deptName = selRow.cells[1].textContent;
+		        rtnJson.userName = selRow.cells[2].textContent;
+		        rtnJson.jobName =  selRow.cells[3].textContent;
+				rtnJson.buJaeId = selRow.getAttribute("DATA2");
+		        
+		        if (!ReturnFunction) {
+                    window.returnValue = rtnJson;
 		        }
-		        else {
-		            if (type == "EMP")
-		                window.returnValue = selRow.getAttribute("DATA2") + ":" + selRow.cells[2].textContent + ":" + selRow.cells[1].textContent + ":" + selRow.cells[3].textContent + ":" + selRow.getAttribute("DATA3");
-		            else
-		                window.returnValue = selRow.getAttribute("DATA2") + ":" + selRow.cells[2].textContent + ":" + selRow.getAttribute("DATA3");
-		        }
-		        window.close();
+				
+				btnClose_onclick(rtnJson);
 		    }
 		</script>
 		<style>
