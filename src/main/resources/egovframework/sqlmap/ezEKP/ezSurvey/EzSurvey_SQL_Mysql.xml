@@ -453,37 +453,59 @@
 				AA.EXTENSIONATTRIBUTE2 AS USERIMAGE
 			FROM (
 				SELECT
-					CN                                                                                                                           AS CN,
-					CASE WHEN #primary# = '1'THEN TITLE ELSE TITLE2 END                                                                          AS POSITION,
-					CASE WHEN #primary# = '1'THEN DISPLAYNAME ELSE DISPLAYNAME2 END                                                              AS DISPLAYNAME,
-					DISPLAYNAME                                                                                                                  AS DISPLAYNAME1,
-					DISPLAYNAME2                                                                                                                 AS DISPLAYNAME2,
-					CONCAT(SUBSTR('0000000000', 1, 10 - CHARACTER_LENGTH(IFNULL(EXTENSIONATTRIBUTE15, '0'))), IFNULL(EXTENSIONATTRIBUTE15, '0')) AS EXTENSIONATTRIBUTE15,
-					DEPARTMENT                                                                                                                   AS DEPARTMENT,
-					CASE WHEN #primary# = '1'THEN DESCRIPTION ELSE DESCRIPTION2 END                                                              AS DEPARTMENTNAME,
-					DESCRIPTION                                                                                                                  AS DEPARTMENTNAME1,
-					DESCRIPTION2                                                                                                                 AS DEPARTMENTNAME2,
-					TELEPHONENUMBER                                                                                                              AS TELEPHONENUMBER,
-					MAIL                                                                                                                         AS MAIL,
-					EXTENSIONATTRIBUTE2                                                                                                          AS EXTENSIONATTRIBUTE2
+					A.CN                                                                                                                           AS CN,
+					CASE WHEN #primary# = '1'THEN A.TITLE ELSE A.TITLE2 END                                                                          AS POSITION,
+					CASE WHEN #primary# = '1'THEN A.DISPLAYNAME ELSE A.DISPLAYNAME2 END                                                              AS DISPLAYNAME,
+					A.DISPLAYNAME                                                                                                                  AS DISPLAYNAME1,
+					A.DISPLAYNAME2                                                                                                                 AS DISPLAYNAME2,
+					CONCAT(SUBSTR('0000000000', 1, 10 - CHARACTER_LENGTH(IFNULL(A.EXTENSIONATTRIBUTE15, '0'))), IFNULL(A.EXTENSIONATTRIBUTE15, '0')) AS EXTENSIONATTRIBUTE15,
+					A.DEPARTMENT                                                                                                                   AS DEPARTMENT,
+					CASE WHEN #primary# = '1'THEN A.DESCRIPTION ELSE A.DESCRIPTION2 END                                                              AS DEPARTMENTNAME,
+					A.DESCRIPTION                                                                                                                  AS DEPARTMENTNAME1,
+					A.DESCRIPTION2                                                                                                                 AS DEPARTMENTNAME2,
+					A.TELEPHONENUMBER                                                                                                              AS TELEPHONENUMBER,
+					A.MAIL                                                                                                                         AS MAIL,
+					A.EXTENSIONATTRIBUTE2                                                                                                          AS EXTENSIONATTRIBUTE2
 				FROM
-					TBL_USERMASTER 
+					TBL_USERMASTER A
+				INNER JOIN
+					TBL_DEPTMASTER B
+				ON
+					A.DEPARTMENT = B.CN 
+				AND
+					A.TENANT_ID = B.TENANT_ID  
 				WHERE
 		]]>
 		<isNotNull property="deptId">
 					DEPARTMENT = #deptId#
 		</isNotNull>
 		<isNull property="deptId">
-					DEPARTMENT IN <iterate property="deptList" open="(" close=")" conjunction=",">#deptList[]#</iterate>
+			<isNotEmpty property="deptList">
+				A.DEPARTMENT IN <iterate property="deptList" open="(" close=")" conjunction=",">#deptList[]#</iterate>
+			</isNotEmpty>
+			<isNotEmpty property="deptList">
+				<isNotEmpty property="subDeptsList">
+					OR
+				</isNotEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="subDeptsList">
+				<iterate property="subDeptsList" conjunction="OR">
+					B.DEPT_CD_PATH LIKE CONCAT('%,', #subDeptsList[]#)
+					OR
+					B.DEPT_CD_PATH LIKE CONCAT(CONCAT('%,', #subDeptsList[]#), ',%')
+					OR
+					B.DEPT_CD_PATH LIKE CONCAT(#subDeptsList[]#, ',%')
+				</iterate>
+			</isNotEmpty>
 		</isNull>
 					
 		<![CDATA[
 				AND
-					CN != 'masteradmin'
+					A.CN != 'masteradmin'
 				AND
-					CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenantId#)
+					A.CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenantId#)
 				AND
-					TENANT_ID = #tenantId#
+					A.TENANT_ID = #tenantId#
 					
 				UNION ALL
 				
@@ -493,7 +515,7 @@
 					CASE WHEN #primary# = '1'THEN A.DISPLAYNAME ELSE A.DISPLAYNAME2 END                                                          AS DISPLAYNAME,
 					A.DISPLAYNAME                                                                                                                AS DISPLAYNAME1,
 					A.DISPLAYNAME2                                                                                                               AS DISPLAYNAME2,
-					CONCAT(SUBSTR('0000000000', 1, 10 - CHARACTER_LENGTH(IFNULL(EXTENSIONATTRIBUTE15, '0'))), IFNULL(EXTENSIONATTRIBUTE15, '0')) AS EXTENSIONATTRIBUTE15,
+					CONCAT(SUBSTR('0000000000', 1, 10 - CHARACTER_LENGTH(IFNULL(A.EXTENSIONATTRIBUTE15, '0'))), IFNULL(A.EXTENSIONATTRIBUTE15, '0')) AS EXTENSIONATTRIBUTE15,
 					A.DEPARTMENT                                                                                                                 AS DEPARTMENT,
 					CASE WHEN #primary# = '1'THEN A.DESCRIPTION ELSE A.DESCRIPTION2 END                                                          AS DEPARTMENTNAME,
 					A.DESCRIPTION                                                                                                                AS DEPARTMENTNAME1,
@@ -505,13 +527,35 @@
 					TBL_ADDJOBMASTER B
 				JOIN
 					TBL_USERMASTER A ON A.CN = B.CN AND A.TENANT_ID = B.TENANT_ID
+				INNER JOIN
+						TBL_DEPTMASTER C
+					ON
+						A.DEPARTMENT = B.CN 
+					AND
+						A.TENANT_ID = C.TENANT_ID 
 				WHERE
 		]]>
 		<isNotNull property="deptId">
 					B.DEPTID = #deptId#
 		</isNotNull>
 		<isNull property="deptId">
-					B.DEPTID IN <iterate property="deptList" open="(" close=")" conjunction=",">#deptList[]#</iterate>
+			<isNotEmpty property="deptList">
+				B.DEPTID IN <iterate property="deptList" open="(" close=")" conjunction=",">#deptList[]#</iterate>
+			</isNotEmpty>
+			<isNotEmpty property="deptList">
+				<isNotEmpty property="subDeptsList">
+					OR
+				</isNotEmpty>
+			</isNotEmpty>
+			<isNotEmpty property="subDeptsList">
+				<iterate property="subDeptsList" conjunction="OR">
+					C.DEPT_CD_PATH LIKE CONCAT('%,', #subDeptsList[]#)
+					OR
+					C.DEPT_CD_PATH LIKE CONCAT(CONCAT('%,', #subDeptsList[]#), ',%')
+					OR
+					C.DEPT_CD_PATH LIKE CONCAT(#subDeptsList[]#, ',%')
+				</iterate>
+			</isNotEmpty>
 		</isNull>
 		<![CDATA[
 				AND

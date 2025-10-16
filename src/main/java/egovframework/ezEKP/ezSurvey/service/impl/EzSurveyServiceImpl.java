@@ -156,13 +156,14 @@ public class EzSurveyServiceImpl extends EzFileMngUtil implements EzSurveyServic
 	}
 	
 	@Override
-	public List<SimpleUserVO> getDeptMemberList(String deptId, List<String> deptList, String primary, int startPoint, int listCount, int tenantId) throws Exception {
+	public List<SimpleUserVO> getDeptMemberList(String deptId, List<String> deptList, List<String> subDeptsList, String primary, int startPoint, int listCount, int tenantId) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
 		if (deptId != null) {
 			map.put("deptId", deptId);
 		}
 		else {
 			map.put("deptList", deptList);
+			map.put("subDeptsList", subDeptsList);
 		}
 		
 		map.put("startPoint", startPoint);
@@ -392,6 +393,7 @@ public class EzSurveyServiceImpl extends EzFileMngUtil implements EzSurveyServic
 		String endDateUTC                    = commonUtil.getDateStringInUTC(endDate   + " 23:59:59", offset, true);
 		Set<SimpleUserVO> setUsers           = new HashSet<>();
 		List<String> deptList                = new ArrayList<>();
+		List<String> subDeptsList                = new ArrayList<>();
 		List<String> jikchekList                = new ArrayList<>();
 		List<String> jikwiList                = new ArrayList<>();
 		List<AttachVO> totalAttach           = new ArrayList<>();
@@ -591,7 +593,11 @@ public class EzSurveyServiceImpl extends EzFileMngUtil implements EzSurveyServic
 					userCompanyId = userDeptId;
 				}
 				else if (userType.equals("dept") || (userType.equals("comp") && surveyUser.getSubDeptYN().equals("N"))) {
-					deptList.add(userDeptId);
+					if ("Y".equals(surveyUser.getSubDeptYN())) {
+						subDeptsList.add(userDeptId);
+					} else {
+						deptList.add(userDeptId);
+					}
 				}
 				else if (userType.equals("jikwi")) {
 					jikwiList.add(userDeptId);
@@ -629,8 +635,8 @@ public class EzSurveyServiceImpl extends EzFileMngUtil implements EzSurveyServic
 			setUsers.addAll(getAllMembersOfCompany(userCompanyId, primary, tenantId));
 		}
 		else { // 대상자 지정 설문인 경우, 대상자를 찾아 삽입
-			if (deptList.size() > 0) {
-				setUsers.addAll(getDeptMemberList(null, deptList, primary, 0, 0, tenantId));
+			if (deptList.size() > 0 || subDeptsList.size() > 0) {
+				setUsers.addAll(getDeptMemberList(null, deptList, subDeptsList, primary, 0, 0, tenantId));
 			}
 			if (jikchekList.size() > 0) {
 				setUsers.addAll(getSearchMemberListByAttr(primary, "EXTENSIONATTRIBUTE8", jikchekList, 0));
