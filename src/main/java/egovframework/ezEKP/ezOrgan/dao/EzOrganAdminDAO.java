@@ -435,31 +435,9 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
         insert("EzOrganAdminDAO.insertDBData_dept", map);
     }
 
-	@SuppressWarnings("unchecked")
-	public Map<String, String> selectValueByParentCN(Map<String, Object> map) {
-		Map<String, String> codeMap = new LinkedHashMap<>();
-
-		String[] values = {
-				"EXTENSIONATTRIBUTE2",
-				"EXTENSIONATTRIBUTE3",
-				"COMPNM2",
-				"DEPT_CD_PATH",
-				"(DEPTLEVEL + 1)"
-		};
-
-		for (String value : values) {
-			map.put("value", value);
-			String code = (String) select("EzOrganAdminDAO.selectValueByParentCN", map);
-			if ("(DEPTLEVEL + 1)".equalsIgnoreCase(value)){
-				codeMap.put("DEPTLEVEL", code);
-			} else {
-				codeMap.put(value, code);
-			}
-		}
-
-		return codeMap;
+	public OrganDeptVO selectValueByParentCN(Map<String, Object> map) {
+		return (OrganDeptVO) select("EzOrganAdminDAO.selectValueByParentCN", map);
 	}
-
 
 	public void insertDBData_dept(Map<String, Object> map) throws Exception {
 	   /* insertDBData_deptForJMocha(map);*/
