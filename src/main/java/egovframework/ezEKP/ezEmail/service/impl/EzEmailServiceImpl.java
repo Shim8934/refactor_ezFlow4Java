@@ -1372,7 +1372,7 @@ public class EzEmailServiceImpl extends EgovAbstractServiceImpl implements EzEma
 	@Override
 	public void sendMail(String userEmail, String password, Locale userLocale, InternetAddress from, InternetAddress[] toArr, InternetAddress[] ccArr, InternetAddress[] bccArr, String subject, String content, boolean isSaved, EmailImportance importance) throws Exception {
 		logger.debug("sendMail started.");
-		logger.debug("from=" + from + ",subject=" + subject + ",isSaved=" + isSaved);
+		logger.debug("from={}, subject{}, isSaved={}, userEmail={}", from, subject, isSaved, userEmail);
 
 //		IMAPAccess ia = null;
 //		
