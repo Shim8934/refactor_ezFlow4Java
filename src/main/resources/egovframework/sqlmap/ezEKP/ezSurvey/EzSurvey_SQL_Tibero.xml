@@ -538,9 +538,9 @@
 					INNER JOIN
 						TBL_DEPTMASTER C
 					ON
-						A.DEPARTMENT = B.CN 
+						B.DEPTID = C.CN
 					AND
-						A.TENANT_ID = C.TENANT_ID 
+						B.TENANT_ID = C.TENANT_ID 
 					WHERE
 				]]>
 		<isNotNull property="deptId">
