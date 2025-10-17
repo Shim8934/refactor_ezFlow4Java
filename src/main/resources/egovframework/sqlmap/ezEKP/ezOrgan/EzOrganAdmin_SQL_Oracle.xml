@@ -268,7 +268,21 @@
                  )
         ]]>
     </insert>
-		
+
+	<select id="EzOrganAdminDAO.selectValueByParentCN" parameterClass="Map" resultClass="OrganDeptVO">
+		<![CDATA[
+			SELECT
+				EXTENSIONATTRIBUTE2,
+				EXTENSIONATTRIBUTE3,
+				COMPNM2,
+				DEPT_CD_PATH,
+				(DEPTLEVEL + 1) as DEPTLEVEL
+			FROM TBL_DEPTMASTER AA
+			WHERE
+				CN=#v_PARENTCN#
+				AND TENANT_ID=#v_TENANT_ID#
+		]]>
+	</select>
 	<!-- <procedure id="EzOrganAdminDAO.insertDBData_user" parameterClass="Map">
 		<![CDATA[
 			{CALL EZSP_INSERTDBDATA_USER(#v_CN#, #v_DISPLAYNAME#, #v_DISPLAYNAME2#, #v_MAIL#, #v_MAILNICKNAME#, #v_UPNNAME#, #v_PARENTCN#, 
