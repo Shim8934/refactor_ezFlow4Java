@@ -1,8 +1,10 @@
 package egovframework.ezMobile.ezSurvey.web;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -12,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import egovframework.let.utl.fcc.service.EzFAL;
+import egovframework.let.utl.fcc.service.MimeTypes;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -209,41 +212,21 @@ public class MSurveyGWController {
 		JSONObject result = new JSONObject ();
 		logger.debug("serverName: " + serverName + " ||  filePath: " + filePath + " || UserId: " + userId + " || File Name: " + fileName);
 		
-		LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
-		
 		if (filePath.equals("") || fileName.equals("") || serverName.equals("") || userId.equals("")) {
 			logger.debug("Invalid arguments!!!!!!");
 			return result;
 		}
 		
 		//Get absolute path of the application
-		String realPath = request.getServletContext().getRealPath("");
-		realPath = commonUtil.detectPathTraversal(realPath);
+		String path = commonUtil.detectPathTraversal(request.getServletContext().getRealPath("")) + commonUtil.detectPathTraversal(filePath);
+		EzFAL.EzFile file = new EzFAL.EzFile(path);
 		
-		EzFAL.EzFile file = new EzFAL.EzFile(realPath + commonUtil.detectPathTraversal(filePath));
-		
-		if (!file.exists()) {
+		if (!file.exists() || !file.isFile()) {
 			throw new FileNotFoundException(fileName);
 		}
-		
-		if (!file.isFile()) {
-			throw new FileNotFoundException(fileName);
-		}
-		
-		String tempDirPath = commonUtil.getUploadPath("upload_survey.ROOT", userInfo.getTenantId()) + commonUtil.separator + "tempUploadFile";
-		EzFAL.EzFile tempDir = new EzFAL.EzFile(tempDirPath);
-		if (!tempDir.exists()) {
-			tempDir.mkdirs();
-		}
-		
-		String tempFilePath = realPath + tempDirPath + realPath;
-		EzFAL.EzFile tempFile = new EzFAL.EzFile(tempFilePath);
-		EzFAL.copyFile(file, tempFile);
-		
-		byte[] fileBytes = Files.readAllBytes(tempFile.toPath());
-		tempFile.delete();
 		
 		JSONObject data = new JSONObject();
+		byte[] fileBytes = commonUtil.readBytesFromFile(Paths.get(filePath));
 		data.put("bytes", fileBytes);
 		result.put("data", data);
 		
