@@ -1131,6 +1131,22 @@ public class EzOrganAdminServiceImpl extends EgovAbstractServiceImpl implements 
 		}
 		
 		map.put("v_EXTATTR15", vo.getExtensionAttribute15());
+
+		Map<String, String> values  = ezOrganAdminDao.selectValueByParentCN(map);
+		String EXTENSIONATTRIBUTE2 = values.get("EXTENSIONATTRIBUTE2");
+		String EXTENSIONATTRIBUTE3 = values.get("EXTENSIONATTRIBUTE3");
+		String COMPNM2 = values.get("COMPNM2");
+		String DEPT_CD_PATH = values.get("DEPT_CD_PATH");
+		String DEPTLEVEL = values.get("(DEPTLEVEL + 1)");
+
+		logger.debug("EXTENSIONATTRIBUTE2 = {}, EXTENSIONATTRIBUTE3 = {}, COMPNM2 = {}, DEPT_CD_PATH = {}, DEPTLEVEL = {}, ",EXTENSIONATTRIBUTE2, EXTENSIONATTRIBUTE3, COMPNM2, DEPT_CD_PATH, DEPTLEVEL);
+
+		map.put("EXTENSIONATTRIBUTE2",EXTENSIONATTRIBUTE2);
+		map.put("EXTENSIONATTRIBUTE3",EXTENSIONATTRIBUTE3);
+		map.put("COMPNM2",COMPNM2);
+		map.put("DEPT_CD_PATH",DEPT_CD_PATH);
+		map.put("DEPTLEVEL",DEPTLEVEL);
+
 		ezOrganAdminDao.insertDBData_dept(map);
 		
 		logger.debug("insertDBData_dept ended");

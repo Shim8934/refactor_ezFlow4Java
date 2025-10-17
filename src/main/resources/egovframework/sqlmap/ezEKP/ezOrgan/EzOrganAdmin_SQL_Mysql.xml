@@ -261,16 +261,19 @@
                  )
      		VALUES
      			( #v_CN#, #v_DISPLAYNAME#, #v_DISPLAYNAME2#, 'Y', #v_MAIL#, #v_PARENTCN#, #v_EXTATTR4#, #v_EXTATTR5#, #v_EXTATTR6#, #v_EXTATTR8#, #v_EXTATTR9#, #v_EXTATTR10#, #v_EXTATTR15#, 'Y', #v_LDAPPATH#, #nowDate#, #nowDate#, #v_MANUAL_FLAG#, #v_TENANT_ID#,
-                    (SELECT EXTENSIONATTRIBUTE2 FROM TBL_DEPTMASTER AA WHERE CN=#v_PARENTCN# AND TENANT_ID=#v_TENANT_ID#),
-                    (SELECT EXTENSIONATTRIBUTE3 FROM TBL_DEPTMASTER AA WHERE CN=#v_PARENTCN# AND TENANT_ID=#v_TENANT_ID#),
-                    (SELECT COMPNM2 FROM TBL_DEPTMASTER AA WHERE CN=#v_PARENTCN# AND TENANT_ID=#v_TENANT_ID#),
-                    CONCAT((SELECT DEPT_CD_PATH FROM TBL_DEPTMASTER AA WHERE CN=#v_PARENTCN# AND TENANT_ID=#v_TENANT_ID#), ',', #v_CN#),
-                    (SELECT DEPTLEVEL + 1 FROM TBL_DEPTMASTER AA WHERE CN=#v_PARENTCN# AND TENANT_ID=#v_TENANT_ID#),
+                    (#EXTENSIONATTRIBUTE2#),
+                    (#EXTENSIONATTRIBUTE3#),
+                    (#COMPNM2#),
+                    CONCAT((#DEPT_CD_PATH#), ',', #v_CN#),
+                    (#DEPTLEVEL#),
                     #v_EXTATTR11#, #v_DEPTTREEFLAG#
                  )
 		]]>
 	</insert>
-		
+
+	<select id="EzOrganAdminDAO.selectValueByParentCN" parameterClass="Map" resultClass="String">
+		SELECT #value# FROM TBL_DEPTMASTER AA WHERE CN=#v_PARENTCN# AND TENANT_ID=#v_TENANT_ID#
+	</select>
 	<!-- <procedure id="EzOrganAdminDAO.insertDBData_user" parameterClass="Map">
 		<![CDATA[
 			{CALL EZSP_INSERTDBDATA_USER(#v_CN#, #v_DISPLAYNAME#, #v_DISPLAYNAME2#, #v_MAIL#, #v_MAILNICKNAME#, #v_UPNNAME#, #v_PARENTCN#, 
