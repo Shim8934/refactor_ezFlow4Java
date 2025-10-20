@@ -625,9 +625,10 @@
 	        g_bDirty = false;
 	        
 	        // onbeforeunload 에서 같은 작업을 하니까 굳이 미리 할 필요 없지 않나?
-//	        if (retVal == "1" && g_url != "" && ("${folderPath}" != "Draft" && g_cmd != "EDIT")) {
-//	            delDrafts();
-//	        }
+	        // ㄴ> 회신, 전달 시 아래 작업을 해야지만 취소 시 임시 보관함에서 메일이 삭제 됨, 주석 해제하여 원복
+	        if (retVal == "1" && g_url != "" && ("${folderPath}" != "Draft" && g_cmd != "EDIT")) {
+	            delDrafts();
+	        }
 	        
 	        if (retVal != "2")
 				btnClose_onclick();
