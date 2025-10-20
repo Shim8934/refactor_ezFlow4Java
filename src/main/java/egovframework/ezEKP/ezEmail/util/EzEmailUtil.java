@@ -1577,12 +1577,8 @@ public class EzEmailUtil {
 						break appendPreviewImage;
 					}
 				}
-				
-				if (useImageConvertServer != null && !useImageConvertServer.equalsIgnoreCase("0")) {
-					previewImageListHtml += " <div><p class=imageArea><a onclick=\"AttachFile_Preview('" + folderPath_URLEnc + "','" + uid + "','" + bodyPartIndex + "','" + filename_spclStr.replace("'", "\\'") + "');\">";
-				} else {
-					previewImageListHtml += " <div><p class=imageArea><a target=_blank href='" + aitem + "&readStatus=Y"+ "'>";
-				}
+//				GetOpenWindow(pURI, "", 890, 840, "yes");
+				previewImageListHtml += " <div><p class='imageArea'><a onclick=\"GetOpenWindow('" + aitem + "&readStatus=Y', '', 890, 840, 'yes');\">";
 				previewImageListHtml += " <img src='" + aitem + "' _filesize='" + size + "' _filename='" + EgovStringUtil.getSpclStrCnvr2(filename) + "' style='cursor:pointer;'></a></p>";
 				previewImageListHtml += " <p onclick=\"DownloadAttach('" + aitem + "');\"><span title='" + filename_spclStr + " (" + strSize + ")" + "' class='attachImageeName' onmouseover=this.style.color='#164aad' onmouseout=this.style.color='black' style='cursor:pointer' >" + filename_spclStr + " (" + strSize + ")</p></div>";
 			}
