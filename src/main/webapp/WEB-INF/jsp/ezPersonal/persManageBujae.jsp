@@ -265,7 +265,6 @@
 					showPopup("/ezPersonal/selectPerson.do?type=" + type + "&dept=" + selectedDept + "&tagName=" + tagName, 860, 535, "SelectPerson_cross", GetOpenWindowfeature(860, 535), select_person_Complete);
 			    }
 			    else {
-			        debugger;
 			        var rtnValue = window.showModalDialog("/ezPersonal/selectPerson.do?type=" + type + "&dept=" + selectedDept + "&tagName=" + tagName, "",
 		                "dialogHeight:535px;dialogwidth:860px;dialogleft:100px;dialogtop:100px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(860, 535));
 		
