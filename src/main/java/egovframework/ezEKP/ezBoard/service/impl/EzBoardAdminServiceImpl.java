@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.StringJoiner;
+import java.util.Properties;
 
 import javax.annotation.Resource;
 import javax.mail.internet.InternetAddress;
@@ -77,6 +78,9 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 
 	@Autowired
 	private EzCommonService ezCommonService;
+
+	@Autowired
+	private Properties config;
 
 	@Resource(name = "EzBoardService")
 	private EzBoardService ezBoardService;
@@ -1066,7 +1070,12 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 	public void trunkBoard(int tenantID) throws Exception {
 		logger.debug("trunkBoard started");
 
-		ezBoardAdminDAO.trunkBoard(tenantID);
+		String useMSA = config.getProperty("config.useMSA");
+		if ("YES".equalsIgnoreCase(useMSA)){
+			ezBoardAdminDAO.trunkBoardMsa(tenantID);
+		} else {
+			ezBoardAdminDAO.trunkBoard(tenantID);
+		}
 
 		logger.debug("trunkBoard ended");
 	}	
