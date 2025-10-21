@@ -914,6 +914,8 @@
 			<input  type="hidden" id="iptFolderPath"  name="iptFolderPath" value="">
 		    <input  type="hidden" id="iptURL"  name="iptURL" value="">
 		    <input  type="hidden" id="iSecurity"  name="iSecurity" value="">
+		    <input  type="hidden" id="toAddr"  name="toAddr" value="${g_useremail}">
+		    <input  type="hidden" id="fromAddr"  name="fromAddr" value="${fromEmail}">
 		    <c:if test="${shareId != null && shareId != ''}">
 		    	<input  type="hidden" id="shareId"  name="shareId" value="${shareId}">
 		    </c:if>

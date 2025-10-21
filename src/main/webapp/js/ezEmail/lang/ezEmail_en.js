@@ -390,6 +390,9 @@ const strLangPlzCheckSearchNameInput = "Enter name to search.";
 const strLangOrgFetchError = "An error occurred while searching organization chart. -";
 const strLangSelectProxyApproverWarning = "Select a person for deputy.";
 
+var strLangIcal01 = "A response email has been sent."
+var strLangIcal02 = "Failed to send response email."
+
 const strLangTempSaveAttachmentsWarning = "Attached files will be deleted upon saving. Do you want to save?";
 
 var strNoSubject = "Enter title.";

@@ -361,6 +361,9 @@ var strLangAppr05 = "회사 전체에게 보내는 메일은 관리자의 승인
 var strLangHSG01 = "이메일 주소를 찾지 못해 스팸신고를 할 수 없습니다.";
 var strLangHSG02 = "스팸신고가 정상적으로 처리되지 않았습니다.";
 
+var strLangIcal01 = "응답 메일을 전송했습니다."
+var strLangIcal02 = "응답 메일 전송에 실패했습니다."
+
 // 2024.04.29 한슬기 : 메일 관련 메시지
 var strLangHSG03 = "제목란이 비어있습니다.";
 

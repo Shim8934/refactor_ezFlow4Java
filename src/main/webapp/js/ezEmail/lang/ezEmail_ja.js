@@ -344,6 +344,9 @@ var strLangKSA05 = "エラーが発生しました。";
 
 var strLangTagAlreadyUse = "この名前は別のタグですでに使用されています。";
 
+var strLangIcal01 = "応答メールを送信しました。"
+var strLangIcal02 = "応答メールの送信に失敗しました。"
+
 /* 2023-05-16 김우철 - 한글 배포용 문서 저장을 위한 메세지 추가 */
 var strLangKWCHd01 = "HWP配布用文書の保存時にエラーが発生しました。もう一度お試しください。";
 

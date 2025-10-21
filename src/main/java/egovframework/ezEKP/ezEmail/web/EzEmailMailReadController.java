@@ -66,6 +66,7 @@ import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -167,6 +168,7 @@ public class EzEmailMailReadController extends EzFileMngUtil {
 
 	@Autowired
 	private Rest rest;
+	private ReloadableResourceBundleMessageSource messageSource;
 
 	/**
 	 * 메일 읽기화면 호출 함수
@@ -1825,7 +1827,9 @@ public class EzEmailMailReadController extends EzFileMngUtil {
 		if ("YES".equalsIgnoreCase(useWebfolder)) {
 			extraMap.put("useWebfolder", true);
 		}
-
+		// ical status 상태를 가져오기 위한 사용자 이메일 주소 추가
+		extraMap.put("userEmail", userEmail);
+		
 		if (useSharedMailbox.equals("YES") && !Globals.APPR_MAIL_SHARED_ID.equalsIgnoreCase(shareId)) {
 			//String shareId = request.getParameter("shareId");
 			logger.debug("shareId=" + shareId);
@@ -1909,6 +1913,9 @@ public class EzEmailMailReadController extends EzFileMngUtil {
 									logger.debug("Message's seen flag changed to true.");
 								}
 							}
+							// ical 응답 조회
+							String icalStatus = ezEmailUtil.getIcalStatusFlag(message);
+							extraMap.put("icalStatus", icalStatus);
 
 							bodyInfoList = ezEmailUtil.getBodyInfo(message, folderPath, uid, -1, null, locale, extraMap);
 							double size = Double.parseDouble(bodyInfoList.get(2));
@@ -2066,7 +2073,8 @@ public class EzEmailMailReadController extends EzFileMngUtil {
 		model.addAttribute("previewMailImage", previewMailImage);
 		model.addAttribute("pReadFlag", pReadFlag);		
 		model.addAttribute("sentDateMsg", sentDateMsg); // 전달, 회신 시 보낸 시간		
-		
+		model.addAttribute("fromAddr", request.getParameter("fromAddr"));
+
 		logger.debug("readMailContent ended.");
 		
 		return "ezEmail/mailReadContent";
@@ -3825,6 +3833,9 @@ public class EzEmailMailReadController extends EzFileMngUtil {
 			extraMap.put("useWebfolder", true);
 		}
 
+		// ical status 상태를 가져오기 위한 사용자 이메일 주소 추가
+		extraMap.put("userEmail", userEmail);
+
 		if (useSharedMailbox.equals("YES")) {
 			String shareId = request.getParameter("shareId");
 			logger.debug("shareId=" + shareId);
@@ -3914,6 +3925,9 @@ public class EzEmailMailReadController extends EzFileMngUtil {
 									logger.debug("Message's seen flag changed to true.");
 								}
 							}
+							// ical 응답 조회
+							String icalStatus = ezEmailUtil.getIcalStatusFlag(message);
+							extraMap.put("icalStatus", icalStatus);
 
 							bodyInfoList = ezEmailUtil.getBodyInfo(message, folderPath, uid, -1, null, locale, extraMap);
 							double size = Double.parseDouble(bodyInfoList.get(2));
