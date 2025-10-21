@@ -15,6 +15,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
+import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLDecoder;
@@ -27,9 +28,14 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.security.PrivateKey;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
+import net.fortuna.ical4j.model.Calendar;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -78,7 +84,23 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
 
+import egovframework.ezEKP.ezEmail.vo.IcalVO;
 import egovframework.let.utl.rest.Result;
+import net.fortuna.ical4j.model.DateTime;
+import net.fortuna.ical4j.model.component.VEvent;
+import net.fortuna.ical4j.model.parameter.Cn;
+import net.fortuna.ical4j.model.parameter.PartStat;
+import net.fortuna.ical4j.model.property.Attendee;
+import net.fortuna.ical4j.model.property.CalScale;
+import net.fortuna.ical4j.model.property.DtEnd;
+import net.fortuna.ical4j.model.property.DtStart;
+import net.fortuna.ical4j.model.property.Location;
+import net.fortuna.ical4j.model.property.Method;
+import net.fortuna.ical4j.model.property.Organizer;
+import net.fortuna.ical4j.model.property.ProdId;
+import net.fortuna.ical4j.model.property.Summary;
+import net.fortuna.ical4j.model.property.Uid;
+import net.fortuna.ical4j.model.property.Version;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -2943,7 +2965,7 @@ public class EzEmailMailWriteController extends EzFileMngUtil {
 		        }
 		        
 		        //SentDate 설정
-		        message.setSentDate(Calendar.getInstance().getTime());
+		        message.setSentDate(java.util.Calendar.getInstance().getTime());
 		        
 		        //User-Agent 설정
 		        message.setHeader("User-Agent", "JMocha Mail 1.0");	        
@@ -7165,4 +7187,227 @@ public class EzEmailMailWriteController extends EzFileMngUtil {
 	public String inputZipPassword() throws Exception{
 		return "ezEmail/mailZipPassword";
 	}
+
+    /**
+     * icalendar 일정 초대 응답 메일
+     */
+    @RequestMapping(value = "/ezEmail/sendIcalResponseMail.do", produces = "application/json; charset=utf-8", method = RequestMethod.POST)
+    @ResponseBody
+    public void sendIcalResponseMail(@CookieValue("loginCookie") String loginCookie, @RequestBody IcalVO icalVO, Locale locale, HttpServletResponse response) throws Exception {
+        logger.debug("sendIcalResponseMail started.");
+
+        LoginVO loginInfo = commonUtil.userInfo(loginCookie);
+        String domainName = ezCommonService.getTenantConfig("DomainName", loginInfo.getTenantId());
+        String userEmail = loginInfo.getId() + "@" + domainName;
+        // 초대받은 이벤트 정보
+        String eventUid = Optional.ofNullable(icalVO.getUid()).map(Uid::getValue).map(s -> s.replaceFirst("^UID:", "").trim()).orElse("");
+        boolean isAllDay = icalVO.isDtAllDay();
+		Date startDt = icalVO.toStartDate();
+		Date endDt = icalVO.toEndDate();
+        String summary = icalVO.getSummaryStr();
+        String organizer = icalVO.getOrganizerCn();
+        String status = icalVO.getStatus();
+		String orgUrl = icalVO.getUidStr();
+
+        logger.debug("eventUid = {}, isAllDay = {}, startDt = {}, endDt = {}, summary = {}, organizer = {}, status = {}, location = {}", eventUid, isAllDay, startDt, endDt, summary, organizer, status, icalVO.getLocationStr());
+
+        VEvent event = ezEmailUtil.createTimeEvent(isAllDay, startDt, endDt, summary, eventUid);
+        //event.getProperties().add(new Uid(eventUid));
+        event.getProperties().add(Method.REPLY); // 응답 메일 표시
+
+        Organizer organizer1 = new Organizer(URI.create("mailto:" + organizer));
+
+        event.getProperties().add(organizer1);
+
+        logger.debug("event= {}", event);
+        PartStat partStat = "DECLINED".equalsIgnoreCase(status) ? PartStat.DECLINED :
+                "TENTATIVE".equalsIgnoreCase(status) ? PartStat.TENTATIVE :
+                        PartStat.ACCEPTED;
+
+        // 참석자 추가 (응답 상태 설정)
+		// attendee uir는 꼭 mailto:로 시작
+        Attendee attendee = new Attendee(URI.create("mailto:" + userEmail));
+        attendee.getParameters().add(partStat); // '수락' 상태 설정
+        attendee.getParameters().add(new Cn(loginInfo.getDisplayName()));
+
+        event.getProperties().add(attendee);
+        event.getProperties().add(new Location(icalVO.getLocationStr()));
+
+        // 캘린더 객체 생성
+        Calendar calendar = new Calendar();
+        calendar.getProperties().add(Version.VERSION_2_0);
+        calendar.getProperties().add(CalScale.GREGORIAN);
+        calendar.getProperties().add(new ProdId("-//Kaoni Corp//iCal4j 3.0//EN"));
+        calendar.getProperties().add(Method.REPLY);
+        calendar.getComponents().add(event);
+
+
+        String password = commonUtil.getUserIdAndPassword(loginCookie).get(1);
+        SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"), userEmail, password);
+
+        // 메일 작성
+        MimeMessage message = sa.createMimeMessage();
+        message.setFrom(new InternetAddress(userEmail));
+        message.addRecipient(Message.RecipientType.TO, new InternetAddress(organizer));
+        message.setSubject(summary);
+
+        // 클라이언트에게 iCalendar 메일을 인식시켜주기 위한 헤더 설정
+        MimeBodyPart calendarPart = new MimeBodyPart();
+        calendarPart.setHeader("Content-Class", "urn:content-classes:calendarmessage");
+        calendarPart.setHeader("Content-Type", "text/calendar; charset=UTF-8; method=REPLY");
+        calendarPart.setHeader("Content-Disposition", "inline");
+        calendarPart.setContent(calendar.toString(), "text/calendar; charset=UTF-8; method=REPLY");
+
+
+        // 메일 컨테이너 설정
+        // Multipart multipart = new MimeMultipart();
+        // alternative로 구성해야 Outlook에서 인식
+
+        MimeBodyPart textPart = new MimeBodyPart();
+        
+        MimeMultipart multipart = new MimeMultipart("alternative");
+        multipart.addBodyPart(calendarPart);
+        message.setContent(multipart);
+
+        IcalVO vo = new IcalVO();
+        vo.setUidStr(eventUid);
+        vo.setAttendeeStr(userEmail);
+        vo.setStatus(status);
+
+		IMAPAccess ia = null;
+		try {
+			// 메일 전송
+			Transport.send(message);
+
+			// 응답 정보 저장
+			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+					userEmail, password, egovMessageSource, locale, ezEmailUtil);
+
+			// orgUrl = 메일함id/메일uid
+			int index = orgUrl.lastIndexOf("/");
+
+			if (index != -1) {
+				String orgMsgFolderPath = orgUrl.substring(0, index);
+				long orgMsgUid = Long.parseLong(orgUrl.substring(index + 1));
+
+				logger.debug("orgMsgFolderPath=" + orgMsgFolderPath + ",orgMsgUid=" + orgMsgUid);
+
+				Folder orgMsgFolder = ia.getFolder(orgMsgFolderPath);
+				orgMsgFolder.open(Folder.READ_WRITE);
+
+				Message orgMessage = ((IMAPFolder) orgMsgFolder).getMessageByUID(orgMsgUid);
+				// 선택한 응답 db 저장
+				if (orgMessage != null) {
+					if (!ezEmailUtil.hasIcalEventUidFlag(orgMessage)) {
+						ezEmailUtil.setIcalEventUidFlag(orgMessage, true, eventUid);
+					}
+
+					ezEmailUtil.setIcalStatusFlag(orgMessage, true, status);
+					ezEmailUtil.setIcalResponseDtFlag(orgMessage, true);
+
+				}
+
+				orgMsgFolder.close(true);
+				
+			}
+        } catch (MessagingException e) {
+            e.printStackTrace();
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+        } finally {
+			if (ia != null) {
+				ia.close();
+				ia = null;
+			}
+		}
+        // 결과 출력
+        //System.out.println(calendar);
+        logger.debug("calendar = {}", calendar.toString());
+    }
+
+    public static VEvent createTimeEvent(String period, String summary, String uidStr) throws Exception {
+		// 하루종일 여부
+        boolean isAllDay = !period.matches(".*(오전|오후)\\s*\\d{1,2}:\\d{2}.*");
+        logger.debug("isAllDay=" + isAllDay);
+        if (isAllDay) { // 하루종일일 경우
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+            DateTimeFormatter icalFormatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+
+            LocalDate startDate;
+            LocalDate endDate;
+
+			// 2일 이상일 경우
+            if (period.contains("~")) {
+                String[] parts = period.split("~");
+                String startStr = parts[0].trim().split(" ")[0]; // "2025.06.10"
+                String endStr = parts[1].trim().split(" ")[0];
+
+                startDate = LocalDate.parse(startStr, formatter);
+                endDate = LocalDate.parse(endStr, formatter).plusDays(1); // iCal 규칙상 +1일
+
+            } else {
+                // 하루 일정 처리
+                String dateStr = period.trim().split(" ")[0]; // 2025.06.10
+                startDate = LocalDate.parse(dateStr, formatter);
+                endDate = startDate.plusDays(1); // 다음날로 설정
+            }
+
+            String startStr = startDate.format(icalFormatter);
+            String endStr = endDate.format(icalFormatter);
+
+            net.fortuna.ical4j.model.Date dtStartDate = new net.fortuna.ical4j.model.Date(startStr); // ical4j.model.Date 사용
+            net.fortuna.ical4j.model.Date dtEndDate = new net.fortuna.ical4j.model.Date(endStr);
+
+            // LocalDate로 생성
+            DtStart dtStart = new DtStart(dtStartDate);
+            //dtStart.getParameters().add(Value.DATE);
+
+            DtEnd dtEnd = new DtEnd(dtEndDate);
+            //dtEnd.getParameters().add(Value.DATE);
+
+            //VEvent event = new VEvent(start, oneDay, summary);
+            VEvent event = new VEvent();
+            event.getProperties().add(dtStart);
+            event.getProperties().add(dtEnd);
+            event.getProperties().add(new Summary(summary));
+            event.getProperties().add(new Uid(uidStr));
+            return event;
+
+        } else { // 시간이 설정되어 있을 경우
+            // 시간대 설정
+            net.fortuna.ical4j.model.TimeZoneRegistry registry = net.fortuna.ical4j.model.TimeZoneRegistryFactory.getInstance().createRegistry();
+            net.fortuna.ical4j.model.TimeZone icalTz = registry.getTimeZone("Asia/Seoul");
+
+            // (KST) 제거
+            String cleaned = period.replaceAll("\\(.*?\\)", "").trim();
+
+            String[] parts = cleaned.split("~");
+            String datePart = parts[0].substring(0, 10).trim();       // "2025.05.16"
+            String startTime = parts[0].substring(10).trim();         // "오후 04:00"
+            String endTime = parts[1].trim();                         // "오후 04:30"
+
+            String startDateTimeStr = datePart + " " + startTime;
+            String endDateTimeStr = datePart + " " + endTime;
+
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd a hh:mm", Locale.KOREAN)
+                    .withZone(ZoneId.of("Asia/Seoul"));
+
+            LocalDateTime startLdt = LocalDateTime.parse(startDateTimeStr, formatter);
+            LocalDateTime endLdt = LocalDateTime.parse(endDateTimeStr, formatter);
+
+            ZonedDateTime startZdt = startLdt.atZone(ZoneId.of("Asia/Seoul"));
+            ZonedDateTime endZdt = endLdt.atZone(ZoneId.of("Asia/Seoul"));
+
+            DateTime start = new DateTime(startZdt.toInstant().toEpochMilli());
+            start.setTimeZone(icalTz);
+
+            DateTime end = new DateTime(endZdt.toInstant().toEpochMilli());
+            end.setTimeZone(icalTz);
+
+
+            VEvent event = new VEvent(start, end, summary);
+            event.getProperties().add(new Uid(uidStr));
+            return event;
+        }
+    }
+
 }

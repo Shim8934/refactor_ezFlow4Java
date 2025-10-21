@@ -1,5 +1,7 @@
 package egovframework.ezEKP.ezEmail.vo;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
@@ -32,10 +34,12 @@ public class IcalVO {
 	// 시작 Date
 	private DtStart dtStart;
 	private Date dtStartDate;
+	private String startDtStr;
 	
 	// 종료 Date
 	private DtEnd dtEnd;
 	private Date dtEndDate;
+	private String endDtStr;
 	
 	// 장소
 	private Location location;
@@ -59,9 +63,62 @@ public class IcalVO {
 	
 	// 로케일
 	private Locale locale = Locale.KOREA;
+
+	// 일정 초대 응답 상태 (ACCEPTED, TENTATIVE, DECLINED)
+	private String status;
+
+	// 일정 시간 (전체)
+	private String period;
+
+	// 일정 초대 응답 시간
+	private Date responseDt;
+
+	// 일정 초대 응답한 참석자 주소
+	private String attendeeStr;
+
+	private String method;
+
+	public String getMethod() {
+		return method;
+	}
+
+	public void setMethod(String method) {
+		this.method = method;
+	}
+
+	public String getAttendeeStr() {
+		return attendeeStr;
+	}
+
+	public void setAttendeeStr(String attendeeStr) {
+		this.attendeeStr = attendeeStr;
+	}
+
+	public Date getResponseDt() {
+		return responseDt;
+	}
+
+	public void setResponseDt(Date responseDt) {
+		this.responseDt = responseDt;
+	}
 	
+	public String getPeriod() {
+		return period;
+	}
+
+	public void setPeriod(String period) {
+		this.period = period;
+	}
 	
-	public Summary getSummary() {
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+    public Summary getSummary() {
 		return summary;
 	}
 	public void setSummary(Summary summary) {
@@ -126,6 +183,25 @@ public class IcalVO {
 	public void setDtStartDate(Date dtStartDate) {
 		this.dtStartDate = dtStartDate;
 	}
+	public String getStartDtStr() {
+		return startDtStr;
+	}
+	public void setStartDtStr(String startDtStr) {
+		this.startDtStr = startDtStr;
+	}
+	public Date toStartDate() throws ParseException {
+		try {
+			if (startDtStr.matches("\\d{8}T\\d{6}")) { // 시간 포함 일정
+				return new SimpleDateFormat("yyyyMMdd'T'HHmmss").parse(startDtStr);
+			} else if (startDtStr.matches("\\d{8}")) { // 온종일 일정
+				return new SimpleDateFormat("yyyyMMdd").parse(startDtStr);
+			} else {
+				throw new IllegalArgumentException("지원되지 않는 날짜 포맷: " + startDtStr);
+			}
+		} catch (ParseException e) {
+			throw e;
+		}
+	}
 	public DtEnd getDtEnd() {
 		return dtEnd;
 	}
@@ -139,6 +215,25 @@ public class IcalVO {
 	}
 	public void setDtEndDate(Date dtEndDate) {
 		this.dtEndDate = dtEndDate;
+	}
+	public String getEndDtStr() {
+		return endDtStr;
+	}
+	public void setEndDtStr(String endDtStr) {
+		this.endDtStr = endDtStr;
+	}
+	public Date toEndDate() throws ParseException {
+		try {
+			if (endDtStr.matches("\\d{8}T\\d{6}")) { // 시간 포함 일정
+				return new SimpleDateFormat("yyyyMMdd'T'HHmmss").parse(endDtStr);
+			} else if (endDtStr.matches("\\d{8}")) { // 온종일 일정
+				return new SimpleDateFormat("yyyyMMdd").parse(endDtStr);
+			} else {
+				throw new IllegalArgumentException("지원되지 않는 날짜 포맷: " + endDtStr);
+			}
+		} catch (ParseException e) {
+			throw e;
+		}
 	}
 	public Location getLocation() {
 		return location;
@@ -167,7 +262,8 @@ public class IcalVO {
 		this.organizer = organizer;
 		
 		if (organizer != null) {
-			organizerCn = organizer.getParameter(Parameter.CN).getValue().toString();
+			Parameter cn = organizer.getParameter(Parameter.CN);
+			String organizerCn = (cn == null) ? "" : cn.getValue().toString();
 			organizerMailTo = organizer.getCalAddress().getSchemeSpecificPart().toString();
 		}
 	}

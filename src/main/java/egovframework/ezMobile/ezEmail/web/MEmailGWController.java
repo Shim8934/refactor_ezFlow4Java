@@ -16,6 +16,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
+import java.net.URI;
 import java.net.URLConnection;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
@@ -84,10 +85,22 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import egovframework.ezEKP.ezEmail.service.EzEmailUserAdminService;
 import com.google.gson.JsonElement;
 import egovframework.ezEKP.ezEmail.util.EmailImportance;
+import egovframework.ezEKP.ezEmail.vo.IcalVO;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
 import egovframework.let.utl.rest.Rest;
 import egovframework.let.utl.rest.Result;
+import net.fortuna.ical4j.model.component.VEvent;
+import net.fortuna.ical4j.model.parameter.Cn;
+import net.fortuna.ical4j.model.parameter.PartStat;
+import net.fortuna.ical4j.model.property.Attendee;
+import net.fortuna.ical4j.model.property.CalScale;
+import net.fortuna.ical4j.model.property.Location;
+import net.fortuna.ical4j.model.property.Method;
+import net.fortuna.ical4j.model.property.Organizer;
+import net.fortuna.ical4j.model.property.ProdId;
+import net.fortuna.ical4j.model.property.Uid;
+import net.fortuna.ical4j.model.property.Version;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 
@@ -4823,6 +4836,10 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 					Map<String, Object> extraMap = new HashMap<String, Object>();
 					extraMap.put("mobile", true);
 					extraMap.put("shareId", info.getUserId());
+
+					// ical 응답 조회
+					String icalStatus = ezEmailUtil.getIcalStatusFlag(message);
+					extraMap.put("icalStatus", icalStatus);
 					
 					bodyInfoList = ezEmailUtil.getBodyInfo(message, folderId, uid, -1, attachedFileList, locale, extraMap);
 
@@ -9815,6 +9832,143 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 		}
 
 		logger.debug("MOBILE G/W MAIL mMailDeleteTag ended.");
+		return result;
+	}
+
+	@RequestMapping(value="/mobile/ezemail/sendIcalResponseMail/users/{userId:.+}", method= RequestMethod.POST, produces="application/json;charset=utf-8")
+	@ResponseBody
+	public Object mSendIcalResponseMail(HttpServletRequest request, @PathVariable String userId,  @RequestBody IcalVO icalVO) throws Exception {
+		logger.debug("MOBILE G/W MAIL mSendIcalResponseMail started.");
+
+		String eventUid = Optional.ofNullable(icalVO.getUid()).map(Uid::getValue).map(s -> s.replaceFirst("^UID:", "").trim()).orElse("");
+		boolean isAllDay = icalVO.isDtAllDay();
+		Date startDt = icalVO.toStartDate();
+		Date endDt = icalVO.toEndDate();
+		String summary = icalVO.getSummaryStr();
+		String organizer = icalVO.getOrganizerCn();
+		String status = icalVO.getStatus();
+		String orgUrl = icalVO.getUidStr();
+		String location = icalVO.getLocationStr();
+
+		String serverName = request.getHeader("x-user-host");
+		MCommonVO info = mOptionService.commonInfo(serverName, userId);
+		String domainName = ezCommonService.getTenantConfig("DomainName", info.getTenantId());
+		String userEmail = info.getUserId() + "@" + domainName;
+
+		JSONObject result = new JSONObject();
+
+		// 초대받은 이벤트 정보
+		logger.debug("eventUid = {}, isAllDay = {}, startDt = {}, endDt = {}, summary = {}, organizer = {}, status = {}, location = {}", eventUid, isAllDay, startDt, endDt, summary, organizer, status, location);
+
+		VEvent event = ezEmailUtil.createTimeEvent(isAllDay, startDt, endDt, summary, eventUid);
+
+		event.getProperties().add(Method.REPLY); // 응답 메일 표시
+
+		Organizer organizer1 = new Organizer(URI.create("mailto:" + organizer));
+		event.getProperties().add(organizer1);
+
+		logger.debug("event= {}", event);
+		PartStat partStat = "DECLINED".equalsIgnoreCase(status) ? PartStat.DECLINED :
+				"TENTATIVE".equalsIgnoreCase(status) ? PartStat.TENTATIVE :
+						PartStat.ACCEPTED;
+
+		// 참석자 추가 (응답 상태 설정)
+		Attendee attendee = new Attendee(URI.create("mailto:" + userEmail));
+		attendee.getParameters().add(partStat); // '수락' 상태 설정
+		attendee.getParameters().add(new Cn(info.getUserName()));
+
+		event.getProperties().add(attendee);
+		event.getProperties().add(new Location(location));
+
+		// 캘린더 객체 생성
+		net.fortuna.ical4j.model.Calendar calendar = new net.fortuna.ical4j.model.Calendar();
+		calendar.getProperties().add(Version.VERSION_2_0);
+		calendar.getProperties().add(CalScale.GREGORIAN);
+		calendar.getProperties().add(new ProdId("-//Example Corp//iCal4j 3.0//EN"));
+		calendar.getProperties().add(Method.REPLY);
+		calendar.getComponents().add(event);
+
+		String password = jspw;
+		SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"), userEmail, password);
+
+		// 메일 작성
+		MimeMessage message = sa.createMimeMessage();
+		message.setFrom(new InternetAddress(userEmail));
+		message.addRecipient(Message.RecipientType.TO, new InternetAddress(organizer));
+		message.setSubject(summary);
+
+		// iCalendar 첨부
+		MimeBodyPart calendarPart = new MimeBodyPart();
+		calendarPart.setHeader("Content-Class", "urn:content-classes:calendarmessage");
+		calendarPart.setHeader("Content-Type", "text/calendar; charset=UTF-8; method=REPLY");
+		calendarPart.setHeader("Content-Disposition", "inline");
+		calendarPart.setContent(calendar.toString(), "text/calendar; charset=UTF-8; method=REPLY");
+
+		MimeBodyPart textPart = new MimeBodyPart();
+		textPart.setText("일정 응답 메일입니다.", "utf-8");
+
+		MimeMultipart multipart = new MimeMultipart("alternative");
+		multipart.addBodyPart(textPart);
+		multipart.addBodyPart(calendarPart);
+		message.setContent(multipart);
+
+		IcalVO vo = new IcalVO();
+		vo.setUidStr(eventUid);
+		vo.setAttendeeStr(userEmail);
+		vo.setStatus(status);
+
+		IMAPAccess ia = null;
+		try {
+			// 메일 전송
+			Transport.send(message);
+
+			String ld = commonUtil.getTwoLetterLangFromLangNum(info.getLang());
+			Locale locale = new Locale(ld);
+
+			// 응답 정보 저장
+			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+					userEmail, password, egovMessageSource, locale, ezEmailUtil);
+
+			int index = orgUrl.lastIndexOf("/");
+
+			if (index != -1) {
+				String orgMsgFolderPath = orgUrl.substring(0, index);
+				long orgMsgUid = Long.parseLong(orgUrl.substring(index + 1));
+
+				logger.debug("orgMsgFolderPath=" + orgMsgFolderPath + ",orgMsgUid=" + orgMsgUid);
+
+				Folder orgMsgFolder = ia.getFolder(orgMsgFolderPath);
+				orgMsgFolder.open(Folder.READ_WRITE);
+
+				Message orgMessage = ((IMAPFolder) orgMsgFolder).getMessageByUID(orgMsgUid);
+
+				if (orgMessage != null) {
+					if (!ezEmailUtil.hasIcalEventUidFlag(orgMessage)) {
+						ezEmailUtil.setIcalEventUidFlag(orgMessage, true, eventUid);
+					}
+
+					ezEmailUtil.setIcalStatusFlag(orgMessage, true, status);
+					ezEmailUtil.setIcalResponseDtFlag(orgMessage, true);
+
+				}
+
+				orgMsgFolder.close(true);
+
+				result.put("status", "ok");
+				result.put("code", 0);
+			}
+		} catch (MessagingException e) {
+			logger.error(e.getMessage(), e);
+			result.put("status", "error");
+			result.put("code", 1);
+		} finally {
+			if (ia != null) {
+				ia.close();
+				ia = null;
+			}
+		}
+		logger.debug("calendar = {}", calendar.toString());
+		logger.debug("MOBILE G/W MAIL mSendIcalResponseMail ended.");
 		return result;
 	}
 	

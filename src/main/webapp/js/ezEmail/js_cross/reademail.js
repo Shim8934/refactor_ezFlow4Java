@@ -79,6 +79,48 @@ function ReSend(pURL, pEmail) {
             window.open("mail_write_Cross.aspx?url=" + encodeURIComponent(pURL) + "&cmd=RESEND&msgto=" + pEmail, "", feature);
     }*/
 }
+document.querySelectorAll(".ical_btn_container").forEach(container => {
+    container.addEventListener("click", function (e) {
+        const btn = e.target.closest("button");
+        if (!btn) return;
+        const status = e.target.dataset.status;
+        const uid = document.getElementById("ical_uid").value;
+        const subject = document.querySelector(".gw_ical_summary").textContent.trim();
+        const period = document.querySelector('.ical-period');
+        const isAllDay = period.dataset.isAllDay == "true";
+        const start = period.dataset.start;
+        const end = period.dataset.end;
+        const location = document.getElementById("ical_location").textContent;
+
+        fetch("/ezEmail/sendIcalResponseMail.do", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                uid: uid,
+                organizerCn: fromAddr,
+                summaryStr: subject,
+                dtAllDay: isAllDay,
+                startDtStr: start,
+                endDtStr: end,
+                status: status,
+                locationStr: location,
+                uidStr: g_paramURL
+            })
+        }).then(res => {
+            if (res.ok) {
+                alert(strLangIcal01);
+            } else {
+                alert(strLangIcal02);
+            }
+            window.top.close();
+        }).catch(error => {
+            alert(strLangIcal02);
+            window.top.close();
+        });
+    });
+});
 
 // 2024.05.24 한슬기 : 수신인 이름을 사용하기위해 오버로딩
 function ReSend(pURL, pEmail, pReader) {
