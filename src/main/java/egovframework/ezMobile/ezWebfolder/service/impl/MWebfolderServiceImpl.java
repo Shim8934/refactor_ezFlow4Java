@@ -213,6 +213,7 @@ public class MWebfolderServiceImpl extends EgovAbstractServiceImpl implements MW
 		webfolderResult.setFolderCount(fldCnt);
 		webfolderResult.setTotalPages(totalPages);
 		webfolderResult.setParentFolderId(folderUpp);
+		webfolderResult.setFolderLevel(data.get("folderLevel").getAsInt());
 
 		return Result.success(webfolderResult);
 	}
