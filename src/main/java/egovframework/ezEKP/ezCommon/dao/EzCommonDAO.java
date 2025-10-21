@@ -3750,4 +3750,9 @@ public class EzCommonDAO extends EgovAbstractDAO {
     public void susinScheduleUpdate(String s) {
         insert("EzCommonDAO.susinScheduleUpdate", s);
     }
+	
+	public void createTblSamlRequestId() throws Exception {
+		logger.debug("If TBL_SAML_REQUEST_ID doesn't exist, creating the table...");
+		update("EzCommonDAO.createTblSamlRequestId");
+	}
 }

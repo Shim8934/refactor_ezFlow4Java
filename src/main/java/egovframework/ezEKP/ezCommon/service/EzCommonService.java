@@ -665,4 +665,7 @@ public interface EzCommonService {
 
 	// 2024-10-07 유길상 - 커뮤니티 > 게시판 > 포토게시판 앨범소개 컬럼 추가
 	public void alterCommItemPhotoItemContent() throws Exception;
+	
+	// 2025-07-24 김승연 - SAML 인증용 request id 확인을 위한 테이블 추가
+	public void createTblSamlRequestId() throws Exception;
 }

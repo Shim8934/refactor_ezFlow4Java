@@ -878,4 +878,35 @@
 		]]>
 	</select>
 	
+	<insert id="loginDAO.insertRequestId" parameterClass="String">
+		INSERT INTO TBL_SAML_REQUEST_ID 
+		    (REQUEST_ID, CREATE_DT)
+		VALUES 
+		    (#requestId#, NOW())
+	</insert>
+	
+	<select id="loginDAO.selectRequestId" resultClass="int" parameterClass="String">
+		SELECT 
+		    COUNT(*)
+		FROM 
+		    TBL_SAML_REQUEST_ID
+		WHERE
+			REQUEST_ID = #requestId#
+	</select>
+	
+	<delete id="loginDAO.deleteRequestId" parameterClass="String">
+		DELETE 
+			FROM TBL_SAML_REQUEST_ID
+		WHERE
+		    REQUEST_ID = #requestId#
+	</delete>
+	
+	<delete id="loginDAO.deleteSamlRequestIdScheduler">
+		<![CDATA[
+			DELETE 
+				FROM TBL_SAML_REQUEST_ID
+			WHERE
+				CREATE_DT < NOW() - INTERVAL 1 DAY
+		]]>
+	</delete>
 </sqlMap>

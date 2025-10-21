@@ -381,6 +381,8 @@ INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_V
 
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'useMobileDraft', '모바일 기안하기 사용 여부', 'NO', '모바일 기안하기 사용 여부. YES: 사용, NO: 미사용 (default : NO)', '2025-08-22 00:00:00', '전자결재');
 
+--2025.07.23 김승연 티그리스 SAML 연동 기능 추가
+INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'useTigrisSAMLAuth', 'tigris SAML 인증 연동여부', 'NO', 'YES: 연동NO: 연동안함 (default: NO)', TO_DATE('2025-07-23 00:00:00','yyyy-mm-dd hh24:mi:ss'), '연동');
 --Board insert
 
 INSERT INTO TBL_Board_MyBoards (UserID, BoardID, BoardName, BoardName2, TreeviewNum, companyID, tenant_ID) VALUES ('everyone', '{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}', '새게시물', 'New BoardItem', -1, 'Top', 0);

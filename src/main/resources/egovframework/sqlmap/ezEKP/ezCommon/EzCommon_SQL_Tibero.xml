@@ -8644,4 +8644,30 @@
 			TBL_COMM_ITEM
 			ADD PHOTOITEMCONTENT CLOB DEFAULT NULL
 	</statement>
+	
+	<select id="EzCommonDAO.checkTblSamlRequestId">
+		SELECT
+			REQUEST_ID
+		FROM
+			TBL_SAML_REQUEST_ID
+		WHERE
+			ROWNUM = 1
+	</select>
+	
+	<statement id="EzCommonDAO.createTblSamlRequestId">
+		{call
+			DECLARE
+			tbl_exists EXCEPTION;
+			pragma exception_init (tbl_exists , -00955);
+			BEGIN
+			EXECUTE IMMEDIATE
+			'CREATE TABLE TBL_SAML_REQUEST_ID 
+             (	
+              REQUEST_ID VARCHAR2(40),
+              CREATE_DT DATE
+             )';
+			EXCEPTION WHEN tbl_exists THEN NULL;
+			END
+		}
+	</statement>
 </sqlMap>

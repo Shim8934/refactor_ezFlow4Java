@@ -152,6 +152,8 @@ import org.springframework.web.util.WebUtils;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 
+import org.opensaml.core.config.InitializationService;
+
 import com.unidocs.workflow.client.WFJob;
 import com.unidocs.workflow.common.FileEx;
 import com.unidocs.workflow.common.JobResult;
@@ -289,7 +291,10 @@ public class CommonUtil {
     	commonUtilInstance = this;
 
 		emptyDocument = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
-    	
+
+		// 2025-07-24 김승연 SAML 전역 설정 초기화
+		InitializationService.initialize();
+		
     	logger.debug("init ended.");
     }
 	public Locale getLocalFromLang(String lang) throws Exception {
