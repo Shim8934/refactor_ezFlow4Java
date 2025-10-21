@@ -274,9 +274,16 @@ public class AuthenticInterceptor extends WebContentInterceptor {
 	        	return false;
 			} else if ("YES".equals(useTigrisSAMLAuth)) {
                 try {
-					String servername = request.getServerName();
+					String currentUri = request.getScheme()
+							+ "://"
+							+ request.getServerName()
+							+ ("http".equals(request.getScheme())
+							&& request.getServerPort() == 80
+							|| "https".equals(request.getScheme())
+							&& request.getServerPort() == 443 ? "" : ":"
+							+ request.getServerPort());
 					MessageContext<SAMLObject> messageContext = null;
-					messageContext = buildSamlMessageContext(servername + config.getProperty("config.tigris.acsUrl"), config.getProperty("config.tigris.spEntityId"), config.getProperty("config.tigris.idpUrl"));
+					messageContext = buildSamlMessageContext(currentUri + config.getProperty("config.tigris.acsUrl"), config.getProperty("config.tigris.spEntityId"), config.getProperty("config.tigris.idpUrl"));
 					HTTPRedirectDeflateEncoder encoder = new HTTPRedirectDeflateEncoder();
 					encoder.setMessageContext(messageContext);
 					encoder.setHttpServletResponse(response);
