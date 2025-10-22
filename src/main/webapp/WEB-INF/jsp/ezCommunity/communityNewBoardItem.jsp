@@ -27,6 +27,11 @@
 			.attachInnerNotice_span {
 				line-height: 55px;
 			}
+			
+			.ui-datepicker-year,
+			.ui-datepicker-month {
+				font-size:12px !important;
+			}
 		</style>
 		<script type="text/javascript" src="${util.addVer('ezCommunity.e1', 'msg')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezCommunity/ConvertSaveImage.js')}"></script>
