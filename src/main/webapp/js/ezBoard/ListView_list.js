@@ -1008,6 +1008,7 @@ function ListView() {
                         var fileSize = SelectSingleNodeValue(oCells[0], "FILESIZE").split("|");
                         var listShowType = SelectSingleNodeValue(oCells[0], "LISTSHOWTYPE"); // 리스트보기방식 (기본:G/확장:E)
                         var publicFlagImg = SelectSingleNodeValue(oCells[0], "PUBLICFLAG") == "N" ? " <div class='board_private'></div>" : "";
+                        var ITEMREAD_FG = SelectSingleNodeValue(oCells[0], "ITEMREAD_FG");
 
                         if (getNodeText(oDatas[10]) != "0") { // 댓글이 있는 경우
                             if (getNodeText(oDatas[6]) == "Y") { // NEW 아이콘 표출
@@ -1040,9 +1041,9 @@ function ListView() {
 //                                        strInnerHtml += "<span class='icon16 icon16_magnifier' onclick='showBoardFile(\"" + javaURLEncode(filePath) + "\", \"" + javaURLEncode(fileExt) + "\", \"" + boardID + "\",\"" + itemID + "\", \"" + writerID + "\")'></span></div></li></ul>";
 //                                    } else {
                                         strInnerHtml += "<ul class='list_attach_ul'><li><div>";
-                                        strInnerHtml += "<span class='file_name' onclick='downloadBoardFile(\"" + downURL + "\", \"" + boardID + "\",\"" + itemID + "\", \"" + writerID + "\")'>" + fileExt + "</span>";
-                                        strInnerHtml += "<span class='file_capacity' onclick='downloadBoardFile(\"" + downURL + "\", \"" + boardID + "\",\"" + itemID + "\", \"" + writerID + "\")'>(" + fileSize + ")</span>";
-                                        strInnerHtml += "<span class='icon16 icon16_download' onclick='downloadBoardFile(\"" + downURL + "\", \"" + boardID + "\",\"" + itemID + "\", \"" + writerID + "\")'></span>";
+                                        strInnerHtml += "<span class='file_name' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG + "\")'>" + fileExt + "</span>";
+                                        strInnerHtml += "<span class='file_capacity' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG + "\")'>(" + fileSize + ")</span>";
+                                        strInnerHtml += "<span class='icon16 icon16_download' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG + "\")'></span>";
                                         //strInnerHtml += "<span class='icon16 icon16_magnifier' onclick='showBoardFile(\"" + javaURLEncode(filePath) + "\", \"" + javaURLEncode(fileExt) + "\", \"" + boardID + "\",\"" + itemID + "\", \"" + writerID + "\")'></span></div></li></ul>";
                                         strInnerHtml += "</div></li></ul>";
 //                                    }
@@ -1064,9 +1065,9 @@ function ListView() {
 //                                            strInnerHtml += "<span class='icon16 icon16_magnifier' onclick='showBoardFile(\"" + javaURLEncode(filePath[y]) + "\", \"" + javaURLEncode(fileExt[y]) + "\", \"" + boardID + "\",\"" + itemID + "\", \"" + writerID + "\")'></span></div></li>";
 //                                        } else {
                                             strInnerHtml += "<li><div>";
-                                            strInnerHtml += "<span class='file_name' onclick='downloadBoardFile(\"" + downURL + "\", \"" + boardID + "\",\"" + itemID + "\", \"" + writerID + "\")'>" + fileExt[y] + "</span>";
-                                            strInnerHtml += "<span class='file_capacity' onclick='downloadBoardFile(\"" + downURL + "\", \"" + boardID + "\",\"" + itemID + "\", \"" + writerID + "\")'>(" + fileSize[y] + ")</span>";
-                                            strInnerHtml += "<span class='icon16 icon16_download' onclick='downloadBoardFile(\"" + downURL + "\", \"" + boardID + "\",\"" + itemID + "\", \"" + writerID + "\")'></span>";
+                                            strInnerHtml += "<span class='file_name' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG + "\")'>" + fileExt[y] + "</span>";
+                                            strInnerHtml += "<span class='file_capacity' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG + "\")'>(" + fileSize[y] + ")</span>";
+                                            strInnerHtml += "<span class='icon16 icon16_download' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG + "\")'></span>";
                                             //strInnerHtml += "<span class='icon16 icon16_magnifier' onclick='showBoardFile(\"" + javaURLEncode(filePath[y]) + "\", \"" + javaURLEncode(fileExt[y]) + "\", \"" + boardID + "\",\"" + itemID + "\", \"" + writerID + "\")'></span></div></li>";
                                             strInnerHtml += "</div></li></ul>";
 //                                        }
