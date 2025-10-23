@@ -5009,7 +5009,7 @@ public class EzBoardController extends EzFileMngUtil{
 		
 		if (useVersion.equals("Y")) {
 			String newestVersion = "";
-			if (!mode.equals("reply")) {
+			if (!mode.equals("reply") && !mode.equals("boardContent") && !mode.equals("boardAttach")) {
 				newestVersion = ezBoardService.getItemVersion(itemID, companyID, tenantID);
 			}
 			
