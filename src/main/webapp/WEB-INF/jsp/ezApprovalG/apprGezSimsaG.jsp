@@ -1138,8 +1138,12 @@
 						.replace(/"/g,'\"')
 						.replace(/<div id=\\?"hwpEditorBoardContent\\"[^]*?<\/div>/g, '')
 						.replace(/font-family\s*:\s*([^;]+);/g, (match, fonts) => {
-					var cleaned = fonts.replace(/'([^']+)'/g, "$1");
-					return `font-family: ${cleaned};`;
+					if (/^'[^']+'$/.test(fonts.trim())) {
+                        const inside = fonts.trim().slice(1, -1);
+                        return "font-family:&quot;" + inside + "&quot;;";
+                    } else {
+                        return match;  // 그대로 원본 반환
+                    }
 				});
 				
 	        	$.ajax({

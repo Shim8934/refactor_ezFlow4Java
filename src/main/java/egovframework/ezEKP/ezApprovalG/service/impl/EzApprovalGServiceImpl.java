@@ -29202,18 +29202,70 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 			for (int i = 0; i < tagsWithClasses; i++) {
 				doc.getElementsByAttribute("class").get(0).removeAttr("class");
 			}
+
+            // body 바로 아래의 연속된 span태그들을 그룹화 작업. <span>을 <p>로 변경 시 의도하지 않은 줄바꿈 처리 없앰.
+            Element body = doc.body();
+            int index = 0;
+            Elements children = body.children();
+
+            int maxCnt = 0;
+
+            while (index < children.size() && maxCnt < 1000) { //무한 반복 방지.
+                Element current = children.get(index);
+
+                if (current.tagName().equals("span")) {
+                    int start = index;
+
+                    // 연속된 span 찾기
+                    while (index + 1 < children.size() &&
+                            children.get(index + 1).tagName().equals("span")) {
+                        index++;
+                    }
+
+                    int end = index;
+
+                    if (end > start) {
+                        Element wrapper = new Element("span");
+
+                        // 감쌀 span들을 미리 복사
+                        List<Element> spansToWrap = new ArrayList<>();
+                        for (int k = start; k <= end; k++) {
+                            spansToWrap.add(children.get(k));
+                        }
+
+                        // 감쌀 span들을 제거하고 wrapper에 추가
+                        for (Element span : spansToWrap) {
+                            span.remove();
+                            wrapper.appendChild(span);
+                        }
+
+                        // wrapper를 body에 삽입
+                        body.insertChildren(start, wrapper);
+
+                        // DOM 구조 갱신
+                        children = body.children();
+                        index = start;
+                    } else {
+                        index++;
+                    }
+                } else {
+                    index++;
+                }
+                maxCnt++;
+            }
 			
-			String fontFamily = "";
-			String fontSize = "";
-			String strStyle = "";
 			// String style = "";
 			
 			logger.debug("span tag parsing started");
 			
 			StringBuilder htmlStyle = new StringBuilder();
-			for (int i=0; i < doc.getElementsByTag("span").size(); i++) {
+            int spanCnt = doc.getElementsByTag("span").size();
+			for (int i=0; i < spanCnt; i++) {
 				String strInnerHtml = doc.getElementsByTag("span").get(i).html();
-				
+                String fontFamily = "";
+                String fontSize = "";
+                String strStyle = "";
+                boolean unwrapSpanFlag = false; // span안에 span안에 span 구조인 경우에 상위 p태그에 속성 이식 후 span을 제거해버림.
 				if (doc.getElementsByTag("span").get(i).hasAttr("style")) {
 						
 					String spanStyle = doc.getElementsByTag("span").get(i).attr("style").toString();
@@ -29245,19 +29297,19 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 				// 2023-05-23 이사라 : 시큐어코딩 문자열 비교 오류 수정
                 if (doc.getElementsByTag("span").get(i).parent().tagName().toLowerCase().equals("body")) {
                     if (StringUtils.isNotBlank(fontFamily)) {
-                        strStyle = "font-family:" + fontFamily;
+                        strStyle = fontFamily;
                     }
 
                     if (StringUtils.isNotBlank(fontSize)) {
-                        if (StringUtils.isNotBlank(strStyle)) {
-                            strStyle += ";";
-                        }
-
-                        strStyle = "font-size:" + fontSize;
+                        strStyle += fontSize;
                     }
 
                     if (StringUtils.isNotBlank(strStyle)) {
-                        strInnerHtml = "<p style=\"" + strStyle + "\">" + strInnerHtml + "</p>";
+                        Element pTag = doc.createElement("p");
+                        pTag.attr("style", strStyle);
+                        pTag.html(strInnerHtml);
+
+                        strInnerHtml = pTag.outerHtml();
                     } else {
                         strInnerHtml = "<p>" + strInnerHtml + "</p>";
                     }
@@ -29307,10 +29359,16 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
                             	doc.getElementsByTag("span").get(i).parentNode().attr("style", htmlStyle.toString());
                             }
     						htmlStyle.setLength(0);
+                            unwrapSpanFlag = true;
                         }
                     }
                 }
                 doc.getElementsByTag("span").get(i).html(strInnerHtml);
+                if (unwrapSpanFlag) {
+                    doc.getElementsByTag("span").get(i).unwrap();
+                    i--;
+                    spanCnt--;
+                }
 			}
 			
 		    //span 태그 제거
@@ -30286,7 +30344,17 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 	}
 	
 	private String replaceStyleValue(String fromStyleStr, String toStyleStr, String targetStyle) {
-		return fromStyleStr.replaceAll(targetStyle + ".*?:\\s*?\\w+;", toStyleStr).replaceAll(" ", "");
+        String regex = targetStyle + ":.*?;";
+        String replacedStr = fromStyleStr;
+        if (fromStyleStr.matches(".*" + regex + ".*")) {
+            replacedStr = fromStyleStr.replaceAll(regex, toStyleStr);
+        }
+
+        replacedStr = replacedStr.replaceAll("\\s*;\\s*", ";")  // ; 주변 공백 제거
+                .replaceAll("\\s*:\\s*", ":")  // : 주변 공백 제거
+                .trim();
+
+        return replacedStr;
 	}
 
 	private String SizeConvertToMM(String pSize) {
