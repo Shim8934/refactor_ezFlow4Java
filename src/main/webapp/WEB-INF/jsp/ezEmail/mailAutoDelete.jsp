@@ -95,7 +95,7 @@
 		        if (shareId != "") {
 		        	requestUrl += "?shareId=" + encodeURIComponent(shareId);
 		        }
-		        var OpenWin = window.open(requestUrl, "mail_selectfolder_Cross", GetOpenWindowfeature(465, 355));
+		        var OpenWin = window.open(requestUrl, "mail_selectfolder_Cross", GetOpenWindowfeature(465, 370));
 		        
 		        
 		        try { OpenWin.focus(); } catch (e) {console.log(e);}

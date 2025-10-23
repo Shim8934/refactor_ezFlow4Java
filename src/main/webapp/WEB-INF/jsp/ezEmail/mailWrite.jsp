@@ -673,13 +673,15 @@
 	        g_bDirty = false;
 	        
 	        // onbeforeunload 에서 같은 작업을 하니까 굳이 미리 할 필요 없지 않나?
-//	        if (retVal == "1" && g_url != "" && ("${folderPath}" != "Draft" && g_cmd != "EDIT")) {
-//	            delDrafts();
-//	        }
+	        // ㄴ> 회신, 전달 시 아래 작업을 해야지만 취소 시 임시 보관함에서 메일이 삭제 됨, 주석 해제하여 원복
+	        if (retVal == "1" && g_url != "" && ("${folderPath}" != "Draft" && g_cmd != "EDIT")) {
+	            delDrafts();
+	        }
 	        
 	        if (retVal != "2")
 				btnClose_onclick();
 	    }
+
 	    var isDelted = false; // deleted의 오타 추정.
 	    function delDrafts(del_uid) {
 	    	var delDraftsURL = g_url;
@@ -701,6 +703,13 @@
 	        xmlhttp = null;
 	        isDelted = true;
 	    }
+
+        // 발송 전 미리보기 시 isDelted이 true 되는 현상 수정
+        function delDrafts_preview(del_uid) {
+            delDrafts(del_uid);
+            isDelted = false;
+        }
+
 	    function delAttachListFile(filedate) {
 	    	var xmlhttp = createXMLHttpRequest();
 	        xmlhttp.open("GET", "/ezEmail/delAttachListFile.do?&delid=" + filedate, true);

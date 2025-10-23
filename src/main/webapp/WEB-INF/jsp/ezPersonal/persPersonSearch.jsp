@@ -1311,7 +1311,7 @@
 	        }
 		</script>
 	</head>
-	<body class="popup" style="overflow: auto; width: fit-content; min-width: 850px;">
+	<body class="popup" style="overflow: auto; width: fit-content; min-width: 850px;overflow-y: hidden;">
 		<div id="normalScreen">
   			<div id="menu">
     			<ul>

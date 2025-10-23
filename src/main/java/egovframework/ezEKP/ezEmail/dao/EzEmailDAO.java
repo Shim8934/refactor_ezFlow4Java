@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import egovframework.ezEKP.ezEmail.vo.MailBigAttachVO;
 import egovframework.ezEKP.ezEmail.vo.MailboxProgressVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -279,5 +280,13 @@ public class EzEmailDAO extends EgovAbstractDAO {
 	
 	public void cancelMailByMailUid(MailDeletedIdVO mailDeletedIdVO) {
 		delete("EzEmailDAO.cancelMailByMailUid", mailDeletedIdVO);
+	}
+	
+	public List<MailBigAttachVO> getBigAttachList(Map<String, Object> map) throws Exception {
+		return (List<MailBigAttachVO>)list("EzEmailDAO.getBigAttachList", map);
+	}
+
+	public int getBigAttachListCount(Map<String, Object> map) throws Exception {
+		return (int) select("EzEmailDAO.getBigAttachListCount", map);
 	}
 }

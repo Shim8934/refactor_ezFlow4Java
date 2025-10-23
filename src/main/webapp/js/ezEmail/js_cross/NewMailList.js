@@ -360,6 +360,7 @@ function MakeListInfoHTML(ConentObject) {
 
                             _TDColum.ondblclick = function () {
                                 clearTimeout(singleClickTimer);
+                                event_listclick(this, event);
                                 event_listDBClick(this.parentElement);
                             };
                             
@@ -419,6 +420,7 @@ function MakeListInfoHTML(ConentObject) {
 
                             _TDColum.ondblclick = function () {
                                 clearTimeout(singleClickTimer);
+                                event_listclick(this, event);
                                 event_listDBClick(this.parentElement);
                             };
                             _TDColum.onselectstart = function () { return false; };
@@ -448,6 +450,7 @@ function MakeListInfoHTML(ConentObject) {
 
                             _TDColum.ondblclick = function () {
                                 clearTimeout(singleClickTimer);
+                                event_listclick(this, event);
                                 event_listDBClick(this.parentElement);
                             };
                             _TDColum.onselectstart = function () { return false; };
@@ -468,6 +471,7 @@ function MakeListInfoHTML(ConentObject) {
 
                             _TDColum.ondblclick = function () {
                                 clearTimeout(singleClickTimer);
+                                event_listclick(this, event);
                                 event_listDBClick(this.parentElement);
                             };
                             _TDColum.onselectstart = function () { return false; };

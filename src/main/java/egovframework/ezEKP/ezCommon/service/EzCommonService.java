@@ -676,4 +676,6 @@ public interface EzCommonService {
 	public void addBoardExtColumnForMultiLang() throws Exception;
 
 	public void updateInitDataForIndiLang() throws Exception;
+
+    public void alterJmochaBigAttachDownLimit() throws Exception;
 }

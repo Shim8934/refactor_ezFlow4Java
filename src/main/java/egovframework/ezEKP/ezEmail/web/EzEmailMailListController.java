@@ -2,6 +2,8 @@ package egovframework.ezEKP.ezEmail.web;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileFilter;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
@@ -44,6 +46,7 @@ import egovframework.ezEKP.ezAI.util.AICommonUtil;
 import egovframework.ezEKP.ezEmail.vo.*;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 
+import org.apache.commons.io.filefilter.PrefixFileFilter;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONArray;
@@ -4300,5 +4303,135 @@ public class EzEmailMailListController {
 		return result;
 	}
 	
+	
+
+	@RequestMapping(value = "/ezEmail/bigAttachManageView.do" , method=RequestMethod.GET, produces="text/xml; charset=utf-8")
+	public String bigFileManageView(@CookieValue("loginCookie") String loginCookie, Locale locale, HttpServletRequest request, Model model, @RequestParam(required = false) String shareId) throws Exception{
+		logger.debug("bigAttachManageView started.");
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String userId = userInfo.getId();
+		int tenantId = userInfo.getTenantId();
+
+		logger.debug("bigFileManageView userId={}, tenantId={}", userId, tenantId);
+
+		if (shareId != null) {
+			model.addAttribute("shareId", shareId);
+		}
+
+
+		logger.debug("bigAttachManageView ended.");
+		return "ezEmail/mailBigAttachManage";
+	}
+
+	@RequestMapping(value = "/ezEmail/getBigAttachList.do", method = RequestMethod.POST, produces="application/json; charset=utf-8")
+	@ResponseBody
+	public Map<String,Object> getBigFileList(@CookieValue("loginCookie") String loginCookie, @RequestBody JSONObject requestObject, Model model, Locale locale) throws Exception{
+		logger.debug("getBigFileList Started.");
+		Map<String, Object> result = new HashMap<>();
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String userId = userInfo.getId();
+		int tenantId = userInfo.getTenantId();
+		String shareId = (String) requestObject.get("shareId");
+		String prop = StringUtils.defaultIfBlank((String) requestObject.get("prop"), "");
+		String orderBy = StringUtils.defaultIfBlank((String) requestObject.get("orderBy"), "");
+		int currentPage = (Integer) requestObject.get("curPage");
+		int maxItemPerPage = (Integer) requestObject.get("maxItemPerPage");
+
+		int startRow = Math.multiplyExact(Math.subtractExact(currentPage, 1), maxItemPerPage);
+
+		if(currentPage == -1){
+			startRow = -1;
+		}
+
+		if (shareId != null && shareId != "" ) {
+			userId = shareId;
+		}
+
+		List<MailBigAttachVO> bigAttachFileList = ezEmailService.getBigAttachList(userId,tenantId,prop,orderBy, startRow, maxItemPerPage);
+		int totalCount = ezEmailService.getBigAttachListCount(userId,tenantId);
+
+		int totalPage = totalCount / maxItemPerPage;
+
+		if(totalCount < 1){
+			totalPage = 1;
+		}
+
+		if ((totalPage * maxItemPerPage) != totalCount && (totalCount % maxItemPerPage) != 0) {
+			totalPage = totalPage + 1;
+		}
+
+		currentPage = Math.min(currentPage, totalPage);
+
+		String bigSizeMailAttachDelDayStr = ezCommonService.getTenantConfig("BigSizeMailAttachDelDay", tenantId);
+		int bigSizeMailAttachDelDay = Integer.parseInt(bigSizeMailAttachDelDayStr);
+
+		if (bigAttachFileList == null) {
+			result.put("code", 1);
+			result.put("msg", "error");
+		} else {
+			result.put("code", 0);
+			result.put("data", bigAttachFileList);
+			result.put("totalCount", totalCount);
+			result.put("totalPage", totalPage);
+			result.put("currentPage", currentPage);
+			result.put("bigSizeMailAttachDelDay", bigSizeMailAttachDelDay);
+		}
+
+
+		logger.debug("getBigFileList ended.");
+		return result;
+	}
+
+	@RequestMapping(value = "/ezEmail/deleteBigAttachFile.do", method = RequestMethod.POST)
+	@ResponseBody
+	public String deleteBigAttachFile(@CookieValue("loginCookie") String loginCookie, @RequestBody JSONObject requestObject, HttpServletRequest request) throws Exception{
+		logger.debug("deleteBigAttachFile Started.");
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		int tenantId = userInfo.getTenantId();
+		String result = "ERROR";
+
+		String realPath = commonUtil.getRealPath(request);
+		String pDirPath = realPath + commonUtil.getUploadPath("upload_mail.ROOT", tenantId);
+
+		// 대용량 파일 폴더 사용 여부 설정
+		if ("YES".equals(ezCommonService.getTenantConfig("useSeparatedLargeFileFolder", tenantId))) {
+			pDirPath += commonUtil.separator + "largeFile";
+		}
+
+		try {
+			ArrayList<Map<String,Object>> fileInfoList = (ArrayList<Map<String, Object>>) requestObject.get("deleteBigAttachList");
+			String[] fileIdArr = new String[fileInfoList.size()];
+
+			//		for (Map<String,Object> file : fileInfoList) {
+			for (int i = 0; i < fileInfoList.size(); i++) {
+				String fileId =  (String) fileInfoList.get(i).get("fileId");
+				String fileDate =  (String) fileInfoList.get(i).get("fileDate");
+				fileDate = fileDate.replace("-", "");
+
+				String realFilePath = pDirPath + commonUtil.separator + fileDate;
+				File directory = new File(realFilePath);
+				File[] files = directory.listFiles((FileFilter) new PrefixFileFilter(fileId));
+
+				for (File expiredFile : files) {
+					logger.debug("expired directory name=" + expiredFile.getName());
+					if (expiredFile.delete()) {
+						fileIdArr[i] = fileId;
+					}
+				}
+			}
+
+			ezEmailService.deleteBigAttachCountInfo(fileIdArr, tenantId);
+
+			result = "OK";
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+		}
+
+		logger.debug("deleteBigAttachFile ended.");
+		return result;
+	}
 	
 }

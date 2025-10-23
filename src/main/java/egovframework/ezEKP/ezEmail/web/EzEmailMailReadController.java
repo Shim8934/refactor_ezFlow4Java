@@ -2775,7 +2775,7 @@ public class EzEmailMailReadController extends EzFileMngUtil {
 			File[] files = directory.listFiles((FileFilter) new PrefixFileFilter(fileId));
 			
 			// 대용량 첨부파일의 기간이 만료되었을 경우
-			if (files == null) {
+			if (files == null || files.length == 0) {
 				response.setContentType("text/plain; charset=utf-8");
 				response.getWriter().print(egovMessageSource.getMessage("main.t4", locale));
 				

@@ -413,6 +413,11 @@ const strLangKeepMoveNoFromHeader = 'Emails without a sender cannot be continuou
 
 const strLangRcptEditError = "The entered value is not in a valid email format.\nPlease enter it in the format: Hong Gil-dong <hongkildong@kaoni.com>";
 
+const strPreviousTime = 'Reserve date should not be older than now.';
+
+const strUnLimit = "unlimited";
+const strDownloadsCount = "downloads";
+
 function GetLocalTime(Offset , pDateTime)
 {
     if (pDateTime == "")

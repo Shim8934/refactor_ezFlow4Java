@@ -6387,16 +6387,17 @@ public class EzEmailMailWriteController extends EzFileMngUtil {
 	 */
 	@RequestMapping(value="/ezEmail/setBigAttachCountInfo.do", method = RequestMethod.POST)
 	@ResponseBody
-	public String setBigAttachCountInfo( @CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+	public String setBigAttachCountInfo( @CookieValue("loginCookie") String loginCookie, HttpServletRequest request, @RequestBody JSONObject requestObject)  throws Exception {
 		logger.debug("setBigAttachCountInfo started.");
 		
         LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		
-		String[] fileIdArr = request.getParameterValues("bigAttach[]");
-		int bigSizeAttachDownloadLimitCount = Integer.parseInt(request.getParameter("BigSizeAttachDownloadLimitCount"));
+
+		ArrayList<Map<String,Object>> fileInfoList = (ArrayList<Map<String, Object>>) requestObject.get("bigAttach");
+		int bigSizeAttachDownloadLimitCount = Integer.parseInt((String) requestObject.get("bigSizeAttachDownloadLimitCount"));
 		int tenantId = userInfo.getTenantId();
-        
-        ezEmailService.setBigAttachCountInfo(fileIdArr, bigSizeAttachDownloadLimitCount, tenantId);
+		String userId = userInfo.getId();
+
+		ezEmailService.setBigAttachCountInfo(fileInfoList, bigSizeAttachDownloadLimitCount, tenantId, userId);
         
         logger.debug("setBigAttachCountInfo ended.");
         

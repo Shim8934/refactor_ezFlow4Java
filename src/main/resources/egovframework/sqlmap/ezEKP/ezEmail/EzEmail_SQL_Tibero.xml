@@ -12,6 +12,7 @@
 	<typeAlias  alias="MailPOP3VO" type="egovframework.ezEKP.ezEmail.vo.MailPOP3VO"/>
 	<typeAlias  alias="MailBlobVO" type="egovframework.ezEKP.ezEmail.vo.MailBlobVO"/>
 	<typeAlias  alias="MailDeletedIdVO" type="egovframework.ezEKP.ezEmail.vo.MailDeletedIdVO"/>
+	<typeAlias  alias="MailBigAttachVO" type="egovframework.ezEKP.ezEmail.vo.MailBigAttachVO"/>
 	
 	<resultMap id="mailGeneral" class="MailGeneralVO">
 		<result property="listCount" column="LISTCOUNT" columnIndex="1"/>
@@ -104,6 +105,17 @@
 	<resultMap id="mailDeletedId" class="MailDeletedIdVO">
 		<result property="mailBoxId" column="MAILBOX_ID" />
 		<result property="mailUid" column="MAIL_UID" />
+	</resultMap>
+	
+	<resultMap id="mailBigAttach" class="MailBigAttachVO">
+		<result property="fileId" column="FILE_ID" />
+		<result property="downloadCount" column="DOWNLOAD_COUNT" />
+		<result property="limitCount" column="LIMIT_COUNT" />
+		<result property="tenantId" column="TENANT_ID" />
+		<result property="fileName" column="FILE_NAME" />
+		<result property="fileSize" column="FILE_SIZE" />
+		<result property="userId" column="USER_ID" />
+		<result property="uploadDate" column="UPLOAD_DATE" />
 	</resultMap>
 	
 	<procedure id="EzEmailDAO.getMailGeneral" parameterClass="Map" resultMap="mailGeneral">
@@ -290,13 +302,12 @@
 			WHERE UserID=#v_USERID# AND POP3Server=#v_POP3SERVER# AND POP3UserID=#v_POP3USERID#
        	]]>
 	</delete>
-	
+
 	<insert id="EzEmailDAO.setBigAttachCountInfo" parameterClass="Map">
 		INSERT INTO JMOCHA_BIGATTACH_DOWN_LIMIT
-			(file_id, download_count, limit_count, tenant_id)
-		<iterate property="fileIdArr" conjunction="UNION ALL">
-		SELECT #fileIdArr[]#, '0', #limitCount#, #tenantId# FROM DUAL
-		</iterate>
+		(file_id, download_count, limit_count, tenant_id, file_name, file_size, user_id, upload_date)
+		VALUES
+			(#fileId#, 0, #limitCount#, #tenantId#, #fileName#, #fileSize#, #userId#, #uploadDate#)
 	</insert>
 	
 	<select id="EzEmailDAO.checkBigAttachDownloadCount" parameterClass="Map" resultClass="String">
@@ -411,4 +422,57 @@
 			  AND MAIL_UID = #mailUid#
 		]]>
 	</delete>
+
+	<select id="EzEmailDAO.getBigAttachList" parameterClass="Map" resultMap="mailBigAttach">
+		<![CDATA[
+			SELECT 
+			    *
+			FROM
+				JMOCHA_BIGATTACH_DOWN_LIMIT
+			WHERE
+			    USER_ID = #userId#
+			AND
+			    TENANT_ID = #tenantId#
+		]]>
+		<isNotEmpty property="prop">
+			ORDER BY
+			<isEqual property="prop" compareValue="fileName">
+				FILE_NAME
+			</isEqual>
+			<isEqual property="prop" compareValue="size">
+				FILE_SIZE
+			</isEqual>
+			<isEqual property="prop" compareValue="downloadCount">
+				DOWNLOAD_COUNT
+			</isEqual>
+			<isEqual property="prop" compareValue="uploadDate">
+				UPLOAD_DATE
+			</isEqual>
+			<isEqual property="prop" compareValue="endDate">
+				UPLOAD_DATE
+			</isEqual>
+		</isNotEmpty>
+		<isNotEmpty property="orderBy">
+			<isEqual property="orderBy" compareValue="ASC">
+				ASC
+			</isEqual>
+			<isEqual property="orderBy" compareValue="DESC">
+				DESC
+			</isEqual>
+		</isNotEmpty>
+		<isNotEqual property="v_start" compareValue="-1">
+			OFFSET #startRow# ROWS FETCH NEXT #maxItemPerPage# ROWS ONLY
+		</isNotEqual>
+	</select>
+
+	<select id="EzEmailDAO.getBigAttachListCount" resultClass="Integer">
+		SELECT
+			COUNT(*)
+		FROM
+			JMOCHA_BIGATTACH_DOWN_LIMIT
+		WHERE
+			USER_ID = #userId#
+		  AND
+			TENANT_ID = #tenantId#
+	</select>
 </sqlMap>

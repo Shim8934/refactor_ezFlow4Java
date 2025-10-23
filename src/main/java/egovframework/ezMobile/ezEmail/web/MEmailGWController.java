@@ -3669,6 +3669,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 								String pBigAttachDownloadDay = ezCommonService.getTenantConfig("BigSizeMailAttachDelDay", info.getTenantId());
 								String bigSizeAttachDownloadLimitCount = ezCommonService.getTenantConfig("MailBigSizeAttachDownloadLimitCount", info.getTenantId());
 								String mailLinkHostname = "";
+								ArrayList<Map<String,Object>> fileInfoList = new ArrayList<>();
 
 								if (ezCommonService.getTenantConfig("useMailLinkHostname", info.getTenantId()).equalsIgnoreCase("YES")) {
 									mailLinkHostname = ezCommonService.getTenantConfig("mailLinkHostname", info.getTenantId());
@@ -3713,7 +3714,8 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 										String fileLocation = xmlDom.getElementsByTagName("FILELOCATION").item(i).getChildNodes().item(0).getNodeValue();
 										String fileDate = fileLocation.split("\\|!\\|")[0];
 										String strFileExt = fileName.substring(fileName.lastIndexOf("."));
-
+										String defaultFileSize = fileSize;
+										
 										strFileExt = strFileExt.toLowerCase();
 										fileSize = commonUtil.getSizeWithUnit(Integer.parseInt(fileSize));
 
@@ -3723,6 +3725,17 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 												"<a href='" + emailHref + "' " + strTarget + " style='color:#333333; text-decoration: none;'><img src='" + protocol + "://" + mailLinkHostname + "/images/icon_adddownload.gif' width='16' height='16'  style='margin-right:8px; cursor:pointer;vertical-align:middle' border='0'/></a>" +
 												"<a id='BigSizeFileLink' href='" + emailHref + "' " + strTarget + " style='color:#333333; text-decoration: none;font-size:12px;'>" + fileName + " (" + fileSize + ")</a></td>" +
 												"</tr>");
+
+										Map<String,Object> fileInfoMap = new HashMap<String,Object>();
+
+										String uploadDate = pBigAttachDownloadPeriod.split(" ~ ")[0].trim();
+
+										fileInfoMap.put("fileId",fileId.substring(0, 36));
+										fileInfoMap.put("fileName",fileName);
+										fileInfoMap.put("fileSize",defaultFileSize);
+										fileInfoMap.put("uploadDate",uploadDate);
+
+										fileInfoList.add(fileInfoMap);
 									}
 
 									if (!hasBigAttach) {
@@ -3749,6 +3762,8 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 								}
 
 								html.append("</div></td></tr></table></div>");
+
+								ezEmailService.setBigAttachCountInfo(fileInfoList,pBigAttachDownloadLimitCount,info.getTenantId(),info.getUserId());
 
 								textBody = html + textBody;
 							}

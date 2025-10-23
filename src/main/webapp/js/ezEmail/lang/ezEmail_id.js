@@ -414,6 +414,11 @@ const strLangKeepMoveNoFromHeader = "Email tanpa pengirim tidak dapat terus dipi
 
 const strLangRcptEditError = "입력된 값이 메일 주소 형식이 아닙니다.\n예) 홍길동 <hongkildong@kaoni.com> 와 같은 형식으로 입력해주세요.";
 
+const strPreviousTime = 'Tanggal cadangan tidak boleh lebih tua dari sekarang.';
+
+const strUnLimit = "tak terbatas";
+const strDownloadsCount = "회";
+
 function GetLocalTime(Offset , pDateTime)
 {
     if (pDateTime == "")

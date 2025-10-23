@@ -36,6 +36,7 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 
+import egovframework.ezEKP.ezEmail.vo.MailBigAttachVO;
 import egovframework.ezEKP.ezEmail.vo.MailboxProgressVO;
 import egovframework.let.utl.fcc.service.KlibUtil;
 import org.apache.commons.io.FileUtils;
@@ -4081,6 +4082,32 @@ public class EzEmailServiceImpl extends EgovAbstractServiceImpl implements EzEma
 	}
 
 	@Override
+	public String setBigAttachCountInfo(ArrayList<Map<String, Object>> fileInfoArr, int limitCount, int tenantId, String userId) throws Exception {
+		logger.debug("setBigAttachCountInfo started.");
+
+		for (Map<String, Object> fileInfo : fileInfoArr) {
+
+			Map<String, Object> map = new HashMap<>();
+			map.put("fileId", (String)fileInfo.get("fileId"));
+			map.put("fileName", (String)fileInfo.get("fileName"));
+			map.put("fileSize", (String)fileInfo.get("fileSize"));
+
+			String uploadDate = (String) fileInfo.get("uploadDate");
+			uploadDate = uploadDate.replace("/", "-");
+
+			map.put("uploadDate", uploadDate);
+			map.put("userId", userId);
+			map.put("limitCount", limitCount);
+			map.put("tenantId", tenantId);
+
+			ezEmailDAO.setBigAttachCountInfo(map);
+
+		}
+		logger.debug("setBigAttachCountInfo ended.");
+		return "";
+	}
+
+	@Override
 	public String checkBigAttachDownloadCount(String fileId, int tenantId) throws Exception {
 		logger.debug("checkBigAttachDownloadCount started.");
 		
@@ -8095,4 +8122,36 @@ public class EzEmailServiceImpl extends EgovAbstractServiceImpl implements EzEma
 			return egovFileScrty.decryptAES(decryptValue);
 		}
 	}
+
+
+	@Override
+	public List<MailBigAttachVO> getBigAttachList(String userId, int tenantId, String prop, String orderBy, int startRow, int maxItemPerPage) throws Exception {
+		logger.debug("checkBigAttachDownloadCount started.");
+
+		Map<String, Object> map = new HashMap<>();
+		map.put("userId", userId);
+		map.put("tenantId", tenantId);
+		map.put("prop", prop);
+		map.put("orderBy", orderBy);
+		map.put("startRow", startRow);
+		map.put("maxItemPerPage", maxItemPerPage);
+
+		logger.debug("checkBigAttachDownloadCount ended.");
+
+		return ezEmailDAO.getBigAttachList(map);
+	}
+
+	@Override
+	public int getBigAttachListCount(String userId, int tenantId) throws Exception {
+		logger.debug("checkBigAttachDownloadCount started.");
+
+		Map<String, Object> map = new HashMap<>();
+		map.put("userId", userId);
+		map.put("tenantId", tenantId);
+
+		logger.debug("checkBigAttachDownloadCount ended.");
+
+		return ezEmailDAO.getBigAttachListCount(map);
+	}
+
 }

@@ -539,6 +539,8 @@
 						el.classList.remove('on');
 						el.querySelector('.layer_select').style.display = 'none';
 					});
+
+					HiddenContextMenu();
 					/*if (!event || !event.target) {
 						layerSelect.style.display = 'none';
 						viewMore.classList.remove('on');
@@ -612,9 +614,13 @@
 						});
 					});
 				}
-
+                
+                document.querySelectorAll(".previewmail").forEach(previewmail => {
+                    previewmail.addEventListener('click', hideLayer);
+                });
+                
 				setUpLayerToggle();
-
+                
 				if (useMailTag) {
 					const labelInput = document.getElementById('label-input');
 					// 입력 시 특수문자 입력 못하도록 함

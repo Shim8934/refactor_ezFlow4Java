@@ -9562,4 +9562,15 @@ public class EzCommonServiceImpl extends EzFileMngUtil implements EzCommonServic
 			logger.debug("\"updateInitDataForIndiLang\" already done.");
 		}
 	}
+
+    @Override
+    public void alterJmochaBigAttachDownLimit() throws Exception {
+        List<TenantVO> tenantIdList = ezCommonDAO.getTenantList();
+
+        for (TenantVO tenantVo : tenantIdList) {
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put("v_TENANTID", tenantVo.getTenantId());
+            ezCommonDAO.alterJmochaBigAttachDownLimit(map);
+        }
+    }
 }

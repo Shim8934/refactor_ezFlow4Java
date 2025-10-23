@@ -3925,4 +3925,14 @@ public class EzCommonDAO extends EgovAbstractDAO {
 	public void updateTblListoption2(Map<String, String> map) {
 		update("EzCommonDAO.updateTblListoption2", map);
 	}
+
+    /* 2025-08-05 김대현 - 대용량 첨부파일 컬럼 추가 */
+    public void alterJmochaBigAttachDownLimit(Map<String, Object> map) {
+        try {
+            select("EzCommonDAO.checkBigAttachInfo" ,map);
+        } catch (Exception e) {
+            logger.debug("JMOCHA_BIGATTACH_DOWN_LIMIT infoList doesn't exist. creating the column...");
+            update("EzCommonDAO.addBigAttachInfo",map);
+        }
+    }
 }

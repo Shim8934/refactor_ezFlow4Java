@@ -72,16 +72,16 @@
 
                         var pWidth = "";
                         var pHeight = "";
-                        if(gap/1000/60 < 30) {
-                            pUrl = "/ezEmail/mailMessage.do?messageid=" + encodeURIComponent(pMessageID);
-                            pWidth = 380;
-                            pHeight = 111;
-                        } else {
+                        // if(gap/1000/60 < 30) {
+                        //     pUrl = "/ezEmail/mailMessage.do?messageid=" + encodeURIComponent(pMessageID);
+                        //     pWidth = 380;
+                        //     pHeight = 111;
+                        // } else {
                             pUrl = "/ezEmail/mailWrite.do?cmd=RESERVE&messageid=" + encodeURIComponent(pMessageID);
                             pUrl += shareId? "&shareId=" + encodeURIComponent(shareId) : "";
                             pWidth = 1200;
                             pHeight = 840;
-                        }
+                        // }
 
                         var newwin = GetOpenWindow(pUrl, "", pWidth, pHeight, "yes");
                         newwin.focus();
@@ -112,6 +112,8 @@
 		</div>
 		<div style="margin-bottom: 7px;">
 			<span><spring:message code='ezEmail.ksaReservation01' /></span>
+			<br>
+			<span><spring:message code='ezEmail.Reservation02' /></span>
 		</div>
 		<div class="box" id="maillist" style="overflow:auto; height:250px;margin:0px;padding:0px;border-top:0px;border-right:1px solid #ddd">
 			<table class="mainlist" style="table-layout:fixed;width:100%;">

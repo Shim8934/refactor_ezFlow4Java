@@ -2,6 +2,7 @@ package egovframework.ezEKP.ezEmail.service;
 
 import java.io.InputStream;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -10,6 +11,7 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
 import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
+import egovframework.ezEKP.ezEmail.vo.MailBigAttachVO;
 import egovframework.ezEKP.ezEmail.vo.MailboxProgressVO;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -172,6 +174,7 @@ public interface EzEmailService {
 	public JSONArray getFolderQuota(String String, Locale locale) throws Exception;
 	
 	public String setBigAttachCountInfo(String[] fileIdArr, int limitCount, int tenantId) throws Exception;
+	public String setBigAttachCountInfo(ArrayList<Map<String,Object>> fileInfoArr, int limitCount, int tenantId, String userId) throws Exception;
 	public String checkBigAttachDownloadCount(String fileId, int tenantId) throws Exception;
 	public void updateBigAttachDownloadCount(String fileId, int tenantId) throws Exception;
 	public void deleteBigAttachCountInfo(File[] fileList, int tenantId) throws Exception;
@@ -283,4 +286,6 @@ public interface EzEmailService {
 	public void actionMailMoveTrash(IMAPAccess ia, Map<String, long[]> folderUids, String cmd, Locale locale, int tenantID, String userEmail, String domainName) throws Exception;
 	public String encryptSecureValue(String encryptValue, boolean useKlibEncrypt) throws Exception;
 	public String decryptSecureValue(String decryptValue, boolean useKlibEncrypt) throws Exception;
+	public List<MailBigAttachVO> getBigAttachList(String userId, int tenantId, String prop, String orderBy, int startRow, int maxItemPerPage) throws Exception;
+	public int getBigAttachListCount(String userId, int tenantId) throws Exception;
 }
