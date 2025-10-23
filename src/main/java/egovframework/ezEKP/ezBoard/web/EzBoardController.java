@@ -12236,7 +12236,7 @@ public class EzBoardController extends EzFileMngUtil{
 			}
 		}
 
-		if (!accessCheck(boardID, boardItemInfo.getItemID(), "", userInfo, "")) {
+		if (boardItemInfo != null && !accessCheck(boardID, boardItemInfo.getItemID(), "", userInfo, "")) {
 			return "main/warning";
 		}
 
