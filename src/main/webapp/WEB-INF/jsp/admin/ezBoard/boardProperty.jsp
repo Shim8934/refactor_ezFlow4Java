@@ -252,6 +252,7 @@
 					}
 					else if ($("#chkQnABoard").is(":checked")) {
 						$("#chkWriterFlag").prop("disabled", true);
+						$("#chkApprBoard").prop("disabled", true);
 					}
 
 	                if (!$("#chkURLBoard").is(":checked")) {
