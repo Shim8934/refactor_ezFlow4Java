@@ -8029,7 +8029,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
             if (!ezPersonalService.hasNotiDiableItem(cID, NotiType.fromString("COMMUNITY_" + notiSubType), NotiPlatform.MAIL, userInfo.getTenantId())) {
 	        	String subject = "[" + clubName + "] " + subName;
 	
-	        	String bodyContent = "[" + cvo.getC_ClubName() + "] " + bodyName;
+	        	String bodyContent = "[" + commonUtil.cleanValue(cvo.getC_ClubName()) + "] " + bodyName;
 	        	
 	        	String content = commonUtil.createNotiMailContent(bodyContent, userInfo.getTenantId(), userInfo.getLocale());
 	        	
