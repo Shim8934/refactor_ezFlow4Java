@@ -1067,7 +1067,7 @@ function receiveCheck_onClick() {
 		requestUrl += "&shareId=" + encodeURIComponent(shareId);
 	}
     
-    var OpenWin = window.open(requestUrl, "mail_readerlist", GetOpenWindowfeature(620, 500));
+    var OpenWin = window.open(requestUrl, "mail_readerlist", GetOpenWindowfeature(650, 500));
     try { OpenWin.focus(); } catch (e) {console.log(e);}
 }
 function ListCount(pCount) {

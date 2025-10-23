@@ -129,7 +129,7 @@
 			var portletId = "<c:out value='${portletId}'/>";
 			
 			var url = "/admin/ezNewPortal/portalMenuAuth.do?menuId=" + portletId + "&companyId=" + companyValue + "&mode=portlet";
-			var OpenWin = window.open(url, "", GetOpenWindowfeature(980, 660));		// 높이 수정 650 > 660
+			var OpenWin = window.open(url, "", GetOpenWindowfeature(1000, 680));		// 높이 수정 650 > 660
 		    	try { OpenWin.focus(); } catch (e) { }
 		}
 		

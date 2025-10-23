@@ -74,7 +74,7 @@
 
 	    	function scheduleExcelUpload() {
 	    		if($("[name=excelFile]").val() == null || $("[name=excelFile]").val() == "") {
-	                alert("파일을 선택해주세요.");
+	                alert("<spring:message code='ezPMS.t106' />");
 	                return;
 	            }
 	    		var form = $("#cForm")[0];

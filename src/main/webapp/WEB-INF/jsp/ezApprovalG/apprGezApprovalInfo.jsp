@@ -4370,7 +4370,14 @@
 		        </HEADER>
 		        <HEADER>
 		        <NAME><spring:message code='ezApprovalG.b12'/></NAME>
-		        <WIDTH>50</WIDTH>
+		        <c:choose>
+					<c:when test="${userInfo.lang eq '6'}">
+						<WIDTH>110</WIDTH>
+					</c:when>
+					<c:otherwise>
+						<WIDTH>50</WIDTH>
+					</c:otherwise>
+				</c:choose>
 		        </HEADER>
 		    </HEADERS>
 		    <ROWS></ROWS>

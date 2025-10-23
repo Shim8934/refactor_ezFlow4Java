@@ -2,12 +2,12 @@
 var strLang1 = "AM"
 var strLang2 = "PM"
 var strLang3 = "JAN;FEB;MAR;APR;MAY;JUN;JUL;AUG;SEP;OCT;NOV;DEC"
-var strLang4 = "SUN;MON;TUE;WED;THU;FRI;SAT"
-var strLang4_1 = "SUN;MON;TUE;WED;THU;FRI;SAT"
-var strLang5 = "SUN;MON;TUE;WED;THU;FRI;SAT"
-var strLang6 = "MON;TUE;WED;THU;FRI;SAT;SUN"
-var strLang5_1 = "Su;Mo;Tu;We;Th;Fr;Sa"
-var strLang6_1 = "Mo;Tu;We;Th;Fr;Sa;Su"
+var strLang4 = "MIN;SEN;SEL;RAB;KAM;JUM;SAB"
+var strLang4_1 = "MIN;SEN;SEL;RAB;KAM;JUM;SAB"
+var strLang5 = "MIN;SEN;SEL;RAB;KAM;JUM;SAB"
+var strLang6 = "SEN;SEL;RAB;KAM;JUM;SAB;MIN"
+var strLang5_1 = "Min;Sen;Sel;Rab;Kam;Jum;Sab"
+var strLang6_1 = "Sen;Sel;Rab;Kam;Jum;Sab;Min"
 var strLang7 = "(No title)"
 // X:\NetModule\FrontEnd\Home\myoffice\ezSchedule\js\kaoni_ActiveX.js
 // X:\NetModule\FrontEnd\Home\myoffice\ezSchedule\js\schedule_write.js
@@ -220,10 +220,10 @@ var strLangHSBScPt2 = ".";
 var strLangHSBScPt3 = "";
 
 /* 2024-05-21 김유진 - 일정 게시판 게시 메세지 추가 */
-var ezSchedule_kyj1 = "Can not post schedules to photo board or anonymous board or url board.";
+var ezSchedule_kyj1 = "Tidak dapat mengirim jadwal ke papan foto, papan anonim, atau papan URL.";
 
 /* 2024-06-24 김유진 - 일정관리 안내 메세지 추가 */
-var ezSchedule_kyj2 = "Please check the repetition pattern once again.";
+var ezSchedule_kyj2 = "Silakan periksa kembali pola pengulangan.";
 
 /* 2024-07-18 조소정 - 일정관리 > 그룹일정 관리 > 작성 권한 기능 추가 */
 var ezSchedule_csj1 = "Dapat ditulis";
@@ -232,7 +232,7 @@ var ezSchedule_csj1 = "Dapat ditulis";
 var strLang151_2 = "itu";
 
 // 2024-06-28 민지수 - 일정 > 첨부파일 드래그 앤 드롭 안내 메세지 추가
-var strLangMJS01 = "You can drag and drop to add files and change the order of added files.";
+var strLangMJS01 = "Anda dapat menyeret dan melepas untuk menambahkan berkas dan mengubah urutan berkas yang ditambahkan.";
 
 /* 2025-02-07 기민혁 - 반복자원 체크 메세지 추가 */
 var strLangKMH1 = "Sumber daya ini tidak mengizinkan pemesanan berulang.";

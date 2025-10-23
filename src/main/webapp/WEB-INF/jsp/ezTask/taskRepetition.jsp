@@ -601,53 +601,41 @@
 		        $("#Sdatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
 		        $("#Edatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
 		    });
-		    if(lang == "1"){
-			    $(function () {
-			        $.datepicker.regional['ko'] = {
-		        		closeText: "<spring:message code='main.t3' />",
-						prevText: "<spring:message code='main.t0604' />",
-						nextText: "<spring:message code='main.t0605' />",
-						currentText: "<spring:message code='main.t0606' />",
-						monthNames: ["<spring:message code='main.t0607' />", "<spring:message code='main.t0608' />", "<spring:message code='main.t0609' />", 
-						             "<spring:message code='main.t0610' />", "<spring:message code='main.t0611' />", "<spring:message code='main.t0612' />",
-						             "<spring:message code='main.t0613' />", "<spring:message code='main.t0614' />", "<spring:message code='main.t0615' />", 
-						             "<spring:message code='main.t0616' />", "<spring:message code='main.t0617' />", "<spring:message code='main.t0618' />"],
-						monthNamesShort: ["<spring:message code='main.t0607' />", "<spring:message code='main.t0608' />", "<spring:message code='main.t0609' />", 
-						                  "<spring:message code='main.t0610' />", "<spring:message code='main.t0611' />", "<spring:message code='main.t0612' />",
-						                  "<spring:message code='main.t0613' />", "<spring:message code='main.t0614' />", "<spring:message code='main.t0615' />", 
-						                  "<spring:message code='main.t0616' />", "<spring:message code='main.t0617' />", "<spring:message code='main.t0618' />"],
-						dayNames: ["<spring:message code='main.t0621' />", "<spring:message code='main.t0622' />", "<spring:message code='main.t0623' />", 
-						           "<spring:message code='main.t0624' />", "<spring:message code='main.t0625' />", "<spring:message code='main.t0626' />",
-						           "<spring:message code='main.t0627' />"],
-						dayNamesShort: ["<spring:message code='main.t0621' />", "<spring:message code='main.t0622' />", "<spring:message code='main.t0623' />", 
-						                "<spring:message code='main.t0624' />", "<spring:message code='main.t0625' />", "<spring:message code='main.t0626' />", 
-						                "<spring:message code='main.t0627' />"],
-						dayNamesMin: ["<spring:message code='main.t0621' />", "<spring:message code='main.t0622' />", "<spring:message code='main.t0623' />", 
-						              "<spring:message code='main.t0624' />", "<spring:message code='main.t0625' />", "<spring:message code='main.t0626' />", 
-						              "<spring:message code='main.t0627' />"],
-			            weekHeader: 'Wk',
-			            dateFormat: 'yy-mm-dd',
-			            firstDay: 0,
-			            isRTL: false,
-			            duration: 200,
-			            showAnim: 'show',
-			            showMonthAfterYear: true
-			        };
-			        $.datepicker.setDefaults($.datepicker.regional['ko']);
-			    });
-		    } else {	    	
-			    $(function () {
-			        $.datepicker.regional['en'] = {
-			            dateFormat: 'yy-mm-dd',
-			            firstDay: 0,
-			            isRTL: false,
-			            duration: 200,
-			            showAnim: 'show',
-			            showMonthAfterYear: true
-			        };
-			        $.datepicker.setDefaults($.datepicker.regional['en']);
-			    });
-		    }
+		   
+			$(function () {
+				$.datepicker.regional["<spring:message code='main.t0619' />"] = {
+					closeText: "<spring:message code='main.t3' />",
+					prevText: "<spring:message code='main.t0604' />",
+					nextText: "<spring:message code='main.t0605' />",
+					currentText: "<spring:message code='main.t0606' />",
+					monthNames: ["<spring:message code='main.t0607' />", "<spring:message code='main.t0608' />", "<spring:message code='main.t0609' />", 
+								 "<spring:message code='main.t0610' />", "<spring:message code='main.t0611' />", "<spring:message code='main.t0612' />",
+								 "<spring:message code='main.t0613' />", "<spring:message code='main.t0614' />", "<spring:message code='main.t0615' />", 
+								 "<spring:message code='main.t0616' />", "<spring:message code='main.t0617' />", "<spring:message code='main.t0618' />"],
+					monthNamesShort: ["<spring:message code='main.t0607' />", "<spring:message code='main.t0608' />", "<spring:message code='main.t0609' />", 
+									  "<spring:message code='main.t0610' />", "<spring:message code='main.t0611' />", "<spring:message code='main.t0612' />",
+									  "<spring:message code='main.t0613' />", "<spring:message code='main.t0614' />", "<spring:message code='main.t0615' />", 
+									  "<spring:message code='main.t0616' />", "<spring:message code='main.t0617' />", "<spring:message code='main.t0618' />"],
+					dayNames: ["<spring:message code='main.t0621' />", "<spring:message code='main.t0622' />", "<spring:message code='main.t0623' />", 
+							   "<spring:message code='main.t0624' />", "<spring:message code='main.t0625' />", "<spring:message code='main.t0626' />",
+							   "<spring:message code='main.t0627' />"],
+					dayNamesShort: ["<spring:message code='main.t0621' />", "<spring:message code='main.t0622' />", "<spring:message code='main.t0623' />", 
+									"<spring:message code='main.t0624' />", "<spring:message code='main.t0625' />", "<spring:message code='main.t0626' />", 
+									"<spring:message code='main.t0627' />"],
+					dayNamesMin: ["<spring:message code='main.t0621' />", "<spring:message code='main.t0622' />", "<spring:message code='main.t0623' />", 
+								  "<spring:message code='main.t0624' />", "<spring:message code='main.t0625' />", "<spring:message code='main.t0626' />", 
+								  "<spring:message code='main.t0627' />"],
+					weekHeader: 'Wk',
+					dateFormat: 'yy-mm-dd',
+					firstDay: 0,
+					isRTL: false,
+					duration: 200,
+					showAnim: 'show',
+					showMonthAfterYear: true
+				};
+				$.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619' />"]);
+			});
+		    
 		    function makeTermDate(pdate)
 		    {
 		        var date = new Date(pdate);

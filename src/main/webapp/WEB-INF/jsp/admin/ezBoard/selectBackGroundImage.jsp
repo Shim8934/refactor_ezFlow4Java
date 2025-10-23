@@ -16,7 +16,12 @@
 		</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	    <link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
-	    <link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />	    
+	    <link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
+		<style>
+			.content td, .file td, .file2 td{
+				width: 50%;
+			}
+		</style>
 	    <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>    
 	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
@@ -185,16 +190,16 @@
                 <li><span onclick="return window.close();"></span></li>
             </ul>
         </div>
-		<table style="width:500px" id="toggle_tbl1" class="content">
+		<table style="width:100%" id="toggle_tbl1" class="content">
 			<tr>
 				<th style='text-align:center;'>
 					<spring:message code="ezBoard.t5011"/>
 				</th>
 				<td colspan="3">
-					<table style="width:471px;height:217px" border="0">
+					<table style="width:100%;height:217px" border="0">
 						<tr>
-							<td id="tdNormalImage" style="width:467px;height:200px">
-								<img id="UploadSliderImage" src="" style="width:467px;height:200px;display:none" />								
+							<td id="tdNormalImage" style="width:100%;height:200px">
+								<img id="UploadSliderImage" src="" style="width:100%;height:200px;display:none" />								
 							</td>
 						</tr>
 					</table>
@@ -205,7 +210,7 @@
 				<th><spring:message code="ezBoard.t5001"/></th>
 				<td colspan="3">					
 					<input type="file" name="file1" id="file1" style="width:85%;margin-left:3px; display:none;" onchange="btn_AttachAdd_onclick()" accept="image/*"/>
-					<input type="text" name="filetxt" id="filetxt" style="width:78%;cursor:default;"
+					<input type="text" name="filetxt" id="filetxt" style="width:50%;cursor:default;"
 					 readonly onclick="SliderImage()"/>
 					<a class="imgbtn imgbck" style="height:22px"><span onclick="SliderImage();"><spring:message code="ezBoard.t5010"/></span></a>
 					<input type="hidden" name="backgroundID" id="backgroundID" value="<c:out value='${backgroundID}'/>"/>

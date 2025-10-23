@@ -154,6 +154,7 @@ public class EzWebFolderAdminController extends EzFileMngUtil {
 			model.addAttribute("primary", (String) resultBody.get("primary"));
 		}
 		
+		model.addAttribute("lang", user.getLang());
 		logger.debug("webfolderAdminLeft end");
 		return "admin/ezWebFolder/webfolderAdminLeft";
 	}

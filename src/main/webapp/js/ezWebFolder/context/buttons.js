@@ -131,7 +131,7 @@ var buttons = (function() {
 										return;
 									}
 
-									window.open(previewData.data, "_blank");
+									window.open(previewData.data, "_blank", GetOpenWindowfeature(1100, 950));
 								} else {
 									alert(messages.strLang7);
 								}

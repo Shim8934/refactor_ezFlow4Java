@@ -295,19 +295,21 @@
 	<resultMap class="ResOccuVO"    	   id="resOccuVO">
 		<result property="ownerId"				column="OWNERID"				columnIndex="1"/>
 		<result property="brdNm"				column="BRD_NM"					columnIndex="2"/>
-		<result property="count"				column="COUNT"					columnIndex="3"/>
-		<result property="usageTime"			column="USAGE_TIME"				columnIndex="4"/>
-		<result property="companyID"			column="COMPANYID"		    	columnIndex="5"/>
+		<result property="brdNm2"				column="BRD_NM2"				columnIndex="3"/>
+		<result property="count"				column="COUNT"					columnIndex="4"/>
+		<result property="usageTime"			column="USAGE_TIME"				columnIndex="5"/>
+		<result property="companyID"			column="COMPANYID"		    	columnIndex="6"/>
 	</resultMap>
 	
 	<resultMap class="ResOccuVO"    	   id="resOccuVO2">
 		<result property="ownerId"				column="OWNERID"				columnIndex="1"/>
 		<result property="brdNm"				column="BRD_NM"					columnIndex="2"/>
-		<result property="companyID"			column="COMPANYID"		    	columnIndex="3"/>
-		<result property="startDate"			column="STARTDATE"				columnIndex="4"/>
-		<result property="endDate"				column="ENDDATE"				columnIndex="5"/>
-		<result property="num"					column="NUM"					columnIndex="6"/>
-		<result property="pNum"					column="PNUM"					columnIndex="7" 		nullValue="0"/>
+		<result property="brdNm2"				column="BRD_NM2"				columnIndex="3"/>
+		<result property="companyID"			column="COMPANYID"		    	columnIndex="4"/>
+		<result property="startDate"			column="STARTDATE"				columnIndex="5"/>
+		<result property="endDate"				column="ENDDATE"				columnIndex="6"/>
+		<result property="num"					column="NUM"					columnIndex="7"/>
+		<result property="pNum"					column="PNUM"					columnIndex="8" 		nullValue="0"/>
 	</resultMap>
 	
 	<!-- <procedure id="EzResourceDAO.getAdmSubClsTree" parameterClass="Map" resultMap="resGetAdmSubClsTreeVO" >
@@ -2690,6 +2692,7 @@
 			SELECT
 				DISTINCT b.OWNERID,
 				b.BRD_NM,
+                b.BRD_NM2,
 				b.COUNT,
 				b.USAGE_TIME,
 				a.COMPANYID
@@ -2745,7 +2748,8 @@
             	TO_CHAR(STARTDATE, 'YYYY-MM-DD HH24:MI:SS') STARTDATE ,
             	TO_CHAR(ENDDATE, 'YYYY-MM-DD HH24:MI:SS') ENDDATE ,
             	A.COMPANYID ,
-            	C.BRD_NM
+            	C.BRD_NM,
+            	C.BRD_NM2
 			FROM
 				TBL_RS_SCHEDULE A
 			JOIN
@@ -2901,7 +2905,9 @@
 	        NVL(APPROVEFLAG, '0') AS APPROVEFLAG,
 	        NVL(RETURNFLAG, '0') AS RETURNFLAG,
 	        NVL(REPEATFLAG, '1') AS REPEATFLAG,
-	        BRD_ACCESS
+	        BRD_ACCESS,
+			TBL_RS_BRD.RES_MAX_DATE,
+			TBL_RS_BRD.RES_MAX_USER_CNT
 	    FROM
 	        TBL_RS_BRD
 	    JOIN 

@@ -11,6 +11,8 @@ public class BoardTreeVO {
 	private String boardName3;
 	/** 게시판이름 4 	*/
 	private String boardName4;
+	/** 게시판이름 6 	*/
+	private String boardName6;
 	/** 트리순서	*/
 	private String treeViewOrder;
 	/** 게시판 색	*/
@@ -67,6 +69,12 @@ public class BoardTreeVO {
 	}
 	public void setBoardName4(String boardName4) {
 		this.boardName4 = boardName4;
+	}
+	public String getBoardName6() {
+		return boardName6;
+	}
+	public void setBoardName6(String boardName6) {
+		this.boardName6 = boardName6;
 	}
 	public String getTreeViewOrder() {
 		return treeViewOrder;

@@ -852,7 +852,7 @@
 	            notiTargetListView.LoadFromID("notiTargetTable");
 	            var selectedRows = notiTargetListView.GetDataRows();
 	            if (selectedRows.length == 0) {
-	            	alert("수신자를 선택하세요");
+	            	alert("<spring:message code='ezNotification.hth97' />");
 	            	return;
 	            }
 	            var notiParamArray = [];

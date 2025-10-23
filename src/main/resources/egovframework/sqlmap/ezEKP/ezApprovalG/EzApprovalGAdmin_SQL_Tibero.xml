@@ -66,7 +66,8 @@
 					TBL_CODELIST.name DOCUMENTSTATENAME,
 					TBL_CODELIST.name2 DOCUMENTSTATENAME2,
 					TBL_CODELIST.name3 DOCUMENTSTATENAME3,
-					TBL_CODELIST.name4 DOCUMENTSTATENAME4  
+					TBL_CODELIST.name4 DOCUMENTSTATENAME4,
+					TBL_CODELIST.name6 DOCUMENTSTATENAME6
 				FROM
 					TBL_CODELIST
 				LEFT JOIN
@@ -107,7 +108,8 @@
 					TBL_CODELIST.name DOCUMENTSTATENAME,
 					TBL_CODELIST.name2 DOCUMENTSTATENAME2,
 					TBL_CODELIST.name3 DOCUMENTSTATENAME3,
-					TBL_CODELIST.name4 DOCUMENTSTATENAME4  
+					TBL_CODELIST.name4 DOCUMENTSTATENAME4,
+					TBL_CODELIST.name6 DOCUMENTSTATENAME6
 				FROM
 					TBL_CODELIST
 				LEFT JOIN
@@ -1895,23 +1897,27 @@
 										WHEN #lang# = '2' THEN NAME2
 										WHEN #lang# = '3' THEN NAME3
 										WHEN #lang# = '4' THEN NAME4
+										WHEN #lang# = '6' THEN NAME6
 									END,
 									INSTR(CASE
 											WHEN #lang# is null OR #lang# = '' OR #lang# = '1' THEN NAME
 											WHEN #lang# = '2' THEN NAME2
 											WHEN #lang# = '3' THEN NAME3
 											WHEN #lang# = '4' THEN NAME4
+											WHEN #lang# = '6' THEN NAME6
 										END, ';', 1, 1) + 1,
 									INSTR(CASE
 											WHEN #lang# is null OR #lang# = '' OR #lang# = '1' THEN NAME
 											WHEN #lang# = '2' THEN NAME2
 											WHEN #lang# = '3' THEN NAME3
 											WHEN #lang# = '4' THEN NAME4
+											WHEN #lang# = '6' THEN NAME6
 										END, ';', 1, 2) - INSTR(CASE
 																	WHEN #lang# is null OR #lang# = '' OR #lang# = '1' THEN NAME
 																	WHEN #lang# = '2' THEN NAME2
 																	WHEN #lang# = '3' THEN NAME3
 																	WHEN #lang# = '4' THEN NAME4
+																	WHEN #lang# = '6' THEN NAME6
 																END, ';', 1, 1) - 1
 									) AS NAME
 						FROM 
@@ -1928,6 +1934,7 @@
 										WHEN #lang# = '2' THEN NAME2
 										WHEN #lang# = '3' THEN NAME3
 										WHEN #lang# = '4' THEN NAME4
+										WHEN #lang# = '6' THEN NAME6
 									END, INSTR(NAME, ';', 1, 2) + 1) = #v_KEEPINGPERIOD#),
 			KEEPPERIODCODE = #v_KEEPINGPERIOD#,
 			SECURITYLEVEL = #itemSecurity#,
@@ -2567,6 +2574,7 @@
 					WHEN #lang# = '2' THEN NAME2
 					WHEN #lang# = '3' THEN NAME3
 					WHEN #lang# = '4' THEN NAME4
+					WHEN #lang# = '6' THEN NAME6
 				END AS NAME
 			FROM 
 				TBL_CODELIST 

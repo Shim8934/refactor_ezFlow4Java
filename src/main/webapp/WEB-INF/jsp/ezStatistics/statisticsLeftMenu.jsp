@@ -200,9 +200,9 @@
             		<span class="sub_iconLNB tree_arrow_down"></span><span class="h2Title" id="PERSONAL" onclick="openFolder('menu1')" ><spring:message code='ezStatistics.t1049' /></span>
 	            </h2>
 	            <ul class="lnbUL" id="menu1UL">
-           			<li class="on"><span class="h2_text list_text" onclick="goPage(16)"><spring:message code='ezStatistics.t1047' /></span></li>
-           			<li><span class="h2_text list_text" onclick="goPage(17)"><spring:message code='ezStatistics.t1045' /></span></li>
-           			<li><span class="h2_text list_text" onclick="goPage(18)"><spring:message code='ezStatistics.t1048' /></span></li>
+           			<li class="on"><span class="h2_text list_text" onclick="goPage(16)" title="<c:if test='${lang eq 6}'><spring:message code='ezStatistics.t1047' /></c:if>"><spring:message code='ezStatistics.t1047' /></span></li>
+           			<li><span class="h2_text list_text" onclick="goPage(17)" title="<c:if test='${lang eq 6}'><spring:message code='ezStatistics.t1045' /></c:if>"><spring:message code='ezStatistics.t1045' /></span></li>
+           			<li><span class="h2_text list_text" onclick="goPage(18)" title="<c:if test='${lang eq 6}'><spring:message code='ezStatistics.t1048' /></c:if>"><spring:message code='ezStatistics.t1048' /></span></li>
 	            </ul>
 	            <c:if test="${useExternalMailServer == 'NO' }">
 	      	    <h2 class="off" id="menu2H2">
@@ -212,9 +212,9 @@
            			<li><span class="h2_text list_text" onClick="menu_change('MAIL')"><spring:message code='ezStatistics.t1001' /></span></li>
            			<li><span class="h2_text list_text" onClick="goPage(1)"><spring:message code='ezStatistics.t1012' /></span></li>
            			<li><span class="h2_text list_text" onclick="goPage(2)"><spring:message code='ezStatistics.t1018' /></span></li>
-           			<li><span class="h2_text list_text" onclick="goPage(4)"><spring:message code='ezStatistics.t1023' /></span></li>
+           			<li><span class="h2_text list_text" onclick="goPage(4)" title="<c:if test='${lang eq 6}'><spring:message code='ezStatistics.t1023' /></c:if>"><spring:message code='ezStatistics.t1023' /></span></li>
            			<li><span class="h2_text list_text" onclick="goPage(5)"><spring:message code='ezStatistics.t1025' /></span></li>
-           			<li><span class="h2_text list_text" onclick="goPage(22)"><spring:message code='ezStatistics.kyj1' /></span></li>
+           			<li><span class="h2_text list_text" onclick="goPage(22)" title="<c:if test='${lang eq 6}'><spring:message code='ezStatistics.kyj1' /></c:if>"><spring:message code='ezStatistics.kyj1' /></span></li>
            			<li><span class="h2_text list_text" onclick="goPage(23)"><spring:message code='ezStatistics.kyj2' /></span></li>
 			    </ul>
 			    </c:if>
@@ -225,15 +225,15 @@
 			            </h2>
 					    <ul class="lnbUL off" id="menu3UL">
                    			<li><span class="h2_text list_text" onclick="goPage(15)"><spring:message code='ezStatistics.t1030' /></span></li>
-                   			<li><span class="h2_text list_text" onclick="goPage(6)"><spring:message code='ezStatistics.t1031' /></span></li>
-                   			<li><span class="h2_text list_text" onclick="goPage(7)"><spring:message code='ezStatistics.t1033' /></span></li>
-                   			<li><span class="h2_text list_text" onclick="goPage(8)"><spring:message code='ezStatistics.t1034' /></span></li>
-                   			<li><span class="h2_text list_text" onclick="goPage(9)"><spring:message code='ezStatistics.t1036' /></span></li>
-                   			<li><span class="h2_text list_text" onclick="goPage(10)"><spring:message code='ezStatistics.t1037' /></span></li>
-                   			<li><span class="h2_text list_text" onclick="goPage(11)"><spring:message code='ezStatistics.t1038' /></span></li>
-                   			<li><span class="h2_text list_text" onclick="goPage(12)"><spring:message code='ezStatistics.t1039' /></span></li>
-                   			<li><span class="h2_text list_text" onclick="goPage(13)"><spring:message code='ezStatistics.t1040' /></span></li>
-                   			<li><span class="h2_text list_text" onclick="goPage(14)"><spring:message code='ezStatistics.t1041' /></span></li>
+                   			<li><span class="h2_text list_text" onclick="goPage(6)" title="<c:if test='${lang eq 6}'><spring:message code='ezStatistics.t1031' /></c:if>"><spring:message code='ezStatistics.t1031' /></span></li>
+                   			<li><span class="h2_text list_text" onclick="goPage(7)" title="<c:if test='${lang eq 6}'><spring:message code='ezStatistics.t1033' /></c:if>"><spring:message code='ezStatistics.t1033' /></span></li>
+                   			<li><span class="h2_text list_text" onclick="goPage(8)" title="<c:if test='${lang eq 6}'><spring:message code='ezStatistics.t1034' /></c:if>"><spring:message code='ezStatistics.t1034' /></span></li>
+                   			<li><span class="h2_text list_text" onclick="goPage(9)" title="<c:if test='${lang eq 6}'><spring:message code='ezStatistics.t1036' /></c:if>"><spring:message code='ezStatistics.t1036' /></span></li>
+                   			<li><span class="h2_text list_text" onclick="goPage(10)" title="<c:if test='${lang eq 6}'><spring:message code='ezStatistics.t1037' /></c:if>"><spring:message code='ezStatistics.t1037' /></span></li>
+                   			<li><span class="h2_text list_text" onclick="goPage(11)" title="<c:if test='${lang eq 6}'><spring:message code='ezStatistics.t1038' /></c:if>"><spring:message code='ezStatistics.t1038' /></span></li>
+                   			<li><span class="h2_text list_text" onclick="goPage(12)" title="<c:if test='${lang eq 6}'><spring:message code='ezStatistics.t1039' /></c:if>"><spring:message code='ezStatistics.t1039' /></span></li>
+                   			<li><span class="h2_text list_text" onclick="goPage(13)" title="<c:if test='${lang eq 6}'><spring:message code='ezStatistics.t1040' /></c:if>"><spring:message code='ezStatistics.t1040' /></span></li>
+                   			<li><span class="h2_text list_text" onclick="goPage(14)" title="<c:if test='${lang eq 6}'><spring:message code='ezStatistics.t1041' /></c:if>"><spring:message code='ezStatistics.t1041' /></span></li>
 					    </ul>
 	           	 	</c:if>
 	      <!--
@@ -261,7 +261,7 @@
 					</h2>
 					<ul class="lnbUL off" id="menu5UL">
 						<li><span class="h2_text list_text" onclick="goPage(25)"><spring:message code='ezStatistics.pgb04' /></span></li>
-						<li><span class="h2_text list_text" onclick="goPage(26)"><spring:message code='ezStatistics.pgb05' /></span></li>
+						<li><span class="h2_text list_text" onclick="goPage(26)" title="<c:if test='${lang eq 6}'><spring:message code='ezStatistics.pgb05' /></c:if>"><spring:message code='ezStatistics.pgb05' /></span></li>
 					</ul>
 				</c:if>
 		    </div>

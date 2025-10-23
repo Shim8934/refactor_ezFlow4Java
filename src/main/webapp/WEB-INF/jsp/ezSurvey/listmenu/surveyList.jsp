@@ -131,7 +131,7 @@
 						<tr>
 							<th headers=""    class="inputTh"><input type="checkbox"></th>
 							<th headers="at"  class="inputTh"><img src="/images/newAttach.gif"></th>
-							<th headers="surveyId"  class="numTh"><spring:message code='ezSurvey.listHeader.pgb03'/></th>
+							<th headers="surveyId" title="<spring:message code='ezSurvey.listHeader.pgb03'/>" class="numTh"><spring:message code='ezSurvey.listHeader.pgb03'/></th>
 							<th headers="tt"  class="ttlTh"    ><spring:message code='ezSurvey.t23'/></th>
 <%--							<th headers="ct"  class="createTh" ><spring:message code='ezSurvey.t24'/></th>--%>
 <%--							<th headers="cd"  class="endDateTh"><spring:message code='ezSurvey.t99'/></th>--%>

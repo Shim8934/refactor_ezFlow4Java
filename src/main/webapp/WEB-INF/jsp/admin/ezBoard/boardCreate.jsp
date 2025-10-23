@@ -39,6 +39,7 @@
 				var name2 = $.trim($("#txtNewName2").val());
 	    		var name3 = $.trim($("#txtNewName3").val());
 				var name4 = $.trim($("#txtNewName4").val());
+				var name6 = $.trim($("#txtNewName6").val());
 				
 				if (name1 == "") {
 					alert("<spring:message code='ezBoard.t107' />");
@@ -54,6 +55,9 @@
 				}
 				if (name4 == "") {
 					name4 = name1;
+				}
+				if (name6 == "") {
+					name6 = name1;
 				}
 				
 			    var newID = "{" + GetGUID() + "}";
@@ -76,6 +80,7 @@
 						boardName2 : encodeURIComponent(name2),
 						boardName3 : encodeURIComponent(name3),
 						boardName4 : encodeURIComponent(name4),
+						boardName6 : encodeURIComponent(name6),
 						parentBoardID : ParentBoardID,
 						boardGroupID : BoardGroupID,
 						useGroupFlag : useGroupFlag
@@ -156,6 +161,12 @@
 					        	<tr class="secondary">
 					          		<th><c:out value='${lang_quaternary}'/></th>
 					          		<td><input name="text" type="text" id="txtNewName4" style="WIDTH:100%" maxlength="30"></td>
+					        	</tr>
+					        </c:if>
+		                    <c:if test="${useIndonesian == 'YES'}">
+					        	<tr class="secondary">
+					          		<th><c:out value='${lang_senary}'/></th>
+					          		<td><input name="text" type="text" id="txtNewName6" style="WIDTH:100%" maxlength="30"></td>
 					        	</tr>
 					        </c:if>
 				      	</table>

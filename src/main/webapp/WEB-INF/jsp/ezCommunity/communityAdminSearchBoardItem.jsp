@@ -869,13 +869,13 @@
 				    
 				    <c:choose>
 						<c:when test="${pSortBy == 'A.Title'}">
-				    		<th style="cursor:pointer" onClick="SortPage('A.Title desc')"><spring:message code='ezCommunity.t124'/><img src="/images/view-sortup.gif" width="9" height="9"></th>
+				    		<th style="cursor:pointer; width: 200px;" onClick="SortPage('A.Title desc')"><spring:message code='ezCommunity.t124'/><img src="/images/view-sortup.gif" width="9" height="9"></th>
 				    	</c:when>
 				    	<c:when test="${pSortBy == 'A.Title desc'}">
-				    		<th style="cursor:pointer" onClick="SortPage('A.Title')"><spring:message code='ezCommunity.t124'/><img src="/images/view-sortdown.gif" width="9" height="9"></th>
+				    		<th style="cursor:pointer; width: 200px;" onClick="SortPage('A.Title')"><spring:message code='ezCommunity.t124'/><img src="/images/view-sortdown.gif" width="9" height="9"></th>
 				    	</c:when>
 				    	<c:otherwise>
-				    		<th style="cursor:pointer" onClick="SortPage('A.Title')"><spring:message code='ezCommunity.t124'/></th>
+				    		<th style="cursor:pointer; width: 200px;" onClick="SortPage('A.Title')"><spring:message code='ezCommunity.t124'/></th>
 				    	</c:otherwise>
 				    </c:choose>
 				    

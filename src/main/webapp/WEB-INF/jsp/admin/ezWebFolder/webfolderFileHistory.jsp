@@ -653,7 +653,7 @@
 	                <table style="width: 100%; border-spacing: 0px; border-collapse: collapse; border: none;" class="list_element">
 	                    <caption></caption>
 	                    <colgroup>
-	                        <col style="width: 90px;">
+	                        <col style="width: 110px;">
 	                        <col>
 	                    </colgroup>
 	                    <tr>

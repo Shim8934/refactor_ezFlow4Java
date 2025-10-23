@@ -8,7 +8,7 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 		<title>left_attitude</title>
 	    <link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
-	    <link rel="stylesheet" href="${util.addVer('main.lhm02', 'msg')}" type="text/css" />
+<%--	    <link rel="stylesheet" href="${util.addVer('main.lhm02', 'msg')}" type="text/css" />--%>
 		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css"/>
 		<link rel="stylesheet" href="${util.addVer('/css/main.css')}" type="text/css"/>	
 		<link rel="stylesheet" href="${util.addVer('/css/ezAttitude/clockTemp1.css')}" type="text/css" />
@@ -424,10 +424,12 @@
 	    	var funcFlag = flag;
 	    	
 	    	// 2023-06-23 황인경 - 디자인 개선 > 근태관리 > 좌측메뉴 > 트리구조 근태관리, 수정신청관리 서브메뉴 선택시 클래스 제어
-	    	if ($(event.target).prop("tagName") == "SPAN" && flag != 7) {
-		    	$(".node_selected").attr("class", "list_text");
-		    	$(event.target).attr("class", "list_text node_selected");
-	    	}
+	    	$(document).on("click", "span.list_text", function(){
+				 $("#left li").removeClass("on");
+				 $(".node_selected").addClass("node_normal");
+				 $(".node_selected").removeClass("node_selected");
+				 $(this).parent().addClass("on");
+			})
 	    	
             var rightUrl = "";
 	    	switch(funcFlag) {
@@ -584,27 +586,27 @@
 		            <span class="sub_iconLNB tree_arrow_down"></span><span class="h2Title" onclick="openFolder()"><spring:message code='ezAttitude.t1'/></span>
 		        </h2>
 		        <ul class="lnbUL on">
-                   	<li><span class="list_text node_selected" id="userAttitude" onclick="functionFlag(1)"><spring:message code='ezAttitude.t143'/></span></li>
-                   	<li><span class="list_text" id="deptAttitude" onclick="functionFlag(2)"><spring:message code='ezAttitude.t144'/></span></li>
-                   	<li><span class="list_text" id="userAnnual" onclick="functionFlag(3)"><spring:message code='ezAttitude.t265'/></span></li>
+                   	<li><span class="list_text node_selected" id="userAttitude" onclick="functionFlag(1)" title="<c:if test='${uselang eq 6}'><spring:message code='ezAttitude.t143'/></c:if>"><spring:message code='ezAttitude.t143'/></span></li>
+                   	<li><span class="list_text" id="deptAttitude" onclick="functionFlag(2)" title="<c:if test='${uselang eq 6}'><spring:message code='ezAttitude.t144'/></c:if>"><spring:message code='ezAttitude.t144'/></span></li>
+                   	<li><span class="list_text" id="userAnnual" onclick="functionFlag(3)" title="<c:if test='${uselang eq 6}'><spring:message code='ezAttitude.t265'/></c:if>"><spring:message code='ezAttitude.t265'/></span></li>
 		        </ul>
 		        <h2 class="off">
-		            <span class="sub_iconLNB tree_plus"></span><span class="h2Title" onclick="openFolder()"><spring:message code='ezAttitude.t7'/></span>
+		            <span class="sub_iconLNB tree_plus"></span><span class="h2Title" onclick="openFolder()" title="<c:if test='${uselang eq 6}'><spring:message code='ezAttitude.t7'/></c:if>"><spring:message code='ezAttitude.t7'/></span>
 		        </h2>
 		        <ul class="lnbUL off">
-               		<li><span class="list_text" onclick="functionFlag(4)"><spring:message code='ezAttitude.t166'/></span></li>
+               		<li><span class="list_text" onclick="functionFlag(4)" title="<c:if test='${uselang eq 6}'><spring:message code='ezAttitude.t166'/></c:if>"><spring:message code='ezAttitude.t166'/></span></li>
                    	<c:if test="${attitudeAdminCheck == true}">
                    		<li>
-							<span class="list_text" onclick="functionFlag(5)"><spring:message code='ezAttitude.t7'/><c:if test="${totalAtt != 0 }"><span id="attCount" class="attCount">(${totalAtt})</span></c:if></span>
+							<span class="list_text" onclick="functionFlag(5)" title="<c:if test='${uselang eq 6}'><spring:message code='ezAttitude.t7'/></c:if>"><spring:message code='ezAttitude.t7'/><c:if test="${totalAtt != 0 }"><span id="attCount" class="attCount">(${totalAtt})</span></c:if></span>
 						</li>
                    		<li>
-							<span class="list_text" onclick="functionFlag(6)"><spring:message code='ezAttitude.t275'/><c:if test="${totalAnnual != '0' }"><span id="annualCount" class="attCount">(${totalAnnual})</span></c:if></span>
+							<span class="list_text" onclick="functionFlag(6)" title="<c:if test='${uselang eq 6}'><spring:message code='ezAttitude.t275'/></c:if>"><spring:message code='ezAttitude.t275'/><c:if test="${totalAnnual != '0' }"><span id="annualCount" class="attCount">(${totalAnnual})</span></c:if></span>
 						</li>
                     </c:if>
 		        </ul>
 		        <c:if test="${attitudeAdminCheck == true}">
 			        <h2 class="off" id="personalH2">
-                  		<span class="sub_iconLNB tree_plus"></span><span class="list_text" onclick="functionFlag(7)"><spring:message code='ezAttitude.t73'/></span>
+                  		<span class="sub_iconLNB tree_plus"></span><span class="list_text" onclick="functionFlag(7)" title="<c:if test='${uselang eq 6}'><spring:message code='ezAttitude.t73'/></c:if>"><spring:message code='ezAttitude.t73'/></span>
 					</h2>
 				</c:if>
 			</div>

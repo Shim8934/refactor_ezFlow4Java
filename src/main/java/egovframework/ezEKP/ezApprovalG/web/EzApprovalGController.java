@@ -550,7 +550,7 @@ public class EzApprovalGController extends EzFileMngUtil{
 		if ("Y".equals(ezCommonService.getTenantConfig("switchUserCompany", userInfo.getTenantId()))) {
 			companyList = Collections.emptyList();
 		} else {
-			companyList = ezApprovalGService.getAllCompanyList(userInfo.getId(), userInfo.getTenantId());
+			companyList = ezApprovalGService.getAllCompanyList(userInfo.getId(), userInfo.getTenantId(), userInfo.getPrimary());
 		}
 		
 		String result = ezOrganService.getPropertyList(userInfo.getId(), "extensionAttribute4;extensionAttribute5", userInfo.getPrimary(), userInfo.getTenantId());

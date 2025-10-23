@@ -821,7 +821,7 @@
 					<span class="sub_iconLNB tree_plus"></span><span class="h2Title" id="" onclick="Function_Flag(10)"><spring:message code='ezSchedule.t1021'/></span>
 				</h2>
 				<h2 class="off">
-					<span class="sub_iconLNB tree_plus"></span><span class="h2Title" id="" onclick="Function_Flag(12)"><spring:message code='ezSchedule.kmh01'/></span>
+					<span class="sub_iconLNB tree_plus"></span><span class="h2Title" id="" onclick="Function_Flag(12)" title="<spring:message code='ezSchedule.kmh01'/>"><spring:message code='ezSchedule.kmh01'/></span>
 				</h2>
 	        </div>
 	    </div>

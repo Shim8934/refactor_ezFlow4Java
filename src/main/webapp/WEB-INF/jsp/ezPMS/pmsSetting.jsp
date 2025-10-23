@@ -141,7 +141,7 @@ function restoreColor(statusId) {
 	   </div>
 	</div>
     <div id="contentArea" style="overflow:auto;">
-    	<table class="content" style="width:430px;margin-left:15px;">
+    	<table class="content" style="width:500px;margin-left:15px;">
 		       <tr>
 					<th><spring:message code='ezPMS.t173' /></th>
 					<td>

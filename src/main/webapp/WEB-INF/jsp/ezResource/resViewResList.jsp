@@ -521,7 +521,7 @@
 	    			<%-- <th style="width:120px"> <spring:message code='ezResource.t366' /></th> --%>
 	    			<th style="width:100px"> <spring:message code='ezResource.t106' /></th>
 	    			<%-- <th style="width:100px"> <spring:message code='ezResource.t37' /></th> --%>
-	    			<th style="width:120px"> <spring:message code="ezResource.max.ygs01" /></th>
+	    			<th style="width:120px" title="<spring:message code="ezResource.max.ygs01" />"> <spring:message code="ezResource.max.ygs01" /></th>
 	    			<th style="width:120px"> <spring:message code="ezResource.max.ygs02" /></th>
 	    			<th style="width:120px"> <spring:message code='ezResource.t367' /></th>
 	    			<th style="width:120px"> <spring:message code='ezPersonal.t1024' /></th>

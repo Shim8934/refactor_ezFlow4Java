@@ -1016,7 +1016,7 @@
 								<li style="width:68px;"><span onClick="pFilterDB='';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()"><spring:message code='ezAddress.t243' /></span></li>
 							</c:when>
 							<c:otherwise>
-								<li style="width:40px;"><span onClick="pFilterDB='';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()"><spring:message code='ezAddress.t243' /></span></li>
+								<li style="width:50px;"><span onClick="pFilterDB='';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()"><spring:message code='ezAddress.t243' /></span></li>
 							</c:otherwise>
 						</c:choose>
 						<c:if test="${userInfo.lang eq '1'}">
@@ -1089,7 +1089,7 @@
 								</li>
 							</c:when>
 							<c:otherwise>
-								<li style="width:40px"><span onClick="pFilterDB='INDEX_EN,ETC';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">
+								<li style="width:50px"><span onClick="pFilterDB='INDEX_EN,ETC';pOrderOption='S_NAME:0';pCurrentPage='1';Get_AddressList()">
 									<spring:message code='ezAddress.t259' /></span>
 								</li>
 							</c:otherwise>

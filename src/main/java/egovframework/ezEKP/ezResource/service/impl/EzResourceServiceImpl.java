@@ -4520,6 +4520,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 					
 					temp.setOwnerId(getScheduleListRept.get(i).getOwnerId());
 					temp.setBrdNm(getScheduleListRept.get(i).getBrdNm());
+					temp.setBrdNm2(getScheduleListRept.get(i).getBrdNm2());
 					temp.setCompanyID(getScheduleListRept.get(i).getCompanyID());
 					temp.setCount(count);
 					temp.setUsageTime(timeDiff);
@@ -4547,6 +4548,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 							ResOccuVO temp2 = new ResOccuVO();
 							temp2.setOwnerId(getResRepOccuList.get(i).getOwnerId());
 							temp2.setBrdNm(getResRepOccuList.get(i).getBrdNm());
+							temp2.setBrdNm2(getResRepOccuList.get(i).getBrdNm2());
 							temp2.setCompanyID(getResRepOccuList.get(i).getCompanyID());
 							temp2.setCount(getResRepOccuList.get(i).getCount());
 							temp2.setUsageTime(getResRepOccuList.get(i).getUsageTime());
@@ -4559,6 +4561,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 					ResOccuVO temp2 = new ResOccuVO();
 					temp2.setOwnerId(getResRepOccuList.get(i).getOwnerId());
 					temp2.setBrdNm(getResRepOccuList.get(i).getBrdNm());
+					temp2.setBrdNm2(getResRepOccuList.get(i).getBrdNm2());
 					temp2.setCompanyID(getResRepOccuList.get(i).getCompanyID());
 					temp2.setCount(getResRepOccuList.get(i).getCount());
 					temp2.setUsageTime(getResRepOccuList.get(i).getUsageTime());

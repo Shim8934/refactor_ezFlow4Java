@@ -112,7 +112,9 @@ public class EzAttitudeAdminController {
 	 * 관리자 근태관리 좌측 화면 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezAttitude/attitudeLeft.do", method = RequestMethod.GET)
-	public String attitudeLeft() {
+	public String attitudeLeft(@CookieValue("loginCookie") String loginCookie,Model model) {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		model.addAttribute("lang", userInfo.getLang());
 		return "/admin/ezAttitude/attitudeLeft";
 	}
 

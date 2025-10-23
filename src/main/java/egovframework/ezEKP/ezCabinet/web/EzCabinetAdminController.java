@@ -46,14 +46,14 @@ public class EzCabinetAdminController {
 	}
 	
 	@RequestMapping(value="/admin/ezcabinet/cabinetAdminLeft.do", method = RequestMethod.GET)
-	public String jspAdminLeft(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+	public String jspAdminLeft(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("jspAdminLeft start");
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
 		
 		if ((long)cabinetRestService.checkCabinetAdmin(request, user.getId()).get("code") != 0) {
 			return "cmm/error/adminDenied";
 		}
-		
+		model.addAttribute("lang", user.getLang());
 		logger.debug("jspAdminLeft end");
 		return "admin/ezCabinet/cabinetAdminLeft";
 	}

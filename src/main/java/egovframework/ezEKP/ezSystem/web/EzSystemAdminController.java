@@ -137,6 +137,7 @@ public class EzSystemAdminController {
 	@RequestMapping(value="/admin/ezSystem/systemLeftMenu.do", method = RequestMethod.GET)
 	public String systemLeftMenu(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		LoginVO user = commonUtil.userInfo(loginCookie);
 
 		if (userInfo == null) {
 			return "cmm/error/adminDenied";
@@ -174,6 +175,7 @@ public class EzSystemAdminController {
 		model.addAttribute("useFidoAccessMenu", useFidoAccessMenu);
 		model.addAttribute("useModuleUsage", useModuleUsage);
 		model.addAttribute("useSystemMonitor", useSystemMonitor);		
+		model.addAttribute("lang", user.getLang());		
 		
 		logger.debug("useIPAccessMenu=" + useIPAccessMenu);
 		

@@ -123,7 +123,7 @@
 		function addUserDL() {
 	        var popUrl = "/admin/ezEmail/mailAddDistributionList.do";
 			var param = "?companyId=" + companyId + "&userDL=add";
-			var popSizeW = 970;
+			var popSizeW = 1030;
 			var popSizeH = 740;
 			var feature = "dialogHeight:" + popSizeH + "px; dialogWidth:" + popSizeW + "px; scroll:no;status:no; help:no; edge:sunken";
 	        feature = feature + GetShowModalPosition(popSizeW, popSizeH);
@@ -155,7 +155,7 @@
 			var dlName = selectNode.getAttribute("data2");
 	        var popUrl = "/admin/ezEmail/mailAddDistributionList.do";
 			var param = "?companyId=" + companyId + "&userDL=modify" + "&cn=" + dlId + "&name=" + encodeURIComponent(dlName);
-			var popSizeW = 970;
+			var popSizeW = 1030;
 			var popSizeH = 750;
 			var feature = "dialogHeight:" + popSizeH + "px; dialogWidth:" + popSizeW + "px; scroll:no;status:no; help:no; edge:sunken";
 	        feature = feature + GetShowModalPosition(popSizeW, popSizeH);

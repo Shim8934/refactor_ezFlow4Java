@@ -162,7 +162,7 @@
 			<a class="imgbtn"><span><spring:message code='ezCabinet.t14'/></span></a>
 			<a class="imgbtn"><span><spring:message code='ezCabinet.t15'/></span></a>
 		</div>
-		
+		<input type="hidden" id="userLang" value="${lang}">
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('ezCabinet.lang', 'msg')          }"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezCabinet/cabinetTree.js')   }"></script>

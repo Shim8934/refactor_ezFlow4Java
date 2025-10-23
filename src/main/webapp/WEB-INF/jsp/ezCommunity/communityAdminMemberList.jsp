@@ -99,7 +99,7 @@
 		
 		<table class="mainlist" style ="width:100%;margin-top:5px">
 			<tr>
-			    <th style="width:40px;"><spring:message code = 'ezCommunity.t32' /></th>
+			    <th style="width:40px; text-align: center"><spring:message code = 'ezCommunity.t32' /></th>
 			    <th  style="width:120px;"><spring:message code = 'ezCommunity.t10' /></th>
 			    <th ><spring:message code = 'ezCommunity.t512' /></th>
 		  	</tr>

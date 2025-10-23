@@ -1145,7 +1145,7 @@
 		                <table style="width: 100%; border-spacing: 0px; border-collapse: collapse; border: none;" class="list_element">
 		                    <caption></caption>
 		                    <colgroup>
-		                        <col style="width: 90px;">
+		                        <col style="width: 110px;">
 		                        <col>
 		                    </colgroup>
 		                    <tr>
@@ -1208,7 +1208,7 @@
 		
 		<div id="searchpopup" class="popupwrap3" style="display:none;margin-bottom:70px">
 			<div class="popupJQLayer" style="padding-top:6px">
-				<div class="title"><spring:message code='ezWebFolder.t10' /><spring:message code='ezWebFolder.t123' /></div>
+				<div class="title"><spring:message code='ezWebFolder.t10' /> <spring:message code='ezWebFolder.t123' /></div>
 				<div id="close">
 		            <ul>
 		                <li><a rel="modal:close"><span onclick="searchOptionHidden()"></span></a></li>

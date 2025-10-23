@@ -649,7 +649,7 @@ public interface EzApprovalGService {
 //
 //	public void insertApprovConnSusin(String orgDocID, String formID, String companyID, int tenantID) throws Exception;
 
-    public List<PortalTopOtherCompanyAddJobVO> getAllCompanyList(String id, int tenantId) throws Exception;
+    public List<PortalTopOtherCompanyAddJobVO> getAllCompanyList(String id, int tenantId, String primary) throws Exception;
 
     public void setNonElecRecDocDelFlag(String docID, String companyID, int tenantID) throws Exception;
 

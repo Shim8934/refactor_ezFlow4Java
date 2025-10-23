@@ -1191,15 +1191,15 @@ var ezApproval_headerHide01 = "헤더 숨기기";
 var ezApproval_headerHide02 = "헤더 펼치기";
 
 /* 2024-12-23 이가은 - 전자결재 일괄배부 기능 추가 */
-var ezApproval_allBeabu01 = "일괄배부를 진행하시겠습니까?";
-var ezApproval_allBeabu02 = "합의문이나 회송된 문서는 대상에서 제외됩니다.";
+var ezApproval_allBeabu01 = "是否要进行批量分发？";
+var ezApproval_allBeabu02 = "协议文件和已回送的文件将被排除在外。";
 
 /* 전자결재 요약전 에디터 기능 */
-var strLangJIH_Summary01 = "요약전 저장이 완료되었습니다.";
-var strLangJIH_Summary02 = "내용이 비어있는 요약전을 저장할 수 없습니다.";
-var strLangJIH_Summary03 = "잘못된 접근입니다.";
-var strLangJIH_Summary04 = "요약전을 불러올 수 없습니다."
-var strLangJIH_Summary05 = "요약전 정보"
+var strLangJIH_Summary01 = "摘要传送已保存完成。";
+var strLangJIH_Summary02 = "无法保存内容为空的摘要传送。";
+var strLangJIH_Summary03 = "访问无效。";
+var strLangJIH_Summary04 = "无法加载摘要传送。"
+var strLangJIH_Summary05 = "摘要传送信息"
 
 /* 전자결재 사인 그리기 기능 */
 var strLangHIH_signDraw01 = "서명을 작성한 뒤 결재해주세요.";
@@ -1227,3 +1227,6 @@ var strLangKYJ_IsPublic03 = "审批线查看";
 
 var strLangJIHShareDox01 = "共享人和共享对象必须隶属于同一公司。";
 var strLangJIHShareDox02 = "请先选择共享人。";
+
+var strLangRetiree01 = "已经离职。\n将从收藏夹中排除。"
+var strLangRetiree02 = "已被撤销。\n将从收藏夹中排除。"

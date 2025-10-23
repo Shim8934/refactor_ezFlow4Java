@@ -404,7 +404,7 @@
                    	<li><span class="list_text" onclick="circular_Search()"><spring:message code="ezCircular.t8" /></span></li>
 		        </ul>
 		        <h2 class="off" id="compH2">
-                   	<span class="sub_iconLNB tree_plus"></span><span class="sub_iconLNB tree_manage" onclick="folder_Manage()"></span><span class="h2Title" onclick="openFolder()"><spring:message code="ezCircular.t7" /></span>
+                   	<span class="sub_iconLNB tree_plus"></span><span class="sub_iconLNB tree_manage" onclick="folder_Manage()"></span><span class="h2Title" onclick="openFolder()" title="<spring:message code='ezCircular.t7' />"><spring:message code="ezCircular.t7" /></span>
 		        </h2>
 		        <ul class="lnbUL off" id="compUL">
                     <div class="tree onlytree circularDoc" id="PostTreeView" style="display:none;"></div>

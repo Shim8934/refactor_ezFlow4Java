@@ -342,16 +342,16 @@
 				      		<th style="width:50px">
 		      			</c:when>
 		      			<c:otherwise>
-				      		<th style="width:70px">
+				      		<th style="width:80px">
 		      			</c:otherwise>
 		      		</c:choose>
 		      		<spring:message code='ezSchedule.t270'/></th> 
-		      		<th style="width:80px"><spring:message code='ezSchedule.t271'/></th> 
+		      		<th style="width:85px"><spring:message code='ezSchedule.t271'/></th> 
 		      		<th style="width:80px"><spring:message code='ezSchedule.t161'/></th> 
 		      		<th style="width:60%"><spring:message code='ezSchedule.t272'/></th>
 		      		<th style="width:140px"><spring:message code='ezSchedule.t273'/></th> 
-		      		<th style="width:140px"><spring:message code='ezSchedule.t274'/></th> 
-		      		<th style="width:140px"><spring:message code='ezSchedule.t275'/></th> 
+		      		<th style="width:170px"><spring:message code='ezSchedule.t274'/></th> 
+		      		<th style="width:170px"><spring:message code='ezSchedule.t275'/></th> 
 		    	</tr>
 		    	<c:forEach var="item" items="${scheduleList}">
 		    	<c:if test="${item.scheduleType == '9'}">

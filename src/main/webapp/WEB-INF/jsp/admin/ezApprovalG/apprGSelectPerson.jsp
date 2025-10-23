@@ -445,7 +445,7 @@
 		<table>
 			<tr style="height:33px; background-color: #f8f8fa; margin-bottom : 3px; padding: 0px; border: 1px solid #eaeaea;">
 			    <td style="padding-right:5px">
-			    	<div style="padding-top: 3px;">
+			    	<div style="padding-top: 3px; display:flex; align-items: center; gap:3px;">
 			    	<c:if test="${type != 'Proxy'}">
 					    <input type="text" id="deptkeyword" onKeyPress="deptsearch_press(event)" style="WIDTH:120px; height:22px; margin-left:5px;" maxLength="50">
 					    <a class="imgbtn" style="margin-right:5px;"><span onclick="deptsearch_click()"><spring:message code='ezPersonal.t71'/></span></a>

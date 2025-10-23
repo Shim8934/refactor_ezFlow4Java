@@ -31657,10 +31657,11 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 	}
 
 	@Override
-	public List<PortalTopOtherCompanyAddJobVO> getAllCompanyList(String userId, int tenantId) throws Exception {
+	public List<PortalTopOtherCompanyAddJobVO> getAllCompanyList(String userId, int tenantId, String primary) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userId", userId);
 		map.put("tenantId", tenantId);
+		map.put("primary", primary);
 		return ezApprovalGDAO.getAllCompanyList(map);
 	}
 

@@ -731,7 +731,7 @@
 					    xhr.onreadystatechange = function() {
                             if (xhr.readyState === 4) {
                                 if (xhr.status === 200) {
-                                    DivPopUpShow(410, 450, url);
+                                    DivPopUpShow(410, 470, url);
                                     // 레이어팝업 높이 수정 (430 -> 45) : 430의 경우 영어에서 잘림
                                 } else {
                                     alert("<spring:message code='ezTask.t200911' />");

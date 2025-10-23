@@ -503,6 +503,7 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 		map.put("v_BOARDGROUPNAME2", boardPropertyVO.getBoardGroupName2());
 		map.put("v_BOARDGROUPNAME3", boardPropertyVO.getBoardGroupName3());
 		map.put("v_BOARDGROUPNAME4", boardPropertyVO.getBoardGroupName4());
+		map.put("v_BOARDGROUPNAME6", boardPropertyVO.getBoardGroupName6());
 		map.put("v_ACCESSID", boardPropertyVO.getAccessID());
 		map.put("v_ACCESSNAME", boardPropertyVO.getAccessName());
 		map.put("v_ACCESSNAME2", boardPropertyVO.getAccessName2());
@@ -543,6 +544,7 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 		map.put("v_BOARDNAME2", boardPropertyVO.getBoardName2());
 		map.put("v_BOARDNAME3", boardPropertyVO.getBoardName3());
 		map.put("v_BOARDNAME4", boardPropertyVO.getBoardName4());
+		map.put("v_BOARDNAME6", boardPropertyVO.getBoardName6());
 		map.put("v_PARENTBOARDID", boardPropertyVO.getParentBoardID());
 		map.put("v_BOARDGROUPID", boardPropertyVO.getBoardGroupID());
 		map.put("v_ACCESSID", boardPropertyVO.getAccessID());
@@ -748,6 +750,7 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 		map.put("v_PBOARDNAME2", boardPropertyVO.getBoardName2());
 		map.put("v_PBOARDNAME3", boardPropertyVO.getBoardName3());
 		map.put("v_PBOARDNAME4", boardPropertyVO.getBoardName4());		
+		map.put("v_PBOARDNAME6", boardPropertyVO.getBoardName6());		
 		map.put("v_PPORTLET", boardPropertyVO.getPortlet());
 		map.put("v_PONELINEREPLY", boardPropertyVO.getOneLineReply());
 		map.put("v_PBACKGROUND", boardPropertyVO.getBackGround());
@@ -878,6 +881,9 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 				boardAttributeVO.setSn(i + "");
 				boardAttributeVO.setColName1(doc.getElementsByTagName("COLNAME1").item(i).getTextContent());
 				boardAttributeVO.setColName2(doc.getElementsByTagName("COLNAME2").item(i).getTextContent());
+				boardAttributeVO.setColName3(doc.getElementsByTagName("COLNAME3").item(i).getTextContent());
+				boardAttributeVO.setColName4(doc.getElementsByTagName("COLNAME4").item(i).getTextContent());
+				boardAttributeVO.setColName6(doc.getElementsByTagName("COLNAME6").item(i).getTextContent());
 				boardAttributeVO.setValue(doc.getElementsByTagName("VALUE").item(i).getTextContent());
 				boardAttributeVO.setColType(doc.getElementsByTagName("COLTYPE").item(i).getTextContent());
 				boardAttributeVO.setMust(doc.getElementsByTagName("MUST").item(i).getTextContent());
@@ -942,21 +948,19 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 			boardListHeaderVO.setTenantID(userInfo.getTenantId());
 			
 			for (int i = 0; i < colSize; i++) {
+				String name1 = doc.getElementsByTagName("NAME1").item(i).getTextContent();
+				String name2 = doc.getElementsByTagName("NAME2").item(i).getTextContent();
+				String name3 = doc.getElementsByTagName("NAME3").item(i).getTextContent();
+				String name4 = doc.getElementsByTagName("NAME4").item(i).getTextContent();
+				String name6 = doc.getElementsByTagName("NAME6").item(i).getTextContent();
+				
 				boardListHeaderVO.setSn(i + "");
 				boardListHeaderVO.setName1(doc.getElementsByTagName("NAME1").item(i).getTextContent());
 				boardListHeaderVO.setName2(doc.getElementsByTagName("NAME2").item(i).getTextContent());
+				boardListHeaderVO.setName3(doc.getElementsByTagName("NAME3").item(i).getTextContent());
+				boardListHeaderVO.setName4(doc.getElementsByTagName("NAME4").item(i).getTextContent());
+				boardListHeaderVO.setName6(doc.getElementsByTagName("NAME6").item(i).getTextContent());
 				
-				if (userInfo.getLang().equals("3")) {
-					boardListHeaderVO.setName3(doc.getElementsByTagName("NAME1").item(i).getTextContent());
-				} else {
-					boardListHeaderVO.setName3(doc.getElementsByTagName("NAME2").item(i).getTextContent());
-				}
-				
-				if (userInfo.getLang().equals("4")) {
-					boardListHeaderVO.setName4(doc.getElementsByTagName("NAME1").item(i).getTextContent());
-				} else {
-					boardListHeaderVO.setName4(doc.getElementsByTagName("NAME2").item(i).getTextContent());
-				}
 				boardListHeaderVO.setColName(doc.getElementsByTagName("COLNAME").item(i).getTextContent());
 				boardListHeaderVO.setWidth(doc.getElementsByTagName("WIDTH").item(i).getTextContent());
 				boardListHeaderVO.setName("Y");

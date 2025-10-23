@@ -240,6 +240,7 @@ public class EzNewPortalServiceImpl extends EgovAbstractServiceImpl implements E
 		map.put("userId", userId);
 		map.put("deptId", "");
 		map.put("mobile", type);
+		map.put("primaryLang", ezCommonService.getTenantConfig("PrimaryLang", tenantId));
 		
 		/**
 		 * 2018-11-21 신규작성
@@ -598,6 +599,7 @@ public class EzNewPortalServiceImpl extends EgovAbstractServiceImpl implements E
 		map.put("themeId", themeId);
 		map.put("portletLang", portletLang);
 		map.put("config", config);
+		map.put("primaryLang", ezCommonService.getTenantConfig("PrimaryLang", tenantId));
 		
 		String lang = commonUtil.getMultiData(portletLang, tenantId);
 		map.put("lang", lang);
@@ -3040,7 +3042,7 @@ public class EzNewPortalServiceImpl extends EgovAbstractServiceImpl implements E
 	}
 	
 	@Override
-	public List<PortletInfoVO> getPortletList(String companyId, int tenantId, int menuLang, String type) {
+	public List<PortletInfoVO> getPortletList(String companyId, int tenantId, int menuLang, String type) throws Exception {
 		logger.debug("getPortletList started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -3048,6 +3050,7 @@ public class EzNewPortalServiceImpl extends EgovAbstractServiceImpl implements E
 		map.put("tenantId", tenantId);
 		map.put("menuLang", menuLang);
 		map.put("portletType", type);
+		map.put("primaryLang", ezCommonService.getTenantConfig("PrimaryLang", tenantId));
 		
 		List<PortletInfoVO> portetList = ezNewPortalDAO.getPortletList(map);
 		

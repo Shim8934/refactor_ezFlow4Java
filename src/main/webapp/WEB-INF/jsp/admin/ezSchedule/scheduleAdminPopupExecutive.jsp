@@ -218,7 +218,7 @@
 				schedule_select_attendant_dialogArguments[0] = secretary;
 				schedule_select_attendant_dialogArguments[1] = ModifySecretary_Complete;
 
-				var OpenWin = window.open("/ezSchedule/scheduleSelectAttendant.do?gubun=config&type=executive&cn=" + userid + "&title=" + encodeURI("비서 목록"), "schedule_group_write", GetOpenWindowfeature(980, 670));
+				var OpenWin = window.open("/ezSchedule/scheduleSelectAttendant.do?gubun=config&type=executive&cn=" + userid + "&title=" + encodeURI("<spring:message code='ezSchedule.t234'/>"), "schedule_group_write", GetOpenWindowfeature(980, 670));
 				try { OpenWin.focus(); } catch (e) { }
 			}
 

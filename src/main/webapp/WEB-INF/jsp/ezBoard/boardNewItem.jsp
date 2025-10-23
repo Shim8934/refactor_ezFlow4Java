@@ -3270,24 +3270,12 @@
              			<!-- 추가 항목이 있을 경우 -->
              			<c:forEach var="boardAttributeVO" items="${boardAttributeListVO}" step="1" varStatus="status">
              				<tr>
-             					<c:choose>
-             						<c:when test="${extenLang == 1}">
-		             					<th>
-											${boardAttributeVO.colName1}
-											<c:if test="${boardAttributeVO.must == 'Y'}">
-												<span style="color:red"> *</span>
-											</c:if>
-										</th>
-             						</c:when>
-             						<c:otherwise>
-             							<th>
-											${boardAttributeVO.colName2}
-											<c:if test="${boardAttributeVO.must == 'Y'}">
-												<span style="color:red"> *</span>
-											</c:if>
-										</th>
-             						</c:otherwise>
-             					</c:choose>
+								<th>
+									${boardAttributeVO.colName1}
+									<c:if test="${boardAttributeVO.must == 'Y'}">
+										<span style="color:red"> *</span>
+									</c:if>
+								</th>
              					<c:choose>
              						<c:when test="${boardAttributeVO.colType == 'radio'}">
 						                <td colspan="3">
@@ -3373,12 +3361,12 @@
 	                    </c:if>
 						<c:if test = "${ (mode eq 'modify' && useVersion eq 'Y' && version ne '') || (historyModify eq 'false' && useVersion eq 'Y') }">
 						<tr id = "tr_version">
-							<th>버전</th>
+							<th><spring:message code='ezBoard.versionManage.hth01' /></th>
 							<td colspan = 3>
 								<input type = "text" id = "majorVersion" style = "width : 25px; text-align : center;" maxLength = 2 />
 								<dot style = "vertical-align : bottom">.</dot>
 								<input type = "text" id = "minorVersion" style = "width : 25px; text-align : center;" maxLength = 2 />
-								* 숫자만 입력 가능합니다.
+								<spring:message code='ezBoard.versionManage.msg12' />
 							</td>
 						</tr>
 						</c:if>

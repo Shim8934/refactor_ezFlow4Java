@@ -35,7 +35,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
-import java.util.Set;
 import java.util.StringJoiner;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -47,8 +46,6 @@ import java.time.format.DateTimeFormatter;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 
 import egovframework.ezEKP.ezBoard.vo.BoardKeywordVO;
 import egovframework.ezEKP.ezBoard.vo.BoardReplyAttachVO;
@@ -353,7 +350,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			BoardListHeaderVO disLikeAddListHeaderVO = new BoardListHeaderVO();
 			disLikeAddListHeaderVO.setColName("DISLIKECOUNT");
 			disLikeAddListHeaderVO.setName(egovMessageSource.getMessage("ezBoard.kmh07", userInfo.getLocale()));
-			disLikeAddListHeaderVO.setWidth("50");
+			disLikeAddListHeaderVO.setWidth("70");
 			listHeaderListVO.add(disLikeAddListHeaderVO);
 		}
 
@@ -891,7 +888,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			BoardListHeaderVO disLikeAddListHeaderVO = new BoardListHeaderVO();
 			disLikeAddListHeaderVO.setColName("DISLIKECOUNT");
 			disLikeAddListHeaderVO.setName(egovMessageSource.getMessage("ezBoard.kmh07", userInfo.getLocale()));
-			disLikeAddListHeaderVO.setWidth("50");
+			disLikeAddListHeaderVO.setWidth("70");
 			listHeaderListVO.add(disLikeAddListHeaderVO);
 		}
 		
@@ -1566,7 +1563,8 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		
 		map.put("itemID", itemID);
 		map.put("mode", mode);
-		map.put("lang", commonUtil.getMultiData(lang, tenantID));
+		map.put("primaryLang", commonUtil.getMultiData(lang, tenantID));
+		map.put("lang", lang);
 		map.put("tenantID", tenantID);
 		
 		String tempString = ezBoardDAO.getBoardItem(map);
@@ -3095,6 +3093,8 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 				result.append("<VALUE>" + commonUtil.cleanValue(brdBoardTreeList.get(i).getBoardName3()) + "</VALUE>");
 			} else if (pStrLang.equals("4")) {
 				result.append("<VALUE>" + commonUtil.cleanValue(brdBoardTreeList.get(i).getBoardName4()) + "</VALUE>");
+			} else if (pStrLang.equals("6")) {
+				result.append("<VALUE>" + commonUtil.cleanValue(brdBoardTreeList.get(i).getBoardName6()) + "</VALUE>");
 			}
 			
 			result.append("<STYLE><![CDATA[]]></STYLE>");
@@ -3108,6 +3108,8 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 				result.append("<DATA2>" + commonUtil.cleanValue(brdBoardTreeList.get(i).getBoardName3()) + "</DATA2>");
 			} else if (pStrLang.equals("4")) {
 				result.append("<DATA2>" + commonUtil.cleanValue(brdBoardTreeList.get(i).getBoardName4()) + "</DATA2>");
+			} else if (pStrLang.equals("6")) {
+				result.append("<DATA2>" + commonUtil.cleanValue(brdBoardTreeList.get(i).getBoardName6()) + "</DATA2>");
 			}
 			
 			result.append("<DATA3>" + pRootBoardID + "</DATA3>");

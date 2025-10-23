@@ -282,7 +282,7 @@
    		<%-- <h2><spring:message code="ezJournal.t115" /></h2> --%>
    		<span class="txt"><spring:message code="ezJournal.t117" /></span>
        	<br />    
-       	<table class="content" style="width: 480px;margin-top:5px">
+       	<table class="content" style="width: 500px;margin-top:5px">
            	<tr>
                	<th><spring:message code="ezJournal.t68" /></th>
               		<td>               

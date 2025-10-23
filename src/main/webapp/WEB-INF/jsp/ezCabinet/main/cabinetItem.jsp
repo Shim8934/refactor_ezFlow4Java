@@ -190,7 +190,7 @@
 		</div>
 		
 		<iframe name="attachFrame" id="attachFrame" style="display: none;"></iframe>
-		
+		<input type="hidden" id="userLang" value="${lang}">
 		<script type="text/javascript" src="${util.addVer('ezCabinet.lang', 'msg')          }"></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')             }"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>

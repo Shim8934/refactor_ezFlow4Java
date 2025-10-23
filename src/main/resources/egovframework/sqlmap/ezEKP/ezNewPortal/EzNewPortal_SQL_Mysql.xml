@@ -543,6 +543,7 @@ SELECT
     quicklinkname, 
     quicklinkname2, 
     quicklinkname3, 
+    quicklinkname6, 
     linktype,
     linktypeurl,
     url,
@@ -954,10 +955,30 @@ AND
                 A.menu_type as menuType
             FROM
                 tbl_portal_menu AS A
-            JOIN
-                tbl_portal_menu_name AS NAME
-            ON
-                A.menu_id = NAME.menu_id
+			JOIN (
+			    SELECT *
+			    FROM (
+			        SELECT *,
+			               ROW_NUMBER() OVER (
+			                   PARTITION BY menu_id
+			                   ORDER BY CASE WHEN menu_lang = #langType# THEN 0
+			                                 WHEN menu_lang = #primaryLang# THEN 1
+			                                 ELSE 2
+			                            END
+			               ) AS rn
+					FROM
+							tbl_portal_menu_name
+					WHERE
+							menu_lang IN (#langType#, #primaryLang#, 1)
+					AND
+							company_id = #companyId#
+					AND
+							tenant_id = #tenantId#
+			    ) t
+			    WHERE rn = 1
+			) AS NAME
+			ON
+				A.menu_id = NAME.menu_id
             JOIN
                 TBL_PORTAL_MENU_COMP AS COMP
             ON
@@ -1136,8 +1157,6 @@ AND
                 NAME.tenant_id = #tenantId#
             AND
                 NAME.company_id = #companyId#
-            AND
-                NAME.menu_lang = #langType#
             AND
                 COMP.menu_used = 1        
             AND
@@ -2242,8 +2261,24 @@ INSERT INTO TBL_PORTAL_THEME_USER (
 		<![CDATA[
 			FROM
 				TBL_PORTAL_PORTLET AS A
-			JOIN
-				TBL_PORTAL_PORTLET_NAME AS NAME
+			JOIN (
+			    SELECT *
+			    FROM (
+			        SELECT *,
+			               ROW_NUMBER() OVER (
+			                   PARTITION BY portlet_id
+			                   ORDER BY CASE WHEN portlet_lang= #portletLang# THEN 0
+			                                 WHEN portlet_lang= #primaryLang# THEN 1
+			                                 ELSE 2
+			                            END
+			               ) AS rn
+			        FROM TBL_PORTAL_PORTLET_NAME
+			        WHERE tenant_id = #tenantId#
+			          AND company_id = #companyId#
+			          AND portlet_lang IN (#portletLang#, 1)
+			    ) t
+			    WHERE rn = 1
+			) AS NAME
 			ON
 				A.portlet_id = NAME.portlet_id
 			AND
@@ -2478,8 +2513,6 @@ INSERT INTO TBL_PORTAL_THEME_USER (
 				AND
 					NAME.company_id = #companyId#
 				AND
-					NAME.portlet_lang = #portletLang#
-				AND
 					(COMP.portlet_used = 1 && THEME.portlet_used = 1)
 				AND
 					(AUTH.access_yn IS NOT NULL)
@@ -2530,8 +2563,6 @@ INSERT INTO TBL_PORTAL_THEME_USER (
 					NAME.tenant_id = #tenantId#
 				AND
 					NAME.company_id = #companyId#
-				AND
-					NAME.portlet_lang = #portletLang#
 				AND
 					(COMP.portlet_used = 1 && THEME.portlet_used = 1)
 				AND
@@ -2602,20 +2633,20 @@ INSERT INTO TBL_PORTAL_THEME_USER (
 		</isEqual>
 		<isEqual property="lang" compareValue="4">
 		<![CDATA[
-			B.theme_name2 AS themename,
+			B.theme_name4 AS themename,
 			B.theme_content4 AS themecontent,
 		]]>
 		</isEqual>
 		<isEqual property="lang" compareValue="5">
 		<![CDATA[
-			B.theme_name2 AS themename,
-			B.theme_content4 AS themecontent,
+			B.theme_name5 AS themename,
+			B.theme_content5 AS themecontent,
 		]]>
 		</isEqual>
 		<isEqual property="lang" compareValue="6">
 		<![CDATA[
-			B.theme_name2 AS themename,
-			B.theme_content4 AS themecontent,
+			B.theme_name6 AS themename,
+			B.theme_content6 AS themecontent,
 		]]>
 		</isEqual>
 		<![CDATA[
@@ -3097,26 +3128,66 @@ SELECT c_id,
 		(A.COMPANY_ID = D.COMPANYID OR TRIM(D.COMPANYID) = '' OR D.COMPANYID IS NULL)
 	AND
 		A.TENANT_ID = D.TENANT_ID
-	LEFT JOIN
-		TBL_PORTAL_MENU_NAME E
+	LEFT JOIN (
+	    SELECT
+				MENU_NAME,
+				menu_id
+	    FROM (
+		        SELECT
+						MENU_NAME,
+						menu_id,
+						ROW_NUMBER() OVER (
+							PARTITION BY menu_id
+							ORDER BY CASE
+								WHEN menu_lang = #menuLang# THEN 0
+								WHEN menu_lang = #primaryLang# THEN 1
+								ELSE 2
+							END
+						) AS rn
+				FROM
+						tbl_portal_menu_name
+				WHERE
+						menu_lang IN (#menuLang#, #primaryLang#, 1)
+				AND
+						company_id = #companyId#
+				AND
+						tenant_id = #tenantId#
+		) t
+		WHERE
+				rn = 1
+	) E
 	ON
 		A.menu_id = E.menu_id
-	AND
-		A.COMPANY_ID = E.COMPANY_ID
-	AND
-		A.tenant_id = E.tenant_id
-	AND
-		E.menu_lang = #menuLang#
-	LEFT JOIN
-		TBL_PORTAL_PORTLET_NAME F
+	LEFT JOIN (
+		SELECT
+				PORTLET_ID,
+				PORTLET_NAME
+		FROM (
+				SELECT
+						PORTLET_ID,
+						PORTLET_NAME,
+						ROW_NUMBER() OVER (
+							PARTITION BY portlet_id
+							ORDER BY CASE
+								WHEN portlet_lang= #menuLang# THEN 0
+								WHEN portlet_lang= #primaryLang# THEN 1
+								ELSE 2
+							END
+						) AS rn
+				FROM
+						TBL_PORTAL_PORTLET_NAME
+				WHERE
+						portlet_lang IN (#menuLang#, #primaryLang#, 1)
+				AND
+						tenant_id = #tenantId#
+				AND
+						company_id = #companyId#
+		) t
+		WHERE
+				rn = 1
+	) F
 	ON
-		A.COMPANY_ID = F.COMPANY_ID
-	AND
-		A.TENANT_ID = F.TENANT_ID
-	AND
 		A.PORTLET_ID = F.PORTLET_ID
-	AND
-		F.PORTLET_LANG = #menuLang#
 	LEFT JOIN
 		TBL_SYSTEMCONFIG H
 	ON

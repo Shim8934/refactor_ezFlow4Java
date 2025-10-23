@@ -334,8 +334,8 @@
                 A.circularuserid,
                 A.circularid,
                 A.memberid,
-                A.membername,
-                A.membername2,
+                B.displayname as membername,
+                B.displayname2 as membername2,
                 A.status,
                 IFNULL(DATE_ADD(DATE_FORMAT(A.confirmdate, '%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE), '') AS confirmdate,
                 A.updatestatus,
@@ -452,20 +452,30 @@
 				BB.company,
 				BB.description,
 				BB.title,
-				A.membername,
+				CASE WHEN #primary# = '1' THEN A.membername ELSE A.membername2 END AS membername,
 				BB.mail
 			FROM
 				TBL_CIRCULAR_BMUSER A
 			LEFT JOIN
 				( SELECT 
-					D.CN, D.DISPLAYNAME, D.COMPANY, D.title, D.MAIL, D.DESCRIPTION
+					D.CN,
+					CASE WHEN #primary# = '1' THEN D.DISPLAYNAME ELSE D.DISPLAYNAME2 END AS DISPLAYNAME,
+					CASE WHEN #primary# = '1' THEN D.COMPANY ELSE D.COMPANY2 END AS COMPANY,
+					CASE WHEN #primary# = '1' THEN D.TITLE ELSE D.TITLE2 END AS TITLE,
+					D.MAIL,
+					CASE WHEN #primary# = '1' THEN D.DESCRIPTION ELSE D.DESCRIPTION2 END AS DESCRIPTION
 				FROM 
 					TBL_USERMASTER D
 				WHERE 
 					D.TENANT_ID = #tenantID# AND D.PHYSICALDELIVERYOFFICENAME = #companyID#
 				UNION ALL
 				SELECT 
-					B.cn, B.DISPLAYNAME, C.EXTENSIONATTRIBUTE3 as COMPANY, a.title, b.mail, C.DISPLAYNAME AS DESCRIPTION
+					B.cn,
+					CASE WHEN #primary# = '1' THEN B.DISPLAYNAME ELSE B.DISPLAYNAME2 END AS DISPLAYNAME,
+					CASE WHEN #primary# = '1' THEN C.EXTENSIONATTRIBUTE3 ELSE C.COMPNM2 END AS COMPANY,
+					CASE WHEN #primary# = '1' THEN A.TITLE ELSE A.TITLE2 END AS TITLE,
+					b.mail,
+					CASE WHEN #primary# = '1' THEN C.DISPLAYNAME ELSE C.DISPLAYNAME2 END AS DESCRIPTION
 				FROM 
 					TBL_USERMASTER B 
 				INNER JOIN 
@@ -1568,7 +1578,7 @@
 	<select id="EzCircularDAO.getListHeader" parameterClass="Map" resultClass="CircularListHeaderVO">
 		<![CDATA[
 			SELECT 
-				IFNULL(CASE #lang# WHEN '1' THEN name1 WHEN '2' THEN name2 WHEN '3' THEN name3 WHEN '4' THEN name4 END, '') name,
+				IFNULL(CASE #lang# WHEN '1' THEN name1 WHEN '2' THEN name2 WHEN '3' THEN name3 WHEN '4' THEN name4 WHEN '6' THEN name6 END, '') name,
 				width,
 				colname
 			FROM 
@@ -1938,14 +1948,26 @@
 				TBL_CIRCULAR_USER A
 			RIGHT JOIN 
 				(SELECT 
-					D.CN, D.DISPLAYNAME, D.COMPANY, D.title, D.MAIL, D.DESCRIPTION, D.DEPARTMENT
+					D.CN,
+					CASE WHEN #primary# = '1' THEN D.DISPLAYNAME ELSE D.DISPLAYNAME2 END AS DISPLAYNAME,
+					CASE WHEN #primary# = '1' THEN D.COMPANY ELSE D.COMPANY2 END AS COMPANY,
+					CASE WHEN #primary# = '1' THEN D.title ELSE D.title2 END AS title,
+					D.MAIL,
+					CASE WHEN #primary# = '1' THEN D.DESCRIPTION ELSE D.DESCRIPTION2 END AS DESCRIPTION,
+					D.DEPARTMENT
 				FROM 
 					TBL_USERMASTER D
 				WHERE 
 					D.TENANT_ID = #tenantID# AND D.PHYSICALDELIVERYOFFICENAME = #companyID#
 				UNION ALL
 				SELECT 
-					B.cn, B.DISPLAYNAME, C.EXTENSIONATTRIBUTE3 as COMPANY, a.title, b.mail, C.DISPLAYNAME AS DESCRIPTION, A.DEPTID
+					B.cn,
+					CASE WHEN #primary# = '1' THEN B.DISPLAYNAME ELSE B.DISPLAYNAME2 END AS DISPLAYNAME,
+					CASE WHEN #primary# = '1' THEN C.EXTENSIONATTRIBUTE3 ELSE C.COMPNM2 END AS COMPANY,
+					CASE WHEN #primary# = '1' THEN A.title ELSE A.title2 END AS title,
+					b.mail,
+					CASE WHEN #primary# = '1' THEN C.DISPLAYNAME ELSE C.DISPLAYNAME2 END AS DESCRIPTION,
+					A.DEPTID
 				FROM 
 					TBL_USERMASTER B 
 				INNER JOIN 

@@ -182,7 +182,7 @@
 				        </ul>
 						<%-- 2023-06-14 황인경 - 디자인 개선 > 업무일지 > 좌측메뉴 > '수신일지함', '임시보관함' 태그 구조 수정, LNB 이미지 삭제 --%>
 						<h2 class="off" id="recvFolderH2">
-							<span class="sub_iconLNB tree_plus"></span><span class="h2Title" listType='recv' onClick="goJournalList(this);" id="recvFolder"><spring:message code='ezJournal.t51'/>
+							<span class="sub_iconLNB tree_plus"></span><span class="h2Title" listType='recv' onClick="goJournalList(this);" id="recvFolder" title="<spring:message code='ezJournal.t51'/>"><spring:message code='ezJournal.t51'/>
 								<c:if test="${recvCount ne 0 }">
 			                   		<span id="recvCount">&nbsp;&nbsp;${recvCount}</span>
 			                   	</c:if>
@@ -193,7 +193,7 @@
 						</h2>
 					</div>
 <%-- 					<ul id="option" class="lnbUL">
-	                    	<li><span class="sub_iconLNB tree_businessLog_receive"></span><span class="list_text" listType='recv' onClick="goJournalList(this);"><spring:message code='ezJournal.t51'/><c:if test="${recvCount ne 0 }"><span id="recvCount">&nbsp;&nbsp;${recvCount}</span></c:if></span></li>
+	                    	<li><span class="sub_iconLNB tree_businessLog_receive"></span><span class="list_text" listType='recv' onClick="goJournalList(this);" title="<spring:message code='ezJournal.t51'/>"><spring:message code='ezJournal.t51'/><c:if test="${recvCount ne 0 }"><span id="recvCount">&nbsp;&nbsp;${recvCount}</span></c:if></span></li>
 	                    	<li><span class="sub_iconLNB tree_outbox"></span><span class="list_text" listType='temp' onClick="goJournalList(this);"><spring:message code='ezJournal.t52'/></span></li>
 	 		        	</ul> --%>
 				</div>

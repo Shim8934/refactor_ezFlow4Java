@@ -425,16 +425,29 @@
             		success : function(result) {
             			printCircularUserList = "<colgroup><col width='20%' /><col width='60%' /><col width='20%' /></colgroup>";    			
             			list = result.circularUserList;
+            			primaryLang = result.userInfo.primary;
             			list.forEach(function(vo, index) {
             				printCircularUserList += "<tr class='printCircularUser' circularUserID='" + vo.memberID + "' style='height:40px;text-align:left;vertical-align:middle;'>";
             				printCircularUserList += "<th style='border-top:0px;border-bottom:1px solid #e2e2e2;border-right:0px;border-left:0px;text-align:left;background-color:white;'>";
             				
             				if (vo.status == 1) {
             					//확인 이미지
-            					printCircularUserList += "<img src='/images/ImgIcon/msg-rd.png' style='vertical-align:middle;'/>&nbsp;" + vo.memberName + "&nbsp;";
+            					printCircularUserList += "<img src='/images/ImgIcon/msg-rd.png' style='vertical-align:middle;'/>&nbsp;";
+								
+								if (primaryLang == "1") {
+									printCircularUserList += vo.memberName + "&nbsp;";
+								} else {
+									printCircularUserList += vo.memberName2 + "&nbsp;";
+								}
             				} else {
             					//미확인 이미지
-            					printCircularUserList += "<img src='/images/ImgIcon/msg-unrd.png' style='vertical-align:middle;'/>&nbsp;" + vo.memberName + "&nbsp;";
+            					printCircularUserList += "<img src='/images/ImgIcon/msg-unrd.png' style='vertical-align:middle;'/>&nbsp;";
+
+								if (primaryLang == "1") {
+									printCircularUserList += vo.memberName + "&nbsp;";
+								} else {
+									printCircularUserList += vo.memberName2 + "&nbsp;";
+								}
             				}
             				
             				printCircularUserList += "</th>";
@@ -457,7 +470,13 @@
             			list = result.circularCommentList ;
             			list.forEach(function(vo, index) {
             				printCircularCommentList  = "<tr class='printCircularComment' circularUserID='" + vo.circularUserID + "' memberID='" + vo.memberID + "' circularCommentID='" + vo.circularCommentID + "' circularCommentStatus='" + vo.status + "'>";
-            				printCircularCommentList += "<td style='padding-left:3px; border-bottom:1px solid #e2e2e2; background-color:#fafafa;'>&nbsp;&nbsp;<img src='/images/ImgIcon/commentRe.gif' style='vertical-align:middle;'/>&nbsp;" + vo.memberName + "</td>";
+            				printCircularCommentList += "<td style='padding-left:3px; border-bottom:1px solid #e2e2e2; background-color:#fafafa;'>&nbsp;&nbsp;<img src='/images/ImgIcon/commentRe.gif' style='vertical-align:middle;'/>&nbsp;";
+							primaryLang = result.userInfo.primary;
+							if (primaryLang == "1") {
+								printCircularCommentList += vo.memberName + "</td>";
+							} else {
+								printCircularCommentList += vo.memberName2 + "</td>";
+							}
             				printCircularCommentList += "<td style='text-align:left;padding:8px; border-bottom:1px solid #e2e2e2; background-color:#fafafa;'>" + vo.circularComment + "&nbsp;&nbsp;";
             				
             				printCircularCommentList += "</td>";

@@ -3,6 +3,7 @@ package egovframework.ezEKP.ezResource.vo;
 public class ResOccuVO {
 	private String ownerId;
 	private String brdNm;
+    private String brdNm2;
 	private int count;
 	private long usageTime;
 	private String companyID;
@@ -79,8 +80,17 @@ public class ResOccuVO {
 	public void setCompanyName(String companyName) {
 		this.companyName = companyName;
 	}
-	public ResOccuVO(String ownerId, String brdNm, int count, long usageTime, String companyID, String startDate,
-			String endDate, int num, int pNum, String occupancy, String companyName) {
+
+    public String getBrdNm2() {
+        return brdNm2;
+    }
+
+    public void setBrdNm2(String brdNm2) {
+        this.brdNm2 = brdNm2;
+    }
+
+    public ResOccuVO(String ownerId, String brdNm, int count, long usageTime, String companyID, String startDate,
+                     String endDate, int num, int pNum, String occupancy, String companyName) {
 		super();
 		this.ownerId = ownerId;
 		this.brdNm = brdNm;

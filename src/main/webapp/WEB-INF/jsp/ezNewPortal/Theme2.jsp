@@ -294,7 +294,8 @@
         </article>
         <article class="exellentEmployee">
 			<dl class="portlet_title">
-	            <dt class="portletText">
+				<spring:message code='ezNewPortal.t127' var="t127"/> <spring:message code='ezNewPortal.t128' var="t128"/>
+	            <dt class="portletText" title="<c:if test='${userLang2 eq 6}'>${t127} ${t128}</c:if>">
 	                <span></span><spring:message code='ezNewPortal.t127'/> <spring:message code='ezNewPortal.t128'/>
 	            </dt>
 	        </dl>

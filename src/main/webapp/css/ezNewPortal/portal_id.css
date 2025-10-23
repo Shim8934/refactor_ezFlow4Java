@@ -1,0 +1,26 @@
+﻿@charset "utf-8";
+
+html,input,button,select,textarea{font-family:'Noto Sans KR', sans-serif, 'malgun gothic', 'arial', 'verdana';}
+.profile_div{width:250px;}
+.filter_pop .check_scroll{max-height:270px;}
+.filter_pop .check_list .check_ul li{width:50%;}
+.lnb_menu_setting .set_btn span{width:55px;}
+.my_info_wrap .my_info{padding-left:35px; background:url(/images/ezNewPortal/info_profile.svg) no-repeat 0 center / 17px 17px; max-width:calc(99.999% - 300px); display:flex;}
+.top_info_area ul li{width:40%;}
+.top_info_area ul li:last-child{width:60%;}
+@media (max-width:1570px) {
+	.top_info_area ul li{width:60%;}
+	.top_info_area ul li:last-child{width:40%;}
+}
+.btn_prev span img, .btn_next span img{margin-top:4px;}
+.quickMenuBtn{width:710px !important;}
+
+#theme3Body .top_info_area ul li > span > span{white-space:normal; word-break:break-word; max-width:100%; height:auto; line-height:13px;}
+#theme3Body .my_info_wrap .portal_setting{height:44px; line-height:16px; display:flex; justify-content:center; align-items:center;}
+#theme3Body .my_info_wrap .config_setting{height:44px; line-height:16px; display:flex; justify-content:center; align-items:center; width: 88px;}
+
+.my_info_wrap .news_setting{margin-left: 20px;}
+
+.voteBtn {width: 70px;}
+
+.slideImageSetting{right: 74px !important;}

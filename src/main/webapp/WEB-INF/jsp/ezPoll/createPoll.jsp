@@ -17,7 +17,7 @@
 		#Sdatepicker:disabled {
 			background-color:white;
 		}
-		.qstSettingSpan{width: 130px !important;}
+		.qstSettingSpan{width: 150px !important;}
 
 		.attachInnerNotice_p_on {
 			text-align: center;

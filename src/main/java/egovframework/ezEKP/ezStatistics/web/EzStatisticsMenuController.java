@@ -72,6 +72,7 @@ public class EzStatisticsMenuController {
 		model.addAttribute("companyID", topId);
 		model.addAttribute("deptID", userInfo.getDeptID());
 		model.addAttribute("adminOrganVal", adminOrganVal);
+		model.addAttribute("lang", userInfo.getPrimary());
 
 		logger.info("statisticsMenuUser ended");
 		return "ezStatistics/statisticsMenuUser";

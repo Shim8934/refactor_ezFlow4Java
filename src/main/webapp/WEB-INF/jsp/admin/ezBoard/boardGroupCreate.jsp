@@ -31,6 +31,7 @@
 				var name2 = $.trim($("#txtNewGroupName2").val());
 				var name3 = $.trim($("#txtNewGroupName3").val());
 				var name4 = $.trim($("#txtNewGroupName4").val());		
+				var name6 = $.trim($("#txtNewGroupName6").val());		
 				
 				if (document.getElementById("allGroupBoard") != null) {
 					var isAllGroupBoard = document.getElementById("allGroupBoard").checked;
@@ -43,7 +44,7 @@
 					return;
 				}
 				
-				if (hasSpecialCharacters(name1) || hasSpecialCharacters(name2) || hasSpecialCharacters(name3) || hasSpecialCharacters(name4)){
+				if (hasSpecialCharacters(name1) || hasSpecialCharacters(name2) || hasSpecialCharacters(name3) || hasSpecialCharacters(name4) || hasSpecialCharacters(name6)){
 					alert("<spring:message code='ezBoard.t120'/>");
 					return;
 				}
@@ -57,6 +58,9 @@
 				}
 				if (name4 == "") {
 					name4 = name1;
+				}
+				if (name6 == "") {
+					name6 = name1;
 				}
 				
 				if (isAllGroupBoard != null && isAllGroupBoard == true) {
@@ -75,6 +79,7 @@
 						boardGroupName2 : encodeURIComponent(name2),
 						boardGroupName3 : encodeURIComponent(name3),
 						boardGroupName4 : encodeURIComponent(name4),
+						boardGroupName6 : encodeURIComponent(name6),
 						companyID : selectedComp,
 						guBun : guBun
 					},
@@ -113,6 +118,12 @@
 				          		<tr class="secondary">
 				            		<th><c:out value='${lang_quaternary}' /></th>
 				            		<td><input type="text" name="textfield" id="txtNewGroupName4" style="width:100%" maxlength=20></td>
+				          		</tr>
+				          	</c:if>
+			          		<c:if test="${useIndonesian == 'YES'}">
+				          		<tr class="secondary">
+				            		<th><c:out value='${lang_senary}' /></th>
+				            		<td><input type="text" name="textfield" id="txtNewGroupName6" style="width:100%" maxlength=20></td>
 				          		</tr>
 				          	</c:if>
 		          		</c:if>

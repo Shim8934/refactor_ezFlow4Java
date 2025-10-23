@@ -211,6 +211,10 @@ public class EzBoardAdminController extends EzFileMngUtil {
 		String lang_quaternary = ezCommonService.getTenantConfig("LangQuaternary" + lang, userInfo.getTenantId());
 		String useJapanese = ezCommonService.getTenantConfig("useJapanese", userInfo.getTenantId());
 		String useChinese = ezCommonService.getTenantConfig("useChinese", userInfo.getTenantId());
+		// 2025-07-02 조수빈 - 기존 방식에 맞추어 인도네시아어 사용 여부에 따라 게시판 그룹 이름 표출/미표출 구현
+		String lang_Senary = ezCommonService.getTenantConfig("LangSenary" + lang, userInfo.getTenantId());
+		String useIndonesian = ezCommonService.getTenantConfig("useIndonesian", userInfo.getTenantId());
+		
 		
 		/* 2018-10-15 홍승비 - 관리자단 게시판그룹생성 진입 시 전체관리자 여부 확인 */
 		if (commonUtil.isAdmin(userInfo.getId(), userInfo.getTenantId(), rollInfo, "c")) {
@@ -223,6 +227,8 @@ public class EzBoardAdminController extends EzFileMngUtil {
 		model.addAttribute("lang_quaternary", lang_quaternary);
 		model.addAttribute("useJapanese", useJapanese);
 		model.addAttribute("useChinese", useChinese);
+		model.addAttribute("lang_senary", lang_Senary);
+		model.addAttribute("useIndonesian", useIndonesian);
 
 		logger.debug("boardGroupCreate ended");
 		return "admin/ezBoard/boardGroupCreate";
@@ -242,6 +248,7 @@ public class EzBoardAdminController extends EzFileMngUtil {
 		String groupName2 = URLDecoder.decode(boardPropertyVO.getBoardGroupName2(), "utf-8");
 		String groupName3 = URLDecoder.decode(boardPropertyVO.getBoardGroupName3(), "utf-8");
 		String groupName4 = URLDecoder.decode(boardPropertyVO.getBoardGroupName4(), "utf-8");
+		String groupName6 = URLDecoder.decode(boardPropertyVO.getBoardGroupName6(), "utf-8");
 		String accessName1 = user.getDeptName1() + "(" + user.getCompanyName1()	+ ", " + user.getDeptName1() + ")";
 		String accessName2 = user.getDeptName2() + "(" + user.getCompanyName2()	+ ", " + user.getDeptName2() + ")";
 		String uID = user.getId();
@@ -252,6 +259,7 @@ public class EzBoardAdminController extends EzFileMngUtil {
 		boardPropertyVO.setBoardGroupName2(groupName2);
 		boardPropertyVO.setBoardGroupName3(groupName3);
 		boardPropertyVO.setBoardGroupName4(groupName4);
+		boardPropertyVO.setBoardGroupName6(groupName6);
 		boardPropertyVO.setAccessID(uID);
 		boardPropertyVO.setAccessName(accessName1);
 		boardPropertyVO.setAccessName2(accessName2);
@@ -287,6 +295,9 @@ public class EzBoardAdminController extends EzFileMngUtil {
 		String lang_quaternary = ezCommonService.getTenantConfig("LangQuaternary" + lang, userInfo.getTenantId());
 		String useJapanese = ezCommonService.getTenantConfig("useJapanese", userInfo.getTenantId());
 		String useChinese = ezCommonService.getTenantConfig("useChinese", userInfo.getTenantId());
+		// 2025-07-02 조수빈 - 기존 방식에 맞추어 인도네시아어 사용 여부에 따라 게시판 그룹 이름 표출/미표출 구현
+		String lang_Senary = ezCommonService.getTenantConfig("LangSenary" + lang, userInfo.getTenantId());
+		String useIndonesian = ezCommonService.getTenantConfig("useIndonesian", userInfo.getTenantId());
 
 		BoardPropertyVO boardPropertyVO = ezBoardService.getBoardProperty(parentBoardID, userInfo.getTenantId());
 		
@@ -303,6 +314,9 @@ public class EzBoardAdminController extends EzFileMngUtil {
 			case "4":
 				parentBoardName = boardPropertyVO.getBoardName4();
 				break;
+			case "6":
+				parentBoardName = boardPropertyVO.getBoardName6();
+			break;
 			default:
 				parentBoardName = boardPropertyVO.getBoardName();
 		}
@@ -317,6 +331,8 @@ public class EzBoardAdminController extends EzFileMngUtil {
 		model.addAttribute("lang_quaternary", lang_quaternary);
 		model.addAttribute("useJapanese", useJapanese);
 		model.addAttribute("useChinese", useChinese);
+		model.addAttribute("lang_senary", lang_Senary);
+		model.addAttribute("useIndonesian", useIndonesian);
 
 		logger.debug("boardCreate ended");
 		return "admin/ezBoard/boardCreate";
@@ -336,6 +352,7 @@ public class EzBoardAdminController extends EzFileMngUtil {
 		String boardName2 = URLDecoder.decode(boardPropertyVO.getBoardName2(), "utf-8");
 		String boardName3 = URLDecoder.decode(boardPropertyVO.getBoardName3(), "utf-8");
 		String boardName4 = URLDecoder.decode(boardPropertyVO.getBoardName4(), "utf-8");
+		String boardName6 = URLDecoder.decode(boardPropertyVO.getBoardName6(), "utf-8");
 		String boardGroupID = boardPropertyVO.getBoardGroupID();
 		String accessName1 = user.getDeptName1() + "(" + user.getCompanyName1()	+ ", " + user.getDeptName1() + ")";
 		String accessName2 = user.getDeptName2() + "(" + user.getCompanyName2()	+ ", " + user.getDeptName2() + ")";
@@ -354,6 +371,7 @@ public class EzBoardAdminController extends EzFileMngUtil {
 		boardPropertyVO.setBoardName2(boardName2);
 		boardPropertyVO.setBoardName3(boardName3);
 		boardPropertyVO.setBoardName4(boardName4);
+		boardPropertyVO.setBoardName6(boardName6);
 		boardPropertyVO.setAccessID(uID);
 		boardPropertyVO.setAccessName(accessName1);
 		boardPropertyVO.setAccessName2(accessName2);
@@ -393,6 +411,9 @@ public class EzBoardAdminController extends EzFileMngUtil {
 				break;
 			case "4":
 				multiBoardName = boardPropertyVO.getBoardName4();
+				break;
+			case "6":
+				multiBoardName = boardPropertyVO.getBoardName6();
 				break;
 			default:
 				multiBoardName = boardPropertyVO.getBoardName();
@@ -494,6 +515,9 @@ public class EzBoardAdminController extends EzFileMngUtil {
 					break;
 				case "4":
 					boardName = boardPropertyVO.getBoardName4();
+					break;
+				case "6":
+					boardName = boardPropertyVO.getBoardName6();
 					break;
 				default:
 					boardName = boardPropertyVO.getBoardName();
@@ -825,6 +849,9 @@ public class EzBoardAdminController extends EzFileMngUtil {
 			case "4":
 				boardName = boardPropertyVO.getBoardName4();
 				break;
+			case "6":
+				boardName = boardPropertyVO.getBoardName6();
+				break;
 			default:
 				boardName = boardPropertyVO.getBoardName();
 		}
@@ -957,6 +984,9 @@ public class EzBoardAdminController extends EzFileMngUtil {
 		// 2023-11-27 조소정 - 관리자 > 게시판 > 그룹 선택 후 일반설정 > 일본어, 중국어 사용 여부에 따라 게시판 그룹이름 표출/미표출 구현
 		String lang_tertiary = ezCommonService.getTenantConfig("LangTertiary" + lang, userInfo.getTenantId());
 		String lang_quaternary = ezCommonService.getTenantConfig("LangQuaternary" + lang, userInfo.getTenantId());
+		// 2025-07-02 조수빈 - 기존 방식에 맞추어 인도네시아어 사용 여부에 따라 게시판 그룹 이름 표출/미표출 구현
+		String lang_Senary = ezCommonService.getTenantConfig("LangSenary" + lang, userInfo.getTenantId());
+		String useIndonesian = ezCommonService.getTenantConfig("useIndonesian", userInfo.getTenantId());
 		String useJapanese = ezCommonService.getTenantConfig("useJapanese", userInfo.getTenantId());
 		String useChinese = ezCommonService.getTenantConfig("useChinese", userInfo.getTenantId());
 
@@ -972,6 +1002,10 @@ public class EzBoardAdminController extends EzFileMngUtil {
 
 		if (boardPropertyVO.getBoardName4() == null	|| boardPropertyVO.getBoardName4().equals("")) {
 			boardPropertyVO.setBoardName4(boardPropertyVO.getBoardName());
+		}
+		
+		if (boardPropertyVO.getBoardName6() == null	|| boardPropertyVO.getBoardName6().equals("")) {
+			boardPropertyVO.setBoardName6(boardPropertyVO.getBoardName());
 		}
 
 		if (boardPropertyVO.getDeleteAfter() == null || boardPropertyVO.getDeleteAfter().equals("")) {
@@ -1039,9 +1073,12 @@ public class EzBoardAdminController extends EzFileMngUtil {
 		model.addAttribute("noticeBoardID", noticeBoardID);
 		model.addAttribute("lang_tertiary", lang_tertiary);
 		model.addAttribute("lang_quaternary", lang_quaternary);
+		model.addAttribute("lang_Senary", lang_Senary);
+		model.addAttribute("useIndonesian", useIndonesian);
 		model.addAttribute("useJapanese", useJapanese);
 		model.addAttribute("useChinese", useChinese);
 		model.addAttribute("boardItemCnt", boardItemCnt);
+		model.addAttribute("lang", lang);
 		
 		logger.debug("boardProperty ended");
 		return "admin/ezBoard/boardProperty";
@@ -1130,18 +1167,36 @@ public class EzBoardAdminController extends EzFileMngUtil {
 	 * 게시판관리 게시판그룹이름변경 메뉴 확장컬럼 설정화면 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezBoard/boardExtensionAttribute.do", method = RequestMethod.GET)
-	public String boardExtensionAttribute(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception {
+	public String boardExtensionAttribute(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest request) throws Exception {
 		logger.debug("boardExtensionAttribute started");
 		
 		userInfo = commonUtil.userInfo(loginCookie);
+		String lang = userInfo.getLang();
 		
 		/* 2020-02-14 홍승비 - 항목명 다국어 처리를 위한 파라미터 추가 */
-		String lang_primary = ezCommonService.getTenantConfig("LangPrimary" + userInfo.getLang(), userInfo.getTenantId());
-		String lang_secondary = ezCommonService.getTenantConfig("LangSecondary" + userInfo.getLang(), userInfo.getTenantId());
+		String useJapanese = ezCommonService.getTenantConfig("useJapanese", userInfo.getTenantId());
+		String useChinese = ezCommonService.getTenantConfig("useChinese", userInfo.getTenantId());
+		String useVietnamese = ezCommonService.getTenantConfig("useVietnamese", userInfo.getTenantId());
+		String useIndonesian = ezCommonService.getTenantConfig("useIndonesian", userInfo.getTenantId());
+		
+		String lang_primary = ezCommonService.getTenantConfig("LangPrimary" + lang, userInfo.getTenantId());
+		String lang_secondary = ezCommonService.getTenantConfig("LangSecondary" + lang, userInfo.getTenantId());
+		String lang_tertiary = ezCommonService.getTenantConfig("LangTertiary" + lang, userInfo.getTenantId());
+		String lang_quaternary = ezCommonService.getTenantConfig("LangQuaternary" + lang, userInfo.getTenantId());
+		String lang_Senary = ezCommonService.getTenantConfig("LangSenary" + lang, userInfo.getTenantId());
 
 		model.addAttribute("lang_user", userInfo.getLang());
 		model.addAttribute("lang_primary", lang_primary);
 		model.addAttribute("lang_secondary", lang_secondary);
+		model.addAttribute("lang_tertiary", lang_tertiary);
+		model.addAttribute("lang_quaternary", lang_quaternary);
+		model.addAttribute("lang_Senary", lang_Senary);
+		model.addAttribute("useJapanese", useJapanese);
+		model.addAttribute("useChinese", useChinese);
+		model.addAttribute("useVietnamese", useVietnamese);
+		model.addAttribute("useIndonesian", useIndonesian);
+		model.addAttribute("boardID", request.getParameter("boardID"));
+		model.addAttribute("gubun", request.getParameter("gubun"));
 		
 		logger.debug("boardExtensionAttribute ended");
 		return "admin/ezBoard/boardExtensionAttribute";
@@ -1167,11 +1222,14 @@ public class EzBoardAdminController extends EzFileMngUtil {
 			for (int i = 0; i < list.size(); i++) {
 				BoardAttributeVO obj = list.get(i);
 				sb.append("<ROW>");
-				sb.append("<CELL><VALUE>" + obj.getColName1() + "</VALUE><DATA1>" + obj.getTableCol() + "</DATA1></CELL>");
-				sb.append("<CELL><VALUE>" + obj.getColName2() + "</VALUE></CELL>");
-				sb.append("<CELL><VALUE>" + obj.getMust() + "</VALUE></CELL>");
-				sb.append("<CELL><VALUE>" + obj.getColType() + "</VALUE></CELL>");
-				sb.append("<CELL><VALUE>" + commonUtil.makeListField(obj.getValue()) + "</VALUE></CELL>");
+				sb.append("<CELL><CLASSNAME>KOR</CLASSNAME><VALUE>" + obj.getColName1() + "</VALUE><DATA1>" + obj.getTableCol() + "</DATA1></CELL>");
+				sb.append("<CELL><CLASSNAME>ENG</CLASSNAME><VALUE>" + obj.getColName2() + "</VALUE></CELL>");
+				sb.append("<CELL><CLASSNAME>JPN</CLASSNAME><VALUE>" + obj.getColName3() + "</VALUE></CELL>");
+				sb.append("<CELL><CLASSNAME>CHN</CLASSNAME><VALUE>" + obj.getColName4() + "</VALUE></CELL>");
+				sb.append("<CELL><CLASSNAME>IDN</CLASSNAME><VALUE>" + obj.getColName6() + "</VALUE></CELL>");
+				sb.append("<CELL><CLASSNAME>MUST</CLASSNAME><VALUE>" + obj.getMust() + "</VALUE></CELL>");
+				sb.append("<CELL><CLASSNAME>TYPE</CLASSNAME><VALUE>" + obj.getColType() + "</VALUE></CELL>");
+				sb.append("<CELL><CLASSNAME>VALUE</CLASSNAME><VALUE>" + commonUtil.makeListField(obj.getValue()) + "</VALUE></CELL>");
 				sb.append("</ROW>");
 			}
 		}
@@ -1203,18 +1261,14 @@ public class EzBoardAdminController extends EzFileMngUtil {
 				sb.append("<ROW>");
 				
 				// 확장컬럼 리스트헤더 저장 시 이미 MakeXMLString()을 사용하여 XML에 대응하도록 파싱한 COLNAME과 VALUE를 저장하므로, 가져올 때 cleanValue 처리가 필요하지 않음
-				if (userInfo.getLang().equals("1")) {
-					sb.append("<CELL><VALUE>" + obj.getColName1() + "</VALUE><DATA1>" + obj.getSn() + "</DATA1></CELL>");
-				} else if (userInfo.getLang().equals("2")) {
-					sb.append("<CELL><VALUE>" + obj.getColName2() + "</VALUE><DATA1>" + obj.getSn() + "</DATA1></CELL>");
-				} else if (userInfo.getLang().equals("3")) {
-					sb.append("<CELL><VALUE>" + obj.getColName3() + "</VALUE><DATA1>" + obj.getSn() + "</DATA1></CELL>");
-				} else if (userInfo.getLang().equals("4")) {
-					sb.append("<CELL><VALUE>" + obj.getColName4() + "</VALUE><DATA1>" + obj.getSn() + "</DATA1></CELL>");
-				}
-
-				sb.append("<CELL><VALUE>" + obj.getColName2() + "</VALUE></CELL>");
-				sb.append("<CELL><VALUE>" + obj.getValue() + "</VALUE></CELL>");
+				// 2025-07-14 조수빈 - 프론트에서 언어별로 사용 유무에 따라 className을 통해 표출을 통제하므로 데이터는 다 반환하는 것으로 로직 수정. (+ className 추가)
+				sb.append("<CELL><CLASSNAME>KOR</CLASSNAME><VALUE>" + obj.getColName1() + "</VALUE><DATA1>" + obj.getSn() + "</DATA1></CELL>");
+				sb.append("<CELL><CLASSNAME>ENG</CLASSNAME><VALUE>" + obj.getColName2() + "</VALUE><DATA1>" + obj.getSn() + "</DATA1></CELL>");
+				sb.append("<CELL><CLASSNAME>JPN</CLASSNAME><VALUE>" + obj.getColName3() + "</VALUE><DATA1>" + obj.getSn() + "</DATA1></CELL>");
+				sb.append("<CELL><CLASSNAME>CHN</CLASSNAME><VALUE>" + obj.getColName4() + "</VALUE><DATA1>" + obj.getSn() + "</DATA1></CELL>");
+				sb.append("<CELL><CLASSNAME>IDN</CLASSNAME><VALUE>" + obj.getColName6() + "</VALUE><DATA1>" + obj.getSn() + "</DATA1></CELL>");
+//				sb.append("<CELL><VALUE>" + obj.getColName2() + "</VALUE></CELL>");
+				sb.append("<CELL><CLASSNAME>WIDTH</CLASSNAME><VALUE>" + obj.getValue() + "</VALUE></CELL>");
 				sb.append("</ROW>");
 			}
 		}
@@ -1313,6 +1367,9 @@ public class EzBoardAdminController extends EzFileMngUtil {
 	        break;
 	    case "4":
 	        boardName = boardProperty.getBoardName4();
+	        break;
+	    case "6":
+	        boardName = boardProperty.getBoardName6();
 	        break;
 	    default:
 	    	boardName = boardProperty.getBoardName();
@@ -2281,5 +2338,38 @@ public class EzBoardAdminController extends EzFileMngUtil {
 
 		logger.debug("addGuestPermit ended");
 		return "TRUE";
+	}
+	
+	@RequestMapping(value = {"/admin/ezBoard/newExtensionAttribute.do", "/admin/ezBoard/editExtensionAttribute.do"}, method = RequestMethod.GET)
+	public String setExtensionAttribute(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
+		logger.debug("setExtensionAttribute started");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String lang = userInfo.getLang();
+		
+		String use_multiData = ezCommonService.getTenantConfig("Use_MultiData", userInfo.getTenantId());
+		String useJapanese = ezCommonService.getTenantConfig("useJapanese", userInfo.getTenantId());
+		String useChinese = ezCommonService.getTenantConfig("useChinese", userInfo.getTenantId());
+//		String useVietnamese = ezCommonService.getTenantConfig("useVietnamese", userInfo.getTenantId());
+		String useIndonesian = ezCommonService.getTenantConfig("useIndonesian", userInfo.getTenantId());
+		
+		String lang_primary = ezCommonService.getTenantConfig("LangPrimary" + lang, userInfo.getTenantId());
+		String lang_secondary = ezCommonService.getTenantConfig("LangSecondary" + lang, userInfo.getTenantId());
+		String lang_tertiary = ezCommonService.getTenantConfig("LangTertiary" + lang, userInfo.getTenantId());
+		String lang_quaternary = ezCommonService.getTenantConfig("LangQuaternary" + lang, userInfo.getTenantId());
+		String lang_Senary = ezCommonService.getTenantConfig("LangSenary" + lang, userInfo.getTenantId());
+		
+		model.addAttribute("use_multiData", use_multiData);
+		model.addAttribute("lang_primary", lang_primary);
+		model.addAttribute("lang_secondary", lang_secondary);
+		model.addAttribute("lang_tertiary", lang_tertiary);
+		model.addAttribute("lang_quaternary", lang_quaternary);
+		model.addAttribute("lang_Senary", lang_Senary);
+		model.addAttribute("useJapanese", useJapanese);
+		model.addAttribute("useChinese", useChinese);
+		model.addAttribute("useIndonesian", useIndonesian);
+		
+		logger.debug("setExtensionAttribute ended");
+		return "/admin/ezBoard/setExtensionAttribute";
 	}
 }

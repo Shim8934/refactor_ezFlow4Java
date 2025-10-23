@@ -366,7 +366,7 @@ function btn_AddToAprLine_onclick()
 			}
 		});
 		if (RetireList.length > 0) {
-			alert("[" + RetireList.join(",") + "] 는 퇴직자입니다.\n즐겨찾기 적용에서 제외됩니다.");
+			alert("[" + RetireList.join(",") + "] " + strLangRetiree01);
 		}
 
 		if (NonReceivingDeptList.length > 0) {

@@ -1107,35 +1107,77 @@
 		    <td style="height:20px"><div id="menu">
 		    	<%-- 2022-06-23 홍승비 - 전자결재 미리보기 영역에서 문서보기 페이지 접근 시, 모든 버튼을 ul 태그부터 숨김처리 --%>
 		        <ul <c:if test="${isPreview == 'Y'}">style="display:none"</c:if>>
-		          <li id="btnWhoKyul" style="display:none"><span onClick="return btnWhoKyul_onclick()"><spring:message code='ezApproval.pjj35'/></span></li>
-		          <li id="btnDocInfo"><span id="span_btnDocInfo" onClick="return btnDocInfo_onclick()"><spring:message code='ezApprovalG.t54'/></span></li>
-		          <li id="btnSummary"><span onclick="return btnSummaryView()"><spring:message code='ezApprovalG.t1203'/></span></li> <%-- 요약전 --%>
-		          <li id="btnOpinion"><span id="span_btnOpinion" onClick="return btnOpinion_onclick()"><spring:message code='ezApprovalG.t55'/></span></li>
-				  <%-- 2023-06-26 민지수 - 추가의견 버튼 추가 --%>
-				  <c:if test="${docAprEnd != 'APR'}"> <%-- 2023-07-13 민지수 - 배부대장의 경우 endView(완료문서보기)로 띄우지만 apr(진행중) 문서인 경우 버튼 숨김처리 --%>
-					<li id="btnAddOpinion"><span id="span_btnOpinion_add" onClick="return btnOpinion_add_onclick()"><spring:message code='ezApprovalG.mjsOp01'/></span></li>
-				  </c:if>
-		          <li id="btnhistory"><span id="span_btnhistory" onClick="btnhistory_onclick()"><spring:message code='ezApprovalG.t61'/></span></li>
-		          <li id="tbtnTotalSave"><span id="btnTotalSave" onclick="return TotalSave_onclick()"><spring:message code='ezApprovalG.t00008'/></span></li>
-		          <c:if test="${sendType eq 'T'}">
-                  	<li id="btnReqOpinion"><span onclick="btnReqOpinion_onclick()">재발송의견</span></li>
-                  </c:if>
-		          <c:if test="${useBoard == 'YES' }">
-				  <li id="btnBoard"><span id="span_btnBoard" onClick="return NewItem_onclick()"><spring:message code='ezApprovalG.t1514'/></span></li>
-				  </c:if>
-				  <c:if test="${approvalFlag eq 'S' and orgCompanyID eq userInfo.companyID and formID != '2018000000' and docAprEnd != 'APR'}">
-		          	<li id="btnReuse"><span onClick="return btnReuse_onclick('reuse')"><spring:message code='ezApprovalG.t990048'/></span></li>
-				  </c:if>
-				  <c:if test="${approvalFlag eq 'G' and formID != '2018000000' and docAprEnd ne 'APR'}">
-				  	<li id="btnReuse"><span onClick="return btnReuse_onclick('reuse')"><spring:message code='ezApprovalG.t990048'/></span></li>
-				  </c:if>
-				  <li id="btnPrint"><span class="icon16 popup_icon16_print" id="span_btnPrint" onClick="return btnPrint_onclick()"></span></li>
-				  <c:if test="${useExternalMailServer == 'NO'}">
-		          <li id="btnMail"><span class="icon16 popup_icon16_mail_gray" id="span_btnMail" onClick="return btnMail_onclick()"></span></li>
-		          </c:if>
-		          <c:if test="${useCabinet == 'YES'}">
-						<li><span onclick = "return addRelatedCabinet()"><spring:message code='ezCabinet.t125'/></span></li>
-		          </c:if>
+					<c:choose>
+					  <c:when test="${userInfo.lang eq '1'}">
+						  <li id="btnWhoKyul" style="display:none"><span onClick="return btnWhoKyul_onclick()"><spring:message code='ezApproval.pjj35'/></span></li>
+						  <li id="btnDocInfo"><span id="span_btnDocInfo" onClick="return btnDocInfo_onclick()"><spring:message code='ezApprovalG.t54'/></span></li>
+						  <li id="btnSummary"><span onclick="return btnSummaryView()"><spring:message code='ezApprovalG.t1203'/></span></li> <%-- 요약전 --%>
+						  <li id="btnOpinion"><span id="span_btnOpinion" onClick="return btnOpinion_onclick()"><spring:message code='ezApprovalG.t55'/></span></li>
+						  <%-- 2023-06-26 민지수 - 추가의견 버튼 추가 --%>
+						  <c:if test="${docAprEnd != 'APR'}"> <%-- 2023-07-13 민지수 - 배부대장의 경우 endView(완료문서보기)로 띄우지만 apr(진행중) 문서인 경우 버튼 숨김처리 --%>
+							<li id="btnAddOpinion"><span id="span_btnOpinion_add" onClick="return btnOpinion_add_onclick()"><spring:message code='ezApprovalG.mjsOp01'/></span></li>
+						  </c:if>
+						  <li id="btnhistory"><span id="span_btnhistory" onClick="btnhistory_onclick()"><spring:message code='ezApprovalG.t61'/></span></li>
+						  <li id="tbtnTotalSave"><span id="btnTotalSave" onclick="return TotalSave_onclick()"><spring:message code='ezApprovalG.t00008'/></span></li>
+						  <c:if test="${sendType eq 'T'}">
+							<li id="btnReqOpinion"><span onclick="btnReqOpinion_onclick()">재발송의견</span></li>
+						  </c:if>
+						  <c:if test="${useBoard == 'YES' }">
+						  <li id="btnBoard"><span id="span_btnBoard" onClick="return NewItem_onclick()"><spring:message code='ezApprovalG.t1514'/></span></li>
+						  </c:if>
+						  <c:if test="${approvalFlag eq 'S' and orgCompanyID eq userInfo.companyID and formID != '2018000000' and docAprEnd != 'APR'}">
+							<li id="btnReuse"><span onClick="return btnReuse_onclick('reuse')"><spring:message code='ezApprovalG.t990048'/></span></li>
+						  </c:if>
+						  <c:if test="${approvalFlag eq 'G' and formID != '2018000000' and docAprEnd ne 'APR'}">
+							<li id="btnReuse"><span onClick="return btnReuse_onclick('reuse')"><spring:message code='ezApprovalG.t990048'/></span></li>
+						  </c:if>
+						  <li id="btnPrint"><span class="icon16 popup_icon16_print" id="span_btnPrint" onClick="return btnPrint_onclick()"></span></li>
+						  <c:if test="${useExternalMailServer == 'NO'}">
+						  <li id="btnMail"><span class="icon16 popup_icon16_mail_gray" id="span_btnMail" onClick="return btnMail_onclick()"></span></li>
+						  </c:if>
+						  <c:if test="${useCabinet == 'YES'}">
+								<li><span onclick = "return addRelatedCabinet()"><spring:message code='ezCabinet.t125'/></span></li>
+						  </c:if>
+					  </c:when>
+					  <c:otherwise>
+						  <li id="btnWhoKyul" style="display:none"><span onClick="return btnWhoKyul_onclick()"><spring:message code='ezApproval.pjj35'/></span></li>
+						  <li id="btnDocInfo"><span id="span_btnDocInfo" onClick="return btnDocInfo_onclick()"><spring:message code='ezApprovalG.t54'/></span></li>
+						  <li id="btnSummary"><span onclick="return btnSummaryView()"><spring:message code='ezApprovalG.t1203'/></span></li> <%-- 요약전 --%>
+						  <li id="btnOpinion"><span id="span_btnOpinion" onClick="return btnOpinion_onclick()"><spring:message code='ezApprovalG.t55'/></span></li>
+						  <%-- 2023-06-26 민지수 - 추가의견 버튼 추가 --%>
+						  <c:if test="${docAprEnd != 'APR'}"> <%-- 2023-07-13 민지수 - 배부대장의 경우 endView(완료문서보기)로 띄우지만 apr(진행중) 문서인 경우 버튼 숨김처리 --%>
+							<li id="btnAddOpinion"><span id="span_btnOpinion_add" onClick="return btnOpinion_add_onclick()"><spring:message code='ezApprovalG.mjsOp01'/></span></li>
+						  </c:if>
+						  <c:if test="${approvalFlag eq 'S' and orgCompanyID eq userInfo.companyID and formID != '2018000000' and docAprEnd != 'APR'}">
+							<li id="btnReuse"><span onClick="return btnReuse_onclick('reuse')"><spring:message code='ezApprovalG.t990048'/></span></li>
+						  </c:if>
+						  <c:if test="${approvalFlag eq 'G' and formID != '2018000000' and docAprEnd ne 'APR'}">
+							<li id="btnReuse"><span onClick="return btnReuse_onclick('reuse')"><spring:message code='ezApprovalG.t990048'/></span></li>
+						  </c:if>
+						  <li id="btnPrint"><span class="icon16 popup_icon16_print" id="span_btnPrint" onClick="return btnPrint_onclick()"></span></li>
+						  <c:if test="${useExternalMailServer == 'NO'}">
+						  <li id="btnMail"><span class="icon16 popup_icon16_mail_gray" id="span_btnMail" onClick="return btnMail_onclick()"></span></li>
+						  </c:if>
+						  <li id="moreBoardIcon" class="view_moreboarditem" style="display: block;">
+							  <span class="view_icon" onclick="this.parentNode.classList.toggle('on')">
+								<img src="/images/ImgIcon/view_more.png">
+							  </span>
+							<ul class="layer_select">
+								<li id="btnhistory"><span id="span_btnhistory" onClick="btnhistory_onclick()"><spring:message code='ezApprovalG.t61'/></span></li>
+								<li id="tbtnTotalSave"><span id="btnTotalSave" onclick="return TotalSave_onclick()"><spring:message code='ezApprovalG.t00008'/></span></li>
+								<c:if test="${sendType eq 'T'}">
+									<li id="btnReqOpinion"><span onclick="btnReqOpinion_onclick()">재발송의견</span></li>
+								</c:if>
+								<c:if test="${useBoard == 'YES' }">
+									<li id="btnBoard"><span id="span_btnBoard" onClick="return NewItem_onclick()"><spring:message code='ezApprovalG.t1514'/></span></li>
+								</c:if>
+								<c:if test="${useCabinet == 'YES'}">
+									<li><span onclick = "return addRelatedCabinet()"><spring:message code='ezCabinet.t125'/></span></li>
+								</c:if>
+							</ul>
+						</li>
+					  </c:otherwise>
+					</c:choose>
 		        </ul>
 		        <ul <c:if test="${isPreview != 'Y'}">style="display:none"</c:if>>
 		        	<li><img src='/images/kr/cm/btn_newpopup.gif' title=<spring:message code='ezEmail.t99000001'/> alt=<spring:message code='ezEmail.t99000001'/> onclick='return parent.btn_newpopup()'></li>
@@ -1151,7 +1193,7 @@
 			  <tr id="headerTabTR" style="display:none;">
 				<td>
 					  <div id="headerTab" style="width:90%; height:27px; margin:0 auto; border-bottom: solid 1px #eaeaea; box-sizing: border-box;">
-						<div id="headerMenu" style="width:80px; height:100%; cursor:pointer; text-align:center" onclick="headerAction()">
+						<div id="headerMenu" style="width:155px; height:100%; cursor:pointer; text-align:center" onclick="headerAction()">
 							<span id="headerHide" style="color:#8f8e93; font-size:14px;"><spring:message code='ezApproval.headerHide01'/></span>
 						</div>
 					  </div>
@@ -1220,5 +1262,33 @@
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
 			<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
 		</div>
+		<script type="text/javascript">
+			var moreBoardIcon = document.getElementById("moreBoardIcon");
+			var iframeContent = document.getElementById("message");
+			var liBtn = document.querySelector(".layer_select");
+			
+			document.addEventListener("click", function(e) {
+				if (moreBoardIcon && !moreBoardIcon.contains(e.target)) {
+					moreBoardIcon.classList.remove("on");
+				}
+			});
+			
+			iframeContent.addEventListener("load", function() {
+				try {
+					var idoc = iframeContent.contentDocument || iframeContent.contentWindow.document;
+					idoc.addEventListener("click", function() {
+						if (moreBoardIcon) {
+							moreBoardIcon.classList.remove("on");
+						}
+					});
+				} catch (e) {}
+			});
+			
+			if (liBtn) {
+				liBtn.addEventListener("click", function(e) {
+					moreBoardIcon.classList.remove("on");
+				});
+			}
+		</script>
 	</body>
 </html>

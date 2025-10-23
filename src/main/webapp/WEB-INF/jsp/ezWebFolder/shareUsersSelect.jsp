@@ -183,7 +183,14 @@
 				<td valign="top">
 					<h2 style="display: inline-block;"><spring:message code='ezWebFolder.t517'/></h2>
 					<span style="float:right;">
-						<input id="cnkeyword" type="text" onkeypress="cnsearch_press(event)" style="width:120px;">
+						<c:choose>
+						<c:when test="${userInfo.lang eq '6'}">
+							<input id="cnkeyword" type="text" onkeypress="cnsearch_press(event)" style="width:90px;">
+						</c:when>
+						<c:otherwise>
+							<input id="cnkeyword" type="text" onkeypress="cnsearch_press(event)" style="width:120px;">
+						</c:otherwise>
+						</c:choose>
 						<a class="imgbtn imgbck" id="cnkeybtn" onclick="cnsearch_click()" style="vertical-align: top; margin-top: 0px !important; height: 25px;"><span><spring:message code='ezWebFolder.t521' /></span></a>
 					</span>
 					<div class="listview" style="margin-top:3px;margin-bottom:5px">

@@ -2764,7 +2764,7 @@
 				ezCommon_cross_dialogArguments[0] = para;
 				var url = "/ezApprovalG/setSearchInfo.do?type=APR&searchType=" + pListTypeValue;
 				var height = approvalFlag == "S" ? 355 : 375;
-				showPopup(url, 510, height, "setsearchInfo_Cross", GetOpenWindowfeature(510, 405), SearchCondi_onclick_Complete);
+				showPopup(url, 600, height, "setsearchInfo_Cross", GetOpenWindowfeature(600, 405), SearchCondi_onclick_Complete);
 		    }
 		
 		    var SearchCond = new Array();

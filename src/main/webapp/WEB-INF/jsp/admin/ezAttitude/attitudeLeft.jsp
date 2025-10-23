@@ -91,15 +91,15 @@
 		<div id="left" class="lnb" style="overflow: auto">
 			<div class="admin_left_title" title="attitude"><spring:message code='ezAttitude.t1'/></div>
 			<div class="adminListBox" style="overflow:hidden; padding-right: 0;">
-				<h2 class="on"><span onClick="moveToPage(1)"><spring:message code = 'ezAttitude.t2' /></span></h2>
-				<h2><span onClick="moveToPage(2)"><spring:message code = 'ezAttitude.t3' /></span></h2>
-				<h2><span onClick="moveToPage(3)"><spring:message code = 'ezAttitude.t4' /></span></h2>
-				<h2><span onClick="moveToPage(4)"><spring:message code = 'ezAttitude.t7' /></span></h2>
+				<h2 class="on"><span onClick="moveToPage(1)" title="<c:if test='${lang eq 6}'><spring:message code='ezAttitude.t2' /></c:if>"><spring:message code = 'ezAttitude.t2' /></span></h2>
+				<h2><span onClick="moveToPage(2)" title="<c:if test='${lang eq 6}'><spring:message code='ezAttitude.t3' /></c:if>"><spring:message code = 'ezAttitude.t3' /></span></h2>
+				<h2><span onClick="moveToPage(3)" title="<c:if test='${lang eq 6}'><spring:message code='ezAttitude.t4' /></c:if>"><spring:message code = 'ezAttitude.t4' /></span></h2>
+				<h2><span onClick="moveToPage(4)" title="<c:if test='${lang eq 6}'><spring:message code='ezAttitude.t7' /></c:if>"><spring:message code = 'ezAttitude.t7' /></span></h2>
 				<h2><span onClick="moveToPage(5)"><spring:message code = 'ezAttitude.t5' /></span></h2>
 				<h2><span onClick="moveToPage(6)"><spring:message code = 'ezAttitude.t6' /></span></h2>
-				<h2><span onClick="moveToPage(7)"><spring:message code = 'ezAttitude.t8' /></span></h2>
-				<h2><span onClick="moveToPage(8)"><spring:message code = 'ezAttitude.t237' /></span></h2>
-				<h2><span onClick="moveToPage(9)"><spring:message code = 'ezAttitude.t292' /></span></h2>
+				<h2><span onClick="moveToPage(7)" title="<c:if test='${lang eq 6}'><spring:message code='ezAttitude.t8' /></c:if>"><spring:message code = 'ezAttitude.t8' /></span></h2>
+				<h2><span onClick="moveToPage(8)" title="<c:if test='${lang eq 6}'><spring:message code='ezAttitude.t237' /></c:if>"><spring:message code = 'ezAttitude.t237' /></span></h2>
+				<h2><span onClick="moveToPage(9)" title="<c:if test='${lang eq 6}'><spring:message code='ezAttitude.t292' /></c:if>"><spring:message code = 'ezAttitude.t292' /></span></h2>
 			</div>
 		</div>
 	</body>

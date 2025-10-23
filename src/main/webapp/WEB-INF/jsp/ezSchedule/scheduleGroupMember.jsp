@@ -746,7 +746,7 @@
 			    </tr> 
 			    
 			</table>
-			<div id="menu" style="width: 130px; margin-left: 45%; margin-top: 1%;">
+			<div id="menu" style="width: 100%; display: flex; justify-content: center; gab:3px; margin-top:1%; ">
 				<ul>
 				    <li title="<spring:message code='ezSchedule.shb10' />"><span onClick="save_onclick()"><spring:message code='ezSchedule.shb11' /></span></li>
 				    <li title="<spring:message code='ezSchedule.t5' />"><span onClick="cancel_onclick()"><spring:message code='ezSchedule.t5' /></span></li>

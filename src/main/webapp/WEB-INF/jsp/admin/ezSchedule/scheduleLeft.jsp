@@ -96,13 +96,13 @@
 	  			<h2 class="on"><span class="h2Title" style="display:inline-block;width:100%;" onClick="goPage(2)"><spring:message code='ezSchedule.t36' /></span></h2>
 	  			<h2><span class="h2Title" style="display:inline-block;width:100%;" onClick="goPage(3)"><spring:message code='ezSchedule.t4003' /></span></h2>
 	  			<c:if test="${lang != 3}">
-		  			<h2><span class="h2Title" style="display:inline-block;width:100%;" onClick="goPage(4)"><spring:message code='ezSchedule.t6000' /></span></h2>
+		  			<h2><span class="h2Title" style="display:inline-block;width:100%;" onClick="goPage(4)" title="<c:if test='${lang eq 6}'><spring:message code='ezSchedule.t6000' /></c:if>"><spring:message code='ezSchedule.t6000' /></span></h2>
 	  			</c:if>
-	  			<h2><span class="h2Title" style="display:inline-block;width:100%;" onClick="goPage(5)"><spring:message code='ezSchedule.t9990007' /></span></h2>
+	  			<h2><span class="h2Title" style="display:inline-block;width:100%;" onClick="goPage(5)" title="<c:if test='${lang eq 6}'><spring:message code='ezSchedule.t9990007' /></c:if>"><spring:message code='ezSchedule.t9990007' /></span></h2>
 	  			<h2><span class="h2Title" style="display:inline-block;width:100%;" onClick="goPage(6)"><spring:message code='ezSchedule.shb12' /></span></h2>
 	  			<h2><span class="h2Title" style="display:inline-block;width:100%;" onClick="goPage(7)"><spring:message code='ezSchedule.admin.hth10' /></span></h2>
-				<h2><span class="h2Title" style="display:inline-block;width:100%;" onClick="goPage(8)"><spring:message code='ezSchedule.lyj01' /></span></h2>
-				<h2><span class="h2Title" style="display:inline-block;width:100%;" onClick="goPage(9)"><spring:message code='ezSchedule.companySc01' /></span></h2>
+				<h2><span class="h2Title" style="display:inline-block;width:100%;" onClick="goPage(8)" title="<c:if test='${lang eq 6}'><spring:message code='ezSchedule.lyj01' /></c:if>"><spring:message code='ezSchedule.lyj01' /></span></h2>
+				<h2><span class="h2Title" style="display:inline-block;width:100%;" onClick="goPage(9)" title="<c:if test='${lang eq 6}'><spring:message code='ezSchedule.companySc01' /></c:if>"><spring:message code='ezSchedule.companySc01' /></span></h2>
   			</div>
 		</div>
 	</body>

@@ -628,10 +628,10 @@
 		            	for (var i = 0; i < $("#List_TBODY2 tr").length; i++) {
 		            		strId = $("#List_TBODY2 tr").eq(i).find("#data7").text();
 		                    strName = $("#List_TBODY2 tr").eq(i).find("#data5").text();
+		                    strName2 = $("#List_TBODY2 tr").eq(i).find("#data5").text();
 	
 		                    strDeptNM = "";
 		                    strEmail = "";
-		                    strName2 = "";
 		                    strDeptNM2 = "";
 		                    jickwe = "";
 		                    phone = "";
@@ -693,10 +693,10 @@
 	            	} else {
 	            		strId = $("[name='" + _RowObjectName + "'").find("#data7").text();
 	                    strName = $("[name='" + _RowObjectName + "'").find("#data5").text();
+	                    strName2 = $("[name='" + _RowObjectName + "'").find("#data5").text();
 
 	                    strDeptNM = "";
 	                    strEmail = "";
-	                    strName2 = "";
 	                    strDeptNM2 = "";
 	                    jickwe = "";
 	                    phone = "";
@@ -2040,6 +2040,7 @@
 	                                                        <option selected value="displayname" usedefault="1"><spring:message code='ezCircular.t80' /></option>
 	                                                        <option value="description" usedefault="1"><spring:message code='ezCircular.t78' /></option>
 	                                                        <option value="title" usedefault="1"><spring:message code='ezCircular.t154' /></option>
+															<option value="extensionAttribute10"><spring:message code='ezEmail.t281'/></option>
 	                                                        <option value="telephonenumber" usedefault="1"><spring:message code='ezCircular.t155' /></option>
 	                                                        <option value="mobile" usedefault="0"><spring:message code='ezCircular.t156' /></option>
 	                                                        <option value="HomePhone" usedefault="0"><spring:message code='ezCircular.t157' /></option>

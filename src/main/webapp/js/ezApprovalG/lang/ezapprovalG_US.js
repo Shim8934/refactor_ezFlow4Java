@@ -969,7 +969,7 @@ var strLangS602 = "has been registered to Favorites.";
 var strLangS603 = "has been removed from your favorites.";
 var strLangS604 = "is a classification code registration error.";
 var strLangS605 = "Error Deleting a classification code.";
-var strLangS957 = ". There are no data on the recipient list <br/> Please specify a recipient.";
+var strLangS957 = "There are no data on the recipient list <br/> Please specify a recipient.";
 var strLangS1108 = "Please select the criteria.";
 var strLangS1109 = "No selection criteria.";
 var strLangS1110 = "Check this item was not specified.";
@@ -1229,3 +1229,6 @@ var strLangKYJ_IsPublic03 = "View Approval Line";
 
 var strLangJIHShareDox01 = "The sharer and the recipient must belong to the same company.";
 var strLangJIHShareDox02 = "Please select the sharer first.";
+
+var strLangRetiree01 = "is a retiree.\nExcluded from favorites."
+var strLangRetiree02 = "has been abolished.\nIt will be excluded from favorites."

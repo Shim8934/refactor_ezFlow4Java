@@ -211,7 +211,7 @@ form{display:inline;margin:0}
 .btnpositionNew{
 	margin: 0px 0px 0px -10px;
 	/* margin-top: 10px; */
-	height: 28px !important;
+	height: 28px;
 	background: none;
 	border: none;
 	/* border-top: 1px solid #eee; */
@@ -725,6 +725,11 @@ form{display:inline;margin:0}
 	text-align:left;
 	height:23px;
 	font-weight:normal;
+
+}
+
+.content.surveyContent th{
+    text-align:center;
 
 }
 
@@ -1913,7 +1918,7 @@ form{display:inline;margin:0}
 .receiver_tltype01 {height:28px!important;  padding:0px 0px 0px 0px; /*background:url(../images/kr/cm/title_bg.gif) no-repeat left*/; display:block; line-height:32px; margin:0px; }
 .receiver_tltype01 span {font-size:14px; font-weight:bold; color:#388CE5; height:28px;display:inline-block;padding:0px 25px 0px 0px;}
 
-.receiver_tltype02 {height:28px!important;  padding:0px 0px 0px 0px!important;  /*background:url(../images/kr/cm/title_bg.gif) no-repeat left;*/ display:block; line-height:28px; margin:0px;}
+.receiver_tltype02 {height:28px!important;  padding:0px 0px 0px 0px;  /*background:url(../images/kr/cm/title_bg.gif) no-repeat left;*/ display:block; line-height:28px; margin:0px;}
 .receiver_tltype02 span {font-size:14px; font-weight:bold; color:#388CE5; height:28px;display:inline-block;padding:0px 25px 0px 0px; min-width:49px;}
 .receiver_borderbox { border:1px solid #D1D1D1; }
 
@@ -2214,7 +2219,7 @@ form{display:inline;margin:0}
 .progress_txt ul{list-style:none; font-size:12px; margin:0px; padding:0px;}
 .progress_txt ul li{height:26px; line-height:26px; margin:0px; padding:0px;}
 .progress_txt ul li span{display:inline-block;}
-.progress_txt ul li .txt_title{width:70px; font-weight:bold; margin:0px; padding:0px 9px; background:url(/images/pr_txtList.gif) 0px 10px no-repeat; overflow:hidden;}
+.progress_txt ul li .txt_title{width:100px; font-weight:bold; margin:0px; padding:0px 9px; background:url(/images/pr_txtList.gif) 0px 10px no-repeat; overflow:hidden;}
 .progress_txt ul li .txt_content{max-width:310px; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;}
 .progress_txt p{margin:7px 0px; padding:0px;}
 
@@ -3013,7 +3018,7 @@ h2, #menu span {font-size: 12px;}
 .prevItem .ddRes {padding: 0px 0px 2px 70px !important;}
 .zoomDiv {text-align: left; padding: 5px; margin: 0px; line-height: 0px;}
 .zoomDiv >img {cursor: pointer;}
-.viewPopupMain {width:150px; position: absolute; background-color:#fff; z-index: 2500;}
+.viewPopupMain {width:160px; position: absolute; background-color:#fff; z-index: 2500;}
 .ui-resizable-e, .ui-resizable-s {border: 1px solid #ddd; background-repeat: no-repeat;}
 .ui-resizable-e {background-image: url('/images/prevview_hbar_dotted.gif'); width: 5px !important; background-position: center;}
 .ui-resizable-s {background-image: url('/images/prevview_bar_dotted.gif'); height: 5px !important; background-position: center -2px;}
@@ -3083,6 +3088,7 @@ h2, #menu span {font-size: 12px;}
 .no-data-img {padding: 20px 0px 10px;}
 .no-data-txt {padding: 10px 0px 20px; font-size: 13px; color: #c0c0c0; font-weight: bold;}
 .textDiv {padding: 0px 20px 15px; border: 1px solid #ddd; border-top: none;}
+.textDiv .txtDiv {font-size: 13px; padding:0px 0px 15px;}
 .txt-response {display: flex; align-items: center; min-height: 30px;}
 .txt-response >img {width: 40px; height: 40px; min-width: 40px; cursor: pointer; margin-right: 10px;}
 .txt-response >span {flex: 1; word-break: break-word; line-height: 1.4;}
@@ -3183,7 +3189,7 @@ h2, #menu span {font-size: 12px;}
 .headpanel .crust {position:relative; clear:none; display:inline-block; zoom:1; width:25%; margin:0px; padding:6px 0px;}
 .headpanel .crust a.crumb>span {display:inline-block; vertical-align:middle; text-overflow:ellipsis; white-space:nowrap; overflow:hidden; max-width:100%; font-size:14px;}
 .headpanel .crust:hover a.crumb, .headpanel .crust.selected a.crumb {color:#0470e4;}
-.headpanel .crust a.crumb {overflow: hidden; display:block; height:46px; line-height:45px; margin:0px; padding:0px 38px; text-decoration:none; outline:0px; -moz-outline-style:0 none; cursor:pointer; align-items: center; text-align:center; min-width: 110px;}
+.headpanel .crust a.crumb {overflow: hidden; display:block; height:46px; line-height:45px; margin:0px; padding:0px 35px; text-decoration:none; outline:0px; -moz-outline-style:0 none; cursor:pointer; align-items: center; text-align:center; min-width: 110px;}
 
 .headpanel .crust{background:url(../images/ezSurvey/survey_progressBG.png) top center no-repeat;}
 .headpanel .crust.selected{background:url(../images/ezSurvey/survey_progressBG_on.png) top center no-repeat;}
@@ -3216,7 +3222,7 @@ h2, #menu span {font-size: 12px;}
 .content.surveyContent, .content.surveyDtl {width: 100%; table-layout: fixed; margin-top: 10px;}
 .content.surveyDtl {margin: 0px; padding: 0px;}
 .inf-spanTxt {margin:0px 10px 0px 0px;}
-.left-Th {width: 80px !important;}
+.left-Th {width: 125px !important;}
 .right-Td {width: 50% !important;}
 .date-input {width: 100px; outline: 0px; border: 1px solid #ddd; padding-left: 5px;}
 .srchDate {width: 100px !important; text-align: center; padding: 0px 5px;}
@@ -3541,7 +3547,7 @@ input[type=range]::-ms-tooltip {display: none;}
 
 .prevQsOpt .sltLogicArea {display: flex;}
 .prevQsOpt .sltLogicArea .prevSltArrow {padding: 0px 30px;}
-.prevQsOpt .sltLogicArea .logicSpan {font-size: 16px; margin-top: 1px; width: 65px;}
+.prevQsOpt .sltLogicArea .logicSpan {font-size: 12px; margin-top: 1px; width: 100px;}
 .prevQsOpt .slidLogicArea {display: flex; align-items: center; justify-content: center; padding-bottom: 10px; min-height: 40px;}
 .prevQsOpt .slidLogicArea .prevSlidSpan {padding-top: 6px; padding-left: 15px;}
 .prevQsOpt .slidLogicArea .prevSlidArrow {padding: 0px 30px;}
@@ -3549,22 +3555,22 @@ input[type=range]::-ms-tooltip {display: none;}
 .prevQsOpt .slidLogicArea .logicSpan {font-size: 14px; padding-left: 5px; width: auto;}
 .prevQsOpt .drdwLogicArea {padding-left: 35px; padding-bottom: 30px;}
 .prevQsOpt .drdwLogicArea .drdwLogicRow {display: flex; padding: 10px 0px;}
-.prevQsOpt .drdwLogicArea .drdwLogicRow .prevDrdwSpan {font-size: 16px; padding-top: 3px;}
+.prevQsOpt .drdwLogicArea .drdwLogicRow .prevDrdwSpan {font-size: 12px; padding-top: 3px; width: 100px;}
 .prevQsOpt .drdwLogicArea .drdwLogicRow .prevDrdwArrow {padding: 0px 30px;}
-.prevQsOpt .drdwLogicArea .drdwLogicRow .logicSpan {font-size: 14px; width: 65px; padding-top: 3px;}
+.prevQsOpt .drdwLogicArea .drdwLogicRow .logicSpan {font-size: 12px; width: 65px; padding-top: 3px; width: 100px;}
 .prevQsOpt .othersLogicArea {display: flex; padding-left: 15px;}
 .prevQsOpt .othersLogicArea .prevArrow {padding: 0px 30px;}
-.prevQsOpt .othersLogicArea .logicSpan {font-size: 16px; margin-top: 2px; width: 65px;}
+.prevQsOpt .othersLogicArea .logicSpan {font-size: 12px; margin-top: 2px; width: 100px;}
 .prevQsOpt .scheduleLogicArea {display: flex;}
 .prevQsOpt .scheduleLogicArea .prevScheduleArrow {padding: 0px 30px;}
-.prevQsOpt .scheduleLogicArea .logicSpan {font-size: 16px; margin-top: 1px; width: 65px;}
+.prevQsOpt .scheduleLogicArea .logicSpan {font-size: 12px; margin-top: 1px; width: 100px;}
 
-.skipSelect, .logicSelect {height: 22px; padding: 0px 10px; font-size: 12px; color: #333; border: 1px solid #ddd; outline: 0px; min-width: 90px; -webkit-appearance: none; border: 1px solid #ddd; margin: 0; background: url(/images/ezSurvey/srvySelect.gif) #fff no-repeat right 16px center;}
+.skipSelect, .logicSelect {height: 22px; padding: 0px 10px; font-size: 12px; color: #333; border: 1px solid #ddd; outline: 0px; min-width: 130px; -webkit-appearance: none; border: 1px solid #ddd; margin: 0; background: url(/images/ezSurvey/srvySelect.gif) #fff no-repeat right 16px right;}
 
 /* skip part */
 .prevQsWrapper .skipArea {display: flex; flex-shrink: 0;}
 .prevQsWrapper .skipArea .skipArrow {padding: 0px 30px; height: 24px; padding-top: 9px;}
-.prevQsWrapper .skipArea .skipSpan {font-size: 16px; margin-top: 2px; font-weight: normal;}
+.prevQsWrapper .skipArea .skipSpan {font-size: 12px; margin-top: 2px; font-weight: normal; width: 100px;}
 .prevQsWrapper .skipArea .skipSelect {margin-top: 9px;}
 
 /* survey Info Btn */
@@ -3861,7 +3867,7 @@ tr.mail_confirm > td:not(:nth-child(-n+5)):before{content:" "; position:absolute
 .lnb h2 { border-bottom: none !important; padding: 9px 10px 9px 23px !important;}
 .memoUL{background: #F8F9FB; padding: 16px 0px 17px 0px;}
 .memoUL li{margin: 0px 20px 0 23px;}
-.surveyUL li{margin: 0px 20px 0 23px;}
+.surveyUL li{margin: 0px 5px 0 23px;}
 .lnb h2.on + .lnbUL{padding-bottom: 11px;}
 /* .imgbck{margin-bottom: 4px !important;} */
 #TopBoards h2{height: 38px; line-height: 38px;}
@@ -3891,7 +3897,7 @@ select{min-height: 24px !important;}
 .collapse_down {background-position: 0px -13px !important; margin: 8px 0px 0px 0px; cursor: pointer;}
 .collapse_up {background-position: 0px 5px !important; margin: 8px 0px 0px 0px; cursor: pointer;}
 .organMainmenu ul.selectUL li ul.option_horizontal_list{position: absolute; left: 0px; top: 28px; min-width: 100px; max-width: 180px; list-style: none; margin: 0px; padding: 0px 0px; background: #ffffff; border: 1px solid #808080; border-bottom-left-radius: 2px; border-bottom-right-radius: 2px; box-shadow: 2px 2px 10px rgb(0 0 0 / 18%); z-index: 10000; display: block; height: auto !important; overflow: auto !important; max-height: 200px !important;}
-.organMainmenu ul.selectUL li .option_horizontal_list li{float: none !important; height: 28px !important; line-height: 30px; margin: 0px !important; padding: 0px 10px !important; font-size: 12px; color: #444; vertical-align: top; box-sizing: border-box; border: 0px none; border-radius: 0px; background: transparent; box-shadow: none; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; border: none !important;}
+.organMainmenu ul.selectUL li .option_horizontal_list li{float: none !important; height: 28px !important; line-height: 30px; margin: 0px !important; padding: 0px 10px; font-size: 12px; color: #444; vertical-align: top; box-sizing: border-box; border: 0px none; border-radius: 0px; background: transparent; box-shadow: none; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; border: none !important;}
 .organMainmenu ul.selectUL li .option_horizontal_list li:hover{background: #e2ecfa; border: 0 none; color: #333333;}
 #mainmenu ul.selectUL{overflow:visible; max-height: 220px;}
 .organMainmenu ul li.newSelect{border-radius: 0px;}
@@ -4462,3 +4468,8 @@ body.drag *{user-select:none !important;}
 /* 새글(NEW) 아이콘 변경 */
 .board_new{display:inline-block; width:16px; height:16px; background:url(../images/kr/community/community_iconnew.svg?v=1) no-repeat center / 16px 16px; margin-left:4px; flex-shrink:0;}
 .list_title_txt{display:block; text-overflow:ellipsis; overflow:hidden; white-space:nowrap; font-size:14px;}
+
+.reReplyText{width:calc(86% - 120px);}
+
+#ownerInput.us{width:75%;}
+.imgbtn.comment{width: 60px;}

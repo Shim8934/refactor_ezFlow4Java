@@ -223,7 +223,11 @@ var CabinetRlFileSelect = function() {
 				var tdElmt2 = document.createElement("td");
 				var sMdName = document.createElement("span");
 				sMdName.textContent = getModuleName(itemList[i]["itemType"]);
-				tdElmt1.appendChild(sMdName);
+                if (document.getElementById("userLang").value == 6) {
+                    sMdName.setAttribute("title", getModuleName(itemList[i]["itemType"]));
+                }
+
+                tdElmt1.appendChild(sMdName);
 				tdElmt2.textContent = itemList[i]["title"];
 				tdElmt2.setAttribute("title", itemList[i]["title"]);
 				tdElmt2.className   = "tdLeft";

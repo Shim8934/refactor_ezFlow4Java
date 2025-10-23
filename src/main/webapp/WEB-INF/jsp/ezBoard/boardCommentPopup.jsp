@@ -164,9 +164,9 @@
 					<c:otherwise>
 							<th style="text-align:center;border-top:1px solid #e2e2e2; border-bottom:1px solid #e2e2e2; border-right:1px solid #e2e2e2; width:15%;">
 							    <c:if test='${boardInfo.attachmentFlag eq "Y"}'>
-                                    <a class='imgbtn' style="vertical-align: middle"><span onclick="btnfileup('commentFile')"><spring:message code='ezBoard.commentAttach.JIH01' /></span></a><br/>
+                                    <a class='imgbtn comment' style="vertical-align: middle"><span onclick="btnfileup('commentFile')"><spring:message code='ezBoard.commentAttach.JIH01' /></span></a><br/>
                                 </c:if>
-								<a class='imgbtn' style="vertical-align: middle"><span onclick="Save_OneLineReply(this)"><spring:message code='ezBoard.t98' /></span></a>
+								<a class='imgbtn comment' style="vertical-align: middle"><span onclick="Save_OneLineReply(this)"><spring:message code='ezBoard.t98' /></span></a>
 							</th>
 						</tr>
 					</c:otherwise>
@@ -179,9 +179,9 @@
 							<span style = "font-weight:normal; display:inline-block; margin-top:2px"><spring:message code='ezBoard.t438' />&nbsp;</span>
 							<span><input type="password" id="txtPassWord" maxlength="20" size="20" />&nbsp;</span>
 							<c:if test='${boardInfo.attachmentFlag eq "Y"}'>
-                                <a class='imgbtn' style="vertical-align: middle"><span onclick="btnfileup('commentFile')"><spring:message code='ezBoard.commentAttach.JIH01' /></span></a>
+                                <a class='imgbtn comment' style="vertical-align: middle"><span onclick="btnfileup('commentFile')"><spring:message code='ezBoard.commentAttach.JIH01' /></span></a>
                             </c:if>
-							<a class='imgbtn' style="vertical-align: middle"><span id="replySaveBtn" onclick="Save_OneLineReply(this)"><spring:message code='ezBoard.t98' /></span></a>
+							<a class='imgbtn comment' style="vertical-align: middle"><span id="replySaveBtn" onclick="Save_OneLineReply(this)"><spring:message code='ezBoard.t98' /></span></a>
 						</th>
 					</tr>
 				</c:if>

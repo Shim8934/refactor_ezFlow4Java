@@ -99,8 +99,8 @@
 	        </div>
 	        <div class="boardListBox" style="overflow:hidden; padding-right: 0;">
 				<ul class="lnbUL" style="background: #F8F9FB; padding-top: 17px;">
-					<li class="ladder" style="margin: 0px 20px 0px 20px; height: 26px; line-height: 26px;"><span class="node_selected" onclick="ladderClick(this);" mode="all"><spring:message code="ezLadder.t011" /> <spring:message code="ezLadder.t001" /></span></li>
-					<li class="ladder" style="margin: 0px 20px 0px 20px; height: 26px; line-height: 26px;"><span class="node_normal" onclick="ladderClick(this);" mode="part"><spring:message code="ezLadder.t108" /></span></li>
+					<li class="ladder" style="margin: 0px 20px 0px 20px; height: 26px; line-height: 26px;"><span class="node_selected" onclick="ladderClick(this);" mode="all" title="<spring:message code='ezLadder.t011' /> <spring:message code='ezLadder.t001' />"><spring:message code="ezLadder.t011" /> <spring:message code="ezLadder.t001" /></span></li>
+					<li class="ladder" style="margin: 0px 20px 0px 20px; height: 26px; line-height: 26px;"><span class="node_normal" onclick="ladderClick(this);" mode="part" title="<spring:message code='ezLadder.t108' />"><spring:message code="ezLadder.t108" /></span></li>
 				</ul>	
 			</div>	        
 	    </div>

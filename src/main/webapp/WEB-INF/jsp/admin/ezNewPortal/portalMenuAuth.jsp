@@ -635,6 +635,7 @@
 		    		    	document.getElementById("pListViewJikcheck_TBODY").innerHTML = "";
 		    			}
 		    			
+						var lang = "<c:out value='${lang}'/>";
 		    			for (var i = 0; i < titleListCount; i++) {
 		    				var titleTR = document.createElement("tr");
 		    				var titleTD = document.createElement("td");
@@ -642,10 +643,21 @@
 		    				titleTR.id = "title_" + titleList[i].jobID + "_" + titleList[i].type;
 		    				titleTR.setAttribute("data1", titleList[i].jobID);
 		    				titleTR.setAttribute("data2", titleList[i].type);
-		    				titleTR.setAttribute("data3", titleList[i].displayName);
+							
+							if (lang == '1') {
+								titleTR.setAttribute("data3", titleList[i].displayName);
+							} else {
+								titleTR.setAttribute("data3", titleList[i].displayName2);
+							}
+							
 		    				titleTR.setAttribute("ondblclick", "applyReceiver()");
 		    				titleTR.setAttribute("onclick", "setSelectTR(this)");
-		    				titleTD.textContent = titleList[i].displayName;
+							
+							if (lang == '1') {
+								titleTD.textContent = titleList[i].displayName;
+							} else {
+								titleTD.textContent = titleList[i].displayName2;
+							}
 		    				titleTD.style.height = "24px";
 		    				
 		    				titleTR.appendChild(titleTD);

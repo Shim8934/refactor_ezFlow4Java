@@ -99,6 +99,9 @@
 			<isEqual property="v_LANGTYPE" compareValue="4">
 				name4 AS name,
 			</isEqual>
+			<isEqual property="v_LANGTYPE" compareValue="6">
+				name6 AS name,
+			</isEqual>
 				width,
 				colname
 	      	FROM
@@ -4744,6 +4747,7 @@
                     WHEN '2' THEN NAME2
                     WHEN '3' THEN NAME3
                     WHEN '4' THEN NAME4
+                    WHEN '6' THEN NAME6
                 END AS NAME
 			</isNotEqual>
 		   	FROM 
@@ -4779,6 +4783,7 @@
                 WHEN '2' THEN NAME2
                 WHEN '3' THEN NAME3
                 WHEN '4' THEN NAME4
+                WHEN '6' THEN NAME6
             END AS NAME
 		</isNotEqual>
    		FROM 
@@ -6056,6 +6061,7 @@
 	                    WHEN '2' THEN NAME2
 	                    WHEN '3' THEN NAME3
 	                    WHEN '4' THEN NAME4
+	                    WHEN '6' THEN NAME6
 	                END AS NAME,
 					WIDTH, 
 					TABLENAME, 
@@ -6101,6 +6107,7 @@
 	                        WHEN '2' THEN NAME2
 	                        WHEN '3' THEN NAME3
 	                        WHEN '4' THEN NAME4
+	                        WHEN '6' THEN NAME6
 	                    END AS NAME,
 						WIDTH, 
 						COLNAME, 
@@ -10266,6 +10273,7 @@
 								   		  		WHEN #v_PSTRLANG# = '2' THEN C.NAME2
 								   		  		WHEN #v_PSTRLANG# = '3' THEN C.NAME3
 								   		  		WHEN #v_PSTRLANG# = '4' THEN C.NAME4
+								   		  		WHEN #v_PSTRLANG# = '6' THEN C.NAME6
 								   		  END as DOCSTATENAME,
 								   		  CASE WHEN processYN = 'H' THEN #v_H#
 							 				   WHEN processYN = 'I' THEN #v_I#
@@ -11573,6 +11581,7 @@
 						WHEN #v_LANGTYPE# = '2' THEN NAME2
 						WHEN #v_LANGTYPE# = '3' THEN NAME3
 						WHEN #v_LANGTYPE# = '4' THEN NAME4
+						WHEN #v_LANGTYPE# = '6' THEN NAME6
 						ELSE NAME
 					END as name
 				FROM 
@@ -11597,6 +11606,7 @@
 						WHEN #v_LANGTYPE# = '2' THEN NAME2
 						WHEN #v_LANGTYPE# = '3' THEN NAME3
 						WHEN #v_LANGTYPE# = '4' THEN NAME4
+						WHEN #v_LANGTYPE# = '6' THEN NAME6
 						ELSE NAME
 					END as name
 				FROM 
@@ -11663,6 +11673,7 @@
 					WHEN #v_LANGTYPE# = '2' THEN NAME2
 					WHEN #v_LANGTYPE# = '3' THEN NAME3
 					WHEN #v_LANGTYPE# = '4' THEN NAME4
+					WHEN #v_LANGTYPE# = '6' THEN NAME6
 					ELSE NAME
 				END AS NAME
 	      	FROM 
@@ -11716,6 +11727,7 @@
 				WHEN #v_LANGTYPE# = '2' THEN NAME2
 				WHEN #v_LANGTYPE# = '3' THEN NAME3
 				WHEN #v_LANGTYPE# = '4' THEN NAME4
+				WHEN #v_LANGTYPE# = '6' THEN NAME6
 			ELSE NAME END) = #v_NAME#
 		</isNotEqual>
 	</select>
@@ -27069,6 +27081,7 @@
    				<isEqual property="v_LANGTYPE" compareValue="2">"NAME2"</isEqual>
                 <isEqual property="v_LANGTYPE" compareValue="3">"NAME3"</isEqual>
                 <isEqual property="v_LANGTYPE" compareValue="4">"NAME4"</isEqual>
+                <isEqual property="v_LANGTYPE" compareValue="6">"NAME6"</isEqual>
    				AS "NAME"
       		FROM 
       			TBL_CODELIST 
@@ -30757,7 +30770,10 @@
 	<select id="EzApprovalG.getAllCompanyList" parameterClass="map" resultMap="PortalTopOtherCompanyAddJobMap">
 		select 
 			EXTENSIONATTRIBUTE2 companyID,
-			EXTENSIONATTRIBUTE3 companyName
+			CASE #primary#
+                WHEN '2' THEN COMPNM2
+                ELSE EXTENSIONATTRIBUTE3
+            END AS companyName
 		from
 			tbl_deptmaster d
 		where 
@@ -30767,7 +30783,10 @@
 		union
 		select
 			EXTENSIONATTRIBUTE2 companyID,
-			EXTENSIONATTRIBUTE3 companyName
+			CASE #primary#
+                WHEN '2' THEN COMPNM2
+                ELSE EXTENSIONATTRIBUTE3
+            END AS companyName
 		from
 			tbl_deptmaster d
 		where 

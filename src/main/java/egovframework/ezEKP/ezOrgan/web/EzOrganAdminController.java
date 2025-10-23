@@ -163,7 +163,7 @@ public class EzOrganAdminController extends EzFileMngUtil {
 	public void init() throws Exception {
     	logger.debug("init started.");
 
-//    	try {
+    	try {
 //			// create table
 //    		ezCommonService.createTables(); // 2024-07-01 김수아 - 테이블 생성 공통함수 추가
 //			ezCommonService.createTblFidoSession(); //2023-11-23 이사라 - Fido 2차인증 테이블 생성, tbl_tenant_config에 해당 옵션 추가
@@ -240,7 +240,9 @@ public class EzOrganAdminController extends EzFileMngUtil {
 //			ezCommonService.createTblStatMenu(); // 2025-03-19 박기범 - 메뉴 통계 테이블 추가
 //			ezCommonService.createUserScheduleTypeConfigTable(); // 2025-04-21 조수빈 - 기본 일정(개인, 부서, 회사)별 사용자 설정 값 저장 테이블 추가
 //			ezCommonService.createTblCommunityGradeTable(); // 2025-07-10 이유정 - 커뮤니티 > 회원등급 테이블 추가
-//
+          	ezCommonService.addColumnsForIndonesian();
+			ezCommonService.addBoardExtColumnForMultiLang();
+
 //			// alter table
 //	    	ezCommonService.alterTableAddColumns(); // 2022-01-19 김은실 - alter 재사용 모듈 추가
 //	    	ezCommonService.addWebfolderTotalLimit();
@@ -312,6 +314,7 @@ public class EzOrganAdminController extends EzFileMngUtil {
 //			ezCommonService.insertUseSaasYN(); // 2025-05-21 유지아 - 모바일 푸시 알림 테넌트 따라 구분 컨피그 추가
 //			ezCommonService.inserExtLargeFilesever(); // 2025-05-22 유지아 - 대용량 첨부파일 외부메일 서버 동시 업로드
 //			ezCommonService.insertUseSendOutState(); // 2024-07-22 양지혜 - 관리자 > 전자결재 > 발송현황 메뉴 표출여부 컨피그 추가
+//          ezCommonService.insertIndonesianTenantConfig(); // 2025-07-02 조수빈 - 인도네시아어(6) 관련 테넌트 없는 부분 추가
 //	    	ezCommonService.insertPortalThemePortletInitdata();
 //	    	ezCommonService.updateTaskUrl();
 //	    	ezCommonService.updateListOptionData(); //2019-03-06 천성준 - 전자결재 회람수신함 관련 리스트헤더 데이터 임시 업데이트문
@@ -414,9 +417,10 @@ public class EzOrganAdminController extends EzFileMngUtil {
 //            ezCommonService.alterTblBoardInfoUrlCopyFlag(); // 2025-08-05 이유정 - 게시판 > 게시글 주소복사 컬럼 추가
 //			ezCommonService.updateGuestAccessibleUris(); // 2025-08-19 양지혜 - 비회원 게시판 허용 URI 데이터 업데이트
 //	        ezCommonService.createTblSamlRequestId();	
-//		} catch (Exception e) {
-//    		logger.error(e.getMessage(), e);
-//    	}
+            ezCommonService.updateInitDataForIndiLang(); // 2025-08-14 조수빈 - 초기 데이터에 대한 인도네시아어 업데이트
+		} catch (Exception e) {
+    		logger.error(e.getMessage(), e);
+    	}
     	logger.debug("init ended.");
     }
 
@@ -489,6 +493,7 @@ public class EzOrganAdminController extends EzFileMngUtil {
 		model.addAttribute("useSharedMailbox", useSharedMailbox);
 		model.addAttribute("useCopyrightMenu", useCopyrightMenu);
 		model.addAttribute("cChk", cChk);
+		model.addAttribute("lang", user.getLang());
 		
 		return "admin/ezOrgan/organLeft";
 	}

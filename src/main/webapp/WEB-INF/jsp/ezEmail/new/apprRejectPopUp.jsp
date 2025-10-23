@@ -17,7 +17,7 @@
 	  	</ul>
 	</div>
 	
-	<p>※ <spring:message code='email.appr.pending.reject.confirm.sub' /></p>
+	<p style="font-size:15px;">※ <spring:message code='email.appr.pending.reject.confirm.sub' /></p>
 	<div>
 		<textarea id="memo" class="" style="width:98%; height: 100px; resize: none; word-break: break-all; overflow-y: auto; justify-content: center;" maxlength="200"></textarea>
 		

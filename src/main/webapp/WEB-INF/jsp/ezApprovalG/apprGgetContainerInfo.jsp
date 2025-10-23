@@ -1878,10 +1878,10 @@
 	            // aprgongramline_cross_dialogArguments[0] = para;
 	            // aprgongramline_cross_dialogArguments[1] = sendCirCulation_onclick_Complete;
 				//
-	            // var OpenWin = window.open(url, "AprGongRamLine_Cross", GetOpenWindowfeature(1145, 760));
+	            // var OpenWin = window.open(url, "AprGongRamLine_Cross", GetOpenWindowfeature(1145, 780));
 	            // try { OpenWin.focus(); } catch (e) { }
 				ezCommon_cross_dialogArguments[0] = para;
-				showPopup(url, 1145, 760, "AprGongRamLine_Cross", GetOpenWindowfeature(1145, 760), sendCirCulation_onclick_Complete);
+				showPopup(url, 1145, 780, "AprGongRamLine_Cross", GetOpenWindowfeature(1145, 780), sendCirCulation_onclick_Complete);
 		    }
 
 		    function sendCirCulation_onclick_Complete(rtn) {

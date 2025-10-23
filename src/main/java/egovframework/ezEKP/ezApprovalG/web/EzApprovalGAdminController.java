@@ -187,6 +187,7 @@ public class EzApprovalGAdminController extends EzFileMngUtil {
 		model.addAttribute("approvalFlag", approvalFlag);
 		model.addAttribute("useAdminBujae", useAdminBujae);
 		model.addAttribute("useEnforceSihang", useEnforceSihang);
+		model.addAttribute("lang", userInfo.getLang());
 		
 		//원문공개사용여부
 		String useOpenGov = config.getProperty("config.useOpenGov"); 
@@ -611,6 +612,7 @@ public class EzApprovalGAdminController extends EzFileMngUtil {
 		model.addAttribute("formID", formID);
 		model.addAttribute("docType", docType);
 		model.addAttribute("companyID", companyID);
+		model.addAttribute("lang", userInfo.getLang());
 		if (type != null && (type.equals("HWP") || type.equals("WebHWP"))) {
 			model.addAttribute("useEditor", type);
 			model.addAttribute("ext", "hwp");
@@ -4755,7 +4757,7 @@ public class EzApprovalGAdminController extends EzFileMngUtil {
 			susinAdmin = "NO";
 		}
 		
-		List<PortalTopOtherCompanyAddJobVO> companyList = ezApprovalGService.getAllCompanyList(userInfo.getId(), userInfo.getTenantId());
+		List<PortalTopOtherCompanyAddJobVO> companyList = ezApprovalGService.getAllCompanyList(userInfo.getId(), userInfo.getTenantId(), userInfo.getPrimary());
 		
 		String result = ezOrganService.getPropertyList(userInfo.getId(), "extensionAttribute4;extensionAttribute5", userInfo.getPrimary(), userInfo.getTenantId());
 		Document doc = commonUtil.convertStringToDocument(result);

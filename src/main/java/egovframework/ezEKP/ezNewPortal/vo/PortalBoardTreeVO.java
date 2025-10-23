@@ -8,6 +8,7 @@ public class PortalBoardTreeVO {
 	private String boardName1;
 	private String boardName2;
 	private String boardName3;
+	private String boardName6;
 	private int sort;
 	private String topParent;
 	private String boardColor;
@@ -73,6 +74,8 @@ public class PortalBoardTreeVO {
 	public void setGubun(int gubun) {
 		this.gubun = gubun;
 	}
+	public String getBoardName6() { return boardName6; }
+	public void setBoardName6(String boardName6) { this.boardName6 = boardName6; }
 	@Override
 	public String toString() {
 		return "PortalBoardTreeVO [id=" + id + ", parent=" + parent + ", text=" + text + ", boardName1=" + boardName1

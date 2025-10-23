@@ -1441,7 +1441,7 @@
 <%--                       	<li><span class="sub_iconLNB tree_search"></span><span class="list_text" onclick="boardSearch()"><spring:message code="ezBoard.khj1" /></span></li> --%>
                     	<c:if test="${applyFlag == 'OK'}">
 	                    	<h2 class="off">	
-	                           	<span class="sub_iconLNB tree_plus" onclick="Apprboard('apprboardH2')"></span><span id="apprboardH2" class="h2Title" onclick="Apprboard('apprboardH2')"><spring:message code="ezBoard.t999001" /><span id="applyCount">(${applyCount})</span>
+	                           	<span class="sub_iconLNB tree_plus" onclick="Apprboard('apprboardH2')"></span><span id="apprboardH2" class="h2Title" onclick="Apprboard('apprboardH2')" title="<spring:message code='ezBoard.t999001' />"><spring:message code="ezBoard.t999001" /><span id="applyCount">(${applyCount})</span>
 	                        </h2>
                     	</c:if>
 						<c:if test="${useMealPlan == 'YES'}">

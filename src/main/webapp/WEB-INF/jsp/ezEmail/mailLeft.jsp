@@ -1704,18 +1704,18 @@
 		        </h2>
 		        <ul class="lnbUL" id="ulMail">
 		        	<div class="tree" id="PostTreeView" oncontextmenu="event_folderMenu(event); return false;" onclick="HiddenFolderMenu();"></div>
-		        	<li onclick="reception_check();"><span class="list_text"><spring:message code="ezEmail.t516" /></span></li>
-		            <li onclick="Open_Search();"><span class="list_text"><spring:message code="ezEmail.t641" /></span></li>
+		        	<li onclick="reception_check();"><span class="list_text" title="<spring:message code="ezEmail.t516" />"><spring:message code="ezEmail.t516" /></span></li>
+		            <li onclick="Open_Search();"><span class="list_text" title="<spring:message code="ezEmail.t641" />"><spring:message code="ezEmail.t641" /></span></li>
 		            <c:if test="${useOnlyInnerMail != 'YES'}">
-		            	<li onclick="check_pop3()"><span class="list_text"><spring:message code="ezEmail.t490" /></span></li>
+		            	<li onclick="check_pop3()"><span class="list_text" title="<spring:message code="ezEmail.t490" />"><spring:message code="ezEmail.t490" /></span></li>
 		            </c:if>	
-		            <li onclick="mail_exportall()" style="display: none;"><span class="list_text"><spring:message code="ezEmail.t99000014" /></span></li>
-		            <li onclick="Open_ReservationManage()"><span class="list_text"><spring:message code="ezEmail.t605" /></span></li>
+		            <li onclick="mail_exportall()" style="display: none;"><span class="list_text" title="<spring:message code="ezEmail.t99000014" />"><spring:message code="ezEmail.t99000014" /></span></li>
+		            <li onclick="Open_ReservationManage()"><span class="list_text" title="<spring:message code='ezEmail.t605' />"><spring:message code="ezEmail.t605" /></span></li>
 		            <c:if test="${useBizmekaSpambox == 'YES'}">
-		            	<li onclick="openSpamBox()"><span class="list_text"><spring:message code="ezEmail.ldh01" /></span></li>
+		            	<li onclick="openSpamBox()"><span class="list_text" title="<spring:message code="ezEmail.ldh01" />"><spring:message code="ezEmail.ldh01" /></span></li>
 		            </c:if>
 		            <c:if test="${operatorMailAddress ne null && operatorMailAddress != ''}">
-		            	<li onclick="operatorSendMail()"><span class="list_text"><spring:message code="ezEmail.0hun01" /></span></li>
+		            	<li onclick="operatorSendMail()"><span class="list_text" title="<spring:message code='ezEmail.0hun01' />"><spring:message code="ezEmail.0hun01" /></span></li>
 		            </c:if>	
 		            <c:if test="${useSpamSniper ne null && useSpamSniper != '' && useSpamSniper != 'NO'}">
 		            	<li onclick="spamMailBox()"><span class="list_text"><spring:message code="ezEmail.ldh01" /></span></li>

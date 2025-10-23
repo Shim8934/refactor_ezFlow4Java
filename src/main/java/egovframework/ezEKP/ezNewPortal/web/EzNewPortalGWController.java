@@ -2635,21 +2635,6 @@ public class EzNewPortalGWController {
 			int menuNamesCount = menuNames.size();
 			JSONObject data = new JSONObject();
 			data.put("menuInfo", menuInfo);
-			
-			if (menuNamesCount > 2) {
-				List<MenuNameVO> menuNamesWithOrder = new ArrayList<MenuNameVO>();
-				
-				// 사용 언어가 가장 먼저 위치하도록 순서 조정.
-				menuNamesWithOrder.add(menuNames.get(Integer.parseInt(primaryLang) - 1));
-				
-				for (MenuNameVO vo : menuNames) {
-					if (!vo.getMenuLang().equals(primaryLang)) {
-						menuNamesWithOrder.add(vo);
-					}
-				}
-				
-				data.put("menuNames", menuNamesWithOrder);
-			} 
 			data.put("menuNames", menuNames);
 			
 			result.put("status", "ok");
@@ -3275,6 +3260,8 @@ public class EzNewPortalGWController {
 				    boardName = boardInfo.getBoardName1();
 				} else if (lang.equals("3")) {
 				    boardName = boardInfo.getBoardName3();
+				} else if (lang.equals("6")){
+				    boardName = boardInfo.getBoardName6();
 				} else {
 				    boardName = boardInfo.getBoardName2();
 				}
@@ -6061,6 +6048,8 @@ public class EzNewPortalGWController {
 				        break;
 				    case "4":
 				        tabBoardName = hashMap.get("BOARDNAME4").toString();
+				    case "6":
+				    	tabBoardName = hashMap.get("BOARDNAME6").toString();
 				        break;
 				    default:
 				    	tabBoardName = hashMap.get("BOARDNAME").toString();

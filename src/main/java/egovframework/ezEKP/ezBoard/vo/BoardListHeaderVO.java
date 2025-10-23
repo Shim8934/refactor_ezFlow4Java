@@ -13,6 +13,8 @@ public class BoardListHeaderVO {
 	private String name3;
 	/** header 이름(다국어)*/
 	private String name4;
+	/** header 이름(인도네시아어)*/
+	private String name6;
 	/** 헤더 사이즈*/
 	private String width;
 	/** Header String Column 명*/
@@ -53,6 +55,12 @@ public class BoardListHeaderVO {
 	}
 	public void setName4(String name4) {
 		this.name4 = name4;
+	}
+	public String getName6() {
+		return name6;
+	}
+	public void setName6(String name6) {
+		this.name6 = name6;
 	}
 	public String getWidth() {
 		return width;

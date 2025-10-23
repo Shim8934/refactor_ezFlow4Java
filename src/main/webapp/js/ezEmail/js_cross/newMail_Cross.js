@@ -3156,15 +3156,15 @@ function Option_onClick() {
     	requestUrl += "?shareId=" + encodeURIComponent(shareId);
     	
     	if (individualmailuser != "0") {
-	        DivPopUpShow(410, 360, requestUrl);
+	        DivPopUpShow(450, 360, requestUrl);
 	    } else {
-	        DivPopUpShow(410, 275, requestUrl);
+	        DivPopUpShow(450, 275, requestUrl);
 	    }
 	} else {
 		if (individualmailuser != "0") {
-	        DivPopUpShow(410, 375, requestUrl);
+	        DivPopUpShow(450, 375, requestUrl);
 	    } else {
-	        DivPopUpShow(410, 320, requestUrl);
+	        DivPopUpShow(450, 320, requestUrl);
 	    }
 	}
     

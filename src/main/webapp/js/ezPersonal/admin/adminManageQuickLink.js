@@ -44,7 +44,7 @@ function event_QuickList(result) {
 		ddElmt2.addEventListener("click", function(event) {btn_delete(itemId, event);});
 		dlElmt.appendChild(ddElmt2);
 		
-		dtElmt.innerHTML = setQuickImg(item.linkType, item.linkTypeUrl);
+		dtElmt.innerHTML = "<img src='" + item.linkTypeUrl + "'>";
 		dtElmt.className = "quickLink_icon";
 		dlElmt.appendChild(dtElmt);
 		
@@ -114,7 +114,7 @@ function event_QuickList(result) {
 	$("#mainlist").sortable({
 		items: "li.link",
 		start: function(event, ui) {
-			$(".linkDetails").remove();
+//			$(".linkDetails").remove();
 		},
 		update: function(event, ui) {
 			updateLinkOrder();
@@ -124,64 +124,33 @@ function event_QuickList(result) {
 	//$("#mainlist").disableSelection();
 }
 
-function setQuickImg(linkType, linkTypeUrl) {
-	var result;
-	
-	/* 2023-06-01 홍승비 - 디자인 개선을 위해 퀵링크 이미지 변경 */
-	/* 2020-09-11 홍승비 - 사용자가 추가한 퀵링크 이미지의 경우, 정렬 스타일 추가 */
-	switch(linkType) {
-		/*
-		case "A" : result = "<img src='/images/admin/link_externalSite.png' id='A'>"; break;
-		case "B" : result = "<img src='/images/admin/link_homePage.png' id='B'>"; break;
-		case "C" : result = "<img src='/images/admin/link_intranet.png' id='C'>"; break;
-		case "D" : result = "<img src='/images/admin/link_connectedPrograms.png' id='D'>"; break;
-		case "E" : result = "<img src='/images/admin/link_blog.png' id='E'>"; break;
-		*/
-		case "A" : result = "<img src='/images/admin/photo1.png' id='A'>"; break;
-		case "B" : result = "<img src='/images/admin/photo2.png' id='B'>"; break;
-		case "C" : result = "<img src='/images/admin/photo3.png' id='C'>"; break;
-		case "D" : result = "<img src='/images/admin/photo4.png' id='D'>"; break; // 2023-06-01 기준 사용하지 않는 분기
-		case "E" : result = "<img src='/images/admin/photo5.png' id='E'>"; break;
-		case "F" : result = "<img src='/images/admin/photo6.png' id='F'>"; break;
-		case "G" : result = "<img src='/images/admin/photo7.png' id='G'>"; break;
-		case "H" : result = "<img src='/images/admin/photo8.png' id='H'>"; break;
-		case "I" : result = "<img src='/images/admin/photo9.png' id='I'>"; break;
-		case "J" : result = "<img src='/images/admin/photo10.png' id='J'>"; break;
-		case "K" : result = "<img src='/images/admin/photo11.png' id='K'>"; break;
-		case "L" : result = "<img src='/images/admin/photo12.png' id='L'>"; break;
-		case "M" : result = "<img src='/images/admin/photo13.png' id='M'>"; break;
-		case "N" : result = "<img src='/images/admin/photo14.png' id='N'>"; break;
-		case "O" : result = "<img src='/images/admin/photo15.png' id='O'>"; break;
-		case "P" : result = "<img src='/images/admin/photo16.png' id='P'>"; break;
-		default : result = "<img src='" + linkTypeUrl + "' style='width:39px; height:38px; padding:0px; margin-top:8px;'>"; break;
-		break;
-	}
-	
-	return result;
-}
-
 function btn_add()  {
-	var itemId = "";
-	g_attendant = "";
+	mode = "new";
+	var linkChoice = document.getElementsByClassName("linkChoice")[0] ? document.getElementsByClassName("linkChoice")[0].classList.remove("linkChoice") : "";
 	
-	$.ajax({
-		url : "/admin/ezPersonal/addQuickLink.do",
-		async : false,
-		data : {"mode": "new"},
-		dataType : "JSON",
-		success : function(result) {
-			openLinkDetail(result, itemId);
+	if (document.getElementsByClassName("linkDetails")[0].getAttribute("id") != "linkLiNew") {
+		document.getElementsByClassName("linkDetails")[0].setAttribute("id", "linkLiNew");
+		document.getElementById("popSize").value = "chk_Full";
+		document.getElementsByName("linktypeOption")[0].checked = true;
+		document.getElementById("typeLink").style.display = "none";
+		document.querySelector(".quickTable02 .quickTD div").scrollTop = 0;			// 스크롤 최상단
+		document.getElementById("AccessList").innerHTML = "";
+		
+		var inputList = document.querySelectorAll(".quickTable01 input");
+		
+		for (var i = 0; i < inputList.length; i++) {
+			inputList[i].value = '';
 		}
-	});
+		
+		$(".linkDetails").slideDown();
+	} else {
+		$(".linkDetails").slideToggle();
+	}
 }
 
 function btn_modify(obj) {
-	var linkChoice = document.getElementsByClassName("linkChoice");
-	var length = linkChoice.length;
-	for (var i = 0; i < length; i++) {
-		linkChoice[i].classList.remove("linkChoice");
-	}
-	
+	mode = "modify";
+	var linkChoice = document.getElementsByClassName("linkChoice")[0] ? document.getElementsByClassName("linkChoice")[0].classList.remove("linkChoice") : "";
 	obj.classList.add("linkChoice");
 	
 	var itemId = obj.getAttribute("id");
@@ -191,7 +160,16 @@ function btn_modify(obj) {
 		data : {"mode": "modify"},
 		dataType : "JSON",
 		success : function(result) {
-			openLinkDetail(result, itemId);
+//			openLinkDetail(result, itemId);
+			if (document.getElementsByClassName("linkDetails")[0].getAttribute("id") != itemId.slice(1, -1)) {
+				document.querySelector("#ZmakeTypeImg") ? document.querySelector("#ZmakeTypeImg").remove() : "";
+				initQuickLink(itemId);
+				initQuickLinkACL(itemId);
+				$(".linkDetails").slideDown();
+			} else {
+				$(".linkDetails").slideToggle();
+			}
+			
 		}
 	});
 }
@@ -234,217 +212,10 @@ function deleteSuccess(itemId) {
 	}
 }
 
-function openLinkDetail(item, itemId) {
-	userLang = item.lang;
-	mode = item.mode;
-	
-	var mainTitle;
-	var subTitle1;
-	var subTitle2;
-	var subTitle3;
-	
-	var subTitleTr1Id = "en";
-	var subTitleTr2Id = "ja";
-	var subTitleTr3Id = "zh";
-	
-	if (item.primary == 1) {
-		mainTitle = strLangkhj9;
-		subTitle1 = strLangkhj10;
-		subTitle2 = strLangkhj11;
-		subTitle3 = strLangCSJQL01;
-		
-		mainTitleId = "Title1";
-		subTitle1Id = "Title2";
-		subTitle2Id = "Title3";
-		subTitle3Id = "Title4";
-	} else if (item.primary == 2) {
-		mainTitle = strLangkhj10;
-		subTitle1 = strLangkhj9;
-		subTitle2 = strLangkhj11;
-		subTitle3 = strLangCSJQL01;
-		
-		mainTitleId = "Title2";
-		subTitle1Id = "Title1";
-		subTitle2Id = "Title3";
-		subTitle3Id = "Title4";
-		
-		subTitleTr1Id = "ko";
-		subTitleTr2Id = "ja";
-		subTitleTr3Id = "zh";
-	} else if (item.primary == 3) {
-		mainTitle = strLangkhj11;
-		subTitle1 = strLangkhj9;
-		subTitle2 = strLangkhj10;
-		subTitle3 = strLangCSJQL01;
-		
-		mainTitleId = "Title3";
-		subTitle1Id = "Title1";
-		subTitle2Id = "Title2";
-		subTitle3Id = "Title4";
-
-		subTitleTr1Id = "ko";
-		subTitleTr2Id = "en";
-		subTitleTr3Id = "zh";
-	} else if (item.primary == 4) {
-		mainTitle = strLangCSJQL01;
-		subTitle1 = strLangkhj9;
-		subTitle2 = strLangkhj10;
-		subTitle3 = strLangkhj11;
-		
-		mainTitleId = "Title4";
-		subTitle1Id = "Title1";
-		subTitle2Id = "Title2";
-		subTitle3Id = "Title3";
-
-		subTitleTr1Id = "ko";
-		subTitleTr2Id = "en";
-		subTitleTr3Id = "ja";
-	}
-	
-	var linksHTML = "<li class='linkDetails' id='linkLiNew' style='display:none'>";
-	linksHTML += "<div class='admin_quickList' id='linkDetailsNew'><dl class='admin_menuDL'><dt class='admin_menuTit'>" + strLangkhj1 + " " + strLangkhj7 + "・" + strLangkhj8 + "</dt><dd id='close' class='admin_menuX'></dd></dl>";	
-	linksHTML += "<div class='admin_menu_content'>";
-	linksHTML += "<table class='quickTable01' border='0' cellpadding='0' cellspacing='0'>";
-	linksHTML += "<tr>";
-	linksHTML += "<th class='quickLinkTH'>" + strLangkhj12 + "(" + mainTitle + ") <span class='Ared'>*</span></th>";
-	linksHTML += "<td class='menuInput'><input type='text' name='Input' id='"+ mainTitleId +"' class='admin_input' maxlength='50'></td>";
-	linksHTML += "</tr>";
-	linksHTML += "<tr id='" + subTitleTr1Id + "'>";
-	linksHTML += "<th class='quickLinkTH'>" + strLangkhj12 + "(" + subTitle1 + ")</th>";
-	linksHTML += "<td class='menuInput'><input type='text' id='"+ subTitle1Id +"' class='admin_input' maxlength='50'></td>";
-	linksHTML += "</tr>";
-	linksHTML += "<tr id='" + subTitleTr2Id + "'>";
-	linksHTML += "<th class='quickLinkTH'>" + strLangkhj12 + "(" + subTitle2 + ")</th>";
-	linksHTML += "<td class='menuInput'><input type='text' id='"+ subTitle2Id +"' class='admin_input' maxlength='50'></td>";
-	linksHTML += "</tr>";
-	linksHTML += "<tr id='" + subTitleTr3Id + "'>";
-	linksHTML += "<th class='quickLinkTH'>" + strLangkhj12 + "(" + subTitle3 + ")</th>";
-	linksHTML += "<td class='menuInput'><input type='text' id='"+ subTitle3Id +"' class='admin_input' maxlength='50'></td>";
-	linksHTML += "</tr>";
-	linksHTML += "<tr>";
-	linksHTML += "<th class='quickLinkTH'>URL <span class='Ared'>*</span></th>";
-	linksHTML += "<td class='menuInput'><input type='text' id='txtURL' class='admin_input' maxlength='512'></td>";
-	linksHTML += "</tr>";
-	linksHTML += "<tr>";
-	linksHTML += "<th class='quickLinkTH'>" + strLangkhj13 + "</th>";
-	linksHTML += "<td class='menuInput'><select class='admin_select' id='popSize' onchange='popChange();'><option value='chk_Full'>FULL</option><option value='chk_Size'>SIZE</option></select></td>";
-	linksHTML += "</tr>";
-	linksHTML += "<tr>";
-	linksHTML += "<th class='quickLinkTH'>" + strLangkhj14 + "</th>";
-	linksHTML += "<td class='menuInput'><span id='div_Size'>Width <input type='text' id='txt_Width' class='popInput' style='width:50px;' onKeyup='this.value=this.value.replace(/[^0-9]/g,\"\");' disabled> Height <input type='text' id='txt_Height' class='popInput' style='width:50px;' onKeyup='this.value=this.value.replace(/[^0-9]/g,\"\");' disabled></span></td>";
-	linksHTML += "</tr>";
-	linksHTML += "</table>";
-	linksHTML += "<table class='quickTable02' border='0' cellpadding='0' cellspacing='0'>";
-	linksHTML += "<tr>";
-	linksHTML += "<th class='quickLinkTH02'><spring:message code = 'ezPersonal.t1023' /> Type <span class='Ared'>*</span><span style='font-size: 12px; font-weight: normal;'>" + strLangQuickLinkSize01 + "</span><span class='adminPlusBtn' onclick='CreateType()'><img src='/images/admin/adminPlus.png'></span></th></tr>";
-	linksHTML += "<tr><td class='quickTD'>";
-	linksHTML += "<div>";
-	linksHTML += "<dl class='quickIcon_link'><dt class='quickIcon_linkDT'>" + setQuickImg("A", "") + "</dt><dd class='quickIcon_linkDD'><input name='linktypeOption' type='radio' value='A' checked=''></dd></dl>";
-	linksHTML += "<dl class='quickIcon_link'><dt class='quickIcon_linkDT'>" + setQuickImg("B", "") + "</dt><dd class='quickIcon_linkDD'><input name='linktypeOption' type='radio' value='B'></dd></dl>";
-	linksHTML += "<dl class='quickIcon_link'><dt class='quickIcon_linkDT'>" + setQuickImg("C", "") + "</dt><dd class='quickIcon_linkDD'><input name='linktypeOption' type='radio' value='C'></dd></dl>";
-	linksHTML += "<dl class='quickIcon_link'><dt class='quickIcon_linkDT'>" + setQuickImg("E", "") + "</dt><dd class='quickIcon_linkDD'><input name='linktypeOption' type='radio' value='E'></dd></dl>";
-	linksHTML += "<dl class='quickIcon_link'><dt class='quickIcon_linkDT'>" + setQuickImg("D", "") + "</dt><dd class='quickIcon_linkDD'><input name='linktypeOption' type='radio' value='D'></dd></dl>";
-	linksHTML += "<dl class='quickIcon_link'><dt class='quickIcon_linkDT'>" + setQuickImg("F", "") + "</dt><dd class='quickIcon_linkDD'><input name='linktypeOption' type='radio' value='F'></dd></dl>";
-	linksHTML += "<dl class='quickIcon_link'><dt class='quickIcon_linkDT'>" + setQuickImg("G", "") + "</dt><dd class='quickIcon_linkDD'><input name='linktypeOption' type='radio' value='G'></dd></dl>";
-	linksHTML += "<dl class='quickIcon_link'><dt class='quickIcon_linkDT'>" + setQuickImg("H", "") + "</dt><dd class='quickIcon_linkDD'><input name='linktypeOption' type='radio' value='H'></dd></dl>";
-	linksHTML += "<dl class='quickIcon_link'><dt class='quickIcon_linkDT'>" + setQuickImg("I", "") + "</dt><dd class='quickIcon_linkDD'><input name='linktypeOption' type='radio' value='I'></dd></dl>";
-	linksHTML += "<dl class='quickIcon_link'><dt class='quickIcon_linkDT'>" + setQuickImg("J", "") + "</dt><dd class='quickIcon_linkDD'><input name='linktypeOption' type='radio' value='J'></dd></dl>";
-	linksHTML += "<dl class='quickIcon_link'><dt class='quickIcon_linkDT'>" + setQuickImg("K", "") + "</dt><dd class='quickIcon_linkDD'><input name='linktypeOption' type='radio' value='K'></dd></dl>";
-	linksHTML += "<dl class='quickIcon_link'><dt class='quickIcon_linkDT'>" + setQuickImg("L", "") + "</dt><dd class='quickIcon_linkDD'><input name='linktypeOption' type='radio' value='L'></dd></dl>";
-	linksHTML += "<dl class='quickIcon_link'><dt class='quickIcon_linkDT'>" + setQuickImg("M", "") + "</dt><dd class='quickIcon_linkDD'><input name='linktypeOption' type='radio' value='M'></dd></dl>";
-	linksHTML += "<dl class='quickIcon_link'><dt class='quickIcon_linkDT'>" + setQuickImg("N", "") + "</dt><dd class='quickIcon_linkDD'><input name='linktypeOption' type='radio' value='N'></dd></dl>";
-	linksHTML += "<dl class='quickIcon_link'><dt class='quickIcon_linkDT'>" + setQuickImg("O", "") + "</dt><dd class='quickIcon_linkDD'><input name='linktypeOption' type='radio' value='O'></dd></dl>";
-	linksHTML += "<dl class='quickIcon_link'><dt class='quickIcon_linkDT'>" + setQuickImg("P", "") + "</dt><dd class='quickIcon_linkDD'><input name='linktypeOption' type='radio' value='P'></dd></dl>";
-	linksHTML += "</div>";
-	linksHTML += "<dl class='quickIcon_link'><dt id='typeImg' class='quickIcon_linkDT'></dt><dd class='quickIcon_linkDD'><input name='linktypeOption' type='radio' value='Z' id='Z' onclick='radioClick(this, 'rad')' style='display:none;' /></dd></dl>";
-	linksHTML += "</td></tr>";
-	linksHTML += "</table>";
-	linksHTML += "<table class='quickTable02' border='0' cellpadding='0' cellspacing='0'>";
-	linksHTML += "<tr>";
-	linksHTML += "<th class='quickLinkTH02'>" + strLangkhj16 +"<span class='adminPlusBtn' onclick='regit()'><img src='/images/admin/adminPlus.png'></span></th></tr>";
-	linksHTML += "<tr><td class='quickTD'><div class='listview' id='AccessList' style='border:0px;'></div></td>";	
-	linksHTML += "</tr></table>";
-	linksHTML += "<div class='bottomBtn'>";
-	linksHTML += "<a class='btnA'><span id='btn_OK'>" + strLangkhj18 + "</span></a>";
-	linksHTML += "</div>";
-	linksHTML += "</div>";
-	linksHTML += "</li>"; 
-	
-	var nowShowDetails = $(".linkDetails").children().attr("id");
-	var detailId = $(".linkDetails").attr("id");
-	
-	if(itemId != "") {
-		var itemId2 = itemId.substring(1, itemId.indexOf("}"));
-	}
-	
-	if (mode == "new") {
-		if (nowShowDetails == "linkDetailsNew") {
-			if (detailId != "linkLiNew") {
-				$(".linkDetails").slideUp(function(){
-					$(".linkDetails").not("#linkLiNew").remove();
-				});
-				
-				$("#linkAdd").after(linksHTML);
-				$(".linkDetails").slideDown();
-			}
-			else {
-				$(".linkDetails").slideUp(function(){
-					$(".linkDetails").remove();
-				});
-			}
-		}
-		else {
-			$("#linkAdd").after(linksHTML);
-			$(".linkDetails").slideDown();
-		}
-	}
-	else {
-		if (detailId == itemId2) {
-			$(".linkDetails").slideUp(function(){
-				$(".linkDetails").remove();
-			});
-		}
-		else {
-			$(".linkDetails").slideUp(function(){
-				$(".linkDetails").not("#" + itemId2).remove();
-			});
-			
-			$("#linkAdd").after(linksHTML);
-			$(".linkDetails").slideDown();
-		}
-		
-	}
-	
-	//수정일경우
-	if (mode == "modify") {
-		initQuickLink(itemId);
-		initQuickLinkACL(itemId);
-	}
-	
-	//타입이미지버튼선택설정
-	$("img").on("click", function() {
-		radioClick(this, 'img');
+function btn_close() {
+	$(".linkDetails").slideUp(function() {
+		$(".linkDetails").attr("class", "linkDetails hideDetails");
 	});
-	
-	//저장버튼설정
-	$("#btn_OK").on("click", function() {
-		btn_ok(itemId);
-	});
-	
-	//닫기버튼설정
-	$(".close").on("click", function(){
-		$(".linkDetails").slideUp(function() {
-			$(".linkDetails").attr("class", "linkDetails hideDetails");
-		});
-	});
-	
-	if (item.useJapanese == "NO") {
-		document.getElementById("ja").style.display = "none";
-	}
-	
-	if (item.useChinese == "NO") {
-		document.getElementById("zh").style.display = "none";
-	}
 }
 
 function popChange() {
@@ -548,8 +319,12 @@ function returnvalue(strXML) {
 			typeImg.style.cursor = "pointer";
 			
 			document.getElementById("typeImg").appendChild(typeImg);
-			document.getElementById("Z").style.display = "";
+			document.getElementById("typeLink").style.display = "";
 			document.getElementById("Z").checked = true;
+			typeImg.onload = function() {
+			    var div = document.querySelector(".quickTable02 .quickTD div");
+			    div.scrollTop = div.scrollHeight;
+			};
 		}
 	}
 }
@@ -670,15 +445,16 @@ function radioClick(obj, type) {
 	}
 }
 
-function btn_ok(itemId) {
-	if (specialChk(document.getElementById("Title1").value) || specialChk(document.getElementById("Title2").value) ||  
-			specialChk(document.getElementById("Title3").value) || specialChk(document.getElementById("Title4").value)) {
+function SaveQuickLink() {
+	if (specialChk(document.getElementById("KOR").value) || specialChk(document.getElementById("ENG").value) ||  
+			specialChk(document.getElementById("JPN").value) || specialChk(document.getElementById("CHN").value)
+			|| specialChk(document.getElementById("IDN").value)) {
 		alert(strLangkhj19);
 		return;
 	}
 	
-	if (document.getElementById(mainTitleId).value.trim() == "") {
-		document.getElementById(mainTitleId).focus();
+	if (document.getElementById(langs[0]).value.trim() == "") {
+		document.getElementById(langs[0]).focus();
 		alert(strLangkhj20);
 		return;
 	}
@@ -689,22 +465,15 @@ function btn_ok(itemId) {
 		return;
 	}
 	
-	if (document.getElementById(subTitle1Id).value.trim() == "") {
-		document.getElementById(subTitle1Id).value = document.getElementById(mainTitleId).value;
+	for (var i = 1; i < langs.length; i++) {
+		var nameInput = document.getElementById(langs[i]);
+		
+		if (!nameInput.value.trim()) {
+			nameInput.value = document.getElementById(langs[0]).value;
+		}
 	}
 	
-	if (document.getElementById(subTitle2Id).value.trim() == "") {
-		document.getElementById(subTitle2Id).value = document.getElementById(mainTitleId).value;
-	}
-	
-	if (document.getElementById(subTitle3Id).value.trim() == "") {
-		document.getElementById(subTitle3Id).value = document.getElementById(mainTitleId).value;
-	}
-
-	SaveQuickLink(itemId);
-}
-
-function SaveQuickLink(itemId) {
+	var itemId = "{" + $(".linkDetails").attr("id") + "}";
 	var linkType = document.querySelector('input[name="linktypeOption"]:checked').value;
 	var linkURL = "";
 	if (linkType == "Z") {
@@ -726,12 +495,12 @@ function SaveQuickLink(itemId) {
 		createNodeAndInsertText(xmlpara, objNode, "pQuickLinkID", itemId);
 	}
 	
-	createNodeAndInsertText(xmlpara, objNode, "pQuickLinkName", document.getElementById(mainTitleId).value);
-	createNodeAndInsertText(xmlpara, objNode, "pQuickLinkName2", document.getElementById(subTitle1Id).value);
-	createNodeAndInsertText(xmlpara, objNode, "pQuickLinkName3", document.getElementById(subTitle2Id).value);
-	createNodeAndInsertText(xmlpara, objNode, "pQuickLinkName4", document.getElementById(subTitle3Id).value);
+	createNodeAndInsertText(xmlpara, objNode, "pQuickLinkName", document.getElementById("KOR").value);
+	createNodeAndInsertText(xmlpara, objNode, "pQuickLinkName2", document.getElementById("ENG").value);
+	createNodeAndInsertText(xmlpara, objNode, "pQuickLinkName3", document.getElementById("JPN").value);
+	createNodeAndInsertText(xmlpara, objNode, "pQuickLinkName4", document.getElementById("CHN").value);
 	createNodeAndInsertText(xmlpara, objNode, "pQuickLinkName5", "");
-	createNodeAndInsertText(xmlpara, objNode, "pQuickLinkName6", "");
+	createNodeAndInsertText(xmlpara, objNode, "pQuickLinkName6", document.getElementById("IDN").value);
 	createNodeAndInsertText(xmlpara, objNode, "pLinkType", linkType);
 	createNodeAndInsertText(xmlpara, objNode, "pLinkTypeURL", linkURL);
 	createNodeAndInsertText(xmlpara, objNode, "pMode", mode);
@@ -803,10 +572,11 @@ function event_GetQuickLink(result) {
 	
 	document.getElementsByClassName("linkDetails")[0].setAttribute("id", quickLinkId.substring(1, quickLinkId.indexOf("}")));
 	
-	document.getElementById("Title1").value = result["quickLinkName"];
-	document.getElementById("Title2").value = result["quickLinkName2"];
-	document.getElementById("Title3").value = result["quickLinkName3"];
-	document.getElementById("Title4").value = result["quickLinkName4"];
+	document.getElementById("KOR").value = result["quickLinkName"];
+	document.getElementById("ENG").value = result["quickLinkName2"];
+	document.getElementById("JPN").value = result["quickLinkName3"];
+	document.getElementById("CHN").value = result["quickLinkName4"];
+	document.getElementById("IDN").value = result["quickLinkName6"];
 	document.getElementById("txtURL").value = result["url"];
 	
 	var size = result["size_"];
@@ -835,10 +605,13 @@ function event_GetQuickLink(result) {
 		typeImg.style.cursor = "pointer";
 		
 		document.getElementById("typeImg").appendChild(typeImg);
-		document.getElementById("Z").style.display = "";
+		document.getElementById("typeLink").style.display = "";
 		document.getElementById("Z").checked = true;
+		document.querySelector(".quickTable02 .quickTD div").scrollTop = 9999;		// 스크롤 최하단
 	}
 	else {
+		document.getElementById("typeLink").style.display = "none";
+		document.querySelector(".quickTable02 .quickTD div").scrollTop = 0;			// 스크롤 최상단
 		var cnt = document.getElementsByName("linktypeOption").length;
 		for (var i = 0; i < cnt; i++) {
 			if (document.getElementsByName("linktypeOption")[i].value.trim() == type.trim()) {

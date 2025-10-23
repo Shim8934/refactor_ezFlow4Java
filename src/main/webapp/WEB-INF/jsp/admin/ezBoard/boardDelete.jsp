@@ -65,7 +65,7 @@
 	    </script>
 	</head>
 	<body class="mainbody">	
-		<h1><spring:message code="ezBoard.t113"/></h1>
+		<h1><spring:message code="ezBoard.t66"/></h1>
 		<div style="max-width:800px;">
 		<c:if test="${hasSubBoard == '1'}">		
 			<table  class="content">

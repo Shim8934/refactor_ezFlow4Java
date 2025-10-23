@@ -15,7 +15,7 @@
 		<div id="cabMgClose" class="cabClose"><ul><li><span></span></li></ul></div>
 		
 		<div class="cabMgTree" id="cabinetMgTree"></div>
-		
+		<input type="hidden" id="userLang" value="${lang}">
 		<jsp:include page="/WEB-INF/jsp/ezCabinet/management/cabinetAdd.jsp"   ></jsp:include>
 		<jsp:include page="/WEB-INF/jsp/ezCabinet/management/cabinetMove.jsp"  ></jsp:include>
 		<jsp:include page="/WEB-INF/jsp/ezCabinet/management/cabinetDelete.jsp"></jsp:include>
@@ -48,7 +48,7 @@
 						click      : null,
 						dblClick   : null
 					});
-					
+					UserLang = "<c:out value='${lang}'/>";
 					myCabinetTree.makeTree({cabinetNode : document.getElementById("cabMagHeader").getAttribute("role")});
 					
 					document.getElementById("cabMgClose").onclick   = function(e) {closeWindow();};

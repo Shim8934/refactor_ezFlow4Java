@@ -109,9 +109,11 @@ public class EzCabinetController {
 	@RequestMapping(value="/ezCabinet/cabinetManagement.do", method = RequestMethod.GET)
 	public String jspGetCabinetManagement(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("jspGetCabinetManagement started");
+		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
 		String currentNode = request.getParameter("node") != null ? request.getParameter("node") : "";
 		model.addAttribute("node", currentNode);
-		
+		model.addAttribute("UserLang", commonUtil.getMultiData(user.getLang(), user.getTenantId()));
+		model.addAttribute("lang", user.getLang());
 		logger.debug("jspGetCabinetManagement ended");
 		return "ezCabinet/management/cabinetManagement";
 	}
@@ -119,12 +121,14 @@ public class EzCabinetController {
 	@RequestMapping(value="/ezCabinet/getRelatedFile.do", method = RequestMethod.GET)
 	public String jspGetRelatedFile(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("jspGetRelatedFile started");
+		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
 		
 		String itemId = request.getParameter("itemId") != null ? request.getParameter("itemId") : "";
 		String module = request.getParameter("module") != null ? request.getParameter("module") : "";
 		
 		model.addAttribute("module", module);
 		model.addAttribute("itemId", itemId);
+		model.addAttribute("lang", user.getLang());
 		
 		logger.debug("jspGetRelatedFile ended");
 		return "ezCabinet/item/cabinetFileSelect";
@@ -229,6 +233,7 @@ public class EzCabinetController {
 		}
 		
 		model.addAttribute("module", module);
+		model.addAttribute("lang", user.getLang());
 		logger.debug("jspGetCabinetFileDetail ended");
 		return "ezCabinet/related/cabinetAddRelated";
 	}

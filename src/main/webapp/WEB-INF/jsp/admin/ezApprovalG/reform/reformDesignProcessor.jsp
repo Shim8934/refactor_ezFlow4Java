@@ -973,6 +973,9 @@
 										//중국어 간체 (번체는 chinese_t)
 										lang = "chinese_s";
 										break;
+									case "6":
+										lang = "english";
+										break;	
 									default:
 										lang = "korean";
 										break;

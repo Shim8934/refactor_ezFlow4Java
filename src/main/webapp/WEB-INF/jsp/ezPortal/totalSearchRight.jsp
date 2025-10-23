@@ -724,13 +724,13 @@ function callSearchController() {
 		//		console.log(res);
 				
 				if (res == null) {
-					alert("서버 에러가 발생하였습니다.\n재시도 후 증상이 계속되면 관리자에게 문의하시기 바랍니다.");
+					alert("<spring:message code='ezTotalSearch.t0040' />");
 					return;
 				}
 				
 				if (res.error != null) {
 					console.log(res.error);
-					alert("서버 에러가 발생하였습니다.\n재시도 후 증상이 계속되면 관리자에게 문의하시기 바랍니다.");
+					alert("<spring:message code='ezTotalSearch.t0040' />");
 					return;
 				}
 				
@@ -853,7 +853,7 @@ function callSearchController() {
 				totalSearch.data.btnStart = undefined;
 			},
 			error: function() {
-				alert("서버 에러가 발생하였습니다.\n재시도 후 증상이 계속되면 관리자에게 문의하시기 바랍니다.");
+				alert("<spring:message code='ezTotalSearch.t0040' />");
 			}
 		});	
 	}

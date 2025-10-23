@@ -219,7 +219,7 @@
 	        	<th style="width: 70px; text-align:center">
 					<spring:message code='ezAttitude.t20' />
 	            </th> 
-	            <td id="dayChkBox" style="width: 500px; text-align:left">
+	            <td id="dayChkBox" style="width: 500px; text-align:left; white-space: nowrap;">
 	            	<input type="checkbox"/><spring:message code='ezAttitude.t21' />
 	            	<input type="checkbox"/><spring:message code='ezAttitude.t22' />
 	            	<input type="checkbox"/><spring:message code='ezAttitude.t23' />

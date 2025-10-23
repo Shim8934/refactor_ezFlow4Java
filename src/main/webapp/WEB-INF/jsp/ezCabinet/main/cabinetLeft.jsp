@@ -67,7 +67,7 @@
 				</span>
 			</div>
 		</div>
-		
+		<input type="hidden" id="userLang" value="${UserLang}">
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')      }"></script>
 		<script type="text/javascript" src="${util.addVer('ezCabinet.lang', 'msg')                }"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezCabinet/cabinetTree.js')         }"></script>
@@ -91,7 +91,7 @@
 				}
 				
 				function resizeWindow() {
-					$(".cabinetListBox").height(window.innerHeight - 105);
+					$(".cabinetListBox").height("100vh");
 				}
 				
 				function setButtons() {

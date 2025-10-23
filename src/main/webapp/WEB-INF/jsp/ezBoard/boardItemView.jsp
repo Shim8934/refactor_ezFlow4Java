@@ -1955,12 +1955,12 @@
                 var currentDate = new Date();
 
                 if (newStartDate > currentDate) {
-                    alert("예약게시물 및 공개시기가 지나지 않은 게시물은 재게시가 불가능합니다.");
+                    alert("<spring:message code='ezBoard.repostLhr05' />");
                     return;
                 }
 
                 if (newEndDate < currentDate) {
-                    alert("게시기간이 만료된 게시물은 재게시가 불가능합니다.");
+                    alert("<spring:message code='ezBoard.repostLhr04' />");
                     return;
                 }
                 
@@ -1976,13 +1976,13 @@
                     return;
                 }
                 
-                if(confirm("재게시를 하시면 최근 게시물로 등록됩니다.\n재게시 하시겠습니까?")) {
+                if(confirm("<spring:message code='ezBoard.repostLhr01' />")) {
                     var xmlhttp = createXMLHttpRequest();
                     xmlhttp.open("POST", "/ezBoard/repostItem.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(pItemID) + "&userID=" + userInfoID +  "&hasReply=" + CheckIfHasReplies(), false);
                     xmlhttp.send();
 
                     if (xmlhttp.responseText == "SUCCESS") {
-                        alert("재게시가 완료되었습니다.");
+                        alert("<spring:message code='ezBoard.repostLhr02' />");
                         window.location.reload();
 
                         //if (boardItemView == "P") {
@@ -2685,7 +2685,7 @@
 								</c:when>
 								<c:otherwise>
 								    <tr>
-										<th style="text-align:center; width: 85%; border-left:1px solid #e2e2e2; border-top:1px solid #e2e2e2; border-bottom:1px solid #e2e2e2;">
+										<th style="text-align:center; width: 81%; border-left:1px solid #e2e2e2; border-top:1px solid #e2e2e2; border-bottom:1px solid #e2e2e2;">
 											<%-- 2023-11-07 전인하 - 게시판 > 이모티콘 아이콘 삽입 --%>
                                             <div class="emoticonRelative">								    
                                                 <img id="_addEmoticon" class="_addEmoticon" src="/images/poll/add_emo_vote.png" onclick="addSticker(this)">
@@ -2699,11 +2699,11 @@
 									</tr>
 								</c:when>
 								<c:otherwise>
-										<th style="text-align:center;border-top:1px solid #e2e2e2; border-bottom:1px solid #e2e2e2; border-right:1px solid #e2e2e2;width:15%;">
+										<th style="text-align:center;border-top:1px solid #e2e2e2; border-bottom:1px solid #e2e2e2; border-right:1px solid #e2e2e2;width:11%;">
 										    <c:if test='${boardInfo.attachmentFlag eq "Y"}'>
-											    <a class='imgbtn' style="vertical-align: middle"><span onclick="btnfileup('commentFile')"><spring:message code='ezBoard.commentAttach.JIH01' /></span></a><br/>
+											    <a class='imgbtn comment' style="vertical-align: middle"><span onclick="btnfileup('commentFile')"><spring:message code='ezBoard.commentAttach.JIH01' /></span></a><br/>
 											</c:if>
-											<a class='imgbtn' style="vertical-align: middle"><span onclick="Save_OneLineReply(this)"><spring:message code='ezBoard.t98' /></span></a>
+											<a class='imgbtn comment' style="vertical-align: middle"><span onclick="Save_OneLineReply(this)"><spring:message code='ezBoard.t98' /></span></a>
 										</th>
 									</tr>
 								</c:otherwise>
@@ -2716,9 +2716,9 @@
 										<span style = "font-weight:normal; display:inline-block; margin-top:2px"><spring:message code='ezBoard.t438' />&nbsp;</span>
 										<span><input type="password" id="txtPassWord" maxlength="20" size="20" />&nbsp;</span>
 										<c:if test='${boardInfo.attachmentFlag eq "Y"}'>
-										    <a class='imgbtn' style="vertical-align: middle"><span onclick="btnfileup('commentFile')"><spring:message code='ezBoard.commentAttach.JIH01' /></span></a>
+										    <a class='imgbtn comment' style="vertical-align: middle"><span onclick="btnfileup('commentFile')"><spring:message code='ezBoard.commentAttach.JIH01' /></span></a>
 										</c:if>
-										<a class='imgbtn' style="vertical-align: middle"><span onclick="Save_OneLineReply(this)"><spring:message code='ezBoard.t98' /></span></a>
+										<a class='imgbtn comment' style="vertical-align: middle"><span onclick="Save_OneLineReply(this)"><spring:message code='ezBoard.t98' /></span></a>
 									</th>
 								</tr>
 							</c:if>

@@ -3512,10 +3512,10 @@ function btnSendAround_onclick() {
         aprgongramline_cross_dialogArguments[0] = para;
         aprgongramline_cross_dialogArguments[1] = btnSendAround_onclick_Complete;
 
-//        var OpenWin = window.open(url, "AprGongRamLine_Cross", GetOpenWindowfeature(1200, 760));
+//        var OpenWin = window.open(url, "AprGongRamLine_Cross", GetOpenWindowfeature(1200, 780));
 //        try { OpenWin.focus(); } catch (e) { }
         ezCommon_cross_dialogArguments[0] = para;
-        showPopup(url, 1200, 760, "AprGongRamLine_Cross", GetOpenWindowfeature(1200, 760), btnSendAround_onclick_Complete);
+        showPopup(url, 1200, 780, "AprGongRamLine_Cross", GetOpenWindowfeature(1200, 780), btnSendAround_onclick_Complete);
     }
 }
 

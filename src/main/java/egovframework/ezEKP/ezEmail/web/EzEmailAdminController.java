@@ -3696,6 +3696,7 @@ public class EzEmailAdminController {
 		model.addAttribute("useCopyrightMenu", useCopyrightMenu);
 		model.addAttribute("useApprMail", useApprMail);
 		model.addAttribute("UseDisablePopImap", UseDisablePopImap);
+		model.addAttribute("lang", user.getLang());
 		
 		return "admin/ezEmail/adminMailLeft";
 	}

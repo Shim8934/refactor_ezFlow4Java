@@ -817,9 +817,9 @@
 			        var ezStatisticsSearch_Cross;
 			        
 			        if (approvalFlag == "S") {
-				        ezStatisticsSearch_Cross = window.open("/admin/ezApprovalG/search.do?ingFlag=APR", "ezStatisticsSearch", GetOpenWindowfeature(510, 314));
+				        ezStatisticsSearch_Cross = window.open("/admin/ezApprovalG/search.do?ingFlag=APR", "ezStatisticsSearch", GetOpenWindowfeature(560, 314));
 			        } else {
-				        ezStatisticsSearch_Cross = window.open("/admin/ezApprovalG/search.do?ingFlag=APR", "ezStatisticsSearch", GetOpenWindowfeature(510, 404));
+				        ezStatisticsSearch_Cross = window.open("/admin/ezApprovalG/search.do?ingFlag=APR", "ezStatisticsSearch", GetOpenWindowfeature(560, 404));
 			        }
 
 			        try { ezStatisticsSearch_Cross.focus(); } catch (e) {

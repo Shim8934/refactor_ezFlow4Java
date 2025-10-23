@@ -13,6 +13,7 @@ import egovframework.com.cmm.service.EzFileMngUtil;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGKlibService;
 import egovframework.ezEKP.ezBoard.service.EzBoardService;
 import egovframework.ezEKP.ezCommunity.dao.EzCommunityDAO;
+import egovframework.ezEKP.ezBoard.vo.BoardListHeaderVO;
 import egovframework.ezEKP.ezCommon.dao.EzCommonDAO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezCommon.vo.ApprovPWDVO;
@@ -5705,7 +5706,7 @@ public class EzCommonServiceImpl extends EzFileMngUtil implements EzCommonServic
                 "\t\t\t\t\t\t\t\t <tr>\n" +
                 "\t\t\t\t\t\t\t\t\t<td width=\"629\" height=\"50\" style=\"border: 1px rgb(255, 255, 255); border-image: none; width: 629px; height: 50px; vertical-align: middle;\">\n" +
                 "\t\t\t\t\t\t\t\t\t   <p align=\"center\" style=\"font-family: 맑은 고딕; font-size: 13px;\">\n" +
-                "\t\t\t\t\t\t\t\t\t\t  <span style=\"font-size: 24pt; font-weight: bold;\">Daily Journal</span>\n" +
+                "\t\t\t\t\t\t\t\t\t\t  <span style=\"font-size: 24pt; font-weight: bold;\">Laporan Harian Pekerjaan</span>\n" +
                 "\t\t\t\t\t\t\t\t\t   </p>\n" +
                 "\t\t\t\t\t\t\t\t\t</td>\n" +
                 "\t\t\t\t\t\t\t\t </tr>\n" +
@@ -5726,7 +5727,7 @@ public class EzCommonServiceImpl extends EzFileMngUtil implements EzCommonServic
                 "\t\t\t\t\t\t\t\t\t<tr>\n" +
                 "\t\t\t\t\t\t\t\t\t   <td width=\"115\"style=\"width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;\">\n" +
                 "\t\t\t\t\t\t\t\t\t\t  <p align=\"center\" style=\"font-family: 맑은 고딕; font-size: 13px;\">\n" +
-                "\t\t\t\t\t\t\t\t\t\t\t <span style=\"font-weight: bold;\">Department</span>\n" +
+                "\t\t\t\t\t\t\t\t\t\t\t <span style=\"font-weight: bold;\">Departemen</span>\n" +
                 "\t\t\t\t\t\t\t\t\t\t  </p>\n" +
                 "\t\t\t\t\t\t\t\t\t   </td>\n" +
                 "\t\t\t\t\t\t\t\t\t   <td width=\"186\" class=\"FIELD\" id=\"journalWriterDept\" style=\"width: 186px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;\" free=\"\">\n" +
@@ -5736,7 +5737,7 @@ public class EzCommonServiceImpl extends EzFileMngUtil implements EzCommonServic
                 "\t\t\t\t\t\t\t\t\t<tr>\n" +
                 "\t\t\t\t\t\t\t\t\t   <td width=\"115\" style=\"width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;\">\n" +
                 "\t\t\t\t\t\t\t\t\t\t  <p align=\"center\" style=\"font-family: 맑은 고딕; font-size: 13px;\">\n" +
-                "\t\t\t\t\t\t\t\t\t\t\t <span style=\"font-weight: bold;\">Writer</span>\n" +
+                "\t\t\t\t\t\t\t\t\t\t\t <span style=\"font-weight: bold;\">Penulis</span>\n" +
                 "\t\t\t\t\t\t\t\t\t\t  </p>\n" +
                 "\t\t\t\t\t\t\t\t\t   </td>\n" +
                 "\t\t\t\t\t\t\t\t\t   <td width=\"186\" class=\"FIELD\" id=\"journalWriterName\" style=\"width: 186px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;\" free=\"\">\n" +
@@ -5746,7 +5747,7 @@ public class EzCommonServiceImpl extends EzFileMngUtil implements EzCommonServic
                 "\t\t\t\t\t\t\t\t\t<tr>\n" +
                 "\t\t\t\t\t\t\t\t\t   <td width=\"115\" style=\"width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-style: solid; border-bottom-style: solid; border-left-style: solid;\">\n" +
                 "\t\t\t\t\t\t\t\t\t\t  <p align=\"center\" style=\"font-family: 맑은 고딕; font-size: 13px;\">\n" +
-                "\t\t\t\t\t\t\t\t\t\t\t <span style=\"font-weight: bold;\">Date</span>\n" +
+                "\t\t\t\t\t\t\t\t\t\t\t <span style=\"font-weight: bold;\">Tanggal Penulisan</span>\n" +
                 "\t\t\t\t\t\t\t\t\t\t  </p>\n" +
                 "\t\t\t\t\t\t\t\t\t   </td>\n" +
                 "\t\t\t\t\t\t\t\t\t   <td width=\"186\" class=\"FIELD\" id=\"journalWriteDate\" style=\"border: 1px solid rgb(0, 0, 0); border-image: none; width: 186px; vertical-align: middle;\" free=\"\">\n" +
@@ -5770,19 +5771,19 @@ public class EzCommonServiceImpl extends EzFileMngUtil implements EzCommonServic
                 "\t\t\t\t\t\t\t\t <tr>\n" +
                 "\t\t\t\t\t\t\t\t\t<td width=\"104\" height=\"38\" style=\"width: 104px; height: 38px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid; background-color: #edf3f8;\">\n" +
                 "\t\t\t\t\t\t\t\t\t   <p align=\"center\" style=\"font-family: 맑은 고딕; font-size: 13px;\">\n" +
-                "\t\t\t\t\t\t\t\t\t\t  <span style=\"font-weight: bold;\">Type</span>\n" +
+                "\t\t\t\t\t\t\t\t\t\t  <span style=\"font-weight: bold;\">Klasifikasi</span>\n" +
                 "\t\t\t\t\t\t\t\t\t   </p>\n" +
                 "\t\t\t\t\t\t\t\t\t</td>\n" +
                 "\t\t\t\t\t\t\t\t\t<td width=\"520\" height=\"38\" style=\"width: 520px; height: 38px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid; background-color: #edf3f8;\">\n" +
                 "\t\t\t\t\t\t\t\t\t   <p align=\"center\" style=\"font-family: 맑은 고딕; font-size: 13px;\">\n" +
-                "\t\t\t\t\t\t\t\t\t\t  <span style=\"font-weight: bold;\">Task Details</span>\n" +
+                "\t\t\t\t\t\t\t\t\t\t  <span style=\"font-weight: bold;\">Isi Pekerjaan dan Perkembangan</span>\n" +
                 "\t\t\t\t\t\t\t\t\t   </p>\n" +
                 "\t\t\t\t\t\t\t\t\t</td>\n" +
                 "\t\t\t\t\t\t\t\t </tr>\n" +
                 "\t\t\t\t\t\t\t\t <tr>\n" +
                 "\t\t\t\t\t\t\t\t\t<td width=\"104\" height=\"200\" style=\"width: 104px; height: 200px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;\">\n" +
                 "\t\t\t\t\t\t\t\t\t   <p align=\"center\" style=\"font-family: 맑은 고딕; font-size: 13px;\">\n" +
-                "\t\t\t\t\t\t\t\t\t\t  <span style=\"font-weight: bold;\">Today</span>\n" +
+                "\t\t\t\t\t\t\t\t\t\t  <span style=\"font-weight: bold;\">Hari Ini</span>\n" +
                 "\t\t\t\t\t\t\t\t\t   </p>\n" +
                 "\t\t\t\t\t\t\t\t\t</td>\n" +
                 "\t\t\t\t\t\t\t\t\t<td width=\"520\" id=\"thisJournal\" style=\"width: 520px; vertical-align: top; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;\" free=\"\">\n" +
@@ -5792,7 +5793,7 @@ public class EzCommonServiceImpl extends EzFileMngUtil implements EzCommonServic
                 "\t\t\t\t\t\t\t\t <tr>\n" +
                 "\t\t\t\t\t\t\t\t\t<td width=\"104\" height=\"200\" style=\"border-width: 1px medium 1px 1px; border-style: solid none solid solid; border-color: rgb(0, 0, 0) currentColor rgb(0, 0, 0) rgb(0, 0, 0); border-image: none; width: 104px; height: 200px; vertical-align: middle;\">\n" +
                 "\t\t\t\t\t\t\t\t\t   <p align=\"center\" style=\"font-family: 맑은 고딕; font-size: 13px;\">\n" +
-                "\t\t\t\t\t\t\t\t\t\t  <span style=\"font-weight: bold;\">Tomorrow</span>\n" +
+                "\t\t\t\t\t\t\t\t\t\t  <span style=\"font-weight: bold;\">Hari Berikutnya</span>\n" +
                 "\t\t\t\t\t\t\t\t\t   </p>\n" +
                 "\t\t\t\t\t\t\t\t\t</td>\n" +
                 "\t\t\t\t\t\t\t\t\t<td width=\"520\" id=\"nextJournal\" style=\"border: 1px solid rgb(0, 0, 0); border-image: none; width: 520px; vertical-align: top;\" free=\"\">\n" +
@@ -6300,7 +6301,7 @@ public class EzCommonServiceImpl extends EzFileMngUtil implements EzCommonServic
                 "\t\t\t\t\t\t\t\t\t <tr>\n" +
                 "\t\t\t\t\t\t\t\t\t\t<td width=\"629\" height=\"50\" style=\"border: 1px rgb(255, 255, 255); border-image: none; width: 629px; height: 50px; vertical-align: middle;\">\n" +
                 "\t\t\t\t\t\t\t\t\t\t   <p align=\"center\" style=\"font-family: 맑은 고딕; font-size: 13px;\">\n" +
-                "\t\t\t\t\t\t\t\t\t\t\t  <span style=\"font-size: 24pt; font-weight: bold;\">Weekly Journal</span>\n" +
+                "\t\t\t\t\t\t\t\t\t\t\t  <span style=\"font-size: 24pt; font-weight: bold;\">Laporan Mingguan Pekerjaan</span>\n" +
                 "\t\t\t\t\t\t\t\t\t\t   </p>\n" +
                 "\t\t\t\t\t\t\t\t\t\t</td>\n" +
                 "\t\t\t\t\t\t\t\t\t </tr>\n" +
@@ -6321,7 +6322,7 @@ public class EzCommonServiceImpl extends EzFileMngUtil implements EzCommonServic
                 "\t\t\t\t\t\t\t\t\t\t<tr>\n" +
                 "\t\t\t\t\t\t\t\t\t\t   <td width=\"115\"style=\"width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;\">\n" +
                 "\t\t\t\t\t\t\t\t\t\t\t  <p align=\"center\" style=\"font-family: 맑은 고딕; font-size: 13px;\">\n" +
-                "\t\t\t\t\t\t\t\t\t\t\t\t <span style=\"font-weight: bold;\">Department</span>\n" +
+                "\t\t\t\t\t\t\t\t\t\t\t\t <span style=\"font-weight: bold;\">Departemen</span>\n" +
                 "\t\t\t\t\t\t\t\t\t\t\t  </p>\n" +
                 "\t\t\t\t\t\t\t\t\t\t   </td>\n" +
                 "\t\t\t\t\t\t\t\t\t\t   <td width=\"186\" class=\"FIELD\" id=\"journalWriterDept\" style=\"width: 186px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;\" free=\"\">\n" +
@@ -6331,7 +6332,7 @@ public class EzCommonServiceImpl extends EzFileMngUtil implements EzCommonServic
                 "\t\t\t\t\t\t\t\t\t\t<tr>\n" +
                 "\t\t\t\t\t\t\t\t\t\t   <td width=\"115\" style=\"width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;\">\n" +
                 "\t\t\t\t\t\t\t\t\t\t\t  <p align=\"center\" style=\"font-family: 맑은 고딕; font-size: 13px;\">\n" +
-                "\t\t\t\t\t\t\t\t\t\t\t\t <span style=\"font-weight: bold;\">Writer</span>\n" +
+                "\t\t\t\t\t\t\t\t\t\t\t\t <span style=\"font-weight: bold;\">Penulis</span>\n" +
                 "\t\t\t\t\t\t\t\t\t\t\t  </p>\n" +
                 "\t\t\t\t\t\t\t\t\t\t   </td>\n" +
                 "\t\t\t\t\t\t\t\t\t\t   <td width=\"186\" class=\"FIELD\" id=\"journalWriterName\" style=\"width: 186px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;\" free=\"\">\n" +
@@ -6341,7 +6342,7 @@ public class EzCommonServiceImpl extends EzFileMngUtil implements EzCommonServic
                 "\t\t\t\t\t\t\t\t\t\t<tr>\n" +
                 "\t\t\t\t\t\t\t\t\t\t   <td width=\"115\" style=\"width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-style: solid; border-bottom-style: solid; border-left-style: solid;\">\n" +
                 "\t\t\t\t\t\t\t\t\t\t\t  <p align=\"center\" style=\"font-family: 맑은 고딕; font-size: 13px;\">\n" +
-                "\t\t\t\t\t\t\t\t\t\t\t\t <span style=\"font-weight: bold;\">Date</span>\n" +
+                "\t\t\t\t\t\t\t\t\t\t\t\t <span style=\"font-weight: bold;\">Tanggal Penulisan</span>\n" +
                 "\t\t\t\t\t\t\t\t\t\t\t  </p>\n" +
                 "\t\t\t\t\t\t\t\t\t\t   </td>\n" +
                 "\t\t\t\t\t\t\t\t\t\t   <td width=\"186\" class=\"FIELD\" id=\"journalWriteDate\" style=\"border: 1px solid rgb(0, 0, 0); border-image: none; width: 186px; vertical-align: middle;\" free=\"\">\n" +
@@ -6365,19 +6366,19 @@ public class EzCommonServiceImpl extends EzFileMngUtil implements EzCommonServic
                 "\t\t\t\t\t\t\t\t\t <tr>\n" +
                 "\t\t\t\t\t\t\t\t\t\t<td width=\"104\" height=\"38\" style=\"width: 104px; height: 38px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid; background-color: #edf3f8;\">\n" +
                 "\t\t\t\t\t\t\t\t\t\t   <p align=\"center\" style=\"font-family: 맑은 고딕; font-size: 13px;\">\n" +
-                "\t\t\t\t\t\t\t\t\t\t\t  <span style=\"font-weight: bold;\">Type</span>\n" +
+                "\t\t\t\t\t\t\t\t\t\t\t  <span style=\"font-weight: bold;\">Klasifikasi</span>\n" +
                 "\t\t\t\t\t\t\t\t\t\t   </p>\n" +
                 "\t\t\t\t\t\t\t\t\t\t</td>\n" +
                 "\t\t\t\t\t\t\t\t\t\t<td width=\"520\" height=\"38\" style=\"width: 520px; height: 38px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid; background-color: #edf3f8;\">\n" +
                 "\t\t\t\t\t\t\t\t\t\t   <p align=\"center\" style=\"font-family: 맑은 고딕; font-size: 13px;\">\n" +
-                "\t\t\t\t\t\t\t\t\t\t\t  <span style=\"font-weight: bold;\">Task Details</span>\n" +
+                "\t\t\t\t\t\t\t\t\t\t\t  <span style=\"font-weight: bold;\">Isi Pekerjaan dan Perkembangan</span>\n" +
                 "\t\t\t\t\t\t\t\t\t\t   </p>\n" +
                 "\t\t\t\t\t\t\t\t\t\t</td>\n" +
                 "\t\t\t\t\t\t\t\t\t </tr>\n" +
                 "\t\t\t\t\t\t\t\t\t <tr>\n" +
                 "\t\t\t\t\t\t\t\t\t\t<td width=\"104\" height=\"200\" style=\"width: 104px; height: 200px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;\">\n" +
                 "\t\t\t\t\t\t\t\t\t\t   <p align=\"center\" style=\"font-family: 맑은 고딕; font-size: 13px;\">\n" +
-                "\t\t\t\t\t\t\t\t\t\t\t  <span style=\"font-weight: bold;\">This Week</span>\n" +
+                "\t\t\t\t\t\t\t\t\t\t\t  <span style=\"font-weight: bold;\">Minggu Ini</span>\n" +
                 "\t\t\t\t\t\t\t\t\t\t   </p>\n" +
                 "\t\t\t\t\t\t\t\t\t\t</td>\n" +
                 "\t\t\t\t\t\t\t\t\t\t<td width=\"520\" id=\"thisJournal\" style=\"width: 520px; vertical-align: top; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;\" free=\"\">\n" +
@@ -6387,7 +6388,7 @@ public class EzCommonServiceImpl extends EzFileMngUtil implements EzCommonServic
                 "\t\t\t\t\t\t\t\t\t <tr>\n" +
                 "\t\t\t\t\t\t\t\t\t\t<td width=\"104\" height=\"200\" style=\"border-width: 1px medium 1px 1px; border-style: solid none solid solid; border-color: rgb(0, 0, 0) currentColor rgb(0, 0, 0) rgb(0, 0, 0); border-image: none; width: 104px; height: 200px; vertical-align: middle;\">\n" +
                 "\t\t\t\t\t\t\t\t\t\t   <p align=\"center\" style=\"font-family: 맑은 고딕; font-size: 13px;\">\n" +
-                "\t\t\t\t\t\t\t\t\t\t\t  <span style=\"font-weight: bold;\">Next Week</span>\n" +
+                "\t\t\t\t\t\t\t\t\t\t\t  <span style=\"font-weight: bold;\">Minggu Depan</span>\n" +
                 "\t\t\t\t\t\t\t\t\t\t   </p>\n" +
                 "\t\t\t\t\t\t\t\t\t\t</td>\n" +
                 "\t\t\t\t\t\t\t\t\t\t<td width=\"520\" id=\"nextJournal\" style=\"border: 1px solid rgb(0, 0, 0); border-image: none; width: 520px; vertical-align: top;\" free=\"\">\n" +
@@ -6895,7 +6896,7 @@ public class EzCommonServiceImpl extends EzFileMngUtil implements EzCommonServic
                 "\t\t\t\t\t\t\t\t <tr>\n" +
                 "\t\t\t\t\t\t\t\t\t<td width=\"629\" height=\"50\" style=\"border: 1px rgb(255, 255, 255); border-image: none; width: 629px; height: 50px; vertical-align: middle;\">\n" +
                 "\t\t\t\t\t\t\t\t\t   <p align=\"center\" style=\"font-family: 맑은 고딕; font-size: 13px;\">\n" +
-                "\t\t\t\t\t\t\t\t\t\t  <span style=\"font-size: 24pt; font-weight: bold;\">Monthly Journal</span>\n" +
+                "\t\t\t\t\t\t\t\t\t\t  <span style=\"font-size: 24pt; font-weight: bold;\">Laporan Bulanan Pekerjaan</span>\n" +
                 "\t\t\t\t\t\t\t\t\t   </p>\n" +
                 "\t\t\t\t\t\t\t\t\t</td>\n" +
                 "\t\t\t\t\t\t\t\t </tr>\n" +
@@ -6916,7 +6917,7 @@ public class EzCommonServiceImpl extends EzFileMngUtil implements EzCommonServic
                 "\t\t\t\t\t\t\t\t\t<tr>\n" +
                 "\t\t\t\t\t\t\t\t\t   <td width=\"115\"style=\"width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;\">\n" +
                 "\t\t\t\t\t\t\t\t\t\t  <p align=\"center\" style=\"font-family: 맑은 고딕; font-size: 13px;\">\n" +
-                "\t\t\t\t\t\t\t\t\t\t\t <span style=\"font-weight: bold;\">Department</span>\n" +
+                "\t\t\t\t\t\t\t\t\t\t\t <span style=\"font-weight: bold;\">Departemen</span>\n" +
                 "\t\t\t\t\t\t\t\t\t\t  </p>\n" +
                 "\t\t\t\t\t\t\t\t\t   </td>\n" +
                 "\t\t\t\t\t\t\t\t\t   <td width=\"186\" class=\"FIELD\" id=\"journalWriterDept\" style=\"width: 186px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;\" free=\"\">\n" +
@@ -6926,7 +6927,7 @@ public class EzCommonServiceImpl extends EzFileMngUtil implements EzCommonServic
                 "\t\t\t\t\t\t\t\t\t<tr>\n" +
                 "\t\t\t\t\t\t\t\t\t   <td width=\"115\" style=\"width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;\">\n" +
                 "\t\t\t\t\t\t\t\t\t\t  <p align=\"center\" style=\"font-family: 맑은 고딕; font-size: 13px;\">\n" +
-                "\t\t\t\t\t\t\t\t\t\t\t <span style=\"font-weight: bold;\">Writer</span>\n" +
+                "\t\t\t\t\t\t\t\t\t\t\t <span style=\"font-weight: bold;\">Penulis</span>\n" +
                 "\t\t\t\t\t\t\t\t\t\t  </p>\n" +
                 "\t\t\t\t\t\t\t\t\t   </td>\n" +
                 "\t\t\t\t\t\t\t\t\t   <td width=\"186\" class=\"FIELD\" id=\"journalWriterName\" style=\"width: 186px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;\" free=\"\">\n" +
@@ -6936,7 +6937,7 @@ public class EzCommonServiceImpl extends EzFileMngUtil implements EzCommonServic
                 "\t\t\t\t\t\t\t\t\t<tr>\n" +
                 "\t\t\t\t\t\t\t\t\t   <td width=\"115\" style=\"width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-style: solid; border-bottom-style: solid; border-left-style: solid;\">\n" +
                 "\t\t\t\t\t\t\t\t\t\t  <p align=\"center\" style=\"font-family: 맑은 고딕; font-size: 13px;\">\n" +
-                "\t\t\t\t\t\t\t\t\t\t\t <span style=\"font-weight: bold;\">Date</span>\n" +
+                "\t\t\t\t\t\t\t\t\t\t\t <span style=\"font-weight: bold;\">Tanggal Penulisan</span>\n" +
                 "\t\t\t\t\t\t\t\t\t\t  </p>\n" +
                 "\t\t\t\t\t\t\t\t\t   </td>\n" +
                 "\t\t\t\t\t\t\t\t\t   <td width=\"186\" class=\"FIELD\" id=\"journalWriteDate\" style=\"border: 1px solid rgb(0, 0, 0); border-image: none; width: 186px; vertical-align: middle;\" free=\"\">\n" +
@@ -6960,19 +6961,19 @@ public class EzCommonServiceImpl extends EzFileMngUtil implements EzCommonServic
                 "\t\t\t\t\t\t\t\t <tr>\n" +
                 "\t\t\t\t\t\t\t\t\t<td width=\"104\" height=\"38\" style=\"width: 104px; height: 38px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid; background-color: #edf3f8;\">\n" +
                 "\t\t\t\t\t\t\t\t\t   <p align=\"center\" style=\"font-family: 맑은 고딕; font-size: 13px;\">\n" +
-                "\t\t\t\t\t\t\t\t\t\t  <span style=\"font-weight: bold;\">Type</span>\n" +
+                "\t\t\t\t\t\t\t\t\t\t  <span style=\"font-weight: bold;\">Klasifikasi</span>\n" +
                 "\t\t\t\t\t\t\t\t\t   </p>\n" +
                 "\t\t\t\t\t\t\t\t\t</td>\n" +
                 "\t\t\t\t\t\t\t\t\t<td width=\"520\" height=\"38\" style=\"width: 520px; height: 38px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid; background-color: #edf3f8;\">\n" +
                 "\t\t\t\t\t\t\t\t\t   <p align=\"center\" style=\"font-family: 맑은 고딕; font-size: 13px;\">\n" +
-                "\t\t\t\t\t\t\t\t\t\t  <span style=\"font-weight: bold;\">Task Details</span>\n" +
+                "\t\t\t\t\t\t\t\t\t\t  <span style=\"font-weight: bold;\">Isi Pekerjaan dan Perkembangan</span>\n" +
                 "\t\t\t\t\t\t\t\t\t   </p>\n" +
                 "\t\t\t\t\t\t\t\t\t</td>\n" +
                 "\t\t\t\t\t\t\t\t </tr>\n" +
                 "\t\t\t\t\t\t\t\t <tr>\n" +
                 "\t\t\t\t\t\t\t\t\t<td width=\"104\" height=\"200\" style=\"width: 104px; height: 200px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;\">\n" +
                 "\t\t\t\t\t\t\t\t\t   <p align=\"center\" style=\"font-family: 맑은 고딕; font-size: 13px;\">\n" +
-                "\t\t\t\t\t\t\t\t\t\t  <span style=\"font-weight: bold;\">This Month</span>\n" +
+                "\t\t\t\t\t\t\t\t\t\t  <span style=\"font-weight: bold;\">Bulan Ini</span>\n" +
                 "\t\t\t\t\t\t\t\t\t   </p>\n" +
                 "\t\t\t\t\t\t\t\t\t</td>\n" +
                 "\t\t\t\t\t\t\t\t\t<td width=\"520\" id=\"thisJournal\" style=\"width: 520px; vertical-align: top; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;\" free=\"\">\n" +
@@ -6982,7 +6983,7 @@ public class EzCommonServiceImpl extends EzFileMngUtil implements EzCommonServic
                 "\t\t\t\t\t\t\t\t <tr>\n" +
                 "\t\t\t\t\t\t\t\t\t<td width=\"104\" height=\"200\" style=\"border-width: 1px medium 1px 1px; border-style: solid none solid solid; border-color: rgb(0, 0, 0) currentColor rgb(0, 0, 0) rgb(0, 0, 0); border-image: none; width: 104px; height: 200px; vertical-align: middle;\">\n" +
                 "\t\t\t\t\t\t\t\t\t   <p align=\"center\" style=\"font-family: 맑은 고딕; font-size: 13px;\">\n" +
-                "\t\t\t\t\t\t\t\t\t\t  <span style=\"font-weight: bold;\">Next Month</span>\n" +
+                "\t\t\t\t\t\t\t\t\t\t  <span style=\"font-weight: bold;\">Bulan Depan</span>\n" +
                 "\t\t\t\t\t\t\t\t\t   </p>\n" +
                 "\t\t\t\t\t\t\t\t\t</td>\n" +
                 "\t\t\t\t\t\t\t\t\t<td width=\"520\" id=\"nextJournal\" style=\"border: 1px solid rgb(0, 0, 0); border-image: none; width: 520px; vertical-align: top;\" free=\"\">\n" +
@@ -7490,7 +7491,7 @@ public class EzCommonServiceImpl extends EzFileMngUtil implements EzCommonServic
                 "\t\t\t\t\t\t\t\t <tr>\n" +
                 "\t\t\t\t\t\t\t\t\t<td width=\"629\" height=\"50\" style=\"border: 1px rgb(255, 255, 255); border-image: none; width: 629px; height: 50px; vertical-align: middle;\">\n" +
                 "\t\t\t\t\t\t\t\t\t   <p align=\"center\" style=\"font-family: 맑은 고딕; font-size: 13px;\">\n" +
-                "\t\t\t\t\t\t\t\t\t\t  <span style=\"font-size: 24pt; font-weight: bold;\">Quarterly Journal</span>\n" +
+                "\t\t\t\t\t\t\t\t\t\t  <span style=\"font-size: 24pt; font-weight: bold;\">Laporan Triwulanan Pekerjaan</span>\n" +
                 "\t\t\t\t\t\t\t\t\t   </p>\n" +
                 "\t\t\t\t\t\t\t\t\t</td>\n" +
                 "\t\t\t\t\t\t\t\t </tr>\n" +
@@ -7511,7 +7512,7 @@ public class EzCommonServiceImpl extends EzFileMngUtil implements EzCommonServic
                 "\t\t\t\t\t\t\t\t\t<tr>\n" +
                 "\t\t\t\t\t\t\t\t\t   <td width=\"115\"style=\"width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;\">\n" +
                 "\t\t\t\t\t\t\t\t\t\t  <p align=\"center\" style=\"font-family: 맑은 고딕; font-size: 13px;\">\n" +
-                "\t\t\t\t\t\t\t\t\t\t\t <span style=\"font-weight: bold;\">Department</span>\n" +
+                "\t\t\t\t\t\t\t\t\t\t\t <span style=\"font-weight: bold;\">Departemen</span>\n" +
                 "\t\t\t\t\t\t\t\t\t\t  </p>\n" +
                 "\t\t\t\t\t\t\t\t\t   </td>\n" +
                 "\t\t\t\t\t\t\t\t\t   <td width=\"186\" class=\"FIELD\" id=\"journalWriterDept\" style=\"width: 186px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;\" free=\"\">\n" +
@@ -7521,7 +7522,7 @@ public class EzCommonServiceImpl extends EzFileMngUtil implements EzCommonServic
                 "\t\t\t\t\t\t\t\t\t<tr>\n" +
                 "\t\t\t\t\t\t\t\t\t   <td width=\"115\" style=\"width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;\">\n" +
                 "\t\t\t\t\t\t\t\t\t\t  <p align=\"center\" style=\"font-family: 맑은 고딕; font-size: 13px;\">\n" +
-                "\t\t\t\t\t\t\t\t\t\t\t <span style=\"font-weight: bold;\">Writer</span>\n" +
+                "\t\t\t\t\t\t\t\t\t\t\t <span style=\"font-weight: bold;\">Penulis</span>\n" +
                 "\t\t\t\t\t\t\t\t\t\t  </p>\n" +
                 "\t\t\t\t\t\t\t\t\t   </td>\n" +
                 "\t\t\t\t\t\t\t\t\t   <td width=\"186\" class=\"FIELD\" id=\"journalWriterName\" style=\"width: 186px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;\" free=\"\">\n" +
@@ -7531,7 +7532,7 @@ public class EzCommonServiceImpl extends EzFileMngUtil implements EzCommonServic
                 "\t\t\t\t\t\t\t\t\t<tr>\n" +
                 "\t\t\t\t\t\t\t\t\t   <td width=\"115\" style=\"width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-style: solid; border-bottom-style: solid; border-left-style: solid;\">\n" +
                 "\t\t\t\t\t\t\t\t\t\t  <p align=\"center\" style=\"font-family: 맑은 고딕; font-size: 13px;\">\n" +
-                "\t\t\t\t\t\t\t\t\t\t\t <span style=\"font-weight: bold;\">Date</span>\n" +
+                "\t\t\t\t\t\t\t\t\t\t\t <span style=\"font-weight: bold;\">Tanggal Penulisan</span>\n" +
                 "\t\t\t\t\t\t\t\t\t\t  </p>\n" +
                 "\t\t\t\t\t\t\t\t\t   </td>\n" +
                 "\t\t\t\t\t\t\t\t\t   <td width=\"186\" class=\"FIELD\" id=\"journalWriteDate\" style=\"border: 1px solid rgb(0, 0, 0); border-image: none; width: 186px; vertical-align: middle;\" free=\"\">\n" +
@@ -7555,19 +7556,19 @@ public class EzCommonServiceImpl extends EzFileMngUtil implements EzCommonServic
                 "\t\t\t\t\t\t\t\t <tr>\n" +
                 "\t\t\t\t\t\t\t\t\t<td width=\"104\" height=\"38\" style=\"width: 104px; height: 38px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid; background-color: #edf3f8;\">\n" +
                 "\t\t\t\t\t\t\t\t\t   <p align=\"center\" style=\"font-family: 맑은 고딕; font-size: 13px;\">\n" +
-                "\t\t\t\t\t\t\t\t\t\t  <span style=\"font-weight: bold;\">Type</span>\n" +
+                "\t\t\t\t\t\t\t\t\t\t  <span style=\"font-weight: bold;\">Klasifikasi</span>\n" +
                 "\t\t\t\t\t\t\t\t\t   </p>\n" +
                 "\t\t\t\t\t\t\t\t\t</td>\n" +
                 "\t\t\t\t\t\t\t\t\t<td width=\"520\" height=\"38\" style=\"width: 520px; height: 38px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid; background-color: #edf3f8;\">\n" +
                 "\t\t\t\t\t\t\t\t\t   <p align=\"center\" style=\"font-family: 맑은 고딕; font-size: 13px;\">\n" +
-                "\t\t\t\t\t\t\t\t\t\t  <span style=\"font-weight: bold;\">Task Details</span>\n" +
+                "\t\t\t\t\t\t\t\t\t\t  <span style=\"font-weight: bold;\">Isi Pekerjaan dan Perkembangan</span>\n" +
                 "\t\t\t\t\t\t\t\t\t   </p>\n" +
                 "\t\t\t\t\t\t\t\t\t</td>\n" +
                 "\t\t\t\t\t\t\t\t </tr>\n" +
                 "\t\t\t\t\t\t\t\t <tr>\n" +
                 "\t\t\t\t\t\t\t\t\t<td width=\"104\" height=\"200\" style=\"width: 104px; height: 200px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;\">\n" +
                 "\t\t\t\t\t\t\t\t\t   <p align=\"center\" style=\"font-family: 맑은 고딕; font-size: 13px;\">\n" +
-                "\t\t\t\t\t\t\t\t\t\t  <span style=\"font-weight: bold;\">This Quarter</span>\n" +
+                "\t\t\t\t\t\t\t\t\t\t  <span style=\"font-weight: bold;\">Triwulan Ini</span>\n" +
                 "\t\t\t\t\t\t\t\t\t   </p>\n" +
                 "\t\t\t\t\t\t\t\t\t</td>\n" +
                 "\t\t\t\t\t\t\t\t\t<td width=\"520\" id=\"thisJournal\" style=\"width: 520px; vertical-align: top; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;\" free=\"\">\n" +
@@ -7577,7 +7578,7 @@ public class EzCommonServiceImpl extends EzFileMngUtil implements EzCommonServic
                 "\t\t\t\t\t\t\t\t <tr>\n" +
                 "\t\t\t\t\t\t\t\t\t<td width=\"104\" height=\"200\" style=\"border-width: 1px medium 1px 1px; border-style: solid none solid solid; border-color: rgb(0, 0, 0) currentColor rgb(0, 0, 0) rgb(0, 0, 0); border-image: none; width: 104px; height: 200px; vertical-align: middle;\">\n" +
                 "\t\t\t\t\t\t\t\t\t   <p align=\"center\" style=\"font-family: 맑은 고딕; font-size: 13px;\">\n" +
-                "\t\t\t\t\t\t\t\t\t\t  <span style=\"font-weight: bold;\">Next Quarter</span>\n" +
+                "\t\t\t\t\t\t\t\t\t\t  <span style=\"font-weight: bold;\">Triwulan Depan</span>\n" +
                 "\t\t\t\t\t\t\t\t\t   </p>\n" +
                 "\t\t\t\t\t\t\t\t\t</td>\n" +
                 "\t\t\t\t\t\t\t\t\t<td width=\"520\" id=\"nextJournal\" style=\"border: 1px solid rgb(0, 0, 0); border-image: none; width: 520px; vertical-align: top;\" free=\"\">\n" +
@@ -8085,7 +8086,7 @@ public class EzCommonServiceImpl extends EzFileMngUtil implements EzCommonServic
                 "\t\t\t\t\t\t\t\t <tr>\n" +
                 "\t\t\t\t\t\t\t\t\t<td width=\"629\" height=\"50\" style=\"border: 1px rgb(255, 255, 255); border-image: none; width: 629px; height: 50px; vertical-align: middle;\">\n" +
                 "\t\t\t\t\t\t\t\t\t   <p align=\"center\" style=\"font-family: 맑은 고딕; font-size: 13px;\">\n" +
-                "\t\t\t\t\t\t\t\t\t\t  <span style=\"font-size: 24pt; font-weight: bold;\">Semiannual Journal</span>\n" +
+                "\t\t\t\t\t\t\t\t\t\t  <span style=\"font-size: 24pt; font-weight: bold;\">Laporan Semesteran Pekerjaan</span>\n" +
                 "\t\t\t\t\t\t\t\t\t   </p>\n" +
                 "\t\t\t\t\t\t\t\t\t</td>\n" +
                 "\t\t\t\t\t\t\t\t </tr>\n" +
@@ -8106,7 +8107,7 @@ public class EzCommonServiceImpl extends EzFileMngUtil implements EzCommonServic
                 "\t\t\t\t\t\t\t\t\t<tr>\n" +
                 "\t\t\t\t\t\t\t\t\t   <td width=\"115\"style=\"width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;\">\n" +
                 "\t\t\t\t\t\t\t\t\t\t  <p align=\"center\" style=\"font-family: 맑은 고딕; font-size: 13px;\">\n" +
-                "\t\t\t\t\t\t\t\t\t\t\t <span style=\"font-weight: bold;\">Department</span>\n" +
+                "\t\t\t\t\t\t\t\t\t\t\t <span style=\"font-weight: bold;\">Departemen</span>\n" +
                 "\t\t\t\t\t\t\t\t\t\t  </p>\n" +
                 "\t\t\t\t\t\t\t\t\t   </td>\n" +
                 "\t\t\t\t\t\t\t\t\t   <td width=\"186\" class=\"FIELD\" id=\"journalWriterDept\" style=\"width: 186px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;\" free=\"\">\n" +
@@ -8116,7 +8117,7 @@ public class EzCommonServiceImpl extends EzFileMngUtil implements EzCommonServic
                 "\t\t\t\t\t\t\t\t\t<tr>\n" +
                 "\t\t\t\t\t\t\t\t\t   <td width=\"115\" style=\"width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;\">\n" +
                 "\t\t\t\t\t\t\t\t\t\t  <p align=\"center\" style=\"font-family: 맑은 고딕; font-size: 13px;\">\n" +
-                "\t\t\t\t\t\t\t\t\t\t\t <span style=\"font-weight: bold;\">Writer</span>\n" +
+                "\t\t\t\t\t\t\t\t\t\t\t <span style=\"font-weight: bold;\">Penulis</span>\n" +
                 "\t\t\t\t\t\t\t\t\t\t  </p>\n" +
                 "\t\t\t\t\t\t\t\t\t   </td>\n" +
                 "\t\t\t\t\t\t\t\t\t   <td width=\"186\" class=\"FIELD\" id=\"journalWriterName\" style=\"width: 186px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;\" free=\"\">\n" +
@@ -8126,7 +8127,7 @@ public class EzCommonServiceImpl extends EzFileMngUtil implements EzCommonServic
                 "\t\t\t\t\t\t\t\t\t<tr>\n" +
                 "\t\t\t\t\t\t\t\t\t   <td width=\"115\" style=\"width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-style: solid; border-bottom-style: solid; border-left-style: solid;\">\n" +
                 "\t\t\t\t\t\t\t\t\t\t  <p align=\"center\" style=\"font-family: 맑은 고딕; font-size: 13px;\">\n" +
-                "\t\t\t\t\t\t\t\t\t\t\t <span style=\"font-weight: bold;\">Date</span>\n" +
+                "\t\t\t\t\t\t\t\t\t\t\t <span style=\"font-weight: bold;\">Tanggal Penulisan</span>\n" +
                 "\t\t\t\t\t\t\t\t\t\t  </p>\n" +
                 "\t\t\t\t\t\t\t\t\t   </td>\n" +
                 "\t\t\t\t\t\t\t\t\t   <td width=\"186\" class=\"FIELD\" id=\"journalWriteDate\" style=\"border: 1px solid rgb(0, 0, 0); border-image: none; width: 186px; vertical-align: middle;\" free=\"\">\n" +
@@ -8150,19 +8151,19 @@ public class EzCommonServiceImpl extends EzFileMngUtil implements EzCommonServic
                 "\t\t\t\t\t\t\t\t <tr>\n" +
                 "\t\t\t\t\t\t\t\t\t<td width=\"104\" height=\"38\" style=\"width: 104px; height: 38px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid; background-color: #edf3f8;\">\n" +
                 "\t\t\t\t\t\t\t\t\t   <p align=\"center\" style=\"font-family: 맑은 고딕; font-size: 13px;\">\n" +
-                "\t\t\t\t\t\t\t\t\t\t  <span style=\"font-weight: bold;\">Type</span>\n" +
+                "\t\t\t\t\t\t\t\t\t\t  <span style=\"font-weight: bold;\">Klasifikasi</span>\n" +
                 "\t\t\t\t\t\t\t\t\t   </p>\n" +
                 "\t\t\t\t\t\t\t\t\t</td>\n" +
                 "\t\t\t\t\t\t\t\t\t<td width=\"520\" height=\"38\" style=\"width: 520px; height: 38px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid; background-color: #edf3f8;\">\n" +
                 "\t\t\t\t\t\t\t\t\t   <p align=\"center\" style=\"font-family: 맑은 고딕; font-size: 13px;\">\n" +
-                "\t\t\t\t\t\t\t\t\t\t  <span style=\"font-weight: bold;\">Task Details</span>\n" +
+                "\t\t\t\t\t\t\t\t\t\t  <span style=\"font-weight: bold;\">Isi Pekerjaan dan Perkembangan</span>\n" +
                 "\t\t\t\t\t\t\t\t\t   </p>\n" +
                 "\t\t\t\t\t\t\t\t\t</td>\n" +
                 "\t\t\t\t\t\t\t\t </tr>\n" +
                 "\t\t\t\t\t\t\t\t <tr>\n" +
                 "\t\t\t\t\t\t\t\t\t<td width=\"104\" height=\"200\" style=\"width: 104px; height: 200px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;\">\n" +
                 "\t\t\t\t\t\t\t\t\t   <p align=\"center\" style=\"font-family: 맑은 고딕; font-size: 13px;\">\n" +
-                "\t\t\t\t\t\t\t\t\t\t  <span style=\"font-weight: bold;\">This Half-year</span>\n" +
+                "\t\t\t\t\t\t\t\t\t\t  <span style=\"font-weight: bold;\">Semester Ini</span>\n" +
                 "\t\t\t\t\t\t\t\t\t   </p>\n" +
                 "\t\t\t\t\t\t\t\t\t</td>\n" +
                 "\t\t\t\t\t\t\t\t\t<td width=\"520\" id=\"thisJournal\" style=\"width: 520px; vertical-align: top; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;\" free=\"\">\n" +
@@ -8172,7 +8173,7 @@ public class EzCommonServiceImpl extends EzFileMngUtil implements EzCommonServic
                 "\t\t\t\t\t\t\t\t <tr>\n" +
                 "\t\t\t\t\t\t\t\t\t<td width=\"104\" height=\"200\" style=\"border-width: 1px medium 1px 1px; border-style: solid none solid solid; border-color: rgb(0, 0, 0) currentColor rgb(0, 0, 0) rgb(0, 0, 0); border-image: none; width: 104px; height: 200px; vertical-align: middle;\">\n" +
                 "\t\t\t\t\t\t\t\t\t   <p align=\"center\" style=\"font-family: 맑은 고딕; font-size: 13px;\">\n" +
-                "\t\t\t\t\t\t\t\t\t\t  <span style=\"font-weight: bold;\">Next Half-year</span>\n" +
+                "\t\t\t\t\t\t\t\t\t\t  <span style=\"font-weight: bold;\">Semester Depan</span>\n" +
                 "\t\t\t\t\t\t\t\t\t   </p>\n" +
                 "\t\t\t\t\t\t\t\t\t</td>\n" +
                 "\t\t\t\t\t\t\t\t\t<td width=\"520\" id=\"nextJournal\" style=\"border: 1px solid rgb(0, 0, 0); border-image: none; width: 520px; vertical-align: top;\" free=\"\">\n" +
@@ -8680,7 +8681,7 @@ public class EzCommonServiceImpl extends EzFileMngUtil implements EzCommonServic
                 "\t\t\t\t\t\t\t\t\t <tr>\n" +
                 "\t\t\t\t\t\t\t\t\t\t<td width=\"629\" height=\"50\" style=\"border: 1px rgb(255, 255, 255); border-image: none; width: 629px; height: 50px; vertical-align: middle;\">\n" +
                 "\t\t\t\t\t\t\t\t\t\t   <p align=\"center\" style=\"font-family: 맑은 고딕; font-size: 13px;\">\n" +
-                "\t\t\t\t\t\t\t\t\t\t\t  <span style=\"font-size: 24pt; font-weight: bold;\">Annual Journal</span>\n" +
+                "\t\t\t\t\t\t\t\t\t\t\t  <span style=\"font-size: 24pt; font-weight: bold;\">Laporan Tahunan Pekerjaan</span>\n" +
                 "\t\t\t\t\t\t\t\t\t\t   </p>\n" +
                 "\t\t\t\t\t\t\t\t\t\t</td>\n" +
                 "\t\t\t\t\t\t\t\t\t </tr>\n" +
@@ -8701,7 +8702,7 @@ public class EzCommonServiceImpl extends EzFileMngUtil implements EzCommonServic
                 "\t\t\t\t\t\t\t\t\t\t<tr>\n" +
                 "\t\t\t\t\t\t\t\t\t\t   <td width=\"115\"style=\"width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;\">\n" +
                 "\t\t\t\t\t\t\t\t\t\t\t  <p align=\"center\" style=\"font-family: 맑은 고딕; font-size: 13px;\">\n" +
-                "\t\t\t\t\t\t\t\t\t\t\t\t <span style=\"font-weight: bold;\">Department</span>\n" +
+                "\t\t\t\t\t\t\t\t\t\t\t\t <span style=\"font-weight: bold;\">Departemen</span>\n" +
                 "\t\t\t\t\t\t\t\t\t\t\t  </p>\n" +
                 "\t\t\t\t\t\t\t\t\t\t   </td>\n" +
                 "\t\t\t\t\t\t\t\t\t\t   <td width=\"186\" class=\"FIELD\" id=\"journalWriterDept\" style=\"width: 186px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;\" free=\"\">\n" +
@@ -8711,7 +8712,7 @@ public class EzCommonServiceImpl extends EzFileMngUtil implements EzCommonServic
                 "\t\t\t\t\t\t\t\t\t\t<tr>\n" +
                 "\t\t\t\t\t\t\t\t\t\t   <td width=\"115\" style=\"width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;\">\n" +
                 "\t\t\t\t\t\t\t\t\t\t\t  <p align=\"center\" style=\"font-family: 맑은 고딕; font-size: 13px;\">\n" +
-                "\t\t\t\t\t\t\t\t\t\t\t\t <span style=\"font-weight: bold;\">Writer</span>\n" +
+                "\t\t\t\t\t\t\t\t\t\t\t\t <span style=\"font-weight: bold;\">Penulis</span>\n" +
                 "\t\t\t\t\t\t\t\t\t\t\t  </p>\n" +
                 "\t\t\t\t\t\t\t\t\t\t   </td>\n" +
                 "\t\t\t\t\t\t\t\t\t\t   <td width=\"186\" class=\"FIELD\" id=\"journalWriterName\" style=\"width: 186px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;\" free=\"\">\n" +
@@ -8721,7 +8722,7 @@ public class EzCommonServiceImpl extends EzFileMngUtil implements EzCommonServic
                 "\t\t\t\t\t\t\t\t\t\t<tr>\n" +
                 "\t\t\t\t\t\t\t\t\t\t   <td width=\"115\" style=\"width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-bottom-width: 1px; border-left-width: 1px; border-top-style: solid; border-bottom-style: solid; border-left-style: solid;\">\n" +
                 "\t\t\t\t\t\t\t\t\t\t\t  <p align=\"center\" style=\"font-family: 맑은 고딕; font-size: 13px;\">\n" +
-                "\t\t\t\t\t\t\t\t\t\t\t\t <span style=\"font-weight: bold;\">Date</span>\n" +
+                "\t\t\t\t\t\t\t\t\t\t\t\t <span style=\"font-weight: bold;\">Tanggal Penulisan</span>\n" +
                 "\t\t\t\t\t\t\t\t\t\t\t  </p>\n" +
                 "\t\t\t\t\t\t\t\t\t\t   </td>\n" +
                 "\t\t\t\t\t\t\t\t\t\t   <td width=\"186\" class=\"FIELD\" id=\"journalWriteDate\" style=\"border: 1px solid rgb(0, 0, 0); border-image: none; width: 186px; vertical-align: middle;\" free=\"\">\n" +
@@ -8745,19 +8746,19 @@ public class EzCommonServiceImpl extends EzFileMngUtil implements EzCommonServic
                 "\t\t\t\t\t\t\t\t\t <tr>\n" +
                 "\t\t\t\t\t\t\t\t\t\t<td width=\"104\" height=\"38\" style=\"width: 104px; height: 38px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid; background-color: #edf3f8;\">\n" +
                 "\t\t\t\t\t\t\t\t\t\t   <p align=\"center\" style=\"font-family: 맑은 고딕; font-size: 13px;\">\n" +
-                "\t\t\t\t\t\t\t\t\t\t\t  <span style=\"font-weight: bold;\">Type</span>\n" +
+                "\t\t\t\t\t\t\t\t\t\t\t  <span style=\"font-weight: bold;\">Klasifikasi</span>\n" +
                 "\t\t\t\t\t\t\t\t\t\t   </p>\n" +
                 "\t\t\t\t\t\t\t\t\t\t</td>\n" +
                 "\t\t\t\t\t\t\t\t\t\t<td width=\"520\" height=\"38\" style=\"width: 520px; height: 38px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid; background-color: #edf3f8;\">\n" +
                 "\t\t\t\t\t\t\t\t\t\t   <p align=\"center\" style=\"font-family: 맑은 고딕; font-size: 13px;\">\n" +
-                "\t\t\t\t\t\t\t\t\t\t\t  <span style=\"font-weight: bold;\">Task Details</span>\n" +
+                "\t\t\t\t\t\t\t\t\t\t\t  <span style=\"font-weight: bold;\">Isi Pekerjaan dan Perkembangan</span>\n" +
                 "\t\t\t\t\t\t\t\t\t\t   </p>\n" +
                 "\t\t\t\t\t\t\t\t\t\t</td>\n" +
                 "\t\t\t\t\t\t\t\t\t </tr>\n" +
                 "\t\t\t\t\t\t\t\t\t <tr>\n" +
                 "\t\t\t\t\t\t\t\t\t\t<td width=\"104\" height=\"200\" style=\"width: 104px; height: 200px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;\">\n" +
                 "\t\t\t\t\t\t\t\t\t\t   <p align=\"center\" style=\"font-family: 맑은 고딕; font-size: 13px;\">\n" +
-                "\t\t\t\t\t\t\t\t\t\t\t  <span style=\"font-weight: bold;\">This Year</span>\n" +
+                "\t\t\t\t\t\t\t\t\t\t\t  <span style=\"font-weight: bold;\">Tahun Ini</span>\n" +
                 "\t\t\t\t\t\t\t\t\t\t   </p>\n" +
                 "\t\t\t\t\t\t\t\t\t\t</td>\n" +
                 "\t\t\t\t\t\t\t\t\t\t<td width=\"520\" id=\"thisJournal\" style=\"width: 520px; vertical-align: top; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid;\" free=\"\">\n" +
@@ -8767,7 +8768,7 @@ public class EzCommonServiceImpl extends EzFileMngUtil implements EzCommonServic
                 "\t\t\t\t\t\t\t\t\t <tr>\n" +
                 "\t\t\t\t\t\t\t\t\t\t<td width=\"104\" height=\"200\" style=\"border-width: 1px medium 1px 1px; border-style: solid none solid solid; border-color: rgb(0, 0, 0) currentColor rgb(0, 0, 0) rgb(0, 0, 0); border-image: none; width: 104px; height: 200px; vertical-align: middle;\">\n" +
                 "\t\t\t\t\t\t\t\t\t\t   <p align=\"center\" style=\"font-family: 맑은 고딕; font-size: 13px;\">\n" +
-                "\t\t\t\t\t\t\t\t\t\t\t  <span style=\"font-weight: bold;\">Next Year</span>\n" +
+                "\t\t\t\t\t\t\t\t\t\t\t  <span style=\"font-weight: bold;\">Tahun Depan</span>\n" +
                 "\t\t\t\t\t\t\t\t\t\t   </p>\n" +
                 "\t\t\t\t\t\t\t\t\t\t</td>\n" +
                 "\t\t\t\t\t\t\t\t\t\t<td width=\"520\" id=\"nextJournal\" style=\"border: 1px solid rgb(0, 0, 0); border-image: none; width: 520px; vertical-align: top;\" free=\"\">\n" +
@@ -9014,4 +9015,551 @@ public class EzCommonServiceImpl extends EzFileMngUtil implements EzCommonServic
     public void createTblSamlRequestId() throws Exception {
         ezCommonDAO.createTblSamlRequestId();
     }
+    
+	@Override
+	public void addColumnsForIndonesian() throws Exception {
+		logger.debug("addColumnsForIndonesian started");
+		
+		ezCommonDAO.addColumnBoardItemListOptionForIndonesian();
+		ezCommonDAO.addColumnBoardItemListOptionBoarForIndonesian();
+		ezCommonDAO.addColumnBoardMyBoardsForIndonesian();
+		ezCommonDAO.addColumnBoardMyTreeForIndonesian();
+		ezCommonDAO.addColumnBoardTreeCacheForIndonesian();
+		ezCommonDAO.addColumnCircularListOptionForIndonesian();
+		ezCommonDAO.addColumnCodeListForIndonesian();
+		ezCommonDAO.addColumnListInfoForIndonesian();
+		ezCommonDAO.addColumnListOptionForIndonesian();
+		ezCommonDAO.addColumnBoardInfoForIndonesian();
+		
+		logger.debug("addColumnsForIndonesian ended");
+	}
+
+	@Override
+	public void insertIndonesianTenantConfig() throws Exception {
+		// 현재 존재하는 테넌트 리스트 조회
+		List<TenantVO> tenantIdList = ezCommonDAO.getTenantList();
+		
+		for (TenantVO tenantVO : tenantIdList) {
+			// 현재 테넌트 기준 PROPERTY_NAME like '%6’의 조회  결과가 0인지 확인
+			int lang6TenantCount = ezCommonDAO.countLangConfigForIndonesian(tenantVO.getTenantId());
+			
+			if (lang6TenantCount < 1) {
+				// lang6TenantCount이 0이라면 관련 데이터가 없다는 의미
+				// 'Lang%6'과 'LangSenary1' ~ 'LangSenary6' insert
+				ezCommonDAO.insertLangConfigForIndonesian(tenantVO.getTenantId());
+			}
+		}
+	}
+
+	@Override
+	public void addBoardExtColumnForMultiLang() throws Exception {
+		ezCommonDAO.addBoardExtColumnForMultiLang();
+	}
+	
+	@Override
+	public void updateInitDataForIndiLang() throws Exception {
+		
+		if (!ezCommonDAO.isChangedToIndi()) {
+			logger.debug("updateInitDataForIndiLang started.");
+			// TBL_CIRCULAR_LISTOPTION
+			String [][] tclDatas = {
+				{"CHECK", "CHECK", "CHECK"},
+				{"제목", "Title", "Judul"},
+				{"작성자", "Membername", "Nama anggota"},
+				{"등록일", "Regdate", "Tanggal registrasi"},
+				{"확인", "Confirm", "Konfirmasi"}
+			};
+			
+			// 다국어 처리를 위해 임의로 BoardListHeaderVO를 map 대신 사용
+			for (String[] data : tclDatas) {
+				BoardListHeaderVO vo = new BoardListHeaderVO();
+				vo.setName(data[0]);
+				vo.setName2(data[1]);
+				vo.setName6(data[2]);
+				
+				ezCommonDAO.updateTblCircularListoption(vo);
+			}
+			
+			// TBL_CODELIST
+			String [][] tcDatas = {
+				{"문서종류", "Type of document", "Tipe dokumen"},
+				{"시행문", "Enforcement", "Implementasi"},
+				{"내부결재", "Inner Approval", "Persetujuan Internal"},
+				{"수신문", "Receipt", "Terima"},
+				{"연계기안", "Linked Draft", "Draf Tertaut"},
+				{"협조", "Agreement(personal)", "Persetujuan (pribadi)"},
+				{"신청", "Application", "Aplikasi"},
+				{"대외접수", "Receipt(outside)", "Penerimaan (eksternal)"},
+				{"대외발송", "Sending(outside)", "Pengiriman (eksternal)"},
+				{"문서상태", "Doc. status", "Status Dokumen"},
+				{"품의", "Draft", "Tinjauan"},
+				{"협조", "Agreement(personal)", "Kerjasama (pribadi)"},
+				{"발송의뢰", "Request send", "Permintaan Kirim"},
+				{"수신", "Receipt", "Terima"},
+				{"합의", "Agreement", "Perjanjian"},
+				{"시행", "Enforcement", "Implementasi"},
+				{"사전감사", "Audit(dept.)", "Audit (dept.)"},
+				{"공람", "Display", "Tampilan"},
+				{"회람1", "Circular", "Edaran"},
+				{"참조", "Reference", "Referensi"},
+				{"사후공람", "Public viewing(After-approval)", "Publikasi(Pasca-Persetujuan)"},
+				{"발송", "Sending", "Mengirim"},
+				{"신청", "Application", "Aplikasi"},
+				{"반송", "Rejection", "Penolakan"},
+				{"회송", "Returning", "Pengembalian"},
+				{"결재방법", "Approval Method", "Metode Persetujuan"},
+				{"결재", "Approval", "Persetujuan"},
+				{"확인", "Confirmation", "Konfirmasi"},
+				{"결재안함", "Skip-approval", "Lewati-Persetujuan"},
+				{"전결", "Pre-approval", "Pra-Persetujuan"},
+				{"발송의뢰", "Request Sending", "Permintaan Pengiriman"},
+				{"개인순차합의", "Agreement(personal)", "Perjanjian (Pribadi)"},
+				{"개인병렬합의", "Parallel agreement(personal)", "Perjanjian Paralel (Pribadi)"},
+				{"부서순차합의", "Sequential agreement(dept.)", "Perjanjian Bertahap (Departemen)"},
+				{"부서병렬합의", "Parallel agreement(dept.)", "Perjanjian Paralel (Departemen)"},
+				{"사전감사", "Pre-audit", "Pra-audit"},
+				{"수신", "Receipt", "Terima"},
+				{"공람", "Display", "Tampilan"},
+				{"대결", "Deputy", "Deputi"},
+				{"회람", "Circular reference", "Referensi edaran"},
+				{"기안", "Draft", "Draf"},
+				{"검토", "Examination", "Pemeriksaan"},
+				{"결재처리상태", "Approval processing status", "Status proses persetujuan"},
+				{"미결", "Not approved", "Tidak Disetujui"},
+				{"대기", "Waiting", "Menunggu"},
+				{"진행", "In progress", "Proses"},
+				{"승인", "Approved", "Disetujui"},
+				{"반송", "Rejected", "Ditolak"},
+				{"보류", "Hold", "Tahan"},
+				{"회수", "Withdrew", "Dibatalkan"},
+				{"완료", "Completed", "Selesai"},
+				{"도착", "Arrived", "Datang"},
+				{"미접수", "Designated", "Dirancang"},
+				{"접수", "Received", "Diterima"},
+				{"배부", "Distributed", "Dibagikan"},
+				{"회송", "Returned", "Kembali"},
+				{"접수", "Received", "Diterima"},
+				{"수신완료", "Completed(receipt)", "Selesai (terima)"},
+				{"발신", "Sending", "Mengirim"},
+				{"전송실패", "Sending failure", "Gagal kirim"},
+				{"수신", "Receipt", "Terima"},
+				{"도달", "Arrived", "Datang"},
+				{"재요청", "ReRequest", "Permintaan kembali"},
+				{"사인종류", "Sign type", "Tipe tanda"},
+				{"NAME", "NAME", "NAMA"},
+				{"NAME", "NAME", "NAMA"},
+				{"결재TYPE", "Approval TYPE", "TIPE Persetujuan"},
+				{"UI폼형식처리", "UI Form format", "Format UI Form"},
+				{"의견종류", "Types of opinions", "Tipe pendapat"},
+				{"추가의견", "Add", "Tambah"},
+				{"일반의견", "General", "Umum"},
+				{"반송의견", "Rejection", "Penolakan"},
+				{"보류의견", "Holding", "Penundaan"},
+				{"회송의견", "Returning", "Pengembalian"},
+				{"지시사항", "Instructions", "Instruksi"},
+				{"메모", "Memo", "Catatan"},
+				{"재배부요청", "Request for redistribution", "Permintaan pembagian kembali"},
+				{"결재날짜순서", "Approval date order", "Persetujuan tanggal pesan"},
+				{"첨부공유유무", "Share attachment Y/n", "Bagikan lampiran Y/n"},
+				{"첨부/의견 display", "Display attachment/comment", "Tampilkan lampiran/komentar"},
+				{"확장기능사용유무", "Use expanded function Y/n", "Gunakan fungsi perluasan Y/n"},
+				{"보안등급", "Security level", "Tingkat keamanan"},
+				{"보존기간", "Archive term", "Syarat Arsip"},
+				{"키워드", "Keyword", "Kata kunci"},
+				{"결재선포함", "Include approval line", "Termasuk baris persetujuan"},
+				{"대리결재유무", "Arbitrary approval Y/n", "Persetujuan sepihak Y/n"},
+				{"대리결재", "Arbitrary approval", "Persetujuan sepihak"},
+				{"문서보기 기한 설정", "Set doc. open term", "Atur dok. syarat buka"},
+				{"회송처리", "Return", "Kembali"},
+				{"대리결재사인헤드", "Deputy approval sign", "Paraf persetujuan Deputi"},
+				{"代", "Deputy", "Deputi"},
+				{"수신처구분", "Receiver type", "Tipe penerima"},
+				{"부서", "Dept", "Dept."},
+				{"부서/사람", "Dept/Personnel", "Dept/Personil"},
+				{"조직도구분", "Organ type", "Tipe Organ"},
+				{"개인수신처", "Personal receiver", "Penerima individu"},
+				{"개인수신처구분", "Personal receiver type", "Tipe penerima individu"},
+				{"문서채번룰", "Doc. numbering rule", "Aturan penomoran dok."},
+				{"11S", "11S", "11S"},
+				{"결재처리제한", "Restrict approval", "Pembatasan persetujuan"},
+				{"전결처리방법", "Arbitrary decision", "Keputusan sepihak"},
+				{"결재칸Split 유무", "Sign box Split Y/n", "Bagi Kotak Paraf Y/n"},
+				{"FIX", "FIX", "Perbaiki"},
+				{"문서링크", "Doc. link", "Tautan dok."},
+				{"수신함보내기", "Send to receiving box", "Kirim ke kotak masuk"},
+				{"변환문서", "Conversion doc.", "Dok. Konversi"},
+				{"그룹사용", "Using Groups", "Menggunakan Grup"},
+				{"특정인 결재처리", "Sign on specific person", "Masuk ke orang tertentu"},
+				{"첨부문서Filter", "Attachment filter", "Filter lampiran"},
+				{"NONE", "NONE", "NONE"},
+				{"감사부서정의", "Define audit dept.", "Tentukan departemen audit"},
+				{"노티유무", "Notify Y/n", "Beritahu Y/t"},
+				{"최근결재선정보", "Last approval line", "Baris persetujuan terakhir"},
+				{"공개/비공개 정의", "Definition of Disclosure/Private", "Definisi Pengungkapan/Pribadi"},
+				{"ALL", "ALL", "SEMUA"},
+				{"LINE", "LINE", "BARIS"},
+				{"보안등급정의", "Defining Security Level", "Menentukan Tingkat Keamanan"},
+				{"보존년한정의", "Archive year", "Tahun arsip"},
+				{"1;1년;1", "1;1 year;1", "1;1 tahun;1"},
+				{"1;2년;2", "1;2 year;2", "1;2 tahun;2"},
+				{"1;3년;3", "1;3 year;3", "1;3 tahun;3"},
+				{"1;5년;5", "1;5 year;5", "1;5 tahun;5"},
+				{"1;10년;10", "1;10 year;10", "1;10 tahun;10"},
+				{"1;준영구;100", "1;Semi-permanence;100", "1;Semi-permanen;100"},
+				{"1;영구;1000", "1;Permanence;1000", "1;Permanen;1000"},
+				{"수신처그룹기호", "Receiver group symbol", "Simbol grup penerima"},
+				{"배부대장처리방법", "Dist. box proc. method", "Metode proses kotak distribusi"},
+				{"자동발송의뢰코드", "Auto send req. code", "Kode permintaan kirim otomatis"},
+				{"공람발송관련", "Public display", "Tampilan publik"},
+				{"내양식함관련", "My forms", "Formulir saya"},
+				{"수신처상태", "Receiver state", "Status penerima"},
+				{"도착", "Arrived", "Datang"},
+				{"발송의뢰반송", "Return Offered", "Tawaran kembali"},
+				{"전송실패", "Error", "Kesalahan"},
+				{"회송", "Return", "Kembali"},
+				{"접수", "Reception progress", "Kemajuan penerimaan"},
+				{"대기", "No receipt", "Tidak ada penerimaan"},
+				{"발송의뢰", "Offered", "Penawaran"},
+				{"수신", "Received", "Diterima"},
+				{"발송", "Sent", "Kirim"}
+			};
+			
+			for (String[] data : tcDatas) {
+				BoardListHeaderVO vo = new BoardListHeaderVO();
+				vo.setName(data[0]);
+				vo.setName2(data[1]);
+				vo.setName6(data[2]);
+				
+				ezCommonDAO.updateTblCodelist(vo);
+			}
+			
+			// TBL_LISTINFO
+			String [][] tliDatas = {
+				{"등록구분", "RegisterType", "JenisRegister"},
+				{"등록일", "RegisterDate", "TanggalRegister"},
+				{"문서번호", "Doc. No.", "No. Dokumen"},
+				{"제목", "Title", "Judul"},
+				{"기록물철명", "RecName", "NamaRek"},
+				{"수신자(발신자)", "Recipient(Sender)", "Penerima(Pengirim)"},
+				{"결재권자", "Approval person", "Orang yang menyetujui"},
+				{"시행번호", "SihangNo", "No. Sihang"},
+				{"첨부", "AttachFlag", "BenderaLampiran"},
+				{"수신", "ReSendFlag", "BenderaKirimUlang"},
+				{"반려", "RejectFlag", "BenderaTolak"},
+				{"분류번호", "DispClassNo", "No.KelasDisp"},
+				{"기록물형태", "RecTypeCode", "KodeJenisRek"},
+				{"종료연도", "EndYear", "TahunAkhir"},
+				{"비치", "STOCKED", "TERSEDIA"},
+				{"보존기간", "KEEPING PERIOD", "PERIODE PENYIMPANAN"},
+				{"보존방법", "CONSERVATION METHOD", "METODE KONSERVASI"},
+				{"보존장소", "Storage", "Penyimpanan"},
+				{"이관여부", "TransferFlag", "BenderaTransfer"},
+				{"연기신청", "DelayFlag", "BenderaTunda"},
+				{"첨부번호", "SepAttachNo", "No.LampiranSep"},
+				{"기록물 형태", "DocForm", "FormulirDokumen"},
+				{"쪽수", "PageNum", "No.Halaman"},
+				{"공개구분", "PublicityCode", "KodePublikasi"},
+				{"공개제한부분", "LimitRange", "RentangBatas"},
+				{"건수", "APRCOUNT", "Jumlah kasus"},
+				{"일련번호", "SerialNum", "No.Serial"},
+				{"생산연도", "RegisterYear", "TahunRegister"},
+				{"이관연도", "TransYear", "TahunTransaksi"},
+				{"연기사유", "DisplayReason", "AlasanTampilan"},
+				{"편철확인", "TerminateFlag", "BenderaTerminasi"},
+				{"기안부서", "Dept.(draft)", "Departemen(draf)"},
+				{"문서명", "Form title", "Judul formulir"},
+				{"공개", "Public", "Publik"},
+				{"처리과코드", "ProcessDeptCode", "KodeDepartemenProses"},
+				{"단위업무코드", "UNITWORKING CODE", "KODE UNITWORKING"},
+				{"생산년도", "ProductionYear", "TahunProduksi"},
+				{"등록일련번호", "RegSerialNo", "No.SerialReg"},
+				{"변경전 기록물철제목", "BeforeTitle", "JudulSebelum"},
+				{"변경후 기록물철제목", "AfterTitle", "JudulSesudah"},
+				{"변경전 기록물형태", "BeforeRecTypeCode", "KodeJenisRekamSebelum"},
+				{"변경후 기록물형태", "AfterRecTypeCode", "KodeJenisRekamSetelah"},
+				{"변경일자", "Modified date", "Tanggal modifikasi"},
+				{"변경사유", "ModifyReason", "Alasan Modifikasi"},
+				{"변경자", "User", "Pengguna"},
+				{"분리번호", "SeperateAttachNo", "No.LampiranTerpisah"},
+				{"변경전 등록일자", "BeforeDate", "TanggalSebelum"},
+				{"변경후 등록일자", "AfterDate", "TanggalSesudah"},
+				{"변경전 제목", "BeforeTitle", "JudulSebelum"},
+				{"변경후 제목", "AfterTitle", "JudulSesudah"},
+				{"변경전쪽수", "BeforePage", "HalamanSebelum"},
+				{"변경후쪽수", "AfterPage", "HalamanSetelah"},
+				{"변경전 결재권자", "BeforeApprover", "SebelumPenyetuju"},
+				{"변경후 결재권자", "AfterApprover", "SetelahPenyetuju"},
+				{"변경전 기안자", "BeforeDrafter", "SebelumPenyusun"},
+				{"변경후 기안자", "AfterDrafter", "SetelahPenyusun"},
+				{"변경전 시행일자", "BeforeExecuteDate", "TanggalSebelumEksekusi"},
+				{"변경후 시행일자", "AfterExecuteDate", "TanggalSetelahEksekusi"},
+				{"변경전 수신자", "BeforeRecevName", "NamaSebelumPenerimaan"},
+				{"변경후 수신자", "AfterRecevName", "NamaSetelahPenerimaan"},
+				{"특수목록위치", "Special list location", "Lokasi daftar khusus"},
+				{"기록물철분류번호", "ClassifyNo_Cab", "No.Klasifikasi_Kab"},
+				{"기록물등록번호", "ClassifyNo_Rec", "No.Klasifikasi_Kirim"},
+				{"특수목록#1", "Special List # 1", "Daftar Khusus # 1"},
+				{"특수목록#2", "Special List # 2", "Daftar Khusus # 2"},
+				{"특수목록#3", "Special List # 3", "Daftar Khusus # 3"},
+				{"처리과기관코드", "ProcessDeptCode", "KodeDepartemenProses"},
+				{"첨부일련번호", "AttFileSN", "SNBerkasAtribut"},
+				{"기관코드", "OrganCode", "KodeOrgan"},
+				{"접수년도", "ReceiptYear", "TahunPenerimaan"},
+				{"배부일련번호", "AllocationSN", "SNAlokasi"},
+				{"접수일자", "ReceptionDate", "TanggalPenerimaan"},
+				{"생산기관등록번호", "OrgDocNumCode", "KodeNomorDokumenOrg"},
+				{"받은 처리과코드", "ManageDeptID", "IDDepartemenKelola"},
+				{"받은 처리과명", "ManageDept", "DeptKelola"},
+				{"배부일자", "ReceiptDate", "TanggalPenerimaan"},
+				{"인수자", "Charge Name", "Nama Biaya"}
+			};
+			
+			for (String[] data : tliDatas) {
+				BoardListHeaderVO vo = new BoardListHeaderVO();
+				vo.setName(data[0]);
+				vo.setName2(data[1]);
+				vo.setName6(data[2]);
+				
+				ezCommonDAO.updateTblListinfo(vo);
+			}
+			
+			// TBL_LISTOPTION
+			String [][] tloDatas = {
+				{"제목", "Title", "Judul"},
+				{"회사", "Company", "Perusahaan"},
+				{"기안부서", "Dept.(draft)", "Departemen (draf)"},
+				{"기안자", "Drafter", "Draf"},
+				{"기안일시", "Date(draft)", "Tanggal (draf)"},
+				{"양식명", "Form title", "Judul formulir"},
+				{"첨부", "Attach", "Lampirkan"},
+				{"공개", "Public", "Publik"},
+				{"기안일시", "Dept.(draft)", "Departemen (draf)"},
+				{"문서상태", "Doc. status", "Status dokumen"},
+				{"결재상태", "Approval status", "Status persetujuan"},
+				{"발신부서", "Dept. sent", "Departemen terkirim"},
+				{"수신부서", "Date recevied", "Tanggal diterima"},
+				{"수신일자", "ProcessDate", "Tanggal proses"},
+				{"양식명", "Form Name", "Nama formulir"},
+				{"도착일자", "Date recevied", "Tanggal diterima"},
+				{"문서번호", "Doc. No.", "No. dokumen"},
+				{"완료일시", "Date completed", "Tanggal selesai"},
+				{"발신의뢰부서", "Dept.(draft)", "Departemen (draf)"},
+				{"발신의뢰자", "Drafter", "Draf"},
+				{"발신의뢰일자", "Date(draft)", "Tanggal (draf)"},
+				{"저장일시", "Save Date", "Tanggal penyimpanan"},
+				{"성명", "Name", "Nama"},
+				{"직위", "Title", "Jabatan"},
+				{"부서", "Dept.", "Departemen"},
+				{"결재유형", "Type", "Jenis"},
+				{"결재일시", "Date", "Tanggal"},
+				{"대리자", "Deputy", "Deputi"},
+				{"대리자직위", "Title(deputy)", "Jabatan (deputi)"},
+				{"대리자부서", "Dept.(deputy)", "Departemen (deputi)"},
+				{"공람일시", "Date", "Tanggal"},
+				{"수신자명", "Dept.", "Departemen"},
+				{"수신자성명", "Name", "Nama"},
+				{"승인일자", "Date", "Tanggal"},
+				{"수신자명", "Dept", "Departemen"},
+				{"발송상태", "ProcessYN", "ProsesYN"},
+				{"구분", "Type", "Jenis"},
+				{"내용", "Content", "Konten"},
+				{"첨부자", "User", "Pengguna"},
+				{"파일이름", "Filename", "Nama berkas"},
+				{"파일크기", "Size", "Ukuran"},
+				{"쪽수", "PageNum", "Nomor halaman"},
+				{"문서명", "Form title", "Judul formulir"},
+				{"첨부이름", "Filename", "Nama berkas"},
+				{"첨부자부서명", "Dept.", "Departemen"},
+				{"등록일자", "Date registered", "Tanggal terdaftar"},
+				{"변경내용", "Content", "Konten"},
+				{"첨부사이즈", "Size", "Ukuran"},
+				{"변경일자", "Date", "Tanggal"},
+				{"변경자", "User", "Pengguna"},
+				{"페이지", "PageNum", "Nomor Halaman"},
+				{"변경자직위", "Title", "Jabatan"},
+				{"변경자부서", "Dept.", "Departemen"},
+				{"결재방법", "Type", "Jenis"},
+				{"결재자이름", "Name", "Nama"},
+				{"결재자직위", "Title", "Jabatan"},
+				{"결재자부서", "Dept.", "Departemen"},
+				{"발의자", "Proposer", "Pengusul"},
+				{"변경자이름", "Name", "Nama"},
+				{"수신자", "Dept.", "Departemen"},
+				{"승인유무", "ProcessYN", "ProsesYN"},
+				{"승인일자", "ProcessDate", "Tanggal Proses"},
+				{"수신자", "Name", "Nama"},
+				{"일자", "Date", "Tanggal"},
+				{"배부일자", "ReceiptDate", "Tanggal Penerimaan"},
+				{"처리과", "Manage Dept.", "Kelola Departemen"},
+				{"인수자", "Charge Name", "Nama Penanggung Jawab"},
+				{"문서번호", "Document number", "Nomor dokumen"},
+				{"제목", "Title", "Judul"},
+				{"공개여부", "Disclosure status", "Status pengungkapan"},
+				{"목록공개", "List disclosure", "Pengungkapan daftar"},
+				{"열람제한일자", "Date of restriction on access", "Tanggal pembatasan akses"},
+				{"수정일자", "Revised date", "Tanggal revisi"},
+				{"생성일자", "Date of creation", "Tanggal pembuatan"},
+				{"작성자", "Writer.", "Penulis"},
+				{"기안부서", "Security Department", "Departemen Keamanan"},
+				{"변경자 부서", "Change Department", "Ubah Departemen"},
+				{"변경자", "Changeor", "Ubah"},
+				{"변경일", "Date of change", "Tanggal perubahan"},
+				{"수신자그룹", "Receiving Dept. Group", "Grup Departemen Penerima"},
+				{"부서아이디", "Dept. ID", "ID Departemen"},
+				{"부서명", "Dept. Name", "Nama Departemen"},
+				{"회사아이디", "Company ID", "ID Perusahaan"},
+				{"코드", "Code", "Kode"},
+				{"명칭", "Name", "Nama"},
+				{"적용일자", "ApplyDate", "Tanggal Pengajuan"},
+				{"변경항목", "ChangeFactor", "Faktor Perubahan"},
+				{"변경전값", "BeforeValue", "Nilai Sebelum"},
+				{"변경후값", "AfterValue", "Nilai Sesudah"},
+				{"단위업무명", "Unit task name", "Nama tugas unit"},
+				{"보존연한", "Archiving term", "Jangka waktu pengarsipan"},
+				{"보존연한책정사유", "Reason of archiving term", "Alasan jangka waktu pengarsipan"},
+				{"보존방법", "Archiving way", "Cara pengarsipan"},
+				{"보존장소", "Storage", "Penyimpanan"},
+				{"비치기록물", "Collocated Records", "Arsip Terkolokasi"},
+				{"비치기록물이관시기", "Collocated Records Transfer Time", "Waktu Transfer Arsip Terkolokasi"},
+				{"이관후예상열람빈도", "Expected open frequency", "Frekuensi pembukaan yang diharapkan"},
+				{"특수목록위치", "Special list location", "Lokasi daftar khusus"},
+				{"제1특수목록", "1st Special lists", "Daftar khusus ke-1"},
+				{"제2특수목록", "2nd Special lists", "Daftar khusus ke-2"},
+				{"제3특수목록", "3rd Special lists", "Daftar khusus ke-3"},
+				{"주요열람용도", "Major reading purpose", "Tujuan bacaan utama"},
+				{"단위업무설명", "Unit task description", "Deskripsi tugas unit"},
+				{"소기능", "Small function", "Fungsi kecil"},
+				{"이름", "Name", "Nama"},
+				{"생산연도", "Productionyear", "Tahun produksi"},
+				{"단위업무명(분류코드)", "Taskname", "Nama tugas"},
+				{"형태", "FORM", "FORMULIR"},
+				{"대기능", "MajorCategoryCode", "Kode Kategori Utama"},
+				{"중기능", "MiddleCategoryCode", "Kode Kategori Tengah"},
+				{"소기능", "MinorCategoryCode", "Kode Kategori Minor"},
+				{"형태", "Rectype", "Rektipe"},
+				{"권호수", "VoluMemo", "NO. VoluMemo"},
+				{"단위업무", "UNIT WORKING", "UNIT KERJA"},
+				{"보존연한", "KEEPING PERIOD", "PERIODE PENYIMPANAN"},
+				{"임시", "TEMPORARY", "SEMENTARA"},
+				{"처리과명", "PROCDEPT NAME", "NAMA PROSEDUR"},
+				{"단위업무코드", "UNITWORKING CODE", "KODE UNIT KERJA"},
+				{"임시", "TEMP", "SEMENTARA"},
+				{"대기능명", "MAJOR", "UTAMA"},
+				{"중기능명", "MIDDLE", "SEDANG"},
+				{"보존방법", "CONSERVATION METHOD", "METODE KONSERVASI"},
+				{"보존장소", "CONSERVATION PLACE", "TEMPAT KONSERVASI"},
+				{"비치", "STOCKED", "TERSEDIA"},
+				{"특수목록", "SPECIAL LIST", "DAFTAR KHUSUS"},
+				{"버전", "Ver", "Versi"},
+				{"기록물 형태", "DocForm", "Formulir Dokumen"},
+				{"변경영역", "ModifyArea", "Area Modifikasi"},
+				{"변경자", "Modifier", "Pengubah"},
+				{"변경일자", "ModifiedDate", "Tanggal Dimodifikasi"},
+				{"결재유형", "ApprovalType", "Jenis Persetujuan"},
+				{"결재자", "Approver", "Pemberi Persetujuan"},
+				{"부서코드", "DEPTCODE", "KODE DEPT"},
+				{"부서명", "DEPTNAME", "NAMA DEPT"},
+				{"버전", "Ver.", "Versi"},
+				{"등록일자", "Regdate", "Tanggal Registrasi"},
+				{"쪽수", "Page", "Halaman"},
+				{"결재권자", "Approval person", "Orang yang menyetujui"},
+				{"시행일자", "Enforce date.", "Tanggal pemberlakuan."},
+				{"수신자(발신자)", "Recipient(Sender)", "Penerima (Pengirim)"},
+				{"변경일자", "Modified date", "Tanggal modifikasi"},
+				{"열람시간", "ReadingTime", "Waktu Baca"},
+				{"열람자", "Reader", "Pembaca"},
+				{"직위", "Position", "Posisi"},
+				{"수 신 자", "Receiver", "Penerima"},
+				{"문서함리스트", "DocFormList", "Daftar Formulir Dokumen"},
+				{"부서명", "APRMEMBERDEPTNAME", "DocFormList"},
+				{"직위", "APRMEMBERJOBTITLE", "APRMEMBERDEPTNAME"},
+				{"결재건수", "APRCOUNT", "APRMEMBERJOBTITLE"},
+				{"발신부서", "SENTDEPTNAME", "APRCOUNT"},
+				{"수신부서", "RECEVDEPTNAME", "SENTDEPTNAME"},
+				{"건수", "APRCOUNT", "RECEVDEPTNAME"},
+				{"양식리스트", "Form list", "Aprcount"},
+				{"문서함명", "Dept. doc. folder", "Daftar formulir"},
+				{"수신자", "Receiver", "Folder dokumen departemen"},
+				{"버전", "Version", "Penerima"},
+				{"수신부서", "Date received", "Versi"},
+				{"도착일자", "ProcessDate", "Tanggal diterima"},
+				{"발송상태", "Sending status", "ProcessDate"},
+				{"회람일시", "Date", "Status pengiriman"},
+				{"수신부서명", "Dept.", "Tanggal"},
+				{"수신부서명", "Dept", "Departemen"},
+				{"등록일시", "Date registered", "Dept"},
+				{"기안일자", "Date drated", "Tanggal terdaftar"},
+				{"완료일자", "Date completed", "Tanggal selesai"},
+				{"수신처그룹", "Receiving Dept. Group", "Grup Departemen Penerima"},
+				{"결재자", "Processor", "Prosesor"},
+				{"수 신 처", "Receiving Dept.", "Departemen Penerima"},
+				{"수 신 자", "Name", "Nama"},
+				{"결재자", "Approval perso", "Orang yang menyetujui"},
+				{"결재방법", "Approval type", "Jenis persetujuan"},
+				{"결재건수", "The number of approval", "Jumlah persetujuan"},
+				{"발신부서", "Sending dept.", "Departemen pengirim"},
+				{"건수", "The number of cases", "Jumlah kasus"},
+				{"수신부서", "Receiving dept.", "Departemen penerima"},
+				{"문서함명", "Doc. folder name", "Nama folder dokumen"},
+				{"소속문서함", "Special doc. folder type", "Jenis folder dokumen khusus"},
+				{"문서함명", "Special doc. folder name", "Nama folder dokumen khusus"},
+				{"서브쿼리", "Query", "Kueri"},
+				{"기능명칭", "Name", "Nama"},
+				{"보안등급", "Security level", "Tingkat keamanan"},
+				{"공개여부", "Public", "Publik"},
+				{"문서분류", "Classified document", "Dokumen rahasia"}
+			};
+			
+			for (String[] data : tloDatas) {
+				BoardListHeaderVO vo = new BoardListHeaderVO();
+				vo.setName(data[0]);
+				vo.setName2(data[1]);
+				vo.setName6(data[2]);
+				
+				ezCommonDAO.updateTblListoption(vo);
+			}
+            
+            // TBL_LISTOPTION - 보존기간 대소문자 구분
+            Map<String, String> map = new HashMap<>();
+            map.put("name6" , "PERIODE PENYIMPANAN");
+            map.put("sn" , "8");
+            map.put("name" , "보존기간");
+            
+            ezCommonDAO.updateTblListoption2(map);
+            
+            Map<String, String> map2 = new HashMap<>();
+            map2.put("name6" , "Periode penyimpanan");
+            map2.put("sn" , "4");
+            map2.put("name" , "보존기간");
+            
+            ezCommonDAO.updateTblListoption2(map2);
+			
+			// TBL_BOARD_ITEM_LISTOPTION
+			String [][] tbilDatas = {
+				{"CHECK", "CHECK", "CHECK"},
+				{"첨부", "Attachments", "Lampiran"},
+				{"제목", "Title", "Judul"},
+				{"부서", "Department", "Departemen"},
+				{"게시자", "Writer", "Penulis"},
+				{"게시일", "Registered", "Terdaftar"},
+				{"조회수", "View", "Lihat"},
+				{"회사", "Company", "Perusahaan"},
+				{"첨부", "Attach", "Lampirkan"},
+				{"게시판명", "Board", "Papan"}
+			};
+			
+			for (String[] data : tbilDatas) {
+				BoardListHeaderVO vo = new BoardListHeaderVO();
+				vo.setName(data[0]);
+				vo.setName2(data[1]);
+				vo.setName6(data[2]);
+				
+				ezCommonDAO.updateTblBoardItemListoption(vo);
+			}
+			
+			logger.debug("updateInitDataForIndiLang ended.");
+		} else {
+			logger.debug("\"updateInitDataForIndiLang\" already done.");
+		}
+	}
 }

@@ -325,6 +325,7 @@
 				var name2 = $.trim($("#txtBoardName2").val());
 				var name3 = $.trim($("#txtBoardName3").val());
 				var name4 = $.trim($("#txtBoardName4").val());
+				var name6 = $.trim($("#txtBoardName6").val());
 				
 				if (name1 == "") {
 	                alert("<spring:message code='ezBoard.t144'/>");
@@ -338,6 +339,9 @@
 	            }
 	            if (name4 == "") {
 					name4 = name1;
+	            }
+	            if (name6 == "") {
+					name6 = name1;
 	            }
 	            
 	            //승인게시판
@@ -646,6 +650,7 @@
 	            	data : {
 	            		boardName:name1, boardName2:name2,
 	            		boardName3:name3, boardName4:name4,
+	            		boardName6:name6,
 	            		boardID:BoardID, attachSizeLimit:AttachMax, boardDescription:Description,
 	            		itemExpires:Expires, url:url, guBun:gubun, replyNotify:replynotify, deleteAfter:iDeleteAfter,
 	            		boardColor:brd_color, portlet:"N", backGround:background,
@@ -1158,12 +1163,12 @@
 		        var para = new Array();
 		        para[0] = BoardID;
 		        para[1] = gubun;
-		        var url = "/admin/ezBoard/boardExtensionAttribute.do";
+		        var url = "/admin/ezBoard/boardExtensionAttribute.do?boardID=" + encodeURIComponent(BoardID) + "&gubun=" + gubun;
 
 		        /* 2018-07-25 홍승비 - 확장칼럼 설정 팝업창 width 조절(일본어 대응) */
 		        if (CrossYN()) {
 		            BoardExtension_dialogArguments[0] = para;
-		            var ExtensionAttribute = window.open(url, "ExtensionAttribute", GetOpenWindowfeature(1120, 750));
+		            var ExtensionAttribute = window.open(url, "ExtensionAttribute", GetOpenWindowfeature(1120, 670));
 		            try { ExtensionAttribute.focus(); } catch (e) { }
 		        } else {
 		            var retVal = window.showModalDialog(url, para, "dialogWidth:780px;dialogHeight:750px;status:no;help:no;scroll:yes;edge:sunken");
@@ -1403,7 +1408,13 @@
 		                    <c:if test="${useChinese == 'YES'}">
 			                    <tr class="secondary">
 			                        <th><c:out value='${lang_quaternary}' /></th>
-			                        <td style="border-bottom:none;"><c:out value='${model.boardName4}' /></td>
+			                        <td style="border-bottom:1px solid #ddd;"><c:out value='${model.boardName4}' /></td>
+			                    </tr>
+		                    </c:if>
+		                    <c:if test="${useIndonesian == 'YES'}">
+			                    <tr class="secondary">
+			                        <th><c:out value='${lang_Senary}' /></th>
+			                        <td style="border-bottom:none;"><c:out value='${model.boardName6}' /></td>
 			                    </tr>
 		                    </c:if>
 		                </table>
@@ -1444,8 +1455,16 @@
 		                    <c:if test="${useChinese == 'YES'}">
 			                    <tr class="secondary">
 			                        <th><c:out value='${lang_quaternary}' /></th>
-			                        <td>
+			                        <td style="border-bottom:1px solid #ddd;">
 			                            <input type="text" id="txtBoardName4" style="width: 100%" value="<c:out value='${model.boardName4}' />" maxlength="20" />
+			                        </td>
+			                    </tr>
+		                   	</c:if>
+		                    <c:if test="${useIndonesian == 'YES'}">
+			                    <tr class="secondary">
+			                        <th><c:out value='${lang_Senary}' /></th>
+			                        <td>
+			                            <input type="text" id="txtBoardName6" style="width: 100%" value="<c:out value='${model.boardName6}' />" maxlength="20" />
 			                        </td>
 			                    </tr>
 		                   	</c:if>
@@ -1564,6 +1583,7 @@
 					<spring:message code = "ezBoard.fileViewerBoard.msg" />
 					
 					<%-- 2023-11-03 민지수 - 카테고리게시판 구분 추가 --%>
+					<c:if test="${lang eq '6'}"><br></c:if>
 	                <c:if test="${model.guBun == '10' }">
 	                	<input type="checkbox" id="chkCategoryBoard" class = "boardTypeEventHandler" checked />
 	                	<spring:message code="ezBoard.MJSCAT01" />

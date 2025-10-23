@@ -1,62 +1,62 @@
 var messages = {
-	strLang1 : "Please select only files.", 		// ezWebFolder.t20
-	strLang2 : "Alread shared", 					// ezWebFolder.t105
-	strLang3 : "Not shared", 						// ezWebFolder.t106
-	strLang4 : "Failed to upload file.", 			// ezWebFolder.t107
-	strLang5 : "Please select files", 				// ezWebFolder.t108
-	strLang6 : "Please select just one file", 		// ezWebFolder.t115
-	strLang7 : "Error occurred.", 					// ezWebFolder.t134
-	strLang8 : "Prev", 								// ezWebFolder.t135
-	strLang9 : "Next", 								// ezWebFolder.t136
-	strLang10 : "Total", 							// ezWebFolder.t137
-	strLang11 : "items", 							// ezWebFolder.t138
-	strLang12 : "No data found.", 					// ezWebFolder.t144
-	strLang13 : "Not owner of the files", 			// ezWebFolder.t243
-	strLang14 : "Any folder is not selected.", 		// ezWebFolder.t270
-	strLang15 : "Folder", 							// ezWebFolder.t276
-	strLang16 : "File", 							// ezWebFolder.t277
-	strLang17 : "All files", 						// ezWebFolder.t291
-	strLang18 : "Not valid initiation date.", 		// ezBoard.t189
-	strLang19 : "Start date should be earlier than end date",	// ezBoard.t191
-	strLang20 : "Any search conditions found", 		// ezBoard.t192
-	strLang21 : "Please set the end date.", 	//ezWebFolder.t308
-	strLang22 : "Please set the starting date.", 	//ezWebFolder.t309
-	strLang23 : "Please select only one.",
-	strLang24 : "Insufficient parameters.",
-	strLang25 : "You do not have permission.",
-	strLang26 : "Others",
-	strLang27 : "people (teams),",
-	strLang28 : "het was added to the shares.",
-	strLang29 : "het modify the shares.",
-	strLang31 : "You do not have anyone to share with. ",
-	strLang32 : "Are you sure you want to cancel sharing?",
-	strLang33 : "You canceled sharing.",
-	strLang34 : "Shared folders cannot be modified.",									// ezWebFolder.t327
-	strLang35 : "Top-level folders cannot be modified.",								// ezWebFolder.t328
-	strLang36 : "This folder can be managed only on the admin page.",					// ezWebFolder.t329
-	strLang37 : "If you are not a folder creator, you cannot modify the folder name.",	// ezWebFolder.t258
-	strLang38 : "Please select a file or folder.",
-	strLang39 : "Please select one file or folder.",
-	strLang40 : "You can't delete a folder unless it's a folder creator.",
-	strLang41 : "You cannot delete a file or folder (including its children) unless it is the creator.",
-	strLang42 : "You cannot modify the name unless you are the creator of the file or folder.",
-	completeDuplicateJob : "Processing completed.",
-	parameterError: "Insufficient parameters.",
-	serverError: "An error has occurred.",
-	permissionError: "You do not have permission.",
-	permissionErrorContains: "Some items cannot be accessed.",
-	resultErrDuplicateRename : "You can not change the duplicate names.",
-	resultErrDuplicateCreate : "You can not create duplicate names.",
-	successMoveFile: "You have successfully moved the file.",
-	successCopyFile: "You have successfully copied the files.",
-	outOfStorageSpaceForOneTime: "It has exceeded the one-time upload capacity.",
-	outOfStorageSpace: "The capacity has been exceeded.",
-	strLangDragNDrop: "Folders can not be uploaded.",
-	replyFileDelete: "Files containing replies cannot be deleted.",
-	extensionError: "The file extension is not allowed\n",
-	unsupportedFormat: "The file format is not supported.",
-	webviewerConfirm: "Do you want to open the selected file with web viewer?",
-	moveFromNotInheritError: "You cannot move/copy files or folders in folders that do not inherit permissions.",
-	moveFromNotInheritErrorContains: "You cannot move/copy because the selected item contains files or folders in folders that do not inherit permissions.",
-	sharedFileFolderNotExists: "The shared file or folder does not exist."
+	strLang1 : "Silakan pilih file saja.",
+	strLang2 : "Sudah dibagikan",
+	strLang3 : "Tidak dibagikan",
+	strLang4 : "Gagal mengunggah file.",
+	strLang5 : "Silakan pilih file",
+	strLang6 : "Silakan pilih satu file saja",
+	strLang7 : "Terjadi kesalahan.",
+	strLang8 : "Sebelumnya",
+	strLang9 : "Selanjutnya",
+	strLang10 : "Jumlah",
+	strLang11 : "item",
+	strLang12 : "Data tidak ditemukan.",
+	strLang13 : "Bukan pemilik file",
+	strLang14 : "Folder mana pun tidak dipilih.",
+	strLang15 : "Folder",
+	strLang16 : "Berkas",
+	strLang17 : "Semua file",
+	strLang18 : "Tanggal inisiasi tidak valid.",
+	strLang19 : "Tanggal mulai harus lebih awal dari tanggal akhir",
+	strLang20 : "Kondisi pencarian apa pun ditemukan",
+	strLang21 : "Silakan tetapkan tanggal akhir.",
+	strLang22 : "Silakan tetapkan tanggal mulai.",
+	strLang23 : "Silakan pilih hanya satu.",
+	strLang24 : "Parameter tidak mencukupi.",
+	strLang25 : "Anda tidak memiliki izin.",
+	strLang26 : "Lainnya",
+	strLang27 : "orang (tim),",
+	strLang28 : "telah ditambahkan ke pembagian.",
+	strLang29 : "telah mengubah pembagian.",
+	strLang31 : "Anda tidak memiliki siapa pun untuk berbagi.",
+	strLang32 : "Apakah Anda yakin ingin membatalkan berbagi?",
+	strLang33 : "Anda telah membatalkan berbagi.",
+	strLang34 : "Folder yang dibagikan tidak dapat diubah.",
+	strLang35 : "Folder tingkat atas tidak dapat diubah.",
+	strLang36 : "Folder ini hanya dapat dikelola di halaman admin.",
+	strLang37 : "Jika Anda bukan pembuat folder, Anda tidak dapat mengubah nama folder.",
+	strLang38 : "Silakan pilih file atau folder.",
+	strLang39 : "Silakan pilih satu file atau folder.",
+	strLang40 : "Anda tidak dapat menghapus folder kecuali Anda adalah pembuat folder.",
+	strLang41 : "Anda tidak dapat menghapus file atau folder (termasuk anak foldernya) kecuali Anda adalah pembuatnya.",
+	strLang42 : "Anda tidak dapat mengubah nama kecuali Anda adalah pembuat file atau folder tersebut.",
+	completeDuplicateJob : "Proses selesai.",
+	parameterError : "Parameter tidak cukup.",
+	serverError : "Terjadi kesalahan.",
+	permissionError : "Anda tidak memiliki izin.",
+	permissionErrorContains : "Beberapa item tidak dapat diakses.",
+	resultErrDuplicateRename : "Anda tidak dapat mengubah nama duplikat.",
+	resultErrDuplicateCreate : "Anda tidak dapat membuat nama duplikat.",
+	successMoveFile : "Anda telah berhasil memindahkan file.",
+	successCopyFile : "Anda telah berhasil menyalin file.",
+	outOfStorageSpaceForOneTime : "Kapasitas unggah satu kali telah terlampaui.",
+	outOfStorageSpace : "Kapasitas telah terlampaui.",
+	strLangDragNDrop : "Folder tidak dapat diunggah.",
+	replyFileDelete : "File yang berisi balasan tidak dapat dihapus.",
+	extensionError : "Ekstensi file tidak diizinkan\n",
+	unsupportedFormat : "Format berkas tidak didukung.",
+	webviewerConfirm : "Apakah Anda ingin membuka berkas yang dipilih dengan penampil web?",
+	moveFromNotInheritError : "Anda tidak dapat memindahkan/menyalin berkas atau folder di folder yang tidak mewarisi izin.",
+	moveFromNotInheritErrorContains : "Anda tidak dapat memindahkan/menyalin karena item yang dipilih berisi berkas atau folder di folder yang tidak mewarisi izin.",
+	sharedFileFolderNotExists : "Berkas atau folder yang dibagikan tidak ada."
 }

@@ -3136,8 +3136,9 @@ public class EzResourceController extends EzFileMngUtil {
 		String companyID = request.getParameter("pCompanyID");
 		String companyName = request.getParameter("pCompanyName");
 		String offset = commonUtil.userInfo(loginCookie).getOffset();
-		
-		List<ResOccuVO> getResOccuList = ezResourceService.getResOccuList(companyID, tenantID, searchStartTime, searchEndTime, offset);
+        String lang = commonUtil.userInfo(loginCookie).getLang();
+
+        List<ResOccuVO> getResOccuList = ezResourceService.getResOccuList(companyID, tenantID, searchStartTime, searchEndTime, offset);
 		long totalTime = 0;
 		if (getResOccuList.size() > 0) {
 			for (int i = 0; i < getResOccuList.size(); i++) {
@@ -3154,6 +3155,7 @@ public class EzResourceController extends EzFileMngUtil {
 		
 		model.addAttribute("getResOccuList", getResOccuList);
 		model.addAttribute("totalTime", totalTime);
+		model.addAttribute("lang", lang);
 		return "json";
 	}
 	

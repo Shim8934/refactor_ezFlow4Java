@@ -235,7 +235,7 @@
 			}
 	
 			appr_reject_arg.complete = setRejectAction;
-		    GetOpenWindow("/ezEmail/appr/setReject.do", "setReject", 500, 275, "no");
+		    GetOpenWindow("/ezEmail/appr/setReject.do", "setReject", 500, 285, "no");
 		}
 	
 		function setRejectAction(memo) {

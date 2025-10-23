@@ -877,7 +877,7 @@
 		            pAPRLINE.DataBind("APRLINE");
 
 					if (RetireList.length > 0) {
-						showAlert("[" + RetireList.join(",") + "] 는 퇴직자입니다.\n즐겨찾기 적용에서 제외됩니다.");
+						showAlert("[" + RetireList.join(",") + "] " + strLangRetiree01);
 					}
 		        } catch (e) {
 		            showAlert("AprGongRamLine_Cross_SetGongRamList::" + e.description);

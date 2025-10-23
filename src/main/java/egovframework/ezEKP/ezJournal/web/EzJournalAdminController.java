@@ -82,15 +82,16 @@ public class EzJournalAdminController {
 	 * 관리자 업무일지  좌측 화면 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezJournal/leftTop.do", method = RequestMethod.GET)
-	public String leftTop(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception {
+	public String leftTop(@CookieValue("loginCookie") String loginCookie,Model model, LoginVO userInfo) throws Exception {
 		logger.debug("leftTop started");
 
 		userInfo = commonUtil.checkAdmin(loginCookie);
-		
+		LoginVO user = commonUtil.userInfo(loginCookie);
 		if (userInfo == null) {
 			return "cmm/error/adminDenied";
 		}
 		logger.debug("leftTop ended");
+		model.addAttribute("lang", user.getLang());
 		return "/admin/ezJournal/leftTop";
 	}
 	

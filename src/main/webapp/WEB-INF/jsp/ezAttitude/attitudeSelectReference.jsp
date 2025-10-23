@@ -2030,6 +2030,7 @@
 	                                                        <option selected value="displayname" usedefault="1"><spring:message code='ezCircular.t80' /></option>
 	                                                        <option value="description" usedefault="1"><spring:message code='ezCircular.t78' /></option>
 	                                                        <option value="title" usedefault="1"><spring:message code='ezCircular.t154' /></option>
+															<option value="extensionAttribute10"><spring:message code='ezEmail.t281'/></option>
 	                                                        <option value="telephonenumber" usedefault="1"><spring:message code='ezCircular.t155' /></option>
 	                                                        <option value="mobile" usedefault="0"><spring:message code='ezCircular.t156' /></option>
 	                                                        <option value="HomePhone" usedefault="0"><spring:message code='ezCircular.t157' /></option>

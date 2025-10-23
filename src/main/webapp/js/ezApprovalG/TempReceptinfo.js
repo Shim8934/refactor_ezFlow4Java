@@ -404,10 +404,10 @@ function btn_AprDeptTempletAdd_onclick()
             }
         }
         if (TrashList.length > 0){
-            alert("[" + TrashList.join(",") + "]" + " 부서는 폐지되었습니다. 즐겨찾기 적용에서 제외됩니다.");
+            alert("[" + TrashList.join(",") + "] " + strLangRetiree02);
         }
         if (RetireList.length > 0) {
-            alert("[" + RetireList.join(",") + "] 는 퇴직자입니다.\n즐겨찾기 적용에서 제외됩니다.");
+            alert("[" + RetireList.join(",") + "] " + strLangRetiree01);
         }
         if (ReceiverlessList.length > 0) {
             alert("[" + ReceiverlessList.join(",") + "] " + strLang1101 + strLang1102);

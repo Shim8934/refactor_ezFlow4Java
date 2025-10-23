@@ -172,6 +172,9 @@
 		    	/*case "4":
 		    		lang = "cn";
 		    		break;*/
+		    	case "6" :
+		    		lang = "id";
+		    		break;
 		    	default :
 		    		lang = "en";
 		    		break;

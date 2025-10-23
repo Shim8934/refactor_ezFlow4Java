@@ -35,7 +35,11 @@
         function statMenuUser() {
             const userId = getSelUserData("DATA2");
             if (!userId) return false;
-            const userName = getSelUserData("DATA7");
+            var lang = "<c:out value='${lang}'/>";
+			var userName = getSelUserData("DATA7");
+			if (lang != '1') {
+				userName =  getSelUserData("DATA8");
+			}
             var selTab = document.querySelector('#tabStatistics .tabover').id;
             var yearNode = $("#searchYear option:selected")[0];
             var monthNode = $("#searchMonth option:selected")[0];

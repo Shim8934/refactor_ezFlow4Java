@@ -116,6 +116,7 @@ public class EzResourceAdminController extends EzFileMngUtil {
 	@RequestMapping(value = "/admin/ezResource/gwBoardListManagelistLeft.do", method = RequestMethod.GET)
 	public String gwBoardListManagelistLeft(@CookieValue("loginCookie") String loginCookie, HttpServletRequest req,Model model) throws Exception {
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		LoginVO user = commonUtil.userInfo(loginCookie);
 		
 		if (userInfo == null) {
 			return "cmm/error/adminDenied";
@@ -128,6 +129,7 @@ public class EzResourceAdminController extends EzFileMngUtil {
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("selectNo", selectNo);
 		model.addAttribute("selectedCompany", Optional.ofNullable(req.getParameter("selCompany")).orElse(""));
+		model.addAttribute("lang", user.getLang());
 		return "admin/ezResource/resGwBoardListManageListLeft";
 	}
 	

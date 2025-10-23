@@ -3539,7 +3539,7 @@
 							<c:if test="${userDL eq 'modify'}">
 								<th style="width:10%; "><spring:message code='ezEmail.userDL25' /></th>
 			            		<td>
-			            			<input id="ownerInput" class="us" type="text" data-id="<c:out value='${ownerId}'/>" value="<c:out value='${ownerName}'/>" style="width: 75%;" disabled/>
+			            			<input id="ownerInput" class="us" type="text" data-id="<c:out value='${ownerId}'/>" value="<c:out value='${ownerName}'/>" disabled/>
 									<a class="imgbtn" style="margin: 0; float: right;"><span onClick="ownerChange()"><spring:message code='ezEmail.userDL11' /></span></a>
 			            		</td>
 							</c:if>

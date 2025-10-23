@@ -1822,7 +1822,9 @@
 	 				spanText.textContent = item.quickLinkName2;
 	 			} else if (userLang == "3") { // 일본어
 	 				spanText.textContent = item.quickLinkName3;
-	 			} else { // 기본 언어
+	 			} else if (userLang == "6") { // 인디어
+					spanText.textContent = item.quickLinkName6;
+				} else { // 기본 언어
 	 				spanText.textContent = item.quickLinkName;
 	 			}
 	 			

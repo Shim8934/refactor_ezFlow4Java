@@ -962,6 +962,8 @@ public class EzBoardController extends EzFileMngUtil{
 			    treeName = resultList.get(i).getTreeName3();
 			} else if ("4".equals(lang) && resultList.get(i).getTreeName4() != null && !resultList.get(i).getTreeName4().isEmpty()) {
 			    treeName = resultList.get(i).getTreeName4();
+			} else if ("6".equals(lang) && resultList.get(i).getTreeName6() != null && !resultList.get(i).getTreeName6().isEmpty()) {
+			    treeName = resultList.get(i).getTreeName6();
 			}
 			
 			sb.append("<VALUE><![CDATA[" + treeName + "]]></VALUE>");
@@ -976,6 +978,8 @@ public class EzBoardController extends EzFileMngUtil{
 				treeNameData2 = resultList.get(i).getTreeName3().trim();
 			} else if ("4".equals(lang) && resultList.get(i).getTreeName4() != null && !resultList.get(i).getTreeName4().isEmpty()) {
 				treeNameData2 = resultList.get(i).getTreeName4().trim();
+			} else if ("6".equals(lang) && resultList.get(i).getTreeName6() != null && !resultList.get(i).getTreeName6().isEmpty()) {
+				treeNameData2 = resultList.get(i).getTreeName6().trim();
 			}
 
 			sb.append("<DATA2><![CDATA[" + treeNameData2 + "]]></DATA2>");			
@@ -1046,6 +1050,8 @@ public class EzBoardController extends EzFileMngUtil{
 		    pBoardName = boardInfo.getBoardName3();
 		} else if (userLang.equals("4") && boardInfo.getBoardName4() != null && !boardInfo.getBoardName4().isEmpty()) {
 		    pBoardName = boardInfo.getBoardName4();
+		} else if (userLang.equals("6") && boardInfo.getBoardName6() != null && !boardInfo.getBoardName6().isEmpty()) {
+		    pBoardName = boardInfo.getBoardName6();
 		}
 		
 		if (boardPropertyVO.getAdminType() == null) {
@@ -1381,6 +1387,10 @@ public class EzBoardController extends EzFileMngUtil{
 				boardInfo.setBoardName4(strProp.getBoardName4());
 			}
 
+			if (strProp.getBoardName6() != null) {
+				boardInfo.setBoardName6(strProp.getBoardName6());
+			}
+			
 			boardInfo.setReplyNotify(strProp.getReplyNotify());
 			boardInfo.setGuBun(strProp.getGuBun());
 			boardInfo.setUrl(strProp.getUrl());
@@ -4757,9 +4767,35 @@ public class EzBoardController extends EzFileMngUtil{
 			for (int i = 0; i < boardAttributeListVO.size(); i++) {
 				String tempValue = boardAttributeListVO.get(i).getValue();
 				String tempColName1 = boardAttributeListVO.get(i).getColName1();
-				String tempColName2 = boardAttributeListVO.get(i).getColName2();
+				String userLang = userInfo.getLang();
+				
+				if (userLang != null && !"1".equals(userLang)) {
+					BoardAttributeVO vo = boardAttributeListVO.get(i);
+					switch (userLang) {
+						case "2":
+							if (vo.getColName2() != null) {
+								tempColName1 = vo.getColName2();
+							}
+							break;
+						case "3":
+							if (vo.getColName3() != null) {
+								tempColName1 = vo.getColName3();
+							}
+							break;
+						case "4":
+							if (vo.getColName4() != null) {
+								tempColName1 = vo.getColName4();
+							}
+							break;
+						case "6":
+							if (vo.getColName6() != null) {
+								tempColName1 = vo.getColName6();
+							}
+							break;
+					}
+				}
+				
 				boardAttributeListVO.get(i).setColName1(tempColName1.replaceAll("\'", "&#039;").replaceAll("\"", "&#034;"));
-				boardAttributeListVO.get(i).setColName2(tempColName2.replaceAll("\'", "&#039;").replaceAll("\"", "&#034;"));
 				boardAttributeListVO.get(i).setValue(tempValue.replaceAll("\'", "&#039;").replaceAll("\"", "&#034;"));
 			}
 		}
@@ -4891,6 +4927,8 @@ public class EzBoardController extends EzFileMngUtil{
 			boardName = boardInfo.getBoardName3();
 		} else if (userLang.equals("4") && boardInfo.getBoardName4() != null && !boardInfo.getBoardName4().isEmpty()) {
 			boardName = boardInfo.getBoardName4();
+		} else if (userLang.equals("6") && boardInfo.getBoardName6() != null && !boardInfo.getBoardName6().isEmpty()) {
+			boardName = boardInfo.getBoardName6();
 		}
 		
 		if (boardListVO.getTitle() != null && !boardListVO.getTitle().equals("")) {
@@ -6209,6 +6247,7 @@ public class EzBoardController extends EzFileMngUtil{
 		boardMyFavoriteVO.setTreeName2(doc.getElementsByTagName("PTREENAME2").item(0).getTextContent());
 		boardMyFavoriteVO.setTreeName3(doc.getElementsByTagName("PTREENAME3").item(0).getTextContent());
 		boardMyFavoriteVO.setTreeName4(doc.getElementsByTagName("PTREENAME4").item(0).getTextContent());
+		boardMyFavoriteVO.setTreeName6(doc.getElementsByTagName("PTREENAME6").item(0).getTextContent());
 		boardMyFavoriteVO.setTreeUpper(doc.getElementsByTagName("PUPPERID").item(0).getTextContent());
 		boardMyFavoriteVO.setMode(doc.getElementsByTagName("PMODE").item(0).getTextContent());
 		
@@ -6969,6 +7008,8 @@ public class EzBoardController extends EzFileMngUtil{
 				boardName = boardInfo.getBoardName3();
 			} else if (userLang.equals("4") && boardInfo.getBoardName4() != null && !boardInfo.getBoardName4().isEmpty()) {
 				boardName = boardInfo.getBoardName4();
+			} else if (userLang.equals("6") && boardInfo.getBoardName6() != null && !boardInfo.getBoardName6().isEmpty()) {
+				boardName = boardInfo.getBoardName6();
 			}
 			
 			if (request.getParameter("sortBy") != null) {
@@ -7068,6 +7109,8 @@ public class EzBoardController extends EzFileMngUtil{
 			boardName = boardInfo.getBoardName3();
 		} else if (userLang.equals("4") && boardInfo.getBoardName4() != null && !boardInfo.getBoardName4().isEmpty()) {
 			boardName = boardInfo.getBoardName4();
+		} else if (userLang.equals("6") && boardInfo.getBoardName6() != null && !boardInfo.getBoardName6().isEmpty()) {
+				boardName = boardInfo.getBoardName6();
 		}
 		
 		String displayName = "";
@@ -8020,6 +8063,8 @@ public class EzBoardController extends EzFileMngUtil{
 			boardName = commonUtil.cleanValue(boardInfo.getBoardName3());
 		} else if (userLang.equals("4")) {
 			boardName = commonUtil.cleanValue(boardInfo.getBoardName4());
+		} else if (userLang.equals("6")) {
+			boardName = commonUtil.cleanValue(boardInfo.getBoardName6());
 		}
 		
 		strXML += "<BOARDNAME>" + boardName + "</BOARDNAME>";
@@ -10612,6 +10657,8 @@ public class EzBoardController extends EzFileMngUtil{
 				boardName = boardInfo.getBoardName3();
 			} else if (userLang.equals("4") && boardInfo.getBoardName4() != null && !boardInfo.getBoardName4().isEmpty()) {
 				boardName = boardInfo.getBoardName4();
+			} else if (userLang.equals("6") && boardInfo.getBoardName6() != null && !boardInfo.getBoardName6().isEmpty()) {
+				boardName = boardInfo.getBoardName6();
 			}
 			
 			if (request.getParameter("sortBy") != null) {
@@ -10710,6 +10757,8 @@ public class EzBoardController extends EzFileMngUtil{
 			boardName = boardInfo.getBoardName3();
 		} else if (userLang.equals("4") && boardInfo.getBoardName4() != null && !boardInfo.getBoardName4().isEmpty()) {
 			boardName = boardInfo.getBoardName4();
+		} else if (userLang.equals("6") && boardInfo.getBoardName6() != null && !boardInfo.getBoardName6().isEmpty()) {
+				boardName = boardInfo.getBoardName6();
 		}
 		
 		String displayName = "";

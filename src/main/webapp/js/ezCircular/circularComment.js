@@ -268,6 +268,7 @@ function getCommentShareUser() {
 			shareUserList = "<colgroup><col width='10%' /><col width='90%' /></colgroup>";
 			
 			list = result.shareUserList;
+			var primaryLang = result.userInfo.primary;
 			
 			if(result.shareUserList.length == 0) {
 				shareUserList += "<td style='border-top:0px;border-right:0px;border-left:0px;text-align:center;background-color:white;' colspan='2'>"+ strLang50 + "</td>";
@@ -280,9 +281,13 @@ function getCommentShareUser() {
 					shareUserList += "<td style='border-top:0px;border-bottom:1px solid #e2e2e2;border-right:0px;border-left:0px;text-align:left;background-color:white;'>";
 					shareUserList += "<input type='checkbox' class='chkBox' />";
 					shareUserList += "</td>";
-					shareUserList += "<td style='border-top:0px;border-bottom:1px solid #e2e2e2;border-right:0px;border-left:0px;text-align:left;background-color:white;'>" + vo.memberName + "</td>";
-					
-					shareUserList += "</tr>";
+					shareUserList += "<td style='border-top:0px;border-bottom:1px solid #e2e2e2;border-right:0px;border-left:0px;text-align:left;background-color:white;'>";
+					if (primaryLang == "1") {
+						shareUserList += vo.memberName;
+					} else {
+						shareUserList += vo.memberName2;
+					}
+					shareUserList += "</td></tr>";
 				}
 			});
 			

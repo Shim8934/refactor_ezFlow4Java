@@ -736,8 +736,8 @@ var SurveyItem = function() {
 	function showViewPopUp() {
 		var optElmt             = document.getElementById("sltView");
 		var viewPopup           = document.getElementById("layer_Viewpopup");
-		viewPopup.style.left    = document.documentElement.clientWidth - 160 + "px";
-		viewPopup.style.top     = "82px";
+		viewPopup.style.left    = document.documentElement.clientWidth - 170 + "px";
+		viewPopup.style.top     = "85px";
 		viewPopup.style.display = "";
 		optElmt.setAttribute("class", "icon16 btn_onarrow_down");
 		optElmt.setAttribute("role", "on");

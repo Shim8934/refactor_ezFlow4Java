@@ -189,7 +189,7 @@
 
                 var _Th = document.createElement("TH");
                 _Th.style.textAlign = "center";
-                _Th.style.width = "100px";
+                // _Th.style.width = "100px";
                 _Th.innerHTML = "<spring:message code='ezStatistics.t88' />";
                 _Tr.appendChild(_Th);
 
