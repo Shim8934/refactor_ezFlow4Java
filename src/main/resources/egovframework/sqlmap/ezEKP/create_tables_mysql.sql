@@ -9226,7 +9226,7 @@ CREATE TABLE `tbl_portal_menu_comp` (
   `company_order` int(11) DEFAULT NULL,
   `menu_ipused` int(11) DEFAULT 0 COMMENT '활성화(Y), 비활성화(N)',
   `icon_url` varchar(200) DEFAULT NULL COMMENT '회사별 기본 아이콘 변경',
-  `OPENTYPE`	int(3)	DEFAULT	3	NOT NULL	COMMENT '메뉴 열기 방식; 1:새 탭, 2:새 창, 3:iframe에서 열기'
+  `OPENTYPE`	int(3)	DEFAULT	3	NOT NULL	COMMENT '메뉴 열기 방식; 1:새 탭, 2:새 창, 3:iframe에서 열기',
   PRIMARY KEY (`company_id`,`tenant_id`,`menu_id`),
   KEY `FK_tbl_portal_menu_comp_menu_id_tbl_portal_menu_menu_id` (`menu_id`),
   CONSTRAINT `FK_tbl_portal_menu_comp_menu_id_tbl_portal_menu_menu_id` FOREIGN KEY (`menu_id`) REFERENCES `tbl_portal_menu` (`menu_id`)
@@ -11215,7 +11215,7 @@ CREATE TABLE `tbl_schedule` (
   `companyid` varchar(40) DEFAULT NULL,
   `googleid` varchar(100) DEFAULT NULL,
   `REPEATEDSCHEDULEOFFSET` double NOT NULL DEFAULT 0,
-  `SHOWTOP` VARCHAR2(2) DEFAULT 'N',
+  `SHOWTOP` VARCHAR(2) DEFAULT 'N',
   PRIMARY KEY (`SCHEDULEID`),
   KEY `IDX_OWNERID` (`OWNERID`),
   KEY `IDX_GOOGLEID` (`googleid`,`TENANT_ID`,`companyid`)
@@ -15945,7 +15945,7 @@ CREATE TABLE `TBL_PORTAL_TOP_USER`
     TENANT_ID  MEDIUMINT    DEFAULT 0  NOT NULL COMMENT '테넌트 아이디',
     COMPANY_ID VARCHAR(100) DEFAULT '' NOT NULL COMMENT '회사 아이디',
     TYPE       MEDIUMINT    DEFAULT 0  NOT NULL COMMENT '타입',
-    USECOLOR   TINYINT      DEFAULT 0  NOT NULL COMMNET '사용 모드(색상)',
+    USECOLOR   TINYINT      DEFAULT 0  NOT NULL COMMENT '사용 모드(색상)',
     PRIMARY KEY (USER_ID, TENANT_ID, COMPANY_ID)
 )   ENGINE=InnoDB DEFAULT CHARSET=utf8
     COMMENT '개인별 탑 메뉴 프레임 타입';
@@ -16579,7 +16579,7 @@ CREATE TABLE TBL_USER_SCHEDULE_TYPE_CONFIG (
     TENANT_ID      MEDIUMINT(5)      NOT NULL COMMENT '테넌트 아이디',
     COMPANYID      VARCHAR(80)       NOT NULL COMMENT '회사 아이디',
     PRIMARY KEY (USERID, COMPANYID, TENANT_ID, SCHEDULETYPE, RELATEDID)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT = '사용자의 일정 유형별 설정 테이블'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT = '사용자의 일정 유형별 설정 테이블';
 
 CREATE TABLE TBL_SAML_REQUEST_ID (
     REQUEST_ID VARCHAR(40) NOT NULL,
