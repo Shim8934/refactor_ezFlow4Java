@@ -233,6 +233,8 @@
 		        var mustTd = updateTr[0].querySelector(".MUST");
 		        var colTypeTd = updateTr[0].querySelector(".TYPE");
 		        var valueTd = updateTr[0].querySelector(".VALUE");
+
+				EditHeader(korNameTd.innerText, column);
 		        
 		        korNameTd ? korNameTd.innerText = column.txtNameKor : "";
 		        engNameTd ? engNameTd.innerText = column.txtNameEng : "";
@@ -385,7 +387,7 @@
 		        }
 		    }
 
-		    function EditHeader(pHeader) {
+		    function EditHeader(pHeader, column) {
 		    	var listview = new ListView();
 		        listview.LoadFromID("lvXmlHeader");
 
@@ -394,8 +396,11 @@
 		        for (var i = 0; i < tr.length; i++) {
 		            if (tr[i].cells[0].innerHTML == pHeader) {
 		                ChangedHeader = true;
-		                setNodeText(tr[i].cells[0], document.getElementById("txtNameKor").value);
-		                setNodeText(tr[i].cells[1], document.getElementById("txtNameEng").value);
+		                setNodeText(tr[i].cells[0], column.txtNameKor);
+		                setNodeText(tr[i].cells[1], column.txtNameEng);
+		                setNodeText(tr[i].cells[2], column.txtNameJpn);
+		                setNodeText(tr[i].cells[3], column.txtNameChn);
+		                setNodeText(tr[i].cells[4], column.txtNameIdn);
 		            }
 		        }
 		    }
