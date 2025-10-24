@@ -125,6 +125,7 @@
 	var useWebHWP = "<c:out value='${useWebHWP}'/>";
 	var companyID = "<c:out value='${companyID}'/>";
 	var userID = "<c:out value='${userId}'/>";
+	var draftAllTypeB = "<c:out value='${draftAllTypeB}'/>";
 	var apprPortletIDs = [];
 	var apprPortletTypes = [];
 	var strBoardPassword =  "<spring:message code='ezBoard.private.pgb05' />";

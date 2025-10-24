@@ -418,6 +418,7 @@ public class EzOrganAdminController extends EzFileMngUtil {
 //			ezCommonService.updateGuestAccessibleUris(); // 2025-08-19 양지혜 - 비회원 게시판 허용 URI 데이터 업데이트
 //	        ezCommonService.createTblSamlRequestId();	
             ezCommonService.updateInitDataForIndiLang(); // 2025-08-14 조수빈 - 초기 데이터에 대한 인도네시아어 업데이트
+//            ezCommonService.createApproveErrorInfoTable(); // 2025-07-17 강동주 - 전자결재 > 백단 결재에서 문서 핸들링 오류 발생 시 이력 관리
 		} catch (Exception e) {
     		logger.error(e.getMessage(), e);
     	}

@@ -19,6 +19,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGGroupDocInfoVO;
 import egovframework.ezMobile.ezApprovalG.vo.*;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
@@ -292,7 +293,9 @@ public class MApprovalGGWController {
         	
         	// 2023-05-25 이가은 - 전자결재 > 공람문서 메뉴 표출을 위한 approvalFlag 값 추가
         	String approvalFlag = ezCommonService.getTenantConfig("approvalFlag", userInfo.getTenantId());
-        	
+
+			List<ApprGGroupDocInfoVO> groupInfo = ezApprovalGService.getGroupDocList(docId, "APR", userInfo.getTenantId(), companyID);
+			
 			JSONObject totalData = new JSONObject();
 			
 			totalData.put("bodyHTML", bodyHTML);
@@ -300,6 +303,8 @@ public class MApprovalGGWController {
 			totalData.put("callBackYN", callBackYN);
 			totalData.put("useMobileViewer", useMobileViewer);
 			totalData.put("approvalFlag", approvalFlag);
+			totalData.put("groupInfo", groupInfo);
+			totalData.put("draftAllTypeB", ezCommonService.getTenantConfig("draftAllTypeB", userInfo.getTenantId()));
 			
 			result.put("status", "ok");
 			result.put("code", "0");
@@ -949,6 +954,14 @@ public class MApprovalGGWController {
 			} else if (type.equals("BO")) {
 				rtnVal = ezApprovalGService.doBoryu(docId, approvalGDocInfoVO.getAprMemberID(), "005", userInfo.getCompanyId(), optionInfo.getLang(), userInfo.getTenantId(), userInfo.getUserName(), "");
 				
+				/* 일괄결재 보류 DB 백단 처리 */
+				List<ApprGGroupDocInfoVO> groupDocList = ezApprovalGService.getGroupDocList(docId, "APR", userInfo.getTenantId(), companyID);
+				if(groupDocList.size() > 1){
+					for(int i = 1; i < groupDocList.size(); i++){
+						rtnVal = ezApprovalGService.doBoryu(groupDocList.get(i).getDocID(), approvalGDocInfoVO.getAprMemberID(), "005", userInfo.getCompanyId(), userInfo.getLang(), userInfo.getTenantId(), userInfo.getUserName(), "");
+					}
+				}
+				
 				if (rtnVal != null && !rtnVal.equals("FALSE")) {
 					result.put("status", "ok");
 					result.put("code", "0");
@@ -963,6 +976,14 @@ public class MApprovalGGWController {
 				mApprovalGService.sendApproveNoticeMail(userInfo, optionInfo, approvalGDocInfoVO, docId, type);
 				
 				rtnVal = ezApprovalGService.doCallBack(docId, userId, userInfo.getCompanyId(), userInfo.getTenantId(), "");
+
+				/* 일괄기안 DB 백단 처리 */
+				List<ApprGGroupDocInfoVO> groupDocList = ezApprovalGService.getGroupDocList(docId, "APR", userInfo.getTenantId(), companyID);
+				if(groupDocList.size() > 1){
+					for(int i = 1; i < groupDocList.size(); i++){
+						rtnVal = ezApprovalGService.doCallBack(groupDocList.get(i).getDocID(), userId, userInfo.getCompanyId(), userInfo.getTenantId(), "");
+					}
+				}
 				
 				if (rtnVal != null && !rtnVal.equals("<RESULT>FALSE</RESULT>")) {
 					result.put("status", "ok");
@@ -975,6 +996,14 @@ public class MApprovalGGWController {
 				}
 			} else if (type.equals("CHECK")) {
 				rtnVal = ezApprovalGService.doApprove(docId, approvalGDocInfoVO.getAprMemberID(), "003", approvalGDocInfoVO.getAprMemberName(), approvalGDocInfoVO.getAprMemberName2(), realPath + approvalGDocInfoVO.getHref(), approvalGDocInfoVO.getAprMemberDeptID(), userInfo.getUserId(), userInfo.getCompanyId(), optionInfo.getLang(), loginVO, "", "017", "", "", "");
+
+				/* 일괄기안 DB 백단 처리 */
+				List<ApprGGroupDocInfoVO> groupDocList = ezApprovalGService.getGroupDocList(docId, "APR", userInfo.getTenantId(), companyID);
+				if(groupDocList.size() > 1){
+					for(int i = 1; i < groupDocList.size(); i++){
+						rtnVal = ezApprovalGService.doApprove(groupDocList.get(i).getDocID(), approvalGDocInfoVO.getAprMemberID(), "003", approvalGDocInfoVO.getAprMemberName(), approvalGDocInfoVO.getAprMemberName2(), realPath + groupDocList.get(i).getDocHref(), approvalGDocInfoVO.getAprMemberDeptID(), userInfo.getUserId(), userInfo.getCompanyId(), optionInfo.getLang(), loginVO, "", "017", "", "", "");
+					}
+				}
 				
 				if (rtnVal != null && !rtnVal.equals("FALSE")) {
 					result.put("status", "ok");
@@ -1384,7 +1413,6 @@ public class MApprovalGGWController {
 					apprGDocInfo.setAprState(apprGMemberSnVO.getAprState());
 				}
 			}
-			
 			if (apprGDocInfo == null) {
 				mode = "END";
 				apprGDocInfo = ezApprovalGService.getDocInfoForNoti(companyID, docID, tenantID, mode);
@@ -2792,4 +2820,74 @@ public class MApprovalGGWController {
 		return result;
 	}
 
+
+	/* 2025/01/22 결재가 백단결재로 실패 이력이 있는지 체크 */ 
+	@RequestMapping(value = "/mobile/ezapproval/{docId}/getCheckNotFailDoc", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject getCheckNotFailDoc(@PathVariable String docId, HttpServletRequest request, Locale locale) {
+		logger.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/" + docId + "/getCheckNotFailDoc] started.");
+
+		JSONObject result = new JSONObject();
+
+		try{
+			String userId = request.getParameter("userId");
+			String aprMemberSN = request.getParameter("aprMemberSN");
+			String serverName = request.getHeader("x-user-host");
+
+			MCommonVO userInfo = mOptionService.commonInfo(serverName, userId);
+
+			String companyID = request.getParameter("companyID");
+			if (companyID != null && !companyID.equals("") && !companyID.equals(userInfo.getCompanyId())) {
+				userInfo.setCompanyId(companyID);
+			}
+
+			boolean rtnValue = ezApprovalGService.getCheckNotFailDoc(docId, companyID, userInfo.getTenantId());
+
+			result.put("status", "ok");
+			result.put("code", "0");
+			result.put("data", rtnValue ? "TRUE" : "FALSE");
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", "1");
+			logger.error(e.getMessage(), e);
+		}
+		logger.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/" + docId + "/getCheckNotFailDoc] ended.");
+		return result;
+	}
+	
+	/*
+	 * 모바일 G/W 전자결재 [GET] 전달받은 문서ID, 결재순번으로 현재 결재자가 마지막 최종결재를 진행하는지 확인
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/mobile/ezapproval/docs/{docId}/checkLastKyulje", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject checkLastKyulje(@PathVariable String docId, HttpServletRequest request) {
+		logger.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/docs/" + docId + "/checkLastKyulje] started.");
+
+		JSONObject result = new JSONObject();
+
+		try {
+			String userID = request.getParameter("userID");
+			String companyID = request.getParameter("companyID");
+			String lang = request.getParameter("lang");
+			int tenantID = Integer.parseInt(request.getParameter("tenantID"));
+			String aprMemberSN = request.getParameter("aprMemberSN");
+			String serverName = request.getHeader("x-user-host");
+			
+			MCommonVO userInfo = mOptionService.commonInfo(serverName, userID);
+			
+			String res = mApprovalGService.checkLastKyulje(docId, aprMemberSN, lang, userInfo.getOffSet(), companyID, tenantID);
+			
+			result.put("status", "ok");
+			result.put("code", "0");
+			result.put("data", res);
+		} catch (Exception e) {
+			result.put("status", "error"); 
+			result.put("code", "1");
+			logger.error(e.getMessage(), e);
+		}
+
+		logger.debug("MOBILE G/W APPROVAL [GET /mobile/ezapproval/docs/" + docId + "/checkLastKyulje] ended.");
+
+		return result;
+	}
+	
 }

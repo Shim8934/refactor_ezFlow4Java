@@ -36,6 +36,7 @@
 		    var ListIdx;
 		    var RetValue;
 		    var ReturnFunction;
+		    var draftTypeFlag = "<c:out value='${draftTypeFlag}'/>";
 		    var reuseFlag = "<c:out value='${reuseFlag}'/>";
 			var resendFormYN = "<c:out value='${resendFormYN}'/>";
 		    window.onload = function () {
@@ -202,6 +203,7 @@
 		                <%-- 2021-01-21 심기영 오피스 결재 양식 추가 --%>
 		                Rtnval[4] = selRow.getAttribute("DATA-OFFICEFLAG");
 						Rtnval[5] = RetValue[2];
+						Rtnval[6] = selRow.getAttribute("formdraftallflag");
 
 		                Rtnval["reformflag"] = selRow.getAttribute("reformflag");
 		                
@@ -460,7 +462,8 @@
 		    				id : "ROOT",
 		    				kind  : document.getElementById('FromList').value,
 		    				searchType : _searchType,
-		    				searchName : _searchName
+		    				searchName : _searchName,
+                            draftTypeFlag : draftTypeFlag
 		    				},
 		    		success: function(xml){
 		    			xmlRtn = loadXMLString(xml);

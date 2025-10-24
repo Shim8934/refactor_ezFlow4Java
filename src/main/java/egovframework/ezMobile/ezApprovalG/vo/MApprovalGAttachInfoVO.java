@@ -7,6 +7,8 @@ public class MApprovalGAttachInfoVO {
 	private String attachName;
 	/** 첨부파일 사이즈*/
 	private int attachFileSize;
+	/** 첨부파일 안번호*/
+	private int groupAttachSn;
 	
 	public String getAttachHref() {
 		return attachHref;
@@ -25,5 +27,11 @@ public class MApprovalGAttachInfoVO {
 	}
 	public void setAttachFileSize(int attachFileSize) {
 		this.attachFileSize = attachFileSize;
+	}
+	public int getGroupAttachSn() {
+		return groupAttachSn;
+	}
+	public void setGroupAttachSn(int groupAttachSn) {
+		this.groupAttachSn = groupAttachSn;
 	}
 }

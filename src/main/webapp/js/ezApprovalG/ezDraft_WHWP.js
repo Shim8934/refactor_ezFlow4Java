@@ -615,7 +615,16 @@ function GetDraftAprLineInfo(ret) {
 }
 
 function setRecevInfo(ret) {
-	setDeptLinesXML(ret);
+    var idx = "";
+    if(an.options.length > 1){
+        idx = 0;
+        for(var i = 1; i < currentTabIdx; i++){
+            if(pSuSinFlagAry[i] == "Y")
+                idx++;
+        }
+        idx = "{{" + idx + "}}"
+    }
+	setDeptLinesXML(ret, currentTabIdx);
 	var precipent = ""
 	var precipents = ""
 	var recipflag = true;
@@ -624,19 +633,23 @@ function setRecevInfo(ret) {
 	
 	/*if( xmldom.xml == "" ) return;
 	if( xmldom.documentElement.childNodes.length == 0 ) return;*/
-	if (getXmlString(xmldom) == "" || xmldom.getElementsByTagName("ROW").length == 0) return; 
+	if (getXmlString(xmldom) == "" || xmldom.getElementsByTagName("ROW").length == 0){
+	    btnReceivLineEnableAry[currentTabIdx] = false;
+	    return;
+	} 
 	
 	btnReceivLineEnable = true;
+	btnReceivLineEnableAry[currentTabIdx] = true;
 	
 	var rows = xmldom.documentElement.childNodes
-	if (message.FieldExist("hrecipients"))
-		message.PutFieldText("hrecipients", "");
+	if (message.FieldExist("hrecipients" + idx))
+		message.PutFieldText("hrecipients" + idx, "");
 	
-	if (message.FieldExist("recipient"))
-		message.PutFieldText("recipient", "");
+	if (message.FieldExist("recipient" + idx))
+		message.PutFieldText("recipient" + idx, "");
 	
-	if (message.FieldExist("recipients"))
-		message.PutFieldText("recipients", "");
+	if (message.FieldExist("recipients" + idx))
+		message.PutFieldText("recipients" + idx, "");
 	
     for (var i = rows.length - 1; i >= 0; i--) {
 		var row = rows[i];
@@ -690,31 +703,31 @@ function setRecevInfo(ret) {
 		}		
 	}
 	
-    if (message.FieldExist("recipient")) {
+    if (message.FieldExist("recipient" + idx)) {
         if (precipent == strLang92) {
-        	message.PutFieldText("recipient", precipent);
+        	message.PutFieldText("recipient" + idx, precipent);
 
             if (!!SummaryOuterReceiverList) {
-                if (message.FieldExist("recipients")) {
-                	message.PutFieldText("recipients", SummaryOuterReceiverList);
-                    if (message.FieldExist("hrecipients"))
-                    	message.PutFieldText("hrecipients", strLang129);
+                if (message.FieldExist("recipients" + idx)) {
+                	message.PutFieldText("recipients" + idx, SummaryOuterReceiverList);
+                    if (message.FieldExist("hrecipients" + idx))
+                    	message.PutFieldText("hrecipients" + idx, strLang129);
                 }
             } else {
-                if (message.FieldExist("recipients")) {
-                	message.PutFieldText("recipients", precipents);
-					if (message.FieldExist("hrecipients"))
-						message.PutFieldText("hrecipients", strLang129);
+                if (message.FieldExist("recipients" + idx)) {
+                	message.PutFieldText("recipients" + idx, precipents);
+					if (message.FieldExist("hrecipients" + idx))
+						message.PutFieldText("hrecipients" + idx, strLang129);
                 }
 			}
 		} else {
-			message.PutFieldText("recipient", precipent);
+			message.PutFieldText("recipient" + idx, precipent);
             if (precipents == "") {
-				if (message.FieldExist("hrecipients"))
-					message.PutFieldText("hrecipients", "");
+				if (message.FieldExist("hrecipients" + idx))
+					message.PutFieldText("hrecipients" + idx, "");
 			
-				if (message.FieldExist("recipients"))
-					message.PutFieldText("recipients", "");
+				if (message.FieldExist("recipients" + idx))
+					message.PutFieldText("recipients" + idx, "");
 			}
 		}
 	}
@@ -843,6 +856,8 @@ function putJunkyulSign(signID) {
 
 function SendDraftMappingSign(ret) {
   try {
+  
+    var allTypeB = typeof draftAllTypeB != "undefined" && typeof pDocIDAry != "undefined" && typeof anCnt == "number" && draftAllTypeB == "Y" && pDocIDAry.length > 2 && anCnt > 1;
 	var psigncell;
 	var pseumyungcell;
 	var pseumyungdatecell;
@@ -921,8 +936,17 @@ function SendDraftMappingSign(ret) {
 				message.PrependFieldText(psigncell, strLang7 + OpinionText);
 				
 				//HwpCtrl.SetFieldImage(psigncell, document.location.protocol + "//" + document.location.hostname + "/ezCommon/downloadAttach.do?filePath=" + escape(ret), 3, 0, 0, true, 2);
-				message.InsertPicture(psigncell, document.location.protocol + "//" + document.location.hostname + portNum + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(ret), SendDraftMappingSign_after);
-				
+//				message.InsertPicture(psigncell, document.location.protocol + "//" + document.location.hostname + portNum + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(ret), SendDraftMappingSign_after);
+                if(allTypeB){
+                    var retFunction = null;
+                    for(var j = 0; j < anCnt; j++){
+                        retFunction = j == anCnt -1 ? SendDraftMappingSign_after : null;
+                        message.InsertPicture(psigncell + "{{" + j + "}}", document.location.protocol + "//" + document.location.hostname + portNum + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(ret), retFunction);
+                    }
+                }else{
+                    message.InsertPicture(psigncell, document.location.protocol + "//" + document.location.hostname + portNum + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(ret), SendDraftMappingSign_after);    
+                }
+                
 			  	signInfo[signCnt] = psigncell;
 				SignType[signCnt] = "IMAGE";
 				SignName[signCnt] = psigncell;
@@ -990,7 +1014,16 @@ function SendDraftMappingSign(ret) {
 				}
 				
                 message.PrependFieldText(psigncell, OpinionText);
-                message.InsertPicture(psigncell, document.location.protocol + "//" + document.location.hostname + portNum + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(ret), SendDraftMappingSign_after);
+//                message.InsertPicture(psigncell, document.location.protocol + "//" + document.location.hostname + portNum + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(ret), SendDraftMappingSign_after);
+                if(allTypeB){
+                    var retFunction = null;
+                    for(var j = 0; j < anCnt; j++){
+                        retFunction = j == anCnt -1 ? SendDraftMappingSign_after : null;
+                        message.InsertPicture(psigncell + "{{" + j + "}}", document.location.protocol + "//" + document.location.hostname + portNum + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(ret), retFunction);
+                    }
+                }else{
+                    message.InsertPicture(psigncell, document.location.protocol + "//" + document.location.hostname + portNum + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(ret), SendDraftMappingSign_after);    
+                }
                 
 			  	signInfo[signCnt] = psigncell;
 				SignType[signCnt] = "IMAGE";
@@ -1483,7 +1516,7 @@ function SetAutoPropertyValue() {
 	
 	pSuSinFlag = "N";
 
-	if(pDraftFlag != "SUSIN" && pDocState != "011" ) {
+	if(pDraftFlag != "SUSIN" && pDocState != "011" && (pDocType == "001" || pDocType == "003")) {
 		var RtnVal = message.FieldExist("recipient");
 		if(RtnVal) {
 			pSuSinFlag = "Y";
@@ -1492,26 +1525,30 @@ function SetAutoPropertyValue() {
 			pSuSinFlag = "N";
 			setMenuBar("btnSetReceivLine", false);	
 		}
-	}
-	
-	
-	if(pSusinSN)
-		pSusinNextSN = parseInt(pSusinSN) + 1;
-	else
-		pSusinNextSN = 1;
-
-	fieldname = pSusinNextSN + "sign1";
-	if(message.FieldExist(fieldname)) {
-		pSuSinFlag = "Y";
-		setMenuBar("btnSetReceivLine", true);
-	} else {
-		if(pSuSinFlag == "N") {	
-			pSuSinFlag = "N";
-			setMenuBar("btnSetReceivLine", false);
-		}
+     
+        if(pSusinSN)
+            pSusinNextSN = parseInt(pSusinSN) + 1;
+        else
+            pSusinNextSN = 1;
+    
+        fieldname = pSusinNextSN + "sign1";
+        if(message.FieldExist(fieldname)) {
+            pSuSinFlag = "Y";
+            setMenuBar("btnSetReceivLine", true);
+        } else {
+            if(pSuSinFlag == "N") {	
+                pSuSinFlag = "N";
+                setMenuBar("btnSetReceivLine", false);
+            }
+        }
 	}
 	
 	pChamJoFlag = "Y";
+	
+	if(typeof pSuSinFlagAry != "undefined"){
+        SignInfoAry[1] = SignInfo;
+        pSuSinFlagAry[1] = pSuSinFlag;
+	}
 //  }catch(e){	
 //	alert("SetAutoPropertyValue()" + e.description);
 //  }
@@ -1607,8 +1644,11 @@ function openOpinionUI_New(pOpinionType) {
 
 function openOpinionUI_New_Complete(ret) {
 	DivPopUpHidden();
+    var idx = draftAllTypeB == "Y" ? currentTabIdx : "";
 	if(ret == "Clear"){
 		pHasOpinionYN = "N";
+		if(draftAllTypeB == "Y")
+		    pHasOpinionYNAry[idx] = "N";
 		ret = "cancel";
 	} else if (ret == "cancel"){
 
@@ -1618,8 +1658,12 @@ function openOpinionUI_New_Complete(ret) {
 		var NodeList = SelectNodes(objXML, "LISTVIEWDATA/ROWS/ROW");
 		if (NodeList.length != 0) {
 			pHasOpinionYN = "Y";
+			if(draftAllTypeB == "Y")
+			    pHasOpinionYNAry[idx] = "Y";
 		} else {
 			pHasOpinionYN = "N";
+			if(draftAllTypeB == "Y")
+                pHasOpinionYNAry[idx] = "N";
 			ret = "cancel";
 		}
 		makeOpinionList(objXML);
@@ -1627,8 +1671,9 @@ function openOpinionUI_New_Complete(ret) {
     return ret;
 }
 
-function makeOpinionList(OpinionXML) {
-	if (!message.FieldExist("opinions"))
+function makeOpinionList(OpinionXML, currentTabIdx) {
+    var idx = draftAllTypeB == "Y" ? "{{" + (currentTabIdx - 1) + "}}" : ""
+	if (!message.FieldExist("opinions" + draftAllTypeB))
 		return;
 
 	var firstFlag = true;
@@ -1654,10 +1699,10 @@ function makeOpinionList(OpinionXML) {
 			}
 				
 		}		
-		message.PutFieldText("opinions", strOpinion);
+		message.PutFieldText("opinions" + idx, strOpinion);
 	}
 	else {
-		message.PutFieldText("opinions", " ");
+		message.PutFieldText("opinions" + idx, " ");
 	}
 }
 
@@ -1675,7 +1720,7 @@ function openFileAttachUI() {
 	
 	return ret;*/
 	  
-	  var url = "/ezApprovalG/aprAttach.do?formID=" + pFormID + "&docID=" + pDocID + "&draftFlag=" + pDraftFlag + "&orgCompanyID=" + orgCompanyID + "&ext=" + "hwp";
+	  var url = "/ezApprovalG/aprAttach.do?formID=" + pFormID + "&docID=" + pDocID + "&draftFlag=" + pDraftFlag + "&orgCompanyID=" + orgCompanyID + "&ext=hwp" + (draftAllTypeB == "Y" ? "&draftAllFlag=Y&anNo=" + currentTabIdx : "");
 	  DivPopUpShow(800, 610, url);
   } catch(e) {
 	  alert("openFileAttachUI() :: " + e);
@@ -1686,9 +1731,9 @@ var aprcabinetattach_cross_dialogArguments = new Array();
 function openAaprDocAttachUI() {
   try{
 	  var parameter = pDocID;
-	  var url = "/ezApprovalG/aprCabinetAttach.do?draftFlag=" + pDraftFlag;
+	  var url = "/ezApprovalG/aprCabinetAttach.do?draftFlag=" + pDraftFlag + (draftAllTypeB == "Y" ? "&draftAllFlag=Y&anNo=" + currentTabIdx : "");
       if (approvalFlag == "S") {
-        url = "/ezApprovalG/aprDocAttach.do?orgCompanyID=" + orgCompanyID;
+        url = "/ezApprovalG/aprDocAttach.do?orgCompanyID=" + orgCompanyID + (draftAllTypeB == "Y" ? "&draftAllFlag=Y&anNo=" + currentTabIdx : "");
       }
 	  /* var feature	= "status:no;dialogWidth:1050px;dialogHeight:520px;edge:sunken;scroll:no;help:no"; 
 	  var ret = window.showModalDialog(url,parameter,feature); */
@@ -1705,7 +1750,7 @@ function openAaprDocAttachUI() {
 function openAaprDocAttachUI_complete(ret){
 	DivPopUpHidden();
 	if(ret != "cancel") {
-		setAttachInfo(pDocID, "APR", lstAttachLink);	
+		setAttachInfo(pDocID, "APR", lstAttachLink, draftAllTypeB);	
 	}
 }
 
@@ -1733,6 +1778,20 @@ function SaveDraftDocInfo_ilban(pState)
 	var xmlpara = createXmlDom();
 	var xmlhttp = createXMLHttpRequest();
 
+    var href = "/document/doc/" + pDocID + ".hwp";
+	var title = message.GetFieldText("doctitle");
+	var tmpID = pDocID;
+	if(draftAnCnt > 1){
+	    for(var i = 1; i < draftAnCnt; i++){
+	        pDocID += "," + pDocIDAry[i + 1];
+	        pFormID += "," + pFormIDAry[i + 1];
+            href += ",/document/doc/" + pDocIDAry[i + 1] + ".hwp";
+            pHasAttachYN += pHasAttachYNAry[i + 1] == "Y" || pHasDocAttachYNAry[i + 1] == "Y" ? ",Y" : ",N";
+            pHasOpinionYN += "," + undefined2EmptyString(parent.pHasOpinionYNAry[i + 1]);
+            title += "㉾" + message.GetFieldText("doctitle{{" + i + "}}");
+        }
+	}
+	
 	createNodeInsert(xmlpara, objNode, "PARAMETER");
 	createNodeAndInsertText(xmlpara, objNode, "DOCID", pDocID);
 	createNodeAndInsertText(xmlpara, objNode, "FORMID", pFormID);
@@ -1749,10 +1808,10 @@ function SaveDraftDocInfo_ilban(pState)
 	}
 
 	createNodeAndInsertText(xmlpara, objNode, "FUNCTIONTYPE", pState);
-	createNodeAndInsertText(xmlpara, objNode, "HREF", "/document/doc/" + pDocID + ".hwp");
+	createNodeAndInsertText(xmlpara, objNode, "HREF", href);
 
 	if (message.FieldExist("doctitle"))
-	    createNodeAndInsertText(xmlpara, objNode, "DOCTITLE", message.GetFieldText("doctitle"));
+	    createNodeAndInsertText(xmlpara, objNode, "DOCTITLE", title);
 	else
 	    createNodeAndInsertText(xmlpara, objNode, "DOCTITLE", "");
 
@@ -1884,6 +1943,7 @@ function SaveDraftDocInfo_ilban(pState)
 		}
 	}
 	
+	pDocID = tmpID;
 	xmlhttp.open("POST","/ezApprovalG/doDraftHWP.do",false);
 	xmlhttp.send(xmlpara);
 	
@@ -2093,6 +2153,7 @@ function putSignXML(SignXML)
 	NodeList = SelectNodes(SignXML, "SIGNINFOS/SIGNINFO");
 	if (NodeList.length > 0) 
 	{
+	    var allTypeB = typeof draftAllTypeB != "undefined" && typeof pDocIDAry != "undefined" && typeof anCnt == "number" && draftAllTypeB == "Y" && pDocIDAry.length > 2 && anCnt > 1;
 		for (i=0; i<NodeList.length; i++)
 		{
 		    var SignType = getNodeText(NodeList.item(i).selectSingleNode("SIGNTYPE"));
@@ -2122,6 +2183,13 @@ function putSignXML(SignXML)
 					message.PutFieldText(SignName, " ");                        
 					message.AppendFieldText(SignName, strLang17);
 					message.InsertPicture(SignName, document.location.protocol + "//" + document.location.hostname + portNum + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(SignCont), null);
+                    if(allTypeB){
+                        for(var j = 0; j < anCnt; j++){
+                            message.InsertPicture(SignName + "{{" + j + "}}", document.location.protocol + "//" + document.location.hostname + portNum + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(SignCont), null);
+                        }
+                    }else{
+                        message.InsertPicture(SignName, document.location.protocol + "//" + document.location.hostname + portNum + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(SignCont), null);    
+                    }
 				}
 				else if (SignType == "IMAGE")  
 				{
@@ -2136,7 +2204,14 @@ function putSignXML(SignXML)
 					var img = SignCont.split("::");                        
                     message.PutFieldText(SignName, "");
                     if(img.length >= 1) {
-                    	message.InsertPicture(SignName, document.location.protocol + "//" + document.location.hostname + portNum + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(img[0]));
+//                    	message.InsertPicture(SignName, document.location.protocol + "//" + document.location.hostname + portNum + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(img[0]));
+                        if(allTypeB){
+                            for(var j = 0; j < anCnt; j++){
+                                message.InsertPicture(SignName + "{{" + j + "}}", document.location.protocol + "//" + document.location.hostname + portNum + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(img[0]));
+                            }
+                        }else{
+                            message.InsertPicture(SignName, document.location.protocol + "//" + document.location.hostname + portNum + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + escape(img[0]));
+                        }
                     }
                     
                     if(img.length >= 2) {
@@ -2193,6 +2268,7 @@ function SaveTMPFile(html) {
 
 function SaveTMPDocInfo(AutoSave, Saveflag, pState, phtml) {
     try {
+        var draftAll = draftAllFlag == "Y" && an.options.length > 1;
         var objRoot;
         var objNode;
         var xmlpara = createXmlDom();
@@ -2203,6 +2279,28 @@ function SaveTMPDocInfo(AutoSave, Saveflag, pState, phtml) {
         var pAutoTmpDocTitle = trim(message.GetFieldText("doctitle"));
         createNodeInsert(xmlpara, objNode, "PARAMETER");
 
+        var href = "/document/doc/" + pDocID + ".htm";
+        var title = message.GetFieldText("doctitle");
+        var tmpID = pDocID;
+        if(draftAll){
+            var tmpOldDocID = pDocIDAry[1];
+            FormHref = pFormHrefAry[1];
+            for(var i = 1; i < an.options.length; i++){
+                if(Saveflag)
+                    newpDocID += "," + newpDocIDAry[i + 1];
+                else
+                    pDocID += "," + pDocIDAry[i + 1];
+                pFormID += "," + pFormIDAry[i + 1];
+                if(AutoSave != "autosave" || createAutoDoc != "N")
+                    href += ",/document/doc/" + (Saveflag ? newpDocIDAry[i + 1] : pDocIDAry[i + 1]) + ".htm";
+                pHasAttachYN += pHasAttachYNAry[i + 1] == "Y" || pHasDocAttachYNAry[i + 1] == "Y" ? ",Y" : ",N";
+                pHasOpinionYN += "," + undefined2EmptyString(pHasOpinionYNAry[i + 1]);
+                FormHref += "," + pFormHrefAry[i + 1];
+                DocSN += "," + undefined2EmptyString(DocSNAry[i + 1]);
+                title += "㉾" + message.GetFieldText("doctitle{{" + i + "}}");
+                tmpOldDocID += "," + pDocIDAry[i + 1];
+            }
+        }
         if(Saveflag) {
             if(AutoSave == "autosave" && createAutoDoc == "Y"){
                 createNodeAndInsertText(xmlpara, objNode, "DOCID", autopDocID);
@@ -2234,12 +2332,12 @@ function SaveTMPDocInfo(AutoSave, Saveflag, pState, phtml) {
             createNodeAndInsertText(xmlpara, objNode, "DOCSTATE", "");
 
         createNodeAndInsertText(xmlpara, objNode, "FUNCTIONTYPE", strAprState1);
-        createNodeAndInsertText(xmlpara, objNode, "HREF", "/document/doc/" + pDocID + ".htm");
+        createNodeAndInsertText(xmlpara, objNode, "HREF", href);
 
 
         if (message.FieldExist("doctitle")) {
             if(pAutoTmpDocTitle != "") {
-                createNodeAndInsertText(xmlpara, objNode, "DOCTITLE", message.GetFieldText("doctitle"));
+                createNodeAndInsertText(xmlpara, objNode, "DOCTITLE", title);
             }else{
                 createNodeAndInsertText(xmlpara, objNode, "DOCTITLE", strLang1133);
             }
@@ -2311,7 +2409,7 @@ function SaveTMPDocInfo(AutoSave, Saveflag, pState, phtml) {
         
         if(Saveflag) {
         	createNodeAndInsertText(xmlpara, objNode, "saveFlag", Saveflag);
-        	createNodeAndInsertText(xmlpara, objNode, "oldDocID", pDocID);
+        	createNodeAndInsertText(xmlpara, objNode, "oldDocID", draftAll ? tmpOldDocID : pDocID);
         }
         
         if (AutoSave == "autosave" && createAutoDoc == "Y"){
@@ -2322,6 +2420,7 @@ function SaveTMPDocInfo(AutoSave, Saveflag, pState, phtml) {
         if (AutoSave == "autosave"){
             createNodeAndInsertText(xmlpara, objNode, "FautoSaveFlag", AutoSave);
         }
+        pDocID = tmpID;
         xmlhttp.open("POST", "/ezApprovalG/doDraftHWP.do", false);
         xmlhttp.send(xmlpara);
 

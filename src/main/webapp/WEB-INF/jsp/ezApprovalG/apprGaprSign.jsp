@@ -31,18 +31,24 @@
             var ctx; // Canvas API 객체
             var signFlag = false; // 서명 여부, 아무 서명도 하지 않았는데 결재가 가능한 것을 방지
 		    
+		    var realOpener;
+		    var isLastSaveDoc = false;
+		    
 		    window.onload = function () {
 		        var pSingFlag = true;
 		
 		        try {
 		            RetValue = parent.aprsign1_cross_dialogArguments[0];
 		            ReturnFunction = parent.aprsign1_cross_dialogArguments[1];
+		            realOpener = parent;
 		        } catch (e) {
 		            try {
 		                RetValue = opener.aprsign1_cross_dialogArguments[0];
 		                ReturnFunction = opener.aprsign1_cross_dialogArguments[1];
+		                realOpener = opener;
 		            } catch (e) {
 		                RetValue = window.dialogArguments;
+		                realOpener = window;
 		            }
 		        }
 		        if (existSign != "Y") {
@@ -50,36 +56,41 @@
 		        }
 		        
 		        pUserID = RetValue;
-		        if (pUserID == "seal") {
-		            window.document.title = "<spring:message code='ezApprovalG.t436'/>";
-		            btn_Save.style.display = "none";
-		        }
-		        GetImageXml(pUserID, pDeptID);
-		        if ("<c:out value ='${userInfoApprovalG}'/>" == "BOTH")
-		            BaseURL = "/fileroot/${userInfo.tenantId}/files/upload_approval/signImgs/" + "${userInfo.id}/";
-		        else
-		            BaseURL = "/fileroot/${userInfo.tenantId}/files/upload_approvalG/signImgs/" + "${userInfo.id}/";
-		        var listview = new ListView();
-		        listview.LoadFromID("listSIGNLIST");
-		        var pCurSelRow = listview.GetDataRows();
-		        if (pCurSelRow) {
-		            if (listview.GetDataRows().length > 0) {
-		                var pSignSelcur = listview.GetDataRows()[0];
-		                listview.SetSelectedIndex(0);
-		                if (pSignSelcur != null && trim_Cross(pSignSelcur.getAttribute("DATA1")) != "NAME") {
-		                    var tempImg = document.createElement("img");
-		                    tempImg.style.width = document.getElementById("SIGNVIEW").style.width;
-		                    tempImg.style.height = document.getElementById("SIGNVIEW").style.height;
-		                    tempImg.setAttribute("width", document.getElementById("SIGNVIEW").style.width);
-		                    tempImg.setAttribute("height", document.getElementById("SIGNVIEW").style.height);                 
-		                    tempImg.src = "/ezApprovalG/approvalGSign.do?fileName=" + pSignSelcur.getAttribute("DATA1");
-		                    document.getElementById("SIGNVIEW").appendChild(tempImg);
-		                }
-		            }
+		        
+		        if(realOpener && typeof realOpener.isLastSaveDoc != "undefined" && realOpener.isLastSaveDoc == true){
+		            isLastSaveDoc = true;
 		        }
 		        
-		        canvas = document.getElementById('canvas')
-		        ctx = canvas.getContext('2d')
+                if (pUserID == "seal") {
+                    window.document.title = "<spring:message code='ezApprovalG.t436'/>";
+                    btn_Save.style.display = "none";
+                }
+                GetImageXml(pUserID, pDeptID);
+                if ("<c:out value ='${userInfoApprovalG}'/>" == "BOTH")
+                    BaseURL = "/fileroot/${userInfo.tenantId}/files/upload_approval/signImgs/" + "${userInfo.id}/";
+                else
+                    BaseURL = "/fileroot/${userInfo.tenantId}/files/upload_approvalG/signImgs/" + "${userInfo.id}/";
+                var listview = new ListView();
+                listview.LoadFromID("listSIGNLIST");
+                var pCurSelRow = listview.GetDataRows();
+                if (pCurSelRow) {
+                    if (listview.GetDataRows().length > 0) {
+                        var pSignSelcur = listview.GetDataRows()[0];
+                        listview.SetSelectedIndex(0);
+                        if (pSignSelcur != null && trim_Cross(pSignSelcur.getAttribute("DATA1")) != "NAME") {
+                            var tempImg = document.createElement("img");
+                            tempImg.style.width = document.getElementById("SIGNVIEW").style.width;
+                            tempImg.style.height = document.getElementById("SIGNVIEW").style.height;
+                            tempImg.setAttribute("width", document.getElementById("SIGNVIEW").style.width);
+                            tempImg.setAttribute("height", document.getElementById("SIGNVIEW").style.height);                 
+                            tempImg.src = "/ezApprovalG/approvalGSign.do?fileName=" + pSignSelcur.getAttribute("DATA1");
+                            document.getElementById("SIGNVIEW").appendChild(tempImg);
+                        }
+                    }
+                }
+                
+                canvas = document.getElementById('canvas')
+                ctx = canvas.getContext('2d')
                 ctx.lineWidth = 2;
                 
                 // 태블릿 지원을 포함한 이벤트리스너
@@ -88,6 +99,24 @@
                 canvas.addEventListener("pointerdown", drawStart);
                 canvas.addEventListener("pointermove", draw);
                 canvas.addEventListener("pointerover", drawStart);
+		        
+		        if(isLastSaveDoc){
+		            /*
+		            if(document.getElementById("SIGNLIST")){
+		                document.getElementById("SIGNLIST").style.display = "none";
+		            }
+		            if(document.getElementById("SIGNVIEW")){
+		                document.getElementById("SIGNVIEW").style.display = "none";
+		            }
+		            */
+		            if(document.getElementById("btn_ImageSave")){
+		                document.getElementById("btn_ImageSave").style.display = "none";
+		            }
+		            if(document.getElementById("btn_draw")){
+		                document.getElementById("btn_draw").style.display = "none";
+		            }
+		        }
+		        
 		    };
 		    /**
 		    * 글림으로된 서명을 선택해서 진행할 경우

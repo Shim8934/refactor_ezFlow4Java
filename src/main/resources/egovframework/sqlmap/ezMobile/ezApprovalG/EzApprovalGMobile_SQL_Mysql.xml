@@ -2654,7 +2654,7 @@
 		<isEqual property="type" compareValue="END">
 			<![CDATA[
 				SELECT
-					COUNT(*)
+					COUNT(*) AS CNT
 				FROM
 					TBL_ENDAPROPINIONINFO
 				WHERE
@@ -2667,8 +2667,10 @@
 		</isEqual>
 		<isNotEqual property="type" compareValue="END">
 			<![CDATA[
+				SELECT COALESCE(SUM(A.CNT), 0) AS CNT
+				FROM (
 				SELECT
-					COUNT(*)
+					COUNT(*) CNT
 				FROM
 					TBL_APROPINIONINFO
 				WHERE
@@ -2677,6 +2679,23 @@
 					COMPANYID = #companyID#
 				AND
 					DOCID = #docID#
+				UNION ALL
+				SELECT
+					COUNT(*)
+				FROM
+					TBL_APROPINIONINFO A
+				JOIN
+					TBL_APRDOCGROUPINFO B
+				ON A.DOCID = B.DOCID
+				WHERE
+					GROUPDOCSN = #docID#
+				AND 
+					B.TENANT_ID = #tenantID#
+				AND
+					B.COMPANYID = #companyID#
+				AND
+					TABSN > 1
+				) A
 			]]>
 		</isNotEqual>
 	</select>
@@ -2737,12 +2756,16 @@
                 CASE
                     WHEN (USERDEPTNAME2 IS NULL OR USERDEPTNAME2 = '') THEN USERDEPTNAME
                     ELSE USERDEPTNAME2
-                END AS USERDEPTNAME
+				END USERDEPTNAME,
+				1 GROUPSN,
+				DOCID
             </isEqual>
             <isNotEqual property="lang" compareValue="2">
                 USERNAME,
                 USERJOBTITLE,
-                USERDEPTNAME
+				USERDEPTNAME,
+				1 GROUPSN,
+				DOCID
             </isNotEqual>
 			FROM
 				TBL_APROPINIONINFO
@@ -2752,8 +2775,51 @@
 				COMPANYID = #companyID#
 			AND
 				DOCID = #docID#
+			UNION ALL
+			SELECT
+			CONTENT,
+			OPINIONGB,
+			USERID,
+			OPINIONSN,
+			<isEqual property="lang" compareValue="2">
+				CASE
+				WHEN (USERNAME2 IS NULL OR USERNAME2 = '') THEN USERNAME
+				ELSE USERNAME2
+				END AS USERNAME,
+				CASE
+				WHEN (USERNAME2 IS NULL OR USERNAME2 = '') THEN USERJOBTITLE
+				ELSE USERJOBTITLE2
+				END AS USERJOBTITLE,
+				CASE
+				WHEN (USERDEPTNAME2 IS NULL OR USERDEPTNAME2 = '') THEN USERDEPTNAME
+				ELSE USERDEPTNAME2
+				END USERDEPTNAME,
+				TABSN GROUPSN,
+				A.DOCID
+			</isEqual>
+			<isNotEqual property="lang" compareValue="2">
+				USERNAME,
+				USERJOBTITLE,
+				USERDEPTNAME,
+				TABSN GROUPSN,
+				A.DOCID
+			</isNotEqual>
+			FROM
+			TBL_APROPINIONINFO A
+			JOIN
+			TBL_APRDOCGROUPINFO B
+			ON
+			A.DOCID = B.DOCID
+			WHERE
+			B.TENANT_ID =#tenantID#
+			AND
+			B.COMPANYID = #companyID#
+			AND
+			B.GROUPDOCSN = #docID#
+			AND
+			TABSN > 1
 			ORDER BY
-				OPINIONSN DESC
+				GROUPSN, OPINIONSN DESC
         </isNotEqual>
 	</select>
 	

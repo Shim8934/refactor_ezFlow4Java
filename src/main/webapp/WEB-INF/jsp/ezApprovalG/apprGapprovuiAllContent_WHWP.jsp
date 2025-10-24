@@ -300,7 +300,12 @@
 			
 /******************************* 웹한글기안기쪽 함수 ******************************/
 	        function Open(url, format, type, callback, name) {
-	            return HwpCtrl.Open(url, format, type, callback, name);
+	            var hostName = window.location.hostname;
+                if(typeof hostName != "undefined" && hostName.indexOf("localhost") > -1){
+                    return localHWPLoad(this, url, callback);
+                }else{
+                    return HwpCtrl.Open(url, format, type, callback, name);
+                }
 	        }
 
 	        function SaveFile(filename, format, callback) {

@@ -3935,4 +3935,16 @@ public class EzCommonDAO extends EgovAbstractDAO {
             update("EzCommonDAO.addBigAttachInfo",map);
         }
     }
+
+	/* 2025-07-07 강동주 - 전자결재 백단에서 결재 시 한글 파일 핸들링 오류 발생한 문서 테이블 */
+	public void createApproveErrorInfoTable() {
+		try {
+			select("EzCommonDAO.checkApproveErrorInfoTable");
+		} catch (Exception e) {
+			logger.debug("TBL_APPROVE_ERROR_INFO doesn't exist. creating the table...");
+
+			update("EzCommonDAO.createApproveErrorInfoTable");
+		}
+	}
+	
 }

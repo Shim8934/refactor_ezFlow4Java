@@ -85,6 +85,7 @@ var signInfo = [];
 var newSignInfo = [];
 function AprrovMappingSign(ret)
 {
+	var allTypeB = typeof draftAllTypeB != "undefined" && typeof pDocIDAry != "undefined" && typeof anCnt == "number" && draftAllTypeB == "Y" && pDocIDAry.length > 2 && anCnt > 1;
 	var SingFlag = true;
 	var DekyulFlag = false;
 	var habyui
@@ -160,7 +161,16 @@ function AprrovMappingSign(ret)
 					SignContent[signCnt] = ret;
 				}
 				
-				message.InsertPicture(habyui, hostURL + escape(ret), AprrovMappingSign_after);
+//				message.InsertPicture(habyui, hostURL + escape(ret), AprrovMappingSign_after);
+				if(allTypeB){
+                    var retFunction = null;
+                    for(var j = 0; j < anCnt; j++){
+                        retFunction = j == anCnt -1 ? AprrovMappingSign_after : null;
+                        message.InsertPicture(signID + "{{" + j + "}}", hostURL + escape(ret), retFunction);    
+                    }
+				}else{
+				    message.InsertPicture(habyui, hostURL + escape(ret), AprrovMappingSign_after);
+				}
 				
 				signCnt = signCnt + 1
 				SingFlag = true;
@@ -304,8 +314,19 @@ function AprrovMappingSign(ret)
 //                        if (signImageType == "NAME") {
 //                            message.InsertPicture(signID, hostURL + escape(ret), AprrovMappingSignName_after);
 //                        } else {
-                        message.InsertPicture(signID, hostURL + escape(ret), AprrovMappingSign_after);
+//                        message.InsertPicture(signID, hostURL + escape(ret), AprrovMappingSign_after);
 //                        }
+                    if(allTypeB){
+                        var retFunction = null;
+                        for(var j = 0; j < anCnt; j++){
+                            retFunction = j == anCnt -1 ? AprrovMappingSign_after : null;
+                            message.InsertPicture(signID + "{{" + j + "}}", hostURL + escape(ret), retFunction);    
+                        }
+                    }else{
+                        message.InsertPicture(signID, hostURL + escape(ret), AprrovMappingSign_after);
+                    }
+
+
                     SignType[signCnt] = "IMAGE";
                     SignContent[signCnt] = ret+"::"+contents;
                 }
@@ -362,7 +383,16 @@ function AprrovMappingSign(ret)
                     message.PrependFieldText(signID, strLang6);
                     var contents = strLang6 + OpinionText;
 
-                    message.InsertPicture(signID, hostURL + escape(ret), AprrovMappingSign_after);
+//                    message.InsertPicture(signID, hostURL + escape(ret), AprrovMappingSign_after);
+                    if(allTypeB){
+                        var retFunction = null;
+                        for(var j = 0; j < anCnt; j++){
+                            retFunction = j == anCnt -1 ? AprrovMappingSign_after : null;
+                            message.InsertPicture(signID + "{{" + j + "}}", hostURL + escape(ret), retFunction);    
+                        }
+                    }else{
+                        message.InsertPicture(signID, hostURL + escape(ret), AprrovMappingSign_after);
+                    }
 
                     SignType[signCnt] = "IMAGE";
                     SignContent[signCnt] = ret+"::"+contents;
@@ -471,7 +501,16 @@ function AprrovMappingSign(ret)
 					}
 					
 	  				message.PrependFieldText(signID, strLang7 + OpinionText);
-	  				message.InsertPicture(signID, hostURL + escape(ret), AprrovMappingSign_after);
+//	  				message.InsertPicture(signID, hostURL + escape(ret), AprrovMappingSign_after);
+                    if(allTypeB){
+                        var retFunction = null;
+                        for(var j = 0; j < anCnt; j++){
+                            retFunction = j == anCnt -1 ? AprrovMappingSign_after : null;
+                            message.InsertPicture(signID + "{{" + j + "}}", hostURL + escape(ret), retFunction);    
+                        }
+                    }else{
+                        message.InsertPicture(signID, hostURL + escape(ret), AprrovMappingSign_after);
+                    }
 	  				
 	  				signInfo[signCnt] = signID;
 			        SignName[signCnt] = signID;
@@ -562,7 +601,16 @@ function AprrovMappingSign(ret)
 					contents = OpinionText + contents;
 					
 					message.PrependFieldText(signID, contents);
-	  				message.InsertPicture(signID, hostURL + escape(ret), AprrovMappingSign_after);
+//	  				message.InsertPicture(signID, hostURL + escape(ret), AprrovMappingSign_after);
+                    if(allTypeB){
+                        var retFunction = null;
+                        for(var j = 0; j < anCnt; j++){
+                            retFunction = j == anCnt -1 ? AprrovMappingSign_after : null;
+                            message.InsertPicture(signID + "{{" + j + "}}", hostURL + escape(ret), retFunction);    
+                        }
+                    }else{
+                        message.InsertPicture(signID, hostURL + escape(ret), AprrovMappingSign_after);
+                    }
 	  				
 	  				signInfo[signCnt] = signID;
 		            SignName[signCnt] = signID;
@@ -696,7 +744,7 @@ function openOpinionUI_New(pOpinionType, CompleteFunction) {
 	}
 }
 
-function makeOpinionList(OpinionXML) {
+function makeOpinionList(OpinionXML, anIdx) {
 	if (!message.FieldExist("opinions"))
 		return;
 
@@ -720,8 +768,12 @@ function makeOpinionList(OpinionXML) {
 				strOpinion = strOpinion + getNodeText(GetChildNodes(NodeList[i])[6]) + "\15";
 			}
 		}		
-		message.PutFieldText("opinions", strOpinion);
 		
+		if(typeof anIdx != "undefined" && anIdx > 0){
+            message.PutFieldText("opinions" + "{{" + (anIdx-1) + "}}", strOpinion);
+        }else{
+            message.PutFieldText("opinions", strOpinion);
+        }
 		/*if (OpinionAction == "ADD" || OpinionAction == "DEL") {
 			GetHTML(before_SaveFile);
 		}*/
@@ -729,9 +781,14 @@ function makeOpinionList(OpinionXML) {
 		OpinionAction = "";
 	}
 	else {
-		message.PutFieldText("opinions", "");
+	    if(typeof anIdx != "undefined" && anIdx > 0){
+		    message.PutFieldText("opinions" + "{{" + (anIdx-1) + "}}", "");
+	    }else{
+		    message.PutFieldText("opinions", "");
+	    }
 	}
-	GetHTML(before_SaveFile);
+
+    GetHTML(before_SaveFile);
 }
 
 function before_SaveFile(html) {
@@ -748,6 +805,21 @@ function before_SaveFile2(html) {
 		UpdateDocHistory(SaveHtml, "N", beforeDocURL);
 
 	SaveFile();
+}
+
+function before_SaveFile_BackEnd(html) {
+	SaveHtml = html;
+	
+	SaveFile();
+	
+	if(typeof saveBtypeFlag != "undefined"){
+        saveBtypeFlag = true;
+	}
+	if(typeof backFailFlag != "undefined" && !backFailFlag){
+	    Approv_Complete_BackEnd(); 
+	}else{
+	    Approve_complete("NAME");
+	}
 }
 
 var aprattach_dialogArguments = new Array();
@@ -769,6 +841,61 @@ function openFileAttachUI_Complete(ret) {
 	}
 }
 
+/**
+ * 백단 결재 메서드
+ * data에 결재관련 정보 저장
+ * pApproveFlag 1 : 결재, 2 : 반송, 3 : 보류, 4 : 회수, 5 : 확인, 6 : 공람
+ * */
+function SaveApproveInfoInBackEnd(pApproveFlag) {
+    var result = "";
+    var sn = wAprMemberSN.toString();
+    var mode = "APR";
+    var pAprState = "";
+    
+    if (pApproveFlag == "1") {
+        pAprState = "APR";
+    } else if (pApproveFlag == "2") {
+        pAprState = "BAN";
+    } else if (pApproveFlag == "3") {
+        pAprState = "BO";
+    } else if (pApproveFlag == "4") {
+        pAprState = "HWE";
+    } else if (pApproveFlag == "5") {
+        pAprState = "CHECK";
+    } else if(pApproveFlag == "6"){
+        pAprState = "GR";
+    }
+    
+    var tmpDocID = pDocID;
+    /*if(typeof draftAllTypeB != "undefined" && draftAllTypeB == "Y" && typeof pDocIDAry != "undefined" && pDocIDAry.length > 0){
+        tmpDocID = pDocIDAry[0];
+    else{
+        tmpDocID = pDocID;
+    }*/
+    var data = {"docID" : tmpDocID, "aprMemberSN" : sn, "mode" : mode, "type" : pAprState};
+    
+    $.ajax({
+        type : "POST",
+        dataType : "json",
+        async : false,
+        url : "/ezApprovalG/doApprovBackEnd.do",
+        contentType : "application/json",
+        data : JSON.stringify(data),
+        success: function(obj){
+            if(obj){
+                console.log(obj);
+                result = obj;
+            }
+        },
+        error : function(err){
+            console.log(err);
+        }        			
+    });
+    
+    return result;
+}
+
+var approvBack = "N";
 function SaveApproveInfo(pApproveFlag) {
 	var rtnVal = SaveFile();
 
@@ -782,15 +909,38 @@ function SaveApproveInfo(pApproveFlag) {
 
 	var objNode;
 	createNodeInsert(xmlpara, objNode, "PARAMETER");
-	createNodeAndInsertText(xmlpara, objNode, "DOCID", getNodeText(GetChildNodes(SelectNodes(xmldoc, "DOCINFO/DATA")[0])[0]));
-	createNodeAndInsertText(xmlpara, objNode, "FORMID", getNodeText(GetChildNodes(SelectNodes(xmldoc, "DOCINFO/DATA")[0])[1]));
-	createNodeAndInsertText(xmlpara, objNode, "ORGDOCID", getNodeText(GetChildNodes(SelectNodes(xmldoc, "DOCINFO/DATA")[0])[2]));
-	createNodeAndInsertText(xmlpara, objNode, "DOCTYPE", getNodeText(GetChildNodes(SelectNodes(xmldoc, "DOCINFO/DATA")[0])[3]));
-	createNodeAndInsertText(xmlpara, objNode, "DOCSTATE", getNodeText(GetChildNodes(SelectNodes(xmldoc, "DOCINFO/DATA")[0])[4]));
-	createNodeAndInsertText(xmlpara, objNode, "FUNCTIONTYPE", "002");
-	createNodeAndInsertText(xmlpara, objNode, "HREF", getNodeText(GetChildNodes(SelectNodes(xmldoc, "DOCINFO/DATA")[0])[6]));
-
 	pDocTitle = message.GetFieldText("doctitle");
+	if(anCnt > 1){
+	    var tmpID = pDocIDAry[1];
+	    pDocID = pDocIDAry[1];
+	    var tmpDir = "/" + Number(pDocID.substr(-3)) + "/";   
+	    pFormID = pFormIDAry[1];
+	    pDocHref = pDocHref.substring(0,pDocHref.indexOf(",") == -1 ? pDocHref.length : pDocHref.indexOf(","));
+	    pHasAttachYN = pHasAttachYNAry[1];
+	    pHasOpinionYN = pHasOpinionYNAry[1];
+	    
+        for(var i = 1; i < anCnt; i++){
+            pDocID += "," + pDocIDAry[i + 1];
+            pFormID += "," + pFormIDAry[i + 1];
+            pDocHref += "," + pDocHref.replace(tmpID, pDocIDAry[i + 1]).replace(tmpDir, "/" + Number(pDocIDAry[i + 1].substr(-3)) + "/");
+            pHasAttachYN += pHasAttachYNAry[i + 1] == "Y" || pHasDocAttachYNAry[i + 1] == "Y" ? ",Y" : ",N";
+            pHasOpinionYN += "," + pHasOpinionYNAry[i + 1];
+            
+            if(typeof pDocTitleAry != "undefined" && pDocTitleAry.length > 1){
+                pDocTitle += "㉾" + pDocTitleAry[i + 1];
+            }else{
+                pDocTitle += "㉾" + message.GetFieldText("doctitle{{" + i + "}}");
+            }
+        }
+    }
+	createNodeAndInsertText(xmlpara, objNode, "DOCID", anCnt > 1 ? pDocID : getNodeText(GetChildNodes(SelectNodes(xmldoc, "DOCINFO/DATA")[0])[0]));
+	createNodeAndInsertText(xmlpara, objNode, "FORMID", anCnt > 1 ? pFormID : getNodeText(GetChildNodes(SelectNodes(xmldoc, "DOCINFO/DATA")[0])[1]));
+	createNodeAndInsertText(xmlpara, objNode, "ORGDOCID", anCnt > 1 ? "" : getNodeText(GetChildNodes(SelectNodes(xmldoc, "DOCINFO/DATA")[0])[2]));
+	createNodeAndInsertText(xmlpara, objNode, "DOCTYPE", anCnt > 1 ? "" : getNodeText(GetChildNodes(SelectNodes(xmldoc, "DOCINFO/DATA")[0])[3]));
+	createNodeAndInsertText(xmlpara, objNode, "DOCSTATE", anCnt > 1 ? "" : getNodeText(GetChildNodes(SelectNodes(xmldoc, "DOCINFO/DATA")[0])[4]));
+	createNodeAndInsertText(xmlpara, objNode, "FUNCTIONTYPE", "002");
+	createNodeAndInsertText(xmlpara, objNode, "HREF", anCnt > 1 ? pDocHref : getNodeText(GetChildNodes(SelectNodes(xmldoc, "DOCINFO/DATA")[0])[6]));
+
 	createNodeAndInsertText(xmlpara, objNode, "DOCTITLE", pDocTitle);
 
     if (approvalFlag == 'S' && pApproveFlag == "2") {
@@ -887,14 +1037,14 @@ function SaveApproveInfo(pApproveFlag) {
 	}
 
 	if (pHasAttachYN == "")
-	    createNodeAndInsertText(xmlpara, objNode, "HASATTACHYN", getNodeText(GetChildNodes(SelectNodes(xmldoc, "DOCINFO/DATA")[0])[9]));
+	    createNodeAndInsertText(xmlpara, objNode, "HASATTACHYN", anCnt > 1 ? pHasAttachYN : getNodeText(GetChildNodes(SelectNodes(xmldoc, "DOCINFO/DATA")[0])[9]));
 	else
 	    createNodeAndInsertText(xmlpara, objNode, "HASATTACHYN", pHasAttachYN);
 
 	var objNode;
 
 	if (pHasOpinionYN == "")
-	    createNodeAndInsertText(xmlpara, objNode, "HASOPINIONYN", getNodeText(GetChildNodes(SelectNodes(xmldoc, "DOCINFO/DATA")[0])[10]));
+	    createNodeAndInsertText(xmlpara, objNode, "HASOPINIONYN", anCnt > 1 ? pHasOpinionYN : getNodeText(GetChildNodes(SelectNodes(xmldoc, "DOCINFO/DATA")[0])[10]));
 	else
 	    createNodeAndInsertText(xmlpara, objNode, "HASOPINIONYN", pHasOpinionYN);
 
@@ -1038,6 +1188,8 @@ function SaveApproveInfo(pApproveFlag) {
 		}
 	}
 	
+	createNodeAndInsertText(xmlpara, objNode, "APPROVBACK", approvBack);
+	pDocID = tmpID;
 	if (pApproveFlag == "1") {
         xmlhttp.open("POST", "/ezApprovalG/doApprov.do", false);
     } else if (pApproveFlag == "2") {
@@ -1076,6 +1228,37 @@ function SaveFile() {
 		dataType : "text",
 		async : false,
 		url : "/ezApprovalG/saveFileHWP.do",
+		contentType : "application/json",
+		data : JSON.stringify(data),
+		success: function(text){
+			result = text;
+		}        			
+	});
+    
+    return result;
+}
+
+function SaveFileForApprovAllTypeB(data) {
+	// 확인, 참조일 경우 파일 저장 안함
+	if (pAprLineType == strAprType2 || pAprLineType == strAprType7) return "TRUE";
+	var result = "";
+	
+	// 일괄기안 B타입은 각 안을 저장 하는 것이 아님 
+	// 1안만 저장 
+	var data = {
+		docID : pDocIDAry[1],
+		formId : pFormIDAry[1],
+		html  : data,
+		orgCompanyID : orgCompanyID
+	}
+
+	var url = "/ezApprovalG/saveFileHWP.do";
+
+    $.ajax({
+		type : "POST",
+		dataType : "text",
+		async : false,
+		url : url,
 		contentType : "application/json",
 		data : JSON.stringify(data),
 		success: function(text){
@@ -1915,7 +2098,9 @@ function openSingUI(parameter) {
 	/*
 	} else {
 		var ret = "NAME";
-		Approve_complete(ret);
+		// 결재 백단 로직으로 변경 
+        Approv_Complete_BackEnd(ret);
+		// Approve_complete(ret);
 		//GetHTML(Approve_complete);
 	}
 	*/
@@ -1977,6 +2162,7 @@ function putSignXML(SignXML) {
 	var NodeList;
 	NodeList = SignXML.selectNodes("SIGNINFOS/SIGNINFO");
 	if (NodeList.length > 0) {
+	    var allTypeB = typeof draftAllTypeB != "undefined" && typeof pDocIDAry != "undefined" && typeof anCnt == "number" && draftAllTypeB == "Y" && pDocIDAry.length > 2 && anCnt > 1;
 		for (i=0; i<NodeList.length; i++) {
 		    var SignType = getNodeText(NodeList.item(i).selectSingleNode("SIGNTYPE"));
 		    var SignName = getNodeText(NodeList.item(i).selectSingleNode("SIGNNAME"));
@@ -1991,12 +2177,26 @@ function putSignXML(SignXML) {
 				} else if (SignType == "PROXY") {
 					message.PutFieldText(SignName, " ");
 					message.AppendFieldText(SignName, strLang8);
-					message.InsertPicture(SignName, hostURL + escape(SignCont), null);
+//					message.InsertPicture(SignName, hostURL + escape(SignCont), null);
+                    if(allTypeB){
+                        for(var j = 0; j < anCnt; j++){
+                            message.InsertPicture(SignName + "{{" + j + "}}", hostURL + escape(SignCont), null);    
+                        }
+                    }else{
+                        message.InsertPicture(SignName, hostURL + escape(SignCont), null);
+                    }
 				} else if (SignType == "IMAGE") {
 				    var img = SignCont.split("::");
 				    message.PutFieldText(SignName, "");
 					if(img.length >= 1) {
-					    message.InsertPicture(SignName, hostURL + escape(img[0]), null);
+//					    message.InsertPicture(SignName, hostURL + escape(img[0]), null);
+                        if(allTypeB){
+                            for(var j = 0; j < anCnt; j++){
+                                message.InsertPicture(SignName + "{{" + j + "}}", hostURL + escape(img[0]), null);    
+                            }
+                        }else{
+                            message.InsertPicture(SignName, hostURL + escape(img[0]), null);
+                        }
 					}
 				    if(img.length >= 2)
 				    	message.AppendFieldText(SignName, img[1]);
@@ -2063,7 +2263,17 @@ function centerOpenWindow(wfileLocation, wWeight, wHeight) {
 	}
 }
 
-function setRecevInfo(ret) {
+function setRecevInfo(ret, changeIdx) {
+    var idx = "";
+    if(changeIdx){
+        idx = 0;
+        for(var i = 1; i < changeIdx; i++){
+            if(pSuSinFlagAry[i])
+                idx++;
+        }
+        idx = "{{" + idx + "}}"
+    }
+    
     var precipent = "";
     var precipents = "";
     var recipflag = true;
@@ -2074,14 +2284,14 @@ function setRecevInfo(ret) {
     if (xmldom.documentElement.length == 0) return;
 
     var rows = xmldom.documentElement.childNodes
-    if (message.FieldExist("hrecipients"))
-        message.PutFieldText("hrecipients", "");
+    if (message.FieldExist("hrecipients" + idx))
+        message.PutFieldText("hrecipients" + idx, "");
 
-    if (message.FieldExist("recipient"))
-        message.PutFieldText("recipient", "");
+    if (message.FieldExist("recipient" + idx))
+        message.PutFieldText("recipient" + idx, "");
 
-    if (message.FieldExist("recipients"))
-        message.PutFieldText("recipients", "");
+    if (message.FieldExist("recipients" + idx))
+        message.PutFieldText("recipients" + idx, "");
 
     for (var i = rows.length - 1; i >= 0; i--) {
     	var row = rows[i];
@@ -2134,23 +2344,23 @@ function setRecevInfo(ret) {
         }
     }
     
-    if (message.FieldExist("recipient")) {
+    if (message.FieldExist("recipient" + idx)) {
         if (precipent == strLang92) {
-            message.PutFieldText("recipient", precipent);
-            if (message.FieldExist("recipients")) {
-                message.PutFieldText("recipients", precipents);
-                if (message.FieldExist("hrecipients"))
-                    message.PutFieldText("hrecipients", strLang129);
+            message.PutFieldText("recipient" + idx, precipent);
+            if (message.FieldExist("recipients" + idx)) {
+                message.PutFieldText("recipients" + idx, precipents);
+                if (message.FieldExist("hrecipients" + idx))
+                    message.PutFieldText("hrecipients" + idx, strLang129);
             }
         }
         else {
-            message.PutFieldText("recipient", precipent);
+            message.PutFieldText("recipient" + idx, precipent);
             if (precipents == "") {
-                if (message.FieldExist("hrecipients"))
-                    message.PutFieldText("hrecipients", "");
+                if (message.FieldExist("hrecipients" + idx))
+                    message.PutFieldText("hrecipients" + idx, "");
 
-                if (message.FieldExist("recipients"))
-                    message.PutFieldText("recipients", "");
+                if (message.FieldExist("recipients" + idx))
+                    message.PutFieldText("recipients" + idx, "");
             }
         }
     }
@@ -2201,7 +2411,9 @@ function UpdateDocHistory(pHtml, isBeforeDoc, beforeDocURL) {
         if (xmlhttp != null && xmlhttp.readyState == 4) {
          	 if (xmlhttp.status == 200) {
 				returnURL = xmlhttp.responseText;
-				snapshotCode = getSnapshotCode();
+				if(!(typeof draftAllTypeB != "undefined" && typeof anCnt != "undefined" && draftAllTypeB == "Y" && anCnt > 1)){
+				    snapshotCode = getSnapshotCode();
+				}
 			 } else {
          		 var pAlertContent = strLang89;
                 OpenAlertUI(pAlertContent);

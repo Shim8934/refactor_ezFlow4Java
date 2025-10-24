@@ -63,7 +63,7 @@ function trim(str) {
 /**
  * 첨부파일 정보 추출
  * */
-function setAttachInfo(tempDocID, INGFlag, attachTag) {
+function setAttachInfo(tempDocID, INGFlag, attachTag, draftAllTypeB) {
     attachTag.innerHTML = "";
     
     /* 2022-01-17 홍승비 - 일괄기안 시 안별 iframe 내부에 접근해야 하므로 분기처리 */
@@ -75,7 +75,7 @@ function setAttachInfo(tempDocID, INGFlag, attachTag) {
     
     // 일괄기안 부모페이지에서 접근
     var tempHref = document.location.href;
-    if (tempHref.indexOf("ezApprovalG/draftuiAll_WHWP.do") > -1 || tempHref.indexOf("ezApprovalG/approvuiAll_WHWP.do") > -1) {
+    if (tempHref.indexOf("ezApprovalG/draftuiAll_WHWP.do") > -1 || tempHref.indexOf("ezApprovalG/approvuiAll_WHWP.do") > -1 || draftAllTypeB == "Y") {
     	isDraftAllPage = "Y";
     	attachTag = document.getElementById(attachTag.id);
     	docAttachTag = document.getElementById(attachTag.id + "Doc");
@@ -284,7 +284,14 @@ function setAttachInfo(tempDocID, INGFlag, attachTag) {
                 }
             }
         }
-        
+        if(typeof attachLoad != "undefined"){
+            var i;
+            for(i = 0; i < an.options.length; i++){
+                if(an.options[i].value == tempDocID)
+                    break;
+            }
+            attachHTMLSave(i + 1);
+        }
         try {
             pHasAttachYN = "Y";
         } catch (e) { }
@@ -310,6 +317,12 @@ function setAttachInfo(tempDocID, INGFlag, attachTag) {
             }
         } catch (e) { }
     }
+}
+
+function attachHTMLSave(idx){
+    attachLoad[idx] = true;
+    attachHTML[idx] = lstAttachLink.innerHTML;
+    docAttachHTML[idx] = lstAttachLinkDoc.innerHTML;
 }
 
 // 2023-05-26 조수빈 - 결재문서 첨부파일 미리보기

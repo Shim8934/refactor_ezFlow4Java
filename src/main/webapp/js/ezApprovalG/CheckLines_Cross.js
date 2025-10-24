@@ -1,16 +1,23 @@
 ﻿var CheckAprLinesXML = "";
 var CheckDeptLinesXML = "";
+var CheckDeptLinesXMLAry = new Array();
 
 function setAprLinesXML(tempXML) {
     if (tempXML != "cancel")
         CheckAprLinesXML = tempXML;
 }
 
-function setDeptLinesXML(tempXML) {
-    if (tempXML == "NONE")
+function setDeptLinesXML(tempXML, currentTabIdx) {
+    if (tempXML == "NONE"){
         CheckDeptLinesXML = "";
-    else if (tempXML != "cancel")
+        if(currentTabIdx)
+            CheckDeptLinesXMLAry[currentTabIdx] = "";
+    }
+    else if (tempXML != "cancel"){
         CheckDeptLinesXML = tempXML;
+        if(currentTabIdx)
+            CheckDeptLinesXMLAry[currentTabIdx] = tempXML;
+    }
 }
 
 function checkLines() {

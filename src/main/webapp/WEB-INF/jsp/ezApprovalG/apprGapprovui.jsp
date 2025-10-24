@@ -836,6 +836,10 @@
 	    			<%--}--%>
 	    			return;
 	    		}
+	    		/* 백단 결재 실패한 이력이 있는 doc은 프론트 결재 로직 */
+	    		if(getCheckNotFailDoc()){
+	    		    backFailFlag = true;
+	    		}
 		        try {
 		            if (OrgAprUserID != arr_userinfo[1]) {
 		            	showConfirm(OrgAprUserName + "<spring:message code='ezApprovalG.t2106'/>", btnApprove_onclick_afterConfirm);
@@ -877,9 +881,83 @@
 		            openSingUI(parameter);
 		        }
 		        else {
-		            Approv_Complete(ret);
+		            /* 백단 결재 호출 */
+                    Approv_Complete_BackEnd(ret);
+                    // Approv_Complete(ret);
 		        }
 		    }
+		    
+		    /**
+		    * BackEnd에서 결재 처리
+            */
+            var backFailFlag = false;
+		    function Approv_Complete_BackEnd(signtype){
+		        DivPopUpHidden();
+                if (checkAprState()) {
+                    alert("<spring:message code='ezApprovalG.bhs23'/>");
+                    //모두결재인 경우 다음 문서로 넘어가도록 설정
+                    if (allFlag == "1") {
+                        LoadNextDocument("\n" + "<spring:message code='ezApprovalG.t4'/>");
+                    } else {
+                        window.returnValue = "CLOSE";
+                        btnClose_onclick();
+                    }
+                    return;
+                }
+                
+                var res = "";
+                if(!backFailFlag){
+                    res = SaveApproveInfoInBackEnd("1");
+                    if(res){
+                        var resCode = res.status;    // ok / error
+                        if(resCode == "ok"){
+                            var resData = res.data;  // SUCCESS / FAIL
+                            if(typeof resData != "undefined" && resData.toUpperCase() == "SUCCESS"){
+                                // 결재 완료
+                                setMenuDisable("btnApprove", false);
+                                
+                                if ((pDraftFlag == "SUSIN" || pAprLineType == strAprType7) && KuyjeType == "001") {
+                                    var pAlertContent = "<spring:message code='ezApprovalG.t35'/>";
+                                    OpenAlertUI(pAlertContent, Draft_Complete);
+                                    return;
+                                } else {
+                                    if (pAprLineType == strAprType7) {
+                                        process_AfterApprove("4");
+                                    } else {
+                                        process_AfterApprove("1");
+                                    }
+                                }
+                            }else if(typeof resData != "undefined" && resData.toUpperCase() == "FAIL"){
+                                backFailFlag = true;
+                                // 결재 실패
+                                /* 
+                                var pAlertContent = "[" + "<spring:message code='ezApprovalG.t34'/>";
+                                OpenAlertUI(pAlertContent);
+                                setMenuDisable("btnApprove", false);
+                                return;
+                                */
+                            }
+                        }else{ // 호출시 데이터 문제(type) or 백단 결재 로직 오류
+                            backFailFlag = true;
+                            /*
+                            var pAlertContent = "[" + "<spring:message code='ezApprovalG.t34'/>";
+                            OpenAlertUI(pAlertContent);
+                            setMenuDisable("btnApprove", false);
+                            return;
+                            */
+                        }
+                    }
+                    /* 백단 결재 로직 실패 시 프론트로 결재 */
+                    if(backFailFlag){
+                        Approv_Complete(signtype);
+                    }
+                }else{
+                    Approv_Complete(signtype);
+                }
+                
+		    }
+		    
+		    
 		    /**
 		    * ExcuteInfo()를 통한 연동관리
 		    * getDocNumber()를 통한 문서번호 채번
@@ -1219,8 +1297,12 @@
 		            OpenAlertUI(pAlertContent);
 		            setMenuDisable("btnApprove", false);
 		            return;
-		        }
-		        Approv_Complete(ret);
+		        }else if(ret == "NAME"){
+                    Approv_Complete_BackEnd(ret);
+                 }else{
+                    Approv_complete(ret);
+                 }
+                 // Approv_Complete(ret);
 		    }
 		
 		    function btnApprove_chkpassword_Complete(chkpass) {
@@ -1291,6 +1373,31 @@
 
 		        if (ret != "cancel") {
 		        	pHasOpinionYN = "Y";
+		        	
+		        	/* 지정반송은 백단 결재 로직 사용 X */
+		        	/* 반송 백단로직 start */
+		        	backFailFlag = false;
+                    var res = SaveApproveInfoInBackEnd("2");
+		        	if(res){
+                        var resCode = res.status;    // ok / error
+                        if(resCode == "ok"){
+                            var resData = res.data;  // SUCCESS / FAIL
+                            if(typeof resData != "undefined" && resData.toUpperCase() == "SUCCESS"){
+                                // 결재 완료
+                                process_AfterApprove("2");
+                            }else if(typeof resData != "undefined" && resData.toUpperCase() == "FAIL"){
+                                // 결재 실패
+                                backFailFlag = true;
+                            }
+                        }else{ // 호출시 데이터 문제(type) or 백단 결재 로직 오류
+                            backFailFlag = true;
+                        }
+                    }
+		        	if(!backFailFlag){
+		        	    return;
+		        	}
+		        	/* 반송 백단 로직 실패 시 프론트 로직 시작 */
+		        	
 		            UpdateLineHistory(); // '변경내역' 업데이트
 		            var rtnVal = ExcuteInfo("BANSONG_BEFORE");
 		            if (!rtnVal) {
@@ -1424,6 +1531,29 @@
 		    			<%--}--%>
 		    			return;
 		    		}
+		        	
+		        	/* 보류 백단로직 start */
+                    backFailFlag = false;
+                    var res = SaveApproveInfoInBackEnd("3");
+                    if(res){
+                        var resCode = res.status;    // ok / error
+                        if(resCode == "ok"){
+                            var resData = res.data;  // SUCCESS / FAIL
+                            if(typeof resData != "undefined" && resData.toUpperCase() == "SUCCESS"){
+                                // 결재 완료
+                                process_AfterApprove("3");
+                            }else if(typeof resData != "undefined" && resData.toUpperCase() == "FAIL"){
+                                // 결재 실패
+                                backFailFlag = true;
+                            }
+                        }else{ // 호출시 데이터 문제(type) or 백단 결재 로직 오류
+                            backFailFlag = true;
+                        }
+                    }
+                    if(!backFailFlag){
+                        return;
+                    }
+                    /* 보류 백단 로직 실패 시 프론트 로직 시작 */
 		        	
 		        	var Rtnxml = createXmlDom();
 		            Rtnxml = loadXMLString(ret);
@@ -2307,6 +2437,28 @@
 		    	}
 		    	return result == "FALSE" ? true : false;
 		    }
+		    
+		    function getCheckNotFailDoc() {
+            	var checkNotFailDoc = "";
+            	
+            	$.ajax({
+            		type : "GET",
+            		url : "/ezApprovalG/getCheckNotFailDoc.do",
+            		dataType : "text",
+            		async : false,
+            		data : {
+            			pDocID : pDocID
+            		},
+            		success : function(data) {
+            			checkNotFailDoc = data;
+            		},
+            		error : function(xhr, status, error) {
+            			
+            		}
+            	});
+            	
+            	return checkNotFailDoc == "TRUE" ? true : false;
+            }
 		    
 		    function getAprLineList(type) {
 		    	var result = "";
