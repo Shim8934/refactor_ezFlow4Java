@@ -3333,13 +3333,14 @@ public class EzNewPortalServiceImpl extends EgovAbstractServiceImpl implements E
 		return comMenuList;
 	};
 
-	public String isUseEzWorkspace(String companyId, int tenantId, String userId, String deptId) throws Exception {
+	public String isUseEzWorkspace(String companyId, int tenantId, String userId, String deptId, String type) throws Exception {
 		logger.debug("isUseEzWorkspace started.");
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("tenantId", tenantId);
 		map.put("companyId", companyId);
 		map.put("userId", userId);
+		map.put("type", type);
 		
 		String result = ezNewPortalDAO.isUseEzWorkspace(map);
 		
