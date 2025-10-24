@@ -187,7 +187,8 @@
 		        var pBoardID = window.parent.pBoardID;
 		        var strRet = "";
 		        var fileList = "";
-
+                var isFileDelete = false;
+                
 		        for (var i = 1; i < filecnt; i++) {
 		            if (document.getElementById("filelist").childNodes[i].childNodes[0].childNodes[0].childNodes[0].checked == true) {
 		                var pAttachDelSN;
@@ -210,10 +211,16 @@
 		                document.getElementById("filelist").removeChild(document.getElementById("filelist").childNodes[i]);
 		                i--;
 		                filecnt--;
+
+                        isFileDelete = true;
 		            }
-                    showAttachInnerNotice();
 		        }
 
+                if (!isFileDelete) {
+                    alert("<spring:message code='ezPMS.t133' />");
+                }
+                showAttachInnerNotice();
+                
 		        url = "/ezTask/tempUploadFileDelete.do";
 
 		        // upload된 파일 tempUploadFile에서 삭제
