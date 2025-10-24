@@ -7069,7 +7069,7 @@ INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIP
         VALUES (@tenant_id_value, 'PersonalHideSusin', 'Y', '개인수신함 기능 사용여부 / Y:사용, N:사용안함 (default:Y)', '개인수신함 기능 사용여부', '2024-11-26 00:00:00', '전자결재');
 
 INSERT INTO TBL_LISTOPTION
-(LISTTYPE, SN, NAME, WIDTH, TABLENAME, COLNAME, COLALIAS, DTYPE, TYPEDESC, FIELDDESC, NAME2, NAME3, NAME4, NAME6, DELFLAG, TENANT_ID, COMPANYID)
+(LISTTYPE, SN, NAME, WIDTH, TABLENAME, COLNAME, COLALIAS, DTYPE, TYPEDESC, FIELDDESC, NAME2, NAME3, NAME4, NAME6, TENANT_ID, COMPANYID)
 		VALUES
 			('K064', 1, '변경순번', 	60, 	'TBL_HISTORYDOCINFO', 	'ChangeSN', 			NULL, NULL, '문서이력리스트', '변경순번', 	'No.', 		'変更順番', 	'变更序号', 'No.',	@tenant_id_value, 'Top'),
 			('K064', 2, '변경일자', 	90, 	'TBL_HISTORYDOCINFO', 	'ChangeDate', 			NULL, NULL, '문서이력리스트', '변경일자', 	'Date', 	'変更日時', 	'变更日', 'Tanggal', @tenant_id_value, 'Top'),
