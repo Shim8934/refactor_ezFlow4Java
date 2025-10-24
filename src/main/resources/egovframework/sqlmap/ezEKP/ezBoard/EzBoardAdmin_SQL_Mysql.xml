@@ -2001,32 +2001,32 @@
 		<isEqual property="isInitHeader" compareValue="YES">
 			<isEqual property="colName" compareValue="ATTACHMENTS">
 				<![CDATA[
-					'첨부', 'Attachments', '添付', '附加', 'Attachments',
+					'첨부', 'Attachments', '添付', '附加', 'Lampiran',
 				]]>
 			</isEqual>
 			<isEqual property="colName" compareValue="TITLE">
 				<![CDATA[
-					'제목', 'Title', '件名', '标题', 'Title',
+					'제목', 'Title', '件名', '标题', 'Judul',
 				]]>
 			</isEqual>
 			<isEqual property="colName" compareValue="WRITERDEPTNAME">
 				<![CDATA[
-					'부서', 'Department', '部署', '部门', 'Department',
+					'부서', 'Department', '部署', '部门', 'Departemen',
 				]]>
 			</isEqual>
 			<isEqual property="colName" compareValue="WRITERNAME">
 				<![CDATA[
-					'게시자', 'Writer', '作成者', '写作者', 'Writer',
+					'게시자', 'Writer', '作成者', '写作者', 'Penulis',
 				]]>
 			</isEqual>
 			<isEqual property="colName" compareValue="WRITEDATE">
 				<![CDATA[
-					'게시일', 'Registered', '掲示日', '发布日期', 'Registered',
+					'게시일', 'Registered', '掲示日', '发布日期', 'Terdaftar',
 				]]>
 			</isEqual>
 			<isEqual property="colName" compareValue="READCOUNT">
 				<![CDATA[
-					'조회수', 'View', 'ヒット数', '查询数', 'View',
+					'조회수', 'View', 'ヒット数', '查询数', 'Lihat',
 				]]>
 			</isEqual>
 		</isEqual>
