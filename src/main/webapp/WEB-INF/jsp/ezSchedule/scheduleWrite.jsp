@@ -646,7 +646,8 @@
 			function setListOwnerID() {
 				var schOwnInfoList = "<c:out value='${schOwnInfoListToJson}'/>";
 				var decodedString = new DOMParser().parseFromString(schOwnInfoList, "text/html").documentElement.textContent;
-				decodedString = JSON.parse(decodedString);
+                decodedString = decodedString.replaceAll("\\", "\\\\");
+                decodedString = JSON.parse(decodedString);
 				
 			    var selElem = document.getElementById("ListOwnerID");
 
@@ -670,9 +671,11 @@
 			        	scheduleTag = "<spring:message code='ezSchedule.lyj14'/>" + " - ";
 			        	
 			        }
-			        
-			        var value = item.scheduleType + ";;" + item.ownerId + ";;" + item.ownerName + ";;" + item.ownerName2;
-			        var text = scheduleTag + (lang == 1 ? item.ownerName : item.ownerName2);
+
+                    var pOwnerName = item.ownerName.replaceAll("&#039;", "\'").replaceAll("&#034;", "\"");
+                    var pOwnerName2 = item.ownerName2.replaceAll("&#039;", "\'").replaceAll("&#034;", "\"");
+			        var value = item.scheduleType + ";;" + item.ownerId + ";;" + pOwnerName + ";;" + pOwnerName2;
+			        var text = scheduleTag + (lang == 1 ? pOwnerName : pOwnerName2);
 			        
 			        var option = document.createElement("option");
 			        option.value = value;
