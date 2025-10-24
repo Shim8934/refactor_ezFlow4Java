@@ -162,7 +162,7 @@
 
 		        if (tr.length != 0) {
 		            document.getElementById("HeadName").innerText = getNodeText(tr[0].cells[0]);
-		            document.getElementById("HeadWidth").value = getNodeText(tr[0].cells[2]);
+		            document.getElementById("HeadWidth").value = getNodeText(tr[0].cells[5]);
 		        }
 		    }
 
@@ -434,7 +434,7 @@
 		            return;
 		        }
 
-		        setNodeText(tr[0].cells[2], document.getElementById("HeadWidth").value);
+		        setNodeText(tr[0].cells[5], document.getElementById("HeadWidth").value);
 
 		        ChangedHeader = true;
 		        alert("<spring:message code='ezBoard.t999054'/>");
