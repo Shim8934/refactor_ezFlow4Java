@@ -1035,7 +1035,7 @@
              	IFNULL(APPROVEFLAG, '0') APPROVEFLAG ,
              	IFNULL(RETURNFLAG, '0') RETURNFLAG ,
 				IFNULL(REPEATFLAG, '1') REPEATFLAG ,
-             	BRD_ACCESS ,
+             	BRD_ACCESS,
              	RES_MAX_DATE ,
              	RES_MAX_USER_CNT
         	FROM

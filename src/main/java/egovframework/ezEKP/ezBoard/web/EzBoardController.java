@@ -62,6 +62,8 @@ import egovframework.ezEKP.ezOrgan.vo.OrganAuth.AdminAuth;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
+import org.apache.logging.log4j.util.Strings;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -1142,6 +1144,12 @@ public class EzBoardController extends EzFileMngUtil{
 			listShowType = boardConfig != null ? boardConfig.getUsrListShowType() : "G";
 		} else {
 			listShowType = boardInfo.getListShowType();
+		}
+		
+		String pBoardGubun = request.getParameter("gubun");
+		
+		if (Strings.isNotBlank(pBoardGubun)) {
+			boardInfo.setGuBun(pBoardGubun);
 		}
 
 		model.addAttribute("boardInfo", boardInfo);
@@ -4744,14 +4752,25 @@ public class EzBoardController extends EzFileMngUtil{
 		
 		String guBun = boardInfo.getGuBun();
 		String paramGuBun = request.getParameter("gubun");
+		
 		boolean isTempPhoto = requestURL.contains("TempPhoto");
 		boolean isTempMovie = requestURL.contains("TempMovie");
 		
 		// 포토, 썸네일, 동영상 타입의 게시판이면서 게시하기 호출 url은 일반 게시판으로 들어왔을 때,
 		// 리스트 페이지에서 넘겨받은 게시판타입과 DB에서 받은 게시판타입이 상이할 때,
 		// 관리자페이지에서 게시판 타입이 변경된 것으로 그룹웨어 새로고침을 요구함
-		if ((!Arrays.asList("3", "4", "7").contains(guBun) && (isTempPhoto || isTempMovie)) ||
-			(StringUtils.isNotEmpty(paramGuBun) && !guBun.equals(paramGuBun)) ) {
+		
+		boolean gubunAndUrlValid = false;
+		
+		if ("3".equals(guBun) || "4".equals(guBun)) {
+			gubunAndUrlValid = isTempPhoto && !isTempMovie;
+		} else if ("7".equals(guBun)) {
+			gubunAndUrlValid = !isTempPhoto && isTempMovie;
+		} else {
+			gubunAndUrlValid = !isTempPhoto && !isTempMovie;
+		}
+		
+		if (!gubunAndUrlValid || (StringUtils.isNotEmpty(paramGuBun) && !guBun.equals(paramGuBun)) ) {
 			model.addAttribute("gubunExchanged", "Y");
 			return "main/warning_board";
 		}
@@ -10677,6 +10696,12 @@ public class EzBoardController extends EzFileMngUtil{
 		int isMyBoardExist = ezBoardService.getIsMyBoardExist(boardID, userInfo.getId(), userInfo.getTenantId(), userInfo.getCompanyID());
 		if (isMyBoardExist > 0) {
 			isMyBoard = "YES";
+		}
+		
+		String pBoardGubun = request.getParameter("gubun");
+		
+		if (Strings.isNotBlank(pBoardGubun)) {
+			boardInfo.setGuBun(pBoardGubun);
 		}
 
 		String endDateOption = checkEndDateConfig(boardInfo, userInfo);

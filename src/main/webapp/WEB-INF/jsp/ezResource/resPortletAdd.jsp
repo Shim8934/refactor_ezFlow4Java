@@ -87,6 +87,13 @@
 	    	var repetition = "";
 			// 반복예약허용 Flag
 			var repeatFlag       = "${repeatFlag}";
+			
+			// 2024-08-27 유길상 - 정원컬럼 추가
+	    	var resMaxDate = "${resMaxDate}";
+			
+			var modType = "<c:out value='${modType}'/>"; // 수정 타입 (0: 반복아님, 1:선택일자 수정, 2: 선택일자부터 이후 일정 수정, 3: 전체 반복일정 수정)
+			var repeatCount = "<c:out value='${repeatCount}'/>"; // 반복 횟수 (반복일정 일부 수정 시 선택한 날짜가 몇 번쨰 반복일정인지 체크)
+			var beforeScheDate = "<c:out value='${startDateVal}'/>"; // 선택일자(수정 전 반복일정 일자) 변수
 	    	
 	    	// 메인페이지의 onload실행과 initLoad함수의 실행 속도 차이로 setTimeout함수 사용
 	    	var onloadflag = false;
@@ -381,6 +388,17 @@
 	        	} else if (typeof (retVal) != "undefined" && retVal.length == 2) {
 	            	ItemArray[0] = retVal[0];
 	            	ItemArray[1] = retVal[1];
+					var curMaxDate = resMaxDate;
+					for (var i = 0; i < ItemArray[0].length; i++) {
+						var itemResMaxDate = getResourceMaxDate(ItemArray[0][i]);
+						console.log("itemResMaxDate", itemResMaxDate)
+						if (itemResMaxDate) {
+							if (itemResMaxDate < curMaxDate) {
+								curMaxDate = itemResMaxDate;
+							}
+						}
+					}
+					resMaxDate = curMaxDate + "";
 
 	            	document.getElementById('itemList').innerHTML = "";
 	            	
@@ -492,6 +510,53 @@
 		            		SaveScheduleId = saveSchedule();
 		            	}
 	            	}
+					// 2024-08-27 유길상 - 최대 예약 가능 기간 검증
+	            	var resMaxDateArray = [];
+	            	for (var i = 0; i < ItemArray[0].length; i++) {
+		               	var itemResMaxDate = getResourceMaxDate(ItemArray[0][i]);
+		               	resMaxDateArray.push(itemResMaxDate);
+		            }
+	            	
+	            	var minNumber = Number.POSITIVE_INFINITY;
+	            	
+	            	for (let i = 0; i < resMaxDateArray.length; i++) {
+	            		var current = resMaxDateArray[i];
+	            	    if (current !== null && current != 0 && current < minNumber) {
+	            	        minNumber = current;
+	            	    }
+	            	}
+	            	
+	            	var maxDateFlag;
+	            	if (minNumber != Infinity) {
+	            		resMaxDate = minNumber;
+	            		var intResMaxDate = parseInt(resMaxDate);
+	            		var checStartDate = ssDate + " " + ssTime;
+		        		var checEndDate = eeDate + " " + eeTime;
+		        		
+		        		var chStDate = new Date(checStartDate);
+		        		var chEdDate = new Date(checEndDate);
+		        		
+		        		
+		        		if (schedule_repetition_cross_dialogArguments[0]) {
+		        			chStDate = new Date(schedule_repetition_cross_dialogArguments[0].startTime);	
+		        			chEdDate = new Date(schedule_repetition_cross_dialogArguments[0].endTime);	
+		        		}
+		        		
+		        		var betweenDay  = (chEdDate - chStDate) / (1000 * 60 * 60 * 24);
+		        		
+		        		if (betweenDay > intResMaxDate) {
+		        			maxDateFlag = false;
+		        		} else {
+		        			maxDateFlag = true;
+		        		}
+	            	} else {
+	            		maxDateFlag = true;
+	            	}
+					
+	            	if (!maxDateFlag) {
+	            		alert(strLangMaxYGS01);
+	            		return;
+	            	}
 	            	
 	            	for (var i = 0 ; i < ItemArray[0].length ; i++) {
 		                SaveSchedule_onClick(cmd, ItemArray[0][i]);
@@ -572,6 +637,33 @@
 	    		xmlHTTP.send(xmlDom);
 	    		
 	    		return trim(xmlHTTP.responseText);
+	    	}
+			
+			// 2024-08-27 유길상 - 최대 예약 가능 기간 조회
+	    	function getResourceMaxDate(item) {
+	    		var brdIdList = schedule_add_select_cross_dialogArguments[0];
+	    		var result = null;
+	    		
+	    		var ssDate = $("#Sdatepicker").datepicker().val();
+	        	var eeDate = $("#Edatepicker").datepicker().val();
+	        	var ssTime = $("#Stimepicker").timepicker({ 'timeFormat': 'H:i' }).val();
+	        	var eeTime = $("#Etimepicker").timepicker({ 'timeFormat': 'H:i' }).val();
+	        	
+	   			 $.ajax({
+	        		    url: '/ezResource/checkResoruceMaxDate.do',
+	        		    type: 'POST',
+	        		    dataType: 'json',
+	        		    async : false,
+		    			cache : false,
+	        		    contentType: "application/json",
+	        		    data: JSON.stringify({
+	        		    	brdId: item
+	        		    }),
+	        		    success: function(data) {
+        		        	result = data;
+	        		    }
+        		});
+	   			return result;
 	    	}
 
 	    	function window_onUnload() {
