@@ -173,7 +173,7 @@
 		    		lang = "cn";
 		    		break;*/
 		    	case "6" :
-		    		lang = "id";
+		    		lang = "in";
 		    		break;
 		    	default :
 		    		lang = "en";
