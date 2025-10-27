@@ -556,7 +556,7 @@
         				</tr>
         				<tr>
        						<th><spring:message code="ezResource.max.ygs02"/></th>
-       						<td colspan="3"><input type="text" name="ResMaxUserCnt" onInput="numberCheck(this);" id="ResMaxUserCnt" value="${resMaxUserCnt}" style="width: 100%;" maxlength="100"></td>
+       						<td colspan="3"><input type="number" min="0" max="999" step="1" onInput="numberCheck(this);" name="ResMaxUserCnt" id="ResMaxUserCnt" value="${resMaxUserCnt}" style="width: 100%;" maxlength="100"></td>
        					</tr>
         				<tr>
           					<th> <spring:message code="ezResource.t148"/></th>

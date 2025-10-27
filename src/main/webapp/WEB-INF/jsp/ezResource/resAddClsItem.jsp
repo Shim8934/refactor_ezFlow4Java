@@ -594,7 +594,7 @@
         					</tr>
         					<tr>
         						<th><spring:message code="ezResource.max.ygs02"/></th>
-        						<td colspan="3"><input type="text" name="ResMaxUserCnt" onInput="numberCheck(this);" id="ResMaxUserCnt" style="width: 100%" maxlength="100"></td>
+        						<td colspan="3"><input type="number" min="0" max="999" step="1" name="ResMaxUserCnt" onInput="numberCheck(this);" id="ResMaxUserCnt" style="width: 100%" maxlength="100"></td>
         					</tr>
 							<tr>
 								<th> <spring:message code="ezResource.lyj01"/></th>
