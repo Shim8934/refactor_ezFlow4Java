@@ -573,6 +573,8 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 
 			if (tagName == null) {
 				tagName = "";
+			} else {
+				tagName = URLDecoder.decode(tagName);
 			}
 			
 			folderId = URLDecoder.decode(folderId, "UTF-8");
