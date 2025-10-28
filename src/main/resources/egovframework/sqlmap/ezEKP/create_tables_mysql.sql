@@ -350,23 +350,6 @@ CREATE TABLE `jmocha_address_info` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `jmocha_address_search`
---
-
-DROP TABLE IF EXISTS `jmocha_address_search`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `jmocha_address_search` (
-  `id` varchar(25) NOT NULL,
-  `zip_code` varchar(5) DEFAULT NULL,
-  `address` varchar(1000) DEFAULT NULL,
-  `old_address` varchar(1000) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  FULLTEXT KEY `fulltext_idx` (`address`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Table structure for table `jmocha_address_simple`
 --
 

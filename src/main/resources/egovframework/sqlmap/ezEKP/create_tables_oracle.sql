@@ -596,16 +596,6 @@ AND    ( tbl_aprdocinfo.startdate IS NOT NULL ));
 	"S_FURIGANA" NVARCHAR2(120)
    ) ;
 --------------------------------------------------------
---  DDL for Table JMOCHA_ADDRESS_SEARCH
---------------------------------------------------------
-
-  CREATE TABLE "JMOCHA_ADDRESS_SEARCH" 
-   (	"ID" VARCHAR2(25 CHAR), 
-	"ZIP_CODE" VARCHAR2(5 CHAR), 
-	"ADDRESS" VARCHAR2(1000 CHAR), 
-	"OLD_ADDRESS" VARCHAR2(1000 CHAR)
-   ) ;
---------------------------------------------------------
 --  DDL for Table JMOCHA_ADDRESS_SIMPLE
 --------------------------------------------------------
 
@@ -9518,12 +9508,6 @@ CREATE TABLE "JMOCHA_MAIL_POP3IMAP" (
   CREATE UNIQUE INDEX "JMOCHA_ADDRESS_FOLDER_PK" ON "JMOCHA_ADDRESS_FOLDER" ("FOLDER_ID") 
   ;
 --------------------------------------------------------
---  DDL for Index JMOCHA_ADDRESS_SEARCH_PK
---------------------------------------------------------
-
-  CREATE UNIQUE INDEX "JMOCHA_ADDRESS_SEARCH_PK" ON "JMOCHA_ADDRESS_SEARCH" ("ID") 
-  ;
---------------------------------------------------------
 --  DDL for Index JMOCHA_BIGATTACH_DOWN_LIMIT_PK
 --------------------------------------------------------
 
@@ -13629,13 +13613,6 @@ END;
   ALTER TABLE "JMOCHA_ADDRESS_INFO" ADD CONSTRAINT "PK_JMOCHA_ADDRESS_INFO" PRIMARY KEY ("ADDRESS_ID")
   USING INDEX;
   ALTER TABLE "JMOCHA_ADDRESS_INFO" MODIFY ("ADDRESS_ID" NOT NULL ENABLE);
---------------------------------------------------------
---  Constraints for Table JMOCHA_ADDRESS_SEARCH
---------------------------------------------------------
-
-  ALTER TABLE "JMOCHA_ADDRESS_SEARCH" ADD CONSTRAINT "JMOCHA_ADDRESS_SEARCH_PK" PRIMARY KEY ("ID")
-  USING INDEX;
-  ALTER TABLE "JMOCHA_ADDRESS_SEARCH" MODIFY ("ID" NOT NULL ENABLE);
 --------------------------------------------------------
 --  Constraints for Table JMOCHA_ADDRESS_SIMPLE
 --------------------------------------------------------
