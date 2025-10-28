@@ -1893,9 +1893,9 @@
 					selectTargetListXML += "<DEPT><![CDATA["+ listviewSelected[nCnt1].getAttribute("data4")+ "]]></DEPT>";
 					selectTargetListXML += "<GROUP><![CDATA["+ listviewSelected[nCnt1].getAttribute("data5")+ "]]></GROUP>";
 					if (nCnt1 == 0)
-						selectedTarget = listviewSelected[nCnt1].cells[0].innerText;
+						selectedTarget = listviewSelected[nCnt1].cells[0].innerText + (listviewSelected[nCnt1].getAttribute("data5") == "Y" ? " <spring:message code="ezNotification.hth68"/>" : "");
 					else
-						selectedTarget += ", "+ listviewSelected[nCnt1].cells[0].innerText;
+						selectedTarget += ", "+ listviewSelected[nCnt1].cells[0].innerText + (listviewSelected[nCnt1].getAttribute("data5") == "Y" ? " <spring:message code="ezNotification.hth68"/>" : "");
 				}
 				selectTargetListXML += "</DATA>";
 

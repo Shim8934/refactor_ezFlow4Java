@@ -488,11 +488,12 @@
 	                selectTargetListXML = "<DATA>";
 	
 	                if (selnode.length == 1) {
-	                    setNodeText(selectedTarget, getNodeText(selnode[0].cells[2]));
+	                    selectedTargetGroup = GetAttribute(selnode[0],"data3")
+						
+						setNodeText(selectedTarget, getNodeText(selnode[0].cells[2]) + (selectedTargetGroup == "Y" ? " <spring:message code="ezNotification.hth68"/>" : ""));
 	                    selectedTargetID = GetAttribute(selnode[0], "data1")
 	                    selectedTargetName = GetAttribute(selnode[0],"data")
 	                    selectedTargetName2 = GetAttribute(selnode[0],"data2")
-	                    selectedTargetGroup = GetAttribute(selnode[0],"data3")
 	                    if (para != "false")
 							updateCheckboxSetting();
 	
@@ -515,13 +516,14 @@
 	                    setNodeText(selectedTarget, "");
 	
 	                    for (var i = 0; i < selnode.length; i++) {
-	                        if (i == 0) setNodeText(selectedTarget, getNodeText(selectedTarget) + getNodeText(selnode[i].cells[2]));
-	                        else setNodeText(selectedTarget, getNodeText(selectedTarget) + ", " + getNodeText(selnode[i].cells[2]));
+	                        selectedTargetGroup = GetAttribute(selnode[i],"data3")
+							
+	                        if (i == 0) setNodeText(selectedTarget, getNodeText(selectedTarget) + getNodeText(selnode[i].cells[2]) + (selectedTargetGroup == "Y" ? " <spring:message code="ezNotification.hth68"/>" : ""));
+	                        else setNodeText(selectedTarget, getNodeText(selectedTarget) + ", " + getNodeText(selnode[i].cells[2]) + (selectedTargetGroup == "Y" ? " <spring:message code="ezNotification.hth68"/>" : ""));
 	
 	                        selectedTargetID = GetAttribute(selnode[i],"data1")
 	                        selectedTargetName = GetAttribute(selnode[i],"data")
 	                        selectedTargetName2 = GetAttribute(selnode[i],"data2")
-	                        selectedTargetGroup = GetAttribute(selnode[i],"data3")
 	
 	                        selectTargetListXML += "<CN>" + selectedTargetID + "</CN>";
 	                        selectTargetListXML += "<NAME><![CDATA[" + selectedTargetName + "]]></NAME>";
