@@ -528,7 +528,10 @@ function ListView() {
                     oInput.id = "HeaderAllCheckBox";
                     oInput.type = "checkbox";
                     oInput.onclick = function () { event_HeaderCheckBoxClick(this); };
-                    objTd.appendChild(oInput);
+        	        var oDiv = document.createElement("div");
+        	        oDiv.className = "custom_checkbox";
+        	        oDiv.appendChild(oInput);
+                    objTd.appendChild(oDiv);
                 }
                 else {
                     var oText = document.createTextNode(strName);
@@ -770,8 +773,11 @@ function ListView() {
                         oInput.id = oDatas[0].text + ";";
 
                     oInput.type = "checkbox";
-                    oInput.onclick = new Function("chk_onselect(this)");                   
-                    objTd.appendChild(oInput);
+                    oInput.onclick = new Function("chk_onselect(this)");           
+        	        var oDiv = document.createElement("div");
+        	        oDiv.className = "custom_checkbox";
+        	        oDiv.appendChild(oInput);
+                    objTd.appendChild(oDiv);
                 }
                 else {
                     objTd.appendChild(oText);
@@ -1281,14 +1287,14 @@ function tr_select(pRowID, pTableID, callbackFunc) {
         //현재 클릭한 Row를 Select 한다.
         //strAttribute = GetAttribute(oSourceTr, "selected");
 
-        if (oSourceTr.childNodes[0].childNodes[0].checked) {
+        if (oSourceTr.childNodes[0].childNodes[0].querySelector('input').checked) {
             oSourceTr.setAttribute("selected", "false");
-            oSourceTr.childNodes[0].childNodes[0].checked = false;
+            oSourceTr.childNodes[0].childNodes[0].querySelector('input').checked = false;
             oSourceTr.style.backgroundColor = m_strColorDefault;
         }
         else {
             oSourceTr.setAttribute("selected", "true");
-            oSourceTr.childNodes[0].childNodes[0].checked = true;
+            oSourceTr.childNodes[0].childNodes[0].querySelector('input').checked = true;
             oSourceTr.style.backgroundColor = m_strColorSelect;
         }
 
@@ -1328,7 +1334,7 @@ function tr_unselectedAll(pTableID) {
 
         for (var i = 0; i < SelList.GetRowCount() ; i++) {
             SetAttribute(SelList.GetDataRows()[i], "selected", "false");
-            SelList.GetDataRows()[i].childNodes[0].childNodes[0].checked = false;
+            SelList.GetDataRows()[i].childNodes[0].childNodes[0].querySelector('input').checked = false;
             SelList.GetDataRows()[i].style.backgroundColor = m_strColorDefault;
             strListInfo = "";
         }
@@ -1381,7 +1387,7 @@ function tr_selectBlock(pRowID, pTableID) {
 function tr_mouseover(pRow) {
 
     var strAttribute = GetAttribute(pRow, "selected");
-    if (pRow.childNodes[0].childNodes[0].checked != true && strAttribute != "true") {
+    if (pRow.childNodes[0].childNodes[0].querySelector('input').checked != true && strAttribute != "true") {
         pRow.style.backgroundColor = m_strColorOver;
 
     }
@@ -1392,7 +1398,7 @@ function tr_mouseover(pRow) {
 //마우스 아웃
 function tr_mouseout(pRow) {
     var strAttribute = GetAttribute(pRow, "selected");
-    if (pRow.childNodes[0].childNodes[0].checked != true && strAttribute != "true")
+    if (pRow.childNodes[0].childNodes[0].querySelector('input').checked != true && strAttribute != "true")
         pRow.style.backgroundColor = m_strColorDefault;
     else
         pRow.style.backgroundColor = m_strColorSelect;
@@ -1521,14 +1527,14 @@ function event_HeaderCheckBoxClick(obj) {
         for (var i = 0; i < SelList.GetRowCount() ; i++) {
             if (i == 0)
                 SelList.GetDataRows()[0].onclick();
-            SelList.GetDataRows()[i].childNodes[0].childNodes[0].checked = true;
+            SelList.GetDataRows()[i].childNodes[0].childNodes[0].querySelector('input').checked = true;
             SelList.GetDataRows()[i].setAttribute("selected", "true")
             SelList.GetDataRows()[i].style.backgroundColor = m_strColorSelect;
         }
     }
     else {
         for (var i = 0; i < SelList.GetRowCount() ; i++) {
-            SelList.GetDataRows()[i].childNodes[0].childNodes[0].checked = false;
+            SelList.GetDataRows()[i].childNodes[0].childNodes[0].querySelector('input').checked = false;
             SelList.GetDataRows()[i].setAttribute("selected", "false")
             SelList.GetDataRows()[i].style.backgroundColor = m_strColorDefault;
             strListInfo = "";
@@ -1547,13 +1553,13 @@ function chk_onselect(obj) {
 
     if (obj.checked) {
         obj.checked = true;
-        obj.parentElement.parentElement.setAttribute("selected", "true");
-        obj.parentElement.parentElement.style.backgroundColor = m_strColorSelect;
+        obj.closest('tr').setAttribute("selected", "true");
+        obj.closest('tr').style.backgroundColor = m_strColorSelect;
     }
     else {
         obj.checked = false;
-        obj.parentElement.parentElement.setAttribute("selected", "false");
-        obj.parentElement.parentElement.style.backgroundColor = m_strColorDefault;
+        obj.closest('tr').setAttribute("selected", "false");
+        obj.closest('tr').style.backgroundColor = m_strColorDefault;
     }
 
 }

@@ -532,7 +532,10 @@ function ListView() {
                     oInput.id = "HeaderAllCheckBox";
                     oInput.type = "checkbox";
                     oInput.onclick = function () { event_HeaderCheckBoxClick(this); };
-                    objTd.appendChild(oInput);
+                    var oDiv = document.createElement("DIV");
+                    oDiv.className ="custom_checkbox";
+                    oDiv.appendChild(oInput);
+                    objTd.appendChild(oDiv);
                 }
                 // 2023-09-06 조소정 - 관리자단 > 일정관리 > 일정그룹관리 메뉴에서 테이블 헤더에 span 추가
                 else if (strName == "GROUPCOLOR") {
@@ -759,7 +762,11 @@ function ListView() {
                     
                     oInput.onclick = function () { event_listCheckboxclick(this); }
                     
-                    objTd.appendChild(oInput);
+                    var oDiv = document.createElement("DIV");
+                    oDiv.className ="custom_checkbox";
+                    oDiv.appendChild(oInput);
+                    
+                    objTd.appendChild(oDiv);
                 }
                 // 2023-09-06 조소정 - 관리자단 > 일정관리 > 일정그룹관리 메뉴에서 테이블 바디에 그룹색상 표출
                 else if (strValue == "GROUPCOLOR") {
@@ -1328,10 +1335,10 @@ function event_listclick(obj, event) {
     if (!listEventCheckbox) {
         if (document.getElementById("HeaderAllCheckBox").checked) {
             var TemplistArray = new Array();
-            if (obj.getElementsByTagName("td").item(0).childNodes.item(0).checked) {
+            if (obj.getElementsByTagName("td").item(0).childNodes.item(0).querySelector('input').checked) {
                 for (var i = 0; i < listContentArry.length; i++) {
                     if (obj.getAttribute("id") == listContentArry[i]) {
-                        obj.childNodes.item(0).childNodes.item(0).checked = false;
+                        obj.children[0].children[0].querySelector('input').checked = false;
                        /* obj.setAttribute("selected", "false");*/
                         obj.style.backgroundColor = m_strColorDefault;
                     }
@@ -1342,7 +1349,7 @@ function event_listclick(obj, event) {
                 listContentArry = TemplistArray;
             }
             else {
-                obj.childNodes.item(0).childNodes.item(0).checked = true;
+                obj.children[0].children[0].querySelector('input').checked = true;
                 obj.style.backgroundColor = m_strColorSelect;
                 obj.setAttribute("selected", "true");
                 /*oList.setAttribute("lastSelectedRowID", obj.id);
@@ -1457,7 +1464,7 @@ function show_groupinfo2(obj) {
 	var checkCnt = 0;
 	var allChild = $("#GroupListView")[0].childNodes[1];
     for (var i = 0;i < allChild.childNodes.length; i++) {
-    	if (allChild.childNodes[i].getElementsByTagName("td").item(0).childNodes.item(0).checked){
+    	if (allChild.childNodes[i].getElementsByTagName("td").item(0).childNodes.item(0).getElementsByTagName("input").item(0).checked){
     		checkCnt++;
     	}
     }
@@ -1501,17 +1508,17 @@ function show_groupinfo2(obj) {
 //2018-07-13 구해안 Input-Checkbox click 함수 새로 생성
 function event_listCheckboxclick(obj) {
     if (obj.checked) {
-        obj.parentElement.parentElement.style.backgroundColor = m_strColorSelect;
+        obj.closest('tr').style.backgroundColor = m_strColorSelect;
         
         var allChild = $("#GroupListView")[0].childNodes;
         
         for (var i = 0;i < allChild.length; i++) {
-        	if (allChild[i].id.indexOf(obj.parentNode.parentNode.id + "_") != -1) {
+        	if (allChild[i].id.indexOf(obj.closest('tr').id + "_") > -1) {
         		allChild[i].style.backgroundColor = m_strColorSelect;
         	}
         }
         
-        listContentArry[listContentArry.length] = obj.parentElement.parentElement.getAttribute("id");
+        listContentArry[listContentArry.length] = obj.closest('tr').getAttribute("id");
     }
     else {
         var TemplistArray = new Array();
@@ -1519,14 +1526,14 @@ function event_listCheckboxclick(obj) {
         var allChild = $("#GroupListView")[0].childNodes;
         
         for (var i = 0;i < allChild.length; i++) {
-        	if (allChild[i].id.indexOf(obj.parentNode.parentNode.id + "_") != -1) {
+        	if (allChild[i].id.indexOf(obj.closest('tr').id + "_") > -1) {
         		allChild[i].style.backgroundColor = m_strColorDefault;
         	}
         }
         
         for (var i = 0; i < listContentArry.length; i++) {
-            if (obj.parentElement.parentElement.getAttribute("id") == listContentArry[i]) {
-                obj.parentElement.parentElement.style.backgroundColor = m_strColorDefault;
+            if (obj.closest('tr').getAttribute("id") == listContentArry[i]) {
+                obj.closest('tr').style.backgroundColor = m_strColorDefault;
             }
             else {
                 TemplistArray[TemplistArray.length] = listContentArry[i];
@@ -1554,7 +1561,7 @@ function tr_unselectedAll(pTableID) {
 
         for (var i = 0; i < SelList.GetRowCount() ; i++) {
             SetAttribute(SelList.GetDataRows()[i], "selected", "false");
-            SelList.GetDataRows()[i].childNodes[0].childNodes[0].checked = false;
+            SelList.GetDataRows()[i].childNodes[0].childNodes[0].querySelector('input').checked = false;
             SelList.GetDataRows()[i].style.backgroundColor = m_strColorDefault;
             strListInfo = "";
         }
@@ -1611,7 +1618,7 @@ function tr_selectBlock(pRowID, pTableID) {
 function tr_mouseover(pRow) {
 
     //var strAttribute = GetAttribute(pRow, "selected");
-    if (pRow.childNodes[0].childNodes[0].checked != true) {
+    if (pRow.childNodes[0].childNodes[0].querySelector('input').checked != true) {
         pRow.style.backgroundColor = m_strColorOver;
 
     }
@@ -1622,7 +1629,7 @@ function tr_mouseover(pRow) {
 //마우스 아웃
 function tr_mouseout(pRow) {
     var strAttribute = GetAttribute(pRow, "selected");
-    if (pRow.childNodes[0].childNodes[0].checked != true)
+    if (pRow.childNodes[0].childNodes[0].querySelector('input').checked != true)
         pRow.style.backgroundColor = m_strColorDefault;
     else
         pRow.style.backgroundColor = m_strColorSelect;
@@ -1813,7 +1820,7 @@ function show_groupinfo3(obj) {
     var allChild = $("#GroupListView")[0].childNodes[1];
 
     for (var i = 0; i < allChild.childNodes.length; i++) {
-        if (allChild.childNodes[i].getElementsByTagName("td").item(0).childNodes.item(0).checked) {
+    	if (allChild.childNodes[i].getElementsByTagName("td").item(0).childNodes.item(0).getElementsByTagName("input").item(0).checked){
             checkCnt++;
         }
     }

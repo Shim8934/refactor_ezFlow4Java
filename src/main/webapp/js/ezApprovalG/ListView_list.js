@@ -667,10 +667,13 @@ function ListView() {
         if (_CheckBoxFlag) {
             var objTd = document.createElement("TH");
             objTd.width = "21px";
+            var div = document.createElement("div");
+            div.className = "custom_checkbox";
             var checkEle = document.createElement("INPUT");
             checkEle.setAttribute("type", "checkbox");
             checkEle.onclick = new Function("SetAllSelect('" + _thisID + "', this)");
-            objTd.appendChild(checkEle);
+            div.appendChild(checkEle);
+            objTd.appendChild(div);
             objTr.insertBefore(objTd, objTr.childNodes.item(0));
         }        
 
@@ -827,7 +830,7 @@ function ListView() {
 
                 var objTd = document.createElement("TD");
                 objTd.style.width = "21px";
-			    objTd.innerHTML = "<INPUT TYPE='CHECKBOX' id='" + _thisID + "_TD_CheckBox_" + i + "' onclick='SelectCheckBox(\"" + _thisID + "\", " + i + ", event);' " + checked + ">";
+			    objTd.innerHTML = "<div class='custom_checkbox'><INPUT TYPE='CHECKBOX' id='" + _thisID + "_TD_CheckBox_" + i + "' onclick='SelectCheckBox(\"" + _thisID + "\", " + i + ", event);' " + checked + "></div>";
                 objTd.onmouseover = new Function("td_mouseover(this)");
                 objTd.onmouseout = new Function("td_mouseout(this)");
                 objTr.appendChild(objTd);

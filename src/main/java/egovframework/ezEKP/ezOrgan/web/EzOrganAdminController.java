@@ -285,6 +285,7 @@ public class EzOrganAdminController extends EzFileMngUtil {
 //			ezCommonService.alterScheduleDefaultViewCheck(); // 2025-03-21 권기혁 - 일정관리환경설정 기본 화면 사용 여부 컬럼 추가
 //            ezCommonService.alterTblClubUserGradeColumn();	// 2025-07-10 이유정 - 커뮤니티 > 회원등급 컬럼 추가
 //            ezCommonService.alterTblClubJoinGradeColumn();	// 2025-07-10 이유정 - 커뮤니티 > 최초가입 등급, 회원목록조회 등급 컬럼 추가
+//          ezCommonService.updateAttitudeCustomCheckbox(); // 2025-07-07 황인경 -커스텀 체크박스 근태관리 폼 데이터 업데이트
 //
 //			// tenant config
 //	    	ezCommonService.insertTblTenantConfig(); // 2020-01-28 useMailConfirm 컨피그 추가 >> 2020-04-28 tbl_tenant_config add

@@ -328,6 +328,10 @@
 		        } else {
 		            objTh.style.width = "15px";
 		        }
+
+		        // wrapper div 생성
+                var checkBoxWrapper = document.createElement("div");
+                checkBoxWrapper.classList.add("custom_checkbox");
 		        
 		        var input = document.createElement("input");
 		        input.type = "checkbox";
@@ -337,7 +341,8 @@
 		        	checkall(); 
 		        };
 		        
-		        objTh.appendChild(input);
+		        checkBoxWrapper.appendChild(input);
+		        objTh.appendChild(checkBoxWrapper);
 		        objTr.appendChild(objTh);
 		
 		        var objTh2 = document.createElement("TH");
@@ -666,7 +671,7 @@
 		    	for (var i = 1; i < filecnt; i++) {
 		    		var filelistTable = document.getElementById("filelist");
 	                var elementTR = document.getElementById("filelist").childNodes[i];
-		    		var elementTRIsChecked = elementTR.childNodes[0].childNodes[0].checked;
+		    		var elementTRIsChecked = elementTR.querySelector('input[type="checkbox"]').checked;
 		    		var elementTrIsBig = GetAttribute(elementTR, "_big");
 		    	
 					if ((type=="big" && elementTrIsBig=="Y") || (type!="big" && elementTRIsChecked)) {
@@ -719,7 +724,7 @@
                 document.getElementById("checkboxall").checked = false;
 		    }
 			
-		    function checkall() {
+		    /*function checkall() {
 		        var filecnt = document.getElementById("filelist").childNodes.length;
 		
 		        for (var i = 1; i < filecnt; i++) {
@@ -730,7 +735,17 @@
 		                document.getElementById("filelist").childNodes[i].childNodes[0].childNodes[0].checked = false;
 		            }
 		        }
-		    }
+		    }*/
+		    
+		    function checkall() {
+                var fileList = document.getElementById("filelist");
+                var checkboxes = fileList.querySelectorAll('input[type="checkbox"]');
+                var isChecked = document.getElementById("checkboxall").checked;
+            
+                checkboxes.forEach(function(checkbox) {
+                    checkbox.checked = isChecked;
+                });
+            }
 		
 		    function fileupload() {
 		    	isfileup = true;
@@ -743,15 +758,7 @@
 		        for (var i = 0; i < filelist.length; i++) {
 					var fnl = filelist[i].name.length;
 					var fbig = filelist[i].isBig;
-		        	// 2024.05.03 한슬기 : 글자수 제한으로 업로드에 실패해도 실패한 파일의 용량은 계산되는 문제로 인해 글자수 체크 위치 변경(onDrop() 내부로 위치 변경) 
-// 		        	if (fnl > attachFileNameMaxLength) {	
-// 		        		alert("<spring:message code='main.jjh08' />" + attachFileNameMaxLength + "<spring:message code='main.lhm03' />");
-// 		        		isfileup = false;
-// 		        		return;
-// 		        	} else if (bodyTypeIsPlain && fbig == "Y") {
-// 		        		plainText_BigAttChk = true;
-// 		        		continue;
-// 		        	} else {
+
 		        	if (bodyTypeIsPlain && fbig == "Y") {	
 		        		plainText_BigAttChk = true;
 		        		continue;

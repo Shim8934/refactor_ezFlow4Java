@@ -29,7 +29,7 @@
 	    			success: function(result){
 	    				var html="";
 						var folderList = result["folders"];
-						memoFolderList = "<colgroup><col width='7%' /><col width='60%' /><col width='33%' /></colgroup>";							
+						memoFolderList = "<colgroup><col width='15%' /><col width='55%' /><col width='35%' /></colgroup>";							
 							 
 						folderList.forEach(function(list, index){
 							if(index == 0) {
@@ -37,7 +37,7 @@
 								inputNameDlg_cross_dialogArguments[5] = list.folder_name;
 							}
 							memoFolderList += "<tr id=" + list.folder_id + " style='cursor:pointer' onclick='event_click(this);' ondblclick='modify_onclick(this);' data1='" + list.folder_id + "' data2='" + list.folder_name +"'>";
-							memoFolderList += "<td style='padding-left:5px;'><input class='myCheckbox' name='myCheckbox' data2='" + list.folder_name +"' data3='" + list.count + "' value=" + list.folder_id + " type='checkbox' onclick='selectRow(this)'></td>";
+							memoFolderList += "<td style='width: 22px; text-align: center;'><div class='custom_checkbox'><input class='myCheckbox' name='myCheckbox' data2='" + list.folder_name +"' data3='" + list.count + "' value=" + list.folder_id + " type='checkbox' onclick='selectRow(this)'></div></td>";
 
 							if (parseInt(list.orders) === 0) {
 								memoFolderList += "<td class='title' style='color:gray;' title='" + memoMessages.strLangMemo22 + "'>" + memoMessages.strLangMemo22 + "</td>";
@@ -68,7 +68,7 @@
 				} else {
 					if (_RowObject != null) {
 						$("input[name=myCheckbox]").prop("checked", false);
-						$("input[name=myCheckbox]").parent().parent().css("backgroundColor", "#FFFFFF");
+						$("input[name=myCheckbox]").parent().parent().parent().css("backgroundColor", "#FFFFFF");
 					}
 	
 					_RowObject = obj;
@@ -92,10 +92,10 @@
 				var num = $(obj).attr("value");
 				if ($(obj).prop("checked") != true) {
 					$(obj).prop("checked", false);
-					$(obj).parent().parent("tr[id = '" + num + "']").css("backgroundColor", "#FFFFFF");
+					$(obj).parent().parent().parent("tr[id = '" + num + "']").css("backgroundColor", "#FFFFFF");
 				} else {
 					$(obj).prop("checked", true);
-					$(obj).parent().parent("tr[id = '" + num + "']").css("backgroundColor", "#f1f8ff");
+					$(obj).parent().parent().parent("tr[id = '" + num + "']").css("backgroundColor", "#f1f8ff");
 				}
 	
 				event.stopPropagation();
@@ -243,9 +243,9 @@
 		            <td>
 		                <div style="border: 1px solid #dbdbda; border-top:0px; width: 450px; height: 385px; display: inline-table;">
 		                    <table class="mainlist" style="width: 100%;">
-		                    	<colgroup><col width='7%' /><col width='60%' /><col width='33%' /></colgroup>
+		                    	<colgroup><col width='10%' /><col width='70%' /><col width='20%' /></colgroup>
 		                        <tr>
-									<th><input id="checkboxAll" type="checkbox" onclick="selectAll()"></th>
+									<th style="width: 22px; text-align: center;"><div class='custom_checkbox'><input id="checkboxAll" type="checkbox" onclick="selectAll()"></div></th>
 		                            <th><spring:message code='ezMemo.t0041' /></th>
 		                            <th><spring:message code='ezMemo.t0042' /></th>
 		                        	<th></th>

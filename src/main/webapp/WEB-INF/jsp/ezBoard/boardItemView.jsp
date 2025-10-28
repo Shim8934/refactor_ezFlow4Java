@@ -837,7 +837,7 @@
 		        
 		        if (gubun != "2") {
 	                window.location.href = "/ezBoard/boardNewItem.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(pItemID) + "&mode=modify" + "&reservedItem=" + pReservedItem + "&portletId=" + portletId + "&historyModify=" + historyModify + "&version=" + version;
-		            window.resizeTo(785, 780);
+		            window.resizeTo(900, 780);
 		        }
 		    }
 		    
@@ -1018,14 +1018,14 @@
 		            var serverName = window.location.hostname;
 		            
 		            /* 2020-01-30 홍승비 - 모두저장 기능을 위해 속성 추가 */
-		            strAttach += "<input type='checkbox' name='fileSelect' value='" + filenameView + "' filePath='" + MakeXMLString(filepath) + "'>";
-		            strAttach += "<img src='" + fileImage + "'> <a href='/ezBoard/boardAttachDown.do?filePath=" + javaURLEncode(filepath) + "&fileName=" + javaURLEncode(filenameOrg) + "'\">";
+		            strAttach += "<div class='custom_checkbox'><input type='checkbox' name='fileSelect' value='" + filenameView + "' filePath='" + MakeXMLString(filepath) + "' id='fileSelect" + i + "'>";
+		            strAttach += "<label for='fileSelect" + i + "'><img src='" + fileImage + "' style='vertical-align: middle;'> <a href='/ezBoard/boardAttachDown.do?filePath=" + javaURLEncode(filepath) + "&fileName=" + javaURLEncode(filenameOrg) + "'\">";
 		            strAttach += filenameView + "&nbsp;(" + filesize + ")</a>";
 		            // 2023-05-25 조수빈 - 게시판 첨부파일 미리보기 아이콘 추가
 		            if (typeof useBoardFilePrvw !== 'undefined' && useBoardFilePrvw == "1" && guestReadFG !== "Y") {
 			            strAttach += "<span class='icon_rbtn2' style='margin-left : 10px;' title='<spring:message code = 'ezEmail.t487'/>' onclick=\"attachFile_Preview('" + javaURLEncode(filepath) + "', '" + javaURLEncode(filenameOrg) + "');\"><img src='/images/icon_preview.png' width='16' height='16' style='vertical-align:middle; cursor:pointer;'></span>";
 		            }
-		            strAttach += "<br>";
+		            strAttach += "</label></div><br>";
 		        }
 		        document.getElementById('lstAttachLink').innerHTML = strAttach;
 		    }
@@ -2658,7 +2658,9 @@
                         <c:forEach var="i" begin="1" end="5">
                             <c:set var="srcIconFlag" value="${itemStarRating.rating >= i}" />
                             <label for="rate${i}">
-                                <input type="radio" name="reviewStar" value="${i}" id="rate${i}" <c:if test="${itemStarRating.rating == i}"> checked </c:if> />
+                            	<div class="custom_radio">
+	                                <input type="radio" name="reviewStar" value="${i}" id="rate${i}" <c:if test="${itemStarRating.rating == i}"> checked </c:if> />
+                            	</div>
                                 <img draggable="false" src="/images/ImgIcon/${srcIconFlag ? 'icon-flag.gif' : 'view-flag.gif'}"/>
                             </label>
                         </c:forEach>

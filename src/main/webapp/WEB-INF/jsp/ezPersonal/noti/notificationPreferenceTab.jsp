@@ -7,6 +7,7 @@
 <meta charset="utf-8">
 <link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
 <link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
+<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 <style>
 label { position:absolute; top: 0; right: 0; bottom: 0; left: 0;}
 .content { width: 100%; table-layout: fixed; }
@@ -23,7 +24,7 @@ input.time { width: 53px; margin: 0 5px; text-align: center; }
 			<col>
 		</colgroup>
 		<tr>
-			<th><spring:message code='ezPersonal.noti.tab.preference' /></td>
+			<th><spring:message code='ezPersonal.noti.tab.preference' /></th>
 			<td>
 				<select id="receive_type"><option value="0"><spring:message code='ezPersonal.noti.preference.always' /></option>
 					<option value="1"><spring:message code='ezPersonal.noti.preference.fixed' /></option>
@@ -35,12 +36,12 @@ input.time { width: 53px; margin: 0 5px; text-align: center; }
 			</td>
 		</tr>
 		<tr id="holiday_div">
-			<th><spring:message code='ezPersonal.noti.preference.holiday' /></td>
+			<th><spring:message code='ezPersonal.noti.preference.holiday' /></th>
 			<td>
 				<div style="display: table; width: 100%;">
 					<div style="display: table-cell; position: relative;">
 						<label for="holiday_not_flag"></label>
-						<input id="holiday_not_flag" type="checkbox" <c:if test="${not notiPreferences.canReceiveHoliday()}">checked="checked"</c:if> />
+						<div class="custom_checkbox"><input id="holiday_not_flag" type="checkbox" <c:if test="${not notiPreferences.canReceiveHoliday()}">checked="checked"</c:if> /></div>
 					</div>
 				</div>
 			</td>

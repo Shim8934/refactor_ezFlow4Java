@@ -251,7 +251,9 @@
 		            <c:forEach var="item" items="${attendantList}">
 		            <tr> 
 		            	<td style="text-align:center">
-		            		<input type='checkbox' value="1" attendantid='${item.attendantId}' attendantName='${item.attendantName}' attendantstatus='${item.status}' />
+		            		<div class="custom_checkbox">
+			            		<input type='checkbox' value="1" attendantid='${item.attendantId}' attendantName='${item.attendantName}' attendantstatus='${item.status}' />
+		            		</div>
 		            	</td> 
 		                <td title="<spring:message code='ezSchedule.t162' />" onClick="show_personinfo('${item.attendantId}')"  style="cursor:pointer; white-space:nowrap; text-align:center">
 		                	<c:if test="${primary == '1'}">${item.attendantName}</c:if>

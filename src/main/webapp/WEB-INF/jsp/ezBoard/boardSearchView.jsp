@@ -397,7 +397,7 @@
 		        SelList.LoadFromID("BoardListDiv");
 		
 		        for (var i = 0; i < SelList.GetRowCount() ; i++) {
-		            SelList.GetDataRows()[i].childNodes[0].childNodes[0].checked = false; 
+		            SelList.GetDataRows()[i].childNodes[0].childNodes[0].childNodes[0].checked = false; 
 		            SelList.GetDataRows()[i].style.backgroundColor = m_strColorDefault;
 		            strListInfo = "";
 		        }
@@ -550,7 +550,10 @@
 		<tr>
 			<th style="text-align: center"><spring:message code='ezBoard.t210' /></th>
 			<td>
-				<input type="checkbox" value="1" id="usepostdate" onclick="DateSearch_Click()"><label for="usepostdate"><spring:message code='ezCircular.t138'/></label>
+				<div class="custom_checkbox">
+					<input type="checkbox" value="1" id="usepostdate" onclick="DateSearch_Click()">
+					<label for="usepostdate"><spring:message code='ezCircular.t138'/></label>
+				</div>
 				<input type="text" id="Sdatepicker" style="width: 80px; text-align: center" readonly="readonly"> ~
 				<input type="text" id="Edatepicker" style="width: 80px; text-align: center" readonly="readonly">
 				<a class="imgbtn imgbck" style="vertical-align:middle;margin-left:10px;"><span onClick="search('basic')" style="vertical-align: middle; line-height: 20px;"><spring:message code='ezBoard.t188' /></span></a>

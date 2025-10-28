@@ -3545,6 +3545,24 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			logger.error(e.getMessage(), e);
 		}
 	}
+	public String checkAttitudeCustomCheckbox()  throws Exception {
+		String result = "";
+		try {
+			result = (String) select("EzCommonDAO.checkAttitudeCustomCheckbox");
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+		}
+		return result;
+	}
+	public void updateAttitudeCustomCheckbox(Map<String, Object> map)  throws Exception {
+		try {
+			logger.debug("checkAttitudeCustomCheckbox insert wrong Data. update data...");
+			update("EzCommonDAO.updateAttitudeCustomCheckbox", map);
+			update("EzCommonDAO.updateAttitudeCustomCheckbox2", map);
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+		}
+	}
 	
 	// 2024-08-27 유길상 - 자원관리 > 자원등록 > 최대 예약 가능 기간 컬럼 추가
 	public void alterTblRsBrdResMaxDate() {

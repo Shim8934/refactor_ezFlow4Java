@@ -227,11 +227,15 @@ function AppendFileAttachInfo(ret, reuseAttach) {
                         var objTd = document.createElement("TD");
                         objTd.style.textAlign = "center";
 
+                        var checkBoxWrapper = document.createElement("div");
+                        checkBoxWrapper.classList.add("custom_checkbox");
+
                         var input = document.createElement("input");
                         input.type = "checkbox";
                         input.name = "fileSelect";
 
-                        objTd.appendChild(input);
+                        checkBoxWrapper.appendChild(input);
+                        objTd.appendChild(checkBoxWrapper);
                         objTr.appendChild(objTd);
 
                         var objTd2 = document.createElement("TD");
@@ -338,11 +342,15 @@ function AppendFileAttachInfo(ret, reuseAttach) {
                             var objTd = document.createElement("TD");
                             objTd.style.textAlign = "center";
 
+                            var checkBoxWrapper = document.createElement("div");
+                            checkBoxWrapper.classList.add("custom_checkbox");
+
                             var input = document.createElement("input");
                             input.type = "checkbox";
                             input.name = "fileSelect";
 
-                            objTd.appendChild(input);
+                            checkBoxWrapper.appendChild(input);
+                            objTd.appendChild(checkBoxWrapper);
                             objTr.appendChild(objTd);
 
                             var objTd2 = document.createElement("TD");

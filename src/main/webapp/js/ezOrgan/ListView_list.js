@@ -540,10 +540,14 @@ function ListView() {
         if (_CheckBoxFlag) {
             var objTd = document.createElement("TH");
             objTd.width = "21px";
+            objTd.style.textAlign = "center";
+            var checkEleDiv = document.createElement("div");
+            checkEleDiv.className = "custom_checkbox";
             var checkEle = document.createElement("INPUT");
             checkEle.setAttribute("type", "checkbox");
             checkEle.onclick = new Function("SetAllSelect('" + _thisID + "', this)");
-            objTd.appendChild(checkEle);
+            checkEleDiv.appendChild(checkEle);
+            objTd.appendChild(checkEleDiv);
             objTr.insertBefore(objTd, objTr.childNodes.item(0));
         } 
 
@@ -638,7 +642,7 @@ function ListView() {
 			if (_CheckBoxFlag) {
                 var objTd = document.createElement("TD");
                 objTd.style.width = "21px";
-			    objTd.innerHTML = "<INPUT TYPE='CHECKBOX' id='" + _thisID + "_TD_CheckBox_" + i + "' onclick='SelectCheckBox(\"" + _thisID + "\", " + i + ", event);' " + checked + ">";
+			    objTd.innerHTML = "<div class='custom_checkbox'><INPUT TYPE='CHECKBOX' id='" + _thisID + "_TD_CheckBox_" + i + "' onclick='SelectCheckBox(\"" + _thisID + "\", " + i + ", event);' " + checked + "></div>";
                 objTd.onmouseover = new Function("td_mouseover(this)");
                 objTd.onmouseout = new Function("td_mouseout(this)");
                 objTr.appendChild(objTd);
@@ -768,7 +772,7 @@ function ListView() {
             objTd.style.width = "21px";
             var checkBoxIndex = objTr.id.split("_")[2];
 
-            objTd.innerHTML = "<INPUT TYPE='CHECKBOX' id='" + _thisID + "_TD_CheckBox_" + checkBoxIndex + "' onclick='SelectCheckBox(\"" + _thisID + "\", " + checkBoxIndex + ", event);' >";
+            objTd.innerHTML = "<div class='custom_checkbox'><INPUT TYPE='CHECKBOX' id='" + _thisID + "_TD_CheckBox_" + checkBoxIndex + "' onclick='SelectCheckBox(\"" + _thisID + "\", " + checkBoxIndex + ", event);' ></div>";
             objTd.onmouseover = new Function("td_mouseover(this)");
             objTd.onmouseout = new Function("td_mouseout(this)");
             objTr.appendChild(objTd);

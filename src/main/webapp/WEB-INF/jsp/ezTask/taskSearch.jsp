@@ -308,7 +308,7 @@
 
 			        tr.setAttribute("startdate", startdate);
 
-			        tr.cells[0].innerHTML += "<input name='myCheckbox' type='checkbox' taskID='" + "inputID" + SelectSingleNodeValue(node, "TASKID") + "_" + i + "' creatorID='" + SelectSingleNodeValue(node, "CREATORID") + "' style='width:13px; height:13px;padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; vertical-align:middle'>"
+			        tr.cells[0].innerHTML += "<div class='custom_checkbox'><input name='myCheckbox' type='checkbox' taskID='" + "inputID" + SelectSingleNodeValue(node, "TASKID") + "_" + i + "' creatorID='" + SelectSingleNodeValue(node, "CREATORID") + "' style='width:13px; height:13px;padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; vertical-align:middle'>"
 
 			        if (SelectSingleNodeValue(node, "IMPORTANCE") == "3")
 			            tr.cells[1].innerHTML += "<img src='/images/ImgIcon/icon-highimportance.gif'>";
@@ -576,7 +576,7 @@
 			<tr>
 				<th style="height:auto"><spring:message code='ezTask.t184' /></th>
 				<td>
-					<input type="checkbox" id="usedate" value="1" onclick="DateSearch_Click();"><label for="usedate"><spring:message code='ezTask.t185' /></label>
+					<div class="custom_checkbox"><input type="checkbox" id="usedate" value="1" onclick="DateSearch_Click();"><label for="usedate"><spring:message code='ezTask.t185' /></label></div>
 					<input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly"> ~
 					<input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly">
 	          		<span>&nbsp;<spring:message code='ezTask.t188'/></span> 
@@ -610,7 +610,7 @@
 			<col style ="width:120px;">
 			<tbody id="todo_HEAD">
 			<tr>
-				<th style="text-align:center"><input id="checkboxAll" type="checkbox" onclick="selectAll()" style="width:13px; height:13px;padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; vertical-align:middle"/></th>
+				<th style="text-align:center"><div class="custom_checkbox"><input id="checkboxAll" type="checkbox" onclick="selectAll()" style="width:13px; height:13px;padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; vertical-align:middle"/></div></th>
 				<th style="text-align:center"><img src="/images/ImgIcon/view-importance.gif"></th>
 				<th ><img src="/images/newAttach.gif"></th>
 				<th ><spring:message code='ezTask.t2005' /></th>

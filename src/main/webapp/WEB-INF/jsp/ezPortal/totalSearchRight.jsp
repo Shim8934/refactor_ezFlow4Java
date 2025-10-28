@@ -1461,8 +1461,10 @@ function dblClickBoard_XTEN(boardID, itemID, gubun) {
                 <th align="center"><spring:message code="ezTotalSearch.t0009" /></th>
                 <td>
                     <span class="spanText" style="margin-left:0px;">
-                        <input type="checkbox" name="chkWriteDate" id="chkWriteDate" value="" onclick="chkWriteDateOnclick(this.id)">
-                        <span><spring:message code="ezTotalSearch.t0010" />&nbsp;</span>
+						<div class='custom_checkbox'>
+                            <input type="checkbox" name="chkWriteDate" id="chkWriteDate" value="" onclick="chkWriteDateOnclick(this.id)"/>
+                        </div>
+                        <span><spring:message code="ezTotalSearch.t0010"/>&nbsp;</span>
                         <span id="showDatePicker">
                         <input type="text" id="sDatepicker" style="width:80px;text-align:center" readonly>
 		                 ~
@@ -1475,16 +1477,26 @@ function dblClickBoard_XTEN(boardID, itemID, gubun) {
                 <th align="center"><spring:message code="ezTotalSearch.t0011" /></th>
                 <td>
                     <span class="spanText" id="chkRange" style="margin-left:0px;">
-                        <input type="checkbox" name="chkAllRange" id="chkAllRange" value="ALL" onclick="chkSearchRange(this.value);">
-                        <spring:message code="ezTotalSearch.t0012" /> &nbsp;&nbsp; &nbsp;&nbsp;
-                        <input type="checkbox" name="chkTitleRange" id="chkTitleRange" value="TITLE" onclick="chkSearchRange(this.value);">
-                        <spring:message code="ezTotalSearch.t0013" />&nbsp;&nbsp;&nbsp;&nbsp;
-                        <input type="checkbox" name="chkContentsRange" id="chkContentsRange" value="CONTENTS" onclick="chkSearchRange(this.value);">
-                        <spring:message code="ezTotalSearch.t0014" />&nbsp;&nbsp;&nbsp;&nbsp;
-                        <input type="checkbox" name="chkWriterRange" id="chkWriterRange" value="WRITER" onclick="chkSearchRange(this.value);">
-                        <spring:message code="ezTotalSearch.t0008" />&nbsp;&nbsp;&nbsp;&nbsp;
-                        <input type="checkbox" name="chkAttachsRange" id="chkAttachsRange" value="ATTACH" onclick="chkSearchRange(this.value);">
-                        <spring:message code="ezTotalSearch.t0015" />&nbsp;
+						<div class='custom_checkbox'>
+                            <input type="checkbox" name="chkAllRange" id="chkAllRange"value="ALL" onclick="chkSearchRange(this.value);">
+                        </div>
+                        <spring:message code="ezTotalSearch.t0012"/> &nbsp;&nbsp; &nbsp;&nbsp;
+						<div class='custom_checkbox'>
+                            <input type="checkbox" name="chkTitleRange" id="chkTitleRange" value="TITLE" onclick="chkSearchRange(this.value);">
+                        </div>
+                        <spring:message code="ezTotalSearch.t0013"/>&nbsp;&nbsp;&nbsp;&nbsp;
+						<div class='custom_checkbox'>
+                            <input type="checkbox" name="chkContentsRange" id="chkContentsRange" value="CONTENTS" onclick="chkSearchRange(this.value);">
+                        </div>
+                        <spring:message code="ezTotalSearch.t0014"/>&nbsp;&nbsp;&nbsp;&nbsp;
+						<div class='custom_checkbox'>
+                            <input type="checkbox" name="chkWriterRange" id="chkWriterRange" value="WRITER" onclick="chkSearchRange(this.value);">
+                        </div>
+                        <spring:message code="ezTotalSearch.t0008"/>&nbsp;&nbsp;&nbsp;&nbsp;
+						<div class='custom_checkbox'>
+                            <input type="checkbox" name="chkAttachsRange" id="chkAttachsRange" value="ATTACH" onclick="chkSearchRange(this.value);">
+                        </div>
+                        <spring:message code="ezTotalSearch.t0015"/>&nbsp;
                         <c:if test="${useWebfolder == 'YES'}">
                         	<font class="point5"><spring:message code="ezTotalSearch.t0039" /></font>
                         </c:if>

@@ -198,10 +198,12 @@
 		<table class="content">
 		  <tr> 
 		    <td colspan="2" > 
-			  <input type="radio" name="FindDept" id="FindDept" value="OrganTree" checked 
-				onclick="FindDeptRdo_onclick(this.value)"><span style=" vertical-align:middle;"><spring:message code='ezApprovalG.t1128'/></span>
-			  <input type="radio" name="FindDept" id="FindDept" value="FindByName"
-				onclick="FindDeptRdo_onclick(this.value)"><span style=" vertical-align:middle;"><spring:message code='ezApprovalG.t1129'/></span>
+			  <div class='custom_radio' style="margin-bottom: 3px;">
+				  <input type="radio" name="FindDept" id="FindDept1" value="OrganTree" checked onclick="FindDeptRdo_onclick(this.value)">
+				  <label for="FindDept1"><spring:message code='ezApprovalG.t1128'/></label>
+				  <input type="radio" name="FindDept" id="FindDept2" value="FindByName" onclick="FindDeptRdo_onclick(this.value)">
+				  <label for="FindDept2"><spring:message code='ezApprovalG.t1129'/></label>
+			  </div>
 			</td>
 		  </tr>
 		  <tr> 

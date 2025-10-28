@@ -37,23 +37,23 @@
 			<ul>
 				<c:choose>
 					<c:when test="${cabinet.permission == '2'}">
-						<li id="addBttn" class="important"><a><span style="color: #0470e4;"><spring:message code='ezCabinet.t45'/></span></a></li>
-						<li id="movBttn"><a><span><spring:message code='ezCabinet.t47'/></span></a></li>
-						<li id="shaBttn"><a><span><spring:message code='ezCabinet.t50'/></span></a></li>
-						<li id="schBttn"><a><span class="icon16 icon16_search"></span></a></li>
-						<li id="delBttn"><a><span class="icon16 icon16_delete"></span></a></li>
-						<li id="refBttn"><a><span class="icon16 icon16_refresh"></span></a></li>
+						<li id="addBttn" class="important"><span><spring:message code='ezCabinet.t45'/></span></li>
+						<li id="movBttn"><span><spring:message code='ezCabinet.t47'/></span></li>
+						<li id="shaBttn"><span><spring:message code='ezCabinet.t50'/></span></li>
+						<li id="schBttn"><span class="icon16 icon16_search"></span></li>
+						<li id="delBttn"><span class="icon16 icon16_delete"></span></li>
+						<li id="refBttn"><span class="icon16 icon16_refresh"></span></li>
 					</c:when>
 					<c:when test="${cabinet.permission == '1'}">
-						<li id="addBttn" class="important"><a><span style="color: #0470e4;"><spring:message code='ezCabinet.t45'/></span></a></li>
-						<li id="movBttn"><a><span><spring:message code='ezCabinet.t47'/></span></a></li>
-						<li id="schBttn"><a><span class="icon16 icon16_search"></span></a></li>
-						<li id="delBttn"><a><span class="icon16 icon16_delete"></span></a></li>
-						<li id="refBttn"><a><span class="icon16 icon16_refresh"></span></a></li>
+						<li id="addBttn" class="important"><span style="color: #0470e4;"><spring:message code='ezCabinet.t45'/></span></li>
+						<li id="movBttn"><span><spring:message code='ezCabinet.t47'/></span></li>
+						<li id="schBttn"><span class="icon16 icon16_search"></span></li>
+						<li id="delBttn"><span class="icon16 icon16_delete"></span></li>
+						<li id="refBttn"><span class="icon16 icon16_refresh"></span></li>
 					</c:when>
 					<c:otherwise>
-						<li id="schBttn"><a><span class="icon16 icon16_search"></span></a></li>
-						<li id="refBttn"><a><span class="icon16 icon16_refresh"></span></a></li>
+						<li id="schBttn"><span class="icon16 icon16_search"></span></li>
+						<li id="refBttn"><span class="icon16 icon16_refresh"></span></li>
 					</c:otherwise>
 				</c:choose>
 				
@@ -80,7 +80,7 @@
 						<td class="cabSearchTd">
 							<div>
 								<span id="cabinetName" class="cabSearchName"><c:out value='${cabinet.cabinetName}'/></span>
-								<span class="searchDetail"><input type="checkbox" id="dCheckBox"><span><spring:message code='ezCabinet.t91'/></span></span>
+								<span class="searchDetail"><div class="custom_checkbox"><input type="checkbox" id="dCheckBox"></div><span><spring:message code='ezCabinet.t91'/></span></span>
 							</div>
 						</td>
 					</tr>
@@ -143,7 +143,7 @@
 				<div>
 					<table class="mainlist cabTbl" id="tblCabinetList">
 						<tr>
-							<th headers=""   class="inputTh"><input type="checkbox"></th>
+							<th headers=""   class="inputTh"><div class="custom_checkbox"><input type="checkbox"></div></th>
 							<th headers="it" class="typeTh" ><spring:message code='ezCabinet.t61'/></th>
 							<th headers="tt" class="ttlTh"  ><spring:message code='ezCabinet.t62'/></th>
 							<th headers="un" class="userTh" ><spring:message code='ezCabinet.t63'/></th>
@@ -191,6 +191,8 @@
 		
 		<iframe name="attachFrame" id="attachFrame" style="display: none;"></iframe>
 		<input type="hidden" id="userLang" value="${lang}">
+		
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')			}"></script>
 		<script type="text/javascript" src="${util.addVer('ezCabinet.lang', 'msg')          }"></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')             }"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>

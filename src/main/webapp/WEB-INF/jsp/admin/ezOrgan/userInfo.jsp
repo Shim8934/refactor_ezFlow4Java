@@ -918,9 +918,11 @@
 	        <tr>
 	            <th style="width: 71px; text-align:center"><spring:message code='ezOrgan.t00003' /></th>
 	            <td style="width: 260px;">
-	                <input type="text" id="txtBirth" style="width:80px;text-align:center;" onkeydown="return checkKey()" readonly="readonly" autocomplete="off"/>
-	                <input type="radio" id="birth_S" name="BirthType" Checked /><spring:message code='ezOrgan.t00001' />
-	                <input type="radio" id="birth_N" name="BirthType" /><spring:message code='ezOrgan.t00002' />
+	               <input type="text" id="txtBirth" style="width:80px;text-align:center;" onkeydown="return checkKey()" readonly="readonly" autocomplete="off"/>&nbsp;
+	                <div class="custom_radio" style="float: right;">
+	                    <input type="radio" id="birth_S" name="BirthType" Checked /><label for="birth_S"><spring:message code='ezOrgan.t00001' /></label>
+	                    <input type="radio" id="birth_N" name="BirthType" style="margin-left: 5px !important;"/><label for="birth_N" style="margin-right: 7px !important"><spring:message code='ezOrgan.t00002' /></label>
+	                </div>
 	            </td>
 	            <th style="width: 71px; text-align:center"><spring:message code='ezOrgan.t283' /></th>
 	            <td style="width: 240px;" >

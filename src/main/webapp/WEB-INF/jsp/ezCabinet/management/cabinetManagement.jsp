@@ -8,6 +8,7 @@
 		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
 		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<link rel="stylesheet" type="text/css" href="${util.addVer('/css/ezCabinet/cabinet.css')}">
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 	</head>
 	<body class="popup cabMag">
 		<h1 id="cabMagHeader" role='<c:out value="${node}"></c:out>'><spring:message code="ezCabinet.t03"/></h1>
@@ -21,11 +22,11 @@
 		<jsp:include page="/WEB-INF/jsp/ezCabinet/management/cabinetDelete.jsp"></jsp:include>
 		
 		<div class="cabdivBttn2" id="cabMgDivBttn">
-			<a class="cabBttn"><span><spring:message code="ezCabinet.t75"/></span></a>
-			<a class="cabBttn"><span><spring:message code="ezCabinet.t78"/></span></a>
-			<a class="cabBttn"><span><spring:message code="ezCabinet.t76"/></span></a>
-			<a class="cabBttn"><span><spring:message code="ezCabinet.t77"/></span></a>
-			<a class="cabBttn"><span><spring:message code="ezCabinet.t46"/></span></a>
+			<a class="imgbtn"><span><spring:message code="ezCabinet.t75"/></span></a>
+			<a class="imgbtn"><span><spring:message code="ezCabinet.t78"/></span></a>
+			<a class="imgbtn"><span><spring:message code="ezCabinet.t76"/></span></a>
+			<a class="imgbtn"><span><spring:message code="ezCabinet.t77"/></span></a>
+			<a class="imgbtn"><span><spring:message code="ezCabinet.t46"/></span></a>
 		</div>
 		
 		<script type="text/javascript" src="${util.addVer('ezCabinet.lang', 'msg')          }"></script>

@@ -550,8 +550,8 @@
 		<div class="div_scroll" style="width:100%; height:500px; overflow: auto" id="divList">
 			<table id="QstList" class="mainlist" style="width:100%;"> 
 			    <tr> 
-					<th width="20px" align="center"> <%-- <spring:message code="ezPoll.t105"/> --%>
-						<input type="checkbox" id="checkAll" style="margin: 0px; padding: 0px; width: 13px; height: 13px;" onchange="javascript:getCheckAll(this)">
+					<th width="20px" align="center" style="width: 22px; text-align: center;"> <%-- <spring:message code="ezPoll.t105"/> --%>
+						<div class='custom_checkbox'><input type="checkbox" id="checkAll" style="margin: 0px; padding: 0px; width: 13px; height: 13px;" onchange="javascript:getCheckAll(this)"></div>
 					</th> 
 <!-- 					<th width="20px"><img src="/images/ImgIcon/view-importance.gif" border="0"></th> -->
 					<th width="400px"><spring:message code="ezPoll.t106"/></th> 
@@ -564,7 +564,7 @@
 			    </tr>
 			 	<c:forEach var="list" items="${list}"> 
 			        <tr id="${list.qstId}" class="white">
-			        	<td style="padding:0"> <input type="checkbox" class="checkBnk" id="qstCheck+<c:out value ="${list.qstId}" />+" value=<c:out value="${list.qstId}" />  onchange="javascript:getChecked(this)"></td>
+						<td style="padding:0; width: 22px; text-align: center;"> <div class='custom_checkbox'><input type="checkbox" class="checkBnk" id="qstCheck+<c:out value ="${list.qstId}" />+" value=<c:out value="${list.qstId}" />  onchange="javascript:getChecked(this)"></div></td>
 			        	
 <!-- 			        	<td>			        	 -->
 <%-- 							<c:if test="${list.isHidden == 1}"> --%>

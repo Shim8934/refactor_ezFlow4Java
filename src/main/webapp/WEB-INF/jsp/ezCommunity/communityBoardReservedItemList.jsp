@@ -47,7 +47,7 @@
 					var strSpace = '';
 					
 					listXML += "<TR>";
-					listXML += "<TD align=center style=\"padding:0;width:20px;\"><input type='checkbox' name='chk' id='chk' onclick='checkBox_checked(\"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "ItemID") + "\",event)'></TD>";
+					listXML += "<TD align=center style='padding:0;width:20px;'><div class='custom_checkbox'><input type='checkbox' name='chk' id='chk' onclick='checkBox_checked(\"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "ItemID") + "\",event)'></div></TD>";
 					listXML += "<TD style=\"word-wrap:break-word;\">" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "BoardName") + "</TD>";
 					listXML += "<TD title='" + MakeXMLString(SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "Abstract").replace("'", "`")) + "' style='cursor:pointer; text-overflow:ellipsis; overflow:hidden' onclick='ItemRead_onclick(\"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "BoardID") + "\", \"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "BoardName") + "\", \"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "ItemID") + "\")'><nobr>" + bTag + strSpace + MakeXMLString(SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "Title")) + "</nobr></TD>";
 					listXML += "<TD>" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "StartDate").substring(0, 16) + "</TD>";
@@ -314,7 +314,7 @@
 		<div  style = "height:370px;">
 		<table class="cmhomelist" id ="tblList" style="width:100%;margin-top:13px">
 			<tr>
-				<th style="padding:0;width:20px; text-align:center;"><input type='checkbox' name="checkbox" onclick='checkBox_checkAll()'></th>
+				<th style="padding:0;width:20px; text-align:center;"><div class='custom_checkbox'><input type='checkbox' name="checkbox" onclick='checkBox_checkAll()'></div></th>
 				<c:choose>
 					<c:when test="${pSortBy == 'BoardName'}">
 						<th style="cursor:pointer"  width="80" onClick="SortPage('BoardName desc')" ><spring:message code='ezCommunity.t418' /><img src="/images/view-sortup.gif" width="9" height="9"></th>

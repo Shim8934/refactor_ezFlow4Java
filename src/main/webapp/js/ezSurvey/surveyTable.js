@@ -53,7 +53,7 @@ function SurveyTable(data) {
 			var headerRow    = _tableElmt.rows[0];
 			var len          = headerRow.cells.length;
 			var firstTd      = headerRow.cells[0];
-			var firstTdChild = firstTd.firstElementChild;
+			var firstTdChild = firstTd.querySelector('input');
 			
 			if (!firstTdChild || (firstTdChild.tagName).toLowerCase() != "input") {
 				firstTd.onclick = function() {sortByHeader(this);};
@@ -220,11 +220,11 @@ function SurveyTable(data) {
 	function toggleRow(row, rowClass) {
 		if (_tableMode == null) {
 			if (rowClass == _unselectClass) {
-				var firstInputCheckBox     = _tableElmt.rows[0].firstElementChild.firstElementChild;
+				var firstInputCheckBox     = _tableElmt.rows[0].firstElementChild.querySelector('input');
 				firstInputCheckBox.checked = false;
 			}
 			
-			var checkboxElmt     = row.firstElementChild.firstElementChild;
+			var checkboxElmt     = row.firstElementChild.querySelector('input');
 			checkboxElmt.checked = rowClass == _selectedClass ? true : false;
 		}
 		
@@ -247,7 +247,7 @@ function SurveyTable(data) {
 		event.stopPropagation();
 		
 		var checkboxElmt     = event.currentTarget;
-		var currentRow       = checkboxElmt.parentElement.parentElement;
+		var currentRow       = checkboxElmt.closest('tr');
 		_lastSelectedRow     = currentRow;
 		currentRow.className = checkboxElmt.checked ? _selectedClass : _unselectClass;
 	} 
@@ -265,7 +265,7 @@ function SurveyTable(data) {
 	
 	function cleanTable() {
 		if (_tableMode == null) {
-			var firstInputCheckBox = _tableElmt.rows[0].firstElementChild.firstElementChild;
+			var firstInputCheckBox = _tableElmt.rows[0].firstElementChild.querySelector('input');;
 			if (firstInputCheckBox) {
 				firstInputCheckBox.checked = false; //Clear first input check box
 				firstInputCheckBox.onclick = function(e) {toggleAllRow(this.checked);};

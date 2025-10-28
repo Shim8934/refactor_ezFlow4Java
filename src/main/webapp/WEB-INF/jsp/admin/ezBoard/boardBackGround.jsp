@@ -41,9 +41,9 @@
 			                                + "' imgwidth = '" + getNodeText(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "WIDTH")[0]) + "' imgheight = '" + getNodeText(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HEIGHT")[0])
 			                                + "' onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_click(this);' ondblclick='event_dbclick(this);' style='cursor:pointer;'>"
 			                        if (getNodeText(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "ISUSE")[0]) == "1")
-			                            _html += "<td style='width:8%;padding-left:5px;'><input type='checkbox' name = 'checkbox' checked = true onclick='event_statuschange(this);'></td>";
+			                            _html += "<td style='width:8%;padding-left:5px;'><div class='custom_checkbox'><input type='checkbox' name = 'checkbox' checked = true onclick='event_statuschange(this);'></div></td>";
 			                        else
-			                            _html += "<td style='width:8%;padding-left:5px;'><input type='checkbox' name = 'checkbox' onclick='event_statuschange(this);'></td>";
+			                            _html += "<td style='width:8%;padding-left:5px;'><div class='custom_checkbox'><input type='checkbox' name = 'checkbox' onclick='event_statuschange(this);'></div></td>";
 
 			                        _html += "<td title='" + getNodeText(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "ORGFILENAME")[0]) + "' style='width:60%; color:gray; text-overflow:ellipsis; overflow:hidden;'>" + getNodeText(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "ORGFILENAME")[0]) + "</td>";
 			                        _html += "<td style='width:32%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;'>" + getNodeText(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "REGDATE")[0]) + "</td>";

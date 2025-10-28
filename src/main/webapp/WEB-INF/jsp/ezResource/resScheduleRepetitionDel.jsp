@@ -69,13 +69,17 @@
   		<table class="content" style="width:100%">
 			<tr>
 		    	<td colspan="3">
-		    		<input id="chk_Instance" type="radio" name="chk_Open" value="Instance" checked>
+		    		<div class="custom_radio">
+			    		<input id="chk_Instance" type="radio" name="chk_Open" value="Instance" checked>
+		    		</div>
 		      		<label for="chk_Instance"><spring:message code='ezResource.t323'/></label>
 		      	</td>
 		  	</tr>
 		  	<tr>
 		    	<td colspan="3">
-		    		<input type="radio" name="chk_Open" value="Master" >
+		    		<div class="custom_radio">
+			    		<input type="radio" name="chk_Open" value="Master" >
+		    		</div>
 		      		<label for="chk_series"><spring:message code='ezResource.t324'/></label>
 		      	</td>
 		  	</tr>  

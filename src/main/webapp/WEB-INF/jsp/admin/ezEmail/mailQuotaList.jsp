@@ -489,13 +489,16 @@
 				<td width="93%" style="margin-bottom: 10px; padding: 5px 5px;">
 					<span id="topmenu" style="width: 500px">
 						<spring:message code="ezWebFolder.t141"></spring:message><!-- 검색대상 -->
-							<input type="checkbox" id="inOffice" checked/>
-							<label for="inOffice"><spring:message code="ezEmail.kes038"></spring:message></label>
-							<input type="checkbox" id="retired" checked/>
-							<label for="retired"><spring:message code="ezEmail.kes039"></spring:message></label>
-							<input type="checkbox" id="stopped" checked/>
-							<label for="stopped"><spring:message code="ezEmail.kes040"></spring:message></label>
-							&nbsp; 
+						    <div class="custom_checkbox">
+						        &nbsp; 
+                                <input type="checkbox" style="margin-bottom: 2px; margin-left:5px" id="inOffice" checked/>
+                                <label for="inOffice" style="vertical-align: baseline;"><spring:message code="ezEmail.kes038"></spring:message></label>
+                                <input type="checkbox" style="margin-bottom: 2px; margin-left:5px" id="retired" checked/>
+                                <label for="retired" style="vertical-align: baseline;"><spring:message code="ezEmail.kes039"></spring:message></label>
+                                <input type="checkbox" style="margin-bottom: 2px; margin-left:5px" id="stopped" checked/>
+                                <label for="stopped" style="vertical-align: baseline;"><spring:message code="ezEmail.kes040"></spring:message></label>
+                                &nbsp; 
+                            </div>
 						<spring:message code="ezStatistics.t1062"></spring:message>&nbsp; <!-- 검색조건 -->
 						<select id="searchKeycode" style="height:22px;"> 
 							<option value="userName"><spring:message code="ezStatistics.t1068"></spring:message></option> <!-- 이름 -->

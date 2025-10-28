@@ -531,7 +531,10 @@ function ListView() {
                     _HeaderCheckBox.style.width = "16px";
                     _HeaderCheckBox.style.height = "16px";
                     _HeaderCheckBox.onclick = function () { event_HeaderCheckBoxClick(this); };
-                    objTd.appendChild(_HeaderCheckBox);
+        	        var oDiv = document.createElement("div");
+        	        oDiv.className = "custom_checkbox";
+        	        oDiv.appendChild(_HeaderCheckBox);
+                    objTd.appendChild(oDiv);
                     strName = "";
                 }
 
@@ -695,7 +698,10 @@ function ListView() {
                     _TDCheckBox_Sub.style.width = "13px";
                     _TDCheckBox_Sub.style.height = "13px";
                     _TDCheckBox_Sub.onclick = new Function("chk_onselect(this)");
-                    objTd.appendChild(_TDCheckBox_Sub);
+        	        var oDiv = document.createElement("div");
+        	        oDiv.className = "custom_checkbox";
+        	        oDiv.appendChild(_TDCheckBox_Sub);
+                    objTd.appendChild(oDiv);
 
                     objTr.appendChild(objTd);
                 }
@@ -1358,14 +1364,14 @@ function event_HeaderCheckBoxClick(obj) {
 
     if (obj.checked) {
         for (var i = 0; i < SelList.GetRowCount() ; i++) {
-            SelList.GetDataRows()[i].childNodes[0].childNodes[0].checked = true;
+            SelList.GetDataRows()[i].childNodes[0].childNodes[0].childNodes[0].checked = true;
             SelList.GetDataRows()[i].style.backgroundColor = m_strColorSelect;
-            strListInfo += SelList.GetDataRows()[i].childNodes[0].childNodes[0].id;
+            strListInfo += SelList.GetDataRows()[i].childNodes[0].childNodes[0].childNodes[0].id;
         }
     }
     else {
         for (var i = 0; i < SelList.GetRowCount() ; i++) {
-            SelList.GetDataRows()[i].childNodes[0].childNodes[0].checked = false;
+            SelList.GetDataRows()[i].childNodes[0].childNodes[0].childNodes[0].checked = false;
             SelList.GetDataRows()[i].style.backgroundColor = m_strColorDefault;
             strListInfo = "";
         }
@@ -1386,7 +1392,7 @@ function tr_unselectedAll(pTableID) {
         SelList.LoadFromID("BoardList");
 
         for (var i = 0; i < SelList.GetRowCount() ; i++) {
-            SelList.GetDataRows()[i].childNodes[0].childNodes[0].checked = false;
+            SelList.GetDataRows()[i].childNodes[0].childNodes[0].childNodes[0].checked = false;
             SelList.GetDataRows()[i].style.backgroundColor = m_strColorDefault;
             strListInfo = "";
         }

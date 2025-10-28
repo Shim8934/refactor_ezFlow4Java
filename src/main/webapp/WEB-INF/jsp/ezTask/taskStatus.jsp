@@ -224,7 +224,9 @@
 					</th>
 					<td>
 						<%-- <checkbox id = "taskStatus"> --%>
-						<input type="checkbox" id="taskStatus" />
+						<div class="custom_checkbox">
+							<input type="checkbox" id="taskStatus" />
+						</div>
 					</td>
 				</tr>
 			</table>

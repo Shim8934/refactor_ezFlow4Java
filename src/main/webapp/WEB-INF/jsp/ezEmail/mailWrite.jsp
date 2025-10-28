@@ -2448,8 +2448,7 @@
 	                    </ul>
 	                    <ul style="float:right;margin-right:50px">
 	                    	<%-- <li class="sel securemail" style="background:none; border:none; padding:0px; padding-top:4px; display:none;">
-	                        	<input type="checkbox" id="chkSecureMail" />
-	                        	<label for="chkSecureMail" style="color:#333;margin-right:3px"><spring:message code='ezEmail.lhm63' /></label>	                        	
+	                        	<input type="checkbox" id="chkSecureMail" /><label for="chkSecureMail" style="color:#333;margin-right:3px"><spring:message code='ezEmail.lhm63' /></label>	                        	
 	                        </li>
 	                        <li class="bar securemail" style="background:none; border:0;padding-left:5px;padding-right:0;cursor:default; display:none;">
 	                            <img src="/images/pbar.gif">
@@ -2548,8 +2547,10 @@
 	                        <th>
 	                            <a class="imgbtn"><span onclick="SelectReceiver_onClick('To')" style="width: 50px; text-align: center;">
 	                                <spring:message code='ezEmail.t66' /></span></a>
-	                            <div style="display: inline-block; font-weight:normal; "><INPUT id="toMe" onclick="MailToMe_Onclick();" value="" type="checkbox" name="toMe" style="margin:0 0 0 3px; vertical-align: top;"/>
-	                            <label for="toMe" style="vertical-align: top; cursor:pointer; line-height: 24px;" ><spring:message code='ezEmail.t99000010' /></label></div>
+	                            <br>
+	                            <div class="custom_checkbox">
+	                                <input id="toMe" onclick="MailToMe_Onclick();" value="" type="checkbox" name="toMe" style="vertical-align: middle;margin-top: 2px;"/><label for="toMe" style="margin-top:1px; cursor:pointer;vertical-align: middle" ><spring:message code='ezEmail.t99000010' /></label>
+                                </div>
 	                        </th>
 	                        <td style="width: 100%; border-right: none;">
 								<div class="viewtxtScroller close">
@@ -2574,7 +2575,7 @@
 	                            <a class="imgbtn"><span onclick="SelectReceiver_onClick('CC')" style="width: 50px; text-align: center;">
 	                                <spring:message code='ezEmail.t594' /></span></a>
 	                            <div onclick="MailBCCView(this);" style="cursor:pointer;display:inline-block;" status="off" id="BccViewer">
-	                            <img src="/images/ImgIcon/groupplus.gif" align="absmiddle"/><span style="vertical-align: middle; cursor:pointer;"><spring:message code='ezEmail.t562' /></span>
+	                            <img src="/images/ImgIcon/groupplus.gif" align="absmiddle"/><span style="vertical-align: middle; margin: -3px 0px 0px 3px; cursor:pointer;"><spring:message code='ezEmail.t562' /></span>
 	                            </div>
 	                        </th>
 	                        <td style="width: 100%; border-right:none;">

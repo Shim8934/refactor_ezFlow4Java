@@ -10,12 +10,15 @@
 		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
 		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<link rel="stylesheet" href="${util.addVer('/css/ezCabinet/cabinet.css')}" type="text/css">
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 	</head>
 	<body class="popup cabAddMain" style="margin-top:0px;">
 		<%-- <h1><spring:message code="ezCabinet.t67"/></h1> --%>
-		<div id="cabAddStore" class="cabStore">
-			<a class="cabStoreBttn"><span><spring:message code='ezCabinet.t14' /></span></a>
-			<a class="cabStoreBttn"><span><spring:message code='ezCabinet.t167'/></span></a>
+		<div id="menu" style="margin-top: 8px;">
+		<ul id="cabAddStore">
+			<li><span><spring:message code='ezCabinet.t14' /></span></li>
+			<li><span><spring:message code='ezCabinet.t167'/></span></li>
+		</ul>
 		</div>
 		<div id="cabAddClose" class="cabClose"><ul><li><span></span></li></ul></div>
 		
@@ -69,7 +72,7 @@
 					window.addEventListener("beforeunload", function(e) {closeAllPopups();}, false);
 					var storeBttnElmt       = document.getElementById("cabAddStore");
 					var storeBttn           = storeBttnElmt.children;
-					var closeBttn           = document.getElementById("cabAddClose").firstElementChild.firstElementChild.firstElementChild;
+					var closeBttn           = document.getElementById("cabAddClose");
 					storeBttn[0].onclick    = function(e) {saveItem();};
 					storeBttn[1].onclick    = function(e) {startUpload();};
 					

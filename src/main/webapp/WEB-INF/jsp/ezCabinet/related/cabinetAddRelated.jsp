@@ -8,6 +8,7 @@
 		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
 		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<link rel="stylesheet" href="${util.addVer('/css/ezCabinet/cabinet.css')}" type="text/css">
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 	</head>
 	<body class="popup cabAddRelated" style="overflow: hidden;">
 		<h1 id="cabMagHeader"><spring:message code="ezCabinet.t125"/></h1>
@@ -24,12 +25,15 @@
 			<c:if test="${activeFlag == '1'}">
 				<div class="addRelatedConfig" id="addRelated">
 					<a class="cabRadio">
-						<input type="radio" name="checkCabinet" id="auto" checked="checked" style="vertical-align:middle;"/>
-						<label for="auto"><span><spring:message code="ezCabinet.t126"/></span></label><br>
+						<div class="custom_radio">
+							<input type="radio" name="checkCabinet" id="auto" checked="checked" style="vertical-align:middle;"/>
+						<label for="auto"><span><spring:message code="ezCabinet.t126"/></span></label></div><br>
 					</a>
 					<a class="cabRadio">
+						<div class="custom_radio">
 						<input type="radio" name="checkCabinet" id="manual" style="vertical-align:middle;"/>
-						<label for="manual"><span><spring:message code="ezCabinet.t127"/></span></label>
+							<label for="manual"><span><spring:message code="ezCabinet.t127"/></span></label>
+						</div>
 					</a>
 				</div>
 			</c:if>
@@ -616,7 +620,7 @@
 					var listAttach      = attachDivElmt.children;
 					if (listAttach && listAttach.length > 0) {
 						for (var i = 0, len = listAttach.length; i < len; i++) {
-							var inputElmt = listAttach[i].firstElementChild;
+							var inputElmt = listAttach[i].firstElementChild.firstElementChild;
 							var filePath  = javaURLDecode(inputElmt.getAttribute("filepath")).replace(/\+/g, " ");
 							var fileName  = javaURLDecode(inputElmt.getAttribute("filename")).replace(/\+/g, " ");
 							
@@ -660,7 +664,7 @@
 					
 					var listChildren    = attach.children;
 					for (var i = 0, len = listChildren.length; i < len; i++) {
-						var inputElmt   = listChildren[i].firstElementChild;
+						var inputElmt   = listChildren[i].firstElementChild.firstElementChild;
 						var filePath    = inputElmt.getAttribute("filepath").replace(/\+/g, " ");
 						var fileName    = inputElmt.getAttribute("filename").replace(/\+/g, " ");
 						

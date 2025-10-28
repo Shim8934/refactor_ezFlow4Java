@@ -1078,6 +1078,9 @@
 		    		var btnPElem = document.createElement("p");
 		    		btnPElem.className = "btn_checkbox";
 		    		
+					var checkInputDiv = document.createElement("div");
+					checkInputDiv.className = "custom_checkbox";
+			
 		    		var checkInput = document.createElement("input");
 		    		checkInput.type = "checkbox";
 		    		checkInput.setAttribute("name", "checkbox");
@@ -1093,8 +1096,9 @@
 		    		closePElem.className = "notice_btnClose close_type" + result.skinValue;
 		    		closePElem.id = "closeBtn" + popup_number;
 		    		
-		    		btnPElem.appendChild(checkInput);
-		    		btnPElem.appendChild(labelElem);
+		    		checkInputDiv.appendChild(checkInput);
+		    		checkInputDiv.appendChild(labelElem);
+		    		btnPElem.appendChild(checkInputDiv);
 		    		btnDiv.appendChild(btnPElem);
 		    		
 		    		layoutDiv.appendChild(titleDl);
@@ -1357,6 +1361,9 @@
     		var btnPElem = document.createElement("p");
     		btnPElem.className = "btn_checkbox";
     		
+			var checkInputDiv = document.createElement("div");
+			checkInputDiv.className = "custom_checkbox";
+			
     		var checkInput = document.createElement("input");
     		checkInput.type = "checkbox";
     		checkInput.setAttribute("name", "checkbox");
@@ -1373,8 +1380,9 @@
     		closePElem.className = "notice_btnClose close_type0";
     		closePElem.id = "surv_closeBtn";
     		
-    		btnPElem.appendChild(checkInput);
-    		btnPElem.appendChild(labelElem);
+    		checkInputDiv.appendChild(checkInput);
+    		checkInputDiv.appendChild(labelElem);
+    		btnPElem.appendChild(checkInputDiv);
     		btnDiv.appendChild(btnPElem);
     		
     		layoutDiv.appendChild(titleDl);

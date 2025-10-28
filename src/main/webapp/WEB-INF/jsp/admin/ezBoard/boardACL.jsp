@@ -1076,10 +1076,13 @@
                 <th><spring:message code='ezBoard.t93'/><br>
                     (<spring:message code='ezBoard.t94'/></th>
                 <td>
-                    <input type="checkbox" id="inherit_OK" onclick="checkbox_onclick(event)">
-                    <spring:message code='ezBoard.t95'/>
-                    <input type="checkbox" id="inherit_NO" onclick="checkbox_onclick(event)">
-                    <spring:message code='ezBoard.t96'/></td>
+                	<div class="custom_checkbox">
+	                    <input type="checkbox" id="inherit_OK" onclick="checkbox_onclick(event)">
+                    	<label for="inherit_OK"><spring:message code='ezBoard.t95'/></label>
+	                    <input type="checkbox" id="inherit_NO" onclick="checkbox_onclick(event)">
+						<label for="inherit_NO"><spring:message code='ezBoard.t96'/></label>
+					</div>
+				</td>
             </tr>
             <tr>
                 <th style="">
@@ -1092,60 +1095,83 @@
             <tr>
                 <th><spring:message code='ezBoard.t84'/></th>
                 <td>
-                    <input type="checkbox" id="admin_OK" onclick="checkbox_onclick(event)">
-                    &nbsp;<spring:message code='ezBoard.t99'/>
-                    <input type="checkbox" id="admin_NO" onclick="checkbox_onclick(event)">
-                    &nbsp;<spring:message code='ezBoard.t100'/><span id="PostSpan">
-                        <input type="checkbox" id="PostNotice" onclick="checkbox_onclick(event)">
-                        &nbsp;<spring:message code='ezNotification.hth36'/></span></td>
+                	<div class="custom_checkbox">
+						<input type="checkbox" id="admin_OK" onclick="checkbox_onclick(event)">
+						<label for="admin_OK"><spring:message code='ezBoard.t99'/></label>
+						<input type="checkbox" id="admin_NO" onclick="checkbox_onclick(event)">
+						<label for="admin_OK"><spring:message code='ezBoard.t100'/></label>
+						<span id="PostSpan">
+							<input type="checkbox" id="PostNotice" onclick="checkbox_onclick(event)">
+							<label for="PostNotice"><spring:message code='ezNotification.hth36'/></label>
+						</span>
+					</div>
+				</td>
             </tr>
             <tr>
                 <th><spring:message code='ezBoard.t83'/></th>
                 <td>
-                    <input type="checkbox" id="access_OK" onclick="checkbox_onclick(event)">
-                    &nbsp;<spring:message code='ezBoard.t99'/>
-                    <input type="checkbox" id="access_NO" onclick="checkbox_onclick(event)">
-                    &nbsp;<spring:message code='ezBoard.t96'/></td>
+                	<div class="custom_checkbox">
+	                    <input type="checkbox" id="access_OK" onclick="checkbox_onclick(event)">
+						<label for="access_OK"><spring:message code='ezBoard.t99'/></label>
+	                    <input type="checkbox" id="access_NO" onclick="checkbox_onclick(event)">
+						<label for="access_NO"><spring:message code='ezBoard.t96'/></label>
+					</div>
+				</td>
             </tr>
             <tr>
                 <th><spring:message code='ezBoard.t102'/></th>
                 <td>
-                    <input type="checkbox" id="list_OK" onclick="checkbox_onclick(event)">
-                    &nbsp;<spring:message code='ezBoard.t99'/>
-                    <input type="checkbox" id="list_NO" onclick="checkbox_onclick(event)">
-                    &nbsp;<spring:message code='ezBoard.t96'/></td>
+                	<div class="custom_checkbox">
+						<input type="checkbox" id="list_OK" onclick="checkbox_onclick(event)">
+						<label for="list_OK"><spring:message code='ezBoard.t99'/></label>
+						<input type="checkbox" id="list_NO" onclick="checkbox_onclick(event)">
+						<label for="list_NO"><spring:message code='ezBoard.t96'/></label>
+					</div>
+				</td>
             </tr>
             <tr>
                 <th><spring:message code='ezBoard.t86'/></th>
                 <td>
-                    <input type="checkbox" id="read_OK" onclick="checkbox_onclick(event)">
-                    &nbsp;<spring:message code='ezBoard.t99'/>
-                    <input type="checkbox" id="read_NO" onclick="checkbox_onclick(event)">
-                    &nbsp;<spring:message code='ezBoard.t96'/></td>
+                	<div class="custom_checkbox">
+						<input type="checkbox" id="read_OK" onclick="checkbox_onclick(event)">
+						<label for="read_OK"><spring:message code='ezBoard.t99'/></label>
+						<input type="checkbox" id="read_NO" onclick="checkbox_onclick(event)">
+						<label for="read_NO"><spring:message code='ezBoard.t96'/></label>
+					</div>
+				</td>
             </tr>
             <tr>
                 <th><spring:message code='ezBoard.t87'/></th>
                 <td>
-                    <input type="checkbox" id="write_OK" onclick="checkbox_onclick(event)">
-                    &nbsp;<spring:message code='ezBoard.t99'/>
-                    <input type="checkbox" id="write_NO" onclick="checkbox_onclick(event)">
-                    &nbsp;<spring:message code='ezBoard.t96'/></td>
+                	<div class="custom_checkbox">
+	                    <input type="checkbox" id="write_OK" onclick="checkbox_onclick(event)">
+						<label for="write_OK"><spring:message code='ezBoard.t99'/></label>
+	                    <input type="checkbox" id="write_NO" onclick="checkbox_onclick(event)">
+						<label for="write_NO"><spring:message code='ezBoard.t96'/></label>
+					</div>
+				</td>
             </tr>
             <tr id="replyTR">
                 <th><spring:message code='ezBoard.t88'/></th>
                 <td>
-                    <input type="checkbox" id="reply_OK" onclick="checkbox_onclick(event)">
-                    &nbsp;<spring:message code='ezBoard.t99'/>
-                    <input type="checkbox" id="reply_NO" onclick="checkbox_onclick(event)">
-                    &nbsp;<spring:message code='ezBoard.t96'/></td>
+                	<div class="custom_checkbox">
+	                    <input type="checkbox" id="reply_OK" onclick="checkbox_onclick(event)">
+						<label for="reply_OK"><spring:message code='ezBoard.t99'/></label>
+	                    <input type="checkbox" id="reply_NO" onclick="checkbox_onclick(event)">
+						<label for="reply_NO"><spring:message code='ezBoard.t96'/></label>
+					</div>
+				</td>
             </tr>
             <tr>
                 <th><spring:message code='ezBoard.t103'/></th>
                 <td>
-                    <input type="checkbox" id="delete_OK" onclick="checkbox_onclick(event)">
-                    &nbsp;<spring:message code='ezBoard.t99'/>
-                    <input type="checkbox" id="delete_NO" onclick="checkbox_onclick(event)">
-                    &nbsp;<spring:message code='ezBoard.t96'/></td>
+                	<div class="custom_checkbox">
+	                    <input type="checkbox" id="delete_OK" onclick="checkbox_onclick(event)">
+						<label for="delete_OK"><spring:message code='ezBoard.t99'/></label>
+	                    <input type="checkbox" id="delete_NO" onclick="checkbox_onclick(event)">
+						<label for="delete_NO"><spring:message code='ezBoard.t96'/></label>
+					</div>
+				</td>
             </tr>
         </table>
         <br>

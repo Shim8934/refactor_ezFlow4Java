@@ -1108,7 +1108,9 @@
 				<table class="mainlist" id="DetailList_header" style="table-layout: fixed;width:100%; display: none;">
 				    <tr>
 						<th style="cursor:pointer;text-align:center;width:20px;">
-					    	<input type="checkbox" id="HeaderAllCheckBox" onClick="event_HeaderCheckBoxClick(this)">
+						    <div class='custom_checkbox'>
+					    	    <input type="checkbox" id="HeaderAllCheckBox" onClick="event_HeaderCheckBoxClick(this)">
+					    	</div>
 						</th>
 						<th style="text-align:center;width:40px;vertical-align: middle;padding:0px"><img src="/images/i_individual.gif" border="0"></th>
 						<th id="CompanyName" style="padding-left:5px; CURSOR:pointer;width:20%;white-space:nowrap;" _OrderOption="1" _OrderName="S_NAME" onClick="OderbyOptionExpression(this)" ><spring:message code='ezAddress.t124' /><span id="S_NAME"></span></th>
@@ -1180,9 +1182,11 @@
 					<tr>
 						<th style="text-align:center;height:30px"><spring:message code='ezAddress.t314' /></th>
 						<td style="text-align:left;height:30px">
-							<input type="checkbox" name="chkType" id="CheckUser" /><span onclick="check_click('CheckUser')" style="cursor: pointer;"><spring:message code='ezAddress.t145' /></span><br/>
-							<input type="checkbox" name="chkType" id="CheckDept" /><span onclick="check_click('CheckDept')" style="cursor: pointer;"><spring:message code='ezAddress.t146' /></span><br/>
-							<input type="checkbox" name="chkType" id="CheckCompany" /><span onclick="check_click('CheckCompany')" style="cursor: pointer;"><spring:message code='ezAddress.t147' /></span>
+						    <div class="custom_checkbox">
+                                <input type="checkbox" name="chkType" id="CheckUser" /><span onclick="check_click('CheckUser')" style="cursor: pointer;">&nbsp;<spring:message code='ezAddress.t145' /></span><br/>
+                                <input type="checkbox" name="chkType" id="CheckDept" /><span onclick="check_click('CheckDept')" style="cursor: pointer;">&nbsp;<spring:message code='ezAddress.t146' /></span><br/>
+                                <input type="checkbox" name="chkType" id="CheckCompany" /><span onclick="check_click('CheckCompany')" style="cursor: pointer;">&nbsp;<spring:message code='ezAddress.t147' /></span>
+							</div>
 						</td>
 					</tr>
 					<tr>
@@ -1231,8 +1235,7 @@
 				<table class="content" style="width:100%;margin-top:10px;">
 					<tr>
 						<td style="width:70%;border-right-width:0px;">
-							<input type="radio" name="importFormat" id="importOutlookCSV" checked="checked" value="outlookCSV" />
-							<label for="importOutlookCSV" style="vertical-align:middle;cursor:pointer;">MS Outlook 2013/2016 CSV</label>
+							<input type="radio" name="importFormat" id="importOutlookCSV" checked="checked" value="outlookCSV" /><label for="importOutlookCSV" style="vertical-align:middle;cursor:pointer;">MS Outlook 2013/2016 CSV</label>
 						</td>
 						<td style="width:30%;text-align:right;border-left-width:0px;">
 							<a class="imgbtn imgbck" href="/ezAddress/addressFormatDownload.do?format=outlookCSV"><span><spring:message code='ezAddress.lhm2' /></span></a>
@@ -1241,8 +1244,7 @@
 					<!-- 
 					<tr>
 						<td style="width:70%;border-right-width:0px;">
-							<input type="radio" name="importFormat" id="importThunderbirdCSV" checked="checked" value="thunderbirdCSV" />
-							<label for="importThunderbirdCSV" style="vertical-align:middle;cursor:pointer;">Mozilla Thunderbird CSV</label>
+							<input type="radio" name="importFormat" id="importThunderbirdCSV" checked="checked" value="thunderbirdCSV" /><label for="importThunderbirdCSV" style="vertical-align:middle;cursor:pointer;">Mozilla Thunderbird CSV</label>
 						</td>
 						<td style="width:30%;text-align:center;border-left-width:0px;">
 							<a class="imgbtn" href="/ezAddress/addressFormatDownload.do?format=thunderbirdCSV"><span><spring:message code='ezAddress.lhm2' /></span></a>
@@ -1250,8 +1252,7 @@
 					</tr>
 					<tr>
 						<td style="width:70%;border-right-width:0px;">
-							<input type="radio" name="importFormat" id="importGoogleCSV" checked="checked" value="googleCSV" />
-							<label for="importGoogleCSV" style="vertical-align:middle;cursor:pointer;">Google CSV</label>
+							<input type="radio" name="importFormat" id="importGoogleCSV" checked="checked" value="googleCSV" /><label for="importGoogleCSV" style="vertical-align:middle;cursor:pointer;">Google CSV</label>
 						</td>
 						<td style="width:30%;text-align:center;border-left-width:0px;">
 							<a class="imgbtn" href="/ezAddress/addressFormatDownload.do?format=googleCSV"><span><spring:message code='ezAddress.lhm2' /></span></a>
@@ -1283,21 +1284,18 @@
 				<table class="content" style="width:100%;margin-top:10px;">
 					<tr>
 						<td>
-							<input type="radio" name="exportFormat" id="exportOutlookCSV" checked="checked" value="outlookCSV" />
-							<label for="exportOutlookCSV" style="vertical-align:middle;cursor:pointer;">MS Outlook 2013/2016 CSV</label>
+							<input type="radio" name="exportFormat" id="exportOutlookCSV" checked="checked" value="outlookCSV" /><label for="exportOutlookCSV" style="vertical-align:middle;cursor:pointer;">MS Outlook 2013/2016 CSV</label>
 						</td>
 					</tr>
 					<!-- 
 					<tr>
 						<td>
-							<input type="radio" name="exportFormat" id="exportThunderbirdCSV" checked="checked" value="thunderbirdCSV" />
-							<label for="exportThunderbirdCSV" style="vertical-align:middle;cursor:pointer;">Mozilla Thunderbird CSV</label>
+							<input type="radio" name="exportFormat" id="exportThunderbirdCSV" checked="checked" value="thunderbirdCSV" /><label for="exportThunderbirdCSV" style="vertical-align:middle;cursor:pointer;">Mozilla Thunderbird CSV</label>
 						</td>
 					</tr>
 					<tr>
 						<td>
-							<input type="radio" name="exportFormat" id="exportGoogleCSV" checked="checked" value="googleCSV" />
-							<label for="exportGoogleCSV" style="vertical-align:middle;cursor:pointer;">Google CSV</label>
+							<input type="radio" name="exportFormat" id="exportGoogleCSV" checked="checked" value="googleCSV" /><label for="exportGoogleCSV" style="vertical-align:middle;cursor:pointer;">Google CSV</label>
 						</td>
 					</tr>
 					 -->

@@ -9,6 +9,7 @@
 		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
 		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<link rel="stylesheet" type="text/css" href="${util.addVer('/css/ezCabinet/cabinet.css')}">
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 	</head>
 	<body class="popup cabRelatedFile">
 		<h1><spring:message code="ezCabinet.t87"/></h1>
@@ -62,8 +63,8 @@
 		</div>
 		
 		<div class="cabdivBttn" id="cabRlBttn">
-			<a class="cabBttn"><span><spring:message code='ezCabinet.t14'/></span></a>
-			<a class="cabBttn"><span><spring:message code='ezCabinet.t15'/></span></a>
+			<a class="imgbtn"><span><spring:message code='ezCabinet.t14'/></span></a>
+			<a class="imgbtn"><span><spring:message code='ezCabinet.t15'/></span></a>
 		</div>
 		<input type="hidden" id="userLang" value="${lang}">
 		

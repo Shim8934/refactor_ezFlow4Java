@@ -9,6 +9,7 @@
 <link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
 		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 <link rel="stylesheet" href="${util.addVer('/css/ezWebFolder/webfolder.css')}" type="text/css">
+<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"/>
 <script type="text/javascript" src="${util.addVer('ezWebFolder.e1', 'msg')}"></script>
 <script type="text/javascript" src="${util.addVer('/js/jquery/jquery.min.js')}"></script>
 <style>
@@ -240,7 +241,7 @@
 			<tbody>
 				<tr>
 					<c:if test="${isPermitted}">
-						<th style="height: 30px;"><input id="all-selector" type="checkbox" /></th>
+						<th style="height: 30px;"><div class="custom_checkbox"><input id="all-selector" type="checkbox" /></div></th>
 					</c:if>
 					<th><spring:message code='webfolder.version.td.num' /></th>
 					<th><spring:message code='webfolder.version.td.date' /></th>
@@ -252,7 +253,7 @@
 						<c:if test="${isPermitted}">
 							<td>
 								<c:if test="${not status.first}">
-									<input id="${history.version}" class="selector" type="checkbox" />
+									<div class="custom_checkbox"><input id="${history.version}" class="selector" type="checkbox" /></div>
 								</c:if>
 							</td>
 						</c:if>

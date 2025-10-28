@@ -462,6 +462,9 @@
 			if(elements["fileExt"] != "folder") {
 				trElmt.addEventListener("click", function(event) {rowContext.onRowClick(event, this);});
 			}
+			
+			var divElmt = document.createElement("div");
+			divElmt.setAttribute("class", "custom_checkbox");
 
 			var inputElmt = document.createElement("input");
 			inputElmt.setAttribute("type", "checkbox");
@@ -477,9 +480,11 @@
 				inputElmt.setAttribute("checked", true);
 				trElmt.setAttribute("class", "bnkWebFolder2");
 			}
+			
+			divElmt.appendChild(inputElmt);
 
 			if (elements["fileExt"] != "folder") {
-				tdElmt1.appendChild(inputElmt);
+				tdElmt1.appendChild(divElmt);
 			}
 		}
 

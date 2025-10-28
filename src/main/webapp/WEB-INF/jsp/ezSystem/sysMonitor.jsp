@@ -26,9 +26,9 @@
 		for (var i = 0; i < obj.length; i++) {
 			var server = obj[i].getSysInfo;
 			if (server[0].hostname.indexOf("is Down") > -1) {
-				str = '<input type="checkbox" name="chkValue" id="chkVal_'+ i +'" onClick="chkServerList_onclick('+ i +')" checked ><strong style="color : red;">' + server[0].hostname + '</strong>';	
+				str = '<div class="custom_checkbox"><input type="checkbox" name="chkValue" id="chkVal_'+ i +'" onClick="chkServerList_onclick('+ i +')" checked ></div><strong style="color : red;">' + server[0].hostname + '</strong>';	
 			} else {
-				str = '<input type="checkbox" name="chkValue" id="chkVal_'+ i +'" onClick="chkServerList_onclick('+ i +')" checked >' + server[0].hostname;	
+				str = '<div class="custom_checkbox"><input type="checkbox" name="chkValue" id="chkVal_'+ i +'" onClick="chkServerList_onclick('+ i +')" checked ></div>' + server[0].hostname;	
 			}			
 			$("#serverList").append(str);
 			

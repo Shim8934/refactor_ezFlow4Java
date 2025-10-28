@@ -807,7 +807,7 @@
 	                    <c:if test="${initFlag == '0'}">
 		                    <tr style="display: none">
 		                        <td>
-	                            	<input type="checkbox" id="chkTransfer" name="chkTransfer" value="1">
+	                            	<div class='custom_checkbox'><input type="checkbox" id="chkTransfer" name="chkTransfer" value="1"></div>
 	                           		<spring:message code='ezApprovalG.t1121'/>
 	                            </td>
 		                    </tr>

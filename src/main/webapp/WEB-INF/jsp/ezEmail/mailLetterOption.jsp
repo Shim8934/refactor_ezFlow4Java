@@ -357,21 +357,23 @@
 		<table style="width:100%;" class="content">
 			<tr style="display:none">
 				<td>
-					<input type="checkbox" name="responseSend" value="checkbox" onClick="" id = "responseSendid">
-					<span style="vertical-align:middle;"> <spring:message code='ezEmail.t369' /></span>
+				    <div class="custom_checkbox">
+                        <input type="checkbox" name="responseSend" value="checkbox" onClick="" id = "responseSendid"><span style="vertical-align:middle;">&nbsp;<spring:message code='ezEmail.t369' /></span>
+                    </div>
 				</td>
 			</tr>
 			<tr>
 				<td>
-					<input type="checkbox" name="responseRead" value="checkbox" onChange="responseRead_onClick()" id = "responseReadid">
-					<span style="vertical-align:middle;"><spring:message code='ezEmail.t370' /> </span>
-					<%-- 2024-11-13 수신확인 외부용을 default로 함, 내부용/외부용 셀렉트박스 display:none 처리 --%>
-					<select style="display:none" id="responseReadType" onChange="" style="vertical-align: middle;" <c:if test="${useReceiptExternal != 'YES'}">disabled</c:if>>
-						<option value="1"><spring:message code='ezEmail.t371' /></option>
-						<c:if test="${useReceiptExternal == 'YES'}">
-						<option value="2"><spring:message code='ezEmail.t372' /></option>
-						</c:if>
-					</select>
+				    <div class="custom_checkbox">
+                        <input type="checkbox" name="responseRead" value="checkbox" onChange="responseRead_onClick()" id = "responseReadid"><span style="vertical-align:middle;">&nbsp;<spring:message code='ezEmail.t370' /> </span>
+                        <%-- 2024-11-13 수신확인 외부용을 default로 함, 내부용/외부용 셀렉트박스 display:none 처리 --%>
+                        <select style="display:none" id="responseReadType" onChange="" style="vertical-align: middle;" <c:if test="${useReceiptExternal != 'YES'}">disabled</c:if>>
+                            <option value="1"><spring:message code='ezEmail.t371' /></option>
+                            <c:if test="${useReceiptExternal == 'YES'}">
+                            <option value="2"><spring:message code='ezEmail.t372' /></option>
+                            </c:if>
+                        </select>
+                    </div>
 				</td>
 			</tr>
 		</table>
@@ -380,25 +382,28 @@
 		<table width="100%" class="content">
 			<tr class="content" style="border-top:none;width:100%;">
 				<td>
-					<input type="checkbox" value="1" id="deliverySend" style="margin-top: 6px;" onclick="ReservedSend(this);">
-					<span style="vertical-align:middle;"> <spring:message code='ezEmail.t374' /> </span>
-					<input type="text" id="Sdatepicker" style="width:90px;text-align:center" readonly="readonly">
-					<input id="Stimepicker" type="text" class="time" style="width:53px;margin-left:10px;text-align:center;" readonly="readonly"/>
+				    <div class="custom_checkbox">
+                        <input type="checkbox" value="1" id="deliverySend" style="margin-top: 2px;" onclick="ReservedSend(this);">&nbsp;<span style="vertical-align:middle;"> <spring:message code='ezEmail.t374' /> </span>
+                        <input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly">
+                        <input id="Stimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;" readonly="readonly"/>
+                    </div>
 				</td>
 			</tr>
 			<c:if test="${useSecureMail == 'YES'}">
 			<tr>
 				<td>
-					<input type="checkbox" name="chkSecureMail" id="chkSecureMail" onClick="secureMail_onClick()" value="checkbox">
-					<span style="vertical-align:middle;"> <spring:message code='ezEmail.t749' /> </span>
+				    <div class="custom_checkbox">
+                        <input type="checkbox" name="chkSecureMail" id="chkSecureMail" onClick="secureMail_onClick()" value="checkbox">&nbsp;<span style="vertical-align:middle;"> <spring:message code='ezEmail.t749' /> </span>
+                    </div>
 				</td>
 			</tr>
 			</c:if>
 			<c:if test="${individualMailUser != '0'}">	
 			<tr>
 				<td>
-					<input type="checkbox" name="eachMailSend" style="margin-top: 6px;" id="eachMailSend" value="checkbox">
-					<span style="vertical-align:middle;"> <spring:message code='ezEmail.t748' /> </span>
+				    <div class="custom_checkbox">
+                        <input type="checkbox" name="eachMailSend" style="margin-top: 2px;" id="eachMailSend" value="checkbox">&nbsp;<span style="vertical-align:middle;"> <spring:message code='ezEmail.t748' /> </span>
+                    </div>
 				</td>
 			</tr>
 			</c:if>

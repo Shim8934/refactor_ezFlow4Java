@@ -587,7 +587,7 @@
 					</div>
 				</div>
 				<div id="lstAttachLink" class="ui-sortable" ondragenter="onDragEnter(event)" ondragover="onDragOver(event)" ondrop="onDrop(event)" style="overflow:auto;">
-				<table id="filelist" class="sublist" style="width: 100%;"><tr><th style="width: 15px;"><input type="checkbox" id="checkboxall"></th><th style="width: 87%;"><spring:message code='ezCommunity.t1135' /></th><th style="width: 13%;"><spring:message code='ezCommunity.t1136' /></th></tr></table>
+				<table id="filelist" class="sublist" style="width: 100%;"><tr><th style="width: 15px;"><div class="custom_checkbox"><input type="checkbox" id="checkboxall"></div></th><th style="width: 87%;"><spring:message code='ezCommunity.t1135' /></th><th style="width: 13%;"><spring:message code='ezCommunity.t1136' /></th></tr></table>
 				<p id="attachInnerNotice" class="attachInnerNotice_p_on"><span class="attachInnerNotice_span"><spring:message code='ezJournal.AttachMJS01' /></span></p></div>
 				<input id="file" type="file" onchange="filechange(event)" multiple="" style="display:none">
 				<input type="hidden" value="upload" onclick="fileupload()">

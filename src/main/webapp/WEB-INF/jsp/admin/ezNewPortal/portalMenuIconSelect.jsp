@@ -24,34 +24,34 @@
 	<h1><spring:message code='ezNewPortal.t075' /></h1>
 	<div id="close"><ul><li><span></span></li></ul></div>
 	<div class="iconArea" id="iconArea">
-		<div class="menuIcon"><div><span class="icon_topmenu icon_nav_webfolder"></span></div><input type="radio" name="selIcon"></div>
-		<div class="menuIcon"><div><span class="icon_topmenu icon_nav_cabinet"></span></div><input type="radio" name="selIcon"></div>
-		<div class="menuIcon"><div><span class="icon_topmenu icon_nav_project"></span></div><input type="radio" name="selIcon"></div>
-		<div class="menuIcon"><div><span class="icon_topmenu icon_nav_workdiary"></span></div><input type="radio" name="selIcon"></div>
-		<div class="menuIcon"><div><span class="icon_topmenu icon_nav_resource"></span></div><input type="radio" name="selIcon"></div>
-		<div class="menuIcon"><div><span class="icon_topmenu icon_nav_board"></span></div><input type="radio" name="selIcon"></div>
-		<div class="menuIcon"><div><span class="icon_topmenu icon_nav_collaboration"></span></div><input type="radio" name="selIcon"></div>
-		<div class="menuIcon"><div><span class="icon_topmenu icon_nav_calendar"></span></div><input type="radio" name="selIcon"></div>
-		<div class="menuIcon"><div><span class="icon_topmenu icon_nav_memo"></span></div><input type="radio" name="selIcon"></div>
-		<div class="menuIcon"><div><span class="icon_topmenu icon_nav_approval"></span></div><input type="radio" name="selIcon"></div>
-		<div class="menuIcon"><div><span class="icon_topmenu icon_nav_circular_edition"></span></div><input type="radio" name="selIcon"></div>
-		<div class="menuIcon"><div><span class="icon_topmenu icon_nav_community"></span></div><input type="radio" name="selIcon"></div>
-		<div class="menuIcon"><div><span class="icon_topmenu icon_nav_survey"></span></div><input type="radio" name="selIcon"></div>
-		<div class="menuIcon"><div><span class="icon_topmenu icon_nav_addressbook"></span></div><input type="radio" name="selIcon"></div>
-		<div class="menuIcon"><div><span class="icon_topmenu icon_nav_voting"></span></div><input type="radio" name="selIcon"></div>
-		<div class="menuIcon"><div><span class="icon_topmenu icon_nav_laddergame"></span></div><input type="radio" name="selIcon"></div>
-		<div class="menuIcon"><div><span class="icon_topmenu icon_nav_mail"></span></div><input type="radio" name="selIcon"></div>
+		<div class="menuIcon"><div><span class="icon_topmenu icon_nav_webfolder"></span></div><div class='custom_radio'><input type="radio" name="selIcon"></div></div>
+		<div class="menuIcon"><div><span class="icon_topmenu icon_nav_cabinet"></span></div><div class='custom_radio'><input type="radio" name="selIcon"></div></div>
+		<div class="menuIcon"><div><span class="icon_topmenu icon_nav_project"></span></div><div class='custom_radio'><input type="radio" name="selIcon"></div></div>
+		<div class="menuIcon"><div><span class="icon_topmenu icon_nav_workdiary"></span></div><div class='custom_radio'><input type="radio" name="selIcon"></div></div>
+		<div class="menuIcon"><div><span class="icon_topmenu icon_nav_resource"></span></div><div class='custom_radio'><input type="radio" name="selIcon"></div></div>
+		<div class="menuIcon"><div><span class="icon_topmenu icon_nav_board"></span></div><div class='custom_radio'><input type="radio" name="selIcon"></div></div>
+		<div class="menuIcon"><div><span class="icon_topmenu icon_nav_collaboration"></span></div><div class='custom_radio'><input type="radio" name="selIcon"></div></div>
+		<div class="menuIcon"><div><span class="icon_topmenu icon_nav_calendar"></span></div><div class='custom_radio'><input type="radio" name="selIcon"></div></div>
+		<div class="menuIcon"><div><span class="icon_topmenu icon_nav_memo"></span></div><div class='custom_radio'><input type="radio" name="selIcon"></div></div>
+		<div class="menuIcon"><div><span class="icon_topmenu icon_nav_approval"></span></div><div class='custom_radio'><input type="radio" name="selIcon"></div></div>
+		<div class="menuIcon"><div><span class="icon_topmenu icon_nav_circular_edition"></span></div><div class='custom_radio'><input type="radio" name="selIcon"></div></div>
+		<div class="menuIcon"><div><span class="icon_topmenu icon_nav_community"></span></div><div class='custom_radio'><input type="radio" name="selIcon"></div></div>
+		<div class="menuIcon"><div><span class="icon_topmenu icon_nav_survey"></span></div><div class='custom_radio'><input type="radio" name="selIcon"></div></div>
+		<div class="menuIcon"><div><span class="icon_topmenu icon_nav_addressbook"></span></div><div class='custom_radio'><input type="radio" name="selIcon"></div></div>
+		<div class="menuIcon"><div><span class="icon_topmenu icon_nav_voting"></span></div><div class='custom_radio'><input type="radio" name="selIcon"></div></div>
+		<div class="menuIcon"><div><span class="icon_topmenu icon_nav_laddergame"></span></div><div class='custom_radio'><input type="radio" name="selIcon"></div></div>
+		<div class="menuIcon"><div><span class="icon_topmenu icon_nav_mail"></span></div><div class='custom_radio'><input type="radio" name="selIcon"></div></div>
 	</div>
 	<div class="iconArea" id="mobileIconArea">
-		<div class="menuIcon"><div><span style="margin-top: 17px;" class="iconCommon icon_mail"></span></div><input type="radio" name="selIcon"></div>
-		<div class="menuIcon"><div><span style="margin-top: 17px;" class="iconCommon icon_employee"></span></div><input type="radio" name="selIcon"></div>
-		<div class="menuIcon"><div><span style="margin-top: 17px;" class="iconCommon icon_approval"></span></div><input type="radio" name="selIcon"></div>
-		<div class="menuIcon"><div><span style="margin-top: 17px;" class="iconCommon icon_resource"></span></div><input type="radio" name="selIcon"></div>
-		<div class="menuIcon"><div><span style="margin-top: 17px;" class="iconCommon icon_notice"></span></div><input type="radio" name="selIcon"></div>
-		<div class="menuIcon"><div><span style="margin-top: 17px;" class="iconCommon icon_address"></span></div><input type="radio" name="selIcon"></div>
-		<div class="menuIcon"><div><span style="margin-top: 17px;" class="iconCommon icon_schedule"></span></div><input type="radio" name="selIcon"></div>
-		<div class="menuIcon"><div><span style="margin-top: 17px;" class="iconCommon icon_survey"></span></div><input type="radio" name="selIcon"></div>
-		<div class="menuIcon"><div><span style="margin-top: 17px;" class="iconCommon icon_webfolder"></span></div><input type="radio" name="selIcon"></div>
+		<div class="menuIcon"><div><span style="margin-top: 17px;" class="iconCommon icon_mail"></span></div><div class='custom_radio'><input type="radio" name="selIcon"></div></div>
+		<div class="menuIcon"><div><span style="margin-top: 17px;" class="iconCommon icon_employee"></span></div><div class='custom_radio'><input type="radio" name="selIcon"></div></div>
+		<div class="menuIcon"><div><span style="margin-top: 17px;" class="iconCommon icon_approval"></span></div><div class='custom_radio'><input type="radio" name="selIcon"></div></div>
+		<div class="menuIcon"><div><span style="margin-top: 17px;" class="iconCommon icon_resource"></span></div><div class='custom_radio'><input type="radio" name="selIcon"></div></div>
+		<div class="menuIcon"><div><span style="margin-top: 17px;" class="iconCommon icon_notice"></span></div><div class='custom_radio'><input type="radio" name="selIcon"></div></div>
+		<div class="menuIcon"><div><span style="margin-top: 17px;" class="iconCommon icon_address"></span></div><div class='custom_radio'><input type="radio" name="selIcon"></div></div>
+		<div class="menuIcon"><div><span style="margin-top: 17px;" class="iconCommon icon_schedule"></span></div><div class='custom_radio'><input type="radio" name="selIcon"></div></div>
+		<div class="menuIcon"><div><span style="margin-top: 17px;" class="iconCommon icon_survey"></span></div><div class='custom_radio'><input type="radio" name="selIcon"></div></div>
+		<div class="menuIcon"><div><span style="margin-top: 17px;" class="iconCommon icon_webfolder"></span></div><div class='custom_radio'><input type="radio" name="selIcon"></div></div>
 	</div>
 	<div id="addIcon" class="btnposition btnpositionNew">
 		<a class="imgbtn"><span><spring:message code='main.sp09' /></span></a>
@@ -73,7 +73,7 @@
 			
 			if (beforeClass == undefined) {
 				if (type != 'mobile') {
-					$(".icon_nav_webfolder").parent().siblings().prop("checked", true);
+					$(".icon_nav_webfolder").parent().siblings().find("input").prop("checked", true);
 				} else {
 					$(document.getElementById("mobileIconArea").children[0]).find("input").prop("checked", true);
 				}
@@ -83,7 +83,7 @@
 				} else {
 					beforeClass = "icon_mail";
 				}
-				$("." + beforeClass).parent().siblings().prop("checked", true);
+				$("." + beforeClass).parent().siblings().find("input").prop("checked", true);
 			}
 			
 			$("#close").on("click", popupClose);
@@ -96,7 +96,7 @@
 		
 		//아이콘 적용
 		var addIcon = function() {
-			var selClass = $("input:checked").siblings().find("span").attr("class");
+			var selClass = $("input:checked").parent().siblings().find("span").attr("class");
 			$(opener.document).find(".menuIcon").find("span").attr("class", selClass);
 			popupClose();
 		}

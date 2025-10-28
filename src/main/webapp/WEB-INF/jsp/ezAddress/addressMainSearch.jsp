@@ -380,12 +380,13 @@
 	            	}
 	            }
 	        }
+	        /*
 	        function check_click(obj) {
 	            if (document.getElementById(obj).checked != true)
 	                document.getElementById(obj).checked = true;
 	            else
 	                document.getElementById(obj).checked = false;
-	        }
+	        }*/
 	    </script>
 	</head>
 	<body class="mainbody" onkeydown="event_listOnkeyDown(event);" onkeyup="event_listOnkeyUp(event);" style="overflow:hidden">
@@ -411,9 +412,15 @@
 	        <tr>
 	            <th><spring:message code='ezAddress.t314' /></th>
 	            <td>
-	                <input type="checkbox" name="chkType" id="CheckUser" style="margin-top: 3px; margin-bottom: 0px;" /><span onclick="check_click('CheckUser')" style="cursor: pointer; vertical-align:middle;"><spring:message code='ezAddress.t145' /></span>
-	                <input type="checkbox" name="chkType" id="CheckDept" style="margin-top: 3px; margin-bottom: 0px;" /><span onclick="check_click('CheckDept')" style="cursor: pointer; vertical-align:middle;"><spring:message code='ezAddress.t146' /></span>
-	                <input type="checkbox" name="chkType" id="CheckCompany" style="margin-top: 3px; margin-bottom: 0px;" /><span onclick="check_click('CheckCompany')" style="cursor: pointer; vertical-align:middle;"><spring:message code='ezAddress.t147' /></span>&nbsp;
+                    <div class="custom_checkbox">
+                        <input type="checkbox" name="chkType" id="CheckUser" checked /><label for="CheckUser"><spring:message code='ezAddress.t145' />&nbsp;&nbsp;</label>
+                    </div>
+                    <div class="custom_checkbox">
+                        <input type="checkbox" name="chkType" id="CheckDept" checked /><label for="CheckDept"><spring:message code='ezAddress.t146' />&nbsp;&nbsp;</label>
+                    </div>
+                    <div class="custom_checkbox">
+                        <input type="checkbox" name="chkType" id="CheckCompany" checked /><label for="CheckCompany"><spring:message code='ezAddress.t147' />&nbsp;&nbsp;</label>
+                    </div>
 	                <select name="search_case" id="search_case" style="height:22px; vertical-align:middle;">
 	                    <option value="S_NAME"><spring:message code='ezAddress.t124' /></option>
 	                    <option value="S_COMPANY"><spring:message code='ezAddress.t51' /></option>
@@ -445,7 +452,9 @@
 	        <table class="mainlist" id="DetailList_header" style="width:100%; table-layout: fixed; display:none;">
 	            <tr>
 	                <th style="cursor: pointer;text-align:center; margin:0px; width: 20px;">
-	                	<input type="checkbox" id="HeaderAllCheckBox" onclick="event_HeaderCheckBoxClick(this)">
+	                    <div class='custom_checkbox'>
+	                	    <input type="checkbox" id="HeaderAllCheckBox" onclick="event_HeaderCheckBoxClick(this)">
+                        </div>
 	                </th>
 	                <th style="padding-left:0px; padding-right:0px; text-align:center;width:40px;"><img src="/images/i_individual.gif" border="0"></th>
 	                <th id="CompanyName"  style="padding:0px; CURSOR: pointer; width: 20%; white-space: nowrap;" onmouseover="this.style.color='#006BB6'" onmouseout="this.style.color='#393939'" _OrderOption="1" _OrderName="S_NAME" onclick="OderbyOptionExpression(this)"><spring:message code='ezAddress.t124' /><span id="S_NAME"><img border="0" src="/images/view-sortup.gif"></span></th>

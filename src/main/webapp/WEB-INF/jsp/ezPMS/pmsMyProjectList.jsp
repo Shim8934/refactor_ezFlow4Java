@@ -8,7 +8,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><script type="text/javascript" src="/js/mouseeffect.js"></script>
-<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+<%--<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />--%>
 		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 <link rel="stylesheet" href="${util.addVer('/css/previewmail.css')}" type="text/css" />
 <link rel="stylesheet" href="${util.addVer('/css/jquery.lineProgressbar.css')}" type="text/css" />
@@ -64,7 +64,7 @@ input[name='boardCheckbox']{margin: 0px; padding: 0px; width: 13px; height: 13px
 					<tr id="BoardList_TH">
 						<th id="BoardList_TH_0" style="text-align: center; overflow: hidden; white-space: nowrap; cursor: pointer; width:20px;"
 							class="h4_center" bgcolor="#CCCCCC">
-							<input type="checkbox" id="HeaderAllCheckBox" name="boardCheckbox" id="HeaderAllCheckBox" onchange="selectedAllTR(this);">
+							<div class='custom_checkbox'><input type="checkbox" id="HeaderAllCheckBox" name="boardCheckbox" id="HeaderAllCheckBox" onchange="selectedAllTR(this);"></div>
 						</th>
 						<th id="BoardList_TH_1" onclick="setListOrder(this)" order="PROJECT_NAME" class="h5_center projectNameTh"><spring:message code='ezPMS.t31' /></th>
 						<th id="BoardList_TH_2" onclick="setListOrder(this)" order="HEAD_MANAGER_NAME" class="h5_center headManagerNameTh"><spring:message code='ezPMS.t330' /></th>

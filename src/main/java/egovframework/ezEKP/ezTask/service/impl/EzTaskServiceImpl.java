@@ -396,6 +396,7 @@ public class EzTaskServiceImpl extends EgovAbstractServiceImpl implements EzTask
 		
 		StringBuilder sb = new StringBuilder();
 		for (TaskAttachVO vo : list) {
+			int i = 0;
 			String fileName = vo.getFileName();
 			String filePath = vo.getFilePath();
 			String fileSize = commonUtil.byteCalculation(vo.getFileSize());
@@ -424,10 +425,12 @@ public class EzTaskServiceImpl extends EgovAbstractServiceImpl implements EzTask
 				fileImage = "/images/etc.svg";
 			}
 
-			sb.append("<input type='checkbox' name='fileSelect' value='" + fileName + "' filePath='" + folderPath + filePath + "' fileName='" + commonUtil.cleanValue(fileName) + "'>");
+			sb.append("<div class='custom_checkbox'><input id='fileSelect" + i + "' type='checkbox' name='fileSelect' value='" + fileName + "' filePath='" + folderPath + filePath + "' fileName='" + commonUtil.cleanValue(fileName) + "'>");
+			sb.append("<label for='fileSelect" + i + "'>");
 			sb.append("<img src='" + fileImage + "' style='width:20px;height:20px;vertical-align:sub;margin-right:3px;'>");
 			sb.append("<a href='/ezTask/downloadAttach.do?filePath=" + URLEncoder.encode(folderPath + filePath, "UTF-8") + "&fileName=" + URLEncoder.encode(fileName, "UTF-8") + "' />");
-			sb.append(commonUtil.cleanValue(fileName) + "&nbsp;(" + fileSize + ")</a><br>");
+			sb.append(commonUtil.cleanValue(fileName) + "&nbsp;(" + fileSize + ")</a><label></div><br>");
+			i = i++;
 		}
 		
 		logger.debug("getAttachListStr ended. listSize = " + list.size());

@@ -92,6 +92,9 @@
 	                    var CHECK = document.createElement("INPUT");
 	                    var IMG = document.createElement("IMG");
 	                    var SPAN = document.createElement("SPAN");
+	                    var DIV = document.createElement("DIV");
+						DIV.className = "custom_checkbox";
+						DIV.style.paddingTop = "5px";
 	                    CHECK.id = "chk_" + i;
 	                    CHECK.type = "checkbox";
 	                    CHECK.value = getNodeText(SelectNodes(docAttach, "FILEPATH")[i]);
@@ -113,7 +116,8 @@
 	                    }
 	                    
 	                    TD1.style.width = "30px";
-	                    TD1.appendChild(CHECK);
+	                    DIV.appendChild(CHECK);
+	                    TD1.appendChild(DIV);
 	                    TD2.style.textAlign = "left";
 	                    TD2.style.overflow = "hidden";
 	                    TD2.style.textOverflow = "ellipsis";
@@ -157,6 +161,8 @@
 	                    var opiIMG = document.createElement("IMG");
 	                    var opiCHECK = document.createElement("INPUT");
 	                    var opiSPAN = document.createElement("SPAN");
+	                    var opiDIV = document.createElement("DIV");
+						opiDIV.className = "custom_checkbox";
 	                    opiCHECK.id = "chk_"+i++;
 	                    opiCHECK.type = "checkbox";
 	                    opiCHECK.value = "Y";
@@ -165,7 +171,8 @@
 	                    opiTR.style.cursor = "pointer";
 	                    opiCHECK.setAttribute("opinionchk","YES");
 	                    opiTD1.style.width = "30px";
-	                    opiTD1.appendChild(opiCHECK);
+	                    opiDIV.appendChild(opiCHECK);
+	                    opiTD1.appendChild(opiDIV);
 	                    opiTD2.style.textAlign = "left";
 	                    opiTD2.style.overflow = "hidden";
 	                    opiTD2.style.textOverflow = "ellipsis";
@@ -269,22 +276,22 @@
 	            if (hasOpinion == "Y" && obj.getAttribute("opinionchk") == "YES") {
 	            	if (obj.checked) {
 	            		opinionChk = obj.value;
-	            		obj.parentElement.parentElement.style.backgroundColor = "#f1f8ff";
+	            		obj.closest("tr").style.backgroundColor = "#f1f8ff";
 	            	} else {
 	            		opinionChk = "";
-	            		obj.parentElement.parentElement.style.backgroundColor = "#FFFFFF";
+	            		obj.closest("tr").style.backgroundColor = "#FFFFFF";
 	            	}
 	            	return;
 	            }
 	            
 	            if (obj.checked) {
-	                obj.parentElement.parentElement.style.backgroundColor = "#f1f8ff";
+	                obj.closest("tr").style.backgroundColor = "#f1f8ff";
 	                strPathInfo = strPathInfo + obj.value + "|||";
 	                strTypeInfo = strTypeInfo + GetAttribute(obj, "data1") + "|||";
 	                strFileName = strFileName + filename + "|||";
 	            }
 	            else {
-	                obj.parentElement.parentElement.style.backgroundColor = "#FFFFFF";
+	                obj.closest("tr").style.backgroundColor = "#FFFFFF";
 	                strPathInfo = strPathInfo.replace(obj.value + "|||", '');
 	                strTypeInfo = strTypeInfo.replace(GetAttribute(obj, "data1") + "|||", '');
 	                strFileName = strFileName.replace(filename + "|||", '');
@@ -324,7 +331,7 @@
 	                if (hasOpinion == "Y") {
 		                var opinionChkbox = document.getElementById('chk_' + i++);
 		                opinionChkbox.checked = true;
-		                opinionChkbox.parentElement.parentElement.style.backgroundColor = "#f1f8ff";
+		                opinionChkbox.closest("tr").style.backgroundColor = "#f1f8ff";
 		                opinionChk = "Y";
 	                }
 	            }
@@ -342,7 +349,7 @@
 	                if (hasOpinion == "Y") {
 	                	var opinionChkbox = document.getElementById('chk_' + i++);
 		                opinionChkbox.checked = false;
-		                opinionChkbox.parentElement.parentElement.style.backgroundColor = "#FFFFFF";
+		                opinionChkbox.closest("tr").style.backgroundColor = "#FFFFFF";
 	                	opinionChk = "";
 	                }
 	            }
@@ -506,7 +513,7 @@
 	    <span>&nbsp;▒ <spring:message code='ezApprovalG.t00009'/></span>
 	    <table class="mainlist" style="width: 550px; margin-left: 5px;margin-top:7px">
 	        <tr>
-	            <th style="width:30px;"><input id="cbx_all" type="checkbox" onclick="return HeaderCheckBoxClick(this);" value="all" /></th>
+	            <th style="width:30px;"><div class='custom_checkbox' style="padding-top: 5px;"><input id="cbx_all" type="checkbox" onclick="return HeaderCheckBoxClick(this);" value="all" /></div></th>
 	            <th><spring:message code='ezApprovalG.t00010'/></th>
 	        </tr>                
 	    </table>

@@ -11,6 +11,7 @@
 		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<link rel="stylesheet" type="text/css" href="${util.addVer('/css/ezCabinet/cabinet.css')}">
 		<link rel="stylesheet" type="text/css" href="${util.addVer('/css/Tab.css')              }">
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 	</head>
 	<body class="popup cabShareFile">
 		<h1><spring:message code="ezCabinet.t04"/></h1>

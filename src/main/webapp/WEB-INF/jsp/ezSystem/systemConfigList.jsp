@@ -160,7 +160,7 @@
 					return;
 				}
 
-				itemNode = document.getElementById(obj).firstChild.firstChild;
+				itemNode = document.getElementById(obj).querySelector('input');
 				if(checkFlag) {
 					if(itemNode.checked == true) {
 						$("#" + obj + " td").css("background-color", "rgb(255, 255, 255)");
@@ -190,7 +190,7 @@
 				var th = doc.getElementById("lvSystemConfigList_TH_0");
 				var acList = doc.getElementById("lvSystemConfigList");
 				
-				th.innerHTML = "<input type= 'checkbox' id = 'checkAll' onchange= 'checkboxHeaderClick()'></input>";
+				th.innerHTML = "<div class='custom_checkbox'><input type= 'checkbox' id = 'checkAll' onchange= 'checkboxHeaderClick()'/></div>";
 				
 				cnt = acList.children[1].childElementCount;
 				
@@ -204,11 +204,11 @@
 				for (i; i < cnt; i++) {
 					var seq = acList.children[1].children[i].children[0].innerHTML;
 					
-					acList.children[1].children[i].children[0].innerHTML = "<input type='checkbox' name='checks' class='checks' id='" 
+					acList.children[1].children[i].children[0].innerHTML = "<div class='custom_checkbox'><input type='checkbox' name='checks' class='checks' id='" 
 					+ seq 
 					+ "' value='" 
 					+ seq 
-					+ "' onchange='inputFunc(event)'></input>";
+					+ "' onchange='inputFunc(event)'/></div>";
 				} 
 			}
 			
@@ -246,7 +246,7 @@
 				$("#contentlist tr td").css("background-color", "rgb(255, 255, 255)");
 
 				for (var i = 0; i < rowList.length; i++) {
-					var objID = rowList[i].parentNode.parentNode.id;
+					var objID = rowList[i].closest('tr').id;
 					$("#" + objID + " td").css("background-color", "rgb(241, 248, 255)");
 					rowList[i].checked = true;
 				}
@@ -449,11 +449,11 @@
 				
 		    	var deleteBlockList = [];
 				$("input[name='checks']:checked").each(function(){
-					var isDeleteBlock = this.parentElement.parentElement.getAttribute("DATA9");
+					var isDeleteBlock = this.closest("tr").getAttribute("DATA9");
 					if (isDeleteBlock.toUpperCase() == "N") {
-						dataList.push(this.parentElement.parentElement.getAttribute("DATA1"));
+						dataList.push(this.closest("tr").getAttribute("DATA1"));
 					} else {
-						deleteBlockList.push(this.parentElement.parentElement.getAttribute("DATA1"));
+						deleteBlockList.push(this.closest("tr").getAttribute("DATA1"));
 					}
 				});
 				
@@ -505,7 +505,7 @@
 					var tempItemSeq = rowList.pop();
 					if (document.getElementById(tempItemSeq) != null) {
 						$("#" + tempItemSeq).prop("checked", true);
-						var tempID = $("#" + tempItemSeq)[0].parentNode.parentNode.id;
+						var tempID = $("#" + tempItemSeq)[0].closest('tr').id;
 						$("#" + tempID + " td").css("background-color",
 								"rgb(241, 248, 255)");
 					}
@@ -623,7 +623,7 @@
 		    	var dataList = new Array();
 
 				$("input[name='checks']:checked").each(function(){
-					dataList.push(this.parentElement.parentElement.getAttribute("DATA1"));
+					dataList.push(this.closest("tr").getAttribute("DATA1"));
 				});
 				
 				if (dataList.length == 0) {

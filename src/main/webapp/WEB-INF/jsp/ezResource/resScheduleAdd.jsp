@@ -988,9 +988,9 @@
 	        			<tr id="tr_STime" ${strDspMod1}>
 	          				<th> <spring:message code="ezResource.t197"/></th>
 	          				<td width="100%" colspan="3" id="Td_StartDate" style="overflow:hidden;">
-	          					<input type="checkbox" id="AllDay" <c:if test="${allDay eq '1' && dayView ne 0}">checked</c:if> onClick="display_time_Unshow()" /><spring:message code="ezResource.t211"/>
-	          					<input type="text" id="Sdatepicker" style="width:90px;text-align:center" readonly="readonly">
-	          					<input id="Stimepicker" type="text" class="time" style="width:53px;margin-left:10px;text-align:center" onkeypress="return KeEventControl(this);" onkeydown="return KeEventControl(this);" onkeyup="return KeEventControl(this);" onmousedown="return false"/>
+	          					<div class="custom_checkbox"><input type="checkbox" id="AllDay" <c:if test="${allDay eq '1' && dayView ne 0}">checked</c:if> onClick="display_time_Unshow()" /><label for="AllDay"><spring:message code="ezResource.t211"/></label></div>
+	          					<input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly">
+	          					<input id="Stimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center" onkeypress="return KeEventControl(this);" onkeydown="return KeEventControl(this);" onkeyup="return KeEventControl(this);" onmousedown="return false"/>
 	           						~
 	           					<input type="text" id="Edatepicker" style="width:90px;text-align:center" readonly="readonly">
 	           					<input id="Etimepicker" type="text" class="time" style="width:53px;margin-left:10px;text-align:center" onkeypress="return KeEventControl(this);" onkeydown="return KeEventControl(this);" onkeyup="return KeEventControl(this);" onmousedown="return false"/>
@@ -1006,7 +1006,7 @@
 	         					</select>
 	         				</td>
        						<th style="display: none"> <spring:message code="ezResource.t217"/></th>
-		           			<td style="display: none"><input type="checkbox" style="display: none" id="PublicFlag" checked /><spring:message code="ezResource.t217"/></td>
+		           			<td style="display: none"><div class="custom_checkbox"><input type="checkbox" style="display: none" id="PublicFlag" checked /></div><spring:message code="ezResource.t217"/></td>
 		           			<th style="display: none"> <spring:message code="ezResource.t218"/></th>
 		           			<td style="display: none">
 		           				<select id="characterID" name="select" class="select">
@@ -1019,7 +1019,7 @@
 	         				<td colspan="3"><input type="text" id="loc" name="loc" value="" style="width: 100%" /></td>
 	       				</tr>
 	       				<tr style="display: none">
-	         				<td><input type="checkbox" id="alertCheck" d  /><spring:message code="ezResource.t223"/></td>
+	         				<td><div class="custom_checkbox"><input type="checkbox" id="alertCheck" d  /></div><spring:message code="ezResource.t223"/></td>
 	         				<td colspan="5">&nbsp;</td>
 	       				</tr>
         
@@ -1043,7 +1043,7 @@
 	       				<c:if test="${useSchedule && cmdStr eq 'add'}">
 	       				<tr>
 	         				<th><spring:message code="ezSchedule.t214"/></th>
-	         				<td colspan="3"><input type="checkbox" id="useSchedule" name="useSchedule" onclick="useScheduleOnclick()"></td>
+	         				<td colspan="3"><div class="custom_checkbox"><input type="checkbox" id="useSchedule" name="useSchedule" onclick="useScheduleOnclick()"></div></td>
 	       				</tr>
 	       				<tr id="attendantTr" style="display:none;">
 	         				<th><spring:message code="ezSchedule.t163"/></th>

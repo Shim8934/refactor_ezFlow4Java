@@ -16,10 +16,10 @@
 	    <script src="${util.addVer('/js/ezPersonal/controls/TreeView.js')}" type="text/javascript"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/ezEmail/Controls/ListView_list.js')}"></script>
 	    <style>
-			input[type=checkbox]{vertical-align: middle;}
 	    	.mainlist thead tr {
 	    		height: 0px;
 	    	}
+	    	.mainlist .custom_checkbox input[type="checkbox"]{vertical-align: middle;}
 	    	
 	    	.mainlist #MsgToList_THEAD #MsgToList_TH {
 	    		height: 0px;
@@ -189,7 +189,11 @@
                 	row.childNodes[0].style.whiteSpace = "";
                 	row.childNodes[0].style.overflow = "";
                 	row.childNodes[0].style.textOverflow = "";
-                    
+
+                    var wrapperDiv = document.createElement("div");
+                    wrapperDiv.setAttribute("class", "custom_checkbox");
+
+                    // deletePermission
                 	var chk = document.createElement("input");
                 	chk.setAttribute("type", "checkbox");
                 	chk.setAttribute("id", "delete_" + row.getAttribute("DATA1"));
@@ -205,9 +209,12 @@
                 	lbl.appendChild(document.createTextNode("<spring:message code='ezEmail.sharedMailbox16' />"));
                 	lbl.style.cursor = "pointer";
 
-                	row.childNodes[1].appendChild(chk);
-                	row.childNodes[1].appendChild(lbl);
+                	//row.childNodes[1].appendChild(chk);
+                	//row.childNodes[1].appendChild(lbl);
+                    wrapperDiv.appendChild(chk);
+                    wrapperDiv.appendChild(lbl);
                 	
+                	// sendPermission
                 	chk = document.createElement("input");
                 	chk.setAttribute("type", "checkbox");
                 	chk.setAttribute("id", "send_" + row.getAttribute("DATA1"));
@@ -223,9 +230,12 @@
                 	lbl.appendChild(document.createTextNode("<spring:message code='ezEmail.sharedMailbox17' />"));
                 	lbl.style.cursor = "pointer";
 
-                	row.childNodes[1].appendChild(chk);
-                	row.childNodes[1].appendChild(lbl);
+                	//row.childNodes[1].appendChild(chk);
+                	//row.childNodes[1].appendChild(lbl);
+                    wrapperDiv.appendChild(chk);
+                    wrapperDiv.appendChild(lbl);
                 	
+                	// managePermission
                 	chk = document.createElement("input");
                 	chk.setAttribute("type", "checkbox");
                 	chk.setAttribute("id", "manage_" + row.getAttribute("DATA1"));
@@ -241,8 +251,13 @@
                 	lbl.appendChild(document.createTextNode("<spring:message code='ezEmail.sharedMailbox25' />"));
                 	lbl.style.cursor = "pointer";
 
-                	row.childNodes[1].appendChild(chk);
-                	row.childNodes[1].appendChild(lbl);
+                    wrapperDiv.appendChild(chk);
+                    wrapperDiv.appendChild(lbl);
+
+                	//row.childNodes[1].appendChild(chk);
+                	//row.childNodes[1].appendChild(lbl);
+                	
+                	row.childNodes[1].appendChild(wrapperDiv);
                 	row.childNodes[1].ondblclick = function() { event.cancelBubble = true; };
                 }
 	        }
@@ -1139,6 +1154,9 @@
                             objTr.childNodes[0].style.overflow = "";
                             objTr.childNodes[0].style.textOverflow = "";
                             
+                            var wrapperDiv = document.createElement("div");
+                            wrapperDiv.setAttribute("class", "custom_checkbox");
+                            
                         	var chk = document.createElement("input");
                         	chk.setAttribute("type", "checkbox");
                         	chk.setAttribute("id", "delete_" + objTr.getAttribute("DATA1"));
@@ -1151,8 +1169,10 @@
                         	lbl.appendChild(document.createTextNode("<spring:message code='ezEmail.sharedMailbox16' />"));
                         	lbl.style.cursor = "pointer";
 
-                        	objTr.childNodes[1].appendChild(chk);
-                        	objTr.childNodes[1].appendChild(lbl);
+                        	//objTr.childNodes[1].appendChild(chk);
+                        	//objTr.childNodes[1].appendChild(lbl);
+                        	wrapperDiv.appendChild(chk);
+                            wrapperDiv.appendChild(lbl);
                         	
                         	chk = document.createElement("input");
                         	chk.setAttribute("type", "checkbox");
@@ -1166,8 +1186,10 @@
                         	lbl.appendChild(document.createTextNode("<spring:message code='ezEmail.sharedMailbox17' />"));
                         	lbl.style.cursor = "pointer";
 
-                        	objTr.childNodes[1].appendChild(chk);
-                        	objTr.childNodes[1].appendChild(lbl);
+                        	//objTr.childNodes[1].appendChild(chk);
+                        	//objTr.childNodes[1].appendChild(lbl);
+                        	wrapperDiv.appendChild(chk);
+                            wrapperDiv.appendChild(lbl);
                         	
                         	chk = document.createElement("input");
                         	chk.setAttribute("type", "checkbox");
@@ -1180,8 +1202,11 @@
                         	lbl.appendChild(document.createTextNode("<spring:message code='ezEmail.sharedMailbox25' />"));
                         	lbl.style.cursor = "pointer";
 
-                        	objTr.childNodes[1].appendChild(chk);
-                        	objTr.childNodes[1].appendChild(lbl);
+                        	//objTr.childNodes[1].appendChild(chk);
+                        	//objTr.childNodes[1].appendChild(lbl);
+                        	wrapperDiv.appendChild(chk);
+                            wrapperDiv.appendChild(lbl);
+                            objTr.childNodes[1].appendChild(wrapperDiv);
                         	objTr.childNodes[1].ondblclick = function() { event.cancelBubble = true; };
                         }
                     }

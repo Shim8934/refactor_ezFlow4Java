@@ -769,7 +769,9 @@
 				  	<c:forEach var="item" items="${memberList}">
 				  	<tr>
 				  		<td style="text-align:center">
-		                	<input type='checkbox' value="1" name="members" memberid="${item.memberId}" memberstatus="${item.status}">
+			                <div class="custom_checkbox">
+			                	<input type='checkbox' value="1" name="members" memberid="${item.memberId}" memberstatus="${item.status}">
+			                </div>
 		                </td> 
 		                <td style="cursor:pointer; white-space:nowrap; text-align:center" title="<spring:message code='ezSchedule.t162' />" onClick="show_personinfo('${item.memberId}')">
 		                    <c:choose>
@@ -778,7 +780,9 @@
 		                    </c:choose>
 		                </td> 
 		                <td style="text-align:center">
-		                	<input type="checkbox" name="memberaccess" memberid="${item.memberId}" writePermission="${item.writePermission}">
+			                <div class="custom_checkbox">
+			                	<input type="checkbox" name="memberaccess" memberid="${item.memberId}" writePermission="${item.writePermission}">
+			                </div>
 		                </td>
 		                <td style="text-align:center">
 		                	<c:if test="${item.status == '0'}"><spring:message code='ezSchedule.t166' /></c:if>

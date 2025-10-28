@@ -2394,6 +2394,10 @@
 		    	document.getElementById("backgroundtd").innerHTML = "";
 	            var backxml = loadXMLString(resultXml);
 	            var i;
+				var oDiv = document.createElement("div");
+				oDiv.className = "custom_radio";
+				oDiv.id = "custom_radio";
+				document.getElementById("backgroundtd").appendChild(oDiv);
 	            for (i = 0; i < SelectNodes(backxml, "DATA/ROW").length; i++) {
 	                if (i == 5) {
 	                    var br = document.createElement("BR");
@@ -2407,7 +2411,8 @@
 	                
 	                var input = document.createElement("INPUT");
 	                input.style.verticalAlign = "top";
-	                input.style.marginTop = "6px";
+	                input.style.marginTop = "8px";
+	                input.style.marginRight = "6px";
 	                input.name = "backradio";
 	                input.type = "radio";
 	                input.onchange = function () { backgroundimagechange(); };
@@ -2426,27 +2431,26 @@
 	                img.style.cursor = "pointer";
 	
 	                span.appendChild(input);
-	                span.appendChild(img);
+					span.appendChild(img);
 	
-	                document.getElementById("backgroundtd").appendChild(span);
+	                oDiv.appendChild(span);
 	            }
 	            if (i == 5) {
 	                var br = document.createElement("BR");
 	                document.getElementById("backgroundtd").appendChild(br);
 	            }
 	            var span = document.createElement("SPAN");
+				span.style.verticalAlign = "top";
+				span.style.margin = "6px 5px 0 10px";
+				span.style.display = "inline-block";
 	            var input = document.createElement("INPUT");
-	            input.style.verticalAlign = "top";
-	            input.style.marginTop = "6px";
 	            input.name = "backradio";
 	            input.type = "radio";
 	            input.onchange = function () { backgroundimagechange(); };
 	
 	            var label = document.createElement("LABEL");
 	            label.style.display = "inline-block";
-	            label.style.verticalAlign = "top";
-	            label.style.marginTop = "8px";
-	            label.style.marginBottom = "5px";
+	            label.style.marginRight = "5px";
 	
 	            label.innerHTML = "<spring:message code='ezBoard.t5009' />";
 	            label.onclick = function () { GetChildNodes(this.parentElement)[0].click(); };
@@ -2454,14 +2458,12 @@
 	
 	            span.appendChild(input);
 	            span.appendChild(label);
-	
-	            document.getElementById("backgroundtd").appendChild(span);
+	            oDiv.appendChild(span);
 	
 	            var a = document.createElement("A");
 	            a.className = "imgbtn imgbck";
 	            a.style.verticalAlign = "top";
-	            a.style.marginTop = "5px !important";
-	            a.style.marginLeft = "10px !important";
+	            a.style.setProperty("margin", "3px", "important");
 	
 	            var span = document.createElement("SPAN");
 	            span.innerHTML = "<spring:message code='ezBoard.t5010' />";
@@ -3201,51 +3203,64 @@
 	                        	</c:choose>
 	                        </td>
 	                        <th style="width:80px"><spring:message code='ezBoard.t434' /></th>
-	                        <c:choose>
-	                        	<c:when test="${boardListVO.importance == '1'}">
-			                        <td style="width: 300px; vertical-align: baseline;"><span style="line-height: 20px; height: 20px; display: inline-block;">
-			                            <input type="checkbox" id="chkEmergent" checked></span><span style="line-height: 21px; height: 12px; display: inline-block; padding-top:5px;"><spring:message code='ezBoard.t435' /></span>
-	                        	</c:when>
-	                        	<c:otherwise>
-			                        <td style="width: 300px; vertical-align: baseline;"><span style="line-height: 20px; height: 20px; display: inline-block;">
-			                            <input type="checkbox" style="margin-top: 0px;" id="chkEmergent"></span><span style="line-height: 21px; height: 12px; display: inline-block; padding-top:5px;"><spring:message code='ezBoard.t435' /></span>
-	                        	</c:otherwise>
-	                        </c:choose>
-	                            <!-- // 20090913 : 게시판 공지게시 기능 -->
-	                            <c:choose>
-	                            	<c:when test="${mode != 'reply'}">
-	                            		<c:choose>
-	                            			<c:when test="${boardInfo.guBun != '2' && (boardInfo.boardAdmin_FG == 'true' || boardInfo.boardGroupAdmin_FG == 'true') && boardListVO.extensionAttribute2 == '1'}">
-									              &nbsp;<span style="line-height: 20px; height: 20px; display: inline-block;"><input type="checkbox" id="noticePost" checked onclick="NotiPost_onclick()"/></span><span style="line-height: 21px; height: 12px; display: inline-block;"><spring:message code='ezBoard.t483' /></span>
-	                            			</c:when>
-	                            			<c:when test="${boardInfo.guBun != '2' && (boardInfo.boardAdmin_FG == 'true' || boardInfo.boardGroupAdmin_FG == 'true')}">
-									              &nbsp;<span style="line-height: 20px; height: 20px; display: inline-block;"><input type="checkbox" id="noticePost" onclick="NotiPost_onclick()"/></span><span style="line-height: 21px; height: 12px; display: inline-block;"><spring:message code='ezBoard.t483' /></span>
-	                            			</c:when>
-	                            			<c:otherwise>
-									              &nbsp;<input type="checkbox" style="display: none" id="noticePost" />
-	                            			</c:otherwise>
-	                            		</c:choose>
-	                            	</c:when>
-	                            	<c:otherwise>
-		                                &nbsp;<input type="checkbox" style="display: none" id="noticePost" />
-	                            	</c:otherwise>
-	                            </c:choose>
-								<c:if test="${mode != 'new' && mode != 'new1' && mode != 'boardContent' && mode != 'boardAttach' && mode != 'temp' && mode != 'reply' && reservedItem == '' && boardInfo.guBun != '9' }">
-						              &nbsp;<span style="line-height: 20px; height: 20px; display: inline-block;"><input type="checkbox" id="readCount" /></span><span style="line-height: 21px; height: 12px; display: inline-block;"><spring:message code='ezBoard.t00002' /></span>
-								</c:if>	
-		                        </td>
+							<td style="width: 300px; vertical-align: baseline;">
+								 <div class="custom_checkbox">
+									 <span style="line-height: 25px; height: 20px; display: inline-block;">
+										<c:choose>
+											<c:when test="${boardListVO.importance == '1'}">
+												<input type="checkbox" id="chkEmergent" checked>
+												<label for="chkEmergent"><spring:message code='ezBoard.t435' /></label>
+											</c:when>
+											<c:otherwise>
+												<input type="checkbox" style="margin-top: 0px;" id="chkEmergent">
+												<label for="chkEmergent"><spring:message code='ezBoard.t435' /></label>
+											</c:otherwise>
+										</c:choose>
+										<!-- // 20090913 : 게시판 공지게시 기능 -->
+										<c:choose>
+											<c:when test="${mode != 'reply'}">
+												<c:choose>
+													<c:when test="${boardInfo.guBun != '2' && (boardInfo.boardAdmin_FG == 'true' || boardInfo.boardGroupAdmin_FG == 'true') && boardListVO.extensionAttribute2 == '1'}">
+														<input type="checkbox" id="noticePost" checked onclick="NotiPost_onclick()"/>
+														<label for="noticePost"><spring:message code='ezBoard.t483' /></label>
+													</c:when>
+													<c:when test="${boardInfo.guBun != '2' && (boardInfo.boardAdmin_FG == 'true' || boardInfo.boardGroupAdmin_FG == 'true')}">
+														<input type="checkbox" id="noticePost" onclick="NotiPost_onclick()"/>
+														<label for="noticePost"><spring:message code='ezBoard.t483' /></label>
+													</c:when>
+													<c:otherwise>
+														&nbsp;<input type="checkbox" style="display: none" id="noticePost" />
+													</c:otherwise>
+												</c:choose>
+											</c:when>
+											<c:otherwise>
+												&nbsp;<input type="checkbox" style="display: none" id="noticePost" />
+											</c:otherwise>
+										</c:choose>
+										<c:if test="${mode != 'new' && mode != 'new1' && mode != 'boardContent' && mode != 'boardAttach' && mode != 'temp' && mode != 'reply' && reservedItem == '' && boardInfo.guBun != '9' }">
+											<input type="checkbox" id="readCount" />
+											<label for="readCount"><spring:message code='ezBoard.t00002' /></label>
+										</c:if>
+								 	</span>
+								 </div>
+							</td>
 	                    </tr>
 
 						<tr id="noti_setTime" style="display: none"> <%-- 공지사항 기간설정 --%>
 							<th><spring:message code='ezBoard.Notimjs06' /></th>
 							<td colspan="3" style="width: 300px; vertical-align: baseline;">
-								<span style="line-height: 20px; height: 20px; display: inline-block;"><input type="radio" id="NotiPeriod" name="isNoti" onclick="NotiPost_onclick()" style="margin-bottom: 5px;"></span><span style="line-height: 21px; height: 12px; display: inline-block; padding-top:5px;"><spring:message code='ezBoard.Notimjs05' /></span>
-								<span id = "notiTimeset" style="display: none;">
+								<div class="custom_radio">
+									<span style="line-height: 30px; height: 20px; display: inline-block;">
+									<input type="radio" id="NotiPeriod" name="isNoti" onclick="NotiPost_onclick()">
+									<label for="NotiPeriod"><spring:message code='ezBoard.Notimjs05' /></label>&nbsp;
+									<span id = "notiTimeset" style="display: none;">
 										<input type="text" id="noti_start" readonly="readonly" style="width:80px;text-align:center; margin-bottom: 3px; ">
-										~ <input type="text" id="noti_end" readonly="readonly" style="width:80px;text-align:center; margin-bottom: 3px; "></span>
-								&nbsp;<span style="line-height: 20px; height: 20px; display: inline-block;">
-										<input type="radio" id="NotiPermanece" name="isNoti" onclick="NotiPost_onclick()" style="margin-bottom: 5px;"></span><span style="line-height: 21px; height: 12px; display: inline-block;"><spring:message code='ezBoard.Notimjs01' /></span>
-								</span>
+										~ <input type="text" id="noti_end" readonly="readonly" style="width:80px;text-align:center; margin-bottom: 3px; ">
+									</span>
+									&nbsp;<input type="radio" id="NotiPermanece" name="isNoti" onclick="NotiPost_onclick()">
+										<label for="NotiPermanece"><spring:message code='ezBoard.Notimjs01' /></label>
+									</span>
+								</div>
 							</td>
 						</tr>
 						<c:if test="${'Y' == boardInfo.writerFlag}">
@@ -3258,7 +3273,9 @@
 											<c:otherwise>${boardListVO.writerName}</c:otherwise>
 										</c:choose>
 									</span>
-									<input type="checkbox" id="chkUseDept" style="margin-left: 0px !important;" onclick="chkUseDept_onclick()">
+									<div class="custom_checkbox">
+										<input type="checkbox" id="chkUseDept" style="margin-left: 0px !important;" onclick="chkUseDept_onclick()">
+									</div>
 									<select id="writerFlag" style="display: none;">
 										<option value="<c:out value='${writerOption.N}\\${writerOption.N2}\\0' />"></option>
 										<option value="<c:out value='${writerOption.T}\\${writerOption.T2}\\1' />"></option>
@@ -3279,9 +3296,12 @@
              					<c:choose>
              						<c:when test="${boardAttributeVO.colType == 'radio'}">
 						                <td colspan="3">
-						                	<c:forEach begin="0" end="${fn:length(fn:split(boardAttributeVO.value, '|')) - 1}" step="1" varStatus="status">
-							                    <input type="radio" name="${boardAttributeVO.tableCol}" value="${fn:split(boardAttributeVO.value, '|')[status.index]}" />${fn:split(boardAttributeVO.value, '|')[status.index]}
-						                	</c:forEach>
+											<div class="custom_radio">
+												<c:forEach begin="0" end="${fn:length(fn:split(boardAttributeVO.value, '|')) - 1}" step="1" varStatus="status">
+													<input type="radio" name="${boardAttributeVO.tableCol}" value="${fn:split(boardAttributeVO.value, '|')[status.index]}" id="lbr${boardAttributeVO.tableCol}${status.index}"/>
+													<label for="lbr${boardAttributeVO.tableCol}${status.index}">${fn:split(boardAttributeVO.value, '|')[status.index]}</label>
+												</c:forEach>
+											</div>
 						                </td>
              						</c:when>
              						<c:when test="${boardAttributeVO.colType == 'text'}">
@@ -3292,9 +3312,12 @@
              						</c:when>
              						<c:when test="${boardAttributeVO.colType == 'check'}">
 						                <td colspan="3">
-						                	<c:forEach begin="0" end="${fn:length(fn:split(boardAttributeVO.value, '|')) - 1}" step="1" varStatus="status">
-							                    <input type="checkbox" name="${boardAttributeVO.tableCol}" value="${fn:split(boardAttributeVO.value, '|')[status.index]}" />${fn:split(boardAttributeVO.value, '|')[status.index]}
-						                	</c:forEach>
+											<div class="custom_checkbox">
+												<c:forEach begin="0" end="${fn:length(fn:split(boardAttributeVO.value, '|')) - 1}" step="1" varStatus="status">
+													<input type="checkbox" name="${boardAttributeVO.tableCol}" value="${fn:split(boardAttributeVO.value, '|')[status.index]}" id="lbc${boardAttributeVO.tableCol}${status.index}"/>
+													<label for="lbc${boardAttributeVO.tableCol}${status.index}">${fn:split(boardAttributeVO.value, '|')[status.index]}</label>
+												</c:forEach>
+											</div>
 						                </td>
              						</c:when>
 									<c:when test="${boardAttributeVO.colType == 'cal'}">
@@ -3383,31 +3406,36 @@
 	                	</c:choose>
 	                        <th><spring:message code='ezBoard.t432' /></th>
 	                        <td>
-	                        	<c:choose>
-	                        		<c:when test="${reservedItem == 'true'}">
-			                            <span style="line-height: 20px; height: 20px; display: inline-block;">
-			                                <input type="checkbox" id="chk_reservation" onclick="Reservation_onclick()" checked style="margin-top:3px;"></span><span style="line-height: 21px; height: 12px; display: inline-block;"><spring:message code='ezBoard.t276' /></span>
-	                        		</c:when>
-	                        		<c:otherwise>
-			                            <span style="line-height: 20px; height: 20px; display: inline-block;">
-			                                <input type="checkbox" id="chk_reservation" onclick="Reservation_onclick()" style="margin-top:3px;"></span><span style="line-height: 21px; height: 12px; display: inline-block;"><spring:message code='ezBoard.t276' /></span>
-	                        		</c:otherwise>
-	                        	</c:choose>
-	                            <span id="reservation_date">
-		                            <input type="text" id="Sdatepicker" readonly="readonly" style="width:80px;text-align:center; margin-bottom: 2px;"><input id="Stimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center; margin-bottom: 2px;"readonly readonlyExcept />
-	                                   &nbsp;<a class="imgbtn imgbck" style= "height:22px; margin-top:2px !important"><span onclick="btn_PostDate_Clear()" popuplocation='topright'><spring:message code='ezBoard.t220' /></span></a></td>
-	                            </span>
+								<div class="custom_checkbox">
+									<span style="line-height: 20px; height: 25px; display: inline-block;">
+										<c:choose>
+											<c:when test="${reservedItem == 'true'}">
+												<input type="checkbox" id="chk_reservation" onclick="Reservation_onclick()" checked>
+												<label for="chk_reservation"><spring:message code='ezBoard.t276' /></label>
+											</c:when>
+											<c:otherwise>
+												<input type="checkbox" id="chk_reservation" onclick="Reservation_onclick()">
+												<label for="chk_reservation"><spring:message code='ezBoard.t276' /></label>
+											</c:otherwise>
+										</c:choose>
+										<span id="reservation_date">
+											<input type="text" id="Sdatepicker" readonly="readonly" style="width:80px;text-align:center; margin-bottom: 2px;"><input id="Stimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center; margin-bottom: 2px;"readonly readonlyExcept />
+											&nbsp;<a class="imgbtn imgbck" style= "height:22px; margin-top:2px !important"><span onclick="btn_PostDate_Clear()" popuplocation='topright'><spring:message code='ezBoard.t220' /></span></a>
+										</span>
+									</span>
+								</div>
+							</td>
 	                    </tr>
 						<c:if test="${boardInfo.publicFlag eq 'Y'}">
 							<tr>
 								<th><spring:message code='ezBoard.private.pgb02'/></th>
 								<td>
-									<span style="line-height: 20px; height: 20px; display: inline-block;">
-										<input type="checkbox" id="publicFlag" name="publicFlag" ${boardListVO.publicFlag == "Y" ? "checked" : "" } style="margin-top:3px;" value="Y">
-									</span>
-									<label for="publicFlag" style="line-height: 21px; height: 12px; display: inline-block; margin-top: 3px;">
-										<spring:message code='ezBoard.private.pgb04'/>
-									</label>
+									<div class="custom_checkbox">
+										<span style="line-height: 29px; height: 29px; display: inline-block;">
+											<input type="checkbox" id="publicFlag" name="publicFlag" ${boardListVO.publicFlag == "Y" ? "checked" : "" } value="Y">
+											<label for="publicFlag"><spring:message code='ezBoard.private.pgb04'/></label>
+										</span>
+									</div>
 								</td>
 							</tr>
 						</c:if>
@@ -3418,8 +3446,12 @@
 	                        	<%-- 2019-11-22 홍승비 - 임시저장한 게시물 재작성 시에도 게시만료일 설정 여부가 제대로 반영되도록 수정 --%>
 	                        		<c:when test="${(mode != 'modify' && mode != 'temp' && boardInfo.expireDays == '-1') || ((mode == 'modify' || mode == 'temp') && fn:substring(boardListVO.endDate, 0, 4) == '9999')}">
 			                            <span id="Chkbox">
-			                                <span style="line-height: 20px; height: 20px; display: inline-block;">
-			                                    <input type="checkbox" id="ChkPermanence" name="ChkPermanence" onclick="return ChkPermanent()" checked style="margin-top:3px;"></span><span style="line-height: 21px; height: 12px; display: inline-block; margin-top: 3px;"><spring:message code='ezBoard.t433' /></span>
+											<div class="custom_checkbox">
+			                                	<span style="line-height: 20px; height: 20px; display: inline-block;">
+													<input type="checkbox" id="ChkPermanence" name="ChkPermanence" onclick="return ChkPermanent()" checked>
+													<label for="ChkPermanence"><spring:message code='ezBoard.t433' /></label>
+												</span>
+											</div>
 			                            </span>
 			                            <span id="Makedate">
 			                                <input type="text" id="Sdatepicker2" readonly="readonly" style="width:80px;text-align:center; margin-bottom:1.2px;">
@@ -3427,8 +3459,12 @@
 	                        		</c:when>
 	                        		<c:otherwise>
 			                            <span id="Chkbox" style="display: inline-block;">
-			                                <span style="line-height: 20px; height: 20px; display: inline-block;">
-			                                    <input type="checkbox" id="ChkPermanence" name="ChkPermanence" onclick="return ChkPermanent()" style="margin-top:3px;"></span><span style="line-height: 21px; height: 12px; display: inline-block;"><spring:message code='ezBoard.t433' /></span>
+											<div class="custom_checkbox">
+												<span style="line-height: 20px; height: 20px; display: inline-block;">
+													<input type="checkbox" id="ChkPermanence" name="ChkPermanence" onclick="return ChkPermanent()">
+													<label for="ChkPermanence"><spring:message code='ezBoard.t433' /></label>
+												</span>
+											</div>
 			                            </span>
 			                            <span id="Makedate">
 			                                <input type="text" id="Sdatepicker2" readonly="readonly" style="width:80px;text-align:center; margin-bottom:1.2px;">
@@ -3481,16 +3517,20 @@
 	                            <table style="width: 100%;" border="0">
 	                                <tr>
 	                                    <td>
-	                                    	<c:choose>
-	                                    		<c:when test="${reservedItem == 'true'}">
-			                                        <span style="line-height: 20px; height: 20px; display: inline-block;">
-			                                            <input type="checkbox" id="chk_reservation" onclick="Reservation_onclick()" checked style="margin-top:3px;"></span><span style="line-height: 21px; height: 12px; display: inline-block; margin-top: 3px;"><spring:message code='ezBoard.t276' /></span>
-	                                    		</c:when>
-	                                    		<c:otherwise>
-			                                        <span style="line-height: 20px; height: 20px; display: inline-block;">
-			                                            <input type="checkbox" id="chk_reservation" onclick="Reservation_onclick()" style="margin-top:3px;"></span><span style="line-height: 21px; height: 12px; display: inline-block; margin-top: 3px;"><spring:message code='ezBoard.t276' /></span>
-	                                    		</c:otherwise>
-	                                    	</c:choose>
+											<div class="custom_checkbox">
+												<span style="line-height: 20px; height: 25px; display: inline-block;">
+													<c:choose>
+														<c:when test="${reservedItem == 'true'}">
+															<input type="checkbox" id="chk_reservation" onclick="Reservation_onclick()" checked>
+															<label for="chk_reservation"><spring:message code='ezBoard.t276' /></label>
+														</c:when>
+														<c:otherwise>
+															<input type="checkbox" id="chk_reservation" onclick="Reservation_onclick()">
+															<label for="chk_reservation"><spring:message code='ezBoard.t276' /></label>
+														</c:otherwise>
+													</c:choose>
+												</span>
+											</div>
 	                                    </td>
 	                                    <td id="reservation_date">
 	                                        <input type="text" id="Sdatepicker" readonly="readonly" style="width:80px;text-align:center" ><input id="Stimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;"readonly readonlyExcept />
@@ -3508,14 +3548,22 @@
 	                                	<c:choose>
 	                                		<c:when test="${(mode != 'modify' && boardInfo.expireDays == '-1') || ((mode == 'modify' || mode == 'temp') && fn:substring(boardListVO.endDate, 0, 4) == '9999')}">
 			                                    <td style="width: 90px; white-space: nowrap" id="Chkbox">
-			                                        <input type="checkbox" id="ChkPermanence" name="ChkPermanence" onclick="return ChkPermanent()" checked style="margin-top:3px;"><spring:message code='ezBoard.t433' /></td>
+			                                        <div class="custom_checkbox">
+														<input type="checkbox" id="ChkPermanence" name="ChkPermanence" onclick="return ChkPermanent()" checked>
+														<label for="ChkPermanence"><spring:message code='ezBoard.t433' /></label>
+													</div>
+												</td>
 			                                    <td id="Makedate">
 			                                        <input type="text" id="Sdatepicker2" readonly="readonly" style="width:80px;text-align:center">&nbsp;&nbsp;
 			                                    </td>
 	                                		</c:when>
 	                                		<c:otherwise>
 			                                    <td style="width: 90px; white-space: nowrap" id="Chkbox">
-			                                        <input type="checkbox" id="ChkPermanence" name="ChkPermanence" onclick="return ChkPermanent()"><spring:message code='ezBoard.t433' /></td>
+			                                        <div class="custom_checkbox">
+														<input type="checkbox" id="ChkPermanence" name="ChkPermanence" onclick="return ChkPermanent()">
+														<label for="ChkPermanence"><spring:message code='ezBoard.t433' /></label>
+													</div>
+												</td>
 			                                    <td id="Makedate">
 			                                        <input type="text" id="Sdatepicker2" readonly="readonly" style="width:80px;text-align:center">&nbsp;&nbsp; </td>
 	                                		</c:otherwise>
@@ -3527,16 +3575,20 @@
 	                    </tr>
 	                    <tr style="display: none">
 	                        <th><spring:message code='ezBoard.t434' /></th>
-	                        <c:choose>
-	                        	<c:when test="${importance == '1'}">
-			                        <td style="vertical-align: middle" colspan="2">
-			                            <input type="checkbox" id="chkEmergent" checked><spring:message code='ezBoard.t435' /></td>
-	                        	</c:when>
-	                        	<c:otherwise>
-			                        <td style="vertical-align: middle" colspan="2">
-			                            <input type="checkbox" id="chkEmergent"><spring:message code='ezBoard.t435' /></td>
-	                        	</c:otherwise>
-	                        </c:choose>
+							<td style="vertical-align: middle" colspan="2">
+								<div class="custom_checkbox">
+									<c:choose>
+										<c:when test="${importance == '1'}">
+											<input type="checkbox" id="chkEmergent" checked>
+											<label for="chkEmergent"><spring:message code='ezBoard.t435' /></label>
+										</c:when>
+										<c:otherwise>
+											<input type="checkbox" id="chkEmergent">
+											<label for="chkEmergent"><spring:message code='ezBoard.t435' /></label>
+										</c:otherwise>
+									</c:choose>
+								</div>
+							</td>
 	                    </tr>
 	                    <c:if test="${boardInfo.guBun == '2'}">
 		                    <tr style="display: none">

@@ -314,16 +314,18 @@
                 <tr>
                     <th style="width:100px; text-align:center"><spring:message code='ezJournal.t23'/></th>
 					<td colspan="3" style="width:10%; text-align: left;">
-						<c:choose>
-							<c:when test="${useDepts eq 'null' || useDepts eq null}">
-								<input type="radio" id="selDeptUseA" name="setUseDept" value="A" checked onclick="checkUseDept()"/><label for="selDeptUseA"><spring:message code = 'ezJournal.t30' /></label>
-								<input type="radio" id="selDeptUseP" name="setUseDept" value="P" onclick="checkUseDept()"/><label for="selDeptUseP"><spring:message code = 'ezJournal.t31' /></label>
-							</c:when>
-							<c:otherwise>
-								<input type="radio" id="selDeptUseA" name="setUseDept" value="A" onclick="checkUseDept()"/><label for="selDeptUseA"><spring:message code = 'ezJournal.t30' /></label>
-								<input type="radio" id="selDeptUseP" name="setUseDept" value="P" checked onclick="checkUseDept()"/><label for="selDeptUseP"><spring:message code = 'ezJournal.t31' /></label>
-							</c:otherwise>
-						</c:choose>
+						<div class="custom_radio">
+							<c:choose>
+								<c:when test="${useDepts eq 'null' || useDepts eq null}">
+									<input type="radio" id="selDeptUseA" name="setUseDept" value="A" checked onclick="checkUseDept()"/><label for="selDeptUseA"><spring:message code = 'ezJournal.t30' /></label>
+									<input type="radio" id="selDeptUseP" name="setUseDept" value="P" onclick="checkUseDept()"/><label for="selDeptUseP"><spring:message code = 'ezJournal.t31' /></label>
+								</c:when>
+								<c:otherwise>
+									<input type="radio" id="selDeptUseA" name="setUseDept" value="A" onclick="checkUseDept()"/><label for="selDeptUseA"><spring:message code = 'ezJournal.t30' /></label>
+									<input type="radio" id="selDeptUseP" name="setUseDept" value="P" checked onclick="checkUseDept()"/><label for="selDeptUseP"><spring:message code = 'ezJournal.t31' /></label>
+								</c:otherwise>
+							</c:choose>
+						</div>
 					</td>
 				</tr>
 			</table>

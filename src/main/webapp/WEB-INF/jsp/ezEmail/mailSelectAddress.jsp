@@ -91,7 +91,7 @@
 	        	var typeList = ["from", "to", "cc", "bcc"];
 	        	
 	        	var listTable, dataList, type;
-	        	var addressInfo, row, checkboxColumn, nameColumn, mailColumn, checkboxInput;
+	        	var addressInfo, row, checkboxColumn, checkboxWrapper, nameColumn, mailColumn, checkboxInput;
 	        	
 	        	for (var i = 0; i < typeList.length; i++) {
 	        		type = typeList[i];
@@ -113,6 +113,10 @@
 		        		row.setAttribute("_name", addressInfo["name"]);
 		        		row.setAttribute("_email", addressInfo["email"]);
 		        		
+                        checkboxWrapper = document.createElement("div");
+                        checkboxWrapper.classList.add("custom_checkbox");
+            
+                        // input 생성 및 설정
 		        		if (addressInfo["email"] != "${myEmail}") {
 		        			checkboxInput = document.createElement("input");
 		        			checkboxInput.type = "checkbox";
@@ -120,8 +124,10 @@
 		        			checkboxInput.style.padding = "0px";
 		        			checkboxInput.style.width = "13px";
 		        			checkboxInput.style.height = "13px";
-		        			checkboxColumn.appendChild(checkboxInput);
+		        			checkboxWrapper.appendChild(checkboxInput);
 		        		}
+
+		        		checkboxColumn.appendChild(checkboxWrapper);
 		        		
 		        		nameColumn.textContent = addressInfo["name"];
 		        		nameColumn.style.width = "40%";
@@ -195,7 +201,7 @@
 	        }
 	    </script>
 	</head>
-	<body style="overflow:hidden;" class="popup">
+	<body style="overflow:hidden;" class="popup chk_lower_4">
         <h1><spring:message code='ezEmail.t554' /></h1>
         <div id="close">
 			<ul>
@@ -214,7 +220,9 @@
 	        <table style="display: none; width: 100%; border: 1px solid #ddd;" id="fromList" class="mainlist">
 	            <tr>
 	                <th style="width: 20px;">
-	                    <input type="checkbox" class="allCheckbox" onClick="allCheck(this, 'from')" style="margin: 0px; padding: 0px; width: 13px; height: 13px;"></th>
+	                    <div class="custom_checkbox">
+	                        <input type="checkbox" class="allCheckbox" onClick="allCheck(this, 'from')" style="margin: 0px; padding: 0px; width: 13px; height: 13px;"></th>
+	                    </div>
 	                <th style="width:40%;"><spring:message code='ezEmail.t31' /></th>
 	                <th style="width:60%;"><spring:message code='ezEmail.t1019' /></th>
 	            </tr>
@@ -222,7 +230,9 @@
 	        <table style="display: none; width: 100%; border: 1px solid #ddd;" id="toList" class="mainlist">
 	            <tr>
 	                <th style="width: 20px;">
-	                    <input type="checkbox" class="allCheckbox" onClick="allCheck(this, 'to')" style="margin: 0px; padding: 0px; width: 13px; height: 13px;"></th>
+	                    <div class="custom_checkbox">
+	                        <input type="checkbox" class="allCheckbox" onClick="allCheck(this, 'to')" style="margin: 0px; padding: 0px; width: 13px; height: 13px;"></th>
+                        </div>
 	                <th style="width:40%;"><spring:message code='ezEmail.t31' /></th>
 	                <th style="width:60%;"><spring:message code='ezEmail.t1019' /></th>
 	            </tr>
@@ -230,7 +240,9 @@
 	        <table style="display: none; width: 100%; border: 1px solid #ddd;" id="ccList" class="mainlist">
 	            <tr>
 	                <th style="width: 20px;">
-	                    <input type="checkbox" class="allCheckbox" onClick="allCheck(this, 'cc')" style="margin: 0px; padding: 0px; width: 13px; height: 13px;"></th>
+                        <div class="custom_checkbox">
+                            <input type="checkbox" class="allCheckbox" onClick="allCheck(this, 'cc')" style="margin: 0px; padding: 0px; width: 13px; height: 13px;"></th>
+	                    </div>
 	                <th style="width:40%;"><spring:message code='ezEmail.t31' /></th>
 	                <th style="width:60%;"><spring:message code='ezEmail.t1019' /></th>
 	            </tr>
@@ -238,7 +250,9 @@
 	        <table style="display: none; width: 100%; border: 1px solid #ddd;" id="bccList" class="mainlist">
 	            <tr>
 	                <th style="width: 20px;">
-	                    <input type="checkbox" class="allCheckbox" onClick="allCheck(this, 'bcc')" style="margin: 0px; padding: 0px; width: 13px; height: 13px;"></th>
+	                    <div class="custom_checkbox">
+	                        <input type="checkbox" class="allCheckbox" onClick="allCheck(this, 'bcc')" style="margin: 0px; padding: 0px; width: 13px; height: 13px;"></th>
+                        </div>
 	                <th style="width:40%;"><spring:message code='ezEmail.t31' /></th>
 	                <th style="width:60%;"><spring:message code='ezEmail.t1019' /></th>
 	            </tr>

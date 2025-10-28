@@ -661,7 +661,7 @@
 				<table class="mainlist" style="width:100%;display:none;"  id="tblFileListHeader-user">
 					<thead>
 						<tr>
-							<th class="wfFilecheck" ><input type="checkbox"></th>
+							<th class="wfFilecheck" ><div class="custom_checkbox"><input type="checkbox"></div></th>
 							<th headers="cn" class="wfConfigCompany" ><spring:message code='ezWebFolder.t146'/></th>
 							<th headers="dn" class="wfConfigCompany"><spring:message code='ezWebFolder.t142'/></th>
 							<th headers="un" class="wfActive"><spring:message code='ezWebFolder.t143.2'/></th>
@@ -675,7 +675,7 @@
 					<table class="mainlist" style="width:100%;display:none;"  id="tblFileListHeader-department">
 						<thead>
 							<tr>
-								<th class="wfFilecheck" ><input type="checkbox"></th>
+								<th class="wfFilecheck" ><div class="custom_checkbox"><input type="checkbox"></div></th>
 								<th headers="cn" class="wfConfigCompany" ><spring:message code='ezWebFolder.t146'/></th>
 								<th headers="dn" class="wfConfigCompany"><spring:message code='ezWebFolder.t142.2'/></th>
 								<th              class="wfConfigCapacity" style="text-align: center;"><spring:message code='ezWebFolder.t148'/></th>
@@ -687,7 +687,7 @@
 					<table class="mainlist" style="width:100%;"  id="tblFileListHeader-company">
 						<thead>
 							<tr>
-								<th class="wfFilecheck" ><input type="checkbox"></th>
+								<th class="wfFilecheck" ><div class="custom_checkbox"><input type="checkbox"></div></th>
 								<th headers="dn" class="wfConfigCompany" ><spring:message code='ezWebFolder.t146.2'/></th>
 								<th              class="wfConfigCapacity" style="text-align: center;"><spring:message code='ezWebFolder.t148'/></th>
 								<th headers="tc" class="wfConfigCapacity" style="text-align: center; "><spring:message code='ezWebFolder.t149'/></th>

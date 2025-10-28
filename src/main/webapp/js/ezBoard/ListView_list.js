@@ -583,7 +583,10 @@ function ListView() {
                     _HeaderCheckBox.style.width = "13px";
                     _HeaderCheckBox.style.height = "13px";
                     _HeaderCheckBox.onclick = function () { event_HeaderCheckBoxClick(this); };
-                    objTd.appendChild(_HeaderCheckBox);
+        	        var oDiv = document.createElement("div");
+        	        oDiv.className = "custom_checkbox";
+        	        oDiv.appendChild(_HeaderCheckBox);
+                    objTd.appendChild(oDiv);
                     strName = "";
                 }
 
@@ -963,7 +966,10 @@ function ListView() {
 					_TDCheckBox_Sub.setAttribute("style", "width: 13px; height: 13px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; vertical-align:middle");
 					
                     _TDCheckBox_Sub.onclick = new Function("chk_onselect(this)");
-                    objTd.appendChild(_TDCheckBox_Sub);
+        	        var oDiv = document.createElement("div");
+        	        oDiv.className = "custom_checkbox";
+        	        oDiv.appendChild(_TDCheckBox_Sub);
+                    objTd.appendChild(oDiv);
                 }
                 else {
                 	/* 2019-01-31 홍승비 - 게시자 이름 특문처리 (익명게시판 오류수정) */
@@ -1676,17 +1682,17 @@ function tr_select(pRowID, pTableID, callbackFunc) {
                 oSourceTr.style.backgroundColor = m_strColorSelect;
             }
         } else {
-            if (oSourceTr.childNodes[0].childNodes[0].checked) {
+            if (oSourceTr.childNodes[0].childNodes[0].childNodes[0].checked) {
                 oSourceTr.setAttribute("selected", "false");
-                oSourceTr.childNodes[0].childNodes[0].checked = false;
+                oSourceTr.childNodes[0].childNodes[0].childNodes[0].checked = false;
                 oSourceTr.style.backgroundColor = m_strColorDefault;
-                strListInfo = ReplaceText(strListInfo, oSourceTr.childNodes[0].childNodes[0].id, "");
+                strListInfo = ReplaceText(strListInfo, oSourceTr.childNodes[0].childNodes[0].childNodes[0].id, "");
             }
             else {
                 oSourceTr.setAttribute("selected", "true");
-                oSourceTr.childNodes[0].childNodes[0].checked = true;
+                oSourceTr.childNodes[0].childNodes[0].childNodes[0].checked = true;
                 oSourceTr.style.backgroundColor = m_strColorSelect;
-                strListInfo += oSourceTr.childNodes[0].childNodes[0].id;
+                strListInfo += oSourceTr.childNodes[0].childNodes[0].childNodes[0].id;
             }
         }
 
@@ -1723,7 +1729,7 @@ function tr_unselectedAll(pTableID) {
 	        SelList.LoadFromID("BoardListDiv");
 	
 	        for (var i = 0; i < SelList.GetRowCount() ; i++) {
-	            SelList.GetDataRows()[i].childNodes[0].childNodes[0].checked = false;
+	            SelList.GetDataRows()[i].childNodes[0].childNodes[0].childNodes[0].checked = false;
 	            SelList.GetDataRows()[i].style.backgroundColor = m_strColorDefault;
 	            strListInfo = "";
 	        }
@@ -1750,14 +1756,14 @@ function event_HeaderCheckBoxClick(obj) {
 
     if (obj.checked) {
         for (var i = 0; i < SelList.GetRowCount() ; i++) {
-            SelList.GetDataRows()[i].childNodes[0].childNodes[0].checked = true;
+            SelList.GetDataRows()[i].childNodes[0].childNodes[0].childNodes[0].checked = true;
             SelList.GetDataRows()[i].style.backgroundColor = m_strColorSelect;
-            strListInfo += SelList.GetDataRows()[i].childNodes[0].childNodes[0].id;
+            strListInfo += SelList.GetDataRows()[i].childNodes[0].childNodes[0].childNodes[0].id;
         }
     }
     else {
         for (var i = 0; i < SelList.GetRowCount() ; i++) {
-            SelList.GetDataRows()[i].childNodes[0].childNodes[0].checked = false;
+            SelList.GetDataRows()[i].childNodes[0].childNodes[0].childNodes[0].checked = false;
             SelList.GetDataRows()[i].style.backgroundColor = m_strColorDefault;
             strListInfo = "";
         }
@@ -1814,7 +1820,7 @@ function tr_mouseover(pRow) {
             pRow.style.backgroundColor=m_strColorOver;
         }
     } else {
-        if (pRow.childNodes[0].childNodes[0].checked != true) {
+        if (pRow.childNodes[0].childNodes[0].childNodes[0].checked != true) {
             pRow.style.backgroundColor=m_strColorOver;      
         }
     }
@@ -1835,7 +1841,7 @@ function tr_mouseout(pRow) {
             }
         }
     } else {
-        if (pRow.childNodes[0].childNodes[0].checked != true) {
+        if (pRow.childNodes[0].childNodes[0].childNodes[0].checked != true) {
             pRow.style.backgroundColor=m_strColorDefault;
         } else {
             pRow.style.backgroundColor=m_strColorSelect;

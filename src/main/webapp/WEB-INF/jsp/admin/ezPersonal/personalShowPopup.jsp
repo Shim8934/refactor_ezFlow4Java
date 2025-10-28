@@ -117,7 +117,7 @@
 			<div class="empty_btn">
 				<div class="empty_div" style="height:425px;background-color:#fff;"></div>
 				<div class="notice_btn" style="border-radius:0px 0px 0px 0px"><p class="btn_checkbox">
-					<input type="checkbox" name="checkbox" class="inp_noticeCheck"><label class="name_type2" style="position:relative;top:4px;">하루 이 창 열지않기</label></p></div>
+					<div class='custom_checkbox'><input type="checkbox" name="checkbox" class="inp_noticeCheck"><label class="name_type2" style="top:4px; margin-left: 10px;">하루 이 창 열지않기</label></div></div>
 			</div>
 		</div>
 		</form>

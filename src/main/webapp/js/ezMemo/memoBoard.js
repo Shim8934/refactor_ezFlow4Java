@@ -414,7 +414,7 @@ function memoDisplayChange() {
 		if($(this).attr("display") == 0){
 			memo_ids.push($(this).val());
 			$(this).attr("display", "1");
-			$(this).parent().parent().attr("style", "opacity : 0.5");
+			$(this).parent().parent().parent().attr("style", "opacity : 0.5");
 		} 
 	});
 	
@@ -461,7 +461,7 @@ function memoDisplayChange2() {
 		if($(this).attr("display") == 1){
 			memo_ids.push($(this).val());
 			$(this).attr("display", "0");
-			$(this).parent().parent().attr("style", "");
+			$(this).parent().parent().parent().attr("style", "");
 		} 
 	});
 	

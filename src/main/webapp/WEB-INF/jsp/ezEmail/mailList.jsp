@@ -2180,12 +2180,10 @@
 							<ul class="content_layout">
 								<li class="content_layout_center">
 									<span class="radio_design">
-										<input type="radio" id="and" name="andor" checked="checked" value="and">
-										<label for="and">AND</label>
+										<input type="radio" id="and" name="andor" checked="checked" value="and"><label for="and">AND</label>
 									</span>
 									<span class="radio_design">
-										<input type="radio" id="or" name="andor" value="or">
-										<label for="or">OR</label>
+										<input type="radio" id="or" name="andor" value="or"><label for="or">OR</label>
 							        </span>
 							    </li>
 							</ul>
@@ -2249,16 +2247,13 @@
 							<ul class="content_layout">
 								<li class="content_layout_center">
 									<span class="radio_design">
-		                                 <input type="radio" id="all" name="attachment" checked="checked" value="all">
-		                                 <label for="all"><spring:message code="ezEmail.pyy14" /></label>
+		                                 <input type="radio" id="all" name="attachment" checked="checked" value="all"><label for="all"><spring:message code="ezEmail.pyy14" /></label>
 		                             </span>
 		                             <span class="radio_design">
-		                                 <input type="radio" id="contain" name="attachment" value="contain">
-		                                 <label for="contain"><spring:message code="ezEmail.pyy15" /></label>
+		                                 <input type="radio" id="contain" name="attachment" value="contain"><label for="contain"><spring:message code="ezEmail.pyy15" /></label>
 		                             </span>
 		                             <span class="radio_design">
-		                                 <input type="radio" id="Ncontain" name="attachment" value="Ncontain">
-		                                 <label for="Ncontain"><spring:message code="ezEmail.pyy16" /></label>
+		                                 <input type="radio" id="Ncontain" name="attachment" value="Ncontain"><label for="Ncontain"><spring:message code="ezEmail.pyy16" /></label>
 		                             </span>
 								</li>
 							</ul>
@@ -2332,8 +2327,10 @@
 							<input id="label-input" type="text" maxlength="100" placeholder="<spring:message code="ezEmail.tag.user.input.placeholder" />" />
 							<a class="imgbtn imgbck" onclick="addLabel()"><span><spring:message code="ezEmail.tag.user.addbtn" /></span></a>
 						</p>
-						<ul id="label-table" class="tagUL">
-						</ul>
+						<div class="custom_checkbox">
+                            <ul id="label-table" class="tagUL">
+                            </ul>
+						</div>
 						<p class="tag_btnSave">
 							<a class="imgbtn imgbck" onclick="saveChangesTags()"><span><spring:message code="main.sp09" /></span></a>
 						</p>

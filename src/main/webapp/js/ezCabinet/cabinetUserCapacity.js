@@ -377,11 +377,15 @@
 				trElmt.setAttribute("userId", capacityList[i]["userId"]);
 				trElmt.onclick = function(event) {clickRowFunct(event);};
 				
+                var divInputElmt = document.createElement("div");
+                divInputElmt.className = "custom_checkbox";
+                
 				var inputElmt  = document.createElement("input");
 				inputElmt.setAttribute("type", "checkbox");
 				inputElmt.onclick = function(event) {getCheckedFunct(event);};
 				tdElmt1.className = "checkBnk";
-				tdElmt1.appendChild(inputElmt);
+				divInputElmt.appendChild(inputElmt);
+				tdElmt1.appendChild(divInputElmt);
 				
 				tdElmt2.textContent = capacityList[i]["companyName"];
 				tdElmt2.setAttribute("title", tdElmt2.textContent);

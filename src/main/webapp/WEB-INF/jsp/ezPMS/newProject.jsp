@@ -490,7 +490,7 @@ var headManagerObj = {};
 				<th><spring:message code='ezPMS.t57' /></th>
 				<td style="width:45%">${userName }</td>
 				<th><spring:message code='ezPMS.t58' /></th>
-				<td><form><input type="radio" name="weightInput" value="autoCalc" style="vertical-align:left; margin-top: 0px;" checked><spring:message code='ezPMS.t59' />  <input type="radio" name="weightInput" value="writeCalc" style="margin-top: 0px;"><spring:message code='ezPMS.t60' /></form></td>
+				<td><form><div class="custom_radio"><input id="autoCalc1" type="radio" name="weightInput" value="autoCalc" style="vertical-align:left; margin-top: 0px;" checked><label for="autoCalc1"><spring:message code='ezPMS.t59' /></label>  <input id="writeCalc1" type="radio" name="weightInput" value="writeCalc" style="margin-top: 0px;"><label for="writeCalc1"><spring:message code='ezPMS.t60' /></label></div></form></td>
 			</tr>
 			<tr>
 				<th><spring:message code='ezPMS.t61' /></th>
@@ -517,7 +517,7 @@ var headManagerObj = {};
 			</tr>
 			<tr>
 				<th><spring:message code='ezPMS.t67' /></th>
-				<td style="width:45%"><input type="checkbox" name="endAlam" value="endAlam" id="endAlam" checked><spring:message code='ezPMS.t68' /></td>
+				<td style="width:45%"><div class="custom_checkbox"><input type="checkbox" name="endAlam" value="endAlam" id="endAlam" checked><label for="endAlam"><spring:message code='ezPMS.t68' /></label></div></td>
 				<th><spring:message code='ezPMS.t69' /></th>
 				<td><select name="daysBeforeAlam" id="daysBeforeAlam">
 						<option value="1" selected>1</option>

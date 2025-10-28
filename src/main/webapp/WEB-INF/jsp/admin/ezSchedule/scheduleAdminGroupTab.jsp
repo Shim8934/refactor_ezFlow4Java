@@ -578,7 +578,7 @@
 		 	var checkCnt = 0;
 		 	var allChild = $("#GroupListView")[0].childNodes[1];
 		     for (var i = 0;i < allChild.childNodes.length; i++) {
-		     	if (allChild.childNodes[i].getElementsByTagName("td").item(0).childNodes.item(0).checked){
+		     	if (allChild.childNodes[i].getElementsByTagName("td").item(0).childNodes.item(0).querySelector('input').checked){
 		     		checkCnt++;
 		     	}
 		     }

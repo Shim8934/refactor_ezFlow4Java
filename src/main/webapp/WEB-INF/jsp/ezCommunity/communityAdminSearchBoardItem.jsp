@@ -93,7 +93,7 @@
 					
 					
 					listXML += "<tr id='rowdata'>";
-					listXML += "<td style='padding:0'><input type='checkbox' name='chk' id='chk"+i+"' onclick='checkBox_checked(\"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "ItemID").trim() + "\", \"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterID").trim() + "\", \"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "BoardID").trim() + "\", event)'></td>";
+					listXML += "<td style='width:22px; padding:0; text-align: center;'><div class='custom_checkbox'><input type='checkbox' name='chk' id='chk"+i+"' onclick='checkBox_checked(\"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "ItemID").trim() + "\", \"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterID").trim() + "\", \"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "BoardID").trim() + "\", event)'></div></td>";
 					listXML += "<td>" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "BoardName").trim() + "</td>";
 					listXML += "<td title='" + MakeXMLString(SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "Abstract").trim().replace("'", "`")) + "' style='cursor:pointer;text-overflow:ellipsis; overflow:hidden; word-break:break-all' onclick='ItemRead_onclick(\"" + pBoardID + "\", \"" + pBoardName + "\", \"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "ItemID").trim() + "\", \"" + bTag + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterID").trim() + "\", event)'><nobr>"
 						+ bTag + strEmergent + strSpace + MakeXMLString(SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "Title").trim()) + "</nobr></td>";
@@ -854,7 +854,7 @@
 		<form name="frmOutbox" method="post">
 			<table class="mainlist" style="width:100%;margin-top:10px">
 				<tr>
-				    <th style="width:20px;padding:0px" align="center"><input type='checkbox' id ="checkbox" name="checkbox" onclick='checkBox_checkAll()'></th>
+					<th style="width:22px;padding:0px; text-align: center;" align="center"><div class="custom_checkbox"><input type='checkbox' id ="checkbox" name="checkbox" onclick='checkBox_checkAll()'></div></th>
 				     <c:choose>
 						<c:when test="${pSortBy == 'BoardName'}">
 				    		<th style="cursor:pointer;width:80px;" onClick="SortPage('BoardName desc')"><spring:message code='ezCommunity.t418'/><img src="/images/view-sortup.gif" width="9" height="9"></th>

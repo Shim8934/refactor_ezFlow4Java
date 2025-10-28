@@ -358,13 +358,13 @@
 		    <tr id="trTransExp">
 		    	<th><spring:message code='ezApprovalG.t1102'/></th>
 		    	<td>
-		    		<input type="checkbox" name="chkTransExp" id="chkTransExp" value="1" style="vertical-align:middle;">
+		    		<div class='custom_checkbox'><input type="checkbox" name="chkTransExp" id="chkTransExp" value="1" style="vertical-align:middle;"></div>
 		    	</td>
 		    </tr>
 		    <tr id="trRejectCab" style="display:none">
 		    	<th><spring:message code='ezApprovalG.t1103'/></th>
 		    	<td>
-		    		<input type="checkbox" name="chkRejectCab" id="chkRejectCab" value="1">
+		    		<div class='custom_checkbox'><input type="checkbox" name="chkRejectCab" id="chkRejectCab" value="1"></div>
 		    	</td>
 		    </tr>
 		  </table>

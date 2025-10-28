@@ -8,8 +8,8 @@
 	<div class="cabMoveFile" id="moveCabTree"></div>
 	
 	<div class="cabdivBttn" id="moveDivBttn">
-		<a class="cabBttn"><span><spring:message code='ezWebFolder.t121'/></span></a>
-		<a class="cabBttn"><span><spring:message code='ezWebFolder.t122'/></span></a>
-		<a class="cabBttn"><span><spring:message code='ezWebFolder.t112'/></span></a>
+		<a class="imgbtn"><span><spring:message code='ezWebFolder.t121'/></span></a>
+		<a class="imgbtn"><span><spring:message code='ezWebFolder.t122'/></span></a>
+		<a class="imgbtn"><span><spring:message code='ezWebFolder.t112'/></span></a>
 	</div>
 </div>

@@ -26,46 +26,46 @@ $(function(){
 	switch(nowStatus) {
 	case 'W' :
 	case 'D' :
-		strHTML += "<input type='radio' value='P' name='status' checked>";
-		strHTML += "</th><td>";
+		strHTML += "<div class='custom_radio'><input type='radio' value='P' name='status' checked>";
+		strHTML += "</th></div><td>";
 		strHTML += "<spring:message code='ezPMS.t258' />";
 		strHTML += "</input></td></tr>";
 		strHTML += "<tr><th>";
-		strHTML += "<input type='radio' value='S' name='status'>";
-		strHTML += "</th><td>";
+		strHTML += "<div class='custom_radio'><input type='radio' value='S' name='status'>";
+		strHTML += "</div></th><td>";
 		strHTML += "<spring:message code='ezPMS.t259' />";
 		strHTML += "</input></td></tr>";
 		break;
 	case 'P' :
-		strHTML += "<input type='radio' value='C' name='status' checked>";
-		strHTML += "</th><td>";
+		strHTML += "<div class='custom_radio'><input type='radio' value='C' name='status' checked>";
+		strHTML += "</div></th><td>";
 		strHTML += "<spring:message code='ezPMS.t261' />";
 		strHTML += "</input></td></tr>";
 		strHTML += "<tr><th>";
-		strHTML += "<input type='radio' value='S' name='status'>";
-		strHTML += "</th><td>";
+		strHTML += "<div class='custom_radio'><input type='radio' value='S' name='status'>";
+		strHTML += "</div></th><td>";
 		strHTML += "<spring:message code='ezPMS.t259' />";
 		strHTML += "</input></td></tr>";
 		break;
 	case 'L' :
-		strHTML += "<input type='radio' value='C' name='status' checked>";
-		strHTML += "</th><td>";
+		strHTML += "<div class='custom_radio'><input type='radio' value='C' name='status' checked>";
+		strHTML += "</div></th><td>";
 		strHTML += "<spring:message code='ezPMS.t261' />";
 		strHTML += "</input></td></tr>";
 		strHTML += "<tr><th>";
-		strHTML += "<input type='radio' value='S' name='status' checked>";
-		strHTML += "</th><td>";
+		strHTML += "<div class='custom_radio'><input type='radio' value='S' name='status' checked>";
+		strHTML += "</div></th><td>";
 		strHTML += "<spring:message code='ezPMS.t259' />";
 		strHTML += "</input></td></tr>";
 		break;
 	case 'S' :
-		strHTML += "<input type='radio' value='P' name='status' checked>";
-		strHTML += "</th><td>";
+		strHTML += "<div class='custom_radio'><input type='radio' value='P' name='status' checked>";
+		strHTML += "</div></th><td>";
 		strHTML += "<spring:message code='ezPMS.t258' />";
 		strHTML += "</input></td></tr>";
 		strHTML += "<tr><th>";
-		strHTML += "<input type='radio' value='C' name='status'>";
-		strHTML += "</th><td>";
+		strHTML += "<div class='custom_radio'><input type='radio' value='C' name='status'>";
+		strHTML += "</div></th><td>";
 		strHTML += "<spring:message code='ezPMS.t261' />";
 		strHTML += "</input></td></tr>";
 		break;

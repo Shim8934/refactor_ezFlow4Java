@@ -64,14 +64,18 @@
 		<table class="content" style="width:100%">
 			<tr>
 		    	<td colspan="3">
-		    		<input type="radio" id="radio1" name="radiobutton" value="radiobutton"  checked>
-		      		<spring:message code='ezTask.t82'/>
+					<div class="custom_radio">
+						<input type="radio" id="radio1" name="radiobutton" value="radiobutton"  checked>
+						<label for="radio1"><spring:message code='ezTask.t82'/></label>
+					</div>
 		      	</td>
 		  	</tr>
 		  	<tr>
 		    	<td colspan="3">
-		    		<input type="radio" id="radio2" name="radiobutton" value="radiobutton" >
-		      		<spring:message code='ezTask.t83'/>
+					<div class="custom_radio">
+						<input type="radio" id="radio2" name="radiobutton" value="radiobutton" >
+						<label for="radio2"><spring:message code='ezTask.t83'/></label>
+					</div>
 		      	</td>
 		  	</tr>  
 		</table>

@@ -303,49 +303,64 @@
 	        </tr>
 	        <tr>
 	            <th rowspan="2"><spring:message code = 'ezApprovalG.t1302' /></th>
-	            <th><input type="radio" id="condition" name="condition" value="1" onclick="return condition_Init('1')"><spring:message code = 'ezApprovalG.t1303' /></th>
+				<th>
+					<div class='custom_radio'>
+						<input type="radio" id="condition1" name="condition" value="1" onclick="return condition_Init('1')">
+						<label for="condition1"><spring:message code = 'ezApprovalG.t1303' /></label>
+					</div>
+				</th>
 	            <td>
-	                <input type="radio" id="UserFlag" name="UserFlag" value="1" onclick="return DeptRadio_Init()">
-		                <c:choose>
-		                	<c:when test="${approvalFlag == 'S' }">
-		                		<spring:message code = 'ezApproval.t400' />
-		                	</c:when>
-		                	<c:otherwise>
-		                		<spring:message code = 'ezApprovalG.t445' />
-		                	</c:otherwise>
-		                </c:choose>
-	                
-	                <input type="radio" id="UserFlag" name="UserFlag" value="2" onclick="return DeptRadio_Init()">
-	                	<c:choose>
-		                	<c:when test="${approvalFlag == 'S' }">
-		                		<spring:message code = 'ezApproval.t401' />
-		                	</c:when>
-		                	<c:otherwise>
-		                		<spring:message code = 'ezApprovalG.t1304' />
-		                	</c:otherwise>
-		                </c:choose>
-	                
-	                <input type="radio" id="UserFlag" name="UserFlag" value="3" onclick="return DeptRadio_Init()">
-	                	<c:choose>
-		                	<c:when test="${approvalFlag == 'S' }">
-		                		<spring:message code = 'ezApproval.t402' />
-		                	</c:when>
-		                	<c:otherwise>
-		                		<spring:message code = 'ezApprovalG.t1305' />
-		                	</c:otherwise>
-		                </c:choose>
-	                <input type="radio" id="UserFlag" name="UserFlag" class = "approvalG" value="4" onclick="return DeptRadio_Init()">
-	                <c:if test="${approvalFlag == 'G' }">
-		                <spring:message code = 'ezApprovalG.t1306' />
-	                </c:if>
+					<div class='custom_radio'>
+						<input type="radio" id="UserFlag1" name="UserFlag" value="1" onclick="return DeptRadio_Init()">
+						<label for="UserFlag1">
+							<c:choose>
+								<c:when test="${approvalFlag == 'S' }">
+									<spring:message code = 'ezApproval.t400' />
+								</c:when>
+								<c:otherwise>
+									<spring:message code = 'ezApprovalG.t445' />
+								</c:otherwise>
+							</c:choose>
+	                	</label>
+					<input type="radio" id="UserFlag2" name="UserFlag" value="2" onclick="return DeptRadio_Init()">
+						<label for="UserFlag2">
+							<c:choose>
+								<c:when test="${approvalFlag == 'S' }">
+									<spring:message code = 'ezApproval.t401' />
+								</c:when>
+								<c:otherwise>
+									<spring:message code = 'ezApprovalG.t1304' />
+								</c:otherwise>
+							</c:choose>
+						</label>
+					<input type="radio" id="UserFlag3" name="UserFlag" value="3" onclick="return DeptRadio_Init()">
+						<label for="UserFlag3">
+							<c:choose>
+								<c:when test="${approvalFlag == 'S' }">
+									<spring:message code = 'ezApproval.t402' />
+								</c:when>
+								<c:otherwise>
+									<spring:message code = 'ezApprovalG.t1305' />
+								</c:otherwise>
+							</c:choose>
+						</label>
+					<input type="radio" id="UserFlag4" name="UserFlag" class = "approvalG" value="4" onclick="return DeptRadio_Init()">
+						<label for="UserFlag4">
+							<c:if test="${approvalFlag == 'G' }">
+								<spring:message code = 'ezApprovalG.t1306' />
+							</c:if>
+						</label>
+					</div>
 	            </td>
 	        </tr>
 	        <tr>
-	            <th><input type="radio" id="condition" name="condition" value="2" onclick="return condition_Init('2')"><spring:message code = 'ezApprovalG.t1307' /></th>
+				<th><div class='custom_radio'><input type="radio" id="condition2" name="condition" value="2" onclick="return condition_Init('2')"><label for="condition2"><spring:message code = 'ezApprovalG.t1307' /></label></div></th>
 	            <td>
-	                <input type="radio" id="Dept" name="Dept" value="1" onclick="return UserFlag_Init()">&nbsp;<spring:message code = 'ezApprovalG.t214' />
-	                <input type="radio" id="Dept" name="Dept" value="2" onclick="return UserFlag_Init()">&nbsp;<spring:message code = 'ezApprovalG.t1308' />
-	                <input type="radio" id="Dept" name="Dept" value="3" onclick="return UserFlag_Init()">&nbsp;<spring:message code = 'ezApprovalG.t1309' />
+					<div class='custom_radio'>
+						<input type="radio" id="Dept1" name="Dept" value="1" onclick="return UserFlag_Init()"><label for="Dept1"><spring:message code = 'ezApprovalG.t214' /></label>
+						<input type="radio" id="Dept2" name="Dept" value="2" onclick="return UserFlag_Init()"><label for="Dept2"><spring:message code = 'ezApprovalG.t1308' /></label>
+						<input type="radio" id="Dept3" name="Dept" value="3" onclick="return UserFlag_Init()"><label for="Dept3"><spring:message code = 'ezApprovalG.t1309' /></label>
+					</div>
 	            </td>
 	        </tr>
 	    </table>

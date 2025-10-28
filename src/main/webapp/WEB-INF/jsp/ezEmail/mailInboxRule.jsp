@@ -162,17 +162,17 @@
                                 
                                 if (_act.indexOf("NONE") != -1) {
                                     if (_Use == "Y")
-                                        _html += "<td style='width:8%;padding-left:5px;'><input type='checkbox' disabled=disabled _itemid='" + _itemid + "' onclick='event_statuschange(this);' checked></td>";
+                                        _html += "<td style='width:8%;padding-left:5px;'><div class='custom_checkbox'><input type='checkbox' disabled=disabled _itemid='" + _itemid + "' onclick='event_statuschange(this);' checked></div></td>";
                                     else
-                                        _html += "<td style='width:8%;padding-left:5px;'><input type='checkbox' disabled=disabled _itemid='" + _itemid + "' onclick='event_statuschange(this);'></td>";
+                                        _html += "<td style='width:8%;padding-left:5px;'><div class='custom_checkbox'><input type='checkbox' disabled=disabled _itemid='" + _itemid + "' onclick='event_statuschange(this);'></div></td>";
         
                                     _html += "<td style='width:60%;color:gray;'>" + MakeXMLString(_name) + "</td>";
                                 }
                                 else {
                                     if (_Use == "Y")
-                                        _html += "<td style='width:8%;padding-left:5px;'><input type='checkbox' _itemid='" + _itemid + "' onclick='event_statuschange(this);' checked></td>";
+                                        _html += "<td style='width:8%;padding-left:5px;'><div class='custom_checkbox'><input type='checkbox' _itemid='" + _itemid + "' onclick='event_statuschange(this);' checked></div></td>";
                                     else
-                                        _html += "<td style='width:8%;padding-left:5px;'><input type='checkbox' _itemid='" + _itemid + "' onclick='event_statuschange(this);'></td>";
+                                        _html += "<td style='width:8%;padding-left:5px;'><div class='custom_checkbox'><input type='checkbox' _itemid='" + _itemid + "' onclick='event_statuschange(this);'></div></td>";
         
                                     _html += "<td style='width:60%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;'>" + MakeXMLString(_name) + "</td>";
                                 }
@@ -275,17 +275,17 @@
                                 
                                 if (_act.indexOf("NONE") != -1) {
                                     if (_Use == "Y")
-                                        _html += "<td style='width:8%;padding-left:5px;'><input type='checkbox' disabled=disabled _itemid='" + _itemid + "' onclick='event_statuschange(this);' checked></td>";
+                                        _html += "<td style='width:8%;padding-left:5px;'><div class='custom_checkbox'><input type='checkbox' disabled=disabled _itemid='" + _itemid + "' onclick='event_statuschange(this);' checked></div></td>";
                                     else
-                                        _html += "<td style='width:8%;padding-left:5px;'><input type='checkbox' disabled=disabled _itemid='" + _itemid + "' onclick='event_statuschange(this);'></td>";
+                                        _html += "<td style='width:8%;padding-left:5px;'><div class='custom_checkbox'><input type='checkbox' disabled=disabled _itemid='" + _itemid + "' onclick='event_statuschange(this);'></div></td>";
         
                                     _html += "<td style='width:60%;color:gray;'>" + MakeXMLString(_name) + "</td>";
                                 }
                                 else {
                                     if (_Use == "Y")
-                                        _html += "<td style='width:8%;padding-left:5px;'><input type='checkbox' _itemid='" + _itemid + "' onclick='event_statuschange(this);' checked></td>";
+                                        _html += "<td style='width:8%;padding-left:5px;'><div class='custom_checkbox'><input type='checkbox' _itemid='" + _itemid + "' onclick='event_statuschange(this);' checked></div></td>";
                                     else
-                                        _html += "<td style='width:8%;padding-left:5px;'><input type='checkbox' _itemid='" + _itemid + "' onclick='event_statuschange(this);'></td>";
+                                        _html += "<td style='width:8%;padding-left:5px;'><div class='custom_checkbox'><input type='checkbox' _itemid='" + _itemid + "' onclick='event_statuschange(this);'></div></td>";
         
                                     _html += "<td style='width:60%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;'>" + MakeXMLString(_name) + "</td>";
                                 }
@@ -318,7 +318,7 @@
 		        }
 		        Xmlhttp = null;
 		    }
-		    function event_Mover(obj) {
+		    /*function event_Mover(obj) {
 		        if (obj != _RowObject) {
 		            obj.childNodes.item(0).style.backgroundColor = "#EDEDED";
 		            obj.childNodes.item(1).style.backgroundColor = "#EDEDED";
@@ -345,7 +345,43 @@
 		        obj.childNodes.item(1).style.backgroundColor = "#f1f8ff";
 		        obj.childNodes.item(2).style.backgroundColor = "#f1f8ff";
 		        MakeDescription();
-		    }
+		    }*/
+
+		    let _RowObject = null;
+		    let colorSelect = "#f1f8ff";
+            let colorOver = "#f4f5f5";
+            let colorDefault = "#ffffff";
+
+            function setRowBackgroundColor(row, color) {
+                if (!row) return;
+                const cells = row.querySelectorAll('td');
+                cells.forEach(cell => {
+                    cell.style.backgroundColor = color;
+                });
+            }
+
+            function event_Mover(row) {
+                if (row !== _RowObject) {
+                    setRowBackgroundColor(row, colorOver);
+                }
+            }
+
+            function event_Mout(row) {
+                if (row !== _RowObject) {
+                    setRowBackgroundColor(row, colorDefault);
+                }
+            }
+
+            function event_click(row) {
+                if (_RowObject) {
+                    setRowBackgroundColor(_RowObject, colorDefault);
+                }
+
+                _RowObject = row;
+                setRowBackgroundColor(row, colorSelect);
+                MakeDescription();
+            }
+
 		    function MakeDescription() {
 		        var _html = "";
 		        var _con = "";

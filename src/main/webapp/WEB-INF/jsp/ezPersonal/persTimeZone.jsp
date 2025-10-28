@@ -10,12 +10,12 @@
 		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<link rel="stylesheet" href="${util.addVer('/css/style.css')}" type="text/css">
 		<style>
-			.country1{content:url(/images/lang/icon_flag_kr.gif); cursor:pointer}
-			.country2{content:url(/images/lang/icon_flag_us.gif); cursor:pointer}
-			.country3{content:url(/images/lang/icon_flag_jp.gif); cursor:pointer}
-			.country4{content:url(/images/lang/icon_flag_cn.gif); cursor:pointer}
-			.country5{content:url(/images/lang/icon_flag_vi.gif); cursor:pointer}
-			.country6{content:url(/images/lang/icon_flag_id.gif); cursor:pointer}
+			.country1{content:url(/images/lang/icon_flag_kr.gif); cursor:pointer; vertical-align: middle;}
+			.country2{content:url(/images/lang/icon_flag_us.gif); cursor:pointer; vertical-align: middle;}
+			.country3{content:url(/images/lang/icon_flag_jp.gif); cursor:pointer; vertical-align: middle;}
+			.country4{content:url(/images/lang/icon_flag_cn.gif); cursor:pointer; vertical-align: middle;}
+			.country5{content:url(/images/lang/icon_flag_vi.gif); cursor:pointer; vertical-align: middle;}
+			.country6{content:url(/images/lang/icon_flag_id.gif); cursor:pointer; vertical-align: middle;}
 		</style>
 
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
@@ -54,33 +54,39 @@
 		function language_form(){
 			var languageTd = document.getElementById("languageTd");
 
-			languageTd.innerHTML += "<input type='radio' id='" + primaryLang + "' name='rad_flag' onclick='flag_onClick(this, \"rad\");' />"
-								 + "<img name='"+ primaryLang + "' class='country" + primaryLang + "' onclick='flag_onClick(this, \"img\");' />";
+			var html = "<div class='custom_radio'>";
+
+			html += "<input type='radio' id='" + primaryLang + "' name='rad_flag' onclick='flag_onClick(this, \"rad\");' />";
+			html += "<label for='" + primaryLang + "'><img name='"+ primaryLang + "' class='country" + primaryLang + "' onclick='flag_onClick(this, \"img\");' /></label>";
 			
-			if(primaryLang != 2) {
-				languageTd.innerHTML += "<input type='radio' id='2' name='rad_flag' onclick='flag_onClick(this, \"rad\");' />"
-									 + "<img name='2' class='country2' onclick='flag_onClick(this, \"img\");' />";
+			if (primaryLang != 2) {
+				html += "<input type='radio' id='2' name='rad_flag' onclick='flag_onClick(this, \"rad\");' />";
+				html += "<label for='2'><img name='2' class='country2' onclick='flag_onClick(this, \"img\");' /></label>";
 			}
-			if(primaryLang != 1) {
-				languageTd.innerHTML += "<input type='radio' id='1' name='rad_flag' onclick='flag_onClick(this, \"rad\");' />"
-									 + "<img name='1' class='country1' onclick='flag_onClick(this, \"img\");' />";
+			if (primaryLang != 1) {
+				html += "<input type='radio' id='1' name='rad_flag' onclick='flag_onClick(this, \"rad\");' />";
+				html += "<label for='1'><img name='1' class='country1' onclick='flag_onClick(this, \"img\");' /></label>";
 			}
-			if(primaryLang != 3 && useJapanese == 'YES') {
-				languageTd.innerHTML += "<input type='radio' id='3' name='rad_flag' onclick='flag_onClick(this, \"rad\");' />"
-									 + "<img name='3' class='country3' onclick='flag_onClick(this, \"img\");' />";
+			if (primaryLang != 3 && useJapanese === 'YES') {
+				html += "<input type='radio' id='3' name='rad_flag' onclick='flag_onClick(this, \"rad\");' />";
+				html += "<label for='3'><img name='3' class='country3' onclick='flag_onClick(this, \"img\");' /></label>";
 			}
-			if(primaryLang != 4 && useChinese == 'YES') {
-				languageTd.innerHTML += "<input type='radio' id='4' name='rad_flag' onclick='flag_onClick(this, \"rad\");' />"
-									 + "<img name='4' class='country4' onclick='flag_onClick(this, \"img\");' />";
+			if (primaryLang != 4 && useChinese === 'YES') {
+				html += "<input type='radio' id='4' name='rad_flag' onclick='flag_onClick(this, \"rad\");' />";
+				html += "<label for='4'><img name='4' class='country4' onclick='flag_onClick(this, \"img\");' /></label>";
 			}
-			if(primaryLang != 5 && useVietnamese == 'YES') {
-				languageTd.innerHTML += "<input type='radio' id='5' name='rad_flag' onclick='flag_onClick(this, \"rad\");' />"
-									 + "<img name='5' class='country5' onclick='flag_onClick(this, \"img\");' />";
+			if (primaryLang != 5 && useVietnamese === 'YES') {
+				html += "<input type='radio' id='5' name='rad_flag' onclick='flag_onClick(this, \"rad\");' />";
+				html += "<label for='5'><img name='5' class='country5' onclick='flag_onClick(this, \"img\");' /></label>";
 			}
-			if(primaryLang != 6 && useIndonesian == 'YES') {
-				languageTd.innerHTML += "<input type='radio' id='6' name='rad_flag' onclick='flag_onClick(this, \"rad\");' />"
-									 + "<img name='6' class='country6' onclick='flag_onClick(this, \"img\");' />";
+			if (primaryLang != 6 && useIndonesian === 'YES') {
+				html += "<input type='radio' id='6' name='rad_flag' onclick='flag_onClick(this, \"rad\");' />";
+				html += "<label for='6'><img name='6' class='country6' onclick='flag_onClick(this, \"img\");' /></label>";
 			}
+			
+			html += "</div>";
+			
+			languageTd.innerHTML += html;
 			
 			document.getElementsByClassName("country1")[0] && document.getElementsByClassName("country1")[0].setAttribute("title", "<spring:message code='ezPersonal.s81'/>");
 			document.getElementsByClassName("country2")[0] && document.getElementsByClassName("country2")[0].setAttribute("title", "<spring:message code='ezPersonal.s82'/>");

@@ -32,6 +32,7 @@
 		#lvJobList tr td:nth-child(4) {padding-left: 12px;}
 		#lvJobList {min-width: 400px;}
 		#lvJobList tr th:nth-child(4), tr th:nth-child(5) {width: 15%;} 
+		#lvJobList_TH_0 {text-align: center;}
 		#lvJobUserList {min-width: 360px;}
 		.countColor {color:#017BEC;}
 	</style>
@@ -550,6 +551,8 @@
 				var labelElmt = document.createElement("label");
 				var inputElmt = document.createElement("input");
 				var spanElmt  = document.createElement("span");
+				var wrapperDiv = document.createElement("div");
+				wrapperDiv.className = "custom_checkbox";
 				
 				labelElmt.className = "switch";
 				spanElmt.className = "slider round";
@@ -567,7 +570,8 @@
 				labelElmt.appendChild(inputElmt);
 				labelElmt.appendChild(spanElmt);
 				
-				useTd.appendChild(labelElmt);
+				wrapperDiv.appendChild(labelElmt);
+				useTd.appendChild(wrapperDiv);
 			}
 		}
 		

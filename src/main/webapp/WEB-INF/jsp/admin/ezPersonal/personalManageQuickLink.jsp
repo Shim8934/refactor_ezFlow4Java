@@ -110,7 +110,7 @@
 								</tr>
 								<tr>
 									<td class="quickTD">
-										<div>
+										<div class="custom_radio">
 											<c:set var="codes" value="A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P" />
 											<c:forEach var="code" items="${fn:split(codes, ',')}" varStatus="var">
 												<dl class="quickIcon_link">

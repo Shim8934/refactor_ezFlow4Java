@@ -81,7 +81,9 @@
 					<c:forEach var="item" items="${list}">
 						<tr>
 							<td style="text-align:center">
-								<input type='checkbox' value="1" checked name="goruplistinput" _name="${item.personal}" _email="${item.address}">
+							    <div class="custom_checkbox">
+								    <input type='checkbox' value="1" checked name="goruplistinput" _name="${item.personal}" _email="${item.address}">
+                                </div>
 							</td>
 							<td>${item.personal}</td>
 							<td>${item.address}</td>
