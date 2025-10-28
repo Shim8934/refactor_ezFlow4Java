@@ -2374,6 +2374,10 @@ public class EzScheduleController extends EzFileMngUtil {
         }
         
         ObjectMapper objectMapper = new ObjectMapper();
+        for (ScheduleOwnerInfoVO scheduleOwnerInfoVO : schOwnInfoList) {
+            scheduleOwnerInfoVO.setOwnerName(scheduleOwnerInfoVO.getOwnerName().replaceAll("\'", "&#039;").replaceAll("\"", "&#034;"));
+            scheduleOwnerInfoVO.setOwnerName2(scheduleOwnerInfoVO.getOwnerName2().replaceAll("\'", "&#039;").replaceAll("\"", "&#034;"));
+        }
         String schOwnInfoListToJson = objectMapper.writeValueAsString(schOwnInfoList);
 
         //2017-11-15 자원관리 사용하지 않을 경우 탭 처리
