@@ -206,8 +206,6 @@
 	            	if (result != "FALSE") {
 	                	msgRtn = result;
 	            	}
-	            	
-	            	onloadflag = true;
 	        	}
 	        	
 	        	if(cmd == "mod") {
@@ -222,6 +220,7 @@
 				if (reFlagVal == '1' && modType != "1") {
 					show_repetition_info();
 				}
+				onloadflag = true;
 		    }
 			
 		    window.onresize = function () {
