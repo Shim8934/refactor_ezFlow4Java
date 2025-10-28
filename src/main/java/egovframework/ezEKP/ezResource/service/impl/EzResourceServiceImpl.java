@@ -2999,13 +2999,6 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 			newNum = ezResourceDAO.delResSch_S2(map);
 			
 			copyResSch(xmlStr, String.valueOf(newNum), tenantID, offset);
-			
-			// 새 반복일정이 작성되었을 때 반복정보 삽입
-			if (reFlag.equals("1") && newNum != 0) {
-				List<ResGetScheduleRepetitionVO> getScheduleRepetition = getScheduleRepetition(newNum, ownerID, companyID, tenantID);
-				String cmd = !getScheduleRepetition.isEmpty() ? "mod" : "add";
-				boolean result = saveRepetition(companyID, String.valueOf(newNum), ownerID, recurXml, cmd, tenantID, offset, "1"); // lang과 관련된 값을 사용하지 않음
-			}
 			num = String.valueOf(newNum);
 		}
 		
