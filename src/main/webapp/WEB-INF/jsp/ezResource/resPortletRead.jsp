@@ -62,6 +62,7 @@
 	        var cmd = "${cmdStr}";
 			var DstartDateVal = "<c:out value='${DstartDateVal}'/>";
 			var DendDateVal = "<c:out value='${DendDateVal}'/>";
+            var title = "${title}";
 	        
 	        window.onload = function () {
 	            document.getElementById("displayNM").innerHTML = "<a onClick=MemberInfo_onClick('" + writerIDVal +"','" + deptID + "')>" + org_ownerNM + "</a> (" + org_deptNM + ")";
@@ -99,6 +100,8 @@
 						document.getElementById("AllDayDisplay").innerHTML = sDT.substring(0, sDT.lastIndexOf(":")) + " ~ " + eDT.substring(0, eDT.lastIndexOf(":"));
 					}
 	            }
+                
+                document.getElementById("titleDIV").innerHTML = ReplaceHTML(title).replaceAll("&#092;", "\\");
 	            
 	            var iframeStyle = "<style>";
 	            iframeStyle += "P { MARGIN-TOP: 0px; MARGIN-BOTTOM: 0px; MARGIN-LEFT: 0px; }";
@@ -798,7 +801,7 @@
 		        		<tr>
 		            		<th><spring:message code='ezResource.t224' /></th>
 		            		<td colspan="3">
-		                		<div id="titleDIV"> <c:out value='${title}' /></div>
+		                		<div id="titleDIV"></div>
 		            		</td>
 		        		</tr>	        			
 	        		</table>

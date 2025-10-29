@@ -1518,7 +1518,7 @@ public class EzResourceController extends EzFileMngUtil {
 				ownerNm = xmlDom2.getElementsByTagName("DISPLAYNAME" + userInfo.getPrimary()).item(0).getTextContent();
 			}*/
 			
-			title = getSchedule.getTitle();
+			title = getSchedule.getTitle().replaceAll("\"", "&#034;").replaceAll("\\\\", "&#092;");
 			loc = getSchedule.getLocation();
 			
 			startDateTime = commonUtil.getDateStringInUTC(getSchedule.getStartDate(), userInfo.getOffset(), false);
