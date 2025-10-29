@@ -2394,10 +2394,10 @@ CREATE TABLE nezapprovalg.`tbl_adminreceiptgroup_main` (
 -- Table structure for table `tbl_adminreceiptgroup_sub`
 --
 
-DROP TABLE IF EXISTS nezportal.`tbl_adminreceiptgroup_sub`;
+DROP TABLE IF EXISTS nezapprovalg.`tbl_adminreceiptgroup_sub`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE nezportal.`tbl_adminreceiptgroup_sub` (
+CREATE TABLE nezapprovalg.`tbl_adminreceiptgroup_sub` (
   `MAINID` bigint(10) NOT NULL,
   `SUBID` bigint(10) NOT NULL AUTO_INCREMENT,
   `DEPTID` varchar(400) DEFAULT NULL,
