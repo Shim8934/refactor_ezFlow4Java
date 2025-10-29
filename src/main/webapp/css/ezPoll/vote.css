@@ -19,7 +19,7 @@
 .emoticon:hover {
     background-size: 100px;
 }
-.emoticonPanel{display: block; width:400px; height:356.5px; margin-top: -362px;margin-left: -39px; background-color: #fff; border:1px solid #ddd; position: absolute;}
+.emoticonPanel{display: block; width:400px; height:356.5px; margin-top: -374px;margin-left: 21px; background-color: #fff; border:1px solid #ddd; position: absolute;}
 #previousEmoticon, #nextEmoticon{width:30px; height:40px; padding-top:3px;}
 
 /* portal area */
