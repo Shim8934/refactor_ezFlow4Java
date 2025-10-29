@@ -2256,7 +2256,7 @@
    			        
    			     	parameter[61] = tempKeyword;
                        
-                    ezapprovalinfo_dialogArguments[0] = parameter;
+                    ezCommon_cross_dialogArguments[0] = parameter;
 					showPopup("/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun + "&orgCompanyID=" + orgCompanyID + "&docType=" + pDocType + "&ext=" + "hwp" + "&formID=" + pFormID + (anCnt > 1 ? "&draftAllFlag=Y" : ""), 1210, 750, "ezApprovalInfo", GetOpenWindowfeature(1210, 750), btnApprovalInfo_Complete);
 				}
 
