@@ -125,4 +125,10 @@ public interface LoginService {
 	public String setPasswordByCertification(String sabun, String certificationNum, String password, LoginVO loginVO) throws Exception;
 
 	boolean userDeviceCnt(String cn) throws Exception;
+	
+	public int insertRequestId(String requestId) throws Exception;
+	
+	public int checktRequestId(String requestId) throws Exception;
+	
+	public void deleteSamlRequestIdScheduler() throws Exception;
 }

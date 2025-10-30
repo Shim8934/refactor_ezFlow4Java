@@ -149,6 +149,8 @@ import org.springframework.web.util.WebUtils;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 
+import org.opensaml.core.config.InitializationService;
+
 import com.unidocs.workflow.client.WFJob;
 import com.unidocs.workflow.common.FileEx;
 import com.unidocs.workflow.common.JobResult;
@@ -296,6 +298,10 @@ public class CommonUtil {
 			EzFAL.initS3Client(config.getProperty("config.S3EndPoint"), config.getProperty("config.S3AccessKey"),
 					config.getProperty("config.S3SecretKey"), config.getProperty("config.S3Bucket"));
 		}
+		
+
+		// 2025-07-24 김승연 SAML 전역 설정 초기화
+		InitializationService.initialize();
 		
     	logger.debug("init ended.");
     }

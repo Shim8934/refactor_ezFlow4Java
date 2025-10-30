@@ -24,6 +24,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
@@ -725,4 +726,30 @@ public class LoginServiceImpl extends EgovAbstractServiceImpl implements LoginSe
 		return result;
 	}
 
+	@Override
+	public int insertRequestId(String requestId) throws Exception {
+		
+		return loginDAO.insertRequestId(requestId);
+	}
+
+	@Override
+	public int checktRequestId(String requestId) throws Exception {
+		
+		int checkResult = loginDAO.selectRequestId(requestId);
+		
+		if(checkResult == 1) {
+			loginDAO.deleteRequestId(requestId);
+		}
+		return checkResult;
+	}
+	
+	@Override
+	@Scheduled(cron = "00 00 05 * * *")
+	public void deleteSamlRequestIdScheduler() throws Exception {
+		logger.debug("deleteSamlRequestId scheduler started.");
+		
+		loginDAO.deleteSamlRequestIdScheduler();
+		
+		logger.debug("deleteSamlRequestId scheduler ended");
+	}
 }

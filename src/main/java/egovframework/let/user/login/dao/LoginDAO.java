@@ -271,4 +271,20 @@ public class LoginDAO extends EgovAbstractDAO {
 	public int userDeviceCnt(Map<String, Object> map) throws Exception {
 		return (int)select("loginDAO.userDeviceCnt", map);
 	}
+	
+	public int insertRequestId(String requestId) throws Exception {
+		return update("loginDAO.insertRequestId", requestId);
+	}
+	
+	public int selectRequestId(String requestId) throws Exception {
+		return (int) select("loginDAO.selectRequestId", requestId);
+	}
+
+	public int deleteRequestId(String requestId) throws Exception {
+		return update("loginDAO.deleteRequestId", requestId);
+	}
+	
+	public void deleteSamlRequestIdScheduler() throws Exception {
+		update("loginDAO.deleteSamlRequestIdScheduler");
+	}
 }

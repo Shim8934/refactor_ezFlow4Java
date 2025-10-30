@@ -2263,7 +2263,16 @@ public class EzCommonServiceImpl extends EzFileMngUtil implements EzCommonServic
             put("config_type","TEAMS");
         }});
 
-        List<TenantVO> tenantIdList = ezCommonDAO.getTenantList();
+        test.add(new HashMap<String, Object>(){{
+            put("confName","useTigrisSAMLAuth");
+            put("property_value","NO");
+            put("config_name","tigris SAML 인증 연동여부");
+            put("regdate","2025-07-23 00:00:00");
+            put("description","YES: 연동NO: 연동안함 (default: NO)");
+            put("config_type","연동");
+        }});
+        
+		List<TenantVO> tenantIdList = ezCommonDAO.getTenantList();
 		
 		for (Map<String, Object> map : test) {
         	try {
@@ -8970,5 +8979,10 @@ public class EzCommonServiceImpl extends EzFileMngUtil implements EzCommonServic
     @Override
     public void alterCommItemPhotoItemContent() throws Exception {
         ezCommonDAO.alterCommItemPhotoItemContent();
+    }
+    
+    @Override
+    public void createTblSamlRequestId() throws Exception {
+        ezCommonDAO.createTblSamlRequestId();
     }
 }

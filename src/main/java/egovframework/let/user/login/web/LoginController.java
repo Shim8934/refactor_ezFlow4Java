@@ -1,5 +1,6 @@
 package egovframework.let.user.login.web;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.UnsupportedEncodingException;
@@ -12,8 +13,10 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -35,11 +38,17 @@ import egovframework.ezEKP.ezBoard.vo.BoardListVO;
 import egovframework.ezEKP.ezBoard.vo.BoardPropertyVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityCBoardVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
+import net.shibboleth.utilities.java.support.xml.BasicParserPool;
 import org.apache.commons.codec.binary.Base32;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.opensaml.core.xml.XMLObject;
+import org.opensaml.core.xml.config.XMLObjectProviderRegistrySupport;
+import org.opensaml.core.xml.io.Unmarshaller;
+import org.opensaml.saml.saml2.core.NameID;
+import org.opensaml.saml.saml2.core.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -83,6 +92,8 @@ import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.CommonUtil.PasswordCheckPolicyResult;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
+import org.w3c.dom.Element;
+
 /**
  * 일반 로그인을 처리하는 컨트롤러 클래스
  * @author 공통서비스 개발팀 박지욱
@@ -2196,6 +2207,101 @@ public class LoginController {
 		}
 
 		logger.debug("sendAuthCodeBySMS ended={}",result);
+		return result;
+	}
+	
+	@PostMapping(value = "/user/login/samlAuth.do")
+	public void samlAuth(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		 String encodedResponse = request.getParameter("SAMLResponse");
+		 
+		 String serverName = request.getServerName();
+		 int tenantId = loginService.getTenantId(serverName);
+		 
+		 Map<String, String> samlResponse = getSamlResponse(encodedResponse);
+		 
+		 String userId = samlResponse.get("userId");
+		 String inResponseTo = samlResponse.get("inResponseTo");
+		 
+		 int checkResponse = loginService.checktRequestId(inResponseTo);
+		 
+		 if (userId != null && !userId.isEmpty() && checkResponse == 1) {
+			 userId = userId.substring(0, userId.indexOf("@"));
+			 logger.debug("userId = " + userId);
+			 
+			 LoginVO loginVO = new LoginVO();
+			 
+			 loginVO.setId(userId);
+			 loginVO.setTenantId(tenantId);;
+			 loginVO.setDn("NOPASSWORD");
+			 
+			 LoginVO resultVO = loginService.selectUser(loginVO);
+			 
+			 if (resultVO.getId() != null) {
+				 String ip = ClientUtil.getClientIP(request);
+				 loginVO.setIp(ip);
+				 
+				 loginService.updateUser(loginVO);
+
+				 String ezSessionId = createLoginCookie(userId, " ", " ", tenantId, request, response, resultVO.getDeptID(), resultVO.getCompanyID());
+				 String sessionCode =  getSessionId(request, ezSessionId);
+				 
+				 resultVO.setAgent(ClientUtil.getClientInfo(request, "agent"));
+				 resultVO.setOs(ClientUtil.getClientInfo(request, "os"));
+				 resultVO.setBrowser(ClientUtil.getClientInfo(request, "browser"));
+				 resultVO.setTenantId(tenantId);
+				 resultVO.setStatus("Y");
+				 resultVO.setSessionCode(sessionCode);
+
+				 if (resultVO.getTitle2() == null) {
+					 resultVO.setTitle2("");
+				 }
+
+				 loginService.insertLog(resultVO);
+					
+				 response.sendRedirect("/ezNewPortal/newPortalMain.do");
+				 return;
+			 }
+		 }
+		response.sendRedirect("/ezNewPortal/newPortalMain.do");
+	}
+	
+	private Map<String, String> getSamlResponse(String encodedResponse) throws Exception {
+
+		Map<String, String> result = new HashMap<>();
+		result.put("userId", "");
+		result.put("inResponseTo", "");
+
+		try{
+			byte[] decoded = Base64.getDecoder().decode(encodedResponse);
+
+			BasicParserPool parserPool = new BasicParserPool();
+			parserPool.setNamespaceAware(true);
+			parserPool.initialize();
+
+			Element element = parserPool.parse(new ByteArrayInputStream(decoded)).getDocumentElement();
+
+			Unmarshaller unmarshaller = XMLObjectProviderRegistrySupport
+					.getUnmarshallerFactory()
+					.getUnmarshaller(element);
+
+			if (unmarshaller == null) {
+				return result;
+			}
+
+			XMLObject xmlObj = unmarshaller.unmarshall(element);
+			Response samlResponse = (Response) xmlObj;
+
+			NameID nameId  = samlResponse.getAssertions().get(0).getSubject().getNameID();
+
+			if (nameId != null) {
+				result.put("userId", nameId.getValue());
+			}
+
+			result.put("inResponseTo", samlResponse.getInResponseTo());
+
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+		}
 		return result;
 	}
 	

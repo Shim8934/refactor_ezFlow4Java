@@ -26,6 +26,21 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.joda.time.DateTime;
+import org.opensaml.messaging.context.MessageContext;
+import org.opensaml.saml.common.SAMLObject;
+import org.opensaml.saml.common.SAMLVersion;
+import org.opensaml.saml.common.messaging.context.SAMLBindingContext;
+import org.opensaml.saml.common.messaging.context.SAMLEndpointContext;
+import org.opensaml.saml.common.messaging.context.SAMLPeerEntityContext;
+import org.opensaml.saml.common.xml.SAMLConstants;
+import org.opensaml.saml.saml2.binding.encoding.impl.HTTPRedirectDeflateEncoder;
+import org.opensaml.saml.saml2.core.AuthnRequest;
+import org.opensaml.saml.saml2.core.Issuer;
+import org.opensaml.saml.saml2.core.impl.AuthnRequestBuilder;
+import org.opensaml.saml.saml2.core.impl.IssuerBuilder;
+import org.opensaml.saml.saml2.metadata.Endpoint;
+import org.opensaml.saml.saml2.metadata.impl.SingleSignOnServiceBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -199,7 +214,8 @@ public class AuthenticInterceptor extends WebContentInterceptor {
 				return false;
 			}
 		} else {
-			String ezOffice365Auth = "";			
+			String ezOffice365Auth = "";
+			String useTigrisSAMLAuth = "";
 			int tenantId = -1;
 			
 			try {
@@ -209,8 +225,9 @@ public class AuthenticInterceptor extends WebContentInterceptor {
 		        logger.debug("serverName=" + serverName + ",tenantId=" + tenantId);
 		    	
 		        ezOffice365Auth = ezCommonService.getTenantConfig("ezOffice365Auth", tenantId);
-		        
+				useTigrisSAMLAuth = ezCommonService.getTenantConfig("useTigrisSAMLAuth", tenantId);
 		    	logger.debug("ezOffice365Auth=" + ezOffice365Auth);
+		    	logger.debug("useTigrisSAMLAuth=" + useTigrisSAMLAuth);
 			} catch (Exception e) {
 				logger.error(e.getMessage(), e);
 				
@@ -255,6 +272,28 @@ public class AuthenticInterceptor extends WebContentInterceptor {
 	        	performEzOffice365Auth(request, response, tenantId);
 	        	
 	        	return false;
+			} else if ("YES".equals(useTigrisSAMLAuth)) {
+                try {
+					String currentUri = request.getScheme()
+							+ "://"
+							+ request.getServerName()
+							+ ("http".equals(request.getScheme())
+							&& request.getServerPort() == 80
+							|| "https".equals(request.getScheme())
+							&& request.getServerPort() == 443 ? "" : ":"
+							+ request.getServerPort());
+					MessageContext<SAMLObject> messageContext = null;
+					messageContext = buildSamlMessageContext(currentUri + config.getProperty("config.tigris.acsUrl"), config.getProperty("config.tigris.spEntityId"), config.getProperty("config.tigris.idpUrl"));
+					HTTPRedirectDeflateEncoder encoder = new HTTPRedirectDeflateEncoder();
+					encoder.setMessageContext(messageContext);
+					encoder.setHttpServletResponse(response);
+		
+					encoder.initialize();
+					encoder.encode();
+				} catch (Exception e) {
+					logger.error(e.getMessage(), e);
+				}
+				return false;
 	        } else {
 	        	logger.debug("No login cookie exists. Redirecting to login page...");
 	        		        	
@@ -572,4 +611,46 @@ public class AuthenticInterceptor extends WebContentInterceptor {
     	
     	return url;
     }
+	
+	public MessageContext<SAMLObject> buildSamlMessageContext(String acsUrl, String spEntityId, String idpUrl) throws Exception {
+		// Issuer 객체 생성
+		Issuer issuer = new IssuerBuilder().buildObject();
+		issuer.setValue(spEntityId);
+
+		// AuthnRequest 객체 생성
+		AuthnRequestBuilder authnRequestBuilder = new AuthnRequestBuilder();
+		AuthnRequest authnRequest = authnRequestBuilder.buildObject();
+
+		String requestId = UUID.randomUUID().toString();
+		loginService.insertRequestId(requestId);
+		
+		authnRequest.setID(requestId);
+		authnRequest.setIssueInstant(new DateTime());
+		authnRequest.setProtocolBinding(SAMLConstants.SAML2_REDIRECT_BINDING_URI);
+		authnRequest.setAssertionConsumerServiceURL(acsUrl);
+		authnRequest.setIssuer(issuer);
+		authnRequest.setVersion(SAMLVersion.VERSION_20);
+		authnRequest.setForceAuthn(true);
+
+		// Context 객체 생성(3.X 버전에서는 BasicSAMLMessageContext를 지원하지 않아 우회함)
+		MessageContext<AuthnRequest> messageContext = new MessageContext<>();
+		messageContext.setMessage(authnRequest);
+
+		SAMLPeerEntityContext peerEntityContext = messageContext.getSubcontext(SAMLPeerEntityContext.class, true);
+		peerEntityContext.setEntityId(spEntityId);
+
+		// EndPoint 생성
+		SAMLEndpointContext endpointContext = peerEntityContext.getSubcontext(SAMLEndpointContext.class, true);
+		SingleSignOnServiceBuilder endpointBuilder = new SingleSignOnServiceBuilder();
+		Endpoint endpoint = endpointBuilder.buildObject();
+		endpoint.setBinding(SAMLConstants.SAML2_REDIRECT_BINDING_URI);
+		endpoint.setLocation(idpUrl);
+		endpointContext.setEndpoint(endpoint);
+
+		// SAMLBindingContext 추가
+		SAMLBindingContext bindingContext = messageContext.getSubcontext(SAMLBindingContext.class, true);
+		bindingContext.setBindingUri(SAMLConstants.SAML2_REDIRECT_BINDING_URI);
+
+		return (MessageContext<SAMLObject>) (MessageContext<?>) messageContext;
+	}
 }
