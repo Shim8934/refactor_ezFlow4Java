@@ -486,7 +486,7 @@
 		    			company : "",
 		                </c:if>		        			
 		    			type : "user",
-						adminOrgan : "y"
+						adminOrgan : "n"
 		        	},
 		        	success : function(result){	
 		        		var headerData = createXmlDom();

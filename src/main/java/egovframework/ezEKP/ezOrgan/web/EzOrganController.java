@@ -352,7 +352,8 @@ public class EzOrganController {
 
 		String useOrganHideFlag = ezCommonService.getTenantConfig("useOrganHideFlag", userInfo.getTenantId()) != ""? ezCommonService.getTenantConfig("useOrganHideFlag", userInfo.getTenantId()) : "NO";
 		// useOganHideFlag를 사용하지 않으면 adminOrgan을 다 "y"로 둬서 조직도숨김을 뺀다.
-		adminOrgan = "NO".equalsIgnoreCase(useOrganHideFlag) ? "y" : adminOrgan;
+		// adminOrgan이 y이고 useOrganHideFlag를 사용하지 않을 때에만 y로 유지한다.
+		adminOrgan = "NO".equalsIgnoreCase(useOrganHideFlag) && "y".equalsIgnoreCase(adminOrgan) ? "y" : adminOrgan;
 		
 		if (userInfo.getRollInfo().indexOf("c=1") != -1 && adminOrgan.equalsIgnoreCase("y")) { // 전체 관리자 && 관리자 > 조직도 메뉴 => 전체 검색
 			companyId = "";
