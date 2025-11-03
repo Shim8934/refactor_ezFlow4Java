@@ -1025,7 +1025,10 @@ public class EzSurveyServiceImpl extends EzFileMngUtil implements EzSurveyServic
 		else if (mode.equals("modify")) {
 			//Change modify status only if it's not draft survey
 			if (survey.getDraftFlag() == 0) {
+				String timeUTC             = commonUtil.getTodayUTCTime("");
 				survey.setModifyFlag(1);
+				survey.setUpdateDate(timeUTC);
+				survey.setUpdateUser(userInfo.getId());
 				survey.setUpdateMode(1);
 				
 				ezSurveyDAO.updateSurveyItem(survey);
@@ -1388,7 +1391,10 @@ public class EzSurveyServiceImpl extends EzFileMngUtil implements EzSurveyServic
 		SurveyVO survey = ezSurveyDAO.getSurveyInfo(map);
 		
 		if (survey.getModifyFlag() == 1) {
+			String timeUTC             = commonUtil.getTodayUTCTime("");
 			survey.setModifyFlag(0);
+			survey.setUpdateDate(timeUTC);
+			survey.setUpdateUser(userInfo.getId());
 			survey.setUpdateMode(1);
 			ezSurveyDAO.updateSurveyItem(survey);
 		}
