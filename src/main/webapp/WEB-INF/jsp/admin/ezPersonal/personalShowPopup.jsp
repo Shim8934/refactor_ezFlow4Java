@@ -40,8 +40,8 @@
 				var parentElement = parent.document.getElementById("ifrmPreViewH");
 				
 				if (parentElement != null) {
-					parentElement.style.height = "<c:out value = '${wHeight}'/>px";
-					parentElement.style.width = "<c:out value = '${wWidth}'/>px";
+					parentElement.style.height = "100%";
+					parentElement.style.width = "97%";
 				}
 			}
 			
@@ -105,7 +105,7 @@
 		</script>
 		
 	</head>
-	<body class = "popup_notice popup_type${skinValue}" style="overflow:hidden;">
+	<body class = "popup_notice popup_type${skinValue}" style="">
 		<!--  popup 해더 사이즈 : 33px;	bottom 사이즈 : 49px;본문 내용 위아래 여백 : 54px;	총 height 사이즈 : 136px; -->
 		<form style="height:100%;">
 		<div class="popup_noticeLayout">

@@ -63,7 +63,7 @@
 			});
 		</script>
 		<style type="text/css">
-			#frameDiv {overflow:auto;}
+			
 		</style>
 	</head>
 	<body class = "mainbody">
