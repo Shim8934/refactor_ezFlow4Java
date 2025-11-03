@@ -1573,10 +1573,15 @@ public class EzNewPortalGWController {
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			String companyId = request.getParameter("companyId");
 			int tenantId = info.getTenantId();
+			String deptId = info.getDeptId();
+			String lang = info.getLang();
+			String deptPath = ezOrganService.getDeptPath(deptId, tenantId);
 			JSONObject data = new JSONObject();
 			List<?> frameList = ezNewPortalService.getUserFrameListAndSelectedFrame(companyId, tenantId, userId);
+			List<ThemeInfoVO> themeList = ezNewPortalService.getUserThemeList(companyId,tenantId, userId, deptPath, lang);
 
 			data.put("frameList", frameList);
+			data.put("themeList", themeList);
 			
 			result.put("status", "ok");
 			result.put("code", 0);

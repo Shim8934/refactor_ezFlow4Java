@@ -87,15 +87,15 @@
 			<section class="set-frame" style="display:none;">
 				<h3><spring:message code='ezPortal.t990022' /></h3>
 				<ul class="form_set theme" id="themeSet">
-					<li class="default select">
+					<li class="default select base" style="display: none;">
 						<span class="form_image"></span>
 						<span class="form_name"><spring:message code='ezPortal.defaultTheme' /></span>
 					</li>
-					<li class="shortcut">
+					<li class="shortcut" style="display: none;">
 						<span class="form_image"></span>
 						<span class="form_name"><spring:message code='ezPortal.shortcutTheme' /></span>
 					</li>
-					<li class="separation">
+					<li class="separation" style="display: none;">
 						<span class="form_image"></span>
 						<span class="form_name"><spring:message code='ezPortal.separationTheme' /></span>
 					</li>
@@ -210,85 +210,20 @@
 						if (xhr.status >= 200 && xhr.status < 300) {
 							var ul = document.getElementById('frameUl');
 							var frameList = JSON.parse(xhr.responseText).data.frameList;
+							var themeList = JSON.parse(xhr.responseText).data.themeList;
 							var usedIndex = -1;
 							
-							frameList.forEach(function (item, index) {
-								var li = document.createElement('li');
-								var div = document.createElement('div');
-								div.className = 'flipsterLi';
+							for (var i = 0; i < themeList.length; i++) {
+								var theme = themeList[i];
+								var themeId = theme.themeId;
 								
-								// 최초 회사 frame 설정
-								if(usedIndex == -1 && item.frameDefault) {
-									div.classList.add('select-flipster');
-									portletSetting.selectedFrame = item.usedFrame;
-									portletSetting.usedTheme = item.themeId;	
-									usedIndex = index;
+								if (themeId == 1) {
+									$(".base").css("display", "");
+								} else if (themeId == 2) {
+									$(".shortcut").css("display", "");
+								} else if (themeId == 3) {
+									$(".separation").css("display", "");
 								}
-								
-								// 사용자가 선택한 frame 설정
-								if (item.usedFrame*1 === item.frameId*1) {
-									var selectFlipster = document.getElementsByClassName('select-flipster')[0];
-									
-									if(selectFlipster !== undefined) {
-										selectFlipster.classList.remove('select-flipster');
-									}
-									div.classList.add('select-flipster');
-									portletSetting.selectedFrame = item.usedFrame;
-									portletSetting.usedTheme = item.themeId;
-									usedIndex = index;
-								}
-								
-								div.setAttribute("frameid", item.frameId);
-								div.setAttribute("themeid", item.themeId);
-								/* div.dataset.frameid = item.frameId;
-								div.dataset.themeid = item.themeId; */
-								// 프레임 이미지 나오면 변경하자!!
-								var img = document.createElement('img');
-								img.src = '/images/admin/theme' + item.themeId + "_frame" + item.frameId + ".png";
-								
-								div.appendChild(img);
-								li.appendChild(div);
-								ul.appendChild(li);
-							});
-
-							// jquey flipster 적용
- 							$(".frameList").flipster({
-								style: 'carousel',
-							    spacing: -0.4,
-							    nav: false,
-							    buttons: true,
-							    start: (usedIndex*1),
-							    fadeIn : 0,
-							});					
-
-							// 프레임이 한 개인 경우 별도 처리
-							var listCnt = frameList.length; 
-							if(listCnt === 1) {
-								var onlyOneFrame = document.getElementById('frameList');
-								onlyOneFrame.style.display = 'flex';
-								onlyOneFrame.style.justifyContent = 'center';
-							}
-							
-							// 배경색은 리스트 화면에 출력할 때 설정하는 걸로!
-							var frameList = document.getElementById('frameList').style.backgroundColor = '#e0e3e4';
-							
-							// flipsterBtn 위치 고정
-							var flipsterBtnPrev = document.getElementsByClassName('flipster__button--prev')[0];
-							var flipsterBtnNext = document.getElementsByClassName('flipster__button--next')[0];
-							if(flipsterBtnPrev !== undefined && flipsterBtnNext !== undefined) {
-								//flipsterBtnPrev.style.top = '9%';
-								//flipsterBtnNext.style.top = '9%';
-								// 2021-02-24 박기범 - 화살표 버튼으로도 프레임 선택되게 수정
-								flipsterBtnPrev.addEventListener('click',currentClick);
-								flipsterBtnNext.addEventListener('click',currentClick);
-							}
-							
-							if(listCnt !== 1) {
-								var frameUl = document.getElementById('frameUl');
-								HTMLCollection.prototype.forEach = Array.prototype.forEach;
-								frameUl.children.forEach(function(item, index) {
-									item.addEventListener('click', selectFrame);
-								});								
 							}
 						} else {
 							console.error(xhr.responseText);	
@@ -298,7 +233,7 @@
 					xhr.send();
 				}
 			
-				// getUserFrameList();
+				getUserFrameList();
 				bodyFrameSetting('on');
 				
 				var saveBtn = document.getElementById('saveBtn');
