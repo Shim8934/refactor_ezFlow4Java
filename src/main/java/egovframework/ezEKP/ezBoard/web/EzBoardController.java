@@ -1518,6 +1518,9 @@ public class EzBoardController extends EzFileMngUtil{
 				boardVO.setListShowType(boardInfo.getListShowType());
 			}
 		}
+		String useVersion = ezBoardService.getUseVersionFlag(boardVO.getBoardId(), userInfo.getTenantId());
+		useVersion = useVersion != null && useVersion.isEmpty() ? "N" : useVersion;
+		boardVO.setUseVersion(useVersion);
     	
     	if (boardType.equals("4") || boardType.equals("7")) { // 썸네일, 동영상
     		resultXML = getThumbList(boardVO, userInfo, type);

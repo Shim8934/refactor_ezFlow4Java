@@ -1045,6 +1045,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("rowCount", end - (start - 1));
 		map.put("limit", start - 1);
 		map.put("bType", ezBoardVO.getBoardType());
+		map.put("useVersion", ezBoardVO.getUseVersion());
 
 		logger.debug("getNoticePostItem ended");
 		return ezBoardDAO.getNoticePostItem(map);
@@ -2045,11 +2046,13 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	public String getNoticePostItemAll(String boardID, int tenantID) throws Exception {
 		logger.debug("getNoticePostItemAll started");
 
+		String useVersion = getUseVersionFlag(boardID, tenantID);
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("boardID", boardID);
 		map.put("tenantID", tenantID);
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
+		map.put("useVersion", useVersion);
 		
 		List<BoardListVO> resultList = ezBoardDAO.getNoticePostItemAll(map);
 		
