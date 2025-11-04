@@ -1040,6 +1040,17 @@ function ListView() {
                     	oText = document.createTextNode(ConvMakeXMLString(strValue));
                     	objTd.appendChild(oText);
                     }
+                    else if (colNameUpperCase == "DOCTITLE") {
+                        if (SelectSingleNodeValue(oCells[j], "GROUPDOC") == "Y") {
+                            var _groupDocImg = document.createElement("img");
+                            _groupDocImg.src = "/images/docu.svg";
+                            _groupDocImg.style.width = "15px"; 
+                            _groupDocImg.style.height = "14px"; 
+                            objTd.appendChild(_groupDocImg);
+                        }
+                        oText = document.createTextNode(" " + strValue);
+                        objTd.appendChild(oText);
+                    }
                     else {
                     	oText = document.createTextNode(strValue);
                         objTd.appendChild(oText);

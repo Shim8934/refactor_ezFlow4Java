@@ -231,6 +231,7 @@
             var drafterName = "<c:out value ='${drafterName}'/>";
 		    var drafterDept = "<c:out value ='${drafterDept}'/>";
 		    var formName = "<c:out value ='${formName}'/>";
+            var isPreview = "${isPreview}";
 			
 			window.onload = function () {
 				if (isParentCommonArgsUsed()) {
@@ -1551,11 +1552,15 @@
 		            if (pAprLineType == "<spring:message code='ezApprovalG.t19'/>")
 		                SaveApproveInfo("1");
 		        } catch (e) { }
-		        try {
-		            window.opener.openergetDocInfo();
-		        } catch (e) {
-		            window.parent.openergetDocInfo();
-		        }
+                
+                if (isPreview != "Y") {
+                    try {
+                        window.opener.openergetDocInfo();
+                    } catch (e) {
+                        window.parent.openergetDocInfo();
+                    }    
+                }
+		        
 		        // try {
 		        //     window.opener.Refresh_Window();
 		        // } catch (e) { }

@@ -23172,6 +23172,7 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 						resultXML.append("<HASOPINIONYN>" + docXML.getElementsByTagName("HASOPINIONYN").item(k).getTextContent() + "</HASOPINIONYN>");
                         /* 2023-06-26 민지수 - 추가의견 존재 여부 저장 (TRUE, FALSE) */
                         resultXML.append("<ADDOPINION>" + opinionAddGB + "</ADDOPINION>");
+                        resultXML.append("<GROUPDOC>" + checkIsGroupDoc(userID, docXML.getElementsByTagName("DOCID").item(k).getTextContent(), companyID, tenantID) + "</GROUPDOC>");
 					}
 					
 					if (fieldName.equals("HASATTACHYN")) {

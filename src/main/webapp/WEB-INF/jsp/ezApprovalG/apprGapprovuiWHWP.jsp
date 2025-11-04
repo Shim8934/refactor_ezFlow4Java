@@ -203,6 +203,8 @@
 
             // 2025-02-18 박기범 - 프론트에서 문서 편집시, 문서를 오픈한 이후로 다른 문서/결재진행 변화가 있었는지 체크하기 위한 코드
             var snapshotCode = "<c:out value ='${snapshotCode}'/>";
+
+            var isPreview = "${isPreview}";
             
 		    function getNextDocList() {
 		        NextDocID = "";
@@ -1567,11 +1569,13 @@
 				            SaveApproveInfo("1"); */	// 분기 타는 위치 확인이 필요함
 				    } catch (e) { }
 			
-			        try {
-			            window.opener.openergetDocInfo();
-			        } catch (e) {
-						window.parent.openergetDocInfo();
-					}
+                    if (isPreview != "Y") {
+                        try {
+                            window.opener.openergetDocInfo();
+                        } catch (e) {
+                            window.parent.openergetDocInfo();
+                        }    
+                    }
 			
 			        // try {
 			        //     window.opener.Refresh_Window();
