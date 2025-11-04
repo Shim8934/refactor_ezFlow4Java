@@ -178,7 +178,12 @@
 		  	</tr>
 			<tr>
 				<th><spring:message code="ezBoard.lyj04" /></th>
-				<td><input id="useGroup" type="checkbox" style="margin-top:5px"><span style="vertical-align:middle"><spring:message code="ezBoard.lyj05" /> <spring:message code="ezBoard.lyj09" /></span></td>
+				<td>
+					<div class="custom_checkbox">
+						<input type="checkbox" id="useGroup"/>
+						<label for="useGroup"><spring:message code="ezBoard.lyj05" /> <spring:message code="ezBoard.lyj09" /></label>
+					</div>
+				</td>
 			</tr>
 		</table>
 		<div class="btnpositionJsp"><a class="imgbtn"><span onclick="Save()"><spring:message code="ezBoard.t98"/></span></a></div></div>

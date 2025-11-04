@@ -1741,7 +1741,10 @@
 			<tr class="contentG" style="${style}">
 				<th><spring:message code="ezBoard.t164" /></th>
 				<td>
-					<input id="useGroup" type="checkbox" onclick="chkUseGroup_onclick(this)"/><spring:message code="ezBoard.t162" /> <spring:message code="ezBoard.lyj09" />
+					<div class="custom_checkbox">
+						<input type="checkbox" id="useGroup" onclick="chkUseGroup_onclick(this)"/>
+						<label for="useGroup"><spring:message code="ezBoard.t162" /> <spring:message code="ezBoard.lyj09" /></label>
+					</div>
 				</td>
 			</tr>
 			<%-- 2019-10-11 홍승비 - 특정 게시판을 회사별 공지게시판으로 설정하는 기능 추가 --%>
