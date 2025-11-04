@@ -2547,8 +2547,7 @@
 	                        <th>
 	                            <a class="imgbtn"><span onclick="SelectReceiver_onClick('To')" style="width: 50px; text-align: center;">
 	                                <spring:message code='ezEmail.t66' /></span></a>
-	                            <br>
-	                            <div class="custom_checkbox">
+	                            <div class="custom_checkbox" style="margin: 0px 3px 0px 3px;">
 	                                <input id="toMe" onclick="MailToMe_Onclick();" value="" type="checkbox" name="toMe" style="vertical-align: middle;margin-top: 2px;"/><label for="toMe" style="margin-top:1px; cursor:pointer;vertical-align: middle" ><spring:message code='ezEmail.t99000010' /></label>
                                 </div>
 	                        </th>
