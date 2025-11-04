@@ -128,7 +128,7 @@ public class EzTeamsScheduler extends EzFileMngUtil {
             return;
         }
 
-        String accessToken = ezTeamsService.getToken("delegated");
+        String accessToken = ezTeamsService.getToken("publicapp");
 
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
@@ -191,12 +191,14 @@ public class EzTeamsScheduler extends EzFileMngUtil {
         String adminAccount = ezCommonService.getTenantConfig("m365AdminAccount", tenantId);
         String adminPassword = ezCommonService.getTenantConfig("m365AdminAccountPw", tenantId);
 
+        /*
         try {
             String delegatedToken = ezTeamsService.getDelegatedToken(teamsClientId, teamsTenantId, adminAccount, adminPassword);
             ezTeamsService.saveAuthToken("GRAPH", "delegated", delegatedToken);
         } catch (Exception e) {
             logger.warn("DelegatedToken failure: {}", e.toString());
         }
+         */
         try {
             String publicappToken = ezTeamsService.getPublicAppToken(teamsTenantId, teamsClientId, teamsClientSecret);
             ezTeamsService.saveAuthToken("GRAPH", "publicapp", publicappToken);
