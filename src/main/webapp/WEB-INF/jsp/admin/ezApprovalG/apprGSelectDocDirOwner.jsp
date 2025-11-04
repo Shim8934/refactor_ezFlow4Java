@@ -292,8 +292,8 @@
   					dataType : "text",
   					data : {
   						deptID : tempDeptID ,
-  						cell : "company;description;displayName;title;telephoneNumber;extensionAttribute2;companyId",
-  						prop : "mail;displayName;description;title;company;telephoneNumber;companyId",
+						cell : "company;description;displayName;title;telephoneNumber;companyId",
+						prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;companyId",
   						page : CurPage ,
   						type : "user"
   					} ,
