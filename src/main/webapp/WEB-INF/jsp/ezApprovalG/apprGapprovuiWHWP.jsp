@@ -251,6 +251,7 @@
 			var strBytesAry = new Array();
 			
 			var wAprMemberSN = "";
+            var isPreview = "${isPreview}";
             
 		    function getNextDocList() {
 		        NextDocID = "";
@@ -2038,11 +2039,13 @@
 				            SaveApproveInfo("1"); */	// 분기 타는 위치 확인이 필요함
 				    } catch (e) { }
 			
-			        try {
-			            window.opener.openergetDocInfo();
-			        } catch (e) {
-						window.parent.openergetDocInfo();
-					}
+                    if (isPreview != "Y") {
+                        try {
+                            window.opener.openergetDocInfo();
+                        } catch (e) {
+                            window.parent.openergetDocInfo();
+                        }    
+                    }
 			
 			        // try {
 			        //     window.opener.Refresh_Window();
