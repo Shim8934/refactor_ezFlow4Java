@@ -2221,10 +2221,12 @@
                ('094',13,'주요열람용도',0,'DISPLAYUSAGE',null,null,null,'단위업무이력관리','주요열람용도','주요열람용도E','주요열람용도J','주요열람용도C',#tenantID#, #companyID#),
                ('094',14,'단위업무설명',0,'DESCRIPTION',null,null,null,'단위업무이력관리','단위업무설명','단위업무설명E','단위업무설명J','단위업무설명C',#tenantID#, #companyID#),
                ('094',15,'소기능',0,'SUBCATEGORYCODE','CODE',null,null,'단위업무이력관리','소기능','소기능E','二次カテゴリコード','次要类别代码',#tenantID#, #companyID#),
-               ('095',1,'이름',140,null,null,null,null,'Simple기록물철','이름','Name','綴じ名','名稱',#tenantID#, #companyID#),
-               ('095',2,'형태',100,null,null,null,null,'Simple기록물철','형태','FORM','形態','表',#tenantID#, #companyID#),
-               ('095',3,'연번',50,null,null,null,null,'Simple기록물철','연번','SN.','連番','序列号',#tenantID#, #companyID#),
-               ('095',4,'권호수',40,null,null,null,null,'Simple기록물철','권호수','VOL.','巻号数','卷湖',#tenantID#, #companyID#),
+               ('095',1,'이름',140,'TITLE',null,null,null,'Simple기록물철','이름','Name','綴じ名','名稱',#tenantID#, #companyID#),
+               ('095',2,'생산연도',50,'PRODUCTIONYEAR',null,null,null,'Simple기록물철','생산연도','Productionyear','生産年度','生产年度',#tenantID#, #companyID#),
+			   ('095',3,'단위업무명(분류코드)',160,'TASKNAME',null,null,null,'Simple기록물철','단위업무명(분류코드)','Taskname','単位業務名','单位业务名称',#tenantID#, #companyID#),
+			   ('095',4,'형태',100,'RECTYPECODE',null,null,null,'Simple기록물철','형태','FORM','形態','表',#tenantID#, #companyID#),
+			   ('095',5,'연번',50,'REGSERIALNO',null,null,null,'Simple기록물철','연번','SN.','連番','序列号',#tenantID#, #companyID#),
+			   ('095',6,'권호수',40,'VOLUMENO',null,null,null,'Simple기록물철','권호수','VOL.','巻号数','卷湖',#tenantID#, #companyID#),
                ('096',1,'대기능',140,null,null,null,null,'기록물철리스트','대기능','MajorCategoryCode','主なカテゴリコード','主要类别代码',#tenantID#, #companyID#),
                ('096',2,'중기능',140,null,null,null,null,'기록물철리스트','중기능','MiddleCategoryCode','中間のカテゴリコード','中间类别代码',#tenantID#, #companyID#),
                ('096',3,'소기능',140,null,null,null,null,'기록물철리스트','소기능','MinorCategoryCode','二次カテゴリコード','次要类别代码',#tenantID#, #companyID#),
@@ -2613,7 +2615,18 @@
                  ('SU200', 3, '기 능 명 칭', 'Name', '機能名', '功能名称', 180, NULL, 'ITEMNAME', NULL, NULL, NULL, NULL, #companyID#, #tenantID#),
                  ('SU200', 4, '보존기간', 'Keeping period', '保存期間', '保留时间', 80, NULL, 'ITEMLIMIT', NULL, NULL, NULL, NULL, #companyID#, #tenantID#),
                  ('SU200', 5, '보안등급', 'Security level', '保安等級', '安全级别', 80, NULL, 'ITEMSECURITY', NULL, NULL, NULL, NULL, #companyID#, #tenantID#),
-                 ('SU200', 6, '공개여부', 'Public', '公開設定', '是否共享', 60, NULL, 'ITEMPUBLIC', NULL, NULL, NULL, NULL, #companyID#, #tenantID#)
+                 ('SU200', 6, '공개여부', 'Public', '公開設定', '是否共享', 60, NULL, 'ITEMPUBLIC', NULL, NULL, NULL, NULL, #companyID#, #tenantID#),
+          		 ('P004', 1, '제목', 	300, 'TBL_APRDOCINFO', 'DocTitle', NULL, NULL, '수신문서처리기', '제목', 'Title', '見出し', '标题',  #companyID#, #tenantID#),
+				 ('P004', 2, '문서상태', 70, 'TBL_APRRECEIPTPROCESSINFO', 'DocState', NULL, NULL, '수신문서처리기', '문서상태', 'Doc. status', '文書区分', '文件状态',  #companyID#, #tenantID#),
+				 ('P004', 3, '결재상태', 70, 'TBL_APRRECEIPTPROCESSINFO', 'AprState', NULL, NULL, '수신문서처리기', '결재상태', 'Approval status', 'ステータス', '批准状态',  #companyID#, #tenantID#),
+				 ('P004', 4, '기안자', 	 70, 'TBL_APRDOCINFO', 'WriterName', NULL, NULL,' 수신문서처리기', '기안자', 'Drafter', '起案者', '起草人',  #companyID#, #tenantID#),
+				 ('P004', 5, '발신부서', 90, 'TBL_APRRECEIPTPROCESSINFO', 'SentDeptName', NULL, NULL, '수신문서처리기', '발신부서', 'Dept. sent', '送信部署', '发送部门',  #companyID#, #tenantID#),
+				 ('P004', 6, '수신자', 	70, 'TBL_APRRECEIPTPROCESSINFO', 'PROCESSORNAME', NULL, NULL, '수신문서처리기', '수신자', 'Receiver', '受信者', '受信者',  #companyID#, #tenantID#),
+				 ('P004', 7, '수신부서', 90, 'TBL_APRRECEIPTPROCESSINFO', 'ReceivedDeptName', NULL, NULL, '수신문서처리기', '도착부서', 'Date received', '受信部署', '收信部门',  #companyID#, #tenantID#),
+				 ('P004', 8, '도착일자', 100, 'TBL_APRRECEIPTPROCESSINFO', 'ProcessDate', NULL, NULL, '수신문서처리기', '도착일자', 'ProcessDate', '到着日付', '接收日',  #companyID#, #tenantID#),
+				 ('P004', 9, '양식명', 	70, 'TBL_APRDOCINFO', 'FormName', NULL, NULL, '수신문서처리기', '양식명', 'Form Name', '様式名', '样式名',  #companyID#, #tenantID#),
+				 ('P004', 10, '첨부', 	30, 'TBL_APRDOCINFO', 'HASATTACHYN', NULL, NULL, '수신문서처리기', '첨부', 'Attach', '添付', '附件',  #companyID#, #tenantID#),
+				 ('P004', 11, '공개',	 30, 'TBL_APRDOCINFO', 'ISPUBLIC', NULL, NULL, '수신문서처리기', '공개', 'Public', '公開', '公开',  #companyID#, #tenantID#)
       ]]>
     </insert>
     
