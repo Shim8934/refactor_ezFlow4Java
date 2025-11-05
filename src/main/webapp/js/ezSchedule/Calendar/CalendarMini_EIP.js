@@ -462,7 +462,6 @@ function MiniDataBind(oAppointment) {
 }
 
 function clickDay(val01) {
-	debugger
 	var beforeId = $("#"+g_selTDID).parent().parent().attr("id"); 
 	if (beforeId) {
 		if (beforeId.indexOf('TOP') == -1) {

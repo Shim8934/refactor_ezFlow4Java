@@ -373,8 +373,7 @@
 		        rtnJson.userName = selRow.cells[2].textContent;
 		        rtnJson.jobName =  selRow.cells[3].textContent;
 		        rtnJson.tagName = tagName;
-		        
-		        debugger;
+				
 		        if (ReturnFunction != null) {
                     ReturnFunction(rtnJson);
 		        } else {
