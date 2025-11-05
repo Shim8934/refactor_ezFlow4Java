@@ -308,55 +308,21 @@ var setImageElement = function (parent, imgsrc, type) {
 
 var setQuickMenuBtnImg = function () {
 	
-	var menuBtnImg = 
-		['/images/contextmenu/mail.png',  // 메일
-		 '/images/contextmenu/approval.png',  // 결재
-		 '/images/contextmenu/schedule.png',  // 일정
-		 '/images/contextmenu/organ.png']; // 조직도
+	var menuBtnImg =  [];
+	if (useExternalMailServer == 'NO') {
+		menuBtnImg.push(['mail', '/images/contextmenu/mail.png']);
+	}
+	menuBtnImg.push(['appr', '/images/contextmenu/approval.png']);
+	menuBtnImg.push(['schedule', '/images/contextmenu/schedule.png']);
+	menuBtnImg.push(['organ', '/images/contextmenu/organ.png']);
+	
+	if (contextMenuObject.memoFlag == 'YES') {
+		menuBtnImg.push(['memo', '/images/contextmenu/memo.png']);
+	}
 	
 	var menuBtnSpans = document.getElementById('quickMenuBtn').childNodes;
-	
-	[].filter.call(menuBtnSpans, function(btnSpan) {
-		// 메모 사용 & 메일 사용
-		if (contextMenuObject.memoFlag === 'YES' && useExternalMailServer == 'NO') {
-			if(btnSpan.className.indexOf('quickMenuTop') > -1) {
-				setImageElement(btnSpan, menuBtnImg[0], 'mail');
-			} else if(btnSpan.className.indexOf('quickMenuMiddle') > -1) {
-				setImageElement(btnSpan, menuBtnImg[1], 'appr');
-				setImageElement(btnSpan, menuBtnImg[2], 'schedule');
-			} else if(btnSpan.className.indexOf('quickMenuBottom') > -1) {
-				setImageElement(btnSpan, menuBtnImg[3], 'organ');
-				setImageElement(btnSpan, '/images/contextmenu/memo.png', 'memo'); // 메모
-			}
-		}	// 메모 사용 & 메일 미사용 
-		else if (contextMenuObject.memoFlag === 'YES' && useExternalMailServer == 'YES') {
-			if(btnSpan.className.indexOf('quickMenuTop') > -1) {
-				setImageElement(btnSpan, menuBtnImg[1], 'appr');
-			} else if(btnSpan.className.indexOf('quickMenuMiddle') > -1) {
-				setImageElement(btnSpan, menuBtnImg[2], 'schedule');
-				setImageElement(btnSpan, menuBtnImg[3], 'organ');
-			} else if(btnSpan.className.indexOf('quickMenuBottom') > -1) {
-				setImageElement(btnSpan, '/images/contextmenu/memo.png', 'memo'); // 메모
-			}
-		}	// 메모 미사용 & 메일 사용 
-		else if (contextMenuObject.memoFlag === 'NO' && useExternalMailServer == 'NO') {
-			if(btnSpan.className.indexOf('quickMenuTop') > -1) {
-				setImageElement(btnSpan, menuBtnImg[0], 'mail');
-			} else if(btnSpan.className.indexOf('quickMenuMiddle') > -1) {
-				setImageElement(btnSpan, menuBtnImg[1], 'appr');
-				setImageElement(btnSpan, menuBtnImg[2], 'schedule');
-			} else if(btnSpan.className.indexOf('quickMenuBottom') > -1) {
-				setImageElement(btnSpan, menuBtnImg[3], 'organ');
-			}
-		}	// 메모 미사용 & 메일 미사용 
-		else {
-			if(btnSpan.className.indexOf('quickMenuTop') > -1) {
-				setImageElement(btnSpan, menuBtnImg[1], 'appr');
-			} else if(btnSpan.className.indexOf('quickMenuBottom') > -1) {
-				setImageElement(btnSpan, menuBtnImg[2], 'schedule');
-				setImageElement(btnSpan, menuBtnImg[3], 'organ');
-			}
-		}
+	menuBtnSpans.forEach((btnSpan, i) => {
+		setImageElement(btnSpan, menuBtnImg[i][1], menuBtnImg[i][0]);
 	});
 }
 
@@ -367,24 +333,18 @@ var setQuickMenuBtn = function () {
 		quickMenuBtn.removeChild(quickMenuBtn.firstChild);	
 	}
 	
-	var btnClassNames;
+	var quickMenuCount = 5
+	quickMenuCount = contextMenuObject.memoFlag === 'NO' ? quickMenuCount-- : quickMenuCount;
+	quickMenuCount = useExternalMailServer == 'NO' ? quickMenuCount-- : quickMenuCount;
 	
 	handleMemoFlag();
-	if(useExternalMailServer == 'YES' && contextMenuObject.memoFlag === 'NO') {
-		btnClassNames = ['quickMenuTop_memo', 'quickMenuMiddle_memo', 'quickMenuBottom_memo'];
-	} else if (useExternalMailServer == 'YES' || contextMenuObject.memoFlag === 'NO') {
-		btnClassNames = ['quickMenuTop', 'quickMenuMiddle', 'quickMenuBottom'];
-	} else {
-		btnClassNames = ['quickMenuTop_memo', 'quickMenuMiddle_memo', 'quickMenuBottom_memo'];	
-	}
-	
-	btnClassNames.map(function(btnClassName) {
+	for (i = 0; i < quickMenuCount; i++) {
+		btnClassName = 'quickMenuSpan';
 		var span = document.createElement('span');
 		span.className = btnClassName;
 		span.id = btnClassName;
 		quickMenuBtn.appendChild(span);
-	});
-	
+	}
 	setQuickMenuBtnImg();
 }
 

@@ -225,11 +225,7 @@
 
                </div>
                 <div id="popupMenuBtn" class="popupMenuBtn" style="display: block;">
-                    <div id="quickMenuBtn" class="quickMenuBtn">
-                        <span class="quickMenuTop_memo"><img src="/images/ezNewPortal/quick01.png"></span>
-                        <span class="quickMenuMiddle_memo"><img src="/images/ezNewPortal/quick02.png"><img src="/images/ezNewPortal/quick03.png"></span>
-                        <span class="quickMenuBottom_memo"><img src="/images/ezNewPortal/quick04.png"><img src="/images/ezNewPortal/quick04.png"></span>
-                    </div>
+                    <div id="quickMenuBtn" class="quickMenuBtn"></div>
                 </div>
 		    </div>
 
