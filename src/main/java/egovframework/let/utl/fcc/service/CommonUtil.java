@@ -32,6 +32,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.math.BigInteger;
@@ -81,7 +82,6 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-//import javax.servlet.http.HttpSession;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.OutputKeys;
@@ -916,6 +916,59 @@ public class CommonUtil {
 		}
 		
 		return filePath;
+	}
+
+	/**
+	 * 2025-11-04 김은실 - 배열을 지정된 크기(ex. 999)의 청크 배열(2차원 배열)로 분할해주는 함수.
+	 * ORA-01795(: 목록에 지정 가능한 식의 최대수는 1000 입니다) 에러를 방지하기 위함.
+	 *
+	 * @param <T> 배열 요소의 타입
+	 * @param array 분할할 대상 배열 (null 허용)
+	 * @param size 각 청크의 최대 크기 (1 이상이어야 함)
+	 * @return 청크 배열 (T[][]). 입력 배열이 null이면 null을 반환합니다.
+	 * @throws IllegalArgumentException size가 1보다 작을 경우
+	 * @since commons-lang3 3.15.0 (예정) :Apache Commons Lang GitHub 최신 main 브랜치(즉, 개발 버전)에 추가된 ArrayUtils.chunk().
+	 */
+	public <T> T[][] chunk(final T[] array, final int size) {
+		// 1. Null 처리
+		if (array == null) {
+			return null;
+		}
+
+		// 2. 유효성 검사
+		if (size < 1) {
+			throw new IllegalArgumentException("Size must be >= 1");
+		}
+
+		final int length = array.length;
+		if (length == 0) {
+			// 빈 배열의 경우, 빈 2차원 배열을 생성하여 반환 (T[0][])
+			@SuppressWarnings("unchecked")
+			final T[][] result = (T[][]) Array.newInstance(array.getClass().getComponentType(), 0, 0);
+			return result;
+		}
+
+		// 3. 청크 개수 계산
+		// Math.ceil((double) length / size)와 동일합니다.
+		final int numChunks = (length + size - 1) / size;
+
+		// 4. 결과 배열(2차원 배열) 초기화
+		// array.getClass().getComponentType()를 사용하여 T 타입의 Class 객체를 얻고,
+		// 이를 기반으로 T[][] 타입의 배열을 동적으로 생성합니다.
+		@SuppressWarnings("unchecked")
+		final T[][] result = (T[][]) Array.newInstance(array.getClass().getComponentType(), numChunks, 0);
+
+		// 5. 배열 분할 및 복사
+		for (int i = 0; i < numChunks; i++) {
+			final int start = i * size;
+			final int end = Math.min(length, start + size); // 마지막 청크의 끝 인덱스 계산
+
+			// Arrays.copyOfRange()를 사용하여 부분 배열을 복사하여 청크를 만듭니다.
+			// 배열 복사가 발생하므로 메모리 효율성은 trade-off가 있습니다.
+			result[i] = Arrays.copyOfRange(array, start, end);
+		}
+
+		return result;
 	}
 	
 	public boolean isLoginCookieExists(HttpServletRequest request, HttpServletResponse response) {

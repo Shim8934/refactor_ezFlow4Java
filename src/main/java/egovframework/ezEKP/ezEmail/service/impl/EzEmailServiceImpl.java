@@ -4152,7 +4152,11 @@ public class EzEmailServiceImpl extends EgovAbstractServiceImpl implements EzEma
 			fileIdArr[i] = fileName.substring(0, 36);
 		}
 		
-		deleteBigAttachCountInfo(fileIdArr, tenantId);
+		String[][] fileIdArrs = commonUtil.chunk(fileIdArr, 999);
+		for (String[] Arrs : fileIdArrs) {
+			deleteBigAttachCountInfo(Arrs, tenantId);
+		}
+
 		logger.debug("deleteBigAttachCountInfo ended.");
 	}
 	
