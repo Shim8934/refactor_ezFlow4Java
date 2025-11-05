@@ -333,11 +333,12 @@ var setQuickMenuBtn = function () {
 		quickMenuBtn.removeChild(quickMenuBtn.firstChild);	
 	}
 	
-	var quickMenuCount = 5
-	quickMenuCount = contextMenuObject.memoFlag === 'NO' ? quickMenuCount-- : quickMenuCount;
-	quickMenuCount = useExternalMailServer == 'NO' ? quickMenuCount-- : quickMenuCount;
-	
 	handleMemoFlag();
+	
+	var quickMenuCount = 5
+	quickMenuCount = contextMenuObject.memoFlag === 'NO' ? quickMenuCount - 1 : quickMenuCount;
+	quickMenuCount = useExternalMailServer == 'NO' ? quickMenuCount - 1 : quickMenuCount;
+	
 	for (i = 0; i < quickMenuCount; i++) {
 		btnClassName = 'quickMenuSpan';
 		var span = document.createElement('span');
