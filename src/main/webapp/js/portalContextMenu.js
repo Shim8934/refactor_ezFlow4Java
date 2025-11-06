@@ -333,11 +333,10 @@ var setQuickMenuBtn = function () {
 		quickMenuBtn.removeChild(quickMenuBtn.firstChild);	
 	}
 	
-	handleMemoFlag();
-	
 	var quickMenuCount = 5
-	quickMenuCount = contextMenuObject.memoFlag === 'NO' ? quickMenuCount - 1 : quickMenuCount;
-	quickMenuCount = useExternalMailServer == 'NO' ? quickMenuCount - 1 : quickMenuCount;
+	handleMemoFlag();
+	quickMenuCount = contextMenuObject.memoFlag == 'NO' ? quickMenuCount - 1 : quickMenuCount;
+	quickMenuCount = useExternalMailServer == 'YES' ? quickMenuCount - 1 : quickMenuCount;
 	
 	for (i = 0; i < quickMenuCount; i++) {
 		btnClassName = 'quickMenuSpan';
