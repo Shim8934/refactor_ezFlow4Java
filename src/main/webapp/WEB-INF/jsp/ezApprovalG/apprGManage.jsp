@@ -1337,7 +1337,7 @@
 					if(approvalFlag == "G"){
 						OpenInformationUI(strLangJSBAP03, btnRJunkyulAll_onclick_Complete);
 					}else{
-						OpenInformationUI(strLangKMH03, btnReceiptAll_onclick_Complete);
+						OpenInformationUI(strLangKMH03, btnRJunkyulAll_onclick_Complete);
 					}
 				}
 		    }
