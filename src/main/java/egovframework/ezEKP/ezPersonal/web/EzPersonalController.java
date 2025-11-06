@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezPersonal.web;
 
+import com.google.gson.JsonArray;
 import com.sun.org.apache.xml.internal.security.utils.Base64;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EzFileMngUtil;
@@ -2509,7 +2510,7 @@ public class EzPersonalController extends EzFileMngUtil {
 	}
 
 	@GetMapping("/ezPersonal/notificationItemTab.do")
-	public String notificationItemTab(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
+	public String notificationItemTab(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
 		logger.debug("notificationItemTab started.");
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
 		Set<String> menuCodeList = ezNewPortalService.getUserMenuList(user.getCompanyID(), user.getTenantId(), user.getLang(), user.getId(), user.getDeptID(), "")
@@ -2525,6 +2526,34 @@ public class EzPersonalController extends EzFileMngUtil {
 		
 		model.addAttribute("usePassAprLine", "YES".equalsIgnoreCase(ezCommonService.getTenantConfig("usePassAprLine", user.getTenantId())));
 		model.addAttribute("useBallotSystem", "YES".equalsIgnoreCase(ezCommonService.getTenantConfig("useBallotSystem", user.getTenantId())));
+
+        LoginVO userInfo = commonUtil.userInfo(loginCookie);
+        String userID = userInfo.getId();
+        String deptID = userInfo.getDeptID();
+        String companyID = userInfo.getCompanyID();
+        String jobID = userInfo.getJobId();
+        String url = "/rest/ezPortal/menus/users/" + userID;
+
+        Map<String, Object> paramMap = new HashMap<String, Object>();
+        paramMap.put("userId", userID);
+        paramMap.put("deptId", deptID);
+        paramMap.put("companyId", companyID);
+        paramMap.put("jobId", jobID);
+        JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.notificationGWServerURL"), url, paramMap, request, "get", null);
+        String status = resultBody.get("status").toString();
+
+        if (status.equals("ok")) {
+            JSONObject resultData = (JSONObject) resultBody.get("data");
+            JSONArray menuList = (JSONArray) resultData.get("menuList");
+
+            if (menuList != null) {
+                for (int i = 0; i < menuList.size(); i++) {
+                    JSONObject obj = (JSONObject) menuList.get(i);
+                    String menuCode = (String) obj.get("menuCode");
+                    model.addAttribute(menuCode != null ? menuCode : "null", "Y");
+                }
+            }
+        }
 		
 		logger.debug("notificationItemTab ended.");
 		return "/ezPersonal/noti/notificationItemTab";
