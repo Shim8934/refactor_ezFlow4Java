@@ -47,6 +47,8 @@
 			#txtContent h5 {font-size:0.83em; margin-top:1.67em; margin-bottom:1.67em;}
 			#txtContent h6 {font-size:0.67em; margin-top:2.33em; margin-bottom:2.33em;}
 			
+			div#txtContent{margin-left:0px; margin-right:0px;}
+			body {margin: 0px 8px}
 			/* 줌 버튼 */
             .zoom_btn_p{margin: 1% 1% 0 1%; touch-action: none; display:flex;}
             .zoom_btn_p span{
