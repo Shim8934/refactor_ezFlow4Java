@@ -754,7 +754,7 @@ public class EzApprovalGHwpController extends EzFileMngUtil{
 		}
  
 		if (orgDocID != null  && !orgDocID.equals("")) {
-			endDir = String.valueOf(Integer.parseInt(orgDocID) % 1000);
+			endDir = ezApprovalGService.getDocDir(orgDocID);
 		}
 
 		String accessInfo = ezCommonService.getTenantConfig("UserInfo_ApprovalG_VIEW", userInfo.getTenantId());
@@ -1673,7 +1673,7 @@ public class EzApprovalGHwpController extends EzFileMngUtil{
 		}
  
 		if (orgDocID != null  && !orgDocID.equals("")) {
-			endDir = String.valueOf(Integer.parseInt(orgDocID) % 1000);
+			endDir = ezApprovalGService.getDocDir(orgDocID);
 		}
 
 		String accessInfo = ezCommonService.getTenantConfig("UserInfo_ApprovalG_VIEW", userInfo.getTenantId());

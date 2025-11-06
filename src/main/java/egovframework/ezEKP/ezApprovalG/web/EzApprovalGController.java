@@ -4302,7 +4302,7 @@ public class EzApprovalGController extends EzFileMngUtil{
 		String docAprEnd = ezApprovalGService.getAprOrEndStr(docID, userInfo.getCompanyID(), userInfo.getTenantId());
 
 		if (orgDocID != null  && !orgDocID.equals("")) {
-			endDir = String.valueOf(Integer.parseInt(orgDocID) % 1000);
+			endDir = ezApprovalGService.getDocDir(orgDocID);
 		}
 		
 		String orgCompanyID = request.getParameter("orgCompanyID");
