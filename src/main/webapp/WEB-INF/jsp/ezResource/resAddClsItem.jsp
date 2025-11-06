@@ -520,7 +520,7 @@
 			
 		</script>
 	</head>
-	<body class="popup" style="height:100%; overflow:hidden;">
+	<body class="popup" style="height:100%; overflow-x:hidden; overflow-y: auto;">
 		<table class="layout">
   			<tr>
 				<td style="height:20px">
