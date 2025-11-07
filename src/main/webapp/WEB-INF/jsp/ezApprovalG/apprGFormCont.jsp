@@ -36,7 +36,7 @@
 		    var ListIdx;
 		    var RetValue;
 		    var ReturnFunction;
-		    var draftTypeFlag = "<c:out value='${draftTypeFlag}'/>";
+		    var draftTypeFlag = "<c:out value='${draftTypeFlag}'/>";  // Y: 일괄기안양식, N: 일괄기안이 아닌 양식, null: 모두 출력
 		    var reuseFlag = "<c:out value='${reuseFlag}'/>";
 			var resendFormYN = "<c:out value='${resendFormYN}'/>";
 		    window.onload = function () {
