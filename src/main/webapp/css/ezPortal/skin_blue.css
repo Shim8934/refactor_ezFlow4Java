@@ -275,7 +275,7 @@ nav .navUL li.on{color:#003497;}
 .mainbody > div > h1 > span > span{color:#003497 !important;}
 
 .icon16{background-image:url(../../images/ezNewPortal/skin/blue/icon_16.png) !important;}
-.icon16_unreadMail_del {background-position: -103px -97px !important;}
+/*.icon16_unreadMail_del {background-position: -103px -97px !important;}*/
 
 .portlet_tabnew01_top p span{border-color:#7E9AD1; color:#003497; background-image:url(../../images/ezNewPortal/skin/blue/tabnew_bg.png); background-color:#fff;}
 .portlet_tabnew01_top p span.tabon{border-color:#7E9AD1; color:#003497; background-color:#EEF4FE; background-image:url(../../images/ezNewPortal/skin/blue/tabnew_bg.png);}
