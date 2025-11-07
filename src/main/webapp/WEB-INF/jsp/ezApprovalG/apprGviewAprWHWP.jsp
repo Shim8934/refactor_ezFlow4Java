@@ -376,10 +376,10 @@
 		        DivPopUpHidden();
 		    }
 			
-			var totalsavefileinfo_dialogArguments = new Array();
+			// var totalsavefileinfo_dialogArguments = new Array();
 		    function TotalSave_onclick() {
-		        totalsavefileinfo_dialogArguments[0] = "";
-		        totalsavefileinfo_dialogArguments[1] = TotalSave_onclick_Complete;
+		        ezCommon_cross_dialogArguments[0] = "";
+		        ezCommon_cross_dialogArguments[1] = TotalSave_onclick_Complete;
 				
 				if(anCnt > 1 && draftAllTypeB == "Y"){
                     changeAn(1, true);
