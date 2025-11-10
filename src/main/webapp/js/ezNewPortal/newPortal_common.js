@@ -1777,9 +1777,10 @@ var openBoard = function (pItemID, pType, oBoardID, password) {
 		var normalWidth = 765;
 		pTop = (pheight - normalHeight) / 2;
 		pLeft = (pwidth - normalWidth) / 2;
+        var url = "/ezBoard/boardItemView.do?showAdjacent=&itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(oBoardID) + "&__wwidth=1918"; 
 
 		$.ajax({
-			url: "/ezBoard/boardItemView.do?showAdjacent=&itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(oBoardID),
+			url: url,
 			headers: !!password ? {
 				'Authorization': 'Basic ' + btoa(password)
 			} : {},
@@ -1789,10 +1790,8 @@ var openBoard = function (pItemID, pType, oBoardID, password) {
 					alert(!!password ? strWrongPassword : strLang1132);
 					return;
 				}
-				var newWindow = window.open("", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=" + normalHeight + ",width=" + normalWidth + ",top=" + pTop + ",left=" + pLeft);
-				newWindow.document.write("<html> <head> <style> html, body { margin: 0; padding: 0; height: 100%; overflow-y: scroll; } </style> </head> <body> </body> </html>");
-				newWindow.document.write(response);
-				newWindow.document.close();
+				window.open(url, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=" + normalHeight + ",width=" + normalWidth + ",top=" + pTop + ",left=" + pLeft);
+				
 			},
 			error: function(xhr, status, error) {
 				console.error('Error:', error);
