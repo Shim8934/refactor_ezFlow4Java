@@ -770,18 +770,18 @@ var secureMailParams = new Array();
 function Send_onClick_Complete(ReturnValue) {
     try {
         if (ReturnValue) {
+            const toLength = document.getElementById("MsgToGot").querySelectorAll("span.rcpt").length;
+            const ccLength = document.getElementById("MsgCCGot").querySelectorAll("span.rcpt").length;
+            const bccLength = document.getElementById("MsgBCCGot").querySelectorAll("span.rcpt").length;
+        
             try {
-                if (document.getElementById("MsgToGot").querySelectorAll("span.rcpt").length === 0 &&
-                    document.getElementById("MsgCCGot").querySelectorAll("span.rcpt").length === 0 &&
-                    document.getElementById("MsgBCCGot").querySelectorAll("span.rcpt").length === 0) {
+                if (toLength === 0 && ccLength === 0 && bccLength === 0) {
                     alert(strLang93);
                     gInvalidAddressArr = null;
                     return;
                 }
             } catch (e) {
-                if (document.getElementById("MsgToGot").childNodes.length == 0 &&
-                        document.getElementById("MsgCCGot").childNodes.length == 0 &&
-                        document.getElementById("MsgBCCGot").childNodes.length == 0) {
+                if (toLength == 0 && ccLength == 0 && bccLength == 0) {
                     alert(strLang93);
                     gInvalidAddressArr = null;
                     return;
@@ -792,7 +792,7 @@ function Send_onClick_Complete(ReturnValue) {
             	individualmailuserNum = Number(individualmailuser);
             } catch (e) {console.log(e);}
             
-            if ((MsgToGot.childNodes.length + MsgCCGot.childNodes.length + MsgBCCGot.childNodes.length) > individualmailuserNum && iseachMail == "true") {
+            if ((toLength + ccLength + bccLength) > individualmailuserNum && iseachMail == "true") {
                 if (confirm(strLangKMS04 + individualmailuserNum + strLangKMS05)) {
                     iseachMail = "false";
                 }
