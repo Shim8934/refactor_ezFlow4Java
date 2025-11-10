@@ -632,7 +632,7 @@ public class EzAttitudeGWController {
 				primary = mOptionService.commonInfoWeb(serverName, request.getParameter("loginId")).getPrimary();
 			}
 			
-			List<AttitudeTypeVO> attitudeTypeList = ezAttitudeService.getAttitudeTypeList(companyId, isuse, isAdmin, statistics, typeIdArr, info.getTenantId(), primary);
+			List<AttitudeTypeVO> attitudeTypeList = ezAttitudeService.getAttitudeTypeList(companyId, isuse, isAdmin, statistics, typeIdArr, info.getTenantId(), primary, "");
 			
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -1950,7 +1950,7 @@ public class EzAttitudeGWController {
 			List<ModApplHistoryVO> list = ezAttitudeService.getAttitudeHistoryList(searchUserName, searchDeptName, searchTitle, searchStartDate, searchEndDate, orderCell, orderOption, offset, pageNum, listSize, companyId, tenantID, searchDeptId, deptIdList, info.getPrimary());
 		
 			//구분 리스트
-			List<AttitudeTypeVO> typeList = ezAttitudeService.getAttitudeTypeList(companyId, isuse, isAdmin, statistics, "", info.getTenantId(), info.getPrimary());
+			List<AttitudeTypeVO> typeList = ezAttitudeService.getAttitudeTypeList(companyId, isuse, isAdmin, statistics, "", info.getTenantId(), info.getPrimary(), "");
 			
 			JSONObject data = new JSONObject();
 			data.put("list", list);
@@ -3071,13 +3071,20 @@ public class EzAttitudeGWController {
 		try{
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
-			
+			String isuse = "";
+			String isAdmin = "";
+			String statistics = "";
+			String typeIdArr = "";
+			String primary = info.getPrimary();
+
 			//근태규율설정정보
 			Map<String, Object> attitudeAnnualConfigInfo = ezAttitudeService.getAttitudeAnnualConfig(info.getTenantId(), companyId);
+            List<AttitudeTypeVO> attitudeTypeList = ezAttitudeService.getAttitudeTypeList(companyId, isuse, isAdmin, statistics, typeIdArr, info.getTenantId(), primary, "user");
 			
 			result.put("status", "ok");
 			result.put("code", 0);
 			result.put("data", attitudeAnnualConfigInfo);
+            result.put("typeList", attitudeTypeList);
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 			result.put("status", "error");

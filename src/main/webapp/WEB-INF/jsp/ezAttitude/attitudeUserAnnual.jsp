@@ -726,22 +726,30 @@
 			        </dl>
 			     </dl>
 		        <dl class="countDL">
-			        <dl class="timeIcconDL">
-			        	<dt class="timeIconDT"><img src="/images/ImgIcon/break_day.png"></dt>
-			            <dd class="timeIconDD"><spring:message code='ezAttitude.t254' /><span class="timeCountR" id="FA11">0</span></dd>
-			        </dl>
-			        <dl class="timeIcconDL">
-			        	<dt class="timeIconDT"><img src="/images/ImgIcon/break_am.png"></dt>
-			            <dd class="timeIconDD"><spring:message code='ezAttitude.t255' /> <span class="timeCountR" id="FA12">0</span></dd>
-			        </dl>
-			        <dl class="timeIcconDL">
-			        	<dt class="timeIconDT"><img src="/images/ImgIcon/break_pm.png"></dt>
-			            <dd class="timeIconDD"><spring:message code='ezAttitude.t256' /> <span class="timeCountR" id="FA13">0</span></dd>
-			        </dl>
-			        <dl class="timeIcconDL">
-			        	<dt class="timeIconDT"><img src="/images/ImgIcon/break_pm02.png"></dt>
-			            <dd class="timeIconDD"><spring:message code='ezAttitude.kje04' /> <span class="timeCountR" id="FA21">0</span></dd>
-			        </dl>
+					<c:if test="${A11typeInfo.isuse eq '1' }">
+						<dl class="timeIcconDL">
+							<dt class="timeIconDT"><img src="/images/ImgIcon/break_day.png"></dt>
+							<dd class="timeIconDD"><spring:message code='ezAttitude.t254' /><span class="timeCountR" id="FA11">0</span></dd>
+						</dl>
+					</c:if>
+					<c:if test="${A12typeInfo.isuse eq '1' }">
+						<dl class="timeIcconDL">
+							<dt class="timeIconDT"><img src="/images/ImgIcon/break_am.png"></dt>
+							<dd class="timeIconDD"><spring:message code='ezAttitude.t255' /> <span class="timeCountR" id="FA12">0</span></dd>
+						</dl>
+					</c:if>
+					<c:if test="${A13typeInfo.isuse eq '1' }">
+						<dl class="timeIcconDL">
+							<dt class="timeIconDT"><img src="/images/ImgIcon/break_pm.png"></dt>
+							<dd class="timeIconDD"><spring:message code='ezAttitude.t256' /> <span class="timeCountR" id="FA13">0</span></dd>
+						</dl>
+					</c:if>
+					<c:if test="${A21typeInfo.isuse eq '1' }">
+						<dl class="timeIcconDL">
+							<dt class="timeIconDT"><img src="/images/ImgIcon/break_pm02.png"></dt>
+							<dd class="timeIconDD"><spring:message code='ezAttitude.kje04' /> <span class="timeCountR" id="FA21">0</span></dd>
+						</dl>
+					</c:if>
 			     </dl>
 		    </div>
 		    <div id="mainmenu">

@@ -345,7 +345,7 @@ public class EzAttitudeServiceImpl extends EgovAbstractServiceImpl implements Ez
 	}
 
 	@Override
-	public List<AttitudeTypeVO> getAttitudeTypeList(String companyId, String isuse, String isAdmin, String statistics, String typeIdArr, int tenantId, String primary) throws Exception {
+	public List<AttitudeTypeVO> getAttitudeTypeList(String companyId, String isuse, String isAdmin, String statistics, String typeIdArr, int tenantId, String primary, String type) throws Exception {
 		logger.debug("getAttitudeTypeList started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -355,6 +355,7 @@ public class EzAttitudeServiceImpl extends EgovAbstractServiceImpl implements Ez
 		map.put("isuse", isuse);
 		map.put("isAdmin", isAdmin);
 		map.put("statistics", statistics);
+		map.put("type", type);
 		map.put("typeIdArr", (!"".equalsIgnoreCase(typeIdArr) ? typeIdArr.split(",") : ""));
 		if (primary.equals("1")) {
 			primary = "";
@@ -641,7 +642,7 @@ public class EzAttitudeServiceImpl extends EgovAbstractServiceImpl implements Ez
 		map.put("tenantId", tenantId);
 		map.put("companyId", companyId);
 		
-		List<AttitudeTypeVO> list = getAttitudeTypeList(companyId, "", "1", "" , "", tenantId, primary);
+		List<AttitudeTypeVO> list = getAttitudeTypeList(companyId, "", "1", "" , "", tenantId, primary, "");
 		
 		boolean result = false;
 		

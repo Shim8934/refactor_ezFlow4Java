@@ -317,6 +317,9 @@
 			#typeIdArr[]#
 		</iterate>
 		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="type">
+			TYPE_ID IN ('A11', 'A12', 'A13', 'A21')
+		</isNotEmpty>
 			AND
 				ISDEL = '0'
 	</select>

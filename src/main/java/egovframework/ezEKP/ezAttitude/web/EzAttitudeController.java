@@ -3688,10 +3688,17 @@ public class EzAttitudeController {
 			String status = resultBody.get("status").toString();
 			
 			JSONObject dataObject = new JSONObject();
+			JSONArray typeListData = new JSONArray();
 			
 			if (status.equals("ok")) {
 				dataObject = (JSONObject) resultBody.get("data");
 				model.addAttribute("annualconfig", dataObject);
+				typeListData = (JSONArray) resultBody.get("typeList");
+				model.addAttribute("A11typeInfo", typeListData.get(0));
+				model.addAttribute("A12typeInfo", typeListData.get(1));
+				model.addAttribute("A13typeInfo", typeListData.get(2));
+				model.addAttribute("A21typeInfo", typeListData.get(3));
+
 			}
 			
 			gwServerUrl = config.getProperty("config.attitudeGwServerURL");
