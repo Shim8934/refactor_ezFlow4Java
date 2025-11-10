@@ -792,8 +792,11 @@
 		                    }
 		                    if (LastSignSN == 1) {
 		                        pAlertContent = "<spring:message code='ezApprovalG.t1697'/>";
+								if (document.getElementById("attAprStatus") && document.getElementById("attAprStatus").value == "ok") {
+									CurAprType = strAprType1;
+								}
 		                      	//2019-05-02 김보미 : 근태관리 연동양식일 경우 추가 - 접수자 전결
-		                        if (CurAprType == strAprType4 && document.getElementById('message').contentWindow.document.getElementById('attitude_annual_conn')) {
+		                        if ((CurAprType == strAprType4 || CurAprType == strAprType1) && document.getElementById('message').contentWindow.document.getElementById('attitude_annual_conn')) {
 			    		        	var code = document.getElementById('message').contentWindow.document.getElementById('annual-conn-script').getAttribute("code");
 			    		        	var script = document.createElement("script");
 			    					script.type = "text/javascript";
@@ -2260,5 +2263,6 @@
 		<XML ID="CONNINFO"></XML>
 		<DIV ID="RECEIPTDEPTID" style="display:none"></DIV>
 		<div id="AprMemberSN" style="display:none"></div>
+		<input type="hidden" id="attAprStatus" value="">
 	</body>
 </html>

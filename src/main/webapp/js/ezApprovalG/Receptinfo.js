@@ -32,6 +32,10 @@ function Receptinfo_ini() {
         	ChangeReceptTab(document.getElementById("3tab1"));
         	initReceptListView();
         	document.getElementById("3tab1").onclick();
+            
+            if (window.opener.document.getElementById("attAprStatus")) {
+                window.opener.document.getElementById("attAprStatus").value = "ok";
+            }
         }
 
         treeViewScrollTo("tvTreeView2");   //2020-04-24 : 선택된 노드로 트리뷰 커서 이동
