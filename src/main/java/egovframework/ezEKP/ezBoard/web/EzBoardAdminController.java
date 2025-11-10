@@ -1024,6 +1024,11 @@ public class EzBoardAdminController extends EzFileMngUtil {
 		/* 2024-09-10 조소정 - 게시판 > 카테고리 기능 추가 */
 		int boardItemCnt = ezBoardAdminService.getBoardItemCnt(boardID, userInfo.getTenantId());
 		
+		String useImageConvertServer = ezCommonService.getTenantConfig("useImageConvertServer", userInfo.getTenantId());
+		if (useImageConvertServer == null) {
+			useImageConvertServer = "0";
+		}
+		
 		/* 2018-07-26 홍승비 - 다국어 표출 시 lang 대신 primary 조건 사용하도록 수정 */
 		model.addAttribute("model", boardPropertyVO);
 		model.addAttribute("use_multiData", use_multiData);
@@ -1041,6 +1046,7 @@ public class EzBoardAdminController extends EzFileMngUtil {
 		model.addAttribute("useJapanese", useJapanese);
 		model.addAttribute("useChinese", useChinese);
 		model.addAttribute("boardItemCnt", boardItemCnt);
+		model.addAttribute("useImageConvertServer", useImageConvertServer);
 		
 		logger.debug("boardProperty ended");
 		return "admin/ezBoard/boardProperty";
