@@ -4867,7 +4867,7 @@ public class EzApprovalGController extends EzFileMngUtil{
 			
             EzFile targetFile = new EzFile(saveFileName);
             
-            logger.debug("formId = " + formId + ", formText.length = " + formText + ", formFile.length = " + formFile.length() + ", targetFile.length = " + targetFile.length());
+            logger.debug("formId = " + formId + ", formFile.length = " + formFile.length() + ", targetFile.length = " + targetFile.length());
             
             // 양식의 본문 (html)을 읽어서 stream에 저장
 			if (extension.equals(".hwp")) {
