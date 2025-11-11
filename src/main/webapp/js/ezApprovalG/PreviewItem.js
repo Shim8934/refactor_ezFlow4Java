@@ -447,7 +447,7 @@ function pre_openViewDocInfo(type) {
     var tr = oArrRows[0];
 
     var pArgument = new Array();
-    var formURL = approvalFlag == "G" ? GetAttribute(tr, "DATA3") : GetAttribute(tr, "DATA2");
+    var formURL = GetAttribute(tr, "DATA3");
     var DocID = GetAttribute(tr, "DATA1");
     var orgCompanyID = GetAttribute(tr, "orgCompanyID");
 
