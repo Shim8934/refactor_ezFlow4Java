@@ -88,6 +88,8 @@
 	     	// 2023-05-25 조수빈 - 전자결재 첨부파일 미리보기 사용 여부
 			var useAprFilePrvw = "<c:out value ='${useAprFilePrvw}'/>";
 			var ReturnFunction;
+
+            var isPreview = "<c:out value='${isPreview}'/>";
 	        
 			function btnOpinion_onclick() {
 			    //openOpinionViewUI();
@@ -268,12 +270,14 @@
 			}
 	
 			function window_onbeforeunload() {
-			    try {
-			        window.opener.openergetDocInfo();
-			    }
-			    catch (e) { 
-					window.parent.openergetDocInfo();
-				}
+                if (isPreview != "Y") {
+                    try {
+                        window.opener.openergetDocInfo();
+                    }
+                    catch (e) {
+                        window.parent.openergetDocInfo();
+                    }
+                }
 			    // try {
 			    //     window.opener.Refresh_Window();
 			    // } catch (e) { }

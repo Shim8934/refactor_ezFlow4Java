@@ -136,6 +136,8 @@
 			// 창마다 고유한 id 지정용
 			var windowUuid = getRandomId();
 			var ReturnFunction;
+
+            var isPreview = "<c:out value ='${isPreview}'/>";
 			
 			window.onload = function () {
 				try {
@@ -862,11 +864,13 @@
 			// 	window.close();
 			// }
 			window.onbeforeunload = function () {
-				try{
-					window.opener.openergetDocInfo();
-				}catch(e){
-					window.parent.openergetDocInfo();
-				}
+                if (isPreview != "Y") {
+                    try {
+                        window.opener.openergetDocInfo();
+                    } catch(e) {
+                        window.parent.openergetDocInfo();
+                    }
+                }
 				// try{
 				// 	window.opener.Refresh_Window();
 				// }catch(e){ }

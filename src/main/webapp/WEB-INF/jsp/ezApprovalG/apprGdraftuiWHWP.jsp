@@ -216,7 +216,9 @@
 
 			// 창마다 고유한 id 지정용
 			var windowUuid = getRandomId();
-			
+
+            var isPreview = "<c:out value='${isPreview}'/>";
+            
 	        window.onload = function () {
 	            try {
 	                pSusinSN = SusinSN;
@@ -1154,13 +1156,15 @@
 			            UndoDoc();
 			    }
 			
-			    try {
-			        if (bAttachProcess == false)
-			            window.opener.openergetDocInfo();
-			    } catch (e) {
-					if (bAttachProcess == false)
-			            window.parent.openergetDocInfo();
-				}
+                if (isPreview != "Y") {
+                    try {
+                        if (bAttachProcess == false)
+                            window.opener.openergetDocInfo();
+                    } catch (e) {
+                        if (bAttachProcess == false)
+                            window.parent.openergetDocInfo();
+                    }
+                }
 			
 			    try {
 // 			        if (bAttachProcess == false)

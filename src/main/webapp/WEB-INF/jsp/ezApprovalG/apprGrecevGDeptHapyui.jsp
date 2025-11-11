@@ -150,6 +150,8 @@
 			var windowUuid = getRandomId();
 			var ReturnFunction;
 
+            var isPreview = "<c:out value ='${isPreview}'/>";
+
 			window.onload = function () {
 				try {
 					if (isParentCommonArgsUsed()) {
@@ -731,11 +733,13 @@
 			// 	window.close();
 			// }
 			window.onbeforeunload = function () {
-				try{
-					window.opener.openergetDocInfo();
-				}catch(e){
-					window.parent.openergetDocInfo();
-				}
+                if (isPreview != "Y") {
+                    try {
+                        window.opener.openergetDocInfo();
+                    } catch(e) {
+                        window.parent.openergetDocInfo();
+                    }
+                }
 				// try{
 				// 	window.opener.Refresh_Window();
 				// }catch(e){ }

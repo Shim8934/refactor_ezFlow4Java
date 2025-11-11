@@ -130,6 +130,8 @@
 			var allowDeptIDs = "<c:out value ='${allowDeptIDs}'/>"
 			var ReturnFunction;
 
+            var isPreview = "<c:out value ='${isPreview}'/>";
+
 			$(function () {
 				try {
 					if (isParentCommonArgsUsed()) {
@@ -450,12 +452,14 @@
 		    //     window.close();
 		    // }
 		    window.onbeforeunload = function () {
-		        try {
-		            window.opener.openergetDocInfo();
-		        }
-		        catch (e) {
-		            window.parent.openergetDocInfo();
-		        }
+                if (isPreview != "Y") {
+                    try {
+                        window.opener.openergetDocInfo();
+                    }
+                    catch (e) {
+                        window.parent.openergetDocInfo();
+                    }
+                }
 		
 		        // try {
 		        //     window.opener.Refresh_Window();

@@ -345,6 +345,8 @@
 			// 창마다 고유한 id 지정용
 			var windowUuid = getRandomId();
 
+            var isPreview = "<c:out value ='${isPreview}'/>";
+
     		// 일괄기안문서를 재기안하는 경우, 기존 문서와 양식 등의 정보를 배열에 부여
     		$(document).ready(function() {
                 pDraftFlag = DraftFlag; // 모든 문서 공통이므로 ready 시 바로 부여
@@ -1070,13 +1072,15 @@
 			        	}
 			    }
 			
-			    try {
-			        if (bAttachProcess == false)
-			            window.opener.openergetDocInfo();
-			    } catch (e) {
-					if (bAttachProcess == false)
-			            window.parent.openergetDocInfo();
-				}
+                if (isPreview != "Y") {
+                    try {
+                        if (bAttachProcess == false)
+                            window.opener.openergetDocInfo();
+                    } catch (e) {
+                        if (bAttachProcess == false)
+                            window.parent.openergetDocInfo();
+                    }
+                }
 			
 			    try {
 // 			        if (bAttachProcess == false)
