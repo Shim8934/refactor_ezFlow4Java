@@ -797,47 +797,40 @@ function pre_openServerDraftUI(pDraftFlag, pCurSelRow) {
 
     //우선 만들고 tmpDocID를 넘겨주어야 한다.	
     var openLocation = "";
-    
-    if (formURL.substr(formURL.length - 3, formURL.length).toLowerCase() == "mht") {
-    	openLocation = "/ezApprovalG/draftui.do?formURL=" + encodeURI(pArgument[1]) + "&draftFlag=" + encodeURI(pArgument[2]) + "&formDocType=" + encodeURI(pArgument[3]);
-    	openLocation = openLocation + "&susinSN=" + encodeURI(pArgument[4]) + "&docState=" + encodeURI(pArgument[5]) + "&listType=" + encodeURI(pListTypeValue) + "&aprState=" + encodeURI(pArgument[6]);
-    	openLocation = openLocation + "&isTmpDoc=" + encodeURI(pArgument[7]) + "&docSN=" + encodeURI(pDocSN);
-    	
-        // FormBuilder
-        if (window.reformflag == null) {
-        	// reformflag null 값이라면
-        	reformflag = GetAttribute(pCurSelRow, "REFORMFLAG");
-        }
-        
-    	if (reformflag.length > 0) {
-            openLocation += "&reformflag=" + encodeURI(reformflag);
-    	}
+    var isGroupDoc = checkIsGroupDoc(pDocSN, "");
+
+    if (isGroupDoc == "Y" && (typeof draftAllTypeB == "undefined" || draftAllTypeB != "Y")) { // 일괄기안 문서를 여는 경우
+        openLocation = "/ezApprovalG/draftuiAll_WHWP.do?formURL=" + encodeURI(pArgument[1]) + "&draftFlag=" + encodeURI(pArgument[2]) + "&formDocType=" + encodeURI(pArgument[3]);
     } else {
-    	if(useWebHWP == "NO") {
-	    	if (!isIE()) {
-	    		//노티문구가 잘못되었음. 아무래도 한글양식은 IE에서만 지원가능합니다 라고 바꿔야할듯
-	            alert(strLang1103);
-	            return;
-	        } else {
-	        	openLocation = "/ezApprovalG/draftuiHWP.do?formURL=" + encodeURI(pArgument[1]) + "&draftFlag=" + encodeURI(pArgument[2]) + "&formDocType=" + encodeURI(pArgument[3]);
-	            openLocation = openLocation + "&susinSN=" + encodeURI(pArgument[4]) + "&docState=" + encodeURI(pArgument[5]) + "&listType=" + encodeURI(pListTypeValue) + "&aprState=" + encodeURI(pArgument[6]);
-	            openLocation = openLocation + "&isTmpDoc=" + encodeURI(pArgument[7]) + "&docSN=" + encodeURI(pDocSN);
-	        }
-    	} else {
-    		/* 2022-06-30 홍승비 - 전자결재 미리보기 기능 일괄기안문서에도 대응 */
-    		var isGroupDoc = checkIsGroupDoc(pDocSN, ""); // 일괄기안문서 여부 체크 (임시저장문서의 pDocSN 전달)
-    		
-    		if (isGroupDoc == "Y" && (typeof draftAllTypeB == "undefined" || draftAllTypeB != "Y")) { // 일괄기안 문서를 여는 경우
-    			openLocation = "/ezApprovalG/draftuiAll_WHWP.do?formURL=" + encodeURI(pArgument[1]) + "&draftFlag=" + encodeURI(pArgument[2]) + "&formDocType=" + encodeURI(pArgument[3]);
-    		} else {
-    			openLocation = "/ezApprovalG/draftuiWHWP.do?formURL=" + encodeURI(pArgument[1]) + "&draftFlag=" + encodeURI(pArgument[2]) + "&formDocType=" + encodeURI(pArgument[3]);
-    		}
-    		
-            openLocation = openLocation + "&susinSN=" + encodeURI(pArgument[4]) + "&docState=" + encodeURI(pArgument[5]) + "&listType=" + encodeURI(pListTypeValue) + "&aprState=" + encodeURI(pArgument[6]);
-            openLocation = openLocation + "&isTmpDoc=" + encodeURI(pArgument[7]) + "&docSN=" + encodeURI(pDocSN);
-    	}
+        if (formURL.substr(formURL.length - 3, formURL.length).toLowerCase() == "mht") {
+            openLocation = "/ezApprovalG/draftui.do?formURL=" + encodeURI(pArgument[1]) + "&draftFlag=" + encodeURI(pArgument[2]) + "&formDocType=" + encodeURI(pArgument[3]);
+
+            // FormBuilder
+            if (window.reformflag == null) {
+                // reformflag null 값이라면
+                reformflag = GetAttribute(pCurSelRow, "REFORMFLAG");
+            }
+
+            if (reformflag.length > 0) {
+                openLocation += "&reformflag=" + encodeURI(reformflag);
+            }
+        } else {
+            if(useWebHWP == "NO") {
+                if (!isIE()) {
+                    //노티문구가 잘못되었음. 아무래도 한글양식은 IE에서만 지원가능합니다 라고 바꿔야할듯
+                    alert(strLang1103);
+                    return;
+                } else {
+                    openLocation = "/ezApprovalG/draftuiHWP.do?formURL=" + encodeURI(pArgument[1]) + "&draftFlag=" + encodeURI(pArgument[2]) + "&formDocType=" + encodeURI(pArgument[3]);
+                }
+            } else {
+                openLocation = "/ezApprovalG/draftuiWHWP.do?formURL=" + encodeURI(pArgument[1]) + "&draftFlag=" + encodeURI(pArgument[2]) + "&formDocType=" + encodeURI(pArgument[3]);
+                
+            }
+        }
     }
-    
+    openLocation = openLocation + "&susinSN=" + encodeURI(pArgument[4]) + "&docState=" + encodeURI(pArgument[5]) + "&listType=" + encodeURI(pListTypeValue) + "&aprState=" + encodeURI(pArgument[6]);
+    openLocation = openLocation + "&isTmpDoc=" + encodeURI(pArgument[7]) + "&docSN=" + encodeURI(pDocSN);
     openLocation +=  "&isPreview=Y";
     
     document.getElementById("ifrmPreViewH").src = openLocation;
