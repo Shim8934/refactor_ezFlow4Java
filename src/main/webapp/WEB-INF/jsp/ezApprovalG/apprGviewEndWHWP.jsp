@@ -82,6 +82,9 @@
 			var ReturnFunction;
 			
             var approvalFlag = "<c:out value = '${approvalFlag}'/>";
+            
+            var isPreview = "<c:out value = '${isPreview}'/>";
+            
 	        window.onresize = function () {
 	       		document.getElementById("messageWHWPEditor").style.height = document.documentElement.clientHeight - 150 + "px";
 	       		var mHeight = document.documentElement.clientHeight - 110 - document.getElementById("messageWHWPEditor").offsetTop + "px";
@@ -673,20 +676,22 @@
 	    }
 
 			window.onbeforeunload = function () {
-				try {
-					if ((window.opener.g_sFlag == undefined && isDocAttach == "false") || (window.opener.g_sFlag != undefined && window.opener.g_sFlag == "m01") || (window.opener.g_sFlag != undefined && window.opener.g_sFlag == "docShare")) {
-						// 전자결재 > 완료문서, 기록물등록대장, 부서공유함에 적용 되도록 조건 추가
-						window.opener.openergetDocInfo();
-					} else {
-						return;
-					}
-				} catch (e) { 
-					if ((window.parent.g_sFlag == undefined && isDocAttach == "false") || (window.parent.g_sFlag != undefined && window.parent.g_sFlag == "m01") || (window.parent.g_sFlag != undefined && window.parent.g_sFlag == "docShare")) {
-						window.parent.openergetDocInfo();
-					} else {
-						return;
-					}
-				}
+                if (isPreview != "Y") {
+                    try {
+                        if ((window.opener.g_sFlag == undefined && isDocAttach == "false") || (window.opener.g_sFlag != undefined && window.opener.g_sFlag == "m01") || (window.opener.g_sFlag != undefined && window.opener.g_sFlag == "docShare")) {
+                            // 전자결재 > 완료문서, 기록물등록대장, 부서공유함에 적용 되도록 조건 추가
+                            window.opener.openergetDocInfo();
+                        } else {
+                            return;
+                        }
+                    } catch (e) {
+                        if ((window.parent.g_sFlag == undefined && isDocAttach == "false") || (window.parent.g_sFlag != undefined && window.parent.g_sFlag == "m01") || (window.parent.g_sFlag != undefined && window.parent.g_sFlag == "docShare")) {
+                            window.parent.openergetDocInfo();
+                        } else {
+                            return;
+                        }
+                    }
+                }
 			}
 	    </script>
 	</head>

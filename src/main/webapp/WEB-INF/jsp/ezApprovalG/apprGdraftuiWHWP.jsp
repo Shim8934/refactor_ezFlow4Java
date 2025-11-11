@@ -311,6 +311,8 @@
             var attachHTML = new Array();
             var docAttachHTML = new Array();
             var anCnt = 1;
+
+            var isPreview = "<c:out value='${isPreview}'/>";
 			
 	        window.onload = function () {
 	            try {
@@ -1489,13 +1491,15 @@
 			            UndoDoc();
 			    }
 			
-			    try {
-			        if (bAttachProcess == false)
-			            window.opener.openergetDocInfo();
-			    } catch (e) {
-					if (bAttachProcess == false)
-			            window.parent.openergetDocInfo();
-				}
+                if (isPreview != "Y") {
+                    try {
+                        if (bAttachProcess == false)
+                            window.opener.openergetDocInfo();
+                    } catch (e) {
+                        if (bAttachProcess == false)
+                            window.parent.openergetDocInfo();
+                    }
+                }
 			
 			    try {
 // 			        if (bAttachProcess == false)

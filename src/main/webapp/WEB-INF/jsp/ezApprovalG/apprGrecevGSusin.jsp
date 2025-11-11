@@ -165,6 +165,8 @@
 			var allowDeptIDs = "<c:out value ='${allowDeptIDs}'/>"
 			var ReturnFunction;
 
+            var isPreview = "<c:out value ='${isPreview}'/>";
+
 		    $(document).ready(function(){
 				if (approvalFlag == 'S') {
 					$(".approvalS").show();
@@ -995,20 +997,22 @@
 		    //     window.close();
 		    // }
 		    window.onbeforeunload = function () {
-		        try {
-		            window.opener.openergetDocInfo();
-		            if (!chkOK) {
-		                if (isReDraft == "N")
-		                    delDocInfo();
-		            }
-		        }
-		        catch (e) {
-		            window.parent.openergetDocInfo();
-		            if (!chkOK) {
-		                if (isReDraft == "N")
-		                    delDocInfo();
-		        	}
-		        }
+                if (isPreview != "Y") {
+                    try {
+                        window.opener.openergetDocInfo();
+                        if (!chkOK) {
+                            if (isReDraft == "N")
+                                delDocInfo();
+                        }
+                    }
+                    catch (e) {
+                        window.parent.openergetDocInfo();
+                        if (!chkOK) {
+                            if (isReDraft == "N")
+                                delDocInfo();
+                        }
+                    }
+                }
 		        // try {
 		        //     window.opener.Refresh_Window();
 		        // } catch (e) { }

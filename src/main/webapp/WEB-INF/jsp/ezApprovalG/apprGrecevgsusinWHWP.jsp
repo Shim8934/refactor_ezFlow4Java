@@ -169,6 +169,8 @@
 			var allowDeptIDs = "<c:out value ='${allowDeptIDs}'/>"
 			var ReturnFunction;
 
+            var isPreview = "<c:out value ='${isPreview}'/>";
+
 		    function process_AfterOpen() {
 		        try {
 		            if (pFormHref == "") {
@@ -1069,22 +1071,24 @@
 			  // }
 		
 			  function window_onbeforeunload() {
-			      try {
-			          window.opener.openergetDocInfo();
-			          if (!chkOK) {
-			
-			              if (isReDraft == "N")
-			                  delDocInfo();
-			          }
-			      }
-			      catch (e) { 
-                      window.parent.openergetDocInfo();
-			          if (!chkOK) {
-			
-			              if (isReDraft == "N")
-			                  delDocInfo();
-			          }
-				  }
+                  if (isPreview != "Y") {
+                      try {
+                          window.opener.openergetDocInfo();
+                          if (!chkOK) {
+
+                              if (isReDraft == "N")
+                                  delDocInfo();
+                          }
+                      }
+                      catch (e) {
+                          window.parent.openergetDocInfo();
+                          if (!chkOK) {
+
+                              if (isReDraft == "N")
+                                  delDocInfo();
+                          }
+                      }
+                  }
 			
 			      // try {
 			      //     window.opener.Refresh_Window();

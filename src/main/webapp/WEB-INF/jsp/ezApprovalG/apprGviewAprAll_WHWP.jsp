@@ -169,6 +169,8 @@
 			// 2024-01-11 김우철 - 다안기안문서 전체 탭 호출 후 selTab(1)을 위한 setTimeout 시간
 			var loadTime = "${loadTimeForApprAll}";
 			var ReturnFunction;
+
+            var isPreview = "<c:out value = '${isPreview}'/>";
     		
 			function btnOpinion_onclick() {
 				openOpinionUI_New("Show");
@@ -366,12 +368,14 @@
 			}
 	
 			function window_onbeforeunload() {
-			    try {
-			        window.opener.openergetDocInfo();
-			    }
-			    catch (e) {
-					window.parent.openergetDocInfo();
-				}
+                if (isPreview != "Y") {
+                    try {
+                        window.opener.openergetDocInfo();
+                    }
+                    catch (e) {
+                        window.parent.openergetDocInfo();
+                    }
+                }
 			    // try {
 			    //     window.opener.Refresh_Window();
 			    // } catch (e) { }
