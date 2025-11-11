@@ -269,15 +269,15 @@
 
 			window.onresize =  function () {
 	             try {
-	                setTimeout(function(){
+	                /*setTimeout(function(){
                          let height = document.documentElement.clientHeight - 220;
 
                             xfe.setWidth("100%");
                             xfe.setHeight(height+ "px");
-	                },100);
+	                },100);*/
 
-                    //xfe.setWidth("100%");
-                    //xfe.setHeight((document.documentElement.clientHeight - 1) + "px");
+                    xfe.setWidth("100%");
+                    xfe.setHeight((document.documentElement.clientHeight - 1) + "px");
 	            } catch (e) { }
 	        }
 			
@@ -353,6 +353,7 @@
 	        });
 	        
 	        xfe.render('xfe');
+	        xfe.showMenubar(false);
 			doc = xfe.xfeStackObject?.xfeDocument; // 제품 디자인영역 document
 	        
 	        if (type == "MAILOUTOFOFFICE" || type == "COMMUNITYPHOTO") {
