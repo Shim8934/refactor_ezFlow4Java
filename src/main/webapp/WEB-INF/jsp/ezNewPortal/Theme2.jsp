@@ -77,15 +77,7 @@
         <div class="bannerlink_area">
         	<article class="writebanner">
                 <ul class="writebannerUL">
-                   	<c:choose>
-                   		<c:when test="${useMail eq 'NO'}">
-                   		<li>
-                   			<dl id="NewMail" class="icon_disabled writebannerDL">
-								<dt class="iconCircle_none"><span class="iconCommon"></span></dt>
-							</dl>
-						</li>
-                   		</c:when>
-                   		<c:otherwise>
+					<c:if test="${useMail eq 'YES'}">
                    		<li>
                        		<dl class="writebannerDL banner_mail" id="NewMail">
                        		 	<dt class="banner_img"></dt>
@@ -93,17 +85,8 @@
                            		<dd id="unreadMailCount" class="iconCount_none">0</dd>
                        		</dl>
                        	</li>
-                   		</c:otherwise>
-                   	</c:choose>
-                   	<c:choose>
-                   		<c:when test="${useApproval eq 'NO'}">
-                   		<li>
-                   			<dl id="AprSign" class="icon_disabled writebannerDL">
-								<dt class="iconCircle_none"><span class="iconCommon"></span></dt>
-							</dl>
-						</li>
-                   		</c:when>
-                   		<c:otherwise>
+					</c:if>
+					<c:if test="${useApproval eq 'YES'}">
                    		<li>
                        		<dl class="writebannerDL banner_apr" id="AprSign">
                            		<dt class="banner_img"></dt>
@@ -111,17 +94,8 @@
                            		<dd id="approvalCount" class="iconCount_none">0</dd>
                        		</dl>
                        	</li>
-                   		</c:otherwise>
-                   	</c:choose>
-                   	<c:choose>
-                   		<c:when test="${useSchedule eq 'NO'}">
-                   		<li>
-                   			<dl id="Schedule" class="icon_disabled writebannerDL">
-								<dt class="iconCircle_none"><span class="iconCommon"></span></dt>
-							</dl>
-						</li>
-                   		</c:when>
-                   		<c:otherwise>
+					</c:if>
+					<c:if test="${useSchedule eq 'YES'}">
                    		<li>
                        		<dl class="writebannerDL banner_schedule" id="Schedule">
                            		<dt class="banner_img"></dt>
@@ -129,58 +103,25 @@
                            		<dd id="scheduleCount" class="iconCount_none">0</dd>
                        		</dl>
                        	</li>
-                   		</c:otherwise>
-                   	</c:choose>
-                   	<c:choose>
-                   	<%-- 구버전 전자설문(useQuestion) 영역 --%>
-                   		<%-- 
-                   		<c:when test="${useQuestion eq 'NO' }">
-                   			<dl id="Poll" class="icon_disabled writebannerDL">
-								<dt class="iconCircle_none"><span class="iconCommon"></span></dt>
-							</dl>
-                   		</c:when>
-                   		<c:otherwise>
-                       		<dl class="writebannerDL" id="Poll">
-                           		<dt><img src="/images/ezNewPortal/theme2Img/writebanner04.png" alt="<spring:message code='ezNewPortal.gu4' />"></dt>
-                           		<dt><spring:message code='ezNewPortal.gu4' /></dt>
-                           		<dd id="pollCount" class="iconCount_none">0</dd>
-                      			</dl>
-                   		</c:otherwise>
-                   		 --%>
-                   		<c:when test="${useSurvey eq 'NO'}">
-                   		<li>
-                   			<dl id="Survey" class="icon_disabled writebannerDL">
-								<dt class="iconCircle_none"><span class="iconCommon"></span></dt>
+					</c:if>
+					<c:if test="${useSurvey eq 'YES'}">
+						<li>
+							<dl class="writebannerDL banner_survey" id="Survey">
+								<dt class="banner_img"></dt>
+								<dt><spring:message code='ezNewPortal.gu4' /></dt>
+								<dd id="surveyCount" class="iconCount_none">0</dd>
 							</dl>
 						</li>
-                   		</c:when>
-                   		<c:otherwise>
-                   		<li>
-                       		<dl class="writebannerDL banner_survey" id="Survey">
-                           		<dt class="banner_img"></dt>
-                           		<dt><spring:message code='ezNewPortal.gu4' /></dt>
-                           		<dd id="surveyCount" class="iconCount_none">0</dd>
-                      		</dl>
-                      	</li>
-                   		</c:otherwise>
-                   	</c:choose>
-                    
+					</c:if>
                     <%-- 2023-06-05 홍승비 - 디자인 개선을 위해 테마2 상단 영역 회람판 메뉴 표출되지 않도록 숨김 / 협업 메뉴 이미지 교체 --%>
                     <li style="display:none;">
-                    	<c:choose>
-                    		<c:when test="${useCircular eq 'NO' }">								
-                    			<dl id="Circular" class="icon_disabled writebannerDL">
-									<dt class="iconCircle_none"><span class="iconCommon"></span></dt>
-								</dl>
-                    		</c:when>
-                    		<c:otherwise>
-                        		<dl class="writebannerDL banner_circular" id="Circular">
-                            		<dt class="banner_img"></dt>
-                            		<dt><spring:message code='ezNewPortal.gu5' /></dt>
-                            		<dd id="circularCount" class="iconCount_none">0</dd>
-                        		</dl>
-                    		</c:otherwise>
-                    	</c:choose>
+						<c:if test="${useCircular eq 'YES'}">
+							<dl class="writebannerDL banner_circular" id="Circular">
+								<dt class="banner_img"></dt>
+								<dt><spring:message code='ezNewPortal.gu5' /></dt>
+								<dd id="circularCount" class="iconCount_none">0</dd>
+							</dl>
+						</c:if>
                     </li>
 					<c:if test="${useEzWorkspace}">
 					<li>
@@ -198,22 +139,22 @@
                         <dt><spring:message code='ezNewPortal.t024'/></dt>
                     </dl>
                     </li>
-                    <c:if test="${useCommunity eq 'YES'}">
-					<li>
-	                    <dl class="writebannerDL banner_community" id="Community">
-	                        <dt class="banner_img"></dt>
-	                        <dt><spring:message code='main.t1006'/></dt>
-	                    </dl>
-                    </li>
-                    </c:if>
-                    <c:if test="${useMemo eq 'YES'}">
-					<li>
-	                    <dl class="writebannerDL banner_memo" id="Memo">
-	                        <dt class="banner_img"></dt>
-	                        <dt><spring:message code='ezMemo.t001'/></dt>
-	                    </dl>
-                    </li>
-                    </c:if>
+					<c:if test="${useCommunity eq 'YES'}">
+						<li>
+							<dl class="writebannerDL banner_community" id="Community">
+								<dt class="banner_img"></dt>
+								<dt><spring:message code='main.t1006'/></dt>
+							</dl>
+						</li>
+						</c:if>
+					<c:if test="${useMemo eq 'YES'}">
+						<li>
+							<dl class="writebannerDL banner_memo" id="Memo">
+								<dt class="banner_img"></dt>
+								<dt><spring:message code='ezMemo.t001'/></dt>
+							</dl>
+						</li>
+					</c:if>
                 </ul>
             </article>
         </div>
@@ -717,11 +658,11 @@
 		});
 		
 		//개인에 탭이 되어있으면
-		if (pSchedule.classList.contains('left_on')) {
+		if (typeof pSchedule !== 'undefined' && pSchedule.classList.contains('left_on')) {
 			assembleScheduleList(pScheduleList);
 		}
 		//부서에 탭이 되어있으면
-		if (dSchedule.classList.contains('right_on')) {
+		if (typeof dSchedule !== 'undefined' && dSchedule.classList.contains('right_on')) {
 			assembleScheduleList(dScheduleList);
 		}
 	}
@@ -745,97 +686,99 @@
 
 	var assembleScheduleList = function (data) {
         var schList = document.getElementById('schedule_list_Top');
-        
-		while(schList.hasChildNodes()) {
-			schList.removeChild(schList.firstChild);	
-		}
+        if (schList) {
+			while(schList.hasChildNodes()) {
+				schList.removeChild(schList.firstChild);
+			}
+
+			if(data.length === 0) {
+				var dl = document.createElement('dl');
+				dl.className = 'nodata';
+
+				var dt = document.createElement('dt');
+				var img = document.createElement('img');
+				img.src = '/images/kr/main/noData_sIcon.png';
+
+				dt.appendChild(img);
+				var dd = document.createElement('dd');
+				dd.textContent = '<spring:message code="ezNewPortal.t018" />';
+
+				dl.appendChild(dt);
+				dl.appendChild(dd);
+
+				schList.appendChild(dl);
+				return;
+			}
 		
-		if(data.length === 0) {
-			var dl = document.createElement('dl');
-			dl.className = 'nodata';
-			
-			var dt = document.createElement('dt');
-			var img = document.createElement('img');
-			img.src = '/images/kr/main/noData_sIcon.png';
-			
-			dt.appendChild(img);
-			var dd = document.createElement('dd');
-			dd.textContent = '<spring:message code="ezNewPortal.t018" />';
-			
-			dl.appendChild(dt);
-			dl.appendChild(dd);
-			
-			schList.appendChild(dl);
-			return;
-		}
 		
-		/* 2023-06-05 홍승비 - 디자인 개선을 위헤 상단 영역 일정 리스트 표출 수정 (li, span 태그 분리 / 클릭 이벤트는 기존 li 태그로 유지) */
-        data.forEach(function(item, index) {
-        	if (index > 4) { return; }
-        	var li = document.createElement('li');
-        	var span = document.createElement('span');
-        	
-        	span.className = "txt";
-        	
-        	// 2020-02-25 김정언
-        	if (item.dateType == "4") {
-        		/*
-        		li.textContent = item.title + " : " + item.creatorName;
-            	li.style.cursor = "pointer";
-            	*/
-            	span.innerText = (ConvertCharToEntityReference(item.title) + " : " + item.creatorName);
-            	
-            	li.addEventListener('click', function() {  			    
-            		if (CrossYN()) {
-    					var OpenWin = window.open("/ezAttitude/attitudeItemView.do?attitudeId=" + encodeURIComponent(item.scheduleId) + "&typeId=" + item.parentId, "", GetOpenWindowfeature(672, 640));
-    					
-    					try { OpenWin.focus(); } catch (e) { }
-    				} else {
-    					window.showModalDialog("/ezAttitude/attitudeItemView.do?attitudeId=" + encodeURIComponent(item.scheduleId) + "&typeId=" + item.parentId, "", 
-    					    "dialogHeight:520px;dialogwidth:800px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(672, 640));
-    				}   		
-            	});
-        	} else if(item.scheduleType == '9') {
-        		/*
-        		li.textContent = '['+ item.startDate.substring(11, 16) + ' ~ ' + item.endDate.substring(11, 16) + '] ' + item.title;
-	        	li.style.cursor = "pointer";
-	        	*/
-	        	span.innerHTML = ("<span>[" + item.startDate.substring(11, 16) + " ~ " + item.endDate.substring(11, 16) + "]</span> " + ConvertCharToEntityReference(item.title));
-	        	
-	        	li.addEventListener('click', function() {
-				    var wWeight = "760";
-				    var wHeight = "650";
-				    var heigth = window.screen.availHeight;
-				    var width = window.screen.availWidth;
-				    var left = (width - wWeight) / 2;
-				    var top = (heigth - wHeight) / 2;
+			/* 2023-06-05 홍승비 - 디자인 개선을 위헤 상단 영역 일정 리스트 표출 수정 (li, span 태그 분리 / 클릭 이벤트는 기존 li 태그로 유지) */
+			data.forEach(function(item, index) {
+				if (index > 4) { return; }
+				var li = document.createElement('li');
+				var span = document.createElement('span');
 				
-			        window.open("/ezSchedule/googleScheduleRead.do" + "?id=" + encodeURIComponent(item.googleId) + "&type=" + item.scheduleType + "&datetype=" + item.dateType + "&repeatcount=" + item.repeatCount + "&startdate=" + item.startDate + "&enddate=" + item.endDate + "&pattern=0","",
-				        "top = " + top + ", left = " + left + ",height = " + wHeight + "px, width = " + wWeight + "px, status = no, toolbar=no, menubar=no,location=no, resizable=1 scrollbars=0");        		
-	        	});
-        	} else {
-        		/*
-	        	li.textContent = '['+ item.startDate.substring(11, 16) + ' ~ ' + item.endDate.substring(11, 16) + '] ' + item.title;
-	        	li.style.cursor = "pointer";
-	        	*/
-	        	span.innerHTML = ("<span>[" + item.startDate.substring(11, 16) + " ~ " + item.endDate.substring(11, 16) + "]</span> " + ConvertCharToEntityReference(item.title));
-	        	
-	        	li.addEventListener('click', function() {
-				    var wWeight = "760";
-				    var wHeight = "670";
-				    var heigth = window.screen.availHeight;
-				    var width = window.screen.availWidth;
-				    var left = (width - wWeight) / 2;
-				    var top = (heigth - wHeight) / 2;
+				span.className = "txt";
 				
-			        window.open("/ezSchedule/scheduleRead.do" + "?id=" + encodeURIComponent(item.scheduleId) + "&type=" + item.scheduleType + "&datetype=" + item.dateType + "&repeatcount=" + item.repeatCount + "&date=" + item.startDate.substr(0, 10) + "&pattern=0","",
-				        "top = " + top + ", left = " + left + ",height = " + wHeight + "px, width = " + wWeight + "px, status = no, toolbar=no, menubar=no,location=no, resizable=1 scrollbars=0");        		
-	        	});
-        	}
-        	
-        	li.appendChild(span);
-        	schList.appendChild(li);
-        });
+				// 2020-02-25 김정언
+				if (item.dateType == "4") {
+					/*
+					li.textContent = item.title + " : " + item.creatorName;
+					li.style.cursor = "pointer";
+					*/
+					span.innerText = (ConvertCharToEntityReference(item.title) + " : " + item.creatorName);
+					
+					li.addEventListener('click', function() {  			    
+						if (CrossYN()) {
+							var OpenWin = window.open("/ezAttitude/attitudeItemView.do?attitudeId=" + encodeURIComponent(item.scheduleId) + "&typeId=" + item.parentId, "", GetOpenWindowfeature(672, 640));
+							
+							try { OpenWin.focus(); } catch (e) { }
+						} else {
+							window.showModalDialog("/ezAttitude/attitudeItemView.do?attitudeId=" + encodeURIComponent(item.scheduleId) + "&typeId=" + item.parentId, "", 
+								"dialogHeight:520px;dialogwidth:800px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(672, 640));
+						}   		
+					});
+				} else if(item.scheduleType == '9') {
+					/*
+					li.textContent = '['+ item.startDate.substring(11, 16) + ' ~ ' + item.endDate.substring(11, 16) + '] ' + item.title;
+					li.style.cursor = "pointer";
+					*/
+					span.innerHTML = ("<span>[" + item.startDate.substring(11, 16) + " ~ " + item.endDate.substring(11, 16) + "]</span> " + ConvertCharToEntityReference(item.title));
+					
+					li.addEventListener('click', function() {
+						var wWeight = "760";
+						var wHeight = "650";
+						var heigth = window.screen.availHeight;
+						var width = window.screen.availWidth;
+						var left = (width - wWeight) / 2;
+						var top = (heigth - wHeight) / 2;
+					
+						window.open("/ezSchedule/googleScheduleRead.do" + "?id=" + encodeURIComponent(item.googleId) + "&type=" + item.scheduleType + "&datetype=" + item.dateType + "&repeatcount=" + item.repeatCount + "&startdate=" + item.startDate + "&enddate=" + item.endDate + "&pattern=0","",
+							"top = " + top + ", left = " + left + ",height = " + wHeight + "px, width = " + wWeight + "px, status = no, toolbar=no, menubar=no,location=no, resizable=1 scrollbars=0");        		
+					});
+				} else {
+					/*
+					li.textContent = '['+ item.startDate.substring(11, 16) + ' ~ ' + item.endDate.substring(11, 16) + '] ' + item.title;
+					li.style.cursor = "pointer";
+					*/
+					span.innerHTML = ("<span>[" + item.startDate.substring(11, 16) + " ~ " + item.endDate.substring(11, 16) + "]</span> " + ConvertCharToEntityReference(item.title));
+					
+					li.addEventListener('click', function() {
+						var wWeight = "760";
+						var wHeight = "670";
+						var heigth = window.screen.availHeight;
+						var width = window.screen.availWidth;
+						var left = (width - wWeight) / 2;
+						var top = (heigth - wHeight) / 2;
+					
+						window.open("/ezSchedule/scheduleRead.do" + "?id=" + encodeURIComponent(item.scheduleId) + "&type=" + item.scheduleType + "&datetype=" + item.dateType + "&repeatcount=" + item.repeatCount + "&date=" + item.startDate.substr(0, 10) + "&pattern=0","",
+							"top = " + top + ", left = " + left + ",height = " + wHeight + "px, width = " + wWeight + "px, status = no, toolbar=no, menubar=no,location=no, resizable=1 scrollbars=0");        		
+					});
+				}
+				
+				li.appendChild(span);
+				schList.appendChild(li);
+			});
+		}
 	}
 	
 	function schedule_get_holiday_top() {
@@ -1110,34 +1053,36 @@
 		//CalendarMiniView_Top("CalendarMini_Top");
 		getScheduleList_Top(nowDay, "P");
 		
-		var pSchedule = document.getElementById('pSchedule');
-		var dSchedule = document.getElementById('dSchedule');
-		
-		pSchedule.addEventListener('click', function() {
-			if(!pSchedule.classList.contains('left_on')) {
-				// 개인일정이 선택되면 부서일정off
-				pSchedule.classList.remove('left');
-				pSchedule.classList.add('left_on');
+		if (document.getElementById('pSchedule')) {
+			var pSchedule = document.getElementById('pSchedule');
+			var dSchedule = document.getElementById('dSchedule');
 
-				dSchedule.classList.remove('right_on');
-				dSchedule.classList.add('right');
-				
-				assembleScheduleList(pScheduleList);
-			}
-		});
-		
-		dSchedule.addEventListener('click', function() {
-			if(!dSchedule.classList.contains('right_on')) {
-				// 부서일정이 선택되면 개인일정off
-				dSchedule.classList.remove('right');
-				dSchedule.classList.add('right_on');
-				
-				pSchedule.classList.remove('left_on');
-				pSchedule.classList.add('left');
-				
-				assembleScheduleList(dScheduleList);
-			}
-		});
+			pSchedule.addEventListener('click', function() {
+				if(!pSchedule.classList.contains('left_on')) {
+					// 개인일정이 선택되면 부서일정off
+					pSchedule.classList.remove('left');
+					pSchedule.classList.add('left_on');
+
+					dSchedule.classList.remove('right_on');
+					dSchedule.classList.add('right');
+
+					assembleScheduleList(pScheduleList);
+				}
+			});
+
+			dSchedule.addEventListener('click', function() {
+				if(!dSchedule.classList.contains('right_on')) {
+					// 부서일정이 선택되면 개인일정off
+					dSchedule.classList.remove('right');
+					dSchedule.classList.add('right_on');
+
+					pSchedule.classList.remove('left_on');
+					pSchedule.classList.add('left');
+
+					assembleScheduleList(dScheduleList);
+				}
+			});
+		}
 		
 		assembleScheduleList(pScheduleList);
 		

@@ -288,7 +288,7 @@ public class EzNewPortalGWController {
 			}
 			
 			if (useMemo == null || useMemo.equals("")) {
-				useMemo = "YES";
+				useMemo = "NO";
 			}
 			
 			if (useLadder == null || useLadder.equals("")) {
@@ -324,7 +324,7 @@ public class EzNewPortalGWController {
 			}
 			
 			if (useCommunity == null || useCommunity.equals("")) {
-				useCommunity = "YES";
+				useCommunity = "NO";
 			}
 			
 			if (useEzPMS == null || useEzPMS.equals("")) {
@@ -344,7 +344,7 @@ public class EzNewPortalGWController {
 			}
 			
 			if (useBoard == null || useBoard.equals("")) {
-				useBoard = "YES";
+				useBoard = "NO";
 			}
 			
 			if (useToDo == null || useToDo.equals("")) {
@@ -527,6 +527,10 @@ public class EzNewPortalGWController {
 			boolean isUseQuestionAuth = false;
 			boolean isUseSurveyAuth = false;
 			boolean isUseScheduleAuth = false;
+			boolean isUseCommunityAuth = false;
+			boolean isUseMemoAuth = false;
+			boolean isUseWebfolderAuth = false;
+			boolean isUseBoardAuth = false;
 			
 			for (MenuInfoVO mVO : menuList) {
 				if (mVO.getMenuCode() != null && mVO.getMenuCode().equals("approval")) {
@@ -548,6 +552,22 @@ public class EzNewPortalGWController {
 				if (mVO.getMenuCode() != null && mVO.getMenuCode().equals("schedule") && useSchedule.equals("YES")) {
 					isUseScheduleAuth = true;
 				}
+				
+				if (mVO.getMenuCode() != null && mVO.getMenuCode().equals("community") && useCommunity.equals("YES")) {
+					isUseCommunityAuth = true;
+				}
+				
+				if (mVO.getMenuCode() != null && mVO.getMenuCode().equals("memo") && useMemo.equals("YES")) {
+					isUseMemoAuth = true;
+				}
+				
+				if (mVO.getMenuCode() != null && mVO.getMenuCode().equals("webfolder") && useWebfolder.equals("YES")) {
+					isUseWebfolderAuth = true;
+				}
+				
+				if (mVO.getMenuCode() != null && mVO.getMenuCode().equals("board") && useBoard.equals("YES")) {
+					isUseBoardAuth = true;
+				}
 			}
 			
 			if (isUseQuestionAuth) {
@@ -566,6 +586,24 @@ public class EzNewPortalGWController {
 				useSchedule = "YES";
 			} else {
 				useSchedule = "NO";
+			}
+			
+			if(isUseMemoAuth) {
+				useMemo = "YES";
+			} else {
+				useMemo = "NO";
+			}
+			
+			if(isUseWebfolderAuth) {
+				useWebfolder = "YES";
+			} else {
+				useWebfolder = "NO";
+			}
+			
+			if(isUseBoardAuth) {
+				useBoard = "YES";
+			} else {
+				useBoard = "NO";
 			}
 			
 			boolean isUseCircular = false;
@@ -601,6 +639,12 @@ public class EzNewPortalGWController {
 				useAttitude = "YES";
 			} else {
 				useAttitude = "NO";
+			}
+			
+			if (isUseCommunityAuth) {
+				useCommunity = "YES";
+			} else {
+				useCommunity = "NO";
 			}
 			
 			if (useExternalMailServer.equalsIgnoreCase("YES")) {
