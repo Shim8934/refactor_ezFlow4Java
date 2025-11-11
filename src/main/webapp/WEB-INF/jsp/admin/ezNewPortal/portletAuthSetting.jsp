@@ -36,7 +36,16 @@
    		<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
 	</div>
 	<script type="text/javascript">
-		var portletAuths = JSON.parse('${portletAuths}');
+		function portletAuthsDecode(str) {
+			var txt = document.createElement('textarea');
+			txt.innerHTML = str;
+			return txt.value;
+    	}
+		
+		var portletAuthsJson = '<c:out value="${portletAuths}" escapeXml="true" />';
+		var decodeStr = portletAuthsDecode(portletAuthsJson);
+		
+		var portletAuths = JSON.parse(decodeStr);
 		
 		var setPortletList = function() {
 			var portletAuthsY = portletAuths.portletAuthsY;

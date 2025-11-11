@@ -807,17 +807,27 @@
 		     	drawAuths();
 		    }
 	   		
+			function escapeHtml(str) {
+				if (str == null) return '';
+				return String(str)
+					.replace(/&/g, '&amp;')
+					.replace(/</g, '&lt;')
+					.replace(/>/g, '&gt;')
+					.replace(/'/g, '&#39;')
+					.replace(/"/g, '&quot;');
+			}
+
 	   		var drawAuths = function() {
 	   			var authsHTML = "<table style='width: 100%; border: 0; padding: 0;' class='mainlist_free'>";
-	   			authsHTML += "<tr><th class='nameTD'><spring:message code='ezNewPortal.t073' /></th><th class='authTD'><spring:message code='ezNewPortal.t074' /></th></table>";
+	   			authsHTML += "<tr><th class='nameTD'><spring:message code='ezNewPortal.t073' /></th><th class='authTD'><spring:message code='ezNewPortal.t074' /></th></tr></table>";
 	   			
 				menuAuths.forEach(function(item, index) {
 					authsHTML += "<table style='width: 100%; border: 0; padding: 0;' class='mainlist_free'>";
 					
 					authsHTML += "<tr style='cursor:pointer;' class='hover'";
 					authsHTML += " data-id=" + item.userId;
-					authsHTML += " data-userName=" + item.userName;
-					authsHTML += " data-userDeptName=" + item.userDeptName;
+					authsHTML += " data-userName=" + escapeHtml(item.userName);
+					authsHTML += " data-userDeptName=" + escapeHtml(item.userDeptName);
 					authsHTML += " data-userType=" + item.userType;
 					authsHTML += " data-accessYN=" + item.accessYN;
 					authsHTML += " data-subdeptPermitted=" + item.subdeptPermitted;
@@ -825,18 +835,18 @@
 					authsHTML += "<td class='nameTD'>";
 					
 					if (item.userType == 1) {
-						authsHTML += item.userName;
+						authsHTML += escapeHtml(item.userName);
 						/* authsHTML += "(" + item.userDeptName + ")"; */
 					} else if(item.userType == 0) {
-						authsHTML +=  "<spring:message code='ezBoard.t9'/>" + " : " + item.userDeptName;
+						authsHTML +=  "<spring:message code='ezBoard.t9'/>" + " : " + escapeHtml(item.userDeptName);
 					} else if (item.userType == 2){
-						authsHTML += "<spring:message code='ezEmail.t28'/>" + " : " + item.userName;
+						authsHTML += "<spring:message code='ezEmail.t28'/>" + " : " + escapeHtml(item.userName);
 					} else if (item.userType == 3) {
-						authsHTML += "<spring:message code='ezEmail.t281'/>" + " : " + item.userName;
+						authsHTML += "<spring:message code='ezEmail.t281'/>" + " : " + escapeHtml(item.userName);
 					} else if (item.userType == 4) {
-						authsHTML += "<spring:message code='ezPersonal.yej05'/>" + " : " + item.userName;
+						authsHTML += "<spring:message code='ezPersonal.yej05'/>" + " : " + escapeHtml(item.userName);
 					} else {
-						authsHTML += item.userName;
+						authsHTML += escapeHtml(item.userName);
 					}
 					
 					authsHTML += "</td>";
@@ -849,7 +859,7 @@
 						authsHTML += "<label class='switch'><input type='checkbox'><span class='slider round'></span></label>";
 					}
 					
-					authsHTML += "</td>";
+					authsHTML += "</td></tr></table>";
 				});
 	   			
 	   			document.getElementById("authList").innerHTML = authsHTML;
