@@ -90,6 +90,8 @@
 
 			var tenantID = "<c:out value ='${userInfo.tenantId}'/>";
 			var ReturnFunction;
+
+            var isPreview = "<c:out value ='${isPreview}'/>";
 	        
 		    $(function () {
 		      	if(approvalFlag == "G") {
@@ -508,12 +510,14 @@
 
 		    }
 		    window.onbeforeunload = function () {
-		        try {
-		            window.opener.openergetDocInfo();
-		        }
-		        catch (e) {
-		            window.parent.openergetDocInfo();
-		        }
+                if (isPreview != "Y") {
+                    try {
+                        window.opener.openergetDocInfo();
+                    }
+                    catch (e) {
+                        window.parent.openergetDocInfo();
+                    }
+                }
 		        // try {
 		        //     window.opener.Refresh_Window();
 		        // } catch (e) { }
