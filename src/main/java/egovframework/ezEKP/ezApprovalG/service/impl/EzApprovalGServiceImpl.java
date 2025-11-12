@@ -29545,7 +29545,12 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 				if (!tableElement.hasAttr("border")) {
 					tableElement.attr("border","1");
 				}
-				
+
+                if (tableElement.hasAttr("border") &&
+                        "0".equals(tableElement.attr("border").trim())) {
+                    tableElement.attr("border", "1");
+                }
+                
 				if (!tableElement.hasAttr("cellspacing")) {
 					tableElement.attr("cellspacing","0");
 				}
