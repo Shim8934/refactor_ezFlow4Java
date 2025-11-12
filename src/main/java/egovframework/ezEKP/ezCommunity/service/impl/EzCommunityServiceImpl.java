@@ -9013,33 +9013,33 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 				CommunityMemberInfoVO memberInfo = commViewMemberGet3(operatorList.getC_ID().trim(), operatorList.getCompanyID(), primary, userInfo.getTenantId());
 
 				sb.append("<tr>");
-				sb.append("<td style=\"width:15px; height:23px; align:center;\"><input type=\"CHECKBOX\" id=" + operatorList.getC_ID() + " class=\"selectOperator\">");
+				sb.append("<td style=\"width:15px; height:23px; align:center;\"><div class=\"custom_checkbox\"><input type=\"CHECKBOX\" id=" + operatorList.getC_ID() + " class=\"selectOperator\"></div>");
 				sb.append("<td align=\"center\">" + memberInfo.getUserName().trim() + "</td>");
 
 				List<CommunityCClubUserVO> authInfo = getClubOperatorList(userInfo.getCompanyID(), userInfo.getTenantId(), code, operatorList.getC_ID());
 
 				if (authInfo.get(0).getAdmin_Auth() != null && authInfo.get(0).getAdmin_Auth().contains("D")) {
-					sb.append("<td><input type=\"CHECKBOX\" id=\"adminAuthD" + iCount + "\" style=\"vertical-align: middle;\" userId=" + operatorList.getC_ID() + " checked><label for=\"adminAuthD" + iCount + "\" style=\"vertical-align: middle;\">홈화면관리</label></td>");
+					sb.append("<td><div class=\"custom_checkbox\"><input type=\"CHECKBOX\" id=\"adminAuthD" + iCount + "\" style=\"vertical-align: middle;\" userId=" + operatorList.getC_ID() + " checked><label for=\"adminAuthD" + iCount + "\" style=\"vertical-align: middle;\">홈화면관리</label></div></td>");
 				} else {
-					sb.append("<td><input type=\"CHECKBOX\" id=\"adminAuthD" + iCount + "\" style=\"vertical-align: middle;\" userId=" + operatorList.getC_ID() + "><label for=\"adminAuthD" + iCount + "\" style=\"vertical-align: middle;\">홈화면관리</label></td>");
+					sb.append("<td><div class=\"custom_checkbox\"><input type=\"CHECKBOX\" id=\"adminAuthD" + iCount + "\" style=\"vertical-align: middle;\" userId=" + operatorList.getC_ID() + "><label for=\"adminAuthD" + iCount + "\" style=\"vertical-align: middle;\">홈화면관리</label></div></td>");
 				}
 
 				if (authInfo.get(0).getAdmin_Auth() != null && authInfo.get(0).getAdmin_Auth().contains("F")) {
-					sb.append("<td><input type=\"CHECKBOX\" id=\"adminAuthF" + iCount + "\" style=\"vertical-align: middle;\" userId=" + operatorList.getC_ID() + " checked><label for=\"adminAuthF" + iCount + "\" style=\"vertical-align: middle;\">게시판관리</label></td>");
+					sb.append("<td><div class=\"custom_checkbox\"><input type=\"CHECKBOX\" id=\"adminAuthF" + iCount + "\" style=\"vertical-align: middle;\" userId=" + operatorList.getC_ID() + " checked><label for=\"adminAuthF" + iCount + "\" style=\"vertical-align: middle;\">게시판관리</label></div></td>");
 				} else {
-					sb.append("<td><input type=\"CHECKBOX\" id=\"adminAuthF" + iCount + "\" style=\"vertical-align: middle;\" userId=" + operatorList.getC_ID() + "><label for=\"adminAuthF" + iCount + "\" style=\"vertical-align: middle;\">게시판관리</label></td>");
+					sb.append("<td><div class=\"custom_checkbox\"><input type=\"CHECKBOX\" id=\"adminAuthF" + iCount + "\" style=\"vertical-align: middle;\" userId=" + operatorList.getC_ID() + "><label for=\"adminAuthF" + iCount + "\" style=\"vertical-align: middle;\">게시판관리</label></div></td>");
 				}
 
 				if (authInfo.get(0).getAdmin_Auth() != null && authInfo.get(0).getAdmin_Auth().contains("B")) {
-					sb.append("<td><input type=\"CHECKBOX\" id=\"adminAuthB" + iCount + "\" style=\"vertical-align: middle;\" userId=" + operatorList.getC_ID() + " checked><label for=\"adminAuthB" + iCount + "\" style=\"vertical-align: middle;\">설문조사관리</label></td>");
+					sb.append("<td><div class=\"custom_checkbox\"><input type=\"CHECKBOX\" id=\"adminAuthB" + iCount + "\" style=\"vertical-align: middle;\" userId=" + operatorList.getC_ID() + " checked><label for=\"adminAuthB" + iCount + "\" style=\"vertical-align: middle;\">설문조사관리</label></div></td>");
 				} else {
-					sb.append("<td><input type=\"CHECKBOX\" id=\"adminAuthB" + iCount + "\" style=\"vertical-align: middle;\" userId=" + operatorList.getC_ID() + "><label for=\"adminAuthB" + iCount + "\" style=\"vertical-align: middle;\">설문조사관리</label></td>");
+					sb.append("<td><div class=\"custom_checkbox\"><input type=\"CHECKBOX\" id=\"adminAuthB" + iCount + "\" style=\"vertical-align: middle;\" userId=" + operatorList.getC_ID() + "><label for=\"adminAuthB" + iCount + "\" style=\"vertical-align: middle;\">설문조사관리</label></div></td>");
 				}
 
 				if (authInfo.get(0).getAdmin_Auth() != null && authInfo.get(0).getAdmin_Auth().contains("A")) {
-					sb.append("<td><input type=\"CHECKBOX\" id=\"adminAuthA" + iCount + "\" style=\"vertical-align: middle;\" userId=" + operatorList.getC_ID() + " checked><label for=\"adminAuthA" + iCount + "\" style=\"vertical-align: middle;\">회원관리</label></td>");
+					sb.append("<td><div class=\"custom_checkbox\"><input type=\"CHECKBOX\" id=\"adminAuthA" + iCount + "\" style=\"vertical-align: middle;\" userId=" + operatorList.getC_ID() + " checked><label for=\"adminAuthA" + iCount + "\" style=\"vertical-align: middle;\">회원관리</label></div></td>");
 				} else {
-					sb.append("<td><input type=\"CHECKBOX\" id=\"adminAuthA" + iCount + "\" style=\"vertical-align: middle;\" userId=" + operatorList.getC_ID() + "><label for=\"adminAuthA" + iCount + "\" style=\"vertical-align: middle;\">회원관리</label></td>");
+					sb.append("<td><div class=\"custom_checkbox\"><input type=\"CHECKBOX\" id=\"adminAuthA" + iCount + "\" style=\"vertical-align: middle;\" userId=" + operatorList.getC_ID() + "><label for=\"adminAuthA" + iCount + "\" style=\"vertical-align: middle;\">회원관리</label></div></td>");
 				}
 				sb.append("</tr>");
 

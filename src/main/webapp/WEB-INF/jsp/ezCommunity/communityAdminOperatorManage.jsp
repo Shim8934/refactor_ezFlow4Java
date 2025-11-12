@@ -146,7 +146,7 @@
 		  
 		<table class="mainlist" style ="width:100%;text-align:center;margin-top:10px">
 			<tr>
-			    <th style="width:15px;text-align: center;"><input type="checkbox" id="HeaderAllCheckBox" onclick="allCheck(this)"></th>
+			    <th style="width:15px;text-align: center;"><div class="custom_checkbox"><input type="checkbox" id="HeaderAllCheckBox" onclick="allCheck(this)"></div></th>
 			    <th style="width:70px;text-align: center;"><spring:message code = 'ezCommunity.t10' /></th>
 			    <th colspan="4" style="width:236px;text-align: center;"><spring:message code = 'ezCommunity.lyj36' /></th>
 			</tr>
