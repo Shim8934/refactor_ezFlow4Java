@@ -357,7 +357,9 @@
 				<tr>
 					<th><spring:message code="ezBoard.t999033" /></th>
 					<td>
-						<input type="checkbox" id="must" style="vertical-align: -6px;">
+						<div class="custom_checkbox">
+							<input type="checkbox" id="must" style="vertical-align: -6px;">
+						</div>
 					</td>
 				</tr>
 				<tr>
