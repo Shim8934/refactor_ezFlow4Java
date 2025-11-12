@@ -1137,14 +1137,13 @@
 				contentText = contentText
 						.replace(/"/g,'\"')
 						.replace(/<div id=\\?"hwpEditorBoardContent\\"[^]*?<\/div>/g, '')
-						.replace(/font-family\s*:\s*([^;]+);/g, (match, fonts) => {
-					if (/^'[^']+'$/.test(fonts.trim())) {
-                        const inside = fonts.trim().slice(1, -1);
-                        return "font-family:&quot;" + inside + "&quot;;";
-                    } else {
-                        return match;  // 그대로 원본 반환
-                    }
-				});
+						.replace(/font-family\s*:\s*([^;]+);/g,
+                          function(match, fonts) {
+                            // 작은따옴표('...')를 &quot;...&quot; 로 변환
+                            var converted = fonts.replace(/'([^']+)'/g, '&quot;$1&quot;');
+                            return "font-family: " + converted + ";";
+                          }
+                        );
 				
 	        	$.ajax({
 		    		type : "POST",
