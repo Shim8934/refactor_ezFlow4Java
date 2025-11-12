@@ -6871,8 +6871,6 @@
 	          	Abstract = #ABSTRACT#,
 	          	Attachments = #hasAttach#,
 	          	ExtensionAttribute2 = #extensionAttribute2#,
-	          	ExtensionAttribute3 = #extensionAttribute3#,
-	          	ExtensionAttribute32 = #extensionAttribute32#,
 	          	ExtensionAttribute4 = #extensionAttribute4#,
 	          	ExtensionAttribute5 = #extensionAttribute5#,
 	          	DocPassWord = #docPassword#,
@@ -6891,12 +6889,11 @@
             writerName = #writerName#,
             writerName2 = #writerName2#
         </isEqual>
-		<isNotEqual property="writerNameType" compareValue="" prepend=",">
-				writerId = #writerID#,
-				writerName = #writerName#,
-		        writerName2 = #writerName2#,
-				writerNameType = #writerNameType#
-		</isNotEqual>
+        <isNotEqual property="guBun" compareValue="2">
+            <isNotEqual property="writerNameType" compareValue="" prepend=",">
+                writerNameType = #writerNameType#
+            </isNotEqual>
+        </isNotEqual>
     		WHERE  
     			TENANT_ID = #tenantID#
     		AND
