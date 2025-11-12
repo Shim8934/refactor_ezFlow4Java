@@ -1613,9 +1613,11 @@
 	        <tr style="${ style }">
                 <th><spring:message code="ezBoard.lhr009"/></th>
                 <td>
-                    <span style="display:inline-block;"><input type="radio" name="listViewType" id="chkListUsr" <c:out value="${model.listShowType == 'U' ? 'checked' : '' }"/>/><spring:message code = "ezBoard.lhr008" /></span>
-                    <span style="display:inline-block;"><input type="radio" name="listViewType" id="chkListGeneral" <c:out value="${model.listShowType == 'G' ? 'checked' : '' }"/>/><spring:message code = "ezBoard.lhr006" /></span>
-                    <span style="display:inline-block;"><input type="radio" name="listViewType" id="chkListExpand" <c:out value="${model.listShowType == 'E' ? 'checked' : '' }"/>/><spring:message code = "ezBoard.lhr007" /></span>
+					<div class="custom_radio">
+						<input type="radio" name="listViewType" id="chkListUsr" <c:out value="${model.listShowType == 'U' ? 'checked' : '' }"/>/><label for="chkListUsr"><spring:message code = "ezBoard.lhr008" /></label>
+						<input type="radio" name="listViewType" id="chkListGeneral" <c:out value="${model.listShowType == 'G' ? 'checked' : '' }"/>/><label for="chkListGeneral"><spring:message code = "ezBoard.lhr006" /></label>
+						<input type="radio" name="listViewType" id="chkListExpand" <c:out value="${model.listShowType == 'E' ? 'checked' : '' }"/>/><label for="chkListExpand"><spring:message code = "ezBoard.lhr007" /></label>
+					</div>
                 </td>
             </tr>
 
