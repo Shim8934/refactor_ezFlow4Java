@@ -509,6 +509,37 @@
         }).call(this, event);
     }
 
+    this.onHiddenFolderMenu = function(){};
+    this.onfolderMenu = function(event){};
+
+    function event_oncontextmenu(event) {
+        window[thisid].onHiddenFolderMenu();
+
+        if (this != window[thisid]) {
+            arguments.callee.call(window[thisid], event);
+            return;
+        }
+        return (navigator.userAgent.indexOf('MSIE') == -1) ?
+        (function (event) {
+            if (!event) event = window.event;
+            var targetEl = event.target;
+            var elementid = targetEl.id;
+            // 메일> 왼쪽 메일함> 숫자> 우클릭 시 컨텍스트 메뉴 표출이 필요하다면 아래 코드를 참고하여 작업하기. (국립암센터는 숫자 클릭 시 : 안읽은 메일만 해당하기 때문에 작업도 수정되어야 한다.):
+            // elementid = targetEl.classList.contains('unread-mail')? targetEl.closest('span[id^="' + g_nodeid + '"]')?.id : targetEl.id;
+            if (elementid.indexOf(g_toggleid) == 0)
+                this.toggle(elementid.split(g_toggleid)[1]);
+            else if (elementid.indexOf(g_nodeid) == 0)
+                window[thisid].onfolderMenu(event);
+        }).call(this, event) :
+        (function (event) {
+            var elementid = window.event.srcElement.id;
+            if (elementid.indexOf(g_toggleid) == 0)
+                this.toggle(elementid.split(g_toggleid)[1]);
+            else if (elementid.indexOf(g_nodeid) == 0)
+                window[thisid].onfolderMenu(event);
+        }).call(this, event);
+    }
+
     function event_ondblclick(event) {
         if (this != window[thisid]) {
             arguments.callee.call(window[thisid], event);
@@ -626,6 +657,7 @@
     try {
         element.addEventListener('selectstart', event_onselectstart, false);
         element.addEventListener('mousedown', event_onmousedown, false);
+        element.addEventListener('contextmenu', event_oncontextmenu, false);
         element.addEventListener('dblclick', event_ondblclick, false);
         element.addEventListener('mouseover', event_onmouseover, false);
         element.addEventListener('mouseout', event_onmouseout, false);

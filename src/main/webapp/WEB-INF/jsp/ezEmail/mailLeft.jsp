@@ -338,6 +338,8 @@
 	            PostTreeView.attachEvent('nodedblclick', function () { PostTreeView.toggle(PostTreeView.selectedIndex()) });
 	            PostTreeView.attachEvent('dragdrop', email_dragdrop);
 	            PostTreeView.dragdrop(true);
+	            PostTreeView.attachEvent('HiddenFolderMenu', HiddenFolderMenu);
+	            PostTreeView.attachEvent('folderMenu', event_folderMenu);
 	            var xmlHTTP = createXMLHttpRequest();
 	            xmlHTTP.open("GET", "/xml/common/organtree_config2.xml", false); 
 	            xmlHTTP.send();
@@ -1734,7 +1736,7 @@
 		        	<span class="h2Title" id="h2TitleMail" style="display:inline-block"><spring:message code="ezEmail.t99000012" /></span><span id="totalUnreadCount" class="txt_color" style="position:absolute;"></span>
 		        </h2>
 		        <ul class="lnbUL" id="ulMail">
-		        	<div class="tree" id="PostTreeView" oncontextmenu="event_folderMenu(event); return false;" onclick="HiddenFolderMenu();"></div>
+		        	<div class="tree" id="PostTreeView" onclick="HiddenFolderMenu();"></div>
 		        	<li onclick="reception_check();"><span class="list_text" title="<spring:message code="ezEmail.t516" />"><spring:message code="ezEmail.t516" /></span></li>
 		            <li onclick="Open_Search();"><span class="list_text" title="<spring:message code="ezEmail.t641" />"><spring:message code="ezEmail.t641" /></span></li>
 		            <c:if test="${useOnlyInnerMail != 'YES'}">
@@ -1831,7 +1833,7 @@
 			        		</span>
 			        	</h2>
 			        	<ul class="lnbUL off" id="ul_${shareInfo.shareId}">
-			        		<div class="tree" id="shareTreeView_${shareInfo.shareId}" oncontextmenu="event_folderMenu(event); return false;" onclick="HiddenFolderMenu();"></div>
+			        		<div class="tree" id="shareTreeView_${shareInfo.shareId}" onclick="HiddenFolderMenu();"></div>
 			        		<li onclick="Open_Search();"><span class="list_text"><spring:message code="ezEmail.t641" /></span></li>
 			        		<c:if test="${shareInfo.sendPermission eq 'Y'}">
 								<li onclick="Open_ReservationManage('${shareInfo.shareId}')"><span class="list_text"><spring:message code="ezEmail.t605" /></span></li>
