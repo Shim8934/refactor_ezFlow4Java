@@ -16186,6 +16186,9 @@ create view nezapprovalg.tbl_permissiongroupinfo as select * from nezportal.tbl_
 drop view if exists nezapprovalg.tbl_permissiongrouplist;
 create view nezapprovalg.tbl_permissiongrouplist as select * from nezportal.tbl_permissiongrouplist;
 
+drop view if exists nezapprovalg.tbl_attitude_apr_conn;
+create view nezapprovalg.tbl_attitude_apr_conn as select * from nezportal.tbl_attitude_apr_conn;
+
 -- nezboard
 drop view if exists nezboard.tbl_deptmaster;
 create view nezboard.tbl_deptmaster as select * from nezportal.tbl_deptmaster;
