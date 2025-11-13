@@ -615,10 +615,24 @@
 
 		        var listview = new ListView();
 		        listview.LoadFromID("lvtForm");
+				
+				var lvtForm = document.getElementById("lvtForm");
+				if (lvtForm) {
+					var lastId = lvtForm.getAttribute("lastselectedrowid");
+					var target = document.getElementById(lastId);
+					if (target) {
+						lvtFormFormBoxId = target.getAttribute("data8");
+					}
+				}
 
 		        var nodeIdx = treeView.GetSelectNode();
 		        if (nodeIdx != null) {
-		            para[0] = nodeIdx.GetNodeData("DATA1");
+					if (lvtFormFormBoxId){
+						para[0] = lvtFormFormBoxId;
+					} else {
+		            	para[0] = nodeIdx.GetNodeData("DATA1");
+					}
+		            
 		        }
 		        var selRow = listview.GetSelectedRows();
 		        if (selRow != "") {
