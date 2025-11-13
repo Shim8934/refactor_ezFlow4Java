@@ -92,6 +92,22 @@ function MakeFormMHTXML() {
             return retValue;
         }        
     }
+    
+    debugger;
+    var docTypeParam = $("#selFormKind option:selected").val();
+    if (approvalFlag == "G" && docTypeParam == "003") {
+         mustField = message.FormInfoCheck("receiptnumber");
+         if (mustField === 0) {
+            retValue[0] = "FALSE";
+            retValue[1] = "";
+            retValue[2] = strLangJIH_ChkRecvnum2;
+        } else if (mustField > 1) {
+            retValue[0] = "FALSE";
+            retValue[1] = "";
+            retValue[2] = strLangJIH_ChkRecvnum1;
+        }
+    }
+    
     retValue[0] = "TRUE";
     retValue[1] = MakeFormMHTXML_Detail();
     retValue[2] = "";

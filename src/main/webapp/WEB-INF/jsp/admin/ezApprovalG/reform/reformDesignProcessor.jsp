@@ -313,6 +313,15 @@
 						}
 						return CheckCount;
 						break;
+					case "receiptnumber":
+						var CheckCount = 0;
+						var HtmlTag = DEXT5.getDext5BodyDom().getElementsByTagName("*");
+						for (var i = 0; i < HtmlTag.length; i++) {
+							if (GetAttribute(HtmlTag[i], "id") == "receiptnumber")
+								CheckCount++;
+						}
+						return CheckCount;
+						break;
 					case "doctitlefield":
 						return DEXT5.getDext5DocumentDom("DextEditor").getElementById("body").getAttribute("doctitlefield");
 						break;

@@ -435,6 +435,15 @@
 	                                return GetAttribute(HtmlTag[i], "doctitlefield");
 	                        }
 	                        break;
+						case "receiptnumber":
+	                        var CheckCount = 0;
+	                        var HtmlTag = CKEDITOR.instances.editor1.document.$.getElementsByTagName("*");
+	                        for (var i = 0 ; i < HtmlTag.length; i++) {
+	                            if (GetAttribute(HtmlTag[i], "id") == "receiptnumber")
+	                                CheckCount++;
+	                        }
+	                        return CheckCount;
+	                        break;
 	                    default:
 	                }
 	
