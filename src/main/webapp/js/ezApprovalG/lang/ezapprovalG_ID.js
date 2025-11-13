@@ -1229,3 +1229,6 @@ var strLangKYJ_IsPublic03 = "Lihat Jalur Persetujuan";
 
 var strLangJIHShareDox01 = "Pemberi dan penerima berbagi harus berasal dari perusahaan yang sama.";
 var strLangJIHShareDox02 = "Silakan pilih pemberi berbagi terlebih dahulu.";
+
+var strLangJIH_ChkRecvnum1 = "receiptnumber 필드는 한개의 필드만 지정해주십시오.";
+var strLangJIH_ChkRecvnum2 = "receiptnumber 필드가 지정되어 있지 않습니다. 지정해주십시오.";

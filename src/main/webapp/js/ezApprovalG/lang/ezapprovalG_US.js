@@ -1229,3 +1229,6 @@ var strLangKYJ_IsPublic03 = "View Approval Line";
 
 var strLangJIHShareDox01 = "The sharer and the recipient must belong to the same company.";
 var strLangJIHShareDox02 = "Please select the sharer first.";
+
+var strLangJIH_ChkRecvnum1 = "Please specify only one receiptnumber field.";
+var strLangJIH_ChkRecvnum2 = "The receiptnumber field is not specified. Please specify it.";

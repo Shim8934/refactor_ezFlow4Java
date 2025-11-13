@@ -1228,3 +1228,6 @@ var strLangKYJ_IsPublic03 = "Xem tuyến phê duyệt";
 
 var strLangJIHShareDox01 = "Người chia sẻ và người được chia sẻ phải thuộc cùng một công ty.";
 var strLangJIHShareDox02 = "Vui lòng chọn người chia sẻ trước.";
+
+var strLangJIH_ChkRecvnum1 = "receiptnumber 필드는 한개의 필드만 지정해주십시오.";
+var strLangJIH_ChkRecvnum2 = "receiptnumber 필드가 지정되어 있지 않습니다. 지정해주십시오.";

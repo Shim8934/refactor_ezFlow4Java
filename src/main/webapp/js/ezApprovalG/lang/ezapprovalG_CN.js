@@ -1227,3 +1227,6 @@ var strLangKYJ_IsPublic03 = "审批线查看";
 
 var strLangJIHShareDox01 = "共享人和共享对象必须隶属于同一公司。";
 var strLangJIHShareDox02 = "请先选择共享人。";
+
+var strLangJIH_ChkRecvnum1 = "请仅指定一个 receiptnumber 字段。";
+var strLangJIH_ChkRecvnum2 = "未指定 receiptnumber 字段。请指定。";

@@ -1229,3 +1229,6 @@ var strLangKYJ_IsPublic03 = "決裁ライン閲覧";
 
 var strLangJIHShareDox01 = "共有者と共有対象者は同じ会社に所属している必要があります。";
 var strLangJIHShareDox02 = "まず共有者を選択してください。";
+
+var strLangJIH_ChkRecvnum1 = "receiptnumber フィールドは1つだけ指定してください。";
+var strLangJIH_ChkRecvnum2 = "receiptnumber フィールドが指定されていません。指定してください。";
