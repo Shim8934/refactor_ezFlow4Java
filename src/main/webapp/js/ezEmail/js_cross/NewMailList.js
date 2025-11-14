@@ -451,7 +451,7 @@ function MakeListInfoHTML(ConentObject) {
                             _TDColum.onselectstart = function () { return false; };
 
                             if (useMailConfirm == "YES" && p_mailConfirm == "true" && useReceivingChk) {
-                                _TDColum.querySelector('#subject').style.textDecoration = 'line-through';
+                                _TDColum.style.textDecoration = 'line-through';
                             }
                             
                             break;
@@ -627,7 +627,7 @@ function MakeListInfoHTML(ConentObject) {
             else
                 mf_updatePageInfoGroupList(szRangeHeader)
         } catch (e) {
-            alert(e.description);
+            alert(e.message);
         }
     }
     else if (p_ListorderValue == "SENT" || p_ListorderValue == "SUBJECT") {
@@ -695,7 +695,7 @@ function MakeListInfoHTML(ConentObject) {
             }
             mf_updatePageInfo(szRangeHeader)
         } catch (e) {
-            alert(e.description);
+            alert(e.message);
         }
     }
 }
@@ -984,7 +984,7 @@ function MakeListInfoHTML_SUB(ConentObject) {
             }
             mf_updatePageInfoGroupList(szRangeHeader)
         } catch (e) {
-            alert(e.description);
+            alert(e.message);
         }
 }
 function MailSelect_One() {
