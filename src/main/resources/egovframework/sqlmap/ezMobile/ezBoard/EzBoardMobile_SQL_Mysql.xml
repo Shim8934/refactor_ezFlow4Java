@@ -2813,9 +2813,32 @@
 			  	A.TENANT_ID = P.TENANT_ID
 			AND
 			  	A.BOARDID = P.BOARDID
-			AND
-				P.GUBUN != '5'
-			AND 
+			LEFT OUTER JOIN
+				(
+					SELECT
+						ITEMID, TENANT_ID
+					FROM
+						(
+							SELECT
+								ROW_NUMBER() OVER(
+							PARTITION BY
+								PARENTITEMID
+							ORDER BY
+								VERSION DESC
+						) RN,
+									ITEMID,
+								TENANT_ID
+							FROM
+								TBL_BOARD_MODIFYHISTORY
+						) M1
+					WHERE
+						M1.RN = 1
+				) M2
+				ON
+					A.ITEMID = M2.ITEMID
+				AND
+					A.TENANT_ID = M2.TENANT_ID
+				WHERE
 			  	A.TENANT_ID = #v_TENANTID#
 	 		AND
             	(A.WRITERCOMPANYID = #v_COMPANYID# OR TRIM(A.WRITERCOMPANYID) = ''
@@ -2827,6 +2850,12 @@
 			  	A.STARTDATE <= #nowDate#
 			AND 
 			  	A.ENDDATE > #nowDate#
+			AND
+				P.GUBUN != '5'
+			AND
+				(P.VERSIONMANAGE = 'Y' AND M2.ITEMID IS NOT NULL
+					OR
+				 P.VERSIONMANAGE = 'N')
 		]]>
 	</select>
 	
@@ -2874,13 +2903,33 @@
 				ON
 					A.TENANT_ID = P.TENANT_ID
 				AND
-					(A.WRITERCOMPANYID = P.COMPANYID OR TRIM(A.WRITERCOMPANYID) = ''
-						OR TRIM(P.COMPANYID) = '' OR P.COMPANYID IS NULL)
-				AND
 					A.BOARDID = P.BOARDID
+				LEFT OUTER JOIN
+				(
+					SELECT
+						ITEMID, TENANT_ID
+					FROM
+					(
+						SELECT
+							ROW_NUMBER() OVER(
+								PARTITION BY
+									PARENTITEMID
+								ORDER BY
+									VERSION DESC
+							) RN,
+							ITEMID,
+							TENANT_ID
+						FROM
+						TBL_BOARD_MODIFYHISTORY
+					) M1
+					WHERE
+						M1.RN = 1
+				) M2
+				ON
+					A.ITEMID = M2.ITEMID
 				AND
-					P.GUBUN != '5'
-				AND
+					A.TENANT_ID = M2.TENANT_ID
+				WHERE
 					A.TENANT_ID = #v_TENANTID#
 				AND
 					(A.WRITERCOMPANYID = #v_COMPANYID# OR TRIM(A.WRITERCOMPANYID) = ''
@@ -2892,6 +2941,14 @@
 					A.STARTDATE <= #nowDate#
 				AND
 					A.ENDDATE > #nowDate#
+				AND
+					P.GUBUN != '5'
+				AND
+					(P.VERSIONMANAGE = 'Y' AND M2.ITEMID IS NOT NULL
+						OR
+			    	P.VERSIONMANAGE = 'N')
+				GROUP BY
+					A.ITEMID, A.TITLE
 		]]>
 		
 		<isNotEmpty property="lastDate">

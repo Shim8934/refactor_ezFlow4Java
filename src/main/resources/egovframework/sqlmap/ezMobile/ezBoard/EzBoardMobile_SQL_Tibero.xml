@@ -2795,7 +2795,7 @@
 	<select id="MBoardDAO.getAllBoardItemListCount" parameterClass="Map" resultClass="Integer">
 		<![CDATA[
 			SELECT 
-				COUNT(*) CNT
+				COUNT(A.ITEMID) CNT
         	FROM 
         		TBL_BOARD_BOARDINFO P              
 			INNER JOIN 
@@ -2804,9 +2804,32 @@
 			  	A.TENANT_ID = P.TENANT_ID
 			AND
 			  	A.BOARDID = P.BOARDID
+				LEFT OUTER JOIN
+			(
+				SELECT
+					ITEMID, TENANT_ID
+				FROM
+					(
+						SELECT
+							ROW_NUMBER() OVER(
+							PARTITION BY
+								PARENTITEMID
+							ORDER BY
+								VERSION DESC
+						) RN,
+								ITEMID,
+							TENANT_ID
+						FROM
+							TBL_BOARD_MODIFYHISTORY
+					) M1
+				WHERE
+					M1.RN = 1
+			) M2
+			ON
+				A.ITEMID = M2.ITEMID
 			AND
-				P.GUBUN != '5'
-			AND 
+				A.TENANT_ID = M2.TENANT_ID
+			WHERE
 			  	A.TENANT_ID = #v_TENANTID#
 	 		AND
             	(A.WRITERCOMPANYID = #v_COMPANYID# OR TRIM(A.WRITERCOMPANYID) = '' OR A.WRITERCOMPANYID IS NULL
@@ -2818,6 +2841,15 @@
 			  	A.STARTDATE <= #nowDate#
 			AND 
 			  	A.ENDDATE > #nowDate#
+			AND
+				P.GUBUN != '5'
+			AND
+			(P.VERSIONMANAGE = 'Y' AND M2.ITEMID IS NOT NULL
+				OR
+			 P.VERSIONMANAGE = 'N')
+			AND
+			  	(A.APPRFLAG = 'Y' 
+			 OR A.APPRFLAG IS NULL)
 		]]>
 	</select>
 	
@@ -2826,58 +2858,84 @@
 			  *
 		  FROM (
 			   SELECT
-				   Row_Number() OVER(ORDER BY A.WRITEDATE DESC) AS RNUM,			   		
-				   A.BOARDID,
-			       P.BOARDNAME AS BOARDNAME,
-			       A.ITEMID,
-			       A.WRITERID,
-			       A.WRITERNAME,
-			       A.WRITERDEPTNAME,
-			       A.WRITERCOMPANYNAME,
-			       TO_DATE(A.STARTDATE, 'YYYY-MM-DD HH24:MI:SS')+(#offset#/(60*24)) AS STARTDATE,
-	              TO_DATE(A.WRITEDATE, 'YYYY-MM-DD HH24:MI:SS')+(#offset#/(60*24)) AS WRITEDATE,
-			       A.PARENTWRITEDATE,
-			       A.IMPORTANCE,
-			       A.TITLE,
-			       A.ATTACHMENTS,
-			       A.READCOUNT,
-			       A.ITEMLEVEL,
-			       A.ABSTRACT,
-			       P.BOARDNAME2 AS BOARDNAME2,
-			       A.WRITERNAME2,
-			       A.WRITERDEPTNAME2,
-			       A.WRITERCOMPANYNAME2,
-			       (SELECT
-			       	 COUNT(*)
-			        FROM
-			       	 TBL_Board_OneLineReply
-			        WHERE
-			       	 TENANT_ID = A.TENANT_ID
-			          AND
-			       	 ITEMID = A.ItemID) ONELINECNT,
-			       A.UPPERITEMIDTREE,
-			       A.DOCNO,
-			       '' AS NOTICE,
-			       P.GUBUN,
-			       A.MAINCONTENT,
-			       P.BOARDGROUPID
-			   FROM
-				   TBL_BOARD_ITEM A
-					   INNER JOIN
-				   TBL_BOARD_BOARDINFO P
-				   ON
-					   A.TENANT_ID = P.TENANT_ID
-				   AND
-					   (A.WRITERCOMPANYID = P.COMPANYID OR TRIM(A.WRITERCOMPANYID) = '' OR A.WRITERCOMPANYID IS NULL
-						   OR TRIM(P.COMPANYID) = '' OR P.COMPANYID IS NULL)
-				   AND
-					   A.BOARDID = P.BOARDID
-				   AND
-						P.GUBUN != '5'
-				   AND
-					   A.TENANT_ID = #v_TENANTID#
-				   AND
-					   (A.WRITERCOMPANYID = #v_COMPANYID# OR TRIM(A.WRITERCOMPANYID) = '' OR A.WRITERCOMPANYID IS NULL
+				  *
+			  FROM (
+					   SELECT
+						   Row_Number() OVER(ORDER BY A.WRITEDATE DESC) AS RNUM,			
+						   A.BOARDID,
+						   P.BOARDNAME AS BOARDNAME,
+						   A.ITEMID,
+						   A.WRITERID,
+						   A.WRITERNAME,
+						   A.WRITERDEPTNAME,
+						   A.WRITERCOMPANYNAME,
+			       			TO_DATE(A.STARTDATE, 'YYYY-MM-DD HH24:MI:SS')+(#offset#/(60*24)) AS STARTDATE,
+	              			TO_DATE(A.WRITEDATE, 'YYYY-MM-DD HH24:MI:SS')+(#offset#/(60*24)) AS WRITEDATE,
+						   A.PARENTWRITEDATE,
+						   A.IMPORTANCE,
+						   A.TITLE,
+						   A.ATTACHMENTS,
+						   A.READCOUNT,
+						   A.ITEMLEVEL,
+						   A.ABSTRACT,
+						   P.BOARDNAME2 AS BOARDNAME2,
+						   A.WRITERNAME2,
+						   A.WRITERDEPTNAME2,
+						   A.WRITERCOMPANYNAME2,
+						   (SELECT
+								COUNT(*)
+							FROM
+								TBL_Board_OneLineReply
+							WHERE
+								TENANT_ID = A.TENANT_ID
+							  AND
+								ITEMID = A.ItemID) ONELINECNT,
+						   A.UPPERITEMIDTREE,
+						   A.DOCNO,
+						   '' AS NOTICE,
+						   P.GUBUN,
+						   A.MAINCONTENT,
+						   P.BOARDGROUPID
+					   FROM
+						   TBL_BOARD_ITEM A
+							   INNER JOIN
+						   TBL_BOARD_BOARDINFO P
+						   ON
+								A.TENANT_ID = P.TENANT_ID
+						   AND
+								(A.WRITERCOMPANYID = P.COMPANYID OR TRIM(A.WRITERCOMPANYID) = '' OR A.WRITERCOMPANYID IS NULL
+									OR TRIM(P.COMPANYID) = '' OR P.COMPANYID IS NULL)
+				   			AND
+								A.BOARDID = P.BOARDID
+						   LEFT OUTER JOIN
+							(
+								SELECT
+									ITEMID, TENANT_ID
+								FROM
+								(
+									SELECT
+										ROW_NUMBER() OVER(
+											PARTITION BY
+												PARENTITEMID
+											ORDER BY
+												VERSION DESC
+										) RN,
+										ITEMID,
+										TENANT_ID
+									FROM
+										TBL_BOARD_MODIFYHISTORY
+								) M1
+								WHERE
+									M1.RN = 1
+							) M2
+							ON
+								A.ITEMID = M2.ITEMID
+							WHERE
+							   A.TENANT_ID = #v_TENANTID#
+							AND
+								P.GUBUN != '5'
+							AND
+								(A.WRITERCOMPANYID = #v_COMPANYID# OR TRIM(A.WRITERCOMPANYID) = '' OR A.WRITERCOMPANYID IS NULL
 						   OR TRIM(P.COMPANYID) = '' OR P.COMPANYID IS NULL)
 		<![CDATA[
 		   AND
@@ -2902,11 +2960,17 @@
                     A.WRITEDATE < #nowDate#
                 AND 
                     A.ENDDATE > #nowDate#
+				AND
+					(P.VERSIONMANAGE = 'Y' AND M2.ITEMID IS NOT NULL
+					 OR
+					P.VERSIONMANAGE = 'N')
             ]]>
         </isEmpty> 
           <![CDATA[
 		  ) T1
-		  WHERE RNUM <= #listSize# 
+		  WHERE RNUM <= #listSize# ) T2
+	  WHERE
+		RNUM >= 1
 		]]>
 	</select>
 	
