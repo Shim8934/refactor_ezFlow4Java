@@ -1717,7 +1717,11 @@
 						}
 						
 		                if (ReturnFunction != null) {
-		                    ReturnFunction(ret);
+                            if (receiptFlag == '' || typeof receiptFlag == 'undefined') {
+                                ReturnFunction(ret);
+                            } else {
+                                ReturnFunction(ret, receiptFlag);
+                            }
 		                }
 		                else {
 		                    window.returnValue = ret;
