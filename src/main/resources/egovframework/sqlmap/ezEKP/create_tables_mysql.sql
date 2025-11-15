@@ -693,6 +693,7 @@ CREATE TABLE `jmocha_mail_delete` (
   `EXPIRE_TIME` int(11) DEFAULT NULL,
   `DELETE_UNREAD` char(1) DEFAULT NULL,
   `FOLDER_NAME` varchar(100) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `AUTO_DELETION_OPTION` varchar(20) DEFAULT 'trash',
   PRIMARY KEY (`USER_ID`,`FOLDER_PATH`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
