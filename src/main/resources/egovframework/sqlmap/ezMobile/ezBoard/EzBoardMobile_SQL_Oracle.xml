@@ -244,13 +244,37 @@
 			</isNotEqual>
 	        
 	        <isNotEmpty property="pSearchText">
-	            <![CDATA[
-	                AND
-	                    (A.title LIKE CONCAT(CONCAT('%', #pSearchText#), '%')
-	                        OR
-	                    A.writerName LIKE CONCAT(CONCAT('%', #pSearchText#), '%'))    
-	            ]]>
-	        </isNotEmpty>
+			<![CDATA[
+				AND (
+					A.title LIKE CONCAT(CONCAT('%', #pSearchText#), '%')
+						OR
+					A.writerName LIKE CONCAT(CONCAT('%', #pSearchText#), '%') 
+			]]>
+			<isEqual property="useKeyword" compareValue="Y">
+				<![CDATA[
+					OR
+						A.ITEMID in (
+							SELECT DISTINCT
+								ITEMID
+							FROM
+								tbl_board_boarditem_keyword BK
+							INNER JOIN
+								TBL_BOARD_KEYWORD K
+							ON
+								BK.KEYWORDID = K.KEYWORDID
+							AND
+								BK.TENANT_ID = K.TENANT_ID
+							WHERE
+								K.KEYWORDNAME like CONCAT(CONCAT('%', #pSearchText#), '%')
+							AND
+								BK.BOARDID = #boardID#
+							AND
+								BK.TENANT_ID = #tenantID#
+						)
+					]]>
+			</isEqual>
+			)
+		</isNotEmpty>
 			
 			<isEqual property="gubun" compareValue="1">
 	            <![CDATA[
@@ -404,15 +428,38 @@
 				<isNotEqual property = "useVersion" compareValue = "Y" prepend="AND">
 					(M1.ITEMID IS NULL OR M1.RN = 1)
 				</isNotEqual>
-	        
-	            <isNotEmpty property="pSearchText">
-	                <![CDATA[
-	                    AND
-	                        (A.title LIKE CONCAT(CONCAT('%', #pSearchText#), '%')
+				<isNotEmpty property="pSearchText">
+					<![CDATA[
+						AND (
+							A.title LIKE CONCAT(CONCAT('%', #pSearchText#), '%')
 	                            OR
-	                        A.writerName LIKE CONCAT(CONCAT('%', #pSearchText#), '%'))    
-	                ]]>
-	            </isNotEmpty>                
+	                        A.writerName LIKE CONCAT(CONCAT('%', #pSearchText#), '%')
+					]]>
+					<isEqual property="useKeyword" compareValue="Y">
+						<![CDATA[
+							OR
+								A.ITEMID in (
+									SELECT DISTINCT
+										ITEMID
+									FROM
+										tbl_board_boarditem_keyword BK
+									INNER JOIN
+										TBL_BOARD_KEYWORD K
+									ON
+										BK.KEYWORDID = K.KEYWORDID
+									AND
+										BK.TENANT_ID = K.TENANT_ID
+									WHERE
+										K.KEYWORDNAME like CONCAT(CONCAT('%', #pSearchText#), '%')
+									AND
+										BK.BOARDID = #boardID#
+									AND
+										BK.TENANT_ID = #tenantID#
+								)
+							]]>
+					</isEqual>
+					)
+				</isNotEmpty>
 	            
 	            <![CDATA[
 	                AND
@@ -594,13 +641,37 @@
 			]]>
             
             <isNotEmpty property="pSearchText">
-                <![CDATA[
-                    AND
-                        (title LIKE CONCAT(CONCAT('%', #pSearchText#), '%')
-                            OR
-                        writerName LIKE CONCAT(CONCAT('%', #pSearchText#), '%'))
-                ]]>
-            </isNotEmpty>
+			<![CDATA[
+				AND (
+					title LIKE CONCAT(CONCAT('%', #pSearchText#), '%')
+						OR
+					writerName LIKE CONCAT(CONCAT('%', #pSearchText#), '%')
+			]]>
+				<isEqual property="useKeyword" compareValue="Y">
+				<![CDATA[
+					OR
+						A.ITEMID in (
+							SELECT DISTINCT
+								ITEMID
+							FROM
+								tbl_board_boarditem_keyword BK
+							INNER JOIN
+								TBL_BOARD_KEYWORD K
+							ON
+								BK.KEYWORDID = K.KEYWORDID
+							AND
+								BK.TENANT_ID = K.TENANT_ID
+							WHERE
+								K.KEYWORDNAME like CONCAT(CONCAT('%', #pSearchText#), '%')
+							AND
+								BK.BOARDID = #boardID#
+							AND
+								BK.TENANT_ID = #tenantID#
+						)
+					]]>
+				</isEqual>
+			)
+			</isNotEmpty>
 			
 			<isEqual property="apprFlag" compareValue="Y">
 				<![CDATA[
@@ -664,7 +735,7 @@
 		<isEqual property="gubun" compareValue="3">
 			<![CDATA[
 				SELECT
-					COUNT(itemid) totalcount
+					COUNT(A.itemid) totalcount
 				FROM
 					TBL_BOARD_ITEM 
 				WHERE
@@ -813,13 +884,37 @@
 	            </isEmpty>
 	            
 	            <isNotEmpty property="pSearchText">
-	                <![CDATA[
-	                    AND
-	                        (A.title LIKE CONCAT(CONCAT('%', #pSearchText#), '%')
-	                            OR
-	                        A.writerName LIKE CONCAT(CONCAT('%', #pSearchText#), '%'))    
-	                ]]>
-	            </isNotEmpty>
+				<![CDATA[
+					AND (
+						A.title LIKE CONCAT(CONCAT('%', #pSearchText#), '%')
+							OR
+						A.writerName LIKE CONCAT(CONCAT('%', #pSearchText#), '%')
+				]]>
+					<isEqual property="useKeyword" compareValue="Y">
+					<![CDATA[
+						OR
+						A.ITEMID in (
+							SELECT DISTINCT
+								ITEMID
+							FROM
+								tbl_board_boarditem_keyword BK
+							INNER JOIN
+								TBL_BOARD_KEYWORD K
+							ON
+								BK.KEYWORDID = K.KEYWORDID
+							AND
+								BK.TENANT_ID = K.TENANT_ID
+							WHERE
+								K.KEYWORDNAME like CONCAT(CONCAT('%', #pSearchText#), '%')
+							AND
+								BK.BOARDID = #boardID#
+							AND
+								BK.TENANT_ID = #tenantID#
+						)
+					]]>
+					</isEqual>
+				)
+			</isNotEmpty>
 	            
 	            <![CDATA[                  
 	              AND 
@@ -1826,13 +1921,37 @@
 								 	S.READDATE > TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS') - 5))
 		]]>
 	<isNotEmpty property="pSearchText">
-		<![CDATA[
-	        WHERE
-	            (A.title LIKE CONCAT(CONCAT('%', #pSearchText#), '%')
+			<![CDATA[
+				AND (
+					A.title LIKE CONCAT(CONCAT('%', #pSearchText#), '%')
 	                OR
-	            A.writerName LIKE CONCAT(CONCAT('%', #pSearchText#), '%'))
-	    ]]>
-	</isNotEmpty>
+	            	A.writerName LIKE CONCAT(CONCAT('%', #pSearchText#), '%')
+			]]>
+			<isEqual property="useKeyword" compareValue="Y">
+				<![CDATA[
+					OR
+						A.ITEMID in (
+							SELECT DISTINCT
+								ITEMID
+							FROM
+								tbl_board_boarditem_keyword BK
+							INNER JOIN
+								TBL_BOARD_KEYWORD K
+							ON
+								BK.KEYWORDID = K.KEYWORDID
+							AND
+								BK.TENANT_ID = K.TENANT_ID
+							WHERE
+								K.KEYWORDNAME like CONCAT(CONCAT('%', #pSearchText#), '%')
+							AND
+								BK.BOARDID = #boardID#
+							AND
+								BK.TENANT_ID = #tenantID#
+						)
+					]]>
+			</isEqual>
+			)
+			</isNotEmpty>
   </select>
   
     <insert id="MBoardDAO.insertFavorite" parameterClass="Map">
@@ -2295,12 +2414,36 @@
 				enddate > #nowDate#
 		]]>
 		<isNotEmpty property="pSearchText">
-		    <![CDATA[
-				AND
-					(title LIKE ('%' || #pSearchText# || '%')
-					OR
-		    		writerName LIKE ('%' || #pSearchText# || '%'))    
+		<![CDATA[
+			AND (
+				title LIKE ('%' || #pSearchText# || '%')
+				OR
+				writerName LIKE ('%' || #pSearchText# || '%')  
 			]]>
+			<isEqual property="useKeyword" compareValue="Y">
+				<![CDATA[
+				OR
+					A.ITEMID in (
+						SELECT DISTINCT
+							ITEMID
+						FROM
+							tbl_board_boarditem_keyword BK
+						INNER JOIN
+							TBL_BOARD_KEYWORD K
+						ON
+							BK.KEYWORDID = K.KEYWORDID
+						AND
+							BK.TENANT_ID = K.TENANT_ID
+						WHERE
+							K.KEYWORDNAME like CONCAT(CONCAT('%', #pSearchText#), '%')
+						AND
+							BK.BOARDID = #boardID#
+						AND
+							BK.TENANT_ID = #tenantID#
+					)
+				]]>
+			</isEqual>
+			)
 		</isNotEmpty>
 		<isEqual property="apprFlag" compareValue="Y">
 			<![CDATA[
@@ -2414,14 +2557,38 @@
 						A.apprflag = 'Y'
 				]]>
 			</isEqual>
-	        <isNotEmpty property="pSearchText">
-	            <![CDATA[
-	                AND
-	                    (A.title LIKE CONCAT(CONCAT('%', #pSearchText#), '%')
+			<isNotEmpty property="pSearchText">
+				<![CDATA[
+					AND (
+						A.title LIKE CONCAT(CONCAT('%', #pSearchText#), '%')
 	                        OR
-	                    A.writerName LIKE CONCAT(CONCAT('%', #pSearchText#), '%'))    
-	            ]]>
-	        </isNotEmpty>
+	                    A.writerName LIKE CONCAT(CONCAT('%', #pSearchText#), '%')
+				]]>
+					<isEqual property="useKeyword" compareValue="Y">
+						<![CDATA[
+						OR
+							A.ITEMID in (
+								SELECT DISTINCT
+									ITEMID
+								FROM
+									tbl_board_boarditem_keyword BK
+								INNER JOIN
+									TBL_BOARD_KEYWORD K
+								ON
+									BK.KEYWORDID = K.KEYWORDID
+								AND
+									BK.TENANT_ID = K.TENANT_ID
+								WHERE
+									K.KEYWORDNAME like CONCAT(CONCAT('%', #pSearchText#), '%')
+								AND
+									BK.BOARDID = #boardID#
+								AND
+									BK.TENANT_ID = #tenantID#
+							)
+						]]>
+					</isEqual>
+				)
+			</isNotEmpty>
 	        <isNotEmpty property="parentWriteDate">
 	            <![CDATA[
 	                AND
@@ -2537,13 +2704,37 @@
 	                ]]>
 	            </isEqual>
 	            <isNotEmpty property="pSearchText">
-	                <![CDATA[
-	                    AND
-	                        (A.title LIKE CONCAT(CONCAT('%', #pSearchText#), '%')
+					<![CDATA[
+						AND (
+							A.title LIKE CONCAT(CONCAT('%', #pSearchText#), '%')
 	                            OR
-	                        A.writerName LIKE CONCAT(CONCAT('%', #pSearchText#), '%'))    
-	                ]]>
-	            </isNotEmpty> 
+	                        A.writerName LIKE CONCAT(CONCAT('%', #pSearchText#), '%')
+					]]>
+						<isEqual property="useKeyword" compareValue="Y">
+							<![CDATA[
+							OR
+								A.ITEMID in (
+									SELECT DISTINCT
+										ITEMID
+									FROM
+										tbl_board_boarditem_keyword BK
+									INNER JOIN
+										TBL_BOARD_KEYWORD K
+									ON
+										BK.KEYWORDID = K.KEYWORDID
+									AND
+										BK.TENANT_ID = K.TENANT_ID
+									WHERE
+										K.KEYWORDNAME like CONCAT(CONCAT('%', #pSearchText#), '%')
+									AND
+										BK.BOARDID = #boardID#
+									AND
+										BK.TENANT_ID = #tenantID#
+								)
+							]]>
+						</isEqual>
+					)
+				</isNotEmpty>
 	            <isNotEmpty property="parentWriteDate">
 	                <![CDATA[
 	                    AND

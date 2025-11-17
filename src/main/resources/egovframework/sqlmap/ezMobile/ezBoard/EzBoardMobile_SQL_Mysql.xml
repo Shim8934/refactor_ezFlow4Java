@@ -629,7 +629,7 @@
 				<isEqual property="useKeyword" compareValue="Y">
 					<![CDATA[
 						OR
-							ITEMID in (
+							A.ITEMID in (
 								SELECT DISTINCT
 									ITEMID
 								FROM
@@ -714,7 +714,7 @@
 		<isEqual property="gubun" compareValue="3">
 			<![CDATA[
 				SELECT
-					COUNT(itemid) totalcount
+					COUNT(A.itemid) totalcount
 				FROM
 					TBL_BOARD_ITEM 
 				WHERE
@@ -1895,35 +1895,34 @@
 		]]>
 		<isNotEmpty property="pSearchText">
 			<![CDATA[
-				AND (
+				WHERE 
 					A.title LIKE CONCAT('%' ,#pSearchText#, '%')
-					OR
+				OR
 		    		A.writerName LIKE CONCAT('%' ,#pSearchText#, '%')   
 			]]>
 			<isEqual property="useKeyword" compareValue="Y">
 				<![CDATA[
-					OR
-						A.ITEMID in (
-							SELECT DISTINCT
-								ITEMID
-							FROM
-								tbl_board_boarditem_keyword BK
-							INNER JOIN
-								TBL_BOARD_KEYWORD K
-							ON
-								BK.KEYWORDID = K.KEYWORDID
-							AND
-								BK.TENANT_ID = K.TENANT_ID
-							WHERE
-								K.KEYWORDNAME like CONCAT(CONCAT('%', #pSearchText#), '%')
-							AND
-								BK.BOARDID = #boardID#
-							AND
-								BK.TENANT_ID = #tenantID#
-						)
-					]]>
+				OR
+					A.ITEMID in (
+						SELECT DISTINCT
+							ITEMID
+						FROM
+							tbl_board_boarditem_keyword BK
+						INNER JOIN
+							TBL_BOARD_KEYWORD K
+						ON
+							BK.KEYWORDID = K.KEYWORDID
+						AND
+							BK.TENANT_ID = K.TENANT_ID
+						WHERE
+							K.KEYWORDNAME like CONCAT(CONCAT('%', #pSearchText#), '%')
+						AND
+							BK.BOARDID = #boardID#
+						AND
+							BK.TENANT_ID = #tenantID#
+					)
+				]]>
 			</isEqual>
-			)
 		</isNotEmpty>
   </select>
   
@@ -2396,7 +2395,7 @@
 				<isEqual property="useKeyword" compareValue="Y">
 					<![CDATA[
 					OR
-						ITEMID in (
+						A.ITEMID in (
 							SELECT DISTINCT
 								ITEMID
 							FROM
