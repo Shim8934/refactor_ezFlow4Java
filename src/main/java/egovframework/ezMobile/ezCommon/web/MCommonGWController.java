@@ -67,10 +67,10 @@ public class MCommonGWController {
 		logger.debug("MOBILE G/W APPROVAL [GET /mobile/ezcommon/filedown] started.");
 		
 		String filePath = request.getParameter("filePath");
-		filePath = filePath == null ? "" : URLDecoder.decode(filePath, StandardCharsets.UTF_8.name());
+        filePath = filePath.replaceAll("%20", "+");
 		logger.debug("filePath = " + filePath);
 		String fileName = (request.getParameter("fileName") == null) ? "" : request.getParameter("fileName");
-		fileName = fileName == null ? "" : URLDecoder.decode(fileName, StandardCharsets.UTF_8.name());
+        fileName = fileName.replaceAll("%20", "+");
 		logger.debug("fileName = " + fileName);
 		String realPath = commonUtil.getRealPath(request);
 		
