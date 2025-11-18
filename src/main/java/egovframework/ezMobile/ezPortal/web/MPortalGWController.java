@@ -1711,6 +1711,7 @@ public class MPortalGWController extends EzFileMngUtil {
 			String portletLang = info.getLang();
 			String deptPath = ezOrganService.getDeptPath(deptId, tenantId);
 			deptPath = "everyone,top,Top," + deptPath + "," + userId;
+            String gwServerUrl = request.getParameter("gwServerUrl") != null ?  request.getParameter("gwServerUrl") : "";
 			JSONObject data = new JSONObject();
 
 			// 회사의 포틀릿 정보 가져오기
@@ -1760,7 +1761,7 @@ public class MPortalGWController extends EzFileMngUtil {
 						boardListVO.setStartDate(commonUtil.getDateStringInUTC(writeDate, info.getOffset(), false));
 						if (StringUtils.isNotBlank(boardListVO.getAttachments()) && "1".equals(boardListVO.getAttachments())) {
 							Optional<BoardAttachVO> boardAttach = ezBoardService.getBoardAttachByName(boardListVO.getItemID(), fileName, tenantId);
-							boardListVO.setThumbnail(boardAttach.map(BoardAttachVO::getFilePath).orElse(""));
+							boardListVO.setThumbnail(gwServerUrl + boardAttach.map(BoardAttachVO::getFilePath).orElse(""));
 						}
 					}
 					
