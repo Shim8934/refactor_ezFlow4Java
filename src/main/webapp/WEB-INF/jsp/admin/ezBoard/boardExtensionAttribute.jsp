@@ -273,8 +273,8 @@
 		    	var listview = new ListView();
 		        listview.LoadFromID("lvSelectList");
 		        var countExtAttr = listview.GetDataRows();
-		    	
-		    	if (countExtAttr > 4) {
+				
+		    	if (countExtAttr.length > 4) {
 			    	// countExtAttr이 5개 이상이면 alert
 		            alert("<spring:message code='ezBoard.t999056'/>");
 		            return;
