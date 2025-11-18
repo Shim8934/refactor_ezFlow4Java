@@ -895,8 +895,8 @@ public class EzNewPortalGWController {
 			int tenantId = info.getTenantId();
 			String langType = info.getLang();
 			String logoType = "P";
-			String deptId = request.getParameter("deptId");
-			String jobId = request.getParameter("jobId");
+			String deptId = request.getParameter("deptId") != null ? request.getParameter("deptId") : info.getDeptId();
+			String jobId = request.getParameter("jobId") != null ? request.getParameter("jobId") : info.getJobId();
 			JSONObject data = new JSONObject();
 
 			/**
