@@ -706,7 +706,7 @@
 							}
 						}
 						rowList = [];
-						parent.lef.goPage(13);
+						parent.left.goPage(13);
 					}
 					//AddJob_List();
 					return;
