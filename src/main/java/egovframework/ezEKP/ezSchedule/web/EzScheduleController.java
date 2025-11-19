@@ -2683,9 +2683,9 @@ public class EzScheduleController extends EzFileMngUtil {
 				result = ezScheduleService.insertSchedule(beforeSche.getOwnerId(), beforeSche.getOwnerName(), beforeSche.getOwnerName2(), creatorid, creatorname, creatorname2, scheduletype, importance, ispublic, datetype, startdate, enddate, repetition, title, location, content, attach, 
         			attendantId, attendantName, attendantName2, attendantDeptName, attendantDeptName2, defaultPath, loginVO.getTenantId(), loginVO.getCompanyID(), showtop, loginVO.getOffset(), loginVO.getLang());
 			} else if ("3".equals(modType)) {
-				ezScheduleService.deleteSchedule(scheduleid, loginVO.getTenantId());
-				result =  ezScheduleService.insertSchedule(beforeSche.getOwnerId(), beforeSche.getOwnerName(), beforeSche.getOwnerName2(), creatorid, creatorname, creatorname2, scheduletype, importance, ispublic, datetype, startdate, enddate, repetition, title, location, content, attach, 
+				result = ezScheduleService.insertSchedule(beforeSche.getOwnerId(), beforeSche.getOwnerName(), beforeSche.getOwnerName2(), creatorid, creatorname, creatorname2, scheduletype, importance, ispublic, datetype, startdate, enddate, repetition, title, location, content, attach, 
         			attendantId, attendantName, attendantName2, attendantDeptName, attendantDeptName2, defaultPath, loginVO.getTenantId(), loginVO.getCompanyID(), showtop, loginVO.getOffset(), loginVO.getLang());
+				ezScheduleService.deleteSchedule(scheduleid, loginVO.getTenantId());
 			} else { // modType = 0, 반복일정 아님
         		result = ezScheduleService.updateSchedule(scheduleid, creatorid, creatorname, creatorname2, importance, ispublic, datetype, startdate, enddate, repetition, title, location, content, attach, defaultPath, loginVO.getTenantId(), loginVO.getCompanyID(), showtop);
 			}
