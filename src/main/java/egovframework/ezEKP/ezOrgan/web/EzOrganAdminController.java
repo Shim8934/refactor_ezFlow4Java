@@ -2410,7 +2410,7 @@ public class EzOrganAdminController extends EzFileMngUtil {
 		int dbName = globals.getProperty("Globals.DbType").equals("mysql") ? 1 : 2;
 		searchKeyword = commonUtil.getWildcardEscapedString(searchKeyword, dbName);
 
-		boolean [] searchFor = {true, false, false, false};
+		boolean [] searchFor = {true, false, true, false};
 
 		List<ArrayList<String>> userList = new ArrayList<ArrayList<String>>();
 
@@ -6076,7 +6076,7 @@ public class EzOrganAdminController extends EzFileMngUtil {
 				int dbName = globals.getProperty("Globals.DbType").equals("mysql") ? 1 : 2;
 				searchKeyword = commonUtil.getWildcardEscapedString(searchKeyword, dbName);
 				
-				boolean [] searchFor = {true, false, false, false};
+				boolean [] searchFor = {true, false, true, false};
 				
 				List<OrganUserVO> totalUserList = ezOrganAdminService.getUserList(tenantId, startRow, maxItemPerPage, searchType, searchKeyword, companyIdChk, "", "", searchFor);
 				String realPath              = request.getServletContext().getRealPath("");
