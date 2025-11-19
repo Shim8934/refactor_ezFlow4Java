@@ -1758,7 +1758,7 @@ public class EzScheduleServiceImpl extends EgovAbstractServiceImpl implements Ez
 		map.put("v_REMINDERSTATUS", "0");
 		ezScheduleDAO.updateReminderSchedule(map);
 		
-		return 0;
+		return Integer.valueOf(scheduleid);
 	}
 
 	@Override
