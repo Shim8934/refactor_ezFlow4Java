@@ -770,12 +770,22 @@ function GetBODY(iframePage) {
     var count = 0;
     var BODYTag;
     var i = 0;
-    count = iframePage.contentWindow.document.getElementsByTagName("*").length;
+    
+    var doc = iframePage.contentWindow.document;
+    count = doc.getElementsByTagName("*").length;
+    
     for (i = 0; i < count; i++) {
-        if (iframePage.contentWindow.document.getElementsByTagName("*")[i].tagName == 'BODY') {
-            BODYTag = iframePage.contentWindow.document.getElementsByTagName("*")[i];
+        if (doc.getElementsByTagName("*")[i].tagName == 'BODY') {
+            BODYTag = doc.getElementsByTagName("*")[i];
         }
     }
+    
+    var styleTags = doc.getElementsByTagName("style");
+    // 뒤에서부터 제거
+    for (i = styleTags.length - 1; i >= 0; i--) {
+        styleTags[i].parentNode.removeChild(styleTags[i]);
+    }
+    
     return BODYTag;
 }
 
