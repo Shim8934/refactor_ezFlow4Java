@@ -2540,9 +2540,6 @@ public class EzScheduleController extends EzFileMngUtil {
         String repeatCount	= "";
         String repStartDate	= "";
         String isAllRep		= "";
-		
-		String beforeScheDate = doc.getElementsByTagName("BEFORESCHEDATE").item(0).getTextContent();
-		String modType = doc.getElementsByTagName("MODTYPE").item(0).getTextContent();
 
         if (scheduleid.equals("")) {
 	        //Set ownername and ownername2
@@ -2662,6 +2659,9 @@ public class EzScheduleController extends EzFileMngUtil {
      			}
         	 }
 	    } else {
+			String modType = doc.getElementsByTagName("MODTYPE").item(0).getTextContent();
+			String beforeScheDate = doc.getElementsByTagName("BEFORESCHEDATE").item(0).getTextContent();
+			
 	    	ScheduleInfoVO beforeSche = ezScheduleService.getScheduleInfo(scheduleid, commonUtil.getMinuteUTC(loginVO.getOffset()), loginVO.getTenantId(), loginVO.getCompanyID());
 	    	defaultPath = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_schedule.ROOT", loginVO.getTenantId());
 			if ("1".equals(modType)) {
