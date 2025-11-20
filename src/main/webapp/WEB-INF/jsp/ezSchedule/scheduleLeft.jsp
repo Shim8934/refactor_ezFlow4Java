@@ -86,6 +86,11 @@
 			        chk_DisplayChange();
 			        chk_DisplayChange2();
 			    }
+
+                var scheBoxs = document.querySelectorAll("input[name='chk_schedule']");
+                for (var i = 0; i < scheBoxs.length; i++) {
+                    saveIsTagChecked(scheBoxs[i]);
+                }
 			}
 			function FindByAttributeValue(attribute, value, element_type)    {
 				element_type = element_type || "*";
