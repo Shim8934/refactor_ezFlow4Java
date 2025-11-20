@@ -3222,7 +3222,14 @@ public class EzEmailMailWriteController extends EzFileMngUtil {
 	                                                if (existingAlternativeSubPart.isMimeType("multipart/related")) {
 	                                                    isRelatedFound = true;
 	                                                    break;
-	                                                }
+													} else {
+														// Alternative Part 안에 첨부파일 파트가 있는 경우가 있어 추가함
+														// 첨부파일 파트인 경우
+														if ((existingAlternativeSubPart.getDisposition() != null && existingAlternativeSubPart.getDisposition().equalsIgnoreCase(Part.ATTACHMENT))
+																|| existingAlternativeSubPart.isMimeType("application/*")) {
+															mixedPart.addBodyPart(getFixedNewPart((MimeBodyPart)existingAlternativeSubPart));
+														}
+													}
 	                                            }               
 	                                        }						
 	                                        
@@ -3273,32 +3280,7 @@ public class EzEmailMailWriteController extends EzFileMngUtil {
 	    											|| p.isMimeType("application/*")
 	    											|| isInlinePartWithoutContentID) {
 	    										hasAttach = true;
-	    											    										
-	    										InternetHeaders newHeaders = new InternetHeaders();
-	    										
-	    										@SuppressWarnings("unchecked")
-												Enumeration<Header> enumerator = p.getAllHeaders();
-	    										
-	    										// 해당 파트의 헤더들을 읽는다.
-	    										while (enumerator.hasMoreElements()) {
-	    											Header h = (Header)enumerator.nextElement();
-	    											
-	    											String hValue = h.getValue();
-	    											
-	    											// long header line의 경우 작성 시에는 folding이 되어 있으나
-	    											// 파트를 복사하는 과정에서 CRLF가 사라지는 현상이 있어
-	    											// 이곳에서 다시 CRLF를 삽입하도록 함
-	    											hValue = hValue.replace("attachment; filename=", "attachment;\r\n filename=");
-	    											hValue = hValue.replace("?= =?", "?=\r\n =?");
-	    											
-	    											newHeaders.addHeader(h.getName(), hValue);
-	    										}
-	    										
-	    										// 해당 파트의 body 데이터를 읽는다.
-	    										byte[] bytes = IOUtils.toByteArray(newBodyPart.getRawInputStream());
-	    											    										
-	    										// 해당 파트의 헤더와 body 데이터를 동일하게 갖는 파트 객체를 생성한다.
-	    										newBodyPart = new MimeBodyPart(newHeaders, bytes);	 
+												newBodyPart = getFixedNewPart((MimeBodyPart)p);
 	    									}
 	    									
 	    									mixedPart.addBodyPart(newBodyPart);	    									
@@ -4112,6 +4094,49 @@ public class EzEmailMailWriteController extends EzFileMngUtil {
 		
 		logger.debug("mailInterSend ended. pResult=" + pResult);
 		return "<DATA>" + pResult + "</DATA>";
+	}
+
+	/**
+	 * 잘못된 속성을 갖고 있는 MimeBodyPart를 전달받아 수정된 버전을 반환한다.
+	 * @param p
+	 * @return
+	 * @throws Exception
+	 */
+	private MimeBodyPart getFixedNewPart(MimeBodyPart p) throws Exception {
+		InternetHeaders newHeaders = new InternetHeaders();
+
+		@SuppressWarnings("unchecked")
+		Enumeration<Header> enumerator = p.getAllHeaders();
+
+		// 해당 파트의 헤더들을 읽는다.
+		while (enumerator.hasMoreElements()) {
+			Header h = (Header)enumerator.nextElement();
+			String hValue = h.getValue();
+
+			if (h.getName().equalsIgnoreCase("Content-Type")) {
+				// Content-Type: application; charset="UTF-8";와 같이
+				// subtype이 없는 경우가 발생해 application/octet-stream으로 변환하도록 함
+				if (hValue.contains("application;")) {
+					hValue = hValue.replace("application;", "application/octet-stream;");
+
+					logger.debug("new Content-Type={}", hValue);
+				}
+			}
+
+			// long header line의 경우 작성 시에는 folding이 되어 있으나
+			// 파트를 복사하는 과정에서 CRLF가 사라지는 현상이 있어
+			// 이곳에서 다시 CRLF를 삽입하도록 함
+			hValue = hValue.replace("attachment; filename=", "attachment;\r\n filename=");
+			hValue = hValue.replace("?= =?", "?=\r\n =?");
+
+			newHeaders.addHeader(h.getName(), hValue);
+		}
+
+		// 해당 파트의 body 데이터를 읽는다.
+		byte[] bytes = IOUtils.toByteArray(p.getRawInputStream());
+
+		// 해당 파트의 헤더와 body 데이터를 동일하게 갖는 파트 객체를 생성한다.
+		return new MimeBodyPart(newHeaders, bytes);
 	}
 	
 	/**
