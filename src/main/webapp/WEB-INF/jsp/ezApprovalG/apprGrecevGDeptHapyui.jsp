@@ -150,6 +150,8 @@
 			var windowUuid = getRandomId();
 			var ReturnFunction;
 
+            var isPreview = "<c:out value ='${isPreview}'/>";
+
 			window.onload = function () {
 				try {
 					if (isParentCommonArgsUsed()) {
@@ -731,11 +733,13 @@
 			// 	window.close();
 			// }
 			window.onbeforeunload = function () {
-				try{
-					window.opener.openergetDocInfo();
-				}catch(e){
-					window.parent.openergetDocInfo();
-				}
+                if (isPreview != "Y") {
+                    try {
+                        window.opener.openergetDocInfo();
+                    } catch(e) {
+                        window.parent.openergetDocInfo();
+                    }
+                }
 				// try{
 				// 	window.opener.Refresh_Window();
 				// }catch(e){ }
@@ -1133,10 +1137,10 @@
 		        }
 		    }
 		
-		    var totalsavefileinfo_dialogArguments = new Array();
+		    //var totalsavefileinfo_dialogArguments = new Array();
 		    function TotalSave_onclick() {
-		        totalsavefileinfo_dialogArguments[0] = "";
-		        totalsavefileinfo_dialogArguments[1] = TotalSave_onclick_Complete;
+		        ezCommon_cross_dialogArguments[0] = "";
+		        ezCommon_cross_dialogArguments[1] = TotalSave_onclick_Complete;
 		
 		        DivPopUpShow(580, 480, "/ezApprovalG/totalSaveFileInfo.do?docID=" + pDocID + "&type=APR");
 		    }

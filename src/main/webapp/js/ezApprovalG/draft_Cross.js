@@ -3433,7 +3433,7 @@ function setInitLoadDocCellInfo() {
         alert("setInitLoadDocCellInfo()" + e.description);
     }
 }
-var ezapralert_cross_dialogArguments = new Array();
+//  ezapralert_cross_dialogArguments = new Array();
 function OpenAlertUI(pAlertContent, CompleteFunction) {
     var parameter = pAlertContent;
     var url = "/ezApprovalG/ezAprAlert.do";
@@ -3444,11 +3444,11 @@ function OpenAlertUI(pAlertContent, CompleteFunction) {
     		feature = feature + GetShowModalPosition(330, 205);
 			var rtn = window.showModalDialog(url, parameter, feature);
     	} else {
-    		ezapralert_cross_dialogArguments[0] = parameter;
+    		ezCommon_cross_dialogArguments[0] = parameter;
     		if (CompleteFunction != undefined)
-    			ezapralert_cross_dialogArguments[1] = CompleteFunction;
+    			ezCommon_cross_dialogArguments[1] = CompleteFunction;
     		else
-    			ezapralert_cross_dialogArguments[1] = OpenAlertUI_Complete;
+    			ezCommon_cross_dialogArguments[1] = OpenAlertUI_Complete;
     		DivPopUpShow(330, 205, url);
     	}
     } else {

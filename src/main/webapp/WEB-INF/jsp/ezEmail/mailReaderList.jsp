@@ -70,7 +70,24 @@
 	            createNodeInsert(xmlDom, objNode, "DATA");
 	            createNodeAndInsertText(xmlDom, objNode, "URL", _url);
 	            if (pGubun == "EACH") {
-	                var pMailAddress = "";
+	            // 1. querySelectorAll로 MailList 내부의 체크된 모든 체크박스를 선택합니다.
+                    const checkedBoxes = document.querySelectorAll('#MailList input[type="checkbox"]:checked');
+            
+                    // 2. 선택된 체크박스들의 _mailaddress 속성 값을 배열로 변환합니다.
+                    const mailAddresses = Array.from(checkedBoxes).map(checkbox => {
+                        // 3. 체크박스에서 가장 가까운 _mailaddress 속성을 가진 부모 요소를 찾습니다.
+                        return checkbox.closest('[\\_mailaddress]').getAttribute('_mailaddress');
+                    });
+            
+                    if (mailAddresses.length > 0) {
+                        // 4. 배열을 "|!|" 구분자로 합쳐 문자열을 만듭니다.
+                        const pMailAddress = mailAddresses.join('|!|');
+                        createNodeAndInsertText(xmlDom, objNode, "EMAILADDRESS", encodeURIComponent(pMailAddress));
+                    } else {
+                        alert(strLangLHM11);
+                        return;
+                    }
+	                /*var pMailAddress = "";
 	                for (var RowCnt = 0; RowCnt < MailList.childNodes.length; RowCnt++) {
 	                    if (MailList.childNodes.item(RowCnt).childNodes.item(0).childNodes.length > 0) {
 	                        if (MailList.childNodes.item(RowCnt).childNodes.item(0).childNodes.item(0).checked) {
@@ -86,7 +103,7 @@
 	                else {
 	                    alert(strLangLHM11);
 	                    return;
-	                }
+	                }*/
 	            }
 	            
 	            var requestUrl = "/ezEmail/mailCancelSend.do" + "?gubun=" + encodeURIComponent(pGubun);
@@ -245,13 +262,20 @@
 	                TD1.style.width = "14px";
 
 					if((reader.ReadDate =="UNREAD" && reader.CancelStatus == "") || (isReadDelete == "YES" && (reader.CancelStatus == "" || reader.CancelStatus == 2))) {
+					    // wrapper div 생성
+                        var checkBoxWrapper = document.createElement("div");
+                        checkBoxWrapper.classList.add("custom_checkbox");
+					
 	                    var TD1_Sub = document.createElement("INPUT");
 	                    TD1_Sub.type = "checkbox";
 	                    TD1_Sub.style.margin = "0px";
 	                    TD1_Sub.style.padding = "0px";
 	                    TD1_Sub.style.width = "13px";
 	                    TD1_Sub.style.height = "13px";
-	                    TD1.appendChild(TD1_Sub);
+
+                        // 조립
+                        checkBoxWrapper.appendChild(TD1_Sub);
+	                    TD1.appendChild(checkBoxWrapper);
 	                }
 	                //TD2.innerHTML = ReplaceText(SelectSingleNodeValue(XmlRows[i], "READERNAME"), "&", "&amp;");
 					
@@ -328,7 +352,7 @@
 				hideDim();
 	        }
 
-	        function event_listCheckboxclick(obj) {
+	        /*function event_listCheckboxclick(obj) {
 	            if (obj.checked) {
 	                for (var RowCnt = 0; RowCnt < MailList.childNodes.length; RowCnt++) {
 	                    if (MailList.childNodes.item(RowCnt).childNodes.item(0).childNodes.length > 0) {
@@ -343,7 +367,17 @@
 	                    }
 	                }
 	            }
-	        }
+	        }*/
+	        function event_listCheckboxclick(obj) {
+                // MailList 요소 내의 모든 체크박스를 선택합니다.
+                const checkboxes = document.querySelectorAll('#MailList input[type="checkbox"]');
+            
+                // 선택된 모든 체크박스를 순회하며 상태를 변경합니다.
+                checkboxes.forEach(checkbox => {
+                    // '전체 선택' 체크박스(obj)의 상태에 따라 각 체크박스의 상태를 설정합니다.
+                    checkbox.checked = obj.checked;
+                });
+            }
 
 	        function ChangeTab(obj) {
 	            var pSelectTab = obj.getAttribute("divname");
@@ -412,7 +446,9 @@
 	                <table style="width: 100%; border: 1px solid #ddd;" id="Table1" class="mainlist">
 	                    <tr>
 	                        <th style="width: 14px;">
-	                            <input type="checkbox" id="HeaderAllCheckBox" style="margin: 0px; padding: 0px; width: 13px; height: 13px;" onclick="event_listCheckboxclick(this);"></th>
+	                            <div class="custom_checkbox">
+	                                <input type="checkbox" id="HeaderAllCheckBox" style="margin: 0px; padding: 0px; width: 13px; height: 13px;" onclick="event_listCheckboxclick(this);"></th>
+	                            </div>
 	                        <th style="width: 92px; text-align: left;"><spring:message code='ezEmail.t31' /></th>
 	                        <th style="width: 212px; text-align: left;"><spring:message code='ezEmail.t1019' /></th>
 	                        <th style="width: 142px; text-align: left;"><spring:message code='ezEmail.t99000074' /></th>

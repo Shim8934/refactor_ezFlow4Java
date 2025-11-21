@@ -11,6 +11,15 @@
     <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
     <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
     <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+    <style>
+        .custom_radio, .custom_checkbox {
+            display: inline-block;
+        }
+
+        .custom_radio {
+            margin-right: 20px; /* 첫 번째 div의 오른쪽에 20px 간격 추가 */
+        }
+    </style>
     <script type="text/javascript">
 
         var usePOP3 = "${usePOP3}";
@@ -72,17 +81,25 @@
         <tr>
             <th><spring:message code='ezOrgan.usePOP3' /></th>
             <td>
-                <input type="radio" name="CheckPOP3" id="POP3used" value="YES" /><spring:message code="ezOrgan.t161" />
-                <input type="radio" name="CheckPOP3" id="POP3unused" value="NO" /><spring:message code="ezOrgan.kyj02" />
-                <input type="checkbox" name="POP3AllUser" id="POP3AllUser" /><spring:message code="ezEmail.setAllUser" />
+                <div class="custom_radio">
+                    <input type="radio" name="CheckPOP3" id="POP3used" value="YES" /><label for="POP3used"><spring:message code="ezOrgan.t161" /></label>
+                    <input type="radio" name="CheckPOP3" id="POP3unused" value="NO" /><label for="POP3unused"><spring:message code="ezOrgan.kyj02" /></label>
+                </div>
+                <div class="custom_checkbox">
+                    <input type="checkbox" name="POP3AllUser" id="POP3AllUser" /><label for="POP3AllUser"><spring:message code="ezEmail.setAllUser" /></label>
+                </div>
             </td>
         </tr>
         <tr>
             <th><spring:message code='ezOrgan.useIMAP' /></th>
             <td>
-                <input type="radio" name="CheckIMAP" id="IMAPused" value="YES" /><spring:message code="ezOrgan.t161" />
-                <input type="radio" name="CheckIMAP" id="IMAPunused" value="NO" /><spring:message code="ezOrgan.kyj02" />
-                <input type="checkbox" name="IMAPAllUser" id="IMAPAllUser" /><spring:message code="ezEmail.setAllUser" />
+                <div class="custom_radio">
+                    <input type="radio" name="CheckIMAP" id="IMAPused" value="YES" /><label for="IMAPused"><spring:message code="ezOrgan.t161" /></label>
+                    <input type="radio" name="CheckIMAP" id="IMAPunused" value="NO" /><label for="IMAPunused"><spring:message code="ezOrgan.kyj02" /></label>
+                </div>
+                <div class="custom_checkbox">
+                    <input type="checkbox" name="IMAPAllUser" id="IMAPAllUser" /><label for="IMAPAllUser"><spring:message code="ezEmail.setAllUser" /></label>
+                </div
             </td>
         </tr>
     </table>

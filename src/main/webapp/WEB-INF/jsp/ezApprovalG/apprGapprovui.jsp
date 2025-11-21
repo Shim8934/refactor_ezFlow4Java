@@ -231,6 +231,7 @@
             var drafterName = "<c:out value ='${drafterName}'/>";
 		    var drafterDept = "<c:out value ='${drafterDept}'/>";
 		    var formName = "<c:out value ='${formName}'/>";
+            var isPreview = "${isPreview}";
 			
 			window.onload = function () {
 				if (isParentCommonArgsUsed()) {
@@ -1300,7 +1301,7 @@
 		        }else if(ret == "NAME"){
                     Approv_Complete_BackEnd(ret);
                  }else{
-                    Approv_complete(ret);
+                    Approv_Complete(ret);
                  }
                  // Approv_Complete(ret);
 		    }
@@ -1681,11 +1682,15 @@
 		            if (pAprLineType == "<spring:message code='ezApprovalG.t19'/>")
 		                SaveApproveInfo("1");
 		        } catch (e) { }
-		        try {
-		            window.opener.openergetDocInfo();
-		        } catch (e) {
-		            window.parent.openergetDocInfo();
-		        }
+                
+                if (isPreview != "Y") {
+                    try {
+                        window.opener.openergetDocInfo();
+                    } catch (e) {
+                        window.parent.openergetDocInfo();
+                    }    
+                }
+		        
 		        // try {
 		        //     window.opener.Refresh_Window();
 		        // } catch (e) { }
@@ -2339,10 +2344,10 @@
 		        return xmlhttp.responseText;
 		    }
 		
-		    var totalsavefileinfo_dialogArguments = new Array();
+		    // var totalsavefileinfo_dialogArguments = new Array();
 		    function TotalSave_onclick() {
-		        totalsavefileinfo_dialogArguments[0] = "";
-		        totalsavefileinfo_dialogArguments[1] = TotalSave_onclick_Complete;
+		        ezCommon_cross_dialogArguments[0] = "";
+		        ezCommon_cross_dialogArguments[1] = TotalSave_onclick_Complete;
 		
 		        DivPopUpShow(580, 480, "/ezApprovalG/totalSaveFileInfo.do?docID=" + pDocID + "&type=" + getDocMode() + "&orgCompanyID=" + orgCompanyID);
 		    }

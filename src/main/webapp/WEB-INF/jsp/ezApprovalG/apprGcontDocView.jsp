@@ -96,6 +96,8 @@
 			var nonElecRec = "<c:out value ='${nonElecRec}'/>";
 			var ReturnFunction;
 
+            var isPreview = "<c:out value = '${isPreview}'/>";
+
 		    $(function () {
 		    	/* 2022-07-29 홍승비 - 열람권한 체크는 초기 진입 시 한번만 진행 (관리자 > 전체 완료문서조회 > 관리자는 모든 문서 열람 가능) */
 			    if ("${pass}" != "<RESULT>TRUE</RESULT>") {
@@ -716,10 +718,10 @@
 		        return result;
 		    }
 		
-		    var totalsavefileinfo_dialogArguments = new Array();
+		    // var totalsavefileinfo_dialogArguments = new Array();
 		    function TotalSave_onclick() {
-		        totalsavefileinfo_dialogArguments[0] = "";
-		        totalsavefileinfo_dialogArguments[1] = TotalSave_onclick_Complete;
+		        ezCommon_cross_dialogArguments[0] = "";
+		        ezCommon_cross_dialogArguments[1] = TotalSave_onclick_Complete;
 		
 		        DivPopUpShow(580, 480, "/ezApprovalG/totalSaveFileInfo.do?docID=" + pDocID + "&type=" + docAprEnd + "&orgCompanyID=" + orgCompanyID);
 		    }
@@ -1050,21 +1052,23 @@
 			}
 
 			window.onbeforeunload = function () {
-				try {
-					if ((window.opener.g_sFlag == undefined && isDocAttach == "false") || (window.opener.g_sFlag != undefined && window.opener.g_sFlag == "m01") || (window.opener.g_sFlag != undefined && window.opener.g_sFlag == "docShare")) {
-						// 전자결재 > 완료문서, 기록물등록대장, 부서공유함에 적용 되도록 조건 추가
-						window.opener.openergetDocInfo();
-					} else {
-						return;
-					}
-				} catch (e) {
-					if ((window.parent.g_sFlag == undefined && isDocAttach == "false") || (window.parent.g_sFlag != undefined && window.parent.g_sFlag == "m01") || (window.parent.g_sFlag != undefined && window.parent.g_sFlag == "docShare")) {
-						// 전자결재 > 완료문서, 기록물등록대장, 부서공유함에 적용 되도록 조건 추가
-						window.parent.openergetDocInfo();
-					} else {
-						return;
-					}
-				}
+                if (isPreview != "Y") {
+                    try {
+                        if ((window.opener.g_sFlag == undefined && isDocAttach == "false") || (window.opener.g_sFlag != undefined && window.opener.g_sFlag == "m01") || (window.opener.g_sFlag != undefined && window.opener.g_sFlag == "docShare")) {
+                            // 전자결재 > 완료문서, 기록물등록대장, 부서공유함에 적용 되도록 조건 추가
+                            window.opener.openergetDocInfo();
+                        } else {
+                            return;
+                        }
+                    } catch (e) {
+                        if ((window.parent.g_sFlag == undefined && isDocAttach == "false") || (window.parent.g_sFlag != undefined && window.parent.g_sFlag == "m01") || (window.parent.g_sFlag != undefined && window.parent.g_sFlag == "docShare")) {
+                            // 전자결재 > 완료문서, 기록물등록대장, 부서공유함에 적용 되도록 조건 추가
+                            window.parent.openergetDocInfo();
+                        } else {
+                            return;
+                        }
+                    }
+                }
 			}
 			
 			function checkHeaderAction() {

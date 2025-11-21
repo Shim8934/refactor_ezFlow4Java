@@ -169,6 +169,8 @@
 			var allowDeptIDs = "<c:out value ='${allowDeptIDs}'/>"
 			var ReturnFunction;
 
+            var isPreview = "<c:out value ='${isPreview}'/>";
+
 		    function process_AfterOpen() {
 		        try {
 		            if (pFormHref == "") {
@@ -1069,22 +1071,24 @@
 			  // }
 		
 			  function window_onbeforeunload() {
-			      try {
-			          window.opener.openergetDocInfo();
-			          if (!chkOK) {
-			
-			              if (isReDraft == "N")
-			                  delDocInfo();
-			          }
-			      }
-			      catch (e) { 
-                      window.parent.openergetDocInfo();
-			          if (!chkOK) {
-			
-			              if (isReDraft == "N")
-			                  delDocInfo();
-			          }
-				  }
+                  if (isPreview != "Y") {
+                      try {
+                          window.opener.openergetDocInfo();
+                          if (!chkOK) {
+
+                              if (isReDraft == "N")
+                                  delDocInfo();
+                          }
+                      }
+                      catch (e) {
+                          window.parent.openergetDocInfo();
+                          if (!chkOK) {
+
+                              if (isReDraft == "N")
+                                  delDocInfo();
+                          }
+                      }
+                  }
 			
 			      // try {
 			      //     window.opener.Refresh_Window();
@@ -2080,10 +2084,10 @@
 				DivPopUpHidden();
 			}
 
-			var totalsavefileinfo_dialogArguments = new Array();
+			// var totalsavefileinfo_dialogArguments = new Array();
 			function TotalSave_onclick() {
-				totalsavefileinfo_dialogArguments[0] = "";
-				totalsavefileinfo_dialogArguments[1] = TotalSave_onclick_Complete;
+				ezCommon_cross_dialogArguments[0] = "";
+				ezCommon_cross_dialogArguments[1] = TotalSave_onclick_Complete;
 
 				var mode = getDocMode();
 				DivPopUpShow(580, 480, "/ezApprovalG/totalSaveFileInfo.do?docID=" + pDocID + "&type=" + mode + "&orgCompanyID=" + orgCompanyID);

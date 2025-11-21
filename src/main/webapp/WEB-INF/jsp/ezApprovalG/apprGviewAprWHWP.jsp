@@ -130,6 +130,8 @@
             var anCnt = 1;
             var FirstHtmlAry = new Array();
             var SaveHtmlAry = new Array();
+
+            var isPreview = "<c:out value = '${isPreview}'/>";
             
 			function btnOpinion_onclick() {
 			    //openOpinionViewUI();
@@ -347,12 +349,14 @@
 			}
 	
 			function window_onbeforeunload() {
-			    try {
-			        window.opener.openergetDocInfo();
-			    }
-			    catch (e) { 
-					window.parent.openergetDocInfo();
-				}
+                if (isPreview != "Y") {
+                    try {
+                        window.opener.openergetDocInfo();
+                    }
+                    catch (e) {
+                        window.parent.openergetDocInfo();
+                    }
+                }
 			    // try {
 			    //     window.opener.Refresh_Window();
 			    // } catch (e) { }
@@ -376,10 +380,10 @@
 		        DivPopUpHidden();
 		    }
 			
-			var totalsavefileinfo_dialogArguments = new Array();
+			// var totalsavefileinfo_dialogArguments = new Array();
 		    function TotalSave_onclick() {
-		        totalsavefileinfo_dialogArguments[0] = "";
-		        totalsavefileinfo_dialogArguments[1] = TotalSave_onclick_Complete;
+		        ezCommon_cross_dialogArguments[0] = "";
+		        ezCommon_cross_dialogArguments[1] = TotalSave_onclick_Complete;
 				
 				if(anCnt > 1 && draftAllTypeB == "Y"){
                     changeAn(1, true);

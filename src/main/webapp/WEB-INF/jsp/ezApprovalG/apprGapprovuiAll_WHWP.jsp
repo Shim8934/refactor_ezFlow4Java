@@ -309,7 +309,9 @@
 			
 			// 2024-01-11 김우철 - 다안기안문서 전체 탭 호출 후 selTab(1)을 위한 setTimeout 시간
 			var loadTime = "${loadTimeForApprAll}";
-			
+
+            var isPreview = "<c:out value ='${isPreview}'/>";
+            
 			// 모두결재 관련 함수
 		    function getNextDocList() {
 		        NextDocID = "";
@@ -1652,12 +1654,14 @@
 			            /* if (pAprLineType == "<spring:message code='ezApprovalG.t19'/>")
 				            SaveApproveInfo("1"); */	// 분기 타는 위치 확인이 필요함
 				    } catch (e) { }
-			
-			        try {
-			            window.opener.openergetDocInfo();
-			        } catch (e) {
-						window.parent.openergetDocInfo();
-					}
+			        
+                    if (isPreview != "Y") {
+                        try {
+                            window.opener.openergetDocInfo();
+                        } catch (e) {
+                            window.parent.openergetDocInfo();
+                        }    
+                    }
 			
 			        // try {
 			        //     window.opener.Refresh_Window();

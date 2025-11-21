@@ -394,33 +394,27 @@
 		    	<HEADERS>
 		      		<HEADER>
 		        		<NAME><spring:message code = 'ezSystem.config.hth20' /></NAME>
-		        		<WIDTH>15%</WIDTH>
-		        		<STYLE>border-top:0px;</STYLE>
+		        		<STYLE>border-top:0px;width:15%</STYLE>
 		      		</HEADER>
 		      		<HEADER>
 		        		<NAME><spring:message code = 'ezSystem.config.hth21' /></NAME>
-		        		<WIDTH>15%</WIDTH>
-		        		<STYLE>border-top:0px;</STYLE>
+						<STYLE>border-top:0px;width:20%</STYLE>
 		      		</HEADER>
 		      		<HEADER>
 		        		<NAME><spring:message code = 'ezSystem.config.hth22' /></NAME>
-		        		<WIDTH>15%</WIDTH>
-		        		<STYLE>border-top:0px;</STYLE>
+						<STYLE>border-top:0px;width:20%</STYLE>
 		      		</HEADER>
 		      		<HEADER>
 		        		<NAME><spring:message code = 'ezSystem.w011' /></NAME>
-		        		<WIDTH>20%</WIDTH>
-		        		<STYLE>border-top:0px;</STYLE>
+						<STYLE>border-top:0px;width:15%</STYLE>
 		      		</HEADER>
 		      		<HEADER>
 		        		<NAME><spring:message code = 'ezSystem.w004' /></NAME>
-		        		<WIDTH>15%</WIDTH>
-		        		<STYLE>border-top:0px;</STYLE>
+						<STYLE>border-top:0px;width:10%</STYLE>
 		      		</HEADER>
 		      		<HEADER>
 		        		<NAME><spring:message code = 'ezSystem.config.hth26' /></NAME>
-		        		<WIDTH>20%</WIDTH>
-		        		<STYLE>border-top:0px;</STYLE>
+						<STYLE>border-top:0px;width:15%</STYLE>
 		      		</HEADER>
 		    	</HEADERS>
 		  	</LISTVIEWDATA>

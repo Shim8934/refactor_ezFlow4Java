@@ -251,6 +251,7 @@
 			var strBytesAry = new Array();
 			
 			var wAprMemberSN = "";
+            var isPreview = "${isPreview}";
             
 		    function getNextDocList() {
 		        NextDocID = "";
@@ -2038,11 +2039,13 @@
 				            SaveApproveInfo("1"); */	// 분기 타는 위치 확인이 필요함
 				    } catch (e) { }
 			
-			        try {
-			            window.opener.openergetDocInfo();
-			        } catch (e) {
-						window.parent.openergetDocInfo();
-					}
+                    if (isPreview != "Y") {
+                        try {
+                            window.opener.openergetDocInfo();
+                        } catch (e) {
+                            window.parent.openergetDocInfo();
+                        }    
+                    }
 			
 			        // try {
 			        //     window.opener.Refresh_Window();
@@ -2505,13 +2508,13 @@
 		    	}
 		    	
 		    	// 통합 PC 저장 시작
-		    	var totalsavefileinfo_dialogArguments = new Array();
+		    	// var totalsavefileinfo_dialogArguments = new Array();
 			    function TotalSave_onclick() {
 			        if(anCnt > 1)
                         changeAn(1, true);
 			    
-			        totalsavefileinfo_dialogArguments[0] = "";
-			        totalsavefileinfo_dialogArguments[1] = TotalSave_onclick_Complete;
+			        ezCommon_cross_dialogArguments[0] = "";
+			        ezCommon_cross_dialogArguments[1] = TotalSave_onclick_Complete;
 			
 			        DivPopUpShow(580, 480, "/ezApprovalG/totalSaveFileInfo.do?docID=" + pDocID + "&type=" + getDocMode() + "&orgCompanyID=" + orgCompanyID);
 			    }

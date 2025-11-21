@@ -190,7 +190,7 @@
                         const limitCountFild = vo.limitCount === 0 ? strUnLimit : vo.downloadCount + " / " + vo.limitCount + strDownloadsCount;
                         
                         html += "<tr onclick='single_check_change(this)'>";
-                        html += "   <td style='width: 50px; padding-left: 19px; cursor: pointer;'><input type='checkbox' id="+ vo.fileId +" date="+ vo.uploadDate +" tId="+ vo.tenantId +" name="+ fileName +"></td>";
+                        html += "   <td style='width: 50px; padding-left: 19px; cursor: pointer;'><div class='custom_checkbox'><input type='checkbox' id="+ vo.fileId +" date="+ vo.uploadDate +" tId="+ vo.tenantId +" name="+ fileName +"></div></td>";
                         html += "	<td onclick='downloadOne(this)' style=' white-space: nowrap; overflow: hidden; cursor: pointer; text-overflow: ellipsis;'title=\'" + fileName + "' id="+ vo.fileId +" date="+ vo.uploadDate +" tId="+ vo.tenantId +" name="+ fileName +">"	+ fileName + "</td>";
                         html += "	<td>" + fileSize + "</td>";
                         html += "    <td>" + limitCountFild +"</td>";
@@ -206,7 +206,7 @@
             }
     
     
-            function check_change(checkbox) {
+            /*function check_change(checkbox) {
     
                 var bigAttachListElement = bigAttachListBody.childNodes.item(0);
     
@@ -239,6 +239,39 @@
                         bigAttachNode.style.backgroundColor = m_strColorDefault;
                     }
     
+                    listContentArray = [];
+                }
+            }*/
+            function check_change(checkbox) {
+                if (!bigAttachListBody.hasChildNodes() || bigAttachListBody.children.length === 0) {
+                    return;
+                }
+            
+                const rows = bigAttachListBody.querySelectorAll('tr');
+                const checkboxes = bigAttachListBody.querySelectorAll('input[type="checkbox"]');
+            
+                if (checkbox.checked) {
+                    // '전체 선택'이 체크된 경우
+                    listContentArray = [];
+                    rows.forEach(row => {
+                        row.style.backgroundColor = m_strColorSelect;
+                    });
+            
+                    checkboxes.forEach(cb => {
+                        cb.checked = true;
+                        listContentArray.push(cb.getAttribute('id'));
+                    });
+            
+                } else {
+                    // '전체 선택'이 해제된 경우
+                    rows.forEach(row => {
+                        row.style.backgroundColor = m_strColorDefault;
+                    });
+            
+                    checkboxes.forEach(cb => {
+                        cb.checked = false;
+                    });
+            
                     listContentArray = [];
                 }
             }
@@ -309,7 +342,7 @@
     
             }
     
-            function single_check_change(bigAttachNode) {
+            /*function single_check_change(bigAttachNode) {
     
                 var bigAttachNodeCheckBox = bigAttachNode.childNodes.item(1).childNodes.item(0);
                 if (bigAttachNodeCheckBox.checked) {
@@ -335,6 +368,25 @@
     
                 // 체크 박스 누를때 이벤트 두번 발생하는 현상 수정
                 event.stopPropagation();
+            }*/
+            function single_check_change(bigAttachNode, event) {
+                const checkbox = bigAttachNode.querySelector('input[type="checkbox"]');
+                if (!checkbox) return; // 체크박스가 없으면 함수 종료
+            
+                const checkboxId = checkbox.getAttribute('id');
+            
+                if (checkbox.checked) {
+                    bigAttachNode.style.backgroundColor = m_strColorSelect;
+                    listContentArray.push(checkboxId);
+            
+                } else {
+                    bigAttachNode.style.backgroundColor = m_strColorDefault;
+                    listContentArray = listContentArray.filter(id => id !== checkboxId);
+                }
+
+                if (event) {
+                    event.stopPropagation();
+                }
             }
     
     
@@ -577,7 +629,7 @@
             <table  class="mainlist" style="width:100%;table-layout:fixed;" >
                 <thead id="mailHeader">
                 <tr>
-                    <th style="width: 50px; padding: 0px; color: black;padding-left:20px;" align="center" nowrap title><input type="checkbox" onClick="check_change(this)" id="Checkbox1"></th>
+                    <th style="width: 50px; padding: 0px; color: black;padding-left:20px;" align="center" nowrap title><div class='custom_checkbox'><input type="checkbox" onClick="check_change(this)" id="Checkbox1"></div></th>
                     <th style="width:100%;cursor:pointer;overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"  align="left" onclick="event_HeaderClick(this)" prop="fileName" orderoption="ASC"><spring:message code="ezEmail.t556" /></th>
                     <th style="width:63px;cursor:pointer" align="left" valign="center" id="tofromname" onclick="event_HeaderClick(this)" prop="size" orderoption="ASC"><spring:message code="ezEmail.t617" /></th>
                     <th style="width:180px;cursor:pointer" align="left" id="tofromdate" onclick="event_HeaderClick(this)" prop="downloadCount" orderoption="ASC"><spring:message code="ezEmail.bigAttach.kdh04" /></th>
