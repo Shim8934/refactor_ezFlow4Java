@@ -883,51 +883,51 @@ function ListView() {
 
                         if (listShowType == "E") {
                             if (fileExt.length > 1) {
-                                    titleImage = titleImage + "<img src='/images/disk.svg?v=1' style='width:20px; height:20px; vertical-align:middle;' onclick='selectToDownloadFiles(\"" + SelectSingleNodeValue(oCells[0], "DATA1") + "\", \"" + SelectSingleNodeValue(oCells[0], "DATA2") +"\", \"" + ITEMREAD_FG +"\")'>";
+                                    titleImage = titleImage + "<img src='/images/disk.svg?v=1' style='width:20px; height:20px; vertical-align:middle;' onclick='selectToDownloadFiles(\"" + SelectSingleNodeValue(oCells[0], "DATA1") + "\", \"" + SelectSingleNodeValue(oCells[0], "DATA2") +"\")'>";
                                 } else if (fileExt[0].indexOf(".jpg") != -1 || fileExt[0].indexOf(".jpeg") != -1 || fileExt[0].indexOf(".bmp") != -1 || fileExt[0].indexOf(".gif") != -1 || fileExt[0].indexOf(".png") != -1 || fileExt[0].indexOf(".tif") != -1 || fileExt[0].indexOf(".tiff") != -1) {
-                                    titleImage = titleImage + "<img src='/images/image.svg?v=1' style='width:20px; height:20px; vertical-align:middle;' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG +"\")'>";
+                                    titleImage = titleImage + "<img src='/images/image.svg?v=1' style='width:20px; height:20px; vertical-align:middle;' onclick='downloadBoardFile(\"" + SelectSingleNodeValue(oCells[0], "DATA1") + "\", \"" + SelectSingleNodeValue(oCells[0], "DATA2") +"\", \"" + downURL +"\")'>";
                                 } else if (fileExt[0].indexOf(".doc") != -1 || fileExt[0].indexOf(".docx") != -1) {
-                                    titleImage = titleImage + "<img src='/images/doc.svg?v=1' style='width:20px; height:20px; vertical-align:middle;' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG +"\")'>";
+                                    titleImage = titleImage + "<img src='/images/doc.svg?v=1' style='width:20px; height:20px; vertical-align:middle;' onclick='downloadBoardFile(\"" + SelectSingleNodeValue(oCells[0], "DATA1") + "\", \"" + SelectSingleNodeValue(oCells[0], "DATA2") +"\", \"" + downURL +"\")'>";
                                 } else if (fileExt[0].indexOf(".xls") != -1 || fileExt[0].indexOf(".xlsx") != -1) {
-                                    titleImage = titleImage + "<img src='/images/xls.svg?v=1' style='width:20px; height:20px; vertical-align:middle;' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG +"\")'>";
+                                    titleImage = titleImage + "<img src='/images/xls.svg?v=1' style='width:20px; height:20px; vertical-align:middle;' onclick='downloadBoardFile(\"" + SelectSingleNodeValue(oCells[0], "DATA1") + "\", \"" + SelectSingleNodeValue(oCells[0], "DATA2") +"\", \"" + downURL +"\")'>";
                                 } else if (fileExt[0].indexOf(".ppt") != -1 || fileExt[0].indexOf(".pptx") != -1 || fileExt[0].indexOf(".pps") != -1 || fileExt[0].indexOf(".ppsx") != -1) {
-                                    titleImage = titleImage + "<img src='/images/ppt.svg?v=1' style='width:20px; height:20px; vertical-align:middle;' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG +"\")'>";
+                                    titleImage = titleImage + "<img src='/images/ppt.svg?v=1' style='width:20px; height:20px; vertical-align:middle;' onclick='downloadBoardFile(\"" + SelectSingleNodeValue(oCells[0], "DATA1") + "\", \"" + SelectSingleNodeValue(oCells[0], "DATA2") +"\", \"" + downURL +"\")'>";
                                 } else if (fileExt[0].indexOf(".txt") != -1) {
-                                    titleImage = titleImage + "<img src='/images/txt.svg?v=1' style='width:20px; height:20px; vertical-align:middle;' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG +"\")'>";
+                                    titleImage = titleImage + "<img src='/images/txt.svg?v=1' style='width:20px; height:20px; vertical-align:middle;' onclick='downloadBoardFile(\"" + SelectSingleNodeValue(oCells[0], "DATA1") + "\", \"" + SelectSingleNodeValue(oCells[0], "DATA2") +"\", \"" + downURL +"\")'>";
                                 } else if (fileExt[0].indexOf(".zip") != -1) {
-                                    titleImage = titleImage + "<img src='/images/zip.svg?v=1' style='width:20px; height:20px; vertical-align:middle;' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG +"\")'>";
+                                    titleImage = titleImage + "<img src='/images/zip.svg?v=1' style='width:20px; height:20px; vertical-align:middle;' onclick='downloadBoardFile(\"" + SelectSingleNodeValue(oCells[0], "DATA1") + "\", \"" + SelectSingleNodeValue(oCells[0], "DATA2") +"\", \"" + downURL +"\")'>";
                                 } else if (fileExt[0].indexOf(".pdf") != -1) {
-                                    titleImage = titleImage + "<img src='/images/pdf.svg?v=1' style='width:20px; height:20px; vertical-align:middle;' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG +"\")'>";
+                                    titleImage = titleImage + "<img src='/images/pdf.svg?v=1' style='width:20px; height:20px; vertical-align:middle;' onclick='downloadBoardFile(\"" + SelectSingleNodeValue(oCells[0], "DATA1") + "\", \"" + SelectSingleNodeValue(oCells[0], "DATA2") +"\", \"" + downURL +"\")'>";
                                 } else if (fileExt[0].indexOf(".hwp") != -1 || fileExt[0].indexOf(".hwpx") != -1) {
-                                    titleImage = titleImage + "<img src='/images/hwp.svg?v=1' style='width:20px; height:20px; vertical-align:middle;' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG +"\")'>";
+                                    titleImage = titleImage + "<img src='/images/hwp.svg?v=1' style='width:20px; height:20px; vertical-align:middle;' onclick='downloadBoardFile(\"" + SelectSingleNodeValue(oCells[0], "DATA1") + "\", \"" + SelectSingleNodeValue(oCells[0], "DATA2") +"\", \"" + downURL +"\")'>";
                                 } else if (fileExt[0].indexOf(".ecm") != -1) {
-                                    titleImage = titleImage + "<img src='/images/ecm.svg?v=1' style='width:20px; height:20px; vertical-align:middle;' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG +"\")'>";
+                                    titleImage = titleImage + "<img src='/images/ecm.svg?v=1' style='width:20px; height:20px; vertical-align:middle;' onclick='downloadBoardFile(\"" + SelectSingleNodeValue(oCells[0], "DATA1") + "\", \"" + SelectSingleNodeValue(oCells[0], "DATA2") +"\", \"" + downURL +"\")'>";
                                 } else {
-                                    titleImage = titleImage + "<img src='/images/etc.svg?v=1' style='width:20px; height:20px; vertical-align:middle;' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG +"\")'>";
+                                    titleImage = titleImage + "<img src='/images/etc.svg?v=1' style='width:20px; height:20px; vertical-align:middle;' onclick='downloadBoardFile(\"" + SelectSingleNodeValue(oCells[0], "DATA1") + "\", \"" + SelectSingleNodeValue(oCells[0], "DATA2") +"\", \"" + downURL +"\")'>";
                                 }
                         } else {
                             if (fileExt.indexOf("MANY") != -1 || (listShowType == "E" && fileExt.length > 1)) {
-                                titleImage = titleImage + "<img src='/images/disk.svg?v=1' style='width:20px; height:20px; vertical-align:middle;' onclick='selectToDownloadFiles(\"" + SelectSingleNodeValue(oCells[0], "DATA1") + "\", \"" + SelectSingleNodeValue(oCells[0], "DATA2") +"\", \"" + ITEMREAD_FG +"\")'>";
+                                titleImage = titleImage + "<img src='/images/disk.svg?v=1' style='width:20px; height:20px; vertical-align:middle;' onclick='selectToDownloadFiles(\"" + SelectSingleNodeValue(oCells[0], "DATA1") + "\", \"" + SelectSingleNodeValue(oCells[0], "DATA2") +"\")'>";
                             } else if (fileExt.indexOf(".jpg") != -1 || fileExt.indexOf(".jpeg") != -1 || fileExt.indexOf(".bmp") != -1 || fileExt.indexOf(".gif") != -1 || fileExt.indexOf(".png") != -1 || fileExt.indexOf(".tif") != -1 || fileExt.indexOf(".tiff") != -1) {
-                                titleImage = titleImage + "<img src='/images/image.svg?v=1' style='width:20px; height:20px; vertical-align:middle;' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG +"\")'>";
+                                titleImage = titleImage + "<img src='/images/image.svg?v=1' style='width:20px; height:20px; vertical-align:middle;' onclick='downloadBoardFile(\"" + SelectSingleNodeValue(oCells[0], "DATA1") + "\", \"" + SelectSingleNodeValue(oCells[0], "DATA2") +"\", \"" + downURL +"\")'>";
                             } else if (fileExt.indexOf(".doc") != -1 || fileExt.indexOf(".docx") != -1) {
-                                titleImage = titleImage + "<img src='/images/doc.svg?v=1' style='width:20px; height:20px; vertical-align:middle;' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG +"\")'>";
+                                titleImage = titleImage + "<img src='/images/doc.svg?v=1' style='width:20px; height:20px; vertical-align:middle;' onclick='downloadBoardFile(\"" + SelectSingleNodeValue(oCells[0], "DATA1") + "\", \"" + SelectSingleNodeValue(oCells[0], "DATA2") +"\", \"" + downURL +"\")'>";
                             } else if (fileExt.indexOf(".xls") != -1 || fileExt.indexOf(".xlsx") != -1) {
-                                titleImage = titleImage + "<img src='/images/xls.svg?v=1' style='width:20px; height:20px; vertical-align:middle;' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG +"\")'>";
+                                titleImage = titleImage + "<img src='/images/xls.svg?v=1' style='width:20px; height:20px; vertical-align:middle;' onclick='downloadBoardFile(\"" + SelectSingleNodeValue(oCells[0], "DATA1") + "\", \"" + SelectSingleNodeValue(oCells[0], "DATA2") +"\", \"" + downURL +"\")'>";
                             } else if (fileExt.indexOf(".ppt") != -1 || fileExt.indexOf(".pptx") != -1 || fileExt.indexOf(".pps") != -1 || fileExt.indexOf(".ppsx") != -1) {
-                                titleImage = titleImage + "<img src='/images/ppt.svg?v=1' style='width:20px; height:20px; vertical-align:middle;' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG +"\")'>";
+                                titleImage = titleImage + "<img src='/images/ppt.svg?v=1' style='width:20px; height:20px; vertical-align:middle;' onclick='downloadBoardFile(\"" + SelectSingleNodeValue(oCells[0], "DATA1") + "\", \"" + SelectSingleNodeValue(oCells[0], "DATA2") +"\", \"" + downURL +"\")'>";
                             } else if (fileExt.indexOf(".txt") != -1) {
-                                titleImage = titleImage + "<img src='/images/txt.svg?v=1' style='width:20px; height:20px; vertical-align:middle;' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG +"\")'>";
+                                titleImage = titleImage + "<img src='/images/txt.svg?v=1' style='width:20px; height:20px; vertical-align:middle;' onclick='downloadBoardFile(\"" + SelectSingleNodeValue(oCells[0], "DATA1") + "\", \"" + SelectSingleNodeValue(oCells[0], "DATA2") +"\", \"" + downURL +"\")'>";
                             } else if (fileExt.indexOf(".zip") != -1) {
-                                titleImage = titleImage + "<img src='/images/zip.svg?v=1' style='width:20px; height:20px; vertical-align:middle;' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG +"\")'>";
+                                titleImage = titleImage + "<img src='/images/zip.svg?v=1' style='width:20px; height:20px; vertical-align:middle;' onclick='downloadBoardFile(\"" + SelectSingleNodeValue(oCells[0], "DATA1") + "\", \"" + SelectSingleNodeValue(oCells[0], "DATA2") +"\", \"" + downURL +"\")'>";
                             } else if (fileExt.indexOf(".pdf") != -1) {
-                                titleImage = titleImage + "<img src='/images/pdf.svg?v=1' style='width:20px; height:20px; vertical-align:middle;' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG +"\")'>";
+                                titleImage = titleImage + "<img src='/images/pdf.svg?v=1' style='width:20px; height:20px; vertical-align:middle;' onclick='downloadBoardFile(\"" + SelectSingleNodeValue(oCells[0], "DATA1") + "\", \"" + SelectSingleNodeValue(oCells[0], "DATA2") +"\", \"" + downURL +"\")'>";
                             } else if (fileExt.indexOf(".hwp") != -1) {
-                                titleImage = titleImage + "<img src='/images/hwp.svg?v=1' style='width:20px; height:20px; vertical-align:middle;' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG +"\")'>";
+                                titleImage = titleImage + "<img src='/images/hwp.svg?v=1' style='width:20px; height:20px; vertical-align:middle;' onclick='downloadBoardFile(\"" + SelectSingleNodeValue(oCells[0], "DATA1") + "\", \"" + SelectSingleNodeValue(oCells[0], "DATA2") +"\", \"" + downURL +"\")'>";
                             } else if (fileExt.indexOf(".ecm") != -1) {
-                                titleImage = titleImage + "<img src='/images/ecm.svg?v=1' style='width:20px; height:20px; vertical-align:middle;' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG +"\")'>";
+                                titleImage = titleImage + "<img src='/images/ecm.svg?v=1' style='width:20px; height:20px; vertical-align:middle;' onclick='downloadBoardFile(\"" + SelectSingleNodeValue(oCells[0], "DATA1") + "\", \"" + SelectSingleNodeValue(oCells[0], "DATA2") +"\", \"" + downURL +"\")'>";
                             } else {
-                                titleImage = titleImage + "<img src='/images/etc.svg?v=1' style='width:20px; height:20px; vertical-align:middle;' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG +"\")'>";
+                                titleImage = titleImage + "<img src='/images/etc.svg?v=1' style='width:20px; height:20px; vertical-align:middle;' onclick='downloadBoardFile(\"" + SelectSingleNodeValue(oCells[0], "DATA1") + "\", \"" + SelectSingleNodeValue(oCells[0], "DATA2") +"\", \"" + downURL +"\")'>";
                             } 
                     	}
                         strValue = "";
@@ -1040,10 +1040,10 @@ function ListView() {
 //                                        strInnerHtml += "<span class='icon16 icon16_download' onclick='downloadBoardFile(\"" + downURL + "\", \"" + boardID + "\",\"" + itemID + "\", \"" + writerID + "\")'></span>";
 //                                        strInnerHtml += "<span class='icon16 icon16_magnifier' onclick='showBoardFile(\"" + javaURLEncode(filePath) + "\", \"" + javaURLEncode(fileExt) + "\", \"" + boardID + "\",\"" + itemID + "\", \"" + writerID + "\")'></span></div></li></ul>";
 //                                    } else {
-                                        strInnerHtml += "<ul class='list_attach_ul'><li><div>";
-                                        strInnerHtml += "<span class='file_name' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG + "\")'>" + fileExt + "</span>";
-                                        strInnerHtml += "<span class='file_capacity' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG + "\")'>(" + fileSize + ")</span>";
-                                        strInnerHtml += "<span class='icon16 icon16_download' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG + "\")'></span>";
+                                        strInnerHtml += "<ul class='list_attach_ul'><li><div onclick='downloadBoardFile(\"" + boardID + "\", \"" + itemID +"\", \"" + downURL +"\")'>";
+                                        strInnerHtml += "<span class='file_name'>" + fileExt + "</span>";
+                                        strInnerHtml += "<span class='file_capacity'>(" + fileSize + ")</span>";
+                                        strInnerHtml += "<span class='icon16 icon16_download'></span>";
                                         //strInnerHtml += "<span class='icon16 icon16_magnifier' onclick='showBoardFile(\"" + javaURLEncode(filePath) + "\", \"" + javaURLEncode(fileExt) + "\", \"" + boardID + "\",\"" + itemID + "\", \"" + writerID + "\")'></span></div></li></ul>";
                                         strInnerHtml += "</div></li></ul>";
 //                                    }
@@ -1064,10 +1064,10 @@ function ListView() {
 //                                            strInnerHtml += "<span class='icon16 icon16_download' onclick='downloadBoardFile(\"" + downURL + "\", \"" + boardID + "\",\"" + itemID + "\", \"" + writerID + "\")'></span>";
 //                                            strInnerHtml += "<span class='icon16 icon16_magnifier' onclick='showBoardFile(\"" + javaURLEncode(filePath[y]) + "\", \"" + javaURLEncode(fileExt[y]) + "\", \"" + boardID + "\",\"" + itemID + "\", \"" + writerID + "\")'></span></div></li>";
 //                                        } else {
-                                            strInnerHtml += "<li><div>";
-                                            strInnerHtml += "<span class='file_name' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG + "\")'>" + fileExt[y] + "</span>";
-                                            strInnerHtml += "<span class='file_capacity' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG + "\")'>(" + fileSize[y] + ")</span>";
-                                            strInnerHtml += "<span class='icon16 icon16_download' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG + "\")'></span>";
+                                            strInnerHtml += "<li><div onclick='downloadBoardFile(\"" + boardID + "\", \"" + itemID +"\", \"" + downURL +"\")'>";
+                                            strInnerHtml += "<span class='file_name'>" + fileExt[y] + "</span>";
+                                            strInnerHtml += "<span class='file_capacity'>(" + fileSize[y] + ")</span>";
+                                            strInnerHtml += "<span class='icon16 icon16_download'></span>";
                                             //strInnerHtml += "<span class='icon16 icon16_magnifier' onclick='showBoardFile(\"" + javaURLEncode(filePath[y]) + "\", \"" + javaURLEncode(fileExt[y]) + "\", \"" + boardID + "\",\"" + itemID + "\", \"" + writerID + "\")'></span></div></li>";
                                             strInnerHtml += "</div></li></ul>";
 //                                        }
@@ -1955,27 +1955,32 @@ function getOriginXML(pTagetID)
     //alert(xmlHeader + "\r\n" + xmlBody);
 }
 
-function downloadBoardFile(downURL, itemRead) {
+function downloadBoardFile(boardID, itemID, downURL) {
 	event.stopPropagation();
-    if (itemRead == "N") {
-    	alert(strLang175);
-        return;
-    }
-    
-	window.location = downURL;
+    attachAccessChk(boardID, itemID, function(){window.location = downURL})
 }
 
-function selectToDownloadFiles(boardID, itemID, itemRead) {
-    
-	if (itemRead == "N") {
-		alert(strLang175);
-		return;
-	}
-    
-    if (boardID == null || boardID == "") { // 나의 스크랩
+function selectToDownloadFiles(boardID, itemID) {
+    if (!boardID) { // 나의 스크랩
         boardID = event.target.parentElement.parentElement.getAttribute("data1");
     }
-    
-	var url = "/ezBoard/selectToDownloadFiles.do?boardID=" + javaURLEncode(boardID) + "&itemID=" + javaURLEncode(itemID);
-    window.open(url, "", "status=no,help=no,width=580px,height=480px" + GetOpenPosition(580, 480));
+    var url = "/ezBoard/selectToDownloadFiles.do?boardID=" + javaURLEncode(boardID) + "&itemID=" + javaURLEncode(itemID);
+    attachAccessChk(boardID, itemID, function(){GetOpenWindow(url, "", "580px", "480px")});
+}
+
+function attachAccessChk(boardID, itemID, rtnFunction) {
+    $.ajax({
+        url: "/ezBoard/attachAccessChk.do?boardId=" + encodeURIComponent(boardID) + "&itemId=" + encodeURIComponent(itemID),
+        method: "GET",
+        success: function(result) {
+            if (result) {
+                rtnFunction();
+            } else {
+                alert(strLang175);
+            }
+        },
+        error: function(xhr) {
+            console.log(xhr.status + ": " + xhr.statusText + "\n" + xhr.responseText);
+        }
+    });
 }

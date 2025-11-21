@@ -274,7 +274,7 @@
 		        return ReplaceText(ReplaceText(ReplaceText(pOrgString, "&amp;", "&"), "&lt;", "<"), "&gt;", ">");
 		    }
 		    
-		    function downloadBoardFile(downURL) {
+		    function downloadBoardFile(boardID, itemID, downURL) {
 		    	
 		        if (Read_FG != "true") {
 		        	alert(strLang175);

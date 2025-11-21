@@ -14233,4 +14233,29 @@ public class EzBoardController extends EzFileMngUtil{
 
 		return result;
 	}
+	
+	@RequestMapping(value = "/ezBoard/attachAccessChk.do", method = RequestMethod.GET)
+	@ResponseBody
+	public boolean attachAccessChk(@CookieValue(value="loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		logger.debug("attachAccessChk started");
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String boardId = request.getParameter("boardId");
+		String itemId = request.getParameter("itemId");
+		
+		boolean result = false;
+				
+		if (accessCheck(boardId, itemId, "", userInfo, "")) {
+			List<BoardAttachVO> attachList = ezBoardService.brdGetItemAttachmentInfo(itemId, userInfo.getTenantId());
+			if (attachList != null && attachList.size() > 0) {
+				result = true;
+			} else {
+            	logger.debug("ERROR: File Doesn't Exists.");
+			}
+		} else {
+			logger.debug("ERROR: Permission denied.");
+		}
+		logger.debug("attachAccessChk ended");
+		return result;
+	}
 }
