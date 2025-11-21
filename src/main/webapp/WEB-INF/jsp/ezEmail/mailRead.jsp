@@ -710,7 +710,7 @@
 				}
 
 
-				let usingMailPreview = document.getElementById("iFramePanel_mail_preview").className.includes('on');
+				let usingMailPreview = document.getElementById("iFramePanel_mail_preview")?.className.includes('on');
 				if (usingMailPreview) {
 					hiddenPreviewMail();
 				}
