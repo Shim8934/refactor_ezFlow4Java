@@ -263,8 +263,9 @@
 				#listSize#
 		</isEqual>
 		<isEqual property="type" compareValue="ING">
+		SELECT * FROM (
 			SELECT 
-				DISTINCT VAPRWILLDOCLIST.DOCID,
+				VAPRWILLDOCLIST.DOCID,
 				DOCTITLE,
 				DATE_ADD(DATE_FORMAT(STARTDATE,'%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) STARTDATE,
                 <isEqual property="lang" compareValue="2">
@@ -280,7 +281,8 @@
 				APRTYPE,
 				FUNCTIONTYPE,
 				URGENTAPPROVAL,
-				VAPRWILLDOCLIST.companyID
+				VAPRWILLDOCLIST.companyID,
+				ROW_NUMBER() OVER (PARTITION BY VAPRWILLDOCLIST.DOCID ORDER BY VAPRWILLDOCLIST.STARTDATE DESC) AS RN
 			FROM
 				VAPRWILLDOCLIST
 			LEFT OUTER JOIN
@@ -342,8 +344,10 @@
 		</isNotEmpty>
 			ORDER BY
 				STARTDATE DESC
-			LIMIT
-				#listSize#
+			LIMIT #listSize#
+		) A
+		WHERE
+		    A.RN = 1
 		</isEqual>
 		<isEqual property="type" compareValue="END">
 			SELECT
@@ -1248,8 +1252,12 @@
 		</isEqual>
 		<isEqual property="type" compareValue="ING">
 			<![CDATA[
-				SELECT 
-					COUNT(DISTINCT VAPRWILLDOCLIST.DOCID, APRTYPE)
+			SELECT 
+				COUNT(*) FROM (
+			    SELECT
+			        VAPRWILLDOCLIST.DOCID,
+			        APRTYPE,
+			        ROW_NUMBER() OVER (PARTITION BY VAPRWILLDOCLIST.DOCID ORDER BY VAPRWILLDOCLIST.STARTDATE DESC) AS RN
 				FROM 
 					VAPRWILLDOCLIST 
 				LEFT OUTER JOIN
@@ -1308,6 +1316,9 @@
 					OR 
 				WRITERNAME LIKE CONCAT('%', #searchText#, '%')) 
 			</isNotEmpty>
+			) A
+			WHERE
+			    A.RN = 1
 		</isEqual>
 		<isEqual property="type" compareValue="END">
 			SELECT
@@ -1960,8 +1971,14 @@
 		   			    FUNCTIONTYPE <> '004'
 					AND
 						IFNULL(GRP.TABSN, 1) = 1 ) as aprDraftCount,
-				(SELECT 
-						COUNT(DISTINCT VAPRWILLDOCLIST.DOCID, APRTYPE)
+				(
+				SELECT 
+				     COUNT(*)
+				FROM (
+					SELECT
+						VAPRWILLDOCLIST.DOCID,
+						APRTYPE,
+						ROW_NUMBER() OVER (PARTITION BY VAPRWILLDOCLIST.DOCID ORDER BY VAPRWILLDOCLIST.STARTDATE DESC) AS RN
 					FROM 
 						VAPRWILLDOCLIST 
 					LEFT OUTER JOIN
@@ -1991,7 +2008,10 @@
 						AND	    
 							AprState != '001'
 				    </isEqual>
-		   				) as aprIngCount,
+				) A
+				WHERE
+					A.RN = 1
+		   	) as aprIngCount,
 			(SELECT
 				COUNT(DISTINCT A.DOCID,
 					  		   B.APRTYPE)
