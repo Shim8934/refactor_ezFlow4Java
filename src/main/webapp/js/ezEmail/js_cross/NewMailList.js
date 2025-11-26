@@ -2032,7 +2032,8 @@ function event_listclick(obj, event) {
                         const cb = row.querySelector('input[type="checkbox"]');
                         if (cb) cb.checked = false;
                         row.style.backgroundColor = m_strColorDefault;
-
+                        _RowObject = row;
+                        
                         if (useReceivingChk) {
                             const receiveChilds = $("#MailList [id^=" + id + "_]");
                             for (let i = 0; i < receiveChilds.length; i++) {
@@ -2059,6 +2060,7 @@ function event_listclick(obj, event) {
                         if (cb) cb.checked = true;
                         row.style.backgroundColor = m_strColorSelect;
                         listContentArry.push(row.getAttribute("id"));
+                        _RowObject = row;
                     }
                 }
             } else {
@@ -2075,6 +2077,7 @@ function event_listclick(obj, event) {
                             receiveChilds[i].style.backgroundColor = m_strColorSelect;
                         }
                     }
+                    _RowObject = obj;
 
                     prevShow();
                 } else {
