@@ -16378,6 +16378,11 @@ CREATE TABLE ezboard.TBL_BOARD_MODIFYHISTORY (
     PRIMARY KEY (ITEMID,TENANT_ID)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+CREATE TABLE ezportal.TBL_SAML_REQUEST_ID (
+     REQUEST_ID VARCHAR(40) NOT NULL,
+     CREATE_DT DATETIME
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 -- 공통테이블 권한 부여
 -- ezapprovalg
 grant select, insert, update, delete on ezportal.tbl_deptmaster to 'ezapprovalg'@'%';
