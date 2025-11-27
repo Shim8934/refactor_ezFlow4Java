@@ -63,7 +63,6 @@
 		var pcheckForm;
 		var pUseBackGround;
 		var strNow = "${ strNow }";
-		var autoFlag = "N";
 		var NewGuid = "${ newGuid }";
 		var orgMode = "${ mode }";
 		<%--var autoSaveTime = "${ boardConfig.autoSaveTime }";--%>

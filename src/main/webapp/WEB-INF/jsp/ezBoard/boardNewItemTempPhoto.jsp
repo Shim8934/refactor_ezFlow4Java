@@ -632,12 +632,7 @@
 	                    window.opener.location.reload(false);
 	                }
 	                catch (e) { }
-	                
-	                if(autoFlag != "Y")
-						window.close();
-	                else
-	                	autoFlag = "N";
-	                
+					window.close();
 	            } else if (getNodeText(GetChildNodes(loadXMLString(xmlhttp.responseText))[0]) == "GUBUNCHANGED") {
                     alert(strLangJIHgubunChange02);
 	            } else {
