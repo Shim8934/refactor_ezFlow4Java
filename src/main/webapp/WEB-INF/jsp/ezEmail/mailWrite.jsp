@@ -564,11 +564,13 @@
 			Sortable.create(MsgCCGot, sortableOptions);
 			Sortable.create(MsgBCCGot, sortableOptions);
 
+			<c:if test="${options.useOnlyInnerMail != 'YES' && shareId == null}">
             var selectName = document.getElementById("mailSenderName");
             var selectedOption = selectName.options[selectName.selectedIndex];
             if (selectedOption.value != 'NONE') {
                 g_showdisplay = selectedOption.text;
             }
+			</c:if>
 
 		}
 	    
