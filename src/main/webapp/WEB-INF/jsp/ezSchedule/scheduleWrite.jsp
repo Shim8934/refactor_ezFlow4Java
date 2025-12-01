@@ -511,8 +511,11 @@
 		        	if (document.getElementById("LabelOwner")) {
 		            	printOwner = document.getElementById("LabelOwner").textContent;
 		        	}
-		        	if (document.querySelector("#LabelAttendant span")) {
-		            	printAttendant = document.querySelector("#LabelAttendant span").textContent;
+					var attendantList = document.querySelectorAll("#LabelAttendant span")
+		        	if (!!attendantList) {
+						for (let i=0; i<attendantList.length; i++) {
+							printAttendant += attendantList[i].textContent;
+						}
 		        	}
 		        }
 
