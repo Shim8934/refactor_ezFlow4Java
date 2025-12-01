@@ -109,7 +109,10 @@
                 var bSel = false;
                 var count = document.getElementById("msg").childNodes.length;
                 if (typeof (count) == "undefined") count = 0;
-                if (document.getElementById("msg").childNodes.item(0).childNodes.item(0).childNodes.item(0).getAttribute("Email") != null) {
+                var emailValue = document.querySelector("#msg input[name='addr']").getAttribute("email");
+
+                //if (document.getElementById("msg").childNodes.item(0).childNodes.item(0).childNodes.item(0).getAttribute("Email") != null) {
+                if (emailValue != null) {
                     {
                         for (var i = 0 ; i < count ; i++) {
                             if (arrAddr.item(i).checked) {
