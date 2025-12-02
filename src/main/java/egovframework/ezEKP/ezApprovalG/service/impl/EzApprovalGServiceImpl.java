@@ -38643,14 +38643,20 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 			// 접수자 정보 (userID)
 			String results = ezOrganService.getPropertyList(userID, propList, strLang, userInfo.getTenantId());;
 			Document xmlDoc = commonUtil.convertStringToDocument(results);
-			pTitle = xmlDoc.getElementsByTagName("TITLE").item(0).getTextContent();
-			pTitle2 = xmlDoc.getElementsByTagName("TITLE2").item(0).getTextContent();
-			displayName = xmlDoc.getElementsByTagName("DISPLAYNAME1").item(0).getTextContent();
-			displayName2 = xmlDoc.getElementsByTagName("DISPLAYNAME2").item(0).getTextContent();
-			department = xmlDoc.getElementsByTagName("DEPARTMENT").item(0).getTextContent();
-			description = xmlDoc.getElementsByTagName("DESCRIPTION1").item(0).getTextContent();
-			description2 = xmlDoc.getElementsByTagName("DESCRIPTION2").item(0).getTextContent();
+            pTitle = userInfo.getTitle();
+            pTitle2 = userInfo.getTitle2();
+            displayName = userInfo.getDisplayName();
+            displayName2 = userInfo.getDeptName2();
+            department = userInfo.getDeptID();
+            description = userInfo.getDeptName();
+            description2 = userInfo.getDeptName2();
 
+            Map<String, Object> writerMap = new HashMap<String, Object> ();
+            writerMap.put("orgDocId", orgDocID);
+            writerMap.put("tenantId", userInfo.getTenantId());
+            writerMap.put("companyId", userInfo.getCompanyID());
+            ApprGAprDocInfoVO orgWriterInfo = ezApprovalGDAO.getOrgDocWriterInfo(writerMap);
+            
 			// 기안자 정보 (orgUID)
 			results = ezOrganService.getPropertyList(orgUID, propList, strLang, userInfo.getTenantId());
 			xmlDoc = commonUtil.convertStringToDocument(results);
@@ -38661,7 +38667,17 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 			orgName2 = xmlDoc.getElementsByTagName("DISPLAYNAME2").item(0).getTextContent();
 			orgJobTitle2 = xmlDoc.getElementsByTagName("TITLE2").item(0).getTextContent();
 			orgDeptName2 = xmlDoc.getElementsByTagName("DESCRIPTION2").item(0).getTextContent();
-			
+
+            if (orgWriterInfo != null) {
+                orgName = orgWriterInfo.getWriterName();
+                orgJobTitle = orgWriterInfo.getWriterJobTitle();
+                orgDeptID = orgWriterInfo.getWriterDeptID();
+                orgDeptName = orgWriterInfo.getWriterDeptName();
+                orgName2 = orgWriterInfo.getWriterName2();
+                orgJobTitle2 = orgWriterInfo.getWriterJobTitle2();
+                orgDeptName2 = orgWriterInfo.getWriterDeptName2();
+            }
+            
 			strXML.getElementsByTagName("WRITERNAME").item(0).setTextContent(orgName);
 			strXML.getElementsByTagName("WRITERJOBTITLE").item(0).setTextContent(orgJobTitle);
 			strXML.getElementsByTagName("WRITERDEPTID").item(0).setTextContent(orgDeptID);

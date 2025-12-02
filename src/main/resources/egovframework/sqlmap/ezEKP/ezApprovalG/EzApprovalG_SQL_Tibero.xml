@@ -39640,4 +39640,21 @@
                     WHERE ROWNUM = 1
 		        ]]>
 	</select>
+
+    <select id="EzApprovalG.getOrgDocLineInfo" parameterClass="Map" resultClass="ApprGLineTempletVO">
+        <![CDATA[
+			SELECT
+				aprmemberdeptid,
+				aprmemberdeptname,
+				aprmemberdeptname2
+			FROM
+				TBL_ENDAPRLINEINFO
+			WHERE
+				docid = #v_DOCID#
+			AND
+				companyID = #companyID#
+			AND
+				tenant_id = #v_TENANTID#
+		]]>
+    </select>
 </sqlMap>

@@ -39641,5 +39641,25 @@
                     WHERE ROWNUM = 1
 		        ]]>
 	</select>
+
+    <select id="EzApprovalG.getOrgDocWriterInfo" parameterClass="Map" resultClass="ApprGAprDocInfoVO">
+        SELECT
+            WRITERID writerID,
+            WRITERDEPTID writerDeptID,
+            WRITERNAME writerName,
+            WRITERJOBTITLE writerJobTitle,
+            WRITERDEPTNAME writerDeptName,
+            WRITERNAME2 writerName2,
+            WRITERJOBTITLE2 writerJobTitle2,
+            WRITERDEPTNAME2 writerDeptName2
+        FROM
+            TBL_ENDAPRDOCINFO
+        WHERE
+            DocID = #orgDocId#
+        AND
+            TENANT_ID = #tenantId#
+        AND
+            COMPANYID = #companyId#
+    </select>
     
 </sqlMap>

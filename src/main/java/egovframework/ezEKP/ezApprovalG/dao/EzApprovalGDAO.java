@@ -4131,4 +4131,8 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	public List<ApprGDocListVO> getDashBoardDoingLines2(Map<String, Object> map) throws Exception {
 		return (List<ApprGDocListVO>) list("EzApprovalG.getDashBoardDoingLines2", map);
 	}
+
+    public ApprGAprDocInfoVO getOrgDocWriterInfo(Map<String, Object> map) throws Exception {
+        return (ApprGAprDocInfoVO) select("EzApprovalG.getOrgDocWriterInfo", map);
+    }
 }
