@@ -10,7 +10,8 @@
 	<typeAlias  alias="CompanyInfoVO" 				type="egovframework.ezEKP.ezCommon.vo.CompanyInfoVO"/>
 	<typeAlias  alias="CountryVO" 					type="egovframework.ezEKP.ezSystem.vo.CountryVO"/>
 	<typeAlias  alias="BoardListHeaderVO"                   type="egovframework.ezEKP.ezBoard.vo.BoardListHeaderVO"/>
-	
+    <typeAlias alias="TblColumnsInfoVO"             type="egovframework.ezEKP.ezCommon.vo.TblColumnsInfoVO"/>
+    
 	<select id="EzCommonDAO.getApprovPWD" parameterClass="userInfo" resultClass="ApprovPWDVO">
 		<![CDATA[
 			SELECT 
@@ -3932,32 +3933,16 @@
 	<!-- 2023-11-22 조소정 - 포탈 > 기본 탑메뉴 중국어 버전 추가 -->
     <select id="EzCommonDAO.getPortalMenuTenantList" resultClass="String">
 		<![CDATA[
-			SELECT
-				LISTAGG(TENANT_ID, ',') AS TENANT_IDS 
-			FROM (
-			    SELECT
-			        TENANT_ID
-			    FROM
-			        TBL_PORTAL_MENU_NAME
-			    GROUP BY
-			        TENANT_ID)
+			SELECT LISTAGG(TENANT_ID, ',') WITHIN GROUP (ORDER BY TENANT_ID) AS TENANT_IDS
+            FROM (SELECT DISTINCT TENANT_ID FROM TBL_PORTAL_MENU_NAME)
 		]]>
 	</select>
 	
 	<!-- 2024-01-25 홍승비 - 회사ID 중복제거를 먼저 진행하도록 쿼리 수정 -->
 	<select id="EzCommonDAO.getPortalMenuCompanyList" resultClass="String">
 		<![CDATA[
-			SELECT
-				 LISTAGG(COMPANY_ID, ',') AS COMPANY_IDS
-			FROM (
-			    SELECT
-			        COMPANY_ID
-			    FROM
-			        TBL_PORTAL_MENU_NAME
-			    WHERE
-			        TENANT_ID = #v_TENANTID#
-			    GROUP BY
-			        COMPANY_ID)
+			SELECT LISTAGG(COMPANY_ID, ',') WITHIN GROUP (ORDER BYCOMPANY_ID) ASCOMPANY_IDS
+            FROM (SELECT DISTINCT COMPANY_ID FROM TBL_PORTAL_MENU_NAME WHERE TENANT_ID=#v_TENANTID#)
 		]]>
 	</select>
 	
@@ -4030,32 +4015,16 @@
 	<!-- 2023-11-22 조소정 - 포탈 > 기본 포틀릿명 중국어 버전 추가 -->
 	<select id="EzCommonDAO.getPortletNameTenantList" resultClass="String">
 		<![CDATA[
-			SELECT
-				LISTAGG(TENANT_ID, ',') AS TENANT_IDS
-			FROM (
-			    SELECT
-			        TENANT_ID
-			    FROM
-			        TBL_PORTAL_PORTLET_NAME
-			    GROUP BY
-			        TENANT_ID)
+			SELECT LISTAGG(TENANT_ID, ',') WITHIN GROUP (ORDER BY TENANT_ID) AS TENANT_IDS
+            FROM (SELECT DISTINCT TENANT_ID FROM TBL_PORTAL_PORTLET_NAME)
 		]]>
 	</select>
 
 	<!-- 2024-01-25 홍승비 - 회사ID 중복제거를 먼저 진행하도록 쿼리 수정 -->
 	<select id="EzCommonDAO.getPortletNameCompanyList" resultClass="String">
 		<![CDATA[
-			SELECT
-				LISTAGG(COMPANY_ID, ',') AS COMPANY_IDS
-			FROM (
-			    SELECT
-			        COMPANY_ID
-			    FROM
-			        TBL_PORTAL_PORTLET_NAME
-			    WHERE
-			        TENANT_ID = #v_TENANTID#
-			    GROUP BY
-			        COMPANY_ID)
+			SELECT LISTAGG(COMPANY_ID, ',') WITHIN GROUP (ORDER BYCOMPANY_ID) ASCOMPANY_IDS
+            FROM (SELECT DISTINCT COMPANY_ID FROM TBL_PORTAL_PORTLET_NAME WHERE TENANT_ID=#v_TENANTID#)
 		]]>
 	</select>
 

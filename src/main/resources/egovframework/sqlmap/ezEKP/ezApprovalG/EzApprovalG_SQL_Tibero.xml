@@ -6417,14 +6417,6 @@
                         TBL_RECORD.COMPANYID = TBL_ENDRECEIPTPOINTINFO.COMPANYID
               </isEqual>
                     LEFT JOIN
-				   		TBL_ENDAPRDOCINFO
-                    ON
-                        TBL_RECORD.DOCID = TBL_ENDAPRDOCINFO.DOCID
-                    AND
-			        	TBL_RECORD.TENANT_ID = TBL_ENDAPRDOCINFO.TENANT_ID
-					AND
-			        	TBL_RECORD.COMPANYID = TBL_ENDAPRDOCINFO.COMPANYID
-                    LEFT JOIN
 				   		TBL_ENDAPRDOCINFO ENDDOCNO
                     ON
                         TBL_ENDAPRDOCINFO.ORGDOCID = ENDDOCNO.DOCID
@@ -9119,6 +9111,7 @@
 	      			TBL_APRDOCINFO.WRITERNAME,
 	      			TBL_APRDOCINFO.WRITERNAME2,
 	      			TBL_APRDOCINFO.FORMID
+	      		]]>
                 <isEqual property="assignChk" compareValue="Y">
                     , TBL_APRRECEIPTPROCESSINFO.PROCESSORNAME as PROCESSORNAME
                     , TBL_APRRECEIPTPROCESSINFO.PROCESSORNAME2 as PROCESSORNAME2
@@ -33798,10 +33791,6 @@
                 AND
                     TBL_RECORD.COMPANYID = TBL_ENDAPRDOCINFO.COMPANYID
                 LEFT JOIN
-                    TBL_ENDAPRDOCINFO
-                ON
-                    TBL_RECORD.DOCID = TBL_ENDAPRDOCINFO.DOCID
-                LEFT JOIN
                     TBL_ENDAPRDOCINFO ENDDOCNO
                 ON
                     TBL_ENDAPRDOCINFO.ORGDOCID = ENDDOCNO.DOCID
@@ -37357,7 +37346,7 @@
                     AND
                         TBL_FORMINFO.COMPANYID = #companyID#
                     ORDER BY
-                        RESENDSTARTDATE DESC DESC NULLS LAST
+                        RESENDSTARTDATE DESC NULLS LAST
                 )
             WHERE ROWNUM <= 5
         ]]>

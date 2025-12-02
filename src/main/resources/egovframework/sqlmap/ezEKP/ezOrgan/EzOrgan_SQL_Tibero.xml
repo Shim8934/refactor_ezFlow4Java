@@ -612,6 +612,9 @@
 				<isEqual property="v_FIELD"  compareValue="PHOTO_UPDATEDT">
 					PHOTO_UPDATEDT
 				</isEqual>
+                <isEqual property="v_FIELD" compareValue="USERTREEFLAG">
+                    USERTREEFLAG
+                </isEqual>
 		<![CDATA[
 			FROM
 				TBL_USERMASTER
