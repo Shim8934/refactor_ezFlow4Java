@@ -174,11 +174,15 @@
 				    if (pDocState === "015" && pOrgDocID.length >= 20) {
 				    	if (ListTypeValue === "99") {	// 공람할문서
 				    		btnGongRam.style.display = "";
-					        btnBoard.style.display = "";
+					        if (typeof btnBoard !== "undefined") {
+					            btnBoard.style.display = ""; 
+					        }
 					        btnReuse.style.display = "";
 					        pOpinionType = "";
 				    	} else if (ListTypeValue === "10") {	// 공람완료문서
-				    		btnBoard.style.display = "";
+				    		if (typeof btnBoard !== "undefined") {
+				    		    btnBoard.style.display = ""; 
+				    		}
 					        btnReuse.style.display = "";
 				    	}
 				    }
