@@ -4080,8 +4080,9 @@ public class EzNewPortalServiceImpl extends EgovAbstractServiceImpl implements E
 			//url = "jdbc:sqlserver://" + ip + ":" + port + ";DatabaseName=" + database + ";trustServerCertificate=true;encrypt=true";
 			url = String.format("jdbc:sqlserver://%s:%s;DatabaseName=%s;trustServerCertificate=true;encrypt=true", ip, port, dataBase);
 		} else if ( type.equalsIgnoreCase("oracle") ) {
-			//url = "jdbc:oracle:thin:@" + ip + ":" + port + "/" + database;
-			url = String.format("jdbc:oracle:thin:@%s:%s/%s", ip, port, dataBase);
+			//url = "jdbc:oracle:thin:@//" + ip + ":" + port + "/" + database;
+            //url = "jdbc:oracle:thin:@" + ip + ":" + port + ":" + database;
+			url = String.format("jdbc:oracle:thin:@//%s:%s/%s", ip, port, dataBase);
 		} else {
 			//url = "jdbc:mariadb://" + ip + ":" + port + "/" + database;
 			url = String.format("jdbc:mariadb://%s:%s/%s", ip, port, dataBase);
@@ -4090,7 +4091,9 @@ public class EzNewPortalServiceImpl extends EgovAbstractServiceImpl implements E
 		String pwd = userPw;
 		
 		Connection conn = null;
-		
+
+        DriverManager.setLoginTimeout(5);
+        
 		Class.forName(driverClassName);
 		
 		conn = DriverManager.getConnection(url, schema, pwd);		
