@@ -132,7 +132,10 @@
 					console.log(error);
 				}
 			});
-			
+			if (typeof(mealDataList) == 'undefined') {
+				alert("<spring:message code='ezMealPlan.nbh001' />");
+				return;
+			}
 			var mealTable = document.getElementById("mealCal");
 			
 			// 월요일부터 하루씩 해당하는 일자가 있는지 비교하고, 해당 일자가 없으면 반복문을 빠져나가고 데이터가 있으면 테이블을 채우는 반복문 실행
@@ -145,14 +148,14 @@
 					mealTable.getElementsByTagName('tr')[2].getElementsByTagName('td')[a].innerHTML = "<textarea maxlength='100'>" + (mealDataList[a].bCourse != null ?  mealDataList[a].bCourse : '') + "</textarea>";
 					mealTable.getElementsByTagName('tr')[3].getElementsByTagName('td')[a].innerHTML = "<textarea maxlength='100'>" + (mealDataList[a].saladBar != null ? mealDataList[a].saladBar : '') + "</textarea>";
 					mealTable.getElementsByTagName('tr')[4].getElementsByTagName('td')[a].innerHTML = "<textarea maxlength='100'>" + (mealDataList[a].dessert != null ? mealDataList[a].dessert : '') + "</textarea>";
-					mealTable.getElementsByTagName('tr')[5].getElementsByTagName('td')[a].innerHTML = "<textarea class='number-only' maxlength='10'>" + (mealDataList[a].totalCal == 0 ? "" : mealDataList[a].totalCal) + "</textarea>";
+					mealTable.getElementsByTagName('tr')[5].getElementsByTagName('td')[a].innerHTML = "<textarea class='number-only' maxlength='6'>" + (mealDataList[a].totalCal == 0 ? "" : mealDataList[a].totalCal) + "</textarea>";
 				} else {
 					mealTable.getElementsByTagName('tr')[0].getElementsByTagName('th')[a + 1].innerText = formatDate(startDate);
 					mealTable.getElementsByTagName('tr')[1].getElementsByTagName('td')[a].innerHTML = "<textarea maxlength='100'></textarea>";
 					mealTable.getElementsByTagName('tr')[2].getElementsByTagName('td')[a].innerHTML = "<textarea maxlength='100'></textarea>";
 					mealTable.getElementsByTagName('tr')[3].getElementsByTagName('td')[a].innerHTML = "<textarea maxlength='100'></textarea>";
 					mealTable.getElementsByTagName('tr')[4].getElementsByTagName('td')[a].innerHTML = "<textarea maxlength='100'></textarea>";
-					mealTable.getElementsByTagName('tr')[5].getElementsByTagName('td')[a].innerHTML = "<textarea class='number-only' maxlength='10'></textarea>";
+					mealTable.getElementsByTagName('tr')[5].getElementsByTagName('td')[a].innerHTML = "<textarea class='number-only' maxlength='6'></textarea>";
 				}
 				
 				startDate.setDate(startDate.getDate() + 1);
@@ -219,6 +222,24 @@
 		function saveMealPlan() {
 			var mealInputList = [];
 			var mealTable = document.getElementById("mealCal");
+			
+			//2025.12.03 노병훈 칼로리 최대 설정 서버단에서 int로 되어있어 2147483647초과시 에러 발생
+			const cals = document.querySelectorAll("#mealCal .number-only");
+			let overFlag = false;
+			
+			cals.forEach(function(v,i) {
+				const numVal = isNaN(parseInt(v.value)) ? 0 : parseInt(v.value);
+				
+				if (numVal > 999999) {
+					v.focus();
+					overFlag = true;
+				}
+			});
+			
+			if (overFlag) {
+                alert("<spring:message code='ezMealPlan.nbh002' />");
+				return;
+			}
 			
 			for (var a = 0; a < 5; a++) {
 				var mealPlan = {

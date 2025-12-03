@@ -145,7 +145,10 @@
 					console.log(error);
 				}
 			});
-			
+			if (typeof(mealDataList) == 'undefined') {
+				alert("<spring:message code='ezMealPlan.nbh001' />");
+				return;
+			}
 			var mealTable = document.getElementById("mealCal");
 			
 			// 월요일부터 하루씩 해당하는 일자가 있는지 비교하고, 해당 일자가 없으면 반복문을 빠져나가고 데이터가 있으면 테이블을 채우는 반복문 실행
