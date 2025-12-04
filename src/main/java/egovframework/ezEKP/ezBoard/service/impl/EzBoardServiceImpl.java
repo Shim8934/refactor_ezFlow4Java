@@ -4502,7 +4502,10 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			boardListVO.setVersion(version.isEmpty() ? "0.0" : version);
 		}
 
-		boolean historyModify = doc.getElementsByTagName("historyModify").item(0).getTextContent().equals("true");
+        boolean historyModify = false;
+        if (doc.getElementsByTagName("historyModify").item(0) != null && doc.getElementsByTagName("historyModify").item(0).getTextContent().equals("true")) {
+            historyModify = true;
+        }
 
 		if (pMode.equals("modify") && (!useVersion.isEmpty() && !useVersion.equals("Y"))) {
 			brdUpdateItem(boardListVO, "BOARD");
