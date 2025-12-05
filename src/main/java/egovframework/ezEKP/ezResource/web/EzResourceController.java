@@ -1402,7 +1402,7 @@ public class EzResourceController extends EzFileMngUtil {
 	/**
 	 * 자원관리 자원 일정 상세정보 화면 호출 함수
 	 */
-	@RequestMapping(value = {"/ezResource/scheduleRead.do", "/ezResource/persPortletRead.do"}, method = RequestMethod.GET)
+	@RequestMapping(value = "/ezResource/scheduleRead.do", method = RequestMethod.GET)
 	public String scheduleRead(@CookieValue("loginCookie") String loginCookie, HttpServletRequest req, Model model, Locale locale) throws Exception {
 		logger.debug("scheduleRead Start");
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -1636,18 +1636,13 @@ public class EzResourceController extends EzFileMngUtil {
 		model.addAttribute("useCabinet", use_cabinet); // 캐비넷 추가 baonk 2018-08-08
 		model.addAttribute("deptID", deptID);
 		
-		String requestURL = (String) req.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE);
-		//뷰만 다르고 cs가 같은 경우여서 requestURL 사용해서 다이나믹뷰
-		requestURL = requestURL.substring(1, requestURL.length() - 3);
-		
-		if(requestURL.contains("persPortletRead"))	return "/ezResource/resPortletRead";
 		return "/ezResource/resScheduleRead";
 	}
 	
 	/**
 	 * 자원관리 자원 예약 화면 호출 함수
 	 */
-	@RequestMapping(value = {"/ezResource/scheduleAdd.do", "/ezResource/persPortletAdd.do" }, method = RequestMethod.GET)
+	@RequestMapping(value = "/ezResource/scheduleAdd.do", method = RequestMethod.GET)
 	public String scheduleAdd(@CookieValue("loginCookie") String loginCookie, HttpServletRequest req, Model model, Locale locale) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String editor = config.getProperty("EDITOR");
@@ -1927,11 +1922,6 @@ public class EzResourceController extends EzFileMngUtil {
 			model.addAttribute("repeatCount", repeatCount);
 		}
 		
-		String requestURL = (String) req.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE);
-		//뷰만 다르고 cs가 같은 경우여서 requestURL 사용해서 다이나믹뷰
-		requestURL = requestURL.substring(1, requestURL.length() - 3);
-		
-		if(requestURL.contains("persPortletAdd"))	return "/ezResource/resPortletAdd";
 		return "/ezResource/resScheduleAdd";
 	}
 	
