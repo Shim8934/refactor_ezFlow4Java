@@ -876,202 +876,217 @@
 	                    SelectDeptNM.setAttribute("countinfo", "1")
 	                }
 	            }
+				
+				if (SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length > 0) {
+					for (var i = 0; i < SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length; i++) {
+						if (pListType == "IMG") {
+							var MainTable = document.createElement("TABLE");
+							MainTable.setAttribute("class", pListType == "IMG" ? "organwrap" : "organwrap_list");
+							MainTable.setAttribute("cellspacing", "0");
+							MainTable.setAttribute("cellpadding", "0");
 
-	            for (var i = 0; i < SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").length; i++) {
-	                if (pListType == "IMG") {
-	                    var MainTable = document.createElement("TABLE");
-	                    MainTable.setAttribute("class", pListType == "IMG" ? "organwrap" : "organwrap_list");
-	                    MainTable.setAttribute("cellspacing", "0");
-	                    MainTable.setAttribute("cellpadding", "0");
-	                    
-	                    if (pListType == "IMG") {
-	                        MainTable.style.marginTop = "5px";
-	                    }
-	                    MainTable.style.marginLeft = "auto";
-	                    MainTable.style.marginRight = "auto";
-	                    var M_TR = document.createElement("TR");
-	                    M_TR.setAttribute("id", "MailUserlist_" + i);
-	                    M_TR.style.cursor = "pointer";
-	                    M_TR.onmouseover = function () { event_listMover(this); };
-	                    M_TR.onmouseout = function () { event_listMout(this); };
-	                    M_TR.onmousedown = function () { event_listclick(this); };
-	                    M_TR.ondblclick = function () { event_listDBclick(this); };
-	                    M_TR.setAttribute("draggable", true);
-	                    M_TR.onselectstart = function () { return false; };
-	                    
-	                    if (CrossYN()) {
-	                        for (var NodeCount = 0; NodeCount < SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i).childNodes.item(0).childNodes.length; NodeCount++) {
-	                            if (SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i).childNodes.item(0).childNodes.item(NodeCount).nodeName != "#text") {
-	                                M_TR.setAttribute("_" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i).childNodes.item(0).childNodes.item(NodeCount).nodeName,
-	                                                  trim_Cross(SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i).childNodes.item(0).childNodes.item(NodeCount).textContent));
-	                            }
-	                        }
-	                    } else {
-	                        for (var NodeCount = 0; NodeCount < SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i).childNodes.item(0).childNodes.length; NodeCount++) {
-	                            M_TR.setAttribute("_" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i).childNodes.item(0).childNodes.item(NodeCount).nodeName,
-	                                              SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i).childNodes.item(0).childNodes.item(NodeCount).text);
-	                        }
-	                    }
+							if (pListType == "IMG") {
+								MainTable.style.marginTop = "5px";
+							}
+							MainTable.style.marginLeft = "auto";
+							MainTable.style.marginRight = "auto";
+							var M_TR = document.createElement("TR");
+							M_TR.setAttribute("id", "MailUserlist_" + i);
+							M_TR.style.cursor = "pointer";
+							M_TR.onmouseover = function () { event_listMover(this); };
+							M_TR.onmouseout = function () { event_listMout(this); };
+							M_TR.onmousedown = function () { event_listclick(this); };
+							M_TR.ondblclick = function () { event_listDBclick(this); };
+							M_TR.setAttribute("draggable", true);
+							M_TR.onselectstart = function () { return false; };
 
-	                    var M_TR_TD = document.createElement("TD");
-	                    M_TR_TD.setAttribute("class", "pictd");
-	                    var M_TR_DIV = document.createElement("DIV");
-	                    M_TR_DIV.setAttribute("class", "pic");
-	                    
-	                    if (M_TR.getAttribute("_DATA9") != "") {	                    	
-	                        var M_TR_IMG = document.createElement("IMG");
-	                        M_TR_IMG.setAttribute("SRC", "/admin/ezOrgan/getPersonalInfo.do?fileName=" + M_TR.getAttribute("_DATA9"));
-	                        M_TR_IMG.setAttribute('onerror', "this.style.display='none'");
-	                        M_TR_IMG.setAttribute("width", "90px");
-	                        M_TR_IMG.setAttribute("height", "90px");
-	                        M_TR_DIV.appendChild(M_TR_IMG);
-	                    }
-	                    M_TR_TD.appendChild(M_TR_DIV);
-	                    M_TR.appendChild(M_TR_TD);
+							if (CrossYN()) {
+								for (var NodeCount = 0; NodeCount < SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i).childNodes.item(0).childNodes.length; NodeCount++) {
+									if (SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i).childNodes.item(0).childNodes.item(NodeCount).nodeName != "#text") {
+										M_TR.setAttribute("_" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i).childNodes.item(0).childNodes.item(NodeCount).nodeName,
+												trim_Cross(SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i).childNodes.item(0).childNodes.item(NodeCount).textContent));
+									}
+								}
+							} else {
+								for (var NodeCount = 0; NodeCount < SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i).childNodes.item(0).childNodes.length; NodeCount++) {
+									M_TR.setAttribute("_" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i).childNodes.item(0).childNodes.item(NodeCount).nodeName,
+											SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i).childNodes.item(0).childNodes.item(NodeCount).text);
+								}
+							}
 
-	                    var M_TR_TD2 = document.createElement("TD");
-	                    M_TR_TD2.style.width = "300px";
+							var M_TR_TD = document.createElement("TD");
+							M_TR_TD.setAttribute("class", "pictd");
+							var M_TR_DIV = document.createElement("DIV");
+							M_TR_DIV.setAttribute("class", "pic");
 
-	                    var M_TR_TDS_Table = document.createElement("TABLE");
-	                    M_TR_TDS_Table.setAttribute("class", "organinfo");
-	                    M_TR_TD2.appendChild(M_TR_TDS_Table);
+							if (M_TR.getAttribute("_DATA9") != "") {
+								var M_TR_IMG = document.createElement("IMG");
+								M_TR_IMG.setAttribute("SRC", "/admin/ezOrgan/getPersonalInfo.do?fileName=" + M_TR.getAttribute("_DATA9"));
+								M_TR_IMG.setAttribute('onerror', "this.style.display='none'");
+								M_TR_IMG.setAttribute("width", "90px");
+								M_TR_IMG.setAttribute("height", "90px");
+								M_TR_DIV.appendChild(M_TR_IMG);
+							}
+							M_TR_TD.appendChild(M_TR_DIV);
+							M_TR.appendChild(M_TR_TD);
 
-	                    var Sub_TR1 = document.createElement("TR");
-	                    var Sub_TD1 = document.createElement("TD");
-	                    Sub_TD1.style.textAlign = "left";
-	                    Sub_TD1.setAttribute("class", "name");
-	                    var pDisplayName = "";
-	                    if ("<c:out value='${use_ocs}'/>" == "YES") {
-	                        pDisplayName += "<span><img src='/images/Presence/unknown.gif' id= '" + GetGUID() + ",type=smtp' style='vertical-align:middle;margin-right:3px;'  onload='PresenceControl(\"" + M_TR.getAttribute("_DATA3") + "\",this);'/></span>";
-	                    }
-	                    pDisplayName += M_TR.getAttribute("_DATA4") == "" ? "" : M_TR.getAttribute("_DATA4");
-	                    pDisplayName += M_TR.getAttribute("_DATA6") == "" ? "" : "[" + M_TR.getAttribute("_DATA6") + "]";
-	                    Sub_TD1.innerHTML = pDisplayName;
-	                    Sub_TR1.appendChild(Sub_TD1);
+							var M_TR_TD2 = document.createElement("TD");
+							M_TR_TD2.style.width = "300px";
 
-	                    var Sub_TR2 = document.createElement("TR");
-	                    var Sub_TD2 = document.createElement("TD");
-	                    Sub_TD2.style.textAlign = "left";
-	                    Sub_TD2.innerHTML = M_TR.getAttribute("_DATA5");
-	                    Sub_TR2.appendChild(Sub_TD2);
+							var M_TR_TDS_Table = document.createElement("TABLE");
+							M_TR_TDS_Table.setAttribute("class", "organinfo");
+							M_TR_TD2.appendChild(M_TR_TDS_Table);
 
-	                    var Sub_TR3 = document.createElement("TR");
-	                    var Sub_TD3 = document.createElement("TD");
-	                    Sub_TD3.style.textAlign = "left";
-	                    var Sub_TD3_Img = document.createElement("IMG");
-	                    Sub_TD3_Img.setAttribute("class", "icon");
-	                    Sub_TD3_Img.setAttribute("src", "/images/OrganTree/icon_hp.gif");
-	                    Sub_TD3.appendChild(Sub_TD3_Img);
-	                    Sub_TD3.innerHTML += M_TR.getAttribute("_DATA8") == "" ? " - " : M_TR.getAttribute("_DATA8");
-	                    Sub_TR3.appendChild(Sub_TD3);
+							var Sub_TR1 = document.createElement("TR");
+							var Sub_TD1 = document.createElement("TD");
+							Sub_TD1.style.textAlign = "left";
+							Sub_TD1.setAttribute("class", "name");
+							var pDisplayName = "";
+							if ("<c:out value='${use_ocs}'/>" == "YES") {
+								pDisplayName += "<span><img src='/images/Presence/unknown.gif' id= '" + GetGUID() + ",type=smtp' style='vertical-align:middle;margin-right:3px;'  onload='PresenceControl(\"" + M_TR.getAttribute("_DATA3") + "\",this);'/></span>";
+							}
+							pDisplayName += M_TR.getAttribute("_DATA4") == "" ? "" : M_TR.getAttribute("_DATA4");
+							pDisplayName += M_TR.getAttribute("_DATA6") == "" ? "" : "[" + M_TR.getAttribute("_DATA6") + "]";
+							Sub_TD1.innerHTML = pDisplayName;
+							Sub_TR1.appendChild(Sub_TD1);
 
-	                    var Sub_TR4 = document.createElement("TR");
-	                    var Sub_TD4 = document.createElement("TD");
-	                    Sub_TD4.style.textAlign = "left";
-	                    var Sub_TD4_Img = document.createElement("IMG");
-	                    Sub_TD4_Img.setAttribute("class", "icon");
-	                    Sub_TD4_Img.setAttribute("src", "/images/OrganTree/icon_mail.gif");
-	                    Sub_TD4.appendChild(Sub_TD4_Img);
-	                    Sub_TD4.innerHTML += M_TR.getAttribute("_DATA3")
-	                    Sub_TR4.appendChild(Sub_TD4);
+							var Sub_TR2 = document.createElement("TR");
+							var Sub_TD2 = document.createElement("TD");
+							Sub_TD2.style.textAlign = "left";
+							Sub_TD2.innerHTML = M_TR.getAttribute("_DATA5");
+							Sub_TR2.appendChild(Sub_TD2);
 
-	                    M_TR_TDS_Table.appendChild(Sub_TR1);
-	                    M_TR_TDS_Table.appendChild(Sub_TR2);
-	                    M_TR_TDS_Table.appendChild(Sub_TR3);
-	                    M_TR_TDS_Table.appendChild(Sub_TR4);
+							var Sub_TR3 = document.createElement("TR");
+							var Sub_TD3 = document.createElement("TD");
+							Sub_TD3.style.textAlign = "left";
+							var Sub_TD3_Img = document.createElement("IMG");
+							Sub_TD3_Img.setAttribute("class", "icon");
+							Sub_TD3_Img.setAttribute("src", "/images/OrganTree/icon_hp.gif");
+							Sub_TD3.appendChild(Sub_TD3_Img);
+							Sub_TD3.innerHTML += M_TR.getAttribute("_DATA8") == "" ? " - " : M_TR.getAttribute("_DATA8");
+							Sub_TR3.appendChild(Sub_TD3);
 
-	                    M_TR.appendChild(M_TR_TD2);
-	                    MainTable.appendChild(M_TR);	                    
-	                    
-	                    document.getElementById("DeptUserImgList").appendChild(MainTable);
-	                } else {
-	                    var M_TR = document.createElement("TR");
-	                    M_TR.setAttribute("id", "MailUserlist_" + i);
-	                    M_TR.style.cursor = "pointer";
- 	                    M_TR.onmouseover = function () { event_listMover(this); };
-	                    M_TR.onmouseout = function () { event_listMout(this); };
-	                    M_TR.onmousedown = function () { event_listclick(this); };
-	                    M_TR.ondblclick = function () { event_listDBclick(this); };
-	                    M_TR.setAttribute("draggable", true);
-	                    M_TR.onselectstart = function () { return false; };
-	                    
-	                    if (CrossYN()) {
-	                        for (var NodeCount = 0; NodeCount < SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i).childNodes.item(0).childNodes.length; NodeCount++) {
-	                            if (SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i).childNodes.item(0).childNodes.item(NodeCount).nodeName != "#text") {
-	                                M_TR.setAttribute("_" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i).childNodes.item(0).childNodes.item(NodeCount).nodeName,
-	                                                  trim_Cross(SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i).childNodes.item(0).childNodes.item(NodeCount).textContent));
-	                            }
-	                        }
-	                    } else {
-	                        for (var NodeCount = 0; NodeCount < SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i).childNodes.item(0).childNodes.length; NodeCount++) {
-	                            M_TR.setAttribute("_" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i).childNodes.item(0).childNodes.item(NodeCount).nodeName,
-	                                              SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i).childNodes.item(0).childNodes.item(NodeCount).text);
-	                        }
-	                    }
+							var Sub_TR4 = document.createElement("TR");
+							var Sub_TD4 = document.createElement("TD");
+							Sub_TD4.style.textAlign = "left";
+							var Sub_TD4_Img = document.createElement("IMG");
+							Sub_TD4_Img.setAttribute("class", "icon");
+							Sub_TD4_Img.setAttribute("src", "/images/OrganTree/icon_mail.gif");
+							Sub_TD4.appendChild(Sub_TD4_Img);
+							Sub_TD4.innerHTML += M_TR.getAttribute("_DATA3")
+							Sub_TR4.appendChild(Sub_TD4);
 
-	                    if (pSeach) {
-	                        var M_TR_TD1 = document.createElement("TD");
-	                        M_TR_TD1.style.overflow = "hidden";
-	                        M_TR_TD1.style.textOverflow = "ellipsis";
-	                        M_TR_TD1.style.whiteSpace = "nowrap";
-	                        M_TR_TD1.style.width = "110px";
-	                        M_TR_TD1.innerHTML = M_TR.getAttribute("_DATA5");
+							M_TR_TDS_Table.appendChild(Sub_TR1);
+							M_TR_TDS_Table.appendChild(Sub_TR2);
+							M_TR_TDS_Table.appendChild(Sub_TR3);
+							M_TR_TDS_Table.appendChild(Sub_TR4);
 
-	                        var M_TR_TD2 = document.createElement("TD");
-	                        M_TR_TD2.style.overflow = "hidden";
-	                        M_TR_TD2.style.textOverflow = "ellipsis";
-	                        M_TR_TD2.style.whiteSpace = "nowrap";
-	                        M_TR_TD2.style.width = "90px";
-	                        if ("<c:out value='${use_ocs}'/>" == "YES") {
-	                            M_TR_TD2.innerHTML = "<span><img src='/images/Presence/unknown.gif' id= '" + GetGUID() + ",type=smtp' style='vertical-align:middle;margin-right:3px;'  onload='PresenceControl(\"" + M_TR.getAttribute("_DATA3") + "\",this);'/></span>" + M_TR.getAttribute("_DATA4");
-	                        } else {
-	                            M_TR_TD2.innerHTML = M_TR.getAttribute("_DATA4");
-	                        }
-	                        var M_TR_TD3 = document.createElement("TD");
-	                        M_TR_TD3.innerHTML = M_TR.getAttribute("_DATA6") == "" ? "" : M_TR.getAttribute("_DATA6");
-	                        M_TR_TD3.style.width = "80px";
+							M_TR.appendChild(M_TR_TD2);
+							MainTable.appendChild(M_TR);
 
-	                        var M_TR_TD4 = document.createElement("TD");
-	                        M_TR_TD4.innerHTML = M_TR.getAttribute("_DATA8") == "" ? "" : M_TR.getAttribute("_DATA8");
+							document.getElementById("DeptUserImgList").appendChild(MainTable);
+						} else {
+							var M_TR = document.createElement("TR");
+							M_TR.setAttribute("id", "MailUserlist_" + i);
+							M_TR.style.cursor = "pointer";
+							M_TR.onmouseover = function () { event_listMover(this); };
+							M_TR.onmouseout = function () { event_listMout(this); };
+							M_TR.onmousedown = function () { event_listclick(this); };
+							M_TR.ondblclick = function () { event_listDBclick(this); };
+							M_TR.setAttribute("draggable", true);
+							M_TR.onselectstart = function () { return false; };
 
-	                        M_TR.appendChild(M_TR_TD1);
-	                        M_TR.appendChild(M_TR_TD2);
-	                        M_TR.appendChild(M_TR_TD3);
-	                        M_TR.appendChild(M_TR_TD4);
-	                        document.getElementById("Search_txtlist_table").getElementsByTagName("TBODY").item(0).appendChild(M_TR);
-	                    } else {
-	                        var M_TR_TD1 = document.createElement("TD");
-	                        M_TR_TD1.style.overflow = "hidden";
-	                        M_TR_TD1.style.textOverflow = "ellipsis";
-	                        M_TR_TD1.style.whiteSpace = "nowrap";
-	                        M_TR_TD1.style.width = "150px";
-	                        
-	                        if ("<c:out value='${use_ocs}'/>" == "YES") {
-	                            M_TR_TD1.innerHTML = "<span><img src='/images/Presence/unknown.gif' id= '" + GetGUID() + ",type=smtp' style='vertical-align:middle;margin-right:3px;'  onload='PresenceControl(\"" + M_TR.getAttribute("_DATA3") + "\",this);'/></span>" + M_TR.getAttribute("_DATA4");
-	                        } else {
-	                            M_TR_TD1.innerHTML = M_TR.getAttribute("_DATA4");
-	                        }
-	                        var M_TR_TD2 = document.createElement("TD");
-	                        M_TR_TD2.style.width = "80px";
-	                        M_TR_TD2.innerHTML = M_TR.getAttribute("_DATA6") == "" ? "" : M_TR.getAttribute("_DATA6");
+							if (CrossYN()) {
+								for (var NodeCount = 0; NodeCount < SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i).childNodes.item(0).childNodes.length; NodeCount++) {
+									if (SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i).childNodes.item(0).childNodes.item(NodeCount).nodeName != "#text") {
+										M_TR.setAttribute("_" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i).childNodes.item(0).childNodes.item(NodeCount).nodeName,
+												trim_Cross(SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i).childNodes.item(0).childNodes.item(NodeCount).textContent));
+									}
+								}
+							} else {
+								for (var NodeCount = 0; NodeCount < SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i).childNodes.item(0).childNodes.length; NodeCount++) {
+									M_TR.setAttribute("_" + SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i).childNodes.item(0).childNodes.item(NodeCount).nodeName,
+											SelectNodes(xmlRtn, "LISTVIEWDATA/ROWS/ROW").item(i).childNodes.item(0).childNodes.item(NodeCount).text);
+								}
+							}
 
-	                        var M_TR_TD3 = document.createElement("TD");
-	                        M_TR_TD3.innerHTML = M_TR.getAttribute("_DATA8") == "" ? "" : M_TR.getAttribute("_DATA8");
+							if (pSeach) {
+								var M_TR_TD1 = document.createElement("TD");
+								M_TR_TD1.style.overflow = "hidden";
+								M_TR_TD1.style.textOverflow = "ellipsis";
+								M_TR_TD1.style.whiteSpace = "nowrap";
+								M_TR_TD1.style.width = "110px";
+								M_TR_TD1.innerHTML = M_TR.getAttribute("_DATA5");
 
-	                        M_TR.appendChild(M_TR_TD1);
-	                        M_TR.appendChild(M_TR_TD2);
-	                        M_TR.appendChild(M_TR_TD3);
-	                        document.getElementById("txtlist_table").getElementsByTagName("TBODY").item(0).appendChild(M_TR);
-	                    }
-	                }
-	            }
-	        }		
-		    function search_press(e) {
-		        if (window.event) {
-		            if (window.event.keyCode == 13) {
-		                search_click("search");
-		            }
-		        }
+								var M_TR_TD2 = document.createElement("TD");
+								M_TR_TD2.style.overflow = "hidden";
+								M_TR_TD2.style.textOverflow = "ellipsis";
+								M_TR_TD2.style.whiteSpace = "nowrap";
+								M_TR_TD2.style.width = "90px";
+								if ("<c:out value='${use_ocs}'/>" == "YES") {
+									M_TR_TD2.innerHTML = "<span><img src='/images/Presence/unknown.gif' id= '" + GetGUID() + ",type=smtp' style='vertical-align:middle;margin-right:3px;'  onload='PresenceControl(\"" + M_TR.getAttribute("_DATA3") + "\",this);'/></span>" + M_TR.getAttribute("_DATA4");
+								} else {
+									M_TR_TD2.innerHTML = M_TR.getAttribute("_DATA4");
+								}
+								var M_TR_TD3 = document.createElement("TD");
+								M_TR_TD3.innerHTML = M_TR.getAttribute("_DATA6") == "" ? "" : M_TR.getAttribute("_DATA6");
+								M_TR_TD3.style.width = "80px";
+
+								var M_TR_TD4 = document.createElement("TD");
+								M_TR_TD4.innerHTML = M_TR.getAttribute("_DATA8") == "" ? "" : M_TR.getAttribute("_DATA8");
+
+								M_TR.appendChild(M_TR_TD1);
+								M_TR.appendChild(M_TR_TD2);
+								M_TR.appendChild(M_TR_TD3);
+								M_TR.appendChild(M_TR_TD4);
+								document.getElementById("Search_txtlist_table").getElementsByTagName("TBODY").item(0).appendChild(M_TR);
+							} else {
+								var M_TR_TD1 = document.createElement("TD");
+								M_TR_TD1.style.overflow = "hidden";
+								M_TR_TD1.style.textOverflow = "ellipsis";
+								M_TR_TD1.style.whiteSpace = "nowrap";
+								M_TR_TD1.style.width = "150px";
+
+								if ("<c:out value='${use_ocs}'/>" == "YES") {
+									M_TR_TD1.innerHTML = "<span><img src='/images/Presence/unknown.gif' id= '" + GetGUID() + ",type=smtp' style='vertical-align:middle;margin-right:3px;'  onload='PresenceControl(\"" + M_TR.getAttribute("_DATA3") + "\",this);'/></span>" + M_TR.getAttribute("_DATA4");
+								} else {
+									M_TR_TD1.innerHTML = M_TR.getAttribute("_DATA4");
+								}
+								var M_TR_TD2 = document.createElement("TD");
+								M_TR_TD2.style.width = "80px";
+								M_TR_TD2.innerHTML = M_TR.getAttribute("_DATA6") == "" ? "" : M_TR.getAttribute("_DATA6");
+
+								var M_TR_TD3 = document.createElement("TD");
+								M_TR_TD3.innerHTML = M_TR.getAttribute("_DATA8") == "" ? "" : M_TR.getAttribute("_DATA8");
+
+								M_TR.appendChild(M_TR_TD1);
+								M_TR.appendChild(M_TR_TD2);
+								M_TR.appendChild(M_TR_TD3);
+								document.getElementById("txtlist_table").getElementsByTagName("TBODY").item(0).appendChild(M_TR);
+							}
+						}
+					}
+				} else {
+					var nodataTr = document.createElement("TR");
+					var nodataTd = document.createElement("TD");
+					nodataTd.textContent = strLang263;
+					nodataTd.setAttribute("colspan", "3");
+					nodataTd.setAttribute("align", "center");
+					nodataTr.appendChild(nodataTd);
+					var nodataTable = "<table class='mainlist' cellSpacing='0' cellPadding='0' style='width: 100%; margin-left: auto; margin-right: auto;'>";
+					nodataTable += "<tr id='noItems_TR'><td align='center'>" + strLang263 + "</td></tr>";
+					nodataTable += "</table>";
+					document.getElementById("txtlist_table").getElementsByTagName("TBODY").item(0).appendChild(nodataTr);
+					document.getElementById("DeptUserImgList").innerHTML = nodataTable;
+				}
+			}
+
+			function search_press(e) {
+				if (window.event) {
+					if (window.event.keyCode == 13) {
+						search_click("search");
+					}
+				}
 		        else {
 		            if (e.which == 13)
 		                search_click("search");
@@ -1271,6 +1286,10 @@
 		            MaxNum = (startNum + parseInt(BlockSize)) - 1;
 		        }
 		        else {
+					if (totalPage == 0) {
+						totalPage = 1
+					}
+					
 		            MaxNum = totalPage;
 		        }
 		        for (i = startNum; i <= MaxNum; i++) {
