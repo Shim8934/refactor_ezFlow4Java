@@ -1644,16 +1644,8 @@ function getOriginXML(pTagetID)
     }
     for(var i=1; i<objBodyData.length; i++)
     {
-        //alert(objBody[i].innerHTML);
-       
-        alert(objBodyData[i].cells.length);
         xmlBody += "<ROW><CELL>";
         xmlBody += "<VALUE><![CDATA[" + objBodyData[i].innerText + "]]></VALUE>";
-        for(var x=0; x<1; x++)
-        {
-            //debugger;
-        }
-        
         xmlBody += "</CELL></ROW>";
     } 
     //alert(xmlHeader + "\r\n" + xmlBody);

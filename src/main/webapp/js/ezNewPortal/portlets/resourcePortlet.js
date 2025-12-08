@@ -82,7 +82,6 @@ function getPersPortlet(){
 }
 
 function mappingResourcePortlet(vo){
-	debugger;
 	var timeTable = vo.rsPortletTime.split(";");
 	var num       = vo.rsPortletNum.split(";");
 	var cnt       = timeTable.length; 
