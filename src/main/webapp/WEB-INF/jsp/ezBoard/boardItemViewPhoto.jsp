@@ -1583,7 +1583,12 @@
 				}
 				
 				function addRelatedCabinet() {
-					window.open("/ezCabinet/cabinetAddRelated.do?module=board", "addRelated", getOpenWindowfeature(480, 505));
+					var openWidth = 480;
+				
+                    if (!navigator.userAgent.includes("Chrome")) {
+                        openWidth = 600;
+                    }
+					window.open("/ezCabinet/cabinetAddRelated.do?module=board", "addRelated", getOpenWindowfeature(openWidth, 505));
 				}
 				
 				function getOpenWindowfeature(popUpW, popUpH) {

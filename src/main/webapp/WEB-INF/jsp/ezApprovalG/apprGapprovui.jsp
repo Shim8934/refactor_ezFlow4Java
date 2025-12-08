@@ -2402,7 +2402,12 @@
 			function addRelatedCabinet() {
 				//* moon 2018.07.26
 				// window.open("/ezCabinet/cabinetAddRelated.do?module=apprv", "addRelated", getOpenWindowfeature(480, 505));
-				showPopup("/ezCabinet/cabinetAddRelated.do?module=apprv", 480, 505, "addRelated", getOpenWindowfeature(480, 505), hidePopup);
+                var openWidth = 480;
+				
+				if (!navigator.userAgent.includes("Chrome")) {
+					openWidth = 600;
+				}
+				showPopup("/ezCabinet/cabinetAddRelated.do?module=apprv", openWidth, 505, "addRelated", getOpenWindowfeature(openWidth, 505), hidePopup);
 			}
 			
 			function getOpenWindowfeature(popUpW, popUpH) {

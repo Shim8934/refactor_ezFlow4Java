@@ -144,7 +144,12 @@
 			
 			function addRelatedCabinet() {
 				//* moon 2018.07.26
-				window.open("/ezCabinet/cabinetAddRelated.do?module=addrs", "addRelated", getOpenWindowfeature(480, 505));
+				var openWidth = 480;
+				
+				if (!navigator.userAgent.includes("Chrome")) {
+					openWidth = 600;
+				}
+				window.open("/ezCabinet/cabinetAddRelated.do?module=addrs", "addRelated", getOpenWindowfeature(openWidth, 505));
 			}
 			
 			function getOpenWindowfeature(popUpW, popUpH) {
