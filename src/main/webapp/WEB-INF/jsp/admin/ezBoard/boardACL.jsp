@@ -824,7 +824,7 @@
 	            selecttargetNew_dialogArguments[0] = receiverData;
 	            selecttargetNew_dialogArguments[1] = SelectTargetNew_Complete;
 	            //selecttargetNew_dialogArguments[2] = "${isAllGroupBoard}"; // 그룹사게시판인 경우, 조직도에 전체 회사 + 전체 권한그룹 표출 필요
-	            var SelectTarget = window.open("/admin/ezBoard/selectTargetGroup.do?isAllGroupBoard=${isAllGroupBoard}" , "SelectTargetNew", GetOpenWindowfeature(970, 645));
+	            var SelectTarget = window.open("/admin/ezBoard/selectTargetGroup.do?isAllGroupBoard=${isAllGroupBoard}" , "SelectTargetNew", GetOpenWindowfeature(970, 680));
 	            try { SelectTarget.focus(); } catch (e) {
 	            }
 	        }
