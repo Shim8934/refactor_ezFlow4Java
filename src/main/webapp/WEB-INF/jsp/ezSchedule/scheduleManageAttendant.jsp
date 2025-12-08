@@ -255,11 +255,11 @@
 			            		<input type='checkbox' value="1" attendantid='${item.attendantId}' attendantName='${item.attendantName}' attendantstatus='${item.status}' />
 		            		</div>
 		            	</td> 
-		                <td title="<spring:message code='ezSchedule.t162' />" onClick="show_personinfo('${item.attendantId}')"  style="cursor:pointer; white-space:nowrap; text-align:center">
+		                <td title="<spring:message code='ezSchedule.t162' />" onClick="show_personinfo('${item.attendantId}')"  style="cursor:pointer; white-space:nowrap; text-align:center; overflow: hidden; text-overflow: ellipsis;">
 		                	<c:if test="${primary == '1'}">${item.attendantName}</c:if>
 		                	<c:if test="${primary != '1'}">${item.attendantName2}</c:if>
 						</td>
-		                <td style="white-space:nowrap;text-align:center">
+		                <td style="white-space:nowrap;text-align:center; overflow: hidden; text-overflow: ellipsis;">
 		                	<c:if test="${primary == '1'}">${item.attendantDeptName}</c:if>
 		                	<c:if test="${primary != '1'}">${item.attendantDeptName2}</c:if>
 		                </td>
