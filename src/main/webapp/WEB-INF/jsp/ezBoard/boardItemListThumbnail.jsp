@@ -76,7 +76,7 @@
 				color:#ffffff;
 			}
 			.topInfoP input[type="checkbox"] {
-				margin: 5px 5px 0px 0px;
+				margin: 11px 5px 0px 0px;
 				/* width: 13px;
 				height: 13px; */
 				vertical-align: top;
@@ -587,19 +587,18 @@
 						}
 						listXML += "</span>";
 						listXML += "</div>";
-						listXML += "<p class='topInfoP'><div class='custom_checkbox'><input type='checkbox' id='" + itemID + "," + writerID + ";' onclick='selectAlbumCheckBox(this, event)'></div>";
-						listXML += "<span style='font-size:13px;overflow: hidden; white-space: nowrap;text-overflow: ellipsis;'>";
+						listXML += "<div class='topInfoP'><div class='custom_checkbox'><input type='checkbox' id='" + itemID + "," + writerID + ";' onclick='selectAlbumCheckBox(this, event)'>";
 
 						if (readFlag == "0") {
-							listXML += "<span class='albumTitle' style='font-size:13px; font-weight:bold;'>";
+							listXML += "<label for='" + itemID + "' class='albumTitle' style='font-weight:bold; overflow: hidden; white-space: nowrap;text-overflow: ellipsis;'>";
 						} else {
-							listXML += "<span class='albumTitle' style='font-size:13px;'>";
+							listXML += "<label for='" + itemID + "' class='albumTitle' style='overflow: hidden; white-space: nowrap;text-overflow: ellipsis;'>";
 						}
-						listXML += title + "</span></span>";
+						listXML += title + "</label></div>";
 						if (isNew == "Y") {
 							listXML+= "<span class='board_new'></span>";
 						}
-						listXML += "</p>";
+						listXML += "</div>";
 						listXML += "<div class='infoDiv'>";
 						listXML += "<span style='font-size:13px;'>";
 						if (getColNameIndex(xmlDoc, "WRITERNAME") != -1) {
@@ -1443,8 +1442,10 @@
 		    
 		    function selectAlbumCheckBox(selectedChkBox, event) { // 체크박스만 클릭 > 다중선택
 				event.stopPropagation(); // 상위 Div의 selectAlbumDiv 이벤트를 방지
-				var parentDiv = selectedChkBox.parentNode.parentNode;
-				var parentP = selectedChkBox.parentNode;
+				console.log(event.target.checked);
+				
+				var parentDiv = selectedChkBox.closest(".boardAlbumDiv");
+				var parentP = selectedChkBox.closest(".topInfoP");
 				
 				if (selectedChkBox.checked == true) {
 					parentDiv.classList.add("selectedAlbumDiv");
