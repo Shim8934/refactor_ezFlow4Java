@@ -2513,70 +2513,71 @@ public class EzResourceController extends EzFileMngUtil {
 		String[] ownerList = resbrd.getOwnerID().split(",");
 		
 		List<ResAdminVO> resInfo = ezResourceService.getResourceAdminInfo(ownerID, userInfo.getTenantId(), ownerList);
-        
-        StringBuilder bodyContent = new StringBuilder();
+		
+		if (!resInfo.isEmpty()) { // 자원관리자가 없을때의 분기처리 추가함
+			StringBuilder bodyContent = new StringBuilder();
 
-        if (userInfo.getPrimary().equals("1")) {
-        	bodyContent.append(userInfo.getDisplayName() +"[" + userInfo.getDeptName() + "] " + egovMessageSource.getMessage("ezResource.t9900002", userInfo.getLocale()));
-        } else {
-        	bodyContent.append(userInfo.getDisplayName2() +"[" + userInfo.getDeptName2() + "] " + egovMessageSource.getMessage("ezResource.t9900002", userInfo.getLocale()));
-        }
-        
-        // 2023-08-02 황인경 - 자원관리 > 예약시 관리자들에게 메일 발송 처리 > 메일 제목, 본문 실자원명 다국어 지원
-        String brdNm;
+			if (userInfo.getPrimary().equals("1")) {
+				bodyContent.append(userInfo.getDisplayName() + "[" + userInfo.getDeptName() + "] " + egovMessageSource.getMessage("ezResource.t9900002", userInfo.getLocale()));
+			} else {
+				bodyContent.append(userInfo.getDisplayName2() + "[" + userInfo.getDeptName2() + "] " + egovMessageSource.getMessage("ezResource.t9900002", userInfo.getLocale()));
+			}
 
-		if (userInfo.getPrimary().equals("1")) {
-			brdNm = resInfo.get(0).getBrdNm();
-		} else {
-			brdNm = resInfo.get(0).getBrdNm2();
+			// 2023-08-02 황인경 - 자원관리 > 예약시 관리자들에게 메일 발송 처리 > 메일 제목, 본문 실자원명 다국어 지원
+			String brdNm;
+
+			if (userInfo.getPrimary().equals("1")) {
+				brdNm = resInfo.get(0).getBrdNm();
+			} else {
+				brdNm = resInfo.get(0).getBrdNm2();
+			}
+
+			bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezResource.t9900003", userInfo.getLocale()) + " : " + brdNm);
+			bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezResource.t9900004", userInfo.getLocale()) + " : " + startDateTime + "&nbsp;~&nbsp;" + endDateTime);
+
+			String subject = "[" + egovMessageSource.getMessage("ezResource.t171", userInfo.getLocale()) + " : " + brdNm + "] " + title;
+			String content = commonUtil.createNotiMailContent(bodyContent.toString(), userInfo.getTenantId(), userInfo.getLocale());
+
+			InternetAddress from = new InternetAddress();
+			from.setPersonal(userInfo.getDisplayName(), "UTF-8");
+			from.setAddress(userInfo.getEmail());
+
+			for (int i = 0; i < resInfo.size(); i++) {
+				String emailAddress = resInfo.get(i).getMailAddress();
+				String accessName = resInfo.get(i).getOwnerNm();
+
+				InternetAddress to = new InternetAddress();
+				to.setPersonal(accessName, "UTF-8");
+				to.setAddress(emailAddress);
+
+				ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject, content, false);
+			}
+
+			if (startDateTime.length() == 16) {
+				startDateTime = startDateTime + ":00";
+			}
+			if (endDateTime.length() == 16) {
+				endDateTime = endDateTime + ":00";
+			}
+
+			String linkUrl = "/ezResource/scheduleRead.do?cmd=mod&from=schedule&num=" + num + "&ownerID=" + ownerID + "&type=Master&startDate=" + startDateTime.substring(0, 10) + "&endDate=" + endDateTime.substring(0, 10);
+			String linkUrlMobile = "/mobile/ezResource/SearchResSchDetail.do?ownerId=" + ownerID + "&num=" + num + "&startDate=" + startDateTime.substring(0, 19) + "&endDate=" + endDateTime.substring(0, 19) + "&type=" + "res";
+
+			List<Map<String, Object>> notiRecipientList = new ArrayList<Map<String, Object>>();
+			for (String cn : ownerList) {
+				Map<String, Object> recipientMap = new HashMap<String, Object>();
+				recipientMap.put("userType", "PERSON");
+				recipientMap.put("companyId", userInfo.getCompanyID());
+				recipientMap.put("cn", cn);
+				notiRecipientList.add(recipientMap);
+			}
+
+			if (notiRecipientList != null && notiRecipientList.size() > 0) {
+				ezNotificationService.sendNoti(request, userInfo.getId(), userInfo.getDisplayName(), notiRecipientList, "RESOURCE", "RESERVE", brdNm + " - " + title, "popup", "760", "750", linkUrl, linkUrlMobile, "notChkSetting");
+			}
 		}
-
-		bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezResource.t9900003", userInfo.getLocale()) + " : " + brdNm);
-        bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezResource.t9900004", userInfo.getLocale()) + " : " +startDateTime + "&nbsp;~&nbsp;" + endDateTime);
-        
-        String subject = "[" + egovMessageSource.getMessage("ezResource.t171", userInfo.getLocale()) + " : " + brdNm + "] " + title;
-        String content = commonUtil.createNotiMailContent(bodyContent.toString(), userInfo.getTenantId(), userInfo.getLocale());
-        
-    	InternetAddress from = new InternetAddress();
-    	from.setPersonal(userInfo.getDisplayName(), "UTF-8");
-    	from.setAddress(userInfo.getEmail());
-    	
-    	for(int i=0; i<resInfo.size(); i++) {
-	    	String emailAddress = resInfo.get(i).getMailAddress();
-	    	String accessName = resInfo.get(i).getOwnerNm();
-	    	
-	    	InternetAddress to = new InternetAddress();
-	    	to.setPersonal(accessName, "UTF-8");
-	    	to.setAddress(emailAddress);
-	        	
-	        ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject, content, false);
-    	}
-    	
-    	if (startDateTime.length() == 16) {
-    		startDateTime = startDateTime + ":00";
-    	}
-    	if (endDateTime.length() == 16) {
-    		endDateTime = endDateTime + ":00";
-    	}
-    	
-    	String linkUrl = "/ezResource/scheduleRead.do?cmd=mod&from=schedule&num=" + num + "&ownerID=" + ownerID + "&type=Master&startDate=" + startDateTime.substring(0,10) + "&endDate=" + endDateTime.substring(0,10);
-    	String linkUrlMobile = "/mobile/ezResource/SearchResSchDetail.do?ownerId=" + ownerID + "&num=" + num + "&startDate=" + startDateTime.substring(0,19) + "&endDate=" + endDateTime.substring(0,19) + "&type=" + "res";
-    	
-    	List<Map<String,Object>> notiRecipientList = new ArrayList<Map<String, Object>> ();
-    	for (String cn : ownerList) {
-    		Map<String, Object> recipientMap = new HashMap<String, Object>();
-    		recipientMap.put("userType", "PERSON");
-    		recipientMap.put("companyId", userInfo.getCompanyID());
-    		recipientMap.put("cn", cn);
-    		notiRecipientList.add(recipientMap);
-    	}
-    	
-    	if (notiRecipientList != null && notiRecipientList.size() > 0) {
-    		ezNotificationService.sendNoti(request, userInfo.getId(), userInfo.getDisplayName(), notiRecipientList, "RESOURCE", "RESERVE", brdNm + " - " + title, "popup", "760", "750", linkUrl, linkUrlMobile, "notChkSetting");
-    	}
-    	
+		
         logger.debug("sendMail ended");
-        
         return "OK";
 	}
 	
@@ -2702,7 +2703,6 @@ public class EzResourceController extends EzFileMngUtil {
 	/**
 	 * 포틀릿 자원 목록 저장
 	 * @param loginCookie
-	 * @param request
 	 * @throws Exception
 	 */
 	@SuppressWarnings("unchecked")
