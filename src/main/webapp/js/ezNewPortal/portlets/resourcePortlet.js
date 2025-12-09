@@ -24,7 +24,7 @@ function showPersResource() {
     document.getElementById("resourceSetting").addEventListener("click", function() {
     	var schedule_add_select_cross_dialogArguments = new Array();
     	if (CrossYN()) {
-            var url = "/ezResource/resPersPortlet.do";
+            var url = "/ezResource/scheduleAddSelect.do";
 
             schedule_add_select_cross_dialogArguments[0] = "";
             schedule_add_select_cross_dialogArguments[1] = btnWrite_onclick_Complete;
@@ -32,7 +32,7 @@ function showPersResource() {
             try { Schedule_Add_Select_Cross.focus(); } catch (e) {
             }
         } else {
-            var url = "/ezResource/resPersPortlet.do";
+            var url = "/ezResource/scheduleAddSelect.do";
             var feature = "status:no;dialogWidth:552px;dialogHeight:430px;help:no;scroll:no;edge:sunken";
             feature = feature + GetShowModalPosition(552, 422);
             var ret = window.showModalDialog(url, "", feature);
@@ -169,7 +169,7 @@ function resourceNodata() {
 
 //예약 등록 팝업
 function reserveInfoPopup(id) {
-	 var url = "/ezResource/portletResourceInfo.do?ownerID=" + id;
+	 var url = "/ezResource/viewClsItem.do?brdID=" + id;
      var feature =  "width=820, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1"
      feature = feature + GetOpenPosition(820, 700);
      window.open(url, "", feature);
