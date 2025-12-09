@@ -1585,7 +1585,7 @@
 				function addRelatedCabinet() {
 					var openWidth = 480;
 				
-                    if (!navigator.userAgent.includes("Chrome")) {
+                    if (navigator.userAgent.includes("Edg")) {
                         openWidth = 600;
                     }
 					window.open("/ezCabinet/cabinetAddRelated.do?module=board", "addRelated", getOpenWindowfeature(openWidth, 505));

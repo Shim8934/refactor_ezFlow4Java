@@ -134,7 +134,7 @@
 				//* moon 2018.07.26
 				var openWidth = 480;
 				
-				if (!navigator.userAgent.includes("Chrome")) {
+				if (navigator.userAgent.includes("Edg")) {
 					openWidth = 600;
 				}
 				window.open("/ezCabinet/cabinetAddRelated.do?module=addrs", "addRelated", getOpenWindowfeature(openWidth, 505));
