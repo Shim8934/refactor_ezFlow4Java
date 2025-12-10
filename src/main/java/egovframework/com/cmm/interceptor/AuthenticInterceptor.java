@@ -274,7 +274,8 @@ public class AuthenticInterceptor extends WebContentInterceptor {
 	        	return false;
 			} else if ("YES".equals(useTigrisSAMLAuth)) {
                 try {
-					String currentUri = request.getScheme()
+					String scheme = "YES".equals(ezCommonService.getTenantConfig("USE_HTTPS", tenantId)) ? "https" : "http";
+					String currentUri = scheme
 							+ "://"
 							+ request.getServerName()
 							+ ("http".equals(request.getScheme())
