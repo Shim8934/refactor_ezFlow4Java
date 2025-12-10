@@ -3540,6 +3540,7 @@ public class EzResourceController extends EzFileMngUtil {
 		String resApprFlag = request.getParameter("resApprFlag"); // 해당 자원 예약 시 승인이 필요한지의 여부; 0: 허가필요X, 1:허가필요, 2:사용안함
 		
 		ResGetScheduleVO info  = ezResourceService.getSchedule(dragNum, dragOwnerId, companyId, tenantId, lang);
+		ResBrdVO resBrdInfo = ezResourceService.getBrd(Integer.valueOf(dragOwnerId), companyId, tenantId);
 		String infoStartTime = commonUtil.getDateStringInUTC(info.getStartDate(), offset, false).substring(10, 16);
 		String infoEndTime   = commonUtil.getDateStringInUTC(info.getEndDate(), offset, false).substring(10, 16);
 		
@@ -3548,6 +3549,13 @@ public class EzResourceController extends EzFileMngUtil {
 		if (!adminFlag.equals("Y") && !info.getWriterID().equals(loginVO.getId())) {
 			logger.debug("Not Permission");
 			returnValue = "1";
+			return returnValue;
+		}
+		
+		// 관리자에 의해 사용이 승인된 자원예약일정은 수정할 수 없음
+		if (info.getApproveFlag().equals("1") && resBrdInfo.getApproveFlag().equals("1")) {
+			returnValue = "4";
+			logger.debug("not allowed for an approved resource.");
 			return returnValue;
 		}
 
