@@ -668,6 +668,7 @@
 		        if (document.getElementById("chkSearchSub").checked)		// SearchSubBoard
 		        {
 		            TYPE += "SEARCHSUBBOARD;";
+					TYPE += "SEARCHSUBSUBBOARD;";
 		        }
 		
 		        if (type == "quick") {
