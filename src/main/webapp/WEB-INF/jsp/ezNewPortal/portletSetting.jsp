@@ -152,7 +152,7 @@
 				<span id="cancelBtn"><spring:message code='ezNewPortal.t001' /></span>
 			</a>
 		</div>
-		<div id="close">
+		<div id="close" class="portalSetting">
 			<ul>
 				<li><span id="closeBtn"></span></li>
 			</ul>

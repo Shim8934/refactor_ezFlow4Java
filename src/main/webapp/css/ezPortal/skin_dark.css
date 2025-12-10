@@ -598,4 +598,4 @@ header + .lnb ul li:hover span, .lnb ul li.on span{color:#388CE5;}
 .filter_pop .check_list .check_ul li .input_check input[type="checkbox"]:checked + label:before { background:  url(/images/ezNewPortal/bg_checkbox.png) no-repeat 2px center;
 background-color: #47494B; border-color: #47494B;}
 
-#close ul li span {background-image : url('/images/close_xBtn_w.svg')}
+#close.portalSetting ul li span {background-image : url('/images/close_xBtn_w.svg')}
