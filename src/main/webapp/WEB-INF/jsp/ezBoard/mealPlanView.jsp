@@ -15,7 +15,9 @@
 			}
 			td {
 				border: 1px solid #d2d2d2;
-				padding-left :10px;
+				padding :0 10px;
+				word-wrap: break-word;
+    			white-space: normal;
 			}
 		</style>
 		<link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/jquery.ui.all.css')}"/>
@@ -229,7 +231,7 @@
 	            </li>
 	        </ul>
 	    </div>
-	    <table id="mealCal" style="width:100%; height:80%; margin-top:50px;">
+	    <table id="mealCal" style="width:100%; height:80%; margin-top:50px; table-layout: fixed;">
 			<tr style="height:5%">
 				<th><spring:message code='ezMealPlan.jsb008' /></th>
 				<th id="day1" class="date"></th>
