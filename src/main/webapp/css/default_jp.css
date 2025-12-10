@@ -119,3 +119,7 @@ table, th, td{font-family:Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, s
 #calSearch .checkmark {transform: translateY(-4px);}
 
 .statistics_wrap .statistics .graph_box .graph .display .num{margin-left: -5px;}
+.payment_form_list ul.info.nodata{margin: 0 0}
+.statistics_wrap .statistics .graph_box .txt { min-width: 105px; margin-right: 10px; padding:0px }
+.statistics_wrap .statistics .graph_box .graph ul { padding: 0PX }
+.statistics_wrap .statistics .graph_box .txt li {font-size: 13px;}

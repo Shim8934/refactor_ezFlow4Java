@@ -1230,3 +1230,5 @@ var strLangJIHShareDox02 = "请先选择共享人。";
 
 var strLangRetiree01 = "已经离职。\n将从收藏夹中排除。"
 var strLangRetiree02 = "已被撤销。\n将从收藏夹中排除。"
+
+var strLangDashBoard01 = "批准";

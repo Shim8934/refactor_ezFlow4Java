@@ -1232,3 +1232,5 @@ var strLangJIHShareDox02 = "Please select the sharer first.";
 
 var strLangRetiree01 = "is a retiree.\nExcluded from favorites."
 var strLangRetiree02 = "has been abolished.\nIt will be excluded from favorites."
+
+var strLangDashBoard01 = "Approved";

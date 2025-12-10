@@ -1232,3 +1232,5 @@ var strLangJIHShareDox02 = "공유자를 먼저 선택바랍니다."
 
 var strLangRetiree01 = "는 퇴직자입니다. \n 즐겨찾기 적용에서 제외됩니다."
 var strLangRetiree02 = "부서는 폐지되었습니다. \n 즐겨찾기 적용에서 제외됩니다."
+
+var strLangDashBoard01 = "승인";

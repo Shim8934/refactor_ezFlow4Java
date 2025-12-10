@@ -99,3 +99,6 @@ input#inOffice, input#retired, input#stopped{vertical-align:middle;}
 .admin_pms_left #left .project_admin{padding-left:15px;}
 
 .statistics_wrap .statistics .graph_box .graph .display .num{margin-left: -5px;}
+.payment_form_list ul.info.nodata{margin: 0 0}
+.statistics_wrap .statistics .graph_box .txt { min-width: 105px; margin-right: 10px; padding:0px }
+.statistics_wrap .statistics .graph_box .graph ul { padding: 0PX }

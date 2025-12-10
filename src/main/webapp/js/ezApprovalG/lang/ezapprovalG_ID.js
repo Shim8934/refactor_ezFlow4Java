@@ -898,7 +898,7 @@ var strLangS38 = "Persetujuan tipe";
 var strLangS49 = "Jabatan";
 var strLangS51 = "kesepakatan";
 var strLangS53 = "departemen setuju";
-var strLangS57 = "Disetujui";
+var strLangS57 = "disetujui";
 var strLangS61 = "perhatian";
 var strLangS63 = "pra-persetujuan";
 var strLangS64 = "Tampilkan";
@@ -1231,3 +1231,5 @@ var strLangJIHShareDox02 = "Silakan pilih pemberi berbagi terlebih dahulu.";
 
 var strLangRetiree01 = "adalah pensiunan.\nDikecualikan dari favorit."
 var strLangRetiree02 = "telah dibubarkan.\nAkan dikecualikan dari favorit."
+
+var strLangDashBoard01 = "Disetujui";

@@ -24,7 +24,7 @@ function grapeResize() {
     
     displays.forEach((el, idx) => {
         if (el) { 
-            if (lang == 6) {
+            if (lang != 1) {
                 el.style.left = (grapeWidth / 35 * multipliers[idx]) + "px";
             } else {
                 el.style.left = (grapeWidth / 35 * multipliers[idx] + 40) + "px";
@@ -1246,7 +1246,7 @@ function makeDoingBox(xml) {
     var aprStateMap = {
         "001" : strLangAprState1,
         "002" : strLangAprState2,
-        "003" : strLangS57
+        "003" : strLangDashBoard01
     }
     
     var data = xml.getElementsByTagName("ROW");

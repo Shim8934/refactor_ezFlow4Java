@@ -1231,3 +1231,5 @@ var strLangJIHShareDox02 = "Vui lòng chọn người chia sẻ trước.";
 
 var strLangRetiree01 = "đã nghỉ việc.\nSẽ bị loại khỏi mục yêu thích."
 var strLangRetiree02 = "đã bị giải thể.\nSẽ bị loại khỏi mục yêu thích."
+
+var strLangDashBoard01 = "Tôi đã phê duyệt";

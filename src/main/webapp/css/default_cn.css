@@ -209,3 +209,10 @@ p, strong, h3, div, a, span, table, th, td {
 #startButton > div > span:nth-child(2){display:block !important;}
 
 .statistics_wrap .statistics .graph_box .graph .display .num{margin-left: -5px;}
+.payment_template .right_box li .template_box .conts_box .document_list ul.info .cont.no-data .txt {left: 55%;}
+.payment_form_list ul .cont.no-data .txt{left: 55%;}
+.payment_template .left_box .template_box .conts_box .document_list ul .cont.no-data .txt{left: 55%;}
+.payment_form_list ul.info.nodata{margin: 0 0}
+.statistics_wrap .statistics .graph_box .txt { min-width: 105px; margin-right: 10px; padding:0px }
+.statistics_wrap .statistics .graph_box .graph ul { padding: 0PX }
+.statistics_wrap .statistics .graph_box .txt li {font-size: 13px;}

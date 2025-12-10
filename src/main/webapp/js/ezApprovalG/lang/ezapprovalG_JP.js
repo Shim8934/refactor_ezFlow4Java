@@ -1231,3 +1231,5 @@ var strLangJIHShareDox02 = "まず共有者を選択してください。";
 
 var strLangRetiree01 = "は退職者です。\nお気に入りの適用から除外されます。"
 var strLangRetiree02 = "は廃止されました。\nお気に入りの適用から除外されます。"
+
+var strLangDashBoard01 = "承認";
