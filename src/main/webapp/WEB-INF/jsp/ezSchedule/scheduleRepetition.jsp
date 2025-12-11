@@ -17,6 +17,7 @@
 		<script type="text/javascript" src="${util.addVer('ezSchedule.e1', 'msg')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/ezSchedule/dlg_schedule.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/ezSchedule/schedule_write_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezSchedule/schedule_read_Cross.js')}"></script>
 		<!-- data picker-->		
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.core.js')}"></script>
@@ -402,7 +403,7 @@
 		    			if (checks.item(i).checked == true)
 		    			{						    
 		    				days += checks.item(i).value;						
-		    				recurString = recurString + getDaystring(i);
+		    				recurString = recurString + " " + makeStringDayofWeekInfo(i.toString());
 		    											
 		    		        recurString = recurString + ","					        
 		    			}
@@ -484,11 +485,11 @@
 		    			
 		    			if(list_MonthInterval2.value == 1)
 		    			{
-		    			    recurString = strLang36 + " " + getOdinalString(parseInt(list_MonthlyEach.value)) + " " + getFullDaystring(parseInt(list_MonthlyDay.value));
+		    			    recurString = strLang36 + " " + makeStringWeekNumber(list_MonthlyEach.value) + " " + makeStringDayofWeekInfo2(list_MonthlyDay.value);
 		    			}
 		    			else
 		    			{					
-		    			    recurString =  list_MonthInterval2.value + strLang83 + " " + getOdinalString(parseInt(list_MonthlyEach.value)) + " " + getFullDaystring(parseInt(list_MonthlyDay.value));					
+		    			    recurString =  list_MonthInterval2.value + strLang83 + " " + makeStringWeekNumber(list_MonthlyEach.value) + " " + makeStringDayofWeekInfo2(list_MonthlyDay.value);					
 		    			}
 		    		}
 		    	}
@@ -521,7 +522,7 @@
 		    			repetition += "|" + list_YearlyEach.value;
 		    			repetition += "|" + list_YearlyDay.value;
 		    			
-		    			recurString = recurString + " " + getMonthString(parseInt(list_Month2.value)) + " " + getOdinalString(parseInt(list_YearlyEach.value)) + " " + getFullDaystring(parseInt(list_YearlyDay.value));
+		    			recurString = recurString + " " + getMonthString(parseInt(list_Month2.value)) + " " + makeStringWeekNumber(list_YearlyEach.value) + " " + makeStringDayofWeekInfo2(list_YearlyDay.value);
 		    		}				
 		    	}
 		    	
@@ -766,88 +767,6 @@
 		    		case 12:
 		    		    rtnString = strLang78;
 		    		    break;	
-		    	}
-		    	return rtnString;
-		    }
-	
-		    function getDaystring(cnt)
-		    {			
-		        var rtnString = "";
-		        switch (cnt)
-		    	{
-		    		case 0:					   
-		    			rtnString = strLang48;
-		    			break;
-		    		case 1:
-		    			rtnString = strLang49;
-		    			break;
-		    		case 2:
-		    			rtnString = strLang50;
-		    			break;
-		    		case 3:
-		    			rtnString = strLang51;
-		    			break;
-		    		case 4:
-		    			rtnString = strLang52;
-		    			break;
-		    		case 5:
-		    			rtnString = strLang53;
-		    			break;
-		    		case 6:
-		    			rtnString = strLang54;
-		    			break;	
-		    	}				
-		    	return " " + rtnString;
-		    }
-		    function getFullDaystring(cnt)
-		    {
-		        var rtnString = "";
-		        switch (cnt)
-		    	{
-		    		case 0:
-		    			rtnString = strLang60;
-		    			break;
-		    		case 1:
-		    			rtnString = strLang61;
-		    			break;
-		    		case 2:
-		    			rtnString = strLang62;
-		    			break;
-		    		case 3:
-		    			rtnString = strLang63;
-		    			break;
-		    		case 4:
-		    			rtnString = strLang64;
-		    			break;
-		    		case 5:
-		    			rtnString = strLang65;
-		    			break;
-		    		case 6:
-		    			rtnString = strLang66;
-		    			break;	
-		    	}
-		    	return rtnString;
-		    }
-		    function getOdinalString(cnt)
-		    {			
-		        var rtnString = "";
-		        switch (cnt)
-		    	{					
-		    		case 1:
-		    			rtnString = strLang55;
-		    			break;
-		    		case 2:
-		    			rtnString = strLang56;
-		    			break;
-		    		case 3:
-		    			rtnString = strLang57;
-		    			break;
-		    		case 4:
-		    			rtnString = strLang58;
-		    			break;
-		    		case 5:
-		    			rtnString = strLang59;
-		    			break;					
 		    	}
 		    	return rtnString;
 		    }
