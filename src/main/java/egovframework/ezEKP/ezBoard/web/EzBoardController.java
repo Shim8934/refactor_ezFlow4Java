@@ -939,7 +939,7 @@ public class EzBoardController extends EzFileMngUtil{
        return resultXML.replaceAll("onerror=alert", "");
    }
    
-   /**
+    /**
 	 * 게시판 나의게시판트리 설정 표출 Method
 	 */
 	public String getMyBoardTreeConfig(String userID, String pRootTreeID, String lang, String companyID, int tenantID) throws Exception {
