@@ -43,7 +43,8 @@
 				flagValue = primaryLang;
 
 				$('.languageTd *').css('display', 'none'); // js : .style.display | jQuery : css()
-				$("#" + flagValue + ", .languageTd img[name=" + flagValue + "]").css('display', '');
+				//$("#" + flagValue + ", .languageTd img[name=" + flagValue + "]").css('display', '');
+				$('#' + flagValue +  ',.languageTd label[for="' + flagValue + '"], .languageTd img[name="' + flagValue + '"]').css('display', '');
 				$("input:radio[id=" + flagValue + "]").prop('checked', true);
 			} else {
 				$("input:radio[id=" + flagValue + "]").prop('checked', true);
