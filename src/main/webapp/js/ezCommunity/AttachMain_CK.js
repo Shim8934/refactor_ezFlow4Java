@@ -481,6 +481,14 @@ function AppendFileAttachInfo(ret)
 				document.getElementById("filelist").appendChild(objTr);
 			}
 	    }
+        
+        var filelistCnt = $("#filelist td").length;
+        
+        if (filelistCnt > 0) {
+            objP.className = "attachInnerNotice_p_off"
+        } else {
+            objP.className = "attachInnerNotice_p_on"
+        }
 	    /*document.getElementById("lstAttachLink").innerHTML = strAttach;*/
 	    
 	    /* 2023-08-16 홍승비 - 커뮤니티 게시물 첨부파일 초기 로딩 및 추가, 삭제 시 > 첨부파일 사이즈의 총합을 계산하여 uploadedFileSize 전역변수에 설정 */
