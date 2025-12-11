@@ -206,7 +206,7 @@
              	STARTTIME,
              	ENDTIME,
              	AUTODELETE,
-             	REMINDERTIME .
+             	REMINDERTIME,
              	DEFAULTVIEWCHECK
         	FROM 
         		TBL_SCHEDULECONFIG 
