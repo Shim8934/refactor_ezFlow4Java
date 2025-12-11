@@ -1145,28 +1145,29 @@
 			    }
 			}
 		    function ExtensionAttribute_onClick() {
-		     /*    if (chkGroupBoard.checked) {
-		            gubun = "1"
-		        } else */ if (chkAnonyBoard.checked) {
-		            gubun = "2";
+				var pGubun = "0";
+		       if (isAllGroupBoard == "Y") {
+		            pGubun = "1"
+		        } else if (chkAnonyBoard.checked) {
+		            pGubun = "2";
 		        } else if (chkPhotoBoard.checked) {
-		            gubun = "3";
+		            pGubun = "3";
 		        } else if (chkThumbBoard.checked) {
-		            gubun = "4";
+		            pGubun = "4";
 		        } else if (chkGeneralBoard.checked) {
-		            gubun = "0";
+		            pGubun = "0";
 		        } else if (chkQnABoard.checked) {
-		            gubun = "5";
+		            pGubun = "5";
 		        } else if (chkMovieBoard.checked) {
-		        	gubun = "7";
+		        	pGubun = "7";
 		        } else if (chkCategoryBoard.checked) {
-		        	gubun = "10";
+		        	pGubun = "10";
 		        }
 
 		        var para = new Array();
 		        para[0] = BoardID;
-		        para[1] = gubun;
-		        var url = "/admin/ezBoard/boardExtensionAttribute.do?boardID=" + encodeURIComponent(BoardID) + "&gubun=" + gubun;
+		        para[1] = pGubun;
+		        var url = "/admin/ezBoard/boardExtensionAttribute.do?boardID=" + encodeURIComponent(BoardID) + "&gubun=" + pGubun;
 
 		        /* 2018-07-25 홍승비 - 확장칼럼 설정 팝업창 width 조절(일본어 대응) */
 		        if (CrossYN()) {
