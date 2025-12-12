@@ -10971,7 +10971,7 @@
 		MERGE INTO TBL_MEAL_PLAN target
 		USING (
 				SELECT
-					#mealDate# AS MEALDATE,
+					TO_DATE(#mealDate#, 'YYYY-MM-DD') AS MEALDATE,
 					#aCourse# AS ACOURSE,
 					#bCourse# AS BCOURSE,
 					#saladBar# AS SALADBAR,
