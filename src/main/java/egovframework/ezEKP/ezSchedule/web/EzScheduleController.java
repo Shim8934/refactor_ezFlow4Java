@@ -2663,12 +2663,13 @@ public class EzScheduleController extends EzFileMngUtil {
 			String beforeScheDate = doc.getElementsByTagName("BEFORESCHEDATE").item(0).getTextContent();
 			
 	    	ScheduleInfoVO beforeSche = ezScheduleService.getScheduleInfo(scheduleid, commonUtil.getMinuteUTC(loginVO.getOffset()), loginVO.getTenantId(), loginVO.getCompanyID());
-	    	defaultPath = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_schedule.ROOT", loginVO.getTenantId());
 			if ("1".equals(modType)) {
+				defaultPath = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_schedule.ROOT", loginVO.getTenantId());
 				ezScheduleService.insertScheduleRepeDel(scheduleid, commonUtil.getDateStringInUTC(beforeScheDate, loginVO.getOffset(), true), commonUtil.getDateStringInUTC(beforeScheDate, loginVO.getOffset(), true), loginVO.getTenantId(), loginVO.getCompanyID());
 				result = ezScheduleService.insertSchedule(beforeSche.getOwnerId(), beforeSche.getOwnerName(), beforeSche.getOwnerName2(), creatorid, creatorname, creatorname2, scheduletype, importance, ispublic, datetype, startdate, enddate, repetition, title, location, content, attach, 
         			attendantId, attendantName, attendantName2, attendantDeptName, attendantDeptName2, defaultPath, loginVO.getTenantId(), loginVO.getCompanyID(), showtop, loginVO.getOffset(), loginVO.getLang());
 			} else if ("2".equals(modType)) {
+				defaultPath = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_schedule.ROOT", loginVO.getTenantId());
 				String[] beforeRepetionArr = beforeSche.getRepetition().split("\\|");
 				DateTimeFormatter FORMATTER = beforeScheDate.length() > 10 ? DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm") : DateTimeFormatter.ofPattern("yyyy-MM-dd");
 				String endDate = LocalDateTime.parse(beforeScheDate, FORMATTER).minusDays(1).toString().substring(0, 10);
@@ -2683,6 +2684,7 @@ public class EzScheduleController extends EzFileMngUtil {
 				result = ezScheduleService.insertSchedule(beforeSche.getOwnerId(), beforeSche.getOwnerName(), beforeSche.getOwnerName2(), creatorid, creatorname, creatorname2, scheduletype, importance, ispublic, datetype, startdate, enddate, repetition, title, location, content, attach, 
         			attendantId, attendantName, attendantName2, attendantDeptName, attendantDeptName2, defaultPath, loginVO.getTenantId(), loginVO.getCompanyID(), showtop, loginVO.getOffset(), loginVO.getLang());
 			} else if ("3".equals(modType)) {
+				defaultPath = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_schedule.ROOT", loginVO.getTenantId());
 				result = ezScheduleService.insertSchedule(beforeSche.getOwnerId(), beforeSche.getOwnerName(), beforeSche.getOwnerName2(), creatorid, creatorname, creatorname2, scheduletype, importance, ispublic, datetype, startdate, enddate, repetition, title, location, content, attach, 
         			attendantId, attendantName, attendantName2, attendantDeptName, attendantDeptName2, defaultPath, loginVO.getTenantId(), loginVO.getCompanyID(), showtop, loginVO.getOffset(), loginVO.getLang());
 				ezScheduleService.deleteSchedule(scheduleid, loginVO.getTenantId());
