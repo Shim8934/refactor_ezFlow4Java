@@ -1437,7 +1437,10 @@ public class EzBoardController extends EzFileMngUtil{
 			}
 		}
 		
-		if (pBoardID.equals("{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}") || pBoardID.equals("{YYYYYYYY-YYYY-YYYY-YYYY-YYYYYYYYYYYY}") || pBoardID.equals("{ZZZZZZZZ-ZZZZ-ZZZZ-ZZZZ-ZZZZZZZZZZZZ}") || boardInfo.getUseGroupFlag().equals("Y")) {
+		if (pBoardID.equals("{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}") || 
+				pBoardID.equals("{YYYYYYYY-YYYY-YYYY-YYYY-YYYYYYYYYYYY}") || 
+				pBoardID.equals("{ZZZZZZZZ-ZZZZ-ZZZZ-ZZZZ-ZZZZZZZZZZZZ}") || 
+				(boardInfo.getUseGroupFlag() != null && boardInfo.getUseGroupFlag().equals("Y"))) {
 			boardInfo.setAccess_("1");
 			boardInfo.setAccess_FG("1");
 			boardInfo.setBoardAdmin_FG("false");
