@@ -24,6 +24,8 @@
 	    	<c:if test="${useJapanese != 'YES'}">.JPN { display: none; }</c:if>
 			<c:if test="${useChinese != 'YES'}">.CHN { display: none; }</c:if>
 			<c:if test="${useIndonesian != 'YES'}">.IDN { display: none; }</c:if>
+			
+			.ui-sortable-helper td{display: flex; align-items: center; box-sizing: border-box;}
 	    </style>
 	    <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>    
 	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
