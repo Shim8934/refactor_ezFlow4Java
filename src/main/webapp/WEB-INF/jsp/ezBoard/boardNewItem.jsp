@@ -1953,8 +1953,8 @@
 			                        htmlData = ReplaceText(htmlData, "&gt;", ">"); */
 			                        htmlData = "<body free>" + htmlData + "</body>";
 			                        
-			                        /* 2025-12-04 노병훈 - 직위 없을 사용자가 작성자일때 ", " 제거 */
-                                    var emptyTitleCheck = strWriterTitle == "" || strWriterTitle == null ? "" :  strWriterTitle + ", ";
+			                        /* 2025-12-04 노병훈 - 직위 없는 사용자가 작성자일때 ", " 제거 */
+                                    var emptyTitleCheck = strWriterTitle.trim() == "" || strWriterTitle == null ? "" :  strWriterTitle + ", ";
 			                        
 			                        if (gubun != "2") {
 			                        	var replyHeader = "<p " + defaultFontAndSize + ">&nbsp;</p><p " + defaultFontAndSize + ">&nbsp;</p>";
@@ -2863,9 +2863,9 @@
 		            } else if (pMode == "reply") {
 		            	var replyHeader = "";
 		            	
-		            	/* 2025-12-04 노병훈 - 직위 없을 사용자가 작성자일때 ", " 제거 */
-                        var emptyTitleCheck = strWriterTitle == "" || strWriterTitle == null ? "" :  strWriterTitle + ", ";
-                        			                        
+		            	/* 2025-12-04 노병훈 - 직위 없는 사용자가 작성자일때 ", " 제거 */
+                        var emptyTitleCheck = strWriterTitle.trim() == "" || strWriterTitle == null ? "" :  strWriterTitle + ", ";
+                        
 		            	if (gubun != "2") {
                         	replyHeader += "<p " + defaultFontAndSize + ">&nbsp;</p><p " + defaultFontAndSize + ">&nbsp;</p>";
                         	replyHeader += "<p " + defaultFontAndSize + ">-----<B>[&nbsp;<spring:message code='ezBoard.t423' /></B>-----</p>";

@@ -268,9 +268,9 @@
                                                             htmlData = ReplaceText(htmlData, "&gt;", ">"); */
 							htmlData = "<body free>" + htmlData + "</body>";
 
-                            /* 2025-12-04 노병훈 - 직위 없을 사용자가 작성자일때 ", " 제거 */
-                            var emptyTitleCheck = strWriterTitle == "" || strWriterTitle == null ? "" :  strWriterTitle + ", ";
-                                
+                            /* 2025-12-04 노병훈 - 직위 없는 사용자가 작성자일때 ", " 제거 */
+                            var emptyTitleCheck = strWriterTitle.trim() == "" || strWriterTitle == null ? "" :  strWriterTitle + ", ";
+
 							if (gubun != "2") {
 								var replyHeader = "<p " + defaultFontAndSize + ">&nbsp;</p><p " + defaultFontAndSize + ">&nbsp;</p>";
 								replyHeader += "<p " + defaultFontAndSize + ">-----<B>[&nbsp;원문&nbsp;&nbsp;내용&nbsp;]</B>-----</p>";

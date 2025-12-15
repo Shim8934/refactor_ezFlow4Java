@@ -149,10 +149,10 @@
 			writeContent = replaceString(writeContent);
 			writeContent = "<body free>" + writeContent + "</body>";
 			
-			/* 2025-12-04 노병훈 - 직위 없을 사용자가 작성자일때 ", " 제거 */
+			/* 2025-12-04 노병훈 - 직위 없는 사용자가 작성자일때 ", " 제거 */
 			var strWriterTitle = "${board.writerPosition}";
-            var emptyTitleCheck = strWriterTitle == "" || strWriterTitle == null ? "" :  strWriterTitle + ", ";
-                                        
+            var emptyTitleCheck = strWriterTitle.trim() == "" || strWriterTitle == null ? "" :  strWriterTitle + ", ";
+
 			writeContent = "<br><br>-----<B>[&nbsp;"+"<spring:message code='ezBoard.t423' />"+"</B>-----"
 						 + "<br><B><spring:message code='ezBoard.t424' />"+"</B>" 
 						 + "&nbsp;${fn:substring(board.writeDate, 0, 16)}" 

@@ -2405,7 +2405,7 @@ function GetBoardItemInfo_New(pBoardID, pItemID, pRetransType, pFont) {
         eSubject.value = getNodeText(SelectNodes(ReturnXML, "NODES/NODE/Title")[0]);
         var PostDate = getNodeText(SelectNodes(ReturnXML, "NODES/NODE/WriteDate")[0]);
         var Sender = getNodeText(SelectNodes(ReturnXML, "NODES/NODE/WriterName")[0]) + " (" +
-	                 getNodeText(SelectNodes(ReturnXML, "NODES/NODE/ExtensionAttribute3")[0]) + "," +
+	                 (getNodeText(SelectNodes(ReturnXML, "NODES/NODE/ExtensionAttribute3")[0]) == "" ? "" : getNodeText(SelectNodes(ReturnXML, "NODES/NODE/ExtensionAttribute3")[0]) +",") +
 			         getNodeText(SelectNodes(ReturnXML, "NODES/NODE/WriterDeptName")[0]) + "," +
 			         getNodeText(SelectNodes(ReturnXML, "NODES/NODE/WriterCompanyName")[0]) + ")";
 
@@ -2510,7 +2510,7 @@ function GetBoardItemInfo_New3(pBoardID, pItemID, pFont) {
         eSubject.value = getNodeText(SelectNodes(ReturnXML, "NODES/NODE/Title")[0]);
         var PostDate = getNodeText(SelectNodes(ReturnXML, "NODES/NODE/StartDate")[0]);
         var Sender = getNodeText(SelectNodes(ReturnXML, "NODES/NODE/WriterName")[0]) + " (" +
-	                 getNodeText(SelectNodes(ReturnXML, "NODES/NODE/ExtensionAttribute3")[0]) + "," +
+	                 (getNodeText(SelectNodes(ReturnXML, "NODES/NODE/ExtensionAttribute3")[0]) == "" ? "" : getNodeText(SelectNodes(ReturnXML, "NODES/NODE/ExtensionAttribute3")[0]) +",") +
 			         getNodeText(SelectNodes(ReturnXML, "NODES/NODE/WriterDeptName")[0]) + "," +
 			         getNodeText(SelectNodes(ReturnXML, "NODES/NODE/WriterCompanyName")[0]) + ")";
 
