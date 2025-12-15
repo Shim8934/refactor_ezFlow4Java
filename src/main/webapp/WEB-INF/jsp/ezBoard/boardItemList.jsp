@@ -1643,23 +1643,18 @@
 					var parser = new DOMParser();
 
 					$.ajax({
-						url: "/ezBoard/boardItemView.do?showAdjacent=" + ShowAdjacent
-								+ "&itemID=" + encodeURIComponent(pitemid)
-								+ "&boardID=" + encodeURIComponent(pboardid)
-								+ "&location=GENERAL",
+						url: "/ezBoard/boardViewAccessCheck.do?itemID=" + encodeURIComponent(pitemid) + "&boardID=" + encodeURIComponent(pboardid) + "&location=GENERAL",
 						headers: {
 							'Authorization': 'Basic ' + btoa(password)
 						},
 						success: function(response) {
 							$.modal.close();
-							var returnDom = parser.parseFromString(response, "text/xml")
-							if (!returnDom || returnDom.querySelector('title').textContent ==="warning") {
+							if (!response) {
 								alert("<spring:message code='ezBoard.t267' />");
 								return;
 							}
-							var newWindow = window.open("", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=790,top=" + pTop + ",left=" + pLeft);
-							newWindow.document.write(response);
-							newWindow.document.close();
+							var openUrl = "/ezBoard/boardItemView.do?showAdjacent=" + ShowAdjacent + "&itemID=" + encodeURIComponent(pitemid) + "&boardID=" + encodeURIComponent(pboardid) + "&location=GENERAL";
+							window.open(openUrl, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=790,top=" + pTop + ",left=" + pLeft);
 						},
 						error: function(xhr, status, error) {
 							console.error('Error:', error);

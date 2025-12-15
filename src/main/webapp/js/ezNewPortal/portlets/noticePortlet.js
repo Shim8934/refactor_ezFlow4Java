@@ -44,27 +44,7 @@ var assembleNoticeList = function(noticeList, noticePortletId, access, totalCnt,
 	var boardId = '';
 	
 	var noticeDetail = function() {
-		var height = window.screen.availHeight;
-		var width = window.screen.availWidth;
-		var top = (height - 720) / 2;
-		var left = (width - 765) / 2;
-		var option = 'toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=765,top='+top+',left='+left;
-		
-		if(this.getAttribute('data3') === "3" || this.getAttribute('data3') === "4") {
-			top = (height - 720) / 2;
-			left = (width - 790) / 2;
-			 
-			option = 'toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=790,top='+top+',left='+left;
-			window.open('/ezBoard/boardItemViewPhoto.do?showAdjacent=&itemID='+ encodeURIComponent(this.getAttribute('data1'))+'&boardID='+ encodeURIComponent(this.getAttribute('data2')), "", option, "");
-		} else if (this.getAttribute('data3') == "7") {
-			 top = (height - 679) / 2;
-			 left = (width - 765) / 2;
-			 
-			 option = 'toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=679,width=765,top='+top+',left='+left;
-			 window.open('/ezBoard/boardItemViewMovie.do?showAdjacent=&itemID='+ encodeURIComponent(this.getAttribute('data1'))+'&boardID='+ encodeURIComponent(this.getAttribute('data2')), "", option, "");
-		   } else {
-			window.open('/ezBoard/boardItemView.do?showAdjacent=&itemID='+ encodeURIComponent(this.getAttribute('data1'))+'&boardID='+ encodeURIComponent(this.getAttribute('data2')), "", option, "");
-		}
+		openBoard(this.getAttribute('data1'), this.getAttribute('data3'), this.getAttribute('data2'));
 	}
 	
 	var noticePlus = function() {

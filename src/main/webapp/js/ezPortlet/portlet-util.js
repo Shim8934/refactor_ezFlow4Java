@@ -853,18 +853,16 @@ function openAnonymousModal(portletId, pItemID, pType, oBoardID, openFunc) {
     var pLeft = (pwidth - 765) / 2;
 
     $.ajax({
-        url: "/ezBoard/boardItemView.do?showAdjacent=&itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(oBoardID),
+        url: "/ezBoard/boardViewAccessCheck.do?showAdjacent=&itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(oBoardID),
         success: function(response) {
-            var returnDom = parser.parseFromString(response, "text/xml")
-            if (!returnDom || returnDom.querySelector('title').textContent ==="warning") {
+            if (!response) {
                 makeInputModal($('#' + portletId + 'Portlet')[0], strBoardPassword, strBoardOk, (function (password) {
                     openFunc(pItemID, pType, oBoardID, password);
                 }));
-            } else {
-                var newWindow = window.open("", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft);
-                newWindow.document.write(response);
-                newWindow.document.close();
-            }
+                return ;
+            } 
+            var openUrl = "/ezBoard/boardItemView.do?&itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(oBoardID) + "&location=GENERAL";
+            window.open(openUrl, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft);
         },
         error: function(xhr, status, error) {
             console.error('Error:', error);

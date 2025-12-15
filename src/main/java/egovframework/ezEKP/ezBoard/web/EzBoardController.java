@@ -4613,6 +4613,51 @@ public class EzBoardController extends EzFileMngUtil{
 		logger.debug("getBoardItemView ended");
         return "ezBoard/boardItemView";
     }
+
+	/**
+	 * 게시판 권한 체크
+	 */
+	@GetMapping("/ezBoard/boardViewAccessCheck.do")
+	@ResponseBody
+	public boolean getBoardViewAccessCheck(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("getBoardViewAccessCheck started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String userId = userInfo.getId();
+		int tenantId = userInfo.getTenantId();
+		String offset = userInfo.getOffset();
+		
+		String boardID = request.getParameter("boardID");
+		String itemID = request.getParameter("itemID");
+		String location = request.getParameter("location").isEmpty() ? "GENERAL" : request.getParameter("location");
+		
+		BoardPropertyVO boardInfo = getBoardInfo(boardID, userInfo);
+		BoardListVO boardItem = ezBoardService.getBrdGetItemInfo(boardID, itemID, commonUtil.getMultiData(userInfo.getLang(), tenantId), tenantId);
+		
+		// 게시물 존재여부 체크
+		if (boardItem == null) {
+			return false;
+		}
+		
+		// 공개비공개 및 권한 체크
+		String authorization = request.getHeader("Authorization");
+		String password = StringUtils.isNotBlank(authorization) ? new String(java.util.Base64.getDecoder().decode(StringUtils.removeStart(authorization, "Basic").trim())) : "";
+		if (!accessCheck(boardID, itemID, location, userInfo, password)) {
+			return false;
+		}
+		
+		// QNA 게시판일 때의 권한 체크
+		if ("5".equals(boardInfo.getGuBun()) && "false".equals(boardInfo.getBoardAdmin_FG())) {
+			// 게시관리자가 아닌 사람은 QNA게시판에서 본인이 쓴 게시물과, 본인이 쓴 게시물에 달린 답 게시물, 공지게시물만 볼 수 있음
+			if (!userId.equals(boardItem.getWriterID()) && !userId.equals(boardItem.getTopWriterID()) 
+					&& !("1".equals(boardItem.getExtensionAttribute2()) && commonUtil.isTodayBetween(boardItem.getNotiStart(), boardItem.getNotiEnd(), offset))) {
+				return false;
+			}
+		}
+		
+		logger.debug("getBoardViewAccessCheck ended.");
+		return true;
+	}
 	
 	/**
 	 * 게시판 읽음표시 실행 Method

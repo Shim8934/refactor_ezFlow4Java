@@ -1780,20 +1780,17 @@ var openBoard = function (pItemID, pType, oBoardID, password) {
 		pLeft = (pwidth - normalWidth) / 2;
 
 		$.ajax({
-			url: "/ezBoard/boardItemView.do?showAdjacent=&itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(oBoardID),
+			url: "/ezBoard/boardViewAccessCheck.do?itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(oBoardID) + "&location=GENERAL",
 			headers: !!password ? {
 				'Authorization': 'Basic ' + btoa(password)
 			} : {},
 			success: function(response) {
-				var returnDom = parser.parseFromString(response, "text/xml")
-				if (!returnDom || returnDom.querySelector('title').textContent ==="warning") {
+				if (!response) {
 					alert(!!password ? strWrongPassword : strLang1132);
 					return;
 				}
-				var newWindow = window.open("", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=" + normalHeight + ",width=" + normalWidth + ",top=" + pTop + ",left=" + pLeft);
-				newWindow.document.write("<html> <head> <style> html, body { margin: 0; padding: 0; height: 100%; overflow-y: scroll; } </style> </head> <body> </body> </html>");
-				newWindow.document.write(response);
-				newWindow.document.close();
+				var openUrl = "/ezBoard/boardItemView.do?showAdjacent=&itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(oBoardID);
+				window.open(openUrl, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=" + normalHeight + ",width=" + normalWidth + ",top=" + pTop + ",left=" + pLeft);
 			},
 			error: function(xhr, status, error) {
 				console.error('Error:', error);
