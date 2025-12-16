@@ -851,37 +851,39 @@
 			AND
             	(A.WRITERCOMPANYID = #v_COMPANYID# OR TRIM(A.WRITERCOMPANYID) = '' OR A.WRITERCOMPANYID IS NULL
             		OR TRIM(P.COMPANYID) = '' OR P.COMPANYID IS NULL)
-          		AND
-					(A.APPRFLAG = 'Y' 
-					OR A.APPRFLAG IS NULL)
-				AND 
-					A.STARTDATE > TO_CHAR(TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS') - 5, 'YYYY-MM-DD HH24:MI:SS') 
-				AND 
- 					A.STARTDATE <= #nowDate#
-				AND 
-					A.ENDDATE > #nowDate#
-				AND 
-					(NOT EXISTS
-								(SELECT 
-     								USERID 
-     							 FROM 
-     							 	TBL_BOARD_ITEM_READ S 
-     							 WHERE 
-     							 	S.TENANT_ID = A.TENANT_ID
-     							 AND
-     							 	S.BOARDID = A.BOARDID 
-     							 AND 
-     							 	S.ITEMID = A.ITEMID 
-     							 AND 
-     							 	S.TENANT_ID = #v_TENANTID#
-     							 AND
-     							 	S.USERID = #v_pUserID# 
-     							 AND 
-     							 	S.READDATE > TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS') - 5))
-     		AND
-				(P.VERSIONMANAGE = 'Y' AND M2.ITEMID IS NOT NULL
-					OR
-			    P.VERSIONMANAGE = 'N')
+			AND
+				P.GUBUN != '5'
+			AND
+				(A.APPRFLAG = 'Y' 
+				OR A.APPRFLAG IS NULL)
+			AND 
+				A.STARTDATE > TO_CHAR(TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS') - 5, 'YYYY-MM-DD HH24:MI:SS') 
+			AND 
+				A.STARTDATE <= #nowDate#
+			AND 
+				A.ENDDATE > #nowDate#
+			AND 
+				(NOT EXISTS
+					(SELECT 
+						USERID 
+					 FROM 
+						TBL_BOARD_ITEM_READ S 
+					 WHERE 
+						S.TENANT_ID = A.TENANT_ID
+					 AND
+						S.BOARDID = A.BOARDID 
+					 AND 
+						S.ITEMID = A.ITEMID 
+					 AND 
+						S.TENANT_ID = #v_TENANTID#
+					 AND
+						S.USERID = #v_pUserID# 
+					 AND 
+						S.READDATE > TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS') - 5))
+		AND
+			(P.VERSIONMANAGE = 'Y' AND M2.ITEMID IS NOT NULL
+				OR
+			P.VERSIONMANAGE = 'N')
 		]]>
 	</select>
 	
