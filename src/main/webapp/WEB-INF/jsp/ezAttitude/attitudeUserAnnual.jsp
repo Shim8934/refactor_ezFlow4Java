@@ -433,7 +433,9 @@
 				    			html += "<td style='width:12%'>" + "<spring:message code='ezAttitude.t268' />" + "</td>";
 		    				} else if(vo.docApprStatus == '011') {
 				    			html += "<td style='width:12%'>" + "<spring:message code='ezAttitude.t269' />" + "</td>";
-		    				} else {
+		    				} else if (vo.docApprStatus == '0') {
+                                html += "<td style='width:12%'>" + "<spring:message code='ezAttitude.t34' />" + "</td>";
+                            } else {
 				    			html += "<td style='width:12%'>" + "<spring:message code='ezAttitude.t270' />" + "</td>";
 		    				}
 		    			} else if (vo.annualApprStatus == 1) {

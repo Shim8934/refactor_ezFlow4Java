@@ -54,7 +54,9 @@
 						tempHtml += "<td colspan='2'><spring:message code='ezAttitude.t268' /></td>";
     				} else if(docApprStatus == '011') {
 						tempHtml += "<td colspan='2'><spring:message code='ezAttitude.t269' /></td>";
-    				} else {
+    				} else if(docApprStatus == '0') {
+                        tempHtml += "<td colspan='2'><spring:message code='ezAttitude.t34' /></td>";
+                    } else {
 						tempHtml += "<td colspan='2'><spring:message code='ezAttitude.t270' /></td>";
     				}
 				} else if(annualApprStatus == "1") {
