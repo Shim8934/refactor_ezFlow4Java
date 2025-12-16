@@ -529,7 +529,7 @@
 		var optElmt             = document.getElementById("sltView");
 		var viewPopup           = document.getElementById("layerPopup");
 		viewPopup.style.left    = document.documentElement.clientWidth - 160 + "px";
-		viewPopup.style.top     = "128px";
+		viewPopup.style.top     = "79px";
 		viewPopup.style.display = "";
 		optElmt.setAttribute("src", "/images/kr/cm/btn_arrow_up.gif");
 		optElmt.setAttribute("role", "on");
