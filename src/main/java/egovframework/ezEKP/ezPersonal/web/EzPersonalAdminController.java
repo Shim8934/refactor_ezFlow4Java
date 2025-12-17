@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.lang.reflect.Field;
 import java.net.URLConnection;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -24,6 +25,9 @@ import javax.servlet.http.HttpServletResponse;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +45,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -65,6 +70,9 @@ import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 /** 
  * @Description [Controller] 관리자 - 초기화면
@@ -981,7 +989,7 @@ public class EzPersonalAdminController extends EzFileMngUtil {
 	
 	@RequestMapping(value = "/admin/ezPersonal/savePopup.do", method = RequestMethod.POST)
 	@ResponseBody
-	public String savePopup(@CookieValue("loginCookie") String loginCookie, @RequestBody JSONObject jObj) throws Exception {
+	public String savePopup(@CookieValue("loginCookie") String loginCookie, HttpServletRequest req, @RequestBody JSONObject jObj) throws Exception {
 		logger.debug("savePopup started");
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -1003,7 +1011,6 @@ public class EzPersonalAdminController extends EzFileMngUtil {
 		vo.setWidth(Integer.parseInt(jObj.get("width").toString()));
 		vo.setHeight(Integer.parseInt(jObj.get("height").toString()));
 		vo.setPosition(jObj.get("position").toString());
-		vo.setContent(jObj.get("content").toString());
 		vo.setSkinValue(Integer.parseInt(jObj.get("skinValue").toString()));
 		 ObjectMapper mapper = new ObjectMapper();
 		List<PersonalPopupUserVO> authList = mapper.convertValue(jObj.get("authList"), new TypeReference<List<PersonalPopupUserVO>>() {});
@@ -1011,6 +1018,11 @@ public class EzPersonalAdminController extends EzFileMngUtil {
 		if (vo.getTitle2().equals("")) {
 			vo.setTitle2(vo.getTitle());
 		}
+		String content = jObj.get("content").toString();
+		if (content != null) {
+			content = changeImgPathInContent(req.getServletContext().getRealPath(""), tenantId, content);
+		}
+		vo.setContent(content);
 		
 		if (vo.getItemSeq() == null) {
 			int itemSeq = ezPersonalAdminService.insertPopup(vo, userInfo.getTenantId(), userInfo.getOffset());
@@ -1026,6 +1038,42 @@ public class EzPersonalAdminController extends EzFileMngUtil {
 		
 		logger.debug("savePopup ended");
 		return "OK";
+	}
+	
+	/**
+	 * 팝업공지 이미지를 임시파일폴더에서 적절한 경로로 이동
+	 */
+	private String changeImgPathInContent(String realPath, int tenantId, String content) throws Exception {
+		
+		String uploadCommonPath = commonUtil.getUploadPath("upload_common.ROOT", tenantId);
+		String uploadPopupPath = commonUtil.getUploadPath("upload_personal.ROOT", tenantId) + commonUtil.separator + "popupNotiImg";
+		
+		org.jsoup.nodes.Document doc = Jsoup.parse(content);
+		Elements imgs = doc.select("img");
+		
+    	Files.createDirectories(Paths.get(realPath + uploadPopupPath));
+
+		for (Element img : imgs) {
+			String src = img.attr("src");
+			
+			if (!src.contains(uploadCommonPath)) {
+				continue;
+			}
+			
+			Path sourcePath = Paths.get(realPath + src); // 복사할 파일이 존재하지 않을 경우
+			if (!Files.exists(sourcePath)) {
+				continue;
+			}
+			
+			String fileName = sourcePath.getFileName().toString();
+			String newSrc = uploadPopupPath + commonUtil.separator + fileName;
+			Path destPath = Paths.get(realPath + newSrc);
+			
+			Files.move(sourcePath, destPath, StandardCopyOption.REPLACE_EXISTING);
+			img.attr("src", newSrc);
+		}
+		
+		return doc.body().html();
 	}
 	
 	/**
