@@ -86,7 +86,7 @@
 .userName{display: block; color:#004896; font-size:14px; padding:10px 0px 0px 20px;}
 .userNameNewCmt{display: block; color:#0470e4; font-size:14px; padding:10px 0px 0px 20px;}
 
-.voteComment{width:100%; height:79px !important; background:#f9f9f9; border:1px solid #DDD; border-bottom:0px; margin:20px 0px 0px 0px; padding:0px; overflow:hidden;}
+.voteComment{position:relative; width:100%; height:79px !important; background:#f9f9f9; border:1px solid #DDD; border-bottom:0px; margin:20px 0px 0px 0px; padding:0px;}
 .sendComment_layout{ height:58px; overflow:hidden; margin:10px; background:#fff; border:1px solid #ddd;}
 .send_attach{ float:left; overflow:hidden; margin:0px 0px 0px 0px; padding:15px 0px 0px 15px;}
 .send_attach .cmtAddFile{cursor:pointer;}
