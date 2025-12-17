@@ -60,7 +60,7 @@
 				var pLeft = (pwidth - 500) / 2; 
 				
 				if (selectedTabId == "openCommu") {
-					infoPopup = window.open("/admin/ezCommunity/admCommunityInfoEdit.do?code=" + pcode, "", "location=1,toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=390,width=480,top=" + pTop + ",left=" + pLeft, "");
+					infoPopup = window.open("/admin/ezCommunity/admCommunityInfoEdit.do?companyID=" + encodeURIComponent(companySelectID) +"&code=" + pcode, "", "location=1,toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=390,width=480,top=" + pTop + ",left=" + pLeft, "");
 				}
 				else {
 					infoPopup = window.open("/admin/ezCommunity/closeCommunityInfo.do?companyID=" + encodeURIComponent(companySelectID) + "&code=" + pcode, "", "location=1,toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=295,width=480,top=" + pTop + ",left=" + pLeft, "");
