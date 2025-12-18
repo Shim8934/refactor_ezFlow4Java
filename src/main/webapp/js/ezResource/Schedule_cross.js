@@ -813,7 +813,7 @@ function AllDayCheckStartEndDateTime() {
 		}
 	}
     var start = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + "00:00";
-    var end = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + "00:00";
+    var end = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + "23:59";
 	
 	return start < end;
 }
