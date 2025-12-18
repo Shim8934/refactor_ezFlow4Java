@@ -540,23 +540,9 @@
 				schedule_add_user_cross_dialogArguments[0] = g_param;
 				schedule_add_user_cross_dialogArguments[1] = Add_UserInfo_onclick_Complete;
 
-				parent.document.querySelector("iframe[name=right]").src = "/ezSchedule/scheduleShowGatherList.do";
-                /*
-				if (CrossYN()) {
-					window.open("/ezSchedule/scheduleShowGatherList.do", "right");
-				} else {
-					var reParam = window.open("/ezSchedule/scheduleShowGatherList.do", "right");
-					if (typeof (reParam) != "undefined" && reParam != null) {
-						idDatepicker.vtLocalDate = reParam["startTime"];
-						idDatepicker.vtLocalEndDate = reParam["endTime"];
-
-						if (reParam["entryList"] != "") {
-							xmpEntryEmailList.innerText = reParam["entryList"];
-							DisplayEntryList();
-						}
-					}
-				}*/
+				parent.document.querySelector("iframe[name=right]").src = "/ezSchedule/scheduleShowGatherList.do?groupId=" + obj.getAttribute('data1') + "&groupName=" + encodeURIComponent(obj.getAttribute('data2'));
 			}
+			
 			function Add_UserInfo_onclick_Complete(reParam) {
 				idDatepicker.vtLocalDate = reParam["startTime"];
 				idDatepicker.vtLocalEndDate = reParam["endTime"];

@@ -15,7 +15,12 @@
 		<script>
 			var g_currentDate;
 		    var g_orgUserID = "<c:out value='${userInfo.id}'/>";
-		    var s_date, e_date;
+			var uselang = "<c:out value='${userInfo.lang}'/>"
+			var groupId = "<c:out value='${groupId}'/>";
+			var groupName = "<c:out value='${groupName}'/>";
+			var Para = {"id": new Array(), "name": new Array(), "deptname": new Array()};
+			var s_date = "";
+			var e_date = "";
 	
 		    function add_DATEs(dateformat, dates) {
 		        var int_millisecond = 1;
@@ -57,55 +62,54 @@
 	
 		        return ("" + year + "-" + month + "-" + day);
 		    }
-		    var RetValue;
-		    var ReturnFunction;
+			
 		    function window_onload() {
-		        try {
-		            RetValue = parent.schedule_add_user_cross_dialogArguments[0];
-		            ReturnFunction = parent.schedule_add_user_cross_dialogArguments[1];
-		        } catch (e) {
-		            try {
-		                RetValue = opener.schedule_add_user_cross_dialogArguments[0];
-		                ReturnFunction = opener.schedule_add_user_cross_dialogArguments[1];
-		            } catch (e) {
-		                RetValue = window.dialogArguments;
-		            }
-		        }
-	
-		        var Para = RetValue;
-		        var entries;
-				document.getElementById("groupName").innerText = Para["groupName"].toString();
+		    	$.ajax({
+					type: "GET",
+					dataType: "xml",
+					async: false,
+					data: {
+						groupID: groupId
+					},
+					url: "/ezSchedule/getGatherDetail.do",
+					success: function (text) {
+						var totalLen = SelectNodes(text, "MEMBERID").length;
+
+						for (var i = 0; i < totalLen; i++) {
+							Para["id"][i] = SelectNodes(text, "MEMBERID").item(i).textContent;
+							if (uselang == "1") {
+								Para["name"][i] = SelectNodes(text, "INFO").item(i).textContent;
+								Para["deptname"][i] = SelectNodes(text, "DESCRIPTION").item(i).textContent;
+							} else {
+								Para["name"][i] = SelectNodes(text, "INFO").item(i).textContent;
+								Para["deptname"][i] = SelectNodes(text, "DESCRIPTION2").item(i).textContent;
+							}
+						}
+					}
+				});
+				
+				document.getElementById("groupName").innerText = groupName
 	
 		        if (typeof (Para) != "undefined" && Para != null) {
-		            s_date = Para["startTime"];
-		            e_date = Para["endTime"];
-		            entries = Para["entryList"];
-	
-		            if (s_date == "") {
-		                s_date = getToday();
-		                var curDateArr = s_date.split("-");
-	
-		                if (curDateArr.length > 0) {
-		                    s_date = curDateArr[0] + "-" + DateChange(curDateArr[1]) + "-" + DateChange(curDateArr[2]);
-		                }
-		            }
-	
-		            if (e_date == "") {
-		                e_date = getToday();
-	
-		                curDateArr = e_date.split("-");
-	
-		                if (curDateArr.length > 0) {
-		                    e_date = curDateArr[0] + "-" + DateChange(curDateArr[1]) + "-" + DateChange(curDateArr[2]);
-		                }
-		            }
-	
+					s_date = getToday();
+					var curDateArr = s_date.split("-");
+
+					if (curDateArr.length > 0) {
+						s_date = curDateArr[0] + "-" + DateChange(curDateArr[1]) + "-" + DateChange(curDateArr[2]);
+					}
+					
+					e_date = getToday();
+					curDateArr = e_date.split("-");
+
+					if (curDateArr.length > 0) {
+						e_date = curDateArr[0] + "-" + DateChange(curDateArr[1]) + "-" + DateChange(curDateArr[2]);
+					}
 		            g_currentDate = s_date;
-	
-		            if (Para["entryList"]["id"].length > 0) {
-		                for (var i = 0 ; i < Para["entryList"]["id"].length; i++) {
-		                    var entryID = Para["entryList"]["id"][i];
-		                    var entryName = Para["entryList"]["name"][i];
+					
+		            if (Para["id"].length > 0) {
+		                for (var i = 0 ; i < Para["id"].length; i++) {
+		                    var entryID = Para["id"][i];
+		                    var entryName = Para["name"][i];
 	
 		                    CreateEmptyInputLine();
 	
@@ -118,8 +122,7 @@
 		                    DisplayScheduleList(listNode, entryID);
 		                }
 		            }
-		        }
-		        else {
+		        } else {
 		            var sysDate = new Date();
 	
 		            s_date = sysDate.getFullYear() + "-"
@@ -485,62 +488,23 @@
 										<table class="entryList_bg"></table>	<!-- 테이블 배경 라인 -->
 	                 					<table id="entryList" class="entryList">
 											<tr>
-												<th></th><th><span>AM</span>0</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>10</th><th>11</th>
-												<th><span>PM</span>12</th><th>13</th><th>14</th><th>15</th><th>16</th><th>17</th><th>18</th><th>19</th><th>20</th><th>21</th><th>22</th><th>23</th>
+												<th></th>
+												<c:forEach var="num" begin="0" end="23" step="1">
+													<th>
+														<c:if test="${num eq 0}"><span>AM</span></c:if>
+														<c:if test="${num eq 12}"><span>PM</span></c:if>
+														${num}
+													</th>
+												</c:forEach>
 											</tr>
 	                   						<tr>
 	                     						<td class="entry_name" id="" deptid=""></td>
 	                     						<td class="entry_schedule" colspan="24">
-	                        						<table style="border:0px; padding:0px; border-collapse:collapse; border-spacing:0px; width:100%;" >
+	                        						<table style="border:0px; padding:0px; border-collapse:collapse; border-spacing:0px; width:100%;"  >
 	                         							<tr>
-															<td style="height:16px;"></td>
-															<td style="height:16px;"></td>
-															<td style="height:16px;"></td>
-															<td style="height:16px;"></td>
-															<td style="height:16px;"></td>
-															<td style="height:16px;"></td>
-															<td style="height:16px;"></td>
-															<td style="height:16px;"></td>
-															<td style="height:16px;"></td>
-															<td style="height:16px;"></td>
-															<td style="height:16px;"></td>
-															<td style="height:16px;"></td>
-															<td style="height:16px;"></td>
-															<td style="height:16px;"></td>
-															<td style="height:16px;"></td>
-															<td style="height:16px;"></td>
-															<td style="height:16px;"></td>
-															<td style="height:16px;"></td>
-															<td style="height:16px;"></td>
-															<td style="height:16px;"></td>
-															<td style="height:16px;"></td>
-															<td style="height:16px;"></td>
-															<td style="height:16px;"></td>
-															<td style="height:16px;"></td>
-															<td style="height:16px;"></td>
-															<td style="height:16px;"></td>
-															<td style="height:16px;"></td>
-															<td style="height:16px;"></td>
-															<td style="height:16px;"></td>
-															<td style="height:16px;"></td>
-															<td style="height:16px;"></td>
-															<td style="height:16px;"></td>
-															<td style="height:16px;"></td>
-															<td style="height:16px;"></td>
-															<td style="height:16px;"></td>
-															<td style="height:16px;"></td>
-															<td style="height:16px;"></td>
-															<td style="height:16px;"></td>
-															<td style="height:16px;"></td>
-															<td style="height:16px;"></td>
-															<td style="height:16px;"></td>
-															<td style="height:16px;"></td>
-															<td style="height:16px;"></td>
-															<td style="height:16px;"></td>
-															<td style="height:16px;"></td>
-															<td style="height:16px;"></td>
-															<td style="height:16px;"></td>
-															<td style="height:16px;"></td>
+															<c:forEach var="num" begin="0" end="48" step="1">
+																<td style="height:16px;"></td>
+															</c:forEach>
 	                        							 </tr>
 	                     							</table>
 	                     						</td>

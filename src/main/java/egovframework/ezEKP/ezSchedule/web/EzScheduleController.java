@@ -6357,13 +6357,17 @@ public class EzScheduleController extends EzFileMngUtil {
 	 * 2023-10-06 임정은 - 모아보기 그룹 선택 시 일정 리스트 표출
 	 */
 	@RequestMapping(value="/ezSchedule/scheduleShowGatherList.do", method = RequestMethod.GET)
-	public String scheduleShowGatherList(@CookieValue("loginCookie") String loginCookie, Model model, LoginSimpleVO loginSimpleVO) throws Exception {
+	public String scheduleShowGatherList(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
 		logger.debug("============ scheduleShowGatherList started ============");
 
-		loginSimpleVO = commonUtil.userInfoSimple(loginCookie);
-
-		model.addAttribute("userInfo", loginSimpleVO);
-
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String groupId = request.getParameter("groupId");
+		String groupName = request.getParameter("groupName");
+		
+		model.addAttribute("groupId", groupId);
+		model.addAttribute("groupName", groupName);
+		model.addAttribute("userInfo", userInfo);
+		
 		return "/ezSchedule/scheduleGatherList";
 	}
 	
