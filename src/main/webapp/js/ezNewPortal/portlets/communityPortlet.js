@@ -166,7 +166,7 @@ var getCommunityList = function(currentPage) {
 				for (var i = 0; i < communityList.length; i++) {
 					var list = setCommunityData(communityList[i], commuPath, "0" + (i + 1));
 					commuElem.appendChild(list);
-					$('.comListDL0'+i).on("click", view_bestCommunity);
+					$('.comListDL0'+(i+1)).on("click", view_bestCommunity);
 				}
 			}
 
