@@ -2152,23 +2152,23 @@ function setbuttonenable() {
     var pFunctionType = GetAttribute(tr, "DATA10");
     var orgCompanyID = GetAttribute(tr, "ORGCOMPANYID");
     
+    document.getElementById("tbtnAssign").style.display = "none";
+    document.getElementById("tbtnDeptRecevList").style.display = "none";
     if (pListTypeValue == "1") {
         document.getElementById("tbtnApproveALL").style.display = "";
         document.getElementById("tbtnReceiptAll").style.display = "none";
         document.getElementById("tbtnRJunkyulAll").style.display = "none";
         document.getElementById("tbtnAssignList").style.display = "none";
-        document.getElementById("tbtnAssign").style.display = "none";
-        document.getElementById("tbtnDeptRecevList").style.display = "none";
         document.getElementById("tbtnJiJungAll").style.display = "none";
         document.getElementById("tbtnBebuAll").style.display = "none";
     } else if (pListTypeValue == "4" || pListTypeValue == "97") {
     	document.getElementById("tbtnApproveALL").style.display = "none";
     	document.getElementById("tbtnReceiptAll").style.display = "";
     	document.getElementById("tbtnRJunkyulAll").style.display = "";
-        if (assignPermission == "Y") { // 지정목록 > 수발신담당자, 기록물관리자에게만 표출
+        if (assignPermission == "Y" && pListTypeValue == "4") { // 지정목록 > 수발신담당자, 기록물관리자에게만 표출
             document.getElementById("tbtnAssignList").style.display = "";
-            document.getElementById("tbtnAssign").style.display = "none";
-            document.getElementById("tbtnDeptRecevList").style.display = "none";
+        } else {
+            document.getElementById("tbtnAssignList").style.display = "none";
         }
         document.getElementById("tbtnJiJungAll").style.display = "";
         document.getElementById("tbtnBebuAll").style.display = "";
@@ -2182,8 +2182,6 @@ function setbuttonenable() {
         document.getElementById("tbtnReceiptAll").style.display = "none";
         document.getElementById("tbtnRJunkyulAll").style.display = "none";
         document.getElementById("tbtnAssignList").style.display = "none";
-        document.getElementById("tbtnAssign").style.display = "none";
-        document.getElementById("tbtnDeptRecevList").style.display = "none";
         document.getElementById("tbtnJiJungAll").style.display = "none";
         document.getElementById("tbtnBebuAll").style.display = "none";
     }
