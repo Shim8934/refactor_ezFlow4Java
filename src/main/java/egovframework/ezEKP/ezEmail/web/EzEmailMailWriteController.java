@@ -2963,6 +2963,9 @@ public class EzEmailMailWriteController extends EzFileMngUtil {
 		        	message.setHeader("X-JMocha-Ext-Receipt", "1");
 					message.setHeader("X-JMocha-Ext-ServerName", https + serverNameByTenantId);
 		        }
+
+				// 리얼 주소
+				message.setHeader("X-JMocha-Real-Sender", userAccount); // 사용자의 real address header
 		        
 		        //SentDate 설정
 		        message.setSentDate(java.util.Calendar.getInstance().getTime());

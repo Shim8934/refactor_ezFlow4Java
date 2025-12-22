@@ -496,11 +496,20 @@ public class EzEmailReceiptNotiController extends EzFileMngUtil {
 					return egovMessageSource.getMessage("ezEmail.lhm23", locale);
 				}
 
-				// 메시지의 sender가 user의 계정(또는 user의 alias mail)인지 검사 > 아래 real address로 변경하여 주석처리
-				//String from = ((InternetAddress)message.getFrom()[0]).getAddress();
-				
-				// 사용자의 real address인 X-JMocha-Disp-Noti-To 헤더 값으로 처리
-				String from =  message.getHeader("X-JMocha-Disp-Noti-To")[0];
+				// 메시지의 sender가 user의 계정(또는 user의 alias mail)인지 검사
+				String from;
+
+				String[] realSenderHeader = message.getHeader("X-JMocha-Real-Sender");
+				String[] dispNotiHeader   = message.getHeader("X-JMocha-Disp-Noti-To");
+
+				if (realSenderHeader != null && realSenderHeader.length > 0) {
+					from = realSenderHeader[0];
+				} else if (dispNotiHeader != null && dispNotiHeader.length > 0) {
+					from = dispNotiHeader[0];
+				} else {
+					from = ((InternetAddress)message.getFrom()[0]).getAddress();
+				}
+
 				logger.debug("from=" + from);
 
 				List<String[]> aliasAddressList = ezEmailService.getAliasAddress(mailId, loginInfo.getTenantId(), "YES", "NO");
