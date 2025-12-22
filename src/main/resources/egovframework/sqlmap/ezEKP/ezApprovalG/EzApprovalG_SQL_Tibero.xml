@@ -6320,6 +6320,7 @@
 		                TBL_RECORD.COMPANYID,
 		                TBL_CABINETCLASS.TITLE,
                         ENDDOCNO.DOCNO SIHANGNO,
+						M.AprmemberId as ORGUSERID,
                         CASE WHEN #multiLang# IS NULL OR #multiLang# = ''
                         	THEN TBL_ENDAPRDOCINFO.WriterDeptName
                         	ELSE TBL_ENDAPRDOCINFO.WriterDeptName2
@@ -6426,6 +6427,16 @@
 			        	TBL_ENDAPRDOCINFO.TENANT_ID = ENDDOCNO.TENANT_ID
 					AND
 			        	TBL_ENDAPRDOCINFO.COMPANYID = ENDDOCNO.COMPANYID
+                    LEFT JOIN 
+			     		TBL_ENDAPRLINEINFO M
+			    	ON 
+			     	    M.TENANT_ID = TBL_RECORD.TENANT_ID
+			     	AND 
+			     		M.DOCID = TBL_RECORD.DOCID
+			    	AND 
+			     		M.COMPANYID = TBL_RECORD.COMPANYID
+			     	AND
+			     	 	M.APRMEMBERSN = 1
               <isEqual property="listType" compareValue="012">
 				   Left Join
 				   		TBL_RECROLEINFO R
@@ -6649,7 +6660,12 @@
 				<isEqual property="listFlag" compareValue="9" prepend="AND">
 						( TBL_RECORD.DocID IS NOT NULL 
 							AND 
-						  TRIM(TBL_CABINETCLASS.OwnerDeptID) = #deptCode# 
+						    <isEqual property="upperDeptCode" compareValue="">
+                               TRIM(TBL_CABINETCLASS.OwnerDeptID) = #tempDeptCode# 
+                            </isEqual>
+                            <isNotEqual property="upperDeptCode" compareValue="">
+                                TRIM(TBL_CABINETCLASS.OwnerDeptID) = #upperDeptCode#
+                            </isNotEqual>
 							AND 
 						  SeperateAttachNo = '00')
 				</isEqual>
@@ -13905,7 +13921,12 @@
 		<isEqual property="listFlag" compareValue="9" prepend="AND">
 				( TBL_RECORD.DocID IS NOT NULL 
 					AND 
-				  TRIM(TBL_CABINET.OwnerDeptID) = #deptCode# 
+                    <isEqual property="upperDeptCode" compareValue="">
+				        TRIM(TBL_CABINET.OwnerDeptID) = #tempDeptCode#
+                    </isEqual>
+                    <isNotEqual property="upperDeptCode" compareValue="">
+                        TRIM(TBL_CABINET.OwnerDeptID) = #upperDeptCode#
+                    </isNotEqual>
 					AND 
 				  SeperateAttachNo = '00')
 		</isEqual>

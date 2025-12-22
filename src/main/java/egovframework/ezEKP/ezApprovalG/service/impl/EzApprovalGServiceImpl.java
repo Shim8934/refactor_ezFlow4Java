@@ -10631,6 +10631,13 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
         }
 
         listCountMap.put("tempDeptCode", recordListVO.getTempDeptCode());
+        
+        if (upDeptInfo.get("USEUPPERDEPTBOX") != null && upDeptInfo.get("USEUPPERDEPTBOX").equals("Y")) {
+            listCountMap.put("upperDeptCode", upDeptInfo.get("upperDeptCode"));
+        } else {
+            listCountMap.put("upperDeptCode", "");
+        }
+        
         listCountMap.put("transFlag", recordListVO.getTransFlag());
         listCountMap.put("listFlag", recordListVO.getListFlag());
         listCountMap.put("extraSelectClause", recordListVO.getExtraSelectClause());

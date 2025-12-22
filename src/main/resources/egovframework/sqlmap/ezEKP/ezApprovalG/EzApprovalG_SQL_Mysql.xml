@@ -6702,7 +6702,12 @@
 				<isEqual property="listFlag" compareValue="9" prepend="AND">
 						( TBL_RECORD.DocID IS NOT NULL 
 							AND 
-						  TBL_CABINET.OwnerDeptID = #deptCode# 
+						    <isEqual property="upperDeptCode" compareValue="">
+                                TBL_CABINET.OwnerDeptID = #deptCode#
+                            </isEqual>
+                            <isNotEqual property="upperDeptCode" compareValue="">
+                                TBL_CABINET.OwnerDeptID = #upperDeptCode#
+                            </isNotEqual>
 							AND 
 						  SeperateAttachNo = '00')
 				</isEqual>
@@ -14006,7 +14011,12 @@
 	<isEqual property="listFlag" compareValue="9" prepend="AND">
 		    ( TBL_RECORD.DocID IS NOT NULL
 			AND
-			TBL_CABINET.OwnerDeptID = #deptCode#
+            <isEqual property="upperDeptCode" compareValue="">
+                TBL_CABINET.OwnerDeptID = #deptCode#
+            </isEqual>
+            <isNotEqual property="upperDeptCode" compareValue="">
+                TBL_CABINET.OwnerDeptID = #upperDeptCode#
+            </isNotEqual>
 			AND
 			SeperateAttachNo = '00')
 	</isEqual>
