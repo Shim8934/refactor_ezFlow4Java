@@ -213,6 +213,14 @@
 		<script type="text/javascript">
 			SurveyItem.start("<c:out value='${config.contentHpercent}'/>", "<c:out value='${config.contentWpercent}'/>", "<c:out value='${config.previewMode}'/>", "<c:out value='${mode}'/>", "<c:out value='${user}'/>");
 			window.onload = function () {
+				var params = new URLSearchParams(window.parent.frames["right"].location.search);
+				var mode = params.get("mode");
+				
+				if (mode == "processing") {
+					window.parent.frames["left"].document.querySelector('.node_selected').classList = "list_text";
+					window.parent.frames["left"].document.querySelector('#processingSurvey span').classList = "list_text node_selected";
+				}
+				
 				<%-- 2024-07-23 김유진 - 설문작성/수정 중 목록으로 돌아올 시 설문작성/수정을 취소함 --%>
 				if (window.parent.frames["left"].surveyId != -1 || window.parent.frames["left"].isInCreateSurvey == true) {
 					if (window.parent.frames["left"].document.querySelector('.node_selected')) {
