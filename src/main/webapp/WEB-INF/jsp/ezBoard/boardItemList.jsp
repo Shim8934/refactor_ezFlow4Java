@@ -1914,9 +1914,9 @@
 		        <c:if test="${boardInfo.boardAdmin_FG == true && boardInfo.guBun ne '2' && (boardInfo.likeFlag == 'Y' || boardInfo.disLikeFlag == 'Y')}">
 		        	<li id="likeAndDisLikeBtn" ><span onClick="likeAndDisLikeList()"><spring:message code='ezBoard.kmh09' /></span></li> 
 		        </c:if>
-			    <c:if test="${MyBoardScrapFlag ne 'NONE'}">
-					  <li><span onClick="SaveScrapMyBoard()"><spring:message code='ezBoard.kmh13' /></span></li>
-			    </c:if>
+			    <c:if test="${MyStorageContFlag != 'NO'}">
+					<li><span onClick="SaveStorageMyBoard()"><spring:message code='ezBoard.kmh52' /></span></li>
+				</c:if>
 		        <c:if test="${boardInfo.boardAdmin_FG == true && boardInfo.isAllGroupBoard ne 'Y'}">
 			        <li id="btn_acl" style="display:none"><span onClick="SetBoardAcl()"><spring:message code='ezBoard.boardManage01' /></span></li> 
 		        </c:if>
