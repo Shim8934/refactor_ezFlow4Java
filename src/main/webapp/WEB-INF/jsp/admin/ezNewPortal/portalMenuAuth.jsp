@@ -32,6 +32,8 @@
 			.titleListTR.selectTR, .groupListTR.selectTR {background-color:#f1f8ff;}
 			#portalGroup {height:478px;width: 100%; overflow: auto; background-color: #ffffff;}
 			#portalGroup_btn {width:100%;padding:0;}
+			
+			.popup [id^='portal'][id$='_content']{width:680px;}
 	    </style>
 	</head>
 	<body class="popup" style="overflow: hidden;"> 
