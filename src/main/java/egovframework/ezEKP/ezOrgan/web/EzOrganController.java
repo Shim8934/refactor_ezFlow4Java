@@ -206,7 +206,7 @@ public class EzOrganController {
 
 		String adminOrgan = request.getParameter("adminOrgan") != null ? request.getParameter("adminOrgan"): "n";
 		
-		String useOrganHideFlag = ezCommonService.getTenantConfig("useOrganHideFlag", userInfo.getTenantId()) != ""? ezCommonService.getTenantConfig("useOrganHideFlag", userInfo.getTenantId()) : "NO";
+		String useOrganHideFlag = !ezCommonService.getTenantConfig("useOrganHideFlag", userInfo.getTenantId()).isEmpty() ? ezCommonService.getTenantConfig("useOrganHideFlag", userInfo.getTenantId()) : "NO";
 		// useOganHideFlag를 사용하지 않으면 adminOrgan을 다 "y"로 둬서 조직도숨김을 뺀다.
 		adminOrgan = "NO".equalsIgnoreCase(useOrganHideFlag) ? "y" : adminOrgan;
 		
