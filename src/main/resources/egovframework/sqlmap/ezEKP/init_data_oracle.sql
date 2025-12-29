@@ -364,6 +364,7 @@ INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_V
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'externalFileServerUrl', '대용량 첨부파일 업로드 서버', 'http://127.0.0.1:8080/', '대용량 첨부파일 동시 업로드할 외부 서버', TO_DATE('2025-05-23 00:00:00', 'YYYY-MM-DD HH24:MI:SS'), '메일');
 
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'useSaas', '톡 모바일 푸시 알림 테넌트에 따른 구분 사용 여부', 'N', '톡서버에 푸시 알림 보낼때 테넌트 아이디 붙여서 넘길지 말지 사용 여부(default:N)', TO_DATE('2025-05-21 00:00:00', 'YYYY-MM-DD HH24:MI:SS'), '포탈');
+INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'useParticipantLottery', '전자설문 참여자보기 추첨기능 사용여부', 'N', '전자설문 참여자보기에서 추첨기능 사용여부. YES: 사용, NO: 미사용 (default:N)', TO_DATE('2025-07-14 00:00:00', 'YYYY-MM-DD HH24:MI:SS'), '전자설문');
 
 -- 게시판 > 비회원 읽기권한 추가
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'useBoardGuestPermit', '게시판 비회원 읽기권한 사용 여부', 'NO', '게시판 비회원 읽기권한 사용 여부. YES: 사용, NO: 미사용 (default : NO)', TO_DATE('2025-08-13 00:00:00', 'YYYY-MM-DD HH24:MI:SS'), '게시판');

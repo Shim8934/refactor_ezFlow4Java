@@ -392,6 +392,7 @@ INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_V
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (@tenant_id_value, 'useTigrisSAMLAuth', 'tigris SAML 인증 연동여부', 'NO', 'YES: 연동NO: 연동안함 (default: NO)', '2025-07-23 00:00:00', '연동');
 
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (@tenant_id_value, 'webHWPVersion', '웹한글기안기 버전', '2', '웹한글기안기 버전에 따라 다른 동작을 하는 부분을 옵션화한다. 1: 웹한글기안기 v1.0 사용, 2: 웹한글기안기 v2.0 사용 (default : 2)', '2025-04-22 00:00:00.000', '전자결재');
+INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (@tenant_id_value, 'useParticipantLottery', '전자설문 참여자보기 추첨기능 사용여부', 'N', '전자설문 참여자보기에서 추첨기능 사용여부. YES: 사용, NO: 미사용 (default:N)', '2025-07-14 00:00:00.000', '전자설문');
 
 -- 일괄기안 B타입
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (@tenant_id_value, 'draftAllTypeB', '일괄기안 B타입', 'N', '일괄기안 B타입 한글문서만 가능하며 헤더 부분에 headcampaign 값이 필수로 존재해야 한다.', '2025-01-08 00:00:00.000', '전자결재G');
