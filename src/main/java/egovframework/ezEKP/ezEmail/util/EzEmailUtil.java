@@ -1770,28 +1770,12 @@ public class EzEmailUtil {
 			// 이후 다른 파트를 처리할 때 HTML 본문을 참조할 필요가 있는 경우를 위해
 			// 추가함. Content-ID가 있는 파트가 실제 HTML 본문에서 참조되고 있는 지를 확인하기 위한 용도임.
 			extraMap.put("htmlBody", htmlBody);
-		} else if(part.isMimeType("text/plain")) {			
-			boolean isRealTextPlain = true;
-			
-			if (part instanceof BodyPart) {
-		        String[] contentTypeHeaders = part.getHeader("Content-Type");
-		        
-		        if (contentTypeHeaders != null && contentTypeHeaders.length > 0) {
-		        	String contentTypeHeader = contentTypeHeaders[0];
-		        	
-		        	logger.debug("contentTypeHeader=" + contentTypeHeader);
-		        	
-		        	// 다음과 같이 Multipart 내 Part 중에 Content-Type이 잘못 생성된 메일이 있음.(image/gif가 되어야 함.)
-		        	// Content-Type: gif; name="signF_hakungLogo.gif"
-		        	// 이 경우 JavaMail에서는 디폴트인 text/plain 타입으로 취급하여 본문에 잘못된 내용이 들어와
-		        	// 실제 헤더에 text/plain이 있는 지 여부를 확인하도록 함.
-		        	if (!contentTypeHeader.toLowerCase().contains("text/plain")) {
-		        		logger.debug("it isn't real text/plain.");
-		        		
-		        		isRealTextPlain = false;
-		        	}
-		        }
-			}
+		} else if(part.isMimeType("text/plain")) {
+			// 다음과 같이 Multipart 내 Part 중에 Content-Type이 잘못 생성된 메일이 있음.(image/gif가 되어야 함.)
+			// Content-Type: gif; name="signF_hakungLogo.gif"
+			// 이 경우 JavaMail에서는 디폴트인 text/plain 타입으로 취급하여 본문에 잘못된 내용이 들어와
+			// 실제 헤더에 text/plain이 있는 지 여부를 확인하도록 함.
+			boolean isRealTextPlain = isRealTextPlainPart(part);
 			
 	        if (isRealTextPlain) {
 				String strContent = "";
@@ -1968,8 +1952,18 @@ public class EzEmailUtil {
 			
 			for (int i = 0; i < count; i++) {
 				p = mp.getBodyPart(i);
+
+				boolean isRealTextPlain = false;
 				
 				if (p.isMimeType("text/plain")) {
+					// 다음과 같이 Multipart 내 Part 중에 Content-Type이 잘못 생성된 메일이 있음.(application/octet-stream 처럼 subtype이 있어야 함)
+					// Content-Type: application; charset="UTF-8";
+					// 이 경우 JavaMail에서는 디폴트인 text/plain 타입으로 취급하여 첨부 파일이 인식되지 않아
+					// 실제 헤더에 text/plain이 있는 지 여부를 확인하도록 함.
+					isRealTextPlain = isRealTextPlainPart(p);
+				}
+				
+				if (isRealTextPlain) {
 					logger.debug("contentType=" + p.getContentType());
 					logger.debug("disposition=" + p.getDisposition());
 				// text/html 파트가 나오거나 multipart/related or mixed 파트가 나올 수도 있다.	
@@ -1998,8 +1992,10 @@ public class EzEmailUtil {
 			if (htmlBody.equals("")) {
 				for (int i = 0; i < count; i++) {
 					p = mp.getBodyPart(i);
-					
-					if (p.isMimeType("text/plain")) {
+					boolean isRealTextPlain = isRealTextPlainPart(p);
+
+					// htmlBody가 없는 경우엔 plain 파트를 htmlBody에 입력한다.
+					if (isRealTextPlain) {
 						List<String> tempList = getBodyInfo(p, folderPath, uid, i, attachedFileList, locale, extraMap, order, depth);
 						htmlBody += tempList.get(0);		
 						break;				
@@ -2187,6 +2183,32 @@ public class EzEmailUtil {
 		resultList.add(isIcalMail);
 			
 		return resultList;
+	}
+	
+	public boolean isRealTextPlainPart(Part part) throws Exception {
+		boolean isRealTextPlain = true;
+		
+		if (part instanceof BodyPart) {
+			String[] contentTypeHeaders = part.getHeader("Content-Type");
+
+			if (contentTypeHeaders != null && contentTypeHeaders.length > 0) {
+				String contentTypeHeader = contentTypeHeaders[0];
+
+				logger.debug("contentTypeHeader=" + contentTypeHeader);
+
+				// 다음과 같이 Multipart 내 Part 중에 Content-Type이 잘못 생성된 메일이 있음.(application/octet-stream 처럼 subtype이 있어야 함)
+				// Content-Type: application; charset="UTF-8";
+				// 이 경우 JavaMail에서는 디폴트인 text/plain 타입으로 취급하여 첨부 파일이 인식되지 않아
+				// 실제 헤더에 text/plain이 있는 지 여부를 확인하도록 함.
+				if (!contentTypeHeader.toLowerCase().contains("text/plain")) {
+					logger.debug("it isn't real text/plain.");
+
+					isRealTextPlain = false;
+				}
+			}
+		}
+		
+		return isRealTextPlain;
 	}
 	
     /**
