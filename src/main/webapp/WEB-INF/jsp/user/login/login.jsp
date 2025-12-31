@@ -658,7 +658,7 @@
 			                        <c:when test="${useOTP}">
 										<p class="otp_txt">OTP</p>
 				                        <p class="otp" title="<spring:message code="info.otp.msg" />">
-											<input id="uotp" name="otp" placeholder="<spring:message code="main.login.ls001"/>" class="input_text" type="text" onblur="if (this.value.length==0) {this.className='input_text', document.getElementById('BC3').style.display = 'none';} else {this.className='input_text'};" onfocus="this.className='input_text focus', document.getElementById('BC3').style.display = 'block';" onkeypress="if(event.keyCode==13) document.loginForm.password.focus();">
+											<input id="uotp" name="otp" placeholder="<spring:message code="main.login.ls001"/>" class="input_text" type="text" onblur="if (this.value.length==0) {this.className='input_text', document.getElementById('BC3').style.display = 'none';} else {this.className='input_text'};" onfocus="this.className='input_text focus', document.getElementById('BC3').style.display = 'block';" onkeypress="if(event.keyCode==13) actionLogin();">
 											<span class="btnClear" id="BC3" onclick="clearInput(this)" style="display:none;"></span>
 				                        </p>
 			                        </c:when>
