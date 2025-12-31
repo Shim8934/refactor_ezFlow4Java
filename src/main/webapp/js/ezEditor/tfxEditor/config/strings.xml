@@ -615,4 +615,20 @@ Prohibited words : </eng>
 		<jp>この単語は禁止語に設定されており、ブックマーク名として使用することはできません。もう一度入力してください。</jp>
 	</string>
 
+	<string id="DIALOG_INPUT_TEXT_CANNOT_USE">
+		<kor>입력창에 삽입할 수 없는 문자가 존재합니다.</kor>
+		<eng>There are characters that cannot be inserted into the input field.</eng>
+		<ChineseS>有些字符不能插入到输入框中。</ChineseS>
+		<ChineseT>有些字元不能插入到輸入框中。</ChineseT>
+		<jp>入力ウィンドウに挿入できない文字が存在します。</jp>
+	</string>
+
+	<string id="UNABLE_TABLE_COPY">
+		<kor>선택한 셀 범위가 올바르지 않습니다.</kor>
+		<eng>The selected cell range is not valid.</eng>
+		<ChineseS>所选单元格区域无效。</ChineseS>
+		<ChineseT>所選單元格區域無效。</ChineseT>
+		<jp>選択したセル範囲が正しくありません。</jp>
+	</string>
+	
 </strings>

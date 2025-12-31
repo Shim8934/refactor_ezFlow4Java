@@ -34,8 +34,8 @@
 				<split/>
 				
 				<InsertVideo visible="true" title="插入视频标签"/>
-				<InsertMediaLink visible="true" title="将外部视频"/>
 				<InsertMedia visible="true" title="视频"/>
+				<InsertMediaLink visible="true" title="将外部视频"/>
 				
 				<split/>
 				
@@ -286,8 +286,8 @@
 				<InsertImage visible="true" title="形象"/>
 				<InsertImages visible="true" title="多个图像"/>		
 				<Object visible="true" title="客体">
-					<InsertMediaLink visible="true" title="外部视频共享"/>
 					<InsertMedia visible="true" title="视频"/>
+					<InsertMediaLink visible="true" title="外部视频共享"/>
 				</Object>
 				<split/>
 				<InsertGrid visible="true" title="将电网"/>
