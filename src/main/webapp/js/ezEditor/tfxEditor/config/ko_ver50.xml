@@ -33,8 +33,8 @@
 				<split/>
 				
 				<InsertVideo visible="true" title="비디오 태그"/>
-				<InsertMediaLink visible="true" title="외부 동영상 공유"/>
 				<InsertMedia visible="true" title="동영상"/>
+				<InsertMediaLink visible="true" title="외부 동영상"/>
 				
 				<split/>
 				
@@ -256,8 +256,8 @@
 				<InsertImage visible="true" title="이미지"/>
 				<InsertImages visible="true" title="다중 이미지"/>		
 				<Object visible="true" title="객체">
-					<InsertMediaLink visible="true" title="외부 동영상 공유"/>
 					<InsertMedia visible="true" title="동영상"/>
+					<InsertMediaLink visible="true" title="외부 동영상"/>
 				</Object>
 				<split/>
 				<InsertGrid visible="true" title="그리드"/>
@@ -385,7 +385,7 @@
 			<ImageProperty visible="true">이미지 편집</ImageProperty>
 			<split/>
 			<InsertMedia visible="true">동영상 삽입</InsertMedia>
-			<InsertMediaLink visible="true">외부 동영상 공유</InsertMediaLink>
+			<InsertMediaLink visible="true">외부 동영상</InsertMediaLink>
 			<Background visible="true">배경 이미지 삽입</Background>
 			<InsertGrid visible="true">그리드 삽입</InsertGrid>
 			<InsertDate visible="false">날짜 삽입</InsertDate>

@@ -35,8 +35,8 @@
 				<split/>
 				
 				<InsertVideo visible="true" title="Insert Vidio"/>
-				<InsertMediaLink visible="true" title="Media Link"/>
 				<InsertMedia visible="true" title="Insert Media"/>
+				<InsertMediaLink visible="true" title="Media Link"/>
 				
 				<split/>
 				
@@ -286,8 +286,8 @@
 				<InsertImage visible="true" title="Image"/>
 				<InsertImages visible="true" title="Insert Images"/>		
 				<Object visible="true" title="Entity">
-					<InsertMediaLink visible="true" title="Media link"/>
 					<InsertMedia visible="true" title="Media"/>
+					<InsertMediaLink visible="true" title="Media link"/>
 				</Object>
 				<split/>
 				<InsertGrid visible="true" title="Grid"/>
