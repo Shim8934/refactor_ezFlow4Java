@@ -4387,7 +4387,7 @@
 					WHERE B.DEPTID IN (SELECT data2 FROM DEPT_RECURSIVE)
 					AND B.TENANT_ID = #v_TENANT_ID#
 				) TREE
-				ORDER BY data1 DESC, nodeLevel ASC, sortOrder ASC, displayName ASC
+				ORDER BY data1 DESC, nodeLevel ASC, TO_NUMBER(sortOrder) ASC, displayName ASC
 			]]>
 		</isEqual>
 
