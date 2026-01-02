@@ -31,32 +31,32 @@ public class EzNewPortalScheduler {
 	@Autowired
 	private LoginService loginService;
 
-	@Scheduled(cron = "${config.cron.weatherUpdate}")
-	public void receiveWeatherData() {
-		if (config.getProperty("config.useInternet") == null ||config.getProperty("config.useInternet").equals("NO")) {
-			return;
-		}
-		
-		logger.debug("weatherUpdate started");
-		
-		try {
-			if (!ezEmailScheduler.preScheduler("weatherUpdate")) {
-				logger.debug("weatherUpdate scheduler ended.");
-				return;
-			}
-			
-			ezNewPortalService.setWeather();
-		} catch (Exception e) {
-		    if (e instanceof UnknownHostException) {
-		    	logger.debug("have to connect the internet to use weather scheduler");
-		    }
-		    else {
-		    	logger.error(e.getMessage(), e);
-		    }
-		}
-		
-		logger.debug("weatherUpdate ended");
-	}
+//	@Scheduled(cron = "${config.cron.weatherUpdate}")
+//	public void receiveWeatherData() {
+//		if (config.getProperty("config.useInternet") == null ||config.getProperty("config.useInternet").equals("NO")) {
+//			return;
+//		}
+//		
+//		logger.debug("weatherUpdate started");
+//		
+//		try {
+//			if (!ezEmailScheduler.preScheduler("weatherUpdate")) {
+//				logger.debug("weatherUpdate scheduler ended.");
+//				return;
+//			}
+//			
+//			ezNewPortalService.setWeather();
+//		} catch (Exception e) {
+//		    if (e instanceof UnknownHostException) {
+//		    	logger.debug("have to connect the internet to use weather scheduler");
+//		    }
+//		    else {
+//		    	logger.error(e.getMessage(), e);
+//		    }
+//		}
+//		
+//		logger.debug("weatherUpdate ended");
+//	}
 
 	@Scheduled(cron = "${config.cron.deleteDbSessionByTime}")
 	public void deleteDbSessionByTime() {

@@ -3196,7 +3196,7 @@
 	    		(#companyID#, #tenantID#, 10, 4, 1, 9, null),
 	    		(#companyID#, #tenantID#, 11, 5, 1, 10, null),
 	    		(#companyID#, #tenantID#, 12, 0, 1, 11, null),
-	    		(#companyID#, #tenantID#, 14, 0, 1, 13, null),
+	    		(#companyID#, #tenantID#, 14, 0, 0, 13, null),
 	    		(#companyID#, #tenantID#, (SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'fixLeft'), 4, 1, -2, '/ezNewPortal/getCustomBoardInfo.do'),
 	    		(#companyID#, #tenantID#, (SELECT PORTLET_ID FROM TBL_PORTAL_PORTLET WHERE PORTLETCODE = 'fixRight'), 4, 1, -1, '/ezNewPortal/getCustomBoardInfo.do'),
 	    		(#companyID#, #tenantID#, 26, 0, 1, 14, null),
