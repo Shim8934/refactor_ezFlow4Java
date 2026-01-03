@@ -608,12 +608,12 @@ AND    ( tbl_aprdocinfo.startdate IS NOT NULL ));
 	"SIMPLE_EMAIL" NVARCHAR2(100)
    ) ;
 --------------------------------------------------------
---  DDL for Table jmocha_address_last_sent
+--  DDL for Table JMOCHA_ADDRESS_LAST_SENT
 -- Oracle 12c 이후부터 제공된 기능: AUTO_INCREMENT = IDENTITY (https://kimvampa.tistory.com/146)
 -- 삽입, 삭제가 빈번한 테이블이라, UNIQUE KEY 사용하지 않음. (* UNIQUE: TENANT_ID, CN, email)
 --------------------------------------------------------
 
-  CREATE TABLE "jmocha_address_last_sent"
+  CREATE TABLE "JMOCHA_ADDRESS_LAST_SENT"
    (	"SEQUENCE" NUMBER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
 	"TENANT_ID" NUMBER(5,0) DEFAULT 0,
 	"CN" NVARCHAR2(80),
