@@ -9389,6 +9389,8 @@ CREATE TABLE "JMOCHA_MAIL_POP3IMAP" (
 
   CREATE INDEX "IDX_JMOHCA_ADDRESS_SIMPLE" ON "JMOCHA_ADDRESS_SIMPLE" ("USER_ID") 
   ;
+  
+  CREATE INDEX "JMOCHA_ADDRESS_LAST_SENT_TENANT_ID_IDX" ON "JMOCHA_ADDRESS_LAST_SENT" ("TENANT_ID", "CN");
 --------------------------------------------------------
 --  DDL for Index IDX_TBL_TASKCODEHISTORY
 --------------------------------------------------------
