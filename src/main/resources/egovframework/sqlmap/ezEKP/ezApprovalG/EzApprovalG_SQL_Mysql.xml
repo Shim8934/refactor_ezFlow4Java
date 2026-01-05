@@ -32399,6 +32399,8 @@
 			A.SHARE_TYPE = #shareType#
 		AND
 			A.TENANT_ID = #tenantId#
+        ORDER BY
+            shareName ASC
 	</select>
 	
 	<delete id="EzApprovalG.delOpinionsExceptHesong" parameterClass="map">

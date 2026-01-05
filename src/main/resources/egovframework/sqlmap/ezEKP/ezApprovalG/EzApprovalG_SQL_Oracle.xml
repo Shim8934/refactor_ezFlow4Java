@@ -31459,6 +31459,8 @@
 			A.SHARE_TYPE = #shareType#
 		AND
 			A.TENANT_ID = #tenantId#
+        ORDER BY
+            shareName ASC
 	</select>
     
 	<insert id="EzApprovalG.insertOpenGovAttachInfo" parameterClass="Map">
