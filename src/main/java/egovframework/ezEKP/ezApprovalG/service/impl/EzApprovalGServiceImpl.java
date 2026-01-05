@@ -7095,7 +7095,7 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
         }else{
 //            beforeHref = href.substring(0, href.lastIndexOf("/")+1) + href.substring(href.lastIndexOf("/")+1, href.lastIndexOf(".")) + "_groupBack" + "." + extension;
             String tempHref = path + commonUtil.separator + companyID + commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + "1000" + commonUtil.separator + getDocDir(docID) + commonUtil.separator + docID + "_groupBack.hwp";
-            File tempFile = new EzFAL.EzFile(commonUtil.detectPathTraversal(realPath + tempHref));
+            EzFAL.EzFile tempFile = new EzFAL.EzFile(commonUtil.detectPathTraversal(realPath + tempHref));
             if(!tempFile.exists()){
                 tempHref = path + commonUtil.separator + companyID + commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + "1000" + commonUtil.separator + getDocDir(docID) + commonUtil.separator + docID + "_groupBack.mht";
                 tempFile = new EzFAL.EzFile(commonUtil.detectPathTraversal(realPath + tempHref));
@@ -7104,8 +7104,8 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
             afterHref = path + commonUtil.separator + companyID + commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + "1000" + commonUtil.separator + getDocDir(docID) + commonUtil.separator + docID + "." + tempHref.substring(tempHref.lastIndexOf(".")+1);
         }
         
-        File beforeFile = new EzFAL.EzFile(commonUtil.detectPathTraversal(realPath + beforeHref));
-        File afterFile = new EzFAL.EzFile(commonUtil.detectPathTraversal(realPath + afterHref));
+        EzFAL.EzFile beforeFile = new EzFAL.EzFile(commonUtil.detectPathTraversal(realPath + beforeHref));
+        EzFAL.EzFile afterFile = new EzFAL.EzFile(commonUtil.detectPathTraversal(realPath + afterHref));
         
         if(beforeFile.exists()){
             EzFAL.copyFile(beforeFile, afterFile);
@@ -17594,7 +17594,7 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
             boolean hwpFilter = "Y".equals(ezCommonService.getTenantConfig("hwpFilter", userInfo.getTenantId()));
             String hwpPath = ezCommonService.getTenantConfig("hwpPath", userInfo.getTenantId());
             List<Object> loadHwp = new ArrayList<>();
-            loadHwp.add(HWPReader.fromFile(new File(formURL));
+            loadHwp.add(HWPReader.fromFile(new File(formURL)));
             if(hwpFilter)
                 loadHwp.add(new RestWHWP(ezCommonService.getTenantConfig("hwpFilterServer", userInfo.getTenantId())).open(hwpPath + docHref));
 			
@@ -17900,44 +17900,44 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 				logger.debug("e: {}", e);
 			}
 		} else if("hwp".equals(ext)) { //부서합의 한글 기안기 처리하기 위해 수정. 접수 후 결재완료 됐을 경우 파싱 에러 때문에 수정. 2019-09-24 홍대표
-			if (EzFAL.isObjectStorageMode()) { // 원격저장소 사용여부를 확인
-				byte[] orgBytes = null;
-				
-				// 원본 파일을 스트림에서 바이트로 read
-				// EzFAL EzFileInputStream 사용 (자동 close 호출)
-				try (EzFileInputStream fis = new EzFileInputStream(formURL)) {
-					orgBytes = IOUtils.toByteArray(fis);
-				} catch (Exception e) {
-					logger.error(e.getMessage(), e);
-				}
-				// 읽어온 원본 파일(EzFile)을 로컬 파일(File)로 임시 저장
-				// EzFAL EzFileOutputStream 사용 (자동 close 호출)
-				try (FileOutputStream fos = new FileOutputStream(formURL)) {
-					fos.write(orgBytes);
-					fos.flush();
-				} catch (Exception e) {
-					logger.error(e.getMessage(), e);
-				}
-			}
-            
+            if (EzFAL.isObjectStorageMode()) { // 원격저장소 사용여부를 확인
+                byte[] orgBytes = null;
+
+                // 원본 파일을 스트림에서 바이트로 read
+                // EzFAL EzFileInputStream 사용 (자동 close 호출)
+                try (EzFileInputStream fis = new EzFileInputStream(formURL)) {
+                    orgBytes = IOUtils.toByteArray(fis);
+                } catch (Exception e) {
+                    logger.error(e.getMessage(), e);
+                }
+                // 읽어온 원본 파일(EzFile)을 로컬 파일(File)로 임시 저장
+                // EzFAL EzFileOutputStream 사용 (자동 close 호출)
+                try (FileOutputStream fos = new FileOutputStream(formURL)) {
+                    fos.write(orgBytes);
+                    fos.flush();
+                } catch (Exception e) {
+                    logger.error(e.getMessage(), e);
+                }
+            }
+
             boolean hwpFilter = "Y".equals(ezCommonService.getTenantConfig("hwpFilter", userInfo.getTenantId()));
             String hwpPath = ezCommonService.getTenantConfig("hwpPath", userInfo.getTenantId());
             List<Object> loadHwp = new ArrayList<>();
             loadHwp.add(HWPReader.fromFile(new File(formURL)));
-            if(hwpFilter)
+            if (hwpFilter)
                 loadHwp.add(new RestWHWP(ezCommonService.getTenantConfig("hwpFilterServer", userInfo.getTenantId())).open(hwpPath + docHref));
             List<ApprGGroupDocInfoVO> group = getGroupDocList(docID, "APR", userInfo.getTenantId(), companyID);
             boolean draftAllTypeB = "Y".equals(ezCommonService.getTenantConfig("draftAllTypeB", userInfo.getTenantId())) && "".equals(susinSN) && group.size() > 1;
-			
-			if (findHwpField(susinSN + "habyuipositon" + aprSN, loadHwp)) {
-				if (isHesong) {
-					setHwpText(draftAllTypeB, susinSN + "habyuipositon" + aprSN, userInfo.getTitle(), loadHwp);
-				} else {
-					setHwpText(draftAllTypeB, susinSN + "habyuipositon" + aprSN, signTitle, loadHwp);
-				}
-			}
-			
-			// 사인이 이미지인 경우 작업 필요 (서버단에서 HWP 문서에 이미지 삽입하는 로직 미구현)
+
+            if (findHwpField(susinSN + "habyuipositon" + aprSN, loadHwp)) {
+                if (isHesong) {
+                    setHwpText(draftAllTypeB, susinSN + "habyuipositon" + aprSN, userInfo.getTitle(), loadHwp);
+                } else {
+                    setHwpText(draftAllTypeB, susinSN + "habyuipositon" + aprSN, signTitle, loadHwp);
+                }
+            }
+
+            // 사인이 이미지인 경우 작업 필요 (서버단에서 HWP 문서에 이미지 삽입하는 로직 미구현)
 //			if (signType.equals("IMAGE")) {
 //				String signImageType = ezCommonService.getTenantConfig("signImageType", userInfo.getTenantId());
 //				
@@ -17957,57 +17957,57 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 //					}
 //				}
 //			}
-			
-			/* 2023-11-15 홍승비 - HWP 파일이면서 이미지 서명인 경우, 원문서에 맵핑되는 정보는 TEXT 유형의 서명으로 고정한다. (현재 결재자명을 문자서명으로 사용) */
-			if (signType.equals("IMAGE")) {
-				String[] tempSignCont = signCont.split("::");
-				signCont = userInfo.getDisplayName();
-				
-				/* 2023-11-01 홍승비 - 합의문의 이미지 서명 확인 시, ::문자 split한 이후의 데이터가 존재하는지 체크하도록 수정 (대리결재(代), 대결, 전결 문자) */
-				if (tempSignCont.length > 1 && tempSignCont[1] != null && 
-						(tempSignCont[1].indexOf(messageSource.getMessage("ezApprovalG.t26", userInfo.getLocale())) > -1 || tempSignCont[1].indexOf(messageSource.getMessage("ezApprovalG.t25", userInfo.getLocale())) > -1
-						|| tempSignCont[1].indexOf(messageSource.getMessage("ezApproval.t498", userInfo.getLocale())) > -1)) {
-					/* 2023-11-15 홍승비 - 합의자의 대리결재(代) 문자, '대결/전결' 문자를 문자 서명 위에 함께 표출하도록 수정  (문자서명과 동일 스펙) */
-					signCont = tempSignCont[1] + signCont;
-				}
-			}
-			
-			// 부서 합의인 경우 원문서 문서번호 채번
-			if (!isHesong) {
-				int lastHabyuiCnt = lastKyulJeHabYuiYN(orgDocID, "approvUi", userInfo.getCompanyID(), userInfo.getTenantId());
-				String orgDeptID = getOrgDraftDeptID(orgDocID, userInfo.getTenantId(), userInfo.getCompanyID());
-				if (lastHabyuiCnt > 0) {
-					String docNo = getHwpText("docnumber", loadHwp);
-					
-					map.put("v_habDocID", docID);
-					List<ApprGDocListVO> docState = ezApprovalGDAO.getLastHabYuiDocState(map);
-					
-					if (docState.size() > 0) {
-						if (docState.get(0).getDocState().equals("012")) {
-							Document xmlDom = commonUtil.convertStringToDocument(getCabinetNum(orgDeptID, "", companyID, userInfo.getTenantId(), userInfo.getOffset()));
-							cabinetSN = xmlDom.getElementsByTagName("RESULT").item(0).getTextContent();
-							
-							map.put("v_DOCNO", docNo + createDocNO(cabinetSN, docNumZeroCnt));
-							map.put("v_MODE", "APR");
-							ezApprovalGDAO.updateDocNumber(map);
-							map.put("v_MODE", "END");
-							map.put("v_DOCID", orgDocID);
-							ezApprovalGDAO.updateDocNumber(map);
-						}
-						setHwpText(false, loadHwp, "docnumber", docNo + createDocNO(cabinetSN, docNumZeroCnt));
-					}
-				}
-			}
-			
-			if (findHwpField(susinSN + "habyuisign" + aprSN, loadHwp)) {
-				setHwpText(draftAllTypeB, loadHwp, susinSN + "habyuisign" + aprSN, signCont);
-			}
-			
-			String strDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false).substring(5, 10).replace("-", ".");
-			if (findHwpField(susinSN + "habyuidate" + aprSN, loadHwp)) {
-				setHwpText(draftAllTypeB, loadHwp, susinSN + "habyuidate" + aprSN, strDate);
-			}
-			
+
+            /* 2023-11-15 홍승비 - HWP 파일이면서 이미지 서명인 경우, 원문서에 맵핑되는 정보는 TEXT 유형의 서명으로 고정한다. (현재 결재자명을 문자서명으로 사용) */
+            if (signType.equals("IMAGE")) {
+                String[] tempSignCont = signCont.split("::");
+                signCont = userInfo.getDisplayName();
+
+                /* 2023-11-01 홍승비 - 합의문의 이미지 서명 확인 시, ::문자 split한 이후의 데이터가 존재하는지 체크하도록 수정 (대리결재(代), 대결, 전결 문자) */
+                if (tempSignCont.length > 1 && tempSignCont[1] != null &&
+                        (tempSignCont[1].indexOf(messageSource.getMessage("ezApprovalG.t26", userInfo.getLocale())) > -1 || tempSignCont[1].indexOf(messageSource.getMessage("ezApprovalG.t25", userInfo.getLocale())) > -1
+                                || tempSignCont[1].indexOf(messageSource.getMessage("ezApproval.t498", userInfo.getLocale())) > -1)) {
+                    /* 2023-11-15 홍승비 - 합의자의 대리결재(代) 문자, '대결/전결' 문자를 문자 서명 위에 함께 표출하도록 수정  (문자서명과 동일 스펙) */
+                    signCont = tempSignCont[1] + signCont;
+                }
+            }
+
+            // 부서 합의인 경우 원문서 문서번호 채번
+            if (!isHesong) {
+                int lastHabyuiCnt = lastKyulJeHabYuiYN(orgDocID, "approvUi", userInfo.getCompanyID(), userInfo.getTenantId());
+                String orgDeptID = getOrgDraftDeptID(orgDocID, userInfo.getTenantId(), userInfo.getCompanyID());
+                if (lastHabyuiCnt > 0) {
+                    String docNo = getHwpText("docnumber", loadHwp);
+
+                    map.put("v_habDocID", docID);
+                    List<ApprGDocListVO> docState = ezApprovalGDAO.getLastHabYuiDocState(map);
+
+                    if (docState.size() > 0) {
+                        if (docState.get(0).getDocState().equals("012")) {
+                            Document xmlDom = commonUtil.convertStringToDocument(getCabinetNum(orgDeptID, "", companyID, userInfo.getTenantId(), userInfo.getOffset()));
+                            cabinetSN = xmlDom.getElementsByTagName("RESULT").item(0).getTextContent();
+
+                            map.put("v_DOCNO", docNo + createDocNO(cabinetSN, docNumZeroCnt));
+                            map.put("v_MODE", "APR");
+                            ezApprovalGDAO.updateDocNumber(map);
+                            map.put("v_MODE", "END");
+                            map.put("v_DOCID", orgDocID);
+                            ezApprovalGDAO.updateDocNumber(map);
+                        }
+                        setHwpText(false, loadHwp, "docnumber", docNo + createDocNO(cabinetSN, docNumZeroCnt));
+                    }
+                }
+            }
+
+            if (findHwpField(susinSN + "habyuisign" + aprSN, loadHwp)) {
+                setHwpText(draftAllTypeB, loadHwp, susinSN + "habyuisign" + aprSN, signCont);
+            }
+
+            String strDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false).substring(5, 10).replace("-", ".");
+            if (findHwpField(susinSN + "habyuidate" + aprSN, loadHwp)) {
+                setHwpText(draftAllTypeB, loadHwp, susinSN + "habyuidate" + aprSN, strDate);
+            }
+
             if (!hwpFilter) {
                 HWPWriter.toFile((HWPFile) loadHwp.get(0), formURL); // 오브젝트 스토리지가 아닌 로컬 파일 시스템의 formURL 경로에 현재 변경한 loadHwp을 저장
             } else {
@@ -38429,8 +38429,8 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 					if (findHwpField("receiptdate", hwpFile)) {
 					setHwpText(false, "receiptdate", commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false).substring(0, 10).replace("-", "."), hwpFile);
 					}
-					
-					tempHwp = new EzFile(commonUtil.detectPathTraversal(formURL)).getFile().getParentFile().toString() + commonUtil.separator + docID + "_backup.hwp";
+
+                    tempHwp = new EzFile(commonUtil.detectPathTraversal(formURL)).getFile().getParentFile().toString() + commonUtil.separator + docID + "_backup.hwp";
 					EzFAL.copyFile(new EzFile(commonUtil.detectPathTraversal(formURL)), new EzFile(commonUtil.detectPathTraversal(tempHwp)));
 					
 					if ((totalLineSN == Integer.parseInt(signNum.trim())) && (aprType.equals("016") || aprType.equals("001") || aprType.equals("004"))) {
