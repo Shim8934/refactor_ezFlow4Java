@@ -82,7 +82,7 @@
   							
 							html += "<tr>";
 							html += "   <td style='width:22px;text-align:center;cursor:deafult;'>" +
-									"		<input id='" + cn + "'type='checkbox' style='margin:0;padding:0;width:13px;height:13px;'/>" +
+									"		<div class='custom_checkbox'><input id='" + cn + "'type='checkbox' style='margin:0;padding:0;width:13px;height:13px;'/></div>" +
 									"	</td>";
     						html += "   <td>" + j + "</td>";
     						html += "	<td title=\'" + userName + "(" + cn + ")'>" + userName + "(" + cn + ")" + "</td>";
@@ -241,7 +241,7 @@
 	    }
 		
 		function event_HeaderCheckBoxClick(obj) {
-			var checkboxList = document.querySelectorAll("#userListBody tr input");
+			var checkboxList = document.querySelectorAll("#userListBody tr div input");
 			[].forEach.call(checkboxList, function(elem){
 				elem.checked = obj.checked;
 			});
@@ -252,12 +252,12 @@
 		}
 	</script>
 </head>
-<body class="mainbody" style="overflow:hidden; margin:0" marginwidth="0" marginheight="0">
+<body class="mainbody chk_lower_4" style="overflow:hidden; margin:0" marginwidth="0" marginheight="0">
 	<div id="contentHeader" style="width: 100%; overflow: auto;">
 		<table class="mainlist" style="width:100%;">
 			<thead>
 				<tr>
-					<th style="width: 22px; text-align: center;"><input type="checkbox" id="HeaderAllCheckBox" onclick="event_HeaderCheckBoxClick(this)" style="margin: 0px; padding: 0px; width: 13px; height: 13px;"></th>
+					<th style="width: 22px; text-align: center;"><div class="custom_checkbox"><input type="checkbox" id="HeaderAllCheckBox" onclick="event_HeaderCheckBoxClick(this)" style="margin: 0px; padding: 0px; width: 13px; height: 13px;"></div></th>
 					<th width="80px"><spring:message code="ezSystem.kyj1"></spring:message></th>
 					<th width="20%"><spring:message code="ezEmail.lsd04"></spring:message></th>
 					<th width="20%"><spring:message code="ezStatistics.t113"></spring:message></th>

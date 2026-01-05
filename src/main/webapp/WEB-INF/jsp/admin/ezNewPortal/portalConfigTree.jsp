@@ -164,7 +164,7 @@
 			var th = doc.getElementById("lvConfigList_TH_0");
 			var acList = doc.getElementById("lvConfigList");
 
-			th.innerHTML = "<input type= 'radio' id = 'checkAll' onchange= 'checkboxHeaderClick()' style='display:none;'></input>";
+			th.innerHTML = "<div class='custom_radio'><input type= 'radio' id = 'checkAll' onchange= 'checkboxHeaderClick()' style='display:none;'/></div>";
 
 			cnt = acList.children[1].childElementCount;
 
@@ -178,11 +178,11 @@
 			for (i; i < cnt; i++) {
 				var seq = acList.children[1].children[i].children[0].innerHTML;
 
-				acList.children[1].children[i].children[0].innerHTML = "<input type='radio' name='checks' class='checks' id='"
+				acList.children[1].children[i].children[0].innerHTML = "<div class='custom_radio'><input type='radio' name='checks' class='checks' id='"
 					+ seq
 					+ "' value='"
 					+ seq
-					+ "' data='" + acList.children[1].children[i].children[3].innerHTML + "'></input>"
+					+ "' data='" + acList.children[1].children[i].children[3].innerHTML + "'/></div>"
 			}
 		}
 

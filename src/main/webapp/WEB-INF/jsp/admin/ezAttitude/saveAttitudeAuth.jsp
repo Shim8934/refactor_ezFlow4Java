@@ -48,8 +48,8 @@
 								authTypes.push('${fn:replace(dept.authType, "'", "\\'") }');
 								html += "<tr>";
 								html += "<td style='width:50%;color:gray;padding-left:15px;'>${dept.deptName }</td>";
-								html += "<td style='width:25%;color:gray;text-align: center;'><input type='radio' name='${dept.deptId }' value='R' /></td>";
-								html += "<td style='width:25%;color:gray;text-align: center;'><input type='radio' name='${dept.deptId }' value='M' /></td>";
+								html += "<td style='width:25%;color:gray;text-align: center;'><div class='custom_radio'><input type='radio' name='${dept.deptId }' value='R' /></div></td>";
+								html += "<td style='width:25%;color:gray;text-align: center;'><div class='custom_radio'><input type='radio' name='${dept.deptId }' value='M' /></div></td>";
 								html += "</tr>";
 							</c:otherwise>
 						</c:choose>
@@ -121,8 +121,8 @@
 	    				//리스트
 						html += "<tr>";
 						html += "<td style='width:50%;color:gray;padding-left:15px;'>"+deptNames[i]+"</td>";
-						html += "<td style='width:25%;color:gray;text-align: center;'><input type='radio' name='"+deptIds[i]+"' value='R' /></td>";
-						html += "<td style='width:25%;color:gray;text-align: center;'><input type='radio' name='"+deptIds[i]+"' value='M' /></td>";
+						html += "<td style='width:25%;color:gray;text-align: center;'><div class='custom_radio'><input type='radio' name='"+deptIds[i]+"' value='R' /></div></td>";
+						html += "<td style='width:25%;color:gray;text-align: center;'><div class='custom_radio'><input type='radio' name='"+deptIds[i]+"' value='M' /></div></td>";
 						html += "</tr>";
 					}
 		    		//마지막 ',' 제거

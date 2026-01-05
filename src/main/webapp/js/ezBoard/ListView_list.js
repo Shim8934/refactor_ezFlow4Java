@@ -583,7 +583,10 @@ function ListView() {
                     _HeaderCheckBox.style.width = "13px";
                     _HeaderCheckBox.style.height = "13px";
                     _HeaderCheckBox.onclick = function () { event_HeaderCheckBoxClick(this); };
-                    objTd.appendChild(_HeaderCheckBox);
+        	        var oDiv = document.createElement("div");
+        	        oDiv.className = "custom_checkbox";
+        	        oDiv.appendChild(_HeaderCheckBox);
+                    objTd.appendChild(oDiv);
                     strName = "";
                 }
 
@@ -822,9 +825,9 @@ function ListView() {
 //                        objTd.style.fontWeight = "BOLD";
 //                    }
                     
-                    if (getNodeText(oDatas[6]) == "Y") {
-                    	titleImage = titleImage + "<img style='vertical-align:middle; display:inline-block;' src='/images/i_new.gif'>&nbsp;";
-                    }
+                    // if (getNodeText(oDatas[6]) == "Y") {
+                    // 	titleImage = titleImage + "<img style='vertical-align:middle; display:inline-block;' src='/images/i_new.gif'>&nbsp;";
+                    // }
                     if (getNodeText(oDatas[4]) == "0") {
                         objTd.style.fontWeight = "BOLD";
                     }
@@ -880,47 +883,51 @@ function ListView() {
 
                         if (listShowType == "E") {
                             if (fileExt.length > 1) {
-                                    titleImage = titleImage + "<img src='/images/disk_icon.png' onclick='selectToDownloadFiles(\"" + SelectSingleNodeValue(oCells[0], "DATA1") + "\", \"" + SelectSingleNodeValue(oCells[0], "DATA2") +"\", \"" + ITEMREAD_FG +"\")'>";
+                                    titleImage = titleImage + "<img src='/images/disk.svg?v=1' style='width:20px; height:20px; vertical-align:middle;' onclick='selectToDownloadFiles(\"" + SelectSingleNodeValue(oCells[0], "DATA1") + "\", \"" + SelectSingleNodeValue(oCells[0], "DATA2") +"\", \"" + ITEMREAD_FG +"\")'>";
                                 } else if (fileExt[0].indexOf(".jpg") != -1 || fileExt[0].indexOf(".jpeg") != -1 || fileExt[0].indexOf(".bmp") != -1 || fileExt[0].indexOf(".gif") != -1 || fileExt[0].indexOf(".png") != -1 || fileExt[0].indexOf(".tif") != -1 || fileExt[0].indexOf(".tiff") != -1) {
-                                    titleImage = titleImage + "<img src='/images/image.png' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG +"\")'>";
+                                    titleImage = titleImage + "<img src='/images/image.svg?v=1' style='width:20px; height:20px; vertical-align:middle;' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG +"\")'>";
                                 } else if (fileExt[0].indexOf(".doc") != -1 || fileExt[0].indexOf(".docx") != -1) {
-                                    titleImage = titleImage + "<img src='/images/doc.png' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG +"\")'>";
+                                    titleImage = titleImage + "<img src='/images/doc.svg?v=1' style='width:20px; height:20px; vertical-align:middle;' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG +"\")'>";
                                 } else if (fileExt[0].indexOf(".xls") != -1 || fileExt[0].indexOf(".xlsx") != -1) {
-                                    titleImage = titleImage + "<img src='/images/xls.png' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG +"\")'>";
+                                    titleImage = titleImage + "<img src='/images/xls.svg?v=1' style='width:20px; height:20px; vertical-align:middle;' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG +"\")'>";
                                 } else if (fileExt[0].indexOf(".ppt") != -1 || fileExt[0].indexOf(".pptx") != -1 || fileExt[0].indexOf(".pps") != -1 || fileExt[0].indexOf(".ppsx") != -1) {
-                                    titleImage = titleImage + "<img src='/images/ppt.png' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG +"\")'>";
+                                    titleImage = titleImage + "<img src='/images/ppt.svg?v=1' style='width:20px; height:20px; vertical-align:middle;' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG +"\")'>";
                                 } else if (fileExt[0].indexOf(".txt") != -1) {
-                                    titleImage = titleImage + "<img src='/images/txt.png' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG +"\")'>";
+                                    titleImage = titleImage + "<img src='/images/txt.svg?v=1' style='width:20px; height:20px; vertical-align:middle;' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG +"\")'>";
                                 } else if (fileExt[0].indexOf(".zip") != -1) {
-                                    titleImage = titleImage + "<img src='/images/zip.png' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG +"\")'>";
-                                }else if (fileExt[0].indexOf(".pdf") != -1) {
-                                    titleImage = titleImage + "<img src='/images/pdf.png' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG +"\")'>";
+                                    titleImage = titleImage + "<img src='/images/zip.svg?v=1' style='width:20px; height:20px; vertical-align:middle;' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG +"\")'>";
+                                } else if (fileExt[0].indexOf(".pdf") != -1) {
+                                    titleImage = titleImage + "<img src='/images/pdf.svg?v=1' style='width:20px; height:20px; vertical-align:middle;' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG +"\")'>";
+                                } else if (fileExt[0].indexOf(".hwp") != -1 || fileExt[0].indexOf(".hwpx") != -1) {
+                                    titleImage = titleImage + "<img src='/images/hwp.svg?v=1' style='width:20px; height:20px; vertical-align:middle;' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG +"\")'>";
                                 } else if (fileExt[0].indexOf(".ecm") != -1) {
-                                    titleImage = titleImage + "<img src='/images/ecm.png' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG +"\")'>";
+                                    titleImage = titleImage + "<img src='/images/ecm.svg?v=1' style='width:20px; height:20px; vertical-align:middle;' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG +"\")'>";
                                 } else {
-                                    titleImage = titleImage + "<img src='/images/email/mail_006.gif' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG +"\")'>";
-                                } 
+                                    titleImage = titleImage + "<img src='/images/etc.svg?v=1' style='width:20px; height:20px; vertical-align:middle;' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG +"\")'>";
+                                }
                         } else {
                             if (fileExt.indexOf("MANY") != -1 || (listShowType == "E" && fileExt.length > 1)) {
-                                titleImage = titleImage + "<img src='/images/disk_icon.png' onclick='selectToDownloadFiles(\"" + SelectSingleNodeValue(oCells[0], "DATA1") + "\", \"" + SelectSingleNodeValue(oCells[0], "DATA2") +"\", \"" + ITEMREAD_FG +"\")'>";
+                                titleImage = titleImage + "<img src='/images/disk.svg?v=1' style='width:20px; height:20px; vertical-align:middle;' onclick='selectToDownloadFiles(\"" + SelectSingleNodeValue(oCells[0], "DATA1") + "\", \"" + SelectSingleNodeValue(oCells[0], "DATA2") +"\", \"" + ITEMREAD_FG +"\")'>";
                             } else if (fileExt.indexOf(".jpg") != -1 || fileExt.indexOf(".jpeg") != -1 || fileExt.indexOf(".bmp") != -1 || fileExt.indexOf(".gif") != -1 || fileExt.indexOf(".png") != -1 || fileExt.indexOf(".tif") != -1 || fileExt.indexOf(".tiff") != -1) {
-                                titleImage = titleImage + "<img src='/images/image.png' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG +"\")'>";
+                                titleImage = titleImage + "<img src='/images/image.svg?v=1' style='width:20px; height:20px; vertical-align:middle;' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG +"\")'>";
                             } else if (fileExt.indexOf(".doc") != -1 || fileExt.indexOf(".docx") != -1) {
-                                titleImage = titleImage + "<img src='/images/doc.png' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG +"\")'>";
+                                titleImage = titleImage + "<img src='/images/doc.svg?v=1' style='width:20px; height:20px; vertical-align:middle;' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG +"\")'>";
                             } else if (fileExt.indexOf(".xls") != -1 || fileExt.indexOf(".xlsx") != -1) {
-                                titleImage = titleImage + "<img src='/images/xls.png' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG +"\")'>";
+                                titleImage = titleImage + "<img src='/images/xls.svg?v=1' style='width:20px; height:20px; vertical-align:middle;' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG +"\")'>";
                             } else if (fileExt.indexOf(".ppt") != -1 || fileExt.indexOf(".pptx") != -1 || fileExt.indexOf(".pps") != -1 || fileExt.indexOf(".ppsx") != -1) {
-                                titleImage = titleImage + "<img src='/images/ppt.png' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG +"\")'>";
+                                titleImage = titleImage + "<img src='/images/ppt.svg?v=1' style='width:20px; height:20px; vertical-align:middle;' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG +"\")'>";
                             } else if (fileExt.indexOf(".txt") != -1) {
-                                titleImage = titleImage + "<img src='/images/txt.png' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG +"\")'>";
+                                titleImage = titleImage + "<img src='/images/txt.svg?v=1' style='width:20px; height:20px; vertical-align:middle;' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG +"\")'>";
                             } else if (fileExt.indexOf(".zip") != -1) {
-                                titleImage = titleImage + "<img src='/images/zip.png' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG +"\")'>";
-                            }else if (fileExt.indexOf(".pdf") != -1) {
-                                titleImage = titleImage + "<img src='/images/pdf.png' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG +"\")'>";
+                                titleImage = titleImage + "<img src='/images/zip.svg?v=1' style='width:20px; height:20px; vertical-align:middle;' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG +"\")'>";
+                            } else if (fileExt.indexOf(".pdf") != -1) {
+                                titleImage = titleImage + "<img src='/images/pdf.svg?v=1' style='width:20px; height:20px; vertical-align:middle;' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG +"\")'>";
+                            } else if (fileExt.indexOf(".hwp") != -1) {
+                                titleImage = titleImage + "<img src='/images/hwp.svg?v=1' style='width:20px; height:20px; vertical-align:middle;' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG +"\")'>";
                             } else if (fileExt.indexOf(".ecm") != -1) {
-                                titleImage = titleImage + "<img src='/images/ecm.png' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG +"\")'>";
+                                titleImage = titleImage + "<img src='/images/ecm.svg?v=1' style='width:20px; height:20px; vertical-align:middle;' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG +"\")'>";
                             } else {
-                                titleImage = titleImage + "<img src='/images/email/mail_006.gif' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG +"\")'>";
+                                titleImage = titleImage + "<img src='/images/etc.svg?v=1' style='width:20px; height:20px; vertical-align:middle;' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG +"\")'>";
                             } 
                     	}
                         strValue = "";
@@ -959,7 +966,10 @@ function ListView() {
 					_TDCheckBox_Sub.setAttribute("style", "width: 13px; height: 13px; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; vertical-align:middle");
 					
                     _TDCheckBox_Sub.onclick = new Function("chk_onselect(this)");
-                    objTd.appendChild(_TDCheckBox_Sub);
+        	        var oDiv = document.createElement("div");
+        	        oDiv.className = "custom_checkbox";
+        	        oDiv.appendChild(_TDCheckBox_Sub);
+                    objTd.appendChild(oDiv);
                 }
                 else {
                 	/* 2019-01-31 홍승비 - 게시자 이름 특문처리 (익명게시판 오류수정) */
@@ -998,14 +1008,22 @@ function ListView() {
                         var fileSize = SelectSingleNodeValue(oCells[0], "FILESIZE").split("|");
                         var listShowType = SelectSingleNodeValue(oCells[0], "LISTSHOWTYPE"); // 리스트보기방식 (기본:G/확장:E)
                         var publicFlagImg = SelectSingleNodeValue(oCells[0], "PUBLICFLAG") == "N" ? " <div class='board_private'></div>" : "";
-                        
-                    	if (getNodeText(oDatas[10]) != "0") {
-                    		objTd.innerHTML = "<div style='display:flex; align-items:center;'>" + titleImage + "<span style='display:block; text-overflow:ellipsis; overflow:hidden; white-space:nowrap;'>" 
-                                + MakeXMLString(strValue) + "</span>" + titleOneLineCnt + publicFlagImg + "</div> ";
-                        } else if (getNodeText(oDatas[6]) == "Y") {
-                        	objTd.innerHTML = "<div style='overflow: hidden; text-overflow: ellipsis; display: inline-block; vertical-align:middle; width:100%;'>" + titleImage + MakeXMLString(strValue) + publicFlagImg + "</div> ";
+                        var ITEMREAD_FG = SelectSingleNodeValue(oCells[0], "ITEMREAD_FG");
+
+                        if (getNodeText(oDatas[10]) != "0") { // 댓글이 있는 경우
+                            if (getNodeText(oDatas[6]) == "Y") { // NEW 아이콘 표출
+                                objTd.innerHTML = "<div style='display:flex; align-items:center;'>" + titleImage + "<span class='list_title_txt'>"
+                                    + MakeXMLString(strValue) + "</span>" + titleOneLineCnt + "<span class='board_new'></span>" + publicFlagImg + "</div> ";
+                            } else {
+                                objTd.innerHTML = "<div style='display:flex; align-items:center;'>" + titleImage + "<span class='list_title_txt'>"
+                                    + MakeXMLString(strValue) + "</span>" + titleOneLineCnt + publicFlagImg + "</div> ";
+                            }
                         } else {
-                        	objTd.innerHTML = titleImage + MakeXMLString(strValue) + publicFlagImg;
+                            if (getNodeText(oDatas[6]) == "Y") { // NEW 아이콘 표출
+                                objTd.innerHTML = "<div style='display:flex; align-items:center;'>" + titleImage + "<span class='list_title_txt'>" + MakeXMLString(strValue) + "</span><span class='board_new'></span>" + publicFlagImg + "</div> ";
+                            } else {
+                                objTd.innerHTML = titleImage + MakeXMLString(strValue) + publicFlagImg;
+                            }
                         }
                         
                         // 사용자가 리스트보기방식을 선택하지 않았을 경우 -> 관리자가 설정한 리스트보기방식을 따름
@@ -1023,9 +1041,9 @@ function ListView() {
 //                                        strInnerHtml += "<span class='icon16 icon16_magnifier' onclick='showBoardFile(\"" + javaURLEncode(filePath) + "\", \"" + javaURLEncode(fileExt) + "\", \"" + boardID + "\",\"" + itemID + "\", \"" + writerID + "\")'></span></div></li></ul>";
 //                                    } else {
                                         strInnerHtml += "<ul class='list_attach_ul'><li><div>";
-                                        strInnerHtml += "<span class='file_name' onclick='downloadBoardFile(\"" + downURL + "\", \"" + boardID + "\",\"" + itemID + "\", \"" + writerID + "\")'>" + fileExt + "</span>";
-                                        strInnerHtml += "<span class='file_capacity' onclick='downloadBoardFile(\"" + downURL + "\", \"" + boardID + "\",\"" + itemID + "\", \"" + writerID + "\")'>(" + fileSize + ")</span>";
-                                        strInnerHtml += "<span class='icon16 icon16_download' onclick='downloadBoardFile(\"" + downURL + "\", \"" + boardID + "\",\"" + itemID + "\", \"" + writerID + "\")'></span>";
+                                        strInnerHtml += "<span class='file_name' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG + "\")'>" + fileExt + "</span>";
+                                        strInnerHtml += "<span class='file_capacity' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG + "\")'>(" + fileSize + ")</span>";
+                                        strInnerHtml += "<span class='icon16 icon16_download' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG + "\")'></span>";
                                         //strInnerHtml += "<span class='icon16 icon16_magnifier' onclick='showBoardFile(\"" + javaURLEncode(filePath) + "\", \"" + javaURLEncode(fileExt) + "\", \"" + boardID + "\",\"" + itemID + "\", \"" + writerID + "\")'></span></div></li></ul>";
                                         strInnerHtml += "</div></li></ul>";
 //                                    }
@@ -1047,9 +1065,9 @@ function ListView() {
 //                                            strInnerHtml += "<span class='icon16 icon16_magnifier' onclick='showBoardFile(\"" + javaURLEncode(filePath[y]) + "\", \"" + javaURLEncode(fileExt[y]) + "\", \"" + boardID + "\",\"" + itemID + "\", \"" + writerID + "\")'></span></div></li>";
 //                                        } else {
                                             strInnerHtml += "<li><div>";
-                                            strInnerHtml += "<span class='file_name' onclick='downloadBoardFile(\"" + downURL + "\", \"" + boardID + "\",\"" + itemID + "\", \"" + writerID + "\")'>" + fileExt[y] + "</span>";
-                                            strInnerHtml += "<span class='file_capacity' onclick='downloadBoardFile(\"" + downURL + "\", \"" + boardID + "\",\"" + itemID + "\", \"" + writerID + "\")'>(" + fileSize[y] + ")</span>";
-                                            strInnerHtml += "<span class='icon16 icon16_download' onclick='downloadBoardFile(\"" + downURL + "\", \"" + boardID + "\",\"" + itemID + "\", \"" + writerID + "\")'></span>";
+                                            strInnerHtml += "<span class='file_name' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG + "\")'>" + fileExt[y] + "</span>";
+                                            strInnerHtml += "<span class='file_capacity' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG + "\")'>(" + fileSize[y] + ")</span>";
+                                            strInnerHtml += "<span class='icon16 icon16_download' onclick='downloadBoardFile(\"" + downURL + "\", \"" + ITEMREAD_FG + "\")'></span>";
                                             //strInnerHtml += "<span class='icon16 icon16_magnifier' onclick='showBoardFile(\"" + javaURLEncode(filePath[y]) + "\", \"" + javaURLEncode(fileExt[y]) + "\", \"" + boardID + "\",\"" + itemID + "\", \"" + writerID + "\")'></span></div></li>";
                                             strInnerHtml += "</div></li></ul>";
 //                                        }
@@ -1656,17 +1674,27 @@ function tr_select(pRowID, pTableID, callbackFunc) {
 
         //현재 클릭한 Row를 Select 한다.
         //strAttribute = GetAttribute(oSourceTr, "selected");
-        if (oSourceTr.childNodes[0].childNodes[0].checked) {
-            oSourceTr.setAttribute("selected", "false");
-            oSourceTr.childNodes[0].childNodes[0].checked = false;
-            oSourceTr.style.backgroundColor = m_strColorDefault;
-            strListInfo = ReplaceText(strListInfo, oSourceTr.childNodes[0].childNodes[0].id, "");
-        }
-        else {
-            oSourceTr.setAttribute("selected", "true");
-            oSourceTr.childNodes[0].childNodes[0].checked = true;
-            oSourceTr.style.backgroundColor = m_strColorSelect;
-            strListInfo += oSourceTr.childNodes[0].childNodes[0].id;
+        if (!document.getElementById("HeaderAllCheckBox") && pBoardType == "E") { // 체크박스가 존재하지 않는 경우
+            if (oSourceTr.style.backgroundColor != "rgb(255, 255, 255)") {
+                oSourceTr.setAttribute("selected", "false");
+                oSourceTr.style.backgroundColor = m_strColorDefault;
+            } else {
+                oSourceTr.setAttribute("selected", "true");
+                oSourceTr.style.backgroundColor = m_strColorSelect;
+            }
+        } else {
+            if (oSourceTr.childNodes[0].childNodes[0].childNodes[0].checked) {
+                oSourceTr.setAttribute("selected", "false");
+                oSourceTr.childNodes[0].childNodes[0].childNodes[0].checked = false;
+                oSourceTr.style.backgroundColor = m_strColorDefault;
+                strListInfo = ReplaceText(strListInfo, oSourceTr.childNodes[0].childNodes[0].childNodes[0].id, "");
+            }
+            else {
+                oSourceTr.setAttribute("selected", "true");
+                oSourceTr.childNodes[0].childNodes[0].childNodes[0].checked = true;
+                oSourceTr.style.backgroundColor = m_strColorSelect;
+                strListInfo += oSourceTr.childNodes[0].childNodes[0].childNodes[0].id;
+            }
         }
 
         //각 리스트마다 마지막으로 선택한 ID를 보관한다.
@@ -1702,13 +1730,23 @@ function tr_unselectedAll(pTableID) {
 	        SelList.LoadFromID("BoardListDiv");
 	
 	        for (var i = 0; i < SelList.GetRowCount() ; i++) {
-	            SelList.GetDataRows()[i].childNodes[0].childNodes[0].checked = false;
+	            SelList.GetDataRows()[i].childNodes[0].childNodes[0].childNodes[0].checked = false;
 	            SelList.GetDataRows()[i].style.backgroundColor = m_strColorDefault;
 	            strListInfo = "";
 	        }
 	    }
     } else {
-    	strListInfo = "";
+        if (pBoardType == "E") { // 체크박스가 존재하지 않는 경우
+            var SelList = new ListView();
+            SelList.LoadFromID("BoardListDiv");
+
+            for (var i = 0; i < SelList.GetRowCount() ; i++) {
+                SelList.GetDataRows()[i].style.backgroundColor = m_strColorDefault;
+                strListInfo = "";
+            }
+        } else {
+    	    strListInfo = "";
+        }
     }
 }
 
@@ -1719,14 +1757,14 @@ function event_HeaderCheckBoxClick(obj) {
 
     if (obj.checked) {
         for (var i = 0; i < SelList.GetRowCount() ; i++) {
-            SelList.GetDataRows()[i].childNodes[0].childNodes[0].checked = true;
+            SelList.GetDataRows()[i].childNodes[0].childNodes[0].childNodes[0].checked = true;
             SelList.GetDataRows()[i].style.backgroundColor = m_strColorSelect;
-            strListInfo += SelList.GetDataRows()[i].childNodes[0].childNodes[0].id;
+            strListInfo += SelList.GetDataRows()[i].childNodes[0].childNodes[0].childNodes[0].id;
         }
     }
     else {
         for (var i = 0; i < SelList.GetRowCount() ; i++) {
-            SelList.GetDataRows()[i].childNodes[0].childNodes[0].checked = false;
+            SelList.GetDataRows()[i].childNodes[0].childNodes[0].childNodes[0].checked = false;
             SelList.GetDataRows()[i].style.backgroundColor = m_strColorDefault;
             strListInfo = "";
         }
@@ -1778,9 +1816,14 @@ function tr_selectBlock(pRowID, pTableID) {
 function tr_mouseover(pRow) {
 
     //var strAttribute = GetAttribute(pRow, "selected");
-    if (pRow.childNodes[0].childNodes[0].checked != true) {
-        pRow.style.backgroundColor=m_strColorOver;      
-
+    if (!document.getElementById("HeaderAllCheckBox") && pBoardType == "E") { // 체크박스가 존재하지 않는 경우
+        if (pRow.style.backgroundColor == "rgb(255, 255, 255)") {
+            pRow.style.backgroundColor=m_strColorOver;
+        }
+    } else {
+        if (pRow.childNodes[0].childNodes[0].childNodes[0].checked != true) {
+            pRow.style.backgroundColor=m_strColorOver;      
+        }
     }
 
     pRow = null;
@@ -1789,10 +1832,22 @@ function tr_mouseover(pRow) {
 //마우스 아웃
 function tr_mouseout(pRow) {
     var strAttribute = GetAttribute(pRow, "selected");
-    if (pRow.childNodes[0].childNodes[0].checked != true)
-        pRow.style.backgroundColor=m_strColorDefault;
-    else
-        pRow.style.backgroundColor=m_strColorSelect;
+
+    if (!document.getElementById("HeaderAllCheckBox") && pBoardType == "E") { // 체크박스가 존재하지 않는 경우
+        if (pRow.style.backgroundColor == "rgb(255, 255, 255)") {
+            pRow.style.backgroundColor = m_strColorSelect;
+        } else {
+            if (pRow.style.backgroundColor != "rgb(241, 248, 255)") {
+                pRow.style.backgroundColor = m_strColorDefault;
+            }
+        }
+    } else {
+        if (pRow.childNodes[0].childNodes[0].childNodes[0].checked != true) {
+            pRow.style.backgroundColor=m_strColorDefault;
+        } else {
+            pRow.style.backgroundColor=m_strColorSelect;
+        }
+    }
 
     pRow = null;
 }

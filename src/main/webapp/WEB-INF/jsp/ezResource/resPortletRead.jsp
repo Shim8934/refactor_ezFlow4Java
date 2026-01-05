@@ -589,8 +589,8 @@
 					        createNodeAndInsertText(xmlDoc, objNode, "WRITERID", writerIDVal);
 					        createNodeAndInsertText(xmlDoc, objNode, "INSTYPE", reFlagVal);
 					        createNodeAndInsertText(xmlDoc, objNode, "GFLAG", gFlagVal);
-					        createNodeAndInsertText(xmlDoc, objNode, "STARTDATE", DstartDateVal);
-					        createNodeAndInsertText(xmlDoc, objNode, "ENDDATE", DendDateVal);
+					        createNodeAndInsertText(xmlDoc, objNode, "STARTDATE", startDateVal);
+					        createNodeAndInsertText(xmlDoc, objNode, "ENDDATE", endDateVal);
 				
 					        xmlHttp.open("POST", "/ezResource/scheduleAddOk.do?cmd=del", false);
 					        xmlHttp.send(xmlDoc);
@@ -648,8 +648,8 @@
 			    createNodeAndInsertText(xmlDoc, objNode, "WRITERID", writerIDVal);
 			    createNodeAndInsertText(xmlDoc, objNode, "INSTYPE", reFlagVal);
 			    createNodeAndInsertText(xmlDoc, objNode, "GFLAG", gFlagVal);
-			    createNodeAndInsertText(xmlDoc, objNode, "STARTDATE", DstartDateVal);
-			    createNodeAndInsertText(xmlDoc, objNode, "ENDDATE", DstartDateVal);
+			    createNodeAndInsertText(xmlDoc, objNode, "STARTDATE", startDateVal);
+			    createNodeAndInsertText(xmlDoc, objNode, "ENDDATE", endDateVal);
 
 			    xmlHttp.open("POST", "/ezResource/scheduleAddOk.do?cmd=del", false);
 			    xmlHttp.send(xmlDoc);

@@ -266,13 +266,13 @@ var strLang353 = "Ada domain atau alamat email yang sama.";
 var strLang354 = "Silakan masukkan nama domain."; 
 var strLang355 = "Besar"; 
 var strLang359 = "Pindah selesai."; 
-var strLangLDH01 = "이 메일에 대한 열람을 차단하시겠습니까?";
-var strLangLDH02 = "이 메일에 대한 열람차단을 해제하시겠습니까?";
-var strLangLDH03 = "차단되었습니다.";
-var strLangLDH04 = "차단 중 오류가 발생했습니다.";
-var strLangLDH05 = "해제되었습니다.";
-var strLangLDH06 = "해제 중 오류가 발생했습니다.";
-var strLangLDH07 = "관리자에 의해 열람차단된 메일입니다.";
+var strLangLDH01 = "Apakah Anda ingin memblokir pembacaan email ini?";
+var strLangLDH02 = "Apakah Anda ingin membuka blokir pembacaan email ini?";
+var strLangLDH03 = "Berhasil diblokir.";
+var strLangLDH04 = "Terjadi kesalahan saat memblokir.";
+var strLangLDH05 = "Berhasil dibuka blokir.";
+var strLangLDH06 = "Terjadi kesalahan saat membuka blokir.";
+var strLangLDH07 = "Email ini telah diblokir dari pembacaan oleh administrator.";
 var strLangLHM01 = "Silakan masukkan nama domain.";                                                                                                                     
 var strLangLHM02 = "Tidak ada admin.";                                                                                                                                  
 var strLangLHM03 = "Tidak ada ID Daftar yang ditentukan.";                                                                                                              
@@ -315,6 +315,7 @@ var strLangLS03 = "Semua email di kotak surat tersebut akan diunduh sebagai satu
 var strLangLS04 = ".";
 var strLangLS05 = "';' cannot be contained."
 var strLangAllmailSaveAlert = "선택된 메일이 없습니다. \n메일을 선택하거나 메일 검색 후 저장해 주세요."
+var strLangEachIcon = "개인별";
 
 /* 2018-07-03 홍승비 - 승인게시물, 커뮤니티 답변메일 companyID 관련 처리*/
 var strLangHSB01 = "Pos ini dapat dilihat di ";
@@ -344,11 +345,21 @@ var strLangKSA05 = "Terjadi kesalahan saat menyimpan jadwal.";
 
 var strLangTagAlreadyUse = "Nama tag ini sudah digunakan oleh tag lain yang sedang digunakan.";
 
+var strLangIcal01 = "Email balasan telah dikirim."
+var strLangIcal02 = "Gagal mengirim email respons."
+
 /* 2023-05-16 김우철 - 한글 배포용 문서 저장을 위한 메세지 추가 */
 var strLangKWCHd01 = "An error occurred while saving security HWP document. Please try again.";
 
 var strLangNJK01 = "Restricted special characters for an email folder name(";
 var strLangNJK02 = "are included.";
+
+//승인메일
+var strLangAppr01 = "Persetujuan Email Perusahaan tidak dapat dilakukan karena tidak ada administrator umum.";
+var strLangAppr02 = "Tidak ada persetuju (approver) yang tersedia.";
+var strLangAppr03 = "Terjadi kesalahan pada Persetujuan Email Perusahaan.";
+var strLangAppr04 = "Email Persetujuan tidak dapat dijadwalkan untuk dikirim.";
+var strLangAppr05 = "Email ke seluruh karyawan harus disetujui sebelum dapat dikirim. Apakah Anda ingin melanjutkan pengiriman?";
 
 // 스팸신고
 var strLangHSG01 = "Laporan spam tidak dapat dilakukan karena alamat email tidak ditemukan.";
@@ -395,11 +406,18 @@ var strUreadDelSearchPermenant = "Setelah dihapus, email tidak dapat dipulihkan.
 const strLangTagLimit = "Anda dapat mendaftar hingga 5 tag.";
 const strLangTagadd = "메일에 태그 추가 :";
 
-const strLangChangeButton = "Switch";
-const strLangChangeLimit = "Cannot switch because the attachment size exceeds the limit.";
+const strLangChangeButton = "Beralih";
+const strLangChangeLimit = "Tidak dapat beralih karena ukuran lampiran melebihi batas.";
 
-const strLangKeepMoveCantUseSentBox = '보낸편지함으로는 계속이동 할 수 없습니다.';
-const strLangKeepMoveNoFromHeader = '보낸이가 비어있는 메일은 계속이동 할 수 없습니다.';
+const strLangKeepMoveCantUseSentBox = "Tidak dapat terus memindahkan ke Kotak Terkirim.";
+const strLangKeepMoveNoFromHeader = "Email tanpa pengirim tidak dapat terus dipindahkan.";
+
+const strLangRcptEditError = "입력된 값이 메일 주소 형식이 아닙니다.\n예) 홍길동 <hongkildong@kaoni.com> 와 같은 형식으로 입력해주세요.";
+
+const strPreviousTime = 'Tanggal cadangan tidak boleh lebih tua dari sekarang.';
+
+const strUnLimit = "tak terbatas";
+const strDownloadsCount = "회";
 
 function GetLocalTime(Offset , pDateTime)
 {

@@ -17,6 +17,8 @@ public class BoardAttributeVO {
 	/** */
 	private String colName4;	
 	/** */
+	private String colName6;	
+	/** */
 	private String value;
 	/** */
 	private String colType;
@@ -90,6 +92,12 @@ public class BoardAttributeVO {
 	}
 	public void setColName4(String colName4) {
 		this.colName4 = colName4;
+	}
+	public String getColName6() {
+		return colName6;
+	}
+	public void setColName6(String colName6) {
+		this.colName6 = colName6;
 	}
 
 }

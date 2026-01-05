@@ -531,7 +531,10 @@ function ListView() {
                     _HeaderCheckBox.style.width = "16px";
                     _HeaderCheckBox.style.height = "16px";
                     _HeaderCheckBox.onclick = function () { event_HeaderCheckBoxClick(this); };
-                    objTd.appendChild(_HeaderCheckBox);
+        	        var oDiv = document.createElement("div");
+        	        oDiv.className = "custom_checkbox";
+        	        oDiv.appendChild(_HeaderCheckBox);
+                    objTd.appendChild(oDiv);
                     strName = "";
                 }
 
@@ -695,7 +698,10 @@ function ListView() {
                     _TDCheckBox_Sub.style.width = "13px";
                     _TDCheckBox_Sub.style.height = "13px";
                     _TDCheckBox_Sub.onclick = new Function("chk_onselect(this)");
-                    objTd.appendChild(_TDCheckBox_Sub);
+        	        var oDiv = document.createElement("div");
+        	        oDiv.className = "custom_checkbox";
+        	        oDiv.appendChild(_TDCheckBox_Sub);
+                    objTd.appendChild(oDiv);
 
                     objTr.appendChild(objTd);
                 }
@@ -769,35 +775,44 @@ function ListView() {
                     var ContentNewCell1 = document.createElement("TD");
                     ContentNewCell1.setAttribute("style", "text-overflow:ellipsis; overflow:hidden; white-space:nowrap; border-bottom:0px; padding-left:10px");
 
+                    var DivCell = document.createElement("DIV");
+                    DivCell.setAttribute("style", "display:flex;align-items:center");
+
                     var TextCell1 = document.createElement("SPAN");
                     TextCell1.id = "spn_title" + i;
                     if(getNodeText(oDatas[7]) == "0") {
-                        TextCell1.setAttribute("style", "font-weight:bold; font-size:12px; padding-left:5px;");
+                        TextCell1.setAttribute("style", "font-weight:bold; font-size:12px; padding-left:5px;text-overflow:ellipsis; overflow:hidden; white-space:nowrap");
                     } else {
-                        TextCell1.setAttribute("style", "font-size:12px; padding-left:5px;");
+                        TextCell1.setAttribute("style", "font-size:12px; padding-left:5px;text-overflow:ellipsis; overflow:hidden; white-space:nowrap");
                     }
                     //var Text1 = document.createTextNode(strValue);
                     //TextCell1.appendChild(Text1);
                     
-                    if (getNodeText(oDatas[3]) == "Y") {
-                    	TextCell1.innerHTML += "<img src='/images/i_new.gif' style='vertical-align:middle;margin:0px 5px 0px 2px' />";
-                    }
-                    
+                    // if (getNodeText(oDatas[3]) == "Y") {
+                    // 	TextCell1.innerHTML += "<img src='/images/i_new.gif' style='vertical-align:middle;margin:0px 5px 0px 2px' />";
+                    // }
                     TextCell1.innerHTML += MakeXMLString(strValue);
 
                     var TitleImage = document.createElement("IMG");
                     TitleImage.setAttribute("style", "padding-bottom:3px;vertical-align:middle;");
                     TitleImage.src = "/images/dot_photoTitle.gif";
 
-                    ContentNewCell1.appendChild(TitleImage);
-                    ContentNewCell1.appendChild(TextCell1);
+                    DivCell.appendChild(TitleImage);
+                    DivCell.appendChild(TextCell1);
 
                     if (getNodeText(oDatas[6]) != "0") {
                         var TextCell_OneLineCnt = document.createElement("SPAN");
                         TextCell_OneLineCnt.setAttribute("style", "color:#c64200");
                         TextCell_OneLineCnt.innerHTML = "&nbsp;[" + getNodeText(oDatas[6]) + "]";
-                        ContentNewCell1.appendChild(TextCell_OneLineCnt);
+                        DivCell.appendChild(TextCell_OneLineCnt);
                     }
+
+                    if (getNodeText(oDatas[3]) == "Y") {
+                        var TextCell_New = document.createElement("SPAN");
+                        TextCell_New.setAttribute("class", "board_new");
+                        DivCell.appendChild(TextCell_New);
+                    }
+                    ContentNewCell1.appendChild(DivCell);
 
                     var ContentNewCell2 = document.createElement("TD");
                     ContentNewCell2.id = "spn_content" + i;
@@ -1349,14 +1364,14 @@ function event_HeaderCheckBoxClick(obj) {
 
     if (obj.checked) {
         for (var i = 0; i < SelList.GetRowCount() ; i++) {
-            SelList.GetDataRows()[i].childNodes[0].childNodes[0].checked = true;
+            SelList.GetDataRows()[i].childNodes[0].childNodes[0].childNodes[0].checked = true;
             SelList.GetDataRows()[i].style.backgroundColor = m_strColorSelect;
-            strListInfo += SelList.GetDataRows()[i].childNodes[0].childNodes[0].id;
+            strListInfo += SelList.GetDataRows()[i].childNodes[0].childNodes[0].childNodes[0].id;
         }
     }
     else {
         for (var i = 0; i < SelList.GetRowCount() ; i++) {
-            SelList.GetDataRows()[i].childNodes[0].childNodes[0].checked = false;
+            SelList.GetDataRows()[i].childNodes[0].childNodes[0].childNodes[0].checked = false;
             SelList.GetDataRows()[i].style.backgroundColor = m_strColorDefault;
             strListInfo = "";
         }
@@ -1377,7 +1392,7 @@ function tr_unselectedAll(pTableID) {
         SelList.LoadFromID("BoardList");
 
         for (var i = 0; i < SelList.GetRowCount() ; i++) {
-            SelList.GetDataRows()[i].childNodes[0].childNodes[0].checked = false;
+            SelList.GetDataRows()[i].childNodes[0].childNodes[0].childNodes[0].checked = false;
             SelList.GetDataRows()[i].style.backgroundColor = m_strColorDefault;
             strListInfo = "";
         }

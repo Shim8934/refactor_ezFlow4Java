@@ -766,7 +766,7 @@ function DisplayUserImageList() {
             	profileTd.innerHTML = `<div class="pic"></div>`;
             } else {
                 profileTd.innerHTML = `<div class="pic">
-											<img src="/admin/ezOrgan/getPersonalInfo.do?fileName=${profileUrl}" width="90px" height="90px">
+											<img src="/admin/ezOrgan/getPersonalInfo.do?fileName=${profileUrl}" onerror="this.style.display='none'" width="90px" height="90px">
 										</div>`;
             }
         

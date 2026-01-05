@@ -168,18 +168,23 @@
             		success: function(data) {
 						resOccuList = data.getResOccuList;
 						var totalTime = data.totalTime;
-						makeList(resOccuList, totalTime);
+                        var lang = data.lang;
+						makeList(resOccuList, totalTime, lang);
             		}        			
             	});
 		   	}
 		   	
-		   	function makeList(resOccuList, totalTime) {
+		   	function makeList(resOccuList, totalTime, lang) {
 		   		var list = "";
 		   		if (resOccuList.length > 0) {
 		   			for (var i = 0; i < resOccuList.length; i++) {
 		   				list += "<tr class=\"resTr\">";
 		   				list += "<td class=\"resTd\">" + resOccuList[i].companyName + "</td>";
-		   				list += "<td class=\"resTd\">" + resOccuList[i].brdNm + "</td>";
+                        if (lang == "1") {
+		   				    list += "<td class=\"resTd\">" + resOccuList[i].brdNm + "</td>";
+                        } else {
+                            list += "<td class=\"resTd\">" + resOccuList[i].brdNm2 + "</td>";
+                        }
 		   				list += "<td class=\"resTd\">" + resOccuList[i].count + "</td>";
 		   				list += "<td class=\"resTd\">" + resOccuList[i].usageTime + "</td>";
 		   				if (i == 0) {
@@ -223,7 +228,7 @@
 			<h1><spring:message code='ezResource.kwc03'/></h1>
 			<div id="close">
 	            <ul>
-	                <li><span onclick="return close_onclick();"></span></li>
+	                <li><span onclick="return close_onclick();" style="position: fixed;right: 10px;"></span></li>
 	            </ul>
 	        </div>
 	        
@@ -240,8 +245,8 @@
 		</div>
         
         <div>
-	        <div id="ResList">
-	        	<table id="resTable" style="width:100%; cursor: default; margin-top:20px;">
+	        <div id="ResList" style="width:1200px;">
+	        	<table id="resTable" style="width:99%; cursor: default; margin-top:20px; margin-bottom:60px;">
 	       			<tr height="30px">
 	       				<th style="width:100px; text-align:center; font-weight:bold"><spring:message code="ezResource.header.kwc1"/></th>
 	       				<th style="width:150px; text-align:center; font-weight:bold"><spring:message code="ezResource.header.kwc2"/></th>

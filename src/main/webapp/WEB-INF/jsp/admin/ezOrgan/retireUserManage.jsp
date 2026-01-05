@@ -204,10 +204,10 @@
 			        for (var i = 0 ; i < document.getElementsByName("chk").length ; i++) {
 			            if (document.getElementsByName('checkbox').item(0).checked == true) {
 			                document.getElementsByName("chk").item(i).checked = true;
-			                document.getElementsByName("chk").item(i).parentElement.parentElement.className = "selectedTR";
+			                document.getElementsByName("chk").item(i).closest('tr').className = "selectedTR";
 			            } else {
 			                document.getElementsByName("chk").item(i).checked = false;
-			                document.getElementsByName("chk").item(i).parentElement.parentElement.className = "unselectedTR";
+			                document.getElementsByName("chk").item(i).closest('tr').className = "unselectedTR";
 			            }
 			        }
 			    }
@@ -555,7 +555,7 @@
 							 data.list.forEach(function(i,v){
 								html += "<tr class='unselectedTR' onclick='clickRow(event)' ondblclick=ShowUserInfo('" + i.cn + "')>";
 								html += "    <td width='30px'>";
-								html += "        <input type='checkbox' onclick='selectCheckBox()' name='chk' id='chk' value='" + i.cn + "'/>";
+								html += "        <div class='custom_checkbox'><input type='checkbox' onclick='selectCheckBox()' name='chk' id='chk' value='" + i.cn + "'/></div>";
 								html += "    </td>";
 								
 								if (lang == '' || lang == 1) {
@@ -632,18 +632,18 @@
 				
 				for (var i = 0; i < length; i++) {
 					tableList.rows[i].className = "unselectedTR";
-					tableList.rows[i].firstElementChild.firstElementChild.checked = false;
+					tableList.rows[i].querySelector('input[type="checkbox"]').checked = false;
 				}
 					
 				currentRow.className = "selectedTR";
-				currentRow.firstElementChild.firstElementChild.checked = true;
+				currentRow.querySelector('input[type="checkbox"]').checked = true;
 			}
 			
 			function selectCheckBox() {
 				event.stopPropagation();
 				
 				var checkboxElmt = event.currentTarget;
-				var currentRow   = checkboxElmt.parentElement.parentElement;
+				var currentRow   = checkboxElmt.closest('tr');
 				
 				if (checkboxElmt.checked) {
 					currentRow.className = "selectedTR";
@@ -711,9 +711,11 @@
 			<tr>
 				<th><spring:message code='ezOrgan.0hun01'/></th>
 				<td>
-					<input type="checkbox" id="usepostdate" onclick="dateSearch()"><label for="usepostdate" style="margin-top: 2px; line-height: 26px;"><spring:message code='ezEmail.t654'/></label>
-					<input type="text" id="startDatepicker" class="hasDatapicker" style="width: 80px; text-align: center; margin-top: -1px;" readonly="readonly" disabled/> ~ 
-					<input type="text" id="endDatepicker" class="hasDatapicker" style="width: 80px; text-align: center; margin-top: -1px;" readonly="readonly" disabled/>
+				    <div class="custom_checkbox">
+                        <input type="checkbox" id="usepostdate" onclick="dateSearch()"><label for="usepostdate" style="margin-top: 2px; line-height: 26px;"><spring:message code='ezEmail.t654'/></label>
+                        <input type="text" id="startDatepicker" class="hasDatapicker" style="width: 80px; text-align: center; margin-top: -1px;" readonly="readonly" disabled/> ~ 
+                        <input type="text" id="endDatepicker" class="hasDatapicker" style="width: 80px; text-align: center; margin-top: -1px;" readonly="readonly" disabled/>
+					</div>
 				</td>
 			</tr>
 		</table>
@@ -726,7 +728,11 @@
 				<table id="mainListHeader" class="mainlist" style="width:100%">
 					<thead>
 						<tr id="mainListHeaderTr">
-							<th style="width: 30px;"><input type='checkbox' name="checkbox" id="checkAll" onclick="funCheckBox('set','a')" /></th>
+							<th style="width: 30px;">
+							    <div class="custom_checkbox">
+							        <input type='checkbox' name="checkbox" id="checkAll" onclick="funCheckBox('set','a')" />
+                                </div>
+                            </th>
 							<th style="width: 15%;"><spring:message code='ezOrgan.t218'/></th>
 							<th style="width: 15%;"><spring:message code='ezOrgan.t67'/></th>
 							<th style="width: 15%;"><spring:message code='ezOrgan.t68'/></th>

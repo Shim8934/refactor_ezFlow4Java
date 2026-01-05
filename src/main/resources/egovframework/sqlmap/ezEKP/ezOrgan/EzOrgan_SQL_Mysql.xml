@@ -4209,9 +4209,9 @@
 						A.UPNNAME AS upnName,
 						A.MOBILE AS mobile,
 						A.TELEPHONENUMBER AS telephoneNumber,
-						A.TEAMSID AS teamsid,
+						A.TEAMSID AS teamsId,
 						A.EXTENSIONATTRIBUTE10 AS extensionAttribute10,
-						'' AS chargebusiness,
+						A.INFO AS chargeBusiness,
 						A.PHYSICALDELIVERYOFFICENAME AS physicalDeliveryOfficeName,
 						'N' AS addJob,
 						A.EXTENSIONATTRIBUTE15 AS sortOrder
@@ -4245,7 +4245,7 @@
 						A.TELEPHONENUMBER AS telephoneNumber,
 						A.TEAMSID AS teamsId,
 						A.EXTENSIONATTRIBUTE10 AS extensionAttribute10,
-						'' AS chargebusiness,
+						A.INFO AS chargeBusiness,
 						A.PHYSICALDELIVERYOFFICENAME AS physicalDeliveryOfficeName,
 						'Y' AS addJob,
 						B.ORDERBY AS sortOrder
@@ -4313,7 +4313,7 @@
 					A.TELEPHONENUMBER AS telephoneNumber,
 					A.TEAMSID AS teamsId,
 					A.EXTENSIONATTRIBUTE10 AS extensionAttribute10,
-					'' AS chargeBusiness,
+					A.INFO AS chargeBusiness,
 					A.PHYSICALDELIVERYOFFICENAME AS physicalDeliveryOfficeName,
 					'N' AS addJob,
 					A.EXTENSIONATTRIBUTE15 AS sortOrder
@@ -4347,7 +4347,7 @@
 					A.TELEPHONENUMBER AS telephoneNumber,
 					A.TEAMSID AS teamsId,
 					A.EXTENSIONATTRIBUTE10 AS extensionAttribute10,
-					'' AS chargeBusiness,
+					A.INFO AS chargeBusiness,
 					A.PHYSICALDELIVERYOFFICENAME AS physicalDeliveryOfficeName,
 					'Y' AS addJob,
 					B.ORDERBY AS sortOrder
@@ -4381,7 +4381,7 @@
 					A.TELEPHONENUMBER AS telephoneNumber,
 					A.TEAMSID AS teamsId,
 					A.EXTENSIONATTRIBUTE10 AS extensionAttribute10,
-					'' AS chargeBusiness,
+					A.INFO AS chargeBusiness,
 					A.PHYSICALDELIVERYOFFICENAME AS physicalDeliveryOfficeName,
 					'Y' AS addJob,
 					B.ORDERBY AS sortOrder
@@ -4413,5 +4413,16 @@
 		SET TEAMSID = #v_TEAMSID#
 		WHERE UPNNAME = #v_UPNNAME#
 	</update>
-	
+
+	<select id="EzOrganDAO.getCnByUpn" parameterClass="Map" resultClass="String">
+        SELECT
+            CN
+        FROM
+            TBL_USERMASTER
+        WHERE
+            UPNNAME = #upnname#
+          AND
+            TENANT_ID = #tenantID#
+	</select>
+
 </sqlMap>

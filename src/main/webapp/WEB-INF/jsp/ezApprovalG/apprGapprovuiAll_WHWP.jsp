@@ -609,7 +609,9 @@
 			        }
 			        else if (mode == "2") {
 			        	// 1안을 기준으로 반송알림메일 발송
-			        	document.getElementById("ifrm1").contentWindow.SendMailBansongtoDrafter();
+			        	if(backFailFlag) { /* 프론트로 반송 로직 태웠을때만 발송 */
+			        	    document.getElementById("ifrm1").contentWindow.SendMailBansongtoDrafter();
+			        	}
 			        	
 			            if (allFlag == "1" || allFlag == "2") {
 			                LoadNextDocument("\n<spring:message code='ezApprovalG.t1377'/>");
@@ -716,7 +718,7 @@
 			    			approveResultAry[i] = text; // 인덱스 접근을 위해 배열로 관리
 			    		}
 			    	});
-		    		GetHTML2(Approve, i, docMaxTabNumForApprov); // 웹한글 비동기 함수에 호환되도록 반드시 인덱스 사용
+                    GetHTML2(Approve, i, docMaxTabNumForApprov); // 웹한글 비동기 함수에 호환되도록 반드시 인덱스 사용
 				}
 		    }
 			
@@ -832,7 +834,8 @@
 	                openSingUI(); // 파라미터 전달할 필요 없음, 서명선택 레이어팝업 호출
 	            }
 	            else { // 확인, 참조, 후열, 공람 등 결재서명을 부여하지 않는 분기
-	            	Approve_complete(ret);
+	            	//Approve_complete(ret);
+	            	Approv_Complete_BackEnd(ret);
 	            }
 	        }
 			 
@@ -846,8 +849,12 @@
 			        OpenAlertUI(pAlertContent);
 			        setMenuDisable("btnApprove", false);
 			        return;
-			     }
-				 Approve_complete(ret);
+			     }else if(ret == "NAME"){
+                    Approv_Complete_BackEnd(ret);
+                 }else{
+                    Approve_complete(ret);
+                 }
+                 // Approve_complete(ret);
 			 }
 
 			   // Approve -> (openSingUI_Complete) -> Approve_complete 시작
@@ -976,6 +983,62 @@
 				   }
 			   }
 			   // Approve_complete 끝
+			   
+			   /**
+               * BackEnd에서 결재 처리
+               */
+               var backFailFlag = false;
+               function Approv_Complete_BackEnd(signtype){
+                   var res = "";
+                   
+                   /* 백단 결재 실패한 이력이 있는 doc은 프론트 결재 로직 */
+                   if(getCheckNotFailDoc()){
+                       backFailFlag = true;
+                   }
+                   
+                   if(!backFailFlag){
+                       DivPopUpHidden();
+                       res = SaveApproveInfoInBackEnd("1");
+                       if(res){
+                           var resCode = res.status;    // ok / error
+                           if(resCode == "ok"){
+                               var resData = res.data;  // SUCCESS / FAIL
+                               if(typeof resData != "undefined" && resData.toUpperCase() == "SUCCESS"){
+                                   // 결재 완료
+                                   setMenuDisable("btnApprove", false);
+                                   
+                                   docApprovCompleteCnt = docMaxTabNumForApprov;
+                                   
+                                   if ((pDraftFlag == "SUSIN" || pAprLineType == strAprType7) && KuyjeType == "001") {
+                                       var pAlertContent = "<spring:message code='ezApprovalG.t35'/>";
+                                       OpenAlertUI(pAlertContent, Draft_Complete);
+                                       return;
+                                   } else {
+                                       if (pAprLineType == strAprType7) {
+                                           process_AfterApprove("4");
+                                       } else {
+                                           process_AfterApprove("1");
+                                       }
+                                   }
+                               }else if(typeof resData != "undefined" && resData.toUpperCase() == "FAIL"){
+                                   // 결재 실패
+                                   backFailFlag = true;
+                               }
+                           }else{ // 호출시 데이터 문제(type) or 백단 결재 로직 오류
+                               backFailFlag = true;
+                           }
+                       }
+                       /* 백단 결재 로직 실패 시 프론트로 결재 */
+                       if(backFailFlag){
+                           docApprovCompleteCnt = 0;
+                           //showLoadingProgress();
+                           Approve_complete(signtype);
+                           //hideLoadingProgress();
+                       }
+                   }else{
+                       Approve_complete(signtype);
+                   }
+               }
 			   
 			   // AprrovMappingSign() 함수로 서명 부여 후, GetHTML에서 비동기 웹한글함수의 동작 성공 시 콜백으로 이 함수를 부르게 된다.
 			   // Approve_complete -> Before_SaveApproveInfo 시작
@@ -1187,21 +1250,53 @@
 					        return;
 					    }
 			            */
-						for (var i = 1; i <= docMaxTabNumForApprov; i++) {
-						   var currIfrm = document.getElementById("ifrm" + i); // 각 안별 웹한글기안기 iframe을 사용
-						   
-						   // 1안의 반송의견을 각 안으로 복사 (1안인 경우에는 동작하지 않도록 분기처리)
-						   if (i > 1) {
-								copyFirstTabOpinion(pDocIDAry[1], pDocIDAry[i], "002");
-						   }
-						   // 모든 안에 대하여 반송의견이 반영되었으므로 의견존재여부 플래그를 변경
-						   pHasOpinionYNAry[i] = "Y";
-						   
-							currIfrm.contentWindow.setInitOpinion(); // 자식 프레임에 접근하여 각 안 별로 문서에 의견 맵핑 진행
-							UpdateLineHistoryForDraftAll(i); // 결재선 변경내역 보류상태로 업데이트
-						}
-			            
-			            GetHTML(btnReject_option_Complete2);
+			            if(backFailFlag){
+                            for (var i = 1; i <= docMaxTabNumForApprov; i++) {
+                               var currIfrm = document.getElementById("ifrm" + i); // 각 안별 웹한글기안기 iframe을 사용
+                               
+                               // 1안의 반송의견을 각 안으로 복사 (1안인 경우에는 동작하지 않도록 분기처리)
+                               if (i > 1) {
+                                    copyFirstTabOpinion(pDocIDAry[1], pDocIDAry[i], "002");
+                               }
+                               // 모든 안에 대하여 반송의견이 반영되었으므로 의견존재여부 플래그를 변경
+                               pHasOpinionYNAry[i] = "Y";
+                               
+                                currIfrm.contentWindow.setInitOpinion(); // 자식 프레임에 접근하여 각 안 별로 문서에 의견 맵핑 진행
+                                UpdateLineHistoryForDraftAll(i); // 결재선 변경내역 보류상태로 업데이트
+                            }
+			                GetHTML(btnReject_option_Complete2);
+			            }
+			            else{
+                        /* 백단 반송 로직 */
+                            for (var i = 1; i <= docMaxTabNumForApprov; i++) {
+                               // 1안의 반송의견을 각 안으로 복사 (1안인 경우에는 동작하지 않도록 분기처리)
+                               if (i > 1) {
+                                    copyFirstTabOpinion(pDocIDAry[1], pDocIDAry[i], "002");
+                               }
+                               // 모든 안에 대하여 반송의견이 반영되었으므로 의견존재여부 플래그를 변경
+                               pHasOpinionYNAry[i] = "Y";
+                            }
+                            var res = SaveApproveInfoInBackEnd("2");
+                            if(res){
+                                var resCode = res.status;    // ok / error
+                                if(resCode == "ok"){
+                                    var resData = res.data;  // SUCCESS / FAIL
+                                    if(typeof resData != "undefined" && resData.toUpperCase() == "SUCCESS"){
+                                        docApprovCompleteCnt = docMaxTabNumForApprov;
+                                        // 반송 완료
+                                        process_AfterApprove("2");
+                                    }else if(typeof resData != "undefined" && resData.toUpperCase() == "FAIL"){
+                                        // 결재 실패
+                                        backFailFlag = true;
+                                    }
+                                }else{ // 호출시 데이터 문제(type) or 백단 결재 로직 오류
+                                    backFailFlag = true;
+                                }
+                            }
+                            if(backFailFlag){
+                                btnReject_option_Complete(ret);
+                            }
+			            }
 			        } else if (ret == "cancel" || ret == undefined) {
 			        	var pAlertContent = "<spring:message code='ezApprovalG.t38'/>";
 			        	HiddenMailProgress();
@@ -1305,22 +1400,54 @@
 			    	ShowMailProgress();
 			    	
 					if (ret != "cancel" && ret != undefined) {
-			    		// 모든 안에 대하여 1안의 보류의견 복사 + 문서 상에 의견 맵핑 + 문서파일 저장동작 진행
-						for (var i = 1; i <= docMaxTabNumForApprov; i++) {
-						   var currIfrm = document.getElementById("ifrm" + i); // 각 안별 웹한글기안기 iframe을 사용
-						   
-						   // 1안의 보류의견을 각 안으로 복사 (1안인 경우에는 동작하지 않도록 분기처리)
-						   if (i > 1) {
-					        	copyFirstTabOpinion(pDocIDAry[1], pDocIDAry[i], "003");
-							}
-							// 모든 안에 대하여 보류의견이 반영되었으므로 의견존재여부 플래그를 변경
-							pHasOpinionYNAry[i] = "Y";
-						   
-					        currIfrm.contentWindow.setInitOpinion(); // 자식 프레임에 접근하여 각 안 별로 문서에 의견 맵핑 진행
-				            UpdateLineHistoryForDraftAll(i); // 결재선 변경내역 보류상태로 업데이트
-						}
+						if(backFailFlag){
+                            // 모든 안에 대하여 1안의 보류의견 복사 + 문서 상에 의견 맵핑 + 문서파일 저장동작 진행
+                            for (var i = 1; i <= docMaxTabNumForApprov; i++) {
+                               var currIfrm = document.getElementById("ifrm" + i); // 각 안별 웹한글기안기 iframe을 사용
+                               
+                               // 1안의 보류의견을 각 안으로 복사 (1안인 경우에는 동작하지 않도록 분기처리)
+                               if (i > 1) {
+                                    copyFirstTabOpinion(pDocIDAry[1], pDocIDAry[i], "003");
+                                }
+                                // 모든 안에 대하여 보류의견이 반영되었으므로 의견존재여부 플래그를 변경
+                                pHasOpinionYNAry[i] = "Y";
+                               
+                                currIfrm.contentWindow.setInitOpinion(); // 자식 프레임에 접근하여 각 안 별로 문서에 의견 맵핑 진행
+                                UpdateLineHistoryForDraftAll(i); // 결재선 변경내역 보류상태로 업데이트
+                            }
 						
-						GetHTML(btnStay_option_Complete2); // 내부적으로 루프를 돌리면서 웹한글 텍스트 로딩 완료 후 btnStay_option_Complete2 함수를 각 안마다 호출함
+						    GetHTML(btnStay_option_Complete2); // 내부적으로 루프를 돌리면서 웹한글 텍스트 로딩 완료 후 btnStay_option_Complete2 함수를 각 안마다 호출함
+						}
+						else{
+                            for (var i = 1; i <= docMaxTabNumForApprov; i++) {
+                               // 1안의 보류의견을 각 안으로 복사 (1안인 경우에는 동작하지 않도록 분기처리)
+                               if (i > 1) {
+                                    copyFirstTabOpinion(pDocIDAry[1], pDocIDAry[i], "003");
+                               }
+                               // 모든 안에 대하여 보류의견이 반영되었으므로 의견존재여부 플래그를 변경
+                               pHasOpinionYNAry[i] = "Y";
+                            }
+                            var res = SaveApproveInfoInBackEnd("3");
+                            if(res){
+                                var resCode = res.status;    // ok / error
+                                if(resCode == "ok"){
+                                    var resData = res.data;  // SUCCESS / FAIL
+                                    if(typeof resData != "undefined" && resData.toUpperCase() == "SUCCESS"){
+                                        docApprovCompleteCnt = docMaxTabNumForApprov;
+                                        // 보류 완료
+                                        process_AfterApprove("3");
+                                    }else if(typeof resData != "undefined" && resData.toUpperCase() == "FAIL"){
+                                        // 결재 실패
+                                        backFailFlag = true;
+                                    }
+                                }else{ // 호출시 데이터 문제(type) or 백단 결재 로직 오류
+                                    backFailFlag = true;
+                                }
+                            }
+                            if(backFailFlag){
+                                btnStay_option_Complete(ret);
+                            }
+						}
 			        } else if (ret == "cancel" || ret == undefined) {
 			        	var pAlertContent = "<spring:message code='ezApprovalG.t392'/>";
 			        	HiddenMailProgress();
@@ -1554,7 +1681,7 @@
 			    	/* 2024-12-27 홍승비 - MHT 양식의 일괄기안 기능이 추가되며 발생한 사이드 이펙트 수정 (WHWP 문서의 메일발송 오류 수정) */
 			        if (document.getElementById("ifrm" + currentTabIdx).contentWindow.isHWP == "Y") {
     			    	// window.open("/ezEmail/mailWrite.do?docHref=" + pDocHrefAry[currentTabIdx] + "&cmd=docsend&docID=" + pDocIDAry[currentTabIdx] + "&TARGET=APPROVALG", "", "height = " + window.screen.availHeight * 0.8 + ", width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
-						showPopup("/ezEmail/mailWrite.do?docHref=" + pDocHrefAry[currentTabIdx] + "&cmd=docsend&docID=" + pDocIDAry[currentTabIdx] + "&TARGET=APPROVALG", 890, window.screen.availHeight * 0.8, "", "height = " + window.screen.availHeight * 0.8 + ", width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1", hidePopup);
+						showPopup("/ezEmail/mailWrite.do?docHref=" + pDocHrefAry[currentTabIdx] + "&cmd=docsend&docID=" + pDocIDAry[currentTabIdx] + "&TARGET=APPROVALG", 1200, window.screen.availHeight * 0.8, "", "height = " + window.screen.availHeight * 0.8 + ", width = 1200px, status = no, toolbar=no, menubar=no,location=no, resizable=1", hidePopup);
 			        } else {
                         var imgUrl = "";
                         html2canvas(document.getElementById("ifrm" + currentTabIdx).contentWindow.document.getElementById("div_Content")).then(function(canvas) {
@@ -1575,12 +1702,12 @@
                     var conHeight = pheight * 0.8;
                     var pwidth = window.screen.availWidth;
                     var pTop = (pheight - conHeight) / 2;
-                    var pLeft = (pwidth - 890) / 2;
+                    var pLeft = (pwidth - 1200) / 2;
                     //기존
                     var pURL = "/ezApprovalG/sendToMailApproval.do?cmd=docsend&docID=" + pDocIDAry[currentTabIdx] + "&docHref=" + encodeURIComponent(pDocHrefAry[currentTabIdx])+"&orgCompanyID="+orgCompanyID;
                     // var newwin = window.open(pURL, "mailsend", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width =890px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
                     // newwin.focus();
-						showPopup(pURL, 890, conHeight, "mailsend", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width =890px, status = no, toolbar=no, menubar=no,location=no, resizable=1", hidePopup);
+						showPopup(pURL, 1200, conHeight, "mailsend", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width =1200px, status = no, toolbar=no, menubar=no,location=no, resizable=1", hidePopup);
                     }
 			    }
 			    
@@ -2261,6 +2388,30 @@
                     alert("apprGdraftuiAllContent_WHWP.FieldsAvailable()  ::  " + e);
                 }
             }
+            
+            function getCheckNotFailDoc(docid) {
+                var checkNotFailDoc = "";
+                
+                $.ajax({
+                    type : "GET",
+                    url : "/ezApprovalG/getCheckNotFailDoc.do",
+                    dataType : "text",
+                    async : false,
+                    data : {
+                        pDocID : pDocIDAry.toString()
+                    },
+                    success : function(data) {
+                        checkNotFailDoc = data;
+                    },
+                    error : function(xhr, status, error) {
+                        
+                    }
+                });
+                
+                return checkNotFailDoc == "TRUE" ? true : false;
+            }
+            
+            
 	    </script>
 	</head>
 	<body class="popup" style="overflow:hidden;" onbeforeunload="return window_onbeforeunload()" onload="javascript:window_onload()">

@@ -374,11 +374,11 @@
 		        if (ReturnFunction != undefined) {
 		            schedule_resource_info_cross_dialogArguments[0] = g_param;
 		            schedule_resource_info_cross_dialogArguments[1] = Add_ResourceInfo_Complete;
-		            var OpenWin = window.open("/ezSchedule/scheduleResourceInfo.do", "schedule_resource_info_Cross", GetOpenWindowfeature(695, 430));
+		            var OpenWin = window.open("/ezSchedule/scheduleResourceInfo.do", "schedule_resource_info_Cross", GetOpenWindowfeature(695, 440));
 		            try { OpenWin.focus(); } catch (e) { }
 		        }
 		        else {
-		            var reParam = window.showModalDialog("/ezSchedule/scheduleResourceInfo.do", g_param, "edge:sunken; dialogHeight:430px;scroll:no; dialogWidth:695px; status:no; help:no" + feature);
+		            var reParam = window.showModalDialog("/ezSchedule/scheduleResourceInfo.do", g_param, "edge:sunken; dialogHeight:440px;scroll:no; dialogWidth:695px; status:no; help:no" + feature);
 	
 		            if (typeof (reParam) != "undefined" && reParam != null) {
 		                idDatepicker.vtLocalDate = reParam["startTime"];

@@ -11,6 +11,8 @@ public class BoardTreeVO {
 	private String boardName3;
 	/** 게시판이름 4 	*/
 	private String boardName4;
+	/** 게시판이름 6 	*/
+	private String boardName6;
 	/** 트리순서	*/
 	private String treeViewOrder;
 	/** 게시판 색	*/
@@ -29,6 +31,8 @@ public class BoardTreeVO {
 	private String docNO;
 	/** */
 	private String url;
+	/** 그룹게시판 사용여부 */
+	private String useGroupFlag;
 	
 	public String getUrl() {
 		return url;
@@ -65,6 +69,12 @@ public class BoardTreeVO {
 	}
 	public void setBoardName4(String boardName4) {
 		this.boardName4 = boardName4;
+	}
+	public String getBoardName6() {
+		return boardName6;
+	}
+	public void setBoardName6(String boardName6) {
+		this.boardName6 = boardName6;
 	}
 	public String getTreeViewOrder() {
 		return treeViewOrder;
@@ -114,7 +124,13 @@ public class BoardTreeVO {
 	public void setDocNO(String docNO) {
 		this.docNO = docNO;
 	}
-	
+	public String getUseGroupFlag() {
+		return useGroupFlag;
+	}
+	public void setUseGroupFlag(String useGroupFlag) {
+		this.useGroupFlag = useGroupFlag;
+	}
+
 	@Override
 	public boolean equals(Object obj) {
 		boolean rtnBool = false;
@@ -142,6 +158,6 @@ public class BoardTreeVO {
 				+ ", treeViewOrder=" + treeViewOrder + ", boardColor=" + boardColor + ", guBun="
 				+ guBun + ", boardGroupAcl=" + boardGroupAcl + ", expanded="
 				+ expanded + ", select=" + select + ", isLeaf=" + isLeaf
-				+ ", docNO=" + docNO + ", url=" + url + "]";
+				+ ", docNO=" + docNO + ", url=" + url + ", useGroupFlag=" + useGroupFlag + "]";
 	}
 }

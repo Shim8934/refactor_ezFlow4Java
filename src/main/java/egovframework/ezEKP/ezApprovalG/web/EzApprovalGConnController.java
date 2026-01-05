@@ -1,9 +1,28 @@
 package egovframework.ezEKP.ezApprovalG.web;
 
+import egovframework.ezEKP.ezApprovalG.CustomException.DocHandlingException;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
+import egovframework.ezEKP.ezApprovalG.util.RestWHWP;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.user.login.web.LoginController;
+import java.util.ArrayList;
+import java.util.UUID;
+
+import kr.dogfoot.hwplib.object.HWPFile;
+import kr.dogfoot.hwplib.object.bodytext.Section;
+import kr.dogfoot.hwplib.object.bodytext.control.Control;
+import kr.dogfoot.hwplib.object.bodytext.control.ControlTable;
+import kr.dogfoot.hwplib.object.bodytext.control.ControlType;
+import kr.dogfoot.hwplib.object.bodytext.control.table.Cell;
+import kr.dogfoot.hwplib.object.bodytext.control.table.Row;
+import kr.dogfoot.hwplib.object.bodytext.paragraph.Paragraph;
+import kr.dogfoot.hwplib.object.bodytext.paragraph.ParagraphList;
+import kr.dogfoot.hwplib.object.bodytext.paragraph.charshape.CharPositionShapeIdPair;
+import kr.dogfoot.hwplib.object.bodytext.paragraph.charshape.ParaCharShape;
+import kr.dogfoot.hwplib.object.bodytext.paragraph.header.ParaHeader;
+import kr.dogfoot.hwplib.reader.HWPReader;
+import kr.dogfoot.hwplib.writer.HWPWriter;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -564,5 +583,126 @@ public class EzApprovalGConnController {
         logger.debug("adminInsertApprGate ended");
 
         return redirectUrl;
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/test.do", method = RequestMethod.GET)
+    public String test(HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
+        logger.debug("test started");
+
+        String path = "C:\\Users\\jungj\\Downloads\\work\\ezFlow4Java\\src\\main\\webapp\\fileroot\\0\\files\\upload_approvalG\\kaoni\\doc\\2025\\59/00000000000000044059.hwp";
+        HWPFile hwpFile = HWPReader.fromFile(path);
+        String[] signTextArray = new String[] {"09/15","기사원"};
+        List<Object> a = new ArrayList();
+        a.add(1);
+        a.add(2);
+        
+        try {
+            for (Section s : hwpFile.getBodyText().getSectionList()) {
+                for (Paragraph p : s) {
+                    Cell cell = findHwpFieldCell(p,"sign4");
+                    if (cell != null) {
+                        ParagraphList paragraphList = cell.getParagraphList();
+                        ParaHeader ph = paragraphList.getParagraph(0).getHeader();
+                        ParaCharShape pcs = paragraphList.getParagraph(0).getCharShape();
+
+                        for (int k = 1; k < signTextArray.length; k++) {
+                            Paragraph newParagraph = paragraphList.addNewParagraph();
+
+                            newParagraph.createText();
+                            newParagraph.createCharShape();
+
+                            //글자모양 복사해주기
+                            for (CharPositionShapeIdPair charPositionShapeIdPair : pcs.getPositonShapeIdPairList()) {
+                                newParagraph.getCharShape().addParaCharShape(charPositionShapeIdPair.getPosition(), charPositionShapeIdPair.getShapeId());
+                            }
+
+                            //헤더값 복사해서 정렬 맞추기
+                            newParagraph.getHeader().setParaShapeId(ph.getParaShapeId());
+                            newParagraph.getHeader().setStyleId(ph.getStyleId());
+
+                            newParagraph.getText().addString(signTextArray[k]);
+                        }
+                        /* 2023-04-28 양지혜 - 공백 문자를 제거하고 사인을 삽입 */
+                        paragraphList.getParagraph(0).deleteText();
+                        paragraphList.getParagraph(0).createText();
+                        paragraphList.getParagraph(0).getText().addString(signTextArray[0]);
+                    }
+                }
+            }
+//            for (Section s : hwpFile.getBodyText().getSectionList()) {
+//                for (Paragraph p : s) {
+//                    Cell cell = findHwpFieldCell(p, "sign3");
+//                    if (cell != null) {
+//                        /* 2023-04-28 양지혜 - 공백 문자를 제거하고 사인을 삽입 */
+//                        cell.getParagraphList().getParagraph(0).deleteText();
+//                        cell.getParagraphList().getParagraph(0).createText();
+//                        cell.getParagraphList().getParagraph(0).getText().addString(String.join("\r\n", signTextArray));
+//                    }
+//                }
+//            }
+        }catch (Exception e){
+            throw new DocHandlingException(e.getMessage());
+        }
+        HWPWriter.toFile(hwpFile, "C:\\Users\\jungj\\Downloads\\work\\ezFlow4Java\\src\\main\\webapp\\fileroot\\0\\files\\upload_approvalG\\kaoni\\doc\\2025\\579/00000000000000043579.hwp");
+        RestWHWP hwp = new RestWHWP("http://webhwp.kaoni.com:8080/filterserver/convert/manager");
+        hwp.open("/home/hancom/data/test1.hwp");
+        hwp.putText("sign1","테스트\r\n123");
+        hwp.putText("sign3","테스트");
+        hwp.putText("sign4","테스트");
+        hwp.putText("sign5","테스트");
+        hwp.putImg("sign2","/home/hancom/data/sign","50","50");
+        hwp.putImg("sign2{{1}}","/home/hancom/data/sign","50","50");
+        hwp.saveHwp("/home/hancom/data/result.hwp");
+        hwp.flush();
+        return "S";
+    }
+    private Cell findHwpFieldCell(Paragraph p, String fieldName) throws Exception {
+        if (p == null || p.getControlList() == null) {
+            return null;
+        }
+        try {
+            for (Control c : p.getControlList()) {
+                if (c.getType() == ControlType.Table) {
+                    ControlTable ct = (ControlTable) c;
+
+                    for (Row row : ct.getRowList()) {
+                        for (Cell cell : row.getCellList()) {
+                            Cell fieldCell = null;
+
+                            if (cell.getListHeader().getFieldName() != null && cell.getListHeader().getFieldName().equals(fieldName)) {
+                                fieldCell = cell;
+                            } else {
+                                fieldCell = findHwpFieldCell(cell.getParagraphList(), fieldName);
+                            }
+
+                            if (fieldCell != null) {
+                                return fieldCell;
+                            }
+                        }
+                    }
+                }
+            }
+        }catch (Exception e){
+            throw new DocHandlingException(e.getMessage());
+        }
+
+        return null;
+    }
+    private Cell findHwpFieldCell(ParagraphList pList, String fieldName) throws Exception {
+        Cell fieldCell = null;
+        try {
+            for (Paragraph p : pList) {
+                fieldCell = findHwpFieldCell(p, fieldName);
+
+                if (fieldCell != null) {
+                    break;
+                }
+            }
+        }
+        catch (Exception e){
+            throw new DocHandlingException(e.getMessage());
+        }
+        return fieldCell;
     }
 }

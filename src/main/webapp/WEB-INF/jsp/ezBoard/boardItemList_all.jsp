@@ -615,15 +615,15 @@
 
  			    if (obj.checked) {
  			        for (var i = 0; i < SelList.GetRowCount() ; i++) {
- 			            SelList.GetDataRows()[i].childNodes[0].childNodes[0].checked = true;
+ 			            SelList.GetDataRows()[i].childNodes[0].childNodes[0].childNodes[0].checked = true;
  			            SelList.GetDataRows()[i].style.backgroundColor = m_strColorSelect;
- 			            strListInfo += SelList.GetDataRows()[i].childNodes[0].childNodes[0].id;
+ 			            strListInfo += SelList.GetDataRows()[i].childNodes[0].childNodes[0].childNodes[0].id;
  			            strBoardListInfo += SelList.GetDataRows()[i].getAttribute("DATA1") + "," +  SelList.GetDataRows()[i].getAttribute("DATA2") + ";";
  			        }
  			    }
  			    else {
  			        for (var i = 0; i < SelList.GetRowCount() ; i++) {
- 			            SelList.GetDataRows()[i].childNodes[0].childNodes[0].checked = false;
+ 			            SelList.GetDataRows()[i].childNodes[0].childNodes[0].childNodes[0].checked = false;
  			            SelList.GetDataRows()[i].style.backgroundColor = m_strColorDefault;
  			            strListInfo = "";
  			            strBoardListInfo = "";
@@ -705,7 +705,14 @@
 		<c:if test="${boardInfo.listView_FG != true}'">
 			<div style="margin-top:100px;text-align:center"><spring:message code="ezBoard.t272" /></div>
 		</c:if>
-		<h1><spring:message code='ezBoard.allboard.hth01'/><span id="mailBoxInfo"></span></h1>
+		<c:choose>
+			<c:when test="${useGroupFlag == 'Y'}">
+				<h1>${boardName}<span id="mailBoxInfo"></span></h1>
+			</c:when>
+			<c:otherwise>
+				<h1><spring:message code='ezBoard.allboard.hth01'/><span id="mailBoxInfo"></span></h1>
+			</c:otherwise>
+		</c:choose>
 		<c:if test="${boardInfo.buttonHidden == 'N'}">
 			<div id="mainmenu">
 			  <ul>

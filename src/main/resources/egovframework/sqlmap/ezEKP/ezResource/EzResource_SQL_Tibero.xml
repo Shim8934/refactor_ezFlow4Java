@@ -295,19 +295,21 @@
 	<resultMap class="ResOccuVO"    	   id="resOccuVO">
 		<result property="ownerId"				column="OWNERID"				columnIndex="1"/>
 		<result property="brdNm"				column="BRD_NM"					columnIndex="2"/>
-		<result property="count"				column="COUNT"					columnIndex="3"/>
-		<result property="usageTime"			column="USAGE_TIME"				columnIndex="4"/>
-		<result property="companyID"			column="COMPANYID"		    	columnIndex="5"/>
+		<result property="brdNm2"				column="BRD_NM2"				columnIndex="3"/>
+		<result property="count"				column="COUNT"					columnIndex="4"/>
+		<result property="usageTime"			column="USAGE_TIME"				columnIndex="5"/>
+		<result property="companyID"			column="COMPANYID"		    	columnIndex="6"/>
 	</resultMap>
 	
 	<resultMap class="ResOccuVO"    	   id="resOccuVO2">
 		<result property="ownerId"				column="OWNERID"				columnIndex="1"/>
 		<result property="brdNm"				column="BRD_NM"					columnIndex="2"/>
-		<result property="companyID"			column="COMPANYID"		    	columnIndex="3"/>
-		<result property="startDate"			column="STARTDATE"				columnIndex="4"/>
-		<result property="endDate"				column="ENDDATE"				columnIndex="5"/>
-		<result property="num"					column="NUM"					columnIndex="6"/>
-		<result property="pNum"					column="PNUM"					columnIndex="7" 		nullValue="0"/>
+		<result property="brdNm2"				column="BRD_NM2"				columnIndex="3"/>
+		<result property="companyID"			column="COMPANYID"		    	columnIndex="4"/>
+		<result property="startDate"			column="STARTDATE"				columnIndex="5"/>
+		<result property="endDate"				column="ENDDATE"				columnIndex="6"/>
+		<result property="num"					column="NUM"					columnIndex="7"/>
+		<result property="pNum"					column="PNUM"					columnIndex="8" 		nullValue="0"/>
 	</resultMap>
 	
 	<!-- <procedure id="EzResourceDAO.getAdmSubClsTree" parameterClass="Map" resultMap="resGetAdmSubClsTreeVO" >
@@ -1700,12 +1702,12 @@
 		]]>			
 	</select>
 	
-	<insert id="EzResourceDAO.delResSch_I" parameterClass="Map">
+	<insert id="EzResourceDAO.copyResSch" parameterClass="Map">
 		<![CDATA[
 			INSERT INTO TBL_RS_SCHEDULE ( 
 				num, pnum, ownerID, writerID, deptNM, ownerNM, title, location, timeDisplay, startDate, endDate, 
 				alertTime, CONTENT, importance, reFlag, gresFlag, entryList, allDay, writeDay, 
-				companyID, characterID, attachFlag, tenant_ID
+				companyID, characterID, attachFlag, tenant_ID, approveFlag
 			)
 			SELECT
 				#v_MaxNum# num,
@@ -1722,7 +1724,7 @@
 				ALERTTIME ,
 				CONTENT ,
 				IMPORTANCE ,
-				'4' reFlag,
+				#v_P_reFlag# reFlag,
 				GRESFLAG ,
 				ENTRYLIST ,
 				ALLDAY ,
@@ -1730,7 +1732,8 @@
 				#v_P_companyID# companyID ,
 				CHARACTERID ,
 				ATTACHFLAG ,
-				tenant_ID
+				tenant_ID,
+				#v_approval# approveFlag
 			FROM 
 				TBL_RS_SCHEDULE 
 			WHERE
@@ -2208,6 +2211,8 @@
 				B.ownerID = #v_p_ownerID# 
 			AND
 				B.ApproveFlag = '1' 
+			AND
+				B.REFLAG <> '4' 
 			AND
 				B.num <> #v_p_num#
 			AND
@@ -2688,6 +2693,7 @@
 			SELECT
 				DISTINCT b.OWNERID,
 				b.BRD_NM,
+                b.BRD_NM2,
 				b.COUNT,
 				b.USAGE_TIME,
 				a.COMPANYID
@@ -2743,7 +2749,8 @@
             	TO_CHAR(STARTDATE, 'YYYY-MM-DD HH24:MI:SS') STARTDATE ,
             	TO_CHAR(ENDDATE, 'YYYY-MM-DD HH24:MI:SS') ENDDATE ,
             	A.COMPANYID ,
-            	C.BRD_NM
+            	C.BRD_NM,
+            	C.BRD_NM2
 			FROM
 				TBL_RS_SCHEDULE A
 			JOIN
@@ -2900,8 +2907,8 @@
 	        NVL(RETURNFLAG, '0') AS RETURNFLAG,
 	        NVL(REPEATFLAG, '1') AS REPEATFLAG,
 	        BRD_ACCESS,
-			RES_MAX_DATE,
-			RES_MAX_USER_CNT
+			TBL_RS_BRD.RES_MAX_DATE,
+			TBL_RS_BRD.RES_MAX_USER_CNT
 	    FROM
 	        TBL_RS_BRD
 	    JOIN 

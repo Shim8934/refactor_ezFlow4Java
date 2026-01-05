@@ -1,5 +1,6 @@
 package egovframework.ezMobile.ezApprovalG.service;
 
+import egovframework.let.user.login.vo.LoginVO;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -8,7 +9,10 @@ import egovframework.ezMobile.ezApprovalG.vo.*;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.ezMobile.ezOption.vo.MOptionVO;
 
+import egovframework.let.user.login.vo.LoginVO;
 import org.json.simple.JSONObject;
+
+import javax.servlet.http.HttpServletRequest;
 
 public interface MApprovalGService {
 
@@ -62,7 +66,26 @@ public interface MApprovalGService {
 	public List<HashMap> checkChangeDocInfo(HashMap<String, Object> params) throws Exception;
 
 	public HashMap<String, Object> getAprMemberBySn(String docID, String aprMemberSN, String lang, String companyID, int tenantID) throws Exception;
-	
+
 	/* 2024-10-31 이가은 - 모바일 보낸공람문서 > 공람회수 기능  */
 	public String gongRamCancel(String docID, int count, int aprMemberSN, String companyID, int tenantId) throws Exception;
+
+    /* 2025-08-12 김유진 - 모바일 기안이 가능한 양식 */
+    public String getForm(String formContID, String kind, String searchType, String searchName, String userID, String deptId, String companyID, String lang, int tenantID) throws Exception;
+
+    /* 2025-08-12 김유진 - 모바일 기안 > 보안등급, 보존년한 */
+    public String getSecurityType(String selected, String companyID, String lang, int tenantID, String approvalFlag) throws Exception;
+    public String getKeepType(String lang, int tenantId, String companyID) throws Exception;
+
+    /* 2025-08-12 김유진 - 모바일 기안 > 첨부, 문서첨부  */
+    public int getAttachFileMaxSn(String docID, int tenantID, String companyID) throws Exception;
+    public String updateAttachFileInfo(String docID, JSONObject jsonObj, MCommonVO userInfo) throws Exception;
+    public String deleteAttachFileInfo(String docID, String companyID, String lang, int tenantID) throws Exception;
+    public String updateAttachDocInfo(JSONObject jsonObject, MCommonVO userInfo, String approvalFlag) throws Exception;
+    public String deleteAttachDocInfo(String docID, String companyID, String lang, int tenantID) throws Exception;
+
+    /* 2025-08-12 김유진 - 모바일 기안 > 문서 작성, 기안정보 저장  */
+    public String saveDraftInfo(JSONObject jObject, String realPath, LoginVO userInfo, String userInfoXML, HttpServletRequest request) throws Exception;
+	
+	public String checkLastKyulje(String docID, String aprMemberSN, String lang, String offSet, String companyID, int tenantID) throws Exception;
 }

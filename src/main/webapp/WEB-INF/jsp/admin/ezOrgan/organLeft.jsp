@@ -113,7 +113,7 @@
   			</div>
   			<div class="adminListBox" style="overflow:hidden; padding-right: 0;">
 				<h2 class="on">
-					<span class="list_text" id="Organ" onClick="goPage(1)" style="display:inline-block;width:100%;"><spring:message code='main.t56' /></span>
+					<span class="list_text" id="Organ" onClick="goPage(1)" style="display:inline-block;width:100%;" title="<c:if test='${lang eq 6}'><spring:message code='main.t56' /></c:if>"><spring:message code='main.t56' /></span>
 				</h2>
 				<h2>
 					<span class="list_text" id="totalUser" onClick="goPage(2)" style="display:inline-block;width:100%;"><spring:message code='ezOrgan.ksy01' /></span>
@@ -123,7 +123,7 @@
 					<span class="list_text" id="CheckAdmin" onClick="goPage(12)" style="display:inline-block;width:100%;"><spring:message code='main.t00062' /></span>
 				</h2> 
 				<h2>
-					<span class="list_text" id="Addjob" onClick="goPage(13)" style="display:inline-block;width:100%;"><spring:message code='main.t00063' /></span>
+					<span class="list_text" id="Addjob" onClick="goPage(13)" style="display:inline-block;width:100%;" title="<c:if test='${lang eq 6}'><spring:message code='main.t00063' /></c:if>"><spring:message code='main.t00063' /></span>
 				</h2> 
 			</c:if>
 				<h2>
@@ -135,7 +135,7 @@
 			<c:if test="${dotNetIntegration ne 'YES'}">
 				<c:if test="${useLoginStop == 'YES'}">
 					<h2>
-						<span class="list_text" onClick="goPage(32)" style="display:inline-block;width:100%;"><spring:message code='ezOrgan.hdp17' /></span>
+						<span class="list_text" onClick="goPage(32)" style="display:inline-block;width:100%;" title="<c:if test='${lang eq 6}'><spring:message code='ezOrgan.hdp17' /></c:if>"><spring:message code='ezOrgan.hdp17' /></span>
 					</h2>
 				</c:if>
 				<c:if test="${packageType != 'mail'}">

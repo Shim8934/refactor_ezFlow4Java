@@ -263,7 +263,7 @@ function previewSubTreeCall(isFolderManager) {
 			var currentIdx = currentGetSubtree.split(treeviewStr + '_img_');
 
 			var currentChildId = g_childid + currentIdx[1];
-			document.getElementById(currentChildId).style.display = "inline-block";
+			document.getElementById(currentChildId).style.display = "block";
 
 			if (document.getElementById(currentGetSubtree).className.indexOf("sub_iconLNB tree_plus") >= 0)
 				document.getElementById(currentGetSubtree).className = "sub_iconLNB tree_minus";

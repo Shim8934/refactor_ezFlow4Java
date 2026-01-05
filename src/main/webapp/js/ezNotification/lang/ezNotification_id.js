@@ -1,12 +1,12 @@
 var mainType = {
-	mail : "메일",	
+	mail : "Surat",	
 	approval : "Persetujuan",	
 	board : "papan peringatan",	
 	schedule : "jadwal",
 	resource : "Pengelolaan sumber daya",
 	survey : "survei",
 	poll : "Pilih",
-	community : "masyarakat",
+	community : "Komunitas",
 	webfolder : "folder web",
 	journal : "Jurnal Kerja",
 	noti : "Pemberitahuan",
@@ -92,7 +92,7 @@ subType["poll"]["new"] = "Pendaftaran baru";
 subType["community"]["new"] = "Pendaftaran baru";
 
 var notiMessages = {
-	strLang1 : '"No data."'
+	strLang1 : '"Tidak ada data."'
 }
 
 var notiDayNames = ["Mg", "Sn", "Sl", "Rb", "Km", "Jm", "Sb"];

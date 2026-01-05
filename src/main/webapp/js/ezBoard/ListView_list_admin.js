@@ -449,7 +449,7 @@ function ListView() {
                 var strName = SelectSingleNodeValue(oHeaders[i], "NAME");
                 
                 var strStyle = SelectSingleNodeValue(oHeaders[i], "STYLE");
-                var strClass = "";//"h5_center";  // 현재는 header에 class가 없으므로 고정함. //SelectSingleNodeValue(oHeaders[i], "CLASSNAME");
+                var strClass = SelectSingleNodeValue(oHeaders[i], "CLASSNAME");
                 
                 var strColName = SelectSingleNodeValue(oHeaders[i], "COLNAME");
                 if(strColName == "DocTitle")
@@ -481,11 +481,7 @@ function ListView() {
 
                 //타이틀에만 적용 차후 가변으로 수정
                 if (strClass != "") {
-                    if (i == 0) {       //// 현재는 header에 class가 없으므로 고정함.
-                        objTd.className = "";
-                    }
-                    else
-                        objTd.className = strClass;
+                    objTd.className = strClass;
                 }        
 
                 // 리스트 제목부분 width 제거

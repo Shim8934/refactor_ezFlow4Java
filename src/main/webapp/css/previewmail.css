@@ -102,3 +102,24 @@ padding:0px 0px 0px 0px; height:36px; line-height:37px;}/* 20130416 수정 */
 .preview_mail_wrap .previewmail_addfile ul li{display:flex; justify-content:space-between; align-items:center; height:35px; padding:0 10px; border:none; border-bottom:1px solid #DEDEDE;}
 .preview_mail_wrap .previewmail_addfile ul li:last-child{border-bottom:none;}
 .preview_mail_wrap .previewmail_addfile ul li span:first-child{width:calc(100% - 21px);}
+
+.button_calendar_task {
+    padding: 7px 46px;
+    margin: 0px;
+    margin-top: 11px;
+    margin-right: 6px;
+    cursor: pointer;
+    border-radius: 4px;
+    font-weight: 500;
+}
+
+.button_calendar_task.active {
+    background-color: #388ce5;
+    color: white;
+    /*box-shadow: 0 0 5px #388ce5;*/
+}
+
+.button_calendar_task:hover:not(.active) {
+    background-color: #388ce529;
+    color: black;
+}

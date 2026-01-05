@@ -220,10 +220,10 @@
 										listXML += "<h4><spring:message code='ezCommunity.lyj102'/><div class='moreView'>";
 										listXML += "<a href='javascript:void(0);' onclick='viewContent(\"BOARD\")'><spring:message code='ezCommunity.lyj108'/></a>";
 										listXML += "<img src='/images/arr_right.gif'></div></h4>";
-										listXML += "<div class='result_list_noti'><span>[<spring:message code='ezCommunity.lyj112'/>]</span></div>";
 									} else {
 										listXML += "<h4><spring:message code='ezCommunity.lyj102'/></h4>";
 									}
+									listXML += "<div class='result_list_noti'><span>[<spring:message code='ezCommunity.lyj112'/>]</span></div>";
 								} else {
 									listXML += "<div class='result_list'>";
 								}

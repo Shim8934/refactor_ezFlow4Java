@@ -26,7 +26,7 @@ public interface EzSurveyService {
 	SimpleDeptVO getSimpleCompany(String deptId, int level, String primary, int tenantId) throws Exception;
 	void getAllDepts(SimpleDeptVO sDept, String[] path, String primary, int tenantId, int order, int level) throws Exception;
 	int getTotalDeptMembers(String deptId, int tenantId) throws Exception;
-	List<SimpleUserVO> getDeptMemberList(String deptId, List<String> deptList, String primary, int startPoint, int listcnt, int tenantId) throws Exception;
+	List<SimpleUserVO> getDeptMemberList(String deptId, List<String> deptList, List<String> subDeptsList, String primary, int startPoint, int listcnt, int tenantId) throws Exception;
 	// int getTotalSearchMembers(String sqlQuery, String srchValue, int tenantId) throws Exception;
 	// List<SimpleUserVO> getSearchMemberList(String primary, int startPoint, int listcnt, String sqlQuery, String srchValue, int tenantId) throws Exception;
 	

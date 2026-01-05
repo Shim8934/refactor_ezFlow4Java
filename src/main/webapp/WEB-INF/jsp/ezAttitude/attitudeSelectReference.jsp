@@ -1248,9 +1248,8 @@
 
 						if (M_TR.getAttribute("_DATA9") != "") {
 							var M_TR_IMG = document.createElement("IMG");
-							M_TR_IMG.setAttribute("SRC",
-									"/admin/ezOrgan/getPersonalInfo.do?fileName="
-											+ M_TR.getAttribute("_DATA9"));
+							M_TR_IMG.setAttribute("SRC", "/admin/ezOrgan/getPersonalInfo.do?fileName=" + M_TR.getAttribute("_DATA9"));
+							M_TR_IMG.setAttribute('onerror', "this.style.display='none'");
 							M_TR_IMG.setAttribute("width", "90px");
 							M_TR_IMG.setAttribute("height", "90px");
 							M_TR_DIV.appendChild(M_TR_IMG);
@@ -2031,6 +2030,7 @@
 	                                                        <option selected value="displayname" usedefault="1"><spring:message code='ezCircular.t80' /></option>
 	                                                        <option value="description" usedefault="1"><spring:message code='ezCircular.t78' /></option>
 	                                                        <option value="title" usedefault="1"><spring:message code='ezCircular.t154' /></option>
+															<option value="extensionAttribute10"><spring:message code='ezEmail.t281'/></option>
 	                                                        <option value="telephonenumber" usedefault="1"><spring:message code='ezCircular.t155' /></option>
 	                                                        <option value="mobile" usedefault="0"><spring:message code='ezCircular.t156' /></option>
 	                                                        <option value="HomePhone" usedefault="0"><spring:message code='ezCircular.t157' /></option>

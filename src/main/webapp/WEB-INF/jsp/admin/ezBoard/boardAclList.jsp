@@ -223,6 +223,13 @@
 		            }
 		        }
 
+				/* 그룹게시판으로 권한복사 불가능 */
+				var useGroupFlag = document.querySelector('.node_selected').closest('div').getAttribute('usegroupflag');
+				if (useGroupFlag == "Y") {
+					alert("<spring:message code='ezBoard.lyj12' />");
+					return;
+				}
+
 		        var MaxID = 0;
 		        var InitTr = listview.GetDataRows();
 

@@ -736,6 +736,18 @@
 
 			}
 			// 2024.08.12 한슬기 : 메일 환경설정 > 편지함관리 > 가져오기 추가 end
+
+			function HiddenFolderMenu(){
+				if (typeof parent.frames['left'] != "undefined") {
+					parent.frames['left'].document.getElementById("folderMenuDiv").style.display = "none";
+				}
+				
+				if (document.getElementById("mailPanel") != null){
+					if (document.getElementById("mailPanel").style.display == "") {
+						document.getElementById("mailPanel").style.display = "none";
+					}
+				}
+			}
 		    
 	    </script>
 	    <title><spring:message code='ezEmail.t904' /></title>
@@ -792,7 +804,7 @@
 	            </div>
 	        </div>
 	        <iframe id = "MailEnv_ifrm" style ="width:100%;height:100%;" frameborder="0" ></iframe>
-		        <div style="width:100%;height:100%;position:absolute;top:0;left:0;display:none;z-index:5000;" id="mailPanel" oncontextmenu="event_listContextMenuAndId(event); return false;">&nbsp;</div>
+		        <div style="width:100%;height:100%;position:absolute;top:0;left:0;display:none;z-index:5000;" id="mailPanel" oncontextmenu="event_listContextMenuAndId(event); return false;" onclick="HiddenFolderMenu();">&nbsp;</div>
 			<div style="width:200px;height:110px; border-radius:8px;text-align:center;vertical-align:middle;display:none;z-index:9000;position:absolute;" id="MailProgress">
 	            <img src="/images/email/progress_img.gif" style="padding-top:20px;"/>
 	            <div id="progressNum" style="padding-top:10px;vertical-align: middle; font-weight: bold; font-size: 1.2em;">4567467</div>

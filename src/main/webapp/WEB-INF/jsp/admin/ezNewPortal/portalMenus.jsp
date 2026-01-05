@@ -58,6 +58,12 @@
 	        .admin_menu .menuIconTD div {height:100%; overflow:auto; padding:5px;}
 			li.menu dl dd span {white-space:normal; line-height:1.2; word-wrap:break-word;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;}
 			.bottomBtn .btnA:hover{text-decoration:none;}
+			.iconTable01 .menuIconTD{padding-left: 5px;}
+			<c:if test="${useJapanese != 'YES'}">.JPN { display: none; }</c:if>
+			<c:if test="${useChinese != 'YES'}">.CHN { display: none; }</c:if>
+			<c:if test="${useVietnamese != 'YES'}">.VNM { display: none; }</c:if>
+			<c:if test="${useIndonesian != 'YES'}">.IDN { display: none; }</c:if>
+			<c:if test="${type == 'mobile' }">.menuOpenTypeTr { display: none; }</c:if>
 		</style>
 	</head>
 	
@@ -76,8 +82,8 @@
 				    <tbody><tr>
 				        <th><spring:message code="ezNewPortal.topMenu.hth01"/></th>
 				        <td>
-				            <input style="margin-top: 0px;" type="radio" id="topDisplayMode" name="topMenuDisplayMode" value="0"><label for="topDisplayMode" style="cursor: pointer; vertical-align: middle"><spring:message code="ezNewPortal.kwc01"/></label>
-				            <input style="margin-top: 0px;" type="radio" id="leftDisplayMode" name="topMenuDisplayMode" value="1"><label for="leftDisplayMode" style="cursor: pointer; vertical-align: middle"><spring:message code="ezPortal.t72"/></label>
+							<div class='custom_radio' style="margin-bottom: 2px;"><input style="margin-top: 0px;" type="radio" id="topDisplayMode" name="topMenuDisplayMode" value="0"><label for="topDisplayMode" style="cursor: pointer; vertical-align: middle"><spring:message code="ezNewPortal.kwc01"/></label>
+							<input style="margin-top: 0px;" type="radio" id="leftDisplayMode" name="topMenuDisplayMode" value="1"><label for="leftDisplayMode" style="cursor: pointer; vertical-align: middle"><spring:message code="ezPortal.t72"/></label></div>
 				        </td>
 				    </tr>
 				</tbody></table>
@@ -96,6 +102,108 @@
 		<div>
 		<span style="font-size: 14px; font-weight: 500;">▒ <spring:message code="ezNewPortal.topMenu.hth04"/></span> </span> <span style="font-size: 11px; font-weight: 400;">(<spring:message code='ezNewPortal.garm07' />)</span>
 		<ul id="menuList" class="admin_menu_set">
+		</ul>
+		<ul>
+			<li class="menuDetails">
+				<div class='admin_menu'>
+					<dl class="admin_menuDL">
+						<dt class="admin_menuTit"></dt>
+						<dd class="admin_menuX"></dd>
+					</dl>
+					<div class="admin_menu_content">
+						<dl class="adminMenu_icon">
+							<dt class="admenuIcon menuIcon">
+								<span></span>
+							</dt>
+							<dd class="admenuIcon_up iconBtn" onclick="uploadIconImg()"><spring:message code="ezNewPortal.t075" /></dd>
+						</dl>
+						<table class="iconTable01" border="0" cellpadding="0" cellspacing="0" style="clear:none;">
+							<tr>
+								<th class="menuIconTH"><spring:message code="ezNewPortal.t076" /></th>
+								<td colspan="2" class="menuIconTD">
+									<label class="switch menuSwitch" style="vertical-align: bottom;">
+										<input type="checkbox">
+										<span class="slider round"></span>
+									</label>
+								</td>
+							</tr>
+							<tr>
+								<th class="menuIconTH">URL</th>
+								<td colspan="2" class="menuIconTD conUrl">
+									<input type="text" class="admin_input" style="width:281px;" maxlength="100">
+								</td>
+							</tr>
+							<tr class="KOR">
+								<th class="menuIconTH" rowspan="6"><spring:message code="ezNewPortal.t077" /></th>
+								<td class="menuIconTD"><spring:message code='ezNewPortal.t078' /></td>
+								<td class="menuInput">
+									<input id="menu1" class="admin_input menuNameInput" type="text" maxlength="50">
+								</td>
+							</tr>
+							<tr class="ENG">
+								<td class="menuIconTD"><spring:message code='ezNewPortal.t079' /></td>
+								<td class="menuInput">
+									<input id="menu2" class="admin_input menuNameInput" type="text" maxlength="50">
+								</td>
+							</tr>
+							<tr class="JPN">
+								<td class="menuIconTD"><spring:message code='ezNewPortal.t080' /></td>
+								<td class="menuInput">
+									<input id="menu3" class="admin_input menuNameInput" type="text" maxlength="50">
+								</td>
+							</tr>
+							<tr class="CHN">
+								<td class="menuIconTD"><spring:message code='ezPortal.t4094' /></td>
+								<td class="menuInput">
+									<input id="menu4" class="admin_input menuNameInput" type="text" maxlength="50">
+								</td>
+							</tr>
+							<tr class="VNM">
+								<td class="menuIconTD"><spring:message code='ezPersonal.s86' /></td>
+								<td class="menuInput">
+									<input id="menu5" class="admin_input menuNameInput" type="text" maxlength="50">
+								</td>
+							</tr>
+							<tr class="IDN">
+								<td class="menuIconTD"><spring:message code='ezPersonal.s87' /></td>
+								<td class="menuInput">
+									<input id="menu6" class="admin_input menuNameInput" type="text" maxlength="50">
+								</td>
+							</tr>
+						</table>
+						<table class="iconTable02" border="0" cellpadding="0" cellspacing="0" style="clear:none;">
+							<tr class="menuOpenTypeTr">
+								<th class="menuIconTH"><spring:message code="ezNewportal.openType" /></th>
+								<td class="menuIconTD">
+									<select id="menuOpenType" style="margin-left:10px">
+										<option value="tab"><spring:message code="ezNewportal.openNewTab" /></option>
+										<option value="window"><spring:message code="ezNewportal.openNewWindow" /></option>
+										<option value="iframe"><spring:message code="ezNewportal.openIframe" /></option>
+									</select>
+								</td>
+							</tr>
+							<tr>
+								<th class="menuIconTH"><spring:message code="ezNewPortal.t081" /></th>
+								<td class="menuIconTD accessOK">
+									<div></div>
+								</td>
+							</tr>
+							<tr>
+								<th class="menuIconTH"><spring:message code="ezNewPortal.t082" /></th>
+								<td class="menuIconTD accessNO">
+									<div></div>
+								</td>
+							</tr>
+						</table>
+						<div class="bottomBtn">
+							<a class="btnA addMenuBtn" onclick="insertMenu()"><spring:message code='ezNewPortal.t002' /></a>
+							<a class="btnA updateMenu" onclick="updateMenu()"><spring:message code="ezNewPortal.t002" /></a>
+							<a class="btnA menuAuthBtn" onclick="openMenuAuth()"><spring:message code="ezNewPortal.t086" /></a>
+							<a class="btnA deleteMenu" onclick="deleteMenu()"><spring:message code="ezNewPortal.t124" /></a>
+						</div>
+					</div>
+				</div>
+			</li>
 		</ul>
 		</div>
 	</body>
@@ -205,7 +313,7 @@
 							return;
 						}
 						
-						menusHTML += "<li class='menu draggable-item' id='menu" + item.menuId + "'>";
+						menusHTML += "<li class='menu draggable-item' type='" + item.menuType + "' id='menu" + item.menuId + "'>";
 						menusHTML += "<dl>";
 						menusHTML += "<dt><span class='" + item.iconUrl + "'>";
 						menusHTML += "</span></dt>";
@@ -229,6 +337,7 @@
 					menusHTML += "<li class='menuAdd' id='menuAdd'><div><img src='/images/admin/menuAdd.png' style='margin:49px 38px' /></div></li>";
 					
 					$("#menuList").html(menusHTML);
+					$(".menuDetails").slideUp();
 					
 					menuList.forEach(function (item, index) {
 						$("#menu" + item.menuId).on("click", {"menuId" : item.menuId}, openMenuDetail);
@@ -322,6 +431,8 @@
 		var openMenuDetail = function(event) {
 			var menuId = event.data.menuId;
 			
+			$(".menuDetails").slideUp();
+			
 			$(".menuChoice").removeClass("menuChoice");
 			$("#menu" + menuId).addClass("menuChoice");
 			
@@ -338,6 +449,8 @@
 			
 			request.onload = function() {
 				if (request.status >= 200 && request.status < 400) {
+					initMenuForm();
+					
 					var result = JSON.parse(request.responseText);
 					var menuInfo = result.menuInfo;
 					var menuNames = result.menuNames;
@@ -347,400 +460,23 @@
 					menuAuths = menuAuthsY;
 					menuAuths = menuAuths.concat(menuAuthsN);
 					
-					var menusHTML = "<li class='menuDetails' id='menuLi" + menuInfo.menuId + "'>";
-					menusHTML += "<div class='admin_menu' id='menuDetails" + menuInfo.menuId + "'>";
-					menusHTML += "<dl class='admin_menuDL'>";
-					menusHTML += "<dt class='admin_menuTit'>" + ConvertCharToEntityReference(menuInfo.menuName) + "</dt><dd class='admin_menuX'></dd></dl>";
+					document.querySelector('.admin_menuDL .admin_menuTit').innerText = ConvertCharToEntityReference(menuInfo.menuName);
+					document.querySelector('.adminMenu_icon .menuIcon span').className = menuInfo.iconUrl;
+					document.querySelector('.menuIconTD .menuSwitch input').checked = menuInfo.menuUsed;
+					document.querySelector('.conUrl .admin_input').value = ReplaceText(ReplaceText(ConvertCharToEntityReference(menuInfo.menuUrl), '\"', "&#39;"), "\'", "&#34;");
 					
-					menusHTML += "<div class='admin_menu_content'>";
-					menusHTML += "<dl class='adminMenu_icon'><dt class='admenuIcon menuIcon'><span class='" + menuInfo.iconUrl + "'></span></dt>";
-					
-					// if (menuInfo.menuType != "G") { //기본 메뉴는 아이콘 변경이 불가능함					
-					menusHTML += "<dd class='admenuIcon_up iconBtn'><spring:message code='ezNewPortal.t075' /></dd>";
-					// }
-					
-					menusHTML += "</dl><table class='iconTable01' border='0' cellpadding='0' cellspacing='0' style='clear:none;'>";
-					menusHTML += "<tr><th class='menuIconTH'><spring:message code='ezNewPortal.t076' /></th>";
-					
-					if (menuInfo.menuUsed) {
-						menusHTML += "<td colspan='2' class='menuIconTD'><label class='switch menuSwitch' style='vertical-align: bottom;'><input type='checkbox' checked><span class='slider round'></span></label></td></tr>";
-					} else {
-						menusHTML += "<td colspan='2' class='menuIconTD'><label class='switch menuSwitch' style='vertical-align: bottom;'><input type='checkbox'><span class='slider round'></span></label></td></tr>";
-					}
-					
-					menusHTML += "<tr><th class='menuIconTH'>URL</th><td colspan='2' class='menuIconTD conUrl'><input type='text' class='admin_input' style='width:281px;' value='" +ReplaceText(ReplaceText(ConvertCharToEntityReference(menuInfo.menuUrl), '\"', "&#39;"), "\'", "&#34;") + "' maxlength='100'></td></tr>"
-					menusHTML += "<tr><th rowspan='" + menuNames.length + "' class='menuIconTH'><spring:message code='ezNewPortal.t077' /></th>";
-					
-					var menuIconTD1 = "<spring:message code='ezNewPortal.t078' />";
-					var menuIconTD2 = "<spring:message code='ezNewPortal.t079' />";
-					var menuIconTD3 = "<spring:message code='ezNewPortal.t080' />";
-					var menuIconTD4 = "<spring:message code='ezPortal.t4094' />";
-					var menuIconTD5 = "<spring:message code='ezNewPortal.t079' />"; // 베트남어(사용시 추가)
- 					var menuIconTD6 = "<spring:message code='ezNewPortal.t079' />"; // 인도네시아어(사용시 추가)
-					
-					var langOrder = [1, 2, 3, 4, 5, 6];
-					var langType = ['1', '2', '3', '4', '5', '6'];
-					
-					var menuNames1 = ""; // 한국어
-					var menuNames2 = ""; // 영어
-					var menuNames3 = ""; // 일본어
-					var menuNames4 = ""; // 중국어
-					var menuNames5 = ""; // 베트남어
-					var menuNames6 = ""; // 인도네시아어
-					
-					function clearMenuNames(menuName) {
-						return ReplaceText(ReplaceText(ConvertCharToEntityReference(menuName), '\"', "&#39;"), "\'", "&#34;");
-					}
-					
-					function checkMenuLang(menuNames, lang) {
-					  return menuNames.filter(function(item) {
-						return item.menuLang == lang;
-					  });
-					}
-					
-					langType.forEach(function(lang) {
-					var filteredMenu = checkMenuLang(menuNames, lang);
-					
-					if (filteredMenu.length > 0) {
-						var menuName = filteredMenu[0].menuName;
-						var clearMenuName = clearMenuNames(menuName);
+					for (var i = 0; i < result.menuNames.length; i++) {
+						var selectorNm = "input#menu";
+						var data = result.menuNames[i];
 						
-						switch (lang) {
-							case '1':
-								menuNames1 = clearMenuName;
-								break;
-							case '2':
-								menuNames2 = clearMenuName;
-								break;
-							case '3':
-								menuNames3 = clearMenuName;
-								break;
-							case '4':
-								menuNames4 = clearMenuName;
-								break;
-							case '5':
-								menuNames5 = clearMenuName;
-								break;
-							case '6':
-								menuNames6 = clearMenuName;
-								break;
-							default:
-								break;
-							}
+						if (document.querySelector('input#menu' + data.menuLang)) {
+							document.querySelector('input#menu' + data.menuLang).value = data.menuName;
 						}
-					});
-					
-					menuNames.forEach(function(item, index) {
-						if (index != 0) {
-							menusHTML += "<tr>";
-						}
-						menusHTML += "<td class='menuIconTD'>";
-						menusHTML += "<spring:message code='ezNewPortal.t077' /> ("; 
-						
-						var country = "";
-						var menuNameInputId = 1;
-						var menuRealName = menuNames1;
-						if (usePrimaryLangOnly != "YES") {
-                            if (menuNames.length > 1) {
-                                if (userLang == "1") { // 한국어
-                                    langOrder.forEach(function(lang) {
-                                        if (item.menuLang == lang) {
-                                            switch (lang) {
-                                                case 1:
-                                                    country = menuIconTD1;
-                                                    break;
-                                                case 2:
-                                                    country = menuIconTD2;
-                                                    menuNameInputId = 2;
-                                                    menuRealName = menuNames2;
-                                                    break;
-                                                case 3:
-                                                    country = menuIconTD3;
-                                                    menuNameInputId = 3;
-                                                    menuRealName = menuNames3;
-                                                    break;
-                                                case 4:
-                                                    country = menuIconTD4;
-                                                    menuNameInputId = 4;
-                                                    menuRealName = menuNames4;
-                                                    break;
-                                                case 5:
-                                                    country = menuIconTD5;
-                                                    menuNameInputId = 5;
-                                                    menuRealName = menuNames5;
-                                                    break;
-                                                case 6:
-                                                    country = menuIconTD6;
-                                                    menuNameInputId = 6;
-                                                    menuRealName = menuNames6;
-                                                    break;
-                                                default:
-                                                    break;
-                                            }
-                                        }
-                                    });
-                                } else if (userLang == "2") { // 영어
-                                    langOrder.forEach(function(lang) {
-                                        if (item.menuLang == lang) {
-                                            switch (lang) {
-                                                case 1:
-                                                    country = menuIconTD2;
-                                                    menuNameInputId = 2;
-                                                    menuRealName = menuNames2;
-                                                    break;
-                                                case 2:
-                                                    country = menuIconTD1;
-                                                    break;
-                                                case 3:
-                                                    country = menuIconTD3;
-                                                    menuNameInputId = 3;
-                                                    menuRealName = menuNames3;
-                                                    break;
-                                                case 4:
-                                                    country = menuIconTD4;
-                                                    menuNameInputId = 4;
-                                                    menuRealName = menuNames4;
-                                                    break;
-                                                case 5:
-                                                    country = menuIconTD5;
-                                                    menuNameInputId = 5;
-                                                    menuRealName = menuNames5;
-                                                    break;
-                                                case 6:
-                                                    country = menuIconTD6;
-                                                    menuNameInputId = 6;
-                                                    menuRealName = menuNames6;
-                                                    break;
-                                                default:
-                                                    break;
-                                            }
-                                        }
-                                    });
-                                } else if (userLang == "3") { // 일본어
-                                    langOrder.forEach(function(lang) {
-                                        if (item.menuLang == lang) {
-                                            switch (lang) {
-                                                case 1:
-                                                    country = menuIconTD3;
-                                                    menuNameInputId = 3;
-                                                    menuRealName = menuNames3;
-                                                    break;
-                                                case 2:
-                                                    country = menuIconTD2;
-                                                    menuNameInputId = 2;
-                                                    menuRealName = menuNames2;
-                                                    break;
-                                                case 3:
-                                                    country = menuIconTD1;
-                                                    break;
-                                                case 4:
-                                                    country = menuIconTD4;
-                                                    menuNameInputId = 4;
-                                                    menuRealName = menuNames4;
-                                                    break;
-                                                case 5:
-                                                    country = menuIconTD5;
-                                                    menuNameInputId = 5;
-                                                    menuRealName = menuNames5;
-                                                    break;
-                                                case 6:
-                                                    country = menuIconTD6;
-                                                    menuNameInputId = 6;
-                                                    menuRealName = menuNames6;
-                                                    break;
-                                                default:
-                                                    break;
-                                            }
-                                        }
-                                    });
-                                } else if (userLang == "4") { // 중국어
-                                    langOrder.forEach(function(lang) {
-                                        if (item.menuLang == lang) {
-                                            switch (lang) {
-                                                case 1:
-                                                    country = menuIconTD4;
-                                                    menuNameInputId = 4;
-                                                    menuRealName = menuNames4;
-                                                    break;
-                                                case 2:
-                                                    country = menuIconTD2;
-                                                    menuNameInputId = 2;
-                                                    menuRealName = menuNames2;
-                                                    break;
-                                                case 3:
-                                                    country = menuIconTD1;
-                                                    break;
-                                                case 4:
-                                                    country = menuIconTD3;
-                                                    menuNameInputId = 3;
-                                                    menuRealName = menuNames3;
-                                                    break;
-                                                case 5:
-                                                    country = menuIconTD5;
-                                                    menuNameInputId = 5;
-                                                    menuRealName = menuNames5;
-                                                    break;
-                                                case 6:
-                                                    country = menuIconTD6;
-                                                    menuNameInputId = 6;
-                                                    menuRealName = menuNames6;
-                                                    break;
-                                                default:
-                                                    break;
-                                            }
-                                        }
-                                    });
-                                } else if (userLang == "5") { // 베트남어
-                                    langOrder.forEach(function(lang) {
-                                        if (item.menuLang == lang) {
-                                            switch (lang) {
-                                                case 1:
-                                                    country = menuIconTD5;
-                                                    menuNameInputId = 5;
-                                                    menuRealName = menuNames5;
-                                                    break;
-                                                case 2:
-                                                    country = menuIconTD2;
-                                                    menuNameInputId = 2;
-                                                    menuRealName = menuNames2;
-                                                    break;
-                                                case 3:
-                                                    country = menuIconTD1;
-                                                    break;
-                                                case 4:
-                                                    country = menuIconTD3;
-                                                    menuNameInputId = 3;
-                                                    menuRealName = menuNames3;
-                                                    break;
-                                                case 5:
-                                                    country = menuIconTD4;
-                                                    menuNameInputId = 4;
-                                                    menuRealName = menuNames4;
-                                                    break;
-                                                case 6:
-                                                    country = menuIconTD6;
-                                                    menuNameInputId = 6;
-                                                    menuRealName = menuNames6;
-                                                    break;
-                                                default:
-                                                    break;
-                                            }
-                                        }
-                                    });
-                                } else if (userLang == "6") { // 인도네시아어
-                                    langOrder.forEach(function(lang) {
-                                        if (item.menuLang == lang) {
-                                            switch (lang) {
-                                                case 1:
-                                                    country = menuIconTD6;
-                                                    menuNameInputId = 6;
-                                                    menuRealName = menuNames6;
-                                                    break;
-                                                case 2:
-                                                    country = menuIconTD2;
-                                                    menuNameInputId = 2;
-                                                    menuRealName = menuNames2;
-                                                    break;
-                                                case 3:
-                                                    country = menuIconTD1;
-                                                    break;
-                                                case 4:
-                                                    country = menuIconTD3;
-                                                    menuNameInputId = 3;
-                                                    menuRealName = menuNames3;
-                                                    break;
-                                                case 5:
-                                                    country = menuIconTD4;
-                                                    menuNameInputId = 4;
-                                                    menuRealName = menuNames4;
-                                                    break;
-                                                case 6:
-                                                    country = menuIconTD5;
-                                                    menuNameInputId = 5;
-                                                    menuRealName = menuNames5;
-                                                    break;
-                                                default:
-                                                    break;
-                                            }
-                                        }
-                                    });
-                                }
-                            } else {
-                                if (userLang == "1") {
-                                    country = menuIconTD1;
-                                    menuNameInputId = 1;
-                                    menuRealName = menuNames1;
-                                } else if (userLang == "2") {
-                                    country = menuIconTD2;
-                                    menuNameInputId = 2;
-                                    menuRealName = menuNames2;
-                                } else if (userLang == "3") {
-                                    country = menuIconTD3;
-                                    menuNameInputId = 3;
-                                    menuRealName = menuNames3;
-                                } else if (userLang == "4") {
-                                    country = menuIconTD4;
-                                    menuNameInputId = 4;
-                                    menuRealName = menuNames4;
-                                } else if (userLang == "5") {
-                                    country = menuIconTD5;
-                                    menuNameInputId = 5;
-                                    menuRealName = menuNames5;
-                                } else if (userLang == "6") {
-                                    country = menuIconTD6;
-                                    menuNameInputId = 6;
-                                    menuRealName = menuNames6;
-                                }
-                            }
-						} else {
-                            if (userLang == "1") {
-                                country = menuIconTD1;
-                                menuNameInputId = 1;
-                                menuRealName = menuNames1;
-                            } else if (userLang == "2") {
-                                country = menuIconTD2;
-                                menuNameInputId = 2;
-                                menuRealName = menuNames2;
-                            } else if (userLang == "3") {
-                                country = menuIconTD3;
-                                menuNameInputId = 3;
-                                menuRealName = menuNames3;
-                            } else if (userLang == "4") {
-                                country = menuIconTD4;
-                                menuNameInputId = 4;
-                                menuRealName = menuNames4;
-                            } else if (userLang == "5") {
-                                country = menuIconTD5;
-                                menuNameInputId = 5;
-                                menuRealName = menuNames5;
-                            } else if (userLang == "6") {
-                                country = menuIconTD6;
-                                menuNameInputId = 6;
-                                menuRealName = menuNames6;
-                            }
-                        }
-						
-						menusHTML += country + ")</td>";
-						menusHTML += "<td class='menuInput'><input class='admin_input menuNameInput' id='menu";
-						menusHTML += menuNameInputId + "' type='text' value='"
-						menusHTML += menuRealName + "' maxlength='50'></td>";
-						menusHTML += "</tr>";
-					});
-					
-					menusHTML += "</table>";
-					menusHTML += "<table class='iconTable02' border='0' cellpadding='0' cellspacing='0' style='clear:none;'>";
-					
-					// 2024-07-19 조수빈 - 웹인 경우 새 탭 / 새 창 / iframe으로 띄우는 옵션 설정 행 추가
-					if (type != 'mobile') {
-						menusHTML += "<tr><th class='menuIconTH'><spring:message code='ezNewportal.openType' /></th><td class='menuIconTD'>";
-						menusHTML += "<select id='menuOpenType' style='margin-left:10px'>";
-						menusHTML += "<option value='tab' " + (menuInfo.openType == 1 ? "selected" : "") + "><spring:message code='ezNewportal.openNewTab' /></option>";
-						menusHTML += "<option value='window' " + (menuInfo.openType == 2 ? "selected" : "") + "><spring:message code='ezNewportal.openNewWindow' /></option>";
-						menusHTML += "<option value='iframe' " + (menuInfo.openType == 3 ? "selected" : "") + "><spring:message code='ezNewportal.openIframe' /></option>";
-						menusHTML += "</select></td></tr>";
 					}
 					
-					menusHTML += "<tr><th class='menuIconTH'><spring:message code='ezNewPortal.t081' /></th><td class='menuIconTD accessOK'><div>";
+					document.getElementById('menuOpenType').options[(menuInfo.openType - 1)].selected = true;
+					
+					document.querySelector('.iconTable02 .accessOK div').innerText = "";
 					
 					if (menuAuthsY != null && menuAuthsY.length != 0) {
 						var menuAuthsYList = "";
@@ -756,10 +492,10 @@
 							}
 						});
 						
-						menusHTML += menuAuthsYList.substring(1) + "</div></td></tr>";
+						document.querySelector('.iconTable02 .accessOK div').innerText = menuAuthsYList.substring(1);
 					}
 					
-					menusHTML += "<tr><th class='menuIconTH'><spring:message code='ezNewPortal.t082' /></th><td class='menuIconTD accessNO'><div>";
+					document.querySelector('.iconTable02 .accessNO div').innerText = "";
 					
 					if (menuAuthsN != null && menuAuthsN.length != 0) {
 						var menuAuthsNList = "";
@@ -775,68 +511,21 @@
 							}
 						});
 						
-						menusHTML += menuAuthsNList.substring(1) + "</div></td></tr>";
+						document.querySelector('.iconTable02 .accessNO div').innerText = menuAuthsNList.substring(1);
 					}
 					
-					menusHTML += "</table>";
-					menusHTML += "<div class='bottomBtn'><a class='btnA updateMenu'><spring:message code='ezNewPortal.t002' /></a><a class='btnA menuAuthBtn'><spring:message code='ezNewPortal.t086' /></a>";
+					document.querySelector('.addMenuBtn').style.display = 'none';
+					document.querySelector('.updateMenu').style.display = '';
 					
-					if (menuInfo.menuType == "A" || menuInfo.menuType == "MA") {
-						menusHTML += "<a class='btnA deleteMenu'><spring:message code='ezNewPortal.t124' /></a>";
-					}
-					menusHTML += "</div></div></div></li>"
-					
-					var nowShowDetails = $(".menuDetails").children().attr("id");
-					
-					if (nowShowDetails == "menuDetails" + menuId) {
-						$(".menuDetails").slideUp(function(){
-							$(".menuDetails").remove();
-						});
-					} else {
-						//나와있는 menuDetails를 제외하곤 다 지운다
-						$(".menuDetails").slideUp(function(){
-							$(".menuDetails").not("#menuLi" + menuId).remove();
-						});
-					}
-					
-					if (nowShowDetails != "menuDetails" + menuId) {
-						if (nowShowDetails == undefined) {
-							//$("#menu" + menuId).after(menusHTML);
-							$("#menuAdd").after(menusHTML);
-							$(".menuDetails").slideDown();
-						} else {
-							//$("#menu" + menuId).after(menusHTML);
-							$("#menuAdd").after(menusHTML);
-							$(".menuDetails").slideDown();
-						}
-					}
-					
-					//기본메뉴일때 연결 URL변경 불가능
 					if (menuInfo.menuType == "G" || menuInfo.menuType == "MG") { //기본 메뉴는 아이콘 변경이 불가능함
 						$(".conUrl").find("input[type='text']").attr('readonly','readonly');
+						document.querySelector('.deleteMenu').style.display = 'none';
+					} else {
+						document.querySelector('.deleteMenu').style.display = '';
 					}
 					
-					//닫기버튼 설정
-					$(".close").on("click", function(){
-						$(".menuDetails").slideUp();
-						$(".menuDetails").attr("class", "menuDetails hideDetails");
-					});
-					
-					//아이콘등록 버튼 설정
-					$(".iconBtn").on("click", uploadIconImg);
-					
-					//권한설정 기능
-					$(".menuAuthBtn").on("click", {"menuId" : menuInfo.menuId, "companyId" : companyValue, "mode" : "view"}, openMenuAuth);
-					
-					//저장기능 
-					$(".updateMenu").on("click", {"menuId" : menuInfo.menuId, "menuType" : menuInfo.menuType}, updateMenu);
-					
-					if (menuInfo.menuType == "A" || menuInfo.menuType == "MA") {
-						$(".deleteMenu").on("click", {"menuId" : menuInfo.menuId}, deleteMenu);
-					}
-					
-					//메뉴 상세보기 iconTable01 height 지정
-					$(".iconTable01, .iconTable02").css("height", (106 + 33 * (menuNames.length -1)) + "px");
+					$(".menuDetails").slideDown();
+					document.querySelectorAll(".iconTable02")[0].style.height = document.querySelectorAll(".iconTable01")[0].scrollHeight + "px";
 				}
 			}
 			
@@ -850,12 +539,7 @@
 			request.send(data);
 		}
 		
-		var closeMenuDetail = function(event) {
-			//그냥 모든 메뉴디테일을 닫아버린다
-			$(".menuDetails").slideUp();
-			$(".menuDetails").remove();
-		}
-		
+		/*
 		$('html').click(function(e) {
 			//영역 외 삭제
 			var obj = e.target;
@@ -863,10 +547,10 @@
 			var elemArr = ["menu", "admin_menuDL", "admin_menu_content", "menuOrderResetButton", "companySelect", "menuAdd"];
 			//console.log(obj.tagName);
 			if (obj.tagName == "HTML" || obj.tagName == "UL" || obj.tagName == "LI" || obj.tagName == "H1") {
-				closeMenuDetail();
+				$(".menuDetails").slideUp();
 				return false;
 			}
-			/* console.log(obj.className);
+			console.log(obj.className);
 			while(elemArr.indexOf(obj.className) == -1){
 				obj = obj.parentElement;
 				console.log(obj);
@@ -874,15 +558,19 @@
 					closeMenuDetail();
 					break;
 				}
-			} */
+			}
 		}); 
 
+		*/
 		var updateMenu = function(event) {
-			var menuId = event.data.menuId;
+			var menuId = "";
+			if (!document.getElementById("menuAdd").classList.contains("menuChoice")) {
+				menuId = document.querySelector('.menuChoice').id.substr(4);
+			}
 			var menuNameList = [];
 			var menuNames = $(".menuNameInput");
 			var menuNamesCount = menuNames.length;
-			var menuType = event.data.menuType;
+			var menuType = document.querySelector('.menuChoice').type;
 			var menuNameEmptyNum = 0;
 			// 특수문자 체크 (앤드&, 소괄호(), 슬래쉬/, - 만 허용함)
 			var special_pattern = /[\{\}\[\]?.,;:|*~`!^\_+<>@\#$%\\\=\'\"]/g;
@@ -959,7 +647,7 @@
 			
 			request.onload = function() { 
 				getMenus();
-				//menuAuths = [];
+				menuAuths = [];
 			}
 			
 			request.onerror = function() {}
@@ -982,190 +670,28 @@
 		
 		var openMenuAdd = function() {
 			$(".menuChoice").removeClass("menuChoice");
-			
-			menuAuths = [];
-			
-			var menusHTML = "<li class='menuDetails' id='menuLiNew'>";
-			menusHTML += "<div class='admin_menu' id='menuDetailsNew'>";
-			menusHTML += "<dl class='admin_menuDL'><dt class='admin_menuTit'>&nbsp;</dt><dd class='admin_menuX'></dd></dl>";
-			menusHTML += "<div class='admin_menu_content'>";
-			menusHTML += "<dl class='adminMenu_icon'><dt class='admenuIcon menuIcon'><span></span></dt>";
-			menusHTML += "<dd class='admenuIcon_up iconBtn'><spring:message code='ezNewPortal.t075' /></dd></dl>";
-			menusHTML += "<table class='iconTable01' border='0' cellpadding='0' cellspacing='0' style='clear:none'>";
-			menusHTML += "<tr><th class='menuIconTH'><spring:message code='ezNewPortal.t076' /></th><td colspan='2' class='menuIconTD'><label class='switch menuSwitch' style='vertical-align: bottom;'><input type='checkbox'><span class='slider round'></span></label></td></tr>";
-			menusHTML += "<tr><th class='menuIconTH'>URL</th><td colspan='2' class='menuIconTD conUrl'><input type='text' class='admin_input' style='width:281px;' maxlength='100'></td></tr>";
-			
-			if (usePrimaryLangOnly == "YES") {
-				menusHTML += "<tr><th class='menuIconTH'><spring:message code='ezNewPortal.t077' /></th>";
-				if (primary == "1") {
-					menusHTML += "<td class='menuIconTD'><spring:message code='ezNewPortal.t077' /> (<spring:message code='ezNewPortal.t078' />)</td>";
-					menusHTML += "<td class='menuInput'><input class='admin_input menuNameInput' id='menu1' type='text' maxlength='50'></td>";
-					menusHTML += "</tr>";	
-				} else if (primary == "2") {
-					menusHTML += "<td class='menuIconTD'><spring:message code='ezNewPortal.t077' /> (<spring:message code='ezNewPortal.t079' />)</td>";
-					menusHTML += "<td class='menuInput'><input class='admin_input menuNameInput' id='menu2' type='text' maxlength='50'></td>";
-					menusHTML += "</tr>";	
-				} else if (primary == "3") {
-					menusHTML += "<td class='menuIconTD'><spring:message code='ezNewPortal.t077' /> (<spring:message code='ezNewPortal.t080' />)</td>";
-					menusHTML += "<td class='menuInput'><input class='admin_input menuNameInput' id='menu3' type='text' maxlength='50'></td>";
-					menusHTML += "</tr>";	
-				} else if (primary == "4") {
-					menusHTML += "<td class='menuIconTD'><spring:message code='ezNewPortal.t077' /> (<spring:message code='ezNewPortal.t080' />)</td>";
-					menusHTML += "<td class='menuInput'><input class='admin_input menuNameInput' id='menu4' type='text' maxlength='50'></td>";
-					menusHTML += "</tr>";	
-				}
-			} else {
-				var mainTitle = "<spring:message code='ezNewPortal.t078' />";
-				var subTitle1 = "<spring:message code='ezNewPortal.t079' />";
-				var subTitle2 = "<spring:message code='ezNewPortal.t080' />";
-				var subTitle3 = "<spring:message code='ezPortal.t4094' />";
-				
-				var mainTitleId = "menu1";
-				var subTitle1Id = "menu2";
-				var subTitle2Id = "menu3";
-				var subTitle3Id = "menu4";
-				
-				var subTitleTr1Id = "en";
-				var subTitleTr2Id = "ja";
-				var subTitleTr3Id = "zh";
-				
-				if (primary == "2") {
-					mainTitle = "<spring:message code='ezNewPortal.t079' />";
-					subTitle1 = "<spring:message code='ezNewPortal.t078' />";
-					subTitle2 = "<spring:message code='ezNewPortal.t080' />";
-					subTitle3 = "<spring:message code='ezPortal.t4094' />";
-					
-					mainTitleId = "menu2";
-					subTitle1Id = "menu1";
-					subTitle2Id = "menu3";
-					subTitle3Id = "menu4";
-					
-					subTitleTr1Id = "ko";
-					subTitleTr2Id = "ja";
-					subTitleTr3Id = "zh";
-				} else if (primary == "3") {
-					mainTitle = "<spring:message code='ezNewPortal.t080' />";
-					subTitle1 = "<spring:message code='ezNewPortal.t078' />";
-					subTitle2 = "<spring:message code='ezNewPortal.t079' />";
-					subTitle3 = "<spring:message code='ezPortal.t4094' />";
-					
-					mainTitleId = "menu3";
-					subTitle1Id = "menu1";
-					subTitle2Id = "menu2";
-					subTitle3Id = "menu4";
-					
-					subTitleTr1Id = "ko";
-					subTitleTr2Id = "en";
-					subTitleTr3Id = "zh";
-				} else if (primary == "4") {
-					mainTitle = "<spring:message code='ezPortal.t4094' />";
-					subTitle1 = "<spring:message code='ezNewPortal.t078' />";
-					subTitle2 = "<spring:message code='ezNewPortal.t079' />";
-					subTitle3 = "<spring:message code='ezNewPortal.t080' />";
-					
-					mainTitleId = "menu4";
-					subTitle1Id = "menu1";
-					subTitle2Id = "menu2";
-					subTitle3Id = "menu3";
-					
-					subTitleTr1Id = "ko";
-					subTitleTr2Id = "en";
-					subTitleTr3Id = "ja";
-				}
-				
-				// 2023-11-23 조소정 - 일본어, 중국어 사용 여부에 따라 메뉴명 rowspan 및 height 조정
-				var menuLength = 0;
-				if (useJapanese === "YES" && useChinese === "YES") {
-					  menuLength = 4;
-				} else if (useJapanese === "YES" && useChinese === "NO") {
-				  menuLength = 3;
-				} else if (useJapanese === "NO" && useChinese === "YES") {
-				  menuLength = 3;
-				} else {
-				  menuLength = 2;
-				}
-
-				menusHTML += "<tr><th rowspan=" + menuLength + " class='menuIconTH'><spring:message code='ezNewPortal.t077' /></th>";
-				menusHTML += "<td class='menuIconTD'> <spring:message code='ezNewPortal.t077' /> (" + mainTitle + ")</td>";
-				menusHTML += "<td class='menuInput'><input class='admin_input menuNameInput' id='" + mainTitleId + "' type='text' maxlength='50'></td>";
-				menusHTML += "</tr>";
-				menusHTML += "<tr id='" + subTitleTr1Id + "'><td class='menuIconTD'><spring:message code='ezNewPortal.t077' /> (" + subTitle1 + ")</td>";
-				menusHTML += "<td class='menuInput'><input class='admin_input menuNameInput' id='" + subTitle1Id + "' type='text' maxlength='50'></td>";
-				menusHTML += "</tr>";
-				menusHTML += "<tr id='" + subTitleTr2Id + "'><td class='menuIconTD'><spring:message code='ezNewPortal.t077' /> (" + subTitle2 + ")</td>";
-				menusHTML += "<td class='menuInput'><input class='admin_input menuNameInput' id='" + subTitle2Id + "' type='text' maxlength='50'></td>";
-				menusHTML += "</tr>";
-				menusHTML += "<tr id='" + subTitleTr3Id + "'><td class='menuIconTD'><spring:message code='ezNewPortal.t077' /> (" + subTitle3 + ")</td>";
-				menusHTML += "<td class='menuInput'><input class='admin_input menuNameInput' id='" + subTitle3Id + "' type='text' maxlength='50'></td>";
-				menusHTML += "</tr>";
-			}
-			menusHTML += "</table>";
-			menusHTML += "<table class='iconTable02' border='0' cellpadding='0' cellspacing='0' style='clear:none'>";
-
-			// 2024-07-19 조수빈 - 웹인 경우 새 탭 / 새 창 / iframe으로 띄우는 옵션 설정 행 추가
-			if (type != 'mobile') {
-				menusHTML += "<tr><th class='menuIconTH'><spring:message code='ezNewportal.openType' /></th><td class='menuIconTD'>";
-				menusHTML += "<select id='menuOpenType' style='margin-left:10px'>";
-				menusHTML += "<option value='tab'><spring:message code='ezNewportal.openNewTab' /></option>";
-				menusHTML += "<option value='window'><spring:message code='ezNewportal.openNewWindow' /></option>";
-				menusHTML += "<option value='iframe'><spring:message code='ezNewportal.openIframe' /></option>";
-				menusHTML += "</select></td></tr>";
-			}
-			
-			menusHTML += "<tr><th class='menuIconTH'><spring:message code='ezNewPortal.t081' /></th><td class='menuIconTD accessOK'><div></div></td></tr>";
-			menusHTML += "<tr><th class='menuIconTH'><spring:message code='ezNewPortal.t082' /></th><td class='menuIconTD accessNO'><div></div></td></tr></table>";
-			menusHTML += "<div class='bottomBtn'><a class='btnA addMenuBtn'><spring:message code='ezNewPortal.t002' /></a><a class='btnA menuAuthBtn'><spring:message code='ezNewPortal.t086' /></a>";
-			menusHTML += "</div></div></div></li>"
+			$("#menuAdd").addClass("menuChoice");
+			$(".conUrl .admin_input").prop("readOnly", false);
 			
 			var nowShowDetails = $(".menuDetails").children().attr("id");
 			
 			if (nowShowDetails == "menuDetailsNew") { 
 				$(".menuDetails").slideUp(function(){
-					$(".menuDetails").remove();
-				});
-			} else {
-				$(".menuDetails").slideUp(function(){
-					$(".menuDetails").not("#menuLiNew").remove();
 				});
 			}
 			
 			if (nowShowDetails != "menuDetailsNew") {
-				if (nowShowDetails == undefined) {
-					$("#menuAdd").after(menusHTML);
-					$(".menuDetails").slideDown();
-				} else {
-					$("#menuAdd").after(menusHTML);
-					$(".menuDetails").slideDown();
-				}
+				$(".menuDetails").slideDown();
+				initMenuForm();
 			}
 			
-			//닫기버튼 설정
-			$(".close").on("click", function(){
-				$(".menuDetails").slideUp();
-				$(".menuDetails").attr("class", "menuDetails hideDetails");
-			});
-			
-			//아이콘등록 버튼 설정
-			$(".iconBtn").on("click", uploadIconImg);
-
 			var companiesObj = document.getElementById("ListCompany");
 			var companyValue = companiesObj.options[companiesObj.selectedIndex].value;
-			//권한설정 기능
-			$(".menuAuthBtn").on("click", {"menuId" : null, "companyId" : companyValue, "mode" : "new"}, openMenuAuth);
 			
-			//저장기능
-			$(".addMenuBtn").on("click", insertMenu);
+			initMenuForm();
 			
-			//메뉴 추가 iconTable01 height 지정
-			$(".iconTable01, .iconTable02").css("height", (usePrimaryLangOnly == "YES" ? 106 : (106 + 33 * (menuLength -1))) + "px");
-			
-			if (useJapanese == "NO" && document.getElementById("ja")) {
-				document.getElementById("ja").style.display = "none";
-			}
-			
-			if (useChinese == "NO" && document.getElementById("zh")) {
-				document.getElementById("zh").style.display = "none";
-			}
+			$(".menuDetails").slideDown();
+			document.querySelectorAll(".iconTable02")[0].style.height = document.querySelectorAll(".iconTable01")[0].scrollHeight + "px";
 		}
 		
 		var insertMenu = function() {
@@ -1267,7 +793,7 @@
 			var response = confirm("<spring:message code='ezNewPortal.t087' />");
 			
 			if (response) {
-				var menuId = event.data.menuId;
+				var menuId = document.querySelector('.menuChoice').id.substr(4);
 				
 				var companiesObj = document.getElementById("ListCompany");
 				var companyValue = companiesObj.options[companiesObj.selectedIndex].value;
@@ -1337,10 +863,12 @@
 		}
 		
 		var openMenuAuth = function(event) {
-			var mode = event.data.mode;
-
-			var url = "/admin/ezNewPortal/portalMenuAuth.do?menuId=" + event.data.menuId + "&companyId=" + event.data.companyId + "&mode=menu";
-			var OpenWin = window.open(url, "", GetOpenWindowfeature(980, 650));
+			var menuId = document.querySelector('.menuChoice').id.substr(4);
+			var companiesObj = document.getElementById("ListCompany");
+			var companyValue = companiesObj.options[companiesObj.selectedIndex].value;
+			
+			var url = "/admin/ezNewPortal/portalMenuAuth.do?menuId=" + menuId + "&companyId=" + companyValue + "&mode=menu";
+			var OpenWin = window.open(url, "", GetOpenWindowfeature(1000, 680));
 		    	try { OpenWin.focus(); } catch (e) { }
 		}
 		
@@ -1403,5 +931,25 @@
 		    });
 		}
 
+		function initMenuForm() {
+			document.querySelector('.admin_menuDL .admin_menuTit').innerText = "";
+			document.querySelector('.adminMenu_icon .menuIcon span').className = "";
+			document.querySelector('.menuIconTD .menuSwitch input').checked = false;
+			document.querySelector('.conUrl .admin_input').value ="";
+			
+			var nameInput = document.querySelectorAll('input.menuNameInput');
+			
+			for (var i = 0; i < nameInput.length; i++) {
+			    nameInput[i].value = "";
+			}
+			
+			document.getElementById('menuOpenType').options[0].selected = true;
+			document.querySelector('.iconTable02 .accessOK div').innerText = "";
+			document.querySelector('.iconTable02 .accessNO div').innerText = "";
+			
+			document.querySelector('.addMenuBtn').style.display = '';
+			document.querySelector('.updateMenu').style.display = 'none';
+			document.querySelector('.deleteMenu').style.display = 'none';
+		}
 	</script>
 </html>

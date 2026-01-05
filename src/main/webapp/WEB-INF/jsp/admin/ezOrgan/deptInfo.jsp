@@ -360,7 +360,7 @@
 		      		</table>
 		      	</td> 
 		  	</tr>
-		  	<tr class="onlyUseG"> 
+		  	<tr> 
 		    	<th><spring:message code='ezOrgan.t221' /></th> 
 		    	<td><input type="text" id=SimpleName style="width:97%" maxlength="50"></td> 
 		  	</tr>
@@ -390,22 +390,22 @@
 		  	<c:if test="${approvalFlag == 'G'}">
 		  	<tr> 
 		    	<th><spring:message code='ezOrgan.t227' /></th> 
-		    	<td><input type="checkbox" id=InsDept value="checkbox"></td> 
+		    	<td><div class="custom_checkbox"><input type="checkbox" id=InsDept value="checkbox"></div></td> 
 		  	</tr> 
 		  	</c:if>
 		  	<c:if test="${approvalFlag == 'G'}">
 		    <tr> 
 		    	<th><spring:message code='ezOrgan.t990' /></th> 
-		    	<td><input type="checkbox" id="ouDoumentReceiveYN" value="checkbox"></td> 
+		    	<td><div class="custom_checkbox"><input type="checkbox" id="ouDoumentReceiveYN" value="checkbox"></div></td> 
 		  	</tr>
 			<tr id="tr_upperDeptBoxYN" style="display: none">
 				<th><spring:message code='ezOrgan.jhy001' /></th>
-				<td><input type="checkbox" id="upperDeptBoxYN" value="checkbox" onclick="disableDocReceive()"></td>
+				<td><div class="custom_checkbox"><input type="checkbox" id="upperDeptBoxYN" value="checkbox" onclick="disableDocReceive()"></div></td>
 			</tr>
 		  	</c:if>
 			<tr class="treeFlag">
 				<th ><spring:message code='ezOrgan.kdh07' /></th>
-				<td><input type="checkbox" id=deptTreeFlag></td>
+				<td><div class="custom_checkbox"><input type="checkbox" id=deptTreeFlag></div></td>
 			</tr>
 		</table> 
 		<div class="btnpositionNew">

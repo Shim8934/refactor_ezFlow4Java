@@ -67,6 +67,7 @@ import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -168,6 +169,7 @@ public class EzEmailMailReadController extends EzFileMngUtil {
 
 	@Autowired
 	private Rest rest;
+	private ReloadableResourceBundleMessageSource messageSource;
 
 	/**
 	 * 메일 읽기화면 호출 함수
@@ -393,7 +395,15 @@ public class EzEmailMailReadController extends EzFileMngUtil {
 							String item = strArr[i].trim();
 							String[] tokens = item.split(" <");
 							String name = tokens[0]; 		
-							name = commonUtil.trimDoubleQuotes(name);								
+							name = commonUtil.trimDoubleQuotes(name);
+
+							// @가 포함되어 있지 않고 =?UTF-8?B? 와 같이 인코딩된 형태이면 디코딩을 시도한다.
+							if (!name.contains("@") && name.startsWith("=?")) {
+								logger.debug("decoding name={}", name);
+
+								name = MimeUtility.decodeText(name);
+							}
+							
 							String address = ""; 
 									
 							if (tokens.length > 1) {
@@ -402,6 +412,13 @@ public class EzEmailMailReadController extends EzFileMngUtil {
 							
 							if (address.endsWith(">")) {
 								address = address.substring(0, address.length() - 1);
+							}
+
+							// @가 포함되어 있지 않고 =?UTF-8?B? 와 같이 인코딩된 형태이면 디코딩을 시도한다.
+							if (!address.contains("@") && address.startsWith("=?")) {
+								logger.debug("decoding address={}", name);
+
+								address = MimeUtility.decodeText(address);
 							}
 							
 							logger.debug("TO=" + name + " " + address);
@@ -429,7 +446,15 @@ public class EzEmailMailReadController extends EzFileMngUtil {
 							String item = strArr[i].trim();
 							String[] tokens = item.split(" <");
 							String name = tokens[0]; 		
-							name = commonUtil.trimDoubleQuotes(name);								
+							name = commonUtil.trimDoubleQuotes(name);
+
+							// @가 포함되어 있지 않고 =?UTF-8?B? 와 같이 인코딩된 형태이면 디코딩을 시도한다.
+							if (!name.contains("@") && name.startsWith("=?")) {
+								logger.debug("decoding name={}", name);
+
+								name = MimeUtility.decodeText(name);
+							}
+							
 							String address = ""; 
 							
 							if (tokens.length > 1) {
@@ -438,6 +463,13 @@ public class EzEmailMailReadController extends EzFileMngUtil {
 							
 							if (address.endsWith(">")) {
 								address = address.substring(0, address.length() - 1);
+							}
+
+							// @가 포함되어 있지 않고 =?UTF-8?B? 와 같이 인코딩된 형태이면 디코딩을 시도한다.
+							if (!address.contains("@") && address.startsWith("=?")) {
+								logger.debug("decoding address={}", name);
+
+								address = MimeUtility.decodeText(address);
 							}
 							
 							logger.debug("CC=" + name + " " + address);
@@ -465,7 +497,15 @@ public class EzEmailMailReadController extends EzFileMngUtil {
 							String item = strArr[i].trim();
 							String[] tokens = item.split(" <");
 							String name = tokens[0]; 		
-							name = commonUtil.trimDoubleQuotes(name);								
+							name = commonUtil.trimDoubleQuotes(name);
+
+							// @가 포함되어 있지 않고 =?UTF-8?B? 와 같이 인코딩된 형태이면 디코딩을 시도한다.
+							if (!name.contains("@") && name.startsWith("=?")) {
+								logger.debug("decoding name={}", name);
+
+								name = MimeUtility.decodeText(name);
+							}
+							
 							String address = ""; 
 							
 							if (tokens.length > 1) {
@@ -474,6 +514,13 @@ public class EzEmailMailReadController extends EzFileMngUtil {
 							
 							if (address.endsWith(">")) {
 								address = address.substring(0, address.length() - 1);
+							}
+
+							// @가 포함되어 있지 않고 =?UTF-8?B? 와 같이 인코딩된 형태이면 디코딩을 시도한다.
+							if (!address.contains("@") && address.startsWith("=?")) {
+								logger.debug("decoding address={}", name);
+
+								address = MimeUtility.decodeText(address);
 							}
 							
 							logger.debug("BCC=" + name + " " + address);
@@ -1131,7 +1178,9 @@ public class EzEmailMailReadController extends EzFileMngUtil {
 		// fixed param
 		String pnFlag = "N";
 		String contentClass = "IPM.Note";
-
+		
+		String type = request.getParameter("type");
+		model.addAttribute("type", type);
 		model.addAttribute("shareId", shareId);
 		model.addAttribute("pnFlag", pnFlag);
 
@@ -1726,6 +1775,7 @@ public class EzEmailMailReadController extends EzFileMngUtil {
 		model.addAttribute("fromStr", fromStr);
 		model.addAttribute("fromEmail", fromEmail);
 		model.addAttribute("url", url);
+		model.addAttribute("encryptedUrl", encryptedUrl);
 		model.addAttribute("toStr", toStr);
 		model.addAttribute("toHiddenStr", toHiddenStr);
 		model.addAttribute("ccStr", ccStr);
@@ -1778,7 +1828,9 @@ public class EzEmailMailReadController extends EzFileMngUtil {
 		if ("YES".equalsIgnoreCase(useWebfolder)) {
 			extraMap.put("useWebfolder", true);
 		}
-
+		// ical status 상태를 가져오기 위한 사용자 이메일 주소 추가
+		extraMap.put("userEmail", userEmail);
+		
 		if (useSharedMailbox.equals("YES") && !Globals.APPR_MAIL_SHARED_ID.equalsIgnoreCase(shareId)) {
 			//String shareId = request.getParameter("shareId");
 			logger.debug("shareId=" + shareId);
@@ -1862,6 +1914,9 @@ public class EzEmailMailReadController extends EzFileMngUtil {
 									logger.debug("Message's seen flag changed to true.");
 								}
 							}
+							// ical 응답 조회
+							String icalStatus = ezEmailUtil.getIcalStatusFlag(message);
+							extraMap.put("icalStatus", icalStatus);
 
 							bodyInfoList = ezEmailUtil.getBodyInfo(message, folderPath, uid, -1, null, locale, extraMap);
 							double size = Double.parseDouble(bodyInfoList.get(2));
@@ -2019,7 +2074,8 @@ public class EzEmailMailReadController extends EzFileMngUtil {
 		model.addAttribute("previewMailImage", previewMailImage);
 		model.addAttribute("pReadFlag", pReadFlag);		
 		model.addAttribute("sentDateMsg", sentDateMsg); // 전달, 회신 시 보낸 시간		
-		
+		model.addAttribute("fromAddr", request.getParameter("fromAddr"));
+
 		logger.debug("readMailContent ended.");
 		
 		return "ezEmail/mailReadContent";
@@ -2719,7 +2775,7 @@ public class EzEmailMailReadController extends EzFileMngUtil {
 			EzFAL.EzFile[] files = directory.listFiles((FileFilter) new PrefixFileFilter(fileId));
 			
 			// 대용량 첨부파일의 기간이 만료되었을 경우
-			if (files == null) {
+			if (files == null || files.length == 0) {
 				response.setContentType("text/plain; charset=utf-8");
 				response.getWriter().print(egovMessageSource.getMessage("main.t4", locale));
 				
@@ -3287,6 +3343,13 @@ public class EzEmailMailReadController extends EzFileMngUtil {
 						// Undisclosed recipients:; <Undisclosed recipients:;>|||| 와 같은 경우가 있어
 						// :; 를 제거하도록 함.
 						toStr = recipientsArr[0].replace(":;", "").replace("; ", ";");
+
+						// @가 포함되어 있지 않고 =?UTF-8?B? 와 같이 인코딩된 형태이면 디코딩을 시도한다.
+						if (!toStr.contains("@") && toStr.startsWith("=?")) {
+							logger.debug("decoding toStr={}", toStr);
+
+							toStr = MimeUtility.decodeText(toStr);
+						}
 					}
 					
 					if (recipientsArr.length > 1 && !recipientsArr[1].isEmpty()) {
@@ -3770,6 +3833,9 @@ public class EzEmailMailReadController extends EzFileMngUtil {
 			extraMap.put("useWebfolder", true);
 		}
 
+		// ical status 상태를 가져오기 위한 사용자 이메일 주소 추가
+		extraMap.put("userEmail", userEmail);
+
 		if (useSharedMailbox.equals("YES")) {
 			String shareId = request.getParameter("shareId");
 			logger.debug("shareId=" + shareId);
@@ -3859,6 +3925,9 @@ public class EzEmailMailReadController extends EzFileMngUtil {
 									logger.debug("Message's seen flag changed to true.");
 								}
 							}
+							// ical 응답 조회
+							String icalStatus = ezEmailUtil.getIcalStatusFlag(message);
+							extraMap.put("icalStatus", icalStatus);
 
 							bodyInfoList = ezEmailUtil.getBodyInfo(message, folderPath, uid, -1, null, locale, extraMap);
 							double size = Double.parseDouble(bodyInfoList.get(2));

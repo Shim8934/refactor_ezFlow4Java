@@ -33,7 +33,7 @@
 					success : function(result) {
 						var list = result.circularDeptList;
 						
-						if (lang == "2") {
+						if ( lang == "2" || lang == "6") {
 							circularDeptList = "<colgroup><col width='7%' /><col width='40%' /><col width='18%' /><col width='18%' /><col width='17%' /></colgroup>";
 						} else {
 							circularDeptList = "<colgroup><col width='7%' /><col width='47%' /><col width='18%' /><col width='15%' /><col width='13%' /></colgroup>";
@@ -54,8 +54,8 @@
 							}
 							
 							circularDeptList += "<tr id=" + vo.circularBMID + " style='cursor:pointer' onclick='event_click(this);' ondblclick='modify_circularDept(this);'>";
-							circularDeptList += "<td style='padding-left:5px;'><input class='myCheckbox' name='myCheckbox' value=" + vo.circularBMID + " type='checkbox' onclick='selectRow(this)'></td>";
-							if (lang == "2") {
+							circularDeptList += "<td style='padding-left:5px;'><div class='custom_checkbox'><input class='myCheckbox' name='myCheckbox' value=" + vo.circularBMID + " type='checkbox' onclick='selectRow(this)'></div></td>";
+							if (lang == "2" || lang == "6") {
 								circularDeptList += "<td class='title' style='color:gray; width:40%;' title='" + title + "'>" + title + "</td>";
 							} else {
 								circularDeptList += "<td class='title' style='color:gray; width:47%;' title='" + title + "'>" + title + "</td>";
@@ -102,7 +102,7 @@
 				} else {
 					if (_RowObject != null) {
 						$("input[name=myCheckbox]").prop("checked", false);
-						$("input[name=myCheckbox]").parent().parent().css("backgroundColor", "#FFFFFF");
+						$("input[name=myCheckbox]").parent().parent().parent().css("backgroundColor", "#FFFFFF");
 					}
 
 					_RowObject = obj;
@@ -201,10 +201,10 @@
 				var num = $(obj).attr("value");
 				if ($(obj).prop("checked") != true) {
 					$(obj).prop("checked", false);
-					$(obj).parent().parent("tr[id = '" + num + "']").css("backgroundColor", "#FFFFFF");
+					$(obj).parent().parent().parent("tr[id = '" + num + "']").css("backgroundColor", "#FFFFFF");
 				} else {
 					$(obj).prop("checked", true);
-					$(obj).parent().parent("tr[id = '" + num + "']").css("backgroundColor", "#f1f8ff");
+					$(obj).parent().parent().parent("tr[id = '" + num + "']").css("backgroundColor", "#f1f8ff");
 				}
 
 				event.stopPropagation();
@@ -226,15 +226,15 @@
 		            <td>
 		                <div style="border: 1px solid #dbdbda; border-top:0px; width: 750px; height: 385px; display: inline-table;">
 		                    <table class="mainlist" style="width: 100%;">
-		                    <c:if test="${userInfo.lang ne 2}">
+		                    <c:if test="${userInfo.lang ne 2 and userInfo.lang ne 6}">
 		                    	<colgroup><col width='7%' /><col width='47%' /><col width='18%' /><col width='15%' /><col width='13%' /></colgroup>
 		                    </c:if>
-		                    <c:if test="${userInfo.lang eq 2}">
+		                    <c:if test="${userInfo.lang eq 2 or userInfo.lang eq 6}">
 		                    	<colgroup><col width='7%' /><col width='40%' /><col width='18%' /><col width='18%' /><col width='17%' /></colgroup>
 		                    </c:if>
 		                    	<!-- 18-05-24 김민성 - 회람판 > 즐겨찾기 단어 수정 -->
 		                        <tr>
-									<th><input id="checkboxAll" type="checkbox" onclick="selectAll()"></th>
+									<th><div class="custom_checkbox"><input id="checkboxAll" type="checkbox" onclick="selectAll()"></div></th>
 		                            <th><spring:message code='ezCircular.t32' /></th>
 		                            <th><spring:message code='ezBoard.t5007' /></th>
 		                            <th><spring:message code='ezCircular.t34' /></th>

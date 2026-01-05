@@ -668,10 +668,10 @@
 				<tr>
 					<c:choose>
 						<c:when test="${chkSysop == '1' || fn:contains(adminAuth, 'A')}">
-							<th style="width:40px"><input type="checkbox" id="HeaderAllCheckBox" class="selectMember" onclick="allCheck(this)"></th>
+							<th style="width:40px; text-align: center;"><input type="checkbox" id="HeaderAllCheckBox" class="selectMember" onclick="allCheck(this)"></th>
 						</c:when>
 						<c:otherwise>
-							<th style="width:40px"><spring:message code = 'ezCommunity.t32' /></th>
+							<th style="width:40px; text-align: center;"><spring:message code = 'ezCommunity.t32' /></th>
 						</c:otherwise>
 					</c:choose>
 					<th style="width:110px;cursor:pointer;" onclick="SortPage(this)"><spring:message code = 'ezCommunity.t10' /></th>
@@ -681,8 +681,8 @@
 					<th style="width:60px"><spring:message code = 'ezCommunity.lyj66' /></th>
 					<th style="width:60px"><spring:message code = 'ezCommunity.lyj67' /></th>
 					<th style="width:60px"><spring:message code = 'ezCommunity.t727' /></th>
-					<th style="width:75px;cursor:pointer;" onclick="SortPage(this)"><spring:message code = 'ezCommunity.t725' /></th>
-					<th style="width:75px;cursor:pointer;" onclick="SortPage(this)"><spring:message code = 'ezCommunity.t726' /></th>
+					<th style="width:85px;cursor:pointer;" onclick="SortPage(this)"><spring:message code = 'ezCommunity.t725' /></th>
+					<th style="width:85px;cursor:pointer;" onclick="SortPage(this)"><spring:message code = 'ezCommunity.t726' /></th>
 				</tr>
 			</thead>
 			<tbody id="tblListBody">

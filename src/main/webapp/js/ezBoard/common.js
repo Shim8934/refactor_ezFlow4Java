@@ -687,7 +687,7 @@ function replyOnclick(reply, replyID, userName){
 		commentList += "<div>"
 		commentList += "<p style='width : 14%; float: left; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden;'><span>" + userInfoName + "</span></p>";
 		commentList += "<img id='_addEmoticonRereply' class='_addEmoticon' src='/images/poll/add_emo_vote.png' onclick='addSticker(this)'>";
-		commentList += "<textarea id='reReply' rows='3' style='resize:none; width:calc(86% - 120px); float: left; overflow: hidden;' maxlength='500' oninput='editAutoGrow(this)'></textarea>";
+		commentList += "<textarea id='reReply' class='reReplyText' rows='3' style='resize:none; float: left; overflow: hidden;' maxlength='500' oninput='editAutoGrow(this)'></textarea>";
 		commentList += "<span style='vertical-align: middle;position:absolute; right: 14px; margin-top: 7px;'>"
 		if (attachmentFlag == "Y") {
 		    commentList += "<a class='imgbtn'><span onclick='btnfileup(\"commentListFile\");'>" + strLangAttachJIH01 + "</span></a><br/>"

@@ -315,6 +315,7 @@ var strLangLS03 = "検索されたメールは1つのZIPファイルに圧縮さ
 var strLangLS04 = "日以後自動削除されます。";
 var strLangLS05 = "';'は含めることができません。"
 var strLangAllmailSaveAlert = "선택된 메일이 없습니다. \n메일을 선택하거나 메일 검색 후 저장해 주세요."
+var strLangEachIcon = "개인별";
 
 /* 2018-07-03 홍승비 - 승인게시물, 커뮤니티 답변메일 companyID 관련 처리*/
 var strLangHSB01 = "この掲示は";
@@ -342,6 +343,9 @@ var strLangKSA04 = "日程を保存しました。";
 var strLangKSA05 = "エラーが発生しました。";
 
 var strLangTagAlreadyUse = "この名前は別のタグですでに使用されています。";
+
+var strLangIcal01 = "応答メールを送信しました。"
+var strLangIcal02 = "応答メールの送信に失敗しました。"
 
 /* 2023-05-16 김우철 - 한글 배포용 문서 저장을 위한 메세지 추가 */
 var strLangKWCHd01 = "HWP配布用文書の保存時にエラーが発生しました。もう一度お試しください。";
@@ -406,6 +410,13 @@ const strLangChangeLimit = "Cannot switch because the attachment size exceeds th
 
 const strLangKeepMoveCantUseSentBox = '보낸편지함으로는 계속이동 할 수 없습니다.';
 const strLangKeepMoveNoFromHeader = '보낸이가 비어있는 메일은 계속이동 할 수 없습니다.';
+
+const strLangRcptEditError = "입력된 값이 메일 주소 형식이 아닙니다.\n예) 홍길동 <hongkildong@kaoni.com> 와 같은 형식으로 입력해주세요.";
+
+const strPreviousTime = '時間の指定が正しくありません。 確認してください。';
+
+const strUnLimit = "無制限";
+const strDownloadsCount = "회";
 
 function GetLocalTime(Offset , pDateTime)
 {

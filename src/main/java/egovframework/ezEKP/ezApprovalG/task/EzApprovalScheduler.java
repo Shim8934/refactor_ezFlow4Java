@@ -109,12 +109,12 @@ public class EzApprovalScheduler extends EzFileMngUtil {
 	
             // 아직 스케쥴러 동작중 && 10회미만 (스케쥴러 동작중 서버꺼짐등 실동작 아닌경우 계속 동작 안할 경우 대비) ? return : DB 등록/업데이트
             ezCommonDAO.susinScheduleUpdate("1");
-            String susinSceduleCnt = ezCommonService.getTenantConfig("susinSceduleCnt", 0);
-            if(!"1".equals(susinSceduleCnt)){
+            String susinScheduleCnt = ezCommonService.getTenantConfig("susinScheduleCnt", 0);
+            if(!"1".equals(susinScheduleCnt)){
                 logger.debug("susinScheduler is running.");
                 return;
             }
-            try{
+            try {
 			int tryCnt = 0;
 			List<HashMap<String, Object>> susinScheduleList = null;
 			susinScheduleList = ezApprovalGService.susinScheduleList();

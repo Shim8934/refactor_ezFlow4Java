@@ -43,7 +43,11 @@
 			</colgroup>
 			<tbody>
 				<tr>
-					<th><input type="checkbox" id="Checkbox1" onchange="checkChange(this);"></th>
+					<th>
+					    <div class="custom_checkbox">
+					        <input type="checkbox" id="Checkbox1" onchange="checkChange(this);">
+					    </div>        
+                    </th>
 					<th><spring:message code='email.appr.th.subject' /></th> <% // 제목 %>
 					<th><spring:message code='email.appr.th.applicant.name' /></th> <% // 작성자명 %>
 					<th><spring:message code='email.appr.th.applicant.email' /></th> <% // 작성자주소 %>
@@ -72,7 +76,8 @@
 						<tr id="apprmail_${count}" data-href="<c:out value='${appr.href}'/>" data-content-class="IPM.Note" data-sender="<c:out value='${appr.senderId}'/>" data-approver="<c:out value='${appr.approverId}'/>" title="<c:out value='${appr.subject}'/>">
 							<td>
                                 <div class="input_wrap">
-                                    <span class="listview-check checks">
+                                    <%--<span class="listview-check checks">--%>
+                                    <span class="custom_checkbox">
                                         <input type="checkbox" id="check_${count}" onchange="checkChangeEach(this);">
                                        	<label for="check_${count}"></label>
                                     </span>
@@ -117,7 +122,7 @@
     }
 
 	function openEmail(object) {
-		callMsgDlgAppr(object.dataset.href);
+		callMsgDlgAppr(object.dataset.href, "appr");
 	}
 
 	const mailListElement = document.getElementById("apprmail");
@@ -261,7 +266,7 @@
 		}
 		
 		appr_reject_arg.complete = setRejectAction;
-	    GetOpenWindow("/ezEmail/appr/setReject.do", "setReject", 500, 275, "no");
+	    GetOpenWindow("/ezEmail/appr/setReject.do", "setReject", 500, 285, "no");
 	}
 
 	function setRejectAction(memo) {

@@ -521,7 +521,10 @@
 	       		</td>
 	     	</tr>
 	     	<tr>
-	     		<td style="width:60px;text-align:right;"><img <spring:message code='ezSchedule.i1' /> /></td>
+	     		<td style="width:60px;text-align:right;">
+					<div style="width:15px;overflow:hidden;display:inline-block;"><img <spring:message code='ezSchedule.i1' /> /></div>
+					<span style="vertical-align: top;"><spring:message code='ezSchedule.i2' /></span>
+				</td>
 	     	</tr>
 		</table>	
 	</body>

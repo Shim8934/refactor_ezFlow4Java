@@ -82,7 +82,7 @@
 		  	</table>
 		  	<table class="popuplist" style="table-layout:fixed;width:100%;">
 		  		<colgroup>
-		  			<col width="6%" /><col width="9%" /><col width="9%" /><col width="22%" /><col width="18%" /><col width="18%" /><col width="18%" />
+		  			<col width="8%" /><col width="9%" /><col width="9%" /><col width="22%" /><col width="18%" /><col width="18%" /><col width="18%" />
 		  		</colgroup>
 		    	<tr>
 		      		<th <c:if test='${lang eq 2 }'>style='padding-left:5px;'</c:if>><spring:message code='ezSchedule.t269' /></th>

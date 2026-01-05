@@ -596,7 +596,7 @@ public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl impleme
 			
 			strHTML.append("</td>");
 			strHTML.append("<td class=\"t2\" style=\"overflow: hidden; cursor: pointer; text-overflow: ellipsis;\" >");
-			strHTML.append("<nobr>");
+			strHTML.append("<div style='display:flex;align-items:center'><span style='overflow: hidden;cursor: pointer;text-overflow: ellipsis;white-space: nowrap;'>");
 			
 			if (!bName.equals("tbl_c_clubnotice") && !bName.equals("tbl_c_notice")) {
 				if (cBoard.getRe_Level() > 0) {
@@ -610,13 +610,15 @@ public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl impleme
 			
 			String nowDate = commonUtil.getTodayUTCTime("");
 			nowDate = EgovDateUtil.addDay(nowDate, -1, "yyyy-MM-dd HH:mm:ss");
+			
+			strHTML.append(commonUtil.cleanValue(cBoard.getTitle().trim())+"</span>");
 
 			if (cBoard.getWriteDay().compareTo(nowDate) >= 0) {
-				strHTML.append("<img src=\"/images/i_new.gif\" alt border=\"0\" style=\"vertical-align:middle;\">&nbsp;");
+				strHTML.append("<span class='board_new'></span>");
 			}
-			
-			strHTML.append(commonUtil.cleanValue(cBoard.getTitle().trim())+"</nobr></td>");
-			
+
+			strHTML.append("</div></td>");
+
 			if (userInfo.getPrimary().equals("1")) {
 				strHTML.append("<td class=\"t1\" width=\"70px\" >" + cBoard.getUserName().trim() + "</td>");
 			} else {

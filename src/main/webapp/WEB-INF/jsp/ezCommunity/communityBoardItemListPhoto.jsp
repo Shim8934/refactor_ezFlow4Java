@@ -97,19 +97,21 @@
                             var title = MakeXMLString(SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[idx], "Title").trim());
                             var oneLineCnt = SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[idx], "ONELINECNT");
                             var writeDate = SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[idx], "WriteDate");
-                            
-                            /* 2018-05-18 홍승비 - 커뮤니티 포토게시판 리스트에서 new 표시 */
-                            if (pastDate <= writeDate) {
-                            	listXML += "<img src='/images/new_icon.gif'>&nbsp;";
-		 					}
-                            listXML += title;
-                            
+
+                            listXML += "<div style='display:flex;align-items:center;'>";
+							listXML += "<span style='white-space:nowrap; overflow:hidden; text-overflow:ellipsis;'>" + title + "</span>"
+
                             /* 2018-05-07 홍승비 - 댓글 표시하기 */ 
                             if (oneLineCnt > 0) {
                             	listXML+="<SPAN style='color:#c64200'> [" + oneLineCnt + "]</SPAN>";
                             }
-                            
-                            listXML += "</td>";
+
+							/* 2018-05-18 홍승비 - 커뮤니티 포토게시판 리스트에서 new 표시 */
+							if (pastDate <= writeDate) {
+								listXML += "<span class='board_new'></span>";
+							}
+
+                            listXML += "</div></td>";
                             listXML += "<tr><td style='padding-left:5px'><span class='photo_name' style='overflow: hidden; white-space: nowrap; text-overflow: ellipsis; max-width:146px; display: inline-block;'>" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[idx], "WriterName").trim() + " / " + writeDate.split(' ')[0] + "</span>";
                             listXML += "</td></tr></table>";
     					}

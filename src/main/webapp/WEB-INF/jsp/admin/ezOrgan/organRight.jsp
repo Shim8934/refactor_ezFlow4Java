@@ -2503,8 +2503,10 @@
 				<dl class="organList">
 					<dt class="organListDT">
 						<span id="organSelectDeptNM"></span>
-						<input type="radio" name="listOpt" id="listOpt1" value="muser" onClick="Change_List()" checked /><label for="listOpt1" style="cursor:pointer;"><spring:message code='ezOrgan.t74' /></label>
-						<input type="radio" name="listOpt" id="listOpt2" value="mgroup" onClick="Change_List()" /><label for="listOpt2" style="cursor:pointer;"><spring:message code='ezOrgan.t75' /></label>
+                        <div class="custom_radio">
+                            <input type="radio" name="listOpt" id="listOpt1" value="muser" onClick="Change_List()" checked style="vertical-align:top; margin:7px 0px 0px 8px;" /><label for="listOpt1" style="cursor:pointer;"><spring:message code='ezOrgan.t74' /></label>
+                            <input type="radio" name="listOpt" id="listOpt2" value="mgroup" onClick="Change_List()" style="vertical-align:top; margin:7px 0px 0px -3px !important;" /><label for="listOpt2" style="cursor:pointer;"><spring:message code='ezOrgan.t75' /></label>
+						</div>
 					</dt>
 				</dl>
 			</ul>
@@ -2548,8 +2550,10 @@
 				<li id="btnSave"><span onClick="excelExport()"><spring:message code='ezStatistics.t1003' /></span></li>
 				<dl class="organList">
 					<dt class="organListDT">
-						<input type="radio" name="listOpt" id="listOpt1" value="muser" onClick="Change_List()" checked /><label for="listOpt1" style="cursor:pointer;"><spring:message code='ezOrgan.t74' /></label>
-						<input type="radio" name="listOpt" id="listOpt2" value="mgroup" onClick="Change_List()" /><label for="listOpt2" style="cursor:pointer;"><spring:message code='ezOrgan.t75' /></label>
+					    <div class="custom_radio">
+                            <input type="radio" name="listOpt" id="listOpt1" value="muser" onClick="Change_List()" checked /><label for="listOpt1" style="cursor:pointer;"><spring:message code='ezOrgan.t74' /></label>
+                            <input type="radio" name="listOpt" id="listOpt2" value="mgroup" onClick="Change_List()" /><label for="listOpt2" style="cursor:pointer;"><spring:message code='ezOrgan.t75' /></label>
+						</div>
 					</dt>
 				</dl>
 			</ul>

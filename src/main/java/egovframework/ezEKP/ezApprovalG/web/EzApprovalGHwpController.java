@@ -766,7 +766,7 @@ public class EzApprovalGHwpController extends EzFileMngUtil{
 		}
  
 		if (orgDocID != null  && !orgDocID.equals("")) {
-			endDir = String.valueOf(Integer.parseInt(orgDocID) % 1000);
+			endDir = ezApprovalGService.getDocDir(orgDocID);
 		}
 
 		String accessInfo = ezCommonService.getTenantConfig("UserInfo_ApprovalG_VIEW", userInfo.getTenantId());
@@ -1414,6 +1414,11 @@ public class EzApprovalGHwpController extends EzFileMngUtil{
 		model.addAttribute("upperDeptCode", upperDeptCode);
 		model.addAttribute("upperDeptName", upperDeptName);
 
+		// 일괄기안 B타입
+		model.addAttribute("draftAllTypeB", ezCommonService.getTenantConfig("draftAllTypeB", userInfo.getTenantId()));
+		List<ApprGGroupDocInfoVO> group = ezApprovalGService.getGroupDocList(listType.equals("21") ? docSN : isTmpDoc, listType.equals("21") ? "TMP" : "APR", userInfo.getTenantId(), userInfo.getCompanyID());
+		model.addAttribute("group", group);
+		
 		logger.debug("draftuiWHWP ended. formPath:" + formPath);
 		
 		return "ezApprovalG/apprGdraftuiWHWP";
@@ -1655,6 +1660,11 @@ public class EzApprovalGHwpController extends EzFileMngUtil{
 		// 2025-02-18 박기범 - 프론트에서 문서 편집시, 문서를 오픈한 이후로 다른 문서/결재진행 변화가 있었는지 체크하기 위한 코드
 		model.addAttribute("snapshotCode", ezApprovalGService.getDocumentSnapshotCode(userInfo.getTenantId(), userInfo.getCompanyID(), docID));
 
+		// 일괄 Type B
+		List<ApprGGroupDocInfoVO> group = ezApprovalGService.getGroupDocList(docID, "APR", userInfo.getTenantId(), userInfo.getCompanyID());
+		model.addAttribute("group", group);
+		model.addAttribute("draftAllTypeB", ezCommonService.getTenantConfig("draftAllTypeB", userInfo.getTenantId()));
+
 		logger.debug("approvuiWHWP ended");
 		
 		return "/ezApprovalG/apprGapprovuiWHWP";
@@ -1701,7 +1711,7 @@ public class EzApprovalGHwpController extends EzFileMngUtil{
 		}
  
 		if (orgDocID != null  && !orgDocID.equals("")) {
-			endDir = String.valueOf(Integer.parseInt(orgDocID) % 1000);
+			endDir = ezApprovalGService.getDocDir(orgDocID);
 		}
 
 		String accessInfo = ezCommonService.getTenantConfig("UserInfo_ApprovalG_VIEW", userInfo.getTenantId());
@@ -2039,6 +2049,10 @@ public class EzApprovalGHwpController extends EzFileMngUtil{
         model.addAttribute("formUrl", formUrl);
         model.addAttribute("formDocType", formDocType);
 		model.addAttribute("useFormContOnReuseForWHWP", ezCommonService.getTenantConfig("useFormContOnReuseForWHWP", userInfo.getTenantId()));
+		model.addAttribute("draftAllTypeB", ezCommonService.getTenantConfig("draftAllTypeB", userInfo.getTenantId()));
+		// 일괄 Type B
+		List<ApprGGroupDocInfoVO> group = ezApprovalGService.getGroupDocList(docID, "APR", userInfo.getTenantId(), userInfo.getCompanyID());
+		model.addAttribute("group", group);
 		
 		logger.debug("ezviewAprWHWP ended");
 		

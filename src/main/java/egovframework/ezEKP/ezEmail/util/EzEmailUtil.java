@@ -27,6 +27,9 @@ import java.security.interfaces.RSAPublicKey;
 import java.security.spec.RSAPublicKeySpec;
 import java.text.SimpleDateFormat;
 import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
 import java.time.format.TextStyle;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -92,6 +95,11 @@ import javax.xml.bind.DatatypeConverter;
 
 import com.google.gson.JsonElement;
 import egovframework.let.utl.fcc.service.KlibUtil;
+import net.fortuna.ical4j.model.DateTime;
+import net.fortuna.ical4j.model.property.DtEnd;
+import net.fortuna.ical4j.model.property.DtStart;
+import net.fortuna.ical4j.model.property.Summary;
+import net.fortuna.ical4j.model.property.Uid;
 import net.fortuna.ical4j.util.CompatibilityHints;
 import net.lingala.zip4j.ZipFile;
 import net.lingala.zip4j.exception.ZipException;
@@ -1131,6 +1139,8 @@ public class EzEmailUtil {
 		String isAttach = "";
 		String previewImageListHtml = "";
 		String isIcalMail = "";
+		String userEmail = "";
+		String icalStatus = "";
 		
 		logger.debug("contentType=" + part.getContentType());
 		logger.debug("disposition=" + part.getDisposition());
@@ -1169,6 +1179,8 @@ public class EzEmailUtil {
 			if (extraMap.get("useImageConvertServer") != null) useImageConvertServer = (String)extraMap.get("useImageConvertServer");
 			if (extraMap.get("useWebfolder") != null) useWebfolder = (boolean)extraMap.get("useWebfolder");
             if (extraMap.get("forPreviewMail") != null) forPreviewMail = (boolean)extraMap.get("forPreviewMail");
+			if (extraMap.get("userEmail") != null) userEmail = (String)extraMap.get("userEmail");
+			if (extraMap.get("icalStatus") != null) icalStatus = (String)extraMap.get("icalStatus");
 		}
 		
 		// 첨부 파일이면서 Content-ID가 있는 경우 실제 HTML 본문에서 참조되고 있는 파트인지 확인하기 위해 추가함(Gmail에서 보낸 메일).
@@ -1273,6 +1285,15 @@ public class EzEmailUtil {
             
             String strSize = getSizeWithUnit(size);
 		    
+            // part.getFileName 메소드가 반환하는 파일명은 인코딩된 형태인 경우도 있고
+            // 디코딩이 수행된 형태인 경우도 있다.
+            // 인코딩된 상태로 반환되는 경우 예: =?UTF-8?B?Mu2VmeuFhC56aXA=?=
+		    // 디코딩된 상태로 변환되는 경우 예: 료비_20160824 (002)_검토_dhlee.xlsx
+		    // 디코딩된 경우 디코딩 이전 인코딩 예: filename*=euc-kr''%B7%E1%BA%F1%5F20160824%20%28002%29%5F%B0%CB%C5%E4%5Fdhlee.xlsx
+			String filename = Objects.isNull(part.getFileName()) ? "" : part.getFileName();
+
+			logger.debug("filename=" + filename + ",index=" + bodyPartIndex + ",order=" + order + ",depth=" + depth);
+
             String NonAsciiFilename = null;
             String originalFilename = null;
 		    String[] headers = part.getHeader("Content-Disposition");
@@ -1280,30 +1301,31 @@ public class EzEmailUtil {
 		    if (headers != null && headers.length > 0) {
 		        String contentDisposition = headers[0];
 		        
-		        logger.debug("contentDisposition=" + contentDisposition);
+		        logger.debug("Content-Disposition=" + contentDisposition);
+				ContentDisposition cd = new ContentDisposition(contentDisposition);
+				String cdFilename = cd.getParameter("filename");
+
+				/**
+				 * 첨부파일 이름이 Content-Disposition이 아닌, Content-Type에 붙은 경우가 있음.
+				 * Disposition에서 발견되지 않으면 위에서 구한 filename을 가지도록 수정함.
+				 *
+				 * (보통) Content-Disposition: attachment;	filename="=?UTF-8?B?7ZWc6riALnR4dA==?="
+				 * (예외) Content-Type: text/plain; 		name="=?UTF-8?B?7ZWc6riALnR4dA==?="
+				 */
+				logger.debug("Content-Disposition filename=" + cdFilename);
+				cdFilename = StringUtils.defaultIfBlank(cdFilename, filename);
 		        
 		        // 표준에 의하면 filename은 US-ASCII 로만 어루어져야 하지만 그렇지 않은 비표준 메일들이 있다.
 		        // 예) contentDisposition=attachment;   filename="2016³â 2Â÷ ÀÚ»ì¿¹¹æ±³À° ÁöµµÀÚ ¾ç¼º ¾È³».hwp"
-		        if (!isPureAscii(contentDisposition)) {
-    		        ContentDisposition cd = new ContentDisposition(contentDisposition);
-    		        NonAsciiFilename = cd.getParameter("filename");
+		        if (!isPureAscii(cdFilename)) {
+    		        NonAsciiFilename = cdFilename;
 		        } else {
-                    ContentDisposition cd = new ContentDisposition(contentDisposition);
-                    originalFilename = cd.getParameter("filename");		            
+                    originalFilename = cdFilename;
 		        }
 		    }
 		    
 		    logger.debug("NonAsciiFilename=" + NonAsciiFilename);
 		    logger.debug("originalFilename=" + originalFilename);
-		    
-            // part.getFileName 메소드가 반환하는 파일명은 인코딩된 형태인 경우도 있고
-            // 디코딩이 수행된 형태인 경우도 있다.
-            // 인코딩된 상태로 반환되는 경우 예: =?UTF-8?B?Mu2VmeuFhC56aXA=?=
-		    // 디코딩된 상태로 변환되는 경우 예: 료비_20160824 (002)_검토_dhlee.xlsx
-		    // 디코딩된 경우 디코딩 이전 인코딩 예: filename*=euc-kr''%B7%E1%BA%F1%5F20160824%20%28002%29%5F%B0%CB%C5%E4%5Fdhlee.xlsx
-			String filename = Objects.isNull(part.getFileName()) ? "" : part.getFileName();
-			
-			logger.debug("filename=" + filename + ",index=" + bodyPartIndex + ",order=" + order + ",depth=" + depth);
 			
 			if (filename != null) {
 				// long filename이 줄바꿈없이 인코딩 경우가 있어 추가함.
@@ -1555,12 +1577,8 @@ public class EzEmailUtil {
 						break appendPreviewImage;
 					}
 				}
-				
-				if (useImageConvertServer != null && !useImageConvertServer.equalsIgnoreCase("0")) {
-					previewImageListHtml += " <div><p class=imageArea><a onclick=\"AttachFile_Preview('" + folderPath_URLEnc + "','" + uid + "','" + bodyPartIndex + "','" + filename_spclStr.replace("'", "\\'") + "');\">";
-				} else {
-					previewImageListHtml += " <div><p class=imageArea><a target=_blank href='" + aitem + "&readStatus=Y"+ "'>";
-				}
+//				GetOpenWindow(pURI, "", 890, 840, "yes");
+				previewImageListHtml += " <div><p class='imageArea'><a onclick=\"GetOpenWindow('" + aitem + "&readStatus=Y', '', 890, 840, 'yes');\">";
 				previewImageListHtml += " <img src='" + aitem + "' _filesize='" + size + "' _filename='" + EgovStringUtil.getSpclStrCnvr2(filename) + "' style='cursor:pointer;'></a></p>";
 				previewImageListHtml += " <p onclick=\"DownloadAttach('" + aitem + "');\"><span title='" + filename_spclStr + " (" + strSize + ")" + "' class='attachImageeName' onmouseover=this.style.color='#164aad' onmouseout=this.style.color='black' style='cursor:pointer' >" + filename_spclStr + " (" + strSize + ")</p></div>";
 			}
@@ -2156,7 +2174,7 @@ public class EzEmailUtil {
 			}
 		} else if (part.isMimeType("text/calendar")) {
 			isIcalMail = "Y";
-			String icalHtml = getIcalMailPartHTML(part, locale);
+			String icalHtml = getIcalMailPartHTML(part, locale, userEmail, icalStatus);
  			htmlBody += icalHtml;
 		}
 		
@@ -4219,6 +4237,19 @@ public class EzEmailUtil {
 		return isSecureMail;
 	}
 	
+	public boolean isEachMail(Message message) throws MessagingException {
+		boolean isEach = false;
+
+		if (message.getHeader("X-JMocha-Each-Mail") != null) {
+            String value = message.getHeader("X-JMocha-Each-Mail")[0];
+			if ("true".equalsIgnoreCase(value)) {
+				isEach = true;
+			}
+		}
+
+		return isEach;
+	}
+
 	public void setSecureMailFlag(Message message, boolean isSet) throws MessagingException {
 		Flags secureMailFlag = new Flags("$SecureMail");
 		
@@ -4305,6 +4336,84 @@ public class EzEmailUtil {
 		} catch (Exception e) {
 			throw e;
 		}
+	}
+
+	public void setIcalResponseDtFlag(Message message, boolean isSet) throws MessagingException {
+		logger.debug("setResponseDtFlag");
+
+		String[] flags = message.getFlags().getUserFlags();
+
+		for (String flag : flags) {
+			if (flag.indexOf("$IcalRespDt-") != -1) {
+				Flags test = new Flags(flag);
+
+				message.setFlags(test, false);
+			}
+		}
+
+		String nowMillisTime = Long.toString(System.currentTimeMillis());
+		Flags respDtFlag = new Flags("$IcalRespDt-" + nowMillisTime);
+
+		logger.debug("nowMillisTime : " + nowMillisTime);
+
+		message.setFlags(respDtFlag, isSet);
+	}
+
+	public void setIcalStatusFlag(Message message, boolean isSet, String status) throws MessagingException {
+		logger.debug("setIcalStatusFlag");
+
+		String[] flags = message.getFlags().getUserFlags();
+
+		for (String flag : flags) {
+			if (flag.indexOf("$IcalStatus-") != -1) {
+				Flags test = new Flags(flag);
+
+				message.setFlags(test, false);
+			}
+		}
+
+		Flags statusFlag = new Flags("$IcalStatus-" + status);
+
+		message.setFlags(statusFlag, isSet);
+	}
+
+	public String getIcalStatusFlag(Message message) throws MessagingException {
+		logger.debug("getSentDateFlag");
+
+		String[] flags = message.getFlags().getUserFlags();
+		String status = "";
+
+		for (String flag : flags) {
+			if (flag.indexOf("$IcalStatus-") != -1) {
+				status = flag.substring("$IcalStatus-".length());
+				break;
+			}
+		}
+
+		return status;
+	}
+
+	public void setIcalEventUidFlag(Message message, boolean isSet, String uid) throws MessagingException {
+		Flags eventUidFlag = new Flags("$IcalUID-" + uid);
+
+		message.setFlags(eventUidFlag, isSet);
+	}
+
+	public boolean hasIcalEventUidFlag(Message message) throws MessagingException {
+		logger.debug("hasIcalEventUidFlag");
+
+		boolean isEventUid = false;
+		String[] flags = message.getFlags().getUserFlags();
+
+		for (String flag : flags) {
+			if (flag.indexOf("$IcalUID-") != -1) {
+				isEventUid = true;
+				break;
+			}
+		}
+
+		logger.debug(Boolean.toString(isEventUid));
+		return isEventUid;
 	}
 
 	public List<String> getInnerDomain(int tenantId) throws Exception {
@@ -6537,7 +6646,7 @@ public class EzEmailUtil {
     /**
      * 아이캘린더 - 메일 Ical 지원
      */
-    public String getIcalMailPartHTML(Part part, Locale locale) {
+	public String getIcalMailPartHTML(Part part, Locale locale, String userEmail, String selectedStatus) throws Exception {
     	IcalVO vo = getIcalProperty(part);
     	vo.setLocale(locale);
     	
@@ -6555,7 +6664,38 @@ public class EzEmailUtil {
     	descBody = (descBody == null || descBody.equals("")) ? vo.getDescriptionStr() : descBody;
     	       
 		PropertyList<Attendee> attendeeList = vo.getAttendee();
-    	
+
+		// 일정 초대 요청 메일인지 일정 초대 응답 회신 메일인지 확인   
+		boolean replyYn = vo.getMethod().equalsIgnoreCase("REPLY");
+		boolean requestYn = vo.getMethod().equalsIgnoreCase("REQUEST");
+
+		String responser = "";
+		String respStatus = "";
+		if (replyYn) {
+			Attendee attendee = attendeeList.get(0);
+			responser = attendee.getCalAddress().getSchemeSpecificPart();
+			Parameter cnParam = attendee.getParameter(Parameter.CN);
+			if (cnParam != null) {
+				responser = cnParam.getValue();
+			}
+
+			Parameter statusParam = attendee.getParameter(Parameter.PARTSTAT);
+			if (statusParam != null) {
+				respStatus = statusParam.getValue();
+				switch (respStatus) {
+					case "ACCEPTED":
+						respStatus = egovMessageSource.getMessage("ezEmail.t901", locale);
+						break;
+					case "DECLINED":
+						respStatus = egovMessageSource.getMessage("ezEmail.t902", locale);
+						break;
+					case "TENTATIVE":
+						respStatus = egovMessageSource.getMessage("ezEmail.t903", locale);
+						break;
+				}
+			}
+		}
+
     	StringBuilder sb = new StringBuilder();
     	
     	sb.append("<style>");
@@ -6575,20 +6715,35 @@ public class EzEmailUtil {
 				// 일정 제목
 				sb.append("<div class='gw_ical_summary'>");
 					sb.append("<img class='ui-datepicker-trigger' src='/images/ImgIcon/calendar-month.png' alt='' title='' style='margin-right: 10px;'>");
+					if (replyYn) sb.append(respStatus).append(" : ");
 					sb.append(summary);
 				sb.append("</div>");
 				// 시간, 장소, 참석자
 				sb.append("<table>");
 					sb.append("<tr class='gw_ical_period'>");
 						sb.append("<td>").append(periodTit).append("</td>");
-						sb.append("<td>").append(period).append("</td>");
+						sb.append("<td id='ical_period'>").append(period).append("</td>");
 					sb.append("</tr>");
 
 					sb.append("<tr class='gw_ical_location'>");
 						sb.append("<td>").append(locationTit).append("</td>");
-						sb.append("<td>").append(location).append("</td>");
+						sb.append("<td id='ical_location'>").append(location).append("</td>");
 					sb.append("</tr>");
-					
+
+				sb.append("<div class='ical-period' style='display:none;' ")
+						.append(" data-is-all-day='").append(vo.isDtAllDay()).append("'")
+						.append(" data-start='").append(vo.getDtStartDate()).append("'")
+						.append(" data-end='").append(vo.getDtEndDate()).append("'>")
+						.append("</div>");
+
+					// 응답 회신 내용
+					if (replyYn) {
+						sb.append("</table>");
+						sb.append("<p style='margin-top: 13px; font-size: medium; color: #388ce5; font-weight: 600;'>");
+						sb.append(String.format(egovMessageSource.getMessage("ezEmail.ical22", locale), responser, respStatus));
+						sb.append("</p>");
+					} else {
+					// 초대 내용	
 					sb.append("<tr class='gw_ical_attendee'>");
 						sb.append("<td>").append(attendeeTit).append("</td>");
 						sb.append("<td>");
@@ -6607,14 +6762,33 @@ public class EzEmailUtil {
 						sb.append("</td>");
 					sb.append("</tr>");
 				sb.append("</table>");
-				// 본문
-				sb.append("<div class='gw_ical_desc'>");
-					sb.append(descBody.replaceAll("\n", "<br />"));
+
+			if (requestYn) {
+				sb.append("<div class='ical_btn_container'>");
+				String[] statuses = { "ACCEPTED", "TENTATIVE", "DECLINED" };
+
+				for (String status : statuses) {
+					boolean isSelected = status.equals(selectedStatus);
+					sb.append(String.format(
+							"<button type='button' class='button_calendar_task%s' data-status='%s'>%s</button>",
+							isSelected ? " active" : "",
+							status,
+							status.equals("ACCEPTED") ? egovMessageSource.getMessage("ezEmail.t901", locale) : status.equals("TENTATIVE") ?
+									egovMessageSource.getMessage("ezEmail.t903", locale) : egovMessageSource.getMessage("ezEmail.t902", locale)
+					));
+				}
 				sb.append("</div>");
+			}
+			// 본문
+			sb.append("<div class='gw_ical_desc'>");
+			sb.append(descBody.replaceAll("\n", "<br />"));
+			sb.append("</div>");
+			sb.append(String.format("<input type='hidden' id='ical_uid' value='%s' />", vo.getUid()));
 			sb.append("</div>"); // gw_ical_contents div END.
-		sb.append("</div>");
-    	
-    	return sb.toString();
+			sb.append("</div>");
+
+		}
+		return sb.toString();
     }
 
     /**
@@ -6714,9 +6888,14 @@ public class EzEmailUtil {
 	    	SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd (E)", locale);
 	    	sDateStr = dateFormat.format(sDate);
 	    	eDateStr = dateFormat.format(eDate);
-	    	
+			
+			// 날짜 차이 계산을 위한 LocalDate 변환
+			LocalDate start = sDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+			LocalDate end = eDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+			long dayDiff = ChronoUnit.DAYS.between(start, end);
+			
 	    	// 하루종일이거나 시작날짜와 종료날짜가 같으면 종료날짜 empty String
-	    	eDateStr = (isAllDay || sDateStr.equals(eDateStr)) ? "" : eDateStr ;
+			eDateStr = sDateStr.equals(eDateStr) || (isAllDay && dayDiff == 1) ? "" : eDateStr ;
 		}
 		
 		if (!isAllDay) {
@@ -6804,6 +6983,7 @@ public class EzEmailUtil {
     		net.fortuna.ical4j.model.Calendar cal = cb.build(is);
     		
             ComponentList<CalendarComponent> compVEVENT = cal.getComponents(net.fortuna.ical4j.model.Component.VEVENT);
+			icalVO.setMethod(cal.getProperty(Property.METHOD) != null ? cal.getProperty(Property.METHOD).getValue() : "");
             for (CalendarComponent cp : compVEVENT) {
             	VEvent vEvent = (VEvent) cp;
             	
@@ -7830,6 +8010,43 @@ public class EzEmailUtil {
 			throw new IllegalStateException("getTagIdx failed");
 		} catch (Exception e) {
 			throw new RuntimeException(e);
+		}
+	}
+
+	public static VEvent createTimeEvent(boolean isAllDay, Date startDt, Date endDt, String summary, String uidStr) throws Exception {
+
+		logger.debug("isAllDay=" + isAllDay);
+		if (isAllDay) {
+			// LocalDate로 생성
+			net.fortuna.ical4j.model.Date icalStart = new net.fortuna.ical4j.model.Date(startDt);
+			net.fortuna.ical4j.model.Date icalEnd = new net.fortuna.ical4j.model.Date(endDt);
+
+			DtStart dtStart = new DtStart(icalStart);
+
+			DtEnd dtEnd = new DtEnd(icalEnd);
+
+			VEvent event = new VEvent();
+			event.getProperties().add(dtStart);
+			event.getProperties().add(dtEnd);
+			event.getProperties().add(new Summary(summary));
+			event.getProperties().add(new Uid(uidStr));
+			return event;
+
+		} else {
+			// 시간대 설정
+			net.fortuna.ical4j.model.TimeZoneRegistry registry = net.fortuna.ical4j.model.TimeZoneRegistryFactory.getInstance().createRegistry();
+			net.fortuna.ical4j.model.TimeZone icalTz = registry.getTimeZone("Asia/Seoul");
+
+			// java.util.Date → ical4j DateTime 변환
+			DateTime start = new DateTime(startDt);
+			start.setTimeZone(icalTz);
+
+			DateTime end = new DateTime(endDt);
+			end.setTimeZone(icalTz);
+
+			VEvent event = new VEvent(start, end, summary);
+			event.getProperties().add(new Uid(uidStr));
+			return event;
 		}
 	}
 }

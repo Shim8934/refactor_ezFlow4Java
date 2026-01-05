@@ -95,7 +95,7 @@
 		        if (shareId != "") {
 		        	requestUrl += "?shareId=" + encodeURIComponent(shareId);
 		        }
-		        var OpenWin = window.open(requestUrl, "mail_selectfolder_Cross", GetOpenWindowfeature(465, 355));
+		        var OpenWin = window.open(requestUrl, "mail_selectfolder_Cross", GetOpenWindowfeature(465, 370));
 		        
 		        
 		        try { OpenWin.focus(); } catch (e) {console.log(e);}
@@ -153,7 +153,11 @@
 				</tr>
 				<tr>
 					<th><spring:message code='ezEmail.t123' /></th>
-					<td><input id="deleteunread" type="checkbox" name="checkbox"></td>
+					<td>
+					    <div class="custom_checkbox">
+					        <input id="deleteunread" type="checkbox" name="checkbox">
+					    </div>    
+                    </td>
 				</tr>
 			</table>
 			<div style="width:750px;text-align:center;">
@@ -187,7 +191,11 @@
 								<c:when test="${item.expireTime eq '1'}"><spring:message code='ezEmail.t127' /></c:when>
 								<c:otherwise><spring:message code='ezEmail.t122' /></c:otherwise>
 							</c:choose></td> 
-						<td style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:center;padding:0px;" ><input type="checkbox" disabled ${item.deleteUnread} name="checkbox2"></td> 
+						<td style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:center;padding:0px;" >
+						    <div class="custom_checkbox">
+						        <input type="checkbox" disabled ${item.deleteUnread} name="checkbox2">
+                            </div>
+                        </td> 
 						<td style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-align:center;padding:0px;">
 							<a class="imgbtn"><span onClick="delete_condition('${item.itemSeq}', '${item.path}')"><spring:message code='ezEmail.t95' /></span></a>
 						</td>

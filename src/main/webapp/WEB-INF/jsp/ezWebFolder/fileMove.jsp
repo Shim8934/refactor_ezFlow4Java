@@ -546,7 +546,7 @@
 					</c:forEach>
 			</select>
 		</c:if>
-		<div style="position: absolute; top: 0px; right: 0px;">
+		<div class="custom_radio" style="position: absolute; top: 0px; right: 0px;">
 			<c:if test="${folderType == 'C'}">
 				<input name="treeType" id="radio1" type="radio" value="comp" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle" onclick="getData();"><label for="radio1"><span> <spring:message code="ezWebFolder.t233"/></span></label>
 			</c:if>

@@ -521,7 +521,7 @@
 	            	<span class="sub_iconLNB tree_plus"></span><span class="h2Title" onclick="openFolder('share')"><spring:message code='ezWebFolder.t266' /></span>
 		        </h2>
 			    <ul class="lnbUL off" id="shareUL">
-                   	<li><span class="list_text" onclick="getSharedList();"><spring:message code='ezWebFolder.t214' /></span></li>
+                   	<li><span class="list_text" onclick="getSharedList();" title="<spring:message code='ezWebFolder.t214' />"><spring:message code='ezWebFolder.t214' /></span></li>
                    	<li><span class="list_text" onclick="getSharingList();"><spring:message code='ezWebFolder.t267' /></span></li>
 				</ul>
 				<h2 class="off">
@@ -536,7 +536,7 @@
 <%-- 				<ul class="lnbUL" id="option"> --%>
 				<h2 class="lnbUL" id="option">
                    	<c:if test="${folderListCount > 0}">                   	
-						<span class="sub_iconLNB tree_plus"></span><span class="h2Title" onclick="fileTransactionHistory(this);"><spring:message code='ezWebFolder.t128'/></span>
+						<span class="sub_iconLNB tree_plus"></span><span class="h2Title" onclick="fileTransactionHistory(this);" title="<spring:message code='ezWebFolder.t128'/>"><spring:message code='ezWebFolder.t128'/></span>
 	         		</c:if>
 <%--                    	웹폴더 관리자 사용자화면에서 제거  --%>
 <%--                    	<c:if test="${isWfAdmin == '1'}"> --%> 

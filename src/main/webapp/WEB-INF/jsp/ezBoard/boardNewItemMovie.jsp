@@ -358,16 +358,11 @@
 					window.close();
 	            } else {
 	                if (getNodeText(GetChildNodes(loadXMLString(xmlhttp.responseText))[0]) == "INACCESSIBLE") {
-	                	if (autoFlag != "Y") {
-	                    	alert(strLang173);
-                        }
+						alert(strLang173);
                     } else if (getNodeText(GetChildNodes(loadXMLString(xmlhttp.responseText))[0]) == "GUBUNCHANGED") {
                         alert(strLangJIHgubunChange02);
                     } else {
-	                	if(autoFlag != "Y") {
-	                    	alert("<spring:message code='ezBoard.t403'/>" + loadXMLString(xmlhttp.responseText).text);
-                        }
-	                    autoFlag = "N";
+						alert("<spring:message code='ezBoard.t403'/>" + loadXMLString(xmlhttp.responseText).text);
 	                }
 		        }
 		
@@ -935,7 +930,7 @@
 				<td style="width:48%;">
 					<span id="spUseDept">${userInfo.displayName}</span>
 					<c:if test="${'Y' == boardInfo.writerFlag}">
-						<input type="checkbox" id="chkUseDept" style="margin-left: 0px !important;" onclick="chkUseDept_onclick()">
+						<div class="custom_checkbox"><input type="checkbox" id="chkUseDept" style="margin-left: 0px !important;" onclick="chkUseDept_onclick()"></div>
 						<select id="writerFlag" style="display: none;">
 							<option value="<c:out value='${writerOption.N}\\${writerOption.N2}\\0' />"></option>
 							<option value="<c:out value='${writerOption.T}\\${writerOption.T2}\\1' />"></option>

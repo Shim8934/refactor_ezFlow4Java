@@ -9,8 +9,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title><spring:message code='ezPMS.t155' /></title>
-<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
-		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
+<%--<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />--%>
 <link rel="stylesheet" href="${util.addVer('/css/previewmail.css')}" type="text/css" />
 <link rel="stylesheet" href="${util.addVer('/css/jquery.lineProgressbar.css')}" type="text/css" />
 <link rel="stylesheet" href="${util.addVer('/js/jquery/jquery.modal.css')}" type="text/css" />
@@ -169,8 +168,8 @@ $(function(){
 						<tr id="BoardList_TH">
 							<th id="BoardList_TH_0" style="text-align: center; overflow: hidden; white-space: nowrap; cursor: pointer; width:20px;"
 								class="h4_center" bgcolor="#CCCCCC">
-								<input type="checkbox" id="HeaderAllCheckBox" name="boardCheckbox" id="HeaderAllCheckBox" onchange="selectedAllTR(this);"
-									style="margin: 0px; padding: 0px; width: 13px; height: 13px; vertical-align: middle;">
+								<div class='custom_checkbox'><input type="checkbox" id="HeaderAllCheckBox" name="boardCheckbox" id="HeaderAllCheckBox" onchange="selectedAllTR(this);"
+                                    style="margin: 0px; padding: 0px; width: 13px; height: 13px; vertical-align: middle;"></div>
 							</th>
 							<th id="BoardList_TH_1" onclick="setListOrder(this)" order="PROJECT_NAME" style="text-align: left; overflow: hidden; white-space: nowrap; 
 								text-overflow: ellipsis; cursor: pointer;;" class="h5_center"><spring:message code='ezPMS.t31' /></th>

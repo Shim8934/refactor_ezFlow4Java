@@ -11,6 +11,7 @@
 		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<link rel="stylesheet" type="text/css" href="${util.addVer('/css/ezCabinet/cabinet.css')}">
 		<link rel="stylesheet" type="text/css" href="${util.addVer('/css/Tab.css')              }">
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 	</head>
 	<body class="popup cabShareFile">
 		<h1><spring:message code="ezCabinet.t04"/></h1>
@@ -162,7 +163,7 @@
 			<a class="imgbtn"><span><spring:message code='ezCabinet.t14'/></span></a>
 			<a class="imgbtn"><span><spring:message code='ezCabinet.t15'/></span></a>
 		</div>
-		
+		<input type="hidden" id="userLang" value="${lang}">
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('ezCabinet.lang', 'msg')          }"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezCabinet/cabinetTree.js')   }"></script>

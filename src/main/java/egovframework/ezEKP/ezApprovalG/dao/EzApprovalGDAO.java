@@ -4095,4 +4095,44 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	public void saveSummary(ApprGSummaryVO summary) throws Exception {
 		update("EzApprovalG.saveSummary", summary);
 	}
+
+	/*2025-01-20 강동주 - 전자결재 > 백단 결재 > 문서 핸들링 시 오류 발생하였을 때 insert */
+	public void saveFailDocID(Map<String, Object> map) throws Exception {
+		insert("EzApprovalG.saveFailDocID", map);
+	}
+	
+	public Map<String, Object> getFailDocID(Map<String, Object> map) throws Exception {
+		return (Map<String, Object>) select("EzApprovalG.getFailDocID", map);
+	}
+	
+	public void updateFailDocID(Map<String, Object> map) throws Exception {
+		update("EzApprovalG.updateFailDocID", map);
+	}
+	
+	public void deleteFailDocID(Map<String, Object> map) throws Exception {
+		delete("EzApprovalG.deleteFailDocID", map);
+	}
+	public Map<String, Object> getDashBoardProGressDocCount(Map<String, Object> map) throws Exception{
+		return (Map<String, Object>) select("EzApprovalG.getDashBoardProGressDocCount", map);
+	}
+	
+	public List<ApprGReceiveDocVO> getDashBoardDeptBox(Map<String, Object> map) throws Exception{
+		return (List<ApprGReceiveDocVO>) list("EzApprovalG.getDashBoardDeptBox", map);
+	}
+	
+	public List<ApprGDocListVO> getDashBoardDocList(Map<Object, Object> map) throws Exception{
+		return (List<ApprGDocListVO>) list("EzApprovalG.getDashBoardDocList", map);
+	}
+	
+	public List<ApprGDocListVO> getDashBoardDoingLines(Map<String, Object> map) throws Exception {
+		return (List<ApprGDocListVO>) list("EzApprovalG.getDashBoardDoingLines", map);
+	}
+	
+	public List<ApprGDocListVO> getDashBoardDoingLines2(Map<String, Object> map) throws Exception {
+		return (List<ApprGDocListVO>) list("EzApprovalG.getDashBoardDoingLines2", map);
+	}
+
+    public ApprGAprDocInfoVO getOrgDocWriterInfo(Map<String, Object> map) throws Exception {
+        return (ApprGAprDocInfoVO) select("EzApprovalG.getOrgDocWriterInfo", map);
+    }
 }

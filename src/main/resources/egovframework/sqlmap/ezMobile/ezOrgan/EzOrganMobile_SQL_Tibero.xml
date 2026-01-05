@@ -289,7 +289,13 @@
 						null as mobile,
 						null as telephoneNumber,
 						null as jobId,
-						EXTENSIONATTRIBUTE2 as userCompanyID
+						EXTENSIONATTRIBUTE2 as userCompanyID,
+						DISPLAYNAME as deptName1,
+						DISPLAYNAME2 as deptName2,
+						DISPLAYNAME as userName1,
+						DISPLAYNAME2 as userName2,
+						CAST('' AS NVARCHAR2(100)) as title1,
+						CAST('' AS NVARCHAR2(100)) as title2
 					FROM
 						TBL_DEPTMASTER
 					WHERE
@@ -323,7 +329,13 @@
 					mobile,
 					telephoneNumber,
 					null as jobId,
-					PHYSICALDELIVERYOFFICENAME as userCompanyID
+					PHYSICALDELIVERYOFFICENAME as userCompanyID,
+					DESCRIPTION as deptName1,
+					DESCRIPTION2 as deptName2,
+					DISPLAYNAME as userName1,
+					DISPLAYNAME2 as userName2,
+					TITLE as title1,
+					TITLE2 as title2
 				FROM
 					TBL_USERMASTER
 				WHERE
@@ -381,7 +393,13 @@
 					B.mobile,
 					B.telephoneNumber,
 					A.JOBID as jobId,
-		    		D.EXTENSIONATTRIBUTE2 as userCompanyID
+		    		D.EXTENSIONATTRIBUTE2 as userCompanyID,
+		    		D.DISPLAYNAME as deptName1,
+					D.DISPLAYNAME2 as deptName2,
+					B.DISPLAYNAME as userName1,
+					B.DISPLAYNAME2 as userName2,
+					A.TITLE as title1,
+					A.TITLE2 as title2
 				FROM
 					TBL_ADDJOBMASTER A
 				JOIN
@@ -430,7 +448,13 @@
 						null as mobile,
 						null as telephoneNumber,
 						null as jobId,
-						EXTENSIONATTRIBUTE2 as userCompanyID
+						EXTENSIONATTRIBUTE2 as userCompanyID,
+						DISPLAYNAME as deptName1,
+						DISPLAYNAME2 as deptName2,
+						DISPLAYNAME as userName1,
+						DISPLAYNAME2 as userName2,
+						CAST('' AS NVARCHAR2(100)) as title1,
+						CAST('' AS NVARCHAR2(100)) as title2
 					FROM
 						TBL_DEPTMASTER
 					WHERE
@@ -458,7 +482,13 @@
 					mobile,
 					telephoneNumber,
 					null as jobId,
-	    		    PHYSICALDELIVERYOFFICENAME as userCompanyID
+	    		    PHYSICALDELIVERYOFFICENAME as userCompanyID,
+	    		    DESCRIPTION as deptName1,
+					DESCRIPTION2 as deptName2,
+					DISPLAYNAME as userName1,
+					DISPLAYNAME2 as userName2,
+					TITLE as title1,
+					TITLE2 as title2
 				FROM
 					TBL_USERMASTER
 				WHERE
@@ -498,7 +528,13 @@
 					B.mobile,
 					B.telephoneNumber,
 					A.JOBID as jobId,
-					D.EXTENSIONATTRIBUTE2 as userCompanyID
+					D.EXTENSIONATTRIBUTE2 as userCompanyID,
+					D.DISPLAYNAME as deptName1,
+					D.DISPLAYNAME2 as deptName2,
+					B.DISPLAYNAME as userName1,
+					B.DISPLAYNAME2 as userName2,
+					A.TITLE as title1,
+					A.TITLE2 as title2
 				FROM
 					TBL_ADDJOBMASTER A
 				JOIN

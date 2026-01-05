@@ -357,7 +357,7 @@
 			</table>
 
 			<div id="menu" style="margin-top: 10px">
-				<ul style="margin-left:220px">
+				<ul style="display: flex; justify-content: center;">
 					<li title="<spring:message code='ezSchedule.shb10' />"><span onClick="save_onclick()"><spring:message code='ezSchedule.shb11' /></span></li>
 					<li title="<spring:message code='ezSchedule.t5' />"><span onClick="cancel_onclick()"><spring:message code='ezSchedule.t5' /></span></li>
 				</ul>

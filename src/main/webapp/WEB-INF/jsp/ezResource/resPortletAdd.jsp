@@ -71,8 +71,8 @@
 	    	var sDT				="${startDateTime}";
 	    	var eDT				="${endDateTime}";
 	    	var flag = false;
-	    	var startDateTimeRepeat = "${startDateTimeRepeat}";
-	    	var endDateTimeRepeat = "${endDateTimeRepeat}";
+	    	var startDateTimeRepeat;
+	    	var endDateTimeRepeat;
 	    	var brdName = "${brdName}";
 	    	var resID = "${resID}";
 	    	var ItemArray = new Array();
@@ -87,6 +87,13 @@
 	    	var repetition = "";
 			// 반복예약허용 Flag
 			var repeatFlag       = "${repeatFlag}";
+			
+			// 2024-08-27 유길상 - 정원컬럼 추가
+	    	var resMaxDate = "${resMaxDate}";
+			
+			var modType = "<c:out value='${modType}'/>"; // 수정 타입 (0: 반복아님, 1:선택일자 수정, 2: 선택일자부터 이후 일정 수정, 3: 전체 반복일정 수정)
+			var repeatCount = "<c:out value='${repeatCount}'/>"; // 반복 횟수 (반복일정 일부 수정 시 선택한 날짜가 몇 번쨰 반복일정인지 체크)
+			var beforeScheDate = "<c:out value='${startDateVal}'/>"; // 선택일자(수정 전 반복일정 일자) 변수
 	    	
 	    	// 메인페이지의 onload실행과 initLoad함수의 실행 속도 차이로 setTimeout함수 사용
 	    	var onloadflag = false;
@@ -136,21 +143,45 @@
 	        	createNodeAndInsertText(xmlpara, objNode, "OWNERID", org_ownerID);
 	        	createNodeAndInsertText(xmlpara, objNode, "GROUPID", "");
 	        	createNodeAndInsertText(xmlpara, objNode, "companyID", org_companyID);
-
+				
+				// 반복일정 관련 데이터 세팅
 	        	if (document.getElementById("iReFlag").value == "1") {
 	            	if (org_num != "" && org_ownerID != "") {
 	                	xmlHttp.open("POST", "/ezResource/scheduleRepetitionProc.do?cmd=get", false);
 	                	xmlHttp.send(xmlpara);
-
-	                	resultXML = xmlHttp.responseXML;
-
-	                	if (resultXML.xml != "") {
+						
+						resultXML = xmlHttp.responseXML;
+						if (resultXML.xml != "") {
+							if (modType == 2) { // 특정 일 이후로 수정일 때 시작일 변경함
+								var scheTimeTemp = resultXML.getElementsByTagName("startDateTime")[0];
+								if (scheTimeTemp && scheTimeTemp.textContent && scheTimeTemp.textContent.length > 11) {
+									scheTimeTemp = scheTimeTemp.textContent.substring(11);
+									if (beforeScheDate) {
+										resultXML.getElementsByTagName("startDateTime")[0].textContent = beforeScheDate + ' ' + scheTimeTemp;
+									}
+								}
+							}
+							startDateTimeRepeat = resultXML.getElementsByTagName("startDateTime")[0].textContent;
+							endDateTimeRepeat = resultXML.getElementsByTagName("endDateTime")[0].textContent;
 	                    	g_data["recurrence"] = getXmlString(resultXML);
 	                	}
 	            	}
-
-	            	show_repetition_info();
-	        	}
+					
+					if (modType != 1) {
+						document.getElementById("tr_STime").style.display = "none"; // 기간 (단일)
+					}
+					
+					if (modType == 2 && resultXML.getElementsByTagName("endRecurType")[0].textContent == "1") { // 횟수반복, 중간부터 수정일 때 반복횟수 초기값 세팅
+						var repeatCountNow = resultXML.getElementsByTagName("instances")[0].textContent;
+						repeatCount = repeatCountNow - repeatCount + 1;
+						updateRecurrence("instances", repeatCount)
+					}
+	        	} else if (document.getElementById("iReFlag").value == "1" && modType == 1) { // 반복일정이지만 수정타입이 1(선택한 날짜의 일정만 수정)일 때, 단일일정 취급
+					repetition = "";
+					reFlagVal = "0";
+					document.getElementById("iReFlag").value = "0";
+					document.getElementById("tmpReFlag").value = "0";
+				}
 
 		        if (brdName != "" && resID  != "") {
 		            ItemArray[0] = Array("${resID}");
@@ -175,8 +206,6 @@
 	            	if (result != "FALSE") {
 	                	msgRtn = result;
 	            	}
-	            	
-	            	onloadflag = true;
 	        	}
 	        	
 	        	if(cmd == "mod") {
@@ -185,6 +214,13 @@
 	        			display_time_Unshow();
 	        		}
 	        	}
+				
+				// 날짜 및 시간 삽입
+				setDate();
+				if (reFlagVal == '1' && modType != "1") {
+					show_repetition_info();
+				}
+				onloadflag = true;
 		    }
 			
 		    window.onresize = function () {
@@ -207,34 +243,70 @@
 		    }
 		    
 		    $(function () {
-	    	    $("#Sdatepicker").datepicker({
-	        	    changeMonth: true,
-	            	changeYear: true,
-	            	autoSize: true,
-	            	showOn: "both",
-	            	buttonImage: "/images/ImgIcon/calendar-month.png",
-	            	buttonImageOnly: true,
-	            	onSelect : function(dateText, inst) {
-		            	var startD = new Date(inst.lastVal);
-		            	var endD = new Date($("#Edatepicker").datepicker().val());
-		            	var dateDiff = (endD - startD)/1000/24/60/60;
-		            	
-		            	var nowSDate = dateText.split('-');
-		            	var nowSDate2 = new Date(nowSDate[0], nowSDate[1]-1, nowSDate[2]);
-		            	nowSDate2.setDate(nowSDate2.getDate() + dateDiff);
+				$("#Sdatepicker").datepicker({
+					changeMonth: true,
+					changeYear: true,
+					autoSize: true,
+					showOn: "both",
+					buttonImage: "/images/ImgIcon/calendar-month.png",
+					buttonImageOnly: true,
+					onSelect: function (dateText, inst) {
+						var startD = new Date(inst.lastVal);
+						var endD = new Date($("#Edatepicker").datepicker().val());
+						var dateDiff = (endD - startD) / 1000 / 24 / 60 / 60;
 
-		            	$("#Edatepicker").datepicker('setDate', nowSDate2);
-		            }
-	        	});
-	        	$("#Edatepicker").datepicker({
-	            	changeMonth: true,
-	            	changeYear: true,
-	            	autoSize: true,
-	            	showOn: "both",
-	            	buttonImage: "/images/ImgIcon/calendar-month.png",
-	            	buttonImageOnly: true
-	        	});
+						var nowSDate = dateText.split('-');
+						var nowSDate2 = new Date(nowSDate[0], nowSDate[1] - 1, nowSDate[2]);
+						nowSDate2.setDate(nowSDate2.getDate() + dateDiff);
 
+						$("#Edatepicker").datepicker('setDate', nowSDate2);
+					}
+				});
+				$("#Edatepicker").datepicker({
+					changeMonth: true,
+					changeYear: true,
+					autoSize: true,
+					showOn: "both",
+					buttonImage: "/images/ImgIcon/calendar-month.png",
+					buttonImageOnly: true
+				});
+
+				$(function () {
+					$.datepicker.regional["<spring:message code='main.t0619' />"] = {
+						closeText: "<spring:message code='main.t3' />",
+						prevText: "<spring:message code='main.t0604' />",
+						nextText: "<spring:message code='main.t0605' />",
+						currentText: "<spring:message code='main.t0606' />",
+						monthNames: ["<spring:message code='main.t0607' />", "<spring:message code='main.t0608' />", "<spring:message code='main.t0609' />",
+							"<spring:message code='main.t0610' />", "<spring:message code='main.t0611' />", "<spring:message code='main.t0612' />",
+							"<spring:message code='main.t0613' />", "<spring:message code='main.t0614' />", "<spring:message code='main.t0615' />",
+							"<spring:message code='main.t0616' />", "<spring:message code='main.t0617' />", "<spring:message code='main.t0618' />"],
+						monthNamesShort: ["<spring:message code='main.t0607' />", "<spring:message code='main.t0608' />", "<spring:message code='main.t0609' />",
+							"<spring:message code='main.t0610' />", "<spring:message code='main.t0611' />", "<spring:message code='main.t0612' />",
+							"<spring:message code='main.t0613' />", "<spring:message code='main.t0614' />", "<spring:message code='main.t0615' />",
+							"<spring:message code='main.t0616' />", "<spring:message code='main.t0617' />", "<spring:message code='main.t0618' />"],
+						dayNames: ["<spring:message code='main.t0621' />", "<spring:message code='main.t0622' />", "<spring:message code='main.t0623' />",
+							"<spring:message code='main.t0624' />", "<spring:message code='main.t0625' />", "<spring:message code='main.t0626' />",
+							"<spring:message code='main.t0627' />"],
+						dayNamesShort: ["<spring:message code='main.t0621' />", "<spring:message code='main.t0622' />", "<spring:message code='main.t0623' />",
+							"<spring:message code='main.t0624' />", "<spring:message code='main.t0625' />", "<spring:message code='main.t0626' />",
+							"<spring:message code='main.t0627' />"],
+						dayNamesMin: ["<spring:message code='main.t0621' />", "<spring:message code='main.t0622' />", "<spring:message code='main.t0623' />",
+							"<spring:message code='main.t0624' />", "<spring:message code='main.t0625' />", "<spring:message code='main.t0626' />",
+							"<spring:message code='main.t0627' />"],
+						weekHeader: "Wk",
+						dateFormat: "yy-mm-dd",
+						firstDay: 0,
+						isRTL: false,
+						duration: 200,
+						showAnim: "show",
+						showMonthAfterYear: true
+					};
+					$.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619' />"]);
+				});
+			});
+			
+			function setDate() {
 	        	var uploadSDate = "${startDateTime2}";
 
 	        	var sYear = uploadSDate.substring(0, 4);
@@ -249,6 +321,18 @@
 				var eDay = uploadEDate.substring(8, 10);
 				var eHour = uploadEDate.substring(11, 13);
 				var eMin = uploadEDate.substring(14, 16);
+				
+				if (modType == "1" || modType == "2") {
+					targetDate = beforeScheDate.split('-');
+					sYear = targetDate[0]
+					sMonth = targetDate[1];
+					sDay = targetDate[2];
+					if (modType == "1") {
+						eYear = sYear;
+						eMonth = sMonth;
+						eDay = sDay;
+					}
+				}
 				
 	        	var SDate = new Date("");
 	        	SDate.setFullYear(sYear, sMonth-1, sDay);
@@ -275,41 +359,7 @@
 	        	$('#Etimepicker').timepicker();
 	        	$('#Etimepicker').timepicker('setTime', EDate);
 	        	$('#Etimepicker').timepicker({ 'timeFormat': 'H:i' });
-	     	});
-		    
-		    $(function () {
-		        $.datepicker.regional["<spring:message code='main.t0619' />"] = {
-		            closeText: "<spring:message code='main.t3' />",
-		            prevText: "<spring:message code='main.t0604' />",
-		            nextText: "<spring:message code='main.t0605' />",
-		            currentText: "<spring:message code='main.t0606' />",
-		            monthNames: ["<spring:message code='main.t0607' />", "<spring:message code='main.t0608' />", "<spring:message code='main.t0609' />", 
-		                         "<spring:message code='main.t0610' />", "<spring:message code='main.t0611' />", "<spring:message code='main.t0612' />",
-		                         "<spring:message code='main.t0613' />", "<spring:message code='main.t0614' />", "<spring:message code='main.t0615' />", 
-		                         "<spring:message code='main.t0616' />", "<spring:message code='main.t0617' />", "<spring:message code='main.t0618' />"],
-		            monthNamesShort: ["<spring:message code='main.t0607' />", "<spring:message code='main.t0608' />", "<spring:message code='main.t0609' />", 
-		                              "<spring:message code='main.t0610' />", "<spring:message code='main.t0611' />", "<spring:message code='main.t0612' />",
-		                              "<spring:message code='main.t0613' />", "<spring:message code='main.t0614' />", "<spring:message code='main.t0615' />", 
-		                              "<spring:message code='main.t0616' />", "<spring:message code='main.t0617' />", "<spring:message code='main.t0618' />"],
-		            dayNames: ["<spring:message code='main.t0621' />", "<spring:message code='main.t0622' />", "<spring:message code='main.t0623' />", 
-		                       "<spring:message code='main.t0624' />", "<spring:message code='main.t0625' />", "<spring:message code='main.t0626' />", 
-		                       "<spring:message code='main.t0627' />"],
-		            dayNamesShort: ["<spring:message code='main.t0621' />", "<spring:message code='main.t0622' />", "<spring:message code='main.t0623' />", 
-				                       "<spring:message code='main.t0624' />", "<spring:message code='main.t0625' />", "<spring:message code='main.t0626' />", 
-				                       "<spring:message code='main.t0627' />"],
-		            dayNamesMin: ["<spring:message code='main.t0621' />", "<spring:message code='main.t0622' />", "<spring:message code='main.t0623' />", 
-			                       "<spring:message code='main.t0624' />", "<spring:message code='main.t0625' />", "<spring:message code='main.t0626' />", 
-			                       "<spring:message code='main.t0627' />"],
-		            weekHeader: "Wk",
-		            dateFormat: "yy-mm-dd",
-		            firstDay: 0,
-		            isRTL: false,
-		            duration: 200,
-		            showAnim: "show",
-		            showMonthAfterYear: true
-		        };
-		        $.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619' />"]);
-		    });
+	     	}
 		    
 		    function Editor_Complete() {
 		        if (cmd == "mod") {
@@ -381,6 +431,17 @@
 	        	} else if (typeof (retVal) != "undefined" && retVal.length == 2) {
 	            	ItemArray[0] = retVal[0];
 	            	ItemArray[1] = retVal[1];
+					var curMaxDate = resMaxDate;
+					for (var i = 0; i < ItemArray[0].length; i++) {
+						var itemResMaxDate = getResourceMaxDate(ItemArray[0][i]);
+						console.log("itemResMaxDate", itemResMaxDate)
+						if (itemResMaxDate) {
+							if (itemResMaxDate < curMaxDate) {
+								curMaxDate = itemResMaxDate;
+							}
+						}
+					}
+					resMaxDate = curMaxDate + "";
 
 	            	document.getElementById('itemList').innerHTML = "";
 	            	
@@ -492,6 +553,53 @@
 		            		SaveScheduleId = saveSchedule();
 		            	}
 	            	}
+					// 2024-08-27 유길상 - 최대 예약 가능 기간 검증
+	            	var resMaxDateArray = [];
+	            	for (var i = 0; i < ItemArray[0].length; i++) {
+		               	var itemResMaxDate = getResourceMaxDate(ItemArray[0][i]);
+		               	resMaxDateArray.push(itemResMaxDate);
+		            }
+	            	
+	            	var minNumber = Number.POSITIVE_INFINITY;
+	            	
+	            	for (let i = 0; i < resMaxDateArray.length; i++) {
+	            		var current = resMaxDateArray[i];
+	            	    if (current !== null && current != 0 && current < minNumber) {
+	            	        minNumber = current;
+	            	    }
+	            	}
+	            	
+	            	var maxDateFlag;
+	            	if (minNumber != Infinity) {
+	            		resMaxDate = minNumber;
+	            		var intResMaxDate = parseInt(resMaxDate);
+	            		var checStartDate = ssDate + " " + ssTime;
+		        		var checEndDate = eeDate + " " + eeTime;
+		        		
+		        		var chStDate = new Date(checStartDate);
+		        		var chEdDate = new Date(checEndDate);
+		        		
+		        		
+		        		if (schedule_repetition_cross_dialogArguments[0]) {
+		        			chStDate = new Date(schedule_repetition_cross_dialogArguments[0].startTime);	
+		        			chEdDate = new Date(schedule_repetition_cross_dialogArguments[0].endTime);	
+		        		}
+		        		
+		        		var betweenDay  = (chEdDate - chStDate) / (1000 * 60 * 60 * 24);
+		        		
+		        		if (betweenDay > intResMaxDate) {
+		        			maxDateFlag = false;
+		        		} else {
+		        			maxDateFlag = true;
+		        		}
+	            	} else {
+	            		maxDateFlag = true;
+	            	}
+					
+	            	if (!maxDateFlag) {
+	            		alert(strLangMaxYGS01);
+	            		return;
+	            	}
 	            	
 	            	for (var i = 0 ; i < ItemArray[0].length ; i++) {
 		                SaveSchedule_onClick(cmd, ItemArray[0][i]);
@@ -514,7 +622,7 @@
 	    		var pageFrom = "";
 	    		var xmlHTTP = createXMLHttpRequest();
 	    		var xmlDom = createXmlDom();    
-	    		var objNode;
+	    		var objNode, objRow, objRows;
 
 	    		objNode = createNodeInsert(xmlDom, objNode, "DATA");
 	    		createNodeAndInsertText(xmlDom, objNode, "SCHEDULEID", "");
@@ -532,6 +640,17 @@
 	    		createNodeAndInsertText(xmlDom, objNode, "TITLE", document.getElementById("title").value);
 	    		createNodeAndInsertText(xmlDom, objNode, "LOCATION", "");
 	    		createNodeAndInsertText(xmlDom, objNode, "CONTENTPATH", "");
+				
+				objRow = createNodeAndAppandNode(xmlDom, objNode, objRow, "ATTENDANTLIST");
+                if (g_attendant != null) {
+                    for (var i=0; i<g_attendant["id"].length; i++) {
+                        createNodeAndAppandNodeText(xmlDom, objRow, objRows , "ATTENDANTID", g_attendant["id"][i]);
+                        createNodeAndAppandNodeText(xmlDom, objRow, objRows , "ATTENDANTNAME1", g_attendant["name1"][i]);
+                        createNodeAndAppandNodeText(xmlDom, objRow, objRows , "ATTENDANTNAME2", g_attendant["name2"][i]);
+                        createNodeAndAppandNodeText(xmlDom, objRow, objRows , "ATTENDANTDEPTNAME", g_attendant["deptname"][i]);
+                        createNodeAndAppandNodeText(xmlDom, objRow, objRows , "ATTENDANTDEPTNAME2", g_attendant["deptname2"][i]);
+                    }
+                }
 	    		
 	    		var Doc_ContentHtml = document.createElement("DIV");
 	    	    var strBody = message.GetEditorContent();
@@ -572,6 +691,33 @@
 	    		xmlHTTP.send(xmlDom);
 	    		
 	    		return trim(xmlHTTP.responseText);
+	    	}
+			
+			// 2024-08-27 유길상 - 최대 예약 가능 기간 조회
+	    	function getResourceMaxDate(item) {
+	    		var brdIdList = schedule_add_select_cross_dialogArguments[0];
+	    		var result = null;
+	    		
+	    		var ssDate = $("#Sdatepicker").datepicker().val();
+	        	var eeDate = $("#Edatepicker").datepicker().val();
+	        	var ssTime = $("#Stimepicker").timepicker({ 'timeFormat': 'H:i' }).val();
+	        	var eeTime = $("#Etimepicker").timepicker({ 'timeFormat': 'H:i' }).val();
+	        	
+	   			 $.ajax({
+	        		    url: '/ezResource/checkResoruceMaxDate.do',
+	        		    type: 'POST',
+	        		    dataType: 'json',
+	        		    async : false,
+		    			cache : false,
+	        		    contentType: "application/json",
+	        		    data: JSON.stringify({
+	        		    	brdId: item
+	        		    }),
+	        		    success: function(data) {
+        		        	result = data;
+	        		    }
+        		});
+	   			return result;
 	    	}
 
 	    	function window_onUnload() {
@@ -635,6 +781,51 @@
 	        $(document).on('click', ".ui-timepicker-list li", function() {
 	        	timeSelect = true;
 	        })
+			
+			 function useScheduleOnclick() {
+                if ($("#useSchedule").is(":checked")) {
+                    $("#attendantTr").show();
+                } else {
+                    $("#attendantTr").hide();
+                }
+            }
+		    
+		    var g_attendant = null;
+            var schedule_select_attendant_dialogArguments = new Array();
+            function manage_attendant() {
+                var StartTime = $("#Sdatepicker").datepicker({dateFormat: 'yy-mm-dd'}).val()
+                var EndTime = $("#Edatepicker").datepicker({dateFormat: 'yy-mm-dd'}).val()
+            
+                schedule_select_attendant_dialogArguments[0] = g_attendant;
+                schedule_select_attendant_dialogArguments[1] = manage_attendant_Complete;
+            
+                GetOpenWindow("/ezSchedule/scheduleSelectAttendant.do?title=" + encodeURI("<spring:message code='ezSchedule.t234'/>") + "&StartTime=" + StartTime + "&EndTime=" + EndTime + "&ownerid=" + s_userID, "schedule_select_attendant", 970, 655);
+            }
+            
+            function manage_attendant_Complete(rtn) {
+                if (typeof (rtn) != "undefined") {
+                    g_attendant = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname2": new Array(), "jikwe": new Array(), "phone": new Array() };
+                    document.getElementById("receiverinput").innerText = "";
+                    
+                    var receiverList = "";
+                    for (var i = 0; i < rtn["id"].length; i++) {
+                        if (i != 0) {
+                            receiverList += ", ";
+                        }
+                        receiverList += rtn["name"][i];
+                      
+                        g_attendant["name"][i] = rtn["name"][i];
+                        g_attendant["id"][i] = rtn["id"][i];
+                        g_attendant["deptname"][i] = rtn["deptname"][i];
+                        g_attendant["name1"][i] = rtn["name1"][i];
+                        g_attendant["name2"][i] = rtn["name2"][i];
+                        g_attendant["deptname2"][i] = rtn["deptname2"][i];
+                        g_attendant["jikwe"][i] = rtn["jikwe"][i];
+                        g_attendant["phone"][i] = rtn["phone"][i];
+                    }
+                    document.getElementById("receiverinput").innerText = receiverList;
+                }
+            }
 		</script>
 	</head>
 	<xmp id="sigBody" style="display: none;">${content}</xmp>
@@ -690,13 +881,21 @@
         				</ul>
       				</div>
       				<table class="content" style="width:100%;">
+						<c:if test="${modType ne '0'}">
+							<tr id="HolderEdit">
+								<th><spring:message code='ezSchedule.ModType.jih02'/></th>
+								<c:choose>
+									<c:when test="${modType eq '1'}"><td colspan="3"><spring:message code='ezSchedule.ModType.jih03'/></td></c:when>
+									<c:when test="${modType eq '2'}"><td colspan="3"><spring:message code='ezSchedule.ModType.jih04'/></td></c:when>
+									<c:when test="${modType eq '3'}"><td colspan="3"><spring:message code='ezSchedule.ModType.jih05'/></td></c:when>
+								</c:choose>
+							</tr>
+						</c:if>
         				<tr>
           					<th> <spring:message code="ezResource.t193"/></th>
           					<td colspan="3" style="width:100%"><div id="displayNM"> </div></td>
         				</tr>
-        				
-							
-						<tr id="tr_Recur" <c:if test="${reFlag ne '1'}">style="display: none"</c:if>>
+						<tr id="tr_Recur" <c:if test="${reFlag ne '1' || modType eq '1'}">style="display: none" attr="asd"</c:if>>
     						<th> <spring:message code="ezResource.t197"/></th>
     						<td colspan="3"><span id="AllDayDisplay"></span>
       							<select id="timeDisplay" name="timeDisplay" class="select" style="width: 95px; display: none">
@@ -707,17 +906,7 @@
       							</select>
       			  			</td>
   						</tr>
-				 		<script>
-        		 	  		if (reFlagVal == "1") {
-	                			strDspMod_1 = "style='display:none'";
-                				strDspMod_2 = "";
-            				} else {
-	                			strDspMod_1 = "";
-                				strDspMod_2 = "style='display:none'";
-            				}	
-            			</script>
-					
-	        			<tr id="tr_STime" ${strDspMod1}>
+	        			<tr id="tr_STime">
 	          				<th> <spring:message code="ezResource.t197"/></th>
 	          				<td width="100%" colspan="3" id="Td_StartDate" style="overflow:hidden;">
 	          					<input type="checkbox" id="AllDay" <c:if test="${allDay eq '1' && dayView ne 0}">checked</c:if> onClick="display_time_Unshow()" /><spring:message code="ezResource.t211"/>
@@ -773,7 +962,15 @@
 	       				<c:if test="${cmdStr eq 'add'}">
 	       				<tr>
 	         				<th><spring:message code="ezSchedule.t214"/></th>
-	         				<td colspan="3"><input type="checkbox" id="useSchedule" name="useSchedule">          </td>
+	         				<td colspan="3"><input type="checkbox" id="useSchedule" name="useSchedule" onclick="useScheduleOnclick()"></td>
+	       				</tr>
+	       				<tr id="attendantTr" style="display:none;">
+	         				<th><spring:message code="ezSchedule.t163"/></th>
+	         				<td colspan="3">
+	         				    <span id="clickbtn" class="imgbtn" style="padding: 0px 10px;" onclick="manage_attendant()"><spring:message code="ezSchedule.t364"/></span>
+	         				    <!-- <input type="text" id="receiverinput" /> -->
+	         				    <span id="receiverinput" style="vertical-align:middle; margin-left: 5px;"></span>
+                            </td>
 	       				</tr>
 	       				</c:if>
       				</table>
@@ -783,8 +980,8 @@
 	  			<td id="EdtorSize" style="vertical-align:top;height:100%;">
 					<iframe id="Iframe1" class="viewbox" name="message" src="/ezEditor/selectEditor.do?type=RESOURCE" style="padding: 0; width: 100%; overflow: auto; margin-top: -1px"></iframe>
 	      			
-	      			<input type="hidden" id="iReFlag" value="${strIReFlagVal}" />
-       				<input type="hidden" id="tmpReFlag" value="${strTmpReFlagVal}" />
+	      			<input type="hidden" id="iReFlag" value="${reFlag}" /> <%-- 반복일자: 1: 반복일자임, 0:반복일자 아님 --%>
+       				<input type="hidden" id="tmpReFlag" value="${strTmpReFlagVal}" /> <%-- 반복일자 수정타입: 1: 추가, 2:수정, 3: 삭제 --%>
        				<input type="hidden" id="gresFlag" value="${gresFlag}" />
        				<input type="hidden" id="num" value="${num}" />
        				<input type="hidden" id="pnum" value="${pNum}" />
@@ -798,7 +995,7 @@
 			        	<tr>
 							<th> <spring:message code="ezResource.t227"/></th>
 							<td class="pos1">
-								<div id="attachedFile" style="display: none; background-c	olor: white; width:350px; height: 60px; overflow: auto"> </div>
+								<div id="attachedFile" style="display: none; background-color: white; width:350px; height: 60px; overflow: auto"> </div>
                   				<div id="divBody" style="background-color: white; width:350px; height: 60px; overflow: auto;"> </div>
                   			</td>
 							

@@ -164,7 +164,7 @@ public class EzSurveyGWController {
 			int totalUsers                 = surveyService.getTotalDeptMembers(deptId, tenantId);
 			int totalPages                 = (totalUsers + 49) / 50;
 			
-			List<SimpleUserVO> memberList = surveyService.getDeptMemberList(deptId, null, primary, startPoint, 50, tenantId);
+			List<SimpleUserVO> memberList = surveyService.getDeptMemberList(deptId, null, null, primary, startPoint, 50, tenantId);
 			
 			result.put("currentPage", currentPage);
 			result.put("totalPages",  totalPages);

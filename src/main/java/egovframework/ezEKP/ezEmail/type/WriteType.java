@@ -33,6 +33,8 @@ public enum WriteType {
 
 	// 전달
 	, FORWARD         (Category.FORWARD, "ezEmail.t5131")
+	// eml로 첨부하는 전달
+	, FORWARD_AS_ATTACH(Category.FORWARD, "ezEmail.t5131")
 
 	, READ            ()
 
@@ -73,7 +75,7 @@ public enum WriteType {
 
 		// 기존 메일을 사용하는 타입.
 		public boolean useLoadFromOrigin() {
-			return EnumSet.of(EDIT, RESEND, REPLY, FORWARD).contains(this); // useOriginalMessage() && useReplyMessage()
+			return EnumSet.of(EDIT, RESEND, REPLY, FORWARD).contains(this);
 		}
 		/**
 		 * original Message를 그대로 재사용
@@ -91,7 +93,11 @@ public enum WriteType {
 		 * original Message를 → reply Message로 사용 (reply로 생성)
 		 * : NEW + append reply
 		 */
-		public boolean useReplyMessage() {
+//		public boolean useReplyMessage() {
+//			return EnumSet.of(REPLY).contains(this);
+//		}
+		// 제목에 prefixCode를 사용하는지
+		public boolean usePrefixForSubject() {
 			return EnumSet.of(REPLY, FORWARD).contains(this);
 		}
 
@@ -99,16 +105,16 @@ public enum WriteType {
 		public boolean useSetAddresses() {
 			return EnumSet.of(EDIT, RESEND, REPLY).contains(this);
 		}
-		// 첨부파일 로드 여부
+		// origin의 첨부파일 그대로 로드 여부
 		public boolean useAppendAttach() {
-			return EnumSet.of(EDIT, RESEND, FORWARD).contains(this);
+			return EnumSet.of(EDIT, RESEND).contains(this); // 아래서 FORWARD 추가함.
 		}
 		/**
 		 * 임시보관함 이용
 		 * : mailWrite.jsp> window.onbeforeunload> delDrafts(); 메일쓰기 창 닫을 시, 임시보관했던 메일 삭제 해줘야 함.
 		 */
 		public boolean useSaveDrafts() {
-			return EnumSet.of(RESEND, REPLY, FORWARD).contains(this); // 아래서 RESERVE 추가할거임.
+			return EnumSet.of(RESEND, REPLY).contains(this); // 아래서 FORWARD, RESERVE 추가할거임.
 		}
 
 		// 본문설정 무시 여부: 20190708 조진호 - 결재, 게시판, 커뮤니티에서 메일로 발송 시에는 textOption 무시
@@ -157,9 +163,17 @@ public enum WriteType {
 	public boolean useOperatorMailAddress() {
 		return this == NEW;
 	}
+	// 메일 옵션 유지
+	public boolean useOrgMailOption() {
+		return isEdit() || isResend();
+	}
 	// unread
 	public boolean useUnread() {
 		return this == RESEND_IN_SENT;
+	}
+	// bodyType 본문타입 유지
+	public boolean useOrgBodyType() {
+		return this != FORWARD_AS_ATTACH;
 	}
 	// orgMessage.reply 할 때, Flags.Flag.ANSWERED를 true 할 것인지
 	public boolean useReplyAnswered() {
@@ -172,23 +186,26 @@ public enum WriteType {
 
 	// getter
 	public boolean useLoadFromOrigin() {
-		// return category.useLoadFromOrigin();
-		return EnumSet.of(EDIT_IN_DRAFTS, RESERVE, RESEND_IN_SENT, REPLY, REPLYALL, FORWARD).contains(this); // 기존코드에서 왜 임시보관함, 보낸편지함으로 한정했을까?
+		// return EnumSet.of(EDIT_IN_DRAFTS, RESERVE, RESEND_IN_SENT, REPLY, REPLYALL, FORWARD).contains(this); // 기존코드에서 왜 임시보관함, 보낸편지함으로 한정했을까?
+		return category != null && category.useLoadFromOrigin();
 	}
 	public boolean useOriginalMessage() {
 		return category != null && category.useOriginalMessage();
 	}
 	public boolean useReplyMessage() {
-		return category != null && category.useReplyMessage();
+		return category == Category.REPLY || this == FORWARD;
+	}
+	public boolean usePrefixForSubject() {
+		return category != null && category.usePrefixForSubject();
 	}
 	public boolean useSetAddresses() {
 		return category != null && category.useSetAddresses();
 	}
 	public boolean useAppendAttach() {
-		return category != null && category.useAppendAttach();
+		return category != null && category.useAppendAttach() || this == FORWARD;
 	}
 	public boolean useSaveDrafts() {
-		return category != null && category.useSaveDrafts() || isReserve();
+		return category != null && category.useSaveDrafts() || EnumSet.of(FORWARD, RESERVE).contains(this);
 	}
 	public boolean ignoreTextOption() {
 		return category != null && category.ignoreTextOption();
@@ -208,6 +225,9 @@ public enum WriteType {
 	}
 	public boolean isReserve() { // 예약발송관리 수정
 		return this == RESERVE;
+	}
+	public boolean isForwardAsAttach() {
+		return this == FORWARD_AS_ATTACH;
 	}
 	public boolean isDotNet() { // 닷넷
 		return EnumSet.of(BOARDDOTNET, COMMUNITYDOTNET, DOCSENDDOTNET).contains(this);

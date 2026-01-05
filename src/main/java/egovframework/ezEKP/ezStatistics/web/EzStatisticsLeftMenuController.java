@@ -74,6 +74,7 @@ public class EzStatisticsLeftMenuController {
 		//2025-03-21 박기범 - 메뉴통계 추가 
 		model.addAttribute("useStatMenu", Objects.toString(ezCommonService.getTenantConfig("useStatMenu", userInfo.getTenantId()), "NO"));
 		model.addAttribute("useExternalMailServer", useExternalMailServer);
+		model.addAttribute("lang", userInfo.getLang());
 	    
 		return "ezStatistics/statisticsLeftMenu";
 	}

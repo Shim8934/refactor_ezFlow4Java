@@ -51,9 +51,9 @@
                     	
                     	/* 2018-07-16 홍승비 - 게시판 환경설정 >  즐겨찾기 체크박스 정렬 */
                     	if (getNodeText(listdom.getElementsByTagName("TABUSED")[i]) == "Y") {
-	                        strHTML += "<td style='width:12%;text-align:center; padding-right:20px;'><input type='checkbox' BoardID='" + getNodeText(listdom.getElementsByTagName("BOARDID")[i]) + "' onclick='event_statuschange(this);' checked></td>";
+	                        strHTML += "<td style='width:12%;text-align:center; padding-right:20px;'><div class='custom_checkbox'><input type='checkbox' BoardID='" + getNodeText(listdom.getElementsByTagName("BOARDID")[i]) + "' onclick='event_statuschange(this);' checked></div></td>";
                     	} else {
-        	                strHTML += "<td style='width:12%;text-align:center; padding-right:20px;'><input type='checkbox' BoardID='" + getNodeText(listdom.getElementsByTagName("BOARDID")[i]) + "' onclick='event_statuschange(this);'></td>";
+        	                strHTML += "<td style='width:12%;text-align:center; padding-right:20px;'> <div class='custom_checkbox'><input type='checkbox' BoardID='" + getNodeText(listdom.getElementsByTagName("BOARDID")[i]) + "' onclick='event_statuschange(this);'></div></td>";
                     	}
                     	
                     	/* 2019-03-29 홍승비 - 새게시물 다국어 메세지 수정 */

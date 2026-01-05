@@ -1000,8 +1000,16 @@ function ListView() {
 			    	cb.setAttribute("checked", "checked");
 			    }
 			    
-			    extTd.appendChild(cb);
-			    extTd.innerHTML += ezSchedule_csj1;
+		        var oDiv = document.createElement("DIV");
+		        oDiv.className = "custom_checkbox";
+                var oLavel = document.createElement("label");
+			    oLavel.setAttribute("for", "cb_" + curID);
+			    oLavel.innerText = ezSchedule_csj1;
+			    
+		        oDiv.appendChild(cb);
+		        oDiv.appendChild(oLavel);
+			    extTd.appendChild(oDiv);
+			    // extTd.innerHTML += ezSchedule_csj1;
 			    objTr.appendChild(extTd);
             }
             

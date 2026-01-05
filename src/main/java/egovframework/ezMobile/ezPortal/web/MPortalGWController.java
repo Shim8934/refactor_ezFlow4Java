@@ -262,7 +262,8 @@ public class MPortalGWController extends EzFileMngUtil {
 
 					if ("true".equals(mailAccess)) {
 						mailList = mEmailService.getMainMailList(info, locale, "isUnreadOnly", listCnt);
-						mailCnt = mEmailService.getMainMailUnreadCount(info, locale);
+						//mailCnt = mEmailService.getMainMailUnreadCount(info, locale);
+						mailCnt = (int) ezEmailService.getUnreadCountAll(null, userId, locale, info.getTenantId()).get("totalUnreadCountInAllAccounts");
 
 						// 메일 중요도 색깔 구하기
 						// jgw 요청은 비용이 높으므로 먼저 중요도 높음 메일이 있는지 체크함
@@ -788,30 +789,21 @@ public class MPortalGWController extends EzFileMngUtil {
 								dataObject.put(menuCode + "Access", access);
 							}
                             break;
+						case "workspace":
+							footerAccessCount = access ? footerAccessCount + 1 : footerAccessCount;
+		
+							if (access) {
+								accessMenuCode.add(menuCode);
+							}
+		
+							dataObject.put(menuCode, access);
+							dataObject.put(menuCode + "Access", access);
+							break;	
                     }
 				} else if (menuCode != null) {
 					dataObject.put(menuCode, access);
 					dataObject.put(menuCode + "Access", access);
 					System.out.println(menuCode + " is NOT in the menuCodeList.");
-				}
-			}
-
-			for (Map.Entry<String, Boolean> menuAccess : menuAccessList.entrySet()) {
-				String menuCode = menuAccess.getKey();
-				boolean access = menuAccess.getValue();
-				if (menuCode != null) {
-					switch(menuCode) {
-						case "workspace":
-						footerAccessCount = access ? footerAccessCount + 1 : footerAccessCount;
-
-						if (access) {
-							accessMenuCode.add(menuCode);
-						}
-
-						dataObject.put(menuCode, access);
-						dataObject.put(menuCode + "Access", access);
-						break;
-					}
 				}
 			}
 			logger.debug("[access result] footerAccessCount : " + footerAccessCount + ", accessMenuCode : " + accessMenuCode.toString() + ", portalAccessCount : " + portalAccessCount);
@@ -825,12 +817,16 @@ public class MPortalGWController extends EzFileMngUtil {
 			
 			List<ScheduleGroupListVO> gatherList = ezScheduleService.getMyGatherList(userId, tenantId, companyId); // 2023-10-06 임정은 - 모바일 일정관리 > 일정 모아보기 추가
 
+			// 2025-08-22 김유진 - 모바일 전자결재 사용 여부
+			String useMobileDraft = ezCommonService.getTenantConfig("useMobileDraft", info.getTenantId());
+
 			dataObject.put("portalAccessCount", portalAccessCount);
 			dataObject.put("footerAccessCount", footerAccessCount);
 			dataObject.put("accessMenuCode", sortedMenu);
 			dataObject.put("approvalFlag", approvalFlag);
 			dataObject.put("useMobileMail2", useMobileMail2);
 			dataObject.put("gatherList", gatherList);
+			dataObject.put("useMobileDraft", useMobileDraft);
 			
 			result.put("status", "ok");
 			result.put("code", 0);			
@@ -1403,6 +1399,7 @@ public class MPortalGWController extends EzFileMngUtil {
 //						}
 
 						String securedMail = String.valueOf("1".equals(mailInfo.get("MAIL_IS_SECURED")));
+						String isEach = String.valueOf("1".equals(mailInfo.get("MAIL_SENT_IN_EACH")));
 
 						int readFlag = "1".equals(mailInfo.get("MAIL_IS_SEEN")) ? 1 : 0;
 						String readClass = "";
@@ -1420,6 +1417,7 @@ public class MPortalGWController extends EzFileMngUtil {
 						mailMap.put("subject", subject);
 						mailMap.put("readClass", readClass);
 						mailMap.put("securedMail", securedMail);
+						mailMap.put("isEach", isEach);
 
 						mailList.add(mailMap);
 					}
@@ -1462,6 +1460,7 @@ public class MPortalGWController extends EzFileMngUtil {
 //						}
 
 						String securedMail = String.valueOf("1".equals(ezEmailUtil.hasSecureMailFlag(message)));
+						String isEach = String.valueOf("1".equals(ezEmailUtil.isEachMail(message)));
 
 						int readFlag = message.isSet(Flags.Flag.SEEN) ? 1 : 0;
 						String readClass = "";
@@ -1479,6 +1478,7 @@ public class MPortalGWController extends EzFileMngUtil {
 						mailMap.put("subject", subject);
 						mailMap.put("readClass", readClass);
 						mailMap.put("securedMail", securedMail);
+						mailMap.put("isEach", isEach);
 
 						mailList.add(mailMap);
 					}

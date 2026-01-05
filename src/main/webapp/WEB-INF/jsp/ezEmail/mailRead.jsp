@@ -24,6 +24,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/reademail.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/string_component.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/leftmenu-util.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/email.address.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/email_tag.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/Common.js')}"></script>
 		<script type="text/javascript">	
@@ -229,7 +230,7 @@
 			}
 
 			function send() {
-			    window.opener.Send_onClick();
+			    window.opener.previewSend();
 			    window.close();
 			}
 
@@ -518,7 +519,9 @@
 		    }
 		
 		    function NewItem_onclick_Complete(ret) {
-		        if (typeof (ret) != "undefined") {
+				if (ret == "cancel" || typeof (ret) == "undefined") {
+					return;
+				} else if (typeof (ret) != "undefined") {
 		            pBoardID = ret[0];
 		
 		            if (pBoardID == "" || typeof (pBoardID) == "undefined") {
@@ -589,7 +592,7 @@
 		        	pURI += "&shareId=" + encodeURIComponent(shareId);
 		    	}
 		        
-		        var newwin = GetOpenWindow(pURI, "", 890, 840, "yes");
+		        var newwin = GetOpenWindow(pURI, "", 1200, 840, "yes");
 		        newwin.focus();
 		    }
 		    
@@ -626,12 +629,16 @@
 		    }
 		    
 		    function mailWritePreviewDel() {
+		        // 기존 mailWritePreview는 브라우저 오픈 후 + 닫힐 때 2번 실행, mailWritePreviewSend는 닫힐 때 1번 실행
+		        // mailWritePreviewSend 일때 send와 함께 작동하면서 isDelted 가 true로 변경되어 '발송전 미리보기' 기능 사용 시 메일 삭제 되지 않는 오류 발생
+		        // delDrafts_preview 함수로 우회하여 isDelted가 false가 되도록 수정
 		    	if (mailWritePreview == "true" || mailWritePreviewSend == "true") {
                     // 메일 작성 > 미리보기 메일 삭제
-                    window.opener.parent.delDrafts(g_uid);
+                    window.opener.parent.delDrafts_preview(g_uid);
                     window.parent.opener.parent.previewChk = false;
 				}
-		    }
+			}
+			
 		    
 		    /* 2020-08-31 홍승비 - 메일 커뮤니티 게시판에 게시 기능 추가 */
 		    // 메일읽기창에서 '커뮤니티 게시' 버튼을 누를 때 호출됨
@@ -703,7 +710,7 @@
 				}
 
 
-				let usingMailPreview = document.getElementById("iFramePanel_mail_preview").className.includes('on');
+				let usingMailPreview = document.getElementById("iFramePanel_mail_preview")?.className.includes('on');
 				if (usingMailPreview) {
 					hiddenPreviewMail();
 				}
@@ -911,6 +918,8 @@
 			<input  type="hidden" id="iptFolderPath"  name="iptFolderPath" value="">
 		    <input  type="hidden" id="iptURL"  name="iptURL" value="">
 		    <input  type="hidden" id="iSecurity"  name="iSecurity" value="">
+		    <input  type="hidden" id="toAddr"  name="toAddr" value="${g_useremail}">
+		    <input  type="hidden" id="fromAddr"  name="fromAddr" value="${fromEmail}">
 		    <c:if test="${shareId != null && shareId != ''}">
 		    	<input  type="hidden" id="shareId"  name="shareId" value="${shareId}">
 		    </c:if>

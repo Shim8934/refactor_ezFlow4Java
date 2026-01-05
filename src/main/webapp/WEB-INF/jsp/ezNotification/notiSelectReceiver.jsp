@@ -637,6 +637,7 @@
 	                    if (M_TR.getAttribute("_DATA9") != "") {	                    	
 	                        var M_TR_IMG = document.createElement("IMG");
 	                        M_TR_IMG.setAttribute("SRC", "/admin/ezOrgan/getPersonalInfo.do?fileName=" + M_TR.getAttribute("_DATA9"));
+	                        M_TR_IMG.setAttribute('onerror', "this.style.display='none'");
 	                        M_TR_IMG.setAttribute("width", "90px");
 	                        M_TR_IMG.setAttribute("height", "90px");
 	                        M_TR_DIV.appendChild(M_TR_IMG);
@@ -851,7 +852,7 @@
 	            notiTargetListView.LoadFromID("notiTargetTable");
 	            var selectedRows = notiTargetListView.GetDataRows();
 	            if (selectedRows.length == 0) {
-	            	alert("수신자를 선택하세요");
+	            	alert("<spring:message code='ezNotification.hth97' />");
 	            	return;
 	            }
 	            var notiParamArray = [];
@@ -1484,8 +1485,10 @@
 					                	<tr>
 					                    	<th><spring:message code='ezBoard.t999025' /></th>
 					                    	<td>
-						                        <input type="checkbox" id="admin_OK" onclick="checkbox_onclick(event)">&nbsp;<spring:message code="ezNotification.hth70"/>
-						                        <input type="checkbox" id="admin_NO" onclick="checkbox_onclick(event)">&nbsp;<spring:message code="ezNotification.hth71"/>
+												<div class='custom_checkbox'>
+													<input type="checkbox" id="admin_OK" onclick="checkbox_onclick(event)"><label for="admin_OK"><spring:message code="ezNotification.hth70"/></label>
+													<input type="checkbox" id="admin_NO" onclick="checkbox_onclick(event)"><label for="admin_NO"><spring:message code="ezNotification.hth71"/></label>
+												</div>
 						                    </td>
 					                	</tr>
 					            	</tbody>

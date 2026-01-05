@@ -23,6 +23,7 @@
 	<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.datepicker.js')}"></script>
 	<script type="text/javascript" src="${util.addVer('/js/jquery/jquery.modal.js')}"></script>
 	<!-- module -->
+	<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 	<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/context/duplicate-file.js')}"></script>
 	<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/context/row-selector.js')}"></script>
 	<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/context/capacity.js')}"></script>
@@ -32,7 +33,6 @@
 	<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/context/share.js')}"></script>
 	<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/selectUsers.js')}"></script>
 	<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/popup.js')}"></script>
-	<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
     <script type="text/javascript">
 		var file 		 = new Array();
 		var strShared1	= messages.strLang2;
@@ -546,15 +546,20 @@
 						});
 					}
 					
+					var wrapperDiv = document.createElement("div");
+                    wrapperDiv.setAttribute("class", "custom_checkbox");
+
 					var inputElmt = document.createElement("input");
 					inputElmt.setAttribute("type", "checkbox");
 					inputElmt.setAttribute("value", result[i]["fileId"]);
-					inputElmt.setAttribute("class", "checkBnk");
+					//inputElmt.setAttribute("class", "checkBnk");
 					inputElmt.addEventListener("change", rowContext.onCheckboxChange);
 					inputElmt.addEventListener("click", function(event) { event.stopPropagation(); });
 					inputElmt.addEventListener("dblclick", function(event) { event.stopPropagation(); });
 					
-					tdElmt1.appendChild(inputElmt);
+					wrapperDiv.appendChild(inputElmt);
+					tdElmt1.appendChild(wrapperDiv);
+
 					tdElmt1.addEventListener("click", function(event) { 
 						this.firstChild.click();
 						event.stopPropagation();
@@ -1246,7 +1251,7 @@
 	                <table style="width: 100%; border-spacing: 0px; border-collapse: collapse; border: none;" class="list_element">
 	                    <caption></caption>
 	                    <colgroup>
-	                        <col style="width: 100px;">
+	                        <col style="width: 110px;">
 	                        <col>
 	                    </colgroup>
 	                    <tr>
@@ -1275,7 +1280,10 @@
 				<table class="mainlist" style="width:100%"  id="tblFileList1">
 					<thead id ="BoardList_THEAD">
 						<tr>
-							<th class="wfFilecheck " style="text-align: center;" ><input type="checkbox" onchange="rowContext.selectAll(this.checked)" id="_checkAll"></th>
+							<th class="wfFilecheck " style="text-align: center;" >
+							    <div class="custom_checkbox">
+							        <input type="checkbox" onchange="rowContext.selectAll(this.checked)" id="_checkAll"></th>
+                                </div>
 							<th class="wfFileFavorite 	headListClick" style="text-align: center;" headers="FAVORITE_STATUS"><img class="none-drag" src='/images/ImgIcon/icon-flag.gif'/></th><!-- 즐겨찾기 -->
 							<th class="wfFileType 		headListClick" style="text-align: center;" headers="TYPE_ICON"><spring:message code='ezWebFolder.t188'/></th><!-- 유형 -->
 							<th class="wfFileName 		headListClick" headers="FILE_NAME"><spring:message code='ezWebFolder.t156'/></th><!-- 이름 -->

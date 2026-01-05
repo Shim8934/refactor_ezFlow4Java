@@ -143,3 +143,5 @@ input:checked + .slider:before{transform:translateX(26px);}
 .lnbUL li .list_text2{padding-left:23px; text-overflow:ellipsis; overflow:hidden; white-space:pre}
 .resetBtn{line-height:0px;}
 .textUser{width:22%}
+
+.statistics_wrap .statistics .graph_box .graph .display .num{margin-left: -5px;}

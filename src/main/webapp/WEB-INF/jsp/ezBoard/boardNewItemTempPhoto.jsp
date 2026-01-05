@@ -232,27 +232,27 @@
 	                var ua = navigator.userAgent;
 	                if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {
 	                    resultHTML = "<table width='100%' class='content' style='border-top:0 none; table-layout:fixed;' id='" + "M_" + imageid + "' name='" + imgpath + "' uniqueId='" + imgUniqueID + "' ><tr>" +
-	                                     "<td style='width:25px;background:rgb(245, 245, 245);border-top:0 none;'><input type='checkbox' value='" + "M_" + imageid + "' id='imagecheck" + bodycount + "'  name='checkmenuSub' /></td>" +
+	                                     "<td style='width:25px;background:rgb(245, 245, 245);border-top:0 none;'><div class='custom_checkbox'><input type='checkbox' value='" + "M_" + imageid + "' id='imagecheck" + bodycount + "'  name='checkmenuSub' /></div></td>" +
 	                                     "<td style='width:113px; height: 100px;border-top:0 none; padding:6px;'><img id='" + imageid + "' title='" + localFileName + "' size='" + imgSize + "' uniqueId='" + imgUniqueID + "' style='width: 100px; height: 100px;' name='imgView'></img></td>" +
 	                                     "<td style='border-top:0 none; padding:6px 8px 6px 6px;'><textarea type=/text' style='width:100%; height:100px; border:1px solid #ddd; margin:0; padding:0;' maxlength='50' name='imgContent'>" + fileContent + "</textarea></td>" +
 	                                     "<td style='width:72px; border-top:0 none; padding:0px 6px; text-align:center;'>";
 	
 	                    if (flag == "Y")
-	                        resultHTML += "<input type='radio' name='mainFG' checked='checked'/></td></tr></table>";
+	                        resultHTML += "<div class='custom_radio'><input type='radio' name='mainFG' checked='checked'/></div></td></tr></table>";
 	                    else
-	                        resultHTML += "<input type='radio' name='mainFG'/></td></tr></table>";
+	                        resultHTML += "<div class='custom_radio'><input type='radio' name='mainFG'/></div></td></tr></table>";
 	                }
 	                else {
 	                    resultHTML = "<table width='100%' class='content' style='border-top:0 none; table-layout:fixed;' id='" + "M_" + imageid + "' name='" + imgpath + "' uniqueId='" + imgUniqueID + "' ><tr>" +
-	                                     "<td style='width:20px;background:rgb(245, 245, 245);border-top:0 none;'><input type='checkbox' value='" + "M_" + imageid + "' id='imagecheck" + bodycount + "'  name='checkmenuSub' /></td>" +
+	                                     "<td style='width:20px;background:rgb(245, 245, 245);border-top:0 none;'><div class='custom_checkbox'><input type='checkbox' value='" + "M_" + imageid + "' id='imagecheck" + bodycount + "'  name='checkmenuSub' /></div></td>" +
 	                                     "<td style='width:100px; height: 100px;border-top:0 none; padding:6px;'><img id='" + imageid + "' title='" + localFileName + "' size='" + imgSize + "' uniqueId='" + imgUniqueID + "' style='width: 100px; height: 100px;' name='imgView'></img></td>" +
 	                                     "<td style='border-top:0 none; padding:6px 8px 6px 6px;'><textarea type=/text' style='width:100%; height:100px; border:1px solid #ddd; margin:0; padding:0;' maxlength='50' name='imgContent'>" + fileContent + "</textarea></td>" +
 	                                     "<td style='width:72px; border-top:0 none; padding:0px 6px; text-align:center;'>";
 	
 	                    if (flag == "Y")
-	                        resultHTML += "<input type='radio' name='mainFG' checked='checked'/></td></tr></table>";
+	                        resultHTML += "<div class='custom_radio'><input type='radio' name='mainFG' checked='checked'/></div></td></tr></table>";
 	                    else
-	                        resultHTML += "<input type='radio' name='mainFG'/></td></tr></table>";
+	                        resultHTML += "<div class='custom_radio'><input type='radio' name='mainFG'/></div></td></tr></table>";
 	                }
 	                var imagecontent = document.getElementById("addimagecontent");
 	
@@ -277,14 +277,14 @@
 	                    return "false";
 	
 	                resultHTML = "<table width='100%' class='content' style='border-top:0 none; table-layout:fixed;' id='" + "M_" + imageid + "' name='" + imgpath + "' uniqueId='" + imgUniqueID + "' ><tr>" +
-	                                     "<td style='width:20px;background:rgb(245, 245, 245);border-top:0 none;'><input type='checkbox' value='" + "M_" + imageid + "' id='imagecheck" + bodycount + "'  name='checkmenuSub' /></td>" +
+	                                     "<td style='width:20px;background:rgb(245, 245, 245);border-top:0 none;'><div class='custom_checkbox'><input type='checkbox' value='" + "M_" + imageid + "' id='imagecheck" + bodycount + "'  name='checkmenuSub' /></div></td>" +
 	                                     "<td style='width:100px; height: 100px;border-top:0 none; padding:6px;'><img id='" + imageid + "' title='" + localFileName + "' size='" + imgSize + "' uniqueId='" + imgUniqueID + "' style='width: 100px; height: 100px;' name='imgView'></img></td>" +
 	                                     "<td style='border-top:0 none; padding:6px 8px 6px 6px;'><textarea type=/text' style='width:100%; height:100px; border:1px solid #ddd; margin:0; padding:0;' maxlength='50' name='imgContent'>" + fileContent + "</textarea></td>" +
 	                                     "<td style='width:72px; border-top:0 none; padding:0px 6px; text-align:center;'>";
 	                if (flag == "Y")
-	                    resultHTML += "<input type='radio' name='mainFG' checked='checked'/></td></tr></table>";
+	                    resultHTML += "<div class='custom_radio'><input type='radio' name='mainFG' checked='checked'/></div></td></tr></table>";
 	                else
-	                    resultHTML += "<input type='radio' name='mainFG'/></td></tr></table>";
+	                    resultHTML += "<div class='custom_radio'><input type='radio' name='mainFG'/></div></td></tr></table>";
 	
 	
 	                var imagecontent = document.getElementById("addimagecontent");
@@ -320,17 +320,17 @@
 	                var ua = navigator.userAgent;
 	                if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {
 	                    resultHTML = "<table width='100%' class='content' style='border-top:0 none; table-layout:fixed;' id='" + "M_" + imageid + "' name='" + imgpath + "' uniqueId='" + imgUniqueID + "' ><tr>" +
-	                                     "<td style='width:25px;background:rgb(245, 245, 245);border-top:0 none;'><input type='checkbox' value='" + "M_" + imageid + "' id='imagecheck" + bodycount + "'  name='checkmenuSub' /></td>" +
+	                                     "<td style='width:25px;background:rgb(245, 245, 245);border-top:0 none;'><div class='custom_checkbox'><input type='checkbox' value='" + "M_" + imageid + "' id='imagecheck" + bodycount + "'  name='checkmenuSub' /></div></td>" +
 	                                     "<td style='width:113px; height: 100px;border-top:0 none; padding:6px;'><img id='" + imageid + "' title='" + localFileName + "' size='" + imgSize + "' uniqueId='" + imgUniqueID + "' style='width: 100px; height: 100px;' name='imgView'></img></td>" +
 	                                     "<td style='border-top:0 none; padding:6px 8px 6px 6px;'><textarea type=/text' style='width:100%; height:100px; border:1px solid #ddd; margin:0; padding:0;' maxlength='50' name='imgContent'></textarea></td>" +
-	                                     "<td style='width:72px; border-top:0 none; padding:0px 6px; text-align:center;'><input type='radio' name=mainFG /></td></tr></table>";
+	                                     "<td style='width:72px; border-top:0 none; padding:0px 6px; text-align:center;'><div class='custom_radio'><input type='radio' name=mainFG /></div></td></tr></table>";
 	                }
 	                else {
 	                    resultHTML = "<table width='100%' class='content' style='border-top:0 none; table-layout:fixed;' id='" + "M_" + imageid + "' name='" + imgpath + "' uniqueId='" + imgUniqueID + "' ><tr>" +
-	                                     "<td style='width:20px;background:rgb(245, 245, 245);border-top:0 none;'><input type='checkbox' value='" + "M_" + imageid + "' id='imagecheck" + bodycount + "'  name='checkmenuSub' /></td>" +
+	                                     "<td style='width:20px;background:rgb(245, 245, 245);border-top:0 none;'><div class='custom_checkbox'><input type='checkbox' value='" + "M_" + imageid + "' id='imagecheck" + bodycount + "'  name='checkmenuSub' /></div></td>" +
 	                                     "<td style='width:100px; height: 100px;border-top:0 none; padding:6px;'><img id='" + imageid + "' title='" + localFileName + "' size='" + imgSize + "' uniqueId='" + imgUniqueID + "' style='width: 100px; height: 100px;' name='imgView'></img></td>" +
 	                                     "<td style='border-top:0 none; padding:6px 8px 6px 6px;'><textarea type=/text' style='width:100%; height:100px; border:1px solid #ddd; margin:0; padding:0;' maxlength='50' name='imgContent'></textarea></td>" +
-	                                     "<td style='width:72px; border-top:0 none; padding:0px 6px; text-align:center;'><input type='radio' name=mainFG /></td></tr></table>";
+	                                     "<td style='width:72px; border-top:0 none; padding:0px 6px; text-align:center;'><div class='custom_radio'><input type='radio' name=mainFG /></div></td></tr></table>";
 	                }
 	                var imagecontent = document.getElementById("addimagecontent");
 	
@@ -355,10 +355,10 @@
 	                    return "false";
 	
 	                var resultHTML = "<table width='100%' class='content' style='border-top:0 none; table-layout:fixed;' id='" + "M_" + imageid + "' name='" + imgpath + "' uniqueId='" + imgUniqueID + "' ><tr>" +
-	                                 "<td style='width:20px; background:rgb(245, 245, 245);border-top:0 none;'><input type='checkbox' value='" + "M_" + imageid + "' id='imagecheck" + bodycount + "'  name='checkmenuSub' /></td>" +
+	                                 "<td style='width:20px; background:rgb(245, 245, 245);border-top:0 none;'><div class='custom_checkbox'><input type='checkbox' value='" + "M_" + imageid + "' id='imagecheck" + bodycount + "'  name='checkmenuSub' /></div></td>" +
 	                                 "<td style='width:100px; height: 100px;border-top:0 none; padding:6px;'><img id='" + imageid + "' title='" + localFileName + "' uniqueId='" + imgUniqueID + "' style='width: 100px; height: 100px;' name='imgView'></img></td>" +
 	                                 "<td style='border-top:0 none; padding:6px 8px 6px 6px;'><textarea type=/text' style='width:100%; height:100px; border:1px solid #ddd; margin:0; padding:0;' maxlength='50' name='imgContent'></textarea></td>" +
-	                                 "<td style='width:72px; border-top:0 none; padding:0px 6px; text-align:center;'><input type='radio' name=mainFG /></td></tr></table>";
+	                                 "<td style='width:72px; border-top:0 none; padding:0px 6px; text-align:center;'><div class='custom_radio'><input type='radio' name=mainFG /></div></td></tr></table>";
 	
 	                var imagecontent = document.getElementById("addimagecontent");
 	
@@ -632,12 +632,7 @@
 	                    window.opener.location.reload(false);
 	                }
 	                catch (e) { }
-	                
-	                if(autoFlag != "Y")
-						window.close();
-	                else
-	                	autoFlag = "N";
-	                
+					window.close();
 	            } else if (getNodeText(GetChildNodes(loadXMLString(xmlhttp.responseText))[0]) == "GUBUNCHANGED") {
                     alert(strLangJIHgubunChange02);
 	            } else {
@@ -1112,7 +1107,9 @@
 	          <td style="width:47%;">
 				  <span id="spUseDept">${boardListVO.writerName}</span>
 				  <c:if test="${'Y' == boardInfo.writerFlag}">
+				  	<div class="custom_checkbox">
 					  <input type="checkbox" id="chkUseDept" style="margin-left: 0px !important;" onclick="chkUseDept_onclick()">
+				  	</div>
 					  <select id="writerFlag" style="display: none;">
 						  <option value="<c:out value='${writerOption.N}\\${writerOption.N2}\\0' />"></option>
 						  <option value="<c:out value='${writerOption.T}\\${writerOption.T2}\\1' />"></option>
@@ -1161,7 +1158,7 @@
 	    <td>
 	        <table style="width:100%; border:1px solid #ddd; border-top:0 none; table-layout:fixed;" border="0" cellspacing="0" cellpadding="0">
 	        <tr>
-	            <th width="60" style="text-align:left;padding-left:3px;border:0;"><input id="checkmenu" type="checkbox" onclick="imagecheckAll(this)" name="checkmenu"/></th>
+	            <th width="60" style="text-align:left;padding-left:3px;border:0;"><div class="custom_checkbox"><input id="checkmenu" type="checkbox" onclick="imagecheckAll(this)" name="checkmenu"/></div></th>
 	            <th style="text-align:center ;padding-left:2px;border:0;"><spring:message code='ezBoard.t1012'/></th>
 	            <th width="72" style="text-align:center;padding-left:2px;border:0;"><spring:message code='ezBoard.t1022'/></th>
 	        </tr>

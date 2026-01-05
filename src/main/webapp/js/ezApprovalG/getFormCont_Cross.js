@@ -21,7 +21,8 @@ function GetFormInfo(ID, KIND, searchtype, searchname) {
 				id : ID,
 				kind  : KIND,
 				searchType : searchtype,
-				searchName : searchname
+				searchName : searchname,
+                draftTypeFlag : draftTypeFlag
 				},
 		success: function(xml){
 			xmlRtn = xml;

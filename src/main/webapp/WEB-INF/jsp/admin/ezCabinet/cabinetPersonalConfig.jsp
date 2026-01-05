@@ -87,7 +87,7 @@
 			<div id="mainSetting" class="userCapDiv" style="height: 500px;">
 				<table class="mainlist cabTbl" id="userCapacityTbl">
 					<tr>
-						<th              class="checkBnk"        ><input type="checkbox"></th>
+						<th              class="checkBnk"        ><div class="custom_checkbox"><input type="checkbox"></div></th>
 						<th headers="cn" class="cabTd8"          ><spring:message code='ezCabinet.t118'/></th>
 						<th headers="dn" class="cabTd8"          ><spring:message code='ezCabinet.t103'/></th>
 						<th headers="un" class="cabTd8"          ><spring:message code='ezCabinet.t117'/></th>

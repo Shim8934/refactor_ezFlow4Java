@@ -10,6 +10,7 @@ import java.util.Optional;
 import java.util.TimeZone;
 
 import javax.annotation.Resource;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -25,6 +26,7 @@ import org.springframework.web.util.WebUtils;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezConn.util.EzConnUtil;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
+import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
@@ -59,6 +61,9 @@ public class EzConnController {
     @Resource(name="EzCommonService")
 	private EzCommonService ezCommonService;
 
+	@Resource(name="EzOrganService")
+	private EzOrganService ezOrganService;
+	
 	@Autowired
 	private CommonUtil commonUtil;
 
@@ -332,80 +337,148 @@ public class EzConnController {
 	@RequestMapping(value="/ezConn/loginForTeams.do", method={RequestMethod.GET})
 	@ResponseBody
 	public void loginForTeams(
-			@RequestParam String id,
-			@RequestParam String cmd,
-			HttpServletRequest request,
+			@RequestParam(required=false) String encacc,        // UPN
+			@RequestParam(required=false) String tabmenu,       // approval, board, orgChart 등
+            @RequestParam(required=false) String device,        // web, mobile, tablet
+            @RequestParam(required=false) String lang,          // locale
+            @RequestParam(required=false) String index,
+            HttpServletRequest request,
 			HttpServletResponse response
 	) throws Exception {
-		logger.debug("loginForTeams started. id={},cmd={}", id, cmd);
+        logger.debug("loginForTeams started. encacc={}, tabmenu={}, device={}, lang={}, index={}", encacc, tabmenu, device, lang, index);
 
 		String resultPage = "";
 
-		try {
-			if (Optional.ofNullable(id).orElse("").isEmpty()) {
-				return;	
-			}
-			
-			String[] params = id.split("@");
-
-			String orgId = params[0].toLowerCase();
-
-			logger.debug("orgId=" + orgId);
-
-			String serverName = request.getServerName();
-			int serverPort = request.getServerPort();
-			int tenantId = loginService.getTenantId(serverName);
-
+        try {
+            String serverName = request.getServerName();
+            int serverPort = request.getServerPort();
+            int tenantId = loginService.getTenantId(serverName);
 			logger.debug("serverName=" + serverName + ",serverPort=" + serverPort + ",tenantId=" + tenantId);
 
-			boolean isUserExists = false;
+            String cn = null;
+            LoginVO resultVO = null;
+            boolean isUserExists = false;
 
-			LoginVO	resultVO = getUserInfo(orgId, "", tenantId);
+            if (encacc != null && !encacc.trim().isEmpty()) {
+                cn = ezOrganService.getCnByUpn(encacc.trim(), tenantId);
+            }
 
-			if (resultVO != null && resultVO.getId() != null && !resultVO.getId().equals("")) {
-				isUserExists = true;
-			}
+            if (cn == null || cn.isEmpty()) {
+                logger.debug("UPN -> CN mapping failed. encacc={}", encacc);
+            } else {
+                resultVO = getUserInfo(cn, "", tenantId);
+                if (resultVO != null && resultVO.getId() != null && !resultVO.getId().isEmpty()) {
+                    isUserExists = true;
+                }
+            }
 
 			logger.debug("isUserExists=" + isUserExists);
 
-			if (isUserExists) {
-				// 2022-10-27 이사라 - 로그인 정보 저장
-				if (commonUtil.isLoginCookieExists(request, response)) {
-					Cookie loginCookie = WebUtils.getCookie(request, "loginCookie");
-					String decryptedLoginCookie = commonUtil.getDecryptedLoginCookie(loginCookie != null ? loginCookie.getValue() : "");
 
-					if (!decryptedLoginCookie.split("///")[1].equals(orgId)) {
-						commonUtil.updateLoginInfo(request, resultVO);
-						loginController.createLoginCookie(resultVO.getId(), " ", " ", tenantId, request, response, resultVO.getDeptID(), resultVO.getCompanyID());
-					}
+            boolean sameUser = false;
+            if (isUserExists && commonUtil.isLoginCookieExists(request, response)) {
+                try {
+                    Cookie loginCookie = WebUtils.getCookie(request, "loginCookie");
+                    String decrypted = commonUtil.getDecryptedLoginCookie(loginCookie != null ? loginCookie.getValue() : "");
+                    String cookieUserId = decrypted.split("///")[1];
+                    sameUser = resultVO.getId().equals(cookieUserId);
+                } catch (Exception e) {
+                    logger.debug(e.getMessage());
+                }
+            }
 
-				} else {
-					commonUtil.updateLoginInfo(request, resultVO);
-					loginController.createLoginCookie(resultVO.getId(), " ", " ", tenantId, request, response, resultVO.getDeptID(), resultVO.getCompanyID());
-				}
+            // 쿠키가 있으면 현재 Teams 로그인 계정과 비교해서 같으면 인증 처리 없이 Redirect, 이외엔 인증페이지에서 토큰 발급
+            boolean sdkAuth = !(cn != null && !cn.isEmpty() && isUserExists && sameUser);
+            logger.debug("sdkAuth=" + sdkAuth);
 
-				// IE, Safari의 경우 기존 사이트에서 iframe으로 ezEKP를 연동할 경우
-				// 보안 문제로 쿠키 정보가 유실되는 현상이 발생해 다음 헤더를 추가함
-				response.setHeader("P3P", "CP=\"Potato\"");
-				
-				if (cmd.equals("approval")) {
-					resultPage = "/ezApprovalG/apprGMain.do";
-				} else if (cmd.equals("board")) {
-					resultPage ="/ezBoard/boardMain.do";
-				} else if (cmd.equals("orgChart")) {
-					resultPage = "/ezOrgan/organMain.do";
-				}
-			}
-		} catch (Exception e) {
-			logger.error(e.getMessage(), e);
-		}
+            if (sdkAuth) {  // 토큰 발급 필요
+                request.setAttribute("tabmenu", tabmenu);
+                request.setAttribute("index", index);
+                request.setAttribute("device", device);
+                request.setAttribute("lang", lang);
+                RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/jsp/ezConn/getAuthForTeams.jsp");
+                dispatcher.forward(request, response);
+                return;
+            }
+
+            // IE, Safari의 경우 기존 사이트에서 iframe으로 ezEKP를 연동할 경우
+            // 보안 문제로 쿠키 정보가 유실되는 현상이 발생해 다음 헤더를 추가함
+            response.setHeader("P3P", "CP=\"Potato\"");
+
+            if (tabmenu.equals("approval")) {
+                resultPage = "/ezApprovalG/apprGMain.do?listType=25";
+            } else if (tabmenu.equals("board")) {
+                resultPage ="/ezBoard/boardMain.do";
+            } else if (tabmenu.equals("orgChart")) {
+                resultPage = "/ezOrgan/organMain.do";
+            }
+            logger.debug("Redirect to {}", resultPage);
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+        }
 
 		logger.debug("loginForTeams ended.");
 
 		// CWE-113 보안 취약점 대응
 		response.sendRedirect(resultPage.replaceAll("\r", "").replaceAll("\n", ""));
 	}
-	
+
+    /**
+     * Teams AuthToken 기반 로그인 처리 - 쿠키 생성 후 메뉴 리다이렉트
+     */
+    @RequestMapping(value="/ezConn/getCurrUser.do", method=RequestMethod.POST)
+    public void getCurrUser(HttpServletRequest req, HttpServletResponse res) throws Exception {
+        logger.debug("getCurrUser started");
+
+        int tenantId = loginService.getTenantId(req.getServerName());
+        String flag    = req.getParameter("FLAG");
+        String token   = req.getParameter("TOKEN");
+        String tabmenu = req.getParameter("TABMENU");
+
+        if (!"AUTHTOKEN".equalsIgnoreCase(flag) || token == null || token.isEmpty()) {
+            res.sendError(HttpServletResponse.SC_BAD_REQUEST, "BAD_FLAG_OR_TOKEN");
+            return;
+        }
+
+        try {
+            // 1) 토큰 -> UPN
+            String upn = ezOrganService.GetUpnFromAuthToken(token, tenantId);
+            if (upn == null || upn.isEmpty()) {
+                res.sendError(401, "NO_UPN");
+                return;
+            }
+
+            // 2) UPN -> CN
+            String cn = ezOrganService.getCnByUpn(upn, tenantId);
+            if (cn == null || cn.isEmpty()) {
+                res.sendError(401, "USER_NOT_FOUND");
+                return;
+            }
+
+            // 3) 쿠키 생성
+            LoginVO vo = getUserInfo(cn, "", tenantId);
+            commonUtil.updateLoginInfo(req, vo);
+            loginController.createLoginCookie(vo.getId(), " ", " ", tenantId, req, res, vo.getDeptID(), vo.getCompanyID());
+
+            res.setHeader("P3P", "CP=\"Potato\"");
+
+            String resultPage = "";
+            if ("approval".equalsIgnoreCase(tabmenu)) {
+                resultPage = "/ezApprovalG/apprGMain.do";
+            } else if ("board".equalsIgnoreCase(tabmenu)) {
+                resultPage = "/ezBoard/boardMain.do";
+            } else if ("orgChart".equalsIgnoreCase(tabmenu)) {
+                resultPage = "/ezOrgan/organMain.do";
+            }
+
+            res.sendRedirect(resultPage.replaceAll("\r", "").replaceAll("\n", ""));
+            logger.debug("getCurrUser ended");
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+            res.sendError(HttpServletResponse.SC_UNAUTHORIZED, "TOKEN_INVALID");
+        }
+    }
+
 	@RequestMapping("/ezConn/approvalMain.do")
 	public String approvalMain(
 					@RequestParam String id,

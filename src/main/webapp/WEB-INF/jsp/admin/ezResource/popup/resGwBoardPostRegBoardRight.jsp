@@ -835,6 +835,7 @@
 	                        if (M_TR.getAttribute("_DATA9") != "") {
 	                            var M_TR_IMG = document.createElement("IMG");
 	                            M_TR_IMG.setAttribute("SRC", "/admin/ezOrgan/getPersonalInfo.do?fileName=" + M_TR.getAttribute("_DATA9"));
+	                            M_TR_IMG.setAttribute('onerror', "this.style.display='none'");
 	                            M_TR_IMG.setAttribute("width", "90px");
 	                            M_TR_IMG.setAttribute("height", "90px");
 	                            M_TR_DIV.appendChild(M_TR_IMG);
@@ -1534,7 +1535,7 @@
         		</tr>
     		</table>
 		<label style="display: inline-flex; align-items: center;">
-    		<input type="checkbox" value="x" id="Check_Everyone" name="Check_Everyone" ><span class="txt" style="margin-bottom: 3px;"><spring:message code="ezResource.t372" /></span>    		
+    		<div class="custom_checkbox"><input type="checkbox" value="x" id="Check_Everyone" name="Check_Everyone" ><label for="Check_Everyone"><span class="txt" style="margin-bottom: 3px;"><spring:message code="ezResource.t372" /></span></label></div>		
 		</label>
     		<div class="btnpositionNew">
         		<a class="imgbtn" onclick="close_onclick()"><span><spring:message code="ezResource.t15" /></span></a>

@@ -154,7 +154,7 @@
             var id = _RowObject.id;
             var usage = _RowObject.getAttribute("usage");
             var companyID = _RowObject.getAttribute("companyid");
-            var OpenWin = window.open("/admin/ezSchedule/SchedulePopupExecutive.do?cn=" + id + "&companyId=" + companyID + "&usage=" + usage + "&priority=" + priority, "SchedulePopupExecutive", GetOpenWindowfeature(460, 200));
+            var OpenWin = window.open("/admin/ezSchedule/SchedulePopupExecutive.do?cn=" + id + "&companyId=" + companyID + "&usage=" + usage + "&priority=" + priority, "SchedulePopupExecutive", GetOpenWindowfeature(460, 220));
             try { OpenWin.focus(); } catch (e) { }
         }
 
@@ -165,7 +165,7 @@
             var priority = lastRow != null ? parseInt(lastRow.getAttribute("priority"), 10) + 1 : 1;
             
             schedule_admin_popup_executive_dialogArguments[1] = popup_executive_complete;
-            var OpenWin = window.open("/admin/ezSchedule/SchedulePopupExecutive.do?priority=" + priority + "&companyId=" + selectedCompanyID, "SchedulePopupExecutive", GetOpenWindowfeature(460, 200));
+            var OpenWin = window.open("/admin/ezSchedule/SchedulePopupExecutive.do?priority=" + priority + "&companyId=" + selectedCompanyID, "SchedulePopupExecutive", GetOpenWindowfeature(460, 220));
             try { OpenWin.focus(); } catch (e) { }
         }
 

@@ -1401,7 +1401,7 @@ var SurveyCreate     = function() {
 		var fileAttToolTip = $("<div class='fileAttTooltip'><div class='fileAttTooltipContent'><div class='fileAttTooltipLine' mode='questionImg'>" + SurveyMessages.strQuestionImage +"</div><div class='fileAttTooltipDivider'></div><div class='fileAttTooltipLine' mode='fileAttach'>" + SurveyMessages.strQuestionFileAttach +"</div></div></div>")
 		var liAttImg     = $("<li class='off atchLiImg'><span class='survey_icon atchImg'></span></li>");
 		var liAttUrl     = $("<li class='off atchLiUrl'><span class=''>" + SurveyMessages.strAttUrl + "</span></li>");
-		var divRequired  = $("<div class='required'><input type='checkbox'><label>" + SurveyMessages.strRequired + "</label></div>");
+		var divRequired  = $("<div><div class='custom_checkbox'><input id='custom" + qstId + "' type='checkbox'><label for='custom" + qstId + "'>" + SurveyMessages.strRequired + "</label></div></div>");
 		var selectBox    = $("<div class='selectBox'></div>");
 		var qstnFileInfo = $("<div class='qstnFileInfo'></div>");
 		var fileList     = $("<div class='fileList'></div>");
@@ -2703,11 +2703,11 @@ var SurveyCreate     = function() {
 				opt = $("<div class='opt' level='" + option.level + "'></div>");
 				
 				if (qstnType == 2) {
-					optChb = $("<input class='optChb' type='checkbox' name='qstn" + qstnId + "opt' value='" + option.level + "' logic='" + option.logic + "' optionId='" + optionId + "' />");
+					optChb = $("<div class='custom_checkbox'><input class='optChb' type='checkbox' name='qstn" + qstnId + "opt' value='" + option.level + "' logic='" + option.logic + "' optionId='" + optionId + "' /></div>");
 					opt.append(optChb);
 				}
 				else {
-					optRdo = $("<input class='optRdo' type='radio' name='qstn" + qstnId + "opt' value='" + option.level + "' logic='" + option.logic + "' optionId='" + optionId + "' />");
+					optRdo = $("<div class='custom_radio'><input class='optRdo' type='radio' name='qstn" + qstnId + "opt' value='" + option.level + "' logic='" + option.logic + "' optionId='" + optionId + "' /></div>");
 					opt.append(optRdo);
 				}
 				
@@ -2749,11 +2749,11 @@ var SurveyCreate     = function() {
 			opt = $("<div class='opt'></div>");
 			
 			if (qstnType == 2) {
-				optChb = $("<input class='optChb' type='checkbox' name='qstn" + qstnId + "opt' value='" + other.level + "' logic='" + other.logic + "' otherFlag='" + other.otherFlag +"' optionId='" + optionId + "'/>");
+				optChb = $("<div class='custom_checkbox'><input class='optChb' type='checkbox' name='qstn" + qstnId + "opt' value='" + other.level + "' logic='" + other.logic + "' otherFlag='" + other.otherFlag +"' optionId='" + optionId + "'/></div>");
 				opt.append(optChb);
 			}
 			else {
-				optRdo = $("<input class='optRdo' type='radio' name='qstn" + qstnId + "opt' value='" + other.level + "' logic='" + other.logic + "' otherFlag='" + other.otherFlag +"' optionId='" + optionId + "'/>");
+				optRdo = $("<div class='custom_radio'><input class='optRdo' type='radio' name='qstn" + qstnId + "opt' value='" + other.level + "' logic='" + other.logic + "' otherFlag='" + other.otherFlag +"' optionId='" + optionId + "'/></div>");
 				opt.append(optRdo);
 			}
 			
@@ -2803,6 +2803,7 @@ var SurveyCreate     = function() {
 		var bodyTd = "";
 		var inputTd = "";
 		var Input = "";
+		var divInput = "";
 		
 		for (var i = 0; i < col.length; i++) {
 			dynamicTd = $("<td></td>");
@@ -2833,9 +2834,17 @@ var SurveyCreate     = function() {
 				}
 				
 				inputTd = $("<td></td>");
+                
+                if (inpType == "radio") {
+                    divInput = $("<div class='custom_radio'></div>");
+                } else if (inpType == "checkbox") {
+                    divInput = $("<div class='custom_checkbox'></div>");
+                }
+                
 				Input = $("<input type='" + inpType + "' name='qstn" + id + "opt" + i + "' id='qstn" + id + "opt" + i + j + "' OptionId='" + rowOptionId + "," + colOptionId +"'>");
 				Input.val(row[i]["rowLevel"] + "," + col[j - row.length]["colLevel"]);
-				inputTd.append(Input);
+				divInput.append(Input);
+				inputTd.append(divInput);
 				bodyTr.append(inputTd);
 			}
 			body.append(bodyTr);
@@ -3098,11 +3107,11 @@ var SurveyCreate     = function() {
 			
 			// 일정 다중 선택
 			if (qstnType == 11) {
-				optChb = $("<input class='optChb' type='checkbox' name='qstn" + qstnId + "opt' value='" + option.level  + "' logic='" + option.logic + "' optionId='" + optionId + "' />");
+				optChb = $("<div class='custom_checkbox'><input class='optChb' type='checkbox' name='qstn" + qstnId + "opt' value='" + option.level  + "' logic='" + option.logic + "' optionId='" + optionId + "' /></div>");
 				opt.append(optChb);
 			}
 			else {
-				optRdo = $("<input class='optRdo' type='radio' name='qstn" + qstnId + "opt' value='" + option.level + "' logic='" + option.logic + "' optionId='" + optionId + "' />");
+				optRdo = $("<div class='custom_radio'><input class='optRdo' type='radio' name='qstn" + qstnId + "opt' value='" + option.level + "' logic='" + option.logic + "' optionId='" + optionId + "' /></div>");
 				opt.append(optRdo);
 			}
 									

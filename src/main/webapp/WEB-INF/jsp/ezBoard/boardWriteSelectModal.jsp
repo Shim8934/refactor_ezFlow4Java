@@ -84,6 +84,21 @@
 					DivPopUpShow(330, 205, pUrl);
 					return;
 				}*/
+
+				<%-- 그룹게시판 선택 시 경고 메세지 추가 (게시물 등록 불가) --%>
+				var spanElement = document.querySelector('span.node_selected');
+				var parentDiv = spanElement ? spanElement.parentElement : null;
+
+				var parentGroup = "";
+				if (parentDiv) {
+					parentGroup = parentDiv.getAttribute('usegroupflag');
+				}
+
+				if (parentGroup == "Y") {
+					var pUrl = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezBoard.lyj08' />") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezBoard.lyj08'/>") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
+					DivPopUpShow(330, 205, pUrl);
+					return;
+				}
 				
 			    var ret = new Array();
 			    ret[0] = SelectedBoardID;

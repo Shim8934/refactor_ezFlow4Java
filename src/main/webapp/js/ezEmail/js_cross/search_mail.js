@@ -327,8 +327,8 @@ function event_searchRecurMail() {
     	var curPage = "";
         if(listType == "mailList"){	
         	var list = document.getElementById("MailList");
-        	if (list.childNodes.item(0).childNodes.item(0).checked) {
-        		list.childNodes.item(0).childNodes.item(0).checked = false;
+        	if (list.childNodes.item(0).childNodes.childNodes.item(0).checked) {
+        		list.childNodes.item(0).childNodes.childNodes.item(0).checked = false;
         	}
         } else {
         	if (document.getElementById("Checkbox1").checked) {
@@ -490,7 +490,7 @@ function resultView(xmlDoc) {
         tr.ondblclick = view_click;
         tr.valign = "center";
 
-        var tempText = "<input type='checkbox' id = 'checklol" + i + "' name='checklol' onclick='event_listCheckboxclick(this)'>";
+        var tempText = "<div class='custom_checkbox'><input type='checkbox' id = 'checklol" + i + "' name='checklol' onclick='event_listCheckboxclick(this)'></div>";
         preparedTD(tr, "26px", "center", "middle", tempText, "", "", true);
 
         tempText = "";
@@ -596,12 +596,12 @@ function FormatSize(p_Prop8) {
 var _RowObject = null;
 
 function event_listMover(obj) {
-    if (!obj.childNodes.item(0).childNodes.item(0).checked) {
+    if (!obj.querySelector('input[type="checkbox"]').checked) {
     	obj.style.backgroundColor = m_strColorOver;
     }
 }
 function event_listMout(obj) {
-    if (!obj.childNodes.item(0).childNodes.item(0).checked) {
+    if (!obj.querySelector('input[type="checkbox"]').checked) {
     	obj.style.backgroundColor = m_strColorDefault;
     }
 }
@@ -624,7 +624,7 @@ function event_listclick(obj) {
     if (document.getElementById("Checkbox1").checked) {
         var TemplistArray = new Array();
         
-        if (obj.childNodes.item(0).childNodes.item(0).checked) {
+        if (obj.querySelector('input[type="checkbox"]').checked) {
         	
             for (var i = 0; i < listContentArryLength; i++) {
                 if (obj.getAttribute("id") == listContentArry[i]) {
@@ -637,7 +637,7 @@ function event_listclick(obj) {
             
             listContentArry = TemplistArray;
         } else {
-            obj.childNodes.item(0).childNodes.item(0).checked = true;
+            obj.querySelector('input[type="checkbox"]').checked = true;
             obj.style.backgroundColor = m_strColorSelect;
             
             listContentArry[listContentArry.length] = obj.getAttribute("id");
@@ -689,14 +689,14 @@ function event_listclick(obj) {
         } else {
             _RowObject = obj;
             
-            if (_RowObject.childNodes.item(0).childNodes.item(0).checked) {
+            if (_RowObject.querySelector('input[type="checkbox"]').checked) {
                 _RowObject.style.backgroundColor = m_strColorDefault;
-                _RowObject.childNodes.item(0).childNodes.item(0).checked = false;
+                _RowObject.querySelector('input[type="checkbox"]').checked = false;
                 
                 listContentArry = ArrayDelete(listContentArry, _RowObject.id);
             } else {
                 _RowObject.style.backgroundColor = m_strColorSelect;
-                _RowObject.childNodes.item(0).childNodes.item(0).checked = true;
+                _RowObject.querySelector('input[type="checkbox"]').checked = true;
                 
                 listContentArry[listContentArry.length] = _RowObject.getAttribute("id");
             }
@@ -706,15 +706,15 @@ function event_listclick(obj) {
 
 function event_listCheckboxclick(obj) {
     if (obj.checked) {
-        obj.parentElement.parentElement.style.backgroundColor = m_strColorSelect;
+        obj.closest('tr').style.backgroundColor = m_strColorSelect;
         listContentArry[listContentArry.length] = obj.parentElement.parentElement.getAttribute("itemid");
     } else {
         var TemplistArray = new Array();
         
         for (var i = 0; i < listContentArry.length; i++) {
         	
-            if (obj.parentElement.parentElement.getAttribute("itemid") == listContentArry[i]) {
-                obj.parentElement.parentElement.style.backgroundColor = m_strColorDefault;
+            if (obj.closest('tr').getAttribute("itemid") == listContentArry[i]) {
+                obj.closest('tr').style.backgroundColor = m_strColorDefault;
             } else {
                 TemplistArray[TemplistArray.length] = listContentArry[i];
             }

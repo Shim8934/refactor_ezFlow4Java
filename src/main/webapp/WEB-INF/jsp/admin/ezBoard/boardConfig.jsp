@@ -21,6 +21,7 @@
 			var itemCnt = -1;
 			var userPageYN = "<c:out value='${userPageYN}'/>"; /* 사용자 페이지 > 게시판 관리 접근 */
 			var pParentNeed = "<c:out value='${parentNeed}'/>";
+			var useGroupFlag = "<c:out value='${useGroupFlag}'/>"; /* 그룹게시판 설정 여부 */
 
 	        document.onselectstart = function () { return false; };
 	        window.onresize = window_resize;
@@ -40,7 +41,15 @@
 				} else {
 					TabId = "1tab1";
 				}
-				
+
+				if (useGroupFlag == "Y") { // 그룹게시판인 경우 게시물 리스트, 권한설정 숨김처리 및 일반설정탭으로 로드되도록 조건 설정
+					document.getElementById("BoardEnv_sub1").style.display = "none";
+					document.getElementById("BoardEnv_sub3").style.display = "none";
+					TabId = "1tab2";
+				} else {
+					TabId = "1tab1";
+				}
+
 	            document.getElementById(TabId).setAttribute("class", "tabon");
 	            Tab1_SelectID = TabId;
 

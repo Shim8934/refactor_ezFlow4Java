@@ -310,7 +310,9 @@
 		    	<tr class="detailSearch" style="display: none;"> 
 		      		<th><spring:message code='ezSchedule.t349'/></th>
 		      		<td>
-		      			<input type="checkbox" value="1" id="usedate" onclick="DateSearch_Click();" style="margin-top: 1px;" /><label for="usedate"><spring:message code='ezSchedule.t350'/></label>
+		      			<div class="custom_checkbox">
+			      			<input type="checkbox" value="1" id="usedate" onclick="DateSearch_Click();" style="margin-top: 1px;" /><label for="usedate"><spring:message code='ezSchedule.t350'/></label>
+		      			</div>
 		            	<input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly"/> ~
 		      			<input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly"/>
 		          		<span>&nbsp;(<spring:message code='ezSchedule.t351'/></span> 
@@ -342,16 +344,16 @@
 				      		<th style="width:50px">
 		      			</c:when>
 		      			<c:otherwise>
-				      		<th style="width:70px">
+				      		<th style="width:80px">
 		      			</c:otherwise>
 		      		</c:choose>
 		      		<spring:message code='ezSchedule.t270'/></th> 
-		      		<th style="width:80px"><spring:message code='ezSchedule.t271'/></th> 
+		      		<th style="width:85px"><spring:message code='ezSchedule.t271'/></th> 
 		      		<th style="width:80px"><spring:message code='ezSchedule.t161'/></th> 
 		      		<th style="width:60%"><spring:message code='ezSchedule.t272'/></th>
 		      		<th style="width:140px"><spring:message code='ezSchedule.t273'/></th> 
-		      		<th style="width:140px"><spring:message code='ezSchedule.t274'/></th> 
-		      		<th style="width:140px"><spring:message code='ezSchedule.t275'/></th> 
+		      		<th style="width:170px"><spring:message code='ezSchedule.t274'/></th> 
+		      		<th style="width:170px"><spring:message code='ezSchedule.t275'/></th> 
 		    	</tr>
 		    	<c:forEach var="item" items="${scheduleList}">
 		    	<c:if test="${item.scheduleType == '9'}">

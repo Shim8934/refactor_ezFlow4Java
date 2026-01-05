@@ -10,6 +10,7 @@
 		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css">
 		<link rel="stylesheet" type="text/css" href="${util.addVer('/css/community.css')}" />
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<style>
 			.graphback {
 				background-color: #f8f8fa;

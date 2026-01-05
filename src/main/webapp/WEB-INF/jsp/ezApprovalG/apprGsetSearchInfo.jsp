@@ -84,20 +84,20 @@
 		            document.getElementById("displayTR3").style.display = "none";
 		            //window.resizeBy(0, -60);
 					if (approvalFlag == "S") {
-			            window.resizeTo(510, 355);
+			            window.resizeTo(600, 400);
 					} else {
 						if (navigator.appName == 'Netscape' && navigator.userAgent.search('Trident') != -1) {
-			            	window.resizeTo(510, 375);
+			            	window.resizeTo(600, 400);
 						} else {
-			            	window.resizeTo(510, 375);
+			            	window.resizeTo(600, 400);
 						}
 					}
 		        } else {
 		        	if (approvalFlag == "S"){
-							resizeTo(510,445);
+							resizeTo(600,445);
 					} else {
 						if (navigator.appName == 'Netscape' && navigator.userAgent.search('Trident') != -1) {
-							resizeTo(510,445);
+							resizeTo(600,445);
 						}
 					}
 				}

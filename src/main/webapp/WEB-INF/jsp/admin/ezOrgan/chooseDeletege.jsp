@@ -80,19 +80,23 @@
 		<table class="content" style="width:100%">
 			<tr>
 		    	<td>
-		    		<input type="radio" id="radio1" name="radiobutton" value="radiobutton"  checked>
-		    		<c:if test="${lang eq  '3'}">
-		      			<label for="radio1"><c:out value='${type}'/><spring:message code='ezOrgan.mse6' /></label>
-		      		</c:if>
-		      		<c:if test="${lang ne '3'}">
-		      			<label for="radio1"><c:out value='${type}'/> <spring:message code='ezOrgan.mse6' /></label>
-		      		</c:if>
+		    	    <div class="custom_radio">
+                        <input type="radio" id="radio1" name="radiobutton" value="radiobutton"  checked>
+                        <c:if test="${lang eq  '3'}">
+                            <label for="radio1"><c:out value='${type}'/><spring:message code='ezOrgan.mse6' /></label>
+                        </c:if>
+                        <c:if test="${lang ne '3'}">
+                            <label for="radio1"><c:out value='${type}'/> <spring:message code='ezOrgan.mse6' /></label>
+                        </c:if>
+		      		</div>
 		      	</td>
 		  	</tr>
 		  	<tr>
 		    	<td>
-		    		<input type="radio" id="radio2" name="radiobutton" value="radiobutton" >
-		      		<label for="radio2"><spring:message code='ezOrgan.mse7' /></label>
+		    	    <div class="custom_radio">
+                        <input type="radio" id="radio2" name="radiobutton" value="radiobutton" >
+                        <label for="radio2"><spring:message code='ezOrgan.mse7' /></label>
+                    </div>
 		      	</td>
 		  	</tr>  
 		</table>

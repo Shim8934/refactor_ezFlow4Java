@@ -520,10 +520,6 @@ public class EzEmailScheduler extends EzFileMngUtil {
 					String[] eachMailHeaders = message.getHeader("X-JMocha-Each-Mail");
 					String eachMailHeader = eachMailHeaders != null ? eachMailHeaders[0] : null;		
 					
-					if (eachMailHeader != null) {
-						message.removeHeader("X-JMocha-Each-Mail");
-					}
-					
 					String useSecureMail = ezCommonService.getTenantConfig("USE_SECUREMAIL", tenantId);
 			        logger.debug("useSecureMail=" + useSecureMail);
 					
@@ -758,7 +754,6 @@ public class EzEmailScheduler extends EzFileMngUtil {
 		        			try {
 		        				message.setRecipients(RecipientType.TO, allRecipients);
 		        				
-		        				message.setHeader("X-JMocha-Each-Mail", "true");
 		        				Transport.send(message);
 		        				
 		        			} catch (MessagingException e1) {
@@ -786,7 +781,6 @@ public class EzEmailScheduler extends EzFileMngUtil {
                                     message.setRecipients(RecipientType.TO, newRecipients);
                                     logger.debug("validAddressList=" + allRecipientList.toString());
                                     logger.debug("invalidAddressList=" + invalidAddressList);
-                                    message.setHeader("X-JMocha-Each-Mail", "true");
                                     Transport.send(message);
 
                                 } else {

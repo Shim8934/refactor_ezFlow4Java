@@ -267,7 +267,7 @@ public class EzNewPortalGWController {
 			String useWebfolder = ezCommonService.getTenantConfig("useWebfolder", tenantId);
 			String useEzPMS = ezCommonService.getTenantConfig("USE_ezPMS", tenantId);
 			String useCommunity = ezCommonService.getTenantConfig("USE_COMMUNITY", tenantId);
-			String useEzWorkspace = ezNewPortalService.isUseEzWorkspace(companyId, tenantId, userId, deptId);
+			String useEzWorkspace = ezNewPortalService.isUseEzWorkspace(companyId, tenantId, userId, deptId, "");
 			String useExternalMailServer = ezCommonService.getTenantConfig("useExternalMailServer", tenantId);
 			
 			String useSchedule = ezCommonService.getTenantConfig("useSchedule", tenantId);
@@ -2635,21 +2635,6 @@ public class EzNewPortalGWController {
 			int menuNamesCount = menuNames.size();
 			JSONObject data = new JSONObject();
 			data.put("menuInfo", menuInfo);
-			
-			if (menuNamesCount > 2) {
-				List<MenuNameVO> menuNamesWithOrder = new ArrayList<MenuNameVO>();
-				
-				// 사용 언어가 가장 먼저 위치하도록 순서 조정.
-				menuNamesWithOrder.add(menuNames.get(Integer.parseInt(primaryLang) - 1));
-				
-				for (MenuNameVO vo : menuNames) {
-					if (!vo.getMenuLang().equals(primaryLang)) {
-						menuNamesWithOrder.add(vo);
-					}
-				}
-				
-				data.put("menuNames", menuNamesWithOrder);
-			} 
 			data.put("menuNames", menuNames);
 			
 			result.put("status", "ok");
@@ -3275,6 +3260,8 @@ public class EzNewPortalGWController {
 				    boardName = boardInfo.getBoardName1();
 				} else if (lang.equals("3")) {
 				    boardName = boardInfo.getBoardName3();
+				} else if (lang.equals("6")){
+				    boardName = boardInfo.getBoardName6();
 				} else {
 				    boardName = boardInfo.getBoardName2();
 				}
@@ -3897,6 +3884,7 @@ public class EzNewPortalGWController {
 //						}
 
 						String securedMail = String.valueOf("1".equals(mailInfo.get("MAIL_IS_SECURED")));
+						String isEach = String.valueOf("1".equals(mailInfo.get("MAIL_SENT_IN_EACH")));
 
 						int readFlag = "1".equals(mailInfo.get("MAIL_IS_SEEN")) ? 1 : 0;
 						String readClass = "";
@@ -3914,6 +3902,7 @@ public class EzNewPortalGWController {
 						mailMap.put("subject", subject);
 						mailMap.put("readClass", readClass);
 						mailMap.put("securedMail", securedMail);
+						mailMap.put("isEach", isEach);
 
 						mailList.add(mailMap);
 					}
@@ -3956,6 +3945,7 @@ public class EzNewPortalGWController {
 //						}
 
 						String securedMail = String.valueOf("1".equals(ezEmailUtil.hasSecureMailFlag(message)));
+						String isEach = String.valueOf("1".equals(ezEmailUtil.isEachMail(message)));
 
 						int readFlag = message.isSet(Flags.Flag.SEEN) ? 1 : 0;
 						String readClass = "";
@@ -3973,6 +3963,7 @@ public class EzNewPortalGWController {
 						mailMap.put("subject", subject);
 						mailMap.put("readClass", readClass);
 						mailMap.put("securedMail", securedMail);
+						mailMap.put("isEach", isEach);
 
 						mailList.add(mailMap);
 					}
@@ -4312,7 +4303,7 @@ public class EzNewPortalGWController {
 			String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", tenantId);
 			String companyId = request.getParameter("companyId");
 
-			JSONObject data = ezNewPortalService.getApprovalList(userId, companyId, tenantId, info.getOffset(), type, approvalFlag, info.getLang());
+			JSONObject data = ezNewPortalService.getApprovalList(userId, companyId, tenantId, info.getOffset(), type, approvalFlag, info.getLang(), info.getPrimary());
 
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -5102,7 +5093,7 @@ public class EzNewPortalGWController {
 				if (info.getRollInfo() != null && info.getRollInfo().indexOf("a=1") > -1 || ezOrganService.isProxyUser(info.getTenantId(), userId, nowDateTime).equals("1")) {
 					susinAdmin = "admin";
 				}
-				String approvalTotalCount = ezApprovalGSerivce.getWebPartList("1", userId, deptId, "", "LEFT", susinAdmin, companyId, portletLang, tenantId, offset);
+				String approvalTotalCount = ezApprovalGSerivce.getWebPartList("1", userId, deptId, "", "LEFT", susinAdmin, companyId, portletLang, tenantId, offset, "");
 				logger.debug("approvalTotalCount : " + approvalTotalCount);
 				
 				Document docXML = commonUtil.convertStringToDocument(approvalTotalCount);
@@ -6058,6 +6049,8 @@ public class EzNewPortalGWController {
 				        break;
 				    case "4":
 				        tabBoardName = hashMap.get("BOARDNAME4").toString();
+				    case "6":
+				    	tabBoardName = hashMap.get("BOARDNAME6").toString();
 				        break;
 				    default:
 				    	tabBoardName = hashMap.get("BOARDNAME").toString();
@@ -6560,7 +6553,7 @@ public class EzNewPortalGWController {
 			if (info.getRollInfo() != null && info.getRollInfo().indexOf("a=1") > -1 || ezOrganService.isProxyUser(info.getTenantId(), userId, nowDateTime).equals("1")) {
 				susinAdmin = "admin";
 			}
-			String approvalTotalCount = ezApprovalGSerivce.getWebPartList("1", userId, deptId, "", "LEFT", susinAdmin, companyId, portletLang, tenantId, offset);
+			String approvalTotalCount = ezApprovalGSerivce.getWebPartList("1", userId, deptId, "", "LEFT", susinAdmin, companyId, portletLang, tenantId, offset, "");
 			logger.debug("approvalTotalCount : " + approvalTotalCount);
 
 			Document docXML = commonUtil.convertStringToDocument(approvalTotalCount);

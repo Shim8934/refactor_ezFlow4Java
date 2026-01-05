@@ -1078,7 +1078,7 @@
 		        return true;
 		    }
 		    function refresh_onclick() {
-		        window.location.href = "/ezBoard/boardItemList.do?page=" + CurPage.toString() + "&boardID=" + encodeURIComponent(pBoardID) + "&sortBy=&boardType=" + pBoardType + "&adminType=" + pAdminType;
+		        window.location.href = "/ezBoard/boardItemList.do?page=" + CurPage.toString() + "&boardID=" + encodeURIComponent(pBoardID) + "&sortBy=&boardType=" + pBoardType + "&adminType=" + pAdminType + "&gubun=" + gubun;
 		    }
 		    function AddToMyBoards() {
 		        var xmlhttp = createXMLHttpRequest();
@@ -2113,7 +2113,9 @@
 							<spring:message code='ezBoard.t185' />
 						</th>
 						<td>${boardName} 
-		      				<input type="checkbox" id="chkSearchSub" ><spring:message code='ezBoard.t498' />
+							<div class="custom_checkbox">
+								<input type="checkbox" id="chkSearchSub" ><label for="chkSearchSub"><spring:message code='ezBoard.t498' /></label>
+							</div>
 		    			</td>
 					</tr>
 					<tr>

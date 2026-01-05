@@ -22,6 +22,7 @@
 	<link rel="stylesheet" href="${util.addVer('/css/ezWebFolder/webfolder.css')}" type="text/css">
 	<link rel="stylesheet" href="${util.addVer('/js/jquery/jquery.modal.css')}" type="text/css" />
 	<link rel="stylesheet" href="${util.addVer('/css/jquery.lineProgressbar.css')}" type="text/css" />
+	<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"/>
 	<!-- datepicker -->
 	<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery-1.9.1.js')}"></script>
 	<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.core.js')}"></script>
@@ -99,11 +100,11 @@
         </div>
 		<select class="select" id="taskRootFolder" onchange="getFileList(this.value)" style="margin-top: -6px;margin-left: 6px; max-width: 400px;">
 		</select>
-		<div style="position: absolute; top: 54px; right: 10px;">
-			<input name="treeType" id="radio1" type="radio" value="C" checked style="margin:0px;padding:0px;width:13px;height:17px;vertical-align: middle" onclick="radioOnclick('C');"><label for="radio1"><span> <spring:message code='ezWebFolder.t233'/></span></label>
-			<input name="treeType" id="radio2" type="radio" value="D"         style="margin:0px;padding:0px;width:13px;height:17px;vertical-align: middle" onclick="radioOnclick('D');"><label for="radio2"><span> <spring:message code='ezWebFolder.t234'/></span></label>
-			<input name="treeType" id="radio3" type="radio" value="U"         style="margin:0px;padding:0px;width:13px;height:17px;vertical-align: middle" onclick="radioOnclick('U');"><label for="radio3"><span> <spring:message code='ezWebFolder.t235'/></span></label>
-			<input name="treeType" id="radio4" type="radio" value="S"         style="margin:0px;padding:0px;width:13px;height:17px;vertical-align: middle" onclick="radioOnclick('S');"><label for="radio4"><span> <spring:message code='ezWebFolder.t266'/></span></label>
+		<div class="custom_radio" style="position: absolute; top: 54px; right: 10px;">
+			<input name="treeType" id="radio1" type="radio" value="C" checked onclick="radioOnclick('C');"><label for="radio1"><span><spring:message code='ezWebFolder.t233'/></span></label>
+			<input name="treeType" id="radio2" type="radio" value="D"         onclick="radioOnclick('D');"><label for="radio2"><span><spring:message code='ezWebFolder.t234'/></span></label>
+			<input name="treeType" id="radio3" type="radio" value="U"         onclick="radioOnclick('U');"><label for="radio3"><span><spring:message code='ezWebFolder.t235'/></span></label>
+			<input name="treeType" id="radio4" type="radio" value="S"         onclick="radioOnclick('S');"><label for="radio4"><span><spring:message code='ezWebFolder.t266'/></span></label>
 		</div>
 	<div id="pageArea">
 		<div style="height:40px;">

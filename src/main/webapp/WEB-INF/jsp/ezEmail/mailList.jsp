@@ -22,6 +22,8 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/Newemail.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/newMail_Cross.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/string_component_utf8.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/email.address.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/email.write.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/Common.js')}"></script>		
 		<link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/jquery.ui.all.css')}">
 		<script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/date_component.js')}"></script>
@@ -537,6 +539,8 @@
 						el.classList.remove('on');
 						el.querySelector('.layer_select').style.display = 'none';
 					});
+
+					HiddenContextMenu();
 					/*if (!event || !event.target) {
 						layerSelect.style.display = 'none';
 						viewMore.classList.remove('on');
@@ -610,9 +614,13 @@
 						});
 					});
 				}
-
+                
+                document.querySelectorAll(".previewmail").forEach(previewmail => {
+                    previewmail.addEventListener('click', hideLayer);
+                });
+                
 				setUpLayerToggle();
-
+                
 				if (useMailTag) {
 					const labelInput = document.getElementById('label-input');
 					// 입력 시 특수문자 입력 못하도록 함
@@ -684,10 +692,10 @@
 		        var conHeight = pheight * 0.8;
 		        var pwidth = window.screen.availWidth;
 		        var conWidth = pwidth * 0.8;
-		        if (conWidth > 890)
-		            conWidth = 890;
+		        if (conWidth > 1200)
+		            conWidth = 1200;
 		        var pTop = (pheight - conHeight) / 2;
-		        var pLeft = (pwidth - 890) / 2;
+		        var pLeft = (pwidth - 1200) / 2;
 		        var feature = "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px,width = " + conWidth + "px, status = no, toolbar=no, menubar=no,location=no,resizable=1";
 		        var requestUrl = "/ezEmail/mailWrite.do?url=" + encodeURIComponent(pURL) + "&cmd=RESEND";
 		        
@@ -746,7 +754,8 @@
 				createNodeAndInsertText(xmlpara, objNode, "EDITORFONTFAMILY", "${mailGeneral.editorFontFamily}");
 				createNodeAndInsertText(xmlpara, objNode, "EDITORFONTSIZE", "${mailGeneral.editorFontSize}");
 				createNodeAndInsertText(xmlpara, objNode, "SELFCCOPTION", "${mailGeneral.selfCcOption}");
-	            
+				createNodeAndInsertText(xmlpara, objNode, "FORWARDAS", "${mailGeneral.forwardAs}");
+
 	            xmlhttp.open("POST", "/ezEmail/mailGeneralSave.do", true);
 	            xmlhttp.onreadystatechange = function() {
 		        	if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
@@ -796,10 +805,11 @@
 		            return;
 		        }
 
-		        if (inputkeyword.value.indexOf("%") != -1) {
-		            alert("'%'" + strLang148);
-		            return;
-		        }
+				// 2025.06.02 한슬기 : 불필요한 코드 제거
+				/*if (inputkeyword.value.indexOf("%") != -1) {
+                    alert("'%'" + strLang148);
+                    return;
+                }*/
 		        
 		        if (inputkeyword.value == "") {
 		        // 2022-12-29 이사라 : 기본검색 시 검색기간을 추가하여 keyword 없이도 검색이 가능하도록 수정
@@ -2170,12 +2180,10 @@
 							<ul class="content_layout">
 								<li class="content_layout_center">
 									<span class="radio_design">
-										<input type="radio" id="and" name="andor" checked="checked" value="and">
-										<label for="and">AND</label>
+										<input type="radio" id="and" name="andor" checked="checked" value="and"><label for="and">AND</label>
 									</span>
 									<span class="radio_design">
-										<input type="radio" id="or" name="andor" value="or">
-										<label for="or">OR</label>
+										<input type="radio" id="or" name="andor" value="or"><label for="or">OR</label>
 							        </span>
 							    </li>
 							</ul>
@@ -2239,16 +2247,13 @@
 							<ul class="content_layout">
 								<li class="content_layout_center">
 									<span class="radio_design">
-		                                 <input type="radio" id="all" name="attachment" checked="checked" value="all">
-		                                 <label for="all"><spring:message code="ezEmail.pyy14" /></label>
+		                                 <input type="radio" id="all" name="attachment" checked="checked" value="all"><label for="all"><spring:message code="ezEmail.pyy14" /></label>
 		                             </span>
 		                             <span class="radio_design">
-		                                 <input type="radio" id="contain" name="attachment" value="contain">
-		                                 <label for="contain"><spring:message code="ezEmail.pyy15" /></label>
+		                                 <input type="radio" id="contain" name="attachment" value="contain"><label for="contain"><spring:message code="ezEmail.pyy15" /></label>
 		                             </span>
 		                             <span class="radio_design">
-		                                 <input type="radio" id="Ncontain" name="attachment" value="Ncontain">
-		                                 <label for="Ncontain"><spring:message code="ezEmail.pyy16" /></label>
+		                                 <input type="radio" id="Ncontain" name="attachment" value="Ncontain"><label for="Ncontain"><spring:message code="ezEmail.pyy16" /></label>
 		                             </span>
 								</li>
 							</ul>
@@ -2322,8 +2327,10 @@
 							<input id="label-input" type="text" maxlength="100" placeholder="<spring:message code="ezEmail.tag.user.input.placeholder" />" />
 							<a class="imgbtn imgbck" onclick="addLabel()"><span><spring:message code="ezEmail.tag.user.addbtn" /></span></a>
 						</p>
-						<ul id="label-table" class="tagUL">
-						</ul>
+						<div class="custom_checkbox">
+                            <ul id="label-table" class="tagUL">
+                            </ul>
+						</div>
 						<p class="tag_btnSave">
 							<a class="imgbtn imgbck" onclick="saveChangesTags()"><span><spring:message code="main.sp09" /></span></a>
 						</p>

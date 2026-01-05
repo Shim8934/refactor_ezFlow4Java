@@ -26,6 +26,7 @@
 		    var selectedCompanyID = "<c:out value='${selectedCompanyID}'/>";
 		    var ReturnFunction;
 		    var userID = "<c:out value='${userInfo.id}'/>";
+			var addJobFlag = "${addJobFlag}"; // (겸) 표시 사용여부 Flag
 		    window.onload = function () {
 		        try {
 		            ReturnFunction = parent.selectperson_cross_dialogArguments1[1];
@@ -147,7 +148,7 @@
 		    		data : {
 		    				deptID   : DeptID, 
 		    				cell 	 : "company;description;displayName;title;telephoneNumber",
-		    				prop     : "department",
+		    				prop     : "department;userType",
 		    				type 	 : "user"
 		    				},
 		    		success: function(xml){
@@ -169,7 +170,26 @@
                 listview.DataBind("OrganListView");
                 listview.DataSource(xml);
                 listview.RowDataBind();
+				// 겸직일 경우, 직위에 (겸) 표시 추가
+				if(addJobFlag == "YES") {
+					modifyJobTitle(xml);
+					listview.DataSource(xml);
+					listview.RowDataBind();
+				}
 		    }
+			function modifyJobTitle(xml) {
+				var rows = xml.getElementsByTagName("ROW");
+				for (var i = 0; i < rows.length; i++) {
+					var cells = rows[i].getElementsByTagName("CELL");
+					if (cells.length > 3) {
+						var job = cells[3].getElementsByTagName("VALUE")[0].textContent;
+						var data4 = cells[0].getElementsByTagName("DATA4")[0].textContent;
+
+						var addJob = (data4 == "addJob") ? "<spring:message code='ezOrgan.psb03'/> " + job : job;
+						cells[3].getElementsByTagName("VALUE")[0].textContent = addJob;
+					}
+				}
+			}
 		    function search_press(e) {
 		        if (window.event) {
 		            if (window.event.keyCode == 13) {
@@ -445,7 +465,7 @@
 		<table>
 			<tr style="height:33px; background-color: #f8f8fa; margin-bottom : 3px; padding: 0px; border: 1px solid #eaeaea;">
 			    <td style="padding-right:5px">
-			    	<div style="padding-top: 3px;">
+			    	<div style="padding-top: 3px; display:flex; align-items: center; gap:3px;">
 			    	<c:if test="${type != 'Proxy'}">
 					    <input type="text" id="deptkeyword" onKeyPress="deptsearch_press(event)" style="WIDTH:120px; height:22px; margin-left:5px;" maxLength="50">
 					    <a class="imgbtn" style="margin-right:5px;"><span onclick="deptsearch_click()"><spring:message code='ezPersonal.t71'/></span></a>

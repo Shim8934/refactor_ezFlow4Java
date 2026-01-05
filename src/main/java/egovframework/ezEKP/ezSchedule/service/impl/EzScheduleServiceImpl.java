@@ -8,6 +8,7 @@ import java.io.OutputStream;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -366,7 +367,7 @@ public class EzScheduleServiceImpl extends EgovAbstractServiceImpl implements Ez
 			if (vo.getDateType().equals("3") && vo.getRepetition() != null && !vo.getRepetition().trim().equals("")) {
 				map.put("v_SCHEDULEID", vo.getScheduleId());
 				
-				List<String> rList = ezScheduleDAO.getScheduleRepeDelList(map);
+				List<String> rList = expandDates(ezScheduleDAO.getScheduleRepeDelList(map));
 				
 				String endDate = vo.getEndDate();
 				String[] info = vo.getRepetition().split("\\|");
@@ -815,7 +816,7 @@ public class EzScheduleServiceImpl extends EgovAbstractServiceImpl implements Ez
 			if (vo.getDateType().equals("3")) {
 				map.put("v_SCHEDULEID", vo.getScheduleId());
 				
-				List<String> rList = ezScheduleDAO.getScheduleRepeDelList(map);
+				List<String> rList = expandDates(ezScheduleDAO.getScheduleRepeDelList(map));
 				
 				String endDate = vo.getEndDate();
 				String[] info = vo.getRepetition().split("\\|");
@@ -1758,7 +1759,7 @@ public class EzScheduleServiceImpl extends EgovAbstractServiceImpl implements Ez
 		map.put("v_REMINDERSTATUS", "0");
 		ezScheduleDAO.updateReminderSchedule(map);
 		
-		return 0;
+		return Integer.valueOf(scheduleid);
 	}
 
 	@Override
@@ -1922,11 +1923,12 @@ public class EzScheduleServiceImpl extends EgovAbstractServiceImpl implements Ez
 	}
 
 	@Override
-	public void insertScheduleRepeDel(String scheduleId, String startDate, int tenantId, String companyID) throws Exception {
+	public void insertScheduleRepeDel(String scheduleId, String startDate, String endDate, int tenantId, String companyID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("v_SCHEDULEID", scheduleId);
 		map.put("v_STARTDATE", startDate);
+		map.put("v_ENDDATE", endDate);
 		map.put("v_TENANTID", tenantId);
 		map.put("v_COMPANYID", companyID);
 		
@@ -3197,7 +3199,7 @@ public class EzScheduleServiceImpl extends EgovAbstractServiceImpl implements Ez
 			if (vo.getDateType().equals("3")) {
 				map.put("v_SCHEDULEID", vo.getScheduleId());
 
-				List<String> rList = ezScheduleDAO.getScheduleRepeDelList(map);
+				List<String> rList = expandDates(ezScheduleDAO.getScheduleRepeDelList(map));
 
 				String endDate = vo.getEndDate();
 				String[] info = vo.getRepetition().split("\\|");
@@ -4570,6 +4572,49 @@ public class EzScheduleServiceImpl extends EgovAbstractServiceImpl implements Ez
 		
 		logger.debug("getAddJobSchedule ended.");
 		
+		return result;
+	}
+	
+	@Override
+	public void updateScheduleRepetition(String scheduleId, String repetition, String companyId, int tenantId) throws Exception {
+		Map<String, Object> map = new HashMap<>();
+		
+		map.put("v_REPETITION", repetition);
+		map.put("v_SCHEDULEID", scheduleId);
+		map.put("v_COMPANYID", companyId);
+		map.put("v_TENANTID", tenantId);
+		
+		ezScheduleDAO.updateScheduleRepetition(map);
+	}
+
+	@Override
+	public void updateScheduleEndDate(String scheduleId, String endDate, String companyId, int tenantId) throws Exception {
+		Map<String, Object> map = new HashMap<>();
+		
+		map.put("v_ENDDATE", endDate);
+		map.put("v_SCHEDULEID", scheduleId);
+		map.put("v_COMPANYID", companyId);
+		map.put("v_TENANTID", tenantId);
+		
+		ezScheduleDAO.updateScheduleEndDate(map);
+	}
+
+	private List<String> expandDates(List<Map<String, Object>> scheduleRows) {
+		DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+		List<String> result = new ArrayList<>();
+	
+		for (Map<String, Object> scheduleRow : scheduleRows) {
+			String start = (String) scheduleRow.get("startDate");
+			String end   = (String) scheduleRow.get("endDate");
+	
+			LocalDate startDate = LocalDate.parse(start, FORMATTER);
+			LocalDate endDate   = LocalDate.parse(end, FORMATTER);
+	
+			for (LocalDate d = startDate; !d.isAfter(endDate); d = d.plusDays(1)) {
+				result.add(d.format(FORMATTER));
+			}
+		}
+	
 		return result;
 	}
 }

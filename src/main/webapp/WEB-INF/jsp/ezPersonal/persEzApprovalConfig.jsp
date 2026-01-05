@@ -80,6 +80,7 @@
 		            case "signTab": sign_ini(); break;
 		            case "shareTab": ManageShare_ini(); break;
 					case "autoSaveTab": ManageAutoSave_ini(); break;
+					case "dashBoard": ManageDashBoardTab_ini(); break;
 		        }
 		    }
 		    
@@ -106,6 +107,10 @@
 			function ManageAutoSave_ini() {
 				document.getElementById("mainframe").src = "/ezPersonal/manageAutoSave.do";
 			}
+			
+			function ManageDashBoardTab_ini() {
+				document.getElementById("mainframe").src = "/ezPersonal/manageDashBoardTab.do";
+			}
 		</script>
 	    <title><spring:message code='ezPersonal.t999900008'/></title>
 	</head>
@@ -122,6 +127,7 @@
 				<c:if test="${approvalFlag == 'G' && autoSaveFlag == 'YES'}">
 					<p><span id="1tab7" divname="autoSaveTab"><spring:message code='ezApprovalG.kmh08'/></span></p>
 				</c:if>
+				<p><span id="1tab8" divname="dashBoard"><spring:message code='ezPersonal.dashBoard01'/></span></p>
 	        </div>
 	    </div>
 	    <div>

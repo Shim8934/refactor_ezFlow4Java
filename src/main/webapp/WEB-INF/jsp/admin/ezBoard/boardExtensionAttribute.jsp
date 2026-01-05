@@ -8,6 +8,11 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	    <link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
 	    <link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />	        
+		<style>
+			<c:if test="${useJapanese != 'YES'}">.JPN { display: none; }</c:if>
+			<c:if test="${useChinese != 'YES'}">.CHN { display: none; }</c:if>
+			<c:if test="${useIndonesian != 'YES'}">.IDN { display: none; }</c:if>
+		</style>
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/ezBoard/ListView_list_admin.js')}"></script>
@@ -19,6 +24,9 @@
 		    var RetValue;
 		    var lang_primary = "<c:out value='${lang_primary}'/>";
 		    var lang_secondary = "<c:out value='${lang_secondary}'/>";
+		    var useJapanese = "<c:out value='${useJapanese}'/>";
+		    var useChinese = "<c:out value='${useChinese}'/>";
+		    var useIndonesian = "<c:out value='${useIndonesian}'/>";
 	    
 			$(document).ready(function(){
 				try {
@@ -70,9 +78,12 @@
 		                var headerNmElem = headerData.getElementsByTagName("NAME");
 	                	headerNmElem[0].textContent = '<spring:message code="ezBoard.hsbEx01"/>(<c:out value="${lang_primary}"/>)'
 	                	headerNmElem[1].textContent = '<spring:message code="ezBoard.hsbEx01"/>(<c:out value="${lang_secondary}"/>)'
-	                	headerNmElem[2].textContent = '<spring:message code="ezBoard.t999037"/>'
-	                	headerNmElem[3].textContent = '<spring:message code="ezBoard.t999038"/>'
-	                	headerNmElem[4].textContent = '<spring:message code="ezBoard.t999039"/>'
+	                	headerNmElem[2].textContent = '<spring:message code="ezBoard.hsbEx01"/>(<c:out value="${lang_tertiary}"/>)'
+	                	headerNmElem[3].textContent = '<spring:message code="ezBoard.hsbEx01"/>(<c:out value="${lang_quaternary}"/>)'
+	                	headerNmElem[4].textContent = '<spring:message code="ezBoard.hsbEx01"/>(<c:out value="${lang_Senary}"/>)'
+	                	headerNmElem[5].textContent = '<spring:message code="ezBoard.t999037"/>'
+	                	headerNmElem[6].textContent = '<spring:message code="ezBoard.t999038"/>'
+	                	headerNmElem[7].textContent = '<spring:message code="ezBoard.t999039"/>'
 		                
 		                if (result != "") {
 		                    var xmlRtn = loadXMLString(result).getElementsByTagName("ROWS")[0];
@@ -112,7 +123,10 @@
 		                var headerNmElem = headerData.getElementsByTagName("NAME");
 	                	headerNmElem[0].textContent = '<spring:message code="ezBoard.hsbEx01"/>(<c:out value="${lang_primary}"/>)'
 	                	headerNmElem[1].textContent = '<spring:message code="ezBoard.hsbEx01"/>(<c:out value="${lang_secondary}"/>)'
-	                	headerNmElem[2].textContent = '<spring:message code="ezBoard.t5002"/>'
+	                	headerNmElem[2].textContent = '<spring:message code="ezBoard.hsbEx01"/>(<c:out value="${lang_tertiary}"/>)'
+	                	headerNmElem[3].textContent = '<spring:message code="ezBoard.hsbEx01"/>(<c:out value="${lang_quaternary}"/>)'
+	                	headerNmElem[4].textContent = '<spring:message code="ezBoard.hsbEx01"/>(<c:out value="${lang_Senary}"/>)'
+	                	headerNmElem[5].textContent = '<spring:message code="ezBoard.t5002"/>'
 	                	
 		                if (result != "") {
 		                    var xmlRtn = loadXMLString(result).getElementsByTagName("ROWS")[0];
@@ -137,51 +151,7 @@
 		    }
 
 		    function OnSelChange_onclick() {
-		        var listview = new ListView();
-		        listview.LoadFromID("lvSelectList");
-
-		        var tr = listview.GetSelectedRows();
-
-		        if (tr.length != 0) {
-		            document.getElementById("txtNameKor").value = getNodeText(tr[0].cells[0]);
-		            document.getElementById("txtNameEng").value = getNodeText(tr[0].cells[1]);
-
-		            if (getNodeText(tr[0].cells[2]) == "Y")
-		                document.getElementById("chkRequired").checked = true;
-		            else
-		                document.getElementById("chkRequired").checked = false;
-
-		            radioType_onClick(getNodeText(tr[0].cells[3]));
-		            SetRadioVal("Type", getNodeText(tr[0].cells[3]));
-		            SetGubunList(getNodeText(tr[0].cells[4]));
-		        }
-		    }
-
-		    function SetGubunList(pCassNo) {
-		    	document.getElementById("AddDel").style.display = "none";
-		        document.getElementById("Gubun").innerHTML = "";
-
-		        if (pCassNo.trim() != "") {
-		            document.getElementById("Gubun").innerHTML = "<table style='width:400px' id='CAS_NO_LIST'><tr><td style='width:100%'><input type='text' id='cas_no1' name='cas_no1' style='width:90%' maxlength='50'>&nbsp;<input type='checkbox' id='DEL_FG1' name='DEL_FG1' /></td></tr></table>";
-		            document.getElementById("AddDel").style.display = "";
-
-		            /* 2021-04-26 홍승비 - 라디오버튼, 체크박스의 각 항목 첫번째 타입명만 ', " 문자를 제대로 표출하는 부분 수정 */
-		            for (var i = 1; i < (pCassNo.split("|").length + 1) ; i++) {
-		                if (i > 1) {
-		                    oRow = document.getElementById("CAS_NO_LIST").insertRow(-1);
-		                    oRow.style.backgroundColor = "#FFFFFF";
-		                    oCell01 = oRow.insertCell(-1);
-		                    oCell01.align = "left";
-		                    oCell01.valign = "middle";
-		                    oCell01.innerHTML = "<input type=\"text\" id=\"cas_no" + i + "\" name=\"cas_no" + i + "\" style=\"width:90%\" maxlength=\"50\" />&nbsp;<input type=\"checkbox\" name=\"DEL_FG" + i + "\" id=\"DEL_FG" + i + "\" />";
-		                    document.getElementById("cas_no" + i).value = pCassNo.split("|")[(i - 1)];
-		                }
-		                else {
-		                    document.getElementById("cas_no1").value = pCassNo.split("|")[(0)];
-		                }
-		            }
-		            document.getElementById("cnt").value = pCassNo.split("|").length;
-		        }
+		    
 		    }
 
 		    function OnSelChange_onclick2() {
@@ -192,92 +162,10 @@
 
 		        if (tr.length != 0) {
 		            document.getElementById("HeadName").innerText = getNodeText(tr[0].cells[0]);
-		            document.getElementById("HeadWidth").value = getNodeText(tr[0].cells[2]);
+		            document.getElementById("HeadWidth").value = getNodeText(tr[0].cells[5]);
 		        }
 		    }
 
-		    /* 2018-11-30 홍승비 - 확장칼럼 항목타입 초기 옵션 value 분기 수정 */
-		    function radioType_onClick(pValue) {
-		        var noAttrFlag = ["text", "cal", "textArea", "people", "", null];
-		    	if (noAttrFlag.includes(pValue)) {
-		            document.getElementById("AddDel").style.display = "none";
-		            document.getElementById("Gubun").innerHTML = "";
-		        }
-		        else {
-		            document.getElementById("Gubun").innerHTML = "<table style='width:400px' id='CAS_NO_LIST'><tr><td style='width:100%'><input type='text' id='cas_no1' name='cas_no1' style='width:90%' maxlength='50'>&nbsp;<input type='checkbox' id='DEL_FG1' name='DEL_FG1' /></td></tr></table>";
-		            document.getElementById("AddDel").style.display = "";
-		        }
-		    }
-
-		    function GetRadioVal(pObjectName) {
-		        return document.getElementById(pObjectName).value;
-		    }
-
-		    function SetRadioVal(pObjectName, p_strVal) {
-		        document.getElementById(pObjectName).value = p_strVal;
-		    }
-
-		    function InitInput() {
-		        document.getElementById("txtNameKor").value = "";
-		        document.getElementById("txtNameEng").value = "";
-		        SetRadioVal("Type", "");
-		        document.getElementById("chkRequired").checked = false;
-		        document.getElementById("AddDel").style.display = "none";
-		        document.getElementById("Gubun").innerHTML = "";
-		    }
-
-		    /* 2020-02-14  홍승비 - 게시판 확장칼럼 다국어 대응 수정 (경고 메세지에서 특정 다국어 용어 제거) */
-		    function CheckValidation() {
-		        if (document.getElementById("txtNameKor").value == "") {
-		            //alert("<spring:message code='ezBoard.t999044'/>");
-		            alert("<spring:message code='ezBoard.hsbEx02'/>");
-		            document.getElementById("txtNameKor").focus();
-		            return false;
-		        }
-		        if (document.getElementById("txtNameEng").value == "") {
-		            //alert("<spring:message code='ezBoard.t999045'/>");
-		            alert("<spring:message code='ezBoard.hsbEx02'/>");
-		            document.getElementById("txtNameEng").focus();
-		            return false;
-		        }
-		        if (GetRadioVal("Type") == "") {
-		            alert("<spring:message code='ezBoard.t999046'/>");
-		            return false;
-		        }
-		        var txtType = getGubun()
-		        if (GetRadioVal("Type") == "radio") {
-		            if (txtType == "") {
-		                alert("<spring:message code='ezBoard.t999047'/>");
-		                return false;
-		            }
-		            else if (txtType == "false") {
-		                alert("<spring:message code='ezBoard.t999048'/>");
-		                return false;
-		            }
-		        }
-		        else if (GetRadioVal("Type") == "check") {
-		            if (txtType == "") {
-		                alert("<spring:message code='ezBoard.t999049'/>");
-		                return false;
-		            }
-		            else if (txtType == "false") {
-		                alert("<spring:message code='ezBoard.t999048'/>");
-		                return false;
-		            }
-		            else if (txtType.indexOf(",") > -1) {
-		                alert("<spring:message code='ezBoard.t999051'/>");
-		                return false;
-		            }
-		        }
-		        else if (GetRadioVal("Type") == "select") {
-                	if (txtType == "") {
-                		alert("<spring:message code='ezBoard.lhr01'/>");
-                		return false;
-                	}
-                }
-
-		        return true;
-		    }
 
 		    function getGubun() {
 		        var ret = "";
@@ -312,41 +200,52 @@
 		        ChangedAdd = true;
 		        RemoveHeader(tr[0].cells[0].innerHTML);
 		        listview.DeleteRow(tr[0].id);
-		        InitInput();
 		    }
 
-		    function btn_Update() {
+		    var updateTr = null;
+
+		    function btnOpenUpdate() {
 		    	var listview = new ListView();
 		        listview.LoadFromID("lvSelectList");
 
-		        var tr = listview.GetSelectedRows();
+		        updateTr = listview.GetSelectedRows();
 
-		        if (tr.length == 0) {
+		        if (!updateTr || updateTr.length == 0) {
+		            alert("<spring:message code='ezBoard.t999053'/>");
+		            return;
+		        }
+		        
+		        setExtColPopup = GetOpenWindow('/admin/ezBoard/editExtensionAttribute.do', 'setExtCol', 500, 500);
+		    }
+		    
+		    function receivedEditExtCol(column) {
+		        if (updateTr.length == 0) {
 		            alert("<spring:message code='ezBoard.t999053'/>");
 		            return;
 		        }
 
-		        if (!CheckValidation()) {
-		            return;
-		        }
+		        var tr = updateTr[0];
+		        var korNameTd = updateTr[0].querySelector(".KOR");
+		        var engNameTd = updateTr[0].querySelector(".ENG");
+		        var jpnNameTd = updateTr[0].querySelector(".JPN");
+		        var chnNameTd = updateTr[0].querySelector(".CHN");
+		        var idnNameTd = updateTr[0].querySelector(".IDN");
+		        var mustTd = updateTr[0].querySelector(".MUST");
+		        var colTypeTd = updateTr[0].querySelector(".TYPE");
+		        var valueTd = updateTr[0].querySelector(".VALUE");
 
-		        var txtGubun = getGubun();
-
-		        EditHeader(tr[0].cells[0].innerHTML);
-
-		        setNodeText(tr[0].cells[0], document.getElementById("txtNameKor").value);
-		        setNodeText(tr[0].cells[1], document.getElementById("txtNameEng").value);
-
-		        if (document.getElementById("chkRequired").checked == true)
-		            setNodeText(tr[0].cells[2], "Y");
-		        else
-		            setNodeText(tr[0].cells[2], "N");
-
-		        setNodeText(tr[0].cells[3], GetRadioVal("Type"));
-		        setNodeText(tr[0].cells[4], txtGubun);
+				EditHeader(korNameTd.innerText, column);
+		        
+		        korNameTd ? korNameTd.innerText = column.txtNameKor : "";
+		        engNameTd ? engNameTd.innerText = column.txtNameEng : "";
+		        jpnNameTd ? jpnNameTd.innerText = column.txtNameJpn : "";
+		        chnNameTd ? chnNameTd.innerText = column.txtNameChn : "";
+		        idnNameTd ? idnNameTd.innerText = column.txtNameIdn : "";
+		        mustTd ? mustTd.innerText = (column.must == true ? "Y" : "N") : "";
+		        colTypeTd ? colTypeTd.innerText = column.colType : "";
+		        valueTd ? valueTd.innerText = column.value : "";
 
 		        ChangedAdd = true;
-		        alert("<spring:message code='ezBoard.t999054'/>");
 		    }
 
 		    function btncancel_onclick() {
@@ -360,26 +259,35 @@
 		        }
 		    }
 
-		    function btn_add() {
-		        var listview = new ListView();
+		    // 현재 창이 닫히면 팝업 창도 닫히도록 하기 위해 팝업창을 변수로 다룸.
+		    var setExtColPopup = null;
+		    
+		    window.addEventListener('unload', function () {
+		        if (setExtColPopup && !setExtColPopup.closed) {
+		        	setExtColPopup.close();
+		        }
+		    });
+		    
+		    function btnOpenAdd() {
+		    	// 현재의 설정된 확장컬럼의 수(=countExtAttr)를 확인하고
+		    	var listview = new ListView();
 		        listview.LoadFromID("lvSelectList");
-		        var tr = listview.GetSelectedRows();
-		        var InitTr = listview.GetDataRows();
-
-		        if (InitTr.length > 4) {
+		        var countExtAttr = listview.GetDataRows();
+				
+		    	if (countExtAttr.length > 4) {
+			    	// countExtAttr이 5개 이상이면 alert
 		            alert("<spring:message code='ezBoard.t999056'/>");
 		            return;
-		        }
+		    	} else {
+			    	// countExtAttr이 4개 이하이면 등록 가능
+			    	setExtColPopup = GetOpenWindow('/admin/ezBoard/newExtensionAttribute.do', 'setExtCol', 500, 500);
+		    	}
+		    }
 
-		        if (!CheckValidation()) {
-		            return;
-		        }
-
-		        if (CheckDuplication(document.getElementById("txtNameKor").value, "lvSelectList", 0) == false) {
-		            alert("<spring:message code='ezBoard.t999057'/>");
-		            return;
-		        }
-
+		    function receivedNewExtCol(column) {
+		        var listview = new ListView();
+		        listview.LoadFromID("lvSelectList");
+		        var InitTr = listview.GetDataRows();
 		        var isExist;
 		        for (var i = 6; i < 11; i++) {
 		            isExist = false;
@@ -394,20 +302,16 @@
 		            }
 		        }
 		        pTableCol = "extensionAttribute" + i.toString();
-
-		        //필수항목여부
-		        var chkRequired = "N";
-		        if (document.getElementById("chkRequired").checked == true)
-		            chkRequired = "Y";
-
-		        var txtGubun = getGubun();
-
-		        var pparsingXML = "<LISTVIEWDATA><ROWS><ROW>";
-		        pparsingXML += "<CELL><VALUE><![CDATA[" + document.getElementById("txtNameKor").value + "]]></VALUE><DATA1>" + pTableCol + "</DATA1></CELL>"; //항목명(한글)
-		        pparsingXML += "<CELL><VALUE><![CDATA[" + document.getElementById("txtNameEng").value + "]]></VALUE></CELL>"; //항목명(영어)
-		        pparsingXML += "<CELL><VALUE><![CDATA[" + chkRequired + "]]></VALUE></CELL>"; //필수항목여부
-		        pparsingXML += "<CELL><VALUE><![CDATA[" + GetRadioVal("Type") + "]]></VALUE></CELL>"; //항목타입
-		        pparsingXML += "<CELL><VALUE><![CDATA[" + txtGubun + "]]></VALUE></CELL>"; //항목타입명
+		    	
+		    	var pparsingXML = "<LISTVIEWDATA><ROWS><ROW>";
+		        pparsingXML += "<CELL><CLASSNAME>KOR</CLASSNAME><VALUE><![CDATA[" + column.txtNameKor + "]]></VALUE><DATA1>" + pTableCol + "</DATA1></CELL>"; //항목명(한국어)
+		        pparsingXML += "<CELL><CLASSNAME>ENG</CLASSNAME><VALUE><![CDATA[" + column.txtNameEng + "]]></VALUE></CELL>"; //항목명(영어)
+		        pparsingXML += "<CELL><CLASSNAME>JPN</CLASSNAME><VALUE><![CDATA[" + column.txtNameJpn + "]]></VALUE></CELL>"; //항목명(일본어)
+		        pparsingXML += "<CELL><CLASSNAME>CHN</CLASSNAME><VALUE><![CDATA[" + column.txtNameChn + "]]></VALUE></CELL>"; //항목명(중국어)
+		        pparsingXML += "<CELL><CLASSNAME>IDN</CLASSNAME><VALUE><![CDATA[" + column.txtNameIdn + "]]></VALUE></CELL>"; //항목명(인도네시아어)
+		        pparsingXML += "<CELL><CLASSNAME>MUST</CLASSNAME><VALUE><![CDATA[" + (column.must == true ? "Y" : "N") + "]]></VALUE></CELL>"; //필수항목여부
+		        pparsingXML += "<CELL><CLASSNAME>TYPE</CLASSNAME><VALUE><![CDATA[" + column.colType + "]]></VALUE></CELL>"; //항목타입
+		        pparsingXML += "<CELL><CLASSNAME>VALUE</CLASSNAME><VALUE><![CDATA[" + column.value + "]]></VALUE></CELL>"; //항목타입명
 		        pparsingXML += "</ROW></ROWS></LISTVIEWDATA>";
 
 		        var Resultxml = loadXMLString(pparsingXML);
@@ -430,7 +334,6 @@
 		        listview.AddDataRow(objTr, Resultxml);
 
 		        ChangedAdd = true;
-		        InitInput();
 		    }
 
 		    function btn_MoveUp() {
@@ -484,7 +387,7 @@
 		        }
 		    }
 
-		    function EditHeader(pHeader) {
+		    function EditHeader(pHeader, column) {
 		    	var listview = new ListView();
 		        listview.LoadFromID("lvXmlHeader");
 
@@ -493,8 +396,11 @@
 		        for (var i = 0; i < tr.length; i++) {
 		            if (tr[i].cells[0].innerHTML == pHeader) {
 		                ChangedHeader = true;
-		                setNodeText(tr[i].cells[0], document.getElementById("txtNameKor").value);
-		                setNodeText(tr[i].cells[1], document.getElementById("txtNameEng").value);
+		                setNodeText(tr[i].cells[0], column.txtNameKor);
+		                setNodeText(tr[i].cells[1], column.txtNameEng);
+		                setNodeText(tr[i].cells[2], column.txtNameJpn);
+		                setNodeText(tr[i].cells[3], column.txtNameChn);
+		                setNodeText(tr[i].cells[4], column.txtNameIdn);
 		            }
 		        }
 		    }
@@ -533,12 +439,47 @@
 		            return;
 		        }
 
-		        setNodeText(tr[0].cells[2], document.getElementById("HeadWidth").value);
+		        setNodeText(tr[0].cells[5], document.getElementById("HeadWidth").value);
 
 		        ChangedHeader = true;
 		        alert("<spring:message code='ezBoard.t999054'/>");
 		    }
 
+		    function checkDuplicateTypeNames(chkTr) {
+            	var rows = [].slice.call(document.querySelectorAll("#lvXmlHeader tbody tr"));
+		    	
+            	if (rows.length < 1) {
+            		return false;
+            	}
+            	
+		    	var chkVals = {};
+		    	var langs = ["KOR"
+			    				, "ENG"
+			    				<c:if test="${useJapanese == 'YES'}"> , "JPN"</c:if>
+			    				<c:if test="${useChinese == 'YES'}"> , "CHN"</c:if>
+			    				<c:if test="${useIndonesian == 'YES'}"> , "IDN"</c:if>
+		    				];
+		    	
+		    	for (var i = 0; i < langs.length; i++) {
+		    		var langTd = chkTr.querySelector("." + langs[i]);
+		    		chkVals[langs[i]] = langTd ? langTd.textContent.trim() : "";
+		    	}
+		    	
+            	
+            	for (var i = 0; i < rows.length; i++) {
+            		for (var j = 0; j < langs.length; j++) {
+            			var td = rows[i].querySelector("." + langs[j]);
+            			var tdTxt = td ? td.textContent.trim() : "";
+            			
+            			if (chkVals[langs[j]] && chkVals[langs[j]] == tdTxt) {
+            				return true;
+            			}
+            		}
+            	}
+    	    	
+    			return false;
+		    }
+		    
 		    function btn_AddHeader() {
 		        var listview2 = new ListView();
 		        listview2.LoadFromID("lvSelectList");
@@ -546,31 +487,30 @@
 		        var tr2 = listview2.GetSelectedRows();
                 var langTDName ="";
 
-                if (${lang_user} == 1 || ${lang_user} == 3 || ${lang_user} == 4 ) {
-                    langTDName = getNodeText(tr2[0].cells[0]);
-                } else if (${lang_user} == 2 ) {
-                    langTDName = getNodeText(tr2[0].cells[1])
-                }
-
 		        if (tr2.length == 0) {
 		            alert("<spring:message code='ezBoard.t999061'/>");
 		            return;
 		        }
 
-		        if (CheckDuplication(langTDName, "lvXmlHeader", 0) == false) {
+		        tr2 = tr2[0];
+		        
+		        if (checkDuplicateTypeNames(tr2)) {
 		            alert("<spring:message code='ezBoard.t999057'/>");
 		            return;
 		        }
 
-		        if (tr2[0].getAttribute("DATA1") == "") {
+		        if (tr2.getAttribute("DATA1") == "") {
 		            alert("<spring:message code='ezBoard.t999062'/>");
 		            return
 		        }
 
 		        var pparsingXML = "<LISTVIEWDATA><ROWS><ROW>";
-                pparsingXML += "<CELL><VALUE><![CDATA[" + langTDName + "]]></VALUE><DATA1>" + GetAttribute(tr2[0],"DATA1") + "</DATA1></CELL>";
-		        pparsingXML += "<CELL><VALUE><![CDATA[" + getNodeText(tr2[0].cells[1]) + "]]></VALUE></CELL>";
-		        pparsingXML += "<CELL><VALUE><![CDATA[80]]></VALUE></CELL>"; 
+                pparsingXML += "<CELL><CLASSNAME>KOR</CLASSNAME><VALUE><![CDATA[" + tr2.querySelector(".KOR").innerText.trim() + "]]></VALUE><DATA1>" + GetAttribute(tr2,"DATA1") + "</DATA1></CELL>";
+		        pparsingXML += "<CELL><CLASSNAME>ENG</CLASSNAME><VALUE><![CDATA[" + tr2.querySelector(".ENG").innerText.trim() + "]]></VALUE></CELL>";
+		        pparsingXML += "<CELL><CLASSNAME>JPN</CLASSNAME><VALUE><![CDATA[" + tr2.querySelector(".JPN").innerText.trim() + "]]></VALUE></CELL>";
+		        pparsingXML += "<CELL><CLASSNAME>CHN</CLASSNAME><VALUE><![CDATA[" + tr2.querySelector(".CHN").innerText.trim() + "]]></VALUE></CELL>";
+		        pparsingXML += "<CELL><CLASSNAME>IDN</CLASSNAME><VALUE><![CDATA[" + tr2.querySelector(".IDN").innerText.trim() + "]]></VALUE></CELL>";
+		        pparsingXML += "<CELL><CLASSNAME>WIDTH</CLASSNAME><VALUE><![CDATA[80]]></VALUE></CELL>";
 		        pparsingXML += "</ROW></ROWS></LISTVIEWDATA>";
 
 		        var Resultxml = loadXMLString(pparsingXML);
@@ -640,11 +580,20 @@
 		            createNodeAndInsertText(xmlpara, objRoot, "BOARDID", pBoardID);
 
 		            for (var i = 0; i < tr.length; i++) {
-		            	createNodeAndInsertText(xmlpara, objRoot, "COLNAME1", MakeXMLString(getNodeText(tr[i].cells[0])));
-		                createNodeAndInsertText(xmlpara, objRoot, "COLNAME2", MakeXMLString(getNodeText(tr[i].cells[1])));
-		                createNodeAndInsertText(xmlpara, objRoot, "VALUE", MakeXMLString(getNodeText(tr[i].cells[4])));
-		                createNodeAndInsertText(xmlpara, objRoot, "COLTYPE", getNodeText(tr[i].cells[3]));
-		                createNodeAndInsertText(xmlpara, objRoot, "MUST", getNodeText(tr[i].cells[2]));
+		            	var korStr = tr[i].querySelector(".KOR").innerText.trim();
+		            	var engStr = tr[i].querySelector(".ENG").innerText.trim();
+		            	var jpnStr = tr[i].querySelector(".JPN").innerText.trim();
+		            	var chnStr = tr[i].querySelector(".CHN").innerText.trim();
+		            	var idnStr = tr[i].querySelector(".IDN").innerText.trim();
+		            	
+		            	createNodeAndInsertText(xmlpara, objRoot, "COLNAME1", MakeXMLString(korStr));
+		            	createNodeAndInsertText(xmlpara, objRoot, "COLNAME2", MakeXMLString(engStr));
+		            	createNodeAndInsertText(xmlpara, objRoot, "COLNAME3", MakeXMLString(jpnStr ? jpnStr : engStr));
+		            	createNodeAndInsertText(xmlpara, objRoot, "COLNAME4", MakeXMLString(chnStr ? chnStr : engStr));
+		            	createNodeAndInsertText(xmlpara, objRoot, "COLNAME6", MakeXMLString(idnStr ? idnStr : engStr));
+		                createNodeAndInsertText(xmlpara, objRoot, "VALUE", MakeXMLString(tr[i].querySelector(".VALUE").innerText));
+		                createNodeAndInsertText(xmlpara, objRoot, "COLTYPE", tr[i].querySelector(".TYPE").innerText);
+		                createNodeAndInsertText(xmlpara, objRoot, "MUST", tr[i].querySelector(".MUST").innerText);
 		                createNodeAndInsertText(xmlpara, objRoot, "TABLECOL", GetAttribute(tr[i],"DATA1"));
 		            }
 
@@ -688,13 +637,25 @@
 
 		        createNodeAndInsertText(xmlpara, objRoot, "NAME1", "CHECK");
 		        createNodeAndInsertText(xmlpara, objRoot, "NAME2", "CHECK");
+		        createNodeAndInsertText(xmlpara, objRoot, "NAME3", "CHECK");
+		        createNodeAndInsertText(xmlpara, objRoot, "NAME4", "CHECK");
+		        createNodeAndInsertText(xmlpara, objRoot, "NAME6", "CHECK");
 		        createNodeAndInsertText(xmlpara, objRoot, "WIDTH", "20");
 		        createNodeAndInsertText(xmlpara, objRoot, "COLNAME", "ITEMID");
 		        
 		        for (var i = 0; i < tr.length; i++) {
-		        	createNodeAndInsertText(xmlpara, objRoot, "NAME1", MakeXMLString(getNodeText(tr[i].cells[0])));
-		            createNodeAndInsertText(xmlpara, objRoot, "NAME2", MakeXMLString(getNodeText(tr[i].cells[1])));
-		            createNodeAndInsertText(xmlpara, objRoot, "WIDTH", MakeXMLString(getNodeText(tr[i].cells[2])));
+		        	var korStr = tr[i].querySelector(".KOR").innerText.trim();
+	            	var engStr = tr[i].querySelector(".ENG").innerText.trim();
+	            	var jpnStr = tr[i].querySelector(".JPN").innerText.trim();
+	            	var chnStr = tr[i].querySelector(".CHN").innerText.trim();
+	            	var idnStr = tr[i].querySelector(".IDN").innerText.trim();
+	            	
+		        	createNodeAndInsertText(xmlpara, objRoot, "NAME1", MakeXMLString(korStr));
+		            createNodeAndInsertText(xmlpara, objRoot, "NAME2", MakeXMLString(engStr));
+		            createNodeAndInsertText(xmlpara, objRoot, "NAME3", MakeXMLString(jpnStr ? jpnStr : engStr));
+		            createNodeAndInsertText(xmlpara, objRoot, "NAME4", MakeXMLString(chnStr ? chnStr : engStr));
+		            createNodeAndInsertText(xmlpara, objRoot, "NAME6", MakeXMLString(idnStr ? idnStr : engStr));
+		            createNodeAndInsertText(xmlpara, objRoot, "WIDTH", MakeXMLString(tr[i].querySelector(".WIDTH").innerText));
 		            createNodeAndInsertText(xmlpara, objRoot, "COLNAME", GetAttribute(tr[i],"DATA1"));
 		        }
 
@@ -745,7 +706,7 @@
 		        oCell01 = oRow.insertCell(-1);
 		        oCell01.align = "left";
 		        oCell01.valign = "middle";
-		        oCell01.innerHTML = "<input tye=\"text\" id=\"cas_no" + cnt + "\" name=\"cas_no" + cnt + "\" style=\"width:90%\" maxlength=\"50\" />&nbsp;<input type=\"checkbox\" name=\"DEL_FG" + cnt + "\" id=\"DEL_FG" + cnt + "\" />"
+		        oCell01.innerHTML = "<input type=\"text\" id=\"cas_no" + cnt + "\" name=\"cas_no" + cnt + "\" style=\"width:90%\" maxlength=\"50\" />&nbsp;<div class=\"custom_checkbox\"><input type=\"checkbox\" name=\"DEL_FG" + cnt + "\" id=\"DEL_FG" + cnt + "\" /></div>"
 		        document.getElementById("cnt").value = cnt;
 		    }
 
@@ -789,22 +750,42 @@
 					<HEADER>
 						<NAME></NAME>
 						<WIDTH>150</WIDTH>
+						<CLASSNAME>KOR</CLASSNAME>
 					</HEADER>
 					<HEADER>
 						<NAME></NAME>
 						<WIDTH>150</WIDTH>
+						<CLASSNAME>ENG</CLASSNAME>
+					</HEADER>
+					<HEADER>
+						<NAME></NAME>
+						<WIDTH>150</WIDTH>
+						<CLASSNAME>JPN</CLASSNAME>
+					</HEADER>
+					<HEADER>
+						<NAME></NAME>
+						<WIDTH>150</WIDTH>
+						<CLASSNAME>CHN</CLASSNAME>
+					</HEADER>
+					<HEADER>
+						<NAME></NAME>
+						<WIDTH>150</WIDTH>
+						<CLASSNAME>IDN</CLASSNAME>
 					</HEADER>
 					<HEADER>
 						<NAME></NAME>
 						<WIDTH>80</WIDTH>
+						<CLASSNAME>MUST</CLASSNAME>
 					</HEADER>
 					<HEADER>
 						<NAME></NAME>
 						<WIDTH>50</WIDTH>
+						<CLASSNAME>TYPE</CLASSNAME>
 					</HEADER>
 					<HEADER>
 						<NAME></NAME>
 						<WIDTH>500</WIDTH>
+						<CLASSNAME>TYPENAME</CLASSNAME>
 					</HEADER>
 				</HEADERS>
 			</LISTVIEWDATA>
@@ -815,14 +796,32 @@
 					<HEADER>
 						<NAME></NAME>
 						<WIDTH>150</WIDTH>
+						<CLASSNAME>KOR</CLASSNAME>
 					</HEADER>
 					<HEADER>
 						<NAME></NAME>
 						<WIDTH>150</WIDTH>
+						<CLASSNAME>ENG</CLASSNAME>
 					</HEADER>
 					<HEADER>
 						<NAME></NAME>
 						<WIDTH>150</WIDTH>
+						<CLASSNAME>JPN</CLASSNAME>
+					</HEADER>
+					<HEADER>
+						<NAME></NAME>
+						<WIDTH>150</WIDTH>
+						<CLASSNAME>CHN</CLASSNAME>
+					</HEADER>
+					<HEADER>
+						<NAME></NAME>
+						<WIDTH>150</WIDTH>
+						<CLASSNAME>IDN</CLASSNAME>
+					</HEADER>
+					<HEADER>
+						<NAME></NAME>
+						<WIDTH>150</WIDTH>
+						<CLASSNAME>WIDTH</CLASSNAME>
 					</HEADER>
 				</HEADERS>
 			</LISTVIEWDATA>
@@ -833,65 +832,20 @@
                 <li><span id="btncancel" onclick="return btncancel_onclick()"></span></li>
             </ul>
         </div>
- 		<div id="outerDiv" style="height:663px; overflow-y:auto;margin-top:-13px;margin-right:-10px;">
+ 		<div id="outerDiv" style="height:610px; overflow-y:auto;margin-top:-13px;margin-right:-10px;">
 	 		<div id="innerDiv" style="padding-right:10px; padding-top:8px; padding-bottom:8px; overflow:hidden;" >
-				<span style="font-weight:bold"><spring:message code='ezBoard.t999030'/></span>
-				<table class="content" style="width:100%;margin-top:5px">
-					<tr>
-<%-- 						<th style="width:15%"><spring:message code='ezBoard.t999031'/></th> --%>
-						<th style="width:15%"><spring:message code='ezBoard.hsbEx01'/></th>
-				        <td style="width:25%"><input id="txtNameKor" style="width:97%" maxlength="20"/></td>
-<%-- 				        <th style="width:15%"><spring:message code='ezBoard.t999032'/></th> --%>
-				        <th style="width:15%"><spring:message code='ezBoard.hsbEx01'/>(<c:out value="${lang_secondary}"/>)</th>
-				        <td style="width:25%"><input id="txtNameEng"  style="width:97%" maxlength="20"/></td>
-						<th style="width:10%"><spring:message code='ezBoard.t999033'/></th>
-				        <td style="width:10%"><input id="chkRequired" type="checkbox" /></td>
-				    </tr>
-				    <tr>
-				        <th style="width:15%"><spring:message code='ezBoard.t999034'/></th>
-				        <td style="width:25%">
-				            <select id="Type" onchange="radioType_onClick(this.value)" style="width:99%">
-				                <option value=""><spring:message code='ezBoard.t74'/></option>
-				                <option value="text"><spring:message code='ezBoard.hyj06'/></option>
-				                <option value="radio"><spring:message code='ezBoard.hyj07'/></option>
-				                <option value="check"><spring:message code='ezBoard.hyj08'/></option>
-								<option value="cal"><spring:message code='ezBoard.MJSBC01'/></option>
-								<option value="select"><spring:message code='ezBoard.MJSBC02'/></option>
-								<option value="people"><spring:message code='ezBoard.extensionAttr.JIH01'/></option>
-								<option value="textArea"><spring:message code='ezBoard.extensionAttr.JIH02'/></option>
-				            </select>
-				        </td>
-				        <td colspan="4">
-				            <table>
-				            	<tr>
-				            		<td id="Gubun"></td>
-				            	</tr>
-				            </table>
-						    <table style="width:400px;display:none;" id="AddDel">
-				   		        <tr>
-			                        <td style="width:100%">
-			                            <input type="button" onclick="javascript: add_row()" value="<spring:message code='ezBoard.t602'/>" />&nbsp;
-			                            <input type="button" onclick="javascript: del_row()" value="<spring:message code='ezBoard.t89'/>" />
-			                            <input type="hidden" id="cnt" name="cnt" value="1" />
-			                        </td>
-			                    </tr>
-					        </table>
-				        </td>
-				    </tr>
-				</table>
-				<table style="width:100%;margin-top:10px">
+				<table style="width:100%;margin-top:10px; margin-bottom:5px">
 					<tr>
 						<td style="width:100%;text-align:right">
-				            <a class="imgbtn imgbck" onClick ="return btn_Init()" id="btn_Init"><span><spring:message code='ezBoard.t999035'/></span></a>
-				            <a class="imgbtn imgbck" onClick ="return btn_add()" id="btn_add"><span><spring:message code='ezBoard.t602'/></span></a>
-				            <a class="imgbtn imgbck" onClick ="return btn_Update()" id="btn_Update"><span><spring:message code='ezBoard.t316'/></span></a>
+				            <a class="imgbtn imgbck" onClick ="return btnOpenAdd()" id="btn_add"><span><spring:message code='ezBoard.t602'/></span></a>
+				            <a class="imgbtn imgbck" onClick ="return btnOpenUpdate()" id="btn_Update"><span><spring:message code='ezBoard.t316'/></span></a>
 				            <a class="imgbtn imgbck" onClick ="return btn_Delete()" id="btn_Delete"><span><spring:message code='ezBoard.t89'/></span></a>
 				            <a class="imgbtn imgbck" onClick ="return btn_AddHeader()" id="btn_AddHeader"><span><spring:message code='ezBoard.t999036'/></span></a>
 						</td>
 					</tr>
 				</table>
 				<div class="listview">
-				    <div id="SelectList" style="border: 0px solid #ddd; Width: 100%; Height: 150px; overflow: hidden; BACKGROUND-COLOR: white; overflow-y:auto; "></div>
+				    <div id="SelectList" style="border: 0px solid #ddd; Width: 100%; Height: 150px; BACKGROUND-COLOR: white; overflow:auto; "></div>
 				</div>
 				<div id="divListHeader" style="padding-top:10px">
 					<span style="font-weight:bold"><spring:message code='ezBoard.t999040'/></span>
@@ -917,7 +871,7 @@
 						</tr>
 					</table>
 					<div class="listview">
-					    <div id="HeaderList" style="border: 0px solid #ddd; Width: 100%; Height: 300px; overflow: hidden; BACKGROUND-COLOR: white; overflow-y:auto; "></div>
+					    <div id="HeaderList" style="border: 0px solid #ddd; Width: 100%; Height: 290px; overflow: hidden; BACKGROUND-COLOR: white; overflow-y:auto; "></div>
 					</div>
 				</div>
 			</div>

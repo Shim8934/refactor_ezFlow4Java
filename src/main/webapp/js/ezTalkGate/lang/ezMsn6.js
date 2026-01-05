@@ -1,16 +1,16 @@
 ﻿var strLang1 = "The attendance time is already registered.";
-var strLang2 = "Additional information related with absenteeism and tardiness are alredy registered.";
-var strLang3 = "Registration failure.";
-var strLang4 = " is assigned as holiday so commute information cannot be recorded.";
-var strLang5 = "Register the attendance time first.";
-var strLang6 = "Time Out is already registered.";
-var strLang7 = "No authority.";
+var strLang2 = "Informasi tambahan terkait ketidakhadiran dan keterlambatan sudah terdaftar.";
+var strLang3 = "Pendaftaran gagal.";
+var strLang4 = "ditetapkan sebagai hari libur sehingga informasi perjalanan tidak dapat direkam.";
+var strLang5 = "Daftar waktu kehadiran terlebih dahulu.";
+var strLang6 = "Waktu Habis sudah terdaftar.";
+var strLang7 = "Tidak ada wewenang.";
 
-var strLang8 = "is not possible to enter the attendance time.";
-var strLang9 = "Absence ";
-var strLang10 = "half-day except holidays";
-var strLang11 = "There are attendance input other matters. \nAre you sure you want to enter the clock-in time?";
-var strLang12 = "Registration has been canceled.";
+var strLang8 = "tidak dapat memasukkan waktu kehadiran.";
+var strLang9 = "Ketidakhadiran";
+var strLang10 = "setengah hari kecuali hari libur";
+var strLang11 = "Ada input kehadiran untuk hal-hal lain. \nApakah Anda yakin ingin memasukkan waktu absensi?";
+var strLang12 = "Pendaftaran telah dibatalkan.";
 
 
 function GetLocalTime(Offset , pDateTime)

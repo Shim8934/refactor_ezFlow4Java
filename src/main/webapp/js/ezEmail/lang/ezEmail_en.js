@@ -315,6 +315,7 @@ var strLangLS03 = "The search results will be downloaded as a single zip file. \
 var strLangLS04 = ".";
 var strLangLS05 = "';' cannot be contained."
 var strLangAllmailSaveAlert = "No emails selected. \nPlease select emails or search before saving."
+var strLangEachIcon = "Individual";
 
 /* 2018-07-03 홍승비 - 승인게시물, 커뮤니티 답변메일 companyID 관련 처리*/
 var strLangHSB01 = "This post can be viewed on ";
@@ -389,6 +390,9 @@ const strLangPlzCheckSearchNameInput = "Enter name to search.";
 const strLangOrgFetchError = "An error occurred while searching organization chart. -";
 const strLangSelectProxyApproverWarning = "Select a person for deputy.";
 
+var strLangIcal01 = "A response email has been sent."
+var strLangIcal02 = "Failed to send response email."
+
 const strLangTempSaveAttachmentsWarning = "Attached files will be deleted upon saving. Do you want to save?";
 
 var strNoSubject = "Enter title.";
@@ -406,6 +410,13 @@ const strLangChangeLimit = "Cannot switch because the attachment size exceeds th
 
 const strLangKeepMoveCantUseSentBox = 'Emails cannot be continuously moved to the Sent folder.';
 const strLangKeepMoveNoFromHeader = 'Emails without a sender cannot be continuously moved.';
+
+const strLangRcptEditError = "The entered value is not in a valid email format.\nPlease enter it in the format: Hong Gil-dong <hongkildong@kaoni.com>";
+
+const strPreviousTime = 'Reserve date should not be older than now.';
+
+const strUnLimit = "unlimited";
+const strDownloadsCount = "downloads";
 
 function GetLocalTime(Offset , pDateTime)
 {

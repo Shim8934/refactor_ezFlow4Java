@@ -759,11 +759,11 @@
 		        var pwidth = window.screen.availWidth;
 		        var conWidth = pwidth * 0.8;
 		        
-		        if (conWidth > 890)
-		            conWidth = 890;
+		        if (conWidth > 1200)
+		            conWidth = 1200;
 		        
 		        var pTop = (pheight - conHeight) / 2;
-		        var pLeft = (pwidth - 890) / 2;
+		        var pLeft = (pwidth - 1200) / 2;
 
                 window.open("/ezEmail/mailWrite.do?cmd=NEW", "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = " + conWidth + "px, status = no, toolbar=no, menubar=no,location=no,resizable=1");
 		    }
@@ -1250,7 +1250,7 @@
 	    	            var birthDate = SelectSingleNodeValue(SelectNodes(xml, "DATA/ROW")[i], "BIRTH");
 	        	        var userName = SelectSingleNodeValue(SelectNodes(xml, "DATA/ROW")[i], "DISPLAYNAME");
 	        	        var userName = SelectSingleNodeValue(SelectNodes(xml, "DATA/ROW")[i], "DISPLAYNAME");
-	        	        var userPic = SelectSingleNodeValue(SelectNodes(xml, "DATA/ROW")[i], "EXTENSIONATTRIBUTE2");
+	        	        var userPicName = SelectSingleNodeValue(SelectNodes(xml, "DATA/ROW")[i], "EXTENSIONATTRIBUTE2");
 	        	        
 	            	    if (userPrimary != "1")
 	                	    userName = SelectSingleNodeValue(SelectNodes(xml, "DATA/ROW")[i], "DISPLAYNAME2");
@@ -1276,12 +1276,10 @@
 		                _li.style.display = "none";
 	    	            _li.style.cursor = "pointer";
 	        	        _li.onclick = new Function("OpenUserInfo('" + cn + "');");
-	        	        
-	        	        if (userPic == "") {
-	                    	_li.innerHTML = "<dl class='birthListDL'><dt class='birthPic'><img src='/images/kr/main/birth_none.png' width='32' height='32'></dt><dd class='birthName'>[" + birthDate + "] " + userName + "</dd><dd class='birthTeam'>" + userDesc + "</dd>";
-	        	        } else {
-	        	        	_li.innerHTML = "<dl class='birthListDL'><dt class='birthPic'><img src='/admin/ezOrgan/getPersonalInfo.do?fileName="+ userPic +"' width='32' height='32'></dt><dd class='birthName'>[" + birthDate + "] " + userName + "</dd><dd class='birthTeam'>" + userDesc + "</dd>";
-	        	        }
+
+						var picNone = "/images/kr/main/birth_none.png";
+						var userPic = (userPicName == "")? picNone : "/admin/ezOrgan/getPersonalInfo.do?fileName="+ userPicName;
+						_li.innerHTML = "<dl class='birthListDL'><dt class='birthPic'><img src='" + userPic + "' onerror=\"this.src='" + picNone + "'\" width='32' height='32'></dt><dd class='birthName'>[" + birthDate + "] " + userName + "</dd><dd class='birthTeam'>" + userDesc + "</dd>";
 	            	    
 	                	document.getElementById("userlist").appendChild(_li);
 

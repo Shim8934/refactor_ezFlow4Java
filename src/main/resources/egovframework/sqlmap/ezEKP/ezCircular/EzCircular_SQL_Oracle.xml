@@ -343,8 +343,8 @@
                 A.circularuserid,
                 A.circularid,
                 A.memberid,
-                A.membername,
-                A.membername2,
+                B.displayname as membername,
+                B.displayname2 as membername2,
                 A.status,
                 NVL(TO_CHAR(TO_DATE(A.confirmdate, 'YYYY-MM-DD HH24:MI:SS') + #offset# / (24 * 60),'YYYY-MM-DD HH24:MI:SS'), ' ') AS confirmdate,
                 A.updatestatus,
@@ -473,6 +473,7 @@
 				CC.company,
     			CC.description,
     			NVL(CC.title, ' ') as title,
+				CASE WHEN #primary# = '1' THEN A.membername ELSE A.membername2 END AS membername,
 				A.membername,
 				CC.mail
 			FROM
@@ -482,14 +483,24 @@
 						BB.*, ROW_NUMBER() OVER (PARTITION BY BB.CN ORDER BY ROWNUM) CNT 
 			      FROM ( 
 			      		SELECT 
-			                D.CN, D.DISPLAYNAME, D.COMPANY, D.title, D.MAIL, D.DESCRIPTION
+			                D.CN,
+			                CASE WHEN #primary# = '1' THEN D.DISPLAYNAME ELSE D.DISPLAYNAME2 END AS DISPLAYNAME,
+							CASE WHEN #primary# = '1' THEN D.COMPANY ELSE D.COMPANY2 END AS COMPANY,
+							CASE WHEN #primary# = '1' THEN D.TITLE ELSE D.TITLE2 END AS TITLE,
+			                D.MAIL,
+							CASE WHEN #primary# = '1' THEN D.DESCRIPTION ELSE D.DESCRIPTION2 END AS DESCRIPTION
 			            FROM 
 			                TBL_USERMASTER D
 			            WHERE 
 			                D.TENANT_ID = #tenantID# AND D.PHYSICALDELIVERYOFFICENAME = #companyID#
 			            UNION ALL
-			            SELECT 
-			                B.cn, B.DISPLAYNAME, C.EXTENSIONATTRIBUTE3 as COMPANY, a.title, b.mail, C.DISPLAYNAME AS DESCRIPTION
+			            SELECT
+							B.cn,
+							CASE WHEN #primary# = '1' THEN B.DISPLAYNAME ELSE B.DISPLAYNAME2 END AS DISPLAYNAME,
+							CASE WHEN #primary# = '1' THEN C.EXTENSIONATTRIBUTE3 ELSE C.COMPNM2 END AS COMPANY,
+							CASE WHEN #primary# = '1' THEN A.TITLE ELSE A.TITLE2 END AS TITLE,
+							b.mail,
+							CASE WHEN #primary# = '1' THEN C.DISPLAYNAME ELSE C.DISPLAYNAME2 END AS DESCRIPTION
 			            FROM 
 			                TBL_USERMASTER B 
 			            INNER JOIN 
@@ -1644,7 +1655,7 @@
 	<select id="EzCircularDAO.getListHeader" parameterClass="Map" resultClass="CircularListHeaderVO">
 		<![CDATA[
 			SELECT 
-				NVL(CASE #lang# WHEN '1' THEN name1 WHEN '2' THEN name2 WHEN '3' THEN name3 WHEN '4' THEN name4 END, ' ') name,
+				NVL(CASE #lang# WHEN '1' THEN name1 WHEN '2' THEN name2 WHEN '3' THEN name3 WHEN '4' THEN name4 WHEN '6' THEN name6 END, ' ') name,
 				width,
 				colname
 			FROM 
@@ -2018,14 +2029,26 @@
 			                 BB.*, ROW_NUMBER() OVER (PARTITION BY BB.CN ORDER BY ROWNUM) CNT 
 			               FROM ( 
 			                SELECT 
-								D.CN, D.DISPLAYNAME, D.COMPANY, D.title, D.MAIL, D.DESCRIPTION, D.DEPARTMENT AS DEPTID
+								D.CN,
+								CASE WHEN #primary# = '1' THEN D.DISPLAYNAME ELSE D.DISPLAYNAME2 END AS DISPLAYNAME,
+								CASE WHEN #primary# = '1' THEN D.COMPANY ELSE D.COMPANY2 END AS COMPANY,
+								CASE WHEN #primary# = '1' THEN D.title ELSE D.title2 END AS title,
+								D.MAIL,
+								CASE WHEN #primary# = '1' THEN D.DESCRIPTION ELSE D.DESCRIPTION2 END AS DESCRIPTION,
+								D.DEPARTMENT AS DEPTID
 							FROM 
 								TBL_USERMASTER D
 							WHERE 
 								D.TENANT_ID = #tenantID# AND D.PHYSICALDELIVERYOFFICENAME = #companyID#
 							UNION ALL
 							SELECT 
-								B.cn, B.DISPLAYNAME, C.EXTENSIONATTRIBUTE3 as COMPANY, a.title, b.mail, C.DISPLAYNAME AS DESCRIPTION, A.DEPTID
+								B.cn,
+								CASE WHEN #primary# = '1' THEN B.DISPLAYNAME ELSE B.DISPLAYNAME2 END AS DISPLAYNAME,
+								CASE WHEN #primary# = '1' THEN C.EXTENSIONATTRIBUTE3 ELSE C.COMPNM2 END AS COMPANY,
+								CASE WHEN #primary# = '1' THEN A.title ELSE A.title2 END AS title,
+								b.mail,
+								CASE WHEN #primary# = '1' THEN C.DISPLAYNAME ELSE C.DISPLAYNAME2 END AS DESCRIPTION,
+								A.DEPTID
 							FROM 
 								TBL_USERMASTER B 
 							INNER JOIN 

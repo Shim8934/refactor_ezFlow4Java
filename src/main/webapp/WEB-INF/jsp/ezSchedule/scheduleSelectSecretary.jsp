@@ -364,9 +364,9 @@
 	    <table>
 	    	<tr>
 	        	<td style="padding-right:4px">
-	        		<div class="box" style="margin-bottom:4px; background-color: #f8f8fa; border: 1px solid #eaeaea; height:26px;" >
+	        		<div class="box" style="margin-bottom:4px; background-color: #f8f8fa; border: 1px solid #eaeaea; height:26px; display:flex; gap:1px; align-items:center;" >
 		                <input id="deptkeyword" onkeypress="deptsearch_press()" style="width:120px; height:22px; margin-left:4px; margin-top :2px;" />
-	                	<a class="imgbtn" style="margin-top :2px;"><span onclick="deptsearch_click()"><spring:message code='ezSchedule.t17' /></span></a>
+	                	<a class="imgbtn"><span onclick="deptsearch_click()"><spring:message code='ezSchedule.t17' /></span></a>
 	            	</div>
 	            	<div style="border: 1px solid #ddd; padding-top:2px;height: 444px; width: 280px; overflow-x: auto; overflow-y: auto; background-color: #FFFFFF" id="TreeView"></div>	            	
 	        	</td>

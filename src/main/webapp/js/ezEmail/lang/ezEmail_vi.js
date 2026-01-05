@@ -315,6 +315,7 @@ var strLangLS03 = "The search results will be downloaded as a single zip file. \
 var strLangLS04 = ".";
 var strLangLS05 = "';' cannot be contained."
 var strLangAllmailSaveAlert = "선택된 메일이 없습니다. \n메일을 선택하거나 메일 검색 후 저장해 주세요."
+var strLangEachIcon = "개인별";
 
 /* 2018-07-03 홍승비 - 승인게시물, 커뮤니티 답변메일 companyID 관련 처리*/
 var strLangHSB01 = "Bài đăng này có thể được xem trên ";
@@ -342,6 +343,9 @@ var strLangKSA04 = "Successfully saved appointment.";
 var strLangKSA05 = "Error occured while saving appointment.";
 
 var strLangTagAlreadyUse = "이미 사용 중인 다른 태그의 이름입니다.";
+
+var strLangIcal01 = "Email phản hồi đã được gửi."
+var strLangIcal02 = "Không gửi được email phản hồi."
 
 /* 2023-05-16 김우철 - 한글 배포용 문서 저장을 위한 메세지 추가 */
 var strLangKWCHd01 = "An error occurred while saving security HWP document. Please try again.";
@@ -399,6 +403,11 @@ const strLangChangeLimit = "Cannot switch because the attachment size exceeds th
 
 const strLangKeepMoveCantUseSentBox = '보낸편지함으로는 계속이동 할 수 없습니다.';
 const strLangKeepMoveNoFromHeader = '보낸이가 비어있는 메일은 계속이동 할 수 없습니다.';
+
+const strUnLimit = "không giới hạn";
+const strDownloadsCount = "회";
+
+const strPreviousTime = 'Ngày dự trữ không được cũ hơn bây giờ.';
 
 function GetLocalTime(Offset , pDateTime)
 {

@@ -616,6 +616,9 @@ public interface EzCommonService {
 
 	// 2024-09-12 황인경 - 모바일 메뉴 권한 별도 생성으로 인한 포틀릿 데이터 변경
 	public void updateMobilePortletMenuId() throws Exception;
+
+	// 2025-07-07 황인경 - 커스텀 체크박스 근태관리 폼 데이터 업데이트
+	public void updateAttitudeCustomCheckbox() throws Exception;
 	
 	// 2024-08-27 유길상 - 자원관리 > 자원등록 > 최대 예약 가능 기간 컬럼 추가
 	public void alterTblRsBrdResMaxDate() throws Exception;
@@ -668,4 +671,16 @@ public interface EzCommonService {
 	
 	// 2025-07-24 김승연 - SAML 인증용 request id 확인을 위한 테이블 추가
 	public void createTblSamlRequestId() throws Exception;
+    
+	public void addColumnsForIndonesian() throws Exception;
+
+	public void insertIndonesianTenantConfig() throws Exception;
+
+	public void addBoardExtColumnForMultiLang() throws Exception;
+
+	public void updateInitDataForIndiLang() throws Exception;
+
+    public void alterJmochaBigAttachDownLimit() throws Exception;
+	
+	public void createApproveErrorInfoTable() throws Exception;
 }

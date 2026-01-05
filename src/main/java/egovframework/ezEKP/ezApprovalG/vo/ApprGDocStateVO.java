@@ -17,6 +17,8 @@ public class ApprGDocStateVO {
 	private String documentStateName3;
 	/** 문서상태이름4*/
 	private String documentStateName4;
+	/** 문서상태이름6*/
+	private String documentStateName6;
 	
 		
 	public String getContainerTypeID() {
@@ -66,6 +68,13 @@ public class ApprGDocStateVO {
 	}
 	public void setDocumentStateName4(String documentStateName4) {
 		this.documentStateName4 = documentStateName4;
+	}
+	public String getDocumentStateName6() {
+		return documentStateName6;
+	}
+
+	public void setDocumentStateName6(String documentStateName6) {
+		this.documentStateName6 = documentStateName6;
 	}
 	
 }

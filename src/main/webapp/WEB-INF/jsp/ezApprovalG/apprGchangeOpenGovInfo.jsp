@@ -530,12 +530,12 @@
         			$.each(result, function(index, item) {
         				attachTr = "";
         				if (item.fileOpenFlag == "Y") {
-        					attachTr = "<tr><td align='center' style='width:30px'><input onClick='fileOpenFlagChk_onClick(this)' class='fileOpenFlagChk' id='fileOpenFlagChk_" + item.sn + "' type='checkbox' checked />&nbsp;</td>"
+        					attachTr = "<tr><td align='center' style='width:30px'><div class='custom_checkbox'><input onClick='fileOpenFlagChk_onClick(this)' class='fileOpenFlagChk' id='fileOpenFlagChk_" + item.sn + "' type='checkbox' checked /></div>&nbsp;</td>"
             				+ "<td style='width:30px'>" + item.sn + "</td><td style='width:350px'>" + item.fileName + "</td>"
             				+ "<td style='width:70px'>" + item.fileSize + "</td>"
             				+ "<td class='fileOpenFlag' id='fileOpenFlag_" + item.sn + "' style='width:60px'>" + "공개" + "</td></tr>";
         				} else {
-        					attachTr = "<tr><td align='center' style='width:30px'><input onClick='fileOpenFlagChk_onClick(this)' class='fileOpenFlagChk' id='fileOpenFlagChk_" + item.sn + "' type='checkbox'/>&nbsp;</td>"
+        					attachTr = "<tr><td align='center' style='width:30px'><div class='custom_checkbox'><input onClick='fileOpenFlagChk_onClick(this)' class='fileOpenFlagChk' id='fileOpenFlagChk_" + item.sn + "' type='checkbox'/></div>&nbsp;</td>"
             				+ "<td style='width:30px'>" + item.sn + "</td><td style='width:350px'>" + item.fileName + "</td>"
             				+ "<td style='width:70px'>" + item.fileSize + "</td>"
             				+ "<td class='fileOpenFlag' id='fileOpenFlag_" + item.sn + "' style='width:60px'>" + "비공개" + "</td></tr>";
@@ -586,13 +586,13 @@
   <table class="content" style="margin-top:10px;width:100%;">
     <tr>
       <th style="width:16%;padding-right:5px;"><spring:message code='ezApprovalG.kes06'/> &nbsp;&nbsp;</th>
-      <td style="width:85%;"><Input type="radio" name="rdoSecType" value="1" checked onClick="return rdoSecType_onclick(this.value)">
+      <td style="width:85%;"><div class="custom_radio"><Input type="radio" name="rdoSecType" value="1" checked onClick="return rdoSecType_onclick(this.value)"></div>
         <span style="vertical-align:middle;"><spring:message code='ezApprovalG.t47'/></span>
-        <Input type="radio" name="rdoSecType" value="2" onClick="return rdoSecType_onclick(this.value)">
+        <div class="custom_radio"><Input type="radio" name="rdoSecType" value="2" onClick="return rdoSecType_onclick(this.value)"></div>
         <span style="vertical-align:middle;"><spring:message code='ezApprovalG.t150'/></span>
-        <Input type="radio"  name="rdoSecType" value="3" onClick="return rdoSecType_onclick(this.value)">
+        <div class="custom_radio"><Input type="radio"  name="rdoSecType" value="3" onClick="return rdoSecType_onclick(this.value)"></div>
         <span style="vertical-align:middle;"><spring:message code='ezApprovalG.t988'/></span>
-        <input type="checkbox" name="openListFlag" id="openListFlag" value="checkbox" onClick="openListFlag_onClick(this)">
+        <div class="custom_checkbox"><input type="checkbox" name="openListFlag" id="openListFlag" value="checkbox" onClick="openListFlag_onClick(this)"></div>
         <span>목록공개</span>
       </td>
     </tr>
@@ -605,21 +605,21 @@
     </tr>
     <tr>
       <th style="width:15%;"><spring:message code='ezApprovalG.t989'/></th>
-        <td ><input type="checkbox" name="selSecLevel1" id="selSecLevel1" value="Y">
+        <td ><div class='custom_checkbox'><input type="checkbox" name="selSecLevel1" id="selSecLevel1" value="Y"></div>
         <span onmouseover="showTooltip_MouseOver(this);" onmouseout="hideTooltip();">1<spring:message code='ezApprovalG.t991'/></span>
-        <input type="checkbox" name="selSecLevel2" id="selSecLevel2" value="Y">
+        <div class='custom_checkbox'><input type="checkbox" name="selSecLevel2" id="selSecLevel2" value="Y"></div>
         <span onmouseover="showTooltip_MouseOver(this);" onmouseout="hideTooltip();">2<spring:message code='ezApprovalG.t991'/></span>
-        <input type="checkbox" name="selSecLevel3" id="selSecLevel3" value="Y">
+        <div class='custom_checkbox'><input type="checkbox" name="selSecLevel3" id="selSecLevel3" value="Y"></div>
         <span onmouseover="showTooltip_MouseOver(this);" onmouseout="hideTooltip();"> 3<spring:message code='ezApprovalG.t991'/></span>
-        <input type="checkbox" name="selSecLevel4" id="selSecLevel4" value="Y">
+        <div class='custom_checkbox'><input type="checkbox" name="selSecLevel4" id="selSecLevel4" value="Y"></div>
         <span onmouseover="showTooltip_MouseOver(this);" onmouseout="hideTooltip();">4<spring:message code='ezApprovalG.t991'/></span><br>
-        <input type="checkbox" name="selSecLevel5" id="selSecLevel5" value="Y">
+        <div class='custom_checkbox'><input type="checkbox" name="selSecLevel5" id="selSecLevel5" value="Y"></div>
         <span onmouseover="showTooltip_MouseOver(this);" onmouseout="hideTooltip();"> 5<spring:message code='ezApprovalG.t991'/></span>
-        <input type="checkbox" name="selSecLevel6" id="selSecLevel6" value="Y">
+        <div class='custom_checkbox'><input type="checkbox" name="selSecLevel6" id="selSecLevel6" value="Y"></div>
         <span onmouseover="showTooltip_MouseOver(this);" onmouseout="hideTooltip();">6<spring:message code='ezApprovalG.t991'/></span>
-        <input type="checkbox" name="selSecLevel7" id="selSecLevel7" value="Y">
+        <div class='custom_checkbox'><input type="checkbox" name="selSecLevel7" id="selSecLevel7" value="Y"></div>
         <span onmouseover="showTooltip_MouseOver(this);" onmouseout="hideTooltip();"> 7<spring:message code='ezApprovalG.t991'/></span>
-        <input type="checkbox" name="selSecLevel8" id="selSecLevel8" value="Y">
+        <div class='custom_checkbox'><input type="checkbox" name="selSecLevel8" id="selSecLevel8" value="Y"></div>
         <span onmouseover="showTooltip_MouseOver(this);" onmouseout="hideTooltip();"> 8<spring:message code='ezApprovalG.t991'/></span>
         </td>
     </tr>
@@ -634,7 +634,7 @@
     <tr>
       <th style="width:15%;">열람제한일</th>
       <td>
-       	<input type="checkbox" name="openGovLimitDate" id="openGovLimitDate" value="checkbox" onclick="openGovLimitDate_onClick()">
+        <div class='custom_checkbox'><input type="checkbox" name="openGovLimitDate" id="openGovLimitDate" value="checkbox" onclick="openGovLimitDate_onClick()"></div>
         <input readonly="readonly" id='idDatepickerForOpenGov' style="PADDING-BOTTOM: 0px; PADDING-LEFT: 3px; PADDING-RIGHT: 3px; PADDING-TOP: 2px; WIDTH: 80px;">
       </td>
     </tr>

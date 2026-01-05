@@ -26,7 +26,8 @@
 			    var sentDateMsg = "${sentDateMsg}"; // 전달, 회신 시 보낸 시간				
 			    var mouseTop;
 			    var mailWritePreview = window.parent.mailWritePreview; // 메일작성 > 미리보기
-			    
+				var fromAddr ="${fromAddr}";
+				
 			    if (objLink != null) {
 					
 			    	if (typeof(objLink.length) == "undefined") {
@@ -481,6 +482,20 @@
 					var feature  = "height = " + popUpH + "px, width = " + popUpW + "px,left=" + left + ",top=" + top + ", status=no, toolbar=no, menubar=no,location=no, resizable=1, scrollbars=yes";
 					return feature;
 				}
+				
+				// 버튼 클릭시 active 클래스 추가 - HTML이 모두 로드된 이후 실행 
+				document.addEventListener("DOMContentLoaded", function () {
+					const buttons = document.querySelectorAll(".button_calendar_task");
+
+					buttons.forEach(btn => {
+						btn.addEventListener("click", function () {
+							// 기존 active 제거
+							buttons.forEach(b => b.classList.remove("active"));
+							// 현재 누른 버튼에 active 추가
+							this.classList.add("active");
+						});
+					});
+				});
 			</script> 
 	</head>
 	<body style="margin-left:10px;margin-top:10px" onload="javascript:window_onload()">

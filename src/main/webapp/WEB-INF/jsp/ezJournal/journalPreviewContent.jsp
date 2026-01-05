@@ -42,7 +42,7 @@
 					<dt class="prepic">
 						<c:choose>
 							<c:when test="${not empty journal.userImage }">
-								<img src="/admin/ezOrgan/getPersonalInfo.do?fileName=${journal.userImage }" width="55px" height="55px">
+								<img src="/admin/ezOrgan/getPersonalInfo.do?fileName=${journal.userImage }" onerror="this.src='/images/kr/main/bestEmployee_pic_none.png'" width="55px" height="55px">
 							</c:when>
 							<c:otherwise>
 								<img src="/images/kr/main/bestEmployee_pic_none.png" width="55px" height="55px">

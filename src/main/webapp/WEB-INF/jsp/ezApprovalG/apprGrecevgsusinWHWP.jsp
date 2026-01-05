@@ -365,8 +365,9 @@
 			        // SetBtnStateTrue();
 			
 			        getReceiveDocInfo();
-			        
-                	document.getElementById("btnAddSepAttach").style.display = "";
+			        if (approvalFlag == "G"){
+						document.getElementById("btnAddSepAttach").style.display = "";
+					}
                 	
 			        if (nonElecRec == "Y") {
 				        getNonElecInfoSusinInit();
@@ -1430,7 +1431,7 @@
 			function btnMail_onclick() {
 // 			    window.open("/myoffice/ezEmail/mail_write.aspx?DocHref=" + pFormHref + "&cmd=docsend&DocID=" + pDocID + "&TARGET=APPROVALG", "", "height = " + window.screen.availHeight * 0.8 + ", width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + GetOpenPosition(890, window.screen.availHeight * 0.8));
 // 		        window.open("/ezEmail/mailWrite.do?docHref=" + pFormHref + "&cmd=docsend&docID=" + pDocID + "&TARGET=APPROVALG", "", "height = " + window.screen.availHeight * 0.8 + ", width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + GetOpenPosition(890, window.screen.availHeight * 0.8));
-				showPopup("/ezEmail/mailWrite.do?docHref=" + pFormHref + "&cmd=docsend&docID=" + pDocID + "&TARGET=APPROVALG", 890, window.screen.availHeight * 0.8, "", "height = " + window.screen.availHeight * 0.8 + ", width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + GetOpenPosition(890, window.screen.availHeight * 0.8), hidePopup);
+				showPopup("/ezEmail/mailWrite.do?docHref=" + pFormHref + "&cmd=docsend&docID=" + pDocID + "&TARGET=APPROVALG", 1200, window.screen.availHeight * 0.8, "", "height = " + window.screen.availHeight * 0.8 + ", width = 1200px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + GetOpenPosition(1200, window.screen.availHeight * 0.8), hidePopup);
 			}
 
 			var tempSecurity = "";
@@ -2083,10 +2084,10 @@
 				DivPopUpHidden();
 			}
 
-			var totalsavefileinfo_dialogArguments = new Array();
+			// var totalsavefileinfo_dialogArguments = new Array();
 			function TotalSave_onclick() {
-				totalsavefileinfo_dialogArguments[0] = "";
-				totalsavefileinfo_dialogArguments[1] = TotalSave_onclick_Complete;
+				ezCommon_cross_dialogArguments[0] = "";
+				ezCommon_cross_dialogArguments[1] = TotalSave_onclick_Complete;
 
 				var mode = getDocMode();
 				DivPopUpShow(580, 480, "/ezApprovalG/totalSaveFileInfo.do?docID=" + pDocID + "&type=" + mode + "&orgCompanyID=" + orgCompanyID);

@@ -490,7 +490,7 @@
 	            var url = "/ezApprovalG/ezApprovalInfo.do?guBun=" + pGubun + "&ext=" + "mht";
 	            // var result = GetOpenWindow(url, "ezApprovalInfo-" + windowUuid, 1210, 750, "NO");
 				ezCommon_cross_dialogArguments[0] = parameter;
-				showPopup(url, 1210, 750, "ezApprovalInfo-" + windowUuid, "", btnApprovalInfo_Complete);
+				showPopup(url, 1210, 750, "ezApprovalInfo-" + windowUuid, GetOpenWindowfeature(1210, 750), btnApprovalInfo_Complete);
 	        }
 	        function btnApprovalInfo_Complete(RtnVal)
 	        {

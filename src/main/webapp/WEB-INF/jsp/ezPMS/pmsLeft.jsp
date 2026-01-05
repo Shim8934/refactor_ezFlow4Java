@@ -43,7 +43,7 @@
 	<%-- 2023-06-15 황인경 - 디자인 개선 > 프로젝트관리 > 좌측메뉴 > style 수정 및 LNB 이미지 삭제, 태그 구조 수정  --%>
 	<body class="newLeft">
 	    <div id="left"  class="lnb pms_left" style="overflow: auto;">
-	    	<div class="left_title" title="ezPMS">
+	    	<div class="left_title">
 	    		<span><spring:message code='ezPMS.t8' /></span>
 	    		<span class="sub_iconLNB tree_leftconfig" title="ezPMS.t144" id="pmsSetting"></span>
 	    	</div>
@@ -80,7 +80,7 @@
 	    </div>
 <%-- 	<body class="leftbody">
 	 	    <div id="left">
-	 	    	<div class="left_pims" title="ezPMS"><span><spring:message code='ezPMS.t8' /></span></div> 
+	 	    	<div class="left_pims"><span><spring:message code='ezPMS.t8' /></span></div>
 	 		    <h2 class="on"><span><spring:message code='ezPMS.t8' /></span></h2> 
 	 		    <ul> 
 	 		    	<li><span id="projectList" style="width:100%;display:inline-block;"><spring:message code='ezPMS.t8' /></span></li>

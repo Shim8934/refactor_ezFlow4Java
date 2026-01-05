@@ -12,7 +12,9 @@
 		<thead id="BoardList_THEAD">
 			<tr id="BoardList_TH">
 				<th id="BoardList_TH_0" style="text-align: center; overflow: hidden; white-space: nowrap; cursor: pointer; width:20px;" class="h4_center" bgcolor="#CCCCCC">
-					<input type="checkbox" id="HeaderAllCheckBox" onchange="selectedAllTR(this);" style="margin: 0px; padding: 0px; width: 13px; height: 13px; vertical-align: middle;">
+					<div class="custom_checkbox">
+						<input type="checkbox" id="HeaderAllCheckBox" onchange="selectedAllTR(this);" style="margin: 0px; padding: 0px; width: 13px; height: 13px; vertical-align: middle;">
+					</div>
 				</th>
 				<!-- 취합여부아이콘 -->
 				<th id="BoardList_TH_10" onclick="setListOrder(this)" order="16" style="overflow: hidden; white-space: nowrap; cursor: pointer; width:35px; text-align: center; padding: 0px 3px;" class="h5_center">
@@ -42,7 +44,7 @@
 			<c:when test="${fn:length(journalList) ne 0}">
 				<c:forEach items="${journalList}" var="journal" varStatus="status">
 				<tr id="${journal.journalId }" mine="${journal.mine }" formStatus="${journal.formStatus }" typeId="${journal.typeId}" formId="${journal.formId}" ondblclick="goJournalDetail(this);" style="cursor: pointer;">
-					<td class="cbTD" style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width:20px;"><input onchange="checkedCheckbox(this);" type="checkbox" name="journalCheckbox" style="width: 13px; height: 13px; padding : 0px; margin : 0px; vertical-align: middle"></td>
+					<td class="cbTD" style="text-align: center; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width:20px;"><div class="custom_checkbox"><input onchange="checkedCheckbox(this);" type="checkbox" name="journalCheckbox" style="width: 13px; height: 13px; padding : 0px; margin : 0px; vertical-align: middle"></div></td>
 					<!-- 취합여부아이콘 -->
 					<c:choose>
 						<c:when test="${journal.isSum eq 'Y'}">
@@ -74,14 +76,18 @@
 					<fmt:formatDate value="${toDay}" pattern="yyyy-MM-dd" var="nowDay"/>
 					<fmt:parseDate value="${journal.journalDate}" pattern="yyyy-MM-dd"  var="jDay"/>
 					<fmt:formatDate value="${jDay}" pattern="yyyy-MM-dd" var="jDay"/>
-					<c:if test="${nowDay <= jDay }">
-						<img src="/images/i_new.gif">
-					</c:if>
-						<c:out value='${journal.journalTitle}'/>
+						<div style="display:flex; align-items:center;">
+						<div style='float:left; overflow: hidden; text-overflow: ellipsis; display: block; max-width: 95%;'>
+							<c:out value='${journal.journalTitle}'/>
+						</div>
 						<c:if test="${journal.replyCount gt 0}">
 							<!-- <a onclick=""><span onclick="quickReply('${journal.journalId }','${journal.journalTitle }');" style="color: #c64200">[${journal.replyCount }]</span></a> -->
 							<a onclick=""><span style="color: #c64200">[<c:out value='${journal.replyCount }'/>]</span></a>
 						</c:if>
+						<c:if test="${nowDay <= jDay }">
+							<span class="board_new" style="margin-top: 2px;"></span>
+						</c:if>
+						</div>
 					</td>
 					<td	onclick="selectedTR(this);" style="text-align: left; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; width:20%;">
 						<c:out value='${fn:substring(journal.journalDate, 0, 16) }'/>

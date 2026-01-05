@@ -19,15 +19,15 @@
 			
 			<div class="adminListBox" style="overflow:hidden; padding-right: 0;">
 				<!-- 기본설정 -->
-				<h2><span><spring:message code='ezCabinet.t09'/></span></h2>
+				<h2><span class="h2Title"><spring:message code='ezCabinet.t09'/></span></h2>
 				<ul></ul>
 				
 				<!-- 용량설정 -->
-				<h2><span><spring:message code='ezCabinet.t10'/></span></h2>
+				<h2><span class="h2Title"><spring:message code='ezCabinet.t10'/></span></h2>
 				<ul></ul>
 				
 				<!-- 모듈설정-->
-				<h2><span><spring:message code='ezCabinet.t155'/></span></h2>
+				<h2><span class="h2Title" title="<c:if test='${lang eq 6}'><spring:message code='ezCabinet.t155' /></c:if>"><spring:message code='ezCabinet.t155'/></span></h2>
 				<ul></ul>
 			</div>
 		</div>

@@ -121,43 +121,43 @@
 					}
 					
 					listXML += "<TR>";
-					listXML += "<TD align=center><input type='checkbox' name='chk' id='chk' onclick='checkBox_checked(\"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "ItemID") + "\", \"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterID") + "\" , event)'></td>";
+					listXML += "<TD align=center><div class='custom_checkbox'><input type='checkbox' name='chk' id='chk' onclick='checkBox_checked(\"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "ItemID") + "\", \"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterID") + "\" , event)'></div></td>";
 					
 					if (pBoardID == "{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}") {
                         listXML += "<TD class='"+ urgency + " " + bClass + "'>" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "BoardName") + "</TD>";
                         listXML += "<TD class='"+ urgency + " " + bClass + "' title='" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "Abstract").trim().replace("'", "`") + "' style='cursor:pointer; text-overflow:ellipsis; overflow:hidden' onclick='ItemRead_onclick(\""
                         	+ SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "BoardID") + "\", \"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "boardName") + "\", \"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "ItemID") + "\", \""
                         	+ SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterID") + "\", event)'>";
-                        listXML += "<div style='float: left; overflow: hidden; text-overflow: ellipsis; display: block; max-width: 100%;'>";
-                        	
-                        /*  2018-05-18 홍승비 - 커뮤니티 일반/그룹/익명게시판 리스트에서 new 표시하기 */
-                       	if (pastDate <= writeDate) {
-                       		listXML += "<img src='/images/i_new.gif' style='margin-bottom:1px;'>&nbsp;";
-                       	}
+						listXML += "<div style='display:flex;align-items:center;'>";
+						listXML += "<div style='float: left; overflow: hidden; text-overflow: ellipsis; display: block; max-width: 100%;'>";
                        	listXML += strEmergent + strSpace + SelectSingleOnlyTitle(SelectNodes(xmldoc,"NODES/NODE")[i], "Title");
                        	listXML += "</div>";
                        	
                        	/* 2018-05-04 홍승비 - 댓글 표시하기, 2020-03-16 홍승비 - 댓글 영역 표출 스타일 수정 */
                        	if(SelectSingleOnlyTitle(SelectNodes(xmldoc,"NODES/NODE")[i], "OneLineCnt") > 0) {
-                       		listXML += "<SPAN class= '" + bClass + "' style='color:#c64200; position:absolute; padding-left:1px;'>[" + SelectSingleOnlyTitle(SelectNodes(xmldoc,"NODES/NODE")[i], "OneLineCnt") + "]<SPAN>";
+                       		listXML += "<SPAN class= '" + bClass + "' style='color:#c64200;padding-left:1px;'>[" + SelectSingleOnlyTitle(SelectNodes(xmldoc,"NODES/NODE")[i], "OneLineCnt") + "]<SPAN>";
                        	}
-                        listXML += "</TD><TD></TD>";
+						/*  2018-05-18 홍승비 - 커뮤니티 일반/그룹/익명게시판 리스트에서 new 표시하기 */
+						if (pastDate <= writeDate) {
+							listXML += "<span class='board_new'></span>";
+						}
+                        listXML += "</div></TD><TD></TD>";
 					}
 					else {
 						listXML += "<TD class='"+ urgency + " " + bClass + "' title='" + MakeXMLString(SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "Abstract").trim().replace("'", "`")) + "' style='cursor:pointer; text-overflow:ellipsis; overflow:hidden' onclick='ItemRead_onclick(\""
 							+ pBoardID + "\", \"" + pBoardName + "\", \"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "ItemID") + "\", \"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "Writer") + "\", event)'>";
+						listXML += "<div style='display:flex;align-items:center;'>";
 						listXML += "<div style='float: left; overflow: hidden; text-overflow: ellipsis; display: block; max-width: 100%;'>";
-						
-	                    if (pastDate <= writeDate) {
-	                   		listXML += "<img src='/images/i_new.gif' style='margin-bottom:1px;'>&nbsp;";
-	                   	}
 	                    listXML += strEmergent + strSpace + Replace2HTML(SelectSingleOnlyTitle(SelectNodes(xmldoc,"NODES/NODE")[i], "Title"));
                        	listXML += "</div>";
 	                    
 						if(SelectSingleOnlyTitle(SelectNodes(xmldoc,"NODES/NODE")[i], "OneLineCnt") > 0) {
-                       		listXML += "<SPAN class ='" + bClass + "' style='color:#c64200; position:absolute; padding-left:1px;'>[" + SelectSingleOnlyTitle(SelectNodes(xmldoc,"NODES/NODE")[i], "OneLineCnt") + "]<SPAN>";
+                       		listXML += "<SPAN class ='" + bClass + "' style='color:#c64200;padding-left:1px;'>[" + SelectSingleOnlyTitle(SelectNodes(xmldoc,"NODES/NODE")[i], "OneLineCnt") + "]</SPAN>";
                        	}
-                    	listXML += "</TD><TD></TD>";
+						if (pastDate <= writeDate) {
+							listXML += "<span class='board_new'></span>";
+						}
+                    	listXML += "</div></TD><TD></TD>";
 					}				
 					
 					if (gubun == '1') {
@@ -180,25 +180,27 @@
 						var downURL = "/ezCommunity/getCommunityAttachInfo.do?fileName=" + javaURLEncode(fileExt) + "&filePath=" + javaURLEncode(filePath);
 						var imgTag = "";
 			           	if (fileExt.indexOf("MANY") != -1) {
-                    		imgTag = "<img src='/images/disk_icon.png' onclick='selectToDownloadFiles(\""+ itemID +"\")'>";
+                    		imgTag = "<img style='cursor: pointer;width:20px; height:20px; vertical-align:middle;' src='/images/disk.svg' onclick='selectToDownloadFiles(\""+ itemID +"\")'>";
                     	} else if (fileExt.indexOf(".jpg") != -1 || fileExt.indexOf(".jpeg") != -1 || fileExt.indexOf(".bmp") != -1 || fileExt.indexOf(".gif") != -1 || fileExt.indexOf(".png") != -1 || fileExt.indexOf(".tif") != -1 || fileExt.indexOf(".tiff") != -1) {
-                    		imgTag = "<img src='/images/image.png' onclick='downloadBoardFile(\"" + downURL + "\")'>";
+                    		imgTag = "<img style='cursor: pointer;width:20px; height:20px; vertical-align:middle;' src='/images/image.svg' onclick='downloadBoardFile(\"" + downURL + "\")'>";
                     	} else if (fileExt.indexOf(".doc") != -1 || fileExt.indexOf(".docx") != -1) {
-                    		imgTag = "<img src='/images/doc.png' onclick='downloadBoardFile(\"" + downURL + "\")'>";
+                    		imgTag = "<img style='cursor: pointer;width:20px; height:20px; vertical-align:middle;' src='/images/doc.svg' onclick='downloadBoardFile(\"" + downURL + "\")'>";
                     	} else if (fileExt.indexOf(".xls") != -1 || fileExt.indexOf(".xlsx") != -1) {
-                    		imgTag = "<img src='/images/xls.png' onclick='downloadBoardFile(\"" + downURL + "\")'>";
+                    		imgTag = "<img style='cursor: pointer;width:20px; height:20px; vertical-align:middle;' src='/images/xls.svg' onclick='downloadBoardFile(\"" + downURL + "\")'>";
                 		} else if (fileExt.indexOf(".ppt") != -1 || fileExt.indexOf(".pptx") != -1 || fileExt.indexOf(".pps") != -1 || fileExt.indexOf(".ppsx") != -1) {
-                			imgTag = "<img src='/images/ppt.png' onclick='downloadBoardFile(\"" + downURL + "\")'>";
+                			imgTag = "<img style='cursor: pointer;width:20px; height:20px; vertical-align:middle;' src='/images/ppt.svg' onclick='downloadBoardFile(\"" + downURL + "\")'>";
             			} else if (fileExt.indexOf(".txt") != -1) {
-            				imgTag = "<img src='/images/txt.png' onclick='downloadBoardFile(\"" + downURL + "\")'>";
+            				imgTag = "<img style='cursor: pointer;width:20px; height:20px; vertical-align:middle;' src='/images/txt.svg' onclick='downloadBoardFile(\"" + downURL + "\")'>";
         				} else if (fileExt.indexOf(".zip") != -1) {
-        					imgTag = "<img src='/images/zip.png' onclick='downloadBoardFile(\"" + downURL + "\")'>";
+        					imgTag = "<img style='cursor: pointer;width:20px; height:20px; vertical-align:middle;' src='/images/zip.svg' onclick='downloadBoardFile(\"" + downURL + "\")'>";
     					}else if (fileExt.indexOf(".pdf") != -1) {
-    						imgTag = "<img src='/images/pdf.png' onclick='downloadBoardFile(\"" + downURL + "\")'>";
+    						imgTag = "<img style='cursor: pointer;width:20px; height:20px; vertical-align:middle;' src='/images/pdf.svg' onclick='downloadBoardFile(\"" + downURL + "\")'>";
+						} else if (fileExt.indexOf(".hwp") != -1 || fileExt.indexOf(".hwpx") != -1) {
+							imgTag = "<img style='cursor: pointer;width:20px; height:20px; vertical-align:middle;' src='/images/hwp.svg' onclick='downloadBoardFile(\"" + downURL + "\")'>";
 						} else if (fileExt.indexOf(".ecm") != -1) {
-							imgTag = "<img src='/images/ecm.png' onclick='downloadBoardFile(\"" + downURL + "\")'>";
+							imgTag = "<img style='cursor: pointer;width:20px; height:20px; vertical-align:middle;' src='/images/ecm.svg' onclick='downloadBoardFile(\"" + downURL + "\")'>";
 						} else {
-							imgTag = "<img src='/images/email/mail_006.gif' onclick='downloadBoardFile(\"" + downURL + "\")'>";
+							imgTag = "<img style='cursor: pointer;width:20px; height:20px; vertical-align:middle;' src='/images/etc.svg' onclick='downloadBoardFile(\"" + downURL + "\")'>";
 						}
 
 						listXML += "<TD class='"+ urgency + "'>" + imgTag +"</TD>";
@@ -782,7 +784,7 @@
 		<div style = "height:370px;">
 			<table  id="tblList" class="cmhomelist" style="width:100%">
 				<tr>
-					<th style="width:20px;padding-top:2px;"><input type='checkbox' name="checkbox" onclick='checkBox_checkAll()'></th>
+					<th style="width:20px;padding-top:2px; text-align: center;"><div class="custom_checkbox"><input type='checkbox' name="checkbox" onclick='checkBox_checkAll()'></div></th>
 					<c:if test="${pBoardID == '{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}' }">
 						<c:choose>
 							<c:when test="${pSortBy == 'BoardName'}">

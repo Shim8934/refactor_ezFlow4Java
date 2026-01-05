@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="12" height="12" viewBox="0 0 12 12">
+  <g id="icon_appr_more" transform="translate(-100 -200)">
+    <image id="icon_appr_more-2" data-name="icon_appr_more" width="12" height="12" transform="translate(100 200)" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAMCAYAAABWdVznAAAABHNCSVQICAgIfAhkiAAAACxJREFUKFNjZMAO/kOFGdGlMQSgCoaaBph7cfgfVRjkaZI1YDN5qIUSSX4AAAVHDAsXx84eAAAAAElFTkSuQmCC"/>
+    <rect id="사각형_17595" data-name="사각형 17595" width="12" height="12" transform="translate(100 200)" fill="none"/>
+    <g id="사각형_17596" data-name="사각형 17596" transform="translate(105 200)" fill="#fff" stroke="#000" stroke-width="1">
+      <rect width="2" height="12" stroke="none"/>
+      <rect x="0.5" y="0.5" width="1" height="11" fill="none"/>
+    </g>
+    <g id="사각형_17597" data-name="사각형 17597" transform="translate(100 207) rotate(-90)" fill="#fff" stroke="#000" stroke-width="1">
+      <rect width="2" height="12" stroke="none"/>
+      <rect x="0.5" y="0.5" width="1" height="11" fill="none"/>
+    </g>
+  </g>
+</svg>

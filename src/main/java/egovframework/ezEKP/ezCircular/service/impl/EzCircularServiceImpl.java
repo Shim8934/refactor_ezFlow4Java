@@ -967,7 +967,7 @@ public class EzCircularServiceImpl extends EgovAbstractServiceImpl implements Ez
 	}
 	
 	@Override
-	public List<CircularMemberVO> getMemberName(String circularBMId, int tenantID, String companyID) throws Exception {
+	public List<CircularMemberVO> getMemberName(String circularBMId, int tenantID, String companyID, String primary) throws Exception {
 		logger.debug("getMemberName started.");
 		logger.debug("circularBMId = " + circularBMId + " || tenantID = " +tenantID + " || companyID = " +companyID);
 		
@@ -975,6 +975,7 @@ public class EzCircularServiceImpl extends EgovAbstractServiceImpl implements Ez
 		map.put("circularBMId", circularBMId);
 		map.put("tenantID", tenantID);
 		map.put("companyID", companyID);
+		map.put("primary", primary);
 		
 		List<CircularMemberVO> list = ezCircularDAO.getMemberName(map);
 		
@@ -1935,6 +1936,7 @@ public class EzCircularServiceImpl extends EgovAbstractServiceImpl implements Ez
 		map.put("perCount", perCount);
 		map.put("offset", commonUtil.getMinuteUTC(offset));
 		map.put("companyID", userInfo.getCompanyID());
+		map.put("primary", userInfo.getPrimary());
 		
 		List<CircularConfirmVO> list = ezCircularDAO.getConfirmMember(map);
 		

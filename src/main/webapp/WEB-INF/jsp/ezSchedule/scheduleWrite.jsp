@@ -90,6 +90,9 @@
 			var modAttendIdList = [];
 			var modAttendName1List = [];
 			var modAttendName2List = [];
+			
+			var modType = "<c:out value='${modType}'/>";
+			var beforeScheDate = "";
 		    
 		    window.onload = function () {
 		    	
@@ -140,7 +143,20 @@
                     $('#Stimepicker').timepicker('setTime', startTime);
                     $('#Etimepicker').timepicker('setTime', endTime);
                 }
+				
+				g_attendant = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname2": new Array(), "jikwe": new Array(), "phone": new Array() };
+
 		        if (scheduleid != "") {
+					//수정시 저장된 일정시간으로 설정
+					setDate();
+					
+					// 이 일정부터 모든 일정 수정일 때, 반복 횟수 조정
+					if (modType === "2" && repetition != null && repetition.split("|")[0] > 0 && repeatCount > 0) {
+						info = repetition.split("|");
+						info[0] = info[0] - (repeatCount - 1);
+						repetition = info.join("|");
+					}
+					
 		            document.getElementById("importantSelect").value = importance;
 		            document.getElementById("publicSelect").value = ispublic;	                
 	                document.getElementById("HolderWrite").style.display = "none";
@@ -176,10 +192,19 @@
 		                /* 2021-11-25 홍승비 - 일정완료 체크박스 표출에 대응하도록 기간TD의 스타일 조정 */
 		                if(document.title == 'Modify'){
 		                document.getElementById("periodblockTD").style.width = "40%";
-		                }else{
+		                } else {
 		                document.getElementById("periodblockTD").style.width = "60%";
 		                }
-		                show_repetition_info();
+						
+						if (modType == '1') {
+							document.getElementById("completeFG_repAllSpan").style.display = "none";
+							document.getElementById("periodblockTD").style.width = "80%";
+							repetition = "";
+							allday_change();
+						} else {
+							show_repetition_info();
+						}
+						
 		            } else if(datetype == "2") {
 		            	document.getElementById("alldaycheck").checked = true;
 		            	allday_change();
@@ -189,7 +214,18 @@
 		                show_repetition_info();
 		                document.getElementById("repeatinfo").textContent = recurringLabelText;
 		                document.getElementById("periodblockTR").style.display = "none";
-		            }                   
+		            }
+					
+					// 참석자 초대 정보
+					<c:forEach var="item" items="${attendantList}" varStatus="status">
+    					g_attendant["name"][${status.index}] = lang == 1 ? '<c:out value="${item.attendantName}"/>' : '<c:out value="${item.attendantName2}"/>';
+						g_attendant["id"][${status.index}] = '<c:out value="${item.attendantId}"/>';
+						g_attendant["deptname"][${status.index}] = '<c:out value="${item.attendantDeptName}"/>';
+						g_attendant["name1"][${status.index}] = '<c:out value="${item.attendantName}"/>';
+						g_attendant["name2"][${status.index}] = '<c:out value="${item.attendantName2}"/>';
+						g_attendant["deptname2"][${status.index}] = '<c:out value="${item.attendantDeptName2}"/>';
+					</c:forEach>
+					
 		        } else if (datetype != ""){ 
 		        	if (datetype == "2") {
 		                document.getElementById("alldaycheck").checked = true;
@@ -220,9 +256,7 @@
 		                document.getElementById("TextTitle").focus();
 		        }
 		        catch (e) { }
-
-		        g_attendant = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname2": new Array(), "jikwe": new Array(), "phone": new Array() };
-     
+				
 		        /* for (var i = 0; i < attendantname.split("&").length - 1; i++) {
 		            g_attendant["id"][i] = attendantemail.split("&")[i];
 		            g_attendant["name1"][i] = attendantname.split("&")[i];
@@ -231,11 +265,6 @@
 		        if (document.getElementById("iReFlag")) {
 		        	tmpReFlag = document.getElementById("iReFlag").value;
 		        }
-		        
-		        //수정시 저장된 일정시간으로 설정
-		         if (scheduleid != "") {
-		        setDate();
-		         }
 		    }
 
 		    window.onresize = function () {
@@ -345,6 +374,15 @@
 		        $('#Etimepicker').timepicker();
 		        $('#Etimepicker').timepicker('setTime', EDate);
 		        $('#Etimepicker').timepicker({ 'timeFormat': 'H:i' });
+				
+				if (modType == "1") {
+					$("#Sdatepicker").datepicker('setDate', repStartDate.slice(0, 10));
+					$("#Edatepicker").datepicker('setDate', repStartDate.slice(0, 10));
+				} else if (modType== "2") {
+					$("#Sdatepicker").datepicker('setDate', repStartDate.slice(0, 10));
+				}
+				
+				beforeScheDate = repStartDate.slice(0, 10) + ' ' + $('#Stimepicker').val();
 		    }
 		    
 		    var monthMsg = "<spring:message code='ezSchedule.t110' />";
@@ -502,6 +540,7 @@
 		        for (var i = 1; i < tmeptr.length; i++) {
 		            var span = document.createElement("SPAN");
 		            var input = document.createElement("INPUT");
+		            var oDiv = document.createElement("DIV");
 		            input.type = "checkbox";
 
 		            var img = document.createElement("IMG");
@@ -520,7 +559,8 @@
 
 		            var br = document.createElement("BR");
 
-		            span.appendChild(input);
+		            oDiv.appendChild(input);
+		            span.appendChild(oDiv);
 		            span.appendChild(img);
 		            span.appendChild(a);
 		            span.appendChild(br);
@@ -740,11 +780,23 @@
 	                            <div id="schedule1">
 	                                <table class="content">
 	                                	<c:if test="${scheduleId != ''}">
+										<c:if test="${modType ne '0'}">
+										<tr id="HolderEdit">
+                                            <th><spring:message code='ezSchedule.ModType.jih02'/></th>
+											<c:choose>
+												<c:when test="${modType eq '1'}"><td colspan="3"><spring:message code='ezSchedule.ModType.jih03'/></td></c:when>
+												<c:when test="${modType eq '2'}"><td colspan="3"><spring:message code='ezSchedule.ModType.jih04'/></td></c:when>
+												<c:when test="${modType eq '3'}"><td colspan="3"><spring:message code='ezSchedule.ModType.jih05'/></td></c:when>
+											</c:choose>
+                                        </tr>
+										</c:if>
                                         <tr id="HolderEdit">
                                             <th><spring:message code='ezSchedule.t363'/></th>
                                             <td colspan="3" id="LabelOwner">
                                                 ${strLabelOwner}
-                                                <input type="checkbox" id="topcheck" value="1" style="margin-left:20px;"> <label for="topcheck"><spring:message code='ezSchedule.kwc01'/></label>
+                                                <div class="custom_checkbox">
+	                                                <input type="checkbox" id="topcheck" value="1" style="margin-left:20px;"> <label for="topcheck"><spring:message code='ezSchedule.kwc01'/></label>
+                                                </div>
                                             </td>
                                         </tr>
                                         </c:if>
@@ -752,7 +804,9 @@
                                             <th><spring:message code='ezSchedule.t363'/></th>
                                             <td colspan="3">
                                             	<select name="ListOwnerID" id="ListOwnerID" onchange="ListOwnerID_Change()" style="height:24px;"></select>
-                                            	<input type="checkbox" id="topcheck" value="1"> <label for="topcheck"><spring:message code='ezSchedule.kwc01'/></label>
+                                                <div class="custom_checkbox">
+	                                            	<input type="checkbox" id="topcheck" value="1"> <label for="topcheck"><spring:message code='ezSchedule.kwc01'/></label>
+                                                </div>
                                             </td>
                                         </tr>
 	                                    <tr>
@@ -771,8 +825,10 @@
 	                                        <th><spring:message code='ezSchedule.t368'/></th>
 	                                        <td id="periodblockTD" <c:if test="${scheduleId != ''}">style="width:80%;"</c:if>>
 	                                        	<span id="periodblock">
-	                                            	<input name="checkbox" type="checkbox" id="alldaycheck" onclick="allday_change()" value="1">
-	                                            	<spring:message code='ezSchedule.t369'/>
+		                                        	<div class="custom_checkbox">
+		                                            	<input name="checkbox" type="checkbox" id="alldaycheck" onclick="allday_change()" value="1">
+														<label for="alldaycheck"><spring:message code='ezSchedule.t369'/></label>
+		                                            </div>
 	                                           		<input type="text" id="Sdatepicker" style="width:90px;text-align:center" readonly="readonly">
 	                                           		<input id="Stimepicker" type="text" class="time" style="width:53px;margin-left:10px;text-align:center;" onkeypress="return KeEventControl(this);" onkeydown="return KeEventControl(this);" onkeyup="return KeEventControl(this);" onmousedown="return false" readonly/>
 	                                            	~
@@ -787,16 +843,22 @@
 	                                        <td>
 												<%-- 단일일정 수정 시 --%>
 	                                        	<span id="completeFG_oneSpan" <c:if test="${dateType != '1' && dateType != '2'}">style="display:none;"</c:if>>
-	                                            	<input name="checkbox" type="checkbox" id="completeFG_one" <c:if test="${completeFG == 'Y' && dateType != '3'}">checked</c:if>>
-	                                            	<spring:message code='ezSchedule.HSBCp02'/>
+													<div class="custom_checkbox">	
+	                                            		<input name="checkbox" type="checkbox" id="completeFG_one" <c:if test="${completeFG == 'Y' && dateType != '3'}">checked</c:if>>
+														<label for="completeFG_one"><spring:message code='ezSchedule.HSBCp02'/></label>
+	                                        		</div>
 	                                            </span>
 	                                            <%-- 반복일정 수정 시 (2021-11-25 기준으로 수정 시 pattern값은 0으로만 전달됨. 반복일정 수정 시 단일/전체 선택 기능이 없기 때문) --%>
                                             	<span id="completeFG_repOneSpan" <c:if test="${dateType != '3' || pattern != '0'}">style="display:none;"</c:if>>
-                                            		<input name="checkbox" type="checkbox" id="completeFG_repOne" onclick="completeFG_change(this.id)" <c:if test="${completeFG == 'Y' && isAllRep == 'N' && dateType == '3'}">checked</c:if>>
+                                            		<div class="custom_checkbox">
+                                            			<input name="checkbox" type="checkbox" id="completeFG_repOne" onclick="completeFG_change(this.id)" <c:if test="${completeFG == 'Y' && isAllRep == 'N' && dateType == '3'}">checked</c:if>>
+                                            		</div>
                                             		<spring:message code='ezSchedule.HSBCp03'/>
                                             	</span>
                                             	<span id="completeFG_repAllSpan" <c:if test="${dateType != '3' || pattern != '0'}">style="display:none;"</c:if>>
-                                            		<input name="checkbox" type="checkbox" id="completeFG_repAll" onclick="completeFG_change(this.id)" <c:if test="${completeFG == 'Y' && isAllRep == 'Y' && dateType == '3'}">checked</c:if>>
+                                            		<div class="custom_checkbox">
+                                            			<input name="checkbox" type="checkbox" id="completeFG_repAll" onclick="completeFG_change(this.id)" <c:if test="${completeFG == 'Y' && isAllRep == 'Y' && dateType == '3'}">checked</c:if>>
+                                            		</div>
                                             		<spring:message code='ezSchedule.HSBCp04'/>
                                             	</span>
 	                                        </td>

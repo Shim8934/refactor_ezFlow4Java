@@ -1144,7 +1144,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			
 			sb.append("<tr>");
 			/* 2018-05-07 홍승비 - 커뮤니티 설문조사 체크박스 사용 (삭제를 위한 해당설문ID, 등록자ID, 커뮤니티ID) */
-			sb.append("<td><input type=\"checkbox\" id=\"" + item.getManagerID()+ ";\" pollRegID=\"" + item.getPollRegUser() + "\" clubNo=\"" + item.getC_clubNo() + "\"/></td>");			
+			sb.append("<td><div class=\"custom_checkbox\"><input type=\"checkbox\" id=\"" + item.getManagerID()+ ";\" pollRegID=\"" + item.getPollRegUser() + "\" clubNo=\"" + item.getC_clubNo() + "\"/></div></td>");			
 			sb.append("<td style=\"text-overflow:ellipsis;overflow:hidden;white-space:nowrap;\" title=\"" + commonUtil.cleanValue(item.getPollSubject()).replaceAll("\\\\", "&#92;") + "\">");
 			sb.append("<a style = \"cursor:pointer\" onclick=movepage(\"" + code + "\",\"" + item.getManagerID() + "\",\"" + pollState.replaceAll(" ", "&nbsp;") + "\")>" + commonUtil.cleanValue(item.getPollSubject()).replaceAll("\\\\", "&#92;") + "</a></td>");
 			sb.append("<td>" + commonUtil.getDateStringInUTC(item.getPollStartDate().substring(0,19), offset, false).substring(0, 10) + " ~ " + commonUtil.getDateStringInUTC(item.getPollEndDate().substring(0,19), offset, false).substring(0, 10) + "</td>");
@@ -1586,7 +1586,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 				switch (questionVO.getAnswerType()) {
 					case 1 :
 						sb.append("<tr style='height:25px'><td class=\"t2\" width=\"50\" align=\"center\">");
-						sb.append("<input type=\"radio\" name=pollSelect_" + questionVO.getQuestionNo() + " value=" + answerVO.getAnswerNo());
+						sb.append("<div class=\"custom_radio\"><input type=\"radio\" name=pollSelect_" + questionVO.getQuestionNo() + " value=" + answerVO.getAnswerNo());
 						
 						if (isSave == 1) {
 							if (answerVO.getAnswerNo().equals(Integer.toString(responseVO.getAnswerNo()))) {
@@ -1594,7 +1594,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 							}
 						}
 						
-						sb.append("></td>");
+						sb.append("></div></td>");
 						sb.append("<td class=\"t2\">" + commonUtil.cleanValue(answerVO.getAnswerContent()) + "</td>");
 						
 						/* 2018-05-09 홍승비 - 커뮤니티 설문조사 이미지 대신 색깔 그래프로 표현 */
@@ -1625,7 +1625,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 						break;
 					case 2 :
 						sb.append("<tr style='height:25px'><td class=\"t2\" width=\"50\" align=\"center\">");
-						sb.append("<input type=\"radio\" name=pollSelect_" + questionVO.getQuestionNo() + " value=" + answerVO.getAnswerNo() + " id=\"pollSelectID_" + questionVO.getQuestionNo() + "_" + answerVO.getAnswerNo() + "\"");
+						sb.append("<div class=\"custom_radio\"><input type=\"radio\" name=pollSelect_" + questionVO.getQuestionNo() + " value=" + answerVO.getAnswerNo() + " id=\"pollSelectID_" + questionVO.getQuestionNo() + "_" + answerVO.getAnswerNo() + "\"");
 						
 						if (isSave == 1) {
 							if (answerVO.getAnswerNo().equals(Integer.toString(responseVO.getAnswerNo()))) {
@@ -1633,7 +1633,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 							}
 						}
 						
-						sb.append("></td><td class=\"t2\">");
+						sb.append("></div></td><td class=\"t2\">");
 						
 						if (answerVO.getAnswerNo().equals(Integer.toString(questionVO.getAnswerCount()))) {
 							sb.append(answerVO.getAnswerNo() + ". " + "<input type=\"text\" name=\"answerETC\" style=\"width:270px\">&nbsp;<a href=\"javascript:etcview( '" + egovMessageSource.getMessage("ezCommunity.t627", userInfo.getLocale()) + "', '" + questionVO.getQuestionID() + "' );\">" + egovMessageSource.getMessage("ezCommunity.t688", userInfo.getLocale()) + "</a>");
@@ -2124,6 +2124,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		
 		int iCount = 1, curPage = 0;
 		StringBuilder sb = new StringBuilder();
+		String lang = userInfo.getLang();
 		
 		for (CommunityCOutApplicationVO outApplication : list) {
 			sb.append("<tr>");
@@ -2132,10 +2133,19 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
             sb.append("<td>" + commonUtil.cleanValue(outApplication.getUserID().trim()) + "</td>");
             sb.append("<td align=\"center\">" + outApplication.getOutDate().substring(0, 10) + "</td>");
             sb.append("<td align=\"center\">");
-            sb.append("<a class=\"imgbtn\"><span onclick=\"javascript:okno('ok','" + commonUtil.cleanValue(outApplication.getUserID().trim()) + "','" + code + "','" + curPage + "','" + commonUtil.cleanValue(outApplication.getUserName().trim()) + "');\" style=\"width:40px\">" + egovMessageSource.getMessage("ezCommunity.t46", userInfo.getLocale()) + "</span></a>");
-            sb.append("</td>");
-            sb.append("<td align=\"center\">");
-            sb.append("<a class=\"imgbtn\"><span onclick=\"javascript:okno('no','" + commonUtil.cleanValue(outApplication.getUserID().trim()) + "','" + code + "','" + curPage + "','" + commonUtil.cleanValue(outApplication.getUserName().trim()) + "');\" style=\"width:40px\">" + egovMessageSource.getMessage("ezCommunity.t552", userInfo.getLocale()) + "</span></a>");
+			
+			if (lang.equals("6")) {
+				sb.append("<a class=\"imgbtn\"><span onclick=\"javascript:okno('ok','" + commonUtil.cleanValue(outApplication.getUserID().trim()) + "','" + code + "','" + curPage + "','" + commonUtil.cleanValue(outApplication.getUserName().trim()) + "');\">" + egovMessageSource.getMessage("ezCommunity.t46", userInfo.getLocale()) + "</span></a>");
+				sb.append("</td>");
+				sb.append("<td align=\"center\">");
+				sb.append("<a class=\"imgbtn\"><span onclick=\"javascript:okno('no','" + commonUtil.cleanValue(outApplication.getUserID().trim()) + "','" + code + "','" + curPage + "','" + commonUtil.cleanValue(outApplication.getUserName().trim()) + "');\">" + egovMessageSource.getMessage("ezCommunity.t552", userInfo.getLocale()) + "</span></a>");
+			} else {
+				sb.append("<a class=\"imgbtn\"><span onclick=\"javascript:okno('ok','" + commonUtil.cleanValue(outApplication.getUserID().trim()) + "','" + code + "','" + curPage + "','" + commonUtil.cleanValue(outApplication.getUserName().trim()) + "');\" style=\"width:40px\">" + egovMessageSource.getMessage("ezCommunity.t46", userInfo.getLocale()) + "</span></a>");
+				sb.append("</td>");
+				sb.append("<td align=\"center\">");
+				sb.append("<a class=\"imgbtn\"><span onclick=\"javascript:okno('no','" + commonUtil.cleanValue(outApplication.getUserID().trim()) + "','" + code + "','" + curPage + "','" + commonUtil.cleanValue(outApplication.getUserName().trim()) + "');\" style=\"width:40px\">" + egovMessageSource.getMessage("ezCommunity.t552", userInfo.getLocale()) + "</span></a>");
+			}
+			
             sb.append("</td>");
             sb.append("</tr>");
             sb.append("<tr>");
@@ -5754,7 +5764,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		// TBL_C_MEMBERINFO에서 승인대기자를 받아올 때, 모든 겸직을 같이 받아와서 레코드 중복이 발생한다. 관리자의 현재 companyID로 조건을 걸어 distinct로 받아오자.
 		// deptID도 받아오도록 한다.
 		List<CommunityCClubUserVO> userList = ezCommunityDAO.adminMemPermitGet2(map);
-		
+		String lang = userInfo.getLang();
 		for (CommunityCClubUserVO user : userList) {
 			sb.append("<tr>");
 			sb.append("<td height=\"23\" align=\"center\">" + iCount + "</td>");
@@ -5770,8 +5780,14 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
             sb.append("<td>" + commonUtil.cleanValue(user.getC_ID()) + "</td>");
             sb.append("<td align=\"center\">" + user.getC_inDate().trim().substring(0, 10) + "</td>");
             sb.append("<td align=\"center\">");
-        	sb.append("<a class=\"imgbtn\"><span onclick=\"javascript:okno('ok','" + commonUtil.cleanValue(user.getC_ID().trim()) + "','" + code + "','" + curPage + "','" + commonUtil.cleanValue(user.getUserName().trim()) + "');\" style=\"width:40px\">" + egovMessageSource.getMessage("ezCommunity.t46", userInfo.getLocale()) + "</span></a>&nbsp;");
-            sb.append("<a class=\"imgbtn\"><span onclick=\"javascript:okno('no','" + commonUtil.cleanValue(user.getC_ID().trim()) + "','" + code + "','" + curPage + "','" + commonUtil.cleanValue(user.getUserName().trim()) + "');\" style=\"width:40px\">" + egovMessageSource.getMessage("ezCommunity.t552", userInfo.getLocale()) + "</span></a>");
+			
+			if (lang.equals("6")) {
+				sb.append("<a class=\"imgbtn\"><span onclick=\"javascript:okno('ok','" + commonUtil.cleanValue(user.getC_ID().trim()) + "','" + code + "','" + curPage + "','" + commonUtil.cleanValue(user.getUserName().trim()) + "');\" >" + egovMessageSource.getMessage("ezCommunity.t46", userInfo.getLocale()) + "</span></a>&nbsp;");
+				sb.append("<a class=\"imgbtn\"><span onclick=\"javascript:okno('no','" + commonUtil.cleanValue(user.getC_ID().trim()) + "','" + code + "','" + curPage + "','" + commonUtil.cleanValue(user.getUserName().trim()) + "');\" >" + egovMessageSource.getMessage("ezCommunity.t552", userInfo.getLocale()) + "</span></a>");
+			} else {
+				sb.append("<a class=\"imgbtn\"><span onclick=\"javascript:okno('ok','" + commonUtil.cleanValue(user.getC_ID().trim()) + "','" + code + "','" + curPage + "','" + commonUtil.cleanValue(user.getUserName().trim()) + "');\" style=\"width:40px\">" + egovMessageSource.getMessage("ezCommunity.t46", userInfo.getLocale()) + "</span></a>&nbsp;");
+				sb.append("<a class=\"imgbtn\"><span onclick=\"javascript:okno('no','" + commonUtil.cleanValue(user.getC_ID().trim()) + "','" + code + "','" + curPage + "','" + commonUtil.cleanValue(user.getUserName().trim()) + "');\" style=\"width:40px\">" + egovMessageSource.getMessage("ezCommunity.t552", userInfo.getLocale()) + "</span></a>");
+			}
             sb.append("</td>");
             sb.append("</tr>");
             
@@ -8013,7 +8029,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
             if (!ezPersonalService.hasNotiDiableItem(cID, NotiType.fromString("COMMUNITY_" + notiSubType), NotiPlatform.MAIL, userInfo.getTenantId())) {
 	        	String subject = "[" + clubName + "] " + subName;
 	
-	        	String bodyContent = "[" + cvo.getC_ClubName() + "] " + bodyName;
+	        	String bodyContent = "[" + commonUtil.cleanValue(cvo.getC_ClubName()) + "] " + bodyName;
 	        	
 	        	String content = commonUtil.createNotiMailContent(bodyContent, userInfo.getTenantId(), userInfo.getLocale());
 	        	

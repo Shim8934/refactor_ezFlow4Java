@@ -25,7 +25,9 @@ public class MBoardTreeVO {
 	private String docNO;
 	/** */
 	private int listCount;
-	
+	/** 그룹게시판 설정여부 */
+	private String useGroupFlag;
+
 	public String getBoardId() {
 		return boardId;
 	}
@@ -98,5 +100,10 @@ public class MBoardTreeVO {
 	public void setListCount(int listCount) {
 		this.listCount = listCount;
 	}
-	
+	public String getUseGroupFlag() {
+		return useGroupFlag;
+	}
+	public void setUseGroupFlag(String useGroupFlag) {
+		this.useGroupFlag = useGroupFlag;
+	}
 }

@@ -206,7 +206,7 @@
 		            
 		            var pAlertContent = "";
 		            
-		            if (userLang == "1" || userLang == "3") {
+		            if (userLang == "1" || userLang == "3" || userLang == "6") {
 			            pAlertContent = arr_userinfo[2] + "<spring:message code='ezApprovalG.t1721'/>" + "<br>" + tmpStartDate + "~" + tmpEndDate + "<br>" + "<spring:message code='ezApprovalG.t1723'/>" + "<br>" + " <spring:message code='ezApprovalG.t1724'/>";
 		            }
 		            else if (userLang == "2") {
@@ -228,7 +228,7 @@
 		        		
 		        		var pAlertContent = "";
 		        		
-			            if (userLang == "1" || userLang == "3") {
+			            if (userLang == "1" || userLang == "3" || userLang == "6") {
 				            pAlertContent = arr_userinfo[2] + "<spring:message code='ezApprovalG.t1721'/>" + "<br>" + tmpStartDate + "~" + tmpEndDate + "<br>" + "<spring:message code='ezApprovalG.t1723'/>" + "<br>" + " <spring:message code='ezApprovalG.t1724'/>";
 			            }
 			            else if (userLang == "2") {
@@ -522,6 +522,7 @@
 		    });
 		  
 		    function window_onload() {
+		        draftAllTypeB = "<c:out value='${draftAllTypeB}'/>";
 		        CurrentHeight = document.documentElement.clientHeight;
 		        CurrentWidth = document.documentElement.clientWidth;
 		        var height = parseInt(divList.style.height.replace('px', '')) + 200;
@@ -2766,7 +2767,7 @@
 				ezCommon_cross_dialogArguments[0] = para;
 				var url = "/ezApprovalG/setSearchInfo.do?type=APR&searchType=" + pListTypeValue;
 				var height = approvalFlag == "S" ? 355 : 375;
-				showPopup(url, 510, height, "setsearchInfo_Cross", GetOpenWindowfeature(510, 405), SearchCondi_onclick_Complete);
+				showPopup(url, 600, height, "setsearchInfo_Cross", GetOpenWindowfeature(600, 405), SearchCondi_onclick_Complete);
 		    }
 		
 		    var SearchCond = new Array();
@@ -3617,7 +3618,7 @@
 									}
 								}
 								// 문서정보 삭제 루프 이후, 일괄기안 그룹 레코드는 전체적으로 삭제한다.(GROUPDOCSN조건으로 삭제, mode = ALL)
-								delGroupDocInfoByDocID(pCurSelRow.getAttribute("DATA1"), "ALL");
+								delGroupDocInfoByDocID(draftAllTypeB == "Y" ? pCurSelRow.getAttribute("DATA3").substr(pCurSelRow.getAttribute("DATA3").lastIndexOf(".") - 20, 20) : pCurSelRow.getAttribute("DATA1"), "ALL");
 							}
 							// 일괄기안 그룹이 아닌 경우, 기존 삭제 분기 동작
 							else {

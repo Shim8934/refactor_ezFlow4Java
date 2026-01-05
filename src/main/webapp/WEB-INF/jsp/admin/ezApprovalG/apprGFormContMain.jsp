@@ -486,10 +486,13 @@
 	        <tr>
 	            <th><spring:message code = 'ezApprovalG.t798' /></th>
 	            <td>
-	                <input type="radio" id="rdTotal" name="rdTotal" style="margin-top: 0px;" value="radiobutton" checked onclick="return rdTotal_onclick()">
-	                <spring:message code = 'ezApprovalG.t1659' />
-	                <input type="radio" id="rdGroup" name="rdGroup" style="margin-top: 0px;" value="radiobutton" onclick="return rdGroup_onclick()">
-	                <spring:message code = 'ezApprovalG.t1660' /></td>
+					<div class='custom_radio'>
+						<input type="radio" id="rdTotal" name="rdTotal" style="margin-bottom: 2px;" value="radiobutton" checked onclick="return rdTotal_onclick()">
+						<label for="rdTotal"><spring:message code = 'ezApprovalG.t1659' /></label>
+						<input type="radio" id="rdGroup" name="rdGroup" style="margin-bottom: 2px;" value="radiobutton" onclick="return rdGroup_onclick()">
+						<label for="rdGroup"><spring:message code = 'ezApprovalG.t1660' /></label>
+					</div>
+				</td>
 	        </tr>
 	    </table>
 	    <table style="margin-top: 10px; width:100%">

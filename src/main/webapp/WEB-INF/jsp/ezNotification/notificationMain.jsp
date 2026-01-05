@@ -36,14 +36,14 @@
                     <ul class="check_ul">
                         <li>
                             <div class="input_check">
-                                <input type="checkbox" id="filter_read" onchange="searchNoti('first')" type="checkbox" name="readfilter" maintype="n" value="read" checked="checked">
-                                <label for="filter_read"><spring:message code="ezNotification.hth05"/></label>
+                                <div class='custom_checkbox'><input type="checkbox" id="filter_read" onchange="searchNoti('first')" type="checkbox" name="readfilter" maintype="n" value="read" checked="checked">
+                                <label for="filter_read"><spring:message code="ezNotification.hth05"/></label></div>
                             </div>
                         </li>
                         <li>
                             <div class="input_check">
-                                <input type="checkbox" id="filter_unread" onchange="searchNoti('first')" type="checkbox" name="readfilter" maintype="n" value="unread" checked="checked">
-                                <label for="filter_unread"><spring:message code="ezNotification.hth06"/></label>
+                                <div class='custom_checkbox'><input type="checkbox" id="filter_unread" onchange="searchNoti('first')" type="checkbox" name="readfilter" maintype="n" value="unread" checked="checked">
+                                <label for="filter_unread"><spring:message code="ezNotification.hth06"/></label></div>
                             </div>
                         </li>
                     </ul>
@@ -51,8 +51,8 @@
                     <ul class="check_ul" id="notiType">
                         <li>
                             <div class="input_check">
-                                <input type="checkbox" id="filter_totalcheck" name="notitypefilter" maintype="y" value="total" checked="checked" onchange="totalfilterCheck()">
-                                <label for="filter_totalcheck"><spring:message code="ezNotification.hth08"/></label>
+                                <div class='custom_checkbox'><input type="checkbox" id="filter_totalcheck" name="notitypefilter" maintype="y" value="total" checked="checked" onchange="totalfilterCheck()">
+                                <label for="filter_totalcheck"><spring:message code="ezNotification.hth08"/></label></div>
                             </div>
                         </li>
                     </ul>
@@ -162,12 +162,12 @@
 		var str = '';
 		for (var i = 0; i < filteredMainTypes.length; i++) {
 	        var key = filteredMainTypes[i];
-			str += '<li><div class="input_check"><input id="filter_';
+			str += '<li><div class="input_check"><div class="custom_checkbox"><input id="filter_';
 			str += key + '" type="checkbox" name="notitypefilter" maintype="y" value=';
 			str += '"' + key + '" checked="checked" onchange="totalfilterCheck()"><label for="filter_';
 			str += key + '">'; 
 			str += mainType[key];
-			str += '</label></div></li>';
+			str += '</label></div></div></li>';
 		}
 		var notiTypeElem = document.getElementById("notiType");
 		notiTypeElem.insertAdjacentHTML('beforeend', str);

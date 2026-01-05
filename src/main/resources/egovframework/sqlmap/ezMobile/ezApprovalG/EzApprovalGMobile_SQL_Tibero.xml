@@ -2708,7 +2708,7 @@
 		<isEqual property="type" compareValue="END">
 			<![CDATA[
 				SELECT
-					COUNT(*)
+					COUNT(*) AS CNT
 				FROM
 					TBL_ENDAPROPINIONINFO
 				WHERE
@@ -2721,8 +2721,10 @@
 		</isEqual>
 		<isNotEqual property="type" compareValue="END">
 			<![CDATA[
+				SELECT COALESCE(SUM(A.CNT), 0) AS CNT
+				FROM (
 				SELECT
-					COUNT(*)
+					COUNT(*) CNT
 				FROM
 					TBL_APROPINIONINFO
 				WHERE
@@ -2731,6 +2733,23 @@
 					COMPANYID = #companyID#
 				AND
 					DOCID = #docID#
+				UNION ALL
+				SELECT
+					COUNT(*)
+				FROM
+					TBL_APROPINIONINFO A
+				JOIN
+					TBL_APRDOCGROUPINFO B
+				ON A.DOCID = B.DOCID
+				WHERE
+					GROUPDOCSN = #docID#
+				AND 
+					B.TENANT_ID = #tenantID#
+				AND
+					B.COMPANYID = #companyID#
+				AND
+					TABSN > 1
+				) A
 			]]>
 		</isNotEqual>
 	</select>
@@ -4219,5 +4238,17 @@
 		AND
 		    SUBSTR(EXTENSIONATTRIBUTE5, 1, INSTR(EXTENSIONATTRIBUTE5, ':', 1, 1) -1) = #userID#
 	</select>
-	
+
+    <select id="MApprovalG.getAttachFileMaxSn" parameterClass="map" resultClass="Integer">
+        SELECT
+            NVL(MAX(ATTACHFILESN), 0)
+        FROM
+            TBL_APRATTACHINFO
+        WHERE
+            DOCID = #v_DOCID#
+        AND
+            TENANT_ID = #v_TENANTID#
+        AND
+            COMPANYID = #companyID#
+    </select>
 </sqlMap>

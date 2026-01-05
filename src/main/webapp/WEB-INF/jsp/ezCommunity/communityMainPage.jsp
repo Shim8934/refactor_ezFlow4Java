@@ -505,7 +505,7 @@
 	                span.className = "icon_new";
 	                
 	                var img = document.createElement("IMG");
-	                img.src = "/images/kr/community/communityPortlet_iconnew.gif" 
+	                img.src = "/images/kr/community/community_iconnew.svg"
 	                
 	                span.appendChild(img);
 	                
@@ -2023,7 +2023,7 @@
 		            						</span>
 		            					</c:if>
 		            					<c:if test="${list.writeDay >= pastDate}">
-		            						<span class="icon_new"><img src="../images/kr/community/communityPortlet_iconnew.gif"></span>
+		            						<span class="icon_new"><img src="../images/kr/community/community_iconnew.svg"></span>
 		            					</c:if>
 		            					<span class="txt" onclick="btn_bbsView('${list.no}','tbl_c_board')">${list.title }</span><span class="date">${fn:substring(list.writeDay, 0, 10) }</span>
 					               </li>

@@ -2,6 +2,7 @@ package egovframework.ezEKP.ezResource.web;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -26,6 +27,7 @@ import javax.xml.xpath.XPathFactory;
 import egovframework.let.utl.fcc.service.EzFAL;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.logging.log4j.util.Strings;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -43,6 +45,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -1538,13 +1541,6 @@ public class EzResourceController extends EzFileMngUtil {
 			allDay = getSchedule.getAllDay();
 			saveApproveFlag = getSchedule.getApproveFlag();
 			returnFlag = getSchedule.getReturnFlag();
-			
-			ResGetScheduleRepetitionVO repDateTimes = ezResourceService.getRepDateTimes(orgOwnerID, userInfo.getCompanyID(), Integer.parseInt(orgNum), userInfo.getTenantId());
-			if (repDateTimes != null) {
-				startDateTimeRepeat = commonUtil.getDateStringInUTC(repDateTimes.getStartDateTime(), userInfo.getOffset(), false);
-				endDateTimeRepeat = commonUtil.getDateStringInUTC(repDateTimes.getEndDateTime(), userInfo.getOffset(), false);
-			}
-			
 		} else {
 			importance = "2";
 			
@@ -1586,6 +1582,23 @@ public class EzResourceController extends EzFileMngUtil {
 		checkSDT = EgovDateUtil.convertDate(startDateTime, "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd HH:mm", "");
 		checkEDT = EgovDateUtil.convertDate(endDateTime, "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd HH:mm", "");
 		
+		// 날짜포맷팅을 yyyy-MM-dd로 맞추는 로직
+		if (StringUtils.isNotBlank(startDateVal)) {
+			startDateVal = startDateVal.replaceAll("\\.", "-");
+			String[] startDateValSplit = startDateVal.split("-"); 
+			startDateValSplit[1] = startDateValSplit[1].length() == 1 ? "0" + startDateValSplit[1] : startDateValSplit[1]; 
+			startDateValSplit[2] = startDateValSplit[2].length() == 1 ? "0" + startDateValSplit[2] : startDateValSplit[2]; 
+			startDateVal = String.join("-", startDateValSplit);
+		}
+
+		if (StringUtils.isNotBlank(endDateVal)) {
+			endDateVal = endDateVal.replaceAll("\\.", "-");
+			String[] endDateValSplit = endDateVal.split("-"); 
+			endDateValSplit[1] = endDateValSplit[1].length() == 1 ? "0" + endDateValSplit[1] : endDateValSplit[1]; 
+			endDateValSplit[2] = endDateValSplit[2].length() == 1 ? "0" + endDateValSplit[2] : endDateValSplit[2]; 
+			endDateVal = String.join("-", endDateValSplit);
+		}
+		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("editor", editor);
 		model.addAttribute("nonActiveX", nonActiveX);
@@ -1612,8 +1625,6 @@ public class EzResourceController extends EzFileMngUtil {
 		model.addAttribute("allDay", allDay);
 		model.addAttribute("startDateTime", startDateTime);
 		model.addAttribute("endDateTime", endDateTime);
-		model.addAttribute("startDateTimeRepeat", startDateTimeRepeat);
-		model.addAttribute("endDateTimeRepeat", endDateTimeRepeat);
 		model.addAttribute("startDateVal", startDateVal);
 		model.addAttribute("endDateVal", endDateVal);
 		model.addAttribute("typeVal", typeVal);
@@ -1625,25 +1636,6 @@ public class EzResourceController extends EzFileMngUtil {
 		model.addAttribute("checkEDT", checkEDT);
 		model.addAttribute("useCabinet", use_cabinet); // 캐비넷 추가 baonk 2018-08-08
 		model.addAttribute("deptID", deptID);
-		
-		if (reFlag.equals("1")) {
-			model.addAttribute("strTmpReFlagVal", "2");
-			model.addAttribute("strDspMod1", "style='display:none'");
-			model.addAttribute("strDspMod2", "");
-		} else {
-			model.addAttribute("strTmpReFlagVal", "0");
-			model.addAttribute("strDspMod1", "");
-			model.addAttribute("strDspMod2", "style='display:none'");
-		}
-		
-		if (reFlag.equals("")) {
-			model.addAttribute("strIReFlagVal", "0");
-		} else {
-			model.addAttribute("strIReFlagVal", reFlag);
-		}
-
-		model.addAttribute("DstartDateVal", startDateVal.replaceAll("\\.", "-"));
-		model.addAttribute("DendDateVal", endDateVal.replaceAll("\\.", "-"));
 		
 		String requestURL = (String) req.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE);
 		//뷰만 다르고 cs가 같은 경우여서 requestURL 사용해서 다이나믹뷰
@@ -1677,7 +1669,7 @@ public class EzResourceController extends EzFileMngUtil {
 		String loc = "";
 		String importance = "";
 		String gresFlag = "0";
-		String reFlag = "";
+		String reFlag = "0";
 		String startDateTime = "";
 		String endDateTime = "";
 		String startDateTime2 = "";
@@ -1763,7 +1755,8 @@ public class EzResourceController extends EzFileMngUtil {
 			startDateTime = commonUtil.getDateStringInUTC(getSchedule.getStartDate(), userInfo.getOffset(), false);
 			endDateTime = commonUtil.getDateStringInUTC(getSchedule.getEndDate(), userInfo.getOffset(), false);
 			
-			reFlag = getSchedule.getReFlag();
+			reFlag = Strings.isNotBlank(getSchedule.getReFlag()) ? getSchedule.getReFlag() : "0";
+			
 			gresFlag = getSchedule.getGresFlag();
 			content = getSchedule.getContent();
 			importance = getSchedule.getImportance();
@@ -1861,6 +1854,25 @@ public class EzResourceController extends EzFileMngUtil {
 		Map<String, Boolean> menuAccessMap = commonUtil.checkMenuAccess(Arrays.asList(new String[] {"schedule"}), userInfo.getCompanyID(), userInfo.getTenantId(), userInfo.getLang(), userInfo.getId(), userInfo.getDeptID(), "");
 		boolean useSchedule = menuAccessMap.get("schedule");
 		
+		String modType = req.getParameter("modType") != null ? req.getParameter("modType") : "0";
+		
+		// 날짜포맷팅을 yyyy-MM-dd로 맞추는 로직
+		if (StringUtils.isNotBlank(startDateVal)) {
+			String[] startDateValSplit = startDateVal.split("-"); 
+			startDateValSplit[1] = startDateValSplit[1].length() == 1 ? "0" + startDateValSplit[1] : startDateValSplit[1]; 
+			startDateValSplit[2] = startDateValSplit[2].length() == 1 ? "0" + startDateValSplit[2] : startDateValSplit[2]; 
+			startDateVal = String.join("-", startDateValSplit);
+		}
+		startDateVal = startDateVal.replaceAll("\\.", "-");
+
+		if (StringUtils.isNotBlank(endDateVal)) {
+			endDateVal = endDateVal.replaceAll("\\.", "-");
+			String[] endDateValSplit = endDateVal.split("-"); 
+			endDateValSplit[1] = endDateValSplit[1].length() == 1 ? "0" + endDateValSplit[1] : endDateValSplit[1]; 
+			endDateValSplit[2] = endDateValSplit[2].length() == 1 ? "0" + endDateValSplit[2] : endDateValSplit[2]; 
+			endDateVal = String.join("-", endDateValSplit);
+		}
+		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("editor", editor);
 		model.addAttribute("noneActiveX", noneActiveX);
@@ -1905,20 +1917,16 @@ public class EzResourceController extends EzFileMngUtil {
 		
 		if (reFlag.equals("1")) {
 			model.addAttribute("strTmpReFlagVal", "2");
-			model.addAttribute("strDspMod1", "style='display:none'");
-			model.addAttribute("strDspMod2", "");
 		} else {
 			model.addAttribute("strTmpReFlagVal", "0");
-			model.addAttribute("strDspMod1", "");
-			model.addAttribute("strDspMod2", "style='display:none'");
 		}
 		
-		if (reFlag.equals("")) {
-			model.addAttribute("strIReFlagVal", "0");
-		} else {
-			model.addAttribute("strIReFlagVal", reFlag);
+		// 반복일정의 특정 일정 일자 이후 수정일 떄, 반복횟수를 계산
+		model.addAttribute("modType", modType);
+		if ("1".equals(modType) || "2".equals(modType)) {
+			int repeatCount = ezResourceService.getRepeatCount(ownerID, num, userInfo.getCompanyID(), userInfo.getTenantId(), userInfo.getOffset(), startDateVal);
+			model.addAttribute("repeatCount", repeatCount);
 		}
-		
 		
 		String requestURL = (String) req.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE);
 		//뷰만 다르고 cs가 같은 경우여서 requestURL 사용해서 다이나믹뷰
@@ -2274,7 +2282,7 @@ public class EzResourceController extends EzFileMngUtil {
 			Node objNode = dom.createElement("TYPE_VAL");
 			objNode.setTextContent(typeVal);
 			rootNode.appendChild(objNode);
-
+			
 			ret = ezResourceService.modifyResSch(commonUtil.convertDocumentToString(dom), userInfo.getTenantId(), userInfo.getOffset());
 		}
 		
@@ -2413,7 +2421,6 @@ public class EzResourceController extends EzFileMngUtil {
 		String allDayEtime = eTime.split(" ")[0] + " 23:59:00";
 		
 		boolean isDupRep = false;
-		List<ResMakeDupResultVO> dtResult = new ArrayList<ResMakeDupResultVO>();
 		
 		if (cmd.equals("add")) {
 			num = "-1";
@@ -2434,14 +2441,14 @@ public class EzResourceController extends EzFileMngUtil {
 		if (isRep) {
 			logger.debug("===반복예약일 때===");
 			
-			isDupRep = ezResourceService.getRepResource(frequency, selType, endRecurType, startDateTime, endDateTime, interval, daysOfWeek, instances, byPosition, daysOfMonth, monthsOfYear, resID, num, companyID, dtResult, userInfo.getTenantId(), userInfo.getOffset());
+			isDupRep = ezResourceService.getRepResource(frequency, selType, endRecurType, startDateTime, endDateTime, interval, daysOfWeek, instances, byPosition, daysOfMonth, monthsOfYear, resID, num, companyID, userInfo.getTenantId(), userInfo.getOffset());
 		} else {
 			logger.debug("===일반예약일 때===");
 			
 			if (!allDay.equals("") && Boolean.parseBoolean(allDay)) {
-				isDupRep = ezResourceService.getRepResource(allDayStime, allDayEtime, resID, num, companyID, dtResult, userInfo.getTenantId(), userInfo.getOffset());
+				isDupRep = ezResourceService.getRepResource(allDayStime, allDayEtime, resID, num, companyID, userInfo.getTenantId(), userInfo.getOffset());
 			} else {
-				isDupRep = ezResourceService.getRepResource(sTime, eTime, resID, num, companyID, dtResult, userInfo.getTenantId(), userInfo.getOffset());
+				isDupRep = ezResourceService.getRepResource(sTime, eTime, resID, num, companyID, userInfo.getTenantId(), userInfo.getOffset());
 			}
 		}
 		
@@ -3137,8 +3144,9 @@ public class EzResourceController extends EzFileMngUtil {
 		String companyID = request.getParameter("pCompanyID");
 		String companyName = request.getParameter("pCompanyName");
 		String offset = commonUtil.userInfo(loginCookie).getOffset();
-		
-		List<ResOccuVO> getResOccuList = ezResourceService.getResOccuList(companyID, tenantID, searchStartTime, searchEndTime, offset);
+        String lang = commonUtil.userInfo(loginCookie).getLang();
+
+        List<ResOccuVO> getResOccuList = ezResourceService.getResOccuList(companyID, tenantID, searchStartTime, searchEndTime, offset);
 		long totalTime = 0;
 		if (getResOccuList.size() > 0) {
 			for (int i = 0; i < getResOccuList.size(); i++) {
@@ -3155,6 +3163,7 @@ public class EzResourceController extends EzFileMngUtil {
 		
 		model.addAttribute("getResOccuList", getResOccuList);
 		model.addAttribute("totalTime", totalTime);
+		model.addAttribute("lang", lang);
 		return "json";
 	}
 	
@@ -3516,5 +3525,212 @@ public class EzResourceController extends EzFileMngUtil {
 		
 		logger.debug("checkResoruceMaxDate end");
 		return ezResourceService.getBrdResMaxDate(brdId, userInfo.getCompanyID(), userInfo.getTenantId());
+	}
+	
+	@RequestMapping(value = "/ezResource/scheduleDragSave.do", method = RequestMethod.POST)
+	@ResponseBody
+	public String scheduleDragSave(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginVO loginVO) throws Exception {
+		logger.debug("scheduleDragSave started.");
+		
+		String returnValue = "0";
+		
+		loginVO = commonUtil.userInfo(loginCookie);
+		String offset    = loginVO.getOffset();
+		String companyId = loginVO.getCompanyID();
+		int tenantId     = loginVO.getTenantId();
+		String lang      = loginVO.getLang();
+		
+		SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd");
+		SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+		
+		String typeCal = request.getParameter("typeCal"); // 0 : 월보기 / 1: 주보기 / 2: 일보기
+		String dragOwnerId = request.getParameter("dragOwnerId");
+		int dragNum = Integer.parseInt(request.getParameter("dragNum"));
+		String dragDay = request.getParameter("dragDay");
+		String dropDay = request.getParameter("dropDay");
+		String resApprFlag = request.getParameter("resApprFlag"); // 해당 자원 예약 시 승인이 필요한지의 여부; 0: 허가필요X, 1:허가필요, 2:사용안함
+		
+		ResGetScheduleVO info  = ezResourceService.getSchedule(dragNum, dragOwnerId, companyId, tenantId, lang);
+		String infoStartTime = commonUtil.getDateStringInUTC(info.getStartDate(), offset, false).substring(10, 16);
+		String infoEndTime   = commonUtil.getDateStringInUTC(info.getEndDate(), offset, false).substring(10, 16);
+		
+		// 권한체크
+		String adminFlag = ezResourceService.getACL(companyId, info.getOwnerID(), loginVO.getId(), "", tenantId, loginVO.getDeptID());
+		if (!adminFlag.equals("Y") && !info.getWriterID().equals(loginVO.getId())) {
+			logger.debug("Not Permission");
+			returnValue = "1";
+			return returnValue;
+		}
+
+		String startDate;
+		String endDate = "";
+		
+		if (info.getReFlag().equals("0")) { // 단독일정
+			if (typeCal.equals("0")) { // 월보기
+				startDate = dropDay + infoStartTime;
+				endDate   = getDropEndDate(sdf1, dropDay.substring(0, 10), info) + infoEndTime;
+			} else { // 주보기 혹은 일보기
+				if (info.getAllDay().equals("1")) {
+					startDate = dropDay.substring(0, 10) + infoStartTime;
+					endDate   = getDropEndDate(sdf1, dropDay, info) + infoEndTime;
+				} else {
+					startDate = getDropStartEnd(sdf2, dropDay, info).get(0);
+					endDate   = getDropStartEnd(sdf2, dropDay, info).get(1);
+				}
+			}
+			// modifyReSch 내부에서 utc 처리를 하고 있음
+			info.setStartDate(startDate);
+			info.setEndDate(endDate);
+			
+			if (resApprFlag.equals("0")) {
+				info.setApproveFlag("1");
+			} else {
+				info.setApproveFlag("0");
+			}
+			
+			// 중복체크
+			boolean isDupRep = ezResourceService.getRepResource(startDate, endDate, dragOwnerId, String.valueOf(dragNum), companyId, tenantId, offset);
+			if (isDupRep) {
+				logger.debug("Duplicated Scheduled");
+				returnValue = "3";
+				return returnValue;
+			}
+			
+			ezResourceService.modifyResSch(info, tenantId, offset);
+			
+		} else if (info.getReFlag().equals("1")) { // 반복일정
+			String defaultPath  = commonUtil.detectPathTraversal(commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_schedule.ROOT", tenantId));
+			
+			if (typeCal.equals("0")) { // 월보기
+				startDate = dropDay.substring(0, 10) + infoStartTime;
+				endDate = dropDay.substring(0, 10) + infoEndTime;
+			} else { // 주보기 혹은 일보기
+				if (info.getAllDay().equals("1")) {
+					startDate = dropDay.substring(0, 10) + infoStartTime;
+					endDate = dropDay.substring(0, 10) + infoEndTime;
+				} else {
+					String newInfoStartTime = getDropStartEnd(sdf2, dropDay, info).get(0).substring(10, 16);
+					String newInfoEndTime   = getDropStartEnd(sdf2, dropDay, info).get(1).substring(10, 16);
+					startDate = dropDay.substring(0, 10) + newInfoStartTime;
+					endDate = dropDay.substring(0, 10) + newInfoEndTime;
+				}
+			}
+			
+			// 중복체크
+			boolean isDupRep = ezResourceService.getRepResource(startDate, endDate, dragOwnerId, "0", companyId, tenantId, offset);
+			if (isDupRep) {
+				logger.debug("Duplicated Scheduled");
+				returnValue = "3";
+				return returnValue;
+			}
+			
+			String approvalFlag = "0"; // 0: 허가받지 않은 자원예약, 1: 허가받은 자원예약
+			if (resApprFlag.equals("0")) {
+				approvalFlag = "1";
+			}
+			
+			ezResourceService.delResSch(dragOwnerId, "0", String.valueOf(dragNum), companyId, info.getWriterID(), dragDay, dragDay, 3, offset, tenantId);
+			ezResourceService.copyResSchDrag(dragOwnerId, dragNum, tenantId, companyId, startDate, endDate, offset, "0", approvalFlag);
+		}
+		
+		returnValue = endDate.substring(0, 10);
+		logger.debug("scheduleDragSave ended.");
+		return returnValue;
+	}
+	
+	/**
+	 * startDate 와 endDate 차이 구하는 함수
+	 */
+	private Integer getDateDiff(ResGetScheduleVO info) throws Exception {
+		logger.debug("getDateDiff start");
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:SS");
+		
+		com.ibm.icu.util.Calendar startCal = com.ibm.icu.util.Calendar.getInstance();
+		startCal.setTime(sdf.parse(info.getStartDate().substring(0, 19)));
+		
+		com.ibm.icu.util.Calendar endCal = com.ibm.icu.util.Calendar.getInstance();
+		endCal.setTime(sdf.parse(info.getEndDate().substring(0, 19)));
+		
+		long diff = endCal.getTimeInMillis() - startCal.getTimeInMillis();
+		long diffMinu = diff / (60 * 1000);
+		
+		logger.debug("diffMinu: " + diffMinu);
+		logger.debug("getDateDiff ended");
+		
+		return (int) diffMinu;
+	}
+	/**
+	 * 종일일정 dropDay 에서 endDate 구하는 함수
+	 */
+	private String getDropEndDate(SimpleDateFormat sdf, String dropDay, ResGetScheduleVO info) {
+		logger.debug("getDropEndDate start");
+		
+		String endDate = "";
+		
+		try {
+			com.ibm.icu.util.Calendar dropCal = com.ibm.icu.util.Calendar.getInstance();
+			dropCal.setTime(sdf.parse(dropDay));
+			dropCal.add(com.ibm.icu.util.Calendar.MINUTE, getDateDiff(info));
+			endDate = sdf.format(dropCal.getTime());
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+		}
+		
+		logger.debug("getDropEndDate ended");
+		return endDate;
+	}
+	/**
+	 * 시간일정 dropDay 에서 startDate 와  endDate 구하는 함수
+	 */
+	private ArrayList<String> getDropStartEnd (SimpleDateFormat sdf, String dropDay, ResGetScheduleVO info) {
+		
+		ArrayList<String> date = new ArrayList<String>();
+		
+		try {
+			com.ibm.icu.util.Calendar dropCal = com.ibm.icu.util.Calendar.getInstance();
+			dropCal.setTime(sdf.parse(dropDay));
+		
+			date.add(sdf.format(dropCal.getTime())); //startDate
+			dropCal.add(com.ibm.icu.util.Calendar.MINUTE, getDateDiff(info));
+			date.add(sdf.format(dropCal.getTime())); //endDate
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+		}	
+		
+		return date;
+	}
+	/**
+	 * 드래그앤드롭시 종료일과 오늘날짜 비교하는 함수
+	 */
+	private boolean CompareDate(String endDate, String startDate) {
+		boolean returnValue = false;
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		
+		try {
+			com.ibm.icu.util.Calendar cal1 = com.ibm.icu.util.Calendar.getInstance();
+			cal1.setTime(sdf.parse(endDate));
+			com.ibm.icu.util.Calendar cal2 = com.ibm.icu.util.Calendar.getInstance();
+			cal2.setTime(sdf.parse(startDate));
+			
+			if (cal1.compareTo(cal2) == -1) { //종료일이 오늘날짜보다 큰경우 저장안함
+				returnValue = true;
+			}
+			
+		} catch (ParseException e) {
+			logger.error(e.getMessage(), e);
+		}
+		
+		return returnValue;
+	}
+	
+	/*
+	 	자원관리 > 일정보기 > 반복일정 수정 시 수정 옵션 선택 팝업
+	 */
+	@GetMapping(value = "/ezResource/scheduleSelectModType.do")
+	public String resScheduleSelectModType(@CookieValue("loginCookie") String loginCookie) throws Exception {
+		logger.debug("resScheduleSelectModType start");
+		
+		return "/ezResource/resScheduleSelectModType";
 	}
 }

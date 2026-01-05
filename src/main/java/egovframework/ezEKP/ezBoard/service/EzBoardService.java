@@ -608,4 +608,11 @@ public interface EzBoardService {
 	public List<BoardListVO> getGuestBoardList(String boardID, int tenantID, int offset) throws Exception;
 
 	public BoardItemVO getMsatCallUrl(HttpServletRequest request, MBoardInfoVO boardInfo, MCommonVO info) throws Exception;
+
+	public int getGroupBoardItemListCount(LoginVO userInfo, String boardID, List<String> childBoardIDs) throws Exception;
+
+	public List<HashMap<String, Object>> getGroupBoardItemList(BoardListVO boardListVO, Map<String, String> orderByMap, List<String> childBoardIDs) throws Exception;
+
+	public String chkSubBoards(String pRootBoardID, String userID, String deptID, String companyID, int pMode, int pSubFlag, int pSelectBy,
+							   String pExcludeBoardID, String lang, String isAdminLeft, boolean isCompanyAdmin, String boardGroupAdmin_FG, String rollInfo, int tenantID) throws Exception;
 }

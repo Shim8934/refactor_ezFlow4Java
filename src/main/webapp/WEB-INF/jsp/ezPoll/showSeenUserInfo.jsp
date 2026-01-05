@@ -31,33 +31,33 @@
 		    }	
 		    
 		    function sendMail(pUserID) {	
-		    	var feature = GetOpenPosition(890, 840);
+		    	var feature = GetOpenPosition(1200, 840);
 		        var pheight = window.screen.availHeight;
 		        var conHeight = pheight * 0.8;
 		        var pwidth = window.screen.availWidth;
 		        var pTop = (pheight - conHeight) / 2;
-		        var pLeft = (pwidth - 890) / 2;
-		        window.open("/ezEmail/mailWrite.do?cmd=POLL&type=one&userId=" + pUserID, "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no,resizable=1" + feature);	    	
+		        var pLeft = (pwidth - 1200) / 2;
+		        window.open("/ezEmail/mailWrite.do?cmd=POLL&type=one&userId=" + pUserID, "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 1200px, status = no, toolbar=no, menubar=no,location=no,resizable=1" + feature);
 		    }
 		    
 		    function sendMailAll1(pQstID) {
-		    	var feature = GetOpenPosition(890, 840);
+		    	var feature = GetOpenPosition(1200, 840);
 		    	var pheight = window.screen.availHeight;
 		        var conHeight = pheight * 0.8;
 		        var pwidth = window.screen.availWidth;
 		        var pTop = (pheight - conHeight) / 2;
-		        var pLeft = (pwidth - 890) / 2;
-		        window.open("/ezEmail/mailWrite.do?cmd=POLL&type=group&state=seen&qstId=" + pQstID, "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no,resizable=1" + feature);	    	
+		        var pLeft = (pwidth - 1200) / 2;
+		        window.open("/ezEmail/mailWrite.do?cmd=POLL&type=group&state=seen&qstId=" + pQstID, "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 1200px, status = no, toolbar=no, menubar=no,location=no,resizable=1" + feature);
 		    }
 		    
 		    function sendMailAll2(pQstID) {
-		    	var feature = GetOpenPosition(890, 840);
+		    	var feature = GetOpenPosition(1200, 840);
 		    	var pheight = window.screen.availHeight;
 		        var conHeight = pheight * 0.8;
 		        var pwidth = window.screen.availWidth;
 		        var pTop = (pheight - conHeight) / 2;
-		        var pLeft = (pwidth - 890) / 2;
-		        window.open("/ezEmail/mailWrite.do?cmd=POLL&type=group&state=unseen&qstId=" + pQstID, "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no,resizable=1" + feature);	    	
+		        var pLeft = (pwidth - 1200) / 2;
+		        window.open("/ezEmail/mailWrite.do?cmd=POLL&type=group&state=unseen&qstId=" + pQstID, "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 1200px, status = no, toolbar=no, menubar=no,location=no,resizable=1" + feature);
 		    }
 		</script>
 	</head>

@@ -24,6 +24,7 @@
 	    <script type="text/javascript" src="${util.addVer('/js/ezWebFolder/adminFile.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/ezWebFolder/selectUsers.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/jquery-ui/jquery-ui.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript">
 			var strLang39  = "<spring:message code='ezWebFolder.t135'/>";
 			var strLang40  = "<spring:message code='ezWebFolder.t136'/>";
@@ -620,7 +621,7 @@
 				<table class="mainlist" style="width:100%"  id="tblFileList1">
 					<thead id ="BoardList_THEAD">
 						<tr>
-							<th class="wfFilecheck" style="text-align: center; "><input type="checkbox"></th>
+							<th class="wfFilecheck" style="text-align: center; "><div class="custom_checkbox"><input type="checkbox"></div></th>
 							<th headers="ft" class="wfFileType		headListClick" data-column="FILETYPE_ICON" style="text-align: center; "><spring:message code='ezWebFolder.t188'/></th>
 							<th headers="fn" class="wfFileName		headListClick" data-column="FILE_NAME" ><spring:message code='ezWebFolder.t156'/></th>
 							<th headers="fs" class="wfFileSize		headListClick" data-column="FILE_SIZE" style="text-align: center; " ><spring:message code='ezWebFolder.t157'/></th>
@@ -657,7 +658,7 @@
 	                <table style="width: 100%; border-spacing: 0px; border-collapse: collapse; border: none;" class="list_element">
 	                    <caption></caption>
 	                    <colgroup>
-	                        <col style="width: 90px;">
+	                        <col style="width: 110px;">
 	                        <col>
 	                    </colgroup>
 	                    <tr>

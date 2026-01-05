@@ -131,20 +131,18 @@
 						+ "\", \"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "ItemID").trim()
 						+ "\", \"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "READ_FG").trim()
 						+"\", event)'>";
+					listXML += "<div style='display:flex;align-items:center;'>";
 					listXML += "<div style='float: left; overflow: hidden; text-overflow: ellipsis; display: block; max-width: 100%;'>";
-					
-                    if (pastDate <= writeDate) {
-                   		listXML += "<img src='/images/i_new.gif' style='margin-bottom:1px;'>&nbsp;";
-                   	}
-                    
                     listXML += strEmergent + strSpace + Replace2HTML(SelectSingleOnlyTitle(SelectNodes(xmldoc,"NODES/NODE")[i], "Title"));
                     listXML += "</div>";
                     
 					if (SelectSingleOnlyTitle(SelectNodes(xmldoc,"NODES/NODE")[i], "OneLineCnt") > 0) {
-                    	listXML += "<SPAN class ='" + bClass + "' style='color:#c64200; position:absolute; padding-left:1px;'>[" + SelectSingleOnlyTitle(SelectNodes(xmldoc,"NODES/NODE")[i], "OneLineCnt") + "]<SPAN>";
+                    	listXML += "<SPAN class ='" + bClass + "' style='color:#c64200;padding-left:1px;'>[" + SelectSingleOnlyTitle(SelectNodes(xmldoc,"NODES/NODE")[i], "OneLineCnt") + "]<SPAN>";
                     }
-					
-                   	listXML += "</TD>";
+					if (pastDate <= writeDate) {
+						listXML += "<span class='board_new' style='vertical-align:middle'></span>";
+					}
+                   	listXML += "</div></TD>";
 					listXML += "<TD class='"+ urgency + " " + bClass + "'>" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterDeptname").trim() + "</TD>";
                     listXML += "<TD class='"+ urgency + " " + bClass + "'><div style='cursor:pointer' onclick='MemberInfo_onclick(\"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterID").trim() + "\", \"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterDeptID").trim() + "\")'>" + MakeXMLString(SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterName").trim()) + "</div></TD>";
 					listXML += "<TD class='"+ urgency + " " + bClass + "'>" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriteDate").split(' ')[0] + "</TD>";
@@ -158,25 +156,27 @@
 						var BoardID = SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "BoardID").trim();
 						var imgTag = "";
 			           	if (fileExt.indexOf("MANY") != -1) {
-                    		imgTag = "<img style='cursor: pointer;' src='/images/disk_icon.png' onclick='selectToDownloadFiles(\""+ readFg + "\", \"" + BoardID + "\", \"" + itemID +"\")'>";
+                    		imgTag = "<img style='cursor: pointer;width:20px; height:20px; vertical-align:middle;' src='/images/disk.svg' onclick='selectToDownloadFiles(\""+ readFg + "\", \"" + BoardID + "\", \"" + itemID +"\")'>";
                     	} else if (fileExt.indexOf(".jpg") != -1 || fileExt.indexOf(".jpeg") != -1 || fileExt.indexOf(".bmp") != -1 || fileExt.indexOf(".gif") != -1 || fileExt.indexOf(".png") != -1 || fileExt.indexOf(".tif") != -1 || fileExt.indexOf(".tiff") != -1) {
-                    		imgTag = "<img style='cursor: pointer;' src='/images/image.png' onclick='downloadBoardFile(\""+ readFg + "\", \"" + downURL + "\")'>";
+                    		imgTag = "<img style='cursor: pointer;width:20px; height:20px; vertical-align:middle;' src='/images/image.svg' onclick='downloadBoardFile(\""+ readFg + "\", \"" + downURL + "\")'>";
                     	} else if (fileExt.indexOf(".doc") != -1 || fileExt.indexOf(".docx") != -1) {
-                    		imgTag = "<img style='cursor: pointer;' src='/images/doc.png' onclick='downloadBoardFile(\""+ readFg + "\", \"" + downURL + "\")'>";
+                    		imgTag = "<img style='cursor: pointer;width:20px; height:20px; vertical-align:middle;' src='/images/doc.svg' onclick='downloadBoardFile(\""+ readFg + "\", \"" + downURL + "\")'>";
                     	} else if (fileExt.indexOf(".xls") != -1 || fileExt.indexOf(".xlsx") != -1) {
-                    		imgTag = "<img style='cursor: pointer;' src='/images/xls.png' onclick='downloadBoardFile(\""+ readFg + "\", \"" + downURL + "\")'>";
+                    		imgTag = "<img style='cursor: pointer;width:20px; height:20px; vertical-align:middle;' src='/images/xls.svg' onclick='downloadBoardFile(\""+ readFg + "\", \"" + downURL + "\")'>";
                 		} else if (fileExt.indexOf(".ppt") != -1 || fileExt.indexOf(".pptx") != -1 || fileExt.indexOf(".pps") != -1 || fileExt.indexOf(".ppsx") != -1) {
-                			imgTag = "<img style='cursor: pointer;' src='/images/ppt.png' onclick='downloadBoardFile(\""+ readFg + "\", \"" + downURL + "\")'>";
+                			imgTag = "<img style='cursor: pointer;width:20px; height:20px; vertical-align:middle;' src='/images/ppt.svg' onclick='downloadBoardFile(\""+ readFg + "\", \"" + downURL + "\")'>";
             			} else if (fileExt.indexOf(".txt") != -1) {
-            				imgTag = "<img style='cursor: pointer;' src='/images/txt.png' onclick='downloadBoardFile(\""+ readFg + "\", \"" + downURL + "\")'>";
+            				imgTag = "<img style='cursor: pointer;width:20px; height:20px; vertical-align:middle;' src='/images/txt.svg' onclick='downloadBoardFile(\""+ readFg + "\", \"" + downURL + "\")'>";
         				} else if (fileExt.indexOf(".zip") != -1) {
-        					imgTag = "<img style='cursor: pointer;' src='/images/zip.png' onclick='downloadBoardFile(\""+ readFg + "\", \"" + downURL + "\")'>";
+        					imgTag = "<img style='cursor: pointer;width:20px; height:20px; vertical-align:middle;' src='/images/zip.svg' onclick='downloadBoardFile(\""+ readFg + "\", \"" + downURL + "\")'>";
     					}else if (fileExt.indexOf(".pdf") != -1) {
-    						imgTag = "<img style='cursor: pointer;' src='/images/pdf.png' onclick='downloadBoardFile(\""+ readFg + "\", \"" + downURL + "\")'>";
+    						imgTag = "<img style='cursor: pointer;width:20px; height:20px; vertical-align:middle;' src='/images/pdf.svg' onclick='downloadBoardFile(\""+ readFg + "\", \"" + downURL + "\")'>";
+						} else if (fileExt.indexOf(".hwp") != -1 || fileExt.indexOf(".hwpx") != -1) {
+							imgTag = "<img style='cursor: pointer;width:20px; height:20px; vertical-align:middle;' src='/images/hwp.svg' onclick='downloadBoardFile(\""+ readFg + "\", \"" + downURL + "\")'>";
 						} else if (fileExt.indexOf(".ecm") != -1) {
-							imgTag = "<img style='cursor: pointer;' src='/images/ecm.png' onclick='downloadBoardFile(\""+ readFg + "\", \"" + downURL + "\")'>";
+							imgTag = "<img style='cursor: pointer;width:20px; height:20px; vertical-align:middle;' src='/images/ecm.svg' onclick='downloadBoardFile(\""+ readFg + "\", \"" + downURL + "\")'>";
 						} else {
-							imgTag = "<img style='cursor: pointer;' src='/images/email/mail_006.gif' onclick='downloadBoardFile(\""+ readFg + "\", \"" + downURL + "\")'>";
+							imgTag = "<img style='cursor: pointer;width:20px; height:20px; vertical-align:middle;' src='/images/etc.svg' onclick='downloadBoardFile(\""+ readFg + "\", \"" + downURL + "\")'>";
 						}
 
 						listXML += "<TD class='"+ urgency + "'>" + imgTag +"</TD>";
@@ -376,7 +376,7 @@
 				<c:forEach var="keyword" items="${beforeKeyword}">
 					<input type="hidden" name="beforeKeyword" value="<c:out value='${keyword }'/>">
 				</c:forEach>
-				<label for="refineInResult"><input type="checkbox" <c:out value='${refineInResult}'/> name="refineInResult" id="refineInResult"><spring:message code='ezCommunity.searchInResult' /></label>
+				<div class='custom_checkbox'><input style="display: inline-block" type="checkbox" <c:out value='${refineInResult}'/> name="refineInResult" id="refineInResult"><label style="display: inline-block" for="refineInResult"><spring:message code='ezCommunity.searchInResult' /></label></div>
 				<select name="searchType">
 					<option value="title"<c:if test="${searchType eq 'title'}">selected</c:if>><spring:message code='ezCommunity.t124' /></option>
 					<option value="writer"<c:if test="${searchType eq 'writer'}">selected</c:if>><spring:message code='ezCommunity.t445' /></option>

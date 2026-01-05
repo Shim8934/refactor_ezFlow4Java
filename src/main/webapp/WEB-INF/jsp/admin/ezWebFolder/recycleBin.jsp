@@ -644,7 +644,7 @@
                 <table style="width: 100%; border-spacing: 0px; border-collapse: collapse; border: none;" class="list_element">
                     <caption></caption>
                     <colgroup>
-                        <col style="width: 90px;">
+                        <col style="width: 120px;">
                         <col>
                     </colgroup>
                     <tr>
@@ -677,7 +677,7 @@
 			<table class="mainlist" style="width:100%"  id="tblFileList1">
 				<thead id ="BoardList_THEAD">
 					<tr>
-						<th class = "wfFilecheck"><input type="checkbox"></th>
+						<th class = "wfFilecheck"><div class="custom_checkbox"><input type="checkbox"></div></th>
 						<th headers="ft" class = "wfFileType		 headListClick" data-column="TRASHCAN_ICON_URL" style="text-align: center; "><spring:message code='ezWebFolder.t188'/></th>
 						<th headers="fn" class = "wfFileName		 headListClick" data-column="TRASHCAN_NAME" ><spring:message code='ezWebFolder.t156'/></th>
 						<th headers="fs" class = "wfFileSize		 headListClick" data-column="TRASHCAN_SIZE" style="overflow: hidden;text-overflow: ellipsis;white-space: nowrap; text-align: center; word-wrap: normal;" ><spring:message code='ezWebFolder.t157'/></th>

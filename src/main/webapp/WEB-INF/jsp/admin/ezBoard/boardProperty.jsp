@@ -48,7 +48,7 @@
 			var boardType = "${ model.guBun }";
 			var versionManageFlag = false;
 			var urlCopyFlag = "<c:out value='${model.urlCopyFlag}'/>"; <%-- url복사 사용여부 (Y/N) --%>
-			
+			var useGroupFlag = "<c:out value='${model.useGroupFlag}'/>"; <%-- 그룹게시판 설정여부 (Y/N) --%>
 			var useImageConvertServer = "<c:out value='${useImageConvertServer}'/>";
 
 			document.onselectstart = function (){
@@ -257,6 +257,7 @@
 					}
 					else if ($("#chkQnABoard").is(":checked")) {
 						$("#chkWriterFlag").prop("disabled", true);
+						$("#chkApprBoard").prop("disabled", true);
 					}
 
 	                if (!$("#chkURLBoard").is(":checked")) {
@@ -275,7 +276,7 @@
 					checkboardtype(e.target.id);
 				});
 				
-				if (boardType == '0' || boardType == '1' || boardType == '9') {
+				if ((boardType == '0' || boardType == '1' || boardType == '9') && useGroupFlag != "Y") {
 					$('#tr_versionManage').show();
 				} else {
 					$('#tr_versionManage').hide();
@@ -283,6 +284,16 @@
 				
 				versionManageFlag = ${ model.versionManage eq 'Y' };
 				$("#versionManageChkBox").prop("checked", versionManageFlag);
+
+				if (useGroupFlag == "Y") {
+					$("#useGroup").prop("checked", true);
+
+					document.querySelectorAll("tr").forEach(el => {
+						if (!el.classList.contains("contentG") && !el.classList.contains("primary")) {
+							el.style.display = "none";
+						}
+					});
+				}
 
 				// VOC #163284 관리자 탭 선택 오류 
 				if (window.parent && window.parent !== window) {
@@ -320,6 +331,7 @@
 				var name2 = $.trim($("#txtBoardName2").val());
 				var name3 = $.trim($("#txtBoardName3").val());
 				var name4 = $.trim($("#txtBoardName4").val());
+				var name6 = $.trim($("#txtBoardName6").val());
 				
 				if (name1 == "") {
 	                alert("<spring:message code='ezBoard.t144'/>");
@@ -333,6 +345,9 @@
 	            }
 	            if (name4 == "") {
 					name4 = name1;
+	            }
+	            if (name6 == "") {
+					name6 = name1;
 	            }
 	            
 	            //승인게시판
@@ -610,6 +625,27 @@
                 }
 
 				urlCopyFlag = $("#chkUrlCopy").is(":checked") ? "Y" : "N" ; <%-- 주소복사 --%>
+                
+				<%-- 그룹게시판 사용여부 --%>
+				if ($("#useGroup").is(":checked")) {
+					if (boardItemCnt > 0) { // 게시물이 존재하는 경우 그룹게시판으로 변경 불가
+						alert("<spring:message code='ezBoard.lyj10'/>");
+						return;
+					}
+
+					if (chkGroupBoardExist() == "true") { // 상위 및 하위게시판에 그룹게시판이 존재하는 경우 그룹게시판으로 변경 불가
+						alert("<spring:message code='ezBoard.lyj11'/>");
+						return;
+					}
+
+					useGroupFlag = "Y";
+					tabBoardCheck1 = "";
+					tabBoardCheck2 = "";
+					tabBoardCheck3 = "";
+					pNoticeBoardMod = "DELETE";
+				} else {
+					useGroupFlag = "N";
+				}
 
 	            /* 2018-10-18 홍승비 - 게시판'그룹' 이름변경 시 하위게시판처럼 데이터가 업데이트되는 부분 수정 */
 	            $.ajax({
@@ -620,6 +656,7 @@
 	            	data : {
 	            		boardName:name1, boardName2:name2,
 	            		boardName3:name3, boardName4:name4,
+	            		boardName6:name6,
 	            		boardID:BoardID, attachSizeLimit:AttachMax, boardDescription:Description,
 	            		itemExpires:Expires, url:url, guBun:gubun, replyNotify:replynotify, deleteAfter:iDeleteAfter,
 	            		boardColor:brd_color, portlet:"N", backGround:background,
@@ -631,7 +668,8 @@
 						reactFlag:useBoardReplyReact, useKeyword:useKeyword, publicFlag:publicFlag,
 						tabBoardCheck1:tabBoardCheck1, tabBoardCheck2:tabBoardCheck2, tabBoardCheck3:tabBoardCheck3, 
 						attachmentFlag:attachmentFlag, allNewBoardFlag:useAllNewBoard, writerFlag : writerFlag,
-						starRatingFlag:starRatingFlag, versionManage : vmf, listShowType : checkListFlag, urlCopyFlag:urlCopyFlag
+						starRatingFlag:starRatingFlag, versionManage : vmf, listShowType : checkListFlag, urlCopyFlag:urlCopyFlag,
+                        useGroupFlag:useGroupFlag
 	            	},
 	            	success : function(result) {
 	            	    if (result == "success") {
@@ -708,8 +746,10 @@
 	             if (chkURLBoard.checked == true || chkHomePageBoard.checked == true || chkCategoryBoard.checked == true) {
 	            	 if (chkURLBoard.checked == true) {
                     	document.getElementById("txtURL").style.display = "";
+						document.getElementById("chkHomePageBoard").style.marginLeft = "0px";
 	            	 } else {
 	            		 document.getElementById("txtURL").style.display = "none";
+						 document.getElementById("chkHomePageBoard").style.marginLeft = "14px";
 	            	 }
 	            	 
                 	if ($("#chkCategoryBoard").is(":checked")) {
@@ -1131,12 +1171,12 @@
 		        var para = new Array();
 		        para[0] = BoardID;
 		        para[1] = gubun;
-		        var url = "/admin/ezBoard/boardExtensionAttribute.do";
+		        var url = "/admin/ezBoard/boardExtensionAttribute.do?boardID=" + encodeURIComponent(BoardID) + "&gubun=" + gubun;
 
 		        /* 2018-07-25 홍승비 - 확장칼럼 설정 팝업창 width 조절(일본어 대응) */
 		        if (CrossYN()) {
 		            BoardExtension_dialogArguments[0] = para;
-		            var ExtensionAttribute = window.open(url, "ExtensionAttribute", GetOpenWindowfeature(1120, 750));
+		            var ExtensionAttribute = window.open(url, "ExtensionAttribute", GetOpenWindowfeature(1120, 670));
 		            try { ExtensionAttribute.focus(); } catch (e) { }
 		        } else {
 		            var retVal = window.showModalDialog(url, para, "dialogWidth:780px;dialogHeight:750px;status:no;help:no;scroll:yes;edge:sunken");
@@ -1302,6 +1342,42 @@
 				}
 				return pass;
 			}
+
+			function chkUseGroup_onclick(obj) {
+				if (obj.checked) {
+					document.querySelectorAll("tr").forEach(el => {
+						if (!el.classList.contains("contentG") && !el.classList.contains("primary") && !el.classList.contains("secondary")) {
+							el.style.display = "none";
+						}
+					});
+				} else {
+					document.querySelectorAll("tr").forEach(el => {
+						if (!el.classList.contains("contentG") && !el.classList.contains("primary") && !el.classList.contains("secondary")) {
+							el.style.display = "";
+						}
+					});
+				}
+			}
+
+			function chkGroupBoardExist() {
+				var result = "";
+
+				$.ajax({
+					type: "POST",
+					dataType: "text",
+					async: false,
+					url: "/ezBoard/chkGroupBoardExist.do",
+					data: {
+						boardID: BoardID,
+						type: "MODIFY"
+					},
+					success: function (res) {
+						result = res;
+					}
+				});
+
+				return result;
+			}
 	    </script>
 	    <style type="text/css">
 	    	.mainlist tr {
@@ -1318,7 +1394,7 @@
 		<xml id="listviewheader" style ="display:none"></xml>
 		<div style="max-width: 800px;">
 		<table class="content">
-	        <tr>
+	        <tr class="contentG">
 	            <th style="min-width: 88px;"><spring:message code="ezBoard.t114"/></th>
 	            <td style="padding: 0;">
 	            	<c:if test="${use_multiData == 'YES'}">
@@ -1340,7 +1416,13 @@
 		                    <c:if test="${useChinese == 'YES'}">
 			                    <tr class="secondary">
 			                        <th><c:out value='${lang_quaternary}' /></th>
-			                        <td style="border-bottom:none;"><c:out value='${model.boardName4}' /></td>
+			                        <td style="border-bottom:1px solid #ddd;"><c:out value='${model.boardName4}' /></td>
+			                    </tr>
+		                    </c:if>
+		                    <c:if test="${useIndonesian == 'YES'}">
+			                    <tr class="secondary">
+			                        <th><c:out value='${lang_Senary}' /></th>
+			                        <td style="border-bottom:none;"><c:out value='${model.boardName6}' /></td>
 			                    </tr>
 		                    </c:if>
 		                </table>
@@ -1353,7 +1435,7 @@
 	    <br/>
 	    <div style="max-width : 800px;">
 	    <table class="content">
-	        <tr>
+	        <tr class="contentG">
 	            <th style="min-width: 88px;"><spring:message code="ezBoard.t111"/></th>
 	            <td style="padding: 0;">
 	                <c:if test="${use_multiData == 'YES'}">
@@ -1381,8 +1463,16 @@
 		                    <c:if test="${useChinese == 'YES'}">
 			                    <tr class="secondary">
 			                        <th><c:out value='${lang_quaternary}' /></th>
-			                        <td>
+			                        <td style="border-bottom:1px solid #ddd;">
 			                            <input type="text" id="txtBoardName4" style="width: 100%" value="<c:out value='${model.boardName4}' />" maxlength="20" />
+			                        </td>
+			                    </tr>
+		                   	</c:if>
+		                    <c:if test="${useIndonesian == 'YES'}">
+			                    <tr class="secondary">
+			                        <th><c:out value='${lang_Senary}' /></th>
+			                        <td>
+			                            <input type="text" id="txtBoardName6" style="width: 100%" value="<c:out value='${model.boardName6}' />" maxlength="20" />
 			                        </td>
 			                    </tr>
 		                   	</c:if>
@@ -1393,7 +1483,7 @@
 	                </c:if>
 	            </td>
 	        </tr>
-	        <tr>
+	        <tr class="contentG">
 	            <th><spring:message code="ezBoard.t154"/></th>
 	            <td><c:out value='${model.boardNo}' /></td>
 	        </tr>
@@ -1401,7 +1491,11 @@
 	        <c:if test="${isAllGroupBoard == 'Y'}">
 		        <tr style="${style2}">
 		        	<th style="border-left:none; border-bottom:none;"><spring:message code ="ezCircular.t118" /> <spring:message code ="ezBoard.hsb05_1" /></th>
-					<td style="border-top:1px solid #dedede; vertical-align: bottom;"><input type="checkbox" name="allGroupBoard" id="allGroupBoard" disabled checked><spring:message code ="ezBoard.hsb03" /> <spring:message code ="ezBoard.hsb04" /></td>
+					<td style="border-top:1px solid #dedede;">
+						<div class="custom_checkbox">
+							<input type="checkbox" name="allGroupBoard" id="allGroupBoard" disabled checked><label for="allGroupBoard"><spring:message code ="ezBoard.hsb03" /> <spring:message code ="ezBoard.hsb04" /></label>
+						</div>
+					</td>
 		        </tr>
 	        </c:if>
 	        <tr style="${style}">
@@ -1413,20 +1507,22 @@
 	        <tr id="expireTr" style="${style}">
 	            <th><spring:message code="ezBoard.t156"/></th>
 	            <td>
-	            	<c:if test="${model.itemExpires == '-1'}">	            
-		                <input type="checkbox" id="chkPermanent" onclick="chkPermanent_onclick()" checked />
-		                <spring:message code="ezBoard.t157"/>
-		                <input type="checkbox" id="chkExpires" onclick="chkExpires_onclick()" />
-		                <input type="text" id="txtExpires" style="width: 35px; height: 21px !important;" readonly />
-		                <spring:message code="ezBoard.t158"/>
-	            	</c:if>
-	                <c:if test="${model.itemExpires != '-1'}">   
-		                <input type="checkbox" id="chkPermanent" onclick="chkPermanent_onclick()" />
-		                <spring:message code="ezBoard.t157"/>
-		                <input type="checkbox" id="chkExpires" onclick="chkExpires_onclick()" checked />
-		                <input type="text" id="txtExpires" style="width: 35px" value="<c:out value='${model.itemExpires}' />" />
-		                <spring:message code="ezBoard.t158"/>
-	                </c:if> 
+					<div class="custom_checkbox">
+						<c:if test="${model.itemExpires == '-1'}">
+							<input type="checkbox" id="chkPermanent" onclick="chkPermanent_onclick()" checked />
+							<label for="chkPermanent"><spring:message code="ezBoard.t157"/></label>
+							<input type="checkbox" id="chkExpires" onclick="chkExpires_onclick()" />
+							<input type="text" id="txtExpires" style="width: 35px; height: 21px !important;" readonly />
+							<spring:message code="ezBoard.t158"/>
+						</c:if>
+						<c:if test="${model.itemExpires != '-1'}">   
+							<input type="checkbox" id="chkPermanent" onclick="chkPermanent_onclick()" />
+							<label for="chkPermanent"><spring:message code="ezBoard.t157"/></label>
+							<input type="checkbox" id="chkExpires" onclick="chkExpires_onclick()" checked />
+							<input type="text" id="txtExpires" style="width: 35px" value="<c:out value='${model.itemExpires}' />" />
+							<spring:message code="ezBoard.t158"/>
+						</c:if> 
+					</div>
 				</td>
 	        </tr>
 	        <tr id="deleteAfterTr" style="${style}">	        
@@ -1436,8 +1532,10 @@
 		            	<spring:message code="ezBoard.t160"/>
 	                	<input type="inputbox" id="deleteafter" style="width: 50px; height:21px !important; margin-top:-2px" readonly />
 	                	<spring:message code="ezBoard.t161"/><br/>
-	                	<input type="checkbox" id="usedeleteafter" onclick="chkDeleteAfter_onclick()"/>
-	                	<spring:message code="ezBoard.t162"/>
+	                	<div class="custom_checkbox">
+		                	<input type="checkbox" id="usedeleteafter" onclick="chkDeleteAfter_onclick()"/>
+	                		<label for="usedeleteafter"><spring:message code="ezBoard.t162"/></label>
+						</div>
 	                </td>
 	            </c:if>
 	            <c:if test="${model.deleteAfter != '-1'}">
@@ -1446,16 +1544,19 @@
 	            		<spring:message code="ezBoard.t160"/>
 	                	<input type="inputbox" id="deleteafter" style="width: 50px;height:20px;margin-top:3px" value="<c:out value='${model.deleteAfter}' />"/>
 	                	<spring:message code="ezBoard.t161"/><br/>
-	                	<input type="checkbox" id="usedeleteafter" onclick="chkDeleteAfter_onclick()" checked />
-	                	<spring:message code="ezBoard.t162"/>
+	                	<div class="custom_checkbox">
+		                	<input type="checkbox" id="usedeleteafter" onclick="chkDeleteAfter_onclick()" checked />
+	                		<label for="usedeleteafter"><spring:message code="ezBoard.t162"/></label>
+						</div>
 	                </td>
 	            </c:if>
 	        </tr>
 	        <tr style="${style}">
 	            <th><spring:message code="ezBoard.t163"/></th>
 	            <td id = "boardTypeList">
-					<input type="checkbox" id="chkGeneralBoard" class = "boardTypeEventHandler" />
-					<spring:message code="ezBoard.t00053" />
+                	<div class="custom_checkbox">
+						<input type="checkbox" id="chkGeneralBoard" class = "boardTypeEventHandler" />
+						<label for="chkGeneralBoard"><spring:message code="ezBoard.t00053" /></label>
 <%-- 2018-10-15 홍승비 - 그룹게시판 구분 사용하지 않도록 수정(임시로 일반게시판과 그룹게시판 구분 함침) --%>
 <%-- 
 	                <c:if test="${model.guBun == '1'}">	                   
@@ -1467,48 +1568,50 @@
 	                	<spring:message code="ezBoard.t164"/>
 	                </c:if>
 --%>
-					<input type="checkbox" id="chkAnonyBoard" class = "boardTypeEventHandler" />
-					<spring:message code="ezBoard.t165"/>
-
-					<input type="checkbox" id="chkPhotoBoard" class = "boardTypeEventHandler" />
-					<spring:message code="ezBoard.t166"/>
-
-					<input type="checkbox" id="chkThumbBoard" class = "boardTypeEventHandler" />
-					<spring:message code="ezBoard.t3000"/>
-
-	                <%-- 2018-11-05 홍승비 - 동영상게시판 구분 추가 --%>
-					<input type="checkbox" id="chkMovieBoard" class = "boardTypeEventHandler" />
-					<spring:message code="ezQuestion.t180"/><spring:message code="ezBoard.t185"/>
-
-	                <br>
-
-					<input type="checkbox" id="chkQnABoard" class = "boardTypeEventHandler" />
-					<spring:message code="ezBoard.t00054" />
-
-	                <%-- 2018-07-13 홍승비 - URL게시판 구분 추가 --%>
-					<input type="checkbox" id="chkURLBoard" class = "boardTypeEventHandler" />
-					URL <spring:message code="ezBoard.t185"/>
-
-	                 <%-- URL 필드를 게시판 구분 필드로 이동 --%>
-	                 <input type="text" class="boardTxtURL" id="txtURL" value="<c:out value='${model.url}' />" />
-
-					<%-- 2018-07-13 홍승비 - 홈페이지게시판 구분 추가 --%>
-					<input type="checkbox" id="chkHomePageBoard" class = "boardTypeEventHandler" />
-					<spring:message code="ezBoard.HSBHp01"/>
-
-					<%-- File Viewer 게시판 --%>
-					<input type = "checkbox" id = "fileViewerBoardChkBox" class = "boardTypeEventHandler" />
-					<spring:message code = "ezBoard.fileViewerBoard.msg" />
-					
-					<%-- 2023-11-03 민지수 - 카테고리게시판 구분 추가 --%>
-	                <c:if test="${model.guBun == '10' }">
-	                	<input type="checkbox" id="chkCategoryBoard" class = "boardTypeEventHandler" checked />
-	                	<spring:message code="ezBoard.MJSCAT01" />
-	                </c:if>
-	                <c:if test="${model.guBun != '10'}">
-	                	<input type="checkbox" id="chkCategoryBoard" class = "boardTypeEventHandler" />
-	                	<spring:message code="ezBoard.MJSCAT01"/>
-	                </c:if>
+						<input type="checkbox" id="chkAnonyBoard" class = "boardTypeEventHandler" />
+						<label for="chkAnonyBoard"><spring:message code="ezBoard.t165"/></label>
+	
+						<input type="checkbox" id="chkPhotoBoard" class = "boardTypeEventHandler" />
+						<label for="chkPhotoBoard"><spring:message code="ezBoard.t166"/></label>
+	
+						<input type="checkbox" id="chkThumbBoard" class = "boardTypeEventHandler" />
+						<label for="chkThumbBoard"><spring:message code="ezBoard.t3000"/></label>
+	
+						<%-- 2018-11-05 홍승비 - 동영상게시판 구분 추가 --%>
+						<input type="checkbox" id="chkMovieBoard" class = "boardTypeEventHandler" />
+						<label for="chkMovieBoard"><spring:message code="ezQuestion.t180"/><spring:message code="ezBoard.t185"/></label>
+	
+						<br>
+	
+						<input type="checkbox" id="chkQnABoard" class = "boardTypeEventHandler" />
+						<label for="chkQnABoard"><spring:message code="ezBoard.t00054" /></label>
+	
+						<%-- 2018-07-13 홍승비 - URL게시판 구분 추가 --%>
+						<input type="checkbox" id="chkURLBoard" class = "boardTypeEventHandler" />
+						<label for="chkURLBoard">URL <spring:message code="ezBoard.t185"/></label>
+	
+						 <%-- URL 필드를 게시판 구분 필드로 이동 --%>
+						 <input type="text" class="boardTxtURL" id="txtURL" value="<c:out value='${model.url}' />" />
+	
+						<%-- 2018-07-13 홍승비 - 홈페이지게시판 구분 추가 --%>
+						<input type="checkbox" id="chkHomePageBoard" class = "boardTypeEventHandler" style="margin-left: 14px;"/>
+						<label for="chkHomePageBoard"><spring:message code="ezBoard.HSBHp01"/></label>
+	
+						<%-- File Viewer 게시판 --%>
+						<input type = "checkbox" id = "fileViewerBoardChkBox" class = "boardTypeEventHandler" />
+						<label for="fileViewerBoardChkBox"><spring:message code = "ezBoard.fileViewerBoard.msg" /></label>
+						
+						<%-- 2023-11-03 민지수 - 카테고리게시판 구분 추가 --%>
+                        <c:if test="${lang eq '6'}"><br></c:if>
+						<c:if test="${model.guBun == '10' }">
+							<input type="checkbox" id="chkCategoryBoard" class = "boardTypeEventHandler" checked />
+							<label for="chkCategoryBoard"><spring:message code="ezBoard.MJSCAT01" /></label>
+						</c:if>
+						<c:if test="${model.guBun != '10'}">
+							<input type="checkbox" id="chkCategoryBoard" class = "boardTypeEventHandler" />
+							<label for="chkCategoryBoard"><spring:message code="ezBoard.MJSCAT01"/></label>
+						</c:if>
+					</div>
 	            </td>
 	        </tr>
 	        
@@ -1524,8 +1627,10 @@
 			<tr id = "tr_versionManage" style = "${ style }">
 				<th><spring:message code = "ezBoard.versionManage.msg1" /></th>
 				<td id = "versionManage">
-					<input type = "checkbox" id = "versionManageChkBox"/>
-					<spring:message code = "ezBoard.t162" />
+					<div class="custom_checkbox">
+						<input type = "checkbox" id = "versionManageChkBox"/>
+						<label for="versionManageChkBox"><spring:message code = "ezBoard.t162" /></label>
+					</div>
 				</td>
 			</tr>
 	        
@@ -1533,15 +1638,17 @@
 	        <tr id="boardOptionTR" style="${style}">
 	        	<th><spring:message code="ezBoard.hsbPR01" /></th>
 	        	<td>
-	        		<span style="display:inline-block;"><input type="checkbox" id="chkApprBoard" onclick="checkApprBoard()"><spring:message code="ezBoard.t999020" />&nbsp;</span>
-	        		<span style="display:inline-block;"><input type="checkbox" id="chkBoardLike"><spring:message code="ezBoard.hsb10" />&nbsp;</span>
-					<span style="display:inline-block;"><input type="checkbox" id="chkBoardReplyReact" onclick="checkboardtype()" /><spring:message code="ezBoard.LJE01" />&nbsp;</span>
-	        		<span style="display:inline-block;"><input type="checkbox" id="chkBoardDisLike"><spring:message code="ezBoard.kmh07" />&nbsp;</span>
-	        		<span style="display:inline-block;"><input type="checkbox" id="chkbackgroundimage" onclick="checkboardtype()" /><spring:message code="ezBoard.t5011_1" />&nbsp;</span>
-	        		<span style="display:inline-block;"><input type="checkbox" id="chkform" onclick="checkboardtype()" /><spring:message code="ezBoard.t999027" />&nbsp;</span>
-	        	    <span style="display:inline-block;"><input type="checkbox" id="keyWord" onclick="checkboardtype()" /><spring:message code="ezApprovalG.t1200" />&nbsp;</span>
-	        	    <span style="display:inline-block;"><input type="checkbox" id="chkStarRating" onclick="checkboardtype()" /><spring:message code="ezBoard.lhr001" />&nbsp;</span>
-	        	    <span style="display:inline-block;"><input type="checkbox" id="chkUrlCopy" onclick="checkboardtype()" /><spring:message code = "ezBoard.lyj02" />&nbsp;</span>
+					<div class="custom_checkbox">
+						<input type="checkbox" id="chkApprBoard" onclick="checkApprBoard()"><label for="chkApprBoard"><spring:message code="ezBoard.t999020" /></label>
+						<input type="checkbox" id="chkBoardLike"><label for="chkBoardLike"><spring:message code="ezBoard.hsb10" /></label>
+						<input type="checkbox" id="chkBoardReplyReact" onclick="checkboardtype()" /><label for="chkBoardReplyReact"><spring:message code="ezBoard.LJE01" /></label>
+						<input type="checkbox" id="chkBoardDisLike"><label for="chkBoardDisLike"><spring:message code="ezBoard.kmh07" /></label>
+						<input type="checkbox" id="chkbackgroundimage" onclick="checkboardtype()" /><label for="chkbackgroundimage"><spring:message code="ezBoard.t5011_1" /></label>
+						<input type="checkbox" id="chkform" onclick="checkboardtype()" /><label for="chkform"><spring:message code="ezBoard.t999027" /></label>
+						<input type="checkbox" id="keyWord" onclick="checkboardtype()" /><label for="keyWord"><spring:message code="ezApprovalG.t1200" /></label>
+						<input type="checkbox" id="chkStarRating" onclick="checkboardtype()" /><label for="chkStarRating"><spring:message code="ezBoard.lhr001" /></label><br>
+                        <input type="checkbox" id="chkUrlCopy" onclick="checkboardtype()" /><label for="chkUrlCopy"><spring:message code="ezBoard.lyj02" /></label>
+					</div>
 	        	</td>
 	        </tr>
 	        
@@ -1549,7 +1656,9 @@
 	        <tr id="chkApprListMail" style="display:none;">
 	            <th><spring:message code="ezBoard.t999019" /></th>
 	            <td>
-	                <input type="checkbox" id="chkApprBoardMail" onclick="checkApprMail()"><spring:message code="ezBoard.t162" />
+					<div class="custom_checkbox">
+		                <input type="checkbox" id="chkApprBoardMail" onclick="checkApprMail()"><label for="chkApprBoardMail"><spring:message code="ezBoard.t162" /></label>
+					</div>
 	            </td>
 	        </tr>
 	        <tr id="chkApprList" style="display:none;">
@@ -1565,7 +1674,7 @@
 	        <tr id="writerFlagTR" style="${style}">
 	        	<th><spring:message code="ezBoard.LJE02" /></th>
 	        	<td>
-	        		<span style="display:inline-block;"><input type="checkbox" id="chkWriterFlag"><spring:message code="ezBoard.t162"/></span>
+					<div class="custom_checkbox"><input type="checkbox" id="chkWriterFlag"><label for="chkWriterFlag"><spring:message code="ezBoard.t162"/></label></div>
 	        	</td>
 	        </tr>
 	        
@@ -1573,30 +1682,32 @@
 			<tr id="boardMailOptionTR" style="${style}">
 	        	<th><spring:message code="ezNotification.hth38" /></th>
 	        	<td>
-	        		<c:if test="${model.mailFG_Post == 'Y'}">	
-	                	<span style="display:inline-block;"><input type="checkbox" id="chkMailFG_Post" onclick="checkboardtype()" checked /><spring:message code="ezBoard.HSBMail01" />&nbsp;</span>
-	                </c:if>
-	                <c:if test="${model.mailFG_Post != 'Y'}">
-	                	<span style="display:inline-block;"><input type="checkbox" id="chkMailFG_Post" onclick="checkboardtype()" /><spring:message code="ezBoard.HSBMail01" />&nbsp;</span>
-	                </c:if>
-					<c:if test="${model.mailFG_Mod == 'Y'}">
-	                	<span style="display:inline-block;"><input type="checkbox" id="chkMailFG_Mod" onclick="checkboardtype()" checked /><spring:message code="ezBoard.HSBMail02" />&nbsp;</span>
-	                </c:if>
-	                <c:if test="${model.mailFG_Mod != 'Y'}">
-	                	<span style="display:inline-block;"><input type="checkbox" id="chkMailFG_Mod" onclick="checkboardtype()" /><spring:message code="ezBoard.HSBMail02" />&nbsp;</span>
-	                </c:if>
-					<c:if test="${model.mailFG_Comment == 'Y'}">
-	                	<span style="display:inline-block;"><input type="checkbox" id="chkMailFG_Comment" onclick="checkboardtype()" checked /><spring:message code="ezBoard.HSBMail03" />&nbsp;</span>
-	                </c:if>
-	                <c:if test="${model.mailFG_Comment != 'Y'}">
-	                	<span style="display:inline-block;"><input type="checkbox" id="chkMailFG_Comment" onclick="checkboardtype()" /><spring:message code="ezBoard.HSBMail03" />&nbsp;</span>
-	                </c:if>
-	        		<c:if test="${model.replyNotify == '1'}">
-	                	<span style="display:inline-block;"><input type="checkbox" id="chkNotify" onclick="checkboardtype()" checked /><spring:message code="ezBoard.HSBMail04" />&nbsp;</span>
-	                </c:if>
-	                <c:if test="${model.replyNotify != '1'}">
-	                	<span style="display:inline-block;"><input type="checkbox" id="chkNotify" onclick="checkboardtype()" /><spring:message code="ezBoard.HSBMail04" />&nbsp;</span>
-	                </c:if>
+					<div class="custom_checkbox">
+						<c:if test="${model.mailFG_Post == 'Y'}">	
+							<input type="checkbox" id="chkMailFG_Post" onclick="checkboardtype()" checked /><label for="chkMailFG_Post"><spring:message code="ezBoard.HSBMail01" /></label>
+						</c:if>
+						<c:if test="${model.mailFG_Post != 'Y'}">
+							<input type="checkbox" id="chkMailFG_Post" onclick="checkboardtype()" /><label for="chkMailFG_Post"><spring:message code="ezBoard.HSBMail01" /></label>
+						</c:if>
+						<c:if test="${model.mailFG_Mod == 'Y'}">
+							<input type="checkbox" id="chkMailFG_Mod" onclick="checkboardtype()" checked /><label for="chkMailFG_Mod"><spring:message code="ezBoard.HSBMail02" /></label>
+						</c:if>
+						<c:if test="${model.mailFG_Mod != 'Y'}">
+							<input type="checkbox" id="chkMailFG_Mod" onclick="checkboardtype()" /><label for="chkMailFG_Mod"><spring:message code="ezBoard.HSBMail02" /></label>
+						</c:if>
+						<c:if test="${model.mailFG_Comment == 'Y'}">
+							<input type="checkbox" id="chkMailFG_Comment" onclick="checkboardtype()" checked /><label for="chkMailFG_Comment"><spring:message code="ezBoard.HSBMail03" /></label>
+						</c:if>
+						<c:if test="${model.mailFG_Comment != 'Y'}">
+							<input type="checkbox" id="chkMailFG_Comment" onclick="checkboardtype()" /><label for="chkMailFG_Comment"><spring:message code="ezBoard.HSBMail03" /></label>
+						</c:if>
+						<c:if test="${model.replyNotify == '1'}">
+							<input type="checkbox" id="chkNotify" onclick="checkboardtype()" checked /><label for="chkNotify"><spring:message code="ezBoard.HSBMail04" /></label>
+						</c:if>
+						<c:if test="${model.replyNotify != '1'}">
+							<input type="checkbox" id="chkNotify" onclick="checkboardtype()" /><label for="chkNotify"><spring:message code="ezBoard.HSBMail04" /></label>
+						</c:if>
+					</div>
 	        	</td>
 	        </tr>
 	        
@@ -1604,39 +1715,51 @@
 	        <tr id="oneLineTr" style="${style}">
 				<th><spring:message code="ezBoard.t81" /></th>
 	            <td>
-	                <c:if test="${model.oneLineReply == '2'}">	                
-	                	<input type="checkbox" id="chkOneLineBottom" onclick="checkboardtype();checkReplyType(this);" checked/>
-	                	<spring:message code="ezBoard.hsbRp02" />
-	                </c:if>
-					<c:if test="${model.oneLineReply != '2'}">	                
-	                	<input type="checkbox" id="chkOneLineBottom" onclick="checkboardtype();checkReplyType(this);"/>
-	                	<spring:message code="ezBoard.hsbRp02" />
-	                </c:if>
-	            	<c:if test="${model.oneLineReply == '1'}">	                
-	                	<input type="checkbox" id="chkOneLineLayer" onclick="checkboardtype();checkReplyType(this);" checked/>
-	                	<spring:message code="ezBoard.hsbRp01" />
-	                </c:if>
-					<c:if test="${model.oneLineReply != '1'}">	                
-	                	<input type="checkbox" id="chkOneLineLayer" onclick="checkboardtype();checkReplyType(this);"/>
-	                	<spring:message code="ezBoard.hsbRp01" />
-	                </c:if>
-	            	<c:if test="${model.oneLineReply == '0'}">	                
-	                	<input type="checkbox" id="chkOneLineNone" onclick="checkboardtype();checkReplyType(this);" checked/>
-	                	<spring:message code="ezBoard.hsbRp03" />
-	                </c:if>
-					<c:if test="${model.oneLineReply != '0'}">	                
-	                	<input type="checkbox" id="chkOneLineNone" onclick="checkboardtype();checkReplyType(this);"/>
-	                	<spring:message code="ezBoard.hsbRp03" />
-	                </c:if>
+					<div class="custom_checkbox">
+						<c:if test="${model.oneLineReply == '2'}">	                
+							<input type="checkbox" id="chkOneLineBottom" onclick="checkboardtype();checkReplyType(this);" checked/>
+							<label for="chkOneLineBottom"><spring:message code="ezBoard.hsbRp02" /></label>
+						</c:if>
+						<c:if test="${model.oneLineReply != '2'}">	                
+							<input type="checkbox" id="chkOneLineBottom" onclick="checkboardtype();checkReplyType(this);"/>
+							<label for="chkOneLineBottom"><spring:message code="ezBoard.hsbRp02" /></label>
+						</c:if>
+						<c:if test="${model.oneLineReply == '1'}">	                
+							<input type="checkbox" id="chkOneLineLayer" onclick="checkboardtype();checkReplyType(this);" checked/>
+							<label for="chkOneLineLayer"><spring:message code="ezBoard.hsbRp01" /></label>
+						</c:if>
+						<c:if test="${model.oneLineReply != '1'}">	                
+							<input type="checkbox" id="chkOneLineLayer" onclick="checkboardtype();checkReplyType(this);"/>
+							<label for="chkOneLineLayer"><spring:message code="ezBoard.hsbRp01" /></label>
+						</c:if>
+						<c:if test="${model.oneLineReply == '0'}">	                
+							<input type="checkbox" id="chkOneLineNone" onclick="checkboardtype();checkReplyType(this);" checked/>
+							<label for="chkOneLineNone"><spring:message code="ezBoard.hsbRp03" /></label>
+						</c:if>
+						<c:if test="${model.oneLineReply != '0'}">	                
+							<input type="checkbox" id="chkOneLineNone" onclick="checkboardtype();checkReplyType(this);"/>
+							<label for="chkOneLineNone"><spring:message code="ezBoard.hsbRp03" /></label>
+						</c:if>
+					</div>
 	            </td>
 	        </tr>
-	        
+			<tr class="contentG" style="${style}">
+				<th><spring:message code="ezBoard.t164" /></th>
+				<td>
+					<div class="custom_checkbox">
+						<input type="checkbox" id="useGroup" onclick="chkUseGroup_onclick(this)"/>
+						<label for="useGroup"><spring:message code="ezBoard.t162" /> <spring:message code="ezBoard.lyj09" /></label>
+					</div>
+				</td>
+			</tr>
 			<%-- 2019-10-11 홍승비 - 특정 게시판을 회사별 공지게시판으로 설정하는 기능 추가 --%>
 			<tr id="trNoticeBoard" style="${style}">
 	            <th><spring:message code="ezBoard.hsbNt01" /></th>
 	            <td>
-	                <input type="checkbox" id="chkNoticeBoard"/>
-	                <spring:message code="ezBoard.t162" /><spring:message code="ezBoard.hsbNt02" />
+                	<div class="custom_checkbox">
+						<input type="checkbox" id="chkNoticeBoard"/>
+						<label for="chkNoticeBoard"><spring:message code="ezBoard.t162" /><spring:message code="ezBoard.hsbNt02" /></label>
+					</div>
 	            </td>
 	        </tr>
 			
@@ -1644,34 +1767,40 @@
 			<tr id="trTabBoard" style="${style}">
 	            <th><spring:message code="ezBoard.pgb01" /></th>
 	            <td>
-					<input type="checkbox" id="chktabBoard1"/><spring:message code="ezBoard.pgb02" />
-					<input type="checkbox" id="chktabBoard2"/><spring:message code="ezBoard.pgb03" />
-					<input type="checkbox" id="chktabBoard3"/><spring:message code="ezBoard.pgb04" />
-					<spring:message code="ezBoard.pgb05" />
+                	<div class="custom_checkbox">
+						<input type="checkbox" id="chktabBoard1"/><label for="chktabBoard1"><spring:message code="ezBoard.pgb02" /></label>
+						<input type="checkbox" id="chktabBoard2"/><label for="chktabBoard2"><spring:message code="ezBoard.pgb03" /></label>
+						<input type="checkbox" id="chktabBoard3"/><label for="chktabBoard3"><spring:message code="ezBoard.pgb04" /></label>
+						<span style="vertical-align: middle"><spring:message code="ezBoard.pgb05" /></span>
+					</div>
 				</td>
 			</tr>
 			<%-- 첨부 설정 --%>
 			<tr id="trAttachment" style="${style}">
 				<th><spring:message code="ezBoard.t10025" /></th>
 				<td>
-					<input type="checkbox" id="chkAttachment"
+                	<div class="custom_checkbox">
+						<input type="checkbox" id="chkAttachment"
 							<c:if test="${model.attachmentFlag == 'Y'}">
 								checked
 							</c:if>
-					/>
-					<spring:message code="ezBoard.t162"/>
+						/>
+						<label for="chkAttachment"><spring:message code="ezBoard.t162"/></label>
+					</div>
 				</td>
 			</tr>
 			<%-- 최근게시물 설정 --%>
 			<tr id="trAllNewBoard" style="${style}">
 				<th><spring:message code="ezBoard.lyj01" /></th>
 				<td>
-					<input type="checkbox" id="chkAllNewBoard" onclick="chkAllNewBoard_onclick()"
+                	<div class="custom_checkbox">
+						<input type="checkbox" id="chkAllNewBoard" onclick="chkAllNewBoard_onclick()"
 							<c:if test="${model.allNewBoardFlag == 'Y'}">
 								checked
 							</c:if>
-					/>
-					<spring:message code="ezBoard.t162"/>
+						/>
+						<label for="chkAllNewBoard"><spring:message code="ezBoard.t162"/></label>
+					</div>
 				</td>
 			</tr>			
 	        <%-- 첨부크기제한 --%>
@@ -1719,10 +1848,10 @@
 							<tr class="primary">
 								<th><spring:message code="ezBoard.private.pgb02"/></th>
 								<td style="border-bottom:1px solid #ddd;">
-									<input type="checkbox" id="publicFlag" ${model.publicFlag == "Y" ? "checked" : "" }/>
-									<label for="publicFlag">
-										<spring:message code="ezBoard.private.pgb03"/>
-									</label>
+					            	<div class="custom_checkbox">
+										<input type="checkbox" id="publicFlag" ${model.publicFlag == "Y" ? "checked" : "" }/>
+										<label for="publicFlag"><spring:message code="ezBoard.private.pgb03"/></label>
+									</div>
 								</td>
 							</tr>
 						</table>

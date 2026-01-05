@@ -1,61 +1,61 @@
-var strLang1 = "Can not attach empty file."
-var strLang2 = "The attached file size can not exceed 2MB."
-var strLang3 = " - Uploading. "
-var strLang4 = " - Error occurred while uploading.\n\nServer Error"
-var strLang5 = "The file to attach is being opened in use. \n\n Close that file and attach again."
-var strLang6 = " - Error occurred while uploading."
-var strLang11 = "Cur"
-var strLang12 = "Copy"
-var strLang13 = "Paste"
-var strLang14 = "Delete"
-var strLang15 = "Select all"
-var strLang16 = "Font color"
-var strLang17 = "Set font color"
-var strLang18 = "Then to be closed when clicked on."
+var strLang1 = "Tidak dapat melampirkan file kosong."
+var strLang2 = "Ukuran file yang dilampirkan tidak boleh lebih dari 2MB."
+var strLang3 = " - Mengunggah. "
+var strLang4 = " - Terjadi kesalahan saat mengunggah.\n\nServer Error"
+var strLang5 = "File yang akan dilampirkan sedang dibuka dan digunakan. \n\nTutup file tersebut dan lampirkan lagi."
+var strLang6 = " - Terjadi kesalahan saat mengunggah."
+var strLang11 = "Potong"
+var strLang12 = "Salin"
+var strLang13 = "Tempel"
+var strLang14 = "Hapus"
+var strLang15 = "Pilih semua"
+var strLang16 = "Warna huruf"
+var strLang17 = "Atur warna huruf"
+var strLang18 = "Kemudian akan ditutup saat di-klik. "
 var strLang19 = "Arial;word-break:break-all"
 var strLang20 = "Arial"
-var strLang22 = "Attachment filename"
-var strLang23 = "Filesize"
-var strLang24 = "Filesize"
-var strLang25 = "Create"
-var strLang27 = "The attached file size can not exceed "
-var strLang28 = "MB."
-var strLang29 = "Do you want to delete the attached image?"
-var strLang31 = "Error occurred while deleting."
-var strLang32 = "Do you want to delete attachment?"
-var strLang33 = "Error occurred while adding file."
-var strLang34 = "ㆍ"
-var strLang35 = "Can not use attachment filename with following characters - "
-var strLang37 = "All image file\0*.jpg;*.gif;*.bmp;*.jpeg;*.jpe;*.jfif;*.tif;*.tiff;*.png\0Bitmap Image(*.bmp)\0*.bmp\0GIF Image(*.gif)\0*.gif\0JPEG Image(*.jpeg;*.jpg;*.jpe;*.jfif)\0*.jpeg;*.jpg;*.jpe;*.jfif\0PNG Image(*.png)\0*.png\0TIFF Image(*.tiff; *.tiff)\0*.tiff;*.tif\0\0"
-var strLang38 = "Uploading can only 5 files at once."
-var strLang39 = "The length of filename can not exceed 111bytes."
-var strLang40 = " - It is not image file type."
-var strLang42 = "Enter a subject."
-var strLang43 = "Subject"
-var strLang58 = " - Error occured while uploading.\n\nServer Error"
-var strLang75 = "The extension of the file upload limit."
-var strLang80 = "Prev"
-var strLang81 = "Next"
-var strLang82 = "Total "
-var strLang83 = "-items"
-var strLang535 = "\"No data found\"";
-var strLang5351 = "People";
+var strLang22 = "Nama file lampiran"
+var strLang23 = "Ukuran file"
+var strLang24 = "Ukuran file"
+var strLang25 = "Buat"
+var strLang27 = "Ukuran file yang dilampirkan tidak boleh lebih dari "
+var strLang28 = "MB. "
+var strLang29 = "Apakah Anda ingin menghapus gambar yang dilampirkan?"
+var strLang31 = "Terjadi kesalahan saat menghapus."
+var strLang32 = "Apakah Anda ingin menghapus lampiran?"
+var strLang33 = "Terjadi kesalahan saat menambahkan file."
+var strLang34 = "-"
+var strLang35 = "Tidak dapat menggunakan nama file lampiran dengan karakter berikut - "
+var strLang37 = "Semua file gambar\0*. jpg;*.gif;*.bmp;*.jpeg;*.jpe;*.jfif;*.tif;*.tiff;*.png\0Bitmap Image(*.bmp)\0*.bmp\0GIF Image(*.gif)\0*.gif\0JPEG Image(*.jpeg;*.jpg;*.jpe;*.jfif)\0*. jpeg;*.jpg;*.jpe;*.jfif\0PNG Image(*.png)\0*.png\0TIFF Image(*.tiff; *.tiff)\0*.tiff;*.tif\0\0"
+var strLang38 = "Mengupload hanya boleh 5 file di pada"
+var strLang39 = "Panjang nama file tidak boleh melebihi 111bytes."
+var strLang40 = " - Ini bukan jenis file gambar."
+var strLang42 = "Masukkan subyek."
+var strLang43 = "Subyek"
+var strLang58 = " - Terjadi kesalahan saat mengupload.\n\nServer Error"
+var strLang75 = "Perpanjangan batas unggah file. "
+var strLang80 = "Sebelumnya"
+var strLang81 = "Berikutnya"
+var strLang82 = "Total"
+var strLang83 = "-item"
+var strLang535 = "\"Tidak ada data yang ditemukan\"";
+var strLang5351 = "Orang";
 
 /* 2017-11-01 장진혁 */
-var strLang84 = "The length of filename ";
-var strLangLHM01 = "Cannot be longer than ";
+var strLang84 = "Panjang nama berkas";
+var strLangLHM01 = "Tidak boleh lebih panjang dari ";
 
 //2018-01-12 강민수92
-var strLang85 = "You must upload an image file.";
+var strLang85 = "Anda harus mengupload berkas gambar. ";
 //2018-02-13 장진혁
-var strLang86 = "You aren't in any communities...";
-var strLang87 = "Join a Community!";
-var strLang88 = "No communities open";
+var strLang86 = "Anda tidak berada di komunitas mana pun...";
+var strLang87 = "Bergabunglah dengan Komunitas!";
+var strLang88 = "Tidak ada komunitas yang terbuka";
 
-var strLang89 = "Please select a file to delete.";
+var strLang89 = "Pilih file yang akan dihapus.";
 
 /* 2021-12-09 홍승비 - 확장자 관련 메세지 추가 */
-var srtLangHSBEx01 = "Unacceptable extension.";
+var srtLangHSBEx01 = "Ekstensi tidak dapat diterima.";
 
 // 2024-06-28 민지수 - 커뮤니티 > 첨부파일 드래그 앤 드롭 안내 메세지 추가
-var strLangMJS01 = "You can drag and drop to add files and change the order of added files.";
+var strLangMJS01 = "Anda dapat menyeret dan melepas untuk menambahkan file dan mengubah urutan file yang ditambahkan.";

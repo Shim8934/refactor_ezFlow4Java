@@ -22,7 +22,7 @@
 	    	}
 	    	.lnbUL li .list_text {
 	    		height: auto;
-	    		white-space: normal;
+	    		/*white-space: normal;*/
 	    	}
 	    	.folderTree {
     		    min-height: 200px;
@@ -245,11 +245,11 @@
 			<div class="adminListBox" style="overflow:hidden; padding-right: 0;">
 				<h2 class="on">
 					<span class="sub_iconLNB tree_arrow_down"></span>
-					<span class="h2Title"  onClick="displayPersonal(this);" id="click1"><spring:message code='ezWebFolder.t101'/></span>
+					<span class="h2Title"  onClick="displayPersonal(this);" id="click1" title="<c:if test='${lang eq 6}'><spring:message code='ezWebFolder.t101' /></c:if>"><spring:message code='ezWebFolder.t101'/></span>
 				</h2>
 				<ul class="lnbUL" id="ul1">
-					<li class="on"><span class="sub_iconLNB tree_dot_li"></span><span id="company" class="list_text leftMenu_btn"  onClick="goPage(1);" ><spring:message code='ezWebFolder.t102'/></span></li>
-					<li><span class="sub_iconLNB tree_dot_li"></span><span id="personal" class="list_text leftMenu_btn" onClick="goPage(2);" ><spring:message code='ezWebFolder.t103'/></span></li>
+					<li class="on"><span class="sub_iconLNB tree_dot_li"></span><span id="company" class="list_text leftMenu_btn"  onClick="goPage(1);"  title="<c:if test='${lang eq 6}'><spring:message code='ezWebFolder.t102' /></c:if>"><spring:message code='ezWebFolder.t102'/></span></li>
+					<li><span class="sub_iconLNB tree_dot_li"></span><span id="personal" class="list_text leftMenu_btn" onClick="goPage(2);"  title="<c:if test='${lang eq 6}'><spring:message code='ezWebFolder.t103' /></c:if>"><spring:message code='ezWebFolder.t103'/></span></li>
 				</ul>
 				
 				<%-- 회사폴더 --%>
@@ -258,9 +258,9 @@
 					<span class="h2Title"  onClick="displayPersonal(this);" id="task"><spring:message code='ezWebFolder.t11'/></span>
 				</h2>
 				<ul class="lnbUL"  style="display:none;" id="ul2">
-					<li><span class="sub_iconLNB tree_dot_li"></span><span class="list_text leftMenu_btn" onClick="companyFolder('task');"><spring:message code='ezWebFolder.t126'/></span></li>
-					<li><span class="sub_iconLNB tree_dot_li"></span><span class="list_text leftMenu_btn" onClick="companyFile(this,'task');"><spring:message code='ezWebFolder.t127'/></span></li>
-					<li><span class="sub_iconLNB tree_dot_li"></span><span class="list_text leftMenu_btn" onClick="folderApplicationHistoryPage();" ><spring:message code='ezWebFolder.ksa02'/></span></li>
+					<li><span class="sub_iconLNB tree_dot_li"></span><span class="list_text leftMenu_btn" onClick="companyFolder('task');" title="<c:if test='${lang eq 6}'><spring:message code='ezWebFolder.t126' /></c:if>"><spring:message code='ezWebFolder.t126'/></span></li>
+					<li><span class="sub_iconLNB tree_dot_li"></span><span class="list_text leftMenu_btn" onClick="companyFile(this,'task');" title="<c:if test='${lang eq 6}'><spring:message code='ezWebFolder.t127' /></c:if>"><spring:message code='ezWebFolder.t127'/></span></li>
+					<li><span class="sub_iconLNB tree_dot_li"></span><span class="list_text leftMenu_btn" onClick="folderApplicationHistoryPage();" title="<c:if test='${lang eq 6}'><spring:message code='ezWebFolder.ksa02' /></c:if>"><spring:message code='ezWebFolder.ksa02'/></span></li>
 				</ul>
 				<ul class="lnbUL" id="lnbUL" style="min-height: 200px; display: none; overflow-x: hidden; overflow-y: hidden; white-space: nowrap; padding: 5px">
 					<div id="folderTree" class="tree onlytree" ></div>
@@ -272,14 +272,14 @@
 					<span class="h2Title"  onClick="displayPersonal(this);" id="click2"><spring:message code='ezWebFolder.t12'/></span>
 				</h2>
 				<ul class="lnbUL" style="display:none;" id="ul3">
-					<li><span class="sub_iconLNB tree_dot_li"></span><span class="list_text leftMenu_btn" onClick="departmentFolder();"><spring:message code='ezWebFolder.t219'/></span></li>
-					<li><span class="sub_iconLNB tree_dot_li"></span><span class="list_text leftMenu_btn" onClick="departmentFile(this);"><spring:message code='ezWebFolder.t220'/></span></li>
+					<li><span class="sub_iconLNB tree_dot_li"></span><span class="list_text leftMenu_btn" onClick="departmentFolder();" title="<c:if test='${lang eq 6}'><spring:message code='ezWebFolder.t219' /></c:if>"><spring:message code='ezWebFolder.t219'/></span></li>
+					<li><span class="sub_iconLNB tree_dot_li"></span><span class="list_text leftMenu_btn" onClick="departmentFile(this);" title="<c:if test='${lang eq 6}'><spring:message code='ezWebFolder.t220' /></c:if>"><spring:message code='ezWebFolder.t220'/></span></li>
 				</ul>
 				<ul class="lnbUL" id="lnbUL2" style="min-height: 200px; display: none; overflow-x: hidden; overflow-y: hidden; white-space: nowrap; padding: 5px">
 					<div id="folderTree2" class="tree onlytree" ></div>
 				</ul>
 												
-				<h2><span class="sub_iconLNB tree_plus"></span><span class="h2Title" onClick="fileTransactionHistory(this);" id="fileHistory"><spring:message code='ezWebFolder.t128'/></span></h2>
+				<h2><span class="sub_iconLNB tree_plus"></span><span class="h2Title" onClick="fileTransactionHistory(this);" id="fileHistory" title="<c:if test='${lang eq 6}'><spring:message code='ezWebFolder.t128' /></c:if>"><spring:message code='ezWebFolder.t128'/></span></h2>
  				<h2><span class="sub_iconLNB tree_plus"></span><span class="h2Title" onclick="getTrashCanList(this);" id="trashClick"><spring:message code='ezWebFolder.t269'/></span></h2>
 			</div>
 		</div>

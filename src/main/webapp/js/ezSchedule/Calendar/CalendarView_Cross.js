@@ -578,7 +578,7 @@ function CalendarView(pTagetID,chk_str) {
                 if (dragDay.substring(4, 14) == dropDay) {
                     return;
                 }
-
+                dragDay = dragDay.substring(4, 14)
                 if (dragType == "2") {
                     dragDay += "ALL";
                 }

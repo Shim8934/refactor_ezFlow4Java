@@ -46,18 +46,18 @@
 				<ul class="lnbUL off">
 				<c:if test="${packageType != 'mail'}">  
 					<li><span  class = "list_text" onClick="goPage(8)"><spring:message code='ezPersonal.khj1' /></span></li>
-					<li><span  class = "list_text" onClick="goPage(3)"><spring:message code = 'ezPersonal.hyh1' /></span></li>
-					<li><span  class = "list_text" onClick="goPage(4)"><spring:message code = 'main.t67' /></span></li>
-					<li><span  class = "list_text" onClick="goPage(7)"><spring:message code = 'ezNewPortal.t019' /></span></li>
+					<li><span  class = "list_text" onClick="goPage(3)" title="<c:if test='${lang eq 6}'><spring:message code = 'ezPersonal.hyh1' /></c:if>"><spring:message code = 'ezPersonal.hyh1' /></span></li>
+					<li><span  class = "list_text" onClick="goPage(4)" title="<c:if test='${lang eq 6}'><spring:message code = 'main.t67' /></c:if>"><spring:message code = 'main.t67' /></span></li>
+					<li><span  class = "list_text" onClick="goPage(7)" title="<c:if test='${lang eq 6}'><spring:message code = 'ezNewPortal.t019' /></c:if>"><spring:message code = 'ezNewPortal.t019' /></span></li>
 <%--					<li><span  class = "list_text" onClick="goPage(9)"><spring:message code = 'main.t10000' /></span></li>--%>
 				</c:if>
 				<c:if test="${packageType == 'mail'}"> 
-					<li><span  class = "list_text" onClick="goPage(4)"><spring:message code = 'main.t67' /></span></li>
+					<li><span  class = "list_text" onClick="goPage(4)" title="<c:if test='${lang eq 6}'><spring:message code = 'main.t67' /></c:if>"><spring:message code = 'main.t67' /></span></li>
 				</c:if>
 				</ul>
 				</c:if>
 				<c:if test="${packageType != 'mail'}">
-				<h2 class="off"><span class="sub_iconLNB tree_plus"></span><span class="h2Title" onclick="openFolder()"><spring:message code='ezNewPortal.mobilePortal01' /></span></h2>
+				<h2 class="off"><span class="sub_iconLNB tree_plus"></span><span class="h2Title" onclick="openFolder()" title="<c:if test='${lang eq 6}'><spring:message code = 'ezNewPortal.mobilePortal01' /></c:if>"><spring:message code='ezNewPortal.mobilePortal01' /></span></h2>
 				<ul class="lnbUL off">
 					<li><span  class = "list_text leftMenu_btn" id="MPortlets"><spring:message code='ezNewPortal.t056' /></span></li>
 					<li><span  class = "list_text leftMenu_btn" id="MTheme"><spring:message code='ezNewPortal.mobilePortal02' /></span></li>

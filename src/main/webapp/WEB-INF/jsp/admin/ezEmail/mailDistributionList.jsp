@@ -203,11 +203,11 @@
 		    var mail_add_distributionlist_cross_dialogArguments = new Array();
 		    function add_dl() {
 		        var feature = "dialogHeight:670px; dialogWidth:970px; scroll:no;status:no; help:no; edge:sunken";
-		        feature = feature + GetShowModalPosition(970, 670);
+		        feature = feature + GetShowModalPosition(1030, 670);
 		        if (CrossYN()) {
 		            mail_add_distributionlist_cross_dialogArguments[0] = companyId;
 		            mail_add_distributionlist_cross_dialogArguments[1] = add_dl_Complete;
-		            var OpenWin = window.open("/admin/ezEmail/mailAddDistributionList.do?companyId=" + companyId, "", GetOpenWindowfeature(970, 670));
+		            var OpenWin = window.open("/admin/ezEmail/mailAddDistributionList.do?companyId=" + companyId, "", GetOpenWindowfeature(1030, 670));
 		            try { OpenWin.focus(); } catch (e) {console.log(e);}
 		        }
 		        else {
@@ -238,12 +238,12 @@
 		        var DeptID = selnode[0].getAttribute("DATA1");
 		
 		        var feature = "dialogHeight:690px; dialogWidth:970px; scroll:no;status:no; help:no; edge:sunken";
-		        feature = feature + GetShowModalPosition(970, 690);
+		        feature = feature + GetShowModalPosition(1030, 690);
 		        if (CrossYN()) {
 		            mail_add_distributionlist_cross_dialogArguments = new Array();
 		            mail_add_distributionlist_cross_dialogArguments[0] = companyId;
 		            mail_add_distributionlist_cross_dialogArguments[1] = mod_dl_Complete;
-		            var OpenWin = window.open("/admin/ezEmail/mailAddDistributionList.do?cn=" + DeptID + "&name=" + encodeURIComponent(selnode[0].innerText) + "&companyId=" + companyId, "", GetOpenWindowfeature(970, 690));
+		            var OpenWin = window.open("/admin/ezEmail/mailAddDistributionList.do?cn=" + DeptID + "&name=" + encodeURIComponent(selnode[0].innerText) + "&companyId=" + companyId, "", GetOpenWindowfeature(1030, 690));
 		            try { OpenWin.focus(); } catch (e) {console.log(e);}
 		        }
 		        else {

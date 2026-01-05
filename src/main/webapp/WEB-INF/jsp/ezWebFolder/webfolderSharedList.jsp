@@ -647,7 +647,13 @@
 						event.stopPropagation();
 					});
 					
-					checkboxColumn.appendChild(inputElement);
+					//checkboxColumn.appendChild(inputElement);
+                    
+                    const customDiv = document.createElement("div");
+                    customDiv.className = "custom_checkbox";
+                    customDiv.appendChild(inputElement);
+                    
+                    checkboxColumn.appendChild(customDiv);
 					
 					fileIconElement = document.createElement("img");
 					fileIconElement.setAttribute("class", "none-drag");
@@ -1145,7 +1151,7 @@
 		                <table style="width: 100%; border-spacing: 0px; border-collapse: collapse; border: none;" class="list_element">
 		                    <caption></caption>
 		                    <colgroup>
-		                        <col style="width: 90px;">
+		                        <col style="width: 110px;">
 		                        <col>
 		                    </colgroup>
 		                    <tr>
@@ -1174,7 +1180,7 @@
 					<table class="mainlist" style="width:100%"  id="tblFileList1">
 						<thead id ="BoardList_THEAD">
 							<tr>
-								<th class="wfFilecheck 			headListClick" style="text-align: center;"><input type="checkbox" onchange="rowContext.selectAll(this.checked)" id="checkAll"></th>
+								<th class="wfFilecheck 			headListClick" style="text-align: center;"><div class="custom_checkbox"><input type="checkbox" onchange="rowContext.selectAll(this.checked)" id="checkAll"></div></th>
 								<th class="wfFileFavorite 		headListClick" headers="FAVORITE_STATUS" style=" text-align: center;"><img class="none-drag" src='/images/ImgIcon/icon-flag.gif'/></th><!-- 즐겨찾기 -->
 								<th class="wfFileType 			headListClick" headers="TYPE_ICON" style="text-align: center;"><spring:message code='ezWebFolder.t188'/></th><!-- 유형 -->
 								<th class="wfFileName 			headListClick" headers="FILE_NAME" ><spring:message code='ezWebFolder.t156'/></th><!-- 이름 -->
@@ -1208,7 +1214,7 @@
 		
 		<div id="searchpopup" class="popupwrap3" style="display:none;margin-bottom:70px">
 			<div class="popupJQLayer" style="padding-top:6px">
-				<div class="title"><spring:message code='ezWebFolder.t10' /><spring:message code='ezWebFolder.t123' /></div>
+				<div class="title"><spring:message code='ezWebFolder.t10' /> <spring:message code='ezWebFolder.t123' /></div>
 				<div id="close">
 		            <ul>
 		                <li><a rel="modal:close"><span onclick="searchOptionHidden()"></span></a></li>

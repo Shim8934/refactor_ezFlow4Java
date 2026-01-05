@@ -65,19 +65,21 @@
 				overflow: hidden;
 				text-overflow: ellipsis;
 				color: #5b5a5a;
+				display: flex;
+				align-items: center;
 			}
 			.selectedP {
-				border-bottom: 2px solid #0470e4;
-				margin: 0px 0px -5px 0px;
+				/*border-bottom: 2px solid #0470e4;*/
+				margin: 0px 0px 0px 0px;
 				padding: 0px 20px;
 				background-color: #3d8fea;
 				color:#ffffff;
 			}
 			.topInfoP input[type="checkbox"] {
-				margin: 5px 5px 0px 0px;
+				margin-right:5px;
 				/* width: 13px;
 				height: 13px; */
-				vertical-align: top;
+				vertical-align: sub;
 			}
 
 			.albumTitle{
@@ -591,19 +593,19 @@
 						listXML += GetElementsByTagName(GetElementsByTagName(GetElementsByTagName(xmlDoc, "ROW")[i], "CELL")[getColNameIndex(xmlDoc, "WRITEDATE")], "VALUE")[0].textContent;
 						listXML += "</span>";
 						listXML += "</div>";
-						listXML += "<p class='topInfoP'><input type='checkbox' id='" + itemID + "," + writerID + ";' onclick='selectAlbumCheckBox(this, event)'>";
-						listXML += "<span style='font-size:13px;'>";
+						listXML += "<div class='custom_checkbox'><p class='topInfoP' style='width: 250px;'><input type='checkbox' id='" + itemID + "," + writerID + ";' onclick='selectAlbumCheckBox(this, event)'>";
+						listXML += "<span style='font-size:13px;overflow: hidden; white-space: nowrap;text-overflow: ellipsis;'>";
 
 						if (readFlag == "0") {
 							listXML += "<span class='albumTitle' style='font-size:13px; font-weight:bold;'>";
 						} else {
 							listXML += "<span class='albumTitle' style='font-size:13px;'>";
 						}
-
+						listXML += title + "</span></span>";
 						if (isNew == "Y") {
-							listXML+= "<img src='/images/i_new.gif' style='vertical-align:middle;margin:0px 5px 0px 2px'/>";
+							listXML+= "<span class='board_new'></span>";
 						}
-						listXML += title + "</span></p>";
+						listXML += "</p></div>";
 						listXML += "<div class='infoDiv'>";
 						listXML += "<span style='font-size:13px;'>";
 						if (getColNameIndex(xmlDoc, "WRITERNAME") != -1) {
@@ -951,7 +953,7 @@
 		    }
 		
 		    function refresh_onclick() {
-		        window.location.href = "/ezBoard/boardItemListMovie.do?page=" + CurPage.toString() + "&boardID=" + encodeURIComponent(pBoardID) + "&sortBy=&boardType=" + pBoardType + "&adminType=" + pAdminType;
+		        window.location.href = "/ezBoard/boardItemListMovie.do?page=" + CurPage.toString() + "&boardID=" + encodeURIComponent(pBoardID) + "&sortBy=&boardType=" + pBoardType + "&adminType=" + pAdminType + "&gubun=" + gubun;
 		    }
 		
 		    function AddToMyBoards() {
@@ -1349,7 +1351,7 @@
 
 			function selectAlbumCheckBox(selectedChkBox, event) { // 체크박스만 클릭 > 다중선택
 				event.stopPropagation(); // 상위 Div의 selectAlbumDiv 이벤트를 방지
-				var parentDiv = selectedChkBox.parentNode.parentNode;
+				var parentDiv = selectedChkBox.parentNode.parentNode.parentNode;
 				var parentP = selectedChkBox.parentNode;
 
 				if (selectedChkBox.checked == true) {
@@ -1638,8 +1640,11 @@
 						<th style="text-align: center">
 							<spring:message code='ezBoard.t185' />
 						</th>
-						<td>${boardName} 
-		      				<input type="checkbox" id="chkSearchSub" ><spring:message code='ezBoard.t498' />
+						<td>
+								${boardName} 
+							<div class="custom_checkbox">
+			      				<input type="checkbox" id="chkSearchSub"><label for="chkSearchSub"><spring:message code='ezBoard.t498' /></label>
+							</div>
 		    			</td>
 					</tr>
 					<tr>

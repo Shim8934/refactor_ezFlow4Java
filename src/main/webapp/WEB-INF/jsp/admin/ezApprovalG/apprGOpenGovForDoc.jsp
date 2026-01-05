@@ -718,7 +718,7 @@
 				    ezStatisticsSearch_Cross_dialogArguments[0] = para;
 				    ezStatisticsSearch_Cross_dialogArguments[1] = SearchCondi_onclick_Complete;
 				
-				    var ezStatisticsSearch_Cross = window.open("/admin/ezApprovalG/search.do?ingFlag=END", "ezStatisticsSearch", GetOpenWindowfeature(510, 404));
+				    var ezStatisticsSearch_Cross = window.open("/admin/ezApprovalG/search.do?ingFlag=END", "ezStatisticsSearch", GetOpenWindowfeature(560, 404));
 
 				    try { ezStatisticsSearch_Cross.focus(); } catch (e) {
 				    }

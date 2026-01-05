@@ -2547,7 +2547,6 @@
 								<span style="display:none"><li id="btnSetAprLine"><span  onClick="return btnSetAprLine_onclick()"><spring:message code='ezApprovalG.t153'/></span></li></span>
 				                <span style="display:none"><li id="btnSetReceivLine"><span  onClick="return btnSetReceivLine_onclick()" ><spring:message code='ezApprovalG.t154'/></span></li></span>
 				                <span style="display:none"><li id="btnSetTaskCode"><span  onClick="btnSetTaskCode_onclick()" ><spring:message code='ezApprovalG.t9994'/></span></li></span>
-                        		<li id="btnReturn" style="display: none"><span onclick="return btnSendDraft_onclick()"><spring:message code='ezApprovalG.t155'/></span></li>
 		                        <li id="btnSendDraft"><span onclick="return btnSendDraft_onclick()">등록</span></li>
 							</c:when>
 							<c:otherwise>
@@ -2556,28 +2555,58 @@
 				                <span style="display:none"><li id="btnSetAprLine"><span  onClick="return btnSetAprLine_onclick()"><spring:message code='ezApprovalG.t153'/></span></li></span>
 				                <span style="display:none"><li id="btnSetReceivLine"><span  onClick="return btnSetReceivLine_onclick()" ><spring:message code='ezApprovalG.t154'/></span></li></span>
 				                <span style="display:none"><li id="btnSetTaskCode"><span  onClick="btnSetTaskCode_onclick()" ><spring:message code='ezApprovalG.t9994'/></span></li></span>
-				                <li id="btnReturn" style="display:none"><span  onClick="return btnSendDraft_onclick()"><spring:message code='ezApprovalG.t155'/></span></li>
 				                <li id="btnSendDraft"><span  onClick="return btnSendDraft_onclick()"  ><spring:message code='ezApprovalG.t156'/></span></li>
-		                </c:otherwise>
-					</c:choose>
-		                
-		                <span style="display:none"><li id="btnDocInfo"><span  onClick="return btnDocInfo_onclick()"><spring:message code='ezApprovalG.t54'/></span></li></span>
-		                <li id="btnOpinion"><span  onClick="return btnOpinion_onclick()"><spring:message code='ezApprovalG.t55'/></span></li>
-		                <li id="btnFileAttach"><span  onClick="return btnFileAttach_onclick()"><spring:message code='ezApprovalG.t56'/></span></li>
-		                <li id="btnAprDocAttach"><span  onClick="return btnAprDocAttach_onclick()"><spring:message code='ezApprovalG.t57'/></span></li>
-		                <li id="btnAddSepAttach" style="display:none"><span  onClick="btnAddSepAttach_onclick()" ><spring:message code='ezApprovalG.t58'/></span></li>
-		                <li id="btnSave" style="display:none"><span  onClick="return btnSave_onclick()"><spring:message code='ezApprovalG.t59'/></span></li>
-		                <li id="btnConn" style="display:none"><span  onClick="return btnConn_onclick()"  ><spring:message code='ezApprovalG.t157'/></span></li>
-		                <li id="btnhistory"><span  onClick="btnhistory_onclick()"><spring:message code='ezApprovalG.t61'/></span></li>
-		                <li id="btnHelper" style="display:none"><span  onClick="return btnHelper_onclick()"><spring:message code='ezApprovalG.t158'/></span></li>
-		                <li id="btnSaveServer" <c:if test ="${approvalFlag == 'S'}">style="display:none"</c:if>><span onClick="return btnSaveServer_onclick()" ><spring:message code='ezApprovalG.t4000'/></span></li>
-						<li id="btnPrint"><span class="icon16 popup_icon16_print" onClick="return btnPrint_onclick()"></span></li>
-						<c:if test="${officeFlag == 'Y' }">
-						<li id="reOffice"><span class="" onClick="reOffice(this)">파일재선택</span></li>
-						</c:if>
-		            	<c:if test="${useCabinet == 'YES'}">
-							<li><span onClick="addRelatedCabinet()"><spring:message code='ezCabinet.t125'/></span></li>
-						</c:if>
+							</c:otherwise>
+						</c:choose>
+		                <c:choose>
+							<c:when test="${userInfo.lang eq '1'}">
+								<li id="btnReturn" style="display: none"><span onclick="return btnSendDraft_onclick()"><spring:message code='ezApprovalG.t155'/></span></li>
+								<span style="display:none"><li id="btnDocInfo"><span  onClick="return btnDocInfo_onclick()"><spring:message code='ezApprovalG.t54'/></span></li></span>
+								<li id="btnOpinion"><span  onClick="return btnOpinion_onclick()"><spring:message code='ezApprovalG.t55'/></span></li>
+								<li id="btnFileAttach"><span  onClick="return btnFileAttach_onclick()"><spring:message code='ezApprovalG.t56'/></span></li>
+								<li id="btnAprDocAttach"><span  onClick="return btnAprDocAttach_onclick()"><spring:message code='ezApprovalG.t57'/></span></li>
+								<li id="btnAddSepAttach" style="display:none"><span  onClick="btnAddSepAttach_onclick()" ><spring:message code='ezApprovalG.t58'/></span></li>
+								<li id="btnSave" style="display:none"><span  onClick="return btnSave_onclick()"><spring:message code='ezApprovalG.t59'/></span></li>
+								<li id="btnConn" style="display:none"><span  onClick="return btnConn_onclick()"  ><spring:message code='ezApprovalG.t157'/></span></li>
+								<li id="btnhistory"><span  onClick="btnhistory_onclick()"><spring:message code='ezApprovalG.t61'/></span></li>
+								<li id="btnHelper" style="display:none"><span  onClick="return btnHelper_onclick()"><spring:message code='ezApprovalG.t158'/></span></li>
+								<li id="btnSaveServer" <c:if test ="${approvalFlag == 'S'}">style="display:none"</c:if>><span onClick="return btnSaveServer_onclick()" ><spring:message code='ezApprovalG.t4000'/></span></li>
+								<li id="btnPrint"><span class="icon16 popup_icon16_print" onClick="return btnPrint_onclick()"></span></li>
+								<c:if test="${officeFlag == 'Y' }">
+								<li id="reOffice"><span class="" onClick="reOffice(this)">파일재선택</span></li>
+								</c:if>
+								<c:if test="${useCabinet == 'YES'}">
+									<li><span onClick="addRelatedCabinet()"><spring:message code='ezCabinet.t125'/></span></li>
+								</c:if>
+							</c:when>
+							<c:otherwise>
+								<span style="display:none"><li id="btnDocInfo"><span  onClick="return btnDocInfo_onclick()"><spring:message code='ezApprovalG.t54'/></span></li></span>
+								<li id="btnOpinion"><span  onClick="return btnOpinion_onclick()"><spring:message code='ezApprovalG.t55'/></span></li>
+								<li id="btnFileAttach"><span  onClick="return btnFileAttach_onclick()"><spring:message code='ezApprovalG.t56'/></span></li>
+								<li id="btnAprDocAttach"><span  onClick="return btnAprDocAttach_onclick()"><spring:message code='ezApprovalG.t57'/></span></li>
+								<li id="btnSave" style="display:none"><span  onClick="return btnSave_onclick()"><spring:message code='ezApprovalG.t59'/></span></li>
+								<li id="btnPrint"><span class="icon16 popup_icon16_print" onClick="return btnPrint_onclick()"></span></li>
+								<li id="moreBoardIcon" class="view_moreboarditem" style="display: block;">
+									<span class="view_icon" onclick="this.parentNode.classList.toggle('on')">
+										<img src="/images/ImgIcon/view_more.png">
+									</span>
+									<ul class="layer_select">
+										<li id="btnReturn" style="display: none"><span onclick="return btnSendDraft_onclick()"><spring:message code='ezApprovalG.t155'/></span></li>
+										<li id="btnAddSepAttach" style="display:none"><span  onClick="btnAddSepAttach_onclick()" ><spring:message code='ezApprovalG.t58'/></span></li>
+										<li id="btnConn" style="display:none"><span  onClick="return btnConn_onclick()"  ><spring:message code='ezApprovalG.t157'/></span></li>
+										<li id="btnhistory"><span  onClick="btnhistory_onclick()"><spring:message code='ezApprovalG.t61'/></span></li>
+										<li id="btnHelper" style="display:none"><span  onClick="return btnHelper_onclick()"><spring:message code='ezApprovalG.t158'/></span></li>
+										<li id="btnSaveServer" <c:if test ="${approvalFlag == 'S'}">style="display:none"</c:if>><span onClick="return btnSaveServer_onclick()" ><spring:message code='ezApprovalG.t4000'/></span></li>
+										<c:if test="${officeFlag == 'Y' }">
+											<li id="reOffice"><span class="" onClick="reOffice(this)">파일재선택</span></li>
+										</c:if>
+										<c:if test="${useCabinet == 'YES'}">
+											<li><span onClick="addRelatedCabinet()"><spring:message code='ezCabinet.t125'/></span></li>
+										</c:if>
+									</ul>
+								</li>
+							</c:otherwise>
+						</c:choose>
 		            </ul>
 					<ul <c:if test="${isPreview != 'Y'}">style="display:none"</c:if>>
 			        	<li><img src='/images/kr/cm/btn_newpopup.gif' title=<spring:message code='ezEmail.t99000001'/> alt=<spring:message code='ezEmail.t99000001'/> onclick='return parent.btn_newpopup()'></li>
@@ -2593,7 +2622,7 @@
 			  <tr id="headerTabTR" style="display:none;">
 			  	<td>
 					  <div id="headerTab" style="width:90%; height:27px; margin:0 auto; border-bottom: solid 1px #eaeaea; box-sizing: border-box;">
-					  	<div id="headerMenu" style="width:80px; height:100%; cursor:pointer; text-align:center" onclick="headerAction()">
+					  	<div id="headerMenu" style="width:155px; height:100%; cursor:pointer; text-align:center" onclick="headerAction()">
 					  		<span id="headerHide" style="color:#8f8e93; font-size:14px;"><spring:message code='ezApproval.headerHide01'/></span>
 					  	</div>
 					  </div>
@@ -2633,7 +2662,7 @@
                 <table class="file" style="height:80px;">
                     <tr>
                         <th id="btn_Attach" style="width:10%;"><spring:message code='ezApprovalG.t65'/></th>
-                        <td style="width:62%; border-right:1px solid #d5d5d5;">
+                        <td style="width:62%; border-right:1px solid #d5d5d5; overflow: auto;">
                             <div id="lstAttachLink" style="height:70px;"></div>
                             <iframe id="ifrmDownload" name="ifrmDownload" src="about:blank" width="0" height="0" style="display: none;"></iframe>
                         </td>
@@ -2671,5 +2700,33 @@
         <c:if test="${useAI}">
             <c:import url="/WEB-INF/jsp/ezAI/aiSlide.jsp" />
         </c:if>
+		<script type="text/javascript">
+			var moreBoardIcon = document.getElementById("moreBoardIcon");
+			var iframeContent = document.getElementById("message");
+			var liBtn = document.querySelector(".layer_select");
+			
+			document.addEventListener("click", function(e) {
+				if (moreBoardIcon && !moreBoardIcon.contains(e.target)) {
+					moreBoardIcon.classList.remove("on");
+				}
+			});
+			
+			iframeContent.addEventListener("load", function() {
+				try {
+					var idoc = iframeContent.contentDocument || iframeContent.contentWindow.document;
+					idoc.addEventListener("click", function() {
+						if (moreBoardIcon) {
+							moreBoardIcon.classList.remove("on");
+						}
+					});
+				} catch (e) {}
+			});
+			
+			if (liBtn) {
+				liBtn.addEventListener("click", function(e) {
+					moreBoardIcon.classList.remove("on");
+				});
+			}
+		</script>
 	</body>
 </html>

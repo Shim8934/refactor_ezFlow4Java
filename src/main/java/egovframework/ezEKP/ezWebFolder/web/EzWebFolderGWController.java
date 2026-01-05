@@ -2,6 +2,7 @@ package egovframework.ezEKP.ezWebFolder.web;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -984,22 +985,31 @@ public class EzWebFolderGWController {
 			List<DuplicateInfoVO> duplicateInfoList = new ArrayList<>();
 			
 			Iterator<String> onlyNameIterator = onlyNameArray.iterator();
+			Iterator<Object> nameIterator = nameArray.iterator();
 			Iterator<FileUploadVO> multiFileIterator = multiFileLists.iterator();
 			
 			while (onlyNameIterator.hasNext()) {
 				String fileName = onlyNameIterator.next();
-				
+
+				nameIterator.next();
 				multiFileIterator.next();
 
 				// 파일 이름으로 중복 정보 가져오기
-				Optional<DuplicateInfoVO> firstInfo = ezWebFolderService.getAllDuplicateInfo(fileName, folderId, offset, userInfo.getTenantId())
+				String decodeFileName = URLDecoder.decode(fileName, "UTF-8");;
+
+				if (decodeFileName.indexOf(commonUtil.separator) > 0) {
+					decodeFileName = decodeFileName.split("/")[decodeFileName.split("/").length - 1];
+				}
+
+				decodeFileName = commonUtil.normalizeFileName(decodeFileName);
+				Optional<DuplicateInfoVO> firstInfo = ezWebFolderService.getAllDuplicateInfo(decodeFileName, folderId, offset, userInfo.getTenantId())
 						.stream()
 						.findFirst();
 
 				// 중복 정보가 존재한다면
 				if (firstInfo.isPresent()) {
 					// multifile 리스트에서 삭제 (업로드 제외됨)
-					onlyNameIterator.remove();
+					nameIterator.remove();
 					multiFileIterator.remove();
 					// 중복 정보 리스트에 추가
 					duplicateInfoList.add(firstInfo.get());

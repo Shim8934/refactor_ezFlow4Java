@@ -936,6 +936,13 @@ function event_displayUserList(xml) {
     else if (USE_OCS.toUpperCase() == "YES") {
         check_presence();
     }
+    
+    var headersList = userlist_h.getElementsByTagName("header");
+    
+    for (var i = 0; i < headersList.length; i++) {
+        var headerName = headersList[i].getElementsByTagName("name")[0].textContent;
+        document.getElementById("pUserList_TH_" + i).innerText = headerName;
+    }
 }
 
 function event_displayUserListCC(xml) {

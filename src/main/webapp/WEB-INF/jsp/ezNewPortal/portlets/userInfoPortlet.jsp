@@ -14,12 +14,8 @@
 	    <div class="box_shadow info_right" style="margin:0px; margin-left:7px">
 	        <dl class="info">
 	        	<dt class="infoImg">
-	        		<c:if test="${userPhoto eq null || userPhoto eq ''}">
-		        		<img src="/images/ezNewPortal/info_pic_none.png">
-	        		</c:if>
-	        		<c:if test="${userPhoto ne null && userPhoto ne ''}">
-		        		<img src="${userPhoto }">
-	        		</c:if>
+					<c:set var="picNone" value="/images/ezNewPortal/info_pic_none.png" />
+					<img src="${not empty userPhoto? userPhoto : picNone}" onerror="this.src='${picNone}'" />
 	        	
 	            <%-- 2023-06-23 황인경 - 디자인 개선 > 유저 포틀릿 > 구조 변경 --%>
 				<dd class="infoName">${userName}<span class="infoTeam">${deptName} ${userTitle}</span></dd>

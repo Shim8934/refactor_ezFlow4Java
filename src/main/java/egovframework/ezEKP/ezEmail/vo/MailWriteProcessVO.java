@@ -156,6 +156,9 @@ public class MailWriteProcessVO {
 			case "FORWARD":
 				this.writetype = WriteType.FORWARD;
 				break;
+			case "FORWARD_AS_ATTACH":
+				this.writetype = WriteType.FORWARD_AS_ATTACH;
+				break;
 			case "READ":
 				this.writetype = WriteType.READ;
 				break;
@@ -220,7 +223,7 @@ public class MailWriteProcessVO {
 	public boolean hasOrigin() {
 		return hasOrigin;
 	}
-	public void setCmd(String cmd) {
+	public void setCmdOwn(String cmd) {
 		/**
 		 * cmdOwn: 들어온 그대로 보존해서 model에 전달. (for 기존 코드 유지: RESERVE→EDIT, POLL→"")
 		 * writetype로 대체하려면 front, send controller 까지 다 수정해야함.
@@ -228,12 +231,25 @@ public class MailWriteProcessVO {
 		this.cmdOwn = cmd;
 		this.cmd = cmd.toUpperCase();
 	}
+	public void setCmd(String cmd) {
+		this.cmd = cmd;
+	}
 	public void setCmdWithFolderName(String sentFolderName) {
 		if (folderPath.equalsIgnoreCase(draftsFolderName) && "EDIT".equals(cmd)) {
 			cmd = "EDIT_IN_DRAFTS";
 		} else if (folderPath.equalsIgnoreCase(sentFolderName) && "RESEND".equals(cmd)) {
 			cmd = "RESEND_IN_SENT";
 		}
+	}
+	// FORWARD_AS_ATTACH로 변경하는 로직
+	public boolean setCmdForForwardAsAttach() {
+		boolean doChange = "FORWARD".equalsIgnoreCase(cmdOwn); // FORWARD일때만
+
+		if (doChange) {
+			cmd = "FORWARD_AS_ATTACH";
+		}
+
+		return doChange;
 	}
 	public String getCmdOwn() {
 		return cmdOwn;

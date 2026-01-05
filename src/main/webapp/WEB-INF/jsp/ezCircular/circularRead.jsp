@@ -425,16 +425,29 @@
             		success : function(result) {
             			printCircularUserList = "<colgroup><col width='20%' /><col width='60%' /><col width='20%' /></colgroup>";    			
             			list = result.circularUserList;
+            			primaryLang = result.userInfo.primary;
             			list.forEach(function(vo, index) {
             				printCircularUserList += "<tr class='printCircularUser' circularUserID='" + vo.memberID + "' style='height:40px;text-align:left;vertical-align:middle;'>";
             				printCircularUserList += "<th style='border-top:0px;border-bottom:1px solid #e2e2e2;border-right:0px;border-left:0px;text-align:left;background-color:white;'>";
             				
             				if (vo.status == 1) {
             					//확인 이미지
-            					printCircularUserList += "<img src='/images/ImgIcon/msg-rd.png' style='vertical-align:middle;'/>&nbsp;" + vo.memberName + "&nbsp;";
+            					printCircularUserList += "<img src='/images/ImgIcon/msg-rd.png' style='vertical-align:middle;'/>&nbsp;";
+								
+								if (primaryLang == "1") {
+									printCircularUserList += vo.memberName + "&nbsp;";
+								} else {
+									printCircularUserList += vo.memberName2 + "&nbsp;";
+								}
             				} else {
             					//미확인 이미지
-            					printCircularUserList += "<img src='/images/ImgIcon/msg-unrd.png' style='vertical-align:middle;'/>&nbsp;" + vo.memberName + "&nbsp;";
+            					printCircularUserList += "<img src='/images/ImgIcon/msg-unrd.png' style='vertical-align:middle;'/>&nbsp;";
+
+								if (primaryLang == "1") {
+									printCircularUserList += vo.memberName + "&nbsp;";
+								} else {
+									printCircularUserList += vo.memberName2 + "&nbsp;";
+								}
             				}
             				
             				printCircularUserList += "</th>";
@@ -457,7 +470,13 @@
             			list = result.circularCommentList ;
             			list.forEach(function(vo, index) {
             				printCircularCommentList  = "<tr class='printCircularComment' circularUserID='" + vo.circularUserID + "' memberID='" + vo.memberID + "' circularCommentID='" + vo.circularCommentID + "' circularCommentStatus='" + vo.status + "'>";
-            				printCircularCommentList += "<td style='padding-left:3px; border-bottom:1px solid #e2e2e2; background-color:#fafafa;'>&nbsp;&nbsp;<img src='/images/ImgIcon/commentRe.gif' style='vertical-align:middle;'/>&nbsp;" + vo.memberName + "</td>";
+            				printCircularCommentList += "<td style='padding-left:3px; border-bottom:1px solid #e2e2e2; background-color:#fafafa;'>&nbsp;&nbsp;<img src='/images/ImgIcon/commentRe.gif' style='vertical-align:middle;'/>&nbsp;";
+							primaryLang = result.userInfo.primary;
+							if (primaryLang == "1") {
+								printCircularCommentList += vo.memberName + "</td>";
+							} else {
+								printCircularCommentList += vo.memberName2 + "</td>";
+							}
             				printCircularCommentList += "<td style='text-align:left;padding:8px; border-bottom:1px solid #e2e2e2; background-color:#fafafa;'>" + vo.circularComment + "&nbsp;&nbsp;";
             				
             				printCircularCommentList += "</td>";
@@ -519,27 +538,29 @@
 		            filetype = getNodeText(SelectSingleNode(xmldomNodes[i], "FileType"));
            
 		            if (filetype == "jpg" || filetype == "jpeg" || filetype == "bmp" || filetype == "gif" || filetype == "png" || filetype == "tif" || filetype == "tiff") {
-		            	imagePath = "/images/image.png";
+		            	imagePath = "/images/image.svg";
 		            } else if (filetype == "doc" || filetype == "docx") {
-		            	imagePath = "/images/doc.png";
+		            	imagePath = "/images/doc.svg";
 		            } else if (filetype == "xls" || filetype == "xlsx") {
-		            	imagePath = "/images/xls.png";
+		            	imagePath = "/images/xls.svg";
 		            } else if (filetype == "ppt" || filetype == "pptx" || filetype == "pps" || filetype == "ppsx") {
-		            	imagePath = "/images/ppt.png";
+		            	imagePath = "/images/ppt.svg";
 		            } else if (filetype == "txt") {
-		            	imagePath = "/images/txt.png";
+		            	imagePath = "/images/txt.svg";
 		            } else if (filetype == "zip") {
-		            	imagePath = "/images/zip.png";
+		            	imagePath = "/images/zip.svg";
 		            } else if (filetype == "pdf") {
-		            	imagePath = "/images/pdf.png";
-		            } else if (filetype == "ecm") {
-		            	imagePath = "/images/ecm.png";
+		            	imagePath = "/images/pdf.svg";
+		            } else if (filetype == "hwp" || filetype == "hwpx") {
+						imagePath = "/images/hwp.svg";
+					} else if (filetype == "ecm") {
+		            	imagePath = "/images/ecm.svg";
 		            //2018-02-13 주홍선 mht파일 아이콘 표시되지 않던 것 수정
 		            } else {
-		            	imagePath = "/images/file.gif";
+		            	imagePath = "/images/etc.svg";
 		            }
 
-		            strAttach[i] = "<img src='" + imagePath + "'/>&nbsp;" + filename + "&nbsp;(" + filesize + ")<br>";
+		            strAttach[i] = "<img src='" + imagePath + "' style='width:20px;height:20px;vertical-align:sub'/>&nbsp;" + filename + "&nbsp;(" + filesize + ")<br>";
 		        }
 
 		        $("#lstAttachLink").html("");
@@ -817,34 +838,41 @@
                                 <div id="attachedfileDIV" style="margin-top: 0px; overflow: auto; padding-top: 0px;height: 70px; border-top-width: 0px;" align="left">
                                     <c:forEach var="item" items="${attachList}" varStatus="status">
                                     	<div style="margin-top:3px;height:auto;">
-                                    		<c:set var="imagePath" value="/images/file.gif" />
-                                    		<input type="checkbox" filename="${item.fileEncodeName}" filepath="${item.filePath}">
-                                    		<c:if test="${item.fileType == 'jpg' || item.fileType == 'jpeg' || item.fileType == 'bmp' || item.fileType == 'gif' || item.fileType == 'png' || item.fileType == 'tif' || item.fileType == 'tiff'}">
-                                    			<c:set var="imagePath" value="/images/image.png" />
-                                    		</c:if>
-                                    		<c:if test="${item.fileType == 'doc' || item.fileType == 'docx'}">
-                                    			<c:set var="imagePath" value="/images/doc.png" />
-                                    		</c:if>
-                                    		<c:if test="${item.fileType == 'xls' || item.fileType == 'xlsx'}">
-                                    			<c:set var="imagePath" value="/images/xls.png" />
-                                    		</c:if>
-                                    		<c:if test="${item.fileType == 'ppt' || item.fileType == 'pptx' || item.fileType == 'pps' || item.fileType == 'ppsx'}">
-                                    			<c:set var="imagePath" value="/images/ppt.png" />
-                                    		</c:if>
-                                    		<c:if test="${item.fileType == 'txt'}">
-                                    			<c:set var="imagePath" value="/images/txt.png" />
-                                    		</c:if>
-                                    		<c:if test="${item.fileType == 'zip'}">
-                                    			<c:set var="imagePath" value="/images/zip.png" />
-                                    		</c:if>
-                                    		<c:if test="${item.fileType == 'pdf'}">
-                                    			<c:set var="imagePath" value="/images/pdf.png" />
-                                    		</c:if>
-                                    		<c:if test="${item.fileType == 'ecm'}">
-                                    			<c:set var="imagePath" value="/images/ecm.png" />
-                                    		</c:if>	                                    		
-                                    		<img src="${imagePath}" />&nbsp;<a href="/ezCircular/downloadAttach.do?circularFileID=${item.circularFileID}" id="regData_${status.count}" style="vertical-align:text-bottom;"><c:out value='${item.fileName}'/> (<c:out value='${item.fileTranSize}'/>)</a>
-                                    	</div>
+											<div class="custom_checkbox">
+												<c:set var="imagePath" value="/images/etc.svg" />
+													<input id="fileSelect${status.index}" type="checkbox" filename="${item.fileEncodeName}" filepath="${item.filePath}">
+												<label for="fileSelect${status.index}">
+													<c:if test="${item.fileType == 'jpg' || item.fileType == 'jpeg' || item.fileType == 'bmp' || item.fileType == 'gif' || item.fileType == 'png' || item.fileType == 'tif' || item.fileType == 'tiff'}">
+														<c:set var="imagePath" value="/images/image.svg" />
+													</c:if>
+													<c:if test="${item.fileType == 'doc' || item.fileType == 'docx'}">
+														<c:set var="imagePath" value="/images/doc.svg" />
+													</c:if>
+													<c:if test="${item.fileType == 'xls' || item.fileType == 'xlsx'}">
+														<c:set var="imagePath" value="/images/xls.svg" />
+													</c:if>
+													<c:if test="${item.fileType == 'ppt' || item.fileType == 'pptx' || item.fileType == 'pps' || item.fileType == 'ppsx'}">
+														<c:set var="imagePath" value="/images/ppt.svg" />
+													</c:if>
+													<c:if test="${item.fileType == 'txt'}">
+														<c:set var="imagePath" value="/images/txt.svg" />
+													</c:if>
+													<c:if test="${item.fileType == 'zip'}">
+														<c:set var="imagePath" value="/images/zip.svg" />
+													</c:if>
+													<c:if test="${item.fileType == 'pdf'}">
+														<c:set var="imagePath" value="/images/pdf.svg" />
+													</c:if>
+                                                    <c:if test="${item.fileType == 'hwp' || item.fileType == 'hwpx'}">
+                                                        <c:set var="imagePath" value="/images/hwp.svg" />
+                                                    </c:if>
+													<c:if test="${item.fileType == 'ecm'}">
+														<c:set var="imagePath" value="/images/ecm.svg" />
+													</c:if>	                    
+													<img src="${imagePath}" style="width:20px;height:20px;vertical-align:sub"/>&nbsp;<a href="/ezCircular/downloadAttach.do?circularFileID=${item.circularFileID}" id="regData_${status.count}" style="vertical-align:text-bottom;"><c:out value='${item.fileName}'/> (<c:out value='${item.fileTranSize}'/>)</a>
+												</label>
+                                    		</div>
+										</div>
                                     </c:forEach>
                                 </div>
                             </td>

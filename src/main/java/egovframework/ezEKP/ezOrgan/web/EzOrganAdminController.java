@@ -166,7 +166,8 @@ public class EzOrganAdminController extends EzFileMngUtil {
     @PostConstruct
 	public void init() throws Exception {
     	logger.debug("init started.");
-//    	try {
+
+    	try {
 //			// create table
 //    		ezCommonService.createTables(); // 2024-07-01 김수아 - 테이블 생성 공통함수 추가
 //			ezCommonService.createTblFidoSession(); //2023-11-23 이사라 - Fido 2차인증 테이블 생성, tbl_tenant_config에 해당 옵션 추가
@@ -243,7 +244,9 @@ public class EzOrganAdminController extends EzFileMngUtil {
 //			ezCommonService.createTblStatMenu(); // 2025-03-19 박기범 - 메뉴 통계 테이블 추가
 //			ezCommonService.createUserScheduleTypeConfigTable(); // 2025-04-21 조수빈 - 기본 일정(개인, 부서, 회사)별 사용자 설정 값 저장 테이블 추가
 //			ezCommonService.createTblCommunityGradeTable(); // 2025-07-10 이유정 - 커뮤니티 > 회원등급 테이블 추가
-//
+          	ezCommonService.addColumnsForIndonesian();
+			ezCommonService.addBoardExtColumnForMultiLang();
+
 //			// alter table
 //	    	ezCommonService.alterTableAddColumns(); // 2022-01-19 김은실 - alter 재사용 모듈 추가
 //	    	ezCommonService.addWebfolderTotalLimit();
@@ -286,6 +289,7 @@ public class EzOrganAdminController extends EzFileMngUtil {
 //			ezCommonService.alterScheduleDefaultViewCheck(); // 2025-03-21 권기혁 - 일정관리환경설정 기본 화면 사용 여부 컬럼 추가
 //            ezCommonService.alterTblClubUserGradeColumn();	// 2025-07-10 이유정 - 커뮤니티 > 회원등급 컬럼 추가
 //            ezCommonService.alterTblClubJoinGradeColumn();	// 2025-07-10 이유정 - 커뮤니티 > 최초가입 등급, 회원목록조회 등급 컬럼 추가
+//          ezCommonService.updateAttitudeCustomCheckbox(); // 2025-07-07 황인경 -커스텀 체크박스 근태관리 폼 데이터 업데이트
 //
 //			// tenant config
 //	    	ezCommonService.insertTblTenantConfig(); // 2020-01-28 useMailConfirm 컨피그 추가 >> 2020-04-28 tbl_tenant_config add
@@ -315,6 +319,7 @@ public class EzOrganAdminController extends EzFileMngUtil {
 //			ezCommonService.insertUseSaasYN(); // 2025-05-21 유지아 - 모바일 푸시 알림 테넌트 따라 구분 컨피그 추가
 //			ezCommonService.inserExtLargeFilesever(); // 2025-05-22 유지아 - 대용량 첨부파일 외부메일 서버 동시 업로드
 //			ezCommonService.insertUseSendOutState(); // 2024-07-22 양지혜 - 관리자 > 전자결재 > 발송현황 메뉴 표출여부 컨피그 추가
+          ezCommonService.insertIndonesianTenantConfig(); // 2025-07-02 조수빈 - 인도네시아어(6) 관련 테넌트 없는 부분 추가
 //	    	ezCommonService.insertPortalThemePortletInitdata();
 //	    	ezCommonService.updateTaskUrl();
 //	    	ezCommonService.updateListOptionData(); //2019-03-06 천성준 - 전자결재 회람수신함 관련 리스트헤더 데이터 임시 업데이트문
@@ -417,9 +422,11 @@ public class EzOrganAdminController extends EzFileMngUtil {
 //            ezCommonService.alterTblBoardInfoUrlCopyFlag(); // 2025-08-05 이유정 - 게시판 > 게시글 주소복사 컬럼 추가
 //			ezCommonService.updateGuestAccessibleUris(); // 2025-08-19 양지혜 - 비회원 게시판 허용 URI 데이터 업데이트
 //	        ezCommonService.createTblSamlRequestId();	
-//		} catch (Exception e) {
-//    		logger.error(e.getMessage(), e);
-//    	}
+            ezCommonService.updateInitDataForIndiLang(); // 2025-08-14 조수빈 - 초기 데이터에 대한 인도네시아어 업데이트
+//            ezCommonService.createApproveErrorInfoTable(); // 2025-07-17 강동주 - 전자결재 > 백단 결재에서 문서 핸들링 오류 발생 시 이력 관리
+		} catch (Exception e) {
+    		logger.error(e.getMessage(), e);
+    	}
     	logger.debug("init ended.");
     }
 
@@ -492,6 +499,7 @@ public class EzOrganAdminController extends EzFileMngUtil {
 		model.addAttribute("useSharedMailbox", useSharedMailbox);
 		model.addAttribute("useCopyrightMenu", useCopyrightMenu);
 		model.addAttribute("cChk", cChk);
+		model.addAttribute("lang", user.getLang());
 		
 		return "admin/ezOrgan/organLeft";
 	}
@@ -1579,120 +1587,132 @@ public class EzOrganAdminController extends EzFileMngUtil {
 	@ResponseBody
 	public String retireUser(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception{
 	    logger.debug("retireUser started.");
-	    
+
         LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		String result = "EMAIL_ERROR";
         
         if (userInfo == null) {
         	logger.debug("retireUser: it's not admin");
-        	
-        	return "EMAIL_ERROR";
+        	return result;
         }
                 
         // UUID로 pass 변경
         //String adminPassword = UUID.randomUUID().toString();
-        
         int tenantID = userInfo.getTenantId();
         String offset = userInfo.getOffset();
-        
         String cnList = request.getParameter("cn");
-
         logger.debug("tenantID=" + tenantID + ",offset=" + offset +",cnList=" + cnList);
-        	    
-		String cn[] = cnList.split(",");
-		String result = "OK";
-		
-		// dhlee
+
+        if (StringUtils.isBlank(cnList)) {
+        	logger.debug("retireUser: cn is blank");
+        	return result;
+        }
+
 		String domain = ezCommonService.getTenantConfig("DomainName", tenantID);
-		// dhlee - end
-		
-		for (int i = 0; i < cn.length; i++) {			
-			// dhlee
+		String cn[] = cnList.split(",");
+
+		for (int i = 0; i < cn.length; i++) {
+			List<String> restoreGroupList = new ArrayList<>();
+			int jamesRc = -100;
+			int groupRc = -1;
+
 			String mailAddr = cn[i] + "@" + domain;
-			
 			logger.debug("mailAddr=" + mailAddr);
-			
-			int rc = ezEmailUserAdminService.retireUser(mailAddr);
-			
-			logger.debug("retireUser rc=" + rc);
-			
-			List<String> distributionList = null;
-			
-			if (rc == 0) { // retireUser 성공				
-				// 해당 User가 속한 Group Email 주소에서 해당 User를 제거한다.
-				OrganUserVO userVO = ezOrganAdminService.getUserInfo(cn[i], userInfo.getPrimary(), tenantID);
-				String groupAddr = userVO.getDepartment() + "@" + domain;
-				rc = ezEmailUserAdminService.updateGroupDel(groupAddr, mailAddr);
-				
-				logger.debug("updateGroupDel rc=" + rc);
-				
-				if (rc != -100) { // updateGroupDel 성공(부모(그룹)나 자식(유저)을 찾지못해도 성공으로 봄.)
-					try {
-						// 로컬 시스템에서 해당 User의 계정을 퇴직처리한다.
-						ezOrganAdminService.retireEntry(cn[i], domain, tenantID, offset);
-					} catch (Exception e) { // Exception이 발생하면 복구 처리를 한다.
-						ezEmailUserAdminService.updateGroupAdd(groupAddr, mailAddr);
-						ezEmailUserAdminService.restoreUser(mailAddr);
-						result = "EMAIL_ERROR";
-						break;
-					}					
-				} else { // updateGroupDel 실패
-					// Group Email 주소에서 제거하는 것이 실패하면 해당 User를 복원시키고, Exception을 발생시킨다.
-					ezEmailUserAdminService.restoreUser(mailAddr);
-					
-					logger.debug("removing the user '" + mailAddr + "' from its group email failed.");
-					
-					result = "EMAIL_ERROR";
-					break;					
+
+			retire: {
+				// 1. james, jmocha
+				jamesRc = ezEmailUserAdminService.retireUser(mailAddr);
+				logger.debug("retireUser rc=" + jamesRc);
+
+				if (jamesRc != 0) { // jgw retireUser 실패
+					logger.debug("retireUser jgw fail!");
+					break retire;
 				}
+
+				// 2. group
 				// 사용자가 속한 공용배포그룹의 Group Email 주소 목록을 구한다.
-				distributionList = ezEmailUserAdminService.getUserDistributionList(mailAddr);
-				
-				for (String dist : distributionList) {
-					logger.debug("dist=" + dist);
-					
-					// 공용배포그룹의 Group Email 주소로부터 해당 User를 제거한다.
-					rc = ezEmailUserAdminService.updateGroupDel(dist, mailAddr);	
-					
-					logger.debug("updateGroupDel rc=" + rc);							
+				List<String> updateGroupDelList = ezEmailUserAdminService.getUserDistributionList(mailAddr); // distributionList
+				logger.debug("updateGroupDel distributionList=" + updateGroupDelList);
+
+				// 사용자가 속한 부서(본직, 겸직) id 목록을 구한다.
+				List<String> deptList = ezOrganAdminService.getRetireUserDeptList(cn[i], tenantID);
+				deptList.stream().forEach(dept -> updateGroupDelList.add(dept + "@" + domain));
+				logger.debug("updateGroupDel deptList=" + deptList);
+
+				// 해당 User가 속한 Group Email 주소에서 해당 User를 제거한다.
+				for (String groupAddr : updateGroupDelList) {
+					groupRc = ezEmailUserAdminService.updateGroupDel(groupAddr, mailAddr);
+					logger.debug("updateGroupDel groupAddr={}, rc={}", groupAddr, groupRc);
+
+					if (groupRc == -100) {
+						logger.debug("updateGroupDel jgw fail!");
+						break retire;
+					}
+
+					// updateGroupDel 성공(부모(그룹)나 자식(유저)을 찾지못해도 성공으로 봄.)
+					restoreGroupList.add(groupAddr);
 				}
-				
+
+				// 3. tbl
+				// 로컬 시스템에서 해당 User의 계정을 퇴직처리한다.
+				try {
+					ezOrganAdminService.retireEntry(cn[i], domain, tenantID, offset);
+					result = "OK";
+					// 아래 4.mail은 restore할 필요 없는지..??
+					// 4.mail의 restore & break 처리가 되면 result = "OK";는 4.mail 후로 옮겨져야 할 것.
+				} catch (Exception e) { // Exception이 발생하면 복구 처리를 한다.
+					break retire;
+				}
+
+				// 4. mail
 				// 사용자 정의 공용배포그룹 관련 테이블에서 user를 제거한다.
 				int delUserDL = ezEmailUserAdminService.deleteAllUserDistributionForMember(mailAddr, domain);
 				logger.debug("delUserDl=" + delUserDL); // 0 성공, -1 실패
-				
+
 				// 공유사서함 기능 사용 시 공유사서함의 공유자에서 해당 유저를 제외한다.
 				String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", tenantID);
 	    		
 	    		if (useSharedMailbox.equals("YES")) {
-	    			rc = ezEmailService.deleteUserFromAllSharedMailbox(cn[i], tenantID);
-	    			
+	    			int rc = ezEmailService.deleteUserFromAllSharedMailbox(cn[i], tenantID);
 	    			logger.debug("deleteUserFromAllSharedMailbox rc=" + rc);
 	    		}
 				// 메일 자동 전달, 자동분류 설정 삭제
-				rc = ezEmailUserAdminService.removeUserMailSetting(mailAddr);
+				int rc = ezEmailUserAdminService.removeUserMailSetting(mailAddr);
 				logger.debug("removeUserMailSetting rc=" + rc);
+
+				// 5. history
+				//사용자 변경 히스토리 테이블에 insert
+				UserChangeInfoVO userChangeInfoVO = new UserChangeInfoVO();
+				userChangeInfoVO.setUserId(cn[i]);
+				userChangeInfoVO.setTenantId(tenantID);
+				userChangeInfoVO.setUpdateType("retire");
+				userChangeInfoVO.setExecutorIp(ClientUtil.getClientIP(request));
+				userChangeInfoVO.setTargetType("user");
+
+				try {
+					ezSystemAdminService.insertUserChangeHist(userChangeInfoVO, userInfo);
+				} catch (Exception e) {
+					logger.error(e.getMessage(), e);
+				}
+			}
+			// retire end
+
+			// Group Email 주소에서 제거하는 것이 실패하면 해당 User를 복원시킨다.
+			if (groupRc == -100) { // updateGroupDel 실패
+				for (String groupAddr : restoreGroupList) {
+					ezEmailUserAdminService.updateGroupAdd(groupAddr, mailAddr);
+					logger.debug("restoreUser updateGroupAdd groupAddr=" + groupAddr);
+				}
 			}
 
-
-			//사용자 변경 히스토리 테이블에 insert
-			UserChangeInfoVO userChangeInfoVO = new UserChangeInfoVO();
-			userChangeInfoVO.setUserId(cn[i]);
-			userChangeInfoVO.setTenantId(tenantID);
-			userChangeInfoVO.setUpdateType("retire");
-			userChangeInfoVO.setExecutorIp(ClientUtil.getClientIP(request));
-			userChangeInfoVO.setTargetType("user");
-			
-			try {
-				ezSystemAdminService.insertUserChangeHist(userChangeInfoVO, userInfo);				
-			} catch (Exception e) {
-				logger.error(e.getMessage(), e);
+			if (jamesRc == 0 && !"OK".equals(result)) {
+				ezEmailUserAdminService.restoreUser(mailAddr);
+				logger.debug("removing the user '" + mailAddr + "' from its group email failed.");
 			}
-			
-			// dhlee - end
+
+			logger.debug("retireUser ended. result=" + result);
 		}
-		
-		logger.debug("retireUser ended. result=" + result);
-		
+
 		return result;
 	}
 	
@@ -2152,7 +2172,6 @@ public class EzOrganAdminController extends EzFileMngUtil {
 					result = preResult.toString();
 				}
         	} catch (Exception e) { // Exception이 발생하면 취소 처리를 한다.
-        		logger.error(e.getMessage(), e);
         		logger.error(e.getMessage(), e);
         		result = "EMAIL_ERROR";
         	}

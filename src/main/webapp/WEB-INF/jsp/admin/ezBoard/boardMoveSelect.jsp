@@ -33,6 +33,7 @@
 			var BoardID = " ";
 			var BoardGroupID = "";
 			var code = "";
+			var useGroupFlag = "";
 	
 			var	SelectedBoardID = "";
 			var	selectedBoardGroupID = "";	
@@ -61,6 +62,7 @@
 
 			    BoardID = RetValue[0]
 			    BoardGroupID = RetValue[1];
+				useGroupFlag = RetValue[2];
 			        
 				var xmlHTTP = createXMLHttpRequest();
 				xmlHTTP.open("GET", "/xml/organtree_config2.xml", false);
@@ -106,6 +108,12 @@
 				if( SelectedBoardID == BoardID )
 				{
 					var pUrl = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezBoard.t139' />") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezBoard.t139'/>") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
+					DivPopUpShow(330, 205, pUrl);
+					return;
+				}
+
+				if (useGroupFlag == "Y" && chkGroupBoardExist(SelectedBoardID) == "true") {
+					var pUrl = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezBoard.lyj14' />") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezBoard.lyj14'/>") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
 					DivPopUpShow(330, 205, pUrl);
 					return;
 				}
@@ -268,7 +276,27 @@
 		        	title3[0].style.textOverflow = 'ellipsis';
 		        	title3[0].style.overflow = 'hidden';
 		        } */
-			}			
+			}
+
+			function chkGroupBoardExist(selBoardID) {
+				var result = "";
+
+				$.ajax({
+					type: "POST",
+					dataType: "text",
+					async: false,
+					url: "/ezBoard/chkGroupBoardExist.do",
+					data: {
+						boardID: selBoardID,
+						type: "MOVE"
+					},
+					success: function (res) {
+						result = res;
+					}
+				});
+
+				return result;
+			}
 	    </script>
 	</head>
 	<body class="popup">

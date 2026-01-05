@@ -9,27 +9,32 @@
 		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
 		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<link rel="stylesheet" type="text/css" href="${util.addVer('/css/ezCabinet/cabinet.css')}">
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 	</head>
 	<body class="popup cabDetail">
 		<%-- <h1 id="fileFileH1"><spring:message code='ezCabinet.t108'/></h1> --%>
-		<div class="cabBttnDiv2" id="fileDivBttn">
-			<c:if test="${permission != 0}">
-				<a class="cabBtt"><span><spring:message code='ezCabinet.t78'/></span></a>
-				<a class="cabBtt"><span><spring:message code='ezCabinet.t46'/></span></a>
-			</c:if>
-			<a class="cabBtt"><span><spring:message code='ezCabinet.t111'/></span></a>
-			<%-- <a class="cabBttn"><span><spring:message code='ezCabinet.t66'/></span></a> --%>
-		</div>
-		
-		<c:if test="${permission != 0}">
-			<div class="cabBttnDiv2" id="fileModifyDivBttn" style="display: none;">
-				<a class="cabBtt"><span><spring:message code='ezCabinet.t14' /></span></a>
-				<a class="cabBtt"><span><spring:message code='ezCabinet.t167'/></span></a>
-				<a class="cabBtt"><span><spring:message code='ezCabinet.t15' /></span></a>
+		<div id="menu">
+			<div class="cabBttnDiv2" id="fileDivBttn">
+				<ul>
+					<c:if test="${permission != 0}">
+						<li class="cabBtt"><span><spring:message code='ezCabinet.t78'/></span></li>
+						<li class="cabBtt"><span><spring:message code='ezCabinet.t46'/></span></li>
+					</c:if>
+					<li class="cabBtt"><span><spring:message code='ezCabinet.t111'/></span></li>
+					<%-- <a class="cabBttn"><span><spring:message code='ezCabinet.t66'/></span></a> --%>
+				</ul>
 			</div>
-			<input type="file" id="fileBttn" multiple="multiple" style="display: none;">
-		</c:if>
-		
+			<c:if test="${permission != 0}">
+				<div class="cabBttnDiv2" id="fileModifyDivBttn" style="display: none;">
+					<ul>
+						<li class="cabBtt"><span><spring:message code='ezCabinet.t14' /></span></li>
+						<li class="cabBtt"><span><spring:message code='ezCabinet.t167'/></span></li>
+						<li class="cabBtt"><span><spring:message code='ezCabinet.t15' /></span></li>
+					</ul>
+				</div>
+				<input type="file" id="fileBttn" multiple="multiple" style="display: none;">
+			</c:if>
+		</div>
 		<div id="cabRlClose" class="cabClose"><ul><li><span></span></li></ul></div>
 		<div class="divInfo">
 			<table class="tblFileInf cabcolor">
@@ -106,10 +111,10 @@
 					window.addEventListener("beforeunload", function(e) {closeAllPopups();}, false);
 					var cabBttnElmt         = document.getElementById("fileDivBttn");
 					var cabBttnModify       = document.getElementById("fileModifyDivBttn");
-					var listBttns           = cabBttnElmt.children;
+					var listBttns           = cabBttnElmt.querySelectorAll('li');
 					
 					if (cabBttnModify) {
-						var listModifyBttns        = cabBttnModify.children;
+						var listModifyBttns        = cabBttnModify.querySelectorAll('li');
 						listBttns[0].onclick       = function(e) {fileModify();};
 						listBttns[1].onclick       = function(e) {fileDelete();};
 						listBttns[2].onclick       = function(e) {filePrint();}

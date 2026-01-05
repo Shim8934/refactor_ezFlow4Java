@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
+import egovframework.ezEKP.ezBoard.vo.BoardListHeaderVO;
 import egovframework.ezEKP.ezCommon.vo.ApprovPWDVO;
 import egovframework.ezEKP.ezCommon.vo.CompanyInfoVO;
 import egovframework.ezEKP.ezCommon.vo.TblColumnsInfoVO;
@@ -3410,6 +3411,7 @@ public class EzCommonDAO extends EgovAbstractDAO {
     	
         return (String) select("EzCommonDAO.getMobileLang", map);
 	}
+
 	public void createJournalListLang() {
 		try {
 			select("EzCommonDAO.checkJournallListLang");
@@ -3539,6 +3541,24 @@ public class EzCommonDAO extends EgovAbstractDAO {
 				update("EzCommonDAO.updateMobileMenuResourceIdTheme");
 				update("EzCommonDAO.updateMobileMenuScheduleIdTheme");
 			}
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+		}
+	}
+	public String checkAttitudeCustomCheckbox()  throws Exception {
+		String result = "";
+		try {
+			result = (String) select("EzCommonDAO.checkAttitudeCustomCheckbox");
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+		}
+		return result;
+	}
+	public void updateAttitudeCustomCheckbox(Map<String, Object> map)  throws Exception {
+		try {
+			logger.debug("checkAttitudeCustomCheckbox insert wrong Data. update data...");
+			update("EzCommonDAO.updateAttitudeCustomCheckbox", map);
+			update("EzCommonDAO.updateAttitudeCustomCheckbox2", map);
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		}
@@ -3755,4 +3775,194 @@ public class EzCommonDAO extends EgovAbstractDAO {
 		logger.debug("If TBL_SAML_REQUEST_ID doesn't exist, creating the table...");
 		update("EzCommonDAO.createTblSamlRequestId");
 	}
+	
+    // 2025-06-23 조수빈 - 인도네시아어 대응 컬럼 추가 시작
+	/*
+		init data table(TBL_BOARD_ITEM_LISTOPTION, TBL_CIRCULAR_LISTOPTION, TBL_CODELIST, TBL_CODELIST, TBL_LISTOPTION)
+		위 테이블들은 추후 초기값이 정해지면 별도의 update문이 필요할 것으로 보임.
+		그 외의 테이블들(TBL_BOARD_ITEM_LISTOPTION_BOAR, TBL_BOARD_MYBOARDS, TBL_BOARD_MYTREE, TBL_BOARD_TREECACHE, TBL_BOARD_BOARDINFO)
+		사용자의 입력 값들이기 때문에 영어(2) 컬럼 값을 복사함.
+	*/
+	public void addColumnBoardItemListOptionForIndonesian() {
+		try {
+			select("EzCommonDAO.checkBoardItemListOptionForIndonesian");
+		} catch (Exception e) {
+			logger.debug("TBL_BOARD_ITEM_LISTOPTION NAME6 column doesn't exist. creating the column...");
+
+			update("EzCommonDAO.addColumnBoardItemListOptionForIndonesian");
+			update("EzCommonDAO.updateDataBoardItemListOptionForIndonesian");
+		}
+	}
+
+	public void addColumnBoardItemListOptionBoarForIndonesian() {
+		try {
+			select("EzCommonDAO.checkBoardItemListOptionBoarForIndonesian");
+		} catch (Exception e) {
+			logger.debug("TBL_BOARD_ITEM_LISTOPTION_BOAR NAME6 column doesn't exist. creating the column...");
+
+			update("EzCommonDAO.addColumnBoardItemListOptionBoarForIndonesian");
+			update("EzCommonDAO.updateDataBoardItemListOptionBoarForIndonesian");
+		}
+	}
+
+	public void addColumnBoardMyBoardsForIndonesian() {
+		try {
+			select("EzCommonDAO.checkBoardMyBoardsForIndonesian");
+		} catch (Exception e) {
+			logger.debug("TBL_BOARD_MYBOARDS BOARDNAME6 column doesn't exist. creating the column...");
+			
+			update("EzCommonDAO.addColumnBoardMyBoardsForIndonesian");
+			update("EzCommonDAO.updateDataBoardMyBoardsForIndonesian");
+		}
+	}
+
+	public void addColumnBoardMyTreeForIndonesian() {
+		try {
+			select("EzCommonDAO.checkBoardMyTreeForIndonesian");
+		} catch (Exception e) {
+			logger.debug("TBL_BOARD_MYTREE TREENAME6 column doesn't exist. creating the column...");
+			
+			update("EzCommonDAO.addColumnBoardMyTreeForIndonesian");
+			update("EzCommonDAO.updateDataBoardMyTreeForIndonesian");
+		}
+	}
+
+	public void addColumnBoardTreeCacheForIndonesian() {
+		try {
+			select("EzCommonDAO.checkBoardTreeCacheForIndonesian");
+		} catch (Exception e) {
+			logger.debug("TBL_BOARD_TREECACHE RESULT6 column doesn't exist. creating the column...");
+			
+			update("EzCommonDAO.addColumnBoardTreeCacheForIndonesian");
+			update("EzCommonDAO.updateDataBoardTreeCacheForIndonesian");
+		}
+	}
+
+	public void addColumnCircularListOptionForIndonesian() {
+		try {
+			select("EzCommonDAO.checkCircularListOptionForIndonesian");
+		} catch (Exception e) {
+			logger.debug("TBL_CIRCULAR_LISTOPTION NAME6 column doesn't exist. creating the column...");
+			
+			update("EzCommonDAO.addColumnCircularListOptionForIndonesian");
+			update("EzCommonDAO.updateDataCircularListOptionForIndonesian");
+		}
+	}
+
+	public void addColumnCodeListForIndonesian() {
+		try {
+			select("EzCommonDAO.checkCodeListForIndonesian");
+		} catch (Exception e) {
+			logger.debug("TBL_CODELIST NAME6 column doesn't exist. creating the column...");
+			
+			update("EzCommonDAO.addColumnCodeListForIndonesian");
+			update("EzCommonDAO.updateDataCodeListForIndonesian");
+		}
+	}
+
+	public void addColumnListInfoForIndonesian() {
+		try {
+			select("EzCommonDAO.checkListInfoForIndonesian");
+		} catch (Exception e) {
+			logger.debug("TBL_LISTINFO NAME6 column doesn't exist. creating the column...");
+			
+			update("EzCommonDAO.addColumnListInfoForIndonesian");
+			update("EzCommonDAO.updateDataListInfoForIndonesian");
+		}
+	}
+
+	public void addColumnListOptionForIndonesian() {
+		try {
+			select("EzCommonDAO.checkListOptionForIndonesian");
+		} catch (Exception e) {
+			logger.debug("TBL_LISTOPTION NAME6 column doesn't exist. creating the column...");
+			
+			update("EzCommonDAO.addColumnListOptionForIndonesian");
+			update("EzCommonDAO.updateDataListOptionForIndonesian");
+		}
+	}
+
+	public void addColumnBoardInfoForIndonesian() {
+		try {
+			select("EzCommonDAO.checkBoardInfoForIndonesian");
+		} catch (Exception e) {
+			logger.debug("TBL_BOARD_BOARDINFO BOARDNAME6 column doesn't exist. creating the column...");
+			
+			update("EzCommonDAO.addColumnBoardInfoForIndonesian");
+			update("EzCommonDAO.updateDataBoardInfoForIndonesian");
+		}
+	}
+	// 2025-06-23 조수빈 - 인도네시아어 대응 컬럼 추가 종료
+	
+	// 2025-07-02 조수빈 - TBL_TENANT_CONFIG 테이블에 인도네시아어 설정값 유무 확인 메소드
+	public int countLangConfigForIndonesian(int tenantId) {
+		return (int) select("EzCommonDAO.countLangConfigForIndonesian", tenantId);
+	}
+
+	public void insertLangConfigForIndonesian(int tenantId) {
+		insert("EzCommonDAO.insertLangConfigForIndonesian", tenantId);
+	}
+
+	public void addBoardExtColumnForMultiLang() {
+		try {
+			select("EzCommonDAO.checkBoardExtColumnForMultiLang");
+		} catch (Exception e) {
+			logger.debug("TBL_BOARD_BOARDINFO_ATTRIBUTE COLNAME3 column doesn't exist. creating the column...");
+			
+			update("EzCommonDAO.addBoardExtColumnForMultiLang");
+			update("EzCommonDAO.updateDataBoardExtColumnForMultiLang");
+		}
+	}
+
+	public boolean isChangedToIndi() {
+		int cnt = (int) select("EzCommonDAO.isChangedToIndi");
+		
+		return cnt > 0 ? false : true;
+	}
+
+	public void updateTblCircularListoption(BoardListHeaderVO vo) {
+		update("EzCommonDAO.updateTblCircularListoption", vo);
+	}
+
+	public void updateTblCodelist(BoardListHeaderVO vo) {
+		update("EzCommonDAO.updateTblCodelist", vo);
+	}
+
+	public void updateTblListinfo(BoardListHeaderVO vo) {
+		update("EzCommonDAO.updateTblListinfo", vo);
+	}
+
+	public void updateTblListoption(BoardListHeaderVO vo) {
+		update("EzCommonDAO.updateTblListoption", vo);
+	}
+
+	public void updateTblBoardItemListoption(BoardListHeaderVO vo) {
+		update("EzCommonDAO.updateTblBoardItemListoption", vo);
+	}
+	
+	public void updateTblListoption2(Map<String, String> map) {
+		update("EzCommonDAO.updateTblListoption2", map);
+	}
+
+    /* 2025-08-05 김대현 - 대용량 첨부파일 컬럼 추가 */
+    public void alterJmochaBigAttachDownLimit(Map<String, Object> map) {
+        try {
+            select("EzCommonDAO.checkBigAttachInfo" ,map);
+        } catch (Exception e) {
+            logger.debug("JMOCHA_BIGATTACH_DOWN_LIMIT infoList doesn't exist. creating the column...");
+            update("EzCommonDAO.addBigAttachInfo",map);
+        }
+    }
+
+	/* 2025-07-07 강동주 - 전자결재 백단에서 결재 시 한글 파일 핸들링 오류 발생한 문서 테이블 */
+	public void createApproveErrorInfoTable() {
+		try {
+			select("EzCommonDAO.checkApproveErrorInfoTable");
+		} catch (Exception e) {
+			logger.debug("TBL_APPROVE_ERROR_INFO doesn't exist. creating the table...");
+
+			update("EzCommonDAO.createApproveErrorInfoTable");
+		}
+	}
+	
 }

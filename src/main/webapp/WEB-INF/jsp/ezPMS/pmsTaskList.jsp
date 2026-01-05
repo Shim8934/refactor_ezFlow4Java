@@ -9,7 +9,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title><spring:message code='ezPMS.t155' /></title>
-<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />
+<%--<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css" />--%>
 		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 <link rel="stylesheet" href="${util.addVer('/css/ezPMS/default/style.css')}" type="text/css" />
 <link rel="stylesheet" href="${util.addVer('/css/previewmail.css')}" type="text/css" />
@@ -80,7 +80,7 @@ input[name='boardCheckbox']{margin: 0px; padding: 0px; width: 13px; height: 13px
 					<tr id="BoardList_TH">
 						<th class="checkboxTh" id="BoardList_TH_0" style="text-align: center; overflow: hidden; white-space: nowrap; cursor: pointer; width:20px;"
 							class="h4_center" bgcolor="#CCCCCC">
-							<input type="checkbox" id="HeaderAllCheckBox" name="boardCheckbox" id="HeaderAllCheckBox" onchange="selectedAllTR(this);">
+							<div class='custom_checkbox'><input type="checkbox" id="HeaderAllCheckBox" name="boardCheckbox" id="HeaderAllCheckBox" onchange="selectedAllTR(this);"></div>
 						</th>
 						<th id="BoardList_TH_1" onclick="setListOrder(this)" order="UPPER_GROUP_NAME" class="h5_center upperGroupNameTh"><spring:message code='ezPMS.t42' /></th>
 						<c:choose>

@@ -7,10 +7,18 @@
 private static String makeMasterCheckbox(Finder disableItemFinder, int mainType, int platform, int subTypeCount) {
 	String id = "master_" + mainType + platform;
 	java.lang.StringBuilder tagBuilder = new StringBuilder("<div><label for=\"").append(id).append("\"></label>")
-			.append("<input id=\"").append(id).append("\" class=\"master\" type=\"checkbox\" data-main=\"").append(mainType).append("\" data-platform=\"").append(platform);
+			.append("<div class=\"custom_checkbox\"><input id=\"").append(id);
 
 	int countWithoutSubType = disableItemFinder.getCountWithoutSubType(mainType, platform);
 
+	if (countWithoutSubType < subTypeCount && countWithoutSubType > 0) {
+		tagBuilder.append("\" class=\"master dashDiv\" type=\"checkbox\" data-main=\"");
+	} else {
+		tagBuilder.append("\" class=\"master\" type=\"checkbox\" data-main=\"");
+	}
+	
+	tagBuilder.append(mainType).append("\" data-platform=\"").append(platform);
+	
 	if (countWithoutSubType < subTypeCount) {
 		tagBuilder.append("\" checked=\" ");
 
@@ -18,14 +26,20 @@ private static String makeMasterCheckbox(Finder disableItemFinder, int mainType,
 			tagBuilder.append("\" indeterminate=\" ");
 		}
 	}
-
-	return tagBuilder.append("\" /></div>").toString();
+	
+	tagBuilder.append("\" />");
+	
+	if (countWithoutSubType < subTypeCount && countWithoutSubType > 0) {
+		tagBuilder.append("<span class=\"dash\"></span>");
+	}
+	
+	return tagBuilder.append("</div></div>").toString();
 }
 
 private static String makeCheckbox(Finder disableItemFinder, int mainType, int subType, int platform) {
 	String id = "" + mainType + subType + platform;
 	java.lang.StringBuilder tagBuilder = new StringBuilder("<div><label for=\"").append(id).append("\"></label>")
-			.append("<input id=\"").append(id)
+			.append("<div class=\"custom_checkbox\"><input id=\"").append(id)
 			.append("\" type=\"checkbox\" data-main=\"").append(mainType)
 			.append("\" data-sub=\"").append(subType)
 			.append("\" data-platform=\"").append(platform);
@@ -34,7 +48,7 @@ private static String makeCheckbox(Finder disableItemFinder, int mainType, int s
 		tagBuilder.append("\" checked=\" ");
 	}
 
-	return tagBuilder.append("\" /></div>").toString();
+	return tagBuilder.append("\" /></div></div>").toString();
 }%>
 <% Finder disableItemFinder = (Finder) request.getAttribute("disableItemFinder"); %>
 <!DOCTYPE html>
@@ -499,6 +513,17 @@ tr[data-target='.poll'], tr.poll { display: none; }
 				var checkedCount = document.querySelectorAll(childChckedSelector).length;
 				masterCheckbox.checked = checkedCount > 0;
 				masterCheckbox.indeterminate = masterCheckbox.checked && checkedCount < childCount;
+				if (masterCheckbox.checked && checkedCount < childCount) {
+					if (masterCheckbox.closest("div").querySelector(".dash") == null) {
+						var dashSpan = document.createElement("span");
+						dashSpan.classList.add("dash");
+						masterCheckbox.closest("div").appendChild(dashSpan);
+						masterCheckbox.classList.add("dashDiv");
+					}
+				} else {
+					masterCheckbox.classList.remove("dashDiv");
+					masterCheckbox.closest("div").querySelector(".dash").remove();
+				}
 			};
 
 			childCheckboxes.forEach(function(el) { el.addEventListener("change", childChangeListener); });
@@ -515,7 +540,15 @@ tr[data-target='.poll'], tr.poll { display: none; }
 					}, 0);
 				});
 			} else {
-				masterCheckbox.addEventListener("change", function(event) { childCheckboxes.forEach(function(el) { el.checked = masterCheckbox.checked; }); });
+				masterCheckbox.addEventListener("change", function(event) {
+					if (masterCheckbox.closest("div").querySelector(".dash") != null) {
+						masterCheckbox.classList.remove("dashDiv");
+						masterCheckbox.closest("div").querySelector(".dash").remove();
+					}
+					childCheckboxes.forEach(function(el) {
+						el.checked = masterCheckbox.checked; 
+					}); 
+				});
 			}
 
 		});

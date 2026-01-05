@@ -23,6 +23,10 @@
 	        <td height="20">
 	            <div id="menu">
 	                <ul>
+						<c:if test="${not empty type && type eq 'appr'}">
+						<li class="important off"><span onclick="setApproval()"><spring:message code='email.appr.approval' /></span></li> <% // 발송승인 %>
+						<li><span onclick="setReject()"><spring:message code='email.appr.reject' /></span></li> <% // 발송거부 %>
+						</c:if>
 	                </ul>
 	            </div>
 	            <div id="close"><ul><li><span onClick="OnBtnClose()"></span></li></ul></div>	
@@ -133,6 +137,8 @@
 	        </td>
 	    </tr>
 	</table>
+	<div style="width:100%;height:100%;position:absolute;top:0;left:0;z-index:1000;background:none rgba(0,0,0,0.5);display:none;" id="progressPanel">&nbsp;</div>
+	<span class="loading_layer" style="z-index:6000;position:absolute;top:50%;left:45%;display:none;" id="loadingLayer"><span class="right"><img src="/images/loading/loading.gif" width="24" height="24" ><spring:message code='ezEmail.t680' /></span></span>
 	<form name="form1" action="mailReadContent.do" method="post" target="message" >
 		<input  type="hidden" id="iptFolderPath"  name="iptFolderPath" value="">
 	    <input  type="hidden" id="iptURL"  name="iptURL" value="">
@@ -160,6 +166,7 @@
 	<script type="text/javascript" src="${util.addVer('/js/Common.js')}"></script>
 	<script type="text/javascript">	
 	    var g_paramURL = "${url}";
+	    var g_encryptedUrl = "${encryptedUrl}";
 		var g_expath = "exchange";
 		var g_servername = ""; 
 		var g_userID = "${ userinfo.EmailID }";
@@ -319,7 +326,7 @@
 	        	pURI += "&shareId=" + encodeURIComponent(shareId);
 	    	}
 	        
-	        var newwin = GetOpenWindow(pURI, "", 890, 840, "yes");
+	        var newwin = GetOpenWindow(pURI, "", 1200, 840, "yes");
 	        newwin.focus();
 	    }
 	    
@@ -388,6 +395,107 @@
                 $("#message").outerHeight($("#message").outerHeight() - heightForChange );
             }
         }
+		
+		function setApproval(){
+			if (confirm("<spring:message code='email.appr.pending.approve.confirm' />")) {
+				showProgress();
+				var allHandsFlag = new URLSearchParams(window.location.search).get("type");
+				var pUrl;
+				if (allHandsFlag == "allHands") {
+					pUrl = "/admin/ezEmail/appr/allHands/setApproval.do";
+				} else if (allHandsFlag == "appr") {
+					pUrl = "/ezEmail/appr/setApproval.do";
+				}
+				$.ajax({
+					type	: "POST",
+					contentType	: "application/json",
+					data	: JSON.stringify({hrefArray: [g_encryptedUrl]}),
+					url		: pUrl,
+					async	: true,
+					success	: function(result) {
+						hideProgress();
+						if ("OK" == result) {
+							alert("<spring:message code='email.appr.pending.approve.complete' />");
+						} else if ("DONE" == result) {
+							alert("<spring:message code='email.appr.pending.done' />");
+						} else {
+							alert("<spring:message code='ezEmail.ls013' />");
+						}
+						try{
+							window.opener.reloadPage();
+						} catch (e) { console.log(e);
+						} finally { window.close();
+						}
+					},
+					error	: function(error) {
+						console.log(error);
+						alert("<spring:message code='ezEmail.ls013' />");
+						try{
+							window.opener.reloadPage();
+						} catch (e) { console.log(e);
+						} finally { window.close();
+						}
+					}
+				});
+			}
+		}
+		var appr_reject_arg = new Object();
+		function setReject() {
+			appr_reject_arg.complete = setRejectAction;
+			GetOpenWindow("/ezEmail/appr/setReject.do", "setReject", 500, 275, "no");
+		}
+
+		function setRejectAction(memo) {
+			showProgress();
+			var allHandsFlag = new URLSearchParams(window.location.search).get("type");
+			var pUrl;
+			if (allHandsFlag == "allHands") {
+				pUrl = "/admin/ezEmail/appr/allHands/setRejectAction.do";
+			} else if (allHandsFlag == "appr") {
+				pUrl = "/ezEmail/appr/setRejectAction.do";
+			}
+			$.ajax({
+				type	: "POST",
+				contentType	: "application/json",
+				data	: JSON.stringify({hrefArray: [g_encryptedUrl], memo: memo}),
+				url		: pUrl,
+				async	: true,
+				success	: function(result) {
+					hideProgress();
+					if ("OK" == result) {
+						alert("<spring:message code='email.appr.pending.reject.complete' />");
+					} else if ("DONE" == result) {
+						alert("<spring:message code='email.appr.pending.done' />");
+					} else {
+						alert("<spring:message code='ezEmail.ls013' />");
+					}
+					try{
+						window.opener.reloadPage();
+					} catch (e) { console.log(e);
+					} finally { window.close();
+					}
+				},
+				error	: function(error) {
+					console.log(error);
+					alert("<spring:message code='ezEmail.ls013' />");
+					try{
+						window.opener.reloadPage();
+					} catch (e) { console.log(e);
+					} finally { window.close();
+					}
+				}
+			});
+		}
+		
+		function showProgress() {
+			document.getElementById("progressPanel").style.display = "";
+			document.getElementById("loadingLayer").style.display = "";
+		}
+
+		function hideProgress() {
+			document.getElementById("progressPanel").style.display = "none";
+			document.getElementById("loadingLayer").style.display = "none";
+		}
     </script>
 </body>
 </html>

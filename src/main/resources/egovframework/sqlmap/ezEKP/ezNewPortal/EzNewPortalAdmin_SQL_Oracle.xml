@@ -73,20 +73,20 @@
 		</isEqual>
 		<isEqual property="lang" compareValue="4">
 		<![CDATA[
-				B.theme_name2 AS themename,
+				B.theme_name4 AS themename,
 				B.theme_content4 AS themecontent,
 		]]>
 		</isEqual>
 		<isEqual property="lang" compareValue="5">
 		<![CDATA[
-				B.theme_name2 AS themename,
-				B.theme_content4 AS themecontent,
+				B.theme_name5 AS themename,
+				B.theme_content5 AS themecontent,
 		]]>
 		</isEqual>
 		<isEqual property="lang" compareValue="6">
 		<![CDATA[
-				B.theme_name2 AS themename,
-				B.theme_content4 AS themecontent,
+				B.theme_name6 AS themename,
+				B.theme_content6 AS themecontent,
 		]]>
 		</isEqual>
 		<![CDATA[
@@ -157,16 +157,35 @@
 				TBL_PORTAL_MENU B
 			ON
 				A.menu_id = B.menu_id
-			JOIN
-				TBL_PORTAL_MENU_NAME C
+			JOIN (
+				    SELECT
+							menu_id,
+							menu_name
+					FROM (
+						SELECT
+								menu_id,
+								menu_name,
+								ROW_NUMBER() OVER (
+									PARTITION BY menu_id
+									ORDER BY CASE
+										WHEN menu_lang = #menuLang# THEN 0
+										WHEN menu_lang = #primaryLang# THEN 1
+										ELSE 2
+									END
+							   ) AS rn
+						FROM
+								tbl_portal_menu_name
+						WHERE
+								menu_lang IN (#menuLang#, #primaryLang#, 1)
+						AND
+								company_id = #companyId#
+						AND
+								tenant_id = #tenantId#
+				    ) t
+				    WHERE rn = 1
+				) C
 			ON
-				A.tenant_id = C.tenant_id
-			AND
-				A.company_id = C.company_id
-			AND
 				A.menu_id = C.menu_id
-			AND 
-				C.menu_lang = #menuLang#
 			WHERE
 				A.tenant_id = #tenantId#
 			AND
@@ -205,16 +224,35 @@
 				TBL_PORTAL_MENU B
 			ON
 				A.menu_id = B.menu_id
-			JOIN
-				TBL_PORTAL_MENU_NAME C
+			JOIN (
+					SELECT
+							menu_name,
+							menu_id
+					FROM (
+							SELECT
+									menu_name,
+									menu_id,
+									ROW_NUMBER() OVER (
+										PARTITION BY menu_id
+											ORDER BY CASE
+												WHEN menu_lang = #menuLang# THEN 0
+												WHEN menu_lang = #primaryLang# THEN 1
+												ELSE 2
+											END
+									) AS rn
+							FROM
+									tbl_portal_menu_name
+							WHERE
+									menu_lang IN (#menuLang#, #primaryLang#, 1)
+							AND
+									company_id = #companyId#
+							AND
+									tenant_id = #tenantId#
+				    ) t
+				    WHERE rn = 1
+				) C
 			ON
-				A.tenant_id = C.tenant_id
-			AND
-				A.company_id = C.company_id
-			AND
-				A.menu_id = C.menu_id
-			AND 
-				C.menu_lang = #menuLang#
+			        A.menu_id = C.menu_id
 			WHERE
 				A.tenant_id = #tenantId#
 			AND
@@ -263,10 +301,7 @@
 			</isEqual>
 			<![CDATA[
 			ORDER BY
-				CASE A.menu_lang WHEN B.company_lang
-					THEN 1
-					ELSE 2
-				END
+				A.menu_lang
 			]]>
 	</select>
 	
@@ -589,6 +624,11 @@
 					THEN A.Boardname
 					ELSE A.Boardname3
 				END as boardname3,
+				CASE
+					WHEN (A.Boardname6 = '' OR A.Boardname6 IS NULL)
+					THEN A.Boardname
+					ELSE A.Boardname6
+				END as boardname6,
 				A.treevieworder as sort,
 				B.parentboardid as topParent,
 				A.boardcolor,

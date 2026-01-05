@@ -240,6 +240,7 @@ public class EzNewPortalServiceImpl extends EgovAbstractServiceImpl implements E
 		map.put("userId", userId);
 		map.put("deptId", "");
 		map.put("mobile", type);
+		map.put("primaryLang", ezCommonService.getTenantConfig("PrimaryLang", tenantId));
 		
 		/**
 		 * 2018-11-21 신규작성
@@ -598,6 +599,7 @@ public class EzNewPortalServiceImpl extends EgovAbstractServiceImpl implements E
 		map.put("themeId", themeId);
 		map.put("portletLang", portletLang);
 		map.put("config", config);
+		map.put("primaryLang", ezCommonService.getTenantConfig("PrimaryLang", tenantId));
 		
 		String lang = commonUtil.getMultiData(portletLang, tenantId);
 		map.put("lang", lang);
@@ -2107,7 +2109,7 @@ public class EzNewPortalServiceImpl extends EgovAbstractServiceImpl implements E
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public JSONObject getApprovalList(String userId, String companyId, int tenantId, String offset, String type, String approvalFlag, String lang) throws Exception {
+	public JSONObject getApprovalList(String userId, String companyId, int tenantId, String offset, String type, String approvalFlag, String lang, String primary) throws Exception {
 		logger.debug("getApprovalList started.");
 		logger.debug("userId = " + userId + " || companyId = " + companyId + " || tenantId = " + tenantId + " || type = " + type);
 		
@@ -2168,6 +2170,7 @@ public class EzNewPortalServiceImpl extends EgovAbstractServiceImpl implements E
 			break;
 		case "draft":
 			//기안
+			map.put("lang", primary.equals("1") ? "" : "2");
 			list = ezNewPortalDAO.getApprovalDraftList(map);
 			result.put("list", list);
 			
@@ -3040,7 +3043,7 @@ public class EzNewPortalServiceImpl extends EgovAbstractServiceImpl implements E
 	}
 	
 	@Override
-	public List<PortletInfoVO> getPortletList(String companyId, int tenantId, int menuLang, String type) {
+	public List<PortletInfoVO> getPortletList(String companyId, int tenantId, int menuLang, String type) throws Exception {
 		logger.debug("getPortletList started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -3048,6 +3051,7 @@ public class EzNewPortalServiceImpl extends EgovAbstractServiceImpl implements E
 		map.put("tenantId", tenantId);
 		map.put("menuLang", menuLang);
 		map.put("portletType", type);
+		map.put("primaryLang", ezCommonService.getTenantConfig("PrimaryLang", tenantId));
 		
 		List<PortletInfoVO> portetList = ezNewPortalDAO.getPortletList(map);
 		
@@ -3330,13 +3334,14 @@ public class EzNewPortalServiceImpl extends EgovAbstractServiceImpl implements E
 		return comMenuList;
 	};
 
-	public String isUseEzWorkspace(String companyId, int tenantId, String userId, String deptId) throws Exception {
+	public String isUseEzWorkspace(String companyId, int tenantId, String userId, String deptId, String type) throws Exception {
 		logger.debug("isUseEzWorkspace started.");
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("tenantId", tenantId);
 		map.put("companyId", companyId);
 		map.put("userId", userId);
+		map.put("type", type);
 		
 		String result = ezNewPortalDAO.isUseEzWorkspace(map);
 		
@@ -4075,8 +4080,9 @@ public class EzNewPortalServiceImpl extends EgovAbstractServiceImpl implements E
 			//url = "jdbc:sqlserver://" + ip + ":" + port + ";DatabaseName=" + database + ";trustServerCertificate=true;encrypt=true";
 			url = String.format("jdbc:sqlserver://%s:%s;DatabaseName=%s;trustServerCertificate=true;encrypt=true", ip, port, dataBase);
 		} else if ( type.equalsIgnoreCase("oracle") ) {
-			//url = "jdbc:oracle:thin:@" + ip + ":" + port + "/" + database;
-			url = String.format("jdbc:oracle:thin:@%s:%s/%s", ip, port, dataBase);
+			//url = "jdbc:oracle:thin:@//" + ip + ":" + port + "/" + database;
+            //url = "jdbc:oracle:thin:@" + ip + ":" + port + ":" + database;
+			url = String.format("jdbc:oracle:thin:@//%s:%s/%s", ip, port, dataBase);
 		} else {
 			//url = "jdbc:mariadb://" + ip + ":" + port + "/" + database;
 			url = String.format("jdbc:mariadb://%s:%s/%s", ip, port, dataBase);
@@ -4085,7 +4091,9 @@ public class EzNewPortalServiceImpl extends EgovAbstractServiceImpl implements E
 		String pwd = userPw;
 		
 		Connection conn = null;
-		
+
+        DriverManager.setLoginTimeout(5);
+        
 		Class.forName(driverClassName);
 		
 		conn = DriverManager.getConnection(url, schema, pwd);		

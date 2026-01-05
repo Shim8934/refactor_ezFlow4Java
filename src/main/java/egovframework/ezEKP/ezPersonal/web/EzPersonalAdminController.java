@@ -336,6 +336,7 @@ public class EzPersonalAdminController extends EzFileMngUtil {
 
 		LoginVO auth = commonUtil.checkAdmin(loginCookie);
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String lang = auth.getLang();
 		
 		if (auth == null) {
 			return "cmm/error/adminDenied";
@@ -365,6 +366,16 @@ public class EzPersonalAdminController extends EzFileMngUtil {
 		model.addAttribute("list", resultList);
 		model.addAttribute("companyId", companyId);
 		model.addAttribute("userPrimanryLang", userLang);
+		model.addAttribute("useJapanese", ezCommonService.getTenantConfig("useJapanese", auth.getTenantId()));
+		model.addAttribute("useChinese", ezCommonService.getTenantConfig("useChinese", auth.getTenantId()));
+		model.addAttribute("useVietnamese", ezCommonService.getTenantConfig("useVietnamese", auth.getTenantId()));
+		model.addAttribute("useIndonesian", ezCommonService.getTenantConfig("useIndonesian", auth.getTenantId()));
+		
+		model.addAttribute("lang_primary", ezCommonService.getTenantConfig("LangPrimary" + lang, auth.getTenantId()));
+		model.addAttribute("lang_secondary", ezCommonService.getTenantConfig("LangSecondary" + lang, auth.getTenantId()));
+		model.addAttribute("lang_tertiary", ezCommonService.getTenantConfig("LangTertiary" + lang, auth.getTenantId()));
+		model.addAttribute("lang_quaternary", ezCommonService.getTenantConfig("LangQuaternary" + lang, auth.getTenantId()));
+		model.addAttribute("lang_Senary", ezCommonService.getTenantConfig("LangSenary" + lang, auth.getTenantId()));
 
 		logger.debug("manageQuickLink ended");
 		return "admin/ezPersonal/personalManageQuickLink";
@@ -411,6 +422,7 @@ public class EzPersonalAdminController extends EzFileMngUtil {
 		logger.debug("addQuickLink started");
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String lang = userInfo.getLang();
 		String mode = "new";
 		
 		if (request.getParameter("mode") != null) {
@@ -423,12 +435,6 @@ public class EzPersonalAdminController extends EzFileMngUtil {
 		json.put("primary", primaryLang);
 		json.put("mode", mode);
 		json.put("lang", userInfo.getLang());
-		
-		// 2023-11-23 조소정 - 관리자 > 포탈 > 빠른링크 > 일본어, 중국어 사용 여부에 따라 링크 이름 표출/미표출 구현
-		json.put("useJapanese", ezCommonService.getTenantConfig("useJapanese", userInfo.getTenantId()));
-		json.put("useChinese", ezCommonService.getTenantConfig("useChinese", userInfo.getTenantId()));
-		json.put("useVietnamese", ezCommonService.getTenantConfig("useVietnamese", userInfo.getTenantId()));
-		json.put("useIndonesian", ezCommonService.getTenantConfig("useIndonesian", userInfo.getTenantId()));
 
 		logger.debug("addQuickLink ended");
 		return json;

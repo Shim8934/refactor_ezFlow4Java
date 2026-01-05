@@ -114,6 +114,7 @@
         	    resultStr = resultStr.replace(/<p .*?>/gi, "<p>");
         	    resultStr = resultStr.replace(/<br .*?>/gi, "<br>");
         	    resultStr = resultStr.replace(/<hr .*?>/gi, "<hr>");
+        	    resultStr = resultStr.replace(/<p><br>/gi, "\r\n"); // <p><br></p>인 경우 두줄되는 현상. 두번변환을 한번변환으로 변경.
         	    resultStr = resultStr.replace(/<p>/gi, "\r\n");
         	    resultStr = resultStr.replace(/<br>/gi, "\r\n");
         	    resultStr = resultStr.replace(/<hr>/gi, "\r\n----------------------------------------------------------------------");
@@ -122,6 +123,7 @@
         	    resultStr = resultStr.replace(/<script .*?>/gi, "<script>");
         	    resultStr = resultStr.replace(/<script>.*?<\/script>/gi, "");
         	    resultStr = resultStr.replace(/<.*?>/gi, "");
+        	    resultStr = resultStr.replace(/^\r\n/gi, ""); // \r\n로 변환 시 두줄되는 현상. 첫 줄바꿈 제거. (<p><p>는 두줄이지만, \n\n은 세줄이다.)
         	    
         	    var tempTextarea = document.createElement("textarea");
         	    tempTextarea.innerHTML = resultStr;

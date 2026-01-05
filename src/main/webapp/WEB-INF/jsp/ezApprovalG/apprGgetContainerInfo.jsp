@@ -361,7 +361,7 @@
 		            
 		            var pAlertContent = "";
 		            
-		            if (userLang == "1" || userLang == "3") {
+		            if (userLang == "1" || userLang == "3" || userLang == "6") {
 			            pAlertContent = arr_userinfo[2] + "<spring:message code='ezApprovalG.t1721'/>" + "<br>" + tmpStartDate + "~" + tmpEndDate + "<br>" + "<spring:message code='ezApprovalG.t1723'/>" + "<br>" + " <spring:message code='ezApprovalG.t1724'/>";
 		            }
 		            else if (userLang == "2") {
@@ -382,7 +382,7 @@
 		        		
 			            var pAlertContent = "";
 			            
-			            if (userLang == "1" || userLang == "3") {
+			            if (userLang == "1" || userLang == "3" || userLang == "6") {
 				            pAlertContent = arr_userinfo[2] + "<spring:message code='ezApprovalG.t1721'/>" + "<br>" + tmpStartDate + "~" + tmpEndDate + "<br>" + "<spring:message code='ezApprovalG.t1723'/>" + "<br>" + " <spring:message code='ezApprovalG.t1724'/>";
 			            }
 			            else if (userLang == "2") {
@@ -1878,10 +1878,10 @@
 	            // aprgongramline_cross_dialogArguments[0] = para;
 	            // aprgongramline_cross_dialogArguments[1] = sendCirCulation_onclick_Complete;
 				//
-	            // var OpenWin = window.open(url, "AprGongRamLine_Cross", GetOpenWindowfeature(1145, 760));
+	            // var OpenWin = window.open(url, "AprGongRamLine_Cross", GetOpenWindowfeature(1145, 780));
 	            // try { OpenWin.focus(); } catch (e) { }
 				ezCommon_cross_dialogArguments[0] = para;
-				showPopup(url, 1145, 760, "AprGongRamLine_Cross", GetOpenWindowfeature(1145, 760), sendCirCulation_onclick_Complete);
+				showPopup(url, 1145, 780, "AprGongRamLine_Cross", GetOpenWindowfeature(1145, 780), sendCirCulation_onclick_Complete);
 		    }
 
 		    function sendCirCulation_onclick_Complete(rtn) {

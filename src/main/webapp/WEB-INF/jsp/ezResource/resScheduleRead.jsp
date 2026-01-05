@@ -298,8 +298,29 @@
 		        
 		        document.getElementById("AllDayDisplay").innerHTML = repeatinfo;
 		    }
+			
+			var resScheduleSelectModType_cross_dialogArguments = new Array();
+			function btn_modify() {
+				if (reFlagVal != '1') {
+					btn_modify_complete('0');
+				} else {
+					if (CrossYN()) {
+						resScheduleSelectModType_cross_dialogArguments[0] = btn_modify_complete;
+						DivPopUpShow(330, 205, "/ezResource/scheduleSelectModType.do");
+					} else {
+						var parameter = modType;
+						var url = "/ezResource/scheduleSelectModType.do";
+						var feature = "status:no;dialogWidth:330px;dialogHeight:200px;help:no;scroll:no;edge:sunken";
+						feature = feature + GetShowModalPosition(330, 200);
+						var rtn = window.showModalDialog(url, parameter, feature);
+						if (rtn != null) {
+							btn_modify_complete(rtn);
+						}
+					}
+				}
+			}
 
-	        function btn_modify() {
+	        function btn_modify_complete(modType) {
 	            if (CrossYN() || pNoneActiveX == "YES") {
 	                filename = "/ezResource/scheduleAdd.do";
 	            }
@@ -307,7 +328,7 @@
                     filename = "/ezResource/scheduleAdd.do";
 	            }
 
-	            window.location.href = filename + "?cmd=mod&from=schedule&" + "num=" + org_num + "&ownerID=" + org_ownerID + "&type=" + typeVal + "&startDate=" + startDateVal + "&endDate=" + endDateVal;
+	            window.location.href = filename + "?cmd=mod&from=schedule&" + "num=" + org_num + "&ownerID=" + org_ownerID + "&type=" + typeVal + "&startDate=" + startDateVal + "&endDate=" + endDateVal + "&modType=" + modType;
 	        }
 
 	        function window_onUnload() {
@@ -680,5 +701,9 @@
 				</td>
 			</tr>
 		</table>
+		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>
+	    <div class="layerpopup" style="z-index: 2000; position: absolute; display: none;" id="iFramePanel">
+	        <iframe src="<spring:message code='main.kms4' />" style="border: none;" id="iFrameLayer"></iframe>
+	    </div>
 	</body>
 </html>

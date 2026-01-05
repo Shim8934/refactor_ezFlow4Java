@@ -6,6 +6,8 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" type="text/css" href="${util.addVer('/css/mainFrame.css')}"/>
+
+	<script type="text/javascript" src="${util.addVer('/js/ezNewPortal/top.js')}"></script>
 	<script type="text/javascript">
         var reloadRetryCount = 1;
 	</script>

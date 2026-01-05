@@ -514,14 +514,14 @@
 	    	
 	    	for (var i = 0 ; i < attList.length; i ++) {
 	    		var htmlStr = "";
-	    		htmlStr += '<tr id="attList_' + (i+1) + '" class="white" onclick="event_listclick(this, event)" ondblclick="mod_detail(this)" draggable="true" style="cursor:pointer;">';
+	    		htmlStr += '<tr id="attList_' + (i+1) + '" class="white" onclick="event_listclick(this, event)" ondblclick="mod_detail(this)" draggable="true">';
 	    		if (excel == true) {
 	    		} else {
-	    			htmlStr += '<td style="padding:0"> <input type="checkbox" class="checkAtt"' 
+	    			htmlStr += '<td style="width: 22px; text-align: center; cursor:default;"> <div class="custom_checkbox"><input type="checkbox" class="checkAtt"' 
 	    	    	htmlStr += 'id="attCheck_' + attList[i].attitudeId + '_' + attList[i].applCnt +'"';
 	    	    	htmlStr += 'value="' + attList[i].attitudeId + '_' + attList[i].applCnt +'"';
 	    	    	htmlStr += 'status="' + attList[i].apprStatus + '"';
-	    	    	htmlStr += ' onclick="event_listCheckboxclick(this)"/></td>';	
+	    	    	htmlStr += ' onclick="event_listCheckboxclick(this)"/></div></td>';	
 	    		}
 	    		if (excel == true) {
 	    			htmlStr += '<td>' + no + '</td>';
@@ -733,10 +733,10 @@
 	        if (!listEventCheckbox) {
 	            if (document.getElementById("HeaderAllCheckBox").checked) {
 	                var TemplistArray = new Array();
-	                if (obj.getElementsByTagName("td").item(0).childNodes.item(0).checked) {
+	                if (obj.getElementsByTagName("td").item(0).querySelector('input').checked) {
 	                    for (var i = 0; i < listContentArry.length; i++) {
 	                        if (obj.getAttribute("id") == listContentArry[i]) {
-	                            obj.childNodes.item(0).childNodes.item(0).checked = false;
+	                            obj.childNodes.item(0).querySelector('input').checked = false;
 	                            obj.style.backgroundColor = m_strColorDefault;
 	                        }
 	                        else {
@@ -746,7 +746,7 @@
 	                    listContentArry = TemplistArray;
 	                }
 	                else {
-	                    obj.childNodes.item(0).childNodes.item(0).checked = true;
+	                    obj.childNodes.item(0).querySelector('input').checked = true;
 	                    obj.style.backgroundColor = m_strColorSelect;
 	                    listContentArry[listContentArry.length] = obj.getAttribute("id");
 	                }
@@ -1032,14 +1032,14 @@
 	    
 	    function event_listCheckboxclick(obj) {
 	        if (obj.checked) {
-				obj.parentElement.parentElement.style.backgroundColor = m_strColorSelect;
-	            listContentArry[listContentArry.length] = obj.parentElement.parentElement.getAttribute("id");
+				obj.closest('tr').style.backgroundColor = m_strColorSelect;
+	            listContentArry[listContentArry.length] = obj.closest('tr').getAttribute("id");
 	        }
 	        else {
 	            var TemplistArray = new Array();
 	            for (var i = 0; i < listContentArry.length; i++) {
-	                if (obj.parentElement.parentElement.getAttribute("id") == listContentArry[i]) {
-	                	obj.parentElement.parentElement.style.backgroundColor = m_strColorDefault;
+	                if (obj.closest('tr').getAttribute("id") == listContentArry[i]) {
+	                	obj.closest('tr').style.backgroundColor = m_strColorDefault;
 	                }
 	                else {
 	                    TemplistArray[TemplistArray.length] = listContentArry[i];
@@ -1101,10 +1101,10 @@
 			</li>
 			<li id="right" style="margin-right:5px">
 				<span style="float:right;font-weight:normal;color:black;border: none; box-shadow:none;">
-					<input name="searchCheck" id="Radio1" type="radio" value="all" <c:if test="${adminFlag != 'true'}">checked</c:if> style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onchange="type_change()"/><label for="Radio1">&nbsp;<spring:message code='ezAttitude.t124'/></label>
+					<div class="custom_radio"><input name="searchCheck" id="Radio1" type="radio" value="all" <c:if test="${adminFlag != 'true'}">checked</c:if> style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onchange="type_change()"/><label for="Radio1">&nbsp;<spring:message code='ezAttitude.t124'/></label>
 					<input name="searchCheck" id="Radio2" type="radio" value="0" <c:if test="${adminFlag == 'true'}">checked</c:if> style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onchange="type_change()"/><label for="Radio2">&nbsp;<spring:message code='ezAttitude.t209'/></label>
 					<input name="searchCheck" id="Radio3" type="radio" value="1" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onchange="type_change()"/><label for="Radio3">&nbsp;<spring:message code='ezAttitude.t210'/></label>
-					<input name="searchCheck" id="Radio4" type="radio" value="2" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onchange="type_change()"/><label for="Radio4">&nbsp;<spring:message code='ezAttitude.t211'/></label>
+					<input name="searchCheck" id="Radio4" type="radio" value="2" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onchange="type_change()"/><label for="Radio4">&nbsp;<spring:message code='ezAttitude.t211'/></label></div>
 				</span>
 			</li> 
         </ul>
@@ -1135,8 +1135,8 @@
 					<tr>
 						<th><spring:message code='ezAttitude.t137'/></th>
 						<td>
-							<input type="checkbox" value="1" id="usepostdate" onclick="DateSearch_Click()"><label for="usepostdate">
-							<spring:message code='ezAttitude.t105'/></label>&nbsp;
+							<div class="custom_checkbox"><input type="checkbox" value="1" id="usepostdate" onclick="DateSearch_Click()"><label for="usepostdate">
+								<spring:message code='ezAttitude.t105'/></label>&nbsp;</div>
 							<input type="text" id="Sdatepicker" style="width:80px;text-align:center;"/> 
 							~ 
 							<input type="text" id="Edatepicker" style="width:80px;text-align:center;"/>
@@ -1153,8 +1153,8 @@
 		<div id="contentlist" name="contentlist" style="border:0px solid blue;height:680px;width:100%;overflow-y:auto;" onblur>
 		<table class="mainlist" style="width:100%;" id="AttList" listpageCount="${mailGeneral.listCount}" curPage="1">
 			<tr>
-				<th width="20px" align="center"> <%-- <spring:message code="ezPoll.t105"/> --%>
-					<input type="checkbox" id="HeaderAllCheckBox" style="margin: 0px; padding: 0px; width: 13px; height: 13px;" onchange="javascript:event_HeaderCheckBoxClick(this)"/>
+				<th width="20px" align="center" style="width: 22px; text-align: center; cursor: default;"> <%-- <spring:message code="ezPoll.t105"/> --%>
+					<div class="custom_checkbox"><input type="checkbox" id="HeaderAllCheckBox" style="margin: 0px; padding: 0px; width: 13px; height: 13px;" onchange="javascript:event_HeaderCheckBoxClick(this)"/></div>
 				</th>
 				<th width="60px" colname="NO">NO.</th>
 				<th style="overflow: hidden;white-space: nowrap;text-overflow: ellipsis;cursor:pointer;width: 11%;" colname="START_DATE"><spring:message code='ezAttitude.t107'/></th>

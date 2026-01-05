@@ -401,8 +401,27 @@
 					}
 				});
 	        }
+			
+			var scheduleSelectModType_cross_dialogArguments = new Array();
+			function edit_schedule() {
+				if (datetype == 3) {
+					if (CrossYN()) {
+						scheduleSelectModType_cross_dialogArguments[0] = edit_schedule_complete;
+						DivPopUpShow(330, 205, "/ezSchedule/scheduleSelectModType.do");
+					} else {
+						var parameter = modType;
+						var url = "/ezSchedule/scheduleSelectModType.do";
+						var feature = "status:no;dialogWidth:330px;dialogHeight:200px;help:no;scroll:no;edge:sunken";
+						feature = feature + GetShowModalPosition(330, 200);
+						rtnVal = window.showModalDialog(url, parameter, feature);
+						edit_schedule_complete(rtnVal);
+					}
+				} else {
+					edit_schedule_complete(0);
+				}
+			}
 				
-	        function edit_schedule() {
+	        function edit_schedule_complete(modType) {
 	            var id = scheduleid;
 	            var win = null;
 	
@@ -414,10 +433,10 @@
 	            /* 2021-11-25 홍승비 - 일정 수정 시 반복일정의 repeatCount와 repStartDate를 전달 */
 	            if (CrossYN()) {
 	                win = window.open("/ezSchedule/scheduleWrite.do?id=" + encodeURIComponent(id) + "&type=" + scheduletype + "&datetype=" + datetype + "&pattern=" + pattern + "&pageFrom=" + pageFrom + "&otherid=" + _otherid
-	                		+ "&repeatCount=" + repeatCount + "&repStartDate=" + encodeURIComponent(repStartDate) + "&showtop=" + showtop, "", "height = 830px, width = 790px, top=" + pTop.toString() + ", left=" + pLeft.toString() + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
+	                		+ "&repeatCount=" + repeatCount + "&repStartDate=" + encodeURIComponent(repStartDate) + "&showtop=" + showtop + "&modType=" + modType, "", "height = 830px, width = 790px, top=" + pTop.toString() + ", left=" + pLeft.toString() + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
 	            } else {
 	            	win = window.open("/ezSchedule/scheduleWrite.do?id=" + encodeURIComponent(id) + "&type=" + scheduletype + "&datetype=" + datetype + "&pattern=" + pattern + "&pageFrom=" + pageFrom + "&otherid=" + _otherid
-	            			+ "&repeatCount=" + repeatCount + "&repStartDate=" + encodeURIComponent(repStartDate), "", "height = 760px, width = 790px, top=" + pTop.toString() + ", left=" + pLeft.toString() + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
+	            			+ "&repeatCount=" + repeatCount + "&repStartDate=" + encodeURIComponent(repStartDate) + "&modType=" + modType, "", "height = 760px, width = 790px, top=" + pTop.toString() + ", left=" + pLeft.toString() + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
 	            	/* if (pUse_Editor == "" || pUse_Editor == "CK") {
 	                    win = window.open("/ezSchedule/scheduleWrite.do?id=" + encodeURIComponent(id) + "&type=" + scheduletype + "&datetype=" + datetype + "&pattern=" + pattern + "&pageFrom=" + pageFrom + "&otherid=" + _otherid, "",
 	                                        "height = 760px, width = 790px, top=" + pTop.toString() + ", left=" + pLeft.toString() + ", status = no, toolbar=no, menubar=no,location=no, resizable=1");
@@ -982,34 +1001,41 @@
 	                                <div id="attachedfileDIV" style="margin-top: 0px; overflow: auto; padding-top: 0px;height: 50px;" align="left">
 	                                    <c:forEach var="item" items="${attachList}" varStatus="status">
 	                                    	<div style="margin-top:3px;height:auto;">
-	                                    		<c:set var="imagePath" value="/images/file.gif" />
-	                                    		<input type="checkbox" name="fileSelect" filename="${item.fileEncodeName}" filepath="${item.filePath}" value="${item.fileName}">
-	                                    		<c:if test="${item.fileType == 'jpg' || item.fileType == 'jpeg' || item.fileType == 'bmp' || item.fileType == 'gif' || item.fileType == 'png' || item.fileType == 'tif' || item.fileType == 'tiff'}">
-	                                    			<c:set var="imagePath" value="/images/image.png" />
-	                                    		</c:if>
-	                                    		<c:if test="${item.fileType == 'doc' || item.fileType == 'docx'}">
-	                                    			<c:set var="imagePath" value="/images/doc.png" />
-	                                    		</c:if>
-	                                    		<c:if test="${item.fileType == 'xls' || item.fileType == 'xlsx'}">
-	                                    			<c:set var="imagePath" value="/images/xls.png" />
-	                                    		</c:if>
-	                                    		<c:if test="${item.fileType == 'ppt' || item.fileType == 'pptx' || item.fileType == 'pps' || item.fileType == 'ppsx'}">
-	                                    			<c:set var="imagePath" value="/images/ppt.png" />
-	                                    		</c:if>
-	                                    		<c:if test="${item.fileType == 'txt'}">
-	                                    			<c:set var="imagePath" value="/images/txt.png" />
-	                                    		</c:if>
-	                                    		<c:if test="${item.fileType == 'zip'}">
-	                                    			<c:set var="imagePath" value="/images/zip.png" />
-	                                    		</c:if>
-	                                    		<c:if test="${item.fileType == 'pdf'}">
-	                                    			<c:set var="imagePath" value="/images/pdf.png" />
-	                                    		</c:if>
-	                                    		<c:if test="${item.fileType == 'ecm'}">
-	                                    			<c:set var="imagePath" value="/images/ecm.png" />
-	                                    		</c:if>	                                    		
-	                                    		<img src="${imagePath}" />&nbsp;<a href="/ezSchedule/downloadAttach.do?fileName=${item.fileEncodeName}&filePath=${item.filePath}" id="regData_${status.count}"><c:out value="${item.fileName}"/> (${item.fileTranSize})</a>	                                    		
-	                                    	</div>
+												<div class="custom_checkbox">
+													<c:set var="imagePath" value="/images/etc.svg" />
+													<input type="checkbox" name="fileSelect" filename="${item.fileEncodeName}" filepath="${item.filePath}" value="${item.fileName}" id="fileSelect${status.index}">
+													<label for="fileSelect${status.index}">
+														<c:if test="${item.fileType == 'jpg' || item.fileType == 'jpeg' || item.fileType == 'bmp' || item.fileType == 'gif' || item.fileType == 'png' || item.fileType == 'tif' || item.fileType == 'tiff'}">
+															<c:set var="imagePath" value="/images/image.svg" />
+														</c:if>
+														<c:if test="${item.fileType == 'doc' || item.fileType == 'docx'}">
+															<c:set var="imagePath" value="/images/doc.svg" />
+														</c:if>
+														<c:if test="${item.fileType == 'xls' || item.fileType == 'xlsx'}">
+															<c:set var="imagePath" value="/images/xls.svg" />
+														</c:if>
+														<c:if test="${item.fileType == 'ppt' || item.fileType == 'pptx' || item.fileType == 'pps' || item.fileType == 'ppsx'}">
+															<c:set var="imagePath" value="/images/ppt.svg" />
+														</c:if>
+														<c:if test="${item.fileType == 'txt'}">
+															<c:set var="imagePath" value="/images/txt.svg" />
+														</c:if>
+														<c:if test="${item.fileType == 'zip'}">
+															<c:set var="imagePath" value="/images/zip.svg" />
+														</c:if>
+														<c:if test="${item.fileType == 'pdf'}">
+															<c:set var="imagePath" value="/images/pdf.svg" />
+														</c:if>
+                                                        <c:if test="${item.fileType == 'hwp' || item.fileType == 'hwpx'}">
+                                                            <c:set var="imagePath" value="/images/hwp.svg" />
+                                                        </c:if>
+														<c:if test="${item.fileType == 'ecm'}">
+															<c:set var="imagePath" value="/images/ecm.svg" />
+														</c:if>	                                    		
+														<img src="${imagePath}" style="width:20px;height:20px;vertical-align:sub"/>&nbsp;<a href="/ezSchedule/downloadAttach.do?fileName=${item.fileEncodeName}&filePath=${item.filePath}" id="regData_${status.count}"><c:out value="${item.fileName}"/> (${item.fileTranSize})</a>
+													</label>
+	                                    		</div>
+											</div>
 	                                    </c:forEach>
 	                                </div>
 	                            </td>
@@ -1111,5 +1137,9 @@
 				selToggleList(document.getElementById("menu"), "ul", "li", "0");
 	        </script>	
 	    </form>
+		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>
+	    <div class="layerpopup" style="z-index: 2000; position: absolute; display: none;" id="iFramePanel">
+	        <iframe src="<spring:message code='main.kms4' />" style="border: none;" id="iFrameLayer"></iframe>
+	    </div>
 	</body>
 </html>

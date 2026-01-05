@@ -181,6 +181,9 @@
 		var userPhotoSrc = '<c:out value="${userPhoto}"/>';
 		var primaryLang = '<c:out value="${primaryLang}"/>';
 		
+		var picNone = "/images/ezNewPortal/info_pic_none.png";
+		var userPic = (userPhotoSrc != "")? '/ezCommon/downloadAttach.do?filePath=' + userPhotoSrc : picNone;
+
 		var newPortalTopMenu = {
 			menuListArr: [],           // 메뉴 리스트 배열에 저장
 			menuListObj: {},           // 메뉴 리스트 객체에 저장
@@ -271,6 +274,9 @@
 		}
 		
 		function leftMainMecuClickEvent(menuUrl, openType) {
+			if (menuUrl &&  menuUrl == "/ezApprovalG/apprGMain.do") {
+				menuUrl = "/ezApprovalG/apprGMain.do?listType=25"
+			}
 			offMenuAll();
 			this.classList.add("on");
 			subMenuClickEvent('off', menuUrl, openType);
@@ -482,11 +488,7 @@
                 
                 // 프로필 정보
 			    str += '<li><span class="util_profile" id="util_profile">';
-			    if (userPhotoSrc != "") {
-				    str += '<img src="' + '/ezCommon/downloadAttach.do?filePath=' + userPhotoSrc + '"></span>';
-			    } else {
-				    str += '<img src="/images/ezNewPortal/info_pic_none.png"></span>';
-			    }
+				str += '<img src="' + userPic + '" onerror="this.src=\'' + picNone + '\'"></span>';
 			    
 			    str += '<div class="profile_div util_div_menu" id="profileContainer"><div class="btn_tab"><span class="set" id="util_set"><spring:message code="ezNewPortal.t006" /></span>';
 				if(primaryLang == 1) {
@@ -540,9 +542,9 @@
 			var height = window.screen.availHeight;
 			var width = window.screen.availWidth;
 			var top = (height - 670) / 2;
-			var left = (width - 750) / 2;
+			var left = (width - 880) / 2;
 			var url = '/ezPersonal/personSearch.do';
-			var option = 'height=670px,width=750px,top=' + top + ',left = ' + left + ',status = no, toolbar=no, menubar=no, location=no, resizable=0';
+			var option = 'height=670px,width=880px,top=' + top + ',left = ' + left + ',status = no, toolbar=no, menubar=no, location=no, resizable=0';
 			
 			window.open(url, "", option);
 		}
@@ -553,7 +555,7 @@
 			if('${roleInfo}' === 'admin') {
 				setEvent('util_admin', '${utilAdminUrl}', '' ,'');	
 			}
-			setEvent('util_employee_search', '/ezPersonal/personSearch.do', '' ,'height=670px,width=750px,top=' + (window.screen.availHeight - 670)/2 + ',left= ' + (window.screen.availWidth - 750) / 2 + ',status = no, toolbar=no, menubar=no,location=no, resizable=0');
+			setEvent('util_employee_search', '/ezPersonal/personSearch.do', '' ,'height=670px,width=880px,top=' + (window.screen.availHeight - 670)/2 + ',left= ' + (window.screen.availWidth - 880) / 2 + ',status = no, toolbar=no, menubar=no,location=no, resizable=0');
 			//document.getElementById("util_employee_search").addEventListener('click', employeeSearch );
 			setEvent('util_set', '/ezPortal/environmentMain.do', 'main' ,'');
 			//setEvent('util_help', '/ezPortal/help/help.do', 'helpWindow', 'height=700px,width=1000px, status = no, toolbar=no, menubar=no, location=no, resizable=0');
@@ -879,6 +881,11 @@
 		}
 		
 		var getSurveyPopupList = function() {
+			// 라이센스 메일인 경우, 전자설문 사용하지 않음.
+			if ('${packageType}' == 'mail') {
+				return {};
+			}
+
 			var returnObj = {};
 			
 			$.ajax({
@@ -1071,6 +1078,9 @@
 		    		var btnPElem = document.createElement("p");
 		    		btnPElem.className = "btn_checkbox";
 		    		
+					var checkInputDiv = document.createElement("div");
+					checkInputDiv.className = "custom_checkbox";
+			
 		    		var checkInput = document.createElement("input");
 		    		checkInput.type = "checkbox";
 		    		checkInput.setAttribute("name", "checkbox");
@@ -1086,8 +1096,9 @@
 		    		closePElem.className = "notice_btnClose close_type" + result.skinValue;
 		    		closePElem.id = "closeBtn" + popup_number;
 		    		
-		    		btnPElem.appendChild(checkInput);
-		    		btnPElem.appendChild(labelElem);
+		    		checkInputDiv.appendChild(checkInput);
+		    		checkInputDiv.appendChild(labelElem);
+		    		btnPElem.appendChild(checkInputDiv);
 		    		btnDiv.appendChild(btnPElem);
 		    		
 		    		layoutDiv.appendChild(titleDl);
@@ -1350,6 +1361,9 @@
     		var btnPElem = document.createElement("p");
     		btnPElem.className = "btn_checkbox";
     		
+			var checkInputDiv = document.createElement("div");
+			checkInputDiv.className = "custom_checkbox";
+			
     		var checkInput = document.createElement("input");
     		checkInput.type = "checkbox";
     		checkInput.setAttribute("name", "checkbox");
@@ -1366,8 +1380,9 @@
     		closePElem.className = "notice_btnClose close_type0";
     		closePElem.id = "surv_closeBtn";
     		
-    		btnPElem.appendChild(checkInput);
-    		btnPElem.appendChild(labelElem);
+    		checkInputDiv.appendChild(checkInput);
+    		checkInputDiv.appendChild(labelElem);
+    		btnPElem.appendChild(checkInputDiv);
     		btnDiv.appendChild(btnPElem);
     		
     		layoutDiv.appendChild(titleDl);
@@ -1690,12 +1705,8 @@
 					var imgDiv = document.createElement('div');
 					imgDiv.classList.add('profile_img');
 					var userImg = document.createElement('img');
-					
-					if (userPhotoSrc != "") {
-						userImg.setAttribute("src","/ezCommon/downloadAttach.do?filePath=" + userPhotoSrc);
-					} else {
-						userImg.setAttribute("src", "/images/ezNewPortal/info_pic_none.png");
-					}
+					userImg.setAttribute("src", userPic);
+					userImg.setAttribute('onerror', "this.src='" + picNone + "'");
 					imgDiv.appendChild(userImg);
 					profileContainer.insertBefore(imgDiv, btnTabDiv);
 					
@@ -1822,7 +1833,9 @@
 	 				spanText.textContent = item.quickLinkName2;
 	 			} else if (userLang == "3") { // 일본어
 	 				spanText.textContent = item.quickLinkName3;
-	 			} else { // 기본 언어
+	 			} else if (userLang == "6") { // 인디어
+					spanText.textContent = item.quickLinkName6;
+				} else { // 기본 언어
 	 				spanText.textContent = item.quickLinkName;
 	 			}
 	 			

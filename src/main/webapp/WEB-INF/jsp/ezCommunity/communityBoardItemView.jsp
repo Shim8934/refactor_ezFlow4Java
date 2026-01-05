@@ -20,7 +20,10 @@
 		<script type="text/javascript" src="${util.addVer('/js/rsa/prng4.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/rsa/rng.js')}"></script>		
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
-		
+		<style type="text/css">
+			/* 첨부파일 아이콘 변경 */
+			#lstAttachLink img{width: 18px;height: 18px;vertical-align: middle;margin: 0 2px 4px 0;}
+		</style>
 		<script type="text/javascript">
 			window.offscreenBuffering = true;
 	        var fontSize = new Array("10px", "12px", "15px", "20px", "30px");
@@ -467,32 +470,34 @@
 	                }
 
 	                if (strFileExt.indexOf(".jpg") != -1 || strFileExt.indexOf(".jpeg") != -1 || strFileExt.indexOf(".bmp") != -1 || strFileExt.indexOf(".gif") != -1 || strFileExt.indexOf(".png") != -1 || strFileExt.indexOf(".tif") != -1 || strFileExt.indexOf(".tiff") != -1)
-	                    fileImage = "/images/image.png";
+	                    fileImage = "/images/image.svg";
 	                else if (strFileExt.indexOf(".doc") != -1 || strFileExt.indexOf(".docx") != -1)
-	                    fileImage = "/images/doc.png";
+	                    fileImage = "/images/doc.svg";
 	                else if (strFileExt.indexOf(".xls") != -1 || strFileExt.indexOf(".xlsx") != -1)
-	                    fileImage = "/images/xls.png";
+	                    fileImage = "/images/xls.svg";
 	                else if (strFileExt.indexOf(".ppt") != -1 || strFileExt.indexOf(".pptx") != -1 || strFileExt.indexOf(".pps") != -1 || strFileExt.indexOf(".ppsx") != -1)
-	                    fileImage = "/images/ppt.png";
+	                    fileImage = "/images/ppt.svg";
 	                else if (strFileExt.indexOf(".txt") != -1)
-	                    fileImage = "/images/txt.png";
+	                    fileImage = "/images/txt.svg";
 	                else if (strFileExt.indexOf(".zip") != -1)
-	                    fileImage = "/images/zip.png";
+	                    fileImage = "/images/zip.svg";
 	                else if (strFileExt.indexOf(".pdf") != -1)
-	                    fileImage = "/images/pdf.png";
-	                else if (strFileExt.indexOf(".ecm") != -1)
-	                    fileImage = "/images/ecm.png";
+	                    fileImage = "/images/pdf.svg";
+					else if (strFileExt.indexOf(".ecm") != -1)
+						fileImage = "/images/ecm.svg";
+	                else if (strFileExt.indexOf(".hwp") != -1 || strFileExt.indexOf(".hwpx") != -1)
+	                    fileImage = "/images/hwp.svg";
 	                else if (strFileExt.indexOf(".mht") != -1)
 	                    fileImage = "/images/mht.png";
 	                else
-	                    fileImage = "/images/email/mail_006.gif";
+	                    fileImage = "/images/etc.svg";
 
 	                var protocol = window.location.protocol;
 	                var serverName = window.location.hostname;
 
-	                strAttach = strAttach + "<input type='checkbox' name='fileSelect' value='" + filenameView + "' filepath='"+ filepath +"' filehref=\"/ezCommunity/getCommunityAttachInfo.do?fileName=" + encodeURIComponent(filenameOrg) + "&filePath=" + encodeURIComponent(filepath)  + "\">";
-	                strAttach = strAttach + "<img src='" + fileImage + "'> <a href=/ezCommunity/getCommunityAttachInfo.do?fileName=" + encodeURIComponent(filenameOrg) + "&filePath=" + encodeURIComponent(filepath) + ">";
-	                strAttach = strAttach + filenameView + "&nbsp;(" + filesize + ")</a><br>";
+	                strAttach = strAttach + "<div class='custom_checkbox'><input id='fileSelect" + i + "' type='checkbox' name='fileSelect' value='" + filenameView + "' filepath='"+ filepath +"' filehref=\"/ezCommunity/getCommunityAttachInfo.do?fileName=" + encodeURIComponent(filenameOrg) + "&filePath=" + encodeURIComponent(filepath)  + "\">";
+	                strAttach = strAttach + "<label for='fileSelect" + i + "'><img style='vertical-align: middle;' src='" + fileImage + "'> <a href=/ezCommunity/getCommunityAttachInfo.do?fileName=" + encodeURIComponent(filenameOrg) + "&filePath=" + encodeURIComponent(filepath) + ">";
+	                strAttach = strAttach + filenameView + "&nbsp;(" + filesize + ")</a></label></div><br>";
 	            }
 	            document.getElementById('lstAttachLink').innerHTML = strAttach;
 	        }
@@ -636,11 +641,11 @@
 	            var conHeight = pheight * 0.8;
 	            var pwidth = window.screen.availWidth;
 	            var pTop = (pheight - conHeight) / 2;
-	            var pLeft = (pwidth - 890) / 2;
+	            var pLeft = (pwidth - 1200) / 2;
 
                 var szUrl = "/ezEmail/mailWrite.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(pItemID) + "&cmd=Community";
 
-	            window.open(szUrl, "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no,resizable=1");
+	            window.open(szUrl, "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 1200px, status = no, toolbar=no, menubar=no,location=no,resizable=1");
 	            window.close();
 	        }
 		    var item_readlist_cross_dialogArguments = new Array();

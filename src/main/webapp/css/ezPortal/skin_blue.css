@@ -257,6 +257,7 @@ nav .navUL li.on{color:#003497;}
 .node_normal:hover{color:#003497 !important;}
 .node_selected{color:#003497 !important;}
 .node_div span.node_normal:hover{color:#003497 !important;}
+.tree span.node_normal:hover {color: #003497 !important;}
 
 .btnposition input:hover{color:#003497; border-color:#3A67BE; background:#EEF4FE;}
 .btnpositionLayer a.imgbtn:hover{color:#003497; border-color:#3A67BE; background:#EEF4FE;}
@@ -274,7 +275,7 @@ nav .navUL li.on{color:#003497;}
 .mainbody > div > h1 > span > span{color:#003497 !important;}
 
 .icon16{background-image:url(../../images/ezNewPortal/skin/blue/icon_16.png) !important;}
-.icon16_unreadMail_del {background-position: -103px -97px !important;}
+/*.icon16_unreadMail_del {background-position: -103px -97px !important;}*/
 
 .portlet_tabnew01_top p span{border-color:#7E9AD1; color:#003497; background-image:url(../../images/ezNewPortal/skin/blue/tabnew_bg.png); background-color:#fff;}
 .portlet_tabnew01_top p span.tabon{border-color:#7E9AD1; color:#003497; background-color:#EEF4FE; background-image:url(../../images/ezNewPortal/skin/blue/tabnew_bg.png);}
@@ -334,4 +335,91 @@ nav .navUL li.on{color:#003497;}
 #theme3Body .main_time .timeCheckIn:hover{background:#FFFFFF; color:#003497; border:1px solid #003497; line-height:30px;}
 #theme3Body .main_time .timeCheckOut:hover{background:#FFFFFF; color:#003497; border:1px solid #003497; line-height:30px;}
 
+/* 2025.06 custom style */
+/* checkbox */
+.custom_checkbox input[type="checkbox"]:checked {background: #003497 !important; border-color:#003497 !important;}
+.master.dashDiv {background: #003497 !important; border-color:#003497 !important;}
+/* radio */
+.custom_radio input[type="radio"]::after {background-color: #003497 !important;}
+.custom_radio input[type="radio"]:checked {border-color:#003497 !important;}
+
 #mainmenu li.view_more.on{color: #003497;}
+
+/* 커뮤니티 통합검색 */
+.community_searchBox{border:0; background:#fff; display:flex; justify-content:center; align-items:center; height:74px; box-sizing:border-box;}
+.community_totalSearch{margin:0; padding:0;}
+.community_totalSearch dl{margin:0; padding:0; display:flex; align-items:center;}
+.community_totalSearch dl dt{margin-right:6px;}
+.community_totalSearch dl dt.selectbox select{border:1px solid #B2C2D1; border-radius:4px; width:120px; height:34px; padding:0 26px 0 12px; background:url(../../images/next.gif) no-repeat right 10px center / 12px 12px #fffe; font-size:14px; color:#333;}
+.community_totalSearch dl dt.searchinput input{border:1px solid #B2C2D1; height:34px !important; border-radius:4px; width:500px; padding:0 10px;font-size: 14px;}
+.community_totalSearch dl dd.btn_search{height:34px; line-height:34px; padding:0 25px; border-radius:4px; background:#042F81; color:#fff; font-size:14px; font-weight:500; cursor:pointer;}
+.community_totalSearch dl dd.btn_CommHome{height:34px; line-height:34px; padding:0 25px; border-radius:4px; background:#355798; color:#fff; font-size:14px; font-weight:500; cursor:pointer; margin-left:5px;}
+.community_totalSearch dl dd:hover{background:#0184BF;}
+.community_totalSearch dl dd.btn_search:hover{background: #032971;}
+.community_totalSearch dl dd.btn_CommHome:hover{background: #2b4d8e;}
+
+.tab-menu{list-style:none; margin:0; padding:0;width: 100%;height: 29px;border-bottom: 1px solid #ddd; margin-bottom:12px; display:inline-block;}
+.tab-menu li{display:block; float: left; height: 29px; line-height: 29px; padding: 0px 20px; border: 0; margin: 0px 1px 0px 0px; border-bottom: 0 none;font-weight: bold; color: #555; background:#fff; cursor:pointer; font-size:14px;}
+.tab-menu li:hover{color: #042F81;background: #fff; border:0; border-bottom: 2px solid #042F81;}
+.tab-menu li.active{color: #042F81;background: #fff; border:0; border-bottom: 2px solid #042F81;}
+
+.result_txt{margin-left: 10px;font-size:14px;font-weight:500;color:#333;height: 34px;display: inline-block;line-height: 32px;}
+.result_txt span{color:#042F81; font-size:14px;}
+.result_list_head{margin-bottom:0;margin-top:0;padding:15px 20px 15px 20px;border-top:1px solid #ddd;border-bottom:1px solid #ddd;overflow:hidden;}
+.result_list_head h4{font-size:16px; margin-bottom:13px;}
+.result_list{margin-top:13px;padding:2px 20px 15px 20px;border-bottom:1px solid #ddd;overflow:hidden;}
+.result_list_cont{display:flex; align-items:stretch;}
+.result_list_cont_L{width:85%;border-right:1px solid #ddd;float:left;}
+.result_list_etc > img{margin-right:5px;}
+.result_list_etc > span{margin-left: 10px; margin-right: 10px;}
+.result_list_cont_R{float:left;width:100px;margin-left:20px;padding:0;display:flex;flex-direction:column;justify-content:center;}
+.result_list_cont_R > div{display:flex; align-items: center; margin:1px 0;}
+.result_list_cont_R > div img{vertical-align:middle; width:16px; height:16px;}
+.result_list_cont_R > div span{margin-left:5px;}
+.result_list_title{margin-bottom:5px;}
+.result_list_title a{cursor:pointer;color:#0033ac;text-decoration:underline;}
+.result_list_desc{margin-bottom:10px;padding-right:14px;margin-top: 5px;word-break: break-all;display: -webkit-box;-webkit-box-orient: vertical;-webkit-line-clamp: 5;overflow: hidden;text-overflow: ellipsis;white-space: normal;}
+.result_list_noti{text-align:left;color:royalblue;margin-bottom:10px;}
+
+.moreView{float: right;font-size: 13px;font-weight: normal;}
+.moreView > a{cursor:pointer;color:#0033ac;text-decoration:underline;margin-right: 5px;}
+.moreView > img{vertical-align: middle;width:15px;height:15px;}
+
+.empty{text-align:center;line-height: 80px;}
+
+.itemBtn{height:28px; line-height:26px; padding:0 12px !important; cursor:pointer; color:#333; border:1px solid #CECECE; border-radius:4px; box-sizing:border-box; background-color:#fff; width:auto !important; float:right;}
+.itemBtn img{display:none;}
+.itemBtn span{vertical-align:baseline !important;}
+.itemBtn:hover, .itemActive{color:#042F81; border:1px solid #042F81; background-color:#fff;}
+
+.filter_pop .check_list .check_ul li .input_check input[type="checkbox"]:checked + label:before { background:  url(/images/ezNewPortal/bg_checkbox.png) no-repeat 2px center;
+background-color: #003497; border-color: #003497;}
+
+.layerPopup_button .button_style01 {
+    display: block;
+    min-width: 113px;
+    height: 36px;
+    line-height: 34px;
+    padding: 0px 20px;
+    background-color: #003497;
+    font-size: 14px;
+    color: #ffffff;
+    text-align: center;
+    box-sizing: border-box;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.radio_design > label {
+    display: inline-block;
+    height: 18px;
+    line-height: 16px;
+    padding-left: 24px;
+    background: url(/images/ezNewPortal/skin/blue/input_checkbox_radio_blue.png) no-repeat -0px -92px;
+    font-size: 14px;
+    vertical-align: middle;
+    cursor: pointer;
+    user-select: none;
+    -ms-user-select: none;
+    -webkit-user-select: none;
+}

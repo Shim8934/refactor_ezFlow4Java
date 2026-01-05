@@ -63,7 +63,7 @@
 		<script ID="clientEventHandlersJS" type="text/javascript">
 			var pUserID = "<c:out value = '${userInfo.id}'/>";
 		    var pListTypeValue = '<c:out value="${listType}"/>';
-		    var PresentOpen = "APPROVAL";
+		    var PresentOpen = "";
 		    var CompanyID = '<c:out value = '${userInfo.companyID}'/>';
 		    var CompanyName = "<c:out value = '${userInfo.companyName}'/>";
 		    var gMenuFlag = 1;
@@ -220,6 +220,9 @@
 						setPresentValue("<spring:message code='ezApprovalG.t1756'/>");
 						document.getElementById('APPROVAL24').click();
 					}
+					if (pListTypeValue == '25') {
+							 parent.document.querySelector("iframe[name=right]").src = "/ezApprovalG/apprGDashBoardMain.do";
+					}
 		        }
 		        getAprCount();
 		        leftResize();
@@ -298,8 +301,8 @@
 	            var url = "/ezApprovalG/mngUserCont.do";
 	            // mngusercont_dialogArgument[0] = "";
 	            // mngusercont_dialogArgument[1] = MngUserOnclick_Complete;
-	            // var Opener = GetOpenWindow(url, "MngUserCont", 465, 395, "NO");
-				showPopup(url, 465, 395, "MngUserCont", GetOpenWindowfeature(465, 395), MngUserOnclick_Complete);
+	            // var Opener = GetOpenWindow(url, "MngUserCont", 490, 395, "NO");
+				showPopup(url, 490, 395, "MngUserCont", GetOpenWindowfeature(490, 395), MngUserOnclick_Complete);
 	        }
 	        function MngUserOnclick_Complete(RtnVal) {
 				hidePopup();
@@ -1369,12 +1372,12 @@
 	        <%-- 25022-01-11 홍승비 - 전자결재G 일괄기안 버튼 추가 (웹한글) --%>
 	        <div class="btn_writeBox">
 	        	<c:choose>
-	        	<c:when test="${useDraftAll == 'YES'}">
-	        		<p class="btn_write01" onclick="btnDraft_onclick();" style="width:83px; display:inline-block; float:none;"><spring:message code='main.t00031'/></p>
+	        	<c:when test="${useDraftAll == 'YES' && draftAllTypeB != 'Y'}">
+	        		<p id="draftBtn" class="btn_write01" onclick="btnDraft_onclick();" style="width:83px; display:inline-block; float:none;"><spring:message code='main.t00031'/></p>
 	        		<p class="btn_write01" onclick="btnDraftAll_onclick();" style="width:83px; display:inline-block; float:right;"><spring:message code='ezApprovalG.HSBDa01'/></p>
 	        	</c:when>
 	        	<c:otherwise>
-	        		<p class="btn_write01" onclick="btnDraft_onclick();"><spring:message code='main.t00031'/></p>
+	        		<p id="draftBtn" class="btn_write01" onclick="btnDraft_onclick();"><spring:message code='main.t00031'/></p>
 	        	</c:otherwise>
 	        	</c:choose>
 	        </div>
@@ -1391,22 +1394,26 @@
 		        <ul class="lnbUL" id="apprUL">
 					<li><span class="list_text" id="APPROVAL1" onclick="setPresentValue('<spring:message code='ezApprovalG.t1747'/>');convMain('1','')"><spring:message code='ezApprovalG.t1747'/><span id=COUNT1></span></span></li>
                    	<c:if test="${whoKyulYN == '1'}">
-                       	<li><span class="list_text" id="MYCONTWHO" onclick="setPresentValue('<spring:message code='ezApproval.pjj34'/>');Open_Func(this)"><spring:message code='ezApproval.pjj34'/><span id="COUNTWHO"></span></span></li>
+						<spring:message code="ezApproval.pjj34" var="pjj34"/>
+                       	<li><span class="list_text" id="MYCONTWHO" onclick="setPresentValue('<spring:message code='ezApproval.pjj34'/>');Open_Func(this)" title="${userInfo.lang eq '1' ? '' : pjj34}"><spring:message code='ezApproval.pjj34'/><span id="COUNTWHO"></span></span></li>
 	                </c:if>
                    	<c:if test="${approvalFlag == 'S' && useShareApproval == 'YES'}">
-                       	<li><span class="list_text" id="APPROVAL11" onclick="setPresentValue('<spring:message code='ezApprovalG.bhs03'/>');convMain('11','')"><spring:message code='ezApprovalG.bhs03'/><span id=COUNT11></span></span></li>
+						<spring:message code="ezApprovalG.bhs03" var="bhs03"/>
+                       	<li><span class="list_text" id="APPROVAL11" onclick="setPresentValue('<spring:message code='ezApprovalG.bhs03'/>');convMain('11','')" title="${userInfo.lang eq '1' ? '' : bhs03}"><spring:message code='ezApprovalG.bhs03'/><span id=COUNT11></span></span></li>
 					</c:if>
                    	<li><span class="list_text" id="APPROVAL2" onclick="setPresentValue('<spring:message code='ezApprovalG.t1706'/>');convMain('3','')"><spring:message code='ezApprovalG.t1706'/><span id=COUNT2></span></span></li>
                    	<li><span class="list_text" id="APPROVAL3" onclick="setPresentValue('<spring:message code='ezApprovalG.t1748'/>');convMain('2','')"><spring:message code='ezApprovalG.t1748'/><span id=COUNT3></span></span></li>
 					<%-- 2023-03-23 양지혜 - 반송된문서함 추가 --%>
-					<li><span class="list_text" id="APPROVAL24" onclick="setPresentValue('<spring:message code='ezApprovalG.t1756'/>');convMain('24','')"><spring:message code='ezApprovalG.t1756'/><span id=COUNT24></span></span></li>
+					<spring:message code="ezApprovalG.t1756" var="t1756"/>
+					<li><span class="list_text" id="APPROVAL24" onclick="setPresentValue('<spring:message code='ezApprovalG.t1756'/>');convMain('24','')" title="${userInfo.lang eq '1' ? '' : t1756}"><spring:message code='ezApprovalG.t1756'/><span id=COUNT24></span></span></li>
 
 					<c:if test="${approvalFlag eq 'G' && autoSendOfferFlag eq '1'}">
                    	<li><span class="list_text" id="UNTREATED" onclick="setPresentValue('미처리문서');Open_Func(this);">미처리문서함<span id=COUNTUNTREATED></span></span></li>
                    	</c:if>
                    	<li><span class="list_text" id="APPROVAL21" onclick="setPresentValue('<spring:message code='ezApprovalG.t3000'/>');convMain('21','')"><spring:message code='ezApprovalG.t3000'/><span id=COUNT21></span></span></li>
                    	<c:if test="${hideSusin != 'N'}">
-                       	<li><span class="list_text" id="APPROVAL4" onclick="setPresentValue('<spring:message code='ezApprovalG.t1749'/>');convMain('4','')"><spring:message code='ezApprovalG.t1749'/><span id=COUNT4></span></span></li>
+						<spring:message code="ezApprovalG.t1749" var="t1749"/>
+                       	<li><span class="list_text" id="APPROVAL4" onclick="setPresentValue('<spring:message code='ezApprovalG.t1749'/>');convMain('4','')" title="${userInfo.lang eq '1' ? '' : t1749}"><spring:message code='ezApprovalG.t1749'/><span id=COUNT4></span></span></li>
 					</c:if>
 					<c:if test="${personalHideSusin == 'Y' && fn:contains(userInfo.rollInfo, 'a=1')}">
 						<li><span class="list_text" id="APPROVAL97" onclick="setPresentValue('<spring:message code='ezApprovalG.PHSKMH01'/>');convMain('97','')"><spring:message code='ezApprovalG.PHSKMH01'/><span id=COUNT97></span></span></li>
@@ -1415,7 +1422,8 @@
                        	<li><span class="list_text" id="APPROVAL99" onclick="setPresentValue('<spring:message code='ezApprovalG.hyj04'/>');convMain('99','')"><spring:message code='ezApprovalG.hyj04'/><span id="COUNT99"></span></span></li>
 					</c:if>
 					<c:if test="${approvalFlag == 'G'}">
-                       	<li><span class="list_text" id="APPROVAL99" onclick="setPresentValue('<spring:message code='ezApprovalG.t10011'/>');convMain('99','')"><spring:message code='ezApprovalG.t10011'/><span id="COUNT99"></span></span></li>
+						<spring:message code="ezApprovalG.t10011" var="t10011"/>
+                       	<li><span class="list_text" id="APPROVAL99" onclick="setPresentValue('<spring:message code='ezApprovalG.t10011'/>');convMain('99','')" title="${userInfo.lang eq '1' ? '' : t1749}"><spring:message code='ezApprovalG.t10011'/><span id="COUNT99"></span></span></li>
 					</c:if>
 					<c:if test="${approvalFlag eq 'S' && userInfoEnforce == '2'}">
                        	<li><span class="list_text" id="APPROVAL5" onclick="setPresentValue('<spring:message code='ezApproval.t839'/>');convMain('6', '')"><spring:message code='ezApproval.t839'/><span id="COUNT6"></span></span></li>
@@ -1427,7 +1435,8 @@
 						<c:if test="${relayShowFlag eq 'Y' || howToSendOffer eq '1'}">
 							<li class="approvalG"><span class="list_text" id="APPROVAL6" onclick="setPresentValue('<spring:message code='ezApprovalG.kbh05'/>');convMain('6');"><spring:message code='ezApprovalG.kbh05'/><span id="COUNT6"></span></span></li>
 						</c:if>
-						<li><span class="list_text" id="m96" onclick="Open_Func(this); getAprCount();"><spring:message code='ezApprovalG.KMHG03'/><span id="COUNT96"></span></span></li>
+						<spring:message code="ezApprovalG.KMHG03" var="KMHG03"/>
+						<li><span class="list_text" id="m96" onclick="Open_Func(this); getAprCount();" title="${userInfo.lang eq '1' ? '' : KMHG03}"><spring:message code='ezApprovalG.KMHG03'/><span id="COUNT96"></span></span></li>
 					</c:if>
 					<c:if test="${userSendOut == 'YES'}">
                        	<li class="approvalG"><span class="list_text" id="APPROVAL7" onclick="setPresentValue('<spring:message code='ezApprovalG.t1752'/>');convMain('7','')"><spring:message code='ezApprovalG.t1752'/><span id=COUNT7></span></span></li>
@@ -1438,22 +1447,27 @@
 		            <span class="sub_iconLNB tree_plus" onclick="openFolder('comp')"></span><span class="h2Title" id="APPROVAL" onclick="openFolder('comp')"><spring:message code='ezApprovalG.lhj15'/></span>
 		        </h2>
 		        <ul class="lnbUL off" id="compUL">
-                   	<li><span class="list_text" id="MYCONT" onClick="setPresentValue('<spring:message code='ezApproval.t990042'/>');Open_Func(this)"><spring:message code='ezApproval.t990042'/></span></li>
+					<spring:message code="ezApproval.t990042" var="t990042"/>
+                   	<li><span class="list_text" id="MYCONT" onClick="setPresentValue('<spring:message code='ezApproval.t990042'/>');Open_Func(this)" title="${userInfo.lang eq '1' ? '' : t990042}"><spring:message code='ezApproval.t990042'/></span></li>
                    	<c:if test="${approvalFlag == 'S'}">
-                           	<li><span class="list_text" id="APPROVAL10" onClick="setPresentValue('<spring:message code='ezApprovalG.hyj03'/>');convMain('10','')"><spring:message code='ezApprovalG.hyj03'/></span></li>
+						<spring:message code="ezApprovalG.hyj03" var="hyj03"/>
+                           	<li><span class="list_text" id="APPROVAL10" onClick="setPresentValue('<spring:message code='ezApprovalG.hyj03'/>');convMain('10','')" title="${userInfo.lang eq '1' ? '' : hyj03}"><spring:message code='ezApprovalG.hyj03'/></span></li>
                    	</c:if>
                    	<c:if test="${approvalFlag == 'G'}">
                            	<li><span class="list_text" id="APPROVAL10" onClick="setPresentValue('<spring:message code='ezApprovalG.t1787'/>');convMain('10','')"><spring:message code='ezApprovalG.t1787'/></span></li>
                    	</c:if>
 					<c:if test="${approvalFlag == 'S'}">
-                       	<li><span class="list_text" id="APPROVAL98" onclick="setPresentValue('<spring:message code='ezApprovalG.sendGongram02'/>');convMain('98','')"><spring:message code='ezApprovalG.sendGongram02'/><span id="COUNT98" style="display:none;"></span></span></li>
+						<spring:message code="ezApprovalG.sendGongram02" var="sendGongram02"/>
+                       	<li><span class="list_text" id="APPROVAL98" onclick="setPresentValue('<spring:message code='ezApprovalG.sendGongram02'/>');convMain('98','')" title="${userInfo.lang eq '1' ? '' : sendGongram02}"><spring:message code='ezApprovalG.sendGongram02'/><span id="COUNT98" style="display:none;"></span></span></li>
 					</c:if>
 					<c:if test="${approvalFlag == 'G'}">
-                       	<li><span class="list_text" id="APPROVAL98" onclick="setPresentValue('<spring:message code='ezApprovalG.sendGongram01'/>');convMain('98','')"><spring:message code='ezApprovalG.sendGongram01'/><span id="COUNT98" style="display:none;"></span></span></li>
+						<spring:message code="ezApprovalG.sendGongram01" var="sendGongram01"/>
+                       	<li><span class="list_text" id="APPROVAL98" onclick="setPresentValue('<spring:message code='ezApprovalG.sendGongram01'/>');convMain('98','')" title="${userInfo.lang eq '1' ? '' : sendGongram01}"><spring:message code='ezApprovalG.sendGongram01'/><span id="COUNT98" style="display:none;"></span></span></li>
 					</c:if>
 		        </ul>
 		        <h2 class="off" id="deptH2">
-		            <span class="sub_iconLNB tree_plus" onclick="openFolder('dept')"></span><span class="h2Title" onclick="openFolder('dept')"><spring:message code='ezApprovalG.t1755'/></span>
+					<spring:message code="ezApprovalG.t1755" var="t1755"/>
+		            <span class="sub_iconLNB tree_plus" onclick="openFolder('dept')"></span><span class="h2Title" onclick="openFolder('dept')" title="${userInfo.lang eq '1' ? '' : t1755}"><spring:message code='ezApprovalG.t1755'/></span>
 		        </h2>
 		        <ul class="lnbUL off" id="deptUL">
                    	<c:choose>
@@ -1461,10 +1475,10 @@
 							<c:forEach var="apprGLeftVOList" items="${apprGLeftVOList}" varStatus="status">
 								<c:choose>
 									<c:when test="${strLang == ''}">
-		                            	<li><span class="list_text" id="myDeptCont${status.count - 1}" onclick="setPresentValue('${apprGLeftVOList.containerTypeName}');cmdOK_onclick('\'${apprGLeftVOList.containerID}\'', '${apprGLeftVOList.containerTypeName}', '')">${apprGLeftVOList.containerTypeName}</span></li>
+		                            	<li><span class="list_text" id="myDeptCont${status.count - 1}" onclick="setPresentValue('${apprGLeftVOList.containerTypeName}');cmdOK_onclick('\'${apprGLeftVOList.containerID}\'', '${apprGLeftVOList.containerTypeName}', '')" title="${apprGLeftVOList.containerTypeName}">${apprGLeftVOList.containerTypeName}</span></li>
 									</c:when>
 									<c:otherwise>
-		                            	<li><span class="list_text" id="myDeptCont${status.count - 1}" onclick="setPresentValue('${apprGLeftVOList.containerTypeName2}');cmdOK_onclick('\'${apprGLeftVOList.containerID}\'', '${apprGLeftVOList.containerTypeName2}', '')">${apprGLeftVOList.containerTypeName2}</span></li>
+		                            	<li><span class="list_text" id="myDeptCont${status.count - 1}" onclick="setPresentValue('${apprGLeftVOList.containerTypeName2}');cmdOK_onclick('\'${apprGLeftVOList.containerID}\'', '${apprGLeftVOList.containerTypeName2}', '')" title="${apprGLeftVOList.containerTypeName2}">${apprGLeftVOList.containerTypeName2}</span></li>
 									</c:otherwise>
 								</c:choose>
 							</c:forEach>
@@ -1480,23 +1494,25 @@
 		        <c:if test="${approvalFlag == 'S'}">
 		        	<c:if test="${useApprFormCont == 'YES'}">
 		        	<h2 class="off" id="ITEMCONTH2">
+						<spring:message code="ezApprovalG.apprLeft01" var="apprLeft01"/>
 		        		<span class="sub_iconLNB tree_plus" onclick="openFolder('ITEMCONT');"></span>
-		        		<span class="h2Title" onclick="openFolder('ITEMCONT');"><spring:message code='ezApprovalG.apprLeft01'/></span>
+		        		<span class="h2Title" onclick="openFolder('ITEMCONT');" title="${userInfo.lang eq '1' ? '' : apprLeft01}"><spring:message code='ezApprovalG.apprLeft01'/></span>
 		        	</h2>
 					<ul class="lnbUL off" id="ITEMCONTUL">
 			          	<c:forEach var="form" items="${itemList}" varStatus="status">
-			          	    <li><span class="list_text" id="itemList${status.count - 1}"  onclick="setPresentValue('${form.formName}'); goFormContainer('${form.formName}');"><c:out value="${form.formName}"></c:out></span></li>
+			          	    <li><span class="list_text" id="itemList${status.count - 1}"  onclick="setPresentValue('${form.formName}'); goFormContainer('${form.formName}');" title="${form.formName}"><c:out value="${form.formName}"></c:out></span></li>
 			          	</c:forEach>
 		          	</ul>
 		          	</c:if>
 		          	<c:if test="${useApprCodeCont == 'YES'}">
 		        	<h2 class="off" id="ITEMCONT2H2">
+						<spring:message code="ezApproval.t844" var="t844"/>
 		        		<span class="sub_iconLNB tree_plus" onclick="openFolder('ITEMCONT2');"></span>
-		        		<span class="h2Title" onclick="openFolder('ITEMCONT2');"><spring:message code='ezApproval.t844'/></span>
+		        		<span class="h2Title" onclick="openFolder('ITEMCONT2');" title="${userInfo.lang eq '1' ? '' : t844}"><spring:message code='ezApproval.t844'/></span>
 		        	</h2>
 		        	<ul class="lnbUL off" id="ITEMCONT2UL">
 			          	<c:forEach var="itemList" items="${taskItemList}" varStatus="status">
-			          	    <li><span class="list_text" id="itemList${status.count - 1}"  onclick="setPresentValue('${itemList.taskName}(${itemList.keepingPeriod})');cmdOK_onclick2('${itemList.taskCode}', '${itemList.taskName}', '${itemList.taskName}(${itemList.keepingPeriod})');">${itemList.taskName}(${itemList.keepingPeriod}) </span></li>
+			          	    <li><span class="list_text" id="itemList${status.count - 1}"  onclick="setPresentValue('${itemList.taskName}(${itemList.keepingPeriod})');cmdOK_onclick2('${itemList.taskCode}', '${itemList.taskName}', '${itemList.taskName}(${itemList.keepingPeriod})');" title="${itemList.taskName}(${itemList.keepingPeriod})">${itemList.taskName}(${itemList.keepingPeriod}) </span></li>
 			          	</c:forEach>
 		          	</ul>
 		          	</c:if>
@@ -1571,7 +1587,8 @@
 		        </c:if>
 		        <c:if test="${approvalFlag eq 'G'}">
 		        	<h2 class="off" id="readingRecordH2">
-		        		<span class="sub_iconLNB tree_plus" onclick="openFolder('readingRecord'), Open_Func(this)"></span><span class="h2Title" id="readingRecord" onclick="openFolder('readingRecord'), Open_Func(this)"><spring:message code='ezApprovalG.kwc001'/></span>
+						<spring:message code="ezApprovalG.kwc001" var="kwc001"/>
+		        		<span class="sub_iconLNB tree_plus" onclick="openFolder('readingRecord'), Open_Func(this)"></span><span class="h2Title" id="readingRecord" onclick="openFolder('readingRecord'), Open_Func(this)" title="${userInfo.lang eq '1' ? '' : kwc001}"><spring:message code='ezApprovalG.kwc001'/></span>
 			        </h2>
 		        	<h2 class="off" id="recordCabinetH2">
 		        		<span class="sub_iconLNB tree_plus" onclick="openFolder('recordCabinet')"></span><span class="h2Title" onclick="openFolder('recordCabinet')"><spring:message code='ezApprovalG.LeftMenu01'/></span>
@@ -1582,9 +1599,12 @@
 			        	<li><span class="list_text" id="m05" onclick="Open_Func(this)"><spring:message code='ezApprovalG.t905'/></span></li>
 			        	<li><span class="list_text" id="m06" onclick="Open_Func(this)"><spring:message code='ezApprovalG.t906'/></span></li>
 			        	<li><span class="list_text" id="m02" onclick="Open_Func(this)"><spring:message code='ezApprovalG.t912'/></span></li>
-						<li><span class="list_text" id="m14" onclick="Open_Func(this)"><spring:message code='ezApprovalG.kbh08'/></span></li>
-						<li><span class="list_text" id="m12" onclick="Open_Func(this)"><spring:message code='ezApprovalG.kbh06'/></span></li>
-						<li><span class="list_text" id="m13" onclick="Open_Func(this)"><spring:message code='ezApprovalG.kbh07'/></span></li>
+						<spring:message code="ezApprovalG.kbh08" var="kbh08"/>
+						<spring:message code="ezApprovalG.kbh06" var="kbh06"/>
+						<spring:message code="ezApprovalG.kbh07" var="kbh07"/>
+						<li><span class="list_text" id="m14" onclick="Open_Func(this)" title="${userInfo.lang eq '1' ? '' : kbh08}"><spring:message code='ezApprovalG.kbh08'/></span></li>
+						<li><span class="list_text" id="m12" onclick="Open_Func(this)" title="${userInfo.lang eq '1' ? '' : kbh06}"><spring:message code='ezApprovalG.kbh06'/></span></li>
+						<li><span class="list_text" id="m13" onclick="Open_Func(this)" title="${userInfo.lang eq '1' ? '' : kbh07}"><spring:message code='ezApprovalG.kbh07'/></span></li>
 			        </ul>
 			        <c:if test="${fn:contains(userInfo.rollInfo, 'm=1') || fn:contains(userInfo.rollInfo, 'w=1') || fn:contains(userInfo.rollInfo, 'c=1')}">
 				        <h2 class="off" id="manageCabinetH2">
@@ -1647,7 +1667,7 @@
 						<ul class="lnbUL off" id="DEPTSHAREUL">
 				          	<c:forEach var="deptShare" items="${deptShareList}" varStatus="status">	
 				          		<li class="on">
-				          			<span class="list_text deptShare" id="${deptShare.shareId}" onclick="Open_Func(this); setBoldText(this);"><c:out value="${deptShare.shareName}"></c:out></span>
+				          			<span class="list_text deptShare" id="${deptShare.shareId}" onclick="Open_Func(this); setBoldText(this);" title="${deptShare.shareName}"><c:out value="${deptShare.shareName}"></c:out></span>
 				          		</li>			          	
 				          	</c:forEach>
 			          	</ul>
@@ -1665,10 +1685,12 @@
 				<c:if test="${approvalForDoc == 'Y'}">
 					<c:if test="${fn:contains(userInfo.rollInfo, 'c=1') || fn:contains(userInfo.rollInfo, 'k=1') || fn:contains(userInfo.rollInfo, 'q=1')}">
 						<h2 class="off" id="adminH2">
-			            	<span class="sub_iconLNB tree_plus" onclick="openFolder('admin')"></span><span class="h2Title" onclick="openFolder('admin')"><spring:message code='ezApprovalG.lhj13'/></span>
+							<spring:message code="ezApprovalG.lhj13" var="lhj13"/>
+			            	<span class="sub_iconLNB tree_plus" onclick="openFolder('admin')"></span><span class="h2Title" onclick="openFolder('admin')" title="${userInfo.lang eq '1' ? '' : lhj13}"><spring:message code='ezApprovalG.lhj13'/></span>
 						</h2>
 						<ul class="lnbUL off" id="adminUL">
-                           	<li><span class="list_text" id="approvalForDoc_sub01" onclick="Menu_Click(this)"><spring:message code='ezApprovalG.lhj14'/></span></li>
+							<spring:message code="ezApprovalG.lhj14" var="lhj14"/>
+                           	<li><span class="list_text" id="approvalForDoc_sub01" onclick="Menu_Click(this)" title="${userInfo.lang eq '1' ? '' : lhj14}"><spring:message code='ezApprovalG.lhj14'/></span></li>
                            	<li><span class="list_text" id="approvalForDoc_sub02" onclick="Menu_Click(this)"><spring:message code='ezApprovalG.lhj15'/></span></li>
 						</ul>
 					</c:if>

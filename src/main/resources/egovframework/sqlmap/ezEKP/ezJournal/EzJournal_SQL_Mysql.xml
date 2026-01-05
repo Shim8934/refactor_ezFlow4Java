@@ -216,49 +216,38 @@
 	
 	<!-- 회사 생성시 기본양식 생성 -->
 	<insert id="insertJournalBasicForm" parameterClass="map">
-		insert into tbl_journal_form (
-			type_id, 	company_id, 	tenant_id	,	
-			form_content	,	
-			form_name	,	
-			form_info	,	
-			form_status	,	
+		INSERT INTO tbl_journal_form (
+			type_id, company_id, tenant_id,
+			form_content,
+			form_content2,
+			form_content3,
+			form_content4,
+			form_content5,
+			form_content6,
+			form_name,
+			form_info,
+			form_status,
 			form_date
-		) values (
-			#typeId#,	#companyId#,	#tenantId#	,
-			(
-			select f.form_content from
-            (select * from tbl_journal_form
-			where company_id = 'Top'
-			and tenant_id = #tenantId#
-			and type_id = #typeId#	
-			and form_status = 'basic') f
-			)	,
-			(
-			select form_name from 
-            (select * from tbl_journal_form
-			where company_id = 'Top'
-			and tenant_id = #tenantId#
-			and type_id = #typeId#	
-			and form_status = 'basic') f
-			)	,
-			(
-			select form_info from 
-            (select * from tbl_journal_form
-			where company_id = 'Top'
-			and tenant_id = #tenantId#
-			and type_id = #typeId#	
-			and form_status = 'basic') f
-			)	,
-			(
-			select form_status from 
-            (select * from tbl_journal_form
-			where company_id = 'Top'
-			and tenant_id = #tenantId#
-			and type_id = #typeId#	
-			and form_status = 'basic') f
-			)	,
-			UTC_TIMESTAMP()
 		)
+		SELECT
+			#typeId#        AS type_id,
+			#companyId#     AS company_id,
+			#tenantId#      AS tenant_id,
+			f.form_content,
+			f.form_content2,
+			f.form_content3,
+			f.form_content4,
+			f.form_content5,
+			f.form_content6,
+			f.form_name,
+			f.form_info,
+			f.form_status,
+			UTC_TIMESTAMP()
+		FROM tbl_journal_form f
+		WHERE f.company_id = 'Top'
+		  AND f.tenant_id  = #tenantId#
+		  AND f.type_id    = #typeId#
+		  AND f.form_status = 'basic'
 	</insert>
 
 	<!-- 양식함 삭제 -->
@@ -728,9 +717,6 @@
 			</isEqual>
 			<isEqual property="formLang" compareValue="5">
 				form_content5 AS form_content,
-			</isEqual>
-			<isEqual property="formLang" compareValue="6">
-				form_content6 AS form_content,
 			</isEqual>
 			<isEqual property="formLang" compareValue="6">
 				form_content6 AS form_content,

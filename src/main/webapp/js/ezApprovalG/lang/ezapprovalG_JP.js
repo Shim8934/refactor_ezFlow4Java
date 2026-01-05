@@ -1221,7 +1221,6 @@ var strLangKm01 = "文書を回収しました。";
 var strLangKMH02 = "一括受付を進めますか？ <br>状態が回送の文書、施行文と合意文は対象外です。";
 var strLangKMH03 = "一括受付と最終承認を進めますか？ <br>状態が回送の文書、施行文と合意文は対象外です。";
 
-
 /* 2025-06-19 김유진 -  전자결재 > 열람권한 */
 var strLangKYJ_IsPublic01 = "全体閲覧";
 var strLangKYJ_IsPublic02 = "部署閲覧";
@@ -1230,5 +1229,7 @@ var strLangKYJ_IsPublic03 = "決裁ライン閲覧";
 var strLangJIHShareDox01 = "共有者と共有対象者は同じ会社に所属している必要があります。";
 var strLangJIHShareDox02 = "まず共有者を選択してください。";
 
+var strLangRetiree01 = "は退職者です。\nお気に入りの適用から除外されます。"
+var strLangRetiree02 = "は廃止されました。\nお気に入りの適用から除外されます。"
 var strLangJIH_ChkRecvnum1 = "receiptnumber フィールドは1つだけ指定してください。";
 var strLangJIH_ChkRecvnum2 = "receiptnumber フィールドが指定されていません。指定してください。";

@@ -25,6 +25,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezMemo/jquery.mCustomScrollbar.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('ezMemo.e1', 'msg')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezNewPortal/top.js')}"></script>
 		<style>
 			.layerpopup {
 				-webkit-border-top-left-radius: 5px;
@@ -140,21 +141,6 @@
 
 		        document.body.appendChild(form);
 		        form.submit();
-		    }
-		    
-		    function reloadLoginPage(multiLoginFlag, url) {
-		    	var frm = "";
-		    	
-		    	frm = "<form action='" + url + "' method='post' style='display:none;' id='reloadLogin' onsubmit='return false;'>";
-		    	if(!!multiLoginFlag) {
-		    		frm += "<input type='hidden' name='multiLoginFlag' value='" + multiLoginFlag + "'>";
-		    	}
-		    	frm += "</form>";
-		    	
-		    	var wrapper = document.createElement("div");
-		    	wrapper.innerHTML = frm;
-		    	document.body.appendChild(wrapper);
-		    	document.getElementById("reloadLogin").submit();
 		    }
 			
 			document.addEventListener("DOMContentLoaded", function () {

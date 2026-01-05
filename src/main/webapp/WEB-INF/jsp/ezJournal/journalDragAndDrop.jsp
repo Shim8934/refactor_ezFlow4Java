@@ -124,7 +124,10 @@
 		        input.type = "checkbox";
 		        input.id = "checkboxall";
 		        input.onclick = function () { checkall(); };
-		        objTh.appendChild(input);
+		        var oDiv = document.createElement("div");
+		        oDiv.className = "custom_checkbox";
+		        oDiv.appendChild(input);
+		        objTh.appendChild(oDiv);
 		        objTr.appendChild(objTh);
 	
 		        var objTh2 = document.createElement("TH");
@@ -190,8 +193,11 @@
 		                    var input = document.createElement("input");
 		                    input.type = "checkbox";
 		                    input.name = "fileSelect";
+		        	        var oDiv = document.createElement("div");
+		        	        oDiv.className = "custom_checkbox";
 
-		                    objTd.appendChild(input);
+		        	        oDiv.appendChild(input);
+		                    objTd.appendChild(oDiv);
 		                    objTr.appendChild(objTd);
 
 		                    var objTd2 = document.createElement("TD");
@@ -245,7 +251,7 @@
 	
 		        var isFileDelete = false;
 		        for (var i = 1; i < filecnt; i++) {
-		            if (document.getElementById("filelist").childNodes[i].childNodes[0].childNodes[0].checked == true) {
+		            if (document.getElementById("filelist").childNodes[i].childNodes[0].childNodes[0].childNodes[0].checked == true) {
 		                var pAttachDelSN;
 		                var pAttachDelFileName;
 		                var is_newfile;
@@ -305,10 +311,10 @@
 	
 		        for (var i = 1; i < filecnt; i++) {
 		            if (document.getElementById("checkboxall").checked == true) {
-		                document.getElementById("filelist").childNodes[i].childNodes[0].childNodes[0].checked = true;
+		                document.getElementById("filelist").childNodes[i].childNodes[0].childNodes[0].childNodes[0].checked = true;
 		            }
 		            else {
-		                document.getElementById("filelist").childNodes[i].childNodes[0].childNodes[0].checked = false;
+		                document.getElementById("filelist").childNodes[i].childNodes[0].childNodes[0].childNodes[0].checked = false;
 		            }
 		        }
 		    }

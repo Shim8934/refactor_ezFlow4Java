@@ -9,7 +9,7 @@
 	<div class="cabMoveTree" id="cabinetMoveTree"></div>
 	
 	<div class="cabdivBttn" id="cabMoveBttn">
-		<a class="cabBttn"><span><spring:message code='ezCabinet.t79'/></span></a>
-		<a class="cabBttn"><span><spring:message code='ezCabinet.t15'/></span></a>
+		<a class="imgbtn"><span><spring:message code='ezCabinet.t79'/></span></a>
+		<a class="imgbtn"><span><spring:message code='ezCabinet.t15'/></span></a>
 	</div>
 </div>

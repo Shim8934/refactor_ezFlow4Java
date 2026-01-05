@@ -174,11 +174,15 @@
 				    if (pDocState === "015" && pOrgDocID.length >= 20) {
 				    	if (ListTypeValue === "99") {	// 공람할문서
 				    		btnGongRam.style.display = "";
-					        btnBoard.style.display = "";
+					        if (typeof btnBoard !== "undefined") {
+					            btnBoard.style.display = ""; 
+					        }
 					        btnReuse.style.display = "";
 					        pOpinionType = "";
 				    	} else if (ListTypeValue === "10") {	// 공람완료문서
-				    		btnBoard.style.display = "";
+				    		if (typeof btnBoard !== "undefined") {
+				    		    btnBoard.style.display = ""; 
+				    		}
 					        btnReuse.style.display = "";
 				    	}
 				    }
@@ -454,12 +458,12 @@
 		        var conHeight = pheight * 0.8;
 		        var pwidth = window.screen.availWidth;
 		        var pTop = (pheight - conHeight) / 2;
-		        var pLeft = (pwidth - 890) / 2;
+		        var pLeft = (pwidth - 1200) / 2;
 			    var pURL = "/ezApprovalG/sendToMailApproval.do?cmd=docsend&docID=" + DocID + "&docHref=" + encodeURIComponent(DocHref)+"&orgCompanyID="+orgCompanyID;
 	 	        //var pURL = "/ezEmail/mailWrite.do?docHref=" +  encodeURIComponent(DocHref) + "&cmd=docsend&docID=" + DocID + "&imageCnt=&target=APPROVALG";
 		        // var newwin = window.open(pURL, "mailsend", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width =890px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
 		        // newwin.focus();
-				showPopup(pURL, 890, conHeight, "mailsend", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width =890px, status = no, toolbar=no, menubar=no,location=no, resizable=1", hidePopup);
+				showPopup(pURL, 1200, conHeight, "mailsend", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width =1200px, status = no, toolbar=no, menubar=no,location=no, resizable=1", hidePopup);
 		    }
 		    
 		    function btnhistory_onclick() {
@@ -551,10 +555,10 @@
 		    	message.SetEditable(false);
 		    }
 		
-		    var totalsavefileinfo_dialogArguments = new Array();
+		    // var totalsavefileinfo_dialogArguments = new Array();
 		    function TotalSave_onclick() {
-		        totalsavefileinfo_dialogArguments[0] = "";
-		        totalsavefileinfo_dialogArguments[1] = TotalSave_onclick_Complete;
+		        ezCommon_cross_dialogArguments[0] = "";
+		        ezCommon_cross_dialogArguments[1] = TotalSave_onclick_Complete;
 				
 		        if (ListTypeValue == "21") { //2019-02-08 천성준 - #14965 임시보관함문서 > 문서보기 > 통합PC저장 시, 첨부 및 문서파일을 내려받을수 없던 문제해결
 			        DivPopUpShow(580, 480, "/ezApprovalG/totalSaveFileInfo.do?docID=" + pDocID + "&type=TMP&orgCompanyID=" + orgCompanyID);
@@ -1186,7 +1190,7 @@
 			  <tr id="headerTabTR" style="display:none;">
 			  	<td>
 					  <div id="headerTab" style="width:90%; height:27px; margin:0 auto; border-bottom: solid 1px #eaeaea; box-sizing: border-box;">
-					  	<div id="headerMenu" style="width:80px; height:100%; cursor:pointer; text-align:center" onclick="headerAction()">
+					  	<div id="headerMenu" style="width:155px; height:100%; cursor:pointer; text-align:center" onclick="headerAction()">
 					  		<span id="headerHide" style="color:#8f8e93; font-size:14px;"><spring:message code='ezApproval.headerHide01'/></span>
 					  	</div>
 					  </div>

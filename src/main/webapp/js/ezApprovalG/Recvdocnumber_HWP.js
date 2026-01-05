@@ -1,5 +1,5 @@
 var fractionsymbol;
-function setDocNumFormat() {
+function setDocNumFormat(pSn) {
     var Arr_Header = new Array()
     var Header, Tail
     var d = new Date();
@@ -16,8 +16,13 @@ function setDocNumFormat() {
         var tempString = pDocNo.split("-");
 
         var tempNumString = "";
-        if (tempString.length - 1 > 0)
-            tempNumString = tempString[tempString.length - 1];
+        
+        if (pSn && pSn.length > 0) {
+             tempNumString = pSn;
+        } else {
+            if (tempString.length - 1 > 0)
+                tempNumString = tempString[tempString.length - 1];
+        }
 
         var i = 0;
         var templen = tempNumString.length;
@@ -136,15 +141,14 @@ function getRecvDocNumber(pDeptID, docNumZeroCnt) {
                 
                 return true;
             } else {
-            	var rtnVal = setDocNumFormat();
+                var SN = getNodeText(GetChildNodes(result)[0]);
+            	var rtnVal = setDocNumFormat(SN);
                 
                 if (!rtnVal) {
                 	return true;
                 }
                 
                 fractionsymbol = trim(HwpCtrl.GetFieldText(name));
-                
-                var SN = getNodeText(GetChildNodes(result)[0]);
                 
                 if (SN == "") {
                     pDocNumCode = "";
@@ -185,7 +189,7 @@ function getRecvDocNumber(pDeptID, docNumZeroCnt) {
                 }
             }
         } else {
-        	var rtnVal = setDocNumFormat();
+        	var rtnVal = setDocNumFormat("");
         	fractionsymbol = trim(HwpCtrl.GetFieldText(name));
 //        	HwpCtrl.SetFieldText(name, fractionsymbol + SN);
         	pDocNo = fractionsymbol;

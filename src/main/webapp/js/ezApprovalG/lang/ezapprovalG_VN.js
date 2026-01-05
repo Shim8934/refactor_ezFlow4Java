@@ -969,7 +969,7 @@ var strLangS602 = "Nó đã được đăng ký vào Favorites.";
 var strLangS603 = "Đã bị xóa khỏi mục yêu thích của bạn.";
 var strLangS604 = "Là lỗi đăng ký mã phân loại.";
 var strLangS605 = "Lỗi xóa mã phân loại.";
-var strLangS957 = ". Không có dữ liệu nào trong danh sách người nhận <br/> lòng chỉ định người nhận.";
+var strLangS957 = "Không có dữ liệu nào trong danh sách người nhận <br/> lòng chỉ định người nhận.";
 var strLangS1108 = "Vui lòng chọn tiêu chí.";
 var strLangS1109 = "Không có tiêu chí lựa chọn.";
 var strLangS1110 = "Kiểm tra mục này không được chỉ định.";
@@ -1192,15 +1192,15 @@ var ezApproval_headerHide01 = "헤더 숨기기";
 var ezApproval_headerHide02 = "헤더 펼치기";
 
 /* 2024-12-23 이가은 - 전자결재 일괄배부 기능 추가 */
-var ezApproval_allBeabu01 = "일괄배부를 진행하시겠습니까?";
-var ezApproval_allBeabu02 = "합의문이나 회송된 문서는 대상에서 제외됩니다.";
+var ezApproval_allBeabu01 = "Bạn có muốn tiến hành phân phối hàng loạt không?";
+var ezApproval_allBeabu02 = "Tài liệu thỏa thuận hoặc tài liệu đã được chuyển hoàn sẽ bị loại trừ.";
 
 /* 전자결재 요약전 에디터 기능 */
-var strLangJIH_Summary01 = "요약전 저장이 완료되었습니다.";
-var strLangJIH_Summary02 = "내용이 비어있는 요약전을 저장할 수 없습니다.";
-var strLangJIH_Summary03 = "잘못된 접근입니다.";
-var strLangJIH_Summary04 = "요약전을 불러올 수 없습니다."
-var strLangJIH_Summary05 = "요약전 정보"
+var strLangJIH_Summary01 = "Lưu bản tóm tắt đã hoàn tất.";
+var strLangJIH_Summary02 = "Không thể lưu bản tóm tắt có nội dung trống.";
+var strLangJIH_Summary03 = "Truy cập không hợp lệ.";
+var strLangJIH_Summary04 = "Không thể tải bản tóm tắt."
+var strLangJIH_Summary05 = "Thông tin bản tóm tắt"
 
 /* 전자결재 사인 그리기 기능 */
 var strLangHIH_signDraw01 = "서명을 작성한 뒤 결재해주세요.";
@@ -1228,6 +1228,9 @@ var strLangKYJ_IsPublic03 = "Xem tuyến phê duyệt";
 
 var strLangJIHShareDox01 = "Người chia sẻ và người được chia sẻ phải thuộc cùng một công ty.";
 var strLangJIHShareDox02 = "Vui lòng chọn người chia sẻ trước.";
+
+var strLangRetiree01 = "đã nghỉ việc.\nSẽ bị loại khỏi mục yêu thích."
+var strLangRetiree02 = "đã bị giải thể.\nSẽ bị loại khỏi mục yêu thích."
 
 var strLangJIH_ChkRecvnum1 = "receiptnumber 필드는 한개의 필드만 지정해주십시오.";
 var strLangJIH_ChkRecvnum2 = "receiptnumber 필드가 지정되어 있지 않습니다. 지정해주십시오.";

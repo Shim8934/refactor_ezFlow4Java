@@ -212,10 +212,10 @@
 	            var conHeight = pheight * 0.8;
 	            var pwidth = window.screen.availWidth;
 	            var conWidth = pwidth * 0.8;
-	            if (conWidth > 890)
-	                conWidth = 890;
+	            if (conWidth > 1200)
+	                conWidth = 1200;
 	            var pTop = (pheight - conHeight) / 2;
-	            var pLeft = (pwidth - 890) / 2;
+	            var pLeft = (pwidth - 1200) / 2;
 	            var feature = "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = " + conWidth + "px, status = no, toolbar=no, menubar=no,location=no, resizable=1";
 	            if (CrossYN() || pNoneActiveX == "YES") {
 	                window.open("/ezEmail/mailWrite.do?cmd=NEW", "", feature);
@@ -363,11 +363,13 @@
 	            	LoadAddressTree(); */
 	            }
 	        }
+			// TODO: div.tree 영역 밖의 li들은 꼭 li로 있어야 하는지? 또 하나의 div.tree로 만들 수는 없는지? (관리 용이 목적)
 	        function address_Search() {
                 parent.document.querySelector("iframe[name=right]").src = "/ezAddress/addressMainSearch.do";
 	            // 2023-06-28 황인경 - 디자인 개선 > 주소록 > 좌측메뉴 > 하단 '주소록검색' 메뉴 선택시 상단 메뉴 선택 해제
 	            $(".node_selected").attr("class", "node_normal");
-	            $(".list_text").addClass("node_selected");
+				// 1) 메일과의 통일성. 2) address_Search() 두 번 클릭 시, .list_text가 list_text는 사라지고 node_normal로 변경되는 현상 발생.
+	            // $(".list_text").addClass("node_selected");
 	        }
 		    
  			function event_folderMenu(event){

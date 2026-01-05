@@ -1,76 +1,76 @@
-﻿var strLang1 = "Attachment filename";
-var strLang2 = "Filesize";
-var strLang3 = "Filesize";
-var strLang4 = "Create";
-var strLang6 = "Can not attach empty file.";
-var strLang7 = "The length of filename can not exceed 111bytes.";
-var strLang8 = "The attached file size can not exceed ";
+﻿var strLang1 = "Nama file lampiran";
+var strLang2 = "Ukuran file";
+var strLang3 = "Ukuran file";
+var strLang4 = "Buat";
+var strLang6 = "Tidak dapat melampirkan file kosong.";
+var strLang7 = "Panjang nama file tidak boleh lebih dari 111bytes.";
+var strLang8 = "Ukuran file yang dilampirkan tidak boleh lebih dari ";
 var strLang9 = "MB.";
-var strLang10 = " - Uploading. ";
-var strLang11 = " - Error occurred while uploading.\n\nServer Error";
-var strLang12 = "The file to attach is being opened in use. \n\n Close that file and attach again.";
-var strLang13 = "- Error occurred while uploading.";
-var strLang14 = "Do you want to delete attached image?";
-var strLang16 = "Error occurred while deleting.";
-var strLang17 = "Do you want to delete attachment?";
-var strLang18 = "Error occurred while adding file.";
+var strLang10 = " - Mengunggah. ";
+var strLang11 = " - Terjadi kesalahan saat mengunggah.\n\nServer Error";
+var strLang12 = "File yang akan dilampirkan sedang dibuka dan digunakan. \n\nTutup file tersebut dan lampirkan lagi.";
+var strLang13 = "- Terjadi kesalahan saat mengunggah.";
+var strLang14 = "Apakah Anda ingin menghapus gambar yang dilampirkan?";
+var strLang16 = "Terjadi kesalahan saat menghapus.";
+var strLang17 = "Apakah Anda ingin menghapus lampiran? ";
+var strLang18 = "Terjadi kesalahan saat menambahkan file.";
 var strLang19 = "ㆍ";
-var strLang20 = "Can not use attachment filename with following characters - ";
-var strLang22 = "All image file\0*.jpg;*.gif;*.bmp;*.jpeg;*.jpe;*.jfif;*.tif;*.tiff;*.png\0Bitmap Image(*.bmp)\0*.bmp\0GIF Image(*.gif)\0*.gif\0JPEG Image(*.jpeg;*.jpg;*.jpe;*.jfif)\0*.jpeg;*.jpg;*.jpe;*.jfif\0PNG Image(*.png)\0*.png\0TIFF Image(*.tiff; *.tiff)\0*.tiff;*.tif\0\0";
-var strLang23 = "Uploading can only 5 files at once.";
-var strLang24 = " - It is not image file type.";
-var strLang26 = "You can not move in the post.";
-var strLang27 = "Cancelled.";
-var strLang39 = "Prev";
-var strLang40 = "Next";
-var strLang41 = "Total ";
-var strLang42 = "-items";
-var strLang43 = "There is no post.";
-var strLang44 = "Add a picture.";
-var strLang45 = "Select your main photo.";
-var strLang46 = "Add Photo completion";
-var strLang47 = "Add Photos of the error";
-var strLang48 = "Are you sure you want to delete an album ?";
-var strLang49 = "Choose one.";
-var strLang50 = "Complete modification";
-var strLang51 = "Fix Errors";
-var strLang53 = "There is no data.";
-var strLang54 = "The extension of the file upload limit.";
-var strLang55 =	"Preview is not available for moved or deleted scrap.";
-var strLang60 = "OK";
-var strLang61 = "Atmosphere";
-var strLang62 = "Return";
-var strLang63 =	"There is no post.";
+var strLang20 = "Tidak dapat menggunakan nama file lampiran dengan karakter berikut - ";
+var strLang22 = "Semua file gambar\0*.jpg;*.gif;*.bmp;*.jpeg;*.jpe;*.jfif;*.tif;*.tiff;*.png\0Gambar Bitmap (*. bmp)\0*.bmp\0GIF Image(*.gif)\0*.gif\0JPEG Image(*.jpeg;*.jpg;*.jpe;*.jfif)\0*.jpeg;*.jpg;*.jpe;*.jfif\0PNG Image(*.png)\0*.png\0TIFF Image(*. tiff; *.tiff)\0*.tiff;*.tif\0\0";
+var strLang23 = "Mengunggah hanya bisa 5 file sekaligus.";
+var strLang24 = " - Bukan tipe file gambar. ";
+var strLang26 = "Anda tidak dapat memindahkan postingan.";
+var strLang27 = "Dibatalkan.";
+var strLang39 = "Sebelumnya";
+var strLang40 = "Berikutnya";
+var strLang41 = "Total";
+var strLang42 = "-item";
+var strLang43 = "Tidak ada postingan.";
+var strLang44 = "Tambahkan gambar";
+var strLang45 = "Pilih foto utama Anda.";
+var strLang46 = "Tambahkan Foto selesai";
+var strLang47 = "Tambahkan Foto kesalahan";
+var strLang48 = "Apakah Anda yakin ingin menghapus album?";
+var strLang49 = "Pilih salah satu.";
+var strLang50 = "Modifikasi selesai";
+var strLang51 = "Perbaiki Kesalahan";
+var strLang53 = "Tidak ada data.";
+var strLang54 = "Perpanjangan batas unggah file. ";
+var strLang55 = "Pratilik tak tersedia bagi memo yang dipindahkan atau dihapus.";
+var strLang60 = "Oke";
+var strLang61 = "Suasana";
+var strLang62 = "Kembali";
+var strLang63 = "Tidak ada postingan.";
 
 
 //2016 추가
-var strLang171 = "The ID of the list was not specified.";
-var strLang172 = "data is not specified.";
-var strLang173 = "no authority";
-var strLang174 = "An error occurred while trying to add picture";
-var strLang175 = "You do not have read permissions.";
-var strLang176 = "no delete privileges.";
-var strLang177 = "Please select your posts.";
-var strLang178 = "Are you sure you want read?";
-var strLang179 = ""; // 어순 처리 목적 빈칸
+var strLang171 = "ID daftar tidak ditentukan.";
+var strLang172 = "data tidak ditentukan.";
+var strLang173 = "tidak ada otoritas";
+var strLang174 = "Terjadi kesalahan ketika mencoba menambahkan gambar";
+var strLang175 = "Anda tidak memiliki hak akses baca. ";
+var strLang176 = "tidak ada hak hapus.";
+var strLang177 = "Silakan pilih posting Anda.";
+var strLang178 = "Apakah Anda yakin ingin membaca?";
+var strLang179 = "";
 
 //2017.12.26 강민수92 추가
-var strLang180 = "Are you sure you want to delete a comment?";
-var strLang181 = "There is no comment.";
-var strLang182 = "Please enter your content.";
-var strLang183 = "Please enter your password.";
-var strLang184 = "You can only delete comments you have registered.";
-var strLang185 = "The password is incorrect.";
-var strLang186 = "Comment";
+var strLang180 = "Apakah Anda yakin ingin menghapus komentar?";
+var strLang181 = "Tidak ada komentar.";
+var strLang182 = "Silakan masukkan konten Anda.";
+var strLang183 = "Silakan masukkan kata sandi Anda. ";
+var strLang184 = "Anda hanya dapat menghapus komentar yang telah Anda daftarkan.";
+var strLang185 = "Kata sandi salah.";
+var strLang186 = "Komentar";
 
 //2021-04-22 김정언 추가
-var strLang187 = ""; // 어순처리 빈칸
+var strLang187 = "";
 
-var strLang188 = "Please choose ";
-var strLang189 = "Please enter "; 
+var strLang188 = "Silakan pilih ";
+var strLang189 = "Silakan masukkan ";
 
 /* 2023-05-16 김우철 - 한글 배포용 문서 저장을 위한 메세지 추가 */
-var strLangKWCHd01 = "An error occurred while saving security HWP document. Please try again.";
+var strLangKWCHd01 = "Terjadi kesalahan saat menyimpan keamanan dokumen HWP. Silakan coba lagi.";
 
 // 2023-03-08 이가은 추가
 var strLangLGE188 = "Anda tidak dapat menyukai komentar Anda sendiri.";
@@ -87,31 +87,31 @@ var strLangLGE06 = "Anonim";
 var strLangLGE07 = "Komentar ini telah dihapus oleh penulis.";
 
 /* 2024-08-26 전인하 - 게시판 > 키워드 > 특문입력제한 */
-var strLangKeywordJIH01 = "역슬래시, 작은따옴표, 큰따옴표, 부등호기호, 해시기호(#)를 입력할 수 없습니다."
-var strLangKeywordJIH02 = "오류가 발생하였습니다."
-var strLangKeywordJIH03 = "해당 게시물을 그룹웨어에서 접근하지 않았거나, 해당 게시물을 접근한 그룹웨어 페이지에 변경사항이 발생하여 키워드를 검색할 수 없습니다."
-var strLangKeywordJIH04 = "보고 있는 게시물 팝업을 닫겠습니까?"
-var strLangKeywordJIH05 = "게시물 혹은 메일 보기 팝업을 통하여 열람한 게시글, 관리자 화면을 통하여 열람한 게시글에서는 키워드를 검색할 수 없습니다.";
+var strLangKeywordJIH01 = "Anda tidak dapat memasukkan garis miring, tanda kutip bawah, tanda kutip ganda, tanda pertidaksamaan, dan tanda hash."
+var strLangKeywordJIH02 = "Terjadi kesalahan."
+var strLangKeywordJIH03 = "Anda tidak dapat mencari kata kunci karena postingan ini tidak diakses dari groupware atau telah terjadi perubahan pada halaman groupware tempat postingan tersebut diakses.";
+var strLangKeywordJIH04 = "Anda ingin menutup postingan yang sedang Anda lihat? ";
+var strLangKeywordJIH05 = "Anda tidak dapat mencari kata kunci di postingan yang dilihat melalui tampilan postingan atau popup email, atau di postingan yang dilihat melalui layar admin. ";
 
-var strLangAttachJIH01 = "첨부";
-var strLangAttachJIH02 = "파일명은 ";
-var strLangAttachJIH03 = "자를 넘을 수 없습니다.";
-var strLangAttachJIH04 = "에러가 발생하였습니다.";
+var strLangAttachJIH01 = "Lampirkan";
+var strLangAttachJIH02 = "Nama file tidak boleh melebihi ";
+var strLangAttachJIH03 = " karakter.";
+var strLangAttachJIH04 = "Terjadi kesalahan.";
 
 // 2024-06-28 민지수 - 게시판 > 첨부파일 드래그 앤 드롭 안내 메세지 추가
-var strLangMJS01 = "You can drag and drop to add files and change the order of added files.";
+var strLangMJS01 = "Anda bisa menyeret dan melepaskan untuk menambahkan file dan mengubah urutan file yang ditambahkan.";
 
 // 2024-10-02 이혜림 추가
-var strLangLHR001 = "0점은 평가할 수 없습니다.";
-var strLangLHR002 = "기존과 동일한 점수로는 평가하기를 할 수 없습니다.";
-var strLangLHR003 = "별점이 성공적으로 저장되었습니다.";
+var strLangLHR001 = "Skor 0 tidak dapat dinilai.";
+var strLangLHR002 = "Tidak dapat memberi nilai dengan skor yang sama seperti sebelumnya.";
+var strLangLHR003 = "Rating berhasil disimpan.";
 
-var strLangFileViewr01 = "해당 게시판은 하나의 글만 등록 가능합니다.\n새로운 글을 등록하려면 기존 글을 먼저 삭제해야 합니다.";
+var strLangFileViewr01 = "Papan ini hanya dapat memiliki satu postingan.\nUntuk mendaftarkan postingan baru, hapus terlebih dahulu postingan yang ada.";
 
 // 2025-06-12 양지혜 - 게시글 버전관리 > 버전 히스토리 생성 안내 문구 추가
-var strLangVersion01 = "게시글 버전관리를 사용하기 위해 히스토리를 생성합니다.\n기존에 등록된 글이 많은 경우 다소 시간이 걸릴 수 있습니다. 계속 진행하시겠습니까?";
-var strLangVersion02 = "게시글 버전 관리를 위한 히스토리 생성에 실패하여 설정을 저장할 수 없습니다.\n버전관리를 '미사용'으로 변경한 후 다시 저장하거나, 관리자에게 문의해주세요.";
+var strLangVersion01 = "Membuat riwayat untuk menggunakan manajemen versi postingan.\nJika ada banyak postingan yang sudah terdaftar, proses ini mungkin memerlukan waktu.\nApakah Anda ingin melanjutkan?";
+var strLangVersion02 = "Gagal membuat riwayat untuk manajemen versi postingan, sehingga pengaturan tidak dapat disimpan.\nUbah manajemen versi menjadi 'Tidak Digunakan' lalu simpan kembali, atau hubungi administrator.";
 
 // 2025-05-07 전인하 - 관리자 > 게시판 > 게시물 구분 변경 시 제한 조건 추가
-var strLangJIHgubunChange01 = "게시판에 게시물이 존재할 경우 게시판의 구분을 변경할 수 없습니다.";
-var strLangJIHgubunChange02 = "관리자 페이지에서 게시판 타입이 변경되었습니다.\n게시물을 저장할 수 없습니다. 그룹웨어 새로고침이 필요합니다.";
+var strLangJIHgubunChange01 = "Jika terdapat postingan di papan, kategori papan tidak dapat diubah.";
+var strLangJIHgubunChange02 = "Jenis papan telah diubah di halaman administrator.\nTidak dapat menyimpan postingan. Penyegaran ulang groupware diperlukan.";

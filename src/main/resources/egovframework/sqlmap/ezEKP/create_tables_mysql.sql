@@ -140,6 +140,7 @@ CREATE TABLE `james_mail_search` (
   `MAIL_IP` varchar(200) DEFAULT NULL,
   `COUNTRY_CODE` varchar(200) DEFAULT NULL,
   `SECURE_FLAG` int(1) DEFAULT 0,
+  `EACH_FLAG` int(1) DEFAULT 0,
   PRIMARY KEY (`MAIL_SEARCH_ID`),
   KEY `MAILBOX_ID` (`MAILBOX_ID`,`MAIL_UID`),
   KEY `MESSAGE_ID` (`MESSAGE_ID`(191)),
@@ -346,23 +347,6 @@ CREATE TABLE `jmocha_address_info` (
   PRIMARY KEY (`address_id`),
   KEY `owner_id` (`owner_id`,`s_email`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `jmocha_address_search`
---
-
-DROP TABLE IF EXISTS `jmocha_address_search`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `jmocha_address_search` (
-  `id` varchar(25) NOT NULL,
-  `zip_code` varchar(5) DEFAULT NULL,
-  `address` varchar(1000) DEFAULT NULL,
-  `old_address` varchar(1000) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  FULLTEXT KEY `fulltext_idx` (`address`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -709,6 +693,7 @@ CREATE TABLE `jmocha_mail_delete` (
   `EXPIRE_TIME` int(11) DEFAULT NULL,
   `DELETE_UNREAD` char(1) DEFAULT NULL,
   `FOLDER_NAME` varchar(100) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `AUTO_DELETION_OPTION` varchar(20) DEFAULT 'trash',
   PRIMARY KEY (`USER_ID`,`FOLDER_PATH`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -755,7 +740,8 @@ CREATE TABLE `jmocha_mail_general` (
   `DEFAULT_SEPARATE_SEND` VARCHAR(10) DEFAULT NULL,
   `DEFAULT_CURSOR_POSITION` VARCHAR(50) DEFAULT NULL,
   `MAIL_SEARCH_PERIOD` varchar(10) DEFAULT NULL,
-  `SELF_CC_OPTION` varchar(10) DEFAULT 'none',  
+  `SELF_CC_OPTION` varchar(10) DEFAULT 'none',
+  `FORWARD_AS` VARCHAR(50) DEFAULT 'inline',
   PRIMARY KEY (`USER_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -2328,6 +2314,7 @@ CREATE TABLE `tbl_addjobmaster` (
   `PROXY` varchar(200) DEFAULT NULL,
   `MANUAL_FLAG` varchar(4) DEFAULT NULL,
   `ROLL_INFO` varchar(200) DEFAULT 'c=0;k=0;g=0;a=0;i=0;n=0;l=0;w=0;m=0;',
+  `USERTREEFLAG` char(1) DEFAULT 'Y',
   PRIMARY KEY (`CN`,`DEPTID`,`TENANT_ID`,`JOBID`,`ROLEID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -3699,6 +3686,7 @@ CREATE TABLE `tbl_board_boardinfo` (
   `BOARDNAME2` varchar(510) CHARACTER SET utf8mb4 DEFAULT NULL,
   `BOARDNAME3` varchar(510) CHARACTER SET utf8mb4 DEFAULT NULL,
   `BOARDNAME4` varchar(510) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `BOARDNAME6` varchar(510) CHARACTER SET utf8mb4 DEFAULT NULL,
   `TREEVIEWORDER` int(11) DEFAULT NULL,
   `BOARDLEVEL` int(11) DEFAULT NULL,
   `PARENTBOARDID` varchar(76) DEFAULT NULL,
@@ -3736,6 +3724,11 @@ CREATE TABLE `tbl_board_boardinfo` (
   `WRITERFLAG` varchar(2) DEFAULT 'N',
   `STARRATINGFLAG` varchar(1) DEFAULT NULL,
   `URLCOPYFLAG` char(1) DEFAULT 'N',
+  `DISLIKEFLAG` VARCHAR(2) DEFAULT NULL,
+  `VERSIONMANAGE` VARCHAR(1) DEFAULT 'N',
+  `USEKEYWORD` VARCHAR(11) DEFAULT NULL,
+  `LISTSHOWTYPE` VARCHAR(2) NOT NULL DEFAULT 'U',
+  `USEGROUPFLAG` char(1) DEFAULT 'N',
   PRIMARY KEY (`BOARDID`,`TENANT_ID`),
   KEY `idx_companyid` (`COMPANYID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -3754,6 +3747,9 @@ CREATE TABLE `tbl_board_boardinfo_attribute` (
   `SN` smallint(3) DEFAULT NULL,
   `COLNAME1` varchar(100) CHARACTER SET utf8mb4 DEFAULT NULL,
   `COLNAME2` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `COLNAME3` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `COLNAME4` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `COLNAME6` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
   `VALUE` varchar(510) CHARACTER SET utf8mb4 DEFAULT NULL,
   `COLTYPE` varchar(100) DEFAULT NULL,
   `MUST` varchar(4) DEFAULT NULL,
@@ -3810,6 +3806,7 @@ CREATE TABLE `tbl_board_configuration` (
   `PREVIEWHCONTENT` bigint(10) DEFAULT 0,
   `ALLNEWBOARDLISTDATE` int(10) DEFAULT 5,
   `CONTENTSIZE` int(2) DEFAULT 0,
+  `USRLISTSHOWTYPE` VARCHAR(2) NOT NULL DEFAULT 'G',
   `TENANT_ID` mediumint(5) NOT NULL,
   PRIMARY KEY (`TENANT_ID`,`USERID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -3902,6 +3899,7 @@ CREATE TABLE `tbl_board_item` (
   `NTENDDATE` varchar(40) DEFAULT NULL,
   `PUBLICFLAG`char(1) DEFAULT 'Y',
   `WRITERNAMETYPE` varchar(2) DEFAULT NULL,
+  `UPDATERID` varchar(80) DEFAULT NULL,
   PRIMARY KEY (`TENANT_ID`,`ITEMID`),
   KEY `writedate` (`WRITEDATE`,`PARENTWRITEDATE`),
   KEY `writedate1` (`WRITEDATE`),
@@ -3994,6 +3992,7 @@ CREATE TABLE `tbl_board_item_listoption` (
   `NAME2` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
   `NAME3` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
   `NAME4` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `NAME6` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
   `COLNAME` varchar(200) NOT NULL,
   `WIDTH` bigint(10) NOT NULL,
   `VIEW_FG` varchar(4) NOT NULL,
@@ -4016,6 +4015,7 @@ CREATE TABLE `tbl_board_item_listoption_boar` (
   `NAME2` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
   `NAME3` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
   `NAME4` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `NAME6` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
   `COLNAME` varchar(200) NOT NULL,
   `WIDTH` bigint(10) NOT NULL,
   `VIEW_FG` varchar(4) NOT NULL,
@@ -4100,6 +4100,9 @@ CREATE TABLE `tbl_board_item_temp` (
   `EXTENSIONATTRIBUTE10` varchar(500) CHARACTER SET utf8mb4 DEFAULT NULL,
   `TENANT_ID` mediumint(5) NOT NULL,
   `PUBLICFLAG`char(1) DEFAULT 'Y',
+  `NTSTARTDATE` varchar(40) DEFAULT NULL,
+  `NTENDDATE` varchar(40) DEFAULT NULL,
+  `WRITERNAMETYPE` VARCHAR(2) DEFAULT NULL,
   PRIMARY KEY (`TENANT_ID`,`ITEMID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -4134,6 +4137,7 @@ CREATE TABLE `tbl_board_listheader` (
   `NAME2` varchar(200) DEFAULT NULL,
   `NAME3` varchar(200) DEFAULT NULL,
   `NAME4` varchar(200) DEFAULT NULL,
+  `NAME6` varchar(200) DEFAULT NULL,
   `COLNAME` varchar(200) NOT NULL,
   `WIDTH` bigint(10) NOT NULL,
   `VIEW_FG` varchar(4) NOT NULL,
@@ -4156,6 +4160,7 @@ CREATE TABLE `tbl_board_myboards` (
   `BOARDNAME2` varchar(100) CHARACTER SET utf8mb4 DEFAULT NULL,
   `BOARDNAME3` varchar(100) CHARACTER SET utf8mb4 DEFAULT NULL,
   `BOARDNAME4` varchar(100) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `BOARDNAME6` varchar(100) CHARACTER SET utf8mb4 DEFAULT NULL,
   `TREEVIEWNUM` double(126,0) DEFAULT NULL,
   `TABUSED` varchar(4) DEFAULT 'Y',
   `VIEWORDER` double(126,0) DEFAULT NULL,
@@ -4179,6 +4184,7 @@ CREATE TABLE `tbl_board_mytree` (
   `TREENAME2` varchar(510) CHARACTER SET utf8mb4 DEFAULT NULL,
   `TREENAME3` varchar(510) CHARACTER SET utf8mb4 DEFAULT NULL,
   `TREENAME4` varchar(510) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `TREENAME6` varchar(510) CHARACTER SET utf8mb4 DEFAULT NULL,
   `TREELEVEL` bigint(10) DEFAULT NULL,
   `TREESTEP` bigint(10) NOT NULL,
   `TREEUPPER` varchar(76) DEFAULT NULL,
@@ -4327,6 +4333,7 @@ CREATE TABLE `tbl_board_treecache` (
   `RESULT2` longtext CHARACTER SET utf8mb4 DEFAULT NULL,
   `RESULT3` longtext CHARACTER SET utf8mb4 DEFAULT NULL,
   `RESULT4` longtext CHARACTER SET utf8mb4 DEFAULT NULL,
+  `RESULT6` longtext CHARACTER SET utf8mb4 DEFAULT NULL,
   `TENANT_ID` mediumint(5) NOT NULL,
   PRIMARY KEY (`TENANT_ID`,`QUERY`(255))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -4359,6 +4366,7 @@ CREATE TABLE `tbl_c_board` (
   `CHARFILENAME` longtext DEFAULT NULL,
   `TENANT_ID` decimal(22,0) NOT NULL DEFAULT 0,
   `UPPERNO` bigint(10) DEFAULT NULL,
+  `ATTACHMENTS` VARCHAR(20) DEFAULT NULL,
   PRIMARY KEY (`NO`),
   UNIQUE KEY `IDX_TBL_C_BOARD` (`TENANT_ID`,`NO`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -5355,6 +5363,7 @@ CREATE TABLE `tbl_circular_listoption` (
   `NAME2` varchar(200) DEFAULT NULL,
   `NAME3` varchar(200) DEFAULT NULL,
   `NAME4` varchar(200) DEFAULT NULL,
+  `NAME6` varchar(200) DEFAULT NULL,
   `COLNAME` varchar(200) NOT NULL,
   `WIDTH` bigint(10) NOT NULL,
   `TENANTID` mediumint(5) NOT NULL,
@@ -5481,6 +5490,7 @@ CREATE TABLE `tbl_codelist` (
   `NAME2` varchar(510) DEFAULT NULL,
   `NAME3` varchar(510) DEFAULT NULL,
   `NAME4` varchar(510) DEFAULT NULL,
+  `NAME6` varchar(510) DEFAULT NULL,
   `TENANT_ID` mediumint(5) NOT NULL DEFAULT 0,
   `COMPANYID` varchar(20) NOT NULL,
   PRIMARY KEY (`TENANT_ID`,`COMPANYID`,`CODE1`,`CODE2`)
@@ -6275,6 +6285,7 @@ CREATE TABLE `tbl_deptmaster` (
   `TENANT_ID` mediumint(5) NOT NULL DEFAULT 0,
   `MANUAL_FLAG` varchar(10) DEFAULT NULL,
   `DEPTTREEFLAG` char(1) DEFAULT 'Y',
+  `USEUPPERDEPTBOX` varchar(4) DEFAULT 'N',
   PRIMARY KEY (`TENANT_ID`,`CN`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -6762,6 +6773,7 @@ CREATE TABLE `tbl_expaprdocinfo` (
   `TENANT_ID` mediumint(5) NOT NULL,
   `PUBLICITYYN` char(2) DEFAULT NULL,
   `FORMVERSION` int(11) DEFAULT 0,
+  `SUMMARYPATH` varchar(140) DEFAULT NULL COMMENT '요약전 mht파일이 저장되는 경로정보',
   PRIMARY KEY (`TENANT_ID`,`COMPANYID`,`DOCID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -6830,6 +6842,7 @@ CREATE TABLE `tbl_expendaprdocinfo` (
   `TENANT_ID` mediumint(5) NOT NULL,
   `PUBLICITYYN` char(2) DEFAULT NULL,
   `FORMVERSION` int(11) DEFAULT 0,
+  `SUMMARYPATH` varchar(140) DEFAULT NULL COMMENT '요약전 mht파일이 저장되는 경로정보',
   PRIMARY KEY (`TENANT_ID`,`COMPANYID`,`DOCID`),
   KEY `IDX_TBL_EXPENDAPRDOCINFO_DELFLAG` (`DELFLAG`),
   KEY `IDX_TBL_EXPENDAPRDOCINFO_DOCID` (`DOCID`),
@@ -6992,6 +7005,7 @@ CREATE TABLE `tbl_formcontainer` (
   `FORMCONTNAME2` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
   `TENANT_ID` mediumint(5) NOT NULL,
   `COMPANYID` varchar(20) NOT NULL,
+  `SN` bigint(20) DEFAULT NULL,
   PRIMARY KEY (`TENANT_ID`,`COMPANYID`,`FORMCONTID`,`FORMCONTNAME`,`FORMCONTOWNDEPID`,`FORMCONTPARENTS`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -7059,6 +7073,7 @@ CREATE TABLE `tbl_forminfo` (
   `FORMGUIDE` longtext DEFAULT NULL,
   `APROPTION` varchar(300) DEFAULT NULL COMMENT '양식 세부설정',
   `SIHANGTYPE` varchar(10) DEFAULT '' COMMENT '전자결재G 시행문 타입',
+  `MOBILEDRAFTFLAG` varchar(4) DEFAULT 'N' COMMENT '전자결재S 모바일 기안 여부',
   PRIMARY KEY (`FORMID`,`TENANT_ID`,`COMPANYID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -7225,6 +7240,8 @@ CREATE TABLE `tbl_historydocinfo` (
   `BEFOREDOCURL` varchar(1020) DEFAULT NULL,
   `TENANT_ID` mediumint(5) NOT NULL DEFAULT 0,
   `COMPANYID` varchar(20) NOT NULL,
+  `EDITVERSION` VARCHAR(100)  DEFAULT NULL,
+  `EDITMODE` CHAR(1) DEFAULT NULL,
   PRIMARY KEY (`DOCID`,`CHANGESN`,`TENANT_ID`,`COMPANYID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -7413,6 +7430,12 @@ CREATE TABLE `tbl_journal_form` (
   `form_status` varchar(10) DEFAULT NULL COMMENT '양식 상태',
   `company_id` varchar(80) NOT NULL COMMENT '회사 아이디',
   `form_del_flag` varchar(10) DEFAULT NULL,
+  `form_lang` MEDIUMINT(5) DEFAULT 1 COMMENT '기본양식사용설정된 언어(defult:1 한국어, 2:영어, 3:일본어, 4:중국어, 5:베트남어, 6:인도네시아어)',
+  `form_content2` TEXT DEFAULT NULL COMMENT '기본양식(영어)',
+  `form_content3` TEXT DEFAULT NULL COMMENT '기본양식(일본어)',
+  `form_content4` TEXT DEFAULT NULL COMMENT '기본양식(중국어)',
+  `form_content5` TEXT DEFAULT NULL COMMENT '기본양식(베트남어)',
+  `form_content6` TEXT DEFAULT NULL COMMENT '기본양식(인도네시아어)',
   PRIMARY KEY (`form_id`,`tenant_id`),
   KEY `FK_tbl_journal_form_type_id_tbl_journal_form_type_type_id_idx` (`type_id`),
   KEY `FK_tbl_journal_form_company_id_tbl_journal_form_type_compan_idx` (`company_id`)
@@ -7883,6 +7906,7 @@ CREATE TABLE `tbl_listinfo` (
   `NAME2` varchar(200) DEFAULT NULL,
   `NAME3` varchar(200) DEFAULT NULL,
   `NAME4` varchar(200) DEFAULT NULL,
+  `NAME6` varchar(200) DEFAULT NULL,
   `DELFLAG` varchar(50) DEFAULT NULL,
   `TENANT_ID` mediumint(5) NOT NULL DEFAULT 0,
   `COMPANYID` varchar(20) NOT NULL,
@@ -7911,6 +7935,7 @@ CREATE TABLE `tbl_listoption` (
   `NAME2` varchar(200) DEFAULT NULL,
   `NAME3` varchar(200) DEFAULT NULL,
   `NAME4` varchar(200) DEFAULT NULL,
+  `NAME6` varchar(200) DEFAULT NULL,
   `DELFLAG` varchar(20) DEFAULT NULL,
   `TENANT_ID` mediumint(5) NOT NULL DEFAULT 0,
   `COMPANYID` varchar(20) NOT NULL,
@@ -8323,6 +8348,8 @@ CREATE TABLE `tbl_photo_imageitem` (
   `IMAGENAME` varchar(800) CHARACTER SET utf8mb4 DEFAULT NULL,
   `MAIN_FLAG` varchar(4) DEFAULT NULL,
   `TENANT_ID` mediumint(5) NOT NULL,
+  `ADDTHUMBNAIL` VARCHAR(20) DEFAULT NULL,
+  `THUMBNAILEXT` VARCHAR(20) DEFAULT NULL,
   PRIMARY KEY (`TENANT_ID`,`IMAGEID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -9183,6 +9210,7 @@ CREATE TABLE `tbl_portal_menu_comp` (
   `company_order` int(11) DEFAULT NULL,
   `menu_ipused` int(11) DEFAULT 0 COMMENT '활성화(Y), 비활성화(N)',
   `icon_url` varchar(200) DEFAULT NULL COMMENT '회사별 기본 아이콘 변경',
+  `OPENTYPE`	int(3)	DEFAULT	3	NOT NULL	COMMENT '메뉴 열기 방식; 1:새 탭, 2:새 창, 3:iframe에서 열기',
   PRIMARY KEY (`company_id`,`tenant_id`,`menu_id`),
   KEY `FK_tbl_portal_menu_comp_menu_id_tbl_portal_menu_menu_id` (`menu_id`),
   CONSTRAINT `FK_tbl_portal_menu_comp_menu_id_tbl_portal_menu_menu_id` FOREIGN KEY (`menu_id`) REFERENCES `tbl_portal_menu` (`menu_id`)
@@ -9283,6 +9311,7 @@ CREATE TABLE `tbl_portal_portlet_comp` (
   `portlet_used` int(11) DEFAULT 0 COMMENT '포틀릿 보임(Y)/숨김(N)',
   `portlet_order` int(11) DEFAULT NULL COMMENT '포틀릿 순서',
   `board_id` varchar(200) DEFAULT NULL,
+  `connection_id` varchar(200) DEFAULT NULL,
   PRIMARY KEY (`company_id`,`tenant_id`,`portlet_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='회사별 포틀릿 설정 테이블';
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -9354,14 +9383,17 @@ DROP TABLE IF EXISTS `tbl_portal_theme`;
 CREATE TABLE `tbl_portal_theme` (
   `theme_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '테마아이디',
   `theme_name` varchar(100) DEFAULT NULL COMMENT '테마 이름',
+  `THEME_NAME2` varchar(100) DEFAULT 'theme2' COMMENT '다국어 테마 이름(영어)',
+  `THEME_NAME3` varchar(100) DEFAULT 'theme3' COMMENT '다국어 테마 이름(일본어)',
+  `THEME_NAME4` varchar(100) DEFAULT 'theme4' COMMENT '다국어 테마 이름(중국어)',
+  `THEME_NAME5` varchar(100) DEFAULT 'theme5' COMMENT '다국어 테마 이름(베트남어)',
+  `THEME_NAME6` varchar(100) DEFAULT 'theme6' COMMENT '다국어 테마 이름(인도네시아어)',
   `theme_content` varchar(400) DEFAULT NULL COMMENT '테마 설명(내용)',
-  `theme_content2` varchar(400) DEFAULT NULL,
-  `theme_content3` varchar(400) DEFAULT NULL,
-  `theme_content4` varchar(400) DEFAULT NULL,
-  `theme_content5` varchar(400) DEFAULT NULL,
-  `theme_content6` varchar(400) DEFAULT NULL,
-  `THEME_NAME2` varchar(100) DEFAULT 'theme2',
-  `THEME_NAME3` varchar(100) DEFAULT 'theme3',
+  `theme_content2` varchar(400) DEFAULT NULL COMMENT '다국어 테마 설명(영어)',
+  `theme_content3` varchar(400) DEFAULT NULL COMMENT '다국어 테마 설명(일본어)',
+  `theme_content4` varchar(400) DEFAULT NULL COMMENT '다국어 테마 설명(중국어)',
+  `theme_content5` varchar(400) DEFAULT NULL COMMENT '다국어 테마 설명(베트남어)',
+  `theme_content6` varchar(400) DEFAULT NULL COMMENT '다국어 테마 설명(인도네시아어)',
   PRIMARY KEY (`theme_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='테마 정보 테이블';
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -9440,6 +9472,7 @@ CREATE TABLE `tbl_portal_theme_user` (
   `tenant_id` mediumint(9) NOT NULL DEFAULT 0 COMMENT '테넌트 아이디',
   `used_theme` int(11) NOT NULL DEFAULT 0 COMMENT '사용자가 사용하는 테마 아이디',
   `used_frame` int(11) DEFAULT NULL COMMENT '사용자가 사용하는 프레임 아이디',
+  `USEPAGING`	TINYINT	DEFAULT	1	NOT NULL	COMMENT '페이징 사용 여부',
   `is_default` int(11) DEFAULT 0,
   PRIMARY KEY (`user_id`,`company_id`,`tenant_id`,`used_theme`),
   KEY `FK_tbl_portal_theme_user_used_theme_tbl_portal_theme_theme_id` (`used_theme`),
@@ -9768,6 +9801,7 @@ CREATE TABLE `tbl_ps_quicklink` (
   `SIZE_` varchar(40) DEFAULT NULL,
   `TENANT_ID` mediumint(5) NOT NULL,
   `LINKORDER` int(11) DEFAULT NULL,
+  `COMPANYID` varchar(20) NOT NULL,
   PRIMARY KEY (`TENANT_ID`,`QUICKLINKID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -10135,6 +10169,7 @@ CREATE TABLE `tbl_record_temp` (
   `SENDINGMEMBERNAME2` varchar(200) DEFAULT NULL,
   `TENANT_ID` mediumint(5) NOT NULL DEFAULT 0,
   `COMPANYID` varchar(20) NOT NULL,
+  `DOCATTACHNAME` varchar(300) DEFAULT '',
   PRIMARY KEY (`DOCID`,`TENANT_ID`,`COMPANYID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -11164,6 +11199,7 @@ CREATE TABLE `tbl_schedule` (
   `companyid` varchar(40) DEFAULT NULL,
   `googleid` varchar(100) DEFAULT NULL,
   `REPEATEDSCHEDULEOFFSET` double NOT NULL DEFAULT 0,
+  `SHOWTOP` VARCHAR(2) DEFAULT 'N',
   PRIMARY KEY (`SCHEDULEID`),
   KEY `IDX_OWNERID` (`OWNERID`),
   KEY `IDX_GOOGLEID` (`googleid`,`TENANT_ID`,`companyid`)
@@ -11408,6 +11444,7 @@ CREATE TABLE `tbl_scheduleconfig` (
   `AUTODELETE` bigint(10) NOT NULL,
   `TENANT_ID` mediumint(5) NOT NULL,
   `REMINDERTIME` VARCHAR(8) NOT NULL DEFAULT '0',
+  `DEFAULTVIEWCHECK` varchar(2) NOT NULL DEFAULT 'N' COMMENT '일정관리 진입 시 Y: DEFAULTVIEW에 해당하는 화면 / N: 마지막으로 조회한 화면',
   PRIMARY KEY (`USERID`,`TENANT_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -11455,6 +11492,7 @@ CREATE TABLE `tbl_schedulegroupmember` (
   `STATUS` mediumint(5) NOT NULL,
   `RESPONSEDATE` datetime NOT NULL,
   `TENANT_ID` mediumint(5) NOT NULL,
+  `WRITEPERMISSION` varchar(10) DEFAULT 'Y' NOT NULL,
   PRIMARY KEY (`GROUPID`,`MEMBERID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -11999,6 +12037,8 @@ CREATE TABLE `tbl_survey` (
   `popup_flag` tinyint(4) DEFAULT 0,
   `MAIL_SENT_FLAG` tinyint(4) DEFAULT 0,
   `CLOSING_TEXT` longtext DEFAULT NULL COMMENT '맺음말',
+  `TOTALNOTI_SENT_FLAG` tinyint(4) DEFAULT 0,
+  `user_exposed_flag` tinyint(4) DEFAULT 1 COMMENT '참여자 노출여부',
   PRIMARY KEY (`survey_id`,`tenant_id`,`company_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -12153,6 +12193,7 @@ CREATE TABLE `tbl_survey_respondent` (
   `response_date` datetime NOT NULL COMMENT '응답일',
   `company_id` varchar(80) NOT NULL COMMENT '컴퍼니 아이디',
   `tenant_id` mediumint(5) NOT NULL COMMENT '테넌트 아이디',
+  `lottery_result` int(11) DEFAULT NULL COMMENT '추첨결과',
   PRIMARY KEY (`company_id`,`tenant_id`,`response_id`),
   KEY `FK_SURVEY_RESPONDENT_idx` (`survey_id`),
   KEY `FK_SURVEY_RESPONDENT_RESPONSE_idx` (`response_id`),
@@ -12792,6 +12833,7 @@ CREATE TABLE `tbl_tmpexpaprdocinfo` (
   `TENANT_ID` mediumint(5) NOT NULL,
   `PUBLICITYYN` char(2) DEFAULT NULL,
   `FORMVERSION` int(11) DEFAULT 0,
+  `SUMMARYPATH` varchar(140) DEFAULT NULL COMMENT '요약전 mht파일이 저장되는 경로정보',
   PRIMARY KEY (`TENANT_ID`,`COMPANYID`,`OWNERID`,`SN`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -13155,6 +13197,7 @@ CREATE TABLE `tbl_usermaster` (
   `PASSWORD2` varchar(100) DEFAULT NULL,
   `PHOTO_UPDATEDT` datetime DEFAULT NULL,
   `USERTREEFLAG` char(1) DEFAULT 'Y',
+  `TeamsId` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`CN`,`TENANT_ID`),
   KEY `IDX_EMP_NO` (`EXTENSIONATTRIBUTE14`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -13290,6 +13333,7 @@ CREATE TABLE `tbl_usermaster_retire` (
   `PASSWORD2` varchar(100) DEFAULT NULL,
   `PHOTO_UPDATEDT` datetime DEFAULT NULL,
   `USERTREEFLAG` char(1) DEFAULT 'Y',
+  `TeamsId` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`CN`,`TENANT_ID`),
   KEY `IDX_EMP_NO` (`EXTENSIONATTRIBUTE14`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -15885,6 +15929,7 @@ CREATE TABLE `TBL_PORTAL_TOP_USER`
     TENANT_ID  MEDIUMINT    DEFAULT 0  NOT NULL COMMENT '테넌트 아이디',
     COMPANY_ID VARCHAR(100) DEFAULT '' NOT NULL COMMENT '회사 아이디',
     TYPE       MEDIUMINT    DEFAULT 0  NOT NULL COMMENT '타입',
+    USECOLOR   TINYINT      DEFAULT 0  NOT NULL COMMENT '사용 모드(색상)',
     PRIMARY KEY (USER_ID, TENANT_ID, COMPANY_ID)
 )   ENGINE=InnoDB DEFAULT CHARSET=utf8
     COMMENT '개인별 탑 메뉴 프레임 타입';
@@ -16416,7 +16461,122 @@ CREATE TABLE `TBL_C_GRADE` (
    PRIMARY KEY (`C_CLUBNO`, `GRADECODE`, `COMPANYID`,`TENANT_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT "커뮤니티별 회원등급 테이블";
 
-CREATE TABLE TBL_SAML_REQUEST_ID (
-     REQUEST_ID VARCHAR(40) NOT NULL,
-     CREATE_DT DATETIME
+DROP TABLE IF EXISTS `TBL_AUTHTOKEN`;
+CREATE TABLE `TBL_AUTHTOKEN` (
+                                 `APITYPE` varchar(20) DEFAULT NULL,
+                                 `TOKENTYPE` varchar(20) NOT NULL DEFAULT 'publicapp',
+                                 `AUTHTOKEN` varchar(4000) DEFAULT NULL,
+                                 `UPDATEDATE` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT="Graph API 인증토큰 저장 테이블";
+
+DROP TABLE IF EXISTS `TBL_USERPRESENCE`;
+CREATE TABLE `TBL_USERPRESENCE` (
+                                    `ID` varchar(50) NOT NULL,
+                                    `PRESENCE` varchar(50) NOT NULL,
+                                    `UPDATETIME` varchar(50) NOT NULL,
+                                    PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT="Graph API Presence 정보 저장 테이블";
+
+
+DROP TABLE IF EXISTS `tbl_board_dislike`;
+CREATE TABLE `tbl_board_dislike` (
+  `ITEMID` varchar(80) NOT NULL,
+  `USERID` varchar(80) NOT NULL,
+  `DISLIKEDATE` varchar(40) DEFAULT NULL,
+  `TENANT_ID` mediumint(5) NOT NULL,
+  PRIMARY KEY (`ITEMID`,`USERID`,`TENANT_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+DROP TABLE IF EXISTS `tbl_boarditem_scrap`;
+CREATE TABLE `tbl_boarditem_scrap` (
+  `USERID` varchar(100) NOT NULL,
+  `BOARDID` varchar(76) NOT NULL,
+  `ITEMID` varchar(76) NOT NULL,
+  `SCRAPDATE` varchar(40) DEFAULT NULL,
+  `TENANT_ID` mediumint(5) NOT NULL,
+  `COMPANYID` varchar(20) NOT NULL,
+  PRIMARY KEY (`TENANT_ID`,`COMPANYID`,`USERID`,`BOARDID`,`ITEMID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `tbl_userscrapcont`;
+CREATE TABLE `tbl_userscrapcont` (
+  `USERSCRAPCONTID` varchar(20) NOT NULL,
+  `USERSCRAPCONTNAME` varchar(255) CHARACTER SET utf8mb4 DEFAULT NULL,
+  `PARENTSCRAPCONTID` varchar(20) DEFAULT NULL,
+  `DESCRIPTION` varchar(255) DEFAULT NULL,
+  `USERID` varchar(100) DEFAULT NULL,
+  `TENANT_ID` mediumint(5) NOT NULL,
+  `COMPANYID` varchar(20) NOT NULL,
+  PRIMARY KEY (`TENANT_ID`,`COMPANYID`,`USERSCRAPCONTID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `tbl_userscrapcontlist`;
+CREATE TABLE `tbl_userscrapcontlist` (
+  `BOARDID` varchar(76) NOT NULL,
+  `ITEMID` varchar(76) NOT NULL,
+  `USERID` varchar(100) DEFAULT NULL,
+  `USERSCRAPCONTID` varchar(20) NOT NULL,
+  `SCRAPDATE` varchar(40) DEFAULT NULL,
+  `DESCRIPTION` varchar(255) DEFAULT NULL,
+  `TENANT_ID` mediumint(5) NOT NULL,
+  `COMPANYID` varchar(20) NOT NULL,
+  PRIMARY KEY (`TENANT_ID`,`BOARDID`,`USERSCRAPCONTID`,`ITEMID`,`USERID`, `COMPANYID`),
+  CONSTRAINT `PK_USERSCRAPCONT` FOREIGN KEY (`TENANT_ID`, `COMPANYID`, `USERSCRAPCONTID`) REFERENCES `tbl_userscrapcont` (`TENANT_ID`, `COMPANYID`, `USERSCRAPCONTID`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `tbl_board_reply_react` (
+    `ITEMID` varchar(76) NOT NULL,
+    `REPLYID` varchar(76) NOT NULL,
+    `USERID` varchar(80) NOT NULL,
+    `REACTFLAG` varchar(1) DEFAULT NULL,
+    `TENANT_ID` mediumint(5) NOT NULL,
+    `COMPANYID` varchar(80) DEFAULT NULL,
+    `REACTDATE` varchar(40) DEFAULT NULL,
+    PRIMARY KEY (`ITEMID`,`REPLYID`,`USERID`,`TENANT_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+DROP TABLE IF EXISTS `TBL_TOTAL_HISTORY`;
+CREATE TABLE `TBL_TOTAL_HISTORY` (
+  `DOCID` varchar(80) NOT NULL,
+  `USERID` varchar(400) NOT NULL,
+  `REGDATE` datetime NOT NULL,
+  `GUBUN` varchar(12) DEFAULT NULL,
+  `USERJOBTITLE` varchar(40) DEFAULT NULL,
+  `USERDEPTID` varchar(400) DEFAULT NULL,
+  `USERDEPTNAME` varchar(200) DEFAULT NULL,
+  `USERNAME` varchar(200) DEFAULT NULL,
+  `USERNAME2` varchar(200) DEFAULT NULL,
+  `USERJOBTITLE2` varchar(200) DEFAULT NULL,
+  `USERDEPTNAME2` varchar(400) DEFAULT NULL,
+  `TENANT_ID` mediumint(5) NOT NULL,
+  `COMPANYID` varchar(20) NOT NULL,
+  PRIMARY KEY (`DOCID`, `USERID`, `REGDATE`, `TENANT_ID`, `COMPANYID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='2023-06-30 기준 통합 PC 저장에서만 사용하고 있음. gubun 은 "D"(Download) 로 사용하고 있음.';
+
+DROP TABLE IF EXISTS `TBL_USER_SCHEDULE_TYPE_CONFIG`;
+CREATE TABLE TBL_USER_SCHEDULE_TYPE_CONFIG (
+    USERID         VARCHAR(80)       NOT NULL COMMENT '사용자 아이디',
+    SCHEDULETYPE   MEDIUMINT(5)      NOT NULL COMMENT '일정 유형',
+    RELATEDID      VARCHAR(100)      NOT NULL COMMENT '유형에 따라 연결되는 대상 ID; 개인: 사용자 아이디, 부서: 부서 아이디, 회사: 회사 아이디, 협업: collaboaration, 일정그룹: 일정그룹아이디',
+    TAGCOLOR       VARCHAR(10)                COMMENT '일정 태그 색상',
+    ISCHECKED      VARCHAR(2)        NOT NULL DEFAULT '1' COMMENT '일정 조회 체크 상태; 0:off / 1:on',
+    TENANT_ID      MEDIUMINT(5)      NOT NULL COMMENT '테넌트 아이디',
+    COMPANYID      VARCHAR(80)       NOT NULL COMMENT '회사 아이디',
+    PRIMARY KEY (USERID, COMPANYID, TENANT_ID, SCHEDULETYPE, RELATEDID)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT = '사용자의 일정 유형별 설정 테이블';
+
+CREATE TABLE TBL_SAML_REQUEST_ID (
+    REQUEST_ID VARCHAR(40) NOT NULL,
+    CREATE_DT DATETIME
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+DROP TABLE IF EXISTS `TBL_APPROVE_ERROR_INFO`;
+CREATE TABLE `TBL_APPROVE_ERROR_INFO` (
+  `DOCID` varchar(80) NOT NULL COMMENT '문서 아이디',
+  `TENANT_ID` mediumint(5) NOT NULL DEFAULT 0 COMMENT '테넌트 아이디',
+  `COMPANYID` varchar(20) NOT NULL COMMENT '회사 아이디',
+  `ERROR_MESSAGE` varchar(2000) DEFAULT NULL COMMENT '오류 메시지',
+  `ERROR_CASE` varchar(200) DEFAULT NULL COMMENT '커스텀 오류 케이스',
+  PRIMARY KEY (`TENANT_ID`,`COMPANYID`,`DOCID`),
+  KEY `tbl_approve_file_error_IDX` (`DOCID`,`TENANT_ID`,`COMPANYID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='백단에서 결재 시 본문 물리파일을 핸들링하다가 오류가 발생한 doc을 넣는 테이블';

@@ -228,7 +228,7 @@ function Schedule_Repetition_onclick()
 	createNodeAndInsertText(xmlDoc, objNode, "NUM", org_num);
     createNodeAndInsertText(xmlDoc, objNode, "OWNERID", org_ownerID);
     
-	if (endDateTimeRepeat !="" ) {
+	if (!!endDateTimeRepeat && endDateTimeRepeat.length > 0) {
 		var startYearNum = Number(startDateTimeRepeat.substring(0, 4));
 		var startMonthNum = Number(startDateTimeRepeat.substring(5, 7))-1;
 		var startDayNum = Number(startDateTimeRepeat.substring(8, 10));
@@ -293,7 +293,7 @@ function Schedule_Repetition_onclick()
 }
 
 function Schedule_Repetition_onclick_Complete(retVal) {
-
+	repeatCount = null;
     if (typeof (retVal) == "undefined" || (typeof (retVal) == "number" && retVal == -1)) {
         DivPopUpHidden();
         return;
@@ -301,7 +301,7 @@ function Schedule_Repetition_onclick_Complete(retVal) {
 
     if (typeof (retVal) == "number" && retVal == 0) {
         repetitionFlag = false;
-        if (g_data["recurrence"] != "") {
+        if (!!g_data["recurrence"]) {
             g_data["recurrence"] = "";
             g_data["recur_del"] = getXmlString(xmlDoc);
 
@@ -536,13 +536,21 @@ function show_repetition_info() {
 	    repeatinfo += strLang581;
 	    repetition = "-1|" + repetition;
 	} else if (getNodeText(xmlinDoc.getElementsByTagName("endRecurType")[0]) == "1") {
-	    repeatinfo += getNodeText(xmlinDoc.getElementsByTagName("instances")[0]) + strLang582;
+		repeatinfo += getNodeText(xmlinDoc.getElementsByTagName("instances")[0]) + strLang582;
 	    repetition = getNodeText(xmlinDoc.getElementsByTagName("instances")[0]) + "|" + repetition;
 	} else if (getNodeText(xmlinDoc.getElementsByTagName("endRecurType")[0]) == "2") {
 	    repeatinfo += getNodeText(xmlinDoc.getElementsByTagName("endDateTime")[0]).split(' ')[0];
 	    repetition = "0|" + repetition;
 	}
 	
+	if (cmd == "mod" && modType != "0") {
+		g_data["REPETITION"] = repetition;
+		updateRecurrence("REPETITION", repetition);
+		updateRecurrence("startDateTime", reStartDate);
+		updateRecurrence("endDateTime", reEndDate);
+		startDateTimeRepeat = reStartDate;
+		endDateTimeRepeat = reEndDate;
+	}
 	document.getElementById("AllDayDisplay").innerHTML = repeatinfo;
 }
 
@@ -560,56 +568,60 @@ function show_repetition_info() {
 function SaveRepetition( org_num, org_ownerID )
 {
 	var xmlHttp = createXMLHttpRequest();
-
-	if( reFlagVal == "1" && tmpReFlag.value == "3" )
-	{
-		xmlHttp.open("POST","/ezResource/scheduleRepetitionProc.do?cmd=del",false);
-		xmlHttp.send( g_data["recur_del"] );
-		
-		var res = xmlHttp.responseText;
-		
-		if( trim(res) == "NO" )
-		{
-			alert("" + strLang128 + "");
-					
-			return;
-		}
-	}
-	else if( reFlagVal == "1" && document.getElementById("tmpReFlag").value == "2")
-	{
-		xmlHttp.open("POST","/ezResource/scheduleRepetitionProc.do?cmd=mod&num="+org_num+"&ownerID="+org_ownerID,false);
-		xmlHttp.send( g_data["recurrence"] );
+	var tmpReFlagVal = document.getElementById("tmpReFlag").value;
+	if (modType != "0" && (tmpReFlagVal == "1" || tmpReFlagVal == "2")) {
+		xmlHttp.open("POST","/ezResource/scheduleRepetitionProc.do?cmd=add&num="+org_num+"&ownerID="+org_ownerID,false);
+		xmlHttp.send(g_data["recurrence"]);
 	
 		var res = xmlHttp.responseText;
-		
-		if( trim(res) == "NO" )
-		{			
-			return;
-		}
-	}
-	else if( (reFlagVal == "0" || reFlagVal == "") && document.getElementById("tmpReFlag").value == "1" )
-	{
-		xmlHttp.open("POST","/ezResource/scheduleRepetitionProc.do?cmd=add&num="+org_num+"&ownerID="+org_ownerID,false);
-		xmlHttp.send( g_data["recurrence"] );
-
-		var res = xmlHttp.responseText;
-		
-		if( trim(res) == "NO" )
-		{
+			
+		if( trim(res) == "NO" ) {
 			alert("" + strLang129 + "");
 			return;
-		}                                                                                                  
-	}
-	else if( reFlagVal == "2" && document.getElementById("tmpReFlag").value == "1")		// 기념일 수정하기
-	{
-		xmlHttp.open("POST","/ezResource/scheduleRepetitionProc.do?cmd=add&num="+org_num+"&ownerID="+org_ownerID,false);
-		xmlHttp.send( g_data["recurrence"] );
-	
-		var res = xmlHttp.responseText;
+		}                                                     
+	} else if (modType != "0" && tmpReFlagVal == "3") {
+		// 새 일정이 삽입되기 때문에 기존 일정을 수정하지 않음
+		return;
+	} else {
+		if (reFlagVal == "1" && tmpReFlagVal == "3") {
+			xmlHttp.open("POST","/ezResource/scheduleRepetitionProc.do?cmd=del",false);
+			xmlHttp.send( g_data["recur_del"] );
+			
+			var res = xmlHttp.responseText;
+			
+			if ( trim(res) == "NO" ) {
+				alert("" + strLang128 + "");
+				return;
+			}
+		} else if ( reFlagVal == "1" && tmpReFlagVal == "2"){
+			xmlHttp.open("POST","/ezResource/scheduleRepetitionProc.do?cmd=mod&num="+org_num+"&ownerID="+org_ownerID,false);
+			xmlHttp.send( g_data["recurrence"] );
 		
-		if( trim(res) == "NO" )
-		{			
-			return;
+			var res = xmlHttp.responseText;
+			
+			if ( trim(res) == "NO" ) {			
+				return;
+			}
+		} else if ( (reFlagVal == "0" || reFlagVal == "") && tmpReFlagVal == "1" ) {
+			xmlHttp.open("POST","/ezResource/scheduleRepetitionProc.do?cmd=add&num="+org_num+"&ownerID="+org_ownerID,false);
+			xmlHttp.send( g_data["recurrence"] );
+	
+			var res = xmlHttp.responseText;
+			
+			if( trim(res) == "NO" ) {
+				alert("" + strLang129 + "");
+				return;
+			}                                                                                                  
+		} else if( reFlagVal == "2" && tmpReFlagVal == "1")	{ // 기념일 수정하기
+			xmlHttp.open("POST","/ezResource/scheduleRepetitionProc.do?cmd=add&num="+org_num+"&ownerID="+org_ownerID,false);
+			xmlHttp.send( g_data["recurrence"] );
+		
+			var res = xmlHttp.responseText;
+			
+			if( trim(res) == "NO" )
+			{			
+				return;
+			}
 		}
 	}
 }
@@ -776,26 +788,34 @@ function CheckTimeRevision(szTime){
 // 저장버튼 누를때..사용됨...
 // 시작일시와 종료일시 Chk
 function CheckStartEndDateTime() {
+	if (!!g_data["recurrence"] && g_data["recurrence"] != "") {
+		const parser = new DOMParser();
+		const xmlDoc = parser.parseFromString(g_data["recurrence"], "text/xml");
+		const node = xmlDoc.querySelector("endRecurType").textContent;
+		if ("1" == node) {
+			return true;
+		}
+	}
     var start = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Stimepicker').val();
     var end = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Etimepicker').val();
 	
-	if( start >= end ) {
-		return false;
-	} else {
-		return true;
-	}
+	return start < end;
 }
 
 // 하루종일 체크시 시작시간 종료시간 체크
 function AllDayCheckStartEndDateTime() {
+	if (!!g_data["recurrence"] && g_data["recurrence"] != "") {
+		const parser = new DOMParser();
+		const xmlDoc = parser.parseFromString(g_data["recurrence"], "text/xml");
+		const node = xmlDoc.querySelector("endRecurType").textContent;
+		if ("1" == node) {
+			return true;
+		}
+	}
     var start = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + "00:00";
     var end = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + "00:00";
 	
-	if( start > end ) {
-		return false;
-	} else {
-		return true;
-	}
+	return start < end;
 }
 
 // 리소스에서 사용
@@ -939,7 +959,9 @@ function SaveSchedule_onClick( cmd , resItem) {
 	createNodeAndInsertText(xmlDoc, objNode, "typeVal", typeVal); // 수정(2007.03.28) : 반복예약 기능
 	createNodeAndInsertText(xmlDoc, objNode, "deptNM", replaceSingleQuotation(ss_deptNM ));//부서명
 	createNodeAndInsertText(xmlDoc, objNode, "ownerNM", replaceSingleQuotation( ss_ownerNM ));//작성자명
-	
+	createNodeAndInsertText(xmlDoc, objNode, "modType", modType);
+	createNodeAndInsertText(xmlDoc, objNode, "beforeScheDate", beforeScheDate); // 이전 일자
+	createNodeAndInsertText(xmlDoc, objNode, "recurrence", g_data["recurrence"]); // 반복정보
 	// 승인이 필요한 자원은 신규등록시 0(비승인)으로 저장
 	// 수정시엔 DB에 저장되어 있는 값으로 저장
 	
@@ -1952,7 +1974,7 @@ function isUsingResource(pResID, pSTime, pETime, pCompanyID, pNum, pCmd, pAllDay
 	createNodeAndInsertText(xmlDOM, objNode, "APPROVE", ApproveFlag);
 	
 	// 20080116 ryujh, 반복예약값이 있을때만
-	if ( g_data["recurrence"] != null && g_data["recurrence"] != "" ) {
+	if ( !!g_data["recurrence"] && g_data["recurrence"] != "" ) {
 		var xmlDOMrec = createXmlDom();
 		xmlDOMrec = loadXMLString(g_data["recurrence"]);
 		
@@ -2257,4 +2279,12 @@ function ConvertSaveImageFile(filename) {
         return XmlHttp.responseText;
     }
     catch (e) { }
+}
+
+function updateRecurrence(tagName, newValue) {
+    let xml = $($.parseXML(g_data["recurrence"]));
+    xml.find(tagName).text(newValue);
+    
+    let serializer = new XMLSerializer();
+    g_data["recurrence"] = serializer.serializeToString(xml[0]);
 }

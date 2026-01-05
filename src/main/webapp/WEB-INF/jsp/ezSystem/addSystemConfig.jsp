@@ -239,14 +239,10 @@
 		  		<td>
 	  				<select id = "typeSelect" onchange="makePrefixCode()">
 	  					<c:forEach var="configType" items="${configTypeList}">
-	  						<c:choose>
-	  						<c:when test="${(configType.typeCode eq configVO.typeCode) && ((flag eq 'mod') or (flag eq 'view'))}">
-		  						<option value="${configType.typeCode}" selected>${configType.typeName}</option>
-	  						</c:when>
-	  						<c:otherwise>
-	  							<option value="${configType.typeCode}">${configType.typeName}</option>
-	  						</c:otherwise>
-	  						</c:choose>
+							<option value="${configType.typeCode}">
+								${configType.typeCode eq configVO.typeCode and (flag eq 'mod' or flag eq 'view') ? 'selected' : '' }
+								${userLang eq '1' ? configType.typeName : configType.typeName2 }
+							</option>
 	  					</c:forEach>
 	  				</select>
 		  		</td>

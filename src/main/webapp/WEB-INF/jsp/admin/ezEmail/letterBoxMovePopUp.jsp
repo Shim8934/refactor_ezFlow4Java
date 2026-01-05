@@ -23,11 +23,9 @@
 			}
 			
 			.divFolder {
-				height: 280px;
-				width: 470px;
+				height: 345px;
 				border: 1px solid #ccc;
-				margin: auto;
-				margin-top: 35px;
+				margin: 10px;
 				overflow: auto;
 				box-sizing: border-box;
 	    		padding: 5px;
@@ -66,6 +64,7 @@
 		    var modifyMsg = "";
 		    var deleteMsg = "";
 		    var letterMoveMsg = "<spring:message code='ezEmail.letter29'/>";
+			var dataNoMsg = "<spring:message code='main.t00026'/>";
 		    
 			$(document).ready(function(){
 				resultRead(); // 편지지함 목록

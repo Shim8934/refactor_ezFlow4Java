@@ -10,7 +10,12 @@ function btnSummaryEdit() {
 function btnSummaryEdit_Complete(rtn) {
     switch (rtn.status) {
         case "success":
-            showAlertUI(strLangJIH_Summary01);
+            if (isTeamsDesktop()) {
+                showAlertUI(strLangJIH_Summary01);
+            } else {
+                showAlert(strLangJIH_Summary01)
+            }
+            
             pSummery = rtn.summary;
             pSummaryPath = rtn.summaryPath;
             if (!isTeamsDesktop()) {

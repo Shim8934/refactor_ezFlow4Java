@@ -188,6 +188,7 @@ public class EzApprovalGAdminController extends EzFileMngUtil {
 		model.addAttribute("approvalFlag", approvalFlag);
 		model.addAttribute("useAdminBujae", useAdminBujae);
 		model.addAttribute("useEnforceSihang", useEnforceSihang);
+		model.addAttribute("lang", userInfo.getLang());
 		
 		//원문공개사용여부
 		String useOpenGov = config.getProperty("config.useOpenGov"); 
@@ -283,9 +284,10 @@ public class EzApprovalGAdminController extends EzFileMngUtil {
 		String companyID = request.getParameter("companyID");
 		String searchType = request.getParameter("searchType");
 		String searchName = request.getParameter("searchName");
+		String draftTypeFlag = request.getParameter("draftTypeFlag");
 		
 		//양식목록에 특수문자처리, 양식등록/수정 양식명1,2 둘다 넣어야 저장되는지 확인필요
-		String result = ezApprovalGService.getFormInfo(id.trim(), kind, searchType, searchName, userInfo.getId(), userInfo.getDeptID(), companyID, userInfo.getLang(), userInfo.getTenantId());
+		String result = ezApprovalGService.getFormInfo(id.trim(), kind, searchType, searchName, userInfo.getId(), userInfo.getDeptID(), companyID, userInfo.getLang(), userInfo.getTenantId(), draftTypeFlag);
 		
 		logger.debug("id : " + id + ", kind : " + kind + ", companyID : " + companyID);
 		
@@ -577,6 +579,7 @@ public class EzApprovalGAdminController extends EzFileMngUtil {
 		String passAprLineFlag = request.getParameter("passAprLineFlag");
 		String receptGubunYN = ezCommonService.getTenantConfig("receptGubunYN", userInfo.getTenantId());
 		String useDraftAll = ezCommonService.getTenantConfig("useDraftAll", userInfo.getTenantId());
+		String useMobileDraft = ezCommonService.getTenantConfig("useMobileDraft", userInfo.getTenantId());
 		
 		String title = (tCheck.equals("fIns") ? egovMessageSource.getMessage("ezApprovalG.t1667", userInfo.getLocale()) : egovMessageSource.getMessage("ezApprovalG.t1668", userInfo.getLocale()));
 		
@@ -611,6 +614,7 @@ public class EzApprovalGAdminController extends EzFileMngUtil {
 		model.addAttribute("formID", formID);
 		model.addAttribute("docType", docType);
 		model.addAttribute("companyID", companyID);
+		model.addAttribute("lang", userInfo.getLang());
 		if (type != null && (type.equals("HWP") || type.equals("WebHWP"))) {
 			model.addAttribute("useEditor", type);
 			model.addAttribute("ext", "hwp");
@@ -692,6 +696,9 @@ public class EzApprovalGAdminController extends EzFileMngUtil {
 		
 		/* 2022-01-07 홍승비 - 일괄기안 옵션 추가 */
 		model.addAttribute("useDraftAll", useDraftAll);
+
+		/* 2025-08-22 김유진 - 모바일기안 옵션 추가 */
+		model.addAttribute("useMobileDraft", useMobileDraft);
 		
 		logger.debug("formMainOther ended.");
 		
@@ -3146,6 +3153,7 @@ public class EzApprovalGAdminController extends EzFileMngUtil {
 		model.addAttribute("openYear", ezCommonService.getTenantConfig("Site_OpenYear", userInfo.getTenantId()));
 		model.addAttribute("useWebHWP", ezCommonService.getTenantConfig("useWebHWP", userInfo.getTenantId()));
 		model.addAttribute("useReceiveInfoName", ezCommonService.getTenantConfig("useReceiveInfoName", userInfo.getTenantId()));
+		model.addAttribute("draftAllTypeB", ezCommonService.getTenantConfig("draftAllTypeB", userInfo.getTenantId()));
 		
 		logger.debug("forAprDoc ended.");
 		
@@ -4108,6 +4116,10 @@ public class EzApprovalGAdminController extends EzFileMngUtil {
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("uploadPortalPath", uploadPortalPath);
 
+		// (겸) 표시 사용여부 Flag
+		String addJobFlag = ezCommonService.getTenantConfig("UseShowAddJobFlag", userInfo.getTenantId());
+		model.addAttribute("addJobFlag", addJobFlag);
+
 		logger.debug("selectPerson ended");
 		return "/admin/ezApprovalG/apprGSelectPerson";
 	}
@@ -4146,6 +4158,10 @@ public class EzApprovalGAdminController extends EzFileMngUtil {
 		model.addAttribute("type", type);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("uploadPortalPath", uploadPortalPath);
+
+		// (겸) 표시 사용여부 Flag
+		String addJobFlag = ezCommonService.getTenantConfig("UseShowAddJobFlag", userInfo.getTenantId());
+		model.addAttribute("addJobFlag", addJobFlag);
 
 		logger.debug("selectPerson ended");
 		return "/admin/ezApprovalG/apprGDSelectPerson";
@@ -4781,7 +4797,7 @@ public class EzApprovalGAdminController extends EzFileMngUtil {
 			susinAdmin = "NO";
 		}
 		
-		List<PortalTopOtherCompanyAddJobVO> companyList = ezApprovalGService.getAllCompanyList(userInfo.getId(), userInfo.getTenantId());
+		List<PortalTopOtherCompanyAddJobVO> companyList = ezApprovalGService.getAllCompanyList(userInfo.getId(), userInfo.getTenantId(), userInfo.getPrimary());
 		
 		String result = ezOrganService.getPropertyList(userInfo.getId(), "extensionAttribute4;extensionAttribute5", userInfo.getPrimary(), userInfo.getTenantId());
 		Document doc = commonUtil.convertStringToDocument(result);

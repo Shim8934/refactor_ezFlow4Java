@@ -69,8 +69,10 @@
         <tr>
             <th><spring:message code='ezOrgan.useIMAP' /></th>
             <td>
-                <input type="radio" id='IMAPused' name="checkIMAP" value="1"<c:if test="${imapEnabled == '1'}"> checked="checked"</c:if>><label for='IMAPused'><spring:message code='ezOrgan.t161' /></label>
-                <input type="radio" id='IMAPunused' name="checkIMAP" value="0"<c:if test="${imapEnabled == '0' || empty imapEnabled}"> checked="checked"</c:if>><label for='IMAPunused'><spring:message code='ezOrgan.kyj02' /></label>
+                <div class="custom_radio">
+                    <input type="radio" id='IMAPused' name="checkIMAP" value="1"<c:if test="${imapEnabled == '1'}"> checked="checked"</c:if>><label for='IMAPused'><spring:message code='ezOrgan.t161' /></label>
+                    <input type="radio" id='IMAPunused' name="checkIMAP" value="0"<c:if test="${imapEnabled == '0' || empty imapEnabled}"> checked="checked"</c:if>><label for='IMAPunused'><spring:message code='ezOrgan.kyj02' /></label>
+                </div>
             </td>
         </tr>
     </table>

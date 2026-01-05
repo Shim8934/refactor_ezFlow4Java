@@ -81,6 +81,21 @@
 			        }
 		    	} */
 
+				<%-- 그룹게시판으로 복사하지 못하도록 함 --%>
+				var spanElement = document.querySelector('span.node_selected');
+				var parentDiv = spanElement ? spanElement.parentElement : null;
+
+				var parentGroup = "";
+				if (parentDiv) {
+					parentGroup = parentDiv.getAttribute('usegroupflag');
+				}
+
+				if (parentGroup == "Y") {
+					var pUrl = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezBoard.lyj06'/>") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezBoard.lyj06'/>") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
+					DivPopUpShow(330, 205, pUrl);
+					return;
+				}
+
 		        CopyItem(selectedBoard);
 		    }
 		    

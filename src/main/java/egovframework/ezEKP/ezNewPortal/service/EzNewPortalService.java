@@ -65,7 +65,7 @@ public interface EzNewPortalService {
 	public void updateUserUsedPortlet(String userId, int tenantId, String companyId, JSONObject jObj) throws Exception;
 	public boolean getCheckAuth(int menuId, String userId, String deptId, String companyId, int tenantId) throws Exception;
 	public List<MenuInfoVO> getAllCompanyMenus(String companyId, int tenantId, String companyLang) throws Exception;
-	public String isUseEzWorkspace(String companyId, int tenantId, String userId, String deptId) throws Exception;
+	public String isUseEzWorkspace(String companyId, int tenantId, String userId, String deptId, String type) throws Exception;
 	/**
 	 * 유은정
 	 */
@@ -175,7 +175,7 @@ public interface EzNewPortalService {
 	public void udpateMenuOrder(JSONArray menus, String companyId, int tenantId) throws Exception;
 	
 	public Map<String, Object> getApprovalStatistics(String userId, String companyId, int tenantId) throws Exception;
-	public JSONObject getApprovalList(String userId, String companyId, int tenantId, String offset, String type, String approvalFlag, String lang) throws Exception;
+	public JSONObject getApprovalList(String userId, String companyId, int tenantId, String offset, String type, String approvalFlag, String lang, String primary) throws Exception;
 	/** -------------------- */
 	
 	/**
@@ -198,7 +198,7 @@ public interface EzNewPortalService {
 	 * @return List<PortletInfoVO>
 	 * @throws Exception
 	 */
-	public List<PortletInfoVO> getPortletList(String companyId, int tenantId, int menuLang, String type);
+	public List<PortletInfoVO> getPortletList(String companyId, int tenantId, int menuLang, String type) throws Exception;
 	// 2024-07-10 조수빈 - 다국어 사용 여부 판단 로직 추가 위해 수정함. 
 	public List<PortletNameInfoVO> getPortletNameList(String companyId, int tenantId, int portletId) throws Exception;
 	public void setWeather() throws Exception;

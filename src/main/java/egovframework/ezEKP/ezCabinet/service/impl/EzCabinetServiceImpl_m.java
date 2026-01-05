@@ -151,7 +151,7 @@ public class EzCabinetServiceImpl_m extends EgovAbstractServiceImpl implements E
 	
 	private CabinetColumnVO createNewRelatedColumn(String columnId, int itemId, String messageName, String columnValue, String companyId, int tenantId) {
 		String columnName1 = egovMessageSource.getMessage(messageName, new Locale(config.getProperty("config.cabinetPrimary")));
-		String columnName2 = egovMessageSource.getMessage(messageName, new Locale(config.getProperty("config.cabinetPrimary")));
+		String columnName2 = egovMessageSource.getMessage(messageName, new Locale(config.getProperty("config.cabinetSecondary")));
 		return new CabinetColumnVO(columnId, itemId, columnName1, columnName2, columnValue, companyId, tenantId);
 	}
 	

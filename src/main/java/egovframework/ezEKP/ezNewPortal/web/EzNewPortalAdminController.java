@@ -130,6 +130,7 @@ public class EzNewPortalAdminController extends EzFileMngUtil {
         
         model.addAttribute("packageType", packageType);
         model.addAttribute("usePortal", usePortal);
+        model.addAttribute("lang", userInfo.getLang());
 
 		logger.debug("portalLeftMenu ended.");
 
@@ -180,6 +181,7 @@ public class EzNewPortalAdminController extends EzFileMngUtil {
 		logger.debug("portalMenus started.");
 		
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		String lang = userInfo.getLang();
 		
 		if (userInfo == null) {
 			logger.debug("portalMenus accessDenied.");
@@ -193,6 +195,13 @@ public class EzNewPortalAdminController extends EzFileMngUtil {
 			model.addAttribute("useChinese", ezCommonService.getTenantConfig("useChinese", userInfo.getTenantId()));
 			model.addAttribute("useVietnamese", ezCommonService.getTenantConfig("useVietnamese", userInfo.getTenantId()));
 			model.addAttribute("useIndonesian", ezCommonService.getTenantConfig("useIndonesian", userInfo.getTenantId()));
+			
+			model.addAttribute("lang_primary", ezCommonService.getTenantConfig("LangPrimary" + lang, userInfo.getTenantId()));
+			model.addAttribute("lang_secondary", ezCommonService.getTenantConfig("LangSecondary" + lang, userInfo.getTenantId()));
+			model.addAttribute("lang_tertiary", ezCommonService.getTenantConfig("LangTertiary" + lang, userInfo.getTenantId()));
+			model.addAttribute("lang_quaternary", ezCommonService.getTenantConfig("LangQuaternary" + lang, userInfo.getTenantId()));
+			model.addAttribute("lang_Senary", ezCommonService.getTenantConfig("LangSenary" + lang, userInfo.getTenantId()));
+			
 			model.addAttribute("type", request.getParameter("type"));
 			String type = request.getParameter("type") == null ? "" : request.getParameter("type");
 			String connectMenuId = type.equals("mobile") ? "-2" : "-1";
@@ -262,6 +271,7 @@ public class EzNewPortalAdminController extends EzFileMngUtil {
 		model.addAttribute("menuId", request.getParameter("menuId"));
 		model.addAttribute("companyId", request.getParameter("companyId"));
 		model.addAttribute("mode", request.getParameter("mode"));
+		model.addAttribute("lang", userInfo.getPrimary());
 		
 		logger.debug("portalMenuAuth ended");
 		

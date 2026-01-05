@@ -139,9 +139,11 @@
 	            			span4.setAttribute("folderId", folders[i].folder_id);
 	            			if (folders[i].orders === 0) {
 		            			span4.setAttribute("folderName", memoMessages.strLangMemo22);
+                                span4.setAttribute("title", memoMessages.strLangMemo22);
 		            			span4.innerHTML = memoMessages.strLangMemo22;
 	            			} else {
 		            			span4.setAttribute("folderName", folders[i].folder_name);
+                                span4.setAttribute("title", folders[i].folder_name);
 		            			span4.innerHTML = folders[i].folder_name;
 	            			}
 	            			

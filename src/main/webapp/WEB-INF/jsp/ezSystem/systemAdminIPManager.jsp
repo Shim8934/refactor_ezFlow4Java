@@ -19,10 +19,10 @@
 		<table class="content" style="width:600px;">
 			<tr>
 				<th rowspan="2" style="width: 60px;"><spring:message code='ezSystem.jje4'/></th>
-				<td>&nbsp;<label id="radioFalse"><input name="ipRadio" type="radio" id="ipRadio0"><span style="vertical-align:middle;">&nbsp;<spring:message code='ezEmail.t99000009'/></span></label></td>
+				<td><div class='custom_radio'><input name="ipRadio" type="radio" id="ipRadio0"><label for="ipRadio0" id="radioFalse"><spring:message code='ezEmail.t99000009'/></label></div></td>
 		    </tr>
 		    <tr>
-				<td>&nbsp;<label id="radioTrue"><input name="ipRadio" type="radio" id="ipRadio1"><span style="vertical-align:middle;">&nbsp;<spring:message code='ezBoard.t162'/></span></label></td>
+				<td><div class='custom_radio'><input name="ipRadio" type="radio" id="ipRadio1"><label for="ipRadio1" id="radioTrue"><spring:message code='ezBoard.t162'/></label></div></td>
 			</tr>
 		</table>
 		<div style="width:600px;">

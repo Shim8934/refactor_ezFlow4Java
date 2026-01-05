@@ -5,6 +5,8 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
+		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css">
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
         <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<title><spring:message code='ezEmail.t546' /></title>
@@ -15,7 +17,7 @@
 				empty-cells: show;
 				padding:0;margin:0;
 				font-size:12px;
-				font-family: 'malgun gothic', 'arial', 'verdana';
+				/*font-family: 'malgun gothic', 'arial', 'verdana';*/
 			}
 			th{
 				white-space: nowrap;

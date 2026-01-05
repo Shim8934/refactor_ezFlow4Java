@@ -1,6 +1,6 @@
 var m_bPrevNext = false;
 var real_href = "";
-var minimumWidth = 890;
+var minimumWidth = 1200;
 
 function get_mail(flag) {
     var Flag;
@@ -60,7 +60,7 @@ function ReSend(pURL, pEmail) {
     var pwidth = window.screen.availWidth;
     var pTop = (pheight - conHeight) / 2;
     var pLeft = (pwidth - minimumWidth) / 2;
-    var feature = "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no,resizable=1";
+    var feature = "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 1200px, status = no, toolbar=no, menubar=no,location=no,resizable=1";
     
     var requestUrl = "/ezEmail/mailWrite.do?url=" + encodeURIComponent(pURL) + "&cmd=RESEND&msgto=" + encodeURIComponent(pEmail);
     
@@ -79,6 +79,48 @@ function ReSend(pURL, pEmail) {
             window.open("mail_write_Cross.aspx?url=" + encodeURIComponent(pURL) + "&cmd=RESEND&msgto=" + pEmail, "", feature);
     }*/
 }
+document.querySelectorAll(".ical_btn_container").forEach(container => {
+    container.addEventListener("click", function (e) {
+        const btn = e.target.closest("button");
+        if (!btn) return;
+        const status = e.target.dataset.status;
+        const uid = document.getElementById("ical_uid").value;
+        const subject = document.querySelector(".gw_ical_summary").textContent.trim();
+        const period = document.querySelector('.ical-period');
+        const isAllDay = period.dataset.isAllDay == "true";
+        const start = period.dataset.start;
+        const end = period.dataset.end;
+        const location = document.getElementById("ical_location").textContent;
+
+        fetch("/ezEmail/sendIcalResponseMail.do", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                uid: uid,
+                organizerCn: fromAddr,
+                summaryStr: subject,
+                dtAllDay: isAllDay,
+                startDtStr: start,
+                endDtStr: end,
+                status: status,
+                locationStr: location,
+                uidStr: g_paramURL
+            })
+        }).then(res => {
+            if (res.ok) {
+                alert(strLangIcal01);
+            } else {
+                alert(strLangIcal02);
+            }
+            window.top.close();
+        }).catch(error => {
+            alert(strLangIcal02);
+            window.top.close();
+        });
+    });
+});
 
 // 2024.05.24 한슬기 : 수신인 이름을 사용하기위해 오버로딩
 function ReSend(pURL, pEmail, pReader) {
@@ -87,7 +129,7 @@ function ReSend(pURL, pEmail, pReader) {
     var pwidth = window.screen.availWidth;
     var pTop = (pheight - conHeight) / 2;
     var pLeft = (pwidth - minimumWidth) / 2;
-    var feature = "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no,resizable=1";
+    var feature = "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 1200px, status = no, toolbar=no, menubar=no,location=no,resizable=1";
     
     var requestUrl = "/ezEmail/mailWrite.do?url=" + encodeURIComponent(pURL) + "&cmd=RESEND&msgto=" + encodeURIComponent(pEmail) + "&reciverName=" + encodeURIComponent(pReader);
     
@@ -689,19 +731,7 @@ function func_reject() {
     params["email"] = new Array();
     params["link"] = new Array();
     var labelFromName = document.getElementById('LabelFromName').textContent;
-    if (labelFromName != g_fromEmail) {
-        // "01099455495 <발신전용>" <01099455495@ktfmms.magicn.com>와 같이 이름안에 <> 기호가 있는 경우
-        // 이름을 감싸는 이중따옴표가 제거된 상태로 들어와서 이메일 주소 파싱에 오류가 발생함. 이에 < 기호가 있는 경우
-        // 다시 이중따옴표로 감싸도록 함.
-        if (labelFromName.indexOf('<') > -1) {
-            params["email"][0] = '"' + labelFromName + '"' + " <" + g_fromEmail + ">";
-        } else {
-            params["email"][0] = labelFromName + " <" + g_fromEmail + ">";
-        }
-    }
-    else {
-        params["email"][0] = g_fromEmail;
-    }
+    params["email"][0] = quoteEmailName(labelFromName, g_fromEmail);
     params["link"][0] = g_rejectWord;
 
     denial_cross_dialogArguments[0] = params;
@@ -770,8 +800,8 @@ function write_mail(userinfo) {
     var conHeight = pheight * 0.8;
     var pwidth = window.screen.availWidth;
     var pTop = (pheight - conHeight) / 2;
-    var pLeft = (pwidth - 890) / 2;
-    var feature = "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1";
+    var pLeft = (pwidth - 1200) / 2;
+    var feature = "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 1200px, status = no, toolbar=no, menubar=no,location=no, resizable=1";
 
     if (pUse_Editor == "")
         window.open('mail_write_Cross.aspx' + "?MsgTo=" + userinfo + '&cmd=NEW', "", feature);
@@ -787,7 +817,7 @@ function receiveCheck_onClick() {
 		requestUrl += "&shareId=" + encodeURIComponent(shareId);
 	}
 	
-    var OpenWin = window.open(requestUrl, "mail_readerlist", GetOpenWindowfeature(620, 500));
+    var OpenWin = window.open(requestUrl, "mail_readerlist", GetOpenWindowfeature(650, 500));
     try { OpenWin.focus(); } catch (e) {console.log(e);}
 }
 function view_original() {

@@ -1959,8 +1959,9 @@ public class EzCircularController extends EzFileMngUtil {
 		String circularBMId = request.getParameter("circularBMId");
 		int tenantId = userInfo.getTenantId();
 		String companyID =userInfo.getCompanyID();
+		String primary = userInfo.getPrimary();
 	
-		List<CircularMemberVO> list = ezCircularService.getMemberName(circularBMId, tenantId, companyID);
+		List<CircularMemberVO> list = ezCircularService.getMemberName(circularBMId, tenantId, companyID, primary);
 		
 		model.addAttribute("list", list);
 		
@@ -2489,6 +2490,7 @@ public class EzCircularController extends EzFileMngUtil {
     	List<CircularListVO> shareUserList = ezCircularService.getCircularUserList(Integer.parseInt(vo.getCircularID()), searchType, searchValue, userInfo.getTenantId(), userInfo.getOffset());
     	
     	model.addAttribute("shareUserList", shareUserList);
+    	model.addAttribute("userInfo", userInfo);
     	
     	logger.debug("getCommentShareUser ended.");
     	
@@ -2564,8 +2566,9 @@ public class EzCircularController extends EzFileMngUtil {
 		String circularBMId = request.getParameter("circularBMID");
 		int tenantId = userInfo.getTenantId();
 		String companyID = userInfo.getCompanyID();
+		String primary = userInfo.getPrimary();
 	
-		List<CircularMemberVO> circularDeptNamelist = ezCircularService.getMemberName(circularBMId, tenantId, companyID);
+		List<CircularMemberVO> circularDeptNamelist = ezCircularService.getMemberName(circularBMId, tenantId, companyID, primary);
 
 		logger.debug("getcircularDeptName ended");
 

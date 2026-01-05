@@ -13,6 +13,7 @@ public class MWebfolderResult {
 	private String folderName;
 	private String folderName2;
 	private String parentFolderId;
+	private int folderLevel;
 
 	private int totalPages;
 	private int fileCount;
@@ -48,6 +49,14 @@ public class MWebfolderResult {
 
 	public void setParentFolderId(String parentFolderId) {
 		this.parentFolderId = parentFolderId;
+	}
+
+	public int getFolderLevel() {
+		return folderLevel;
+	}
+
+	public void setFolderLevel(int folderLevel) {
+		this.folderLevel = folderLevel;
 	}
 
 	public void setRootFolder() {

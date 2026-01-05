@@ -1,5 +1,8 @@
 //Baonk 2018-06-14
-
+var UserLang;
+if (document.getElementById("userLang")) {
+    UserLang = document.getElementById("userLang").value;
+}
 function CabinetTree() {
 	//private variables
 	var _treeElmtId   = null;

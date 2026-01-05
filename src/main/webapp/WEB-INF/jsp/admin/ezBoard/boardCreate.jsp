@@ -11,6 +11,12 @@
 	    <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/ezBoard/common.js')}"></script>	    
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<style>
+			#nameTable tr:last-child th,
+			#nameTable tr:last-child td {
+				border-bottom: none;
+			}
+		</style>
 		<script type="text/javascript" language="javascript">
 			var ParentBoardID = "<c:out value='${parentBoardID}'/>";
 	    	var BoardGroupID = "<c:out value='${boardGroupID}'/>";
@@ -33,6 +39,7 @@
 				var name2 = $.trim($("#txtNewName2").val());
 	    		var name3 = $.trim($("#txtNewName3").val());
 				var name4 = $.trim($("#txtNewName4").val());
+				var name6 = $.trim($("#txtNewName6").val());
 				
 				if (name1 == "") {
 					alert("<spring:message code='ezBoard.t107' />");
@@ -49,8 +56,20 @@
 				if (name4 == "") {
 					name4 = name1;
 				}
+				if (name6 == "") {
+					name6 = name1;
+				}
 				
 			    var newID = "{" + GetGUID() + "}";
+
+				/* 그룹게시판 설정여부 */
+				var useGroupFlag = document.getElementById("useGroup").checked ? "Y" : "N";
+				if (useGroupFlag == "Y") {
+					if (chkGroupBoardExist() == "true") { // 상위게시판에 그룹게시판이 존재하는 경우 그룹게시판으로 등록 불가
+						alert("<spring:message code='ezBoard.lyj13'/>");
+						return;
+					}
+				}
 
 			    $.ajax({
 					type : "POST",
@@ -61,8 +80,10 @@
 						boardName2 : encodeURIComponent(name2),
 						boardName3 : encodeURIComponent(name3),
 						boardName4 : encodeURIComponent(name4),
+						boardName6 : encodeURIComponent(name6),
 						parentBoardID : ParentBoardID,
-						boardGroupID : BoardGroupID
+						boardGroupID : BoardGroupID,
+						useGroupFlag : useGroupFlag
 					},
 					success: function(result){						
 						alert("<spring:message code='ezBoard.t109' />");	
@@ -86,7 +107,27 @@
 					    window.location.reload(true);
 					}  
 				});			   
-			}	    	
+			}
+
+			function chkGroupBoardExist() {
+				var result = "";
+
+				$.ajax({
+					type: "POST",
+					dataType: "text",
+					async: false,
+					url: "/ezBoard/chkGroupBoardExist.do",
+					data: {
+						boardID: ParentBoardID,
+						type: "CREATE"
+					},
+					success: function (res) {
+						result = res;
+					}
+				});
+
+				return result;
+			}
 	    </script>
 	</head>
 	<body class="mainbody">
@@ -101,7 +142,7 @@
 		    	<th><spring:message code="ezBoard.t111" /></th>
 		    	<td style="padding:0">
 		    		<c:if test="${use_multiData == 'YES'}">				    
-				    	<table style="width:100%">
+				    	<table id="nameTable" style="width:100%">
 				        	<tr class="primary">
 				        		<th><c:out value='${lang_primary}'/></th>
 				          		<td><input name="text" type="text" id="txtNewName" style="WIDTH:100%" maxlength="30"></td>
@@ -122,6 +163,12 @@
 					          		<td><input name="text" type="text" id="txtNewName4" style="WIDTH:100%" maxlength="30"></td>
 					        	</tr>
 					        </c:if>
+		                    <c:if test="${useIndonesian == 'YES'}">
+					        	<tr class="secondary">
+					          		<th><c:out value='${lang_senary}'/></th>
+					          		<td><input name="text" type="text" id="txtNewName6" style="WIDTH:100%" maxlength="30"></td>
+					        	</tr>
+					        </c:if>
 				      	</table>
 				 	</c:if>
 				 	<c:if test="${use_multiData != 'YES'}">
@@ -129,6 +176,15 @@
 				    </c:if>  
 			    </td>
 		  	</tr>
+			<tr>
+				<th><spring:message code="ezBoard.lyj04" /></th>
+				<td>
+					<div class="custom_checkbox">
+						<input type="checkbox" id="useGroup"/>
+						<label for="useGroup"><spring:message code="ezBoard.lyj05" /> <spring:message code="ezBoard.lyj09" /></label>
+					</div>
+				</td>
+			</tr>
 		</table>
 		<div class="btnpositionJsp"><a class="imgbtn"><span onclick="Save()"><spring:message code="ezBoard.t98"/></span></a></div></div>
 	</body>

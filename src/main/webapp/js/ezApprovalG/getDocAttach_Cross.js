@@ -63,7 +63,7 @@ function trim(str) {
 /**
  * 첨부파일 정보 추출
  * */
-function setAttachInfo(tempDocID, INGFlag, attachTag) {
+function setAttachInfo(tempDocID, INGFlag, attachTag, draftAllTypeB) {
     attachTag.innerHTML = "";
     
     /* 2022-01-17 홍승비 - 일괄기안 시 안별 iframe 내부에 접근해야 하므로 분기처리 */
@@ -75,7 +75,7 @@ function setAttachInfo(tempDocID, INGFlag, attachTag) {
     
     // 일괄기안 부모페이지에서 접근
     var tempHref = document.location.href;
-    if (tempHref.indexOf("ezApprovalG/draftuiAll_WHWP.do") > -1 || tempHref.indexOf("ezApprovalG/approvuiAll_WHWP.do") > -1) {
+    if (tempHref.indexOf("ezApprovalG/draftuiAll_WHWP.do") > -1 || tempHref.indexOf("ezApprovalG/approvuiAll_WHWP.do") > -1 || draftAllTypeB == "Y") {
     	isDraftAllPage = "Y";
     	attachTag = document.getElementById(attachTag.id);
     	docAttachTag = document.getElementById(attachTag.id + "Doc");
@@ -168,26 +168,26 @@ function setAttachInfo(tempDocID, INGFlag, attachTag) {
                 }
 
                 if (strFileExt.indexOf(".jpg") != -1 || strFileExt.indexOf(".jpeg") != -1 || strFileExt.indexOf(".bmp") != -1 || strFileExt.indexOf(".gif") != -1 || strFileExt.indexOf(".png") != -1 || strFileExt.indexOf(".tif") != -1 || strFileExt.indexOf(".tiff") != -1)
-                    fileImage = "/images/image.png";
+                    fileImage = "/images/image.svg";
                 else if (strFileExt.indexOf(".doc") != -1 || strFileExt.indexOf(".docx") != -1)
-                    fileImage = "/images/doc.png";
+                    fileImage = "/images/doc.svg";
                 else if (strFileExt.indexOf(".xls") != -1 || strFileExt.indexOf(".xlsx") != -1)
-                    fileImage = "/images/xls.png";
+                    fileImage = "/images/xls.svg";
                 else if (strFileExt.indexOf(".ppt") != -1 || strFileExt.indexOf(".pptx") != -1 || strFileExt.indexOf(".pps") != -1 || strFileExt.indexOf(".ppsx") != -1)
-                    fileImage = "/images/ppt.png";
+                    fileImage = "/images/ppt.svg";
                 else if (strFileExt.indexOf(".txt") != -1)
-                    fileImage = "/images/txt.png";
+                    fileImage = "/images/txt.svg";
                 else if (strFileExt.indexOf(".zip") != -1)
-                    fileImage = "/images/zip.png";
+                    fileImage = "/images/zip.svg";
                 else if (strFileExt.indexOf(".pdf") != -1)
-                    fileImage = "/images/pdf.png";
+                    fileImage = "/images/pdf.svg";
                 else if (strFileExt.indexOf(".ecm") != -1)
-                    fileImage = "/images/ecm.png";
+                    fileImage = "/images/ecm.svg";
                 //확장자가 hwp인 파일을 첨부할 경우 아래아한글 아이콘이 나타나도록 수정. 2019-10-25 홍대표
-                else if (strFileExt.indexOf(".hwp") != -1)
-                	fileImage = "/images/hwp.png";
+                else if (strFileExt.indexOf(".hwp") != -1 || strFileExt.indexOf(".hwpx") != -1)
+                	fileImage = "/images/hwp.svg";
                 else
-                    fileImage = "/images/attach-small.gif";
+                    fileImage = "/images/etc.svg";
 
                 if (CrossYN())
                     strTarget = "target=\''";
@@ -196,12 +196,12 @@ function setAttachInfo(tempDocID, INGFlag, attachTag) {
                 var serverName = window.location.hostname;
 
                 /* 2020-11-18 홍승비 - 선택 및 다중 다운로드를 위한 체크박스 추가, 파일 아이콘 위치 정렬 */
-                strAttach = strAttach + "<span style='display:inline-block;'><input type='checkbox' name='fileSelect' fileName=\"" + xmlFileName + "\" filepath=\"" + xmlFilePath +"\">";
+                strAttach = strAttach + "<span style='display:inline-block;'><div class='custom_checkbox'><input type='checkbox' name='fileSelect' fileName=\"" + xmlFileName + "\" filepath=\"" + xmlFilePath +"\"><label>";
                 strAttach = strAttach + "<a href= /ezApprovalG/downloadAttach.do?fileName=" + filename + "&docID=" + tempDocID + "&docStatus=" + INGFlag + "&docAttachSN=" + SelectSingleNodeValue(GetChildNodes(xmlRtn[i])[0], "DATA2") + "&filePath=" + filepath + " onclick='AttachProcess(event)'>";
                 //strAttach = strAttach + "<a href='/myoffice/Common/downloadattach.aspx?filename=" + filename + "&filepath=" + filepath + "' " + strTarget + "' onclick='AttachProcess()'>";
 
-                strAttach = strAttach + "<IMG SRC='" + fileImage + "' border='0' style='vertical-align:sub;'>";
-                strAttach = strAttach + MakeXMLString(getNodeText(GetChildNodes(xmlRtn[i])[1])) + "</a>";
+                strAttach = strAttach + "<IMG SRC='" + fileImage + "' border='0' style='width:20px; height:20px; vertical-align:sub; margin-right:3px;'>";
+                strAttach = strAttach + MakeXMLString(getNodeText(GetChildNodes(xmlRtn[i])[1])) + "</a></label></div>";
                 
                 // 2023-05-25 조수빈 - 첨부파일 미리보기 아이콘 추가
                if (typeof useAprFilePrvw !== 'undefined' && useAprFilePrvw == "1") {
@@ -284,7 +284,14 @@ function setAttachInfo(tempDocID, INGFlag, attachTag) {
                 }
             }
         }
-        
+        if(typeof attachLoad != "undefined"){
+            var i;
+            for(i = 0; i < an.options.length; i++){
+                if(an.options[i].value == tempDocID)
+                    break;
+            }
+            attachHTMLSave(i + 1);
+        }
         try {
             pHasAttachYN = "Y";
         } catch (e) { }
@@ -310,6 +317,12 @@ function setAttachInfo(tempDocID, INGFlag, attachTag) {
             }
         } catch (e) { }
     }
+}
+
+function attachHTMLSave(idx){
+    attachLoad[idx] = true;
+    attachHTML[idx] = lstAttachLink.innerHTML;
+    docAttachHTML[idx] = lstAttachLinkDoc.innerHTML;
 }
 
 // 2023-05-26 조수빈 - 결재문서 첨부파일 미리보기

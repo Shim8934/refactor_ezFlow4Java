@@ -4,11 +4,13 @@
 
 function SaveAprLineInfoCC(pstrXML) {
 	if (window.hasOwnProperty('pDocIDAry')) {
-		if (pDocIDAry.length > 0) {
+		if (pDocIDAry.length > 2) {
 			for (i = 0; i < gongramXMLAry.length; i++) {
 				SaveAprLineInfoCC_after(gongramXMLAry[i]);
 			}
-		}
+		}else {
+            SaveAprLineInfoCC_after(pstrXML);
+        }
 	} else {
 		SaveAprLineInfoCC_after(pstrXML);
 	}
@@ -16,7 +18,7 @@ function SaveAprLineInfoCC(pstrXML) {
 
 function delAprLineInfoCC() {
 	if (window.hasOwnProperty('pDocIDAry')) {
-		if (pDocIDAry.length > 0) {
+		if (pDocIDAry.length > 2) {
 			for (i = 1; i < pDocIDAry.length; i++) {
 				delAprLineInfoCC_after(pDocIDAry[i]);
 			}

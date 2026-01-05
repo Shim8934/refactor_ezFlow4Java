@@ -129,7 +129,7 @@ body {
 }
 
 .lmLetterBoxTitle>div:first-child {
-	width: 105px;
+	width: 95px;
 	border-right: 1px solid #ddd;
 	display: inline-block;
 }

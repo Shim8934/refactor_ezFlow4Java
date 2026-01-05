@@ -503,8 +503,8 @@
 			}
 		</script>
 	</head>
-	<body class="popup" style="overflow:hidden">
-		<form method="post">
+	<body class="popup" style="overflow: auto; min-width: 500px;">
+		<form method="post" style="position: relative;">
 		  <div id="menu" style="margin-bottom:19px;">
 		    <ul>
 		      <!-- 2018-05-30 구해안 그룹웨어 모듈 '등록','저장후닫기' => '저장'으로 통일  ezAddress.t339 => t300 -->
@@ -514,7 +514,7 @@
 		        </select>
 		    </ul>
 		  </div>
-		  <div id="close">
+		  <div id="close" style="top: 2px;">
 		    <ul>
 		      <li><span onClick="close_onclick()"></span></li>
 		    </ul>

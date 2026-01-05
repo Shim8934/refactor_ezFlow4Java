@@ -188,11 +188,11 @@
 				<c:if test="${useApprMail}">
 				<h2>
 					<% // 전체메일승인 %>
-					<span class="h2Title" onClick="goPage(37)" style="display:inline-block;width:100%;"><spring:message code="email.appr.menu.allhands" /></span>
+					<span class="h2Title" onClick="goPage(37)" style="display:inline-block;width:100%;" title="<c:if test='${lang eq 6}'><spring:message code='email.appr.menu.allhands' /></c:if>"><spring:message code="email.appr.menu.allhands" /></span>
 				</h2>
 				<h2>
 					<% // 메일승인관리 %>
-					<span class="h2Title" onClick="goPage(38)" style="display:inline-block;width:100%;"><spring:message code="email.appr.menu.normal" /></span>
+					<span class="h2Title" onClick="goPage(38)" style="display:inline-block;width:100%;" title="<c:if test='${lang eq 6}'><spring:message code='email.appr.menu.normal' /></c:if>"><spring:message code="email.appr.menu.normal" /></span>
 				</h2>
 				</c:if>
 				
@@ -201,7 +201,7 @@
 					<span class="h2Title" onClick="goPage(9)" style="display:inline-block;width:100%;"><spring:message code='main.t00027' /></span>
 				</h2>
 				<h2>
-					<span class="h2Title" onClick="goPage(3)" style="display:inline-block;width:100%;"><spring:message code='main.t58' /></span>
+					<span class="h2Title" onClick="goPage(3)" style="display:inline-block;width:100%;" title="<c:if test='${lang eq 6}'><spring:message code='main.t58' /></c:if>"><spring:message code='main.t58' /></span>
 				</h2>
 				</c:if>
 				<c:if test="${UseDisablePopImap == 'YES'}">
@@ -210,20 +210,20 @@
 					</h2>
 				</c:if>
 				<h2>
-					<span class="h2Title" onClick="goPage(2)" style="display:inline-block;width:100%;"><spring:message code='main.t57' /></span>
+					<span class="h2Title" onClick="goPage(2)" style="display:inline-block;width:100%;" title="<c:if test='${lang eq 6}'><spring:message code='main.t57' /></c:if>"><spring:message code='main.t57' /></span>
 				</h2>  
 				<c:if test="${useSharedMailbox == 'YES'}">
 					<h2>
-						<span class="h2Title" onClick="goPage(33)" style="display:inline-block;width:100%;"><spring:message code='ezEmail.sharedMailbox01' /></span>
+						<span class="h2Title" onClick="goPage(33)" style="display:inline-block;width:100%;" title="<c:if test='${lang eq 6}'><spring:message code='ezEmail.sharedMailbox01' /></c:if>"><spring:message code='ezEmail.sharedMailbox01' /></span>
 						<ul></ul>
 					</h2>
 				</c:if>
 				<c:if test="${cChk == '1'}">
 				<h2>
-					<span class="h2Title" onClick="goPage(35)" style="display:inline-block;width:100%;"><spring:message code='ezEmail.multiDomain.ksa01' /></span>
+					<span class="h2Title" onClick="goPage(35)" style="display:inline-block;width:100%;" title="<c:if test='${lang eq 6}'><spring:message code='ezEmail.multiDomain.ksa01' /></c:if>"><spring:message code='ezEmail.multiDomain.ksa01' /></span>
 				</h2> 
 				<h2>
-					<span class="h2Title" onClick="goPage(36)" style="display:inline-block;width:100%;"><spring:message code='ezEmail.multiDomain.ksa02' /></span>
+					<span class="h2Title" onClick="goPage(36)" style="display:inline-block;width:100%;" title="<c:if test='${lang eq 6}'><spring:message code='ezEmail.multiDomain.ksa02' /></c:if>"><spring:message code='ezEmail.multiDomain.ksa02' /></span>
 				</h2>
 	  			</c:if>
 				<!-- 2018-02-20 재은 수정 (편지지 등록) -->
@@ -235,7 +235,7 @@
 				</c:if>
 				<c:if test="${useSignatureTemplate == 'YES'}">
 					<h2>
-						<span class="h2Title" onClick="goPage(32)" style="display:inline-block;width:100%;"><spring:message code='ezEmail.jje05'/></span>
+						<span class="h2Title" onClick="goPage(32)" style="display:inline-block;width:100%;" title="<c:if test='${lang eq 6}'><spring:message code='ezEmail.jje05' /></c:if>"><spring:message code='ezEmail.jje05'/></span>
 						<ul></ul>
 					</h2>
 				</c:if>

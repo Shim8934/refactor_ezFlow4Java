@@ -690,7 +690,7 @@ function DisplayWaitStat() {
     }
 }
 
-function getAprLine(tr) {
+function getAprLine(tr, mainPageType) {
     var pDocID,pMode = "",pFlag = "";
     var orgCompanyID = GetAttribute(tr, "orgCompanyID");
     
@@ -750,18 +750,23 @@ function getAprLine(tr) {
 				orgCompanyID : orgCompanyID
 				},
 		success: function(xml){
-			getAprovSub_after(xml);
+			getAprovSub_after(xml, mainPageType);
 		}        			
 	});
     
 }
 
-function getAprovSub_after(xml) {
-    if (document.getElementById("lvAprLine").innerHTML != "") document.getElementById("lvAprLine").innerHTML = "";
-    if (xml == "NOTPERMISSION") {
-        document.getElementById("lvAprLine").innerHTML = "<img src='/images/warning02.gif' width='120' height='100'><h1>" + strLang929 + "</h1>";
-        document.getElementById("lvAprLine").style.textAlign = "center";
-        return;
+function getAprovSub_after(xml, type) {
+    if (!type) {
+        if (document.getElementById("lvAprLine").innerHTML != "") {
+            document.getElementById("lvAprLine").innerHTML = "";
+        }
+    
+        if (xml == "NOTPERMISSION") {
+            document.getElementById("lvAprLine").innerHTML = "<img src='/images/warning02.gif' width='120' height='100'><h1>" + strLang929 + "</h1>";
+            document.getElementById("lvAprLine").style.textAlign = "center";
+            return;
+        }
     }
 
 
@@ -784,10 +789,16 @@ function getAprovSub_after(xml) {
     AprLine.SetID("AprLine");
     AprLine.SetMulSelectable(false);
 //    AprLine.SetTitleIdx(arrySubTab[1]);
-    AprLine.SetRowOnDblClick("lvAprLine_DBSelChange");
+    if (type == "dash") {
+        AprLine.SetRowOnDblClick("lvAprLine_DBSelChange2");
+    } else {
+        AprLine.SetRowOnDblClick("lvAprLine_DBSelChange");
+    }
     AprLine.SetRowOnClick("lvAprLine_SelChange");
     AprLine.DataSource(xmlDoc);
-    AprLine.DataBind("lvAprLine");
+    if (type != "dash") {
+        AprLine.DataBind("lvAprLine");
+    }
 
     if (AprLine.GetRowCount() > 0) {
         //document.getElementById("tbtnUserInfo").style.display = "";
@@ -901,7 +912,7 @@ function openDraftUI(pDraftFlag, pCurSelRow,officeFlag) {
     if (formURL.substr(formURL.length - 3, formURL.length).toLowerCase() == "mht") {
         var isGroupDoc = checkIsGroupDoc(pArgument[7], ""); // 일괄기안문서 여부 체크 (1안 기준의 DOCID 전달)
 
-        if (isGroupDoc == "Y") { // 반송된 일괄기안 문서를 여는 경우
+        if (isGroupDoc == "Y" && (typeof draftAllTypeB == "undefined" || draftAllTypeB != "Y")) { // 반송된 일괄기안 문서를 여는 경우
             openLocation = "/ezApprovalG/draftuiAll_WHWP.do?formURL=" + encodeURI(pArgument[1]) + "&draftFlag=" + encodeURI(pArgument[2]) + "&formDocType=" + encodeURI(pArgument[3]);
         } else {
             openLocation = "/ezApprovalG/draftui.do?formURL=";
@@ -932,7 +943,7 @@ function openDraftUI(pDraftFlag, pCurSelRow,officeFlag) {
     	} else {
     		var isGroupDoc = checkIsGroupDoc(pArgument[7], ""); // 일괄기안문서 여부 체크 (1안 기준의 DOCID 전달)
     		
-    		if (isGroupDoc == "Y") { // 반송된 일괄기안 문서를 여는 경우
+    		if (isGroupDoc == "Y" && (typeof draftAllTypeB == "undefined" || draftAllTypeB != "Y")) { // 반송된 일괄기안 문서를 여는 경우
     			openLocation = "/ezApprovalG/draftuiAll_WHWP.do?formURL=" + encodeURI(pArgument[1]) + "&draftFlag=" + encodeURI(pArgument[2]) + "&formDocType=" + encodeURI(pArgument[3]);
     		} else {
     			openLocation = "/ezApprovalG/draftuiWHWP.do?formURL=" + encodeURI(pArgument[1]) + "&draftFlag=" + encodeURI(pArgument[2]) + "&formDocType=" + encodeURI(pArgument[3]);
@@ -997,7 +1008,7 @@ function openApprovUI(allFlag) {
         		var isGroupDoc = checkIsGroupDoc(encodeURI(pArgument[0]), orgCompanyID);
         		var openLocation = "";
         		
-        		if (isGroupDoc == "Y") { // 일괄기안 문서를 여는 경우
+        		if (isGroupDoc == "Y" && (typeof draftAllTypeB == "undefined" || draftAllTypeB != "Y")) { // 일괄기안 문서를 여는 경우
         			openLocation = "/ezApprovalG/approvuiAll_WHWP.do?docID=" + encodeURI(pArgument[0]);
         		} else {
             		openLocation = "/ezApprovalG/approvuiWHWP.do?docID=" + encodeURI(pArgument[0]);
@@ -1007,7 +1018,7 @@ function openApprovUI(allFlag) {
         	}
         } else {
             var isGroupDoc = checkIsGroupDoc(encodeURI(pArgument[0]), orgCompanyID);
-            if (isGroupDoc == "Y") // 일괄기안 문서를 여는 경우
+            if (isGroupDoc == "Y" && (typeof draftAllTypeB == "undefined" || draftAllTypeB != "Y")) // 일괄기안 문서를 여는 경우
                 openLocation = "/ezApprovalG/approvuiAll_WHWP.do?docID=";
             else
                 openLocation = "/ezApprovalG/approvui.do?docID=";
@@ -1202,7 +1213,7 @@ function openViewDocInfo(type) {
         	} else {
         		var isGroupDoc = checkIsGroupDoc(encodeURI(DocID), orgCompanyID);
         		
-        		if (isGroupDoc == "Y") { // 일괄기안 문서를 여는 경우 (결재진행문서, 기안한문서 메뉴에서 접근 시 지원)
+        		if (isGroupDoc == "Y" && (typeof draftAllTypeB == "undefined" || draftAllTypeB != "Y")) { // 일괄기안 문서를 여는 경우 (결재진행문서, 기안한문서 메뉴에서 접근 시 지원)
         			openLocation = "/ezApprovalG/ezviewAprAll_WHWP.do";
         		} else {
         			openLocation = "/ezApprovalG/ezviewAprWHWP.do";
@@ -3047,7 +3058,7 @@ function openServerDraftUI(pDraftFlag, pCurSelRow) {
     	} else {
     		var isGroupDoc = checkIsGroupDoc(pDocSN, "");
     		
-    		if (isGroupDoc == "Y") { // 임시저장된 일괄기안 문서를 여는 경우
+    		if (isGroupDoc == "Y" && (typeof draftAllTypeB == "undefined" || draftAllTypeB != "Y")) { // 임시저장된 일괄기안 문서를 여는 경우
     			openLocation = "/ezApprovalG/draftuiAll_WHWP.do?formURL=" + encodeURI(pArgument[1]) + "&draftFlag=" + encodeURI(pArgument[2]) + "&formDocType=" + encodeURI(pArgument[3]);
     		} else {
         		openLocation = "/ezApprovalG/draftuiWHWP.do?formURL=" + encodeURI(pArgument[1]) + "&draftFlag=" + encodeURI(pArgument[2]) + "&formDocType=" + encodeURI(pArgument[3]);
@@ -3226,12 +3237,12 @@ function chk_Passwd_Complete(chkpass) {
             return false;
         }
         
-        /* 2022-02-23 홍승비 - 일괄기안된 문서는 일괄결재 제외 */
+        /* 2022-02-23 홍승비 - 일괄기안된 문서는 일괄결재 제외 
         var isGroupDoc = checkIsGroupDoc($(this).attr("DATA1"), orgCompanyID); // 일괄기안문서 여부 체크 (1안 기준의 DOCID 전달)
         if (isGroupDoc == "Y") {
         	passCnt++;
         	return true;
-        }
+        }*/
         
         //결재타입 정보
         $.ajax({
@@ -3512,10 +3523,10 @@ function btnSendAround_onclick() {
         aprgongramline_cross_dialogArguments[0] = para;
         aprgongramline_cross_dialogArguments[1] = btnSendAround_onclick_Complete;
 
-//        var OpenWin = window.open(url, "AprGongRamLine_Cross", GetOpenWindowfeature(1200, 760));
+//        var OpenWin = window.open(url, "AprGongRamLine_Cross", GetOpenWindowfeature(1200, 780));
 //        try { OpenWin.focus(); } catch (e) { }
         ezCommon_cross_dialogArguments[0] = para;
-        showPopup(url, 1200, 760, "AprGongRamLine_Cross", GetOpenWindowfeature(1200, 760), btnSendAround_onclick_Complete);
+        showPopup(url, 1200, 780, "AprGongRamLine_Cross", GetOpenWindowfeature(1200, 780), btnSendAround_onclick_Complete);
     }
 }
 

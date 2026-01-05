@@ -42,13 +42,13 @@ var CabinetFileHelper = function() {
 			window.addEventListener("beforeunload", function(e) {closeAllPopups();}, false);
 			var cabBttnElmt         = document.getElementById("fileDivBttn");
 			var cabBttnModify       = document.getElementById("fileModifyDivBttn");
-			var listBttns           = cabBttnElmt.children;
+			var listBttns           = cabBttnElmt.querySelectorAll('li');
 			var totalBttn           = listBttns.length;
 			var specialFunct        = isphoto ? fileDownloadAll : filePrint;
 			
 			if (cabBttnModify) {
 				//Write privilege
-				var listModifyBttns = cabBttnModify.children;
+				var listModifyBttns = cabBttnModify.querySelectorAll('li');
 				
 				if (totalBttn == 3) {
 					listBttns[0].onclick = function(e) {fileModify()  ;};

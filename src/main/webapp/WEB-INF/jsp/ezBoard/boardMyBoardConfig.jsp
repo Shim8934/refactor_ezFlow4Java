@@ -137,6 +137,7 @@
 	                createNodeAndInsertText(xmlpara, objNode, "PTREENAME2", TreeName);
 	                createNodeAndInsertText(xmlpara, objNode, "PTREENAME3", TreeName);
 	                createNodeAndInsertText(xmlpara, objNode, "PTREENAME4", TreeName);
+	                createNodeAndInsertText(xmlpara, objNode, "PTREENAME6", TreeName);
 	                if (type == "U")
 	                    createNodeAndInsertText(xmlpara, objNode, "PUPPERID", "0");
 	                else if (type == "C")
@@ -177,6 +178,7 @@
 	            createNodeAndInsertText(xmlpara, objNode, "PTREENAME2", TreeName);
 	            createNodeAndInsertText(xmlpara, objNode, "PTREENAME3", TreeName);
 	            createNodeAndInsertText(xmlpara, objNode, "PTREENAME4", TreeName);
+	            createNodeAndInsertText(xmlpara, objNode, "PTREENAME6", TreeName);
 	            if (typeArg == "U")
 	                createNodeAndInsertText(xmlpara, objNode, "PUPPERID", "0");
 	            else if (typeArg == "C")
@@ -234,6 +236,7 @@
 	                createNodeAndInsertText(xmlpara, objNode, "PTREENAME2", TreeName);
 	                createNodeAndInsertText(xmlpara, objNode, "PTREENAME3", TreeName);
 	                createNodeAndInsertText(xmlpara, objNode, "PTREENAME4", TreeName);
+	                createNodeAndInsertText(xmlpara, objNode, "PTREENAME6", TreeName);
 	                createNodeAndInsertText(xmlpara, objNode, "PUPPERID", SelectedBoardID);
 	                createNodeAndInsertText(xmlpara, objNode, "PMODE", "MOD");
 	                createNodeAndInsertText(xmlpara, objNode, "PBOARDID", "");
@@ -269,6 +272,7 @@
 	            createNodeAndInsertText(xmlpara, objNode, "PTREENAME2", TreeName);
 	            createNodeAndInsertText(xmlpara, objNode, "PTREENAME3", TreeName);
 	            createNodeAndInsertText(xmlpara, objNode, "PTREENAME4", TreeName);
+	            createNodeAndInsertText(xmlpara, objNode, "PTREENAME6", TreeName);
 	            createNodeAndInsertText(xmlpara, objNode, "PUPPERID", SelectedBoardID);
 	            createNodeAndInsertText(xmlpara, objNode, "PMODE", "MOD");
 	            createNodeAndInsertText(xmlpara, objNode, "PBOARDID", "");
@@ -311,6 +315,7 @@
 	            createNodeAndInsertText(xmlpara, objNode, "PTREENAME2", "");
 	            createNodeAndInsertText(xmlpara, objNode, "PTREENAME3", "");
 	            createNodeAndInsertText(xmlpara, objNode, "PTREENAME4", "");
+	            createNodeAndInsertText(xmlpara, objNode, "PTREENAME6", "");
 	            createNodeAndInsertText(xmlpara, objNode, "PUPPERID", "");
 	            createNodeAndInsertText(xmlpara, objNode, "PMODE", "DEL");
 	            createNodeAndInsertText(xmlpara, objNode, "PBOARDID", "");
@@ -378,6 +383,12 @@
 		                createNodeAndInsertText(xmlpara, objNode, "PTREENAME4", "${boardInfo.boardName4}");
 	                } else {
 		                createNodeAndInsertText(xmlpara, objNode, "PTREENAME4", "${boardInfo.boardName}");
+	                }
+	                
+	                if ("${boardInfo.boardName6}" != null && "${boardInfo.boardName6}" != "") {
+		                createNodeAndInsertText(xmlpara, objNode, "PTREENAME6", "${boardInfo.boardName6}");
+	                } else {
+		                createNodeAndInsertText(xmlpara, objNode, "PTREENAME6", "${boardInfo.boardName}");
 	                }
 	                
 	                createNodeAndInsertText(xmlpara, objNode, "PUPPERID", SelectedBoardID);

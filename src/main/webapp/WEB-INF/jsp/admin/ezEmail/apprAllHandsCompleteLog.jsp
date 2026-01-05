@@ -69,7 +69,11 @@
 				</colgroup>
 				<tbody>
 					<tr>
-                        <th><input type="checkbox" id="Checkbox1" onchange="checkChange(this);"></th>
+                        <th>
+                            <div class="custom_checkbox">
+                                <input type="checkbox" id="Checkbox1" onchange="checkChange(this);">
+                            </div>
+                        </th>
                         <th><spring:message code='email.appr.th.subject' /></th> 			<% // 제목 %>
                         <th><spring:message code='email.appr.th.applicant.name' /></th> 	<% // 작성자명 %>
                         <th><spring:message code='email.appr.th.applicant.email' /></th> 	<% // 작성자주소 %>
@@ -110,8 +114,10 @@
 			<td class="tmp-apprMailList-checkbox">
 				<div class="input_wrap">
 					<span class="listview-check checks">
-	        			<input type="checkbox" id onchange="checkChangeEach(this);">
-						<label></label>
+	        			<div class="custom_checkbox">
+                            <input type="checkbox" id onchange="checkChangeEach(this);">
+                            <label></label>
+                        </div>
 	                </span>
 				</div>
 			</td>

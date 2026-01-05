@@ -118,6 +118,8 @@ import org.apache.poi.ss.usermodel.VerticalAlignment;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.tika.parser.txt.CharsetDetector;
+import org.apache.tika.parser.txt.CharsetMatch;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -142,6 +144,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.i18n.CookieLocaleResolver;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -305,6 +308,23 @@ public class CommonUtil {
 		
     	logger.debug("init ended.");
     }
+	public Locale getLocalFromLang(String lang) throws Exception {
+		if (lang.equals("1")) {
+			return Locale.KOREA;
+		} else if (lang.equals("2")) {
+			return Locale.ENGLISH;
+		} else if (lang.equals("3")) {
+			return Locale.JAPAN;
+		} else if (lang.equals("4")) {
+			return Locale.CHINA;
+		} else if (lang.equals("5")) {
+			return new Locale("vi", "VN");
+		} else if (lang.equals("6")) {
+			return new Locale("id", "ID");
+		}
+
+		return Locale.getDefault();
+	}
 
     /**
      * Path Traversal 공격을 방지하기 위해 filePath에 ../ 혹은 ..\ 패턴이 있으면
@@ -326,6 +346,20 @@ public class CommonUtil {
     	}
     	
     	return filePath;
+    }
+
+    public static String detectCharset(MultipartFile multipartFile) throws Exception {
+        byte[] fileBytes = multipartFile.getBytes();
+
+        CharsetDetector detector = new CharsetDetector();
+        detector.setText(fileBytes);
+
+        CharsetMatch match = detector.detect(); // 가장 가능성 높은 인코딩
+        if (match != null) {
+            return match.getName();  // 예: "UTF-8", "windows-1252", "EUC-KR"
+        }
+
+        return "UTF-8"; // fallback
     }
     
 	/** 
@@ -782,11 +816,20 @@ public class CommonUtil {
 			    // "자동회신:"과 같이 :이 제목에 포함되어 있는 경우 메일 저장하기 시, 한글파일명 깨지는 문제가 있어
 			    // :를 %3A로 변경한 후 URI 인코딩을 수행함. 
 				filename = filename.replaceAll(":", "%3A");
+				// 2025-05-11 김은실 : 제목에 ;가 포함될 경우 아래 "; filename" 에서 제목을 ;까지만 인식하는 경우가 발생한다.
+				// ex. attachment; filename="test;.eml"; filename*=UTF-8''"test;.eml"; => filename=tes
+				filename = filename.replaceAll(";", "%3B");
+				// 2025-05-19 김은실 : 제목에 '가 포함될 경우 front(js)를 거쳐가면서 name이 '를 기준으로 짤리는 현상이 발생하는 듯 하다.
+				// ex. attachment; filename="te'st.eml"; filename*=UTF-8''"te'st.eml"; => filename=te
+				filename = filename.replaceAll("'", "%27");
+
 				URI uri = new URI(null, null, filename, null);
 				filename = uri.toASCIIString();
 				// %3A에서 %가 %25로 인코딩되므로 다시 %3A로 변경함.
 				filename = filename.replaceAll("%253A", "%3A");
-				
+				filename = filename.replaceAll("%253B", "%3B");
+				filename = filename.replaceAll("%2527", "%27");
+
                 if (userAgentValue.contains("Chrome")) {
                     filename = filename + "\"" + "; filename*=UTF-8''\"" + filename;
                 }				
@@ -1788,6 +1831,39 @@ public class CommonUtil {
 		logger.debug("normalizeFileName ended");
 		return nfcFilename;
 	}
+
+	/**
+	 * zip파일 생성 시, 유효한 파일 이름 반환.
+	 * @param fileName
+	 * @return String
+	 */
+	public String getValidZipEntryFileName(String fileName) {
+		// fileName이 너무길면 entry name too long 오류 발생으로 150글자 이상이면 150글자까지만 남기고 뒤에 문자열은 삭제
+		fileName = fileName.chars()
+				.limit(150)
+				.mapToObj(c -> String.valueOf((char) c))
+				.collect(Collectors.joining());
+
+		/**
+		 * 고아 surrogate 제거 (UTF-8 인코딩 과정에서 발견될 유효하지 않은 유니코드 시퀀스)
+		 *
+		 * Surrogate란?
+		 * : 유니코드 코드포인트가 U+10000 이상일 경우 UTF-16에서 두 개의 16비트 코드 단위(surrogate pair)로 표현합니다.
+		 * 		High Surrogate: U+D800 ~ U+DBFF
+		 * 		Low Surrogate: U+DC00 ~ U+DFFF
+		 *		예: 😃 (U+1F603) → \uD83D\uDE03 (high surrogate + low surrogate) length = 2
+		 *
+		 * 150자로 자르는 과정에서, 뒷자리 유니코드만 잘리는 상황이 발생 시 \uD83D만 남아 MALFORMED 발생.
+		 * 		ZipCoder 는 내부적으로 CharsetEncoder 를 사용해 String → byte[] 변환을 합니다.
+		 * 		CharsetEncoder 가 변환할 수 없는 문자 시퀀스를 만나면 CoderResult.malformedForLength() 를 반환하고, 여기서 IllegalArgumentException("MALFORMED") 가 발생합니다.
+		 */
+		fileName = fileName.replaceAll("[\uD800-\uDFFF]", "");
+
+		// 제어문자 (\u0000 ~ \u001F, 특히 \u0000 NUL) 제거
+		fileName = fileName.replaceAll("\\p{Cntrl}", "");
+
+		return fileName;
+	}
 	
 	public String getUniqueFileName(String fileName, Map<String, Integer> fileNameMap) {
 		String fileNameLowerCase = fileName.toLowerCase();
@@ -2690,7 +2766,7 @@ public class CommonUtil {
 				
 				try {
     				if (menuCode.equals("workspace")) {//협업
-						String useEzWorkspace = ezNewPortalService.isUseEzWorkspace(companyId, tenantId, userId, deptId);
+						String useEzWorkspace = ezNewPortalService.isUseEzWorkspace(companyId, tenantId, userId, deptId, type);
 						
 						/* 2025-02-27 홍승비 - 포탈 > 협업 메뉴 사용 여부 판별 시 URL이 아닌 메뉴코드를 사용하도록 수정 (쿼리에서 판별) */
 						menuAccess = useEzWorkspace.equals("YES");

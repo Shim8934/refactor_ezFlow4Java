@@ -1,5 +1,5 @@
 ﻿var PreviewH_Move = false;
-var minimumWidth = 890;
+var minimumWidth = 1200;
 function PreviewH_onMouserDown(e) {
     curevent = (typeof event == 'undefined' ? e : event)
 
@@ -273,7 +273,7 @@ function ReSend(pURL, pEmail, pReader) {
     var pwidth = window.screen.availWidth;
     var pTop = (pheight - conHeight) / 2;
     var pLeft = (pwidth - minimumWidth) / 2;
-    var feature = "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no,resizable=1";
+    var feature = "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 1200px, status = no, toolbar=no, menubar=no,location=no,resizable=1";
     
     var requestUrl = "/ezEmail/mailWrite.do?url=" + encodeURIComponent(pURL) + "&cmd=RESEND&msgto=" + encodeURIComponent(pEmail) + "&reciverName=" + encodeURIComponent(pReader);
     
@@ -322,7 +322,7 @@ function reply_mail_onclick() {
     		pURI += "&shareId=" + encodeURIComponent(shareId);
     	}
         
-        var newwin = window.open(pURI, "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
+        var newwin = window.open(pURI, "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 1200px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
         newwin.focus();
     }
 }
@@ -371,7 +371,7 @@ function all_reply_mail_onclick() {
         	pURI += "&shareId=" + encodeURIComponent(shareId);
     	}
         
-        var newwin = window.open(pURI, "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
+        var newwin = window.open(pURI, "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 1200px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
         newwin.focus();
     }
 }
@@ -444,48 +444,20 @@ function rewrite_onClick() {
 }
 
 function transmission_mail_onclick() {
-    if (listContentArry.length == 0 && listSubContentArry.length == 0 && currentFixingId == null) {
-        alert(strLang42);
+    var pSelectItems = [];
+
+    // 2025.02.13 김은실 : [국립암센터] 메일 전달 방식. 전달 시 메일 다수 선택 가능.
+    if (listContentArry.length > 0) {
+        pSelectItems = listContentArry.map(id => document.getElementById(id).getAttribute("_href")); // ["INBOX/4", "INBOX/5", "INBOX/6"]
+    } else if (listSubContentArry.length > 0) {
+        pSelectItems = listSubContentArry.map(id => document.getElementById(id).getAttribute("_href"));
+    } else if (currentFixingId) {
+        pSelectItems = [currentFixingId.getAttribute('_href')]; // ["INBOX/4"]
     }
-    
-    if (listContentArry.length > 1 || listSubContentArry.length > 1) {
-        alert(strLang44);
-        return;
-    }
-    else {
-        var pSelectItem;
-        if (listContentArry.length > 0) {
-            pSelectItem = document.getElementById(listContentArry[listContentArry.length - 1])
-        } else if (listSubContentArry.length > 0) {
-            pSelectItem = document.getElementById(listSubContentArry[listSubContentArry.length - 1])
-        } else {
-        	pSelectItem = currentFixingId;
-        }
-        var pheight = window.outerHeight;
-        var conHeight = Math.max(pheight * 0.8, 840);
-        var pwidth = window.outerWidth;
-        var conWidth = pwidth * 0.8;
-        if (conWidth > minimumWidth)
-            conWidth = minimumWidth;
-        
-        var pLeft = window.outerWidth / 2 + window.screenX - (conWidth / 2);
-        var pTop = window.outerHeight / 2 + window.screenY - (conHeight / 2);
-        
-        if (checkBlockedMail(pSelectItem.getAttribute('_href')) == '1') {
-            alert(strLangLDH07);
-            return;        
-        }
-        
-        var pURI = "/ezEmail/mailWrite.do?cmd=FORWARD&URL=" + encodeURIComponent(pSelectItem.getAttribute('_href'));
-        
-        if (typeof(shareId) != "undefined" && shareId != "") {
-        	pURI += "&shareId=" + encodeURIComponent(shareId);
-    	}
-        
-        var newwin = window.open(pURI, "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
-        newwin.focus();
-    }
+
+    forward_mail_call(pSelectItems, shareId); // 마지막 라인이라 return 필요없어서 생략.
 }
+
 function Read_StatusChange(pGubun) {
     if (listContentArry.length == 0 && listSubContentArry.length == 0 && currentFixingId == null) {
         alert(strLang42);
@@ -523,12 +495,13 @@ function Read_StatusChange(pGubun) {
     xmlHTTP.open("POST", url, false);
     xmlHTTP.send(xmlpara);
     
+    clearAllMailSelections();
     // 20200428 조진호 - 메일 리스트에서 체크박스를 이용한 행위 뒤 체크박스가 풀리도록 추가
-    if (listContentArry.length > 0) {
+    /*if (listContentArry.length > 0) {
         for (var i = 1; i <= listContentArry.length; i++) {
             document.getElementById(listContentArry[listContentArry.length - i]).children[0].children[0].checked = false;
         }
-    }
+    }*/
     try {
         if (document.getElementById("HeaderAllCheckBox") != null)
             document.getElementById("HeaderAllCheckBox").checked = false;
@@ -536,6 +509,33 @@ function Read_StatusChange(pGubun) {
     
     MailListRefresh();
 }
+
+function clearAllMailSelections() {
+    const seen = new Set();
+
+    listContentArry.forEach(id => {
+        if (seen.has(id)) {
+            return; // 중복 방지
+        }
+ 
+        seen.add(id);
+
+        const row = document.getElementById(id);
+        if (!row) {
+            return;
+        }
+
+        const checkbox = row.querySelector('input[type="checkbox"]');
+        if (checkbox) {
+            checkbox.checked = false;
+        }
+
+        row.style.backgroundColor = m_strColorDefault; // 선택 해제 시 배경색도 원래대로
+    });
+
+    listContentArry = []; // 배열 초기화
+}
+
 var mail_movecopy_cross_dialogArguments = new Array();
 function move_mail_onclick() {
     if (listContentArry.length == 0 && listSubContentArry.length == 0 && currentFixingId == null) {
@@ -624,12 +624,13 @@ function move_mail_onclick_Complete(moveUrl) {
 
         Mail_CopyPostSend(moveUrl["cmd"], moveUrl["url"], szItemID);
         
+        clearAllMailSelections();
         // 20200428 조진호 - 메일 리스트에서 체크박스를 이용한 행위 뒤 체크박스가 풀리도록 추가
-        if (listContentArry.length > 0) {
+        /*if (listContentArry.length > 0) {
             for (var i = 1; i <= listContentArry.length; i++) {
                 document.getElementById(listContentArry[listContentArry.length - i]).children[0].children[0].checked = false;
             }
-        }
+        }*/
         try {
             if (document.getElementById("HeaderAllCheckBox") != null)
                 document.getElementById("HeaderAllCheckBox").checked = false;
@@ -1095,7 +1096,7 @@ function receiveCheck_onClick() {
 		requestUrl += "&shareId=" + encodeURIComponent(shareId);
 	}
     
-    var OpenWin = window.open(requestUrl, "mail_readerlist", GetOpenWindowfeature(620, 500));
+    var OpenWin = window.open(requestUrl, "mail_readerlist", GetOpenWindowfeature(650, 500));
     try { OpenWin.focus(); } catch (e) {console.log(e);}
 }
 function ListCount(pCount) {
@@ -1116,41 +1117,9 @@ function reject_onclick() {
     params["email"] = new Array();
     params["link"] = new Array();
     for (var n = 0; n < RejectArray.length; n++) {
-        var xmlHTTP = new XMLHttpRequest();
-        var xmlpara = createXmlDom();
-        var objNode;
-        xmlhttp_mailMoveDelete = createXMLHttpRequest();
-        createNodeInsert(xmlpara, objNode, "DATA");
-        var url = "";
-        url = document.getElementById(RejectArray[n]).getAttribute("_href");
-        createNodeAndInsertText(xmlpara, objNode, "ITEMID", url);
-        
-        var requestUrl = "/ezEmail/mailGetFromEmail.do";
-        
-		if (typeof(shareId) != "undefined" && shareId != "") {
-			requestUrl += "?shareId=" + encodeURIComponent(shareId);
-		}
-        
-        try {
-            xmlHTTP.open("POST", requestUrl, false);
-            xmlHTTP.send(xmlpara);
-
-            if (xmlHTTP.status < 200 || xmlHTTP.status > 300) {
-                alert("ERROR");
-                xmlDOM = null;
-                xmlHTTP = null;
-            }
-        }
-        catch (e) {
-            alert(e.description);
-            xmlDOM = null;
-            xmlHTTP = null;
-        }
-
-        var fromEmail = xmlHTTP.responseText;
-        xmlDOM = null;
-        xmlHTTP = null;
-        params["email"][n] = fromEmail;
+        const msgto = document.getElementById(RejectArray[n]).querySelectorAll('[data-msgto]')[0].getAttribute('data-msgto');
+        const splitAddr = getEmailAddressList(msgto);
+        params["email"][n] = quoteEmailName(splitAddr.name[0], splitAddr.email[0]);
         params["link"][n] = "";
     }
     denial_cross_dialogArguments[0] = params;
@@ -1309,6 +1278,11 @@ function event_xmlhttp_mailPreview_Complete() {
                     var Pos2 = pReceiver_.indexOf(">");
                     var pReceiver_Name = TrimText(pReceiver_.substring(0, Pos1));
                     var pReceiver_Address = TrimText(pReceiver_.substring(Pos1 + 1, Pos2));
+                    
+                    if (pReceiver_Address.indexOf("@") == -1) {
+                        // @가 없으면 정상적인 이메일 주소가 아니므로 이름하고 동일한 값을 표시한다.
+                        pReceiver_Address = pReceiver_Name;
+                    }
                     
                     if (Cnt == 0) {
                         pReceiverHtml = "<span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='#666'  style='cursor:pointer' title='" + ConvertStringForHTML(pReceiver_Address) + "' onclick='show_personinfo(\"" + pReceiver_Address + "\")'>\"" + pReceiver_Name  + " &lt;" + pReceiver_Address + "&gt;" + "\"</span>";
@@ -1472,11 +1446,9 @@ function event_xmlhttp_mailPreview_Complete() {
                 document.getElementById("PreH_MailCCDetail").innerHTML = pCcDetailHtml;
                 document.getElementById("PreH_sub_MailSender").innerHTML = pMailSenderHtml;
                 
-                if (senderProfileImageName !== "") {
-                	document.getElementById("preHSenderImage").src = "/admin/ezOrgan/getPersonalInfo.do?fileName=" + senderProfileImageName;
-                } else {
-                	document.getElementById("preHSenderImage").src = "/images/kr/main/bestEmployee_pic_none.png";
-                }
+                var picNone = "/images/kr/main/bestEmployee_pic_none.png";
+                document.getElementById("preHSenderImage").src = (senderProfileImageName !== "")? "/admin/ezOrgan/getPersonalInfo.do?fileName=" + senderProfileImageName : picNone;
+                document.getElementById("preHSenderImage").setAttribute('onerror', "this.src='" + picNone + "'");
 
 				if (useMailTag) {
 					document.getElementById("pre_h_tag_add").value = "";
@@ -1505,11 +1477,9 @@ function event_xmlhttp_mailPreview_Complete() {
                 document.getElementById("PreW_MailCCDetail").innerHTML = pCcDetailHtml;
                 document.getElementById("PreW_sub_MailSender").innerHTML = pMailSenderHtml;
                 
-                if (senderProfileImageName !== "") {
-                	document.getElementById("preWSenderImage").src = "/admin/ezOrgan/getPersonalInfo.do?fileName=" + senderProfileImageName;
-                } else {
-                	document.getElementById("preWSenderImage").src = "/images/kr/main/bestEmployee_pic_none.png";
-                }
+                var picNone = "/images/kr/main/bestEmployee_pic_none.png";
+                document.getElementById("preWSenderImage").src = (senderProfileImageName !== "")? "/admin/ezOrgan/getPersonalInfo.do?fileName=" + senderProfileImageName : picNone;
+                document.getElementById("preWSenderImage").setAttribute('onerror', "this.src='" + picNone + "'");
 
 				if (useMailTag) {
 					document.getElementById("pre_w_tag_add").value = "";
@@ -2014,7 +1984,7 @@ function callMsgDlg(szContentClass, Href) {
     }
 }
 
-function callMsgDlgAppr(href) {
+function callMsgDlgAppr(href, type) {
     var pheight = window.screen.availHeight;
     var conHeight = 720;
     var pwidth = window.screen.availWidth;
@@ -2026,6 +1996,9 @@ function callMsgDlgAppr(href) {
     var feature = "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = " + conWidth + "px, toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1";
 
     var pURI = "/ezEmail/mailApprRead.do?URL=" + encodeURIComponent(href);
+    if (type) {
+        pURI += "&type=" + encodeURIComponent(type);
+    }
 
     ReadMailOpenNewWin = window.open(pURI, "", feature);
 
@@ -2093,12 +2066,14 @@ function mail_export_exec(isAllMail) {
 		}
 	}
 	
+	clearAllMailSelections();
 	// 20200428 조진호 - 메일 리스트에서 체크박스를 이용한 행위 뒤 체크박스가 풀리도록 추가
-    if (listContentArry.length > 0) {
+    /*if (listContentArry.length > 0) {
         for (var i = 1; i <= listContentArry.length; i++) {
             document.getElementById(listContentArry[listContentArry.length - i]).children[0].children[0].checked = false;
         }
-    }
+    }*/
+
     try {
         if (document.getElementById("HeaderAllCheckBox") != null)
             document.getElementById("HeaderAllCheckBox").checked = false;
@@ -2457,12 +2432,13 @@ function toggle_flag(obj) {
         flagXmlHttp.onreadystatechange = event_toggle_flag_end;
         flagXmlHttp.send(xmlDom);
         if(typeof obj === "undefined") {
+            clearAllMailSelections();
             // 20200428 조진호 - 메일 리스트에서 체크박스를 이용한 행위 뒤 체크박스가 풀리도록 추가
-            if (listContentArry.length > 0) {
+            /*if (listContentArry.length > 0) {
                 for (var i = 1; i <= listContentArry.length; i++) {
                     document.getElementById(listContentArry[listContentArry.length - i]).children[0].children[0].checked = false;
                 }
-            }
+            }*/
             try {
                 if (document.getElementById("HeaderAllCheckBox") != null)
                     document.getElementById("HeaderAllCheckBox").checked = false;
@@ -2641,7 +2617,7 @@ function MailOptionHiddenOutside(e) {
         hiddenMoreMenu();
     }
 
-    let usingMailPreview = document.getElementById("iFramePanel_mail_preview").className.includes('on');
+    let usingMailPreview = document.getElementById("iFramePanel_mail_preview")?.className.includes('on');
     if (usingMailPreview) {
         hiddenPreviewMail();
     }

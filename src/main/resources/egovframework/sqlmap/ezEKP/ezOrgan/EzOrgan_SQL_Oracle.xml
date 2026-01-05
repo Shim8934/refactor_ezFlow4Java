@@ -3903,7 +3903,7 @@
 	<select id="EzOrganDAO.getCompanyId" parameterClass="Map" resultClass="String">
 		SELECT physicaldeliveryofficename
 		FROM tbl_usermaster
-		WHERE cn = #userId# AND tenantid = #tenantId#
+		WHERE cn = #userId# AND tenant_id = #tenantId#
 	</select>
 
 	<!-- 2023-07-31 전인하 - 겸직/부서 별 권한 설정 기능 - 겸직/사용자 기준 권한 설정 옵션 사용 시 유저 정보에 해당하는 겸직 권한 조회 -->
@@ -4267,13 +4267,13 @@
 						TO_NCHAR('') AS textColor,
 						'i_company' AS icon,
 						TO_NCHAR('') AS mail,
-						'' AS presence,
+						TO_NCHAR('') AS presence,
 						TO_NCHAR('') AS upnName,
 						TO_NCHAR('') AS mobile,
 						TO_NCHAR('') AS telephoneNumber,
-						'' AS teamsId,
+						TO_NCHAR('') AS teamsId,
 						TO_NCHAR('') AS extensionAttribute10,
-						'' AS chargeBusiness,
+						TO_NCHAR('') AS chargeBusiness,
 						TO_NCHAR('') AS physicalDeliveryOfficeName,
 						'N' AS addJob,
 						EXTENSIONATTRIBUTE15 AS sortOrder
@@ -4298,13 +4298,13 @@
 						TO_NCHAR('') AS textColor,
 						'i_company' AS icon,
 						TO_NCHAR('') AS mail,
-						'' AS presence,
+						TO_NCHAR('') AS presence,
 						TO_NCHAR('') AS upnName,
 						TO_NCHAR('') AS mobile,
 						TO_NCHAR('') AS telephoneNumber,
-						'' AS teamsId,
+						TO_NCHAR('') AS teamsId,
 						TO_NCHAR('') AS extensionAttribute10,
-						'' AS chargeBusiness,
+						TO_NCHAR('') AS chargeBusiness,
 						TO_NCHAR('') AS physicalDeliveryOfficeName,
 						'N' AS addJob,
 						EXTENSIONATTRIBUTE15 AS sortOrder
@@ -4343,7 +4343,7 @@
 						A.TELEPHONENUMBER AS telephoneNumber,
 						A.TEAMSID AS teamsId,
 						A.EXTENSIONATTRIBUTE10 AS extensionAttribute10,
-						'' AS chargeBusiness,
+						A.INFO AS chargeBusiness,
 						A.PHYSICALDELIVERYOFFICENAME AS physicalDeliveryOfficeName,
 						'N' AS addJob,
 						A.EXTENSIONATTRIBUTE15 AS sortOrder
@@ -4377,7 +4377,7 @@
 						A.TELEPHONENUMBER AS telephoneNumber,
 						A.TEAMSID AS teamsId,
 						A.EXTENSIONATTRIBUTE10 AS extensionAttribute10,
-						'' AS chargeBusiness,
+						A.INFO AS chargeBusiness,
 						A.PHYSICALDELIVERYOFFICENAME AS physicalDeliveryOfficeName,
 						'Y' AS addJob,
 						B.ORDERBY AS sortOrder
@@ -4447,7 +4447,7 @@
 					A.TELEPHONENUMBER AS telephoneNumber,
 					A.TEAMSID AS teamsId,
 					A.EXTENSIONATTRIBUTE10 AS extensionAttribute10,
-					'' AS chargeBusiness,
+					A.INFO AS chargeBusiness,
 					A.PHYSICALDELIVERYOFFICENAME AS physicalDeliveryOfficeName,
 					'N' AS addJob,
 					A.EXTENSIONATTRIBUTE15 AS sortOrder
@@ -4481,7 +4481,7 @@
 					A.TELEPHONENUMBER AS telephoneNumber,
 					A.TEAMSID AS teamsId,
 					A.EXTENSIONATTRIBUTE10 AS extensionAttribute10,
-					'' AS chargeBusiness,
+					A.INFO AS chargeBusiness,
 					A.PHYSICALDELIVERYOFFICENAME AS physicalDeliveryOfficeName,
 					'Y' AS addJob,
 					B.ORDERBY AS sortOrder
@@ -4516,7 +4516,7 @@
 					A.TELEPHONENUMBER AS telephoneNumber,
 					A.TEAMSID AS teamsId,
 					A.EXTENSIONATTRIBUTE10 AS extensionAttribute10,
-					'' AS chargeBusiness,
+					A.INFO AS chargeBusiness,
 					A.PHYSICALDELIVERYOFFICENAME AS physicalDeliveryOfficeName,
 					'Y' AS addJob,
 					B.ORDERBY AS sortOrder
@@ -4547,5 +4547,16 @@
 		SET TEAMSID = #v_TEAMSID#
 		WHERE UPNNAME = #v_UPNNAME#
 	</update>
+
+	<select id="EzOrganDAO.getCnByUpn"	parameterClass="Map" resultClass="String">
+        SELECT
+            CN
+        FROM
+            TBL_USERMASTER
+        WHERE
+            UPNNAME = #upnname#
+          AND
+            TENANT_ID = #tenantID#
+	</select>
 
 </sqlMap>

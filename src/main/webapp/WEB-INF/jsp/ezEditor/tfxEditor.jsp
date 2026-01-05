@@ -12,16 +12,97 @@
 		<script  type="text/javascript">
 			var type = "<c:out value='${type}'/>";
 			var editorLoadFlag = false;
+			var doc = null; // 제품 디자인영역 document
+			
+			// 2025.07.30 김대현 - 커서를 원래 위치로 돌리는 함수
+			function setFocus(selection,savedRange) {
+				selection.removeAllRanges();
+				selection.addRange(savedRange);
+			}
+
+			// 2025.07.30 김대현 - 현재 스크롤 위치 저장 함수
+			function saveCursorPosition() {
+				const iframe = document.querySelector('.xfeDesignFrame');
+				const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+				const currentScroll = iframeDoc.body.scrollTop;
+				return currentScroll;
+			}
 			
 			function SetEditorContent(Data) {
 	            try {
-	                xfe.setHtmlValue(Data);
+	            	// 메인페이지의 onload실행과 initLoad함수의 실행 속도 차이로 setTimeout함수 사용
+	            	if (parent.onloadflag || typeof parent.onloadflag === "undefined") {
+	            		if (Data === "") {
+							Data = "<p " + defaultFontAndSize + "><br></p>";
+						}
+						
+						// 2025-07-29 김대현 임시저장시 setEditorContent 후 커서 위치로 다시 이동
+						const doc = xfe.xfeStackObject.xfeDocument;
+						const body = doc.body;
+						
+						const iframe = document.querySelector('.xfeDesignFrame');
+						const currentScroll = saveCursorPosition();
+
+						const selection = doc.getSelection();
+						let offset = 0;
+
+						if (selection && selection.rangeCount > 0) {
+							const range = selection.getRangeAt(0);
+							const preRange = range.cloneRange();
+							preRange.selectNodeContents(body);
+							preRange.setEnd(range.startContainer, range.startOffset);
+							offset = preRange.toString().length;
+						}
+
+
+						body.innerHTML = Data;
+
+
+						let currentOffset = 0;
+						const walker = doc.createTreeWalker(body, NodeFilter.SHOW_TEXT, null, false);
+
+						while (walker.nextNode()) {
+							const node = walker.currentNode;
+							const length = node.nodeValue.length;
+
+							if (currentOffset + length >= offset) {
+								const range = doc.createRange();
+								range.setStart(node, offset - currentOffset);
+								range.collapse(true);
+
+								const sel = doc.getSelection();
+								sel.removeAllRanges();
+								sel.addRange(range);
+								break;
+							}
+
+							currentOffset += length;
+						}
+						
+						iframe.contentDocument.body.scrollTop = currentScroll;
+					} else {
+	            		setTimeout(parent.Editor_Complete, 10);
+	            	}
 	            } catch (e) { }
 	        }
 		
 			function GetEditorContent() {
 				try {
-	            	return xfe.getBodyValue();
+					
+					// 2025.07.28 김대현 태그프리 자동저장시 커서 사라지는 현상 수정
+					var selection = doc.getSelection();// 현재 문서에서 선택(커서) 정보
+					const iframe = document.querySelector('.xfeDesignFrame');
+					const currentScroll = saveCursorPosition();
+
+					let savedRange = null;
+					savedRange = selection.rangeCount > 0 ? selection.getRangeAt(0).cloneRange() : null; // 마우스 위치 저장
+					
+					var result = xfe.getBodyValue();
+
+					if (savedRange) setFocus(selection,savedRange);
+					iframe.contentDocument.body.scrollTop = currentScroll;
+					
+	            	return result;
 				} catch (e) { return ""; }
 	        }
 			
@@ -47,13 +128,23 @@
 	        }
 			
 			function GetEditorTextContent() {
+				var selection = doc.getSelection();// 현재 문서에서 선택(커서) 정보
+
+				let savedRange = null;
+				savedRange = selection.rangeCount > 0 ? selection.getRangeAt(0).cloneRange() : null; // 마우스 위치 저장
+				const iframe = document.querySelector('.xfeDesignFrame');
+				const currentScroll = saveCursorPosition();
+
                 var resultStr = xfe.getBodyValue();
+
+				if (savedRange) setFocus(selection,savedRange);
                 
                 resultStr = resultStr.replace(/\r\n/gi, "\n");
                 resultStr = resultStr.replace(/\n/gi, "");
                 resultStr = resultStr.replace(/<p .*?>/gi, "<p>");
                 resultStr = resultStr.replace(/<br .*?>/gi, "<br>");
                 resultStr = resultStr.replace(/<hr .*?>/gi, "<hr>");
+                resultStr = resultStr.replace(/<p><br>/gi, "\r\n"); // <p><br></p>인 경우 두줄되는 현상. 두번변환을 한번변환으로 변경.
                 resultStr = resultStr.replace(/<p>/gi, "\r\n");
                 resultStr = resultStr.replace(/<br>/gi, "\r\n");
                 resultStr = resultStr.replace(/<hr>/gi, "\r\n----------------------------------------------------------------------");
@@ -62,11 +153,13 @@
                 resultStr = resultStr.replace(/<script .*?>/gi, "<script>");
                 resultStr = resultStr.replace(/<script>.*?<\/script>/gi, "");
                 resultStr = resultStr.replace(/<.*?>/gi, "");
+                resultStr = resultStr.replace(/^\r\n/gi, ""); // \r\n로 변환 시 두줄되는 현상. 첫 줄바꿈 제거. (<p><p>는 두줄이지만, \n\n은 세줄이다.)
                 
                 var tempTextarea = document.createElement("textarea");
                 tempTextarea.innerHTML = resultStr;
                 resultStr = tempTextarea.value;
-                
+				iframe.contentDocument.body.scrollTop = currentScroll;
+				
                 return  resultStr;
 	        }
 			
@@ -176,15 +269,15 @@
 
 			window.onresize =  function () {
 	             try {
-	                setTimeout(function(){
+	                /*setTimeout(function(){
                          let height = document.documentElement.clientHeight - 220;
 
                             xfe.setWidth("100%");
                             xfe.setHeight(height+ "px");
-	                },100);
+	                },100);*/
 
-                    //xfe.setWidth("100%");
-                    //xfe.setHeight((document.documentElement.clientHeight - 1) + "px");
+                    xfe.setWidth("100%");
+                    xfe.setHeight((document.documentElement.clientHeight - 1) + "px");
 	            } catch (e) { }
 	        }
 			
@@ -193,6 +286,10 @@
 	        	var range = xfe.getSavedRange();
 	        	xfe.insertHtmlAtCursor(text, range);
 	        }
+
+			function SetEditorFocus() { // 에디터 textarea에 커서를 위치시킴
+				xfe.setFocus();
+			}
 		</script> 
 	</head>
 	<body style="margin: 0px; padding: 0px; overflow: hidden;" id="xfe">
@@ -251,10 +348,13 @@
 	            uploadPasteContentsPath : uploadPasteContentsPath,
 	            autoFocus : false,
 	            rootFrameId : 'tbContentElement',
-	            ignoreMinHeight : true
+	            ignoreMinHeight : true,
+				autoSave: {apply : false}
 	        });
 	        
 	        xfe.render('xfe');
+	        xfe.showMenubar(false);
+			doc = xfe.xfeStackObject?.xfeDocument; // 제품 디자인영역 document
 	        
 	        if (type == "MAILOUTOFOFFICE" || type == "COMMUNITYPHOTO") {
 	        	xfe.showToolbarItem(0, 11, false);

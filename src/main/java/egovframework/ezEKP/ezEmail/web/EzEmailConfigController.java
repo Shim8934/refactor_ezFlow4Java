@@ -259,6 +259,8 @@ public class EzEmailConfigController extends EzFileMngUtil {
 		}
 		List<String> defaultFontSizeList = Arrays.asList("8pt,9pt,10pt,11pt,12pt,13pt,14pt,16pt,18pt,20pt,24pt,30pt,36pt,54pt,72pt".split(","));
 		String selfCcOption = mailGeneralVO.getSelfCcOption() == null ? "none" : mailGeneralVO.getSelfCcOption(); // 나를 항상 참조에 포함 선택. none : 사용안함(default) / cc : 나를 항상 참조에 포함 / bcc : 나를 항상 숨은참조에 포함
+		String forwardAs = mailGeneralVO.getForwardAs(); // 2025.02.13 김은실 : 메일 전달 방식 inline: 본문으로 전달(default), attach: 첨부로 전달
+		// forwardAs: DB에 있는 값 그대로 사용하면 되고, MailGeneralVO 객체 생성 시 초기화가 "inline"이므로 후 처리는 필요없다.
 
 		String fontFamily = egovMessageSource.getMessage("main.t246", locale);
 		String fontSize = "10pt";
@@ -312,7 +314,8 @@ public class EzEmailConfigController extends EzFileMngUtil {
 				 + ",previewSubtree=" + previewSubtree + ",useOnlyInnerMail=" + useOnlyInnerMail + ",usePreviewSubTree=" + usePreviewSubTree
 				 + ",previewMailImage=" + previewMailImage + ",previewMail=" + previewMail + ",textOption=" + textOption + ",mailSearchPeriod=" + mailSearchPeriod
 				 + ",defaultCursorPosition=" + defaultCursorPosition + ",defaultSeparateSend=" + defaultSeparateSend + ",useEachMailDefault=" + useEachMailDefault
-				 + ",mailSendResult=" + mailSendResult + ",primaryLang=" + primaryLang + ",editorFontFamily=" + editorFontFamily + ",editorFontSize=" + editorFontSize);
+				 + ",mailSendResult=" + mailSendResult + ",primaryLang=" + primaryLang + ",editorFontFamily=" + editorFontFamily + ",editorFontSize=" + editorFontSize
+				 + ",selfCcOption=" + selfCcOption + ",forwardAs=" + forwardAs);
 		
 		model.addAttribute("listCount", listCount);
 		model.addAttribute("previewMode", previewMode);
@@ -341,6 +344,7 @@ public class EzEmailConfigController extends EzFileMngUtil {
 		model.addAttribute("defaultFontFamilyList", defaultFontFamilyList);
 		model.addAttribute("defaultFontSizeList", defaultFontSizeList);
 		model.addAttribute("selfCcOption", selfCcOption);
+		model.addAttribute("forwardAs", forwardAs);
 
 		logger.debug("mailGeneral ended.");
 		
@@ -449,7 +453,9 @@ public class EzEmailConfigController extends EzFileMngUtil {
 		String selfCcOption = doc.getElementsByTagName("SELFCCOPTION").item(0).getTextContent();
 
 		String inMailBox = doc.getElementsByTagName("INMAILBOX").item(0).getTextContent();
-		
+		// 2025.02.13 김은실 : 메일 전달 방식. inline: 본문으로 전달(default), attach: 첨부로 전달
+		String forwardAs = doc.getElementsByTagName("FORWARDAS").item(0).getTextContent();
+
 		logger.debug("userId=" + userInfo.getId() + ",listCount=" + listCount + ",refreshInterval=" + refreshInterval 
 				+ ",keepDeleteLength=" + keepDeleteLength + ",previewMode=" + previewMode 
 				+ ",previewWList=" + previewWList + ",previewWContent=" + previewWContent
@@ -462,6 +468,7 @@ public class EzEmailConfigController extends EzFileMngUtil {
 				+ ",mailSendResult=" + mailSendResult
 				+ ",editorFontFamily=" + editorFontFamily + ",editorFontSize=" + editorFontSize
 				+ ",selfCcOption=" + selfCcOption
+				+ ",forwardAs=" + forwardAs
 		);
 
 		String rtnValue= "OK";
@@ -489,6 +496,7 @@ public class EzEmailConfigController extends EzFileMngUtil {
 			mailGeneral.setEditorFontFamily(editorFontFamily);
 			mailGeneral.setEditorFontSize(editorFontSize);
 			mailGeneral.setSelfCcOption(selfCcOption);
+			mailGeneral.setForwardAs(forwardAs);
 
 			ezEmailService.setMailGeneral(userInfo.getTenantId(), userInfo.getId(), mailGeneral, mode, inMailBox);
 		} catch (RuntimeException e) {

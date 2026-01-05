@@ -91,8 +91,8 @@
 			    <tr>
 			        <th><spring:message code='ezSchedule.t402' /></th>
 			        <td>
-			            <input style="margin-top: 0px;" type="radio" id="USE" name="USE" value="1" /><label for="USE" style="cursor: pointer; vertical-align: middle"><spring:message code='ezSchedule.t403' /></label>
-			            <input style="margin-top: 0px;" type="radio" id="NUSE" name="USE" value="2"/><label for="NUSE" style="cursor: pointer; vertical-align: middle"><spring:message code='ezSchedule.t404' /></label>
+						<div class='custom_radio'><input style="margin-top: 0px;" type="radio" id="USE" name="USE" value="1" /><label for="USE" style="cursor: pointer; vertical-align: middle"><spring:message code='ezSchedule.t403' /></label>
+						<input style="margin-top: 0px;" type="radio" id="NUSE" name="USE" value="2"/><label for="NUSE" style="cursor: pointer; vertical-align: middle"><spring:message code='ezSchedule.t404' /></label></div>
 			        </td>
 			    </tr>
 			</table>

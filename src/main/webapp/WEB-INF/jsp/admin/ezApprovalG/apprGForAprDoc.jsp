@@ -43,6 +43,7 @@
 			var useWebHWP = "<c:out value ='${useWebHWP}'/>";
 			var selectYear = "ALL";
 			var useReceiveInfoName = "<c:out value ='${useReceiveInfoName}'/>"; // 수신처 뒤에 "장"을 붙이는지 여부 (0 : 안붙임 / 1 : 붙임 / 2: 상위부서 + 수신처장)       
+			var draftAllTypeB = "<c:out value ='${draftAllTypeB}'/>"; // 일괄기안 B타입 플래그       
 			
 			document.onselectstart = function () {
 		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA") {
@@ -624,7 +625,7 @@
 		                	var isGroupDoc = checkIsGroupDoc(encodeURI(DocID), ""); // 현재 소속한 회사의 문서가 보이므로, companyID 전달 없어도 됨
 		                	var openLocation = "";
 		            		
-		            		if (isGroupDoc == "Y") { // 일괄기안 문서를 여는 경우 (결재진행문서, 기안한문서 메뉴에서 접근 시 지원)
+		            		if (isGroupDoc == "Y" && draftAllTypeB != "Y") { // 일괄기안 문서를 여는 경우 (결재진행문서, 기안한문서 메뉴에서 접근 시 지원)
 		            			openLocation = "/ezApprovalG/ezviewAprAll_WHWP.do?docID=" + escape(DocID) + "&docHref=" + escape(pURL);
 		            		} else {
 		            			openLocation = "/ezApprovalG/ezviewAprWHWP.do?docID=" + escape(DocID) + "&docHref=" + escape(pURL);
@@ -636,7 +637,7 @@
                         var isGroupDoc = checkIsGroupDoc(encodeURI(DocID), ""); // 현재 소속한 회사의 문서가 보이므로, companyID 전달 없어도 됨
                         var openLocation = "";
 
-                        if (isGroupDoc == "Y") { // 일괄기안 문서를 여는 경우 (결재진행문서, 기안한문서 메뉴에서 접근 시 지원)
+                        if (isGroupDoc == "Y" && draftAllTypeB != "Y") { // 일괄기안 문서를 여는 경우 (결재진행문서, 기안한문서 메뉴에서 접근 시 지원)
                             openLocation = "/ezApprovalG/ezviewAprAll_WHWP.do?docID=" + escape(DocID) + "&docHref=" + escape(pURL);
                         } else {
                             var openLocation = "/ezApprovalG/aprDocView.do?docID=" + encodeURI(DocID) + "&docHref=" + encodeURI(pURL);
@@ -817,9 +818,9 @@
 			        var ezStatisticsSearch_Cross;
 			        
 			        if (approvalFlag == "S") {
-				        ezStatisticsSearch_Cross = window.open("/admin/ezApprovalG/search.do?ingFlag=APR", "ezStatisticsSearch", GetOpenWindowfeature(510, 314));
+				        ezStatisticsSearch_Cross = window.open("/admin/ezApprovalG/search.do?ingFlag=APR", "ezStatisticsSearch", GetOpenWindowfeature(560, 314));
 			        } else {
-				        ezStatisticsSearch_Cross = window.open("/admin/ezApprovalG/search.do?ingFlag=APR", "ezStatisticsSearch", GetOpenWindowfeature(510, 404));
+				        ezStatisticsSearch_Cross = window.open("/admin/ezApprovalG/search.do?ingFlag=APR", "ezStatisticsSearch", GetOpenWindowfeature(560, 404));
 			        }
 
 			        try { ezStatisticsSearch_Cross.focus(); } catch (e) {

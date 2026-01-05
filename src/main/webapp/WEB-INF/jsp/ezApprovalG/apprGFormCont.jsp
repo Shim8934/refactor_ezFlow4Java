@@ -36,6 +36,7 @@
 		    var ListIdx;
 		    var RetValue;
 		    var ReturnFunction;
+		    var draftTypeFlag = "<c:out value='${draftTypeFlag}'/>";  // Y: 일괄기안양식, N: 일괄기안이 아닌 양식, null: 모두 출력
 		    var reuseFlag = "<c:out value='${reuseFlag}'/>";
 			var resendFormYN = "<c:out value='${resendFormYN}'/>";
 		    window.onload = function () {
@@ -202,6 +203,7 @@
 		                <%-- 2021-01-21 심기영 오피스 결재 양식 추가 --%>
 		                Rtnval[4] = selRow.getAttribute("DATA-OFFICEFLAG");
 						Rtnval[5] = RetValue[2];
+						Rtnval[6] = selRow.getAttribute("formdraftallflag");
 
 		                Rtnval["reformflag"] = selRow.getAttribute("reformflag");
 		                
@@ -334,6 +336,15 @@
 				        		        	parent.opener.getFavoriteForms();
 				        		        }
 				                    }
+									if (isTeamsDesktop()) {
+										if (parent.document.getElementById("aprDashBoard")){
+											parent.getFavoriteForms();
+										}
+									} else {
+										if (window.opener.parent.frames["right"].document.getElementById("aprDashBoard")) {
+											window.opener.parent.frames["right"].getFavoriteForms();
+										}
+									}
 				    			} else {
 				    				OpenAlertUI("<spring:message code='ezApprovalG.t180'/>");
 				    			}
@@ -460,7 +471,8 @@
 		    				id : "ROOT",
 		    				kind  : document.getElementById('FromList').value,
 		    				searchType : _searchType,
-		    				searchName : _searchName
+		    				searchName : _searchName,
+                            draftTypeFlag : draftTypeFlag
 		    				},
 		    		success: function(xml){
 		    			xmlRtn = loadXMLString(xml);

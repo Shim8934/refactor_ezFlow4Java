@@ -43,6 +43,8 @@
 	            getGroupTree(1, 1, 0, true);
 	            InitListView();
 	            getGroupItem("");
+				setTooltipIfOverflow("lvtDocForm_TH_2");
+				setTooltipIfOverflow("lvtDocForm_TH_3");
 	            if (CrossYN()) {
 	                try {
 	                    ReturnFunction = parent.itemcode_dialogArgument[1];
@@ -57,8 +59,17 @@
 	                window.returnValue = Rtnval;
 	            }
 	        }
-	        
-	        function Tree_setconfig() {
+
+			function setTooltipIfOverflow(id) {
+				var th = document.getElementById(id);
+				if (th) {
+					if (th.scrollWidth > th.clientWidth) {
+						th.setAttribute("title", th.innerText.trim());
+					}
+				}
+			}
+
+			function Tree_setconfig() {
 		    	var xmlDom = createXmlDom();
 	            xmlDom = loadXMLFile("/xml/organtree_config2.xml");
 		    	var treeView = new TreeView();

@@ -1230,5 +1230,8 @@ var strLangKYJ_IsPublic03 = "결재선 열람";
 var strLangJIHShareDox01 = "공유자와 공유대상자는 같은 회사에 소속되어 있어야 합니다."
 var strLangJIHShareDox02 = "공유자를 먼저 선택바랍니다."
 
+var strLangRetiree01 = "는 퇴직자입니다. \n 즐겨찾기 적용에서 제외됩니다."
+var strLangRetiree02 = "부서는 폐지되었습니다. \n 즐겨찾기 적용에서 제외됩니다."
+
 var strLangJIH_ChkRecvnum1 = "receiptnumber 필드는 한개의 필드만 지정해주십시오.";
 var strLangJIH_ChkRecvnum2 = "receiptnumber 필드가 지정되어 있지 않습니다. 지정해주십시오.";

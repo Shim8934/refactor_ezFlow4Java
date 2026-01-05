@@ -77,9 +77,9 @@
 		<span>▒ <spring:message code='ezApprovalG.hyh02' /></span>
 		<span id=pMessageContent></span>
 		<table class="content" style="margin-top:10px">
-			<tr><th><input id='doc' name ='doc' type='checkbox' checked="checked" disabled="disabled"></th>
+			<tr><th><div class='custom_checkbox'><input id='doc' name ='doc' type='checkbox' checked="checked" disabled="disabled"></div></th>
 			<td><span id="ext2"><spring:message code='ezApprovalG.hyh03'/></span></td></tr> 
-			<tr><th><input id='opi' name ='opi' type='checkbox' ></th>
+			<tr><th><div class='custom_checkbox'><input id='opi' name ='opi' type='checkbox' ></div></th>
 			<td><span id="ext2"><spring:message code='ezApprovalG.t10020'/></span></td></tr>
 		</table>
 		<div class="btnposition btnpositionNew">

@@ -513,7 +513,7 @@
 		function Emp_Search() {
 		    if (document.getElementById('input_search').value != "") {
 		        var wHeight = 670;
-		        var wWidth = 750;
+		        var wWidth = 880;
 		        var wVertical = Math.floor(screen.height / 2) - (wHeight / 2);
 		        var wHorizontal = Math.floor(screen.width / 2) - (wWidth / 2);
 
@@ -709,7 +709,7 @@
                         <c:if test="${checkAdmin}">
                         	<li><img title="<spring:message code='ezResource.t106' />" style="cursor: pointer;" onclick='OpenWindow(event, "/admin/main.do", "", "")' src="/images/kr/main/admin.png"></li>
                         </c:if>
-                        <li><img title="<spring:message code='ezPersonal.t210' />" style="cursor: pointer;" onclick='OpenWindow(event, "/ezPersonal/personSearch.do", "", "height=670px,width=750px, status = no, toolbar=no, menubar=no,location=no, resizable=0")' src="/images/kr/main/person.png"></li>
+                        <li><img title="<spring:message code='ezPersonal.t210' />" style="cursor: pointer;" onclick='OpenWindow(event, "/ezPersonal/personSearch.do", "", "height=670px,width=880px, status = no, toolbar=no, menubar=no,location=no, resizable=0")' src="/images/kr/main/person.png"></li>
                         <li><img title="<spring:message code='ezPersonal.t999900011' />" style="cursor: pointer;" onclick='OpenWindow(event, "/ezPortal/environmentMain.do", "main", "")' src="/images/kr/main/env.png"></li>
 						<li><img title="<spring:message code='main.t00037' />" style="cursor: pointer;" onclick='OpenWindow(event, "/ezNewPortal/help/index.do", "helpWindow", "height=800px,width=1560px, status = no, toolbar=no, menubar=no, location=no, resizable=1")' src="/images/kr/main/help.png"></li>
 						<li><img title="<spring:message code='ezPortal.t990043' />" style="cursor: pointer;" onclick='top.location.href = "/user/login/actionLogout.do"' src="/images/kr/main/logout.png"></li>

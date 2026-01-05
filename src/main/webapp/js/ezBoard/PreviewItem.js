@@ -434,6 +434,7 @@ var UserIMG;
 var OneLineReplyFlag;
 var Gubun;
 var BoardID;
+var picNone = "/images/kr/main/bestEmployee_pic_none.png";
 
 function event_ItemPreviewRead_photo() {
     if (xmlhttp != null && xmlhttp.readyState == 4) {
@@ -444,8 +445,8 @@ function event_ItemPreviewRead_photo() {
             
             if (SelectSingleNodeValueNew(xmldom, "DATA") == "NO") {
             	alert(strLang173);
-                document.getElementById("userImgH").src = "/images/kr/main/bestEmployee_pic_none.png";
-                document.getElementById("userImgW").src = "/images/kr/main/bestEmployee_pic_none.png";
+                document.getElementById("userImgH").src = picNone;
+                document.getElementById("userImgW").src = picNone;
             } 
             
             var WriterID = SelectSingleNodeValueNew(xmldom, "NODES/NODE/WriterID");
@@ -478,9 +479,11 @@ function event_ItemPreviewRead_photo() {
             
             if (document.getElementById("userImgH") != null && UserIMG != "") {
             	document.getElementById("userImgH").src = UserIMG;
+            	document.getElementById("userImgH").setAttribute('onerror', "this.src='" + picNone + "'");
             }
             if (document.getElementById("userImgW") != null && UserIMG != "") {
             	document.getElementById("userImgW").src = UserIMG;
+            	document.getElementById("userImgW").setAttribute('onerror', "this.src='" + picNone + "'");
             }
             
             var pOCS = "";
@@ -544,11 +547,11 @@ function event_ItemPreviewRead() {
             	document.querySelector('#PreH_sub_subject').textContent = "";
             	document.querySelector('#PreH_MailReceiver').textContent = "";
             	document.querySelector('#PreH_date').textContent = "";
-            	document.getElementById("userImgH").src = "/images/kr/main/bestEmployee_pic_none.png";
+            	document.getElementById("userImgH").src = picNone;
             	document.querySelector('#PreW_sub_subject').textContent = "";
             	document.querySelector('#PreW_MailReceiver').textContent = "";
             	document.querySelector('#PreW_date').textContent = "";
-            	document.getElementById("userImgW").src = "/images/kr/main/bestEmployee_pic_none.png";
+            	document.getElementById("userImgW").src = picNone;
             }
             
             ItemID = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/ItemID");
@@ -609,9 +612,11 @@ function event_ItemPreviewRead() {
             
             if (document.getElementById("userImgH") != null && UserIMG != "") {
                 document.getElementById("userImgH").src = UserIMG;
+                document.getElementById("userImgH").setAttribute('onerror', "this.src='" + picNone + "'");
             }
             if (document.getElementById("userImgW") != null && UserIMG != "") {
                 document.getElementById("userImgW").src = UserIMG;
+                document.getElementById("userImgW").setAttribute('onerror', "this.src='" + picNone + "'");
             }
         }
     }

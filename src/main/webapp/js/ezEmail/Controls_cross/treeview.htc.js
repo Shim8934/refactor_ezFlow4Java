@@ -99,7 +99,7 @@
                 return;*/
         if (document.getElementById(g_toggleid + nodeIdx)) {
 	        if (document.getElementById(g_childid + nodeIdx).style.display == "none") {
-	            document.getElementById(g_childid + nodeIdx).style.display = "inline-block";
+	            document.getElementById(g_childid + nodeIdx).style.display = "block";
 	            if (document.getElementById(g_toggleid + nodeIdx).className.indexOf("sub_iconLNB tree_plus") >= 0)
 	                document.getElementById(g_toggleid + nodeIdx).className = "sub_iconLNB tree_minus";
 	            else
@@ -231,7 +231,7 @@
                 g_nodeArray["nodeXML"][nodeIdx].appendChild(childXML.documentElement.childNodes.item(0));
 
             if (childLength) {
-                childel.style.display = "inline-block";
+                childel.style.display = "block";
                 /*if (GetAttribute(toggleel, 'src').indexOf(g_baseImage["dot_normal"]) >= 0)
                     toggleel.setAttribute('src', g_baseImage["minus_normal"]);*/
                 if (GetAttribute(toggleel, 'class').indexOf("tree_blank") >= 0){
@@ -509,6 +509,37 @@
         }).call(this, event);
     }
 
+    this.onHiddenFolderMenu = function(){};
+    this.onfolderMenu = function(event){};
+
+    function event_oncontextmenu(event) {
+        window[thisid].onHiddenFolderMenu();
+
+        if (this != window[thisid]) {
+            arguments.callee.call(window[thisid], event);
+            return;
+        }
+        return (navigator.userAgent.indexOf('MSIE') == -1) ?
+        (function (event) {
+            if (!event) event = window.event;
+            var targetEl = event.target;
+            var elementid = targetEl.id;
+            // 메일> 왼쪽 메일함> 숫자> 우클릭 시 컨텍스트 메뉴 표출이 필요하다면 아래 코드를 참고하여 작업하기. (국립암센터는 숫자 클릭 시 : 안읽은 메일만 해당하기 때문에 작업도 수정되어야 한다.):
+            // elementid = targetEl.classList.contains('unread-mail')? targetEl.closest('span[id^="' + g_nodeid + '"]')?.id : targetEl.id;
+            if (elementid.indexOf(g_toggleid) == 0)
+                this.toggle(elementid.split(g_toggleid)[1]);
+            else if (elementid.indexOf(g_nodeid) == 0)
+                window[thisid].onfolderMenu(event);
+        }).call(this, event) :
+        (function (event) {
+            var elementid = window.event.srcElement.id;
+            if (elementid.indexOf(g_toggleid) == 0)
+                this.toggle(elementid.split(g_toggleid)[1]);
+            else if (elementid.indexOf(g_nodeid) == 0)
+                window[thisid].onfolderMenu(event);
+        }).call(this, event);
+    }
+
     function event_ondblclick(event) {
         if (this != window[thisid]) {
             arguments.callee.call(window[thisid], event);
@@ -567,7 +598,9 @@
 
             var elementid = targetEl.id;
             if (elementid.indexOf(g_nodeid) == 0 && g_baseClass["hover"] != "") {
-                document.getElementById(elementid).setAttribute('class', (g_selectedIdx == elementid.split(g_nodeid)[1] ? g_baseClass["selected"] : g_baseClass["normal"]));
+                // 이게 꼭 필요한 건지? (TODO: 무엇을 위한 건지 확인 필요.)
+                // 메일,주소록>left> div.tree 영역 밖의 '메일검색'등을 클릭한 후 div.tree 영역에 hover 시 selected가 원복되는 현상 발생.
+                // document.getElementById(elementid).setAttribute('class', (g_selectedIdx == elementid.split(g_nodeid)[1] ? g_baseClass["selected"] : g_baseClass["normal"]));
             }
 
         }).call(this, event) :
@@ -624,6 +657,7 @@
     try {
         element.addEventListener('selectstart', event_onselectstart, false);
         element.addEventListener('mousedown', event_onmousedown, false);
+        element.addEventListener('contextmenu', event_oncontextmenu, false);
         element.addEventListener('dblclick', event_ondblclick, false);
         element.addEventListener('mouseover', event_onmouseover, false);
         element.addEventListener('mouseout', event_onmouseout, false);

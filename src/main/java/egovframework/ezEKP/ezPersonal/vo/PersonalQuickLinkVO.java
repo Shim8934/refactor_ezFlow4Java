@@ -11,6 +11,8 @@ public class PersonalQuickLinkVO {
 	private String quickLinkName3;
 	/** 이름(중국어)*/
 	private String quickLinkName4;
+	/** 이름(인도네시아어)*/
+	private String quickLinkName6;
 	/** 링크타입*/
 	private String linkType;
 	/** 링크타입이미지경로*/
@@ -160,5 +162,11 @@ public class PersonalQuickLinkVO {
 	}
 	public void setSubdeptPermitted(String subdeptPermitted) {
 		this.subdeptPermitted = subdeptPermitted;
+	}
+	public String getQuickLinkName6() {
+		return quickLinkName6;
+	}
+	public void setQuickLinkName6(String quickLinkName6) {
+		this.quickLinkName6 = quickLinkName6;
 	}
 }

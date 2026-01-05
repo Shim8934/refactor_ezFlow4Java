@@ -7,14 +7,23 @@
 
 function ReserverdMail_Save()
 {
+    const delaySendDate = m_rgParams4PostOption["delaySendDate"];
+    // 현재 시간 가져오기
+    const now = new Date();
+    const targetDate = new Date(delaySendDate);
+    if (targetDate < now) {
+        alert(strPreviousTime);
+        return;
+    }
         var xmlhttp_1 = createXMLHttpRequest();
         var strQuery = "<DATA><MESSAGEID>"+pCDOMessageId+"</MESSAGEID></DATA>";
-        xmlhttp_1.open("POST", "/ezEmail/reservedMailCheck.do", false);
-        xmlhttp_1.send(strQuery);
-        if(xmlhttp_1.responseText == "<DATA>MAIL-EXISTS</DATA>")
-            Send_onClick();
-        else
-            alert(strLang243);
+// 2025-07-21 김대현 기존 예약메일 수정을 발송 30분 전에는 못하던걸 가능하게 변경
+//        xmlhttp_1.open("POST", "/ezEmail/reservedMailCheck.do", false);
+//        xmlhttp_1.send(strQuery);
+//        if(xmlhttp_1.responseText == "<DATA>MAIL-EXISTS</DATA>")
+    Send_onClick();
+//        else
+//            alert(strLang243);
 
     try {
         window.opener.window.close();

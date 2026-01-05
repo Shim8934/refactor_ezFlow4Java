@@ -1086,6 +1086,11 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 	public void retireDBData_D3(Map<String, Object> map) throws Exception {
         delete("EzOrganAdminDAO.retireDBData_D3", map);
     }
+
+	@SuppressWarnings("unchecked")
+	public List<String> getRetireUserDeptList(Map<String, Object> map) {
+		return (List<String>) list("EzOrganAdminDAO.getRetireUserDeptList", map);
+	}
 			
 	public void deleteDBData_D1(Map<String, Object> map) throws Exception {
         delete("EzOrganAdminDAO.deleteDBData_D1", map);

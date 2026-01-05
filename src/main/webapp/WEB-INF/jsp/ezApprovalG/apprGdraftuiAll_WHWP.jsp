@@ -1408,7 +1408,7 @@
 	                var url = "/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun +"&docType=" + pDocType + "&ext=" + "hwp" + "&formID=" + pFormID + "&draftAllFlag=Y";
 			        // var ret = window.open(url, "ezApprovalInfo-" + windowUuid, 'height=750,width=1210,scrollbars=no' + GetOpenPosition(1210, 750));
 					ezCommon_cross_dialogArguments[0] = parameter;
-					showPopup(url, 1210, 750, "ezApprovalInfo-" + windowUuid, 'height=750,width=1210,scrollbars=no' + GetOpenPosition(1210, 750), btnApprovalInfo_Complete);
+					showPopup(url, 1210, 750, "ezApprovalInfo-" + windowUuid, GetOpenWindowfeature(1210, 750), btnApprovalInfo_Complete);
 			    } catch (e) {
 			        alert("ezdraftui_hwp.btnApprovalInfo()::" + e);
 			    }
@@ -2851,7 +2851,7 @@
  	                <table class="file" style="height:80px; margin-top:-9px;">
 	                    <tr>
 	                        <th id="btn_Attach"><spring:message code='ezApprovalG.t65'/></th>
-	                        <td style="width:62%; border-right:1px solid #d5d5d5;">
+	                        <td style="width:62%; border-right:1px solid #d5d5d5; overflow: auto;">
 	                            <div id="lstAttachLink" style="height:70px;"></div>
 	                            <iframe id="ifrmDownload" name="ifrmDownload" src="about:blank" width="0" height="0" style="display: none;"></iframe>
 	                        </td>

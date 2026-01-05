@@ -218,7 +218,7 @@
 				schedule_select_attendant_dialogArguments[0] = secretary;
 				schedule_select_attendant_dialogArguments[1] = ModifySecretary_Complete;
 
-				var OpenWin = window.open("/ezSchedule/scheduleSelectAttendant.do?gubun=config&type=executive&cn=" + userid + "&title=" + encodeURI("비서 목록"), "schedule_group_write", GetOpenWindowfeature(980, 670));
+				var OpenWin = window.open("/ezSchedule/scheduleSelectAttendant.do?gubun=config&type=executive&cn=" + userid + "&title=" + encodeURI("<spring:message code='ezSchedule.t234'/>"), "schedule_group_write", GetOpenWindowfeature(980, 670));
 				try { OpenWin.focus(); } catch (e) { }
 			}
 
@@ -263,12 +263,14 @@
 		           		<spring:message code='ezSchedule.t402' />
 		            </th>
 		            <td>
-		            	<input id="date" type="radio" name="usage" value="Y" checked style="margin:0px 0px 0px 4px" onClick='showMainPattern(0);' />
-		                <label for="date"><spring:message code='ezSchedule.t403' /></label>
-		                <span id="lunarRadio">
-			                <input id="date2" type="radio" name="usage" value="N" style="margin:0px 0px 0px 4px" onClick='showMainPattern(1);'/>
-			                <label for="date2"><spring:message code='ezSchedule.t404' /></label>
-		                </span>
+						<div class='custom_radio'>
+							<input id="date" type="radio" name="usage" value="Y" checked style="margin:0px 0px 1px 4px" onClick='showMainPattern(0);' />
+							<label for="date"><spring:message code='ezSchedule.t403' /></label>
+							<span id="lunarRadio" style="margin-left: 10px;">
+								<input id="date2" type="radio" name="usage" value="N" style="margin:0px 0px 1px 4px" onClick='showMainPattern(1);'/>
+									<label for="date2"><spring:message code='ezSchedule.t404' /></label>
+							</span>
+						</div>
 		            </td>
 		        </tr>
 				<tr>

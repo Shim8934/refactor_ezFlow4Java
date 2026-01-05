@@ -85,9 +85,9 @@
 	            Function_Flag(funcCode);
 	            previewSubTreeCall();
 	            leftResize();
-		        $(".taskListBox").mCustomScrollbar({
-	        		theme : "dark"
-	        	});
+		        // $(".taskListBox").mCustomScrollbar({
+	        	// 	theme : "dark"
+	        	// });
 	            
 	            if (pRefreshinterval != "") {
 		            console.log('Setting Mail List Refresh Timer...');
@@ -101,8 +101,19 @@
 
 	                    document.addEventListener('visibilitychange', onVisibilityChange);
 	                    recordNextMailListRefreshTime();
-	                }		            
+	                }
 		        }
+
+				window.parent.frames['left'].document.addEventListener('click', HiddenFolderMenu);
+
+				const topFrame = window.parent?.parent?.parent?.frames['topFrame'];
+				if (topFrame && topFrame.contentWindow && topFrame.contentWindow.document) {
+					topFrame.contentWindow.document.addEventListener('click', HiddenFolderMenu);
+				}
+
+				document.getElementById("taskListBox").addEventListener("scroll", function() {
+                    HiddenFolderMenu();
+				});
 	        }
 	        
 	        function getCurrentTime() {
@@ -327,6 +338,8 @@
 	            PostTreeView.attachEvent('nodedblclick', function () { PostTreeView.toggle(PostTreeView.selectedIndex()) });
 	            PostTreeView.attachEvent('dragdrop', email_dragdrop);
 	            PostTreeView.dragdrop(true);
+	            PostTreeView.attachEvent('HiddenFolderMenu', HiddenFolderMenu);
+	            PostTreeView.attachEvent('folderMenu', event_folderMenu);
 	            var xmlHTTP = createXMLHttpRequest();
 	            xmlHTTP.open("GET", "/xml/common/organtree_config2.xml", false); 
 	            xmlHTTP.send();
@@ -727,7 +740,7 @@
 	        function Open_ReservationManage(shareId) {
 				var requestUrl = "/ezEmail/mailReservation.do";
 				requestUrl += shareId? "?shareId=" + encodeURIComponent(shareId) : "";
-	            var OpenWin = window.open(requestUrl, "mail_reservation_cross", GetOpenWindowfeature(501, 350));
+				var OpenWin = window.open(requestUrl, "mail_reservation_cross", GetOpenWindowfeature(560, 380));
 	            try { OpenWin.focus(); } catch (e) {console.log(e);}
 	        }
 	        function Open_Restore() {
@@ -1152,7 +1165,7 @@
 		    }
 			
 			function leftResize(){
-	        	$(".taskListBox").height(window.innerHeight-135);
+                $(".taskListBox").css("max-height", window.innerHeight - 220);
 	        }
 	        
 	        $( window ).resize(function() {
@@ -1453,6 +1466,7 @@
 			//address start
 			function Address_Menu_Click() {
 				LoadAddressTree(true);
+				// TODO: mailLeft.jsp의 주소록 부분과 addressLeft.jsp의 주소록 부분은 공통 처리할 수 없는지? (c:import 또는 selectnode_address)
 				if (AddressTreeView.selectedIndex() == -1)
 					AddressTreeView.select(1);
 				else
@@ -1500,6 +1514,12 @@
 
 			function address_Search() {
                 parent.document.querySelector("iframe[name=right]").src = "/ezAddress/addressMainSearch.do";
+				// liSelcted();
+				/**
+				 * TODO: $("#" + treeViewValue + " span.node_selected").attr("class", "node_normal");
+				 * 		 → $(".node_selected").attr("class", "node_normal"); 로 바꿀 수는 없는 건지?
+				 */
+				$(".node_selected").attr("class", "node_normal");
 			}
 
 			var AddressTreeView = null;
@@ -1599,6 +1619,9 @@
 			function address_Config() {
 				detailView();
 		 		parent.document.querySelector("iframe[name=right]").src = "/ezEmail/mailConfig.do?flag=address";
+				// liSelcted();
+				$(".node_selected").attr("class", "node_normal");
+
 			}
 			//address end
 			
@@ -1626,6 +1649,20 @@
 	            	mailBoxMenu.attr("class", "list_text node_selected");
 	            }--%>
 			}
+
+			function Open_BigAttachManage() {
+				try {
+					let url = "/ezEmail/bigAttachManageView.do";
+
+					if (shareId != "") {
+						url += "?shareId=" + encodeURIComponent(shareId);
+					}
+
+					window.open(url, "right");
+				} catch (e) {console.log(e);}
+				liSelcted();
+			}
+			
 	    </script>
 		<style type="text/css">
 			.myBar_red {
@@ -1672,6 +1709,12 @@
 			/*#tagcontent { word-break: break-all; line-height: 215%; }
 			#tagcontent a { padding: 4px; border-radius: 4px; }
 			#tagcontent a:hover { background: #c0ccd5; color: #0470e4; }*/
+
+			#taskListBox::-webkit-scrollbar {
+				position: absolute;
+				width: 9px;
+				height: auto;
+			}
 		</style>
 	</head>
 	<body class="newLeft">
@@ -1687,25 +1730,26 @@
 	        	<p class="btn_write02" onclick="write_LetterToMe()"><spring:message code="ezEmail.t99000010" /></p> 
 	        	<p class="btn_write01" onclick="write_Letter()"><spring:message code="ezEmail.t99000013" /></p>
 	        </div>
-        	<div class="taskListBox" style="overflow:hidden; padding-right: 0;">
+        	<div id="taskListBox" class="taskListBox" style="overflow:auto; padding-right: 0; max-height: 160px">
 		        <h2 class="on" id="h2Mail" onclick="Email_Menu_Click();">
 		        	<span class="sub_iconLNB tree_arrow_down"></span>
 		        	<span class="h2Title" id="h2TitleMail" style="display:inline-block"><spring:message code="ezEmail.t99000012" /></span><span id="totalUnreadCount" class="txt_color" style="position:absolute;"></span>
 		        </h2>
 		        <ul class="lnbUL" id="ulMail">
-		        	<div class="tree" id="PostTreeView" oncontextmenu="event_folderMenu(event); return false;" onclick="HiddenFolderMenu();"></div>
-		        	<li onclick="reception_check();"><span class="list_text"><spring:message code="ezEmail.t516" /></span></li>
-		            <li onclick="Open_Search();"><span class="list_text"><spring:message code="ezEmail.t641" /></span></li>
+		        	<div class="tree" id="PostTreeView" onclick="HiddenFolderMenu();"></div>
+		        	<li onclick="reception_check();"><span class="list_text" title="<spring:message code="ezEmail.t516" />"><spring:message code="ezEmail.t516" /></span></li>
+		            <li onclick="Open_Search();"><span class="list_text" title="<spring:message code="ezEmail.t641" />"><spring:message code="ezEmail.t641" /></span></li>
 		            <c:if test="${useOnlyInnerMail != 'YES'}">
-		            	<li onclick="check_pop3()"><span class="list_text"><spring:message code="ezEmail.t490" /></span></li>
+		            	<li onclick="check_pop3()"><span class="list_text" title="<spring:message code="ezEmail.t490" />"><spring:message code="ezEmail.t490" /></span></li>
 		            </c:if>	
-		            <li onclick="mail_exportall()" style="display: none;"><span class="list_text"><spring:message code="ezEmail.t99000014" /></span></li>
-		            <li onclick="Open_ReservationManage()"><span class="list_text"><spring:message code="ezEmail.t605" /></span></li>
-		            <c:if test="${useBizmekaSpambox == 'YES'}">
-		            	<li onclick="openSpamBox()"><span class="list_text"><spring:message code="ezEmail.ldh01" /></span></li>
+		            <li onclick="mail_exportall()" style="display: none;"><span class="list_text" title="<spring:message code="ezEmail.t99000014" />"><spring:message code="ezEmail.t99000014" /></span></li>
+		            <li onclick="Open_ReservationManage()"><span class="list_text" title="<spring:message code='ezEmail.t605' />"><spring:message code="ezEmail.t605" /></span></li>
+		            <li onclick="Open_BigAttachManage()"><span class="list_text"><spring:message code="ezEmail.bigAttach.kdh03" /></span></li>
+                    <c:if test="${useBizmekaSpambox == 'YES'}">
+		            	<li onclick="openSpamBox()"><span class="list_text" title="<spring:message code="ezEmail.ldh01" />"><spring:message code="ezEmail.ldh01" /></span></li>
 		            </c:if>
 		            <c:if test="${operatorMailAddress ne null && operatorMailAddress != ''}">
-		            	<li onclick="operatorSendMail()"><span class="list_text"><spring:message code="ezEmail.0hun01" /></span></li>
+		            	<li onclick="operatorSendMail()"><span class="list_text" title="<spring:message code='ezEmail.0hun01' />"><spring:message code="ezEmail.0hun01" /></span></li>
 		            </c:if>	
 		            <c:if test="${useSpamSniper ne null && useSpamSniper != '' && useSpamSniper != 'NO'}">
 		            	<li onclick="spamMailBox()"><span class="list_text"><spring:message code="ezEmail.ldh01" /></span></li>
@@ -1727,7 +1771,7 @@
                             <span>
                                 <div id="tagtitle" class="on" onclick='openTagFolder();'>
                                     <span class="sub_iconLNB tree_blank"></span>
-                                    <span class="tag_normal" style="width: 156px; text-align: justify;"><spring:message code="ezEmail.tag" /></span>
+                                    <span class="tag_normal" style="text-align: justify;"><spring:message code="ezEmail.tag" /></span>
                                 </div>
                                 <ul class="lnbUL" id="tagcontent">
                                     <li class="tagcontent">
@@ -1768,7 +1812,6 @@
 								</div>
 							</div>
 							<li onclick="address_Search()">
-								<span class="sub_iconLNB tree_search"></span>
 								<span class="list_text" title="<spring:message code="ezEmail.t99000042" />"><spring:message code="ezEmail.t99000042" /></span>
 							</li>
 							<li onclick="address_Config()">
@@ -1790,7 +1833,7 @@
 			        		</span>
 			        	</h2>
 			        	<ul class="lnbUL off" id="ul_${shareInfo.shareId}">
-			        		<div class="tree" id="shareTreeView_${shareInfo.shareId}" oncontextmenu="event_folderMenu(event); return false;" onclick="HiddenFolderMenu();"></div>
+			        		<div class="tree" id="shareTreeView_${shareInfo.shareId}" onclick="HiddenFolderMenu();"></div>
 			        		<li onclick="Open_Search();"><span class="list_text"><spring:message code="ezEmail.t641" /></span></li>
 			        		<c:if test="${shareInfo.sendPermission eq 'Y'}">
 								<li onclick="Open_ReservationManage('${shareInfo.shareId}')"><span class="list_text"><spring:message code="ezEmail.t605" /></span></li>

@@ -543,6 +543,7 @@ SELECT
     quicklinkname, 
     quicklinkname2, 
     quicklinkname3, 
+    quicklinkname6, 
     linktype,
     linktypeurl,
     url,
@@ -954,10 +955,30 @@ AND
                 A.menu_type as menuType
             FROM
                 tbl_portal_menu AS A
-            JOIN
-                tbl_portal_menu_name AS NAME
-            ON
-                A.menu_id = NAME.menu_id
+			JOIN (
+			    SELECT *
+			    FROM (
+			        SELECT *,
+			               ROW_NUMBER() OVER (
+			                   PARTITION BY menu_id
+			                   ORDER BY CASE WHEN menu_lang = #langType# THEN 0
+			                                 WHEN menu_lang = #primaryLang# THEN 1
+			                                 ELSE 2
+			                            END
+			               ) AS rn
+					FROM
+							tbl_portal_menu_name
+					WHERE
+							menu_lang IN (#langType#, #primaryLang#, 1)
+					AND
+							company_id = #companyId#
+					AND
+							tenant_id = #tenantId#
+			    ) t
+			    WHERE rn = 1
+			) AS NAME
+			ON
+				A.menu_id = NAME.menu_id
             JOIN
                 TBL_PORTAL_MENU_COMP AS COMP
             ON
@@ -1136,8 +1157,6 @@ AND
                 NAME.tenant_id = #tenantId#
             AND
                 NAME.company_id = #companyId#
-            AND
-                NAME.menu_lang = #langType#
             AND
                 COMP.menu_used = 1        
             AND
@@ -1844,7 +1863,11 @@ INSERT INTO TBL_PORTAL_THEME_USER (
 	            LINEINFO.aprmemberdeptid,
 	            LINEINFO.aprmemberdeptname,
 	            LINEINFO.aprmemberid,
-	            LINEINFO.aprmembername
+	            LINEINFO.aprmembername,
+	            DOCINFO.hasattachyn,
+	            DOCINFO.hasopinionyn,
+				exp.formname,
+				exp.formname2
 			FROM
 				TBL_APRDOCINFO AS DOCINFO
 			LEFT OUTER JOIN
@@ -1863,6 +1886,14 @@ INSERT INTO TBL_PORTAL_THEME_USER (
 				DOCINFO.companyid = LINEINFO.companyid
 			AND
 				DOCINFO.docid = LINEINFO.docid
+			LEFT OUTER JOIN 
+					 TBL_EXPAPRDOCINFO exp
+			ON 
+					 DOCINFO.DOCID = exp.DOCID
+			AND
+					 DOCINFO.TENANT_ID = exp.TENANT_ID
+			AND
+					 DOCINFO.COMPANYID = exp.COMPANYID
 			WHERE
 				DOCINFO.tenant_id = #tenantId#
 			AND
@@ -1908,7 +1939,13 @@ INSERT INTO TBL_PORTAL_THEME_USER (
 		        LINEINFO.aprmemberid AS aprmemberid,
 		        LINEINFO.aprmembername AS aprmembername,
 		        LINEINFO.aprmembername2 AS aprmembername2,
-		        USER.extensionattribute2 AS ext2
+		        USER.extensionattribute2 AS ext2,
+	            LINEINFO.aprtype,
+	            LINEINFO.aprmemberdeptname AS aprmemberdeptname,
+	            LINEINFO.aprmemberdeptname2 AS aprmemberdeptname2,
+	            LINEINFO.aprmemberjobtitle AS aprmemberjobtitle,
+	            LINEINFO.aprmemberjobtitle2 AS aprmemberjobtitle2,
+	            LINEINFO.processdate AS processdate
 		    FROM 
 		        TBL_APRLINEINFO AS LINEINFO
 		    JOIN 
@@ -2017,7 +2054,19 @@ INSERT INTO TBL_PORTAL_THEME_USER (
 			    DOCINFO.writername,
 			    DOCINFO.writername2,
 			    DOCINFO.href,
-			    DOCINFO.companyid
+			    DOCINFO.companyid,
+			    DOCINFO.HASATTACHYN,
+			    DOCINFO.HASOPINIONYN,
+			    exp.formname,
+			    exp.formname2,
+			    CASE #lang#
+	                WHEN '2' THEN DOCINFO.WRITERDEPTNAME2
+			        ELSE DOCINFO.WRITERDEPTNAME
+	            END AS WRITERDEPTNAME,
+			    CASE #lang#
+	                WHEN '2' THEN DOCINFO.WRITERJOBTITLE2
+			        ELSE DOCINFO.WRITERJOBTITLE
+	            END AS WRITERJOBTITLE
 			FROM
 				TBL_APRDOCINFO AS DOCINFO
 			JOIN
@@ -2036,6 +2085,12 @@ INSERT INTO TBL_PORTAL_THEME_USER (
 				DOCINFO.COMPANYID = GRP.COMPANYID
 			AND
 				DOCINFO.DOCID = GRP.DOCID
+			LEFT OUTER JOIN 
+					 TBL_EXPAPRDOCINFO exp
+			ON 
+					 DOCINFO.DOCID = exp.DOCID
+			AND
+					 DOCINFO.TENANT_ID = exp.TENANT_ID
 			WHERE
 				DOCINFO.tenant_id = #tenantId#
 			AND
@@ -2242,8 +2297,24 @@ INSERT INTO TBL_PORTAL_THEME_USER (
 		<![CDATA[
 			FROM
 				TBL_PORTAL_PORTLET AS A
-			JOIN
-				TBL_PORTAL_PORTLET_NAME AS NAME
+			JOIN (
+			    SELECT *
+			    FROM (
+			        SELECT *,
+			               ROW_NUMBER() OVER (
+			                   PARTITION BY portlet_id
+			                   ORDER BY CASE WHEN portlet_lang= #portletLang# THEN 0
+			                                 WHEN portlet_lang= #primaryLang# THEN 1
+			                                 ELSE 2
+			                            END
+			               ) AS rn
+			        FROM TBL_PORTAL_PORTLET_NAME
+			        WHERE tenant_id = #tenantId#
+			          AND company_id = #companyId#
+			          AND portlet_lang IN (#portletLang#, 1)
+			    ) t
+			    WHERE rn = 1
+			) AS NAME
 			ON
 				A.portlet_id = NAME.portlet_id
 			AND
@@ -2478,8 +2549,6 @@ INSERT INTO TBL_PORTAL_THEME_USER (
 				AND
 					NAME.company_id = #companyId#
 				AND
-					NAME.portlet_lang = #portletLang#
-				AND
 					(COMP.portlet_used = 1 && THEME.portlet_used = 1)
 				AND
 					(AUTH.access_yn IS NOT NULL)
@@ -2530,8 +2599,6 @@ INSERT INTO TBL_PORTAL_THEME_USER (
 					NAME.tenant_id = #tenantId#
 				AND
 					NAME.company_id = #companyId#
-				AND
-					NAME.portlet_lang = #portletLang#
 				AND
 					(COMP.portlet_used = 1 && THEME.portlet_used = 1)
 				AND
@@ -2602,20 +2669,20 @@ INSERT INTO TBL_PORTAL_THEME_USER (
 		</isEqual>
 		<isEqual property="lang" compareValue="4">
 		<![CDATA[
-			B.theme_name2 AS themename,
+			B.theme_name4 AS themename,
 			B.theme_content4 AS themecontent,
 		]]>
 		</isEqual>
 		<isEqual property="lang" compareValue="5">
 		<![CDATA[
-			B.theme_name2 AS themename,
-			B.theme_content4 AS themecontent,
+			B.theme_name5 AS themename,
+			B.theme_content5 AS themecontent,
 		]]>
 		</isEqual>
 		<isEqual property="lang" compareValue="6">
 		<![CDATA[
-			B.theme_name2 AS themename,
-			B.theme_content4 AS themecontent,
+			B.theme_name6 AS themename,
+			B.theme_content6 AS themecontent,
 		]]>
 		</isEqual>
 		<![CDATA[
@@ -3097,26 +3164,66 @@ SELECT c_id,
 		(A.COMPANY_ID = D.COMPANYID OR TRIM(D.COMPANYID) = '' OR D.COMPANYID IS NULL)
 	AND
 		A.TENANT_ID = D.TENANT_ID
-	LEFT JOIN
-		TBL_PORTAL_MENU_NAME E
+	LEFT JOIN (
+	    SELECT
+				MENU_NAME,
+				menu_id
+	    FROM (
+		        SELECT
+						MENU_NAME,
+						menu_id,
+						ROW_NUMBER() OVER (
+							PARTITION BY menu_id
+							ORDER BY CASE
+								WHEN menu_lang = #menuLang# THEN 0
+								WHEN menu_lang = #primaryLang# THEN 1
+								ELSE 2
+							END
+						) AS rn
+				FROM
+						tbl_portal_menu_name
+				WHERE
+						menu_lang IN (#menuLang#, #primaryLang#, 1)
+				AND
+						company_id = #companyId#
+				AND
+						tenant_id = #tenantId#
+		) t
+		WHERE
+				rn = 1
+	) E
 	ON
 		A.menu_id = E.menu_id
-	AND
-		A.COMPANY_ID = E.COMPANY_ID
-	AND
-		A.tenant_id = E.tenant_id
-	AND
-		E.menu_lang = #menuLang#
-	LEFT JOIN
-		TBL_PORTAL_PORTLET_NAME F
+	LEFT JOIN (
+		SELECT
+				PORTLET_ID,
+				PORTLET_NAME
+		FROM (
+				SELECT
+						PORTLET_ID,
+						PORTLET_NAME,
+						ROW_NUMBER() OVER (
+							PARTITION BY portlet_id
+							ORDER BY CASE
+								WHEN portlet_lang= #menuLang# THEN 0
+								WHEN portlet_lang= #primaryLang# THEN 1
+								ELSE 2
+							END
+						) AS rn
+				FROM
+						TBL_PORTAL_PORTLET_NAME
+				WHERE
+						portlet_lang IN (#menuLang#, #primaryLang#, 1)
+				AND
+						tenant_id = #tenantId#
+				AND
+						company_id = #companyId#
+		) t
+		WHERE
+				rn = 1
+	) F
 	ON
-		A.COMPANY_ID = F.COMPANY_ID
-	AND
-		A.TENANT_ID = F.TENANT_ID
-	AND
 		A.PORTLET_ID = F.PORTLET_ID
-	AND
-		F.PORTLET_LANG = #menuLang#
 	LEFT JOIN
 		TBL_SYSTEMCONFIG H
 	ON
@@ -3450,7 +3557,15 @@ ORDER BY
 		menu.menucode = 'workspace'
 	AND
 		user_id = #userId#
-]]>    
+		]]>   
+	AND 
+	<isNotEqual property="type" compareValue="mobile">
+		menu_type = 'A'
+	</isNotEqual>
+	<isEqual property="type" compareValue="mobile">
+		menu_type = 'MA'
+	</isEqual>
+
 </select>
 
 <select id="ezNewPortal.getInitCompanyList" resultClass="OrganDeptVO">

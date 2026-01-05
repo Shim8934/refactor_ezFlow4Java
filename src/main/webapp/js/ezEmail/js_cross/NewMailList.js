@@ -1,4 +1,4 @@
-﻿﻿var XmlHeader;
+﻿var XmlHeader;
 var XmlHeader_SUB;
 var BlockSize = 10;
 var p_ListOrderObject = null;
@@ -40,17 +40,22 @@ function MakeHeaderHTML(HeaderObject) {
         var _HeaderTH = document.createElement("TH");
         _HeaderTH.style.width = "22px";        
         if (p_ListorderValue != "SENT" && p_ListorderValue != "SUBJECT") {
+            // wrapper div 생성
+            var _CheckBoxWrapper = document.createElement("div");
+            _CheckBoxWrapper.classList.add("custom_checkbox");
+
+            // input 생성 및 설정
         	_HeaderTH.style.textAlign = "center";
              var _HeaderCheckBox = document.createElement("INPUT");
             _HeaderCheckBox.type = "checkbox";
-            _HeaderCheckBox.style.margin = "0px";
-            _HeaderCheckBox.style.padding = "0px";
-            _HeaderCheckBox.style.width = "13px";
-            _HeaderCheckBox.style.height = "13px";
             _HeaderCheckBox.setAttribute("id", "HeaderAllCheckBox");
+
             if (p_ListorderValue == "GROUPSUBLIST") { _HeaderCheckBox.onclick = function () { event_SubHeaderCheckBoxClick(this); }; }
             else { _HeaderCheckBox.onclick = function () { event_HeaderCheckBoxClick(this); }; }
-            _HeaderTH.appendChild(_HeaderCheckBox);
+            
+            // 조립
+            _CheckBoxWrapper.appendChild(_HeaderCheckBox);
+            _HeaderTH.appendChild(_CheckBoxWrapper);
         }
         _HeaderTR.appendChild(_HeaderTH);
         for (var Cnt = 0; Cnt < XmlRows.length; Cnt++) {
@@ -131,13 +136,23 @@ function MakeHeaderHTML_SUB(HeaderObject) {
         var _HeaderTR = document.createElement("TR");
         var _HeaderTH = document.createElement("TH");
         _HeaderTH.style.width = "22px";
-        var _HeaderCheckBox = document.createElement("INPUT");
+        // wrapper div 생성
+        var _CheckBoxWrapper = document.createElement("div");
+        _CheckBoxWrapper.classList.add("custom_checkbox");
+
+        // input 생성 및 설정
+        _HeaderTH.style.textAlign = "center";
+         var _HeaderCheckBox = document.createElement("INPUT");
         _HeaderCheckBox.type = "checkbox";
-        _HeaderCheckBox.style.margin = "0px";
-        _HeaderCheckBox.style.padding = "0px";
-        _HeaderCheckBox.style.width = "13px";
-        _HeaderCheckBox.style.height = "13px";
         _HeaderCheckBox.setAttribute("id", "HeaderAllCheckBox");
+
+        if (p_ListorderValue == "GROUPSUBLIST") { _HeaderCheckBox.onclick = function () { event_SubHeaderCheckBoxClick(this); }; }
+        else { _HeaderCheckBox.onclick = function () { event_HeaderCheckBoxClick(this); }; }
+
+        // 조립
+        _CheckBoxWrapper.appendChild(_HeaderCheckBox);
+        _HeaderTH.appendChild(_CheckBoxWrapper);
+
         if (p_ListorderValue == "GROUPSUBLIST") { _HeaderCheckBox.onclick = function () { event_SubHeaderCheckBoxClick(this); }; }
         else { _HeaderCheckBox.onclick = function () { event_HeaderCheckBoxClick(this); }; }
         _HeaderTH.appendChild(_HeaderCheckBox);
@@ -234,6 +249,7 @@ function MakeListInfoHTML(ConentObject) {
                 var p_ContentClass = SelectSingleNodeValue(XmlRows[Cnt], "contentclass");
                 var p_IsDraft = SelectSingleNodeValue(XmlRows[Cnt], "isdraft");
                 var p_SecureMail = SelectSingleNodeValue(XmlRows[Cnt], "securemail");
+                var p_IsEach = SelectSingleNodeValue(XmlRows[Cnt], "isEach");
                 var p_Readdt = SelectSingleNodeValue(XmlRows[Cnt], "readdt");
                 var p_Group = SelectSingleNodeValue(XmlRows[Cnt], "group");
                 var p_RecipientCount = SelectSingleNodeValue(XmlRows[Cnt], "recipientCount");
@@ -257,6 +273,7 @@ function MakeListInfoHTML(ConentObject) {
                 _TR.setAttribute("_contentclass", p_ContentClass);
                 _TR.setAttribute("_isdraft", p_IsDraft);
                 _TR.setAttribute("securemail", p_SecureMail);
+                _TR.setAttribute("isEach", p_IsEach);
                 _TR.dataset.tags = tags;
                 
                 if (shareId != "" && deletePermission != "Y") {
@@ -274,17 +291,30 @@ function MakeListInfoHTML(ConentObject) {
                 _TDCheckBox.style.width = "22px";
                 _TDCheckBox.style.textAlign = "center";
                 _TDCheckBox.style.cursor = "default";
-                var _TDCheckBox_Sub = document.createElement("INPUT");
+
+                // <div class="custom_checkbox"> 생성
+                var _CheckBoxWrapper = document.createElement("div");
+                _CheckBoxWrapper.classList.add("custom_checkbox");
+
+                // <input type="checkbox"> 생성
+                var _TDCheckBox_Sub = document.createElement("input");
                 _TDCheckBox_Sub.type = "checkbox";
+                _TDCheckBox_Sub.id = "checkbox_" + Cnt; // 고유 ID 부여 (선택적)
+                
                 if (p_ListorderValue == "GROUPSUBLIST") { _TDCheckBox_Sub.onclick = function () { event_SublistCheckboxclick(this); }; }
                 else { _TDCheckBox_Sub.onclick = function () { event_listCheckboxclick(this); }; }
-                _TDCheckBox_Sub.style.margin = "0px";
-                _TDCheckBox_Sub.style.padding = "0px";
-                _TDCheckBox_Sub.style.width = "13px";
-                _TDCheckBox_Sub.style.height = "13px";
-                _TDCheckBox_Sub.style.cursor = "pointer";
-                _TDCheckBox.appendChild(_TDCheckBox_Sub);
+
+                // label 생성 - 실제로 필요는 없어 display:none 처리, 코드가 없으면 undefined 오류 발생으로 넣음
+                var _Label = document.createElement("label");
+                _Label.setAttribute("for", _TDCheckBox_Sub.id);
+                _Label.style.display = "none";
+
+                // 조립
+                _CheckBoxWrapper.appendChild(_TDCheckBox_Sub);
+                _CheckBoxWrapper.appendChild(_Label);
+                _TDCheckBox.appendChild(_CheckBoxWrapper);
                 _TR.appendChild(_TDCheckBox);
+
                 XmlHeaderRows = SelectNodes(XmlHeader, "view/column");
                 
                 // 수신확인 중 수신자가 여러명일 경우
@@ -358,6 +388,7 @@ function MakeListInfoHTML(ConentObject) {
 
                             _TDColum.ondblclick = function () {
                                 clearTimeout(singleClickTimer);
+                                event_listclick(this, event);
                                 event_listDBClick(this.parentElement);
                             };
                             
@@ -375,6 +406,10 @@ function MakeListInfoHTML(ConentObject) {
                             }
                             if (p_SecureMail == 1) {
                             	p_Subject = "<span class='security_icon'></span>" + p_Subject;
+                            }
+                            if (p_IsEach == 1) {
+                                p_Subject = "<span class='eachMail_icon'>" + strLangEachIcon + "</span>" + p_Subject;
+                                // *strLangEachIcon: NewMailList.js가 포함된 곳엔 ('ezEmail.e1', 'msg') = ezEmail_ko.js가 임포트되고 있다.
                             }
                             
                             var p_Title  = SelectSingleNodeValue(XmlRows[Cnt], "subject");
@@ -410,12 +445,13 @@ function MakeListInfoHTML(ConentObject) {
 
                             _TDColum.ondblclick = function () {
                                 clearTimeout(singleClickTimer);
+                                event_listclick(this, event);
                                 event_listDBClick(this.parentElement);
                             };
                             _TDColum.onselectstart = function () { return false; };
 
                             if (useMailConfirm == "YES" && p_mailConfirm == "true" && useReceivingChk) {
-                                _TDColum.querySelector('#subject').style.textDecoration = 'line-through';
+                                _TDColum.style.textDecoration = 'line-through';
                             }
                             
                             break;
@@ -439,6 +475,7 @@ function MakeListInfoHTML(ConentObject) {
 
                             _TDColum.ondblclick = function () {
                                 clearTimeout(singleClickTimer);
+                                event_listclick(this, event);
                                 event_listDBClick(this.parentElement);
                             };
                             _TDColum.onselectstart = function () { return false; };
@@ -459,6 +496,7 @@ function MakeListInfoHTML(ConentObject) {
 
                             _TDColum.ondblclick = function () {
                                 clearTimeout(singleClickTimer);
+                                event_listclick(this, event);
                                 event_listDBClick(this.parentElement);
                             };
                             _TDColum.onselectstart = function () { return false; };
@@ -589,7 +627,7 @@ function MakeListInfoHTML(ConentObject) {
             else
                 mf_updatePageInfoGroupList(szRangeHeader)
         } catch (e) {
-            alert(e.description);
+            alert(e.message);
         }
     }
     else if (p_ListorderValue == "SENT" || p_ListorderValue == "SUBJECT") {
@@ -657,7 +695,7 @@ function MakeListInfoHTML(ConentObject) {
             }
             mf_updatePageInfo(szRangeHeader)
         } catch (e) {
-            alert(e.description);
+            alert(e.message);
         }
     }
 }
@@ -850,17 +888,33 @@ function MakeListInfoHTML_SUB(ConentObject) {
                 _TR.onclick = function () { event_Sublistclick(this); };
                 _TR.ondblclick = function () { event_SublistDBClick(this); };
                 _TR.onselectstart = function () { return false; };
+                
                 var _TDCheckBox = document.createElement("TD");
                 _TDCheckBox.style.width = "22px";
-                var _TDCheckBox_Sub = document.createElement("INPUT");
+                
+                // <div class="custom_checkbox"> 생성
+                var _CheckBoxWrapper = document.createElement("div");
+                _CheckBoxWrapper.classList.add("custom_checkbox");
+                
+                // input 생성
+                var _TDCheckBox_Sub = document.createElement("input");
                 _TDCheckBox_Sub.type = "checkbox";
+                _TDCheckBox_Sub.id = "checkbox_" + Cnt;  // Cnt는 반복문의 인덱스 또는 고유 값
+                
+                // 이벤트 핸들러 등록
                 _TDCheckBox_Sub.onclick = function () { event_SublistCheckboxclick(this); };
-                _TDCheckBox_Sub.style.margin = "0px";
-                _TDCheckBox_Sub.style.padding = "0px";
-                _TDCheckBox_Sub.style.width = "13px";
-                _TDCheckBox_Sub.style.height = "13px";
-                _TDCheckBox.appendChild(_TDCheckBox_Sub);
+                
+                // label 생성 - 실제로 필요는 없어 display:none 처리, 코드가 없으면 undefined 오류 발생으로 넣음
+                var _Label = document.createElement("label");
+                _Label.setAttribute("for", _TDCheckBox_Sub.id);
+                _Label.style.display = "none";
+                
+                // 조립
+                _CheckBoxWrapper.appendChild(_TDCheckBox_Sub);
+                _CheckBoxWrapper.appendChild(_Label);
+                _TDCheckBox.appendChild(_CheckBoxWrapper);
                 _TR.appendChild(_TDCheckBox);
+
                 XmlHeaderRows = SelectNodes(XmlHeader_SUB, "view/column");
                 for (var HRows = 0; HRows < XmlHeaderRows.length; HRows++) {
 
@@ -930,7 +984,7 @@ function MakeListInfoHTML_SUB(ConentObject) {
             }
             mf_updatePageInfoGroupList(szRangeHeader)
         } catch (e) {
-            alert(e.description);
+            alert(e.message);
         }
 }
 function MailSelect_One() {
@@ -1185,7 +1239,8 @@ function GetListIevent_ongetxmlcomplete() {
             	
             	if (!(typeof getChkId === 'undefined')) {
                     listContentArry[listContentArry.length] = getChkId;
-	            	document.getElementById(getChkId).childNodes.item(0).childNodes.item(0).checked = true;
+	            	//document.getElementById(getChkId).childNodes.item(0).childNodes.item(0).checked = true;
+	            	document.getElementById(getChkId).querySelector('input[type="checkbox"]').checked = true;
 	                document.getElementById(getChkId).style.backgroundColor = m_strColorSelect;
             	}
             } // for End
@@ -1635,27 +1690,40 @@ function event_listContextMenu(event) {
     document.getElementById("ContextMenuDiv").style.top = EventMouseY + "px";
     document.getElementById("ContextMenuDiv").style.display = "";
 }
+
+// 마우스 오버 - 리스트
 function event_listMover(obj) {
-	currentMoverId = obj.id;
-    if (pGroupListClickObject != obj && !obj.childNodes.item(0).childNodes.item(0).checked) {
+    currentMoverId = obj.id;
+    const checkbox = obj.querySelector('input[type="checkbox"]');
+    if (pGroupListClickObject !== obj && checkbox && !checkbox.checked) {
         obj.style.backgroundColor = m_strColorOver;
     }
 }
+
+// 마우스 오버 - 서브 리스트
 function event_SublistMover(obj) {
-    if (obj != _SubRowObject && !obj.childNodes.item(0).childNodes.item(0).checked) {
+    const checkbox = obj.querySelector('input[type="checkbox"]');
+    if (obj !== _SubRowObject && checkbox && !checkbox.checked) {
         obj.style.backgroundColor = m_strColorOver;
     }
 }
+
+// 마우스 아웃 - 리스트
 function event_listMout(obj) {
-    if (pGroupListClickObject != obj && !obj.childNodes.item(0).childNodes.item(0).checked) {
+    const checkbox = obj.querySelector('input[type="checkbox"]');
+    if (pGroupListClickObject !== obj && checkbox && !checkbox.checked) {
         obj.style.backgroundColor = m_strColorDefault;
     }
 }
+
+// 마우스 아웃 - 서브 리스트
 function event_SublistMout(obj) {
-    if (obj != _SubRowObject && !obj.childNodes.item(0).childNodes.item(0).checked) {
+    const checkbox = obj.querySelector('input[type="checkbox"]');
+    if (obj !== _SubRowObject && checkbox && !checkbox.checked) {
         obj.style.backgroundColor = m_strColorDefault;
     }
 }
+
 function event_HeaderClick(obj) {
     if (p_ListOrderObject != null) {
         if (p_ListOrderObject.childNodes.length > 1 && p_ListOrderObject.childNodes[1].nodeName == "IMG")
@@ -1733,22 +1801,63 @@ function event_SubHeaderClick(obj) {
 }
 
 function event_SubHeaderCheckBoxClick(obj) {
+    const groupList = document.getElementById("GroupSubList");
+    const rows = groupList.querySelectorAll("tr");
+
     if (obj.checked) {
-        for (var i = 0; i < document.getElementById("GroupSubList").childNodes.length; i++) {
-            document.getElementById("GroupSubList").childNodes.item(i).childNodes.item(0).childNodes.item(0).checked = true;
-            document.getElementById("GroupSubList").childNodes.item(i).style.backgroundColor = m_strColorSelect;
-            listSubContentArry[listSubContentArry.length] = document.getElementById("GroupSubList").childNodes.item(i).getAttribute("id");
-        }
-    }
-    else {
-        for (var i = 0; i < document.getElementById("GroupSubList").childNodes.length; i++) {
-            document.getElementById("GroupSubList").childNodes.item(i).childNodes.item(0).childNodes.item(0).checked = false;
-            document.getElementById("GroupSubList").childNodes.item(i).style.backgroundColor = m_strColorDefault;
-        }
-        listSubContentArry = new Array();
+        rows.forEach(row => {
+            const checkbox = row.querySelector('input[type="checkbox"]');
+            if (checkbox) {
+                checkbox.checked = true;
+                row.style.backgroundColor = m_strColorSelect;
+                listSubContentArry.push(row.getAttribute("id"));
+            }
+        });
+    } else {
+        rows.forEach(row => {
+            const checkbox = row.querySelector('input[type="checkbox"]');
+            if (checkbox) {
+                checkbox.checked = false;
+                row.style.backgroundColor = m_strColorDefault;
+            }
+        });
+        listSubContentArry = [];
     }
 }
+
 function event_HeaderCheckBoxClick(obj) {
+    const mailListElement = document.getElementById("MailList");
+    if (isEmptyMailList(mailListElement)) return;
+
+    const mailNodes = mailListElement.children;  // childNodes 대신 children 권장
+    const nodeCount = mailNodes.length;
+
+    // obj가 체크박스 input 그 자체면 그대로, 아니면 내부에서 찾기
+    const input = obj.tagName === 'INPUT' && obj.type === 'checkbox' ? obj : obj.querySelector('input[type="checkbox"]');
+    if (!input) return;
+
+    if (input.checked) {
+        for (let i = 0; i < nodeCount; i++) {
+            const mailNode = mailNodes[i];
+            const inputbox = mailNode.querySelector('input[type="checkbox"]');
+            if (inputbox) inputbox.checked = true;
+            mailNode.style.backgroundColor = m_strColorSelect;
+            if (!listContentArry.includes(mailNode.id)) {
+                listContentArry.push(mailNode.id);
+            }
+        }
+    } else {
+        for (let i = 0; i < nodeCount; i++) {
+            const mailNode = mailNodes[i];
+            const inputbox = mailNode.querySelector('input[type="checkbox"]');
+            if (inputbox) inputbox.checked = false;
+            mailNode.style.backgroundColor = m_strColorDefault;
+        }
+        listContentArry = [];
+    }
+}
+
+/*function event_HeaderCheckBoxClick(obj) {
 	
 	// mail list DomElement
 	var mailListElement = document.getElementById("MailList");
@@ -1794,7 +1903,7 @@ function event_HeaderCheckBoxClick(obj) {
         
         listContentArry = new Array();
     }
-}
+}*/
 
 // MailList id값을 가진 DomElement를 파라미터로 함
 // 메일 Row가 존재하지 않으면 true, 있다면 false
@@ -1857,7 +1966,254 @@ function ArrayDelete(TargetArray, DeleteNodeStr) {
     TargetArray = TempArray;
     return TargetArray;
 }
-var listContentArry = new Array();
+
+var listContentArry = [];
+var listSubContentArry = [];
+var listEventCheckbox = false;
+var listSubEventCheckbox = false;
+
+function event_listclick(obj, event) {
+    if (obj.tagName === "TD") {
+        obj = obj.parentElement;
+    }
+
+    const checkbox = obj.querySelector('input[type="checkbox"]');
+    const rowId = obj.getAttribute("id");
+
+    if (!listEventCheckbox) {
+        const headerCheckbox = document.getElementById("HeaderAllCheckBox");
+
+        if (headerCheckbox && headerCheckbox.checked) {
+            const isSelected = checkbox?.checked;
+
+            if (isSelected) {
+                listContentArry = listContentArry.filter(id => id !== rowId);
+                checkbox.checked = false;
+                obj.style.backgroundColor = m_strColorDefault;
+            } else {
+                listContentArry.push(rowId);
+                checkbox.checked = true;
+                obj.style.backgroundColor = m_strColorSelect;
+            }
+        } else {
+            if (!event.shiftKey && !event.ctrlKey && listContentArry.length > 0) {
+                for (let id of listContentArry) {
+                    const row = document.getElementById(id);
+                    if (row) {
+                        const cb = row.querySelector('input[type="checkbox"]');
+                        if (cb) cb.checked = false;
+                        row.style.backgroundColor = m_strColorDefault;
+
+                        if (useReceivingChk) {
+                            const receiveChilds = $("#MailList [id^=" + id + "_]");
+                            for (let i = 0; i < receiveChilds.length; i++) {
+                                receiveChilds[i].style.backgroundColor = m_strColorDefault;
+                            }
+                        }
+                    }
+                }
+                listContentArry = [];
+            }
+
+            if (event.shiftKey) {
+                let prevId = listContentArry.length > 0 ? listContentArry[0] : rowId;
+                let prevIndex = parseInt(prevId.replace("Maillist_", ""));
+                let currIndex = parseInt(rowId.replace("Maillist_", ""));
+                let start = Math.min(prevIndex, currIndex);
+                let end = Math.max(prevIndex, currIndex);
+
+                listContentArry = [];
+                for (let i = start; i <= end; i++) {
+                    const row = document.getElementById("Maillist_" + i);
+                    if (row) {
+                        const cb = row.querySelector('input[type="checkbox"]');
+                        if (cb) cb.checked = true;
+                        row.style.backgroundColor = m_strColorSelect;
+                        listContentArry.push(row.getAttribute("id"));
+                    }
+                }
+            } else {
+                const isSelected = checkbox?.checked;
+                checkbox.checked = !isSelected;
+                obj.style.backgroundColor = !isSelected ? m_strColorSelect : m_strColorDefault;
+
+                if (!isSelected) {
+                    listContentArry.push(rowId);
+
+                    if (useReceivingChk) {
+                        const receiveChilds = $("#MailList [id^=" + rowId + "_]");
+                        for (let i = 0; i < receiveChilds.length; i++) {
+                            receiveChilds[i].style.backgroundColor = m_strColorSelect;
+                        }
+                    }
+
+                    prevShow();
+                } else {
+                    listContentArry = listContentArry.filter(id => id !== rowId);
+
+                    if (useReceivingChk) {
+                        const receiveChilds = $("#MailList [id^=" + rowId + "_]");
+                        for (let i = 0; i < receiveChilds.length; i++) {
+                            receiveChilds[i].style.backgroundColor = m_strColorDefault;
+                        }
+                    }
+                }
+            }
+
+            document.getElementById("ContextMenuDiv").style.display = "none";
+        }
+    } else {
+        listEventCheckbox = false;
+    }
+}
+
+// 그룹 체크박스 클릭
+function event_listCheckboxclick(checkbox) {
+    if (!checkbox) return;
+
+    const row = checkbox.closest('tr');
+    if (!row) return;
+
+    const mailList = document.getElementById('MailList');
+    if (!mailList) return;
+
+    const allChild = mailList.children;
+
+    if (checkbox.checked) {
+        row.style.backgroundColor = m_strColorSelect;
+
+        Array.from(allChild).forEach(child => {
+            if (child.id.startsWith(row.id + "_")) {
+                child.style.backgroundColor = m_strColorSelect;
+            }
+        });
+
+        if (!listContentArry.includes(row.id)) {
+            listContentArry.push(row.id);
+        }
+    } else {
+        Array.from(allChild).forEach(child => {
+            if (child.id.startsWith(row.id + "_")) {
+                child.style.backgroundColor = m_strColorOpened;
+            }
+        });
+
+        listContentArry = listContentArry.filter(id => {
+            if (id === row.id) {
+                row.style.backgroundColor = m_strColorDefault;
+                return false;
+            }
+            return true;
+        });
+    }
+
+    listEventCheckbox = true;
+}
+
+// 서브 항목 클릭
+function event_Sublistclick(obj) {
+    if (!obj) return;
+
+    const checkbox = obj.querySelector('input[type="checkbox"]');
+    if (!checkbox) return;
+
+    const rowId = obj.id;
+
+    if (!listSubEventCheckbox) {
+        const headerCheckbox = document.getElementById("HeaderAllCheckBox");
+        const headerChecked = headerCheckbox ? headerCheckbox.checked : false;
+
+        if (headerChecked) {
+            const updatedArr = [];
+            if (checkbox.checked) {
+                listSubContentArry.forEach(id => {
+                    if (id === rowId) {
+                        checkbox.checked = false;
+                        obj.style.backgroundColor = m_strColorDefault;
+                    } else {
+                        updatedArr.push(id);
+                    }
+                });
+                listSubContentArry = updatedArr;
+            } else {
+                checkbox.checked = true;
+                obj.style.backgroundColor = m_strColorSelect;
+                listSubContentArry.push(rowId);
+            }
+        } else {
+            if (!PressShiftKey && !PressCtrlKey && listSubContentArry.length > 0) {
+                listSubContentArry.forEach(id => {
+                    const subRow = document.getElementById(id);
+                    if (subRow) {
+                        subRow.style.backgroundColor = m_strColorDefault;
+                        const cb = subRow.querySelector('input[type="checkbox"]');
+                        if (cb) cb.checked = false;
+                    }
+                });
+                listSubContentArry = [];
+            }
+
+            if (PressShiftKey) {
+                const preIndex = parseInt(_SubRowObject?.id.replace("Maillist_", ""));
+                const curIndex = parseInt(rowId.replace("Maillist_", ""));
+
+                listSubContentArry = [];
+                const [start, end] = [preIndex, curIndex].sort((a, b) => a - b);
+
+                for (let i = start; i <= end; i++) {
+                    const subRow = document.getElementById(`Maillist_${i}`);
+                    if (subRow) {
+                        const cb = subRow.querySelector('input[type="checkbox"]');
+                        if (cb) cb.checked = true;
+                        subRow.style.backgroundColor = m_strColorSelect;
+                        listSubContentArry.push(subRow.id);
+                    }
+                }
+
+                _SubRowObject = obj;
+            } else {
+                _SubRowObject = obj;
+                if (checkbox.checked) {
+                    obj.style.backgroundColor = m_strColorDefault;
+                    checkbox.checked = false;
+                    listSubContentArry = listSubContentArry.filter(id => id !== rowId);
+                } else {
+                    obj.style.backgroundColor = m_strColorSelect;
+                    checkbox.checked = true;
+                    listSubContentArry.push(rowId);
+                    prevShow();
+                }
+            }
+
+            const ctxMenu = document.getElementById("ContextMenuDiv");
+            if (ctxMenu) ctxMenu.style.display = "none";
+        }
+    } else {
+        listSubEventCheckbox = false;
+    }
+}
+
+// 서브 체크박스 클릭
+function event_SublistCheckboxclick(checkbox) {
+    if (!checkbox) return;
+
+    const row = checkbox.closest('tr');
+    if (!row) return;
+
+    if (checkbox.checked) {
+        row.style.backgroundColor = m_strColorSelect;
+        if (!listSubContentArry.includes(row.id)) {
+            listSubContentArry.push(row.id);
+        }
+    } else {
+        row.style.backgroundColor = m_strColorDefault;
+        listSubContentArry = listSubContentArry.filter(id => id !== row.id);
+    }
+
+    listSubEventCheckbox = true;
+}
+
+/*var listContentArry = new Array();
 var listSubContentArry = new Array();
 var listEventCheckbox = false;
 var listSubEventCheckbox = false;
@@ -2010,7 +2366,7 @@ function event_listCheckboxclick(obj) {
         
         for (var i = 0;i < allChild.length; i++) {
         	if (allChild[i].id.indexOf(obj.parentNode.parentNode.id + "_") != -1) {
-        		/*allChild[i].style.backgroundColor = m_strColorDefault;*/
+        		//allChild[i].style.backgroundColor = m_strColorDefault;
         		allChild[i].style.backgroundColor = m_strColorOpened;
         	}
         }
@@ -2130,7 +2486,7 @@ function event_SublistCheckboxclick(obj) {
     }
     listSubEventCheckbox = true;
 }
-
+*/
 function checkBlockedMail(url) {
     var strQuery = "<URL>" + url + "</URL>";
     xmlhttp_mailCheckBlock = createXMLHttpRequest();

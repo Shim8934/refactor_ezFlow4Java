@@ -162,8 +162,8 @@
 					<tr>
 						<th><spring:message code='ezSystem.jje3'/></th>
 						<td>
-							<label id="la1"><input type="radio" id="ipAllow1" name="ipAllow" Checked>&nbsp;<span style="vertical-align:middle;"><spring:message code='ezSystem.jje21'/></span></label>
-							<label id="la2"><input type="radio" id="ipAllow2" name="ipAllow">&nbsp;<span style="vertical-align:middle;"><spring:message code='ezSystem.jje22'/></span></label>
+							<label id="la1"><div class='custom_radio'><input type="radio" id="ipAllow1" name="ipAllow" Checked>&nbsp;</div><span style="vertical-align:middle;"><spring:message code='ezSystem.jje21'/></span></label>
+							<label id="la2"><div class='custom_radio'><input type="radio" id="ipAllow2" name="ipAllow">&nbsp;</div><span style="vertical-align:middle;"><spring:message code='ezSystem.jje22'/></span></label>
 						</td>
 					</tr>
 			    <tr>

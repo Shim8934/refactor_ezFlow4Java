@@ -22,7 +22,6 @@ public class MailWriteOptionsVO {
 	private String stateName; // (randomUUID) var filedate
 	private String uploadCommonPath;
 	private String uploadCommunityPath;
-	private String charsetCheck = "1"; // false("0"): ezEmail.t665 = The original email charset is not korean. Do you want to attach the original email?
 	private String fileUploadType = ""; // 안쓰임??
 
 	// 파일첨부 제한 관련 변수 설정
@@ -192,13 +191,6 @@ public class MailWriteOptionsVO {
 	}
 	public String getUploadCommunityPath() {
 		return uploadCommunityPath;
-	}
-
-	public void setCharsetCheck(String charsetCheck) {
-		this.charsetCheck = charsetCheck;
-	}
-	public String getCharsetCheck() {
-		return charsetCheck;
 	}
 
 	public void setFileUploadType(String fileUploadType) {
@@ -592,7 +584,7 @@ public class MailWriteOptionsVO {
 				+ postType + ", useMultiLangMail=" + useMultiLangMail + ", useFromAddress=" + useFromAddress + ", useDistributionSender=" + useDistributionSender
 				+ ", fromAddressList=" + fromAddressList + ", useSecureMail=" + useSecureMail + ", security=" + security
 				+ ", newWindowId=" + newWindowId + ", stateName=" + stateName + ", uploadCommonPath=" + uploadCommonPath
-				+ ", uploadCommunityPath=" + uploadCommunityPath + ", charsetCheck=" + charsetCheck
+				+ ", uploadCommunityPath=" + uploadCommunityPath
 				+ ", fileUploadType=" + fileUploadType + ", mailAttachLimit=" + mailAttachLimit
 				+ ", bigSizeMailAttachLimit=" + bigSizeMailAttachLimit + ", totBigSizeMailAttachLimit="
 				+ totBigSizeMailAttachLimit + ", bigSizeMailAttachDelDate=" + bigSizeMailAttachDelDate

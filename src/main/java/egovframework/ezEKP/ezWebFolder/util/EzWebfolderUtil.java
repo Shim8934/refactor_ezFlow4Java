@@ -2,6 +2,7 @@ package egovframework.ezEKP.ezWebFolder.util;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
@@ -110,7 +111,7 @@ public class EzWebfolderUtil {
 				  /*, String[] MailAttachLargeArray) throws Exception {*/
 		// log4j2에서 %M하면 메소드명 안 적어도 되므로 input,output값만 출력해도 됨	 *스프링 AOP: 매 메소드마다 표준적으로 로그를 찍을 수가 있음.
 		logger.debug("convertFileUploadVOFromRequest started. multiPartFileLists={}, mailAttachArray={}, userId={}, tenantId={}, locale={}",
-															multiPartFileLists.toString(), mailAttachArray.toString(), userId, tenantId, locale);
+															multiPartFileLists.toString(), Arrays.toString(mailAttachArray), userId, tenantId, locale);
 		List<FileUploadVO> list = new ArrayList<>();
 
 		/**
@@ -158,7 +159,7 @@ public class EzWebfolderUtil {
 	private List<FileUploadVO> addListMailAttachArray(String[] mailAttachArray
 			, String userAccount, Locale locale, String folderPath, Map<String, Object> extraMap) throws Exception {
 		logger.debug("addListMailAttachArray started. mailAttachArray={}, locale={}, folderPath={}",
-													  mailAttachArray.toString(), locale, folderPath);
+													  Arrays.toString(mailAttachArray), locale, folderPath);
 		List<FileUploadVO> list = new ArrayList<>();
 
 		// IMAPAccess open -> folder open -> 실 수행 -> folder close -> IMAPAccess close

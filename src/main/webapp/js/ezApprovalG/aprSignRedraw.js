@@ -168,6 +168,7 @@ function redrawAllAprSign_WHWP(pSignDataXML) {
 	var hostURL = document.location.protocol + "//" + document.location.hostname + portNum + "/ezApprovalG/downloadAttachForHwp.do?filePath=";
 	var signDataDom = SelectNodes(loadXMLString(pSignDataXML), "SIGNDATA");
 	var signDataLength = signDataDom.length;
+	var allTypeB = typeof parent.draftAllTypeB != "undefined" && typeof parent.pDocIDAry != "undefined" && typeof parent.anCnt == "number" && parent.draftAllTypeB == "Y" && parent.pDocIDAry.length > 2 && parent.anCnt > 1;
 	
 	if (signDataLength > 0) {
 		 for (i = 0; i < signDataLength; i++) {
@@ -201,8 +202,15 @@ function redrawAllAprSign_WHWP(pSignDataXML) {
     				 if (signContAddStr != "") {
     					 PrependFieldText(signName, signContAddStr);
     				 }
-    				 
-    				 InsertPicture(signName, hostURL + escape(signContSrc), null);
+                     
+//    				 InsertPicture(signName, hostURL + escape(signContSrc), null);
+                     if(allTypeB){
+                         for(var j = 0; j < parent.anCnt; j++){
+                             InsertPicture(signName + "{{" + j + "}}", hostURL + escape(signContSrc), null);
+                         }
+                     }else{
+                         InsertPicture(signName, hostURL + escape(signContSrc), null);    
+                     }
             	 }
              }
 		 }

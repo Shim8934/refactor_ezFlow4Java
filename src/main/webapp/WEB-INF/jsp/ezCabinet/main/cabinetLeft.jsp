@@ -11,6 +11,7 @@
 		<link rel="stylesheet" href="${util.addVer('/css/ezCabinet/cabinet.css')}" type="text/css">
 		<link rel="stylesheet" href="${util.addVer('main.lhm02', 'msg')}" type="text/css">
 		<link rel="stylesheet" href="/css/ezMemo/jquery.mCustomScrollbar.css">
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 	</head>
 	
 	<body class="newLeft">
@@ -67,7 +68,7 @@
 				</span>
 			</div>
 		</div>
-		
+		<input type="hidden" id="userLang" value="${UserLang}">
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')      }"></script>
 		<script type="text/javascript" src="${util.addVer('ezCabinet.lang', 'msg')                }"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezCabinet/cabinetTree.js')         }"></script>
@@ -91,7 +92,7 @@
 				}
 				
 				function resizeWindow() {
-					$(".cabinetListBox").height(window.innerHeight - 105);
+					$(".cabinetListBox").height("100vh");
 				}
 				
 				function setButtons() {

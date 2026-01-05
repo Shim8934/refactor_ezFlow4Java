@@ -971,13 +971,36 @@ function openOpinionUI_Complete(ret) {
 
         var NodeList = SelectNodes(Rtnxml, "LISTVIEWDATA/ROWS/ROW");
 
-        if (NodeList.length != 0)
+        if (NodeList.length != 0){
+            if(typeof pHasOpinionYNAry != "undefined"){
+                pHasOpinionYNAry[currentTabIdx] = "Y";
+            }
             pHasOpinionYN = "Y";
+        }
         else {
+            if(typeof pHasOpinionYNAry != "undefined"){
+                pHasOpinionYNAry[currentTabIdx] = "N";
+            }
             pHasOpinionYN = "N";
             ret = "cancel";
         }
-        makeOpinionList(Rtnxml);
+        if(typeof pHasOpinionYNAry != "undefined" && typeof anCnt != "undefined" && typeof draftAllTypeB != "undefined" && draftAllTypeB == "Y" && anCnt > 1){
+            makeOpinionList(Rtnxml, currentTabIdx);
+        }else{
+            makeOpinionList(Rtnxml);
+        }
+    }else if(ret == "Clear"){
+        if(typeof pHasOpinionYNAry != "undefined"){
+            pHasOpinionYNAry[currentTabIdx] = "N";
+        }
+        pHasOpinionYN = "N";
+        
+        if(typeof pHasOpinionYNAry != "undefined" && typeof anCnt != "undefined" && typeof draftAllTypeB != "undefined" && draftAllTypeB == "Y" && anCnt > 1){
+            makeOpinionList(ret, currentTabIdx);
+        }else{
+            makeOpinionList(ret);
+        }
+        
     }
 }
 
@@ -1963,6 +1986,53 @@ function SaveApproveInfo(pApproveFlag) {
      		 return "FALSE";
      	 }
    }
+}
+
+/**
+ * 백단 결재 메서드
+ * data에 결재관련 정보 저장
+ * pApproveFlag 1 : 결재, 2 : 반송, 3 : 보류, 4 : 회수, 5 : 확인, 6 : 공람
+ * */
+function SaveApproveInfoInBackEnd(pApproveFlag) {
+    var result = "";
+    var sn = wAprMemberSN.toString();
+    var mode = "APR";
+    var pAprState = "";
+    
+    if (pApproveFlag == "1") {
+        pAprState = "APR";
+    } else if (pApproveFlag == "2") {
+        pAprState = "BAN";
+    } else if (pApproveFlag == "3") {
+        pAprState = "BO";
+    } else if (pApproveFlag == "4") {
+        pAprState = "HWE";
+    } else if (pApproveFlag == "5") {
+        pAprState = "CHECK";
+    } else if(pApproveFlag == "6"){
+        pAprState = "GR";
+    }
+    
+    var data = {"docID" : pDocID, "aprMemberSN" : sn, "mode" : mode, "type" : pAprState};
+    $.ajax({
+        type : "POST",
+        dataType : "json",
+        async : false,
+        url : "/ezApprovalG/doApprovBackEnd.do",
+        contentType : "application/json",
+        data : JSON.stringify(data),
+        success: function(obj){
+            if(obj){
+                console.log(obj);
+                result = obj;
+            }
+        },
+        error : function(err){
+            console.log(err);
+        }        			
+    });
+    
+    return result;
 }
 
 /*
@@ -3049,7 +3119,7 @@ function openSingUI(parameter) {
         }
         else {
             var ret = "NAME";
-            Approv_Complete(ret);
+        Approv_Complete(ret);
         }
         */
 }
@@ -3318,17 +3388,17 @@ function OpenInformationUI(pInformationContent, CompleteFunction, isEditMode) {
 function OpenInformationUI_Complete() {
     DivPopUpHidden();
 }
-var ezapralert_cross_dialogArguments = new Array();
+// var ezapralert_cross_dialogArguments = new Array();
 function OpenAlertUI(pAlertContent, CompleteFunction) {
     var parameter = pAlertContent;
     var url = "/ezApprovalG/ezAprAlert.do";
 
     if (CrossYN()) {
-        ezapralert_cross_dialogArguments[0] = parameter;
+        ezCommon_cross_dialogArguments[0] = parameter;
         if (CompleteFunction != undefined)
-            ezapralert_cross_dialogArguments[1] = CompleteFunction;
+            ezCommon_cross_dialogArguments[1] = CompleteFunction;
         else
-            ezapralert_cross_dialogArguments[1] = OpenAlertUI_Complete;
+            ezCommon_cross_dialogArguments[1] = OpenAlertUI_Complete;
         DivPopUpShow(330, 205, url);
     }
     else {
@@ -3493,7 +3563,7 @@ function SignSave() {
 
         for (i = 0; i < SignContent.length; i++) {
             objNode = createNodeAndAppandNode(xmlpara, objRoot, objNode, "SIGNINFO");
-            createNodeAndAppandNodeText(xmlpara, objNode, subNode, "DOCID", pDocID);
+            createNodeAndAppandNodeText(xmlpara, objNode, subNode, "DOCID", typeof anCnt != "undefined" && anCnt > 1 ? pDocIDAry : pDocID);
             createNodeAndAppandNodeText(xmlpara, objNode, subNode, "SIGNTYPE", SignType[i]);
             createNodeAndAppandNodeText(xmlpara, objNode, subNode, "SIGNNAME", SignName[i]);
             createNodeAndAppandNodeText(xmlpara, objNode, subNode, "CONTENT", SignContent[i]);
@@ -3855,13 +3925,20 @@ function UpdateLineHistory() {
 	var result = "";
     
 	/* 2020-05-22 홍승비 - 사용자 부서에 특수문자 허용 + arr_userinfo[] 배열의 값은 c:out 태그로 저장하므로, DB 저장 시 역으로 특수문자 인코딩 진행 */
+	var tmp;
+	if(typeof anCnt != "undefined" && anCnt > 1){
+	    tmp = pDocIDAry[1];
+	    for(var i = 2; i < pDocIDAry.length; i++){
+	        tmp += "," + pDocIDAry[i];
+	    }
+	}
     $.ajax({
 		type : "POST",
 		dataType : "text",
 		async : false,
 		url : "/ezApprovalG/updateLineHistory.do",
 		data : {
-			docID : pDocID,
+			docID : tmp ? tmp : pDocID,
 			userID : arr_userinfo[1],
 			userName : arr_userinfo[11],
 			userJobTitle : arr_userinfo[13],

@@ -21,6 +21,9 @@
 		    var ReturnFunction;
 		    var CancelFunction;
 		    window.onload = function () {
+		        // XmlHttpRequest.js 추가 시 오류로 본 jsp 페이지에 setColorMode 별도 구현
+		        setColorMode();
+
 		        try {
 		            Arguments = parent.mail_select_dlmember_cross_dialogArguments[0];
 		            ReturnFunction = parent.mail_select_dlmember_cross_dialogArguments[1];
@@ -35,6 +38,38 @@
 		        
 		        document.all("cmd_ok").focus();
 		    }
+
+		    function setColorMode() {
+                if (window.location.href.indexOf('/admin/') > 0) {
+                    return;
+                }
+
+                const cookies = document.cookie.split('; ');
+
+                for (const cookie of cookies) {
+                    const [cookieName, cookieValue] = cookie.split('=');
+                    if ('useColor' === cookieName) {
+                        useColor = decodeURIComponent(cookieValue);
+                    }
+                }
+
+                if (useColor) {
+                    var link = document.createElement('link');
+                    link.rel = 'stylesheet';
+                    link.id = "skinCss";
+
+                    if (useColor == 1) {
+                        link.href = '/css/ezPortal/skin_blue.css';
+                    } else if (useColor == 2) {
+                        link.href = '/css/ezPortal/skin_red.css';
+                    } else if (useColor == 3) {
+                        link.href = '/css/ezPortal/skin_dark.css';
+                    }
+
+                    document.head.appendChild(link);
+                }
+		    }
+
 		    function Window_Close() {
 		        if (ReturnFunction != null) {
 		            CancelFunction();
@@ -107,7 +142,11 @@
 			    		<c:forEach var="item" items="${list}">
 					    <tr>
 						  <c:if test="${newMailFlag eq null}">
-						  <td style="text-align:center;"><input type='checkbox' name="goruplistinput" _email="${item.mail}" _name="${item.displayName}" checked ></td>
+						  <td style="text-align:center;">
+						      <div class="custom_checkbox">
+						          <input type='checkbox' name="goruplistinput" _email="${item.mail}" _name="${item.displayName}" checked >
+						      </div>  
+                          </td>
 						  </c:if>
 					      <td style="text-align:center;">${item.displayName}</td>
 					      <td style="text-align:center;">&nbsp;${item.company} </td>

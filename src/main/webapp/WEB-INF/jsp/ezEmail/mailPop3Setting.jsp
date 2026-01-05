@@ -94,33 +94,41 @@
         <tr>
             <th><spring:message code='ezOrgan.usePOP3' /></th>
             <td>
-                <input type="radio" id='POP3used' name="checkPOP3" value="1"<c:if test="${popEnabled == '1'}"> checked="checked"</c:if> onchange="pop3Used();"><label for='POP3used'><spring:message code='ezOrgan.t161' /></label>
-                <input type="radio" id='POP3unused' name="checkPOP3" value="0"<c:if test="${popEnabled == '0' || empty popEnabled}"> checked="checked"</c:if> onchange="pop3Used();"><label for='POP3unused'><spring:message code='ezOrgan.kyj02' /></label>
+                <div class="custom_radio">
+                    <input type="radio" id='POP3used' name="checkPOP3" value="1"<c:if test="${popEnabled == '1'}"> checked="checked"</c:if> onchange="pop3Used();"><label for='POP3used'><spring:message code='ezOrgan.t161' /></label>
+                    <input type="radio" id='POP3unused' name="checkPOP3" value="0"<c:if test="${popEnabled == '0' || empty popEnabled}"> checked="checked"</c:if> onchange="pop3Used();"><label for='POP3unused'><spring:message code='ezOrgan.kyj02' /></label>
+                </div>
             </td>
         </tr>
         <tr class="popUsed_only">
             <th><spring:message code='ezEmail.POP3.config.POPsince' /></th>
             <td>
-                <input type="radio" id="POP3sincenow" name="POP3since" value="1" <c:if test="${empty popSince}"> checked="checked"</c:if>><label for="POP3sincenow"><spring:message code='ezEmail.POP3.config.sinceNow' /></label>
-                <input type="radio" id="POP3sinceexist" name="POP3since" value="0" <c:if test="${popSince == '0'}"> checked="checked"</c:if>><label for="POP3sinceexist"><spring:message code='ezEmail.POP3.config.sinceExist' /></label>
-                <c:if test="${not empty popSince && popSince != '0'}">
-                    <br>
-                    <input type="radio" id="POP3since" name="POP3since" checked="checked" value="${popSince}"><label for="POP3since"><spring:message code='ezEmail.POP3.config.since' /> (${popSinceDateFormat})</label>
-                </c:if>
+                <div class="custom_radio">
+                    <input type="radio" id="POP3sincenow" name="POP3since" value="1" <c:if test="${empty popSince}"> checked="checked"</c:if>><label for="POP3sincenow"><spring:message code='ezEmail.POP3.config.sinceNow' /></label>
+                    <input type="radio" id="POP3sinceexist" name="POP3since" value="0" <c:if test="${popSince == '0'}"> checked="checked"</c:if>><label for="POP3sinceexist"><spring:message code='ezEmail.POP3.config.sinceExist' /></label>
+                    <c:if test="${not empty popSince && popSince != '0'}">
+                        <br>
+                        <input type="radio" id="POP3since" name="POP3since" checked="checked" value="${popSince}"><label for="POP3since"><spring:message code='ezEmail.POP3.config.since' /> (${popSinceDateFormat})</label>
+                    </c:if>
+                </div>
             </td>
         </tr>
         <tr class="popUsed_only">
             <th><spring:message code='ezEmail.POP3.config.POPasRead' /></th>
             <td>
-                <input type="radio" id="popAsRead" name="popAsRead" value="1" <c:if test="${popAsRead == '1' || empty popAsRead}"> checked="checked"</c:if>><label for="popAsRead"><spring:message code='ezEmail.POP3.config.asRead' /></label>
-                <input type="radio" id="popAsNoRead" name="popAsRead" value="0" <c:if test="${popAsRead == '0'}"> checked="checked"</c:if>><label for=popAsNoRead><spring:message code='ezEmail.POP3.config.asNoRead' /></label>
+                <div class="custom_radio">
+                    <input type="radio" id="popAsRead" name="popAsRead" value="1" <c:if test="${popAsRead == '1' || empty popAsRead}"> checked="checked"</c:if>><label for="popAsRead"><spring:message code='ezEmail.POP3.config.asRead' /></label>
+                    <input type="radio" id="popAsNoRead" name="popAsRead" value="0" <c:if test="${popAsRead == '0'}"> checked="checked"</c:if>><label for=popAsNoRead><spring:message code='ezEmail.POP3.config.asNoRead' /></label>
+                </div>
             </td>
         </tr>
         <tr class="popUsed_only">
             <th><spring:message code='ezEmail.POP3.config.POPkeepCopy' /></th>
             <td>
-                <input type="radio" id="popKeepCopy" name="popKeepCopy" value="1" <c:if test="${popKeepCopy == '1' || empty popKeepCopy}"> checked="checked"</c:if>><label for="popKeepCopy"><spring:message code='ezEmail.POP3.config.keepCopy' /></label>
-                <input type="radio" id="popKeepNoCopy" name="popKeepCopy" value="0" <c:if test="${popKeepCopy == '0'}"> checked="checked"</c:if>><label for="popKeepNoCopy"><spring:message code='ezEmail.POP3.config.keepNoCopy' /></label>
+                <div class="custom_radio">
+                    <input type="radio" id="popKeepCopy" name="popKeepCopy" value="1" <c:if test="${popKeepCopy == '1' || empty popKeepCopy}"> checked="checked"</c:if>><label for="popKeepCopy"><spring:message code='ezEmail.POP3.config.keepCopy' /></label>
+                    <input type="radio" id="popKeepNoCopy" name="popKeepCopy" value="0" <c:if test="${popKeepCopy == '0'}"> checked="checked"</c:if>><label for="popKeepNoCopy"><spring:message code='ezEmail.POP3.config.keepNoCopy' /></label>
+                </div>
             </td>
         </tr>
     </table>

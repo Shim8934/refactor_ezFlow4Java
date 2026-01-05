@@ -10,6 +10,7 @@
 	<typeAlias  alias="CompanyInfoVO" 				type="egovframework.ezEKP.ezCommon.vo.CompanyInfoVO"/>
 	<typeAlias  alias="CountryVO" 					type="egovframework.ezEKP.ezSystem.vo.CountryVO"/>
 	<typeAlias  alias="TblColumnsInfoVO" 			type="egovframework.ezEKP.ezCommon.vo.TblColumnsInfoVO"/>
+	<typeAlias  alias="BoardListHeaderVO"                   type="egovframework.ezEKP.ezBoard.vo.BoardListHeaderVO"/>
 
 	<select id="EzCommonDAO.getApprovPWD" parameterClass="userInfo" resultClass="ApprovPWDVO">
 		<![CDATA[
@@ -3443,12 +3444,12 @@
 					USERID NVARCHAR2(50) NOT NULL,
 					USERNM NVARCHAR2(100),
 					USERNM2 NVARCHAR2(100),
-					DEPTID CHAR(50 CHAR),
+					DEPTID NVARCHAR2(50),
 					DEPTNM NVARCHAR2(100),
 					DEPTNM2 NVARCHAR2(100),
 					TITLE NVARCHAR2(100),
 					TITLE2 NVARCHAR2(100),
-					COMPANYID CHAR(50 CHAR),
+					COMPANYID NVARCHAR2(50),
 					COMPANYNM NVARCHAR2(100),
 					COMPANYNM2 NVARCHAR2(100),
 					AUTHORIZEDTIME DATE,
@@ -3638,7 +3639,7 @@
 								WHEN FORM_ID = 5 THEN '<tr><th>Name</th><td id="writerName" style=""></td></tr><tr><th>Date </th><td colspan="2" id="attiTime"><span id="periodblock" datetype="2"><input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly"><input id="Stimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;" /></span></td></tr><tr> <th>Contact information</th> <td id="mobile" style=""><input name="mobile" type="text" style="width:98%" value=""  maxlength="50"></td> </tr><tr> <th>Substitute</th> <td id="bizsub" style=""><input name="bizsub" type="text" style="width:98%" value=""  maxlength="120"></td></tr>'
 								WHEN FORM_ID = 6 THEN '<tr><th>Name</th><td id="writerName" style=""></td></tr><tr><th>Date </th><td colspan="2" id="attiTime"><span id="periodblock" datetype="3"><input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly"><input id="Stimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;" /> ~<input id="Etimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;" /></span></td></tr><tr> <th>Contact information</th> <td id="mobile" style=""><input name="mobile" type="text" style="width:98%" value=""  maxlength="50"></td> </tr><tr> <th>Substitute</th> <td id="bizsub" style=""><input name="bizsub" type="text" style="width:98%" value=""  maxlength="120"></td></tr>'
 								WHEN FORM_ID = 7 THEN '<tr><th>Name</th><td id="writerName" style=""></td></tr><tr><th>Date </th><td colspan="2" id="attiTime"><span id="periodblock" datetype="4"><input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly"> ~ <input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly"></span></td></tr><tr> <th>Workplace</th> <td id="region" style=""><input name="region" type="text" style="width:98%" value=""  maxlength="200"></td> </tr><tr> <th>Contact information</th> <td id="mobile" style=""><input name="mobile" type="text" style="width:98%" value=""  maxlength="50"></td> </tr><tr> <th>Substitute</th> <td id="bizsub" style=""><input name="bizsub" type="text" style="width:98%" value=""  maxlength="120"></td></tr>'
-								WHEN FORM_ID = 8 THEN '<tr><th>Name</th><td id="writerName" style=""></td></tr><tr><th>Date </th><td colspan="2" id="attiTime"><span id="periodblock" datetype="5"><input name="checkbox" type="checkbox" id="alldaycheck" style="height:22px;" onclick="allday_change()" value="1">All day <input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly"><input id="Stimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;" /> ~ <input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly"><input id="Etimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;" /></span></td></tr><tr> <th>Workplace</th> <td id="region" style=""><input name="region" type="text" style="width:98%" value=""  maxlength="200"></td> </tr><tr> <th>Contact information</th> <td id="mobile" style=""><input name="mobile" type="text" style="width:98%" value=""  maxlength="50"></td> </tr><tr> <th>Substitute</th> <td id="bizsub" style=""><input name="bizsub" type="text" style="width:98%" value=""  maxlength="120"></td></tr>'
+								WHEN FORM_ID = 8 THEN '<tr><th>Name</th><td id="writerName" style=""></td></tr><tr><th>Date </th><td colspan="2" id="attiTime"><span id="periodblock" datetype="5"><div class="custom_checkbox"><input name="checkbox" type="checkbox" id="alldaycheck" style="height:22px;" onclick="allday_change()" value="1"></div>All day <input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly"><input id="Stimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;" /> ~ <input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly"><input id="Etimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;" /></span></td></tr><tr> <th>Workplace</th> <td id="region" style=""><input name="region" type="text" style="width:98%" value=""  maxlength="200"></td> </tr><tr> <th>Contact information</th> <td id="mobile" style=""><input name="mobile" type="text" style="width:98%" value=""  maxlength="50"></td> </tr><tr> <th>Substitute</th> <td id="bizsub" style=""><input name="bizsub" type="text" style="width:98%" value=""  maxlength="120"></td></tr>'
 								WHEN FORM_ID = 9 THEN '<tr><th>Name</th><td id="writerName" style=""></td></tr><tr><th>Date </th><td colspan="2" id="attiTime"><span id="periodblock" datetype="4"><input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly"> ~ <input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly"></span></td></tr><tr> <th>Contact information</th> <td id="mobile" style=""><input name="mobile" type="text" style="width:98%" value=""  maxlength="50"></td> </tr><tr> <th>Substitute</th> <td id="bizsub" style=""><input name="bizsub" type="text" style="width:98%" value=""  maxlength="120"></td></tr>'
 								WHEN FORM_ID = 10 THEN '<tr><th>Name</th><td id="writerName" style=""></td></tr><tr><th>Date </th><td colspan="2" id="attiTime"><span id="periodblock" datetype="3"><input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly"><input id="Stimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;" /> ~<input id="Etimepicker" type="text" class="time" style="width:43px;margin-left:10px;text-align:center;" /></span></td></tr><tr> <th>Contact information</th> <td id="mobile" style=""><input name="mobile" type="text" style="width:98%" value=""  maxlength="50"></td> </tr>'
 								ELSE NULL
@@ -5944,7 +5945,7 @@
 			INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME)
 				VALUES (#menuId#, 5, #companyId#, #tenantId#, 'Hộp Thư Đến')
 			INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME)
-				VALUES (#menuId#, 6, #companyId#, #tenantId#, 'Surat Masuk')
+				VALUES (#menuId#, 6, #companyId#, #tenantId#, 'E-Mail')
 			INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME)
 				VALUES ((#menuId# + 1), 1, #companyId#, #tenantId#, '직원목록')
 			INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME)
@@ -5980,7 +5981,7 @@
 			INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME)
 				VALUES ((#menuId# + 3), 5, #companyId#, #tenantId#, 'Quản Lý Tài Nguyên')
 			INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME)
-				VALUES ((#menuId# + 3), 6, #companyId#, #tenantId#, 'Manajemen Sumber Daya')
+				VALUES ((#menuId# + 3), 6, #companyId#, #tenantId#, 'Sumber')
 			INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME)
 				VALUES ((#menuId# + 4), 1, #companyId#, #tenantId#, '게시판')
 			INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME)
@@ -5992,7 +5993,7 @@
 			INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME)
 				VALUES ((#menuId# + 4), 5, #companyId#, #tenantId#, 'Bảng Tin')
 			INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME)
-				VALUES ((#menuId# + 4), 6, #companyId#, #tenantId#, 'Papan Pengumuman')
+				VALUES ((#menuId# + 4), 6, #companyId#, #tenantId#, 'Papan')
 			INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME)
 				VALUES ((#menuId# + 5), 1, #companyId#, #tenantId#, '개인주소록')
 			INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME)
@@ -6004,7 +6005,7 @@
 			INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME)
 				VALUES ((#menuId# + 5), 5, #companyId#, #tenantId#, 'Danh Bạ Cá Nhân')
 			INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME)
-				VALUES ((#menuId# + 5), 6, #companyId#, #tenantId#, 'Buku Alamat Pribadi')
+				VALUES ((#menuId# + 5), 6, #companyId#, #tenantId#, 'Kontak')
 			INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME)
 				VALUES ((#menuId# + 6), 1, #companyId#, #tenantId#, '오늘일정')
 			INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME)
@@ -6016,7 +6017,7 @@
 			INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME)
 				VALUES ((#menuId# + 6), 5, #companyId#, #tenantId#, 'Lịch Trình Hôm Nay')
 			INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME)
-				VALUES ((#menuId# + 6), 6, #companyId#, #tenantId#, 'Jadwal Hari Ini')
+				VALUES ((#menuId# + 6), 6, #companyId#, #tenantId#, 'Jadwal')
 			INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME)
 				VALUES ((#menuId# + 7), 1, #companyId#, #tenantId#, '전자설문')
 			INTO TBL_PORTAL_MENU_NAME (MENU_ID, MENU_LANG, COMPANY_ID, TENANT_ID, MENU_NAME)
@@ -8676,4 +8677,469 @@
 			END
 		}
 	</statement>
+    
+    <select id="EzCommonDAO.checkBoardItemListOptionForIndonesian" resultClass="String">
+		SELECT
+			NAME6
+		FROM
+			TBL_BOARD_ITEM_LISTOPTION
+		WHERE
+			ROWNUM = 1
+	</select>
+	
+	<statement id="EzCommonDAO.addColumnBoardItemListOptionForIndonesian">
+		ALTER TABLE
+			TBL_BOARD_ITEM_LISTOPTION
+		ADD
+			NAME6 NVARCHAR2(100)
+	</statement>
+	
+	<update id="EzCommonDAO.updateDataBoardItemListOptionForIndonesian">
+		UPDATE
+			TBL_BOARD_ITEM_LISTOPTION
+		SET
+			NAME6 = NAME2
+	</update>
+	
+	<select id="EzCommonDAO.checkBoardItemListOptionBoarForIndonesian" resultClass="String">
+		SELECT
+			NAME6
+		FROM
+			TBL_BOARD_ITEM_LISTOPTION_BOAR
+		WHERE
+			ROWNUM = 1
+	</select>
+
+	<statement id="EzCommonDAO.addColumnBoardItemListOptionBoarForIndonesian">
+		ALTER TABLE
+			TBL_BOARD_ITEM_LISTOPTION_BOAR
+		ADD
+			NAME6 NVARCHAR2(100)
+	</statement>
+	
+	<update id="EzCommonDAO.updateDataBoardItemListOptionBoarForIndonesian">
+		UPDATE
+			TBL_BOARD_ITEM_LISTOPTION_BOAR
+		SET
+			NAME6 = NAME2
+	</update>
+	
+	<select id="EzCommonDAO.checkBoardMyBoardsForIndonesian" resultClass="String">
+		SELECT
+			BOARDNAME6
+		FROM
+			TBL_BOARD_MYBOARDS
+		WHERE
+			ROWNUM = 1
+	</select>
+
+	<statement id="EzCommonDAO.addColumnBoardMyBoardsForIndonesian">
+		ALTER TABLE
+			TBL_BOARD_MYBOARDS
+		ADD
+			BOARDNAME6 NVARCHAR2(50)
+	</statement>
+	
+	<update id="EzCommonDAO.updateDataBoardMyBoardsForIndonesian">
+		UPDATE
+			TBL_BOARD_MYBOARDS
+		SET
+			BOARDNAME6 = BOARDNAME2
+	</update>
+	
+	<select id="EzCommonDAO.checkBoardMyTreeForIndonesian" resultClass="String">
+		SELECT
+			TREENAME6
+		FROM
+			TBL_BOARD_MYTREE
+		WHERE
+			ROWNUM = 1
+	</select>
+
+	<statement id="EzCommonDAO.addColumnBoardMyTreeForIndonesian">
+		ALTER TABLE
+			TBL_BOARD_MYTREE
+		ADD
+			TREENAME6 NVARCHAR2(255)
+	</statement>
+	
+	<update id="EzCommonDAO.updateDataBoardMyTreeForIndonesian">
+		UPDATE
+			TBL_BOARD_MYTREE
+		SET
+			TREENAME6 = TREENAME2
+	</update>
+	
+	<select id="EzCommonDAO.checkBoardTreeCacheForIndonesian" resultClass="String">
+		SELECT
+			RESULT6
+		FROM
+			TBL_BOARD_TREECACHE
+		WHERE
+			ROWNUM = 1
+	</select>
+
+	<statement id="EzCommonDAO.addColumnBoardTreeCacheForIndonesian">
+		ALTER TABLE
+			TBL_BOARD_TREECACHE
+		ADD
+			RESULT6 NCLOB
+	</statement>
+	
+	<update id="EzCommonDAO.updateDataBoardTreeCacheForIndonesian">
+		UPDATE
+			TBL_BOARD_TREECACHE
+		SET
+			RESULT6 = RESULT2
+	</update>
+	
+	<select id="EzCommonDAO.checkCircularListOptionForIndonesian" resultClass="String">
+		SELECT
+			NAME6
+		FROM
+			TBL_CIRCULAR_LISTOPTION
+		WHERE
+			ROWNUM = 1
+	</select>
+
+	<statement id="EzCommonDAO.addColumnCircularListOptionForIndonesian">
+		ALTER TABLE
+			TBL_CIRCULAR_LISTOPTION
+		ADD
+			NAME6 NVARCHAR2(100)
+	</statement>
+	
+	<update id="EzCommonDAO.updateDataCircularListOptionForIndonesian">
+		UPDATE
+			TBL_CIRCULAR_LISTOPTION
+		SET
+			NAME6 = NAME2
+	</update>
+	
+	<select id="EzCommonDAO.checkCodeListForIndonesian" resultClass="String">
+		SELECT
+			NAME6
+		FROM
+			TBL_CODELIST
+		WHERE
+			ROWNUM = 1
+	</select>
+
+	<statement id="EzCommonDAO.addColumnCodeListForIndonesian">
+		ALTER TABLE
+			TBL_CODELIST
+		ADD
+			NAME6 NVARCHAR2(255)
+	</statement>
+
+	<update id="EzCommonDAO.updateDataCodeListForIndonesian">
+		UPDATE
+			TBL_CODELIST
+		SET
+			NAME6 = NAME2
+	</update>
+	
+	<select id="EzCommonDAO.checkListInfoForIndonesian" resultClass="String">
+		SELECT
+			NAME6
+		FROM
+			TBL_LISTINFO
+		WHERE
+			ROWNUM = 1
+	</select>
+
+	<statement id="EzCommonDAO.addColumnListInfoForIndonesian">
+		ALTER TABLE
+			TBL_LISTINFO
+		ADD
+			NAME6 NVARCHAR2(200)
+	</statement>
+	
+	<update id="EzCommonDAO.updateDataListInfoForIndonesian">
+		UPDATE
+			TBL_LISTINFO
+		SET
+			NAME6 = NAME2
+	</update>
+	
+	<select id="EzCommonDAO.checkListOptionForIndonesian" resultClass="String">
+		SELECT
+			NAME6
+		FROM
+			TBL_LISTOPTION
+		WHERE
+			ROWNUM = 1
+	</select>
+
+	<statement id="EzCommonDAO.addColumnListOptionForIndonesian">
+		ALTER TABLE
+			TBL_LISTOPTION
+		ADD
+			NAME6 NVARCHAR2(200)
+	</statement>
+	
+	<update id="EzCommonDAO.updateDataListOptionForIndonesian">
+		UPDATE
+			TBL_LISTOPTION
+		SET
+			NAME6 = NAME2
+	</update>
+	
+	<select id="EzCommonDAO.checkBoardInfoForIndonesian" resultClass="String">
+		SELECT
+			BOARDNAME6
+		FROM
+			TBL_BOARD_BOARDINFO
+		WHERE
+			ROWNUM = 1
+	</select>
+
+	<statement id="EzCommonDAO.addColumnBoardInfoForIndonesian">
+		ALTER TABLE
+			TBL_BOARD_BOARDINFO
+		ADD
+			BOARDNAME6 NVARCHAR2(255)
+	</statement>
+	
+	<update id="EzCommonDAO.updateDataBoardInfoForIndonesian">
+		UPDATE
+			TBL_BOARD_BOARDINFO
+		SET
+			BOARDNAME6 = BOARDNAME2
+	</update>
+	
+	<select id="EzCommonDAO.countLangConfigForIndonesian" parameterClass="Integer" resultClass="Integer">
+		SELECT
+			COUNT(*)
+		FROM
+			TBL_TENANT_CONFIG
+		WHERE
+			PROPERTY_NAME LIKE 'Lang%6'
+		AND
+			TENANT_ID = #tenantId#
+	</select>
+	
+	<insert id="EzCommonDAO.insertLangConfigForIndonesian" parameterClass="Integer">
+		INSERT ALL
+			INTO tbl_tenant_config
+				(TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
+			VALUES
+				(#tenantId#, 'LangPrimary6', 'Koréa', '', '멀티언어6(메인)', TO_DATE('2017-01-06 00:00:00', 'YYYY-MM-DD HH24:MI:SS'), '일반')
+			INTO tbl_tenant_config
+				(TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
+			VALUES
+				(#tenantId#, 'LangSecondary6', 'Inggris', '', '멀티언어6(서브)', TO_DATE('2017-01-06 00:00:00', 'YYYY-MM-DD HH24:MI:SS'), '일반')
+			INTO tbl_tenant_config
+				(TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
+			VALUES
+				(#tenantId#, 'LangTertiary6', 'Jepang', '', '멀티언어6', TO_DATE('2017-01-06 00:00:00', 'YYYY-MM-DD HH24:MI:SS'), '일반')
+			INTO tbl_tenant_config
+				(TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
+			VALUES
+				(#tenantId#, 'LangQuaternary6', 'Tionghoa', '', '멀티언어6', TO_DATE('2017-01-06 00:00:00', 'YYYY-MM-DD HH24:MI:SS'), '일반')
+			INTO tbl_tenant_config
+				(TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
+			VALUES
+				(#tenantId#, 'LangSenary1', '인도네시아어', '', '멀티언어1', TO_DATE('2017-01-06 00:00:00', 'YYYY-MM-DD HH24:MI:SS'), '일반')
+			INTO tbl_tenant_config
+				(TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
+			VALUES
+				(#tenantId#, 'LangSenary2', 'Indonesian', '', '멀티언어2', TO_DATE('2017-01-06 00:00:00', 'YYYY-MM-DD HH24:MI:SS'), '일반')
+			INTO tbl_tenant_config
+				(TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
+			VALUES
+				(#tenantId#, 'LangSenary3', 'インドネシア語', '', '멀티언어3', TO_DATE('2017-01-06 00:00:00', 'YYYY-MM-DD HH24:MI:SS'), '일반')
+			INTO tbl_tenant_config
+				(TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
+			VALUES
+				(#tenantId#, 'LangSenary4', '印尼语', '', '멀티언어4', TO_DATE('2017-01-06 00:00:00', 'YYYY-MM-DD HH24:MI:SS'), '일반')
+			INTO tbl_tenant_config
+				(TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
+			VALUES
+				(#tenantId#, 'LangSenary5', '', '', '멀티언어5', TO_DATE('2017-01-06 00:00:00', 'YYYY-MM-DD HH24:MI:SS'), '일반')
+			INTO tbl_tenant_config
+				(TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
+			VALUES
+				(#tenantId#, 'LangSenary6', 'Indonésia', '', '멀티언어6', TO_DATE('2017-01-06 00:00:00', 'YYYY-MM-DD HH24:MI:SS'), '일반')
+		SELECT * FROM DUAL
+	</insert>
+	
+	<select id="EzCommonDAO.checkBoardExtColumnForMultiLang">
+		SELECT
+			COLNAME3
+		FROM
+			TBL_BOARD_BOARDINFO_ATTRIBUTE
+		WHERE
+			ROWNUM = 1
+	</select>
+	
+	<statement id="EzCommonDAO.addBoardExtColumnForMultiLang">
+		ALTER TABLE
+			TBL_BOARD_BOARDINFO_ATTRIBUTE
+		ADD (
+			COLNAME3 NVARCHAR2(100),
+			COLNAME4 NVARCHAR2(100),
+			COLNAME6 NVARCHAR2(100)
+		)
+	</statement>
+	
+	<update id="EzCommonDAO.updateDataBoardExtColumnForMultiLang">
+		UPDATE
+			TBL_BOARD_BOARDINFO_ATTRIBUTE
+		SET
+			COLNAME3 = COLNAME2,
+			COLNAME4 = COLNAME2,
+			COLNAME6 = COLNAME2
+	</update>
+	
+	<select id="EzCommonDAO.isChangedToIndi" resultClass="Integer">
+		SELECT
+			COUNT(*)
+		FROM
+			TBL_CIRCULAR_LISTOPTION
+		WHERE
+			NAME1 = 'CHECK'
+		AND
+			NAME2 = 'CHECK'
+		AND
+			NAME6 != 'PERIKSA'
+	</select>
+	
+	<update id="EzCommonDAO.updateTblCircularListoption" parameterClass="BoardListHeaderVO">
+		UPDATE
+			TBL_CIRCULAR_LISTOPTION
+		SET
+			NAME6 = #name6#
+		WHERE
+			NAME1 = #name#
+		AND
+			NAME2 = #name2#
+	</update>
+	
+	<update id="EzCommonDAO.updateTblCodelist" parameterClass="BoardListHeaderVO">
+		UPDATE
+			TBL_CODELIST
+		SET
+			NAME6 = #name6#
+		WHERE
+			NAME = #name#
+		AND
+			NAME2 = #name2#
+	</update>
+	
+	<update id="EzCommonDAO.updateTblListinfo" parameterClass="BoardListHeaderVO">
+		UPDATE
+			TBL_LISTINFO
+		SET
+			NAME6 = #name6#
+		WHERE
+			NAME = #name#
+		AND
+			NAME2 = #name2#
+	</update>
+	
+	<update id="EzCommonDAO.updateTblListoption" parameterClass="BoardListHeaderVO">
+		UPDATE
+			TBL_LISTOPTION
+		SET
+			NAME6 = #name6#
+		WHERE
+			NAME = #name#
+		AND
+			NAME2 = #name2#
+	</update>
+	
+	<update id="EzCommonDAO.updateTblBoardItemListoption" parameterClass="BoardListHeaderVO">
+		UPDATE
+			TBL_BOARD_ITEM_LISTOPTION
+		SET
+			NAME6 = #name6#
+		WHERE
+			NAME1 = #name#
+		AND
+			NAME2 = #name2#
+	</update>
+	
+	<update id="EzCommonDAO.updateTblListoption2" parameterClass="Map">
+		UPDATE  
+			TBL_LISTOPTION
+		SET		
+			NAME6 = #name6#
+		WHERE 
+		    SN = #sn#
+		AND
+		    NAME = #name#
+	</update>
+
+    <select id="EzCommonDAO.checkBigAttachInfo" resultClass="String">
+	   <![CDATA[
+        SELECT
+            FILE_NAME
+        FROM
+            JMOCHA_BIGATTACH_DOWN_LIMIT
+        WHERE
+            ROWNUM <= 1
+        ]]>
+   </select>
+
+    <statement id="EzCommonDAO.addBigAttachInfo">
+		<![CDATA[
+        ALTER TABLE
+            JMOCHA_BIGATTACH_DOWN_LIMIT
+            ADD
+            (FILE_NAME NVARCHAR2(100),
+			FILE_SIZE NUMBER,
+			USER_ID NVARCHAR2(80),
+			UPLOAD_DATE NVARCHAR2(100))
+        ]]>
+	</statement>
+
+	<select id="EzCommonDAO.checkApproveErrorInfoTable" resultClass="String">
+		<![CDATA[
+		SELECT
+			DOCID
+		FROM
+			TBL_APPROVE_ERROR_INFO
+		WHERE
+			ROWNUM = 1
+		]]>
+	</select>
+
+	<statement id="EzCommonDAO.createApproveErrorInfoTable">
+		CREATE TABLE TBL_APPROVE_ERROR_INFO (
+			DOCID NVARCHAR2(80) NOT NULL ENABLE,
+			TENANT_ID NUMBER(5,0) DEFAULT 0 NOT NULL ENABLE,
+			COMPANYID NVARCHAR2(20) NOT NULL ENABLE,
+			ERROR_MESSAGE NVARCHAR2(2000) NULL ,
+			ERROR_CASE NVARCHAR2(200) NULL ,
+			CREATEDATE DATE NULL ,
+			UPDATEDATE DATE NULL ,
+			CONSTRAINT TBL_APPROVE_ERROR_INFO_PK PRIMARY KEY (DOCID, TENANT_ID, COMPANYID)
+		)
+	</statement>
+	
+	<select id="EzCommonDAO.checkAttitudeCustomCheckbox" resultClass="String">
+		<![CDATA[
+			SELECT FORM_HTML
+			FROM TBL_ATTITUDE_FORM
+			WHERE FORM_ID = 8
+			AND ROWNUM = 1
+		]]>
+	</select>
+	
+	<update id="EzCommonDAO.updateAttitudeCustomCheckbox">
+		<![CDATA[
+			UPDATE  TBL_ATTITUDE_FORM
+			SET FORM_HTML = #form_html#
+			WHERE FORM_ID=8
+		]]>
+	</update>
+	
+	<update id="EzCommonDAO.updateAttitudeCustomCheckbox2">
+		<![CDATA[
+			UPDATE  TBL_ATTITUDE_FORM
+			SET FORM_HTML2 = #form_html2#
+			WHERE FORM_ID=8
+		]]>
+	</update>
 </sqlMap>

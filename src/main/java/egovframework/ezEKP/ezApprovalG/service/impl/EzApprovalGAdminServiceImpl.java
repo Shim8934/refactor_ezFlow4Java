@@ -2554,6 +2554,7 @@ public class EzApprovalGAdminServiceImpl extends EzFileMngUtil implements EzAppr
 		String openGovFlag = "";
 		String formAprOption = "";
 		String passAprLineFlag = "";
+		String mobileDraftFlag = "N";
 		
 		String formName = doc.getElementsByTagName("FormName").item(0).getTextContent();
 		String formName2 = doc.getElementsByTagName("FormName2").item(0).getTextContent();
@@ -2577,6 +2578,7 @@ public class EzApprovalGAdminServiceImpl extends EzFileMngUtil implements EzAppr
 			tbItemName2 = doc.getElementsByTagName("TBITEMNAME2").item(0).getTextContent();
 			useFlag = doc.getElementsByTagName("USEFLAG").item(0).getTextContent();
 			formConnFlag = doc.getElementsByTagName("ConnFlag").item(0).getTextContent();
+			mobileDraftFlag = doc.getElementsByTagName("mobileDraftFlag").item(0).getTextContent();
 		} else {
 			formConnFlag = doc.getElementsByTagName("ConnFlag").item(0).getTextContent();
 			openGovFlag = doc.getElementsByTagName("openGovFlag").item(0).getTextContent();
@@ -2645,6 +2647,7 @@ public class EzApprovalGAdminServiceImpl extends EzFileMngUtil implements EzAppr
 		map.put("v_formAprOption", formAprOption);
 		map.put("v_FORMSIHANGTYPE", formSihangType);
 		map.put("v_PFORMDRAFTALLFLAG", formDraftAllFlag);
+		map.put("v_MOBILEDRAFTFLAG", mobileDraftFlag);
 
 		if (formID.equals("")) {
 			formID = generateNextFormId(companyID, userInfo.getTenantId());

@@ -96,6 +96,9 @@ public class ApprGFormVO {
 
 	/* 2024-11-25 기민혁 - 전자결재G > 최근서식 시간 */
 	private String resendStartDate;
+
+	/** 2025-07-02 김유진 - 모바일 기안 */
+	private String mobileDraftFlag;
 	
 	public String getPassAprLineFlag() {
 		return passAprLineFlag;
@@ -441,4 +444,12 @@ public class ApprGFormVO {
 	public String getResendStartDate() { return resendStartDate; }
 
 	public void setResendStartDate(String resendStartDate) { this.resendStartDate = resendStartDate; }
+
+	public String getMobileDraftFlag() {
+		return mobileDraftFlag;
+	}
+
+	public void setMobileDraftFlag(String mobileDraftFlag) {
+		this.mobileDraftFlag = mobileDraftFlag;
+	}
 }

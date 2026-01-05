@@ -34,7 +34,7 @@
 	<body class="leftbody admin_pms_left" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
 		<div id="left">
 			
-			<div class="left_admin" title="<spring:message code="ezPMS.t8"/>"><spring:message code="ezPMS.t8" /></div>
+			<div class="left_admin"><spring:message code="ezPMS.t8" /></div>
 			
 				<h2 class="project_admin"><span onClick="goPage(1)" style="display:inline-block;width:100%;"><spring:message code="ezPMS.t235" /></span><ul></ul></h2>	
 		</div>

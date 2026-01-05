@@ -16,6 +16,7 @@ import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeUtility;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
@@ -254,6 +255,14 @@ public class EzEmailReceiptNotiController extends EzFileMngUtil {
 
 						tempSb.append("<ROW>");
 						tempSb.append("<READEREMAIL><![CDATA[" + email + "]]></READEREMAIL>");
+
+						// @가 포함되어 있지 않고 =?UTF-8?B? 와 같이 인코딩된 형태이면 디코딩을 시도한다.
+						if (!name.contains("@") && name.startsWith("=?")) {
+							logger.debug("decoding name={}", name);
+
+							name = MimeUtility.decodeText(name);
+						}
+						
 						tempSb.append("<READERNAME><![CDATA[" + name + "]]></READERNAME>");
 
 						// 메일 수신자의 주소가 alias 주소인 경우 real(account) 주소로 바꾼다.

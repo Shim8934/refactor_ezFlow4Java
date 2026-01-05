@@ -15,7 +15,13 @@
 	    <script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/Newemail.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/ezWebFolder/relay/webfolderFileUploadOpener.js')}"></script>
 	    <style> 
-			p { margin-bottom: 0; margin-top: 0; } 
+			p { margin-bottom: 0; margin-top: 0; }
+
+			.button_calendar_task {
+				pointer-events: none;
+				cursor: default;
+				opacity: 0.6;
+			}
 		</style>
 	    <script language="javascript" type="text/javascript">
 	        var g_paramURL = "${url}";
@@ -40,6 +46,9 @@
 				document.addEventListener('click', function (e) {
 					if (window.parent.hiddenMoreMenu) {
 						parent.hiddenMoreMenu(e);
+					}
+					if(window.parent.hideLayer) {
+						parent.HiddenContextMenu;
 					}
 				})
 				
@@ -346,12 +355,12 @@
 	            var pwidth = window.screen.availWidth;
 	            var conWidth = pwidth * 0.8;
 	            
-	            if (conWidth > 890) {
-	                conWidth = 890;
+	            if (conWidth > 1200) {
+	                conWidth = 1200;
 	            }
 	            
 	            var pTop = (pheight - conHeight) / 2;
-	            var pLeft = (pwidth - 890) / 2;
+	            var pLeft = (pwidth - 1200) / 2;
 	            var oForm = document.createElement("FORM");
 	            oForm.name = "fomAction";
 	            oForm.method = "POST";
@@ -378,7 +387,7 @@
 	        	}
 	            
 	            var newwin = window.open(pURI, "", "top=" + pTop.toString() + ", left=" + pLeft.toString() 
-                		+ ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
+                		+ ", height = " + conHeight + "px, width = 1200px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
                 newwin.focus();
 	        }
 	        

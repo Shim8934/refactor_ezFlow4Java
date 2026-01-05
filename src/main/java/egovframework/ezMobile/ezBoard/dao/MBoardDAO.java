@@ -299,4 +299,12 @@ public class MBoardDAO extends EgovAbstractDAO {
 	public List<MBoardNewListVO> getAllNewBoardList(Map<String, Object> map) throws Exception {
 		return (List<MBoardNewListVO>) list("MBoardDAO.getAllNewBoardList", map);
 	}
+
+	public int getGroupBoardItemListCount(Map<String, Object> map) {
+		return (int) select("MBoardDAO.getGroupBoardItemListCount", map);
+	}
+
+	public List<MBoardListVO> getGroupBoardItemList(Map<String, Object> map) {
+		return (List<MBoardListVO>) list("MBoardDAO.getGroupBoardItemList", map);
+	}
 }

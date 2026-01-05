@@ -44,6 +44,8 @@
 				background-color:#ffd9ec;
 				border:1px solid #f44336;
 			}
+			/* 첨부파일 아이콘 변경 */
+			#lstAttachLink img{width: 18px;height: 18px;vertical-align: middle;margin: 0 2px 4px 0;}
 		</style>
 		<script  type="text/javascript">
 		    window.offscreenBuffering = true;
@@ -835,7 +837,7 @@
 		        
 		        if (gubun != "2") {
 	                window.location.href = "/ezBoard/boardNewItem.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(pItemID) + "&mode=modify" + "&reservedItem=" + pReservedItem + "&portletId=" + portletId + "&historyModify=" + historyModify + "&version=" + version;
-		            window.resizeTo(785, 780);
+		            window.resizeTo(900, 780);
 		        }
 		    }
 		    
@@ -992,36 +994,38 @@
 		            }
 		            
 		            if (strFileExt.indexOf(".jpg") != -1 || strFileExt.indexOf(".jpeg") != -1 || strFileExt.indexOf(".bmp") != -1 || strFileExt.indexOf(".gif") != -1 || strFileExt.indexOf(".png") != -1 || strFileExt.indexOf(".tif") != -1 || strFileExt.indexOf(".tiff") != -1)
-		                fileImage = "/images/image.png";
+		                fileImage = "/images/image.svg";
 		            else if (strFileExt.indexOf(".doc") != -1 || strFileExt.indexOf(".docx") != -1)
-		                fileImage = "/images/doc.png";
+		                fileImage = "/images/doc.svg";
 		            else if (strFileExt.indexOf(".xls") != -1 || strFileExt.indexOf(".xlsx") != -1)
-		                fileImage = "/images/xls.png";
+		                fileImage = "/images/xls.svg";
 		            else if (strFileExt.indexOf(".ppt") != -1 || strFileExt.indexOf(".pptx") != -1 || strFileExt.indexOf(".pps") != -1 || strFileExt.indexOf(".ppsx") != -1)
-		                fileImage = "/images/ppt.png";
+		                fileImage = "/images/ppt.svg";
 		            else if (strFileExt.indexOf(".txt") != -1)
-		                fileImage = "/images/txt.png";
+		                fileImage = "/images/txt.svg";
 		            else if (strFileExt.indexOf(".zip") != -1)
-		                fileImage = "/images/zip.png";
+		                fileImage = "/images/zip.svg";
 		            else if (strFileExt.indexOf(".pdf") != -1)
-		                fileImage = "/images/pdf.png";
+		                fileImage = "/images/pdf.svg";
+					else if (strFileExt.indexOf(".hwp") != -1 || strFileExt.indexOf(".hwpx") != -1)
+						fileImage = "/images/hwp.svg";
 		            else if (strFileExt.indexOf(".ecm") != -1)
-		                fileImage = "/images/ecm.png";
+		                fileImage = "/images/ecm.svg";
 		            else
-		                fileImage = "/images/email/mail_006.gif";
+		                fileImage = "/images/etc.svg";
 		
 		            var protocol = window.location.protocol;
 		            var serverName = window.location.hostname;
 		            
 		            /* 2020-01-30 홍승비 - 모두저장 기능을 위해 속성 추가 */
-		            strAttach += "<input type='checkbox' name='fileSelect' value='" + filenameView + "' filePath='" + MakeXMLString(filepath) + "'>";
-		            strAttach += "<img src='" + fileImage + "'> <a href='/ezBoard/boardAttachDown.do?filePath=" + javaURLEncode(filepath) + "&fileName=" + javaURLEncode(filenameOrg) + "'\">";
+		            strAttach += "<div class='custom_checkbox'><input type='checkbox' name='fileSelect' value='" + filenameView + "' filePath='" + MakeXMLString(filepath) + "' id='fileSelect" + i + "'>";
+		            strAttach += "<label for='fileSelect" + i + "'><img src='" + fileImage + "' style='vertical-align: middle;'> <a href='/ezBoard/boardAttachDown.do?filePath=" + javaURLEncode(filepath) + "&fileName=" + javaURLEncode(filenameOrg) + "'\">";
 		            strAttach += filenameView + "&nbsp;(" + filesize + ")</a>";
 		            // 2023-05-25 조수빈 - 게시판 첨부파일 미리보기 아이콘 추가
 		            if (typeof useBoardFilePrvw !== 'undefined' && useBoardFilePrvw == "1" && guestReadFG !== "Y") {
 			            strAttach += "<span class='icon_rbtn2' style='margin-left : 10px;' title='<spring:message code = 'ezEmail.t487'/>' onclick=\"attachFile_Preview('" + javaURLEncode(filepath) + "', '" + javaURLEncode(filenameOrg) + "');\"><img src='/images/icon_preview.png' width='16' height='16' style='vertical-align:middle; cursor:pointer;'></span>";
 		            }
-		            strAttach += "<br>";
+		            strAttach += "</label></div><br>";
 		        }
 		        document.getElementById('lstAttachLink').innerHTML = strAttach;
 		    }
@@ -1128,9 +1132,9 @@
 		        var conHeight = pheight * 0.8;
 		        var pwidth = window.screen.availWidth;
 		        var pTop = (pheight - conHeight) / 2;
-		        var pLeft = (pwidth - 890) / 2;
+		        var pLeft = (pwidth - 1200) / 2;
 		        var szUrl = "/ezEmail/mailWrite.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(pItemID) + "&cmd=board";
-		        window.open(szUrl, "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no,resizable=1");
+		        window.open(szUrl, "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 1200px, status = no, toolbar=no, menubar=no,location=no,resizable=1");
 		        window.close();
 		    }
 		    var item_readlist_cross_dialogArguments = new Array();
@@ -1484,18 +1488,18 @@
 		        var conHeight = pheight * 0.8;
 		        var pwidth = window.screen.availWidth;
 		        var pTop = (pheight - conHeight) / 2;
-		        var pLeft = (pwidth - 890) / 2;
+		        var pLeft = (pwidth - 1200) / 2;
 		        var szUrl = "/ezEmail/mailWrite.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(pItemID) + "&cmd=board";
-		        window.open(szUrl, "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no,resizable=1");
+		        window.open(szUrl, "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 1200px, status = no, toolbar=no, menubar=no,location=no,resizable=1");
 		    }
 		    function Retrans_mailAttach() {
 		        var pheight = window.screen.availHeight;
 		        var conHeight = pheight * 0.8;
 		        var pwidth = window.screen.availWidth;
 		        var pTop = (pheight - conHeight) / 2;
-		        var pLeft = (pwidth - 890) / 2;
+		        var pLeft = (pwidth - 1200) / 2;
 		        var szUrl = "/ezEmail/mailWrite.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(pItemID) + "&cmd=board&retransType=boardAttach";
-		        window.open(szUrl, "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no,resizable=1");
+		        window.open(szUrl, "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 1200px, status = no, toolbar=no, menubar=no,location=no,resizable=1");
 		    }
 		    function Appr_onclick(pFlag) {
 		        if (pFlag == "C") { // 반려
@@ -1951,12 +1955,12 @@
                 var currentDate = new Date();
 
                 if (newStartDate > currentDate) {
-                    alert("예약게시물 및 공개시기가 지나지 않은 게시물은 재게시가 불가능합니다.");
+                    alert("<spring:message code='ezBoard.repostLhr05' />");
                     return;
                 }
 
                 if (newEndDate < currentDate) {
-                    alert("게시기간이 만료된 게시물은 재게시가 불가능합니다.");
+                    alert("<spring:message code='ezBoard.repostLhr04' />");
                     return;
                 }
                 
@@ -1972,13 +1976,13 @@
                     return;
                 }
                 
-                if(confirm("재게시를 하시면 최근 게시물로 등록됩니다.\n재게시 하시겠습니까?")) {
+                if(confirm("<spring:message code='ezBoard.repostLhr01' />")) {
                     var xmlhttp = createXMLHttpRequest();
                     xmlhttp.open("POST", "/ezBoard/repostItem.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(pItemID) + "&userID=" + userInfoID +  "&hasReply=" + CheckIfHasReplies(), false);
                     xmlhttp.send();
 
                     if (xmlhttp.responseText == "SUCCESS") {
-                        alert("재게시가 완료되었습니다.");
+                        alert("<spring:message code='ezBoard.repostLhr02' />");
                         window.location.reload();
 
                         //if (boardItemView == "P") {
@@ -2654,7 +2658,9 @@
                         <c:forEach var="i" begin="1" end="5">
                             <c:set var="srcIconFlag" value="${itemStarRating.rating >= i}" />
                             <label for="rate${i}">
-                                <input type="radio" name="reviewStar" value="${i}" id="rate${i}" <c:if test="${itemStarRating.rating == i}"> checked </c:if> />
+                            	<div class="custom_radio">
+	                                <input type="radio" name="reviewStar" value="${i}" id="rate${i}" <c:if test="${itemStarRating.rating == i}"> checked </c:if> />
+                            	</div>
                                 <img draggable="false" src="/images/ImgIcon/${srcIconFlag ? 'icon-flag.gif' : 'view-flag.gif'}"/>
                             </label>
                         </c:forEach>
@@ -2681,7 +2687,7 @@
 								</c:when>
 								<c:otherwise>
 								    <tr>
-										<th style="text-align:center; width: 85%; border-left:1px solid #e2e2e2; border-top:1px solid #e2e2e2; border-bottom:1px solid #e2e2e2;">
+										<th style="text-align:center; width: 81%; border-left:1px solid #e2e2e2; border-top:1px solid #e2e2e2; border-bottom:1px solid #e2e2e2;">
 											<%-- 2023-11-07 전인하 - 게시판 > 이모티콘 아이콘 삽입 --%>
                                             <div class="emoticonRelative">								    
                                                 <img id="_addEmoticon" class="_addEmoticon" src="/images/poll/add_emo_vote.png" onclick="addSticker(this)">
@@ -2695,11 +2701,11 @@
 									</tr>
 								</c:when>
 								<c:otherwise>
-										<th style="text-align:center;border-top:1px solid #e2e2e2; border-bottom:1px solid #e2e2e2; border-right:1px solid #e2e2e2;width:15%;">
+										<th style="text-align:center;border-top:1px solid #e2e2e2; border-bottom:1px solid #e2e2e2; border-right:1px solid #e2e2e2;width:11%;">
 										    <c:if test='${boardInfo.attachmentFlag eq "Y"}'>
-											    <a class='imgbtn' style="vertical-align: middle"><span onclick="btnfileup('commentFile')"><spring:message code='ezBoard.commentAttach.JIH01' /></span></a><br/>
+											    <a class='imgbtn comment' style="vertical-align: middle"><span onclick="btnfileup('commentFile')"><spring:message code='ezBoard.commentAttach.JIH01' /></span></a><br/>
 											</c:if>
-											<a class='imgbtn' style="vertical-align: middle"><span onclick="Save_OneLineReply(this)"><spring:message code='ezBoard.t98' /></span></a>
+											<a class='imgbtn comment' style="vertical-align: middle"><span onclick="Save_OneLineReply(this)"><spring:message code='ezBoard.t98' /></span></a>
 										</th>
 									</tr>
 								</c:otherwise>
@@ -2712,9 +2718,9 @@
 										<span style = "font-weight:normal; display:inline-block; margin-top:2px"><spring:message code='ezBoard.t438' />&nbsp;</span>
 										<span><input type="password" id="txtPassWord" maxlength="20" size="20" />&nbsp;</span>
 										<c:if test='${boardInfo.attachmentFlag eq "Y"}'>
-										    <a class='imgbtn' style="vertical-align: middle"><span onclick="btnfileup('commentFile')"><spring:message code='ezBoard.commentAttach.JIH01' /></span></a>
+										    <a class='imgbtn comment' style="vertical-align: middle"><span onclick="btnfileup('commentFile')"><spring:message code='ezBoard.commentAttach.JIH01' /></span></a>
 										</c:if>
-										<a class='imgbtn' style="vertical-align: middle"><span onclick="Save_OneLineReply(this)"><spring:message code='ezBoard.t98' /></span></a>
+										<a class='imgbtn comment' style="vertical-align: middle"><span onclick="Save_OneLineReply(this)"><spring:message code='ezBoard.t98' /></span></a>
 									</th>
 								</tr>
 							</c:if>

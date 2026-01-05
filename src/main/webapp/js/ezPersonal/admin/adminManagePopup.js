@@ -83,7 +83,7 @@ function checkbox_header() {
 	var doc = window.document;
 	var th = doc.getElementById("AccessListView_TH_0");
 	var acList = doc.getElementById("AccessListView");
-	th.innerHTML = "<input type='checkbox' id = 'checkAll' onchange='checkboxHeaderClick()'></input>";
+	th.innerHTML = "<div class='custom_checkbox'><input type='checkbox' id = 'checkAll' onchange='checkboxHeaderClick()'/></div>";
 	
 	cnt = acList.children[1].childElementCount;
 	var i = 0;
@@ -91,8 +91,8 @@ function checkbox_header() {
 		var seq = acList.children[1].children[i].getAttribute("data1");
 		var inuse = acList.children[1].children[i].getAttribute("inuse");
 		var jinhangFlag = acList.children[1].children[i].children[5].innerHTML;
-		acList.children[1].children[i].children[0].innerHTML = "<input type='checkbox' name='checks' class='checks' id='" + seq + "' value='" + seq +"' onchange='inputFunc(event,"+seq+")'></input>";
-		acList.children[1].children[i].children[6].innerHTML = "<label class='switch' id='switch" + seq + "' inuse='" + inuse +"' onclick='inUseUpdate(event," + seq +")'><input type='checkbox'><span class='slider round'></span></label>";
+		acList.children[1].children[i].children[0].innerHTML = "<div class='custom_checkbox'><input type='checkbox' name='checks' class='checks' id='" + seq + "' value='" + seq +"' onchange='inputFunc(event,"+seq+")'/>";
+		acList.children[1].children[i].children[6].innerHTML = "<label class='switch' id='switch" + seq + "' inuse='" + inuse +"' onclick='inUseUpdate(event," + seq +")'><input type='checkbox'><span class='slider round'></span></label></div>";
 
 		if(jinhangFlag == 1) {
 			acList.children[1].children[i].children[5].innerHTML = "<img src='/images/admin/inuse.png' border='0' class='jinhang' progress='1'>";
@@ -149,7 +149,7 @@ function rowListSelect() {
 		var tempItemSeq = rowList.pop();
 		if(document.getElementById(tempItemSeq) != null) {
 			$("#" + tempItemSeq).prop("checked", true);
-			var tempID = $("#" + tempItemSeq)[0].parentNode.parentNode.id;
+			var tempID = $("#" + tempItemSeq)[0].closest('tr').id;
 			$("#" + tempID + " td").css("background-color", "rgb(241, 248, 255)");
 		}
 	}
@@ -167,7 +167,7 @@ function inputFunc(event, itemseq) {
 	$("#contentlist tr td").css("background-color", "rgb(255, 255, 255)");
 
 	for(var i=0; i<rowList.length; i++) {
-		var objID = $("#"+rowList[i])[0].parentNode.parentNode.id;
+		var objID = $("#"+rowList[i])[0].closest('tr').id;
 		$("#" + objID + " td").css("background-color", "rgb(241, 248, 255)");
 		$("#" + rowList[i]).prop("checked", true);
 	}
@@ -260,9 +260,9 @@ function PopupList_onDblclick(obj) {
 
 //공지사항 팝업 호출 method
 var showPopupPage = function() {
-	var wWidth = $("#"+itemseq)[0].parentNode.parentNode.getAttribute('DATA2');
-	var wHeight = $("#"+itemseq)[0].parentNode.parentNode.getAttribute('DATA3');
-	var wPosition = $("#"+itemseq)[0].parentNode.parentNode.getAttribute('DATA4');
+	var wWidth = $("#"+itemseq)[0].closest('tr').getAttribute('DATA2');
+	var wHeight = $("#"+itemseq)[0].closest('tr').getAttribute('DATA3');
+	var wPosition = $("#"+itemseq)[0].closest('tr').getAttribute('DATA4');
 	var wVertical, wHorizontal;
 
 	if (wPosition == 0) {
@@ -333,7 +333,7 @@ function inUseUpdate(event, seq) {
 		success : function (result) {
 			if(result === "OK") {
 				$("#switch" + seq).attr("inuse", inuse);
-				$("#switch" + seq)[0].parentNode.parentNode.setAttribute("inuse", inuse);
+				$("#switch" + seq)[0].closest('tr').setAttribute("inuse", inuse);
 			}
 		}, error: function(xhr, option, error) {
 			console.log(xhr.status);
@@ -423,7 +423,7 @@ var del_popup = function () {
 			var tempID = $(this)[0].id;
 			popupList += tempID + ";"
 			delCnt = delCnt + 1;
-			var tempUse = $("#" + tempID)[0].parentNode.parentNode.children[5].children[0].getAttribute('progress');
+			var tempUse = $("#" + tempID)[0].closest('tr').getAttribute('progress');
 			if(tempUse === "1") {
 				inUseFlag = true;
 			}
@@ -620,8 +620,8 @@ function showPreview(isPreview, itemseq) {
 			// 세로 모드
 			doc.getElementById("ifrmPreViewH").style.width = "0px";
 			doc.getElementById("ifrmPreViewH").style.height = "0px";
-			var itemSeqTitle = $("#"+itemseq)[0].parentNode.parentNode.children[2].innerHTML;
-			var itemSeqSDate = $("#"+itemseq)[0].parentNode.parentNode.children[3].innerHTML;
+			var itemSeqTitle = $("#" + itemseq).closest("tr").find("td").eq(2).text().trim();
+			var itemSeqSDate = $("#" + itemseq).closest("tr").find("td").eq(3).text().trim();
 			doc.getElementById('Preview_HeaderH').style.visibility ="";
 			doc.getElementById('Preview_HeaderH').title = itemSeqTitle;
 			doc.getElementById('PreH_sub_subject').innerHTML = itemSeqTitle;

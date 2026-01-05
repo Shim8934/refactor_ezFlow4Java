@@ -37,43 +37,47 @@
  */
 
 var IsInsert = [ false, false, false ]; // 0:MsgToGot, 1:MsgCCGot, 2:MsgBCCGot
+var isCallLastSent = false; // 최근사용주소는 클릭 시에만 실행하도록 수정.
 var mode = null;
 var emailToDelete = null; // 최근 사용 주소 삭제 시 : 삭제 click 이벤트 외에 발생하는 select 이벤트를 실행하지 않기 위함.
-var checkKeyEvent = { // 한글 조합문자 특성으로 인해 keydown event 두 번 발생할 때 search 이벤트를 실행하지 않기 위함. (가독성을 위해 객체화)
-    isDuble: false,
-    prev: false,
-    setIsDuble: function(currentE) {
-        // console.debug(currentE.type, ": ", currentE.key, ", keyCode: ", currentE.keyCode, ", isComposing: ", currentE.originalEvent.isComposing);
-		/*
-         * keydown :  Process , keyCode: 229 , isComposing:  true
-		 * keydown :  Enter , keyCode: 13 , isComposing:  false
-		 * 이벤트 두 번 실행될 때 하나는 search 차단.
-         */
-
-        // search 실행 차단할 조건
-        checkKeyEvent.isDuble = checkKeyEvent.prev && (currentE.keyCode == 13);
-        // previous isComposing 저장
-        checkKeyEvent.prev = currentE.originalEvent.isComposing;
-        /*
-         * JavaScript의 this는 함수 호출 방식에 따라 동적으로 결정.
-         * 이벤트 핸들러로 사용될 경우, this는 이벤트를 트리거한 DOM 요소를 참조함. 여기서 this는 $("#MsgTo")이 된다.
-         * checkKeyEvent 객체를 명시적으로 지정함.
-         */
-    }
-}
+// 최근사용주소는 클릭 시에만 실행하도록 수정하면 될 것 같아서 해당 문제 제외해 봄.
+// var checkKeyEvent = { // 한글 조합문자 특성으로 인해 keydown event 두 번 발생할 때 search 이벤트를 실행하지 않기 위함. (가독성을 위해 객체화)
+//     isDuble: false,
+//     prev: false,
+//     setIsDuble: function(currentE) {
+//         // console.debug(currentE.type, ": ", currentE.key, ", keyCode: ", currentE.keyCode, ", isComposing: ", currentE.originalEvent.isComposing);
+// 		/*
+//          * keydown :  Process , keyCode: 229 , isComposing:  true
+// 		 * keydown :  Enter , keyCode: 13 , isComposing:  false
+// 		 * 이벤트 두 번 실행될 때 하나는 search 차단.
+//          */
+//
+//         // search 실행 차단할 조건
+//         checkKeyEvent.isDuble = checkKeyEvent.prev && (currentE.keyCode == 13);
+//         // previous isComposing 저장
+//         checkKeyEvent.prev = currentE.originalEvent.isComposing;
+//         /*
+//          * JavaScript의 this는 함수 호출 방식에 따라 동적으로 결정.
+//          * 이벤트 핸들러로 사용될 경우, this는 이벤트를 트리거한 DOM 요소를 참조함. 여기서 this는 $("#MsgTo")이 된다.
+//          * checkKeyEvent 객체를 명시적으로 지정함.
+//          */
+//     }
+// }
 
 // document ready
 $(function() {
-    setupAutocomplete("#MsgTo", 0, MsgToGot);
-    setupAutocomplete("#MsgCC", 1, MsgCCGot);
-    setupAutocomplete("#MsgBCC", 2, MsgBCCGot);
+    setupAutocomplete("#MsgTo", "#MsgTo_TR .btn_AutoCompleteResults", 0, MsgToGot);
+    setupAutocomplete("#MsgCC", "#MsgCC_TR .btn_AutoCompleteResults", 1, MsgCCGot);
+    setupAutocomplete("#MsgBCC", "#MsgBCC_TR .btn_AutoCompleteResults", 2, MsgBCCGot);
 })
 
 // autocomplete 객체 생성
-function setupAutocomplete(selector, iType, element) {
-    var btn_AutoCompleteResults = selector+"+";
-
-    $(selector).autocomplete({
+/** @param {String} inputSelector
+ * @param {String} autoCompleteBtnSelector
+ * @param {Number} iType
+ * @param {HTMLElement} recipientContainerElement */
+function setupAutocomplete(inputSelector, autoCompleteBtnSelector, iType, recipientContainerElement) {
+    $(inputSelector).autocomplete({
         source : function(request, response) {
             if (request.term.length < 2) { // 기존(auto) minLength : 2
                 mode = new LastSent(request, response);
@@ -97,7 +101,7 @@ function setupAutocomplete(selector, iType, element) {
                     return;
                 }
 
-                element.appendChild(newElem);
+                recipientContainerElement.appendChild(newElem);
                 $(this).val("");
                 IsInsert[iType] = true;
             }
@@ -106,19 +110,26 @@ function setupAutocomplete(selector, iType, element) {
             return false;
         },
         open : function(event, ui) {
-            $(btn_AutoCompleteResults).addClass("active");
+            $(autoCompleteBtnSelector).addClass("active");
 
+            //$(recipientContainerElement).outerWidth()
             // 20180628 자동완성창의 width 값 고정
-            mode.ulCss($(this).autocomplete("widget"), $(this).outerWidth()); // ul, inputW(:current input width)
+            mode.ulCss($(this).autocomplete("widget"), $(recipientContainerElement).outerWidth()); // ul, inputW(:current input width)
         },
         close : function(event, ui) {
-            $(btn_AutoCompleteResults).removeClass("active");
+            $(autoCompleteBtnSelector).removeClass("active");
 
             if (IsInsert[iType])
                 $(this).val("");
             IsInsert[iType] = false;
         },
-        appendTo : "#AutoCompleteResults"
+        appendTo : "#AutoCompleteResults",
+        position: {
+            my: 'left top',
+            at: 'left bottom',
+            collision: 'fit',
+            of: recipientContainerElement
+        }
     });
 
     /**
@@ -127,7 +138,7 @@ function setupAutocomplete(selector, iType, element) {
      * menu.select와 option select는 호출 타이밍과 컨텍스트가 다릅니다.
      */
     // 재정의 1. select
-    var instance = $(selector).autocomplete("instance");
+    var instance = $(inputSelector).autocomplete("instance");
     var originalSelect = instance.menu.select;  // 기존 select 메서드를 저장
     instance.menu.select = async function(event) {
         // (클릭 때문에 자동으로 실행되는) select 옵션을 실행하지 않아야 함.
@@ -141,7 +152,7 @@ function setupAutocomplete(selector, iType, element) {
             // 초기화
             emailToDelete = null;
             lastSentStash = null;
-            $(selector).autocomplete("search", "");
+            $(inputSelector).autocomplete("search", "");
             /*
              * 새로 받아오는 것이 너무 느리거나 성능상 문제가 된다면, 다음과 같이 간이처리로 수정해주세요.
              * this.active.remove(); // 1. 해당 li 삭제.
@@ -157,16 +168,20 @@ function setupAutocomplete(selector, iType, element) {
         originalSelect.call(this, event);
     };
 
-    $(selector).on("keydown", checkKeyEvent.setIsDuble);
+//    $(selector).on("keydown", checkKeyEvent.setIsDuble);
 
     // 클릭 시 Autocomplete 목록을 열거나 닫기
-    $(selector + ', ' + btn_AutoCompleteResults).on("click", function() {
+    $(inputSelector + ', ' + autoCompleteBtnSelector).on("click", function(event) {
+        event.preventDefault();
+        event.stopPropagation();
+
         // 최근 사용 주소이면서 + 이미 목록이 열려 있으면 닫고,
-        if($(selector).autocomplete("widget").is(":visible") && mode instanceof LastSent) {
-            $(selector).autocomplete("close");
+        if($(inputSelector).autocomplete("widget").is(":visible") && mode instanceof LastSent) {
+            $(inputSelector).autocomplete("close");
         // 그 외 클릭 시 최근 사용 주소
         } else {
-            $(selector).autocomplete("search", "");
+            isCallLastSent = true; // 클릭 시에만 최근사용주소 목록 가져오도록 함.
+            $(inputSelector).autocomplete("search", "");
         }
     });
 }
@@ -209,17 +224,17 @@ $.ui.menu.prototype.focus = function(event, item) {
 };
 
 // 재정의 4. search
-var originalSearch = $.ui.autocomplete.prototype.search;  // 기존 search 메서드를 저장
-$.ui.autocomplete.prototype.search = function(value) {
-    if (checkKeyEvent.isDuble) { // minLength : 0 때문에 search 발생
-        checkKeyEvent.isDuble = false;
-        // console.debug("한글 조합문자 특성으로 인해 keydown event 두 번 발생할 때 search 실행 차단");
-        return;
-    }
-
-    // 기존 search 호출
-    originalSearch.call(this, value);
-};
+// var originalSearch = $.ui.autocomplete.prototype.search;  // 기존 search 메서드를 저장
+// $.ui.autocomplete.prototype.search = function(value) {
+//     if (checkKeyEvent.isDuble) { // minLength : 0 때문에 search 발생
+//         checkKeyEvent.isDuble = false;
+//         // console.debug("한글 조합문자 특성으로 인해 keydown event 두 번 발생할 때 search 실행 차단");
+//         return;
+//     }
+//
+//     // 기존 search 호출
+//     originalSearch.call(this, value);
+// };
 
 /**
  * JS Class는 ES6(ECMAScript 2015) 이상에서 사용 가능. (오.. email.rowselector.js에서도 Class 사용중!)
@@ -277,6 +292,10 @@ var lastSentStash = null;
 class LastSent extends Mode {
     // 절감 목적 : lastSent list는 데이터가 일정한데 비해, 빈번하게 발생할 것으로 예상된다. (term.length: 0-1)
     async getList(request) {
+        // minLength : 0 이나, 클릭이 아닐 때는 수행하지 않도록 빈 목록을 반환하도록 했다.
+        if (!isCallLastSent) return [];
+        isCallLastSent = false;
+
         // length = 0 인것도 결과임. if null, DB에서 데이터 가져올 것.(fetchServerList)
         return lastSentStash? lastSentStash : super.fetchServerList(request);
     };

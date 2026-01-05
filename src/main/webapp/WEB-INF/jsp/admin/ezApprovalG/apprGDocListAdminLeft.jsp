@@ -298,7 +298,7 @@
 	            var url = "/ezApprovalG/mngUserCont.do";
 	            mngusercont_dialogArgument[0] = "";
 	            mngusercont_dialogArgument[1] = MngUserOnclick_Complete;
-	            var Opener = GetOpenWindow(url, "MngUserCont", 465, 395, "NO");
+	            var Opener = GetOpenWindow(url, "MngUserCont", 490, 395, "NO");
 	        }
 	        function MngUserOnclick_Complete(RtnVal) {
 	            TreeViewRefresh();

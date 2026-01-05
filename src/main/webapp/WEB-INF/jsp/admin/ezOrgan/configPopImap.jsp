@@ -42,15 +42,19 @@
 			<tr>
 				<th><spring:message code='ezOrgan.usePOP3' /></th>
 				<td>
-					<input type="radio" name="usePop3" id="pop3Used" value="1" <c:if test="${popEnabled == '1'}"> checked="checked"</c:if> /><spring:message code="ezOrgan.t161" />
-					<input type="radio" name="usePop3" id="pop3Unused" value="0" <c:if test="${empty popEnabled or popEnabled == '0'}"> checked="checked"</c:if> /><spring:message code="ezOrgan.kyj02" />
+				    <div class="custom_radio">
+                        <input type="radio" name="usePop3" id="pop3Used" value="1" <c:if test="${popEnabled == '1'}"> checked="checked"</c:if> /><label for="pop3Used"><spring:message code="ezOrgan.t161" /></label>
+                        <input type="radio" name="usePop3" id="pop3Unused" value="0" <c:if test="${empty popEnabled or popEnabled == '0'}"> checked="checked"</c:if> /><label for="pop3Unused"><spring:message code="ezOrgan.kyj02" /></label>
+					</div>
 				</td>
 			</tr>
 			<tr>
 				<th><spring:message code='ezOrgan.useIMAP' /></th>
 				<td>
-					<input type="radio" name="useImap" id="imapUsed" value="1" <c:if test="${imapEnabled == '1'}"> checked="checked"</c:if> /><spring:message code="ezOrgan.t161" />
-					<input type="radio" name="useImap" id="imapUnused" value="0" <c:if test="${empty imapEnabled or imapEnabled == '0'}"> checked="checked"</c:if> /><spring:message code="ezOrgan.kyj02" />
+				    <div class="custom_radio">
+                        <input type="radio" name="useImap" id="imapUsed" value="1" <c:if test="${imapEnabled == '1'}"> checked="checked"</c:if> /><label for="imapUsed"><spring:message code="ezOrgan.t161" /></label>
+                        <input type="radio" name="useImap" id="imapUnused" value="0" <c:if test="${empty imapEnabled or imapEnabled == '0'}"> checked="checked"</c:if> /><label for="imapUnused"><spring:message code="ezOrgan.kyj02" /></label>
+					</div>
 				</td>
 			</tr>
 		</table>

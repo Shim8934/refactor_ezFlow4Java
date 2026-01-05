@@ -158,7 +158,7 @@ function showEdit(obj) {
 		
 		var circularEdit = "<tr class='circularCommentEdit' circularUserID='" + circularUserID + "' style='border:1px solid #e2e2e2; padding:10px'>";
 		circularEdit += "<td style='background-color:#ececec;' colspan='2'><textarea style='width:105%;height:50px;resize:none;overflow:auto;vertical-align:middle;margin:5px;border:1px solid #ddd' maxlength='5000'></textarea></td>";
-		circularEdit += "<td style='background-color:#ececec; text-align:center;'><a class='imgbtn' style='margin-left:47px;padding-left:2px;'>&nbsp;<span onclick='editCircularComment(this);' style='padding-right:3px;'>" + strLang3 + "</span>&nbsp;</a><br/><div style='margin-left:35px;'><input type='checkbox' id='commentStatus' style='vertical-align:middle;'>" + strLang4 + "</input></div></td>";
+		circularEdit += "<td style='background-color:#ececec; text-align:center;'><a class='imgbtn' style='margin-left:47px;padding-left:2px;'>&nbsp;<span onclick='editCircularComment(this);' style='padding-right:3px;'>" + strLang3 + "</span>&nbsp;</a><br/><div style='margin-left:35px;'><div class='custom_checkbox'><input type='checkbox' id='commentStatus' style='vertical-align:middle;'/><label for='commentStatus'>" + strLang4 + "</label></div></div></td>";
 		circularEdit += "</tr>";
 		
 		$(obj).closest("tr").after(circularEdit);
@@ -268,6 +268,7 @@ function getCommentShareUser() {
 			shareUserList = "<colgroup><col width='10%' /><col width='90%' /></colgroup>";
 			
 			list = result.shareUserList;
+			var primaryLang = result.userInfo.primary;
 			
 			if(result.shareUserList.length == 0) {
 				shareUserList += "<td style='border-top:0px;border-right:0px;border-left:0px;text-align:center;background-color:white;' colspan='2'>"+ strLang50 + "</td>";
@@ -280,9 +281,13 @@ function getCommentShareUser() {
 					shareUserList += "<td style='border-top:0px;border-bottom:1px solid #e2e2e2;border-right:0px;border-left:0px;text-align:left;background-color:white;'>";
 					shareUserList += "<input type='checkbox' class='chkBox' />";
 					shareUserList += "</td>";
-					shareUserList += "<td style='border-top:0px;border-bottom:1px solid #e2e2e2;border-right:0px;border-left:0px;text-align:left;background-color:white;'>" + vo.memberName + "</td>";
-					
-					shareUserList += "</tr>";
+					shareUserList += "<td style='border-top:0px;border-bottom:1px solid #e2e2e2;border-right:0px;border-left:0px;text-align:left;background-color:white;'>";
+					if (primaryLang == "1") {
+						shareUserList += vo.memberName;
+					} else {
+						shareUserList += vo.memberName2;
+					}
+					shareUserList += "</td></tr>";
 				}
 			});
 			

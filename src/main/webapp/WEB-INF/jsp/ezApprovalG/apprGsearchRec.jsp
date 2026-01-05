@@ -389,7 +389,7 @@
 		  </tr>
 		  <tr>
 		  	<th style="WIDTH:80px"><spring:message code='ezApprovalG.t1116'/></th>
-		  	<td><input type="checkbox" name="chkTransExp" id="chkTransExp" value="1"  style="vertical-align:middle;"></td>
+			  <td><div class='custom_checkbox'><input type="checkbox" name="chkTransExp" id="chkTransExp" value="1"  style="vertical-align:middle;"></div></td>
 		  </tr>
 		  </table>
 		  

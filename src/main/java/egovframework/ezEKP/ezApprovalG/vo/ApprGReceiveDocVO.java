@@ -76,6 +76,10 @@ public class ApprGReceiveDocVO {
 	/** 작성자 부서명 2 */
 	private String writerDeptName2;
 
+    private String WRITERJOBTITLE;
+	
+	private String WRITERJOBTITLE2;
+    
 	public String getWriterDeptName() {
 		return writerDeptName;
 	}
@@ -292,4 +296,11 @@ public class ApprGReceiveDocVO {
 	public void setProcessorName2(String processorName2) {
 		this.processorName2 = processorName2;
 	}
+    public String getWRITERJOBTITLE() {return WRITERJOBTITLE;}
+
+	public void setWRITERJOBTITLE(String WRITERJOBTITLE) {this.WRITERJOBTITLE = WRITERJOBTITLE;}
+
+	public String getWRITERJOBTITLE2() {return WRITERJOBTITLE2;}
+
+	public void setWRITERJOBTITLE2(String WRITERJOBTITLE2) {this.WRITERJOBTITLE2 = WRITERJOBTITLE2;}
 }

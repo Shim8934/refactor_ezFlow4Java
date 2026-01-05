@@ -531,10 +531,14 @@ var SurveyItem = function() {
 				trElmt.onclick    = function(event) {clickRowFunct(event);};
 				trElmt.ondblclick = function(event) {itemDblClickHandler(this);};
 				
+                var divElmt = document.createElement("div");
+                divElmt.className = "custom_checkbox";
+                
 				var inputElmt  = document.createElement("input");
 				inputElmt.setAttribute("type", "checkbox");
 				inputElmt.onclick = function(event) {getCheckedFunct(event);};
-				tdElmt1.appendChild(inputElmt);
+				divElmt.appendChild(inputElmt);
+				tdElmt1.appendChild(divElmt);
 				
 				if (itemList[i]["attachFlag"] == 1) {
 					var imgAttch  = document.createElement("img");
@@ -736,8 +740,8 @@ var SurveyItem = function() {
 	function showViewPopUp() {
 		var optElmt             = document.getElementById("sltView");
 		var viewPopup           = document.getElementById("layer_Viewpopup");
-		viewPopup.style.left    = document.documentElement.clientWidth - 160 + "px";
-		viewPopup.style.top     = "82px";
+		viewPopup.style.left    = document.documentElement.clientWidth - 170 + "px";
+		viewPopup.style.top     = "85px";
 		viewPopup.style.display = "";
 		optElmt.setAttribute("class", "icon16 btn_onarrow_down");
 		optElmt.setAttribute("role", "on");

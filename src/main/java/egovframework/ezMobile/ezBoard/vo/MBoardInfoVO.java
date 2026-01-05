@@ -145,6 +145,8 @@ public class MBoardInfoVO {
 	private String starRatingFlag;
 	
 	private String versionManage;
+	/** 그룹게시판 설정여부 */
+	private String useGroupFlag;
 	
 	@Override
 	public String toString() {
@@ -615,5 +617,12 @@ public class MBoardInfoVO {
 	}
 	public void setVersionManage(String versionManage) {
 		this.versionManage = versionManage;
+	}
+
+	public String getUseGroupFlag() {
+		return useGroupFlag;
+	}
+	public void setUseGroupFlag(String useGroupFlag) {
+		this.useGroupFlag = useGroupFlag;
 	}
 }

@@ -1,5 +1,5 @@
 var fractionsymbol;
-function setDocNumFormat() {
+function setDocNumFormat(pSn) {
     var Arr_Header = new Array()
     var Header, Tail
     var d = new Date();
@@ -16,14 +16,29 @@ function setDocNumFormat() {
         var tempString = pDocNo.split("-");
 
         var tempNumString = "";
-        if (tempString.length - 1 > 0)
-            tempNumString = tempString[tempString.length - 1];
+        
+        if (pSn && pSn.length > 0) {
+             tempNumString = pSn;
+        } else {
+            if (tempString.length - 1 > 0)
+                tempNumString = tempString[tempString.length - 1];
+        }
 
         var i = 0;
         var templen = tempNumString.length;
         for (i = 0; i < 6 - templen; i++)
             tempNumString = "0" + tempNumString;
         pDocNumCode = arr_userinfo[4] + tempNumString;
+        
+        // 전결일 때 docNo와 receiptNumber 필드를 갱신함
+        // useReceiveDocNo 값에 따라 접수 시 채번할 경우 이미 채번된 값을 갱신함
+        if (LastSignSN == "1") {
+            var splits = pDocNo.split("-");
+            splits[splits.length - 1] = tempNumString;
+            pDocNo = splits.join("-");
+            message.PutFieldText("receiptnumber", pDocNo);
+        }
+        
         return false;
     }
     else if (fieldValue == "") {
@@ -149,15 +164,14 @@ function getRecvDocNumber(pDeptID, docNumZeroCnt) {
 
                     return true;
                 } else {
-                    var rtnVal = setDocNumFormat();
+                    var SN = getNodeText(GetChildNodes(result)[0]);
+                    var rtnVal = setDocNumFormat(SN);
 
                     if (!rtnVal) {
                         return true;
                     }
 
                     fractionsymbol = trim(message.GetFieldText(name));
-
-                    var SN = getNodeText(GetChildNodes(result)[0]);
 
                     if (SN == "") {
                         pDocNumCode = "";
@@ -196,13 +210,13 @@ function getRecvDocNumber(pDeptID, docNumZeroCnt) {
                     }
                 }
             } else {
-                var rtnVal = setDocNumFormat();
+                var rtnVal = setDocNumFormat("");
                 fractionsymbol = trim(message.GetFieldText(name));
                 pDocNo = fractionsymbol;
                 return true;
             }
         }else{
-            var rtnVal = setDocNumFormat();
+            var rtnVal = setDocNumFormat("");
 
             if (!rtnVal) {
                 return true;

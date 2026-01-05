@@ -38,6 +38,7 @@
 		    var ReturnFunction;
 		    var reuseFlag = "<c:out value='${reuseFlag}'/>";
 			var resendFormYN = "<c:out value='${resendFormYN}'/>";
+			var draftTypeFlag = null; // Y: 일괄기안양식, N: 일괄기안이 아닌 양식, null: 모두 출력
 		    window.onload = function () {
 				Get_Favoritelist();
 		        DocFileType = DocFileType.toLowerCase();

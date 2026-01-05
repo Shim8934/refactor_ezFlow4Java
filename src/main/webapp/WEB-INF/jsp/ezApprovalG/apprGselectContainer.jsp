@@ -50,6 +50,24 @@
 				}
 		
 		        listHeader();
+				
+				var deptHeader = document.getElementById("lvtdepCont_TH_0");
+				var deptHeader2 = document.getElementById("lvtdepCont_TH_1");
+				
+				if (deptHeader){
+					if (deptHeader.textContent == ("<spring:message code='ezApprovalG.t687'/>").toUpperCase()) {
+						deptHeader.textContent = "<spring:message code='ezApprovalG.t687'/>";
+					} else if (deptHeader.textContent == ("<spring:message code='ezApprovalG.t1548'/>").toUpperCase()) {
+						deptHeader.textContent = "<spring:message code='ezApprovalG.t1548'/>";
+					} else if (deptHeader.textContent == ("<spring:message code='ezApprovalG.t1221'/>").toUpperCase()) {
+						deptHeader.textContent = "<spring:message code='ezApprovalG.t1221'/>"
+					}
+				}
+				
+				if (deptHeader2 && deptHeader2.textContent == ("<spring:message code='ezApprovalG.t1549'/>").toUpperCase()) {
+					deptHeader2.textContent = "<spring:message code='ezApprovalG.t1549'/>";
+				}
+				
 		        Init();
 		    }
 		

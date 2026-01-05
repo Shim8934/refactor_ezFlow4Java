@@ -479,17 +479,88 @@ function CalendarView(pTagetID) {
         			var beforeYear = sDate.getFullYear();
         			
         			sDate.setFullYear(iYear, iMonth, iDay); 
-        			if(typeCal == 0){    		   
-        				if(iYear == beforeYear && iMonth == beforeMonth){
-        					return;   			   
-        				}else CalendarView("Calendar");
-        			}else{
+        			if (typeCal == 0 && iYear == beforeYear && iMonth == beforeMonth) {
+                        return;   			   
+                    } else {
         				CalendarView("Calendar");
         			}
         		}
             });               
  
     }
+    
+    //2018-11-05 김혜정 월보기화면에서 드래그앤드롭을 위해 추가
+    $("td[id^='index_']").droppable({
+        tolerance: "pointer",
+        drop: function(event, ui) {
+            var typeCal = 0;
+            var dragOwnerId = ui.draggable.find('td').attr("owner_id");
+            var dragNum = ui.draggable.find('td').attr("num");
+            var dragDay = ui.draggable.children().attr("id");
+            var dropDay = $(this).attr("day");
+            var completeFG = ui.draggable.find('td').attr("completefg");
+            
+            if (dragDay.substring(4, 14) == dropDay) {
+                return;
+            }
+
+            if (updateDragSchedule(typeCal, dragOwnerId, dragNum, dragDay.substring(4, 14), dropDay, completeFG)) {
+                RefreshView();
+            }
+        }
+    });
+    
+    //2018-11-05 김혜정 주보기화면에서 드래그앤드롭을 위해 추가 - 하루종일
+    $("div[id$='ALL']").droppable({
+        tolerance: "pointer",
+        addClasses: false,
+        drop: function(event, ui) {
+            var typeCal = 1;
+            var dragOwnerId = ui.draggable.find('div').context.getAttribute("owner_id");
+            var dragNum = ui.draggable.find('div').context.getAttribute("num");
+            var dropDay = $(this).attr("id");
+            var dragDay = ui.draggable.find('div').context.id
+            var completeFG = ui.draggable.find('div').context.getAttribute("completefg");
+
+            if (dragDay.substring(4, 14) == dropDay.substring(0, 10)) {
+                return;
+            }
+
+            dragDay = dragDay.substring(4, dragDay.lastIndexOf("_"));
+            dragDay = changeDateFormat(dragDay);
+
+            if (updateDragSchedule(typeCal, dragOwnerId, dragNum, dragDay, dropDay, completeFG)) {
+                RefreshView();
+            }
+        }
+    });
+    
+    //2018-11-06 김혜정 주보기/일보기 화면에서 드래그앤드롭을 위해 추가 - 시간지정
+    $("td[id^='TD_'][id$='_Value']").droppable({ //뒤에가 Value로 끝나는
+        tolerance: "pointer",
+        drop: function(event, ui) {
+            var typeCal = 1;
+            var dragOwnerId = ui.draggable.attr("owner_id");
+            var dragNum = ui.draggable.attr("num");
+            var dropOwnerId  = $(this).attr("owner_id");
+            var dropNum  = $(this).attr("num");
+            var dragDay = ui.draggable.attr("id");
+            var dropDay = $(this).attr("id").substring(3, $(this).attr("id").indexOf("_Value"));
+
+            dragDay = dragDay.substring(4, dragDay.lastIndexOf("_"));
+            
+            if (dragDay == dropDay) {
+                return;
+            }
+
+            dragDay = changeDateFormat(dragDay);
+            dropDay = changeDateFormat(dropDay);
+
+            if (updateDragSchedule(typeCal, dragOwnerId, dragNum, dragDay, dropDay)) {
+                RefreshView();
+            }
+        }
+    });
 }
 
 ///////////// 월보기 Calendar 생성 시작 /////////////
@@ -676,8 +747,8 @@ function MonthData(oThisDate, TDIndex) {
 
     objTd.setAttribute("id", "index_" + TDIndex);
     objTd.setAttribute("day", cell_ID);
-    objTd.onmousedown = function () { MultiSelectStart(this); };
-    objTd.onmouseup = function () { MultiSelectEnd(this); };
+    objTd.onmousedown = function () { MultiSelectStart(this, event); };
+    objTd.onmouseup = function () { MultiSelectEnd(this, event); };
     //objTd.onmouseover = function () { MultiSelectItems(this); };
 
     // 일자 영역
@@ -733,11 +804,11 @@ function MonthData(oThisDate, TDIndex) {
 var DragStartItemID = "";
 var DragEndItemID = "";
 var IsDrag = false;
-function MultiSelectStart(obj) {
+function MultiSelectStart(obj, event) {
     IsDrag = true;
     DragStartItemID = GetAttribute(obj,"id");
 }
-function MultiSelectItems(obj) {
+function MultiSelectItems(obj, event) {
     if (IsDrag) {
         var StartIdex = parseInt(DragStartItemID.replace("index_", ""));
         var Endidex = parseInt(GetAttribute(obj,"id").replace("index_", ""));
@@ -756,7 +827,7 @@ function MultiSelectItems(obj) {
         }
     }
 }
-function MultiSelectEnd(obj) {
+function MultiSelectEnd(obj, event) {
     IsDrag = false;
     DragEndItemID = GetAttribute(obj,"id");
     if (DragStartItemID == DragEndItemID) {
@@ -2222,4 +2293,51 @@ function GetOpenPosition(popUpW, popUpH) {
     var feature = ",left=" + left + ",top=" + top;
 
     return feature
+}
+
+function changeDateFormat(date) {
+	var day  = date.substring(0, 10);
+	var hour = date.substring(11, date.indexOf(":"));
+	var Minu = date.substring(date.indexOf(":") + 1);
+	
+	hour = (hour.length == 1) ?  "0" + hour : hour;
+	day  = day + " " + hour + ":" + Minu + "0:00";
+	
+	return day;
+}
+
+function updateDragSchedule(typeCal, dragOwnerId, dragNum, dragDay, dropDay, completeFG) {
+	var rtv = true;
+	$.ajax({
+		type : "POST",
+		async : false,
+		dataType : "text",
+		url : "/ezResource/scheduleDragSave.do",
+		data : {
+			typeCal: typeCal,
+			dragOwnerId : dragOwnerId,
+            dragNum : dragNum,
+			dragDay: dragDay,
+			dropDay: dropDay,
+			completeFG: completeFG,
+            resApprFlag : ApproveFlag
+		},
+		success: function(text) {
+			if (text == "1") { //권한 없음
+				setTimeout(function() { alert(strLangModSche01); }, 10)
+				rtv = false;
+			}else if (text == "2") { //이전날짜사용하는데 종료일이 현재날짜보다 큰 경우
+				setTimeout(function() { alert(strLangModSche02); }, 10)
+				rtv = false;
+			} else if (text == "3") { // 중복예약인 경우
+                setTimeout(function() { alert(strLang248); }, 10)
+				rtv = false;
+            }
+		},
+		error: function(error) {
+			console.log("error");
+		}
+	});
+	
+	return rtv;
 }

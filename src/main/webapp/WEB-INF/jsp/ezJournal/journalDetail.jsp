@@ -209,37 +209,41 @@
 						<th><spring:message code='ezJournal.t105' /></th>
 						<td>
 							<div id="lstAttachLink" style="OVERFLOW: auto; HEIGHT: 50px; background-color: white; text-align: left">
-								<c:forEach items="${journal.fileList }" var="file">
+								<c:forEach items="${journal.fileList }" var="file" varStatus="status">
 									<div style="margin-top: 3px; height: auto !important;">
-										<c:set var="imagePath" value="/images/file.gif" />
-										<%-- <input type="checkbox" name="fileSelect" value="${file.fileName }"> --%>
-										<!-- 		            			<img src="/images/image.png">  -->
-										<input type="checkbox" filename="${file.fileEncodeName}" filepath="${file.filePath}">
-										<c:if test="${file.fileType == 'jpg' || file.fileType == 'jpeg' || file.fileType == 'bmp' || file.fileType == 'gif' || file.fileType == 'png' || file.fileType == 'tif' || file.fileType == 'tiff'}">
-											<c:set var="imagePath" value="/images/image.png" />
-										</c:if>
-										<c:if test="${file.fileType == 'doc' || file.fileType == 'docx'}">
-											<c:set var="imagePath" value="/images/doc.png" />
-										</c:if>
-										<c:if test="${file.fileType == 'xls' || file.fileType == 'xlsx'}">
-											<c:set var="imagePath" value="/images/xls.png" />
-										</c:if>
-										<c:if test="${file.fileType == 'ppt' || file.fileType == 'pptx' || file.fileType == 'pps' || file.fileType == 'ppsx'}">
-											<c:set var="imagePath" value="/images/ppt.png" />
-										</c:if>
-										<c:if test="${file.fileType == 'txt'}">
-											<c:set var="imagePath" value="/images/txt.png" />
-										</c:if>
-										<c:if test="${file.fileType == 'zip'}">
-											<c:set var="imagePath" value="/images/zip.png" />
-										</c:if>
-										<c:if test="${file.fileType == 'pdf'}">
-											<c:set var="imagePath" value="/images/pdf.png" />
-										</c:if>
-										<c:if test="${file.fileType == 'ecm'}">
-											<c:set var="imagePath" value="/images/ecm.png" />
-										</c:if>
-										<img src="${imagePath}" />&nbsp; <a href="/ezJournal/journalAttachDown.do?filePath=${file.filePath }&fileName=${file.fileEncodeName}&journalId=${journal.journalId}"><c:out value='${file.fileName }'/>&nbsp;(${file.fileTransSize })</a><br>
+										<div class="custom_checkbox">
+										    <c:set var="imagePath" value="/images/etc.svg" />
+                                            <%-- <input type="checkbox" name="fileSelect" value="${file.fileName }"> --%>
+                                            <!-- 		            			<img src="/images/image.png">  -->
+                                                <input id="fileSelect${status.index}" type="checkbox" filename="${file.fileEncodeName}" filepath="${file.filePath}">
+                                            <c:if test="${file.fileType == 'jpg' || file.fileType == 'jpeg' || file.fileType == 'bmp' || file.fileType == 'gif' || file.fileType == 'png' || file.fileType == 'tif' || file.fileType == 'tiff'}">
+                                                <c:set var="imagePath" value="/images/image.svg" />
+                                            </c:if>
+                                            <c:if test="${file.fileType == 'doc' || file.fileType == 'docx'}">
+                                                <c:set var="imagePath" value="/images/doc.svg" />
+                                            </c:if>
+                                            <c:if test="${file.fileType == 'xls' || file.fileType == 'xlsx'}">
+                                                <c:set var="imagePath" value="/images/xls.svg" />
+                                            </c:if>
+                                            <c:if test="${file.fileType == 'ppt' || file.fileType == 'pptx' || file.fileType == 'pps' || file.fileType == 'ppsx'}">
+                                                <c:set var="imagePath" value="/images/ppt.svg" />
+                                            </c:if>
+                                            <c:if test="${file.fileType == 'txt'}">
+                                                <c:set var="imagePath" value="/images/txt.svg" />
+                                            </c:if>
+                                            <c:if test="${file.fileType == 'zip'}">
+                                                <c:set var="imagePath" value="/images/zip.svg" />
+                                            </c:if>
+                                            <c:if test="${file.fileType == 'pdf'}">
+                                                <c:set var="imagePath" value="/images/pdf.svg" />
+                                            </c:if>
+                                            <c:if test="${file.fileType == 'hwp' || file.fileType == 'hwpx'}">
+                                                <c:set var="imagePath" value="/images/hwp.svg" />
+                                            </c:if>
+                                            <c:if test="${file.fileType == 'ecm'}">
+                                                <c:set var="imagePath" value="/images/ecm.svg" />
+                                            </c:if>
+										<label for="fileSelect${status.index}"><img src="${imagePath}" style="width:20px;height:20px;vertical-align:sub"/>&nbsp; <a href="/ezJournal/journalAttachDown.do?filePath=${file.filePath }&fileName=${file.fileEncodeName}&journalId=${journal.journalId}"><c:out value='${file.fileName }'/>&nbsp;(${file.fileTransSize })</a></label></div><br>
 									</div>
 								</c:forEach>
 							</div>
@@ -328,9 +332,9 @@
 		        var conHeight = pheight * 0.8;
 		        var pwidth = window.screen.availWidth;
 		        var pTop = (pheight - conHeight) / 2;
-		        var pLeft = (pwidth - 890) / 2;
+		        var pLeft = (pwidth - 1200) / 2;
 		        var szUrl = "/ezEmail/mailWrite.do?journalId=" + journalId+ "&cmd=journal";
-		        window.open(szUrl, "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no,resizable=1");
+		        window.open(szUrl, "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 1200px, status = no, toolbar=no, menubar=no,location=no,resizable=1");
 		        window.close();
 		    }
 		    

@@ -202,7 +202,7 @@
 	    		$("#contentlist table.mainlist tbody").html("");
 	    		
 	    		result.forEach(function(vo, index) {
-	    			resultHtml += "<tr userid='" + vo.userId + "'><td><input type='checkbox' style='margin: 0px; padding: 0px; width:13px; height: 13px;'/></td>";
+	    			resultHtml += "<tr userid='" + vo.userId + "'><td><div class='custom_checkbox'><input type='checkbox' style='margin: 0px; padding: 0px; width:13px; height: 13px;'/></div></td>";
 	    			resultHtml += "<td>" + vo.userName + "</td>";
 	    			resultHtml += "<td>" + vo.userTitle + "</td>";
 	    			resultHtml += "<td>" + vo.deptName + "</td>";
@@ -383,9 +383,11 @@
 					<td style="width: 3%;"><spring:message code='ezAttitude.t13' /></td>
 					<td style="width: 20%;">
 						<span style="width: 90%;">
-							<input type="radio" name="searchGubun" value="" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle;" checked="checked"/>&nbsp;<spring:message code='ezAttitude.t124' />
-							<input type="radio" name="searchGubun" value="0" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle;"/>&nbsp;<spring:message code='ezAttitude.t118' />
-							<input type="radio" name="searchGubun" value="1" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle;"/>&nbsp;<spring:message code='ezAttitude.t119' />
+							<div class="custom_radio">
+								<input id="searchGubun1" type="radio" name="searchGubun" value="" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle;" checked="checked"/><label for="searchGubun1"><spring:message code='ezAttitude.t124' /></label>
+								<input id="searchGubun2" type="radio" name="searchGubun" value="0" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle;"/><label for="searchGubun2"><spring:message code='ezAttitude.t118' /></label>
+								<input id="searchGubun3" type="radio" name="searchGubun" value="1" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle;"/><label for="searchGubun3"><spring:message code='ezAttitude.t119' /></label>
+							</div>
 						</span>
 					</td>
 				</tr>
@@ -410,7 +412,7 @@
 			<table class="mainlist" style="width:100%;">
 				<thead>
 					<tr>
-						<th style="width:20px;"><input id="HeaderAllCheckBox" type="checkbox" style="margin: 0px; padding: 0px; width:13px; height: 13px;"/></th>
+						<th style="width:20px;"><div class="custom_checkbox"><input id="HeaderAllCheckBox" type="checkbox" style="margin: 0px; padding: 0px; width:13px; height: 13px;"/></div></th>
 						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="displayname"><spring:message code='ezAttitude.t10' /></th>
 						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="title"><spring:message code='ezAttitude.t11' /></th>
 						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="description"><spring:message code='ezAttitude.t9'/></th>

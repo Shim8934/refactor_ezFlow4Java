@@ -431,7 +431,7 @@
 							<tr>
 								<td>
 									<h2 class="receiver_tltype01" >
-										<span style="min-width: 45px;" id="PermissionStr"><spring:message code='ezJournal.t41'/> </span>
+										<span id="PermissionStr" style="white-space: nowrap;"><spring:message code='ezJournal.t41'/> </span>
 									</h2>
 									<div class="receiver_borderbox">
 										<div id="authorDeptList" style="width: 250px; Height: 481px; overflow-x: auto; overflow-y: auto;">

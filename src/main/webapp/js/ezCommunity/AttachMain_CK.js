@@ -381,11 +381,14 @@ function AppendFileAttachInfo(ret)
 		}
 		else
 			objTh.style.width = "15px";
+        var div = document.createElement("div");
+        div.className = "custom_checkbox"
 		var input = document.createElement("input");
 		input.type = "checkbox";
 		input.id = "checkboxall";
 		input.onclick = function () { checkall(); };
-		objTh.appendChild(input);
+		div.appendChild(input);
+		objTh.appendChild(div);
 		objTr.appendChild(objTh);
 
 		var objTh2 = document.createElement("TH");
@@ -443,13 +446,16 @@ function AppendFileAttachInfo(ret)
 
 				var objTd = document.createElement("TD");
 				objTd.style.textAlign = "center";
-
+                
+                var div = document.createElement("div");
+                div.className = "custom_checkbox";
 				var input = document.createElement("input");
 				input.type = "checkbox";
 				input.name = "fileSelect";
 				input.setAttribute("value", MakeXMLString(ServerFile));
 
-				objTd.appendChild(input);
+				div.appendChild(input);
+				objTd.appendChild(div);
 				objTr.appendChild(objTd);
 
 				var objTd2 = document.createElement("TD");
@@ -703,10 +709,10 @@ function checkall() {
 
 	for (var i = 1; i < filecnt; i++) {
 		if (document.getElementById("checkboxall").checked == true) {
-			document.getElementById("filelist").childNodes[i].childNodes[0].childNodes[0].checked = true;
+			document.getElementById("filelist").childNodes[i].querySelector("input[type=checkbox]").checked = true;
 		}
 		else {
-			document.getElementById("filelist").childNodes[i].childNodes[0].childNodes[0].checked = false;
+			document.getElementById("filelist").childNodes[i].querySelector("input[type=checkbox]").checked = false;
 		}
 	}
 }

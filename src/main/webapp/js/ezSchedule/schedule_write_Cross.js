@@ -168,17 +168,14 @@ function save_schedule(pageFrom)
 	if (tmpReFlag == "0" && $.trim(repetition) != "") {
 		var sdate, edate;
 		
-		if (g_sdate == null)
-		{
+		if (g_sdate == null) {
 		    sdate = new Date(startDateStringOrgin.substring(0, 4), parseInt(startDateStringOrgin.substring(5, 7)) -1, startDateStringOrgin.substring(8, 10), startDateStringOrgin.substring(11, 13), startDateStringOrgin.substring(14, 16), startDateStringOrgin.substring(17, 19));
 		    edate = new Date(endDateStringOrgin.substring(0, 4), parseInt(endDateStringOrgin.substring(5, 7)) - 1, endDateStringOrgin.substring(8, 10), endDateStringOrgin.substring(11, 13), endDateStringOrgin.substring(14, 16), endDateStringOrgin.substring(17, 19));
 		    if (isNaN(sdate)) {
 		        sdate = new Date(startDateStringOrgin);
 		        edate = new Date(endDateStringOrgin);
 		    }
-        }
-		else
-		{
+        } else {
 			sdate = new Date(g_sdate.trim());
 			edate = new Date(g_edate.trim());
 
@@ -450,6 +447,10 @@ function save_schedule(pageFrom)
 			}
 		}
 	}
+	
+	createNodeAndInsertText(xmlDom, objNode, "REPEATCOUNT", repeatCount);
+	createNodeAndInsertText(xmlDom, objNode, "BEFORESCHEDATE", beforeScheDate);
+	createNodeAndInsertText(xmlDom, objNode, "MODTYPE", modType);
 	
 	xmlHTTP.open("POST", "/ezSchedule/scheduleSave.do?pageFrom=" + pageFrom, false);
 	xmlHTTP.send(xmlDom);
@@ -825,7 +826,7 @@ function allday_change()
         document.getElementById("Stimepicker").style.display = "";
         document.getElementById("Etimepicker").style.display = "";
         timeSelect = false;
-        if ((!timeSelect && datetype == "1") || datetype == "" || datetype == "2") { //하루종일 일정일 때 시간
+        if ((!timeSelect && datetype == "1") || datetype == "" || datetype == "2" || (datetype == "3" && modType == "1")) { //하루종일 일정일 때 시간
         	//2018-08-28 김보미 - 현재시간으로 설정
         	if($("#Stimepicker").val() == "00:00" && $("#Etimepicker").val() == "23:59") {
 	        	var now = new Date(nowDate);
@@ -1167,109 +1168,54 @@ function show_repetition_info()
 
 	repeatinfo += " " + strLang38;
 	
-	if (info[1] == "1") {					// 하루종일 일정
-		repeatinfo += strLang39;
+	var sdate, edate;
+	if (g_sdate == null) {
+		var sDate = $("#Sdatepicker").datepicker({dateFormat: 'yy-mm-dd'}).val();
+		var sTime = info[1] == "1" ? "00:00" : $('#Stimepicker').val();
+		
+		var eDate = $("#Edatepicker").datepicker({dateFormat: 'yy-mm-dd'}).val();
+		var eTime = info[1] == "1" ? "23:59" : $('#Etimepicker').val();
+
+		sdate = sDate + " " + sTime
+		edate = eDate + " " + eTime;
+	} else {
+		sdate = new Date(g_sdate);
+		edate = new Date(g_edate);
+		sdate = sdate.getFullYear() + "-" + pad(parseInt(sdate.getMonth()) + 1) + "-" + pad(sdate.getDate()) + " " + pad(sdate.getHours()) + ":" + pad(sdate.getMinutes());
+		edate = edate.getFullYear() + "-" + pad(parseInt(edate.getMonth()) + 1) + "-" + pad(edate.getDate()) + " " + pad(edate.getHours()) + ":" + pad(edate.getMinutes());
+	}
+	
+	if (info[1] == "1") { 	// 하루종일 일정
 		document.getElementById("alldaycheck").checked = true;
 		// 반복일정 상단표시
 		document.getElementById("topcheck").checked = false;
-        document.getElementById("topcheck").disabled = true;
-	}
-	else
-	{
+		document.getElementById("topcheck").disabled = true;
+		repeatinfo += strLang39;
+	} else {
         document.getElementById("topcheck").disabled = false;
-
-		var sdate, edate;
-		if (g_sdate == null)
-		{	
-		    var sDate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
-		    var sYear = sDate.split("-")[0];
-		    var sMon = sDate.split("-")[1];
-		    var sDay = sDate.split("-")[2];
-		    var sTime = $('#Stimepicker').val();
-		    var sHour = sTime.split(":")[0];
-		    var sMin = sTime.split(":")[1];
-
-
-		    var eDate = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
-		    var eYear = eDate.split("-")[0];
-		    var eMon = eDate.split("-")[1];
-		    var eDay = eDate.split("-")[2];
-		    var eTime = $('#Etimepicker').val();
-		    var eHour = eTime.split(":")[0];
-		    var eMin = eTime.split(":")[1];
-
-		    sdate = sYear + "-" + sMon + "-" + sDay + " " + sHour + ":" + sMin;
-		    edate = eYear + "-" + eMon + "-" + eDay + " " + eHour + ":" + eMin;
-		}
-		else
-		{
-			sdate = new Date(g_sdate);
-			edate = new Date(g_edate);
-			sdate = sdate.getFullYear() + "-" + (parseInt(sdate.getMonth()) + 1) + "-" + sdate.getDate() + " " + sdate.getHours() + ":" + sdate.getMinutes();
-		    edate = edate.getFullYear() + "-" + (parseInt(edate.getMonth()) + 1) + "-" + edate.getDate() + " " + edate.getHours() + ":" + edate.getMinutes();
-		}
-        
-        var reStartHour = sdate.split(" ")[1].split(":")[0];
-		var reEndHour = edate.split(" ")[1].split(":")[0];
-		
-		var reStartMinute = sdate.split(" ")[1].split(":")[1];
-		reStartMinute = reStartMinute.length==1?reStartMinute+"0":reStartMinute;
-		var reEndMinute = edate.split(" ")[1].split(":")[1];
-		reEndMinute = reEndMinute.length==1?reEndMinute+"0":reEndMinute;
-        
-        /*if( Number(reStartHour) < 12)   
-        { 
-			repeatinfo += "" + strLang1 + " "; 			
-		}
-        else    
-        { 
-			repeatinfo += "" + strLang2 + " "; 
-			reStartHour = Number(reStartHour)-12; 
-		}        
-                
-        repeatinfo += reStartHour + ":" + reStartMinute + "" + " ~ " + "";*/
 		var sTime = $('#Stimepicker').val();
 		var eTime = $('#Etimepicker').val();
 		
 		repeatinfo += sTime + " ~ " +eTime;
-        
-       /* if(Number(reEndHour) < 12)   
-        { 
-			repeatinfo += "" + strLang1 + " "; 
-		}
-        else
-        {
-			repeatinfo += "" + strLang2 + " ";
-			reEndHour = Number(reEndHour)-12;
-		}
-        
-        repeatinfo += reEndHour + ":" + reEndMinute;*/
 	}
 	
+	var sDate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
 	if(info[0] == -1){
-		var sDate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
-	    var sYear = sDate.split("-")[0];
-	    var sMon = sDate.split("-")[1];
-	    var sDay = sDate.split("-")[2];
 	    repeatinfo += " " + strLang79 + " : " + sDate + " ~ " + strLang46;
-	}else if(info[0] == 0){
-		var sDate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
-	    var sYear = sDate.split("-")[0];
-	    var sMon = sDate.split("-")[1];
-	    var sDay = sDate.split("-")[2];
+	} else if(info[0] == 0) {
 	    var eDate = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
-	    var eYear = eDate.split("-")[0];
-	    var eMon = eDate.split("-")[1];
-	    var eDay = eDate.split("-")[2];
 		repeatinfo += " " + strLang79 + " : " + sDate + " ~ " + eDate;
 	}else{
-		var sDate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
-	    var sYear = sDate.split("-")[0];
-	    var sMon = sDate.split("-")[1];
-	    var sDay = sDate.split("-")[2];
 		repeatinfo += " " + strLang79 + " : " + sDate + " ~ " + info[0] + strLang47;
 	}
+	
+	g_sdate = sdate;
+	g_edate = edate;
 	document.getElementById("repeatinfo").innerHTML = repeatinfo;
+}
+
+function pad(num) { 
+    return ('0' + num).slice(-2); 
 }
 
 function ReplaceText( orgStr, findStr, replaceStr )
@@ -2091,8 +2037,12 @@ function setAttachFileInfo(strXML) {
                 var input = document.createElement("input");
                 input.type = "checkbox";
                 input.name = "fileSelect";
+                
+                var oDiv = document.createElement("div");
+		        oDiv.className = "custom_checkbox";
 
-                objTd.appendChild(input);
+		        oDiv.appendChild(input);
+                objTd.appendChild(oDiv);
                 objTr.appendChild(objTd);
 
                 var objTd2 = document.createElement("TD");

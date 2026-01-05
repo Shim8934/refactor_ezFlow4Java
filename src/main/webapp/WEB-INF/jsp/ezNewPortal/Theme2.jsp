@@ -30,7 +30,9 @@
     <div class="sec1Layout_left">
     	<article class="personal">
             <div class="info">
-            	<p class="pic"><c:if test='${userPhoto == ""}'><img src="/images/default_pic.gif" style="border-radius:20px;" width="100%" height="100%" /></c:if><c:if test='${userPhoto != ""}'><img width="100%" height="100%" style="border-radius:20px;"id="myImg" src="/ezCommon/downloadAttach.do?filePath=${userPhoto }"></c:if></p>
+				<c:set var="picNone" value="/images/default_pic.gif" />
+				<c:set var="userPic" value="${not empty userPhoto? '/ezCommon/downloadAttach.do?filePath=' += userPhoto : picNone}" />
+            	<p class="pic"><img id="myImg" src="${userPic}" onerror="this.src='${picNone}'" width="100%" height="100%" style="border-radius:20px;" /></p>
                 <dl class="info_txt">
                 	<dt>
                 		<%-- 2023-06-15 황인경 - 디자인 개선 > 테마2 > 상단 사용자 정보 > 부서 추가 --%>
@@ -292,7 +294,8 @@
         </article>
         <article class="exellentEmployee">
 			<dl class="portlet_title">
-	            <dt class="portletText">
+				<spring:message code='ezNewPortal.t127' var="t127"/> <spring:message code='ezNewPortal.t128' var="t128"/>
+	            <dt class="portletText" title="<c:if test='${userLang2 eq 6}'>${t127} ${t128}</c:if>">
 	                <span></span><spring:message code='ezNewPortal.t127'/> <spring:message code='ezNewPortal.t128'/>
 	            </dt>
 	        </dl>
@@ -398,6 +401,7 @@
 	var useWebHWP = "<c:out value='${useWebHWP}'/>";
 	var companyID = "<c:out value='${companyID}'/>";
 	var userID = "<c:out value='${userId}'/>";
+	var draftAllTypeB = "<c:out value='${draftAllTypeB}'/>";
 	var apprPortletIDs = [];
 	var apprPortletTypes = [];
 	var strBoardPassword =  "<spring:message code='ezBoard.private.pgb05' />";
@@ -676,39 +680,25 @@
 			success : function(result) {
 				var bestEmployee = result.bestEmployee;
 				var excellentContent = document.getElementById('excellentcontent');
-				
-				if (bestEmployee === null || bestEmployee ==  undefined) {
-					var emPic = document.getElementById('emPic');
-					
-					var img = document.createElement('img');
- 					img.style.width = '100%';
-					img.style.height = '100%';
- 					img.style.maxWidth = '70px';
-					img.style.maxHeight = '60px';
-					img.src = '\/images/ezNewPortal/bestEmployee_pic_none.png';
 
-					emPic.appendChild(img);
-					
-					document.getElementById("exellentDeptName").innerText = "";
-					document.getElementById("exellentEmpName").innerText = '<spring:message code="ezNewPortal.t018" />';
-					
+				var emPic = document.getElementById('emPic');
+
+				var img = document.createElement('img');
+				img.style.width = '100%';
+				img.style.height = '100%';
+				img.style.maxWidth = '70px';
+				img.style.maxHeight = '60px';
+				img.src = bestEmployee? bestEmployee.userImg : '\/images/ezNewPortal/bestEmployee_pic_none.png';
+				img.setAttribute('onerror', "this.src='/images/default_pic.gif'"); // ezNewPortalService.getMonthlyBestEmployee의 default값.
+
+				emPic.appendChild(img);
+
+				document.getElementById("exellentDeptName").innerText = bestEmployee? bestEmployee.userDeptName : "";
+				document.getElementById("exellentEmpName").innerText = bestEmployee? (bestEmployee.userName + " " + bestEmployee.title) : '<spring:message code="ezNewPortal.t018" />';
+
+				if (!bestEmployee) {
 					var nodata = document.getElementById("exellentEmpName");
 					nodata.style.color = "#c0c0c0";
-					
-				} else {
-					var emPic = document.getElementById('emPic');
-					
-					var img = document.createElement('img');
- 					img.style.width = '100%';
-					img.style.height = '100%';
-					img.style.maxWidth = '70px';
-					img.style.maxHeight = '60px';
-					img.src = bestEmployee.userImg;
-					
-					emPic.appendChild(img);
-					
-					document.getElementById("exellentDeptName").innerText = bestEmployee.userDeptName;
-					document.getElementById("exellentEmpName").innerText = (bestEmployee.userName + " " + bestEmployee.title);
 				}
 			}
 		});

@@ -12,6 +12,8 @@ public class BoardMyFavoriteVO {
 	private String boardName3;
 	/**게시판명(중국어)	 */
 	private String boardName4;
+	/**게시판명(인니어)	 */
+	private String boardName6;
 	/**탭번호	 */
 	private String tabUsed;
 	/** 구분	 */
@@ -28,6 +30,8 @@ public class BoardMyFavoriteVO {
 	private String treeName3;
 	/**트리명(중국어) */
 	private String treeName4;
+	/**트리명(인니어) */
+	private String treeName6;
 	/**트리 레벨	 */
 	private String treeLevel;
 	/**  트리 단계	*/
@@ -99,6 +103,12 @@ public class BoardMyFavoriteVO {
 	public void setBoardName4(String boardName4) {
 		this.boardName4 = boardName4;
 	}
+	public String getBoardName6() {
+		return boardName6;
+	}
+	public void setBoardName6(String boardName6) {
+		this.boardName6 = boardName6;
+	}
 	public String getTabUsed() {
 		return tabUsed;
 	}
@@ -143,6 +153,12 @@ public class BoardMyFavoriteVO {
 	}
 	public String getTreeName4() {
 		return treeName4;
+	}
+	public String getTreeName6() {
+		return treeName6;
+	}
+	public void setTreeName6(String treeName6) {
+		this.treeName6 = treeName6;
 	}
 	public void setTreeName4(String treeName4) {
 		this.treeName4 = treeName4;

@@ -781,8 +781,10 @@
 	        <tr>
 	            <th><spring:message code ='ezApprovalG.t442' /></th>
 	            <td>
-	                <input type="text" id="FormName" name="FormName" style="width: 200px;">
-	                <a class="imgbtn imgbck"><span onclick="return btn_FormSelect_onclick()"><spring:message code ='ezApproval.t113' /></span></a>
+					<div style="display:flex; align-items: center; gap:3px;">
+	                	<input type="text" id="FormName" name="FormName" style="width: 200px;">
+	                	<a class="imgbtn imgbck"><span onclick="return btn_FormSelect_onclick()"><spring:message code ='ezApproval.t113' /></span></a>
+					</div>
 	            </td>
 	        </tr>
 	        <tr id="DOCNUM" class = 'approvalG'>

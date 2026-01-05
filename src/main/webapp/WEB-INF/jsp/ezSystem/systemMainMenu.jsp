@@ -28,6 +28,17 @@
 				}
 				
 				parameterTableSetting();
+
+				const BigSizeMailAttachDelDayTag = document.getElementById("BigSizeMailAttachDelDay");
+				const oldValue = BigSizeMailAttachDelDayTag.value;
+				BigSizeMailAttachDelDayTag.addEventListener('change', e => {
+					const tagValue = BigSizeMailAttachDelDayTag.value;
+					if (tagValue <= 0) {
+						alert("<spring:message code='ezSystem.BigSizeMailAttachDelDay.minimum'/>");
+						BigSizeMailAttachDelDayTag.value = oldValue;
+					}
+				});
+				
 			}
 			
 			function parameterTableSetting() {

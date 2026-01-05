@@ -164,15 +164,19 @@
 	        <tr>
 	            <th style="width:200px; text-align:center"><spring:message code='ezSchedule.t999' /></th>
 	            <td>
+					<div style="display:flex; align-items: center; gap:3px;">
 	                <input id="txtuser" type="text" style="width:84%" onfocus="this.blur();" readonly="readonly" />
-	                <a class="imgbtn imgbck"><span onclick="select_person()"><spring:message code='ezSchedule.t1000' /></span></a>                
+	                <a class="imgbtn imgbck"><span onclick="select_person()"><spring:message code='ezSchedule.t1000' /></span></a>
+					</div>
 	            </td>
 	        </tr>
 	        <tr>
 	            <th style="width:200px; text-align:center"><spring:message code='ezSchedule.t1004' /></th>
 	            <td>
+					<div style="display:flex; align-items: center; gap:3px;">
 	                <input id="txtdept" type="text" style="width:84%" onfocus="this.blur();" readonly="readonly" />
-	                <a class="imgbtn imgbck"><span onclick="select_sharedept()"><spring:message code='ezSchedule.t1000' /></span></a>                
+	                <a class="imgbtn imgbck"><span onclick="select_sharedept()"><spring:message code='ezSchedule.t1000' /></span></a>
+					</div>
 	            </td>
 	        </tr>
 	    </table>
