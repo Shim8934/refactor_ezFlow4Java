@@ -234,8 +234,8 @@
 	            </li>
 	        </ul>
 	    </div>
-	    <table id="mealCal" style="width:100%; height:80%; margin-top:50px; table-layout: fixed;">
-			<tr style="height:5%">
+	    <table id="mealCal" style="width:100%; height:80%; margin-top:50px;">
+			<tr style="height:6%">
 				<th><spring:message code='ezMealPlan.jsb008' /></th>
 				<th id="day1" class="date"></th>
 				<th id="day2" class="date"></th>
@@ -243,7 +243,7 @@
 				<th id="day4" class="date"></th>
 				<th id="day5" class="date"></th>
 			</tr>
-			<tr style="height:30%">
+			<tr style="height:34%">
 				<th>
 					<spring:message code='ezMealPlan.jsb002' />
 				</th>
@@ -253,7 +253,7 @@
 				<td></td>
 				<td></td>
 			</tr>
-			<tr style="height:30%">
+			<tr style="height:34%">
 				<th>
 					<spring:message code='ezMealPlan.jsb003' />
 				</th>
@@ -263,7 +263,7 @@
 				<td></td>
 				<td></td>
 			</tr>
-			<tr style="height:10%">
+			<tr style="height:12%">
 				<th>
 					<spring:message code='ezMealPlan.jsb004' />
 				</th>
@@ -273,7 +273,7 @@
 				<td></td>
 				<td></td>
 			</tr>
-			<tr style="height:5%">
+			<tr style="height:8%">
 				<th>
 					<spring:message code='ezMealPlan.jsb005' />
 				</th>
@@ -283,7 +283,7 @@
 				<td></td>
 				<td></td>
 			</tr>
-			<tr style="height:5%">
+			<tr style="height:6%">
 				<th>
 					<spring:message code='ezMealPlan.jsb006' />
 				</th>
