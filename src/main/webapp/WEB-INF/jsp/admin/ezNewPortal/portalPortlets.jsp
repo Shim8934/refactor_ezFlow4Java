@@ -564,179 +564,181 @@
 						menuId = result[i].menuId;
 						portletNameListCnt = portletNameList.length;
 						portletCode =  result[i].portletCode == null ? "" : result[i].portletCode;
-
-						// 2020-12-08 박기범 - data3에 portletCode 추가
-						listHTML += "<li class='portlet col' id='portlet" + portletId + "' data1='" + defaultOrder
-								+ "' data2='" + menuId + "' data3='" + portletCode + "' data-general=" + result[i].general
-								+ " data-url='" + ReplaceText(ReplaceText(ConvertCharToEntityReference(result[i].portletUrl), '\"', "&#39;"), "\'", "&#34;");
 						
-						if (lang != 1 && lang != 2 && portletId == 12) {
-							listHTML +=  "' style='display:none'>";
-						} else {
-							listHTML +=  "'>";
-						}
-						
-						if (usePrimaryLangOnly == "YES") {
-							listHTML += "<div class='portlet-header'><div class='portlet_header_name'>" + ConvertCharToEntityReference(portletNameList[0].portletName) + "</div>";
-						} else {
-							listHTML += "<div class='portlet-header'><div class='portlet_header_name'>" + portletName + "</div>";
-						}
-						
-						if (!result[i].general) {
-							listHTML += "<a class='deletePortletBtn'>";
-							listHTML += "<span><spring:message code='ezNewPortal.t059' /></span></a>";
-						}
-						
-						listHTML += "<a class='updatePortletBtn'>";
-						listHTML += "<span><spring:message code='ezNewPortal.t002' /></span></a>";
-						listHTML += "</div>";
-						listHTML += "<div class='portlet-content'>";
-						listHTML += "<table class='portletInfo'><tr><th class='portletInfoTH'><spring:message code='ezNewPortal.t096' /> : </th>";
-						if (portletId == 34) { //슬라이드 이미지 포틀릿의 경우
-							listHTML += "<td class='portletInfoTD'><label class='switch'><input type='checkbox'><span class='slider round'></span></label>";
-							listHTML += "<div class='slideImageSetting'><a><img src='/images/admin/admin_portlet_set.png'></a></div>";
-							listHTML += "<div class='portletAuthSetting'><a class='imgbtn'><span><spring:message code='ezNewPortal.t074'/></span></a></div>";
-							listHTML += "</td>";
-						} else {
-							listHTML += "<td class='portletInfoTD'><label class='switch'><input type='checkbox'><span class='slider round'></span></label>";
-							listHTML += "<div class='portletAuthSetting'><a class='imgbtn'><span><spring:message code='ezNewPortal.t074'/></span></a></div>";
-							listHTML += "</td>";
-						}
-						listHTML += "</tr>";
-						
-						for (var j = 0; j < portletNameListCnt; j++) {
-							var language = "";
-							var portletNameTrId = "";
+						if (portletCode != "weather") {
+							// 2020-12-08 박기범 - data3에 portletCode 추가
+							listHTML += "<li class='portlet col' id='portlet" + portletId + "' data1='" + defaultOrder
+									+ "' data2='" + menuId + "' data3='" + portletCode + "' data-general=" + result[i].general
+									+ " data-url='" + ReplaceText(ReplaceText(ConvertCharToEntityReference(result[i].portletUrl), '\"', "&#39;"), "\'", "&#34;");
 							
-							//언어
-							if (portletNameList[j].portletLang == 1) {
-								language = "<spring:message code='ezNewPortal.t078' />";
-								portletNameTr = "ko";
-							} else if (portletNameList[j].portletLang == 2) {
-								language = "<spring:message code='ezNewPortal.t079' />";
-								portletNameTr = "en";
-							} else if (portletNameList[j].portletLang == 3) {
-								language = "<spring:message code='ezNewPortal.t080' />";
-								portletNameTr = "ja";
-							} else if (portletNameList[j].portletLang == 4) {
-								language = "<spring:message code='ezPortal.t4094' />";
-								portletNameTr = "zh";
-							} else if (portletNameList[j].portletLang == 5) {
-								language = "<spring:message code='ezPersonal.s86' />";
-								portletNameTr = "vi";
-							} else if (portletNameList[j].portletLang == 6) {
-								language = "<spring:message code='ezPersonal.s87' />";
-								portletNameTr = "id";
+							if (lang != 1 && lang != 2 && portletId == 12) {
+								listHTML +=  "' style='display:none'>";
+							} else {
+								listHTML +=  "'>";
 							}
 							
-							// 2023-12-01 조소정 - 일본어, 중국어 사용 여부에 따라 포틀릿명 표출/미표출 구현
-							if ((useJapanese == "NO" && portletNameTr == "ja") || (useChinese == "NO" && portletNameTr == "zh")) {
-								listHTML += "<tr style='display:none;'><th class='portletInfoTH'><spring:message code='ezNewPortal.t097' />(" + language + ") :</th><td class='portletInfoTD'><input class='portletName' data1='" + portletNameList[j].portletLang + "' type='text' value='" + ConvertCharToEntityReference(portletNameList[j].portletName) + "' maxlength='50'></td></tr>"
+							if (usePrimaryLangOnly == "YES") {
+								listHTML += "<div class='portlet-header'><div class='portlet_header_name'>" + ConvertCharToEntityReference(portletNameList[0].portletName) + "</div>";
 							} else {
-								listHTML += "<tr><th class='portletInfoTH'><spring:message code='ezNewPortal.t097' />(" + language + ") :</th><td class='portletInfoTD'><input class='portletName' data1='" + portletNameList[j].portletLang + "' type='text' value='" + ConvertCharToEntityReference(portletNameList[j].portletName) + "' maxlength='50'></td></tr>"
+								listHTML += "<div class='portlet-header'><div class='portlet_header_name'>" + portletName + "</div>";
 							}
-						}
-						
-						if (!result[i].general) {						
-							listHTML += "<tr><th class='portletInfoTH'><spring:message code='ezNewPortal.t098' /> : </th><td class='portletInfoTD'>";
 							
-							var menuName = result[i].menuName;
+							if (!result[i].general) {
+								listHTML += "<a class='deletePortletBtn'>";
+								listHTML += "<span><spring:message code='ezNewPortal.t059' /></span></a>";
+							}
 							
-							if (menuName == null || menuName == "null") {
-								menuName = "<spring:message code='ezNewPortal.t089' />";
+							listHTML += "<a class='updatePortletBtn'>";
+							listHTML += "<span><spring:message code='ezNewPortal.t002' /></span></a>";
+							listHTML += "</div>";
+							listHTML += "<div class='portlet-content'>";
+							listHTML += "<table class='portletInfo'><tr><th class='portletInfoTH'><spring:message code='ezNewPortal.t096' /> : </th>";
+							if (portletId == 34) { //슬라이드 이미지 포틀릿의 경우
+								listHTML += "<td class='portletInfoTD'><label class='switch'><input type='checkbox'><span class='slider round'></span></label>";
+								listHTML += "<div class='slideImageSetting'><a><img src='/images/admin/admin_portlet_set.png'></a></div>";
+								listHTML += "<div class='portletAuthSetting'><a class='imgbtn'><span><spring:message code='ezNewPortal.t074'/></span></a></div>";
+								listHTML += "</td>";
 							} else {
-								menuName = ConvertCharToEntityReference(menuName);
+								listHTML += "<td class='portletInfoTD'><label class='switch'><input type='checkbox'><span class='slider round'></span></label>";
+								listHTML += "<div class='portletAuthSetting'><a class='imgbtn'><span><spring:message code='ezNewPortal.t074'/></span></a></div>";
+								listHTML += "</td>";
+							}
+							listHTML += "</tr>";
+							
+							for (var j = 0; j < portletNameListCnt; j++) {
+								var language = "";
+								var portletNameTrId = "";
+								
+								//언어
+								if (portletNameList[j].portletLang == 1) {
+									language = "<spring:message code='ezNewPortal.t078' />";
+									portletNameTr = "ko";
+								} else if (portletNameList[j].portletLang == 2) {
+									language = "<spring:message code='ezNewPortal.t079' />";
+									portletNameTr = "en";
+								} else if (portletNameList[j].portletLang == 3) {
+									language = "<spring:message code='ezNewPortal.t080' />";
+									portletNameTr = "ja";
+								} else if (portletNameList[j].portletLang == 4) {
+									language = "<spring:message code='ezPortal.t4094' />";
+									portletNameTr = "zh";
+								} else if (portletNameList[j].portletLang == 5) {
+									language = "<spring:message code='ezPersonal.s86' />";
+									portletNameTr = "vi";
+								} else if (portletNameList[j].portletLang == 6) {
+									language = "<spring:message code='ezPersonal.s87' />";
+									portletNameTr = "id";
+								}
+								
+								// 2023-12-01 조소정 - 일본어, 중국어 사용 여부에 따라 포틀릿명 표출/미표출 구현
+								if ((useJapanese == "NO" && portletNameTr == "ja") || (useChinese == "NO" && portletNameTr == "zh")) {
+									listHTML += "<tr style='display:none;'><th class='portletInfoTH'><spring:message code='ezNewPortal.t097' />(" + language + ") :</th><td class='portletInfoTD'><input class='portletName' data1='" + portletNameList[j].portletLang + "' type='text' value='" + ConvertCharToEntityReference(portletNameList[j].portletName) + "' maxlength='50'></td></tr>"
+								} else {
+									listHTML += "<tr><th class='portletInfoTH'><spring:message code='ezNewPortal.t097' />(" + language + ") :</th><td class='portletInfoTD'><input class='portletName' data1='" + portletNameList[j].portletLang + "' type='text' value='" + ConvertCharToEntityReference(portletNameList[j].portletName) + "' maxlength='50'></td></tr>"
+								}
+							}
+							
+							if (!result[i].general) {						
+								listHTML += "<tr><th class='portletInfoTH'><spring:message code='ezNewPortal.t098' /> : </th><td class='portletInfoTD'>";
+								
+								var menuName = result[i].menuName;
+								
+								if (menuName == null || menuName == "null") {
+									menuName = "<spring:message code='ezNewPortal.t089' />";
+								} else {
+									menuName = ConvertCharToEntityReference(menuName);
+								}
+		
+								listHTML += "<input id='portletMenu" + portletId + "' type='text' value='" + menuName + "'readonly>";
+								listHTML += "<div class='btnpositionJsp menuSetting'>";
+								listHTML += "<a class='menuSettingtBtn'>";
+								listHTML += "<img src='/images/admin/admin_portlet_set.png' /></a></div>";
+								listHTML += "</td></tr>";
+								
+								if (menuId != 4 && menuId != connectMenuId && menuId != mobileBrdId) {
+									listHTML += "<tr class='connectionTR'><th class='portletInfoTH'><spring:message code='ezNewPortal.t101' /></th><td class='portletInfoTD'><input type='text' class='connectionUrl' value='"+ ReplaceText(ReplaceText(ConvertCharToEntityReference(portletURL), '\"', "&#39;"), "\'", "&#34;") +"' maxlength='100'></td></tr>";
+								} else {
+									if (!result[i].general) {
+										listHTML += "<tr class='connectionTR notUsedTR'><th class='portletInfoTH'><spring:message code='ezNewPortal.t101' /></th><td class='portletInfoTD'><input type='text' class='connectionUrl' value='"+ ReplaceText(ReplaceText(ConvertCharToEntityReference(portletURL), '\"', "&#39;"), "\'", "&#34;") +"' maxlength='100'></td></tr>";
+									} else {
+										listHTML += "<tr class='connectionTR notUsedTR'><th class='portletInfoTH'><spring:message code='ezNewPortal.t101' /></th><td class='portletInfoTD'><input type='text' class='connectionUrl' value='' maxlength='100'></td></tr>";
+									}	
+								}
+								
+							} else if (isFixBoardPortlet(portletCode)) {
+								listHTML += "<tr class='connectionTR notUsedTR'><th class='portletInfoTH'><spring:message code='ezNewPortal.t101' /></th><td class='portletInfoTD'><input type='text' class='connectionUrl' value='"+ ReplaceText(ReplaceText(ConvertCharToEntityReference(portletURL), '\"', "&#39;"), "\'", "&#34;") +"' maxlength='100'></td></tr>";
+							}
+							
+							// 2020-12-07 박기범:tabBoard 게시판도 게시판설정 감추도록 분기 추가
+							if ((menuId == 4 || menuId == mobileBrdId) && portletId != 10 && portletCode != "tabBoard") {
+								listHTML += "<tr class='boardTR'><th class='portletInfoTH'><spring:message code='ezNewPortal.t048' /> :</th><td class='portletInfoTD'>";
+								
+								var boardName = "";
+								
+								if (result[i].boardName1 == null || result[i].boardName1 == "null") {
+									boardName = "<spring:message code='ezNewportal.boardNameNone01' />";
+								} else {
+									boardName = ReplaceText(ReplaceText(result[i].boardName1, '\"', "&#39;"), "\'", "&#34;");
+								}
+								
+								listHTML += "<input id='portletBoard" + portletId + "' class='boardName' type='text' value='" + boardName + "' data1='" + result[i].portletBoardId + "' readonly>";
+								listHTML += "<div class='boardSetting'>";
+								listHTML += "<a class='boardSettingtBtn'>";
+								listHTML += "<img src='/images/admin/admin_portlet_set.png' /></a></div></td></tr>";
+								
+								listHTML += "<tr class='boardTR2 notUsedTR'><th class='portletInfoTH'><spring:message code='ezSystem.w018' /> :</th><td class='portletInfoTD'>";
+								listHTML += "<input id='portletConnection" + portletId + "' type='text' readonly>";
+								listHTML += "<div class='connectionSetting'>";
+								listHTML += "<a class='connectionSettingtBtn'>";
+								listHTML += "<img src='/images/admin/admin_portlet_set.png' /></a></div></td></tr>";	
+							} else if (result[i].general && ((menuId != 4 && menuId != mobileBrdId) || portletId == 10)){
+								listHTML += "<tr class='boardNotUsed'><th class='portletInfoTH'>&nbsp;</th><td class='portletInfoTD'>&nbsp;<br/></td></tr>";
+							} else if (menuId == connectMenuId) {
+								var connectionName = "";
+								
+								if (result[i].connectionName == null || result[i].connectionName == "null") {
+									connectionName = "없음";
+								} else {
+									connectionName = ReplaceText(ReplaceText(result[i].connectionName, '\"', "&#39;"), "\'", "&#34;");
+								}
+								
+								listHTML += "<tr class='boardTR notUsedTR'><th class='portletInfoTH'><spring:message code='ezNewPortal.t048' /> :</th><td class='portletInfoTD'>";
+								listHTML += "<input id='portletBoard" + portletId + "' type='text' readonly>";
+								listHTML += "<div class='boardSetting'>";
+								listHTML += "<a class='boardSettingtBtn'>";
+								listHTML += "<img src='/images/admin/admin_portlet_set.png' /></a></div></td></tr>";
+								
+								listHTML += "<tr class='boardTR2 UsedTR'><th class='portletInfoTH'><spring:message code='ezSystem.w018' /> :</th><td class='portletInfoTD'>";
+								listHTML += "<input id='portletConnection" + portletId + "' type='text' value='" + connectionName + "' data1='" + result[i].portletConnectionId + "' readonly>";
+								listHTML += "<div class='connectionSetting'>";
+								listHTML += "<a class='connectionSettingtBtn'>";
+								listHTML += "<img src='/images/admin/admin_portlet_set.png' /></a></div></td></tr>";
+								
+							} else if (!result[i].general) {
+								listHTML += "<tr class='boardTR notUsedTR'><th class='portletInfoTH'><spring:message code='ezNewPortal.t048' /> :</th><td class='portletInfoTD'>";
+								listHTML += "<input id='portletBoard" + portletId + "' type='text' readonly>";
+								listHTML += "<div class='boardSetting'>";
+								listHTML += "<a class='boardSettingtBtn'>";
+								listHTML += "<img src='/images/admin/admin_portlet_set.png' /></a></div></td></tr>";
+								
+								listHTML += "<tr class='boardTR2 notUsedTR'><th class='portletInfoTH'><spring:message code='ezSystem.w018' /> :</th><td class='portletInfoTD'>";
+								listHTML += "<input id='portletConnection" + portletId + "' type='text' readonly>";
+								listHTML += "<div class='connectionSetting'>";
+								listHTML += "<a class='connectionSettingtBtn'>";
+								listHTML += "<img src='/images/admin/admin_portlet_set.png' /></a></div></td></tr>";	
+								
 							}
 	
-							listHTML += "<input id='portletMenu" + portletId + "' type='text' value='" + menuName + "'readonly>";
-							listHTML += "<div class='btnpositionJsp menuSetting'>";
-							listHTML += "<a class='menuSettingtBtn'>";
-							listHTML += "<img src='/images/admin/admin_portlet_set.png' /></a></div>";
-							listHTML += "</td></tr>";
-							
-							if (menuId != 4 && menuId != connectMenuId && menuId != mobileBrdId) {
-								listHTML += "<tr class='connectionTR'><th class='portletInfoTH'><spring:message code='ezNewPortal.t101' /></th><td class='portletInfoTD'><input type='text' class='connectionUrl' value='"+ ReplaceText(ReplaceText(ConvertCharToEntityReference(portletURL), '\"', "&#39;"), "\'", "&#34;") +"' maxlength='100'></td></tr>";
-							} else {
-								if (!result[i].general) {
-									listHTML += "<tr class='connectionTR notUsedTR'><th class='portletInfoTH'><spring:message code='ezNewPortal.t101' /></th><td class='portletInfoTD'><input type='text' class='connectionUrl' value='"+ ReplaceText(ReplaceText(ConvertCharToEntityReference(portletURL), '\"', "&#39;"), "\'", "&#34;") +"' maxlength='100'></td></tr>";
-								} else {
-									listHTML += "<tr class='connectionTR notUsedTR'><th class='portletInfoTH'><spring:message code='ezNewPortal.t101' /></th><td class='portletInfoTD'><input type='text' class='connectionUrl' value='' maxlength='100'></td></tr>";
-								}	
+							if (!result[i].general) {
+								listHTML += getCabinetTypeRowStr(portletURL, portletId);
+								listHTML += getBoardViewTypeRowStr(portletURL, portletId);
+							} else if (isFixBoardPortlet(portletCode)) {
+								listHTML += getFixBoardKeyRowStr(portletURL, portletId);
 							}
-							
-						} else if (isFixBoardPortlet(portletCode)) {
-							listHTML += "<tr class='connectionTR notUsedTR'><th class='portletInfoTH'><spring:message code='ezNewPortal.t101' /></th><td class='portletInfoTD'><input type='text' class='connectionUrl' value='"+ ReplaceText(ReplaceText(ConvertCharToEntityReference(portletURL), '\"', "&#39;"), "\'", "&#34;") +"' maxlength='100'></td></tr>";
+	
+							listHTML += "</table>";
+							listHTML += "</li>";
 						}
-						
-						// 2020-12-07 박기범:tabBoard 게시판도 게시판설정 감추도록 분기 추가
-						if ((menuId == 4 || menuId == mobileBrdId) && portletId != 10 && portletCode != "tabBoard") {
-							listHTML += "<tr class='boardTR'><th class='portletInfoTH'><spring:message code='ezNewPortal.t048' /> :</th><td class='portletInfoTD'>";
-							
-							var boardName = "";
-							
-							if (result[i].boardName1 == null || result[i].boardName1 == "null") {
-								boardName = "<spring:message code='ezNewportal.boardNameNone01' />";
-							} else {
-								boardName = ReplaceText(ReplaceText(result[i].boardName1, '\"', "&#39;"), "\'", "&#34;");
-							}
-							
-							listHTML += "<input id='portletBoard" + portletId + "' class='boardName' type='text' value='" + boardName + "' data1='" + result[i].portletBoardId + "' readonly>";
-							listHTML += "<div class='boardSetting'>";
-							listHTML += "<a class='boardSettingtBtn'>";
-							listHTML += "<img src='/images/admin/admin_portlet_set.png' /></a></div></td></tr>";
-							
-							listHTML += "<tr class='boardTR2 notUsedTR'><th class='portletInfoTH'><spring:message code='ezSystem.w018' /> :</th><td class='portletInfoTD'>";
-							listHTML += "<input id='portletConnection" + portletId + "' type='text' readonly>";
-							listHTML += "<div class='connectionSetting'>";
-							listHTML += "<a class='connectionSettingtBtn'>";
-							listHTML += "<img src='/images/admin/admin_portlet_set.png' /></a></div></td></tr>";	
-						} else if (result[i].general && ((menuId != 4 && menuId != mobileBrdId) || portletId == 10)){
-							listHTML += "<tr class='boardNotUsed'><th class='portletInfoTH'>&nbsp;</th><td class='portletInfoTD'>&nbsp;<br/></td></tr>";
-						} else if (menuId == connectMenuId) {
-							var connectionName = "";
-							
-							if (result[i].connectionName == null || result[i].connectionName == "null") {
-								connectionName = "없음";
-							} else {
-								connectionName = ReplaceText(ReplaceText(result[i].connectionName, '\"', "&#39;"), "\'", "&#34;");
-							}
-							
-							listHTML += "<tr class='boardTR notUsedTR'><th class='portletInfoTH'><spring:message code='ezNewPortal.t048' /> :</th><td class='portletInfoTD'>";
-							listHTML += "<input id='portletBoard" + portletId + "' type='text' readonly>";
-							listHTML += "<div class='boardSetting'>";
-							listHTML += "<a class='boardSettingtBtn'>";
-							listHTML += "<img src='/images/admin/admin_portlet_set.png' /></a></div></td></tr>";
-							
-							listHTML += "<tr class='boardTR2 UsedTR'><th class='portletInfoTH'><spring:message code='ezSystem.w018' /> :</th><td class='portletInfoTD'>";
-							listHTML += "<input id='portletConnection" + portletId + "' type='text' value='" + connectionName + "' data1='" + result[i].portletConnectionId + "' readonly>";
-							listHTML += "<div class='connectionSetting'>";
-							listHTML += "<a class='connectionSettingtBtn'>";
-							listHTML += "<img src='/images/admin/admin_portlet_set.png' /></a></div></td></tr>";
-							
-						} else if (!result[i].general) {
-							listHTML += "<tr class='boardTR notUsedTR'><th class='portletInfoTH'><spring:message code='ezNewPortal.t048' /> :</th><td class='portletInfoTD'>";
-							listHTML += "<input id='portletBoard" + portletId + "' type='text' readonly>";
-							listHTML += "<div class='boardSetting'>";
-							listHTML += "<a class='boardSettingtBtn'>";
-							listHTML += "<img src='/images/admin/admin_portlet_set.png' /></a></div></td></tr>";
-							
-							listHTML += "<tr class='boardTR2 notUsedTR'><th class='portletInfoTH'><spring:message code='ezSystem.w018' /> :</th><td class='portletInfoTD'>";
-							listHTML += "<input id='portletConnection" + portletId + "' type='text' readonly>";
-							listHTML += "<div class='connectionSetting'>";
-							listHTML += "<a class='connectionSettingtBtn'>";
-							listHTML += "<img src='/images/admin/admin_portlet_set.png' /></a></div></td></tr>";	
-							
-						}
-
-						if (!result[i].general) {
-							listHTML += getCabinetTypeRowStr(portletURL, portletId);
-							listHTML += getBoardViewTypeRowStr(portletURL, portletId);
-						} else if (isFixBoardPortlet(portletCode)) {
-							listHTML += getFixBoardKeyRowStr(portletURL, portletId);
-						}
-
-						listHTML += "</table>";
-						listHTML += "</li>";
 					}
 					
 					listHTML += "<li class='portlet addPortlet'><div style='margin-top:97px'><img src='/images/admin/admin_portlet_plus.png' /></div></li>";

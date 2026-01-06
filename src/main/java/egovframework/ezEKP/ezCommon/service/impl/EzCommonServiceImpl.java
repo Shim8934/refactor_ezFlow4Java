@@ -1108,11 +1108,11 @@ public class EzCommonServiceImpl extends EzFileMngUtil implements EzCommonServic
         map.put("tenantID", tenantID);
 
         String propertyValue = ezCommonDAO.getTenantConfig(map);
-
+/*
 		if (!property.equals("ApprovalFlag")) {
 			logger.debug("PROPERTY NAME : {} || PROPERTY VALUE : {} || TENANTID : {} ", property, propertyValue, tenantID);
 		}
-
+*/
         if (propertyValue == null) {
             propertyValue = "";
         }
@@ -1333,7 +1333,7 @@ public class EzCommonServiceImpl extends EzFileMngUtil implements EzCommonServic
 
         String propertyValue = ezCommonDAO.getCompanyConfig(map);
 
-		logger.debug("PROPERTY NAME : {} || PROPERTY VALUE : {} || TENANTID : {} || COMPANYID : {}", property, propertyValue, tenantID, companyID);
+//		logger.debug("PROPERTY NAME : {} || PROPERTY VALUE : {} || TENANTID : {} || COMPANYID : {}", property, propertyValue, tenantID, companyID);
 		//logger.debug("PROPERTY VALUE : " + propertyValue); // 로그정리
 
         if (propertyValue == null) {
@@ -1354,7 +1354,7 @@ public class EzCommonServiceImpl extends EzFileMngUtil implements EzCommonServic
 		map.put("propertyName", propertyName);
 		map.put("propertyValue", propertyValue);
 
-		logger.debug("PROPERTY NAME : {} || PROPERTY VALUE : {} || TENANTID :  {} || COMPANYID : {}", propertyName, propertyValue, tenantId, companyId);
+//		logger.debug("PROPERTY NAME : {} || PROPERTY VALUE : {} || TENANTID :  {} || COMPANYID : {}", propertyName, propertyValue, tenantId, companyId);
 		//logger.debug("PROPERTY VALUE : " + propertyValue); // 로그정리
 
 		ezCommonDAO.insertCompanyConfig(map);
@@ -1373,7 +1373,7 @@ public class EzCommonServiceImpl extends EzFileMngUtil implements EzCommonServic
 		map.put("propertyName", propertyName);
 		map.put("propertyValue", propertyValue);
 
-		logger.debug("PROPERTY NAME : {} || PROPERTY VALUE : {} || TENANTID : {} || COMPANYID : {}", propertyName, propertyValue, tenantId, companyId);
+//		logger.debug("PROPERTY NAME : {} || PROPERTY VALUE : {} || TENANTID : {} || COMPANYID : {}", propertyName, propertyValue, tenantId, companyId);
 		//logger.debug("PROPERTY VALUE : " + propertyValue); // 로그정리
 
 		ezCommonDAO.updateCompanyConfig(map);

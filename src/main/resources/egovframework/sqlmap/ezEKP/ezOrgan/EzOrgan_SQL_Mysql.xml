@@ -4256,7 +4256,7 @@
 					WHERE B.DEPTID IN (SELECT data2 FROM DEPT_RECURSIVE)
 					AND B.TENANT_ID = #v_TENANT_ID#
 				) AS TREE
-				ORDER BY data1 DESC, nodeLevel ASC, sortOrder ASC, displayName ASC
+				ORDER BY data1 DESC, nodeLevel ASC, CAST(IFNULL(sortOrder, 999999) AS UNSIGNED) ASC, displayName ASC
         	]]>
 		</isEqual>
 		<isEqual property="v_CLASS" compareValue="group">

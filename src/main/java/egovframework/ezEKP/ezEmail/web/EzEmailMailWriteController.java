@@ -5892,9 +5892,9 @@ public class EzEmailMailWriteController extends EzFileMngUtil {
 			
 			model.addAttribute("susinList", jsonList);
 		} catch (DOMException e) {
-			logger.debug("e.message=" + e.getMessage());
+			logger.error(e.getMessage(), e);
 		} catch (Exception e) {
-			logger.debug("e.message=" + e.getMessage());
+			logger.error(e.getMessage(), e);
 		}
 
 		logger.debug("autoCompleteList ended.");
@@ -5957,6 +5957,12 @@ public class EzEmailMailWriteController extends EzFileMngUtil {
 
 		void setSentDate(SimpleDateFormat utcFormatter, TimeZone timeZone, long aDayAgo) throws Exception {
 			String sentDateStr = getByTag("SENTDATE");
+
+			// 티베로에서는 밀리세컨드 부분이 없어 파싱 오류가 발생해 추가함
+			if (!sentDateStr.contains(".")) {
+				sentDateStr += ".000";
+			}
+			
 			Date sentDate = utcFormatter.parse(sentDateStr); //throws ParseException
 
 			boolean within24h = sentDate.getTime() > aDayAgo;
