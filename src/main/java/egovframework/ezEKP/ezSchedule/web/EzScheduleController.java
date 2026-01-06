@@ -3125,9 +3125,15 @@ public class EzScheduleController extends EzFileMngUtil {
         List<ScheduleSecretaryVO> tList = ezScheduleService.getPublicScheduleSec(loginVO.getId(), loginVO.getLang(), tenantId ,companyID);
         
         for (ScheduleSecretaryVO ssvo : tList) {
-        	if (ssvo.getSecId().equals(vo.getOwnerId())) {
-        		_admin = "Y";
-        		_editPosible = "Y";
+        	if (ssvo.getSecId().equals(vo.getOwnerId())) {//로그인한 사용자가 비서인지 확인 추가 조건 필요
+				// 원글 작성자가 아니고 참석자일때(10 : MODIFIERID 가 아닐때) READONLY가 Y 의거 조건 사용 *****주석 지워*****
+				if (!vo.getIsReadOnly().equals("Y")) {
+					_admin = "Y";
+					_editPosible = "Y";
+				} else {
+					_admin = "N";
+					_editPosible = "N";
+				}
         	}
         }
         
