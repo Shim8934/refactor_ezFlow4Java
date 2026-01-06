@@ -90,6 +90,7 @@
 				height: auto;
 				max-height: 100px;
 				min-height: 100px;
+				width: auto;
 				max-width: 100%;
 				border-radius: 3px;
 			}
