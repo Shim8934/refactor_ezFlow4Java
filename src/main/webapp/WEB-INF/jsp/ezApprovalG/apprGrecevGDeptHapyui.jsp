@@ -1345,7 +1345,7 @@
 	                <table class="file" style="height:80px;">
 	                    <tr>
 	                        <th id="btn_Attach"><spring:message code='ezApprovalG.t65'/></th>
-	                        <td style=" width:62%; border-right:1px solid #d5d5d5;">
+	                        <td style=" width:62%; border-right:1px solid #d5d5d5; overflow: auto;">
 	                            <div id="lstAttachLink" style="height:70px;"></div>
 	                        </td>
 	                        <td style=" width:30%;">
