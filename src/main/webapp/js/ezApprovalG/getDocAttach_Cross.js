@@ -196,26 +196,28 @@ function setAttachInfo(tempDocID, INGFlag, attachTag, draftAllTypeB) {
                 var serverName = window.location.hostname;
 
                 /* 2020-11-18 홍승비 - 선택 및 다중 다운로드를 위한 체크박스 추가, 파일 아이콘 위치 정렬 */
-                strAttach = strAttach + "<span style='display:inline-block;'><div class='custom_checkbox'><input type='checkbox' name='fileSelect' fileName=\"" + xmlFileName + "\" filepath=\"" + xmlFilePath +"\"><label>";
+                strAttach = strAttach + "<span style='display:inline-block;'><div class='custom_checkbox' 'display: inline;'><input type='checkbox' name='fileSelect' fileName=\"" + xmlFileName + "\" filepath=\"" + xmlFilePath +"\"><label>";
                 strAttach = strAttach + "<a href= /ezApprovalG/downloadAttach.do?fileName=" + filename + "&docID=" + tempDocID + "&docStatus=" + INGFlag + "&docAttachSN=" + SelectSingleNodeValue(GetChildNodes(xmlRtn[i])[0], "DATA2") + "&filePath=" + filepath + " onclick='AttachProcess(event)'>";
                 //strAttach = strAttach + "<a href='/myoffice/Common/downloadattach.aspx?filename=" + filename + "&filepath=" + filepath + "' " + strTarget + "' onclick='AttachProcess()'>";
 
                 strAttach = strAttach + "<IMG SRC='" + fileImage + "' border='0' style='width:20px; height:20px; vertical-align:sub; margin-right:3px;'>";
-                strAttach = strAttach + MakeXMLString(getNodeText(GetChildNodes(xmlRtn[i])[1])) + "</a></label></div>";
+                strAttach = strAttach + MakeXMLString(getNodeText(GetChildNodes(xmlRtn[i])[1])) + "</a></label>";
                 
                 // 2023-05-25 조수빈 - 첨부파일 미리보기 아이콘 추가
                if (typeof useAprFilePrvw !== 'undefined' && useAprFilePrvw == "1") {
                     strAttach += "<span class='icon_rbtn2 file-preview' data-filepath=\"" + encodeURIComponent(filepath) + "\" data-filename=\"" + encodeURIComponent(filename) + "\" " +
                                  "style='margin-left:10px;' title=\"" + strLangJSBAP01 + "\">" +
-                                 "<img src='/images/icon_preview.png' width='16' height='16' style='vertical-align:middle; cursor:pointer;'></span>";
+                                 "<img src='/images/icon_preview.png' width='16' height='16' style='vertical-align:middle; cursor:pointer;'>";
                 }
                
                 
                 if (SelectSingleNodeValue(GetChildNodes(xmlRtn[i])[0], "ISBIGATTACH") == "Y") { // 대용량첨부파일 표시
-                	strAttach = strAttach + " <font style='color:blue'>[" + strLangHSBAt02 + "]</font> &nbsp;</span>";
+                	strAttach = strAttach + " <font style='color:blue; vertical-align:middle;'>[" + strLangHSBAt02 + "]</font> &nbsp;";
                 } else {
-                	strAttach = strAttach + " &nbsp;</span>";
+                	strAttach = strAttach + " &nbsp;";
                 }
+                
+                strAttach += "</div></span>";
                 
                 /* 2020-11-17 홍승비 - 일반첨부와 문서첨부 영역의 분리 */
                 attachTag.innerHTML = strAttach + "<iframe frameborder=\"0\" id=\"ifrmDownload\" name=\"ifrmDownload\" src=\"about:blank\" width=\"0\" height=\"0\"></iframe>";
@@ -452,7 +454,7 @@ function attach_Download() {
 	var fileNames = ""; // 파일이름
 	
 	if (checkedFilesLength == 1) { // 하나만 저장하는 경우
-		checkedFiles.next()[0].click();
+		checkedFiles.next()[0].querySelector('a').click();
 	}
 	else if (checkedFilesLength > 1) { // 여러개는 zip으로 저장
 		for (var i = 0; i < checkedFilesLength; i++) {
