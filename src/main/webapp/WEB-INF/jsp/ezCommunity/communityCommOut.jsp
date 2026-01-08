@@ -17,9 +17,7 @@
 		<script type="text/javascript">
 			function outok_onclick(code) {
 				if( window.outreason.value == "" ){
-					alert("<spring:message code='ezCommunity.t715'/>");
-					window.outreason.focus();
-					
+					OpenAlertUI("<spring:message code='ezCommunity.t715'/>");
 					return;
 				}
 				
@@ -41,11 +39,9 @@
 
 	
 				if( rtnValue == "1" ) {
-					alert("<spring:message code='ezCommunity.t716'/>");
-					window.self.close();
+					OpenAlertUI("<spring:message code='ezCommunity.t716'/>",outcancel_onclick);
 				} else {
-					alert("<spring:message code='ezCommunity.t717'/>");
-					window.self.close();
+					OpenAlertUI("<spring:message code='ezCommunity.t717'/>",outcancel_onclick);
 				}
 			}
 			
@@ -111,6 +107,10 @@
 		
 		<div class="btnpositionNew">
 			<a class="imgbtn" name="Submit" id="outok" onClick="return outok_onclick('${code}')"><span><spring:message code='ezCommunity.t719'/></span></a>
+		</div>
+		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background:none rgba(0,0,0,0.5); display:none;" id="mailPanel"></div>
+		<div class="layerpopup"  style="z-index: 2000; position: absolute; display: none;" id="iFramePanel">
+			<iframe src="" style="border:none;" id="iFrameLayer"></iframe>
 		</div>
 	</body>
 </html>
