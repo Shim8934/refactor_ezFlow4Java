@@ -2181,7 +2181,7 @@ public class LoginController {
 		if ("authCode".equals(type)) {
 			// 인증코드
 			randomValue = Integer.toString(random.nextInt(888888) + 111111);
-			result = commonUtil.sendSMS(mobileNo,randomValue,type) ? randomValue : "FAIL";
+			result = commonUtil.sendSMS(mobileNo,randomValue,type) ? "" : "FAIL";
 			result = useShowAuthCode? randomValue : result;
 		} else {
 			// 임시비밀번호
@@ -2201,7 +2201,7 @@ public class LoginController {
 					ezCommonService.insertUserConfigInfo(tenantId, cn, "resetPassword", "Y");
 				}
 
-				result = commonUtil.sendSMS(mobileNo,tempPassword,type) ? tempPassword : "FAILSMS";
+				result = commonUtil.sendSMS(mobileNo,tempPassword,type) ? "" : "FAILSMS";
 				result = useShowAuthCode? tempPassword : result;
 
 			} catch (Exception e) {
