@@ -1178,7 +1178,7 @@ DROP TABLE IF EXISTS `jmocha_stat_mail_user_day`;
 CREATE TABLE `jmocha_stat_mail_user_day` (
   `TENANT_ID` int(11) NOT NULL,
   `DT_DD` varchar(15) CHARACTER SET utf8mb4 NOT NULL,
-  `USERID` varchar(20) NOT NULL,
+  `USERID` varchar(80) NOT NULL,
   `DEPTID` varchar(200) NOT NULL,
   `ORGID` varchar(200) DEFAULT NULL,
   `RECEIVEINCNT` int(11) DEFAULT 0,
@@ -1203,7 +1203,7 @@ DROP TABLE IF EXISTS `jmocha_stat_mail_user_month`;
 CREATE TABLE `jmocha_stat_mail_user_month` (
   `TENANT_ID` int(11) NOT NULL,
   `DT_MM` varchar(15) CHARACTER SET utf8mb4 NOT NULL,
-  `USERID` varchar(20) NOT NULL,
+  `USERID` varchar(80) NOT NULL,
   `DEPTID` varchar(200) NOT NULL,
   `ORGID` varchar(200) DEFAULT NULL,
   `RECEIVEINCNT` int(11) DEFAULT 0,
