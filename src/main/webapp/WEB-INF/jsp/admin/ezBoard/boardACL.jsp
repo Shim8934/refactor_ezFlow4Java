@@ -488,6 +488,24 @@
 	                selectTargetListXML = "<DATA>";
 	
 	                if (selnode.length == 1) {
+	                    if (para != 'false' && selectedTargetID == GetAttribute(selnode[0], "data1")) {
+                            
+                            var trID = selnode[0].id;
+                            var trElement = document.getElementById(trID);
+                            trElement.setAttribute("selected", "false");
+                            
+                            setNodeText(selectedTarget, " ");
+                            
+                            CheckBoxInit();
+                            
+                            var tableID = "AccessListView";
+                            var tblElement = document.getElementById(tableID);
+                            tblElement.removeAttribute('lastselectedrowid');
+                            selectedTargetID = "";
+                            
+                            selectTargetListXML = "";
+                            return;
+	                    }
 	                    selectedTargetGroup = GetAttribute(selnode[0],"data3")
 						
 						setNodeText(selectedTarget, getNodeText(selnode[0].cells[2]) + (selectedTargetGroup == "Y" ? " <spring:message code="ezNotification.hth68"/>" : ""));
