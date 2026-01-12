@@ -645,7 +645,11 @@ AND    ( tbl_aprdocinfo.startdate IS NOT NULL ));
    (	"FILE_ID" NVARCHAR2(100), 
 	"DOWNLOAD_COUNT" NUMBER, 
 	"LIMIT_COUNT" NUMBER, 
-	"TENANT_ID" NUMBER DEFAULT 0
+	"TENANT_ID" NUMBER DEFAULT 0,
+	"FILE_NAME" NVARCHAR2(100),
+    "FILE_SIZE" NUMBER,
+    "USER_ID" NVARCHAR2(80),
+    "UPLOAD_DATE" NVARCHAR2(100)
    ) ;
 --------------------------------------------------------
 --  DDL for Table JMOCHA_CONNECTION_INFO

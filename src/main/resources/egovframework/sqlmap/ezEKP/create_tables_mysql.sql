@@ -425,6 +425,10 @@ CREATE TABLE `jmocha_bigattach_down_limit` (
   `download_count` int(10) DEFAULT NULL,
   `limit_count` int(10) DEFAULT NULL,
   `tenant_id` mediumint(9) NOT NULL,
+  `file_name` varchar(100),
+  `file_size` bigint(20),
+  `user_id` varchar(80),
+  `upload_date` varchar(100),
   PRIMARY KEY (`file_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
