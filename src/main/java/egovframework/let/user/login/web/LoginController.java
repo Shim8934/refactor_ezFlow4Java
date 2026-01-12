@@ -2159,6 +2159,8 @@ public class LoginController {
 		return "/user/login/authNumberPage";
 	}
 
+	// 이 URL을 호출하면 지정된 사용자의 비밀번호를 임시 비밀번호로 변경하기 때문에 필요한 사이트가 있는 경우 주석을 풀어서 사용
+	/*
 	@ResponseBody
 	@RequestMapping(value = "/user/login/resetPw/sendAuthCodeBySMS.do")
 	public String sendAuthCodeBySMS (HttpServletRequest request, HttpServletResponse response, ModelMap map) throws Exception {
@@ -2212,7 +2214,8 @@ public class LoginController {
 
 		logger.debug("sendAuthCodeBySMS ended={}",result);
 		return result;
-	}
+	}	
+	 */
 	
 	@PostMapping(value = "/user/login/samlAuth.do")
 	public void samlAuth(HttpServletRequest request, HttpServletResponse response) throws Exception {
