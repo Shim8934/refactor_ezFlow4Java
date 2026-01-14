@@ -16588,7 +16588,9 @@ CREATE TABLE `TBL_APPROVE_ERROR_INFO` (
 
 DROP TABLE IF EXISTS `jmocha_shared_mailfolder`;
 CREATE TABLE `jmocha_shared_mailfolder` (
+  `simple_idx` int(11) NOT NULL AUTO_INCREMENT,
   `mailbox_id` varchar(100) DEFAULT NULL,
   `sharer` varchar(100) DEFAULT NULL,
-  `share_member` varchar(100) DEFAULT NULL
+  `share_member` varchar(100) DEFAULT NULL,
+   PRIMARY KEY (`simple_idx`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;

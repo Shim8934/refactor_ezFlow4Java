@@ -3073,6 +3073,19 @@ public class EzEmailMailReadController extends EzFileMngUtil {
 		}	
 		
 		logger.debug("folderPath=" + folderPath + ",uid=" + uid + ",contentId=" + contentId);
+
+		// voc 176303 공유사서함 메일 인라인 이미지 안보이는 부분 수정
+		String sharer = request.getParameter("sharer") == null ? "" : (String) request.getParameter("sharer");
+		String folderName = folderPath;
+		if(!sharer.equals("")){
+			try {
+				userEmail = sharer + "@" + domainName;
+				folderName = folderPath.substring(18);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+
 		
 		IMAPAccess ia = null;
 		try {
@@ -3080,9 +3093,9 @@ public class EzEmailMailReadController extends EzFileMngUtil {
 					userEmail, password, egovMessageSource, locale, ezEmailUtil);
 	
 			if (ia != null){
-				Folder f = ia.getFolder(folderPath != null ? folderPath : "");
+				Folder f = ia.getFolder(folderName != null ? folderName : "");
 				if (f == null || !f.exists()) {
-					logger.error("Folder not found. folderPath=" + folderPath);
+					logger.error("Folder not found. folderPath=" + folderName);
 				} else {
 					f.open(Folder.READ_ONLY);
 					Message message = null;

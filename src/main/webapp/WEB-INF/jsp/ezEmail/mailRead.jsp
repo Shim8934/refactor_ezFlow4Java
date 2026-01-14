@@ -275,7 +275,8 @@
 					resizeHeight = document.documentElement.clientHeight - 220;
 		        else
 					resizeHeight = document.documentElement.clientHeight - 190;
-				<c:if test="${useMailTag}">
+				<c:if test="${useMailTag && empty sharer}">
+				//voc 176293 공유편지함에서는 태그 사용 안함
 				resizeHeight -= document.getElementById("tag_td").clientHeight;
 				</c:if>
 
@@ -898,7 +899,7 @@
 		                <span id="LabelSubject">${subject}</span>
 		                </div></td>
 		                </tr>
-						<c:if test="${useMailTag}">
+						<c:if test="${useMailTag && empty sharer}">
 							<tr>
 								<th><spring:message code='ezEmail.tag' /></th>
 								<td id="tag_td" colspan="4">

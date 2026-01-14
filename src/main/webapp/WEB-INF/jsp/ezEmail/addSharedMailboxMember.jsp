@@ -66,7 +66,7 @@
 	        var userInfo = new Array();
 	        var sharer = "${sharer}";
 	        var useShowAllCompanies = "${useShowAllCompanies}";
-	        var useOrgListCheckBox = true; // 사조그룹
+	        var useOrgListCheckBox = JSON.parse("${useOrgListCheckBox}");
 	        var m_selectedTree = null;
 	    	var receiverListId = "MsgToList";
 	    	var emailAttrArr = {
@@ -79,6 +79,7 @@
 	        var receiverCount = 0;
 	        var selectedDept = "";
 	        var useShowAllCompanies = "${useShowAllCompanies}";
+            var EventCheck = false;
 
 	        window.onunload = function () {
 		        if(ReturnFunction != null)
@@ -153,7 +154,8 @@
 	        		resultXml += "<ROW>";
 	        		resultXml += "<CELL>";
 	        		resultXml += "<DATA1>" + xmlStrId + "</DATA1>";
-	        		resultXml += "<VALUE>" + xmlStrname + "(" + dept + "/" + company + ")" + "</VALUE>";
+	        		//voc 176234 회사명 삭제
+	        		resultXml += "<VALUE>" + xmlStrname + "(" + dept + ")" + "</VALUE>";
 	        		resultXml += "<TITLE>" + xmlStrId + "</TITLE>";
 	        		resultXml += "</CELL>";
 	        		resultXml += "</ROW>";
@@ -167,7 +169,8 @@
                 listview.SetID("MsgToList");
                 listview.SetSelectFlag(false);
                 listview.SetMulSelectable(false);
-                listview.SetRowOnDblClick("DeleteReceiver");
+                // voc 176553 더블클릭으로 제거하면 deleteReceiver가 두번 호출되서 함수 부여하는 부분 하나 주석
+                // listview.SetRowOnDblClick("DeleteReceiver");
                 listview.DataSource(loadXMLString(resultXml));
                 listview.RowDataBind();
 
@@ -353,7 +356,9 @@
 		        	async : true,
 		        	data : {
 		        		search : document.getElementById("search_type").value + "::" + document.getElementById("keyword").value, 
-		        		company : "",
+                        <c:if test="${useShowAllCompanies eq 'YES'}">
+                        company : "",
+                        </c:if>
 		        		page : CurPage,
 		        		cell : "description;displayName;title;telephoneNumber;" + document.getElementById("search_type").value, 
 		        		prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;department;usertype", 
@@ -427,6 +432,10 @@
 		        	success : function(result) {
 		        		if (result.resultCode === "OK") {
 		        			alert("<spring:message code='ezEmail.sharedMailboxPYY01' />");
+		        			// voc 176277 저장 후 닫기시 새로고침되도록
+		        			EventCheck = true;
+		        			//voc 176242 저장하면 창 닫히도록 수정
+		        			window.close();
 		        		} else {
 		        			alert("<spring:message code='ezEmail.sharedMailboxPYY02' />");
 		        		}
@@ -883,12 +892,17 @@
 	        function keyword_Clear() {
 	            document.getElementsByName('keyword').value = "";
 	        }
-	
+
+            //voc 176272 검색했을때 겸직으로 두번 들어간 경우 alert가 두번떠서 플래그로 표시
+	        var firstAlert = true;
+
 	        function InsertReceiver(pListView) {
 	            var pparsingXML = "";
 	            var pparsingXML2 = "";
 	            var strSIP = "";
 	            var pAddFlag = false;
+	            // voc 176554
+	            var existStr = "";
 	
 	            var listid = "MsgToList";
 	            var getlistview = new ListView();
@@ -897,23 +911,31 @@
 	            var arrRows = getlistview.GetSelectedRows();
 	            var length = arrRows.length;
 				
-                if (listContentArry != "") {
+                if (listContentArry == ""){
+                    // voc 176553
+                    alert("<spring:message code='ezEmail.yja006'/>");
+                } else if (listContentArry != "") {
                     for (var i = 0; i < listContentArry.length; i++) {
                     	var strId = document.getElementById(listContentArry[i]).getAttribute("_data2");
                         var strName = document.getElementById(listContentArry[i]).getAttribute("_data4");
                         var deptName = document.getElementById(listContentArry[i]).getAttribute("_data14");
                         var companyName = document.getElementById(listContentArry[i]).getAttribute("_data18");
                         if (companyName == null) {
-                        	companyName = document.getElementById(listContentArry[i]).getAttribute("_data15");	
+                            // voc 176234 의도는 부서영문명이 아니라 회사명
+                        	companyName = document.getElementById(listContentArry[i]).getAttribute("_data16");
                         }
                         
                         var bFlag = getlistview.ExistRow("data1", strId);
 
                         if (bFlag) {
                             pAddFlag = true;
+                            existStr += existStr == "" ? strName : ", " + strName;
                         } else {
                             if(strId == sharer){
-                                alert("<spring:message code='ezEmail.pyy25' />");
+                                if(firstAlert){
+                                    alert("<spring:message code='ezEmail.pyy25' />");
+                                    firstAlert = false;
+                                }
                                 continue;
                             }
                         	var xmlStringName = MakeXMLString(strName);
@@ -923,7 +945,8 @@
                             pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
                             pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + MakeXMLString(strId) + "</DATA1>";
                             pparsingXML = pparsingXML + "<DATA4>ORGAN</DATA4>";
-                            pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(strName) + "(" + deptName + "/" + companyName + ")" +  "</VALUE></CELL></ROW>";
+                            //voc 176263 부서명 특수문자 있는 경우 리스트 표시되지 않음 수정
+                            pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(strName) + "(" + MakeXMLString(deptName) + ")" +  "</VALUE></CELL></ROW>";
                             pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
                             Resultxml = loadXMLString(pparsingXML2);
 
@@ -962,6 +985,9 @@
                         }
                     }
                 }
+                if(pAddFlag){
+                    alert("<spring:message code='ezEmail.yja007'/>" + existStr);
+                }
 	        }
 	
 	        function CheckMailReceiver(selRow, option) {
@@ -996,11 +1022,15 @@
 	
 	            var arrRows = selList.GetSelectedRows();
 	            var strName = "";
-	
-	            for (var i = 0; i < arrRows.length; i++) {
-	                selList.DeleteRow(arrRows[i].id);
-	                DeleteReceiver_CheckBox(listid, arrRows[i]);
-	            }
+
+	             if (arrRows == ""){
+                    alert("<spring:message code='ezEmail.yja006'/>");
+                } else {
+                    for (var i = 0; i < arrRows.length; i++) {
+                        selList.DeleteRow(arrRows[i].id);
+                        DeleteReceiver_CheckBox(listid, arrRows[i]);
+                    }
+                }
 	        }
 			
 	        function orgTabButton_onClick(init) {
@@ -1212,7 +1242,8 @@
 	        }
 	        
 	        function popupClose() {
-	        	window.opener.addSharedMailboxComplete();
+	        	// returnFunction으로 들어가있어서 굳이 호출 안해도됨
+	        	// window.opener.addSharedMailboxComplete();
 	        	window.close();
 	        }
 	        
@@ -1319,7 +1350,7 @@
 						jobID : jobId,
 						pageNum : CurPage,
 						cell : "company;description;displayName;title;telephoneNumber", 
-						prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;department",
+						prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;department;userType",
 						searchType : "",
 						searchValue : "",
 						comID : comId
@@ -1591,6 +1622,8 @@
  				$(this).click();
  			}
  		});
+
+ 		firstAlert = true;
  	});
  	
  	$(document).on("click", ".checkUser, .checkDept", function() {

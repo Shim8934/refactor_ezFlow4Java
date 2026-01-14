@@ -389,6 +389,8 @@
 		        		deleteone.style.display = 'none';
 		        		moveBtn.style.display = 'none';
 		        		receivecheck.style.display = 'none';
+		        		//voc 176298 공유사서함은 해킹의심신고 불가
+		        		hackingMail.style.display = 'none';
 		        		document.getElementById("searchAllBoxByName").style.display = 'none';
 		        	}
 		        	theBody.onkeyup = function(){};
@@ -2154,7 +2156,7 @@
 			}
 		</script>
 		<style>
-			<c:if test="${useMailTag}">
+			<c:if test="${useMailTag && empty sharer}">
 			.tagli > span:first-child { width: 55px; display: inline-block; }
 			.tagli > input { height: 22px; vertical-align: middle; }
 			.tagli > input + .imgbtn { margin: 0px; vertical-align: middle; }
@@ -2346,7 +2348,7 @@
 	          <c:if test="${useHackingMailReport == 'YES'}">
 			  <li id="hackingMail" title="<spring:message code="ezEmail.zno002" />" onClick="moveHackingMail()"><span class="icon16 icon16_spam"></span></li>		
 			  </c:if>
-				<c:if test="${useMailTag}">
+				<c:if test="${useMailTag && empty sharer}">
 				<li class="view_more" data-before-show="showLabelLayer" style="position: relative;">
 					<span><spring:message code="ezEmail.tag" /></span>
 					<div id="label-layer" class="layer_select keep_alive tagArea" style="display: none; position: fixed; top: 85px;">
@@ -2523,7 +2525,7 @@
                                         <span class="icon_graydown" onclick="BCCDetail_view(this);" id="PreH_BCCDetail" style="display:none;"></span>
                                         <p class="hidden_area" id="PreH_MailBCC_Rayer" style="display:none;"><span id="PreH_MailBCCDetail"></span></p>
                                     </li>
-									<c:if test="${useMailTag}">
+									<c:if test="${useMailTag && empty sharer}">
 										<li class="preT_list tagli"><span class="cblack"><spring:message code="ezEmail.tag" /></span>
 											<span class="input_select">
 												<sapn class="input_wrap" id="input_wrap_h">
@@ -2605,7 +2607,7 @@
                                         <span class="icon_graydown" onclick="BCCDetail_view(this);" id="PreW_BCCDetail" style="display:none;"></span>
                                         <p class="hidden_area" id="PreW_MailBCCDetail_Rayer" style="display:none;"><span id="PreW_MailBCCDetail"></span></p>
                                     </li>
-									<c:if test="${useMailTag}">
+									<c:if test="${useMailTag && empty sharer}">
 										<li class="preT_list tagli"><span class="cblack"><spring:message code="ezEmail.tag" /></span>
 											<span class="input_select">
 												<sapn class="input_wrap" id="input_wrap_w" style="float: revert">

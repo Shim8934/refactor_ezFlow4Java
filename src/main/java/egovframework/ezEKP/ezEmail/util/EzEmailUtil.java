@@ -1549,6 +1549,10 @@ public class EzEmailUtil {
 					aitem += "&shareId=" + URLEncoder.encode(shareId, "UTF-8");
 				}
 
+				if (sharer != null) {
+					aitem += "&sharer=" + URLEncoder.encode(sharer, "UTF-8");
+				}
+
 				pAttachListHtml += "<li>";
 
 				pAttachListHtml += " <span onclick=\"DownloadAttach('" + aitem + "');\"><span title=\"" + filename_spclStr + " (" + strSize + ")" + "\" class='attachFileName' onmouseover=this.style.color='#164aad' onmouseout=this.style.color='black' style='cursor:pointer' >" + filename_spclStr + " (" + strSize + ")</span></span>";

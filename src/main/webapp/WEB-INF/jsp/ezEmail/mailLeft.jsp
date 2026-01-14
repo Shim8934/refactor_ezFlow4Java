@@ -963,7 +963,12 @@
 				    }
 					document.getElementById("mailbox_delete").style.display = "none";
 					document.getElementById("mailbox_import").style.display = "none"; 
-				} else {
+				} else if (href.indexOf("Drafts")== 0){
+				    //임시보관함도 공유하기 기능 못하도록 수정
+                    if(useSharedMailFolder=="YES"){
+                        document.getElementById("mailbox_share").style.display = "none";
+                    }
+                } else {
 				    if(useSharedMailFolder=="YES"){
 				        document.getElementById("mailbox_share").style.display =  "";
 				    }
@@ -1789,34 +1794,36 @@
 		        }
 		    }
 		    
-			function addSharedMailboxComplete() {
+			function addSharedMailboxComplete(RtnVal) {
 	        	setTimeout(function() {
-	            	var href = window[treeviewStr].getvalue(1, "href");
-	            	
-	            	folderRefreshForSharer = "Y";
-	            	window[treeviewStr].source("<tree><nodes>" + get_childXML("", true, true, false) + "</nodes></tree>");
-	            	window[treeviewStr].update();
-	            	folderRefreshForSharer = "";
-	                if (window[treeviewStr].selectedIndex() == -1) {
-	                	window[treeviewStr].select(1);
-	                }
-	                
-	                var url = "/ezEmail/mailList.do?dispname=" + encodeURIComponent(window[treeviewStr].getvalue(1, "foldername")) + "&url=" + encodeURIComponent(window[treeviewStr].getvalue(1, "href"));
-	                
-	            	if (shareId != "") {
-	            		url += "&shareId=" + encodeURIComponent(shareId);
-		            }
-	                
-                    var href = window[treeviewStr].getvalue(nodeIdx, "href");
-                    if (href.indexOf("shared_mailFolder")== 0 && href != "shared_mailFolder") {
-                	    url += "&sharer=" + encodeURIComponent(window[treeviewStr].getvalue(nodeIdx, "sharer"));
-                    }
+	        	    if (RtnVal) {
+                        var href = window[treeviewStr].getvalue(1, "href");
 
-                    window.open(url, "right");
-	                
-	                previewSubTreeCall();
-	                applyEllipsisMailTree();
-	            	detailView();
+                        folderRefreshForSharer = "Y";
+                        window[treeviewStr].source("<tree><nodes>" + get_childXML("", true, true, false, true) + "</nodes></tree>");
+                        window[treeviewStr].update();
+                        folderRefreshForSharer = "";
+                        if (window[treeviewStr].selectedIndex() == -1) {
+                            window[treeviewStr].select(2);
+                        }
+
+                        var url = "/ezEmail/mailList.do?dispname=" + encodeURIComponent(window[treeviewStr].getvalue(2, "foldername")) + "&url=" + encodeURIComponent(window[treeviewStr].getvalue(2, "href"));
+
+                        if (shareId != "") {
+                            url += "&shareId=" + encodeURIComponent(shareId);
+                        }
+
+                        var href = window[treeviewStr].getvalue(nodeIdx, "href");
+                        if (href.indexOf("shared_mailFolder")== 0 && href != "shared_mailFolder") {
+                            url += "&sharer=" + encodeURIComponent(window[treeviewStr].getvalue(nodeIdx, "sharer"));
+                        }
+
+                        window.open(url, "right");
+
+                        previewSubTreeCall();
+                        applyEllipsisMailTree();
+                        detailView();
+	        	    }
 	            }, 10);
 		    }
 			

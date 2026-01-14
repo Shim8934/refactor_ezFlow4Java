@@ -5058,7 +5058,7 @@ public class EzEmailServiceImpl extends EgovAbstractServiceImpl implements EzEma
 		
 		logger.debug("compId=" + compId + ",sharer=" + sharer);
 		String inputParams = "sharer=" + URLEncoder.encode(sharer, "UTF-8")
-				+ "&mailboxId=" + URLEncoder.encode(mailboxId, "UTF-8");
+				+ "&mailboxId=" + URLEncoder.encode(mailboxId, "UTF-8") + "&tenantId=" + URLEncoder.encode(String.valueOf(tenantId), "UTF-8");
 		logger.debug("inputParams=" + inputParams);
 		
 		String result = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") 
@@ -5079,7 +5079,7 @@ public class EzEmailServiceImpl extends EgovAbstractServiceImpl implements EzEma
 	public JSONObject setShareMailBoxMember(String compId, int tenantId, String sharer, String mailboxId, JSONArray userList, Locale locale)
 			throws Exception {
 		JSONObject resultObj = new JSONObject();
-		logger.debug("getShareMailBoxMember start.");
+		logger.debug("setShareMailBoxMember start.");
 		
 		logger.debug("compId=" + compId + ",sharer=" + sharer);
 		String inputParams = "sharer=" + URLEncoder.encode(sharer, "UTF-8")

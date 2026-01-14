@@ -786,8 +786,8 @@ public class EzEmailMenuController extends EzFileMngUtil {
 		StringBuilder subFolderXML = new StringBuilder();
 		
 		if (folderName.equals("shared_mailFolder")){
-			List<JSONObject> sharedMailBoxexistsCheck = ezEmailService.getSharedMailBoxFolder(loginInfo.getId(), domainName); 
-			
+			List<JSONObject> sharedMailBoxexistsCheck = ezEmailService.getSharedMailBoxFolder(loginInfo.getId(), domainName);
+
 			if(sharedMailBoxexistsCheck != null && sharedMailBoxexistsCheck.size()>0){
 				for(int z=0; z < sharedMailBoxexistsCheck.size(); z++){
 					String sharer = (String) sharedMailBoxexistsCheck.get(z).get("SHARER");
@@ -795,20 +795,20 @@ public class EzEmailMenuController extends EzFileMngUtil {
 					String folderInfofolderName = (String) sharedMailBoxexistsCheck.get(z).get("MAILBOX_NAME");
 					String userName = (String) sharedMailBoxexistsCheck.get(z).get("USERNAME");
 					String deptName = (String) sharedMailBoxexistsCheck.get(z).get("DEPTNAME");
-					
+
 					IMAPAccess ia = null;
 					try {
 						ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
 								sharerAddress, password, egovMessageSource, locale, ezEmailUtil);
-						
+
 						if (!folderName.equals("")) {
 							Folder fd =  ia.getFolder(folderInfofolderName);
-							
+
 							String folderId = fd.getName();
 							String displayName = ezEmailUtil.getDisplayNameFromFolderId(folderId, locale);
-							
+
 							subFolderXML.append("<node imgidx='1'");
-							
+
 							if (bcount.equals("-1")) {
 								if (fd.getUnreadMessageCount() > 0) {
 									subFolderXML.append(" caption='" + displayName + "'");
@@ -819,7 +819,7 @@ public class EzEmailMenuController extends EzFileMngUtil {
 							} else {
 								subFolderXML.append(" caption='" + displayName + "'");
 							}
-							
+
 							subFolderXML.append(" foldername='" + displayName + "'");
 							subFolderXML.append(" orgBoxName='" + 0 + "'");
 							//					subFolderXML.append(" orgBoxName='" + i + "'");
@@ -827,15 +827,16 @@ public class EzEmailMenuController extends EzFileMngUtil {
 							subFolderXML.append(" href='shared_mailFolder." + fd.getFullName() + "'");
 							subFolderXML.append(" sharer='" + sharer + "'");
 							subFolderXML.append(" userName='" + userName + "'");
-							subFolderXML.append(" deptName='" + deptName + "'");
-							
+							// voc 176318
+							subFolderXML.append(" deptName='" + deptName.replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("&", "&amp;") + "'");
+
 							if (!isSubscribe) {
 								if (fd.isSubscribed()) {
 									subFolderXML.append(" subscribe='1'");
 								} else {
 									subFolderXML.append(" subscribe='0'");
 								}
-								
+
 								if (fd.list().length > 0) {
 									subFolderXML.append(" hassub='1'");
 								}
@@ -844,16 +845,16 @@ public class EzEmailMenuController extends EzFileMngUtil {
 									subFolderXML.append(" hassub='1'");
 								}
 							}
-							
+
 							if (bcount.equals("-1")) {
 								if (fd.getUnreadMessageCount() > 0) {
 									subFolderXML.append(" style='font-weight:bold'");
 								}
 							}
-							
+
 							subFolderXML.append("></node>");
 						}
-						
+
 					} catch (MessagingException e) {
 						e.printStackTrace();
 					} finally {
@@ -863,7 +864,7 @@ public class EzEmailMenuController extends EzFileMngUtil {
 					}
 				}
 			}
-				
+
 		} else {
 			String sharer = request.getParameter("sharer") == null ? "" : request.getParameter("sharer");
 			String userName = request.getParameter("userName") == null ? "" : request.getParameter("userName");
@@ -3349,6 +3350,10 @@ public class EzEmailMenuController extends EzFileMngUtil {
 		int tenantId = userVO.getTenantId();
 		String useShowAllCompanies = ezCommonService.getTenantConfig("useShowAllCompanies", tenantId);
 
+		//voc 176270 사조그룹은 true가 디폴트였는데 수정
+		String useOrgListCheckBox = ezCommonService.getTenantConfig("useOrgListCheckBox", tenantId); // 조직도 체크박스 사용여부
+		useOrgListCheckBox = (useOrgListCheckBox != null && useOrgListCheckBox.equalsIgnoreCase("YES")) ? "true" : "false";
+
 		logger.debug("deptId=" +deptId + ",compId=" + compId + ",folderPath="+ folderPath + ",sharer=" + sharer);
 		String tenantDomain = "";
 		try {
@@ -3375,6 +3380,7 @@ public class EzEmailMenuController extends EzFileMngUtil {
 		model.addAttribute("mailDomain", tenantDomain);
 		model.addAttribute("sharedMailboxMail", sharedMailboxMail);
 		model.addAttribute("useShowAllCompanies", useShowAllCompanies);
+		model.addAttribute("useOrgListCheckBox", useOrgListCheckBox);
 
 		logger.debug("addSharedMailboxMember ended.");
 		return "ezEmail/addSharedMailboxMember";

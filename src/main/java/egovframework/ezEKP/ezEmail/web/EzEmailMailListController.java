@@ -4338,6 +4338,20 @@ public class EzEmailMailListController {
 		Map<String, Object> extraMap = new HashMap<String, Object>();
 		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", loginInfo.getTenantId());
 
+		//voc 176290 메일 미리보기
+		String sharer = requestObject.get("sharer") == null ? "" : (String) requestObject.get("sharer");
+		String folderName = folderPath;
+		if(!sharer.equals("")){
+			try {
+				userAccount = sharer + "@" + domainName;
+				folderName = folderPath.substring(18);
+				extraMap.put("sharer",sharer);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			logger.debug("sharer=" + sharer + ",folderName=" + folderName);
+		}
+
 		if (useSharedMailbox.equals("YES")) {
 			String shareId = (String) requestObject.get("shareId");
 			logger.debug("shareId=" + shareId);
@@ -4366,7 +4380,7 @@ public class EzEmailMailListController {
 					userAccount, password, egovMessageSource, locale, ezEmailUtil);
 
 			if (ia != null){
-				Folder f = ia.getFolder(folderPath != null ? folderPath : "");
+				Folder f = ia.getFolder(folderName != null ? folderName : "");
 
 				if (f != null && f.exists()) {
 					f.open(Folder.READ_ONLY);

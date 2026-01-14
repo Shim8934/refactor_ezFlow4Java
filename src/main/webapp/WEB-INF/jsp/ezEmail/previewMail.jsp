@@ -31,6 +31,11 @@
         }
 
         window.onload = function() {
+            if(parent.sharer!=''){
+                // 176306 ,176298 삭제, 해킹의심신고 버튼 숨김
+                document.getElementById("deleteBtn").style.display = "none";
+                document.getElementById("hackingBtn").style.display = "none";
+            }
             getPreviewMail();
         }
         
@@ -44,7 +49,8 @@
                 contentType	: "application/json",
                 data	: JSON.stringify({
                                 _href: _href,
-                                shareId: (parent.shareId)? parent.shareId : null
+                                shareId: (parent.shareId)? parent.shareId : null,
+                                sharer: (parent.sharer)? parent.sharer : null
                             }),
                 url		: "/ezEmail/getPreviewMail.do",
                 async	: true,
@@ -270,8 +276,8 @@
 
         </div>
         <div class="btnposition btnpositionNew" id="btn_area">
-            <a class="imgbtn" onclick="return delete_mail()"><span><spring:message code="ezPoll.t202" /></span></a>
-            <a class="imgbtn" onclick="return moveHackingMail_previewMail()"><span><spring:message code="ezEmail.zno002" /></span></a>
+            <a class="imgbtn" id="deleteBtn" onclick="return delete_mail()"><span><spring:message code="ezPoll.t202" /></span></a>
+            <a class="imgbtn" id="hackingBtn"onclick="return moveHackingMail_previewMail()"><span><spring:message code="ezEmail.zno002" /></span></a>
             <a class="imgbtn" onclick="windows_close()"><span><spring:message code="main.t3" /></span></a>
         </div>
     </div>

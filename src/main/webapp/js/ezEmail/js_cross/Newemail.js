@@ -1542,7 +1542,8 @@ function event_xmlhttp_mailPreview_Complete() {
                 document.getElementById("preHSenderImage").src = (senderProfileImageName !== "")? "/admin/ezOrgan/getPersonalInfo.do?fileName=" + senderProfileImageName : picNone;
                 document.getElementById("preHSenderImage").setAttribute('onerror', "this.src='" + picNone + "'");
 
-				if (useMailTag) {
+                //voc 176583
+				if (useMailTag && sharer=="") {
 					document.getElementById("pre_h_tag_add").value = "";
 					document.getElementById("pre_h_tag_view").innerHTML = "";
 					if (pTags) {
@@ -1578,7 +1579,7 @@ function event_xmlhttp_mailPreview_Complete() {
                 document.getElementById("preWSenderImage").src = (senderProfileImageName !== "")? "/admin/ezOrgan/getPersonalInfo.do?fileName=" + senderProfileImageName : picNone;
                 document.getElementById("preWSenderImage").setAttribute('onerror', "this.src='" + picNone + "'");
 
-				if (useMailTag) {
+				if (useMailTag && sharer=="") {
 					document.getElementById("pre_w_tag_add").value = "";
 					document.getElementById("pre_w_tag_view").innerHTML = "";
 					if (pTags) {

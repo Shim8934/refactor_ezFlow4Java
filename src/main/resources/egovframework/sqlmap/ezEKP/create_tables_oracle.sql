@@ -8725,6 +8725,13 @@ CREATE TABLE "JMOCHA_MAIL_POP3IMAP" (
     CONSTRAINT JMOCHA_MAIL_POP3IMAP_CHECK4 CHECK (POP_EXCLUDE_IMPORTED IN ('0', '1')),
     CONSTRAINT JMOCHA_MAIL_POP3IMAP_CHECK5 CHECK (IMAP_ENABLED IN ('0', '1'))
 );
+
+--------------------------------------------------------
+--  DDL for Sequence JMOCHA_SHARED_MAILFOLDER
+--------------------------------------------------------
+
+   CREATE SEQUENCE  "SEQ_JMOCHA_SHARED_MAILFOLDER"  MINVALUE 1 MAXVALUE 999999999999999999999999 INCREMENT BY 50 START WITH 1 CACHE 50 NOORDER  NOCYCLE ;
+
 --------------------------------------------------------
 --  DDL for Sequence DBOBJECTID_SEQUENCE
 --------------------------------------------------------
@@ -20367,6 +20374,7 @@ COMMENT ON COLUMN TBL_APPROVE_ERROR_INFO.ERROR_MESSAGE IS '오류 메시지';
 COMMENT ON COLUMN TBL_APPROVE_ERROR_INFO.ERROR_CASE IS '커스텀 오류 케이스';
 
 CREATE TABLE jmocha_shared_mailfolder (
+    simple_idx NUMBER(11,0),
     mailbox_id  VARCHAR2(100) DEFAULT NULL,
     sharer  VARCHAR2(100) DEFAULT NULL,
     share_member VARCHAR2(100) DEFAULT NULL
