@@ -2503,14 +2503,15 @@ function setbuttonenable() {
 	            document.getElementById("tbtnReceipt").style.display = "none";	   	        	
 	        }     
 	    }
-	    if (pListTypeValue == "3") {
-	    	if(!shareUser || shareUser != 'shareUser'){
-	    		document.getElementById("tbtnDraft").style.display = "";   
-	    	}
-	    }
-	    if (pListTypeValue == "2") {
-            document.getElementById("tbtnDraft").style.display = "";      
-	    }
+    }
+    // 결재진행문서, 기안한문서 에서 S, G 버전 모두 기안버튼 출력 되도록 스코프 변경
+    if (pListTypeValue == "3") {
+        if(!shareUser || shareUser != 'shareUser'){
+            document.getElementById("tbtnDraft").style.display = "";
+        }
+    }
+    if (pListTypeValue == "2") {
+        document.getElementById("tbtnDraft").style.display = "";
     }
     
     if (pListTypeValue != "21" ) {
