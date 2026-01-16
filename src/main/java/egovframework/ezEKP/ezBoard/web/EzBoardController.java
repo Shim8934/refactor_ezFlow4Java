@@ -4320,6 +4320,10 @@ public class EzBoardController extends EzFileMngUtil{
 			if ("2".equals(boardProp.getGuBun()) || boardItemVO.getWriterID() == null) {
 				rtv = ezBoardService.chkPasswordAnonymous(boardItemVO.getItemID(), password, userInfo.getTenantId());
 			}
+			// 익명게시판 아니고 게시판 작성자 ID와 로그인한 사용자 ID가 같지 않으면 권한 없음 
+			if (!"2".equals(boardProp.getGuBun()) || !boardItemVO.getWriterID().equalsIgnoreCase(userInfo.getId())) {
+				rtv = false;
+			}
 		}
 		
 		// 어떤 경우든 본인이 작성한 게시글에는 접근할 수 있게 함
