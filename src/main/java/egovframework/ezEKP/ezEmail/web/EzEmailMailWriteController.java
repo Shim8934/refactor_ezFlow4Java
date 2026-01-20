@@ -6697,7 +6697,7 @@ public class EzEmailMailWriteController extends EzFileMngUtil {
 		 */
 		do {
 			// 전사메일 ----------------------------------------------------------
-			if (!"UNUSED".equalsIgnoreCase(useApprMailAllHands)) {
+			if ("USAGE".equalsIgnoreCase(useApprMailAllHands)) {
 				for (String addr : recipients) {
 					if(ezEmailUtil.isCompanyMail(addr, tenantId)) {
 						policyChk = false;
