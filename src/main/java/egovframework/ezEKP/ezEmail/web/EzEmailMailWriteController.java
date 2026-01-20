@@ -6851,10 +6851,10 @@ public class EzEmailMailWriteController extends EzFileMngUtil {
 			String password = commonUtil.getUserIdAndPassword(loginCookie).get(1);
 			SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"), userEmail, password);
 
-			try (IMAPAccess ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+			IMAPAccess ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
 					userEmail, password, egovMessageSource, user.getLocale(), ezEmailUtil);
-				 Folder folder = ia.getFolder(ezEmailUtil.getDraftsFolderId(user.getLocale()))
-			) {
+			Folder folder = ia.getFolder(ezEmailUtil.getDraftsFolderId(user.getLocale()));		
+			try {
 				if (folder == null) {
 					logger.error("IMAP Folder is null");
 					return Result.failure(3, "IMAP Folder is null");
@@ -7016,6 +7016,14 @@ public class EzEmailMailWriteController extends EzFileMngUtil {
 				result.put("itemUid", itemUid);
 
 				return Result.success(result);
+			} finally {
+				if (folder != null) {
+					folder.close(true);
+				}
+				
+				if (ia != null) {
+					ia.close();
+				}
 			}
 		} catch (Exception e) {
 			logger.error("error:", e);
@@ -7094,10 +7102,10 @@ public class EzEmailMailWriteController extends EzFileMngUtil {
 			Long newMessageUid = null;
 			String fileName = null;
 
-			try (IMAPAccess ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+			IMAPAccess ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
 					userEmail, password, egovMessageSource, user.getLocale(), ezEmailUtil);
-				 Folder folder = ia.getFolder(ezEmailUtil.getDraftsFolderId(user.getLocale()))
-			) {
+			Folder folder = ia.getFolder(ezEmailUtil.getDraftsFolderId(user.getLocale()));			
+			try {
 				if (folder == null) {
 					logger.error("IMAP Folder is null");
 					return Result.failure(3, "IMAP Folder is null");
@@ -7239,6 +7247,14 @@ public class EzEmailMailWriteController extends EzFileMngUtil {
 
 				bigFlagNode.setTextContent("N");
 				fileLocationNode.setTextContent(fileUidName);
+			} finally {
+				if (folder != null) {
+					folder.close(true);
+				}
+				
+				if (ia != null) {
+					ia.close();
+				}
 			}
 
 			String newXmlContent = commonUtil.convertDocumentToString(xmlDom);
