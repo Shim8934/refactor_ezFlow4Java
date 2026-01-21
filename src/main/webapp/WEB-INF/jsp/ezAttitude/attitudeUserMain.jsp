@@ -2480,7 +2480,7 @@
 					<th style='width:12%'><spring:message code='ezAttitude.t134'/></th>
 					<th style='width:20%;padding-left: 20px;'><spring:message code='ezAttitude.t149'/></th>
 					<th style="width:32%; border-right-color:transparent;padding-left: 20px;"><spring:message code='ezAttitude.t46'/></th>
-					<th style='border-left:0px;width: 7px;'>&nbsp;</th>
+					<th style='border-left:0px;width: 2px;'>&nbsp;</th>
 				</tr> 
 			</table>
 			
