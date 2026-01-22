@@ -429,6 +429,12 @@ background-color: #003497; border-color: #003497;}
 .custom_radio input[type="radio"]::after{background-color: #003497;}
 .custom_radio input[type="radio"]:checked{border-color: #003497 !important;}
 
+/* 설문 상당버튼s (S) */
+.surveyBody .header-wrapper ul li span:hover{background-color: #DAE8FF !important; border-color: #3A67BE !important; color: #003497;}
+/* 타이틀
+.surveyBody .surveydetail-body .svTitle{background-color: #DAE8FF !important; border-color: #3A67BE !important; color: #003497;
+/* 설문 상당버튼s(E) */
+
 /*게시글 복사, 이동 팝업 css 추가(S)*/
 .popup #TopBoards h2.on{background: #F8F9FB !important; color: #003497 !important;}
 .popup #TopBoards h2:hover{background: #F8F9FB url(/images/kr/left/01_minus.gif) no-repeat right 13px !important; color: #003497 !important;}
