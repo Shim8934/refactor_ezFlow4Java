@@ -400,8 +400,12 @@ function getDocListS_after() {
                 NodeListLen = 0;
         }
 
+        var preDocList = new ListView();
+        preDocList.LoadFromID('DocList');
+        var preSelectedRow = preDocList.GetSelectedRows();
+
         if (NodeListLen > 10) {
-            paging(curpage, nowblock);
+            paging(curpage, nowblock, selRowChangeFlag, preSelectedRow);
         }
         else {
 
@@ -417,6 +421,11 @@ function getDocListS_after() {
             DocList.SetUrgentFlag(false);
             DocList.DataSource(ListViewNode);
             DocList.DataBind("lvtDoclist");
+            if (selRowChangeFlag && preSelectedRow.length > 0) {
+                // 탭 이동 시 전 탭에서 선택된 row 선택되지 않도록 flag값 변경
+                selRowChangeFlag = false;
+                DocList.SetSelectedID(preSelectedRow[0].getAttribute('id'));
+            }
             DocList = null;
 
             pagingCount(curpage, nowblock);
