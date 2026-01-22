@@ -181,7 +181,7 @@ function start_search() {
         }
     }
 
-    if (keyword.value.indexOf("%") != -1) {
+    if (searchKArray.find((searchK) => searchK.indexOf("%") != -1)) {
         alert("'%'" + strLang148);
         return;
     }
