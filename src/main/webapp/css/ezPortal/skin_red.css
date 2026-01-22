@@ -431,3 +431,9 @@ background-color: #A20000; border-color: #A20000;}
 .background_listImg > .custom_radio input[type="radio"]:checked{border: #A20000 !important; background: #A20000 !important;}
 .background_listImg > .custom_radio input[type="radio"]::after{left: 5px; top: 3px;}
 .background_listImg:has(.custom_radio input[type="radio"]:checked) {border: 1px solid #a20000;}
+
+/*게시글 복사, 이동 팝업 css 추가(S)*/
+.popup #TopBoards h2.on{background: #F8F9FB !important; color: #A20000 !important;}
+.popup #TopBoards h2:hover{background: #F8F9FB url(/images/kr/left/01_minus.gif) no-repeat right 13px !important; color: #A20000 !important;}
+.popup #TopBoards h2.on:hover{background: #F8F9FB !important; color: #A20000 !important;}
+/*게시글 복사, 이동 팝업 css 추가(E)*/
