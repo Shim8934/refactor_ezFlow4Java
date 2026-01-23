@@ -1910,11 +1910,14 @@
                     </div>
 				</div>
 				<!-- <li style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li> -->
+			    <c:if test="${MyBoardScrapFlag ne 'NONE'}">
+					  <li><span onClick="SaveScrapMyBoard()"><spring:message code='ezBoard.kmh13' /></span></li>
+			    </c:if>
 		        <li id="noti" style="display:none"><span onClick="ChangeNotiOrder()"><spring:message code='ezBoard.t4000' /></span></li>
 		        <c:if test="${boardInfo.boardAdmin_FG == true && boardInfo.guBun ne '2' && (boardInfo.likeFlag == 'Y' || boardInfo.disLikeFlag == 'Y')}">
 		        	<li id="likeAndDisLikeBtn" ><span onClick="likeAndDisLikeList()"><spring:message code='ezBoard.kmh09' /></span></li> 
 		        </c:if>
-			    <c:if test="${MyStorageContFlag != 'NO'}">
+			    <c:if test="${not empty MyStorageContFlag && MyStorageContFlag != 'NO'}">
 					<li><span onClick="SaveStorageMyBoard()"><spring:message code='ezBoard.kmh52' /></span></li>
 				</c:if>
 		        <c:if test="${boardInfo.boardAdmin_FG == true && boardInfo.isAllGroupBoard ne 'Y'}">
