@@ -1476,8 +1476,8 @@ function show_groupinfo2(obj) {
 	
 	if(obj == 'show'){
 		var checkId = $('#GroupListView tbody input:checked')
-		var groupColor = checkId[0].parentNode.parentNode.getAttribute("data3");
-		
+		var groupColor = checkId[0].parentNode.parentNode.parentNode.getAttribute("data3");
+
 		if(checkId.length > 1){
 			alert(strLang276);
 			return;
