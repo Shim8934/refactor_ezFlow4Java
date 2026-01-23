@@ -1925,7 +1925,7 @@ form{display:inline;margin:0}
 
 .receiver_list{border:0 none !important; font-size:12px; border-spacing:0; border-collapse:collapse;}
 .receiver_list th{text-align:left;border:0px;text-decoration:none; color:#777; font-size:12px; padding:8px 4px; border-top:1px solid #cfcfcf;border-bottom:1px solid #cfcfcf; background-color: #f6f6f6;}
-.receiver_list td{ border:0px; font-weight:normal; font-size:13px; color:#333; padding:5px 4px; line-height:150%; border-bottom:1px solid #efefef; border-spacing:0;}
+.receiver_list td{ border:0px; font-weight:normal; font-size:13px; color:#333; padding:5px 4px; line-height:150%; border-bottom:1px solid #efefef; border-spacing:0; text-overflow: ellipsis; overflow: hidden;}
 
 .address_wordmenu {margin:0px 0px 10px 0px; min-height:25px; padding:5px 0px 10px 0px; list-style:none; border-top:1px solid #eee; border-bottom:1px solid #eee;}
 .address_wordmenu li {height:22px; line-height:22px; width:18px; padding:0px 0px 0px 3px; display:inline-block; cursor:pointer;text-align:center;border:1px solid #dedede;border-radius:2px;margin-top:5px;}

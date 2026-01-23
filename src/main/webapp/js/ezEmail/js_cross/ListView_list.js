@@ -73,6 +73,7 @@ function ListView() {
     this.SetSelectedID = SetSelectedID;
     this.SetSelectedIndex = SetSelectedIndex;
     this.GetSelectedRowID = GetSelectedRowID;
+    this.GetSelectedRowIDMaxNum = GetSelectedRowIDMaxNum;
     this.CreateTabelCell = CreateTabelCell;
     this.ExistRow = ExistRow;
     this.RowDataBind = RowDataBind;
@@ -1330,6 +1331,29 @@ function ListView() {
         }
 
         return oList.childNodes[1].childNodes[pIdx].getAttribute("id");
+    }
+
+    function GetSelectedRowIDMaxNum() {
+        let maxNum = 0;
+
+        var oList = document.getElementById(_thisID);
+        if (!oList)
+            return maxNum;
+
+        if (oList.rows.length > 0) {
+            for (var i = 0; i < oList.rows.length; i++) {
+                const id = oList.rows[i].id;
+
+                if (id.indexOf("TR") >= 0) {
+                    const num = Number(id.substring(id.lastIndexOf('_') + 1), id.length);
+
+                    if (!isNaN(num))
+                        maxNum = Math.max(maxNum, num);
+                }
+            }
+        }
+
+        return maxNum;
     }
 
     function CreateTabelCell(pText) {

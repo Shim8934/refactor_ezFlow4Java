@@ -2818,180 +2818,36 @@
 	        function dlmember_click_Complete(count) {
 	            DivPopUpHidden();
 	            try {
-	                if (m_selectedWindow.id == "ListViewMsgTo") {
-	                    var listviewTo = new ListView();
-	                    listviewTo.LoadFromID("MsgToList");
-	                    var InitTrTo = listviewTo.GetDataRows();
-	                    var pparsingXML = "";
-	                    var pparsingXML2 = "";
-	                    var aa = 0;
-	                    for (var i = 0; i < count; i++) {
-	                        var IsInsert = CheckMailReceiver(mail_select_dlmember_cross_dialogArguments[0]["email"][i], "3");
-	                        if (!IsInsert) {
-	                        	if (type == "") {
-	                        		if (!increaseReceiverCount()) {
-						        		return;
-						        	}
-	                        	}
-	                        	
-	                        	pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
-	                            pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + MakeXMLString(mail_select_dlmember_cross_dialogArguments[0]["name"][i]) + "</DATA1>";
-	                            pparsingXML = pparsingXML + "<DATA2>" + mail_select_dlmember_cross_dialogArguments[0]["email"][i] + "</DATA2>";
-	                            pparsingXML = pparsingXML + "<DATA3></DATA3>";
-	                            pparsingXML = pparsingXML + "<DATA4></DATA4>";
-	                            pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(mail_select_dlmember_cross_dialogArguments[0]["name"][i]) + " &lt;" + mail_select_dlmember_cross_dialogArguments[0]["email"][i] + "&gt;" + "</VALUE></CELL></ROW>";
-	                            pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
-	                            var Resultxml = loadXMLString(pparsingXML2);
-	                            
-	                            pparsingXML2 = "";
-	                            pparsingXML = "";
-	                            
-	                            var listview = new ListView();
-	                            listview.LoadFromID("MsgToList");
-	                            
-	                            var MaxID = 0;
-                                var InitTr = listview.GetDataRows();
-                                var MaxCntNum = 0;
-                                for (var j = 0  ; j < InitTr.length  ; j++) {
-                                    var curnum = Number(listview.GetSelectedRowID(j).substring(listview.GetSelectedRowID(j).lastIndexOf('_') + 1), listview.GetSelectedRowID(j).length);
-                                    if (MaxID < curnum) {
-                                        MaxID = curnum;
-                                        MaxCntNum = j;
-                                    }
-                                }
+					const LoadIDMap = {ListViewMsgTo: "MsgToList", ListViewMsgCC: "MsgCCList", ListViewMsgBCC: "MsgBCCList"};
+					const LoadID = LoadIDMap[m_selectedWindow.id];
+					if (!LoadID) return;
 
-                                var objTr = listview.AddRow(InitTr.length);
-                                if (MaxCntNum != 0)
-                                    MaxCntNum = MaxCntNum + 1;
-                                SetAttribute(objTr, "id", listview.GetSelectedRowID(MaxCntNum).substring(0, listview.GetSelectedRowID(MaxCntNum).lastIndexOf('_') + 1) + (MaxID + 1));
-                                listview.AddDataRow(objTr, Resultxml);
+					var listviewTo = new ListView();
+					listviewTo.LoadFromID(LoadID);
+					var InitTrTo = listviewTo.GetDataRows();
 
-                                document.getElementById("MsgToList").className = "receiver_list";
-                                var _tdlength = document.getElementById("MsgToList").getElementsByTagName("TD").length;
-                                for (var y = 0; y < _tdlength; y++) {
-                                    document.getElementById("MsgToList").getElementsByTagName("TD")[y].style.textOverflow = "";
-                                    document.getElementById("MsgToList").getElementsByTagName("TD")[y].style.overflow = "";
-                                }
+					var listview = new ListView();
+					listview.LoadFromID(LoadID);
+					let MaxID = listview.GetSelectedRowIDMaxNum();
+					document.getElementById(LoadID).className = "receiver_list";
 
-                            }
-                        }
-	                }
-	                else if (m_selectedWindow.id == "ListViewMsgCC") {
-	                    var listviewCC = new ListView();
-	                    listviewCC.LoadFromID("MsgCCList");
-	                    var InitTrTo = listviewCC.GetDataRows();
-	                    var pparsingXML = "";
-	                    var pparsingXML2 = "";
-	                    var aa = 0;
-	                    for (var i = 0; i < count; i++) {
-	                        var IsInsert = CheckMailReceiver(mail_select_dlmember_cross_dialogArguments[0]["email"][i], "3");
-	                        if (!IsInsert) {
-	                        	if (type == "") {
-	                        		if (!increaseReceiverCount()) {
-						        		return;
-						        	}
-	                        	}
-	                        	
-	                        	pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
-	                            pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + MakeXMLString(mail_select_dlmember_cross_dialogArguments[0]["name"][i]) + "</DATA1>";
-	                            pparsingXML = pparsingXML + "<DATA2>" + mail_select_dlmember_cross_dialogArguments[0]["email"][i] + "</DATA2>";
-	                            pparsingXML = pparsingXML + "<DATA3></DATA3>";
-	                            pparsingXML = pparsingXML + "<DATA4></DATA4>";
-	                            pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(mail_select_dlmember_cross_dialogArguments[0]["name"][i]) + " &lt;" + mail_select_dlmember_cross_dialogArguments[0]["email"][i] + "&gt;" + "</VALUE></CELL></ROW>";
-	                            pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
-	                            var Resultxml = loadXMLString(pparsingXML2);
-	                            
-	                            pparsingXML2 = "";
-	                            pparsingXML = "";
-	                            
-	                            var listview = new ListView();
-	                            listview.LoadFromID("MsgCCList");
-	                            
-	                            var MaxID = 0;
-                                var InitTr = listview.GetDataRows();
-                                var MaxCntNum = 0;
-                                for (var j = 0  ; j < InitTr.length  ; j++) {
-                                    var curnum = Number(listview.GetSelectedRowID(j).substring(listview.GetSelectedRowID(j).lastIndexOf('_') + 1), listview.GetSelectedRowID(j).length);
-                                    if (MaxID < curnum) {
-                                        MaxID = curnum;
-                                        MaxCntNum = j;
-                                    }
-                                }
+					for (var i = 0; i < count; i++) {
+						if (CheckMailReceiver(mail_select_dlmember_cross_dialogArguments[0]["email"][i], "3")) continue;
+						if (type == "" && !increaseReceiverCount()) return;
 
-                                var objTr = listview.AddRow(InitTr.length);
-                                if (MaxCntNum != 0)
-                                    MaxCntNum = MaxCntNum + 1;
-                                SetAttribute(objTr, "id", listview.GetSelectedRowID(MaxCntNum).substring(0, listview.GetSelectedRowID(MaxCntNum).lastIndexOf('_') + 1) + (MaxID + 1));
-                                listview.AddDataRow(objTr, Resultxml);
+						const pparsingXML = "<LISTVIEWDATA2><ROWS>"
+						+ "<ROW><CELL><DATA1>" + MakeXMLString(mail_select_dlmember_cross_dialogArguments[0]["name"][i]) + "</DATA1>"
+						+ "<DATA2>" + mail_select_dlmember_cross_dialogArguments[0]["email"][i] + "</DATA2>"
+						+ "<DATA3></DATA3>"
+						+ "<DATA4></DATA4>"
+						+ "<VALUE>" + MakeXMLString(mail_select_dlmember_cross_dialogArguments[0]["name"][i]) + " &lt;" + mail_select_dlmember_cross_dialogArguments[0]["email"][i] + "&gt;" + "</VALUE></CELL></ROW>"
+						+ "</ROWS></LISTVIEWDATA2>";
+						var Resultxml = loadXMLString(pparsingXML);
 
-                                document.getElementById("MsgCCList").className = "receiver_list";
-                                var _tdlength = document.getElementById("MsgCCList").getElementsByTagName("TD").length;
-                                for (var y = 0; y < _tdlength; y++) {
-                                    document.getElementById("MsgCCList").getElementsByTagName("TD")[y].style.textOverflow = "";
-                                    document.getElementById("MsgCCList").getElementsByTagName("TD")[y].style.overflow = "";
-                                }
-	                        }
-	                    }
-	                }
-	                else if (m_selectedWindow.id == "ListViewMsgBCC") {
-	                    var listviewBCC = new ListView();
-	                    listviewBCC.LoadFromID("MsgBCCList");
-	                    var InitTrTo = listviewBCC.GetDataRows();
-	                    var pparsingXML = "";
-	                    var pparsingXML2 = "";
-	                    var aa = 0;
-	                    for (var i = 0; i < count; i++) {
-	                        //var IsInsert = CheckMailReceiver(rtnValue["email"][i], "3");
-	                        var IsInsert = CheckMailReceiver(mail_select_dlmember_cross_dialogArguments[0]["email"][i], "3");
-	                        if (!IsInsert) {
-	                        	if (type == "") {
-	                        		if (!increaseReceiverCount()) {
-						        		return;
-						        	}
-	                        	}
-	                        	
-	                        	pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
-	                            pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + MakeXMLString(mail_select_dlmember_cross_dialogArguments[0]["name"][i]) + "</DATA1>";
-	                            pparsingXML = pparsingXML + "<DATA2>" + mail_select_dlmember_cross_dialogArguments[0]["email"][i] + "</DATA2>";
-	                            pparsingXML = pparsingXML + "<DATA3></DATA3>";
-	                            pparsingXML = pparsingXML + "<DATA4></DATA4>";
-	                            pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(mail_select_dlmember_cross_dialogArguments[0]["name"][i]) + " &lt;" + mail_select_dlmember_cross_dialogArguments[0]["email"][i] + "&gt;" + "</VALUE></CELL></ROW>";
-	                            pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
-	                            var Resultxml = loadXMLString(pparsingXML2);
-	                            
-	                            pparsingXML2 = "";
-	                            pparsingXML = "";
-	                            
-	                            var listview = new ListView();
-	                            listview.LoadFromID("MsgBCCList");
-	                            
-	                            var MaxID = 0;
-                                var InitTr = listview.GetDataRows();
-                                var MaxCntNum = 0;
-                                for (var j = 0  ; j < InitTr.length  ; j++) {
-                                    var curnum = Number(listview.GetSelectedRowID(j).substring(listview.GetSelectedRowID(j).lastIndexOf('_') + 1), listview.GetSelectedRowID(j).length);
-                                    if (MaxID < curnum) {
-                                        MaxID = curnum;
-                                        MaxCntNum = j;
-                                    }
-                                }
-
-                                var objTr = listview.AddRow(InitTr.length);
-                                if (MaxCntNum != 0)
-                                    MaxCntNum = MaxCntNum + 1;
-                                SetAttribute(objTr, "id", listview.GetSelectedRowID(MaxCntNum).substring(0, listview.GetSelectedRowID(MaxCntNum).lastIndexOf('_') + 1) + (MaxID + 1));
-                                listview.AddDataRow(objTr, Resultxml);
-
-                                document.getElementById("MsgBCCList").className = "receiver_list";
-                                var _tdlength = document.getElementById("MsgBCCList").getElementsByTagName("TD").length;
-                                for (var y = 0; y < _tdlength; y++) {
-                                    document.getElementById("MsgBCCList").getElementsByTagName("TD")[y].style.textOverflow = "";
-                                    document.getElementById("MsgBCCList").getElementsByTagName("TD")[y].style.overflow = "";
-                                }
-	                        
-	                        }
-	                    }
-	                }
+						var objTr = listview.AddRow(listview.GetRowCount());
+						SetAttribute(objTr, "id", LoadID + "_TR_" + ++MaxID);
+						listview.AddDataRow(objTr, Resultxml);
+					}
 	            } catch (e) { }
 	        }
 	        
