@@ -42,6 +42,11 @@ public class CookieAttributeFilter implements Filter{
 				
 				response.getWriter().println("direct jsp request not allowed.");
 				return;
+			} else if (((HttpServletRequest)request).getRequestURI().endsWith(".jspx")) {
+				logger.debug("jspx request={}", ((HttpServletRequest)request).getRequestURI());
+
+				response.getWriter().println("direct jspx request not allowed.");
+				return;
 			}
 		}
 		
