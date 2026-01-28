@@ -18,6 +18,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/input-util.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/search_mail.js')}"></script>
+		<script>var usePreviewMail = "${usePreviewMail}";</script>
 		<script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/NewMailList.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/Newemail.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/newMail_Cross.js')}"></script>
@@ -142,7 +143,7 @@
 			var searchRequiredCategory = [];
 			var searchRequirement = [];
 			let drawTagConsumeCallback;
-			var usePreviewMail = ${usePreviewMail};
+			//var usePreviewMail = ${usePreviewMail};
 		    var url = "<c:out value='${url}'/>";
 		    var sharer = "${sharer}";
 

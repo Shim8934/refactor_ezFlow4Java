@@ -418,13 +418,26 @@ function MakeListInfoHTML(ConentObject) {
                             _TDColum.title = p_Title.replaceAll('&amp;', '&').replaceAll('&#40;', '(').replaceAll('&#41;', ')').replaceAll('&lt;', '<').replaceAll('&gt;', '>').replaceAll('&quot;', '"').replaceAll('&#39;', "'");
 
                             if (useMailNewWindow == "YES") {
-                            	if (g_bdraft == true) {
-	                            	p_Subject = "<span style='color: #999;'>" + p_mailBoxName + "</span>" + p_Subject + "<img class='mailpopupicon' id='previewMailIcon' src='/images/bsearch_new2.svg' width='14px' style='padding: 0 8px;' onclick = 'previewMail(this, event)' onmouseover = 'this.src = \"/images/bsearch_new2_hover.svg\"'  onmouseout = 'this.src = \"/images/bsearch_new2.svg\"'/>";
-	                            } else {
-	                            	p_Subject = "<div id = \"subject\"style=\" cursor:pointer; max-width:85%; display:inline-block;overflow:hidden; text-overflow: ellipsis;\">" + "<span style='color: #999;'>" + p_mailBoxName + "</span>" + p_Subject + "</div>&nbsp;&nbsp;<img class='mailpopupicon' src=\"/images/email/popup_icon.gif\" width=\"12px\"  onclick = \"mailOpenPopup(this, event)\" /> <img class='mailpopupicon' id='previewMailIcon' src='/images/bsearch_new2.svg' width='14px' style='padding: 0 8px;' onclick = 'previewMail(this, event)' onmouseover = 'this.src = \"/images/bsearch_new2_hover.svg\"'  onmouseout = 'this.src = \"/images/bsearch_new2.svg\"'/>" ;
-	                            }
+                                // 2026.01.28 한슬기 : 메일 미리보기버튼(돋보기) 옵션화 적용
+                                if (usePreviewMail === "true"){
+                                    if (g_bdraft == true) {
+                                        p_Subject = "<span style='color: #999;'>" + p_mailBoxName + "</span>" + p_Subject + "<img class='mailpopupicon' id='previewMailIcon' src='/images/bsearch_new2.svg' width='14px' style='padding: 0 8px;' onclick = 'previewMail(this, event)' onmouseover = 'this.src = \"/images/bsearch_new2_hover.svg\"'  onmouseout = 'this.src = \"/images/bsearch_new2.svg\"'/>";
+                                    } else {
+                                        p_Subject = "<div id = \"subject\"style=\" cursor:pointer; max-width:85%; display:inline-block;overflow:hidden; text-overflow: ellipsis;\">" + "<span style='color: #999;'>" + p_mailBoxName + "</span>" + p_Subject + "</div>&nbsp;&nbsp;<img class='mailpopupicon' src=\"/images/email/popup_icon.gif\" width=\"12px\"  onclick = \"mailOpenPopup(this, event)\" /> <img class='mailpopupicon' id='previewMailIcon' src='/images/bsearch_new2.svg' width='14px' style='padding: 0 8px;' onclick = 'previewMail(this, event)' onmouseover = 'this.src = \"/images/bsearch_new2_hover.svg\"'  onmouseout = 'this.src = \"/images/bsearch_new2.svg\"'/>" ;
+                                    }
+                                } else {
+                                    if (g_bdraft == true) {
+                                        p_Subject = "<span style='color: #999;'>" + p_mailBoxName + "</span>" + p_Subject;
+                                    } else {
+                                        p_Subject = "<div id = \"subject\"style=\" cursor:pointer; max-width:85%; display:inline-block;overflow:hidden; text-overflow: ellipsis;\">" + "<span style='color: #999;'>" + p_mailBoxName + "</span>" + p_Subject + "</div>&nbsp;&nbsp;" ;
+                                    }
+                                }
                             } else {
-                                p_Subject = "<span style='color: #999;'>" + p_mailBoxName + "</span>" + p_Subject + "<img class='mailpopupicon' id='previewMailIcon' src='/images/bsearch_new2.svg' width='14px' style='padding: 0 8px;' onclick = 'previewMail(this, event)' onmouseover = 'this.src = \"/images/bsearch_new2_hover.svg\"'  onmouseout = 'this.src = \"/images/bsearch_new2.svg\"'/>";
+                                if (usePreviewMail === "true") {
+                                    p_Subject = "<span style='color: #999;'>" + p_mailBoxName + "</span>" + p_Subject + "<img class='mailpopupicon' id='previewMailIcon' src='/images/bsearch_new2.svg' width='14px' style='padding: 0 8px;' onclick = 'previewMail(this, event)' onmouseover = 'this.src = \"/images/bsearch_new2_hover.svg\"'  onmouseout = 'this.src = \"/images/bsearch_new2.svg\"'/>";
+                                } else {
+                                    p_Subject = "<span style='color: #999;'>" + p_mailBoxName + "</span>" + p_Subject;
+                                }
                             }
 
                             _TDColum.innerHTML = p_Subject;
