@@ -1793,9 +1793,11 @@ public class EzEmailAdminController {
 			}
 			itemCnt = ezOrganAdminService.getUserCount(userInfo.getTenantId(), searchKeycode, searchKeyword, searchFor, companyId);
 		} catch (NullPointerException ex) {
+			logger.debug(ex.getMessage());
 			userCnList = new ArrayList<>();
 			itemCnt = 0;
 		} catch (Exception ex) {
+			logger.debug(ex.getMessage());
 			userCnList = new ArrayList<>();
 			itemCnt = 0;
 		}
