@@ -181,11 +181,6 @@ function start_search() {
         }
     }
 
-    if (searchKArray.find((searchK) => searchK.indexOf("%") != -1)) {
-        alert("'%'" + strLang148);
-        return;
-    }
-
     var baseURL = document.location.protocol + "//" + g_servername + "/" + g_expath + "/" + g_userID + "/";
 
     var sMailFolder = TrimText(select2.value);

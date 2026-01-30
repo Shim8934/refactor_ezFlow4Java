@@ -822,12 +822,6 @@
 		            return;
 		        }
 
-				// 2025.06.02 한슬기 : 불필요한 코드 제거
-				/*if (inputkeyword.value.indexOf("%") != -1) {
-                    alert("'%'" + strLang148);
-                    return;
-                }*/
-		        
 		        if (inputkeyword.value == "") {
 		        // 2022-12-29 이사라 : 기본검색 시 검색기간을 추가하여 keyword 없이도 검색이 가능하도록 수정
 		        //    alert(strLang254);
