@@ -887,7 +887,7 @@
 			}
 	    </script>
 	</head>
-	<body class="popup" onload="window_onload()">
+	<body class="popup newBoardPopup" onload="window_onload()">
 		<div id="menu">
 			<ul>
 				<li><span onClick="checkDuplicateSubmit('new');"><spring:message code='ezBoard.t98'/></span></li>
