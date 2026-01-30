@@ -834,7 +834,7 @@
 			}
 	    </script>
 	</head>
-	<body class="popup" onload="window_onload()">
+	<body class="popup newBoardPopup" onload="window_onload()">
 	    <div class="layout">
 			<div id="menu">
 				<ul>
