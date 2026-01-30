@@ -1382,9 +1382,9 @@ public class EzJournalGWController {
 					}*/
 				}
 			}
-			/*zos.flush();
+			zos.flush();
 			zos.close();
-			zos = null;*/
+//			zos = null;
 			
 			EzFAL.EzFile file = new EzFAL.EzFile(pDirTempPath + ".zip");
 			
