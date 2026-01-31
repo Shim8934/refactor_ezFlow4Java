@@ -4001,11 +4001,16 @@ public class EzEmailMailListController {
 			saveChangesTagRequest.getDisableTagList().stream().distinct().map("$Tag-"::concat).forEach(removeFlags::add);
 
 			for (Map.Entry<String, List<Long>> entry : mailboxUidsMap.entrySet()) {
-				try (Folder folder = imapAccess.getFolder(entry.getKey())) {
+				Folder folder = imapAccess.getFolder(entry.getKey());
+				try {
 					folder.open(Folder.READ_WRITE);
 					Message[] messagesByUID = ((IMAPFolder) folder).getMessagesByUID(ArrayUtils.toPrimitive(entry.getValue().toArray(new Long[0])));
 					folder.setFlags(messagesByUID, addFlags, true);
 					folder.setFlags(messagesByUID, removeFlags, false);
+				} finally {
+					if (folder != null) {
+						folder.close(true);
+					}
 				}
 			}
 		} catch (Exception e) {
@@ -4043,9 +4048,10 @@ public class EzEmailMailListController {
 			userEmail = userInfo.getId() + "@" + domainName;
 		}
 
-		try (IMAPAccess imapAccess = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+		IMAPAccess imapAccess = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
 				userEmail, commonUtil.getUserIdAndPassword(loginCookie).get(1), egovMessageSource, locale, ezEmailUtil);
-			 Folder folder = imapAccess.getFolder(folderId)) {
+		Folder folder = imapAccess.getFolder(folderId);		
+		try {
 			if (folder == null) {
 				logger.error("has not exists folder: {}, user: {}", folderId, userEmail);
 				modelAndView.setStatus(HttpStatus.NOT_FOUND);
@@ -4056,6 +4062,14 @@ public class EzEmailMailListController {
 			String folderName = ezEmailUtil.getDisplayNameFromFolderId(folderId, locale);
 			modelAndView.addObject("folderName", folderName.replace(".", "/"));
 			modelAndView.setViewName("/ezEmail/mailKeepMove");
+		} finally {
+			if (folder != null) {
+				folder.close(true);
+			}
+
+			if (imapAccess != null) {
+				imapAccess.close();
+			}
 		}
 
 		return modelAndView;
@@ -4131,16 +4145,18 @@ public class EzEmailMailListController {
 				Double userQuota = 0.0;
 				Double userWarn = 0.0;
 
-				try (IMAPAccess ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+				IMAPAccess ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
 						userEmail, commonUtil.getUserIdAndPassword(loginCookie).get(1), egovMessageSource, locale, ezEmailUtil);
-					 IMAPFolder targetFolder = (IMAPFolder) ia.getFolder(targetFolderPath)) {
+				IMAPFolder targetFolder = (IMAPFolder) ia.getFolder(targetFolderPath);				
+				try {
 					ezEmailService.setMailboxProgress(userKey, userEmail, "KEEPMOVE", userInfo.getTenantId(), -1);
 
 					Map<String, Set<Long>> mailboxMoveTargetMailMap = new HashMap<>();
 					Set<String> fromSet = new HashSet<>();
 
 					for (Map.Entry<String, long[]> folderIdUid : folderIdUidMap.entrySet()) {
-						try (IMAPFolder sourceFolder = (IMAPFolder) ia.getFolder(folderIdUid.getKey())) {
+						IMAPFolder sourceFolder = (IMAPFolder) ia.getFolder(folderIdUid.getKey());
+						try {
 							sourceFolder.open(Folder.READ_ONLY);
 							Message[] originMessages = sourceFolder.getMessagesByUID(folderIdUid.getValue());
 
@@ -4163,6 +4179,14 @@ public class EzEmailMailListController {
 
 							for (long uid : folderIdUid.getValue()) {
 								uidSet.add(uid);
+							}
+						} finally {
+							if (sourceFolder != null) {
+								try {
+									sourceFolder.close(true);
+								} catch (MessagingException me) {
+									logger.error(me.getMessage(), me);
+								}
 							}
 						}
 					}
@@ -4227,7 +4251,8 @@ public class EzEmailMailListController {
 					int processedCount = 0;
 
 					for (Map.Entry<String, Set<Long>> mailboxInUids : mailboxMoveTargetMailMap.entrySet()) {
-						try (IMAPFolder sourceFolder = (IMAPFolder) ia.getFolder(mailboxInUids.getKey())) {
+						IMAPFolder sourceFolder = (IMAPFolder) ia.getFolder(mailboxInUids.getKey());
+						try {
 							sourceFolder.open(Folder.READ_WRITE);
 							Message[] messages = sourceFolder.getMessagesByUID(ArrayUtils.toPrimitive(mailboxInUids.getValue().toArray(new Long[0])));
 							String useImapMoveCommand = ezCommonService.getTenantConfig("useImapMoveCommand", userInfo.getTenantId());
@@ -4262,6 +4287,14 @@ public class EzEmailMailListController {
 									ezEmailService.updateMailboxProgress(userKey, Math.min((int) Math.floor((double) processedCount / totalCount * 100), 99));
 								}
 							}
+						} finally {
+							if (sourceFolder != null) {
+								try {
+									sourceFolder.close(true);
+								} catch (MessagingException me) {
+									logger.error(me.getMessage(), me);
+								}
+							}
 						}
 					}
 
@@ -4274,6 +4307,18 @@ public class EzEmailMailListController {
 						logger.error("updateMailboxProgress error:", e);
 					}
 				} finally {
+					if (targetFolder != null) {
+						try {
+							targetFolder.close(true);
+						} catch (MessagingException me) {
+							logger.error(me.getMessage(), me);
+						}
+					}
+
+					if (ia != null) {
+						ia.close();
+					}
+					
 					// 사용자 Quota를 변경시켰다면 원래 값으로 복원시킨다.
 					if (isNewUserQuotaNeeded) {
 						try {
