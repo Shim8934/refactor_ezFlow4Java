@@ -10587,6 +10587,8 @@ public class EzBoardController extends EzFileMngUtil{
 					zos.write(fileBytes);
 					zos.closeEntry();
 				}
+                zos.flush();
+                zos.close();
 	
 				EzFAL.EzFile file = new EzFAL.EzFile(pDirTempPath + ".zip");
 				
