@@ -1036,7 +1036,6 @@ function Window_resize() {
             		    } 
             		}
             	}
-                document.getElementById("MailListRayer").style.width = "100%";
             }
             if (pPreviewShow_HOW.trim() == "H") {
                 if (pMailListDiv_H == 0 || pMailPreVDiv_H == 0) {
