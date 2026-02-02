@@ -683,6 +683,10 @@
 					menuAllList.classList.add('menu-icon');
 				}
 				
+				if (!!item && item.menuUrl == "/ezApprovalG/apprGMain.do") {
+					item.menuUrl = "/ezApprovalG/apprGMain.do?listType=25";
+				}
+				
 				menuAllList.addEventListener('click', expandMenuClickEvent.bind(menuAllList, item.menuUrl, item.openType));
 				
 				document.getElementById('menuListAll').appendChild(menuAllList);
