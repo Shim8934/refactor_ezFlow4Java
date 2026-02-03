@@ -37066,18 +37066,18 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 					uniqueFileNameMap = new HashMap<String, Integer> ();
 					folderName = commonUtil.getUniqueFileName(fileName, uniqueFolderNameMap);
 					folderNameMap.put(docId, folderName);
-					zout.putNextEntry(new ZipEntry(folderName + commonUtil.separator));
-					zout.closeEntry();
+					//zout.putNextEntry(new ZipEntry(folderName + commonUtil.separator));
+					//zout.closeEntry();
 					isAttachYN = false;
 					downloadFileInZip(realPath, filePath, fileName, folderName, zout, uniqueFileNameMap, isAttachYN, attMark);
 					break;
 				case "ATT":
 					attachCnt += 1;
 					// 첨부파일 존재할 시 첨부 폴더 생성.
-					if (attachCnt == 1) {
-						zout.putNextEntry(new ZipEntry(folderName + commonUtil.separator + attMark + commonUtil.separator));
-						zout.closeEntry();
-					}
+					//if (attachCnt == 1) {
+					//  zout.putNextEntry(new ZipEntry(folderName + commonUtil.separator + attMark + commonUtil.separator));
+					//  zout.closeEntry();
+					//}
 					isAttachYN = true;
 					downloadFileInZip(realPath, filePath, fileName, folderName, zout, uniqueFileNameMap, isAttachYN, attMark);
 					break;
