@@ -66,5 +66,6 @@ var messages = {
 	apprPortlet005 : "Tài liệu được thực hiện bởi một công ty khác không thể được phục hồi.",
 	apprPortlet006 : "Dạng Hangul chỉ có thể được tìm thấy trong IE.",
 	apprPortlet007 : "Biểu mẫu được liên kết không thể được soạn thảo lại.",
-	apprPortlet008 : "Bạn có muốn hủy bỏ cấu hình vắng mặt không?"
+	apprPortlet008 : "Bạn có muốn hủy bỏ cấu hình vắng mặt không?",
+    strLangnbh001 : "Không có quyền xem danh sách."
 }

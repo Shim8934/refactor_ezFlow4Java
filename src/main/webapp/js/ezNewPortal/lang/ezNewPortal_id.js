@@ -66,6 +66,6 @@ var messages = {
 	apprPortlet005 : "Dokumen yang dibuat oleh perusahaan lain tidak dapat dipulihkan.",
 	apprPortlet006 : "Formulir Hangul hanya dapat ditemukan di IE.",
 	apprPortlet007 : "Formulir yang ditautkan tidak dapat ditulis ulang.",
-	apprPortlet008 : "Apakah Anda ingin membatalkan konfigurasi ketidakhadiran?"
-	
+	apprPortlet008 : "Apakah Anda ingin membatalkan konfigurasi ketidakhadiran?", 
+	strLangnbh001 : "Tidak memiliki hak untuk melihat daftar."
 }

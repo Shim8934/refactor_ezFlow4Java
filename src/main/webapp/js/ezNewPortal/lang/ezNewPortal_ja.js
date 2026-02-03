@@ -66,5 +66,6 @@ var messages = {
 	apprPortlet005 : "他の会社から提案した文書は再起案することができません。",
 	apprPortlet006 : "日本語の様式は IE からのみ見られます。",
 	apprPortlet007 : "連動様式は再起案することができません。",
-	apprPortlet008 : "不在設定を解除しますか？"
+	apprPortlet008 : "不在設定を解除しますか？",
+	strLangnbh001 : "リストを閲覧する権限がありません。"
 }

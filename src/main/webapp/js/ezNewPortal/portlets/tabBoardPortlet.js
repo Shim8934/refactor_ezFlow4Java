@@ -127,17 +127,22 @@ function getTabBoardList(tabId, boardId, tabBoardName) {
 			var totalCnt = data.totalCnt;
 			var currentPage = data.currentPage;
 			var boardList = data.boardList;
+			var listViewFg = data.listViewFg;
+			
 			if (typeof boardList != "undefined") {
 		        var tabDocsHTML = "";
-
-		        boardList.forEach(function (item, index) {
-		            tabDocsHTML += dataAssemblerTabBoard(item);
-		        });
+				
+				if (boardList != null) {
+					boardList.forEach(function (item, index) {
+						tabDocsHTML += dataAssemblerTabBoard(item);
+					});	
+				}
 		        
 		        if (tabDocsHTML == "") {
+					var setStrLang = listViewFg ? messages.strLang1 : messages.strLangnbh001;
 		            tabDocsHTML += "<dl class='nodata'>";
 					tabDocsHTML += "<dt><img src='/images/kr/main/noData_sIcon.png'></dt>";
-					tabDocsHTML += "<dd>" + messages.strLang1 + "</dd>";
+					tabDocsHTML += "<dd>" + setStrLang + "</dd>";
 					tabDocsHTML += "</dl>";
 		        }
 		        

@@ -66,5 +66,6 @@ var messages = {
 	apprPortlet005 : "Documents made by another company can not be recovered.",
 	apprPortlet006 : "Hangul form can be found only in IE.",
 	apprPortlet007 : "The linked form can not be re-drafted.",
-	apprPortlet008 : "Do you want to unlock absence configuration?"
+	apprPortlet008 : "Do you want to unlock absence configuration?",
+	strLangnbh001 : "No right to view list."
 }

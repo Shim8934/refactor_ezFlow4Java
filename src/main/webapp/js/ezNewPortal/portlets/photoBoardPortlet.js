@@ -28,6 +28,11 @@ function initPhotoBoardPortlet(portletId) {
 	if (nodataArea) {
 		document.getElementById(portletId + "Portlet").querySelector(".portletPageNav").style.display = "none";
 	}
+
+	var listViewOff = document.getElementById(portletId + "Portlet").querySelector(".listViewOff");
+	if (listViewOff) {
+		totalCnt = 0;
+	}
 	
 	var currentPage = 1;
 	resetPortletPaging(portletId, totalCnt, currentPage, "");

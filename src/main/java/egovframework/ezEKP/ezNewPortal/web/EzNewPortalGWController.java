@@ -4140,12 +4140,16 @@ public class EzNewPortalGWController {
 			
 			if (boardId == null) {
 				data.put("access", false);
+				data.put("listViewFg", false);
 				data.put("photoBoardList", null);
 				data.put("totalCnt", 0);
 				data.put("currentPage", 1);
 			} else {
 				// 게시판 권한 체크
-				boolean accessCheck = boardAuthCheck(boardId, deptPath, tenantId, companyId, deptId, userId, rollInfo);
+				Map<String, Object> accessMap = ezNewPortalService.boardAuthCheck(boardId, deptPath, tenantId, companyId, deptId, userId, rollInfo);
+				boolean accessCheck = (boolean) accessMap.get("access");
+				boolean listViewFg = (boolean) accessMap.get("listViewFg");
+				data.put("listViewFg", listViewFg);
 				if (!accessCheck) {
 					data.put("access", "false");
 					data.put("photoBoardList", null);
@@ -4218,11 +4222,14 @@ public class EzNewPortalGWController {
 			String boardId = portlet.getPortletBoardId();
 
 			// 게시판 권한 체크
-			boolean accessCheck = boardAuthCheck(boardId, deptPath, tenantId, companyId, deptId, userId, rollInfo);
+			Map<String, Object> accessMap = ezNewPortalService.boardAuthCheck(boardId, deptPath, tenantId, companyId, deptId, userId, rollInfo);
+			boolean accessCheck = (boolean) accessMap.get("access");
+			boolean listViewFg = (boolean) accessMap.get("listViewFg");
 			
 			// 여기에 데이터를 put해서 넘기면 됨.
 			JSONObject data = new JSONObject();
 			data.put("boardId", boardId); // 포틀릿 정보 중 boardId 가져오기
+			data.put("listViewFg", listViewFg);
 			
 			if (boardId == null) {
 				data.put("access", "false");
@@ -4703,65 +4710,6 @@ public class EzNewPortalGWController {
 		return result;
 	}
 
-	// //////board 권한 체크
-	public boolean boardAuthCheck(String boardId, String deptPath, int tenantId, String companyId, String deptId, String userId, String rollInfo) throws Exception {
- 		logger.debug("boardAuthCheck started");
-		boolean authCheck = false;
-		String[] deptPathSplit = deptPath.split(",");
-		int deptPathCount = deptPathSplit.length;
-
-		try {
-			if (ezBoardService.isBoardAdmin(boardId, userId, deptId, companyId, tenantId, rollInfo)) {
-				authCheck = true;
-			} else {
-				for (int i = 0; i < deptPathCount; i++) {
-					String deptPathId = deptPathSplit[i];
-					BoardPropertyVO authInfo = ezBoardAdminService.getACL(boardId, deptPathId, tenantId);
-					
-					if (authInfo == null) {
-						
-					} else {
-						String access = authInfo.getAccess_();
-						String deptAcl = authInfo.getBoardGroupACL();
-						
-						if (i == deptPathCount - 1) {
-							deptAcl = "Y";
-						}
-						
-						if (access.equals("1")) {
-							if (deptAcl.equals("Y")) {
-								authCheck = true;
-							}
-							
-							if (authInfo.getAccessID().equals(deptId)) {
-								authCheck = true;
-							}
-						} else if (access.equals("0") && deptAcl.equals("Y")) {
-							authCheck = false;
-						}
-					}
-					
-					
-					/*String authCompare = ezNewPortalService.getBoardAuthCheck(boardId, deptPathId, tenantId, companyId);
-
-					if (authCompare != null) {
-						if (authCompare.equals("true")) {
-							authCheck = true;
-						} else {
-							authCheck = false;
-						}
-					}*/
-				}
-			}
-		} catch (Exception e) {
-			logger.debug("boardAuthCheck error");
-		}
-
-		logger.debug("authCheck : " + authCheck);
-		logger.debug("boardAuthCheck ended");
-		return authCheck;
-	}
-	
 	/**
 	 * 포탈개인화 G/W [GET] 포틀릿 - 슬라이드 이미지
 	 */
@@ -5248,7 +5196,10 @@ public class EzNewPortalGWController {
 			data.put("portletName", portlet.getPortletName());
 
 			// 게시판 권한 체크
-			boolean accessCheck = boardAuthCheck(boardId, deptPath, tenantId, companyId, deptId, userId, rollInfo);
+			Map<String, Object> accessMap = ezNewPortalService.boardAuthCheck(boardId, deptPath, tenantId, companyId, deptId, userId, rollInfo);
+			boolean accessCheck = (boolean) accessMap.get("access");
+			boolean listViewFg = (boolean) accessMap.get("listViewFg");
+			data.put("listViewFg", listViewFg);
 			if (!accessCheck) {
 				data.put("access", "false");
 				data.put("boardList", null);
@@ -5287,7 +5238,6 @@ public class EzNewPortalGWController {
 						boardListVO.setThumbnail(boardAttach.map(BoardAttachVO::getFilePath).orElse(""));
 					}
 				}
-
 
 				data.put("access", "true");
 				data.put("boardList", boardList);
@@ -6106,10 +6056,13 @@ public class EzNewPortalGWController {
 					}
 					
 					// 탭게시판 권한 체크
-					boolean accessCheckSub = boardAuthCheck(tabBoardId, deptPath, tenantId, companyId, deptId, userId, rollInfo);
+					Map<String, Object> accessMap = ezNewPortalService.boardAuthCheck(tabBoardId, deptPath, tenantId, companyId, deptId, userId, rollInfo);
+					boolean accessCheckSub = (boolean) accessMap.get("access");
+					boolean listViewFg = (boolean) accessMap.get("listViewFg");
 					
 					if (accessCheckSub) {
 						hashMap.put("BOARDNAME", tabBoardName);
+						hashMap.put("listViewFg", listViewFg);
 						tabList.add(hashMap);
 					}
 					data.put("portletLang", portletLang);
@@ -6155,7 +6108,9 @@ public class EzNewPortalGWController {
 			int currentPage = Integer.parseInt(request.getParameter("currentPage"));
 					
 			// 탭게시판 권한 체크
-			boolean accessCheckSub = boardAuthCheck(boardId, deptPath, tenantId, companyId, deptId, userId, rollInfo);
+			Map<String, Object> accessMap = ezNewPortalService.boardAuthCheck(boardId, deptPath, tenantId, companyId, deptId, userId, rollInfo);
+			boolean accessCheckSub = (boolean) accessMap.get("access");
+			boolean listViewFg = (boolean) accessMap.get("listViewFg");
 			
 			if (accessCheckSub) {
 				BoardPropertyVO boardPropertyVO = ezBoardService.getBoardProperty(boardId, info.getTenantId());
@@ -6175,25 +6130,31 @@ public class EzNewPortalGWController {
 				currentPage = currentPage == 0         ? 1          : currentPage;
 				int startRow  = (currentPage - 1) * listCnt;
 				
-				List<BoardListVO> boardList = ezNewPortalService.getBoardPortletInfo(info.getUserId(), info.getTenantId(),	boardId, listCnt, info.getCompanyId(), info.getOffSet(), isQnANormal, startRow, useVersion);
+				if (listViewFg) {
+					List<BoardListVO> boardList = ezNewPortalService.getBoardPortletInfo(info.getUserId(), info.getTenantId(),	boardId, listCnt, info.getCompanyId(), info.getOffSet(), isQnANormal, startRow, useVersion);
 
-				int boardListCount = boardList.size();
+					int boardListCount = boardList.size();
 
-				for (int i = 0; i < boardListCount; i++) {
-					String writeDate = boardList.get(i).getStartDate();
-					boardList.get(i).setStartDate(commonUtil.getDateStringInUTC(writeDate, info.getOffSet(), false));
+					for (int i = 0; i < boardListCount; i++) {
+						String writeDate = boardList.get(i).getStartDate();
+						boardList.get(i).setStartDate(commonUtil.getDateStringInUTC(writeDate, info.getOffSet(), false));
+					}
+
+					data.put("boardList", boardList);
+					data.put("currentPage", currentPage);
+					data.put("totalCnt", totalCnt);
+				} else {
+					data.put("boardList", null);
+					data.put("currentPage", 1);
+					data.put("totalCnt", 0);
 				}
-				
-				data.put("boardList", boardList);
-				data.put("currentPage", currentPage);
-				data.put("totalCnt", totalCnt);
-				
 			} else {
 				data.put("boardList", null);
 				data.put("currentPage", 1);
 				data.put("totalCnt", 0);
 			}
 			
+			data.put("listViewFg", listViewFg);
 			result.put("status", "ok");
 			result.put("code", 0);
 			result.put("data", data);
@@ -6232,7 +6193,10 @@ public class EzNewPortalGWController {
 			JSONObject data = new JSONObject();
 			
 			// 게시판 권한 체크
-			boolean accessCheck = boardAuthCheck(boardID, deptPath, tenantId, companyId, deptId, userId, rollInfo);
+			Map<String, Object> accessMap = ezNewPortalService.boardAuthCheck(boardID, deptPath, tenantId, companyId, deptId, userId, rollInfo);
+			boolean accessCheck = (boolean) accessMap.get("access");
+			boolean listViewFg = (boolean) accessMap.get("listViewFg");
+			data.put("listViewFg", listViewFg);
 
 			if (!accessCheck) {
 				data.put("access", "false");
