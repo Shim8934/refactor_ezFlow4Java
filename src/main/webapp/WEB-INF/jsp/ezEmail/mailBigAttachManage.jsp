@@ -51,6 +51,8 @@
     
                 var data = {
                     'shareId' : shareId,
+                    'prop' : 'uploadDate',
+                    'orderBy' : 'DESC',
                     'curPage' :  pageNum,
                     'maxItemPerPage' : 10
                 }
@@ -296,7 +298,9 @@
                     alert("<spring:message code='ezCabinet.t141' />");
                     return;
                 }
-    
+                if (!confirm("<spring:message code='ezEmail.t668'/>")) {
+                    return;
+                }
                 var pURL = '/ezEmail/deleteBigAttachFile.do';
     
                 var deleteBigAttachList = new Array();
