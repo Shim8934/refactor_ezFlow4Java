@@ -12240,8 +12240,8 @@ public class EzBoardController extends EzFileMngUtil{
 		
 		try (OutputStream output = response.getOutputStream()) {
 			// 기존 파일 객체 생성
-			pFilePath = URLDecoder.decode(pFilePath, "UTF-8");
-			fileName = URLDecoder.decode(fileName, "UTF-8");
+			pFilePath = commonUtil.htmlUnescape(URLDecoder.decode(pFilePath, "UTF-8"));
+			fileName = commonUtil.htmlUnescape(URLDecoder.decode(fileName, "UTF-8"));
 
 			logger.debug("filePath : {}",pFilePath);
 			

@@ -33293,11 +33293,18 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
         }
         String filePath = filePath2 + commonUtil.separator + docId + "_office";
 		String fileName = URLEncoder.encode(originalFilename, "UTF-8");
-
-		String address = config.getProperty("config.officeConverterServerURL") + "/DG_viewer/viewer/getThumbnail.do?"
-//				+ "filepath=" + filePath + "&filename=" + fileName + "&fileext=" + fileExt;
+        
+        String serverUrl = ezCommonService.getTenantConfig("SATimageConvertServerURL", tenantId);
+        String address = "";
+        if (serverUrl.contains("/DG_viewer")) {
+            address = serverUrl.split("/DG_viewer")[0];
+        } else {
+            logger.debug("SAT Server doesn't exists.");
+            throw new Exception("incorrect server url");
+//				+ "filepath=" + filePath + "&filename=" + fileName + "&fileext=" + fileExt
+        };
 //        String address = config.getProperty("config.officeConverterServerURL") + "/DG_viewer/viewer/document/docviewer.do?"
-                + "filepath=" + URLEncoder.encode(tempUploadPath + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + URLEncoder.encode(filePath, "UTF-8"), "UTF-8").replace("+", "%20")
+            address += "/DG_viewer/viewer/getThumbnail.do?filepath=" + URLEncoder.encode(tempUploadPath + "/ezApprovalG/downloadAttachForHwp.do?filePath=" + URLEncoder.encode(filePath, "UTF-8"), "UTF-8").replace("+", "%20")
                 + "&filename=" + URLEncoder.encode(fileName, "UTF-8") + "&fileext=" + ext;
 
 		logger.debug("image converting requestURL : " + address);
@@ -33316,7 +33323,7 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 			}
 		
 			// 2021-01-14 이혁진 넘어온 response값을 가지고 이미지URL생성
-			String convertedImgInfo = config.getProperty("config.officeConverterServerURL") + "/DG_viewer" + response;
+			String convertedImgInfo = serverUrl.split("/DG_viewer")[0] + "/DG_viewer" + response;
 			
 			// 컨버팅 후, 오피스 문서 파일 삭제
 //			File tempFile = new File(tempUploadPath + commonUtil.separator + file.getOriginalFilename());
