@@ -24,7 +24,7 @@ function showPersResource() {
     document.getElementById("resourceSetting").addEventListener("click", function() {
     	var schedule_add_select_cross_dialogArguments = new Array();
     	if (CrossYN()) {
-            var url = "/ezResource/scheduleAddSelect.do";
+            var url = "/ezResource/resPersPortlet.do";
 
             schedule_add_select_cross_dialogArguments[0] = "";
             schedule_add_select_cross_dialogArguments[1] = btnWrite_onclick_Complete;
@@ -32,7 +32,7 @@ function showPersResource() {
             try { Schedule_Add_Select_Cross.focus(); } catch (e) {
             }
         } else {
-            var url = "/ezResource/scheduleAddSelect.do";
+            var url = "/ezResource/resPersPortlet.do";
             var feature = "status:no;dialogWidth:552px;dialogHeight:430px;help:no;scroll:no;edge:sunken";
             feature = feature + GetShowModalPosition(552, 422);
             var ret = window.showModalDialog(url, "", feature);

@@ -2127,7 +2127,7 @@ public class EzResourceController extends EzFileMngUtil {
 	/**
 	 * 자원관리 자원예약 자원선택 화면 호출 함수
 	 */
-	@RequestMapping(value = "/ezResource/scheduleAddSelect.do", method = RequestMethod.GET)
+	@RequestMapping(value = {"/ezResource/scheduleAddSelect.do", "/ezResource/resPersPortlet.do"}, method = RequestMethod.GET)
 	public String scheduleAddSelect(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest req) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
@@ -2171,7 +2171,12 @@ public class EzResourceController extends EzFileMngUtil {
 		model.addAttribute("accessCode", "0");
 		model.addAttribute("useEditor", useEditor);
 		model.addAttribute("noneActiveX", noneActiveX);
+				
+		String requestURL = (String) req.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE);
+		//뷰만 다르고 cs가 같은 경우여서 requestURL 사용해서 다이나믹뷰
+		requestURL = requestURL.substring(1, requestURL.length() - 3);
 		
+		if(requestURL.contains("resPersPortlet"))	return "/ezResource/resPersPortlet";
 		return "/ezResource/resScheduleAddSelect";
 	}
 	
