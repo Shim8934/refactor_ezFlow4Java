@@ -3782,10 +3782,11 @@
 									<input id="customrdoSecType1" type="radio" name="rdoSecType" value="1" checked onclick="return rdoSecType_onclick(this.value)" style="height: 13px; width: 13px; padding: 0px; margin: 0px 3px 0 0;"><label for="customrdoSecType1"><span style="padding-right: 10px;"><spring:message code='ezApprovalG.t47'/></span></label>
 									<input id="customrdoSecType2" type="radio" name="rdoSecType" value="2" onclick="return rdoSecType_onclick(this.value)" style="height: 13px; width: 13px; padding: 0px; margin: 0px 3px 0 0;"><label for="customrdoSecType2"><span style="padding-right: 10px;"><spring:message code='ezApprovalG.t150'/></span></label>
 									<input id="customrdoSecType3" type="radio" name="rdoSecType" value="3" onclick="return rdoSecType_onclick(this.value)" style="height: 13px; width: 13px; padding: 0px; margin: 0px 3px 0 0;"><label for="customrdoSecType3"><span><spring:message code='ezApprovalG.t46'/></span></label>
-									<span class="openGov">
-										<input type="checkbox" name="openListFlag" id="openListFlag" value="checkbox" onClick="openListFlag_onClick(this)" style="height: 13px; width: 13px; padding: 0px; margin: 0px; vertical-align: top;">
-										<label for="openListFlag"><span>목록공개</span></label>
-									</span>
+									<span class="openGov" style="margin-left:6px;">
+									    <div class="custom_checkbox">
+                                            <input type="checkbox" name="openListFlag" id="openListFlag" value="checkbox" onClick="openListFlag_onClick(this)">
+                                            <label for="openListFlag"><span style="margin-left:-5px;">목록공개</span></label>
+									    </div>
 								</div>
 		                    </div>
 		                </td>
