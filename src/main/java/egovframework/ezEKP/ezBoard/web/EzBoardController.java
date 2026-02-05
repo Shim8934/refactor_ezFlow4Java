@@ -4327,7 +4327,7 @@ public class EzBoardController extends EzFileMngUtil{
 		}
 		
 		// 어떤 경우든 본인이 작성한 게시글에는 접근할 수 있게 함
-		if (boardItemVO != null && boardItemVO.getWriterID().equalsIgnoreCase(userInfo.getId())) {
+		if (boardItemVO != null && userInfo.getId().equalsIgnoreCase(boardItemVO.getWriterID())) {
 			rtv = true;
 		}
 		logger.debug("accessCheck ended");
