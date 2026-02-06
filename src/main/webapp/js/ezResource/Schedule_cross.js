@@ -543,14 +543,13 @@ function show_repetition_info() {
 	    repetition = "0|" + repetition;
 	}
 	
-	if (cmd == "mod" && modType != "0") {
-		g_data["REPETITION"] = repetition;
-		updateRecurrence("REPETITION", repetition);
-		updateRecurrence("startDateTime", reStartDate);
-		updateRecurrence("endDateTime", reEndDate);
-		startDateTimeRepeat = reStartDate;
-		endDateTimeRepeat = reEndDate;
-	}
+	g_data["REPETITION"] = repetition;
+	updateRecurrence("REPETITION", repetition);
+	updateRecurrence("startDateTime", reStartDate);
+	updateRecurrence("endDateTime", reEndDate);
+	startDateTimeRepeat = reStartDate;
+	endDateTimeRepeat = reEndDate;
+	
 	document.getElementById("AllDayDisplay").innerHTML = repeatinfo;
 }
 
