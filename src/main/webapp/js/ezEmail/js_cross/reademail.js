@@ -1529,7 +1529,7 @@ function view_OriginalEML() {
     var requestUrl = "/ezEmail/getOriginalEML.do?" + parameters;
 
     if (typeof(shareId) != "undefined" && shareId != "") {
-        requestUrl += "?shareId=" + encodeURIComponent(shareId);
+        requestUrl += "&shareId=" + encodeURIComponent(shareId);
     }
 
     if (typeof(sharer) != "undefined" && sharer != "") {
