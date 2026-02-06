@@ -34,8 +34,8 @@
 				<split/>
 				
 				<InsertVideo visible="true" title="ビデオタグ"/>
-				<InsertMediaLink visible="true" title="外部ビデオの挿入"/>
 				<InsertMedia visible="true" title="動画の挿入"/>
+				<InsertMediaLink visible="true" title="外部ビデオの挿入"/>
 				
 				<split/>
 				
@@ -290,8 +290,8 @@
 				<InsertImage visible="true" title="イメージ"/>
 				<InsertImages visible="true" title="複数の画像"/>		
 				<Object visible="true" title="オブジェクト">
-					<InsertMediaLink visible="true" title="外部動画共有"/>
 					<InsertMedia visible="true" title="動画"/>
+					<InsertMediaLink visible="true" title="外部動画共有"/>
 				</Object>
 				<split/>
 				<InsertGrid visible="true" title="グリッド挿入"/>
@@ -304,7 +304,7 @@
 			</Insert>
 			
 			<!-- 보기 메뉴 설정. -->
-			<View visible="true" title="보기">
+			<View visible="true" title="見る">
 				<Fullscreen visible="true" title="全体画面"/>
 				<split/>
 				<Ruler visible="true" title="ルーラー"/>

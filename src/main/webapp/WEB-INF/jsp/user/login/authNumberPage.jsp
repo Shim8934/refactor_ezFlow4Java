@@ -216,7 +216,7 @@
                                     <span class="time_mes" id="remainTime" style="display: none;"></span>
                                     <div class="confirmBox">
                                         <p class="input_wrap">
-                                            <input id="authcodeCheck" name="CertNum" class="input_text" type="text" onkeypress="key_press();" placeholder='<spring:message code="login.zno013"/>'>
+                                            <input id="authCode" name="CertNum" class="input_text" type="text" onkeypress="key_press();" placeholder='<spring:message code="login.zno013"/>'>
                                             <span class="btnClear" id="" onclick="clearInput(this)"></span>
                                         </p>
                                         <p class="btn" onclick="doOk()"><spring:message code="main.t4008"/></p>
