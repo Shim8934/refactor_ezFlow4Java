@@ -226,7 +226,7 @@ public class MSurveyGWController {
 		}
 		
 		JSONObject data = new JSONObject();
-		byte[] fileBytes = commonUtil.readBytesFromFile(Paths.get(filePath));
+		byte[] fileBytes = commonUtil.readBytesFromFile(Paths.get(path));
 		data.put("bytes", fileBytes);
 		result.put("data", data);
 		
