@@ -1666,7 +1666,7 @@
 			        	</h2>
 						<ul class="lnbUL off" id="DEPTSHAREUL">
 				          	<c:forEach var="deptShare" items="${deptShareList}" varStatus="status">	
-				          		<li class="on">
+				          		<li>
 				          			<span class="list_text deptShare" id="${deptShare.shareId}" onclick="Open_Func(this); setBoldText(this);" title="${deptShare.shareName}"><c:out value="${deptShare.shareName}"></c:out></span>
 				          		</li>			          	
 				          	</c:forEach>
