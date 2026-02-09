@@ -365,7 +365,7 @@ INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_V
 
 INSERT INTO TBL_COMPANY_CONFIG (TENANT_ID, COMPANY_ID, PROPERTY_NAME, PROPERTY_VALUE) VALUES (@tenant_id_value, 'Top', 'useFidoSession', 'NO');
 
---2024.07.22 양지혜 - 관리자 > 대외발송현황 메뉴 표출여부
+-- 2024.07.22 양지혜 - 관리자 > 대외발송현황 메뉴 표출여부
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE) VALUES(@tenant_id_value, 'useSendOutState', 'NO', '관리자페이지 대외발송현황 메뉴 표출여부 YES: 사용 NO: 사용안함 (default:NO)', '발송현황 메뉴 표출여부', '2024-07-22 00:00:00', '전자결재');
 
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (@tenant_id_value, 'useExternalLargeFileServer', '메일 대용량 첨부 외부메일 동시 업로드 여부', 'N', '메일에서 대용량 첨부할때 외부메일 서버 동시 업로드 여부(default:N)', '2025-05-23 00:00:00', '메일');
@@ -388,7 +388,7 @@ INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_V
 -- 식단 테넌트 컨피그 추가
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (@tenant_id_value, 'useMealPlan', '식단 사용 여부', 'YES', '식단 사용 여부(YES / NO)', '2025-02-05', '게시판');
 
---2025.07.23 김승연 티그리스 SAML 연동 기능 추가
+-- 2025.07.23 김승연 티그리스 SAML 연동 기능 추가
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (@tenant_id_value, 'useTigrisSAMLAuth', 'tigris SAML 인증 연동여부', 'NO', 'YES: 연동NO: 연동안함 (default: NO)', '2025-07-23 00:00:00', '연동');
 
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (@tenant_id_value, 'webHWPVersion', '웹한글기안기 버전', '2', '웹한글기안기 버전에 따라 다른 동작을 하는 부분을 옵션화한다. 1: 웹한글기안기 v1.0 사용, 2: 웹한글기안기 v2.0 사용 (default : 2)', '2025-04-22 00:00:00.000', '전자결재');
@@ -7014,15 +7014,15 @@ INSERT INTO TBL_PORTAL_PORTLET_SIZE (SIZE_ID, CLASS_SIZE) VALUES (1, 'two_by_one
 INSERT INTO TBL_PORTAL_PORTLET_SIZE (SIZE_ID, CLASS_SIZE) VALUES (2, 'one_by_two');
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES(@tenant_id_value, 'notiStoragePeriod', '통합알림 데이터 보관 기간', '10', '통합알림 데이터 보관 기간(default: 10)(일)', '2024-04-25 00:00:00', '통합알림');
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES(@tenant_id_value, 'notiPollingInterval', '통합알림 데이터 새로고침 주기', '60000', '통합알림 데이터 새로고침 주기 설정(단위는 밀리초)', '2024-04-25 00:00:00', '통합알림');
---2023.09.11 - 한태훈 - 일정관리 > 미리알림 방식(닷넷 통합 알림, 자바 메일) 선택 테넌트 컨피그 추가
+-- 2023.09.11 - 한태훈 - 일정관리 > 미리알림 방식(닷넷 통합 알림, 자바 메일) 선택 테넌트 컨피그 추가
 INSERT INTO TBL_TENANT_CONFIG(TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
 VALUES(@tenant_id_value, 'useDotNetNoticeForReminder', 'NO', 'YES : 미리알림 기능 이용시 닷넷 통합알림 기능 사용, NO : 미리알림 기능 이용시 자바 메일 기능 사용(DEFAULT : NO); 닷넷 통합 알림 이용시 config.properties에 닷넷 통합알림 DB 접속 정보 기입', '미리알림 시 닷넷 알림 사용 여부', '2023-09-11 00:00:00.000', '일정관리');
 
---2023.09.11 - 한태훈 - 일정관리 > 미리알림 시 하루종일 일정의 시작 시각
+-- 2023.09.11 - 한태훈 - 일정관리 > 미리알림 시 하루종일 일정의 시작 시각
 INSERT INTO TBL_TENANT_CONFIG(TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
 VALUES(@tenant_id_value, 'allDaySTimeForReminder', '09:00', 'HH24:MM 형식으로 미리알림 시 하루종일 일정의 시작 시각 설정가능(MM은 00 또는 30만 가능)', '미리알림 시 하루종일 일정의 시작 시각 세팅', '2023-09-15 00:00:00.000', '일정관리');
 
---2025.05.23 - 이혜림 - 게시판 > 공지사항 등록기간
+-- 2025.05.23 - 이혜림 - 게시판 > 공지사항 등록기간
 INSERT INTO TBL_TENANT_CONFIG(TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
 VALUES(@tenant_id_value, 'boardNoticePeriod', '30', '게시판 공지사항의 기간 설정(일단위) (default: 30)', '게시판 공지사항 기간 설정', '2025-05-23 00:00:00.000', '게시판');
 
