@@ -1074,6 +1074,7 @@
                         }
                     }
                 }
+                btnClose_onclick();
 			}
 			
 			function checkHeaderAction() {
