@@ -1138,7 +1138,18 @@
 					}
 				});
 		    }
-		    
+
+            function mailbox_attach_import_bridge(param) {
+                if (param.files && param.files[0]) {
+
+                    var dataTransfer = new DataTransfer();
+                    dataTransfer.items.add(param.files[0]);
+                    document.getElementById("file1").files = dataTransfer.files;
+
+                    mailbox_attach_import();
+                }
+            }
+
 		 	// 메일박스 가져오기
 			function mailbox_attach_import(pwd, tempId, userkey) {
 				var encryptPw = (typeof pwd != "undefined") ? pwd : "";
@@ -1244,7 +1255,6 @@
 				if (result == "OK") {
 					document.importMailboxform.file1.value = "";
 					MailListRefresh(); 
-					location.reload();
 				}
 				
 			}

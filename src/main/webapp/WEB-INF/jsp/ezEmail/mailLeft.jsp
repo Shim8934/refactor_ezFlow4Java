@@ -1084,7 +1084,7 @@
 		            	parent.document.querySelector("iframe[name=right]").src = url;
 		    		}
 		    		
-	            	parent.frames["right"].mailbox_import();
+                    document.getElementById("mailbox_import_left").click();
 	            } catch (e) {
 	            	console.log("mailbox_import error!");
 	            }
@@ -2089,5 +2089,5 @@
 	    <div class="mail_space">
 	        	<span class="mail_spaceText"><spring:message code="main.t00045" />&nbsp;<span class="userPer" id="usePer"></span></span><span  id="myBar" class="mailBar"></span>
         </div>
-	</body>
+    <input type="file" id="mailbox_import_left" style="display:none;" accept=".zip" onchange="parent.frames['right'].mailbox_attach_import_bridge(this); this.value='';">
 </html>
