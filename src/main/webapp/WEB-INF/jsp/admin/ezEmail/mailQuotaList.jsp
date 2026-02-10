@@ -402,7 +402,9 @@
 		  	
 		  	// 편지함 용량수정 이벤트 호출
 		  	function mod_quota(res){
-		  		var width=480, height=210;
+                var isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+                var width=480;
+                var height= isSafari ? 240 : 210;
 		  		var left = (screen.availWidth - width) / 2;
 		  		var top = (screen.availHeight - height) / 2;
 		  		var specs = "width=" + width;
