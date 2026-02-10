@@ -42,13 +42,15 @@
 	            Name_Complete = Name;
 	            var parameter = new Array();
 	            parameter[0] = document.getElementById(Name + "Value").value;
+                var isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+                var popupHeight = isSafari ? 280 : 260;
 	            if (CrossYN()) {
 	                manycolor_dialogArguments[1] = SelectColor_Complete;
-	                var OpenWin = window.open("/ezCommon/manyColor.do?refresh5=&type=" + Name, "manyColor", GetOpenWindowfeature(294, 260));
+                    var OpenWin = window.open("/ezCommon/manyColor.do?refresh5=&type=" + Name, "manyColor", GetOpenWindowfeature(294, popupHeight));
 	                try { OpenWin.focus(); } catch (e) {console.log(e);}
 	            }
 	            else {
-	                var retValue = window.showModalDialog("/ezCommon/manyColor.do?refresh5=&type=" + Name, "", "dialogHeight:260px; dialogWidth:294px; status:no;scroll:no; help:no; edge:sunken");
+	                var retValue = window.showModalDialog("/ezCommon/manyColor.do?refresh5=&type=" + Name, "", "dialogHeight:" + popupHeight + "px; dialogWidth:294px; status:no;scroll:no; help:no; edge:sunken");
 	                if (typeof (retValue) != "undefined" && retValue != null) {
 	                    document.getElementById(Name + "Value").innerText = retValue;
 	                    document.getElementById(Name).style.backgroundColor = retValue;
@@ -64,7 +66,7 @@
 	
 	    </script>
 	</head>
-	<body>    
+	<body">
 	    <br />
 	    <table style="border: 0; border-collapse: collapse; border-spacing: 0; padding:0px;">
 	        <tr>
