@@ -365,11 +365,11 @@
 			        // SetBtnStateTrue();
 			
 			        getReceiveDocInfo();
-			        if (approvalFlag == "G"){
+			        if (approvalFlag == "G" && viewDoc != "Y") {
 						document.getElementById("btnAddSepAttach").style.display = "";
 					}
                 	
-			        if (nonElecRec == "Y") {
+			        if (nonElecRec == "Y" && viewDoc != "Y") {
 				        getNonElecInfoSusinInit();
 	                	document.getElementById("btnAddSepAttach").style.display = "none";
 			        }
