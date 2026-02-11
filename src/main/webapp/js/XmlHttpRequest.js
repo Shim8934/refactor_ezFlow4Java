@@ -2434,7 +2434,7 @@ function adjustLayerAlertPosition(alertElemId) {
 }
 
 // 기존의 window.open 메서드를 저장하여 재정의
-var originWindowOpen = window.open;
+const originWindowOpen = window.open;
 
 window.open = function (url, target, features) {
     var urlObj;
