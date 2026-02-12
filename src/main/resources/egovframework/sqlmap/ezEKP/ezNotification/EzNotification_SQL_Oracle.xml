@@ -12,7 +12,7 @@
 		TBL_REALTIME_NOTIFICATION
 		(NOTISEQ, USERID, MAINTYPE, SUBTYPE, NOTICONTENT, SENDERID, SENDERNAME, REGDATE, ETCDATA, LINKURL, LINKURL_MOBILE, VIEWTYPE, VIEWWIDTH, VIEWHEIGHT, TENANT_ID, COMPANYID)
 	VALUES
-		((SELECT NVL(MAX(NOTISEQ) + 1, 1) FROM TBL_REALTIME_NOTIFICATION), #recipientId#, #mainType#, #subType#, #notiContent#, #senderId#, #senderName#, TO_DATE(#regDate#, 'YYYY-MM-DD HH24:MI:SS'), #etcData#, #linkUrl#, #linkUrlMobile#, #viewType#, #viewWidth#, #viewHeight#, #tenantId#, #companyId#)	
+		(SEQ_REALTIME_NOTIFICATION.NEXTVAL, #recipientId#, #mainType#, #subType#, #notiContent#, #senderId#, #senderName#, TO_DATE(#regDate#, 'YYYY-MM-DD HH24:MI:SS'), #etcData#, #linkUrl#, #linkUrlMobile#, #viewType#, #viewWidth#, #viewHeight#, #tenantId#, #companyId#)	
     </insert>
      
     <select id="EzNotificationDAO.getTotalNotiListCnt" parameterClass="Map" resultClass="int">
