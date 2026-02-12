@@ -251,11 +251,12 @@
 			        	type : "POST",
 			        	dataType : "html",
 			        	url : "/admin/ezOrgan/restoreRetireUser.do",
-			        	async : false,
+			        	async : true,
 			        	data : {deptID : rtnValue, cn : data},
 			        	success : function(result) {			        	    
 			        	    if (result == "OK") {
 			        			alert(strLang9);
+                                retireUserList();
 			        	    // } else if (result == "DIFF_COMPANY") {
 			        	    //	alert(strLangLHM01);
 			        	    } else {
@@ -276,8 +277,6 @@
 									alert(strLang10);
 								}
 						});
-
-			        retireUserList();
 			    }
 			}
 			
