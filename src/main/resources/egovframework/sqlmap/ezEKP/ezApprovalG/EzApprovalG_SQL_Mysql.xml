@@ -9336,6 +9336,9 @@
 	      	        )
 	      	    )
 	      	</isNotEqual>
+            <isEqual property="assignChk" compareValue="Y" prepend="AND">
+                TBL_APRRECEIPTPROCESSINFO.DOCSTATE = '011'
+            </isEqual>
 			</isNotEqual>
             </isNotEqual>
 			<!-- 2024-02-27 홍승비 - SQL Injection 제거 -->
@@ -15229,6 +15232,9 @@
                 )
             )
 		</isNotEqual>
+        <isEqual property="assignChk" compareValue="Y" prepend="AND">
+            TBL_APRRECEIPTPROCESSINFO.DOCSTATE = '011'
+        </isEqual>
 		</isNotEqual>
 		</isNotEqual>
 		<!-- 2024-02-23 홍승비 - SQL Injection 제거 -->
