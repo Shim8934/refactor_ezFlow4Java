@@ -418,7 +418,7 @@ LEFT JOIN (
 					user_type = 'GROUP'
 			)
 		)
-	GROUP BY quicklinkid
+	GROUP BY quicklinkid, user_type, tenant_id
 	) ACL
 	]]>
 		</isEqual>
@@ -464,7 +464,7 @@ LEFT JOIN (
            			user_type = 'GROUP'
            	)
 		)
-	GROUP BY quicklinkid
+	GROUP BY quicklinkid, user_type, tenant_id
 	) ACL
 ]]>
 		</isEqual>
@@ -519,7 +519,7 @@ LEFT JOIN (
            			user_type = 'GROUP'
            	)
 		)
-	GROUP BY quicklinkid
+	GROUP BY quicklinkid, user_type, tenant_id
 	) ACL
 ]]>
 		</isEqual>
@@ -2388,7 +2388,7 @@ INSERT INTO TBL_PORTAL_THEME_USER (
            				)
            			)
            		GROUP BY
-           			portlet_id
+           			portlet_id, tenant_id, company_id, user_type
            		) AUTH
             ]]>
         </isEqual>
@@ -2438,7 +2438,7 @@ INSERT INTO TBL_PORTAL_THEME_USER (
            				)
            			)
            		GROUP BY
-           			portlet_id
+           			portlet_id, tenant_id, company_id, user_type
            		) AUTH
             ]]>
         </isEqual>
@@ -2499,7 +2499,7 @@ INSERT INTO TBL_PORTAL_THEME_USER (
            				)
            			)
            		GROUP BY
-           			portlet_id
+           			portlet_id, tenant_id, company_id, user_type
            		) AUTH
             ]]>
         </isEqual>
@@ -3666,7 +3666,7 @@ ORDER BY
 					)
 				)
 			GROUP BY
-				portlet_id
+				portlet_id, tenant_id, company_id, user_type
 			) AUTH
 	]]>
 	</isEqual>
@@ -3716,7 +3716,7 @@ ORDER BY
 					)
 				)
 			GROUP BY
-				portlet_id
+				portlet_id, tenant_id, company_id, user_type
 			) AUTH
 	]]>
 	</isEqual>
@@ -3777,7 +3777,7 @@ ORDER BY
 					)
 				)
 			GROUP BY
-				portlet_id
+				portlet_id, tenant_id, company_id, user_type
 			) AUTH
 	]]>
 	</isEqual>
