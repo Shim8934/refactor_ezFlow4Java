@@ -3530,12 +3530,12 @@
 			function btnAssignList_onclick() {
 				assignChk = "Y";
 				getReceivedDocList();
-				$('#sel_status_div').closest("li").hide();
+				// $('#sel_status_div').closest("li").hide();
 			}
 			function btnDeptRecevList_onclick() {
 				assignChk = "N";
 				getReceivedDocList();
-				$('#sel_status_div').closest("li").show();
+				// $('#sel_status_div').closest("li").show();
 			}
 
 			/* 2024-06-28 양지혜 - 전자결재 > 부서수신함 > 지정목록 > 지정
