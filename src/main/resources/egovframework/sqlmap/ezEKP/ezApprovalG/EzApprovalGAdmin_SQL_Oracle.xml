@@ -4770,6 +4770,12 @@
 			A.OWNER_ID = #ownerId#
 		AND
 			A.TENANT_ID = #tenantId#
+        ORDER BY
+            CASE
+                WHEN A.SHARE_TYPE = 'U' THEN 1
+                WHEN A.SHARE_TYPE ='D' THEN 2
+            END,
+            SHARENAME ASC
 	</select>
 	
 	<insert id="EzApprovalGAdmin.insertDelDoc" parameterClass="Map">
