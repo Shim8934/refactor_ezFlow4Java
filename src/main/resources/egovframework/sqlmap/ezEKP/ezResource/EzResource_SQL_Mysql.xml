@@ -2160,6 +2160,8 @@
 					MEMBER_ID = 'everyone' )
             AND
                 TENANT_ID = #tenantID#
+			GROUP BY
+				member_id
 		]]>
 	</select>
   

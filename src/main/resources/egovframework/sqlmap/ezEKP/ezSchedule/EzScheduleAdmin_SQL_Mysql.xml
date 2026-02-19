@@ -164,8 +164,9 @@
         		b.companyid = #v_COMPANYID#
         	
          
-            group by b.groupid
-        	order by b.groupname
+            GROUP BY 
+          		b.groupid, b.groupname, b.description, b.createdate, b.creatorid
+        	ORDER BY b.groupname
 		]]>
          
 	</select>
@@ -234,7 +235,10 @@
         		b.companyid = #v_COMPANYID#
         	
          
-            group by b.groupid
+            GROUP BY 
+				b.groupid, b.modifydate, b.createdate, b.transferdate, b.creatorid, 
+				b.precreatorid, b.groupname, b.description, b.creatorname, b.precreatorname, 
+				b.creatorname2, b.precreatorname2, b.groupcolor
         	order by b.createdate desc
 		]]>
 		
