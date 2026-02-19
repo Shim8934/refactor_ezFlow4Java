@@ -9155,5 +9155,17 @@
 		]]>
 	</select>
 
+    <delete id="EzOrganAdminDAO.deleteSecretary" parameterClass="map">
+        <![CDATA[
+			DELETE FROM
+				TBL_SECRETARY
+	   		WHERE
+	   			SECRETARYID = #v_USERID#
+	   		AND
+	   			TENANT_ID = #v_TENANTID#
+   			AND
+	   			COMPANYID = #v_COMPANYID#
+	   	]]>
+    </delete>
 
 </sqlMap>

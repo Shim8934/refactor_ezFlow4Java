@@ -1695,6 +1695,9 @@ public class EzOrganAdminController extends EzFileMngUtil {
 				} catch (Exception e) {
 					logger.error(e.getMessage(), e);
 				}
+
+                // 해당 User가 비서일 경우 비서목록에서 해당 User를 제거한다.
+                ezOrganAdminService.deleteSecretary(cn[i], tenantID, userInfo.getCompanyID());
 			}
 			// retire end
 

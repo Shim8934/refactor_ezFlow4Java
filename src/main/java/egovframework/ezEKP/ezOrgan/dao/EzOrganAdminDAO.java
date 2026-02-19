@@ -2461,4 +2461,8 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 	public void resetLoginCnt(Map<String, Object> map) throws Exception {
 		update("EzOrganAdminDAO.updateResetLoginCnt", map);
 	}
+
+    public void deleteSecretary(Map<String, Object> map) throws Exception {
+        delete("EzOrganAdminDAO.deleteSecretary", map);
+    }
 }

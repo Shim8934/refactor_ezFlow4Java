@@ -233,4 +233,6 @@ public interface EzOrganAdminService {
 	public void updateUserMailAddress(String cn, String mailAddress, int tenantID) throws Exception;
 	
 	public void resetLoginCnt(String cn, int tenantID) throws Exception;
+
+    public void deleteSecretary(String userID, int tenantID, String companyID) throws Exception;
 }

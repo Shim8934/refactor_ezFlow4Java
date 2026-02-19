@@ -7016,4 +7016,17 @@
 		]]>
 	</select>
 
+    <delete id="EzOrganAdminDAO.deleteSecretary" parameterClass="map">
+        <![CDATA[
+			delete from
+				tbl_secretary
+	   		where
+	   			secretaryid = #v_USERID#
+	   		and
+	   			tenant_id = #v_TENANTID#
+	   		and
+	   			companyid = #v_COMPANYID#
+	   	]]>
+    </delete>
+
 </sqlMap>
