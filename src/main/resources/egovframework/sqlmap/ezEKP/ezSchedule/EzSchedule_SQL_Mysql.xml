@@ -556,32 +556,34 @@
 	<select id="EzScheduleDAO.getCumDeptId" parameterClass="map" resultClass="String">
 		<![CDATA[
 			SELECT 
-				a.DEPARTMENT
-				FROM (SELECT 
-				D.CN, D.DEPARTMENT, D.PHYSICALDELIVERYOFFICENAME, D.TENANT_ID
+				A.DEPARTMENT
+			FROM 
+				(SELECT 
+					D.CN, D.DEPARTMENT, D.PHYSICALDELIVERYOFFICENAME, D.TENANT_ID
 				FROM 
-				TBL_USERMASTER D
+					TBL_USERMASTER D
 				UNION ALL
-				SELECT 
-				B.cn, A.DEPTID, C.EXTENSIONATTRIBUTE2, A.TENANT_ID
-				FROM 
-				TBL_USERMASTER B 
-				INNER JOIN 
-				TBL_ADDJOBMASTER A 
-				ON 
-				A.CN = B.CN 
-				AND 
-				A.TENANT_ID = B.TENANT_ID       
-				RIGHT JOIN 
-				TBL_DEPTMASTER C
-				ON 
-				A.DEPTID = C.CN
-				AND 
-				B.TENANT_ID = C.TENANT_ID) A
-				WHERE 
-				A.CN = #v_USERID# and A.PHYSICALDELIVERYOFFICENAME = #v_COMPANYID# and a.tenant_id = #v_TENANTID#
-				GROUP BY 
-				A.CN
+					SELECT 
+						B.cn, TA.DEPTID, C.EXTENSIONATTRIBUTE2, TA.TENANT_ID
+					FROM 
+						TBL_USERMASTER B 
+					INNER JOIN 
+						TBL_ADDJOBMASTER TA 
+					ON 
+						TA.CN = B.CN 
+					AND 
+						TA.TENANT_ID = B.TENANT_ID       
+					RIGHT JOIN 
+						TBL_DEPTMASTER C
+					ON 
+						TA.DEPTID = C.CN
+					AND 
+						B.TENANT_ID = C.TENANT_ID
+				) A
+			WHERE 
+				A.CN = #v_USERID# and A.PHYSICALDELIVERYOFFICENAME = #v_COMPANYID# and A.tenant_id = #v_TENANTID#
+			GROUP BY 
+				A.CN, A.DEPARTMENT, A.PHYSICALDELIVERYOFFICENAME, A.tenant_id
 		]]>
 	</select>
 	<!-- checked -->

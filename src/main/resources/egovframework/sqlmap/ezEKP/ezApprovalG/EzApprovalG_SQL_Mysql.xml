@@ -141,7 +141,7 @@
 									   *
 									FROM 
 										( SELECT 
-											VAPRDOINGDOCLIST.*
+											DISTINCT VAPRDOINGDOCLIST.*
 										  FROM 
 											 VAPRDOINGDOCLIST 
 										]]>
@@ -155,40 +155,40 @@
 											AND
 												VAPRDOINGDOCLIST.DOCID = GRP.DOCID
 										</isEqual>
-										  WHERE 
+										    WHERE 
 										  <isEqual property="v_ISDOORREJECTFG" compareValue="true">
-					      					 APRMEMBERID = #v_USERID#
+					      					    APRMEMBERID = #v_USERID#
 										  </isEqual>
 										  <isEqual property="v_LISTTYPE" compareValue="11">
-											 APRMEMBERID IN (SELECT OWNERID FROM TBL_PS_SHAREAPPROVAL WHERE TENANTID = #v_TENANTID# AND SHAREUSERID = #v_USERID#)										  
+											    APRMEMBERID IN (SELECT OWNERID FROM TBL_PS_SHAREAPPROVAL WHERE TENANTID = #v_TENANTID# AND SHAREUSERID = #v_USERID#)										  
 										  </isEqual>
 										  <![CDATA[
-					      				  AND 
-					      					 aprtype <> '015'
+                                              AND 
+                                                 aprtype <> '015'
 										  ]]>
 										  <isEqual property="v_LISTTYPE" compareValue="1">
                                           <![CDATA[
-                                          AND
-											FUNCTIONTYPE <> '004'
+                                              AND
+                                                FUNCTIONTYPE <> '004'
                                           ]]>
                                           </isEqual>
                                           <isEqual property="v_LISTTYPE" compareValue="24">
                                           <![CDATA[
-										  AND
-                                          	FUNCTIONTYPE = '004'
+                                              AND
+                                                FUNCTIONTYPE = '004'
                                           ]]>
                                           </isEqual>
                                             <![CDATA[
-					      				  AND 
-					      					 VAPRDOINGDOCLIST.tenant_id = #v_TENANTID#
-					      				  AND
-											VAPRDOINGDOCLIST.COMPANYID = #companyID#
+                                              AND 
+                                                 VAPRDOINGDOCLIST.tenant_id = #v_TENANTID#
+                                              AND
+                                                VAPRDOINGDOCLIST.COMPANYID = #companyID#
 						      				]]>
 											<isEqual property="v_ISDOORREJECTFG" compareValue="true">
 											AND
 					      						IFNULL(GRP.TABSN, 1) = 1
-											GROUP BY
-												VAPRDOINGDOCLIST.DOCID
+<!--											GROUP BY-->
+<!--												VAPRDOINGDOCLIST.DOCID-->
 											</isEqual>
 											) AS T1
 											WHERE
@@ -283,7 +283,7 @@
 											*
 										FROM (
 										  SELECT 
-											VENDCHAMJODOCINFO.*
+											DISTINCT VENDCHAMJODOCINFO.*
 									]]>
 										  FROM 
 											 VENDCHAMJODOCINFO 
@@ -329,8 +329,8 @@
 										<isEqual property="v_ISDOORREJECTFG" compareValue="true">
 											AND
 												IFNULL(GRP.TABSN, 1) = 1
-											GROUP BY
-												VENDCHAMJODOCINFO.DOCID
+<!--											GROUP BY-->
+<!--												VENDCHAMJODOCINFO.DOCID-->
 										</isEqual>
 				      					) AS T2
 				      					WHERE
@@ -426,7 +426,7 @@
 										*
 									FROM (
 										SELECT 
-											VAPRDOINGDOCLIST.*
+											DISTINCT VAPRDOINGDOCLIST.*
 										FROM 
 											VAPRDOINGDOCLIST 
 										LEFT OUTER JOIN
@@ -466,8 +466,6 @@
 											VAPRDOINGDOCLIST.COMPANYID = #companyID#
 										AND
 											IFNULL(GRP.TABSN, 1) = 1
-										GROUP BY
-											VAPRDOINGDOCLIST.DOCID
 									) AS T3
 								]]>
 								WHERE
@@ -534,7 +532,7 @@
 										*
 									FROM (
 										SELECT 
-										    VENDCHAMJODOCINFO.*
+										    DISTINCT VENDCHAMJODOCINFO.*
 										FROM 
 											VENDCHAMJODOCINFO 
 										LEFT OUTER JOIN
@@ -573,8 +571,6 @@
 											VENDCHAMJODOCINFO.COMPANYID = #companyID#
 										AND
 											IFNULL(GRP.TABSN, 1) = 1
-										GROUP BY
-											VENDCHAMJODOCINFO.DOCID
 									) AS T4
 									WHERE
 										1 = 1
@@ -33397,11 +33393,14 @@
 					D.COMPANYID = #companyID#
 				AND
 					IFNULL(GRP.TABSN, 1) = 1
-				GROUP BY 
-				    D.DOCID,
-					L.`APRSTATE`,
-					D.`FUNCTIONTYPE`,
-					`DOCSTATE`
+				GROUP BY
+                    D.DOCID,
+                    L.`APRSTATE`,
+                    D.`FUNCTIONTYPE`,
+                    L.`APRTYPE`,
+                    `DOCSTATE`,
+                    L.`APRMEMBERSN`,
+                    L.`APRMEMBERID`
 		UNION ALL
 			SELECT
 				D.`DOCID`,
@@ -33482,12 +33481,23 @@
 				AND
 					IFNULL(GRP.TABSN, 1) = 1
 				GROUP BY
-					D.DOCID,
-					L.`APRSTATE`,
-					D.`FUNCTIONTYPE`,
-					`DOCSTATE`) Z 
+                    D.DOCID,
+                    L.`APRSTATE`,
+                    D.`FUNCTIONTYPE`,
+                    L.`APRTYPE`,
+                    `DOCSTATE`,
+                    L.`APRMEMBERSN`,
+                    L.`APRMEMBERID`,
+                    `APR`) Z 
 				GROUP BY
-					Z.DOCID
+					Z.DOCID,
+                    Z.APRSTATE,
+                    Z.FUNCTIONTYPE,
+                    Z.APRTYPE,
+                    Z.DOCSTATE,
+                    Z.APRMEMBERSN,
+                    Z.APRMEMBERID,
+                    APR
 					) A ) B
 	</select>
 	
@@ -37125,59 +37135,59 @@
 				COUNT(Z.DOCID) COUNT,
 			    Z.STARTDATE
 			FROM
-			(SELECT
-			    D.`DOCID`,
-				L.`APRSTATE`,
-				D.`FUNCTIONTYPE`,
-				L.`APRTYPE`,
-				CASE WHEN L.`APRTYPE` = '007' AND  D.`DOCSTATE` = '002' THEN '017' ELSE D.DOCSTATE END AS DOCSTATE,
-				L.`APRMEMBERSN`,
-				L.`APRMEMBERID`,
-				TRUE AS APR,
-				D.STARTDATE
-			FROM
-				tbl_aprdocinfo D
-			JOIN 
-				tbl_aprlineinfo L 
-			ON
-				D.`DOCID` = L.`DOCID`
-			AND 
-				D.`TENANT_ID` = L.`TENANT_ID`
-			AND 
-				D.`COMPANYID` = L.`COMPANYID`
-			AND
-				L.APRSTATE IN ( '002', '005')	
-			LEFT OUTER JOIN
-				TBL_APRDOCGROUPINFO GRP
-			ON
-				D.TENANT_ID = GRP.TENANT_ID
-			AND
-				D.COMPANYID = GRP.COMPANYID
-			AND
-				D.DOCID = GRP.DOCID
-			WHERE
-				(
-					L.`APRMEMBERID` = #v_USERID#
-					<isNotEmpty property="proxyList">
-						OR 
-							(
-								L.`APRMEMBERID` IN 
-								<iterate property="proxyList" open="(" close=")" conjunction=",">
-									#proxyList[].id#
-								</iterate>
-							AND
-								L.aprmemberdeptid IN
-								<iterate property="proxyList" open="(" close=")" conjunction=",">
-									#proxyList[].dept#
-								</iterate>
-							AND
-								L.aprmemberjobtitle IN
-								<iterate property="proxyList" open="(" close=")" conjunction=",">
-									#proxyList[].title#
-								</iterate>
-							)
-					</isNotEmpty>
-				)
+                (SELECT
+                    D.`DOCID`,
+                    L.`APRSTATE`,
+                    D.`FUNCTIONTYPE`,
+                    L.`APRTYPE`,
+                    CASE WHEN L.`APRTYPE` = '007' AND  D.`DOCSTATE` = '002' THEN '017' ELSE D.DOCSTATE END AS DOCSTATE,
+                    L.`APRMEMBERSN`,
+                    L.`APRMEMBERID`,
+                    TRUE AS APR,
+                    D.STARTDATE
+                FROM
+                    tbl_aprdocinfo D
+                JOIN 
+                    tbl_aprlineinfo L 
+                ON
+                    D.`DOCID` = L.`DOCID`
+                AND 
+                    D.`TENANT_ID` = L.`TENANT_ID`
+                AND 
+                    D.`COMPANYID` = L.`COMPANYID`
+                AND
+                    L.APRSTATE IN ( '002', '005')	
+                LEFT OUTER JOIN
+                    TBL_APRDOCGROUPINFO GRP
+                ON
+                    D.TENANT_ID = GRP.TENANT_ID
+                AND
+                    D.COMPANYID = GRP.COMPANYID
+                AND
+                    D.DOCID = GRP.DOCID
+                WHERE
+                    (
+                        L.`APRMEMBERID` = #v_USERID#
+                        <isNotEmpty property="proxyList">
+                            OR 
+                                (
+                                    L.`APRMEMBERID` IN 
+                                    <iterate property="proxyList" open="(" close=")" conjunction=",">
+                                        #proxyList[].id#
+                                    </iterate>
+                                AND
+                                    L.aprmemberdeptid IN
+                                    <iterate property="proxyList" open="(" close=")" conjunction=",">
+                                        #proxyList[].dept#
+                                    </iterate>
+                                AND
+                                    L.aprmemberjobtitle IN
+                                    <iterate property="proxyList" open="(" close=")" conjunction=",">
+                                        #proxyList[].title#
+                                    </iterate>
+                                )
+                        </isNotEmpty>
+                    )
 			<![CDATA[
 				AND 
 					D.STARTDATE >= STR_TO_DATE(#v_STARTDATE#, '%Y-%m-%d %H:%i:%s') 
@@ -37197,7 +37207,12 @@
 				    D.DOCID,
 					L.`APRSTATE`,
 					D.`FUNCTIONTYPE`,
-					`DOCSTATE`
+                    L.`APRTYPE`,
+					`DOCSTATE`,
+                    L.`APRMEMBERSN`,
+                    L.`APRMEMBERID`,
+                    APR,
+                    D.STARTDATE
 		UNION ALL
 			SELECT
 				D.`DOCID`,
@@ -37277,13 +37292,26 @@
 				AND
 					IFNULL(GRP.TABSN, 1) = 1
 				GROUP BY
-					D.DOCID,
-					L.`APRSTATE`,
-					D.`FUNCTIONTYPE`,
-					`DOCSTATE`) Z 
-				GROUP BY
-					Z.DOCID
-					) A ) B
+                    D.DOCID,
+                    L.`APRSTATE`,
+                    D.`FUNCTIONTYPE`,
+                    L.`APRTYPE`,
+                    `DOCSTATE`,
+                    L.`APRMEMBERSN`,
+                    L.`APRMEMBERID`,
+                    APR,
+                    D.STARTDATE) Z 
+            GROUP BY
+                Z.DOCID,
+                Z.APRSTATE,
+                Z.FUNCTIONTYPE,
+                Z.APRTYPE,
+                Z.DOCSTATE,
+                Z.APRMEMBERSN,
+                Z.APRMEMBERID,
+                APR,
+                Z.STARTDATE
+                ) A ) B
 	</select>
     
     <select id="EzApprovalG.getDashBoardDeptBox" parameterClass="Map" resultClass="ApprGReceiveDocVO" remapResults="true">
@@ -37465,7 +37493,7 @@
                                    *
                                 FROM 
                                     ( SELECT 
-                                        VAPRDOINGDOCLIST.*
+                                        DISTINCT VAPRDOINGDOCLIST.*
                                       FROM 
                                          VAPRDOINGDOCLIST 
                                     ]]>
@@ -37500,10 +37528,10 @@
                                         VAPRDOINGDOCLIST.COMPANYID = #companyID#
                                         ]]>
                                         <isEqual property="v_ISDOORREJECTFG" compareValue="true">
-                                        AND
-                                            IFNULL(GRP.TABSN, 1) = 1
-                                        GROUP BY
-                                            VAPRDOINGDOCLIST.DOCID
+                                      AND
+                                            IFNULL(GRP.TABSN, 1) = 1 
+<!--                                      GROUP BY-->
+<!--                                            VAPRDOINGDOCLIST.DOCID-->
                                         </isEqual>
                                         ) AS T1
                                         WHERE
@@ -37579,7 +37607,7 @@
                                         *
                                     FROM (
                                       SELECT 
-                                        VENDCHAMJODOCINFO.*
+                                        DISTINCT VENDCHAMJODOCINFO.*
                                 ]]>
                                       FROM 
                                          VENDCHAMJODOCINFO 
@@ -37616,8 +37644,8 @@
                                     <isEqual property="v_ISDOORREJECTFG" compareValue="true">
                                         AND
                                             IFNULL(GRP.TABSN, 1) = 1
-                                        GROUP BY
-                                            VENDCHAMJODOCINFO.DOCID
+<!--                                        GROUP BY-->
+<!--                                            VENDCHAMJODOCINFO.DOCID-->
                                     </isEqual>
                                     ) AS T2
                                     WHERE
@@ -37694,7 +37722,7 @@
                                     *
                                 FROM (
                                     SELECT 
-                                        VAPRDOINGDOCLIST.*
+                                        DISTINCT VAPRDOINGDOCLIST.*
                                     FROM 
                                         VAPRDOINGDOCLIST 
                                     LEFT OUTER JOIN
@@ -37728,8 +37756,6 @@
                                         VAPRDOINGDOCLIST.COMPANYID = #companyID#
                                     AND
                                         IFNULL(GRP.TABSN, 1) = 1
-                                    GROUP BY
-                                        VAPRDOINGDOCLIST.DOCID
                                 ) AS T3
                             ]]>
                             WHERE
@@ -37796,7 +37822,7 @@
                                     *
                                 FROM (
                                     SELECT 
-                                        VENDCHAMJODOCINFO.*
+                                        DISTINCT VENDCHAMJODOCINFO.*
                                     FROM 
                                         VENDCHAMJODOCINFO 
                                     LEFT OUTER JOIN
@@ -37829,8 +37855,6 @@
                                         VENDCHAMJODOCINFO.COMPANYID = #companyID#
                                     AND
                                         IFNULL(GRP.TABSN, 1) = 1
-                                    GROUP BY
-                                        VENDCHAMJODOCINFO.DOCID
                                 ) AS T4
                                 WHERE
                                     1 = 1
