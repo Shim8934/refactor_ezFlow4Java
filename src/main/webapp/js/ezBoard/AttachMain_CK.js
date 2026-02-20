@@ -331,7 +331,7 @@ function AppendFileAttachInfo(ret) {
 
 		var objP = document.createElement("p");
 		objP.id = "attachInnerNotice";
-		objP.className = "attachInnerNotice_p_off";
+		objP.className = "attachInnerNotice_p_on";
 
 		var objSpan = document.createElement("span");
 		objSpan.innerText = strLangMJS01;
