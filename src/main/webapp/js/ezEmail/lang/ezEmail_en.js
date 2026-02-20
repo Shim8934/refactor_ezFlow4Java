@@ -266,6 +266,7 @@ var strLang353 = "The same domain or email address exists.";
 var strLang354 = "Please enter a domain name.";
 var strLang355 = "Big";
 var strLang359 = "Move completed.";
+var strLang360 = "No data available.";
 var strLangLDH01 = "Do you want to block access to this email?";
 var strLangLDH02 = "Do you want to unblock this email?";
 var strLangLDH03 = "Block completed.";

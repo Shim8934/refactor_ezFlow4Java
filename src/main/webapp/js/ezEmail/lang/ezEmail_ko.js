@@ -266,6 +266,7 @@ var strLang353 = "동일한 도메인 또는 메일 주소가 존재합니다.";
 var strLang354 = "도메인명을 입력해 주세요.";
 var strLang355 = "대용량";
 var strLang359 = "이동하였습니다.";
+var strLang360 = "데이터가 없습니다.";
 var strLangLDH01 = "이 메일에 대한 열람을 차단하시겠습니까?";
 var strLangLDH02 = "이 메일에 대한 열람차단을 해제하시겠습니까?";
 var strLangLDH03 = "차단되었습니다.";

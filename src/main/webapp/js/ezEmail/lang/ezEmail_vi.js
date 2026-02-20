@@ -266,6 +266,7 @@ var strLang353 = "Cùng một tên miền hoặc địa chỉ email tồn tại.
 var strLang354 = "Vui lòng nhập tên miền.";
 var strLang355 = "Lớn";
 var strLang359 = "Di chuyển đã hoàn thành.";
+var strLang360 = "Không có dữ liệu.";
 var strLangLDH01 = "이 메일에 대한 열람을 차단하시겠습니까?";
 var strLangLDH02 = "이 메일에 대한 열람차단을 해제하시겠습니까?";
 var strLangLDH03 = "차단되었습니다.";

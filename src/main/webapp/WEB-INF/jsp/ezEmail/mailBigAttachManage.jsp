@@ -157,7 +157,7 @@
                 const bigSizeMailAttachDelDay = res.bigSizeMailAttachDelDay;
     
                 if (bigAttachFileList.length < 1) {
-                    html += "<tr><td colspan=\"9\" style=\"text-align:center;\">" + strLang155 + "</td></tr>";
+                    html += "<tr><td colspan=\"9\" style=\"text-align:center;\">" + strLang360 + "</td></tr>";
                 } else {
                     bigAttachFileList.forEach(function(vo, index) {
                         var fileName = vo.fileName;

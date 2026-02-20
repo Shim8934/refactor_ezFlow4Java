@@ -266,6 +266,7 @@ var strLang353 = "存在相同域名或电子邮件地址。";
 var strLang354 = "请输入你的域名。";
 var strLang355 = "超大";
 var strLang359 = "已经移动";
+var strLang360 = "没有数据。";
 var strLangLDH01 = "이 메일에 대한 열람을 차단하시겠습니까?";
 var strLangLDH02 = "이 메일에 대한 열람차단을 해제하시겠습니까?";
 var strLangLDH03 = "차단되었습니다.";
