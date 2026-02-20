@@ -2266,7 +2266,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		sb.append("<ExtensionAttribute8>" + commonUtil.cleanValue(itemInfo.getExtensionAttribute8()) + "</ExtensionAttribute8>");
 		sb.append("<ExtensionAttribute9>" + commonUtil.cleanValue(itemInfo.getExtensionAttribute9()) + "</ExtensionAttribute9>");
 		sb.append("<ExtensionAttribute10>" + commonUtil.cleanValue(itemInfo.getExtensionAttribute10()) + "</ExtensionAttribute10>");
-		sb.append("<BoardID>" + commonUtil.cleanValue(itemInfo.getBoardID()) + "</BoardID>");
+        sb.append("<BoardID>" + commonUtil.cleanValue(boardID) + "</BoardID>");
 		
 		/* 2018-12-03 홍승비 - 게시물 정보에 사원이미지 추가 */
 		if (itemInfo.getUserImageFile() != null && !itemInfo.getUserImageFile().equals("")) {
