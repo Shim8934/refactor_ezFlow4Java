@@ -5184,7 +5184,7 @@ public class EzBoardController extends EzFileMngUtil{
 			}
 		}
         
-        if (boardInfo.getWrite_FG().equals("false")) {
+        if ((!pMode.equals("reply") &&boardInfo.getWrite_FG().equals("false")) || (pMode.equals("reply") && boardInfo.getReply_FG().equals("false"))) {
             return "<RESULT>INACCESSIBLE</RESULT>";
         }
 		
