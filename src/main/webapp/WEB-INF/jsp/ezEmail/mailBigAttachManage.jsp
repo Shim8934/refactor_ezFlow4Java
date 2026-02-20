@@ -54,7 +54,7 @@
                     'prop' : 'uploadDate',
                     'orderBy' : 'DESC',
                     'curPage' :  pageNum,
-                    'maxItemPerPage' : 10
+                    'maxItemPerPage' : 15
                 }
     
                 $.ajax({
@@ -127,7 +127,7 @@
                     'prop'  : prop,
                     'orderBy' : orderBy,
                     'curPage' :  curPage,
-                    'maxItemPerPage' : 10
+                    'maxItemPerPage' : 15
     
                 }
     
