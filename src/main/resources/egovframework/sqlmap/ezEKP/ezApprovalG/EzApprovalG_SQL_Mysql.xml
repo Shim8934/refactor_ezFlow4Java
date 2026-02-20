@@ -5900,7 +5900,7 @@
       	  			AND 
       	  					COMPANYID = #companyID#
       	  			GROUP BY 
-      	  					CABINETCLASSNO,TENANT_ID ) TBMAXVOL 
+      	  					CABINETCLASSNO,TENANT_ID, COMPANYID ) TBMAXVOL 
       	  			INNER JOIN 
       	  					TBL_CABINET 
       	  			ON 
@@ -9929,7 +9929,8 @@
       	  												TBL_CABINET.TENANT_ID = #v_TENANTID#
       	  											AND
       	  												TBL_CABINET.COMPANYID = #companyID#
-      	  											GROUP BY CABINETCLASSNO, TENANT_ID, COMPANYID ) TBMAXVOL 
+      	  											GROUP BY
+      	  											    CABINETCLASSNO, TENANT_ID, COMPANYID ) TBMAXVOL 
       	  									INNER JOIN 
       	  										TBL_CABINET 
       	  									ON 
@@ -37302,16 +37303,16 @@
                     APR,
                     D.STARTDATE) Z 
             GROUP BY
-                Z.DOCID,
-                Z.APRSTATE,
-                Z.FUNCTIONTYPE,
-                Z.APRTYPE,
-                Z.DOCSTATE,
-                Z.APRMEMBERSN,
-                Z.APRMEMBERID,
-                APR,
-                Z.STARTDATE
-                ) A ) B
+                    Z.DOCID,
+                    Z.APRSTATE,
+                    Z.FUNCTIONTYPE,
+                    Z.APRTYPE,
+                    Z.DOCSTATE,
+                    Z.APRMEMBERSN,
+                    Z.APRMEMBERID,
+                    APR,
+                    Z.STARTDATE
+                    ) A ) B
 	</select>
     
     <select id="EzApprovalG.getDashBoardDeptBox" parameterClass="Map" resultClass="ApprGReceiveDocVO" remapResults="true">
