@@ -24,7 +24,7 @@ public class EzDoc24Controller {
 	/**
 	 * 문서24 List 조회 함수
 	 */
-	@RequestMapping(value = "/ezDoc24/getDoc24List.do", method = RequestMethod.GET, produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/ezDoc24/getDoc24List.do", method = RequestMethod.GET, produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String getDoc24List() throws Exception{
 		logger.debug("getDoc24List Started.");
@@ -39,7 +39,7 @@ public class EzDoc24Controller {
 	 * 문서24 상세정보 조회 함수
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/ezDoc24/getDoc24Detail.do", method = RequestMethod.GET, produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/ezDoc24/getDoc24Detail.do", method = RequestMethod.GET, produces = "text/xml;charset=utf-8")
 	public String getDoc24Detail(String orgcn, Model model) throws Exception{
 		logger.debug("getDoc24Detail Started.");
         String jsonData = ezDoc24Service.getDoc24Detail(orgcn);

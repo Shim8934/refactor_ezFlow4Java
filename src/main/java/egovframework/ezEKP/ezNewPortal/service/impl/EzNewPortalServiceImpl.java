@@ -1,6 +1,5 @@
 package egovframework.ezEKP.ezNewPortal.service.impl;
 
-import java.io.File;
 import java.io.InputStreamReader;
 import java.lang.reflect.Field;
 import java.net.URL;
@@ -47,6 +46,7 @@ import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezNewPortal.vo.PortalTopVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortalTopVO.TopFrameType;
 
+import egovframework.let.utl.fcc.service.EzFAL;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.egovframe.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import org.json.simple.JSONArray;
@@ -3623,7 +3623,7 @@ public class EzNewPortalServiceImpl extends EgovAbstractServiceImpl implements E
 		boolean bExist = true;
 		int fileCount = 0;
 		
-		File file = new File(commonUtil.detectPathTraversal(dirPath + fileName)); 
+		EzFAL.EzFile file = new EzFAL.EzFile(commonUtil.detectPathTraversal(dirPath + fileName)); 
 		
 		while (bExist) {
 			if (file.exists()) {

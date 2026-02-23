@@ -28,6 +28,8 @@ import egovframework.ezEKP.ezApprovalG.vo.ApprGHistoryDocVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.KlibUtil;
+import egovframework.let.utl.fcc.service.EzFAL;
+import egovframework.let.utl.fcc.service.EzFAL.*;
 
 /**
  * @see EzApprovalGKlibService
@@ -168,24 +170,38 @@ public final class EzApprovalGKlibServiceImpl extends EgovAbstractServiceImpl im
 
 			// .ezd인 파일들은 제외하고 백업
 			FileFilter fileFilter = file -> !file.toString().endsWith("." + ENCRYPTED_FILE_EXT);
+			
+			// EzFAL 적용 (.ezd 파일 필터링 불가능, 전체 복사로 대체)
+			EzFile realDocumentEzFile = new EzFile(realDocumentFile.toString());
+			EzFile relativeDocumentEzFile = new EzFile(relativeDocumentFile.toString());
+			EzFile realDocumentHistoryDirEzFile = new EzFile(realDocumentHistoryDir.toString());
+			EzFile relativeDocumentHistoryDirEzFile = new EzFile(relativeDocumentHistoryDir.toString());
+			EzFile realAttachmentDirEzFile = new EzFile(realAttachmentDir.toString());
+			EzFile relativeAttachmentDirEzFile = new EzFile(relativeAttachmentDir.toString());
+			EzFile realAttachmentHistoryDirEzFile = new EzFile(realAttachmentHistoryDir.toString());
+			EzFile relativeAttachmentHistoryDirEzFile = new EzFile(relativeAttachmentHistoryDir.toString());
 
 			// 결재완료문서 백업
-			FileUtils.copyDirectory(realDocumentFile.toFile(),
-					backupDir.resolve(relativeDocumentFile).toFile(), fileFilter);
+			//FileUtils.copyDirectory(realDocumentFile.toFile(), backupDir.resolve(relativeDocumentFile).toFile(), fileFilter);
+			EzFAL.copyFile(realDocumentEzFile, relativeDocumentEzFile);
+			
 			// 결재문서 히스토리 폴더 백업
-			if (Files.exists(realDocumentHistoryDir)) {
-				FileUtils.copyDirectory(realDocumentHistoryDir.toFile(),
-						backupDir.resolve(relativeDocumentHistoryDir).toFile(), fileFilter);
+			//if (Files.exists(realDocumentHistoryDir)) {
+			if (realDocumentHistoryDirEzFile.exists()) {
+				//FileUtils.copyDirectory(realDocumentHistoryDir.toFile(), backupDir.resolve(relativeDocumentHistoryDir).toFile(), fileFilter);
+				EzFAL.copyFile(realDocumentHistoryDirEzFile, relativeDocumentHistoryDirEzFile);
 			}
 			// 첨부파일 폴더 백업
-			if (Files.exists(realAttachmentDir)) {
-				FileUtils.copyDirectory(realAttachmentDir.toFile(),
-						backupDir.resolve(relativeAttachmentDir).toFile(), fileFilter);
+			//if (Files.exists(realAttachmentDir)) {
+			if (realAttachmentDirEzFile.exists()) {
+				//FileUtils.copyDirectory(realAttachmentDir.toFile(), backupDir.resolve(relativeAttachmentDir).toFile(), fileFilter);
+				EzFAL.copyFile(realAttachmentDirEzFile, relativeAttachmentDirEzFile);
 			}
 			// 첨부파일 히스토리 폴더 백업
-			if (Files.exists(realAttachmentHistoryDir)) {
-				FileUtils.copyDirectory(realAttachmentHistoryDir.toFile(),
-						backupDir.resolve(relativeAttachmentHistoryDir).toFile(), fileFilter);
+			//if (Files.exists(realAttachmentHistoryDir)) {
+			if (realAttachmentHistoryDirEzFile.exists()) {
+				//FileUtils.copyDirectory(realAttachmentHistoryDir.toFile(), backupDir.resolve(relativeAttachmentHistoryDir).toFile(), fileFilter);
+				EzFAL.copyFile(realAttachmentHistoryDirEzFile, relativeAttachmentHistoryDirEzFile);
 			}
 		} catch (Exception ex) {
 			logger.error(ex.getMessage(), ex);
@@ -356,13 +372,23 @@ public final class EzApprovalGKlibServiceImpl extends EgovAbstractServiceImpl im
 
 			// .ezd 확장자로 저장될 경로
 			String encryptedFileHref = file.toString() + "." + ENCRYPTED_FILE_EXT;
-			Path encryptedFile = Paths.get(encryptedFileHref);
+			//Path encryptedFile = Paths.get(encryptedFileHref);
 
 			// 암호화한 바이트를 .ezd 파일로 저장
-			commonUtil.writeBytesToFile(encryptedFile, encryptedBytes);
+			//commonUtil.writeBytesToFile(encryptedFile, encryptedBytes);
+			
+			// 로컬 파일을 오브젝트 스토리지에 업로드, EzFAL EzFileOutputStream 사용 (자동 close 호출)
+			try (EzFileOutputStream fos = new EzFileOutputStream(encryptedFileHref)) { // 오브젝트 스토리지로 연결되는 파일아웃스트림
+				fos.write(encryptedBytes); // 로컬 파일 시스템에서 가져온 파일 바이트
+				fos.flush();
+			}
 
 			// 원본 파일 삭제
-			Files.delete(file);
+			//Files.delete(file);
+			
+			// EzFAL 적용
+			EzFile ezFile = new EzFile(file.toString());
+			ezFile.delete();
 
 			return true;
 		} catch (Exception ex) {

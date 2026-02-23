@@ -1233,3 +1233,6 @@ var strLangRetiree01 = "adalah pensiunan.\nDikecualikan dari favorit."
 var strLangRetiree02 = "telah dibubarkan.\nAkan dikecualikan dari favorit."
 
 var strLangDashBoard01 = "Disetujui";
+
+var strLangJIH_ChkRecvnum1 = "receiptnumber 필드는 한개의 필드만 지정해주십시오.";
+var strLangJIH_ChkRecvnum2 = "receiptnumber 필드가 지정되어 있지 않습니다. 지정해주십시오.";

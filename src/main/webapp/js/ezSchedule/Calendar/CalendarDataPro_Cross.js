@@ -64,7 +64,7 @@ function chk_scheduleCSS() {
 			var chk_eachVal1 = $(this).val();
 			var chk_type = $(this).data("schedule-type");
 			
-			if (chk_type == "10" || chk_type == "1" || chk_type == "4") {
+			if (chk_type == "10" || chk_type == "4") {
 				$('.td_list td[scheduletype = "' + chk_type + '"]').each(function (index, value) {
 					$(value).addClass('chk_noneDisplay');
 				});
@@ -79,7 +79,7 @@ function chk_scheduleCSS() {
 			var test = $(this).val();
 			var chk_type = $(this).data("schedule-type");
 			
-			if (chk_type == "10" || chk_type == "1" || chk_type == "4") {
+			if (chk_type == "10" || chk_type == "4") {
 				$('.td_list td[scheduletype = "' + chk_type + '"]').each(function (index, value) {
 					$(value).removeClass('chk_noneDisplay');
 				});
@@ -95,7 +95,7 @@ function chk_scheduleCSS() {
 			var chk_eachVal1 = $(this).val();
 			var chk_type = $(this).data("schedule-type");
 			
-			if (chk_type == "10" || chk_type == "1" || chk_type == "4") {
+			if (chk_type == "10" || chk_type == "4") {
 				$('div[scheduletype = "' + chk_type + '"]').each(function (index, value) {
 					$(value).addClass('chk_noneDisplay');
 				});
@@ -110,7 +110,7 @@ function chk_scheduleCSS() {
 			var test = $(this).val();
 			var chk_type = $(this).data("schedule-type");
 			
-			if (chk_type == "10" || chk_type == "1" || chk_type == "4") {
+			if (chk_type == "10" || chk_type == "4") {
 				$('div[scheduletype = "' + chk_type + '"]').each(function (index, value) {
 					$(value).removeClass('chk_noneDisplay');
 				});
@@ -125,7 +125,7 @@ function chk_scheduleCSS() {
 			var chk_eachVal1 = $(this).val();
 			var chk_type = $(this).data("schedule-type");
 			
-			if (chk_type == "10" || chk_type == "1" || chk_type == "4") {
+			if (chk_type == "10" || chk_type == "4") {
 				$('div[scheduletype = "' + chk_type + '"]').each(function (index, value) {
 					$(value).addClass('chk_noneDisplay');
 				});
@@ -140,7 +140,7 @@ function chk_scheduleCSS() {
 			var test = $(this).val();
 			var chk_type = $(this).data("schedule-type");
 			
-			if (chk_type == "10" || chk_type == "1" || chk_type == "4") {
+			if (chk_type == "10" || chk_type == "4") {
 				$('div[scheduletype = "' + chk_type + '"]').each(function (index, value) {
 					$(value).removeClass('chk_noneDisplay');
 				});

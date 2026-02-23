@@ -6,6 +6,8 @@ import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
+import egovframework.let.utl.fcc.service.EzFAL;
+import egovframework.let.utl.fcc.service.EzFAL.*;
 import org.apache.commons.collections4.map.HashedMap;
 import org.apache.commons.io.FileUtils;
 import org.json.simple.JSONArray;
@@ -311,13 +313,14 @@ public class EzApprovalGConnServiceImpl extends EzFileMngUtil implements EzAppro
         
         for(Map<String, Object> info : list) {
             String delPath = commonUtil.getRealPath(servletContext) + (String) info.get("ATTACHFILEHREF");
-            new File(delPath).delete();
+            new EzFile(delPath).delete();
         }
         
         // 결재가 올라간 연동문서의 경우 파일첨부 정보 데이터는 히스토리를 위하여 삭제처리 하지 않음.
-        if ("1".equals(type))
+        if ("1".equals(type)) {
             ezApprovalGConnDao.deleteConnAttachData(keyId);
-        
+        }
+		
         logger.debug("deleteConnAttachData ended");
     }
 
@@ -399,17 +402,17 @@ public class EzApprovalGConnServiceImpl extends EzFileMngUtil implements EzAppro
         logger.debug("copyFile started target : " + target);
 
         if (!dirPath.trim().equals("")) {
-            File file = new File(commonUtil.detectPathTraversal(dirPath));
+            EzFile file = new EzFile(commonUtil.detectPathTraversal(dirPath));
 
             if (!file.exists()) {
                 file.mkdirs();
             }
         }
         try {
-            File src = new File(commonUtil.detectPathTraversal(source));
-            File des = new File(commonUtil.detectPathTraversal(target));
+            EzFile src = new EzFile(commonUtil.detectPathTraversal(source));
+            EzFile des = new EzFile(commonUtil.detectPathTraversal(target));
 
-            FileUtils.copyFile(src, des);
+            EzFAL.copyFile(src, des);
 
             logger.debug("copyFile ended");
             return true;

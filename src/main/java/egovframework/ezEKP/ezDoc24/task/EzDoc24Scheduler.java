@@ -53,7 +53,7 @@ public class EzDoc24Scheduler {
 	public void doc24Scheduler() throws Exception {
 		logger.debug("doc24Scheduler started.");
 		
-		if (!ezEmailScheduler.preScheduler("doc24Scheduler")) {
+		if (!ezEmailScheduler.preScheduler("ezapprovalg_doc24Scheduler")) {
 			logger.debug("doc24Scheduler ended.");
 			return;
 		}

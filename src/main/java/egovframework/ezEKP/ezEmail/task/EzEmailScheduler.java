@@ -38,6 +38,7 @@ import javax.mail.search.ReceivedDateTerm;
 import javax.mail.search.SearchTerm;
 import javax.servlet.ServletContext;
 
+import egovframework.let.utl.fcc.service.EzFAL;
 import egovframework.let.user.login.vo.LoginVO;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
@@ -133,7 +134,7 @@ public class EzEmailScheduler extends EzFileMngUtil {
 			return;
 		}
 
-		if (!preScheduler("mailboxQuotaListUpdate")) {
+		if (!preScheduler("ezemail_mailboxQuotaListUpdate")) {
 			logger.debug("mailboxQuotaListUpdate scheduler ended.");
 			return;
 		}
@@ -197,7 +198,7 @@ public class EzEmailScheduler extends EzFileMngUtil {
 			return;
 		}
 		
-		if (!preScheduler("deleteAllUserOldMail")) {
+		if (!preScheduler("ezemail_deleteAllUserOldMail")) {
 			logger.debug("deleteAllUserOldMail scheduler ended.");
 			return;
 		}
@@ -292,7 +293,7 @@ public class EzEmailScheduler extends EzFileMngUtil {
 		}
 				
 		//choose scheduler running server
-		if (!preScheduler("deleteMailBlob")) {
+		if (!preScheduler("ezemail_deleteMailBlob")) {
 			logger.debug("deleteMailBlob ended.");
 			return;
 		}
@@ -355,7 +356,7 @@ public class EzEmailScheduler extends EzFileMngUtil {
 		}
 		
 		//choose scheduler running server
-		if (!preScheduler("autoDelete")) {
+		if (!preScheduler("ezemail_autoDelete")) {
 			logger.debug("autoDelete scheduler ended.");
 			return;
 		}
@@ -456,7 +457,7 @@ public class EzEmailScheduler extends EzFileMngUtil {
 		}
 		
 		//choose scheduler running server
-		if (!preScheduler("reservedMailSend")) {
+		if (!preScheduler("ezemail_reservedMailSend")) {
 			logger.debug("reservedMailSend scheduler ended.");
 			return;
 		}
@@ -467,8 +468,8 @@ public class EzEmailScheduler extends EzFileMngUtil {
 		
 		for (int i = 0; i < list.size(); i++) {
 			IMAPAccess ia = null;
-			FileInputStream fis = null;
-			File f = null;
+			EzFAL.EzFileInputStream fis = null;
+			EzFAL.EzFile f = null;
 			File encryptedFile = null; // 보안메일 관련 파일 변수
 			MimeMessage message = null;
 			Locale locale = null;
@@ -501,11 +502,11 @@ public class EzEmailScheduler extends EzFileMngUtil {
 				String pDirPath = commonUtil.getUploadPath("upload_mail.RESERVED_MAIL_PATH", tenantId);
 				pDirPath = realPath + pDirPath;
 	
-				f = new File(pDirPath + commonUtil.separator + messageId + ".eml");
+				f = new EzFAL.EzFile(pDirPath + commonUtil.separator + messageId + ".eml");
 				logger.debug("filePath=" + pDirPath + commonUtil.separator + messageId + ".eml");
 								
 				if (f.exists()) {
-					fis = new FileInputStream(f);
+					fis = new EzFAL.EzFileInputStream(f);
 	
 					SMTPAccess sa = SMTPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.SMTPPort"),
 							userAccount, password);
@@ -1060,7 +1061,7 @@ public class EzEmailScheduler extends EzFileMngUtil {
 		}
 		
         //choose scheduler running server
-        if (!preScheduler("processMailStatLogs")) {
+        if (!preScheduler("ezemail_processMailStatLogs")) {
             logger.debug("processMailStatLogs scheduler ended.");
             return;
         }
@@ -1195,7 +1196,7 @@ public class EzEmailScheduler extends EzFileMngUtil {
 		logger.debug("dailyFileManage scheduler started.");
 		
 		//choose scheduler running server
-		if (!preScheduler("dailyFileManage")) {
+		if (!preScheduler("ezemail_dailyFileManage")) {
 			logger.debug("dailyFileManage scheduler ended.");
 			return;
 		}
@@ -1265,7 +1266,7 @@ public class EzEmailScheduler extends EzFileMngUtil {
         }
 
         //choose scheduler running server
-        if (!preScheduler("broadcastQuotaWarning")) {
+        if (!preScheduler("ezemail_broadcastQuotaWarning")) {
             logger.debug("broadcastQuotaWarning scheduler ended.");
             return;
         }
@@ -1406,7 +1407,7 @@ public class EzEmailScheduler extends EzFileMngUtil {
         logger.debug("useDistributionoDelete scheduler started.");
 
         //choose scheduler running server
-        if (!preScheduler("useDistributionoDelete")) {
+        if (!preScheduler("ezemail_useDistributionoDelete")) {
             logger.debug("useDistributionoDelete scheduler ended.");
             return;
         }
@@ -1448,7 +1449,7 @@ public class EzEmailScheduler extends EzFileMngUtil {
 		logger.debug("AutoDeleteOfRetireUser scheduler started.");
 
 		//choose scheduler running server
-		if (!preScheduler("AutoDeleteOfRetireUser")) {
+		if (!preScheduler("ezportal_AutoDeleteOfRetireUser")) {
 			logger.debug("AutoDeleteOfRetireUser scheduler ended.");
 			return;
 		}
@@ -1527,18 +1528,18 @@ public class EzEmailScheduler extends EzFileMngUtil {
 			if (useSeparatedLargeFileFolder.equals("YES")) {
 				pUploadPath += commonUtil.separator + "largeFile";
 			}
-			
-			File file = new File(pUploadPath);
+
+			EzFAL.EzFile file = new EzFAL.EzFile(pUploadPath);
 			logger.debug("path=" + pUploadPath);
 			
 			String bigSizeMailAttachDelDayStr = ezCommonService.getTenantConfig("BigSizeMailAttachDelDay", tenantVO.getTenantId());
 			int bigSizeMailAttachDelDay = Integer.parseInt(bigSizeMailAttachDelDayStr);
 			
 			if (file.exists()) {
-				File[] files = file.listFiles(new DeleteExpireAttachFilter(bigSizeMailAttachDelDay));
+				EzFAL.EzFile[] files = file.listFiles(new DeleteExpireAttachFilter(bigSizeMailAttachDelDay));
 				
-				for (File expiredFile : files) {
-					File[] filelist = expiredFile.listFiles();
+				for (EzFAL.EzFile expiredFile : files) {
+					EzFAL.EzFile[] filelist = expiredFile.listFiles();
 					logger.debug("expired directory name=" + expiredFile.getName());
 					if (deleteDirectory(expiredFile)) {
 						logger.debug(expiredFile.getName() + " is deleted.");
@@ -1562,6 +1563,24 @@ public class EzEmailScheduler extends EzFileMngUtil {
             try {
                 //set SchedulerServer
                 String server = config.getProperty("config.SchedulerServer");
+				
+				// config.SchedulerServer의 값이 ez를 포함하는 경우는 쿠버네티스 MSA 환경에서
+				// 실행되는 경우이며 이 때는 스케쥴러가 속한 모듈명이 config.SchedulerServer에
+				// 포함된 경우에만 선출대상이 되고 그렇지 않으면 선출되지 않는다.
+				// 전자결재 관련 스케쥴러는 전자결재 pod에서만 실행되도록 하기 위한 조치임.
+				// config.SchedulerServer는 쿠버네티스 환경에서 pod명으로 설정된다.
+				if (server.contains("ez")) {
+					String moduleName = scheduler.split("_")[0];
+					
+					logger.debug("scheduler={},moduleName={},server={}", scheduler, moduleName, server);
+					
+					if (moduleName.startsWith("ez") && !server.contains(moduleName)) {
+						logger.debug("this server is not for the scheduler.");
+						logger.debug("preScheduler ended.");
+
+						return isSchedulerServer;
+					}
+				}
 
                 String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/setSchedulerServer";
 

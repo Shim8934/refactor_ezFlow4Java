@@ -104,7 +104,7 @@
 	</ul>
 	
 	<div class="surveydetail-body" id="mainSurveyBody">
-		<div id="svTitle" class="survey-title"><c:out value="${survey.title}"></c:out><span class="srvyTitle_info" id="surveyInfBttn"><img src="/images/ezSurvey/srvyTitle_info.png"></span></div>
+		<div id="svTitle" class="survey-title" style="word-break:break-all;"><c:out value="${survey.title}"></c:out><span class="srvyTitle_info" id="surveyInfBttn"><img src="/images/ezSurvey/srvyTitle_info.png"></span></div>
 		
 		<div id="svPurpose" class="svPurpose">
 			<div class="survey-otherinf">

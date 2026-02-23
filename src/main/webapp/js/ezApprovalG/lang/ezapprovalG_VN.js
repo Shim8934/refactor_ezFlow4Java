@@ -1233,3 +1233,6 @@ var strLangRetiree01 = "đã nghỉ việc.\nSẽ bị loại khỏi mục yêu 
 var strLangRetiree02 = "đã bị giải thể.\nSẽ bị loại khỏi mục yêu thích."
 
 var strLangDashBoard01 = "Tôi đã phê duyệt";
+
+var strLangJIH_ChkRecvnum1 = "receiptnumber 필드는 한개의 필드만 지정해주십시오.";
+var strLangJIH_ChkRecvnum2 = "receiptnumber 필드가 지정되어 있지 않습니다. 지정해주십시오.";

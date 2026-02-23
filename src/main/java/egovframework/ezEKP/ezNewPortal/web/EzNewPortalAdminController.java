@@ -21,6 +21,7 @@ import egovframework.ezEKP.ezNewPortal.service.EzNewPortalService;
 import egovframework.ezEKP.ezSystem.service.EzSystemAdminService;
 import egovframework.ezEKP.ezSystem.vo.SystemConfigTypeVO;
 
+import egovframework.let.utl.fcc.service.EzFAL;
 import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -1110,7 +1111,7 @@ public class EzNewPortalAdminController extends EzFileMngUtil {
         
         pDirPath = commonUtil.detectPathTraversal(pDirPath);
         
-        File file = new File(pDirPath + "uploadFile");
+        EzFAL.EzFile file = new EzFAL.EzFile(pDirPath + "uploadFile");
 
         if (!file.exists()) {
         	file.mkdirs();        
@@ -1590,7 +1591,7 @@ public class EzNewPortalAdminController extends EzFileMngUtil {
         slidePath = commonUtil.detectPathTraversal(slidePath);
         slidePath = commonUtil.stripScriptTags(slidePath);
         
-        File file = new File(slidePath);
+        EzFAL.EzFile file = new EzFAL.EzFile(slidePath);
 
         if (!file.exists()) {
         	file.mkdirs();        
@@ -1605,11 +1606,11 @@ public class EzNewPortalAdminController extends EzFileMngUtil {
 			
 			imagePath = commonUtil.detectPathTraversal(realPath + pDirPath + newFileName);
 			
-			File imageFile = new File(imagePath); 
+			EzFAL.EzFile imageFile = new EzFAL.EzFile(imagePath); 
 			
 			String saveName = UUID.randomUUID() + ".jpg";
 			if (imageFile.exists()) {
-				BufferedImage inputImage = ImageIO.read(imageFile);
+				BufferedImage inputImage = ImageIO.read(new EzFAL.EzFileInputStream(imageFile));
 				BufferedImage outputImage = null;
 				Graphics2D saveImage = null;
 				
@@ -1618,13 +1619,17 @@ public class EzNewPortalAdminController extends EzFileMngUtil {
 				saveImage.drawImage(inputImage, 0, 0, 617, 250, null);
 				saveImage.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
 				
+				String tempDirPath = commonUtil.getUploadPath("upload_newPortal.ROOT", userInfo.getTenantId()) + commonUtil.separator + "tempUploadFile";
+				EzFAL.EzFile dir = new EzFAL.EzFile(tempDirPath);
+				if (!dir.exists()) {
+					dir.mkdirs();
+				}
+				String tempRealPath = realPath + tempDirPath + saveName;
+				ImageIO.write(outputImage, "png", new File(tempRealPath));
+				
 				String imagePath2 = realPath + pDirPath + saveName;
 				imagePath2 = commonUtil.detectPathTraversal(imagePath2);
-				
-				File newFile = new File(imagePath2);
-				
-				ImageIO.write(outputImage, "png" , newFile);
-				deleteFile(imagePath);
+				EzFAL.moveFile(imagePath, imagePath2);
 
 			}
 

@@ -21,6 +21,7 @@ import javax.imageio.ImageReader;
 import javax.imageio.stream.ImageInputStream;
 import javax.servlet.http.HttpServletRequest;
 
+import egovframework.let.utl.fcc.service.EzFAL;
 import org.apache.commons.io.IOUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -874,7 +875,7 @@ public class EzEditorController extends EzFileMngUtil {
 					String fileType = fileDatas[0].substring(fileDatas[0].indexOf("/") + 1, fileDatas[0].indexOf(";"));
 					fileType = commonUtil.detectPathTraversal(fileType);
 					fileData = fileDatas[1];
-					FileOutputStream fileOuputStream = null;
+					EzFAL.EzFileOutputStream fileOuputStream = null;
 
 					try {
 						String filePath = "";
@@ -895,7 +896,7 @@ public class EzEditorController extends EzFileMngUtil {
 						String fileName = UUID.randomUUID() + "." + fileType;
 
 						filePath = filePath + commonUtil.separator + today;
-						File file = new File(commonUtil.detectPathTraversal(realPath + filePath));
+						EzFAL.EzFile file = new EzFAL.EzFile(commonUtil.detectPathTraversal(realPath + filePath));
 
 						if (!file.exists()) {
 							file.mkdirs();
@@ -903,7 +904,7 @@ public class EzEditorController extends EzFileMngUtil {
 
 						Decoder decoder = Base64.getDecoder();
 						byte[] imageByte = decoder.decode(fileData);
-						fileOuputStream = new FileOutputStream(commonUtil.detectPathTraversal(realPath + filePath + commonUtil.separator + fileName));
+						fileOuputStream = new EzFAL.EzFileOutputStream(commonUtil.detectPathTraversal(realPath + filePath + commonUtil.separator + fileName));
 						fileOuputStream.write(imageByte);
 						fileOuputStream.flush();
 
@@ -967,7 +968,7 @@ public class EzEditorController extends EzFileMngUtil {
 				}
 				logger.debug("filePath : " + filePath);
 
-				File file = new File(commonUtil.detectPathTraversal(realPath + filePath));
+				EzFAL.EzFile file = new EzFAL.EzFile(commonUtil.detectPathTraversal(realPath + filePath));
 
 				if (!file.exists()) {
 					file.mkdirs();

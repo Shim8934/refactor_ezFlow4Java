@@ -84,6 +84,7 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
 
+import egovframework.let.utl.fcc.service.EzFAL;
 import egovframework.ezEKP.ezEmail.vo.IcalVO;
 import egovframework.let.utl.rest.Result;
 import net.fortuna.ical4j.model.DateTime;
@@ -495,7 +496,7 @@ public class EzEmailMailWriteController extends EzFileMngUtil {
 	public String mailInterUpload(
 			@CookieValue("loginCookie") String loginCookie, 
 			MultipartHttpServletRequest request) throws Exception{
-		logger.debug("mailInterUploadXCK started.");
+ 		logger.debug("mailInterUploadXCK started.");
 		
 		String strXML = "";
 		String strXML2 = "";
@@ -611,7 +612,7 @@ public class EzEmailMailWriteController extends EzFileMngUtil {
 		pDirPath = realPath + pDirPath;
 		
 		// check the upload mail root folder and create it if it doesn't exist.
-		File uploadMailRootFolder = new File(pDirPath);
+		EzFAL.EzFile uploadMailRootFolder = new EzFAL.EzFile(pDirPath);
 
 		if (!uploadMailRootFolder.exists()) {
 			logger.debug("creating uploadMailRootFolder=" + uploadMailRootFolder);
@@ -635,7 +636,7 @@ public class EzEmailMailWriteController extends EzFileMngUtil {
                 String pDate = EgovDateUtil.getToday("");
                 folderDate = pDate;
                 pDirTempPath = largeFilePath + commonUtil.separator + pDate;
-                File file = new File(pDirTempPath);
+				EzFAL.EzFile file = new EzFAL.EzFile(pDirTempPath);
                 
                 if (!file.exists()) {
                 	file.mkdirs();
@@ -646,12 +647,12 @@ public class EzEmailMailWriteController extends EzFileMngUtil {
                 pFileName[i] = commonUtil.normalizeFileName(pFileName[i]);
                 
                 String base64OrgFileName = Base64.encodeBase64String(pFileName[i].getBytes("UTF-8"));
-                FileOutputStream fos = null;
+				EzFAL.EzFileOutputStream fos = null;
                 
                 try {
 					// 대용량 첨부 파일명을 저장하는 파일
-                	File f = new File(commonUtil.detectPathTraversal(pDirTempPath + commonUtil.separator + sGUID[i] + "__.txt"));
-                	fos = new FileOutputStream(f);
+					EzFAL.EzFile f = new EzFAL.EzFile(commonUtil.detectPathTraversal(pDirTempPath + commonUtil.separator + sGUID[i] + "__.txt"));
+                	fos = new EzFAL.EzFileOutputStream(f);
                     fos.write(base64OrgFileName.getBytes("ISO-8859-1"));
                 } catch(IOException e) {
                 	throw e;
@@ -667,8 +668,8 @@ public class EzEmailMailWriteController extends EzFileMngUtil {
                 pDirTempPath = pDirPath + commonUtil.separator + "tempFileUpload";
                 pBigFileUpload = "N";
             }
-			
-			File f = new File(pDirTempPath);
+
+			EzFAL.EzFile f = new EzFAL.EzFile(pDirTempPath);
 
 			if (!f.exists()) {
 				f.mkdirs();
@@ -682,8 +683,8 @@ public class EzEmailMailWriteController extends EzFileMngUtil {
                     resultUpload[i] = "denied";
                 } else {
 					// Multipart 형식으로 업로드된 파일을 복사한다.
-                    //writeUploadedFile(multiFile.get(i), sGUID[i], pDirTempPath);
-					multiFile.get(i).transferTo(new File(pDirTempPath, sGUID[i]));
+                    writeUploadedFile(multiFile.get(i), sGUID[i], pDirTempPath);
+					//multiFile.get(i).transferTo(new File(pDirTempPath, sGUID[i]));
                     fileLocation[i] = pDirTempPath + commonUtil.separator + sGUID[i];
                     resultUpload[i] = "true";
 
@@ -775,7 +776,7 @@ public class EzEmailMailWriteController extends EzFileMngUtil {
 		strXML += strXML2 + "</NODES></ROOT>";
 
         String xmlPath = pDirPath + commonUtil.separator + "templist";
-        File f = new File(xmlPath);
+		EzFAL.EzFile f = new EzFAL.EzFile(xmlPath);
 
         if (!f.exists()) {
 			f.mkdirs();
@@ -783,7 +784,7 @@ public class EzEmailMailWriteController extends EzFileMngUtil {
 
 		// 업로드된 파일에 대한 정보를 누적해서 저장하는 파일
         xmlPath += commonUtil.separator + tempFolderName + ".txt";
-        f = new File(xmlPath);
+        f = new EzFAL.EzFile(xmlPath);
         
         if (f.exists()) {
         	String tempXmlList = "";
@@ -792,7 +793,7 @@ public class EzEmailMailWriteController extends EzFileMngUtil {
         	OutputStreamWriter osw = null;
         	
         	try {
-	        	isr = new InputStreamReader(new FileInputStream(f));
+	        	isr = new InputStreamReader(new EzFAL.EzFileInputStream(f));
 	        	br = new BufferedReader(isr);
 	        	int read = 0;
 				
@@ -810,7 +811,7 @@ public class EzEmailMailWriteController extends EzFileMngUtil {
 	            	nodeList.item(0).appendChild(xmldom.importNode(nodeList2.item(i), true));
 	            }
             	
-	            osw = new OutputStreamWriter(new FileOutputStream(f));
+	            osw = new OutputStreamWriter(new EzFAL.EzFileOutputStream(f));
             	osw.write(commonUtil.convertDocumentToString(xmldom));
             	String crlf = System.getProperty("line.separator");
         		osw.append(crlf+crlf);
@@ -838,7 +839,7 @@ public class EzEmailMailWriteController extends EzFileMngUtil {
         	OutputStreamWriter osw = null;
         	
         	try {
-        		osw = new OutputStreamWriter(new FileOutputStream(f));
+        		osw = new OutputStreamWriter(new EzFAL.EzFileOutputStream(f));
         		osw.write(strXML);
         		String crlf = System.getProperty("line.separator");
         		osw.append(crlf+crlf);
@@ -977,8 +978,8 @@ public class EzEmailMailWriteController extends EzFileMngUtil {
 					logger.error(e.getMessage(), e);
 				}
 			}
-			
-			File f = new File(filePath[i]);
+
+			EzFAL.EzFile f = new EzFAL.EzFile(filePath[i]);
 			
 			if (f.exists()) {
 				fileName[i] = doc.getElementsByTagName("DATA1").item(i).getTextContent();
@@ -1038,7 +1039,7 @@ public class EzEmailMailWriteController extends EzFileMngUtil {
 			// 현재 날짜의 폴더가 없으면 생성한다.
 			String folderDate = EgovDateUtil.getToday("");
 			String bigAttachFolderPath = largeFilePath + commonUtil.separator + folderDate;
-            File file = new File(bigAttachFolderPath);
+			EzFAL.EzFile file = new EzFAL.EzFile(bigAttachFolderPath);
             
             if (!file.exists()) {
             	file.mkdirs();
@@ -1048,20 +1049,20 @@ public class EzEmailMailWriteController extends EzFileMngUtil {
             	if (filePath[i].equals("NOFILE")) {
 					continue;
 				}
-            	
-            	FileInputStream fis = null;
-				FileOutputStream fos = null;
-				FileOutputStream fos2 = null;
+
+				EzFAL.EzFileInputStream fis = null;
+				EzFAL.EzFileOutputStream fos = null;
+				EzFAL.EzFileOutputStream fos2 = null;
 				BufferedInputStream bis = null;
 				BufferedOutputStream bos = null;
                 
 				try {
 					// CWE-404 보안 취약점 대응
 					// 게시판의 첨부파일을 대용량첨부 폴더쪽으로 복사한다.
-					fis = new FileInputStream(filePath[i]);
+					fis = new EzFAL.EzFileInputStream(filePath[i]);
 					bis = new BufferedInputStream(fis);
 					
-					fos = new FileOutputStream(bigAttachFolderPath + commonUtil.separator + newFileName[i]);
+					fos = new EzFAL.EzFileOutputStream(bigAttachFolderPath + commonUtil.separator + newFileName[i]);
 					bos = new BufferedOutputStream(fos);
 					
 					int data = 0;
@@ -1073,9 +1074,9 @@ public class EzEmailMailWriteController extends EzFileMngUtil {
 					
 					// 첨부파일의 original 이름을 base64로 인코딩하여 첨부파일__.txt에 저장한다.
                 	String base64OrgFileName = Base64.encodeBase64String(fileName[i].getBytes("UTF-8"));
-                	
-                	File fileForName = new File(bigAttachFolderPath + commonUtil.separator + newFileName[i] + "__.txt");
-                	fos2 = new FileOutputStream(fileForName);
+
+					EzFAL.EzFile fileForName = new EzFAL.EzFile(bigAttachFolderPath + commonUtil.separator + newFileName[i] + "__.txt");
+                	fos2 = new EzFAL.EzFileOutputStream(fileForName);
                 	fos2.write(base64OrgFileName.getBytes("ISO-8859-1"));
                 	
                 	//첨부파일 정보를 XML data로 만든다.
@@ -1139,8 +1140,8 @@ public class EzEmailMailWriteController extends EzFileMngUtil {
             }            
 		} else { // 일반첨부의 경우
 			logger.debug("In case of common attachment.");
-			
-			File file = new File(pTempFileUploadPath);
+
+			EzFAL.EzFile file = new EzFAL.EzFile(pTempFileUploadPath);
 			
 			if (!file.exists()) {
 				file.mkdirs();
@@ -1150,18 +1151,18 @@ public class EzEmailMailWriteController extends EzFileMngUtil {
 				if (filePath[i].equals("NOFILE")) {
 					continue;
 				}
-				
-				FileInputStream fis = null;
-				FileOutputStream fos = null;
+
+				EzFAL.EzFileInputStream fis = null;
+				EzFAL.EzFileOutputStream fos = null;
 				BufferedInputStream bis = null;
 				BufferedOutputStream bos = null;
 				
 				try {
 					// 게시판의 첨부파일을 메일 첨부파일 임시폴더쪽으로 복사한다.
-					fis = new FileInputStream(filePath[i]);
+					fis = new EzFAL.EzFileInputStream(filePath[i]);
 					bis = new BufferedInputStream(fis);
 					
-					fos = new FileOutputStream(pTempFileUploadPath + commonUtil.separator + newFileName[i]);
+					fos = new EzFAL.EzFileOutputStream(pTempFileUploadPath + commonUtil.separator + newFileName[i]);
 					bos = new BufferedOutputStream(fos);
 					
 					int data = 0;
@@ -1242,13 +1243,13 @@ public class EzEmailMailWriteController extends EzFileMngUtil {
 		}
 		
 		// templist폴더에 메일에 대한 첨부파일 정보를 가지고있는 txt파일 생성한다.
-        File f = new File(pTempListPath);
+		EzFAL.EzFile f = new EzFAL.EzFile(pTempListPath);
         
         if (!f.exists()) {
 			f.mkdirs();
         }
         
-        f = new File(pTempListPath + commonUtil.separator + tempFolderName + ".txt");
+        f = new EzFAL.EzFile(pTempListPath + commonUtil.separator + tempFolderName + ".txt");
 		// 2024.11.01 한슬기 : 기존파일에 덮어쓰기 -> 기존 파일에 업로드 된 파일에 대한 정보를 추가하여 저장하도록 로직 수정
 		if(f.exists()) {
 			OutputStreamWriter outWrite = null;
@@ -1257,7 +1258,7 @@ public class EzEmailMailWriteController extends EzFileMngUtil {
 			String tempXmlList = "";
 		
 	    	try {
-	    		inputRead = new InputStreamReader(new FileInputStream(f));
+	    		inputRead = new InputStreamReader(new EzFAL.EzFileInputStream(f));
 	    		bufferRead = new BufferedReader(inputRead);
 	    		int read = 0;
 	    		
@@ -1275,7 +1276,7 @@ public class EzEmailMailWriteController extends EzFileMngUtil {
 	    			nodeList.item(0).appendChild(xmlDom.importNode(nodeList2.item(i), true));
 	    		}
 	    		
-	    		outWrite = new OutputStreamWriter(new FileOutputStream(f));
+	    		outWrite = new OutputStreamWriter(new EzFAL.EzFileOutputStream(f));
 	    		outWrite.write(commonUtil.convertDocumentToString(xmlDom));
 	    		String crlf = System.getProperty("line.separator");
 	    		outWrite.append(crlf+crlf);
@@ -1296,7 +1297,7 @@ public class EzEmailMailWriteController extends EzFileMngUtil {
 	    		}
 	    	}
 		} else {
-			try (OutputStreamWriter outWrite = new OutputStreamWriter(Files.newOutputStream(f.toPath()))) {
+			try (OutputStreamWriter outWrite = new OutputStreamWriter(new EzFAL.EzFileOutputStream(f))) {
 				outWrite.write(sb.toString());
 				String crlf = System.getProperty("line.separator");
 				outWrite.append(crlf).append(crlf);
@@ -1385,8 +1386,8 @@ public class EzEmailMailWriteController extends EzFileMngUtil {
 //				filePathValue = "/" + filePathValue;
 //			}
 			
-			filePath[i] = ezJournalPath + filePathValue;						
-			File f = new File(filePath[i]);
+			filePath[i] = ezJournalPath + filePathValue;
+			EzFAL.EzFile f = new EzFAL.EzFile(filePath[i]);
 			
 			if (f.exists()) {
 				fileName[i] = doc.getElementsByTagName("DATA1").item(i).getTextContent();
@@ -1427,7 +1428,7 @@ public class EzEmailMailWriteController extends EzFileMngUtil {
 			// 현재 날짜의 폴더가 없으면 생성한다.
 			String folderDate = EgovDateUtil.getToday("");
 			String bigAttachFolderPath = largeFilePath + commonUtil.separator + folderDate;
-			File file = new File(bigAttachFolderPath);
+			EzFAL.EzFile file = new EzFAL.EzFile(bigAttachFolderPath);
 			
 			if (!file.exists()) {
 				file.mkdirs();
@@ -1437,20 +1438,20 @@ public class EzEmailMailWriteController extends EzFileMngUtil {
 				if (filePath[i].equals("NOFILE")) {
 					continue;
 				}
-				
-				FileInputStream fis = null;
-				FileOutputStream fos = null;
-				FileOutputStream fos2 = null;				
+
+				EzFAL.EzFileInputStream fis = null;
+				EzFAL.EzFileOutputStream fos = null;
+				EzFAL.EzFileOutputStream fos2 = null;
 				BufferedInputStream bis = null;
 				BufferedOutputStream bos = null;
 				
 				try {
 					// CWE-404 보안 취약점 대응
 					// 게시판의 첨부파일을 대용량첨부 폴더쪽으로 복사한다.
-					fis = new FileInputStream(filePath[i]);
+					fis = new EzFAL.EzFileInputStream(filePath[i]);
 					bis = new BufferedInputStream(fis);
 					
-					fos = new FileOutputStream(bigAttachFolderPath + commonUtil.separator + newFileName[i]);
+					fos = new EzFAL.EzFileOutputStream(bigAttachFolderPath + commonUtil.separator + newFileName[i]);
 					bos = new BufferedOutputStream(fos);
 					
 					int data = 0;
@@ -1462,9 +1463,9 @@ public class EzEmailMailWriteController extends EzFileMngUtil {
 					
 					// 첨부파일의 original 이름을 base64로 인코딩하여 첨부파일__.txt에 저장한다.
 					String base64OrgFileName = Base64.encodeBase64String(fileName[i].getBytes("UTF-8"));
-					
-					File fileForName = new File(bigAttachFolderPath + commonUtil.separator + newFileName[i] + "__.txt");
-					fos2 = new FileOutputStream(fileForName);
+
+					EzFAL.EzFile fileForName = new EzFAL.EzFile(bigAttachFolderPath + commonUtil.separator + newFileName[i] + "__.txt");
+					fos2 = new EzFAL.EzFileOutputStream(fileForName);
 					fos2.write(base64OrgFileName.getBytes("ISO-8859-1"));
 					
 					// 2022-10-11 이사라 - 확장자에 암호화 모듈에서 붙은 추가 확장자(ezd)가 있는 경우 제거하고 비교
@@ -1528,8 +1529,8 @@ public class EzEmailMailWriteController extends EzFileMngUtil {
 			}            
 		} else { // 일반첨부의 경우
 			logger.debug("In case of common attachment.");
-			
-			File file = new File(pTempFileUploadPath);
+
+			EzFAL.EzFile file = new EzFAL.EzFile(pTempFileUploadPath);
 			
 			if (!file.exists()) {
 				file.mkdirs();
@@ -1539,18 +1540,18 @@ public class EzEmailMailWriteController extends EzFileMngUtil {
 				if (filePath[i].equals("NOFILE")) {
 					continue;
 				}
-				
-				FileInputStream fis = null;
-				FileOutputStream fos = null;
+
+				EzFAL.EzFileInputStream fis = null;
+				EzFAL.EzFileOutputStream fos = null;
 				BufferedInputStream bis = null;
 				BufferedOutputStream bos = null;
 				
 				try {
 					// 게시판의 첨부파일을 메일 첨부파일 임시폴더쪽으로 복사한다.
-					fis = new FileInputStream(filePath[i]);
+					fis = new EzFAL.EzFileInputStream(filePath[i]);
 					bis = new BufferedInputStream(fis);
 					
-					fos = new FileOutputStream(pTempFileUploadPath + commonUtil.separator + newFileName[i]);
+					fos = new EzFAL.EzFileOutputStream(pTempFileUploadPath + commonUtil.separator + newFileName[i]);
 					bos = new BufferedOutputStream(fos);
 					
 					int data = 0;
@@ -1619,17 +1620,17 @@ public class EzEmailMailWriteController extends EzFileMngUtil {
 		sb.append("</NODES></ROOT>");
 				
 		// templist폴더에 메일에 대한 첨부파일 정보를 가지고있는 txt파일 생성한다.
-		File f = new File(pTempListPath);
+		EzFAL.EzFile f = new EzFAL.EzFile(pTempListPath);
 		
 		if (!f.exists()) {
 			f.mkdirs();
 		}
 		
-		f = new File(pTempListPath + commonUtil.separator + tempFolderName + ".txt");
+		f = new EzFAL.EzFile(pTempListPath + commonUtil.separator + tempFolderName + ".txt");
 		OutputStreamWriter outWrite = null;
 		
 		try {
-			outWrite = new OutputStreamWriter(new FileOutputStream(f));
+			outWrite = new OutputStreamWriter(new EzFAL.EzFileOutputStream(f));
 			outWrite.write(sb.toString());
 			String crlf = System.getProperty("line.separator");
 			outWrite.append(crlf+crlf);
@@ -3032,8 +3033,8 @@ public class EzEmailMailWriteController extends EzFileMngUtil {
 			            	    // 이미지 파일의 Path를 구한다.
 			                	imagePath = new URL(imagePath).getPath();
 			                	String pDirPath = realPath + imagePath;
-			                	
-			        	        File f = new File(pDirPath);
+
+								EzFAL.EzFile f = new EzFAL.EzFile(pDirPath);
 			        	        
 			        	        if (f.exists()) {	            		
 			        	            // 본문 내용에 있는 image tag의 src 속성의 값을 content id 형식으로 변경한다.
@@ -3051,16 +3052,25 @@ public class EzEmailMailWriteController extends EzFileMngUtil {
 			                		        	        
 				                	// 이미지 파일을 추가할 Mime Body Part를 생성한다.
 				                	MimeBodyPart messageBodyPart = new MimeBodyPart();
-				                	
-				        	        FileDataSource source = new FileDataSource(f);
-				        	        messageBodyPart.setDataHandler(new DataHandler(source));
+
+									if (!EzFAL.isObjectStorageMode() || pDirPath.contains("upload_common")) {
+										FileDataSource source = new FileDataSource(f.getFile());
+										messageBodyPart.setDataHandler(new DataHandler(source));
+									} else {
+										// 성능 향상을 위해 Object Storage에 있는 파일을 로컬 폴더로 복사한다.
+										IOUtils.copy(new EzFAL.EzFileInputStream(f), new FileOutputStream(f.getFile()));
+
+										FileDataSource source = new FileDataSource(f.getFile());
+										messageBodyPart.setDataHandler(new DataHandler(source));
+									}
+
 				        	        messageBodyPart.setFileName(imageName);
 				        	        
 				        	        String contentType = null;
 				        	        BufferedInputStream bis = null;
 				        	        
 				        	        try {
-				        		        bis = new BufferedInputStream(new FileInputStream(f));
+				        		        bis = new BufferedInputStream(new EzFAL.EzFileInputStream(f));
 				        		        contentType = URLConnection.guessContentTypeFromStream(bis);
 				        	        } catch(FileNotFoundException e) {
 										logger.error(e.getMessage(), e);
@@ -3844,7 +3854,7 @@ public class EzEmailMailWriteController extends EzFileMngUtil {
 			            	
 							String pDirPath = commonUtil.getUploadPath("upload_mail.RESERVED_MAIL_PATH", userInfo.getTenantId());
 				    		pDirPath = realPath + pDirPath;
-				            File f = new File(pDirPath + commonUtil.separator + reservedId + ".eml");
+							EzFAL.EzFile f = new EzFAL.EzFile(pDirPath + commonUtil.separator + reservedId + ".eml");
 							if (f.exists()) {
 								f.delete();
 							}
@@ -3899,7 +3909,7 @@ public class EzEmailMailWriteController extends EzFileMngUtil {
 			        // file system의 templist txt파일 삭제
 			        String pDirPath = realPath + commonUtil.getUploadPath("upload_mail.ROOT", userInfo.getTenantId()) + commonUtil.separator + "templist";
 			        pDirPath += commonUtil.separator + stateName + ".txt";
-			        File f = new File(pDirPath);
+					EzFAL.EzFile f = new EzFAL.EzFile(pDirPath);
 			        if (f.exists()) {
 			        	f.delete();
 			        }
@@ -4250,12 +4260,15 @@ public class EzEmailMailWriteController extends EzFileMngUtil {
 	        String realPath = commonUtil.getRealPath(request);
 	        String pDirPath = realPath + commonUtil.getUploadPath("upload_mail.ROOT", loginInfo.getTenantId()) + commonUtil.separator + "templist";
 	        pDirPath += commonUtil.separator + delId + ".txt";
-	        File f = new File(pDirPath);
+
+			EzFAL.EzFile f = new EzFAL.EzFile(pDirPath);
+			InputStream in = new EzFAL.EzFileInputStream(f);
+
 			try {
 				// DOM Parser 준비
 				DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 				DocumentBuilder builder = factory.newDocumentBuilder();
-				Document doc = builder.parse(f);
+				Document doc = builder.parse(in);
 
 				doc.getDocumentElement().normalize();
 
@@ -4361,15 +4374,16 @@ public class EzEmailMailWriteController extends EzFileMngUtil {
         String realPath = commonUtil.getRealPath(request);
         String pDirPath = realPath + commonUtil.getUploadPath("upload_mail.ROOT", userInfo.getTenantId()) + commonUtil.separator + "templist";
         pDirPath += commonUtil.separator + delId + ".txt";
-        
-        File f = new File(pDirPath);
+
+		EzFAL.EzFile f = new EzFAL.EzFile(pDirPath);
+		InputStream in = new EzFAL.EzFileInputStream(f);
 
 		if (f.exists()) {
 			try {
 				// DOM Parser 준비
 				DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 				DocumentBuilder builder = factory.newDocumentBuilder();
-				Document doc = builder.parse(f);
+				Document doc = builder.parse(in);
 
 				doc.getDocumentElement().normalize();
 
@@ -4476,12 +4490,12 @@ public class EzEmailMailWriteController extends EzFileMngUtil {
 		String xmlPath = pDirPath + commonUtil.separator + "templist" + commonUtil.separator + fileData + ".txt";
     	
 		String returnValue = "";
-		File f = new File(xmlPath);
+		EzFAL.EzFile f = new EzFAL.EzFile(xmlPath);
         if (f.exists()) {
 			InputStreamReader isr = null;
 	    	BufferedReader br = null;
 	    	try {
-	        	isr = new InputStreamReader(new FileInputStream(f));
+	        	isr = new InputStreamReader(new EzFAL.EzFileInputStream(f));
 	        	br = new BufferedReader(isr);
 	        	int read = 0;
 				while ((read = br.read()) != -1) {
@@ -4692,13 +4706,13 @@ public class EzEmailMailWriteController extends EzFileMngUtil {
 		if (useSeparatedLargeFileFolder.equals("YES")) {
 			largeFilePath += commonUtil.separator + "largeFile";
 		}
-		
-		File templistFile = new File(xmlPath);
+
+		EzFAL.EzFile templistFile = new EzFAL.EzFile(xmlPath);
 		if (templistFile.exists()) {
 			String strXml = "";
 			InputStreamReader isr = null;
 			try {
-				isr = new InputStreamReader(new FileInputStream(xmlPath));
+				isr = new InputStreamReader(new EzFAL.EzFileInputStream(xmlPath));
 			    int read = 0;
 				while ((read = isr.read()) != -1) {
 					strXml += (char)read;
@@ -4719,12 +4733,12 @@ public class EzEmailMailWriteController extends EzFileMngUtil {
 						String[] fileLocationArray = fileLocation.split("\\|!\\|");
 						String pRealFilePath = largeFilePath + commonUtil.separator + fileLocationArray[0] + commonUtil.separator + fileLocationArray[1];
 						pRealFilePath = commonUtil.detectPathTraversal(pRealFilePath);
-						
-						File bigAttachFile = new File(pRealFilePath);
+
+						EzFAL.EzFile bigAttachFile = new EzFAL.EzFile(pRealFilePath);
 						
 						if (bigAttachFile.exists()) {
 							bigAttachFile.delete();
-							File bigAttachNameFile = new File(pRealFilePath+"__.txt");
+							EzFAL.EzFile bigAttachNameFile = new EzFAL.EzFile(pRealFilePath+"__.txt");
 							bigAttachNameFile.delete();
 						}
 
@@ -4760,7 +4774,7 @@ public class EzEmailMailWriteController extends EzFileMngUtil {
 			
 			OutputStreamWriter osw = null;
 			try {
-				osw = new OutputStreamWriter(new FileOutputStream(xmlPath), "UTF-8");
+				osw = new OutputStreamWriter(new EzFAL.EzFileOutputStream(xmlPath), "UTF-8");
 				osw.write(strXml2);
 			} finally {
 				if (osw != null) {
@@ -5788,20 +5802,20 @@ public class EzEmailMailWriteController extends EzFileMngUtil {
 		String messageId = commonUtil.detectPathTraversal(reservedId);
 		
 		messageId = ezEmailService.setMailReserved(tenantId, messageId, subject, sendDate, mailId, userId, isReserve);
-		
-		File f = null;
+
+		EzFAL.EzFile f = null;
 		
 		String pDirPath = commonUtil.getUploadPath("upload_mail.RESERVED_MAIL_PATH", tenantId);
 		pDirPath = realPath + pDirPath;
-		f = new File(pDirPath);
+		f = new EzFAL.EzFile(pDirPath);
 		if (!f.exists()) {
 			f.mkdirs();
 		}
 		
-		f = new File(pDirPath + commonUtil.separator + messageId + ".eml");
-    	FileOutputStream fos = null;
+		f = new EzFAL.EzFile(pDirPath + commonUtil.separator + messageId + ".eml");
+		EzFAL.EzFileOutputStream fos = null;
     	try {
-    		fos = new FileOutputStream(f);
+    		fos = new EzFAL.EzFileOutputStream(f);
     		message.writeTo(fos);
     	} catch (IOException e) {
     		logger.error("IOException has occurred");

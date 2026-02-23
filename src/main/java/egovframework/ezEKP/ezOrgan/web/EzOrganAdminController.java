@@ -34,8 +34,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import egovframework.let.utl.rest.JgwResult;
 import egovframework.let.utl.rest.Result;
+import egovframework.let.utl.fcc.service.EzFAL;
+import org.apache.commons.io.IOUtils;
+
 import egovframework.ezEKP.ezOrgan.service.impl.EzOrganAdminServiceImpl;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
+
 import org.apache.commons.lang3.BooleanUtils;
 import egovframework.ezEKP.ezOrgan.vo.OrganAuth;
 import egovframework.ezEKP.ezOrgan.vo.OrganAuth.AdminAuth;
@@ -2160,6 +2164,10 @@ public class EzOrganAdminController extends EzFileMngUtil {
 
 				if (preResult.succeeded()) {
 					ezOrganAdminService.updateDBData_user(vo);
+					if ("".equalsIgnoreCase(vo.getExtensionAttribute2())){
+						String realPath = commonUtil.getRealPath(request);
+						ezOrganAdminService.deleteDestUserProfileImage(userInfo.getId(), userInfo.getTenantId(), realPath);
+					}
 					result = "OK";
 				} else {
 					result = preResult.toString();
@@ -2597,15 +2605,15 @@ public class EzOrganAdminController extends EzFileMngUtil {
 		} else {
 			serverPath = realPath + commonUtil.getUploadPath("upload_approvalG.SIGNIMGS", userInfo.getTenantId()) + commonUtil.separator + userID + commonUtil.separator;
 		}
-		
-		File file = new File(commonUtil.detectPathTraversal(serverPath));
+
+		EzFAL.EzFile file = new EzFAL.EzFile(commonUtil.detectPathTraversal(serverPath));
 			
 		if (!file.exists()) {
 			file.mkdirs();
 		}
 		
 		if (!mode.equals("TEMP")) {
-			File file1 = new File(commonUtil.detectPathTraversal(tempPath));
+			EzFAL.EzFile file1 = new EzFAL.EzFile(commonUtil.detectPathTraversal(tempPath));
 			
 			if (!file1.exists()) {
 				file1.mkdirs();
@@ -2622,7 +2630,7 @@ public class EzOrganAdminController extends EzFileMngUtil {
 		
 		try {
 			stream = request.getInputStream();
-			bos = new FileOutputStream(commonUtil.detectPathTraversal(serverPath + fileName));
+			bos = new EzFAL.EzFileOutputStream(commonUtil.detectPathTraversal(serverPath + fileName));
 			int bytesRead = 0;
 			byte[] buffer = new byte[BUFF_SIZE];
 			
@@ -2652,13 +2660,13 @@ public class EzOrganAdminController extends EzFileMngUtil {
 		//썸네일 생성
         if (mode.equals("PICTURE")) {
         	String thumbnailPath = realPath + commonUtil.getUploadPath("upload_personal.PHOTOTHUMBNAIL", userInfo.getTenantId());
-        	File file2 = new File(commonUtil.detectPathTraversal(serverPath + fileName));
-			File thumbnailFolder = new File(commonUtil.detectPathTraversal(thumbnailPath));
+			EzFAL.EzFile file2 = new EzFAL.EzFile(commonUtil.detectPathTraversal(serverPath + fileName));
+			EzFAL.EzFile thumbnailFolder = new EzFAL.EzFile(commonUtil.detectPathTraversal(thumbnailPath));
 			if (!thumbnailFolder.exists()) {
 				thumbnailFolder.mkdirs();
 			}
-			
-			File thumbnailFile = new File(commonUtil.detectPathTraversal(thumbnailPath + commonUtil.separator + file2.getName()));
+
+			EzFAL.EzFile thumbnailFile = new EzFAL.EzFile(commonUtil.detectPathTraversal(thumbnailPath + commonUtil.separator + file2.getName()));
 			createThumbnail(file2, thumbnailFile);
         }
 		
@@ -2716,15 +2724,15 @@ public class EzOrganAdminController extends EzFileMngUtil {
 			} else {
 				serverPath = realPath + commonUtil.getUploadPath("upload_approvalG.SIGNIMGS", userInfo.getTenantId()) + commonUtil.separator + userID + commonUtil.separator;
 			}
-						
-			File file = new File(commonUtil.detectPathTraversal(serverPath));
+
+			EzFAL.EzFile file = new EzFAL.EzFile(commonUtil.detectPathTraversal(serverPath));
 			
 			if (!file.exists()) {
 				file.mkdirs();
 			}
 			
 			if (!mode.equals("TEMP")) {
-				File file1 = new File(commonUtil.detectPathTraversal(tempPath));
+				EzFAL.EzFile file1 = new EzFAL.EzFile(commonUtil.detectPathTraversal(tempPath));
 				
 				if (!file1.exists()) {
 					file1.mkdirs();
@@ -2732,33 +2740,45 @@ public class EzOrganAdminController extends EzFileMngUtil {
 			}
 
 			writeUploadedFile(multiFile, fileName + extension, tempPath);
-			File imageFile = new File(commonUtil.detectPathTraversal(tempPath + fileName + extension));			
+			EzFAL.EzFile imageFile = new EzFAL.EzFile(commonUtil.detectPathTraversal(tempPath + fileName + extension));
 
-			BufferedImage bi = ImageIO.read(imageFile);
-			/*2018-04-12이효진  bi.getType으로 지정시 color변경되어 TYPE_4BYTE_ABGR로 지정*/
-//            BufferedImage bufferedImage = new BufferedImage(119, 128, bi.getType());
-            BufferedImage bufferedImage = new BufferedImage(119, 128, BufferedImage.TYPE_4BYTE_ABGR);
-            /*2018-04-12이효진  PNG파일 배경지정*/
-//            bufferedImage.createGraphics().drawImage(bi, 0, 0, 119, 128, null);
-            bufferedImage.createGraphics().drawImage(bi, 0, 0, 119, 128, Color.WHITE, null);
-            
-            File file2 = new File(commonUtil.detectPathTraversal(serverPath + fileName + "png"));
-            ImageIO.write(bufferedImage, "png", file2);
-            //임시 저장 파일 삭제
-            deleteFile(tempPath + fileName + extension);
-            
-            //썸네일 생성
-            if (mode.equals("PICTURE")) {
-            	String thumbnailPath = realPath + commonUtil.getUploadPath("upload_personal.PHOTOTHUMBNAIL", userInfo.getTenantId());
-    			File thumbnailFolder = new File(commonUtil.detectPathTraversal(thumbnailPath));
-    			if (!thumbnailFolder.exists()) {
-    				thumbnailFolder.mkdirs();
-    			}
-    			
-    			File thumbnailFile = new File(commonUtil.detectPathTraversal(thumbnailPath + commonUtil.separator + file2.getName()));
-    			createThumbnail(file2, thumbnailFile);
-            }
-            
+			InputStream in = null;
+
+			try {
+				in = new EzFAL.EzFileInputStream(imageFile);
+
+				BufferedImage bi = ImageIO.read(in);
+				/*2018-04-12이효진  bi.getType으로 지정시 color변경되어 TYPE_4BYTE_ABGR로 지정*/
+	//            BufferedImage bufferedImage = new BufferedImage(119, 128, bi.getType());
+				BufferedImage bufferedImage = new BufferedImage(119, 128, BufferedImage.TYPE_4BYTE_ABGR);
+				/*2018-04-12이효진  PNG파일 배경지정*/
+	//            bufferedImage.createGraphics().drawImage(bi, 0, 0, 119, 128, null);
+				bufferedImage.createGraphics().drawImage(bi, 0, 0, 119, 128, Color.WHITE, null);
+
+				EzFAL.EzFile file2 = new EzFAL.EzFile(commonUtil.detectPathTraversal(serverPath + fileName + "png"));
+				try (OutputStream out = new EzFAL.EzFileOutputStream(file2)) {
+					ImageIO.write(bufferedImage, "png", out);
+				}
+				//임시 저장 파일 삭제
+				deleteFile(tempPath + fileName + extension);
+
+				//썸네일 생성
+				if (mode.equals("PICTURE")) {
+					String thumbnailPath = realPath + commonUtil.getUploadPath("upload_personal.PHOTOTHUMBNAIL", userInfo.getTenantId());
+					EzFAL.EzFile thumbnailFolder = new EzFAL.EzFile(commonUtil.detectPathTraversal(thumbnailPath));
+					if (!thumbnailFolder.exists()) {
+						thumbnailFolder.mkdirs();
+					}
+
+					EzFAL.EzFile thumbnailFile = new EzFAL.EzFile(commonUtil.detectPathTraversal(thumbnailPath + commonUtil.separator + file2.getName()));
+					createThumbnail(file2, thumbnailFile);
+				}
+			} finally {
+				if (in != null) {
+					in.close();
+				}
+			}
+
             logger.debug("signImangeUpload ended");
 
             return fileName + "png";
@@ -4242,11 +4262,14 @@ public class EzOrganAdminController extends EzFileMngUtil {
 		return ResponseEntity.ok().body(operatorMailId);
 	}
 	
-	private boolean createThumbnail(File sourceFile, File targetFile) {
+	private boolean createThumbnail(EzFAL.EzFile sourceFile, EzFAL.EzFile targetFile) {
 		boolean result = false;
-		
+		InputStream in = null;
+		OutputStream out = null;
+
 		try {
-			BufferedImage sourceImage = ImageIO.read(sourceFile);
+			in = new EzFAL.EzFileInputStream(sourceFile);
+			BufferedImage sourceImage = ImageIO.read(in);
 			int w = 100;
 		    int h = 100;
 		    
@@ -4256,15 +4279,17 @@ public class EzOrganAdminController extends EzFileMngUtil {
 		    g2.setClip(new Ellipse2D.Float(0, 0, w, h));
 		    g2.drawImage(sourceImage, 0, 0, w, h, null);
 		    g2.dispose();
-			
-			ImageIO.write(targetImage, "png", targetFile);
+
+			out = new EzFAL.EzFileOutputStream(targetFile);
+			ImageIO.write(targetImage, "png", out);
 			
 			result = true;
 		} catch (Exception e) {
 			logger.debug("fail to create thumbnail : " + sourceFile.getName());
-			
-			try {
-				Files.copy(sourceFile.toPath(), targetFile.toPath());
+
+			try (InputStream source = new EzFAL.EzFileInputStream(sourceFile);
+				 OutputStream target = new EzFAL.EzFileOutputStream(targetFile)) {
+				IOUtils.copy(source, target);
 				logger.debug("copy original File to thumbnail.");
 			} catch (IOException e1) {
 				logger.error(e1.getMessage(), e1);
@@ -5130,9 +5155,9 @@ public class EzOrganAdminController extends EzFileMngUtil {
 	    
 		result = saveUserInfo(loginCookie, vo, request, response, locale);
 		resultMap.put("status", result);
-		
-		File oldFile =new File(commonUtil.detectPathTraversal(tempFilePath));
-        File newFile =new File(commonUtil.detectPathTraversal(newFilePath));
+
+		EzFAL.EzFile oldFile =new EzFAL.EzFile(commonUtil.detectPathTraversal(tempFilePath));
+		EzFAL.EzFile newFile =new EzFAL.EzFile(commonUtil.detectPathTraversal(newFilePath));
         
         Path oldFilePathC = Paths.get(tempFilePath);
 

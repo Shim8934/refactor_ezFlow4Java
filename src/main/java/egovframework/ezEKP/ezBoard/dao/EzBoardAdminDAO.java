@@ -260,6 +260,10 @@ public class EzBoardAdminDAO extends EgovAbstractDAO {
 		delete("EzBoardAdminDAO.trunkBoard", tenantID);
 	}
 
+	public void trunkBoardMsa(int tenantID) throws Exception{
+		delete("EzBoardAdminDAO.trunkBoardMsa", tenantID);
+	}
+
 	public void getBoardTree_Set_D(Map<String, Object> map) throws Exception{
 		delete("EzBoardAdminDAO.getBoardTree_Set_D", map);
 	}

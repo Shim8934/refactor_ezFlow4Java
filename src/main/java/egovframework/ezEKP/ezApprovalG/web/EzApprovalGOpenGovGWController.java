@@ -3,9 +3,12 @@ package egovframework.ezEKP.ezApprovalG.web;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGOpenGovService;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
 import egovframework.let.utl.fcc.service.CommonUtil;
+import egovframework.let.utl.fcc.service.EzFAL.*;
 import kr.dogfoot.hwplib.object.HWPFile;
 import kr.dogfoot.hwplib.reader.HWPReader;
 import kr.dogfoot.hwplib.writer.HWPWriter;
+
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
@@ -17,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
@@ -51,7 +55,7 @@ public class EzApprovalGOpenGovGWController {
         JSONObject result = new JSONObject();
 
         try {
-            InputStream fin = null;
+          //  InputStream fin = null;
             String resultCode = "000";
             String data = "";
             JSONObject dataJson = new JSONObject();
@@ -129,21 +133,28 @@ public class EzApprovalGOpenGovGWController {
                         String fileHref = commonUtil.detectPathTraversal(commonUtil.getRealPath(request) + href);
 
                         logger.debug("fileType = " + href.substring(href.length() - 3, href.length()));
+						
+						EzFile orgFile = new EzFile(fileHref); // 원본 HWP파일 접근 시 EzFAL 적용
+						String fileHrefForDataJson = fileHref;
 
-                        //	문서가 한글일때
+                        // 문서가 한글일때
                         if (href.substring(href.length() - 3, href.length()).equals("hwp")) {
-                            HWPFile hwpFile = HWPReader.fromFile(fileHref);
+                           // HWPFile hwpFile = HWPReader.fromFile(fileHref);
+                            HWPFile hwpFile = HWPReader.fromFile(orgFile.getFile());
 
                             // 관인 지워주는 작업
                             ezApprovalGOpenGovService.setHwpSealSignEmpty(hwpFile);
                             HWPWriter.toFile(hwpFile, fileHref + ".tmp");
-                            fin = new FileInputStream(new File(fileHref + ".tmp"));
-                        } else {
-                            fin = new FileInputStream(new File(fileHref));
-                        }
+                           // fin = new EzFileInputStream(new File(fileHref + ".tmp"));
+						   fileHrefForDataJson = fileHref + ".tmp";
+                        }/* else {
+                            //fin = new EzFileInputStream(new File(fileHref));
+                        }*/
 
-                        byte[] bytes = IOUtils.toByteArray(fin);
-
+                        //byte[] bytes = IOUtils.toByteArray(fin);
+						File afterFile = new File(fileHrefForDataJson); // HWP 문서인 경우 관인 제거된 파일 (오브젝트 스토리지에 저장할 파일이 아니므로 EzFAL 적용 제외)
+						byte[] bytes = FileUtils.readFileToByteArray(afterFile);
+						
                         resultCode = "000";
 
                         dataJson.put("bytes", bytes);

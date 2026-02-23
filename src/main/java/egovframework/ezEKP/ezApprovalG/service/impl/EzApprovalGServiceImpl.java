@@ -150,6 +150,8 @@ import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil; 
 import egovframework.let.utl.fcc.service.KlibUtil;
 import egovframework.let.utl.fcc.service.Offset;
+import egovframework.let.utl.fcc.service.EzFAL;
+import egovframework.let.utl.fcc.service.EzFAL.*;
 import kr.dogfoot.hwplib.object.bodytext.paragraph.charshape.CharPositionShapeIdPair; 
 
 import javax.servlet.ServletContext; 
@@ -2416,6 +2418,29 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
         if (docNo != null && !docNo.trim().equals("")) {
         	String docFilePath = dirPath + companyID + commonUtil.separator + "doc" + commonUtil.separator + commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offSet, false).substring(0,4) + commonUtil.separator + getDocDir(newDocID) + commonUtil.separator + newDocID + "." + extFileName;
         	if (extFileName.equals("hwp")) {
+				File localDocFile = new File(docFilePath);
+				
+				if (EzFAL.isObjectStorageMode()) { // 원격저장소 사용여부를 확인
+					byte[] orgBytes = null;
+					
+					// 원본 파일을 스트림에서 바이트로 read
+					// EzFAL EzFileInputStream 사용 (자동 close 호출)
+		    		try (EzFileInputStream fis = new EzFileInputStream(docFilePath)) {
+		    			orgBytes = IOUtils.toByteArray(fis);
+		    		} catch (Exception e) {
+		    			logger.error(e.getMessage(), e);
+		    		}
+		    		
+		    		// 읽어온 원본 파일(EzFile)을 로컬 파일(File)로 임시 저장
+					// EzFAL EzFileOutputStream 사용 (자동 close 호출)
+					try (FileOutputStream fos = new FileOutputStream(localDocFile)) {
+						fos.write(orgBytes);
+						fos.flush(); // newFile을 EzFileOutputStream으로 열어서 write했으므로, 기존의 Files.copy()와 같은 추가 호출은 필요하지 않음
+					} catch (Exception e) {
+						logger.error(e.getMessage(), e);
+					}
+				}
+                
                 boolean hwpFilter = "Y".equals(ezCommonService.getTenantConfig("hwpFilter", tenantID));
                 String hwpPath = ezCommonService.getTenantConfig("hwpPath", tenantID);
                 List<Object> hwpFile = new ArrayList<>();
@@ -2434,16 +2459,26 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 						break;
 					}
 				}
-
+                
                 if(!hwpFilter)
                     HWPWriter.toFile((HWPFile) hwpFile.get(0), docFilePath);
                 else{
                     whwpSave(((RestWHWP) hwpFile.get(1)), hwpPath + docFilePath.substring(docFilePath.indexOf("/fileroot/")), docFilePath.substring(0, docFilePath.lastIndexOf("/")));
                 }
+		        
+		        // docnumber 필드 등을 수정한 로컬 파일을 원격 저장소로 업로드 (로컬 파일은 업로드 후 자동 삭제됨)
+				// EzFileOutputStream을 선언하는 순간 로컬 파일 경로에 새로운 File 객체가 생성되므로, 미리 저장해둔 byte 배열을 전달
+		        if (EzFAL.isObjectStorageMode()) {
+		        	byte[] hwpFileBytes = FileUtils.readFileToByteArray(localDocFile);
+		        	
+					try (EzFileOutputStream foshwp = new EzFileOutputStream(docFilePath)) {
+						foshwp.write(hwpFileBytes);
+						foshwp.flush();
+					} catch (Exception e) {
+						logger.error(e.getMessage(), e);
+					}
+		        }
         	} else {
-        		OutputStream outputStream = null;
-        		OutputStreamWriter output = null;
-
         		String loadMht = ezCommonService.loadMHTFile(docFilePath);
         		String content = ezCommonService.startMHT2HTML(realPath + commonUtil.getUploadPath("config.LocalPath", tenantID), loadMht, realPath + commonUtil.getUploadPath("config.LocalPath", tenantID), realPath, locale, "", "");
 
@@ -2465,17 +2500,13 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
         		String tempHtml = doc.outerHtml();
         		String convertedMHT = ezCommonService.startHtml2Mht(tempHtml, realPath, locale);
         		
-        		try {
-        			outputStream = new FileOutputStream(new File(commonUtil.detectPathTraversal(docFilePath)));
-        			output = new OutputStreamWriter(outputStream);
-        			output.write(convertedMHT);
-        		} catch (Exception e) {
-        			logger.error(e.getMessage(), e);
-        		} finally {
-					// 2023-05-12 이사라 : NullPointerException 시큐어코딩
-					IOUtils.closeQuietly(output);
-					IOUtils.closeQuietly(outputStream);
-        		}
+				// EzFAL EzFileOutputStream 사용 (자동 close 호출)
+				try (EzFileOutputStream fos = new EzFileOutputStream(commonUtil.detectPathTraversal(docFilePath))) {
+					fos.write(convertedMHT.getBytes()); // MHT 문자열을 바이트 배열로 가져와 파일 저장
+					fos.flush();
+				} catch (Exception e) {
+					logger.error(e.getMessage(), e);
+				}
         	}
         }
 		
@@ -6970,15 +7001,16 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 	}
 	
 	private byte[] loadFile(String filePath) throws IOException {
-		File file = new File(filePath);
+		EzFile file = new EzFile(filePath);
         long orgFileSize = file.length();
-        
         byte[] content = null;
-        try(FileInputStream fis = new FileInputStream(file);
-            ByteArrayOutputStream baos = new ByteArrayOutputStream()){
+        
+        try (EzFileInputStream fis = new EzFileInputStream(file);
+            ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
             byte[] buffer = new byte[8192];
             int bytesRead;
-            while((bytesRead = fis.read(buffer)) != -1){
+            
+            while ((bytesRead = fis.read(buffer)) != -1) {
                 baos.write(buffer, 0, bytesRead);
             }
             content = baos.toByteArray();
@@ -7078,20 +7110,20 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
         }else{
 //            beforeHref = href.substring(0, href.lastIndexOf("/")+1) + href.substring(href.lastIndexOf("/")+1, href.lastIndexOf(".")) + "_groupBack" + "." + extension;
             String tempHref = path + commonUtil.separator + companyID + commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + "1000" + commonUtil.separator + getDocDir(docID) + commonUtil.separator + docID + "_groupBack.hwp";
-            File tempFile = new File(commonUtil.detectPathTraversal(realPath + tempHref));
+            EzFAL.EzFile tempFile = new EzFAL.EzFile(commonUtil.detectPathTraversal(realPath + tempHref));
             if(!tempFile.exists()){
                 tempHref = path + commonUtil.separator + companyID + commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + "1000" + commonUtil.separator + getDocDir(docID) + commonUtil.separator + docID + "_groupBack.mht";
-                tempFile = new File(commonUtil.detectPathTraversal(realPath + tempHref));
+                tempFile = new EzFAL.EzFile(commonUtil.detectPathTraversal(realPath + tempHref));
             }
             beforeHref = tempHref;
             afterHref = path + commonUtil.separator + companyID + commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + "1000" + commonUtil.separator + getDocDir(docID) + commonUtil.separator + docID + "." + tempHref.substring(tempHref.lastIndexOf(".")+1);
         }
         
-        File beforeFile = new File(commonUtil.detectPathTraversal(realPath + beforeHref));
-        File afterFile = new File(commonUtil.detectPathTraversal(realPath + afterHref));
+        EzFAL.EzFile beforeFile = new EzFAL.EzFile(commonUtil.detectPathTraversal(realPath + beforeHref));
+        EzFAL.EzFile afterFile = new EzFAL.EzFile(commonUtil.detectPathTraversal(realPath + afterHref));
         
         if(beforeFile.exists()){
-            FileUtils.copyFile(beforeFile, afterFile);
+            EzFAL.copyFile(beforeFile, afterFile);
         }
 
         if(!mode){
@@ -7204,6 +7236,27 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 			}
 			
 			formURL = realPath + fileForder1;
+			
+			if (EzFAL.isObjectStorageMode()) { // 원격저장소 사용여부를 확인
+				byte[] orgBytes = null;
+				
+				// 원본 파일을 스트림에서 바이트로 read
+				// EzFAL EzFileInputStream 사용 (자동 close 호출)
+	    		try (EzFileInputStream fis = new EzFileInputStream(formURL)) {
+	    			orgBytes = IOUtils.toByteArray(fis);
+	    		} catch (Exception e) {
+	    			logger.error(e.getMessage(), e);
+	    		}
+	    		
+	    		// 읽어온 원본 파일(EzFile)을 로컬 파일(File)로 임시 저장
+				// EzFAL EzFileOutputStream 사용 (자동 close 호출)
+				try (FileOutputStream fos = new FileOutputStream(formURL)) {
+					fos.write(orgBytes);
+					fos.flush();
+				} catch (Exception e) {
+					logger.error(e.getMessage(), e);
+				}
+			}
             
             //DOCSTATE : 011(수신)
             if (docStateSign.equals("011")) {
@@ -7349,7 +7402,7 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
                     canHandlingFile = true;
                 }
             }*/
-            File allBFile = new File(formURL + "OA");
+            EzFAL.EzFile allBFile = new EzFAL.EzFile(formURL + "OA");
             boolean isLast = false;
             if((totalLineSN == Integer.parseInt(signNum.trim()) || isJKAprTypeAfterDK)
                     && (aprType.equals("016") || aprType.equals("001") || aprType.equals("004") || (aprType.equals("008") && addLastKyulJeYN.equals("1") || addLastKyulJeYN.equals("2")))
@@ -7357,7 +7410,7 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
                 isLast = true;
                 draftAllTypeB = false;
                 if(allBFile.exists())
-                    FileUtils.copyFile(allBFile, new File(formURL));
+                    EzFAL.copyFile(allBFile, new EzFAL.EzFile(formURL));
             }
             
             boolean hwpFilter = "Y".equals(ezCommonService.getTenantConfig("hwpFilter", userInfo.getTenantId()));
@@ -7714,8 +7767,8 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 					}
 				}
 				
-                    tempHwp = new File(commonUtil.detectPathTraversal(formURL)).getParentFile() + commonUtil.separator + docID + "_backup.hwp";
-                    FileUtils.copyFile(new File(commonUtil.detectPathTraversal(formURL)), new File(commonUtil.detectPathTraversal(tempHwp)));
+                    tempHwp = new EzFile(commonUtil.detectPathTraversal(formURL)).getFile().getParentFile() + commonUtil.separator + docID + "_backup.hwp";
+                    EzFAL.copyFile(new EzFile(commonUtil.detectPathTraversal(formURL)), new EzFile(commonUtil.detectPathTraversal(tempHwp)));
 				
                 String draftFlag = docStateSign.equals("011") ? "SUSIN" : "DRAFT";
                 String pProcessIdx = !((totalLineSN == Integer.parseInt(signNum.trim()) || isJKAprTypeAfterDK == true) && (aprType.equals("016") || aprType.equals("001")) && !aprType.equals("007"))
@@ -7729,16 +7782,29 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 					}
 				}
 				
-                if(!hwpFilter) {
+                if (!hwpFilter) {
                     HWPWriter.toFile((HWPFile) hwpFile.get(0), formURL);
                     if(allBFile.exists() && !isLast)
                         HWPWriter.toFile((HWPFile) hwpFile.get(1), formURL + "OA");
-                } else{
+                } else {
                     whwpSave(((RestWHWP) hwpFile.get(1)), hwpPath + fileForder1, formURL.substring(0, formURL.lastIndexOf("/")));
                     if(allBFile.exists() && !isLast)
                         whwpSave(((RestWHWP) hwpFile.get(3)), hwpPath + fileForder1 + "OA", formURL.substring(0, formURL.lastIndexOf("/")));
                 }
-                    hwpSaveFlag = true;
+				
+				// EzFileOutputStream을 선언하는 순간 로컬 파일 경로에 새로운 File 객체가 생성되므로, 미리 저장해둔 byte 배열을 전달
+		        if (EzFAL.isObjectStorageMode()) {
+		        	byte[] hwpFileBytes = FileUtils.readFileToByteArray(new File(formURL));
+		        	
+					try (EzFileOutputStream foshwp = new EzFileOutputStream(formURL)) {
+						foshwp.write(hwpFileBytes);
+						foshwp.flush();
+					} catch (Exception e) {
+						logger.error(e.getMessage(), e);
+					}
+		        }
+				
+				hwpSaveFlag = true;
 			} else if (result.equals("B")) {
 				docState = "004";
 				
@@ -8041,10 +8107,12 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 
 	private void rollBackHwp(String formURL, String tempHwp) throws Exception {
 		logger.debug("rollBackHwp started");
-
-		FileUtils.copyFile(new File(commonUtil.detectPathTraversal(tempHwp)), new File(commonUtil.detectPathTraversal(formURL)));
-		deleteFile(tempHwp);
-
+		
+		EzFile tempHwpFile = new EzFile(commonUtil.detectPathTraversal(tempHwp));
+		EzFAL.copyFile(tempHwpFile, new EzFile(commonUtil.detectPathTraversal(formURL)));
+		
+		tempHwpFile.delete();
+		
 		logger.debug("rollBackHwp ended");
 	}
 
@@ -8903,43 +8971,25 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 		}
 		
 		String tempHtml = doc.outerHtml();
-		OutputStream outputStream = null;
-		OutputStreamWriter output = null;
 		
 		try {
 			convertedMHT = ezCommonService.startHtml2Mht(tempHtml, realPath, userInfo.getLocale());
-			tempMht = new File(commonUtil.detectPathTraversal(formURL)).getParentFile() + commonUtil.separator + docID + "_backup.mht";
-			FileUtils.copyFile(new File(commonUtil.detectPathTraversal(formURL)), new File(commonUtil.detectPathTraversal(tempMht)));
+			tempMht = new EzFile(commonUtil.detectPathTraversal(formURL)).getFile().getParentFile() + commonUtil.separator + docID + "_backup.mht";
+			EzFAL.copyFile(new EzFile(commonUtil.detectPathTraversal(formURL)), new EzFile(commonUtil.detectPathTraversal(tempMht)));
 			
-			outputStream = new FileOutputStream(new File(commonUtil.detectPathTraversal(formURL)));
-			output = new OutputStreamWriter(outputStream);
-			
-			output.write(convertedMHT);
+			// EzFAL EzFileOutputStream 사용 (자동 close 호출)
+			try (EzFileOutputStream fos = new EzFileOutputStream(commonUtil.detectPathTraversal(formURL))) {
+				fos.write(convertedMHT.getBytes()); // MHT 문자열을 바이트 배열로 가져와 파일 저장
+				fos.flush();
+			} catch (Exception e) {
+				logger.error(e.getMessage(), e);
+			}
 		}  catch (FileNotFoundException fnfe) {
 			logger.debug("fnfe: {}", fnfe);
 		} catch (IOException ioe) {
 			logger.debug("ioe: {}", ioe);
 		} catch (Exception e) {
 			logger.debug("e: {}", e);
-		}  finally{
-			
-			if (output != null) {
-			try {
-				output.close();
-			} catch (Exception ignore) {
-				logger.debug("IGNORED: {}", ignore.getMessage());
-			}
-	    }
-			if (outputStream != null) {
-				try {
-					outputStream.close();
-				} catch (Exception ignore) {
-					logger.debug("IGNORED: {}", ignore.getMessage());
-                    resultJson.put("result", "");
-                    return resultJson;
-//					return "";
-				}
-		    }
 		}
 		
 		mhtSaveFlag = true;
@@ -9279,9 +9329,11 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 	private void rollBackMHT(String formURL, String tempMht) throws Exception {
 		logger.debug("rollBackMHT started");
 
-		FileUtils.copyFile(new File(commonUtil.detectPathTraversal(tempMht)), new File(commonUtil.detectPathTraversal(formURL)));
-		deleteFile(tempMht);
-
+		EzFile tempMhtFile = new EzFile(commonUtil.detectPathTraversal(tempMht));
+		EzFAL.copyFile(tempMhtFile, new EzFile(commonUtil.detectPathTraversal(formURL)));
+		
+		tempMhtFile.delete();
+		
 		logger.debug("rollBackMHT ended");
 	}
 
@@ -10162,7 +10214,7 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 			String target = dirPath + commonUtil.separator + companyID + commonUtil.separator + "uploadFile" + commonUtil.separator + oldYear + commonUtil.separator + "history" + commonUtil.separator +
 					getDocDir(docID) + commonUtil.separator + docID.trim() + getNDigitNum(attachSN, 4) + getNDigitNum(String.valueOf(strSN), 4) + docXML.getElementsByTagName("ATTACHFILENAME").item(0).getTextContent();
 			// history 디렉토리로 copy
-			FileUtils.copyFile(new File(commonUtil.detectPathTraversal(source)), new File(commonUtil.detectPathTraversal(target)));
+			EzFAL.copyFile(new EzFile(commonUtil.detectPathTraversal(source)), new EzFile(commonUtil.detectPathTraversal(target)));
 			// DB에 저장될 target 경로 재설정
 			target = commonUtil.getUploadPath("upload_approvalG.ROOT", tenantID) + commonUtil.separator + companyID + commonUtil.separator + "uploadFile" + commonUtil.separator + oldYear + commonUtil.separator + "history" + commonUtil.separator +
 					getDocDir(docID) + commonUtil.separator + docID.trim() + getNDigitNum(attachSN, 4) + getNDigitNum(String.valueOf(strSN), 4) + docXML.getElementsByTagName("ATTACHFILENAME").item(0).getTextContent();
@@ -12227,7 +12279,7 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
             ezApprovalGDAO.deleteTmpDocInfo7(map);
             ezApprovalGDAO.deleteTmpDocInfo8(map);
 
-            File file = new File(commonUtil.detectPathTraversal(path + href));
+            EzFile file = new EzFile(commonUtil.detectPathTraversal(path + href));
             file.delete();
         }
 		
@@ -15387,11 +15439,11 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
             String afterHref = commonUtil.getUploadPath("upload_approvalG.ROOT", tenantID) + sep + companyID + sep + "uploadFile" + sep + docYear + sep +
                     getDocDir(docID) + sep + "TMP" + sep + docID.trim() + sep;
             
-            while (new File(afterHref + afterFileName).exists()) {
+            while (new EzFile(afterHref + afterFileName).exists()) {
                 afterFileName = UUID.randomUUID() + "." + extension;
             }
             
-            FileUtils.copyFile(new File(servletContext.getRealPath("") + beforeHref), new File(servletContext.getRealPath("") + afterHref + afterFileName));
+            EzFAL.copyFile(new EzFile(servletContext.getRealPath("") + beforeHref), new EzFile(servletContext.getRealPath("") + afterHref + afterFileName));
             aprAttach.setAttachHref(afterHref + afterFileName);
         }
 		
@@ -17555,14 +17607,14 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 		String formURL = userInfo.getRealPath() + docHref;
 		String ext = getExtendedFileName(formURL);
 		
-		if("mht".equals(ext)) {
+		if ("mht".equals(ext)) {
 			String loadMht = ezCommonService.loadMHTFile(formURL); // 결재문서 가져오기
 			// HTML -> MHT
 			String content = ezCommonService.startMHT2HTML(userInfo.getRealPath() + commonUtil.getUploadPath("config.LocalPath", userInfo.getTenantId()), loadMht, userInfo.getRealPath() + commonUtil.getUploadPath("config.LocalPath", userInfo.getTenantId()), userInfo.getRealPath(), userInfo.getLocale(), "", "");
 			//HTML 파싱 document 클래스 겹쳐서 임포트 못함
 			org.jsoup.nodes.Document doc = Jsoup.parse(content);
 			
-			if(doc.getElementById("deptgamsaname") != null) {
+			if (doc.getElementById("deptgamsaname") != null) {
 				isGamsaDoc = true;
 			}
 			
@@ -17594,53 +17646,54 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 			}
 			
 			String tempHtml = doc.outerHtml();
-			OutputStream outputStream = null;
-			OutputStreamWriter output = null;
+			String convertedMHT = ezCommonService.startHtml2Mht(tempHtml, userInfo.getRealPath(), userInfo.getLocale());
+			String tempMht = new EzFile(formURL).getFile().getParentFile() + commonUtil.separator + orgDocID + "_backup.mht"; // getParentFile() 부분 정상 동작 여부 확인, getfile 한번 써주기
 			
-			try {
-				String convertedMHT = ezCommonService.startHtml2Mht(tempHtml, userInfo.getRealPath(), userInfo.getLocale());
-				String tempMht = new File(formURL).getParentFile() + commonUtil.separator + orgDocID + "_backup.mht";
-				FileUtils.copyFile(new File(formURL), new File(tempMht));
-				
-				outputStream = new FileOutputStream(new File(formURL));
-				output = new OutputStreamWriter(outputStream);
-				
-				output.write(convertedMHT);
-			}  catch (FileNotFoundException fnfe) {
+			EzFAL.copyFile(new EzFile(formURL), new EzFile(tempMht));
+			
+			// EzFAL EzFileOutputStream 사용 (자동 close 호출)
+			try (EzFileOutputStream fos = new EzFileOutputStream(formURL)) {
+				fos.write(convertedMHT.getBytes()); // MHT 문자열을 바이트 배열로 가져와 파일 저장
+				fos.flush();
+			} catch (FileNotFoundException fnfe) {
 				logger.debug("fnfe: {}", fnfe);
 			} catch (IOException ioe) {
 				logger.debug("ioe: {}", ioe);
 			} catch (Exception e) {
 				logger.debug("e: {}", e);
-			}  finally{
-				
-				if (output != null) {
-					try {
-						output.close();
-					} catch (Exception ignore) {
-						logger.debug("IGNORED: {}", ignore.getMessage());
-					}
-				}
-				if (outputStream != null) {
-					try {
-						outputStream.close();
-					} catch (Exception ignore) {
-						logger.debug("IGNORED: {}", ignore.getMessage());
-						return "";
-					}
-				}
 			}
 		} else if ("hwp".equals(ext)) { //부서합의 한글 기안기 처리하기 위해 수정. 접수 후 결재완료 됐을 경우 파싱 에러 때문에 수정. 2019-09-24 홍대표
+			
+            if (EzFAL.isObjectStorageMode()) { // 원격저장소 사용여부를 확인
+				byte[] orgBytes = null;
+				
+				// 원본 파일을 스트림에서 바이트로 read
+				// EzFAL EzFileInputStream 사용 (자동 close 호출)
+				try (EzFileInputStream fis = new EzFileInputStream(formURL)) {
+					orgBytes = IOUtils.toByteArray(fis);
+				} catch (Exception e) {
+					logger.error(e.getMessage(), e);
+				}
+				// 읽어온 원본 파일(EzFile)을 로컬 파일(File)로 임시 저장
+				// EzFAL EzFileOutputStream 사용 (자동 close 호출)
+				try (FileOutputStream fos = new FileOutputStream(formURL)) {
+					fos.write(orgBytes);
+					fos.flush();
+				} catch (Exception e) {
+					logger.error(e.getMessage(), e);
+				}
+			}
+            
             List<ApprGGroupDocInfoVO> group = getGroupDocList(docID, "APR", userInfo.getTenantId(), companyID);
             boolean draftAllTypeB = "Y".equals(ezCommonService.getTenantConfig("draftAllTypeB", userInfo.getTenantId())) && group.size() > 1;
             boolean hwpFilter = "Y".equals(ezCommonService.getTenantConfig("hwpFilter", userInfo.getTenantId()));
             String hwpPath = ezCommonService.getTenantConfig("hwpPath", userInfo.getTenantId());
             List<Object> loadHwp = new ArrayList<>();
-            loadHwp.add(HWPReader.fromFile(formURL));
+            loadHwp.add(HWPReader.fromFile(new File(formURL)));
             if(hwpFilter)
                 loadHwp.add(new RestWHWP(ezCommonService.getTenantConfig("hwpFilterServer", userInfo.getTenantId())).open(hwpPath + docHref));
 			
-			if(findHwpField("deptgamsaname", loadHwp)) {
+			if (findHwpField("deptgamsaname", loadHwp)) {
 				isGamsaDoc = true;
 			}
 			
@@ -17670,12 +17723,24 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 					setHwpText(draftAllTypeB, loadHwp, "deptgamsasign", signCont);
 				}
 			}
-			
-            if(!hwpFilter)
-			    HWPWriter.toFile((HWPFile) loadHwp.get(0), formURL);
-            else{
+            
+            if (!hwpFilter) {
+			    HWPWriter.toFile((HWPFile) loadHwp.get(0), formURL); // 변경한 loadHwp 파일을 formURL 파일에 덮어쓰기 (로컬 파일 시스템 상에서의 동작)
+            } else {
                 whwpSave(((RestWHWP) loadHwp.get(1)), hwpPath + docHref, formURL.substring(0, formURL.lastIndexOf("/")));
             }
+            
+			// 위의 변경된 loadHwp파일 (로컬 파일 시스템 상에서의 formURL 경로 파일)을 아래 코드로 오브젝트 스토리지에 쓰기 처리
+			// EzFileOutputStream을 선언하는 순간 로컬 파일 경로에 새로운 File 객체가 생성되므로, 미리 저장해둔 byte 배열을 전달
+	        byte[] hwpFileBytes = FileUtils.readFileToByteArray(new File(formURL));
+	        
+			// EzFAL EzFileOutputStream 사용 (자동 close 호출)
+			try (EzFileOutputStream fosHwp = new EzFileOutputStream(formURL)) { // 오브젝트 스토리지로 연결되는 파일아웃스트림
+				fosHwp.write(hwpFileBytes); // 로컬 파일 시스템에서 가져온 파일
+				fosHwp.flush(); // 로컬 파일 시스템 -> 오브젝트 스토리지로 업로드
+			} catch (Exception e) {
+				logger.error(e.getMessage(), e);
+			}
 		}
 		
 		StringBuilder resultXML = new StringBuilder();
@@ -17909,66 +17974,65 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 				doc.getElementById(susinSN + "habyuidate" + aprSN).html(commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false).substring(5, 10).replace("-", "."));
 			}
 		
-		if (doc.getElementById(susinSN + "habyuija" + aprSN) != null) {
-			doc.getElementById(susinSN + "habyuija" + aprSN).html(signName);
-		}
+			if (doc.getElementById(susinSN + "habyuija" + aprSN) != null) {
+				doc.getElementById(susinSN + "habyuija" + aprSN).html(signName);
+			}
 		
-		String tempHtml = doc.outerHtml();
-		OutputStream outputStream = null;
-		OutputStreamWriter output = null;
-		
-		try {
-				String convertedMHT = ezCommonService.startHtml2Mht(tempHtml, userInfo.getRealPath(), userInfo.getLocale());
-				String tempMht = new File(commonUtil.detectPathTraversal(formURL)).getParentFile() + commonUtil.separator + orgDocID + "_backup.mht";
-				FileUtils.copyFile(new File(commonUtil.detectPathTraversal(formURL)), new File(commonUtil.detectPathTraversal(tempMht)));
-					
-				outputStream = new FileOutputStream(new File(formURL));
-				output = new OutputStreamWriter(outputStream);
-				
-				output.write(convertedMHT);
+			String tempHtml = doc.outerHtml();
+			String convertedMHT = ezCommonService.startHtml2Mht(tempHtml, userInfo.getRealPath(), userInfo.getLocale());
+			String tempMht = new EzFile(commonUtil.detectPathTraversal(formURL)).getFile().getParentFile() + commonUtil.separator + orgDocID + "_backup.mht";
+			EzFAL.copyFile(new EzFile(commonUtil.detectPathTraversal(formURL)), new EzFile(commonUtil.detectPathTraversal(tempMht)));
+			
+			// EzFAL EzFileOutputStream 사용 (자동 close 호출)
+			try (EzFileOutputStream fos = new EzFileOutputStream(formURL)) {
+				fos.write(convertedMHT.getBytes()); // MHT 문자열을 바이트 배열로 가져와 파일 저장
+				fos.flush();
 			}  catch (FileNotFoundException fnfe) {
 				logger.debug("fnfe: {}", fnfe);
 			} catch (IOException ioe) {
 				logger.debug("ioe: {}", ioe);
 			} catch (Exception e) {
 				logger.debug("e: {}", e);
-			}  finally{
-				
-				if (output != null) {
-					try {
-						output.close();
-					} catch (Exception ignore) {
-						logger.debug("IGNORED: {}", ignore.getMessage());
-					}
-				}
-				if (outputStream != null) {
-					try {
-						outputStream.close();
-					} catch (Exception ignore) {
-						logger.debug("IGNORED: {}", ignore.getMessage());
-						return "";
-					}
-				}
 			}
 		} else if("hwp".equals(ext)) { //부서합의 한글 기안기 처리하기 위해 수정. 접수 후 결재완료 됐을 경우 파싱 에러 때문에 수정. 2019-09-24 홍대표
+            if (EzFAL.isObjectStorageMode()) { // 원격저장소 사용여부를 확인
+                byte[] orgBytes = null;
+
+                // 원본 파일을 스트림에서 바이트로 read
+                // EzFAL EzFileInputStream 사용 (자동 close 호출)
+                try (EzFileInputStream fis = new EzFileInputStream(formURL)) {
+                    orgBytes = IOUtils.toByteArray(fis);
+                } catch (Exception e) {
+                    logger.error(e.getMessage(), e);
+                }
+                // 읽어온 원본 파일(EzFile)을 로컬 파일(File)로 임시 저장
+                // EzFAL EzFileOutputStream 사용 (자동 close 호출)
+                try (FileOutputStream fos = new FileOutputStream(formURL)) {
+                    fos.write(orgBytes);
+                    fos.flush();
+                } catch (Exception e) {
+                    logger.error(e.getMessage(), e);
+                }
+            }
+
             boolean hwpFilter = "Y".equals(ezCommonService.getTenantConfig("hwpFilter", userInfo.getTenantId()));
             String hwpPath = ezCommonService.getTenantConfig("hwpPath", userInfo.getTenantId());
             List<Object> loadHwp = new ArrayList<>();
-            loadHwp.add(HWPReader.fromFile(formURL));
-            if(hwpFilter)
+            loadHwp.add(HWPReader.fromFile(new File(formURL)));
+            if (hwpFilter)
                 loadHwp.add(new RestWHWP(ezCommonService.getTenantConfig("hwpFilterServer", userInfo.getTenantId())).open(hwpPath + docHref));
             List<ApprGGroupDocInfoVO> group = getGroupDocList(docID, "APR", userInfo.getTenantId(), companyID);
             boolean draftAllTypeB = "Y".equals(ezCommonService.getTenantConfig("draftAllTypeB", userInfo.getTenantId())) && "".equals(susinSN) && group.size() > 1;
-			
-			if (findHwpField(susinSN + "habyuipositon" + aprSN, loadHwp)) {
-				if (isHesong) {
-					setHwpText(draftAllTypeB, susinSN + "habyuipositon" + aprSN, userInfo.getTitle(), loadHwp);
-				} else {
-					setHwpText(draftAllTypeB, susinSN + "habyuipositon" + aprSN, signTitle, loadHwp);
-				}
-			}
-			
-			// 사인이 이미지인 경우 작업 필요 (서버단에서 HWP 문서에 이미지 삽입하는 로직 미구현)
+
+            if (findHwpField(susinSN + "habyuipositon" + aprSN, loadHwp)) {
+                if (isHesong) {
+                    setHwpText(draftAllTypeB, susinSN + "habyuipositon" + aprSN, userInfo.getTitle(), loadHwp);
+                } else {
+                    setHwpText(draftAllTypeB, susinSN + "habyuipositon" + aprSN, signTitle, loadHwp);
+                }
+            }
+
+            // 사인이 이미지인 경우 작업 필요 (서버단에서 HWP 문서에 이미지 삽입하는 로직 미구현)
 //			if (signType.equals("IMAGE")) {
 //				String signImageType = ezCommonService.getTenantConfig("signImageType", userInfo.getTenantId());
 //				
@@ -17988,62 +18052,73 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 //					}
 //				}
 //			}
-			
-			/* 2023-11-15 홍승비 - HWP 파일이면서 이미지 서명인 경우, 원문서에 맵핑되는 정보는 TEXT 유형의 서명으로 고정한다. (현재 결재자명을 문자서명으로 사용) */
-			if (signType.equals("IMAGE")) {
-				String[] tempSignCont = signCont.split("::");
-				signCont = userInfo.getDisplayName();
-				
-				/* 2023-11-01 홍승비 - 합의문의 이미지 서명 확인 시, ::문자 split한 이후의 데이터가 존재하는지 체크하도록 수정 (대리결재(代), 대결, 전결 문자) */
-				if (tempSignCont.length > 1 && tempSignCont[1] != null && 
-						(tempSignCont[1].indexOf(messageSource.getMessage("ezApprovalG.t26", userInfo.getLocale())) > -1 || tempSignCont[1].indexOf(messageSource.getMessage("ezApprovalG.t25", userInfo.getLocale())) > -1
-						|| tempSignCont[1].indexOf(messageSource.getMessage("ezApproval.t498", userInfo.getLocale())) > -1)) {
-					/* 2023-11-15 홍승비 - 합의자의 대리결재(代) 문자, '대결/전결' 문자를 문자 서명 위에 함께 표출하도록 수정  (문자서명과 동일 스펙) */
-					signCont = tempSignCont[1] + signCont;
-				}
-			}
-			
-			// 부서 합의인 경우 원문서 문서번호 채번
-			if (!isHesong) {
-				int lastHabyuiCnt = lastKyulJeHabYuiYN(orgDocID, "approvUi", userInfo.getCompanyID(), userInfo.getTenantId());
-				String orgDeptID = getOrgDraftDeptID(orgDocID, userInfo.getTenantId(), userInfo.getCompanyID());
-				if (lastHabyuiCnt > 0) {
-					String docNo = getHwpText("docnumber", loadHwp);
-					
-					map.put("v_habDocID", docID);
-					List<ApprGDocListVO> docState = ezApprovalGDAO.getLastHabYuiDocState(map);
-					
-					if (docState.size() > 0) {
-						if (docState.get(0).getDocState().equals("012")) {
-							Document xmlDom = commonUtil.convertStringToDocument(getCabinetNum(orgDeptID, "", companyID, userInfo.getTenantId(), userInfo.getOffset()));
-							cabinetSN = xmlDom.getElementsByTagName("RESULT").item(0).getTextContent();
-							
-							map.put("v_DOCNO", docNo + createDocNO(cabinetSN, docNumZeroCnt));
-							map.put("v_MODE", "APR");
-							ezApprovalGDAO.updateDocNumber(map);
-							map.put("v_MODE", "END");
-							map.put("v_DOCID", orgDocID);
-							ezApprovalGDAO.updateDocNumber(map);
-						}
-						setHwpText(false, loadHwp, "docnumber", docNo + createDocNO(cabinetSN, docNumZeroCnt));
-					}
-				}
-			}
-			
-			if (findHwpField(susinSN + "habyuisign" + aprSN, loadHwp)) {
-				setHwpText(draftAllTypeB, loadHwp, susinSN + "habyuisign" + aprSN, signCont);
-			}
-			
-			String strDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false).substring(5, 10).replace("-", ".");
-			if (findHwpField(susinSN + "habyuidate" + aprSN, loadHwp)) {
-				setHwpText(draftAllTypeB, loadHwp, susinSN + "habyuidate" + aprSN, strDate);
-			}
-			
-            if(!hwpFilter)
-                HWPWriter.toFile((HWPFile) loadHwp.get(0), formURL);
-            else{
+
+            /* 2023-11-15 홍승비 - HWP 파일이면서 이미지 서명인 경우, 원문서에 맵핑되는 정보는 TEXT 유형의 서명으로 고정한다. (현재 결재자명을 문자서명으로 사용) */
+            if (signType.equals("IMAGE")) {
+                String[] tempSignCont = signCont.split("::");
+                signCont = userInfo.getDisplayName();
+
+                /* 2023-11-01 홍승비 - 합의문의 이미지 서명 확인 시, ::문자 split한 이후의 데이터가 존재하는지 체크하도록 수정 (대리결재(代), 대결, 전결 문자) */
+                if (tempSignCont.length > 1 && tempSignCont[1] != null &&
+                        (tempSignCont[1].indexOf(messageSource.getMessage("ezApprovalG.t26", userInfo.getLocale())) > -1 || tempSignCont[1].indexOf(messageSource.getMessage("ezApprovalG.t25", userInfo.getLocale())) > -1
+                                || tempSignCont[1].indexOf(messageSource.getMessage("ezApproval.t498", userInfo.getLocale())) > -1)) {
+                    /* 2023-11-15 홍승비 - 합의자의 대리결재(代) 문자, '대결/전결' 문자를 문자 서명 위에 함께 표출하도록 수정  (문자서명과 동일 스펙) */
+                    signCont = tempSignCont[1] + signCont;
+                }
+            }
+
+            // 부서 합의인 경우 원문서 문서번호 채번
+            if (!isHesong) {
+                int lastHabyuiCnt = lastKyulJeHabYuiYN(orgDocID, "approvUi", userInfo.getCompanyID(), userInfo.getTenantId());
+                String orgDeptID = getOrgDraftDeptID(orgDocID, userInfo.getTenantId(), userInfo.getCompanyID());
+                if (lastHabyuiCnt > 0) {
+                    String docNo = getHwpText("docnumber", loadHwp);
+
+                    map.put("v_habDocID", docID);
+                    List<ApprGDocListVO> docState = ezApprovalGDAO.getLastHabYuiDocState(map);
+
+                    if (docState.size() > 0) {
+                        if (docState.get(0).getDocState().equals("012")) {
+                            Document xmlDom = commonUtil.convertStringToDocument(getCabinetNum(orgDeptID, "", companyID, userInfo.getTenantId(), userInfo.getOffset()));
+                            cabinetSN = xmlDom.getElementsByTagName("RESULT").item(0).getTextContent();
+
+                            map.put("v_DOCNO", docNo + createDocNO(cabinetSN, docNumZeroCnt));
+                            map.put("v_MODE", "APR");
+                            ezApprovalGDAO.updateDocNumber(map);
+                            map.put("v_MODE", "END");
+                            map.put("v_DOCID", orgDocID);
+                            ezApprovalGDAO.updateDocNumber(map);
+                        }
+                        setHwpText(false, loadHwp, "docnumber", docNo + createDocNO(cabinetSN, docNumZeroCnt));
+                    }
+                }
+            }
+
+            if (findHwpField(susinSN + "habyuisign" + aprSN, loadHwp)) {
+                setHwpText(draftAllTypeB, loadHwp, susinSN + "habyuisign" + aprSN, signCont);
+            }
+
+            String strDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false).substring(5, 10).replace("-", ".");
+            if (findHwpField(susinSN + "habyuidate" + aprSN, loadHwp)) {
+                setHwpText(draftAllTypeB, loadHwp, susinSN + "habyuidate" + aprSN, strDate);
+            }
+
+            if (!hwpFilter) {
+                HWPWriter.toFile((HWPFile) loadHwp.get(0), formURL); // 오브젝트 스토리지가 아닌 로컬 파일 시스템의 formURL 경로에 현재 변경한 loadHwp을 저장
+            } else {
                 whwpSave(((RestWHWP) loadHwp.get(1)), hwpPath + docHref, formURL.substring(0, formURL.lastIndexOf("/")));
             }
+			
+			// EzFileOutputStream을 선언하는 순간 로컬 파일 경로에 새로운 File 객체가 생성되므로, 미리 저장해둔 byte 배열을 전달
+	        byte[] hwpFileBytes = FileUtils.readFileToByteArray(new File(formURL));
+	        
+			// EzFAL EzFileOutputStream 사용 (자동 close 호출)
+			try (EzFileOutputStream fosHwp = new EzFileOutputStream(formURL)) { // 오브젝트 스토리지로 연결되는 파일아웃스트림
+				fosHwp.write(hwpFileBytes); // 로컬 파일 시스템에서 가져온 파일
+				fosHwp.flush();
+			} catch (Exception e) {
+				logger.error(e.getMessage(), e);
+			}
 		}
 		
 		// '합의' 서명 XML 생성
@@ -19075,7 +19150,7 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
                 
                 // 파일 복사에 성공하면 완료문서 관련 테이블에 데이터 입력.
 				if (rtnVal) {
-                    File file = new File(commonUtil.detectPathTraversal(targetPath));
+                    EzFile file = new EzFile(commonUtil.detectPathTraversal(targetPath));
                     String fileSize = "";
                     if (file.exists()) {
                         long lFileSize = file.length();
@@ -20317,6 +20392,28 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 		if (docHref != null) {
 			// HWP
 			if (docHref.indexOf(".hwp") > -1) {
+				
+				if (EzFAL.isObjectStorageMode()) { // 원격저장소 사용여부를 확인
+					byte[] orgBytes = null;
+					
+					// 원본 파일을 스트림에서 바이트로 read
+					// EzFAL EzFileInputStream 사용 (자동 close 호출)
+					try (EzFileInputStream fis = new EzFileInputStream(realPath + docHref)) {
+						orgBytes = IOUtils.toByteArray(fis);
+					} catch (Exception e) {
+						logger.error(e.getMessage(), e);
+					}
+					// 읽어온 원본 파일(EzFile)을 로컬 파일(File)로 임시 저장
+					// EzFAL EzFileOutputStream 사용 (자동 close 호출)
+					try (FileOutputStream fos = new FileOutputStream(realPath + docHref)) {
+						fos.write(orgBytes);
+						fos.flush();
+					} catch (Exception e) {
+						logger.error(e.getMessage(), e);
+					}
+				}
+				
+				/* 2023-11-28 홍승비 - 부재사유 지정으로 자동 결재 시, 서명일자칸에 자동결재된 날짜를 표출하도록 수정 */
                 boolean hwpFilter = "Y".equals(ezCommonService.getTenantConfig("hwpFilter", tenantID));
                 String hwpPath = ezCommonService.getTenantConfig("hwpPath", tenantID);
                 List<Object> hwpFile = new ArrayList<>();
@@ -20339,11 +20436,22 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 				
 				// 서명일자, 서명칸 필드가 양식상에 존재하는 경우에만 파일 수정 및 저장 진행
 				if (findHwpField(signDateField, hwpFile) || findHwpField(signField, hwpFile)) {
-                    if(!hwpFilter)
+                    if (!hwpFilter) {
                         HWPWriter.toFile((HWPFile) hwpFile.get(0), realPath + docHref);
-                    else{
+                    } else {
                         whwpSave(((RestWHWP) hwpFile.get(1)), hwpPath + docHref, realPath + docHref.substring(0, docHref.lastIndexOf("/")));
                     }
+					
+					// EzFileOutputStream을 선언하는 순간 로컬 파일 경로에 새로운 File 객체가 생성되므로, 미리 저장해둔 byte 배열을 전달
+					byte[] hwpFileBytes = FileUtils.readFileToByteArray(new File(realPath + docHref));
+			        
+					// EzFAL EzFileOutputStream 사용 (자동 close 호출)
+					try (EzFileOutputStream fosHwp = new EzFileOutputStream(realPath + docHref)) { // 오브젝트 스토리지로 연결되는 파일아웃스트림
+						fosHwp.write(hwpFileBytes); // 로컬 파일 시스템에서 가져온 파일
+						fosHwp.flush();
+					} catch (Exception e) {
+						logger.error(e.getMessage(), e);
+					}
 				}
 			}
 			// MHT
@@ -20366,11 +20474,11 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 				if (doc.getElementById(signDateField) != null || doc.getElementById(signField) != null) {
 					String tempHtml = doc.outerHtml();
 					
-					try (OutputStream outputStream = new FileOutputStream(new File(commonUtil.detectPathTraversal(realPath + docHref))); 
-							OutputStreamWriter output = new OutputStreamWriter(outputStream);) {
+					// EzFAL EzFileOutputStream 사용 (자동 close 호출)
+					try (EzFileOutputStream fos = new EzFileOutputStream(commonUtil.detectPathTraversal(realPath + docHref))) {
 						String convertedMHT = ezCommonService.startHtml2Mht(tempHtml, realPath, locale);
-						
-						output.write(convertedMHT);
+						fos.write(convertedMHT.getBytes()); // MHT 문자열을 바이트 배열로 가져와 파일 저장
+						fos.flush();
 					} catch (FileNotFoundException fnfe) {
 						logger.debug("fnfe: {}", fnfe);
 					} catch (IOException ioe) {
@@ -20594,21 +20702,22 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 		return "TURE";
 	}
 
+	/* 2025-06-22 홍승비 - 공통적인 파일 복사 메서드에 EzFAL 적용 (서버 상에 저장된 파일 간 복사에 사용) */
 	public boolean copyFile(String source, String target, String dirPath) throws Exception {
 		logger.debug("copyFile started");
 
 		if (!dirPath.trim().equals("")) {
-			File file = new File(commonUtil.detectPathTraversal(dirPath));
+			EzFile file = new EzFile(commonUtil.detectPathTraversal(dirPath));
 			
 			if (!file.exists()) {
 				file.mkdirs();
 			}
 		}
 		try {
-			File src = new File(commonUtil.detectPathTraversal(source));
-			File des = new File(commonUtil.detectPathTraversal(target));
+			EzFile src = new EzFile(commonUtil.detectPathTraversal(source));
+			EzFile des = new EzFile(commonUtil.detectPathTraversal(target));
 			
-			FileUtils.copyFile(src, des);
+			EzFAL.copyFile(src, des);
 			
 			logger.debug("copyFile ended");
 			return true;
@@ -20618,6 +20727,7 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 		}
 	}
 	
+	/* 2025-06-22 홍승비 - 공통적인 파일 복사 메서드에 EzFAL 적용 (서버 상에 저장된 파일 간 복사에 사용) */
 	/**
 	 * source 파일의 바이트를 KLIB 으로 복호화 후 target 파일로 복사한다.
 	 * */
@@ -20626,20 +20736,27 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 		logger.debug("copyDecryptFileForKlib started");
 
 		if (!dirPath.trim().equals("")) {
-			File file = new File(commonUtil.detectPathTraversal(dirPath));
+			EzFile file = new EzFile(commonUtil.detectPathTraversal(dirPath));
 			
 			if (!file.exists()) {
 				file.mkdirs();
 			}
 		}
 		try {
-			File src = new File(commonUtil.detectPathTraversal(source));
-			File des = new File(commonUtil.detectPathTraversal(target));
+			File src = new EzFile(commonUtil.detectPathTraversal(source)).getFile();
+			File des = new EzFile(commonUtil.detectPathTraversal(target)).getFile();
 			
 			byte[] descryptedBytes = klibUtil.decrypt(commonUtil.readBytesFromFile(src.toPath()));
-			ByteArrayInputStream inputStream = new ByteArrayInputStream(descryptedBytes);
 			
+			// 로컬 파일 시스템에서의 decrypt된 파일을 로컬 파일 시스템의 des 경로에 저장
+			ByteArrayInputStream inputStream = new ByteArrayInputStream(descryptedBytes);
 			Files.copy(inputStream, des.toPath(), StandardCopyOption.REPLACE_EXISTING);
+			
+			// 위에서 decrypt한 파일을 다시 오브젝트 스토리지로 업로드
+			try (EzFileOutputStream fos = new EzFileOutputStream(commonUtil.detectPathTraversal(target))) { // 오브젝트 스토리지로 연결되는 파일아웃스트림
+				fos.write(FileUtils.readFileToByteArray(new File(commonUtil.detectPathTraversal(target)))); // 로컬 파일 시스템에서 가져온 파일
+				fos.flush();
+			}
 			
 			logger.debug("copyDecryptFileForKlib ended");
 			return true;
@@ -21899,7 +22016,7 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 					String extFileName = getExtendedFileName(fileName);
 					String fileURL = dirPath + commonUtil.separator + fileName.replace(commonUtil.getUploadPath("upload_approvalG.ROOT", tenantID) + commonUtil.separator, "");
 					
-					File file = new File(commonUtil.detectPathTraversal(dirPath + companyID + commonUtil.separator + "doc" + commonUtil.separator + commonUtil.getTodayUTCTime("yyyy") + commonUtil.separator + "1000" + commonUtil.separator + getDocDir(docID)));
+					File file = new EzFile(commonUtil.detectPathTraversal(dirPath + companyID + commonUtil.separator + "doc" + commonUtil.separator + commonUtil.getTodayUTCTime("yyyy") + commonUtil.separator + "1000" + commonUtil.separator + getDocDir(docID))).getFile();
 					
 					// 2018.06.27 - KLIB 암호화 파일이면 .ezd 확장자 제거
 					boolean isEncryptedForKlib = fileName.endsWith("." + EzApprovalGKlibService.ENCRYPTED_FILE_EXT);
@@ -31386,27 +31503,25 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 //                            strTarget = strXmlDirPath + commonUtil.separator + strCompanyID + commonUtil.separator + "uploadFile" + commonUtil.separator + nYear + commonUtil.separator  + getDocDir(strNewID) + commonUtil.separator  + strNewID.trim()  + getNDigitNum(domXML.getElementsByTagName("ATTACHSN").item(i).getTextContent(), 4) + strAttachName;
                             strTarget = strXmlDirPath + commonUtil.separator + strCompanyID + commonUtil.separator + "uploadFile" + commonUtil.separator + nYear + commonUtil.separator  + getDocDir(strNewID) + commonUtil.separator  + strNewID.trim()  + getNDigitNum(domXML.getElementsByTagName("ATTACHSN").item(i).getTextContent(), 4) + (strAttachName.lastIndexOf(".") > -1 ? strAttachName.substring(strAttachName.lastIndexOf(".")) : "");
                             
-                            File dir = new File(commonUtil.detectPathTraversal(strXmlDirPath + commonUtil.separator + strCompanyID + commonUtil.separator + "uploadFile" + commonUtil.separator + nYear + commonUtil.separator  + getDocDir(strNewID)));
+							// 중계문서 데이터를 실제 문서 파일로 저장하기 위한 폴더 경로, EzFAL 적용
+                            EzFile dir = new EzFile(commonUtil.detectPathTraversal(strXmlDirPath + commonUtil.separator + strCompanyID + commonUtil.separator + "uploadFile" + commonUtil.separator + nYear + commonUtil.separator  + getDocDir(strNewID)));
                             
                             if (!dir.exists()) {
                             	dir.mkdirs();
                             }
 
                             // 2023-05-31 이사라 : 시큐어코딩 리소스 close
-                            //FileInputStream input = null;
-                            //FileOutputStream output = null;
                             try {
                                 // 복사할 대상 파일을 지정해준다.
-                                File file = new File(commonUtil.detectPathTraversal(strSource));
+                                File file = new File(commonUtil.detectPathTraversal(strSource)); // 외부에서 전달된 중계문서 데이터, 로컬 파일 시스템으로 접근
                                 long lFileSize = file.length();
                                 strFileSize = Long.toString(lFileSize);
                                 
-                                // FileInputStream 는 File object를 생성자 인수로 받을 수 있다.
-                                //input = new FileInputStream(file);
-								try (FileInputStream input = new FileInputStream(file)){
+								try (FileInputStream input = new FileInputStream(file)) { // 로컬 파일 시스템에서 읽은 데이터
+									
+									// EzFAL EzFileOutputStream 사용 (자동 close 호출)
 									// 복사된 파일의 위치를 지정해준다.
-	                                //output = new FileOutputStream(new File(commonUtil.detectPathTraversal(strTarget)));
-									try (FileOutputStream output = new FileOutputStream(new File(commonUtil.detectPathTraversal(strTarget)))) {
+									try (EzFileOutputStream output = new EzFileOutputStream(new EzFile(commonUtil.detectPathTraversal(strTarget)))) { // 오브젝트 스토리지로 write
 										int readBuffer = 0;
 										byte[] buffer = new byte[512];
 										while ((readBuffer = input.read(buffer)) != -1) {
@@ -31420,19 +31535,6 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 								}
                             } catch (Exception e) {
                                 logger.error(e.getMessage(), e);
-                            /*} finally {
-								// 2023-05-12 이사라 : NullPointerException 시큐어코딩
-								IOUtils.closeQuietly(input);
-								IOUtils.closeQuietly(output);
-                                try{
-                                    // 생성된 InputStream Object를 닫아준다.
-                                    input.close();
-                                    // 생성된 OutputStream Object를 닫아준다.
-                                    output.close();
-                                } catch(IOException io) {
-                                	logger.error(io.getMessage(), io);
-                                }
-                                */
                             }
                         }
 						map.put("ATTACHFILESIZE", strFileSize);
@@ -31545,7 +31647,7 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
              
              File ackFile = new File(commonUtil.detectPathTraversal(commonUtil.getRealPath(servletContext) + commonUtil.separator + "fileroot" + commonUtil.separator + tenantID + commonUtil.separator +"files" + config.getProperty("upload_relay.ROOT") + commonUtil.separator +"data" + commonUtil.separator +"sendtemp" + commonUtil.separator + strFileName));
              
-         	if( ackFile.exists()) {
+         	if (ackFile.exists()) {
          		ackFile.delete();
          	}
              
@@ -32297,8 +32399,12 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 		String realPath = servletContext.getRealPath("");
 		String approvalUploadPath = commonUtil.getUploadPath("upload_approvalG.ROOT", tenantId);
 		String reformDirectoryPathStr = String.join(commonUtil.separator, approvalUploadPath, companyId, "form", "reform", formId);
-
-		return Files.exists(Paths.get(realPath).resolve("." + reformDirectoryPathStr));
+		
+		// EzFAL 적용
+		EzFile reformDirectoryPathEzFile = new EzFile(Paths.get(realPath).resolve("." + reformDirectoryPathStr).toString());
+		
+		//return Files.exists(Paths.get(realPath).resolve("." + reformDirectoryPathStr));
+		return reformDirectoryPathEzFile.exists();
 	}
 
 	private String createDocNO(String cabinetSN, String docNumZeroCnt) {
@@ -33527,28 +33633,19 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
         String tempHtml = formDocument.outerHtml();
         String convertedMht = ezCommonService.startHtml2Mht(tempHtml, realPath, locale);
 
-        File file = new File(enforcePath + "ENFORCE");
+        EzFile file = new EzFile(enforcePath + "ENFORCE");
         if (!file.exists()) {
             file.mkdirs();
         }
-
-        OutputStream outputStream = null;
-        OutputStreamWriter outputStreamWriter = null;
-
-        try {
-            outputStream = new FileOutputStream(new File(commonUtil.detectPathTraversal(enforcePath + "ENFORCE" + commonUtil.separator + docFileName)));
-            outputStreamWriter = new OutputStreamWriter(outputStream);
-            outputStreamWriter.write(convertedMht);
-        } catch (Exception e) {
+        
+		// EzFAL EzFileOutputStream 사용 (자동 close 호출)
+		try (EzFileOutputStream fos = new EzFileOutputStream(commonUtil.detectPathTraversal(enforcePath + "ENFORCE" + commonUtil.separator + docFileName))) { // 오브젝트 스토리지로 연결되는 파일아웃스트림
+			fos.write(convertedMht.getBytes()); // 로컬 파일 시스템에서 가져온 파일
+			fos.flush();
+		} catch (Exception e) {
             logger.error(e.getMessage(), e);
-        } finally {
-			// 2023-05-12 이사라 : NullPointerException 시큐어코딩
-            //outputStreamWriter.close();
-            //outputStream.close();
-			IOUtils.closeQuietly(outputStreamWriter);
-			IOUtils.closeQuietly(outputStream);
         }
-
+		
         logger.debug("enforceSihangDoc ended.");
         return enforcedDocPath;
     }
@@ -34457,41 +34554,21 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 			}
 			
 			String tempHtml = doc.outerHtml();
-			OutputStream outputStream = null;
-			OutputStreamWriter output = null;
+			String convertedMHT = ezCommonService.startHtml2Mht(tempHtml, userInfo.getRealPath(), userInfo.getLocale());
+			String tempMht = new EzFile(formURL).getFile().getParentFile() + commonUtil.separator + docID + "_backup.mht";
+			EzFAL.copyFile(new EzFile(formURL), new EzFile(tempMht));
 			
-			try {
-				String convertedMHT = ezCommonService.startHtml2Mht(tempHtml, userInfo.getRealPath(), userInfo.getLocale());
-				String tempMht = new File(formURL).getParentFile() + commonUtil.separator + docID + "_backup.mht";
-				FileUtils.copyFile(new File(formURL), new File(tempMht));
-				
-				outputStream = new FileOutputStream(new File(formURL));
-				output = new OutputStreamWriter(outputStream);
-				
-				output.write(convertedMHT);
-			}  catch (FileNotFoundException fnfe) {
+			// EzFAL EzFileOutputStream 사용 (자동 close 호출)
+			try (EzFileOutputStream fos = new EzFileOutputStream(formURL)) {
+				fos.write(convertedMHT.getBytes());
+				fos.flush();
+			}
+			catch (FileNotFoundException fnfe) {
 				logger.debug("fnfe: {}", fnfe);
 			} catch (IOException ioe) {
 				logger.debug("ioe: {}", ioe);
 			} catch (Exception e) {
 				logger.debug("e: {}", e);
-			}  finally{
-				
-				if (output != null) {
-					try {
-						output.close();
-					} catch (Exception ignore) {
-						logger.debug("IGNORED: {}", ignore.getMessage());
-					}
-				}
-				if (outputStream != null) {
-					try {
-						outputStream.close();
-					} catch (Exception ignore) {
-						logger.debug("IGNORED: {}", ignore.getMessage());
-						return "";
-					}
-				}
 			}
 		} else if("hwp".equals(ext)) {
 //			HWPFile loadHwp = HWPReader.fromFile(formURL);
@@ -37172,7 +37249,7 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 	public void downloadFileInZip(String realPath, String filePath, String fileName, String folderName, ZipOutputStream zout, Map<String,Integer> fileNameMap, boolean isAttachYN, String attMark) throws Exception {
 		logger.debug("downloadFileInZip started");
 		try {
-			File sourceFile = new File(commonUtil.detectPathTraversal(realPath + filePath));
+			File sourceFile = new EzFile(commonUtil.detectPathTraversal(realPath + filePath)).getFile();
 			byte[] fileBytes = commonUtil.readBytesFromFile(sourceFile.toPath());
 			String realExt = "";
 
@@ -37466,7 +37543,7 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
         attachDocInfo.setAttachFileSN(sn);
         attachDocInfo.setAttachFileName(realFileName);
         attachDocInfo.setAttachFileHref(destPath + commonUtil.separator + fileName);
-        attachDocInfo.setAttachFileSize(String.valueOf (new File(srcPath).length()));
+        attachDocInfo.setAttachFileSize(String.valueOf (new EzFile(srcPath).getFile().length()));
         attachDocInfo.setAttachUserID(userInfo.getId());
         attachDocInfo.setAttachUserName(userInfo.getDisplayName());
         attachDocInfo.setAttachUserJobTitle(userInfo.getTitle());
@@ -37483,16 +37560,16 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 
         ezApprovalGDAO.insertAttachInfo(attachDocInfo);
 
-        File dest = new File(destRealPath);
+        EzFile dest = new EzFile(destRealPath);
 
         if (dest.exists()) {
             dest.mkdirs();
         }
 
-        File src = new File(srcPath);
-        dest = new File(destRealPath + commonUtil.separator + fileName);
+        EzFile src = new EzFile(srcPath);
+        dest = new EzFile(destRealPath + commonUtil.separator + fileName);
 
-        FileUtils.copyFile(src, dest);
+        EzFAL.copyFile(src, dest);
 
         logger.info("docAttach ended");
     }
@@ -37555,16 +37632,16 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 
                     ezApprovalGDAO.insertAttachInfo(a);
 
-                    File dest = new File(realPath + saveFilePath);
+                    EzFile dest = new EzFile(realPath + saveFilePath);
 
                     if (!dest.exists()) {
                         dest.mkdirs();
                     }
 
-                    File src = new File(realPath + sourcePath);
-                    dest = new File(realPath + destPath);
+                    EzFile src = new EzFile(realPath + sourcePath);
+                    dest = new EzFile(realPath + destPath);
 
-                    FileUtils.copyFile(src, dest);
+                    EzFAL.copyFile(src, dest);
                 } catch (Exception e) {
                     logger.error(e.getMessage(), e);
                 }
@@ -38240,6 +38317,27 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 			fileForder1 = aprXML.getElementsByTagName("HREF").item(0).getTextContent();
 			
 			formURL = realPath + fileForder1;
+			
+			if (EzFAL.isObjectStorageMode()) { // 원격저장소 사용여부를 확인
+				byte[] orgBytes = null;
+				
+				// 원본 파일을 스트림에서 바이트로 read
+				// EzFAL EzFileInputStream 사용 (자동 close 호출)
+				try (EzFileInputStream fis = new EzFileInputStream(formURL)) {
+					orgBytes = IOUtils.toByteArray(fis);
+				} catch (Exception e) {
+					logger.error(e.getMessage(), e);
+				}
+				// 읽어온 원본 파일(EzFile)을 로컬 파일(File)로 임시 저장
+				// EzFAL EzFileOutputStream 사용 (자동 close 호출)
+				try (FileOutputStream fos = new FileOutputStream(formURL)) {
+					fos.write(orgBytes);
+					fos.flush();
+				} catch (Exception e) {
+					logger.error(e.getMessage(), e);
+				}
+			}
+            
             boolean hwpFilter = "Y".equals(ezCommonService.getTenantConfig("hwpFilter", userInfo.getTenantId()));
             String hwpPath = ezCommonService.getTenantConfig("hwpPath", userInfo.getTenantId());
             List<Object> hwpFile = new ArrayList<>();
@@ -38472,9 +38570,9 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 					if (findHwpField("receiptdate", hwpFile)) {
 					setHwpText(false, "receiptdate", commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false).substring(0, 10).replace("-", "."), hwpFile);
 					}
-					
-					tempHwp = new File(commonUtil.detectPathTraversal(formURL)).getParentFile() + commonUtil.separator + docID + "_backup.hwp";
-					FileUtils.copyFile(new File(commonUtil.detectPathTraversal(formURL)), new File(commonUtil.detectPathTraversal(tempHwp)));
+
+                    tempHwp = new EzFile(commonUtil.detectPathTraversal(formURL)).getFile().getParentFile().toString() + commonUtil.separator + docID + "_backup.hwp";
+					EzFAL.copyFile(new EzFile(commonUtil.detectPathTraversal(formURL)), new EzFile(commonUtil.detectPathTraversal(tempHwp)));
 					
 					if ((totalLineSN == Integer.parseInt(signNum.trim())) && (aprType.equals("016") || aprType.equals("001") || aprType.equals("004"))) {
 						linkCheck = excuteInfoHwp("LAST_SIGN_BEFORE", "SUSIN", hwpFile, docID, userID, formURL, companyID, userInfo.getTenantId(), request);
@@ -38486,11 +38584,24 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 						throw new RuntimeException("Conn Error.");
 					}
 
-                    if(!hwpFilter)
+                    if (!hwpFilter) {
                         HWPWriter.toFile((HWPFile) hwpFile.get(0), formURL);
-                    else{
+                    } else {
                         whwpSave(((RestWHWP) hwpFile.get(1)), hwpPath + fileForder1, formURL.substring(0, formURL.lastIndexOf("/")));
                     }
+					
+					// EzFileOutputStream을 선언하는 순간 로컬 파일 경로에 새로운 File 객체가 생성되므로, 미리 저장해둔 byte 배열을 전달
+			        byte[] hwpFileBytes = FileUtils.readFileToByteArray(new File(formURL));
+			        
+					// 위의 변경된 hwpFile(로컬 파일 시스템 상에서의 formURL 경로 파일)을 아래 코드로 오브젝트 스토리지에 쓰기 처리
+					// EzFAL EzFileOutputStream 사용 (자동 close 호출)
+					try (EzFileOutputStream fosHwp = new EzFileOutputStream(formURL)) { // 오브젝트 스토리지로 연결되는 파일아웃스트림
+						fosHwp.write(hwpFileBytes); // 로컬 파일 시스템에서 가져온 파일
+						fosHwp.flush();
+					} catch (Exception e) {
+						logger.error(e.getMessage(), e);
+					}
+					
 					hwpSaveFlag = true;
 				}
 			}
@@ -39303,41 +39414,21 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 					}
 					
 					String tempHtml = doc.outerHtml();
-					OutputStream outputStream = null;
-					OutputStreamWriter output = null;
 					
-					try {
+					// EzFAL EzFileOutputStream 사용 (자동 close 호출)
+					try (EzFileOutputStream fos = new EzFileOutputStream(commonUtil.detectPathTraversal(formURL))) {
 						convertedMHT = ezCommonService.startHtml2Mht(tempHtml, realPath, userInfo.getLocale());
-						tempMht = new File(commonUtil.detectPathTraversal(formURL)).getParentFile() + commonUtil.separator + docID + "_backup.mht";
-						FileUtils.copyFile(new File(commonUtil.detectPathTraversal(formURL)), new File(commonUtil.detectPathTraversal(tempMht)));
+						tempMht = new EzFile(commonUtil.detectPathTraversal(formURL)).getFile().getParentFile().toString() + commonUtil.separator + docID + "_backup.mht";
+						EzFAL.copyFile(new EzFile(commonUtil.detectPathTraversal(formURL)), new EzFile(commonUtil.detectPathTraversal(tempMht)));
 						
-						outputStream = new FileOutputStream(new File(commonUtil.detectPathTraversal(formURL)));
-						output = new OutputStreamWriter(outputStream);
-						output.write(convertedMHT);
-					}  catch (FileNotFoundException fnfe) {
+						fos.write(convertedMHT.getBytes());
+						fos.flush();
+					} catch (FileNotFoundException fnfe) {
 						logger.debug("fnfe: {}", fnfe);
 					} catch (IOException ioe) {
 						logger.debug("ioe: {}", ioe);
 					} catch (Exception e) {
 						logger.debug("e: {}", e);
-					}  finally{
-						
-						if (output != null) {
-							try {
-								output.close();
-							} catch (Exception ignore) {
-								logger.debug("IGNORED: {}", ignore.getMessage());
-							}
-						}
-						
-						if (outputStream != null) {
-							try {
-								outputStream.close();
-							} catch (Exception ignore) {
-								logger.debug("IGNORED: {}", ignore.getMessage());
-								throw new RuntimeException("Error occurred during file processing.");
-							}
-						}
 					}
 					
 					mhtSaveFlag = true;
@@ -40500,8 +40591,20 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
         FilePath path = new FilePath(summary.getDocID() + ".mht", "uploadSummary", summary.getCompanyID(), summary.getTenantID());
         
         // 파일 저장
-        Files.createDirectories(Paths.get(path.getDirFullPath()));
-        Files.write(Paths.get(path.getFileFullPath()), summaryMhtStr.getBytes("UTF-8"), StandardOpenOption.CREATE);
+		// Files.createDirectories(Paths.get(path.getDirFullPath()));
+		// Files.write(Paths.get(path.getFileFullPath()), summaryMhtStr.getBytes("UTF-8"), StandardOpenOption.CREATE);
+		
+		// EzFAL 적용
+		EzFile summaryDir = new EzFile(Paths.get(path.getDirFullPath()).toString());
+		if (!summaryDir.exists()) {
+			summaryDir.mkdir();
+		}
+		
+		// EzFAL EzFileOutputStream 사용 (자동 close 호출)
+		try (EzFileOutputStream fos = new EzFileOutputStream(Paths.get(path.getFileFullPath()).toString())) { // 오브젝트 스토리지로 연결되는 파일아웃스트림
+			fos.write(summaryMhtStr.getBytes("UTF-8")); // 로컬 파일 시스템에서 가져온 파일 바이트
+			fos.flush();
+		}
         
         logger.debug("saveSummaryFileContent ended");
         return path.getFilePath();
@@ -40513,7 +40616,7 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
         
         FilePath path = new FilePath(docID + ".mht", "uploadSummary", companyID, tenantID);
         
-        File summaryFile = new File(path.getFileFullPath());
+        EzFile summaryFile = new EzFile(path.getFileFullPath());
         if (summaryFile.exists()) {
             summaryFile.delete();
         }
@@ -40570,11 +40673,16 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
         logger.debug("saveSignImg started.");
         String fileName = UUID.randomUUID().toString() + ".jpg";
         FilePath path = new FilePath(fileName, "drawSignImg", companyID, tenantID);
-        // 파일 저장
-        Files.createDirectories(Paths.get(path.getDirFullPath()));
-        Files.write(Paths.get(path.getFileFullPath()), signImg.getBytes(), StandardOpenOption.CREATE);
         
-        logger.debug("saveSignImg ended.");
+        EzFile signImgDir = new EzFile(Paths.get(path.getDirFullPath()).toString());
+		if (!signImgDir.exists()) {
+			signImgDir.mkdir(); 
+		}
+        
+		try (EzFileOutputStream fos = new EzFileOutputStream(path.getFileFullPath())) {
+			fos.write(signImg.getBytes());
+			fos.flush();
+		}
         return path.getFilePath();
     }
 

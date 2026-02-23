@@ -241,6 +241,15 @@
 	                        }
 	                        return CheckCount;
 	                        break;
+						case "receiptnumber":
+	                        var CheckCount = 0;
+	                        var HtmlTag = GetElementsByTagName(kukudocsEditor.getContentViewElement()[0], "*");
+	                        for (var i = 0 ; i < HtmlTag.length; i++) {
+	                            if (GetAttribute(HtmlTag[i], "id") == "receiptnumber")
+	                                CheckCount++;
+	                        }
+	                        return CheckCount;
+	                        break;
 	                    case "doctitlefield":
 	                        var CheckCount = 0;
 	                        var HtmlTag = GetElementsByTagName(kukudocsEditor.getContentViewElement()[0], "*");

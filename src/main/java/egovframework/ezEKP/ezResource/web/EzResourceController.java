@@ -24,6 +24,7 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
 
+import egovframework.let.utl.fcc.service.EzFAL;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.logging.log4j.util.Strings;
@@ -1520,7 +1521,7 @@ public class EzResourceController extends EzFileMngUtil {
 				ownerNm = xmlDom2.getElementsByTagName("DISPLAYNAME" + userInfo.getPrimary()).item(0).getTextContent();
 			}*/
 			
-			title = getSchedule.getTitle();
+			title = getSchedule.getTitle().replaceAll("\"", "&#034;").replaceAll("\\\\", "&#092;");
 			loc = getSchedule.getLocation();
 			
 			startDateTime = commonUtil.getDateStringInUTC(getSchedule.getStartDate(), userInfo.getOffset(), false);
@@ -2973,8 +2974,8 @@ public class EzResourceController extends EzFileMngUtil {
         if (!pDirPath.substring(pDirPath.length() - 1).equals(commonUtil.separator)) {
         	pDirPath = pDirPath + commonUtil.separator;
         }
-        File file = new File(pDirPath + "uploadFile");
-        File tempFile = new File(pDirPath + "tempUploadFile");
+		EzFAL.EzFile file = new EzFAL.EzFile(pDirPath + "uploadFile");
+        EzFAL.EzFile tempFile = new EzFAL.EzFile(pDirPath + "tempUploadFile");
         
         logger.debug("pDirPath : " + pDirPath);
         
@@ -2995,10 +2996,10 @@ public class EzResourceController extends EzFileMngUtil {
         writeUploadedFile(multiFile, newFileName + pFileName, pDirPath + "tempUploadFile"); // 원본 파일을 업로드한 뒤, 아래 코드에서 이미지 형식으로 변환함
         
         /* 2021-10-26 홍승비 - 자원등록 시 TIF, TIFF 이미지 제대로 표출되지 않는 오류 수정 (PNG로 치환) */
-        File imageFile = new File(commonUtil.detectPathTraversal(pDirPath + "tempUploadFile" + commonUtil.separator + newFileName + pFileName));
+        EzFAL.EzFile imageFile = new EzFAL.EzFile(commonUtil.detectPathTraversal(pDirPath + "tempUploadFile" + commonUtil.separator + newFileName + pFileName));
         
 		if (imageFile.exists()) {
-			BufferedImage bi = ImageIO.read(imageFile);		
+			BufferedImage bi = ImageIO.read(new EzFAL.EzFileInputStream(imageFile));		
 			BufferedImage bufferedImage = null;
 			
 			if (extension.toUpperCase().equals("TIF") || extension.toUpperCase().equals("TIFF")) {
@@ -3084,7 +3085,7 @@ public class EzResourceController extends EzFileMngUtil {
 		
 		logger.debug("fileName : " + fileName + ", pDirPath : " + pDirPath);
 		
-		File file = new File(pDirPath + commonUtil.separator + fileName);
+		EzFAL.EzFile file = new EzFAL.EzFile(pDirPath + commonUtil.separator + fileName);
 		file.delete();
 
         logger.debug("tempUploadFileDelete ended");

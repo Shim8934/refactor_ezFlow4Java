@@ -88,6 +88,8 @@
 	     	// 2023-05-25 조수빈 - 전자결재 첨부파일 미리보기 사용 여부
 			var useAprFilePrvw = "<c:out value ='${useAprFilePrvw}'/>";
 			var ReturnFunction;
+
+            var isPreview = "<c:out value='${isPreview}'/>";
 	        
             // 일괄 타입 B
             var draftAllTypeB = "<c:out value ='${draftAllTypeB}'/>";

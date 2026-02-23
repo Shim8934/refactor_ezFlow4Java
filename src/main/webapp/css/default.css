@@ -2239,7 +2239,6 @@ form{display:inline;margin:0}
 .opinion_ul li:nth-child(even){background:#fafafa;}
 
 div#txtContent {margin-left:5px;margin-right:5px;word-wrap:break-word;font-size:12px;}
-div#txtContent table {margin:auto;}
 
 .blockLeft {
 	position : absolute;

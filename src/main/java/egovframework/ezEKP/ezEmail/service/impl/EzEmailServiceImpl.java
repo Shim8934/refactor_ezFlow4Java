@@ -2,6 +2,7 @@ package egovframework.ezEKP.ezEmail.service.impl;
 
 import java.io.File;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
@@ -36,12 +37,15 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 
+import egovframework.com.cmm.service.EzFileMngUtil;
+import egovframework.let.utl.fcc.service.EzFAL;
 import egovframework.ezEKP.ezEmail.vo.MailBigAttachVO;
 import egovframework.ezEKP.ezEmail.vo.MailboxProgressVO;
 import egovframework.let.utl.fcc.service.KlibUtil;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.codec.binary.Base64;
+import org.apache.poi.util.IOUtils;
 import org.egovframe.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -108,6 +112,9 @@ public class EzEmailServiceImpl extends EgovAbstractServiceImpl implements EzEma
 	
 	@Resource(name = "EzCommonService")
     private EzCommonService ezCommonService;
+
+	@Resource(name = "EzFileMngUtil")
+	private EzFileMngUtil ezFileMngUtil;
 	
 	@Autowired
 	private EzOrganAdminDAO ezOrganAdminDao;
@@ -1371,7 +1378,7 @@ public class EzEmailServiceImpl extends EgovAbstractServiceImpl implements EzEma
 	@Override
 	public void sendMail(String userEmail, String password, Locale userLocale, InternetAddress from, InternetAddress[] toArr, InternetAddress[] ccArr, InternetAddress[] bccArr, String subject, String content, boolean isSaved, EmailImportance importance) throws Exception {
 		logger.debug("sendMail started.");
-		logger.debug("from=" + from + ",subject=" + subject + ",isSaved=" + isSaved);
+		logger.debug("from={}, subject{}, isSaved={}, userEmail={}", from, subject, isSaved, userEmail);
 
 //		IMAPAccess ia = null;
 //		
@@ -4136,7 +4143,7 @@ public class EzEmailServiceImpl extends EgovAbstractServiceImpl implements EzEma
 	}
 
 	@Override
-	public void deleteBigAttachCountInfo(File[] fileList, int tenantId) throws Exception {
+	public void deleteBigAttachCountInfo(EzFAL.EzFile[] fileList, int tenantId) throws Exception {
 		logger.debug("deleteBigAttachCountInfo(file[], int) started.");
 		
 		String[] fileIdArr = new String[fileList.length];
@@ -5122,8 +5129,10 @@ public class EzEmailServiceImpl extends EgovAbstractServiceImpl implements EzEma
 				logger.debug("imagesEle size=" + imagesEle.size());
 
 				String templatePathTmp = mailTemplatePath + "/temp";
-				File mailTemplateFolder = new File(realPath + templatePathTmp);
-				FileUtils.forceMkdir(mailTemplateFolder);
+				EzFAL.EzFile mailTemplateFolder = new EzFAL.EzFile(realPath + templatePathTmp);
+				if (!mailTemplateFolder.exists()) {
+					mailTemplateFolder.mkdirs();
+				}
 				
 				for (org.jsoup.nodes.Element img : imagesEle) {
 					try {
@@ -5134,11 +5143,14 @@ public class EzEmailServiceImpl extends EgovAbstractServiceImpl implements EzEma
 						String fileName      = UUID.randomUUID() + "." + fileType;
 						String destFilePath  = templatePathTmp + "/" + fileName;
 						logger.debug("sourceFilePath=" + sourceFilePath + ", destFilePath=" + destFilePath);
-						
-						File srcFile  = new File(realPath + "/" + sourceFilePath);
-						File destFile = new File(realPath + "/" + destFilePath);
-						FileUtils.copyFile(srcFile, destFile);
-						
+
+						EzFAL.EzFile srcFile  = new EzFAL.EzFile(realPath + "/" + sourceFilePath);
+						EzFAL.EzFile destFile = new EzFAL.EzFile(realPath + "/" + destFilePath);
+						try (InputStream in = new EzFAL.EzFileInputStream(srcFile);
+							 OutputStream out = new EzFAL.EzFileOutputStream(destFile)) {
+							IOUtils.copy(in, out);
+						}
+
 						img.attr("src", mailTemplatePath + "/" + fileName);
 					} catch (IndexOutOfBoundsException e) {
 						logger.error(e.getMessage(), e);
@@ -5176,14 +5188,14 @@ public class EzEmailServiceImpl extends EgovAbstractServiceImpl implements EzEma
 		
 		if (editorType.equals("0")) {
 			File mvFolder  = new File(realPath + "/" + mailTemplatePath);
-			File tmpFolder = new File(realPath + "/" + mailTemplatePath + "/temp");
+			EzFAL.EzFile tmpFolder = new EzFAL.EzFile(realPath + "/" + mailTemplatePath + "/temp");
 			
 			if (tmpFolder.exists()) {
-				File[] files = tmpFolder.listFiles();
+				EzFAL.EzFile[] files = tmpFolder.listFiles();
  
-				for (File f : files) {
+				for (EzFAL.EzFile f : files) {
 					if (resultInt == 0) {
-						File mf = new File(mvFolder, f.getName());
+						EzFAL.EzFile mf = new EzFAL.EzFile(mvFolder, f.getName());
 						f.renameTo(mf);
 					} else {
 						f.delete();
@@ -5230,8 +5242,8 @@ public class EzEmailServiceImpl extends EgovAbstractServiceImpl implements EzEma
 				mailTemplatePath += type.equalsIgnoreCase("all") ? "" :	"/" + templateId;
 
 				try {
-					File testFile = new File(realPath + mailTemplatePath);
-					FileUtils.deleteDirectory(testFile);
+					EzFAL.EzFile testFile = new EzFAL.EzFile(realPath + mailTemplatePath);
+					ezFileMngUtil.deleteDirectory(testFile);
 				} catch (RuntimeException e) {
 					logger.error(e.getMessage(), e);
 				} catch (Exception e) {

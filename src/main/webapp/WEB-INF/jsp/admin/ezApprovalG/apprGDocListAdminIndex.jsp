@@ -4,8 +4,8 @@
 <html class="frame_main">
 <title>
 	<spring:message code='ezApprovalG.lhr001'/>
-	<link rel="stylesheet" type="text/css" href="${util.addVer('/css/mainFrame.css')}"/>
 </title>
+<link rel="stylesheet" type="text/css" href="${util.addVer('/css/mainFrame.css')}"/>
 <body>
 <iframe id="left"
 		src="/admin/ezApprovalG/apprGDocListAdminLeft.do?listType=${listType}&selectDeptID=${selectDeptID}"

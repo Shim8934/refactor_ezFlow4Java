@@ -49,6 +49,7 @@
 			var versionManageFlag = false;
 			var urlCopyFlag = "<c:out value='${model.urlCopyFlag}'/>"; <%-- url복사 사용여부 (Y/N) --%>
 			var useGroupFlag = "<c:out value='${model.useGroupFlag}'/>"; <%-- 그룹게시판 설정여부 (Y/N) --%>
+			var useImageConvertServer = "<c:out value='${useImageConvertServer}'/>";
 
 			document.onselectstart = function (){
 	            if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA") {
@@ -137,6 +138,10 @@
 	                	$("#chkApprBoard").prop("disabled",true);
 	                }
 	            }
+				
+				if (useImageConvertServer == "0") {
+					$("#fileViewerBoardChkBox").prop("disabled",true);
+				}
 
 				if (writerFlag == "Y") {
 					$("#chkWriterFlag").prop("checked", true);

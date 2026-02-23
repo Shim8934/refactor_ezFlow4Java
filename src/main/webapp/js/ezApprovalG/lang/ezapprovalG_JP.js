@@ -1233,3 +1233,6 @@ var strLangRetiree01 = "は退職者です。\nお気に入りの適用から除
 var strLangRetiree02 = "は廃止されました。\nお気に入りの適用から除外されます。"
 
 var strLangDashBoard01 = "承認";
+
+var strLangJIH_ChkRecvnum1 = "receiptnumber フィールドは1つだけ指定してください。";
+var strLangJIH_ChkRecvnum2 = "receiptnumber フィールドが指定されていません。指定してください。";

@@ -1232,3 +1232,6 @@ var strLangRetiree01 = "已经离职。\n将从收藏夹中排除。"
 var strLangRetiree02 = "已被撤销。\n将从收藏夹中排除。"
 
 var strLangDashBoard01 = "批准";
+
+var strLangJIH_ChkRecvnum1 = "请仅指定一个 receiptnumber 字段。";
+var strLangJIH_ChkRecvnum2 = "未指定 receiptnumber 字段。请指定。";

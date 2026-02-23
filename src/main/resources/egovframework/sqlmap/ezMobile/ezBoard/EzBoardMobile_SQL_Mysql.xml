@@ -630,7 +630,7 @@
 				<isEqual property="useKeyword" compareValue="Y">
 					<![CDATA[
 						OR
-							ITEMID in (
+							A.ITEMID in (
 								SELECT DISTINCT
 									ITEMID
 								FROM
@@ -715,7 +715,7 @@
 		<isEqual property="gubun" compareValue="3">
 			<![CDATA[
 				SELECT
-					COUNT(itemid) totalcount
+					COUNT(A.itemid) totalcount
 				FROM
 					TBL_BOARD_ITEM 
 				WHERE
@@ -1904,35 +1904,34 @@
 		]]>
 		<isNotEmpty property="pSearchText">
 			<![CDATA[
-				AND (
+				WHERE 
 					A.title LIKE CONCAT('%' ,#pSearchText#, '%')
-					OR
+				OR
 		    		A.writerName LIKE CONCAT('%' ,#pSearchText#, '%')   
 			]]>
 			<isEqual property="useKeyword" compareValue="Y">
 				<![CDATA[
-					OR
-						A.ITEMID in (
-							SELECT DISTINCT
-								ITEMID
-							FROM
-								tbl_board_boarditem_keyword BK
-							INNER JOIN
-								TBL_BOARD_KEYWORD K
-							ON
-								BK.KEYWORDID = K.KEYWORDID
-							AND
-								BK.TENANT_ID = K.TENANT_ID
-							WHERE
-								K.KEYWORDNAME like CONCAT(CONCAT('%', #pSearchText#), '%')
-							AND
-								BK.BOARDID = #boardID#
-							AND
-								BK.TENANT_ID = #tenantID#
-						)
-					]]>
+				OR
+					A.ITEMID in (
+						SELECT DISTINCT
+							ITEMID
+						FROM
+							tbl_board_boarditem_keyword BK
+						INNER JOIN
+							TBL_BOARD_KEYWORD K
+						ON
+							BK.KEYWORDID = K.KEYWORDID
+						AND
+							BK.TENANT_ID = K.TENANT_ID
+						WHERE
+							K.KEYWORDNAME like CONCAT(CONCAT('%', #pSearchText#), '%')
+						AND
+							BK.BOARDID = #boardID#
+						AND
+							BK.TENANT_ID = #tenantID#
+					)
+				]]>
 			</isEqual>
-			)
 		</isNotEmpty>
   </select>
   
@@ -2405,7 +2404,7 @@
 				<isEqual property="useKeyword" compareValue="Y">
 					<![CDATA[
 					OR
-						ITEMID in (
+						A.ITEMID in (
 							SELECT DISTINCT
 								ITEMID
 							FROM
@@ -2822,9 +2821,32 @@
 			  	A.TENANT_ID = P.TENANT_ID
 			AND
 			  	A.BOARDID = P.BOARDID
-			AND
-				P.GUBUN != '5'
-			AND 
+			LEFT OUTER JOIN
+				(
+					SELECT
+						ITEMID, TENANT_ID
+					FROM
+						(
+							SELECT
+								ROW_NUMBER() OVER(
+							PARTITION BY
+								PARENTITEMID
+							ORDER BY
+								VERSION DESC
+						) RN,
+									ITEMID,
+								TENANT_ID
+							FROM
+								TBL_BOARD_MODIFYHISTORY
+						) M1
+					WHERE
+						M1.RN = 1
+				) M2
+				ON
+					A.ITEMID = M2.ITEMID
+				AND
+					A.TENANT_ID = M2.TENANT_ID
+				WHERE
 			  	A.TENANT_ID = #v_TENANTID#
 	 		AND
             	(A.WRITERCOMPANYID = #v_COMPANYID# OR TRIM(A.WRITERCOMPANYID) = ''
@@ -2836,6 +2858,12 @@
 			  	A.STARTDATE <= #nowDate#
 			AND 
 			  	A.ENDDATE > #nowDate#
+			AND
+				P.GUBUN != '5'
+			AND
+				(P.VERSIONMANAGE = 'Y' AND M2.ITEMID IS NOT NULL
+					OR
+				 P.VERSIONMANAGE = 'N')
 		]]>
 	</select>
 	
@@ -2883,13 +2911,33 @@
 				ON
 					A.TENANT_ID = P.TENANT_ID
 				AND
-					(A.WRITERCOMPANYID = P.COMPANYID OR TRIM(A.WRITERCOMPANYID) = ''
-						OR TRIM(P.COMPANYID) = '' OR P.COMPANYID IS NULL)
-				AND
 					A.BOARDID = P.BOARDID
+				LEFT OUTER JOIN
+				(
+					SELECT
+						ITEMID, TENANT_ID
+					FROM
+					(
+						SELECT
+							ROW_NUMBER() OVER(
+								PARTITION BY
+									PARENTITEMID
+								ORDER BY
+									VERSION DESC
+							) RN,
+							ITEMID,
+							TENANT_ID
+						FROM
+						TBL_BOARD_MODIFYHISTORY
+					) M1
+					WHERE
+						M1.RN = 1
+				) M2
+				ON
+					A.ITEMID = M2.ITEMID
 				AND
-					P.GUBUN != '5'
-				AND
+					A.TENANT_ID = M2.TENANT_ID
+				WHERE
 					A.TENANT_ID = #v_TENANTID#
 				AND
 					(A.WRITERCOMPANYID = #v_COMPANYID# OR TRIM(A.WRITERCOMPANYID) = ''
@@ -2901,6 +2949,14 @@
 					A.STARTDATE <= #nowDate#
 				AND
 					A.ENDDATE > #nowDate#
+				AND
+					P.GUBUN != '5'
+				AND
+					(P.VERSIONMANAGE = 'Y' AND M2.ITEMID IS NOT NULL
+						OR
+			    	P.VERSIONMANAGE = 'N')
+				GROUP BY
+					A.ITEMID, A.TITLE
 		]]>
 		
 		<isNotEmpty property="lastDate">

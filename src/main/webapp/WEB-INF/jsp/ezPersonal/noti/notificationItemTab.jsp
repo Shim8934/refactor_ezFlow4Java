@@ -115,322 +115,341 @@ tr[data-target='.poll'], tr.poll { display: none; }
 			<th><%=makeCheckbox(disableItemFinder, 1, 0, 4)%></th>
 		</tr>
 		<c:if test="${packageType ne 'mail'}">
-		<tr class="collapsible" data-target=".approval">
-			<th><spring:message code='ezPersonal.noti.item.approval' /></th>
-			<th><%=makeMasterCheckbox(disableItemFinder, 2, 1, 6)%></th>
-			<th><%=makeMasterCheckbox(disableItemFinder, 2, 2, 6)%></th>
-			<th><%=makeMasterCheckbox(disableItemFinder, 2, 3, 6)%></th>
-			<th><%=makeMasterCheckbox(disableItemFinder, 2, 4, 6)%></th>
-		</tr>
-		<tr class="collapse approval">
-			<td><spring:message code='ezPersonal.noti.item.approval.1' /></td>
-			<td><%=makeCheckbox(disableItemFinder, 2, 1, 1)%></td>
-			<td><%=makeCheckbox(disableItemFinder, 2, 1, 2)%></td>
-			<td><%=makeCheckbox(disableItemFinder, 2, 1, 3)%></td>
-			<td><%=makeCheckbox(disableItemFinder, 2, 1, 4)%></td>
-		</tr>
-		<tr class="collapse approval">
-			<td><spring:message code='ezPersonal.noti.item.approval.2' /></td>
-			<td><%=makeCheckbox(disableItemFinder, 2, 2, 1)%></td>
-			<td><%=makeCheckbox(disableItemFinder, 2, 2, 2)%></td>
-			<td><%=makeCheckbox(disableItemFinder, 2, 2, 3)%></td>
-			<td><%=makeCheckbox(disableItemFinder, 2, 2, 4)%></td>
-			
-		</tr>
-		<tr class="collapse approval">
-			<td><spring:message code='ezPersonal.noti.item.approval.3' /></td>
-			<td><%=makeCheckbox(disableItemFinder, 2, 3, 1)%></td>
-			<td><%=makeCheckbox(disableItemFinder, 2, 3, 2)%></td>
-			<td><%=makeCheckbox(disableItemFinder, 2, 3, 3)%></td>
-			<td><%=makeCheckbox(disableItemFinder, 2, 3, 4)%></td>
-		</tr>
-		<tr class="collapse approval">
-			<td><spring:message code='ezPersonal.noti.item.approval.4' /></td>
-			<td><%=makeCheckbox(disableItemFinder, 2, 4, 1)%></td>
-			<td><%=makeCheckbox(disableItemFinder, 2, 4, 2)%></td>
-			<td><%=makeCheckbox(disableItemFinder, 2, 4, 3)%></td>
-			<td><%=makeCheckbox(disableItemFinder, 2, 4, 4)%></td>
-		</tr>
-		<tr class="collapse approval">
-			<td><spring:message code='ezPersonal.noti.item.approval.5' /></td>
-			<td><%=makeCheckbox(disableItemFinder, 2, 5, 1)%></td>
-			<td><%=makeCheckbox(disableItemFinder, 2, 5, 2)%></td>
-			<td><%=makeCheckbox(disableItemFinder, 2, 5, 3)%></td>
-			<td><%=makeCheckbox(disableItemFinder, 2, 5, 4)%></td>
-		</tr>
-		<tr class="collapse approval passAprLine">
-			<td><spring:message code='ezPersonal.noti.item.approval.6' /></td>
-			<td><%=makeCheckbox(disableItemFinder, 2, 6, 1)%></td>
-			<td><%=makeCheckbox(disableItemFinder, 2, 6, 2)%></td>
-			<td><%=makeCheckbox(disableItemFinder, 2, 6, 3)%></td>
-			<td><%=makeCheckbox(disableItemFinder, 2, 6, 4)%></td>
-		</tr>
-		<%-- 2023-08-03 조수빈 - 게시판 알림 설정 --%>
-		<tr class="collapsible" data-target=".board">
-	        <th><spring:message code='ezBoard.t0006' /></th>
-	        <th><%=makeMasterCheckbox(disableItemFinder, 3, 1, 5)%></th>
-	        <th></th>
-	        <th><%=makeMasterCheckbox(disableItemFinder, 3, 3, 5)%></th>
-	        <th><%=makeMasterCheckbox(disableItemFinder, 3, 4, 5)%></th>
-		</tr>
-		<tr class="collapse board">
-	        <td><spring:message code='ezNotification.hth39' /></td>
-	        <td><%=makeCheckbox(disableItemFinder, 3, 1, 1)%></td>
-	        <td></td>
-	        <td><%=makeCheckbox(disableItemFinder, 3, 1, 3)%></td>
-	        <td><%=makeCheckbox(disableItemFinder, 3, 1, 4)%></td>
-		</tr>
-		<tr class="collapse board">
-	        <td><spring:message code='ezNotification.hth40' /></td>
-	        <td><%=makeCheckbox(disableItemFinder, 3, 2, 1)%></td>
-	        <td></td>
-	        <td><%=makeCheckbox(disableItemFinder, 3, 2, 3)%></td>
-	        <td><%=makeCheckbox(disableItemFinder, 3, 2, 4)%></td>
-		</tr>
-		<tr class="collapse board">
-	        <td><spring:message code='ezBoard.HSBMail03' /></td>
-	        <td><%=makeCheckbox(disableItemFinder, 3, 3, 1)%></td>
-	        <td></td>
-	        <td><%=makeCheckbox(disableItemFinder, 3, 3, 3)%></td>
-	        <td><%=makeCheckbox(disableItemFinder, 3, 3, 4)%></td>
-		</tr>
-		<tr class="collapse board">
-	        <td><spring:message code='ezBoard.HSBMail04' /></td>
-	        <td><%=makeCheckbox(disableItemFinder, 3, 4, 1)%></td>
-	        <td></td>
-	        <td><%=makeCheckbox(disableItemFinder, 3, 4, 3)%></td>
-	        <td><%=makeCheckbox(disableItemFinder, 3, 4, 4)%></td>
-		</tr>
-		<tr class="collapse board">
-	        <td><spring:message code='ezNotification.hth56' /></td>
-	        <td><%=makeCheckbox(disableItemFinder, 3, 5, 1)%></td>
-	        <td></td>
-	        <td><%=makeCheckbox(disableItemFinder, 3, 5, 3)%></td>
-	        <td><%=makeCheckbox(disableItemFinder, 3, 5, 4)%></td>
-		</tr>
-		<%-- 2023-08-03 조수빈 - 일정관리 알림 설정 --%>
-		<tr class="collapsible" data-target=".schedule">
-	        <th><spring:message code='ezSchedule.t1010'/></th>
-	        <th><%=makeMasterCheckbox(disableItemFinder, 4, 1, 6)%></th>
-	        <th></th>
-	        <th><%=makeMasterCheckbox(disableItemFinder, 4, 3, 6)%></th>
-	        <th><%=makeMasterCheckbox(disableItemFinder, 4, 4, 6)%></th>
-		</tr>
-		<tr class="collapse schedule">
-	        <td><spring:message code='ezSchedule.kmss09'/></td>
-	        <td><%=makeCheckbox(disableItemFinder, 4, 1, 1)%></td>
-	        <td></td>
-	        <td><%=makeCheckbox(disableItemFinder, 4, 1, 3)%></td>
-	        <td><%=makeCheckbox(disableItemFinder, 4, 1, 4)%></td>
-		</tr>
-		<tr class="collapse schedule">
-	        <td><spring:message code='ezSchedule.kmss10'/></td>
-	        <td><%=makeCheckbox(disableItemFinder, 4, 2, 1)%></td>
-	        <td></td>
-	        <td><%=makeCheckbox(disableItemFinder, 4, 2, 3)%></td>
-	        <td><%=makeCheckbox(disableItemFinder, 4, 2, 4)%></td>
-		</tr>
-		<tr class="collapse schedule">
-	        <td><spring:message code='ezSchedule.kmss11'/></td>
-	        <td><%=makeCheckbox(disableItemFinder, 4, 3, 1)%></td>
-	        <td></td>
-	        <td><%=makeCheckbox(disableItemFinder, 4, 3, 3)%></td>
-	        <td><%=makeCheckbox(disableItemFinder, 4, 3, 4)%></td>
-		</tr>
-		<tr class="collapse schedule">
-	        <td><spring:message code='ezSchedule.kmss12'/></td>
-	        <td><%=makeCheckbox(disableItemFinder, 4, 4, 1)%></td>
-	        <td></td>
-	        <td><%=makeCheckbox(disableItemFinder, 4, 4, 3)%></td>
-	        <td><%=makeCheckbox(disableItemFinder, 4, 4, 4)%></td>
-		</tr>
-		<tr class="collapse schedule">
-	        <td><spring:message code='ezSchedule.cofig.hth01'/></td>
-	        <td><%=makeCheckbox(disableItemFinder, 4, 5, 1)%></td>
-	        <td></td>
-	        <td><%=makeCheckbox(disableItemFinder, 4, 5, 3)%></td>
-   	        <td><%=makeCheckbox(disableItemFinder, 4, 5, 4)%></td>
-		</tr>
-		<tr class="collapse schedule">
-	        <td><spring:message code='ezSchedule.cofig.hth02'/></td>
-	        <td><%=makeCheckbox(disableItemFinder, 4, 6, 1)%></td>
-	        <td></td>
-	        <td><%=makeCheckbox(disableItemFinder, 4, 6, 3)%></td>
-   	        <td><%=makeCheckbox(disableItemFinder, 4, 6, 4)%></td>
-		</tr>
+            <c:if test="${not empty approval and approval eq 'Y'}">
+                <tr class="collapsible" data-target=".approval">
+                    <th><spring:message code='ezPersonal.noti.item.approval' /></th>
+                    <th><%=makeMasterCheckbox(disableItemFinder, 2, 1, 6)%></th>
+                    <th><%=makeMasterCheckbox(disableItemFinder, 2, 2, 6)%></th>
+                    <th><%=makeMasterCheckbox(disableItemFinder, 2, 3, 6)%></th>
+                    <th><%=makeMasterCheckbox(disableItemFinder, 2, 4, 6)%></th>
+                </tr>
+                <tr class="collapse approval">
+                    <td><spring:message code='ezPersonal.noti.item.approval.1' /></td>
+                    <td><%=makeCheckbox(disableItemFinder, 2, 1, 1)%></td>
+                    <td><%=makeCheckbox(disableItemFinder, 2, 1, 2)%></td>
+                    <td><%=makeCheckbox(disableItemFinder, 2, 1, 3)%></td>
+                    <td><%=makeCheckbox(disableItemFinder, 2, 1, 4)%></td>
+                </tr>
+                <tr class="collapse approval">
+                    <td><spring:message code='ezPersonal.noti.item.approval.2' /></td>
+                    <td><%=makeCheckbox(disableItemFinder, 2, 2, 1)%></td>
+                    <td><%=makeCheckbox(disableItemFinder, 2, 2, 2)%></td>
+                    <td><%=makeCheckbox(disableItemFinder, 2, 2, 3)%></td>
+                    <td><%=makeCheckbox(disableItemFinder, 2, 2, 4)%></td>
+    
+                </tr>
+                <tr class="collapse approval">
+                    <td><spring:message code='ezPersonal.noti.item.approval.3' /></td>
+                    <td><%=makeCheckbox(disableItemFinder, 2, 3, 1)%></td>
+                    <td><%=makeCheckbox(disableItemFinder, 2, 3, 2)%></td>
+                    <td><%=makeCheckbox(disableItemFinder, 2, 3, 3)%></td>
+                    <td><%=makeCheckbox(disableItemFinder, 2, 3, 4)%></td>
+                </tr>
+                <tr class="collapse approval">
+                    <td><spring:message code='ezPersonal.noti.item.approval.4' /></td>
+                    <td><%=makeCheckbox(disableItemFinder, 2, 4, 1)%></td>
+                    <td><%=makeCheckbox(disableItemFinder, 2, 4, 2)%></td>
+                    <td><%=makeCheckbox(disableItemFinder, 2, 4, 3)%></td>
+                    <td><%=makeCheckbox(disableItemFinder, 2, 4, 4)%></td>
+                </tr>
+                <tr class="collapse approval">
+                    <td><spring:message code='ezPersonal.noti.item.approval.5' /></td>
+                    <td><%=makeCheckbox(disableItemFinder, 2, 5, 1)%></td>
+                    <td><%=makeCheckbox(disableItemFinder, 2, 5, 2)%></td>
+                    <td><%=makeCheckbox(disableItemFinder, 2, 5, 3)%></td>
+                    <td><%=makeCheckbox(disableItemFinder, 2, 5, 4)%></td>
+                </tr>
+                <tr class="collapse approval passAprLine">
+                    <td><spring:message code='ezPersonal.noti.item.approval.6' /></td>
+                    <td><%=makeCheckbox(disableItemFinder, 2, 6, 1)%></td>
+                    <td><%=makeCheckbox(disableItemFinder, 2, 6, 2)%></td>
+                    <td><%=makeCheckbox(disableItemFinder, 2, 6, 3)%></td>
+                    <td><%=makeCheckbox(disableItemFinder, 2, 6, 4)%></td>
+                </tr>
+            </c:if>
 		
-		<%-- 2024-04-30 한태훈 - 자원관리 알림 설정 --%>
-		<tr class="collapsible" data-target=".resource">
-	        <th><spring:message code='ezResource.t17'/></th>
-	        <th><%=makeMasterCheckbox(disableItemFinder, 5, 1, 3)%></th>
-	        <th></th>
-	        <th><%=makeMasterCheckbox(disableItemFinder, 5, 3, 3)%></th>
-	        <th><%=makeMasterCheckbox(disableItemFinder, 5, 4, 3)%></th>
-		</tr>
-		<tr class="collapse resource">
-	        <td><spring:message code='ezNotification.hth41'/></td>
-	        <td><%=makeCheckbox(disableItemFinder, 5, 1, 1)%></td>
-	        <td></td>
-	        <td><%=makeCheckbox(disableItemFinder, 5, 1, 3)%></td>
-	        <td><%=makeCheckbox(disableItemFinder, 5, 1, 4)%></td>
-		</tr>
-		<tr class="collapse resource">
-	        <td><spring:message code='ezNotification.hth42'/></td>
-	        <td><%=makeCheckbox(disableItemFinder, 5, 2, 1)%></td>
-	        <td></td>
-	        <td><%=makeCheckbox(disableItemFinder, 5, 2, 3)%></td>
-	        <td><%=makeCheckbox(disableItemFinder, 5, 2, 4)%></td>
-		</tr>
-		<tr class="collapse resource">
-	        <td><spring:message code='ezNotification.hth43'/></td>
-	        <td><%=makeCheckbox(disableItemFinder, 5, 3, 1)%></td>
-	        <td></td>
-	        <td><%=makeCheckbox(disableItemFinder, 5, 3, 3)%></td>
-	        <td><%=makeCheckbox(disableItemFinder, 5, 3, 4)%></td>
-		</tr>
+            <%-- 2023-08-03 조수빈 - 게시판 알림 설정 --%>
+            <c:if test="${not empty board and board eq 'Y'}">
+                <tr class="collapsible" data-target=".board">
+                    <th><spring:message code='ezBoard.t0006' /></th>
+                    <th><%=makeMasterCheckbox(disableItemFinder, 3, 1, 5)%></th>
+                    <th></th>
+                    <th><%=makeMasterCheckbox(disableItemFinder, 3, 3, 5)%></th>
+                    <th><%=makeMasterCheckbox(disableItemFinder, 3, 4, 5)%></th>
+                </tr>
+                <tr class="collapse board">
+                    <td><spring:message code='ezNotification.hth39' /></td>
+                    <td><%=makeCheckbox(disableItemFinder, 3, 1, 1)%></td>
+                    <td></td>
+                    <td><%=makeCheckbox(disableItemFinder, 3, 1, 3)%></td>
+                    <td><%=makeCheckbox(disableItemFinder, 3, 1, 4)%></td>
+                </tr>
+                <tr class="collapse board">
+                    <td><spring:message code='ezNotification.hth40' /></td>
+                    <td><%=makeCheckbox(disableItemFinder, 3, 2, 1)%></td>
+                    <td></td>
+                    <td><%=makeCheckbox(disableItemFinder, 3, 2, 3)%></td>
+                    <td><%=makeCheckbox(disableItemFinder, 3, 2, 4)%></td>
+                </tr>
+                <tr class="collapse board">
+                    <td><spring:message code='ezBoard.HSBMail03' /></td>
+                    <td><%=makeCheckbox(disableItemFinder, 3, 3, 1)%></td>
+                    <td></td>
+                    <td><%=makeCheckbox(disableItemFinder, 3, 3, 3)%></td>
+                    <td><%=makeCheckbox(disableItemFinder, 3, 3, 4)%></td>
+                </tr>
+                <tr class="collapse board">
+                    <td><spring:message code='ezBoard.HSBMail04' /></td>
+                    <td><%=makeCheckbox(disableItemFinder, 3, 4, 1)%></td>
+                    <td></td>
+                    <td><%=makeCheckbox(disableItemFinder, 3, 4, 3)%></td>
+                    <td><%=makeCheckbox(disableItemFinder, 3, 4, 4)%></td>
+                </tr>
+                <tr class="collapse board">
+                    <td><spring:message code='ezNotification.hth56' /></td>
+                    <td><%=makeCheckbox(disableItemFinder, 3, 5, 1)%></td>
+                    <td></td>
+                    <td><%=makeCheckbox(disableItemFinder, 3, 5, 3)%></td>
+                    <td><%=makeCheckbox(disableItemFinder, 3, 5, 4)%></td>
+                </tr>
+            </c:if>
+            <%-- 2023-08-03 조수빈 - 일정관리 알림 설정 --%>
+            <c:if test="${not empty schedule and schedule eq 'Y'}">
+                <tr class="collapsible" data-target=".schedule">
+                    <th><spring:message code='ezSchedule.t1010'/></th>
+                    <th><%=makeMasterCheckbox(disableItemFinder, 4, 1, 6)%></th>
+                    <th></th>
+                    <th><%=makeMasterCheckbox(disableItemFinder, 4, 3, 6)%></th>
+                    <th><%=makeMasterCheckbox(disableItemFinder, 4, 4, 6)%></th>
+                </tr>
+                <tr class="collapse schedule">
+                    <td><spring:message code='ezSchedule.kmss09'/></td>
+                    <td><%=makeCheckbox(disableItemFinder, 4, 1, 1)%></td>
+                    <td></td>
+                    <td><%=makeCheckbox(disableItemFinder, 4, 1, 3)%></td>
+                    <td><%=makeCheckbox(disableItemFinder, 4, 1, 4)%></td>
+                </tr>
+                <tr class="collapse schedule">
+                    <td><spring:message code='ezSchedule.kmss10'/></td>
+                    <td><%=makeCheckbox(disableItemFinder, 4, 2, 1)%></td>
+                    <td></td>
+                    <td><%=makeCheckbox(disableItemFinder, 4, 2, 3)%></td>
+                    <td><%=makeCheckbox(disableItemFinder, 4, 2, 4)%></td>
+                </tr>
+                <tr class="collapse schedule">
+                    <td><spring:message code='ezSchedule.kmss11'/></td>
+                    <td><%=makeCheckbox(disableItemFinder, 4, 3, 1)%></td>
+                    <td></td>
+                    <td><%=makeCheckbox(disableItemFinder, 4, 3, 3)%></td>
+                    <td><%=makeCheckbox(disableItemFinder, 4, 3, 4)%></td>
+                </tr>
+                <tr class="collapse schedule">
+                    <td><spring:message code='ezSchedule.kmss12'/></td>
+                    <td><%=makeCheckbox(disableItemFinder, 4, 4, 1)%></td>
+                    <td></td>
+                    <td><%=makeCheckbox(disableItemFinder, 4, 4, 3)%></td>
+                    <td><%=makeCheckbox(disableItemFinder, 4, 4, 4)%></td>
+                </tr>
+                <tr class="collapse schedule">
+                    <td><spring:message code='ezSchedule.cofig.hth01'/></td>
+                    <td><%=makeCheckbox(disableItemFinder, 4, 5, 1)%></td>
+                    <td></td>
+                    <td><%=makeCheckbox(disableItemFinder, 4, 5, 3)%></td>
+                    <td><%=makeCheckbox(disableItemFinder, 4, 5, 4)%></td>
+                </tr>
+                <tr class="collapse schedule">
+                    <td><spring:message code='ezSchedule.cofig.hth02'/></td>
+                    <td><%=makeCheckbox(disableItemFinder, 4, 6, 1)%></td>
+                    <td></td>
+                    <td><%=makeCheckbox(disableItemFinder, 4, 6, 3)%></td>
+                    <td><%=makeCheckbox(disableItemFinder, 4, 6, 4)%></td>
+                </tr>
+            </c:if>
 		
-		<%-- 2024-04-30 한태훈 - 전자설문 알림 설정 --%>
-		<tr class="collapsible" data-target=".survey">
-	        <th><spring:message code='ezQuestion.t300'/></th>
-	        <th><%=makeMasterCheckbox(disableItemFinder, 6, 1, 2)%></th>
-	        <th></th>
-	        <th><%=makeMasterCheckbox(disableItemFinder, 6, 3, 2)%></th>
-	        <th><%=makeMasterCheckbox(disableItemFinder, 6, 4, 2)%></th>
-		</tr>
-		<tr class="collapse survey">
-	        <td><spring:message code='ezNotification.hth44'/></td>
-	        <td><%=makeCheckbox(disableItemFinder, 6, 1, 1)%></td>
-	        <td></td>
-	        <td><%=makeCheckbox(disableItemFinder, 6, 1, 3)%></td>
-	        <td><%=makeCheckbox(disableItemFinder, 6, 1, 4)%></td>
-		</tr>
+            <%-- 2024-04-30 한태훈 - 자원관리 알림 설정 --%>
+            <c:if test="${not empty resource and resource eq 'Y'}">
+                <tr class="collapsible" data-target=".resource">
+                    <th><spring:message code='ezResource.t17'/></th>
+                    <th><%=makeMasterCheckbox(disableItemFinder, 5, 1, 3)%></th>
+                    <th></th>
+                    <th><%=makeMasterCheckbox(disableItemFinder, 5, 3, 3)%></th>
+                    <th><%=makeMasterCheckbox(disableItemFinder, 5, 4, 3)%></th>
+                </tr>
+                <tr class="collapse resource">
+                    <td><spring:message code='ezNotification.hth41'/></td>
+                    <td><%=makeCheckbox(disableItemFinder, 5, 1, 1)%></td>
+                    <td></td>
+                    <td><%=makeCheckbox(disableItemFinder, 5, 1, 3)%></td>
+                    <td><%=makeCheckbox(disableItemFinder, 5, 1, 4)%></td>
+                </tr>
+                <tr class="collapse resource">
+                    <td><spring:message code='ezNotification.hth42'/></td>
+                    <td><%=makeCheckbox(disableItemFinder, 5, 2, 1)%></td>
+                    <td></td>
+                    <td><%=makeCheckbox(disableItemFinder, 5, 2, 3)%></td>
+                    <td><%=makeCheckbox(disableItemFinder, 5, 2, 4)%></td>
+                </tr>
+                <tr class="collapse resource">
+                    <td><spring:message code='ezNotification.hth43'/></td>
+                    <td><%=makeCheckbox(disableItemFinder, 5, 3, 1)%></td>
+                    <td></td>
+                    <td><%=makeCheckbox(disableItemFinder, 5, 3, 3)%></td>
+                    <td><%=makeCheckbox(disableItemFinder, 5, 3, 4)%></td>
+                </tr>
+            </c:if>
 		
-		<%-- 2024-04-30 한태훈 - 투표 알림 설정 --%>
-		<tr class="collapsible" data-target=".poll">
-	        <th><spring:message code='ezPoll.t103'/></th>
-	        <th><%=makeMasterCheckbox(disableItemFinder, 7, 1, 1)%></th>
-	        <th></th>
-	        <th><%=makeMasterCheckbox(disableItemFinder, 7, 3, 1)%></th>
-	        <th><%=makeMasterCheckbox(disableItemFinder, 7, 4, 1)%></th>
-		</tr>
-		<tr class="collapse poll">
-	        <td><spring:message code='ezNotification.hth46'/></td>
-	        <td><%=makeCheckbox(disableItemFinder, 7, 1, 1)%></td>
-	        <td></td>
-	        <td><%=makeCheckbox(disableItemFinder, 7, 1, 3)%></td>
-	        <td><%=makeCheckbox(disableItemFinder, 7, 1, 4)%></td>
-		</tr>
+            <%-- 2024-04-30 한태훈 - 전자설문 알림 설정 --%>
+            <c:if test="${not empty survey and survey eq 'Y'}">
+                <tr class="collapsible" data-target=".survey">
+                    <th><spring:message code='ezQuestion.t300'/></th>
+                    <th><%=makeMasterCheckbox(disableItemFinder, 6, 1, 2)%></th>
+                    <th></th>
+                    <th><%=makeMasterCheckbox(disableItemFinder, 6, 3, 2)%></th>
+                    <th><%=makeMasterCheckbox(disableItemFinder, 6, 4, 2)%></th>
+                </tr>
+                <tr class="collapse survey">
+                    <td><spring:message code='ezNotification.hth44'/></td>
+                    <td><%=makeCheckbox(disableItemFinder, 6, 1, 1)%></td>
+                    <td></td>
+                    <td><%=makeCheckbox(disableItemFinder, 6, 1, 3)%></td>
+                    <td><%=makeCheckbox(disableItemFinder, 6, 1, 4)%></td>
+                </tr>
+            </c:if>
 		
-		<%-- 2024-04-30 한태훈 - 커뮤니티 알림 설정 --%>
-		<tr class="collapsible" data-target=".community">
-	        <th><spring:message code='ezCommunity.t1529'/></th>
-	        <th><%=makeMasterCheckbox(disableItemFinder, 8, 1, 7)%></th>
-	        <th></th>
-	        <th><%=makeMasterCheckbox(disableItemFinder, 8, 3, 7)%></th>
-	        <th><%=makeMasterCheckbox(disableItemFinder, 8, 4, 7)%></th>
-		</tr>
-		<tr class="collapse community">
-	        <td><spring:message code='ezNotification.hth47'/></td>
-	        <td><%=makeCheckbox(disableItemFinder, 8, 1, 1)%></td>
-	        <td></td>
-	        <td><%=makeCheckbox(disableItemFinder, 8, 1, 3)%></td>
-	        <td><%=makeCheckbox(disableItemFinder, 8, 1, 4)%></td>
-		</tr>
-		<tr class="collapse community">
-	        <td><spring:message code='ezNotification.hth48'/></td>
-	        <td><%=makeCheckbox(disableItemFinder, 8, 2, 1)%></td>
-	        <td></td>
-	        <td><%=makeCheckbox(disableItemFinder, 8, 2, 3)%></td>
-	        <td><%=makeCheckbox(disableItemFinder, 8, 2, 4)%></td>
-		</tr>
-		<tr class="collapse community">
-	        <td><spring:message code='ezNotification.hth49'/></td>
-	        <td><%=makeCheckbox(disableItemFinder, 8, 3, 1)%></td>
-	        <td></td>
-	        <td><%=makeCheckbox(disableItemFinder, 8, 3, 3)%></td>
-	        <td><%=makeCheckbox(disableItemFinder, 8, 3, 4)%></td>
-		</tr>
-		<tr class="collapse community">
-	        <td><spring:message code='ezNotification.hth50'/></td>
-	        <td><%=makeCheckbox(disableItemFinder, 8, 4, 1)%></td>
-	        <td></td>
-	        <td><%=makeCheckbox(disableItemFinder, 8, 4, 3)%></td>
-	        <td><%=makeCheckbox(disableItemFinder, 8, 4, 4)%></td>
-		</tr>
-		<tr class="collapse community">
-	        <td><spring:message code='ezNotification.hth51'/></td>
-	        <td><%=makeCheckbox(disableItemFinder, 8, 5, 1)%></td>
-	        <td></td>
-	        <td><%=makeCheckbox(disableItemFinder, 8, 5, 3)%></td>
-	        <td><%=makeCheckbox(disableItemFinder, 8, 5, 4)%></td>
-		</tr>
-		<tr class="collapse community">
-	        <td><spring:message code='ezNotification.hth52'/></td>
-	        <td><%=makeCheckbox(disableItemFinder, 8, 6, 1)%></td>
-	        <td></td>
-	        <td><%=makeCheckbox(disableItemFinder, 8, 6, 3)%></td>
-	        <td><%=makeCheckbox(disableItemFinder, 8, 6, 4)%></td>
-		</tr>
-		<tr class="collapse community">
-	        <td><spring:message code='ezNotification.hth53'/></td>
-	        <td><%=makeCheckbox(disableItemFinder, 8, 7, 1)%></td>
-	        <td></td>
-	        <td><%=makeCheckbox(disableItemFinder, 8, 7, 3)%></td>
-	        <td><%=makeCheckbox(disableItemFinder, 8, 7, 4)%></td>
-		</tr>
-		<tr class="collapse community">
-			<td><spring:message code='ezNotification.lyj97'/></td>
-			<td><%=makeCheckbox(disableItemFinder, 8, 8, 1)%></td>
-			<td></td>
-			<td></td>
-			<td><%=makeCheckbox(disableItemFinder, 8, 8, 4)%></td>
-		</tr>
+            <%-- 2024-04-30 한태훈 - 투표 알림 설정 --%>
+            <c:if test="${not empty vote and vote eq 'Y'}">
+                <tr class="collapsible" data-target=".poll">
+                    <th><spring:message code='ezPoll.t103'/></th>
+                    <th><%=makeMasterCheckbox(disableItemFinder, 7, 1, 1)%></th>
+                    <th></th>
+                    <th><%=makeMasterCheckbox(disableItemFinder, 7, 3, 1)%></th>
+                    <th><%=makeMasterCheckbox(disableItemFinder, 7, 4, 1)%></th>
+                </tr>
+                <tr class="collapse poll">
+                    <td><spring:message code='ezNotification.hth46'/></td>
+                    <td><%=makeCheckbox(disableItemFinder, 7, 1, 1)%></td>
+                    <td></td>
+                    <td><%=makeCheckbox(disableItemFinder, 7, 1, 3)%></td>
+                    <td><%=makeCheckbox(disableItemFinder, 7, 1, 4)%></td>
+                </tr>
+            </c:if>
 		
-		<%-- 2024-04-30 한태훈 - 웹폴더 알림 설정 --%>
-		<tr class="collapsible" data-target=".webfolder">
-	        <th><spring:message code='ezWebFolder.t10'/></th>
-	        <th><%=makeMasterCheckbox(disableItemFinder, 9, 1, 2)%></th>
-	        <th></th>
-	        <th><%=makeMasterCheckbox(disableItemFinder, 9, 3, 2)%></th>
-	        <th><%=makeMasterCheckbox(disableItemFinder, 9, 4, 2)%></th>
-		</tr>
-		<tr class="collapse webfolder">
-	        <td><spring:message code='ezNotification.hth54'/></td>
-	        <td><%=makeCheckbox(disableItemFinder, 9, 1, 1)%></td>
-	        <td></td>
-	        <td><%=makeCheckbox(disableItemFinder, 9, 1, 3)%></td>
-	        <td><%=makeCheckbox(disableItemFinder, 9, 1, 4)%></td>
-		</tr>
-		<tr class="collapse webfolder">
-	        <td><spring:message code='ezNotification.hth55'/></td>
-	        <td><%=makeCheckbox(disableItemFinder, 9, 2, 1)%></td>
-	        <td></td>
-	        <td><%=makeCheckbox(disableItemFinder, 9, 2, 3)%></td>
-	        <td><%=makeCheckbox(disableItemFinder, 9, 2, 4)%></td>
-		</tr>
+            <%-- 2024-04-30 한태훈 - 커뮤니티 알림 설정 --%>
+            <c:if test="${not empty community and community eq 'Y'}">
+                <tr class="collapsible" data-target=".community">
+                    <th><spring:message code='ezCommunity.t1529'/></th>
+                    <th><%=makeMasterCheckbox(disableItemFinder, 8, 1, 7)%></th>
+                    <th></th>
+                    <th><%=makeMasterCheckbox(disableItemFinder, 8, 3, 7)%></th>
+                    <th><%=makeMasterCheckbox(disableItemFinder, 8, 4, 7)%></th>
+                </tr>
+                <tr class="collapse community">
+                    <td><spring:message code='ezNotification.hth47'/></td>
+                    <td><%=makeCheckbox(disableItemFinder, 8, 1, 1)%></td>
+                    <td></td>
+                    <td><%=makeCheckbox(disableItemFinder, 8, 1, 3)%></td>
+                    <td><%=makeCheckbox(disableItemFinder, 8, 1, 4)%></td>
+                </tr>
+                <tr class="collapse community">
+                    <td><spring:message code='ezNotification.hth48'/></td>
+                    <td><%=makeCheckbox(disableItemFinder, 8, 2, 1)%></td>
+                    <td></td>
+                    <td><%=makeCheckbox(disableItemFinder, 8, 2, 3)%></td>
+                    <td><%=makeCheckbox(disableItemFinder, 8, 2, 4)%></td>
+                </tr>
+                <tr class="collapse community">
+                    <td><spring:message code='ezNotification.hth49'/></td>
+                    <td><%=makeCheckbox(disableItemFinder, 8, 3, 1)%></td>
+                    <td></td>
+                    <td><%=makeCheckbox(disableItemFinder, 8, 3, 3)%></td>
+                    <td><%=makeCheckbox(disableItemFinder, 8, 3, 4)%></td>
+                </tr>
+                <tr class="collapse community">
+                    <td><spring:message code='ezNotification.hth50'/></td>
+                    <td><%=makeCheckbox(disableItemFinder, 8, 4, 1)%></td>
+                    <td></td>
+                    <td><%=makeCheckbox(disableItemFinder, 8, 4, 3)%></td>
+                    <td><%=makeCheckbox(disableItemFinder, 8, 4, 4)%></td>
+                </tr>
+                <tr class="collapse community">
+                    <td><spring:message code='ezNotification.hth51'/></td>
+                    <td><%=makeCheckbox(disableItemFinder, 8, 5, 1)%></td>
+                    <td></td>
+                    <td><%=makeCheckbox(disableItemFinder, 8, 5, 3)%></td>
+                    <td><%=makeCheckbox(disableItemFinder, 8, 5, 4)%></td>
+                </tr>
+                <tr class="collapse community">
+                    <td><spring:message code='ezNotification.hth52'/></td>
+                    <td><%=makeCheckbox(disableItemFinder, 8, 6, 1)%></td>
+                    <td></td>
+                    <td><%=makeCheckbox(disableItemFinder, 8, 6, 3)%></td>
+                    <td><%=makeCheckbox(disableItemFinder, 8, 6, 4)%></td>
+                </tr>
+                <tr class="collapse community">
+                    <td><spring:message code='ezNotification.hth53'/></td>
+                    <td><%=makeCheckbox(disableItemFinder, 8, 7, 1)%></td>
+                    <td></td>
+                    <td><%=makeCheckbox(disableItemFinder, 8, 7, 3)%></td>
+                    <td><%=makeCheckbox(disableItemFinder, 8, 7, 4)%></td>
+                </tr>
+                <tr class="collapse community">
+                    <td><spring:message code='ezNotification.lyj97'/></td>
+                    <td><%=makeCheckbox(disableItemFinder, 8, 8, 1)%></td>
+                    <td></td>
+                    <td></td>
+                    <td><%=makeCheckbox(disableItemFinder, 8, 8, 4)%></td>
+                </tr>
+            </c:if>
 		
-		<%-- 2024-06-28 한태훈 - 업무일지 알림 설정 --%>
-		<tr class="collapsible" data-target=".journal">
-	        <th><spring:message code='ezJournal.t1'/></th>
-	        <th><%=makeMasterCheckbox(disableItemFinder, 10, 1, 2)%></th>
-	        <th></th>
-	        <th><%=makeMasterCheckbox(disableItemFinder, 10, 3, 2)%></th>
-	        <th><%=makeMasterCheckbox(disableItemFinder, 10, 4, 2)%></th>
-		</tr>
-		<tr class="collapse journal">
-	        <td><spring:message code='ezJournal.t122'/></td>
-	        <td><%=makeCheckbox(disableItemFinder, 10, 1, 1)%></td>
-	        <td></td>
-	        <td><%=makeCheckbox(disableItemFinder, 10, 1, 3)%></td>
-	        <td><%=makeCheckbox(disableItemFinder, 10, 1, 4)%></td>
-		</tr>
-		<tr class="collapse journal">
-	        <td><spring:message code='ezJournal.t123'/></td>
-	        <td><%=makeCheckbox(disableItemFinder, 10, 2, 1)%></td>
-	        <td></td>
-	        <td><%=makeCheckbox(disableItemFinder, 10, 2, 3)%></td>
-	        <td><%=makeCheckbox(disableItemFinder, 10, 2, 4)%></td>
-		</tr>
+            <%-- 2024-04-30 한태훈 - 웹폴더 알림 설정 --%>
+            <c:if test="${not empty webfolder and webfolder eq 'Y'}">
+                <tr class="collapsible" data-target=".webfolder">
+                    <th><spring:message code='ezWebFolder.t10'/></th>
+                    <th><%=makeMasterCheckbox(disableItemFinder, 9, 1, 2)%></th>
+                    <th></th>
+                    <th><%=makeMasterCheckbox(disableItemFinder, 9, 3, 2)%></th>
+                    <th><%=makeMasterCheckbox(disableItemFinder, 9, 4, 2)%></th>
+                </tr>
+                <tr class="collapse webfolder">
+                    <td><spring:message code='ezNotification.hth54'/></td>
+                    <td><%=makeCheckbox(disableItemFinder, 9, 1, 1)%></td>
+                    <td></td>
+                    <td><%=makeCheckbox(disableItemFinder, 9, 1, 3)%></td>
+                    <td><%=makeCheckbox(disableItemFinder, 9, 1, 4)%></td>
+                </tr>
+                <tr class="collapse webfolder">
+                    <td><spring:message code='ezNotification.hth55'/></td>
+                    <td><%=makeCheckbox(disableItemFinder, 9, 2, 1)%></td>
+                    <td></td>
+                    <td><%=makeCheckbox(disableItemFinder, 9, 2, 3)%></td>
+                    <td><%=makeCheckbox(disableItemFinder, 9, 2, 4)%></td>
+                </tr>
+            </c:if>
+		
+            <%-- 2024-06-28 한태훈 - 업무일지 알림 설정 --%>
+            <c:if test="${not empty journal and journal eq 'Y'}">
+                <tr class="collapsible" data-target=".journal">
+                    <th><spring:message code='ezJournal.t1'/></th>
+                    <th><%=makeMasterCheckbox(disableItemFinder, 10, 1, 2)%></th>
+                    <th></th>
+                    <th><%=makeMasterCheckbox(disableItemFinder, 10, 3, 2)%></th>
+                    <th><%=makeMasterCheckbox(disableItemFinder, 10, 4, 2)%></th>
+                </tr>
+                <tr class="collapse journal">
+                    <td><spring:message code='ezJournal.t122'/></td>
+                    <td><%=makeCheckbox(disableItemFinder, 10, 1, 1)%></td>
+                    <td></td>
+                    <td><%=makeCheckbox(disableItemFinder, 10, 1, 3)%></td>
+                    <td><%=makeCheckbox(disableItemFinder, 10, 1, 4)%></td>
+                </tr>
+                <tr class="collapse journal">
+                    <td><spring:message code='ezJournal.t123'/></td>
+                    <td><%=makeCheckbox(disableItemFinder, 10, 2, 1)%></td>
+                    <td></td>
+                    <td><%=makeCheckbox(disableItemFinder, 10, 2, 3)%></td>
+                    <td><%=makeCheckbox(disableItemFinder, 10, 2, 4)%></td>
+                </tr>
+            </c:if>
 		</c:if>
 	</table>
 	<div class="btnpositionJsp">

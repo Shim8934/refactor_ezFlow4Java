@@ -28,6 +28,7 @@ import egovframework.ezEKP.ezSurvey.service.EzSurveyService;
 import egovframework.ezEKP.ezSurvey.vo.SurveyItemSearchVO;
 import egovframework.ezEKP.ezSurvey.vo.RespondentVO;
 import egovframework.ezEKP.ezSurvey.vo.SurveyVO;
+import egovframework.let.utl.fcc.service.EzFAL;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.hssf.util.HSSFColor;
@@ -356,7 +357,7 @@ public class EzSurveyController extends EzFileMngUtil {
 		}
 		
 		String defaultFontFamily = egovMessageSource.getMessage("main.t246", user.getLocale());
-		String defaultFontSize = "13px";		
+		String defaultFontSize = "13px";
 		String adminYN = commonUtil.isAdmin(user.getId(), user.getTenantId(), user.getRollInfo(), "c;l;k") ? "Y" : "N";
 		
 		model.addAttribute("user", user.getId());
@@ -1060,8 +1061,8 @@ public class EzSurveyController extends EzFileMngUtil {
 					row.createCell(1);
 					String realPath = request.getServletContext().getRealPath("");
 					realPath = commonUtil.detectPathTraversal(realPath);
-					File imageFile = new File(realPath + commonUtil.separator + imgTitle.getFpath());
-					try (ImageInputStream imageInputStream = ImageIO.createImageInputStream(imageFile);) {
+					EzFAL.EzFile imageFile = new EzFAL.EzFile(realPath + commonUtil.separator + imgTitle.getFpath());
+					try (ImageInputStream imageInputStream = ImageIO.createImageInputStream(imageFile.getFile())) {
 						Iterator<ImageReader> readers = ImageIO.getImageReaders(imageInputStream);
 						if (readers.hasNext()) {
 			                ImageReader reader = readers.next();
@@ -1074,7 +1075,7 @@ public class EzSurveyController extends EzFileMngUtil {
 					}
 					
 					byte[] bytes = null;
-			        try (FileInputStream fis = new FileInputStream(imageFile);
+			        try (EzFAL.EzFileInputStream fis = new EzFAL.EzFileInputStream(imageFile);
 			            ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
 			            byte[] buffer = new byte[1024];
 			            int bytesRead;
