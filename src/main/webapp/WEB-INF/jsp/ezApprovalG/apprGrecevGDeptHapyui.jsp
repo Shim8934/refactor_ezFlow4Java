@@ -1348,7 +1348,7 @@
 	                        <td style=" width:62%; border-right:1px solid #d5d5d5; overflow: auto;">
 	                            <div id="lstAttachLink" style="height:70px;"></div>
 	                        </td>
-	                        <td style=" width:30%;">
+	                        <td style=" width:30%; overflow:auto;">
 								<div id="lstAttachLinkDoc" style="height:70px;"></div>
 							</td>
 							<td class="pos2" style="width:8%; background:#fffcfa;">
