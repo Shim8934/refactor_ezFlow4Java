@@ -24,7 +24,7 @@ INSERT INTO nezportal.tbl_tenant_servername (`TENANT_ID`, `SERVER_NAME`) VALUES 
 
 INSERT INTO nezportal.TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (@tenant_id_value, 'dbSessionStoragePeriod', 'DB세션 보관 기간', '5', 'DB 세션 사용 시 tbl_session 테이블에 세션 보관 기간 day기준(default:1)', '2023-12-14 00:00:00', '로그인');
 INSERT INTO nezportal.TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (@tenant_id_value, 'checkPasswordNumber', '3자리 이상의 연속숫자, 같은숫자, 생일, 전화번호 방지', 'YES', '패스워드 설정 시 3자리 이상의 연속숫자, 같은숫자, 생일, 전화번호 방지 사용여부 (default:YES)', '2023-06-09 00:00:00', '로그인');
-INSERT INTO nezportal.TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (@tenant_id_value, 'useOTP', 'OTP 사용여부', 'NO', 'TFA 2중인증 OTP 사용여부 (default:NO)', '2023-03-30 00:00:00', '로그인');
+INSERT INTO nezportal.TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (@tenant_id_value, 'useOTP', 'OTP 사용여부', 'YES', 'TFA 2중인증 OTP 사용여부 (default:NO)', '2023-03-30 00:00:00', '로그인');
 INSERT INTO nezportal.TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (@tenant_id_value, 'MaxMessageSize', '메일최대크기', '65536', '메일최대크기 (default:65536)', '2017-01-06 00:00:00', '메일');
 INSERT INTO nezportal.TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (@tenant_id_value, 'useZipCodeSearchInApr', '전자결재 민원인주소 검색 사용여부', 'NO', '전자결재>결재정보에서 민원인주소를 입력 시 주소정보 검색을 사용한다.(민원인주소 버튼: 결재정보>수신자>민원인주소입력 버튼, 전자결재G에서 재기안이 아닐 때 버튼 활성화)YES: 이름+우편번호검색+상세주소 입력NO: 이름 입력 (default: NO)', '2017-01-06 00:00:00', '전자결재G');
 INSERT INTO nezportal.TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (@tenant_id_value, 'useZipCodeSearch', '우편번호 검색 사용여부', 'YES', '사용자 정보 관리, 주소록에서 우편번호 검색을 사용한다. (우편번호 검색 버튼 활성화)YES: 사용NO: 사용안함 (default: YES)', '2017-01-06 00:00:00', '일반');
@@ -36,7 +36,7 @@ INSERT INTO nezportal.TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, 
 INSERT INTO nezportal.TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (@tenant_id_value, 'UserInfo_Enforce', '시행문 변환 정의', '3', '* 2024-04-16 기준 분석 결과 : 소스코드 상에서 전체 주석처리되거나 테넌트 컨피그 파라미터를 아예 전달하지 않는 등 정상적으로 사용되지 않는 값으로 확인, 차후 수정 가능성이 있어 테넌트 컨피그 레코드는 유지함. * 기존 테넌트 컨피그 설명 : 1: 단순 변환 후 인쇄2: 시행문 변환 후 심사용3: 시행문 변환 후 바로 발송용(*추후개발) (default: 3)', '2017-01-06 00:00:00', '전자결재');
 INSERT INTO nezportal.TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (@tenant_id_value, 'UserInfo_ApprovalG_VIEW', '문서 열람 권한 정의', 'YYY', '문서 열람 권한을 정의한다. 권한을 체크 할 경우 Y로 권한을 체크하지 않을 경우 N으로 각 자리를 채운다. 비공개 문서인 경우, 이곳에 속하면 열람 가능. 속하지 않으면, 2번, 3번을 추가로 체크. 부분공개 문서인 경우, 이곳에 속하면 열람 가능. 속하지 않으면, 2번, 3번을 추가로 체크.공개 문서인 경우, 2번 3번을 추가로 체크.첫번째자리 Y/N: 공개/부분공개/비공개 권한 체크두번째자리 Y/N: 보안등급 권한 체크세번째자리 Y/N: 열람권한 체크 (default: YYY)', '2017-01-06 00:00:00', '전자결재');
 INSERT INTO nezportal.TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (@tenant_id_value, 'useReSend', '메일 재작성 사용여부', 'YES', '보낸 메일의 재작성 기능을 사용한다.YES: 사용NO: 사용안함메일>보낸편지함메일>보낸편지함>메일읽기 (default: YES)', '2017-01-06 00:00:00', '메일');
-INSERT INTO nezportal.TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (@tenant_id_value, 'useReform', '전자결재 폼빌더 양식 작성 가능 여부', 'NO', '전자결재 양식 추가 시에 폼빌더 작성기를 활성화할 수 있는지에 대한 여부를 설정한다. 이미 폼빌더 양식으로 추가 됐다면 옵션을 비활성화해도 폼빌더 양식으로서 동작한다. (default : NO)', '2017-01-06 00:00:00', '전자결재');
+INSERT INTO nezportal.TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (@tenant_id_value, 'useReform', '전자결재 폼빌더 양식 작성 가능 여부', 'YES', '전자결재 양식 추가 시에 폼빌더 작성기를 활성화할 수 있는지에 대한 여부를 설정한다. 이미 폼빌더 양식으로 추가 됐다면 옵션을 비활성화해도 폼빌더 양식으로서 동작한다. (default : NO)', '2017-01-06 00:00:00', '전자결재');
 INSERT INTO nezportal.TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (@tenant_id_value, 'useReceiveInfoName', '수신부서 표기 타입', '0', '수신부서 지정 시 부서 이름 끝에 "장"을 붙인다.0: 부서이름만 표기1: 부서이름+장으로 표기 2: 상위부서(부서이름+장)으로 표기  (default: 0)', '2017-01-06 00:00:00', '전자결재');
 INSERT INTO nezportal.TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (@tenant_id_value, 'useReceiveDocNo', '접수 시 채번방식 설정', 'NO', '결재문서 접수 시 채번 붙이는 때를 설정한다. (전자결재G)YES: 접수/편철/전결 시 채번NO: 최종결재/편철/전결 시 채번 (default: NO)', '2017-01-06 00:00:00', '전자결재G');
 INSERT INTO nezportal.TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (@tenant_id_value, 'useReceiptExternal', '외부메일 수신확인 지원여부', 'YES', '외부메일 수신확인을 지원한다.YES: 지원NO: 지원안함 (default: NO)', '2017-01-06 00:00:00', '메일');
@@ -93,7 +93,7 @@ INSERT INTO nezportal.TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, 
 INSERT INTO nezportal.TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (@tenant_id_value, 'USE_OCS', 'MS OCS 사용여부', 'NO', 'ms ocs 2007 사용여부YES: 사용NO: 사용안함 (default: NO)', '2017-01-06 00:00:00', '연동');
 INSERT INTO nezportal.TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (@tenant_id_value, 'Use_MultiData', '멀티언어 사용여부', 'YES', 'YES: 사용NO: 사용안함 (default: YES)     * 2024-05-22(해당 컨피그를 확인한 시점) 기준으로 게시판 모듈에서만 사용중인 것으로 확인됨', '2017-01-06 00:00:00', '게시판');
 INSERT INTO nezportal.TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (@tenant_id_value, 'USE_JOURNAL', '업무일지 모듈 사용여부', 'NO', 'YES: 사용NO: 사용안함 (default: NO)', '2017-01-06 00:00:00', '기타모듈');
-INSERT INTO nezportal.TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (@tenant_id_value, 'USE_HTTPS', 'HTTPS 사용여부', 'NO', 'YES: 사용NO: 사용안함 (default: NO)', '2017-01-06 00:00:00', '메일');
+INSERT INTO nezportal.TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (@tenant_id_value, 'USE_HTTPS', 'HTTPS 사용여부', 'YES', 'YES: 사용NO: 사용안함 (default: NO)', '2017-01-06 00:00:00', '메일');
 INSERT INTO nezportal.TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (@tenant_id_value, 'USE_HTMLMODE', '에디터 HTML 모드 사용여부', 'YES', '에디터의 HTML 모드를 사용한다. 관리자 화면에서는 설정에 관계없이 무조건 사용한다.YES: 사용NO: 사용안함 (default: YES)', '2017-01-06 00:00:00', '일반');
 INSERT INTO nezportal.TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (@tenant_id_value, 'Use_FromAddress', '발신인 주소 선택 사용여부', 'NO', '발신인이 멀티 메일 도메인을 가지고 있을 때 메일쓰기에서 보내는 사람의 메일 주소 선택이 가능하다.YES: 사용NO: 사용안함 (default: NO)', '2017-01-06 00:00:00', '메일');
 INSERT INTO nezportal.TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (@tenant_id_value, 'USE_FileExtension', '첨부파일 확장자명 제한', '7z,alz,avi,bmp,csv,cur,doc,docx,eml,gif,hwp,hwpx,hwt,jpeg,jpg,log,mht,mov,mp4,odt,pdf,png,ppt,pptx,rar,tif,txt,wmv,xls,xlsx,zip', '업로드 가능한 첨부파일의 확장자명을 설정한다. ex) exe|jpg*: 제한하지 않음 (모든 확장자 허용) (default: *)', '2017-01-06 00:00:00', '일반');
@@ -144,7 +144,7 @@ INSERT INTO nezportal.TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, 
 INSERT INTO nezportal.TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (@tenant_id_value, 'ezOffice365ClientSecret', 'Office365 Client Secret Key', '', 'Office365 Client Secret Key', '2017-01-06 00:00:00', '연동');
 INSERT INTO nezportal.TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (@tenant_id_value, 'ezOffice365ClientId', 'Office365 Client Id', '', 'Office365 Client Id', '2017-01-06 00:00:00', '연동');
 INSERT INTO nezportal.TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (@tenant_id_value, 'ezOffice365Auth', 'Office365와의 인증 연동여부', 'NO', 'YES: 연동NO: 연동안함 (default: NO)', '2017-01-06 00:00:00', '연동');
-INSERT INTO nezportal.TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (@tenant_id_value, 'editorFontStyle', '에디터 기본 폰트 스타일', '굴림|10pt', '에디터에서 기본으로 설정되는 폰트 스타일을 설정한다. 수직바(|)로 글꼴과 크기를 구분하며, 사용자 언어(lang)가 한글일 경우에만 적용된다. (default: 굴림|13px)', '2017-01-06 00:00:00', '일반');
+INSERT INTO nezportal.TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (@tenant_id_value, 'editorFontStyle', '에디터 기본 폰트 스타일', '맑은 고딕|10pt', '에디터에서 기본으로 설정되는 폰트 스타일을 설정한다. 수직바(|)로 글꼴과 크기를 구분하며, 사용자 언어(lang)가 한글일 경우에만 적용된다. (default: 굴림|13px)', '2017-01-06 00:00:00', '일반');
 INSERT INTO nezportal.TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (@tenant_id_value, 'EDITOR', '에디터 타입', 'KUKUDOCS', 'CK, NAMO, TAGFREE, FORM, POLARIS, DEXT, KUKUDOCS 중 사용할 에디터를 설정한다. (default: KUKUDOCS)', '2017-01-06 00:00:00', '일반');
 INSERT INTO nezportal.TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (@tenant_id_value, 'draftJunGyulFlag', '전자결재 사인칸 전결자 표시', '1', '전자결재 기안 시 사인칸에 전결자 텍스트를 표시한다.1: 사용0: 사용안함 (default: 1)', '2017-01-06 00:00:00', '전자결재');
 INSERT INTO nezportal.TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (@tenant_id_value, 'dotNetUrl', '닷넷 모듈 URL', '', '', '2017-01-06 00:00:00', '연동');
@@ -354,7 +354,7 @@ INSERT INTO nezportal.TBL_COMPANY_CONFIG (TENANT_ID, COMPANY_ID, PROPERTY_NAME, 
 
 INSERT INTO nezportal.TBL_COMPANY_CONFIG (TENANT_ID, COMPANY_ID, PROPERTY_NAME, PROPERTY_VALUE) VALUES (@tenant_id_value, 'Top', 'useFidoSession', 'NO');
 
---2024.07.22 양지혜 - 관리자 > 대외발송현황 메뉴 표출여부
+-- 2024.07.22 양지혜 - 관리자 > 대외발송현황 메뉴 표출여부
 INSERT INTO nezportal.TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE) VALUES(@tenant_id_value, 'useSendOutState', 'NO', '관리자페이지 대외발송현황 메뉴 표출여부 YES: 사용 NO: 사용안함 (default:NO)', '발송현황 메뉴 표출여부', '2024-07-22 00:00:00', '전자결재');
 
 -- Board insert 
@@ -512,7 +512,7 @@ INSERT INTO   nezapprovalg.TBL_CONTAINERTODOCSTATE  (ContainerTypeID,  DocumentS
 INSERT INTO   nezapprovalg.TBL_CONTAINERTODOCSTATE  (ContainerTypeID,  DocumentState, COMPANYID, TENANT_ID) VALUES (N'700', N'031','Top',@tenant_id_value);
 INSERT INTO   nezapprovalg.TBL_CONTAINERTODOCSTATE  (ContainerTypeID,  DocumentState, COMPANYID, TENANT_ID) VALUES (N'700', N'032','Top',@tenant_id_value);
 
-------------------------------------------
+-- -- ---------------------------------------
 -- TENANT_ID 추가시 TENANT_ID 수정해서 INSERT
 -- -- ---------------------------------------
 
@@ -6902,20 +6902,17 @@ INSERT INTO nezportal.TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, PROPERTY_VALU
 
 INSERT INTO nezportal.TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE) VALUES (@tenant_id_value, 'usePortletSize', 'Y', 'Y: 사용 N: 사용안함 (default: Y)', '포탈 포틀릿 커스텀 사이즈 사용 여부', '2023-11-20 00:00:00', '포탈');
 
-INSERT INTO nezportal.TBL_PORTAL_PORTLET_SIZE (SIZE_ID, CLASS_SIZE) VALUES (0, 'one_by_one');
-INSERT INTO nezportal.TBL_PORTAL_PORTLET_SIZE (SIZE_ID, CLASS_SIZE) VALUES (1, 'two_by_one');
-INSERT INTO nezportal.TBL_PORTAL_PORTLET_SIZE (SIZE_ID, CLASS_SIZE) VALUES (2, 'one_by_two');
 INSERT INTO nezportal.TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES(@tenant_id_value, 'notiStoragePeriod', '통합알림 데이터 보관 기간', '10', '통합알림 데이터 보관 기간(default: 10)(일)', '2024-04-25 00:00:00', '통합알림');
 INSERT INTO nezportal.TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES(@tenant_id_value, 'notiPollingInterval', '통합알림 데이터 새로고침 주기', '60000', '통합알림 데이터 새로고침 주기 설정(단위는 밀리초)', '2024-04-25 00:00:00', '통합알림');
---2023.09.11 - 한태훈 - 일정관리 > 미리알림 방식(닷넷 통합 알림, 자바 메일) 선택 테넌트 컨피그 추가
+-- 2023.09.11 - 한태훈 - 일정관리 > 미리알림 방식(닷넷 통합 알림, 자바 메일) 선택 테넌트 컨피그 추가
 INSERT INTO nezportal.TBL_TENANT_CONFIG(TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
 VALUES(@tenant_id_value, 'useDotNetNoticeForReminder', 'NO', 'YES : 미리알림 기능 이용시 닷넷 통합알림 기능 사용, NO : 미리알림 기능 이용시 자바 메일 기능 사용(DEFAULT : NO); 닷넷 통합 알림 이용시 config.properties에 닷넷 통합알림 DB 접속 정보 기입', '미리알림 시 닷넷 알림 사용 여부', '2023-09-11 00:00:00.000', '일정관리');
 
---2023.09.11 - 한태훈 - 일정관리 > 미리알림 시 하루종일 일정의 시작 시각
+-- 2023.09.11 - 한태훈 - 일정관리 > 미리알림 시 하루종일 일정의 시작 시각
 INSERT INTO nezportal.TBL_TENANT_CONFIG(TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
 VALUES(@tenant_id_value, 'allDaySTimeForReminder', '09:00', 'HH24:MM 형식으로 미리알림 시 하루종일 일정의 시작 시각 설정가능(MM은 00 또는 30만 가능)', '미리알림 시 하루종일 일정의 시작 시각 세팅', '2023-09-15 00:00:00.000', '일정관리');
 
---2025.05.23 - 이혜림 - 게시판 > 공지사항 등록기간
+-- 2025.05.23 - 이혜림 - 게시판 > 공지사항 등록기간
 INSERT INTO nezportal.TBL_TENANT_CONFIG(TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
 VALUES(@tenant_id_value, 'boardNoticePeriod', '30', '게시판 공지사항의 기간 설정(일단위) (default: 30)', '게시판 공지사항 기간 설정', '2025-05-23 00:00:00.000', '게시판');
 
@@ -7224,6 +7221,10 @@ INSERT INTO nezportal.TBL_PORTAL_FRAME (frame_id, frame_name, theme_id) VALUES (
 INSERT INTO nezportal.TBL_PORTAL_FRAME (frame_id, frame_name, theme_id) VALUES (8, 'Frame2', 3);
 -- 모바일 프레임
 INSERT INTO nezportal.TBL_PORTAL_FRAME (frame_id, frame_name, theme_id) VALUES (9, 'Frame1', 4);
+
+INSERT INTO nezportal.TBL_PORTAL_PORTLET_SIZE (SIZE_ID, CLASS_SIZE) VALUES (0, 'one_by_one');
+INSERT INTO nezportal.TBL_PORTAL_PORTLET_SIZE (SIZE_ID, CLASS_SIZE) VALUES (1, 'two_by_one');
+INSERT INTO nezportal.TBL_PORTAL_PORTLET_SIZE (SIZE_ID, CLASS_SIZE) VALUES (2, 'one_by_two');
 
 INSERT INTO nezportal.TBL_PORTAL_PORTLET (portlet_id, menu_id, portlet_url, portlet_type, default_order, portletcode) VALUES (15, 4, '/ezNewPortal/getCustomBoardInfo.do', 'G', -2, 'fixLeft');
 INSERT INTO nezportal.TBL_PORTAL_PORTLET (portlet_id, menu_id, portlet_url, portlet_type, default_order, portletcode) VALUES (16, 4, '/ezNewPortal/getCustomBoardInfo.do', 'G', -1, 'fixRight');
