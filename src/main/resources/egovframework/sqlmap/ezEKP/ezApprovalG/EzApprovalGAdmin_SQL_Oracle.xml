@@ -4730,7 +4730,12 @@
 		        THEN C.DISPLAYNAME
 		        END AS ownerName,
 			A.OWNER_TYPE as ownerType,
-			B.PHYSICALDELIVERYOFFICENAME  as ownerCompanyId
+            CASE
+                WHEN A.OWNER_TYPE = 'U'
+                THEN B.PHYSICALDELIVERYOFFICENAME
+                WHEN A.OWNER_TYPE = 'D'
+                THEN C.EXTENSIONATTRIBUTE2
+            END AS ownerCompanyId
 		FROM
 			TBL_SHARE_DOC_DIR A
 		LEFT JOIN
