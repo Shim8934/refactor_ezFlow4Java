@@ -2775,6 +2775,15 @@
                     alert("ezdraftuiAll.setKeepPeriod()  ::  " + e);
                 }
             }
+			
+			// 안체크하여 존재하는 안이 있을때만 실행함
+			function btnSummaryEdit_before() {
+				if (!btnChk()) {
+					return false;
+				} else {
+					btnSummaryEdit()
+				}
+			}
 	    </script>
 	</head>
 	<body class="popup" style="overflow:hidden;">
@@ -2785,7 +2794,7 @@
 						<%-- 2022-06-30 홍승비 - 전자결재 미리보기 영역에서 문서보기 페이지 접근 시, 모든 버튼을 ul 태그부터 숨김처리 --%>
 				        <ul <c:if test="${isPreview == 'Y'}">style="display:none"</c:if>>
 							<li id="btntotaldocinfo"><span onclick="return btnApprovalInfo()"><spring:message code='ezApprovalG.t1742'/></span></li>
-							<li id="btnSummary"><span onclick="return btnSummaryEdit()"><spring:message code='ezApprovalG.t1203'/></span></li> <%-- 요약전 --%>
+							<li id="btnSummary"><span onclick="return btnSummaryEdit_before()"><spring:message code='ezApprovalG.t1203'/></span></li> <%-- 요약전 --%>
 	                        <li id="btnSendDraft"><span onclick="return btnSendDraft_onclick()"><spring:message code='ezApprovalG.t156'/></span></li>
 	                        <li id="btnOpinion"><span onclick="return btnOpinion_onclick()"><spring:message code='ezApprovalG.t55'/></span></li>
 	                        <li id="btnFileAttach"><span onclick="return btnFileAttach_onclick()"><spring:message code='ezApprovalG.t56'/></span></li>
