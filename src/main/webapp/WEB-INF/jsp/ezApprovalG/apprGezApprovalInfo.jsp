@@ -3787,6 +3787,7 @@
                                             <input type="checkbox" name="openListFlag" id="openListFlag" value="checkbox" onClick="openListFlag_onClick(this)">
                                             <label for="openListFlag"><span style="margin-left:-5px;">목록공개</span></label>
 									    </div>
+									</span>
 								</div>
 		                    </div>
 		                </td>
