@@ -2688,6 +2688,7 @@ public class EzScheduleController extends EzFileMngUtil {
 				ezScheduleService.updateScheduleEndDate(beforeSche.getScheduleId(), commonUtil.getDateStringInUTC(beforeSche.getEndDate(), loginVO.getOffset(), true), beforeSche.getCompanyid(), loginVO.getTenantId());
 				result = ezScheduleService.insertSchedule(beforeSche.getOwnerId(), beforeSche.getOwnerName(), beforeSche.getOwnerName2(), creatorid, creatorname, creatorname2, scheduletype, importance, ispublic, datetype, startdate, enddate, repetition, title, location, content, attach, 
         			attendantId, attendantName, attendantName2, attendantDeptName, attendantDeptName2, defaultPath, loginVO.getTenantId(), loginVO.getCompanyID(), showtop, loginVO.getOffset(), loginVO.getLang());
+				repeatCount = "1";
 			} else if ("3".equals(modType)) {
 				defaultPath = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_schedule.ROOT", loginVO.getTenantId());
 				result = ezScheduleService.insertSchedule(beforeSche.getOwnerId(), beforeSche.getOwnerName(), beforeSche.getOwnerName2(), creatorid, creatorname, creatorname2, scheduletype, importance, ispublic, datetype, startdate, enddate, repetition, title, location, content, attach, 
