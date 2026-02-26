@@ -534,8 +534,11 @@
 	        function quick_add() {
 	        	var pQname = document.getElementById("qname").value.trim();
 	            var pQemail = document.getElementById("qemail").value.trim();
+                var qComPhone = document.getElementById("qcomphone").value;
+                var qMobile = document.getElementById("qmobile").value;
 	            var regex = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
-	            
+                var regex2 = /^[0-9+\- ]+$/;
+
                 if (pQname == "") {
                 	document.getElementById("qname").focus();
 	                alert("<spring:message code='ezAddress.t220' />");
@@ -563,7 +566,19 @@
 	                    return;
 	                }
 	            }
-	            
+
+                if (qComPhone != "" && !regex2.test(qComPhone)) {
+                    alert("<spring:message code='ezOrgan.ls009' />");
+                    document.getElementById("qcomphone").focus();
+                    return;
+                }
+
+                if (qMobile != "" && !regex2.test(qMobile)) {
+                    alert("<spring:message code='ezOrgan.ls009' />");
+                    document.getElementById("qmobile").focus();
+                    return;
+                }
+
 	            var xmlHTTP = createXMLHttpRequest();
 	            var xmlDom = createXmlDom();
 				
