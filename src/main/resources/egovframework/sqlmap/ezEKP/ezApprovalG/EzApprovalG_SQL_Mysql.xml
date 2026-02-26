@@ -30802,6 +30802,7 @@
 				COMPANYID = #v_COMPANYID#
 			AND
 				TENANT_ID = #v_TENANTID#) B
+        GROUP BY B.DOCID
 	</select>
 	
 	<select id="EzApprovalG.getReceiptPointNameList" parameterClass="Map" resultClass="String">
