@@ -2676,6 +2676,8 @@ function showAlert(msg, callback) {
         alert(msg);
         if (typeof callback == "function") {
             callback();
+        } else if (typeof callback == "string") {
+            window.close();
         }
     }
 }
