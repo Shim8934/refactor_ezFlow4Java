@@ -63,7 +63,7 @@ public class EzScheduleScheduler {
 		logger.debug("checkGoogleToken started");
 		
 		//choose scheduler running server
-		if (!ezEmailScheduler.preScheduler("checkGoogleToken")) {
+		if (!ezEmailScheduler.preScheduler("ezcommon_checkGoogleToken")) {
 			logger.debug("checkGoogleToken scheduler ended.");
 			return;
 		}
@@ -79,7 +79,7 @@ public class EzScheduleScheduler {
 		
 		String nowTimeStr = commonUtil.getTodayUTCTime("yyyy-MM-dd HH:mm");
 		
-		if (!ezEmailScheduler.preScheduler("checkReminder")) { 
+		if (!ezEmailScheduler.preScheduler("ezcommon_checkReminder")) { 
 			logger.debug("checkReminder ended."); 
 			return; 
 		}

@@ -939,8 +939,8 @@ public class EzNewPortalGWController {
 			int tenantId = info.getTenantId();
 			String langType = info.getLang();
 			String logoType = "P";
-			String deptId = request.getParameter("deptId");
-			String jobId = request.getParameter("jobId");
+			String deptId = request.getParameter("deptId") != null ? request.getParameter("deptId") : info.getDeptId();
+			String jobId = request.getParameter("jobId") != null ? request.getParameter("jobId") : info.getJobId();
 			JSONObject data = new JSONObject();
 
 			/**
@@ -4607,6 +4607,7 @@ public class EzNewPortalGWController {
 			result.put("code", 0);
 			result.put("data", sList);
 		} catch (Exception e) {
+			logger.debug(e.getMessage(), e);
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");

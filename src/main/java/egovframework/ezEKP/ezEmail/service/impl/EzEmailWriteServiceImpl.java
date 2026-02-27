@@ -35,6 +35,7 @@ import javax.mail.internet.MimeUtility;
 import javax.servlet.http.HttpServletRequest;
 
 import egovframework.ezEKP.ezPoll.service.EzPollService;
+import egovframework.let.utl.fcc.service.*;
 import org.apache.commons.lang3.StringUtils;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.egovframe.rte.fdl.cmmn.EgovAbstractServiceImpl;
@@ -65,10 +66,6 @@ import egovframework.ezEKP.ezPoll.vo.PollEmailSimpleUser;
 import egovframework.ezEKP.ezPoll.vo.PollUserAnswerVO;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
-import egovframework.let.utl.fcc.service.ClientUtil;
-import egovframework.let.utl.fcc.service.CommonUtil;
-import egovframework.let.utl.fcc.service.EgovDateUtil;
-import egovframework.let.utl.fcc.service.EgovStringUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 
 /**
@@ -149,7 +146,7 @@ public class EzEmailWriteServiceImpl extends EgovAbstractServiceImpl implements 
         String realPath = commonUtil.getRealPath(request);
         String pDirPath = commonUtil.getUploadPath("upload_mail.RESERVED_MAIL_PATH", loginInfo.getTenantId());
         pDirPath = realPath + commonUtil.separator + pDirPath;
-        File emlFile = new File(pDirPath + commonUtil.separator + messageId + ".eml");
+        EzFAL.EzFile emlFile = new EzFAL.EzFile(pDirPath + commonUtil.separator + messageId + ".eml");
 
         if (!emlFile.exists()) { //eml파일이 저장소에 없는 경우
             return "ezEmail.lhm06";
@@ -236,7 +233,7 @@ public class EzEmailWriteServiceImpl extends EgovAbstractServiceImpl implements 
     public void loadFromOrigin(MailWriteProcessVO writevo, LoginVO loginInfo, String userAccount, String password, Locale locale, String orgAccount) {
         MailWriteMessageVO messagevo = writevo.getMailWriteMessageVO();
         WriteType writetype = writevo.getWriteType();
-        File emlFile = writevo.getEmlFile();
+        EzFAL.EzFile emlFile = writevo.getEmlFile();
 
         Map<String, Object> extraMap = writevo.getExtraMap();
         String folderPath = writevo.getFolderPath();
@@ -401,7 +398,7 @@ public class EzEmailWriteServiceImpl extends EgovAbstractServiceImpl implements 
         }
     }
 
-    private Message getMessageToSave(WriteType writetype, Message orgMessage, String userAccount, String password, File emlFile) throws Exception {
+    private Message getMessageToSave(WriteType writetype, Message orgMessage, String userAccount, String password, EzFAL.EzFile emlFile) throws Exception {
         Message messageToSave = null;
 
         // isReply, FORWARD
@@ -432,11 +429,8 @@ public class EzEmailWriteServiceImpl extends EgovAbstractServiceImpl implements 
 
             // RESERVE
             if (writetype.isReserve()) {
-                /*
-                 * try-with-resources (권장)
-                 * try-with-resources를 사용하면 IOException이 발생하더라도 fis.close();가 자동으로 실행됩니다.
-                 */
-                try (FileInputStream fis = new FileInputStream(emlFile)) { // try-with-resources
+
+                try (EzFAL.EzFileInputStream fis = new EzFAL.EzFileInputStream(emlFile)) {
                     messageToSave = sa.readMimeMessage(fis); // MimeMessage
                 }
             }

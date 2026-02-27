@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.HashMap;
 
 import egovframework.ezEKP.ezEmail.type.WriteType;
+import egovframework.let.utl.fcc.service.EzFAL;
 
 public class MailWriteProcessVO {
 	/**
@@ -54,7 +55,7 @@ public class MailWriteProcessVO {
 	private String mailId;
 	private String reciverName; // for RESEND_IN_SENT
 	private HashMap<String, Object> extraMap = new HashMap<>(); // shareId
-	private File emlFile; // for RESERVE
+	private EzFAL.EzFile emlFile; // for RESERVE
 
 	// vo
 	public void setMailWriteMessageVO(MailWriteMessageVO mailWriteMessageVO) {
@@ -307,13 +308,13 @@ public class MailWriteProcessVO {
 	public HashMap<String, Object> getExtraMap() {
 		return extraMap;
 	}
-	public void setEmlFile(File emlFile) {
+	public void setEmlFile(EzFAL.EzFile emlFile) {
 		this.emlFile = emlFile;
 	}
-	public File getEmlFile() {
+	public EzFAL.EzFile getEmlFile() {
 		return emlFile;
 	}
-	public void setReservation(String messageId, String delaySendDate, File emlFile) {
+	public void setReservation(String messageId, String delaySendDate, EzFAL.EzFile emlFile) {
 		mailWriteMessageVO.setCdoMessageID(messageId);
 		mailWriteMessageVO.setDelaySendDate(delaySendDate);
 		setEmlFile(emlFile);

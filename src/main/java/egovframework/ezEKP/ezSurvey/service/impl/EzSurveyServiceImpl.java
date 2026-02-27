@@ -26,6 +26,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import egovframework.ezEKP.ezSurvey.vo.ResultViewPermissionVO;
+import egovframework.let.utl.fcc.service.EzFAL;
 import org.apache.commons.io.FileUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -297,7 +298,7 @@ public class EzSurveyServiceImpl extends EzFileMngUtil implements EzSurveyServic
 		String surveyPath  = getSurveyDirPath(tenantId);
 		String pDirPath    = realPath + surveyPath;
 		
-		File file = new File(pDirPath);
+		EzFAL.EzFile file = new EzFAL.EzFile(pDirPath);
 		
 		if (!file.exists() && !file.mkdirs()) {
 			logger.debug("Can not create file!");
@@ -315,7 +316,7 @@ public class EzSurveyServiceImpl extends EzFileMngUtil implements EzSurveyServic
 	@Override
 	public void deleteAttachFile(String filePath, String realPath, int tenantId) throws Exception {
 		String pDirPath = realPath + commonUtil.detectPathTraversal(filePath);
-		File file       = new File(pDirPath);
+		EzFAL.EzFile file       = new EzFAL.EzFile(pDirPath);
 		
 		if (file.exists()) {
 			try {
@@ -331,7 +332,7 @@ public class EzSurveyServiceImpl extends EzFileMngUtil implements EzSurveyServic
 	public void getDownloadedFile(String fileName, String filePath, String realPath, String userAgent, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		String _fileName = fileName;
 		_fileName        = CommonUtil.getEncodedFileNameForDownload(userAgent, _fileName);
-		File file        = new File(realPath + commonUtil.detectPathTraversal(filePath));
+		EzFAL.EzFile file        = new EzFAL.EzFile(realPath + commonUtil.detectPathTraversal(filePath));
 		
 		if (!file.exists()) {
 			throw new FileNotFoundException(fileName);
@@ -344,7 +345,7 @@ public class EzSurveyServiceImpl extends EzFileMngUtil implements EzSurveyServic
 		BufferedInputStream in = null;
 		
 		try {
-			in              = new BufferedInputStream(new FileInputStream(file));
+			in              = new BufferedInputStream(new EzFAL.EzFileInputStream(file));
 			String mimetype = "application/octet-stream";
 			
 			response.setBufferSize(BUFF_SIZE);
@@ -773,7 +774,7 @@ public class EzSurveyServiceImpl extends EzFileMngUtil implements EzSurveyServic
 		}
 		else {
 			String filePath = commonUtil.detectPathTraversal(attachObj.get("fpath").toString());
-			File attFile    = new File(realPath + filePath);
+			EzFAL.EzFile attFile    = new EzFAL.EzFile(realPath + filePath);
 			long fileSize   = attFile.length();
 			attach.setFpath(filePath);
 			attach.setFileSize(fileSize);

@@ -24,6 +24,7 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
 
+import egovframework.let.utl.fcc.service.EzFAL;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.logging.log4j.util.Strings;
@@ -1402,7 +1403,7 @@ public class EzResourceController extends EzFileMngUtil {
 	/**
 	 * 자원관리 자원 일정 상세정보 화면 호출 함수
 	 */
-	@RequestMapping(value = {"/ezResource/scheduleRead.do", "/ezResource/persPortletRead.do"}, method = RequestMethod.GET)
+	@RequestMapping(value = "/ezResource/scheduleRead.do", method = RequestMethod.GET)
 	public String scheduleRead(@CookieValue("loginCookie") String loginCookie, HttpServletRequest req, Model model, Locale locale) throws Exception {
 		logger.debug("scheduleRead Start");
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -1520,7 +1521,7 @@ public class EzResourceController extends EzFileMngUtil {
 				ownerNm = xmlDom2.getElementsByTagName("DISPLAYNAME" + userInfo.getPrimary()).item(0).getTextContent();
 			}*/
 			
-			title = getSchedule.getTitle();
+			title = getSchedule.getTitle().replaceAll("\"", "&#034;").replaceAll("\\\\", "&#092;");
 			loc = getSchedule.getLocation();
 			
 			startDateTime = commonUtil.getDateStringInUTC(getSchedule.getStartDate(), userInfo.getOffset(), false);
@@ -1636,18 +1637,13 @@ public class EzResourceController extends EzFileMngUtil {
 		model.addAttribute("useCabinet", use_cabinet); // 캐비넷 추가 baonk 2018-08-08
 		model.addAttribute("deptID", deptID);
 		
-		String requestURL = (String) req.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE);
-		//뷰만 다르고 cs가 같은 경우여서 requestURL 사용해서 다이나믹뷰
-		requestURL = requestURL.substring(1, requestURL.length() - 3);
-		
-		if(requestURL.contains("persPortletRead"))	return "/ezResource/resPortletRead";
 		return "/ezResource/resScheduleRead";
 	}
 	
 	/**
 	 * 자원관리 자원 예약 화면 호출 함수
 	 */
-	@RequestMapping(value = {"/ezResource/scheduleAdd.do", "/ezResource/persPortletAdd.do" }, method = RequestMethod.GET)
+	@RequestMapping(value = "/ezResource/scheduleAdd.do", method = RequestMethod.GET)
 	public String scheduleAdd(@CookieValue("loginCookie") String loginCookie, HttpServletRequest req, Model model, Locale locale) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String editor = config.getProperty("EDITOR");
@@ -1927,11 +1923,6 @@ public class EzResourceController extends EzFileMngUtil {
 			model.addAttribute("repeatCount", repeatCount);
 		}
 		
-		String requestURL = (String) req.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE);
-		//뷰만 다르고 cs가 같은 경우여서 requestURL 사용해서 다이나믹뷰
-		requestURL = requestURL.substring(1, requestURL.length() - 3);
-		
-		if(requestURL.contains("persPortletAdd"))	return "/ezResource/resPortletAdd";
 		return "/ezResource/resScheduleAdd";
 	}
 	
@@ -2983,8 +2974,8 @@ public class EzResourceController extends EzFileMngUtil {
         if (!pDirPath.substring(pDirPath.length() - 1).equals(commonUtil.separator)) {
         	pDirPath = pDirPath + commonUtil.separator;
         }
-        File file = new File(pDirPath + "uploadFile");
-        File tempFile = new File(pDirPath + "tempUploadFile");
+		EzFAL.EzFile file = new EzFAL.EzFile(pDirPath + "uploadFile");
+        EzFAL.EzFile tempFile = new EzFAL.EzFile(pDirPath + "tempUploadFile");
         
         logger.debug("pDirPath : " + pDirPath);
         
@@ -3005,10 +2996,10 @@ public class EzResourceController extends EzFileMngUtil {
         writeUploadedFile(multiFile, newFileName + pFileName, pDirPath + "tempUploadFile"); // 원본 파일을 업로드한 뒤, 아래 코드에서 이미지 형식으로 변환함
         
         /* 2021-10-26 홍승비 - 자원등록 시 TIF, TIFF 이미지 제대로 표출되지 않는 오류 수정 (PNG로 치환) */
-        File imageFile = new File(commonUtil.detectPathTraversal(pDirPath + "tempUploadFile" + commonUtil.separator + newFileName + pFileName));
+        EzFAL.EzFile imageFile = new EzFAL.EzFile(commonUtil.detectPathTraversal(pDirPath + "tempUploadFile" + commonUtil.separator + newFileName + pFileName));
         
 		if (imageFile.exists()) {
-			BufferedImage bi = ImageIO.read(imageFile);		
+			BufferedImage bi = ImageIO.read(new EzFAL.EzFileInputStream(imageFile));		
 			BufferedImage bufferedImage = null;
 			
 			if (extension.toUpperCase().equals("TIF") || extension.toUpperCase().equals("TIFF")) {
@@ -3094,7 +3085,7 @@ public class EzResourceController extends EzFileMngUtil {
 		
 		logger.debug("fileName : " + fileName + ", pDirPath : " + pDirPath);
 		
-		File file = new File(pDirPath + commonUtil.separator + fileName);
+		EzFAL.EzFile file = new EzFAL.EzFile(pDirPath + commonUtil.separator + fileName);
 		file.delete();
 
         logger.debug("tempUploadFileDelete ended");
@@ -3550,6 +3541,7 @@ public class EzResourceController extends EzFileMngUtil {
 		String resApprFlag = request.getParameter("resApprFlag"); // 해당 자원 예약 시 승인이 필요한지의 여부; 0: 허가필요X, 1:허가필요, 2:사용안함
 		
 		ResGetScheduleVO info  = ezResourceService.getSchedule(dragNum, dragOwnerId, companyId, tenantId, lang);
+		ResBrdVO resBrdInfo = ezResourceService.getBrd(Integer.valueOf(dragOwnerId), companyId, tenantId);
 		String infoStartTime = commonUtil.getDateStringInUTC(info.getStartDate(), offset, false).substring(10, 16);
 		String infoEndTime   = commonUtil.getDateStringInUTC(info.getEndDate(), offset, false).substring(10, 16);
 		
@@ -3558,6 +3550,13 @@ public class EzResourceController extends EzFileMngUtil {
 		if (!adminFlag.equals("Y") && !info.getWriterID().equals(loginVO.getId())) {
 			logger.debug("Not Permission");
 			returnValue = "1";
+			return returnValue;
+		}
+		
+		// 관리자에 의해 사용이 승인된 자원예약일정은 수정할 수 없음
+		if (info.getApproveFlag().equals("1") && resBrdInfo.getApproveFlag().equals("1")) {
+			returnValue = "4";
+			logger.debug("not allowed for an approved resource.");
 			return returnValue;
 		}
 

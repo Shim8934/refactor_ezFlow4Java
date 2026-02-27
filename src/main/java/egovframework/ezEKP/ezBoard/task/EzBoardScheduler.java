@@ -43,7 +43,7 @@ public class EzBoardScheduler {
 		logger.debug("boardGarbageClear started");
 		
 		//choose scheduler running server
-		if (!ezEmailScheduler.preScheduler("boardGarbageClear")) {
+		if (!ezEmailScheduler.preScheduler("ezboard_boardGarbageClear")) {
 			logger.debug("boardGarbageClear scheduler ended.");
 			return;
 		}
@@ -71,7 +71,7 @@ public class EzBoardScheduler {
 		logger.debug("boardNotiEndAlram started");
 
 		//choose scheduler running server
-		if (!ezEmailScheduler.preScheduler("boardNotiEndAlram")) {
+		if (!ezEmailScheduler.preScheduler("ezboard_boardNotiEndAlram")) {
 			logger.debug("boardNotiEndAlram scheduler ended.");
 			return;
 		}

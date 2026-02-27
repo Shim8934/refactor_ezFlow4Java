@@ -11,6 +11,7 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
 import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
+import egovframework.let.utl.fcc.service.EzFAL;
 import egovframework.ezEKP.ezEmail.vo.MailBigAttachVO;
 import egovframework.ezEKP.ezEmail.vo.MailboxProgressVO;
 import org.json.simple.JSONArray;
@@ -177,7 +178,7 @@ public interface EzEmailService {
 	public String setBigAttachCountInfo(ArrayList<Map<String,Object>> fileInfoArr, int limitCount, int tenantId, String userId) throws Exception;
 	public String checkBigAttachDownloadCount(String fileId, int tenantId) throws Exception;
 	public void updateBigAttachDownloadCount(String fileId, int tenantId) throws Exception;
-	public void deleteBigAttachCountInfo(File[] fileList, int tenantId) throws Exception;
+	public void deleteBigAttachCountInfo(EzFAL.EzFile[] fileList, int tenantId) throws Exception;
 	public void deleteBigAttachCountInfo(String[] fileIdArr, int tenantId) throws Exception;
 	public int deleteMailDeleteForUser(String pUserEmail) throws Exception;
 

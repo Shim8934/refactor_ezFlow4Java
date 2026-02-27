@@ -230,7 +230,7 @@
 				}
 				else if (checkedFilesLength > 1) { // 여러개는 zip으로 저장
 					filePath = decodeURIComponent(GetAttribute(checkedFiles.get(0), "filepath"));
-					filePath = filePath.substr(0, filePath.lastIndexOf("/") + 1);
+					filePath = filePath.substr(0, filePath.lastIndexOf("/"));
 					
 					for (var i = 0; i < checkedFilesLength; i++) {
 						filePathTemp = decodeURIComponent(GetAttribute(checkedFiles.get(i), "filepath")); // 각 파일의 풀경로

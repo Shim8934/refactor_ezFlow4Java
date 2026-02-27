@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezPersonal.web;
 
+import com.google.gson.JsonArray;
 import com.sun.org.apache.xml.internal.security.utils.Base64;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EzFileMngUtil;
@@ -25,9 +26,11 @@ import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
+import egovframework.let.utl.fcc.service.EzFAL;
 import egovframework.let.utl.rest.Result;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -1614,29 +1617,29 @@ public class EzPersonalController extends EzFileMngUtil {
 		fileName2 = userInfo.getId() + "." + fileExt; //바꿀파일명
 		filePath = commonUtil.getUploadPath("upload_personal.PHOTO", userInfo.getTenantId()) + commonUtil.separator + fileName;//임시파일경로
 		filePath2 = commonUtil.getUploadPath("upload_personal.PHOTO", userInfo.getTenantId()) + commonUtil.separator + fileName2;//바꿀파일경로
-		
-		File file = new File(commonUtil.detectPathTraversal(realPath + commonUtil.getUploadPath("upload_personal.PHOTOTEMP", userInfo.getTenantId()))); 
+
+		EzFAL.EzFile file = new EzFAL.EzFile(commonUtil.detectPathTraversal(realPath + commonUtil.getUploadPath("upload_personal.PHOTOTEMP", userInfo.getTenantId())));
 		
 		if (!file.exists()) {
 			file.mkdirs();
 		}
-		
-		File tempImageFile = new File(commonUtil.detectPathTraversal(realPath + filePath));
-		File newImageFile = new File(commonUtil.detectPathTraversal(realPath + filePath2));
+
+		EzFAL.EzFile tempImageFile = new EzFAL.EzFile(commonUtil.detectPathTraversal(realPath + filePath));
+		EzFAL.EzFile newImageFile = new EzFAL.EzFile(commonUtil.detectPathTraversal(realPath + filePath2));
 		
 		if (newImageFile.exists()) {
-			FileUtils.deleteQuietly(newImageFile);
+			newImageFile.delete();
 		}
 		
 		if (tempImageFile.exists()) {
 			tempImageFile.renameTo(newImageFile);
 		}
-		
-		File tempThumnailFile = new File(commonUtil.detectPathTraversal(realPath + commonUtil.getUploadPath("upload_personal.PHOTOTHUMBNAIL", userInfo.getTenantId()) + commonUtil.separator + fileName)); 
-		File newThumnailFile = new File(commonUtil.detectPathTraversal(realPath + commonUtil.getUploadPath("upload_personal.PHOTOTHUMBNAIL", userInfo.getTenantId()) + commonUtil.separator + fileName2)); 
+
+		EzFAL.EzFile tempThumnailFile = new EzFAL.EzFile(commonUtil.detectPathTraversal(realPath + commonUtil.getUploadPath("upload_personal.PHOTOTHUMBNAIL", userInfo.getTenantId()) + commonUtil.separator + fileName));
+		EzFAL.EzFile newThumnailFile = new EzFAL.EzFile(commonUtil.detectPathTraversal(realPath + commonUtil.getUploadPath("upload_personal.PHOTOTHUMBNAIL", userInfo.getTenantId()) + commonUtil.separator + fileName2));
 		
 		if (newThumnailFile.exists()) {
-			FileUtils.deleteQuietly(newThumnailFile);
+			newThumnailFile.delete();
 		}
 		
 		if (tempThumnailFile.exists()) {
@@ -1881,11 +1884,12 @@ public class EzPersonalController extends EzFileMngUtil {
 		return "/ezPersonal/persNoticeList";
 	}
 	
-	private boolean createThumbnail(File sourceFile, File targetFile) {
+	private boolean createThumbnail(EzFAL.EzFile sourceFile, EzFAL.EzFile targetFile) {
 		boolean result = false;
 		
-		try {
-			BufferedImage sourceImage = ImageIO.read(sourceFile);
+		try (InputStream in = new EzFAL.EzFileInputStream(sourceFile);
+			 OutputStream out = new EzFAL.EzFileOutputStream(targetFile)) {
+			BufferedImage sourceImage = ImageIO.read(in);
 			int w = 100;
 		    int h = 100;
 		    
@@ -1896,14 +1900,15 @@ public class EzPersonalController extends EzFileMngUtil {
 		    g2.drawImage(sourceImage, 0, 0, w, h, null);
 		    g2.dispose();
 			
-			ImageIO.write(targetImage, "png", targetFile);
+			ImageIO.write(targetImage, "png", out);
 			
 			result = true;
 		} catch (Exception e) {
 			logger.debug("fail to create thumbnail : " + sourceFile.getName());
 			
-			try {
-				Files.copy(sourceFile.toPath(), targetFile.toPath());
+			try (InputStream source = new EzFAL.EzFileInputStream(sourceFile);
+				 OutputStream target = new EzFAL.EzFileOutputStream(targetFile)) {
+				IOUtils.copy(source, target);
 				logger.debug("copy original File to thumbnail.");
 			} catch (IOException e1) {
 				logger.error(e1.getMessage(), e1);
@@ -2252,9 +2257,11 @@ public class EzPersonalController extends EzFileMngUtil {
 			//기존코드	
 			BufferedImage bufferedImage = new BufferedImage(119, 128, BufferedImage.TYPE_4BYTE_ABGR);
 			bufferedImage.createGraphics().drawImage(bi, 0, 0, 119, 128, Color.WHITE, null);
-			
-			File profileImageFile = new File(commonUtil.detectPathTraversal(realPath + filePath));
-			ImageIO.write(bufferedImage, "png", profileImageFile);
+
+			EzFAL.EzFile profileImageFile = new EzFAL.EzFile(commonUtil.detectPathTraversal(realPath + filePath));
+			try (OutputStream out = new EzFAL.EzFileOutputStream(profileImageFile)) {
+				ImageIO.write(bufferedImage, "png", out);
+			}
 			
 			File file1 = new File(commonUtil.detectPathTraversal(realPath + commonUtil.getUploadPath("upload_personal.PHOTOTEMP", userInfo.getTenantId()) + commonUtil.separator + fileName));
 			if (file1.exists()) {
@@ -2263,12 +2270,12 @@ public class EzPersonalController extends EzFileMngUtil {
 			
 			//썸네일 생성
 			String thumbnailPath = realPath + commonUtil.getUploadPath("upload_personal.PHOTOTHUMBNAIL", userInfo.getTenantId());
-			File thumbnailFolder = new File(commonUtil.detectPathTraversal(thumbnailPath));
+			EzFAL.EzFile thumbnailFolder = new EzFAL.EzFile(commonUtil.detectPathTraversal(thumbnailPath));
 			if (!thumbnailFolder.exists()) {
 				thumbnailFolder.mkdirs();
 			}
-			
-			File thumbnailFile = new File(commonUtil.detectPathTraversal(thumbnailPath + commonUtil.separator + profileImageFile.getName()));
+
+			EzFAL.EzFile thumbnailFile = new EzFAL.EzFile(commonUtil.detectPathTraversal(thumbnailPath + commonUtil.separator + profileImageFile.getName()));
 			createThumbnail(profileImageFile, thumbnailFile);
 		}
 		
@@ -2507,7 +2514,7 @@ public class EzPersonalController extends EzFileMngUtil {
 	}
 
 	@GetMapping("/ezPersonal/notificationItemTab.do")
-	public String notificationItemTab(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
+	public String notificationItemTab(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
 		logger.debug("notificationItemTab started.");
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
 		Set<String> menuCodeList = ezNewPortalService.getUserMenuList(user.getCompanyID(), user.getTenantId(), user.getLang(), user.getId(), user.getDeptID(), "")
@@ -2523,6 +2530,34 @@ public class EzPersonalController extends EzFileMngUtil {
 		
 		model.addAttribute("usePassAprLine", "YES".equalsIgnoreCase(ezCommonService.getTenantConfig("usePassAprLine", user.getTenantId())));
 		model.addAttribute("useBallotSystem", "YES".equalsIgnoreCase(ezCommonService.getTenantConfig("useBallotSystem", user.getTenantId())));
+
+        LoginVO userInfo = commonUtil.userInfo(loginCookie);
+        String userID = userInfo.getId();
+        String deptID = userInfo.getDeptID();
+        String companyID = userInfo.getCompanyID();
+        String jobID = userInfo.getJobId();
+        String url = "/rest/ezPortal/menus/users/" + userID;
+
+        Map<String, Object> paramMap = new HashMap<String, Object>();
+        paramMap.put("userId", userID);
+        paramMap.put("deptId", deptID);
+        paramMap.put("companyId", companyID);
+        paramMap.put("jobId", jobID);
+        JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.notificationGWServerURL"), url, paramMap, request, "get", null);
+        String status = resultBody.get("status").toString();
+
+        if (status.equals("ok")) {
+            JSONObject resultData = (JSONObject) resultBody.get("data");
+            JSONArray menuList = (JSONArray) resultData.get("menuList");
+
+            if (menuList != null) {
+                for (int i = 0; i < menuList.size(); i++) {
+                    JSONObject obj = (JSONObject) menuList.get(i);
+                    String menuCode = (String) obj.get("menuCode");
+                    model.addAttribute(menuCode != null ? menuCode : "null", "Y");
+                }
+            }
+        }
 		
 		logger.debug("notificationItemTab ended.");
 		return "/ezPersonal/noti/notificationItemTab";

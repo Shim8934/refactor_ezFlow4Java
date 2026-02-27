@@ -56,7 +56,7 @@ public class EzSurveyScheduler {
 		logger.debug("sendMailToSurveyParticipant scheduler started.");
 		
 		//choose scheduler running server
-		if (!ezEmailScheduler.preScheduler("sendMailToSurveyParticipant")) {
+		if (!ezEmailScheduler.preScheduler("ezcommon_sendMailToSurveyParticipant")) {
 			logger.debug("sendMailToSurveyParticipant scheduler ended.");
 			return;
 		}

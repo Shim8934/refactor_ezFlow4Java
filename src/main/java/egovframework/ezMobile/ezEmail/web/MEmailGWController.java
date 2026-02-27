@@ -87,7 +87,7 @@ import com.google.gson.JsonElement;
 import egovframework.ezEKP.ezEmail.util.EmailImportance;
 import egovframework.ezEKP.ezEmail.vo.IcalVO;
 import egovframework.let.user.login.vo.LoginSimpleVO;
-import egovframework.let.utl.fcc.service.EgovDateUtil;
+import egovframework.let.utl.fcc.service.*;
 import egovframework.let.utl.rest.Rest;
 import egovframework.let.utl.rest.Result;
 import net.fortuna.ical4j.model.component.VEvent;
@@ -167,8 +167,6 @@ import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.ezMobile.ezOption.vo.MOptionVO;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
-import egovframework.let.utl.fcc.service.CommonUtil;
-import egovframework.let.utl.fcc.service.EgovStringUtil;
 import net.htmlparser.jericho.Renderer;
 import net.htmlparser.jericho.Source;
 import org.xml.sax.InputSource;
@@ -2099,7 +2097,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 			pDirPath = realPath + pDirPath;
 		
 			// check the upload mail root folder and create it if it doesn't exist.
-			File uploadMailRootFolder = new File(pDirPath);
+			EzFAL.EzFile uploadMailRootFolder = new EzFAL.EzFile(pDirPath);
 			
 			if (!uploadMailRootFolder.exists()) {
 				logger.debug("creating uploadMailRootFolder=" + uploadMailRootFolder);
@@ -2130,7 +2128,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 
 					pDirTempPath = pDirPath + commonUtil.separator + "tempFileUpload";
 
-					File f = new File(pDirTempPath); // tempFileUpload 만들어주고
+					EzFAL.EzFile f = new EzFAL.EzFile(pDirTempPath); // tempFileUpload 만들어주고
 
 					if (!f.exists()) {
 						f.mkdirs();
@@ -2190,7 +2188,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 			strXML += strXML2 + "</NODES></ROOT>";
 
 			String xmlPath = pDirPath + commonUtil.separator + "templist";
-	        File f = new File(xmlPath);
+			EzFAL.EzFile f = new EzFAL.EzFile(xmlPath);
 	        
 	        if (!f.exists()) {
 				f.mkdirs();
@@ -2201,12 +2199,12 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 	        
 	        logger.debug("###" + xmlPath + "###");
 	        
-	        f = new File(xmlPath);
+	        f = new EzFAL.EzFile(xmlPath);
 	        
 	        if (f.exists()) {
 	        	String tempXmlList = "";
 	        	
-	        	try (InputStreamReader isr = new InputStreamReader(new FileInputStream(f)); 
+	        	try (InputStreamReader isr = new InputStreamReader(new EzFAL.EzFileInputStream(f));
 	        			BufferedReader br = new BufferedReader(isr)) {
 		        	int read = 0;
 		        	
@@ -2224,7 +2222,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 		            	nodeList.item(0).appendChild(xmldom.importNode(nodeList2.item(i), true));
 		            }
 		            
-					try (OutputStreamWriter osw = new OutputStreamWriter(new FileOutputStream(f))) {
+					try (OutputStreamWriter osw = new OutputStreamWriter(new EzFAL.EzFileOutputStream(f))) {
 						osw.write(commonUtil.convertDocumentToString(xmldom));
 						String crlf = System.getProperty("line.separator");
 						osw.append(crlf + crlf);
@@ -2255,7 +2253,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 	        } else {
 	        	//OutputStreamWriter osw = null;
 	        	
-	        	try (OutputStreamWriter osw = new OutputStreamWriter(new FileOutputStream(f))) {
+	        	try (OutputStreamWriter osw = new OutputStreamWriter(new EzFAL.EzFileOutputStream(f))) {
 	        		osw.write(strXML);
 	        		String crlf = System.getProperty("line.separator");
 	        		osw.append(crlf + crlf);
@@ -2334,8 +2332,8 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 		try {
 			// get fileId with extension
 			fileId = fileId.substring(0, 36);
-			File directory = new File(realFilePath);
-			File[] files = directory.listFiles((FileFilter) new PrefixFileFilter(fileId));
+			EzFAL.EzFile directory = new EzFAL.EzFile(realFilePath);
+			EzFAL.EzFile[] files = directory.listFiles((FileFilter) new PrefixFileFilter(fileId));
 
 			// 대용량 첨부파일의 기간이 만료되었을 경우
 			if (files == null) {
@@ -2368,14 +2366,14 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 
 			// get original filename from text file
 			String fileName = "";
-			File originalNameFile = new File(realFilePath + "__.txt");
+			EzFAL.EzFile originalNameFile = new EzFAL.EzFile(realFilePath + "__.txt");
 
 			if (!originalNameFile.exists()) {
 				logger.error("originalNameFile not found. filePath=" + realFilePath + "__.txt");
 			} else {
 				InputStreamReader isr = null;
 				try {
-					isr = new InputStreamReader(new FileInputStream(originalNameFile));
+					isr = new InputStreamReader(new EzFAL.EzFileInputStream(originalNameFile));
 					int read = 0;
 					while ((read = isr.read()) != -1) {
 						fileName += (char)read;
@@ -2569,7 +2567,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 			pDirPath = realPath + pDirPath;
 
 			// check the upload mail root folder and create it if it doesn't exist.
-			File uploadMailRootFolder = new File(pDirPath);
+			EzFAL.EzFile uploadMailRootFolder = new EzFAL.EzFile(pDirPath);
 
 			if (!uploadMailRootFolder.exists()) {
 				logger.debug("creating uploadMailRootFolder=" + uploadMailRootFolder);
@@ -2592,7 +2590,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 				String pDate = EgovDateUtil.getToday("");
 				folderDate = pDate;
 				pDirTempPath = largeFilePath + commonUtil.separator + pDate; // 날짜까지 생성
-				File file = new File(pDirTempPath);
+				EzFAL.EzFile file = new EzFAL.EzFile(pDirTempPath);
 
 				if (!file.exists()) {
 					file.mkdirs();
@@ -2603,12 +2601,12 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 				pFileName[i] = commonUtil.normalizeFileName(pFileName[i]);
 
 				String base64OrgFileName = org.apache.commons.codec.binary.Base64.encodeBase64String(pFileName[i].getBytes("UTF-8"));
-				FileOutputStream fos = null;
+				EzFAL.EzFileOutputStream fos = null;
 
 				try {
 					// 대용량 첨부 파일명을 저장하는 파일
-					File f = new File(commonUtil.detectPathTraversal(pDirTempPath + commonUtil.separator + sGUID[i] + "__.txt"));
-					fos = new FileOutputStream(f);
+					EzFAL.EzFile f = new EzFAL.EzFile(commonUtil.detectPathTraversal(pDirTempPath + commonUtil.separator + sGUID[i] + "__.txt"));
+					fos = new EzFAL.EzFileOutputStream(f);
 					fos.write(base64OrgFileName.getBytes("ISO-8859-1"));
 				} catch (Exception e) {
 					throw e;
@@ -2618,7 +2616,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 					}
 				}
 
-				File f = new File(pDirTempPath);
+				EzFAL.EzFile f = new EzFAL.EzFile(pDirTempPath);
 
 				if (!f.exists()) {
 					f.mkdirs();
@@ -2685,7 +2683,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 			strXML += strXML2 + "</NODES></ROOT>";
 
 			String xmlPath = pDirPath + commonUtil.separator + "templist";
-			File f = new File(xmlPath);
+			EzFAL.EzFile f = new EzFAL.EzFile(xmlPath);
 
 			if (!f.exists()) {
 				f.mkdirs();
@@ -2695,7 +2693,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 			xmlPath += commonUtil.separator + tempFolderName + ".txt";
 			logger.debug("###" + xmlPath + "###");
 
-			f = new File(xmlPath);
+			f = new EzFAL.EzFile(xmlPath);
 
 			if (f.exists()) {
 				String tempXmlList = "";
@@ -2704,7 +2702,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 				OutputStreamWriter osw = null;
 
 				try {
-					isr = new InputStreamReader(new FileInputStream(f));
+					isr = new InputStreamReader(new EzFAL.EzFileInputStream(f));
 					br = new BufferedReader(isr);
 					int read = 0;
 
@@ -2722,7 +2720,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 						nodeList.item(0).appendChild(xmldom.importNode(nodeList2.item(i), true));
 					}
 
-					osw = new OutputStreamWriter(new FileOutputStream(f));
+					osw = new OutputStreamWriter(new EzFAL.EzFileOutputStream(f));
 					osw.write(commonUtil.convertDocumentToString(xmldom));
 					String crlf = System.getProperty("line.separator");
 					osw.append(crlf+crlf);
@@ -2752,7 +2750,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 				OutputStreamWriter osw = null;
 
 				try {
-					osw = new OutputStreamWriter(new FileOutputStream(f));
+					osw = new OutputStreamWriter(new EzFAL.EzFileOutputStream(f));
 					osw.write(strXML);
 					String crlf = System.getProperty("line.separator");
 					osw.append(crlf+crlf);
@@ -2942,8 +2940,8 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 						if (hasAttachFile && bigBool.equals("N")) {
 						    // 첨부파일을 삽입할 Part를 생성한다.
 							BodyPart messageBodyPart = new MimeBodyPart();
-							
-					        File f = new File(pDirTempPath + commonUtil.separator + path);
+
+							EzFAL.EzFile f = new EzFAL.EzFile(pDirTempPath + commonUtil.separator + path);
 					        FileDataSource source = new FileDataSource(pDirTempPath + commonUtil.separator + path);
 					        messageBodyPart.setDataHandler(new DataHandler(source));
 					        
@@ -3007,7 +3005,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 						NodeList childNodes = subNode.getChildNodes();
 						
 		                if (childNodes.item(2).getTextContent().equals("N")) {
-		                	File file = new File(pDirTempPath + commonUtil.separator + childNodes.item(1).getTextContent());
+							EzFAL.EzFile file = new EzFAL.EzFile(pDirTempPath + commonUtil.separator + childNodes.item(1).getTextContent());
 		                	
 		                    if (file.exists()) {
 		                    	file.delete();
@@ -3227,7 +3225,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 				largeFilePath += commonUtil.separator + "largeFile";
 			}
 
-			File templistFile = new File(xmlPath);
+			EzFAL.EzFile templistFile = new EzFAL.EzFile(xmlPath);
 			if (templistFile.exists()) {
 				StringBuilder strXml = new StringBuilder();
 				try (InputStreamReader isr = new InputStreamReader(Files.newInputStream(templistFile.toPath()))) {
@@ -3249,11 +3247,11 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 							String pRealFilePath = largeFilePath + commonUtil.separator + fileLocationArray[0] + commonUtil.separator + fileLocationArray[1];
 							pRealFilePath = commonUtil.detectPathTraversal(pRealFilePath);
 
-							File bigAttachFile = new File(pRealFilePath);
+							EzFAL.EzFile bigAttachFile = new EzFAL.EzFile(pRealFilePath);
 
 							if (bigAttachFile.exists()) {
 								bigAttachFile.delete();
-								File bigAttachNameFile = new File(pRealFilePath + "__.txt");
+								EzFAL.EzFile bigAttachNameFile = new EzFAL.EzFile(pRealFilePath + "__.txt");
 								bigAttachNameFile.delete();
 							}
 
@@ -3779,15 +3777,20 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 							String extractedPath = imageMatcher.group(1) != null ? imageMatcher.group(1) : imageMatcher.group(2);
 							String imagePath = realPath + extractedPath;
 							File imageFile = new File(imagePath);
-							if (imageFile.exists()) {
+							if (imageFile.exists()){
 								String imageExt = FilenameUtils.getExtension(imageFile.getName());
 								String imageName = UUID.randomUUID().toString() + "." + imageExt;
-	
+
 								String cid = imageName + "@12345678.87654321";
 								String cidWithBrackets = "<" + cid + ">";
-	
+
 								String contentType = null;
-	
+
+								// 성능 향상을 위해 Object Storage에 있는 파일을 로컬 폴더로 복사한다.
+								if (EzFAL.isObjectStorageMode()) {
+									IOUtils.copy(new EzFAL.EzFileInputStream(new EzFAL.EzFile(imageFile)), new FileOutputStream(imageFile));
+								}
+
 								try (FileInputStream is = new FileInputStream(imageFile)) {
 									contentType = URLConnection.guessContentTypeFromStream(is);
 								} catch(FileNotFoundException e) {
@@ -3795,29 +3798,31 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 								} catch(Exception e) {
 									logger.error(e.getMessage(), e);
 								}
-	
+
 								if (contentType == null) {
 									contentType = Files.probeContentType(imageFile.toPath());
 								}
-	
+
 								MimeBodyPart imagePart = new MimeBodyPart();
 								FileDataSource fileSource = new FileDataSource(imageFile);
-	
+
 								imagePart.setDataHandler(new DataHandler(fileSource));
 								imagePart.setFileName(imageName);
 								imagePart.setHeader("Content-Type", contentType);
 								imagePart.setContentID(cidWithBrackets);
 								imagePart.setDisposition(Part.INLINE);
-	
+
 								imageParts.add(imagePart);
 
 								// dhlee : 20221027 - 사이냅 웹에디터를 사용하는 닷넷 모바일에서 이미지 업로드를 지원하기 위해 Upload_Common 폴더 관련 처리를 추가함.
 								if (imageMatcher.group(1) == null ) {
 									cid = cid + "\"";
 								}
-	
+
 								imageMatcher.appendReplacement(sb, "src=\"cid:" + cid);
+
 							}
+
 						}
 
 						textBody = imageMatcher.appendTail(sb).toString();
@@ -4283,7 +4288,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 			            if (!stateName.isEmpty()) {
 					        String pDirPath = realPath + commonUtil.getUploadPath("upload_mail.ROOT", info.getTenantId()) + commonUtil.separator + "templist";
 					        pDirPath += commonUtil.separator + stateName + ".txt";
-					        File f = new File(pDirPath);
+							EzFAL.EzFile f = new EzFAL.EzFile(pDirPath);
 					        
 					        if (f.exists()) {
 					        	f.delete();
@@ -7181,7 +7186,7 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 		
 		try {
 //		    stream = file.getInputStream();
-		    File cFile = new File(stordFilePathReal);
+			EzFAL.EzFile cFile = new EzFAL.EzFile(stordFilePathReal);
 	
 		    if (!cFile.isDirectory()) {
 				boolean _flag = cFile.mkdirs();
@@ -7191,8 +7196,8 @@ private static final Logger logger = LoggerFactory.getLogger(MEmailGWController.
 				}
 		    }
 	
-		    bos = new FileOutputStream(stordFilePathReal + File.separator + newName);
-		    
+		    bos = new EzFAL.EzFileOutputStream(stordFilePathReal + File.separator + newName);
+
 		    logger.debug("###" + stordFilePathReal + File.separator + newName + "###");
 		    
 		    Decoder decoder = Base64.getDecoder();

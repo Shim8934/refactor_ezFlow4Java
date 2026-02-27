@@ -50,6 +50,7 @@ import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.ClientUtil;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
+import egovframework.let.utl.fcc.service.EzFAL.*;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -659,13 +660,30 @@ public class EzApprovalGAdminController extends EzFileMngUtil {
 			// 상대 경로로 해야함
 			Path reformMhtPath = reformDirectory.resolve(formID + "_FORMBuilder.mht");
 			
-			if (Files.exists(reformFunctionPath)) {
-				String reformFunctionStr = new String(commonUtil.readBytesFromFile(reformFunctionPath));
+			// EzFAL 적용
+			EzFile reformFunctionPathEzFile = new EzFile(reformFunctionPath.toString());
+			EzFile reformMhtPathEzFile = new EzFile(reformMhtPath.toString());
+			
+			//if (Files.exists(reformFunctionPath)) {
+			if (reformFunctionPathEzFile.exists()) {
+				//String reformFunctionStr = new String(commonUtil.readBytesFromFile(reformFunctionPath));
+				String reformFunctionStr = new String();
+				
+				// EzFAL EzFileInputStream 사용 (자동 close 호출)
+				try (EzFileInputStream fis = new EzFileInputStream(reformFunctionPathEzFile)) {
+					byte[] fileBytes = new byte[fis.available()];
+					fis.read(fileBytes);
+					
+					reformFunctionStr = new String(fileBytes, "UTF-8");
+				} catch (Exception e) {
+					logger.error(e.getMessage(), e);
+				}
 				
 				model.addAttribute("reformFunction", reformFunctionStr);
 			}
 			
-			if (Files.exists(realPath.resolve(reformMhtPath))) {
+			//if (Files.exists(realPath.resolve(reformMhtPath))) {
+			if (reformMhtPathEzFile.exists()) {
 				reformUrl = commonUtil.separator + reformMhtPath.toString().replace("\\", "\\\\");
 			}
 		}
@@ -1153,7 +1171,7 @@ public class EzApprovalGAdminController extends EzFileMngUtil {
 		logger.debug("path : " + path);
 		
 		try {
-			File file = new File(commonUtil.detectPathTraversal(path));
+			File file = new File(commonUtil.detectPathTraversal(path)); // webapp/xml/ezApprovalG 폴더 하위 로컬 파일에 접근하므로 EzFAL 적용 제외
 			// CWE-404 보안 취약점 대응
 			try (BufferedReader br = new BufferedReader(new FileReader(file))) {
 				String line = null;
@@ -2519,7 +2537,7 @@ public class EzApprovalGAdminController extends EzFileMngUtil {
 			return "json";
 		}
 		
-		File dir = new File(commonUtil.detectPathTraversal(realPath + dirPath));
+		EzFile dir = new EzFile(commonUtil.detectPathTraversal(realPath + dirPath));
 		
         if (!dir.exists()) {
         	dir.mkdirs();
@@ -2786,14 +2804,24 @@ public class EzApprovalGAdminController extends EzFileMngUtil {
 		String companyPath = commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator + companyID;
 		String encodeInfo = "";
 		
-		File fileDir = new File(commonUtil.detectPathTraversal(realPath + companyPath));
+		EzFile fileDir = new EzFile(commonUtil.detectPathTraversal(realPath + companyPath));
 		
 		if (!fileDir.exists()) {
 			fileDir.mkdirs();
 		}
 		
-		File file = new File(commonUtil.detectPathTraversal(realPath + companyPath + commonUtil.separator + "encodeinfo.xml"));
-		encodeInfo = FileUtils.readFileToString(file);
+		EzFile file = new EzFile(commonUtil.detectPathTraversal(realPath + companyPath + commonUtil.separator + "encodeinfo.xml"));
+//		encodeInfo = FileUtils.readFileToString(file);
+		
+		// EzFAL EzFileInputStream 사용 (자동 close 호출)
+		try (EzFileInputStream fis = new EzFileInputStream(file)) {
+			byte[] fileBytes = new byte[fis.available()];
+			fis.read(fileBytes);
+			
+			encodeInfo = new String(fileBytes, "UTF-8");
+		} catch (Exception e) {
+			logger.error(e.getMessage(), e);
+		}
 		
 		model.addAttribute("encodeInfo", encodeInfo);
 		
@@ -2822,7 +2850,7 @@ public class EzApprovalGAdminController extends EzFileMngUtil {
 		String returnString = "<ENCODEINFO><SIGN>" + optionValue1 + "</SIGN><ENCODE>" + optionValue2 + "</ENCODE><NONE>" + optionValue3 + "</NONE></ENCODEINFO>";
 		 
 		try {
-			File cFile = new File(commonUtil.detectPathTraversal(realPath + dirPath + commonUtil.separator + companyID));
+			EzFile cFile = new EzFile(commonUtil.detectPathTraversal(realPath + dirPath + commonUtil.separator + companyID));
 			if (!cFile.isDirectory()) {
 				boolean _flag = cFile.mkdirs();
 				if (!_flag) {
@@ -2830,11 +2858,12 @@ public class EzApprovalGAdminController extends EzFileMngUtil {
 				}
 			}
 			
-			File file = new File(commonUtil.detectPathTraversal(realPath + dirPath + commonUtil.separator + companyID + commonUtil.separator + "encodeinfo.xml"));
+			EzFile file = new EzFile(commonUtil.detectPathTraversal(realPath + dirPath + commonUtil.separator + companyID + commonUtil.separator + "encodeinfo.xml"));
 			// CWE-404 보안 취약점 대응
-			try (BufferedWriter writer = new BufferedWriter(new FileWriter(file, false))) {
-				writer.write(returnString);
-				writer.flush();
+			// EzFAL EzFileOutputStream 사용 (자동 close 호출)
+			try (EzFileOutputStream fos = new EzFileOutputStream(file)) {
+				fos.write(returnString.getBytes());
+				fos.flush();
 			}
 			
 			logger.debug("saveOptionInfo success.");
@@ -2842,6 +2871,7 @@ public class EzApprovalGAdminController extends EzFileMngUtil {
 			return "TRUE";
 		} catch (Exception e) {
 			logger.debug("saveOptionInfo exception.");
+			logger.error(e.getMessage(), e);
 			
 			return "FALSE";
 		} finally {

@@ -48,7 +48,7 @@ UPDATE jmocha_user_distribution SET DOMAIN_NAME = REPLACE(DOMAIN_NAME, 'old.kaon
 UPDATE jmocha_user_distribution_mem SET DOMAIN_NAME = REPLACE(DOMAIN_NAME, 'old.kaoni.com', 'new.kaoni.com');
 UPDATE jmocha_user_mail_template SET user_id = REPLACE(user_id, 'old.kaoni.com', 'new.kaoni.com');
 UPDATE jmocha_user_quota SET user_id = REPLACE(user_id, 'old.kaoni.com', 'new.kaoni.com');
-/* serverName 설정은 서버명이 들어가야 하므로 주의 필요 */
+/* serverName과 mailLinkHostname 설정은 서버명이 들어가야 하므로 주의 필요 */
 UPDATE tbl_tenant_config SET PROPERTY_VALUE = REPLACE(PROPERTY_VALUE, 'old.kaoni.com', 'new.kaoni.com');
 UPDATE tbl_company_config SET PROPERTY_VALUE = REPLACE(PROPERTY_VALUE, 'old.kaoni.com', 'new.kaoni.com');
 UPDATE tbl_deptmaster SET MAIL = REPLACE(MAIL, 'old.kaoni.com', 'new.kaoni.com');

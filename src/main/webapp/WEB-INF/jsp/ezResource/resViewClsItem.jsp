@@ -9,6 +9,9 @@
 		<link rel="stylesheet" href="${util.addVer('/css/default.css')}" type="text/css"/>
 		<link rel="stylesheet" href="${util.addVer('main.default.css', 'msg')}" type="text/css" />
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery.modal.js')}"></script>
 		<script type="text/javascript">
 			var strBrd_ID = "${strBrdID}";
 			var strOwnDeptID = "${ownDeptID}";
@@ -49,8 +52,13 @@
                 }
             }
 
-			function btnClose_Click(){
-				window.close();
+			function btnClose_Click() {
+				if (!!opener && opener.location.href.includes("/ezNewPortal/")) {
+					window.close();
+				} else {
+					parent.DivPopUpHidden();
+					$(parent.parent.frames["left"].document.getElementById("blockLeft")).remove();
+				}
 			}
 		</script>
 	</head>
@@ -65,48 +73,26 @@
         				</ul>
       				</div>
       				<table id="firstRowFirstTrTable" class="content">
+						<tr>
+          					<th> <spring:message code="ezResource.t39"/></th>
+          					<td colspan="2" name="Brd_NM" idval="${strBrdID}"> ${strBrdNm} </td>
+        				</tr>
         				<tr>
-        				<th> <spring:message code="ezResource.t153"/></th>
-          					<td colspan="2"  name="Owner" idval="${ownerID}" nmval="${strBrdNm}">
-								<c:forEach var="list"  items="${ownerList}" begin="0" varStatus="value">
-									<c:if test ="${not value.last }">
-										${list.displayName }, 
-									</c:if>
-									<c:if test ="${value.last }">
-										${list.displayName }
-									</c:if>
-								</c:forEach>
-							</td>
-          					<%-- <th> <spring:message code="ezResource.t151"/></th>
-          					<td name="OwnDept" idval="${ownDeptNm}">${ownDeptNm}</td> --%>
-          					<%-- <th> <spring:message code="ezResource.t152"/></th>
-          					<td id="MakeDate" style="padding-right:15px;width:120px" nowrap> ${makeDate}</td> --%>
+							<th> <spring:message code="ezResource.t153"/></th>
+								<td colspan="2"  name="Owner" idval="${ownerID}" nmval="${strBrdNm}">
+									<c:forEach var="list"  items="${ownerList}" begin="0" varStatus="value">
+										<c:if test ="${not value.last }">
+											${list.displayName }, 
+										</c:if>
+										<c:if test ="${value.last }">
+											${list.displayName }
+										</c:if>
+									</c:forEach>
+								</td>
         				</tr>
         				<tr>
           					<th> <spring:message code="ezResource.t155"/></th>
           					<td colspan="2" name="OwnerCall" style="padding-right:15px;width:120px" nowrap> ${ownerCall}</td>
-          					<%-- <th> <spring:message code="ezResource.rkms01"/></th>
-          					<td colspan="3"  name="subOwner" idval="${ownerID}" nmval="${strBrdNm}">${ownerNm}(${ownerPosition}) </td>
-          					<td colspan="3"  name="subOwner"  >
-          					<div id="subOwner" style="overflow-y:auto; line-height:25px; height:25px;">
-          					<c:if test="${!empty ownerList}" >
-									<c:forEach var="list"  items="${ownerList}" begin="1" varStatus="value">
-										<c:if test ="${not value.last }">
-											${list.displayName }(${list.description }),  
-										</c:if>
-										<c:if test ="${value.last }">
-											${list.displayName }(${list.description }) 
-										</c:if>
-									</c:forEach>
-								</c:if>
-							</div>
-							</td> --%>
-          					<%-- <th> <spring:message code="ezResource.t155"/></th>
-          					<td name="OwnerCall" style="padding-right:15px;width:120px" nowrap> ${ownerCall}</td> --%>
-        				</tr>
-        				<tr>
-          					<th> <spring:message code="ezResource.t39"/></th>
-          					<td colspan="2" name="Brd_NM" idval="${strBrdID}"> ${strBrdNm} </td>
         				</tr>
         				<tr>
           					<th><spring:message code="ezResource.max.ygs02"/></th>
@@ -156,8 +142,12 @@
 								</c:if>
           					</td>
         				</tr>
+						<tr>
+          					<th> <spring:message code='ezBoard.t5007'/></th>
+          					<td colspan="3">${makeDate}</td>
+        				</tr>
         				<tr>
-          					<th style="height:200px;">이미지</th>
+          					<th style="height:200px;"><spring:message code="ezPortal.jjs03"/></th>
           					<td style="width:50%; border-right: 0" name="preview1"><img id="preview1" src="/images/default_pic.jpg" width="120" height="120" style="margin-left: auto; margin-right: auto; display: block; border-right: 0px;"></td>
           					<td style="border-left: 0" name="preview2"><img id="preview2" src="/images/default_pic.jpg" width="120" height="120" style="margin-left: auto; margin-right: auto; display: block; border-right: 0px;"></td>
         				</tr>

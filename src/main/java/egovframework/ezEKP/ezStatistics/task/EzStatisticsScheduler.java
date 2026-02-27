@@ -38,7 +38,7 @@ public class EzStatisticsScheduler {
 		logger.debug("apprStatisticsDailybatch started");
 
 		//choose scheduler running server
-		if (!ezEmailScheduler.preScheduler("apprStatisticsDailybatch")) {
+		if (!ezEmailScheduler.preScheduler("ezapprovalg_apprStatisticsDailybatch")) {
 			logger.debug("apprStatisticsDailybatch scheduler ended.");
 			return;
 		}

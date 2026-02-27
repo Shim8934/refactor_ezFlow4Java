@@ -39,6 +39,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import egovframework.ezEKP.ezOrgan.vo.OrganAuth;
+import egovframework.let.utl.fcc.service.EzFAL;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.util.Strings;
@@ -2378,6 +2379,10 @@ public class EzScheduleController extends EzFileMngUtil {
         }
         
         ObjectMapper objectMapper = new ObjectMapper();
+        for (ScheduleOwnerInfoVO scheduleOwnerInfoVO : schOwnInfoList) {
+            scheduleOwnerInfoVO.setOwnerName(scheduleOwnerInfoVO.getOwnerName().replaceAll("\'", "&#039;").replaceAll("\"", "&#034;"));
+            scheduleOwnerInfoVO.setOwnerName2(scheduleOwnerInfoVO.getOwnerName2().replaceAll("\'", "&#039;").replaceAll("\"", "&#034;"));
+        }
         String schOwnInfoListToJson = objectMapper.writeValueAsString(schOwnInfoList);
 
         //2017-11-15 자원관리 사용하지 않을 경우 탭 처리
@@ -3669,7 +3674,7 @@ public class EzScheduleController extends EzFileMngUtil {
         if (!pDirPath.substring(pDirPath.length() - 1).equals(commonUtil.separator)) {
         	pDirPath = pDirPath + commonUtil.separator;
         }
-        File file = new File(commonUtil.detectPathTraversal(pDirPath + "uploadFile"));
+		EzFAL.EzFile file = new EzFAL.EzFile(commonUtil.detectPathTraversal(pDirPath + "uploadFile"));
 
         if (!file.exists()) {
         	file.mkdirs();        
@@ -5464,19 +5469,19 @@ public class EzScheduleController extends EzFileMngUtil {
 		String downFileName = "";
 		
 		try {
-			File tempFile = new File(pDirTempPath + commonUtil.separator + ".zip");
+			EzFAL.EzFile tempFile = new EzFAL.EzFile(pDirTempPath + commonUtil.separator + ".zip");
 			
 			if (tempFile.exists()) {
 				tempFile.delete();
 			}
 			
-			tempFile = new File(tempFileUploadPath);
+			tempFile = new EzFAL.EzFile(tempFileUploadPath);
 			
 			if (!tempFile.exists()) {
 				tempFile.mkdirs();
 			}
 			
-			zos = new ZipOutputStream(new FileOutputStream(pDirTempPath + ".zip"), Charset.forName("utf-8"));
+			zos = new ZipOutputStream(new EzFAL.EzFileOutputStream(pDirTempPath + ".zip"), Charset.forName("utf-8"));
 			
 			String[] fileNamesArr = fileNames.split(":");
 			String[] fileNamesUIDArr = fileNamesUID.split(":");
@@ -5491,7 +5496,7 @@ public class EzScheduleController extends EzFileMngUtil {
 					BufferedInputStream bis = null;
 					
 					try {
-						File sourceFile = new File(commonUtil.detectPathTraversal(fullFilePath + fileNamesUIDArr[i]));
+						EzFAL.EzFile sourceFile = new EzFAL.EzFile(commonUtil.detectPathTraversal(fullFilePath + fileNamesUIDArr[i]));
 						byte[] fileBytes = commonUtil.readBytesFromFile(sourceFile.toPath());
 						
 						if (fileNamesUIDArr[i].endsWith("." + EzApprovalGKlibService.ENCRYPTED_FILE_EXT)) {
@@ -5519,7 +5524,7 @@ public class EzScheduleController extends EzFileMngUtil {
 				zos.close();
 				zos = null;
 	
-				File file = new File(pDirTempPath + ".zip");
+				EzFAL.EzFile file = new EzFAL.EzFile(pDirTempPath + ".zip");
 				
 				if (file.exists()) {
 					downFile(request, response, pDirTempPath + ".zip", downFileName);
@@ -5527,7 +5532,7 @@ public class EzScheduleController extends EzFileMngUtil {
 				}
 			}
 		} catch (Exception e) {
-			File file = new File(pDirTempPath + ".zip");
+			EzFAL.EzFile file = new EzFAL.EzFile(pDirTempPath + ".zip");
 			
 			if (file.exists()) {
 				file.delete();

@@ -58,6 +58,7 @@ import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
+import egovframework.let.utl.fcc.service.EzFAL;
 
 /** 
  * @Description [Controller] 관리자 - 게시판관리 
@@ -714,10 +715,10 @@ public class EzBoardAdminController extends EzFileMngUtil {
 		writeUploadedFile(file, "S_" + fileName, realPath + filePath);
 		
 		try {
-			File imageFile = new File(commonUtil.detectPathTraversal(realFullPath));
+			EzFAL.EzFile imageFile = new EzFAL.EzFile(commonUtil.detectPathTraversal(realFullPath));
 			
 			if (imageFile.exists()) {
-				BufferedImage bi = ImageIO.read(new File(commonUtil.detectPathTraversal(realFullPath)));
+				BufferedImage bi = ImageIO.read(imageFile.getFile());
 				width = bi.getWidth();
 				height = bi.getHeight();
 				
@@ -755,7 +756,7 @@ public class EzBoardAdminController extends EzFileMngUtil {
 			writeUploadedFile(file, "S_" + fileName, realPath + filePath);
 			
 			try {
-				File tempFile = new File(realPath + tempFilePath + commonUtil.separator + "S_" + commonUtil.detectPathTraversal(fileName));
+				EzFAL.EzFile tempFile = new EzFAL.EzFile(realPath + tempFilePath + commonUtil.separator + "S_" + commonUtil.detectPathTraversal(fileName));
 				
 				if (tempFile.exists()) {
 					tempFile.delete();
@@ -794,7 +795,7 @@ public class EzBoardAdminController extends EzFileMngUtil {
 		boardBackgroundVO.setTenantID(userInfo.getTenantId());
 		
 		try {
-			File tempFile = new File(realPath + filePath + commonUtil.separator +"S_" + commonUtil.detectPathTraversal(fileName));
+			EzFAL.EzFile tempFile = new EzFAL.EzFile(realPath + filePath + commonUtil.separator +"S_" + commonUtil.detectPathTraversal(fileName));
 			
 			if (tempFile != null) {
 				tempFile.delete();
@@ -1059,6 +1060,11 @@ public class EzBoardAdminController extends EzFileMngUtil {
 		/* 2024-09-10 조소정 - 게시판 > 카테고리 기능 추가 */
 		int boardItemCnt = ezBoardAdminService.getBoardItemCnt(boardID, userInfo.getTenantId());
 		
+		String useImageConvertServer = ezCommonService.getTenantConfig("useImageConvertServer", userInfo.getTenantId());
+		if (useImageConvertServer == null) {
+			useImageConvertServer = "0";
+		}
+		
 		/* 2018-07-26 홍승비 - 다국어 표출 시 lang 대신 primary 조건 사용하도록 수정 */
 		model.addAttribute("model", boardPropertyVO);
 		model.addAttribute("use_multiData", use_multiData);
@@ -1078,6 +1084,7 @@ public class EzBoardAdminController extends EzFileMngUtil {
 		model.addAttribute("useJapanese", useJapanese);
 		model.addAttribute("useChinese", useChinese);
 		model.addAttribute("boardItemCnt", boardItemCnt);
+		model.addAttribute("useImageConvertServer", useImageConvertServer);
 		model.addAttribute("lang", lang);
 		
 		logger.debug("boardProperty ended");

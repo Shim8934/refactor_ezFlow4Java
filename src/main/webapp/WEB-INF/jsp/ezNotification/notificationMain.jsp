@@ -104,12 +104,14 @@
 	var notiListFlag = true;
 	var isNotiLoading = false; 
 	var notiDateEndPoint = "";
+	var menuList = ${menuList != null ? menuList : '[]'};
+
 	window.onload = function () {
 		checkSkin();
 		checkEmergencyPermission();
 		notiListFlag = true;
 		document.getElementById('notiwrap').addEventListener("scroll", notiScroll);
-		makeMainTypeList();
+		makeFilteredMainTypeList();
 		searchNoti('first');
 	}
 	
@@ -156,9 +158,10 @@
 
 	}
 	
-	function makeMainTypeList() {
+	function makeMainTypeList(filteredMainTypes) {
 		var str = '';
-		for (key in mainType) {
+		for (var i = 0; i < filteredMainTypes.length; i++) {
+	        var key = filteredMainTypes[i];
 			str += '<li><div class="input_check"><div class="custom_checkbox"><input id="filter_';
 			str += key + '" type="checkbox" name="notitypefilter" maintype="y" value=';
 			str += '"' + key + '" checked="checked" onchange="totalfilterCheck()"><label for="filter_';
@@ -1250,6 +1253,36 @@
         }
 
         return pBlockedMail;
+    }
+    
+    function makeFilteredMainTypeList() {
+        var menuCodes = [];
+        for (var i = 0; i < menuList.length; i++) {
+        	if (menuList[i].menuCode === "vote") {	// 투표
+                menuList[i].menuCode = "poll";
+            }
+            menuCodes.push(menuList[i].menuCode);
+        }
+
+	    var filteredMainTypes = [];
+	    
+        for (var key in mainType) {
+            if (menuCodes.indexOf(key) !== -1) {
+            	filteredMainTypes.push(key);
+            }
+        }
+
+        // 공지 알림(noti) 및 기타(etc)는 항상 추가
+        if (filteredMainTypes.indexOf("noti") === -1) {
+        	filteredMainTypes.push("noti");
+        }
+        if (filteredMainTypes.indexOf("etc") === -1) {
+        	filteredMainTypes.push("etc");
+        }
+        
+        if (filteredMainTypes.length > 0) {
+            makeMainTypeList(filteredMainTypes);
+        }
     }
 	
 </script>

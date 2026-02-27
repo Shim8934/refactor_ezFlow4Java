@@ -2332,6 +2332,9 @@ function updateDragSchedule(typeCal, dragOwnerId, dragNum, dragDay, dropDay, com
 			} else if (text == "3") { // 중복예약인 경우
                 setTimeout(function() { alert(strLang248); }, 10)
 				rtv = false;
+            } else if (text == "4") { // 관리자가 이미 사용허가를 낸 자원은 수정 불가
+                setTimeout(function() { alert(strLang132); }, 10)
+				rtv = false;
             }
 		},
 		error: function(error) {

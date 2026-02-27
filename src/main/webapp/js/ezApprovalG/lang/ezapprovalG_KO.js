@@ -1234,3 +1234,6 @@ var strLangRetiree01 = "는 퇴직자입니다. \n 즐겨찾기 적용에서 제
 var strLangRetiree02 = "부서는 폐지되었습니다. \n 즐겨찾기 적용에서 제외됩니다."
 
 var strLangDashBoard01 = "승인";
+
+var strLangJIH_ChkRecvnum1 = "receiptnumber 필드는 한개의 필드만 지정해주십시오.";
+var strLangJIH_ChkRecvnum2 = "receiptnumber 필드가 지정되어 있지 않습니다. 지정해주십시오.";

@@ -22,6 +22,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONObject;
@@ -55,6 +56,8 @@ import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
 import egovframework.let.utl.fcc.service.KlibUtil;
+import egovframework.let.utl.fcc.service.EzFAL;
+import egovframework.let.utl.fcc.service.EzFAL.*;
 
 @Controller
 public class EzApprovalGHwpController extends EzFileMngUtil{
@@ -442,23 +445,38 @@ public class EzApprovalGHwpController extends EzFileMngUtil{
 			docFile = dirPath + docFile.replace( commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()), "");
 			
 			String dir = docFile.substring(0, docFile.lastIndexOf(commonUtil.separator) + 1);
-			File file = new File(commonUtil.detectPathTraversal(dir));
+			EzFile file = new EzFile(commonUtil.detectPathTraversal(dir));
 			
 			if (!file.exists()) {
 				file.mkdirs();
 			}
 			
-			File newFile = new File(commonUtil.detectPathTraversal(docFile));
+			EzFile newFile = new EzFile(commonUtil.detectPathTraversal(docFile));
 			
 			if (!newFile.exists()) {
-				File orgFile = new File(commonUtil.detectPathTraversal(orgDocFile));
+				EzFile orgFile = new EzFile(commonUtil.detectPathTraversal(orgDocFile));
 				
 				// KLIB 복호화
 				if (orgDocFile.endsWith("." + EzApprovalGKlibServiceImpl.ENCRYPTED_FILE_EXT)) {
-					byte[] orgBytes = commonUtil.readBytesFromFile(orgFile.toPath());
-					FileUtils.writeByteArrayToFile(newFile, klibUtil.decrypt(orgBytes));
+					byte[] orgBytes = null;
+					
+					// 원본 파일을 스트림에서 바이트로 read
+					// EzFAL EzFileInputStream 사용 (자동 close 호출)
+		    		try (EzFileInputStream fis = new EzFileInputStream(orgFile.getFile().getPath())) {
+		    			orgBytes = IOUtils.toByteArray(fis);
+		    		} catch (Exception e) {
+		    			logger.error(e.getMessage(), e);
+		    		}
+					
+					// EzFAL EzFileOutputStream 사용 (자동 close 호출)
+					try (EzFileOutputStream fos = new EzFileOutputStream(newFile)) {
+						fos.write(klibUtil.decrypt(orgBytes));
+						fos.flush();
+					} catch (Exception e) {
+						logger.error(e.getMessage(), e);
+					}
 				} else {
-					FileUtils.copyFile(orgFile, newFile);
+					EzFAL.copyFile(orgFile, newFile);
 				}
 			}
 		}
@@ -562,7 +580,7 @@ public class EzApprovalGHwpController extends EzFileMngUtil{
 			copyPath = copyPath + commonUtil.separator + "tempFileUpload";
 		}
 
-		File f = new File(commonUtil.detectPathTraversal(pDirTempPath));
+		EzFile f = new EzFile(commonUtil.detectPathTraversal(pDirTempPath)); // 대용량 첨부파일과 호환되도록 EzFAL 적용
 
 		// 파일을 업로드할 폴더가 존재하지 않으면 생성한다.            
 		if (!f.exists()) {
@@ -577,25 +595,19 @@ public class EzApprovalGHwpController extends EzFileMngUtil{
 			extResult = "denied";
 		} else {
 			// 대용량 첨부파일의 경우에는 후에 다운로드 받을 때 파일명을 내려보내기 위해 원 파일명을 저장한다.                
-			if (pBigFileUpload.equals("Y")) {                    
+			if (pBigFileUpload.equals("Y")) {
 				String base64OrgFileName = Base64.encodeBase64String(orgFileName.getBytes("UTF-8"));
-				FileOutputStream fos = null;
-
-				try {
-					File nameFile = new File(commonUtil.detectPathTraversal(saveLocalPath + "__.txt"));
-					fos = new FileOutputStream(nameFile);
+				// EzFAL EzFileOutputStream 사용 (자동 close 호출)
+				try (EzFileOutputStream fos = new EzFileOutputStream(commonUtil.detectPathTraversal(saveLocalPath + "__.txt"))) {
 					fos.write(base64OrgFileName.getBytes("ISO-8859-1"));
+					fos.flush();
 				} catch (Exception e) {
-					throw e;
-				} finally {
-					if (fos != null) {
-						fos.close();
-					}
+					logger.error(e.getMessage(), e);
 				}
 			}
 			
-			File file2 = new File(commonUtil.detectPathTraversal(pDirTempPath + commonUtil.separator + newfilename));
-			File file3 = new File(commonUtil.detectPathTraversal(realPath +  commonUtil.separator + sFileHref ));
+			EzFile file2 = new EzFile(commonUtil.detectPathTraversal(pDirTempPath + commonUtil.separator + newfilename));
+			EzFile file3 = new EzFile(commonUtil.detectPathTraversal(realPath +  commonUtil.separator + sFileHref ));
 			
 			if (!file2.exists()) {
 				
@@ -608,7 +620,7 @@ public class EzApprovalGHwpController extends EzFileMngUtil{
 					
 					try {
 						inpStream = downloadUrl.openStream();
-						Files.copy(inpStream, pathTarget);
+						Files.copy(inpStream, pathTarget); // URL을 통해서 배포용 HWP파일을 다운받게 되므로 EzFAL 적용 제외
 						
 						inpStream.close();
 					} catch (Exception e) {
@@ -623,7 +635,7 @@ public class EzApprovalGHwpController extends EzFileMngUtil{
 					    }
 					}
 				} else {
-					FileUtils.copyFile(file3, file2);
+					EzFAL.copyFile(file3, file2);
 				}
 			}
 
@@ -878,24 +890,24 @@ public class EzApprovalGHwpController extends EzFileMngUtil{
 			String orgDocFile = xmlDom.getElementsByTagName("ORGHREF").item(0).getTextContent();
 			String docFile = xmlDom.getElementsByTagName("HREF").item(0).getTextContent();
 			
-			orgDocFile = dirPath + orgDocFile.replace( commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()), "");
-			docFile = dirPath + docFile.replace( commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()), "");
+			orgDocFile = dirPath + orgDocFile.replace(commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()), "");
+			docFile = dirPath + docFile.replace(commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()), "");
 			
 			String dir = docFile.substring(0, docFile.lastIndexOf(commonUtil.separator) + 1);
-			File file = new File(commonUtil.detectPathTraversal(dir));
+			EzFile file = new EzFile(commonUtil.detectPathTraversal(dir));
 			
 			if (!file.exists()) {
 				file.mkdirs();
 			}
 			
-			File newFile = new File(commonUtil.detectPathTraversal(docFile));
+			EzFile newFile = new EzFile(commonUtil.detectPathTraversal(docFile));
 			
 			if (!newFile.exists()) {
-				File orgFile = new File(commonUtil.detectPathTraversal(orgDocFile));
-				InputStream orgFileInputStream = null;
+				EzFile orgFile = new EzFile(commonUtil.detectPathTraversal(orgDocFile));
+				//InputStream orgFileInputStream = null;
 
 				// CWE-404 보안 취약점 대응
-				try {
+				/*try {
 					// 2018.06.21 - KLIB으로 암호화된 파일일 때는 복호화 하여 저장
 					if (orgDocFile.endsWith("." + EzApprovalGKlibServiceImpl.ENCRYPTED_FILE_EXT)) {
 						byte[] encryptedBytes = commonUtil.readBytesFromFile(orgFile.toPath());
@@ -909,6 +921,23 @@ public class EzApprovalGHwpController extends EzFileMngUtil{
 					if (orgFileInputStream != null) {
 						orgFileInputStream.close();
 					}
+				}*/
+				byte[] orgBytes = FileUtils.readFileToByteArray(orgFile.getFile());
+					
+				// EzFAL EzFileOutputStream 사용 (자동 close 호출)
+				try (EzFileOutputStream fos = new EzFileOutputStream(newFile)) {
+					// 2018.06.21 - KLIB으로 암호화된 파일일 때는 복호화 하여 저장
+					if (orgDocFile.endsWith("." + EzApprovalGKlibServiceImpl.ENCRYPTED_FILE_EXT)) {
+						fos.write(klibUtil.decrypt(orgBytes));
+					}
+					// KLIB 적용 이외의 경우, 원문서를 그대로 수신문으로 복사
+					else {
+						fos.write(orgBytes);
+					}
+					
+					fos.flush(); // newFile을 EzFileOutputStream으로 열어서 write했으므로, 기존의 Files.copy()와 같은 추가 호출은 필요하지 않음
+				} catch (Exception e) {
+					logger.error(e.getMessage(), e);
 				}
 			}
 		}
@@ -1105,7 +1134,7 @@ public class EzApprovalGHwpController extends EzFileMngUtil{
 				return result;
 			}
 			
-			File file = new File(commonUtil.detectPathTraversal(path + userInfo.getCompanyID() + commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + ezApprovalGService.getDocDir(docID)));
+			EzFile file = new EzFile(commonUtil.detectPathTraversal(path + userInfo.getCompanyID() + commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + ezApprovalGService.getDocDir(docID)));
 			
 			if (!file.exists()) {
 				file.mkdirs();
@@ -1113,6 +1142,7 @@ public class EzApprovalGHwpController extends EzFileMngUtil{
 			
 			String saveFileName = path + userInfo.getCompanyID() + commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + ezApprovalGService.getDocDir(docID) + commonUtil.separator + docID + ".hwp";
 			saveFileName = commonUtil.detectPathTraversal(saveFileName);
+			
 			byte[] documentBytes = Base64.decodeBase64(formText);
 			
 			// 2018.08.23 KLIB 암호화
@@ -1121,8 +1151,16 @@ public class EzApprovalGHwpController extends EzFileMngUtil{
 				saveFileName += "." + EzApprovalGKlibService.ENCRYPTED_FILE_EXT;
 			}
 			
-			commonUtil.writeBytesToFile(Paths.get(commonUtil.detectPathTraversal(saveFileName)), documentBytes);
-
+			// EzFAL EzFileOutputStream 사용 (자동 close 호출)
+			try (EzFileOutputStream fos = new EzFileOutputStream(commonUtil.detectPathTraversal(saveFileName))) {
+				fos.write(documentBytes);
+				fos.flush();
+			} catch (Exception e) {
+				logger.error(e.getMessage(), e);
+			}
+			
+			// commonUtil.writeBytesToFile(Paths.get(commonUtil.detectPathTraversal(saveFileName)), documentBytes);
+			
 			result = "SUCCESS";
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
@@ -1904,23 +1942,40 @@ public class EzApprovalGHwpController extends EzFileMngUtil{
 			docFile = dirPath + docFile.replace( commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()), "");
 			
 			String dir = docFile.substring(0, docFile.lastIndexOf(commonUtil.separator) + 1);
-			File file = new File(commonUtil.detectPathTraversal(dir));
+			EzFile file = new EzFile(commonUtil.detectPathTraversal(dir));
 			
 			if (!file.exists()) {
 				file.mkdirs();
 			}
 			
-			File newFile = new File(commonUtil.detectPathTraversal(docFile));
+			EzFile newFile = new EzFile(commonUtil.detectPathTraversal(docFile));
 			
 			if (!newFile.exists()) {
-				File orgFile = new File(commonUtil.detectPathTraversal(orgDocFile));
+				EzFile orgFile = new EzFile(commonUtil.detectPathTraversal(orgDocFile));
+				byte[] orgBytes = null;
 				
-				// KLIB 복호화
-				if (orgDocFile.endsWith("." + EzApprovalGKlibServiceImpl.ENCRYPTED_FILE_EXT)) {
-					byte[] orgBytes = commonUtil.readBytesFromFile(orgFile.toPath());
-					FileUtils.writeByteArrayToFile(newFile, klibUtil.decrypt(orgBytes));
-				} else {
-					FileUtils.copyFile(orgFile, newFile);
+				// 원본 파일을 스트림에서 바이트로 read
+				// EzFAL EzFileInputStream 사용 (자동 close 호출)
+	    		try (EzFileInputStream fis = new EzFileInputStream(orgFile.getFile().getPath())) {
+	    			orgBytes = IOUtils.toByteArray(fis);
+	    		} catch (Exception e) {
+	    			logger.error(e.getMessage(), e);
+	    		}
+					
+				// EzFAL EzFileOutputStream 사용 (자동 close 호출)
+				try (EzFileOutputStream fos = new EzFileOutputStream(newFile)) {
+					// KLIB 복호화
+					if (orgDocFile.endsWith("." + EzApprovalGKlibServiceImpl.ENCRYPTED_FILE_EXT)) {
+						fos.write(klibUtil.decrypt(orgBytes));
+					}
+					// KLIB 적용 이외의 경우, 원문서를 그대로 수신문으로 복사
+					else {
+						fos.write(orgBytes);
+					}
+					
+					fos.flush(); // newFile을 EzFileOutputStream으로 열어서 write했으므로, 기존의 Files.copy()와 같은 추가 호출은 필요하지 않음
+				} catch (Exception e) {
+					logger.error(e.getMessage(), e);
 				}
 			}
 		}
@@ -2053,33 +2108,40 @@ public class EzApprovalGHwpController extends EzFileMngUtil{
 			docFile = dirPath + docFile.replace( commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()), "");
 			
 			String dir = docFile.substring(0, docFile.lastIndexOf(commonUtil.separator) + 1);
-			File file = new File(commonUtil.detectPathTraversal(dir));
+			EzFile file = new EzFile(commonUtil.detectPathTraversal(dir));
 			
 			if (!file.exists()) {
 				file.mkdirs();
 			}
 			
-			File newFile = new File(commonUtil.detectPathTraversal(docFile));
+			EzFile newFile = new EzFile(commonUtil.detectPathTraversal(docFile));
 			
 			if (!newFile.exists()) {
-				File orgFile = new File(commonUtil.detectPathTraversal(orgDocFile));
-				InputStream orgFileInputStream = null;
-
-				// CWE-404 보안 취약점 대응
-				try {
+				EzFile orgFile = new EzFile(commonUtil.detectPathTraversal(orgDocFile));
+				byte[] orgBytes = null;
+				
+				// 원본 파일을 스트림에서 바이트로 read
+				// EzFAL EzFileInputStream 사용 (자동 close 호출)
+	    		try (EzFileInputStream fis = new EzFileInputStream(orgFile.getFile().getPath())) {
+	    			orgBytes = IOUtils.toByteArray(fis);
+	    		} catch (Exception e) {
+	    			logger.error(e.getMessage(), e);
+	    		}
+	    		
+				// EzFAL EzFileOutputStream 사용 (자동 close 호출)
+				try (EzFileOutputStream fos = new EzFileOutputStream(newFile)) {
 					// 2018.06.21 - KLIB으로 암호화된 파일일 때는 복호화 하여 저장
 					if (orgDocFile.endsWith("." + EzApprovalGKlibServiceImpl.ENCRYPTED_FILE_EXT)) {
-						byte[] encryptedBytes = commonUtil.readBytesFromFile(orgFile.toPath());
-						orgFileInputStream = new ByteArrayInputStream(klibUtil.decrypt(encryptedBytes));
-					} else {
-						orgFileInputStream = new FileInputStream(orgFile);
+						fos.write(klibUtil.decrypt(orgBytes));
+					}
+					// KLIB 암호화 이외의 경우, 원문서를 그대로 수신문으로 복사
+					else {
+						fos.write(orgBytes);
 					}
 					
-					Files.copy(orgFileInputStream, newFile.toPath());
-				} finally {
-					if (orgFileInputStream != null) {
-						orgFileInputStream.close();
-					}
+					fos.flush(); // newFile을 EzFileOutputStream으로 열어서 write했으므로, 기존의 Files.copy()와 같은 추가 호출은 필요하지 않음
+				} catch (Exception e) {
+					logger.error(e.getMessage(), e);
 				}
 			}
 		}
@@ -2413,7 +2475,7 @@ public class EzApprovalGHwpController extends EzFileMngUtil{
         pDirPath = realPath + pDirPath + commonUtil.separator + companyID + commonUtil.separator;
         logger.debug("pDirPath : " + pDirPath);
         
-        File tempFile = new File(pDirPath + "tempUploadFile");
+        File tempFile = new File(pDirPath + "tempUploadFile"); // tempUploadFile 경로의 임시 파일이므로 EzFAL 적용 제외
         
         if (!tempFile.exists()) {
         	tempFile.mkdirs();
@@ -2449,7 +2511,7 @@ public class EzApprovalGHwpController extends EzFileMngUtil{
 		
 		logger.debug("filePath : " + (pDirPath + commonUtil.separator + fileName));
 		
-		File file = new File(pDirPath + commonUtil.separator + fileName);
+		File file = new File(pDirPath + commonUtil.separator + fileName); // tempUploadFile 경로의 임시 파일이므로 EzFAL 적용 제외
 		file.delete();
 
 		logger.debug("tempUploadFileDelete ended");

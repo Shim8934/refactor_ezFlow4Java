@@ -3054,7 +3054,7 @@ function doc24Detail_onclick() {
     var width = window.screen.availWidth; 
     var left = (width - 620) / 2; 
     var top = (heigth - 425) / 2;         
-    var szHref = "/ezDoc24/getDoc24Detail.do?orgcn=" + selDoc24;   
+    var szHref = "/ezApprovalG/ezDoc24/getDoc24Detail.do?orgcn=" + selDoc24;   
 	try{
 	    DivPopUpShow(620, 380, szHref); 
 	}catch(e){

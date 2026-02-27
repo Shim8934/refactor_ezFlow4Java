@@ -1,7 +1,6 @@
 package egovframework.ezEKP.ezTask.service.impl;
 
-import java.io.File;
-import java.io.PrintWriter;
+import java.io.ByteArrayInputStream;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -14,6 +13,7 @@ import java.util.Map;
 import java.util.TimeZone;
 import java.util.UUID;
 
+import egovframework.let.utl.fcc.service.EzFAL;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.io.IOUtils;
 import org.egovframe.rte.fdl.cmmn.EgovAbstractServiceImpl;
@@ -21,7 +21,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.FileCopyUtils;
 
 import egovframework.ezEKP.ezTask.dao.EzTaskDAO;
 import egovframework.ezEKP.ezTask.service.EzTaskService;
@@ -207,26 +206,26 @@ public class EzTaskServiceImpl extends EgovAbstractServiceImpl implements EzTask
 		docPath = commonUtil.detectPathTraversal(docPath);
 		docPath = commonUtil.stripScriptTags(docPath);
 		
-		File docFolder = new File(docPath);
+		EzFAL.EzFile docFolder = new EzFAL.EzFile(docPath);
 		if (!docFolder.exists()) {
 			docFolder.mkdirs();
 		}
 		
-		PrintWriter pw = null;
-		
 		mhtFilePath = commonUtil.detectPathTraversal(mhtFilePath);
 		mhtFilePath = commonUtil.stripScriptTags(mhtFilePath);
 		
-		try {
-			pw = new PrintWriter(new File(mhtFilePath));
-			pw.println(content);
-			pw.flush();
+		try (ByteArrayInputStream stream = new ByteArrayInputStream(content.getBytes("UTF-8"));
+			 EzFAL.EzFileOutputStream bos = new EzFAL.EzFileOutputStream(mhtFilePath)) {
+			
+			int bytesRead = 0;
+			byte[] buffer = new byte[2048];
+			
+			while ((bytesRead = stream.read(buffer, 0, 2048)) != -1) {
+				bos.write(buffer, 0, bytesRead);
+			}
+
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
-		} finally {
-			// 2023-05-17 이사라 : NullPointerException 시큐어코딩
-			//pw.close();
-			IOUtils.closeQuietly(pw);
 		}
 		
 		if (taskID.equals("")) {
@@ -247,7 +246,7 @@ public class EzTaskServiceImpl extends EgovAbstractServiceImpl implements EzTask
 			uploadFilePath = commonUtil.detectPathTraversal(uploadFilePath);
 			uploadFilePath = commonUtil.stripScriptTags(uploadFilePath);
 			
-			File uploadFileFolder = new File(uploadFilePath);
+			EzFAL.EzFile uploadFileFolder = new EzFAL.EzFile(uploadFilePath);
 			
 			logger.debug("fileList = " + fileList);
 			logger.debug("fileNamse = " + fileNames);
@@ -308,25 +307,26 @@ public class EzTaskServiceImpl extends EgovAbstractServiceImpl implements EzTask
 		folderPath = commonUtil.detectPathTraversal(folderPath);
 		folderPath = commonUtil.stripScriptTags(folderPath);
 		
-		File folder = new File(folderPath);
+		EzFAL.EzFile folder = new EzFAL.EzFile(folderPath);
 		if (!folder.exists()) {
 			folder.mkdirs();
 		}
 		
-		PrintWriter pw = null;
 		String mhtFile = commonUtil.detectPathTraversal(mhtFilePath);
 		mhtFile = commonUtil.stripScriptTags(mhtFile);
 		
-		try {
-			pw = new PrintWriter(new File(mhtFile));
-			pw.println(content);
-			pw.flush();
+		try (ByteArrayInputStream stream = new ByteArrayInputStream(content.getBytes("UTF-8"));
+			 EzFAL.EzFileOutputStream bos = new EzFAL.EzFileOutputStream(mhtFile)) {
+			
+			int bytesRead = 0;
+			byte[] buffer = new byte[2048];
+			
+			while ((bytesRead = stream.read(buffer, 0, 2048)) != -1) {
+				bos.write(buffer, 0, bytesRead);
+			}
+
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
-		} finally {
-			// 2023-05-17 이사라 : NullPointerException 시큐어코딩
-			//pw.close();
-			IOUtils.closeQuietly(pw);
 		}
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -345,7 +345,7 @@ public class EzTaskServiceImpl extends EgovAbstractServiceImpl implements EzTask
 			uploadFilePath = commonUtil.detectPathTraversal(uploadFilePath);
 			uploadFilePath = commonUtil.stripScriptTags(uploadFilePath);
 			
-			File uploadFileFolder = new File(uploadFilePath);
+			EzFAL.EzFile uploadFileFolder = new EzFAL.EzFile(uploadFilePath);
 			
 			if (!uploadFileFolder.exists()) {
 				uploadFileFolder.mkdirs();
@@ -373,7 +373,7 @@ public class EzTaskServiceImpl extends EgovAbstractServiceImpl implements EzTask
 				String beforePath = pDirPath + "tempUploadFile" + commonUtil.separator + filePath;
 				String afterPath = pDirPath + "uploadFile" + commonUtil.separator + taskID + commonUtil.separator + filePath;
 				
-				fileMove(beforePath, afterPath);
+				EzFAL.moveFile(beforePath, afterPath);
 			}
 		}
 		
@@ -1119,7 +1119,7 @@ public class EzTaskServiceImpl extends EgovAbstractServiceImpl implements EzTask
 			dirPath = commonUtil.detectPathTraversal(dirPath);
 			dirPath = commonUtil.stripScriptTags(dirPath);
 			
-			File file = new File(dirPath);
+			EzFAL.EzFile file = new EzFAL.EzFile(dirPath);
 
 			if (file.exists()) {
 				file.delete();
@@ -1295,10 +1295,10 @@ public class EzTaskServiceImpl extends EgovAbstractServiceImpl implements EzTask
 		logger.debug("fileMove started.");
 		logger.debug("beforeFilePath = " + beforeFilePath + " || afterFilePath = " + afterFilePath);
 		
-		File file = new File(commonUtil.detectPathTraversal(beforeFilePath));
+		EzFAL.EzFile file = new EzFAL.EzFile(commonUtil.detectPathTraversal(beforeFilePath));
 
 		try {
-			file.renameTo(new File(commonUtil.detectPathTraversal(afterFilePath)));			
+			file.renameTo(new EzFAL.EzFile(commonUtil.detectPathTraversal(afterFilePath)));			
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		}
@@ -1311,8 +1311,8 @@ public class EzTaskServiceImpl extends EgovAbstractServiceImpl implements EzTask
 		
 		String dirPath = pDirpath + "uploadFile" + commonUtil.separator + taskID + "_uploadFile";
 		
-		File directoryFile = new File(commonUtil.detectPathTraversal(dirPath));
-		File[] deleteFileList = directoryFile.listFiles();
+		EzFAL.EzFile directoryFile = new EzFAL.EzFile(commonUtil.detectPathTraversal(dirPath));
+		EzFAL.EzFile[] deleteFileList = directoryFile.listFiles();
 
 		if (directoryFile.exists()) {
 			// 디렉토리 하위의 파일을 모두 삭제 한뒤 디렉토리 삭제
