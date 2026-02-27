@@ -408,7 +408,7 @@
             	TBL_C_CLUBNOTICE
             </isEqual>
 			WHERE
-				no = CAST(#v_NO# AS INT)
+				no = CAST(#v_NO# AS UNSIGNED)
 			AND
 				tenant_id = #tenantID#
 	</select>
@@ -440,7 +440,7 @@
             	TBL_C_CLUBNOTICE
             </isEqual>
 			WHERE
-				no = CAST(#v_NO# AS INT)
+				no = CAST(#v_NO# AS UNSIGNED)
 			AND
 				tenant_id = #tenantID#
 	</select>
@@ -462,7 +462,7 @@
             	TBL_C_CLUBNOTICE
             </isEqual>
 			WHERE
-				no = CAST(#v_NO# AS INT)
+				no = CAST(#v_NO# AS UNSIGNED)
 			AND
 				tenant_id = #tenantID#
 		<isNotNull property="v_CODE">
@@ -492,7 +492,7 @@
             	TBL_C_CLUBNOTICE
             </isEqual>
 			WHERE
-				no = CAST(#v_NO# AS INT)
+				no = CAST(#v_NO# AS UNSIGNED)
 			AND
 				tenant_id = #tenantID# 
 		<isNotNull property="v_CODE">
@@ -3774,7 +3774,7 @@
 				TBL_C_CLUBNOTICE
 			</isEqual>
 			WHERE
-				no = CAST(#v_NO# AS INT)
+				no = CAST(#v_NO# AS UNSIGNED)
 			AND
 				tenant_id = #tenantID#
 	</select>
@@ -5435,7 +5435,7 @@
 				title = #v_TITLE#,
 				content = #v_TEXTCONTENT#
 			WHERE
-				no = CAST(#v_NO# AS INT)
+				no = CAST(#v_NO# AS UNSIGNED)
 			AND
 				tenant_id = #tenantID#
 		<isNotNull property="v_CODE">
@@ -5568,7 +5568,7 @@
             	TBL_C_CLUBNOTICE
             </isEqual>
 			WHERE
-				no = CAST(#v_NO# AS INT)
+				no = CAST(#v_NO# AS UNSIGNED)
 			AND
 				tenant_id = #tenantID# 
 		<isNotNull property="v_CODE">
@@ -6557,7 +6557,7 @@
 					TBL_COMM_BOARDINFO
 				SET
 					showposition = ' ',
-					sn = CAST(replace(sn, CHAR(13), ' ') AS INT)
+					sn = CAST(replace(sn, CHAR(13), ' ') AS UNSIGNED)
 				WHERE
 					RTRIM(c_clubno) = #v_CN#
 				AND
@@ -7222,7 +7222,7 @@
 			SET
 				readnum = READNUM + 1
 			WHERE
-				no = CAST(#v_NO# AS INT)
+				no = CAST(#v_NO# AS UNSIGNED)
 			AND
 				tenant_id = #tenantID#
 	</update>
@@ -8809,7 +8809,7 @@
             a.C_CLUBNO = #code#
           AND
             a.COMPANYID = #companyID#
-        order by CAST(a.GRADECODE AS INT) asc
+        order by CAST(a.GRADECODE AS SIGNED) asc
         ]]>
  	</select>
 
@@ -9364,7 +9364,7 @@
 		<isNotEqual property="adminType" compareValue="true">
 			<![CDATA[
 				AND C.C_ID = #userId#
-				AND IFNULL(CAST(C.GRADE AS INT), 10) <= CAST(D.READ_FG AS INT)
+				AND IFNULL(CAST(C.GRADE AS SIGNED), 10) <= CAST(D.READ_FG AS SIGNED)
 			]]>
 		</isNotEqual>
 		<isEqual property="period" compareValue="recent">
@@ -9421,7 +9421,7 @@
 		<isNotEqual property="adminType" compareValue="true">
 			<![CDATA[
 				AND C.C_ID = #userId#
-				AND IFNULL(CAST(C.GRADE AS INT), 10) <= CAST(D.READ_FG AS INT)
+				AND IFNULL(CAST(C.GRADE AS SIGNED), 10) <= CAST(D.READ_FG AS SIGNED)
 			]]>
 		</isNotEqual>
 		<isEqual property="period" compareValue="recent">

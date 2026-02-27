@@ -2714,7 +2714,7 @@
 					*
 				FROM
 					(SELECT
-						IFNULL(MAX(CAST(TRIM(containertypeid) as INT)), 1000) + 10
+						IFNULL(MAX(CAST(TRIM(containertypeid) as SIGNED)), 1000) + 10
 					FROM
 						TBL_CONTAINERTYPE
 					WHERE
