@@ -12878,7 +12878,7 @@
 <!-- 	</procedure> -->
 	<select id="EzApprovalG.getNewVolumeNo" parameterClass="Map" resultClass="String">
 		 SELECT 
-		 		CAST(MAX(VOLUMENO) + 1 as int) NEWVOLNO  
+		 		CAST(MAX(VOLUMENO) + 1 as SIGNED) NEWVOLNO  
 	     FROM 
 	     		TBL_CABINET 
 	     WHERE  
