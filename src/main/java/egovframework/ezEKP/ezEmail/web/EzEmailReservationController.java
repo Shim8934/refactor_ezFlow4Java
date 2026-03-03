@@ -134,7 +134,7 @@ public class EzEmailReservationController extends EzFileMngUtil {
 
 		String password = jspw;
 		Message savedMessage = null;
-		FileInputStream fis = null;
+        EzFAL.EzFileInputStream fis = null;
 
 		IMAPAccess ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
 				userEmail, password, egovMessageSource, locale, ezEmailUtil);
@@ -142,7 +142,7 @@ public class EzEmailReservationController extends EzFileMngUtil {
 				userEmail, password);
 
 		try {
-			fis = new FileInputStream(f);
+			fis = new EzFAL.EzFileInputStream(f);
 			savedMessage = sa.readMimeMessage(fis); // MimeMessage
 			savedMessage.setFlag(Flags.Flag.SEEN, true);
 
