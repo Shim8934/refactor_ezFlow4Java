@@ -211,7 +211,11 @@
 				groupname,
 				'' as description,
               	'' as createdate,
-              	a.groupcolor as groupcolor,
+              	CASE 
+					WHEN a.groupcolor IS NULL OR a.groupcolor = 'null' OR a.groupcolor = '' 
+					THEN 'rgb(233, 222, 19)' 
+					ELSE a.groupcolor 
+				END AS groupcolor,
               	creatorid
         	from
         		tbl_schedulegroup a left join tbl_schedulegroupmember b on a.groupid = b.groupid and a.tenant_id = b.tenant_id
