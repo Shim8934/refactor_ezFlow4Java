@@ -113,7 +113,11 @@
 					var liChangeSpan = event.target.querySelector(".list_text");
 					liChangeSpan.setAttribute("class", "list_text node_selected");
 				} else {
-					event.target.setAttribute("class", "list_text node_selected");
+				    if (event.target.classList.contains("list_text")) {
+					    event.target.setAttribute("class", "list_text node_selected");
+				    } else {
+					    event.target.parentElement.setAttribute("class", "list_text node_selected");
+				    }
 				}
 		    }
 		
