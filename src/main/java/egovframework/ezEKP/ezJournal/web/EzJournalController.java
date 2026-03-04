@@ -22,6 +22,7 @@ import javax.mail.internet.InternetAddress;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import egovframework.let.utl.fcc.service.EgovStringUtil;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -1276,6 +1277,8 @@ public class EzJournalController extends EzFileMngUtil {
 		
 		String journalId = request.getParameter("journalId");
 		String journalTitle = request.getParameter("journalTitle");
+        String downFileName = "";
+        String[] fileNameS = request.getParameter("fileNameS").split("\\|");
 		
 		Map<String, Object> param = new HashMap<String, Object>();
 		
@@ -1299,11 +1302,14 @@ public class EzJournalController extends EzFileMngUtil {
 			byte[] tempBytes = Base64.getDecoder().decode(bytes);
 			
 			journalTitle = CommonUtil.getEncodedFileNameForDownload(request.getHeader("User-Agent"), journalTitle);
-			
-			try (InputStream is = new ByteArrayInputStream(tempBytes)) {
-				response.setBufferSize(BUFF_SIZE);
-				response.setContentType(mimetype);
-				response.setHeader("Content-Disposition", "attachment; filename=\"" + journalTitle + ".zip\"");
+            downFileName = fileNameS[0] + " " + egovMessageSource.getMessage("ezCircular.t50", userInfo.getLocale()) + " " + (fileNameS.length-1) + egovMessageSource.getMessage("ezStatistics.t1067", userInfo.getLocale()) + ".zip";//zip파일명
+            String orgFileName = EgovStringUtil.isNullToString(downFileName);
+            orgFileName = CommonUtil.getEncodedFileNameForDownload(request.getHeader("User-Agent"), orgFileName);
+
+            try (InputStream is = new ByteArrayInputStream(tempBytes)) {
+                response.setBufferSize(BUFF_SIZE);
+                response.setContentType(mimetype);
+				response.setHeader("Content-Disposition", "attachment; filename=\"" + orgFileName + "\"");
 				response.setContentLength(fileSize);
 				
 				FileCopyUtils.copy(is, response.getOutputStream());

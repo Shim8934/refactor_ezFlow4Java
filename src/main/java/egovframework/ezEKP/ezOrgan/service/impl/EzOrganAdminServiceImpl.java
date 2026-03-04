@@ -26,6 +26,7 @@ import javax.servlet.http.HttpServletResponse;
 import egovframework.ezEKP.ezOrgan.vo.OrganAuth;
 import egovframework.ezEKP.ezOrgan.vo.OrganAuth.AdminAuth;
 import egovframework.ezEKP.ezOrgan.vo.OrganAddJobVO;
+import egovframework.let.utl.fcc.service.EzFAL;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -947,9 +948,22 @@ public class EzOrganAdminServiceImpl extends EgovAbstractServiceImpl implements 
 				ezOrganAdminDao.insertCompanyInfo_I10(map1);
 //				ezOrganAdminDao.insertCompanyInfo_I11(map1);
 				/* 2020-08-24 홍승비 - insert all 시, 오라클에서는 insert한 레코드 바로 select할수 없어 null이 삽입되는 오류 수정 */
-				if (globals.getProperty("Globals.DbType").equals("oracle")) {
-					ezOrganAdminDao.insertCompanyInfo_I12_separate(map1); // insertCompanyInfo_I12 오라클 쿼리에서 6개의 insert를 분리
-				}
+				/* ezekp365g 사이트에서 mysql 의 경우 TBL_FORMPROPERTY 테이블을 뷰로 사용하는데 oracle과 동일한 현상이 발생하여 로직 동일하게 수정*/
+				ezOrganAdminDao.insertCompanyInfo_I12_separate(map1); // insertCompanyInfo_I12 쿼리에서 6개의 insert를 분리
+				Map<String, String> codes  = ezOrganAdminDao.getCodeMap(map1);
+				String processCode     = codes.get("processinfo");
+				String draftCode       = codes.get("draftinfo");
+				String receiptCode     = codes.get("receiptinfo");
+				String approvalCode    = codes.get("approvalinfo");
+				String recvApprovalCode= codes.get("recvapprovalinfo");
+				String userDefinedCode = codes.get("userdefinedinfo");
+				logger.debug("processinfo = {}, draftinfo = {}, receiptinfo = {}, approvalinfo = {}, recvapprovalinfo = {}, userdefinedinfo = {}",processCode, draftCode, receiptCode, approvalCode, recvApprovalCode, userDefinedCode);
+				map1.put("upperCode1", processCode);
+				map1.put("upperCode2", draftCode);
+				map1.put("upperCode3", receiptCode);
+				map1.put("upperCode4", approvalCode);
+				map1.put("upperCode5", recvApprovalCode);
+				map1.put("upperCode6", userDefinedCode);
 				ezOrganAdminDao.insertCompanyInfo_I12(map1);
 				ezOrganAdminDao.insertCompanyInfo_I13(map1);
 				ezOrganAdminDao.insertCompanyInfo_I14(map1);
@@ -1125,6 +1139,22 @@ public class EzOrganAdminServiceImpl extends EgovAbstractServiceImpl implements 
 		}
 		
 		map.put("v_EXTATTR15", vo.getExtensionAttribute15());
+
+		OrganDeptVO values  = ezOrganAdminDao.selectValueByParentCN(map);
+		String EXTENSIONATTRIBUTE2 = values.getExtensionAttribute2();
+		String EXTENSIONATTRIBUTE3 = values.getExtensionAttribute3();
+		String COMPNM2 = values.getCompNm2();
+		String DEPT_CD_PATH = values.getDept_Cd_Path();
+		String DEPTLEVEL = values.getDeptLevel();
+
+		logger.debug("EXTENSIONATTRIBUTE2 = {}, EXTENSIONATTRIBUTE3 = {}, COMPNM2 = {}, DEPT_CD_PATH = {}, DEPTLEVEL = {}, ",EXTENSIONATTRIBUTE2, EXTENSIONATTRIBUTE3, COMPNM2, DEPT_CD_PATH, DEPTLEVEL);
+
+		map.put("EXTENSIONATTRIBUTE2",EXTENSIONATTRIBUTE2);
+		map.put("EXTENSIONATTRIBUTE3",EXTENSIONATTRIBUTE3);
+		map.put("COMPNM2",COMPNM2);
+		map.put("DEPT_CD_PATH",DEPT_CD_PATH);
+		map.put("DEPTLEVEL",DEPTLEVEL);
+
 		ezOrganAdminDao.insertDBData_dept(map);
 		
 		logger.debug("insertDBData_dept ended");
@@ -1450,21 +1480,21 @@ public class EzOrganAdminServiceImpl extends EgovAbstractServiceImpl implements 
 			String photoFilePath = photoPath + senderProfileImageName;
 			logger.debug("photoFilePath={}", photoFilePath);
 
-			File photoFile = new File(commonUtil.detectPathTraversal(photoFilePath));
+			EzFAL.EzFile photoFile = new EzFAL.EzFile(commonUtil.detectPathTraversal(photoFilePath));
 			if (photoFile.exists()) {
 				photoFile.delete();
 				logger.debug("photoFile delete.");
 			}
-			/*
+
 			String thumbnailFilePath = thumbnailPath + cn + ".jpg";
 			logger.debug("thumbnailFilePath={}", thumbnailFilePath);
 
-			File thumbnailFile = new File(commonUtil.detectPathTraversal(thumbnailFilePath));
+			EzFAL.EzFile thumbnailFile = new EzFAL.EzFile(commonUtil.detectPathTraversal(thumbnailFilePath));
 			if (thumbnailFile.exists()) {
 				thumbnailFile.delete();
 				logger.debug("thumbnailFile delete.");
 			}
-			*/
+
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		}

@@ -36,7 +36,7 @@ function getNoticePagePerCount(noticePortletId) {
 }
 
 /* 공지사항 데이터 조합 */
-var assembleNoticeList = function(noticeList, noticePortletId, access, totalCnt, currentPage) {
+var assembleNoticeList = function(noticeList, noticePortletId, access, listViewFg, totalCnt, currentPage) {
 	/* HTMLColllection에도 forEach 추가*/
 	HTMLCollection.prototype.forEach = Array.prototype.forEach;
 	var str = '';
@@ -93,19 +93,29 @@ var assembleNoticeList = function(noticeList, noticePortletId, access, totalCnt,
 	};
 	
 	if (access == "true") {
-		if (noticeList && noticeList.length != 0) {
-//			str += "<ul class='noti_portlet_list portletPagingArea'>";
-			noticeList.forEach(function(item, index){
-				str += dataAssembler(item, index);
-			});
+		if (listViewFg == "true") {
+			if (noticeList && noticeList.length != 0) {
+	//			str += "<ul class='noti_portlet_list portletPagingArea'>";
+				noticeList.forEach(function(item, index){
+					str += dataAssembler(item, index);
+				});
+			} else {
+	//			str += "<ul class='portlet_list'>";
+				str += "<dl class='nodata'>";
+				str += "<dt>";
+				str += "<img src='/images/kr/main/noData_sIcon.png'>";
+				str += "</dt>";
+				str += "<dd>" + messages.strLang1 + "</dd>";
+				str += "</dl>";
+			}
 		} else {
-//			str += "<ul class='portlet_list'>";
 			str += "<dl class='nodata'>";
 			str += "<dt>";
 			str += "<img src='/images/kr/main/noData_sIcon.png'>";
 			str += "</dt>";
-			str += "<dd>" + messages.strLang1 + "</dd>";
+			str += "<dd>" + messages.strLangnbh001 + "</dd>";
 			str += "</dl>";
+			totalCnt = 0; //리스트보기 권한이 없을때 네비게이션버튼 없에기위해
 		}
 	} else {
 		if (noticePortletId == null || noticePortletId == "") {
@@ -182,9 +192,10 @@ var getNoticePortletList = function (currentPage) {
             var noticeList = response.noticeList;
             var boardId = response.boardId;
             var access = response.access;
+            var listViewFg = response.listViewFg;
             var totalCnt = response.totalCnt;
             currentPage = response.currentPage;
-            assembleNoticeList(noticeList, boardId, access, totalCnt, currentPage);
+            assembleNoticeList(noticeList, boardId, access, listViewFg, totalCnt, currentPage);
         },
         error: function (xhr, status, error) {
             console.error(xhr.responseText);

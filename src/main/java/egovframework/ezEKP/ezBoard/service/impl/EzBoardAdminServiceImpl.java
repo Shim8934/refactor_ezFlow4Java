@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.StringJoiner;
+import java.util.Properties;
 
 import javax.annotation.Resource;
 import javax.mail.internet.InternetAddress;
@@ -29,7 +30,9 @@ import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.vo.OrganAuth;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 
+import egovframework.let.utl.fcc.service.EzFAL;
 import egovframework.let.user.login.service.LoginService;
+
 import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -75,6 +78,9 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 
 	@Autowired
 	private EzCommonService ezCommonService;
+
+	@Autowired
+	private Properties config;
 
 	@Resource(name = "EzBoardService")
 	private EzBoardService ezBoardService;
@@ -206,7 +212,7 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 		try {			
 			String docPath = commonUtil.getUploadPath("upload_board.FORM", tenantID) + commonUtil.separator;
 			String fullPath = realPath + commonUtil.detectPathTraversal(docPath);
-			File doc = new File(fullPath);
+			EzFAL.EzFile doc = new EzFAL.EzFile(fullPath);
 			
 			/* 2020-01-09 홍승비 - 파일경로 폴더 생성 방식 수정 (존재하지 않는 상위폴더를 전부 생성하도록 수정) */
 			if (!doc.exists() || !doc.isDirectory()) {
@@ -215,14 +221,14 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 			
 			dbPath = docPath + boardID + ".mht";
 			mhtFilePath = realPath + commonUtil.detectPathTraversal(dbPath);
-			File mht = new File(mhtFilePath);
+			EzFAL.EzFile mht = new EzFAL.EzFile(mhtFilePath);
 			
 			if (mht.exists()) {
 				mht.delete();
 			}
 			
 			stream = new ByteArrayInputStream(formContent.getBytes("UTF-8"));
-			bos = new FileOutputStream(mhtFilePath);
+			bos = new EzFAL.EzFileOutputStream(mhtFilePath);
 			
 			int bytesRead = 0;
 			int buffer_size = 1024;
@@ -1075,7 +1081,12 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 	public void trunkBoard(int tenantID) throws Exception {
 		logger.debug("trunkBoard started");
 
-		ezBoardAdminDAO.trunkBoard(tenantID);
+		String useMSA = config.getProperty("config.useMSA");
+		if ("YES".equalsIgnoreCase(useMSA)){
+			ezBoardAdminDAO.trunkBoardMsa(tenantID);
+		} else {
+			ezBoardAdminDAO.trunkBoard(tenantID);
+		}
 
 		logger.debug("trunkBoard ended");
 	}	
@@ -1518,32 +1529,28 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 	
 	public String saveHWP(String boardID, String formContent, String realPath, int tenantID) throws Exception {
 		logger.debug("saveHWP started");
-
-		InputStream stream = null;
-		OutputStream bos = null;
+		
 		String hwpFilePath = "";
 		String dbPath = "";
 		
-		try {			
-			String docPath = commonUtil.getUploadPath("upload_board.FORM", tenantID) + commonUtil.separator;
-			String fullPath = realPath + commonUtil.detectPathTraversal(docPath);
-			File doc = new File(fullPath);
-			
-			/* 2020-01-09 홍승비 - 파일경로 폴더 생성 방식 수정 (존재하지 않는 상위폴더를 전부 생성하도록 수정) */
-			if (!doc.exists() || !doc.isDirectory()) {
-				doc.mkdirs();
-			}
-			
-			dbPath = docPath + boardID + ".hwp";
-			hwpFilePath = realPath + commonUtil.detectPathTraversal(dbPath);
-			File hwp = new File(hwpFilePath);
-			
-			if (hwp.exists()) {
-				hwp.delete();
-			}
-			
-			stream = new ByteArrayInputStream(Base64.decodeBase64(formContent));
-			bos = new FileOutputStream(hwpFilePath);
+		String docPath = commonUtil.getUploadPath("upload_board.FORM", tenantID) + commonUtil.separator;
+		String fullPath = realPath + commonUtil.detectPathTraversal(docPath);
+		EzFAL.EzFile doc = new EzFAL.EzFile(fullPath);
+		
+		/* 2020-01-09 홍승비 - 파일경로 폴더 생성 방식 수정 (존재하지 않는 상위폴더를 전부 생성하도록 수정) */
+		if (!doc.exists() || !doc.isDirectory()) {
+			doc.mkdirs();
+		}
+		
+		dbPath = docPath + boardID + ".hwp";
+		hwpFilePath = realPath + commonUtil.detectPathTraversal(dbPath);
+		EzFAL.EzFile hwp = new EzFAL.EzFile(hwpFilePath);
+		
+		if (hwp.exists()) {
+			hwp.delete();
+		}
+		try (InputStream stream = new EzFAL.EzFileInputStream(hwp);
+			OutputStream bos = new EzFAL.EzFileOutputStream(hwpFilePath)) {
 			
 			int bytesRead = 0;
 			byte[] buffer = new byte[2048];
@@ -1553,22 +1560,6 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 			}
 		} catch(Exception e) {
 			logger.error(e.getMessage(), e);
-		} finally {
-			if(bos != null){
-				try {
-					bos.close();
-				} catch (Exception ignore) {
-						logger.debug("IGNORED: {}", ignore.getMessage());
-				}
-			}
-			
-			if(stream != null){
-				try {
-					stream.close();
-				} catch (Exception ignore) {
-					logger.debug("IGNORED: {}", ignore.getMessage());
-				}
-			}
 		}
 
 		logger.debug("saveHWP ended");

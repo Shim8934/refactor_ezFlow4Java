@@ -1,6 +1,5 @@
 package egovframework.ezEKP.ezNewPortal.service.impl;
 
-import java.io.File;
 import java.io.InputStreamReader;
 import java.lang.reflect.Field;
 import java.net.URL;
@@ -33,6 +32,9 @@ import javax.servlet.http.HttpServletResponse;
 import com.google.gson.Gson;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGProxyVO;
 import egovframework.ezEKP.ezApprovalG.vo.PortletAprInfoVO;
+import egovframework.ezEKP.ezBoard.service.EzBoardAdminService;
+import egovframework.ezEKP.ezBoard.service.EzBoardService;
+import egovframework.ezEKP.ezBoard.vo.BoardPropertyVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezNewPortal.vo.PortalUserSwitchVO;
 import egovframework.ezEKP.ezNewPortal.vo.QuickLinkVO;
@@ -47,6 +49,7 @@ import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezNewPortal.vo.PortalTopVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortalTopVO.TopFrameType;
 
+import egovframework.let.utl.fcc.service.EzFAL;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.egovframe.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import org.json.simple.JSONArray;
@@ -138,6 +141,12 @@ public class EzNewPortalServiceImpl extends EgovAbstractServiceImpl implements E
 	
 	@Resource(name  ="EzApprovalGDAO")
 	private EzApprovalGDAO ezApprovalGDAO;
+
+	@Autowired
+	private EzBoardService ezBoardService;
+
+	@Autowired
+	private EzBoardAdminService ezBoardAdminService;
 	
 	// public List<BoardListVO> getNoticePortletList(String companyId, int tenantId, int limit, String offset, String lang) throws Exception {
 	public List<BoardListVO> getNoticePortletList(String companyId, int tenantId, String offset, String lang, int currentPage, int listCntSize, int portletId) throws Exception {
@@ -3623,7 +3632,7 @@ public class EzNewPortalServiceImpl extends EgovAbstractServiceImpl implements E
 		boolean bExist = true;
 		int fileCount = 0;
 		
-		File file = new File(commonUtil.detectPathTraversal(dirPath + fileName)); 
+		EzFAL.EzFile file = new EzFAL.EzFile(commonUtil.detectPathTraversal(dirPath + fileName)); 
 		
 		while (bExist) {
 			if (file.exists()) {
@@ -4388,5 +4397,84 @@ public class EzNewPortalServiceImpl extends EgovAbstractServiceImpl implements E
 	@Override
 	public String getFirstCityCode(String countryCode) throws Exception {
 		return ezNewPortalDAO.getFirstCityCode(countryCode);
+	}
+
+	// 포탈 > board 권한 체크 메서드 > 컨트롤러단에서 서비스단으로 이동
+	@Override
+	public Map<String, Object> boardAuthCheck(String boardId, String deptPath, int tenantId, String companyId, String deptId, String userId, String rollInfo) throws Exception {
+		logger.debug("boardAuthCheck started");
+		Map<String, Object> accessMap = new HashMap<String, Object>();
+		boolean authCheck = false;
+		boolean listViewFg = false;
+		String[] deptPathSplit = deptPath.split(",");
+		int deptPathCount = deptPathSplit.length;
+
+		try {
+			if (ezBoardService.isBoardAdmin(boardId, userId, deptId, companyId, tenantId, rollInfo)) {
+				authCheck = true;
+				listViewFg = true;
+			} else {
+				for (int i = 0; i < deptPathCount; i++) {
+					String deptPathId = deptPathSplit[i];
+					BoardPropertyVO authInfo = ezBoardAdminService.getACL(boardId, deptPathId, tenantId);
+
+					if (authInfo == null) {
+
+					} else {
+						String access = authInfo.getAccess_();
+						String listViewAcess = authInfo.getListView_FG();
+						String deptAcl = authInfo.getBoardGroupACL();
+
+						if (i == deptPathCount - 1) {
+							deptAcl = "Y";
+						}
+
+						if (access.equals("1")) {
+							if (deptAcl.equals("Y")) {
+								authCheck = true;
+							}
+
+							if (authInfo.getAccessID().equals(deptId)) {
+								authCheck = true;
+							}
+						} else if (access.equals("0") && deptAcl.equals("Y")) {
+							authCheck = false;
+						}
+
+						if (listViewAcess.equals("true")) {
+							if (deptAcl.equals("Y")) {
+								listViewFg = true;
+							}
+
+							if (authInfo.getAccessID().equals(deptId)) {
+								listViewFg = true;
+							}
+						} else if (listViewAcess.equals("false") && deptAcl.equals("Y")) {
+							listViewFg = false;
+						}
+					}
+					
+					
+					/*String authCompare = ezNewPortalService.getBoardAuthCheck(boardId, deptPathId, tenantId, companyId);
+
+					if (authCompare != null) {
+						if (authCompare.equals("true")) {
+							authCheck = true;
+						} else {
+							authCheck = false;
+						}
+					}*/
+				}
+			}
+		} catch (Exception e) {
+			logger.debug("boardAuthCheck error");
+		}
+		accessMap.put("access", authCheck);
+		accessMap.put("listViewFg", listViewFg);
+
+		logger.debug("authCheck : " + authCheck);
+		logger.debug("listViewFg : " + listViewFg);
+		logger.debug("boardAuthCheck ended");
+		return accessMap;
 	}
 }

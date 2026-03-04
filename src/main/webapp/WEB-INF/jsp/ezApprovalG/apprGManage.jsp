@@ -1735,8 +1735,10 @@
 		    	}
 		    }
 		    
-		    function btnApprovalInfo_Complete(ret) {
-		    	hidePopup();
+		    function btnApprovalInfo_Complete(ret, receiptFlag) {
+                if (receiptFlag == '' || typeof receiptFlag == 'undefined') {
+                    hidePopup();
+                }
 				retValue = ret;
 		    	
 			        if (ret && ret[0] == "OK") {

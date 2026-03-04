@@ -18,6 +18,7 @@ import java.util.Map;
 import javax.annotation.Resource;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import egovframework.let.utl.fcc.service.EzFAL;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -325,7 +326,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		
 		String pDirPath = realPath + commonUtil.getUploadPath("upload_resource.ROOT", tenantID);
 		
-		File file = new File(pDirPath + commonUtil.separator + "uploadFile" + commonUtil.separator + brdID + "_uploadFile");
+		EzFAL.EzFile file = new EzFAL.EzFile(pDirPath + commonUtil.separator + "uploadFile" + commonUtil.separator + brdID + "_uploadFile");
 		
 		if (!file.exists()) {
 			file.mkdirs();
@@ -341,10 +342,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 			
 			String afterFilePath = pDirPath + commonUtil.separator + "tempUploadFile" + commonUtil.separator + strAttachList1;
 			
-			File beforeFile = new File(beforeFilePath);
-			File afterFile = new File(afterFilePath);
-			
-			FileUtils.moveFile(beforeFile, afterFile);
+			EzFAL.moveFile(beforeFilePath , afterFilePath);
 		}
 		
 		if(strAttachList2.indexOf("/") != -1) {
@@ -354,16 +352,13 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 			
 			String afterFilePath = pDirPath + commonUtil.separator + "tempUploadFile" + commonUtil.separator + strAttachList2;
 			
-			File beforeFile = new File(beforeFilePath);
-			File afterFile = new File(afterFilePath);
-			
-			FileUtils.moveFile(beforeFile, afterFile);
+			EzFAL.moveFile(beforeFilePath , afterFilePath);
 		}
 		
 		if(file.exists()) {
-			File[] files = file.listFiles();
+			EzFAL.EzFile[] files = file.listFiles();
 			
-			for(File f: files){
+			for(EzFAL.EzFile f: files){
 				f.delete();
 			}
 		}
@@ -376,13 +371,13 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 			String beforeFilePath = pDirPath + commonUtil.separator + "tempUploadFile" + commonUtil.separator + strAttachList1;
 			String afterFilePath = pDirPath + commonUtil.separator + "uploadFile" + commonUtil.separator + brdID + "_uploadFile" + commonUtil.separator + strAttachList1;
 
-			File beforeFile = new File(beforeFilePath);
+			EzFAL.EzFile beforeFile = new EzFAL.EzFile(beforeFilePath);
 			fileSize = beforeFile.length();
 			
-			File afterFile = new File(afterFilePath);
+			EzFAL.EzFile afterFile = new EzFAL.EzFile(afterFilePath);
 			
 			if (!afterFile.exists()) {
-				FileUtils.moveFile(beforeFile, afterFile);
+				EzFAL.moveFile(beforeFile, afterFile);
 			}
 			
 			attachMap.put("fileName", strAttachList1);
@@ -401,13 +396,13 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 			String beforeFilePath = pDirPath + commonUtil.separator + "tempUploadFile" + commonUtil.separator + strAttachList2;
 			String afterFilePath = pDirPath + commonUtil.separator + "uploadFile" + commonUtil.separator + brdID + "_uploadFile" + commonUtil.separator + strAttachList2;
 
-			File beforeFile = new File(beforeFilePath);
+			EzFAL.EzFile beforeFile = new EzFAL.EzFile(beforeFilePath);
 			fileSize = beforeFile.length();
 			
-			File afterFile = new File(afterFilePath);
+			EzFAL.EzFile afterFile = new EzFAL.EzFile(afterFilePath);
 			
 			if (!afterFile.exists()) {
-				FileUtils.moveFile(beforeFile, afterFile);
+				EzFAL.moveFile(beforeFile, afterFile);
 			}
 			
 			attachMap.put("fileName", strAttachList2);
@@ -478,7 +473,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		
 		String pDirPath = realPath + commonUtil.getUploadPath("upload_resource.ROOT", tenantID);
 		
-		File file = new File(pDirPath + "uploadFile" + commonUtil.separator + brdID + "_uploadFile");
+		EzFAL.EzFile file = new EzFAL.EzFile(pDirPath + "uploadFile" + commonUtil.separator + brdID + "_uploadFile");
 		
 		if (!file.exists()) {
 			file.mkdirs();
@@ -489,13 +484,13 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 			String beforeFilePath = pDirPath + commonUtil.separator + "tempUploadFile" + commonUtil.separator + strAttachList1;
 			String afterFilePath = pDirPath + commonUtil.separator + "uploadFile" + commonUtil.separator + brdID + "_uploadFile" + commonUtil.separator + strAttachList1;
 
-			File beforeFile = new File(beforeFilePath);
+			EzFAL.EzFile beforeFile = new EzFAL.EzFile(beforeFilePath);
 			long fileSize = beforeFile.length();
 			
-			File afterFile = new File(afterFilePath);
+			EzFAL.EzFile afterFile = new EzFAL.EzFile(afterFilePath);
 			
 			if (!afterFile.exists()) {
-				FileUtils.moveFile(beforeFile, afterFile);
+				EzFAL.moveFile(beforeFile, afterFile);
 			}
 			
 			attachMap.put("fileName", strAttachList1);
@@ -511,13 +506,13 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 			String beforeFilePath = pDirPath + commonUtil.separator + "tempUploadFile" + commonUtil.separator + strAttachList2;
 			String afterFilePath = pDirPath + commonUtil.separator + "uploadFile" + commonUtil.separator + brdID + "_uploadFile" + commonUtil.separator + strAttachList2;
 
-			File beforeFile = new File(beforeFilePath);
+			EzFAL.EzFile beforeFile = new EzFAL.EzFile(beforeFilePath);
 			long fileSize = beforeFile.length();
 			
-			File afterFile = new File(afterFilePath);
+			EzFAL.EzFile afterFile = new EzFAL.EzFile(afterFilePath);
 			
 			if (!afterFile.exists()) {
-				FileUtils.moveFile(beforeFile, afterFile);
+				EzFAL.moveFile(beforeFile, afterFile);
 			}
 			
 			attachMap.put("fileName", strAttachList2);
@@ -2490,12 +2485,12 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		
 		String pDirPath = realPath + commonUtil.getUploadPath("upload_resource.ROOT", tenantID);
 		
-		File file = new File(pDirPath + commonUtil.separator + "uploadFile" + commonUtil.separator + resID + "_uploadFile");
+		EzFAL.EzFile file = new EzFAL.EzFile(pDirPath + commonUtil.separator + "uploadFile" + commonUtil.separator + resID + "_uploadFile");
 		
 		if(file.exists()) {
-			File[] files = file.listFiles();
+			EzFAL.EzFile[] files = file.listFiles();
 			
-			for(File f: files){
+			for(EzFAL.EzFile f: files){
 				f.delete();
 			}
 			

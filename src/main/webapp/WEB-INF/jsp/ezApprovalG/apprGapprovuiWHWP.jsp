@@ -205,6 +205,8 @@
 
             // 2025-02-18 박기범 - 프론트에서 문서 편집시, 문서를 오픈한 이후로 다른 문서/결재진행 변화가 있었는지 체크하기 위한 코드
             var snapshotCode = "<c:out value ='${snapshotCode}'/>";
+
+            var isPreview = "${isPreview}";
             
             // 일괄 타입 B
             var draftAllTypeB = "<c:out value ='${draftAllTypeB}'/>";

@@ -6347,8 +6347,13 @@
                         <isEqual property="listType" compareValue="001">
                             CONCAT(CONCAT(TBL_RECORD.ProcessDeptName, '-'), SUBSTR(TBL_RECORD.RegisterNo, -6)) AS DispRegisterNo
                         </isEqual>
+                        <isEqual property="listType" compareValue="012">
+                            CONCAT(CONCAT(TBL_RECORD.ProcessDeptName, '-'), SUBSTR(TBL_RECORD.RegisterNo, -6)) AS DispRegisterNo
+                        </isEqual>
                         <isNotEqual property="listType" compareValue="001">
-                            CONCAT(CONCAT(TBL_RECORD.ProcessDeptName, '-'), TRIM(LEADING'0' FROM TBL_RECORD.RegisterNo)) AS DispRegisterNo
+                            <isNotEqual property="listType" compareValue="012">
+                                CONCAT(CONCAT(TBL_RECORD.ProcessDeptName, '-'), TRIM(LEADING'0' FROM TBL_RECORD.RegisterNo)) AS DispRegisterNo
+                            </isNotEqual>
                         </isNotEqual>
                     </isNotEmpty>
                     <isNotEmpty property="recTitle" prepend=",">

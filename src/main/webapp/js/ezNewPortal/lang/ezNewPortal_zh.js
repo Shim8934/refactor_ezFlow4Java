@@ -66,5 +66,6 @@ var messages = {
 	apprPortlet005 : "文档无法恢复不是由其他公司发起的。",
 	apprPortlet006 : "韩文样式只能在《专栏》中看到。",
 	apprPortlet007 : "联动样式不能重新制定。",
-	apprPortlet008 : "确定要取消构件设置吗 ？"
+	apprPortlet008 : "确定要取消构件设置吗 ？",
+	strLangnbh001 : "리스트 보기 권한이 없습니다."
 }

@@ -44,6 +44,8 @@
 						</c:if>
 						 -->
 						</dl>
+					<c:choose>
+						<c:when test="${listViewFg eq 'true' }">
 						<c:choose>
 							<c:when test="${not empty photoBoardList && photoBoardList != ''}">
 								<ul class="photoList portletPagingArea" id="photoul">
@@ -65,6 +67,18 @@
 								</ul>
 							</c:otherwise>
 						</c:choose>
+						</c:when>
+						<c:otherwise>
+							<ul class="portlet_list portletPagingArea" id="photoul" style="display:block">
+								<dl class="nodata listViewOff">
+									<dt>
+										<img src="/images/kr/main/noData_sIcon.png">
+									</dt>
+									<dd><spring:message code='ezNewPortal.t142' /></dd>
+								</dl>
+							</ul>
+						</c:otherwise>
+					</c:choose>
 				</c:when>
 				<c:otherwise>
 					<c:choose>

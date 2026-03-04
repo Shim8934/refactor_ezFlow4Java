@@ -229,7 +229,7 @@
 	                    return "false";
 					
 	                var imagecontent = document.getElementById("addimagecontent");
-					insertImageHtml(imagecontent, imgpath, localFileName, imgUniqueID, imageid, imgSize);
+					insertImageHtml(imagecontent, imgpath, localFileName, imgUniqueID, imageid, imgSize, flag);
 					if (!!fileContent) {
 						document.getElementById("txtArea" + imageid).value = fileContent;
 					}
@@ -253,7 +253,7 @@
 	                    return "false";
 					
 					var imagecontent = document.getElementById("addimagecontent");
-					insertImageHtml(imagecontent, imgpath, localFileName, imgUniqueID, imageid, imgSize);
+					insertImageHtml(imagecontent, imgpath, localFileName, imgUniqueID, imageid, imgSize, flag);
 					if (!!fileContent) {
 						document.getElementById("txtArea" + imageid).value = fileContent;
 					}
@@ -315,7 +315,7 @@
 	            }
 	        }
 			
-			function insertImageHtml(imagecontentDom, imgpath, localFileName, imgUniqueID, imageid, imgSize) {
+			function insertImageHtml(imagecontentDom, imgpath, localFileName, imgUniqueID, imageid, imgSize, flag) {
 				// 사진 개체 박스
 				const wrapperAttr = { id: "M_" + imageid, name: imgpath, uniqueId: imgUniqueID };
 				const wrapper = createEl("div", "album_list_cont", wrapperAttr);
@@ -342,7 +342,8 @@
 				const spanRadio = createEl("span", "album_list_mainChk");
 				const radioWrap = createEl("div", "custom_radio");
 				radioWrap.appendChild(createEl("input", null, { type: "radio", name: "mainFG" }));
-				
+				if (flag == 'Y') radioWrap.querySelector('input').checked = true;
+
 				spanRadio.appendChild(radioWrap);
 				wrapper.append(spanCheck, spanPhoto, spanText, spanRadio);
 				imagecontentDom.appendChild(wrapper);

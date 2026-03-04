@@ -779,7 +779,7 @@
 					</HEADER>
 					<HEADER>
 						<NAME></NAME>
-						<WIDTH>50</WIDTH>
+						<WIDTH>70</WIDTH>
 						<CLASSNAME>TYPE</CLASSNAME>
 					</HEADER>
 					<HEADER>

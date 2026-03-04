@@ -169,7 +169,7 @@ function resourceNodata() {
 
 //예약 등록 팝업
 function reserveInfoPopup(id) {
-	 var url = "/ezResource/portletResourceInfo.do?ownerID=" + id;
+	 var url = "/ezResource/viewClsItem.do?brdID=" + id;
      var feature =  "width=820, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1"
      feature = feature + GetOpenPosition(820, 700);
      window.open(url, "", feature);
@@ -178,7 +178,7 @@ function reserveInfoPopup(id) {
 // 예약 등록 팝업
 function reserveSavePopup(id) {
 	 var selectedDate = Sdatepicker.value.replace(/\./g, "-");
-	 var url = "/ezResource/persPortletAdd.do?cmd=add&from=schedule&selsd=" + selectedDate + "&seled=" + selectedDate + "&dayView=&ownerID=" + id;
+	 var url = "/ezResource/scheduleAdd.do?cmd=add&from=schedule&selsd=" + selectedDate + "&seled=" + selectedDate + "&dayView=&ownerID=" + id;
      var feature =  "width=820, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1"
      feature = feature + GetOpenPosition(820, 700);
      window.open(url, "", feature);
@@ -190,7 +190,7 @@ function reserveViewPopup() {//0 num //1 id
 	var _num     = _this.getAttribute('num');
 	var _ownerID = _this.getAttribute('ownerID');
 	var selectedDate = Sdatepicker.value.replace('/\./g', '-');
-	var url     = "/ezResource/persPortletRead.do?cmd=mod&from=schedule&num=" + _num + "&ownerID=" + _ownerID + "&type=Master&startDate=" + selectedDate + "&endDate=" + selectedDate
+	var url     = "/ezResource/scheduleRead.do?cmd=mod&from=schedule&num=" + _num + "&ownerID=" + _ownerID + "&type=Master&startDate=" + selectedDate + "&endDate=" + selectedDate
     var feature =  "width=820, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1"
     
 	feature = feature + GetOpenPosition(820, 700);

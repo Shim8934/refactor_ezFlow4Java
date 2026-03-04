@@ -23,6 +23,12 @@
 		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.datepicker.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/timeControls/jquery.timepicker.js')}"></script>
 		
+		<style>
+            #ui-datepicker-div{margin: 6px auto 0 auto !important;} 
+            #sendComment:has(.uploadedFile[style*="display: inline-block"]){height:190px !important; position: relative;}
+            .comment_input_layout{width:calc(100% - 220px);}
+            .uploadedFile{margin:0; right: 110px; float: none; left: 10px; bottom: 10px;}
+		</style>
 		<script type="text/javascript">	
 			var filesize 				= 0;
 			var xhr1 					= new XMLHttpRequest();
@@ -2970,8 +2976,20 @@
 		        	format: 'yyyy-mm-dd',
 		        	onSelect:function(dateText, inst){
 		        		selDateTimePicker(inst);
-		        	}
-		    	});		
+		        	},
+		        	beforeShow: function(input, inst) {
+                        var datepickerDiv = $('#ui-datepicker-div');
+                        if (datepickerDiv.parent().attr('id') !== '_dateTimePicker') {
+                             datepickerDiv.appendTo('#_dateTimePicker');
+                        }
+                        setTimeout(function() {
+                             datepickerDiv.css({
+                                'position': 'static',
+                                'display': 'block'
+                            });
+                        }, 0);
+                    }
+		    	});
 		
 				var _endD = "<c:out value='${question.endDate}'/>";
 				
@@ -3242,7 +3260,7 @@
 									<ul class="voteIcon_ul">
 										<li class="voteIconImg_li icon endDate">
 											<img id="endDate" src="/images/poll/endDateModify.png" class="voteIconImg nosecret" style="width:45px" title="<spring:message code = 'ezPoll.hdp04'/>" onmouseover="this.src = '/images/poll/endDateModify_hover.png'" onmouseout="this.src = '/images/poll/endDateModify.png'" />
-											<div id="_dateTimePicker" style="display: none; position: fixed; top: 130px; right: 10px; height: 226px; width: 223px; background: white; border-radius: 10px; padding-top: 20px; border:1px solid #ddd; z-index:10;">										
+											<div id="_dateTimePicker" style="display: none; position: fixed; top: 130px; right: 10px; padding-bottom:20px; width: 223px; background: white; border-radius: 10px; padding-top: 20px; border:1px solid #ddd; z-index:10;">										
 												<input type="text" id="Edatepicker" style="width:80px; height: 20px; text-align:center; margin-left: 18px; margin-right: 5px; float: left; z-index: 10;" readonly >
 												<select id="eTimePicker" style="float:left"></select>
 												<i id="dateConfirmBtn" class="fa fa-check-circle"></i>
@@ -3576,11 +3594,11 @@
 							<!-- <textarea cols="20" rows="1" id="comment_input" oninput="auto_grow(this)" maxlength="500"></textarea> -->
 							<input type="text" id="comment_input" oninput="auto_grow(this)" maxlength="500" style="width: 100%"/>
 						</div>
+						<div id="uploadedFile" class="uploadedFile" style="display:none;">
+                            <img id="cancelImg" class="cancelImg" src="/images/close.png"  onclick="cancelShowingCmtFile(this);">
+                            <img id="previewImage" class="previewImage">
+                        </div>
 						<div class="commentBtn">
-							<div id="uploadedFile" class="uploadedFile" style="display:none;">
-								<img id="cancelImg" class="cancelImg" src="/images/close.png"  onclick="cancelShowingCmtFile(this);">
-								<img id="previewImage" class="previewImage">
-							</div>	
 							<button id="sendBttn" class="sendBttn" onclick="sendComment(); return false;"><spring:message code="ezPoll.t144"/></button>						
 						</div>
 						</div>

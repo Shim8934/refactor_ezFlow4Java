@@ -339,9 +339,10 @@ public class EzCommunityAdminController {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		String code = request.getParameter("code");
+		String companyID = request.getParameter("companyID");
 		
 		CommunityClubVO club = ezCommunityAdminService.admCommunityInfoEdit(commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), code, userInfo.getTenantId());
-		club.setUserName(ezCommunityAdminService.getUserName(club.getC_SysopID().trim(), userInfo.getPrimary(), userInfo.getCompanyID(), userInfo.getTenantId()));
+		club.setUserName(ezCommunityAdminService.getUserName(club.getC_SysopID().trim(), userInfo.getPrimary(), companyID, userInfo.getTenantId()));
 		//club.setC_ClubDesc(club.getC_ClubDesc().replaceAll("<br>", "\r\n"));
 		club.setC_ClubName(commonUtil.cleanValue(club.getC_ClubName()));
 		

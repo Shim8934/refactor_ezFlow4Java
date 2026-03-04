@@ -7697,13 +7697,21 @@
 			INSERT
         	INTO
         		TBL_COMM_ITEM_ATTACHMENTS
+        		(ITEMID,
+				GUID,
+				FILEPATH,
+				FILESIZE,
+				FILENAME,
+				TENANT_ID,
+				FILECONTENT)
        		VALUES
        			(#itemID#,
        			UUID(),
        			#filePath#,
        			#fileSize#,
        			#fileName#,
-       			#tenantID#)
+       			#tenantID#,
+       			#fileContent#)
 		]]>
 	</insert>
 	

@@ -40,8 +40,8 @@
 				var parentElement = parent.document.getElementById("ifrmPreViewH");
 				
 				if (parentElement != null) {
-					parentElement.style.height = "<c:out value = '${wHeight}'/>px";
-					parentElement.style.width = "<c:out value = '${wWidth}'/>px";
+					parentElement.style.height = "100%";
+					parentElement.style.width = "97%";
 				}
 			}
 			
@@ -105,7 +105,7 @@
 		</script>
 		
 	</head>
-	<body class = "popup_notice popup_type${skinValue}" style="overflow:hidden;">
+	<body class = "popup_notice popup_type${skinValue}" style="">
 		<!--  popup 해더 사이즈 : 33px;	bottom 사이즈 : 49px;본문 내용 위아래 여백 : 54px;	총 height 사이즈 : 136px; -->
 		<form style="height:100%;">
 		<div class="popup_noticeLayout">
@@ -115,7 +115,6 @@
 			</dl>
 			<div class='popup_noticeList'>${content }</div>
 			<div class="empty_btn">
-				<div class="empty_div" style="height:425px;background-color:#fff;"></div>
 				<div class="notice_btn" style="border-radius:0px 0px 0px 0px"><p class="btn_checkbox">
 					<div class='custom_checkbox'><input type="checkbox" name="checkbox" class="inp_noticeCheck"><label class="name_type2" style="top:4px; margin-left: 10px;">하루 이 창 열지않기</label></div></div>
 			</div>

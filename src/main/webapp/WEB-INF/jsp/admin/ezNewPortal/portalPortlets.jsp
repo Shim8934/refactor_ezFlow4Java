@@ -1137,7 +1137,9 @@
 				if (viewType == "b") {
 					mobilePortlet = 1;
 				}
-			} 
+			} else if (webType == "mobile" && viewType == "b") {
+                mobilePortlet = 1;
+            }
 			
 			if (mobilePortlet == -1) {
 				return viewType === BoardViewType.CARD_A || viewType === BoardViewType.CARD_B;

@@ -66,5 +66,6 @@ var messages = {
 	apprPortlet005 : "다른 회사에서 기안한 문서는 재기안 할 수 없습니다.",
 	apprPortlet006 : "한글양식은 IE에서만 볼 수 있습니다.",
 	apprPortlet007 : "연동 양식은 재기안하실 수 없습니다.",
-	apprPortlet008 : "부재 설정을 해제하시겠습니까?"
+	apprPortlet008 : "부재 설정을 해제하시겠습니까?",
+	strLangnbh001 : "리스트 보기 권한이 없습니다."
 }

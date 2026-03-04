@@ -301,4 +301,18 @@ public interface EzNewPortalService {
 	public String getUserLocalLang(String userID, int tenantID) throws Exception;
 
 	public String getFirstCityCode(String countryCode) throws Exception;
+
+	/**
+	 * 포탈 > 포틀릿 접근, 리스트보기 권한 체크
+	 * @param boardId 	게시글 아이디
+	 * @param deptPath 	권한 경로 : everyone,top,Top, + 해당 사용자의 상위부서들 + 자기 부서
+	 * @param tenantId 	테넌트아이디
+	 * @param companyId 회사아이디
+	 * @param deptId 	부서아이디
+	 * @param userId 	사용자 아이디
+	 * @param rollInfo	
+	 * @return	Map = (access : boolean), (listViewFg : boolean)
+	 * @throws Exception
+	 */
+	public Map<String, Object> boardAuthCheck(String boardId, String deptPath, int tenantId, String companyId, String deptId, String userId, String rollInfo) throws Exception;
 }

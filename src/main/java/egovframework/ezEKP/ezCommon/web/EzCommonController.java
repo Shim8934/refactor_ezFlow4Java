@@ -19,6 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
+import egovframework.let.utl.fcc.service.EzFAL;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -255,7 +256,7 @@ public class EzCommonController extends EzFileMngUtil{
         
         filePath = realPath + uploadModule;
         
-        File file = new File(commonUtil.detectPathTraversal(filePath));
+        EzFAL.EzFile file = new EzFAL.EzFile(commonUtil.detectPathTraversal(filePath));
         if (!file.exists()) {
         	file.mkdirs();
         }

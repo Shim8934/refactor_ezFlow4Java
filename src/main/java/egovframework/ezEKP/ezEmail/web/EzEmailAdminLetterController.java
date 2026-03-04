@@ -16,6 +16,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import egovframework.let.utl.fcc.service.EzFAL;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
@@ -386,12 +387,12 @@ public class EzEmailAdminLetterController {
 			ezEmailAdminLetterService.updateLetterMove(letterNo, parentLetterBoxNo);
 			
 			// 이동 할 편지지 디렉토리명 변경하기  (같은 위치에 옮겨졌을때 대비)
-			String exFolder = realPath + filePath + letterId;
-			String changeFolder = realPath + filePath + letterId + "-old"; // 변경할 디렉토리명
-			File exFile = new File(exFolder); // 변경 전
-			File chFile = new File(changeFolder); // 변경 후
-			exFile.renameTo(chFile); // 변경
-			logger.debug("changeFolder=" + changeFolder + ", exFolder=" + exFolder);
+			// String exFolder = realPath + filePath + letterId;
+			String changeFolder = realPath + filePath + letterId; // 변경할 디렉토리명
+			/*EzFAL.EzFile exFile = new EzFAL.EzFile(exFolder); // 변경 전
+			EzFAL.EzFile chFile = new EzFAL.EzFile(changeFolder); // 변경 후
+			exFile.renameTo(chFile); // 변경*/
+			logger.debug("changeFolder=" + changeFolder );
 
 			// 이동하기
 			String originPath = changeFolder; // 이동할 디렉토리
@@ -403,7 +404,7 @@ public class EzEmailAdminLetterController {
 			String result = moveFile(folderName, fileName, originPath, path, uploadPath, letterBox, letterId);
 			
 			if (result != null) {
-				File file = new File(changeFolder);
+				EzFAL.EzFile file = new EzFAL.EzFile(changeFolder);
 				
 				if (file.exists()) {
 					deleteDirectory(file);
@@ -416,6 +417,7 @@ public class EzEmailAdminLetterController {
 			}
 		} catch (RuntimeException e) {
 			returnStr = "ERROR";
+			e.printStackTrace();
 		} catch (Exception e) {
 			returnStr = "ERROR";
 		}
@@ -578,15 +580,15 @@ public class EzEmailAdminLetterController {
 			// files/upload_mail/letterBoxUpload/.../...
 			filePath = filePath + commonUtil.separator + letterBoxNo + "/" + letterId;
 			logger.debug("filePath=" + filePath);
-			
-			File file = new File(realPath + filePath);
+
+			EzFAL.EzFile file = new EzFAL.EzFile(realPath + filePath);
 
 			if (!file.exists()) {
 				file.mkdirs();
 			}
 
 			// CWE-404 보안 취약점 대응
-			try (BufferedWriter fw = new BufferedWriter(new FileWriter(file + commonUtil.separator + fileName))) {
+			try (BufferedWriter fw = new BufferedWriter(new OutputStreamWriter(new EzFAL.EzFileOutputStream(file + commonUtil.separator + fileName), "UTF-8"))) {
 				fw.write(letterContent);
 				fw.flush();
 			}
@@ -651,9 +653,9 @@ public class EzEmailAdminLetterController {
 			// files/upload_mail/letterBoxUpload/.../...
 			filePath = filePath + commonUtil.separator + letterBoxNo + "/" + letterId;
 			logger.debug("filePath=" + filePath);
-			
-			File file = new File(realPath + filePath);
-			File fileHtml = new File(realPath + filePath + "/" + fileName);
+
+			EzFAL.EzFile file = new EzFAL.EzFile(realPath + filePath);
+			EzFAL.EzFile fileHtml = new EzFAL.EzFile(realPath + filePath + "/" + fileName);
 
 			if (!file.exists()) {
 				file.mkdirs();
@@ -664,7 +666,7 @@ public class EzEmailAdminLetterController {
 			}
 
 			// CWE-404 보안 취약점 대응
-			try (BufferedWriter fw = new BufferedWriter(new FileWriter(file + commonUtil.separator + fileName))) {
+			try (BufferedWriter fw = new BufferedWriter(new OutputStreamWriter(new EzFAL.EzFileOutputStream(file + commonUtil.separator + fileName), "UTF-8"))) {
 				fw.write(letterContent);
 				fw.flush();
 			}
@@ -710,7 +712,7 @@ public class EzEmailAdminLetterController {
 			letterBoxNo = commonUtil.detectPathTraversal(letterBoxNo);
 			filePath = filePath + commonUtil.separator + letterBoxNo;
 					
-			deleteDirectory(new File(realPath + filePath));
+			deleteDirectory(new EzFAL.EzFile(realPath + filePath));
 
 		} catch (RuntimeException e) {
 			returnStr = "ERROR";
@@ -723,13 +725,13 @@ public class EzEmailAdminLetterController {
 	}
 
 	// 하위 폴더 및 파일까지 삭제하는 함수 (재은)
-	public boolean deleteDirectory(File path) {
+	public boolean deleteDirectory(EzFAL.EzFile path) {
 		if (!path.exists()) {
 			return false;
 		}
 
-		File[] files = path.listFiles();
-		for (File file : files) {
+		EzFAL.EzFile[] files = path.listFiles();
+		for (EzFAL.EzFile file : files) {
 			if (file.isDirectory()) {
 				deleteDirectory(file);
 			} else {
@@ -743,30 +745,30 @@ public class EzEmailAdminLetterController {
 	public String moveFile(String folderName, String fileName, String originPath, String copyPath, String uploadPath, String letterBox, String letterId) throws Exception{
 		String path = copyPath + "/" + folderName;
 		String filePath = path + "/" + fileName;
-		File dir = new File(path);
+		EzFAL.EzFile dir = new EzFAL.EzFile(path);
 
 		if (!dir.exists()) { // 폴더 없으면 폴더 생성
 			dir.mkdirs();
 		}
 
 		try {
-			File file = new File(originPath + "/" + fileName);
+			EzFAL.EzFile file = new EzFAL.EzFile(originPath + "/" + fileName);
 
-			if (file.renameTo(new File(filePath))) { // 파일 이동
+			if (file.renameTo(new EzFAL.EzFile(filePath))) { // 파일 이동
 
-				dir = new File(originPath + "/images"); // 이미지 있으면 이미지도 이동시켜줄것
+				dir = new EzFAL.EzFile(originPath + "/images"); // 이미지 있으면 이미지도 이동시켜줄것
 				if (dir.exists()) {
 
-					File newImages = new File(path + "/images");
+					EzFAL.EzFile newImages = new EzFAL.EzFile(path + "/images");
 					newImages.mkdirs();
 
-					File[] imgs = dir.listFiles();
+					EzFAL.EzFile[] imgs = dir.listFiles();
 
 					for (int i = 0; i < imgs.length; i++) {
-						imgs[i].renameTo(new File(newImages.toString() + "/" + imgs[i].getName()));
+						imgs[i].renameTo(new EzFAL.EzFile(newImages.toString() + "/" + imgs[i].getName()));
 					}
 
-					updateFile(new File(copyPath + folderName + "/" + fileName), uploadPath + "/" + letterBox + "/" + letterId, uploadPath + "/" + folderName);
+					updateFile(new EzFAL.EzFile(copyPath + folderName + "/" + fileName), uploadPath + "/" + letterBox + "/" + letterId, uploadPath + "/" + folderName);
 
 				}
 
@@ -784,15 +786,15 @@ public class EzEmailAdminLetterController {
 	}
 
 	// html파일의 img src 경로 바꿔주는 함수 (재은)
-	public String updateFile(File htmlFile, String originPath, String copyPath) {
+	public String updateFile(EzFAL.EzFile htmlFile, String originPath, String copyPath) {
 		// file, originPath, path
 
 		String resultReturn = "OK";
 		String result = null;
 		try {
 			// CWE-404 보안 취약점 대응
-			try (FileReader reader = new FileReader(htmlFile);
-				FileWriter writer = new FileWriter(htmlFile)) {
+			try (Reader reader = new InputStreamReader(new EzFAL.EzFileInputStream(htmlFile), "UTF-8");
+				 Writer writer = new OutputStreamWriter(new EzFAL.EzFileOutputStream(htmlFile), "UTF-8")) {
 				result = "";
 
 				int c;
@@ -862,16 +864,16 @@ public class EzEmailAdminLetterController {
 			
 			ezEmailAdminLetterService.deleteLetter(letterNo);
 
-			File file = new File(realPath + filePath);
+			EzFAL.EzFile file = new EzFAL.EzFile(realPath + filePath);
 			logger.debug("path=" + realPath + filePath);
 
 			if (file.exists()) {
-				File[] fileList = file.listFiles();
+				EzFAL.EzFile[] fileList = file.listFiles();
 
-				for (File f : fileList) {
+				for (EzFAL.EzFile f : fileList) {
 					if (!f.delete()) { // 삭제가 안되면 이미지 폴더 밑에 이미지들 삭제
-						File[] imgList = f.listFiles();
-						for (File imgF : imgList) {
+						EzFAL.EzFile[] imgList = f.listFiles();
+						for (EzFAL.EzFile imgF : imgList) {
 							imgF.delete();
 						}
 						f.delete();
@@ -944,8 +946,8 @@ public class EzEmailAdminLetterController {
 			returnJson = ezEmailAdminLetterService.selectDetailLetter(letterNo);
 
 			String letter = filePath + commonUtil.separator + returnJson.get("letterBoxNo") + "/" + returnJson.get("letterId") + "/" + fileName;
-			
-			File file = new File(realPath + letter);
+
+			EzFAL.EzFile file = new EzFAL.EzFile(realPath + letter);
 
 			if (!file.exists()) {
 				letter = "ERROR";
@@ -954,7 +956,7 @@ public class EzEmailAdminLetterController {
 					String letterHtml = "";
 					String letterHtmlTemp = "";
 					// CWE-404 보안 취약점 대응
-					try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+					try (BufferedReader br = new BufferedReader(new InputStreamReader(new EzFAL.EzFileInputStream(file), "UTF-8"))) {
 						while ((letterHtmlTemp = br.readLine()) != null) {
 							letterHtml += letterHtmlTemp;
 						}

@@ -131,6 +131,8 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 			
 			model.addAttribute("boardId", data.get("boardId")); //게시판 아이디 넘기기
 			model.addAttribute("access", access);
+			String listViewFg = data.get("listViewFg").toString();
+			model.addAttribute("listViewFg", listViewFg);
 			
 			if (access.equals("true")) {
 				if (data.get("noticeList") != null) {
@@ -612,6 +614,8 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 			JSONObject data = (JSONObject) resultBody.get("data");
 			String access = data.get("access").toString();
 			model.addAttribute("access", access);
+			String listViewFg = data.get("listViewFg").toString();
+			model.addAttribute("listViewFg", listViewFg);
 			model.addAttribute("boardId", data.get("boardId"));
 			model.addAttribute("portletName", data.get("portletName"));
 			
@@ -1101,6 +1105,8 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 			JSONObject data = (JSONObject) resultBody.get("data");
 			String access = data.get("access").toString();
 			model.addAttribute("access", access);
+			String listViewFg = data.get("listViewFg").toString();
+			model.addAttribute("listViewFg", listViewFg);
 			model.addAttribute("boardId", data.get("boardId"));
 			model.addAttribute("portletName", data.get("portletName"));
 			
@@ -1194,6 +1200,8 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 			JSONObject data = (JSONObject) resultBody.get("data");
 			String access = data.get("access").toString();
 			model.addAttribute("access", access);
+			String listViewFg = data.get("listViewFg").toString();
+			model.addAttribute("listViewFg", listViewFg);
 			model.addAttribute("boardId", data.get("boardId"));
 			model.addAttribute("portletName", data.get("portletName"));
 			
@@ -1491,6 +1499,8 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		if (result.equals("ok")) {
 			JSONObject data = (JSONObject) resultBody.get("data");
 			String access = data.get("access").toString();
+			String listViewFg = data.get("listViewFg").toString();
+			model.addAttribute("listViewFg", listViewFg);
 			
 			if (access.equals("true")) {
 				boardList = (JSONArray) data.get("boardList");

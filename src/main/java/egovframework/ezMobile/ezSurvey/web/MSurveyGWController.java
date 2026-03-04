@@ -1,8 +1,10 @@
 package egovframework.ezMobile.ezSurvey.web;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -11,6 +13,8 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import egovframework.let.utl.fcc.service.EzFAL;
+import egovframework.let.utl.fcc.service.MimeTypes;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -214,22 +218,15 @@ public class MSurveyGWController {
 		}
 		
 		//Get absolute path of the application
-		String realPath = request.getServletContext().getRealPath("");
-		realPath = commonUtil.detectPathTraversal(realPath);
+		String path = commonUtil.detectPathTraversal(request.getServletContext().getRealPath("")) + commonUtil.detectPathTraversal(filePath);
+		EzFAL.EzFile file = new EzFAL.EzFile(path);
 		
-		File file = new File(realPath + commonUtil.detectPathTraversal(filePath));
-		
-		if (!file.exists()) {
+		if (!file.exists() || !file.isFile()) {
 			throw new FileNotFoundException(fileName);
 		}
-		
-		if (!file.isFile()) {
-			throw new FileNotFoundException(fileName);
-		}
-		
-		byte[] fileBytes = Files.readAllBytes(file.toPath());
 		
 		JSONObject data = new JSONObject();
+		byte[] fileBytes = commonUtil.readBytesFromFile(Paths.get(path));
 		data.put("bytes", fileBytes);
 		result.put("data", data);
 		

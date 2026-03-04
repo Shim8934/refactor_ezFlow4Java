@@ -292,6 +292,17 @@ public class CommonUtil {
 
 		emptyDocument = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
 
+		String useS3ObjectStorage = config.getProperty("config.useS3ObjectStorage");
+
+		logger.info("useS3ObjectStorage={},s3EndPoint={},s3Bucket={}", useS3ObjectStorage, config.getProperty("config.S3EndPoint"), config.getProperty("config.S3Bucket"));
+
+		if ("YES".equalsIgnoreCase(useS3ObjectStorage)) {
+			EzFAL.setStorageMode(EzFAL.OBJECT_STORAGE_MODE);
+			EzFAL.initS3Client(config.getProperty("config.S3EndPoint"), config.getProperty("config.S3AccessKey"),
+					config.getProperty("config.S3SecretKey"), config.getProperty("config.S3Bucket"));
+		}
+		
+
 		// 2025-07-24 김승연 SAML 전역 설정 초기화
 		InitializationService.initialize();
 		
@@ -408,32 +419,36 @@ public class CommonUtil {
 
 	public byte[] readBytesFromFile(Path path) throws IOException {
 		String pathStr = path.toString();
-
 		logger.debug("readBytesFromFile path=" + pathStr);
 
-		File file = new File(pathStr);
+		EzFAL.EzFile file = new EzFAL.EzFile(pathStr);
 		long orgFileSize = file.length();
-		
+
 		/* 2025-07-11 (수정) 기존 FileInputStream 단일 읽기 방식 → ByteArrayOutputStream 기반으로 변경 */
 		byte[] content = null;
-		try(FileInputStream fis = new FileInputStream(file);
-			ByteArrayOutputStream baos = new ByteArrayOutputStream()){
+		try (EzFAL.EzFileInputStream fin = new EzFAL.EzFileInputStream(file);
+			 ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
 			byte[] buffer = new byte[8192];
 			int bytesRead;
-			while((bytesRead = fis.read(buffer)) != -1){
+			while((bytesRead = fin.read(buffer)) != -1){
 				baos.write(buffer, 0, bytesRead);
 			}
 			content = baos.toByteArray();
-			
+
 			if (orgFileSize != content.length) { // 만일 실제 파일과 생성된 파일의 사이즈가 다른 경우 로그를 남기도록 함.
 				logger.debug("File size mismatch: expected {} bytes, but read {} bytes.", orgFileSize, content.length);
 			}
+	
+		} catch (IOException e) {
+			logger.error("Failed to read file: " + pathStr, e);
+			throw e;
 		}
 
 		logger.debug("readBytesFromFile ended. path=" + pathStr);
 
 		return content;
-    }
+
+	}
 
     public void writeBytesToFile(Path path, byte[] content) throws IOException {
 		String pathStr = path.toString();

@@ -2239,7 +2239,6 @@ form{display:inline;margin:0}
 .opinion_ul li:nth-child(even){background:#fafafa;}
 
 div#txtContent {margin-left:5px;margin-right:5px;word-wrap:break-word;font-size:12px;}
-div#txtContent table {margin:auto;}
 
 .blockLeft {
 	position : absolute;
@@ -5949,3 +5948,9 @@ body.drag *{user-select:none !important;}
 .background_listImg > .custom_radio input[type="radio"]:checked {background: #0470e4; border-color:#0470e4 !important;}
 .background_listImg:has(.custom_radio input[type="radio"]:checked){border:1px solid #0470e4;}
 .preview_toggleBtn span.num{display: inline-block; font-weight: bold; color: #0470e4; font-size: 13px; padding-left: 5px;}
+
+/*게시글 복사, 이동 팝업 css 추가(S)*/
+.popup #TopBoards h2.on{background: #F8F9FB !important; color: #0287db !important;}
+.popup #TopBoards h2:hover{background: #F8F9FB url(/images/kr/left/01_minus.gif) no-repeat right 13px !important; color: #0287db !important;}
+.popup #TopBoards h2.on:hover{background: #F8F9FB !important; color: #0287db !important;}
+/*게시글 복사, 이동 팝업 css 추가(E)*/

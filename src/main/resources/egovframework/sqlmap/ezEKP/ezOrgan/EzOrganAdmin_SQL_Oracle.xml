@@ -268,7 +268,21 @@
                  )
         ]]>
     </insert>
-		
+
+	<select id="EzOrganAdminDAO.selectValueByParentCN" parameterClass="Map" resultClass="OrganDeptVO">
+		<![CDATA[
+			SELECT
+				EXTENSIONATTRIBUTE2,
+				EXTENSIONATTRIBUTE3,
+				COMPNM2,
+				DEPT_CD_PATH,
+				(DEPTLEVEL + 1) as DEPTLEVEL
+			FROM TBL_DEPTMASTER AA
+			WHERE
+				CN=#v_PARENTCN#
+				AND TENANT_ID=#v_TENANT_ID#
+		]]>
+	</select>
 	<!-- <procedure id="EzOrganAdminDAO.insertDBData_user" parameterClass="Map">
 		<![CDATA[
 			{CALL EZSP_INSERTDBDATA_USER(#v_CN#, #v_DISPLAYNAME#, #v_DISPLAYNAME2#, #v_MAIL#, #v_MAILNICKNAME#, #v_UPNNAME#, #v_PARENTCN#, 
@@ -1578,110 +1592,118 @@
 		FROM   DUAL
       ]]>
     </insert>
-    
+
+	<select id="EzOrganAdminDAO.selectCodeById" parameterClass="Map" resultClass="String">
+		SELECT CODE
+		FROM TBL_FORMPROPERTY T
+		WHERE ID = #id#
+		AND TENANT_ID = #tenantID#
+		AND COMPANYID = #companyID#
+	</select>
+	
     <insert id="EzOrganAdminDAO.insertCompanyInfo_I12" parameterClass="Map">
       <![CDATA[
         INSERT ALL
 			INTO TBL_FORMPROPERTY (SN, CODE,  ID,  NAME,  DESCRIPTION,  UPPERCODE, TENANT_ID, COMPANYID)
-			VALUES (2, (SELECT SYS_GUID() FROM DUAL),'headcampaign', 'F0002', '머리표제', (SELECT CODE FROM    TBL_FORMPROPERTY T WHERE ID='processinfo' AND TENANT_ID = #tenantID# AND COMPANYID = #companyID#),#tenantID#, #companyID#)
+			VALUES (2, (SELECT SYS_GUID() FROM DUAL),'headcampaign', 'F0002', '머리표제', #upperCode1#,#tenantID#, #companyID#)
 			INTO TBL_FORMPROPERTY (SN, CODE,  ID,  NAME,  DESCRIPTION,  UPPERCODE, TENANT_ID, COMPANYID)
-			VALUES (3, (SELECT SYS_GUID() FROM DUAL),'doctitle', 'F0003', '문서제목', (SELECT CODE FROM    TBL_FORMPROPERTY T WHERE ID='processinfo' AND TENANT_ID = #tenantID# AND COMPANYID = #companyID#),#tenantID#, #companyID#)
+			VALUES (3, (SELECT SYS_GUID() FROM DUAL),'doctitle', 'F0003', '문서제목', #upperCode1#,#tenantID#, #companyID#)
 			INTO TBL_FORMPROPERTY (SN, CODE,  ID,  NAME,  DESCRIPTION,  UPPERCODE, TENANT_ID, COMPANYID)
-			VALUES (4, (SELECT SYS_GUID() FROM DUAL), 'body', 'F0004', '본문', (SELECT CODE FROM    TBL_FORMPROPERTY T WHERE ID='processinfo' AND TENANT_ID = #tenantID# AND COMPANYID = #companyID#),#tenantID#, #companyID#)
+			VALUES (4, (SELECT SYS_GUID() FROM DUAL), 'body', 'F0004', '본문', #upperCode1#,#tenantID#, #companyID#)
 			INTO TBL_FORMPROPERTY (SN, CODE,  ID,  NAME,  DESCRIPTION,  UPPERCODE, TENANT_ID, COMPANYID)
-			VALUES (5, (SELECT SYS_GUID() FROM DUAL), 'docnumber', 'F0005', '문서번호', (SELECT CODE FROM    TBL_FORMPROPERTY T WHERE ID='processinfo' AND TENANT_ID = #tenantID# AND COMPANYID = #companyID#),#tenantID#, #companyID#)
+			VALUES (5, (SELECT SYS_GUID() FROM DUAL), 'docnumber', 'F0005', '문서번호', #upperCode1#,#tenantID#, #companyID#)
 			INTO TBL_FORMPROPERTY (SN, CODE,  ID,  NAME,  DESCRIPTION,  UPPERCODE, TENANT_ID, COMPANYID)
-			VALUES (6, (SELECT SYS_GUID() FROM DUAL), 'grouping', 'F0006', '분류기호', (SELECT CODE FROM    TBL_FORMPROPERTY T WHERE ID='processinfo' AND TENANT_ID = #tenantID# AND COMPANYID = #companyID#),#tenantID#, #companyID#)
+			VALUES (6, (SELECT SYS_GUID() FROM DUAL), 'grouping', 'F0006', '분류기호', #upperCode1#,#tenantID#, #companyID#)
 			INTO TBL_FORMPROPERTY (SN, CODE,  ID,  NAME,  DESCRIPTION,  UPPERCODE, TENANT_ID, COMPANYID)
-			VALUES (7, (SELECT SYS_GUID() FROM DUAL),'publication', 'F0007', '공개유무', (SELECT CODE FROM    TBL_FORMPROPERTY T WHERE ID='processinfo' AND TENANT_ID = #tenantID# AND COMPANYID = #companyID#),#tenantID#, #companyID#)
+			VALUES (7, (SELECT SYS_GUID() FROM DUAL),'publication', 'F0007', '공개유무', #upperCode1#,#tenantID#, #companyID#)
 			INTO TBL_FORMPROPERTY (SN, CODE,  ID,  NAME,  DESCRIPTION,  UPPERCODE, TENANT_ID, COMPANYID)
-			VALUES (8, (SELECT SYS_GUID() FROM DUAL), 'securitylevel', 'F0008', '보안등급', (SELECT CODE FROM    TBL_FORMPROPERTY T WHERE ID='processinfo' AND TENANT_ID = #tenantID# AND COMPANYID = #companyID#),#tenantID#, #companyID#)
+			VALUES (8, (SELECT SYS_GUID() FROM DUAL), 'securitylevel', 'F0008', '보안등급', #upperCode1#,#tenantID#, #companyID#)
 			INTO TBL_FORMPROPERTY (SN, CODE,  ID,  NAME,  DESCRIPTION,  UPPERCODE, TENANT_ID, COMPANYID)
-			VALUES (9, (SELECT SYS_GUID() FROM DUAL), 'keepperiod', 'F0009', '보존년한', (SELECT CODE FROM    TBL_FORMPROPERTY T WHERE ID='processinfo' AND TENANT_ID = #tenantID# AND COMPANYID = #companyID#),#tenantID#, #companyID#)
+			VALUES (9, (SELECT SYS_GUID() FROM DUAL), 'keepperiod', 'F0009', '보존년한', #upperCode1#,#tenantID#, #companyID#)
 			INTO TBL_FORMPROPERTY (SN, CODE,  ID,  NAME,  DESCRIPTION,  UPPERCODE, TENANT_ID, COMPANYID)
-			VALUES (10, (SELECT SYS_GUID() FROM DUAL), 'docsummary', 'F0010', '문서요약', (SELECT CODE FROM    TBL_FORMPROPERTY T WHERE ID='processinfo' AND TENANT_ID = #tenantID# AND COMPANYID = #companyID#),#tenantID#, #companyID#)
+			VALUES (10, (SELECT SYS_GUID() FROM DUAL), 'docsummary', 'F0010', '문서요약', #upperCode1#,#tenantID#, #companyID#)
 			INTO TBL_FORMPROPERTY (SN, CODE,  ID,  NAME,  DESCRIPTION,  UPPERCODE, TENANT_ID, COMPANYID)
-			VALUES (11, (SELECT SYS_GUID() FROM DUAL), 'senddate', 'F0011', '발신일자', (SELECT CODE FROM    TBL_FORMPROPERTY T WHERE ID='processinfo' AND TENANT_ID = #tenantID# AND COMPANYID = #companyID#),#tenantID#, #companyID#)
+			VALUES (11, (SELECT SYS_GUID() FROM DUAL), 'senddate', 'F0011', '발신일자', #upperCode1#,#tenantID#, #companyID#)
 			INTO TBL_FORMPROPERTY (SN, CODE,  ID,  NAME,  DESCRIPTION,  UPPERCODE, TENANT_ID, COMPANYID)
-			VALUES (12, (SELECT SYS_GUID() FROM DUAL), 'enforcedate', 'F0012', '시행일자', (SELECT CODE FROM    TBL_FORMPROPERTY T WHERE ID='processinfo' AND TENANT_ID = #tenantID# AND COMPANYID = #companyID#),#tenantID#, #companyID#)
+			VALUES (12, (SELECT SYS_GUID() FROM DUAL), 'enforcedate', 'F0012', '시행일자', #upperCode1#,#tenantID#, #companyID#)
 			INTO TBL_FORMPROPERTY (SN, CODE,  ID,  NAME,  DESCRIPTION,  UPPERCODE, TENANT_ID, COMPANYID)
-			VALUES (13, (SELECT SYS_GUID() FROM DUAL), 'memo', 'F0013', '의견', (SELECT CODE FROM    TBL_FORMPROPERTY T WHERE ID='processinfo' AND TENANT_ID = #tenantID# AND COMPANYID = #companyID#),#tenantID#, #companyID#)
+			VALUES (13, (SELECT SYS_GUID() FROM DUAL), 'memo', 'F0013', '의견', #upperCode1#,#tenantID#, #companyID#)
 			INTO TBL_FORMPROPERTY (SN, CODE,  ID,  NAME,  DESCRIPTION,  UPPERCODE, TENANT_ID, COMPANYID)
-			VALUES (14, (SELECT SYS_GUID() FROM DUAL), 'zipcode', 'F0014', '우편번호', (SELECT CODE FROM    TBL_FORMPROPERTY T WHERE ID='processinfo' AND TENANT_ID = #tenantID# AND COMPANYID = #companyID#),#tenantID#, #companyID#)
+			VALUES (14, (SELECT SYS_GUID() FROM DUAL), 'zipcode', 'F0014', '우편번호', #upperCode1#,#tenantID#, #companyID#)
 			INTO TBL_FORMPROPERTY (SN, CODE,  ID,  NAME,  DESCRIPTION,  UPPERCODE, TENANT_ID, COMPANYID)
-			VALUES (15, (SELECT SYS_GUID() FROM DUAL), 'telephone', 'F0015', '전화', (SELECT CODE FROM    TBL_FORMPROPERTY T WHERE ID='processinfo' AND TENANT_ID = #tenantID# AND COMPANYID = #companyID#),#tenantID#, #companyID#)
+			VALUES (15, (SELECT SYS_GUID() FROM DUAL), 'telephone', 'F0015', '전화', #upperCode1#,#tenantID#, #companyID#)
 			INTO TBL_FORMPROPERTY (SN, CODE,  ID,  NAME,  DESCRIPTION,  UPPERCODE, TENANT_ID, COMPANYID)
-			VALUES (16, (SELECT SYS_GUID() FROM DUAL), 'junkyul', 'F0016', '전결/대결', (SELECT CODE FROM    TBL_FORMPROPERTY T WHERE ID='processinfo' AND TENANT_ID = #tenantID# AND COMPANYID = #companyID#),#tenantID#, #companyID#)
+			VALUES (16, (SELECT SYS_GUID() FROM DUAL), 'junkyul', 'F0016', '전결/대결', #upperCode1#,#tenantID#, #companyID#)
 			INTO TBL_FORMPROPERTY (SN, CODE,  ID,  NAME,  DESCRIPTION,  UPPERCODE, TENANT_ID, COMPANYID)
-			VALUES (17, (SELECT SYS_GUID() FROM DUAL), 'address', 'F0017', '주소', (SELECT CODE FROM    TBL_FORMPROPERTY T WHERE ID='processinfo' AND TENANT_ID = #tenantID# AND COMPANYID = #companyID#),#tenantID#, #companyID#)
+			VALUES (17, (SELECT SYS_GUID() FROM DUAL), 'address', 'F0017', '주소', #upperCode1#,#tenantID#, #companyID#)
 			INTO TBL_FORMPROPERTY (SN, CODE,  ID,  NAME,  DESCRIPTION,  UPPERCODE, TENANT_ID, COMPANYID)
-			VALUES (18, (SELECT SYS_GUID() FROM DUAL), 'sealsign', 'F0018', '관인날인', (SELECT CODE FROM    TBL_FORMPROPERTY T WHERE ID='processinfo' AND TENANT_ID = #tenantID# AND COMPANYID = #companyID#),#tenantID#, #companyID#)
+			VALUES (18, (SELECT SYS_GUID() FROM DUAL), 'sealsign', 'F0018', '관인날인', #upperCode1#,#tenantID#, #companyID#)
 			INTO TBL_FORMPROPERTY (SN, CODE,  ID,  NAME,  DESCRIPTION,  UPPERCODE, TENANT_ID, COMPANYID)
-			VALUES (19,(SELECT SYS_GUID() FROM DUAL), 'noseal', 'F0019', '관인생략', (SELECT CODE FROM    TBL_FORMPROPERTY T WHERE ID='processinfo' AND TENANT_ID = #tenantID# AND COMPANYID = #companyID#),#tenantID#, #companyID#)
+			VALUES (19,(SELECT SYS_GUID() FROM DUAL), 'noseal', 'F0019', '관인생략', #upperCode1#,#tenantID#, #companyID#)
 			INTO TBL_FORMPROPERTY (SN, CODE,  ID,  NAME,  DESCRIPTION,  UPPERCODE, TENANT_ID, COMPANYID)
-			VALUES (20,(SELECT SYS_GUID() FROM DUAL), 'receiptnumber', 'F0056', '접수번호', (SELECT CODE FROM    TBL_FORMPROPERTY T WHERE ID='processinfo' AND TENANT_ID = #tenantID# AND COMPANYID = #companyID#),#tenantID#, #companyID#)
+			VALUES (20,(SELECT SYS_GUID() FROM DUAL), 'receiptnumber', 'F0056', '접수번호', #upperCode1#,#tenantID#, #companyID#)
 			INTO TBL_FORMPROPERTY (SN, CODE,  ID,  NAME,  DESCRIPTION,  UPPERCODE, TENANT_ID, COMPANYID)
-			VALUES (22,(SELECT SYS_GUID() FROM DUAL), 'draftername', 'F0021', '기안자 성명', (SELECT CODE FROM    TBL_FORMPROPERTY T WHERE ID='draftinfo' AND TENANT_ID = #tenantID# AND COMPANYID = #companyID#),#tenantID#, #companyID#)
+			VALUES (22,(SELECT SYS_GUID() FROM DUAL), 'draftername', 'F0021', '기안자 성명', #upperCode2#,#tenantID#, #companyID#)
 			INTO TBL_FORMPROPERTY (SN, CODE,  ID,  NAME,  DESCRIPTION,  UPPERCODE, TENANT_ID, COMPANYID)
-			VALUES (23,(SELECT SYS_GUID() FROM DUAL), 'department', 'F0022', '기안자 부서명', (SELECT CODE FROM    TBL_FORMPROPERTY T WHERE ID='draftinfo' AND TENANT_ID = #tenantID# AND COMPANYID = #companyID#),#tenantID#, #companyID#)
+			VALUES (23,(SELECT SYS_GUID() FROM DUAL), 'department', 'F0022', '기안자 부서명', #upperCode2#,#tenantID#, #companyID#)
 			INTO TBL_FORMPROPERTY (SN, CODE,  ID,  NAME,  DESCRIPTION,  UPPERCODE, TENANT_ID, COMPANYID)
-			VALUES (24,(SELECT SYS_GUID() FROM DUAL), 'position', 'F0023', '기안자 직위', (SELECT CODE FROM    TBL_FORMPROPERTY T WHERE ID='draftinfo' AND TENANT_ID = #tenantID# AND COMPANYID = #companyID#),#tenantID#, #companyID#)
+			VALUES (24,(SELECT SYS_GUID() FROM DUAL), 'position', 'F0023', '기안자 직위', #upperCode2#,#tenantID#, #companyID#)
 			INTO TBL_FORMPROPERTY (SN, CODE,  ID,  NAME,  DESCRIPTION,  UPPERCODE, TENANT_ID, COMPANYID)
-			VALUES (25,(SELECT SYS_GUID() FROM DUAL), 'email', 'F0024', '기안자 E-Mail', (SELECT CODE FROM    TBL_FORMPROPERTY T WHERE ID='draftinfo' AND TENANT_ID = #tenantID# AND COMPANYID = #companyID#),#tenantID#, #companyID#)
+			VALUES (25,(SELECT SYS_GUID() FROM DUAL), 'email', 'F0024', '기안자 E-Mail', #upperCode2#,#tenantID#, #companyID#)
 			INTO TBL_FORMPROPERTY (SN, CODE,  ID,  NAME,  DESCRIPTION,  UPPERCODE, TENANT_ID, COMPANYID)
-			VALUES (26,(SELECT SYS_GUID() FROM DUAL), 'draftdate', 'F0025', '기안일자', (SELECT CODE FROM    TBL_FORMPROPERTY T WHERE ID='draftinfo' AND TENANT_ID = #tenantID# AND COMPANYID = #companyID#),#tenantID#, #companyID#)
+			VALUES (26,(SELECT SYS_GUID() FROM DUAL), 'draftdate', 'F0025', '기안일자', #upperCode2#,#tenantID#, #companyID#)
 			INTO TBL_FORMPROPERTY (SN, CODE,  ID,  NAME,  DESCRIPTION,  UPPERCODE, TENANT_ID, COMPANYID)
-			VALUES (27,(SELECT SYS_GUID() FROM DUAL), 'lastKyulName', 'F0026', '최종결재자명', (SELECT CODE FROM    TBL_FORMPROPERTY T WHERE ID='draftinfo' AND TENANT_ID = #tenantID# AND COMPANYID = #companyID#),#tenantID#, #companyID#)
+			VALUES (27,(SELECT SYS_GUID() FROM DUAL), 'lastKyulName', 'F0026', '최종결재자명', #upperCode2#,#tenantID#, #companyID#)
 			INTO TBL_FORMPROPERTY (SN, CODE,  ID,  NAME,  DESCRIPTION,  UPPERCODE, TENANT_ID, COMPANYID)
-			VALUES (28,(SELECT SYS_GUID() FROM DUAL), 'lastKyuljikwee', 'F0027', '최종결재자직위', (SELECT CODE FROM    TBL_FORMPROPERTY T WHERE ID='draftinfo' AND TENANT_ID = #tenantID# AND COMPANYID = #companyID#),#tenantID#, #companyID#)
+			VALUES (28,(SELECT SYS_GUID() FROM DUAL), 'lastKyuljikwee', 'F0027', '최종결재자직위', #upperCode2#,#tenantID#, #companyID#)
 			INTO TBL_FORMPROPERTY (SN, CODE,  ID,  NAME,  DESCRIPTION,  UPPERCODE, TENANT_ID, COMPANYID)
-			VALUES (29,(SELECT SYS_GUID() FROM DUAL), 'chief', 'F0028', '기관장', (SELECT CODE FROM    TBL_FORMPROPERTY T WHERE ID='draftinfo' AND TENANT_ID = #tenantID# AND COMPANYID = #companyID#),#tenantID#, #companyID#)
+			VALUES (29,(SELECT SYS_GUID() FROM DUAL), 'chief', 'F0028', '기관장', #upperCode2#,#tenantID#, #companyID#)
 			INTO TBL_FORMPROPERTY (SN, CODE,  ID,  NAME,  DESCRIPTION,  UPPERCODE, TENANT_ID, COMPANYID)
-			VALUES (30,(SELECT SYS_GUID() FROM DUAL), 'deptshortedname', 'F0029', '부서약어', (SELECT CODE FROM    TBL_FORMPROPERTY T WHERE ID='draftinfo' AND TENANT_ID = #tenantID# AND COMPANYID = #companyID#),#tenantID#, #companyID#)
+			VALUES (30,(SELECT SYS_GUID() FROM DUAL), 'deptshortedname', 'F0029', '부서약어', #upperCode2#,#tenantID#, #companyID#)
 			INTO TBL_FORMPROPERTY (SN, CODE,  ID,  NAME,  DESCRIPTION,  UPPERCODE, TENANT_ID, COMPANYID)
-			VALUES (32,(SELECT SYS_GUID() FROM DUAL), 'recipient', 'F0031', '수신', (SELECT CODE FROM    TBL_FORMPROPERTY T WHERE ID='receiptinfo' AND TENANT_ID = #tenantID# AND COMPANYID = #companyID#),#tenantID#, #companyID#)
+			VALUES (32,(SELECT SYS_GUID() FROM DUAL), 'recipient', 'F0031', '수신', #upperCode3#,#tenantID#, #companyID#)
 			INTO TBL_FORMPROPERTY (SN, CODE,  ID,  NAME,  DESCRIPTION,  UPPERCODE, TENANT_ID, COMPANYID)
-			VALUES (33,(SELECT SYS_GUID() FROM DUAL), 'recipients', 'F0032', '수신처', (SELECT CODE FROM    TBL_FORMPROPERTY T WHERE ID='receiptinfo' AND TENANT_ID = #tenantID# AND COMPANYID = #companyID#),#tenantID#, #companyID#)
+			VALUES (33,(SELECT SYS_GUID() FROM DUAL), 'recipients', 'F0032', '수신처', #upperCode3#,#tenantID#, #companyID#)
 			INTO TBL_FORMPROPERTY (SN, CODE,  ID,  NAME,  DESCRIPTION,  UPPERCODE, TENANT_ID, COMPANYID)
-			VALUES (34,(SELECT SYS_GUID() FROM DUAL), 'refer', 'F0033', '참조', (SELECT CODE FROM    TBL_FORMPROPERTY T WHERE ID='receiptinfo' AND TENANT_ID = #tenantID# AND COMPANYID = #companyID#),#tenantID#, #companyID#)
+			VALUES (34,(SELECT SYS_GUID() FROM DUAL), 'refer', 'F0033', '참조', #upperCode3#,#tenantID#, #companyID#)
 			INTO TBL_FORMPROPERTY (SN, CODE,  ID,  NAME,  DESCRIPTION,  UPPERCODE, TENANT_ID, COMPANYID)
-			VALUES (35,(SELECT SYS_GUID() FROM DUAL), 'seal', 'F0034', '발신처명의', (SELECT CODE FROM    TBL_FORMPROPERTY T WHERE ID='receiptinfo' AND TENANT_ID = #tenantID# AND COMPANYID = #companyID#),#tenantID#, #companyID#)
+			VALUES (35,(SELECT SYS_GUID() FROM DUAL), 'seal', 'F0034', '발신처명의', #upperCode3#,#tenantID#, #companyID#)
 			INTO TBL_FORMPROPERTY (SN, CODE,  ID,  NAME,  DESCRIPTION,  UPPERCODE, TENANT_ID, COMPANYID)
-			VALUES (36,(SELECT SYS_GUID() FROM DUAL), 'receiptdate', 'F0035', '접수일자', (SELECT CODE FROM    TBL_FORMPROPERTY T WHERE ID='receiptinfo' AND TENANT_ID = #tenantID# AND COMPANYID = #companyID#),#tenantID#, #companyID#)
+			VALUES (36,(SELECT SYS_GUID() FROM DUAL), 'receiptdate', 'F0035', '접수일자', #upperCode3#,#tenantID#, #companyID#)
 			INTO TBL_FORMPROPERTY (SN, CODE,  ID,  NAME,  DESCRIPTION,  UPPERCODE, TENANT_ID, COMPANYID)
-			VALUES (38,(SELECT SYS_GUID() FROM DUAL), 'sign', 'F0037', '결재사인', (SELECT CODE FROM    TBL_FORMPROPERTY T WHERE ID='approvalinfo' AND TENANT_ID = #tenantID# AND COMPANYID = #companyID#),#tenantID#, #companyID#)
+			VALUES (38,(SELECT SYS_GUID() FROM DUAL), 'sign', 'F0037', '결재사인', #upperCode4#,#tenantID#, #companyID#)
 			INTO TBL_FORMPROPERTY (SN, CODE,  ID,  NAME,  DESCRIPTION,  UPPERCODE, TENANT_ID, COMPANYID)
-			VALUES (39,(SELECT SYS_GUID() FROM DUAL), 'approdept', 'F0038', '결재자부서명', (SELECT CODE FROM    TBL_FORMPROPERTY T WHERE ID='approvalinfo' AND TENANT_ID = #tenantID# AND COMPANYID = #companyID#),#tenantID#, #companyID#)
+			VALUES (39,(SELECT SYS_GUID() FROM DUAL), 'approdept', 'F0038', '결재자부서명', #upperCode4#,#tenantID#, #companyID#)
 			INTO TBL_FORMPROPERTY (SN, CODE,  ID,  NAME,  DESCRIPTION,  UPPERCODE, TENANT_ID, COMPANYID)
-			VALUES (40,(SELECT SYS_GUID() FROM DUAL), 'jikwe', 'F0039', '결재자직위', (SELECT CODE FROM    TBL_FORMPROPERTY T WHERE ID='approvalinfo' AND TENANT_ID = #tenantID# AND COMPANYID = #companyID#),#tenantID#, #companyID#)
+			VALUES (40,(SELECT SYS_GUID() FROM DUAL), 'jikwe', 'F0039', '결재자직위', #upperCode4#,#tenantID#, #companyID#)
 			INTO TBL_FORMPROPERTY (SN, CODE,  ID,  NAME,  DESCRIPTION,  UPPERCODE, TENANT_ID, COMPANYID)
-			VALUES (41,(SELECT SYS_GUID() FROM DUAL), 'seumyung', 'F0040', '결재자명', (SELECT CODE FROM    TBL_FORMPROPERTY T WHERE ID='approvalinfo' AND TENANT_ID = #tenantID# AND COMPANYID = #companyID#),#tenantID#, #companyID#)
+			VALUES (41,(SELECT SYS_GUID() FROM DUAL), 'seumyung', 'F0040', '결재자명', #upperCode4#,#tenantID#, #companyID#)
 			INTO TBL_FORMPROPERTY (SN, CODE,  ID,  NAME,  DESCRIPTION,  UPPERCODE, TENANT_ID, COMPANYID)
-			VALUES (42,(SELECT SYS_GUID() FROM DUAL), 'seumyungdate', 'F0041', '결재일자', (SELECT CODE FROM    TBL_FORMPROPERTY T WHERE ID='approvalinfo' AND TENANT_ID = #tenantID# AND COMPANYID = #companyID#),#tenantID#, #companyID#)
+			VALUES (42,(SELECT SYS_GUID() FROM DUAL), 'seumyungdate', 'F0041', '결재일자', #upperCode4#,#tenantID#, #companyID#)
 			INTO TBL_FORMPROPERTY (SN, CODE,  ID,  NAME,  DESCRIPTION,  UPPERCODE, TENANT_ID, COMPANYID)
-			VALUES (43,(SELECT SYS_GUID() FROM DUAL), 'habyuisign', 'F0042', '합의자 사인', (SELECT CODE FROM    TBL_FORMPROPERTY T WHERE ID='approvalinfo' AND TENANT_ID = #tenantID# AND COMPANYID = #companyID#),#tenantID#, #companyID#)
+			VALUES (43,(SELECT SYS_GUID() FROM DUAL), 'habyuisign', 'F0042', '합의자 사인', #upperCode4#,#tenantID#, #companyID#)
 			INTO TBL_FORMPROPERTY (SN, CODE,  ID,  NAME,  DESCRIPTION,  UPPERCODE, TENANT_ID, COMPANYID)
-			VALUES (44,(SELECT SYS_GUID() FROM DUAL), 'habyui', 'F0043', '합의자 부서명', (SELECT CODE FROM    TBL_FORMPROPERTY T WHERE ID='approvalinfo' AND TENANT_ID = #tenantID# AND COMPANYID = #companyID#),#tenantID#, #companyID#)
+			VALUES (44,(SELECT SYS_GUID() FROM DUAL), 'habyui', 'F0043', '합의자 부서명', #upperCode4#,#tenantID#, #companyID#)
 			INTO TBL_FORMPROPERTY (SN, CODE,  ID,  NAME,  DESCRIPTION,  UPPERCODE, TENANT_ID, COMPANYID)
-			VALUES (45,(SELECT SYS_GUID() FROM DUAL), 'habyuipositon', 'F0044', '합의자 직위', (SELECT CODE FROM    TBL_FORMPROPERTY T WHERE ID='approvalinfo' AND TENANT_ID = #tenantID# AND COMPANYID = #companyID#),#tenantID#, #companyID#)
+			VALUES (45,(SELECT SYS_GUID() FROM DUAL), 'habyuipositon', 'F0044', '합의자 직위', #upperCode4#,#tenantID#, #companyID#)
 			INTO TBL_FORMPROPERTY (SN, CODE,  ID,  NAME,  DESCRIPTION,  UPPERCODE, TENANT_ID, COMPANYID)
-			VALUES (46,(SELECT SYS_GUID() FROM DUAL), 'habyuija', 'F0045', '합의자명', (SELECT CODE FROM    TBL_FORMPROPERTY T WHERE ID='approvalinfo' AND TENANT_ID = #tenantID# AND COMPANYID = #companyID#),#tenantID#, #companyID#)
+			VALUES (46,(SELECT SYS_GUID() FROM DUAL), 'habyuija', 'F0045', '합의자명', #upperCode4#,#tenantID#, #companyID#)
 			INTO TBL_FORMPROPERTY (SN, CODE,  ID,  NAME,  DESCRIPTION,  UPPERCODE, TENANT_ID, COMPANYID)
-			VALUES (47,(SELECT SYS_GUID() FROM DUAL), 'habyuidate', 'F0046', '합의일자', (SELECT CODE FROM    TBL_FORMPROPERTY T WHERE ID='approvalinfo' AND TENANT_ID = #tenantID# AND COMPANYID = #companyID#),#tenantID#, #companyID#)
+			VALUES (47,(SELECT SYS_GUID() FROM DUAL), 'habyuidate', 'F0046', '합의일자', #upperCode4#,#tenantID#, #companyID#)
 			INTO TBL_FORMPROPERTY (SN, CODE,  ID,  NAME,  DESCRIPTION,  UPPERCODE, TENANT_ID, COMPANYID)
-			VALUES (48,(SELECT SYS_GUID() FROM DUAL), 'gongram', 'F0047', '공람사인', (SELECT CODE FROM    TBL_FORMPROPERTY T WHERE ID='approvalinfo' AND TENANT_ID = #tenantID# AND COMPANYID = #companyID#),#tenantID#, #companyID#)
+			VALUES (48,(SELECT SYS_GUID() FROM DUAL), 'gongram', 'F0047', '공람사인', #upperCode4#,#tenantID#, #companyID#)
 			INTO TBL_FORMPROPERTY (SN, CODE,  ID,  NAME,  DESCRIPTION,  UPPERCODE, TENANT_ID, COMPANYID)
-			VALUES (50,(SELECT SYS_GUID() FROM DUAL), '1sign', 'F0049', '결재사인1', (SELECT CODE FROM    TBL_FORMPROPERTY T WHERE ID='recvapprovalinfo' AND TENANT_ID = #tenantID# AND COMPANYID = #companyID#),#tenantID#, #companyID#)
+			VALUES (50,(SELECT SYS_GUID() FROM DUAL), '1sign', 'F0049', '결재사인1', #upperCode5#,#tenantID#, #companyID#)
 			INTO TBL_FORMPROPERTY (SN, CODE,  ID,  NAME,  DESCRIPTION,  UPPERCODE, TENANT_ID, COMPANYID)
-			VALUES (51,(SELECT SYS_GUID() FROM DUAL), '1approdept', 'F0050', '결재자부서명1', (SELECT CODE FROM    TBL_FORMPROPERTY T WHERE ID='recvapprovalinfo' AND TENANT_ID = #tenantID# AND COMPANYID = #companyID#),#tenantID#, #companyID#)
+			VALUES (51,(SELECT SYS_GUID() FROM DUAL), '1approdept', 'F0050', '결재자부서명1', #upperCode5#,#tenantID#, #companyID#)
 			INTO TBL_FORMPROPERTY (SN, CODE,  ID,  NAME,  DESCRIPTION,  UPPERCODE, TENANT_ID, COMPANYID)
-			VALUES (52,(SELECT SYS_GUID() FROM DUAL), '1jikwe', 'F0051', '결재자직위1', (SELECT CODE FROM    TBL_FORMPROPERTY T WHERE ID='recvapprovalinfo' AND TENANT_ID = #tenantID# AND COMPANYID = #companyID#),#tenantID#, #companyID#)
+			VALUES (52,(SELECT SYS_GUID() FROM DUAL), '1jikwe', 'F0051', '결재자직위1', #upperCode5#,#tenantID#, #companyID#)
 			INTO TBL_FORMPROPERTY (SN, CODE,  ID,  NAME,  DESCRIPTION,  UPPERCODE, TENANT_ID, COMPANYID)
-			VALUES (53,(SELECT SYS_GUID() FROM DUAL), '1seumyung', 'F0052', '결재자명1', (SELECT CODE FROM    TBL_FORMPROPERTY T WHERE ID='recvapprovalinfo' AND TENANT_ID = #tenantID# AND COMPANYID = #companyID#),#tenantID#, #companyID#)
+			VALUES (53,(SELECT SYS_GUID() FROM DUAL), '1seumyung', 'F0052', '결재자명1', #upperCode5#,#tenantID#, #companyID#)
 			INTO TBL_FORMPROPERTY (SN, CODE,  ID,  NAME,  DESCRIPTION,  UPPERCODE, TENANT_ID, COMPANYID)
-			VALUES (54,(SELECT SYS_GUID() FROM DUAL), '1seumyungdate', 'F0053', '결재일자1', (SELECT CODE FROM    TBL_FORMPROPERTY T WHERE ID='recvapprovalinfo' AND TENANT_ID = #tenantID# AND COMPANYID = #companyID#),#tenantID#, #companyID#)
+			VALUES (54,(SELECT SYS_GUID() FROM DUAL), '1seumyungdate', 'F0053', '결재일자1', #upperCode5#,#tenantID#, #companyID#)
 			INTO TBL_FORMPROPERTY (SN, CODE,  ID,  NAME,  DESCRIPTION,  UPPERCODE, TENANT_ID, COMPANYID)
-			VALUES (56,(SELECT SYS_GUID() FROM DUAL), '', 'F0055', '사용자정의정보', (SELECT CODE FROM    TBL_FORMPROPERTY T WHERE ID='userdefinedinfo' AND TENANT_ID = #tenantID# AND COMPANYID = #companyID#),#tenantID#, #companyID#)
+			VALUES (56,(SELECT SYS_GUID() FROM DUAL), '', 'F0055', '사용자정의정보', #upperCode6#,#tenantID#, #companyID#)
 		SELECT *
 		FROM   DUAL
       ]]>
@@ -3789,6 +3811,28 @@
 			VALUES ('SU200', 5, '보안등급', 80, NULL, 'ITEMSECURITY', NULL, NULL, NULL, NULL, 'Security level', '保安等級', '安全级别', 'Tingkat keamanan', NULL, #companyID#, #tenantID#)
 			INTO TBL_LISTOPTION (LISTTYPE, SN, NAME, WIDTH, TABLENAME, COLNAME, COLALIAS, DTYPE, TYPEDESC, FIELDDESC, NAME2, NAME3, NAME4, NAME6, DELFLAG, COMPANYID, TENANT_ID)
 			VALUES ('SU200', 6, '공개여부', 60, NULL, 'ITEMPUBLIC', NULL, NULL, NULL, NULL, 'Public', '公開設定', '是否共享', 'Publik', NULL, #companyID#, #tenantID#)
+			INTO TBL_LISTOPTION (LISTTYPE, SN, NAME, WIDTH, TABLENAME, COLNAME, COLALIAS, DTYPE, TYPEDESC, FIELDDESC, NAME2, NAME3, NAME4, NAME6, DELFLAG, COMPANYID, TENANT_ID)
+			VALUES ('P004', 1, '제목', 	300, 'TBL_APRDOCINFO', 'DocTitle', NULL, NULL, '수신문서처리기', '제목', 'Title', '見出し', '标题', NULL, NULL, #companyID#, #tenantID#)
+			INTO TBL_LISTOPTION (LISTTYPE, SN, NAME, WIDTH, TABLENAME, COLNAME, COLALIAS, DTYPE, TYPEDESC, FIELDDESC, NAME2, NAME3, NAME4, NAME6, DELFLAG, COMPANYID, TENANT_ID)
+			VALUES ('P004', 2, '문서상태', 70, 'TBL_APRRECEIPTPROCESSINFO', 'DocState', NULL, NULL, '수신문서처리기', '문서상태', 'Doc. status', '文書区分', '文件状态', NULL, NULL,  #companyID#, #tenantID#)
+			INTO TBL_LISTOPTION (LISTTYPE, SN, NAME, WIDTH, TABLENAME, COLNAME, COLALIAS, DTYPE, TYPEDESC, FIELDDESC, NAME2, NAME3, NAME4, NAME6, DELFLAG, COMPANYID, TENANT_ID)
+			VALUES ('P004', 3, '결재상태', 70, 'TBL_APRRECEIPTPROCESSINFO', 'AprState', NULL, NULL, '수신문서처리기', '결재상태', 'Approval status', 'ステータス', '批准状态', NULL, NULL,  #companyID#, #tenantID#)
+			INTO TBL_LISTOPTION (LISTTYPE, SN, NAME, WIDTH, TABLENAME, COLNAME, COLALIAS, DTYPE, TYPEDESC, FIELDDESC, NAME2, NAME3, NAME4, NAME6, DELFLAG, COMPANYID, TENANT_ID)
+			VALUES ('P004', 4, '기안자', 	 70, 'TBL_APRDOCINFO', 'WriterName', NULL, NULL,' 수신문서처리기', '기안자', 'Drafter', '起案者', '起草人', NULL, NULL,  #companyID#, #tenantID#)
+			INTO TBL_LISTOPTION (LISTTYPE, SN, NAME, WIDTH, TABLENAME, COLNAME, COLALIAS, DTYPE, TYPEDESC, FIELDDESC, NAME2, NAME3, NAME4, NAME6, DELFLAG, COMPANYID, TENANT_ID)
+			VALUES ('P004', 5, '발신부서', 90, 'TBL_APRRECEIPTPROCESSINFO', 'SentDeptName', NULL, NULL, '수신문서처리기', '발신부서', 'Dept. sent', '送信部署', '发送部门', NULL, NULL,  #companyID#, #tenantID#)
+			INTO TBL_LISTOPTION (LISTTYPE, SN, NAME, WIDTH, TABLENAME, COLNAME, COLALIAS, DTYPE, TYPEDESC, FIELDDESC, NAME2, NAME3, NAME4, NAME6, DELFLAG, COMPANYID, TENANT_ID)
+			VALUES ('P004', 6, '수신자', 	70, 'TBL_APRRECEIPTPROCESSINFO', 'PROCESSORNAME', NULL, NULL, '수신문서처리기', '수신자', 'Receiver', '受信者', '受信者',  NULL, NULL, #companyID#, #tenantID#)
+			INTO TBL_LISTOPTION (LISTTYPE, SN, NAME, WIDTH, TABLENAME, COLNAME, COLALIAS, DTYPE, TYPEDESC, FIELDDESC, NAME2, NAME3, NAME4, NAME6, DELFLAG, COMPANYID, TENANT_ID)
+			VALUES ('P004', 7, '수신부서', 90, 'TBL_APRRECEIPTPROCESSINFO', 'ReceivedDeptName', NULL, NULL, '수신문서처리기', '도착부서', 'Date received', '受信部署', '收信部门', NULL, NULL,  #companyID#, #tenantID#)
+			INTO TBL_LISTOPTION (LISTTYPE, SN, NAME, WIDTH, TABLENAME, COLNAME, COLALIAS, DTYPE, TYPEDESC, FIELDDESC, NAME2, NAME3, NAME4, NAME6, DELFLAG, COMPANYID, TENANT_ID)
+			VALUES ('P004', 8, '도착일자', 100, 'TBL_APRRECEIPTPROCESSINFO', 'ProcessDate', NULL, NULL, '수신문서처리기', '도착일자', 'ProcessDate', '到着日付', '接收日', NULL, NULL,  #companyID#, #tenantID#)
+			INTO TBL_LISTOPTION (LISTTYPE, SN, NAME, WIDTH, TABLENAME, COLNAME, COLALIAS, DTYPE, TYPEDESC, FIELDDESC, NAME2, NAME3, NAME4, NAME6, DELFLAG, COMPANYID, TENANT_ID)
+			VALUES ('P004', 9, '양식명', 	70, 'TBL_APRDOCINFO', 'FormName', NULL, NULL, '수신문서처리기', '양식명', 'Form Name', '様式名', '样式名', NULL, NULL,  #companyID#, #tenantID#)
+			INTO TBL_LISTOPTION (LISTTYPE, SN, NAME, WIDTH, TABLENAME, COLNAME, COLALIAS, DTYPE, TYPEDESC, FIELDDESC, NAME2, NAME3, NAME4, NAME6, DELFLAG, COMPANYID, TENANT_ID)
+			VALUES ('P004', 10, '첨부', 	30, 'TBL_APRDOCINFO', 'HASATTACHYN', NULL, NULL, '수신문서처리기', '첨부', 'Attach', '添付', '附件', NULL, NULL,  #companyID#, #tenantID#)
+			INTO TBL_LISTOPTION (LISTTYPE, SN, NAME, WIDTH, TABLENAME, COLNAME, COLALIAS, DTYPE, TYPEDESC, FIELDDESC, NAME2, NAME3, NAME4, NAME6, DELFLAG, COMPANYID, TENANT_ID)
+			VALUES ('P004', 11, '공개',	 30, 'TBL_APRDOCINFO', 'ISPUBLIC', NULL, NULL, '수신문서처리기', '공개', 'Public', '公開', '公开', NULL, NULL, #companyID#, #tenantID#)
 		SELECT *
 		FROM   DUAL
       ]]>

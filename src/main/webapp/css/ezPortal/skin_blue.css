@@ -428,3 +428,9 @@ background-color: #003497; border-color: #003497;}
 .custom_checkbox input[type="checkbox"]:checked { background: #003497; border-color: #003497 !important;}
 .custom_radio input[type="radio"]::after{background-color: #003497;}
 .custom_radio input[type="radio"]:checked{border-color: #003497 !important;}
+
+/*게시글 복사, 이동 팝업 css 추가(S)*/
+.popup #TopBoards h2.on{background: #F8F9FB !important; color: #003497 !important;}
+.popup #TopBoards h2:hover{background: #F8F9FB url(/images/kr/left/01_minus.gif) no-repeat right 13px !important; color: #003497 !important;}
+.popup #TopBoards h2.on:hover{background: #F8F9FB !important; color: #003497 !important;}
+/*게시글 복사, 이동 팝업 css 추가(E)*/

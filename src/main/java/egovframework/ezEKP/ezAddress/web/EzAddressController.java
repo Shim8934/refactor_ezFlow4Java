@@ -736,7 +736,11 @@ public class EzAddressController{
 		String replaceMemo = addressInfo.getsMemo();
 		
 		if (replaceMemo != null) {
-			replaceMemo = replaceMemo.replace("\\", "\\\\").replaceAll("\"", "\\\\\"").replace("\'", "\\\'").replaceAll("\n", "&#92;n").replaceAll("/", "\\\\/");
+			replaceMemo = replaceMemo.replace("\\", "\\\\").replaceAll("\"", "\\\\\"").replaceAll("\'", "\\\'").replaceAll("\n", "&#92;n").replaceAll("/", "\\\\/");
+		}
+		if (addressInfo.getsName() != null) { //js로 처리 불가
+			String replaceName = addressInfo.getsName().replace("\\", "\\\\").replaceAll("\"", "\\\\\"").replaceAll("\'", "\\\'").replaceAll("\n", "&#92;n").replaceAll("/", "\\\\/");
+			addressInfo.setsName(replaceName);
 		}
 		
 		model.addAttribute("useEditor", useEditor);

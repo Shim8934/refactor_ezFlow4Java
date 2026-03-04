@@ -104,7 +104,7 @@
 	</ul>
 	
 	<div class="surveydetail-body" id="mainSurveyBody">
-		<div id="svTitle" class="survey-title"><c:out value="${survey.title}"></c:out><span class="srvyTitle_info" id="surveyInfBttn"><img src="/images/ezSurvey/srvyTitle_info.png"></span></div>
+		<div id="svTitle" class="survey-title" style="word-break:break-all;"><c:out value="${survey.title}"></c:out><span class="srvyTitle_info" id="surveyInfBttn"><img src="/images/ezSurvey/srvyTitle_info.png"></span></div>
 		
 		<div id="svPurpose" class="svPurpose">
 			<div class="survey-otherinf">
@@ -1469,6 +1469,10 @@
             if (event.target.src.indexOf("/images/ezSurvey/pdf.png") != -1) {
                 return;
             }
+
+			if(!checkImg(event.target.title)){
+				return;
+			}
             
             if (event.type == "mouseenter") {
                 console.log("imgEnter");
@@ -1492,6 +1496,10 @@
             if (event.target.src.indexOf("/images/ezSurvey/pdf.png") != -1) {
                 return;
             }
+
+			if(!checkImg(event.target.title)){
+				return;
+			}
             
             if (event.type == "mouseenter") {
                 console.log("imgEnter");
@@ -1508,6 +1516,18 @@
             }
         })
 
+		function checkImg(title) {
+			if (title == '') {
+				return true;
+			}
+			var index = title.lastIndexOf(".");
+			var getExt = title.slice(index + 1).toLowerCase();
+
+			var extensions = ['jpg', 'png', 'gif', 'jpeg', 'webp', 'svg'];
+
+			return extensions.includes(getExt);
+		}
+		
 		/* 수정 이벤트 수신을 위한 WebSocket subscribe 설정 */
 		function getCmtSockConnect() {
 			var tenantID = "${tenantId}";

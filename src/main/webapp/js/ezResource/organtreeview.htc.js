@@ -1177,10 +1177,10 @@ function organtreeview(thisobjid, elobjid) {
                   		g_baseClass["selected"] + "' style='display:inline-block; overflow-x:hidden; text-overflow:ellipsis; width:" + (168 - (mydepth.length * 18)) + "px;'" +
                   		" title='" + findchildnodevalue(childNode, "VALUE") + "'>");*/
                 	if(nodeWidth > 40) {
-                		nodeHtml += "<span class='node_normal' id='" + g_nodeid + nodeCount + "' style='display:inline-block; overflow-x:hidden; text-overflow:ellipsis; width:" + nodeWidth + "px;'>";
+                		nodeHtml += "<span class='node_normal' id='" + g_nodeid + nodeCount + "' style='display:inline-block; overflow-x:hidden; text-overflow:ellipsis; width:" + nodeWidth + "px;'title='" + findchildnodevalue(childNode, "VALUE") + "'>";
                 	}
                 	else {
-                		nodeHtml += "<span class='node_normal' id='" + g_nodeid + nodeCount + "'>";
+                		nodeHtml += "<span class='node_normal' id='" + g_nodeid + nodeCount + "'title='" + findchildnodevalue(childNode, "VALUE") + "'>";
                 	}
                     g_selectedIdx = nodeCount;
                 }
@@ -1192,10 +1192,10 @@ function organtreeview(thisobjid, elobjid) {
                   		g_baseClass["normal"] + "' style='display:inline-block; overflow-x:hidden; text-overflow:ellipsis; width:" + (168 - (mydepth.length * 18)) + "px;'" +
                   		" title='" + findchildnodevalue(childNode, "VALUE") + "'>");*/
                 	if(nodeWidth > 40) {
-                		nodeHtml += "<span class='node_normal' id='" + g_nodeid + nodeCount + "' style='display:inline-block; overflow-x:hidden; text-overflow:ellipsis; width:" + nodeWidth + "px;'>";
+                		nodeHtml += "<span class='node_normal' id='" + g_nodeid + nodeCount + "' style='display:inline-block; overflow-x:hidden; text-overflow:ellipsis; width:" + nodeWidth + "px;'title='" + findchildnodevalue(childNode, "VALUE") + "'>";
                 	}
                 	else {
-                		nodeHtml += "<span class='node_normal' id='" + g_nodeid + nodeCount + "'>";
+                		nodeHtml += "<span class='node_normal' id='" + g_nodeid + nodeCount + "'title='" + findchildnodevalue(childNode, "VALUE") + "'>";
                 	}
                 }
                 

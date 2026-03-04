@@ -1174,11 +1174,14 @@ public class MPortalGWController extends EzFileMngUtil {
 			String boardId = portlet.getPortletBoardId();
 
 			// 게시판 권한 체크
-			boolean accessCheck = boardAuthCheck(boardId, deptPath, tenantId, companyId, deptId, userId, rollInfo);
+			Map<String, Object> accessMap = ezNewPortalService.boardAuthCheck(boardId, deptPath, tenantId, companyId, deptId, userId, rollInfo);
+			boolean accessCheck = (boolean) accessMap.get("access");
+			boolean listViewFg = (boolean) accessMap.get("listViewFg");
 
 			// 여기에 데이터를 put해서 넘기면 됨.
 			JSONObject data = new JSONObject();
 			data.put("boardId", boardId); // 포틀릿 정보 중 boardId 가져오기
+			data.put("listViewFg", listViewFg);
 
 			if (boardId == null) {
 				data.put("access", "false");
@@ -1267,7 +1270,10 @@ public class MPortalGWController extends EzFileMngUtil {
 				data.put("currentPage", 1);
 			} else {
 				// 게시판 권한 체크
-				boolean accessCheck = boardAuthCheck(boardId, deptPath, tenantId, companyId, deptId, userId, rollInfo);
+				Map<String, Object> accessMap = ezNewPortalService.boardAuthCheck(boardId, deptPath, tenantId, companyId, deptId, userId, rollInfo);
+				boolean accessCheck = (boolean) accessMap.get("access");
+				boolean listViewFg = (boolean) accessMap.get("listViewFg");
+				data.put("listViewFg", listViewFg);
 				if (!accessCheck) {
 					data.put("access", "false");
 					data.put("photoBoardList", null);
@@ -1723,7 +1729,10 @@ public class MPortalGWController extends EzFileMngUtil {
 				data.put("portletName", portlet.getPortletName());
 	
 				// 게시판 권한 체크
-				boolean accessCheck = boardAuthCheck(boardId, deptPath, tenantId, companyId, deptId, userId, rollInfo);
+				Map<String, Object> accessMap = ezNewPortalService.boardAuthCheck(boardId, deptPath, tenantId, companyId, deptId, userId, rollInfo);
+				boolean accessCheck = (boolean) accessMap.get("access");
+				boolean listViewFg = (boolean) accessMap.get("listViewFg");
+				data.put("listViewFg", listViewFg);
 				if (!accessCheck) {
 					data.put("access", "false");
 					data.put("boardList", null);
@@ -1853,54 +1862,6 @@ public class MPortalGWController extends EzFileMngUtil {
 		logger.debug("MOBILE G/W getResourcePortlet ended.");
 
 		return result;
-	}
-	
-	// 게시판 권한 체크
-	public boolean boardAuthCheck(String boardId, String deptPath, int tenantId, String companyId, String deptId, String userId, String rollInfo) throws Exception {
-		logger.debug("boardAuthCheck started");
-		boolean authCheck = false;
-		String[] deptPathSplit = deptPath.split(",");
-		int deptPathCount = deptPathSplit.length;
-
-		try {
-			if (ezBoardService.isBoardAdmin(boardId, userId, deptId, companyId, tenantId, rollInfo)) {
-				authCheck = true;
-			} else {
-				for (int i = 0; i < deptPathCount; i++) {
-					String deptPathId = deptPathSplit[i];
-					BoardPropertyVO authInfo = ezBoardAdminService.getACL(boardId, deptPathId, tenantId);
-
-					if (authInfo == null) {
-
-					} else {
-						String access = authInfo.getAccess_();
-						String deptAcl = authInfo.getBoardGroupACL();
-
-						if (i == deptPathCount - 1) {
-							deptAcl = "Y";
-						}
-
-						if (access.equals("1")) {
-							if (deptAcl.equals("Y")) {
-								authCheck = true;
-							}
-
-							if (authInfo.getAccessID().equals(deptId)) {
-								authCheck = true;
-							}
-						} else if (access.equals("0") && deptAcl.equals("Y")) {
-							authCheck = false;
-						}
-					}
-				}
-			}
-		} catch (Exception e) {
-			logger.debug("boardAuthCheck error");
-		}
-
-		logger.debug("authCheck : " + authCheck);
-		logger.debug("boardAuthCheck ended");
-		return authCheck;
 	}
 	
 	@SuppressWarnings("unchecked")

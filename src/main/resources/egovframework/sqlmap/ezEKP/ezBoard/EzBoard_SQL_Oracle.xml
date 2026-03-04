@@ -2031,6 +2031,24 @@
 							AND A.TENANT_ID = F.TENANT_ID
 					</isEqual>
 	        		<![CDATA[
+					LEFT OUTER JOIN
+						(
+							SELECT
+								ROW_NUMBER() OVER(
+									PARTITION BY
+										PARENTITEMID
+									ORDER BY
+										VERSION DESC
+								) RN,
+								ITEMID,
+								TENANT_ID
+							FROM
+							TBL_BOARD_MODIFYHISTORY
+						) M1
+					ON
+						A.ITEMID = M1.ITEMID
+					AND
+						A.TENANT_ID = M1.TENANT_ID
 		              WHERE  
 		              	A.TENANT_ID = #v_TENANTID#
 		              AND
@@ -2052,6 +2070,8 @@
 		              AND 
 		              	APPRFLAG = 'Y' 
 	              </isNotEmpty>
+		              AND
+						(M1.ITEMID IS NULL OR M1.RN = 1)
         			ORDER BY 
         				A.NotiNo ASC, 
         				TO_NUMBER(A.ParentWriteDate) DESC, 
@@ -2148,6 +2168,24 @@
 								TENANT_ID ) F ON
 							A.ITEMID = F.ITEMID
 							AND A.TENANT_ID = F.TENANT_ID
+							LEFT OUTER JOIN
+							(
+								SELECT
+									ROW_NUMBER() OVER(
+										PARTITION BY
+											PARENTITEMID
+										ORDER BY
+											VERSION DESC
+									) RN,
+									ITEMID,
+									TENANT_ID
+								FROM
+								TBL_BOARD_MODIFYHISTORY
+							) M1
+						ON
+							A.ITEMID = M1.ITEMID
+						AND
+							A.TENANT_ID = M1.TENANT_ID
 				        WHERE
 				        	A.TENANT_ID = #v_TENANTID#
 				        AND
@@ -2164,6 +2202,8 @@
 				        	extensionAttribute2 = '1'
 						AND
 		     			  	(A.APPRFLAG = 'Y' OR A.APPRFLAG IS NULL)
+				        AND
+							(M1.ITEMID IS NULL OR M1.RN = 1)
 						ORDER BY
 							A.WriteDate DESC) T1
 					WHERE
@@ -2246,6 +2286,24 @@
 						TENANT_ID ) F ON
 					A.ITEMID = F.ITEMID
 					AND A.TENANT_ID = F.TENANT_ID
+				LEFT OUTER JOIN
+					(
+						SELECT
+							ROW_NUMBER() OVER(
+								PARTITION BY
+									PARENTITEMID
+								ORDER BY
+									VERSION DESC
+							) RN,
+							ITEMID,
+							TENANT_ID
+						FROM
+						TBL_BOARD_MODIFYHISTORY
+					) M1
+				ON
+					A.ITEMID = M1.ITEMID
+				AND
+					A.TENANT_ID = M1.TENANT_ID
              	WHERE  
              		A.TENANT_ID = #v_TENANTID#
              	AND
@@ -2258,6 +2316,8 @@
                 	extensionAttribute1 = '0'
                 AND 
                 	extensionAttribute2 = '1'
+             	 AND
+					(M1.ITEMID IS NULL OR M1.RN = 1)
               	ORDER BY
               		A.WriteDate DESC
 			]]>
@@ -2387,12 +2447,32 @@
                             TENANT_ID ) F ON
                     A.ITEMID = F.ITEMID
                 AND A.TENANT_ID = F.TENANT_ID
+				LEFT OUTER JOIN
+					(
+						SELECT
+							ROW_NUMBER() OVER(
+								PARTITION BY
+									PARENTITEMID
+								ORDER BY
+									VERSION DESC
+							) RN,
+							ITEMID,
+							TENANT_ID
+						FROM
+						TBL_BOARD_MODIFYHISTORY
+					) M1
+				ON
+					A.ITEMID = M1.ITEMID
+				AND
+					A.TENANT_ID = M1.TENANT_ID
 				WHERE
 				  	A.TENANT_ID = #v_TENANTID#
 				AND
 			 		(A.WRITERCOMPANYID = #v_COMPANYID# OR TRIM(B.COMPANYID) = '' OR B.COMPANYID IS NULL)
 				AND 
 					WRITERID = #v_PUSERID# 
+				AND
+					(M1.ITEMID IS NULL OR M1.RN = 1)
 				AND 
 			<![CDATA[
 					((A.APPRFLAG <> 'C' AND A.APPRFLAG <> 'N') OR A.APPRFLAG IS NULL) 
@@ -3138,8 +3218,26 @@
                 A.EXTENSIONATTRIBUTE2 NOTICE  
            	FROM 
            		TBL_Board_Item A
+           	LEFT OUTER JOIN
+				(
+					SELECT
+						ROW_NUMBER() OVER(
+							PARTITION BY
+								PARENTITEMID
+							ORDER BY
+								VERSION DESC
+						) RN,
+						ITEMID,
+						TENANT_ID
+					FROM
+					TBL_BOARD_MODIFYHISTORY
+				) M1
+			ON
+				A.ITEMID = M1.ITEMID
+			AND
+				A.TENANT_ID = M1.TENANT_ID
           	WHERE  
-          		TENANT_ID = #tenantID#
+          		A.TENANT_ID = #tenantID#
           	AND
          		BOARDID = #boardID#
             AND 
@@ -3157,6 +3255,8 @@
 					OR 
 				A.APPRFLAG IS NULL
 			)
+          	AND
+				(M1.ITEMID IS NULL OR M1.RN = 1)
            	ORDER BY 
            		NOTINO ASC,
                 TO_NUMBER(A.ParentWriteDate) DESC,
@@ -4736,7 +4836,7 @@
 	<select id="EzBoardDAO.getMyBoardTotalItemCount" parameterClass="Map" resultClass="Integer">
 		<![CDATA[
 			SELECT 
-				COUNT(ITEMID)
+				COUNT(A.ITEMID)
 			FROM 
 				TBL_Board_Item A
 			INNER JOIN
@@ -4745,6 +4845,24 @@
 				A.TENANT_ID = B.TENANT_ID
 			AND
 				A.BoardID = B.BoardID
+			LEFT OUTER JOIN
+				(
+					SELECT
+						ROW_NUMBER() OVER(
+							PARTITION BY
+								PARENTITEMID
+							ORDER BY
+								VERSION DESC
+						) RN,
+						ITEMID,
+						TENANT_ID
+					FROM
+					TBL_BOARD_MODIFYHISTORY
+				) M1
+			ON
+				A.ITEMID = M1.ITEMID
+			AND
+				A.TENANT_ID = M1.TENANT_ID
 			WHERE  
 				A.TENANT_ID = #v_TENANTID#
 			AND
@@ -4763,6 +4881,8 @@
 				EndDate > #nowDate#
 			AND
 			    B.GUBUN != 9
+			AND
+				(M1.ITEMID IS NULL OR M1.RN = 1)
 		]]>
 	</select>
 	<select id="EzBoardDAO.getMyBoardTotalItemCountTemp" parameterClass="Map" resultClass="Integer">
@@ -5188,7 +5308,7 @@
 	<select id="EzBoardDAO.getMyNoticePostItemCount" parameterClass="Map" resultClass="Integer">
 		<![CDATA[
 			SELECT
-				COUNT(ITEMID) CNT
+				COUNT(A.ITEMID)  CNT
 			FROM
 				TBL_Board_Item A
 			INNER JOIN
@@ -5197,6 +5317,24 @@
 				A.TENANT_ID = B.TENANT_ID
 			AND
 				A.BoardID = B.BoardID
+			LEFT OUTER JOIN
+				(
+					SELECT
+						ROW_NUMBER() OVER(
+							PARTITION BY
+								PARENTITEMID
+							ORDER BY
+								VERSION DESC
+						) RN,
+						ITEMID,
+						TENANT_ID
+					FROM
+					TBL_BOARD_MODIFYHISTORY
+				) M1
+			ON
+				A.ITEMID = M1.ITEMID
+			AND
+				A.TENANT_ID = M1.TENANT_ID
        		WHERE  
        			A.TENANT_ID = #v_TENANTID#
    			AND
@@ -5214,13 +5352,15 @@
 			AND
 				(A.APPRFLAG = 'Y' 
 				OR A.APPRFLAG IS NULL)
+			AND
+				(M1.ITEMID IS NULL OR M1.RN = 1)
 		]]>
 	</select>
 	
 	<select id="EzBoardDAO.getSearchMyBoardItemCount" parameterClass="Map" resultClass="Integer">
 		<![CDATA[
 			SELECT 
-				COUNT(ITEMID)
+				COUNT(A.ITEMID)
    			FROM 
    				TBL_BOARD_ITEM A
    			INNER JOIN 
@@ -5229,6 +5369,24 @@
 				A.TENANT_ID = B.TENANT_ID
 			AND
 				A.BoardID = B.BoardID
+   			LEFT OUTER JOIN
+				(
+					SELECT
+						ROW_NUMBER() OVER(
+							PARTITION BY
+								PARENTITEMID
+							ORDER BY
+								VERSION DESC
+						) RN,
+						ITEMID,
+						TENANT_ID
+					FROM
+					TBL_BOARD_MODIFYHISTORY
+				) M1
+			ON
+				A.ITEMID = M1.ITEMID
+			AND
+				A.TENANT_ID = M1.TENANT_ID
    			WHERE 
    				A.TENANT_ID = #v_TENANTID#
    			AND
@@ -5295,6 +5453,8 @@
 				)
 			)
 			]]>
+			AND
+				(M1.ITEMID IS NULL OR M1.RN = 1)
 		</isNotEmpty>
 	</select>
 	
@@ -5695,11 +5855,29 @@
 	<select id="EzBoardDAO.getNoticePostItemCount" resultClass="Integer">
 		<![CDATA[
 			SELECT 
-				COUNT(itemid) CNT  
+				COUNT(A.itemid) CNT  
 	        FROM 
 	        	TBL_BOARD_ITEM 
+	        LEFT OUTER JOIN
+				(
+					SELECT
+						ROW_NUMBER() OVER(
+							PARTITION BY
+								PARENTITEMID
+							ORDER BY
+								VERSION DESC
+						) RN,
+						ITEMID,
+						TENANT_ID
+					FROM
+					TBL_BOARD_MODIFYHISTORY
+				) M1
+			ON
+				A.ITEMID = M1.ITEMID
+			AND
+				A.TENANT_ID = M1.TENANT_ID
 	        WHERE  
-	        	tenant_id = #tenantID#
+	        	A.tenant_id = #tenantID#
 	        AND
 	        	boardid = #boardId#
 	        AND 
@@ -5716,6 +5894,8 @@
 	        	extensionattribute2 = '1'
 	        AND
 				(APPRFLAG = 'Y' OR APPRFLAG IS NULL)
+			AND
+				(M1.ITEMID IS NULL OR M1.RN = 1)
         ]]>
 	</select>
 	

@@ -268,11 +268,14 @@
                                                             htmlData = ReplaceText(htmlData, "&gt;", ">"); */
 							htmlData = "<body free>" + htmlData + "</body>";
 
+                            /* 2025-12-04 노병훈 - 직위 없는 사용자가 작성자일때 ", " 제거 */
+                            var emptyTitleCheck = strWriterTitle.trim() == "" || strWriterTitle == null ? "" :  strWriterTitle + ", ";
+
 							if (gubun != "2") {
 								var replyHeader = "<p " + defaultFontAndSize + ">&nbsp;</p><p " + defaultFontAndSize + ">&nbsp;</p>";
 								replyHeader += "<p " + defaultFontAndSize + ">-----<B>[&nbsp;원문&nbsp;&nbsp;내용&nbsp;]</B>-----</p>";
 								replyHeader += "<p " + defaultFontAndSize + "><B>게시일자 :</B>" + strWriteDate + "</p>";
-								replyHeader += "<p " + defaultFontAndSize + "><B>게시자 :</B>" + strWriterName + "(" + strWriterTitle + "," + strWriterDeptName + "," + strWriterCompanyName + ")</p>";
+								replyHeader += "<p " + defaultFontAndSize + "><B>게시자 :</B>" + strWriterName + "(" + emptyTitleCheck + strWriterDeptName + "," + strWriterCompanyName + ")</p>";
 								replyHeader += "<p " + defaultFontAndSize + "><B>제목 :</B>" + ReplaceText("", "&amp;#92;", "\\") + "</p>";
 								replyHeader += "<p " + defaultFontAndSize + ">&nbsp;</p><p " + defaultFontAndSize + ">&nbsp;</p>";
 								htmlData = replyHeader + htmlData;

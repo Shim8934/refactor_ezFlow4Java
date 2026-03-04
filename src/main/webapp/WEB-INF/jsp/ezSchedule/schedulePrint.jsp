@@ -20,6 +20,30 @@
 		    window.onafterprint = function () {
 		        document.all.normalScreen.style.display = "";
 		    }
+
+			window.onload = function () {
+				myVar = setInterval(function () { DocumentComplate(); }, 1000);
+			}
+			
+			function DocumentComplate() {
+				if (CrossYN()) {
+					window.print();
+				} else {
+					preview_print();
+				}
+
+				clearInterval(myVar);
+			}
+
+			function preview_print() { //미리보기 기능 선언
+				var OLECMDID = 7; //7이 미리보기,6이 인쇄,8이 페이지설정
+				var PROMPT = 1;
+				var WebBrowser = '<OBJECT ID="WebBrowser1" WIDTH=0 HEIGHT=0 CLASSID="CLSID:8856F961-340A-11D0-A96B-00C04FD705A2"></OBJECT>';
+				document.body.insertAdjacentHTML('beforeEnd', WebBrowser);
+				WebBrowser1.ExecWB(OLECMDID, PROMPT);
+				WebBrowser1.outerHTML = "";
+				return false;
+			}
 		</script>
 		<style type="text/css">
 	       html, body {height: 98%;}        

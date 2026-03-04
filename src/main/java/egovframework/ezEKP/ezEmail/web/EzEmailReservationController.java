@@ -19,6 +19,7 @@ import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import egovframework.ezEKP.ezEmail.logic.SMTPAccess;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.ezEKP.ezEmail.vo.MailWriteProcessVO;
+import egovframework.let.utl.fcc.service.EzFAL;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -129,11 +130,11 @@ public class EzEmailReservationController extends EzFileMngUtil {
 		String realPath = commonUtil.getRealPath(request);
 		String pDirPath = commonUtil.getUploadPath("upload_mail.RESERVED_MAIL_PATH", userInfo.getTenantId());
 		pDirPath = realPath + pDirPath;
-		File f = new File(pDirPath + commonUtil.separator + messageId + ".eml");
+		EzFAL.EzFile f = new EzFAL.EzFile(pDirPath + commonUtil.separator + messageId + ".eml");
 
 		String password = jspw;
 		Message savedMessage = null;
-		FileInputStream fis = null;
+        EzFAL.EzFileInputStream fis = null;
 
 		IMAPAccess ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
 				userEmail, password, egovMessageSource, locale, ezEmailUtil);
@@ -141,7 +142,7 @@ public class EzEmailReservationController extends EzFileMngUtil {
 				userEmail, password);
 
 		try {
-			fis = new FileInputStream(f);
+			fis = new EzFAL.EzFileInputStream(f);
 			savedMessage = sa.readMimeMessage(fis); // MimeMessage
 			savedMessage.setFlag(Flags.Flag.SEEN, true);
 

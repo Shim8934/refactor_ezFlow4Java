@@ -2822,6 +2822,13 @@
 				TBL_BOARD_TREECACHE
 		]]>
 	</delete>
+
+	<delete id="EzBoardAdminDAO.trunkBoardMsa" parameterClass="Integer">
+		<![CDATA[
+			TRUNCATE TABLE
+				nezboard.TBL_BOARD_TREECACHE
+		]]>
+	</delete>
 		
 	<delete id="EzBoardAdminDAO.deleteACL" parameterClass="Map">
 		<![CDATA[

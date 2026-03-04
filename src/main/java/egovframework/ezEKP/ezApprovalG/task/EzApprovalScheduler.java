@@ -38,6 +38,7 @@ import egovframework.let.user.login.vo.TenantVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
+import egovframework.let.utl.fcc.service.EzFAL.*;
 
 @Component
 public class EzApprovalScheduler extends EzFileMngUtil {
@@ -101,7 +102,7 @@ public class EzApprovalScheduler extends EzFileMngUtil {
 		if(checkTimer()) {
 			logger.debug("susinScheduler started.");
 						
-			if (!ezEmailScheduler.preScheduler("susinScheduler")) {
+			if (!ezEmailScheduler.preScheduler("ezapprovalg_susinScheduler")) {
 				logger.debug("susinScheduler ended.");
 				return;
 			}
@@ -175,7 +176,7 @@ public class EzApprovalScheduler extends EzFileMngUtil {
 			
 			for (int i = 0; i < aprBigAttachInfoVOList.size(); i++) {
 				ApprGAttachInfoVO tempAprBigAttachInfoVO = aprBigAttachInfoVOList.get(i);
-				File file = new File(realPath + tempAprBigAttachInfoVO.getAttachFileHref());
+				EzFile file = new EzFile(realPath + tempAprBigAttachInfoVO.getAttachFileHref());
 				
 				if (file.exists()) { // 삭제할 파일이 존재할때만 동작
 					BasicFileAttributes attrs = null;
@@ -190,7 +191,7 @@ public class EzApprovalScheduler extends EzFileMngUtil {
 					// 대용량 첨부파일의 저장기간이 만료된 경우, 자동삭제 + 대용량파일 다운로드횟수 제거 + 각 테이블의 ISBIGATTACHDEL 플래그를 'Y'로 갱신
 					if (isBigFileDelDayOver == true) {
 						logger.debug("expired appr file name=" + file.getName());
-						if (deleteDirectory(file)) {
+						if (file.delete()) {
 							logger.debug(file.getName() + " is deleted.");
 							// 대용량 첨부파일의 다운로드 제한 횟수 정보 삭제
 							ezApprovalGService.deleteBigAttachFileDownloadCnt(tempAprBigAttachInfoVO.getDocID(), tempAprBigAttachInfoVO.getAttachFileSN(), tempAprBigAttachInfoVO.getCompanyID(), tenantVO.getTenantId());

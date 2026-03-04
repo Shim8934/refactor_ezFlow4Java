@@ -59,6 +59,7 @@ import egovframework.ezEKP.ezAI.util.AICommonUtil;
 import egovframework.ezEKP.ezBoard.vo.BoardKeywordVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganAuth;
 import egovframework.ezEKP.ezOrgan.vo.OrganAuth.AdminAuth;
+import egovframework.let.utl.fcc.service.EzFAL;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -939,7 +940,7 @@ public class EzBoardController extends EzFileMngUtil{
        return resultXML.replaceAll("onerror=alert", "");
    }
    
-   /**
+    /**
 	 * 게시판 나의게시판트리 설정 표출 Method
 	 */
 	public String getMyBoardTreeConfig(String userID, String pRootTreeID, String lang, String companyID, int tenantID) throws Exception {
@@ -1540,6 +1541,9 @@ public class EzBoardController extends EzFileMngUtil{
 				boardVO.setListShowType(boardInfo.getListShowType());
 			}
 		}
+		String useVersion = ezBoardService.getUseVersionFlag(boardVO.getBoardId(), userInfo.getTenantId());
+		useVersion = useVersion != null && useVersion.isEmpty() ? "N" : useVersion;
+		boardVO.setUseVersion(useVersion);
     	
     	if (boardType.equals("4") || boardType.equals("7")) { // 썸네일, 동영상
     		resultXML = getThumbList(boardVO, userInfo, type);
@@ -4316,6 +4320,10 @@ public class EzBoardController extends EzFileMngUtil{
 			if ("2".equals(boardProp.getGuBun()) || boardItemVO.getWriterID() == null) {
 				rtv = ezBoardService.chkPasswordAnonymous(boardItemVO.getItemID(), password, userInfo.getTenantId());
 			}
+			// 익명게시판 아니고 게시판 작성자 ID와 로그인한 사용자 ID가 같지 않으면 권한 없음 
+			if (!"2".equals(boardProp.getGuBun()) || !boardItemVO.getWriterID().equalsIgnoreCase(userInfo.getId())) {
+				rtv = false;
+			}
 		}
 		
 		// 어떤 경우든 본인이 작성한 게시글에는 접근할 수 있게 함
@@ -5242,9 +5250,9 @@ public class EzBoardController extends EzFileMngUtil{
 		if (!pDirPath.substring(pDirPath.length() - 1).equals(commonUtil.separator)) {
 			pDirPath = pDirPath + commonUtil.separator;
 		}
-		
-		File file = new File(commonUtil.detectPathTraversal(pDirPath));
-		File file2 = new File(commonUtil.detectPathTraversal(pDirPath + pBoardID + commonUtil.separator + "uploadFile"));
+
+		EzFAL.EzFile file = new EzFAL.EzFile (commonUtil.detectPathTraversal(pDirPath));
+		EzFAL.EzFile  file2 = new EzFAL.EzFile (commonUtil.detectPathTraversal(pDirPath + pBoardID + commonUtil.separator + "uploadFile"));
 		
 		if (!file.exists()) {
 			file.mkdirs();
@@ -5294,8 +5302,8 @@ public class EzBoardController extends EzFileMngUtil{
 					if ((extStr.isEmpty() || useExtension.toLowerCase().indexOf(extStr) == -1) && !useExtension.equals("*")) {
 						resultUpload[i] = "denied";
 					} else {
-						String pAttachPath = realPath + commonUtil.getUploadPath("upload_board.TEMPUPLOADFILE", userInfo.getTenantId()) + commonUtil.separator;
-						File fTemp = new File(pAttachPath, sGUID[i]);
+						String pAttachPath = realPath + commonUtil.getUploadPath("upload_board.TEMPUPLOADFILE", userInfo.getTenantId());
+						EzFAL.EzFile fTemp = new EzFAL.EzFile(pAttachPath, sGUID[i]);
 						
 						if (!file.exists()) {
 							fTemp.mkdirs();
@@ -5389,25 +5397,21 @@ public class EzBoardController extends EzFileMngUtil{
 		if ((extStr.isEmpty() || useExtension.toLowerCase().indexOf(extStr) == -1) && !useExtension.equals("*")) {
 			returnVal = "denied";
 		} else {
-			if (!new File(dirPath + "tempUploadFile").exists()) {
-				new File(dirPath + "tempUploadFile").mkdirs();
+			if (!new EzFAL.EzFile(dirPath + "tempUploadFile").exists()) {
+				new EzFAL.EzFile(dirPath + "tempUploadFile").mkdirs();
 			}
 			
-			if (!new File(dirPath + boardID).exists()) {
-				new File(dirPath + boardID + commonUtil.separator + "uploadFile").mkdirs();
-				new File(dirPath + boardID + commonUtil.separator + "doc").mkdirs();
-			} else if (!new File(dirPath + boardID + commonUtil.separator + "uploadFile").exists()) {
-				new File(dirPath + boardID + commonUtil.separator + "uploadFile").mkdirs();
+			if (!new EzFAL.EzFile(dirPath + boardID).exists()) {
+				new EzFAL.EzFile(dirPath + boardID + commonUtil.separator + "uploadFile").mkdirs();
+				new EzFAL.EzFile(dirPath + boardID + commonUtil.separator + "doc").mkdirs();
+			} else if (!new EzFAL.EzFile(dirPath + boardID + commonUtil.separator + "uploadFile").exists()) {
+				new EzFAL.EzFile(dirPath + boardID + commonUtil.separator + "uploadFile").mkdirs();
 			}
 			
 			String attachPath = dirPath + "tempUploadFile" + commonUtil.separator + uploadSN + "_" + commonUtil.detectPathTraversal(fileName);
 			
-			InputStream stream = null;
-			OutputStream bos = null;         
-			
-			try {
-				stream = request.getInputStream();
-				bos = new FileOutputStream(commonUtil.detectPathTraversal(attachPath));
+			try (InputStream stream = request.getInputStream();
+				EzFAL.EzFileOutputStream bos = new EzFAL.EzFileOutputStream(commonUtil.detectPathTraversal(attachPath))) {
 //                long fileSize = 0;
 				int bytesRead = 0;
 				byte[] buffer = new byte[BUFF_SIZE];
@@ -5418,21 +5422,6 @@ public class EzBoardController extends EzFileMngUtil{
 				}
 			} catch (Exception e) {
 				throw e;                
-			} finally {
-				if (bos != null) {
-					try {
-						bos.close();
-					} catch (Exception e) {
-						logger.debug("e.message=" + e.getMessage());
-					}
-				}
-				if (stream != null) {
-					try {
-						stream.close();
-					} catch (Exception e) {
-						logger.debug("e.message=" + e.getMessage());
-					}
-				}
 			}
 			returnVal = "OK_" + uploadSN + "_" + fileName;
 		}
@@ -5492,26 +5481,22 @@ public class EzBoardController extends EzFileMngUtil{
 		
 		String dirPath = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_board.ROOT", userInfo.getTenantId()) + commonUtil.separator;
 		
-		if (!new File(dirPath + "tempUploadFile").exists()) {
-			new File(dirPath + "tempUploadFile").mkdirs();
+		if (!new EzFAL.EzFile(dirPath + "tempUploadFile").exists()) {
+			new EzFAL.EzFile(dirPath + "tempUploadFile").mkdirs();
 		}
 		
-		if (!new File(dirPath + boardID).exists()) {
-			new File(dirPath + boardID + commonUtil.separator + "uploadFile").mkdirs();
-			new File(dirPath + boardID + commonUtil.separator + "doc").mkdirs();
-		} else if (!new File(dirPath + boardID + commonUtil.separator + "uploadFile").exists()) {
-			new File(dirPath + boardID + commonUtil.separator + "uploadFile").mkdirs();
+		if (!new EzFAL.EzFile(dirPath + boardID).exists()) {
+			new EzFAL.EzFile(dirPath + boardID + commonUtil.separator + "uploadFile").mkdirs();
+			new EzFAL.EzFile(dirPath + boardID + commonUtil.separator + "doc").mkdirs();
+		} else if (!new EzFAL.EzFile(dirPath + boardID + commonUtil.separator + "uploadFile").exists()) {
+			new EzFAL.EzFile(dirPath + boardID + commonUtil.separator + "uploadFile").mkdirs();
 		}
 		
 		String attachPath = dirPath + "tempUploadFile" + commonUtil.separator + uploadSN + "." + commonUtil.detectPathTraversal(ext);
 		String mapPath = dirPath + "tempUploadFile" + commonUtil.separator;
 		
-		InputStream stream = null;
-		OutputStream bos = null;         
-		
-		try {
-			stream = request.getInputStream();
-			bos = new FileOutputStream(commonUtil.detectPathTraversal(attachPath));
+		try (InputStream stream = request.getInputStream();
+				EzFAL.EzFileOutputStream bos = new EzFAL.EzFileOutputStream(commonUtil.detectPathTraversal(attachPath))) {
 //			long fileSize = 0;
 			int bytesRead = 0;
 			byte[] buffer = new byte[BUFF_SIZE];
@@ -5521,31 +5506,16 @@ public class EzBoardController extends EzFileMngUtil{
 //				fileSize += bytesRead;
 			}
 		} catch (Exception e) {
-			throw e;                
-		} finally {
-			if (bos != null) {
-				try {
-					bos.close();
-				} catch (Exception e) {
-					logger.debug("e.message=" + e.getMessage());
-				}
-			}
-			if (stream != null) {
-				try {
-					stream.close();
-				} catch (Exception e) {
-					logger.debug("e.message=" + e.getMessage());
-				}
-			}
+			throw e;
 		}
 		
-		File imageFile = new File(commonUtil.detectPathTraversal(attachPath));
+		EzFAL.EzFile imageFile = new EzFAL.EzFile(commonUtil.detectPathTraversal(attachPath));
 		
 		int nImgWidth = 0;
 		int nImgHeight = 0;
 		
 		if (imageFile.exists()) {			
-			BufferedImage bi = ImageIO.read(imageFile);
+			BufferedImage bi = ImageIO.read(imageFile.getFile());
 			nImgWidth = bi.getWidth();
 			nImgHeight = bi.getHeight();
 			int nWidth = 0, nHeight = 0;
@@ -5566,7 +5536,7 @@ public class EzBoardController extends EzFileMngUtil{
 				bufferedImage = new BufferedImage(nWidth, nHeight, bi.getType());
 			}
 			bufferedImage.createGraphics().drawImage(bi, 0, 0, nWidth, nHeight, null);
-			ImageIO.write(bufferedImage, ext, new File(commonUtil.detectPathTraversal(mapPath + "s_" + uploadSN + fileExt)));
+			ImageIO.write(bufferedImage, ext, new EzFAL.EzFile(commonUtil.detectPathTraversal(mapPath + "s_" + uploadSN + fileExt)).getFile());
 		}
 		
 		returnVal = "OK_" + commonUtil.getUploadPath("upload_board.TEMPUPLOADFILE", userInfo.getTenantId()) + commonUtil.separator + uploadSN + fileExt;
@@ -5629,11 +5599,10 @@ public class EzBoardController extends EzFileMngUtil{
 		resultXML.append("<NODES>");
 		
 		if (pMode.equals("boardAttach")) {
-			File file = new File(commonUtil.detectPathTraversal(filePath + pConLocation));
+			EzFAL.EzFile  file = new EzFAL.EzFile(commonUtil.detectPathTraversal(filePath + pConLocation));
 			String fileExtension = pConLocation.substring(pConLocation.lastIndexOf("."));
 			String newFilePath = "tempUploadFile" + commonUtil.separator + "{" + UUID.randomUUID() + "}_" + pTitle + fileExtension;
-			File fileMove = new File(commonUtil.detectPathTraversal(filePath + commonUtil.getUploadPath("upload_board.ROOT", tenantID) + commonUtil.separator + commonUtil.detectPathTraversal(newFilePath)));
-			FileUtils.copyFile(file, fileMove);
+			EzFAL.copyFile(filePath, newFilePath);
 			
 			long mhtSize = file.length();
 			
@@ -5651,9 +5620,7 @@ public class EzBoardController extends EzFileMngUtil{
 			String fileExtension = boardAttachVOList.get(i).getFilePath().substring(boardAttachVOList.get(i).getFilePath().lastIndexOf("."));
 			String newFilePath = "tempUploadFile" + commonUtil.separator + "{" + UUID.randomUUID() + "}" + fileExtension;
 			
-			File file = new File(commonUtil.detectPathTraversal(filePath + commonUtil.separator + pFilePath));
-			File fileMove = new File(commonUtil.detectPathTraversal(filePath + commonUtil.getUploadPath("upload_board.ROOT", tenantID) + commonUtil.separator + commonUtil.detectPathTraversal(newFilePath)));
-			FileUtils.copyFile(file, fileMove);
+			EzFAL.copyFile(pFilePath, newFilePath);
 			
 			resultXML.append("<NODE>");
 			resultXML.append("<ItemID>" + boardAttachVOList.get(i).getItemID() + "</ItemID>");
@@ -7261,8 +7228,8 @@ public class EzBoardController extends EzFileMngUtil{
 				unique_ID = uniqueIDs.split(";")[i];
 				imagePath = delServerPath + commonUtil.separator + unique_ID;
 				s_imagePath = delServerPath + commonUtil.separator + "s_" + unique_ID;
-				File file = new File(commonUtil.detectPathTraversal(imagePath));
-				File file1 = new File(commonUtil.detectPathTraversal(s_imagePath));
+				EzFAL.EzFile file = new EzFAL.EzFile(commonUtil.detectPathTraversal(imagePath));
+				EzFAL.EzFile file1 = new EzFAL.EzFile(commonUtil.detectPathTraversal(s_imagePath));
 				
 				if (file.exists()) {
 					deleteFile(imagePath);
@@ -7307,7 +7274,7 @@ public class EzBoardController extends EzFileMngUtil{
 			}
 			
 			String uniqueName = "";
-			File file = new File(commonUtil.detectPathTraversal(serverPath));
+			EzFAL.EzFile file = new EzFAL.EzFile(commonUtil.detectPathTraversal(serverPath));
 			
 			if (!file.exists()) {
 				file.mkdirs();
@@ -7354,13 +7321,13 @@ public class EzBoardController extends EzFileMngUtil{
 					
 					writeUploadedFile(multiFile.get(i), uniqueName, serverPath); // 원본 파일을 업로드한 뒤, 아래 코드에서 이미지 형식으로 변환함
 					fileLocation = uniqueName;
-					File imageFile = new File(commonUtil.detectPathTraversal(serverPath + uniqueName));	
+					EzFAL.EzFile imageFile = new EzFAL.EzFile(commonUtil.detectPathTraversal(serverPath + uniqueName));	
 					
 					int nImgWidth = 0;
 					int nImgHeight = 0;
 					
 					if (imageFile.exists()) {
-						BufferedImage bi = ImageIO.read(imageFile);		
+						BufferedImage bi = ImageIO.read(imageFile.getFile());		
 						
 						nImgWidth = bi.getWidth();
 						nImgHeight = bi.getHeight();
@@ -7612,13 +7579,13 @@ public class EzBoardController extends EzFileMngUtil{
 			String orgpDirPath = realPath + filePath;
 			String despPath = orgpDirPath.replace("/files/upload_board", "/files/upload_board/tempUploadFile");
 			
-			File file = new File(orgpDirPath);
-			File file2 = new File(despPath);
-			File file3 = new File(despPath.replace("s_", ""));
+			EzFAL.EzFile file = new EzFAL.EzFile(orgpDirPath);
+			EzFAL.EzFile file2 = new EzFAL.EzFile(despPath);
+			EzFAL.EzFile file3 = new EzFAL.EzFile(despPath.replace("s_", ""));
 			
 			if (file.exists() && !file2.exists()) {
-				FileUtils.copyFile(file, file2);
-				FileUtils.copyFile(file, file3);
+				EzFAL.copyFile(file, file2);
+				EzFAL.copyFile(file, file3);
 			}
 			
 			sb.append("</ROW>");
@@ -7803,25 +7770,23 @@ public class EzBoardController extends EzFileMngUtil{
 			
 			if (!filePath.equals("")) {
 				String tempFilePath = uploadFilePath + commonUtil.separator + filePath;
-				File file = new File(tempFilePath);
+				EzFAL.EzFile file = new EzFAL.EzFile(tempFilePath);
 				
 				if (file.exists()) {
 					file_Path = uploadFilePath + commonUtil.separator + boardID + commonUtil.separator + "uploadFile" + filePath.replace("tempUploadFile", "");
 				}
 				
-				FileUtils.copyFile(file, new File(file_Path));
-				deleteFile(tempFilePath);
+				EzFAL.moveFile(tempFilePath, file_Path);
 				
 				if (filePath.indexOf("s_") > -1) {
 					tempFilePath = uploadFilePath + commonUtil.separator + filePath.replace("s_", "");
-					File file2 = new File(tempFilePath);
+					EzFAL.EzFile file2 = new EzFAL.EzFile(tempFilePath);
 					
 					if (file2.exists()) {
 						filePath = uploadFilePath + commonUtil.separator + boardID + commonUtil.separator + "uploadFile" + filePath.replace("s_", "").replace("tempUploadFile", "");
 					}
 					
-					FileUtils.copyFile(file2, new File(filePath));
-					deleteFile(tempFilePath);
+					EzFAL.moveFile(tempFilePath, filePath);
 				}
 				
 				/* 2018-11-07 홍승비 - 동영상 게시물의 경우, 동영상 수정 시 동일한 s_{GUID}로 생성된 썸네일 복사 */
@@ -7830,25 +7795,24 @@ public class EzBoardController extends EzFileMngUtil{
 						String s_file_Path = "";
 						String s_tempFilePath = uploadFilePath + commonUtil.separator + filePath.replace("/{", "/s_{");
 						s_tempFilePath = s_tempFilePath.substring(0, s_tempFilePath.lastIndexOf(".")) + "." + thumbnailExt;
-						File s_file = new File(s_tempFilePath);
+						EzFAL.EzFile s_file = new EzFAL.EzFile(s_tempFilePath);
 						
 						if (s_file.exists()) {
 							s_file_Path = uploadFilePath + commonUtil.separator + boardID + commonUtil.separator + "uploadFile" + filePath.replace("tempUploadFile", "").replace("/{", "/s_{");
 							s_file_Path = s_file_Path.substring(0, s_file_Path.lastIndexOf(".")) + "." + thumbnailExt;
 						}
 						
-						FileUtils.copyFile(s_file, new File(s_file_Path));
-						deleteFile(s_tempFilePath);	
+						EzFAL.moveFile(s_tempFilePath, s_file_Path);
 					}
 				} else {
 					String orgThumb = doc.getElementsByTagName("ORGTHUMB").item(0).getTextContent();
 					String orgThumbPath = "s_" + orgThumb.substring(0, orgThumb.lastIndexOf(".")) + "." + thumbnailExt;
 					String thumbPath = filePath.replace("tempUploadFile", "");
 					String moveThumbPath = thumbPath.substring(0, thumbPath.lastIndexOf(".")).replace("/{", "/s_{") + "." + thumbnailExt;
-					File orgThumbFile = new File(uploadFilePath + commonUtil.separator + boardID + commonUtil.separator + "uploadFile" + commonUtil.separator + orgThumbPath);
-					File moveThumbFile = new File(uploadFilePath + commonUtil.separator + boardID + commonUtil.separator + "uploadFile" + moveThumbPath);
+					EzFAL.EzFile orgThumbFile = new EzFAL.EzFile(uploadFilePath + commonUtil.separator + boardID + commonUtil.separator + "uploadFile" + commonUtil.separator + orgThumbPath);
+					EzFAL.EzFile moveThumbFile = new EzFAL.EzFile(uploadFilePath + commonUtil.separator + boardID + commonUtil.separator + "uploadFile" + moveThumbPath);
 					
-					FileUtils.copyFile(orgThumbFile, moveThumbFile);
+					EzFAL.copyFile(orgThumbFile, moveThumbFile);
 				}
 			}
 			
@@ -8842,14 +8806,14 @@ public class EzBoardController extends EzFileMngUtil{
 			dirPath2 = realPath + commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId());
 		}
 		
-		File file = new File(dirPath + boardID);
+		EzFAL.EzFile file = new EzFAL.EzFile(dirPath + boardID);
 		
 		if (!file.exists()) {
 			file.mkdirs();
-			new File(dirPath + boardID + commonUtil.separator + "uploadFile").mkdirs();
-			new File(dirPath + boardID + commonUtil.separator + "doc").mkdirs();
-		} else if (!new File(dirPath + boardID + commonUtil.separator + "uploadFile").exists()) {
-			new File(dirPath + boardID + commonUtil.separator + "uploadFile").mkdirs();
+			new EzFAL.EzFile(dirPath + boardID + commonUtil.separator + "uploadFile").mkdirs();
+			new EzFAL.EzFile(dirPath + boardID + commonUtil.separator + "doc").mkdirs();
+		} else if (!new EzFAL.EzFile(dirPath + boardID + commonUtil.separator + "uploadFile").exists()) {
+			new EzFAL.EzFile(dirPath + boardID + commonUtil.separator + "uploadFile").mkdirs();
 		}
 		
 		Map<String, Integer> fileNameMap = new HashMap<String, Integer>();
@@ -8880,12 +8844,12 @@ public class EzBoardController extends EzFileMngUtil{
 				if (!fileName.endsWith(fileExt)) {
 					fileName += fileExt;
 					fileNames[k] = fileName;
-					file = new File(dirPath2 + commonUtil.separator + fileLocation);
+					file = new EzFAL.EzFile(dirPath2 + commonUtil.separator + fileLocation);
 					fileSize = String.valueOf(file.length());
 				}
 			}
 			fileName = commonUtil.getUniqueFileName(fileNames[k], fileNameMap);
-			file = new File(dirPath2 + commonUtil.separator + fileLocation);
+			file = new EzFAL.EzFile(dirPath2 + commonUtil.separator + fileLocation);
 			uploadLocation = dirPath + commonUtil.separator + "tempUploadFile" + commonUtil.separator + uploadSN[k] + "_" + fileName;
 			puploadSN = uploadSN[k] + "_" + fileName;
 			
@@ -8898,27 +8862,15 @@ public class EzBoardController extends EzFileMngUtil{
 			if (useHwpDownSecurity.equals("Y") && approvalFlag.equals("G") && fileExt.equalsIgnoreCase(".hwp") && !downUrl[k].equals("noUrl")) {
 				Path pathUploadLocation = Paths.get(commonUtil.detectPathTraversal(uploadLocation));
 				URL downloadUrl = new URL(downUrl[k]);
-				InputStream inpStream = null;
 				
-				try {
-					inpStream = downloadUrl.openStream();
-					Files.copy(inpStream, pathUploadLocation);
-					
-					inpStream.close();
+				try (InputStream inpStream = downloadUrl.openStream()) {
+					EzFAL.copyFile(downloadUrl.toString(), pathUploadLocation.toString());
 				} catch (Exception e) {
 					logger.error(e.getMessage(), e);
-				} finally {
-					if (inpStream != null) {
-						try {
-							inpStream.close();
-						} catch (Exception ignore) {
-							logger.error(ignore.getMessage(), ignore);
-						}
-				    }
 				}
 			} else {
 				if (file.exists()) {
-					FileUtils.copyFile(file, new File(commonUtil.detectPathTraversal(uploadLocation)));
+					EzFAL.copyFile(file, new EzFAL.EzFile(commonUtil.detectPathTraversal(uploadLocation)));
 				}
 			}
 			
@@ -8968,14 +8920,14 @@ public class EzBoardController extends EzFileMngUtil{
 		String dirPath = realPath + commonUtil.getUploadPath("upload_board.ROOT", userInfo.getTenantId()) + commonUtil.separator;
 		String dirPath2 = realPath + commonUtil.getUploadPath("upload_schedule.ROOT", userInfo.getTenantId());
 
-		File file = new File(dirPath + boardID);
+		EzFAL.EzFile file = new EzFAL.EzFile(dirPath + boardID);
 
 		if (!file.exists()) {
 			file.mkdirs();
-			new File(dirPath + boardID + commonUtil.separator + "uploadFile").mkdirs();
-			new File(dirPath + boardID + commonUtil.separator + "doc").mkdirs();
-		} else if (!new File(dirPath + boardID + commonUtil.separator + "uploadFile").exists()) {
-			new File(dirPath + boardID + commonUtil.separator + "uploadFile").mkdirs();
+			new EzFAL.EzFile(dirPath + boardID + commonUtil.separator + "uploadFile").mkdirs();
+			new EzFAL.EzFile(dirPath + boardID + commonUtil.separator + "doc").mkdirs();
+		} else if (!new EzFAL.EzFile(dirPath + boardID + commonUtil.separator + "uploadFile").exists()) {
+			new EzFAL.EzFile(dirPath + boardID + commonUtil.separator + "uploadFile").mkdirs();
 		}
 
 		Map<String, Integer> fileNameMap = new HashMap<String, Integer>();
@@ -8992,12 +8944,12 @@ public class EzBoardController extends EzFileMngUtil{
 			int extIndex = fileLocation.lastIndexOf(".");
 			String fileExt = fileLocation.substring(extIndex);
 			fileName = commonUtil.getUniqueFileName(fileNames[k], fileNameMap);
-			file = new File(dirPath2 + commonUtil.separator + fileLocation);
+			file = new EzFAL.EzFile(dirPath2 + commonUtil.separator + fileLocation);
 			uploadLocation = dirPath + commonUtil.separator + "tempUploadFile" + commonUtil.separator + uploadSN[k] + "_" + fileName;
 			puploadSN = uploadSN[k] + "_" + fileName;
 
 			if (file.exists()) {
-				FileUtils.copyFile(file, new File(commonUtil.detectPathTraversal(uploadLocation)));
+				EzFAL.copyFile(file, new EzFAL.EzFile(commonUtil.detectPathTraversal(uploadLocation)));
 			}
 
 			strXML += "<NODE><PUPLOADSN><![CDATA[" + puploadSN + "]]></PUPLOADSN>";
@@ -9162,7 +9114,7 @@ public class EzBoardController extends EzFileMngUtil{
         else if (boardInfo.getApprFlag() != null && boardInfo.getApprFlag().equalsIgnoreCase("Y")) { // 승인게시판
         	bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t253", userInfo.getLocale()) + boardItem.getWriterName() + "(" + (boardItem.getExtensionAttribute3() == null || "null".equals(boardItem.getExtensionAttribute3()) ? "" : boardItem.getExtensionAttribute3()) + ", " + boardItem.getWriterDeptName() + ", " + boardItem.getWriterCompanyName() + ")");
         } else {
-        	bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t253", userInfo.getLocale()) + userInfo.getDisplayName() + "(" + (userInfo.getTitle() == null || "null".equals(userInfo.getTitle()) ? "" : userInfo.getTitle()) + ", " + userInfo.getDeptName() + ", " + userInfo.getCompanyName() + ")");
+        	bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t253", userInfo.getLocale()) + userInfo.getDisplayName() + "(" + (userInfo.getTitle() == null || "null".equals(userInfo.getTitle()) || userInfo.getTitle().trim().isEmpty() ? "" : userInfo.getTitle() + ", ") + userInfo.getDeptName() + ", " + userInfo.getCompanyName() + ")");
         }
         
         bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t254", userInfo.getLocale()) + strURL + commonUtil.cleanValue(boardItem.getTitle()) + "</a>");
@@ -9377,7 +9329,7 @@ public class EzBoardController extends EzFileMngUtil{
         if (boardInfo.getApprFlag() != null && boardInfo.getApprFlag().equalsIgnoreCase("Y")) { // 승인게시판
         	bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t253", userInfo.getLocale()) + doc.getElementsByTagName("WriterName").item(0).getTextContent() + "(" + ("null".equals(doc.getElementsByTagName("ExtensionAttribute3").item(0).getTextContent()) ? "" : doc.getElementsByTagName("ExtensionAttribute3").item(0).getTextContent()) + ", " + doc.getElementsByTagName("WriterDeptName").item(0).getTextContent() + ", " + doc.getElementsByTagName("WriterCompanyName").item(0).getTextContent() + ")");
         } else {
-        	bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t253", userInfo.getLocale()) + userInfo.getDisplayName() + "(" + (userInfo.getTitle() == null || "null".equals(userInfo.getTitle()) ? "" : userInfo.getTitle()) + ", " + userInfo.getDeptName() + ", " + userInfo.getCompanyName() + ")");
+        	bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t253", userInfo.getLocale()) + userInfo.getDisplayName() + "(" + (userInfo.getTitle() == null || "null".equals(userInfo.getTitle()) || userInfo.getTitle().trim().isEmpty() ? "" : userInfo.getTitle() + ", ") + userInfo.getDeptName() + ", " + userInfo.getCompanyName() + ")");
         }
 		
         bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t254", userInfo.getLocale()) + strURL + commonUtil.cleanValue(title) + "</span>");
@@ -9499,7 +9451,7 @@ public class EzBoardController extends EzFileMngUtil{
         bodyContent.append("<br>" + egovMessageSource.getMessage("ezBoard.t999006", userInfo.getLocale()) + "<br><br>");
         bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t251", userInfo.getLocale()) + commonUtil.cleanValue(boardName));
         bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t252", userInfo.getLocale()) + strDate);
-        bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t253", userInfo.getLocale()) + userInfo.getDisplayName() + "(" + (userInfo.getTitle() == null || "null".equals(userInfo.getTitle()) ? "" : userInfo.getTitle()) + ", " + userInfo.getDeptName() + ", " + userInfo.getCompanyName() + ")");
+        bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t253", userInfo.getLocale()) + userInfo.getDisplayName() + "(" + (userInfo.getTitle() == null || "null".equals(userInfo.getTitle()) || userInfo.getTitle().trim().isEmpty() ? "" : userInfo.getTitle() + ", ") + userInfo.getDeptName() + ", " + userInfo.getCompanyName() + ")");
         bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t254", userInfo.getLocale()) + strURL + commonUtil.cleanValue(title) + "</a>");
 
         String content = commonUtil.createNotiMailContent(bodyContent.toString(), userInfo.getTenantId(), userInfo.getLocale());
@@ -9810,8 +9762,8 @@ public class EzBoardController extends EzFileMngUtil{
 		String savePath = realPath + commonUtil.getUploadPath("upload_board.BOARDBACKGROUND", userInfo.getTenantId());
 
 		if (file == null) {
-			if (!new File(savePath).exists()) {
-				new File(savePath).mkdirs();
+			if (!new EzFAL.EzFile(savePath).exists()) {
+				new EzFAL.EzFile(savePath).mkdirs();
 			}
 			
 			String filePath = request.getParameter("FILEPATH");
@@ -9820,11 +9772,11 @@ public class EzBoardController extends EzFileMngUtil{
 			int height = Integer.parseInt(request.getParameter("HEIGHT"));
 			
 
-			File imageFile = new File(serverPath + commonUtil.separator + fileName);
+			EzFAL.EzFile imageFile = new EzFAL.EzFile(serverPath + commonUtil.separator + fileName);
 			String extension = fileName.substring(fileName.lastIndexOf(".") + 1, fileName.length());
 			
 			if (imageFile.exists()) {			
-				BufferedImage bi = ImageIO.read(imageFile);
+				BufferedImage bi = ImageIO.read(imageFile.getFile());
 				BufferedImage bufferedImage = null;
 				/* 2019-10-21 홍승비 - png파일의 경우, 썸네일 이미지 저장 시 타입을 TYPE_4BYTE_ABGR로 고정 */
 				if (bi.getType() == 0 || extension.equals("png")) { // 일부 png 파일의 경우, type값이 0으로 넘어오거나 검은색으로 저장된다.
@@ -9853,10 +9805,10 @@ public class EzBoardController extends EzFileMngUtil{
 			writeUploadedFile(file, newFileName, serverPath);
 			
 			try {
-				File imageFile = new File(serverPath + commonUtil.separator + newFileName);
+				EzFAL.EzFile imageFile = new EzFAL.EzFile(serverPath + commonUtil.separator + newFileName);
 				
 				if (imageFile.exists()) {
-					BufferedImage bi = ImageIO.read(new File(serverPath + commonUtil.separator + newFileName));
+					BufferedImage bi = ImageIO.read(imageFile.getFile());
 					width = bi.getWidth();
 					height = bi.getHeight();
 					
@@ -10601,23 +10553,20 @@ public class EzBoardController extends EzFileMngUtil{
 		//logger.debug("fullFilePath : " + fullFilePath);
 		//logger.debug("fileNames : " + fileNames);
 		
-		ZipOutputStream zos = null;
 		String downFileName = "";
 		
-		try {
-			File tempFile = new File(pDirTempPath + commonUtil.separator + ".zip");
+		try (ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(pDirTempPath + ".zip"), Charset.forName("utf-8"))) {
+			EzFAL.EzFile tempFile = new EzFAL.EzFile(pDirTempPath + commonUtil.separator + ".zip");
 			
 			if (tempFile.exists()) {
 				tempFile.delete();
 			}
 			
-			tempFile = new File(tempFileUploadPath);
+			tempFile = new EzFAL.EzFile(tempFileUploadPath);
 			
 			if (!tempFile.exists()) {
 				tempFile.mkdirs();
 			}
-			
-			zos = new ZipOutputStream(new FileOutputStream(pDirTempPath + ".zip"), Charset.forName("utf-8"));
 			
 			String[] fileNamesArr = fileNames.split(":");
 			String[] fileNamesUIDArr = fileNamesUID.split(":");
@@ -10629,38 +10578,23 @@ public class EzBoardController extends EzFileMngUtil{
 			
 			if (fileNamesArr.length != 0) {// 파일이 있으면
 				for (int i = 0; i < fileNamesArr.length; i++) { // 파일 갯수만큼
-					BufferedInputStream bis = null;
+					EzFAL.EzFile sourceFile = new EzFAL.EzFile(commonUtil.detectPathTraversal(fullFilePath + fileNamesUIDArr[i]));
+					byte[] fileBytes = commonUtil.readBytesFromFile(sourceFile.toPath());
 					
-					try {
-						File sourceFile = new File(commonUtil.detectPathTraversal(fullFilePath + fileNamesUIDArr[i]));
-						byte[] fileBytes = commonUtil.readBytesFromFile(sourceFile.toPath());
-						
-						if (fileNamesUIDArr[i].endsWith("." + EzApprovalGKlibService.ENCRYPTED_FILE_EXT)) {
-							fileBytes = klibUtil.decrypt(fileBytes);
-						}
-						
-						fileNamesArr[i] = commonUtil.getUniqueFileName(fileNamesArr[i], fileNameMap);
-						ZipEntry zentry = new ZipEntry(fileNamesArr[i]);
-						zos.putNextEntry(zentry);
-						zos.write(fileBytes);
-						zos.closeEntry();
-					} catch (IOException e) {
-						logger.error(e.getMessage(), e);
-					} finally {
-						if (bis != null) {
-							try {
-								bis.close();
-							} catch (Exception e) {
-								logger.error(e.getMessage(), e);
-							}
-						}
+					if (fileNamesUIDArr[i].endsWith("." + EzApprovalGKlibService.ENCRYPTED_FILE_EXT)) {
+						fileBytes = klibUtil.decrypt(fileBytes);
 					}
+					
+					fileNamesArr[i] = commonUtil.getUniqueFileName(fileNamesArr[i], fileNameMap);
+					ZipEntry zentry = new ZipEntry(fileNamesArr[i]);
+					zos.putNextEntry(zentry);
+					zos.write(fileBytes);
+					zos.closeEntry();
 				}
-				zos.flush();
-				zos.close();
-				zos = null;
+                zos.flush();
+                zos.close();
 	
-				File file = new File(pDirTempPath + ".zip");
+				EzFAL.EzFile file = new EzFAL.EzFile(pDirTempPath + ".zip");
 				
 				if (file.exists()) {
 					downFile(request, response, pDirTempPath + ".zip", downFileName);
@@ -10668,19 +10602,12 @@ public class EzBoardController extends EzFileMngUtil{
 				}
 			}
 		} catch (Exception e) {
-			File file = new File(pDirTempPath + ".zip");
+			EzFAL.EzFile file = new EzFAL.EzFile(pDirTempPath + ".zip");
 			
 			if (file.exists()) {
 				file.delete();
 			}
-		} finally {
-			if (zos != null) {
-				try {
-					zos.close();
-				} catch (Exception e) {
-					logger.error(e.getMessage(), e);
-				}
-			}
+			logger.debug(e.getMessage(), e);
 		}
 		logger.debug("downloadAttachAll ended.");
 	}
@@ -10908,8 +10835,8 @@ public class EzBoardController extends EzFileMngUtil{
 			String s_imagePath = "";
 			imagePath = commonUtil.detectPathTraversal(delServerPath + commonUtil.separator + uniqueID);
 			s_imagePath = commonUtil.detectPathTraversal(delServerPath + commonUtil.separator + "s_" + uniqueID);
-			File file = new File(imagePath);
-			File file1 = new File(s_imagePath);
+			EzFAL.EzFile file = new EzFAL.EzFile(imagePath);
+			EzFAL.EzFile file1 = new EzFAL.EzFile(s_imagePath);
 			
 			if (file.exists()) {
 				deleteFile(imagePath);
@@ -10942,7 +10869,7 @@ public class EzBoardController extends EzFileMngUtil{
 			}
 			
 			String uniqueName = "";
-			File file = new File(serverPath);
+			EzFAL.EzFile file = new EzFAL.EzFile(serverPath);
 			
 			if (!file.exists()) {
 				file.mkdirs();
@@ -11030,7 +10957,7 @@ public class EzBoardController extends EzFileMngUtil{
 		dirPath = realPath + commonUtil.getUploadPath("upload_board.TEMPUPLOADFILE", userInfo.getTenantId());	
 		serverPath = dirPath + commonUtil.separator;
 		
-		File file = new File(serverPath);
+		EzFAL.EzFile file = new EzFAL.EzFile(serverPath);
 		
 		if (!file.exists()) {
 			file.mkdirs();
@@ -11043,38 +10970,38 @@ public class EzBoardController extends EzFileMngUtil{
 		if (addThumbnail.equals("Y")) {
 			String ext = thumbFile.substring(thumbFile.lastIndexOf(".") + 1);
 			thumbnailID = thumbnailID.substring(0, thumbnailID.lastIndexOf(".") + 1) + ext;
-			File orgFile = new File(serverPath + thumbFile);
-			File movieFile = new File(serverPath + thumbnailID);
+			EzFAL.EzFile orgFile = new EzFAL.EzFile(serverPath + thumbFile);
+			EzFAL.EzFile movieFile = new EzFAL.EzFile(serverPath + thumbnailID);
 			if (movieFile.exists()) {
 				movieFile.delete();
 			}
-			FileUtils.moveFile(orgFile, movieFile);
+			EzFAL.moveFile(orgFile, movieFile);
 			
-			File s_moveFile = new File(serverPath + "s_" + thumbnailID);
+			EzFAL.EzFile s_moveFile = new EzFAL.EzFile(serverPath + "s_" + thumbnailID);
 			if (s_moveFile.exists()) {
 				s_moveFile.delete();
 			}
-			FileUtils.copyFile(movieFile, s_moveFile);
+			EzFAL.copyFile(movieFile, s_moveFile);
 			
 		} else {
 			thumbnailID = thumbnailID.substring(0, thumbnailID.lastIndexOf(".") + 1) + "png";
 			
-			File movieFile = new File(serverPath + thumbnailID);
+			EzFAL.EzFile movieFile = new EzFAL.EzFile(serverPath + thumbnailID);
 			BufferedImage bi = null;
 			String[] base64Arr = thumbFile.split(",");
 			byte[] imageByte = Base64.decodeBase64(base64Arr[1]);
 			
-			ByteArrayInputStream bis = new ByteArrayInputStream(imageByte);
-			bi = ImageIO.read(bis);
-			bis.close();
+			try (ByteArrayInputStream bis = new ByteArrayInputStream(imageByte)) {
+				bi = ImageIO.read(bis);
+			}
 
-			ImageIO.write(bi, "png", movieFile);
+			ImageIO.write(bi, "png", movieFile.getFile());
 			
-			File s_moveFile = new File(serverPath + "s_" + thumbnailID);
+			EzFAL.EzFile s_moveFile = new EzFAL.EzFile(serverPath + "s_" + thumbnailID);
 			if (s_moveFile.exists()) {
 				s_moveFile.delete();
 			}
-			FileUtils.copyFile(movieFile, s_moveFile);
+			EzFAL.copyFile(movieFile, s_moveFile);
 		}
 		
 		resultUpload = "true";
@@ -11928,7 +11855,7 @@ public class EzBoardController extends EzFileMngUtil{
 	        if (boardProperty.getApprFlag() != null && boardProperty.getApprFlag().equalsIgnoreCase("Y")) { // 승인게시판
 	        	bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t253", userInfo.getLocale()) + boardItem.getWriterName() + "(" + (boardItem.getExtensionAttribute3() == null || "null".equals(boardItem.getExtensionAttribute3()) ? "" : boardItem.getExtensionAttribute3()+ ", ") + boardItem.getWriterDeptName() + ", " + boardItem.getWriterCompanyName() + ")");
 	        } else {
-	        	bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t253", userInfo.getLocale()) + userInfo.getDisplayName() + "(" + (userInfo.getTitle() == null || "null".equals(userInfo.getTitle()) ? "" : userInfo.getTitle()+ ", ") + userInfo.getDeptName() + ", " + userInfo.getCompanyName() + ")");
+	        	bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t253", userInfo.getLocale()) + userInfo.getDisplayName() + "(" + (userInfo.getTitle() == null || "null".equals(userInfo.getTitle()) || userInfo.getTitle().trim().isEmpty() ? "" : userInfo.getTitle() + ", ") + userInfo.getDeptName() + ", " + userInfo.getCompanyName() + ")");
 	        }
 	        
 	        bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t254", userInfo.getLocale()) + strURL + commonUtil.cleanValue(boardItem.getTitle()) + "</a>");
@@ -11940,7 +11867,7 @@ public class EzBoardController extends EzFileMngUtil{
 			bodyContent.append("<br>" + egovMessageSource.getMessage("ezBoard.HSBMail05", userInfo.getLocale()) + "<br><br>");
 	        bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t251", userInfo.getLocale()) + commonUtil.cleanValue(boardName));
 	        bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t252", userInfo.getLocale()) + strDate);
-	        bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t253", userInfo.getLocale()) + userInfo.getDisplayName() + "(" + (userInfo.getTitle() == null || "null".equals(userInfo.getTitle()) ? "" : userInfo.getTitle()) + ", " + userInfo.getDeptName() + ", " + userInfo.getCompanyName() + ")");
+	        bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t253", userInfo.getLocale()) + userInfo.getDisplayName() + "(" + (userInfo.getTitle() == null || "null".equals(userInfo.getTitle()) || userInfo.getTitle().trim().isEmpty() ? "" : userInfo.getTitle() + ", ") + userInfo.getDeptName() + ", " + userInfo.getCompanyName() + ")");
 	        bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t254", userInfo.getLocale()) + strURL + commonUtil.cleanValue(boardItem.getTitle()) + "</a>");
 
 
@@ -11951,7 +11878,7 @@ public class EzBoardController extends EzFileMngUtil{
 			bodyContent.append("<br>" + egovMessageSource.getMessage("ezBoard.HSBMail06", userInfo.getLocale()) + "<br><br>");
 	        bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t251", userInfo.getLocale()) + commonUtil.cleanValue(boardName));
 	        bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t252", userInfo.getLocale()) + strDate);
-	        bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t253", userInfo.getLocale()) + userInfo.getDisplayName() + "(" + (userInfo.getTitle() == null || "null".equals(userInfo.getTitle()) ? "" : userInfo.getTitle()) + ", " + userInfo.getDeptName() + ", " + userInfo.getCompanyName() + ")");
+	        bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t253", userInfo.getLocale()) + userInfo.getDisplayName() + "(" + (userInfo.getTitle() == null || "null".equals(userInfo.getTitle()) || userInfo.getTitle().trim().isEmpty() ? "" : userInfo.getTitle() + ", ") + userInfo.getDeptName() + ", " + userInfo.getCompanyName() + ")");
 	        bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t254", userInfo.getLocale()) + strURL + commonUtil.cleanValue(boardItem.getTitle()) + "</a>");
 
 	        content = commonUtil.createNotiMailContent(bodyContent.toString(), userInfo.getTenantId(), userInfo.getLocale());
@@ -12246,7 +12173,7 @@ public class EzBoardController extends EzFileMngUtil{
 			logger.debug("filePath : {}",pFilePath);
 			
 			String realPath = commonUtil.getRealPath(request);
-			File srcFile = new File(commonUtil.detectPathTraversal(realPath + pFilePath));
+			EzFAL.EzFile srcFile = new EzFAL.EzFile(commonUtil.detectPathTraversal(realPath + pFilePath));
 			
 			if (!srcFile.exists() || !srcFile.isFile()) {
 			    throw new FileNotFoundException(fileName);
@@ -12263,14 +12190,14 @@ public class EzBoardController extends EzFileMngUtil{
 			}
 			
 			String md5FileName = sb2.toString() + fileName.substring(fileName.lastIndexOf("."));
-			File destFile = new File(destFilePath + commonUtil.separator + md5FileName);
-			File newFolder = new File(destFilePath);
+			EzFAL.EzFile destFile = new EzFAL.EzFile(destFilePath + commonUtil.separator + md5FileName);
+			EzFAL.EzFile newFolder = new EzFAL.EzFile(destFilePath);
 			
 			if (!newFolder.exists()) {
 				newFolder.mkdirs();
 			}
 			
-			FileUtils.copyFile(srcFile, destFile);
+			EzFAL.copyFile(srcFile, destFile);
 			
 			String SATimageConvertServerURL = ezCommonService.getTenantConfig("SATimageConvertServerURL", userInfo.getTenantId());
 			String fileExt = fileName.split("\\.")[fileName.split("\\.").length - 1];
@@ -13624,13 +13551,13 @@ public class EzBoardController extends EzFileMngUtil{
 			String orgpDirPath = realPath + filePath;
 			String despPath = orgpDirPath.replace("/files/upload_board", "/files/upload_board/tempUploadFile");
 			
-			File file = new File(orgpDirPath);
-			File file2 = new File(despPath);
-			File file3 = new File(despPath.replace("s_", ""));
+			EzFAL.EzFile  file = new EzFAL.EzFile(orgpDirPath);
+			EzFAL.EzFile file2 = new EzFAL.EzFile(despPath);
+			EzFAL.EzFile file3 = new EzFAL.EzFile(despPath.replace("s_", ""));
 			
 			if (file.exists() && !file2.exists()) {
-				FileUtils.copyFile(file, file2);
-				FileUtils.copyFile(file, file3);
+				EzFAL.copyFile(file, file2);
+				EzFAL.copyFile(file, file3);
 			}
 			
 			sb.append("</ROW>");

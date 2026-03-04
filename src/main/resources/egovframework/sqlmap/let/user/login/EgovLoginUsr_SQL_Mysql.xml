@@ -626,8 +626,9 @@
                 password_updatedt,
                 mobile,
                 extensionattribute5,
-                extensionattribute7 as JOBID,
-                '' ROLEID
+                extensionattribute7  as jobId,
+				extensionattribute8  as roleId,
+				upnname
             FROM 
                 TBL_USERMASTER a
             WHERE 
@@ -670,8 +671,9 @@
                 password_updatedt,
                 mobile,
                 extensionattribute5,
-                EXTENSIONATTRIBUTE7 as JOBID,
-                EXTENSIONATTRIBUTE8  as roleId
+                extensionattribute7  as jobId,
+				extensionattribute8  as roleId,
+                upnname
             FROM 
                 TBL_USERMASTER a
             WHERE 
@@ -714,8 +716,9 @@
                 password_updatedt,
                 mobile,
                 extensionattribute5,
-                extensionattribute7 as JOBID,
-                '' ROLEID
+                EXTENSIONATTRIBUTE7 as jobId,
+ 	            EXTENSIONATTRIBUTE8 as roleId,
+ 	            upnname
             FROM 
                 TBL_USERMASTER a
             WHERE 

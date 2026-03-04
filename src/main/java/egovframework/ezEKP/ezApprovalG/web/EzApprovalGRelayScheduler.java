@@ -1715,7 +1715,7 @@ public class EzApprovalGRelayScheduler {
 		}
 		
 		//choose scheduler running server
-		if (!ezEmailScheduler.preScheduler("receiverMain")) {
+		if (!ezEmailScheduler.preScheduler("ezapprovalg_receiverMain")) {
 			logger.debug("receiverMain scheduler ended.");
 			return;
 		}

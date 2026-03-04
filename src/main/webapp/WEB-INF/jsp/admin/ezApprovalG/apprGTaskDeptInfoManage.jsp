@@ -185,7 +185,7 @@
 		            var pDeptName2 = selRow[0].getAttribute("DATA2");
 	
 		            if (RemoveDeptInfo(pDeptID, pDeptName, pDeptName2) == "TRUE") {
-		                OpenAlertUI("<spring:message code = 'ezApprovalG.t804' />");
+		                OpenAlertUI("<spring:message code = 'ezApproval.task01' />");
 		                AprLineInit();
 		            } else {
 		                OpenAlertUI("<spring:message code = 'ezApprovalG.t805' />");

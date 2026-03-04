@@ -29,6 +29,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import egovframework.let.utl.fcc.service.EzFAL;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -169,7 +170,7 @@ public class EzFileMngUtil extends EgovAbstractServiceImpl{
      */
     protected void deleteFile(String filePath) throws Exception {
 	    try {
-			File targetFile = new File(filePath);
+			EzFAL.EzFile targetFile = new EzFAL.EzFile(filePath);
 	
 			if (targetFile != null) {
 				targetFile.delete();
@@ -188,13 +189,18 @@ public class EzFileMngUtil extends EgovAbstractServiceImpl{
      * @throws Exception
      */
     protected void writeUploadedFile(MultipartFile file, String newName, String stordFilePath) throws Exception {
-		InputStream stream = null;
-		OutputStream bos = null;
 		String stordFilePathReal = (stordFilePath==null?"":stordFilePath);
 		
-		try {
-		    stream = file.getInputStream();
-		    File cFile = new File(stordFilePathReal);
+		// 로컬에 경로가 없으면 오류가 발생함
+		EzFAL.EzFile stordFile = new EzFAL.EzFile(stordFilePath);
+		if (!stordFile.exists()) {
+			stordFile.mkdirs();
+		}
+		
+		try (InputStream stream = file.getInputStream();
+			 EzFAL.EzFileOutputStream bos = new EzFAL.EzFileOutputStream(stordFilePathReal + commonUtil.separator + newName)) {
+			
+			EzFAL.EzFile cFile = new EzFAL.EzFile(stordFilePathReal);
 	
 		    if (!cFile.isDirectory()) {
 				boolean _flag = cFile.mkdirs();
@@ -202,9 +208,7 @@ public class EzFileMngUtil extends EgovAbstractServiceImpl{
 				    throw new IOException("Directory creation Failed ");
 				}
 		    }
-	
-		    bos = new FileOutputStream(stordFilePathReal + File.separator + newName);
-	
+
 		    int bytesRead = 0;
 		    byte[] buffer = new byte[BUFF_SIZE];
 	
@@ -217,21 +221,6 @@ public class EzFileMngUtil extends EgovAbstractServiceImpl{
 			logger.debug("ioe: {}", ioe);
 		} catch (Exception e) {
 			logger.debug("e: {}", e);
-		} finally {
-		    if (bos != null) {
-				try {
-				    bos.close();
-				} catch (Exception ignore) {
-					logger.debug("IGNORED: {}", ignore.getMessage());
-				}
-		    }
-		    if (stream != null) {
-				try {
-				    stream.close();
-				} catch (Exception ignore) {
-					logger.debug("IGNORED: {}", ignore.getMessage());
-				}
-		    }
 		}
     }
 
@@ -446,8 +435,8 @@ public class EzFileMngUtil extends EgovAbstractServiceImpl{
 		String orgFileName = EgovStringUtil.isNullToString(orignFileNm);
     	
 		orgFileName = CommonUtil.getEncodedFileNameForDownload(request.getHeader("User-Agent"), orgFileName);
-		
-		File file = new File(commonUtil.detectPathTraversal(downFileName));
+
+		EzFAL.EzFile file = new EzFAL.EzFile(commonUtil.detectPathTraversal(downFileName));
 		//log.debug(this.getClass().getName()+" downFile downFileName "+downFileName);
 		//log.debug(this.getClass().getName()+" downFile orgFileName "+orgFileName);
 	
@@ -465,7 +454,7 @@ public class EzFileMngUtil extends EgovAbstractServiceImpl{
 		    BufferedInputStream in = null;
 	
 		    try {
-		    	in = new BufferedInputStream(new FileInputStream(file));
+		    	in = new BufferedInputStream(new EzFAL.EzFileInputStream(file));
 		    	
 	    	    String mimetype = "application/octet-stream"; //"application/x-msdownload"	
 	    	    
@@ -567,8 +556,8 @@ public class EzFileMngUtil extends EgovAbstractServiceImpl{
 		String orgFileName = EgovStringUtil.isNullToString(orignFileNm);
 		
 		orgFileName = CommonUtil.getEncodedFileNameForDownload(request.getHeader("User-Agent"), orgFileName);
-		
-		File file = new File(downFileName);
+
+		EzFAL.EzFile file = new EzFAL.EzFile(downFileName);
 	
 		if (!file.exists() || !file.isFile()) {
 		    throw new FileNotFoundException(downFileName);
@@ -618,7 +607,7 @@ public class EzFileMngUtil extends EgovAbstractServiceImpl{
         String realPath = commonUtil.getRealPath(request);
         
         filePath = realPath + filePath;
-        File file = new File(filePath);
+		EzFAL.EzFile file = new EzFAL.EzFile(filePath);
         
 	    // klib 확장자로 끝난다면 downFileForKlib 메소드로 리턴
         // ezCommon/downloadAttach.do 에서 이 메소드를 호출하기 때문에 전자결재에서 결재완료된 한글 문서를 로드할 때도 사용됨
@@ -637,24 +626,32 @@ public class EzFileMngUtil extends EgovAbstractServiceImpl{
         long fileSize = 0;
         
         try {
-	        fileSize = file.length();
-	        bis = new BufferedInputStream(new FileInputStream(file));
-	        contentType = URLConnection.guessContentTypeFromStream(bis);
-	        
-	        if (contentType == null) {
-	        	contentType = "application/octet-stream";
-	        }
-	        
-	        response.setContentType(contentType);
-	        response.setHeader("Content-Length", Long.toString(fileSize));
-	        
-	        logger.debug("contentType=" + contentType + ",fileSize=" + fileSize);
-	        
-	        os = response.getOutputStream();
-	        
-	        IOUtils.copy(bis, os);
-	        
-	        os.flush();
+			if (file.exists()) {
+				fileSize = file.length();
+				bis = new BufferedInputStream(new EzFAL.EzFileInputStream(file));
+				contentType = URLConnection.guessContentTypeFromStream(bis);
+
+				if (contentType == null) {
+					if (filePath.toLowerCase().endsWith(".html")) {
+						contentType = "text/html";
+					} else {
+						contentType = "application/octet-stream";
+					}
+				}
+
+				response.setContentType(contentType);
+				response.setHeader("Content-Length", Long.toString(fileSize));
+
+				logger.debug("contentType=" + contentType + ",fileSize=" + fileSize);
+
+				os = response.getOutputStream();
+
+				IOUtils.copy(bis, os);
+
+				os.flush();
+			} else {
+				logger.debug("{} not found.", filePath);
+			}
         } catch(Exception e) {
         	logger.error(e.getMessage(), e);
         } finally {
@@ -709,7 +706,41 @@ public class EzFileMngUtil extends EgovAbstractServiceImpl{
 		
 		return path.delete();
 	}
-	
+
+	public boolean deleteDirectory(EzFAL.EzFile path) throws Exception {
+		if (path.isDirectory()) {
+			EzFAL.EzFile[] files = path.listFiles();
+
+			for (int i=0; i<files.length; i++) {
+				if (files[i].isDirectory()) {
+					deleteDirectory(files[i]);
+				}
+				else {
+					files[i].delete();
+				}
+			}
+		}
+
+		return path.delete();
+	}
+
+	public void fileMove(String beforeFilePath, String afterFilePath) throws Exception {
+		logger.debug("fileMove started.");
+		logger.debug("beforeFilePath = " + beforeFilePath + " || afterFilePath = " + afterFilePath);
+
+		EzFAL.EzFile srcFile = new EzFAL.EzFile(commonUtil.detectPathTraversal(beforeFilePath));
+		EzFAL.EzFile destFile = new EzFAL.EzFile(commonUtil.detectPathTraversal(afterFilePath));
+
+		try (InputStream in = new EzFAL.EzFileInputStream(srcFile);
+			 OutputStream out = new EzFAL.EzFileOutputStream(destFile)) {
+			IOUtils.copy(in, out);
+		}
+
+		srcFile.delete();
+
+		logger.debug("fileMove ended.");
+	}
+
 	/**
 	 * 폴더를 압축하여 zip파일을 생성한다.
 	 * 
@@ -811,7 +842,7 @@ public class EzFileMngUtil extends EgovAbstractServiceImpl{
 	 * @throws Exception
 	 */
 	public String readFile(String filePath) throws Exception {
-		File file = new File(filePath);
+		EzFAL.EzFile file = new EzFAL.EzFile(filePath);
 		
 		if (!file.exists()) {
 			throw new NoSuchFileException(filePath);
@@ -822,7 +853,7 @@ public class EzFileMngUtil extends EgovAbstractServiceImpl{
 		String strLine = null;
 		
 		try {
-			br = new BufferedReader(new InputStreamReader(new FileInputStream(file), "UTF-8"));
+			br = new BufferedReader(new InputStreamReader(new EzFAL.EzFileInputStream(file), "UTF-8"));
 			
 			while ((strLine = br.readLine()) != null) {
 				sb.append(strLine + "\n");

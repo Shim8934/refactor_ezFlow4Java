@@ -2,6 +2,7 @@ package egovframework.ezEKP.ezCommon.service.impl;
 
 import egovframework.ezMobile.ezOption.dao.MOptionDAO;
 import egovframework.ezMobile.ezOption.vo.MOptionVO;
+import egovframework.let.utl.fcc.service.EzFAL;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -33,6 +34,9 @@ import egovframework.let.user.login.vo.TenantServerNameVO;
 import egovframework.let.user.login.vo.TenantVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.KlibUtil;
+import egovframework.let.utl.fcc.service.MimeTypes;
+import egovframework.let.utl.fcc.service.EzFAL.*;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -62,6 +66,7 @@ import javax.net.ssl.SSLSession;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 import javax.servlet.http.HttpServletRequest;
+
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -543,26 +548,24 @@ public class EzCommonServiceImpl extends EzFileMngUtil implements EzCommonServic
 
         for (String imgSrc : imgSrcs) {
             String contentType = "application/octet-stream";
-            String extension = ".gif"; //기존확장자가.gif로고정되어있었으므로,디폴트로사용함
-
-            InputStream tempIn = null;
-            try {
-            	if (imgSrc.contains("222.106.242.180")) {
-                    continue;
-                // 이미지 src에 base64로 변환된 이미지를 직접 넘겨주는 경우 파일입출력 하지 않음
-            	} else if (!imgSrc.startsWith("data:")) { 
-            		tempIn = Files.newInputStream(Paths.get(realPath + imgSrc));
-            		contentType = URLConnection.guessContentTypeFromStream(tempIn);
-            	}
-            } catch (IOException e) {
-                //url 일 시 realPath + path 로 exception 발생 -> 위의 default값 사용하므로 따로 exception 처리 하지 않음.
-				logger.debug("e.message=" + e.getMessage());
-            } finally {
-                if (tempIn != null) {
-                    tempIn.close();
-                }
-            }
-
+            String extension = ".gif"; // 기존 확장자가.gif로 고정되어있었으므로, 디폴트로 사용
+			
+            if (imgSrc.contains("222.106.242.180")) {
+        		continue;
+        	}
+            // 이미지 src에 base64로 변환된 이미지를 직접 넘겨주는 경우 파일입출력 하지 않음
+            else if (!imgSrc.startsWith("data:")) {
+	        	// EzFAL EzFileInputStream 사용 (자동 close 호출)
+	    		try (EzFileInputStream fis = new EzFileInputStream(Paths.get(realPath, imgSrc).toString())) {
+	    			byte[] fileBytes = new byte[fis.available()];
+	    			fis.read(fileBytes);
+	    			contentType = MimeTypes.getContentType(fileBytes);
+	    		} catch (Exception e) {
+					// url 일 시 realPath + path 로 exception 발생 -> 위의 default값 사용하므로 따로 exception 처리 하지 않음.
+	    			logger.error(e.getMessage(), e);
+	    		}
+        	}
+            
             if (contentType == null) {
                 contentType = "application/octet-stream";
             } else {
@@ -570,7 +573,7 @@ public class EzCommonServiceImpl extends EzFileMngUtil implements EzCommonServic
                 extension = "." + contentType.split("/")[1];
             }
 
-            logger.debug("imgSrc = " + imgSrc);
+            logger.debug("imgSrc = " + imgSrc + " / contentType = " + contentType);
             /*
                 imgSrc compile 중 boardID의 {}로 에러가 발생, 임시로 !!Q, !!W로 치환
             */
@@ -649,18 +652,18 @@ public class EzCommonServiceImpl extends EzFileMngUtil implements EzCommonServic
                 imagesBuilder.append("--" + m_strBoundary);
             } else {
                 try {
-                    String fisPath = new File(realPath + imgSrc).exists() ? realPath + imgSrc : realPath + "/" + imgSrc;
-                    in = new FileInputStream(fisPath);
+                    String fisPath = new EzFile(realPath + imgSrc).exists() ? realPath + imgSrc : realPath + "/" + imgSrc;
+                    in = new EzFileInputStream(fisPath);
 
                     logger.debug(realPath + imgSrc + " is exist.");
                 } catch (Exception e) {
                     try {
-                        in = new FileInputStream(imgSrc);
+                        in = new EzFileInputStream(imgSrc);
                         logger.debug(realPath + imgSrc + " is not exist. ::: " + e.getMessage());
                         logger.debug(imgSrc + " is exist.");
                     } catch (Exception e2) {
                         try {
-                            in = new FileInputStream(realPath + "/images/default_pic.jpg");
+                            in = new EzFileInputStream(realPath + "/images/default_pic.jpg");
                             logger.debug(imgSrc + " is not exist. ::: " + e2.getMessage());
                             logger.debug("change default image.");
                         } catch (Exception e3) {
@@ -711,22 +714,19 @@ public class EzCommonServiceImpl extends EzFileMngUtil implements EzCommonServic
 
         String tempHtml = htmlBuilder.toString();
 
-        for(String backgroundImgSrc : backgroundImgSrcs) {
+        for (String backgroundImgSrc : backgroundImgSrcs) {
             String contentType = "application/octet-stream";
-            String extension = ".gif"; //기존확장자가.gif로고정되어있었으므로,디폴트로사용함
-
-            InputStream tempIn = null;
-            try {
-                tempIn = Files.newInputStream(Paths.get(realPath, backgroundImgSrc));
-                contentType = URLConnection.guessContentTypeFromStream(tempIn);
-            } catch (Exception e) {
-                logger.error(e.getMessage(), e);
-            } finally {
-                if (tempIn != null) {
-                    tempIn.close();
-                }
-            }
-
+            String extension = ".gif"; // 기존 확장자가.gif로 고정되어있었으므로,디폴트로 사용
+			
+			// EzFAL EzFileInputStream 사용 (자동 close 호출)
+			try (EzFileInputStream fis = new EzFileInputStream(Paths.get(realPath, backgroundImgSrc).toString())) {
+				byte[] fileBytes = new byte[fis.available()];
+				fis.read(fileBytes);
+				contentType = MimeTypes.getContentType(fileBytes);
+			} catch (Exception e) {
+				logger.error(e.getMessage(), e);
+			}
+			
             if (contentType == null) {
                 contentType = "application/octet-stream";
             } else {
@@ -804,17 +804,17 @@ public class EzCommonServiceImpl extends EzFileMngUtil implements EzCommonServic
                 }
             } else {
                 try {
-                    String fisPath = new File(realPath + backgroundImgSrc).exists() ? realPath + backgroundImgSrc : realPath + "/" + backgroundImgSrc;
-                    in = new FileInputStream(fisPath);
+                    String fisPath = new EzFile(realPath + backgroundImgSrc).exists() ? realPath + backgroundImgSrc : realPath + "/" + backgroundImgSrc;
+                    in = new EzFileInputStream(fisPath);
                     logger.debug(realPath + backgroundImgSrc + " is exist.");
                 } catch (Exception e) {
                     try {
-                        in = new FileInputStream(backgroundImgSrc);
+                        in = new EzFileInputStream(backgroundImgSrc);
                         logger.debug(realPath + backgroundImgSrc + " is not exist. ::: " + e.getMessage());
                         logger.debug(backgroundImgSrc + " is exist.");
                     } catch (Exception e2) {
                         try {
-                            in = new FileInputStream(realPath + "/images/default_pic.jpg");
+                            in = new EzFileInputStream(realPath + "/images/default_pic.jpg");
                             logger.debug(backgroundImgSrc + " is not exist. ::: " + e2.getMessage());
                             logger.debug("change default image.");
                         } catch (Exception e3) {
@@ -866,7 +866,7 @@ public class EzCommonServiceImpl extends EzFileMngUtil implements EzCommonServic
         String domain = request.getServerName() +":" +request.getServerPort();
 
         filePath = realPath + uploadModule;
-        File file = new File(filePath);
+        EzFAL.EzFile file = new EzFAL.EzFile(filePath);
 
         if (!file.exists()) {
         	file.mkdirs();
@@ -917,6 +917,12 @@ public class EzCommonServiceImpl extends EzFileMngUtil implements EzCommonServic
 		List<String> m_ListImageLocalLocation = new ArrayList<String>();
 		String extension = ".gif"; // 기존 확장자가 .gif로 고정되어 있었으므로, 디폴트로 사용함
 		boolean isUTF8;
+        
+        // filePath 없을 시의 교정
+        EzFAL.EzFile file = new EzFAL.EzFile(m_strLPath);
+        if (!file.exists()) {
+        	file.mkdirs();
+        }
 		
 		strBoundary = getBoundaryText(m_strMHT);
 		logger.debug("strBoundary="+strBoundary);
@@ -996,7 +1002,7 @@ public class EzCommonServiceImpl extends EzFileMngUtil implements EzCommonServic
 		String strImageName = UUID.randomUUID() + extension;
         String SfilePath = m_strSPath + strImageName;
         String LfilePath = m_strLPath + strImageName;
-        File file = new File(commonUtil.detectPathTraversal(m_strLPath));
+        EzFAL.EzFile file = new EzFAL.EzFile(commonUtil.detectPathTraversal(m_strLPath));
 
         if (!file.exists()) {
         	file.mkdirs();
@@ -1004,7 +1010,7 @@ public class EzCommonServiceImpl extends EzFileMngUtil implements EzCommonServic
 
         OutputStream bos = null;
         try {
-        	bos = new FileOutputStream(new File(commonUtil.detectPathTraversal(LfilePath)));
+        	bos = new EzFAL.EzFileOutputStream(commonUtil.detectPathTraversal(LfilePath));
         	bos.write(imageBytes);
 		} catch (Exception e) {
 			logger.debug("e: {}", e);

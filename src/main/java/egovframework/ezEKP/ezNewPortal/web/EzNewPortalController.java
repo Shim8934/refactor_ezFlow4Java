@@ -1,7 +1,6 @@
 package egovframework.ezEKP.ezNewPortal.web;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileReader;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -22,6 +21,7 @@ import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.ezEKP.ezNewPortal.service.EzNewPortalService;
 import egovframework.ezEKP.ezNewPortal.vo.MenuInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.PortalUserSwitchVO;
+import egovframework.let.utl.fcc.service.EzFAL;
 import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -995,9 +995,9 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 		try {
 			path = commonUtil.detectPathTraversal(path);
 			
-			File file = new File(path);
+			EzFAL.EzFile file = new EzFAL.EzFile(path);
 			// CWE-404 보안 취약점 대응
-			try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+			try (BufferedReader br = new BufferedReader(new FileReader(file.getFile()))) {
 				String line = null;
 		
 				while ((line = br.readLine()) != null) {

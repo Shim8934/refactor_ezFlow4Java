@@ -21,18 +21,25 @@ function makeBoardList(portletId, fileName, count, type, currentPage) {
 		url: "/ezNewPortal/getCustomBoardInfo.do",
 		success: function (result) {
 			var access = result.access;
+			var listViewFg = result.listViewFg;
 			var boardList = result.boardList;
 			var boardListTotalCnt = result.boardListTotalCnt;
 			var currentPage = result.currentPage;
             boardPortletLang = result.boardPortletLang;
             
 			if (access == "true") {
-				if ("a" === type) {
-					getBoardListAType(result.boardList, portletId);
-				} else if ("b" === type) {
-					getBoardListBType(result.boardList, portletId);
+				if (listViewFg == true) {
+					if ("a" === type) {
+						getBoardListAType(result.boardList, portletId);
+					} else if ("b" === type) {
+						getBoardListBType(result.boardList, portletId);
+					} else {
+						getBoardList(result.boardList, portletId);
+					}
 				} else {
-					getBoardList(result.boardList, portletId);
+					boardHTML += '<dl class="nodata"><dt><img src="/images/kr/main/noData_sIcon.png"></dt><dd>' + messages.strLangnbh001 + '</dd></dl>'
+					$("#customBoardList" + portletId).html(boardHTML);
+					boardListTotalCnt = 0; //리스트보기 권한이 없을때 네비게이션버튼 없에기위해
 				}
 			} else {
                 boardHTML += '<dl class="nodata"><dt><img src="/images/kr/main/noData_sIcon.png"></dt><dd>' + messages.strLang14 + '</dd></dl>'

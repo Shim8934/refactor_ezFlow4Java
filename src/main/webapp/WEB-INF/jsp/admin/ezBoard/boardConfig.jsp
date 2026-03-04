@@ -46,8 +46,6 @@
 					document.getElementById("BoardEnv_sub1").style.display = "none";
 					document.getElementById("BoardEnv_sub3").style.display = "none";
 					TabId = "1tab2";
-				} else {
-					TabId = "1tab1";
 				}
 
 	            document.getElementById(TabId).setAttribute("class", "tabon");

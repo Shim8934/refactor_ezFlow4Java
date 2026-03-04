@@ -145,7 +145,10 @@
 					console.log(error);
 				}
 			});
-			
+			if (typeof(mealDataList) == 'undefined') {
+				alert("<spring:message code='ezMealPlan.nbh001' />");
+				return;
+			}
 			var mealTable = document.getElementById("mealCal");
 			
 			// 월요일부터 하루씩 해당하는 일자가 있는지 비교하고, 해당 일자가 없으면 반복문을 빠져나가고 데이터가 있으면 테이블을 채우는 반복문 실행
@@ -231,8 +234,8 @@
 	            </li>
 	        </ul>
 	    </div>
-	    <table id="mealCal" style="width:100%; height:80%; margin-top:50px; table-layout: fixed;">
-			<tr style="height:5%">
+	    <table id="mealCal" style="width:100%; height:80%; margin-top:50px;">
+			<tr style="height:6%">
 				<th><spring:message code='ezMealPlan.jsb008' /></th>
 				<th id="day1" class="date"></th>
 				<th id="day2" class="date"></th>
@@ -240,7 +243,7 @@
 				<th id="day4" class="date"></th>
 				<th id="day5" class="date"></th>
 			</tr>
-			<tr style="height:30%">
+			<tr style="height:34%">
 				<th>
 					<spring:message code='ezMealPlan.jsb002' />
 				</th>
@@ -250,7 +253,7 @@
 				<td></td>
 				<td></td>
 			</tr>
-			<tr style="height:30%">
+			<tr style="height:34%">
 				<th>
 					<spring:message code='ezMealPlan.jsb003' />
 				</th>
@@ -260,7 +263,7 @@
 				<td></td>
 				<td></td>
 			</tr>
-			<tr style="height:10%">
+			<tr style="height:12%">
 				<th>
 					<spring:message code='ezMealPlan.jsb004' />
 				</th>
@@ -270,7 +273,7 @@
 				<td></td>
 				<td></td>
 			</tr>
-			<tr style="height:5%">
+			<tr style="height:8%">
 				<th>
 					<spring:message code='ezMealPlan.jsb005' />
 				</th>
@@ -280,7 +283,7 @@
 				<td></td>
 				<td></td>
 			</tr>
-			<tr style="height:5%">
+			<tr style="height:6%">
 				<th>
 					<spring:message code='ezMealPlan.jsb006' />
 				</th>

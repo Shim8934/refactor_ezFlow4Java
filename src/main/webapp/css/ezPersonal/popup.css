@@ -22,7 +22,7 @@
 .popup_notice .popup_noticeTitle dt{float:left; width:25px; height:25px; margin:0px 10px 0px 0px; padding:0px; background:url(../../images/surv_popup_title.png) no-repeat center;}
 .popup_notice .popup_noticeTitle dd{margin:0; padding:0px; font-size:18px; color:#fff; font-weight:500;}
 
-.popup_notice .popup_noticeLayout .popup_noticeList{overflow:auto; margin:0px; padding:25px; background:#FFF; height:calc(100% - 116px) !important; box-sizing:border-box;}
+.popup_notice .popup_noticeLayout .popup_noticeList{overflow:auto; margin:0px; padding:25px; background:#FFF; height:calc(100vh - 116px) !important; max-height: calc(100% - 116px); box-sizing:border-box;}
 .popup_notice .popup_noticeLayout .popup_noticeList p{margin:0px; padding:0px; line-height:18px; font-size:12px; word-break:break-all; word-wrap: break-word;}
 .popup_notice .popup_noticeLayout .notice_btn{overflow:hidden; margin:0px; padding:0 0 0 20px; height:46px; background:#F5F5F5; display:flex; align-items:center; border-radius:0 0 10px 10px;}
 .popup_notice .popup_noticeLayout .notice_btn p{display:inline-block; margin:0px; padding:0px; font-size:12px; color:#333;}

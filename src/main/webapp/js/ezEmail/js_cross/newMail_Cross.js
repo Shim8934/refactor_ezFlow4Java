@@ -2282,7 +2282,7 @@ function GetDocumentInfo(DocID, DocHref, ImagCnt, Target) {
         }
         
         /* 2023-05-16 김우철 - 테넌트 컨피그  useHwpDownSecurity의 값이 Y일 때, 배포용 문서로 변환하는 함수 hwp_url를 호출 */
-        if (useHwpDownSecurity == "Y" && approvalFlag == "G") {
+        if (!!useHWP && useHWP == "YES" && useHwpDownSecurity == "Y" && approvalFlag == "G") {
         	hwp_url(0, ofileName.length);
         } else {
         	attach_Add_OtherModule(ofileName, ofileHref, ofileAttachSize, ofileTypeCode);
@@ -2405,7 +2405,7 @@ function GetBoardItemInfo_New(pBoardID, pItemID, pRetransType, pFont) {
         eSubject.value = getNodeText(SelectNodes(ReturnXML, "NODES/NODE/Title")[0]);
         var PostDate = getNodeText(SelectNodes(ReturnXML, "NODES/NODE/WriteDate")[0]);
         var Sender = getNodeText(SelectNodes(ReturnXML, "NODES/NODE/WriterName")[0]) + " (" +
-	                 getNodeText(SelectNodes(ReturnXML, "NODES/NODE/ExtensionAttribute3")[0]) + "," +
+	                 (getNodeText(SelectNodes(ReturnXML, "NODES/NODE/ExtensionAttribute3")[0]) == "" ? "" : getNodeText(SelectNodes(ReturnXML, "NODES/NODE/ExtensionAttribute3")[0]) +",") +
 			         getNodeText(SelectNodes(ReturnXML, "NODES/NODE/WriterDeptName")[0]) + "," +
 			         getNodeText(SelectNodes(ReturnXML, "NODES/NODE/WriterCompanyName")[0]) + ")";
 
@@ -2510,7 +2510,7 @@ function GetBoardItemInfo_New3(pBoardID, pItemID, pFont) {
         eSubject.value = getNodeText(SelectNodes(ReturnXML, "NODES/NODE/Title")[0]);
         var PostDate = getNodeText(SelectNodes(ReturnXML, "NODES/NODE/StartDate")[0]);
         var Sender = getNodeText(SelectNodes(ReturnXML, "NODES/NODE/WriterName")[0]) + " (" +
-	                 getNodeText(SelectNodes(ReturnXML, "NODES/NODE/ExtensionAttribute3")[0]) + "," +
+	                 (getNodeText(SelectNodes(ReturnXML, "NODES/NODE/ExtensionAttribute3")[0]) == "" ? "" : getNodeText(SelectNodes(ReturnXML, "NODES/NODE/ExtensionAttribute3")[0]) +",") +
 			         getNodeText(SelectNodes(ReturnXML, "NODES/NODE/WriterDeptName")[0]) + "," +
 			         getNodeText(SelectNodes(ReturnXML, "NODES/NODE/WriterCompanyName")[0]) + ")";
 
@@ -4327,7 +4327,7 @@ function attach_Add_OtherModule(ofileName, ofileHref, ofileAttachSize) {
     for (var i = 0; i < g_fileList.length; i++) {
     	var filepath = "";
     	
-    	if (useHwpDownSecurity == "Y" && approvalFlag == "G") {
+    	if (!!useHWP && useHWP == "YES" && useHwpDownSecurity == "Y" && approvalFlag == "G") {
     		filepath = ofileCopyPath[i];
     	} else {
     		filepath = ofileHref[i];
@@ -4547,7 +4547,7 @@ function hwp_url(p_num, arrayLength) {
 		}
 		
 		var strFileExt = ofileName[p_num].substr(ofileName[p_num].lastIndexOf('.') + 1);
-		if (useHwpDownSecurity == "Y" && approvalFlag == "G" && strFileExt.toUpperCase() == "HWP" && ofileTypeCode[p_num] == "document") {
+		if (!!useHWP && useHWP == "YES" && useHwpDownSecurity == "Y" && approvalFlag == "G" && strFileExt.toUpperCase() == "HWP" && ofileTypeCode[p_num] == "document") {
 			var doc = HwpCtrl.Open(window.location.origin + ofileHref[p_num], "HWP", "", function(res) {
 				// console.log("res" + p_num + " : " + JSON.stringify(res));
 				if (res.result) {
