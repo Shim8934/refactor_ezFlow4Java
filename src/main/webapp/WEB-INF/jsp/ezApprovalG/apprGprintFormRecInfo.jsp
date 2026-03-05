@@ -175,10 +175,13 @@
 				<td id="tdPublicYn" colspan="3">
 				<c:choose>
 					<c:when test="${publicCode2 == 'N'}">
-						&nbsp;<spring:message code='ezApprovalG.t46'/>
+						&nbsp;<spring:message code='ezApprovalG.kmh05'/>
+					</c:when>
+					<c:when test="${publicCode2 == 'B'}">
+						&nbsp;<spring:message code='ezApprovalG.kmh04'/>
 					</c:when>
 					<c:otherwise>
-						&nbsp;<spring:message code='ezApprovalG.t47'/>
+						&nbsp;<spring:message code='ezApprovalG.kmh03'/>
 					</c:otherwise>
 				</c:choose>
 				</td>
