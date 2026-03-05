@@ -417,9 +417,9 @@ function pre_openApprovUI(allFlag) {
                         }
                     } else {
                         openLocation = "/ezApprovalG/approvuiWHWP.do?docID=" + encodeURI(pArgument[0]);
+                        openLocation += "&id=" + encodeURI(pArgument[1]) + "&name=" + encodeURI(pArgument[2]);
                         openLocation += "&deptID=" + encodeURI(pArgument[3]) + "&allFlag=" + encodeURI(allFlag) + "&docState=" + encodeURI(GetAttribute(tr[0], "DATA12")) + "&mode=" + encodeURI(mode) + "&orgCompanyID=" + orgCompanyID + "&orgDocID=" + encodeURI(GetAttribute(tr[0], "DATA2"));
                     }
-                    
                 } else {
                     openLocation = "/ezApprovalG/approvui.do?docID=" + encodeURI(pArgument[0]);
                     openLocation = openLocation + "&id=" + encodeURI(pArgument[1]) + "&name=" + encodeURI(pArgument[2]);
