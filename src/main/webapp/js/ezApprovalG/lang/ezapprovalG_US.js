@@ -1237,3 +1237,5 @@ var strLangDashBoard01 = "Approved";
 
 var strLangJIH_ChkRecvnum1 = "Please specify only one receiptnumber field.";
 var strLangJIH_ChkRecvnum2 = "The receiptnumber field is not specified. Please specify it.";
+
+var strLangKYJ01 = "The comment has been modified by another approver. Please reopen the comment window.";

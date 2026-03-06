@@ -1236,3 +1236,5 @@ var strLangDashBoard01 = "Tôi đã phê duyệt";
 
 var strLangJIH_ChkRecvnum1 = "receiptnumber 필드는 한개의 필드만 지정해주십시오.";
 var strLangJIH_ChkRecvnum2 = "receiptnumber 필드가 지정되어 있지 않습니다. 지정해주십시오.";
+
+var strLangKYJ01 = "다른 결재자에 의해 의견이 변경되었습니다. 의견창을 다시 열어주십시오.";

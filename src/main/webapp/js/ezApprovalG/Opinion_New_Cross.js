@@ -37,7 +37,8 @@ function initOpinionInfo() {
  * 진행문서 의견 리스트
  * return : 의견리스트 (xmlDom)
  */
-function getOpinionList() {
+var oldOpinionList = "";
+function getOpinionList(chkFlag) {
 	try {
     	var result = "";
         
@@ -53,10 +54,17 @@ function getOpinionList() {
     		},
     		success: function(xml){
     			result = xml;
+    			if (typeof chkFlag == 'undefined' || chkFlag != "Y") {
+    			    oldOpinionList = xml;
+    			}
     		}        			
     	});
-
-        return loadXMLString(result);
+    	
+        if (typeof chkFlag == 'undefined' || chkFlag != "Y") {
+            return loadXMLString(result);        
+        } else {
+            return result;
+        }
     } catch (e) {
         alert("getOpinionList ::" + e.description);
     }
@@ -303,6 +311,16 @@ function deleteOpinionInfo_complete(ret) {
  */
 function saveOpinionInfo() {
 	try {
+	    // 개인병렬에 의해 동시 의견 변경시, 앞선 의견이 삭제되는 경우가 있어 일반의견 저장시 변경사항 체크하도록 함
+	    if (typeof pOpinionType != 'undefined' && pOpinionType == "001" && oldOpinionList != "") {
+	        var nowOpinionList = getOpinionList("Y");
+	        if (nowOpinionList != oldOpinionList) {
+                var pAlertContent = strLangKYJ01;
+                OpenAlertUI(pAlertContent);
+                return;
+	        }
+	    }
+	
 		var OpinionList = new ListView();
 		OpinionList.LoadFromID("OpinionList");
 		
