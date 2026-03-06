@@ -476,7 +476,7 @@
 		        if (typeof (ret) != "undefined") {
 		            pBoardID = ret[0];
 		
-		            if (pBoardID == "" || typeof (pBoardID) == "undefined") {
+		            if (pBoardID == "" || typeof (pBoardID) == "undefined" || ret == "cancel") {
 		                return;
 		            }
 		
