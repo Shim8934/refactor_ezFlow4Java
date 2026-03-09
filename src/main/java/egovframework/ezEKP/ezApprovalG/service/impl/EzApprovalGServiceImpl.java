@@ -17078,7 +17078,7 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
                 }
 			} 
 			
-			if (rtnVal) {
+			if (rtnVal && nonElecRecXML.trim().equals("")) {
 				sendMsg(docID, "", "END", companyID, lang , userInfo.getTenantId());
 				sendNoti(docID, userID, userName, "", "", "", "END", companyID, lang, userInfo.getTenantId());
 			}
