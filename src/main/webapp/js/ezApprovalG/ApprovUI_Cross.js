@@ -4000,7 +4000,11 @@ function setRecevInfo(ret) {
         }
         return;
     }
-
+    
+    if (typeof(ret) == 'undefined') {
+        return;
+    }
+    
     var xmldom = createXmlDom();
     xmldom.async = false;
     xmldom = loadXMLString(ret);
