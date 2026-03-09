@@ -302,37 +302,58 @@ var SurveyFile = function() {
 		function deleteFile(imgObj, event) {
 			if (event) {event.stopPropagation();}
 			
-			var liElmt   = imgObj.parentElement;
-			var filePath = liElmt.getAttribute("path");
-			
-			// 2020-03-13 김민성 - 질문 수정 > url 삭제시 url 삭제 메소드 분기 타도록 추가
-			if(filePath == null) {
-				deleteUrlFile(imgObj, event);
-				return;
+			var liElmt = imgObj.parentElement;
+			if (typeof(liElmt) != 'undefined' || liElmt != null ) {
+			    var setId = imgObj.closest('.qstnWrapper').id;
+			    if (!deleteFilePathObj[setId]) {
+                    deleteFilePathObj[setId] = [];
+                }
+			    deleteFilePathObj[setId].push(liElmt.getAttribute("path"));
+			    afterDeleteSuccessfully(liElmt);
 			}
-			
-			$.ajax({
-				type: "POST",
-				url: "/ezSurvey/deleteAttachFile.do",
-				data: {"filePath" : filePath},
-				dataType: "JSON",
-				async: false,
-				cache: false,
-				success : function(data) {
-					var code = data.code;
-					
-					switch(code) {
-						case 0 : afterDeleteSuccessfully(liElmt)  ; break;
-						case 1 : alert(SurveyMessages.strParamErr); break;
-						case 2 : alert(SurveyMessages.strError)   ; break;
-						default: alert(SurveyMessages.strError)   ; return;
-					}
-				},
-				error : function(error) {
-					alert(SurveyMessages.strError + error);
-				}
-			});
 		}
+		
+		function doDeleteFile() {
+            if (Object.keys(deleteFilePathObj).length === 0) {
+                return
+            }
+            Object.values(deleteFilePathObj).forEach(function(files) {
+            
+                files.forEach(function(v) {
+                    var filePath = v;
+                    if(filePath == null) {
+                        deleteUrlFile(imgObj, event);
+                        return;
+                    }
+                    
+                    $.ajax({
+                        type: "POST",
+                        url: "/ezSurvey/deleteAttachFile.do",
+                        data: {"filePath" : filePath},
+                        dataType: "JSON",
+                        async: false,
+                        cache: false,
+                        success : function(data) {
+                            /*
+                            var code = data.code;
+                            var liElmt = document.querySelector('[path="'+filePath+'"]')
+                            switch(code) {
+                                case 0 : afterDeleteSuccessfully(liElmt)  ; break;
+                                case 1 : alert(SurveyMessages.strParamErr); break;
+                                case 2 : alert(SurveyMessages.strError)   ; break;
+                                default: alert(SurveyMessages.strError)   ; return;
+                            }
+                            */
+                        },
+                        error : function(error) {
+                            alert(SurveyMessages.strError + error);
+                        }
+                    });
+                });
+            });
+            
+            deleteFilePathObj = {};
+        }
 		
 		function afterDeleteSuccessfully(liElmt) {
 			displayInputTitle(liElmt);
@@ -550,7 +571,8 @@ var SurveyFile = function() {
 			mkImgTag   : mkImgTag,
 			download   : downloadFile,
 			render     : renderAttachList,
-			makeImgTitle : makeImgTitle
+			makeImgTitle : makeImgTitle,
+			doDeleteFile : doDeleteFile
 		};
 	}
 }();

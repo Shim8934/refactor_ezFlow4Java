@@ -1,5 +1,7 @@
 package egovframework.ezEKP.ezSurvey.service.impl;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
@@ -8,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
+import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -20,6 +23,7 @@ import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpEntity;
@@ -336,6 +340,58 @@ public class EzSurveyRestServiceImpl extends EgovAbstractServiceImpl implements 
 		}
 		
 		return resultBody;
+	}
+
+	@Override
+	public JSONObject copyAndUploadFile(HttpServletRequest request, String userId, String sourceFilePath) throws Exception {
+		String gwServerUrl = config.getProperty("config.surveyGwServerURL");
+		String apiUrl = gwServerUrl + "/rest/ezsurvey/attachfile/file-upload";
+
+		String cleanPath = sourceFilePath.replace("\\/", "/"); // 슬래시 정제
+		String webRootPath = request.getServletContext().getRealPath("/");
+		File sourceFile = new File(webRootPath, cleanPath);
+
+		if (!sourceFile.exists()) {
+			sourceFile = new File(cleanPath);
+			if(!sourceFile.exists()) {
+				throw new FileNotFoundException("파일을 찾을 수 없습니다 : " + sourceFile.getAbsolutePath());
+			}
+		}
+
+		SimpleClientHttpRequestFactory requestFactory = new SimpleClientHttpRequestFactory();
+		requestFactory.setBufferRequestBody(false);
+		RestTemplate restTemplate = new RestTemplate(requestFactory);
+
+		restTemplate.getMessageConverters().removeIf(m -> m.getClass().equals(ResourceHttpMessageConverter.class));
+		restTemplate.getMessageConverters().add(new BnkResourceHttpMessageConverter());
+
+		MultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
+		JSONObject jsonObject = new JSONObject();
+		JSONArray jsonArray = new JSONArray();
+
+		String originalName = sourceFile.getName();
+		String extension = originalName.contains(".") ? originalName.substring(originalName.lastIndexOf(".")) : "";
+		String newUuidName = UUID.randomUUID().toString() + extension;
+
+		JSONObject fileJson = new JSONObject();
+		fileJson.put("originalFilename", newUuidName);
+		jsonArray.add(fileJson);
+
+		map.add("files", new FileSystemResource(sourceFile));
+		jsonObject.put("nameArray", jsonArray);
+		map.add("data", jsonObject);
+
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+		headers.set("host-name", request.getServerName());
+
+		HttpEntity<MultiValueMap<String, Object>> entity = new HttpEntity<>(map, headers);
+
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(apiUrl);
+		ResponseEntity<String> result = restTemplate.exchange(builder.build().encode().toUri(), HttpMethod.POST, entity, String.class);
+
+		JSONParser jp = new JSONParser();
+		return (JSONObject) jp.parse(result.getBody());
 	}
 	
 	@Override

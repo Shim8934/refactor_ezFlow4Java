@@ -763,6 +763,21 @@ public class EzSurveyController extends EzFileMngUtil {
 		logger.debug("Upload file finishes!");
 		return resultObj;
 	}
+
+	@RequestMapping(value="/ezSurvey/copyAttachFile.do", method = RequestMethod.POST)
+	@ResponseBody
+	public JSONArray jsonCopyFile(@RequestParam("sourceFilePath") List<String> sourceFilePathList, @CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+
+		JSONArray resultList = new JSONArray();
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+
+		for (String path : sourceFilePathList) {
+			JSONObject copyResult = surveyRestService.copyAndUploadFile(request, userInfo.getId(), path);
+			resultList.add(copyResult.get("path"));
+		}
+
+		return resultList;
+	}
 	
 	@RequestMapping(value="/ezSurvey/deleteAttachFile.do", method = RequestMethod.POST)
 	@ResponseBody
