@@ -38307,6 +38307,10 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 		String docNO = "";
 		String retNum = "";
 		String tempHwp = "";
+        String upperDeptCode = "";
+        String upperDeptName = "";
+        String upperDeptName2 = "";
+        String symbolDeptName = "";
 		
 		// 2023-10-04 조수빈 - 정상 (TRUE)/ 다른 노드에서 처리 (DONE)/ 실패를 구분하기 위한 변수 (ERROR).
 		String resultStr = "TRUE";
@@ -38367,6 +38371,26 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
             department = userInfo.getDeptID();
             description = userInfo.getDeptName();
             description2 = userInfo.getDeptName2();
+
+            /* 전자결재G > 상위부서문서함 사용 > 상위부서 정보로 record 정보를 저장 */
+            Map<String, String> upDeptInfo = getUpperDeptInfo(department, userInfo.getTenantId());
+            if (upDeptInfo.get("USEUPPERDEPTBOX") != null && upDeptInfo.get("USEUPPERDEPTBOX").equals("Y")) {
+                upperDeptCode = upDeptInfo.get("upperDeptCode");
+                upperDeptName = upDeptInfo.get("upperDeptName");
+                upperDeptName2 = upDeptInfo.get("upperDeptName2");
+            }
+            // 상위부서문서함, 부서약어 고려
+            if (upperDeptCode != null && !upperDeptCode.trim().isEmpty()) {
+                symbolDeptName = getDeptSymbol(upperDeptCode, userInfo.getTenantId());
+                if (symbolDeptName == null || symbolDeptName.trim().isEmpty()) {
+                    symbolDeptName = upperDeptName;
+                }
+            } else {
+                symbolDeptName = getDeptSymbol(department, userInfo.getTenantId());
+                if (symbolDeptName == null || symbolDeptName.trim().isEmpty()) {
+                    symbolDeptName = description;
+                }
+            }
 
             Map<String, Object> writerMap = new HashMap<String, Object> ();
             writerMap.put("orgDocId", orgDocID);
@@ -38553,7 +38577,7 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 									}
 								}
 								
-								docNO = description + "-" + createDocNO(cabinetSN , docNumZeroCnt);
+								docNO = symbolDeptName + "-" + createDocNO(cabinetSN , docNumZeroCnt);
 						setHwpText(false, "receiptnumber", docNO, hwpFile);
 								strXML.getElementsByTagName("DOCNO").item(0).setTextContent(docNO);
 								retNum = getNDigitNum(cabinetSN, 6);
@@ -38567,7 +38591,7 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 							}
 						} else {
 							// 채번하지 않는 경우 
-							docNO = description + "-";
+							docNO = symbolDeptName + "-";
 					setHwpText(false, "receiptnumber", docNO, hwpFile);
 							strXML.getElementsByTagName("DOCNO").item(0).setTextContent(docNO);
 						}
@@ -38875,6 +38899,10 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 		String cabinetSN = "";
 		String docNO = "";
         String scheme = "http://";
+        String upperDeptCode = "";
+        String upperDeptName = "";
+        String upperDeptName2 = "";
+        String symbolDeptName = "";
 		
     	if (request.getHeader("HTTPS") != null && request.getHeader("HTTPS").toString().toLowerCase().equals("on")) {
     		scheme = "https://";
@@ -38929,6 +38957,26 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
             department = userInfo.getDeptID();
             description = userInfo.getDeptName();
             description2 = userInfo.getDeptName2();
+
+            /* 전자결재G > 상위부서문서함 사용 > 상위부서 정보로 record 정보를 저장 */
+            Map<String, String> upDeptInfo = getUpperDeptInfo(department, userInfo.getTenantId());
+            if (upDeptInfo.get("USEUPPERDEPTBOX") != null && upDeptInfo.get("USEUPPERDEPTBOX").equals("Y")) {
+                upperDeptCode = upDeptInfo.get("upperDeptCode");
+                upperDeptName = upDeptInfo.get("upperDeptName");
+                upperDeptName2 = upDeptInfo.get("upperDeptName2");
+            }
+            // 상위부서문서함, 부서약어 고려
+            if (upperDeptCode != null && !upperDeptCode.trim().isEmpty()) {
+                symbolDeptName = getDeptSymbol(upperDeptCode, userInfo.getTenantId());
+                if (symbolDeptName == null || symbolDeptName.trim().isEmpty()) {
+                    symbolDeptName = upperDeptName;
+                }
+            } else {
+                symbolDeptName = getDeptSymbol(department, userInfo.getTenantId());
+                if (symbolDeptName == null || symbolDeptName.trim().isEmpty()) {
+                    symbolDeptName = description;
+                }
+            }
 
             Map<String, Object> writerMap = new HashMap<String, Object> ();
             writerMap.put("orgDocId", orgDocID);
@@ -39341,7 +39389,7 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 						for (int i = 0; i < Arr_Header.length; i++) {
 							
 							if (Arr_Header[i].equalsIgnoreCase("@dp")) {
-								receiptFormat += description;
+                                receiptFormat += symbolDeptName;
 							} else if (Arr_Header[i].equalsIgnoreCase("@yy")) {
 								/* 2025-04-01 홍승비 - 전자결재G > 기산일(회계년도) 시간대 기준 값을 테넌트 컨피그로 옵션화, 디폴트로 UTC 정시가 아닌 한국시(UTC + 9)를 기준으로 사용하도록 수정 */
 								String todayUTCTime = commonUtil.getTodayUTCTime("");
