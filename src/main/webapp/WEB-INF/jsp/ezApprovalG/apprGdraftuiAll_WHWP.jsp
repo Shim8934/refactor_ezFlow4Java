@@ -183,6 +183,7 @@
 	        var pLimitRange = "", pPageNum = "1";
 	        var cabinetID = "";
 	        var TaskCode = "";
+            var keepperiod = "";
 	        var DocNumCode = "";
 	        var SummaryFlag = false;
 	        var btnReceivLineEnable = false;
@@ -1495,9 +1496,15 @@
 		                TaskCode = SelectSingleNodeValueNew(xmlCab, "CABINETINFO/CABINET/TASKCODE");
 		            }
 
+                    cabinetID = SelectSingleNodeValueNew(xmlCab, "CABINETINFO/CABINET/CABINETID");
 
-	            	cabinetID = SelectSingleNodeValueNew(xmlCab, "CABINETINFO/CABINET/CABINETID");
-	            	tempKeyword = ret[6];
+                    var currIfrm = document.getElementById("ifrm" + currentTabIdx);
+                    if (currIfrm.contentWindow.FieldExist("keepperiod")) {
+                        keepperiod = SelectSingleNodeValueNew(xmlCab, "CABINETINFO/CABINET/KEEPPERIOD");
+                        currIfrm.contentWindow.PutFieldText("keepperiod", keepperiod);
+                    }
+
+                    tempKeyword = ret[6];
 		            tempSecurity = ret[7];
 		            tempUrgent = ret[8];
 		            pSummery = ret[9];
@@ -1519,7 +1526,7 @@
                         pPageNum = ret[13];
 
                         setPublicFlag();
-                        setKeepPeriod();
+                        setKeepPeriod(currIfrm);
 
 /*                        if (nonElecRec == "Y") {
                             nonElecRecInfoXml = ret[23];
@@ -2703,41 +2710,41 @@
                 }
             }
 
-            function setKeepPeriod() {
+            function setKeepPeriod(currIfrm) {
                 try {
-                    viewTabNum = $("dl.tab_menu dt").length;
-                    for (var i = 1; i < viewTabNum; i++) { // 1안부터 시작
-                        var ifrm = document.getElementById("ifrm" + i);
-                        if (!ifrm.contentWindow.FieldExist("keepperiod")) { // 보존연한 필드가 양식에 없다면 다음 루프로 이동
-                            continue;
-                        }
-                        var keepperiodText = "";
-
-                        switch (keepperiod) {
-                            case '01':
-                                keepperiodText = "1년";
-                                break;
-                            case '03':
-                                keepperiodText = "3년";
-                                break;
-                            case '05':
-                                keepperiodText = "5년";
-                                break;
-                            case '10':
-                                keepperiodText = "10년";
-                                break;
-                            case '20':
-                                keepperiodText = "30년";
-                                break;
-                            case '30':
-                                keepperiodText = "준영구";
-                                break;
-                            case '40':
-                                keepperiodText = "영구";
-                                break;
-                        }
-                        ifrm.contentWindow.PutFieldText("keepperiod", keepperiodText);
+                    // viewTabNum = $("dl.tab_menu dt").length;
+                    // for (var i = 1; i < viewTabNum; i++) { // 1안부터 시작
+                    // var ifrm = document.getElementById("ifrm" + i);
+                    if (!currIfrm.contentWindow.FieldExist("keepperiod")) { // 보존연한 필드가 양식에 없다면 다음 루프로 이동
+                        return;
                     }
+                    var keepperiodText = "";
+
+                    switch (keepperiod) {
+                        case '01':
+                            keepperiodText = "1년";
+                            break;
+                        case '03':
+                            keepperiodText = "3년";
+                            break;
+                        case '05':
+                            keepperiodText = "5년";
+                            break;
+                        case '10':
+                            keepperiodText = "10년";
+                            break;
+                        case '20':
+                            keepperiodText = "30년";
+                            break;
+                        case '30':
+                            keepperiodText = "준영구";
+                            break;
+                        case '40':
+                            keepperiodText = "영구";
+                            break;
+                    }
+                    ifrm.contentWindow.PutFieldText("keepperiod", keepperiodText);
+                    // }
                 } catch (e) {
                     alert("ezdraftuiAll.setKeepPeriod()  ::  " + e);
                 }
