@@ -70,13 +70,16 @@
 	        arr_userinfo[14] = "<c:out value ='${userInfo.title2}'/>";
 	        arr_userinfo[15] = "<c:out value ='${userInfo.deptName1}'/>";
 	        arr_userinfo[16] = "<c:out value ='${userInfo.deptName2}'/>";
-	        var g_uFlag = "";
+            var g_sFlag = ""
+            var g_uFlag = "";
 	        var UserLang = "<c:out value ='${userInfo.lang}'/>";
 	        var isPeriodYear = true;
 	        var OpenWin;
 	        var approvalFlag = "<c:out value ='${approvalFlag}'/>";
 	        var ext = "";
 	        var useWebHWP = "<c:out value ='${useWebHWP}'/>";
+            var selRowChangeFlag = false;
+            var diffPaging = "";
 	        
 	        document.onselectstart = function () { return false; };
 	        
@@ -128,6 +131,7 @@
 		
 		            case "4":
 		                ListTypeFlag = "11";
+                        PageSize = 20
 		                GetEndYConfirmList();
 		                break;
 		        }
