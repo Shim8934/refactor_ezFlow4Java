@@ -6,11 +6,11 @@ function setDocNumFormat(pSn) {
     var d = new Date();
 
     var numHeader = "";
-    var DeptSymbol = arr_userinfo[5];
+    var DeptSymbol = getDeptSymbol(arr_userinfo[4], arr_userinfo[5]);
     
-    if (typeof upperDeptName !== "undefined" && upperDeptName !== "") {
-        DeptSymbol = upperDeptName;
-    }
+//    if (typeof upperDeptName !== "undefined" && upperDeptName !== "") {
+//        DeptSymbol = upperDeptName;
+//    }
 
     var fields = message.GetFieldsList();
     var field = message.GetListItem(fields, "receiptnumber");
@@ -235,7 +235,7 @@ function getRecvDocNumber(pDeptID, docNumZeroCnt) {
 	        	});
 		        
 		        if (!field) {
-		            var DeptSymbol = deptName;
+		            var DeptSymbol = getDeptSymbol(pDeptID, deptName);
 		            var SN = getNodeText(GetChildNodes(result)[0]);
 		            
 		            //2019-01-08 천성준 - 접수번호 채번 시, 채번길이 설정이 안먹혀서 주석
@@ -477,4 +477,42 @@ function getCurDocNumber() {
 	var dataNodes = GetChildNodes(loadXMLString(result));
     var SN = getNodeText(dataNodes[0]);
 	return SN;
+}
+
+function getDeptSymbol(DeptID, DeptName) {
+var result = "";
+
+    if (typeof upperDeptCode !== "undefined" && upperDeptCode !== "") {
+        DeptID = upperDeptCode;
+        
+        /* 2024-11-07 홍승비 - 전자결재 > 상위부서문서함 관련 변수 체크 추가 */
+        if (typeof upperDeptName !== "undefined" && upperDeptName !== "") {
+        	DeptName = upperDeptName;
+        }
+    }
+	
+	$.ajax({
+		type : "POST",
+		dataType : "text",
+		async : false,
+		url : "/ezOrgan/getADInfos.do",
+		data : {
+			cn : DeptID,
+			prop : "extensionAttribute6",
+			cate  : "group"
+		},
+		success: function(xml){
+			result = xml;
+		}        			
+	});
+	
+    var dataNodes = GetChildNodes(loadXMLString(result).documentElement);
+    var RtnVal = getNodeText(dataNodes[0]);
+
+    if (RtnVal == "") {
+        return DeptName;
+    }
+    else {
+        return RtnVal;
+    }
 }
