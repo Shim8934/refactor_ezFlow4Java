@@ -30828,7 +30828,7 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 				} else {
 					org.jsoup.nodes.Node childNode = parentNode.childNode(j);
 					String childNodeStyle = childNode.attr("style");
-					if (childNode.childNode(0).toString() != null) {
+					if (childNode.childNodeSize() != 0 && childNode.childNode(0).toString() != null) {
 						if (parentText.replace(" ", "").equals(childNode.childNode(0).toString().replace(" ", "").replace("\n", ""))) {
 							if (childNode.hasAttr("style")) {
 								if (childNodeStyle.toLowerCase().indexOf("font-family") > -1) {
