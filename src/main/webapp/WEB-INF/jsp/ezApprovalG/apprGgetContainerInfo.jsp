@@ -812,7 +812,9 @@
 	                                    	docID = docID.substr(0, docID.lastIndexOf("."));
 	                                    	AttachUrlA2 = "." + getOriginalFileExtension(AttachUrlA1)
 	                                    }
-	                                    
+	                                    if (AttachUrlA1 == "") {
+                                            showAlert("<spring:message code='ezApprovalG.t633'/>");
+                                        } else {
 	                                    if (AttachUrlA2 == ".hwp") {
 											if(useWebHWP == "NO") {
 												if (isIE()) {
@@ -831,6 +833,7 @@
 	                                    openLocation += "?docID=" + docID + "&docHref=" + AttachUrl + "&formID=&orgDocID=";
 // 	                                    openwindow(openLocation, "", 880, 570);
 	                                    showPopupSlide(openLocation, 1000, 950, "", GetOpenWindowfeature(1000, 950), hidePopupSlide);
+	                                    }
 									} else {
 	                                    window.open("/ezApprovalG/downloadAttach.do?fileName=" + Attachfilename + "&filePath=" + AttachUrl, "_self");
 	                                }

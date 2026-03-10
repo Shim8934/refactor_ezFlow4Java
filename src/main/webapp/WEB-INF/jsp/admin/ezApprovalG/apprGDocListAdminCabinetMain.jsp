@@ -547,6 +547,9 @@
 		                                    var docID = tempStr[tempStr.length - 1].replace(AttachUrlA2, '');
 		                                    var openLocation;
 		                                    
+		                                    if (AttachUrlA1 == "") {
+                                                showAlert("<spring:message code='ezApprovalG.t633'/>");
+                                            } else {
 		                                    if (AttachUrlA2.lastIndexOf(".ezd") === AttachUrlA2.length - 5) {
 		                                    	docID = docID.substr(0, docID.lastIndexOf("."));
 		                                    	AttachUrlA2 = "." + getOriginalFileExtension(AttachUrlA1)
@@ -569,6 +572,7 @@
 		                                    }
 		                                    openLocation += "?docID=" + docID + "&docHref=" + AttachUrl + "&formID=&orgDocID=";
 		                                    openwindow(openLocation, "", 880, 570);
+		                                    }
 										} else {
 		                                    window.open("/ezApprovalG/downloadAttach.do?fileName=" + Attachfilename + "&filePath=" + AttachUrl, "_self");
 		                                }

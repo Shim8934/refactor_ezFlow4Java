@@ -675,7 +675,9 @@
 	                                	var tempStr = AttachUrlA1.split("/");
 	                                    var docID = tempStr[tempStr.length - 1].replace(AttachUrlA2, '');
 	                                    var openLocation;
-	                                    
+	                                    if (AttachUrlA1 == "") {
+                                            showAlert("<spring:message code='ezApprovalG.t633'/>");
+                                        } else {
 	                                    if (AttachUrlA2 == ".hwp" || AttachUrlA2 == ".ezd") {
 	                                    	if (isIE()) {
 	                                    		openLocation = "/ezApprovalG/ezViewEnd_HWP.do";
@@ -689,6 +691,7 @@
 	                                    }
 	                                    openLocation += "?docID=" + docID + "&docHref=" + AttachUrl + "&formID=&orgDocID=";
 	                                    openwindow(openLocation, "", 880, 570);
+	                                    }
 									} else {
 	                                    window.open("/ezApprovalG/downloadAttach.do?fileName=" + Attachfilename + "&filePath=" + AttachUrl, "_self");
 	                                }
