@@ -15445,6 +15445,9 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
         // 다른 프로세스의 경우도 첨부파일을 먼저 저장하는 경우가 있을수 있으므로, 임시 첨부 저장을 별도 폴더로 분류 && 중복될시 파일명 UUID로 처리함.
         for (ApprGAttachInfoVO aprAttach : listAprAttach) {
             String beforeHref = aprAttach.getAttachHref();
+            if (beforeHref.isEmpty()) {
+                continue;
+            }
             String afterFileName = getNDigitNum(aprAttach.getAttachSN(), 4) + aprAttach.getAttachName();
             String extension = FilenameUtils.getExtension(afterFileName);
             String afterHref = commonUtil.getUploadPath("upload_approvalG.ROOT", tenantID) + sep + companyID + sep + "uploadFile" + sep + docYear + sep +
