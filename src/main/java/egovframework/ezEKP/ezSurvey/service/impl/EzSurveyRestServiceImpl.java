@@ -15,6 +15,7 @@ import java.util.UUID;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import egovframework.let.utl.fcc.service.EzFAL;
 import org.apache.commons.compress.utils.IOUtils;
 import org.egovframe.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import org.json.simple.JSONArray;
@@ -349,12 +350,12 @@ public class EzSurveyRestServiceImpl extends EgovAbstractServiceImpl implements 
 
 		String cleanPath = sourceFilePath.replace("\\/", "/"); // 슬래시 정제
 		String webRootPath = request.getServletContext().getRealPath("/");
-		File sourceFile = new File(webRootPath, cleanPath);
-
+		EzFAL.EzFile sourceFile = new EzFAL.EzFile(webRootPath, cleanPath);
+		
 		if (!sourceFile.exists()) {
-			sourceFile = new File(cleanPath);
+			sourceFile = new EzFAL.EzFile(cleanPath);
 			if(!sourceFile.exists()) {
-				throw new FileNotFoundException("파일을 찾을 수 없습니다 : " + sourceFile.getAbsolutePath());
+				throw new FileNotFoundException("파일을 찾을 수 없습니다 : " + sourceFile.getName());
 			}
 		}
 
@@ -377,7 +378,7 @@ public class EzSurveyRestServiceImpl extends EgovAbstractServiceImpl implements 
 		fileJson.put("originalFilename", newUuidName);
 		jsonArray.add(fileJson);
 
-		map.add("files", new FileSystemResource(sourceFile));
+		map.add("files", new FileSystemResource(sourceFile.getFile()));
 		jsonObject.put("nameArray", jsonArray);
 		map.add("data", jsonObject);
 
