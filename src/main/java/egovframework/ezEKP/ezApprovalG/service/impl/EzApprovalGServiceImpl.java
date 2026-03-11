@@ -24248,7 +24248,7 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 		
 		if (isUsed.equals("reuse")) {
 			for (int i = 0; i < apprGAprLineVOList.size(); i++) {
-				apprGAprLineVOList.get(i).setAprState("");
+				apprGAprLineVOList.get(i).setAprState("001");
 			}
 			apprGAprLineVOList.get(apprGAprLineVOList.size()-1).setAprState("002");
 		}
