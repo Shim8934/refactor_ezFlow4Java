@@ -2162,6 +2162,9 @@
                 TENANT_ID = #tenantID#
 			GROUP BY
 				member_id
+			ORDER BY
+				access_lvl ASC
+			LIMIT 1
 		]]>
 	</select>
   
