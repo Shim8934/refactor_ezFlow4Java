@@ -130,6 +130,7 @@
 		        }
 
 	        	var listviewtype = "";
+	        	listviewtype = document.getElementById("listviewtype")[document.getElementById("listviewtype").selectedIndex].value;
 				btnSet();
     			
 	        	xmlhttp = createXMLHttpRequest();
