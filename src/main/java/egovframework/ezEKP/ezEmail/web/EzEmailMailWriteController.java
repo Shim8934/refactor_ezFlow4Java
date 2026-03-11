@@ -4417,8 +4417,8 @@ public class EzEmailMailWriteController extends EzFileMngUtil {
 								String fullPath = bigAttachFolderPath + commonUtil.separator + fileName;
 
 								logger.debug("fullPath=" + fullPath);
-								File file = new File(fullPath);
-								File fileTxt = new File(fullPath+"__.txt");
+								EzFAL.EzFile file = new EzFAL.EzFile(fullPath);
+								EzFAL.EzFile fileTxt = new EzFAL.EzFile(fullPath+"__.txt");
 
 								if (file.exists()) {
 									boolean deleted = file.delete();
@@ -4429,7 +4429,7 @@ public class EzEmailMailWriteController extends EzFileMngUtil {
 										logger.debug("file delete failure");
 									}
 								} else {
-									logger.debug("the file doesn't exists");
+									logger.debug("the file doesn't exist");
 								}
 
 								String useExternalLargeFileServer = ezCommonService.getTenantConfig("useExternalLargeFileServer", userInfo.getTenantId());
@@ -6972,16 +6972,33 @@ public class EzEmailMailWriteController extends EzFileMngUtil {
 
 				Path largeFilePath = Paths.get(commonUtil.getRealPath(request), uploadMailDir, largeFileDir, bigDateDir, itemUid);
 				Path largeNameFilePath = largeFilePath.resolveSibling(itemUid + "__.txt");
+				long fileSize;
 
-				Files.createDirectories(largeFilePath.getParent());
-				Files.copy(targetAttachPart.getInputStream(), largeFilePath);
+				if (EzFAL.isObjectStorageMode()) {
+					EzFAL.EzFile f = new EzFAL.EzFile(largeFilePath.toFile());
+					
+					try (InputStream src = targetAttachPart.getInputStream();
+							OutputStream target = new EzFAL.EzFileOutputStream(f)) {
+						IOUtils.copy(src, target);
+					}
 
-				try (FileOutputStream fos = new FileOutputStream(largeNameFilePath.toFile())) {
-					String base64EncodedName = Base64.encodeBase64String(commonUtil.normalizeFileName(fileName).getBytes(StandardCharsets.UTF_8));
-					fos.write(base64EncodedName.getBytes(StandardCharsets.ISO_8859_1));
+					try (OutputStream fos = new EzFAL.EzFileOutputStream(new EzFAL.EzFile(largeNameFilePath.toFile()))) {
+						String base64EncodedName = Base64.encodeBase64String(commonUtil.normalizeFileName(fileName).getBytes(StandardCharsets.UTF_8));
+						fos.write(base64EncodedName.getBytes(StandardCharsets.ISO_8859_1));
+					}
+					
+					fileSize = f.length();
+				} else {
+					Files.createDirectories(largeFilePath.getParent());
+					Files.copy(targetAttachPart.getInputStream(), largeFilePath);
+
+					try (FileOutputStream fos = new FileOutputStream(largeNameFilePath.toFile())) {
+						String base64EncodedName = Base64.encodeBase64String(commonUtil.normalizeFileName(fileName).getBytes(StandardCharsets.UTF_8));
+						fos.write(base64EncodedName.getBytes(StandardCharsets.ISO_8859_1));
+					}
+
+					fileSize = Files.size(largeFilePath);
 				}
-
-				long fileSize = Files.size(largeFilePath);
 
 				if (itemNode == null) {
 					Node nodesElem;
@@ -7140,7 +7157,18 @@ public class EzEmailMailWriteController extends EzFileMngUtil {
 				String fileUidName = fileLocations[1];
 
 				Path largeFilePath = Paths.get(commonUtil.getRealPath(request), uploadMailDir, largeFileDir, dateDir, fileUidName);
-
+				
+				if (EzFAL.isObjectStorageMode()) {
+					// Object Storage에 있는 대용량 첨부 파일을 파일 스토리지로 복사한다.
+					
+					EzFAL.EzFile f = new EzFAL.EzFile(largeFilePath.toFile());
+					
+					try (InputStream src = new EzFAL.EzFileInputStream(f);
+							OutputStream target = new FileOutputStream(f.getFile())) {
+						IOUtils.copy(src, target);
+					}
+				}
+				
 				if (!Files.exists(largeFilePath)) {
 					logger.error("Not found large file: {}", largeFilePath);
 					return Result.failure(5, "Not found large file: " + largeFilePath);
@@ -7256,8 +7284,21 @@ public class EzEmailMailWriteController extends EzFileMngUtil {
 				newMessageUid = uids[0].uid;
 
 				Path largeNameFilePath = largeFilePath.resolveSibling(fileUidName + "__.txt");
-				Files.delete(largeNameFilePath);
-				Files.delete(largeFilePath);
+
+				if (EzFAL.isObjectStorageMode()) {
+					EzFAL.EzFile f = new EzFAL.EzFile(largeFilePath.toFile());
+					EzFAL.EzFile fName = new EzFAL.EzFile(largeNameFilePath.toFile());
+
+					// 파일 스토리지에 복사했던 대용량 첨부 파일 복사본을 삭제한다.
+					Files.delete(largeFilePath);					
+					
+					// Object Storage에 있는 대용량 첨부 파일과 이름 파일을 삭제한다.
+					f.delete();
+					fName.delete();
+				} else {
+					Files.delete(largeNameFilePath);
+					Files.delete(largeFilePath);
+				}
 
 				bigFlagNode.setTextContent("N");
 				fileLocationNode.setTextContent(fileUidName);
