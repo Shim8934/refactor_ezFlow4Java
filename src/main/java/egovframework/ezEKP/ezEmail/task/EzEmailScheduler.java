@@ -1219,9 +1219,6 @@ public class EzEmailScheduler extends EzFileMngUtil {
 			directoryList.add(commonUtil.getUploadPath("upload_common.ROOT", tenantVO.getTenantId()));
 		}
 		
-		int dayLimit = 2;
-		long nowTime = new Date().getTime();
-		
 		//delete garbage files from directoryList
 		for (String directory : directoryList) {
 			File file = new File(realPath + directory);
@@ -1231,16 +1228,14 @@ public class EzEmailScheduler extends EzFileMngUtil {
 
                 if (files != null){
                     for (File f : files) {
+						long limitTime = new Date().getTime() - 2 * 24 * 60 * 60 * 1000; // dayLimit = 2
+						logger.debug("limitTime=" + limitTime);
                         logger.debug("f.getName()=" + f.getName());
-                        logger.debug("nowTime=" + nowTime);
                         logger.debug("f.lastModified()=" + f.lastModified());
 
-                        if (nowTime - f.lastModified() > dayLimit * 24 * 60 * 60 * 1000) {
-                            if (deleteDirectory(f)) {
-                                logger.debug(f.getName() + " is deleted.");
-                            }
-                        }
-
+						if (deleteDirectory(f, limitTime)) {
+							logger.debug(f.getName() + " is deleted.");
+						}
                     }
                 }
             }

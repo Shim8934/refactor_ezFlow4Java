@@ -691,20 +691,38 @@ public class EzFileMngUtil extends EgovAbstractServiceImpl{
      * @throws Exception
      */
 	public boolean deleteDirectory(File path) throws Exception {
+		return deleteDirectory(path, 0);
+	}
+
+	public boolean deleteDirectory(File path, long limitTime) {
+		if (path == null || !path.exists()) return false;
+
+		boolean canDeleteParent = true;
+
 		if (path.isDirectory()) {
 			File[] files = path.listFiles();
-			
-			for (int i=0; i<files.length; i++) {
-				if (files[i].isDirectory()) {
-					deleteDirectory(files[i]);
+			if (files != null) {
+				for (File file : files) {
+					// 재귀 호출: 하위 파일/폴더 삭제 시도
+					// 하위 항목 중 하나라도 삭제되지 않았다면(false), 부모 폴더는 지울 수 없음
+					if (!deleteDirectory(file, limitTime)) {
+						canDeleteParent = false;
+					}
 				}
-				else {
-					files[i].delete();
-				}
+			} else {
+				// listFiles()가 null이면 접근 권한 등의 문제로 내용을 확인할 수 없음
+				canDeleteParent = false;
 			}
 		}
-		
-		return path.delete();
+
+		// 최종 삭제 조건:
+		// 1. 시간 조건(limitTime)을 만족해야 함
+		// 2. 디렉토리인 경우, 내부의 모든 자식이 성공적으로 지워졌어야 함 (canDeleteParent)
+		if ((limitTime == 0 || path.lastModified() < limitTime) && canDeleteParent) {
+			return path.delete();
+		}
+
+		return false;
 	}
 
 	public boolean deleteDirectory(EzFAL.EzFile path) throws Exception {
