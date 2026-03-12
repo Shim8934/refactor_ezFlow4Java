@@ -57,9 +57,13 @@
 	        var receiptFlag = '';
 	        
 	        // 2023-08-29 조수빈 - 일괄접수자전결인 경우에만 opener가 있고 접수자전결은 없기 때문에 null로 인한 에러 처리를 위해 추가
-	        if (opener) {
+            if (opener && typeof opener.receiptFlag != 'undefined') {
 	        	receiptFlag = opener.receiptFlag;
 	        }
+
+            if (hesongFlag == "Y") {
+                receiptFlag = '';
+            }
 
 			/* 2024-07-18 양지혜 - 상위부서문서함 관련 */
 			var upperDeptCode = "<c:out value ='${upperDeptCode}'/>";
