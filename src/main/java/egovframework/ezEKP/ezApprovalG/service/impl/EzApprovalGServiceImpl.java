@@ -2387,14 +2387,14 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
         	
         	String hasAttach = "0";
         	
-        	if (apprGDocListVO2.getHasAttachYn().equals("Y")) {
+        	if ("Y".equals(apprGDocListVO2.getHasAttachYn())) {
         		hasAttach = "1";
         	}
         	
         	String seperateAttachXML = makeListField(apprGDocListVO2.getSeperateAttachXML()).trim();
-        	String numOfPage = makeListField(apprGDocListVO2.getPageNum().trim());
+        	String numOfPage = makeListField(apprGDocListVO2.getPageNum() == null ? "" : apprGDocListVO2.getPageNum().trim());
         	
-        	if (numOfPage.equals("")) {
+        	if ("".equals(numOfPage)) {
         		numOfPage = "1";
         	}
 
@@ -2448,7 +2448,9 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
                 if(hwpFilter)
                     hwpFile.add(new RestWHWP(ezCommonService.getTenantConfig("hwpFilterServer", tenantID)).open(hwpPath + docFilePath.substring(docFilePath.indexOf("/fileroot/"))));
 
-		        setHwpText(false, "docnumber", docNo, hwpFile);
+                if (!"Y".equals(hesongFlag == null ? "" : hesongFlag.trim())) {
+                    setHwpText(false, "docnumber", docNo, hwpFile);
+                }
 		        
 		        //접수 후 반송,회송대장등록일 경우 접수결재칸 지워주기
 				for (int i = 1; i < 10; i++) {
@@ -2483,8 +2485,10 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
         		String content = ezCommonService.startMHT2HTML(realPath + commonUtil.getUploadPath("config.LocalPath", tenantID), loadMht, realPath + commonUtil.getUploadPath("config.LocalPath", tenantID), realPath, locale, "", "");
 
         		org.jsoup.nodes.Document doc = Jsoup.parse(content);
-        		doc.getElementById("docnumber").html(docNo);
-        		
+                if (!"Y".equals(hesongFlag == null ? "" : hesongFlag.trim()) && doc.getElementById("docnumber") != null) {
+                    doc.getElementById("docnumber").html(docNo);
+                }
+
         		for (int i = 1; i < 10; i++) {
         			if (doc.getElementById("1sign" + i) != null) {
         				doc.getElementById("1sign" + i).html("");
