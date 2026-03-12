@@ -344,58 +344,6 @@ public class EzSurveyRestServiceImpl extends EgovAbstractServiceImpl implements 
 	}
 
 	@Override
-	public JSONObject copyAndUploadFile(HttpServletRequest request, String userId, String sourceFilePath) throws Exception {
-		String gwServerUrl = config.getProperty("config.surveyGwServerURL");
-		String apiUrl = gwServerUrl + "/rest/ezsurvey/attachfile/file-upload";
-
-		String cleanPath = sourceFilePath.replace("\\/", "/"); // 슬래시 정제
-		String webRootPath = request.getServletContext().getRealPath("/");
-		EzFAL.EzFile sourceFile = new EzFAL.EzFile(webRootPath, cleanPath);
-		
-		if (!sourceFile.exists()) {
-			sourceFile = new EzFAL.EzFile(cleanPath);
-			if(!sourceFile.exists()) {
-				throw new FileNotFoundException("파일을 찾을 수 없습니다 : " + sourceFile.getName());
-			}
-		}
-
-		SimpleClientHttpRequestFactory requestFactory = new SimpleClientHttpRequestFactory();
-		requestFactory.setBufferRequestBody(false);
-		RestTemplate restTemplate = new RestTemplate(requestFactory);
-
-		restTemplate.getMessageConverters().removeIf(m -> m.getClass().equals(ResourceHttpMessageConverter.class));
-		restTemplate.getMessageConverters().add(new BnkResourceHttpMessageConverter());
-
-		MultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
-		JSONObject jsonObject = new JSONObject();
-		JSONArray jsonArray = new JSONArray();
-
-		String originalName = sourceFile.getName();
-		String extension = originalName.contains(".") ? originalName.substring(originalName.lastIndexOf(".")) : "";
-		String newUuidName = UUID.randomUUID().toString() + extension;
-
-		JSONObject fileJson = new JSONObject();
-		fileJson.put("originalFilename", newUuidName);
-		jsonArray.add(fileJson);
-
-		map.add("files", new FileSystemResource(sourceFile.getFile()));
-		jsonObject.put("nameArray", jsonArray);
-		map.add("data", jsonObject);
-
-		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.MULTIPART_FORM_DATA);
-		headers.set("host-name", request.getServerName());
-
-		HttpEntity<MultiValueMap<String, Object>> entity = new HttpEntity<>(map, headers);
-
-		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(apiUrl);
-		ResponseEntity<String> result = restTemplate.exchange(builder.build().encode().toUri(), HttpMethod.POST, entity, String.class);
-
-		JSONParser jp = new JSONParser();
-		return (JSONObject) jp.parse(result.getBody());
-	}
-	
-	@Override
 	public JSONObject deleteAttachFile(HttpServletRequest request, String userId, String filePath) throws Exception {
 		String url                = "/rest/ezsurvey/attachfile/file-delete";
 		Map<String, Object> param = new HashMap<String, Object>();

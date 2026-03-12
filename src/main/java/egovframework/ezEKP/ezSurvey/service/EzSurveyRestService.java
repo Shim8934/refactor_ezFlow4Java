@@ -26,7 +26,6 @@ public interface EzSurveyRestService {
 	
 	//User upload/download/delete attach file
 	public JSONObject uploadAttachFile(MultipartHttpServletRequest request, String userId, List<MultipartFile> multiFiles) throws Exception;
-	public JSONObject copyAndUploadFile(HttpServletRequest request, String userId, String sourceFilePath) throws Exception;
 	public JSONObject deleteAttachFile(HttpServletRequest request, String userId, String filePath) throws Exception;
 	public void downloadAttachFile(HttpServletRequest request, HttpServletResponse response, String userId, String filePath, String fileName) throws Exception;
 	
