@@ -4406,6 +4406,17 @@ public class EzNewPortalServiceImpl extends EgovAbstractServiceImpl implements E
 		Map<String, Object> accessMap = new HashMap<String, Object>();
 		boolean authCheck = false;
 		boolean listViewFg = false;
+
+		//everyone,top,Top,부서댑스,사용자아이디;에서
+		//everyone,top,Top,부서댑스,(직위,직책,겸직),사용자아이디;로변경
+		String userJJID = ezBoardService.getUserJJID(userId, companyId, tenantId);
+		int authCheckUserJJIDCnt = 0;
+		int listViewFgUserJJIDCnt = 0;
+		String orgDeptPath = deptPath;
+		if(!userJJID.isEmpty()){
+			deptPath = deptPath.replace(deptId, deptId +","+ userJJID);
+		}
+		
 		String[] deptPathSplit = deptPath.split(",");
 		int deptPathCount = deptPathSplit.length;
 
@@ -4424,8 +4435,10 @@ public class EzNewPortalServiceImpl extends EgovAbstractServiceImpl implements E
 						String access = authInfo.getAccess_();
 						String listViewAcess = authInfo.getListView_FG();
 						String deptAcl = authInfo.getBoardGroupACL();
-
-						if (i == deptPathCount - 1) {
+						boolean accessdept = authInfo.getType().equals("GROUP") ? orgDeptPath.indexOf(deptPathId) > -1 : authInfo.getAccessID().equals(deptId);
+						boolean accessUserJJID = authInfo.getType().equals("GROUP") ? userJJID.indexOf(deptPathId) > -1 : userJJID.indexOf(authInfo.getAccessID()) > -1;
+						
+						if (i == deptPathCount - 1) { //마지막 순번 = 사용자아이디 에서 세팅
 							deptAcl = "Y";
 						}
 
@@ -4437,8 +4450,19 @@ public class EzNewPortalServiceImpl extends EgovAbstractServiceImpl implements E
 							if (authInfo.getAccessID().equals(deptId)) {
 								authCheck = true;
 							}
+							if (accessUserJJID) {
+								++authCheckUserJJIDCnt;
+							}
 						} else if (access.equals("0") && deptAcl.equals("Y")) {
 							authCheck = false;
+						} else if (access.equals("0") && accessdept) {
+							authCheck = false;
+						}  else if (access.equals("0") && accessUserJJID) {
+							authCheck = false;
+						}
+
+						if (access.equals("1") && authCheckUserJJIDCnt > 0) {
+							authCheck = true;
 						}
 
 						if (listViewAcess.equals("true")) {
@@ -4449,7 +4473,14 @@ public class EzNewPortalServiceImpl extends EgovAbstractServiceImpl implements E
 							if (authInfo.getAccessID().equals(deptId)) {
 								listViewFg = true;
 							}
+							if (accessUserJJID) {
+								++listViewFgUserJJIDCnt;
+							}
 						} else if (listViewAcess.equals("false") && deptAcl.equals("Y")) {
+							listViewFg = false;
+						} else if (listViewAcess.equals("false") && accessdept) {
+							listViewFg = false;
+						} else if (listViewAcess.equals("false") && accessUserJJID) {
 							listViewFg = false;
 						}
 					}
