@@ -2743,7 +2743,7 @@
                             keepperiodText = "영구";
                             break;
                     }
-                    ifrm.contentWindow.PutFieldText("keepperiod", keepperiodText);
+                    currIfrm.contentWindow.PutFieldText("keepperiod", keepperiodText);
                     // }
                 } catch (e) {
                     alert("ezdraftuiAll.setKeepPeriod()  ::  " + e);
