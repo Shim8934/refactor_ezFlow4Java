@@ -3698,9 +3698,16 @@ public class EzEmailUtil {
 	public boolean copyInlineParts(Part src, Multipart dest, boolean includeAttachment) throws MessagingException, IOException {
 		return this.copyInlineParts(src, dest, includeAttachment, false);
 	}
+
+	public boolean copyInlineParts(Part src, Multipart dest, boolean includeAttachment,
+								   boolean convertInlineImageToAttachment) throws MessagingException, IOException {
+		Map<String, Object> extraMap = new HashMap<String, Object>();
+
+		return this.copyInlineParts(src, dest, includeAttachment, convertInlineImageToAttachment, extraMap);
+	}
 	
 	public boolean copyInlineParts(Part src, Multipart dest, boolean includeAttachment, 
-						boolean convertInlineImageToAttachment) throws MessagingException, IOException {
+						boolean convertInlineImageToAttachment, Map<String, Object> extraMap) throws MessagingException, IOException {
 		if (src.isMimeType("multipart/related")) {
 			Multipart mp = (Multipart)src.getContent();
 			int count = mp.getCount();
@@ -3715,12 +3722,29 @@ public class EzEmailUtil {
 				if (p.isMimeType("multipart/*")) {
 					if (copyInlineParts(p, dest, includeAttachment, convertInlineImageToAttachment)) {
 						return true;
-					}					
+					}
+				} else if (p.isMimeType("text/html")) {
+					if (extraMap != null) {
+						extraMap.put("htmlBody", p.getContent().toString());
+					}
 				} else if (p instanceof MimePart) {
 					// text/html 파트가 없으면 인라인 이미지 파트를 첨부파일 파트로 변환한다.(이미지를 첨부로 대신 표시하기 위해)
 					if (convertInlineImageToAttachment) {
 						if (p.getDisposition() != null && p.getDisposition().equalsIgnoreCase(Part.INLINE)) {
 							p = getConvertedBodyPartFromInlineToAttachment(p);
+						}
+					}
+
+					// 제외 case에 해당한다고 해도 실제 HTML 내에서 참조가 되고 있는 지 여부를 확인하여 참조되고 있는 경우
+					// inline 복사를 하도록 함.
+					boolean isReferencedContentID = false;
+					
+					if (((MimePart)p).getContentID() != null && extraMap != null && extraMap.get("htmlBody") != null) {
+						if (Part.ATTACHMENT.equalsIgnoreCase(p.getDisposition()) || p.isMimeType("application/*")) {
+							String contentID = ((MimePart) p).getContentID();
+							String htmlBodyContent = (String) extraMap.get("htmlBody");
+
+							isReferencedContentID = isReferencedContentID(contentID, htmlBodyContent);
 						}
 					}
 					
@@ -3735,6 +3759,7 @@ public class EzEmailUtil {
 							&& !Part.ATTACHMENT.equalsIgnoreCase(p.getDisposition())
 							&& !p.isMimeType("text/plain")
 							&& !p.isMimeType("application/*")
+							|| isReferencedContentID
 							|| (includeAttachment 
 									&& (Part.ATTACHMENT.equalsIgnoreCase(p.getDisposition()) 
 											|| p.isMimeType("application/*")))) {
@@ -3799,6 +3824,28 @@ public class EzEmailUtil {
 		}
 		
 		return false;
+	}
+	
+	private boolean isReferencedContentID(String contentID, String htmlBodyContent) {
+		boolean isReferencedContentID = false;
+
+		if (!StringUtils.isEmpty(contentID) && !StringUtils.isEmpty(htmlBodyContent)) {
+			if (contentID.startsWith("<")) {
+				contentID = contentID.substring(1);
+			}
+
+			if (contentID.endsWith(">")) {
+				contentID = contentID.substring(0, contentID.length() - 1);
+			}
+
+			if (htmlBodyContent.contains("cid:" + contentID)) {
+				isReferencedContentID = true;
+			}
+
+			logger.debug("copyInlineParts contentID={}, isReferencedContentID={}", contentID, isReferencedContentID);
+		}
+
+		return isReferencedContentID;
 	}
 	
 	/**
