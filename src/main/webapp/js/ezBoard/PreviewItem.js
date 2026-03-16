@@ -382,6 +382,18 @@ function ItemPreviewRead(obj) {
     var pboardid = obj.getAttribute("DATA1");
     var pitemid = obj.getAttribute("DATA2");
 
+    if (typeof BoardAdmin_FG === "undefined") {
+        BoardAdmin_FG = "false";
+    }
+    xmlhttp.open("POST", "/ezBoard/getACL.do?boardID=" + encodeURIComponent(pBoardID), false);
+    xmlhttp.send();
+    var ret = xmlhttp.responseText;
+    if (ret.indexOf("<BOARDADMIN>true</BOARDADMIN>") != -1 || ret.indexOf("<BOARDGROUPADMIN>OK</BOARDGROUPADMIN>") != -1) {
+        BoardAdmin_FG = "true";
+    } else {
+        BoardAdmin_FG ="false";
+    }
+
     if (document.getElementById('spn_title' + obj.id.split('_')[2]) != null) { // 다른 게시판에선 이 조건문을 타지않는걸로 보임
         document.getElementById('spn_title' + obj.id.split('_')[2]).style.fontWeight = "normal";
         //document.getElementById('spn_content' + obj.id.split('_')[2]).style.fontWeight = "normal"; // 게시판 > 썸네일게시판  > PreViewH사용시 스크립트오류 발생시킨부분 주석
@@ -419,7 +431,7 @@ function ItemPreviewRead(obj) {
         xmlhttp2.send();
     }
 
-    if (obj.getAttribute("gubun") == "2" && BoardAdmin_FG != "true" && BoardGroupAdmin_FG != "OK" && obj.getAttribute("publicflag") == "N") {
+    if ((obj.getAttribute("gubun") == "2" || obj.getAttribute("DATA10") == "2") && BoardAdmin_FG != "true" && BoardGroupAdmin_FG != "OK" && obj.getAttribute("publicflag") == "N") {
         document.getElementById('openPassword').setAttribute('data-id', obj.getAttribute("DATA2"));
         document.getElementById('openPassword').setAttribute('data-board', obj.getAttribute("DATA1"));
         $('#openPassword').val('');

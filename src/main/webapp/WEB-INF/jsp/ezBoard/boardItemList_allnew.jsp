@@ -16,6 +16,13 @@
 		<script type="text/javascript" src="${util.addVer('/js/Common.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezBoard/ListView_list.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezBoard/PreviewItem.js')}"></script>
+        <link rel="stylesheet"  href="${util.addVer('/js/jquery/jquery.modal.css')}" type="text/css" />
+        <script type="text/javascript" src="${util.addVer('/js/jquery/jquery.modal.js')}"></script>
+        <style>
+            .jquery-modal {
+                text-align: center;
+            }
+        </style>
 		<script type="text/javascript">
 			var pBoardID = '<c:out value="${boardID}"/>';
 		    var SSUserID = "${userInfo.id}";    
@@ -473,15 +480,31 @@
 		        var pwidth = window.screen.availWidth;
 		        var pTop = (pheight - 720) / 2;
 		        var pLeft = (pwidth - 765) / 2;
+
+                xmlhttp.open("POST", "/ezBoard/getACL.do?boardID=" + encodeURIComponent(pBoardID), false);
+                xmlhttp.send();
+                var ret = xmlhttp.responseText;
+                if (ret.indexOf("<BOARDADMIN>true</BOARDADMIN>") != -1 || ret.indexOf("<BOARDGROUPADMIN>OK</BOARDGROUPADMIN>") != -1) {
+                    BoardAdmin_FG = "true";
+                } else {
+                    BoardAdmin_FG ="false";
+                }
 		
 		        if (obj.getAttribute("DATA10") == "3" || obj.getAttribute("DATA10") == "4") {
 		        	pLeft = (pwidth - 790) / 2;
 					window.open("/ezBoard/boardItemViewPhoto.do?showAdjacent=" + ShowAdjacent + "&itemID=" + encodeURIComponent(obj.getAttribute("DATA2")) + "&boardID=" + encodeURIComponent(obj.getAttribute("DATA1")), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=793,width=790,top=" + pTop + ",left=" + pLeft, "");
 	            } else if (obj.getAttribute("DATA10") == "7") {
 					window.open("/ezBoard/boardItemViewMovie.do?showAdjacent=" + ShowAdjacent + "&itemID=" + encodeURIComponent(obj.getAttribute("DATA2")) + "&boardID=" + encodeURIComponent(obj.getAttribute("DATA1")), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=679,width=764,top=" + pTop + ",left=" + pLeft, "");
-	            } else {
-					window.open("/ezBoard/boardItemView.do?showAdjacent=" + ShowAdjacent + "&itemID=" + encodeURIComponent(obj.getAttribute("DATA2")) + "&boardID=" + encodeURIComponent(obj.getAttribute("DATA1")), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
-	            }
+	            } else if (obj.getAttribute("DATA10") == "2" && BoardAdmin_FG != "true" && BoardGroupAdmin_FG != "OK" && obj.getAttribute("publicflag") == "N") {
+                    document.getElementById('openPassword').setAttribute('data-id', obj.getAttribute("DATA2"));
+                    document.getElementById('openPassword').setAttribute('data-board', obj.getAttribute("DATA1"));
+                    $('#openPassword').val('');
+                    $('#chkPass').modal();
+                } else if (obj.getAttribute("publicflag") == "N" && BoardAdmin_FG != "true" && BoardGroupAdmin_FG != "OK" && obj.getAttribute("DATA3") != SSUserID) {
+                    alert("<spring:message code='ezBoard.t202' />");
+                } else {
+                    isOpenWindow = window.open("/ezBoard/boardItemView.do?showAdjacent=" + ShowAdjacent + "&itemID=" + encodeURIComponent(obj.getAttribute("DATA2")) + "&boardID=" + encodeURIComponent(obj.getAttribute("DATA1")) + "&location=GENERAL", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,"+getMacOSAndSafariPopupResizing(890, 720)+",top=" + pTop + ",left=" + pLeft, "");
+                }
 		        //}
 		        //getBoardList();
 		    }   
@@ -680,7 +703,94 @@
 	            	document.getElementById("ifrmPreViewW").style.minHeight = "";
 	            }
 		    }
-			
+            function openAnonymous() {
+                var elementPass = document.getElementById('openPassword');
+                var password = elementPass.value;
+                var pboardid = elementPass.getAttribute("data-board");
+                var pitemid =elementPass.getAttribute("data-id");
+
+                if (g_bPrevShow) {
+                    clickPreviweType = "TEXT";
+                    if (document.getElementById("previewmail_bar_h") != null)
+                        document.getElementById("previewmail_bar_h").style.cursor = "w-resize";
+                    xmlhttp = createXMLHttpRequest();
+                    if (location.href.toLowerCase().indexOf('temp') > -1)
+                        xmlhttp.open("POST", "/ezBoard/getPreviewItem.do?boardID=" + encodeURIComponent(pboardid) + "&itemID=" + encodeURIComponent(pitemid) + "&mode=" + pMode + "&location=TEMP", true);
+                    else
+                        xmlhttp.open("POST", "/ezBoard/getPreviewItem.do?boardID=" + encodeURIComponent(pboardid) + "&itemID=" + encodeURIComponent(pitemid) + "&mode=" + pMode + "&location=GENERAL", true);
+                    xmlhttp.onreadystatechange = event_ItemPreviewRead;
+                    xmlhttp.setRequestHeader('Authorization', 'Basic ' + btoa(password));
+
+                    xmlhttp.onload = function() {
+                        if (xmlhttp.status === 200) {
+                            $.modal.close();
+                            var response = xmlhttp.responseText;
+                            var parser = new DOMParser();
+                            var returnDom = parser.parseFromString(response, "text/xml");
+
+                            if (!returnDom || SelectSingleNodeValue(returnDom, "DATA") == "NO") {
+                                alert("<spring:message code='main.t00001' />");
+                                return;
+                            } else if (!returnDom || SelectSingleNodeValue(returnDom, "DATA") == "NOPASSWORD") {
+                                alert("<spring:message code='ezBoard.t267' />");
+                                return;
+                            }
+                        } else {
+                            // 에러 처리
+                            alert("요청 실패: " + xmlhttp.status);
+                        }
+                    };
+
+                    xmlhttp.send();
+                    xmlhttp2 = createXMLHttpRequest();
+                    xmlhttp2.open("POST", "/ezBoard/getItemAttachments.do?itemID=" + encodeURIComponent(pitemid), true);
+                    xmlhttp2.onreadystatechange = event_ItemPreviewRead;
+                    xmlhttp2.send();
+                } else {
+                    var pheight = window.screen.availHeight;
+                    var pwidth = window.screen.availWidth;
+                    var pTop = (pheight - 720) / 2;
+                    var pLeft = (pwidth - 790) / 2;
+                    var parser = new DOMParser();
+
+                    $.ajax({
+                        url: "/ezBoard/boardViewPasswordCheck.do?itemID=" + encodeURIComponent(pitemid) + "&boardID=" + encodeURIComponent(pboardid) + "&location=GENERAL",
+                        headers: {
+                            'Authorization': 'Basic ' + btoa(password)
+                        },
+                        success: function(response) {
+                            if (!response) {
+                                alert("<spring:message code='ezBoard.t267' />");
+                                return;
+                            }
+                            $.modal.close();
+                            // 암호 맞다면 권한 체크
+                            $.ajax({
+                                url: "/ezBoard/boardViewAccessCheck.do?itemID=" + encodeURIComponent(pitemid) + "&boardID=" + encodeURIComponent(pboardid) + "&location=GENERAL",
+                                headers: {
+                                    'Authorization': 'Basic ' + btoa(password)
+                                },
+                                success: function(response) {
+                                    $.modal.close();
+                                    if (!response) {
+                                        alert("<spring:message code='main.t00001' />");
+                                        return;
+                                    }
+                                    var openUrl = "/ezBoard/boardItemView.do?showAdjacent=" + ShowAdjacent + "&itemID=" + encodeURIComponent(pitemid) + "&boardID=" + encodeURIComponent(pboardid) + "&location=GENERAL";
+                                    window.open(openUrl, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,"+getMacOSAndSafariPopupResizing(790, 720)+",top=" + pTop + ",left=" + pLeft);
+                                },
+                                error: function(xhr, status, error) {
+                                    console.error('Error:', error);
+                                }
+                            });
+
+                        },
+                        error: function(xhr, status, error) {
+                            console.error('Error:', error);
+                        }
+                    });
+                }
+            }
 		</script>
 		<style type="text/css">
 		    #layer_Viewpopup { 
@@ -822,6 +932,34 @@
 		    		</div>
 				</div>
 		    </div>
+           <div id="chkPass" class="modal" style="display: none;">
+                <div class="popupJQLayer">
+                    <div class="title"><spring:message code='ezBoard.t244'/></div>
+                    <div class="closeImgBttn">
+                        <ul><li><span>
+                            <a href="#" rel="modal:close" style="display: block; height: 100px;"></a>
+                        </span></li></ul>
+                    </div>
+                    <label for="openPassword" class="txt" style="margin-top:15px">
+                        ▒&nbsp;<spring:message code='ezBoard.t245'/>
+                    </label>
+                    <div style="margin-top:10px">
+                        <input type="password" class="textarea" id="openPassword" name="openPassword"
+                               style="WIDTH:100%;height:25px;border:1px solid #ccc">
+                    </div>
+                    <div style="width: 100%">
+                        <div style="text-align:center;">
+                            <div class="btnpositionLayer">
+                                <a class="imgbtn">
+                                    <span onclick="openAnonymous()">
+                                        <spring:message code='ezBoard.t14'/>
+                                    </span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 <%-- 		<div id="ListInfo" style="display:none"><%=ListInfo%></div> --%>
 	</body>
 </html>

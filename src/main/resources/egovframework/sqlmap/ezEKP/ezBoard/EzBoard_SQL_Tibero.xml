@@ -461,7 +461,7 @@
 						NAME3, 
 						NAME4, 
 						NAME6,
-						WIDTH, 
+						WIDTH,
 						COLNAME 
 					FROM 
 						TBL_Board_Item_ListOption  
@@ -562,9 +562,9 @@
 						NAME1, 
 						NAME2, 
 						NAME3, 
-						NAME4, 
+						NAME4,
 						NAME6,
-						WIDTH, 
+						WIDTH,
 						COLNAME 
 					FROM 
 						TBL_Board_Item_ListOption_Boar  
@@ -854,31 +854,31 @@
 			AND
 				P.GUBUN != '5'
 			AND
-				(A.APPRFLAG = 'Y' 
+				(A.APPRFLAG = 'Y'
 				OR A.APPRFLAG IS NULL)
-			AND 
-				A.STARTDATE > TO_CHAR(TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS') - 5, 'YYYY-MM-DD HH24:MI:SS') 
-			AND 
+			AND
+				A.STARTDATE > TO_CHAR(TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS') - 5, 'YYYY-MM-DD HH24:MI:SS')
+			AND
 				A.STARTDATE <= #nowDate#
-			AND 
+			AND
 				A.ENDDATE > #nowDate#
-			AND 
+			AND
 				(NOT EXISTS
-					(SELECT 
-						USERID 
-					 FROM 
-						TBL_BOARD_ITEM_READ S 
-					 WHERE 
+					(SELECT
+						USERID
+					 FROM
+						TBL_BOARD_ITEM_READ S
+					 WHERE
 						S.TENANT_ID = A.TENANT_ID
 					 AND
-						S.BOARDID = A.BOARDID 
-					 AND 
-						S.ITEMID = A.ITEMID 
-					 AND 
+						S.BOARDID = A.BOARDID
+					 AND
+						S.ITEMID = A.ITEMID
+					 AND
 						S.TENANT_ID = #v_TENANTID#
 					 AND
-						S.USERID = #v_pUserID# 
-					 AND 
+						S.USERID = #v_pUserID#
+					 AND
 						S.READDATE > TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS') - 5))
 		AND
 			(P.VERSIONMANAGE = 'Y' AND M2.ITEMID IS NOT NULL
@@ -6766,7 +6766,7 @@
 				USERID,   LISTCOUNT,   PREVIEW,   PREVIEWWLIST,   PREVIEWWCONTENT,   PREVIEWHLIST,   PREVIEWHCONTENT, ALLNEWBOARDLISTDATE, CONTENTSIZE, TENANT_ID
 			)
           	VALUES ( 
-          		#userId#, #listCount#, #preview#, #previewWList#, #previewWContent#, #previewHList#, #previewHContent#, #allNewBoardListDate#, #contentSize#, #tenantID# 
+          		#userId#, #listCount#, #preview#, #previewWList#, #previewWContent#, #previewHList#, #previewHContent#, #allNewBoardListDate#, #contentSize#, #tenantID#
           	)
 		]]>
 	</insert>
@@ -9568,7 +9568,8 @@
 						   '' AS NOTICE,
 						   P.GUBUN,
 						   A.MAINCONTENT,
-						   P.BOARDGROUPID
+						   P.BOARDGROUPID,
+                           A.PUBLICFLAG
 					   FROM
 						   TBL_BOARD_ITEM A
 							   INNER JOIN
@@ -10977,7 +10978,8 @@
 							'' AS NOTICE,
 							P.GUBUN,
 							A.MAINCONTENT,
-							P.BOARDGROUPID
+							P.BOARDGROUPID,
+                            A.PUBLICFLAG
 						FROM
 							TBL_BOARD_ITEM A
 								INNER JOIN

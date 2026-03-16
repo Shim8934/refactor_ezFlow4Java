@@ -4361,6 +4361,7 @@ public class EzBoardController extends EzFileMngUtil{
 		String boardID = request.getParameter("boardID");
 		String itemID = request.getParameter("itemID");
 		String pReservedItem = request.getParameter("pReservedItem");
+		boolean pwFlag =  Boolean.TRUE.equals(request.getSession().getAttribute("pwFlag"));
 		//2018.08.08 캐비넷 추가
 		String use_cabinet = ezCommonService.getTenantConfig("useCabinet", userInfo.getTenantId());
 		if (use_cabinet.equals("YES")) {
@@ -4387,7 +4388,14 @@ public class EzBoardController extends EzFileMngUtil{
 		String authorization = request.getHeader("Authorization");
 		String password = StringUtils.isNotBlank(authorization) ? new String(java.util.Base64.getDecoder().decode(StringUtils.removeStart(authorization, "Basic").trim())) : "";
 		
-		if (!accessCheck(boardID, itemID, location, userInfo, password)) {
+		if (StringUtils.isBlank(authorization)) {
+            password = (String) request.getSession().getAttribute("boardPw"+itemID);
+        }
+
+        boolean rtv = accessCheck(boardID, itemID, location, userInfo, password);
+        request.getSession().removeAttribute("boardPw"+itemID);
+        if (pwFlag) rtv = true;
+        if (!rtv) {
 			return "main/warning";
 		}
 		
@@ -4635,7 +4643,8 @@ public class EzBoardController extends EzFileMngUtil{
 		
 		String boardID = request.getParameter("boardID");
 		String itemID = request.getParameter("itemID");
-		String location = request.getParameter("location").isEmpty() ? "GENERAL" : request.getParameter("location");
+		String location = request.getParameter("location");
+        location = (location == null || location.isEmpty()) ? "GENERAL" : location;
 		
 		BoardPropertyVO boardInfo = getBoardInfo(boardID, userInfo);
 		BoardListVO boardItem = ezBoardService.getBrdGetItemInfo(boardID, itemID, commonUtil.getMultiData(userInfo.getLang(), tenantId), tenantId);
@@ -4648,6 +4657,11 @@ public class EzBoardController extends EzFileMngUtil{
 		// 공개비공개 및 권한 체크
 		String authorization = request.getHeader("Authorization");
 		String password = StringUtils.isNotBlank(authorization) ? new String(java.util.Base64.getDecoder().decode(StringUtils.removeStart(authorization, "Basic").trim())) : "";
+
+        if (StringUtils.isNotBlank(password)) {
+            request.getSession().setAttribute("boardPw"+itemID, password);
+        }
+
 		if (!accessCheck(boardID, itemID, location, userInfo, password)) {
 			return false;
 		}
@@ -8319,7 +8333,16 @@ public class EzBoardController extends EzFileMngUtil{
 			String authorization = request.getHeader("Authorization");
 			String password = StringUtils.isNotBlank(authorization) ? new String(java.util.Base64.getDecoder().decode(StringUtils.removeStart(authorization, "Basic").trim())) : "";
 
-			if (!accessCheck(boardID, itemID, location, userInfo, password)) {
+            if (StringUtils.isNotBlank(authorization)) { // 암호 입력
+                if (!ezBoardService.chkPasswordAnonymous(itemID, password, userInfo.getTenantId())) { // 암호 불일치
+                    request.getSession().setAttribute("pwFlag", false);
+                    return "<DATA>NOPASSWORD</DATA>";
+                } else {
+                    request.getSession().setAttribute("pwFlag", true);
+                }
+            }
+            if (!accessCheck(boardID, itemID, location, userInfo, password)) { // 게시판 권한 없음
+                request.getSession().setAttribute("pwFlag", false);
 				return "<DATA>NO</DATA>";
 			}
 		}
@@ -12977,6 +13000,7 @@ public class EzBoardController extends EzFileMngUtil{
 					resultXML.append("<BOARDGROUPID>" + boardList.get(j).get("BOARDGROUPID") + "</BOARDGROUPID>");
 					resultXML.append("<ITEMREAD_FG>" + (accessCheck((String)boardList.get(j).get("BOARDID"), (String)boardList.get(j).get("ITEMID"),
 							"GENERAL", userInfo, "") ? "Y" : "N") + "</ITEMREAD_FG>");
+                    resultXML.append("<PUBLICFLAG>" + boardList.get(j).get("PUBLICFLAG") + "</PUBLICFLAG>");
 				}
 				resultXML.append("</CELL>");
 			}
@@ -13761,6 +13785,7 @@ public class EzBoardController extends EzFileMngUtil{
 					resultXML.append("<FILEPATH>" +  commonUtil.cleanValue((String)boardList.get(j).get("FILEPATH"))  + "</FILEPATH>");
 					resultXML.append("<ITEMREAD_FG>" + (accessCheck((String)boardList.get(j).get("BOARDID"), (String)boardList.get(j).get("ITEMID"),
 							"GENERAL", userInfo, "") ? "Y" : "N") + "</ITEMREAD_FG>");
+                    resultXML.append("<PUBLICFLAG>" + boardList.get(j).get("PUBLICFLAG") + "</PUBLICFLAG>");
 				}
 				resultXML.append("</CELL>");
 			}
@@ -14258,4 +14283,38 @@ public class EzBoardController extends EzFileMngUtil{
 		logger.debug("attachAccessChk ended");
 		return result;
 	}
+    /**
+     * 익명 게시판 비밀글 암호 체크
+     */
+    @GetMapping("/ezBoard/boardViewPasswordCheck.do")
+    @ResponseBody
+    public boolean getBoardViewPasswordCheck(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+        logger.debug("getBoardViewPasswordCheck started.");
+
+        LoginVO userInfo = commonUtil.userInfo(loginCookie);
+        String userId = userInfo.getId();
+        int tenantId = userInfo.getTenantId();
+        String offset = userInfo.getOffset();
+
+        String boardID = request.getParameter("boardID");
+        String itemID = request.getParameter("itemID");
+        String location = request.getParameter("location").isEmpty() ? "GENERAL" : request.getParameter("location");
+
+        BoardPropertyVO boardInfo = getBoardInfo(boardID, userInfo);
+        BoardListVO boardItem = ezBoardService.getBrdGetItemInfo(boardID, itemID, commonUtil.getMultiData(userInfo.getLang(), tenantId), tenantId);
+
+        // 게시물 존재여부 체크
+        if (boardItem == null) {
+            return false;
+        }
+
+        // 공개비공개 및 권한 체크
+        String authorization = request.getHeader("Authorization");
+        String password = StringUtils.isNotBlank(authorization) ? new String(java.util.Base64.getDecoder().decode(StringUtils.removeStart(authorization, "Basic").trim())) : "";
+
+        boolean rtn = ezBoardService.chkPasswordAnonymous(itemID, password, userInfo.getTenantId());
+
+        logger.debug("getBoardViewPasswordCheck ended.");
+        return rtn;
+    }
 }

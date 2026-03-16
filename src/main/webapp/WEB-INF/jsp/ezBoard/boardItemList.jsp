@@ -826,7 +826,7 @@
 		            isOpenWindow = window.open("/ezBoard/boardItemView.do?showAdjacent=" + ShowAdjacent + "&itemID=" + encodeURIComponent(obj.getAttribute("DATA2")) + "&boardID=" + encodeURIComponent(obj.getAttribute("DATA1")) + "&location=GENERAL", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=890,top=" + pTop + ",left=" + pLeft, "");
 	            }
 		    }
-		    
+
 		    /*  2019-04-12 홍승비 - 사용되지 않는 함수 주석처리 */
 /* 		    function NoticeRead_onclick(pItemBoardID, pItemBoardName, pItemID, pUserID, evt) {
 		        if (Read_FG != "true") {
@@ -1620,6 +1620,9 @@
 							var returnDom = parser.parseFromString(response, "text/xml");
 
 							if (!returnDom || SelectSingleNodeValue(returnDom, "DATA") == "NO") {
+								alert("<spring:message code='main.t00001' />");
+								return;
+							} else if (!returnDom || SelectSingleNodeValue(returnDom, "DATA") == "NOPASSWORD") {
 								alert("<spring:message code='ezBoard.t267' />");
 								return;
 							}
@@ -1643,24 +1646,42 @@
 					var pLeft = (pwidth - 790) / 2;
 					var parser = new DOMParser();
 
-					$.ajax({
-						url: "/ezBoard/boardViewAccessCheck.do?itemID=" + encodeURIComponent(pitemid) + "&boardID=" + encodeURIComponent(pboardid) + "&location=GENERAL",
-						headers: {
-							'Authorization': 'Basic ' + btoa(password)
-						},
-						success: function(response) {
-							$.modal.close();
-							if (!response) {
-								alert("<spring:message code='ezBoard.t267' />");
-								return;
-							}
-							var openUrl = "/ezBoard/boardItemView.do?showAdjacent=" + ShowAdjacent + "&itemID=" + encodeURIComponent(pitemid) + "&boardID=" + encodeURIComponent(pboardid) + "&location=GENERAL";
-							window.open(openUrl, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=790,top=" + pTop + ",left=" + pLeft);
-						},
-						error: function(xhr, status, error) {
-							console.error('Error:', error);
-						}
-					});
+                    $.ajax({
+                        url: "/ezBoard/boardViewPasswordCheck.do?itemID=" + encodeURIComponent(pitemid) + "&boardID=" + encodeURIComponent(pboardid) + "&location=GENERAL",
+                        headers: {
+                            'Authorization': 'Basic ' + btoa(password)
+                        },
+                        success: function(response) {
+                            if (!response) {
+                                alert("<spring:message code='ezBoard.t267' />");
+                                return;
+                            }
+                            $.modal.close();
+                            // 암호 맞다면 권한 체크
+                            $.ajax({
+                                url: "/ezBoard/boardViewAccessCheck.do?itemID=" + encodeURIComponent(pitemid) + "&boardID=" + encodeURIComponent(pboardid) + "&location=GENERAL",
+                                headers: {
+                                    'Authorization': 'Basic ' + btoa(password)
+                                },
+                                success: function(response) {
+                                    $.modal.close();
+                                    if (!response) {
+                                        alert("<spring:message code='main.t00001' />");
+                                        return;
+                                    }
+                                    var openUrl = "/ezBoard/boardItemView.do?showAdjacent=" + ShowAdjacent + "&itemID=" + encodeURIComponent(pitemid) + "&boardID=" + encodeURIComponent(pboardid) + "&location=GENERAL";
+                                    window.open(openUrl, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,"+getMacOSAndSafariPopupResizing(790, 720)+",top=" + pTop + ",left=" + pLeft);
+                                },
+                                error: function(xhr, status, error) {
+                                    console.error('Error:', error);
+                                }
+                            });
+
+                        },
+                        error: function(xhr, status, error) {
+                            console.error('Error:', error);
+                        }
+                    });
 				}
 			}
 			
@@ -1921,7 +1942,7 @@
 					<li><span onClick="SaveStorageMyBoard()"><spring:message code='ezBoard.kmh52' /></span></li>
 				</c:if>
 		        <c:if test="${boardInfo.boardAdmin_FG == true && boardInfo.isAllGroupBoard ne 'Y'}">
-			        <li id="btn_acl" style="display:none"><span onClick="SetBoardAcl()"><spring:message code='ezBoard.boardManage01' /></span></li> 
+			        <li id="btn_acl" style="display:none"><span onClick="SetBoardAcl()"><spring:message code='ezBoard.boardManage01' /></span></li>
 		        </c:if>
 		        
 		        <%-- 2020-06-15 홍승비 - 즐겨찾기 여부에 따라 별모양 아이콘 스타일 수정 --%>

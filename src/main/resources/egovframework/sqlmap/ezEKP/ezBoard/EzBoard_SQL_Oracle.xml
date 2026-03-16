@@ -9569,7 +9569,8 @@
 						   '' AS NOTICE,
 						   P.GUBUN,
 						   A.MAINCONTENT,
-						   P.BOARDGROUPID
+						   P.BOARDGROUPID,
+                           A.PUBLICFLAG
 					   FROM
 						   TBL_BOARD_ITEM A
 							   INNER JOIN
@@ -11030,7 +11031,8 @@
 						   '' AS NOTICE,
 						   P.GUBUN,
 						   A.MAINCONTENT,
-						   P.BOARDGROUPID
+						   P.BOARDGROUPID,
+                           A.PUBLICFLAG
 					   FROM
 						   TBL_BOARD_ITEM A
 							   INNER JOIN
