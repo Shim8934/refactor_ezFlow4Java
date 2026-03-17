@@ -1780,17 +1780,32 @@ var openBoard = function (pItemID, pType, oBoardID, password) {
 		pLeft = (pwidth - normalWidth) / 2;
 
 		$.ajax({
-			url: "/ezBoard/boardViewAccessCheck.do?itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(oBoardID) + "&location=GENERAL",
+			url: "/ezBoard/boardViewPasswordCheck.do?itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(oBoardID) + "&location=GENERAL",
 			headers: !!password ? {
 				'Authorization': 'Basic ' + btoa(password)
 			} : {},
 			success: function(response) {
 				if (!response) {
-					alert(!!password ? strWrongPassword : strLang1132);
+					alert(strWrongPassword);
 					return;
 				}
-				var openUrl = "/ezBoard/boardItemView.do?showAdjacent=&itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(oBoardID);
-				window.open(openUrl, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=" + normalHeight + ",width=" + normalWidth + ",top=" + pTop + ",left=" + pLeft);
+				$.ajax({
+                    url: "/ezBoard/boardViewAccessCheck.do?itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(oBoardID) + "&location=GENERAL",
+                    headers: {
+                        'Authorization': 'Basic ' + btoa(password)
+                    },
+                    success: function(response) {
+                        if (!response) {
+                            alert(strLang1132);
+                            return;
+                        }
+                        var openUrl = "/ezBoard/boardItemView.do?showAdjacent=&itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(oBoardID);
+                        window.open(openUrl, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=" + normalHeight + ",width=" + normalWidth + ",top=" + pTop + ",left=" + pLeft);
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error:', error);
+                    }
+                });
 			},
 			error: function(xhr, status, error) {
 				console.error('Error:', error);

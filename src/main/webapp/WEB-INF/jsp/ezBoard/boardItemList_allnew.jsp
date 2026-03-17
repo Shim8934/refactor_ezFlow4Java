@@ -503,7 +503,7 @@
                 } else if (obj.getAttribute("publicflag") == "N" && BoardAdmin_FG != "true" && BoardGroupAdmin_FG != "OK" && obj.getAttribute("DATA3") != SSUserID) {
                     alert("<spring:message code='ezBoard.t202' />");
                 } else {
-                    isOpenWindow = window.open("/ezBoard/boardItemView.do?showAdjacent=" + ShowAdjacent + "&itemID=" + encodeURIComponent(obj.getAttribute("DATA2")) + "&boardID=" + encodeURIComponent(obj.getAttribute("DATA1")) + "&location=GENERAL", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,"+getMacOSAndSafariPopupResizing(890, 720)+",top=" + pTop + ",left=" + pLeft, "");
+                    window.open("/ezBoard/boardItemView.do?showAdjacent=" + ShowAdjacent + "&itemID=" + encodeURIComponent(obj.getAttribute("DATA2")) + "&boardID=" + encodeURIComponent(obj.getAttribute("DATA1")), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
                 }
 		        //}
 		        //getBoardList();
@@ -777,7 +777,7 @@
                                         return;
                                     }
                                     var openUrl = "/ezBoard/boardItemView.do?showAdjacent=" + ShowAdjacent + "&itemID=" + encodeURIComponent(pitemid) + "&boardID=" + encodeURIComponent(pboardid) + "&location=GENERAL";
-                                    window.open(openUrl, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,"+getMacOSAndSafariPopupResizing(790, 720)+",top=" + pTop + ",left=" + pLeft);
+                                    window.open(openUrl, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=790,top=" + pTop + ",left=" + pLeft);
                                 },
                                 error: function(xhr, status, error) {
                                     console.error('Error:', error);

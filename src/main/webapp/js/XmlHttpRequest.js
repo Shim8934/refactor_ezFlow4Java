@@ -3169,7 +3169,7 @@ function createEl(tag, className, attrs = {}) {
             el.setAttribute(key, attrs[key]);
         }
     }
-    
+
     return el;
 }
 

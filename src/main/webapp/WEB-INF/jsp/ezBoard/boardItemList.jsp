@@ -1670,7 +1670,7 @@
                                         return;
                                     }
                                     var openUrl = "/ezBoard/boardItemView.do?showAdjacent=" + ShowAdjacent + "&itemID=" + encodeURIComponent(pitemid) + "&boardID=" + encodeURIComponent(pboardid) + "&location=GENERAL";
-                                    window.open(openUrl, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,"+getMacOSAndSafariPopupResizing(790, 720)+",top=" + pTop + ",left=" + pLeft);
+                                    window.open(openUrl, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=790,top=" + pTop + ",left=" + pLeft);
                                 },
                                 error: function(xhr, status, error) {
                                     console.error('Error:', error);
