@@ -35,9 +35,13 @@
 						deptID = result;
 					}
 				});
-		    	
+				
+				if (typeof deptID != 'undefined' && deptID == "") {
+				    alert("<spring:message code='ezSchedule.kyj01' />");
+				} else {
 		        // var feature = GetOpenPosition(420, 450);
 		        window.open("/ezCommon/showPersonInfo.do?id=" + userid + "&dept="+deptID, "", GetOpenWindowfeature(420, 450, 1));
+		        }
 		    }
 			
 		    var OpenWin;
