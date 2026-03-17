@@ -117,6 +117,7 @@ import egovframework.let.utl.fcc.service.EgovDateUtil;
 import egovframework.let.utl.fcc.service.KlibUtil;
 import org.egovframe.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import org.json.simple.JSONObject;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 @Service("EzBoardService")
@@ -3718,7 +3719,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			
 			rtnValue = true;
 		} catch (Exception e) {
-			logger.debug(e.getMessage());
+            logger.error("saveAttachmentsInfo error", e);
 			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			rtnValue = false;
 		}
@@ -4525,7 +4526,11 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		}
 		
 		if (boardListVO.getAttachments() != null && !boardListVO.getAttachments().equals("")) {
-			String realFileNames = commonUtil.detectPathTraversal(doc.getElementsByTagName("REALFILENAMES").item(0).getTextContent());
+            Node realFileNamesNode = doc.getElementsByTagName("REALFILENAMES").item(0);
+            String realFileNames = "";
+            if (realFileNamesNode != null && realFileNamesNode.getTextContent() != null) {
+                realFileNames = commonUtil.detectPathTraversal(realFileNamesNode.getTextContent());
+            }
 			if (!saveAttachmentsInfo(boardListVO.getAttachments(), boardListVO.getItemID(), boardListVO.getBoardID(), boardListVO.getFilePath(), "BOARD", realPath, userInfo.getTenantId(), realFileNames)) {
 				return egovMessageSource.getMessage("ezCommunity.lhj05", userInfo.getLocale());
 			}

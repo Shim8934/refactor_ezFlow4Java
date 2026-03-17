@@ -1069,20 +1069,23 @@
 		        else {
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "EXTENSIONATTRIBUTE5", MakeXMLString(GetSmallUrl()));
 		        }
-		        var obj = GetBODY(document.getElementById('docContent')).getElementsByTagName("TD");
-		        for (var i = 0; i < obj.length; i++) {
-		            if (obj[i].free == "")
-		                obj[i].removeAttribute('free');
-		            if (obj[i].className == "FIELD")
-		                obj[i].removeAttribute('className');
-		        }
-
+                if (pMode != "boardAttach") {
+                    var obj = GetBODY(document.getElementById('docContent')).getElementsByTagName("TD");
+                    for (var i = 0; i < obj.length; i++) {
+                        if (obj[i].free == "")
+                            obj[i].removeAttribute('free');
+                        if (obj[i].className == "FIELD")
+                            obj[i].removeAttribute('className');
+                    }
+                }
 		        setTimeout(JSleep, 1000);
 
 		        if (editor != "HWP") {
 			        var strBody = message.GetEditorContent();
-			        
-			        if (pDocID != "" && pUrl.toLowerCase().indexOf(".mht") > -1) {
+
+                    if (pMode == "boardAttach") {
+                        strBody = message.GetEditorContent();
+                    } else if (pDocID != "" && pUrl.toLowerCase().indexOf(".mht") > -1) {
 			        	strBody = message.GetEditorContent() + "<hr><div contenteditable='false' >" + GetBODY(document.getElementById('docContent')).innerHTML + "</div>";
 			        } else {
 			        	strBody = message.GetEditorContent() + "<div contenteditable='false' >" + GetBODY(document.getElementById('docContent')).innerHTML + "</div>";
