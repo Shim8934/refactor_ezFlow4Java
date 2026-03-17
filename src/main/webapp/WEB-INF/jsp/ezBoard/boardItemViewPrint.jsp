@@ -461,7 +461,7 @@
 		    </td> 
 		  </tr>
 		  </table>
-		  <div class="comment_listBox" style="display: none;">
+		  <div class="comment_listBox" style="display: none; border-top: 1px solid #CDD1D5;">
 			  <div id="onelinereplylist"></div>
 		  </div>
 	</body>
