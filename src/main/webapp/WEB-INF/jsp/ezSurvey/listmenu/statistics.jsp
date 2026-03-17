@@ -261,7 +261,7 @@
 					if (surveyStatistic["annoynymous"] == 0 && (surveyStatistic["userExposed"] == 1 || adminYN == 'Y')) {
 						/* 프로필사진 */
 						var userAva     = document.createElement("img");
-						var picNone = "/images/default_pic.jpg";
+						var picNone = "/images/ezNewPortal/info_pic_none.png";
 						userAva.src     = responses[i]["image"] ? "/admin/ezOrgan/getPersonalInfo.do?fileName=" + responses[i]["image"] : picNone;
 						userAva.setAttribute('onerror', "this.src='" + picNone + "'");
 						userAva.onclick = (function(userId) {return function() {showUserInfoFromId(userId);};})(responses[i]["responsorId"]);
@@ -443,7 +443,7 @@
 					var tdElmt3 = document.createElement("td");
 					var tdElmt4 = document.createElement("td");
 					var imgElmt = document.createElement("img");
-					var picNone = "/images/default_pic.jpg";
+					var picNone = "/images/ezNewPortal/info_pic_none.png";
 					imgElmt.src = userList[i][userImage] ?  "/admin/ezOrgan/getPersonalInfo.do?fileName=" + userList[i][userImage] : picNone;
 					imgElmt.setAttribute('onerror', "this.src='" + picNone + "'");
 					tdElmt1.appendChild(imgElmt);
