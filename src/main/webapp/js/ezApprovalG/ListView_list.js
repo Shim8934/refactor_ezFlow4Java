@@ -1976,6 +1976,7 @@ function checkboxBtnShowCtl() {
     
     var isDelShow = true;
     var isRedraftShow = true;
+    var isAddCabinetShow = true;
     var pFunctionType = "";
     var pDocState = "";
     if (oArrRows.length >= 0) {
@@ -2015,6 +2016,12 @@ function checkboxBtnShowCtl() {
     	} else {
     		document.getElementById("tbtnRedraft").style.display = "none";
     	}
+    	
+        //선택된 문서가 1개 이며 상태가 회송 타입인 경우 대장등록 표출
+        if (!(oArrRows.length == 1 && approvalFlag == "G" && isAddCabinetShow && GetAttribute(oArrRows[0], "DATA10") == "015")) {
+            isAddCabinetShow = false
+        }
+    	document.getElementById("tbtnRegList").style.display = isAddCabinetShow ? "" : "none";
     	
     	document.getElementById("tbtnApprove").style.display = "none";
     	document.getElementById("tbtnReceipt").style.display = "none";
