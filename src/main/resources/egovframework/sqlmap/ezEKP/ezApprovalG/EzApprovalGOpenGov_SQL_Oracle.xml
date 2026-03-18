@@ -99,7 +99,7 @@
 				'' AS "n7",
 				TBL_ENDAPRDOCINFO.doctitle,
 				'' AS "n9",
-				TO_DATE(TBL_OPENGOVDOCINFO.createdate, 'YYYYMMDDHH24MISS') AS createdate,
+                TO_CHAR(TBL_OPENGOVDOCINFO.createdate, 'YYYYMMDDHH24MISS') AS createdate,
 				#companyNum# AS companycode,
 				#companyName# AS companyname,
 				TBL_ENDAPRDOCINFO.writerdeptid,
@@ -137,7 +137,7 @@
 				)
 				WHERE ROWNUM = 1
 					) AS aprmemberjobtitle,
-				NVL(TBL_OPENGOVDOCINFO.openlimitdate, SYSDATE -1) AS openlimitdate,
+				TO_CHAR(NVL(TBL_OPENGOVDOCINFO.openlimitdate, SYSDATE -1),'YYYYMMDD') AS openlimitdate,
 				'' AS "n32",
 				'' AS "n33",
 				'01' AS "n34",
@@ -249,7 +249,7 @@
 				'' AS "n7",
 				TBL_ENDAPRDOCINFO.doctitle,
 				'' AS "n9",
-				TBL_OPENGOVDOCINFO.createdate AS createdate,
+				TO_CHAR(TBL_OPENGOVDOCINFO.createdate, 'YYYYMMDDHH24MISS') AS createdate,
 				#companyNum# AS companycode,
 				#companyName# AS companyname,
 				TBL_ENDAPRDOCINFO.writerdeptid,
@@ -287,7 +287,7 @@
 				)
 				WHERE ROWNUM = 1
 					) AS aprmemberjobtitle,
-				NVL(TBL_OPENGOVDOCINFO.openlimitdate, SYSDATE -1) AS openlimitdate,
+				TO_CHAR(NVL(TBL_OPENGOVDOCINFO.openlimitdate, SYSDATE -1),'YYYYMMDD') AS openlimitdate,
 				'' AS "n32",
 				'' AS "n33",
 				'01' AS "n34",

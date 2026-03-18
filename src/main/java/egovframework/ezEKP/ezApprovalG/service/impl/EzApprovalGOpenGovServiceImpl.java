@@ -103,7 +103,11 @@ public class EzApprovalGOpenGovServiceImpl extends EgovAbstractServiceImpl imple
 
         logger.debug("insertGovDocSend ended.");
     }
-
+    
+    private String nullCheck(String param) throws Exception {
+        return param == null || "null".equalsIgnoreCase(param) ? "" : param;
+    }
+    
     //scheduler
     @Override
     public List<String> getOpenGovCsv() throws Exception {
@@ -122,40 +126,40 @@ public class EzApprovalGOpenGovServiceImpl extends EgovAbstractServiceImpl imple
         for (ApprGOpenGovCsvVO csv : csvList) {
             StringBuilder csvRow = new StringBuilder();
             csvRow.append(csv.getDocID() + companyNum + "|");
-            csvRow.append(csv.getN2() + "|");
-            csvRow.append(csv.getN3() + "|");
-            csvRow.append(csv.getN4() + "|");
-            csvRow.append(csv.getN5() + "|");
-            csvRow.append(csv.getN6() + "|");
-            csvRow.append(csv.getN7() + "|");
-            csvRow.append(csv.getDocTitle() + "|");
-            csvRow.append(csv.getN9() + "|");
-            csvRow.append(csv.getCreateDate() + "|");
-            csvRow.append(csv.getCompanyCode() + "|");
-            csvRow.append(csv.getCompanyName() + "|");
-            csvRow.append(csv.getWriterDeptID() + "|");
-            csvRow.append(csv.getWriterDeptName() + "|");
-            csvRow.append(csv.getWriterName() + "|");
-            csvRow.append(csv.getN16() + "|");
-            csvRow.append(csv.getDocNo() + "|");
-            csvRow.append(csv.getKeepingPeriod() + "|");
-            csvRow.append(csv.getPublicityCode() + "|");
-            csvRow.append(csv.getBasis() + "|");
-            csvRow.append(csv.getReason() + "|");
-            csvRow.append(csv.getN22() + "|");
-            csvRow.append(csv.getN23() + "|");
-            csvRow.append(csv.getN24() + "|");
-            csvRow.append(csv.getN25() + "|");
-            csvRow.append(csv.getListOpenFlag() + "|");
-            csvRow.append(csv.getN27() + "|");
-            csvRow.append(csv.getN28() + "|");
-            csvRow.append(csv.getAprMemberTitle() + "|");
-            csvRow.append(csv.getAprMemberJobTitle() + "|");
-            csvRow.append(csv.getOpenLimitDate() + "|");
-            csvRow.append(csv.getN32() + "|");
-            csvRow.append(csv.getN33() + "|");
-            csvRow.append(csv.getN34() + "|");
-            csvRow.append(csv.getFileList());
+            csvRow.append(nullCheck(csv.getN2()) + "|");
+            csvRow.append(nullCheck(csv.getN3()) + "|");
+            csvRow.append(nullCheck(csv.getN4()) + "|");
+            csvRow.append(nullCheck(csv.getN5()) + "|");
+            csvRow.append(nullCheck(csv.getN6()) + "|");
+            csvRow.append(nullCheck(csv.getN7()) + "|");
+            csvRow.append(nullCheck(csv.getDocTitle()) + "|");
+            csvRow.append(nullCheck(csv.getN9()) + "|");
+            csvRow.append(nullCheck(csv.getCreateDate()) + "|");
+            csvRow.append(nullCheck(csv.getCompanyCode()) + "|");
+            csvRow.append(nullCheck(csv.getCompanyName()) + "|");
+            csvRow.append(nullCheck(csv.getWriterDeptID()) + "|");
+            csvRow.append(nullCheck(csv.getWriterDeptName()) + "|");
+            csvRow.append(nullCheck(csv.getWriterName()) + "|");
+            csvRow.append(nullCheck(csv.getN16()) + "|");
+            csvRow.append(nullCheck(csv.getDocNo()) + "|");
+            csvRow.append(nullCheck(csv.getKeepingPeriod()) + "|");
+            csvRow.append(nullCheck(csv.getPublicityCode()) + "|");
+            csvRow.append(nullCheck(csv.getBasis()) + "|");
+            csvRow.append(nullCheck(csv.getReason()) + "|");
+            csvRow.append(nullCheck(csv.getN22()) + "|");
+            csvRow.append(nullCheck(csv.getN23()) + "|");
+            csvRow.append(nullCheck(csv.getN24()) + "|");
+            csvRow.append(nullCheck(csv.getN25()) + "|");
+            csvRow.append(nullCheck(csv.getListOpenFlag()) + "|");
+            csvRow.append(nullCheck(csv.getN27()) + "|");
+            csvRow.append(nullCheck(csv.getN28()) + "|");
+            csvRow.append(nullCheck(csv.getAprMemberTitle()) + "|");
+            csvRow.append(nullCheck(csv.getAprMemberJobTitle()) + "|");
+            csvRow.append(nullCheck(csv.getOpenLimitDate()) + "|");
+            csvRow.append(nullCheck(csv.getN32()) + "|");
+            csvRow.append(nullCheck(csv.getN33()) + "|");
+            csvRow.append(nullCheck(csv.getN34()) + "|");
+            csvRow.append(nullCheck(csv.getFileList()));
 
             list.add(csvRow.toString());
         }
@@ -199,40 +203,40 @@ public class EzApprovalGOpenGovServiceImpl extends EgovAbstractServiceImpl imple
         for (ApprGOpenGovCsvVO csv : csvList) {
             StringBuilder csvRow = new StringBuilder();
             csvRow.append(csv.getDocID() + config.getProperty("openGov_companyNum") + "|");
-            csvRow.append(csv.getN2() + "|");
-            csvRow.append(csv.getN3() + "|");
-            csvRow.append(csv.getN4() + "|");
-            csvRow.append(csv.getN5() + "|");
-            csvRow.append(csv.getN6() + "|");
-            csvRow.append(csv.getN7() + "|");
-            csvRow.append(csv.getDocTitle() + "|");
-            csvRow.append(csv.getN9() + "|");
-            csvRow.append(csv.getCreateDate() + "|");
-            csvRow.append(csv.getCompanyCode() + "|");
-            csvRow.append(csv.getCompanyName() + "|");
-            csvRow.append(csv.getWriterDeptID() + "|");
-            csvRow.append(csv.getWriterDeptName() + "|");
-            csvRow.append(csv.getWriterName() + "|");
-            csvRow.append(csv.getN16() + "|");
-            csvRow.append(csv.getDocNo() + "|");
-            csvRow.append(csv.getKeepingPeriod() + "|");
-            csvRow.append(csv.getPublicityCode() + "|");
-            csvRow.append(csv.getBasis() + "|");
-            csvRow.append(csv.getReason() + "|");
-            csvRow.append(csv.getN22() + "|");
-            csvRow.append(csv.getN23() + "|");
-            csvRow.append(csv.getN24() + "|");
-            csvRow.append(csv.getN25() + "|");
-            csvRow.append(csv.getListOpenFlag() + "|");
-            csvRow.append(csv.getN27() + "|");
-            csvRow.append(csv.getN28() + "|");
-            csvRow.append(csv.getAprMemberTitle() + "|");
-            csvRow.append(csv.getAprMemberJobTitle() + "|");
-            csvRow.append(csv.getOpenLimitDate() + "|");
-            csvRow.append(csv.getN32() + "|");
-            csvRow.append(csv.getN33() + "|");
-            csvRow.append(csv.getN34() + "|");
-            csvRow.append(csv.getFileList());
+            csvRow.append(nullCheck(csv.getN2()) + "|");
+            csvRow.append(nullCheck(csv.getN3()) + "|");
+            csvRow.append(nullCheck(csv.getN4()) + "|");
+            csvRow.append(nullCheck(csv.getN5()) + "|");
+            csvRow.append(nullCheck(csv.getN6()) + "|");
+            csvRow.append(nullCheck(csv.getN7()) + "|");
+            csvRow.append(nullCheck(csv.getDocTitle()) + "|");
+            csvRow.append(nullCheck(csv.getN9()) + "|");
+            csvRow.append(nullCheck(csv.getCreateDate()) + "|");
+            csvRow.append(nullCheck(csv.getCompanyCode()) + "|");
+            csvRow.append(nullCheck(csv.getCompanyName()) + "|");
+            csvRow.append(nullCheck(csv.getWriterDeptID()) + "|");
+            csvRow.append(nullCheck(csv.getWriterDeptName()) + "|");
+            csvRow.append(nullCheck(csv.getWriterName()) + "|");
+            csvRow.append(nullCheck(csv.getN16()) + "|");
+            csvRow.append(nullCheck(csv.getDocNo()) + "|");
+            csvRow.append(nullCheck(csv.getKeepingPeriod()) + "|");
+            csvRow.append(nullCheck(csv.getPublicityCode()) + "|");
+            csvRow.append(nullCheck(csv.getBasis()) + "|");
+            csvRow.append(nullCheck(csv.getReason()) + "|");
+            csvRow.append(nullCheck(csv.getN22()) + "|");
+            csvRow.append(nullCheck(csv.getN23()) + "|");
+            csvRow.append(nullCheck(csv.getN24()) + "|");
+            csvRow.append(nullCheck(csv.getN25()) + "|");
+            csvRow.append(nullCheck(csv.getListOpenFlag()) + "|");
+            csvRow.append(nullCheck(csv.getN27()) + "|");
+            csvRow.append(nullCheck(csv.getN28()) + "|");
+            csvRow.append(nullCheck(csv.getAprMemberTitle()) + "|");
+            csvRow.append(nullCheck(csv.getAprMemberJobTitle()) + "|");
+            csvRow.append(nullCheck(csv.getOpenLimitDate()) + "|");
+            csvRow.append(nullCheck(csv.getN32()) + "|");
+            csvRow.append(nullCheck(csv.getN33()) + "|");
+            csvRow.append(nullCheck(csv.getN34()) + "|");
+            csvRow.append(nullCheck(csv.getFileList()));
 
             list.add(csvRow.toString());
         }
