@@ -2541,7 +2541,7 @@ function LineAprTyepSetAll_DELETE_ADD() {
 	$.each($(pTotalRows).get().reverse(), function(index) {
 		var text = "";
 		var id = this.id;
-		id = id.substring(0, id.length-1) + index;
+        id = id.replace(/\d+$/, '') + index;
 		
 		/*if($(this).attr("DATA8") == "Y" && $(this).attr("DATA11") == "008") {
 			text = "★";
