@@ -347,8 +347,6 @@ public class LoginController {
 		
 		String useMasteradminLogin = ezCommonService.getTenantConfig("useMasteradminLogin", tenantId);
 		boolean masteradminLogin = false;
-		String displayName1 = null;
-		String useSession = null;
 
 		// 2023-03-22 이사라 : [TFA] 2-factor 인증 사용 체크
 		String loginOtp = "";
@@ -389,177 +387,118 @@ public class LoginController {
 					
         	model.addAttribute("message", egovMessageSource.getMessage("fail.common.login", locale));
         	return "forward:/user/login/login.do";
+		}
+
         // 사용자 ID 혹은 사원번호가 발견된 경우
-		} else {
-			// OTP Key 유무 확인
-			if (useOTP && hasOTP) {
-				String otpKey = ezCommonService.getUserConfigInfo(tenantId, _uid, "otpKey");
-				String otpCode = "";
+		// OTP Key 유무 확인
+		if (useOTP && hasOTP) {
+			String otpKey = ezCommonService.getUserConfigInfo(tenantId, _uid, "otpKey");
+			String otpCode = "";
 
-				if (StringUtils.isNotBlank(otpKey)) {
-					logger.debug("has OTP checked.");
-					otpCode = getTOTPCode(otpKey);
-					isRightOTP = loginVO.getOtp().equals(otpCode) ? true : false;
+			if (StringUtils.isNotBlank(otpKey)) {
+				logger.debug("has OTP checked.");
+				otpCode = getTOTPCode(otpKey);
+				isRightOTP = loginVO.getOtp().equals(otpCode) ? true : false;
 
-					logger.debug("OTP correct code={}, submmited code={}, isRightOTP={}", otpCode, loginVO.getOtp(), isRightOTP);
-				} else {
-					// otp 키가 null인 경우 예외 처리
-					logger.debug("has no valid OTP key.");
-					hasOTP = false;
-					model.addAttribute("message", "setflagTFA:" + _uid);
-					return "forward:/user/login/login.do";
-				}
-			// OTP 초기화한 사용자는 설정화면을 제공, masteradmin 계정은 OTP 인증을 제외 함
-			} else if (useOTP && !hasOTP && resultVO.getLoginCnt() > 0 && !resultVO.getId().equalsIgnoreCase("masteradmin")) {
-				logger.debug("hasn't set OTP key.");
+				logger.debug("OTP correct code={}, submmited code={}, isRightOTP={}", otpCode, loginVO.getOtp(), isRightOTP);
+			} else {
+				// otp 키가 null인 경우 예외 처리
+				logger.debug("has no valid OTP key.");
+				hasOTP = false;
 				model.addAttribute("message", "setflagTFA:" + _uid);
 				return "forward:/user/login/login.do";
 			}
+		// OTP 초기화한 사용자는 설정화면을 제공, masteradmin 계정은 OTP 인증을 제외 함
+		} else if (useOTP && !hasOTP && resultVO.getLoginCnt() > 0 && !resultVO.getId().equalsIgnoreCase("masteradmin")) {
+			logger.debug("hasn't set OTP key.");
+			model.addAttribute("message", "setflagTFA:" + _uid);
+			return "forward:/user/login/login.do";
+		}
 
-			resultVO.setIp(ClientUtil.getClientIP(request));
-			resultVO.setAgent(ClientUtil.getClientInfo(request, "agent"));
-			resultVO.setOs(ClientUtil.getClientInfo(request, "os"));
-			resultVO.setBrowser(ClientUtil.getClientInfo(request, "browser"));
-			resultVO.setTenantId(tenantId);
-					
-			// 로그인 후 IP 주소 체크
-        	boolean ipAddressChk = ipAccessCheck(resultVO);
-			useFido = fidoNotAccessIpCheck(resultVO);
-			if (!useFido && "usefidoforce".equalsIgnoreCase(loginVO.getPassword())) { // fido test를 위한 코드 - useFido가 이미 true라면 if문을 굳이 실행할 이유가 없기때문에 !useFido로 한정 함
-				useFido = true;
+		// 로그인 후 IP 주소 체크
+		resultVO.setIp(ClientUtil.getClientIP(request));
+		resultVO.setAgent(ClientUtil.getClientInfo(request, "agent"));
+		resultVO.setOs(ClientUtil.getClientInfo(request, "os"));
+		resultVO.setBrowser(ClientUtil.getClientInfo(request, "browser"));
+		resultVO.setTenantId(tenantId);
+		boolean ipAddressChk = ipAccessCheck(resultVO);
+		logger.debug("ipAddressChk : {}", ipAddressChk);
+
+		if (!ipAddressChk) {
+			actionLogout(request, response, model);
+
+			// 2021-12-29 이사라 : ip 주소 check 실패인 경우 접속실패 로그 저장
+			resultVO.setStatus("N");
+
+			if (resultVO.getTitle2() == null) {
+				resultVO.setTitle2("");
 			}
-			logger.debug("useFido : {}, ipAddressChk : {}", useFido, ipAddressChk);
-        	
-        	// 2018.10.22 이석화 추가 - useSession row 유무 확인
-    		useSession = ezCommonService.getTenantConfig("useSession", tenantId);
-        	
-        	if (ipAddressChk == true) {
-        		// 사용자 ID를 사용해 로그인하는 경우
-    			if (_uid.equals(resultVO.getId())) {
-    				
-    				// useMasteradminLogin이 YES일 경우 masteradmin의 암호로 로그인 가능하도록 한다.
-    				if (useMasteradminLogin.equals("YES")) {
-    					displayName1 = resultVO.getDisplayName1();
-    					_pwd = EgovFileScrty.encryptPassword(rpwd, "masteradmin");
-    					
-    					loginVO.setId("masteradmin");
-    		        	loginVO.setPassword(_pwd);
-    		            loginVO.setDn("PASSWORD");
-    					
-    		            resultVO = loginService.selectUser(loginVO);
-    		            
-    		            // masteradmin 암호가 맞는 경우
-    		            if (resultVO != null && resultVO.getId() != null && !resultVO.getId().equals("")) {
-    		            	logger.debug("masteradmin password correct.");
-    		            	masteradminLogin = true;
-    		            	isRightOTP = true; // OTP 체크 없이 로그인 가능하도록 함
-    		            }
-    				}
-    				
-    				if (!masteradminLogin) {
-						// 2023-03-22 이사라 : [TFA] 사용자 ID or 사원번호가 발견되었으나 첫번째 로그인 혹은 초기화된 사용자가 아닌데 OTP를 입력하지 않은 경우
-						if (useOTP && "".equals(loginOtp) && (resultVO.getLoginCnt() > 0 || hasOTP)) {
-							logger.debug("It isn't the first login and otpKey hasn't been reset either, but otp is not submitted.");
-							model.addAttribute("message", "emptyOtp");
 
-							return "forward:/user/login/login.do";
-						}
+			loginService.insertLog(resultVO);
 
-    					//User uses his/her username to login
-    					loginVO.setId(_uid);
-    					_pwd = EgovFileScrty.encryptPassword(rpwd, _uid);
-    		        	loginVO.setPassword(_pwd);
-    		            loginVO.setDn("PASSWORD");
-    		            
-    		            if (!_uid.equalsIgnoreCase("MASTERADMIN")) {
-    			            // AD를 사용하는 경우 AD의 암호화 비교한 값을 구한다.
-    			            if (ezCommonService.getTenantConfig("USE_AD", tenantId).equalsIgnoreCase("YES")) {
-    			            	// true 이면 그룹웨어 암호 변경
-    			            	// false 이면 그냥 로그인 금지
-    			            	chkADpass = loginService.chkADAndUpdatePassword(_uid, rpwd, tenantId);	            	
-    			            	
-    			            	if (chkADpass.equalsIgnoreCase("false")) {
-    			            		// vo의 password에 null 값을 넣어서 selectUser에서 무조건 암호가 틀리게 한다.
-    			            		loginVO.setPassword(null);	            		
-    			            	}
-    			            }
-    		            }
-    		            
-    		            // 암호가 맞는 지 확인한다.
-    		            resultVO = loginService.selectUser(loginVO);
-    				}
-    				
-    	        // 사원번호를 사용해 로그인하는 경우
-    			} else {
-    				//Check if his/her tenant allows using employeeID to login				
-    				String useEmpNumberLogin = ezCommonService.getTenantConfig("UseEmpNumberLogin", tenantId);
-    				
-    				// 사원번호를 사용한 로그인을 허용하는 경우
-    				if (useEmpNumberLogin.equals("YES") && !resultVO.getId().equals("")) {
-    					
-    					String orgId = resultVO.getId();
-						_uid = orgId;
-    					
-    					// useMasteradminLogin이 YES일 경우 masteradmin의 암호로 로그인 가능하도록 한다.
-    					if (useMasteradminLogin.equals("YES")) {
-    						displayName1 = resultVO.getDisplayName1();
-    						_pwd = EgovFileScrty.encryptPassword(rpwd, "masteradmin");
-    						
-    						loginVO.setId("masteradmin");
-    			        	loginVO.setPassword(_pwd);
-    			            loginVO.setDn("PASSWORD");
-    						
-    			            resultVO = loginService.selectUser(loginVO);
-    			            
-    			            // masteradmin 암호가 맞는 경우
-    			            if (resultVO != null && resultVO.getId() != null && !resultVO.getId().equals("")) {
-    			            	logger.debug("masteradmin password correct.");
-    			            	masteradminLogin = true;
-								isRightOTP = true; // OTP 체크 없이 로그인 가능하도록 함
-    			            }
-    					}
-    					
-    					if (!masteradminLogin) {
-							// 2023-03-22 이사라 : [TFA] 사용자 ID or 사원번호가 발견되었으나 첫번째 로그인 혹은 초기화된 사용자가 아닌데 OTP를 입력하지 않은 경우
-							if (useOTP && "".equals(loginOtp) && (resultVO.getLoginCnt() > 0 || hasOTP)) {
-								logger.debug("It isn't the first login and otpKey hasn't been reset either, but otp is not submitted.");
-								model.addAttribute("message", "emptyOtp");
+			return "cmm/error/accessBlock";
+		}
 
-								return "forward:/user/login/login.do";
-							}
+		// 사원번호를 사용한 로그인을 허용하지 않는 경우
+		if (!_uid.equals(resultVO.getId()) && !"YES".equalsIgnoreCase(ezCommonService.getTenantConfig("UseEmpNumberLogin", tenantId))) {
+			//This kind of login is not allowed in his/her tenant
+			model.addAttribute("message", egovMessageSource.getMessage("fail.common.login", locale));
+			return "forward:/user/login/login.do";
+		}
 
-    						// 실제 사용자 ID를 사용해 암호가 맞는 지 확인한다.
-    						// _uid = orgId;
-    						_pwd = EgovFileScrty.encryptPassword(rpwd, _uid);
-    			        	loginVO.setId(_uid);
-    			        	loginVO.setPassword(_pwd);
-    			            loginVO.setDn("PASSWORD");
-    			            
-    			            resultVO = loginService.selectUser(loginVO);
-    					}
-    					
-    		         // 사원번호를 사용한 로그인을 허용하지 않는 경우
-    				} else {
-    					//This kind of login is not allowed in his/her tenant
-    			        model.addAttribute("message", egovMessageSource.getMessage("fail.common.login", locale));
-    			        return "forward:/user/login/login.do";
-    				}
-    			}
-        	} else {
-        		actionLogout(request, response, model);
-        		
-        		// 2021-12-29 이사라 : ip 주소 check 실패인 경우 접속실패 로그 저장
-				resultVO.setStatus("N");
+		useFido = fidoNotAccessIpCheck(resultVO);
+		if (!useFido && "usefidoforce".equalsIgnoreCase(loginVO.getPassword())) { // fido test를 위한 코드 - useFido가 이미 true라면 if문을 굳이 실행할 이유가 없기때문에 !useFido로 한정 함
+			useFido = true;
+		}
+		logger.debug("useFido : {}", useFido);
 
-				if (resultVO.getTitle2() == null) {
-					resultVO.setTitle2("");
-				}
-				
-				loginService.insertLog(resultVO);
-        		
-        		return "cmm/error/accessBlock";
-        	}
+		// useMasteradminLogin이 YES일 경우 masteradmin의 암호로 로그인 가능하도록 한다.
+		if ("YES".equalsIgnoreCase(useMasteradminLogin)) {
+			_pwd = EgovFileScrty.encryptPassword(rpwd, "masteradmin");
+			loginVO.setId("masteradmin");
+			loginVO.setPassword(_pwd);
+			loginVO.setDn("PASSWORD");
+
+			resultVO = loginService.selectUser(loginVO);
+
+			// masteradmin 암호가 맞는 경우
+			if (resultVO != null && resultVO.getId() != null && !resultVO.getId().equals("")) {
+				logger.debug("masteradmin password correct.");
+				masteradminLogin = true;
+				isRightOTP = true; // OTP 체크 없이 로그인 가능하도록 함
+			}
+		}
+
+		// 사용자의 암호가 맞는 지 확인한다.
+		if (!masteradminLogin) {
+			// 2023-03-22 이사라 : [TFA] 사용자 ID or 사원번호가 발견되었으나 첫번째 로그인 혹은 초기화된 사용자가 아닌데 OTP를 입력하지 않은 경우
+			if (useOTP && "".equals(loginOtp) && (resultVO.getLoginCnt() > 0 || hasOTP)) {
+				logger.debug("It isn't the first login and otpKey hasn't been reset either, but otp is not submitted.");
+				model.addAttribute("message", "emptyOtp");
+
+				return "forward:/user/login/login.do";
+			}
+
+			loginVO.setId(_uid);
+			loginVO.setDn("PASSWORD");
+			_pwd = EgovFileScrty.encryptPassword(rpwd, _uid);
+			loginVO.setPassword(_pwd);
 			
+			if (!"MASTERADMIN".equalsIgnoreCase(_uid)) { // 기존 코드> '사원번호 로그인' 시에는 해당 조건문이 없었음. 단순 누락인건지?
+				// AD를 사용하는 경우 AD의 암호화 비교한 값을 구한다.
+				if ("YES".equalsIgnoreCase(ezCommonService.getTenantConfig("USE_AD", tenantId))) {
+					// true 이면 그룹웨어 암호 변경
+					// false 이면 그냥 로그인 금지
+					chkADpass = loginService.chkADAndUpdatePassword(_uid, rpwd, tenantId);
+					
+					if ("false".equalsIgnoreCase(chkADpass)) {
+						// vo의 password에 null 값을 넣어서 selectUser에서 무조건 암호가 틀리게 한다.
+						loginVO.setPassword(null);
+					}
+				}
+			}
+
+			resultVO = loginService.selectUser(loginVO);
 		}
 		
 		int numberOfLoginFailPermit = 0;
@@ -631,15 +570,6 @@ public class LoginController {
 				
 				loginService.insertLog(resultVO);
         		
-				/*//로그인 쿠기 생성
-				createLoginCookie(_uid, rpwd, _pwd, tenantId, request, response, deptId, companyId);*/
-				
-				/* 더 이상 사용되지 않는 코드로 보여 보안 취약점 조치를 위해 제거함
-	        	Cookie cookieName = new Cookie("userName", URLEncoder.encode(displayName1, "utf-8"));
-	        	cookieName.setPath("/");
-	        	response.addCookie(cookieName);
-				*/
-	        	
 	        	return "redirect:/ezNewPortal/newPortalMain.do";
         		
         	} else {
@@ -861,22 +791,17 @@ public class LoginController {
     					}
     					
     					loginService.insertLog(resultVO);
-    	
-    					//createLoginCookie(_uid, rpwd, _pwd, tenantId, request, response, deptId, companyId);
-    		        	
-						/* 더 이상 사용되지 않는 코드로 보여 보안 취약점 조치를 위해 제거함
-    		        	Cookie cookieName = new Cookie("userName", URLEncoder.encode(resultVO.getDisplayName1(), "utf-8"));
-    		        	cookieName.setPath("/");
-    		        	response.addCookie(cookieName);
-						*/
     		        	
     		        	//세션 생성 - 일시적으로 주석처리 필요할때 사용
     		        	//session = request.getSession();
 
 						boolean useDbSession = "YES".equalsIgnoreCase(config.getProperty("config.UseDbSession"));
+
+						// 2018.10.22 이석화 추가 - useSession row 유무 확인
+						String useSession = ezCommonService.getTenantConfig("useSession", tenantId);
     		        	
     		        	// 2018-10-22 이석화 - 세션이 0이면 세션 사용안함
-						if (!useSession.equals("") && !useDbSession) { // DB 세션을 사용하면 세션 유지 시간 설정이 불필요 함
+						if (StringUtils.isNotBlank(useSession) && !useDbSession) { // DB 세션을 사용하면 세션 유지 시간 설정이 불필요 함
     		        		int sessionTime = Integer.parseInt(useSession);
     		        		
 	    		        	if (sessionTime != 0) {
