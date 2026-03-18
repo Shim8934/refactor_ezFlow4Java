@@ -11413,6 +11413,8 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 				map.put("v_ATTACHUSERDEPTNAME2", userInfo.getDeptName2());
 				map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
 				ezApprovalGDAO.insertReuseAttachHistory(map);
+                map.put("v_ORGDOCID", beforeDocID);
+                ezApprovalGDAO.insertTbAprDocAttachInfo(map);
 			}
 		}
 		
