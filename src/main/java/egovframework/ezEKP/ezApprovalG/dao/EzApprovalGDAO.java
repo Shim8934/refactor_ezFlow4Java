@@ -4135,4 +4135,12 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
     public ApprGAprDocInfoVO getOrgDocWriterInfo(Map<String, Object> map) throws Exception {
         return (ApprGAprDocInfoVO) select("EzApprovalG.getOrgDocWriterInfo", map);
     }
+
+    public ApprGDocListVO getApprovalDocInfo(Map<String, Object> map) throws Exception {
+        return (ApprGDocListVO) select("EzApprovalG.getApprovalDocInfo", map);
+    }
+
+    public ApprGDocListVO getViewDocInfo(Map<String, Object> map) {
+        return (ApprGDocListVO) select("EzApprovalG.getViewDocInfo", map);
+    }
 }

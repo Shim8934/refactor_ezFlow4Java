@@ -72,26 +72,21 @@ function setAttachInfo(tempDocID, INGFlag, attachTag, draftAllTypeB) {
     var parentHasAttachAry = new Array(); // 부모창의 일반첨부여부 배열
     var parentHasDocAttachAry = new Array(); // 부모창의 문서첨부여부 배열
     var currIdx = 0; // 현재 선택된 안의 인덱스 (1안부터 시작, 최대 10)
-    
-    // 일괄기안 부모페이지에서 접근
-    var tempHref = document.location.href;
-    if (tempHref.indexOf("ezApprovalG/draftuiAll_WHWP.do") > -1 || tempHref.indexOf("ezApprovalG/approvuiAll_WHWP.do") > -1 || draftAllTypeB == "Y") {
-    	isDraftAllPage = "Y";
-    	attachTag = document.getElementById(attachTag.id);
-    	docAttachTag = document.getElementById(attachTag.id + "Doc");
-    	parentHasAttachAry = pHasAttachYNAry;
-    	parentHasDocAttachAry = pHasDocAttachYNAry;
-    	currIdx = currentTabIdx;
+    var doc = document;
+    // 일괄기안에서 접근
+    if(typeof draftAllFlag != "undefined" && draftAllFlag == "Y" || draftAllTypeB == "Y"){
+        isDraftAllPage = "Y";
+    }else if(typeof parent.draftAllFlag != "undefined" && parent.draftAllFlag == "Y"){
+        isDraftAllPage = "Y";
+        doc = parent.document;
     }
-    // 일괄기안 자식페이지에서 접근
-    else if (tempHref.indexOf("ezApprovalG/draftContentAll_WHWP.do") > -1 || tempHref.indexOf("ezApprovalG/approvContentAll_WHWP.do") > -1
-                || parent.location.href.indexOf("ezApprovalG/draftuiAll_WHWP.do") > -1 || parent.location.href.indexOf("ezApprovalG/approvuiAll_WHWP.do") > -1) {
-    	isDraftAllPage = "Y";
-    	attachTag = parent.document.getElementById(attachTag.id);
-    	docAttachTag = parent.document.getElementById(attachTag.id + "Doc");
-    	parentHasAttachAry = parent.pHasAttachYNAry;
-    	parentHasDocAttachAry = parent.pHasDocAttachYNAry;
-    	currIdx = frameNum;
+        
+    if(isDraftAllPage == "Y"){
+        attachTag = doc.getElementById(attachTag.id);
+        docAttachTag = doc.getElementById(attachTag.id + "Doc");
+        parentHasAttachAry = doc.pHasAttachYNAry;
+        parentHasDocAttachAry = doc.pHasDocAttachYNAry;
+        currIdx = typeof currentTabIdx != "undefined" ? currentTabIdx : frameNum;
     }
     // 기본 접근
     else {
@@ -239,43 +234,16 @@ function setAttachInfo(tempDocID, INGFlag, attachTag, draftAllTypeB) {
                 	strDocAttach = strDocAttach + "<a style='cursor:pointer' onclick=\"OpenAttachAlertUI('" + strLang260 + "')\">";
                 	strDocAttach = strDocAttach + "<IMG SRC='/images/attach-small.gif' border='0'>";
                     strDocAttach = strDocAttach + FileName + "</a> &nbsp; ";
-                } else if (FileExt == "hwp") {
-                	//2018-09-12 천성준 - mht결재문서에 hwp문서를 문서첨부 하고 IE가 아닌 chrome으로 mht결재문서를 문서보기 하면 알럿이 뜨면서 첨부파일 정보가 공백이 되어서 IE검사 주석처리함. 대신 문서보기 하단 문서첨부를 클릭해서 열때 hwp이면 IE검사를 하게 로직 추가함
-                	/*if (isIE()) {
-                		openLocation = "/ezApprovalG/ezViewEnd_HWP.do?docID=" + escapenew(FileDocID) +
-                		"&docHref=" + escapenew(FilePath) + "&formID=&orgDocid=";
-                		strAttach = strAttach + "<a style='cursor:pointer' onclick=\"openAttachView('" + openLocation + "', '', 973, 570)\">";
-                		strAttach = strAttach + "<IMG SRC='/images/attach-small.gif' border='0'>";
-                		strAttach = strAttach + getNodeText(GetChildNodes(xmlRtn[i])[1]) + "</a> &nbsp; ";
-                    } else {
-                    	var pAlertContent = "한글양식은 IE에서만 볼 수 있습니다.";
-                    	showAlert(pAlertContent);
-                        
-                        return;
-                    }*/ 
-                	if (useWebHWP == "NO") {
-	                	if (isIE()) {
-		                	openLocation = "/ezApprovalG/ezViewEnd_HWP.do?docID=" + escapenew(FileDocID) + "&docHref=" + escapenew(FilePath) + "&formID=&orgDocid=";
-	                	} else {
-	                    	var pAlertContent = "한글양식은 IE에서만 볼 수 있습니다.";
-	                    	showAlert(pAlertContent);
-	                        
-	                        return;
-	                    }
-                	} else {
-                		openLocation = "/ezApprovalG/ezViewEnd_WHWP.do?docID=" + escapenew(FileDocID) + "&docHref=" + escapenew(FilePath) + "&formID=&orgDocid=&docAttachParent=" + escapenew(tempDocID);
-                	}
-                	strDocAttach = strDocAttach + "<a style='cursor:pointer' onclick=\"openAttachView('" + openLocation + "', '', 973, 570)\">";
-                	strDocAttach = strDocAttach + "<IMG SRC='/images/attach-small.gif' border='0'>";
-                	strDocAttach = strDocAttach + FileName + "</a> &nbsp; ";
-                	
+                } else if (FileExt == "hwp" && useWebHWP == "NO" && !isIE()) {
+                    var pAlertContent = "한글양식은 IE에서만 볼 수 있습니다.";
+                    showAlert(pAlertContent);
+                    return;
                 } else {
-                    openLocation = "/ezApprovalG/contDocView.do";
-                    openLocation = openLocation + "?docID=" + escapenew(FileDocID) + "&docHref=" + escapenew(FilePath) + "&formID=&orgDocID=&docAttachParent=" + escapenew(tempDocID);
-                    strDocAttach = strDocAttach + "<a style='cursor:pointer' onclick=\"openAttachView('" + openLocation + "', '', 973, 570)\">";
-                    strDocAttach = strDocAttach + "<IMG SRC='/images/attach-small.gif' border='0'>";
-                    strDocAttach = strDocAttach + FileName + "</a> &nbsp; ";
+                    openLocation = "/ezApprovalG/view.do?docID=" + escapenew(FileDocID) + "&docAttachParent=" + escapenew(tempDocID);
                 }
+                strDocAttach = strDocAttach + "<a style='cursor:pointer' onclick=\"openAttachView('" + openLocation + "', '', 973, 570)\">";
+                strDocAttach = strDocAttach + "<IMG SRC='/images/attach-small.gif' border='0'>";
+                strDocAttach = strDocAttach + FileName + "</a> &nbsp; ";
                 
                 /* 2020-11-17 홍승비 - 일반첨부와 문서첨부 영역의 분리 */
                 docAttachTag.innerHTML = strDocAttach + "<iframe frameborder=\"0\" id=\"ifrmDownload\" name=\"ifrmDownload\" src=\"about:blank\" width=\"0\" height=\"0\"></iframe>";

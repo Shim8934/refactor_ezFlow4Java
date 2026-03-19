@@ -2027,6 +2027,14 @@
                 	 document.getElementById("apprAttachGuideTR").style.display = "none";
                  }
 	    	}
+
+		    function addInput(form, name, value){
+		        var hidden = document.createElement("input");
+                hidden.type = "hidden";
+                hidden.name = name;
+                hidden.value = value;
+                form.appendChild(hidden);
+		    }
 			
 	    	function connInit() {
 				var keywordXml = loadXMLString(GetDocumentElement("CONNROOT", true));
@@ -2035,20 +2043,14 @@
 				if (connNodes.length>0) {
 					if (g_DraftFlag === "REDRAFT") {
 						OpenAlertUI("연동문서는 다시 접수할 수 없습니다.<br/>문서보기 창으로 이동합니다.", function() {
-							var url = "/ezApprovalG/ezviewAprWHWP.do" +
-								"?docID=" + pDocID +
-								"&docHref=" + pFormHref +
-								"&opinionFlag=Y" +
-								"&docState=" + pDocState +
-								"&listSusin=" + arr_userinfo[1] +
-								"&oDoc=" + pOrgDocID +
-								"&isOpinion=OPINION_SHOW" +
-								"&listType=1" +
-								"&CallBackType=" +
-								"&ext=mht" +
-								"&orgCompanyID=" + orgCompanyID;
-
-							window.open(url, "_self");
+                             const form = document.createElement("form");
+                             form.method = "post";
+                             form.action = "/ezApprovalG/view.do";
+                             addInput(form, "docID", pDocID);
+                             addInput(form, "listSusin", arr_userinfo[1]);
+                             addInput(form, "isOpinion", "OPINION_SHOW");
+                             addInput(form, "listType", "1");
+                             form.submit();
 						});
 						return;
 					}

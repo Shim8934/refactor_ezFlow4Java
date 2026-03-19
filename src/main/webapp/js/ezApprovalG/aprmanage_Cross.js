@@ -964,68 +964,15 @@ function openApprovUI(allFlag) {
     var openLocation;
     if (tr.length > 0) {
         var pArgument = new Array();
-        pArgument[0] = GetAttribute(tr[0], "DATA1");      
-        pArgument[1] = GetAttribute(tr[0], "DATA4");		
-        pArgument[2] = GetAttribute(tr[0], "DATA5");		
-        pArgument[3] = GetAttribute(tr[0], "DATA7");
-        pArgument[4] = GetAttribute(tr[0], "APRMEMBERSN")
-        var orgCompanyID = GetAttribute(tr[0], "orgCompanyID");
-
-        if (GetAttribute(tr[0], "DATA12") == "017") {
-        	   $.ajax({
-        			type : "POST",
-        			dataType : "text",
-        			async : false,
-        			url : "/ezApprovalG/getLineMode.do",
-        			data : {
-        					docID : pArgument[0],
-        					orgCompanyID : orgCompanyID
-        					},
-        			success: function(xml){
-        				mode = xml;
-        			}        			
-        	  });
+        pArgument[0] = GetAttribute(tr[0], "DATA1");
+        var formURL = GetAttribute(tr[0], "DATA3");      
+        if(formURL.substr(formURL.length - 3, formURL.length).toLowerCase() == "hwp" && useWebHWP == "NO" && !isIE()){
+            var pAlertContent = "한글양식은 IE에서만 볼 수 있습니다.";
+            showAlert(pAlertContent);
+            return;
         }
+        openLocation = "/ezApprovalG/approve.do?docID=" + encodeURI(pArgument[0]) + "&allFlag=" + encodeURI(allFlag);
         
-        var formURL = GetAttribute(tr[0], "DATA3");
-        if (formURL.substr(formURL.length - 3, formURL.length).toLowerCase() == "doc") {
-            openLocation = "/myoffice/ezApprovalG/ezViewWord/ezAproveUI_word_Cross.aspx?docID=" + encodeURI(pArgument[0]);
-            openLocation = openLocation + "&id=" + encodeURI(pArgument[1]) + "&name=" + encodeURI(pArgument[2]);
-            openLocation = openLocation + "&deptID=" + encodeURI(pArgument[3]) + "&allFlag=" + encodeURI(allFlag);
-        } else if (formURL.substr(formURL.length - 3, formURL.length).toLowerCase() == "hwp") {
-	        if (useWebHWP == "NO") {
-        		if (isIE()) {
-	        		var openLocation = "/ezApprovalG/approvuiHWP.do?docID=" + encodeURI(pArgument[0]);
-	        		openLocation += "&id=" + encodeURI(pArgument[1]) + "&name=" + encodeURI(pArgument[2]);
-	        		openLocation += "&deptID=" + encodeURI(pArgument[3]) + "&allFlag=" + encodeURI(allFlag) + "&docState=" + encodeURI(GetAttribute(tr[0], "DATA12")) + "&mode=" + encodeURI(mode) + "&orgCompanyID=" + orgCompanyID + "&orgDocID=" + encodeURI(GetAttribute(tr[0], "DATA2"));
-	        	} else {
-	        		var pAlertContent = "한글양식은 IE에서만 볼 수 있습니다.";
-	        		showAlert(pAlertContent);
-	                
-	                return;
-	        	}
-        	} else {
-        		var isGroupDoc = checkIsGroupDoc(encodeURI(pArgument[0]), orgCompanyID);
-        		var openLocation = "";
-        		
-        		if (isGroupDoc == "Y" && (typeof draftAllTypeB == "undefined" || draftAllTypeB != "Y")) { // 일괄기안 문서를 여는 경우
-        			openLocation = "/ezApprovalG/approvuiAll_WHWP.do?docID=" + encodeURI(pArgument[0]);
-        		} else {
-            		openLocation = "/ezApprovalG/approvuiWHWP.do?docID=" + encodeURI(pArgument[0]);
-        		}
-        		openLocation += "&id=" + encodeURI(pArgument[1]) + "&name=" + encodeURI(pArgument[2]);
-        		openLocation += "&deptID=" + encodeURI(pArgument[3]) + "&allFlag=" + encodeURI(allFlag) + "&docState=" + encodeURI(GetAttribute(tr[0], "DATA12")) + "&mode=" + encodeURI(mode) + "&orgCompanyID=" + orgCompanyID + "&orgDocID=" + encodeURI(GetAttribute(tr[0], "DATA2"));
-        	}
-        } else {
-            var isGroupDoc = checkIsGroupDoc(encodeURI(pArgument[0]), orgCompanyID);
-            if (isGroupDoc == "Y" && (typeof draftAllTypeB == "undefined" || draftAllTypeB != "Y")) // 일괄기안 문서를 여는 경우
-                openLocation = "/ezApprovalG/approvuiAll_WHWP.do?docID=";
-            else
-                openLocation = "/ezApprovalG/approvui.do?docID=";
-            openLocation = openLocation + encodeURI(pArgument[0]);
-            openLocation = openLocation + "&id=" + encodeURI(pArgument[1]) + "&name=" + encodeURI(pArgument[2]);
-            openLocation = openLocation + "&deptID=" + encodeURI(pArgument[3]) + "&allFlag=" + encodeURI(allFlag) + "&docState=" + encodeURI(GetAttribute(tr[0], "DATA12")) + "&mode=" + encodeURI(mode) + "&orgCompanyID=" + orgCompanyID + "&orgDocID=" + encodeURI(GetAttribute(tr[0], "DATA2")) + "&aprMemberSN=" + pArgument[4];
-        }
         openwindow(openLocation, "ApprovUI", 880, 550);
     }
     else {
@@ -1178,67 +1125,15 @@ function openViewDocInfo(type) {
     // 20191210 ezd 확장자 빼기
     var formUrlExt = getOriginalFileExtension(formURL);
 
-    if (pListTypeValue == "7" || pListTypeValue == "8" || pListTypeValue == "9") {
-        if (formUrlExt === "hwp") {
-        	if(useWebHWP == "NO") {
-	            if (CrossYN() && isIE()) {
-	            	openLocation = "/ezApprovalG/ezViewEnd_HWP.do";
-	            } else {
-	            	var pAlertContent = "한글양식은 IE에서만 볼 수 있습니다.";
-	            	showAlert(pAlertContent);
-	                
-	                return;
-	            }
-        	} else {
-        		openLocation = "/ezApprovalG/ezViewEnd_WHWP.do";
-        	}
-        }
-        else {
-            openLocation = "/ezApprovalG/contDocView.do";
-        }
-        openLocation = openLocation + "?docID=" + encodeURI(DocID) + "&docHref=" + encodeURI(formURL) + "&formID=" + encodeURI(formID) + "&orgDocID=&sendType=" + GetAttribute(tr, "DATA5");
+    if (formUrlExt === "hwp" && useWebHWP == "NO" && !(CrossYN() && isIE())) {
+        var pAlertContent = "한글양식은 IE에서만 볼 수 있습니다.";
+        showAlert(pAlertContent);
+        return;
     }
-    else {
-    	// 2018.07.06 (KLIB) - ezd 확장자 처리
-        if (formUrlExt === "hwp") {
-        	if (useWebHWP == "NO") {
-	            if (CrossYN() && isIE()) {
-	            	openLocation = "/ezApprovalG/ezviewAprHWP.do";
-	            } else {
-	            	var pAlertContent = "한글양식은 IE에서만 볼 수 있습니다.";
-	            	showAlert(pAlertContent);
-	                
-	                return;
-	            }
-        	} else {
-        		var isGroupDoc = checkIsGroupDoc(encodeURI(DocID), orgCompanyID);
-        		
-        		if (isGroupDoc == "Y" && (typeof draftAllTypeB == "undefined" || draftAllTypeB != "Y")) { // 일괄기안 문서를 여는 경우 (결재진행문서, 기안한문서 메뉴에서 접근 시 지원)
-        			openLocation = "/ezApprovalG/ezviewAprAll_WHWP.do";
-        		} else {
-        			openLocation = "/ezApprovalG/ezviewAprWHWP.do";
-        		}
-        	}
-        }
-        else {
-            var isGroupDoc = checkIsGroupDoc(encodeURI(DocID), orgCompanyID);
-
-            if (isGroupDoc == "Y") { // 일괄기안 문서를 여는 경우 (결재진행문서, 기안한문서 메뉴에서 접근 시 지원)
-                openLocation = "/ezApprovalG/ezviewAprAll_WHWP.do";
-            } else {
-        	    openLocation = "/ezApprovalG/aprDocView.do";
-        	}
-        }
-        openLocation = openLocation + "?docID=" + encodeURI(pArgument[0]) + "&docHref=" + encodeURI(pArgument[1]);
-        openLocation = openLocation + "&opinionFlag=" + encodeURI(pArgument[2]) + "&docState=" + encodeURI(pArgument[3]) + "&listSusin=" + encodeURI(pArgument[4]) + "&oDoc=" + encodeURI(pArgument[5]);
-        openLocation = openLocation + "&isOpinion=" + encodeURI(pArgument[6]);
-        openLocation = openLocation + "&listType=" + encodeURI(pArgument[7]);
-        openLocation = openLocation + "&CallBackType=" + escape(trim_Cross(type));
-        openLocation = openLocation + "&ext=" + escape(trim_Cross(ext));
-        openLocation = openLocation + "&orgCompanyID=" + orgCompanyID;
-        if (shareUser = "shareUser") {
-        	openLocation += "&pageType=admin";
-        }
+    openLocation = "/ezApprovalG/view.do?docID=" + encodeURI(pArgument[0]) + "&listSusin=" + encodeURI(pArgument[4]) + "&isOpinion=" + encodeURI(pArgument[6])
+                    + "&listType=" + encodeURI(pArgument[7]) + "&CallBackType=" + escape(trim_Cross(type));
+    if (shareUser = "shareUser") {
+        openLocation += "&pageType=admin";
     }
     openwindow(openLocation, "", 880, 570);
 }

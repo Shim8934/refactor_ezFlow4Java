@@ -713,10 +713,8 @@ public class MApprovalGServiceImpl extends EgovAbstractServiceImpl implements MA
 						if (!"007".equalsIgnoreCase(vo.getAprType())) { // 참조가 아닌 경우에만 결재링크 생성 (웹과 동일)
 							contentBuilder.append("<span style='font-size:13px; font-weight:bold;'>" + approvalGDocInfoVO.getWriterName() + "</span>");
 							contentBuilder.append("<span style='font-size:13px;'>" + egovMessageSource.getMessage("ezEmail.csj14", locale) + "</span>");
-							contentBuilder.append("<a id='approv_a' href ='" + https + serverName + "/ezApprovalG/approvui.do?");
+							contentBuilder.append("<a id='approv_a' href ='" + https + serverName + "/ezApprovalG/approve.do?");
 							contentBuilder.append("docID=" + approvalGDocInfoVO.getDocID());
-							contentBuilder.append("&id=" + targetUserId + "&name=" + targetUserName + "&deptID=" + ezOrganService.getPropertyValue(targetUserId, "department", tenantId));
-							contentBuilder.append("&allFlag=0&mailchk=Y&mode=APR&orgCompanyID=" + ezOrganService.getPropertyValue(targetUserId, "physicaldeliveryofficename", tenantId));
 							contentBuilder.append("' data-id='" + approvalGDocInfoVO.getDocID() + "'"+ "data-comp='" + ezOrganService.getPropertyValue(targetUserId, "physicaldeliveryofficename", tenantId));
 							contentBuilder.append("' onclick ='javascript:mail_link();' style='cursor: pointer; font-size: 13px; color: blue;' target='_blank'><br>");
 							contentBuilder.append(egovMessageSource.getMessage("ezEmail.csj15", locale)); //결재 문서 바로가기 링크

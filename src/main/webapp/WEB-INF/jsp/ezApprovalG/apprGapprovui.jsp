@@ -31,6 +31,14 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/apprGSummary.js')}"></script>
 		
 		<script ID="clientEventHandlersJS" type="text/javascript">                                                                                        
+            if(location.pathname.endsWith("approve.do")){
+                history.replaceState(null, null, location.pathname);
+                sessionStorage.setItem("docID", "<c:out value ='${docID}'/>");
+                sessionStorage.setItem("share", "<c:out value ='${share}'/>");
+                sessionStorage.setItem("isPreview", "<c:out value ='${isPreview}'/>");
+                sessionStorage.setItem("allFlag", "<c:out value ='${allFlag}'/>");
+            }
+
 		    var OrgAprUserID		= "<c:out value ='${uID}'/>";
 		    var OrgAprUserName		= "<c:out value ='${name}'/>";
 		    var OrgAprUserName2		= '';

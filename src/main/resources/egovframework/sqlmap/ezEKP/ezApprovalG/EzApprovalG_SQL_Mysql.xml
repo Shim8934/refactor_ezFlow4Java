@@ -38308,4 +38308,76 @@
         AND
         COMPANYID = #companyId#
     </select>
+
+    <select id="EzApprovalG.getApprovalDocInfo" parameterClass="Map" resultClass="ApprGDocListVO">
+        SELECT * FROM (
+        SELECT *
+        FROM VAPRDOINGDOCLIST
+        WHERE DOCID = #v_DOCID#
+        AND TENANT_ID = #v_TENANTID#
+        AND COMPANYID = #companyID#
+        AND APRMEMBERID
+        <isEmpty property="isShare">
+            = #v_USERID#
+        </isEmpty>
+        <isNotEmpty property="isShare">
+            IN (SELECT OWNERID FROM TBL_PS_SHAREAPPROVAL WHERE TENANTID = #v_TENANTID# AND SHAREUSERID = #v_USERID#)
+        </isNotEmpty>
+        UNION
+        SELECT *
+        FROM VENDCHAMJODOCINFO
+        WHERE DOCID = #v_DOCID#
+        AND TENANT_ID = #v_TENANTID#
+        AND COMPANYID = #companyID#
+        AND APRTYPE != '015'
+        AND
+        FUNCTIONTYPE != '004'
+        AND APRMEMBERID
+        <isEmpty property="isShare">
+            = #v_USERID#
+        </isEmpty>
+        <isNotEmpty property="isShare">
+            IN (SELECT OWNERID FROM TBL_PS_SHAREAPPROVAL WHERE TENANTID = #v_TENANTID# AND SHAREUSERID = #v_USERID#)
+        </isNotEmpty>
+        <isNotEmpty property="proxyList">
+            UNION
+            SELECT
+            *
+            FROM
+            VAPRDOINGDOCLIST
+            WHERE
+            APRMEMBERID
+            <iterate property="proxyList" prepend="IN" conjunction="," open="(" close=")">
+                #proxyList[].id#
+            </iterate>
+            AND APRMEMBERDEPTID
+            <iterate property="proxyList" prepend="IN" conjunction="," open="(" close=")">
+                #proxyList[].dept#
+            </iterate>
+            AND APRMEMBERJOBTITLE
+            <iterate property="proxyList" prepend="IN" conjunction="," open="(" close=")">
+                #proxyList[].title#
+            </iterate>
+        </isNotEmpty>
+        ORDER BY APRMEMBERSN
+    ) A
+    LIMIT 1
+    </select>
+
+    <select id="EzApprovalG.getViewDocInfo" parameterClass="Map" resultClass="ApprGDocListVO">
+        SELECT * FROM
+            VAPRWILLDOCLIST
+        WHERE
+            TENANT_ID = #v_TENANTID#
+        AND
+            COMPANYID = #companyID#
+        AND
+            DOCID = #v_DOCID#
+        AND
+            APRMEMBERID = #v_USERID#
+        <isEqual property="MineViewYN" compareValue="YES" prepend="AND">
+            AprState != '001'
+        </isEqual>
+        LIMIT 1
+    </select>
 </sqlMap>

@@ -526,35 +526,10 @@ public class EzApprovalGConnServiceImpl extends EzFileMngUtil implements EzAppro
 
         String path = "";
         MultiValueMap queryParam = new LinkedMultiValueMap();
-        if (docHref.endsWith(".mht")) {
-            path = "/ezApprovalG/aprDocView.do";
-            queryParam.set("docID", docId);
-            queryParam.set("docHref", docHref);
-            queryParam.set("opinionFlag", opinionFlag);
-            queryParam.set("docState", docState);
-            queryParam.set("listSusin", "");
-            queryParam.set("oDoc", "");
-            queryParam.set("isOpinion", "OPINION_SHOW");
-            queryParam.set("listType", "1");
-            queryParam.set("CallBackType", "");
-            queryParam.set("ext", docHref.substring(docHref.lastIndexOf(".") + 1));
-            queryParam.set("orgCompanyID", userInfo.getCompanyID());
-        } else if (docHref.endsWith(".hwp")) {
-            path = "/ezApprovalG/ezviewAprWHWP.do";
-            queryParam.set("docID", docId);
-            queryParam.set("docHref", docHref);
-            queryParam.set("opinionFlag", opinionFlag);
-            queryParam.set("docState", docState);
-            queryParam.set("listSusin", "");
-            queryParam.set("oDoc", "");
-            queryParam.set("isOpinion", "OPINION_SHOW");
-            queryParam.set("listType", "1");
-            queryParam.set("CallBackType", "");
-            queryParam.set("ext", docHref.substring(docHref.lastIndexOf(".") + 1));
-            queryParam.set("orgCompanyID", userInfo.getCompanyID());
-        } else {
-            throw new Exception();
-        }
+        path = "/ezApprovalG/view.do";
+        queryParam.set("docID", docId);
+        queryParam.set("isOpinion", "OPINION_SHOW");
+        queryParam.set("listType", "1");
 
         return makeUrl(path, queryParam);
     }
@@ -578,25 +553,8 @@ public class EzApprovalGConnServiceImpl extends EzFileMngUtil implements EzAppro
 
         String path = "";
         MultiValueMap queryParam = new LinkedMultiValueMap();
-        if (tempDocHref.endsWith(".mht")) {
-            path = "/ezApprovalG/contDocView.do";
-            queryParam.set("docID", docId);
-            queryParam.set("docHref", docHref);
-            queryParam.set("formID", formCode);
-            queryParam.set("orgDocID", orgDocId);
-            queryParam.set("docState", docState);
-            queryParam.set("orgCompanyID", userInfo.getCompanyID());
-        } else if (tempDocHref.endsWith(".hwp")) {
-            path = "/ezApprovalG/ezViewEnd_WHWP.do";
-            queryParam.set("docID", docId);
-            queryParam.set("docHref", docHref);
-            queryParam.set("formID", formCode);
-            queryParam.set("orgDocID", orgDocId);
-            queryParam.set("docState", docState);
-            queryParam.set("orgCompanyID", userInfo.getCompanyID());
-        } else {
-            throw new Exception();
-        }
+        path = "/ezApprovalG/view.do";
+        queryParam.set("docID", docId);
 
         return makeUrl(path, queryParam);
     }
