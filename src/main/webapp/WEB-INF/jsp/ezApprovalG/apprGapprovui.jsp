@@ -436,23 +436,7 @@
 		        pArgument[4] = NextDocUserName2;
 		        pArgument[3] = NextDocDeptID;
 		        var formURL = NextDocHref;
-		        if (NextDocExtended.toLowerCase() == "doc") {
-		            var openLocation = "/myoffice/ezApprovalG/ezViewWord/ezAproveUI_word_Cross.aspx?DocID="+escape(pArgument[0]);
-		            openLocation = openLocation + "&uID="+escape(pArgument[1])+"&uName="+escape(pArgument[2]) + "&uName2="+escape(pArgument[4]);
-		            openLocation = openLocation + "&uDeptID="+escape(pArgument[3]) + "&AllFlag=" + escape(allFlag);
-		        } else if (NextDocExtended.toLowerCase() == "hwp" && useWebHWP == "NO") {
-		            var openLocation = "/ezApprovalG/approvuiHWP.do?docID=" + escape(pArgument[0]);
-		            openLocation = openLocation + "&ID=" + escape(pArgument[1]) + "&name=" + escape(pArgument[2]) + "&name2=" + escape(pArgument[4]);
-		            openLocation = openLocation + "&deptID=" + escape(pArgument[3]) + "&allFlag=" + escape(allFlag);
-		        } else if (NextDocExtended.toLowerCase() == "hwp" && useWebHWP == "YES") {
-		            var openLocation = "/ezApprovalG/approvuiWHWP.do?docID=" + escape(pArgument[0]);
-		            openLocation = openLocation + "&id=" + escape(pArgument[1]) + "&name=" + escape(pArgument[2]) + "&name2=" + escape(pArgument[4]);
-		            openLocation = openLocation + "&deptID=" + escape(pArgument[3]) + "&allFlag=" + escape(allFlag);
-		        } else {
-		            var openLocation = "/myoffice/ezApprovalG/ApprovUI/approvui_CK.aspx?DocID="+escape(pArgument[0]);
-		            openLocation = openLocation + "&uID="+escape(pArgument[1])+"&uName="+escape(pArgument[2]) + "&uName2="+escape(pArgument[4]);
-		            openLocation = openLocation + "&uDeptID="+escape(pArgument[3]) + "&AllFlag=" + escape(allFlag);
-		        }
+                var openLocation = "/ezApprovalG/approve.do?docID=" + escape(pArgument[0]) + "&allFlag=" + escape(allFlag);
 		        try {
 		            if (window.opener != null) {
 						window.opener.openwindow(openLocation, "" , 880 , 550);
