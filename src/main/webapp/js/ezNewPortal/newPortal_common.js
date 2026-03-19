@@ -1772,24 +1772,24 @@ var openBoard = function (pItemID, pType, oBoardID, password) {
 		pTop = (pheight - 679) / 2;
 		pLeft = (pwidth - 764) / 2;
 		window.open("/ezBoard/boardItemViewMovie.do?showAdjacent=&itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(oBoardID), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=" + height + ",width=764,top=" + pTop + ",left=" + pLeft, "");
-	} else {
-		var parser = new DOMParser();
-		var normalHeight = 720;
-		var normalWidth = 765;
-		pTop = (pheight - normalHeight) / 2;
-		pLeft = (pwidth - normalWidth) / 2;
+	} else if (pType == "2") {
+	    var parser = new DOMParser();
+        var normalHeight = 720;
+        var normalWidth = 765;
+        pTop = (pheight - normalHeight) / 2;
+        pLeft = (pwidth - normalWidth) / 2;
 
-		$.ajax({
-			url: "/ezBoard/boardViewPasswordCheck.do?itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(oBoardID) + "&location=GENERAL",
-			headers: !!password ? {
-				'Authorization': 'Basic ' + btoa(password)
-			} : {},
-			success: function(response) {
-				if (!response) {
-					alert(strWrongPassword);
-					return;
-				}
-				$.ajax({
+        $.ajax({
+            url: "/ezBoard/boardViewPasswordCheck.do?itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(oBoardID) + "&location=GENERAL",
+            headers: !!password ? {
+                'Authorization': 'Basic ' + btoa(password)
+            } : {},
+            success: function(response) {
+                if (!response) {
+                    alert(strWrongPassword);
+                    return;
+                }
+                $.ajax({
                     url: "/ezBoard/boardViewAccessCheck.do?itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(oBoardID) + "&location=GENERAL",
                     headers: {
                         'Authorization': 'Basic ' + btoa(password)
@@ -1806,10 +1806,34 @@ var openBoard = function (pItemID, pType, oBoardID, password) {
                         console.error('Error:', error);
                     }
                 });
-			},
-			error: function(xhr, status, error) {
-				console.error('Error:', error);
-			}
-		});
+            },
+            error: function(xhr, status, error) {
+                console.error('Error:', error);
+            }
+        });
+	} else {
+        var parser = new DOMParser();
+        var normalHeight = 720;
+        var normalWidth = 765;
+        pTop = (pheight - normalHeight) / 2;
+        pLeft = (pwidth - normalWidth) / 2;
+
+        $.ajax({
+            url: "/ezBoard/boardViewAccessCheck.do?itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(oBoardID) + "&location=GENERAL",
+            headers: !!password ? {
+                'Authorization': 'Basic ' + btoa(password)
+            } : {},
+            success: function(response) {
+                if (!response) {
+                    alert(!!password ? strWrongPassword : strLang1132);
+                    return;
+                }
+                var openUrl = "/ezBoard/boardItemView.do?showAdjacent=&itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(oBoardID);
+                window.open(openUrl, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=" + normalHeight + ",width=" + normalWidth + ",top=" + pTop + ",left=" + pLeft);
+            },
+            error: function(xhr, status, error) {
+                console.error('Error:', error);
+            }
+        });
 	}
 }
