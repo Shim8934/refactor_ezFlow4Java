@@ -1209,7 +1209,9 @@
 				WHERE
 	         		T1.TENANT_ID = #v_TENANTID#
 				AND
-	         		BOARDID = #v_PBOARDID#)
+	         		BOARDID = #v_PBOARDID#
+                AND
+                    T1.TYPE = 'PERSON')
 	        		
 	      		UNION
 	      		 
@@ -1247,7 +1249,8 @@
 	       		WHERE
 	       			T1.TENANT_ID = #v_TENANTID#
 	       		AND
-	       			BOARDID = #v_PBOARDID#)
+	       			BOARDID = #v_PBOARDID#
+	       		AND T1.TYPE = 'DEPT')
 	       			
 	       		UNION
 	       		
@@ -1465,7 +1468,8 @@
 	       		WHERE
 	       			T1.TENANT_ID = #v_TENANTID#
 	       		AND  
-	       			BOARDID = #v_PBOARDID#)
+	       			BOARDID = #v_PBOARDID#
+	       		AND T1.TYPE = 'DEPT')
 	       			
 				UNION
 	       		
