@@ -659,60 +659,59 @@ public class LoginController {
             	if (check != -3) {
     	        	//비밀번호 변경 팝업 상태 값 초기화
     	        	int diff = 1;
-    	        	
-    	        	if (resultVO.getLoginCnt() == 0) {
-    	        		diff = 0;
-    	        		
-    	        		String pwPolicyExplain = commonUtil.getPwPolicyExplain(companyId, tenantId, locale);
-    	        		model.addAttribute("isFirstLogin", "Y");
-    	        		model.addAttribute("companyId", companyId);
-    	        		model.addAttribute("pwPolicyExplain", pwPolicyExplain);
-    	        	} else {
-    	        		String expirePassPeriod = ezCommonService.getCompanyConfig(tenantId, companyId, "ExpirePassPeriod");
-    	        		expirePassPeriod = expirePassPeriod.trim().equals("") ? "0" : expirePassPeriod;
-    	        		logger.debug("companyId=" + companyId + ", ExpirePassPeriod=" + expirePassPeriod);
-    		        	// String expirePassPeriod = ezCommonService.getTenantConfig("ExpirePassPeriod", tenantId);        	
-    		        	
-    		        	if (!expirePassPeriod.trim().equals("0")) {
-    		        		int realPeriod = Integer.parseInt("-" + expirePassPeriod.trim());
-    		        		
-    		        		Calendar cal = Calendar.getInstance();
-    		        		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-    		            	
-    		            	String baseStr = commonUtil.getTodayUTCTime("");        	
-    		            	Date baseDT = date.parse(baseStr);
-    		            	            	
-    		            	cal.setTime(baseDT);
-    		            	cal.add(Calendar.DATE, realPeriod);
-    		            	
-    		            	baseDT = cal.getTime();
-    		            	Date passwordUpdateDT = resultVO.getPassword_updatedt();
-    		            	
-    		            	if (passwordUpdateDT == null) {
-    		            		passwordUpdateDT = resultVO.getUpdateDT();
-    		            	}
-    		            	
-    		            	logger.debug("passwordUpdateDT=" + passwordUpdateDT);
-    		            	logger.debug("baseDT=" + baseDT);
-    		            	
-    		            	//오늘 기준 6개월전 날짜, 마지막 개인정보 수정일자 간 뺄셈
-    		    			diff = EgovDateUtil.getDaysDiff(baseDT, passwordUpdateDT);
-    		    			logger.debug("diff=" + diff);
-    		        	}	        	
-    	        	}        	        	
-    	        		        	
+
+					String changePassword = ezCommonService.getTenantConfig("changePassword", tenantId);
+
+					if (!"N".equalsIgnoreCase(resultVO.getManualFlag()) // 인사연동 사용자의 경우 비밀번호 첫로그인 및 만료 시 예외
+						&& !(changePassword != null && changePassword.equals("0"))) { // 패스워드 변경 이벤트 발생 여부
+
+						if (resultVO.getLoginCnt() == 0) {
+							diff = 0;
+
+							String pwPolicyExplain = commonUtil.getPwPolicyExplain(companyId, tenantId, locale);
+							model.addAttribute("isFirstLogin", "Y");
+							model.addAttribute("companyId", companyId);
+							model.addAttribute("pwPolicyExplain", pwPolicyExplain);
+						} else {
+							String expirePassPeriod = ezCommonService.getCompanyConfig(tenantId, companyId, "ExpirePassPeriod");
+							expirePassPeriod = expirePassPeriod.trim().equals("") ? "0" : expirePassPeriod;
+							logger.debug("companyId=" + companyId + ", ExpirePassPeriod=" + expirePassPeriod);
+							// String expirePassPeriod = ezCommonService.getTenantConfig("ExpirePassPeriod", tenantId);
+
+							if (!expirePassPeriod.trim().equals("0")) {
+								int realPeriod = Integer.parseInt("-" + expirePassPeriod.trim());
+
+								Calendar cal = Calendar.getInstance();
+								SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+								String baseStr = commonUtil.getTodayUTCTime("");
+								Date baseDT = date.parse(baseStr);
+
+								cal.setTime(baseDT);
+								cal.add(Calendar.DATE, realPeriod);
+
+								baseDT = cal.getTime();
+								Date passwordUpdateDT = resultVO.getPassword_updatedt();
+
+								if (passwordUpdateDT == null) {
+									passwordUpdateDT = resultVO.getUpdateDT();
+								}
+
+								logger.debug("passwordUpdateDT=" + passwordUpdateDT);
+								logger.debug("baseDT=" + baseDT);
+
+								//오늘 기준 6개월전 날짜, 마지막 개인정보 수정일자 간 뺄셈
+								diff = EgovDateUtil.getDaysDiff(baseDT, passwordUpdateDT);
+								logger.debug("diff=" + diff);
+							}
+						}
+					}
+
     	        	// 로그인 실패 횟수를 제한하는 경우 
     	        	if (check != -1) {
     		        	// 성공적으로 로그인한 경우 지금까지의 로그인 실패 카운터를 초기화한다.
     		        	//Reset number of login fail attempts
     		        	commonUtil.resetLoginFailAttempts(_uid, tenantId);
-    	        	}
-    	        	
-    	        	//패스워드 변경 이벤트 발생 여부
-    	        	String changePassword = ezCommonService.getTenantConfig("changePassword", tenantId);
-    	        	
-    	        	if (changePassword != null && changePassword.equals("0")) {
-    	        		diff = 1;
     	        	}
     	        	
     	        	// 사용자정지 여부를 체크

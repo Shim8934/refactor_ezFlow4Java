@@ -43,6 +43,7 @@
 		<result property="jobId"				column="jobId"						columnIndex="28"/>
 		<result property="roleId"				column="roleId"						columnIndex="29"/>
 		<result property="upnname"				column="upnname"					columnIndex="30"/>
+		<result property="manualFlag"			column="manualFlag"					columnIndex="31"/>
     </resultMap>    
     
     <resultMap id="session" class="egovframework.let.user.login.vo.SessionVO">
@@ -260,7 +261,8 @@
  	                extensionattribute5,
  	                EXTENSIONATTRIBUTE7  as jobId,
  	            	EXTENSIONATTRIBUTE8  as roleId,
- 	            	upnname
+ 	            	upnname,
+ 	            	MANUAL_FLAG AS MANUALFLAG
  	            FROM
  	                TBL_USERMASTER a 
  	            WHERE  
@@ -312,7 +314,8 @@
 					u.extensionattribute5,
 					b.jobid as jobId,
 					b.roleId as roleId,
-					u.upnname
+					u.upnname,
+					b.MANUAL_FLAG AS MANUALFLAG
 				FROM
 					TBL_ADDJOBMASTER b
 				JOIN
@@ -365,7 +368,8 @@
 				extensionattribute5,
 				EXTENSIONATTRIBUTE7  as jobId,
 				EXTENSIONATTRIBUTE8  as roleId,
-				upnname
+				upnname,
+				MANUAL_FLAG AS MANUALFLAG
 			FROM
 				TBL_USERMASTER a
 			WHERE
@@ -417,7 +421,8 @@
 					u.extensionattribute5,
 					b.jobid as jobId,
 					b.roleId  as roleId,
-					u.upnname
+					u.upnname,
+					b.MANUAL_FLAG AS MANUALFLAG
 				FROM
 					TBL_ADDJOBMASTER b
 				JOIN

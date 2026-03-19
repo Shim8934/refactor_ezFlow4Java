@@ -163,6 +163,8 @@ public class LoginVO implements Serializable {
 	private String teamsId;
 	
 	private String upnname;
+	/** 수동으로 추가한 사원 구분(Y/N) */
+	private String manualFlag;
     
 	// 생성자 대신 활용도 높게 setter로 정의함.
 	public void setForSelectUser(String id, String dn, int tenantId) {
@@ -612,5 +614,13 @@ public class LoginVO implements Serializable {
 
 	public void setUpnname(String upnname) {
 		this.upnname = upnname;
+	}
+
+	public String getManualFlag() {
+		return manualFlag;
+	}
+
+	public void setManualFlag(String manualFlag) {
+		this.manualFlag = manualFlag;
 	}
 }
