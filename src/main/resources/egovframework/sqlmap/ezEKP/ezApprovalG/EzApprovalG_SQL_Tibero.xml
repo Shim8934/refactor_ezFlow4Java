@@ -39710,6 +39710,8 @@
             FROM
             VAPRDOINGDOCLIST
             WHERE
+            DOCID = #v_DOCID#
+            AND
             APRMEMBERID
                 <iterate property="proxyList" prepend="IN" conjunction="," open="(" close=")">
                     #proxyList[].id#
