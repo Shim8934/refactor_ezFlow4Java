@@ -651,6 +651,10 @@
 			                    }
 			                   getDocInfoAll();
 			                }else{
+			                    if(anCnt == 1 && pDocIDAry.length == 0){
+                                    pDocIDAry[1] = pDocID;
+                                    an.options[0].value = pDocID;
+			                    }
 			                    getDocInfo();
 			                }
 			                
