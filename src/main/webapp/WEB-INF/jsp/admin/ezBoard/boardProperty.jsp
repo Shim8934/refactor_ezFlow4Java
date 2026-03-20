@@ -1356,6 +1356,9 @@
 						if (!el.classList.contains("contentG") && !el.classList.contains("primary") && !el.classList.contains("secondary")) {
 							el.style.display = "";
 						}
+						if (el.id == "chkApprList") {
+                            el.style.display = document.getElementById('chkApprBoard').checked ? "" : "none";
+                        }
 					});
 				}
 			}
