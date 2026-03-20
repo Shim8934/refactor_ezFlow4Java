@@ -1533,6 +1533,7 @@
 						}
 						document.getElementById("notiTimeset").style.display ="";
 					}
+                    document.getElementById("notiTimeset").style.display = document.getElementById("NotiPeriod").checked ? "" : "none"
 				} else if(document.getElementById("NotiPeriod").checked){
 					document.getElementById("notiTimeset").style.display ="";
 				} else {
