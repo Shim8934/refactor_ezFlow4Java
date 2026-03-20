@@ -14787,30 +14787,9 @@ public class EzApprovalGController extends EzFileMngUtil{
         if (resultXML2.getElementsByTagName("FORMVERSION").getLength() > 0) {
             formVersion = resultXML2.getElementsByTagName("FORMVERSION").item(0).getTextContent().trim();
         }
-        String pass = viewChk(docInfo, docAttachParent, userInfo, model, pageType, isDocAttach, share, isMHT);
-        if("main/warning".equals(pass))
-            return pass;
-        
-        String editor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
-        String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
-        String susinAdmin = "";
-        String signCheck = "";
-        String title = docInfo.getDocTitle();
-        String orgDocID = docInfo.getOrgDocID();
-        String formID = docInfo.getFormID();
-        String docState = docInfo.getDocState();
 
         List<ApprGGroupDocInfoVO> groupDocInfoList = new ArrayList<>();
         String draftAllTypeB = ezCommonService.getTenantConfig("draftAllTypeB", userInfo.getTenantId());
-        // 한글
-        model.addAttribute("useFormContOnReuseForWHWP", ezCommonService.getTenantConfig("useFormContOnReuseForWHWP", userInfo.getTenantId()));
-        model.addAttribute("draftAllTypeB", draftAllTypeB);
-        // 일괄 Type B
-        if("Y".equals(draftAllTypeB)){
-            List<ApprGGroupDocInfoVO> group = ezApprovalGService.getGroupDocList(docID, "APR", userInfo.getTenantId(), userInfo.getCompanyID());
-            model.addAttribute("group", group);
-        }
-
         // 1안의 docID를 GroupDocSN으로 전달한다. 임시저장된 문서도 문서보기가 가능하므로, listType을 체크한다.
         String groupDocSN = "";
 
@@ -14824,6 +14803,28 @@ public class EzApprovalGController extends EzFileMngUtil{
         if(!groupDocInfoList.isEmpty() && !"Y".equals(draftAllTypeB)){
             model.addAttribute("loadTimeForApprAll", ezCommonService.getTenantConfig("loadTimeForApprAll", userInfo.getTenantId()));
         }
+        String pass = viewChk(docInfo, docAttachParent, userInfo, model, pageType, isDocAttach, share, isMHT, !groupDocInfoList.isEmpty());
+        if("main/warning".equals(pass))
+            return pass;
+        
+        String editor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
+        String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
+        String susinAdmin = "";
+        String signCheck = "";
+        String title = docInfo.getDocTitle();
+        String orgDocID = docInfo.getOrgDocID();
+        String formID = docInfo.getFormID();
+        String docState = docInfo.getDocState();
+
+        // 한글
+        model.addAttribute("useFormContOnReuseForWHWP", ezCommonService.getTenantConfig("useFormContOnReuseForWHWP", userInfo.getTenantId()));
+        model.addAttribute("draftAllTypeB", draftAllTypeB);
+        // 일괄 Type B
+        if("Y".equals(draftAllTypeB)){
+            List<ApprGGroupDocInfoVO> group = ezApprovalGService.getGroupDocList(docID, "APR", userInfo.getTenantId(), userInfo.getCompanyID());
+            model.addAttribute("group", group);
+        }
+
         String hwpToolbar = ezCommonService.getTenantConfig("HWPToolbar", userInfo.getTenantId());
         model.addAttribute("hwpToolbar", hwpToolbar);
         model.addAttribute("useEditor", editor);
@@ -15008,7 +15009,7 @@ public class EzApprovalGController extends EzFileMngUtil{
         }
     }
 
-    private String viewChk(ApprGDocListVO docInfo, String docAttachParent, LoginVO userInfo, Model model, String pageType, boolean isDocAttach, String share, boolean isMHT) throws Exception{
+    private String viewChk(ApprGDocListVO docInfo, String docAttachParent, LoginVO userInfo, Model model, String pageType, boolean isDocAttach, String share, boolean isMHT, boolean isGroup) throws Exception{
         logger.debug("viewChk started.");
         String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
         String accessInfo = ezCommonService.getTenantConfig("UserInfo_ApprovalG_VIEW", userInfo.getTenantId());
@@ -15019,7 +15020,7 @@ public class EzApprovalGController extends EzFileMngUtil{
         String docState = docInfo.getDocState();
         String pass = "<RESULT>FALSE</RESULT>";
         String docAprEnd = mode;
-        if(isMHT){
+        if((!isGroup && isMHT) || !ing){
             if(ing){
                 if (!userInfo.getRollInfo().contains("c=1") && !userInfo.getRollInfo().contains("q=1")) {
                     if (docID != null && !docID.isEmpty()) {
