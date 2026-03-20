@@ -39745,18 +39745,13 @@
 
     <select id="EzApprovalG.getViewDocInfo" parameterClass="Map" resultClass="ApprGDocListVO">
         SELECT * FROM
-            VAPRWILLDOCLIST
+            TBL_APRDOCINFO
         WHERE
             TENANT_ID = #v_TENANTID#
         AND
             COMPANYID = #companyID#
         AND
             DOCID = #v_DOCID#
-        AND
-            APRMEMBERID = #v_USERID#
-        <isEqual property="MineViewYN" compareValue="YES" prepend="AND">
-            AprState != '001'
-        </isEqual>
         AND ROWNUM = 1
     </select>
 </sqlMap>
