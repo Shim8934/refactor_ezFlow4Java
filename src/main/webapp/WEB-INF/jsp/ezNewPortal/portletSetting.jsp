@@ -137,7 +137,10 @@
 				<h3><spring:message code='ezPortal.t134' />
 					<div class="cont_slide_check">
 						<label>
-							<input id="pagingSetting" type="checkbox"><spring:message code='ezNewPortal.usePaging' />
+						    <div class="custom_checkbox">
+							    <input id="pagingSetting" type="checkbox">
+							    <label for="pagingSetting"><spring:message code='ezNewPortal.usePaging' /></label>
+						    </div>
 						</label>
 					</div>
 				</h3>
