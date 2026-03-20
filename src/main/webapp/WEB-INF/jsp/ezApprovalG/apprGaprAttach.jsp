@@ -1345,7 +1345,17 @@
 		    
 		    // 파일 선택 다이얼로그를 제어하기 위한 함수
 		    function initialize() {
-				document.body.onfocus = checkIt;
+				filetag.onchange = checkIt;
+                setTimeout(function() {
+                    document.body.onfocus = function() {
+                        setTimeout(function() {
+                            if (!filetag.value.length) {
+                                hideLoadingProgress();
+                            }
+                            document.body.onfocus = null;
+                        }, 500);
+                    };
+                }, 200);
 			}
 			
 			function checkIt() {

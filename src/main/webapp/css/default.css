@@ -5954,3 +5954,10 @@ body.drag *{user-select:none !important;}
 .popup #TopBoards h2:hover{background: #F8F9FB url(/images/kr/left/01_minus.gif) no-repeat right 13px !important; color: #0287db !important;}
 .popup #TopBoards h2.on:hover{background: #F8F9FB !important; color: #0287db !important;}
 /*게시글 복사, 이동 팝업 css 추가(E)*/
+
+/*2026-03-11 임시디자인*/
+#PreH_sub_MailSender span{color: #333 !important}
+#PreH_MailReceiver span{color: #333 !important}
+.preT_list #PreH_date{color: #333; font-size: 13px; margin-left: 4px !important}
+#PreH_date:before{ display: none;}
+.popup .pad1 {padding: 10px 0px !important}

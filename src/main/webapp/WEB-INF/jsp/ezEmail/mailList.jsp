@@ -391,7 +391,9 @@
 		        		moveBtn.style.display = 'none';
 		        		receivecheck.style.display = 'none';
 		        		//voc 176298 공유사서함은 해킹의심신고 불가
-		        		hackingMail.style.display = 'none';
+		        		if (typeof hackingMail !== "undefined") {
+		        		    hackingMail.style.display = 'none';
+		        		}
 		        		document.getElementById("searchAllBoxByName").style.display = 'none';
 		        	}
 		        	theBody.onkeyup = function(){};

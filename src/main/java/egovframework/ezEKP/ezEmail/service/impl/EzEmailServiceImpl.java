@@ -4152,7 +4152,11 @@ public class EzEmailServiceImpl extends EgovAbstractServiceImpl implements EzEma
 			fileIdArr[i] = fileName.substring(0, 36);
 		}
 		
-		deleteBigAttachCountInfo(fileIdArr, tenantId);
+		String[][] fileIdArrs = commonUtil.chunk(fileIdArr, 999);
+		for (String[] Arrs : fileIdArrs) {
+			deleteBigAttachCountInfo(Arrs, tenantId);
+		}
+
 		logger.debug("deleteBigAttachCountInfo ended.");
 	}
 	
@@ -8116,7 +8120,7 @@ public class EzEmailServiceImpl extends EgovAbstractServiceImpl implements EzEma
 					from = ezEmailUtil.getFullFromAddressOfMessage(message);
 					receivedDate = (message.getReceivedDate() != null) ? message.getReceivedDate().toString() : "";
 	
-					logger.debug("subject=" + subject + ",from=" + from + ",receivedDate=" + receivedDate);
+					logger.debug("userEmail=" + userEmail + ",subject=" + subject + ",from=" + from + ",receivedDate=" + receivedDate);
 				}
 			}
 	
