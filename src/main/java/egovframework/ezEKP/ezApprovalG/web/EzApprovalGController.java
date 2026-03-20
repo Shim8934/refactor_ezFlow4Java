@@ -32,7 +32,6 @@ import egovframework.ezEKP.ezPortal.vo.PortalTopOtherCompanyAddJobVO;
 import egovframework.ezMobile.ezApprovalG.service.MApprovalGService;
 import egovframework.ezMobile.ezApprovalG.vo.MApprovalGDocInfoVO;
 import egovframework.ezMobile.ezOption.service.MOptionService;
-import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.ezMobile.ezOption.vo.MOptionVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -40,7 +39,6 @@ import egovframework.let.utl.fcc.service.EgovDateUtil;
 import egovframework.let.utl.fcc.service.KlibUtil;
 import egovframework.let.utl.fcc.service.EzFAL;
 import egovframework.let.utl.fcc.service.EzFAL.*;
-import egovframework.let.utl.rest.Result;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGDeliveryListVO;
 
@@ -72,12 +70,9 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.http.HttpStatus;
 import org.apache.logging.log4j.util.Strings;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFFont;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -112,12 +107,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 import javax.annotation.Resource;
-import javax.servlet.ServletContext;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -128,19 +118,12 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
-import java.net.URL;
-import java.net.URLDecoder;
 import java.net.URLEncoder;
-import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.security.MessageDigest;
 import java.security.PrivateKey;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -14458,9 +14441,10 @@ public class EzApprovalGController extends EzFileMngUtil{
 
         String formInfoDetail = ezApprovalGService.getFormInfoDetail(docInfo.getFormID(), userInfo.getCompanyID(), userInfo.getTenantId());
         Document resultXML2 = commonUtil.convertStringToDocument(formInfoDetail);
-        boolean isMHT = docInfo.getHref().endsWith("mht");
+        List<ApprGGroupDocInfoVO> group = ezApprovalGService.getGroupDocList(docID, "APR", userInfo.getTenantId(), userInfo.getCompanyID());
+        boolean isMHT = group.isEmpty() && docInfo.getHref().endsWith("mht");
         if (resultXML2.getElementsByTagName("FORMFILELOCATION").getLength() > 0) {
-            isMHT = resultXML2.getElementsByTagName("FORMFILELOCATION").item(0).getTextContent().trim().endsWith("mht");
+            isMHT = group.isEmpty() && resultXML2.getElementsByTagName("FORMFILELOCATION").item(0).getTextContent().trim().endsWith("mht");
         }
         
         String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", tenantID);
@@ -14494,7 +14478,6 @@ public class EzApprovalGController extends EzFileMngUtil{
         }
 
         String useWebHWP = ezCommonService.getTenantConfig("useWebHWP", userInfo.getTenantId());
-        List<ApprGGroupDocInfoVO> group = new ArrayList<>();
         String draftAllTypeB = ezCommonService.getTenantConfig("draftAllTypeB", userInfo.getTenantId());
         // mht
         if(isMHT){
@@ -14586,7 +14569,6 @@ public class EzApprovalGController extends EzFileMngUtil{
             model.addAttribute("optjunKyukInfo", ezApprovalGService.getOptionInfo("A32", "001", userInfo, "CODE"));
             model.addAttribute("isHWP", "Y");
             if("YES".equals(useWebHWP)){
-                group = ezApprovalGService.getGroupDocList(docID, "APR", userInfo.getTenantId(), userInfo.getCompanyID());
                 model.addAttribute("draftAllTypeB", draftAllTypeB);
                 model.addAttribute("loadTimeForApprAll", ezCommonService.getTenantConfig("loadTimeForApprAll", userInfo.getTenantId()));
                 model.addAttribute("group", group);
@@ -14803,7 +14785,17 @@ public class EzApprovalGController extends EzFileMngUtil{
         if(!groupDocInfoList.isEmpty() && !"Y".equals(draftAllTypeB)){
             model.addAttribute("loadTimeForApprAll", ezCommonService.getTenantConfig("loadTimeForApprAll", userInfo.getTenantId()));
         }
-        String pass = viewChk(docInfo, docAttachParent, userInfo, model, pageType, isDocAttach, share, isMHT, !groupDocInfoList.isEmpty());
+
+        isMHT = isMHT && (groupDocInfoList.isEmpty() || !ing);
+        
+        String mode = "VIE";
+        if ("4".equals(listType) || "6".equals(listType) || "10".equals(listType) || "99".equals(listType) || "98".equals(listType)) {
+            mode = "REC";
+        } else if ("21".equals(listType)) {
+            mode = "TMP";
+        }
+        
+        String pass = viewChk(docInfo, docAttachParent, userInfo, model, pageType, isDocAttach, share, isMHT, mode);
         if("main/warning".equals(pass))
             return pass;
         
@@ -14850,12 +14842,6 @@ public class EzApprovalGController extends EzFileMngUtil{
             model.addAttribute("admin", admin);
             
             if(ing){
-                String mode = "VIE";
-                if ("4".equals(listType) || "6".equals(listType) || "10".equals(listType) || "99".equals(listType) || "98".equals(listType)) {
-                    mode = "REC";
-                } else if ("21".equals(listType)) {
-                    mode = "TMP";
-                }
                 model.addAttribute("mode", mode);
                 model.addAttribute("callBackType", callBackType);
             }else {
@@ -14994,33 +14980,26 @@ public class EzApprovalGController extends EzFileMngUtil{
         logger.debug("view ended.");
 
         if (pass.equals("<RESULT>TRUE</RESULT>")) {
-            String url = "";
-            if(!groupDocInfoList.isEmpty()){
-                url = !"Y".equals(draftAllTypeB) && ing ? "apprGviewAprAll_WHWP" : ing ? "apprGviewAprWHWP" : 
-                        isMHT ? "apprGcontDocView" : "apprGviewEndWHWP";
-            }else{
-                url = isMHT ? ing ? "apprGaprDocView" : "apprGcontDocView" :
-                        !"YES".equals(useWebHWP) ? ing ? "apprGviewAprHWP" : "apprGviewEndHWP" :
-                        ing ? "apprGviewAprWHWP" : "apprGviewEndWHWP";
-            }
-            return "ezApprovalG/" + url;
+            return "ezApprovalG/" + (isMHT ? ing ? "apprGaprDocView" : "apprGcontDocView" :
+                    !"YES".equals(useWebHWP) ? ing ? "apprGviewAprHWP" : "apprGviewEndHWP" :
+                    !groupDocInfoList.isEmpty() && !"Y".equals(draftAllTypeB) && ing ? "apprGviewAprAll_WHWP" :
+                    ing ? "apprGviewAprWHWP" : "apprGviewEndWHWP");
         } else {
             return "main/warning";
         }
     }
 
-    private String viewChk(ApprGDocListVO docInfo, String docAttachParent, LoginVO userInfo, Model model, String pageType, boolean isDocAttach, String share, boolean isMHT, boolean isGroup) throws Exception{
+    private String viewChk(ApprGDocListVO docInfo, String docAttachParent, LoginVO userInfo, Model model, String pageType, boolean isDocAttach, String share, boolean isMHT, String mode) throws Exception{
         logger.debug("viewChk started.");
         String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
         String accessInfo = ezCommonService.getTenantConfig("UserInfo_ApprovalG_VIEW", userInfo.getTenantId());
         String href = docInfo.getHref();
         boolean ing = href.contains("/1000/");
-        String mode = ing ? "APR" : "END";
         String docID = docInfo.getDocID();
         String docState = docInfo.getDocState();
-        String pass = "<RESULT>FALSE</RESULT>";
-        String docAprEnd = mode;
-        if((!isGroup && isMHT) || !ing){
+        String pass = "";
+        String docAprEnd = ing ? "APR" : "END";
+        if(isMHT){
             if(ing){
                 if (!userInfo.getRollInfo().contains("c=1") && !userInfo.getRollInfo().contains("q=1")) {
                     if (docID != null && !docID.isEmpty()) {
