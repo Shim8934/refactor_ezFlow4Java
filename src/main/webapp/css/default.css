@@ -5657,7 +5657,7 @@ body.drag *{user-select:none !important;}
 
 .flex_contentBox{display:flex; flex-direction:column; gap:8px; padding-top:10px;}
 .flex_content{display:flex; flex-wrap:nowrap;}
-.flex_content_tit{width:103px; min-width:103px; min-height:20px; line-height:20px; padding:6px 7px 6px 0px; font-size:13px; color:#1E2124; font-weight:normal;}
+.flex_content_tit{width:103px; min-width:103px; min-height:20px; line-height:20px; padding:6px 7px 6px 0px; font-size:13px; color:#1E2124; font-weight:normal; word-wrap: break-word;}
 .flex_content_cont{flex-grow:1; min-height:32px; font-size:13px; color:#1E2124; font-weight:normal;}
 .flex_content_cont input[type="text"],
 .flex_content_cont input[type="password"],
