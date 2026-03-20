@@ -187,11 +187,13 @@
 			    	if (listTypeValue === "99") {	// 공람할문서
 			    		btnGongRam.style.display = "";
 				        btnBoard.style.display = "";
-				        btnReuse.style.display = "";
+				        if(typeof btnReuse != "undefined")
+				            btnReuse.style.display = "";
 				        pOpinionType = "";
 			    	} else if (listTypeValue === "10") {	// 공람완료문서
 			    		btnBoard.style.display = "";
-				        btnReuse.style.display = "";
+				        if(typeof btnReuse != "undefined")
+                            btnReuse.style.display = "";
 			    	}
 			    }
 			    

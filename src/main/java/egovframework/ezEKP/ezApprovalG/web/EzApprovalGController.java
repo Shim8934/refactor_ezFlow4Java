@@ -14734,7 +14734,7 @@ public class EzApprovalGController extends EzFileMngUtil{
 
         logger.debug("approve ended");
 
-        return isMHT ? "ezApprovalG/apprGapprovui" :
+        return group.isEmpty() && isMHT ? "ezApprovalG/apprGapprovui" :
                 "NO".equals(useWebHWP) ? "/ezApprovalG/apprGapprovuiHWP" :
                 group.isEmpty() || "Y".equals(draftAllTypeB) ? "/ezApprovalG/apprGapprovuiWHWP" :
                 "ezApprovalG/apprGapprovuiAll_WHWP";
@@ -14802,8 +14802,36 @@ public class EzApprovalGController extends EzFileMngUtil{
 
         List<ApprGGroupDocInfoVO> groupDocInfoList = new ArrayList<>();
         String draftAllTypeB = ezCommonService.getTenantConfig("draftAllTypeB", userInfo.getTenantId());
+        // 한글
+        model.addAttribute("useFormContOnReuseForWHWP", ezCommonService.getTenantConfig("useFormContOnReuseForWHWP", userInfo.getTenantId()));
+        model.addAttribute("draftAllTypeB", draftAllTypeB);
+        // 일괄 Type B
+        if("Y".equals(draftAllTypeB)){
+            List<ApprGGroupDocInfoVO> group = ezApprovalGService.getGroupDocList(docID, "APR", userInfo.getTenantId(), userInfo.getCompanyID());
+            model.addAttribute("group", group);
+        }
+
+        // 1안의 docID를 GroupDocSN으로 전달한다. 임시저장된 문서도 문서보기가 가능하므로, listType을 체크한다.
+        String groupDocSN = "";
+
+        if ("21".equals(listType)) { // docID = 임시저장된 docSN (사용자ID@순번 형태)
+            // 웹한글기안기의 비동기 동작으로 1안이 늦게 저장되어 GROUPDOCSN값이 다를 수 있다. 따라서 정상적인 GROUPDOCSN값을 다시 가져오도록 한다.
+            groupDocSN = ezApprovalGService.getGroupDocSN(docID, userInfo.getTenantId(), userInfo.getCompanyID());
+            groupDocInfoList = ezApprovalGService.getGroupDocList(groupDocSN, "TMP", userInfo.getTenantId(), userInfo.getCompanyID());
+        } else {
+            groupDocInfoList = ezApprovalGService.getGroupDocList(docID, "APR", userInfo.getTenantId(), userInfo.getCompanyID());
+        }
+        if(!groupDocInfoList.isEmpty() && !"Y".equals(draftAllTypeB)){
+            model.addAttribute("loadTimeForApprAll", ezCommonService.getTenantConfig("loadTimeForApprAll", userInfo.getTenantId()));
+        }
+        String hwpToolbar = ezCommonService.getTenantConfig("HWPToolbar", userInfo.getTenantId());
+        model.addAttribute("hwpToolbar", hwpToolbar);
+        model.addAttribute("useEditor", editor);
+        model.addAttribute("groupDocInfoList", groupDocInfoList); // 문서 리스트 데이터 
+        model.addAttribute("groupDocInfoListCnt", groupDocInfoList.size()); // 문서 리스트 데이터 카운트 (안의 갯수)
+        model.addAttribute("groupDocSN", docID); // 일괄기안그룹 DOCID (GROOUPDOCSN)
         
-        if(isMHT){
+        if(groupDocInfoList.isEmpty() && isMHT || (!groupDocInfoList.isEmpty() && !ing && isMHT)){
             String signImageType = ezCommonService.getTenantConfig("signImageType", userInfo.getTenantId());
             String use_cabinet = ezCommonService.getTenantConfig("useCabinet", userInfo.getTenantId());
             if (use_cabinet.equals("YES")) {
@@ -14848,35 +14876,6 @@ public class EzApprovalGController extends EzFileMngUtil{
                     }
                 }
             }
-        }else{
-            // 한글
-            model.addAttribute("useFormContOnReuseForWHWP", ezCommonService.getTenantConfig("useFormContOnReuseForWHWP", userInfo.getTenantId()));
-            model.addAttribute("draftAllTypeB", draftAllTypeB);
-            // 일괄 Type B
-            if("Y".equals(draftAllTypeB)){
-                List<ApprGGroupDocInfoVO> group = ezApprovalGService.getGroupDocList(docID, "APR", userInfo.getTenantId(), userInfo.getCompanyID());
-                model.addAttribute("group", group);
-            }
-
-            // 1안의 docID를 GroupDocSN으로 전달한다. 임시저장된 문서도 문서보기가 가능하므로, listType을 체크한다.
-            String groupDocSN = "";
-
-            if ("21".equals(listType)) { // docID = 임시저장된 docSN (사용자ID@순번 형태)
-                // 웹한글기안기의 비동기 동작으로 1안이 늦게 저장되어 GROUPDOCSN값이 다를 수 있다. 따라서 정상적인 GROUPDOCSN값을 다시 가져오도록 한다.
-                groupDocSN = ezApprovalGService.getGroupDocSN(docID, userInfo.getTenantId(), userInfo.getCompanyID());
-                groupDocInfoList = ezApprovalGService.getGroupDocList(groupDocSN, "TMP", userInfo.getTenantId(), userInfo.getCompanyID());
-            } else {
-                groupDocInfoList = ezApprovalGService.getGroupDocList(docID, "APR", userInfo.getTenantId(), userInfo.getCompanyID());
-            }
-            if(!groupDocInfoList.isEmpty() && !"Y".equals(draftAllTypeB)){
-                model.addAttribute("loadTimeForApprAll", ezCommonService.getTenantConfig("loadTimeForApprAll", userInfo.getTenantId()));
-            }
-            String hwpToolbar = ezCommonService.getTenantConfig("HWPToolbar", userInfo.getTenantId());
-            model.addAttribute("hwpToolbar", hwpToolbar);
-            model.addAttribute("useEditor", editor);
-            model.addAttribute("groupDocInfoList", groupDocInfoList); // 문서 리스트 데이터 
-            model.addAttribute("groupDocInfoListCnt", groupDocInfoList.size()); // 문서 리스트 데이터 카운트 (안의 갯수)
-            model.addAttribute("groupDocSN", docID); // 일괄기안그룹 DOCID (GROOUPDOCSN)
         }
 
         // 진행중
@@ -14994,10 +14993,16 @@ public class EzApprovalGController extends EzFileMngUtil{
         logger.debug("view ended.");
 
         if (pass.equals("<RESULT>TRUE</RESULT>")) {
-            return "ezApprovalG/" + (isMHT ? ing ? "apprGaprDocView" : "apprGcontDocView" :
-                    !"YES".equals(useWebHWP) ? ing ? "apprGviewAprHWP" : "apprGviewEndHWP" :
-                    !groupDocInfoList.isEmpty() && !"Y".equals(draftAllTypeB) && ing ? "apprGviewAprAll_WHWP" : 
-                    ing ? "apprGviewAprWHWP" : "apprGviewEndWHWP");
+            String url = "";
+            if(!groupDocInfoList.isEmpty()){
+                url = !"Y".equals(draftAllTypeB) && ing ? "apprGviewAprAll_WHWP" : ing ? "apprGviewAprWHWP" : 
+                        isMHT ? "apprGcontDocView" : "apprGviewEndWHWP";
+            }else{
+                url = isMHT ? ing ? "apprGaprDocView" : "apprGcontDocView" :
+                        !"YES".equals(useWebHWP) ? ing ? "apprGviewAprHWP" : "apprGviewEndHWP" :
+                        ing ? "apprGviewAprWHWP" : "apprGviewEndWHWP";
+            }
+            return "ezApprovalG/" + url;
         } else {
             return "main/warning";
         }
