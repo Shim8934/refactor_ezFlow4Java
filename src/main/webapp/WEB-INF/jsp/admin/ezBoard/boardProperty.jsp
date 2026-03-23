@@ -1648,8 +1648,8 @@
 						<input type="checkbox" id="chkBoardDisLike"><label for="chkBoardDisLike"><spring:message code="ezBoard.kmh07" /></label>
 						<input type="checkbox" id="chkbackgroundimage" onclick="checkboardtype()" /><label for="chkbackgroundimage"><spring:message code="ezBoard.t5011_1" /></label>
 						<input type="checkbox" id="chkform" onclick="checkboardtype()" /><label for="chkform"><spring:message code="ezBoard.t999027" /></label>
-						<input type="checkbox" id="keyWord" onclick="checkboardtype()" /><label for="keyWord"><spring:message code="ezApprovalG.t1200" /></label>
-						<input type="checkbox" id="chkStarRating" onclick="checkboardtype()" /><label for="chkStarRating"><spring:message code="ezBoard.lhr001" /></label><br>
+						<input type="checkbox" id="keyWord" onclick="checkboardtype()" /><label for="keyWord"><spring:message code="ezApprovalG.t1200" /></label><br>
+						<input type="checkbox" id="chkStarRating" onclick="checkboardtype()" /><label for="chkStarRating"><spring:message code="ezBoard.lhr001" /></label>
                         <input type="checkbox" id="chkUrlCopy" onclick="checkboardtype()" /><label for="chkUrlCopy"><spring:message code="ezBoard.lyj02" /></label>
 					</div>
 	        	</td>
