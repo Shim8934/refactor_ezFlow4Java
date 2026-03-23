@@ -12,7 +12,10 @@
                     reload.action = location.pathname;
                     var param = reload.children;
                     for(var i = 0; i < param.length; i++){
-                        param[i].value = sessionStorage.getItem(param[i].id);
+                        if(sessionStorage.getItem(param[i].id))
+                            param[i].value = sessionStorage.getItem(param[i].id);
+                        else
+                            param[i--].remove();
                     }
                     reload.submit();
                 }else{
