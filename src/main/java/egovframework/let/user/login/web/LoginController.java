@@ -851,9 +851,17 @@ public class LoginController {
             	}
         	}
         	
-        // 사용자가 입력한 암호가 맞지 않는 경우
-        } else if (resultVO == null || StringUtils.isBlank(resultVO.getId())) {
-        	logger.debug("_uid=" + _uid + ",password is wrong.");
+        } else {
+			String MsgCodeifWrongOTP = "";
+
+			// 사용자가 입력한 암호가 맞지 않는 경우
+			if (resultVO == null || StringUtils.isBlank(resultVO.getId())) {
+				logger.debug("_uid=" + _uid + ",password is wrong.");
+			// 2023-03-22 이사라 : [TFA] 사용자가 입력한 OTP가 맞지 않는 경우
+			} else {
+				logger.debug("Wrong OTP, _uid={}, submitted={}", _uid, loginOtp);
+				MsgCodeifWrongOTP = ".otp";
+			}
         			
         	// 2021-12-21 이사라 : 접속 로그정보 저장 (실패)
         	loginVO.setId(_uid);
@@ -933,7 +941,7 @@ public class LoginController {
 	            	return "forward:/user/login/login.do";
         		case -1:
         			//Show normal login fail message
-                	model.addAttribute("message", egovMessageSource.getMessage("fail.common.login", locale));
+                	model.addAttribute("message", egovMessageSource.getMessage("fail.common.login" + MsgCodeifWrongOTP, locale));
                 	return "forward:/user/login/login.do";            	
         		default:
         			//Increase number of attempts in database
@@ -977,96 +985,6 @@ public class LoginController {
     	            	return "forward:/user/login/login.do";
         			}
         	}
-			// 2023-03-22 이사라 : [TFA] 사용자가 입력한 OTP가 맞지 않는 경우
-		} else {
-			logger.debug("Wrong OTP, _uid={}, submitted={}", _uid, loginOtp);
-
-			// 접속 실패 로그정보 저장
-			loginVO.setId(_uid);
-			loginVO.setTenantId(tenantId);
-			loginVO.setDn("NOPASSWORD");
-			resultVO = loginService.selectUser(loginVO);
-
-			resultVO.setIp(ClientUtil.getClientIP(request));
-			resultVO.setAgent(ClientUtil.getClientInfo(request, "agent"));
-			resultVO.setOs(ClientUtil.getClientInfo(request, "os"));
-			resultVO.setBrowser(ClientUtil.getClientInfo(request, "browser"));
-			resultVO.setTenantId(tenantId);
-			resultVO.setStatus("N");
-
-			if (resultVO.getTitle2() == null) {
-				resultVO.setTitle2("");
-			}
-
-			loginService.insertLog(resultVO);
-
-			// 로그인 실패 카운트 처리 및 메시지
-			int check = checkState(tenantId, _uid, numberOfLoginFailPermit);
-			String errorMsg1 = "";
-			String errorMsg2 = "";
-			String errorMsg3 = "";
-			String errorMsg4 = "";
-			String errorMsg5 = "";
-
-			switch (check) {
-			case -3:
-				// Show block message
-				model.addAttribute("message1", egovMessageSource.getMessageExtend("fail.common.login.block", new Object[] { numberOfLoginFailPermit }, locale));
-				model.addAttribute("message2", egovMessageSource.getMessage("fail.common.login", locale));
-				model.addAttribute("threeLineMSG", "Y");
-
-				return "forward:/user/login/login.do";
-			case -2:
-				// The first time this user login failed
-				ezCommonService.insertUserConfigInfo(tenantId, _uid, "LoginFailCount", "1");
-				// Show warning message
-				errorMsg1 = egovMessageSource.getMessage("fail.common.login", locale);
-				errorMsg2 = egovMessageSource.getMessage("fail.common.login.warning2", locale);
-				errorMsg3 = egovMessageSource.getMessageExtend("fail.common.login.warning3", new Object[] {1}, locale);
-				errorMsg4 = egovMessageSource.getMessage("fail.common.login.warning4", locale);
-				errorMsg5 = egovMessageSource.getMessageExtend("fail.common.login.warning5", new Object[] { numberOfLoginFailPermit }, locale);
-
-				model.addAttribute("message1", errorMsg1);
-				model.addAttribute("message2", errorMsg2);
-				model.addAttribute("message3", errorMsg3);
-				model.addAttribute("message4", errorMsg4);
-				model.addAttribute("message5", errorMsg5);
-				model.addAttribute("isWrongPass", "Y"); // 기존 비밀번호 오류 메시지 레이어를 그대로 사용하기 위해 isWrongPass를 사용
-
-				return "forward:/user/login/login.do";
-			case -1:
-				// Show normal login fail message
-				model.addAttribute("message", egovMessageSource.getMessage("fail.common.login.otp", locale));
-				return "forward:/user/login/login.do";
-			default:
-				// Increase number of attempts in database
-				ezCommonService.updateUserConfigInfo(tenantId, _uid, "LoginFailCount", Integer.toString(check + 1));
-
-				if (check >= numberOfLoginFailPermit - 1) {
-					// Show block message
-					model.addAttribute("message1", egovMessageSource.getMessageExtend("fail.common.login.block", new Object[] { numberOfLoginFailPermit }, locale));
-					model.addAttribute("message2", egovMessageSource.getMessage("fail.common.login", locale));
-					model.addAttribute("threeLineMSG", "Y");
-
-					return "forward:/user/login/login.do";
-				} else {
-					// Show warning message
-					errorMsg1 = egovMessageSource.getMessage("fail.common.login", locale);
-					errorMsg2 = egovMessageSource.getMessage("fail.common.login.warning2", locale);
-					errorMsg3 = egovMessageSource.getMessageExtend("fail.common.login.warning3", new Object[] { check + 1 }, locale);
-					errorMsg4 = egovMessageSource.getMessage("fail.common.login.warning4", locale);
-					errorMsg5 = egovMessageSource.getMessageExtend("fail.common.login.warning5", new Object[] { numberOfLoginFailPermit }, locale);
-
-					model.addAttribute("message1", errorMsg1);
-					model.addAttribute("message2", errorMsg2);
-					model.addAttribute("message3", errorMsg3);
-					model.addAttribute("message4", errorMsg4);
-					model.addAttribute("message5", errorMsg5);
-					model.addAttribute("isWrongPass", "Y"); // 기존 비밀번호 오류 메시지 레이어를 그대로 사용하기 위해 isWrongPass를 사용
-
-					return "forward:/user/login/login.do";
-				}
-			}
 		}
     }
     
