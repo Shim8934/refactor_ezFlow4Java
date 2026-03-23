@@ -39688,6 +39688,7 @@
 
     <select id="EzApprovalG.getApprovalDocInfo" parameterClass="Map" resultClass="ApprGDocListVO">
         SELECT * FROM (
+        SELECT * FROM (
             SELECT *
             FROM VAPRDOINGDOCLIST
             WHERE DOCID = #v_DOCID#
@@ -39738,6 +39739,7 @@
                     #proxyList[].title#
                 </iterate>
             </isNotEmpty>
+        )
             ORDER BY APRMEMBERSN
         )
         WHERE ROWNUM = 1

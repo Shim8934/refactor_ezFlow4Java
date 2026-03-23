@@ -14434,7 +14434,7 @@ public class EzApprovalGController extends EzFileMngUtil{
 
         ApprGDocListVO docInfo = ezApprovalGService.getApprovalDocInfo(docID, userInfo, share);
         
-        if(docInfo == null || "015".equals(docInfo.getDocState())){
+        if(docInfo == null || "015".equals(docInfo.getDocState()) || "1".equals(docInfo.getAprMemberSN())){
             model.addAttribute("docID", docID);
             return "redirect:/ezApprovalG/view.do";
         }
