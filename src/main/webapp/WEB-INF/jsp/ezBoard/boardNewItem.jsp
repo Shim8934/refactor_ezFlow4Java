@@ -917,7 +917,8 @@
 		        }
 		        createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "BOARDID", pBoardID);
 		        if (gubun != "2") {
-		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "WRITERID", SSUserID);
+		            var setWriterId = pMode == "modify" ? strWriterID : SSUserID;
+		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "WRITERID", setWriterId);
 					if ('Y' == writerFlag) {
 						var flagwriterName = $('#writerFlag').val().toString().split("\\");
 						createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "WRITERNAME", MakeXMLString(flagwriterName[0]));
