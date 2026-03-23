@@ -5121,7 +5121,17 @@ public class EzBoardController extends EzFileMngUtil{
 		model.addAttribute("useKeyword", useKeyword);
 		model.addAttribute("keywordListForModify", keywordListForModify);
 		if ("Y".equals(boardInfo.getWriterFlag())) {
-			model.addAttribute("writerOption", ezBoardService.getWriterOption(userInfo));
+			if (mode.equals("modify")) {
+				String orgId = userInfo.getId();
+				int orgTenantId = userInfo.getTenantId();
+				userInfo.setId(boardListVO.getWriterID());
+				userInfo.setTenantId(boardListVO.getTenantID());
+				model.addAttribute("writerOption", ezBoardService.getWriterOption(userInfo));
+				userInfo.setId(orgId);
+				userInfo.setTenantId(orgTenantId);
+			} else {
+				model.addAttribute("writerOption", ezBoardService.getWriterOption(userInfo));
+			}
 		}
 		model.addAttribute("useVersion", useVersion);
 		model.addAttribute("historyModify", request.getParameter("historyModify") == null ? "false" : request.getParameter("historyModify"));

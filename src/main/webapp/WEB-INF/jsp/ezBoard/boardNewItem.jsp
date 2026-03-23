@@ -2955,10 +2955,10 @@
 
 			function chkUseDept_onclick() {
 				if (chkUseDept.checked) { // 팀/부서로 표시
-					spUseDept.innerHTML = "${deptName}";
+					spUseDept.innerHTML = pMode == "modify" ? strWriterDeptName : "${deptName}";//
 					document.getElementById("writerFlag").selectedIndex = 1;
 				} else { // 이름으로 표시
-					spUseDept.innerHTML = "${displayName}";
+					spUseDept.innerHTML = pMode == "modify" ? "${writerOption.N}" : "${displayName}";
 					document.getElementById("writerFlag").selectedIndex = 0;
 				}
 			}

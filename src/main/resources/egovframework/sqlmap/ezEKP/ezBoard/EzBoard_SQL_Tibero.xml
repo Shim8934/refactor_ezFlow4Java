@@ -7080,6 +7080,9 @@
         </isEqual>
         <isNotEqual property="guBun" compareValue="2">
             <isNotEqual property="writerNameType" compareValue="" prepend=",">
+                writerId = #writerID#,
+                writerName = #writerName#,
+                writerName2 = #writerName2#,
                 writerNameType = #writerNameType#
             </isNotEqual>
         </isNotEqual>
