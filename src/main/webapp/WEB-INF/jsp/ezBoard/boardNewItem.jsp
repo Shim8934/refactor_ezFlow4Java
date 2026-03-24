@@ -3196,7 +3196,7 @@
 				<c:forEach var="boardAttributeVO" items="${boardAttributeListVO}" step="1" varStatus="status">
 					<div class="flex_content">
                 		<div class="flex_content_tit ${boardAttributeVO.must == 'Y' ? "point_tit" : ""}">
-							<c:out value="${extenLang == 1 ? boardAttributeVO.colName1 : boardAttributeVO.colName2}"/>
+							${extenLang == 1 ? boardAttributeVO.colName1 : boardAttributeVO.colName2}
 						</div>
 						<div class="${boardAttributeVO.colType == 'people' ? 'flex_content_cont type2' : 'flex_content_cont'}">
 						<c:choose>
