@@ -24074,7 +24074,7 @@
            FROM 
            		TBL_APRDOCATTACHINFO  
 		   WHERE  
-		   		DOCID = #v_DOCID# 
+		   		DOCID = #orgDoc#
 		   AND 	
 		   		TENANT_ID = #v_TENANTID#
 		   AND
