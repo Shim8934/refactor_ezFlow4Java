@@ -62,12 +62,6 @@
 	
 		        return ("" + year + "-" + month + "-" + day);
 		    }
-		    
-		    function decodeHtml(str) {
-                let txt = document.createElement("textarea");
-                txt.innerHTML = str;
-                return txt.value;
-            }
 			
 		    function window_onload() {
 		    	$.ajax({
@@ -94,7 +88,7 @@
 					}
 				});
 				
-				document.getElementById("groupName").innerText = groupName
+				document.getElementById("groupName").innerText = replaceEntityCodeToStr(groupName);
 	
 		        if (typeof (Para) != "undefined" && Para != null) {
 					s_date = getToday();
