@@ -1772,7 +1772,7 @@ var openBoard = function (pItemID, pType, oBoardID, password) {
 		pTop = (pheight - 679) / 2;
 		pLeft = (pwidth - 764) / 2;
 		window.open("/ezBoard/boardItemViewMovie.do?showAdjacent=&itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(oBoardID), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=" + height + ",width=764,top=" + pTop + ",left=" + pLeft, "");
-	} else if (pType == "2") {
+	} else if (pType == "2" && password) {
 	    var parser = new DOMParser();
         var normalHeight = 720;
         var normalWidth = 765;
