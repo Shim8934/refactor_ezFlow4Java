@@ -335,7 +335,7 @@
 				<div id="preview_attachBox" class="preview_attachBox" style="display: none;">
 					<div class="preview_attach_header">
 						<span class="preview_toggleBtn active"><spring:message code='ezBoard.t10025'/></span>
-						<button type="button" class="textBtn i_attach_download"><spring:message code='ezBoard.t10024'/></button>
+<%--						<button type="button" class="textBtn i_attach_download"><spring:message code='ezBoard.t10024'/></button>--%>
 					</div>
 					<div class="preview_attach_list active" id="lstAttachLink" style="border: none;"></div>
 				</div>

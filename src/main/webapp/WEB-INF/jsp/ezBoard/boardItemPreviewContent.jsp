@@ -351,16 +351,15 @@
 					}
 
 					strAttach += "<li>";
-					strAttach += "<span id='MailAttachDownloadItems' name='MailAttachDownloadItems'><img style='cursor:pointer;vertical-align:middle' src='" + fileTypeImg + "'/>";
-					strAttach += filename + " (" + filesize + ")</span>";
 
 					/* 2018-10-11 홍승비 - 모두저장용 filePath 속성 추가 */
-					strAttach += "<a style='display: none;' name='filename' href='/ezBoard/getBoardAttachInfo.do?type=BOARD&itemID=" + encodeURIComponent(getNodeText(SelectSingleNode(xmldomNodes[i], "ItemID"))) + "&attID=" + getNodeText(SelectSingleNode(xmldomNodes[i], "GUID"))
-							+ "' filePath='" + filepathHTMLEscape + "' fileNameAttr='" + filenameAttr + "' realFileName='" + filename + "'>" + filename + " (" + filesize + ")</a>";
+					strAttach += "<span name='MailAttachDownloadItems' style='cursor:pointer;' onclick=\"location.href='/ezBoard/getBoardAttachInfo.do?type=BOARD&itemID=" + encodeURIComponent(getNodeText(SelectSingleNode(xmldomNodes[i], "ItemID"))) + "&attID=" + encodeURIComponent(getNodeText(SelectSingleNode(xmldomNodes[i], "GUID"))) + "'\" filePath='" + filepathHTMLEscape + "' fileNameAttr='" + filenameAttr + "' realFileName='" + filename + "'>"
+					strAttach += "<img style='cursor:pointer;vertical-align:middle' src='" + fileTypeImg + "'/>"
+					strAttach += filename + " (" + filesize + ")";
 					strAttach += "</span>";
 					// 2023-05-23 조수빈 - 게시판 첨부파일 미리보기 아이콘 추가
 					if (typeof useBoardFilePrvw !== 'undefined' && useBoardFilePrvw == "1") {
-						strAttach += "<button class='textBtn i_attach_preview' title='<spring:message code = 'ezEmail.t487'/>' onclick=\"attachFile_Preview('" + javaURLEncode(filepath) + "', '" + javaURLEncode(filename) + "');\"></button>";
+						strAttach += "<button class='textBtn i_attach_preview' onclick=\"attachFile_Preview('" + javaURLEncode(filepath) + "', '" + javaURLEncode(filename) + "');\"><spring:message code = 'ezBoard.newDesign11'/></button>";
 					}
 					strAttach += "<button type='button' onclick=\"DownloadFile('/ezBoard/getBoardAttachInfo.do?type=BOARD&itemID=" + encodeURIComponent(getNodeText(SelectSingleNode(xmldomNodes[i], "ItemID"))) + "&attID=" + getNodeText(SelectSingleNode(xmldomNodes[i], "GUID")) + "')\" class='textBtn i_attach_download'>" + strLangNewBoardDesign10 + "</button>";
 					strAttach += "</li>";

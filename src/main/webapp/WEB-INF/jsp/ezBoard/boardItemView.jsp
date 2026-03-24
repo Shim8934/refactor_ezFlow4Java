@@ -985,6 +985,7 @@
 						var oA = document.createElement("a");
 						var oImage = document.createElement("img");
 						var oInput = document.createElement("input");
+						var downBtn = document.createElement("button");
 						oInput.type = "checkbox";
 						oInput.style.display = "none"; // ui 변경으로 선택 저장 기능 삭제 (추후 기능 재사용시 수정필요)
 						
@@ -1027,12 +1028,19 @@
 						var protocol = window.location.protocol;
 						var serverName = window.location.hostname;
 						
+						downBtn.className = "textBtn i_attach_download";
+						var downUrl = "/ezBoard/boardAttachDown.do?filePath=" + javaURLEncode(filepath) + "&fileName=" + javaURLEncode(filenameOrg);
+						downBtn.addEventListener("click", function () {
+							location.href = downUrl;
+						});
+						downBtn.textContent = strLangNewBoardDesign10; 
+						
 						oInput.setAttribute("name","fileSelect");
 						oInput.setAttribute("value",filenameView);
 						oInput.setAttribute("filePath",MakeXMLString(filepath));
 						oImage.src = fileImage;
 						oA.innerText = filenameOrg + " (" + filesize + ")";
-						oA.href = "/ezBoard/boardAttachDown.do?filePath=" + javaURLEncode(filepath) + "&fileName=" + javaURLEncode(filenameOrg);
+						oA.href = downUrl;
 						oSpan.appendChild(oInput);
 						oSpan.appendChild(oImage);
 						oSpan.appendChild(oA)
@@ -1046,6 +1054,7 @@
 							oButton.innerText = "<spring:message code = 'ezBoard.newDesign11'/>";
 							oLi.appendChild(oButton);
 						}
+						oLi.appendChild(downBtn);
 						oUl.appendChild(oLi);
 					}
 					document.getElementById('lstAttachLink').append(oUl);
