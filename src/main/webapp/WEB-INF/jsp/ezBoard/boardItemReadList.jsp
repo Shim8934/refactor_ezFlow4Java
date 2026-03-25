@@ -122,7 +122,7 @@
 			            		listTd[i].style.width = "120px";
 			            		listTd[i].style.textAlign = "center";
 			            		listTd[i].style.cursor = "pointer";
-			            		listTd[i].innerHTML = listTd[i].textContent.split("(")[0];
+			            		//listTd[i].innerHTML = listTd[i].textContent.split("(")[0]; //의도파악이 어려워 주석처리
 			            	}
 			            	if((i%4) == 2) {
 			            		listTd[i].style.width = "80px";
