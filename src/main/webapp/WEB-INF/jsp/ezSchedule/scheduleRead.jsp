@@ -173,12 +173,16 @@
 						deptID = result;
 					}
 				});
-	        	
+				
+	        	if (typeof deptID != 'undefined' && deptID == "") {
+                    alert("<spring:message code='ezSchedule.kyj01' />");
+                } else {
 	            // var feature = GetOpenPosition(420, 450);
 	            if (userid.indexOf('@') > 0)
 	                window.open("/ezCommon/showPersonInfo.do?email=" + userid+"&dept="+deptID, "", GetOpenWindowfeature(420, 450, 1));
 	            else
 	                window.open("/ezCommon/showPersonInfo.do?id=" + userid+"&dept="+deptID, "", GetOpenWindowfeature(420, 450, 1));
+	            }
 	        }
 	
 			/* function group_info() {
