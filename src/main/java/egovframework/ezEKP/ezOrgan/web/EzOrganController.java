@@ -455,7 +455,7 @@ public class EzOrganController {
 		userInfo = commonUtil.userInfo(loginCookie);
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
         String strBaseDN = xmlDom.getDocumentElement().getChildNodes().item(0).getTextContent();
-		String strFilter = "(&(objectclass=ucOrg2)(docsysteminfo=*))";
+		String strFilter = "(&(objectclass=ucOrg2))";
 
         int intScope = 1;
         String strXML = ezOrganService.getOrganSubTreeInfo(strFilter, strBaseDN, intScope);

@@ -1545,7 +1545,7 @@ function RequestDataG(pNodeID, pTreeID) {
 
         var treeView = new TreeView();
         treeView.LoadFromID("tvTreeView3");
-
+        treeView.SetUseSusinColor4AprG(true);
         treeView.AppendChildNodes(xmlRtn.documentElement, TreeIdx);
         xmlhttp2 = null;
     } catch (e) {

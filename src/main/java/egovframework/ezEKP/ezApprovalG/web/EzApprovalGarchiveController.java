@@ -2346,7 +2346,7 @@ public class EzApprovalGarchiveController extends EzFileMngUtil {
 		
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
         String keyword = xmlDom.getDocumentElement().getChildNodes().item(0).getTextContent();
-        String strFilter = "(&(ou=*" + keyword + "*)(objectclass=ucorg2))";
+        String strFilter = "(&(ucOrgFullName=*" + keyword + "*)(objectclass=ucorg2))";
         int intScope = 3;
         String strXML = ezOrganService.searchOuterOrgan(strFilter, intScope);
         
