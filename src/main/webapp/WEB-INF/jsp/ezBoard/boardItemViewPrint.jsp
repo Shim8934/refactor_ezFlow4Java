@@ -245,7 +245,7 @@
 					var serverName = window.location.hostname;
 					
 					oImage.src = fileImage;
-					oA.innerText = filenameView + " (" + filesize + ")";
+					oA.innerText = filenameOrg + " (" + filesize + ")";
 					oA.style.cursor = "default";
 					oSpan.appendChild(oImage);
 					oSpan.appendChild(oA)
