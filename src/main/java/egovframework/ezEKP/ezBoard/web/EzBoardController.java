@@ -96,7 +96,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.HandlerMapping;
-import org.springframework.web.util.HtmlUtils;
 import org.springframework.web.util.UriComponentsBuilder;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -4852,11 +4851,6 @@ public class EzBoardController extends EzFileMngUtil{
 			}
 			/* 2021-04-26 홍승비 - 확장칼럼의 COLNAME, VALUE에 대한 ', "문자 파싱 추가 (jsp단에서 추가 파싱 없이 value 속성으로 쓰기 위해)*/
 			for (int i = 0; i < boardAttributeListVO.size(); i++) {
-				boardAttributeListVO.get(i).setColName1(HtmlUtils.htmlUnescape(boardAttributeListVO.get(i).getColName1()));
-				boardAttributeListVO.get(i).setColName2(HtmlUtils.htmlUnescape(boardAttributeListVO.get(i).getColName2()));
-				boardAttributeListVO.get(i).setColName3(HtmlUtils.htmlUnescape(boardAttributeListVO.get(i).getColName3()));
-				boardAttributeListVO.get(i).setColName4(HtmlUtils.htmlUnescape(boardAttributeListVO.get(i).getColName4()));
-				boardAttributeListVO.get(i).setColName6(HtmlUtils.htmlUnescape(boardAttributeListVO.get(i).getColName6()));
 				String tempValue = boardAttributeListVO.get(i).getValue();
 				String tempColName1 = boardAttributeListVO.get(i).getColName1();
 				String userLang = userInfo.getLang();
