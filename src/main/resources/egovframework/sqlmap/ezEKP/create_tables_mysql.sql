@@ -16582,6 +16582,8 @@ CREATE TABLE `TBL_APPROVE_ERROR_INFO` (
   `COMPANYID` varchar(20) NOT NULL COMMENT '회사 아이디',
   `ERROR_MESSAGE` varchar(2000) DEFAULT NULL COMMENT '오류 메시지',
   `ERROR_CASE` varchar(200) DEFAULT NULL COMMENT '커스텀 오류 케이스',
+  `CREATEDATE` datetime DEFAULT NULL COMMENT '오류 생성일',
+  `UPDATEDATE` datetime DEFAULT NULL COMMENT '업데이트 일자',
   PRIMARY KEY (`TENANT_ID`,`COMPANYID`,`DOCID`),
   KEY `tbl_approve_file_error_IDX` (`DOCID`,`TENANT_ID`,`COMPANYID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='백단에서 결재 시 본문 물리파일을 핸들링하다가 오류가 발생한 doc을 넣는 테이블';
