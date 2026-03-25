@@ -39681,23 +39681,9 @@
             WHERE DOCID = #v_DOCID#
             AND TENANT_ID = #v_TENANTID#
             AND COMPANYID = #companyID#
-            AND APRMEMBERID 
-            <isEmpty property="isShare">
-                = #v_USERID#
-            </isEmpty>
-            <isNotEmpty property="isShare">
-                IN (SELECT OWNERID FROM TBL_PS_SHAREAPPROVAL WHERE TENANTID = #v_TENANTID# AND SHAREUSERID = #v_USERID#)
-            </isNotEmpty>
-            UNION
-            SELECT *
-            FROM VENDCHAMJODOCINFO
-            WHERE DOCID = #v_DOCID#
-            AND TENANT_ID = #v_TENANTID#
-            AND COMPANYID = #companyID#
             AND APRTYPE != '015'
-            AND
-            FUNCTIONTYPE != '004'
-            AND APRMEMBERID
+            AND FUNCTIONTYPE != '004'
+            AND (APRMEMBERID
             <isEmpty property="isShare">
                 = #v_USERID#
             </isEmpty>
@@ -39705,15 +39691,40 @@
                 IN (SELECT OWNERID FROM TBL_PS_SHAREAPPROVAL WHERE TENANTID = #v_TENANTID# AND SHAREUSERID = #v_USERID#)
             </isNotEmpty>
             <isNotEmpty property="proxyList">
+                OR
+                (APRMEMBERID
+                <iterate property="proxyList" prepend="IN" conjunction="," open="(" close=")">
+                    #proxyList[].id#
+                </iterate>
+                AND APRMEMBERDEPTID
+                <iterate property="proxyList" prepend="IN" conjunction="," open="(" close=")">
+                    #proxyList[].dept#
+                </iterate>
+                AND APRMEMBERJOBTITLE
+                <iterate property="proxyList" prepend="IN" conjunction="," open="(" close=")">
+                    #proxyList[].title#
+                </iterate>
+                )
+            </isNotEmpty>
+            )
             UNION
-            SELECT
-            *
-            FROM
-            VAPRDOINGDOCLIST
-            WHERE
-            DOCID = #v_DOCID#
-            AND
-            APRMEMBERID
+            SELECT *
+            FROM VENDCHAMJODOCINFO
+            WHERE DOCID = #v_DOCID#
+            AND TENANT_ID = #v_TENANTID#
+            AND COMPANYID = #companyID#
+            AND APRTYPE != '015'
+            AND FUNCTIONTYPE != '004'
+            AND (APRMEMBERID
+            <isEmpty property="isShare">
+                = #v_USERID#
+            </isEmpty>
+            <isNotEmpty property="isShare">
+                IN (SELECT OWNERID FROM TBL_PS_SHAREAPPROVAL WHERE TENANTID = #v_TENANTID# AND SHAREUSERID = #v_USERID#)
+            </isNotEmpty>
+            <isNotEmpty property="proxyList">
+                OR
+                (APRMEMBERID
                 <iterate property="proxyList" prepend="IN" conjunction="," open="(" close=")">
                     #proxyList[].id#
                 </iterate>
@@ -39725,7 +39736,9 @@
                 <iterate property="proxyList" prepend="IN" conjunction="," open="(" close=")">
                     #proxyList[].title#
                 </iterate>
+                )
             </isNotEmpty>
+            )
         )
             ORDER BY APRMEMBERSN
         )
