@@ -2222,6 +2222,7 @@
 	            var ifrm1 = document.getElementById("ifrm1");
 	            if (ifrm1 != null && typeof(ifrm1) != "undefined") {
 	                var viewTabCnt = Number(allTabNum); // 모든 안의 갯수
+	                $("div.tab_container").css("min-height", window.innerHeight - 169);
 	                
 	                for (var i = 0; i < viewTabCnt; i++) {
 	                    var viewTabNo = Number(i) + 1;
