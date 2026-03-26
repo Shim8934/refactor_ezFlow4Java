@@ -4,7 +4,7 @@ function ChangeTab(obj) {
         case "ApvForm_div1":
             if (document.getElementById("ApvForm_content1").style.display == "none") {
                 document.getElementById("ApvForm_content1").style.display = "";
-                document.getElementById("ApvForm_content2").style.display = "none";
+                document.getElementById("ApvForm_content2").style.overflow = "hidden";
                 document.getElementById("ApvForm_content3").style.display = "none";
                 document.getElementById("ApvForm_content4").style.display = "none";
                 document.getElementById("ApvForm_content5").style.display = "none";
@@ -21,9 +21,9 @@ function ChangeTab(obj) {
             }
             break;
         case "ApvForm_div2":
-            if (document.getElementById("ApvForm_content2").style.display == "none") {
+            if (document.getElementById("ApvForm_content2").style.overflow == "hidden") {
                 document.getElementById("ApvForm_content1").style.display = "none";
-                document.getElementById("ApvForm_content2").style.display = "";
+                document.getElementById("ApvForm_content2").style.overflow = "visible";
                 document.getElementById("ApvForm_content3").style.display = "none";
                 document.getElementById("ApvForm_content4").style.display = "none";
                 document.getElementById("ApvForm_content5").style.display = "none";
@@ -42,7 +42,7 @@ function ChangeTab(obj) {
         case "ApvForm_div3":
             if (document.getElementById("ApvForm_content3").style.display == "none") {
                 document.getElementById("ApvForm_content1").style.display = "none";
-                document.getElementById("ApvForm_content2").style.display = "none";
+                document.getElementById("ApvForm_content2").style.overflow = "hidden";
                 document.getElementById("ApvForm_content3").style.display = "";
                 document.getElementById("ApvForm_content4").style.display = "none";
                 document.getElementById("ApvForm_content5").style.display = "none";
@@ -61,7 +61,7 @@ function ChangeTab(obj) {
         case "ApvForm_div4":
             if (document.getElementById("ApvForm_content4").style.display == "none") {
                 document.getElementById("ApvForm_content1").style.display = "none";
-                document.getElementById("ApvForm_content2").style.display = "none";
+                document.getElementById("ApvForm_content2").style.overflow = "hidden";
                 document.getElementById("ApvForm_content3").style.display = "none";
                 document.getElementById("ApvForm_content4").style.display = "";
                 document.getElementById("ApvForm_content5").style.display = "none";
@@ -80,7 +80,7 @@ function ChangeTab(obj) {
         case "ApvForm_div5":
             if (document.getElementById("ApvForm_content5").style.display == "none") {
                 document.getElementById("ApvForm_content1").style.display = "none";
-                document.getElementById("ApvForm_content2").style.display = "none";
+                document.getElementById("ApvForm_content2").style.overflow = "hidden";
                 document.getElementById("ApvForm_content3").style.display = "none";
                 document.getElementById("ApvForm_content4").style.display = "none";
                 document.getElementById("ApvForm_content5").style.display = "";
@@ -100,7 +100,7 @@ function ChangeTab(obj) {
         case "ApvForm_div6":
             if (document.getElementById("ApvForm_content6").style.display == "none") {
                 document.getElementById("ApvForm_content1").style.display = "none";
-                document.getElementById("ApvForm_content2").style.display = "none";
+                document.getElementById("ApvForm_content2").style.overflow = "hidden";
                 document.getElementById("ApvForm_content3").style.display = "none";
                 document.getElementById("ApvForm_content4").style.display = "none";
                 document.getElementById("ApvForm_content5").style.display = "none";
@@ -120,7 +120,7 @@ function ChangeTab(obj) {
         case "ApvForm_div7":
             if (document.getElementById("ApvForm_content7").style.display == "none") {
                 document.getElementById("ApvForm_content1").style.display = "none";
-                document.getElementById("ApvForm_content2").style.display = "none";
+                document.getElementById("ApvForm_content2").style.overflow = "hidden";
                 document.getElementById("ApvForm_content3").style.display = "none";
                 document.getElementById("ApvForm_content4").style.display = "none";
                 document.getElementById("ApvForm_content5").style.display = "none";
@@ -139,7 +139,7 @@ function ChangeTab(obj) {
         case "ApvForm_div8":
             if (document.getElementById("ApvForm_content8").style.display == "none") {
                 document.getElementById("ApvForm_content1").style.display = "none";
-                document.getElementById("ApvForm_content2").style.display = "none";
+                document.getElementById("ApvForm_content2").style.overflow = "hidden";
                 document.getElementById("ApvForm_content3").style.display = "none";
                 document.getElementById("ApvForm_content4").style.display = "none";
                 document.getElementById("ApvForm_content5").style.display = "none";
@@ -159,7 +159,7 @@ function ChangeTab(obj) {
         case "ApvForm_div9":  //양식 세부설정
             if (document.getElementById("ApvForm_content9").style.display == "none") {
                 document.getElementById("ApvForm_content1").style.display = "none";
-                document.getElementById("ApvForm_content2").style.display = "none";
+                document.getElementById("ApvForm_content2").style.overflow = "hidden";
                 document.getElementById("ApvForm_content3").style.display = "none";
                 document.getElementById("ApvForm_content4").style.display = "none";
                 document.getElementById("ApvForm_content5").style.display = "none";
@@ -178,7 +178,7 @@ function ChangeTab(obj) {
         case "ApvForm_div10":
             if (document.getElementById("ApvForm_content10").style.display == "none") {
                 document.getElementById("ApvForm_content1").style.display = "none";
-                document.getElementById("ApvForm_content2").style.display = "none";
+                document.getElementById("ApvForm_content2").style.overflow = "hidden";
                 document.getElementById("ApvForm_content3").style.display = "none";
                 document.getElementById("ApvForm_content4").style.display = "none";
                 document.getElementById("ApvForm_content5").style.display = "none";

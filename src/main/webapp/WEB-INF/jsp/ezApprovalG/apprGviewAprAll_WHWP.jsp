@@ -878,11 +878,11 @@
 					var addString = "";
 					if (viewTabIdx == 1) { // 1안인 경우, 선택된 상태로 스타일 처리
                         $("dl.tab_menu").append("<dt class=\"on\" id=\"dt" + viewTabIdx + "\" style=\"cursor:pointer\"><span onclick=\"selTab('" + viewTabIdx + "')\"  id=\"sp" + viewTabIdx + "\">" + viewTabIdx + " " + strLangHSBRDa01 + "</span></dt>");
-                        addString = "<div class=\"tab_content\" id=\"tab" + viewTabIdx + "\" style=\"display:black;\"> ";
+                        addString = "<div class=\"tab_content\" id=\"tab" + viewTabIdx + "\" style=\"height:0px; overflow:visible;\"> ";
 					}
                     else {
                         $("dl.tab_menu").append("<dt id=\"dt" + viewTabIdx + "\" style=\"cursor:pointer\"><span onclick=\"selTab('" + viewTabIdx + "')\"  id=\"sp" + viewTabIdx + "\">" + viewTabIdx + " " + strLangHSBRDa01 + "</span></dt>");
-                        addString = "<div class=\"tab_content\" id=\"tab" + viewTabIdx + "\" style=\"display:black;\">";
+                        addString = "<div class=\"tab_content\" id=\"tab" + viewTabIdx + "\" style=\"height:0px; overflow:hidden;\">";
                     }
 
 					// formID는 자식 프레임에서 process_AfterOpen() > getApprovInfo() 등으로 알아서 가져오게 된다. 안 넘겨줘도 됨
@@ -899,8 +899,10 @@
 	            $("dl.tab_menu dt").removeClass("on"); // 기존 탭 활성화 모두 제거
 	            $("#dt" + objNum).addClass("on"); // 현재 선택한 탭 활성화
 
-	            $("div.tab_content").attr("style", "display:none"); // 생성된 iframe 영역을 전부 안보이게 처리
-	            $("#tab" + objNum).attr("style", "display:block"); // 현재 선택한 탭의 iframe을 보이게 함
+//	            $("div.tab_content").attr("style", "display:none"); // 생성된 iframe 영역을 전부 안보이게 처리
+//	            $("#tab" + objNum).attr("style", "display:block"); // 현재 선택한 탭의 iframe을 보이게 함
+	            $("div.tab_content").css("overflow", "hidden");
+	            $("#tab" + objNum).css("overflow", "visible");
 
 	            currentTabIdx = objNum; //현재 선택된 탭 인덱스 변경
 	            

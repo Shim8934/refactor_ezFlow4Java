@@ -625,7 +625,7 @@
 				cntGetTextFile++;
 				if (currentTabIdx != currIdx) {
 					// GetTextFile가 완료된 탭은 다시 감춤
-					document.getElementById("tab" + currIdx).style.display = "none";
+					document.getElementById("tab" + currIdx).style.overflow = "hidden";
 				}
 				if (docMaxTabNumForDraft == cntGetTextFile) {
 					// 모든 GetTextFile가 실행되면 컨테이너 높이 원복. 원복하지 않으면 창크기변경시 컨테이너가 변하지 않음.
@@ -2124,10 +2124,10 @@
 	                var addString = "";
 	                if (newTabCnt == 1) { // 최초 1안 추가
 	                    $("dl.tab_menu").append("<dt class=\"active\" id=\"dt" + newTabIdx + "\" style=\"cursor:pointer\"><span onclick=\"selTab('" + newTabIdx + "')\"  id=\"sp" + newTabIdx + "\">" + viewTabIdx + " " + strLangHSBRDa01 + "</span></li>");
-	                    addString = "<div class=\"tab_content\" id=\"tab" + newTabIdx + "\" style=\"display:black;\"> ";
+	                    addString = "<div class=\"tab_content\" id=\"tab" + newTabIdx + "\" style=\"height:0px; overflow:visible;\"> ";
 	                } else {
 	                    $("dl.tab_menu").append("<dt id=\"dt" + newTabIdx + "\" style=\"cursor:pointer\"><span onclick=\"selTab('" + newTabIdx + "')\" id=\"sp" + newTabIdx + "\">" + viewTabIdx + " " + strLangHSBRDa01 + "</span></li>");
-	                    addString = "<div class=\"tab_content\" id=\"tab" + newTabIdx + "\" style=\"display:black;\"> ";
+	                    addString = "<div class=\"tab_content\" id=\"tab" + newTabIdx + "\" style=\"height:0px; overflow:hidden;\"> ";
 	                }
 	                
 	                var iframeURL = (formExt == "mht" ? "/ezApprovalG/draftContent.do" : "/ezApprovalG/draftContentAll_WHWP.do") + "?frameNum=" + newTabIdx + "&formID=" + encodeURI(pFormIDAry[newTabIdx]) + "&docHref=" + encodeURI(pFormHrefAry[newTabIdx]) + "&docID=" + encodeURI(pDocIDAry[newTabIdx]);
@@ -2223,11 +2223,11 @@
 	                    var addString = "";
 	                    if (viewNewTabCnt == 1) {
 	                        $("dl.tab_menu").append("<dt class=\"on\" id=\"dt" + newTabIdx + "\" style=\"cursor:pointer\"><span onclick=\"selTab('" + newTabIdx + "')\"  id=\"sp" + newTabIdx + "\">" + newTabIdx + " " + strLangHSBRDa01 + "</span></dt>");
-	                        addString = "<div class=\"tab_content\" id=\"tab" + newTabIdx + "\" style=\"display:block;\">";
+	                        addString = "<div class=\"tab_content\" id=\"tab" + newTabIdx + "\" style=\"height:0px; overflow:visible;\">";
 	                    }
 	                    else {
 	                        $("dl.tab_menu").append("<dt id=\"dt" + newTabIdx + "\" style=\"cursor:pointer\"><span onclick=\"selTab('" + newTabIdx + "')\"  id=\"sp" + newTabIdx + "\">" + newTabIdx + " " + strLangHSBRDa01 + "</span></dt>");
-	                        addString = "<div class=\"tab_content\" id=\"tab" + newTabIdx + "\" style=\"display:block;\">";
+	                        addString = "<div class=\"tab_content\" id=\"tab" + newTabIdx + "\" style=\"height:0px; overflow:hidden;\">";
 	                    }
 	                    
 	                    var iframeURL = (extAry[i] == "mht" ? "/ezApprovalG/draftContent.do" : "/ezApprovalG/draftContentAll_WHWP.do") + "?frameNum=" + newTabIdx + "&docHref=" + encodeURI(pFormHrefAry[newTabIdx]) + "&docID=" + encodeURI(pDocIDAry[newTabIdx]);
@@ -2260,11 +2260,11 @@
 						var addString = "";
  						if (newTabIdx == 1) { // 1안인 경우, 선택된 상태로 스타일 처리
 	                        $("dl.tab_menu").append("<dt class=\"on\" id=\"dt" + newTabIdx + "\" style=\"cursor:pointer\"><span onclick=\"selTab('" + newTabIdx + "')\"  id=\"sp" + newTabIdx + "\">" + viewTabIdx + " " + strLangHSBRDa01 + "</span></dt>");
-	                        addString = "<div class=\"tab_content\" id=\"tab" + newTabIdx + "\" style=\"display:black;\"> ";
+	                        addString = "<div class=\"tab_content\" id=\"tab" + newTabIdx + "\" style=\"height:0px; overflow:visible;\"> ";
 						}
 	                    else {
 	                        $("dl.tab_menu").append("<dt id=\"dt" + newTabIdx + "\" style=\"cursor:pointer\"><span onclick=\"selTab('" + newTabIdx + "')\"  id=\"sp" + newTabIdx + "\">" + viewTabIdx + " " + strLangHSBRDa01 + "</span></dt>");
-	                        addString = "<div class=\"tab_content\" id=\"tab" + newTabIdx + "\" style=\"display:none;\">";
+	                        addString = "<div class=\"tab_content\" id=\"tab" + newTabIdx + "\" style=\"height:0px; overflow:hidden;\">";
 	                    }
 
  						// formID는 자식 프레임에서 process_AfterOpen() > GetAprDocFormID()로 알아서 가져오게 된다. 안 넘겨줘도 됨
@@ -2282,8 +2282,10 @@
 	            $("dl.tab_menu dt").removeClass("on"); // 기존 탭 활성화 모두 제거
 	            $("#dt" + objNum).addClass("on"); // 현재 선택한 탭 활성화
 
-	            $("div.tab_content").attr("style", "display:none"); // 생성된 iframe 영역을 전부 안보이게 처리
-	            $("#tab" + objNum).attr("style", "display:block"); // 현재 선택한 탭의 iframe을 보이게 함
+//	            $("div.tab_content").attr("style", "display:none"); // 생성된 iframe 영역을 전부 안보이게 처리
+//	            $("#tab" + objNum).attr("style", "display:block"); // 현재 선택한 탭의 iframe을 보이게 함
+	            $("div.tab_content").css("overflow", "hidden");
+	            $("#tab" + objNum).css("overflow", "visible");
 
 	            currentTabIdx = objNum; //현재 선택된 탭 인덱스 변경
 	            
@@ -2297,7 +2299,7 @@
 	            // 자식창 내부 iframe 영역 리사이즈 (자식창의 함수가 로딩된 경우에만 동작)
 	            var currIfrm = document.getElementById("ifrm" + objNum);
 	            if (typeof(currIfrm.contentWindow.Resize) == "function") {
-	            	currIfrm.contentWindow.Resize();
+	            	//currIfrm.contentWindow.Resize();
 	            }
 	            
                 var tmp = currIfrm.contentDocument.getElementById("hwpctrl_frame");
@@ -2354,6 +2356,7 @@
 	            var ifrm1 = document.getElementById("ifrm1");
 	            if (ifrm1 != null && typeof(ifrm1) != "undefined") {
 	                var viewTabCnt = Number(newTabIdx);
+	                $("div.tab_container").css("min-height", window.innerHeight - 169);
 	                
 	                for (var i = 0; i < viewTabCnt; i++) {
 	                    var viewTabNo = Number(i) + 1;
