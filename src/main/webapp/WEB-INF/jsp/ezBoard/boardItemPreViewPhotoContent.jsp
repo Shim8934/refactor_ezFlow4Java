@@ -143,7 +143,7 @@
 		        if (CurrentHeight < 300)
 		            document.getElementById("trheight").style.height = 300 + "px";
 		        else
-		            document.getElementById("trheight").style.height = (CurrentHeight - 300) + "px";
+		            document.getElementById("trheight").style.height = ((CurrentHeight - 300) < 300 ? 300 : (CurrentHeight - 300) ) + "px";
 		    }
 		    
 	        function generateGuid() {
