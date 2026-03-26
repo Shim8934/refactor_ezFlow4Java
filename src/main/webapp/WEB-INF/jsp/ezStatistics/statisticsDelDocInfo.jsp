@@ -109,13 +109,6 @@ var pCompanyId = '<c:out value="${companyId}"/>';
 	    	{
 	    	libtn_clear.style.display = "none";
 	    	}
-	    if(SelectNodes(xmlDom, "DATA/SUMMARY")[0].childNodes.length != 0)
-	    //if(xmlDom.selectSingleNode("DATA/SUMMARY").text != "")
-	    {
-	        //var DelDocInfo = xmlDom.selectSingleNode("DATA/SUMMARY").text;
-	        var DelDocInfo = SelectNodes(xmlDom, "DATA/SUMMARY")[0].childNodes[0].nodeValue;
-	        document.getElementById("txt_DelDocInfo").value = DelDocInfo;
-	    }
 	}
 
 function DelDocInfoSave_onclick(delflag)
