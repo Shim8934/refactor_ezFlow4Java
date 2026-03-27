@@ -440,10 +440,14 @@ public class LoginController {
 		}
 
 		// 사원번호를 사용한 로그인을 허용하지 않는 경우
-		if (!_uid.equals(resultVO.getId()) && !"YES".equalsIgnoreCase(ezCommonService.getTenantConfig("UseEmpNumberLogin", tenantId))) {
-			//This kind of login is not allowed in his/her tenant
-			model.addAttribute("message", egovMessageSource.getMessage("fail.common.login", locale));
-			return "forward:/user/login/login.do";
+		if (!_uid.equals(resultVO.getId())) {
+			_uid = resultVO.getId(); // orgId
+
+			if (!"YES".equalsIgnoreCase(ezCommonService.getTenantConfig("UseEmpNumberLogin", tenantId))) {
+				//This kind of login is not allowed in his/her tenant
+				model.addAttribute("message", egovMessageSource.getMessage("fail.common.login", locale));
+				return "forward:/user/login/login.do";
+			}
 		}
 
 		useFido = fidoNotAccessIpCheck(resultVO);
