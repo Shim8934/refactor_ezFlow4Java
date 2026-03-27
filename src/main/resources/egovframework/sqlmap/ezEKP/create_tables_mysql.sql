@@ -2696,7 +2696,7 @@ DROP TABLE IF EXISTS `tbl_apr_gamsaattachinfo`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_apr_gamsaattachinfo` (
-  `ORGDOCID` varchar(80) NOT NULL,
+  `ORGDOCID` varchar(20) NOT NULL,
   `OPINIONID` varchar(80) NOT NULL,
   `ATTACHFILESN` bigint(10) NOT NULL,
   `ATTACHFILENAME` varchar(1020) CHARACTER SET utf8mb4 DEFAULT NULL,
@@ -2727,7 +2727,7 @@ DROP TABLE IF EXISTS `tbl_apr_gamsadocattachinfo`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_apr_gamsadocattachinfo` (
-  `ORGDOCID` varchar(80) NOT NULL,
+  `ORGDOCID` varchar(20) NOT NULL,
   `OPINIONID` varchar(80) NOT NULL,
   `ATTACHSN` bigint(10) NOT NULL,
   `ATTACHDOCNAME` varchar(1020) CHARACTER SET utf8mb4 DEFAULT NULL,
@@ -2756,8 +2756,8 @@ DROP TABLE IF EXISTS `tbl_apr_gamsaopinion`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_apr_gamsaopinion` (
   `SN` bigint(10) NOT NULL,
-  `ORGDOCID` varchar(80) NOT NULL,
-  `ISGSDOCID` varchar(80) NOT NULL,
+  `ORGDOCID` varchar(20) NOT NULL,
+  `ISGSDOCID` varchar(20) NOT NULL,
   `OPINIONID` varchar(80) NOT NULL,
   `OPINIONDOCNUM` bigint(10) NOT NULL,
   `FILEPATH` varchar(1020) DEFAULT NULL,
@@ -2784,8 +2784,8 @@ DROP TABLE IF EXISTS `tbl_apr_isgsdoccategory`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_apr_isgsdoccategory` (
   `SN` bigint(10) NOT NULL,
-  `ORGDOCID` varchar(80) NOT NULL,
-  `ISGSDOCID` varchar(80) DEFAULT NULL,
+  `ORGDOCID` varchar(20) NOT NULL,
+  `ISGSDOCID` varchar(20) DEFAULT NULL,
   `CODE2` varchar(12) NOT NULL,
   `CATEGORYNAME` varchar(100) NOT NULL,
   `JOCHIDATE` datetime DEFAULT NULL,
@@ -2805,8 +2805,8 @@ DROP TABLE IF EXISTS `tbl_apr_jochidoc`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_apr_jochidoc` (
   `SN` bigint(10) NOT NULL,
-  `DOCID` varchar(80) NOT NULL,
-  `ORGDOCID` varchar(80) NOT NULL,
+  `DOCID` varchar(20) NOT NULL,
+  `ORGDOCID` varchar(20) NOT NULL,
   `FILEPATH` varchar(1020) DEFAULT NULL,
   `DELFLAG` varchar(2) NOT NULL DEFAULT 'N',
   `ISHISTORY` varchar(2) DEFAULT NULL,
@@ -2830,7 +2830,7 @@ DROP TABLE IF EXISTS `tbl_apr_secure_list`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_apr_secure_list` (
-  `DOCID` varchar(80) NOT NULL,
+  `DOCID` varchar(20) NOT NULL,
   `AUTHID` varchar(400) NOT NULL,
   `TENANT_ID` mediumint(5) NOT NULL DEFAULT 0,
   PRIMARY KEY (`TENANT_ID`,`AUTHID`,`DOCID`)
@@ -2845,7 +2845,7 @@ DROP TABLE IF EXISTS `tbl_aprattachinfo`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_aprattachinfo` (
-  `DOCID` varchar(80) NOT NULL,
+  `DOCID` varchar(20) NOT NULL,
   `ATTACHFILESN` bigint(10) NOT NULL,
   `VIEWORDER` bigint(10) DEFAULT NULL,
   `ATTACHFILENAME` varchar(1020) CHARACTER SET utf8mb4 DEFAULT NULL,
@@ -2879,7 +2879,7 @@ DROP TABLE IF EXISTS `tbl_aprdocattachinfo`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_aprdocattachinfo` (
-  `DOCID` varchar(80) NOT NULL,
+  `DOCID` varchar(20) NOT NULL,
   `ATTACHSN` bigint(10) NOT NULL,
   `ATTACHDOCNAME` varchar(1020) CHARACTER SET utf8mb4 DEFAULT NULL,
   `ATTACHDOCURL` varchar(1020) DEFAULT NULL,
@@ -2906,7 +2906,7 @@ DROP TABLE IF EXISTS `tbl_aprdocgroupinfo`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_aprdocgroupinfo` (
-  `DOCID` varchar(80) NOT NULL,
+  `DOCID` varchar(20) NOT NULL,
   `TABSN` bigint(10) NOT NULL,
   `GROUPDOCSN` varchar(80) NOT NULL,
   `TENANT_ID` mediumint(5) NOT NULL DEFAULT 0,
@@ -2924,9 +2924,9 @@ DROP TABLE IF EXISTS `tbl_aprdocinfo`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_aprdocinfo` (
-  `DOCID` varchar(80) NOT NULL,
-  `FORMID` varchar(40) DEFAULT NULL,
-  `ORGDOCID` varchar(80) DEFAULT NULL,
+  `DOCID` varchar(20) NOT NULL,
+  `FORMID` varchar(10) DEFAULT NULL,
+  `ORGDOCID` varchar(20) DEFAULT NULL,
   `DOCTYPE` varchar(12) DEFAULT NULL,
   `DOCSTATE` varchar(12) DEFAULT NULL,
   `FUNCTIONTYPE` varchar(12) DEFAULT NULL,
@@ -3001,7 +3001,7 @@ DROP TABLE IF EXISTS `tbl_aprlineinfo`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_aprlineinfo` (
-  `DOCID` varchar(80) NOT NULL,
+  `DOCID` varchar(20) NOT NULL,
   `APRMEMBERSN` bigint(10) NOT NULL,
   `APRTYPE` varchar(12) DEFAULT NULL,
   `APRSTATE` varchar(12) DEFAULT NULL,
@@ -3038,7 +3038,7 @@ DROP TABLE IF EXISTS `tbl_apropenhistory`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_apropenhistory` (
-  `DOCID` varchar(80) NOT NULL,
+  `DOCID` varchar(20) NOT NULL,
   `USERID` varchar(40) NOT NULL,
   `PROCESSDATE` datetime DEFAULT NULL,
   `OPENDATE` datetime NOT NULL,
@@ -3056,7 +3056,7 @@ DROP TABLE IF EXISTS `tbl_apropinioninfo`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_apropinioninfo` (
-  `DOCID` varchar(80) NOT NULL,
+  `DOCID` varchar(20) NOT NULL,
   `USERID` varchar(400) NOT NULL,
   `OPINIONGB` varchar(12) DEFAULT NULL COMMENT '001:일반의견, 002:반송의견, 003:보류의견, 004:회송의견',
   `CONTENT` longtext CHARACTER SET utf8mb4 DEFAULT NULL,
@@ -3126,7 +3126,7 @@ DROP TABLE IF EXISTS `tbl_aprreceiptprocessinfo`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_aprreceiptprocessinfo` (
   `RECEIVESN` bigint(10) NOT NULL,
-  `DOCID` varchar(80) NOT NULL,
+  `DOCID` varchar(20) NOT NULL,
   `SENTDEPTID` varchar(400) DEFAULT NULL,
   `SENTDEPTNAME` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
   `RECEIVEDDEPTID` varchar(400) NOT NULL,
@@ -3135,18 +3135,18 @@ CREATE TABLE `tbl_aprreceiptprocessinfo` (
   `APRSTATE` varchar(12) DEFAULT NULL,
   `PROCESSDATE` datetime DEFAULT NULL,
   `PROCESSYN` varchar(4) DEFAULT NULL,
-  `PROCESSDOCID` varchar(80) DEFAULT NULL,
+  `PROCESSDOCID` varchar(20) DEFAULT NULL,
   `PROCESSORID` varchar(400) DEFAULT NULL,
   `PROCESSORNAME` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
   `PROCESSORJOBTITLE` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
-  `PARENTSDOCID` varchar(80) DEFAULT NULL,
+  `PARENTSDOCID` varchar(20) DEFAULT NULL,
   `SENTDEPTNAME2` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
   `RECEIVEDDEPTNAME2` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
   `PROCESSORNAME2` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
   `PROCESSORJOBTITLE2` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
   `TENANT_ID` mediumint(5) NOT NULL DEFAULT 0,
   `COMPANYID` varchar(20) NOT NULL,
-  `ROOTDOCID` varchar(80) DEFAULT NULL,
+  `ROOTDOCID` varchar(20) DEFAULT NULL,
   PRIMARY KEY (`TENANT_ID`,`COMPANYID`,`RECEIVESN`,`DOCID`,`RECEIVEDDEPTID`(255)),
   KEY `IDX_TBL_ARPI_APRSTATE` (`APRSTATE`),
   KEY `IDX_TBL_ARPI_RECEIVEDDEPTID` (`RECEIVEDDEPTID`)
@@ -3606,7 +3606,7 @@ DROP TABLE IF EXISTS `tbl_audio_visualrecexinfo_temp`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_audio_visualrecexinfo_temp` (
-  `DOCID` char(20) NOT NULL,
+  `DOCID` varchar(20) NOT NULL,
   `RECORDID` varchar(68) DEFAULT NULL,
   `SEPERATEATTACHNO` varchar(8) NOT NULL,
   `SUMMARY` varchar(1020) DEFAULT NULL,
@@ -3625,7 +3625,7 @@ DROP TABLE IF EXISTS `tbl_autodocnum_item`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_autodocnum_item` (
-  `FORMID` char(10) NOT NULL,
+  `FORMID` varchar(10) NOT NULL,
   `KEEPPERIOD` varchar(8) DEFAULT NULL,
   `SECURITYLEVEL` varchar(4) DEFAULT NULL,
   `ISPUBLIC` varchar(4) DEFAULT NULL,
@@ -3648,7 +3648,7 @@ DROP TABLE IF EXISTS `tbl_board_apprlist`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_board_apprlist` (
-  `BOARDID` varchar(76) NOT NULL COMMENT '게시판ID',
+  `BOARDID` varchar(38) NOT NULL COMMENT '게시판ID',
   `APPRUSERID` varchar(40) NOT NULL COMMENT '승인자',
   `TENANT_ID` mediumint(5) NOT NULL,
   PRIMARY KEY (`TENANT_ID`,`BOARDID`,`APPRUSERID`)
@@ -3686,7 +3686,7 @@ DROP TABLE IF EXISTS `tbl_board_boardinfo`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_board_boardinfo` (
-  `BOARDID` varchar(76) NOT NULL,
+  `BOARDID` varchar(38) NOT NULL,
   `BOARDNAME` varchar(510) CHARACTER SET utf8mb4 DEFAULT NULL,
   `BOARDNAME2` varchar(510) CHARACTER SET utf8mb4 DEFAULT NULL,
   `BOARDNAME3` varchar(510) CHARACTER SET utf8mb4 DEFAULT NULL,
@@ -3694,7 +3694,7 @@ CREATE TABLE `tbl_board_boardinfo` (
   `BOARDNAME6` varchar(510) CHARACTER SET utf8mb4 DEFAULT NULL,
   `TREEVIEWORDER` int(11) DEFAULT NULL,
   `BOARDLEVEL` int(11) DEFAULT NULL,
-  `PARENTBOARDID` varchar(76) DEFAULT NULL,
+  `PARENTBOARDID` varchar(38) DEFAULT NULL,
   `BOARDDESCRIPTION` varchar(510) CHARACTER SET utf8mb4 DEFAULT NULL,
   `ITEMEXPIRES` int(11) DEFAULT NULL,
   `ATTACHSIZELIMIT` varchar(510) DEFAULT NULL,
@@ -3747,7 +3747,7 @@ DROP TABLE IF EXISTS `tbl_board_boardinfo_attribute`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_board_boardinfo_attribute` (
-  `BOARDID` varchar(76) NOT NULL,
+  `BOARDID` varchar(38) NOT NULL,
   `TABLECOL` varchar(100) NOT NULL,
   `SN` smallint(3) DEFAULT NULL,
   `COLNAME1` varchar(100) CHARACTER SET utf8mb4 DEFAULT NULL,
@@ -3771,13 +3771,13 @@ DROP TABLE IF EXISTS `tbl_board_boardmanage`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_board_boardmanage` (
-  `BOARDID` varchar(76) NOT NULL,
+  `BOARDID` varchar(38) NOT NULL,
   `ACCESSID` varchar(40) NOT NULL,
   `ACCESSNAME` varchar(100) CHARACTER SET utf8mb4 DEFAULT NULL,
   `ACCESSNAME2` varchar(100) CHARACTER SET utf8mb4 DEFAULT NULL,
   `ACCESSLEVEL` bigint(10) DEFAULT NULL,
   `ACCESS_` bigint(10) DEFAULT NULL,
-  `PARENTBOARDID` varchar(76) DEFAULT NULL,
+  `PARENTBOARDID` varchar(38) DEFAULT NULL,
   `BOARDADMIN_FG` varchar(10) DEFAULT NULL,
   `LISTVIEW_FG` varchar(10) DEFAULT NULL,
   `READ_FG` varchar(10) DEFAULT NULL,
@@ -3825,7 +3825,7 @@ DROP TABLE IF EXISTS `tbl_board_deletereservedboard`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_board_deletereservedboard` (
-  `BOARDID` varchar(76) NOT NULL,
+  `BOARDID` varchar(38) NOT NULL,
   `TENANT_ID` mediumint(5) NOT NULL,
   PRIMARY KEY (`TENANT_ID`,`BOARDID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -3839,8 +3839,8 @@ DROP TABLE IF EXISTS `tbl_board_deletereserveditem`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_board_deletereserveditem` (
-  `BOARDID` varchar(76) NOT NULL,
-  `ITEMID` varchar(76) NOT NULL,
+  `BOARDID` varchar(38) NOT NULL,
+  `ITEMID` varchar(38) NOT NULL,
   `TENANT_ID` mediumint(5) NOT NULL,
   PRIMARY KEY (`TENANT_ID`,`BOARDID`,`ITEMID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -3854,8 +3854,8 @@ DROP TABLE IF EXISTS `tbl_board_item`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_board_item` (
-  `ITEMID` varchar(80) NOT NULL,
-  `BOARDID` varchar(80) NOT NULL,
+  `ITEMID` varchar(38) NOT NULL,
+  `BOARDID` varchar(38) NOT NULL,
   `WRITERID` varchar(80) DEFAULT NULL,
   `WRITERNAME` varchar(120) DEFAULT NULL,
   `WRITERNAME2` varchar(120) DEFAULT NULL,
@@ -3921,8 +3921,8 @@ DROP TABLE IF EXISTS `tbl_board_item_attachhistory`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_board_item_attachhistory` (
-  `BOARDID` varchar(80) NOT NULL,
-  `ITEMID` varchar(80) NOT NULL,
+  `BOARDID` varchar(38) NOT NULL,
+  `ITEMID` varchar(38) NOT NULL,
   `ATTACHFILENAME` varchar(1020) DEFAULT NULL,
   `ATTACHFILEHREF` varchar(1020) DEFAULT NULL,
   `ATTACHFILESIZE` varchar(400) DEFAULT NULL,
@@ -3948,7 +3948,7 @@ DROP TABLE IF EXISTS `tbl_board_item_attachments`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_board_item_attachments` (
-  `ITEMID` varchar(76) NOT NULL,
+  `ITEMID` varchar(38) NOT NULL,
   `GUID` varchar(76) NOT NULL,
   `FILEPATH` varchar(800) CHARACTER SET utf8mb4 DEFAULT NULL,
   `FILESIZE` varchar(100) DEFAULT NULL,
@@ -3966,8 +3966,8 @@ DROP TABLE IF EXISTS `tbl_board_item_history`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_board_item_history` (
-  `BOARDID` varchar(80) NOT NULL,
-  `ITEMID` varchar(80) NOT NULL,
+  `BOARDID` varchar(38) NOT NULL,
+  `ITEMID` varchar(38) NOT NULL,
   `MODIFYSN` bigint(10) NOT NULL,
   `MODIFYUSERID` varchar(400) DEFAULT NULL,
   `MODIFYUSERNAME` varchar(200) DEFAULT NULL,
@@ -4014,7 +4014,7 @@ DROP TABLE IF EXISTS `tbl_board_item_listoption_boar`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_board_item_listoption_boar` (
-  `BOARDID` varchar(76) NOT NULL,
+  `BOARDID` varchar(38) NOT NULL,
   `SN` bigint(10) NOT NULL,
   `NAME1` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
   `NAME2` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
@@ -4037,8 +4037,8 @@ DROP TABLE IF EXISTS `tbl_board_item_read`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_board_item_read` (
-  `BOARDID` varchar(76) NOT NULL,
-  `ITEMID` varchar(76) NOT NULL,
+  `BOARDID` varchar(38) NOT NULL,
+  `ITEMID` varchar(38) NOT NULL,
   `USERID` varchar(100) NOT NULL,
   `USERNAME` varchar(100) CHARACTER SET utf8mb4 DEFAULT NULL,
   `USERNAME2` varchar(100) CHARACTER SET utf8mb4 DEFAULT NULL,
@@ -4064,8 +4064,8 @@ DROP TABLE IF EXISTS `tbl_board_item_temp`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_board_item_temp` (
-  `ITEMID` varchar(76) NOT NULL,
-  `BOARDID` varchar(76) NOT NULL,
+  `ITEMID` varchar(38) NOT NULL,
+  `BOARDID` varchar(38) NOT NULL,
   `WRITERID` varchar(40) DEFAULT NULL,
   `WRITERNAME` varchar(120) CHARACTER SET utf8mb4 DEFAULT NULL,
   `WRITERNAME2` varchar(120) CHARACTER SET utf8mb4 DEFAULT NULL,
@@ -4120,7 +4120,7 @@ DROP TABLE IF EXISTS `tbl_board_like`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_board_like` (
-  `ITEMID` varchar(80) NOT NULL,
+  `ITEMID` varchar(38) NOT NULL,
   `USERID` varchar(80) NOT NULL,
   `LIKEDATE` varchar(40) DEFAULT NULL,
   `TENANT_ID` mediumint(5) NOT NULL,
@@ -4136,7 +4136,7 @@ DROP TABLE IF EXISTS `tbl_board_listheader`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_board_listheader` (
-  `BOARDID` varchar(76) NOT NULL,
+  `BOARDID` varchar(38) NOT NULL,
   `SN` bigint(10) NOT NULL,
   `NAME1` varchar(200) DEFAULT NULL,
   `NAME2` varchar(200) DEFAULT NULL,
@@ -4160,7 +4160,7 @@ DROP TABLE IF EXISTS `tbl_board_myboards`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_board_myboards` (
   `USERID` varchar(100) NOT NULL,
-  `BOARDID` varchar(76) NOT NULL,
+  `BOARDID` varchar(38) NOT NULL,
   `BOARDNAME` varchar(100) CHARACTER SET utf8mb4 DEFAULT NULL,
   `BOARDNAME2` varchar(100) CHARACTER SET utf8mb4 DEFAULT NULL,
   `BOARDNAME3` varchar(100) CHARACTER SET utf8mb4 DEFAULT NULL,
@@ -4193,7 +4193,7 @@ CREATE TABLE `tbl_board_mytree` (
   `TREELEVEL` bigint(10) DEFAULT NULL,
   `TREESTEP` bigint(10) NOT NULL,
   `TREEUPPER` varchar(76) DEFAULT NULL,
-  `TREEBOARDID` varchar(76) DEFAULT NULL,
+  `TREEBOARDID` varchar(38) DEFAULT NULL,
   `TENANT_ID` mediumint(5) NOT NULL,
   `COMPANYID` varchar(80) DEFAULT NULL,
   PRIMARY KEY (`TENANT_ID`,`TREEID`)
@@ -4208,7 +4208,7 @@ DROP TABLE IF EXISTS `tbl_board_newboard_orderinfo`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_board_newboard_orderinfo` (
-  `BOARDID` varchar(76) DEFAULT NULL,
+  `BOARDID` varchar(38) DEFAULT NULL,
   `USERID` varchar(100) NOT NULL,
   `TABUSED` varchar(4) DEFAULT NULL,
   `VIEWORDER` double(126,0) DEFAULT NULL,
@@ -4226,7 +4226,7 @@ DROP TABLE IF EXISTS `tbl_board_noticeboard`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_board_noticeboard` (
-  `BOARDID` varchar(510) NOT NULL,
+  `BOARDID` varchar(38) NOT NULL,
   `TENANT_ID` mediumint(5) NOT NULL,
   `COMPANYID` varchar(80) NOT NULL,
   PRIMARY KEY (`BOARDID`,`TENANT_ID`,`COMPANYID`)
@@ -4241,9 +4241,9 @@ DROP TABLE IF EXISTS `tbl_board_onelinereply`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_board_onelinereply` (
-  `ITEMID` varchar(76) NOT NULL,
-  `REPLYID` varchar(76) NOT NULL,
-  `BOARDID` varchar(76) NOT NULL,
+  `ITEMID` varchar(38) NOT NULL,
+  `REPLYID` varchar(38) NOT NULL,
+  `BOARDID` varchar(38) NOT NULL,
   `USERID` varchar(100) DEFAULT NULL,
   `USERNAME` varchar(100) CHARACTER SET utf8mb4 DEFAULT NULL,
   `USERNAME2` varchar(100) CHARACTER SET utf8mb4 DEFAULT NULL,
@@ -5511,17 +5511,17 @@ DROP TABLE IF EXISTS `tbl_comm_boardinfo`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_comm_boardinfo` (
   `C_CLUBNO` varchar(40) NOT NULL,
-  `BOARDID` varchar(76) NOT NULL,
+  `BOARDID` varchar(38) NOT NULL,
   `BOARDNAME` varchar(100) CHARACTER SET utf8mb4 DEFAULT NULL,
   `BOARDNAME2` varchar(100) CHARACTER SET utf8mb4 DEFAULT NULL,
   `TREEVIEWORDER` varchar(1000) DEFAULT NULL,
   `BOARDLEVEL` bigint(10) DEFAULT NULL,
-  `PARENTBOARDID` varchar(76) NOT NULL,
+  `PARENTBOARDID` varchar(38) NOT NULL,
   `BOARDDESCRIPTION` varchar(400) CHARACTER SET utf8mb4 DEFAULT NULL,
   `ITEMEXPIRES` bigint(10) DEFAULT NULL,
   `ATTACHSIZELIMIT` varchar(20) DEFAULT NULL,
   `REPLYNOTIFY` bigint(10) DEFAULT NULL,
-  `BOARDGROUPID` varchar(76) DEFAULT NULL,
+  `BOARDGROUPID` varchar(38) DEFAULT NULL,
   `ALERTPOSTITEM` bigint(10) DEFAULT NULL,
   `GUBUN` bigint(10) DEFAULT NULL,
   `URL` varchar(400) DEFAULT NULL,
@@ -5548,13 +5548,13 @@ DROP TABLE IF EXISTS `tbl_comm_boardmanage`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_comm_boardmanage` (
-  `BOARDID` varchar(76) NOT NULL,
+  `BOARDID` varchar(38) NOT NULL,
   `ACCESSID` varchar(40) NOT NULL,
   `ACCESSNAME` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
   `ACCESSNAME2` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
   `ACCESSLEVEL` bigint(10) DEFAULT NULL,
   `ACCESS_` bigint(10) DEFAULT NULL,
-  `PARENTBOARDID` varchar(76) DEFAULT NULL,
+  `PARENTBOARDID` varchar(38) DEFAULT NULL,
   `BOARDADMIN_FG` varchar(100) DEFAULT NULL,
   `LISTVIEW_FG` varchar(10) DEFAULT NULL,
   `READ_FG` varchar(10) DEFAULT NULL,
@@ -5576,7 +5576,7 @@ DROP TABLE IF EXISTS `tbl_comm_deletereservedboard`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_comm_deletereservedboard` (
-  `BOARDID` varchar(76) NOT NULL,
+  `BOARDID` varchar(38) NOT NULL,
   `TENANT_ID` decimal(22,0) NOT NULL DEFAULT 0,
   PRIMARY KEY (`TENANT_ID`,`BOARDID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -5590,8 +5590,8 @@ DROP TABLE IF EXISTS `tbl_comm_deletereserveditem`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_comm_deletereserveditem` (
-  `BOARDID` varchar(76) NOT NULL,
-  `ITEMID` varchar(76) NOT NULL,
+  `BOARDID` varchar(38) NOT NULL,
+  `ITEMID` varchar(38) NOT NULL,
   `TENANT_ID` decimal(22,0) NOT NULL DEFAULT 0,
   PRIMARY KEY (`TENANT_ID`,`BOARDID`,`ITEMID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -5605,8 +5605,8 @@ DROP TABLE IF EXISTS `tbl_comm_item`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_comm_item` (
-  `ITEMID` varchar(76) NOT NULL,
-  `BOARDID` varchar(76) NOT NULL,
+  `ITEMID` varchar(38) NOT NULL,
+  `BOARDID` varchar(38) NOT NULL,
   `WRITERID` varchar(40) DEFAULT NULL,
   `WRITERNAME` varchar(120) CHARACTER SET utf8mb4 DEFAULT NULL,
   `WRITERNAME2` varchar(120) CHARACTER SET utf8mb4 DEFAULT NULL,
@@ -5651,7 +5651,7 @@ DROP TABLE IF EXISTS `tbl_comm_item_attachments`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_comm_item_attachments` (
-  `ITEMID` varchar(76) NOT NULL,
+  `ITEMID` varchar(38) NOT NULL,
   `GUID` varchar(76) NOT NULL,
   `FILEPATH` varchar(400) CHARACTER SET utf8mb4 DEFAULT NULL,
   `FILESIZE` varchar(20) DEFAULT NULL,
@@ -5669,8 +5669,8 @@ DROP TABLE IF EXISTS `tbl_comm_item_read`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_comm_item_read` (
-  `BOARDID` varchar(76) NOT NULL,
-  `ITEMID` varchar(76) NOT NULL,
+  `BOARDID` varchar(38) NOT NULL,
+  `ITEMID` varchar(38) NOT NULL,
   `USERID` varchar(40) NOT NULL,
   `USERNAME` varchar(100) CHARACTER SET utf8mb4 DEFAULT NULL,
   `USERNAME2` varchar(100) CHARACTER SET utf8mb4 DEFAULT NULL,
@@ -5696,7 +5696,7 @@ DROP TABLE IF EXISTS `tbl_comm_myboards`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_comm_myboards` (
   `USERID` varchar(40) NOT NULL,
-  `BOARDID` varchar(76) NOT NULL,
+  `BOARDID` varchar(38) NOT NULL,
   `BOARDNAME` varchar(40) CHARACTER SET utf8mb4 DEFAULT NULL,
   `TREEVIEWNUM` bigint(10) DEFAULT NULL,
   `TENANT_ID` decimal(22,0) NOT NULL DEFAULT 0,
@@ -5712,9 +5712,9 @@ DROP TABLE IF EXISTS `tbl_comm_onelinereply`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_comm_onelinereply` (
-  `ITEMID` varchar(76) NOT NULL,
+  `ITEMID` varchar(38) NOT NULL,
   `REPLYID` varchar(76) NOT NULL,
-  `BOARDID` varchar(76) NOT NULL,
+  `BOARDID` varchar(38) NOT NULL,
   `USERID` varchar(100) DEFAULT NULL,
   `USERNAME` varchar(100) CHARACTER SET utf8mb4 DEFAULT NULL,
   `USERNAME2` varchar(100) CHARACTER SET utf8mb4 DEFAULT NULL,
@@ -6106,7 +6106,7 @@ DROP TABLE IF EXISTS `tbl_dailyformcountlog`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_dailyformcountlog` (
   `REGDATE` varchar(40) CHARACTER SET utf8mb4 NOT NULL,
-  `FORMID` varchar(40) NOT NULL,
+  `FORMID` varchar(10) NOT NULL,
   `FORMNAME` varchar(200) DEFAULT NULL,
   `FORMCONTID` varchar(40) NOT NULL,
   `FORMCONTNAME` varchar(200) DEFAULT NULL,
@@ -6239,7 +6239,7 @@ DROP TABLE IF EXISTS `tbl_deptcontlist`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_deptcontlist` (
-  `DOCID` varchar(80) NOT NULL,
+  `DOCID` varchar(20) NOT NULL,
   `DEPTCONTID` varchar(40) NOT NULL,
   `LINKDATE` datetime DEFAULT NULL,
   `DESCRIPTION` varchar(1020) DEFAULT NULL,
@@ -6347,7 +6347,7 @@ DROP TABLE IF EXISTS `tbl_depttemplet`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_depttemplet` (
   `USERID` varchar(255) NOT NULL,
-  `FORMID` varchar(40) NOT NULL,
+  `FORMID` varchar(10) NOT NULL,
   `APRDEPTSN` bigint(10) NOT NULL,
   `APRDEPTTEMPLETNAME` varchar(800) DEFAULT NULL,
   `TENANT_ID` mediumint(5) NOT NULL DEFAULT 0,
@@ -6365,7 +6365,7 @@ DROP TABLE IF EXISTS `tbl_depttempletdetail`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_depttempletdetail` (
   `USERID` varchar(400) NOT NULL,
-  `FORMID` varchar(40) NOT NULL,
+  `FORMID` varchar(10) NOT NULL,
   `APRDEPTSN` bigint(10) NOT NULL,
   `APRDEPTMEMBERSN` bigint(10) NOT NULL,
   `APRMEMBERDEPTID` varchar(400) DEFAULT NULL,
@@ -6430,7 +6430,7 @@ DROP TABLE IF EXISTS `tbl_docdeletehistory`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_docdeletehistory` (
-  `DOCID` varchar(100) NOT NULL,
+  `DOCID` varchar(20) NOT NULL,
   `DOCNO` varchar(45) DEFAULT NULL,
   `DOCTITLE` varchar(255) CHARACTER SET utf8mb4 DEFAULT NULL,
   `DEPTNAME` varchar(50) CHARACTER SET utf8mb4 DEFAULT NULL,
@@ -6452,7 +6452,7 @@ DROP TABLE IF EXISTS `tbl_docdelivery`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_docdelivery` (
   `SN` bigint(10) NOT NULL,
-  `DOCID` varchar(80) NOT NULL,
+  `DOCID` varchar(20) NOT NULL,
   `DEPTID` varchar(400) NOT NULL,
   `HREF` varchar(1020) DEFAULT NULL,
   `RECEIPTDATE` datetime DEFAULT NULL,
@@ -6486,7 +6486,7 @@ DROP TABLE IF EXISTS `tbl_editapprdoc`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_editapprdoc` (
   `SN` bigint(10) NOT NULL AUTO_INCREMENT,
-  `DOCID` varchar(80) NOT NULL,
+  `DOCID` varchar(20) NOT NULL,
   `BEFOREHTML` text DEFAULT NULL,
   `AFTERHTML` text DEFAULT NULL,
   `USERID` varchar(80) NOT NULL,
@@ -6505,7 +6505,7 @@ DROP TABLE IF EXISTS `tbl_endaprdocattachinfo`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_endaprdocattachinfo` (
-  `DOCID` varchar(80) NOT NULL,
+  `DOCID` varchar(20) NOT NULL,
   `ATTACHSN` bigint(10) NOT NULL,
   `ATTACHDOCNAME` varchar(1020) CHARACTER SET utf8mb4 DEFAULT NULL,
   `ATTACHDOCURL` varchar(1020) DEFAULT NULL,
@@ -6532,8 +6532,8 @@ DROP TABLE IF EXISTS `tbl_endaprdocinfo`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_endaprdocinfo` (
-  `DOCID` varchar(80) NOT NULL,
-  `ORGDOCID` varchar(80) DEFAULT NULL,
+  `DOCID` varchar(20) NOT NULL,
+  `ORGDOCID` varchar(20) DEFAULT NULL,
   `DOCTYPE` varchar(12) DEFAULT NULL,
   `DOCSTATE` varchar(12) DEFAULT NULL,
   `FUNCTIONTYPE` varchar(12) DEFAULT NULL,
@@ -6549,7 +6549,7 @@ CREATE TABLE `tbl_endaprdocinfo` (
   `WRITERJOBTITLE` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
   `WRITERDEPTID` varchar(400) DEFAULT NULL,
   `WRITERDEPTNAME` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
-  `FORMID` varchar(40) DEFAULT NULL,
+  `FORMID` varchar(10) DEFAULT NULL,
   `CONTAINERID` varchar(40) DEFAULT NULL,
   `ISPUBLIC` varchar(4) DEFAULT NULL COMMENT '공개여부(Y/N)',
   `WRITERNAME2` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
@@ -6575,7 +6575,7 @@ DROP TABLE IF EXISTS `tbl_endaprlineinfo`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_endaprlineinfo` (
-  `DOCID` varchar(80) NOT NULL,
+  `DOCID` varchar(20) NOT NULL,
   `APRMEMBERSN` bigint(10) NOT NULL,
   `APRTYPE` varchar(12) DEFAULT NULL,
   `APRSTATE` varchar(12) DEFAULT NULL,
@@ -6613,7 +6613,7 @@ DROP TABLE IF EXISTS `tbl_endapropinioninfo`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_endapropinioninfo` (
-  `DOCID` varchar(80) NOT NULL,
+  `DOCID` varchar(20) NOT NULL,
   `USERID` varchar(400) NOT NULL,
   `OPINIONGB` varchar(12) DEFAULT NULL COMMENT '001:일반의견, 002:반송의견, 003:보류의견, 004:회송의견',
   `CONTENT` longtext CHARACTER SET utf8mb4 DEFAULT NULL,
@@ -6639,7 +6639,7 @@ DROP TABLE IF EXISTS `tbl_endattachinfo`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_endattachinfo` (
-  `DOCID` varchar(80) NOT NULL,
+  `DOCID` varchar(20) NOT NULL,
   `ATTACHFILESN` bigint(10) NOT NULL,
   `VIEWORDER` bigint(10) DEFAULT NULL,
   `ATTACHFILENAME` varchar(1020) CHARACTER SET utf8mb4 DEFAULT NULL,
@@ -6673,7 +6673,7 @@ DROP TABLE IF EXISTS `tbl_endreceiptpointinfo`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_endreceiptpointinfo` (
-  `DOCID` varchar(80) NOT NULL,
+  `DOCID` varchar(20) NOT NULL,
   `RECEIPTPOINTID` varchar(400) NOT NULL,
   `RECEIPTPOINTNAME` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
   `EXTRECEPTYN` varchar(4) DEFAULT NULL,
@@ -6704,7 +6704,7 @@ DROP TABLE IF EXISTS `tbl_endreceiptprocessinfo`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_endreceiptprocessinfo` (
   `RECEIVESN` bigint(10) NOT NULL,
-  `DOCID` varchar(80) NOT NULL,
+  `DOCID` varchar(20) NOT NULL,
   `SENTDEPTID` varchar(400) DEFAULT NULL,
   `SENTDEPTNAME` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
   `RECEIVEDDEPTID` varchar(400) NOT NULL,
@@ -6713,11 +6713,11 @@ CREATE TABLE `tbl_endreceiptprocessinfo` (
   `APRSTATE` varchar(12) DEFAULT NULL,
   `PROCESSDATE` datetime DEFAULT NULL,
   `PROCESSYN` varchar(4) DEFAULT NULL,
-  `PROCESSDOCID` varchar(80) DEFAULT NULL,
+  `PROCESSDOCID` varchar(20) DEFAULT NULL,
   `PROCESSORID` varchar(400) DEFAULT NULL,
   `PROCESSORNAME` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
   `PROCESSORJOBTITLE` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
-  `PARENTSDOCID` varchar(80) DEFAULT NULL,
+  `PARENTSDOCID` varchar(20) DEFAULT NULL,
   `SENTDEPTNAME2` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
   `RECEIVEDDEPTNAME2` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
   `PROCESSORNAME2` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
@@ -6751,7 +6751,7 @@ DROP TABLE IF EXISTS `tbl_expaprdocinfo`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_expaprdocinfo` (
-  `DOCID` varchar(80) NOT NULL,
+  `DOCID` varchar(20) NOT NULL,
   `SECURITYCODE` bigint(10) DEFAULT NULL COMMENT '100:1등급, 200:2등급, 300:3등급, 400:4등급, 500:5등급',
   `STORAGEPERIOD` varchar(160) DEFAULT NULL COMMENT '1:1년, 2:2년, 3:3년, 5:5년, 10:10년, 100:준영구, 1000:영구',
   `KEYWORD` varchar(1020) CHARACTER SET utf8mb4 DEFAULT NULL,
@@ -6791,7 +6791,7 @@ DROP TABLE IF EXISTS `tbl_expaprline`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_expaprline` (
-  `DOCID` varchar(80) NOT NULL,
+  `DOCID` varchar(20) NOT NULL,
   `APRMEMBERSN` bigint(10) NOT NULL,
   `ORGUSERID` varchar(200) NOT NULL,
   `PROXYUSERID` varchar(400) DEFAULT NULL,
@@ -6816,7 +6816,7 @@ DROP TABLE IF EXISTS `tbl_expendaprdocinfo`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_expendaprdocinfo` (
-  `DOCID` varchar(80) NOT NULL,
+  `DOCID` varchar(20) NOT NULL,
   `SECURITYCODE` bigint(10) DEFAULT NULL COMMENT '100:1등급, 200:2등급, 300:3등급, 400:4등급, 500:5등급',
   `STORAGEPERIOD` varchar(160) DEFAULT NULL COMMENT '1:1년, 2:2년, 3:3년, 5:5년, 10:10년, 100:준영구, 1000:영구',
   `KEYWORD` varchar(1020) CHARACTER SET utf8mb4 DEFAULT NULL,
@@ -6864,7 +6864,7 @@ DROP TABLE IF EXISTS `tbl_expendaprline`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_expendaprline` (
-  `DOCID` varchar(80) NOT NULL,
+  `DOCID` varchar(20) NOT NULL,
   `APRMEMBERSN` bigint(10) NOT NULL,
   `ORGUSERID` varchar(255) NOT NULL,
   `PROXYUSERID` varchar(400) DEFAULT NULL,
@@ -6906,7 +6906,7 @@ DROP TABLE IF EXISTS `tbl_form_autorule`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_form_autorule` (
-  `FORMID` varchar(40) NOT NULL,
+  `FORMID` varchar(10) NOT NULL,
   `AUTORULESN` bigint(10) NOT NULL,
   `AUTORULEGUID` varchar(50) NOT NULL,
   `CHECKFIELDTYPE` varchar(50) DEFAULT NULL,
@@ -6934,7 +6934,7 @@ DROP TABLE IF EXISTS `tbl_form_autoruleline`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_form_autoruleline` (
-  `FORMID` varchar(40) NOT NULL,
+  `FORMID` varchar(10) NOT NULL,
   `AUTORULEGUID` varchar(50) NOT NULL,
   `APRMEMBERSN` bigint(10) NOT NULL,
   `APRTYPE` varchar(24) DEFAULT NULL,
@@ -6968,7 +6968,7 @@ DROP TABLE IF EXISTS `tbl_form_office`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_form_office` (
-  `FORMID` varchar(40) NOT NULL,
+  `FORMID` varchar(10) NOT NULL,
   `TENANT_ID` mediumint(5) NOT NULL,
   `COMPANYID` varchar(20) NOT NULL,
   PRIMARY KEY (`FORMID`,`TENANT_ID`,`COMPANYID`),
@@ -7041,7 +7041,7 @@ DROP TABLE IF EXISTS `tbl_formgroup`;
 CREATE TABLE `tbl_formgroup` (
   `SN` bigint(10) NOT NULL,
   `FORMGROUPID` varchar(200) DEFAULT NULL,
-  `FORMID` varchar(40) DEFAULT NULL,
+  `FORMID` varchar(10) DEFAULT NULL,
   `TENANT_ID` mediumint(5) NOT NULL,
   `COMPANYID` varchar(20) NOT NULL,
   PRIMARY KEY (`TENANT_ID`,`COMPANYID`,`SN`)
@@ -7057,7 +7057,7 @@ DROP TABLE IF EXISTS `tbl_forminfo`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_forminfo` (
   `FORMCONTID` varchar(40) DEFAULT NULL,
-  `FORMID` varchar(40) NOT NULL,
+  `FORMID` varchar(10) NOT NULL,
   `FORMNAME` varchar(1020) CHARACTER SET utf8mb4 DEFAULT NULL,
   `FORMNAME2` varchar(1020) CHARACTER SET utf8mb4 DEFAULT NULL,
   `FORMDOCTYPE` varchar(24) NOT NULL,
@@ -7111,7 +7111,7 @@ DROP TABLE IF EXISTS `tbl_formrecv`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_formrecv` (
-  `FORMID` varchar(40) NOT NULL,
+  `FORMID` varchar(10) NOT NULL,
   `DEPTID` varchar(400) NOT NULL,
   `DEPTSN` bigint(10) DEFAULT NULL,
   `USERID` varchar(400) DEFAULT NULL,
@@ -7131,7 +7131,7 @@ DROP TABLE IF EXISTS `tbl_formuserinfo`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_formuserinfo` (
-  `FORMID` varchar(40) NOT NULL,
+  `FORMID` varchar(10) NOT NULL,
   `USERID` varchar(400) NOT NULL,
   `TENANT_ID` mediumint(5) NOT NULL DEFAULT 0,
   `COMPANYID` varchar(20) NOT NULL,
@@ -7147,7 +7147,7 @@ DROP TABLE IF EXISTS `tbl_gongramlineinfo`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_gongramlineinfo` (
-  `DOCID` varchar(80) NOT NULL,
+  `DOCID` varchar(20) NOT NULL,
   `APRMEMBERSN` bigint(10) NOT NULL,
   `APRTYPE` varchar(12) DEFAULT NULL,
   `APRSTATE` varchar(12) DEFAULT NULL,
@@ -7195,7 +7195,7 @@ DROP TABLE IF EXISTS `tbl_historyattachinfo`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_historyattachinfo` (
-  `DOCID` varchar(80) NOT NULL,
+  `DOCID` varchar(20) NOT NULL,
   `ATTACHFILESN` bigint(10) NOT NULL,
   `ATTACHFILENAME` varchar(1020) CHARACTER SET utf8mb4 DEFAULT NULL,
   `ATTACHFILEDISPLAYNAME` varchar(1020) CHARACTER SET utf8mb4 DEFAULT NULL,
@@ -7228,7 +7228,7 @@ DROP TABLE IF EXISTS `tbl_historydocinfo`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_historydocinfo` (
-  `DOCID` varchar(80) NOT NULL,
+  `DOCID` varchar(20) NOT NULL,
   `CHANGESN` bigint(10) NOT NULL,
   `URL` varchar(1020) DEFAULT NULL,
   `CHANGEUSERID` varchar(400) DEFAULT NULL,
@@ -7259,7 +7259,7 @@ DROP TABLE IF EXISTS `tbl_historylineinfo`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_historylineinfo` (
-  `DOCID` varchar(80) NOT NULL,
+  `DOCID` varchar(20) NOT NULL,
   `APRMEMBERSN` bigint(10) NOT NULL,
   `APRTYPE` varchar(12) DEFAULT NULL,
   `APRSTATE` varchar(12) DEFAULT NULL,
@@ -7300,7 +7300,7 @@ DROP TABLE IF EXISTS `tbl_historyreceiptinfo`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_historyreceiptinfo` (
-  `DOCID` varchar(80) NOT NULL,
+  `DOCID` varchar(20) NOT NULL,
   `RECEIPTDEPTID` varchar(255) NOT NULL,
   `RECEIPTDEPTNAME` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
   `STATUS` varchar(4) DEFAULT NULL,
@@ -7770,7 +7770,7 @@ DROP TABLE IF EXISTS `tbl_lastaprline`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_lastaprline` (
   `USERID` varchar(400) NOT NULL,
-  `FORMID` varchar(40) NOT NULL,
+  `FORMID` varchar(10) NOT NULL,
   `APRMEMBERSN` bigint(10) NOT NULL,
   `APRTYPE` varchar(12) DEFAULT NULL,
   `APRSTATE` varchar(12) DEFAULT NULL,
@@ -7805,7 +7805,7 @@ DROP TABLE IF EXISTS `tbl_lastdeptline`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_lastdeptline` (
   `USERID` varchar(400) NOT NULL,
-  `FORMID` varchar(40) NOT NULL,
+  `FORMID` varchar(10) NOT NULL,
   `RECEIPTPOINTID` varchar(400) NOT NULL,
   `RECEIPTPOINTNAME` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
   `EXTRECEPTYN` varchar(4) DEFAULT NULL,
@@ -7836,7 +7836,7 @@ DROP TABLE IF EXISTS `tbl_lastdocid`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_lastdocid` (
-  `LASTDOCID` varchar(80) NOT NULL,
+  `LASTDOCID` varchar(20) NOT NULL,
   `TENANT_ID` mediumint(5) NOT NULL DEFAULT 0,
   `COMPANYID` varchar(20) NOT NULL,
   PRIMARY KEY (`TENANT_ID`,`COMPANYID`,`LASTDOCID`)
@@ -7852,7 +7852,7 @@ DROP TABLE IF EXISTS `tbl_lintemplet`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_lintemplet` (
   `USERID` varchar(400) NOT NULL,
-  `FORMID` varchar(40) NOT NULL,
+  `FORMID` varchar(10) NOT NULL,
   `APRLINESN` bigint(10) NOT NULL,
   `APRTEMPLETNAME` varchar(800) CHARACTER SET utf8mb4 DEFAULT NULL,
   `TENANT_ID` mediumint(5) NOT NULL DEFAULT 0,
@@ -7870,7 +7870,7 @@ DROP TABLE IF EXISTS `tbl_lintempletdetail`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_lintempletdetail` (
   `USERID` varchar(400) NOT NULL,
-  `FORMID` varchar(40) NOT NULL,
+  `FORMID` varchar(10) NOT NULL,
   `APRLINESN` bigint(10) NOT NULL,
   `APRMEMBERSN` bigint(10) NOT NULL,
   `APRTYPE` varchar(12) DEFAULT NULL,
@@ -8202,7 +8202,7 @@ DROP TABLE IF EXISTS `tbl_opengovdocinfo`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_opengovdocinfo` (
-  `docid` varchar(80) NOT NULL,
+  `docid` varchar(20) NOT NULL,
   `openflag` char(9) DEFAULT NULL,
   `basis` varchar(200) CHARACTER SET utf8 DEFAULT NULL,
   `reason` varchar(1000) CHARACTER SET utf8 DEFAULT NULL,
@@ -8226,7 +8226,7 @@ DROP TABLE IF EXISTS `tbl_opengovfileinfo`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_opengovfileinfo` (
-  `DOCID` varchar(80) NOT NULL,
+  `DOCID` varchar(20) NOT NULL,
   `SN` bigint(10) NOT NULL,
   `FILEOPENFLAG` char(1) DEFAULT NULL,
   `COMPANYID` varchar(20) NOT NULL,
@@ -8243,7 +8243,7 @@ DROP TABLE IF EXISTS `tbl_opengovmodifyhistory`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_opengovmodifyhistory` (
-  `docid` varchar(80) NOT NULL,
+  `docid` varchar(20) NOT NULL,
   `modifiername` varchar(400) DEFAULT NULL,
   `sn` int(10) NOT NULL,
   `modifierdeptname` varchar(400) DEFAULT NULL,
@@ -8342,8 +8342,8 @@ DROP TABLE IF EXISTS `tbl_photo_imageitem`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_photo_imageitem` (
   `IMAGEID` varchar(76) NOT NULL,
-  `ITEMID` varchar(76) NOT NULL,
-  `BOARDID` varchar(76) NOT NULL,
+  `ITEMID` varchar(38) NOT NULL,
+  `BOARDID` varchar(38) NOT NULL,
   `WRITERID` varchar(40) NOT NULL,
   `WRITERNAME` varchar(120) CHARACTER SET utf8mb4 DEFAULT NULL,
   `WRITERDEPTID` varchar(40) NOT NULL,
@@ -10023,7 +10023,7 @@ DROP TABLE IF EXISTS `tbl_receiptpointinfo`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_receiptpointinfo` (
-  `DOCID` varchar(80) NOT NULL,
+  `DOCID` varchar(20) NOT NULL,
   `RECEIPTPOINTID` varchar(400) NOT NULL,
   `RECEIPTPOINTNAME` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
   `EXTRECEPTYN` varchar(4) DEFAULT NULL,
@@ -10068,7 +10068,7 @@ CREATE TABLE `tbl_recexchinfo` (
   `attachxsl` varchar(255) DEFAULT NULL,
   `xmlpath` varchar(255) DEFAULT NULL,
   `sourcexmlPath` varchar(255) DEFAULT NULL,
-  `DocID` varchar(50) DEFAULT NULL,
+  `DocID` varchar(20) DEFAULT NULL,
   `ModiFlag` varchar(10) DEFAULT NULL,
   `ModiDate` datetime DEFAULT NULL,
   `Notification` varchar(10) DEFAULT NULL,
@@ -10088,7 +10088,7 @@ DROP TABLE IF EXISTS `tbl_record`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_record` (
   `RECORDID` varchar(200) NOT NULL,
-  `DOCID` varchar(80) DEFAULT NULL,
+  `DOCID` varchar(20) DEFAULT NULL,
   `PROCESSDEPTNAME` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
   `PROCESSDEPTCODE` varchar(28) DEFAULT NULL,
   `REGISTERYEAR` varchar(16) DEFAULT NULL,
@@ -10141,7 +10141,7 @@ DROP TABLE IF EXISTS `tbl_record_temp`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_record_temp` (
   `RECORDID` varchar(200) DEFAULT NULL,
-  `DOCID` varchar(80) NOT NULL,
+  `DOCID` varchar(20) NOT NULL,
   `PROCESSDEPTNAME` varchar(200) DEFAULT NULL,
   `PROCESSDEPTCODE` varchar(28) DEFAULT NULL,
   `REGISTERYEAR` varchar(16) DEFAULT NULL,
@@ -10224,7 +10224,7 @@ DROP TABLE IF EXISTS `tbl_recreadhistory`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_recreadhistory` (
   `SERIALNO` decimal(19,0) NOT NULL,
-  `DOCID` varchar(80) NOT NULL,
+  `DOCID` varchar(20) NOT NULL,
   `USERID` varchar(400) DEFAULT NULL,
   `USERNAME` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
   `USERTITLE` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
@@ -10268,7 +10268,7 @@ DROP TABLE IF EXISTS `tbl_recrelayinfo`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_recrelayinfo` (
-  `docID` char(20) DEFAULT NULL,
+  `docID` varchar(20) DEFAULT NULL,
   `xDocID` varchar(255) NOT NULL,
   `recdate` datetime DEFAULT NULL,
   `mFrom` varchar(255) DEFAULT NULL,
@@ -10344,7 +10344,7 @@ DROP TABLE IF EXISTS `tbl_recroleinfo_temp`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_recroleinfo_temp` (
-  `DOCID` char(20) NOT NULL,
+  `DOCID` varchar(20) NOT NULL,
   `RECORDID` varchar(68) DEFAULT NULL,
   `SEPERATEATTACHNO` varchar(8) NOT NULL,
   `USERID` varchar(200) NOT NULL,
@@ -10403,7 +10403,7 @@ CREATE TABLE `tbl_registerdoc` (
   `SN` int(11) NOT NULL,
   `containerID` varchar(45) NOT NULL,
   `regtitle` varchar(255) CHARACTER SET utf8mb4 DEFAULT NULL,
-  `orgdocid` varchar(45) DEFAULT NULL,
+  `orgdocid` varchar(20) DEFAULT NULL,
   `href` varchar(255) DEFAULT NULL,
   `hasAttachYn` varchar(4) DEFAULT NULL,
   `writerDeptID` varchar(20) DEFAULT NULL,
@@ -11761,7 +11761,7 @@ DROP TABLE IF EXISTS `tbl_seperateattach_temp`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_seperateattach_temp` (
-  `DOCID` char(20) NOT NULL,
+  `DOCID` varchar(20) NOT NULL,
   `RECORDID` varchar(68) DEFAULT NULL,
   `SEPERATEATTACHNO` varchar(8) NOT NULL,
   `TITLE` varchar(1020) DEFAULT NULL,
@@ -11829,7 +11829,7 @@ DROP TABLE IF EXISTS `tbl_signinfo`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_signinfo` (
-  `DOCID` varchar(80) NOT NULL,
+  `DOCID` varchar(20) NOT NULL,
   `APRSN` bigint(10) NOT NULL,
   `SIGNTYPE` varchar(40) DEFAULT NULL,
   `SIGNNAME` varchar(400) NOT NULL,
@@ -11892,7 +11892,7 @@ DROP TABLE IF EXISTS `tbl_specialcataloginfo_doc`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_specialcataloginfo_doc` (
-  `DOCID` varchar(80) NOT NULL,
+  `DOCID` varchar(20) NOT NULL,
   `SERIALNO` varchar(12) NOT NULL,
   `SC1` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
   `SC2` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
@@ -11932,7 +11932,7 @@ DROP TABLE IF EXISTS `tbl_specialcataloginfo_tmp`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_specialcataloginfo_tmp` (
-  `DOCID` char(20) NOT NULL,
+  `DOCID` varchar(20) NOT NULL,
   `RECORDID` varchar(68) NOT NULL,
   `SERIALNO` varchar(12) NOT NULL,
   `SC1` varchar(200) DEFAULT NULL,
@@ -12678,8 +12678,8 @@ DROP TABLE IF EXISTS `tbl_tmpaprdocinfo`;
 CREATE TABLE `tbl_tmpaprdocinfo` (
   `OWNERID` varchar(255) NOT NULL,
   `SN` bigint(10) NOT NULL,
-  `FORMID` varchar(40) DEFAULT NULL,
-  `ORGDOCID` varchar(80) DEFAULT NULL,
+  `FORMID` varchar(10) DEFAULT NULL,
+  `ORGDOCID` varchar(20)) DEFAULT NULL,
   `DOCTYPE` varchar(12) DEFAULT NULL,
   `DOCSTATE` varchar(12) DEFAULT NULL,
   `FUNCTIONTYPE` varchar(12) DEFAULT NULL,
@@ -14577,7 +14577,7 @@ DROP TABLE IF EXISTS `tbl_sendoutinfo`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_sendoutinfo` (
   `IDEX` int(80) NOT null auto_increment primary KEY,
-  `DOCID` varchar(80) NOT NULL,
+  `DOCID` varchar(20) NOT NULL,
   `FILENAME` varchar(400) NOT NULL,
   `FOLDERNAME` varchar(400) DEFAULT NULL,
   `FILESTATE` varchar(400) DEFAULT NULL,
@@ -14803,7 +14803,7 @@ DROP TABLE IF EXISTS `TBL_SUSINSCHEDULE`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `TBL_SUSINSCHEDULE` (
-  `DOCID` varchar(80) NOT NULL,
+  `DOCID` varchar(20) NOT NULL,
   `DEPTID` varchar(80) DEFAULT NULL,
   `DIRPATH` varchar(1020) DEFAULT NULL,
   `DOCSTATE` varchar(12) DEFAULT NULL,
@@ -15722,7 +15722,7 @@ CREATE TABLE TBL_SERIAL_NOROLLBACK (
 
 CREATE TABLE `tbl_board_tabboard` (
   `TABID` 		mediumint(2) 	NOT NULL,
-  `BOARDID` 		varchar(80) 	NOT NULL,
+  `BOARDID` 		varchar(38) 	NOT NULL,
   `TENANT_ID` 	mediumint(5) 	NOT NULL,
   `COMPANYID` 	varchar(80) 	NOT NULL,
   `BOARDNAME` 	varchar(255),
@@ -15731,7 +15731,7 @@ CREATE TABLE `tbl_board_tabboard` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE TBL_APRBIGATTACH_DOWNLOADINFO (
-    DOCID VARCHAR(80) NOT NULL,
+    DOCID varchar(20) NOT NULL,
     ATTACHFILESN BIGINT(10) NOT NULL,
     DOWNLOAD_COUNT BIGINT(10),
     TENANT_ID MEDIUMINT(5) NOT NULL DEFAULT 0,
@@ -16000,7 +16000,7 @@ DROP TABLE IF EXISTS `TBL_DISTRIBUTEINFO`;
 CREATE TABLE `TBL_DISTRIBUTEINFO`
 (
   `SN` bigint(10) NOT NULL,
-  `DOCID` varchar(80) NOT NULL,
+  `DOCID` varchar(20) NOT NULL,
   `RECEIPTDATE` datetime DEFAULT NULL,
   `ORGANID` varchar(400) NOT NULL,
   `ORGAN` varchar(200) CHARACTER SET utf8mb4 DEFAULT NULL,
@@ -16015,8 +16015,8 @@ CREATE TABLE `TBL_DISTRIBUTEINFO`
   `ORGANUSERNAME2` varchar(100) DEFAULT NULL,
   `TENANT_ID` mediumint(5) NOT NULL DEFAULT 0,
   `COMPANYID` varchar(20) NOT NULL,
-  `PARENTDOCID` varchar(80) NULL,
-  `ORGDOCID` varchar(80) NOT NULL,
+  `PARENTDOCID` varchar(20) NULL,
+  `ORGDOCID` varchar(20) NOT NULL,
   `DELIVERYSN` bigint(10) DEFAULT NULL,
   `TYPE` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`TENANT_ID`,`COMPANYID`,`SN`,`DOCID`,`ORGANID`(255))
@@ -16147,8 +16147,8 @@ CREATE TABLE TBL_BOARD_KEYWORD (
 --
 CREATE TABLE TBL_BOARD_BOARDITEM_KEYWORD (
     KEYWORDID bigint(20) NOT NULL COMMENT '키워드 아이디',
-    BOARDID varchar(40) NOT NULL COMMENT '게시판 아이디',
-    ITEMID varchar(40) NOT NULL COMMENT '게시물 아이디',
+    BOARDID varchar(38) NOT NULL COMMENT '게시판 아이디',
+    ITEMID varchar(38) NOT NULL COMMENT '게시물 아이디',
     TENANT_ID mediumint(5) NOT NULL COMMENT '테넌트 아이디',
     SN tinyint(3) NOT NULL COMMENT '키워드 순번',
     PRIMARY KEY (KEYWORDID, ITEMID, SN, TENANT_ID)
@@ -16225,7 +16225,7 @@ CREATE TABLE JMOCHA_MAIL_BLOCKED (
 
 DROP TABLE IF EXISTS TBL_BOARD_COMMENT_ATTACHMENTS;
 CREATE TABLE TBL_BOARD_COMMENT_ATTACHMENTS (
-  `ITEMID` varchar(76) NOT NULL COMMENT "게시글 아이디",
+  `ITEMID` varchar(38) NOT NULL COMMENT "게시글 아이디",
   `REPLYID` varchar(76) NOT NULL COMMENT "댓글 아이디",
   `SN` mediumint(5) NOT NULL COMMENT "첨부파일 순번",
   `FILEPATH` varchar(800) DEFAULT NULL COMMENT "첨부파일 저장경로",
@@ -16259,7 +16259,7 @@ DROP TABLE IF EXISTS `tbl_gongramdeletehistory`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tbl_gongramdeletehistory` (
-	`DOCID` varchar(80) NOT NULL,
+	`DOCID` varchar(20) NOT NULL,
 	`APRMEMBERSN` bigint(10) NOT NULL,
 	`APRTYPE` varchar(12) DEFAULT NULL,
 	`APRSTATE` varchar(12) DEFAULT NULL,
@@ -16312,7 +16312,7 @@ CREATE TABLE `tbl_schedulegathermember` (
 -- Table structure for table `tbl_board_item_rating`
 --
 CREATE TABLE tbl_board_item_rating (
-    ITEMID varchar(76) NOT NULL COMMENT '게시물 아이디',
+    ITEMID varchar(38) NOT NULL COMMENT '게시물 아이디',
     USERID varchar(80) NOT NULL COMMENT '사용자 아이디',
     RATING varchar(2) NOT NULL COMMENT '별점',
     RATINGDATE varchar(40) NOT NULL COMMENT '별점 부여 날짜',
@@ -16325,7 +16325,7 @@ CREATE TABLE tbl_board_item_rating (
 -- Table structure for table `tbl_board_item_rating_summary`
 --
 CREATE TABLE tbl_board_item_rating_summary (
-    ITEMID varchar(76) NOT NULL COMMENT '게시물 아이디',
+    ITEMID varchar(38) NOT NULL COMMENT '게시물 아이디',
     TOTALRATERS varchar(10) NOT NULL COMMENT '총 평가자 수',
     TOTALSCORE varchar(6) NOT NULL COMMENT '총 점수',
     AVERAGESCORE varchar(5) NOT NULL COMMENT '평균 점수',
@@ -16419,7 +16419,7 @@ CREATE TABLE TBL_STAT_MENU_DEPT
     TIME_CODE  INT          NOT NULL COMMENT '빠른 범위 검색/정렬용 (형식: YYYYMMDDHH)',
     MENU_ID    INT(11) COMMENT '집계 메뉴 id',
     CODE       VARCHAR(10) COMMENT '집계 통계 종류',
-    STAT_COUNT INT          NOT NULL DEFAULT 0 COMMENT '집계 카운트',
+    STAT_COUNT INT          NOT NULL DEFtbl_c_clubuserAULT 0 COMMENT '집계 카운트',
 
     PRIMARY KEY (TENANT_ID, COMPANY_ID, DEPT_ID, MENU_ID, TIME_CODE),
     INDEX IDX_TIME_COMPONENTS (YEAR, MONTH, DAY, HOUR),
@@ -16447,8 +16447,8 @@ CREATE TABLE TBL_STAT_MENU_DEPT_MONTH
   DEFAULT CHARSET = UTF8MB4 COMMENT "부서별 메뉴 통계 월별 집계 테이블";
 
 CREATE TABLE TBL_BOARD_MODIFYHISTORY (
-    ITEMID VARCHAR(40) NOT NULL,
-    PARENTITEMID VARCHAR(40) DEFAULT NULL,
+    ITEMID varchar(38) NOT NULL,
+    PARENTITEMID varchar(38) DEFAULT NULL,
     VERSION VARCHAR(5) DEFAULT NULL,
     MODIFYUSERID VARCHAR(80) DEFAULT NULL,
     MODIFYUSERNAME VARCHAR(120) DEFAULT NULL,
@@ -16485,7 +16485,7 @@ CREATE TABLE `TBL_USERPRESENCE` (
 
 DROP TABLE IF EXISTS `tbl_board_dislike`;
 CREATE TABLE `tbl_board_dislike` (
-  `ITEMID` varchar(80) NOT NULL,
+  `ITEMID` varchar(38) NOT NULL,
   `USERID` varchar(80) NOT NULL,
   `DISLIKEDATE` varchar(40) DEFAULT NULL,
   `TENANT_ID` mediumint(5) NOT NULL,
@@ -16495,8 +16495,8 @@ CREATE TABLE `tbl_board_dislike` (
 DROP TABLE IF EXISTS `tbl_boarditem_scrap`;
 CREATE TABLE `tbl_boarditem_scrap` (
   `USERID` varchar(100) NOT NULL,
-  `BOARDID` varchar(76) NOT NULL,
-  `ITEMID` varchar(76) NOT NULL,
+  `BOARDID` varchar(38) NOT NULL,
+  `ITEMID` varchar(38) NOT NULL,
   `SCRAPDATE` varchar(40) DEFAULT NULL,
   `TENANT_ID` mediumint(5) NOT NULL,
   `COMPANYID` varchar(20) NOT NULL,
@@ -16517,8 +16517,8 @@ CREATE TABLE `tbl_userscrapcont` (
 
 DROP TABLE IF EXISTS `tbl_userscrapcontlist`;
 CREATE TABLE `tbl_userscrapcontlist` (
-  `BOARDID` varchar(76) NOT NULL,
-  `ITEMID` varchar(76) NOT NULL,
+  `BOARDID` varchar(38) NOT NULL,
+  `ITEMID` varchar(38) NOT NULL,
   `USERID` varchar(100) DEFAULT NULL,
   `USERSCRAPCONTID` varchar(20) NOT NULL,
   `SCRAPDATE` varchar(40) DEFAULT NULL,
@@ -16530,8 +16530,8 @@ CREATE TABLE `tbl_userscrapcontlist` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `tbl_board_reply_react` (
-    `ITEMID` varchar(76) NOT NULL,
-    `REPLYID` varchar(76) NOT NULL,
+    `ITEMID` varchar(38) NOT NULL,
+    `REPLYID` varchar(38) NOT NULL,
     `USERID` varchar(80) NOT NULL,
     `REACTFLAG` varchar(1) DEFAULT NULL,
     `TENANT_ID` mediumint(5) NOT NULL,
@@ -16542,7 +16542,7 @@ CREATE TABLE `tbl_board_reply_react` (
 
 DROP TABLE IF EXISTS `TBL_TOTAL_HISTORY`;
 CREATE TABLE `TBL_TOTAL_HISTORY` (
-  `DOCID` varchar(80) NOT NULL,
+  `DOCID` varchar(20) NOT NULL,
   `USERID` varchar(400) NOT NULL,
   `REGDATE` datetime NOT NULL,
   `GUBUN` varchar(12) DEFAULT NULL,
@@ -16577,7 +16577,7 @@ CREATE TABLE TBL_SAML_REQUEST_ID (
 
 DROP TABLE IF EXISTS `TBL_APPROVE_ERROR_INFO`;
 CREATE TABLE `TBL_APPROVE_ERROR_INFO` (
-  `DOCID` varchar(80) NOT NULL COMMENT '문서 아이디',
+  `DOCID` varchar(20) NOT NULL COMMENT '문서 아이디',
   `TENANT_ID` mediumint(5) NOT NULL DEFAULT 0 COMMENT '테넌트 아이디',
   `COMPANYID` varchar(20) NOT NULL COMMENT '회사 아이디',
   `ERROR_MESSAGE` varchar(2000) DEFAULT NULL COMMENT '오류 메시지',
