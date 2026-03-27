@@ -590,8 +590,7 @@
 		 	
 		 	if(obj == 'show'){
 		 		var checkId = $('input:checked')
- 				var groupColor = checkId[0].parentNode.parentNode.getAttribute("data3");
-		 		
+ 				var groupColor = checkId[0].closest('tr').getAttribute("data3");
 		 		if(checkId.length > 1){
 		 			alert(strLang276);
 		 			return;
