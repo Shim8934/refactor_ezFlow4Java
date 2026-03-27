@@ -662,8 +662,8 @@ public class LoginController {
 
 					String changePassword = ezCommonService.getTenantConfig("changePassword", tenantId);
 
-					if (!"N".equalsIgnoreCase(resultVO.getManualFlag()) // 인사연동 사용자의 경우 비밀번호 첫로그인 및 만료 시 예외
-						&& !(changePassword != null && changePassword.equals("0"))) { // 패스워드 변경 이벤트 발생 여부
+//					if (!"N".equalsIgnoreCase(resultVO.getManualFlag()) // 인사연동 사용자의 경우 비밀번호 첫로그인 및 만료 시 예외 필요 사이트 시 주석을 해제하여 사용
+					if (!(changePassword != null && changePassword.equals("0"))) { // 패스워드 변경 이벤트 발생 여부
 
 						if (resultVO.getLoginCnt() == 0) {
 							diff = 0;
