@@ -504,12 +504,12 @@
 									TENANT_ID = #tenantID#)
 				AND
 					DEPARTMENT NOT IN (SELECT CN FROM TBL_DEPTMASTER WHERE DEPT_CD_PATH LIKE '%trash\_dept%' escape '\' AND TENANT_ID = #tenantID#)
-				AND
 			]]>
 				<isEqual property="useOrganHideFlag" compareValue="YES" prepend="and">
 					USERTREEFLAG = 'Y'
 				</isEqual>
 			<![CDATA[
+				AND
 					TENANT_ID = #tenantID#)
 			]]>    
 				UNION ALL

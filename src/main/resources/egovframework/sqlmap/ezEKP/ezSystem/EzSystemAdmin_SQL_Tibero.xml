@@ -590,7 +590,7 @@
 	
 	<insert id="EzSystemAdminDAO.insertAdminIPBand" parameterClass="Map">
 		<selectKey resultClass="int" keyProperty="id">
-			SELECT TBL_ADMIN_ACCESS_IP_SEQ2.NEXTVAL FROM SYS.DUAL
+			SELECT TBL_ADMIN_ACCESS_IP_SEQ2.NEXTVAL FROM DUAL
 		</selectKey>
 		<![CDATA[
 			INSERT INTO 
