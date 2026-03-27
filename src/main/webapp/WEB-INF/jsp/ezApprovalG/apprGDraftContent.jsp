@@ -1059,6 +1059,8 @@
                 }
 
                 elem = document.getElementById(name);
+                if(!elem)
+                    return;
                 if(isHtml || text.indexOf("<br>") > -1)
                     elem.innerHTML = text;
                 else
