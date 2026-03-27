@@ -282,7 +282,7 @@
             selectedAn = opener.parent.an.selectedIndex;
             maxAnIdx = opener.parent.an.options.length;
             // 안이 삭제되면서 각 안의 인덱스가 변동하는 것을 막기 위해 뒤에서부터 안을 거꾸로 삭제함
-            for (let i = maxAnIdx - 1; i < 0; i--) {
+            for (let i = maxAnIdx - 1; i > 0; i--) {
                 if (i != selectedAn) {
                     deleteAn_B(HwpCtrl, i)
                 }
