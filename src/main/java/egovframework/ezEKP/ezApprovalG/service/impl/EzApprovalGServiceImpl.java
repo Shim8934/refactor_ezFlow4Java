@@ -41049,8 +41049,7 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
         map.put("v_DOCID", docID);
         map.put("v_USERID", userInfo.getId());
         map.put("v_TENANTID", userInfo.getTenantId());
-        map.put("v_COMPANYID", userInfo.getTenantId());
-        map.put("companyID", userInfo.getCompanyID());
+        map.put("v_COMPANYID", userInfo.getCompanyID());
         map.put("MineViewYN", ezCommonService.getTenantConfig("MineViewYN", userInfo.getTenantId()));
 
         ApprGDocListVO docInfo = ezApprovalGDAO.getViewDocInfo(map);

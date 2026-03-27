@@ -39764,7 +39764,7 @@
         WHERE
             TENANT_ID = #v_TENANTID#
         AND
-            COMPANYID = #companyID#
+            COMPANYID = #v_COMPANYID#
         AND
             DOCID = #v_DOCID#
         AND ROWNUM = 1
