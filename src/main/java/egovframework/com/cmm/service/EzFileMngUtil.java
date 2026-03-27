@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.net.URLConnection;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
@@ -441,10 +442,20 @@ public class EzFileMngUtil extends EgovAbstractServiceImpl{
 		//log.debug(this.getClass().getName()+" downFile orgFileName "+orgFileName);
 	
 		if (!file.exists()) {
+			response.setContentType("text/html; charset=UTF-8");
+			PrintWriter out = response.getWriter();
+			out.println("<script>alert('FileNotFound'); history.go(-1);</script>");
+			out.flush();
+			out.close();
 		    throw new FileNotFoundException(downFileName);
 		}
 	
 		if (!file.isFile()) {
+			response.setContentType("text/html; charset=UTF-8");
+			PrintWriter out = response.getWriter();
+			out.println("<script>alert('FileNotFound'); history.go(-1);</script>");
+			out.flush();
+			out.close();
 		    throw new FileNotFoundException(downFileName);
 		}
 		

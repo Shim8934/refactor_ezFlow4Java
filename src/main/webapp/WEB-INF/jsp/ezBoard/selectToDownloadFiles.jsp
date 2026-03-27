@@ -132,10 +132,10 @@
 			if (checks.getElementsByTagName("input").item(suffix)) {
 	            if (checks.getElementsByTagName("input").item(suffix).checked) {
 	                location.href = GetAttribute(checks.getElementsByTagName("a").item(suffix++), "href");
-	                setTimeout(function () { downloadAll(checks) }, 1000);
+	                setTimeout(function () { btn_OK(); }, 1000);
 	            } else {
 	                suffix++;
-	                downloadAll(checks);
+	                btn_OK();
 	            }
 	        } else {
 	            suffix = 0;

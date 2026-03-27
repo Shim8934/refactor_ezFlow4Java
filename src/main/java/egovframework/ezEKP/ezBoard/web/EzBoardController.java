@@ -9,6 +9,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 import java.net.URI;
@@ -10631,6 +10632,11 @@ public class EzBoardController extends EzFileMngUtil{
 				file.delete();
 			}
 			logger.debug(e.getMessage(), e);
+			response.setContentType("text/html; charset=UTF-8");
+			PrintWriter out = response.getWriter();
+			out.println("<script>alert('"+egovMessageSource.getMessage("ezCabinet.t141", userInfo.getLocale())+"'); history.go(-1);</script>");
+			out.flush();
+			out.close();
 		}
 		logger.debug("downloadAttachAll ended.");
 	}
