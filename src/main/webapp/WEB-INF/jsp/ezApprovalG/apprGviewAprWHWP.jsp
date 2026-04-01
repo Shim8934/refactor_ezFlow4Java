@@ -109,7 +109,7 @@
             // 일괄 타입 B
             var draftAllTypeB = "<c:out value ='${draftAllTypeB}'/>";
             var pMode;
-            var draftAllFlag = "Y";
+            var draftAllFlag = <c:if test="${fn:length(group) > 0}">"Y"</c:if><c:if test="${fn:length(group) == 0}">"N"</c:if>;
             var groupDocSN = "<c:out value ='${groupDocSN}'/>"; // 일괄기안된 문서가 가지는 TBL_APRDOCGROUPINFO의 GROUPDOCSN값 (1안의 DOCID)
             var pDocHrefAry = new Array();
             var pFormIDAry = new Array();
