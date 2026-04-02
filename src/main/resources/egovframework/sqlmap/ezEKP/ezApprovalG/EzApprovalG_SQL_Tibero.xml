@@ -5294,7 +5294,7 @@
                  (Z.DEPTID IS NOT NULL OR A.APRMEMBERID != '' OR EXTRECEPTYN = 'Y')
             <isEqual property="approvalFlag" compareValue="G">
                 AND
-                    D.EXTENSIONATTRIBUTE11 = 'Y'
+                    (D.EXTENSIONATTRIBUTE11 = 'Y' OR D.EXTENSIONATTRIBUTE11 IS NULL)
             </isEqual>
             ORDER BY 
 		     	 APRDEPTMEMBERSN DESC
