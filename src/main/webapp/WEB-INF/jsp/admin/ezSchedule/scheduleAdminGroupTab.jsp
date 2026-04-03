@@ -569,7 +569,7 @@
 			    return true;
 			}
 		   
-		 
+		var show_groupinfo2_dialogArguments = new Array();
 		 function show_groupinfo2(obj) {
 		    // 영어에서 ui 틀어짐 : 850 > 900 으로 수치 변경
 		 	var checkRealID = "";
@@ -599,22 +599,24 @@
 		 			return;
 		 		}else{
 		 			checkRealID = checkId[0].id.substring(0,checkId[0].id.length -1);
+		 			show_groupinfo2_dialogArguments[0] = show_groupinfo2_complete;
 		 			window.open("/ezSchedule/scheduleGroupMember.do?groupID=" + checkRealID + "&groupColor=" + encodeURIComponent(groupColor), "schedule_group_modify", "height = 550px, width = 900px, status = no, toolbar=no, menubar=no,location=no, resizable=0" + feature);
 		 			return;
 		 		}
 		 	}else{
-		 		
 		 		var selectedTr = document.getElementById(obj);
-		 		
-		 		
-		 		
+		 		show_groupinfo2_dialogArguments[0] = show_groupinfo2_complete;
 		 		window.open("/ezSchedule/scheduleGroupMember.do?groupID=" + selectedTr.getAttribute("data1") + "&groupColor=" + encodeURIComponent(selectedTr.getAttribute("data3")), "", "height = 550px, width = 900px, status = no, toolbar=no, menubar=no,location=no, resizable=0" + feature);
 		 		
 		 	}
-			
 		 }
 		 
-		 
+		function show_groupinfo2_complete (rtnValue) {
+		    if (rtnValue == "mod") {
+		        goToPageByNum(CurPage);
+		    }
+		}
+		
 		// 초기화버튼
 			function reset() {
 				$(function() {

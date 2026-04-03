@@ -22,7 +22,7 @@
 		    var loginUserId = "<c:out value='${loginUserId}' />";
 		    var loginUserRoll = "<c:out value='${loginUserRoll}' />";
 		    var g_Member; //그룹 멤버 정보
-		 
+		    var ReturnFunction;
 		    function show_personinfo(userid) {
 		    	var deptID = "";
 		    	$.ajax({
@@ -540,8 +540,8 @@
 						// 2023-09-06 조소정 - 관리자단과 사용자단의 부모창이 달라 분기처리함
 						var pathName = opener.parent.location.pathname;
 							
-						if (pathName.includes('admin')) {
-							opener.parent.lef.groupRefresh();
+						if (pathName.includes('admin') && ReturnFunction != "" ) {
+							ReturnFunction("mod");
 						}
 						else {
 							opener.parent.parent.left.groupRefresh();
@@ -680,6 +680,7 @@
 		    
 		    //2018-08-10 김보미 - 추가
 		    window.onload = function () {
+		        ReturnFunction = typeof(opener.show_groupinfo2_dialogArguments) != 'undefined' ? opener.show_groupinfo2_dialogArguments[0] : "";
 		    	var groupName = "<c:out value='${groupName}' />";
 	    	    var description = "<c:out value='${description}' />";
 	        	$('#groupname').val(unEscapeHtml2(groupName));
