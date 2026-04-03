@@ -76,7 +76,10 @@
 		
 		$(function(){
 			windowResize();
-			
+			if (adminFlag == "false" && window.parent.name == "main") {
+			    alert("<spring:message code='ezAttitude.nbh01'/>");
+                window.parent.location.reload();
+            }
 			$(document).on('click', '#AttList th', function(){
 				if (!($(this).find("input[type=checkbox]").length) && ($(this).attr("colname") != "NO") && $(this).attr("colname") != "ORIGIN_TIME") { // checkbox는 sort에서 제외
 					if (!$(this).find("img").length) { // 새로운 th를 클릭한 경우

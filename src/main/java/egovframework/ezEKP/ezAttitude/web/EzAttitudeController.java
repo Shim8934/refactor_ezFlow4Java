@@ -157,6 +157,13 @@ public class EzAttitudeController {
 		if(status.equals("ok")){
 			typeList = (JSONArray) resultBody.get("data");
 		}
+
+		String adminFlag = "false";
+		if (commonUtil.isAdmin(userInfo.getId(), userInfo.getTenantId(), userInfo.getRollInfo(), "c;k;e")) {
+			adminFlag = "true";
+		} else if (commonUtil.isAdmin(userInfo.getId(), userInfo.getTenantId(), userInfo.getRollInfo(), "g")) {
+			adminFlag = "true";
+		}
 		
 		model.addAttribute("useLang", userInfo.getLang());
 		model.addAttribute("typeList", typeList);
@@ -165,6 +172,7 @@ public class EzAttitudeController {
 		model.addAttribute("selectedDeptID", userInfo.getDeptID());
 		model.addAttribute("searchStartDate", searchStartDate.substring(0, 10));
 		model.addAttribute("searchEndDate", searchEndDate.substring(0, 10));
+		model.addAttribute("adminFlag", adminFlag);
 		
 		logger.debug("attitudeManage ended.");
 		
@@ -223,7 +231,7 @@ public class EzAttitudeController {
 			@RequestParam(required=false)String deptid) throws Exception {
 		logger.debug("adminGetAttModAppList started");
 		
-		String adminFlag = "true";
+		String adminFlag = "false";
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -270,6 +278,12 @@ public class EzAttitudeController {
 
 		if (deptList.size() < 1) {
 			return "cmm/error/accessDenied";
+		}
+
+		if (commonUtil.isAdmin(userInfo.getId(), userInfo.getTenantId(), userInfo.getRollInfo(), "c;k;e")) {
+			adminFlag = "true";
+		} else if (commonUtil.isAdmin(userInfo.getId(), userInfo.getTenantId(), userInfo.getRollInfo(), "g")) {
+			adminFlag = "true";
 		}
 		
 		model.addAttribute("selectedDeptID", deptid);
@@ -4215,8 +4229,8 @@ public class EzAttitudeController {
 			@RequestParam(required=false)String endDate,
 			@RequestParam(required=false)String deptid) throws Exception {
 		logger.debug("adminGetAnnCanAppList started");
-		
-		String adminFlag = "true";
+
+		String adminFlag = "false";
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -4263,6 +4277,12 @@ public class EzAttitudeController {
 
 		if (deptList.size() < 1) {
 			return "cmm/error/accessDenied";
+		}
+
+		if (commonUtil.isAdmin(userInfo.getId(), userInfo.getTenantId(), userInfo.getRollInfo(), "c;k;e")) {
+			adminFlag = "true";
+		} else if (commonUtil.isAdmin(userInfo.getId(), userInfo.getTenantId(), userInfo.getRollInfo(), "g")) {
+			adminFlag = "true";
 		}
 		
 		model.addAttribute("selectedDeptID", deptid);

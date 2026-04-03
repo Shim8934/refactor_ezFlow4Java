@@ -77,9 +77,14 @@
 	    	var selectedDeptID = "${selectedDeptID}";
 	    	var listSize = 20;
 	    	var today = "${searchEndDate}"; //오늘날짜 
+            var adminFlag = "${adminFlag}";
 
 	        $(function () {
 	            //datepicker
+	            if (adminFlag == "false" && window.parent.name == "main") {
+	                alert("<spring:message code='ezAttitude.nbh01'/>");
+                    window.parent.location.reload();
+                }
 				$("#Sdatepicker").datepicker({
 					changeMonth : true,
 					changeYear : true,
