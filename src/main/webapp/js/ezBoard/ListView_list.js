@@ -1965,7 +1965,7 @@ function selectToDownloadFiles(boardID, itemID) {
         boardID = event.target.parentElement.parentElement.getAttribute("data1");
     }
     var url = "/ezBoard/selectToDownloadFiles.do?boardID=" + javaURLEncode(boardID) + "&itemID=" + javaURLEncode(itemID);
-    attachAccessChk(boardID, itemID, function(){GetOpenWindow(url, "", "580px", "480px")});
+    attachAccessChk(boardID, itemID, function(){GetOpenWindow(url, "", "580", "480")});
 }
 
 function attachAccessChk(boardID, itemID, rtnFunction) {
