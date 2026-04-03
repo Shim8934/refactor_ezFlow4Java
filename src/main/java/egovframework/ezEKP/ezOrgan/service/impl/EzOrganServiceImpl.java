@@ -53,6 +53,11 @@ import javax.naming.directory.DirContext;
 import javax.naming.directory.InitialDirContext;
 import javax.naming.directory.SearchControls;
 import javax.naming.directory.SearchResult;
+import javax.naming.ldap.Control;
+import javax.naming.ldap.InitialLdapContext;
+import javax.naming.ldap.LdapContext;
+import javax.naming.ldap.PagedResultsControl;
+import javax.naming.ldap.PagedResultsResponseControl;
 import javax.servlet.http.HttpServletRequest;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -1853,7 +1858,8 @@ public class EzOrganServiceImpl extends EgovAbstractServiceImpl implements EzOrg
        
         env.put(Context.PROVIDER_URL, config.getProperty("R_LServer")); 
         env.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory"); 
-        DirContext dirCtx = new InitialDirContext(env); 
+
+		LdapContext dirCtx = new InitialLdapContext(env, null);
         SearchControls constraints = new SearchControls();
 		
 		if (intScope == 0) {
@@ -1870,28 +1876,51 @@ public class EzOrganServiceImpl extends EgovAbstractServiceImpl implements EzOrg
             constraints.setReturningAttributes(attrIDs);
         }
         
-        m_ne = dirCtx.search(strBaseDN + config.getProperty("R_LBaseDN"), strFilter, constraints); 
+		// ldap 페이징을 이용하여, 크기가 과도하게 크더라도 한번에 반환하도록 변경하였음, 차후 개선이 필요함
+		int pageSize = 1000; // 서버 제한은 2000개로 추정됨
+		byte[] cookie = null; //cookie는 다음 페이지를 가져오기 위한 토큰
         
-        dirCtx.close(); 
+		do {
+			dirCtx.setRequestControls(new Control[]{
+				new PagedResultsControl(pageSize, cookie, Control.CRITICAL)
+			});
         
-        while (m_ne.hasMoreElements()) {
-        	SearchResult sr = (SearchResult)m_ne.next(); 
-            String str[] = new String[13];
+        	m_ne = dirCtx.search(strBaseDN + config.getProperty("R_LBaseDN"), strFilter, constraints); 
+        
+			
+			while (m_ne != null && m_ne.hasMore()) {
+				SearchResult sr = (SearchResult)m_ne.next(); 
+				String str[] = new String[13];
             
-            for (int i = 0; i < attrIDs.length; i++) { 
-            	if (sr.getAttributes().get(attrIDs[i]) == null || sr.getAttributes().get(attrIDs[i]).get().equals("")) {
-            		if (attrIDs[i].equals("ouSendOutDocumentYN") || attrIDs[i].equals("ouReceiveDocumentYN")) {
-            			str[i] = "N";
-            		} else {
-            			str[i] = " ";
-            		}
-            	} else {
-            		str[i] = (String)sr.getAttributes().get(attrIDs[i]).get();
-            	}
-            } 
-            ou.add(str); 
-        }
-  
+				for (int i = 0; i < attrIDs.length; i++) {
+					if (sr.getAttributes().get(attrIDs[i]) == null || sr.getAttributes().get(attrIDs[i]).get().equals("")) {
+						if (attrIDs[i].equals("ouSendOutDocumentYN") || attrIDs[i].equals("ouReceiveDocumentYN")) {
+							str[i] = "N";
+						} else {
+							str[i] = " ";
+						}
+					} else {
+						str[i] = (String) sr.getAttributes().get(attrIDs[i]).get();
+					}
+				}
+				ou.add(str);
+			}
+			
+			cookie = null;
+			Control[] controls = dirCtx.getResponseControls();
+			if (controls != null) {
+				for (Control control : controls) {
+					if (control instanceof PagedResultsResponseControl) {
+						PagedResultsResponseControl prrc = (PagedResultsResponseControl) control;
+						cookie = prrc.getCookie();
+					}
+				}
+			}
+	
+		} while (cookie != null && cookie.length != 0);
+		
+		dirCtx.close();
+		
         Collections.sort(ou, new Comparator<String[]>(){
         	@Override
             public int compare(String[] o1, String[] o2) {
