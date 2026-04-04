@@ -1,5 +1,7 @@
 package egovframework.ezEKP.ezSurvey.service.impl;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
@@ -8,10 +10,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
+import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import egovframework.let.utl.fcc.service.EzFAL;
 import org.apache.commons.compress.utils.IOUtils;
 import org.egovframe.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import org.json.simple.JSONArray;
@@ -20,6 +24,7 @@ import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpEntity;
@@ -337,7 +342,7 @@ public class EzSurveyRestServiceImpl extends EgovAbstractServiceImpl implements 
 		
 		return resultBody;
 	}
-	
+
 	@Override
 	public JSONObject deleteAttachFile(HttpServletRequest request, String userId, String filePath) throws Exception {
 		String url                = "/rest/ezsurvey/attachfile/file-delete";

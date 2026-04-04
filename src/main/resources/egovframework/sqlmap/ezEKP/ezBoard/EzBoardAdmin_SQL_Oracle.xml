@@ -1735,12 +1735,13 @@
 			parentboardid = #parentBoardID#
 		ORDER BY 
 			treevieworder
-	</select>	
-	
-	<!-- 	권한가져오기 -->
+	</select>
+
+	<!-- 	권한가져오기, 권한그룹 추가 -->
 	<select id="EzBoardAdminDAO.getACL"  parameterClass="java.util.Map" resultClass="BoardPropertyVO">
 		<![CDATA[
-			SELECT 
+		SELECT * FROM (
+			(SELECT 
 				boardid,
 	            accessid ,
 	            accessname ,
@@ -1766,6 +1767,8 @@
 	       		boardid = #pBoardID# 
 	       AND 
 	       		accessid = #userDeptPath# 
+		   AND
+				(TYPE <> 'GROUP' OR TYPE IS NULL)
 		]]>
 		<isEqual property="v_ISDEPT" compareValue="1">
 			<isEqual property="v_ISEQUALDEPT" compareValue="0">
@@ -1773,11 +1776,53 @@
 	 				boardgroupacl = 'Y'
 			</isEqual>
 		</isEqual>
+		)
+		UNION
+			(SELECT
+				TBB.boardid,
+				TBB.accessid ,
+				TBB.accessname ,
+				TBB.accessname2 ,
+				TBB.accesslevel ,
+				TBB.access_ ,
+				TBB.parentboardid ,
+				TBB.boardadmin_fg ,
+				TBB.listview_fg ,
+				TBB.read_fg ,
+				TBB.write_fg ,
+				TBB.reply_fg ,
+				TBB.delete_fg ,
+				TBB.inherit_fg ,
+				TBB.postnotice ,
+				TBB.boardgroupacl,
+				TBB.type
+			FROM
+				TBL_BOARD_BOARDMANAGE TBB
+			INNER JOIN TBL_PERMISSIONGROUPLIST PGL
+				ON TBB.TENANT_ID = PGL.TENANT_ID
+				AND TBB.ACCESSID = PGL.GROUP_ID
+			INNER JOIN TBL_PERMISSIONGROUPINFO PGI
+				ON PGL.TENANT_ID = PGI.TENANT_ID
+				AND PGL.GROUP_ID = PGI.GROUP_ID
+			WHERE
+				TBB.TENANT_ID = #tenantID#
+			AND
+				boardid = #pBoardID#
+			AND
+				PGI.MEMBER_ID = #userDeptPath#
+			AND
+				TBB.TYPE = 'GROUP'
+		<isEqual property="v_ISDEPT" compareValue="1">
+			<isEqual property="v_ISEQUALDEPT" compareValue="0">
+				AND
+				boardgroupacl = 'Y'
+			</isEqual>
+		</isEqual>
+		)
 		<![CDATA[
-	       AND 
-	       		rownum <= 1 
+	       ) WHERE ROWNUM <= 1
 		]]>
-	</select>	
+	</select>
 	
 	<select id="EzBoardAdminDAO.getBackGroundImage"  resultMap="backGroundImage" parameterClass="BoardBackgroundVO">
 		<![CDATA[

@@ -264,7 +264,7 @@
         //     }
 	    // }
 	        
-	    function setReceiveDistribute(pCurSelRow) {
+	    function setReceiveDistributeOld(pCurSelRow) {
 	        try {
 	            var xmlpara = createXmlDom();
 	            var listview = new ListView();
@@ -291,18 +291,66 @@
 	            }
 	            
 	            if ("<c:out value ='${mode}'/>" == "add") {
-	                xmlhttp.open("POST", "/ezApprovalG/addBebu.do", true);
+	                xmlhttp.open("POST", "/ezApprovalG/addBebu.do", false);
 	            } else {
-	                xmlhttp.open("POST", "/ezApprovalG/setBebu.do", true);
+	                xmlhttp.open("POST", "/ezApprovalG/setBebu.do", false);
 	            }
 	            
 	            xmlhttp.send(xmlpara);
-	            //return getNodeText(GetChildNodes(xmlhttp.responseXML)[0]);
 	        } catch (ErrMsg) {
 	            alert(ErrMsg.description);
 	        }
 	    }
 		
+		function setReceiveDistribute(pCurSelRow) {
+            try {
+                var xmlpara = document.implementation.createDocument("", "", null);
+                var listview = new ListView();
+                listview.LoadFromID("listAPRLINE1");
+                var xmlhttp = new XMLHttpRequest(); 
+                var pSelRows = listview.GetDataRows();
+                var objRoot = xmlpara.createElement("ROWS");
+                objRoot.setAttribute("DocID", pDocID);
+                objRoot.setAttribute("ReceiveSN", pReceiveSN);
+                objRoot.setAttribute("SendDeptID", psentDeptID);
+                objRoot.setAttribute("DocState", pAprSate);
+                objRoot.setAttribute("ReceivedDeptID", pReceivedDeptID);
+                xmlpara.appendChild(objRoot);
+    
+                for (var i = 0; i < pSelRows.length; i++) {
+                    var SelRow = pSelRows[i];
+                    var objRow = xmlpara.createElement("ROW");
+                    
+                    var addNode = function(name, val) {
+                        var node = xmlpara.createElement(name);
+                        node.textContent = val || "";
+                        objRow.appendChild(node);
+                    };
+                    
+                    addNode("RECEIVEDEPTID", SelRow.getAttribute("DATA1"));
+                    addNode("RECEIVEDEPTNAME", SelRow.getAttribute("DATA4"));
+                    addNode("RECEIVEDEPTNAME2", SelRow.getAttribute("DATA5"));
+                    
+                    objRoot.appendChild(objRow);
+                }
+                
+                var targetUrl = ("<c:out value ='${mode}'/>" == "add") ? "/ezApprovalG/addBebu.do" : "/ezApprovalG/setBebu.do";
+                
+                xmlhttp.open("POST", targetUrl, false);
+                xmlhttp.setRequestHeader("Content-Type", "application/xml");
+                xmlhttp.send(xmlpara);
+        
+                if (xmlhttp.status === 200) {
+                    console.log("Success:", xmlhttp.status);
+                }
+        
+            } catch (ErrMsg) {
+                // 표준 코드 실패 시 구형 함수 호출
+                console.log("Switching to Old Method:", ErrMsg.message || ErrMsg.description);
+                setReceiveDistributeOld(pCurSelRow);
+            }
+        }
+            
 		function setReceiveDistributeAll(pCurSelRow) {
 	        try {
 	            var xmlpara = createXmlDom();

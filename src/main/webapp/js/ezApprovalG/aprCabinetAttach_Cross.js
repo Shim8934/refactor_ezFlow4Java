@@ -42,7 +42,7 @@ function DocMove() {
                 for (i = 0; i < SelDocList.GetRowCount() ; i++) {
                     countsel = SelDocList.GetDataRows();
 
-                    if (GetAttribute(countsel[i], "DATA1") == GetAttribute(selRow, "DATA2")) {
+                    if (GetAttribute(countsel[i], "DATA2") == GetAttribute(selRow, "DATA1")) {
                         DuplicateFlag = true;
                     }
                 }
@@ -57,7 +57,7 @@ function DocMove() {
                     GetXml += "<ROWS><ROW><CELL>"
                     GetXml += "<VALUE><![CDATA[" + docName + "]]></VALUE>";
                     GetXml += "<DATA1>" + MakeXMLString(GetAttribute(selRow, "DATA2")) + "</DATA1>";
-                    GetXml += "<DATA2 ></DATA2>";
+                    GetXml += "<DATA2 >" + MakeXMLString(GetAttribute(selRow, "DATA1")) + "</DATA2>";
                     GetXml += "<DATA3>" + MakeXMLString(pDocID) + "</DATA3>";
                     GetXml += "<DATA4>" + MakeXMLString(pUserID) + "</DATA4>";
                     GetXml += "<DATA5>" + MakeXMLString(pUserJobTitle) + "</DATA5>";

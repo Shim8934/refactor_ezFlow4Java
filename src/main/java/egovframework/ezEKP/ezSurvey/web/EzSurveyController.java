@@ -3,6 +3,7 @@ package egovframework.ezEKP.ezSurvey.web;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -13,6 +14,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -762,6 +764,35 @@ public class EzSurveyController extends EzFileMngUtil {
 		
 		logger.debug("Upload file finishes!");
 		return resultObj;
+	}
+
+	@RequestMapping(value="/ezSurvey/copyAttachFile.do", method = RequestMethod.POST)
+	@ResponseBody
+	public JSONArray jsonCopyFile(@RequestParam("sourceFilePath") List<String> sourceFilePathList, @CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+
+		JSONArray resultList = new JSONArray();
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+
+		for (String path : sourceFilePathList) {
+			String cleanPath = path.replace("\\/", "/");
+			String realPath = commonUtil.getRealPath(request);
+			EzFAL.EzFile sourceFile = new EzFAL.EzFile(realPath + cleanPath);
+
+			if(!sourceFile.exists()) {
+				throw new FileNotFoundException("파일을 찾을 수 없습니다 : " + sourceFile.getName());
+			}
+
+			String originalName = sourceFile.getName();
+			String extension = originalName.contains(".") ? originalName.substring(originalName.lastIndexOf(".")) : "";
+			String newUuidName = UUID.randomUUID().toString() + extension;
+
+			String newPath = commonUtil.getUploadPath("upload_survey.ROOT", userInfo.getTenantId()) + commonUtil.separator + newUuidName;
+			EzFAL.copyFile(realPath + cleanPath, realPath + newPath);
+
+			resultList.add(newPath);
+		}
+
+		return resultList;
 	}
 	
 	@RequestMapping(value="/ezSurvey/deleteAttachFile.do", method = RequestMethod.POST)

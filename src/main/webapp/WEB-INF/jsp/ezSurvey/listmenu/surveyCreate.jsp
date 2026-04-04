@@ -46,6 +46,7 @@
 			var editor = "<c:out value='${editor}'/>";
 			var hwpHTML;
 			var hwpCheck = false;
+			var deleteFilePathObj = {};
 		</script>
 	</head>
 	

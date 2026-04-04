@@ -212,7 +212,7 @@ var SurveyCreate     = function() {
 		returnObj = checkStep1();
 		if (returnObj["error"]) {alert(returnObj["error"]); return;}
 		surveyObj["draft"] = 1;
-		
+        questionFile.doDeleteFile();
 		$.ajax({
 			type: "POST",
 			url: "/ezSurvey/saveSurvey.do",
@@ -263,6 +263,7 @@ var SurveyCreate     = function() {
 	}
 	// 설문 저장
 	function saveSurvey() {
+	    questionFile.doDeleteFile();
 		if(confirm(SurveyMessages.strSaveAsk) == true) {
 			var saveSurveybtn = document.getElementById('saveSurvey');
 			saveSurveybtn.style.pointerEvents = 'none';
@@ -1789,15 +1790,54 @@ var SurveyCreate     = function() {
 			var deepCopy    = JSON.parse(JSON.stringify(qstn));
 			deepCopy.level  = nextId;
 			
-			// 복사한 질문 객체 이후의 객체들 아이디값 +1
-			checkActionForNewId(qstnId, qstnList, "copy");
-			
-			// 복사한 질문 객체를 배열에 추가
-			qstnList.splice(qstnId, 0, deepCopy);
-			
-			// 복사한 객체로 사용자용 질문폼 생성
-			qstnWrapper.after("<div class='qstnWrapper' id='qstn" + nextId + "'></div>");
-			mkQstnsByType(qstnWrapper.next(), qstnType, deepCopy);
+			var pathArray = new Array();
+            if(deepCopy.attach && deepCopy.attach.fpath) {
+                pathArray.push(deepCopy.attach.fpath);
+            }
+            
+            if(deepCopy.option) {
+                deepCopy.option.forEach(function(v) {
+                    if(v.attach && v.attach.fpath) {
+                        pathArray.push(v.attach.fpath);
+                    }
+                });
+            }
+        
+            $.ajax({
+                url: "/ezSurvey/copyAttachFile.do",
+                type: "POST",
+                traditional: true,
+                data: { 
+                    "sourceFilePath": pathArray 
+                },
+                dataType: "json",
+                success: function(response) {
+                    if (response && response.length > 0) {
+                        
+                        if (deepCopy.attach) {
+                            deepCopy.attach.fpath = response[0];
+                        }
+        
+                        if (deepCopy.option) {
+                            for(var i = 0; i < deepCopy.option.length; i++) {
+                                if(response[i + 1]) {
+                                    deepCopy.option[i].attach.fpath = response[i + 1];
+                                }
+                            }
+                        }
+        
+                        checkActionForNewId(qstnId, qstnList, "copy");
+                        qstnList.splice(qstnId, 0, deepCopy);
+                        
+                        var newWrapper = $("<div class='qstnWrapper' id='qstn" + nextId + "'></div>");
+                        qstnWrapper.after(newWrapper);
+                        mkQstnsByType(newWrapper, qstnType, deepCopy);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    alert("서버 통신 중 오류가 발생했습니다.");
+                }
+            });
 		});
 		
 		// 우상단 삭제 버튼 클릭 이벤트
@@ -1818,9 +1858,11 @@ var SurveyCreate     = function() {
 		
 		// 수정 취소 버튼 클릭 이벤트 수정 폼 삭제
 		$(".quesBacgr").on("click", ".mdfCancel", function() {
+		    var targetId = this.closest('.qstnWrapper').id;
 			var thisWrapper = $(this).parents(".qstnWrapper");
 			thisWrapper.prev().css("display", ""); // 숨김 처리했던 사용자 폼 다시 보임 처리
 			thisWrapper.remove();                  // 수정 폼 삭제
+			delete deleteFilePathObj[targetId];
 		});
 		
 		// 로직 폼 생성 버튼 이벤트
@@ -3563,6 +3605,9 @@ var SurveyCreate     = function() {
 	}
 	
 	function escapeHtml(text) {
+	    if (typeof(text) == 'undefined') {//임시방어
+	        text = '';
+	    }
 	    var map = {
 	        '&': '&amp;',
 	        '<': '&lt;',
