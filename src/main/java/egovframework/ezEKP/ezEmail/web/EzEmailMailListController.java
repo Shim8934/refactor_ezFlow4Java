@@ -4348,8 +4348,10 @@ public class EzEmailMailListController {
 		logger.debug("previewMail started");
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String useHackingMailReport = ezCommonService.getTenantConfig("useHackingMailReport", userInfo.getTenantId());
 
 		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("useHackingMailReport", useHackingMailReport);
 
 		logger.debug("previewMail ended");
 

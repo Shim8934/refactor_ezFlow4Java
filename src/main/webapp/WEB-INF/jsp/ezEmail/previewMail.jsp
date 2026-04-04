@@ -277,7 +277,9 @@
         </div>
         <div class="btnposition btnpositionNew" id="btn_area">
             <a class="imgbtn" id="deleteBtn" onclick="return delete_mail()"><span><spring:message code="ezPoll.t202" /></span></a>
+            <c:if test="${useHackingMailReport == 'YES'}">
             <a class="imgbtn" id="hackingBtn"onclick="return moveHackingMail_previewMail()"><span><spring:message code="ezEmail.zno002" /></span></a>
+            </c:if>
             <a class="imgbtn" onclick="windows_close()"><span><spring:message code="main.t3" /></span></a>
         </div>
     </div>
