@@ -245,6 +245,7 @@ nav .navUL li.on{color:#A20000;}
 
 #mainmenu li.important{border-color:#D0ABAB !important; color:#A20000 !important;}
 #mainmenu li:hover{background-color:#FBF6F6 !important; border-color:#A20000 !important; color:#A20000 !important;}
+#mainmenu li:hover > a {color:#A20000 !important;}
 #mainmenu li.important:hover{background-color:#FBF6F6 !important;}
 
 #mainmenu li.view_more.on{border:1px solid #A20000!important; background:#FBF6F6!important;}
