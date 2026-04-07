@@ -3518,7 +3518,9 @@ function GetAddrFormatForSend(receiveCol) {
                     var regex = /^(.*?)<([^>]+)>$/;
                     var match = name.match(regex);
 
-                    if (match) {
+                    // 이름<회사> <a@b.com> 과 같은 형태로 name 부분에 <>가 포함되는 경우가 있어
+                    // 유효한 메일 주소인지를 판단하기 위해 @ 포함 여부 체크를 추가함
+                    if (match && match[2].indexOf("@") > -1) {
                         name = match[1].trim(); // "<" 밖의 부분
                         email = match[2].trim(); // "<" 안의 부분
                     }
