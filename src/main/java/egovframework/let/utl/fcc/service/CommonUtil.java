@@ -376,7 +376,7 @@ public class CommonUtil {
     public Matcher getMatcherForStripScriptTagsAndFunctions(String src) {
 		// dhlee: 20240420 - ( 뿐 아니라 ` 기호일 때도 alert 함수가 실행되어 ` 문자도 추가함
 		// dhlee: 20240718 - (가 &#40;로 변경된 경우가 있어 &#40;와 &#41;에 대한 처리를 추가함
-		Pattern p = Pattern.compile("<(object|applet|script).*?>|</(object|applet|script).*?>|alert([ ]*?/\\*.*?\\*/[ ]*?)?[(`].*?[)`]|alert([ ]*?/\\*.*?\\*/[ ]*?)?&#40;.*?&#41;|confirm([ ]*?/\\*.*?\\*/[ ]*?)?[(`].*?[)`]|confirm([ ]*?/\\*.*?\\*/[ ]*?)?&#40;.*?&#41;|prompt([ ]*?/\\*.*?\\*/[ ]*?)?[(`].*?[)`]|prompt([ ]*?/\\*.*?\\*/[ ]*?)?&#40;.*?&#41;|window.*?location",
+		Pattern p = Pattern.compile("<(object|applet|script).*?>|</(object|applet|script).*?>|alert([ ]*?/\\*.*?\\*/[ ]*?)?[(`].*?[)`]|alert([ ]*?/\\*.*?\\*/[ ]*?)?&#40;.*?&#41;|confirm([ ]*?/\\*.*?\\*/[ ]*?)?[(`].*?[)`]|confirm([ ]*?/\\*.*?\\*/[ ]*?)?&#40;.*?&#41;|prompt([ ]*?/\\*.*?\\*/[ ]*?)?[(`].*?[)`]|prompt([ ]*?/\\*.*?\\*/[ ]*?)?&#40;.*?&#41;",
 						Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
 		return p.matcher(src);
 	}
