@@ -12,4 +12,4 @@ CREATE TABLE `jmocha_shared_mailfolder` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
-        VALUES ('0', 'useSharedMailFolder', 'YES', '공유편지함 기능 사용 여부 (default:NO)', '공유편지함 기능 사용 여부', '2026-01-06 00:00:00', '메일');
+        VALUES ('0', 'useSharedMailFolder', 'NO', '공유편지함 기능 사용 여부 (default:NO)', '공유편지함 기능 사용 여부', '2026-01-06 00:00:00', '메일');
