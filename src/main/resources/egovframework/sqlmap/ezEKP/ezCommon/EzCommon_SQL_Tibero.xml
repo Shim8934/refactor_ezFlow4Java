@@ -9115,12 +9115,10 @@
 
     <delete id="EzCommonDAO.errorLogDelete">
         <![CDATA[
-		DELETE FROM
-			TBL_ERRORLOG
-        WHERE
-            LOGDATE < ADDDATE(NOW(), - (SELECT PROPERTY_VALUE 
+            DELETE FROM TBL_ERRORLOG
+            WHERE LOGDATE < SYSDATE - (SELECT TO_NUMBER(PROPERTY_VALUE)
                                         FROM TBL_TENANT_CONFIG
-                                        WHERE PROPERTY_NAME = 'ERRORLOGDAY'))
+                                        WHERE PROPERTY_NAME = 'ERRORLOGDAY')
         ]]>
     </delete>
 
