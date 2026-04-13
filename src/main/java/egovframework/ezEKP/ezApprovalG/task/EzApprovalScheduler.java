@@ -286,4 +286,10 @@ public class EzApprovalScheduler extends EzFileMngUtil {
 		
 		return isSchedulerServer;
 	}
+
+    @Scheduled(cron = "00 05 00 * * *")
+    public void errorLogDelete() throws Exception {
+        ezCommonDAO.errorLogDelete();
+    }
+
 }

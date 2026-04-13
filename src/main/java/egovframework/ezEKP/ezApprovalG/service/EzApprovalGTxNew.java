@@ -1,11 +1,15 @@
 package egovframework.ezEKP.ezApprovalG.service;
 
 import egovframework.ezEKP.ezApprovalG.dao.EzApprovalGDAO;
+import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.BadSqlGrammarException;
 import org.springframework.stereotype.Service;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,6 +28,8 @@ public class EzApprovalGTxNew {
     @Autowired
     EzApprovalGDAO ezApprovalGDAO;
 
+    @Autowired
+    private EzCommonService ezCommonService;
     /**
      * 결재문서 완료 시, 다른 과정이 끝나고(완료문서 완성, DB insert 등) 기록물삽입에서 갑자기 중복될 경우
      * 결재가 중복이 아닌데 기록물이 중복일 경우 동시성 문제일때 일어남.
@@ -50,5 +56,41 @@ public class EzApprovalGTxNew {
             logger.error(e.getMessage(), e);
         }
         logger.info("insertRegErrorNoRollbackRecord ended");
+    }
+
+    public void insertErrorLog(Exception ex) {
+        try {
+            Map<String, Object> map = new HashMap<>();
+            StringWriter sw = new StringWriter();
+            PrintWriter pw = new PrintWriter(sw);
+            String errorClass = ezCommonService.getTenantConfig("errorClass", 0);
+            String[] sp = errorClass.split(";");
+            if(errorClass.contains("ALL"))
+                ex.printStackTrace(pw);
+            else{
+                for (StackTraceElement element : ex.getStackTrace()) {
+                    String line = element.toString();
+                    for(String s : sp){
+                        if (!s.isEmpty() && line.contains(s)){
+                            pw.println(line);
+                            break;
+                        }
+                    }
+                }
+            }
+            String error = sw.toString();
+            map.put("message",ex.getMessage());
+            map.put("error",error);
+
+            ezCommonService.insertErrorLog(map);
+        } catch (BadSqlGrammarException e) {
+            try {
+                ezCommonService.createTblErrorLog();
+            } catch (Exception exc) {
+                logger.error("createTblErrorLog fail.");
+            }
+        } catch (Exception e) {
+            logger.error("insertErrorLog fail.");
+        }
     }
 }

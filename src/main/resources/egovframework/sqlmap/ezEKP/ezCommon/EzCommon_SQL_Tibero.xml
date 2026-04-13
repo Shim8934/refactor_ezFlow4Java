@@ -9112,4 +9112,45 @@
 		INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE)
 		VALUES (#tenantID#, 'accountYearTimeZone', '전자결재 회계년도 계산 시 타임존 선택 옵션', 'KST', '회계년도 계산 시, UTC 또는 KST (한국 표준시)를 사용할지 선택한다. (default: KST)', sysdate, '전자결재G')
 	</insert>
+
+    <delete id="EzCommonDAO.errorLogDelete">
+        <![CDATA[
+		DELETE FROM
+			TBL_ERRORLOG
+        WHERE
+            LOGDATE < ADDDATE(NOW(), - (SELECT PROPERTY_VALUE 
+                                        FROM TBL_TENANT_CONFIG
+                                        WHERE PROPERTY_NAME = 'ERRORLOGDAY'))
+        ]]>
+    </delete>
+
+    <insert id="EzCommonDAO.insertErrorLog" parameterClass="Map">
+        INSERT INTO TBL_ERRORLOG
+        (MESSAGE, ERRORLOG)
+        VALUES(#message#, #error#)
+    </insert>
+
+    <statement id="EzCommonDAO.createTblErrorLog">
+        CREATE TABLE TBL_ERRORLOG
+        (
+        LOGDATE TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        MESSAGE VARCHAR2(2000),
+        ERRORLOG CLOB
+        )
+    </statement>
+
+    <insert id="EzCommonDAO.insertErrorLogConfig">
+        INSERT ALL
+        INTO TBL_TENANT_CONFIG
+        (TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
+        VALUES
+        (0, 'ERRORCLASS', 'EzApproval', '에러로그 발생 클래스 구분자 ;', '에러 발생 클래스명',
+        TO_DATE('2026-04-10 00:00:00','YYYY-MM-DD HH24:MI:SS'), '전자결재')
+        INTO TBL_TENANT_CONFIG
+        (TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
+        VALUES
+        (0, 'ERRORLOGDAY', '365', '에러로그 저장기간 (일)', '에러로그 저장기간 (일)',
+        TO_DATE('2026-04-10 00:00:00','YYYY-MM-DD HH24:MI:SS'), '전자결재')
+        SELECT 1 FROM DUAL
+    </insert>
 </sqlMap>

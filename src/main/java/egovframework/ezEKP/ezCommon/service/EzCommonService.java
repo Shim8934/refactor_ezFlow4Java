@@ -686,5 +686,8 @@ public interface EzCommonService {
 	
 	/* 2025-04-29 홍승비 - 전자결재G > 회계년도 계산 시 타임존 선택 옵션 컨피그 추가 */
 	public void insertAccountYearTimeZone() throws Exception;
-	
+
+    void insertErrorLog(Map<String, Object> map) throws Exception;
+
+    void createTblErrorLog() throws Exception;
 }

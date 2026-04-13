@@ -3977,4 +3977,17 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			insert("EzCommonDAO.insertAccountYearTimeZone", map);
 		}
 	}
+
+    public void errorLogDelete() {
+        delete("EzCommonDAO.errorLogDelete");
+    }
+
+    public void insertErrorLog(Map<String, Object> map) {
+        insert("EzCommonDAO.insertErrorLog", map);
+    }
+
+    public void createTblErrorLog() {
+        insert("EzCommonDAO.insertErrorLogConfig");
+        update("EzCommonDAO.createTblErrorLog");
+    }
 }

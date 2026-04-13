@@ -9622,4 +9622,14 @@ public class EzCommonServiceImpl extends EzFileMngUtil implements EzCommonServic
 			ezCommonDAO.insertAccountYearTimeZone(map);
 		}
 	}
-}
+
+    @Override
+    public void insertErrorLog(Map<String, Object> map) throws Exception {
+        ezCommonDAO.insertErrorLog(map);
+    }
+
+    @Override
+    public void createTblErrorLog() throws Exception {
+        ezCommonDAO.createTblErrorLog();
+    }
+ }
