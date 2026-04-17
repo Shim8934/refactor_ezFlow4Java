@@ -39762,4 +39762,35 @@
             DOCID = #v_DOCID#
         AND ROWNUM = 1
     </select>
+    
+    <select id="EzApprovalG.getChkDocExist" parameterClass="Map" resultClass="Integer">
+        SELECT
+            COUNT(DOCID)
+        FROM
+            TBL_APRDOCINFO
+        WHERE
+            TENANT_ID = #v_TENANTID#
+        AND
+            COMPANYID = #companyID#
+        AND
+            DOCID = #v_DOCID#
+    </select>
+
+    <select id="EzApprovalG.getChiefDept" parameterClass="String" resultClass="String">
+        SELECT CN
+        FROM TBL_DEPTMASTER
+        WHERE
+        EXTENSIONATTRIBUTE9 = #userID#
+    </select>
+
+    <select id="EzApprovalG.getDocDeptPath" parameterClass="Map" resultClass="String">
+        SELECT DEPT_CD_PATH
+        FROM TBL_DEPTMASTER
+        WHERE CN = (SELECT APRMEMBERDEPTID
+                    FROM TBL_ENDAPRLINEINFO
+                    WHERE TENANT_ID = #v_TENANTID#
+                    AND COMPANYID = #companyID#
+                    AND DOCID = #v_DOCID#
+                    AND APRMEMBERSN = 1)
+    </select>
 </sqlMap>

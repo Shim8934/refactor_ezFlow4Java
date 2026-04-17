@@ -5,10 +5,10 @@
 <!--            <ThresholdFilter level="OFF" onMatch="DENY" onMismatch="ACCEPT"/>-->
             <PatternLayout pattern="%d %5p [%thread] [%c] %replace{%m}{[\r\n]}{}%n" />
         </Console>
-        <!--<Rewrite name="rewrite">
+        <Rewrite name="rewrite">
             <AppenderRef ref="console"/>
             <SQLRewriter />
-        </Rewrite>-->
+        </Rewrite>
         <!--<RollingFile name="exceptionLog" fileName="~jmocha/log/jmocha-exception.log"
                              filePattern="~jmocha/log/jmocha-exception-%d{YYMMdd}-%i.log" append="false">
             <ThresholdFilter level="ERROR" onMatch="ACCEPT" onMismatch="DENY"/>
@@ -33,8 +33,8 @@
         </CustomAppender>-->
     </Appenders>
     <Loggers>
-        <Logger name="java.sql" level="INFO" additivity="false">
-            <AppenderRef ref="console" />
+        <Logger name="java.sql" level="DEBUG" additivity="false">
+            <AppenderRef ref="rewrite" />
         </Logger>
         <Logger name="egovframework" level="DEBUG" additivity="false">
             <AppenderRef ref="console" />

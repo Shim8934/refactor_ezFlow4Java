@@ -4143,4 +4143,16 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
     public ApprGDocListVO getViewDocInfo(Map<String, Object> map) {
         return (ApprGDocListVO) select("EzApprovalG.getViewDocInfo", map);
     }
+
+	public int getChkDocExist(Map<String, Object> map)  throws Exception {
+		return (int) select("EzApprovalG.getChkDocExist", map);
+	}
+
+    public List<String> getChiefDept(String userID) {
+        return (List<String>) list("EzApprovalG.getChiefDept", userID);
+    }
+
+    public String getDocDeptPath(Map<String, Object> map) {
+        return (String) select("EzApprovalG.getDocDeptPath", map);
+    }
 }

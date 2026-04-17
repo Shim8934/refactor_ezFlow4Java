@@ -1152,7 +1152,18 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
             }
 
 		}
-		
+
+        // 부서장
+        if(!rtnVal && "Y".equals(ezCommonService.getTenantConfig("chiefDocView", tenantID))){
+            List<String> chiefDept = ezApprovalGDAO.getChiefDept(userID);
+            String deptPath = ezApprovalGDAO.getDocDeptPath(map);
+            for(String dept : chiefDept){
+                rtnVal = deptPath.contains(dept);
+                if(rtnVal)
+                    break;
+            }
+        }
+        
 		//열람권한으로 권한 체크
 		if (!rtnVal && mode.substring(2).equals("Y")) {
 			map.put("v_FLAG", "006");

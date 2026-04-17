@@ -1386,7 +1386,8 @@ public class EzApprovalGRelayScheduler {
         }
 
         //결재진행문서 정보에 수신문서 정보를 입력해 준다.
-        boolean inputReceiveInfo = ezApprovalGService.createRelayDocInfo(relayXML.getWriterName(), relayXML.getWriterDept(), commonUtil.getRealPath(servletContext), relayXML.getxDocID(), relayXML.getReceiveID(), relayXML.getCompanyID(), relayXML.getTenantID());
+        String dept = ("Y".equals(ezCommonService.getTenantConfig("relayCompany", relayXML.getTenantID())) ? relayXML.getSendName() + " " : "") + relayXML.getWriterDept();
+        boolean inputReceiveInfo = ezApprovalGService.createRelayDocInfo(relayXML.getWriterName(), dept, commonUtil.getRealPath(servletContext), relayXML.getxDocID(), relayXML.getReceiveID(), relayXML.getCompanyID(), relayXML.getTenantID());
         logger.debug("#수신문서정보입력=" + inputReceiveInfo);
 
         //수신된 유통문서에 대해 수신(Receive) ACK 발송
@@ -1471,7 +1472,8 @@ public class EzApprovalGRelayScheduler {
         }
 
         //결재진행문서 정보에 수신문서 정보를 입력해 준다.
-        boolean inputReceiveInfo = ezApprovalGService.createRelayDocInfo(relayXML.getWriterName(), relayXML.getWriterDept(), commonUtil.getRealPath(servletContext), relayXML.getxDocID(), relayXML.getReceiveID(), relayXML.getCompanyID(), relayXML.getTenantID());
+        String dept = ("Y".equals(ezCommonService.getTenantConfig("relayCompany", relayXML.getTenantID())) ? relayXML.getSendName() + " " : "") + relayXML.getWriterDept();
+        boolean inputReceiveInfo = ezApprovalGService.createRelayDocInfo(relayXML.getWriterName(), dept, commonUtil.getRealPath(servletContext), relayXML.getxDocID(), relayXML.getReceiveID(), relayXML.getCompanyID(), relayXML.getTenantID());
         logger.debug("#수신문서정보입력=" + inputReceiveInfo);
 
         //수신된 유통문서에 대해 수신(Receive) ACK 발송

@@ -358,6 +358,13 @@ INSERT INTO nezportal.TBL_COMPANY_CONFIG (TENANT_ID, COMPANY_ID, PROPERTY_NAME, 
 -- 2024.07.22 양지혜 - 관리자 > 대외발송현황 메뉴 표출여부
 INSERT INTO nezportal.TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE) VALUES(@tenant_id_value, 'useSendOutState', 'NO', '관리자페이지 대외발송현황 메뉴 표출여부 YES: 사용 NO: 사용안함 (default:NO)', '발송현황 메뉴 표출여부', '2024-07-22 00:00:00', '전자결재');
 
+-- 전자결재 G > 기관코드 테넌트컨피그로 변경
+INSERT INTO nezportal.TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES	(@tenant_id_value, 'organCode', '전자결재G 문서유통 기관코드', 'organCode', '전자결재G 문서유통시 사용하는 기관코드', '2026-03-03 00:00:00', '전자결재G');
+INSERT INTO nezportal.TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES	(@tenant_id_value, 'runRelayScheduler', '유통문서 수신 스케줄러 사용여부', 'NO', '유통문서 수신 스케줄러 사용여부 (NO: 미사용, YES: 사용)', '2026-03-04 00:00:00', '전자결재G');
+INSERT INTO nezportal.TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES	(@tenant_id_value, 'relayDocMakerId', '유통 테스트문서 생성 가능 id', '', '관리자페이지에서 유통문서를 임의로 생성할 수 있는 사용자id입니다. 필요한 경우에만 삽입하고, 아닐 땐 빈문자열로 두세요.', '2026-03-04 00:00:00', '전자결재G');
+INSERT INTO nezportal.TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES	(@tenant_id_value, 'outSusinAll', '대외수신함 전부서 사용여부', 'N', '대외수신함 전부서 사용여부(N: 미사용, Y: 사용, default: N)', '2026-04-15 00:00:00', '전자결재G');
+INSERT INTO nezportal.TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES	(@tenant_id_value, 'chiefDocView', '부서장 하위부서 열람권한', 'N', '부서장 하위부서 열람권한(N: 미사용, Y: 사용, default: N)', '2026-04-17 00:00:00', '전자결재');
+
 -- Board insert 
 Insert into nezboard.TBL_BOARD_ITEM_LISTOPTION (LISTTYPE,SN,NAME1,NAME2,NAME3,NAME4,COLNAME,WIDTH,VIEW_FG,TENANT_ID) values ('0',0,'CHECK','CHECK','CHECK','CHECK','ITEMID',20,'Y',@tenant_id_value);
 Insert into nezboard.TBL_BOARD_ITEM_LISTOPTION (LISTTYPE,SN,NAME1,NAME2,NAME3,NAME4,COLNAME,WIDTH,VIEW_FG,TENANT_ID) values ('0',1,'No','No','No','No','DOCNO',30,'Y',@tenant_id_value);

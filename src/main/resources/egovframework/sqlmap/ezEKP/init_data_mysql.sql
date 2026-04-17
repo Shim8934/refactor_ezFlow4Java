@@ -403,6 +403,8 @@ INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_V
 
 -- 전자결재 G > 회계년도 계산 시 타임존 선택 옵션 추가 (UTC / KST)
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES	(@tenant_id_value, 'accountYearTimeZone', '전자결재 회계년도 계산 시 타임존 선택 옵션', 'KST', '회계년도 계산 시, UTC 또는 KST (한국 표준시)를 사용할지 선택한다. (default: KST)', '2025-04-29 00:00:00', '전자결재G');
+INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES	(@tenant_id_value, 'outSusinAll', '대외수신함 전부서 사용여부', 'N', '대외수신함 전부서 사용여부(N: 미사용, Y: 사용, default: N)', '2026-04-15 00:00:00', '전자결재G');
+INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES	(@tenant_id_value, 'chiefDocView', '부서장 하위부서 열람권한', 'N', '부서장 하위부서 열람권한(N: 미사용, Y: 사용, default: N)', '2026-04-17 00:00:00', '전자결재');
 
 -- Board insert 
 Insert into TBL_BOARD_ITEM_LISTOPTION (LISTTYPE,SN,NAME1,NAME2,NAME3,NAME4,NAME6,COLNAME,WIDTH,VIEW_FG,TENANT_ID) values ('0',0,'CHECK','CHECK','CHECK','CHECK','CHECK','ITEMID',20,'Y',@tenant_id_value);
