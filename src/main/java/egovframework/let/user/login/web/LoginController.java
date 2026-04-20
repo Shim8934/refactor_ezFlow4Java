@@ -2064,58 +2064,73 @@ public class LoginController {
 	 */
 	
 	@PostMapping(value = "/user/login/samlAuth.do")
-	public void samlAuth(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		 String encodedResponse = request.getParameter("SAMLResponse");
+	public String samlAuth(HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
+		String encodedResponse = request.getParameter("SAMLResponse");
 		 
-		 String serverName = request.getServerName();
-		 int tenantId = loginService.getTenantId(serverName);
+		String serverName = request.getServerName();
+		int tenantId = loginService.getTenantId(serverName);
 		 
-		 Map<String, String> samlResponse = getSamlResponse(encodedResponse);
+		Map<String, String> samlResponse = getSamlResponse(encodedResponse);
 		 
-		 String userId = samlResponse.get("userId");
-		 String inResponseTo = samlResponse.get("inResponseTo");
+		String fullUserId = samlResponse.get("userId");
+		String inResponseTo = samlResponse.get("inResponseTo");
 		 
-		 int checkResponse = loginService.checktRequestId(inResponseTo);
+		int checkResponse = loginService.checktRequestId(inResponseTo);
+		
+		if (checkResponse != 1) {
+			model.addAttribute("mainContent", "requestId " + inResponseTo + " not found!");
+			return "ezCommon/error";
+		}
 		 
-		 if (userId != null && !userId.isEmpty() && checkResponse == 1) {
-			 userId = userId.substring(0, userId.indexOf("@"));
-			 logger.debug("userId = " + userId);
-			 
-			 LoginVO loginVO = new LoginVO();
-			 
-			 loginVO.setId(userId);
-			 loginVO.setTenantId(tenantId);;
-			 loginVO.setDn("NOPASSWORD");
-			 
-			 LoginVO resultVO = loginService.selectUser(loginVO);
-			 
-			 if (resultVO.getId() != null) {
-				 String ip = ClientUtil.getClientIP(request);
-				 loginVO.setIp(ip);
-				 
-				 loginService.updateUser(loginVO);
+		if (fullUserId != null && !fullUserId.isEmpty()) {
+			int atSignIndex = fullUserId.indexOf("@");
 
-				 String ezSessionId = createLoginCookie(userId, " ", " ", tenantId, request, response, resultVO.getDeptID(), resultVO.getCompanyID());
-				 String sessionCode =  getSessionId(request, ezSessionId);
-				 
-				 resultVO.setAgent(ClientUtil.getClientInfo(request, "agent"));
-				 resultVO.setOs(ClientUtil.getClientInfo(request, "os"));
-				 resultVO.setBrowser(ClientUtil.getClientInfo(request, "browser"));
-				 resultVO.setTenantId(tenantId);
-				 resultVO.setStatus("Y");
-				 resultVO.setSessionCode(sessionCode);
+			if (atSignIndex != -1) {
+				String userId = fullUserId.substring(0, atSignIndex);
+				String domain = fullUserId.substring(atSignIndex + 1);
 
-				 if (resultVO.getTitle2() == null) {
-					 resultVO.setTitle2("");
-				 }
+				logger.debug("samlAuth userId={},domain={}", userId, domain);
 
-				 loginService.insertLog(resultVO);
-					
-				 response.sendRedirect("/ezNewPortal/newPortalMain.do");
-				 return;
-			 }
-		 }
-		response.sendRedirect("/ezNewPortal/newPortalMain.do");
+				LoginVO loginVO = new LoginVO();
+
+				loginVO.setId(userId);
+				loginVO.setTenantId(tenantId);
+				;
+				loginVO.setDn("NOPASSWORD");
+
+				LoginVO resultVO = loginService.selectUser(loginVO);
+
+				if (resultVO.getId() != null) {
+					String ip = ClientUtil.getClientIP(request);
+					loginVO.setIp(ip);
+
+					loginService.updateUser(loginVO);
+
+					String ezSessionId = createLoginCookie(userId, " ", " ", tenantId, request, response, resultVO.getDeptID(), resultVO.getCompanyID());
+					String sessionCode = getSessionId(request, ezSessionId);
+
+					resultVO.setIp(ip);
+					resultVO.setAgent(ClientUtil.getClientInfo(request, "agent"));
+					resultVO.setOs(ClientUtil.getClientInfo(request, "os"));
+					resultVO.setBrowser(ClientUtil.getClientInfo(request, "browser"));
+					resultVO.setTenantId(tenantId);
+					resultVO.setStatus("Y");
+					resultVO.setSessionCode(sessionCode);
+
+					if (resultVO.getTitle2() == null) {
+						resultVO.setTitle2("");
+					}
+
+					loginService.insertLog(resultVO);
+
+					response.sendRedirect("/ezNewPortal/newPortalMain.do");
+					return null;
+				}
+			}
+		}
+
+		model.addAttribute("mainContent", "userId " + fullUserId + " not found!"); 
+		return "ezCommon/error";
 	}
 	
 	private Map<String, String> getSamlResponse(String encodedResponse) throws Exception {
