@@ -14,7 +14,10 @@
 		<link rel="stylesheet" type="text/css" href="${util.addVer('/js/jquery/dateControls/jquery.ui.all.css')}">
 		<link rel="stylesheet" type="text/css" href="${util.addVer('/js/jquery/dateControls/demos.css')        }">
 		<link rel="stylesheet" type="text/css" href="${util.addVer('/css/ezSurvey/jquery.qtip.css')            }">
+		<link rel="stylesheet" type="text/css" href="${util.addVer('/css/select2.min.css')                     }">
 		<style type="text/css">
+			.surveyTimeSelect + .select2 .select2-selection { height: auto; }
+			.select2-container--default .select2-results > .select2-results__options { max-height: 130px; overflow-y: auto; }
 			#cf-purpose h1, #cf-purpose h2 , #cf-purpose h3 , #cf-purpose h4 , #cf-purpose h5 , #cf-purpose h6 {
 				margin-left:0px;
 				margin-right:0px;
@@ -119,6 +122,7 @@
 			</div>
 		</div>
 		
+		<script type="text/javascript" src="${util.addVer('/js/select2.min.js'         )}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezSurvey/surveyFile.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezSurvey/survey.js'    )}"></script>
 		<c:choose>

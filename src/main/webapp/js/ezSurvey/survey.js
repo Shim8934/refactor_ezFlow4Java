@@ -54,16 +54,20 @@ var SurveyCreate     = function() {
 		var startSel      = document.getElementById("startTime");
 		var endSel        = document.getElementById("endTime");
 		if (startSel) {
+			if ($(startSel).hasClass("select2-hidden-accessible")) { $(startSel).select2("destroy"); }
 			startSel.innerHTML = buildTimeOptions(startMinTime);
 			var sVal = startTimeVal || (startSel.options[0] ? startSel.options[0].value : "00:00");
 			startSel.value = startSel.querySelector('option[value="' + sVal + '"]') ? sVal : (startSel.options[0] ? startSel.options[0].value : "");
+			$(startSel).select2({ width: "auto", dropdownAutoWidth: true });
 		}
 		var startTimeSelected = startSel ? startSel.value : null;
 		var endMinTime = getEndMinTime(endDateVal, startDateVal, startTimeSelected);
 		if (endSel) {
+			if ($(endSel).hasClass("select2-hidden-accessible")) { $(endSel).select2("destroy"); }
 			endSel.innerHTML = buildTimeOptions(endMinTime);
 			var eVal = endTimeVal || "23:30";
 			endSel.value = endSel.querySelector('option[value="' + eVal + '"]') ? eVal : (endSel.options.length > 0 ? endSel.options[endSel.options.length - 1].value : "");
+			$(endSel).select2({ width: "auto", dropdownAutoWidth: true });
 		}
 	}
 	
@@ -139,8 +143,10 @@ var SurveyCreate     = function() {
 			var curVal   = curStart ? curStart.value : "";
 			var minTime  = getMinTimeForDate(selectedDate);
 			if (curStart) {
+				if ($(curStart).hasClass("select2-hidden-accessible")) { $(curStart).select2("destroy"); }
 				curStart.innerHTML = buildTimeOptions(minTime);
 				curStart.value     = curStart.querySelector('option[value="' + curVal + '"]') ? curVal : (curStart.options[0] ? curStart.options[0].value : "");
+				$(curStart).select2({ width: "auto", dropdownAutoWidth: true });
 			}
 			var endDateVal = document.getElementById("endDate") ? document.getElementById("endDate").value : "";
 			var newStart   = curStart ? curStart.value : null;
@@ -148,8 +154,10 @@ var SurveyCreate     = function() {
 			var endSel     = document.getElementById("endTime");
 			var curEnd     = endSel ? endSel.value : "";
 			if (endSel) {
+				if ($(endSel).hasClass("select2-hidden-accessible")) { $(endSel).select2("destroy"); }
 				endSel.innerHTML = buildTimeOptions(endMinTime);
 				endSel.value     = endSel.querySelector('option[value="' + curEnd + '"]') ? curEnd : (endSel.options.length > 0 ? endSel.options[endSel.options.length - 1].value : "");
+				$(endSel).select2({ width: "auto", dropdownAutoWidth: true });
 			}
 		});
 		$("#endDate").datepicker("option", "onSelect", function(selectedDate) {
@@ -159,21 +167,25 @@ var SurveyCreate     = function() {
 			var endSel       = document.getElementById("endTime");
 			var curEnd       = endSel ? endSel.value : "";
 			if (endSel) {
+				if ($(endSel).hasClass("select2-hidden-accessible")) { $(endSel).select2("destroy"); }
 				endSel.innerHTML = buildTimeOptions(endMinTime);
 				endSel.value     = endSel.querySelector('option[value="' + curEnd + '"]') ? curEnd : (endSel.options.length > 0 ? endSel.options[endSel.options.length - 1].value : "");
+				$(endSel).select2({ width: "auto", dropdownAutoWidth: true });
 			}
 		});
 		var startTimeSel = document.getElementById("startTime");
 		if (startTimeSel) {
-			startTimeSel.addEventListener("change", function() {
+			$(startTimeSel).on("change", function() {
 				var startDateVal = document.getElementById("startDate") ? document.getElementById("startDate").value : "";
 				var endDateVal   = document.getElementById("endDate")   ? document.getElementById("endDate").value   : "";
 				var endMinTime   = getEndMinTime(endDateVal, startDateVal, this.value);
 				var endSel       = document.getElementById("endTime");
 				var curEnd       = endSel ? endSel.value : "";
 				if (endSel) {
+					if ($(endSel).hasClass("select2-hidden-accessible")) { $(endSel).select2("destroy"); }
 					endSel.innerHTML = buildTimeOptions(endMinTime);
 					endSel.value     = endSel.querySelector('option[value="' + curEnd + '"]') ? curEnd : (endSel.options.length > 0 ? endSel.options[endSel.options.length - 1].value : "");
+					$(endSel).select2({ width: "auto", dropdownAutoWidth: true });
 				}
 			});
 		}
@@ -5207,15 +5219,19 @@ function survPeriodReset(orgSurvey) {
 	var startMinTime = getMinTimeForDate(actualStartDate);
 	var startSel     = document.getElementById("startTime");
 	if (startSel) {
+		if ($(startSel).hasClass("select2-hidden-accessible")) { $(startSel).select2("destroy"); }
 		startSel.innerHTML = buildTimeOptions(startMinTime);
 		startSel.value     = startSel.querySelector('option[value="' + sTime + '"]') ? sTime : (startSel.options[0] ? startSel.options[0].value : "");
+		$(startSel).select2({ width: "auto", dropdownAutoWidth: true });
 	}
 	var actualStartTime = startSel ? startSel.value : sTime;
 	var endMinTime      = getEndMinTime(actualEndDate, actualStartDate, actualStartTime);
 	var endSel          = document.getElementById("endTime");
 	if (endSel) {
+		if ($(endSel).hasClass("select2-hidden-accessible")) { $(endSel).select2("destroy"); }
 		endSel.innerHTML = buildTimeOptions(endMinTime);
 		endSel.value     = endSel.querySelector('option[value="' + eTime + '"]') ? eTime : (endSel.options.length > 0 ? endSel.options[endSel.options.length - 1].value : "");
+		$(endSel).select2({ width: "auto", dropdownAutoWidth: true });
 	}
 }
 

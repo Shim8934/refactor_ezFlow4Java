@@ -204,7 +204,7 @@ public class EzEmailAsync {
 		long surveyId = survey.getSurveyId();
 		
 		String endDateUTC     = survey.getEndDate();
-		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 		Date timeUTC;
 		String endDateString = null ;
 		String realTimeZone = "";
@@ -212,7 +212,7 @@ public class EzEmailAsync {
 		
 		try {
 			timeUTC = formatter.parse(endDateUTC);
-			endDateString = new SimpleDateFormat("yyyy-MM-dd").format(timeUTC);
+			endDateString = new SimpleDateFormat("yyyy-MM-dd HH:mm").format(timeUTC);
 			String timeZone = ezCommonService.selectUserGetTimeZone(survey.getCreatorId(), survey.getTenantId());
 			System.out.println("timezone" + timeZone);
 			String[] timeZoneArr = timeZone.split("\\|");
