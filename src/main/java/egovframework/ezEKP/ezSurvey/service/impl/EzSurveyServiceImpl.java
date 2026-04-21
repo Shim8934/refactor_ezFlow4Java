@@ -707,10 +707,9 @@ public class EzSurveyServiceImpl extends EzFileMngUtil implements EzSurveyServic
 			}
 			
 			//Send notice mail
-			String nowDateStr = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("yyyy-MM-dd"), offset, false);
-			String startDateOnly = startDate.contains(" ") ? startDate.substring(0, startDate.indexOf(" ")) : startDate;
-			Boolean notiMailFlag = mailFlag == 1 && nowDateStr.equals(startDateOnly) && draftMode == 0;
-			Boolean totalNotiFlag = nowDateStr.equals(startDateOnly) && draftMode == 0;
+			String nowDateUTC    = commonUtil.getTodayUTCTime("");
+			Boolean notiMailFlag  = mailFlag == 1 && startDateUTC.compareTo(nowDateUTC) <= 0 && draftMode == 0;
+			Boolean totalNotiFlag = startDateUTC.compareTo(nowDateUTC) <= 0 && draftMode == 0;
 			if (notiMailFlag) {
 				int mailSentFlag = ezSurveyDAO.getMailSentFlag(survey);
 				

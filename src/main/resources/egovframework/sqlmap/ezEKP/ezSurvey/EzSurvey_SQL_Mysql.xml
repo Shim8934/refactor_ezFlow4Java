@@ -959,9 +959,9 @@
 			from
 				tbl_survey
 			where
-				date_add(start_date, interval #offset# minute) <= current_date
+				date_add(start_date, interval #offset# minute) <= now()
 			and
-				date_add(end_date, interval #offset# minute) >= current_date
+				date_add(end_date, interval #offset# minute) >= now()
 		 	and
 		 		use_status = 1
 		 	and
