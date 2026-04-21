@@ -121,17 +121,19 @@
 					</tr>
 					<tr>
 						<th class="left-Th"><spring:message code="ezSurvey.t38"/></th> <%-- start date && end date setting --%>
-						<td class="right-Td">
+						<td class="right-Td" colspan="4">
 							<div class="surveyinf-divcf">
-								<span id="cf-startDate"><c:out value="${fn:substring(survey.startDate, 0, 10)}"/></span>
+								<span id="cf-startDate"><c:out value="${fn:substring(survey.startDate, 0, 16)}"/></span>
 								<img class="ui-datepicker-trigger bnk" src="/images/ezSurvey/calendar-month.png">
 								&nbsp;~&nbsp;
-								<span id="cf-endDate"><c:out value="${fn:substring(survey.endDate, 0, 10)}"/></span>
+								<span id="cf-endDate"><c:out value="${fn:substring(survey.endDate, 0, 16)}"/></span>
 								<img class="ui-datepicker-trigger bnk" src="/images/ezSurvey/calendar-month.png">
 							</div>
 						</td>
+					</tr>
+					<tr>
 						<th class="left-Th"><spring:message code="ezSurvey.t49"/></th> <%-- multiple select setting --%>
-						<td class="right-Td">
+						<td class="right-Td" colspan="4">
 							<div id="cf-multiple" class="surveyinf-divcf"><spring:message code="${survey.multiAnswerFlag == 1 ? 'ezSurvey.t51' : 'ezSurvey.t50'}"/></div>
 						</td>
 					</tr>
@@ -744,7 +746,7 @@
 						var qstnId = wrapper.getAttribute("id");
 						var id     = parseInt(qstnId.replace("prevQstn", ""));
 						var type   = parseInt(wrapper.getAttribute("type"));
-						
+
 						switch (type) {
 							case 1:
 								responseResult = getSingleSltRespose(id, type);
@@ -1299,27 +1301,31 @@
 				}
 			});
 		}
-		// 설문 가능 기간과 오늘 날짜 비교
+		// 설문 가능 기간과 오늘 날짜/시간 비교
 		function checkDate() {
-			var startDate = survey.startDate.substr(0, 10);
-			var endDate   = survey.endDate.substr(0, 10);
+			var startDate = survey.startDate.substr(0, 16);
+			var endDate   = survey.endDate.substr(0, 16);
 			var today     = new Date();
 			var yyyy      = today.getFullYear();
 			var MM        = today.getMonth() + 1;
 			var dd        = today.getDate();
+			var HH        = today.getHours();
+			var mm        = today.getMinutes();
 			var result    = "success";
-			
+
 			if (dd < 10) {dd = '0' + dd;}
 			if (MM < 10) {MM = '0' + MM;}
-			
-			today = yyyy + "-" + MM + "-" + dd;
-			
-			// 시작일이 오늘 이후이거나, 종료일이 오늘 이전인 경우 설문 응답 불가능
+			if (HH < 10) {HH = '0' + HH;}
+			if (mm < 10) {mm = '0' + mm;}
+
+			today = yyyy + "-" + MM + "-" + dd + " " + HH + ":" + mm;
+
+			// 시작일시가 현재 이후이거나, 종료일시가 현재 이전인 경우 설문 응답 불가능
 			if (startDate > today || endDate < today) {
 				alert(SurveyMessages.strNotPeriod + startDate + "~" + endDate);
 				result = "fail";
 			}
-			
+
 			return result;
 		}
 		// 필수 응답 질문 유무 체크

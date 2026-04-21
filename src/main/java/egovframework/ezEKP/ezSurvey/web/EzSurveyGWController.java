@@ -470,6 +470,10 @@ public class EzSurveyGWController {
 			String purpose          = infor.get("purpose")    != null ? infor.get("purpose").toString()            : "";
 			String startDate        = infor.get("startDate")  != null ? infor.get("startDate").toString()          : "";
 			String endDate          = infor.get("endDate")    != null ? infor.get("endDate").toString()            : "";
+			String startTime        = infor.get("startTime")  != null ? infor.get("startTime").toString()          : "";
+			String endTime          = infor.get("endTime")    != null ? infor.get("endTime").toString()            : "";
+			if (!startTime.isEmpty()) startDate = startDate + " " + startTime;
+			if (!endTime.isEmpty())   endDate   = endDate   + " " + endTime;
 			int publicFlag          = infor.get("public")     != null ? ((Long)infor.get("public")).intValue()     : -1;
 			int anonymousFlag       = infor.get("anonymous")  != null ? ((Long)infor.get("anonymous")).intValue()  : -1;
 			int userExposedFlag     = infor.get("userExposed")!= null ? ((Long)infor.get("userExposed")).intValue(): 1;

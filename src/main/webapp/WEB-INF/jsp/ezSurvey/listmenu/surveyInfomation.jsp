@@ -14,8 +14,10 @@
 					<th class="left-Th"><spring:message code="ezSurvey.t38"/></th> <%-- start date && end date setting --%>
 					<td class="right-Td">
 						<input type="text" id="startDate" class="srchDate" readonly size="10">
+						<select id="startTime" class="surveyTimeSelect" style="margin-left:4px;"></select>
 						&nbsp;~&nbsp;
 						<input type="text" id="endDate" class="srchDate" readonly size="10">
+						<select id="endTime" class="surveyTimeSelect" style="margin-left:4px;"></select>
 					</td>
 					<th class="left-Th"><spring:message code="ezSurvey.t101"/></th> <%-- open public result days setting --%>
 					<td class="right-Td">

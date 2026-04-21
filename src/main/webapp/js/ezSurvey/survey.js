@@ -46,6 +46,26 @@ var SurveyCreate     = function() {
 		minDate        : 0,
 		dateFormat     : "yy-mm-dd"
 	};
+
+	function buildTimeOptions() {
+		var opts = [];
+		for (var h = 0; h < 24; h++) {
+			for (var m = 0; m < 60; m += 30) {
+				var hh = (h < 10 ? "0" : "") + h;
+				var mm = m === 0 ? "00" : "30";
+				opts.push('<option value="' + hh + ':' + mm + '">' + hh + ':' + mm + '</option>');
+			}
+		}
+		return opts.join("");
+	}
+
+	function initTimeSelects(startTimeVal, endTimeVal) {
+		var opts     = buildTimeOptions();
+		var startSel = document.getElementById("startTime");
+		var endSel   = document.getElementById("endTime");
+		if (startSel) { startSel.innerHTML = opts; startSel.value = startTimeVal || "00:00"; }
+		if (endSel)   { endSel.innerHTML   = opts; endSel.value   = endTimeVal   || "23:30"; }
+	}
 	
 	var datepickerSchedule   = {
 		changeMonth    : true,
@@ -90,6 +110,7 @@ var SurveyCreate     = function() {
 		
 		$("#startDate").datepicker(datepickerSt);
 		$("#endDate").datepicker(datepickerSt);
+		initTimeSelects();
 		// 설문 생성시, 재사용인지 처음 생성하는 것인지 확인
 		if (!surveyItem) {
 			var today = new Date();
@@ -299,6 +320,8 @@ var SurveyCreate     = function() {
 		
 		var startDate      = document.getElementById("startDate").value;
 		var endDate        = document.getElementById("endDate").value;
+		var startTime      = document.getElementById("startTime") ? document.getElementById("startTime").value : "00:00";
+		var endTime        = document.getElementById("endTime")   ? document.getElementById("endTime").value   : "23:30";
 		var publicFlag     = parseInt(document.querySelector('input[name="publicSpan"]:checked').value);
 		var anonymousFlag  = parseInt(document.querySelector('input[name="anonymousSpan"]:checked').value);
 		var userExposedFlag = parseInt(document.querySelector('input[name="userExposedSpan"]:checked').value);
@@ -323,6 +346,8 @@ var SurveyCreate     = function() {
 		surveyObj["infor"]["multiple"]  = multipleFlag;
 		surveyObj["infor"]["startDate"] = startDate;
 		surveyObj["infor"]["endDate"]   = endDate;
+		surveyObj["infor"]["startTime"] = startTime;
+		surveyObj["infor"]["endTime"]   = endTime;
 		surveyObj["infor"]["userflag"]  = userFlag;
 		surveyObj["infor"]["mail"]      = mailFlag;
 		surveyObj["infor"]["popup"]     = popupFlag;
@@ -4660,8 +4685,8 @@ var SurveyCreate     = function() {
 	function confirmSurveyInfo(qstInf) {
 		var surveyInfWrap = document.getElementById("surveyInfConfirm");
 		document.getElementById("cf-purpose").innerHTML      = replaceAll(qstInf["purpose"], "(&lt;(\/?)(script|applet|object)&gt;)", "");
-		document.getElementById("cf-startDate").textContent  = qstInf["startDate"];
-		document.getElementById("cf-endDate").textContent    = qstInf["endDate"];
+		document.getElementById("cf-startDate").textContent  = qstInf["startDate"] + " " + qstInf["startTime"];
+		document.getElementById("cf-endDate").textContent    = qstInf["endDate"] + " " + qstInf["endTime"];
 		document.getElementById("cf-anoynymous").textContent = qstInf["anonymous"] == 0 ? SurveyMessages.strAnoynym1  : SurveyMessages.strAnoynym2;
 		document.getElementById("cf-userExposed").textContent = qstInf["userExposed"] == 0 ? SurveyMessages.strPublic2 : SurveyMessages.strPublic1;
 		document.getElementById("cf-multiple").textContent   = qstInf["multiple"]  == 0 ? SurveyMessages.strMultiple1 : SurveyMessages.strMultiple2;
@@ -5051,6 +5076,14 @@ function getHTML4(callBack, param1, param2) {
 		});
 }
 
+function roundToHalfHour(timeStr) {
+	var parts = timeStr ? timeStr.split(":") : ["0", "0"];
+	var h = parseInt(parts[0]) || 0;
+	var m = parseInt(parts[1]) || 0;
+	m = m < 30 ? 0 : 30;
+	return (h < 10 ? "0" : "") + h + ":" + (m === 0 ? "00" : "30");
+}
+
 function survPeriodReset(orgSurvey) {
 	var today = new Date();
 	var todayStr = getStringFormatForDate(today);
@@ -5067,6 +5100,13 @@ function survPeriodReset(orgSurvey) {
 	if (nowDate > eDate) {
 		$("#endDate").datepicker("setDate", today);
 	}
+
+	var sTimeRaw = orgSurvey["startDate"] && orgSurvey["startDate"].length > 15 ? orgSurvey["startDate"].slice(11, 16) : "00:00";
+	var eTimeRaw = orgSurvey["endDate"]   && orgSurvey["endDate"].length   > 15 ? orgSurvey["endDate"].slice(11, 16)   : "23:30";
+	var startSel = document.getElementById("startTime");
+	var endSel   = document.getElementById("endTime");
+	if (startSel) startSel.value = roundToHalfHour(sTimeRaw);
+	if (endSel)   endSel.value   = roundToHalfHour(eTimeRaw);
 }
 
 function getStringFormatForDate(dateObj) {

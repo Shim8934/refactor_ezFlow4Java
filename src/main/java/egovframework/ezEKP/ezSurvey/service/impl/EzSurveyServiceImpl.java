@@ -390,8 +390,8 @@ public class EzSurveyServiceImpl extends EzFileMngUtil implements EzSurveyServic
 		String userCompanyId                 = "";
 		SurveyVO survey                      = new SurveyVO();
 		String timeUTC                       = commonUtil.getTodayUTCTime("");
-		String startDateUTC                  = commonUtil.getDateStringInUTC(startDate + " 00:00:00", offset, true);
-		String endDateUTC                    = commonUtil.getDateStringInUTC(endDate   + " 23:59:59", offset, true);
+		String startDateUTC                  = commonUtil.getDateStringInUTC(startDate.length() > 10 ? startDate + ":00" : startDate + " 00:00:00", offset, true);
+		String endDateUTC                    = commonUtil.getDateStringInUTC(endDate.length()   > 10 ? endDate   + ":00" : endDate   + " 23:59:59", offset, true);
 		Set<SimpleUserVO> setUsers           = new HashSet<>();
 		List<String> deptList                = new ArrayList<>();
 		List<String> subDeptsList                = new ArrayList<>();
@@ -708,8 +708,9 @@ public class EzSurveyServiceImpl extends EzFileMngUtil implements EzSurveyServic
 			
 			//Send notice mail
 			String nowDateStr = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("yyyy-MM-dd"), offset, false);
-			Boolean notiMailFlag = mailFlag == 1 && nowDateStr.equals(startDate) && draftMode == 0;
-			Boolean totalNotiFlag = nowDateStr.equals(startDate) && draftMode == 0;
+			String startDateOnly = startDate.contains(" ") ? startDate.substring(0, startDate.indexOf(" ")) : startDate;
+			Boolean notiMailFlag = mailFlag == 1 && nowDateStr.equals(startDateOnly) && draftMode == 0;
+			Boolean totalNotiFlag = nowDateStr.equals(startDateOnly) && draftMode == 0;
 			if (notiMailFlag) {
 				int mailSentFlag = ezSurveyDAO.getMailSentFlag(survey);
 				
@@ -1427,10 +1428,12 @@ public class EzSurveyServiceImpl extends EzFileMngUtil implements EzSurveyServic
 		}
 		
 		//Check date
-		Date dToday         = formatter.parse(timeUTC);
+		//2026-04-21 UTC -> TimeZone 시간 수정
+		String localTimeStr = commonUtil.getDateStringInUTC(timeUTC, userInfo.getOffset(), false);
+		Date dToday         = formatter.parse(localTimeStr);
 		Date dEndDate       = formatter.parse(survey.getEndDate());
 		Date dStartDate     = formatter.parse(survey.getStartDate());
-		
+
 		if (dStartDate.compareTo(dToday) > 0 || dToday.compareTo(dEndDate) > 0) {
 			result.put("status", "error");
 			result.put("code", 7);
