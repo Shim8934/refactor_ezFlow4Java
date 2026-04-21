@@ -1051,4 +1051,6 @@ public interface EzApprovalGService {
     public ApprGDocListVO getApprovalDocInfo(String docID, LoginVO userInfo, String share) throws Exception;
 
     public ApprGDocListVO getViewDocInfo(String docID, LoginVO userInfo) throws Exception;
+    
+    public String checkAccessFormCont(String formID, String deptID, String companyID, int tenantID) throws Exception;
 }

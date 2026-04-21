@@ -587,6 +587,33 @@
 					alert("타부서의 철정보로 설정되어있습니다. \n'" + arr_userinfo[5] + "'부서의 철로 변경해주시기바랍니다.");
 					return;
 				}	
+				
+				
+                if (ListType == "21" && pDraftFlag == "REDRAFT") {
+                    var chkDocExist = "";
+                    
+                    // 임시보관문서 재기안 시 양식 접근 권한 체크
+                    $.ajax({
+                        type : "POST",
+                        dataType : "text",
+                        async : false,
+                        url : "/ezApprovalG/checkAccessFormCont.do",
+                        data : {
+                            formID : pFormID
+                        },
+                        success : function(result) {
+                            chkDocExist = result;
+                        },
+                        error : function(e) {
+                           console.log(e);
+                        }
+                    });
+                    
+                    if ("N" == chkDocExist) {
+                        OpenAlertUI("<spring:message code='ezApprovalG.kyj02' arguments='" + arr_userinfo[5] + ", 1'/>");
+                        return;
+                    }
+                }
 	        
 // 	            try {
 	            	var result = "";

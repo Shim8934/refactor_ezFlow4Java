@@ -3227,7 +3227,7 @@ function openReceivUI() {
     return ret;
 }
 
-function GetAprDocFormID() {
+function GetAprDocFormID(tempDocID) {
     try {
     	var result = "";
     	
@@ -3237,7 +3237,7 @@ function GetAprDocFormID() {
     		async : false,
     		url : "/ezApprovalG/getAprDocFormID.do",
     		data : {
-    			docID : pDocID
+    			docID : typeof tempDocID == "undefined" || tempDocID == "" ? pDocID : tempDocID
     		},
     		success: function(xml){
     			result = xml;

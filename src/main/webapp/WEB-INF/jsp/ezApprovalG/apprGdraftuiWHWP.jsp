@@ -640,7 +640,7 @@
 			                    pDocID = isTmpDocID;
 			                }
 			
-			                GetAprDocFormID();
+			            //    GetAprDocFormID();
 			                setAttachInfo(pDocID, "APR", lstAttachLink, draftAllTypeB);
 			                GetExchInfo();
 			                
@@ -649,12 +649,15 @@
 			                        pDocIDAry[1] = pDocID;
 			                        an.options[0].value = pDocID;
 			                    }
+			                   /* 2026-04-21 김유진 - 일괄기안 B 타입일 경우, 1안의 formID 가져오기 */
+			                   GetAprDocFormID(pDocIDAry[1]);
 			                   getDocInfoAll();
 			                }else{
 			                    if(anCnt == 1 && pDocIDAry.length == 0){
                                     pDocIDAry[1] = pDocID;
                                     an.options[0].value = pDocID;
 			                    }
+			                    GetAprDocFormID();
 			                    getDocInfo();
 			                }
 			                
@@ -925,6 +928,39 @@
                     window.returnValue = "CLOSE";
                     window.close();
                     return;
+                }
+                
+                
+                if (ListType == "21" && pDraftFlag == "REDRAFT") {
+                    
+                    // 임시보관문서 재기안 시 양식 접근 권한 체크
+                    var resultChk = "";
+                    for(var i = 1; i <= draftAnCnt; i++){
+                        $.ajax({
+                            type : "POST",
+                            dataType : "text",
+                            async : false,
+                            url : "/ezApprovalG/checkAccessFormCont.do",
+                            data : {
+                                formID : draftAnCnt > 1 ? pFormIDAry[i] : pFormID
+                            },
+                            success : function(result) {
+                                resultChk = result;
+                            },
+                            error : function(e) {
+                               console.log(e);
+                            }
+                        });
+                        
+                        if ("N" == resultChk) {
+                            if (draftAnCnt > 1) {
+                                OpenAlertUI("<spring:message code='ezApprovalG.kyj02' arguments='" + arr_userinfo[5] + ", " + i + "'/>");
+                            } else {
+                                OpenAlertUI("<spring:message code='ezApprovalG.kyj03' arguments='" + arr_userinfo[5] + "'/>");
+                            }
+                            return;
+                        }
+                    }
                 }
 
 		    	$.ajax({

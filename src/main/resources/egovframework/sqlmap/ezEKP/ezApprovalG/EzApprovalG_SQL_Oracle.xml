@@ -39805,4 +39805,66 @@
                     AND DOCID = #v_DOCID#
                     AND APRMEMBERSN = 1)
     </select>
+
+    <select id="EzApprovalG.checkAccessFormCont" parameterClass="Map" resultClass="Integer">
+        SELECT
+            CASE
+                WHEN NOT EXISTS (
+                    SELECT 1
+                    FROM 
+                        TBL_FORMINFO
+                    JOIN 
+                        TBL_FORMCONTAINER
+                    ON 
+                        TBL_FORMINFO.FORMCONTID = TBL_FORMCONTAINER.FORMCONTID
+                    AND 
+                        TBL_FORMINFO.TENANT_ID = TBL_FORMCONTAINER.TENANT_ID
+                    AND 
+                        TBL_FORMINFO.COMPANYID = TBL_FORMCONTAINER.COMPANYID
+                    WHERE 
+                        TBL_FORMINFO.FORMID = #v_FORMID#
+                    AND 
+                        TBL_FORMINFO.TENANT_ID = #v_TENANTID#
+                    AND 
+                        TBL_FORMINFO.COMPANYID = #companyID#
+                ) THEN 1
+                ELSE (
+                    SELECT 
+                        COUNT(TBL_FORMINFO.FORMID)
+                    FROM 
+                        TBL_FORMINFO
+                    JOIN 
+                        TBL_FORMCONTAINER
+                    ON 
+                        TBL_FORMINFO.FORMCONTID = TBL_FORMCONTAINER.FORMCONTID
+                    AND 
+                        TBL_FORMINFO.TENANT_ID = TBL_FORMCONTAINER.TENANT_ID
+                    AND 
+                        TBL_FORMINFO.COMPANYID = TBL_FORMCONTAINER.COMPANYID
+                    LEFT JOIN 
+                        TBL_FORMCONTUSERGROUP
+                    ON 
+                        TBL_FORMCONTAINER.FORMCONTID = TBL_FORMCONTUSERGROUP.FORMCONTID
+                    AND 
+                        TBL_FORMCONTAINER.TENANT_ID = TBL_FORMCONTUSERGROUP.TENANT_ID
+                    AND 
+                        TBL_FORMCONTAINER.COMPANYID = TBL_FORMCONTUSERGROUP.COMPANYID
+                    WHERE 
+                        TBL_FORMINFO.FORMID = #v_FORMID#
+                    AND 
+                        TBL_FORMINFO.TENANT_ID = #v_TENANTID#
+                    AND 
+                        TBL_FORMINFO.COMPANYID = #companyID#
+                    AND 
+                        (TBL_FORMCONTAINER.FORMCONTOWNDEPID = 'ALL'
+                        OR 
+                            (TBL_FORMCONTUSERGROUP.FORMCONTUSERDEPID IS NOT NULL
+                            AND 
+                            TBL_FORMCONTUSERGROUP.FORMCONTUSERDEPID = #v_DEPTID#
+                            )
+                        )
+                ) 
+            END AS rst
+        FROM DUAL
+    </select>
 </sqlMap>
