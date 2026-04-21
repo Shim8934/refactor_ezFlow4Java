@@ -47,24 +47,24 @@ var SurveyCreate     = function() {
 		dateFormat     : "yy-mm-dd"
 	};
 
-	function buildTimeOptions() {
-		var opts = [];
-		for (var h = 0; h < 24; h++) {
-			for (var m = 0; m < 60; m += 30) {
-				var hh = (h < 10 ? "0" : "") + h;
-				var mm = m === 0 ? "00" : "30";
-				opts.push('<option value="' + hh + ':' + mm + '">' + hh + ':' + mm + '</option>');
-			}
-		}
-		return opts.join("");
-	}
-
 	function initTimeSelects(startTimeVal, endTimeVal) {
-		var opts     = buildTimeOptions();
-		var startSel = document.getElementById("startTime");
-		var endSel   = document.getElementById("endTime");
-		if (startSel) { startSel.innerHTML = opts; startSel.value = startTimeVal || "00:00"; }
-		if (endSel)   { endSel.innerHTML   = opts; endSel.value   = endTimeVal   || "23:30"; }
+		var startDateVal  = document.getElementById("startDate") ? document.getElementById("startDate").value : "";
+		var endDateVal    = document.getElementById("endDate")   ? document.getElementById("endDate").value   : "";
+		var startMinTime  = getMinTimeForDate(startDateVal);
+		var startSel      = document.getElementById("startTime");
+		var endSel        = document.getElementById("endTime");
+		if (startSel) {
+			startSel.innerHTML = buildTimeOptions(startMinTime);
+			var sVal = startTimeVal || (startSel.options[0] ? startSel.options[0].value : "00:00");
+			startSel.value = startSel.querySelector('option[value="' + sVal + '"]') ? sVal : (startSel.options[0] ? startSel.options[0].value : "");
+		}
+		var startTimeSelected = startSel ? startSel.value : null;
+		var endMinTime = getEndMinTime(endDateVal, startDateVal, startTimeSelected);
+		if (endSel) {
+			endSel.innerHTML = buildTimeOptions(endMinTime);
+			var eVal = endTimeVal || "23:30";
+			endSel.value = endSel.querySelector('option[value="' + eVal + '"]') ? eVal : (endSel.options.length > 0 ? endSel.options[endSel.options.length - 1].value : "");
+		}
 	}
 	
 	var datepickerSchedule   = {
@@ -110,12 +110,12 @@ var SurveyCreate     = function() {
 		
 		$("#startDate").datepicker(datepickerSt);
 		$("#endDate").datepicker(datepickerSt);
-		initTimeSelects();
 		// 설문 생성시, 재사용인지 처음 생성하는 것인지 확인
 		if (!surveyItem) {
 			var today = new Date();
 			$("#startDate").datepicker("setDate", today);
 			$("#endDate").datepicker("setDate", today);
+			initTimeSelects();
 			fileDivElmt.onclick = function(e) {startUpload();};
 		}
 		else {
@@ -133,6 +133,50 @@ var SurveyCreate     = function() {
 			getReuseQuestions();
 		}
 		
+		// 날짜 변경 시 시간 선택 옵션 업데이트 (현재 시각 이후만 표시)
+		$("#startDate").datepicker("option", "onSelect", function(selectedDate) {
+			var curStart = document.getElementById("startTime");
+			var curVal   = curStart ? curStart.value : "";
+			var minTime  = getMinTimeForDate(selectedDate);
+			if (curStart) {
+				curStart.innerHTML = buildTimeOptions(minTime);
+				curStart.value     = curStart.querySelector('option[value="' + curVal + '"]') ? curVal : (curStart.options[0] ? curStart.options[0].value : "");
+			}
+			var endDateVal = document.getElementById("endDate") ? document.getElementById("endDate").value : "";
+			var newStart   = curStart ? curStart.value : null;
+			var endMinTime = getEndMinTime(endDateVal, selectedDate, newStart);
+			var endSel     = document.getElementById("endTime");
+			var curEnd     = endSel ? endSel.value : "";
+			if (endSel) {
+				endSel.innerHTML = buildTimeOptions(endMinTime);
+				endSel.value     = endSel.querySelector('option[value="' + curEnd + '"]') ? curEnd : (endSel.options.length > 0 ? endSel.options[endSel.options.length - 1].value : "");
+			}
+		});
+		$("#endDate").datepicker("option", "onSelect", function(selectedDate) {
+			var startDateVal = document.getElementById("startDate") ? document.getElementById("startDate").value : "";
+			var startTime    = document.getElementById("startTime") ? document.getElementById("startTime").value : null;
+			var endMinTime   = getEndMinTime(selectedDate, startDateVal, startTime);
+			var endSel       = document.getElementById("endTime");
+			var curEnd       = endSel ? endSel.value : "";
+			if (endSel) {
+				endSel.innerHTML = buildTimeOptions(endMinTime);
+				endSel.value     = endSel.querySelector('option[value="' + curEnd + '"]') ? curEnd : (endSel.options.length > 0 ? endSel.options[endSel.options.length - 1].value : "");
+			}
+		});
+		var startTimeSel = document.getElementById("startTime");
+		if (startTimeSel) {
+			startTimeSel.addEventListener("change", function() {
+				var startDateVal = document.getElementById("startDate") ? document.getElementById("startDate").value : "";
+				var endDateVal   = document.getElementById("endDate")   ? document.getElementById("endDate").value   : "";
+				var endMinTime   = getEndMinTime(endDateVal, startDateVal, this.value);
+				var endSel       = document.getElementById("endTime");
+				var curEnd       = endSel ? endSel.value : "";
+				if (endSel) {
+					endSel.innerHTML = buildTimeOptions(endMinTime);
+					endSel.value     = endSel.querySelector('option[value="' + curEnd + '"]') ? curEnd : (endSel.options.length > 0 ? endSel.options[endSel.options.length - 1].value : "");
+				}
+			});
+		}
 		window.addEventListener("beforeunload", function(e) {closeAllPopups();}, false);
 		fileDivElmt.addEventListener("dragenter", function(e) {surveyFile.dragEnter(e);}, false);
 		fileDivElmt.addEventListener("dragover" , function(e) {surveyFile.dragOver(e);} , false);
@@ -5076,6 +5120,56 @@ function getHTML4(callBack, param1, param2) {
 		});
 }
 
+function getMinTimeForDate(dateStr) {
+	if (!dateStr) return null;
+	var now  = new Date();
+	var yyyy = now.getFullYear();
+	var MM   = now.getMonth() + 1;
+	var dd   = now.getDate();
+	if (MM < 10) MM = "0" + MM;
+	if (dd < 10) dd = "0" + dd;
+	if (dateStr !== (yyyy + "-" + MM + "-" + dd)) return null;
+	var h = now.getHours();
+	var m = now.getMinutes();
+	if (m === 0)      { /* keep h:00 */ }
+	else if (m <= 30) { m = 30; }
+	else              { h += 1; m = 0; }
+	if (h >= 24) return "23:30";
+	if (h < 10) h = "0" + h;
+	return h + ":" + (m === 0 ? "00" : "30");
+}
+
+function getEndMinTime(endDateStr, startDateStr, startTime) {
+	var dateMin = getMinTimeForDate(endDateStr);
+	if (startDateStr && endDateStr && startDateStr === endDateStr && startTime) {
+		var parts = startTime.split(":");
+		var h = parseInt(parts[0]);
+		var m = parseInt(parts[1]) + 30;
+		if (m >= 60) { h += 1; m = 0; }
+		if (h < 24) {
+			var nextSlot = (h < 10 ? "0" : "") + h + ":" + (m === 0 ? "00" : "30");
+			if (!dateMin || nextSlot > dateMin) return nextSlot;
+		}
+	}
+	return dateMin;
+}
+
+function buildTimeOptions(minTime) {
+	var opts = [];
+	for (var h = 0; h < 24; h++) {
+		for (var m = 0; m < 60; m += 30) {
+			var hh      = (h < 10 ? "0" : "") + h;
+			var mm      = m === 0 ? "00" : "30";
+			var timeStr = hh + ":" + mm;
+			if (!minTime || timeStr >= minTime) {
+				opts.push('<option value="' + timeStr + '">' + timeStr + '</option>');
+			}
+		}
+	}
+	if (opts.length === 0) { opts.push('<option value="23:30">23:30</option>'); }
+	return opts.join("");
+}
+
 function roundToHalfHour(timeStr) {
 	var parts = timeStr ? timeStr.split(":") : ["0", "0"];
 	var h = parseInt(parts[0]) || 0;
@@ -5101,12 +5195,28 @@ function survPeriodReset(orgSurvey) {
 		$("#endDate").datepicker("setDate", today);
 	}
 
+	// 날짜 재설정 후 실제 날짜값 기반으로 시간 옵션 재구성
+	var actualStartDate = document.getElementById("startDate") ? document.getElementById("startDate").value : "";
+	var actualEndDate   = document.getElementById("endDate")   ? document.getElementById("endDate").value   : "";
+
 	var sTimeRaw = orgSurvey["startDate"] && orgSurvey["startDate"].length > 15 ? orgSurvey["startDate"].slice(11, 16) : "00:00";
 	var eTimeRaw = orgSurvey["endDate"]   && orgSurvey["endDate"].length   > 15 ? orgSurvey["endDate"].slice(11, 16)   : "23:30";
-	var startSel = document.getElementById("startTime");
-	var endSel   = document.getElementById("endTime");
-	if (startSel) startSel.value = roundToHalfHour(sTimeRaw);
-	if (endSel)   endSel.value   = roundToHalfHour(eTimeRaw);
+	var sTime    = roundToHalfHour(sTimeRaw);
+	var eTime    = roundToHalfHour(eTimeRaw);
+
+	var startMinTime = getMinTimeForDate(actualStartDate);
+	var startSel     = document.getElementById("startTime");
+	if (startSel) {
+		startSel.innerHTML = buildTimeOptions(startMinTime);
+		startSel.value     = startSel.querySelector('option[value="' + sTime + '"]') ? sTime : (startSel.options[0] ? startSel.options[0].value : "");
+	}
+	var actualStartTime = startSel ? startSel.value : sTime;
+	var endMinTime      = getEndMinTime(actualEndDate, actualStartDate, actualStartTime);
+	var endSel          = document.getElementById("endTime");
+	if (endSel) {
+		endSel.innerHTML = buildTimeOptions(endMinTime);
+		endSel.value     = endSel.querySelector('option[value="' + eTime + '"]') ? eTime : (endSel.options.length > 0 ? endSel.options[endSel.options.length - 1].value : "");
+	}
 }
 
 function getStringFormatForDate(dateObj) {
