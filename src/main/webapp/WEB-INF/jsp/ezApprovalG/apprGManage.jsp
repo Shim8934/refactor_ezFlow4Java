@@ -3653,7 +3653,7 @@
 				<li id="tbtnApproveALL" style="DISPLAY:none"><span id="btnApproveALL" aprAllType="LIST"  onClick="return  btnApproveALL_onclick()"><spring:message code='ezApprovalG.t1740'/></span></li>  <!--onclick 함수 파라미터(LIST : 리스트 직접 일괄결재, POPUP : 팝업창 일괄결재-->
 				<li id="tbtnApprove2" style="DISPLAY:none"><span  id=btnApprove2  onClick ="return  btnApprove_onclick('2')" ><spring:message code='ezApprovalG.t1740'/></span></li>
 				<li id="tbtnReceipt"  style="DISPLAY:none"><span id="btnReceipt" onclick="return btnReceipt_onclick()" ><spring:message code='ezApprovalG.t1308'/></span></li>
-				<li id="tbtnSimsa" style="DISPLAY:none"><span id="btnSimsa" onclick="return btnSimsa_onclick()" ><spring:message code='ezApprovalG.t214'/></span></li>
+				<li id="tbtnSimsa" class="important" style="DISPLAY:none"><span id="btnSimsa" onclick="return btnSimsa_onclick()" ><spring:message code='ezApprovalG.t214'/></span></li>
 				<li id="tbtnReceiptAll" style="DISPLAY:none"><span id="btnReceiptAll" onclick="return btnReceiptAll_onclick()" ><spring:message code='ezApprovalG.lgeAR01'/></span></li>
 				<li id="tbtnRJunkyulAll" style="DISPLAY:none"><span id="btnRJunkyulAll" onclick="return btnRJunkyulAll_onclick()" ><spring:message code='ezApprovalG.lgeAR02'/></span></li>
 				<li id="tbtnJiJungAll" style="DISPLAY:none"><span id="btnJiJunglAll" onclick="return btnJiJungAll_onclick()" ><spring:message code='ezApprovalG.JKMH01'/></span></li>

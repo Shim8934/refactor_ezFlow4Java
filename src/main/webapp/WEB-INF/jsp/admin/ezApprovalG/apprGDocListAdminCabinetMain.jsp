@@ -8,7 +8,7 @@
 	    <title><spring:message code='ezApprovalG.t901'/></title>
 	    <style>
 	        .IMG_BTN {
-	            behavior: url("/css/include/ImgBtn.htc");a
+	            behavior: url("/css/include/ImgBtn.htc");
 	        }
 	
 	        .pagetd {
@@ -2542,7 +2542,7 @@
                 <!-- <li id="tbar3" style="background: none; padding-right: 2px;">
                     <img src="/images/i_bar.gif"></li> -->	            
                 <li class="important" id="tdRegRecord" style="Display: None"><span id="RegRecord" onclick="return btnRegRecord_onclick()"><spring:message code='ezApprovalG.t933'/></span></li>
-                <li class="important" id="tdRegSepAtt" style="Display: None"><span id="RegSepAtt" onclick="return btnRegAttach_onclick()"><spring:message code='ezApprovalG.t942'/></span></li>
+                <li id="tdRegSepAtt" style="Display: None"><span id="RegSepAtt" onclick="return btnRegAttach_onclick()"><spring:message code='ezApprovalG.t942'/></span></li>
                 <li id="tdViewRecInfo"><span id="ViewRecInfo" onclick="return btnViewRecInfo_onclick()"><spring:message code='ezApprovalG.t527'/></span></li>
                 <li id="tDocInfo"><span id="DocInfo" onclick="return GongRamDocInfo()"><spring:message code='ezApprovalG.t946'/></span></li>	            
                 <li id="tdbtnCardSend" style="Display: None"><span id="btnCardSend" onclick="return btnCardSend_onclick()"><spring:message code='ezApprovalG.t943'/></span></li>
