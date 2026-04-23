@@ -5624,16 +5624,18 @@ public class EzBoardController extends EzFileMngUtil{
 		resultXML.append("<NODES>");
 		
 		if (pMode.equals("boardAttach")) {
-			EzFAL.EzFile  file = new EzFAL.EzFile(commonUtil.detectPathTraversal(filePath + pConLocation));
+			EzFAL.EzFile file = new EzFAL.EzFile(commonUtil.detectPathTraversal(filePath + pConLocation));
 			String fileExtension = pConLocation.substring(pConLocation.lastIndexOf("."));
-			String newFilePath = "tempUploadFile" + commonUtil.separator + "{" + UUID.randomUUID() + "}_" + pTitle + fileExtension;
-			EzFAL.copyFile(filePath, newFilePath);
-			
-			long mhtSize = file.length();
-			
+            String boardItemTitle = pTitle.replaceAll("[/*?\"<>|:]","_");
+			String newFilePath = commonUtil.getUploadPath("upload_board.TEMPUPLOADFILE", tenantID) +
+                    commonUtil.separator + "{" + UUID.randomUUID().toString() + "}_" + commonUtil.detectPathTraversal(boardItemTitle + fileExtension);
+            long mhtSize = file.length();
+
+            EzFAL.copyFile(file, new EzFAL.EzFile(commonUtil.detectPathTraversal(filePath + newFilePath)));
+
 			resultXML.append("<NODE>");
 			resultXML.append("<ItemID>" + pItemID + "</ItemID>");
-			resultXML.append("<FileName>" + commonUtil.cleanValue(pTitle + fileExtension) + "</FileName>");
+			resultXML.append("<FileName>" + commonUtil.cleanValue(boardItemTitle + fileExtension) + "</FileName>");
 			resultXML.append("<FilePath>" + commonUtil.cleanValue(newFilePath) + "</FilePath>");
 			resultXML.append("<FileSize>" + getProperSizeDisplay(String.valueOf(mhtSize)) + "</FileSize>");
 			resultXML.append("<FileSize2>" + mhtSize + "</FileSize2>");
@@ -5643,10 +5645,11 @@ public class EzBoardController extends EzFileMngUtil{
 		for (int i = 0; i < boardAttachVOList.size(); i++) {
 			String pFilePath = boardAttachVOList.get(i).getFilePath();
 			String fileExtension = boardAttachVOList.get(i).getFilePath().substring(boardAttachVOList.get(i).getFilePath().lastIndexOf("."));
-			String newFilePath = "tempUploadFile" + commonUtil.separator + "{" + UUID.randomUUID() + "}" + fileExtension;
-			
-			EzFAL.copyFile(pFilePath, newFilePath);
-			
+            String newFilePath = commonUtil.getUploadPath("upload_board.TEMPUPLOADFILE", tenantID)
+                    + commonUtil.separator + "{" + UUID.randomUUID().toString() + "}" + fileExtension;
+            newFilePath = commonUtil.detectPathTraversal(newFilePath);
+            EzFAL.copyFile(commonUtil.detectPathTraversal(filePath + pFilePath), filePath + newFilePath);
+
 			resultXML.append("<NODE>");
 			resultXML.append("<ItemID>" + boardAttachVOList.get(i).getItemID() + "</ItemID>");
 			resultXML.append("<FileName>" + commonUtil.cleanValue(boardAttachVOList.get(i).getFileName()) + "</FileName>");

@@ -1117,7 +1117,7 @@ public class EzEmailServiceImpl extends EgovAbstractServiceImpl implements EzEma
 					
 					ezOrganAdminDao.setDeptPrimaryMail(deptMap);
 				} else if (type.equals("ml")) {
-					inputParams = "userId=" + userId + "&companyId=" + companyId + "&primaryMail=" + primaryMail;
+					inputParams = "userId=" + userId + "&domain=" + domain + "&primaryMail=" + primaryMail;
 					requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/setDistributionPrimaryMail";
 					response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
 					logger.debug("ml response=" + response);
