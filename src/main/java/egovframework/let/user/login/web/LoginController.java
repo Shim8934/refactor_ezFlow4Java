@@ -222,7 +222,8 @@ public class LoginController {
     	String pbm = egovFileScrty.getPbm();
     	
     	//2018-11-05 유은정 - 포탈 개인화 관련 logo 추가
-    	String logo = "";
+    	String logo = null;
+		String banner = null;
     	
     	String companyId = null;
     	String logoUrl = "/rest/admin/ezPortal/logos/companies/" + companyId;
@@ -238,8 +239,14 @@ public class LoginController {
     			
     			if (logoJson.get("logoType").equals("L")) {
     				logo = logoJson.get("logoUrl").toString();
-    				break;
     			}
+				if (logoJson.get("logoType").equals("B")) {
+					banner = logoJson.get("logoUrl").toString();
+				}
+
+				if (logo != null && banner != null) {
+					break;
+				}
     		}
     	}
     	
@@ -258,6 +265,7 @@ public class LoginController {
 		model.addAttribute("publicModulus", pbm);
 		model.addAttribute("publicExponent", "10001");
 		model.addAttribute("logoUrl", logo);
+		model.addAttribute("banner", banner);
 		model.addAttribute("usePasswordReset", usePasswordReset);
 		CommonUtil.addXUACompatibleHeaderToResponse(request, response);
 		response.setHeader("Cache-Control", "no-store");

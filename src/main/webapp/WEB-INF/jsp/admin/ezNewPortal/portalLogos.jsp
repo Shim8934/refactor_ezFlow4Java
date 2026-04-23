@@ -21,6 +21,7 @@
 	         .deleteLogoBtn {display : none;}
 	         .loginLogo .logoIcon img {width:229px; height:81px;}
 	         .portalLogo .logoIcon img, .darkLogo .logoIcon img, .mPortalLogo .logoIcon img, .mLoginLogo .logoIcon img  {width:106px; height:42px;}
+	         .loginBanner .logoIcon img  {object-fit: contain; width:100%; height:100%;}
 		</style>
 	</head>
 	<body class="mainbody">
@@ -89,6 +90,23 @@
 						</div>
 					</div>
 				</div>
+				<div class="loginBanner">
+                    <div class="logoInfo">
+                        <div class="logoInfo">
+                            <div class='logoIconInfo'>
+                            <div class='logoIcon'><img></img></div>
+                            </div>
+                            
+                            <div class="logoContent">
+                                <div id="imgBanner" class='btnpositionJsp'><a class='imgbtn updateLogoBtn'><span><spring:message code='ezNewPortal.t058' /></span></a> <a class='imgbtn deleteLogoBtn'><span><spring:message code='ezNewPortal.t059' /></span></a></div>
+                                <ul>
+                                    <li class="logoTitle"><spring:message code='ezNewPortal.loginBanner01' /></li>
+                                    <li><spring:message code='ezNewPortal.loginBanner02' /></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 			</c:when>
 			<c:otherwise>
 				<div class="mLoginLogo" style="margin-top:30px">
@@ -238,6 +256,16 @@
 									document.getElementById("imgDark").querySelectorAll(".updateLogoBtn")[0].querySelector("span").textContent = "<spring:message code='ezNewPortal.t058' />";
 									document.getElementById("imgDark").querySelectorAll(".deleteLogoBtn")[0].style.display = "none";
 								}
+							} else if (logoType == "B") {
+                                document.getElementsByClassName("loginBanner")[0].querySelectorAll(".logoIcon")[0].querySelector("img").src = logoUrl;
+                            
+                                if (!logoDefault) {
+                                    document.getElementById("imgBanner").querySelectorAll(".updateLogoBtn")[0].querySelector("span").textContent = "<spring:message code='ezNewPortal.t067' />";
+                                    document.getElementById("imgBanner").querySelectorAll(".deleteLogoBtn")[0].style.display = "inline-block";
+                                } else {
+                                    document.getElementById("imgBanner").querySelectorAll(".updateLogoBtn")[0].querySelector("span").textContent = "<spring:message code='ezNewPortal.t058' />";
+                                    document.getElementById("imgBanner").querySelectorAll(".deleteLogoBtn")[0].style.display = "none";
+                                }
 							}
 						} else { // 2025-03-07 황인경 - 관리자 > 포탈 > 모바일포탈관리 > 로고관리
 							if (logoType == "ML") {
@@ -305,6 +333,8 @@
     				logoType = "P";
     			} else if (logoType == "imgDark") {
 					logoType = "D";
+                } else if (logoType == "imgBanner") {
+                    logoType = "B";
 				} else if (logoType == "imgML") {
 					logoType = "ML";
 				} else if (logoType == "imgMP") {
@@ -317,7 +347,7 @@
     			
     			var request = new XMLHttpRequest();
     
-    			if (ext == "jpeg" || ext == "jpg" || ext == "png" || ext == "bmp" || ext == "gif" || ext == "svg") {
+    			if (ext == "jpeg" || ext == "jpg" || ext == "png" || ext == "bmp" || ext == "gif") {
     				/* 2021-12-09 홍승비 - 로고 이미지 업로드 시 서버단에서도 이미지 확장자 체크 진행 */
     				if (checkImgExtension(ext) == "UPLOAD_EXT_ERROR") {
     					alert("<spring:message code ='ezAttitude.t260' />"); // 허용하지 않는 확장자입니다.
@@ -354,6 +384,11 @@
 
 							document.getElementById("imgDark").querySelectorAll(".updateLogoBtn")[0].querySelector("span").textContent = "<spring:message code='ezNewPortal.t067' />";
 							document.getElementById("imgDark").querySelectorAll(".deleteLogoBtn")[0].style.display = "inline-block";
+                        } else if (logoType == "B") {
+                            document.getElementsByClassName("loginBanner")[0].querySelectorAll(".logoIcon")[0].querySelector("img").src = result;
+
+                            document.getElementById("imgBanner").querySelectorAll(".updateLogoBtn")[0].querySelector("span").textContent = "<spring:message code='ezNewPortal.t067' />";
+                            document.getElementById("imgBanner").querySelectorAll(".deleteLogoBtn")[0].style.display = "inline-block";
 	    				} else if (logoType == "ML") {
 							document.getElementsByClassName("mLoginLogo")[0].querySelectorAll(".logoIcon")[0].querySelector("img").src = result;
 
@@ -369,7 +404,7 @@
 	    				document.getElementById("imgFile").value = "";
 	    			}
     			} else {
-    				alert("<spring:message code = 'ezCommunity.lhj03' /> (jpg, png, bmp, jpeg, gif, svg)");
+    				alert("<spring:message code = 'ezCommunity.lhj03' /> (jpg, png, bmp, jpeg, gif)");
 					document.getElementById("imgFile").value = "";
     				return false;
     			}
@@ -391,6 +426,8 @@
 						logoType = "D";
 					} else if (logoType == "imgLogin") {
 						logoType = "L";
+                    } else if (logoType == "imgBanner") {
+                        logoType = "B";
 					} else if (logoType == "imgML") {
 						logoType = "ML";
 					} else if (logoType == "imgMP") {
@@ -420,6 +457,11 @@
 							document.getElementById("imgDark").querySelectorAll(".deleteLogoBtn")[0].style.display = "none";
 							logoUrl = "/images/ezNewPortal/skin/dark/logo_white.png";
 							document.getElementsByClassName("darkLogo")[0].querySelector(".logoIcon").querySelector("img").src = logoUrl;
+                        } else if (logoType == "B") {
+                            document.getElementById("imgBanner").querySelectorAll(".updateLogoBtn")[0].querySelector("span").textContent = "<spring:message code='ezNewPortal.t058' />";
+                            document.getElementById("imgBanner").querySelectorAll(".deleteLogoBtn")[0].style.display = "none";
+                            logoUrl = "/images/kr/login/login_img1.png";
+                            document.getElementsByClassName("loginBanner")[0].querySelector(".logoIcon").querySelector("img").src = logoUrl;
 						} else if (logoType == "ML") {
 							document.getElementById("imgML").querySelectorAll(".updateLogoBtn")[0].querySelector("span").textContent = "<spring:message code='ezNewPortal.t058' />";
 							document.getElementById("imgML").querySelectorAll(".deleteLogoBtn")[0].style.display = "none";
