@@ -575,9 +575,10 @@ public class EzConnController {
 		try {
 			String id = request.getParameter("id");
 			id = ezConnUtil.decryptAES(id);
-			logger.debug("id=" + id);
-			
 			String cn = id.split(":")[0];
+
+			logger.debug("changePassword cn={}", cn);
+			
 			String password = id.split(":")[1];
 			int tenantID = 0;
 			String domain = ezCommonService.getTenantConfig("DomainName", tenantID);
