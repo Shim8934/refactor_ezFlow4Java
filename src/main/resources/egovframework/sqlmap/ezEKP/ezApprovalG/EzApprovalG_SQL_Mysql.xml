@@ -7380,13 +7380,13 @@
 				TBL_CABINETCLASS.EXPIRATIONYEAR >= #v_ACCOUNTYEAR#
         ]]>
 			AND
-            <isEqual property="upperDeptCode" compareValue="">
+            <isEmpty property="upperDeptCode">
                 TBL_CABINETCLASS.OWNERDEPTID = #v_DEPTID#
-            </isEqual>
-            <isNotEqual property="upperDeptCode" compareValue="">
+            </isEmpty>
+            <isNotEmpty property="upperDeptCode">
                 TBL_CABINETCLASS.OWNERDEPTID = #upperDeptCode#
-            </isNotEqual>
-			ORDER BY 
+            </isNotEmpty>
+			ORDER BY
 				TBL_CABINETCLASS.Title
 		</isEmpty>
 		<!-- S버전 -->

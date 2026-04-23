@@ -7279,18 +7279,18 @@
 <!-- 		ORDER BY 
 				TBL_CABINETCLASS.Title   -->
         AND
-        <isEqual property="upperDeptCode" compareValue="">
+        <isEmpty property="upperDeptCode">
             TBL_CABINETCLASS.OWNERDEPTID = #v_DEPTID#
-        </isEqual>
-        <isNotEqual property="upperDeptCode" compareValue="">
+        </isEmpty>
+        <isNotEmpty property="upperDeptCode">
             TBL_CABINETCLASS.OWNERDEPTID = #upperDeptCode#
-        </isNotEqual>
+        </isNotEmpty>
 		</isEmpty>
 		<!-- S버전 -->
 		<isNotEmpty property="approvalFlag">
 		<![CDATA[
-			SELECT 
-				DISTINCT TBL_CABINET.CabinetID , 
+			SELECT
+				DISTINCT TBL_CABINET.CabinetID ,
 				SVTASKCLASS.TaskCode ,
 				SVTASKCLASS.KEEPINGPERIOD , 
 				SVTASKCLASS.TEMPFLAG ,
@@ -13924,12 +13924,12 @@
 		<isEqual property="listFlag" compareValue="9" prepend="AND">
 				( TBL_RECORD.DocID IS NOT NULL 
 					AND 
-                    <isEqual property="upperDeptCode" compareValue="">
+                    <isEmpty property="upperDeptCode">
 				        TRIM(TBL_CABINET.OwnerDeptID) = #tempDeptCode#
-                    </isEqual>
-                    <isNotEqual property="upperDeptCode" compareValue="">
+                    </isEmpty>
+                    <isNotEmpty property="upperDeptCode">
                         TRIM(TBL_CABINET.OwnerDeptID) = #upperDeptCode#
-                    </isNotEqual>
+                    </isNotEmpty>
 					AND 
 				  SeperateAttachNo = '00')
 		</isEqual>
