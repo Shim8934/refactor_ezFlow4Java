@@ -716,7 +716,10 @@ public class EzSurveyServiceImpl extends EzFileMngUtil implements EzSurveyServic
 				if(mailSentFlag == 0) {
 					logger.debug("start send mail");
 					
-					ezEmailAsync.sendMail(sendMailList, survey, offset);
+					// 메일 발송 시에는 timeZone으로 전달
+					survey.setStartDate(startDate.length() > 10 ? startDate + ":00" : startDate + " 23:59:59");
+					survey.setEndDate(endDate.length() > 10 ? endDate + ":00" : endDate + " 23:59:59");
+					ezEmailAsync.sendMail(sendMailList, survey);
 					updateMailSentFlag(crrSurveyId, 1, companyId, tenantId);
 				}
 				

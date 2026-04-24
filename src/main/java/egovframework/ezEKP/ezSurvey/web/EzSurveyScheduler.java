@@ -79,7 +79,7 @@ public class EzSurveyScheduler {
 			List<SurveyParticipantVO> participantList = ezSurveyService.getSurveyParticipantListForMail(surveyId, companyId, tenantId);
 			
 			if (survey.getMailFlag() == 1 && survey.getMailSentFlag() == 0) {
-				ezEmailAsync.sendMail(participantList, survey, Integer.toString(offset));
+				ezEmailAsync.sendMail(participantList, survey);
 				ezSurveyService.updateMailSentFlag(surveyId, 1, companyId, tenantId);
 			}
 			

@@ -198,7 +198,7 @@ public class EzEmailAsync {
 	}
 	
 	@Async
-	public void sendMail(List<SurveyParticipantVO> userList, SurveyVO survey, String offset) {
+	public void sendMail(List<SurveyParticipantVO> userList, SurveyVO survey) {
 		String creatorId = survey.getCreatorId();
 		String title = survey.getTitle();
 		long surveyId = survey.getSurveyId();
