@@ -65,7 +65,7 @@ var SurveyCreate     = function() {
 		if (endSel) {
 			if ($(endSel).hasClass("select2-hidden-accessible")) { $(endSel).select2("destroy"); }
 			endSel.innerHTML = buildTimeOptions(endMinTime);
-			var eVal = endTimeVal || "23:30";
+			var eVal = endTimeVal || "23:45";
 			endSel.value = endSel.querySelector('option[value="' + eVal + '"]') ? eVal : (endSel.options.length > 0 ? endSel.options[endSel.options.length - 1].value : "");
 			$(endSel).select2({ width: "auto", dropdownAutoWidth: true });
 		}
@@ -377,7 +377,7 @@ var SurveyCreate     = function() {
 		var startDate      = document.getElementById("startDate").value;
 		var endDate        = document.getElementById("endDate").value;
 		var startTime      = document.getElementById("startTime") ? document.getElementById("startTime").value : "00:00";
-		var endTime        = document.getElementById("endTime")   ? document.getElementById("endTime").value   : "23:30";
+		var endTime        = document.getElementById("endTime")   ? document.getElementById("endTime").value   : "23:45";
 		var publicFlag     = parseInt(document.querySelector('input[name="publicSpan"]:checked').value);
 		var anonymousFlag  = parseInt(document.querySelector('input[name="anonymousSpan"]:checked').value);
 		var userExposedFlag = parseInt(document.querySelector('input[name="userExposedSpan"]:checked').value);
@@ -5143,12 +5143,14 @@ function getMinTimeForDate(dateStr) {
 	if (dateStr !== (yyyy + "-" + MM + "-" + dd)) return null;
 	var h = now.getHours();
 	var m = now.getMinutes();
-	if (m === 0)      { /* keep h:00 */ }
-	else if (m <= 30) { m = 30; }
-	else              { h += 1; m = 0; }
-	if (h >= 24) return "23:30";
+	if (m === 0)       { /* keep h:00 */ }
+	else if (m <= 15)  { m = 15; }
+	else if (m <= 30)  { m = 30; }
+	else if (m <= 45)  { m = 45; }
+	else               { h += 1; m = 0; }
+	if (h >= 24) return "23:45";
 	if (h < 10) h = "0" + h;
-	return h + ":" + (m === 0 ? "00" : "30");
+	return h + ":" + (m < 10 ? "0" + m : m);
 }
 
 function getEndMinTime(endDateStr, startDateStr, startTime) {
@@ -5156,10 +5158,10 @@ function getEndMinTime(endDateStr, startDateStr, startTime) {
 	if (startDateStr && endDateStr && startDateStr === endDateStr && startTime) {
 		var parts = startTime.split(":");
 		var h = parseInt(parts[0]);
-		var m = parseInt(parts[1]) + 30;
+		var m = parseInt(parts[1]) + 15;
 		if (m >= 60) { h += 1; m = 0; }
 		if (h < 24) {
-			var nextSlot = (h < 10 ? "0" : "") + h + ":" + (m === 0 ? "00" : "30");
+			var nextSlot = (h < 10 ? "0" : "") + h + ":" + (m < 10 ? "0" + m : m);
 			if (!dateMin || nextSlot > dateMin) return nextSlot;
 		}
 	}
@@ -5169,25 +5171,25 @@ function getEndMinTime(endDateStr, startDateStr, startTime) {
 function buildTimeOptions(minTime) {
 	var opts = [];
 	for (var h = 0; h < 24; h++) {
-		for (var m = 0; m < 60; m += 30) {
+		for (var m = 0; m < 60; m += 15) {
 			var hh      = (h < 10 ? "0" : "") + h;
-			var mm      = m === 0 ? "00" : "30";
+			var mm      = m < 10 ? "0" + m : m;
 			var timeStr = hh + ":" + mm;
 			if (!minTime || timeStr >= minTime) {
 				opts.push('<option value="' + timeStr + '">' + timeStr + '</option>');
 			}
 		}
 	}
-	if (opts.length === 0) { opts.push('<option value="23:30">23:30</option>'); }
+	if (opts.length === 0) { opts.push('<option value="23:45">23:45</option>'); }
 	return opts.join("");
 }
 
-function roundToHalfHour(timeStr) {
+function roundToQuarterHour(timeStr) {
 	var parts = timeStr ? timeStr.split(":") : ["0", "0"];
 	var h = parseInt(parts[0]) || 0;
 	var m = parseInt(parts[1]) || 0;
-	m = m < 30 ? 0 : 30;
-	return (h < 10 ? "0" : "") + h + ":" + (m === 0 ? "00" : "30");
+	m = m < 15 ? 0 : m < 30 ? 15 : m < 45 ? 30 : 45;
+	return (h < 10 ? "0" : "") + h + ":" + (m < 10 ? "0" + m : m);
 }
 
 function survPeriodReset(orgSurvey) {
@@ -5212,9 +5214,9 @@ function survPeriodReset(orgSurvey) {
 	var actualEndDate   = document.getElementById("endDate")   ? document.getElementById("endDate").value   : "";
 
 	var sTimeRaw = orgSurvey["startDate"] && orgSurvey["startDate"].length > 15 ? orgSurvey["startDate"].slice(11, 16) : "00:00";
-	var eTimeRaw = orgSurvey["endDate"]   && orgSurvey["endDate"].length   > 15 ? orgSurvey["endDate"].slice(11, 16)   : "23:30";
-	var sTime    = roundToHalfHour(sTimeRaw);
-	var eTime    = roundToHalfHour(eTimeRaw);
+	var eTimeRaw = orgSurvey["endDate"]   && orgSurvey["endDate"].length   > 15 ? orgSurvey["endDate"].slice(11, 16)   : "23:45";
+	var sTime    = roundToQuarterHour(sTimeRaw);
+	var eTime    = roundToQuarterHour(eTimeRaw);
 
 	var startMinTime = getMinTimeForDate(actualStartDate);
 	var startSel     = document.getElementById("startTime");
