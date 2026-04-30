@@ -35,17 +35,14 @@
 		#lvJobList_TH_0 {text-align: center;}
 		#lvJobUserList {min-width: 360px;}
 		.countColor {color:#017BEC;}
+		#jobUserListView th {position: sticky; top: 0; z-index: 1;}
 	</style>
 	<script type="text/javascript">
 		var Tab1_flag = true;
 		var Tab1_SelectID = "";	//001:직위관리, 002:직책관리
 		
-		var pTotalPage = 0;
 		var pTotalCnt = 0;
-		var pPageSize = 10;
-		var pBlockSize = 10;
-		var pCurPage = 1;
-		
+
 		var pSearchType = "";
 		var pSearchValue = "";
 		
@@ -133,7 +130,6 @@
 		}
 		
 		function job_userList_click() {
-			pCurPage = 1;
 			pSearchValue = "";
 			job_userList();
 		}
@@ -182,8 +178,6 @@
 	            		jobID 		: pJobID,
 	            		type 		: Tab1_SelectID,
 	            		companyID 	: pCompanyID,
-	            		pageSize 	: pPageSize,
-	            		pageNum 	: pCurPage,
 	            		searchType 	: pSearchType,
 	            		searchValue : pSearchValue
 	            	},
@@ -231,8 +225,6 @@
 	            listview.SetHeightFree(true);
 	            listview.DataSource(headerData);
 	            listview.DataBind("jobUserListView");
-	            
-	            makePageRayer();
 			} else {
 				document.getElementById("PreContent_RayerH").style.display = "none";
 				document.getElementById("preview_nodata").style.display = "";
@@ -491,8 +483,7 @@
 			$("#searchValue").val("");
 			
 			pSearchValue = "";
-			pCurPage = 1;
-			
+
 			job_list();
 			job_userList();
 		}
@@ -629,98 +620,20 @@
 		function windowResize() {
 			var height = document.documentElement.clientHeight;
 			
-			document.getElementById("previewH").style.height = (height - 200) + "px";
+			document.getElementById("previewH").style.height = (height - 185) + "px";
 			document.getElementById("jobListView").style.height = (height - 225)+ "px";
-			document.getElementById("jobUserListView").style.height = (height - 273) + "px";
+			document.getElementById("jobUserListView").style.height = (height - 238) + "px";
 		}
 		
 		$(function(){
 			windowResize();
 		});
 		
-	    /* 유저리스트 페이징 만드는 함수 */
-	    function makePageRayer() {
-	    	var _html = "<div class='pagenavi'>";
-	    	
-	    	var startPageNum = parseInt((pCurPage - 1) / pBlockSize ) * pBlockSize + 1;
-	    	var endPageNum = parseInt((pCurPage - 1) / pBlockSize ) * pBlockSize + pBlockSize;
-	    	
-	    	if ((pTotalCnt % pPageSize) > 0) {
-	    		pTotalPage = parseInt(pTotalCnt / pPageSize) + 1;
-	    	} else {
-	    		pTotalPage = parseInt(pTotalCnt / pPageSize);
-	    	}
-	    	
-	    	if (endPageNum > pTotalPage) {
-	    		endPageNum = pTotalPage;
-	    	}
-	    	
-	    	if (pCurPage > 1) {
-	    		_html += "<span class='btnimg first' onclick='return goToPageNum(1)'></span>";
-	    	} else {
-	    		_html += "<span class='btnimg first disabled'></span>";
-	    	}
-	    	
-	    	if (parseInt((pCurPage - 1) / pBlockSize) > 0) {
-	    		_html += "<span class='btnimg prev' onclick='return goToPrevBlock()'></span>";
-	    	} else {
-	    		_html += "<span class='btnimg prev disabled'></span>";
-	    	}
-	    	
-	    	if (pTotalCnt > 0) {
-		    	for (var i = startPageNum; i <= endPageNum; i++) {
-		    		if (pCurPage == i) {
-		    			_html += "<span class='on'>" + i + "</span>";
-		    		} else {
-			    		_html += "<span onclick='goToPageNum(" + i + ")'>" + i + "</span>";
-		    		}
-		    	}
-	    	} else {
-	    		_html += "<span class='on'>1</span>";
-	    	}
-	    	
-	    	if (pTotalPage >= parseInt(((parseInt((pCurPage - 1) / pBlockSize) + 1) * pBlockSize) + 1)) {
-	    		_html += "<span class='btnimg next' onclick='return goToNextBlock()'></span>";
-	    	} else {
-	    		_html += "<span class='btnimg next disabled'></span>";
-	    	}
-	    	
-	    	if (pCurPage < pTotalPage) {
-	    		_html += "<span class='btnimg last' onclick='return goToPageNum(" + pTotalPage + ")'></span>";
-	    	} else {
-	    		_html += "<span class='btnimg last disabled'></span>";
-	    	}
-	    	
-	    	_html += "</div>";
-	    	
-	    	$("#jobUserListPageRayer").html(_html);
-	    }
-	    
-	    /* 페이징 숫자 버튼 클릭 이벤트 */
-	    function goToPageNum(page) {
-	    	pCurPage = page;
-	    	job_userList();
-	    }
-	    
-	    /* 페이징 다음블럭 이동 클릭 이벤트 */
-	    function goToNextBlock() {
-	    	pCurPage = parseInt((pCurPage - 1) / pBlockSize ) * pBlockSize + pBlockSize + 1;
-	    	job_userList();
-	    }
-	    
-	    /* 페이징 이전블럭 이동 클릭 이벤트 */
-	    function goToPrevBlock() {
-	    	pCurPage = parseInt((pCurPage - 1) / pBlockSize ) * pBlockSize - pBlockSize + 1;
-	    	job_userList();
-	    }
-	    
 	    /* 유저 검색 이벤트 */
 	    function search() {
 	    	pSearchType = $("#searchType").val();
 	    	pSearchValue = $("#searchValue").val();
-	    	
-	    	pCurPage = 1;
-	    	
+
 	    	job_userList();
 	    }
 	    
@@ -800,7 +713,6 @@
 					<div id="jobUserListView" style="height: 610px; width: 100%; overflow: auto;"></div>
 				</div>
 				
-				<div id="jobUserListPageRayer" style="border-top: 0px;"></div>
 			</div>
 		</div>
 		
