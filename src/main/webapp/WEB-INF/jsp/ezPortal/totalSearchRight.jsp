@@ -427,7 +427,7 @@ function dblClickBoard(boardID, itemID) {
 function dblClickApproval(docID) {
 	var appList  = totalSearch.approval;
 	var docInfo;
-	var url = "/ezApprovalG/contDocView.do";
+	var url = "/ezApprovalG/view.do";
 	
 /* 	$(appList).each(function() {
 		if(this.DocID === docID) {
@@ -442,17 +442,13 @@ function dblClickApproval(docID) {
 	var docHref = docInfo.href;
 	var formUrlExt = docHref.substr(docHref.length - 3, docHref.length).toLowerCase();
 	
-	if (formUrlExt === "hwp" || formUrlExt === "ezd") {
-		if (CrossYN() && isIE()) {
-			url = "/ezApprovalG/ezViewEnd_HWP.do";
-		} else {
-			var pAlertContent = "한글양식은 IE에서만 볼 수 있습니다.";
-			alert(pAlertContent);
-			return;
-		}
+	if ((formUrlExt === "hwp" || formUrlExt === "ezd") && !(CrossYN() && isIE())) {
+        var pAlertContent = "한글양식은 IE에서만 볼 수 있습니다.";
+        alert(pAlertContent);
+        return;
 	}
 
-	url += "?docID=" + encodeURI(docInfo.docId) + "&docHref=" + encodeURI(docHref);
+	url += "?docID=" + encodeURI(docInfo.docId);
 	
 	openwindow(url, "", "", "");
 }
@@ -1093,8 +1089,27 @@ function openwindow(wfileLocation, wName, wWidth, wHeight) {
 			width = parseInt(width) - 10;
 		}
 		
-		window.open(wfileLocation, wName, "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=" + heigth + ",width=" + width + ",top=" + top + ",left = " + left);
-		
+        var param = new URLSearchParams(url.substring(url.indexOf("?")));
+        wName = wName ? wName : param.get("docID");
+        var data = url.includes("approve.do") ? ["docID", "share", "isPreview", "allFlag"] : 
+                    ["docID", "share", "isPreview", "listSusin", "docAttachParent", "admin", "listType", "pageType", "isOpinion", "callBackType"];
+        window.open("", wName, "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=" + heigth + ",width=" + width + ",top=" + top + ",left = " + left);
+        const form = document.createElement("form");
+        form.method = "post";
+        form.action = url.substring(0,url.indexOf("?"));
+        form.target = wName;
+        for(const key of data){
+            if(param.get(key)){
+                const hidden = document.createElement("input");
+                hidden.type = "hidden";
+                hidden.name = key;
+                hidden.value = param.get(key);
+                form.appendChild(hidden);
+            }
+        }
+        document.body.appendChild(form);
+        form.submit();
+        document.body.removeChild(form);
 		} catch (e) {
 			alert("openwindow :: " + e.description);
 		}
@@ -1363,25 +1378,17 @@ function boardDataAssembler_XTEN(data) {
 
 /* 전자결재 상세 팝업 (XTEN)*/
 function dblClickApproval_XTEN(docID, href) {
-	var url = "/ezApprovalG/contDocView.do";
+	var url = "/ezApprovalG/view.do";
 	var docHref = href;
 	var formUrlExt = docHref.substr(docHref.length - 3, docHref.length).toLowerCase();
 	
-	if (formUrlExt === "hwp" || formUrlExt === "ezd") {
-		if (useWebHWP != "YES") {
-			if (CrossYN() && isIE()) {
-				url = "/ezApprovalG/ezViewEnd_HWP.do";
-			} else {
-				var pAlertContent = "한글양식은 IE에서만 볼 수 있습니다.";
-				alert(pAlertContent);
-				return;
-			}
-    	} else {
-    		url = "/ezApprovalG/ezViewEnd_WHWP.do";
-    	}
+	if ((formUrlExt === "hwp" || formUrlExt === "ezd") && useWebHWP != "YES" && !(CrossYN() && isIE())) {
+        var pAlertContent = "한글양식은 IE에서만 볼 수 있습니다.";
+        alert(pAlertContent);
+        return;
 	}
 	
-	url += "?docID=" + encodeURI(docID) + "&docHref=" + encodeURI(docHref);
+	url += "?docID=" + encodeURI(docID);
 	
 	openwindow(url, "", "", "");
 }

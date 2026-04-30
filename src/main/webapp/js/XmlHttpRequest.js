@@ -1003,7 +1003,31 @@ function GetOpenWindow(url, target, popUpW, popUpH, resizeFlag) {
         resize = "resizable=yes";
     
     var feature = "height=" + popUpH + ",width=" + popUpW + ",left=" + left + ",top=" + top + ", status=no, toolbar=no, menubar=no,location=no," + resize;
-    var result = window.open(url, target, feature);
+    var result;
+    if(url.includes("approve.do") || url.includes("view.do")){
+        var param = new URLSearchParams(url.substring(url.indexOf("?")));
+        target = target ? target : param.get("docID");
+        var data = url.includes("approve.do") ? ["docID", "share", "isPreview", "allFlag"] : 
+                    ["docID", "share", "isPreview", "listSusin", "docAttachParent", "admin", "listType", "pageType", "isOpinion", "callBackType"];
+        result = window.open("", target, feature);
+        const form = document.createElement("form");
+        form.method = "post";
+        form.action = url.substring(0,url.indexOf("?"));
+        form.target = target;
+        for(const key of data){
+            if(param.get(key)){
+                const hidden = document.createElement("input");
+                hidden.type = "hidden";
+                hidden.name = key;
+                hidden.value = param.get(key);
+                form.appendChild(hidden);
+            }
+        }
+        document.body.appendChild(form);
+        form.submit();
+        document.body.removeChild(form);
+    }else
+        result = window.open(url, target, feature);
     result.focus();
     return result;
 }
@@ -2911,7 +2935,30 @@ function showPopupSlide(url, width, height, target, feature, callback, i) {
     } else {
         ezCommon_cross_dialogArguments[1] = callback;
 
-        ezCommon_cross_openWin = window.open(url, target, feature);
+        if(url.includes("approve.do") || url.includes("view.do")){
+            var param = new URLSearchParams(url.substring(url.indexOf("?")));
+            target = target ? target : param.get("docID");
+            var data = url.includes("approve.do") ? ["docID", "share", "isPreview", "allFlag"] : 
+                        ["docID", "share", "isPreview", "listSusin", "docAttachParent", "admin", "listType", "pageType", "isOpinion", "callBackType"];
+            ezCommon_cross_openWin = window.open("", target, feature);
+            const form = document.createElement("form");
+            form.method = "post";
+            form.action = url.substring(0,url.indexOf("?"));
+            form.target = target;
+            for(const key of data){
+                if(param.get(key)){
+                    const hidden = document.createElement("input");
+                    hidden.type = "hidden";
+                    hidden.name = key;
+                    hidden.value = param.get(key);
+                    form.appendChild(hidden);
+                }
+            }
+            document.body.appendChild(form);
+            form.submit();
+            document.body.removeChild(form);
+        }else
+            ezCommon_cross_openWin = window.open(url, target, feature);
         try { ezCommon_cross_openWin.focus(); } catch (e) { }
     }
 }

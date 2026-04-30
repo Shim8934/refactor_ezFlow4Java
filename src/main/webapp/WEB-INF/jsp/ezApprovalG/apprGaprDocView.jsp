@@ -23,6 +23,21 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/Office.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/apprGSummary.js')}"></script>
 		<script ID="clientEventHandlersJS" type="text/javascript">
+            if(location.pathname.endsWith("view.do")){
+                history.replaceState(null, null, location.pathname);
+                sessionStorage.setItem("docID", "<c:out value ='${docID}'/>");
+                sessionStorage.setItem("isPreview", "<c:out value ='${isPreview}'/>");
+                sessionStorage.setItem("allFlag", "<c:out value ='${allFlag}'/>");
+                sessionStorage.setItem("listSusin", "<c:out value ='${listSusin}'/>");
+                sessionStorage.setItem("sendType", "<c:out value ='${sendType}'/>");
+                sessionStorage.setItem("docAttachParent", "<c:out value ='${docAttachParent}'/>");
+                sessionStorage.setItem("admin", "<c:out value ='${admin}'/>");
+                sessionStorage.setItem("listType", "<c:out value ='${listType}'/>");
+                sessionStorage.setItem("pageType", "<c:out value ='${pageType}'/>");
+                sessionStorage.setItem("isOpinion", "<c:out value ='${isOpinion}'/>");
+                sessionStorage.setItem("callBackType", "<c:out value ='${callBackType}'/>");
+            }
+
 		    var	DocID = "<c:out value ='${docID}'/>";
 		    var	DocHref = "<c:out value ='${docHref}'/>";
 		    var	OpinionFlag = "<c:out value ='${opinionFlag}'/>";

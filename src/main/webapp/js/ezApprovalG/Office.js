@@ -277,7 +277,7 @@ var nowZoom = 100;
 					orgCompanyID : orgCompanyID
 				}
 
-				var url = location.href.indexOf("contDocView") == -1 ? "/ezApprovalG/saveFile.do" : "/ezApprovalG/saveEndFile.do";
+				var url = typeof pendDir == "undefined" ? "/ezApprovalG/saveFile.do" : "/ezApprovalG/saveEndFile.do";
 
 				$.ajax({
 					type : "POST",

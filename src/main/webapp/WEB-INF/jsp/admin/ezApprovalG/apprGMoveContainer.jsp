@@ -128,24 +128,12 @@
 	            var ext = pURL.substr(pURL.length - 3, pURL.length).toLowerCase();
 	
 	            // 2018.08.01 (KLIB) - ezd 확장자 처리
-	            if (ext == "hwp" || ext == "ezd") {
-	            	if (isIE()) {
-		            	openLocation = "/ezApprovalG/ezViewEnd_HWP.do";
-	                } else {
-	                	var pAlertContent = "한글양식은 IE에서만 볼 수 있습니다.";
-	                	alert(pAlertContent);
-	                    
-	                    return;
-	                }
+	            if ((ext == "hwp" || ext == "ezd") && !isIE()) {
+                    var pAlertContent = "한글양식은 IE에서만 볼 수 있습니다.";
+                    alert(pAlertContent);
+                    return;
 	            }
-	            else {
-	                if (CrossYN()) {
-	                    openLocation = "/ezApprovalG/contDocView.do";
-	                } else {
-                        openLocation = "/ezApprovalG/contDocView.do";
-	                }
-	            }
-	            openLocation = openLocation + "?docID=" + encodeURIComponent(DocID) + "&docHref=" + encodeURIComponent(pURL) + "&formID=" + encodeURIComponent(formID) + "&orgDocID=" + encodeURIComponent(orgDocid) + "&admin=Y";
+                openLocation = "/ezApprovalG/view.do?admin=Y&docID=" + encodeURIComponent(DocID);
 	            var result = GetOpenWindow(openLocation, "", 1000, 950, "YES");
 	        }
 
@@ -578,9 +566,7 @@
 	        else
 	            orgDocid = $(obj).attr("orgdocid");
 			
-			var openLocation = "/ezApprovalG/contDocView.do";
-			openLocation += "?docID=" + encodeURIComponent(DocID) + "&docHref=" + encodeURIComponent(pURL) + "&formID=" + encodeURIComponent(formID) + "&orgDocID=" + encodeURIComponent(orgDocid) + "&admin=Y";
-			console.log(openLocation);
+			var openLocation = "/ezApprovalG/view.do?admin=Y&docID=" + encodeURIComponent(DocID);
 			GetOpenWindow(openLocation, "", 1000, 950, "YES");
 		}
 		

@@ -87,6 +87,21 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/apprGSummary.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/html2canvas.js')}"></script>
 	    <script type="text/javascript">
+            if(location.pathname.endsWith("view.do")){
+                history.replaceState(null, null, location.pathname);
+                sessionStorage.setItem("docID", "<c:out value ='${docID}'/>");
+                sessionStorage.setItem("isPreview", "<c:out value ='${isPreview}'/>");
+                sessionStorage.setItem("allFlag", "<c:out value ='${allFlag}'/>");
+                sessionStorage.setItem("listSusin", "<c:out value ='${listSusin}'/>");
+                sessionStorage.setItem("sendType", "<c:out value ='${sendType}'/>");
+                sessionStorage.setItem("docAttachParent", "<c:out value ='${docAttachParent}'/>");
+                sessionStorage.setItem("admin", "<c:out value ='${admin}'/>");
+                sessionStorage.setItem("listType", "<c:out value ='${listType}'/>");
+                sessionStorage.setItem("pageType", "<c:out value ='${pageType}'/>");
+                sessionStorage.setItem("isOpinion", "<c:out value ='${isOpinion}'/>");
+                sessionStorage.setItem("callBackType", "<c:out value ='${callBackType}'/>");
+            }
+
 	        var docID = "<c:out value='${docID}'/>";
 	        var docHref = "<c:out value='${docHref}'/>";
 	        var opinionFlag = "<c:out value='${opinionFlag}'/>";

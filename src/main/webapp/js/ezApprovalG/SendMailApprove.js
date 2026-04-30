@@ -190,20 +190,7 @@ function sendmail(to, eSubject, Drafter, pDraftDate, type, opt, isCheck, Method)
     
     if (Subject == strLang1122) {
     	if (Method != "007") {
-    		if (docExt == "hwp") {
-    			if (useWebHWP == "YES") {
-    				/* 2022-02-23 홍승비 - 일괄기안문서 대응용 분기 추가 */
-    				if (typeof(draftAllFlag) != "undefined" && draftAllFlag == "Y" && typeof draftAllTypeB != "undefined" && draftAllTypeB != "Y") { // 일괄기안문서
-    					Approv_a += "<span style='font-weight:bold;'>" + Drafter + "</span>"+ "<span>" + strLangSpjj34 + "</span>" + "<a id='approv_a' href ='"+window.location.protocol + "//" + window.location.host+"/ezApprovalG/approvuiAll_WHWP.do?docID="+mailDocID+"&id="+id+"&name="+javaURLEncode(to.split(",")[0])+"&deptID="+deptid+"&allFlag=0&mode=APR&mailchk=Y" + (orgCompanyID == undefined ? "" : "&orgCompanyID=" + orgCompanyID) + "'"+ "data-id='" + mailDocID + "'"+ "data-comp='" + orgCompanyID + "' onclick ='javascript:mail_link();' style='cursor: pointer; color: blue;' target='_blank'><br>"+ strLangSpjj33 + "</a><br><br><span style='font-weight:bold;'>" + strLangjjh04 + "</span><br>";
-    				} else { // 기존 단일기안문서
-    					Approv_a += "<span style='font-weight:bold;'>" + Drafter + "</span>"+ "<span>" + strLangSpjj34 + "</span>" + "<a id='approv_a' href ='"+window.location.protocol + "//" + window.location.host+"/ezApprovalG/approvuiWHWP.do?docID="+mailDocID+"&id="+id+"&name="+javaURLEncode(to.split(",")[0])+"&deptID="+deptid+"&allFlag=0&mode=APR&mailchk=Y" + (orgCompanyID == undefined ? "" : "&orgCompanyID=" + orgCompanyID) + "'"+ "data-id='" + mailDocID + "'"+ "data-comp='" + orgCompanyID + "' onclick ='javascript:mail_link();' style='cursor: pointer; color: blue;' target='_blank'><br>"+ strLangSpjj33 + "</a><br><br><span style='font-weight:bold;'>" + strLangjjh04 + "</span><br>";
-    				}
-    			}
-    			else
-    				Approv_a += "<span style='font-weight:bold;'>" + Drafter + "</span>"+ "<span>" + strLangSpjj34 + "</span>" + "<a id='approv_a' href ='"+window.location.protocol + "//" + window.location.host+"/ezApprovalG/approvuiHWP.do?docID="+mailDocID+"&id="+id+"&name="+javaURLEncode(to.split(",")[0])+"&deptID="+deptid+"&allFlag=0&mode=APR&mailchk=Y" + (orgCompanyID == undefined ? "" : "&orgCompanyID=" + orgCompanyID) + "'"+ "data-id='" + mailDocID + "'"+ "data-comp='" + orgCompanyID + "' onclick ='javascript:mail_link();' style='cursor: pointer; color: blue;' target='_blank'><br>"+ strLangSpjj33 + "</a><br><br><span style='font-weight:bold;'>" + strLangjjh04 + "</span><br>";
-    		} else {
-    			Approv_a += "<span style='font-weight:bold;'>" + Drafter + "</span>"+ "<span>" + strLangSpjj34 + "</span>" + "<a id='approv_a' href ='"+window.location.protocol + "//" + window.location.host+"/ezApprovalG/approvui.do?docID="+mailDocID+"&id="+id+"&name="+javaURLEncode(to.split(",")[0])+"&deptID="+deptid+"&allFlag=0&mode=APR&mailchk=Y" + (orgCompanyID == undefined ? "" : "&orgCompanyID=" + orgCompanyID) + "'"+ "data-id='" + mailDocID + "'"+ "data-comp='" + orgCompanyID + "' onclick ='javascript:mail_link();' style='cursor: pointer; color: blue;' target='_blank'><br>"+ strLangSpjj33 + "</a><br><br><span style='font-weight:bold;'>" + strLangjjh04 + "</span><br>";
-    		}
+            Approv_a += "<span style='font-weight:bold;'>" + Drafter + "</span>"+ "<span>" + strLangSpjj34 + "</span>" + "<a id='approv_a' href ='"+window.location.protocol + "//" + window.location.host+"/ezApprovalG/approve.do?docID="+mailDocID+"'"+ "data-id='" + mailDocID + "'"+ "data-comp='" + orgCompanyID + "' onclick ='javascript:mail_link();' style='cursor: pointer; color: blue;' target='_blank'><br>"+ strLangSpjj33 + "</a><br><br><span style='font-weight:bold;'>" + strLangjjh04 + "</span><br>";
     	}
     }
     

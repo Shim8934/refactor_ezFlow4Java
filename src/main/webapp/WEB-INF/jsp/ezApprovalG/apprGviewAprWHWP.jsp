@@ -23,6 +23,21 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/SendMailApprove.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/apprGSummary.js')}"></script>
 	    <script type="text/javascript">
+            if(location.pathname.endsWith("view.do")){
+                history.replaceState(null, null, location.pathname);
+                sessionStorage.setItem("docID", "<c:out value ='${docID}'/>");
+                sessionStorage.setItem("isPreview", "<c:out value ='${isPreview}'/>");
+                sessionStorage.setItem("allFlag", "<c:out value ='${allFlag}'/>");
+                sessionStorage.setItem("listSusin", "<c:out value ='${listSusin}'/>");
+                sessionStorage.setItem("sendType", "<c:out value ='${sendType}'/>");
+                sessionStorage.setItem("docAttachParent", "<c:out value ='${docAttachParent}'/>");
+                sessionStorage.setItem("admin", "<c:out value ='${admin}'/>");
+                sessionStorage.setItem("listType", "<c:out value ='${listType}'/>");
+                sessionStorage.setItem("pageType", "<c:out value ='${pageType}'/>");
+                sessionStorage.setItem("isOpinion", "<c:out value ='${isOpinion}'/>");
+                sessionStorage.setItem("callBackType", "<c:out value ='${callBackType}'/>");
+            }
+
 	        var docID = "<c:out value='${docID}'/>";
 	        var docHref = "<c:out value='${docHref}'/>";
 	        var formUrl = "<c:out value='${formUrl}'/>";
@@ -94,7 +109,7 @@
             // 일괄 타입 B
             var draftAllTypeB = "<c:out value ='${draftAllTypeB}'/>";
             var pMode;
-            var draftAllFlag = "Y";
+            var draftAllFlag = <c:if test="${fn:length(group) > 0}">"Y"</c:if><c:if test="${fn:length(group) == 0}">"N"</c:if>;
             var groupDocSN = "<c:out value ='${groupDocSN}'/>"; // 일괄기안된 문서가 가지는 TBL_APRDOCGROUPINFO의 GROUPDOCSN값 (1안의 DOCID)
             var pDocHrefAry = new Array();
             var pFormIDAry = new Array();
@@ -172,11 +187,13 @@
 			    	if (listTypeValue === "99") {	// 공람할문서
 			    		btnGongRam.style.display = "";
 				        btnBoard.style.display = "";
-				        btnReuse.style.display = "";
+				        if(typeof btnReuse != "undefined")
+				            btnReuse.style.display = "";
 				        pOpinionType = "";
 			    	} else if (listTypeValue === "10") {	// 공람완료문서
 			    		btnBoard.style.display = "";
-				        btnReuse.style.display = "";
+				        if(typeof btnReuse != "undefined")
+                            btnReuse.style.display = "";
 			    	}
 			    }
 			    

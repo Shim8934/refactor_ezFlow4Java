@@ -1048,4 +1048,7 @@ public interface EzApprovalGService {
     
     public String aprDashBoardDocList(String listType, String userID, String deptID, String pageSize, String pageNum, String orderCell, String orderOption, String companyID, String userLang, String searchQuery, Document dueryData, int tenantID, String offSet, Map<String, Object> searchMap, String primeLang) throws Exception;
 
+    public ApprGDocListVO getApprovalDocInfo(String docID, LoginVO userInfo, String share) throws Exception;
+
+    public ApprGDocListVO getViewDocInfo(String docID, LoginVO userInfo) throws Exception;
 }

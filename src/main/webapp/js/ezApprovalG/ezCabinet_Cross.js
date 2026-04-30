@@ -1430,37 +1430,14 @@ function ViewDoc_onclick_Complete(Rtn) {
             	tempUrl = tempUrl.substr(0, tempUrl.length - 4);
             }
             
-            if (tempUrl.substr(tempUrl.length - 3, tempUrl.length).toLowerCase() == "hwp") {
-            	if(useWebHWP == "NO") {
-	            	if (isIE()) {
-	                	if (g_uFlag == "m03" || g_uFlag == "m14") {  // 2023-09-25 전인하 - 배부대장 메뉴 flag값 전달
-	                		openLocation = "/ezApprovalG/ezViewEnd_HWP.do?docID=" + encodeURI(DocID) + "&docHref=" + encodeURI(pURL) + "&formID=&orgDocID=";
-	                	} else {
-	                		openLocation = "/ezApprovalG/ezViewEnd_HWP.do?docID=" + escape(DocID) + "&docHref=" + escape(pURL) + "&formID=" + escape(selRow.getAttribute("DATA5")) + "&orgDocID=";
-	                	}
-	                } else {
-	                	var pAlertContent = "한글양식은 IE에서만 볼 수 있습니다.";
-	                	alert(pAlertContent);
-	                    
-	                    return;
-	                }
-            	} else {
-            		if (g_uFlag == "m03" || g_uFlag == "m14") { /* 2023-07-13 민지수 - 배부대장 메뉴 flag값 전달 */
-                		openLocation = "/ezApprovalG/ezViewEnd_WHWP.do?docID=" + encodeURI(DocID) + "&docHref=" + encodeURI(pURL) + "&formID=&orgDocID=&uFlag=" + g_uFlag;
-                	} else {
-                		openLocation = "/ezApprovalG/ezViewEnd_WHWP.do?docID=" + escape(DocID) + "&docHref=" + escape(pURL) + "&formID=" + escape(selRow.getAttribute("DATA5")) + "&orgDocID=";
-                	}
-            	}
-            } else {
-	            if (g_uFlag == "m03" || g_uFlag == "m14") { // 2023-09-25 전인하 - 배부대장 메뉴 flag값 전달
-	                openLocation = "/ezApprovalG/contDocView.do";
-	                openLocation = openLocation + "?docID=" + encodeURI(DocID) + "&docHref=" + encodeURI(pURL) + "&formID=&orgDocID=&uFlag=" + g_uFlag;
-	            } else {
-	                openLocation = "/ezApprovalG/contDocView.do";
-	                openLocation = openLocation + "?docID=" + encodeURI(DocID) + "&docHref=" + encodeURI(pURL) + "&formID=" + encodeURI(selRow.getAttribute("DATA5")) + "&orgDocID=";
-	            }
-             }
-	            openwindow(openLocation, "cabinet", 880, 570);
+            if (tempUrl.substr(tempUrl.length - 3, tempUrl.length).toLowerCase() == "hwp" && useWebHWP == "NO" && !isIE()) {
+                var pAlertContent = "한글양식은 IE에서만 볼 수 있습니다.";
+                alert(pAlertContent);
+                
+                return;
+            }
+            openLocation = "/ezApprovalG/view.do?docID=" + encodeURI(DocID);
+            openwindow(openLocation, "cabinet", 880, 570);
          }
      }
 }
@@ -1550,7 +1527,29 @@ function openwindow(wfileLocation, wName, wWeigth, wHeigth) {
             width = parseInt(width) - 10;
         }
 
-        window.open(wfileLocation, wName, "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=" + heigth + ",width=" + width + ",top=" + top + ",left = " + left);
+        if(wfileLocation.includes("view.do")){
+            var param = new URLSearchParams(wfileLocation.substring(wfileLocation.indexOf("?")));
+            var data = ["docID", "share", "isPreview", "listSusin", "docAttachParent", "admin", "listType", "pageType", "isOpinion", "callBackType"];
+            wName = wName ? wName : param.get("docID");
+            window.open("", wName, "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=" + heigth + ",width=" + width + ",top=" + top + ",left = " + left);
+            const form = document.createElement("form");
+            form.method = "post";
+            form.action = wfileLocation.substring(0,wfileLocation.indexOf("?"));
+            form.target = wName;
+            for(const key of data){
+                if(param.get(key)){
+                    const hidden = document.createElement("input");
+                    hidden.type = "hidden";
+                    hidden.name = key;
+                    hidden.value = param.get(key);
+                    form.appendChild(hidden);
+                }
+            }
+            document.body.appendChild(form);
+            form.submit();
+            document.body.removeChild(form);
+        }else
+            window.open(wfileLocation, wName, "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=" + heigth + ",width=" + width + ",top=" + top + ",left = " + left);
 
     }
     catch (e) {

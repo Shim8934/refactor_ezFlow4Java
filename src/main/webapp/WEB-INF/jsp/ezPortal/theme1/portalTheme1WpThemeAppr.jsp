@@ -203,32 +203,14 @@
 
 	                var pArgument = new Array();
 	                pArgument[0] = pDocID;
-	                pArgument[1] = pAprMemberID;
-	                pArgument[2] = pAprMemberName;
-	                pArgument[3] = pAprMemberDeptID;
-
-	                var formURL = pHref;
-	                if (formURL.substr(formURL.length - 3, formURL.length).toLowerCase() == "doc") {
-	                    openLocation = "/myoffice/ezApprovalG/ezViewWord/ezAproveUI_word_Cross.aspx?DocID=" + escape(pArgument[0]);
-	                    openLocation = openLocation + "&uID=" + escape(pArgument[1]) + "&uName=" + escape(pArgument[2]);
-	                    openLocation = openLocation + "&uDeptID=" + escape(pArgument[3]) + "&AllFlag=0";
-	                } else if (formURL.substr(formURL.length - 3, formURL.length).toLowerCase() == "hwp") {
-	                	if (isIE()) {
-		                    openLocation = "/ezApprovalG/approvuiHWP.do?docID=" + escape(pArgument[0]);
-		                    openLocation = openLocation + "&uID=" + escape(pArgument[1]) + "&uName=" + escape(pArgument[2]);
-		                    openLocation = openLocation + "&uDeptID=" + escape(pArgument[3]) + "&AllFlag=0" + "&docState=" + escape(pDocState);
-	                	} else {
-	                		var pAlertContent = "한글양식은 IE에서만 볼 수 있습니다.";
-	                        alert(pAlertContent);
-	                        
-	                        return;
-	                	}
-	                } else {
-                        openLocation = "/ezApprovalG/approvui.do?docID=";
-	                    openLocation = openLocation + escape(pArgument[0]);
-	                    openLocation = openLocation + "&id=" + escape(pArgument[1]) + "&name=" + escape(pArgument[2]);
-	                    openLocation = openLocation + "&deptID=" + escape(pArgument[3]) + "&allFlag=0" + "&docState=" + escape(pDocState);
-	                }
+                    var formURL = pHref;
+                    if(formURL.substr(formURL.length - 3, formURL.length).toLowerCase() == "hwp" && useWebHWP == "NO" && !isIE()){
+                        var pAlertContent = "한글양식은 IE에서만 볼 수 있습니다.";
+                        alert(pAlertContent);
+                        return;
+                    }
+	                
+                    openLocation = "/ezApprovalG/approve.do?docID=" + escape(pArgument[0]);
 	                openwindow(openLocation, "", 880, 550);
 	            }
 
@@ -246,32 +228,16 @@
 	                pArgument[7] = "2";
 
 	                var openLocation;
-	                if (formURL.substr(formURL.length - 3, formURL.length).toLowerCase() == "doc") {
-	                    openLocation = "/myoffice/ezApprovalG/ezViewWord/ezViewApr_Word_Cross.aspx?DocID=" + escape(pArgument[0]) + "&DocHref=" + escape(pArgument[1]);
-	                    openLocation = openLocation + "&OpinionFlag=" + escape(pArgument[2]) + "&docState=" + escape(pArgument[3]) + "&ListSusin=" + escape(pArgument[4]) + "&odoc=" + escape(pArgument[5]);
-	                    openLocation = openLocation + "&isOpinion=" + escape(pArgument[6]);
-	                    openLocation = openLocation + "&ListType=" + escape(pArgument[7]);
+	                if (formURL.substr(formURL.length - 3, formURL.length).toLowerCase() == "hwp" && !isIE()) {
+                        var pAlertContent = "한글양식은 IE에서만 볼 수 있습니다.";
+                        alert(pAlertContent);
+                        
+                        return;
 	                }
-	                else if (formURL.substr(formURL.length - 3, formURL.length).toLowerCase() == "hwp") {
-	                	if (isIE()) {
-		                    openLocation = "/ezApprovalG/ezviewAprHWP.do?docID=" + escape(pArgument[0]) + "&docHref=" + escape(pArgument[1]);
-		                    openLocation = openLocation + "&opinionFlag=" + escape(pArgument[2]) + "&docState=" + escape(pArgument[3]) + "&listSusin=" + escape(pArgument[4]) + "&odoc=" + escape(pArgument[5]);
-		                    openLocation = openLocation + "&isOpinion=" + escape(pArgument[6]);
-		                    openLocation = openLocation + "&listType=" + escape(pArgument[7]);
-	                	} else {
-	                		var pAlertContent = "한글양식은 IE에서만 볼 수 있습니다.";
-	                        alert(pAlertContent);
-	                        
-	                        return;
-	                	}
-	                }
-	                else {
-                    	openLocation = "/ezApprovalG/aprDocView.do?docID=";
-	                    openLocation = openLocation + escape(pArgument[0]) + "&docHref=" + escape(pArgument[1]);
-	                    openLocation = openLocation + "&opinionFlag=" + escape(pArgument[2]) + "&docState=" + escape(pArgument[3]) + "&ListSusin=" + escape(pArgument[4]) + "&odoc=" + escape(pArgument[5]);
-	                    openLocation = openLocation + "&isOpinion=" + escape(pArgument[6]);
-	                    openLocation = openLocation + "&listType=" + escape(pArgument[7]);
-	                }
+                    openLocation = "/ezApprovalG/view.do?docID=";
+                    openLocation = openLocation + escape(pArgument[0]) + "&listSusin=" + escape(pArgument[4]) + "&listType=" + escape(pArgument[7]);
+                    openLocation = openLocation + "&isOpinion=" + escape(pArgument[6]);
+                    openLocation = openLocation + "&listType=" + escape(pArgument[7]);
 
 	                openwindow(openLocation, "", 880, 570);
 	            }
@@ -485,7 +451,30 @@
 	                    heigth = parseInt(height) - 30;
 	                    width = parseInt(width) - 10;
 	                }
-	                window.open(wfileLocation, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=" + height + ",width=" + width + ",top=" + top + ",left = " + left);
+	                
+	                if(wfileLocation.includes("approve.do") || wfileLocation.includes("view.do")){
+                        var param = new URLSearchParams(wfileLocation.substring(wfileLocation.indexOf("?")));
+                        var data = wfileLocation.includes("approve.do") ? ["docID", "share", "isPreview", "allFlag"] :
+                                    ["docID", "share", "isPreview", "listSusin", "docAttachParent", "admin", "listType", "pageType", "isOpinion", "callBackType"];
+                        window.open("", param.get("docID"), "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=" + height + ",width=" + width + ",top=" + top + ",left = " + left);
+                        const form = document.createElement("form");
+                        form.method = "post";
+                        form.action = wfileLocation.substring(0,wfileLocation.indexOf("?"));
+                        form.target = param.get("docID");
+                        for(const key of data){
+                            if(param.get(key)){
+                                const hidden = document.createElement("input");
+                                hidden.type = "hidden";
+                                hidden.name = key;
+                                hidden.value = param.get(key);
+                                form.appendChild(hidden);
+                            }
+                        }
+                        document.body.appendChild(form);
+                        form.submit();
+                        document.body.removeChild(form);
+                    }else
+	                    window.open(wfileLocation, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=" + height + ",width=" + width + ",top=" + top + ",left = " + left);
 	            }
 	            
 	            /* 2018-09-04 홍승비 - 탭메뉴 마우스오버 시 하이라이트 설정 */

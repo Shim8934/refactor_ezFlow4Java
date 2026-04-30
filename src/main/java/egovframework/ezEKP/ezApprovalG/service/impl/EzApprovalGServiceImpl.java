@@ -33201,20 +33201,8 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 		String targetUserDeptID = "";
 		String targetUserCompanyID = "";
         
-		// 2023-05-16 이가은 - mht, hwp, whwp 구분을 위해 추가
-		String useWHWP = ezCommonService.getTenantConfig("useWebHWP", userInfo.getTenantId());
-		String href = xmlDom.getElementsByTagName("HREF").item(0).getTextContent();
-		String docHrefType = (href.substring(href.length() - 3, href.length())).toUpperCase();
-		String approvuiHref = "";
+		String approvuiHref = "/ezApprovalG/approve.do?";
 		
-		if (docHrefType.equals("MHT")) {
-			approvuiHref = "/ezApprovalG/approvui.do?";
-		} else if (docHrefType.equals("HWP") && useWHWP.equals("NO")) {
-			approvuiHref = "/ezApprovalG/approvuiHWP.do?";
-		} else {
-			approvuiHref = "/ezApprovalG/approvuiWHWP.do?";
-		}
-        
 		if (mode.equals("APR")) {
 			Document xmlDom2 = commonUtil.convertStringToDocument(aprLineInfo);
 			int lineCnt = xmlDom2.getElementsByTagName("ROWS").item(0).getChildNodes().getLength();
@@ -33274,8 +33262,6 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
     		bodyContent.append("<span style='font-size:13px;'>" + messageSource.getMessage("ezEmail.csj14", userInfo.getLocale()) + "</span>");
     		bodyContent.append("<a id='approv_a' href ='" + (request.isSecure() ? "https:" : "http:") + "//" + request.getServerName() + (request.getServerPort() == 80 ? "" : ":" + request.getServerPort()) + approvuiHref);
     		bodyContent.append("docID=" + xmlDom.getElementsByTagName("DOCID").item(0).getTextContent());
-    		bodyContent.append("&id=" + targetUserID + "&name=" + targetUserName + "&deptID=" + targetUserDeptID);
-    		bodyContent.append("&allFlag=0&mailchk=Y&mode=APR&orgCompanyID=" + targetUserCompanyID);
     		bodyContent.append("' data-id='" + xmlDom.getElementsByTagName("DOCID").item(0).getTextContent() + "'"+ "data-comp='" + targetUserCompanyID);
     		bodyContent.append("' onclick ='javascript:mail_link();' style='cursor: pointer; font-size: 15px; color: blue;' target='_blank'><br>");
     		bodyContent.append(messageSource.getMessage("ezEmail.csj15", userInfo.getLocale())); //결재 문서 바로가기 링크
@@ -34908,10 +34894,8 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 					bodyContent.append("<span style='font-size:13px;'>" + messageSource.getMessage("ezEmail.csj17", userInfo.getLocale()) + ": " + xmlDom.getElementsByTagName("DOCTITLE").item(0).getTextContent() + "</span><br>");
 					bodyContent.append("<span style='font-size:13px;'>" + messageSource.getMessage("ezEmail.csj18", userInfo.getLocale()) + ": " + xmlDom.getElementsByTagName("WRITERNAME").item(0).getTextContent() + "</span><br>");
 					bodyContent.append("<span style='font-size:13px;'>" + messageSource.getMessage("ezEmail.csj19", userInfo.getLocale()) + ": " + xmlDom.getElementsByTagName("STARTDATE").item(0).getTextContent() + "</span><br>");
-					bodyContent.append("<a id='approv_a' href ='" + (request.isSecure() ? "https:" : "http:") + "//" + request.getServerName() + (request.getServerPort() == 80 ? "" : ":" + request.getServerPort()) + "/ezApprovalG/approvui.do?");
+					bodyContent.append("<a id='approv_a' href ='" + (request.isSecure() ? "https:" : "http:") + "//" + request.getServerName() + (request.getServerPort() == 80 ? "" : ":" + request.getServerPort()) + "/ezApprovalG/approve.do?");
 					bodyContent.append("docID=" + xmlDom.getElementsByTagName("DOCID").item(0).getTextContent());
-					bodyContent.append("&id=" + targetUserID + "&name=" + targetUserName + "&deptID=" + targetUserDeptID);
-					bodyContent.append("&allFlag=0&mailchk=Y&mode=APR&orgCompanyID=" + targetUserCompanyID);
 					bodyContent.append("' data-id='" + xmlDom.getElementsByTagName("DOCID").item(0).getTextContent() + "'"+ "data-comp='" + targetUserCompanyID);
 					bodyContent.append("' onclick ='javascript:mail_link();' style='cursor: pointer; font-size: 15px; color: blue;' target='_blank'><br>");
 					bodyContent.append(messageSource.getMessage("ezEmail.csj15", userInfo.getLocale())); //결재 문서 바로가기 링크
@@ -34919,10 +34903,8 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 				} else {
 					bodyContent.append("<span style='font-size:13px; font-weight:bold;'>" + xmlDom.getElementsByTagName("WRITERNAME").item(0).getTextContent() + "</span>");
 					bodyContent.append("<span style='font-size:13px;'>" + messageSource.getMessage("ezEmail.csj14", userInfo.getLocale()) + "</span>");
-					bodyContent.append("<a id='approv_a' href ='" + (request.isSecure() ? "https:" : "http:") + "//" + request.getServerName() + (request.getServerPort() == 80 ? "" : ":" + request.getServerPort()) + "/ezApprovalG/approvui.do?");
+					bodyContent.append("<a id='approv_a' href ='" + (request.isSecure() ? "https:" : "http:") + "//" + request.getServerName() + (request.getServerPort() == 80 ? "" : ":" + request.getServerPort()) + "/ezApprovalG/approve.do?");
 					bodyContent.append("docID=" + xmlDom.getElementsByTagName("DOCID").item(0).getTextContent());
-					bodyContent.append("&id=" + targetUserID + "&name=" + targetUserName + "&deptID=" + targetUserDeptID);
-					bodyContent.append("&allFlag=0&mailchk=Y&mode=APR&orgCompanyID=" + targetUserCompanyID);
 					bodyContent.append("' data-id='" + xmlDom.getElementsByTagName("DOCID").item(0).getTextContent() + "'"+ "data-comp='" + targetUserCompanyID);
 					bodyContent.append("' onclick ='javascript:mail_link();' style='cursor: pointer; font-size: 15px; color: blue;' target='_blank'><br>");
 					bodyContent.append(messageSource.getMessage("ezEmail.csj15", userInfo.getLocale())); //결재 문서 바로가기 링크
@@ -40009,177 +39991,28 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 	}
 	
 	private String getAprUrl(String docID, LoginVO userInfo) throws Exception {
-
-        String companyID = userInfo.getCompanyID();
-        int tenantID = userInfo.getTenantId();
-
-        Map<String, Object> map = new HashMap<String, Object>();
-        map.put("docID", docID);
-        map.put("tenantID", tenantID);
-        map.put("companyID", companyID);
-
-        List<ApprGLineTempletVO> nextAprUserInfoList = new ArrayList<>();
-        nextAprUserInfoList = ezApprovalGDAO.getNextAprLineInfo(map);
-
-        String nextUserID = "";
-        String nextUserDeptId = "";
-        String nextUserName = "";
-        String nextUserSN = "";
-        if (nextAprUserInfoList.size() == 1) {
-            nextUserID = nextAprUserInfoList.get(0).getAprMemberID();
-            nextUserDeptId = nextAprUserInfoList.get(0).getAprMemberDeptID();
-            nextUserName = nextAprUserInfoList.get(0).getAprMemberName();
-            nextUserSN = nextAprUserInfoList.get(0).getAprMemberSN();
-        } else {
-            nextUserID = userInfo.getId();
-            nextUserDeptId = userInfo.getDeptID();
-            nextUserName = ezOrganService.getPropertyValue(nextUserID, "displayName", userInfo.getTenantId());
-            for (ApprGLineTempletVO vo : nextAprUserInfoList) {
-            	if(nextUserID.equals(vo.getAprMemberID())) {
-            		nextUserSN = vo.getAprMemberSN();
-            		break;
-            	}
-			}
-        }
-
-        String docHref = getDocHref(docID, "APR", "", "", companyID, tenantID);
-        String isGroupDoc = checkIsGroupDoc(nextUserID, docID, companyID, tenantID);
-        String path = "";
-        String docInfo = getDocInfo(docID, "APR", "ALL", userInfo, companyID, userInfo.getTenantId(), "", "");
-
-        String draftAllTypeB = ezCommonService.getTenantConfig("draftAllTypeB", userInfo.getTenantId());
-        
-		Document xmlDom = commonUtil.convertStringToDocument(docInfo);
-		String docState = xmlDom.getElementsByTagName("DOCSTATE").item(0).getTextContent();
-
+        String path = "/ezApprovalG/approve.do";
         MultiValueMap queryParam = new LinkedMultiValueMap();
-        if (docHref.endsWith(".mht")) {
-            path = "/ezApprovalG/approvui.do";
-        } else if (docHref.endsWith(".hwp")) {
-            if ("Y".equals(isGroupDoc) && !"Y".equals(draftAllTypeB)) {
-                path = "/ezApprovalG/approvuiAll_WHWP.do";
-            } else {
-                path = "/ezApprovalG/approvuiWHWP.do";
-            }
-        } else {
-            throw new Exception();
-        }
 
         queryParam.set("docID", docID);
-        queryParam.set("id", nextUserID);
-        queryParam.set("name", nextUserName);
-        queryParam.set("deptID", nextUserDeptId);
-        queryParam.set("allFlag", "0");
-        queryParam.set("mailchk", "Y");
-        queryParam.set("orgCompanyID", companyID);
-        if (!"".equals(docState)) {
-        	queryParam.set("docState", docState);
-        }
-        if("".equals(nextUserSN)) {
-        	queryParam.set("aprMemberSN", nextUserSN);
-        }
 
         return commonUtil.makeUrl(path, queryParam);
     }
 	
 	public String getEndUrl(String docID, LoginVO userInfo) throws Exception {
-
-        String nextUserID = userInfo.getId();
-        String companyID = userInfo.getCompanyID();
-        int tenantID = userInfo.getTenantId();
-
-        String docInfoStr = getDocInfo(docID, "END", "ALL", userInfo, companyID, tenantID, "", "");
-        Document docInfo = commonUtil.convertStringToDocument(docInfoStr);
-
-        String docHref = docInfo.getElementsByTagName("HREF").item(0).getTextContent().trim();
-        String docState = docInfo.getElementsByTagName("DOCSTATE").item(0).getTextContent().trim();
-        String orgDocId = docInfo.getElementsByTagName("ORGDOCID").item(0).getTextContent().trim();
-        String formId = docInfo.getElementsByTagName("FORMID").item(0).getTextContent().trim();
-        String isGroupDoc = checkIsGroupDoc(nextUserID, docID, companyID, tenantID);
-        String draftAllTypeB = ezCommonService.getTenantConfig("draftAllTypeB", userInfo.getTenantId());
-        
-        String tempDocHref = docHref;
-        if (tempDocHref.endsWith(".ezd")) {
-            tempDocHref = tempDocHref.replace(".ezd", "");
-        }
-
-        String path = "";
+        String path = "/ezApprovalG/view.do";
         MultiValueMap queryParam = new LinkedMultiValueMap();
-        if (tempDocHref.endsWith(".mht")) {
-            path = "/ezApprovalG/contDocView.do";
-        } else if (tempDocHref.endsWith(".hwp") && !"Y".equals(draftAllTypeB)) {
-            if ("Y".equals(isGroupDoc)) {
-                path = "/ezApprovalG/ezViewEndAll_WHWP.do";
-            } else {
-                path = "/ezApprovalG/ezViewEnd_WHWP.do";
-            }
-        } else if (tempDocHref.endsWith(".pdf") && !"Y".equals(draftAllTypeB)) {
-            if ("Y".equals(isGroupDoc)) {
-                path = "/ezApprovalG/ezViewEndAll_WHWP.do";
-            } else {
-                path = "/ezApprovalG/contDocView.do";
-            }
-        } else {
-            throw new Exception();
-        }
         queryParam.set("docID", docID);
-        queryParam.set("docHref", docHref);
-        queryParam.set("formID", formId);
-        queryParam.set("orgDocID", orgDocId);
-        queryParam.set("docState", docState);
-        queryParam.set("orgCompanyID", companyID);
 
         return commonUtil.makeUrl(path, queryParam);
     }
 	
 	private String getProcessingUrl(String docID, LoginVO userInfo) throws Exception {
-
-        String nextUserID = userInfo.getId();
-        String companyID = userInfo.getCompanyID();
-        int tenantID = userInfo.getTenantId();
-
-        String docInfoStr = getDocInfo(docID, "APR", "ALL", userInfo, companyID, tenantID, "", "");
-        Document docInfo = commonUtil.convertStringToDocument(docInfoStr);
-
-        String docHref = docInfo.getElementsByTagName("HREF").item(0).getTextContent().trim();
-        String docState = docInfo.getElementsByTagName("DOCSTATE").item(0).getTextContent().trim();
-        String orgDocId = docInfo.getElementsByTagName("ORGDOCID").item(0).getTextContent().trim();
-        String opinionFlag = docInfo.getElementsByTagName("HASOPINIONYN").item(0).getTextContent().trim();
-
-        //String susinAdmin = getSusinAdmin(nextUserID, tenantID);
-
-        String isGroupDoc = checkIsGroupDoc(nextUserID, docID, companyID, tenantID);
-        String draftAllTypeB = ezCommonService.getTenantConfig("draftAllTypeB", userInfo.getTenantId());
-
-        String tempDocHref = docHref;
-        if (tempDocHref.endsWith(".ezd")) {
-            tempDocHref = tempDocHref.replace(".ezd", "");
-        }
-
-        String path = "";
+        String path = "/ezApprovalG/view.do";
         MultiValueMap queryParam = new LinkedMultiValueMap();
-        if (tempDocHref.endsWith(".mht")) {
-            path = "/ezApprovalG/aprDocView.do";
-        } else if (tempDocHref.endsWith(".hwp") && !"Y".equals(draftAllTypeB)) {
-            if ("Y".equals(isGroupDoc)) {
-                path = "/ezApprovalG/ezviewAprAll_WHWP.do";
-            } else {
-                path = "/ezApprovalG/ezviewAprWHWP.do";
-            }
-        } else {
-            throw new Exception();
-        }
         queryParam.set("docID", docID);
-        queryParam.set("docHref", docHref);
-        queryParam.set("opinionFlag", opinionFlag);
-        queryParam.set("docState", docState);
-        queryParam.set("listSusin", "");
-        queryParam.set("oDoc", orgDocId);
         queryParam.set("isOpinion", "OPINION_SHOW");
         queryParam.set("listType", "3");
-        queryParam.set("CallBackType", "");
-        queryParam.set("ext", docHref.substring(docHref.lastIndexOf(".") + 1));
-        queryParam.set("orgCompanyID", userInfo.getCompanyID());
 
         return commonUtil.makeUrl(path, queryParam);
     }
@@ -41256,4 +41089,37 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
         logger.debug("aprDashBoardDoingList ended.");
         return resultXML.toString();
 	}
+
+    public ApprGDocListVO getApprovalDocInfo(String docID, LoginVO userInfo, String share) throws Exception {
+        logger.debug("getApprovalDocInfo started.");
+        Map<String, Object> map = new HashMap<>();
+        map.put("v_DOCID", docID);
+        map.put("v_USERID", userInfo.getId());
+        map.put("v_TENANTID", userInfo.getTenantId());
+        map.put("companyID", userInfo.getCompanyID());
+        map.put("isShare", share);
+        map.put("proxyList", getProxyUserInfo(userInfo.getId(), userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset()));
+
+        ApprGDocListVO docInfo = ezApprovalGDAO.getApprovalDocInfo(map);
+        logger.debug("getApprovalDocInfo ended.");
+        return docInfo;
+    }
+
+    public ApprGDocListVO getViewDocInfo(String docID, LoginVO userInfo) throws Exception {
+        logger.debug("getViewDocInfo started.");
+        Map<String, Object> map = new HashMap<>();
+        map.put("v_DOCID", docID);
+        map.put("v_USERID", userInfo.getId());
+        map.put("v_TENANTID", userInfo.getTenantId());
+        map.put("v_COMPANYID", userInfo.getCompanyID());
+        map.put("MineViewYN", ezCommonService.getTenantConfig("MineViewYN", userInfo.getTenantId()));
+
+        ApprGDocListVO docInfo = ezApprovalGDAO.getViewDocInfo(map);
+        
+        if(docInfo == null){
+            docInfo = ezApprovalGDAO.getEndDocInfo(map);
+        }
+        logger.debug("getViewDocInfo ended.");
+        return docInfo;
+    }
 }

@@ -1777,7 +1777,9 @@ function SaveApproveInfo(pApproveFlag) {
         		var field = message.GetListItem(fields, "receiptnumber");
         		if (field) {
         			createNodeAndInsertText(xmlpara, objNode, "DOCNO", getfieldValue(field));
-        		}
+        		} else {
+                    createNodeAndInsertText(xmlpara, objNode, "DOCNO", "");
+                }
         	}
     	} else {
     		var field = message.GetListItem(fields, "deptshortedname");
