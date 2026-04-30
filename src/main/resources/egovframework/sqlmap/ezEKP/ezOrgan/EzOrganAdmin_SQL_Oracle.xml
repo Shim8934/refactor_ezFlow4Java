@@ -7703,10 +7703,10 @@
 			<![CDATA[
 				) B
 				WHERE
-					ROWNUM <= (#v_PAGENUM# + #v_PAGESIZE#)
+					ROWNUM <= (NVL(#v_PAGENUM#, 0) + NVL(#v_PAGESIZE#, 999999999))
 					) X
 				 	WHERE
-				 		NUM > (#v_PAGENUM#)
+				 		NUM > NVL(#v_PAGENUM#, 0)
 			]]>
 				ORDER BY
 					USERTYPE, CN
