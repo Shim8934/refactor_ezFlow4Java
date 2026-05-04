@@ -1580,7 +1580,7 @@
 			</table>
 		</div>
 		
-        <div id="ApvForm_content2" style="width:100%;display:none; padding-top:10px;">
+        <div id="ApvForm_content2" style="width:100%;height: 0; overflow:hidden; padding-top:10px;">
             <h2 id="H1" class="receiver_tltype01" style="margin-bottom:5px;">
 			<span style="min-width: 45px;" id="Span1"><spring:message code='ezApproval.t00007'/></span>
             </h2>
