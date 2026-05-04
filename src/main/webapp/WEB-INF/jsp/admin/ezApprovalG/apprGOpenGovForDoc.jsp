@@ -701,7 +701,6 @@
 	                                    }
                                         openLocation = "/ezApprovalG/view.do?docID=" + docID;
 	                                    openwindow(openLocation, "", 880, 570);
-	                                    }
 									} else {
 	                                    window.open("/ezApprovalG/downloadAttach.do?fileName=" + Attachfilename + "&filePath=" + AttachUrl, "_self");
 	                                }

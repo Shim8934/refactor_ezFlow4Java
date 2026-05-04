@@ -823,7 +823,6 @@
                                         openLocation = "/ezApprovalG/view.do?docID=" + docID;
 // 	                                    openwindow(openLocation, "", 880, 570);
 	                                    showPopupSlide(openLocation, 1000, 950, "", GetOpenWindowfeature(1000, 950), hidePopupSlide);
-	                                    }
 									} else {
 	                                    window.open("/ezApprovalG/downloadAttach.do?fileName=" + Attachfilename + "&filePath=" + AttachUrl, "_self");
 	                                }
