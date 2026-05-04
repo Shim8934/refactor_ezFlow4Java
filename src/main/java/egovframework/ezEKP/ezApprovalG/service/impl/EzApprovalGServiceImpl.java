@@ -1157,8 +1157,9 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
         if(!rtnVal && "Y".equals(ezCommonService.getTenantConfig("chiefDocView", tenantID))){
             List<String> chiefDept = ezApprovalGDAO.getChiefDept(userID);
             String deptPath = ezApprovalGDAO.getDocDeptPath(map);
+            String[] depts = deptPath.split(",");
             for(String dept : chiefDept){
-                rtnVal = deptPath.contains(dept);
+                rtnVal = Arrays.asList(depts).contains(dept);
                 if(rtnVal)
                     break;
             }
