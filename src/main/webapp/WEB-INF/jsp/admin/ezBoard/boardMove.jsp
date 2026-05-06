@@ -24,9 +24,10 @@
 			var SelectedBoardName = "";
 			var SelectedBoardParentBoardID = "";
 			var selectedBoardGroupID = "";			
-			var OrgBoardID = "<c:out value='${boardID}'/>";	
+			var OrgBoardID = "<c:out value='${boardID}'/>";
 			var OrgBoardGroupID = "<c:out value='${boardGroupID}'/>";
 			var useGroupFlag = "<c:out value='${useGroupFlag}'/>";
+			var companyID = "<c:out value='${companyID}'/>";
 			
 			var boardmoveselect_cross_dialogArguments = new Array();
 			function MoveSelect(){
@@ -34,6 +35,7 @@
 			    parameter[0] = OrgBoardID;
 			    parameter[1] = OrgBoardGroupID;
 			    parameter[2] = useGroupFlag;
+			    parameter[3] = companyID;
 
 			    //if (CrossYN()) {
 		        boardmoveselect_cross_dialogArguments[0] = parameter;

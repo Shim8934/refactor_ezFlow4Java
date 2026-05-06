@@ -374,7 +374,7 @@
 	                    boardMainUrl = "/admin/ezBoard/boardOrder.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&parentBoardID=" + encodeURIComponent(SelectedBoardParentBoardID);
 	                    break;
 	                case 4:	                    
-                        boardMainUrl = "/admin/ezBoard/boardMove.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&boardGroupID=" + encodeURIComponent(SelectedBoardGroupID);
+                        boardMainUrl = "/admin/ezBoard/boardMove.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&boardGroupID=" + encodeURIComponent(SelectedBoardGroupID) + "&companyID=" + encodeURIComponent(companySelectID);
 	                    break;
 	                case 5:	                    
 	                    boardMainUrl = "/admin/ezBoard/boardDelete.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&boardGroupID=" + encodeURIComponent(SelectedBoardGroupID);	                    

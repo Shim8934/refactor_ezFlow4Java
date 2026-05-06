@@ -686,10 +686,25 @@
 	          		WHERE
 	          			A.TENANT_ID = #v_TENANTID#
 	          		AND
-		                (A.companyid = #v_COMPANYID# OR	TRIM(A.companyid) = ''	OR	A.companyid IS NULL)
+				]]>
+				<isEqual property="v_isAdminLeft" compareValue="Y">
+					<isEmpty property="v_COMPANYID">
+						<![CDATA[(TRIM(A.companyid) = '' OR A.companyid IS NULL)]]>
+						<isEqual property="v_pRootBoardID" compareValue="top">
+							<![CDATA[AND A.gubun = 99]]>
+						</isEqual>
+					</isEmpty>
+					<isNotEmpty property="v_COMPANYID">
+						A.companyid = #v_COMPANYID#
+					</isNotEmpty>
+				</isEqual>
+				<isNotEqual property="v_isAdminLeft" compareValue="Y">
+					<![CDATA[(A.companyid = #v_COMPANYID# OR TRIM(A.companyid) = '' OR A.companyid IS NULL)]]>
+				</isNotEqual>
+          		<![CDATA[
 	          		AND
 	          			A.PARENTBOARDID = #v_pRootBoardID#
-	                AND 
+	                AND
 	                	A.BoardID <> #v_pExcludeBoardID#
 	           		ORDER BY
 	           			A.TreeViewOrder ASC
@@ -1734,11 +1749,12 @@
 		WHERE
 			tenant_id = #tenantID#
 		AND
-			(companyID = #companyID#
-		<isEqual property="isCompanyAdmin" compareValue="true">
-			OR TRIM(companyID) = '' OR companyID IS NULL
-		</isEqual>
-			)
+		<isEmpty property="companyID">
+			<![CDATA[(TRIM(companyID) = '' OR companyID IS NULL)]]>
+		</isEmpty>
+		<isNotEmpty property="companyID">
+			companyID = #companyID#
+		</isNotEmpty>
 		AND
 			parentboardid = #parentBoardID#
 		ORDER BY 
@@ -2459,13 +2475,13 @@
 	<insert id="EzBoardAdminDAO.createBoard_I2" parameterClass="Map" >
 		<![CDATA[
 			INSERT INTO TBL_Board_BoardManage ( 
-				BOARDID, 	 ACCESSID, 	   ACCESSNAME, 	   ACCESSNAME2, 	ACCESSLEVEL, ACCESS_, PARENTBOARDID, 	 BOARDADMIN_FG, LISTVIEW_FG, READ_FG, WRITE_FG, REPLY_FG, DELETE_FG, INHERIT_FG, TENANT_ID, COMPANYID, TYPE 
+				BOARDID, 	 ACCESSID, 	   ACCESSNAME, 	   ACCESSNAME2, 	ACCESSLEVEL, ACCESS_, PARENTBOARDID, 	 BOARDADMIN_FG, LISTVIEW_FG, READ_FG, WRITE_FG, REPLY_FG, DELETE_FG, INHERIT_FG, BOARDGROUPACL, TENANT_ID, COMPANYID, TYPE
 			)
 		]]>
 		<isEqual property="isAllGroupBoard" compareValue="Y">
 			<![CDATA[
 	     		SELECT
-					#v_BOARDID#,  'Top',  DISPLAYNAME,  DISPLAYNAME2,   1, 		 1, 	  #v_PARENTBOARDID#, 	'false', 	'true', 	 'true',	 'true', 	'true',   'true',    'true', 	 #v_TENANTID#,  'Top', 'DEPT'
+					#v_BOARDID#,  'Top',  DISPLAYNAME,  DISPLAYNAME2,   1, 		 1, 	  #v_PARENTBOARDID#, 	'false', 	'true', 	 'true',	 'true', 	'true',   'true',    'true',  'N',  #v_TENANTID#,  'Top', 'DEPT'
 	   			FROM
 	   				TBL_DEPTMASTER
 	   			WHERE
@@ -2477,7 +2493,7 @@
 		<isNotEqual property="isAllGroupBoard" compareValue="Y">
 			<![CDATA[
 	     		VALUES ( 
-	     			#v_BOARDID#, #v_ACCESSID#, #v_ACCESSNAME#, #v_ACCESSNAME2#, 1, 			 1, 	  #v_PARENTBOARDID#, 'true', 		'true', 	 'true', 'true', 	'true',   'true',    'true', 	 #v_TENANTID#, #v_COMPANYID#, #v_TYPE#
+	     			#v_BOARDID#, #v_ACCESSID#, #v_ACCESSNAME#, #v_ACCESSNAME2#, 1, 			 1, 	  #v_PARENTBOARDID#, 'true', 		'true', 	 'true', 'true', 	'true',   'true',    'true',  'N',  #v_TENANTID#, #v_COMPANYID#, #v_TYPE#
 	     		)
 			]]>
 		</isNotEqual>
@@ -2645,7 +2661,8 @@
 		          	VERSIONMANAGE = #versionManage#,
 		          	LISTSHOWTYPE = #v_LISTSHOWTYPE#,
 		          	URLCOPYFLAG = #v_URLCOPYFLAG#,
-	      			USEGROUPFLAG = #v_USEGROUPFLAG#
+	      			USEGROUPFLAG = #v_USEGROUPFLAG#,
+	      			USEVIEWGRANT = #v_USEVIEWGRANT#
 	    		WHERE
 	    			TENANT_ID = #v_TENANTID#
 	    		AND  
