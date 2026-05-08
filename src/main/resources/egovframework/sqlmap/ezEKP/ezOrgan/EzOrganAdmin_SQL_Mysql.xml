@@ -2648,18 +2648,7 @@
 				('SU200', 3, '기능명칭', 180, NULL, 'ITEMNAME', NULL, NULL, NULL, NULL, 'Name', '機能名', '功能名称', 'Nama', NULL, #companyID#, #tenantID#),
 				('SU200', 4, '보존기간', 80, NULL, 'ITEMLIMIT', NULL, NULL, NULL, NULL, 'Keeping period', '保存期間', '保留时间', 'Periode penyimpanan', NULL, #companyID#, #tenantID#),
 				('SU200', 5, '보안등급', 80, NULL, 'ITEMSECURITY', NULL, NULL, NULL, NULL, 'Security level', '保安等級', '安全级别', 'Tingkat keamanan', NULL, #companyID#, #tenantID#),
-				('SU200', 6, '공개여부', 60, NULL, 'ITEMPUBLIC', NULL, NULL, NULL, NULL, 'Public', '公開設定', '是否共享', 'Publik', NULL, #companyID#, #tenantID#),
-          		 ('P004', 1, '제목', 	300, 'TBL_APRDOCINFO', 'DocTitle', NULL, NULL, NULL, NULL, '수신문서처리기', '제목', 'Title', '見出し', '标题', NULL, NULL,  #companyID#, #tenantID#),
-				 ('P004', 2, '문서상태', 70, 'TBL_APRRECEIPTPROCESSINFO', 'DocState', NULL, NULL, NULL, NULL, '수신문서처리기', '문서상태', 'Doc. status', '文書区分', '文件状态', NULL, NULL,  #companyID#, #tenantID#),
-				 ('P004', 3, '결재상태', 70, 'TBL_APRRECEIPTPROCESSINFO', 'AprState', NULL, NULL, NULL, NULL, '수신문서처리기', '결재상태', 'Approval status', 'ステータス', '批准状态', NULL, NULL,  #companyID#, #tenantID#),
-				 ('P004', 4, '기안자', 	 70, 'TBL_APRDOCINFO', 'WriterName', NULL, NULL, NULL, NULL, ' 수신문서처리기', '기안자', 'Drafter', '起案者', '起草人', NULL, NULL,  #companyID#, #tenantID#),
-				 ('P004', 5, '발신부서', 90, 'TBL_APRRECEIPTPROCESSINFO', 'SentDeptName', NULL, NULL, NULL, NULL, '수신문서처리기', '발신부서', 'Dept. sent', '送信部署', '发送部门', NULL, NULL,   #companyID#, #tenantID#),
-				 ('P004', 6, '수신자', 	70, 'TBL_APRRECEIPTPROCESSINFO', 'PROCESSORNAME', NULL, NULL, NULL, NULL, '수신문서처리기', '수신자', 'Receiver', '受信者', '受信者', NULL, NULL,  #companyID#, #tenantID#),
-				 ('P004', 7, '수신부서', 90, 'TBL_APRRECEIPTPROCESSINFO', 'ReceivedDeptName', NULL, NULL, NULL, NULL, '수신문서처리기', '도착부서', 'Date received', '受信部署', '收信部门', NULL, NULL,  #companyID#, #tenantID#),
-				 ('P004', 8, '도착일자', 100, 'TBL_APRRECEIPTPROCESSINFO', 'ProcessDate', NULL, NULL, NULL, NULL, '수신문서처리기', '도착일자', 'ProcessDate', '到着日付', '接收日', NULL, NULL,  #companyID#, #tenantID#),
-				 ('P004', 9, '양식명', 	70, 'TBL_APRDOCINFO', 'FormName', NULL, NULL, NULL, NULL, '수신문서처리기', '양식명', 'Form Name', '様式名', '样式名', NULL, NULL, #companyID#, #tenantID#),
-				 ('P004', 10, '첨부', 	30, 'TBL_APRDOCINFO', 'HASATTACHYN', NULL, NULL, NULL, NULL, '수신문서처리기', '첨부', 'Attach', '添付', '附件', NULL, NULL, #companyID#, #tenantID#),
-				 ('P004', 11, '공개',	 30, 'TBL_APRDOCINFO', 'ISPUBLIC', NULL, NULL, NULL, NULL, '수신문서처리기', '공개', 'Public', '公開', '公开', NULL, NULL, #companyID#, #tenantID#)
+				('SU200', 6, '공개여부', 60, NULL, 'ITEMPUBLIC', NULL, NULL, NULL, NULL, 'Public', '公開設定', '是否共享', 'Publik', NULL, #companyID#, #tenantID#)
       ]]>
     </insert>
     
@@ -3675,9 +3664,11 @@
                	  	TENANT_ID = #tenantID#
                	  AND  
                	  	(DEPTLEVEL = 1
-               	  OR 
-               	  	CN = 'Top') ) A
-           	ORDER BY 
+               	  OR
+               	  	CN = 'Top')
+               	  AND
+               	  	DEPTTREEFLAG = 'Y' ) A
+           	ORDER BY
         		A.EXTENSIONATTRIBUTE15, A.DISPLAYNAME
 		]]>
 	</select>
@@ -6822,6 +6813,23 @@
 		]]>
 	</update>
 	
+
+	<update id="EzOrganAdminDAO.updateAddJobContactInfo" parameterClass="map">
+		<![CDATA[
+		UPDATE
+			TBL_USERMASTER
+		SET
+			TELEPHONENUMBER = #v_TELEPHONENUMBER#,
+			HOMEPHONE = #v_HOMEPHONE#,
+			MOBILE = #v_MOBILE#,
+			FACSIMILETELEPHONENUMBER = #v_FACSIMILETELEPHONENUMBER#
+		WHERE
+			CN = #v_CN#
+		  AND
+			TENANT_ID = #v_TENANTID#
+		]]>
+	</update>
+
 	<insert id="EzOrganAdminDAO.insertConnectMenuForCompany" parameterClass="Map">
 	<![CDATA[
 		INSERT INTO TBL_PORTAL_MENU_COMP 
