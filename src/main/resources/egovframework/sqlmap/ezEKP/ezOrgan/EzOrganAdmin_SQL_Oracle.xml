@@ -5639,7 +5639,7 @@
         		A.EXTENSIONATTRIBUTE15, A.DISPLAYNAME
 		]]>
 	</select>
-
+	
 	<!-- <procedure id="EzOrganAdminDAO.getAddJobList" parameterClass="Map" resultClass="OrganUserVO">
 		<![CDATA[
 			{CALL EZSP_GETADDJOBLIST(#v_COMPANYID#, #v_LANGDATA#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}

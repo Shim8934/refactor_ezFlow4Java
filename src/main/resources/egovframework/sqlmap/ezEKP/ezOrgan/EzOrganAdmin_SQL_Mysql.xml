@@ -3662,7 +3662,7 @@
                	  	TBL_DEPTMASTER 
                	  WHERE
                	  	TENANT_ID = #tenantID#
-               	  AND
+               	  AND  
                	  	(DEPTLEVEL = 1
                	  OR
                	  	CN = 'Top')
