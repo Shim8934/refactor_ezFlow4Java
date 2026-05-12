@@ -34,8 +34,7 @@
 			var BoardGroupID = "";
 			var code = "";
 			var useGroupFlag = "";
-			var companyID = "";
-
+	
 			var	SelectedBoardID = "";
 			var	selectedBoardGroupID = "";	
 			var SelectedBoardName = "";
@@ -64,7 +63,6 @@
 			    BoardID = RetValue[0]
 			    BoardGroupID = RetValue[1];
 				useGroupFlag = RetValue[2];
-				companyID = RetValue[3] || "";
 			        
 				var xmlHTTP = createXMLHttpRequest();
 				xmlHTTP.open("GET", "/xml/organtree_config2.xml", false);
@@ -85,8 +83,7 @@
 						rootBoardID : pRootBoardID,
 						subFlag : pSubFlag,
 						selectFlag : "0",
-						isAdminLeft : "Y",
-						companyID : companyID
+						isAdminLeft : "Y"
 						},
 					success: function(result){
 						ret = loadXMLString(result);				
@@ -149,9 +146,7 @@
 					data : {
 						rootBoardID : 'top',
 						subFlag : '0',
-						isAdminLeft : "Y",
-						companyID : companyID
-					},
+						isAdminLeft : "Y"},
 					success : function(result){
 						MakeTopBoardView(result);
 					}

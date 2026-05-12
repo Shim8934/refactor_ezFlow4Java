@@ -862,7 +862,6 @@ public class EzBoardAdminController extends EzFileMngUtil {
 		model.addAttribute("boardName", boardName);
 		model.addAttribute("hasSubBoard", hasSubBoard);
 		model.addAttribute("useGroupFlag", boardPropertyVO.getUseGroupFlag());
-		model.addAttribute("companyID", Optional.ofNullable(request.getParameter("companyID")).orElse(""));
 
 		logger.debug("boardMove ended");
 		return "admin/ezBoard/boardMove";
@@ -872,15 +871,14 @@ public class EzBoardAdminController extends EzFileMngUtil {
 	 * 게시판관리 이동할 게시판 선택화면 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezBoard/boardMoveSelect.do", method = RequestMethod.GET)
-	public String boardMoveSelect(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+	public String boardMoveSelect(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
 		logger.debug("boardMoveSelect started");
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-
+		
 		String serverName = userInfo.getServerName();
-
+		
 		model.addAttribute("serverName", serverName);
-		model.addAttribute("companyID", Optional.ofNullable(request.getParameter("companyID")).orElse(""));
 
 		logger.debug("boardMoveSelect ended");
 		return "admin/ezBoard/boardMoveSelect";

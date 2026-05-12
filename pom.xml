@@ -701,7 +701,7 @@
               <artifactId>maven-war-plugin</artifactId>
               <version>3.4.0</version>
               <configuration>
-                <packagingExcludes>fileroot/**,WEB-INF/classes/document/**,**/*.md</packagingExcludes>
+                <packagingExcludes>fileroot/**</packagingExcludes>
               </configuration>
             </plugin>
         </plugins>
