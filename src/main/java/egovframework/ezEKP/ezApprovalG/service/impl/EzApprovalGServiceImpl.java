@@ -10859,47 +10859,50 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 				
 				resultXML.append("]]></VALUE>");
 
-                Map<String, Object> map = new HashMap<String, Object>();
-                map.put("v_DOCID", docXML.getElementsByTagName("DOCID").item(k).getTextContent());
-                map.put("companyID", recordListVO.getCompanyID());
-                map.put("v_TENANTID",tenantID);
-                map.put("v_FLAG","ADDY");
-                String opinionAddGB = ezApprovalGDAO.getOpinionAddGB(map);
-                String hasopinionYn = ezApprovalGDAO.getHasopinionYn(map);
+          String opinionAddGB = "";
+          String hasopinionYn = "";
 
-				if (p == 0) {
-					resultXML.append("<DATA1><![CDATA[" + makeListField(docXML.getElementsByTagName("DOCID").item(k).getTextContent()) + "]]></DATA1>");
-					resultXML.append("<DATA2><![CDATA[" + makeListField(docXML.getElementsByTagName("HREF").item(k).getTextContent()) + "]]></DATA2>");
-					resultXML.append("<DATA3><![CDATA[" + makeListField(docXML.getElementsByTagName("WRITERID").item(k).getTextContent()) + "]]></DATA3>");
-					resultXML.append("<DATA4><![CDATA[" + makeListField(docXML.getElementsByTagName("CONTAINERID").item(k).getTextContent()) + "]]></DATA4>");
-					resultXML.append("<DATA5><![CDATA[" + makeListField(docXML.getElementsByTagName("FORMID").item(k).getTextContent()) + "]]></DATA5>");
-					resultXML.append("<DATA6><![CDATA[" + makeListField(docXML.getElementsByTagName("RECORDID").item(k).getTextContent()) + "]]></DATA6>");
-					resultXML.append("<DATA7><![CDATA[" + makeListField(docXML.getElementsByTagName("CABINETID").item(k).getTextContent()) + "]]></DATA7>");
-					resultXML.append("<DATA8><![CDATA[" + makeListField(docXML.getElementsByTagName("SEPERATEATTACHNO").item(k).getTextContent()) + "]]></DATA8>");
-					resultXML.append("<DATA9><![CDATA[" + makeListField(docXML.getElementsByTagName("CONFIRMFLAG").item(k).getTextContent()) + "]]></DATA9>");
-					resultXML.append("<DATA10><![CDATA[" + makeListField(docXML.getElementsByTagName("CABINETCLASSNO").item(k).getTextContent()) + "]]></DATA10>");
-					resultXML.append("<DATA11><![CDATA[" + makeListField(docXML.getElementsByTagName("OWNERDEPTID").item(k).getTextContent()) + "]]></DATA11>");
-					resultXML.append("<DATA12><![CDATA[" + makeListField(docXML.getElementsByTagName("REGISTERTYPE").item(k).getTextContent()) + "]]></DATA12>");
-					resultXML.append("<DATA13>" + makeListField(docXML.getElementsByTagName("REJECTFLAG").item(k).getTextContent()) + "</DATA13>");
-					
-					if (recordListVO.isUsePublicFlag()) {
-						resultXML.append("<DATA14><![CDATA[" + makeListField(docXML.getElementsByTagName("SECURITYAPPROVAL").item(k).getTextContent()) + "]]></DATA14>");
-					}
-					resultXML.append("<DATA15><![CDATA[" + makeListField(docXML.getElementsByTagName("DOCSTATE").item(k).getTextContent()) + "]]></DATA15>");
-					resultXML.append("<DATA16><![CDATA[" + makeListField(docXML.getElementsByTagName("PUBLICITYYN").item(k).getTextContent()).trim() + "]]></DATA16>");
-					resultXML.append("<DATA17><![CDATA[" + makeListField(docXML.getElementsByTagName("DOCTYPE").item(k).getTextContent()).trim() + "]]></DATA17>");
+          if (p == 0) {
+              Map<String, Object> map = new HashMap<String, Object>();
+              map.put("v_DOCID", docXML.getElementsByTagName("DOCID").item(k).getTextContent());
+              map.put("companyID", recordListVO.getCompanyID());
+              map.put("v_TENANTID", tenantID);
+              map.put("v_FLAG", "ADDY");
+              opinionAddGB = ezApprovalGDAO.getOpinionAddGB(map);
+              hasopinionYn = ezApprovalGDAO.getHasopinionYn(map);
 
-                    resultXML.append("<DATA99><![CDATA[" + makeListField(docXML.getElementsByTagName("FORMNAME").item(k).getTextContent()) + "]]></DATA99>");
+              resultXML.append("<DATA1><![CDATA[" + makeListField(docXML.getElementsByTagName("DOCID").item(k).getTextContent()) + "]]></DATA1>");
+              resultXML.append("<DATA2><![CDATA[" + makeListField(docXML.getElementsByTagName("HREF").item(k).getTextContent()) + "]]></DATA2>");
+              resultXML.append("<DATA3><![CDATA[" + makeListField(docXML.getElementsByTagName("WRITERID").item(k).getTextContent()) + "]]></DATA3>");
+              resultXML.append("<DATA4><![CDATA[" + makeListField(docXML.getElementsByTagName("CONTAINERID").item(k).getTextContent()) + "]]></DATA4>");
+              resultXML.append("<DATA5><![CDATA[" + makeListField(docXML.getElementsByTagName("FORMID").item(k).getTextContent()) + "]]></DATA5>");
+              resultXML.append("<DATA6><![CDATA[" + makeListField(docXML.getElementsByTagName("RECORDID").item(k).getTextContent()) + "]]></DATA6>");
+              resultXML.append("<DATA7><![CDATA[" + makeListField(docXML.getElementsByTagName("CABINETID").item(k).getTextContent()) + "]]></DATA7>");
+              resultXML.append("<DATA8><![CDATA[" + makeListField(docXML.getElementsByTagName("SEPERATEATTACHNO").item(k).getTextContent()) + "]]></DATA8>");
+              resultXML.append("<DATA9><![CDATA[" + makeListField(docXML.getElementsByTagName("CONFIRMFLAG").item(k).getTextContent()) + "]]></DATA9>");
+              resultXML.append("<DATA10><![CDATA[" + makeListField(docXML.getElementsByTagName("CABINETCLASSNO").item(k).getTextContent()) + "]]></DATA10>");
+              resultXML.append("<DATA11><![CDATA[" + makeListField(docXML.getElementsByTagName("OWNERDEPTID").item(k).getTextContent()) + "]]></DATA11>");
+              resultXML.append("<DATA12><![CDATA[" + makeListField(docXML.getElementsByTagName("REGISTERTYPE").item(k).getTextContent()) + "]]></DATA12>");
+              resultXML.append("<DATA13>" + makeListField(docXML.getElementsByTagName("REJECTFLAG").item(k).getTextContent()) + "</DATA13>");
 
-                    /* 2023-06-26 민지수 - 추가의견 존재 여부 저장 (TRUE, FALSE) */
-                    resultXML.append("<ADDOPINION>" + opinionAddGB + "</ADDOPINION>");
-                    resultXML.append("<HASOPINIONYN>" + hasopinionYn + "</HASOPINIONYN>");
-                    
-					if (docXML.getElementsByTagName("DOCSTATE").item(k).getTextContent().equals("011") ) {
-						resultXML.append("<DATA19><![CDATA[" + makeListField(docXML.getElementsByTagName("ORGUSERID").item(k).getTextContent()) + "]]></DATA19>");
-						resultXML.append("<DATA20></DATA20>");
-					}
-				}
+              if (recordListVO.isUsePublicFlag()) {
+                  resultXML.append("<DATA14><![CDATA[" + makeListField(docXML.getElementsByTagName("SECURITYAPPROVAL").item(k).getTextContent()) + "]]></DATA14>");
+              }
+              resultXML.append("<DATA15><![CDATA[" + makeListField(docXML.getElementsByTagName("DOCSTATE").item(k).getTextContent()) + "]]></DATA15>");
+              resultXML.append("<DATA16><![CDATA[" + makeListField(docXML.getElementsByTagName("PUBLICITYYN").item(k).getTextContent()).trim() + "]]></DATA16>");
+              resultXML.append("<DATA17><![CDATA[" + makeListField(docXML.getElementsByTagName("DOCTYPE").item(k).getTextContent()).trim() + "]]></DATA17>");
+
+              resultXML.append("<DATA99><![CDATA[" + makeListField(docXML.getElementsByTagName("FORMNAME").item(k).getTextContent()) + "]]></DATA99>");
+
+              /* 2023-06-26 민지수 - 추가의견 존재 여부 저장 (TRUE, FALSE) */
+              resultXML.append("<ADDOPINION>" + opinionAddGB + "</ADDOPINION>");
+              resultXML.append("<HASOPINIONYN>" + hasopinionYn + "</HASOPINIONYN>");
+
+              if (docXML.getElementsByTagName("DOCSTATE").item(k).getTextContent().equals("011")) {
+                  resultXML.append("<DATA19><![CDATA[" + makeListField(docXML.getElementsByTagName("ORGUSERID").item(k).getTextContent()) + "]]></DATA19>");
+                  resultXML.append("<DATA20></DATA20>");
+              }
+          }
 				
 				if (fieldName.toUpperCase().equals("ATTACHFLAG")) {
 					resultXML.append("<HASATTACHYN>" + docXML.getElementsByTagName("ATTACHFLAG").item(k).getTextContent() + "</HASATTACHYN>");
