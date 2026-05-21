@@ -1762,8 +1762,11 @@ public class EzNewPortalServiceImpl extends EgovAbstractServiceImpl implements E
 	@Override
 	public void updateCompanyLogo(String companyId, int tenantId, String logoType, String logoUrl) {
 		logger.debug("updateCompanyLogo started.");
+
+		String targetCompanyId = (logoType.equals("L") || logoType.equals("B") || logoType.equals("ML"))? String.valueOf(tenantId) : companyId;
+		
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("companyId", companyId);
+		map.put("companyId", targetCompanyId);
 		map.put("tenantId", tenantId);
 		map.put("logoType", logoType);
 		map.put("logoUrl", logoUrl);
@@ -1810,9 +1813,12 @@ public class EzNewPortalServiceImpl extends EgovAbstractServiceImpl implements E
 	@Override
 	public void deleteCompanyLogo(String companyId, int tenantId, String logoType) {
 		logger.debug("deleteCompanyLogo started.");
+
+		String targetCompanyId = (logoType.equals("L") || logoType.equals("B") || logoType.equals("ML"))? String.valueOf(tenantId) : companyId;
+		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("logoType", logoType);
-		map.put("companyId", companyId);
+		map.put("companyId", targetCompanyId);
 		map.put("tenantId", tenantId);
 		
 		ezNewPortalDAO.deleteCompanyLogo(map);

@@ -235,6 +235,7 @@
         <mvc:interceptor>            
             <mvc:mapping path="/mobile/**"/>
             <mvc:mapping path="/rest/**"/>
+			<mvc:mapping path="/api/**"/>
             <mvc:exclude-mapping path="/rest/ezwebfolder/**"/>
             <mvc:exclude-mapping path="/rest/ezwebfolderadmin/**"/>
 			<mvc:exclude-mapping path="/rest/MenuSchedule"/>

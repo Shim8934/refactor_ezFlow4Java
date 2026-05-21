@@ -787,7 +787,7 @@
 	            }
 		    }
 		    function btn_Modify_Onclick() {
-		        if (Write_FG != "true" && gubun != "2") {
+		        if ((Write_FG != "true" && Delete_FG != "true") && gubun != "2") {
 		            alert("<spring:message code='ezBoard.t304' />");
 		            return;
 		        }

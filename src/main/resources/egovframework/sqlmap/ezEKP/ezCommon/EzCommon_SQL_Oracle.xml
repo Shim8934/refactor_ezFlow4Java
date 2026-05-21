@@ -9178,7 +9178,7 @@
         INTO TBL_TENANT_CONFIG
         (TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)
         VALUES
-        (0, 'ERRORCLASS', 'EzApproval', '에러로그 발생 클래스 구분자 ;', '에러 발생 클래스명',
+        (0, 'ERRORCLASS', 'EzApproval', '에러로그 발생 클래스 구분자  | 전체로그 확인시 ALL', '에러 발생 클래스명',
         TO_DATE('2026-04-10 00:00:00','YYYY-MM-DD HH24:MI:SS'), '전자결재')
         INTO TBL_TENANT_CONFIG
         (TENANT_ID, PROPERTY_NAME, PROPERTY_VALUE, DESCRIPTION, CONFIG_NAME, REGDATE, CONFIG_TYPE)

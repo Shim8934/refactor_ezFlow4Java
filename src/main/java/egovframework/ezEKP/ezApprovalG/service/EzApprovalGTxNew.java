@@ -10,8 +10,10 @@ import org.springframework.stereotype.Service;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 /**
  * 트랜잭션(Tx) REQUIRES_NEW 정책을 위한 클래스
@@ -64,22 +66,22 @@ public class EzApprovalGTxNew {
             StringWriter sw = new StringWriter();
             PrintWriter pw = new PrintWriter(sw);
             String errorClass = ezCommonService.getTenantConfig("errorClass", 0);
-            String[] sp = errorClass.split(";");
             if(errorClass.contains("ALL"))
                 ex.printStackTrace(pw);
-            else{
-                for (StackTraceElement element : ex.getStackTrace()) {
-                    String line = element.toString();
-                    for(String s : sp){
-                        if (!s.isEmpty() && line.contains(s)){
-                            pw.println(line);
-                            break;
-                        }
-                    }
-                }
+            else if(!errorClass.isEmpty()){
+                Pattern pattern = Pattern.compile(errorClass);
+
+                // 2. Stream을 이용한 필터링 및 출력
+                Arrays.stream(ex.getStackTrace())
+                        .map(StackTraceElement::toString)
+                        .filter(line -> pattern.matcher(line).find())
+                        .forEach(pw::println);
             }
             String error = sw.toString();
-            map.put("message",ex.getMessage());
+            if(error.isEmpty())
+                return;
+            
+            map.put("message",ex.getMessage() == null ? ex.toString() : ex.getMessage());
             map.put("error",error);
 
             ezCommonService.insertErrorLog(map);

@@ -772,6 +772,32 @@
 		        		if (pDraftFlag == "REDRAFT") {
 		        			compareDocDateCurDate();
 		        		}
+		        		
+		        		
+                        if (ListType == "21" && pDraftFlag == "REDRAFT") {
+                            
+                            // 임시보관문서 재기안 시 양식 접근 권한 체크
+                            $.ajax({
+                                type : "POST",
+                                dataType : "text",
+                                async : false,
+                                url : "/ezApprovalG/checkAccessFormCont.do",
+                                data : {
+                                    formID : pFormID
+                                },
+                                success : function(result) {
+                                    chkDocExist = result;
+                                },
+                                error : function(e) {
+                                   console.log(e);
+                                }
+                            });
+                            
+                            if ("N" == chkDocExist) {
+                                OpenAlertUI("<spring:message code='ezApprovalG.kyj03' arguments='" + arr_userinfo[5] + "'/>");
+                                return;
+                            }
+                        }
 		        	
 			        	var result = "";
 			        	

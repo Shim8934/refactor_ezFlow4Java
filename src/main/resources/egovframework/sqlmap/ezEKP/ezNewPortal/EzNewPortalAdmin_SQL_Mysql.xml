@@ -790,7 +790,6 @@
 	</update>
 	
 	<update id="ezNewPortal.updateCompanyLogo" parameterClass="Map">
-		<isEqual property="logoType" compareValue="P">
 		<![CDATA[
 			INSERT INTO TBL_PORTAL_LOGO
 				(company_id, tenant_id, logo_type, logo_url)
@@ -799,47 +798,6 @@
 			ON DUPLICATE KEY UPDATE
 				logo_url = #logoUrl#
 		]]>
-		</isEqual>
-		<isEqual property="logoType" compareValue="L">
-		<![CDATA[
-			INSERT INTO TBL_PORTAL_LOGO
-				(company_id, tenant_id, logo_type, logo_url)
-			VALUES
-				(#tenantId#, #tenantId#, #logoType#, #logoUrl#)
-			ON DUPLICATE KEY UPDATE
-				logo_url = #logoUrl#
-		]]>
-		</isEqual>
-		<isEqual property="logoType" compareValue="D">
-		<![CDATA[
-			INSERT INTO TBL_PORTAL_LOGO
-				(company_id, tenant_id, logo_type, logo_url)
-			VALUES
-				(#companyId#, #tenantId#, #logoType#, #logoUrl#)
-			ON DUPLICATE KEY UPDATE
-				logo_url = #logoUrl#
-		]]>
-		</isEqual>
-		<isEqual property="logoType" compareValue="ML">
-		<![CDATA[
-			INSERT INTO TBL_PORTAL_LOGO
-				(company_id, tenant_id, logo_type, logo_url)
-			VALUES
-				(#tenantId#, #tenantId#, #logoType#, #logoUrl#)
-			ON DUPLICATE KEY UPDATE
-				logo_url = #logoUrl#
-		]]>
-		</isEqual>
-		<isEqual property="logoType" compareValue="MP">
-		<![CDATA[
-			INSERT INTO TBL_PORTAL_LOGO
-				(company_id, tenant_id, logo_type, logo_url)
-			VALUES
-				(#companyId#, #tenantId#, #logoType#, #logoUrl#)
-			ON DUPLICATE KEY UPDATE
-				logo_url = #logoUrl#
-		]]>
-		</isEqual>
 	</update>
 	
 	<select id="ezNewPortal.getCompanyLogoList" parameterClass="Map" resultClass="PortalLogoVO">
@@ -945,27 +903,9 @@
 			tenant_id = #tenantId#
 		AND
 			logo_type = #logoType#
-	]]>
-	<isEqual property="logoType" compareValue="L">
-	<![CDATA[
 		AND
-			company_id = #tenantId#
+			company_id = #companyId#
 	]]>
-	</isEqual>
-	<isNotEqual property="logoType" compareValue="L">
-		<isEqual property="logoType" compareValue="ML">
-		<![CDATA[
-			AND
-				company_id = #tenantId#
-		]]>
-		</isEqual>
-		<isNotEqual property="logoType" compareValue="ML">
-		<![CDATA[
-			AND
-				company_id = #companyId#
-		]]>
-		</isNotEqual>
-	</isNotEqual>
 	</delete>
 	
 	<!-- 권한 관련 추가/삭제 -->

@@ -680,6 +680,31 @@
                 	OpenAlertUI("외부발송문서 총 용량은 최대 7.4MB 입니다." + "<br>" + currIdx + "<spring:message code='ezApprovalG.HSBDa04_1'/> " + "첨부파일이나 본문용량을 줄여주시기 바랍니다.");
                     return;
                 }
+                
+                // 임시보관문서 재기안 시 양식 접근 권한 체크
+                if (pDraftFlag == "REDRAFT" && ListType == "21") {
+                    var resultChk = "";
+                    $.ajax({
+                        type : "POST",
+                        dataType : "text",
+                        async : false,
+                        url : "/ezApprovalG/checkAccessFormCont.do",
+                        data : {
+                            formID : pFormIDAry[currIdx]
+                        },
+                        success : function(result) {
+                            resultChk = result;
+                        },
+                        error : function(e) {
+                           console.log(e);
+                        }
+                    });
+                    
+                    if ("N" == resultChk) {
+                        OpenAlertUI("<spring:message code='ezApprovalG.kyj02' arguments='" + arr_userinfo[5] + ", " + currIdx + "'/>");
+                        return;
+                    }
+                }
 
                 bAttachProcess = false;
 

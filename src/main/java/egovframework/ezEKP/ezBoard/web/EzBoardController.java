@@ -4813,8 +4813,16 @@ public class EzBoardController extends EzFileMngUtil{
 		String newGuid = UUID.randomUUID().toString();
 		BoardPropertyVO boardInfo = getBoardInfo(boardID, userInfo);
 		
-		if (boardInfo.getWrite_FG() != null && boardInfo.getWrite_FG().equals("false")) {
-			return "main/warning";
+		if (mode != null && mode.equals("reply")) {
+			if (boardInfo.getReply_FG() != null && boardInfo.getReply_FG().equals("false")) {
+				return "main/warning";
+			}
+		}
+		else {
+			if ((boardInfo.getWrite_FG() != null && boardInfo.getWrite_FG().equals("false"))  &&
+					(boardInfo.getDelete_FG() != null && boardInfo.getDelete_FG().equals("false"))) {
+				return "main/warning";
+			}
 		}
 		
 		String guBun = boardInfo.getGuBun();

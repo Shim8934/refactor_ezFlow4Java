@@ -1012,6 +1012,13 @@ public class CommonUtil {
 			return result;
 		}
 
+		// DB 세션 사용 설정 상황에서 UUID가 아닌 기존 로그인 쿠키 형식의 값이 들어오면 세션 만료와 같이 처리함
+		if ("YES".equalsIgnoreCase(config.getProperty("config.UseDbSession")) && loginCookie.getValue().length() != 36) {
+			result = "1";
+
+			return result;
+		}
+		
 		try {
 			String ip = ClientUtil.getClientIP(request);
 			String decryptedLoginCookie = getDecryptedLoginCookie(loginCookie.getValue());

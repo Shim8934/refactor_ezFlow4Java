@@ -4155,4 +4155,8 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
     public String getDocDeptPath(Map<String, Object> map) {
         return (String) select("EzApprovalG.getDocDeptPath", map);
     }
+
+	public int checkAccessFormCont(Map<String, Object> map)  throws Exception {
+		return (int) select("EzApprovalG.checkAccessFormCont", map);
+	}
 }

@@ -3374,9 +3374,11 @@ public class EzNewPortalGWController {
 			String loginLogoUrl = "";
 			String portalLogoUrl = "";
 			String darkLogoUrl = "";
+			String loginBannerUrl = "";
 			boolean loginLogoUrlDefault = true;
 			boolean portalLogoUrlDefault = true;
 			boolean darkLogoUrlDefault = true;
+			boolean loginBannerUrlDefault = true;
 			
 			// 2025-03-07 황인경 - 관리자 > 포탈 > 모바일포탈관리 > 로고관리
 			String mobileChk = "N";
@@ -3394,6 +3396,7 @@ public class EzNewPortalGWController {
 					loginLogoUrl = ezNewPortalService.getPortalLogoInfo(null, tenantId, "L");
 					portalLogoUrl = ezNewPortalService.getPortalLogoInfo(companyId, tenantId, "P");
 					darkLogoUrl = ezNewPortalService.getPortalLogoInfo(companyId, tenantId, "D");
+					loginBannerUrl = ezNewPortalService.getPortalLogoInfo(null, tenantId, "B");
 				} else { // 모바일
 					mLoginLogoUrl = ezNewPortalService.getPortalLogoInfo(null, tenantId, "ML");
 					mPortalLogoUrl = ezNewPortalService.getPortalLogoInfo(companyId, tenantId, "MP");
@@ -3422,6 +3425,14 @@ public class EzNewPortalGWController {
 			} else {
 				darkLogoUrl = commonUtil.getUploadPath("upload_newPortal.ROOT", tenantId) + commonUtil.separator + "uploadFile" + commonUtil.separator + darkLogoUrl;
 				darkLogoUrlDefault = false;
+			}
+
+			if (loginBannerUrl == null || loginBannerUrl.equals("")) {
+				loginBannerUrl = "/images/kr/login/login_img1.png";
+				loginBannerUrlDefault = true;
+			} else {
+				loginBannerUrl = commonUtil.getUploadPath("upload_newPortal.ROOT", tenantId) + commonUtil.separator + "uploadFile" + commonUtil.separator + loginBannerUrl;
+				loginBannerUrlDefault = false;
 			}
 			
 			if (mLoginLogoUrl == null || mLoginLogoUrl.equals("")) {
@@ -3462,6 +3473,13 @@ public class EzNewPortalGWController {
 				darkLogo.setLogoDefault(darkLogoUrlDefault);
 
 				logoList.add(darkLogo);
+
+				PortalLogoVO loginBanner = new PortalLogoVO();
+				loginBanner.setLogoType("B");
+				loginBanner.setLogoUrl(loginBannerUrl);
+				loginBanner.setLogoDefault(loginBannerUrlDefault);
+
+				logoList.add(loginBanner);
 			} else { // 모바일
 				PortalLogoVO mLoginLogo = new PortalLogoVO();
 				mLoginLogo.setLogoType("ML");

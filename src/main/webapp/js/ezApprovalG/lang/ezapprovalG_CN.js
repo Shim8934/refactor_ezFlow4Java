@@ -1235,3 +1235,5 @@ var strLangDashBoard01 = "批准";
 
 var strLangJIH_ChkRecvnum1 = "请仅指定一个 receiptnumber 字段。";
 var strLangJIH_ChkRecvnum2 = "未指定 receiptnumber 字段。请指定。";
+
+var strLangKYJ01 = "다른 결재자에 의해 의견이 변경되었습니다. 의견창을 다시 열어주십시오.";

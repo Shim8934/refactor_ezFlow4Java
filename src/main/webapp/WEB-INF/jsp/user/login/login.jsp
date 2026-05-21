@@ -586,7 +586,7 @@
 	</head>	
 	<body class="login_body" onload="fnInit()">
 		<div class="login_wrapper">
-			<div class="login_backImg">
+			<div class="login_backImg" style="background-image: url(<c:out value='${banner}' />);"> 
 				<c:if test="${guestPermitYN eq 'YES' && showGuestBoardYN eq 'YES'}">
 					<div class="contents_guestBoardList">
 						<dl class="contents_tabGuestBoard">

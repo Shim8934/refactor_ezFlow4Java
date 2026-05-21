@@ -41137,4 +41137,15 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
         logger.debug("getViewDocInfo ended.");
         return docInfo;
     }
+    
+    @Override
+    public String checkAccessFormCont(String formID, String deptID, String companyID, int tenantID) throws Exception {
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("companyID", companyID);
+        map.put("v_DEPTID", deptID);
+        map.put("v_FORMID", formID);
+        map.put("v_TENANTID", tenantID);
+        int resultCnt = ezApprovalGDAO.checkAccessFormCont(map);
+        return resultCnt > 0 ? "Y" : "N";
+    }
 }

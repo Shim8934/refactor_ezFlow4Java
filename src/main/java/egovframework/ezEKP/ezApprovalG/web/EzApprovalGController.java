@@ -15119,4 +15119,18 @@ public class EzApprovalGController extends EzFileMngUtil{
         logger.debug("viewChk ended.");
         return pass;
     }
+
+	@RequestMapping(value = "/ezApprovalG/checkAccessFormCont.do", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
+	@ResponseBody
+	public String checkAccessFormCont(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception {
+		logger.debug("checkAccessFormCont started");
+
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+		String formID = request.getParameter("formID");
+
+		String rtnValue = ezApprovalGService.checkAccessFormCont(formID, userInfo.getDeptID(), userInfo.getCompanyID(), userInfo.getTenantId());
+
+		logger.debug("checkAccessFormCont ended");
+		return rtnValue;
+	}
 }

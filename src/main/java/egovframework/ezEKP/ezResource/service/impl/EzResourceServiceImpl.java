@@ -4521,7 +4521,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 					Document xmlDom2 = commonUtil.convertStringToDocument(retVal);
 					for (int j=0; j<xmlDom2.getDocumentElement().getChildNodes().getLength(); j++) {
 						// 허가되지 않은 자원의 리스트는 skip 비승인0 승인1 
-						if(xmlDom2.getElementsByTagName("approveFlag").item(j).getTextContent().equals("0")) continue;
+						if(xmlDom2.getElementsByTagName("approveFlag").item(j).getTextContent().equals("0") || xmlDom2.getElementsByTagName("approveFlag").item(j).getTextContent().equals("2")) continue;
 						String sDate = xmlDom2.getElementsByTagName("dtstart").item(j).getTextContent().substring(11, 16);
 						String eDate = xmlDom2.getElementsByTagName("dtend").item(j).getTextContent().substring(11, 16);
 						String num   = xmlDom2.getElementsByTagName("number").item(j).getTextContent();
