@@ -17,7 +17,8 @@
   3. 재시도 없음, 한 건 실패(insertNotifyItem 등)가 `throws Exception` 전파 시 이후 수신자 발송 중단 + 롤백.
 - **동작 보존 주의(배치/이동 시)**: `insertNotifyItem` seq 채번값이 실제 INSERT에 미사용되는 기존 quirk 유지, `getGroupDocSN` 그룹문서 조기 return 분기 수신자별 재평가, 알림 도착 순서.
 - **미정밀 확인**: `doApprove` 16940~16960 `for m` 합의 루프 내 sendMsg fan-out 가능성, `doProcess`의 docID 콤마분해 외곽 N배수.
-- **개선 방향 (후속/협의)**: (a) 타임아웃 추가(저비용 고효과, 공유 메서드 영향 확인 후) (b) 알림을 트랜잭션 커밋 후로 분리(P6) (c) 배치 발송(다건 sqlmap+엔드포인트 신규, 큰 작업).
+- **개선 방향 (후속/협의)**: (a) 타임아웃 추가 ✅ **완료**(commit 54e37dd324, EzEmailUtil.getWebServiceResult, config `webservice.connectTimeout`/`webservice.readTimeout` 외부화, 기본 5s/10s) (b) 알림을 트랜잭션 커밋 후로 분리(P6, 미처리) (c) 배치 발송(다건 sqlmap+엔드포인트 신규, 큰 작업, 미처리).
+- **타임아웃 동명 중복 미처리분(후속 후보)**: `getWebServiceResult`가 `EzNotificationScheduler`(~121), `LoginServiceImpl`(~644), `EzEmailScheduler.getWebServiceResultForGw`(~1655)에도 별도 정의됨 — 동일 무타임아웃. 일관 적용 검토.
 
 ---
 
