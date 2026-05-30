@@ -5098,12 +5098,13 @@ Map<String, String> rowData = indexRowElements(taskMidRowList.item(k));
 		}
 		resultXML.append("</HEADERS>");
 		
-		int dlength = docXML.getElementsByTagName("ROW").getLength();
+		NodeList simpleCabRowList = docXML.getElementsByTagName("ROW"); int dlength = simpleCabRowList.getLength();
 		String primaryData = commonUtil.getPrimaryData(langType, tenantID);
 		
 		resultXML.append("<ROWS>");
 		
 		for (int k = 0; k < dlength; k++) {
+Map<String, String> rowData = indexRowElements(simpleCabRowList.item(k));
 			resultXML.append("<ROW>");
 
             // 2024-06-12 전인하 - 전자결재G > 기록물관리 > 기록물철인계 > 기록물철 리스트 호출 시 생산연도, 단위업무 정보 함께 호출
@@ -5111,25 +5112,25 @@ Map<String, String> rowData = indexRowElements(taskMidRowList.item(k));
                 resultXML.append("<CELL>");
                 if (i == 0) {
                     if (primaryData.equals("1")) {
-                        resultXML.append("<VALUE><![CDATA[" + makeListField(docXML.getElementsByTagName("TITLE").item(k).getTextContent()) + "]]></VALUE>");
+                        resultXML.append("<VALUE><![CDATA[" + makeListField(rowData.get("TITLE")) + "]]></VALUE>");
                     } else {
-                        resultXML.append("<VALUE><![CDATA[" + makeListField(docXML.getElementsByTagName("TITLE2").item(k).getTextContent()) + "]]></VALUE>");
+                        resultXML.append("<VALUE><![CDATA[" + makeListField(rowData.get("TITLE2")) + "]]></VALUE>");
                     }
-                    resultXML.append("<DATA1><![CDATA[" + makeListField(docXML.getElementsByTagName("CABINETID").item(k).getTextContent().trim()) + "]]></DATA1>");
-                    resultXML.append("<DATA2><![CDATA[" + makeListField(docXML.getElementsByTagName("TASKCODE").item(k).getTextContent()) + "]]></DATA2>");
-                    resultXML.append("<DATA3><![CDATA[" + makeListField(docXML.getElementsByTagName("CABINETCLASSNO").item(k).getTextContent().trim()) + "]]></DATA3>");
-                    resultXML.append("<DATA4><![CDATA[" + makeListField(docXML.getElementsByTagName("OWNERID").item(k).getTextContent().trim()) + "]]></DATA4>");
-                    resultXML.append("<DATA5><![CDATA[" + makeListField(docXML.getElementsByTagName("TITLE").item(k).getTextContent()) + "]]></DATA5>");
-                    resultXML.append("<DATA6><![CDATA[" + makeListField(docXML.getElementsByTagName("TITLE2").item(k).getTextContent()) + "]]></DATA6>");
-                    resultXML.append("<DATA7><![CDATA[" + makeListField(docXML.getElementsByTagName("PRODUCTIONYEAR").item(k).getTextContent()) + "]]></DATA7>");
+                    resultXML.append("<DATA1><![CDATA[" + makeListField(rowData.get("CABINETID").trim()) + "]]></DATA1>");
+                    resultXML.append("<DATA2><![CDATA[" + makeListField(rowData.get("TASKCODE")) + "]]></DATA2>");
+                    resultXML.append("<DATA3><![CDATA[" + makeListField(rowData.get("CABINETCLASSNO").trim()) + "]]></DATA3>");
+                    resultXML.append("<DATA4><![CDATA[" + makeListField(rowData.get("OWNERID").trim()) + "]]></DATA4>");
+                    resultXML.append("<DATA5><![CDATA[" + makeListField(rowData.get("TITLE")) + "]]></DATA5>");
+                    resultXML.append("<DATA6><![CDATA[" + makeListField(rowData.get("TITLE2")) + "]]></DATA6>");
+                    resultXML.append("<DATA7><![CDATA[" + makeListField(rowData.get("PRODUCTIONYEAR")) + "]]></DATA7>");
                 } else {
                     String tagName = listXML.getElementsByTagName("COLNAME").item(i).getTextContent();
                     if (tagName.equals("RECTYPECODE")) {
-                        resultXML.append("<VALUE><![CDATA[" + getRecordTypeString(makeListField(docXML.getElementsByTagName(tagName).item(k).getTextContent()), companyID, langType, tenantID) + "]]></VALUE>");
+                        resultXML.append("<VALUE><![CDATA[" + getRecordTypeString(makeListField(rowData.get(tagName)), companyID, langType, tenantID) + "]]></VALUE>");
                     } else if (tagName.equals("TASKNAME")) {
-                        resultXML.append("<VALUE><![CDATA[" + makeListField(docXML.getElementsByTagName(tagName).item(k).getTextContent()) +"("+ makeListField(docXML.getElementsByTagName("TASKCODE").item(k).getTextContent()) + ")]]></VALUE>");
+                        resultXML.append("<VALUE><![CDATA[" + makeListField(rowData.get(tagName)) +"("+ makeListField(rowData.get("TASKCODE")) + ")]]></VALUE>");
                     } else {
-                        resultXML.append("<VALUE><![CDATA[" + makeListField(docXML.getElementsByTagName(tagName).item(k).getTextContent()) + "]]></VALUE>");
+                        resultXML.append("<VALUE><![CDATA[" + makeListField(rowData.get(tagName)) + "]]></VALUE>");
                     }
                 }
                 resultXML.append("</CELL>");
@@ -10999,20 +11000,21 @@ Map<String, String> rowData = indexRowElements(attachFileRowList.item(k));
 		
 		resultXML.append("<CODELIST>");
 		
-		int dlength = docXML.getElementsByTagName("ROW").getLength();
+		NodeList codeInfoRowList = docXML.getElementsByTagName("ROW"); int dlength = codeInfoRowList.getLength();
 		String primaryData = commonUtil.getPrimaryData(lang, tenantID);
 		
 		resultXML.append("<RECORDTYPE>");
 		for (int k = 0; k < dlength; k++) {
-			String strCodeType = docXML.getElementsByTagName("CODETYPE").item(k).getTextContent();
+Map<String, String> rowData = indexRowElements(codeInfoRowList.item(k));
+			String strCodeType = rowData.get("CODETYPE");
 			if (strCodeType.equals("000")) {
 				resultXML.append("<CODE>");
-				resultXML.append("<CODENUM>" + makeListField(docXML.getElementsByTagName("CODE").item(k).getTextContent()) + "</CODENUM>");
+				resultXML.append("<CODENUM>" + makeListField(rowData.get("CODE")) + "</CODENUM>");
 				
 				if (primaryData.equals("1")) {
-					resultXML.append("<DESCRIPTION>" + makeListField(docXML.getElementsByTagName("NAME").item(k).getTextContent()) + "</DESCRIPTION>");
+					resultXML.append("<DESCRIPTION>" + makeListField(rowData.get("NAME")) + "</DESCRIPTION>");
 				} else {
-					resultXML.append("<DESCRIPTION>" + makeListField(docXML.getElementsByTagName("NAME2").item(k).getTextContent()) + "</DESCRIPTION>");
+					resultXML.append("<DESCRIPTION>" + makeListField(rowData.get("NAME2")) + "</DESCRIPTION>");
 				}
 				resultXML.append("</CODE>");
 			}
@@ -11021,15 +11023,16 @@ Map<String, String> rowData = indexRowElements(attachFileRowList.item(k));
 		
 		resultXML.append("<KEEPINGMETHOD>");
 		for (int k = 0; k < dlength; k++) {
-			String strCodeType = docXML.getElementsByTagName("CODETYPE").item(k).getTextContent();
+Map<String, String> rowData = indexRowElements(codeInfoRowList.item(k));
+			String strCodeType = rowData.get("CODETYPE");
 			if (strCodeType.equals("001")) {
 				resultXML.append("<CODE>");
-				resultXML.append("<CODENUM>" + makeListField(docXML.getElementsByTagName("CODE").item(k).getTextContent()) + "</CODENUM>");
+				resultXML.append("<CODENUM>" + makeListField(rowData.get("CODE")) + "</CODENUM>");
 				
 				if (primaryData.equals("1")) {
-					resultXML.append("<DESCRIPTION>" + makeListField(docXML.getElementsByTagName("NAME").item(k).getTextContent()) + "</DESCRIPTION>");
+					resultXML.append("<DESCRIPTION>" + makeListField(rowData.get("NAME")) + "</DESCRIPTION>");
 				} else {
-					resultXML.append("<DESCRIPTION>" + makeListField(docXML.getElementsByTagName("NAME2").item(k).getTextContent()) + "</DESCRIPTION>");
+					resultXML.append("<DESCRIPTION>" + makeListField(rowData.get("NAME2")) + "</DESCRIPTION>");
 				}
 				resultXML.append("</CODE>");
 			}
@@ -11038,15 +11041,16 @@ Map<String, String> rowData = indexRowElements(attachFileRowList.item(k));
 		
 		resultXML.append("<KEEPINGPLACE>");
 		for (int k = 0; k < dlength; k++) {
-			String strCodeType = docXML.getElementsByTagName("CODETYPE").item(k).getTextContent();
+Map<String, String> rowData = indexRowElements(codeInfoRowList.item(k));
+			String strCodeType = rowData.get("CODETYPE");
 			if (strCodeType.equals("002")) {
 				resultXML.append("<CODE>");
-				resultXML.append("<CODENUM>" + makeListField(docXML.getElementsByTagName("CODE").item(k).getTextContent()) + "</CODENUM>");
+				resultXML.append("<CODENUM>" + makeListField(rowData.get("CODE")) + "</CODENUM>");
 				
 				if (primaryData.equals("1")) {
-					resultXML.append("<DESCRIPTION>" + makeListField(docXML.getElementsByTagName("NAME").item(k).getTextContent()) + "</DESCRIPTION>");
+					resultXML.append("<DESCRIPTION>" + makeListField(rowData.get("NAME")) + "</DESCRIPTION>");
 				} else {
-					resultXML.append("<DESCRIPTION>" + makeListField(docXML.getElementsByTagName("NAME2").item(k).getTextContent()) + "</DESCRIPTION>");
+					resultXML.append("<DESCRIPTION>" + makeListField(rowData.get("NAME2")) + "</DESCRIPTION>");
 				}
 				resultXML.append("</CODE>");
 			}
@@ -11055,15 +11059,16 @@ Map<String, String> rowData = indexRowElements(attachFileRowList.item(k));
 		
 		resultXML.append("<REGISTERTYPE>");
 		for (int k = 0; k < dlength; k++) {
-			String strCodeType = docXML.getElementsByTagName("CODETYPE").item(k).getTextContent();
+Map<String, String> rowData = indexRowElements(codeInfoRowList.item(k));
+			String strCodeType = rowData.get("CODETYPE");
 			if (strCodeType.equals("003")) {
 				resultXML.append("<CODE>");
-				resultXML.append("<CODENUM>" + makeListField(docXML.getElementsByTagName("CODE").item(k).getTextContent()) + "</CODENUM>");
+				resultXML.append("<CODENUM>" + makeListField(rowData.get("CODE")) + "</CODENUM>");
 				
 				if (primaryData.equals("1")) {
-					resultXML.append("<DESCRIPTION>" + makeListField(docXML.getElementsByTagName("NAME").item(k).getTextContent()) + "</DESCRIPTION>");
+					resultXML.append("<DESCRIPTION>" + makeListField(rowData.get("NAME")) + "</DESCRIPTION>");
 				} else {
-					resultXML.append("<DESCRIPTION>" + makeListField(docXML.getElementsByTagName("NAME2").item(k).getTextContent()) + "</DESCRIPTION>");
+					resultXML.append("<DESCRIPTION>" + makeListField(rowData.get("NAME2")) + "</DESCRIPTION>");
 				}
 				resultXML.append("</CODE>");
 			}
@@ -11072,15 +11077,16 @@ Map<String, String> rowData = indexRowElements(attachFileRowList.item(k));
 		
 		resultXML.append("<KEEPINGPERIOD>");
 		for (int k = 0; k < dlength; k++) {
-			String strCodeType = docXML.getElementsByTagName("CODETYPE").item(k).getTextContent();
+Map<String, String> rowData = indexRowElements(codeInfoRowList.item(k));
+			String strCodeType = rowData.get("CODETYPE");
 			if (strCodeType.equals("004")) {
 				resultXML.append("<CODE>");
-				resultXML.append("<CODENUM>" + makeListField(docXML.getElementsByTagName("CODE").item(k).getTextContent()) + "</CODENUM>");
+				resultXML.append("<CODENUM>" + makeListField(rowData.get("CODE")) + "</CODENUM>");
 				
 				if (primaryData.equals("1")) {
-					resultXML.append("<DESCRIPTION>" + makeListField(docXML.getElementsByTagName("NAME").item(k).getTextContent()) + "</DESCRIPTION>");
+					resultXML.append("<DESCRIPTION>" + makeListField(rowData.get("NAME")) + "</DESCRIPTION>");
 				} else {
-					resultXML.append("<DESCRIPTION>" + makeListField(docXML.getElementsByTagName("NAME2").item(k).getTextContent()) + "</DESCRIPTION>");
+					resultXML.append("<DESCRIPTION>" + makeListField(rowData.get("NAME2")) + "</DESCRIPTION>");
 				}
 				resultXML.append("</CODE>");
 			}
@@ -11089,15 +11095,16 @@ Map<String, String> rowData = indexRowElements(attachFileRowList.item(k));
 		
 		resultXML.append("<SPECIALRECORD>");
 		for (int k = 0; k < dlength; k++) {
-			String strCodeType = docXML.getElementsByTagName("CODETYPE").item(k).getTextContent();
+Map<String, String> rowData = indexRowElements(codeInfoRowList.item(k));
+			String strCodeType = rowData.get("CODETYPE");
 			if (strCodeType.equals("005")) {
 				resultXML.append("<CODE>");
-				resultXML.append("<CODENUM>" + makeListField(docXML.getElementsByTagName("CODE").item(k).getTextContent()) + "</CODENUM>");
+				resultXML.append("<CODENUM>" + makeListField(rowData.get("CODE")) + "</CODENUM>");
 				
 				if (primaryData.equals("1")) {
-					resultXML.append("<DESCRIPTION>" + makeListField(docXML.getElementsByTagName("NAME").item(k).getTextContent()) + "</DESCRIPTION>");
+					resultXML.append("<DESCRIPTION>" + makeListField(rowData.get("NAME")) + "</DESCRIPTION>");
 				} else {
-					resultXML.append("<DESCRIPTION>" + makeListField(docXML.getElementsByTagName("NAME2").item(k).getTextContent()) + "</DESCRIPTION>");
+					resultXML.append("<DESCRIPTION>" + makeListField(rowData.get("NAME2")) + "</DESCRIPTION>");
 				}
 				resultXML.append("</CODE>");
 			}
@@ -11106,15 +11113,16 @@ Map<String, String> rowData = indexRowElements(attachFileRowList.item(k));
 		
 		resultXML.append("<SECURITYLEVEL>");
 		for (int k = 0; k < dlength; k++) {
-			String strCodeType = docXML.getElementsByTagName("CODETYPE").item(k).getTextContent();
+Map<String, String> rowData = indexRowElements(codeInfoRowList.item(k));
+			String strCodeType = rowData.get("CODETYPE");
 			if (strCodeType.equals("006")) {
 				resultXML.append("<CODE>");
-				resultXML.append("<CODENUM>" + makeListField(docXML.getElementsByTagName("CODE").item(k).getTextContent()) + "</CODENUM>");
+				resultXML.append("<CODENUM>" + makeListField(rowData.get("CODE")) + "</CODENUM>");
 				
 				if (primaryData.equals("1")) {
-					resultXML.append("<DESCRIPTION>" + makeListField(docXML.getElementsByTagName("NAME").item(k).getTextContent()) + "</DESCRIPTION>");
+					resultXML.append("<DESCRIPTION>" + makeListField(rowData.get("NAME")) + "</DESCRIPTION>");
 				} else {
-					resultXML.append("<DESCRIPTION>" + makeListField(docXML.getElementsByTagName("NAME2").item(k).getTextContent()) + "</DESCRIPTION>");
+					resultXML.append("<DESCRIPTION>" + makeListField(rowData.get("NAME2")) + "</DESCRIPTION>");
 				}
 				resultXML.append("</CODE>");
 			}
@@ -11123,15 +11131,16 @@ Map<String, String> rowData = indexRowElements(attachFileRowList.item(k));
 		
 		resultXML.append("<RECORDINGAVTYPE>");
 		for (int k = 0; k < dlength; k++) {
-			String strCodeType = docXML.getElementsByTagName("CODETYPE").item(k).getTextContent();
+Map<String, String> rowData = indexRowElements(codeInfoRowList.item(k));
+			String strCodeType = rowData.get("CODETYPE");
 			if (strCodeType.equals("008")) {
 				resultXML.append("<CODE>");
-				resultXML.append("<CODENUM>" + makeListField(docXML.getElementsByTagName("CODE").item(k).getTextContent()) + "</CODENUM>");
+				resultXML.append("<CODENUM>" + makeListField(rowData.get("CODE")) + "</CODENUM>");
 				
 				if (primaryData.equals("1")) {
-					resultXML.append("<DESCRIPTION>" + makeListField(docXML.getElementsByTagName("NAME").item(k).getTextContent()) + "</DESCRIPTION>");
+					resultXML.append("<DESCRIPTION>" + makeListField(rowData.get("NAME")) + "</DESCRIPTION>");
 				} else {
-					resultXML.append("<DESCRIPTION>" + makeListField(docXML.getElementsByTagName("NAME2").item(k).getTextContent()) + "</DESCRIPTION>");
+					resultXML.append("<DESCRIPTION>" + makeListField(rowData.get("NAME2")) + "</DESCRIPTION>");
 				}
 				resultXML.append("</CODE>");
 			}
@@ -11140,15 +11149,16 @@ Map<String, String> rowData = indexRowElements(attachFileRowList.item(k));
 		
 		resultXML.append("<PHOTOAVTYPE>");
 		for (int k = 0; k < dlength; k++) {
-			String strCodeType = docXML.getElementsByTagName("CODETYPE").item(k).getTextContent();
+Map<String, String> rowData = indexRowElements(codeInfoRowList.item(k));
+			String strCodeType = rowData.get("CODETYPE");
 			if (strCodeType.equals("009")) {
 				resultXML.append("<CODE>");
-				resultXML.append("<CODENUM>" + makeListField(docXML.getElementsByTagName("CODE").item(k).getTextContent()) + "</CODENUM>");
+				resultXML.append("<CODENUM>" + makeListField(rowData.get("CODE")) + "</CODENUM>");
 				
 				if (primaryData.equals("1")) {
-					resultXML.append("<DESCRIPTION>" + makeListField(docXML.getElementsByTagName("NAME").item(k).getTextContent()) + "</DESCRIPTION>");
+					resultXML.append("<DESCRIPTION>" + makeListField(rowData.get("NAME")) + "</DESCRIPTION>");
 				} else {
-					resultXML.append("<DESCRIPTION>" + makeListField(docXML.getElementsByTagName("NAME2").item(k).getTextContent()) + "</DESCRIPTION>");
+					resultXML.append("<DESCRIPTION>" + makeListField(rowData.get("NAME2")) + "</DESCRIPTION>");
 				}
 				resultXML.append("</CODE>");
 			}
