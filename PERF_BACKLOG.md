@@ -39,14 +39,33 @@
 - **사유 (미처리)**: 두 단계로 나뉨.
   - **Tier A (Java 레벨, 이번 회차 가능 후보)**: round-trip은 두고, 행 루프 진입 시 해당 ROW의 자식 노드를 `Map<tagName, value>`로 1회 인덱싱 → 셀에서 Map 조회. `getElementsByTagName` 전체스캔 제거. 출력 동일. **사용자 협의 후 처리 가능.**
   - **Tier B (대규모 리팩터, 범위 경계)**: VO→XML→DOM 왕복 자체를 없애고 `apprGRecordVOList` VO에서 직접 읽기. 태그 ~40개가 VO getter와 1:1 매핑되는지·`cleanValue`/`makeListField` 변환 보존 검증 필요. 안전망(mockito) 부재 상태에서 위험 큼 → 후속 회차 권장.
-- **개선 방향**: Tier A 먼저(저위험). 동일 패턴이 `aprDocList`, `getCabinetList` 등 다른 목록 빌더에도 존재 → 공통 헬퍼화 검토.
+- **개선 방향**: Tier A 먼저(저위험). 공통 헬퍼 `indexRowElements(Node)`로 추출.
+- **처리 상태**: ✅ **완료** (commit 0e4a19ad66 getRecordList, 4a3630bce6 헬퍼+aprDocList+getCabinetList). Tier B는 미처리(후속).
 
 ---
 
-## [BL-004] 미정독 목록 메서드 추가 스캔 필요
+## [BL-005] aprDashBoardDocList — aprDocList의 쌍둥이(near-duplicate) 메서드
 
-- **위치**: `getContDocList`, `getSearchDocList*`, `getDeliveryList`, `getUserContList`, `getApproveDocInfo` 등 (본문 미정독)
-- **패턴**: P1/P2/P7/P8 동형 예상
-- **확신도**: 정황 (스캐너 자기검증에서 P1 과소집계 경고)
-- **사유 (미처리)**: 29000줄 파일, 표본만 정독. 동형 "행 루프 안 코드→명칭 / 의견조회 / getElementsByTagName 반복" 다수 존재 개연성 높음.
-- **개선 방향 (후속)**: 메서드 단위 추가 스캔 → 동일 Tier A 패턴 일괄 정리.
+- **위치**: `EzApprovalGServiceImpl.java` `aprDashBoardDocList` (메서드 시작 ~40799, 셀 루프 ~40889~)
+- **패턴**: P7/P8 (getElementsByTagName 셀별 전체 트리 재스캔, 사실상 O(N^2)) — **aprDocList와 동일**
+- **확신도**: 확실
+- **현황**: aprDocList와 셀 렌더링 블록이 거의 동일. `Document docXML = convertStringToDocument(docList); docXML.getElementsByTagName("ROW")...` 라운드트립 + 셀마다 `docXML.getElementsByTagName(TAG).item(k).getTextContent()` 약 31건.
+- **사유 (미처리)**: 이번 회차 범위(aprDocList/getCabinetList)에 포함 안 함. aprDocList 수정 시 동일 코드라 sed 라인범위로 분리 처리했고 쌍둥이는 의도적으로 미변경.
+- **개선 방향 (후속)**: 이미 추출된 `indexRowElements(Node)` 헬퍼를 그대로 적용(aprDocList와 동일 절차). 저위험.
+- **추가 검토**: aprDocList/aprDashBoardDocList는 셀 렌더링이 사실상 동일 → **두 메서드의 공통 본문 추출(중복 제거)** 자체가 별도 리팩터 후보(범위 큼, 별도 회차).
+
+---
+
+## [BL-006] 동형 목록/상세 빌더 Tier A 후보 인벤토리 (스캔 결과)
+
+- **패턴**: `getQueryResult(VO)→convertStringToDocument→셀별 getElementsByTagName().item()` 라운드트립 (P7/P8)
+- **확신도**: 정황 (셀별 item() 호출 수 기준 자동 집계 — 실제 라운드트립 여부는 메서드별 재확인 필요)
+- **셀별 `getElementsByTagName(...).item()` 호출 수 상위 목록 빌더** (이번 회차 미처리분):
+  - `getContDocList` (~40), `makeTaskFullListXml` (~39), `getAttachDocInfo` (~36),
+    `getInnerLineInfo` (~34), `aprDashBoardDocList` (~31, → BL-005), `getAttachFileInfo` (~29),
+    `getContDocListS` (~25), `makeTaskListXmlAll` (~25), `getFindSimpleCabinetListAll` (~25),
+    `getLineInfo` (~25), `getReceiptTempletDetailInfo` (~23), `getAprLineInfo` (~22),
+    `getUserContList` (~22), `getGongRamLineInfo` (~21), `makeTaskListXml` (~47)
+  - (※ `doApprove`(~146), `deleteUserContDoc`(~38) 등은 목록 빌더가 아닌 처리 로직일 수 있어 라운드트립 여부 개별 확인 필요 — 단순 입력 Document 파싱이면 대상 아님)
+- **사유 (미처리)**: 메서드 단위 안전망/검증 필요, 범위 분할.
+- **개선 방향 (후속)**: 메서드별로 ① 라운드트립 여부 확인 → ② `indexRowElements` 헬퍼 적용 (저위험 Tier A) → ③ Java8 빌드 검증. 쉬운 것부터(`getCabinetList`와 구조 유사한 `getFindSimpleCabinetListAll` 등).
