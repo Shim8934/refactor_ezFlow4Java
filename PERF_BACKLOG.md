@@ -68,4 +68,22 @@
     `getUserContList` (~22), `getGongRamLineInfo` (~21), `makeTaskListXml` (~47)
   - (※ `doApprove`(~146), `deleteUserContDoc`(~38) 등은 목록 빌더가 아닌 처리 로직일 수 있어 라운드트립 여부 개별 확인 필요 — 단순 입력 Document 파싱이면 대상 아님)
 - **사유 (미처리)**: 메서드 단위 안전망/검증 필요, 범위 분할.
-- **개선 방향 (후속)**: 메서드별로 ① 라운드트립 여부 확인 → ② `indexRowElements` 헬퍼 적용 (저위험 Tier A) → ③ Java8 빌드 검증. 쉬운 것부터(`getCabinetList`와 구조 유사한 `getFindSimpleCabinetListAll` 등).
+- **개선 방향 (후속)**: 메서드별로 ① 라운드트립 여부 확인 → ② `indexRowElements` 헬퍼 적용 (저위험 Tier A) → ③ Java8 빌드 검증.
+
+### 진행 현황 (Tier A 적용 완료 — 전부 R 라운드트립, Java8 빌드 GREEN)
+- 초기: getRecordList, aprDocList, getCabinetList
+- 배치1: getCirculationinfo, getLineInfo, getAttachInfo, getOpinionInfo, getFormInfo, getFormContainerInfo
+- 배치2: getAprLineInfo, getTempList(5-arg), getLineTempletInfo, getLineTempletDetailInfo, getReceiptTempletInfo
+- 배치3: getTempList(4-arg), getListXML, getTempList2, getTempList3, getTaskCategory, getTaskMiddleCategory
+- 배치4: getUncompleteDocList, getAttachFileInfo, getAttachDocInfo, getHistoryForDoc
+- 배치5: getHistoryForLine, getHistoryForAttach, getHistoryForLineDetail, getGongRamLineInfo, getReceiptHistoryInfo
+- 배치6: getFindSimpleCabinetList, getFindSimpleCabinetListAll
+- **누적 31개 메서드.**
+
+### 남은 hard tail (자동 일괄 부적합 — 개별 정밀 처리 필요)
+- **(P) param-input docXML — 구조 검증 필수**: makeTaskListXml, makeTaskListXmlAll, makeTaskFullListXml, GetRecordInfo, getRecReadHistory, getRecordHistory, getCabinetHistory, getTaskCharger, getCabinetDetailInfo
+  - ⚠️ **핵심 주의**: 이들은 docXML이 호출자 입력 Document. `getElementsByTagName(TAG)`는 문서 전체(자손) 검색인데 `indexRowElements`는 ROW **직계 자식만** 인덱싱. 입력 XML의 ROW 자식이 flat 태그가 아니면(중첩/속성) 결과 불일치 → 적용 전 ROW 구조가 `<ROW><TAG>val</TAG>...</ROW>` flat인지 반드시 확인.
+- **중첩/멀티 루프 (인덱스 i&k, k&p, 2-loop)**: getContDocList, getContDocListS, getUserContList, getUserContListAll, getReceivedDocInfo, aprDashBoardDocList(→BL-005), getDeliveryList(trim 다수, idx j 역순), getReceiptTempletDetailInfo(k&i), getSimpleCabinetList(nested i + trim), getAprType(2-loop 공유 dlength), getCodeInfo(코드타입별 다중 루프), getSignInfo, getTaskSubCategoryAll, getContainerInfoManage(2-loop), getSendOutDocList
+  - 데이터 행 루프의 인덱스 변수를 정확히 식별해 sed 패턴(item(k)/item(j)/item(p)) 매칭 + 헤더/비-docXML 조회는 미변경.
+- **(B) 숫자 childNode 인덱스 — tag-map 부적합, 다른 fix**: gongRamSave, gongRamSaveIng, gongRamSaveEnd, updateOpinionInfo, updateAttachFileInfo, updateOpinionSihangReject, updateAddOpinionInfo, getTotalAttachSize/chkAprLines/chkDeptLines. → ROW NodeList 1회 캐싱 + `rows.item(k).getChildNodes()` 1회로 별도 최적화(숫자 인덱스 유지).
+- **(제외) 부작용 동반 루프**: doApprove(루프 내 sendMsg/setBujaeInfo 등 부작용) — 호출횟수 보존 까다로움, Tier A 대상 아님.
