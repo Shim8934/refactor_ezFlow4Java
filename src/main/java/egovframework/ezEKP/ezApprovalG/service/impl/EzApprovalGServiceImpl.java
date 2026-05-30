@@ -14205,39 +14205,40 @@ Map<String, String> rowData = indexRowElements(histLineDtlRowList.item(k));
 		}
 		resultXML.append("</HEADERS>");
 		
-		int dlength = docXML.getElementsByTagName("ROW").getLength();
+		NodeList findCabRowList = docXML.getElementsByTagName("ROW"); int dlength = findCabRowList.getLength();
 		
 		resultXML.append("<ROWS>");
 		
 		for (int k = 0; k < dlength; k++) {
 			resultXML.append("<ROW>");
+Map<String, String> rowData = indexRowElements(findCabRowList.item(k));
 			resultXML.append("<CELL>");
-			resultXML.append("<VALUE><![CDATA[" + makeListField(docXML.getElementsByTagName("CNAME").item(k).getTextContent()) + "]]></VALUE>");
-			resultXML.append("<DATA1><![CDATA[" + makeListField(docXML.getElementsByTagName("CABINETID").item(k).getTextContent()) + "]]></DATA1>");
-			resultXML.append("<DATA2><![CDATA[" + makeListField(docXML.getElementsByTagName("TASKCODE").item(k).getTextContent()) + "]]></DATA2>");
-			resultXML.append("<DATA3><![CDATA[" + makeListField(docXML.getElementsByTagName("CABINETCLASSNO").item(k).getTextContent()) + "]]></DATA3>");
-			resultXML.append("<DATA4><![CDATA[" + makeListField(docXML.getElementsByTagName("OWNERID").item(k).getTextContent()) + "]]></DATA4>");
+			resultXML.append("<VALUE><![CDATA[" + makeListField(rowData.get("CNAME")) + "]]></VALUE>");
+			resultXML.append("<DATA1><![CDATA[" + makeListField(rowData.get("CABINETID")) + "]]></DATA1>");
+			resultXML.append("<DATA2><![CDATA[" + makeListField(rowData.get("TASKCODE")) + "]]></DATA2>");
+			resultXML.append("<DATA3><![CDATA[" + makeListField(rowData.get("CABINETCLASSNO")) + "]]></DATA3>");
+			resultXML.append("<DATA4><![CDATA[" + makeListField(rowData.get("OWNERID")) + "]]></DATA4>");
 			resultXML.append("</CELL>");
 			resultXML.append("<CELL>");
-			resultXML.append("<VALUE>" + makeListField(docXML.getElementsByTagName("MCNAME").item(k).getTextContent()) + "</VALUE>");
+			resultXML.append("<VALUE>" + makeListField(rowData.get("MCNAME")) + "</VALUE>");
 			resultXML.append("</CELL>");
 			resultXML.append("<CELL>");
-			resultXML.append("<VALUE>" + makeListField(docXML.getElementsByTagName("SCNAME").item(k).getTextContent()) + "</VALUE>");
+			resultXML.append("<VALUE>" + makeListField(rowData.get("SCNAME")) + "</VALUE>");
 			resultXML.append("</CELL>");
 			resultXML.append("<CELL>");
-			resultXML.append("<VALUE><![CDATA[" + makeListField(docXML.getElementsByTagName("TASKNAME").item(k).getTextContent()) + "]]></VALUE>");
+			resultXML.append("<VALUE><![CDATA[" + makeListField(rowData.get("TASKNAME")) + "]]></VALUE>");
 			resultXML.append("</CELL>");
 			resultXML.append("<CELL>");
-			resultXML.append("<VALUE>" + commonUtil.cleanValue(makeListField(docXML.getElementsByTagName("TITLE").item(k).getTextContent())) + "</VALUE>");
+			resultXML.append("<VALUE>" + commonUtil.cleanValue(makeListField(rowData.get("TITLE"))) + "</VALUE>");
 			resultXML.append("</CELL>");
 			resultXML.append("<CELL>");
-			resultXML.append("<VALUE>" + getRecordTypeString(makeListField(docXML.getElementsByTagName("RECTYPECODE").item(k).getTextContent()), companyID, langType, tenantID) + "</VALUE>");
+			resultXML.append("<VALUE>" + getRecordTypeString(makeListField(rowData.get("RECTYPECODE")), companyID, langType, tenantID) + "</VALUE>");
 			resultXML.append("</CELL>");
 			resultXML.append("<CELL>");
-			resultXML.append("<VALUE>" + makeListField(docXML.getElementsByTagName("REGSERIALNO").item(k).getTextContent()) + "</VALUE>");
+			resultXML.append("<VALUE>" + makeListField(rowData.get("REGSERIALNO")) + "</VALUE>");
 			resultXML.append("</CELL>");
 			resultXML.append("<CELL>");
-			resultXML.append("<VALUE>" + makeListField(docXML.getElementsByTagName("VOLUMENO").item(k).getTextContent()) + "</VALUE>");
+			resultXML.append("<VALUE>" + makeListField(rowData.get("VOLUMENO")) + "</VALUE>");
 			resultXML.append("</CELL>");
 			resultXML.append("</ROW>");
 		}
@@ -14305,46 +14306,47 @@ Map<String, String> rowData = indexRowElements(histLineDtlRowList.item(k));
 		}
 		resultXML.append("</HEADERS>");
 		
-		int dlength = docXML.getElementsByTagName("ROW").getLength();
+		NodeList findCabAllRowList = docXML.getElementsByTagName("ROW"); int dlength = findCabAllRowList.getLength();
 		
 		resultXML.append("<ROWS>");
 		
 		for (int k = 0; k < dlength; k++) {
 			resultXML.append("<ROW>");
+Map<String, String> rowData = indexRowElements(findCabAllRowList.item(k));
 			resultXML.append("<CELL>");
-			resultXML.append("<VALUE><![CDATA[" + makeListField(docXML.getElementsByTagName("TITLE").item(k).getTextContent()) + "]]></VALUE>");
-			resultXML.append("<DATA1><![CDATA[" + makeListField(docXML.getElementsByTagName("CABINETID").item(k).getTextContent()) + "]]></DATA1>");
-			resultXML.append("<DATA2><![CDATA[" + makeListField(docXML.getElementsByTagName("TASKCODE").item(k).getTextContent()) + "]]></DATA2>");
-			resultXML.append("<DATA3><![CDATA[" + makeListField(docXML.getElementsByTagName("CABINETCLASSNO").item(k).getTextContent()) + "]]></DATA3>");
-			resultXML.append("<DATA4><![CDATA[" + makeListField(docXML.getElementsByTagName("OWNERID").item(k).getTextContent()) + "]]></DATA4>");
-			resultXML.append("<DATA7><![CDATA[" + makeListField(docXML.getElementsByTagName("TASKCODE").item(k).getTextContent()) + "]]></DATA7>");
-			resultXML.append("<DATA8><![CDATA[" + makeListField(docXML.getElementsByTagName("KEEPINGPERIOD").item(k).getTextContent()) + "]]></DATA8>");
-			resultXML.append("<DATA9><![CDATA[" + makeListField(docXML.getElementsByTagName("TEMPFLAG").item(k).getTextContent()) + "]]></DATA9>");
-			resultXML.append("<DATA10><![CDATA[" + makeListField(docXML.getElementsByTagName("DISPLAYRECFLAG").item(k).getTextContent()) + "]]></DATA10>");
-			resultXML.append("<DATA11><![CDATA[" + makeListField(docXML.getElementsByTagName("SPECIALCATALOGFLAG").item(k).getTextContent()) + "]]></DATA11>");
-			resultXML.append("<DATA12><![CDATA[" + makeListField(docXML.getElementsByTagName("SC1").item(k).getTextContent()) + "]]></DATA12>");
-			resultXML.append("<DATA13><![CDATA[" + makeListField(docXML.getElementsByTagName("SC2").item(k).getTextContent()) + "]]></DATA13>");
-			resultXML.append("<DATA14><![CDATA[" + makeListField(docXML.getElementsByTagName("SC3").item(k).getTextContent()) + "]]></DATA14>");
-			resultXML.append("<DATA15><![CDATA[" + makeListField(docXML.getElementsByTagName("KEEPINGMETHOD").item(k).getTextContent()) + "]]></DATA15>");
-			resultXML.append("<DATA16><![CDATA[" + makeListField(docXML.getElementsByTagName("KEEPINGPLACE").item(k).getTextContent()) + "]]></DATA16>");
-			resultXML.append("<DATA17><![CDATA[" + makeListField(docXML.getElementsByTagName("TASKNAME").item(k).getTextContent()) + "]]></DATA17>");
-			resultXML.append("<DATA18><![CDATA[" + makeListField(docXML.getElementsByTagName("TASKNAME2").item(k).getTextContent()) + "]]></DATA18>");
+			resultXML.append("<VALUE><![CDATA[" + makeListField(rowData.get("TITLE")) + "]]></VALUE>");
+			resultXML.append("<DATA1><![CDATA[" + makeListField(rowData.get("CABINETID")) + "]]></DATA1>");
+			resultXML.append("<DATA2><![CDATA[" + makeListField(rowData.get("TASKCODE")) + "]]></DATA2>");
+			resultXML.append("<DATA3><![CDATA[" + makeListField(rowData.get("CABINETCLASSNO")) + "]]></DATA3>");
+			resultXML.append("<DATA4><![CDATA[" + makeListField(rowData.get("OWNERID")) + "]]></DATA4>");
+			resultXML.append("<DATA7><![CDATA[" + makeListField(rowData.get("TASKCODE")) + "]]></DATA7>");
+			resultXML.append("<DATA8><![CDATA[" + makeListField(rowData.get("KEEPINGPERIOD")) + "]]></DATA8>");
+			resultXML.append("<DATA9><![CDATA[" + makeListField(rowData.get("TEMPFLAG")) + "]]></DATA9>");
+			resultXML.append("<DATA10><![CDATA[" + makeListField(rowData.get("DISPLAYRECFLAG")) + "]]></DATA10>");
+			resultXML.append("<DATA11><![CDATA[" + makeListField(rowData.get("SPECIALCATALOGFLAG")) + "]]></DATA11>");
+			resultXML.append("<DATA12><![CDATA[" + makeListField(rowData.get("SC1")) + "]]></DATA12>");
+			resultXML.append("<DATA13><![CDATA[" + makeListField(rowData.get("SC2")) + "]]></DATA13>");
+			resultXML.append("<DATA14><![CDATA[" + makeListField(rowData.get("SC3")) + "]]></DATA14>");
+			resultXML.append("<DATA15><![CDATA[" + makeListField(rowData.get("KEEPINGMETHOD")) + "]]></DATA15>");
+			resultXML.append("<DATA16><![CDATA[" + makeListField(rowData.get("KEEPINGPLACE")) + "]]></DATA16>");
+			resultXML.append("<DATA17><![CDATA[" + makeListField(rowData.get("TASKNAME")) + "]]></DATA17>");
+			resultXML.append("<DATA18><![CDATA[" + makeListField(rowData.get("TASKNAME2")) + "]]></DATA18>");
 			resultXML.append("</CELL>");
 			resultXML.append("<CELL>");
-			resultXML.append("<VALUE><![CDATA[" + makeListField(docXML.getElementsByTagName("SCNAME").item(k).getTextContent() + "(" + makeListField(docXML.getElementsByTagName("SUBCATEGORYCODE").item(k).getTextContent()) + ")") + "]]></VALUE>");
+			resultXML.append("<VALUE><![CDATA[" + makeListField(rowData.get("SCNAME") + "(" + makeListField(rowData.get("SUBCATEGORYCODE")) + ")") + "]]></VALUE>");
 			resultXML.append("</CELL>");
 			resultXML.append("<CELL>");
-			resultXML.append("<VALUE><![CDATA[" + makeListField(docXML.getElementsByTagName("TASKNAME").item(k).getTextContent() + "(" + makeListField(docXML.getElementsByTagName("TASKCODE").item(k).getTextContent()) + ")") + "]]></VALUE>");
-			resultXML.append("<DATA1><![CDATA[" + makeListField(docXML.getElementsByTagName("SUBCATEGORYCODE").item(k).getTextContent()) + "]]></DATA1>");
+			resultXML.append("<VALUE><![CDATA[" + makeListField(rowData.get("TASKNAME") + "(" + makeListField(rowData.get("TASKCODE")) + ")") + "]]></VALUE>");
+			resultXML.append("<DATA1><![CDATA[" + makeListField(rowData.get("SUBCATEGORYCODE")) + "]]></DATA1>");
 			resultXML.append("</CELL>");
 			resultXML.append("<CELL>");
-			resultXML.append("<VALUE><![CDATA[" + getRecordTypeString(makeListField(docXML.getElementsByTagName("RECTYPECODE").item(k).getTextContent()), companyID, langType, tenantID) + "]]></VALUE>");
+			resultXML.append("<VALUE><![CDATA[" + getRecordTypeString(makeListField(rowData.get("RECTYPECODE")), companyID, langType, tenantID) + "]]></VALUE>");
 			resultXML.append("</CELL>");
 			resultXML.append("<CELL>");
-			resultXML.append("<VALUE>" + makeListField(docXML.getElementsByTagName("REGSERIALNO").item(k).getTextContent()) + "</VALUE>");
+			resultXML.append("<VALUE>" + makeListField(rowData.get("REGSERIALNO")) + "</VALUE>");
 			resultXML.append("</CELL>");
 			resultXML.append("<CELL>");
-			resultXML.append("<VALUE>" + makeListField(docXML.getElementsByTagName("VOLUMENO").item(k).getTextContent()) + "</VALUE>");
+			resultXML.append("<VALUE>" + makeListField(rowData.get("VOLUMENO")) + "</VALUE>");
 			resultXML.append("</CELL>");
 			resultXML.append("</ROW>");
 		}
