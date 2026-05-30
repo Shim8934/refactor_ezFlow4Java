@@ -5,6 +5,22 @@
 
 ---
 
+## [BL-007] sendMsg — 알림 발송 N+1 통신 + HTTP 타임아웃 미설정 + 트랜잭션 점유 (운영 핫스팟)
+
+- **정의**: `EzApprovalGServiceImpl.sendMsg(docID, nextUserID, mode, ...)` (~20853). 단건(수신자 1명) 전제. 1회당 DB SELECT 10여 회 + INSERT 1 + (ezTalk 사용 테넌트면) 외부 HTTP 1회.
+- **외부 HTTP 경로**: `addEzTalkNotification`(EzEmailServiceImpl ~2216) → `getWebServiceResult`(EzEmailUtil ~4225) → `JGwServerURL + /ezTalkGate/addNotification` 로 `HttpURLConnection` POST 동기 1회.
+- **N+1 통신 (fan-out 루프)**: `doSendDoc`(수신처마다 ~19603/19686), `sendRecvMsg`(부서원마다 ~20226, 2차 fan-out, 최대 50명), `doCallBack`(결재선마다 ~22577), `doCancelForce`(~27723), `doSendDocSchedule`(~20201). 수신처 N개 → DB insert N + ezTalk HTTP N.
+- **배치 가능성 — 이번 회차 불가**: sendMsg/insertNotifyItem/addEzTalkNotification 전부 단건 시그니처. **다건 insert sqlmap 없음**(iBATIS, `insertNotifyItem` 단건), **ezTalk 다건 엔드포인트 없음**. 배치하려면 ① 다건 INSERT sqlmap 신규 ② ezTalk 다건 엔드포인트+시그니처 신규 → **SQL/외부 API 신규 = 범위 밖**. CLAUDE.md P1("기존 다건 sqlmap 없으면 후속 회차") 해당.
+- **⚠ 진짜 운영 통증 (지연 발생 시 문제) — 별도 고가치 후보**:
+  1. **HTTP 타임아웃 미설정**: `getWebServiceResult`가 `setConnectTimeout`/`setReadTimeout` 미설정 → ezTalk 지연/무응답 시 무한 대기. fan-out 루프에서 N명 × 무제한 대기 누적. **지연 시 항상 문제됐던 원인 유력.** 단 이 메서드는 알림 외 30여 호출처 공유 → 영향 광범위, 사용자 협의 필요.
+  2. **트랜잭션 점유 중 동기 HTTP**: `context-transaction.xml` pointcut `egovframework.ezEKP..*Impl.*(..)` + `<tx:method name="*">`로 doSendDoc 등이 DB 트랜잭션 연 채 루프 내 동기 ezTalk 호출 → 외부 느리면 DB 커넥션/락 점유. (P6 트랜잭션 경계 — 사용자 확정 필요)
+  3. 재시도 없음, 한 건 실패(insertNotifyItem 등)가 `throws Exception` 전파 시 이후 수신자 발송 중단 + 롤백.
+- **동작 보존 주의(배치/이동 시)**: `insertNotifyItem` seq 채번값이 실제 INSERT에 미사용되는 기존 quirk 유지, `getGroupDocSN` 그룹문서 조기 return 분기 수신자별 재평가, 알림 도착 순서.
+- **미정밀 확인**: `doApprove` 16940~16960 `for m` 합의 루프 내 sendMsg fan-out 가능성, `doProcess`의 docID 콤마분해 외곽 N배수.
+- **개선 방향 (후속/협의)**: (a) 타임아웃 추가(저비용 고효과, 공유 메서드 영향 확인 후) (b) 알림을 트랜잭션 커밋 후로 분리(P6) (c) 배치 발송(다건 sqlmap+엔드포인트 신규, 큰 작업).
+
+---
+
 ## [BL-001] getRecordList — 행당 의견조회 N+1
 
 - **위치**: `EzApprovalGServiceImpl.java:10865-10872` (`getRecordList`)
