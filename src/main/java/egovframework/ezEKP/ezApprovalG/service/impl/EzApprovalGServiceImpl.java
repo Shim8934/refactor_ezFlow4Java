@@ -5703,7 +5703,7 @@ Map<String, String> rowData = indexRowElements(taskMidRowList.item(k));
 		sb.append("</DATA>");
 		
 		Document docXML = commonUtil.convertStringToDocument(sb.toString());
-		int dlength = docXML.getElementsByTagName("ROW").getLength();
+		NodeList uncompleteRowList = docXML.getElementsByTagName("ROW"); int dlength = uncompleteRowList.getLength();
 		
 		StringBuilder rtnXML = new StringBuilder();
 		
@@ -5721,27 +5721,28 @@ Map<String, String> rowData = indexRowElements(taskMidRowList.item(k));
 	
 		rtnXML.append("<ROWS>");
 		for (int k = 0; k < dlength; k++){
+Map<String, String> rowData = indexRowElements(uncompleteRowList.item(k));
 			rtnXML.append("<ROW>");
-			rtnXML.append("<CELL><VALUE>" + makeXMLString(makeListField(docXML.getElementsByTagName("DOCTITLE").item(k).getTextContent())) + "</VALUE>");
-			rtnXML.append("<DOCID>" + makeXMLString(makeListField(docXML.getElementsByTagName("DOCID").item(k).getTextContent())) + "</DOCID></CELL>");
-			rtnXML.append("<CELL><VALUE>" + makeXMLString(makeListField(getCode2Name("A02", docXML.getElementsByTagName("DOCSTATE").item(k).getTextContent(), companyID, userLang, tenantID))) + "</VALUE></CELL>");
-			rtnXML.append("<CELL><VALUE>" + makeXMLString(makeListField(docXML.getElementsByTagName("APRMEMBERNAME").item(k).getTextContent())) + "</VALUE></CELL>");
+			rtnXML.append("<CELL><VALUE>" + makeXMLString(makeListField(rowData.get("DOCTITLE"))) + "</VALUE>");
+			rtnXML.append("<DOCID>" + makeXMLString(makeListField(rowData.get("DOCID"))) + "</DOCID></CELL>");
+			rtnXML.append("<CELL><VALUE>" + makeXMLString(makeListField(getCode2Name("A02", rowData.get("DOCSTATE"), companyID, userLang, tenantID))) + "</VALUE></CELL>");
+			rtnXML.append("<CELL><VALUE>" + makeXMLString(makeListField(rowData.get("APRMEMBERNAME"))) + "</VALUE></CELL>");
 			
 			if (approvalFlag.equals("G")) {
-				rtnXML.append("<CELL><VALUE>" + makeXMLString(makeListField(getCode2Name("A03", docXML.getElementsByTagName("APRTYPE").item(k).getTextContent(), companyID, userLang, tenantID))) + "</VALUE></CELL>");
+				rtnXML.append("<CELL><VALUE>" + makeXMLString(makeListField(getCode2Name("A03", rowData.get("APRTYPE"), companyID, userLang, tenantID))) + "</VALUE></CELL>");
 			} else {
-				rtnXML.append("<CELL><VALUE>" + makeXMLString(makeListField(getCode2Name("SA03", docXML.getElementsByTagName("APRTYPE").item(k).getTextContent(), companyID, userLang, tenantID))) + "</VALUE></CELL>");
+				rtnXML.append("<CELL><VALUE>" + makeXMLString(makeListField(getCode2Name("SA03", rowData.get("APRTYPE"), companyID, userLang, tenantID))) + "</VALUE></CELL>");
 			}
 			
 			if (approvalFlag.equals("G")) {
-				rtnXML.append("<CELL><VALUE>" + makeXMLString(makeListField(getCode2Name("A04", docXML.getElementsByTagName("APRSTATE").item(k).getTextContent(), companyID, userLang, tenantID))) + "</VALUE></CELL>");
+				rtnXML.append("<CELL><VALUE>" + makeXMLString(makeListField(getCode2Name("A04", rowData.get("APRSTATE"), companyID, userLang, tenantID))) + "</VALUE></CELL>");
 			} else {
-				rtnXML.append("<CELL><VALUE>" + makeXMLString(makeListField(getCode2Name("SA04", docXML.getElementsByTagName("APRSTATE").item(k).getTextContent(), companyID, userLang, tenantID))) + "</VALUE></CELL>");
+				rtnXML.append("<CELL><VALUE>" + makeXMLString(makeListField(getCode2Name("SA04", rowData.get("APRSTATE"), companyID, userLang, tenantID))) + "</VALUE></CELL>");
 			}
 			
-			rtnXML.append("<CELL><VALUE>" + makeXMLString(makeListField(docXML.getElementsByTagName("APRMEMBERDEPTNAME").item(k).getTextContent())) + "</VALUE></CELL>");
-			rtnXML.append("<CELL><VALUE>" + makeXMLString(makeListField(docXML.getElementsByTagName("WRITERNAME").item(k).getTextContent())) + "</VALUE></CELL>");
-			rtnXML.append("<CELL><VALUE>" + commonUtil.getDateStringInUTC(makeXMLString(makeListField(convertDate(docXML.getElementsByTagName("STARTDATE").item(k).getTextContent()))), userInfo.getOffset(), false) + "</VALUE></CELL>");
+			rtnXML.append("<CELL><VALUE>" + makeXMLString(makeListField(rowData.get("APRMEMBERDEPTNAME"))) + "</VALUE></CELL>");
+			rtnXML.append("<CELL><VALUE>" + makeXMLString(makeListField(rowData.get("WRITERNAME"))) + "</VALUE></CELL>");
+			rtnXML.append("<CELL><VALUE>" + commonUtil.getDateStringInUTC(makeXMLString(makeListField(convertDate(rowData.get("STARTDATE")))), userInfo.getOffset(), false) + "</VALUE></CELL>");
 			rtnXML.append("</ROW>");	
 		}
 		rtnXML.append("</ROWS>");
@@ -10168,7 +10169,7 @@ Map<String, String> rowData = indexRowElements(taskMidRowList.item(k));
 		sb.append("</DATA>");
 		
 		Document docXML = commonUtil.convertStringToDocument(sb.toString());
-		int dlength = docXML.getElementsByTagName("ROW").getLength();
+		NodeList attachFileRowList = docXML.getElementsByTagName("ROW"); int dlength = attachFileRowList.getLength();
 		
 		String fieldName = "";
 		String fieldValue = "";
@@ -10177,6 +10178,7 @@ Map<String, String> rowData = indexRowElements(taskMidRowList.item(k));
 		
 		for (int k = 0; k < dlength; k++) {
 			resultXML.append("<ROW>");
+Map<String, String> rowData = indexRowElements(attachFileRowList.item(k));
 			for (int p = 0; p < hlength; p++) {
 				resultXML.append("<CELL>");
 				fieldName = listXML.getElementsByTagName("COLNAME").item(p).getTextContent().toUpperCase();
@@ -10184,30 +10186,30 @@ Map<String, String> rowData = indexRowElements(taskMidRowList.item(k));
 				if (fieldName.toUpperCase().equals("ATTACHUSERNAME")) {
 					fieldName = fieldName + commonUtil.getMultiData(lang, tenantID);
 				}
-				fieldValue = docXML.getElementsByTagName(fieldName).item(k).getTextContent();
+				fieldValue = rowData.get(fieldName);
 				resultXML.append("<VALUE>" + commonUtil.cleanValue(getListField(fieldName, fieldValue, companyID, lang, tenantID, offset)) + "</VALUE>");
 				
 				if (p == 0) {
-					resultXML.append("<DATA1><![CDATA[" + makeListField(docXML.getElementsByTagName("ATTACHFILEHREF").item(k).getTextContent()) + "]]></DATA1>");
-					resultXML.append("<DATA2>" + makeListField(docXML.getElementsByTagName("ATTACHFILESN").item(k).getTextContent()) + "</DATA2>");
-					resultXML.append("<DATA3>" + makeListField(docXML.getElementsByTagName("DOCID").item(k).getTextContent()) + "</DATA3>");
-					resultXML.append("<DATA4><![CDATA[" + makeListField(docXML.getElementsByTagName("ATTACHUSERID").item(k).getTextContent()) + "]]></DATA4>");
-					resultXML.append("<DATA5><![CDATA[" + makeListField(docXML.getElementsByTagName("ATTACHUSERJOBTITLE").item(k).getTextContent()) + "]]></DATA5>");
-					resultXML.append("<DATA6><![CDATA[" + makeListField(docXML.getElementsByTagName("ATTACHUSERDEPTID").item(k).getTextContent()) + "]]></DATA6>");
-					resultXML.append("<DATA7><![CDATA[" + makeListField(docXML.getElementsByTagName("ATTACHUSERDEPTNAME").item(k).getTextContent()) + "]]></DATA7>");
-					resultXML.append("<DATA8>" + makeListField(docXML.getElementsByTagName("ATTACHFILESIZE").item(k).getTextContent() + "bytes") + "</DATA8>");
-					resultXML.append("<DATA9>" + makeListField(docXML.getElementsByTagName("PAGENUM").item(k).getTextContent()) + "</DATA9>");
-					resultXML.append("<DATA10><![CDATA[" + makeListField(docXML.getElementsByTagName("ATTACHFILENAME").item(k).getTextContent()) + "]]></DATA10>");
-					resultXML.append("<DATA11><![CDATA[" + makeListField(docXML.getElementsByTagName("BODYATTACH").item(k).getTextContent()) + "]]></DATA11>");
-					resultXML.append("<DATA12><![CDATA[" + makeListField(docXML.getElementsByTagName("DISPLAYNAME").item(k).getTextContent()) + "]]></DATA12>");
-					resultXML.append("<DATA13><![CDATA[" + makeListField(docXML.getElementsByTagName("ATTACHUSERNAME").item(k).getTextContent()) + "]]></DATA13>");
-					resultXML.append("<DATA14><![CDATA[" + makeListField(docXML.getElementsByTagName("ATTACHUSERNAME2").item(k).getTextContent()) + "]]></DATA14>");
-					resultXML.append("<DATA15><![CDATA[" + makeListField(docXML.getElementsByTagName("ATTACHUSERJOBTITLE").item(k).getTextContent()) + "]]></DATA15>");
-					resultXML.append("<DATA16><![CDATA[" + makeListField(docXML.getElementsByTagName("ATTACHUSERJOBTITLE2").item(k).getTextContent()) + "]]></DATA16>");
-					resultXML.append("<DATA17><![CDATA[" + makeListField(docXML.getElementsByTagName("ATTACHUSERDEPTNAME").item(k).getTextContent()) + "]]></DATA17>");
-					resultXML.append("<DATA18><![CDATA[" + makeListField(docXML.getElementsByTagName("ATTACHUSERDEPTNAME2").item(k).getTextContent()) + "]]></DATA18>");
-					resultXML.append("<ISBIGATTACH><![CDATA[" + makeListField(docXML.getElementsByTagName("ISBIGATTACH").item(k).getTextContent()) + "]]></ISBIGATTACH>");
-					resultXML.append("<ISBIGATTACHDEL><![CDATA[" + makeListField(docXML.getElementsByTagName("ISBIGATTACHDEL").item(k).getTextContent()) + "]]></ISBIGATTACHDEL>");
+					resultXML.append("<DATA1><![CDATA[" + makeListField(rowData.get("ATTACHFILEHREF")) + "]]></DATA1>");
+					resultXML.append("<DATA2>" + makeListField(rowData.get("ATTACHFILESN")) + "</DATA2>");
+					resultXML.append("<DATA3>" + makeListField(rowData.get("DOCID")) + "</DATA3>");
+					resultXML.append("<DATA4><![CDATA[" + makeListField(rowData.get("ATTACHUSERID")) + "]]></DATA4>");
+					resultXML.append("<DATA5><![CDATA[" + makeListField(rowData.get("ATTACHUSERJOBTITLE")) + "]]></DATA5>");
+					resultXML.append("<DATA6><![CDATA[" + makeListField(rowData.get("ATTACHUSERDEPTID")) + "]]></DATA6>");
+					resultXML.append("<DATA7><![CDATA[" + makeListField(rowData.get("ATTACHUSERDEPTNAME")) + "]]></DATA7>");
+					resultXML.append("<DATA8>" + makeListField(rowData.get("ATTACHFILESIZE") + "bytes") + "</DATA8>");
+					resultXML.append("<DATA9>" + makeListField(rowData.get("PAGENUM")) + "</DATA9>");
+					resultXML.append("<DATA10><![CDATA[" + makeListField(rowData.get("ATTACHFILENAME")) + "]]></DATA10>");
+					resultXML.append("<DATA11><![CDATA[" + makeListField(rowData.get("BODYATTACH")) + "]]></DATA11>");
+					resultXML.append("<DATA12><![CDATA[" + makeListField(rowData.get("DISPLAYNAME")) + "]]></DATA12>");
+					resultXML.append("<DATA13><![CDATA[" + makeListField(rowData.get("ATTACHUSERNAME")) + "]]></DATA13>");
+					resultXML.append("<DATA14><![CDATA[" + makeListField(rowData.get("ATTACHUSERNAME2")) + "]]></DATA14>");
+					resultXML.append("<DATA15><![CDATA[" + makeListField(rowData.get("ATTACHUSERJOBTITLE")) + "]]></DATA15>");
+					resultXML.append("<DATA16><![CDATA[" + makeListField(rowData.get("ATTACHUSERJOBTITLE2")) + "]]></DATA16>");
+					resultXML.append("<DATA17><![CDATA[" + makeListField(rowData.get("ATTACHUSERDEPTNAME")) + "]]></DATA17>");
+					resultXML.append("<DATA18><![CDATA[" + makeListField(rowData.get("ATTACHUSERDEPTNAME2")) + "]]></DATA18>");
+					resultXML.append("<ISBIGATTACH><![CDATA[" + makeListField(rowData.get("ISBIGATTACH")) + "]]></ISBIGATTACH>");
+					resultXML.append("<ISBIGATTACHDEL><![CDATA[" + makeListField(rowData.get("ISBIGATTACHDEL")) + "]]></ISBIGATTACHDEL>");
 				}
 				resultXML.append("</CELL>");
 			}
@@ -11224,7 +11226,7 @@ Map<String, String> rowData = indexRowElements(taskMidRowList.item(k));
 		sb.append("</DATA>");
 		
 		Document docXML = commonUtil.convertStringToDocument(sb.toString());
-		int dlength = docXML.getElementsByTagName("ROW").getLength();
+		NodeList attachDocRowList = docXML.getElementsByTagName("ROW"); int dlength = attachDocRowList.getLength();
 		
 		String fieldName = "";
 		String fieldValue = "";
@@ -11233,48 +11235,49 @@ Map<String, String> rowData = indexRowElements(taskMidRowList.item(k));
 		
 		for (int k = 0; k < dlength; k++) {
 			resultXML.append("<ROW>");
+Map<String, String> rowData = indexRowElements(attachDocRowList.item(k));
 			
 			for (int p = 0; p < hlength; p++) {
 				resultXML.append("<CELL>");
 				fieldName = listXML.getElementsByTagName("COLNAME").item(p).getTextContent().toUpperCase();
 				
-				fieldValue = docXML.getElementsByTagName(fieldName).item(k).getTextContent();
+				fieldValue = rowData.get(fieldName);
 				resultXML.append("<VALUE><![CDATA["+ getListField(fieldName, fieldValue, companyID, lang, tenantID, offset) + "]]></VALUE>");
 				
 				/* 2021-12-15 홍승비 - 문서첨부 데이터를 가져오는 경우 S버전과 G버전의 속성 차이를 구분하도록 수정 */
 				if (p == 0) {
 					if (approvalFlag.equals("G")) {
-						resultXML.append("<DATA1><![CDATA[" + makeListField(docXML.getElementsByTagName("ATTACHDOCURL").item(k).getTextContent()) + "]]></DATA1>");
-						resultXML.append("<DATA2><![CDATA[" + makeListField(docXML.getElementsByTagName("ATTACHSN").item(k).getTextContent()) + "]]></DATA2>");
-						resultXML.append("<DATA3><![CDATA[" + makeListField(docXML.getElementsByTagName("DOCID").item(k).getTextContent()) + "]]></DATA3>");
-						resultXML.append("<DATA4><![CDATA[" + makeListField(docXML.getElementsByTagName("ATTACHUSERID").item(k).getTextContent()) + "]]></DATA4>");
-						resultXML.append("<DATA5><![CDATA[" + makeListField(docXML.getElementsByTagName("ATTACHUSERJOBTITLE").item(k).getTextContent()) + "]]></DATA5>");
-						resultXML.append("<DATA6><![CDATA[" + makeListField(docXML.getElementsByTagName("ATTACHUSERDEPTID").item(k).getTextContent()) + "]]></DATA6>");
-						resultXML.append("<DATA7><![CDATA[" + makeListField(docXML.getElementsByTagName("ATTACHUSERDEPTNAME").item(k).getTextContent()) + "]]></DATA7>");
-						resultXML.append("<DATA8><![CDATA[" + makeListField(docXML.getElementsByTagName("ATTACHUSERNAME").item(k).getTextContent()) + "]]></DATA8>");
-						resultXML.append("<DATA9><![CDATA[" + makeListField(docXML.getElementsByTagName("SUBATTACHYN").item(k).getTextContent()) + "]]></DATA9>");
-						resultXML.append("<DATA10><![CDATA[" + makeListField(docXML.getElementsByTagName("ATTACHDOCNAME").item(k).getTextContent()) + "]]></DATA10>");
-						resultXML.append("<DATA11><![CDATA[" + makeListField(docXML.getElementsByTagName("ATTACHUSERNAME").item(k).getTextContent()) + "]]></DATA11>");
-						resultXML.append("<DATA12><![CDATA[" + makeListField(docXML.getElementsByTagName("ATTACHUSERNAME2").item(k).getTextContent()) + "]]></DATA12>");
-						resultXML.append("<DATA13><![CDATA[" + makeListField(docXML.getElementsByTagName("ATTACHUSERJOBTITLE").item(k).getTextContent()) + "]]></DATA13>");
-						resultXML.append("<DATA14><![CDATA[" + makeListField(docXML.getElementsByTagName("ATTACHUSERJOBTITLE2").item(k).getTextContent()) + "]]></DATA14>");
-						resultXML.append("<DATA15><![CDATA[" + makeListField(docXML.getElementsByTagName("ATTACHUSERDEPTNAME").item(k).getTextContent()) + "]]></DATA15>");
-						resultXML.append("<DATA16><![CDATA[" + makeListField(docXML.getElementsByTagName("ATTACHUSERDEPTNAME2").item(k).getTextContent()) + "]]></DATA16>");
+						resultXML.append("<DATA1><![CDATA[" + makeListField(rowData.get("ATTACHDOCURL")) + "]]></DATA1>");
+						resultXML.append("<DATA2><![CDATA[" + makeListField(rowData.get("ATTACHSN")) + "]]></DATA2>");
+						resultXML.append("<DATA3><![CDATA[" + makeListField(rowData.get("DOCID")) + "]]></DATA3>");
+						resultXML.append("<DATA4><![CDATA[" + makeListField(rowData.get("ATTACHUSERID")) + "]]></DATA4>");
+						resultXML.append("<DATA5><![CDATA[" + makeListField(rowData.get("ATTACHUSERJOBTITLE")) + "]]></DATA5>");
+						resultXML.append("<DATA6><![CDATA[" + makeListField(rowData.get("ATTACHUSERDEPTID")) + "]]></DATA6>");
+						resultXML.append("<DATA7><![CDATA[" + makeListField(rowData.get("ATTACHUSERDEPTNAME")) + "]]></DATA7>");
+						resultXML.append("<DATA8><![CDATA[" + makeListField(rowData.get("ATTACHUSERNAME")) + "]]></DATA8>");
+						resultXML.append("<DATA9><![CDATA[" + makeListField(rowData.get("SUBATTACHYN")) + "]]></DATA9>");
+						resultXML.append("<DATA10><![CDATA[" + makeListField(rowData.get("ATTACHDOCNAME")) + "]]></DATA10>");
+						resultXML.append("<DATA11><![CDATA[" + makeListField(rowData.get("ATTACHUSERNAME")) + "]]></DATA11>");
+						resultXML.append("<DATA12><![CDATA[" + makeListField(rowData.get("ATTACHUSERNAME2")) + "]]></DATA12>");
+						resultXML.append("<DATA13><![CDATA[" + makeListField(rowData.get("ATTACHUSERJOBTITLE")) + "]]></DATA13>");
+						resultXML.append("<DATA14><![CDATA[" + makeListField(rowData.get("ATTACHUSERJOBTITLE2")) + "]]></DATA14>");
+						resultXML.append("<DATA15><![CDATA[" + makeListField(rowData.get("ATTACHUSERDEPTNAME")) + "]]></DATA15>");
+						resultXML.append("<DATA16><![CDATA[" + makeListField(rowData.get("ATTACHUSERDEPTNAME2")) + "]]></DATA16>");
 					}
 					else {
-						resultXML.append("<DATA1><![CDATA[" + makeListField(docXML.getElementsByTagName("ATTACHDOCURL").item(k).getTextContent()) + "]]></DATA1>");
-						resultXML.append("<DATA2><![CDATA[" + makeListField(docXML.getElementsByTagName("ATTACHSN").item(k).getTextContent()) + "]]></DATA2>");
-						resultXML.append("<DATA3><![CDATA[" + makeListField(docXML.getElementsByTagName("DOCID").item(k).getTextContent()) + "]]></DATA3>");
-						resultXML.append("<DATA4><![CDATA[" + makeListField(docXML.getElementsByTagName("ATTACHUSERID").item(k).getTextContent()) + "]]></DATA4>");
-						resultXML.append("<DATA5><![CDATA[" + makeListField(docXML.getElementsByTagName("ATTACHUSERJOBTITLE").item(k).getTextContent()) + "]]></DATA5>");
-						resultXML.append("<DATA6><![CDATA[" + makeListField(docXML.getElementsByTagName("ATTACHUSERDEPTID").item(k).getTextContent()) + "]]></DATA6>");
-						resultXML.append("<DATA7><![CDATA[" + makeListField(docXML.getElementsByTagName("ATTACHUSERDEPTNAME").item(k).getTextContent()) + "]]></DATA7>");
-						resultXML.append("<DATA8><![CDATA[" + makeListField(docXML.getElementsByTagName("ATTACHUSERNAME").item(k).getTextContent()) + "]]></DATA8>");
-						resultXML.append("<DATA9><![CDATA[" + makeListField(docXML.getElementsByTagName("SUBATTACHYN").item(k).getTextContent()) + "]]></DATA9>");
-						resultXML.append("<DATA10><![CDATA[" + makeListField(docXML.getElementsByTagName("ATTACHDOCNAME").item(k).getTextContent()) + "]]></DATA10>");
-						resultXML.append("<DATA11><![CDATA[" + makeListField(docXML.getElementsByTagName("ATTACHUSERNAME2").item(k).getTextContent()) + "]]></DATA11>");
-						resultXML.append("<DATA12><![CDATA[" + makeListField(docXML.getElementsByTagName("ATTACHUSERJOBTITLE2").item(k).getTextContent()) + "]]></DATA12>");
-						resultXML.append("<DATA13><![CDATA[" + makeListField(docXML.getElementsByTagName("ATTACHUSERDEPTNAME2").item(k).getTextContent()) + "]]></DATA13>");
+						resultXML.append("<DATA1><![CDATA[" + makeListField(rowData.get("ATTACHDOCURL")) + "]]></DATA1>");
+						resultXML.append("<DATA2><![CDATA[" + makeListField(rowData.get("ATTACHSN")) + "]]></DATA2>");
+						resultXML.append("<DATA3><![CDATA[" + makeListField(rowData.get("DOCID")) + "]]></DATA3>");
+						resultXML.append("<DATA4><![CDATA[" + makeListField(rowData.get("ATTACHUSERID")) + "]]></DATA4>");
+						resultXML.append("<DATA5><![CDATA[" + makeListField(rowData.get("ATTACHUSERJOBTITLE")) + "]]></DATA5>");
+						resultXML.append("<DATA6><![CDATA[" + makeListField(rowData.get("ATTACHUSERDEPTID")) + "]]></DATA6>");
+						resultXML.append("<DATA7><![CDATA[" + makeListField(rowData.get("ATTACHUSERDEPTNAME")) + "]]></DATA7>");
+						resultXML.append("<DATA8><![CDATA[" + makeListField(rowData.get("ATTACHUSERNAME")) + "]]></DATA8>");
+						resultXML.append("<DATA9><![CDATA[" + makeListField(rowData.get("SUBATTACHYN")) + "]]></DATA9>");
+						resultXML.append("<DATA10><![CDATA[" + makeListField(rowData.get("ATTACHDOCNAME")) + "]]></DATA10>");
+						resultXML.append("<DATA11><![CDATA[" + makeListField(rowData.get("ATTACHUSERNAME2")) + "]]></DATA11>");
+						resultXML.append("<DATA12><![CDATA[" + makeListField(rowData.get("ATTACHUSERJOBTITLE2")) + "]]></DATA12>");
+						resultXML.append("<DATA13><![CDATA[" + makeListField(rowData.get("ATTACHUSERDEPTNAME2")) + "]]></DATA13>");
 					}
 				}
 				resultXML.append("</CELL>");
@@ -11900,7 +11903,7 @@ Map<String, String> rowData = indexRowElements(taskMidRowList.item(k));
 		
 		Document docXML = commonUtil.convertStringToDocument(sb.toString());
 		
-		int dlength = docXML.getElementsByTagName("ROW").getLength();
+		NodeList histDocRowList = docXML.getElementsByTagName("ROW"); int dlength = histDocRowList.getLength();
 		
 		String fieldName = "";
 		String fieldValue = "";
@@ -11909,6 +11912,7 @@ Map<String, String> rowData = indexRowElements(taskMidRowList.item(k));
 		
 		for (int k = 0; k < dlength; k++) {
 			resultXML.append("<ROW>");
+Map<String, String> rowData = indexRowElements(histDocRowList.item(k));
 			for (int p = 0; p < hlength; p++) {
 				resultXML.append("<CELL>");
 				fieldName = listXML.getElementsByTagName("COLNAME").item(p).getTextContent().toUpperCase();
@@ -11916,17 +11920,17 @@ Map<String, String> rowData = indexRowElements(taskMidRowList.item(k));
 				if (fieldName.equals("CHANGEUSERNAME") || fieldName.equals("CHANGEUSERJOBTITLE") || fieldName.equals("CHANGEUSERDEPTNAME")) {
 					fieldName = fieldName + langData;
 				}
-				fieldValue = docXML.getElementsByTagName(fieldName).item(k).getTextContent();
+				fieldValue = rowData.get(fieldName);
 				resultXML.append("<VALUE>" + commonUtil.cleanValue(getListField(fieldName, fieldValue, companyID, lang, tenantID, offset)) + "</VALUE>");
 				
 				if (p == 0) {
-					resultXML.append("<DATA1>" + makeListField(docXML.getElementsByTagName("DOCID").item(k).getTextContent()) + "</DATA1>");
-					resultXML.append("<DATA2>" + makeListField(docXML.getElementsByTagName("URL").item(k).getTextContent()) + "</DATA2>");
-					resultXML.append("<DATA3>" + makeListField(docXML.getElementsByTagName("CHANGEUSERID").item(k).getTextContent()) + "</DATA3>");
-					resultXML.append("<DATA4>" + makeListField(docXML.getElementsByTagName("CHANGEUSERDEPTID").item(k).getTextContent()) + "</DATA4>");
-					resultXML.append("<DATA5>" + makeListField(docXML.getElementsByTagName("CHKFLAG").item(k).getTextContent()) + "</DATA5>");
-                    resultXML.append("<DATA6>" + makeListField(docXML.getElementsByTagName("EDITVERSION").item(k).getTextContent()) + "</DATA6>");
-                    resultXML.append("<BEFOREDOCURL>" + makeListField(docXML.getElementsByTagName("BEFOREDOCURL").item(k).getTextContent()) + "</BEFOREDOCURL>");
+					resultXML.append("<DATA1>" + makeListField(rowData.get("DOCID")) + "</DATA1>");
+					resultXML.append("<DATA2>" + makeListField(rowData.get("URL")) + "</DATA2>");
+					resultXML.append("<DATA3>" + makeListField(rowData.get("CHANGEUSERID")) + "</DATA3>");
+					resultXML.append("<DATA4>" + makeListField(rowData.get("CHANGEUSERDEPTID")) + "</DATA4>");
+					resultXML.append("<DATA5>" + makeListField(rowData.get("CHKFLAG")) + "</DATA5>");
+                    resultXML.append("<DATA6>" + makeListField(rowData.get("EDITVERSION")) + "</DATA6>");
+                    resultXML.append("<BEFOREDOCURL>" + makeListField(rowData.get("BEFOREDOCURL")) + "</BEFOREDOCURL>");
 				}
 				resultXML.append("</CELL>");
 			}
