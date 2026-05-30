@@ -4304,15 +4304,16 @@ Map<String, String> rowData = indexRowElements(recvTmplRowList.item(k));
 		sb.append("</DATA>");
 		
 		Document docXML = commonUtil.convertStringToDocument(sb.toString());
-		int dlength = docXML.getElementsByTagName("ROW").getLength();
+		NodeList tmpl4RowList = docXML.getElementsByTagName("ROW"); int dlength = tmpl4RowList.getLength();
 		
 		for (int k = 0; k < dlength; k++) {
+Map<String, String> rowData = indexRowElements(tmpl4RowList.item(k));
 			returnValue.append("<ROW>");
 			returnValue.append("<CELL>");
-			returnValue.append("<VALUE> " + commonUtil.cleanValue(docXML.getElementsByTagName("MAINNAME").item(k).getTextContent()) + "</VALUE>");
-			returnValue.append("<DATA1>" + docXML.getElementsByTagName("MAINID").item(k).getTextContent() + "</DATA1>");
-			returnValue.append("<DATA2>" + commonUtil.cleanValue(docXML.getElementsByTagName("MAINNAME").item(k).getTextContent()) + "</DATA2>");
-			returnValue.append("<DATA3>" + docXML.getElementsByTagName("EXTRECEPTYN").item(k).getTextContent() + "</DATA3>");
+			returnValue.append("<VALUE> " + commonUtil.cleanValue(rowData.get("MAINNAME")) + "</VALUE>");
+			returnValue.append("<DATA1>" + rowData.get("MAINID") + "</DATA1>");
+			returnValue.append("<DATA2>" + commonUtil.cleanValue(rowData.get("MAINNAME")) + "</DATA2>");
+			returnValue.append("<DATA3>" + rowData.get("EXTRECEPTYN") + "</DATA3>");
 			returnValue.append("</CELL>");
 			returnValue.append("</ROW>");
 		}
@@ -4370,33 +4371,34 @@ Map<String, String> rowData = indexRowElements(recvTmplRowList.item(k));
 		sb.append("</DATA>");
 		
 		Document docXML = commonUtil.convertStringToDocument(sb.toString());
-		int dlength = docXML.getElementsByTagName("ROW").getLength();
+		NodeList listXmlRowList = docXML.getElementsByTagName("ROW"); int dlength = listXmlRowList.getLength();
 		String primaryData = commonUtil.getPrimaryData(lang, tenantID);
 		
 		resultXML.append("<ROWS>");
 		
 		for (int k = 0; k < dlength; k++) {
+Map<String, String> rowData = indexRowElements(listXmlRowList.item(k));
 			resultXML.append("<ROW>");
 			resultXML.append("<CELL>");
 			resultXML.append("<VALUE>" + (dlength - k) + "</VALUE>");
-			resultXML.append("<DATA1>" + docXML.getElementsByTagName("DEPTID").item(k).getTextContent() + "</DATA1>");
+			resultXML.append("<DATA1>" + rowData.get("DEPTID") + "</DATA1>");
 			resultXML.append("<DATA2>" + "" + "</DATA2>");
-			resultXML.append("<DATA3>" + docXML.getElementsByTagName("EXTRECEPTYN").item(k).getTextContent() + "</DATA3>");
+			resultXML.append("<DATA3>" + rowData.get("EXTRECEPTYN") + "</DATA3>");
 			resultXML.append("<DATA4>" + "N" + "</DATA4>");
 			resultXML.append("<DATA5>" + "N" + "</DATA5>");
-			resultXML.append("<DATA6>" + commonUtil.cleanValue(docXML.getElementsByTagName("COMPANYID").item(k).getTextContent()) + "</DATA6>");
+			resultXML.append("<DATA6>" + commonUtil.cleanValue(rowData.get("COMPANYID")) + "</DATA6>");
 			resultXML.append("<DATA7>" + "" + "</DATA7>");
 			resultXML.append("<DATA8>" + "" + "</DATA8>");
 			resultXML.append("<DATA9>" + "" + "</DATA9>");
-			resultXML.append("<DATA10>" + commonUtil.cleanValue(docXML.getElementsByTagName("DEPTNAME").item(k).getTextContent()) + "</DATA10>");
-			resultXML.append("<DATA11>" + commonUtil.cleanValue(docXML.getElementsByTagName("DEPTNAME2").item(k).getTextContent()) + "</DATA11>");
+			resultXML.append("<DATA10>" + commonUtil.cleanValue(rowData.get("DEPTNAME")) + "</DATA10>");
+			resultXML.append("<DATA11>" + commonUtil.cleanValue(rowData.get("DEPTNAME2")) + "</DATA11>");
 			resultXML.append("</CELL>");
 			resultXML.append("<CELL>");
 			
 			if (primaryData.equals("1")) {
-				resultXML.append("<VALUE>" + commonUtil.cleanValue(makeListField(docXML.getElementsByTagName("DEPTNAME").item(k).getTextContent())) + "</VALUE>");					
+				resultXML.append("<VALUE>" + commonUtil.cleanValue(makeListField(rowData.get("DEPTNAME"))) + "</VALUE>");					
 			} else {
-				resultXML.append("<VALUE>" + commonUtil.cleanValue(makeListField(docXML.getElementsByTagName("DEPTNAME2").item(k).getTextContent())) + "</VALUE>");
+				resultXML.append("<VALUE>" + commonUtil.cleanValue(makeListField(rowData.get("DEPTNAME2"))) + "</VALUE>");
 			}
 			
 			resultXML.append("</CELL>");
@@ -4441,26 +4443,27 @@ Map<String, String> rowData = indexRowElements(recvTmplRowList.item(k));
 		sb.append("</DATA>");
 		
 		Document docXML = commonUtil.convertStringToDocument(sb.toString());
-		int dlength = docXML.getElementsByTagName("ROW").getLength();
+		NodeList tmpl2RowList = docXML.getElementsByTagName("ROW"); int dlength = tmpl2RowList.getLength();
 		
 		for (int k = 0; k < dlength; k++) {
+Map<String, String> rowData = indexRowElements(tmpl2RowList.item(k));
 			returnValue.append("<ROW>");
 			returnValue.append("<CELL>");
 			
 			if (primary.equals("1")) {
-				returnValue.append("<VALUE> " + commonUtil.cleanValue(docXML.getElementsByTagName("DEPTNAME").item(k).getTextContent()) + "</VALUE>");
+				returnValue.append("<VALUE> " + commonUtil.cleanValue(rowData.get("DEPTNAME")) + "</VALUE>");
 			} else {
-				returnValue.append("<VALUE> " + commonUtil.cleanValue(docXML.getElementsByTagName("DEPTNAME2").item(k).getTextContent()) + "</VALUE>");
+				returnValue.append("<VALUE> " + commonUtil.cleanValue(rowData.get("DEPTNAME2")) + "</VALUE>");
 			}
 			
-			returnValue.append("<DATA1>" + docXML.getElementsByTagName("DEPTID").item(k).getTextContent() + "</DATA1>");
-			returnValue.append("<DATA2>" + commonUtil.cleanValue(docXML.getElementsByTagName("DEPTNAME").item(k).getTextContent()) + "</DATA2>");
-			returnValue.append("<DATA3>" + commonUtil.cleanValue(docXML.getElementsByTagName("DEPTNAME2").item(k).getTextContent()) + "</DATA3>");
-			returnValue.append("<DATA4>" + commonUtil.cleanValue(docXML.getElementsByTagName("COMPANYID").item(k).getTextContent()) + "</DATA4>");
-			returnValue.append("<DATA5>" + commonUtil.cleanValue(docXML.getElementsByTagName("SUBID").item(k).getTextContent()) + "</DATA5>");
-			returnValue.append("<DATA6>" + commonUtil.cleanValue(docXML.getElementsByTagName("EXTRECEPTYN").item(k).getTextContent()) + "</DATA6>");
+			returnValue.append("<DATA1>" + rowData.get("DEPTID") + "</DATA1>");
+			returnValue.append("<DATA2>" + commonUtil.cleanValue(rowData.get("DEPTNAME")) + "</DATA2>");
+			returnValue.append("<DATA3>" + commonUtil.cleanValue(rowData.get("DEPTNAME2")) + "</DATA3>");
+			returnValue.append("<DATA4>" + commonUtil.cleanValue(rowData.get("COMPANYID")) + "</DATA4>");
+			returnValue.append("<DATA5>" + commonUtil.cleanValue(rowData.get("SUBID")) + "</DATA5>");
+			returnValue.append("<DATA6>" + commonUtil.cleanValue(rowData.get("EXTRECEPTYN")) + "</DATA6>");
             // 2024-05-23 김유진 - 폐지부서 정보 추가
-            String TrashDeptYN = (docXML.getElementsByTagName("DEPT_CD_PATH").item(k) == null || docXML.getElementsByTagName("DEPT_CD_PATH").item(k).getTextContent() == "" || docXML.getElementsByTagName("DEPT_CD_PATH").item(k).getTextContent().contains("trash_dept")) ? "Y" : "N";
+            String TrashDeptYN = (docXML.getElementsByTagName("DEPT_CD_PATH").item(k) == null || rowData.get("DEPT_CD_PATH") == "" || rowData.get("DEPT_CD_PATH").contains("trash_dept")) ? "Y" : "N";
             returnValue.append("<DATA7>" + commonUtil.cleanValue(TrashDeptYN) + "</DATA7>");
             returnValue.append("</CELL>");
 			returnValue.append("</ROW>");
@@ -4493,18 +4496,19 @@ Map<String, String> rowData = indexRowElements(recvTmplRowList.item(k));
 		sb.append("</DATA>");
 		
 		Document docXML = commonUtil.convertStringToDocument(sb.toString());
-		int dlength = docXML.getElementsByTagName("ROW").getLength();
+		NodeList tmpl3RowList = docXML.getElementsByTagName("ROW"); int dlength = tmpl3RowList.getLength();
 		
 		for (int k = 0; k < dlength; k++) {
+Map<String, String> rowData = indexRowElements(tmpl3RowList.item(k));
 			
 			returnValue.append("<ROW>");
 			returnValue.append("<CELL>");
-			returnValue.append("<VALUE> " + commonUtil.cleanValue(docXML.getElementsByTagName("APRDEPTTEMPLETNAME").item(k).getTextContent()) + "</VALUE>");
-			returnValue.append("<DATA1>" + docXML.getElementsByTagName("APRDEPTSN").item(k).getTextContent() + "</DATA1>");
-			returnValue.append("<DATA2>" + commonUtil.cleanValue(docXML.getElementsByTagName("APRDEPTTEMPLETNAME").item(k).getTextContent()) + "</DATA2>");
-			returnValue.append("<DATA3>" + docXML.getElementsByTagName("EXTRECEPTYN").item(k).getTextContent() + "</DATA3>");
-            returnValue.append("<DATA4>" + docXML.getElementsByTagName("USERID").item(k).getTextContent() + "</DATA4>");
-            returnValue.append("<DATA5>" + docXML.getElementsByTagName("FORMID").item(k).getTextContent() + "</DATA5>");
+			returnValue.append("<VALUE> " + commonUtil.cleanValue(rowData.get("APRDEPTTEMPLETNAME")) + "</VALUE>");
+			returnValue.append("<DATA1>" + rowData.get("APRDEPTSN") + "</DATA1>");
+			returnValue.append("<DATA2>" + commonUtil.cleanValue(rowData.get("APRDEPTTEMPLETNAME")) + "</DATA2>");
+			returnValue.append("<DATA3>" + rowData.get("EXTRECEPTYN") + "</DATA3>");
+            returnValue.append("<DATA4>" + rowData.get("USERID") + "</DATA4>");
+            returnValue.append("<DATA5>" + rowData.get("FORMID") + "</DATA5>");
 			returnValue.append("</CELL>");
 			returnValue.append("</ROW>");
 		}
@@ -4759,11 +4763,12 @@ Map<String, String> rowData = indexRowElements(recvTmplRowList.item(k));
 		
 		resultXML.append("<TASKCATEGORY>");
 		
-		for (int k = 0; k < docXML.getElementsByTagName("ROW").getLength(); k++) {
+		NodeList taskCatRowList = docXML.getElementsByTagName("ROW"); for (int k = 0; k < taskCatRowList.getLength(); k++) {
+Map<String, String> rowData = indexRowElements(taskCatRowList.item(k));
 			resultXML.append("<CATEGORY>");
-			resultXML.append("<CODE><![CDATA[" + makeListField(docXML.getElementsByTagName("CATEGORYCODE").item(k).getTextContent()) + "]]></CODE>");
-			resultXML.append("<NAME><![CDATA[" + makeListField(docXML.getElementsByTagName("CNAME").item(k).getTextContent()) + "]]></NAME>");
-			resultXML.append("<NAME2><![CDATA[" + makeListField(docXML.getElementsByTagName("CNAME2").item(k).getTextContent()) + "]]></NAME2>");
+			resultXML.append("<CODE><![CDATA[" + makeListField(rowData.get("CATEGORYCODE")) + "]]></CODE>");
+			resultXML.append("<NAME><![CDATA[" + makeListField(rowData.get("CNAME")) + "]]></NAME>");
+			resultXML.append("<NAME2><![CDATA[" + makeListField(rowData.get("CNAME2")) + "]]></NAME2>");
 			resultXML.append("</CATEGORY>");
 		}
 		resultXML.append("</TASKCATEGORY>");
@@ -4798,11 +4803,12 @@ Map<String, String> rowData = indexRowElements(recvTmplRowList.item(k));
 		
 		resultXML.append("<TASKMCATEGORY>");
 		
-		for (int k = 0; k < docXML.getElementsByTagName("ROW").getLength(); k++) {
+		NodeList taskMidRowList = docXML.getElementsByTagName("ROW"); for (int k = 0; k < taskMidRowList.getLength(); k++) {
+Map<String, String> rowData = indexRowElements(taskMidRowList.item(k));
 			resultXML.append("<MCATEGORY>");
-			resultXML.append("<CODE><![CDATA[" + makeListField(docXML.getElementsByTagName("MCATEGORYCODE").item(k).getTextContent()) + "]]></CODE>");
-			resultXML.append("<NAME><![CDATA[" + makeListField(docXML.getElementsByTagName("MCNAME").item(k).getTextContent()) + "]]></NAME>");
-			resultXML.append("<NAME2><![CDATA[" + makeListField(docXML.getElementsByTagName("MCNAME2").item(k).getTextContent()) + "]]></NAME2>");
+			resultXML.append("<CODE><![CDATA[" + makeListField(rowData.get("MCATEGORYCODE")) + "]]></CODE>");
+			resultXML.append("<NAME><![CDATA[" + makeListField(rowData.get("MCNAME")) + "]]></NAME>");
+			resultXML.append("<NAME2><![CDATA[" + makeListField(rowData.get("MCNAME2")) + "]]></NAME2>");
 			resultXML.append("</MCATEGORY>");
 		}
 		resultXML.append("</TASKMCATEGORY>");
