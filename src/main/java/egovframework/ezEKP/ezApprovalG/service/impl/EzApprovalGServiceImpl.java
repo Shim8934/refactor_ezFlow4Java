@@ -5467,7 +5467,7 @@ Map<String, String> rowData = indexRowElements(taskMidRowList.item(k));
 		
 		Document docXML = commonUtil.convertStringToDocument(docList);
 		
-		int dlength = docXML.getElementsByTagName("ROW").getLength();
+		NodeList contDocRowList = docXML.getElementsByTagName("ROW"); int dlength = contDocRowList.getLength();
 		
 		String fieldName = "";
 		String fieldValue = "";
@@ -5476,6 +5476,7 @@ Map<String, String> rowData = indexRowElements(taskMidRowList.item(k));
 		resultXML.append("<ROWS>");
 		
 		for (int k = dlength - 1; k >= 0; k--) {
+Map<String, String> rowData = indexRowElements(contDocRowList.item(k));
 			resultXML.append("<ROW>");
 			for (int p = 0; p < hlength; p++) {
 				resultXML.append("<CELL>");
@@ -5484,27 +5485,27 @@ Map<String, String> rowData = indexRowElements(taskMidRowList.item(k));
 				if (fieldName.equals("WRITERNAME") || fieldName.equals("WRITERDEPTNAME") || fieldName.equals("FORMNAME") || fieldName.equals("WRITERJOBTITLE")) {
 					fieldName = fieldName + langData;
 				}
-				fieldValue = docXML.getElementsByTagName(fieldName).item(k).getTextContent();
+				fieldValue = rowData.get(fieldName);
 				resultXML.append("<VALUE>" + commonUtil.cleanValue(getListField(fieldName, fieldValue, companyID, lang, tenantID, offset)) + "</VALUE>");
 				
 				if (p == 0) {
-					resultXML.append("<DATA1>" + docXML.getElementsByTagName("DOCID").item(k).getTextContent() + "</DATA1>");
-					resultXML.append("<DATA2>" + makeListField(docXML.getElementsByTagName("HREF").item(k).getTextContent()) + "</DATA2>");
-					resultXML.append("<DATA3>" + makeListField(docXML.getElementsByTagName("WRITERID").item(k).getTextContent()) + "</DATA3>");
-					resultXML.append("<DATA4>" + docXML.getElementsByTagName("CONTAINERID").item(k).getTextContent() + "</DATA4>");
-					resultXML.append("<DATA5>" + makeListField(docXML.getElementsByTagName("ORGDOCID").item(k).getTextContent()) + "</DATA5>");
-					resultXML.append("<DATA6>" + docXML.getElementsByTagName("FORMID").item(k).getTextContent() + "</DATA6>");
-					resultXML.append("<DATA7>" + docXML.getElementsByTagName("DOCSTATE").item(k).getTextContent() + "</DATA7>");
-					resultXML.append("<DATA8>" + makeListField(docXML.getElementsByTagName("ISPUBLIC").item(k).getTextContent()) + "</DATA8>");
-					resultXML.append("<DATA9>" + docXML.getElementsByTagName("DOCTYPE").item(k).getTextContent() + "</DATA9>");
-					resultXML.append("<DATA10>" + docXML.getElementsByTagName("SECURITYAPPROVAL").item(k).getTextContent() + "</DATA10>");
+					resultXML.append("<DATA1>" + rowData.get("DOCID") + "</DATA1>");
+					resultXML.append("<DATA2>" + makeListField(rowData.get("HREF")) + "</DATA2>");
+					resultXML.append("<DATA3>" + makeListField(rowData.get("WRITERID")) + "</DATA3>");
+					resultXML.append("<DATA4>" + rowData.get("CONTAINERID") + "</DATA4>");
+					resultXML.append("<DATA5>" + makeListField(rowData.get("ORGDOCID")) + "</DATA5>");
+					resultXML.append("<DATA6>" + rowData.get("FORMID") + "</DATA6>");
+					resultXML.append("<DATA7>" + rowData.get("DOCSTATE") + "</DATA7>");
+					resultXML.append("<DATA8>" + makeListField(rowData.get("ISPUBLIC")) + "</DATA8>");
+					resultXML.append("<DATA9>" + rowData.get("DOCTYPE") + "</DATA9>");
+					resultXML.append("<DATA10>" + rowData.get("SECURITYAPPROVAL") + "</DATA10>");
 				}
 				
 				if (fieldName.equals("HASATTACHYN")) {
-					resultXML.append("<HASATTACHYN>" + docXML.getElementsByTagName("HASATTACHYN").item(k).getTextContent() + "</HASATTACHYN>");
+					resultXML.append("<HASATTACHYN>" + rowData.get("HASATTACHYN") + "</HASATTACHYN>");
 				}
 				if (fieldName.equals("ISPUBLIC")) {
-					resultXML.append("<ISPUBLIC>" + docXML.getElementsByTagName("ISPUBLIC").item(k).getTextContent() + "</ISPUBLIC>");
+					resultXML.append("<ISPUBLIC>" + rowData.get("ISPUBLIC") + "</ISPUBLIC>");
 				}
 				
 				resultXML.append("</CELL>");
@@ -28350,8 +28351,9 @@ Map<String, String> rowData = indexRowElements(findCabAllRowList.item(k));
 		String FieldName = "";
 		String FieldValue = "";
 		resultXML.append("<ROWS>");
-		int dlength = docXML.getElementsByTagName("ROW").getLength();
+		NodeList contDocSRowList = docXML.getElementsByTagName("ROW"); int dlength = contDocSRowList.getLength();
 		for (int k = dlength-1; k >=0; k-- ) {
+Map<String, String> rowData = indexRowElements(contDocSRowList.item(k));
 			resultXML.append("<ROW>");
 			firstFlag = true;
 			
@@ -28371,11 +28373,11 @@ Map<String, String> rowData = indexRowElements(findCabAllRowList.item(k));
 				}
 				
 				 // 품의함 품의 / 시행 구분 처리
-                if (FieldName.toUpperCase().equals("DOCSTATENAME") && docXML.getElementsByTagName("DOCTYPE").item(k).getTextContent().equals(staDTExcuteDoc)) {
+                if (FieldName.toUpperCase().equals("DOCSTATENAME") && rowData.get("DOCTYPE").equals(staDTExcuteDoc)) {
                     FieldValue = messageSource.getMessage("ezApproval.t885", locale);
                 } else {
                 	if (FieldName.equals("DOCSTATENAME")) {
-                		FieldValue = docXML.getElementsByTagName("DOCSTATE").item(k).getTextContent();
+                		FieldValue = rowData.get("DOCSTATE");
                 	} else {
 				        FieldValue = docXML.getElementsByTagName(FieldName.toUpperCase()).item(k).getTextContent();
                 	}
@@ -28384,31 +28386,31 @@ Map<String, String> rowData = indexRowElements(findCabAllRowList.item(k));
 				resultXML.append("<VALUE><![CDATA[" + getListField(FieldName, FieldValue, companyID, lang, tenantID, offSet) + "]]></VALUE>");
 			
 				if (firstFlag) {
-					resultXML.append("<DATA1><![CDATA[" + docXML.getElementsByTagName("DOCID").item(k).getTextContent() + "]]></DATA1>");
-					resultXML.append("<DATA2><![CDATA[" + docXML.getElementsByTagName("HREF").item(k).getTextContent() + "]]></DATA2>");
-					resultXML.append("<DATA3><![CDATA[" + docXML.getElementsByTagName("WRITERID").item(k).getTextContent() + "]]></DATA3>");
-					resultXML.append("<DATA4><![CDATA[" + docXML.getElementsByTagName("CONTAINERID").item(k).getTextContent() + "]]></DATA4>");
-					resultXML.append("<DATA5><![CDATA[" + docXML.getElementsByTagName("ORGDOCID").item(k).getTextContent() + "]]></DATA5>");
-					resultXML.append("<DATA6><![CDATA[" + docXML.getElementsByTagName("FORMID").item(k).getTextContent() + "]]></DATA6>");
-					resultXML.append("<DATA7><![CDATA[" + docXML.getElementsByTagName("DOCSTATE").item(k).getTextContent() + "]]></DATA7>");
-					resultXML.append("<DATA8><![CDATA[" + docXML.getElementsByTagName("ISPUBLIC").item(k).getTextContent() + "]]></DATA8>");
-					resultXML.append("<DATA9><![CDATA[" + docXML.getElementsByTagName("DOCTYPE").item(k).getTextContent() + "]]></DATA9>");
-					resultXML.append("<DATA10><![CDATA[" + docXML.getElementsByTagName("FUNCTIONTYPE").item(k).getTextContent() + "]]></DATA10>");
+					resultXML.append("<DATA1><![CDATA[" + rowData.get("DOCID") + "]]></DATA1>");
+					resultXML.append("<DATA2><![CDATA[" + rowData.get("HREF") + "]]></DATA2>");
+					resultXML.append("<DATA3><![CDATA[" + rowData.get("WRITERID") + "]]></DATA3>");
+					resultXML.append("<DATA4><![CDATA[" + rowData.get("CONTAINERID") + "]]></DATA4>");
+					resultXML.append("<DATA5><![CDATA[" + rowData.get("ORGDOCID") + "]]></DATA5>");
+					resultXML.append("<DATA6><![CDATA[" + rowData.get("FORMID") + "]]></DATA6>");
+					resultXML.append("<DATA7><![CDATA[" + rowData.get("DOCSTATE") + "]]></DATA7>");
+					resultXML.append("<DATA8><![CDATA[" + rowData.get("ISPUBLIC") + "]]></DATA8>");
+					resultXML.append("<DATA9><![CDATA[" + rowData.get("DOCTYPE") + "]]></DATA9>");
+					resultXML.append("<DATA10><![CDATA[" + rowData.get("FUNCTIONTYPE") + "]]></DATA10>");
                     if(lang.equals("2")) {
-                        resultXML.append("<DATA99><![CDATA[" + docXML.getElementsByTagName("FORMNAME2").item(k).getTextContent() + "]]></DATA99>");
+                        resultXML.append("<DATA99><![CDATA[" + rowData.get("FORMNAME2") + "]]></DATA99>");
                     } else {
-                        resultXML.append("<DATA99><![CDATA[" + docXML.getElementsByTagName("FORMNAME").item(k).getTextContent() + "]]></DATA99>");
+                        resultXML.append("<DATA99><![CDATA[" + rowData.get("FORMNAME") + "]]></DATA99>");
                     }
 
 					firstFlag = false;
 				}
 				
 				if (FieldName.equals("HASATTACHYN")) {
-					resultXML.append("<HASATTACHYN><![CDATA[" + docXML.getElementsByTagName("HASATTACHYN").item(k).getTextContent() + "]]></HASATTACHYN>");
+					resultXML.append("<HASATTACHYN><![CDATA[" + rowData.get("HASATTACHYN") + "]]></HASATTACHYN>");
 				}
 				
 				if (FieldName.equals("ISPUBLIC")) {
-					resultXML.append("<ISPUBLIC><![CDATA[" + docXML.getElementsByTagName("ISPUBLIC").item(k).getTextContent() + "]]></ISPUBLIC>");
+					resultXML.append("<ISPUBLIC><![CDATA[" + rowData.get("ISPUBLIC") + "]]></ISPUBLIC>");
 				}
 				resultXML.append("</CELL>");
 			}
@@ -28491,13 +28493,14 @@ Map<String, String> rowData = indexRowElements(findCabAllRowList.item(k));
 		String FieldName = "";
 		String FieldValue = "";
 		resultXML.append("<ROWS>");
-		int dlength = docXML.getElementsByTagName("ROW").getLength();
+		NodeList userContRowList = docXML.getElementsByTagName("ROW"); int dlength = userContRowList.getLength();
 		
 		for (int k = dlength - 1; k >= 0; k--) {
+Map<String, String> rowData = indexRowElements(userContRowList.item(k));
 			resultXML.append("<ROW>");
 			for (i = 0; i < hlength; i++) {
 				FieldName = listXML.getElementsByTagName("COLNAME").item(i).getTextContent().toUpperCase();
-				FieldValue = docXML.getElementsByTagName(FieldName).item(k).getTextContent();
+				FieldValue = rowData.get(FieldName);
 				resultXML.append("<CELL>");
 				
 				if (FieldName.equals("LINKDATE")) {
@@ -28507,25 +28510,25 @@ Map<String, String> rowData = indexRowElements(findCabAllRowList.item(k));
 				}
 			
 				if (i == 0) {
-					resultXML.append("<DATA1><![CDATA[" + docXML.getElementsByTagName("DOCID").item(k).getTextContent() + "]]></DATA1>");
-					resultXML.append("<DATA2><![CDATA[" + docXML.getElementsByTagName("HREF").item(k).getTextContent() + "]]></DATA2>");
-					resultXML.append("<DATA3><![CDATA[" + docXML.getElementsByTagName("WRITERID").item(k).getTextContent() + "]]></DATA3>");
-					resultXML.append("<DATA4><![CDATA[" + docXML.getElementsByTagName("CONTAINERID").item(k).getTextContent() + "]]></DATA4>");
-					resultXML.append("<DATA5><![CDATA[" + docXML.getElementsByTagName("ORGDOCID").item(k).getTextContent() + "]]></DATA5>");
-					resultXML.append("<DATA6><![CDATA[" + docXML.getElementsByTagName("FORMID").item(k).getTextContent() + "]]></DATA6>");
-					resultXML.append("<DATA7><![CDATA[" + docXML.getElementsByTagName("DOCSTATE").item(k).getTextContent() + "]]></DATA7>");
-					resultXML.append("<DATA8><![CDATA[" + docXML.getElementsByTagName("ISPUBLIC").item(k).getTextContent() + "]]></DATA8>");
-					resultXML.append("<DATA9><![CDATA[" + docXML.getElementsByTagName("DOCTYPE").item(k).getTextContent() + "]]></DATA9>");
-					resultXML.append("<ORGCOMPANYID><![CDATA[" + docXML.getElementsByTagName("COMPANYID").item(k).getTextContent() + "]]></ORGCOMPANYID>");
-					resultXML.append("<HASOPINIONYN><![CDATA[" + docXML.getElementsByTagName("HASOPINIONYN").item(k).getTextContent() + "]]></HASOPINIONYN>");
+					resultXML.append("<DATA1><![CDATA[" + rowData.get("DOCID") + "]]></DATA1>");
+					resultXML.append("<DATA2><![CDATA[" + rowData.get("HREF") + "]]></DATA2>");
+					resultXML.append("<DATA3><![CDATA[" + rowData.get("WRITERID") + "]]></DATA3>");
+					resultXML.append("<DATA4><![CDATA[" + rowData.get("CONTAINERID") + "]]></DATA4>");
+					resultXML.append("<DATA5><![CDATA[" + rowData.get("ORGDOCID") + "]]></DATA5>");
+					resultXML.append("<DATA6><![CDATA[" + rowData.get("FORMID") + "]]></DATA6>");
+					resultXML.append("<DATA7><![CDATA[" + rowData.get("DOCSTATE") + "]]></DATA7>");
+					resultXML.append("<DATA8><![CDATA[" + rowData.get("ISPUBLIC") + "]]></DATA8>");
+					resultXML.append("<DATA9><![CDATA[" + rowData.get("DOCTYPE") + "]]></DATA9>");
+					resultXML.append("<ORGCOMPANYID><![CDATA[" + rowData.get("COMPANYID") + "]]></ORGCOMPANYID>");
+					resultXML.append("<HASOPINIONYN><![CDATA[" + rowData.get("HASOPINIONYN") + "]]></HASOPINIONYN>");
 				}
 				
 				if (listXML.getElementsByTagName("COLNAME").item(i).getTextContent().equals("HASATTACHYN")) {
-					resultXML.append("<HASATTACHYN>" + docXML.getElementsByTagName("HASATTACHYN").item(k).getTextContent() + "</HASATTACHYN>");
+					resultXML.append("<HASATTACHYN>" + rowData.get("HASATTACHYN") + "</HASATTACHYN>");
 				}
 				
 				if (listXML.getElementsByTagName("COLNAME").item(i).getTextContent().equals("ISPUBLIC")) {
-					resultXML.append("<ISPUBLIC>" + docXML.getElementsByTagName("ISPUBLIC").item(k).getTextContent() + "</ISPUBLIC>");
+					resultXML.append("<ISPUBLIC>" + rowData.get("ISPUBLIC") + "</ISPUBLIC>");
 				}
 				resultXML.append("</CELL>");
 			}
@@ -28605,9 +28608,10 @@ Map<String, String> rowData = indexRowElements(findCabAllRowList.item(k));
 		String FieldName = "";
 		String FieldValue = "";
 		resultXML.append("<ROWS>");
-		int dlength = docXML.getElementsByTagName("ROW").getLength();
+		NodeList userContAllRowList = docXML.getElementsByTagName("ROW"); int dlength = userContAllRowList.getLength();
 		
 		for (int k = dlength - 1; k >= 0; k--) {
+Map<String, String> rowData = indexRowElements(userContAllRowList.item(k));
 			resultXML.append("<ROW>");
 			for (i = 0; i < hlength; i++) {
 				FieldName = listXML.getElementsByTagName("COLNAME").item(i).getTextContent();
@@ -28621,23 +28625,23 @@ Map<String, String> rowData = indexRowElements(findCabAllRowList.item(k));
 				}
 			
 				if (i == 0) {
-					resultXML.append("<DATA1><![CDATA[" + docXML.getElementsByTagName("DOCID").item(k).getTextContent() + "]]></DATA1>");
-					resultXML.append("<DATA2><![CDATA[" + docXML.getElementsByTagName("HREF").item(k).getTextContent() + "]]></DATA2>");
-					resultXML.append("<DATA3><![CDATA[" + docXML.getElementsByTagName("WRITERID").item(k).getTextContent() + "]]></DATA3>");
-					resultXML.append("<DATA4><![CDATA[" + docXML.getElementsByTagName("CONTAINERID").item(k).getTextContent() + "]]></DATA4>");
-					resultXML.append("<DATA5><![CDATA[" + docXML.getElementsByTagName("ORGDOCID").item(k).getTextContent() + "]]></DATA5>");
-					resultXML.append("<DATA6><![CDATA[" + docXML.getElementsByTagName("FORMID").item(k).getTextContent() + "]]></DATA6>");
-					resultXML.append("<DATA7><![CDATA[" + docXML.getElementsByTagName("DOCSTATE").item(k).getTextContent() + "]]></DATA7>");
-					resultXML.append("<DATA8><![CDATA[" + docXML.getElementsByTagName("ISPUBLIC").item(k).getTextContent() + "]]></DATA8>");
-					resultXML.append("<DATA9><![CDATA[" + docXML.getElementsByTagName("DOCTYPE").item(k).getTextContent() + "]]></DATA9>");
+					resultXML.append("<DATA1><![CDATA[" + rowData.get("DOCID") + "]]></DATA1>");
+					resultXML.append("<DATA2><![CDATA[" + rowData.get("HREF") + "]]></DATA2>");
+					resultXML.append("<DATA3><![CDATA[" + rowData.get("WRITERID") + "]]></DATA3>");
+					resultXML.append("<DATA4><![CDATA[" + rowData.get("CONTAINERID") + "]]></DATA4>");
+					resultXML.append("<DATA5><![CDATA[" + rowData.get("ORGDOCID") + "]]></DATA5>");
+					resultXML.append("<DATA6><![CDATA[" + rowData.get("FORMID") + "]]></DATA6>");
+					resultXML.append("<DATA7><![CDATA[" + rowData.get("DOCSTATE") + "]]></DATA7>");
+					resultXML.append("<DATA8><![CDATA[" + rowData.get("ISPUBLIC") + "]]></DATA8>");
+					resultXML.append("<DATA9><![CDATA[" + rowData.get("DOCTYPE") + "]]></DATA9>");
 				}
 				
 				if (listXML.getElementsByTagName("COLNAME").item(i).getTextContent().equals("HASATTACHYN")) {
-					resultXML.append("<HASATTACHYN>" + docXML.getElementsByTagName("HASATTACHYN").item(k).getTextContent() + "</HASATTACHYN>");
+					resultXML.append("<HASATTACHYN>" + rowData.get("HASATTACHYN") + "</HASATTACHYN>");
 				}
 				
 				if (listXML.getElementsByTagName("COLNAME").item(i).getTextContent().equals("ISPUBLIC")) {
-					resultXML.append("<ISPUBLIC>" + docXML.getElementsByTagName("ISPUBLIC").item(k).getTextContent() + "</ISPUBLIC>");
+					resultXML.append("<ISPUBLIC>" + rowData.get("ISPUBLIC") + "</ISPUBLIC>");
 				}
 				resultXML.append("</CELL>");
 			}
