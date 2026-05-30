@@ -95,7 +95,16 @@
 - 배치4: getUncompleteDocList, getAttachFileInfo, getAttachDocInfo, getHistoryForDoc
 - 배치5: getHistoryForLine, getHistoryForAttach, getHistoryForLineDetail, getGongRamLineInfo, getReceiptHistoryInfo
 - 배치6: getFindSimpleCabinetList, getFindSimpleCabinetListAll
-- **누적 31개 메서드.**
+- 배치7: getContDocList, getContDocListS, getUserContList, getUserContListAll
+- 배치8: getReceiptTempletDetailInfo, getSignInfo, aprDashBoardDocList(=BL-005 쌍둥이, 완료)
+- 배치9: getSendOutDocList, getAprType(2개 k-루프), getDeliveryList(역순 j)
+- 배치10: getSimpleCabinetList, getCodeInfo(9개 k-루프)
+- **누적 43개 메서드.**
+
+### R-중첩군 잔류 (자동 sed 부적합 — 개별 처리/저우선)
+- `getContainerInfoManage`: if/else 2개 j-루프. 일부 태그가 `"CONTAINERTYPENAME" + commonUtil.getMultiData(...)` **동적·중첩괄호 태그**라 단순 sed 미적용. 저가치(컨테이너 목록). 수동 처리 시 `rowData.get(동적키)`로 변환 가능.
+- `getReceivedDocInfo`: 표준 `docXML.getElementsByTagName("ROW")` 행루프 형태 아님(다른 변수/구조). 개별 정독 후 판단 필요.
+- `getTaskSubCategoryAll`: 셀별 item() 재조회 안티패턴 **미해당**(대상 아님으로 정정).
 
 ### 남은 hard tail (자동 일괄 부적합 — 개별 정밀 처리 필요)
 - **(P) param-input docXML — 구조 검증 필수**: makeTaskListXml, makeTaskListXmlAll, makeTaskFullListXml, GetRecordInfo, getRecReadHistory, getRecordHistory, getCabinetHistory, getTaskCharger, getCabinetDetailInfo
