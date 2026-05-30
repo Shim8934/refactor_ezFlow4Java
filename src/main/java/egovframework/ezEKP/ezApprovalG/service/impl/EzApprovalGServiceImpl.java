@@ -3134,16 +3134,17 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 		
 		Document docXML = commonUtil.convertStringToDocument(sb.toString());
 		
-		int dlength = docXML.getElementsByTagName("ROW").getLength();
+		NodeList aprTypeRowList = docXML.getElementsByTagName("ROW"); int dlength = aprTypeRowList.getLength();
 		
 		rtnXML.append("<APRTYPES>");
 		rtnXML.append("<USERTYPES>");
 		
 		for (int k = 0; k < dlength; k++) {
-			String strCode2 = docXML.getElementsByTagName("CODE2").item(k).getTextContent().trim();
+Map<String, String> rowData = indexRowElements(aprTypeRowList.item(k));
+			String strCode2 = rowData.get("CODE2").trim();
 			if (!strCode2.equals(staATBuSeuSoonChaHyubJo) && !strCode2.equals(staATBuSeuByungRyulHyubJo) && !strCode2.equals(staATGamSaBu)) {
 				rtnXML.append("<APRTYPE><CODE>" + commonUtil.cleanValue(strCode2));
-				rtnXML.append("</CODE><NAME>" + commonUtil.cleanValue(docXML.getElementsByTagName("NAME").item(k).getTextContent()));
+				rtnXML.append("</CODE><NAME>" + commonUtil.cleanValue(rowData.get("NAME")));
 				rtnXML.append("</NAME></APRTYPE>");
 			}
 		}
@@ -3152,10 +3153,11 @@ public class EzApprovalGServiceImpl extends EzFileMngUtil implements EzApprovalG
 		rtnXML.append("<DEPTTYPES>");
 		
 		for (int k = 0; k < dlength; k++) {
-			String strCode2 = docXML.getElementsByTagName("CODE2").item(k).getTextContent().trim();
+Map<String, String> rowData = indexRowElements(aprTypeRowList.item(k));
+			String strCode2 = rowData.get("CODE2").trim();
 			if (strCode2.equals(staATBuSeuSoonChaHyubJo) || strCode2.equals(staATBuSeuByungRyulHyubJo) || strCode2.equals(staATGamSaBu)) {
 				rtnXML.append("<APRTYPE><CODE>" + commonUtil.cleanValue(strCode2));
-				rtnXML.append("</CODE><NAME>" + commonUtil.cleanValue(docXML.getElementsByTagName("NAME").item(k).getTextContent()));
+				rtnXML.append("</CODE><NAME>" + commonUtil.cleanValue(rowData.get("NAME")));
 				rtnXML.append("</NAME></APRTYPE>");
 			}
 		}
@@ -6131,7 +6133,7 @@ Map<String, String> rowData = indexRowElements(uncompleteRowList.item(k));
 		String docList = getSendOutDocList(mode, querySize, querySize2, orderOption1, orderOption2, basicOrder, basicOrderReverse, companyID, tenantID, queryMap);
 		
 		Document docXML = commonUtil.convertStringToDocument(docList);
-		int dlength = docXML.getElementsByTagName("ROW").getLength();
+		NodeList sendOutRowList = docXML.getElementsByTagName("ROW"); int dlength = sendOutRowList.getLength();
 		
 		String fieldName = "";
 		String fieldValue = "";
@@ -6139,6 +6141,7 @@ Map<String, String> rowData = indexRowElements(uncompleteRowList.item(k));
 		resultXML.append("<ROWS>");
 		
 		for (int k = dlength - 1; k >= 0; k--) {
+Map<String, String> rowData = indexRowElements(sendOutRowList.item(k));
 			resultXML.append("<ROW>");
 			for (int p = 0; p < hlength; p++) {
 				resultXML.append("<CELL>");
@@ -6147,15 +6150,15 @@ Map<String, String> rowData = indexRowElements(uncompleteRowList.item(k));
 				if (fieldName.equals("WRITERDEPTNAME") || fieldName.equals("WRITERNAME") || fieldName.equals("FORMNAME")) {
 					fieldName = fieldName + langData;
 				}
-				fieldValue = docXML.getElementsByTagName(fieldName).item(k).getTextContent();
+				fieldValue = rowData.get(fieldName);
 				resultXML.append("<VALUE>" + commonUtil.cleanValue(getListField(fieldName, fieldValue, companyID, userLang, tenantID, offset)) + "</VALUE>");
 				
 				if (p == 0) {
-					resultXML.append("<DATA1>" + docXML.getElementsByTagName("DOCID").item(k).getTextContent() + "</DATA1>");
+					resultXML.append("<DATA1>" + rowData.get("DOCID") + "</DATA1>");
 					resultXML.append("<DATA2>" + "" + "</DATA2>");
-					resultXML.append("<DATA3>" + makeListField(docXML.getElementsByTagName("HREF").item(k).getTextContent()) + "</DATA3>");
-					resultXML.append("<DATA4>" + docXML.getElementsByTagName("CONTAINERID").item(k).getTextContent() + "</DATA4>");
-					resultXML.append("<DATA5>" + docXML.getElementsByTagName("PROCESSYN").item(k).getTextContent() + "</DATA5>");
+					resultXML.append("<DATA3>" + makeListField(rowData.get("HREF")) + "</DATA3>");
+					resultXML.append("<DATA4>" + rowData.get("CONTAINERID") + "</DATA4>");
+					resultXML.append("<DATA5>" + rowData.get("PROCESSYN") + "</DATA5>");
 					resultXML.append("<DATA6>" + "" + "</DATA6>");
 					resultXML.append("<DATA7>" + "" + "</DATA7>");
 					resultXML.append("<DATA8>" + "" + "</DATA8>");
@@ -6164,7 +6167,7 @@ Map<String, String> rowData = indexRowElements(uncompleteRowList.item(k));
 					resultXML.append("<DATA11>" + "" + "</DATA11>");
 					resultXML.append("<DATA12>" + "" + "</DATA12>");
 					resultXML.append("<DATA13>" + "" + "</DATA13>");
-					resultXML.append("<DATA14>" + makeListField(docXML.getElementsByTagName("URGENTAPPROVAL").item(k).getTextContent()) + "</DATA14>");
+					resultXML.append("<DATA14>" + makeListField(rowData.get("URGENTAPPROVAL")) + "</DATA14>");
 				}
 				resultXML.append("</CELL>");
 			}
@@ -25696,7 +25699,8 @@ Map<String, String> rowData = indexRowElements(findCabAllRowList.item(k));
 		String langData = commonUtil.getMultiData(lang, tenantID);
 		
 		resultXML.append("<ROWS>");
-		for (int j = docXML.getElementsByTagName("ROW").getLength() - 1; j >= 0; j--) {
+		NodeList delivRowList = docXML.getElementsByTagName("ROW"); for (int j = delivRowList.getLength() - 1; j >= 0; j--) {
+Map<String, String> rowData = indexRowElements(delivRowList.item(j));
 			resultXML.append("<ROW>");
 			
 			for (i=0; i<hlength; i++) {
@@ -25711,22 +25715,22 @@ Map<String, String> rowData = indexRowElements(findCabAllRowList.item(k));
 				
 				//2018-09-05 강민수92 배부부서컬럼에 배부자 괄호로 추가
 				if (fieldName.equals("ORGAN")) {
-					fieldValue = makeXMLString(docXML.getElementsByTagName(fieldName).item(j).getTextContent() + "(" + docXML.getElementsByTagName("ORGANUSERNAME").item(j).getTextContent() + ")");
+					fieldValue = makeXMLString(rowData.get(fieldName) + "(" + rowData.get("ORGANUSERNAME") + ")");
 				} else {
-					fieldValue = makeXMLString(docXML.getElementsByTagName(fieldName).item(j).getTextContent());
+					fieldValue = makeXMLString(rowData.get(fieldName));
 				}
 				resultXML.append(getListField(fieldName, fieldValue, companyID, lang, tenantID, offset) + "</VALUE>");
 				
 				if (i == 0) {
-                    resultXML.append("<DATA1>" + makeXMLString(docXML.getElementsByTagName("DOCID").item(j).getTextContent().trim()) + "</DATA1>");
-                    resultXML.append("<DATA2>" + makeXMLString(docXML.getElementsByTagName("HREF").item(j).getTextContent().trim()) + "</DATA2>");
-                    resultXML.append("<DATA3>" + makeXMLString(docXML.getElementsByTagName("SN").item(j).getTextContent().trim()) + "</DATA3>");
-                    resultXML.append("<DATA4>" + makeXMLString(docXML.getElementsByTagName("MANAGEDEPTID").item(j).getTextContent().trim()) + "</DATA4>");
-                    resultXML.append("<DATA5>" + makeXMLString(docXML.getElementsByTagName("CHARGEID").item(j).getTextContent().trim()) + "</DATA5>");
-                    resultXML.append("<DATA6>" + makeXMLString(docXML.getElementsByTagName("DEPTID").item(j).getTextContent().trim()) + "</DATA6>");
-                    resultXML.append("<DATA7>" + makeXMLString(docXML.getElementsByTagName("ORGDOCNUMCODE").item(j).getTextContent().trim()) + "</DATA7>");
+                    resultXML.append("<DATA1>" + makeXMLString(rowData.get("DOCID").trim()) + "</DATA1>");
+                    resultXML.append("<DATA2>" + makeXMLString(rowData.get("HREF").trim()) + "</DATA2>");
+                    resultXML.append("<DATA3>" + makeXMLString(rowData.get("SN").trim()) + "</DATA3>");
+                    resultXML.append("<DATA4>" + makeXMLString(rowData.get("MANAGEDEPTID").trim()) + "</DATA4>");
+                    resultXML.append("<DATA5>" + makeXMLString(rowData.get("CHARGEID").trim()) + "</DATA5>");
+                    resultXML.append("<DATA6>" + makeXMLString(rowData.get("DEPTID").trim()) + "</DATA6>");
+                    resultXML.append("<DATA7>" + makeXMLString(rowData.get("ORGDOCNUMCODE").trim()) + "</DATA7>");
                     // 2023-09-05 전인하 - 배부대장 > 리스트조회 시 보안결재정보 함께 호출
-                    resultXML.append("<DATA8>" + makeXMLString(docXML.getElementsByTagName("SECURITYAPPROVAL").item(j).getTextContent().trim()) + "</DATA8>");
+                    resultXML.append("<DATA8>" + makeXMLString(rowData.get("SECURITYAPPROVAL").trim()) + "</DATA8>");
                 }
 				resultXML.append("</CELL>");
 			}
