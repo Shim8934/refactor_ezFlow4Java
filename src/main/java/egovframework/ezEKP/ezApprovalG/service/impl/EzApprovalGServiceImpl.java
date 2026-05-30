@@ -12017,7 +12017,7 @@ Map<String, String> rowData = indexRowElements(histDocRowList.item(k));
 		
 		Document docXML = commonUtil.convertStringToDocument(sb.toString());
 		
-		int dlength = docXML.getElementsByTagName("ROW").getLength();
+		NodeList histLineRowList = docXML.getElementsByTagName("ROW"); int dlength = histLineRowList.getLength();
 		
 		String fieldName = "";
 		String fieldValue = "";
@@ -12026,6 +12026,7 @@ Map<String, String> rowData = indexRowElements(histDocRowList.item(k));
 		
 		for (int k = 0; k < dlength; k++) {
 			resultXML.append("<ROW>");
+Map<String, String> rowData = indexRowElements(histLineRowList.item(k));
 			for (int p = 0; p < hlength; p++) {
 				resultXML.append("<CELL>");
 				fieldName = listXML.getElementsByTagName("COLNAME").item(p).getTextContent().toUpperCase();
@@ -12033,15 +12034,15 @@ Map<String, String> rowData = indexRowElements(histDocRowList.item(k));
 				if (fieldName.equals("MODIFYUSERNAME") || fieldName.equals("MODIFYUSERJOBTITLE") || fieldName.equals("MODIFYUSERDEPTNAME")) {
 					fieldName = fieldName + langData;
 				}
-				fieldValue = docXML.getElementsByTagName(fieldName).item(k).getTextContent();
+				fieldValue = rowData.get(fieldName);
 				resultXML.append("<VALUE>" + commonUtil.cleanValue(getListField(fieldName, fieldValue, companyID, lang, tenantID, offset)) + "</VALUE>");
 				
 				if (p == 0) {
-					resultXML.append("<DATA1>" + makeListField(docXML.getElementsByTagName("DOCID").item(k).getTextContent()) + "</DATA1>");
-					resultXML.append("<DATA2>" + makeListField(docXML.getElementsByTagName("MODIFYSN").item(k).getTextContent()) + "</DATA2>");
-					resultXML.append("<DATA3>" + makeListField(docXML.getElementsByTagName("MODIFYUSERID").item(k).getTextContent()) + "</DATA3>");
-					resultXML.append("<DATA4>" + makeListField(docXML.getElementsByTagName("MODIFYUSERDEPTID").item(k).getTextContent()) + "</DATA4>");
-					resultXML.append("<DATA5>" + makeListField(docXML.getElementsByTagName("CHKFLAG").item(k).getTextContent()) + "</DATA5>");
+					resultXML.append("<DATA1>" + makeListField(rowData.get("DOCID")) + "</DATA1>");
+					resultXML.append("<DATA2>" + makeListField(rowData.get("MODIFYSN")) + "</DATA2>");
+					resultXML.append("<DATA3>" + makeListField(rowData.get("MODIFYUSERID")) + "</DATA3>");
+					resultXML.append("<DATA4>" + makeListField(rowData.get("MODIFYUSERDEPTID")) + "</DATA4>");
+					resultXML.append("<DATA5>" + makeListField(rowData.get("CHKFLAG")) + "</DATA5>");
 				}
 				resultXML.append("</CELL>");
 			}
@@ -12115,7 +12116,7 @@ Map<String, String> rowData = indexRowElements(histDocRowList.item(k));
 		
 		Document docXML = commonUtil.convertStringToDocument(sb.toString());
 		
-		int dlength = docXML.getElementsByTagName("ROW").getLength();
+		NodeList histAttachRowList = docXML.getElementsByTagName("ROW"); int dlength = histAttachRowList.getLength();
 		
 		String fieldName = "";
 		String fieldValue = "";
@@ -12124,6 +12125,7 @@ Map<String, String> rowData = indexRowElements(histDocRowList.item(k));
 		
 		for (int k = 0; k < dlength; k++) {
 			resultXML.append("<ROW>");
+Map<String, String> rowData = indexRowElements(histAttachRowList.item(k));
 			for (int p = 0; p < hlength; p++) {
 				resultXML.append("<CELL>");
 				fieldName = listXML.getElementsByTagName("COLNAME").item(p).getTextContent().toUpperCase();
@@ -12131,7 +12133,7 @@ Map<String, String> rowData = indexRowElements(histDocRowList.item(k));
 					fieldName = fieldName + langData;
 				}
 				if (fieldName.equals("MODIFYFLAG")) {
-					switch (docXML.getElementsByTagName(fieldName).item(k).getTextContent()) {
+					switch (rowData.get(fieldName)) {
 						case "001":
 							fieldValue = messageSource.getMessage("ezApprovalG.t268", locale);
 							break;
@@ -12145,25 +12147,25 @@ Map<String, String> rowData = indexRowElements(histDocRowList.item(k));
 							fieldValue = messageSource.getMessage("ezApprovalG.t267", locale);
 							break;
 						default:
-							fieldValue = docXML.getElementsByTagName(fieldName).item(k).getTextContent();
+							fieldValue = rowData.get(fieldName);
 							break;
 					}
 				} else {
-					fieldValue = docXML.getElementsByTagName(fieldName).item(k).getTextContent();
+					fieldValue = rowData.get(fieldName);
 				}
 				
 				resultXML.append("<VALUE>" + commonUtil.cleanValue(getListField(fieldName, fieldValue, companyID, lang, tenantID, offset)) + "</VALUE>");
 				
 				if (p == 0) {
-					resultXML.append("<DATA1>" + makeListField(docXML.getElementsByTagName("DOCID").item(k).getTextContent()) + "</DATA1>");
-					resultXML.append("<DATA2><![CDATA[" + makeListField(docXML.getElementsByTagName("ATTACHFILENAME").item(k).getTextContent()) + "]]></DATA2>");
-					resultXML.append("<DATA3><![CDATA[" + makeListField(docXML.getElementsByTagName("ATTACHFILEDISPLAYNAME").item(k).getTextContent()) + "]]></DATA3>");
-					resultXML.append("<DATA4><![CDATA[" + makeListField(docXML.getElementsByTagName("ATTACHFILEHREF").item(k).getTextContent()) + "]]></DATA4>");
-					resultXML.append("<DATA5>" + makeListField(docXML.getElementsByTagName("ATTACHUSERID").item(k).getTextContent()) + "</DATA5>");
-					resultXML.append("<DATA6>" + makeListField(docXML.getElementsByTagName("ATTACHUSERDEPTID").item(k).getTextContent()) + "</DATA6>");
-					resultXML.append("<DATA7>" + makeListField(docXML.getElementsByTagName("MODIFYFLAG").item(k).getTextContent()) + "</DATA7>");
-					resultXML.append("<DATA8>" + makeListField(docXML.getElementsByTagName("CHKFLAG").item(k).getTextContent()) + "</DATA8>");
-					resultXML.append("<DATA9>" + makeListField(docXML.getElementsByTagName("ATTACHFILESN").item(k).getTextContent()) + "</DATA9>");
+					resultXML.append("<DATA1>" + makeListField(rowData.get("DOCID")) + "</DATA1>");
+					resultXML.append("<DATA2><![CDATA[" + makeListField(rowData.get("ATTACHFILENAME")) + "]]></DATA2>");
+					resultXML.append("<DATA3><![CDATA[" + makeListField(rowData.get("ATTACHFILEDISPLAYNAME")) + "]]></DATA3>");
+					resultXML.append("<DATA4><![CDATA[" + makeListField(rowData.get("ATTACHFILEHREF")) + "]]></DATA4>");
+					resultXML.append("<DATA5>" + makeListField(rowData.get("ATTACHUSERID")) + "</DATA5>");
+					resultXML.append("<DATA6>" + makeListField(rowData.get("ATTACHUSERDEPTID")) + "</DATA6>");
+					resultXML.append("<DATA7>" + makeListField(rowData.get("MODIFYFLAG")) + "</DATA7>");
+					resultXML.append("<DATA8>" + makeListField(rowData.get("CHKFLAG")) + "</DATA8>");
+					resultXML.append("<DATA9>" + makeListField(rowData.get("ATTACHFILESN")) + "</DATA9>");
 				}
 				resultXML.append("</CELL>");
 			}
@@ -12239,7 +12241,7 @@ Map<String, String> rowData = indexRowElements(histDocRowList.item(k));
 		
 		Document docXML = commonUtil.convertStringToDocument(sb.toString());
 		
-		int dlength = docXML.getElementsByTagName("ROW").getLength();
+		NodeList histLineDtlRowList = docXML.getElementsByTagName("ROW"); int dlength = histLineDtlRowList.getLength();
 		
 		String fieldName = "";
 		String fieldValue = "";
@@ -12248,6 +12250,7 @@ Map<String, String> rowData = indexRowElements(histDocRowList.item(k));
 		
 		for (int k = 0; k < dlength; k++) {
 			resultXML.append("<ROW>");
+Map<String, String> rowData = indexRowElements(histLineDtlRowList.item(k));
 			for (int p = 0; p < hlength; p++) {
 				resultXML.append("<CELL>");
 				fieldName = listXML.getElementsByTagName("COLNAME").item(p).getTextContent().toUpperCase();
@@ -12255,15 +12258,15 @@ Map<String, String> rowData = indexRowElements(histDocRowList.item(k));
 				if (fieldName.equals("APRMEMBERNAME") || fieldName.equals("APRMEMBERJOBTITLE") || fieldName.equals("APRMEMBERDEPTNAME")) {
 					fieldName = fieldName + langData;
 				}
-				fieldValue = docXML.getElementsByTagName(fieldName).item(k).getTextContent();
+				fieldValue = rowData.get(fieldName);
 				resultXML.append("<VALUE>" + commonUtil.cleanValue(getListField(fieldName, fieldValue, companyID, lang, tenantID, offset)) + "</VALUE>");
 				
 				if (p == 0) {
-					resultXML.append("<DATA1>" + makeListField(docXML.getElementsByTagName("DOCID").item(k).getTextContent()) + "</DATA1>");
-					resultXML.append("<DATA2>" + makeListField(docXML.getElementsByTagName("APRMEMBERSN").item(k).getTextContent()) + "</DATA2>");
-					resultXML.append("<DATA3>" + makeListField(docXML.getElementsByTagName("APRMEMBERID").item(k).getTextContent()) + "</DATA3>");
-					resultXML.append("<DATA4>" + makeListField(docXML.getElementsByTagName("APRMEMBERDEPTID").item(k).getTextContent()) + "</DATA4>");
-					resultXML.append("<DATA5>" + makeListField(docXML.getElementsByTagName("CHKFLAG").item(k).getTextContent()) + "</DATA5>");
+					resultXML.append("<DATA1>" + makeListField(rowData.get("DOCID")) + "</DATA1>");
+					resultXML.append("<DATA2>" + makeListField(rowData.get("APRMEMBERSN")) + "</DATA2>");
+					resultXML.append("<DATA3>" + makeListField(rowData.get("APRMEMBERID")) + "</DATA3>");
+					resultXML.append("<DATA4>" + makeListField(rowData.get("APRMEMBERDEPTID")) + "</DATA4>");
+					resultXML.append("<DATA5>" + makeListField(rowData.get("CHKFLAG")) + "</DATA5>");
 				}
 				resultXML.append("</CELL>");
 			}
@@ -33849,7 +33852,7 @@ Map<String, String> rowData = indexRowElements(histDocRowList.item(k));
 		}
 		
 		Document docXML = commonUtil.convertStringToDocument(docList);
-		int dlength = docXML.getElementsByTagName("ROW").getLength();
+		NodeList gongRamLineRowList = docXML.getElementsByTagName("ROW"); int dlength = gongRamLineRowList.getLength();
 		
 		String fieldName = "";
 		String fieldValue = "";
@@ -33858,6 +33861,7 @@ Map<String, String> rowData = indexRowElements(histDocRowList.item(k));
 		
 		for (int k = 0; k < dlength; k++) {
 			resultXML.append("<ROW>");
+Map<String, String> rowData = indexRowElements(gongRamLineRowList.item(k));
 			
 			for (int p = 0; p < hlength; p++) {
 				resultXML.append("<CELL>");
@@ -33867,28 +33871,28 @@ Map<String, String> rowData = indexRowElements(histDocRowList.item(k));
 					fieldName = fieldName + langData;
 				}
 				
-				fieldValue = docXML.getElementsByTagName(fieldName).item(k).getTextContent();
+				fieldValue = rowData.get(fieldName);
 				resultXML.append("<VALUE>" + commonUtil.cleanValue(getListField(fieldName, fieldValue, companyID, lang, tenantID, offset)) + "</VALUE>");
 				
 				if (p == 0) {
-					resultXML.append("<DATA1>" + makeListField(convertDate(docXML.getElementsByTagName("PROCESSDATE").item(k).getTextContent())) + "</DATA1>");
-					resultXML.append("<DATA2>" + makeListField(convertDate(docXML.getElementsByTagName("RECEIVEDDATE").item(k).getTextContent())) + "</DATA2>");
+					resultXML.append("<DATA1>" + makeListField(convertDate(rowData.get("PROCESSDATE"))) + "</DATA1>");
+					resultXML.append("<DATA2>" + makeListField(convertDate(rowData.get("RECEIVEDDATE"))) + "</DATA2>");
 					resultXML.append("<DATA3>" + docID + "</DATA3>");
-					resultXML.append("<DATA4>" + makeListField(docXML.getElementsByTagName("APRMEMBERID").item(k).getTextContent()) + "</DATA4>");
-					resultXML.append("<DATA5>" + docXML.getElementsByTagName("APRMEMBERISDEPTYN").item(k).getTextContent() + "</DATA5>");
-					resultXML.append("<DATA6><![CDATA[" + makeListField(docXML.getElementsByTagName("APRMEMBERDEPTID").item(k).getTextContent()) + "]]></DATA6>");
-					resultXML.append("<DATA7>" + makeListField(docXML.getElementsByTagName("REASONDONOTAPPROV").item(k).getTextContent()) + "</DATA7>");
-					resultXML.append("<DATA8>" + docXML.getElementsByTagName("ISPROPOSERYN").item(k).getTextContent() + "</DATA8>");
-					resultXML.append("<DATA9>" + docXML.getElementsByTagName("ISBRIEFUSERYN").item(k).getTextContent() + "</DATA9>");
-					resultXML.append("<DATA10>" + makeListField(docXML.getElementsByTagName("APRMEMBERLDAPPATH").item(k).getTextContent()) + "</DATA10>");
-					resultXML.append("<DATA11>" + makeListField(docXML.getElementsByTagName("APRTYPE").item(k).getTextContent()) + "</DATA11>");
-					resultXML.append("<DATA12>" + makeListField(docXML.getElementsByTagName("APRSTATE").item(k).getTextContent()) + "</DATA12>");
-					resultXML.append("<DATA13><![CDATA[" + makeListField(docXML.getElementsByTagName("APRMEMBERNAME").item(k).getTextContent()) + "]]></DATA13>");
-					resultXML.append("<DATA14><![CDATA[" + makeListField(docXML.getElementsByTagName("APRMEMBERNAME2").item(k).getTextContent()) + "]]></DATA14>");
-					resultXML.append("<DATA15><![CDATA[" + makeListField(docXML.getElementsByTagName("APRMEMBERDEPTNAME").item(k).getTextContent()) + "]]></DATA15>");
-					resultXML.append("<DATA16><![CDATA[" + makeListField(docXML.getElementsByTagName("APRMEMBERDEPTNAME2").item(k).getTextContent()) + "]]></DATA16>");
-					resultXML.append("<DATA17><![CDATA[" + makeListField(docXML.getElementsByTagName("APRMEMBERJOBTITLE").item(k).getTextContent()) + "]]></DATA17>");
-					resultXML.append("<DATA18><![CDATA[" + makeListField(docXML.getElementsByTagName("APRMEMBERJOBTITLE2").item(k).getTextContent()) + "]]></DATA18>");
+					resultXML.append("<DATA4>" + makeListField(rowData.get("APRMEMBERID")) + "</DATA4>");
+					resultXML.append("<DATA5>" + rowData.get("APRMEMBERISDEPTYN") + "</DATA5>");
+					resultXML.append("<DATA6><![CDATA[" + makeListField(rowData.get("APRMEMBERDEPTID")) + "]]></DATA6>");
+					resultXML.append("<DATA7>" + makeListField(rowData.get("REASONDONOTAPPROV")) + "</DATA7>");
+					resultXML.append("<DATA8>" + rowData.get("ISPROPOSERYN") + "</DATA8>");
+					resultXML.append("<DATA9>" + rowData.get("ISBRIEFUSERYN") + "</DATA9>");
+					resultXML.append("<DATA10>" + makeListField(rowData.get("APRMEMBERLDAPPATH")) + "</DATA10>");
+					resultXML.append("<DATA11>" + makeListField(rowData.get("APRTYPE")) + "</DATA11>");
+					resultXML.append("<DATA12>" + makeListField(rowData.get("APRSTATE")) + "</DATA12>");
+					resultXML.append("<DATA13><![CDATA[" + makeListField(rowData.get("APRMEMBERNAME")) + "]]></DATA13>");
+					resultXML.append("<DATA14><![CDATA[" + makeListField(rowData.get("APRMEMBERNAME2")) + "]]></DATA14>");
+					resultXML.append("<DATA15><![CDATA[" + makeListField(rowData.get("APRMEMBERDEPTNAME")) + "]]></DATA15>");
+					resultXML.append("<DATA16><![CDATA[" + makeListField(rowData.get("APRMEMBERDEPTNAME2")) + "]]></DATA16>");
+					resultXML.append("<DATA17><![CDATA[" + makeListField(rowData.get("APRMEMBERJOBTITLE")) + "]]></DATA17>");
+					resultXML.append("<DATA18><![CDATA[" + makeListField(rowData.get("APRMEMBERJOBTITLE2")) + "]]></DATA18>");
 				}
 				
 				resultXML.append("</CELL>");
@@ -35938,7 +35942,7 @@ Map<String, String> rowData = indexRowElements(histDocRowList.item(k));
 		}
 		
 		Document docXML = commonUtil.convertStringToDocument(docList);
-		int dlength = docXML.getElementsByTagName("ROW").getLength();
+		NodeList recvHistRowList = docXML.getElementsByTagName("ROW"); int dlength = recvHistRowList.getLength();
 		
 		String fieldName = "";
 		String fieldValue = "";
@@ -35947,6 +35951,7 @@ Map<String, String> rowData = indexRowElements(histDocRowList.item(k));
 		
 		for (int k = 0; k < dlength; k++) {
 			resultXML.append("<ROW>");
+Map<String, String> rowData = indexRowElements(recvHistRowList.item(k));
 			
 			for (int p = 0; p < hlength; p++) {
 				resultXML.append("<CELL>");
@@ -35957,15 +35962,15 @@ Map<String, String> rowData = indexRowElements(histDocRowList.item(k));
 					fieldName = fieldName + langData;
 				}
 				
-				fieldValue = docXML.getElementsByTagName(fieldName).item(k).getTextContent();
+				fieldValue = rowData.get(fieldName);
 				
 				resultXML.append("<VALUE>" + commonUtil.cleanValue(getListField(fieldName, fieldValue, companyID, lang, tenantID, offset)) + "</VALUE>");
 				
 				if (p == 0) {
-					resultXML.append("<DATA1>" + makeListField(docXML.getElementsByTagName("RECEIPTDEPTNAME").item(k).getTextContent()) + "</DATA1>");
-					resultXML.append("<DATA2>" + makeListField(docXML.getElementsByTagName("STATUS").item(k).getTextContent()) + "</DATA2>");
-					resultXML.append("<DATA3>" + makeListField(docXML.getElementsByTagName("STATUSDATE").item(k).getTextContent()) + "</DATA3>");
-					resultXML.append("<DATA4>" + makeListField(docXML.getElementsByTagName("RECEIPTDEPTNAME2").item(k).getTextContent()) + "</DATA4>");
+					resultXML.append("<DATA1>" + makeListField(rowData.get("RECEIPTDEPTNAME")) + "</DATA1>");
+					resultXML.append("<DATA2>" + makeListField(rowData.get("STATUS")) + "</DATA2>");
+					resultXML.append("<DATA3>" + makeListField(rowData.get("STATUSDATE")) + "</DATA3>");
+					resultXML.append("<DATA4>" + makeListField(rowData.get("RECEIPTDEPTNAME2")) + "</DATA4>");
 				}
 				
 				resultXML.append("</CELL>");
