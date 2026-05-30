@@ -4232,7 +4232,10 @@ public class EzEmailUtil {
 				
 		try {
 			conn = (HttpURLConnection) url.openConnection();
-			
+			// 외부 게이트웨이 무응답/지연 시 무한 대기 방지. 값은 config 외부화(미설정 시 기본 5s/10s).
+			conn.setConnectTimeout(Integer.parseInt(config.getProperty("webservice.connectTimeout", "5000")));
+			conn.setReadTimeout(Integer.parseInt(config.getProperty("webservice.readTimeout", "10000")));
+
 			// POST 방식으로 요청한다.
 			conn.setDoOutput(true);
 			conn.setRequestMethod("POST");
