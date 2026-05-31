@@ -13621,14 +13621,15 @@ Map<String, String> rowData = indexRowElements(signRowList.item(k));
 		String sn = "";
 		
 		if (signXML.getDocumentElement().getChildNodes().getLength() > 0) {
-			href = makeXMLString(makeListField(signXML.getElementsByTagName("HREF").item(0).getTextContent()));
-			docType = makeXMLString(makeListField(signXML.getElementsByTagName("DOCTYPE").item(0).getTextContent()));
-			docState = makeXMLString(makeListField(signXML.getElementsByTagName("DOCSTATE").item(0).getTextContent()));
-			aprState = makeXMLString(makeListField(signXML.getElementsByTagName("APRSTATE").item(0).getTextContent()));
-			receivedSN = makeXMLString(makeListField(signXML.getElementsByTagName("RECEIVESN").item(0).getTextContent()));
-			receivedDeptID = makeXMLString(makeListField(signXML.getElementsByTagName("RECEIVEDDEPTID").item(0).getTextContent()));
-			receivedDeptName = makeXMLString(makeListField(signXML.getElementsByTagName("RECEIVEDDEPTNAME").item(0).getTextContent()));
-			sn = makeXMLString(makeListField(signXML.getElementsByTagName("SN").item(0).getTextContent()));
+Map<String, String> rowData = indexRowElements(signXML.getElementsByTagName("ROW").item(0));
+			href = makeXMLString(makeListField(rowData.get("HREF")));
+			docType = makeXMLString(makeListField(rowData.get("DOCTYPE")));
+			docState = makeXMLString(makeListField(rowData.get("DOCSTATE")));
+			aprState = makeXMLString(makeListField(rowData.get("APRSTATE")));
+			receivedSN = makeXMLString(makeListField(rowData.get("RECEIVESN")));
+			receivedDeptID = makeXMLString(makeListField(rowData.get("RECEIVEDDEPTID")));
+			receivedDeptName = makeXMLString(makeListField(rowData.get("RECEIVEDDEPTNAME")));
+			sn = makeXMLString(makeListField(rowData.get("SN")));
 		}
 		
 		rtnVal.append("<DOCFLAGINFO>");
@@ -28172,14 +28173,16 @@ Map<String, String> rowData = indexRowElements(delivRowList.item(j));
 			resultXML.append("</HEADERS>");
 			resultXML.append("<ROWS>");
 			
-			for(int j =0; j<docXML.getElementsByTagName("ROW").getLength(); j ++) {
+			NodeList containerRowList = docXML.getElementsByTagName("ROW");
+			for(int j =0; j<containerRowList.getLength(); j ++) {
+				Map<String, String> rowData = indexRowElements(containerRowList.item(j));
 				resultXML.append("<ROW>");
 				resultXML.append("<CELL>");
-				resultXML.append("<VALUE>" + makeListField(docXML.getElementsByTagName("CONTAINERTYPENAME" + commonUtil.getMultiData(lang, tenantID)).item(j).getTextContent()) + "</VALUE>");
-				resultXML.append("<DATA1>" + makeListField(docXML.getElementsByTagName("CONTAINERID").item(j).getTextContent()) + "</DATA1>");
-				resultXML.append("<DATA2>" + makeListField(docXML.getElementsByTagName("CONTAINERTYPEID").item(j).getTextContent()) +  "</DATA2>");
-				resultXML.append("<DATA3>" + makeListField(docXML.getElementsByTagName("CONTAINERTYPENAME").item(j).getTextContent()) +  "</DATA3>");
-				resultXML.append("<DATA4>" + makeListField(docXML.getElementsByTagName("CONTAINEROWNDEPID").item(j).getTextContent()) +  "</DATA4>");
+				resultXML.append("<VALUE>" + makeListField(rowData.get("CONTAINERTYPENAME" + commonUtil.getMultiData(lang, tenantID))) + "</VALUE>");
+				resultXML.append("<DATA1>" + makeListField(rowData.get("CONTAINERID")) + "</DATA1>");
+				resultXML.append("<DATA2>" + makeListField(rowData.get("CONTAINERTYPEID")) +  "</DATA2>");
+				resultXML.append("<DATA3>" + makeListField(rowData.get("CONTAINERTYPENAME")) +  "</DATA3>");
+				resultXML.append("<DATA4>" + makeListField(rowData.get("CONTAINEROWNDEPID")) +  "</DATA4>");
 				resultXML.append("</CELL>");
 				resultXML.append("</ROW>");
 	        }
@@ -28187,12 +28190,14 @@ Map<String, String> rowData = indexRowElements(delivRowList.item(j));
 			resultXML.append("</LISTVIEWDATA>");
 		} else {
 			resultXML.append("<PARAMETER>");
-			for(int j =0; j<docXML.getElementsByTagName("ROW").getLength(); j ++) {
-				resultXML.append("<CONTID" + j + ">" ); 
-				resultXML.append(makeListField(docXML.getElementsByTagName("CONTAINERID").item(j).getTextContent()) ); 
+			NodeList containerRowList = docXML.getElementsByTagName("ROW");
+			for(int j =0; j<containerRowList.getLength(); j ++) {
+				Map<String, String> rowData = indexRowElements(containerRowList.item(j));
+				resultXML.append("<CONTID" + j + ">" );
+				resultXML.append(makeListField(rowData.get("CONTAINERID")) );
 				resultXML.append("</CONTID" + j + ">");
 				resultXML.append("<NAME" + j + ">" );
-				resultXML.append(makeListField(docXML.getElementsByTagName("CONTAINERTYPENAME" + commonUtil.getMultiData(lang, tenantID)).item(j).getTextContent())); 
+				resultXML.append(makeListField(rowData.get("CONTAINERTYPENAME" + commonUtil.getMultiData(lang, tenantID))));
 				resultXML.append("</NAME" + j + ">");
 			}
 			resultXML.append("</PARAMETER>");
