@@ -101,10 +101,12 @@
 - 배치10: getSimpleCabinetList, getCodeInfo(9개 k-루프)
 - **누적 43개 메서드.**
 
-### R-중첩군 잔류 (자동 sed 부적합 — 개별 처리/저우선)
-- `getContainerInfoManage`: if/else 2개 j-루프. 일부 태그가 `"CONTAINERTYPENAME" + commonUtil.getMultiData(...)` **동적·중첩괄호 태그**라 단순 sed 미적용. 저가치(컨테이너 목록). 수동 처리 시 `rowData.get(동적키)`로 변환 가능.
-- `getReceivedDocInfo`: 표준 `docXML.getElementsByTagName("ROW")` 행루프 형태 아님(다른 변수/구조). 개별 정독 후 판단 필요.
-- `getTaskSubCategoryAll`: 셀별 item() 재조회 안티패턴 **미해당**(대상 아님으로 정정).
+### R-중첩군 잔류 → 수동 처리 완료/정정
+- `getContainerInfoManage`: ✅ **완료**(commit aff0802b67). if/else 2개 j-루프, 동적 태그는 `rowData.get("CONTAINERTYPENAME"+getMultiData(...))`로 수동 변환.
+- `getReceivedDocInfo`: ✅ **완료**(commit aff0802b67). signXML 단건(item(0)) 8회 전체스캔 → ROW(0) 1회 인덱싱.
+- `getTaskSubCategoryAll`: ✅ **대상 아님 확정** — VO 직접 조회(`apprGTaskVOList.get(k).getXxx()`), getElementsByTagName 미사용.
+
+→ **R-중첩군(헬퍼 적용 가능 목록 빌더) Tier A 전수 완료.** 누적 45개 메서드.
 
 ### 남은 hard tail (자동 일괄 부적합 — 개별 정밀 처리 필요)
 - **(P) param-input docXML — 구조 검증 필수**: makeTaskListXml, makeTaskListXmlAll, makeTaskFullListXml, GetRecordInfo, getRecReadHistory, getRecordHistory, getCabinetHistory, getTaskCharger, getCabinetDetailInfo
