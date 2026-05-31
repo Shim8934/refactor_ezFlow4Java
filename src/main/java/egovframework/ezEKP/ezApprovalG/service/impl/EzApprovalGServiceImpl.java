@@ -10393,6 +10393,51 @@ Map<String, String> rowData = indexRowElements(attachFileRowList.item(k));
 	}
 
 	/*
+	 * 추가의견 존재 배치 조회 공통 헬퍼. 행마다 getOpinionAddGB를 호출하던 N+1을 페이지 단위 IN절 1회로 대체.
+	 * 반환 Set은 "DOCIDCOMPANYID" 복합키 — 페이지 내 문서가 서로 다른 회사(계열사 등)여도 행별 (DOCID,COMPANYID)
+	 * 단건 조회와 동일하게 매칭된다. gongHoiRam!=null이면 TBL_APROPINIONINFO, null이면 TBL_ENDAPROPINIONINFO 분기(단건과 동일).
+	 */
+	private java.util.Set<String> batchAddOpinionKeys(java.util.List<String> docIds, java.util.Collection<String> companyIds, int tenantID, String vFlag, String gongHoiRam) throws Exception {
+		java.util.Set<String> resultSet = new java.util.HashSet<String>();
+		if (docIds == null || docIds.isEmpty() || companyIds == null || companyIds.isEmpty()) {
+			return resultSet;
+		}
+		Map<String, Object> batchMap = new HashMap<String, Object>();
+		batchMap.put("v_TENANTID", tenantID);
+		batchMap.put("v_FLAG", vFlag);
+		if (gongHoiRam != null) {
+			batchMap.put("v_GongHoiRam", gongHoiRam);
+		}
+		batchMap.put("v_DOCIDS", new java.util.ArrayList<String>(new java.util.LinkedHashSet<String>(docIds)));
+		batchMap.put("v_COMPANYIDS", new java.util.ArrayList<String>(new java.util.LinkedHashSet<String>(companyIds)));
+		for (Map<String, Object> opRow : ezApprovalGDAO.getOpinionAddGbBatch(batchMap)) {
+			resultSet.add(String.valueOf(opRow.get("DOCID")) + '' + String.valueOf(opRow.get("COMPANYID")));
+		}
+		return resultSet;
+	}
+
+	// batchAddOpinionKeys 결과 조회용 복합키 생성 (단건 getOpinionAddGB의 TRUE/FALSE와 동일 의미)
+	private String addOpinionKey(String docId, String companyId) {
+		return docId + '' + companyId;
+	}
+
+	/* docXML(ROW마다 DOCID/COMPANYID 보유)에서 페이지 DOCID/COMPANYID를 모아 배치 추가의견 조회.
+	   목록 빌더들이 행마다 getOpinionAddGB를 호출하던 N+1을 페이지 1회로 묶는다. */
+	private java.util.Set<String> batchAddOpinionKeysFromDoc(Document opinionDocXML, int tenantID, String vFlag, String gongHoiRam) throws Exception {
+		NodeList docIdNodes = opinionDocXML.getElementsByTagName("DOCID");
+		NodeList companyNodes = opinionDocXML.getElementsByTagName("COMPANYID");
+		java.util.List<String> docIds = new java.util.ArrayList<String>();
+		java.util.List<String> companyIds = new java.util.ArrayList<String>();
+		for (int i = 0; i < docIdNodes.getLength(); i++) {
+			docIds.add(docIdNodes.item(i).getTextContent());
+		}
+		for (int i = 0; i < companyNodes.getLength(); i++) {
+			companyIds.add(companyNodes.item(i).getTextContent());
+		}
+		return batchAddOpinionKeys(docIds, companyIds, tenantID, vFlag, gongHoiRam);
+	}
+
+	/*
 	 * Tier A 공통 헬퍼: getQueryResult로 직렬화된 ROW 노드의 자식 element를 Map<tag,value>로 1회 인덱싱.
 	 * 목록 빌드 루프에서 셀마다 docXML.getElementsByTagName(TAG).item(idx)로 전체 트리를 재스캔(사실상 O(N^2))하던 것을
 	 * 행당 1회 인덱싱 + O(1) 조회로 대체한다. element-only(getQueryResult가 flat ROW 직렬화)이므로 텍스트노드 없음.
@@ -10828,7 +10873,7 @@ Map<String, String> rowData = indexRowElements(attachFileRowList.item(k));
 
 		/* 추가의견/의견여부 배치 조회: 행당 2회(getOpinionAddGB+getHasopinionYn) DB 호출 → 페이지 1회씩으로 축소.
 		   동작 보존: addOpinion은 존재 DOCID set의 contains로 TRUE/FALSE, hasOpinionYn은 DOCID→값 맵(미존재 시 null, 기존 단건과 동일). */
-		java.util.Set<String> addOpinionDocIdSet = new java.util.HashSet<String>();
+		java.util.Set<String> addOpinionKeySet = new java.util.HashSet<String>();
 		java.util.Map<String, Object> hasOpinionYnMap = new java.util.HashMap<String, Object>();
 		if (dlength > 0) {
 			java.util.List<String> pageDocIdList = new java.util.ArrayList<String>();
@@ -10836,13 +10881,14 @@ Map<String, String> rowData = indexRowElements(attachFileRowList.item(k));
 			for (int d = 0; d < docIdNodeList.getLength(); d++) {
 				pageDocIdList.add(docIdNodeList.item(d).getTextContent());
 			}
-			Map<String, Object> opinionBatchMap = new HashMap<String, Object>();
-			opinionBatchMap.put("companyID", recordListVO.getCompanyID());
-			opinionBatchMap.put("v_TENANTID", tenantID);
-			opinionBatchMap.put("v_FLAG", "ADDY");
-			opinionBatchMap.put("v_DOCIDS", pageDocIdList);
-			addOpinionDocIdSet.addAll(ezApprovalGDAO.getOpinionAddGbBatch(opinionBatchMap));
-			for (Map<String, Object> hasRow : ezApprovalGDAO.getHasOpinionYnBatch(opinionBatchMap)) {
+			// 추가의견: 공통 배치 헬퍼(복합키). getRecordList는 단일 회사(recordListVO) 컨텍스트.
+			addOpinionKeySet = batchAddOpinionKeys(pageDocIdList, java.util.Collections.singletonList(recordListVO.getCompanyID()), tenantID, "ADDY", null);
+			// 의견여부(HASOPINIONYN): getRecordList 전용 단일 회사 배치
+			Map<String, Object> hasYnBatchMap = new HashMap<String, Object>();
+			hasYnBatchMap.put("companyID", recordListVO.getCompanyID());
+			hasYnBatchMap.put("v_TENANTID", tenantID);
+			hasYnBatchMap.put("v_DOCIDS", pageDocIdList);
+			for (Map<String, Object> hasRow : ezApprovalGDAO.getHasOpinionYnBatch(hasYnBatchMap)) {
 				hasOpinionYnMap.put((String) hasRow.get("DOCID"), hasRow.get("HASOPINIONYN"));
 			}
 		}
@@ -10930,7 +10976,7 @@ Map<String, String> rowData = indexRowElements(attachFileRowList.item(k));
 
           if (p == 0) {
               String curDocId = rowData.get("DOCID");
-              opinionAddGB = addOpinionDocIdSet.contains(curDocId) ? "TRUE" : "FALSE";
+              opinionAddGB = addOpinionKeySet.contains(addOpinionKey(curDocId, recordListVO.getCompanyID())) ? "TRUE" : "FALSE";
               Object hasYnVal = hasOpinionYnMap.get(curDocId);
               hasopinionYn = (hasYnVal == null) ? null : String.valueOf(hasYnVal);
 
@@ -22842,6 +22888,7 @@ Map<String, String> rowData = indexRowElements(findCabAllRowList.item(k));
 		String langData = commonUtil.getMultiData(lang, tenantID);
 		resultXML.append("<ROWS>");
 		
+		java.util.Set<String> addOpinionKeySet = batchAddOpinionKeysFromDoc(docXML, tenantID, "ADDY", null);
 		for (int k = dlength - 1; k >= 0; k--) {
 			resultXML.append("<ROW>");
 			for (int p = 0; p < hlength; p++) {
@@ -22862,7 +22909,7 @@ Map<String, String> rowData = indexRowElements(findCabAllRowList.item(k));
                 map.put("companyID", docXML.getElementsByTagName("COMPANYID").item(k).getTextContent());
                 map.put("v_TENANTID",tenantID);
                 map.put("v_FLAG","ADDY");
-                String opinionAddGB = ezApprovalGDAO.getOpinionAddGB(map);
+                String opinionAddGB = addOpinionKeySet.contains(addOpinionKey(docXML.getElementsByTagName("DOCID").item(k).getTextContent(), docXML.getElementsByTagName("COMPANYID").item(k).getTextContent())) ? "TRUE" : "FALSE";
 
 				if (p == 0) {
 					resultXML.append("<DATA1>" + docXML.getElementsByTagName("DOCID").item(k).getTextContent() + "</DATA1>");
@@ -23779,6 +23826,7 @@ Map<String, String> rowData = indexRowElements(findCabAllRowList.item(k));
 		resultXML.append("<ROWS>");
 		
 		NodeList aprRowList = docXML.getElementsByTagName("ROW");
+		java.util.Set<String> addOpinionKeySet = batchAddOpinionKeysFromDoc(docXML, tenantID, "ADDY", "Y");
 		for (int k = dlength - 1; k >= 0; k--) {
 			resultXML.append("<ROW>");
 			Map<String, String> rowData = indexRowElements(aprRowList.item(k));
@@ -23807,7 +23855,7 @@ Map<String, String> rowData = indexRowElements(findCabAllRowList.item(k));
                         map.put("v_TENANTID",tenantID);
                         map.put("v_FLAG","ADDY");
                         map.put("v_GongHoiRam","Y");
-                        String opinionAddGB = ezApprovalGDAO.getOpinionAddGB(map);
+                        String opinionAddGB = addOpinionKeySet.contains(addOpinionKey(rowData.get("DOCID"), rowData.get("COMPANYID"))) ? "TRUE" : "FALSE";
 
 						resultXML.append("<DATA1>" + rowData.get("DOCID") + "</DATA1>");
 						resultXML.append("<DATA2>" + makeListField(rowData.get("ORGDOCID")) + "</DATA2>");
@@ -28967,6 +29015,7 @@ Map<String, String> rowData = indexRowElements(userContAllRowList.item(k));
 		
 		int dlength = docXML.getElementsByTagName("ROW").getLength();
 		
+		java.util.Set<String> addOpinionKeySet = batchAddOpinionKeysFromDoc(docXML, tenantID, "ADDY", null);
 		for (int k = dlength - 1; k >= 0; k--) {
 			resultXML.append("<ROW>");
 			firstFlag = true;
@@ -28989,7 +29038,7 @@ Map<String, String> rowData = indexRowElements(userContAllRowList.item(k));
                 map.put("companyID", docXML.getElementsByTagName("COMPANYID").item(k).getTextContent());
                 map.put("v_TENANTID",tenantID);
                 map.put("v_FLAG","ADDY");
-                String opinionAddGB = ezApprovalGDAO.getOpinionAddGB(map);
+                String opinionAddGB = addOpinionKeySet.contains(addOpinionKey(docXML.getElementsByTagName("DOCID").item(k).getTextContent(), docXML.getElementsByTagName("COMPANYID").item(k).getTextContent())) ? "TRUE" : "FALSE";
 
 				if (firstFlag) {
 					resultXML.append("<DATA1><![CDATA[" + docXML.getElementsByTagName("DOCID").item(k).getTextContent() + "]]></DATA1>");
@@ -40950,6 +40999,7 @@ Map<String, String> rowData = indexRowElements(recvHistRowList.item(k));
         
 		resultXML.append("<ROWS>");
 		
+		java.util.Set<String> addOpinionKeySet = batchAddOpinionKeysFromDoc(docXML, tenantID, "ADDY", "Y");
 		for (int k = dlength - 1; k >= 0; k--) {
 Map<String, String> rowData = indexRowElements(aprDashRowList.item(k));
 			resultXML.append("<ROW>");
@@ -40977,7 +41027,7 @@ Map<String, String> rowData = indexRowElements(aprDashRowList.item(k));
                     map.put("userId", userID);
                     map.put("primeLang", primeLang);
                     
-                    String opinionAddGB = ezApprovalGDAO.getOpinionAddGB(map);
+                    String opinionAddGB = addOpinionKeySet.contains(addOpinionKey(rowData.get("DOCID"), rowData.get("COMPANYID"))) ? "TRUE" : "FALSE";
 
 					if (p == 0) {
 						resultXML.append("<DATA1>" + rowData.get("DOCID") + "</DATA1>");
