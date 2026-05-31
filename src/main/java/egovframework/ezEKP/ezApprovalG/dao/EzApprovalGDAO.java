@@ -3869,6 +3869,16 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	public String getHasopinionYn(Map<String, Object> map) throws Exception {
 		return (String) select("EzApprovalG.selectHasOpinionYn",map);
 	}
+	// 완료문서 추가의견 존재 여부 배치 조회 (DOCID 목록 → 존재하는 DOCID 목록)
+	@SuppressWarnings("unchecked")
+	public List<String> getOpinionAddGbBatch(Map<String, Object> map) throws Exception {
+		return (List<String>) list("EzApprovalG.selectOpinionAddGbBatch", map);
+	}
+	// 완료문서 의견여부 배치 조회 (DOCID 목록 → DOCID/HASOPINIONYN 맵 목록)
+	@SuppressWarnings("unchecked")
+	public List<Map<String, Object>> getHasOpinionYnBatch(Map<String, Object> map) throws Exception {
+		return (List<Map<String, Object>>) list("EzApprovalG.selectHasOpinionYnBatch", map);
+	}
 
 	@SuppressWarnings("unchecked")
 	public List<ApprGOutOfOfficeInfoVO> getAllProxyInfo(Map<String, Object> map) throws Exception {

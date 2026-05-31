@@ -10826,6 +10826,27 @@ Map<String, String> rowData = indexRowElements(attachFileRowList.item(k));
 		int dlength = recordRowList.getLength();
 		String primaryData = commonUtil.getPrimaryData(lang, tenantID);
 
+		/* 추가의견/의견여부 배치 조회: 행당 2회(getOpinionAddGB+getHasopinionYn) DB 호출 → 페이지 1회씩으로 축소.
+		   동작 보존: addOpinion은 존재 DOCID set의 contains로 TRUE/FALSE, hasOpinionYn은 DOCID→값 맵(미존재 시 null, 기존 단건과 동일). */
+		java.util.Set<String> addOpinionDocIdSet = new java.util.HashSet<String>();
+		java.util.Map<String, Object> hasOpinionYnMap = new java.util.HashMap<String, Object>();
+		if (dlength > 0) {
+			java.util.List<String> pageDocIdList = new java.util.ArrayList<String>();
+			NodeList docIdNodeList = docXML.getElementsByTagName("DOCID");
+			for (int d = 0; d < docIdNodeList.getLength(); d++) {
+				pageDocIdList.add(docIdNodeList.item(d).getTextContent());
+			}
+			Map<String, Object> opinionBatchMap = new HashMap<String, Object>();
+			opinionBatchMap.put("companyID", recordListVO.getCompanyID());
+			opinionBatchMap.put("v_TENANTID", tenantID);
+			opinionBatchMap.put("v_FLAG", "ADDY");
+			opinionBatchMap.put("v_DOCIDS", pageDocIdList);
+			addOpinionDocIdSet.addAll(ezApprovalGDAO.getOpinionAddGbBatch(opinionBatchMap));
+			for (Map<String, Object> hasRow : ezApprovalGDAO.getHasOpinionYnBatch(opinionBatchMap)) {
+				hasOpinionYnMap.put((String) hasRow.get("DOCID"), hasRow.get("HASOPINIONYN"));
+			}
+		}
+
 		for (int k = 0; k < dlength; k++) {
 			resultXML.append("<ROW>");
 
@@ -10908,13 +10929,10 @@ Map<String, String> rowData = indexRowElements(attachFileRowList.item(k));
           String hasopinionYn = "";
 
           if (p == 0) {
-              Map<String, Object> map = new HashMap<String, Object>();
-              map.put("v_DOCID", rowData.get("DOCID"));
-              map.put("companyID", recordListVO.getCompanyID());
-              map.put("v_TENANTID", tenantID);
-              map.put("v_FLAG", "ADDY");
-              opinionAddGB = ezApprovalGDAO.getOpinionAddGB(map);
-              hasopinionYn = ezApprovalGDAO.getHasopinionYn(map);
+              String curDocId = rowData.get("DOCID");
+              opinionAddGB = addOpinionDocIdSet.contains(curDocId) ? "TRUE" : "FALSE";
+              Object hasYnVal = hasOpinionYnMap.get(curDocId);
+              hasopinionYn = (hasYnVal == null) ? null : String.valueOf(hasYnVal);
 
               resultXML.append("<DATA1><![CDATA[" + makeListField(rowData.get("DOCID")) + "]]></DATA1>");
               resultXML.append("<DATA2><![CDATA[" + makeListField(rowData.get("HREF")) + "]]></DATA2>");
