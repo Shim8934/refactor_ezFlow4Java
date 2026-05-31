@@ -115,3 +115,32 @@
   - 데이터 행 루프의 인덱스 변수를 정확히 식별해 sed 패턴(item(k)/item(j)/item(p)) 매칭 + 헤더/비-docXML 조회는 미변경.
 - **(B) 숫자 childNode 인덱스 — tag-map 부적합, 다른 fix**: gongRamSave, gongRamSaveIng, gongRamSaveEnd, updateOpinionInfo, updateAttachFileInfo, updateOpinionSihangReject, updateAddOpinionInfo, getTotalAttachSize/chkAprLines/chkDeptLines. → ROW NodeList 1회 캐싱 + `rows.item(k).getChildNodes()` 1회로 별도 최적화(숫자 인덱스 유지).
 - **(제외) 부작용 동반 루프**: doApprove(루프 내 sendMsg/setBujaeInfo 등 부작용) — 호출횟수 보존 까다로움, Tier A 대상 아님.
+
+---
+
+## [BL-008] 의견 배치 조회 SQL 트랙 — 현황 / 재개 가이드
+
+> 브랜치 `perf/getrecordlist-opinion-batch` (base `perf/ezapprovalg-antipattern-1`), PR #2. **PR #1 머지 후 진행.**
+
+### 완료
+- 행마다 `getOpinionAddGB`(getRecordList는 `getHasopinionYn`까지) 호출하던 N+1을 페이지 IN절 배치로 축소.
+- sqlmap 3종(Mysql/Oracle/Tibero) 신규: `selectOpinionAddGbBatch`(DISTINCT DOCID,COMPANYID + DOCID IN/COMPANYID IN), `selectHasOpinionYnBatch`.
+- DAO: `getOpinionAddGbBatch`, `getHasOpinionYnBatch`.
+- 서비스 공통 헬퍼: `batchAddOpinionKeys` / `batchAddOpinionKeysFromDoc` / `addOpinionKey`(복합키 "DOCIDCOMPANYID").
+- 적용 5개: getRecordList(단일회사), aprDocList(GongHoiRam Y), aprDashBoardDocList(Y), getSearchDocList, getSearchDocListS.
+- Java8 빌드 GREEN, sqlmap XML well-formed.
+
+### 재개 시 먼저 할 일 (중요)
+1. **DB 통합 검증 (머지 전 필수)**: 빌드는 SQL 미실행. iBATIS `<iterate>` IN절 실제 동작 + 다중 회사(계열사) 페이지에서 단건 vs 배치 결과 동일성 확인. 케이스: 빈 페이지(IN() 방지 — dlength==0/empty 가드 있음), 단건, 다건, 추가의견 유무, DOCID 동일·회사 다름.
+2. **복합키 separator**: `addOpinionKey`/`batchAddOpinionKeys`가 `''`(제어문자 char) 사용. 동일 토큰이어야 매칭됨(현재 동일).
+
+### 남은 의견 N+1 후보 (미적용)
+- 단건 호출 `getOpinionAddGB` (루프 아님, v_FLAG=ADDN): EzApprovalGServiceImpl 36738(`rtvl`), 36757(`Result`) — N+1 아님, 배치 불필요(기록만).
+- `getHasopinionYn` 루프 호출처는 현재 getRecordList뿐(배치 완료). 타 메서드는 addOpinion만.
+- 동형 의견조회가 추가로 발견되면 `batchAddOpinionKeysFromDoc(docXML, tenantID, "ADDY", gongHoiRam)` 한 줄 + 행 호출을 `addOpinionKeySet.contains(addOpinionKey(docId, companyId))`로 치환.
+
+## [BL-009] Tier A 누락 — getInnerLineInfo
+
+- **위치**: `EzApprovalGServiceImpl.getInnerLineInfo` (~22617)
+- **현황**: 배치1~10 Tier A에서 누락됨. 여전히 셀마다 `docXML.getElementsByTagName(TAG).item(k)` 전체 트리 재스캔(O(N^2)). 단일 k-루프 추정.
+- **개선 방향**: 다른 R-라운드트립 빌더와 동일 절차(`indexRowElements` 헬퍼 적용) — 정확 라인 확인 후 sed.
