@@ -141,6 +141,6 @@
 
 ## [BL-009] Tier A 누락 — getInnerLineInfo
 
-- **위치**: `EzApprovalGServiceImpl.getInnerLineInfo` (~22617)
-- **현황**: 배치1~10 Tier A에서 누락됨. 여전히 셀마다 `docXML.getElementsByTagName(TAG).item(k)` 전체 트리 재스캔(O(N^2)). 단일 k-루프 추정.
-- **개선 방향**: 다른 R-라운드트립 빌더와 동일 절차(`indexRowElements` 헬퍼 적용) — 정확 라인 확인 후 sed.
+- **위치**: `EzApprovalGServiceImpl.getInnerLineInfo`
+- **현황**: ~~배치1~10 Tier A에서 누락됨. 셀마다 `docXML.getElementsByTagName(TAG).item(k)` 전체 트리 재스캔(O(N^2)).~~
+- **처리 상태**: ✅ **완료** (branch `perf/getinnerlineinfo-tiera`). 역순 k-루프, 셀 27건 docXML.item(k) → `indexRowElements` 헬퍼(`innerLineRowList`) rowData.get 치환. 의견 배치는 SQL 트랙에서 이미 적용됨. Java8 빌드 GREEN.

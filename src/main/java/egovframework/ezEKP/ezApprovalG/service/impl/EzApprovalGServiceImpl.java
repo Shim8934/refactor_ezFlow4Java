@@ -22881,7 +22881,7 @@ Map<String, String> rowData = indexRowElements(findCabAllRowList.item(k));
 		
 		Document docXML = commonUtil.convertStringToDocument(docList);
 		
-		int dlength = docXML.getElementsByTagName("ROW").getLength();
+		NodeList innerLineRowList = docXML.getElementsByTagName("ROW"); int dlength = innerLineRowList.getLength();
 		
 		String fieldName = "";
 		String fieldValue = "";
@@ -22890,6 +22890,7 @@ Map<String, String> rowData = indexRowElements(findCabAllRowList.item(k));
 		
 		java.util.Set<String> addOpinionKeySet = batchAddOpinionKeysFromDoc(docXML, tenantID, "ADDY", null);
 		for (int k = dlength - 1; k >= 0; k--) {
+Map<String, String> rowData = indexRowElements(innerLineRowList.item(k));
 			resultXML.append("<ROW>");
 			for (int p = 0; p < hlength; p++) {
 				resultXML.append("<CELL>");
@@ -22899,48 +22900,48 @@ Map<String, String> rowData = indexRowElements(findCabAllRowList.item(k));
 					fieldName = fieldName + langData;
 				}
 				
-				fieldValue = docXML.getElementsByTagName(fieldName).item(k).getTextContent();
+				fieldValue = rowData.get(fieldName);
 				
 				resultXML.append("<VALUE>" + commonUtil.cleanValue(getListField(fieldName, fieldValue, companyID, lang, tenantID, offset)) + " </VALUE>");
 
                 /* 2023-06-26 민지수 - 리스트 표출을 위한 추가의견 존재여부 추가 */
                 Map<String, Object> map = new HashMap<String, Object>();
-                map.put("v_DOCID", docXML.getElementsByTagName("DOCID").item(k).getTextContent());
-                map.put("companyID", docXML.getElementsByTagName("COMPANYID").item(k).getTextContent());
+                map.put("v_DOCID", rowData.get("DOCID"));
+                map.put("companyID", rowData.get("COMPANYID"));
                 map.put("v_TENANTID",tenantID);
                 map.put("v_FLAG","ADDY");
-                String opinionAddGB = addOpinionKeySet.contains(addOpinionKey(docXML.getElementsByTagName("DOCID").item(k).getTextContent(), docXML.getElementsByTagName("COMPANYID").item(k).getTextContent())) ? "TRUE" : "FALSE";
+                String opinionAddGB = addOpinionKeySet.contains(addOpinionKey(rowData.get("DOCID"), rowData.get("COMPANYID"))) ? "TRUE" : "FALSE";
 
 				if (p == 0) {
-					resultXML.append("<DATA1>" + docXML.getElementsByTagName("DOCID").item(k).getTextContent() + "</DATA1>");
-					resultXML.append("<DATA2>" + makeListField(docXML.getElementsByTagName("HREF").item(k).getTextContent()) + "</DATA2>");
-					resultXML.append("<DATA3>" + makeListField(docXML.getElementsByTagName("WRITERID").item(k).getTextContent()) + "</DATA3>");
-					resultXML.append("<DATA4>" + docXML.getElementsByTagName("CONTAINERID").item(k).getTextContent() + "</DATA4>");
-					resultXML.append("<DATA5>" + makeListField(docXML.getElementsByTagName("ORGDOCID").item(k).getTextContent()) + "</DATA5>");
-					resultXML.append("<DATA6>" + docXML.getElementsByTagName("FORMID").item(k).getTextContent() + "</DATA6>");
-					resultXML.append("<DATA7>" + docXML.getElementsByTagName("DOCSTATE").item(k).getTextContent() + "</DATA7>");
-					resultXML.append("<DATA8>" + makeListField(docXML.getElementsByTagName("ISPUBLIC").item(k).getTextContent()) + "</DATA8>");
-					resultXML.append("<DATA9>" + docXML.getElementsByTagName("DOCTYPE").item(k).getTextContent() + "</DATA9>");
-					resultXML.append("<DATA10>" + docXML.getElementsByTagName("SECURITYAPPROVAL").item(k).getTextContent() + "</DATA10>");
-					resultXML.append("<DATA11>" + docXML.getElementsByTagName("EDMSYN").item(k).getTextContent() + "</DATA11>");
-					resultXML.append("<DATA12>" + docXML.getElementsByTagName("WRITERDEPTID").item(k).getTextContent() + "</DATA12>");
-					resultXML.append("<DATA99>" + docXML.getElementsByTagName("FORMNAME").item(k).getTextContent() + "</DATA99>");
-					resultXML.append("<ORGCOMPANYID><![CDATA[" + docXML.getElementsByTagName("COMPANYID").item(k).getTextContent() + "]]></ORGCOMPANYID>");
-                    resultXML.append("<HASOPINIONYN><![CDATA[" + docXML.getElementsByTagName("HASOPINIONYN").item(k).getTextContent() + "]]></HASOPINIONYN>");
+					resultXML.append("<DATA1>" + rowData.get("DOCID") + "</DATA1>");
+					resultXML.append("<DATA2>" + makeListField(rowData.get("HREF")) + "</DATA2>");
+					resultXML.append("<DATA3>" + makeListField(rowData.get("WRITERID")) + "</DATA3>");
+					resultXML.append("<DATA4>" + rowData.get("CONTAINERID") + "</DATA4>");
+					resultXML.append("<DATA5>" + makeListField(rowData.get("ORGDOCID")) + "</DATA5>");
+					resultXML.append("<DATA6>" + rowData.get("FORMID") + "</DATA6>");
+					resultXML.append("<DATA7>" + rowData.get("DOCSTATE") + "</DATA7>");
+					resultXML.append("<DATA8>" + makeListField(rowData.get("ISPUBLIC")) + "</DATA8>");
+					resultXML.append("<DATA9>" + rowData.get("DOCTYPE") + "</DATA9>");
+					resultXML.append("<DATA10>" + rowData.get("SECURITYAPPROVAL") + "</DATA10>");
+					resultXML.append("<DATA11>" + rowData.get("EDMSYN") + "</DATA11>");
+					resultXML.append("<DATA12>" + rowData.get("WRITERDEPTID") + "</DATA12>");
+					resultXML.append("<DATA99>" + rowData.get("FORMNAME") + "</DATA99>");
+					resultXML.append("<ORGCOMPANYID><![CDATA[" + rowData.get("COMPANYID") + "]]></ORGCOMPANYID>");
+                    resultXML.append("<HASOPINIONYN><![CDATA[" + rowData.get("HASOPINIONYN") + "]]></HASOPINIONYN>");
                     resultXML.append("<ADDOPINION>" + opinionAddGB + "</ADDOPINION>");
-                    resultXML.append("<WRITERJOBTITLE><![CDATA[" + docXML.getElementsByTagName("WRITERJOBTITLE").item(k).getTextContent() + "]]></WRITERJOBTITLE>");
-                    resultXML.append("<WRITERJOBTITLE2><![CDATA[" + docXML.getElementsByTagName("WRITERJOBTITLE2").item(k).getTextContent() + "]]></WRITERJOBTITLE2>");
-                    resultXML.append("<WRITERDEPTNAME><![CDATA[" + docXML.getElementsByTagName("WRITERDEPTNAME").item(k).getTextContent() + "]]></WRITERDEPTNAME>");
-                    resultXML.append("<WRITERDEPTNAME2><![CDATA[" + docXML.getElementsByTagName("WRITERDEPTNAME2").item(k).getTextContent() + "]]></WRITERDEPTNAME2>");
-                    resultXML.append("<WRITERNAME2><![CDATA[" + docXML.getElementsByTagName("WRITERNAME2").item(k).getTextContent() + "]]></WRITERNAME2>");
-                    resultXML.append("<ENDDATE><![CDATA[" + docXML.getElementsByTagName("ENDDATE").item(k).getTextContent() + "]]></ENDDATE>");
+                    resultXML.append("<WRITERJOBTITLE><![CDATA[" + rowData.get("WRITERJOBTITLE") + "]]></WRITERJOBTITLE>");
+                    resultXML.append("<WRITERJOBTITLE2><![CDATA[" + rowData.get("WRITERJOBTITLE2") + "]]></WRITERJOBTITLE2>");
+                    resultXML.append("<WRITERDEPTNAME><![CDATA[" + rowData.get("WRITERDEPTNAME") + "]]></WRITERDEPTNAME>");
+                    resultXML.append("<WRITERDEPTNAME2><![CDATA[" + rowData.get("WRITERDEPTNAME2") + "]]></WRITERDEPTNAME2>");
+                    resultXML.append("<WRITERNAME2><![CDATA[" + rowData.get("WRITERNAME2") + "]]></WRITERNAME2>");
+                    resultXML.append("<ENDDATE><![CDATA[" + rowData.get("ENDDATE") + "]]></ENDDATE>");
                 }
 				
 				if (fieldName.equals("HASATTACHYN")) {
-					resultXML.append("<HASATTACHYN>" + docXML.getElementsByTagName("HASATTACHYN").item(k).getTextContent() + "</HASATTACHYN>");
+					resultXML.append("<HASATTACHYN>" + rowData.get("HASATTACHYN") + "</HASATTACHYN>");
 				}
 				if (fieldName.equals("ISPUBLIC")) {
-					resultXML.append("<ISPUBLIC>" + docXML.getElementsByTagName("ISPUBLIC").item(k).getTextContent() + "</ISPUBLIC>");
+					resultXML.append("<ISPUBLIC>" + rowData.get("ISPUBLIC") + "</ISPUBLIC>");
 				}
 				
 				resultXML.append("</CELL>");
